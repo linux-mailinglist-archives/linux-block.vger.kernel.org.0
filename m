@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAE3341A28D
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:05:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B3F841A285
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:05:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238039AbhI0WHS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        id S238243AbhI0WHN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:07:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238006AbhI0WGi (ORCPT
+        with ESMTP id S237755AbhI0WGj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:06:38 -0400
+        Mon, 27 Sep 2021 18:06:39 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC27C05174A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2492C05174C;
         Mon, 27 Sep 2021 15:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=RL6C/c6i2qfpkU1bbRAF0GVGBtIpDSTv1FipAKcuxm0=; b=Fdp20N4R49x/LULSjNRNLrIb+5
-        oUNu4U2e1NlyPtQTdPkCg4RgHXyBsFgf97Zlc+EG7JKKtbmhMLx734twtXRJTLgwWwVD1WZ5ySMlw
-        AxInYkPCr4zN2SBpSs1Aj5uMsiZToiVB1Eo0zKjkj8mQUI4lU32uE7tyUtEeRA0gTlUWvUMCPGU6S
-        RPJzvdf4sm9FQmAALucLoW+ucfOMHyP4XAT7frCM5YomYcbpqtSp+G8oXZGd8G68VZ1qSS/NVgyX6
-        1xY7nMjTjoCWK0a8D/0rkySJJN8576BWSPIDi7IJ9fXv49U/Xez9GX/v/JjgrTZGt63rPM469dMWf
-        F4/oznOA==;
+        bh=9wOyTGIy2lYyV34pVMUavNLLhw5CZPDfOmRGSHe5G74=; b=07zwU3xPrOBcdHSpGYs8LRPP+c
+        +I8AnV/ZtPwoHS+DKfHXzjwKNXNe33T984MYfhAEaL/lF4Czs39KEJctIFZ45YlTDQI/Y2wm15qSO
+        ykvcgOACq/mHfXN8zy/hB1syOzuqGej7dhQdsATNMy6xyjlqzls9YwRqJKeUHHV3kmDpYhWRDOYO9
+        /OzsSbrTwEqZzCAJGU50oN52nUOJ0BnbovjTMY7hjPnHUX2b0oXqh1R80MfZf89Y3hzYeiFTP2tNP
+        QRGjewva09bdUmavFjuNbxD4QJ9H3+Uxr8iIiZOJlgUHbGx6+DCvm1kshqhlIxTD2A/lpI/ScN4qf
+        IQGv8MLQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUyiG-004VIk-4E; Mon, 27 Sep 2021 22:03:04 +0000
+        id 1mUyiG-004VIs-6R; Mon, 27 Sep 2021 22:03:04 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, efremov@linux.com, hch@lst.de
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 12/14] block/ataflop: add registration bool before calling del_gendisk()
-Date:   Mon, 27 Sep 2021 15:03:00 -0700
-Message-Id: <20210927220302.1073499-13-mcgrof@kernel.org>
+Subject: [PATCH v2 13/14] block/ataflop: provide a helper for cleanup up an atari disk
+Date:   Mon, 27 Sep 2021 15:03:01 -0700
+Message-Id: <20210927220302.1073499-14-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210927220302.1073499-1-mcgrof@kernel.org>
 References: <20210927220302.1073499-1-mcgrof@kernel.org>
@@ -44,59 +44,79 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The ataflop assumes del_gendisk() is safe to call, this is only
-true because add_disk() does not return a failure, but that will
-change soon. And so, before we get to adding error handling for
-that case, let's make sure we keep track of which disks actually
-get registered. Then we use this to only call del_gendisk for them.
+Instead of using two separate code paths for cleaning up an atari disk,
+use one. We take the more careful approach to check for *all* disk
+types, as is done on exit. The init path didn't have that check as
+the alternative disk types are only probed for later, they are not
+initialized by default.
+
+Yes, there is a shared tag for all disks.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/ataflop.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/block/ataflop.c | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
-index 6a865d42b1fd..97f1c19f9c02 100644
+index 97f1c19f9c02..e9d874f51597 100644
 --- a/drivers/block/ataflop.c
 +++ b/drivers/block/ataflop.c
-@@ -298,6 +298,7 @@ static struct atari_floppy_struct {
- 				   disk change detection) */
- 	int flags;		/* flags */
- 	struct gendisk *disk[NUM_DISK_MINORS];
-+	bool registered[NUM_DISK_MINORS];
- 	int ref;
- 	int type;
- 	struct blk_mq_tag_set tag_set;
-@@ -2000,8 +2001,10 @@ static void ataflop_probe(dev_t dev)
- 		return;
- 	mutex_lock(&ataflop_probe_lock);
- 	if (!unit[drive].disk[type]) {
--		if (ataflop_alloc_disk(drive, type) == 0)
-+		if (ataflop_alloc_disk(drive, type) == 0) {
- 			add_disk(unit[drive].disk[type]);
-+			unit[drive].registered[type] = true;
-+		}
- 	}
+@@ -2009,6 +2009,20 @@ static void ataflop_probe(dev_t dev)
  	mutex_unlock(&ataflop_probe_lock);
  }
-@@ -2065,6 +2068,7 @@ static int __init atari_floppy_init (void)
- 		unit[i].track = -1;
- 		unit[i].flags = 0;
- 		add_disk(unit[i].disk[0]);
-+		unit[i].registered[0] = true;
- 	}
  
- 	printk(KERN_INFO "Atari floppy driver: max. %cD, %strack buffering\n",
-@@ -2133,7 +2137,8 @@ static void __exit atari_floppy_exit(void)
- 		for (type = 0; type < NUM_DISK_MINORS; type++) {
- 			if (!unit[i].disk[type])
- 				continue;
--			del_gendisk(unit[i].disk[type]);
-+			if (unit[i].registered[type])
-+				del_gendisk(unit[i].disk[type]);
- 			blk_cleanup_disk(unit[i].disk[type]);
- 		}
- 		blk_mq_free_tag_set(&unit[i].tag_set);
++static void atari_cleanup_floppy_disk(struct atari_floppy_struct *fs)
++{
++	int type;
++
++	for (type = 0; type < NUM_DISK_MINORS; type++) {
++		if (!fs->disk[type])
++			continue;
++		if (fs->registered[type])
++			del_gendisk(fs->disk[type]);
++		blk_cleanup_disk(fs->disk[type]);
++	}
++	blk_mq_free_tag_set(&fs->tag_set);
++}
++
+ static int __init atari_floppy_init (void)
+ {
+ 	int i;
+@@ -2079,10 +2093,8 @@ static int __init atari_floppy_init (void)
+ 	return 0;
+ 
+ err:
+-	while (--i >= 0) {
+-		blk_cleanup_disk(unit[i].disk[0]);
+-		blk_mq_free_tag_set(&unit[i].tag_set);
+-	}
++	while (--i >= 0)
++		atari_cleanup_floppy_disk(&unit[i]);
+ 
+ 	unregister_blkdev(FLOPPY_MAJOR, "fd");
+ out_unlock:
+@@ -2131,18 +2143,10 @@ __setup("floppy=", atari_floppy_setup);
+ 
+ static void __exit atari_floppy_exit(void)
+ {
+-	int i, type;
++	int i;
+ 
+-	for (i = 0; i < FD_MAX_UNITS; i++) {
+-		for (type = 0; type < NUM_DISK_MINORS; type++) {
+-			if (!unit[i].disk[type])
+-				continue;
+-			if (unit[i].registered[type])
+-				del_gendisk(unit[i].disk[type]);
+-			blk_cleanup_disk(unit[i].disk[type]);
+-		}
+-		blk_mq_free_tag_set(&unit[i].tag_set);
+-	}
++	for (i = 0; i < FD_MAX_UNITS; i++)
++		atari_cleanup_floppy_disk(&unit[i]);
+ 	unregister_blkdev(FLOPPY_MAJOR, "fd");
+ 
+ 	del_timer_sync(&fd_timer);
 -- 
 2.30.2
 
