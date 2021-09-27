@@ -2,50 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C336941A1B0
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:00:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C7B641A1E4
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:01:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237548AbhI0WCN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:02:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50718 "EHLO
+        id S237866AbhI0WCp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237364AbhI0WCI (ORCPT
+        with ESMTP id S237805AbhI0WCc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:02:08 -0400
+        Mon, 27 Sep 2021 18:02:32 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5253C061769;
-        Mon, 27 Sep 2021 15:00:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698EEC06177D;
+        Mon, 27 Sep 2021 15:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Dn0nwO97tF5sgMNA9UASzPzbBLRiiVkhBQPIhqix1v4=; b=M3AH6Wnz5zIiS4kLah8jwnFJa1
-        ltMKTFrQbN9BwJYv5ZCv995arAvOdhSKf8EhWlYPhIV7Sr4AAwpOdJUyB/F7ufNhgmWKlJA6kT51u
-        oEr8JdB9+9L2GBUGN066ftfZvxsFamjpWTEunnhVUUlrH0gNd7c9KTDB5OwTMlb2O/mt+cQjgJpxf
-        EADkOpygKHi6dbUm5sFFGcyQ4TNHklG/jXADY24VCBj8UGxfRD6IUN/ewsC4aZXuMafNSgQZs1d2N
-        kmO4Jj/Pkj7TUy+slVYTrDQ5GgBAgTRhJEN1V6r0g+5HcdKvRMN4F6JlNsbifP6Tro38G+UrmTvbP
-        1KQBjKAw==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=f1z5HgkOwmjFBk4lUYxpkBwDgNqINDcFoZThfyywwx8=; b=eQhJDUwgI2a4kvwwC1LW4Grcbe
+        Afldl7Y/5P+CtLt6Bf7Y9ytxFLTlAL7DQ1mrwOtj6+6Pnddn8Wp4NkxVuxqvoNw0Tyz5tv3XvMzt/
+        95ad2a+T3zdPfY1HqSNzUwK9FALGPXQfHChw080YZLrustezGq9sWxl4CDGODiD+GUg6c3Ya2VpOL
+        Lz+0XMYtVA7Q3XN0iSeVnjb/6bCKu9f0aIxF7V2Oxq68qH0zcltU5tGD/tQ+xGADbb+jbit4yqFIv
+        EQ6Wyv4G24Wl6sIzPggmISuK4WSugRZrguNrS2KSbhhqFI7oFTnyVJEEiHe4GjAGQLWYlZNDx3Kcq
+        wpi9PwkQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUyfN-004SV5-96; Mon, 27 Sep 2021 22:00:05 +0000
+        id 1mUyfw-004SuN-7t; Mon, 27 Sep 2021 22:00:40 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
-        kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
-        beanhuo@micron.com, ulf.hansson@linaro.org, avri.altman@wdc.com,
-        swboyd@chromium.org, agk@redhat.com, snitzer@redhat.com,
-        josef@toxicpanda.com
-Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
-        ming.lei@redhat.com, linux-scsi@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-mmc@vger.kernel.org,
-        dm-devel@redhat.com, nbd@other.debian.org,
+To:     axboe@kernel.dk, colyli@suse.de, kent.overstreet@gmail.com,
+        kbusch@kernel.org, sagi@grimberg.me, vishal.l.verma@intel.com,
+        dan.j.williams@intel.com, dave.jiang@intel.com,
+        ira.weiny@intel.com, konrad.wilk@oracle.com, roger.pau@citrix.com,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, minchan@kernel.org, ngupta@vflare.org,
+        senozhatsky@chromium.org
+Cc:     xen-devel@lists.xenproject.org, nvdimm@lists.linux.dev,
+        linux-nvme@lists.infradead.org, linux-bcache@vger.kernel.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v4 6/6] nbd: add error handling support for add_disk()
-Date:   Mon, 27 Sep 2021 14:59:58 -0700
-Message-Id: <20210927215958.1062466-7-mcgrof@kernel.org>
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH v2 00/10] block: second batch of add_disk() error handling conversions
+Date:   Mon, 27 Sep 2021 15:00:29 -0700
+Message-Id: <20210927220039.1064193-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210927215958.1062466-1-mcgrof@kernel.org>
-References: <20210927215958.1062466-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
@@ -53,41 +50,43 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We never checked for errors on add_disk() as this function
-returned void. Now that this is fixed, use the shiny new
-error handling.
+This is the second series of driver conversions for add_disk()
+error handling. You can find this set and the rest of the 7th set of
+driver conversions on my 20210927-for-axboe-add-disk-error-handling
+branch [0].
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/block/nbd.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Changes on this v2 since the last first version of this
+patch series:
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 5170a630778d..741365295157 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1757,7 +1757,9 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- 	disk->fops = &nbd_fops;
- 	disk->private_data = nbd;
- 	sprintf(disk->disk_name, "nbd%d", index);
--	add_disk(disk);
-+	err = add_disk(disk);
-+	if (err)
-+		goto out_err_disk;
- 
- 	/*
- 	 * Now publish the device.
-@@ -1766,6 +1768,8 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- 	nbd_total_devices++;
- 	return nbd;
- 
-+out_err_disk:
-+	blk_cleanup_disk(disk);
- out_free_idr:
- 	mutex_lock(&nbd_index_mutex);
- 	idr_remove(&nbd_index_idr, index);
+  - rebased onto linux-next tag 20210927
+  - nvme-multipath: used test_and_set_bit() as suggested by Keith Busch,         
+    and justified this in the code with a comment as this race was not
+    obvious
+  - Added reviewed-by / Acked-by tags where one was provided 
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20210927-for-axboe-add-disk-error-handling
+
+Luis Chamberlain (10):
+  block/brd: add error handling support for add_disk()
+  bcache: add error handling support for add_disk()
+  nvme-multipath: add error handling support for add_disk()
+  nvdimm/btt: do not call del_gendisk() if not needed
+  nvdimm/btt: use goto error labels on btt_blk_init()
+  nvdimm/btt: add error handling support for add_disk()
+  nvdimm/blk: avoid calling del_gendisk() on early failures
+  nvdimm/blk: add error handling support for add_disk()
+  xen-blkfront: add error handling support for add_disk()
+  zram: add error handling support for add_disk()
+
+ drivers/block/brd.c           | 10 ++++++++--
+ drivers/block/xen-blkfront.c  |  8 +++++++-
+ drivers/block/zram/zram_drv.c |  6 +++++-
+ drivers/md/bcache/super.c     | 17 ++++++++++++-----
+ drivers/nvdimm/blk.c          | 21 +++++++++++++++------
+ drivers/nvdimm/btt.c          | 24 +++++++++++++++---------
+ drivers/nvme/host/multipath.c | 13 +++++++++++--
+ 7 files changed, 73 insertions(+), 26 deletions(-)
+
 -- 
 2.30.2
 
