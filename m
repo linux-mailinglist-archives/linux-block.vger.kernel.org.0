@@ -2,49 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E52284193E8
-	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 14:14:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EC5E4195FA
+	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 16:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234117AbhI0MPl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 08:15:41 -0400
-Received: from verein.lst.de ([213.95.11.211]:46465 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234073AbhI0MPk (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 08:15:40 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0A23467373; Mon, 27 Sep 2021 14:04:42 +0200 (CEST)
-Date:   Mon, 27 Sep 2021 14:04:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Tejun Heo <tj@kernel.org>, linux-block@vger.kernel.org
-Subject: Re: [PATCH 3/4] block: drain file system I/O on del_gendisk
-Message-ID: <20210927120441.GA25223@lst.de>
-References: <20210922172222.2453343-1-hch@lst.de> <20210922172222.2453343-4-hch@lst.de> <YUvZi2a0KjxEkiHo@T590> <20210923052705.GA5314@lst.de> <YUwhPy1J8lzHQF77@T590>
+        id S234587AbhI0OKr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 10:10:47 -0400
+Received: from condef-07.nifty.com ([202.248.20.72]:28931 "EHLO
+        condef-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234583AbhI0OKq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 27 Sep 2021 10:10:46 -0400
+X-Greylist: delayed 349 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Sep 2021 10:10:45 EDT
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-07.nifty.com with ESMTP id 18RE16ag030845
+        for <linux-block@vger.kernel.org>; Mon, 27 Sep 2021 23:01:07 +0900
+Received: from grover.. (133-32-232-101.west.xps.vectant.ne.jp [133.32.232.101]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 18RE07Fv028280;
+        Mon, 27 Sep 2021 23:00:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 18RE07Fv028280
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1632751208;
+        bh=+Hloq7pOWn+uCkJoTRCg/87ciA9Hg53ptAbmWaWlSNI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rsMuJ8ftbFfHF2vWJhdb7xNenWQmLOEYRydU83zeYdXTr2nNvryEiBJUxFEkVuUx8
+         rVFCFCFWAkyC+3JjV13cfUWgU5o7xlNy/OEMtc38cnhtt14pjNiYYeL+jyDZsxPC+S
+         BpwVxnhojJd+DA83hKqHMdidPEGZA5N/rw6uD5ABy8HvfkFfSX9yyd3xbLkn0XQi/J
+         /xZgu9AgZwsND/iM+wDqvvj3GadK+/VQkB9fkHc/D5wvd8ijOWCKAazbs9dv3QqVvF
+         D9xT18IZbpg0xo6AQEeHKuP92zeekXTJUKd0+k0F1RnIg86gBzaV4tER6bUpQIZzET
+         E6Aj3YyeWL/4w==
+X-Nifty-SrcIP: [133.32.232.101]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [RESEND PATCH 0/4] block: clean up Kconfig and Makefile
+Date:   Mon, 27 Sep 2021 22:59:56 +0900
+Message-Id: <20210927140000.866249-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YUwhPy1J8lzHQF77@T590>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Sep 23, 2021 at 02:39:59PM +0800, Ming Lei wrote:
-> > > After blk_mq_unfreeze_queue() returns, blk_try_enter_queue() will return
-> > > true, so new FS I/O from opened bdev still won't be blocked, right?
-> > 
-> > It won't be blocked by blk_mq_unfreeze_queue, but because the capacity
-> > is set to 0 it still won't make it to the driver.
-> 
-> One bio could be made & checked before set_capacity(0), then is
-> submitted after blk_mq_unfreeze_queue() returns.
-> 
-> blk_mq_freeze_queue_wait() doesn't always imply RCU grace period, for
-> example, the .q_usage_counter may have been in atomic mode before
-> calling blk_queue_start_drain() & blk_mq_freeze_queue_wait().
 
-True, but this isn't really a new issue as we never had proper quiesce
-behavior.  I have a bunch of ideas of how to make this actually solid,
-but none of them looks like 5.15 material.
+This is a resend of
+https://lore.kernel.org/linux-block/20210528184435.252924-1-masahiroy@kernel.org/#t
+
+
+
+Masahiro Yamada (4):
+  block: remove redundant =y from BLK_CGROUP dependency
+  block: simplify Kconfig files
+  block: move menu "Partition type" to block/partitions/Kconfig
+  block: move CONFIG_BLOCK guard to top Makefile
+
+ Makefile                 |  3 ++-
+ block/Kconfig            | 28 ++++++++++------------------
+ block/Kconfig.iosched    |  4 ----
+ block/Makefile           |  2 +-
+ block/partitions/Kconfig |  4 ++++
+ 5 files changed, 17 insertions(+), 24 deletions(-)
+
+-- 
+2.30.2
 
