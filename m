@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E69141A211
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B507841A20F
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237897AbhI0WDp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50936 "EHLO
+        id S237671AbhI0WDo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237907AbhI0WDb (ORCPT
+        with ESMTP id S237906AbhI0WDb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Mon, 27 Sep 2021 18:03:31 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01C5C061778;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE0EC061776;
         Mon, 27 Sep 2021 15:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=9EAR2dM9iC7D1FytGy3vTETK1LUd0jxNEcV2YPw5vHw=; b=DgTmAFmzoOT6o9szu1SQMT8/3R
-        pNnOwGhGL7lDnadoANDfOdI3eDLJdWhL7ANU6YfKr31Ariuas2/YoOW48oXYv+GgijF5s+yNzGabZ
-        iwITAKsF6U8N02Dd61FFi5vRyPpzUkW4THsEIdmhveqjm9OehG21jH+d5oYFI0Hoej42d0oJhXMl9
-        l14QcRaqA5bRBZK64CNNFHTm46iDsEy7jeDz3gd0F4HEmlTVLC/jdhDeIts5+3c85NZuCCAiK8MKY
-        DPekgxdQKFdGnzqWWvUdNnnLYn4mXUeCZF5WBoZP5SW9h3o0Ejg4wIopQ4l/kgKY38L5fwXBhBxtA
-        SBj43BtQ==;
+        bh=kAwBQ5VBtN2Yg3t7P/5NmUL/iMDW1Ezv+4/j346Oueg=; b=KLKFAdn1Kl23TMdHmVjOLyVE2v
+        NLxOqM5nfEWcCKfDm+9aZv3a7ZL75ji5emobKIDaIEbC+64LGG/bVowL5vIkS0+U8K/sk4EWS+6rH
+        38g+N9d3f9w4Y07ydxKzH6wXJQYnnR/ZDGlVOtVOL+7GdSOdQYlBRWFlcG15suEo3U85KxPA9E7DF
+        nPLVjNG23EPodkNyb5v/MbCkoH7W4nfLplFR7WtBy/J1IUjxpVaQduJ+JL/1GsWA3YdaNRHKiw3EC
+        nrjYOqTyCPdAFCXkwuLvqCiCeHOMqTlUfUrL9/ZsOu+Bsc6EH43KW1RRCc+Vq5UyAyqc6SKHTuUci
+        eNsVBqkw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUygR-004TPM-Pr; Mon, 27 Sep 2021 22:01:11 +0000
+        id 1mUygR-004TPO-RO; Mon, 27 Sep 2021 22:01:11 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, justin@coraid.com, geert@linux-m68k.org,
         ulf.hansson@linaro.org, hare@suse.de, tj@kernel.org,
@@ -39,9 +39,9 @@ Cc:     linux-xtensa@linux-xtensa.org, linux-um@lists.infradead.org,
         linux-m68k@lists.linux-m68k.org, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 04/15] drbd: add error handling support for add_disk()
-Date:   Mon, 27 Sep 2021 15:00:59 -0700
-Message-Id: <20210927220110.1066271-5-mcgrof@kernel.org>
+Subject: [PATCH v2 05/15] um/drivers/ubd_kern: add error handling support for add_disk()
+Date:   Mon, 27 Sep 2021 15:01:00 -0700
+Message-Id: <20210927220110.1066271-6-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210927220110.1066271-1-mcgrof@kernel.org>
 References: <20210927220110.1066271-1-mcgrof@kernel.org>
@@ -56,35 +56,56 @@ We never checked for errors on add_disk() as this function
 returned void. Now that this is fixed, use the shiny new
 error handling.
 
+ubd_disk_register() never returned an error, so just fix
+that now and let the caller handle the error condition.
+
+Reviewed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/drbd/drbd_main.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/um/drivers/ubd_kern.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 55234a558e98..19db80a1e409 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -2794,7 +2794,9 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 		goto out_idr_remove_vol;
- 	}
+diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+index cd9dc0556e91..81045c199c30 100644
+--- a/arch/um/drivers/ubd_kern.c
++++ b/arch/um/drivers/ubd_kern.c
+@@ -854,8 +854,8 @@ static const struct attribute_group *ubd_attr_groups[] = {
+ 	NULL,
+ };
  
--	add_disk(disk);
-+	err = add_disk(disk);
+-static void ubd_disk_register(int major, u64 size, int unit,
+-			      struct gendisk *disk)
++static int ubd_disk_register(int major, u64 size, int unit,
++			     struct gendisk *disk)
+ {
+ 	disk->major = major;
+ 	disk->first_minor = unit << UBD_SHIFT;
+@@ -872,7 +872,7 @@ static void ubd_disk_register(int major, u64 size, int unit,
+ 
+ 	disk->private_data = &ubd_devs[unit];
+ 	disk->queue = ubd_devs[unit].queue;
+-	device_add_disk(&ubd_devs[unit].pdev.dev, disk, ubd_attr_groups);
++	return device_add_disk(&ubd_devs[unit].pdev.dev, disk, ubd_attr_groups);
+ }
+ 
+ #define ROUND_BLOCK(n) ((n + (SECTOR_SIZE - 1)) & (-SECTOR_SIZE))
+@@ -919,10 +919,15 @@ static int ubd_add(int n, char **error_out)
+ 	blk_queue_write_cache(ubd_dev->queue, true, false);
+ 	blk_queue_max_segments(ubd_dev->queue, MAX_SG);
+ 	blk_queue_segment_boundary(ubd_dev->queue, PAGE_SIZE - 1);
+-	ubd_disk_register(UBD_MAJOR, ubd_dev->size, n, disk);
++	err = ubd_disk_register(UBD_MAJOR, ubd_dev->size, n, disk);
 +	if (err)
 +		goto out_cleanup_disk;
- 
- 	/* inherit the connection state */
- 	device->state.conn = first_connection(resource)->cstate;
-@@ -2808,6 +2810,8 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 	drbd_debugfs_device_add(device);
- 	return NO_ERROR;
++
+ 	ubd_gendisk[n] = disk;
+ 	return 0;
  
 +out_cleanup_disk:
 +	blk_cleanup_disk(disk);
- out_idr_remove_vol:
- 	idr_remove(&connection->peer_devices, vnr);
- out_idr_remove_from_resource:
+ out_cleanup_tags:
+ 	blk_mq_free_tag_set(&ubd_dev->tag_set);
+ out:
 -- 
 2.30.2
 
