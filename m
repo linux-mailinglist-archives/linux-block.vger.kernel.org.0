@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B507841A20F
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AAFB41A216
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237671AbhI0WDo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50928 "EHLO
+        id S237942AbhI0WDs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237906AbhI0WDb (ORCPT
+        with ESMTP id S237470AbhI0WDf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:03:31 -0400
+        Mon, 27 Sep 2021 18:03:35 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE0EC061776;
-        Mon, 27 Sep 2021 15:01:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CCBC06125A;
+        Mon, 27 Sep 2021 15:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=kAwBQ5VBtN2Yg3t7P/5NmUL/iMDW1Ezv+4/j346Oueg=; b=KLKFAdn1Kl23TMdHmVjOLyVE2v
-        NLxOqM5nfEWcCKfDm+9aZv3a7ZL75ji5emobKIDaIEbC+64LGG/bVowL5vIkS0+U8K/sk4EWS+6rH
-        38g+N9d3f9w4Y07ydxKzH6wXJQYnnR/ZDGlVOtVOL+7GdSOdQYlBRWFlcG15suEo3U85KxPA9E7DF
-        nPLVjNG23EPodkNyb5v/MbCkoH7W4nfLplFR7WtBy/J1IUjxpVaQduJ+JL/1GsWA3YdaNRHKiw3EC
-        nrjYOqTyCPdAFCXkwuLvqCiCeHOMqTlUfUrL9/ZsOu+Bsc6EH43KW1RRCc+Vq5UyAyqc6SKHTuUci
-        eNsVBqkw==;
+        bh=T9eCqOQRvpBijkMagg7pwr5fiJ/Yqy7eE80sQLHpZoI=; b=ZxBjWAMOGlsRdtCPxng1cmqC77
+        /fYbKL0FSQjiD2CzyehxJ/G7u1sw86YFKN/wN4H5WrQP4Xa+25HZz8VZ0cj5ywdnFWJIlSP+g+Ckl
+        mqI9XcqLEldiIEaXPT9u7eRU6SRINslGtabygGz2WOihyoWqib6SHNftpnZdXKcGpWXlTghXXIj4X
+        hJQ6s0ENbrCOZPmgkCv4TW1o77PsNl2WZH7f5r8Nrj38o+099lP1p02VjyCotuxPgI4vtLgwjNasg
+        AnFT6H9ZnsYBowOLNl8oQe6apTqtJp0sA1dmn0yoA8vQ8WBBIx/YKhw+QytI9PX5OqI/aDvaeICUG
+        l+YmIITQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUygR-004TPO-RO; Mon, 27 Sep 2021 22:01:11 +0000
+        id 1mUygR-004TPQ-Sz; Mon, 27 Sep 2021 22:01:11 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, justin@coraid.com, geert@linux-m68k.org,
         ulf.hansson@linaro.org, hare@suse.de, tj@kernel.org,
@@ -39,9 +39,9 @@ Cc:     linux-xtensa@linux-xtensa.org, linux-um@lists.infradead.org,
         linux-m68k@lists.linux-m68k.org, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 05/15] um/drivers/ubd_kern: add error handling support for add_disk()
-Date:   Mon, 27 Sep 2021 15:01:00 -0700
-Message-Id: <20210927220110.1066271-6-mcgrof@kernel.org>
+Subject: [PATCH v2 06/15] xtensa/platforms/iss/simdisk: add error handling support for add_disk()
+Date:   Mon, 27 Sep 2021 15:01:01 -0700
+Message-Id: <20210927220110.1066271-7-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210927220110.1066271-1-mcgrof@kernel.org>
 References: <20210927220110.1066271-1-mcgrof@kernel.org>
@@ -56,56 +56,52 @@ We never checked for errors on add_disk() as this function
 returned void. Now that this is fixed, use the shiny new
 error handling.
 
-ubd_disk_register() never returned an error, so just fix
-that now and let the caller handle the error condition.
-
-Reviewed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- arch/um/drivers/ubd_kern.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/xtensa/platforms/iss/simdisk.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
-index cd9dc0556e91..81045c199c30 100644
---- a/arch/um/drivers/ubd_kern.c
-+++ b/arch/um/drivers/ubd_kern.c
-@@ -854,8 +854,8 @@ static const struct attribute_group *ubd_attr_groups[] = {
- 	NULL,
- };
- 
--static void ubd_disk_register(int major, u64 size, int unit,
--			      struct gendisk *disk)
-+static int ubd_disk_register(int major, u64 size, int unit,
-+			     struct gendisk *disk)
+diff --git a/arch/xtensa/platforms/iss/simdisk.c b/arch/xtensa/platforms/iss/simdisk.c
+index 3cdfa00738e0..ad85c554cd45 100644
+--- a/arch/xtensa/platforms/iss/simdisk.c
++++ b/arch/xtensa/platforms/iss/simdisk.c
+@@ -259,6 +259,7 @@ static int __init simdisk_setup(struct simdisk *dev, int which,
+ 		struct proc_dir_entry *procdir)
  {
- 	disk->major = major;
- 	disk->first_minor = unit << UBD_SHIFT;
-@@ -872,7 +872,7 @@ static void ubd_disk_register(int major, u64 size, int unit,
+ 	char tmp[2] = { '0' + which, 0 };
++	int err = -ENOMEM;
  
- 	disk->private_data = &ubd_devs[unit];
- 	disk->queue = ubd_devs[unit].queue;
--	device_add_disk(&ubd_devs[unit].pdev.dev, disk, ubd_attr_groups);
-+	return device_add_disk(&ubd_devs[unit].pdev.dev, disk, ubd_attr_groups);
- }
+ 	dev->fd = -1;
+ 	dev->filename = NULL;
+@@ -267,7 +268,7 @@ static int __init simdisk_setup(struct simdisk *dev, int which,
  
- #define ROUND_BLOCK(n) ((n + (SECTOR_SIZE - 1)) & (-SECTOR_SIZE))
-@@ -919,10 +919,15 @@ static int ubd_add(int n, char **error_out)
- 	blk_queue_write_cache(ubd_dev->queue, true, false);
- 	blk_queue_max_segments(ubd_dev->queue, MAX_SG);
- 	blk_queue_segment_boundary(ubd_dev->queue, PAGE_SIZE - 1);
--	ubd_disk_register(UBD_MAJOR, ubd_dev->size, n, disk);
-+	err = ubd_disk_register(UBD_MAJOR, ubd_dev->size, n, disk);
+ 	dev->gd = blk_alloc_disk(NUMA_NO_NODE);
+ 	if (!dev->gd)
+-		return -ENOMEM;
++		goto out;
+ 	dev->gd->major = simdisk_major;
+ 	dev->gd->first_minor = which;
+ 	dev->gd->minors = SIMDISK_MINORS;
+@@ -275,10 +276,18 @@ static int __init simdisk_setup(struct simdisk *dev, int which,
+ 	dev->gd->private_data = dev;
+ 	snprintf(dev->gd->disk_name, 32, "simdisk%d", which);
+ 	set_capacity(dev->gd, 0);
+-	add_disk(dev->gd);
++	err = add_disk(dev->gd);
 +	if (err)
 +		goto out_cleanup_disk;
-+
- 	ubd_gendisk[n] = disk;
- 	return 0;
  
+ 	dev->procfile = proc_create_data(tmp, 0644, procdir, &simdisk_proc_ops, dev);
++
+ 	return 0;
++
 +out_cleanup_disk:
-+	blk_cleanup_disk(disk);
- out_cleanup_tags:
- 	blk_mq_free_tag_set(&ubd_dev->tag_set);
- out:
++	blk_cleanup_disk(dev->gd);
++out:
++	return err;
+ }
+ 
+ static int __init simdisk_init(void)
 -- 
 2.30.2
 
