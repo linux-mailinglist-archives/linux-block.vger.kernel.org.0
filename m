@@ -2,202 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23FE8419935
-	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 18:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA9F1419D07
+	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 19:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235576AbhI0Qjw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 12:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59760 "EHLO
+        id S238084AbhI0RjH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 13:39:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235552AbhI0Qju (ORCPT
+        with ESMTP id S237776AbhI0RhY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 12:39:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70849C061770;
-        Mon, 27 Sep 2021 09:38:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=w925P6ItKF9rs87b7yDYFnpWVAY11Rt3apCJxCqDXyQ=; b=cVEW7XBpskdyaWzz+3jArNQHmi
-        MCLY9v/lIcIf8sRDGyAUOeWqh09vvpDVz22dy18XdoiLOZb/9DB7gYQWutszDRR2tjc1kB1Qd9IOB
-        213dMl+WuE1pk6C5XAOLsBx630fDe/Ah5y/ox5jAPktbMNfnjNvPHEnZg6m572Jehqdrp/PB5UFnz
-        MsexloYyFxxXBHHAUUpev5Gz6PgmyOJOg3mvE+2dkxpGHnHie0orcgNohdscTYLMuoGfWc8iDtGVo
-        iR5a3yl8AQPlGlS0qKTAtu+W+Q9uiyR2kmAhuxuh/sLVY9BWKk/zgJcBY2fCThOewse9ktYeNPGCd
-        hEoM03fg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUtdn-003OSv-8t; Mon, 27 Sep 2021 16:38:07 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     tj@kernel.org, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org, minchan@kernel.org, jeyu@kernel.org,
-        shuah@kernel.org
-Cc:     bvanassche@acm.org, dan.j.williams@intel.com, joe@perches.com,
-        tglx@linutronix.de, mcgrof@kernel.org, keescook@chromium.org,
-        rostedt@goodmis.org, linux-spdx@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 12/12] zram: use ATTRIBUTE_GROUPS to fix sysfs deadlock module removal
-Date:   Mon, 27 Sep 2021 09:38:05 -0700
-Message-Id: <20210927163805.808907-13-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210927163805.808907-1-mcgrof@kernel.org>
-References: <20210927163805.808907-1-mcgrof@kernel.org>
+        Mon, 27 Sep 2021 13:37:24 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1CFC02C30A;
+        Mon, 27 Sep 2021 10:08:54 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id l6so12208976plh.9;
+        Mon, 27 Sep 2021 10:08:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=icdhatsIVMpVj9yFW17RwQuR1S0u1I+iYgg1GU5p9cg=;
+        b=ZMz3hfxwpz4U36m5O/CYL7j1TR5S3j0rERHxQWLDXoJkRLldkBdniIGZLVHf9Iit5d
+         Ecfe2rMtWI53lH6H7AXxEgdRL/M1bsKthqaf1i/A3XJEpNQqe9UzQLfrrxOboq/hOvYI
+         4Bwuza8gO3r6TeSr6m+M5Eiv2gzQYeRvyeuwXV7M2uZeVy1hj8m0O3vGG9v8kzUD4MTB
+         PY7nVeQM2AX4z265SOWlctIjaPzpr9PjGT+KrvnYle0zWd5ZXTp1jpaIhwgYWcCLy3HW
+         V0akiE9PrGLppPnC6Lp5xh4hKko3DuVWP7aJ9iISiwNuJbM0Xk/jhJDPOjfOFFbnm7+q
+         AYiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=icdhatsIVMpVj9yFW17RwQuR1S0u1I+iYgg1GU5p9cg=;
+        b=NJuyGIPqOWJDps/otVJqUJHLq9Bn92tXwXa6+mmXTskp8WKhbpfhVG729aAxTE0/Xl
+         oIVPILOVsj3iS9JnzoSs5mbMu0kSd/z/CwVSOBv3HMYIpqZm31YcugfyTamHZtV7nmZy
+         7IE+HShOQ4isrxxgknf1FcAI7EnREleNceZLhs1h7r7F9w7gNOCyj1fdPu7IxfokK2kg
+         1T+qKN0Mnyu8DRH1QG45WwogLn1PP/RW6NEIFYDGAYq/ejBSD0MhvLYRgmVApfPdC2i9
+         r5FuxYpxZzZ3XVnfWwgIhU00CwLtGzhUBT5zuvPtRRhg5VFdGA2CDnYc69zVCzQ+2CNU
+         ba8A==
+X-Gm-Message-State: AOAM533TUIoHa8N720EQvFsC58QLYaHTGrm95gjbeijcnXCBq8G00Jbx
+        2CjvGRh1xigFacWuQ4gNsww=
+X-Google-Smtp-Source: ABdhPJyjoDWsLl88srnjDSeCTyY4vJVqnDVBwMnKif2pCakeEaOeDgBGKPQVQt2Y0SHa7GNcYXjAyg==
+X-Received: by 2002:a17:90a:1a42:: with SMTP id 2mr174835pjl.202.1632762533935;
+        Mon, 27 Sep 2021 10:08:53 -0700 (PDT)
+Received: from localhost (2603-800c-1a02-1bae-e24f-43ff-fee6-449f.res6.spectrum.com. [2603:800c:1a02:1bae:e24f:43ff:fee6:449f])
+        by smtp.gmail.com with ESMTPSA id k25sm3666216pgt.49.2021.09.27.10.08.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Sep 2021 10:08:53 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Mon, 27 Sep 2021 07:08:52 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     "yukuai (C)" <yukuai3@huawei.com>,
+        Khazhy Kumykov <khazhy@google.com>, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [RFC PATCH] blk-throttle: enable io throttle for root in cgroup
+ v2
+Message-ID: <YVH6pLUONhmvhTMK@slm.duckdns.org>
+References: <20210909140815.2600858-1-yukuai3@huawei.com>
+ <20210917174103.GC13346@blackbody.suse.cz>
+ <CACGdZYJiLuh6kED_tdWkYqbHDXc_18m-XJbevp-ri5ansvbtYg@mail.gmail.com>
+ <37f8c687-8549-104a-2501-532a0cfc9a48@huawei.com>
+ <20210921134414.GE4091@blackbody.suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <20210921134414.GE4091@blackbody.suse.cz>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The ATTRIBUTE_GROUPS is typically used to avoid boiler plate
-code which is used in many drivers. Embracing ATTRIBUTE_GROUPS was
-long due on the zram driver, however a recent fix for sysfs allows
-users of ATTRIBUTE_GROUPS to also associate a module to the group
-attribute.
+Hello,
 
-In zram's case this also means it allows us to fix a race which triggers
-a deadlock on the zram driver. This deadlock happens when a sysfs attribute
-use a lock also used on module removal. This happens when for instance a
-sysfs file on a driver is used, then at the same time we have module
-removal call trigger. The module removal call code holds a lock, and then
-the sysfs file entry waits for the same lock. While holding the lock the
-module removal tries to remove the sysfs entries, but these cannot be
-removed yet as one is waiting for a lock. This won't complete as the lock
-is already held. Likewise module removal cannot complete, and so we
-deadlock.
+On Tue, Sep 21, 2021 at 03:44:14PM +0200, Michal Koutný wrote:
+> On 2021/09/18 3:58, Khazhy Kumykov wrote:
+> > (This does also bring up: if this is a useful thing, would it make
+> > sense to tie to the device, vs. requiring cgroup. We happen to use
+> > cgroups so that requirement doesn't affect us).
+> 
+> Good point, That's IMO a better idea, it'd be more consistent with other
+> resources for which there exist global (cgroup independent) kernel
+> constraints (e.g. threads-max sysctl, mem= cmdline, cpu hotplug) that
+> double the root cgroup contraint role.
 
-Sysfs fixes this when the group attributes have a module associated to
-it, sysfs will *try* to get a refcount to the module when a shared
-lock is used, prior to mucking with a sysfs attribute. If this fails we
-just give up right away.
+This is why I usually try to push root-cgroup level features outside cgroup
+because it really doesn't have much to do with cgroups at the root level.
+For visibility stuff, we do replicate quite a bit in the root level because
+not doing so becomes too painful for users but for control I'm more
+hesitant.
 
-This deadlock was first reported with the zram driver, a sketch of how
-this can happen follows:
+One side-way solution could be using iocost. It doesn't have root-level
+control per-se but it does configure per-device attributes which define what
+the device can and is allowed to do so that it can be used as the basis for
+weighted fair distribution. Even if IO control is disabled from the root
+level, it'll still modulate the device according to the parameters.
 
-CPU A                              CPU B
-                                   whatever_store()
-module_unload
-  mutex_lock(foo)
-                                   mutex_lock(foo)
-   del_gendisk(zram->disk);
-     device_del()
-       device_remove_groups()
+> OTOH, this also deepens the precedent of init NS root cgroup being
+> special (more special than a container's root cgroup).
 
-In this situation whatever_store() is waiting for the mutex foo to
-become unlocked, but that won't happen until module removal is complete.
-But module removal won't complete until the sysfs file being poked
-completes which is waiting for a lock already held.
+While it does seem like an aesthetical wrinkle, I don't think this is a
+practical problem. System root being different is a given whether
+aesthetically pleasing or not (not the most important but we have
+CONFIG_CGROUPS after all). I don't think it'll lead anywhere good to try to
+mask the differences.
 
-This issue can be reproduced easily on the zram driver as follows:
+Thanks.
 
-Loop 1 on one terminal:
-
-while true;
-	do modprobe zram;
-	modprobe -r zram;
-done
-
-Loop 2 on a second terminal:
-while true; do
-	echo 1024 >  /sys/block/zram0/disksize;
-	echo 1 > /sys/block/zram0/reset;
-done
-
-Without this patch we end up in a deadlock, and the following
-stack trace is produced which hints to us what the issue was:
-
-INFO: task bash:888 blocked for more than 120 seconds.
-      Tainted: G            E 5.12.0-rc1-next-20210304+ #4
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:bash            state:D stack:    0 pid:  888 ppid: 887 flags:<etc>
-Call Trace:
- __schedule+0x2e4/0x900
- schedule+0x46/0xb0
- schedule_preempt_disabled+0xa/0x10
- __mutex_lock.constprop.0+0x2c3/0x490
- ? _kstrtoull+0x35/0xd0
- reset_store+0x6c/0x160 [zram]
- kernfs_fop_write_iter+0x124/0x1b0
- new_sync_write+0x11c/0x1b0
- vfs_write+0x1c2/0x260
- ksys_write+0x5f/0xe0
- do_syscall_64+0x33/0x80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f34f2c3df33
-RSP: 002b:00007ffe751df6e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f34f2c3df33
-RDX: 0000000000000002 RSI: 0000561ccb06ec10 RDI: 0000000000000001
-RBP: 0000561ccb06ec10 R08: 000000000000000a R09: 0000000000000001
-R10: 0000561ccb157590 R11: 0000000000000246 R12: 0000000000000002
-R13: 00007f34f2d0e6a0 R14: 0000000000000002 R15: 00007f34f2d0e8a0
-INFO: task modprobe:1104 can't die for more than 120 seconds.
-task:modprobe        state:D stack:    0 pid: 1104 ppid: 916 flags:<etc>
-Call Trace:
- __schedule+0x2e4/0x900
- schedule+0x46/0xb0
- __kernfs_remove.part.0+0x228/0x2b0
- ? finish_wait+0x80/0x80
- kernfs_remove_by_name_ns+0x50/0x90
- remove_files+0x2b/0x60
- sysfs_remove_group+0x38/0x80
- sysfs_remove_groups+0x29/0x40
- device_remove_attrs+0x4a/0x80
- device_del+0x183/0x3e0
- ? mutex_lock+0xe/0x30
- del_gendisk+0x27a/0x2d0
- zram_remove+0x8a/0xb0 [zram]
- ? hot_remove_store+0xf0/0xf0 [zram]
- zram_remove_cb+0xd/0x10 [zram]
- idr_for_each+0x5e/0xd0
- destroy_devices+0x39/0x6f [zram]
- __do_sys_delete_module+0x190/0x2a0
- do_syscall_64+0x33/0x80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f32adf727d7
-RSP: 002b:00007ffc08bb38a8 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000055eea23cbb10 RCX: 00007f32adf727d7
-RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055eea23cbb78
-RBP: 000055eea23cbb10 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007f32adfe5ac0 R11: 0000000000000206 R12: 000055eea23cbb78
-R13: 0000000000000000 R14: 0000000000000000 R15: 000055eea23cbc20
-
-[0] https://lkml.kernel.org/r/20210401235925.GR4332@42.do-not-panic.com
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/block/zram/zram_drv.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index b26abcb955cc..60a55ae8cd91 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1902,14 +1902,7 @@ static struct attribute *zram_disk_attrs[] = {
- 	NULL,
- };
- 
--static const struct attribute_group zram_disk_attr_group = {
--	.attrs = zram_disk_attrs,
--};
--
--static const struct attribute_group *zram_disk_attr_groups[] = {
--	&zram_disk_attr_group,
--	NULL,
--};
-+ATTRIBUTE_GROUPS(zram_disk);
- 
- /*
-  * Allocate and initialize new zram device. the function returns
-@@ -1981,7 +1974,7 @@ static int zram_add(void)
- 		blk_queue_max_write_zeroes_sectors(zram->disk->queue, UINT_MAX);
- 
- 	blk_queue_flag_set(QUEUE_FLAG_STABLE_WRITES, zram->disk->queue);
--	device_add_disk(NULL, zram->disk, zram_disk_attr_groups);
-+	device_add_disk(NULL, zram->disk, zram_disk_groups);
- 
- 	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
- 
 -- 
-2.30.2
-
+tejun
