@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C64D41A20B
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0F4841A215
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237652AbhI0WDm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        id S237931AbhI0WDr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:03:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237894AbhI0WDa (ORCPT
+        with ESMTP id S237767AbhI0WDe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:03:30 -0400
+        Mon, 27 Sep 2021 18:03:34 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23583C061575;
-        Mon, 27 Sep 2021 15:01:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46B6AC061259;
+        Mon, 27 Sep 2021 15:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=PIC+qXoGsoFJ1eZ9LA9t8T951f2hrkUOPPt1FYAGsmg=; b=FuCcNq9IOVETu5gZfPU8ZyHeZ0
-        4yRRj59j+TWMJveqzARzPIPnGBkIS/5Y078bG/DLPJo1lgh8OCNwb8EpIOOsJ0GtuUVKQxuHZ/3ld
-        HL0sUlBkiWjZ77631MgWdDggaYxof/KSEim0JSi0S3NKEmak/7p/dqHVg/kW0ASIsF7WDhhpaebSp
-        4fefTGDxj/g/uR9rTjLmBSfyf/Tv1cvID9Bf630aiPWO86W8Ajx45BwFipe5bb4YETBXNjbbBvE6r
-        f3FqRfIhJNfTLkqYXp8ynHhmGzqzYn2l/ZVmr6WYZBoDyCtvcn9oBnf7tLAJrjDo1H5H71B32c3Fr
-        4KiKUnwg==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=7R5PYVFPXskQk20vzfFqzumtxD4zBhl8b3RLHCGuP34=; b=u4OTo3hDr0W+U3kO5NDbdLXSvy
+        wN9PcMjyNrp7CnD5AyiT1q1aDYgWDTNv70JFUfkEjJLeHsH5gDmaelxnEnJsx+n1fZG7eKRfTQLC2
+        vev16guU/nh9p+oqdFrMbCLtMN0Ga0sPKsgbcOJArTGT5DzTXNR6iahovyDGW7tUDVE2KcWng+4I7
+        tG9rVmsKxHMRyESFR2rlhH8ZqP7agJh+WrByfti9oEP4v1O66P0KYvoFwwNkBD3OspvlfKe8qNh3G
+        ukRpJ6yrcBuKUhoqachgfXn1KfYE8NNqktQ+A6a15FMWvBCANtnJ5m75FvHisL+zNyQ55DkGpTG6e
+        EIM0V88Q==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUygR-004TPC-K8; Mon, 27 Sep 2021 22:01:11 +0000
+        id 1mUygR-004TPG-LP; Mon, 27 Sep 2021 22:01:11 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, justin@coraid.com, geert@linux-m68k.org,
         ulf.hansson@linaro.org, hare@suse.de, tj@kernel.org,
@@ -39,10 +39,12 @@ Cc:     linux-xtensa@linux-xtensa.org, linux-um@lists.infradead.org,
         linux-m68k@lists.linux-m68k.org, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 00/15] block: third batch of add_disk() error handling conversions
-Date:   Mon, 27 Sep 2021 15:00:55 -0700
-Message-Id: <20210927220110.1066271-1-mcgrof@kernel.org>
+Subject: [PATCH v2 01/15] z2ram: add error handling support for add_disk()
+Date:   Mon, 27 Sep 2021 15:00:56 -0700
+Message-Id: <20210927220110.1066271-2-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210927220110.1066271-1-mcgrof@kernel.org>
+References: <20210927220110.1066271-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
@@ -50,53 +52,41 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is the 2nd version of the third batch of driver conversions for the
-add_disk() error handling. This and the entire 7th series of driver
-conversions can be found on my 20210927-for-axboe-add-disk-error-handling
-branch [0].
+We never checked for errors on add_disk() as this function
+returned void. Now that this is fixed, use the shiny new
+error handling. Only the disk is cleaned up inside
+z2ram_register_disk() as the caller deals with the rest.
 
-On this v2 series the following changes have been made since the v1
-series of this patch set:
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ drivers/block/z2ram.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-  - rebased onto linux-next tag 20210927
-  - z2ram: fixed compile warning reported by 0day and Geert Uytterhoe
-  - um/drivers/ubd_kern: added the reviewed-by tag by Gabriel Krisman
-    Bertazi
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20210927-for-axboe-add-disk-error-handling
-
-Christoph Hellwig (4):
-  pcd: move the identify buffer into pcd_identify
-  pcd: cleanup initialization
-  pf: cleanup initialization
-  pd: cleanup initialization
-
-Luis Chamberlain (11):
-  z2ram: add error handling support for add_disk()
-  aoe: add error handling support for add_disk()
-  m68k/emu/nfblock: add error handling support for add_disk()
-  drbd: add error handling support for add_disk()
-  um/drivers/ubd_kern: add error handling support for add_disk()
-  xtensa/platforms/iss/simdisk: add error handling support for
-    add_disk()
-  n64cart: add error handling support for add_disk()
-  pcd: add error handling support for add_disk()
-  pcd: fix ordering of unregister_cdrom()
-  pcd: capture errors on cdrom_register()
-  pd: add error handling support for add_disk()
-
- arch/m68k/emu/nfblock.c             |   9 +-
- arch/um/drivers/ubd_kern.c          |  13 +-
- arch/xtensa/platforms/iss/simdisk.c |  13 +-
- drivers/block/aoe/aoeblk.c          |   6 +-
- drivers/block/drbd/drbd_main.c      |   6 +-
- drivers/block/n64cart.c             |  12 +-
- drivers/block/paride/pcd.c          | 304 +++++++++++++---------------
- drivers/block/paride/pd.c           | 144 ++++++-------
- drivers/block/paride/pf.c           | 223 +++++++++-----------
- drivers/block/z2ram.c               |   7 +-
- 10 files changed, 364 insertions(+), 373 deletions(-)
-
+diff --git a/drivers/block/z2ram.c b/drivers/block/z2ram.c
+index 4eef218108c6..ccc52c935faf 100644
+--- a/drivers/block/z2ram.c
++++ b/drivers/block/z2ram.c
+@@ -318,6 +318,7 @@ static const struct blk_mq_ops z2_mq_ops = {
+ static int z2ram_register_disk(int minor)
+ {
+ 	struct gendisk *disk;
++	int err;
+ 
+ 	disk = blk_mq_alloc_disk(&tag_set, NULL);
+ 	if (IS_ERR(disk))
+@@ -333,8 +334,10 @@ static int z2ram_register_disk(int minor)
+ 		sprintf(disk->disk_name, "z2ram");
+ 
+ 	z2ram_gendisk[minor] = disk;
+-	add_disk(disk);
+-	return 0;
++	err = add_disk(disk);
++	if (err)
++		blk_cleanup_disk(disk);
++	return err;
+ }
+ 
+ static int __init z2_init(void)
 -- 
 2.30.2
 
