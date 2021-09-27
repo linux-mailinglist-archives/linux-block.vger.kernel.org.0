@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC09941A1AA
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:00:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0877441A1B5
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:00:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237426AbhI0WCK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50704 "EHLO
+        id S237600AbhI0WCO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237245AbhI0WCG (ORCPT
+        with ESMTP id S237404AbhI0WCJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:02:06 -0400
+        Mon, 27 Sep 2021 18:02:09 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A50FC061575;
-        Mon, 27 Sep 2021 15:00:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4554C06176C;
+        Mon, 27 Sep 2021 15:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=/2Y2MKFwUhO35iq3LLeVGpx3NHoUnH6gtoSyzdn2zgY=; b=O7xOt0yQy7+6NTR/u/7MXeXiyI
-        kyzS+V7ltb/1KPWatLq8px6EZNtTcLe7H582Ox379kivuzLvFGklALlQjFCkAy3gIyOYG+Uvb3J+u
-        KXzcppsVAKWBWVVw/O2WcuiFIQkF5vQMPJFsv6WyvLnFbE5diBACBx/mukDDSH2WU8SD26J212KM8
-        TtKeyTcOC59nhG6+Y6wn05cPuoJy26ePaDfiYJlltSDVqAUXnVmCdpRHuC9/paIvuBNJY2hPwbZs8
-        iDJYESn6bfqszE+eFwoHa4WxnNebufhulzC7m5ZzhanDdS6zIab8sCkN1irrRB/sH/vn/sTvxOatC
-        EK2MxMPA==;
+        bh=GSnwJGqE24fGphaFobcSY6Y9xf4YP0gJ4SZNHqUVKO0=; b=rrId4nxVmKTX2ZVroe7YTkZBoU
+        M0GYACDk+yZdRa8ni89+7dCtMej5oBN3DKfmxRhXECVLY7YcTqa8tLBakNUoX0yvO/P/O9frTwHJY
+        iJ+IVfvyf+uyZv2Q5gLSp43KDW1ZYQ3v2X/nWPujtpiNFKiF8E+SryBriKzQwift1AGwxU7Q2xPBD
+        fTFO8OTA9RQBE/xJyfn+uyEuiGp3KLt2RQ0eUQ/MUj8gY6GJwwm+67luU25bpLuF8+XiKMPfOgqdt
+        yulArpkEM8PTYtdWqgYQzL9AzTSujLL4xofUnpktsNAA0v0TkX2auYGy1JCFLcEJpnlBWdMWqyCfg
+        jDhINijQ==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUyfM-004SUv-Rf; Mon, 27 Sep 2021 22:00:04 +0000
+        id 1mUyfM-004SUx-Sp; Mon, 27 Sep 2021 22:00:04 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, martin.petersen@oracle.com, jejb@linux.ibm.com,
         kbusch@kernel.org, sagi@grimberg.me, adrian.hunter@intel.com,
@@ -40,9 +40,9 @@ Cc:     hch@infradead.org, hare@suse.de, bvanassche@acm.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v4 1/6] scsi/sd: add error handling support for add_disk()
-Date:   Mon, 27 Sep 2021 14:59:53 -0700
-Message-Id: <20210927215958.1062466-2-mcgrof@kernel.org>
+Subject: [PATCH v4 2/6] scsi/sr: add error handling support for add_disk()
+Date:   Mon, 27 Sep 2021 14:59:54 -0700
+Message-Id: <20210927215958.1062466-3-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210927215958.1062466-1-mcgrof@kernel.org>
 References: <20210927215958.1062466-1-mcgrof@kernel.org>
@@ -57,35 +57,33 @@ We never checked for errors on add_disk() as this function
 returned void. Now that this is fixed, use the shiny new
 error handling.
 
-As with the error handling for device_add() we follow the same
-logic and just put the device so that cleanup is done via the
-scsi_disk_release().
+Just put the cdrom kref and have the unwinding be done by
+sr_kref_release().
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/scsi/sd.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/sr.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 523bf2fdc253..3a101ad4d16e 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3449,7 +3449,13 @@ static int sd_probe(struct device *dev)
- 		pm_runtime_set_autosuspend_delay(dev,
- 			sdp->host->hostt->rpm_autosuspend_delay);
- 	}
--	device_add_disk(dev, gd, NULL);
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 8b17b35283aa..d769057b25a0 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -727,7 +727,12 @@ static int sr_probe(struct device *dev)
+ 	dev_set_drvdata(dev, cd);
+ 	disk->flags |= GENHD_FL_REMOVABLE;
+ 	sr_revalidate_disk(cd);
+-	device_add_disk(&sdev->sdev_gendev, disk, NULL);
 +
-+	error = device_add_disk(dev, gd, NULL);
++	error = device_add_disk(&sdev->sdev_gendev, disk, NULL);
 +	if (error) {
-+		put_device(&sdkp->dev);
-+		goto out;
++		kref_put(&cd->kref, sr_kref_release);
++		goto fail;
 +	}
-+
- 	if (sdkp->capacity)
- 		sd_dif_config_host(sdkp);
  
+ 	sdev_printk(KERN_DEBUG, sdev,
+ 		    "Attached scsi CD-ROM %s\n", cd->cdi.name);
 -- 
 2.30.2
 
