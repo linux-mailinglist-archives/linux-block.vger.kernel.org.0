@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96D4B419601
-	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 16:10:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0183A4195FE
+	for <lists+linux-block@lfdr.de>; Mon, 27 Sep 2021 16:10:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234739AbhI0OMd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 10:12:33 -0400
-Received: from condef-08.nifty.com ([202.248.20.73]:34220 "EHLO
+        id S234677AbhI0OMB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 10:12:01 -0400
+Received: from condef-08.nifty.com ([202.248.20.73]:33484 "EHLO
         condef-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234741AbhI0OMc (ORCPT
+        with ESMTP id S234706AbhI0OL6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 10:12:32 -0400
-Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-08.nifty.com with ESMTP id 18RE18L6028468
-        for <linux-block@vger.kernel.org>; Mon, 27 Sep 2021 23:01:08 +0900
+        Mon, 27 Sep 2021 10:11:58 -0400
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-08.nifty.com with ESMTP id 18RE19HL028538
+        for <linux-block@vger.kernel.org>; Mon, 27 Sep 2021 23:01:09 +0900
 Received: from grover.. (133-32-232-101.west.xps.vectant.ne.jp [133.32.232.101]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 18RE07Fx028280;
+        by conuserg-10.nifty.com with ESMTP id 18RE07G0028280;
         Mon, 27 Sep 2021 23:00:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 18RE07Fx028280
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 18RE07G0028280
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1632751209;
-        bh=KxbFoC0Lpctbe3+9vWMEemrZDfcQA9Rb6dRZ6EUnmN4=;
+        bh=A+BkteJsqOiCj+z6B2881OBPKBaV4HPokeV46N2OmSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2uoKVUTSU6/9ZgiEyItEKglzN9eATvYKW++xnVmz7Ez2/OrrcovgQgaPv/BcXCgC
-         1Z8FS6Q3PqP16lOq1SC/UfNCn8O+/SnighzVhNhpI/xvq+wldKLGpgimwqt5AHPshh
-         M0ET1ejypJExn+qmHWdyJu+PpRVmc48SZ8GWLzHnjTabfbbMLVYfe2+kyNAiUtB9yy
-         YbGirCrO9prEl5ZnVtJRAOMwbp2JMwfqVa5IhQsr6k1GqtXCFWneB8IQr7PPl1G47z
-         O6v6LhEiWb2egUvdSeEjXp468iPh2/CoCE285fHrz2b+WcN5IJAbtSS4iulaUkehrx
-         z3m9vi7irYnbg==
+        b=JYMm4/RAQMnWOXdwLovsdIOhLVi5M69GwZTmkJz53e4GW6EOr7SgVYUIREEMBS/Ay
+         XhZtUYOgn2xhAT1TAbm/4oZnqMzLJHCsqsGuZe0tIP0ptUtt/MGoJH2cvRm3nAdu5f
+         a08eA18AULPjYz6YI4UxTlBJqHnyWQXLm29LTKigkx5+18FYbbui4Qe2koVJaqauiY
+         rT23mK9CWQLKUVFVkEmX4AyxH/FKSTz2V644EVVn4dG7xAqjwXQWTZoK2sRrVYzADk
+         WjfI41HxkYdCPpTv7QmigxGvM975r13OpE502YQ8ygg2dD/tnyUivbGNC2unKzrktE
+         0uzgoVTQM4tog==
 X-Nifty-SrcIP: [133.32.232.101]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>
-Subject: [RESEND PATCH 2/4] block: simplify Kconfig files
-Date:   Mon, 27 Sep 2021 22:59:58 +0900
-Message-Id: <20210927140000.866249-3-masahiroy@kernel.org>
+Subject: [RESEND PATCH 3/4] block: move menu "Partition type" to block/partitions/Kconfig
+Date:   Mon, 27 Sep 2021 22:59:59 +0900
+Message-Id: <20210927140000.866249-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210927140000.866249-1-masahiroy@kernel.org>
 References: <20210927140000.866249-1-masahiroy@kernel.org>
@@ -45,83 +45,51 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Everything under block/ depends on BLOCK. BLOCK_HOLDER_DEPRECATED is
-selected from drivers/md/Kconfig, which is entirely dependent on BLOCK.
-
-Extend the 'if BLOCK' ... 'endif' so it covers the whole block/Kconfig.
-
-Also, clean up the definition of BLOCK_COMPAT and BLK_MQ_PCI because
-COMPAT and PCI are boolean.
+Move the menu to the relevant place.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- block/Kconfig         | 18 +++++++-----------
- block/Kconfig.iosched |  4 ----
- 2 files changed, 7 insertions(+), 15 deletions(-)
+ block/Kconfig            | 4 ----
+ block/partitions/Kconfig | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/block/Kconfig b/block/Kconfig
-index 1d83504749e7..c4d35829ea4f 100644
+index c4d35829ea4f..c6ce41a5e5b2 100644
 --- a/block/Kconfig
 +++ b/block/Kconfig
-@@ -196,33 +196,29 @@ source "block/partitions/Kconfig"
+@@ -190,12 +190,8 @@ config BLK_INLINE_ENCRYPTION_FALLBACK
+ 	  by falling back to the kernel crypto API when inline
+ 	  encryption hardware is not present.
  
- endmenu
+-menu "Partition Types"
+-
+ source "block/partitions/Kconfig"
  
--endif # BLOCK
+-endmenu
 -
  config BLOCK_COMPAT
--	bool
--	depends on BLOCK && COMPAT
--	default y
-+	def_bool COMPAT
+ 	def_bool COMPAT
  
- config BLK_MQ_PCI
--	bool
--	depends on BLOCK && PCI
--	default y
-+	def_bool PCI
- 
- config BLK_MQ_VIRTIO
- 	bool
--	depends on BLOCK && VIRTIO
-+	depends on VIRTIO
- 	default y
- 
- config BLK_MQ_RDMA
- 	bool
--	depends on BLOCK && INFINIBAND
-+	depends on INFINIBAND
- 	default y
- 
- config BLK_PM
--	def_bool BLOCK && PM
-+	def_bool PM
- 
- # do not use in new code
- config BLOCK_HOLDER_DEPRECATED
- 	bool
- 
- source "block/Kconfig.iosched"
+diff --git a/block/partitions/Kconfig b/block/partitions/Kconfig
+index 278593b8e4e9..7aff4eb81c60 100644
+--- a/block/partitions/Kconfig
++++ b/block/partitions/Kconfig
+@@ -2,6 +2,8 @@
+ #
+ # Partition configuration
+ #
++menu "Partition Types"
 +
-+endif # BLOCK
-diff --git a/block/Kconfig.iosched b/block/Kconfig.iosched
-index 2f2158e05a91..885fee86dfca 100644
---- a/block/Kconfig.iosched
-+++ b/block/Kconfig.iosched
-@@ -1,6 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--if BLOCK
--
- menu "IO Schedulers"
- 
- config MQ_IOSCHED_DEADLINE
-@@ -45,5 +43,3 @@ config BFQ_CGROUP_DEBUG
- 	files in a cgroup which can be useful for debugging.
- 
- endmenu
--
--endif
+ config PARTITION_ADVANCED
+ 	bool "Advanced partition selection"
+ 	help
+@@ -267,3 +269,5 @@ config CMDLINE_PARTITION
+ 	help
+ 	  Say Y here if you want to read the partition table from bootargs.
+ 	  The format for the command line is just like mtdparts.
++
++endmenu
 -- 
 2.30.2
 
