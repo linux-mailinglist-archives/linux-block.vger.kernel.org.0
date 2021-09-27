@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE4E241A218
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBDE841A20C
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 00:02:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237992AbhI0WDv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Sep 2021 18:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
+        id S237516AbhI0WDm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Sep 2021 18:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237678AbhI0WDg (ORCPT
+        with ESMTP id S237951AbhI0WDa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Sep 2021 18:03:36 -0400
+        Mon, 27 Sep 2021 18:03:30 -0400
 Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB11BC061203;
-        Mon, 27 Sep 2021 15:01:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D76EC06176C;
+        Mon, 27 Sep 2021 15:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=8Tqj5TdypJFI9LKCX1GYcX8SMXGQKJv6MnhgBe11KFw=; b=mzs3LZQa/W+/kFjAVDF2BntjfL
-        PZjeTLtE7vD4VHrvKk12WqIjPIkdNzWkdRxHe9pzEFQOBs9JLDVJTk0h8oEvECSLdYuCeL6EYHCz/
-        F63qAuwhJrIvKlVPT9Ekp9vi8B4CJz5gX9/F9r6rfdskHPMHSs2hxpQOVZyksJOuA6R35xeQadBua
-        nR0n+PkjEzzjVunTdZGw8qirchD3uQ73eLPSp7TGeQy9lO+jLtGXu0jRtXqpfVLtpz9WZbWilltyq
-        wTZDY4U5UMhtjlic8pV3eaHBYf/47UYExbcFDQmhE5zO/I2HzzBt90ikAf+Kpxrwc52vZ5THOvWes
-        0mHDoFNg==;
+        bh=lal2NXQqjpgVXT5qKBKMi1UaOalfu5XptBbZ07KGrZw=; b=yQSS1ENaqP0/EmeOmEA7TaYNbH
+        KkQ1/i0F0uNf9lDdAx9K73d02TPmNN3Ivsk8DSXa6F/9zD4EjLag0VZxHuhK3OO8aBPIIbPAiTfbE
+        riPJmPJUNubabBALjMrY6x2rg2Vj/2iDryU9nQlzd0PM4Q/guxMrv+dbeUhtqqPg1LXu7cu4WtdiJ
+        8yD2V0n2H+6bpHkWVYpEsu4A35PdKy+5XBgzyZcHCiDssQ9mKhBeNpxaB9umX4LZfNdApZ6YwC/X4
+        b/+NQPuXMCqj7bKRlJTiaZbfyxe4pi+SsX1p9gL9t9anUIFqPq3xeX+508J+0d7xf0lP3kPhHV31r
+        tYpI3naA==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUygS-004TPi-8D; Mon, 27 Sep 2021 22:01:12 +0000
+        id 1mUygS-004TPk-9U; Mon, 27 Sep 2021 22:01:12 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, justin@coraid.com, geert@linux-m68k.org,
         ulf.hansson@linaro.org, hare@suse.de, tj@kernel.org,
@@ -39,9 +39,9 @@ Cc:     linux-xtensa@linux-xtensa.org, linux-um@lists.infradead.org,
         linux-m68k@lists.linux-m68k.org, drbd-dev@lists.linbit.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH v2 13/15] pcd: fix ordering of unregister_cdrom()
-Date:   Mon, 27 Sep 2021 15:01:08 -0700
-Message-Id: <20210927220110.1066271-14-mcgrof@kernel.org>
+Subject: [PATCH v2 14/15] pcd: capture errors on cdrom_register()
+Date:   Mon, 27 Sep 2021 15:01:09 -0700
+Message-Id: <20210927220110.1066271-15-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210927220110.1066271-1-mcgrof@kernel.org>
 References: <20210927220110.1066271-1-mcgrof@kernel.org>
@@ -52,30 +52,29 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We first register cdrom and then we add_disk() and
-so we we should likewise unregister the cdrom first and
-then del_gendisk().
+No errors were being captured wehen cdrom_register() fails,
+capture the error and return the error.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/paride/pcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/paride/pcd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
-index a7fab3830d7b..82a654fc4db8 100644
+index 82a654fc4db8..4cc0d141db78 100644
 --- a/drivers/block/paride/pcd.c
 +++ b/drivers/block/paride/pcd.c
-@@ -1021,9 +1021,9 @@ static void __exit pcd_exit(void)
- 		if (!cd->present)
- 			continue;
+@@ -940,7 +940,9 @@ static int pcd_init_unit(struct pcd_unit *cd, bool autoprobe, int port,
  
-+		unregister_cdrom(&cd->info);
- 		del_gendisk(cd->disk);
- 		pi_release(cd->pi);
--		unregister_cdrom(&cd->info);
- 		blk_cleanup_disk(cd->disk);
- 
- 		blk_mq_free_tag_set(&cd->tag_set);
+ 	cd->present = 1;
+ 	pcd_probe_capabilities(cd);
+-	register_cdrom(cd->disk, &cd->info);
++	ret = register_cdrom(cd->disk, &cd->info);
++	if (ret)
++		goto out_pi_release;
+ 	ret = add_disk(cd->disk);
+ 	if (ret)
+ 		goto out_unreg_cdrom;
 -- 
 2.30.2
 
