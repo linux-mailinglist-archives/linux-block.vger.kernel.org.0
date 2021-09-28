@@ -2,48 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28F2B41A70F
-	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 07:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 565A141A713
+	for <lists+linux-block@lfdr.de>; Tue, 28 Sep 2021 07:26:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234240AbhI1F1R (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 28 Sep 2021 01:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234177AbhI1F1Q (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 28 Sep 2021 01:27:16 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704CFC061604;
-        Mon, 27 Sep 2021 22:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NPzymWGZFZtOe+/jKRLbVu5DHM/rAWyTP2BsW0jWWww=; b=Y0f7Dd33ee5lwoWyq+hGjkHpRY
-        ZJSXiwIPf1WeFsInpvFPzHSupGwHwdq/mLNc3gzXPT13ulK0dWgLGT/KiB57wEc9qdY3JKK80LRDc
-        yEGi1Ehvg9ftTz68tUMsIbcwbC7+UCznNj4v4x5c/Gf0mCI5GYEgbakV24riqWCPUKYEDSqJYp0ns
-        smKAnxOfCJxHLLN3zY5m8Frt/u0Ac2YWIE3eoFp+6wCz5qRvfWxa7KezBJTN8desq+SEHTWda8IjI
-        26PSuhx0FhFRFboEL+usfS6uhnHVROEibZu6I81r4EsZk66nVYNCjY0SSy4rL5st6BThzHjJ1Rc8+
-        jSM/Eh3Q==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mV5bU-00AWDA-1t; Tue, 28 Sep 2021 05:24:48 +0000
-Date:   Tue, 28 Sep 2021 06:24:32 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH 0/4] block: clean up Kconfig and Makefile
-Message-ID: <YVKnECFT5nieGg+G@infradead.org>
-References: <20210927140000.866249-1-masahiroy@kernel.org>
+        id S234973AbhI1F2F (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 Sep 2021 01:28:05 -0400
+Received: from verein.lst.de ([213.95.11.211]:50083 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234177AbhI1F2F (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 28 Sep 2021 01:28:05 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 500E267373; Tue, 28 Sep 2021 07:26:24 +0200 (CEST)
+Date:   Tue, 28 Sep 2021 07:26:24 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH V3 5/7] genirq/affinity: move group_cpus_evenly() into
+ lib/
+Message-ID: <20210928052624.GA29020@lst.de>
+References: <20210928005558.243352-1-ming.lei@redhat.com> <20210928005558.243352-6-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210927140000.866249-1-masahiroy@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20210928005558.243352-6-ming.lei@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The whole series looks good to me:
+On Tue, Sep 28, 2021 at 08:55:56AM +0800, Ming Lei wrote:
+> group_cpus_evenly() has become one generic helper which can be used for
+> other subsystems, so move it into lib/.
+> 
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+
+Looks good,
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
