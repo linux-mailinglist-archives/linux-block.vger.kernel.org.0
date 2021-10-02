@@ -2,83 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A3B941FB92
-	for <lists+linux-block@lfdr.de>; Sat,  2 Oct 2021 14:06:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E79C41FC4F
+	for <lists+linux-block@lfdr.de>; Sat,  2 Oct 2021 15:29:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233020AbhJBMIX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 2 Oct 2021 08:08:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33368 "EHLO
+        id S233187AbhJBNao (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 2 Oct 2021 09:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232972AbhJBMIX (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 2 Oct 2021 08:08:23 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99BFFC061570
-        for <linux-block@vger.kernel.org>; Sat,  2 Oct 2021 05:06:37 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id y197so14693680iof.11
-        for <linux-block@vger.kernel.org>; Sat, 02 Oct 2021 05:06:37 -0700 (PDT)
+        with ESMTP id S230089AbhJBNan (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 2 Oct 2021 09:30:43 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DFFC0613EC
+        for <linux-block@vger.kernel.org>; Sat,  2 Oct 2021 06:28:57 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id k13so13478791ilo.7
+        for <linux-block@vger.kernel.org>; Sat, 02 Oct 2021 06:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
-        b=YYc1Y5T0qTtHLRqpR9eIERkbcRDU/ki38EIFVHCgD3bswliNowrup7UPrGLUXVoGDe
-         Xo8VoLZ4t+2kxRcWMcW53O1ubdfR3JlW8cep564ik7EeQyTVqcsq7UkpHdrxa4PSGVad
-         M//E+MMxCiuQvCV4VDDCpV/Cdlfl6g6UP13y0chkMJy7/N1ftFT3PW/8vEZwS+X0UCWW
-         v5XudVT6A3KPkmtNzoHbk+LwbHmFQPSK1ei+HvSzYBwteAbhpz/q++xqBNtpdXNvNoB2
-         ZLcih30oGM2rEqeVVUtSbDsfbJXf5nnfOQriCb9tdgGYhl4gPi6/Tc5H6fpts2A4fL5G
-         hv3g==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dCkNHFsEN6MvEG1ZDSeULMUhv2QttNHqJmByU8POC3Y=;
+        b=eHA79hddrjkSNlIr8yuJUJBxg1RCE19yI4y/vnv50N11E5E0I/rV0IrqGtlf88bWuw
+         KpfM+XAeEb1FQ3tfoqKFzDQQCAwh1gNPxzPzzlJMBZCG/1z8fgvtOwihZ17tFk7v9aUk
+         Yzjuivk+LroxW9qiJ0jQFAhI1OsEf986CQp+0wZPpZko1dab5dxnS6zRsdenp0LGsZNf
+         W/R4cPbPkCR0mTLzd+E2D7l0q+9SC67gSbVPqH5xVtGWH6DYFHiATQzN4rM6kib8zfzn
+         QGmRJGiWO3lLlu2LnKZQGmmCi0lLA3o5PQgS0fUam0mYeDdss66VxIiWWoADTOkNv/F4
+         8LPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
-        b=OalTW0zAX5t8V4LXHwW8GA3xp1NJ+6sq34Spn1Dv8JD9A2l6y9wsIFPK6lc4RGntw0
-         a4oHXVElxuT6Gbe/Rqa3TOfntzOWToyLfglWqPudIx7KFD0B4FWHxgTib6MjWCxhHPIV
-         oGhmDz9gm12TSlwyouW/haUWLReVUMxI+w6Gcuv0xeR1vC1M6Xycc+C0WmtcqgUNK3/2
-         EMVZRtAtgDEUyt9WkImmpZ67YshCNxIakG26r760X5wtBh/HcD/2nCdLAIHk2df0lsVY
-         wdzpV47tKcrq/Y4SiamHWDEGb7xe51xie306s4HSYKcXosNK+Z965fdOk4y8h+j52mxK
-         3F8w==
-X-Gm-Message-State: AOAM531wZybOCl/j1AMgu/b3ZHfhULFR3c8va7WkqNy/Yjo9DBuOxoKx
-        sahVP/j+HIfAzaF4dP7pukHjLD5JqKk+dcYuAiA=
-X-Google-Smtp-Source: ABdhPJxWAFRUDNwtZxLqZLm+GHxLhuiHGNN1gB40EkZyJ/3JXLCGUlFS8LQGW0XH43Qh5mITo2+tGrFCnLMTeMKcWYI=
-X-Received: by 2002:a02:a18d:: with SMTP id n13mr2654770jah.132.1633176397151;
- Sat, 02 Oct 2021 05:06:37 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dCkNHFsEN6MvEG1ZDSeULMUhv2QttNHqJmByU8POC3Y=;
+        b=r9k7myIquc59KSMVJBgOoQv+g9sldAK8VZvHSs0nzowFgmbhF2ObIDQVMi5OFgoaIi
+         DID8KITctrWfykEa34uWVKpN6gtQf7zud3pc7euP2c6RpJ0fsj+O0dFQBtkpY076uUMb
+         b8ShcMjZdlvTDzuz1wmVeFk+C3zUOG2PdIn9MgeqcTzBtAcSWmN7OGq3MQaymHATJ6W0
+         BtiV0EsuvBV7bfOzoKU/vR2qC5ehqcIo58Lt0nbJ5BfuDOIUY/ARmE8khLft1QZp9Uaa
+         EY2XjHALbOLluoD1iDjAZqCLBmZcpSaANM50aNLXPyr/PXZYp88dmej/MqPygbBPZrP/
+         0dRA==
+X-Gm-Message-State: AOAM5301uuZDmZr21MI82nUDjsnvNxgelQ3CzTWSiavY7qlq3L5Wx4t3
+        CpI768TMTAiw6ga1lFYEvNtkcTE0+yYTQw==
+X-Google-Smtp-Source: ABdhPJwYCxfkXmh3i+5Qs1nN9Ojyiqxj7J7J5t96prJ9jo2huDeT+H0tmSG0MXRqvZkei+gw2463GA==
+X-Received: by 2002:a05:6e02:18ce:: with SMTP id s14mr2624329ilu.242.1633181337228;
+        Sat, 02 Oct 2021 06:28:57 -0700 (PDT)
+Received: from [192.168.1.116] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id l3sm5535528ilq.48.2021.10.02.06.28.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Oct 2021 06:28:56 -0700 (PDT)
+Subject: Re: [PATCH v2 (RESEND)] brd: reduce the brd_devices_mutex scope
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <d79f288b-3968-71ca-c9b2-49c0ac6940b6@i-love.sakura.ne.jp>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a3365e67-8e85-13e4-f202-04d0eb47513c@kernel.dk>
+Date:   Sat, 2 Oct 2021 07:28:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Received: by 2002:a4f:f90d:0:0:0:0:0 with HTTP; Sat, 2 Oct 2021 05:06:36 -0700 (PDT)
-Reply-To: unitednnation0@gmail.com
-From:   "U.n" <wadebaye33@gmail.com>
-Date:   Sat, 2 Oct 2021 00:06:36 -1200
-Message-ID: <CACE0T5UqNqkUz1tMx6Mq0aAHkUjo0u62ZB7AM+pCsT5Pmz+JFQ@mail.gmail.com>
-Subject: Attention
-To:     unitednnation0@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d79f288b-3968-71ca-c9b2-49c0ac6940b6@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---=20
+On 10/2/21 3:19 AM, Tetsuo Handa wrote:
+> As with commit 8b52d8be86d72308 ("loop: reorder loop_exit"),
+> unregister_blkdev() needs to be called first in order to avoid calling
+> brd_alloc() from brd_probe() after brd_del_one() from brd_exit(). Then,
+> we can avoid holding global mutex during add_disk()/del_gendisk() as with
+> commit 1c500ad706383f1a ("loop: reduce the loop_ctl_mutex scope").
 
+Applied for 5.16, thanks.
 
-Attention Sir/Madam
-This is the United Nation (UN). We the United Nations (UN) Globally
-has approved (US$2.500,000)( two Million Five hundred thousand
-dollars) compensation as part of our responsibilities for humanitarian
-Aid for fighting against CoronaVirus and you are among the lucky ones.
+-- 
+Jens Axboe
 
-
-This compensation is for the most affected countries, communities and
-families across the global. Your funds were deposited with Bank in USA
-to transfer your funds to you via Internet Banking. You have to send
-your full details as state below:with this email Address
-  ( unitednnation0@gmail.com )
-Your full names:
-Address:
-Telephone:
-Occupation:
-
-
-
-Yours Sincerely
-Mr. Ant=C3=B3nio Guterres
-United Nations (UN).
