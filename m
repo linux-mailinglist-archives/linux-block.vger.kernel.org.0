@@ -2,98 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BA8641FA97
-	for <lists+linux-block@lfdr.de>; Sat,  2 Oct 2021 11:23:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A3B941FB92
+	for <lists+linux-block@lfdr.de>; Sat,  2 Oct 2021 14:06:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232681AbhJBJY5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 2 Oct 2021 05:24:57 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57615 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232709AbhJBJY5 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 2 Oct 2021 05:24:57 -0400
-Received: from fsav312.sakura.ne.jp (fsav312.sakura.ne.jp [153.120.85.143])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 1929N4Cu034754;
-        Sat, 2 Oct 2021 18:23:04 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav312.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav312.sakura.ne.jp);
- Sat, 02 Oct 2021 18:23:04 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav312.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 1929N4ed034748
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 2 Oct 2021 18:23:04 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: [PATCH v2 (RESEND)] block: genhd: fix double kfree() in
- __alloc_disk_node()
-Message-ID: <e6dd13c5-8db0-4392-6e78-a42ee5d2a1c4@i-love.sakura.ne.jp>
-Date:   Sat, 2 Oct 2021 18:23:02 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S233020AbhJBMIX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 2 Oct 2021 08:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232972AbhJBMIX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 2 Oct 2021 08:08:23 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99BFFC061570
+        for <linux-block@vger.kernel.org>; Sat,  2 Oct 2021 05:06:37 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id y197so14693680iof.11
+        for <linux-block@vger.kernel.org>; Sat, 02 Oct 2021 05:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=YYc1Y5T0qTtHLRqpR9eIERkbcRDU/ki38EIFVHCgD3bswliNowrup7UPrGLUXVoGDe
+         Xo8VoLZ4t+2kxRcWMcW53O1ubdfR3JlW8cep564ik7EeQyTVqcsq7UkpHdrxa4PSGVad
+         M//E+MMxCiuQvCV4VDDCpV/Cdlfl6g6UP13y0chkMJy7/N1ftFT3PW/8vEZwS+X0UCWW
+         v5XudVT6A3KPkmtNzoHbk+LwbHmFQPSK1ei+HvSzYBwteAbhpz/q++xqBNtpdXNvNoB2
+         ZLcih30oGM2rEqeVVUtSbDsfbJXf5nnfOQriCb9tdgGYhl4gPi6/Tc5H6fpts2A4fL5G
+         hv3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=OalTW0zAX5t8V4LXHwW8GA3xp1NJ+6sq34Spn1Dv8JD9A2l6y9wsIFPK6lc4RGntw0
+         a4oHXVElxuT6Gbe/Rqa3TOfntzOWToyLfglWqPudIx7KFD0B4FWHxgTib6MjWCxhHPIV
+         oGhmDz9gm12TSlwyouW/haUWLReVUMxI+w6Gcuv0xeR1vC1M6Xycc+C0WmtcqgUNK3/2
+         EMVZRtAtgDEUyt9WkImmpZ67YshCNxIakG26r760X5wtBh/HcD/2nCdLAIHk2df0lsVY
+         wdzpV47tKcrq/Y4SiamHWDEGb7xe51xie306s4HSYKcXosNK+Z965fdOk4y8h+j52mxK
+         3F8w==
+X-Gm-Message-State: AOAM531wZybOCl/j1AMgu/b3ZHfhULFR3c8va7WkqNy/Yjo9DBuOxoKx
+        sahVP/j+HIfAzaF4dP7pukHjLD5JqKk+dcYuAiA=
+X-Google-Smtp-Source: ABdhPJxWAFRUDNwtZxLqZLm+GHxLhuiHGNN1gB40EkZyJ/3JXLCGUlFS8LQGW0XH43Qh5mITo2+tGrFCnLMTeMKcWYI=
+X-Received: by 2002:a02:a18d:: with SMTP id n13mr2654770jah.132.1633176397151;
+ Sat, 02 Oct 2021 05:06:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a4f:f90d:0:0:0:0:0 with HTTP; Sat, 2 Oct 2021 05:06:36 -0700 (PDT)
+Reply-To: unitednnation0@gmail.com
+From:   "U.n" <wadebaye33@gmail.com>
+Date:   Sat, 2 Oct 2021 00:06:36 -1200
+Message-ID: <CACE0T5UqNqkUz1tMx6Mq0aAHkUjo0u62ZB7AM+pCsT5Pmz+JFQ@mail.gmail.com>
+Subject: Attention
+To:     unitednnation0@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-syzbot is reporting use-after-free read at bdev_free_inode() [1], for
-kfree() from __alloc_disk_node() is called before bdev_free_inode()
-(which is called after RCU grace period) reads bdev->bd_disk and calls
-kfree(bdev->bd_disk).
+--=20
 
-Fix use-after-free read followed by double kfree() problem
-by making sure that bdev->bd_disk is NULL when calling iput().
 
-Link: https://syzkaller.appspot.com/bug?extid=8281086e8a6fbfbd952a [1]
-Reported-by: syzbot <syzbot+8281086e8a6fbfbd952a@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
-Changes in v2:
-  Defer bdev->bd_disk assignment instead of resetting to NULL in bdev_alloc().
+Attention Sir/Madam
+This is the United Nation (UN). We the United Nations (UN) Globally
+has approved (US$2.500,000)( two Million Five hundred thousand
+dollars) compensation as part of our responsibilities for humanitarian
+Aid for fighting against CoronaVirus and you are among the lucky ones.
 
- block/bdev.c  | 2 +-
- block/genhd.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/block/bdev.c b/block/bdev.c
-index cf2780cb44a7..485a258b0ab3 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -490,7 +490,6 @@ struct block_device *bdev_alloc(struct gendisk *disk, u8 partno)
- 	bdev = I_BDEV(inode);
- 	mutex_init(&bdev->bd_fsfreeze_mutex);
- 	spin_lock_init(&bdev->bd_size_lock);
--	bdev->bd_disk = disk;
- 	bdev->bd_partno = partno;
- 	bdev->bd_inode = inode;
- 	bdev->bd_stats = alloc_percpu(struct disk_stats);
-@@ -498,6 +497,7 @@ struct block_device *bdev_alloc(struct gendisk *disk, u8 partno)
- 		iput(inode);
- 		return NULL;
- 	}
-+	bdev->bd_disk = disk;
- 	return bdev;
- }
- 
-diff --git a/block/genhd.c b/block/genhd.c
-index 7b6e5e1cf956..496e8458c357 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1268,6 +1268,7 @@ struct gendisk *__alloc_disk_node(struct request_queue *q, int node_id,
- 
- out_destroy_part_tbl:
- 	xa_destroy(&disk->part_tbl);
-+	disk->part0->bd_disk = NULL;
- 	iput(disk->part0->bd_inode);
- out_free_bdi:
- 	bdi_put(disk->bdi);
--- 
-2.18.4
+This compensation is for the most affected countries, communities and
+families across the global. Your funds were deposited with Bank in USA
+to transfer your funds to you via Internet Banking. You have to send
+your full details as state below:with this email Address
+  ( unitednnation0@gmail.com )
+Your full names:
+Address:
+Telephone:
+Occupation:
+
+
+
+Yours Sincerely
+Mr. Ant=C3=B3nio Guterres
+United Nations (UN).
