@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C8F642237E
-	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 12:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1E21422385
+	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 12:29:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234207AbhJEKbI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Oct 2021 06:31:08 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3926 "EHLO
+        id S234476AbhJEKbP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Oct 2021 06:31:15 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3927 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234323AbhJEKa5 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Oct 2021 06:30:57 -0400
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HNtyV71Crz67VWd;
-        Tue,  5 Oct 2021 18:25:38 +0800 (CST)
+        with ESMTP id S234230AbhJEKbA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Oct 2021 06:31:00 -0400
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HNtyY3gZqz67HnK;
+        Tue,  5 Oct 2021 18:25:41 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 5 Oct 2021 12:29:05 +0200
+ 15.1.2308.8; Tue, 5 Oct 2021 12:29:07 +0200
 Received: from localhost.localdomain (10.69.192.58) by
  lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 5 Oct 2021 11:29:03 +0100
+ 15.1.2308.8; Tue, 5 Oct 2021 11:29:05 +0100
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <ming.lei@redhat.com>, <hare@suse.de>,
         <linux-scsi@vger.kernel.org>, <kashyap.desai@broadcom.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v5 09/14] blk-mq: Add blk_mq_tag_update_sched_shared_sbitmap()
-Date:   Tue, 5 Oct 2021 18:23:34 +0800
-Message-ID: <1633429419-228500-10-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v5 10/14] blk-mq: Add blk_mq_alloc_map_and_rqs()
+Date:   Tue, 5 Oct 2021 18:23:35 +0800
+Message-ID: <1633429419-228500-11-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1633429419-228500-1-git-send-email-john.garry@huawei.com>
 References: <1633429419-228500-1-git-send-email-john.garry@huawei.com>
@@ -44,79 +44,226 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Put the functionality to update the sched shared sbitmap size in a common
-function.
+Add a function to combine allocating tags and the associated requests,
+and factor out common patterns to use this new function.
 
-Since the same formula is always used to resize, and it can be got from
-the request queue argument, so just pass the request queue pointer.
+Some function only call blk_mq_alloc_map_and_rqs() now, but more
+functionality will be added later.
 
+Also make blk_mq_alloc_rq_map() and blk_mq_alloc_rqs() static since they
+are only used in blk-mq.c, and finally rename some functions for
+conciseness and consistency with other function names:
+- __blk_mq_alloc_map_and_{request -> rqs}()
+- blk_mq_alloc_{map_and_requests -> set_map_and_rqs}()
+
+Suggested-by: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-mq-sched.c | 3 +--
- block/blk-mq-tag.c   | 6 ++++++
- block/blk-mq-tag.h   | 1 +
- block/blk-mq.c       | 3 +--
- 4 files changed, 9 insertions(+), 4 deletions(-)
+ block/blk-mq-sched.c | 15 +++--------
+ block/blk-mq-tag.c   |  9 +------
+ block/blk-mq.c       | 62 +++++++++++++++++++++++++-------------------
+ block/blk-mq.h       |  9 ++-----
+ 4 files changed, 42 insertions(+), 53 deletions(-)
 
 diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index bdbb6c31b433..6c15f6e98e2e 100644
+index 6c15f6e98e2e..d1b56bb9ac64 100644
 --- a/block/blk-mq-sched.c
 +++ b/block/blk-mq-sched.c
-@@ -575,8 +575,7 @@ static int blk_mq_init_sched_shared_sbitmap(struct request_queue *queue)
- 					&queue->sched_breserved_tags;
- 	}
+@@ -519,21 +519,12 @@ static int blk_mq_sched_alloc_map_and_rqs(struct request_queue *q,
+ 					  struct blk_mq_hw_ctx *hctx,
+ 					  unsigned int hctx_idx)
+ {
+-	struct blk_mq_tag_set *set = q->tag_set;
+-	int ret;
++	hctx->sched_tags = blk_mq_alloc_map_and_rqs(q->tag_set, hctx_idx,
++						    q->nr_requests);
  
--	sbitmap_queue_resize(&queue->sched_bitmap_tags,
--			     queue->nr_requests - set->reserved_tags);
-+	blk_mq_tag_update_sched_shared_sbitmap(queue);
- 
- 	return 0;
+-	hctx->sched_tags = blk_mq_alloc_rq_map(set, hctx_idx, q->nr_requests,
+-					       set->reserved_tags, set->flags);
+ 	if (!hctx->sched_tags)
+ 		return -ENOMEM;
+-
+-	ret = blk_mq_alloc_rqs(set, hctx->sched_tags, hctx_idx, q->nr_requests);
+-	if (ret) {
+-		blk_mq_free_rq_map(hctx->sched_tags, set->flags);
+-		hctx->sched_tags = NULL;
+-	}
+-
+-	return ret;
++	return 0;
  }
+ 
+ /* called in queue's release handler, tagset has gone away */
 diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index ff5caeb82542..55b5a226dcc0 100644
+index 55b5a226dcc0..db99f1246795 100644
 --- a/block/blk-mq-tag.c
 +++ b/block/blk-mq-tag.c
-@@ -634,6 +634,12 @@ void blk_mq_tag_resize_shared_sbitmap(struct blk_mq_tag_set *set, unsigned int s
- 	sbitmap_queue_resize(&set->__bitmap_tags, size - set->reserved_tags);
- }
+@@ -592,7 +592,6 @@ int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 	if (tdepth > tags->nr_tags) {
+ 		struct blk_mq_tag_set *set = hctx->queue->tag_set;
+ 		struct blk_mq_tags *new;
+-		bool ret;
  
-+void blk_mq_tag_update_sched_shared_sbitmap(struct request_queue *q)
-+{
-+	sbitmap_queue_resize(&q->sched_bitmap_tags,
-+			     q->nr_requests - q->tag_set->reserved_tags);
-+}
-+
- /**
-  * blk_mq_unique_tag() - return a tag that is unique queue-wide
-  * @rq: request for which to compute a unique tag
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index f0a0ee758a55..a9f5f1824819 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -50,6 +50,7 @@ extern int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
- 					unsigned int depth, bool can_grow);
- extern void blk_mq_tag_resize_shared_sbitmap(struct blk_mq_tag_set *set,
- 					     unsigned int size);
-+extern void blk_mq_tag_update_sched_shared_sbitmap(struct request_queue *q);
+ 		if (!can_grow)
+ 			return -EINVAL;
+@@ -604,15 +603,9 @@ int blk_mq_tag_update_depth(struct blk_mq_hw_ctx *hctx,
+ 		if (tdepth > MAX_SCHED_RQ)
+ 			return -EINVAL;
  
- extern void blk_mq_tag_wakeup_all(struct blk_mq_tags *tags, bool);
- void blk_mq_queue_tag_busy_iter(struct request_queue *q, busy_iter_fn *fn,
+-		new = blk_mq_alloc_rq_map(set, hctx->queue_num, tdepth,
+-				tags->nr_reserved_tags, set->flags);
++		new = blk_mq_alloc_map_and_rqs(set, hctx->queue_num, tdepth);
+ 		if (!new)
+ 			return -ENOMEM;
+-		ret = blk_mq_alloc_rqs(set, new, hctx->queue_num, tdepth);
+-		if (ret) {
+-			blk_mq_free_rq_map(new, set->flags);
+-			return -ENOMEM;
+-		}
+ 
+ 		blk_mq_free_rqs(set, *tagsptr, hctx->queue_num);
+ 		blk_mq_free_rq_map(*tagsptr, set->flags);
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 158ee7dbbd76..7e964a1c1bee 100644
+index 7e964a1c1bee..6d3664acb9f8 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -3643,8 +3643,7 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
- 		q->nr_requests = nr;
- 		if (blk_mq_is_sbitmap_shared(set->flags)) {
- 			if (q->elevator)
--				sbitmap_queue_resize(&q->sched_bitmap_tags,
--						     nr - set->reserved_tags);
-+				blk_mq_tag_update_sched_shared_sbitmap(q);
- 			else
- 				blk_mq_tag_resize_shared_sbitmap(set, nr);
- 		}
+@@ -2385,11 +2385,11 @@ void blk_mq_free_rq_map(struct blk_mq_tags *tags, unsigned int flags)
+ 	blk_mq_free_tags(tags, flags);
+ }
+ 
+-struct blk_mq_tags *blk_mq_alloc_rq_map(struct blk_mq_tag_set *set,
+-					unsigned int hctx_idx,
+-					unsigned int nr_tags,
+-					unsigned int reserved_tags,
+-					unsigned int flags)
++static struct blk_mq_tags *blk_mq_alloc_rq_map(struct blk_mq_tag_set *set,
++					       unsigned int hctx_idx,
++					       unsigned int nr_tags,
++					       unsigned int reserved_tags,
++					       unsigned int flags)
+ {
+ 	struct blk_mq_tags *tags;
+ 	int node;
+@@ -2437,8 +2437,9 @@ static int blk_mq_init_request(struct blk_mq_tag_set *set, struct request *rq,
+ 	return 0;
+ }
+ 
+-int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+-		     unsigned int hctx_idx, unsigned int depth)
++static int blk_mq_alloc_rqs(struct blk_mq_tag_set *set,
++			    struct blk_mq_tags *tags,
++			    unsigned int hctx_idx, unsigned int depth)
+ {
+ 	unsigned int i, j, entries_per_page, max_order = 4;
+ 	size_t rq_size, left;
+@@ -2849,25 +2850,34 @@ static void blk_mq_init_cpu_queues(struct request_queue *q,
+ 	}
+ }
+ 
+-static bool __blk_mq_alloc_map_and_request(struct blk_mq_tag_set *set,
+-					int hctx_idx)
++struct blk_mq_tags *blk_mq_alloc_map_and_rqs(struct blk_mq_tag_set *set,
++					     unsigned int hctx_idx,
++					     unsigned int depth)
+ {
+-	unsigned int flags = set->flags;
+-	int ret = 0;
++	struct blk_mq_tags *tags;
++	int ret;
+ 
+-	set->tags[hctx_idx] = blk_mq_alloc_rq_map(set, hctx_idx,
+-					set->queue_depth, set->reserved_tags, flags);
+-	if (!set->tags[hctx_idx])
+-		return false;
++	tags = blk_mq_alloc_rq_map(set, hctx_idx, depth, set->reserved_tags,
++				   set->flags);
++	if (!tags)
++		return NULL;
+ 
+-	ret = blk_mq_alloc_rqs(set, set->tags[hctx_idx], hctx_idx,
+-				set->queue_depth);
+-	if (!ret)
+-		return true;
++	ret = blk_mq_alloc_rqs(set, tags, hctx_idx, depth);
++	if (ret) {
++		blk_mq_free_rq_map(tags, set->flags);
++		return NULL;
++	}
+ 
+-	blk_mq_free_rq_map(set->tags[hctx_idx], flags);
+-	set->tags[hctx_idx] = NULL;
+-	return false;
++	return tags;
++}
++
++static bool __blk_mq_alloc_map_and_rqs(struct blk_mq_tag_set *set,
++				       int hctx_idx)
++{
++	set->tags[hctx_idx] = blk_mq_alloc_map_and_rqs(set, hctx_idx,
++						       set->queue_depth);
++
++	return set->tags[hctx_idx];
+ }
+ 
+ static void blk_mq_free_map_and_requests(struct blk_mq_tag_set *set,
+@@ -2912,7 +2922,7 @@ static void blk_mq_map_swqueue(struct request_queue *q)
+ 			hctx_idx = set->map[j].mq_map[i];
+ 			/* unmapped hw queue can be remapped after CPU topo changed */
+ 			if (!set->tags[hctx_idx] &&
+-			    !__blk_mq_alloc_map_and_request(set, hctx_idx)) {
++			    !__blk_mq_alloc_map_and_rqs(set, hctx_idx)) {
+ 				/*
+ 				 * If tags initialization fail for some hctx,
+ 				 * that hctx won't be brought online.  In this
+@@ -3345,7 +3355,7 @@ static int __blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+ 	int i;
+ 
+ 	for (i = 0; i < set->nr_hw_queues; i++) {
+-		if (!__blk_mq_alloc_map_and_request(set, i))
++		if (!__blk_mq_alloc_map_and_rqs(set, i))
+ 			goto out_unwind;
+ 		cond_resched();
+ 	}
+@@ -3364,7 +3374,7 @@ static int __blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
+  * may reduce the depth asked for, if memory is tight. set->queue_depth
+  * will be updated to reflect the allocated depth.
+  */
+-static int blk_mq_alloc_map_and_requests(struct blk_mq_tag_set *set)
++static int blk_mq_alloc_set_map_and_rqs(struct blk_mq_tag_set *set)
+ {
+ 	unsigned int depth;
+ 	int err;
+@@ -3530,7 +3540,7 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
+ 	if (ret)
+ 		goto out_free_mq_map;
+ 
+-	ret = blk_mq_alloc_map_and_requests(set);
++	ret = blk_mq_alloc_set_map_and_rqs(set);
+ 	if (ret)
+ 		goto out_free_mq_map;
+ 
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index d08779f77a26..83585a344568 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -55,13 +55,8 @@ void blk_mq_put_rq_ref(struct request *rq);
+ void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+ 		     unsigned int hctx_idx);
+ void blk_mq_free_rq_map(struct blk_mq_tags *tags, unsigned int flags);
+-struct blk_mq_tags *blk_mq_alloc_rq_map(struct blk_mq_tag_set *set,
+-					unsigned int hctx_idx,
+-					unsigned int nr_tags,
+-					unsigned int reserved_tags,
+-					unsigned int flags);
+-int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+-		     unsigned int hctx_idx, unsigned int depth);
++struct blk_mq_tags *blk_mq_alloc_map_and_rqs(struct blk_mq_tag_set *set,
++				unsigned int hctx_idx, unsigned int depth);
+ 
+ /*
+  * Internal helpers for request insertion into sw queues
 -- 
 2.26.2
 
