@@ -2,113 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89DB5422EC6
-	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 19:10:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7295A422F2C
+	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 19:26:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234459AbhJERMf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Oct 2021 13:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233961AbhJERMf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Oct 2021 13:12:35 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F9DC061749
-        for <linux-block@vger.kernel.org>; Tue,  5 Oct 2021 10:10:44 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id h1so157562ila.1
-        for <linux-block@vger.kernel.org>; Tue, 05 Oct 2021 10:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=AkJLClJJ5bauorxHEoDKg0TJm7AU7dkaRYlW5L/xmtQ=;
-        b=BtMP0popbuIQatUxMSdYf8Ce4TOYJ7vhdCkfglgZDlNn1F+ae5QX5+UIJPRG/vR9GI
-         J5RAGjulU0t/mtWGUNoT1/PGltZb3+W2zLng9a6yfDpMElPjUyEQ8z8Vw4FIasLcVv54
-         iQ9SvADHSOtudLGPEoO1YSU4eDkrCRrJ5d3cfcEjHOFhpoSEG7745PWCVSymLbsTEatC
-         PBIdL59LewBqR7Zck63uf2sNAqmKgqxPOmn5zGRt5D1K8MsNDV6yJFqiu2fXsqFT+Oes
-         NUs6/y6cHj2iqMjjaVHZDHmDnOBdbFxpYEFyoqr1B7ScgVmKgh0HRLsEEXheAHOGZU0W
-         M6Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AkJLClJJ5bauorxHEoDKg0TJm7AU7dkaRYlW5L/xmtQ=;
-        b=MS0r716UogAQLkKMKiDGSCtsnrvFND54fxMxxIZFetxQiDebiTXFw7HSQFtueC7nai
-         e2jk8v43qGTd64EAsktWKJzTnccafUXDFdLcYO/VZQn0/gs4nUqCkFoc2fPGzXOIZSwV
-         ft+Gj5YzYCMYa323+zrQuLeHyuJTLgNJLQmg2assFOhFKMoTjbgxtuz16UTgljEsbJ6R
-         VJ6PqkuN5ScHeywvkMj4r/s7LVmgBwe9PfQVP/ptvtf9qfoUvxfmnNg62gCBBZwBvdU3
-         Qnsr0IxVvau4lNNFP2o8fRu8mfYcI7YSDVUBjhss8QTJQI6d3HZuj3f6F+bRSR6OuuPB
-         H8mA==
-X-Gm-Message-State: AOAM531sTXdAQ7drwiuaUNiTM5R5vbSytybB1d+cywPmkIOBN7iqUloS
-        ejsO52e9uNtkffaCUc6zq43tkBgP6PX9+mMV/EM=
-X-Google-Smtp-Source: ABdhPJyfFqBtouSzpzmGsLyYj/fP2qVo9W6Z1jsfk5vzE8e++yPnsNEJsq1GDrv5nEihENxKCJijPA==
-X-Received: by 2002:a05:6e02:d8c:: with SMTP id i12mr3578116ilj.190.1633453843655;
-        Tue, 05 Oct 2021 10:10:43 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id l1sm11300985ilc.65.2021.10.05.10.10.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Oct 2021 10:10:43 -0700 (PDT)
-Subject: Re: [PATCH] block: don't call should_fail_request() for
- !CONFIG_FAIL_MAKE_REQUEST
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <50093280-104b-545a-c4c9-2fc3efd45520@kernel.dk>
- <69b72109-a488-e0c2-3f8a-0fff917e66dd@acm.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8ed8898b-0776-fb58-2003-aefe9875a746@kernel.dk>
-Date:   Tue, 5 Oct 2021 11:10:42 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S234217AbhJER2J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Oct 2021 13:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233671AbhJER2J (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 5 Oct 2021 13:28:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7EE6A61350;
+        Tue,  5 Oct 2021 17:26:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633454778;
+        bh=TRVVk+cqSwmsQPPrsGSixnwW56Ss0wyABclPIq4gyE8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pyoR1P2drWCfoIMMWXbZbYfSVyvJ+FFcLILOhILVTcsHIzWS7FylokMYssDKCymyv
+         KIjPMKiI4uqFw4QY1iuTRSlKATXzlVP6qy4TIHTip7QDbtZ0i6gNX0RzsafwUdS84C
+         Mvk7JYogoERYPcVuDz/UCTwBOxQS8JAnRrQhEyq7jAdHoTm6zFXTCqcjrKhAn2Ss1L
+         8rTeB+xJGsbDesPU1hTAlYm3FQZ9dE43ca/V3p3ofMC1D99wew15nHOznhpgsvVFUT
+         l/v5J9seOQknAg6LBuPw3SzPjujBnzeECGRpsZ3/iIrXPXLRKEi+11+Cac7sBPs17W
+         x8awmT/CeEBcg==
+Date:   Tue, 5 Oct 2021 10:26:17 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     Satya Tangirala <satyaprateek2357@gmail.com>, dm-devel@redhat.com,
+        linux-mmc@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] blk-crypto cleanups
+Message-ID: <YVyKuXgDjNgNdSHS@gmail.com>
+References: <20210929163600.52141-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <69b72109-a488-e0c2-3f8a-0fff917e66dd@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210929163600.52141-1-ebiggers@kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/5/21 11:04 AM, Bart Van Assche wrote:
-> On 10/5/21 8:32 AM, Jens Axboe wrote:
->> Unnecessary function call, if we don't have that specific configuration
->> option enabled.
->>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>
->> ---
->>
->> diff --git a/block/blk-core.c b/block/blk-core.c
->> index 5454db2fa263..a267f11f55cb 100644
->> --- a/block/blk-core.c
->> +++ b/block/blk-core.c
->> @@ -697,8 +697,10 @@ static inline bool bio_check_ro(struct bio *bio)
->>   
->>   static noinline int should_fail_bio(struct bio *bio)
->>   {
->> +#ifdef CONFIG_FAIL_MAKE_REQUEST
->>   	if (should_fail_request(bdev_whole(bio->bi_bdev), bio->bi_iter.bi_size))
->>   		return -EIO;
->> +#endif
->>   	return 0;
->>   }
->>   ALLOW_ERROR_INJECTION(should_fail_bio, ERRNO);
+On Wed, Sep 29, 2021 at 09:35:56AM -0700, Eric Biggers wrote:
+> This series renames struct blk_keyslot_manager to struct
+> blk_crypto_profile, as it is misnamed; it doesn't always manage
+> keyslots.  It's much more logical to think of it as the
+> "blk-crypto profile" of a device, similar to blk_integrity_profile.
 > 
-> Has the performance impact of this patch been measured? I'm asking because I
-> found the following in blk-core.c:
+> This series also improves the inline-encryption.rst documentation file,
+> and cleans up blk-crypto-fallback a bit.
 > 
-> #ifdef CONFIG_FAIL_MAKE_REQUEST
-> [ ... ]
-> #else /* CONFIG_FAIL_MAKE_REQUEST */
-> static inline bool should_fail_request(struct block_device *part,
-> 					unsigned int bytes)
-> {
-> 	return false;
-> }
-> #endif /* CONFIG_FAIL_MAKE_REQUEST */
+> This series applies to block/for-next.
+> 
+> Changed v3 => v4:
+>   - Rebased onto block/for-next to resolve a conflict due to
+>     'struct request' being moved.
+> 
 
-True, might be a leftover from some other experimentation. Looks like we
-can just ignore that patch.
+Ping?
 
--- 
-Jens Axboe
-
+- Eric
