@@ -2,182 +2,214 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7351E422E18
-	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 18:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0B4B422F1D
+	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 19:22:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236402AbhJEQjB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Oct 2021 12:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235588AbhJEQjA (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Oct 2021 12:39:00 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51027C061749;
-        Tue,  5 Oct 2021 09:37:10 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id m5so14827pfk.7;
-        Tue, 05 Oct 2021 09:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fXysKaZsmwoRw6MaIqdbIRHQReHtGv62HbEcBZHPs4c=;
-        b=kpe+FEAvACw7nP9VlOvmhMJwEXjlFoLqOQHfNvj2s0AEQIxFLERjn2blqd3uBsmL0w
-         4eCB09IAK3dUIFQBnEVT/IhzOppmIaAuZptGjBi5/WoV8UHefIMQkooxwOdAIHAG2udz
-         kAEK2iVaFa0pdIjwNhonagi4ZhSIhBIwVt1JmYEsfc4tRklsfq81xnwOQvQPlISwJze8
-         tGs7LtGYilmtNQzpBvwAn60t9OkMG3d3Vu0XWkuR1HvZ0hVtFGAM9fn8YmVpA4GfTgjF
-         qoZwmsX4d/9JyWUoTl7YqkfF4I9BMDN/UKybDyKeQ3fUWO/Ikd9UsbO1J2YzWBctPEe3
-         wCmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=fXysKaZsmwoRw6MaIqdbIRHQReHtGv62HbEcBZHPs4c=;
-        b=Vxr691lgSAnyyFJOFxV8gCnAxAtAzEhA0gD4/n/aMSTnE2mmHQhQtyvhe9Xd3JYiQc
-         wP56aJoNrMgIxTMp++faz7grU+4UP5yhWEL8WnIzIqFbx4jtEr4FUrI37la7G9nWYIK7
-         epITZfvOTGrdyZ/0T+vGBKWQZRiILjtLFOzPS8wjgse7i/ztajVOZ2IkDmjK2kxLQRvu
-         fjTf6kNkI1BkZTxCUfCJoiHtihxs28K+cJVwMJJOOdsqfTnv9OZML6JEn6p5KtlxOcOl
-         9gQqS/cexF2/Rclizrs0aEFXvCR5xBAIv/BqdKEgtBtTc7yhycWQf3FprEFCCtxHCa+V
-         HeIg==
-X-Gm-Message-State: AOAM533OW4nmIqZx8JHp4ouympRNQrjUKyqxo3kZAW3zXN1J5YR5/av4
-        bAyj43pSxR2dA0s7goPWehpwL3kKbD8=
-X-Google-Smtp-Source: ABdhPJzSVT20EZ1jVhhFc87d6KXxpNZuMI3lrXD572U83esAb81vvt+FSF0QZQsGTYktMz08S/PLKw==
-X-Received: by 2002:a63:490d:: with SMTP id w13mr16706649pga.481.1633451829725;
-        Tue, 05 Oct 2021 09:37:09 -0700 (PDT)
-Received: from google.com ([2620:15c:211:201:1aa2:5fb9:bbf2:7f64])
-        by smtp.gmail.com with ESMTPSA id n185sm19195262pfn.171.2021.10.05.09.37.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Oct 2021 09:37:09 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date:   Tue, 5 Oct 2021 09:37:07 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Suleiman Souhlal <suleiman@google.com>,
-        Jesse Barnes <jsbarnes@google.com>
-Subject: Re: [PATCH] zram: Allow backing device to be assigned after init
-Message-ID: <YVx/MynFCQLRcAN2@google.com>
-References: <20211001181627.394921-1-bgeffon@google.com>
- <YVtH60zyzq9AhUv2@google.com>
- <CADyq12xk-2Fhnf_rJQ70oC1_98OEBJqwxOt6z=PpJa5V=X3dFQ@mail.gmail.com>
- <YVtqHv+p3uYkbu5E@google.com>
- <CADyq12w2sHdeBhAKVP+5GghHMqNZN+h36ydV7gi8QxOcHZ7f7A@mail.gmail.com>
- <CADyq12zNcXAS8+7GwMPsbFNgn-M-7e+mtR=_9PXBTOfX65yoew@mail.gmail.com>
+        id S235917AbhJERYS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Oct 2021 13:24:18 -0400
+Received: from mx07-001d1705.pphosted.com ([185.132.183.11]:46920 "EHLO
+        mx07-001d1705.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234938AbhJERYR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 5 Oct 2021 13:24:17 -0400
+X-Greylist: delayed 1417 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Oct 2021 13:24:14 EDT
+Received: from pps.filterd (m0209329.ppops.net [127.0.0.1])
+        by mx08-001d1705.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 195GnZIf025817;
+        Tue, 5 Oct 2021 16:58:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sony.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=S1;
+ bh=bFq0gUCj+1rZhXMwCeMtZr757fLcC8Pl9kMcvt+8FRw=;
+ b=B/qAGZ0zVn9AxTBgv8rXnuDrSGV+LWWQNN7mQz00mnC5RBAJgiy5XWkqR6XXx6/0bRBV
+ tQw6qpohUAgVeZt5LdRNHlXxKcFkzNvwHRHHCuEWWXYjMJcrpYLevV7TVIroQsI4kd0z
+ jBwztWmW8mU4HKxz5wF+SWunXJks8aB1snX7xnf0ilIaRYmizYCWvDd0rQrsgC5h34ZA
+ jdXimUyDkn0unyldqnL/JhxSmrLChPaF0FMBaXnwuHjeipUh2nXyZVyFthicJkCPYxpk
+ BRsGVNI9kHFh8Znj11ONOUohMNVk03BVn2DULkP3uEzLt3jIXSDflL9Uttpi9XGemBdX mw== 
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2047.outbound.protection.outlook.com [104.47.73.47])
+        by mx08-001d1705.pphosted.com with ESMTP id 3bg3sm0v3g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Oct 2021 16:58:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CyxLDTl2VeUGkTsjUKM5EAeGzWUaPG6coTRIwwr7Co+t7Mjq7MCrXu+RoZCdsR3FZCnn589FheGKYqm/GUOmDkV+5qj91dajVQQ6c/C+SvVyMFquU8e+RjXobPp2m8B/X1sNH075Arj0e3vCZpTqtPuF0jZsIiC2OuNmRC/9jdX9JW3JIPxC7tSiqNmFCyjswncLtH/VbpPgxxG6pw7JGE5/LR+4ZT+wnogvOiBl/3/5Ab7CpFccqLpTP+ecLchEHYA9qak7O7KRElrIkWweSWKLciK4IJfi1ZF4dDROxIeT3u1cPofwBfXDNLZVheYa4gYz6v3l5VRNFNABmnRbSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bFq0gUCj+1rZhXMwCeMtZr757fLcC8Pl9kMcvt+8FRw=;
+ b=Tu7bA/exG0Q8i6PR/Nw2/cs51RZLzr88i/SwDFu78KTOhz9B/q5SS6Ko9GRwpooMpIQPrIkyHIUJnrl29IEAAlxEWsVfl0tw3dAUYDAtHZuatIXKv8APx8ePr6w9u9tSM7YRaPAfceMvH2EdDIZbHv70RyHJZCK5wMwfbpHTguhMJSaaBO0CYm3aK7krJ4x7o7V5NFX8xnl+KypDQWW+lymUm9eSIhZJ6fuOYh1uOZOSo/v0kemnS/HWKDEINjKTcC+b36TMyTLEATRkZ3JVexrt+m/D2GCAxAIwDFpiWi4ggrMFmkotoRcGUc34zMOCnHsAxScmMTmSUGJnu9GP4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+Received: from BYAPR13MB2503.namprd13.prod.outlook.com (2603:10b6:a02:cd::33)
+ by BY5PR13MB4455.namprd13.prod.outlook.com (2603:10b6:a03:1d4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.12; Tue, 5 Oct
+ 2021 16:57:56 +0000
+Received: from BYAPR13MB2503.namprd13.prod.outlook.com
+ ([fe80::f544:a41:f814:7be9]) by BYAPR13MB2503.namprd13.prod.outlook.com
+ ([fe80::f544:a41:f814:7be9%6]) with mapi id 15.20.4587.018; Tue, 5 Oct 2021
+ 16:57:56 +0000
+From:   <Tim.Bird@sony.com>
+To:     <gregkh@linuxfoundation.org>, <mcgrof@kernel.org>
+CC:     <tj@kernel.org>, <akpm@linux-foundation.org>, <minchan@kernel.org>,
+        <jeyu@kernel.org>, <shuah@kernel.org>, <bvanassche@acm.org>,
+        <dan.j.williams@intel.com>, <joe@perches.com>,
+        <tglx@linutronix.de>, <keescook@chromium.org>,
+        <rostedt@goodmis.org>, <linux-spdx@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v8 03/12] selftests: add tests_sysfs module
+Thread-Topic: [PATCH v8 03/12] selftests: add tests_sysfs module
+Thread-Index: AQHXs74tItgg1rfm00mmBKYUROs6y6vEf8UAgAArAZA=
+Date:   Tue, 5 Oct 2021 16:57:55 +0000
+Message-ID: <BYAPR13MB2503180449E0863CFD4672F5FDAF9@BYAPR13MB2503.namprd13.prod.outlook.com>
+References: <20210927163805.808907-1-mcgrof@kernel.org>
+ <20210927163805.808907-4-mcgrof@kernel.org> <YVxeTvKkYs938g94@kroah.com>
+In-Reply-To: <YVxeTvKkYs938g94@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=sony.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fcaf89cc-738e-498a-a50f-08d98821473f
+x-ms-traffictypediagnostic: BY5PR13MB4455:
+x-microsoft-antispam-prvs: <BY5PR13MB44557ABC8CDDDB570A0813B6FDAF9@BY5PR13MB4455.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OodLZs6s01a9+4yb3m0yojogOzxScmtOWoxP3IfGkJtaTgtiLg+myi3lIU7tkwAMAuXf6R+VM39UM15dIQRgh9B74GD2r3DGjH76Nyqydglh2MujWQAH/3+f03NgsXr3NNkWpcFrN/5VKHO6aLYgMnVEHjhsrCnGW7JKf+Dq/eOuUv3ozob9htAdxqvqWmftXqb3BYsmUMSMWSn0UdB9lkMFe9MucqBs5I2uz7HHWFad0s1FZCpmPH/+WeaPSHBOd9tIsNm1tMoKbO8/XSyE56K4Eqn3FXNV9LME0lMP8gLc2HOgC2TgQEyzDADO7QWnfhM36BHovuSkkIppSDipK02RzJE5+J2zo1mnoqAQtAxFqQkYOa6a0oMOf/e0S4oVV033AuJchzziUM/0HDQm3V4f9ArOgpQfbgIoOejBK0l2zeIJSHWdEOyoFvuVuJfjyLh5Z+s2mdVE3+xefi/zuNQAfbvXs0trqRpTmAa1w7ECiZ0VHLvF63bNGarPP6420cD3mlaWSvTMT6R14rcx3SeFxG9qa8xbI9pvYtjGfq851cCop7p3nBP9i2zk44kWirDJjvjMF75cwNv5SXhNctrm0lLNRZj0zNo9+1/UwVfaOCS4U4aqCtDkeGKkEtLN43Q0WwJ0Q+hHvkIbcmXU+4WX3RBvOxu97Pacf5sxHRUrUIHTVa3+nFq3Zke22skvTMgSamD1N5mVs1/2sh4x00AIaWSNCXKvkI0TMTQ95/VoWaxe7a3K2rPyHC7FeG2CigYPG0Js/AOi+gPao7Kx1c/zU3FlQx+mll8I6At6e4/+FmwO39tifQZJZkxvV2ZE
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2503.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66556008)(52536014)(6506007)(64756008)(53546011)(66476007)(26005)(55016002)(66446008)(9686003)(8936002)(186003)(5660300002)(7416002)(4326008)(7696005)(38070700005)(8676002)(86362001)(38100700002)(966005)(122000001)(508600001)(110136005)(54906003)(316002)(71200400001)(83380400001)(76116006)(2906002)(66946007)(33656002)(2004002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?9YZlHFC5BrHJ7pC2ntWfXdxuexsli+3htodJcsUnhisAIcScgzuj4zLqW0cn?=
+ =?us-ascii?Q?z4kPIW7QoQ7Fk7Qf6+v9lAeQgVzvNc0uTz7OswKdyOgHKEDUKpFKtxF3Q/LJ?=
+ =?us-ascii?Q?EERbDYEkhvLzuuC623pfjR5P1AmTtIdGiQP1KRI7ZGSDuG4G3gaoWI1Nz3oP?=
+ =?us-ascii?Q?chKusI1+UeKcrhnwzwyBJH3rRwCsEB/pJAHf+mr8wvnHYP8SnafDJ5gmpIlS?=
+ =?us-ascii?Q?esBUHIuxwUj+vwAvQMKAGtVgEEXCsGENQmeoIVLNLlZP7YXx8qhr/T71bens?=
+ =?us-ascii?Q?ABCezZg0NIwAiQEGlN35LIXp+Bfo3PVW5Smz137Hj9SUjtSw3fhbnYDJm2Wt?=
+ =?us-ascii?Q?PsIdFYcEjhFFayjGxU506zJWPgaZjsH5VMb01n7n8tN/OaAHLtfo3ziS2KpF?=
+ =?us-ascii?Q?6PFtPxlhATfx1xnTjL4n+4U3Kr3OsjfHYh34c22FZjO7rfhBpLLRZB+gcSSf?=
+ =?us-ascii?Q?66smtVVyb+CQnXOiDjkrhnVkxBcVvoEsaefI5nJkL9bAkX4axjdl77GRT1zM?=
+ =?us-ascii?Q?pxxxU013p8gE+UcByTBTcZiTDm707orWKYLUmv4lX4AN89xqsu0Voc2CCBSt?=
+ =?us-ascii?Q?21qfbtqAhaFuiZxUQT8tfFHeCCwux+QoCqSuMS39W+GxKKhSperhBbB05eaG?=
+ =?us-ascii?Q?CJjGE8x5Yi+l+RCemYfJgA2x28OJoeEWCpQS9Cj0iyhnCf6AkMGBovwMIQWb?=
+ =?us-ascii?Q?LPT4WLMz+O6Szx4wpYrmMOIWbgXYTerCDcx31ZFYrBiVDKE3uYNNtznxZCGo?=
+ =?us-ascii?Q?ypxjzdih/jpgOmvm5+yqzR/LTst2yJsivldghaNLiV8YctwAMoiYSGoLG5WF?=
+ =?us-ascii?Q?rCfkdrTf4AJg9xrBxpp3+8VOKQdoIEZO2mVD2+T+X2YlIRVkb4lg8JQZVLP+?=
+ =?us-ascii?Q?xolspMSYWB3VpMk/WJd7kscfuwd1PtD5VafWpPzr8aM08y6f80ZRSl4Bhmhh?=
+ =?us-ascii?Q?yldMcaL2HtEkrHhRXVBlvHrJ2OOK/sTbpovWFrY3Wuxb0QxJHQejX+GYtNKV?=
+ =?us-ascii?Q?GKwLq4Dhx9IyCwg8beBVE91FXd4Rh+sX50KYb4KnowR271KfDXJJlEMBpsU/?=
+ =?us-ascii?Q?rX8d5Sj/SVoUbAp8OZh23jEmt+OfPfxCXIshfoiz7gUdUnYp88pUP9ZKt6HO?=
+ =?us-ascii?Q?SI9TQhU09FKxczDaeo9O47wRxeivaZR+ET4ialyHWa82F/vhc5yo3TgWpHND?=
+ =?us-ascii?Q?2zyCUBAPhl55U7cUgzMvLicNRCM4EwPvmZonPGB2JzT4jEbuGh6+UNP6wrsA?=
+ =?us-ascii?Q?VTmZcL8WlUbxPwcRg9Rf61FtBYE6CJ/9NyIe/ek5A6xUEQiOHJ2akDf6o3LT?=
+ =?us-ascii?Q?fDXubILr6aGTANWKDSYw2DrP?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADyq12zNcXAS8+7GwMPsbFNgn-M-7e+mtR=_9PXBTOfX65yoew@mail.gmail.com>
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR13MB2503.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fcaf89cc-738e-498a-a50f-08d98821473f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Oct 2021 16:57:55.9298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LJMrV12k30eNAm1sFG++4jZuHUspmtP82pTHORpKt+u+WkhL+fw5zHRff7fAeDV10MkAggewImJioSOhxkcrwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR13MB4455
+X-Proofpoint-ORIG-GUID: EeylVr4NBOriIM-rODFr0fTwLx2nZqSX
+X-Proofpoint-GUID: EeylVr4NBOriIM-rODFr0fTwLx2nZqSX
+X-Sony-Outbound-GUID: EeylVr4NBOriIM-rODFr0fTwLx2nZqSX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-10-05_03,2021-10-04_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2110050102
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Oct 05, 2021 at 11:18:38AM -0400, Brian Geffon wrote:
-> > On Mon, Oct 4, 2021 at 4:55 PM Minchan Kim <minchan@kernel.org> wrote:
-> > >
-> > > On Mon, Oct 04, 2021 at 02:40:52PM -0400, Brian Geffon wrote:
-> > > > On Mon, Oct 4, 2021 at 2:29 PM Minchan Kim <minchan@kernel.org> wrote:
-> > > > >
-> > > > > On Fri, Oct 01, 2021 at 11:16:27AM -0700, Brian Geffon wrote:
-> > > > > > There does not appear to be a technical reason to not
-> > > > > > allow the zram backing device to be assigned after the
-> > > > > > zram device is initialized.
-> > > > > >
-> > > > > > This change will allow for the backing device to be assigned
-> > > > > > as long as no backing device is already assigned. In that
-> > > > > > event backing_dev would return -EEXIST.
-> > > > > >
-> > > > > > Signed-off-by: Brian Geffon <bgeffon@google.com>
-> > > > > > ---
-> > > > > >  drivers/block/zram/zram_drv.c | 6 +++---
-> > > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> > > > > > index fcaf2750f68f..12b4555ee079 100644
-> > > > > > --- a/drivers/block/zram/zram_drv.c
-> > > > > > +++ b/drivers/block/zram/zram_drv.c
-> > > > > > @@ -462,9 +462,9 @@ static ssize_t backing_dev_store(struct device *dev,
-> > > > > >               return -ENOMEM;
-> > > > > >
-> > > > > >       down_write(&zram->init_lock);
-> > > > > > -     if (init_done(zram)) {
-> > > > > > -             pr_info("Can't setup backing device for initialized device\n");
-> > > > > > -             err = -EBUSY;
-> > > > > > +     if (zram->backing_dev) {
-> > > > > > +             pr_info("Backing device is already assigned\n");
-> > > > > > +             err = -EEXIST;
-> > > > > >               goto out;
-> > > > >
-> > > > > Hi Brian,
-> > > > >
-> > > >
-> > > > Hi Minchan,
-> > > >
-> > > > > I am worry about the inconsistency with other interface of current zram
-> > > > > set up. They were supposed to set it up before zram disksize setting
-> > > > > because it makes code more simple/maintainalbe in that we don't need
-> > > > > to check some feature on the fly.
-> > > > >
-> > > > > Let's think about when zram extends the writeback of incompressible
-> > > > > page on demand. The write path will need the backing_dev under
-> > > > > down_read(&zarm->init_lock) or other conditional variable to check
-> > > > > whether the feature is enabled or not on the fly.
-> > > >
-> > > > I don't follow what you mean by that, writeback_store already holds
-> > > > down_read(&zarm->init_lock).
-> > >
-> > > I should have explained a bit more. Sorry about that.
-> > > I am thinking about a feature to deal with incompressible page.
-> > > Let's have an example to handle incompressible page for that.
-> > >
-> > > zram_bvec_rw
-> > >   zram_bvec_write
-> > >     if (comp_len >= huge_class)
-> > >         zs_page_writeback
-> > >             down_read(&zram->init_lock) or some other way
-> > >
-> > > It's just idea for incompressible page but we might intorduce
-> > > the way for other compresible pages, too at some condition.
-> 
-> (sorry for the top post before)
-> 
-> Hi Minchan,
-> I guess the point I was trying to make was that so long as we allow a
-> reset operation we'll need to be taking the init lock in read mode
-> before doing any writeback. Does that seem right?
 
-It's true and it introduced many lock dependency problems before.
-We actually had the lock in the rw path but we removed the lock
-so without strong reason, I'd like to avoid the lock in the rw path.
 
-commit 08eee69fcf6b
-Author: Minchan Kim <minchan@kernel.org>
-Date:   Thu Feb 12 15:00:45 2015 -0800
+> -----Original Message-----
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Tuesday, October 5, 2021 8:17 AM
+> To: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: tj@kernel.org; akpm@linux-foundation.org; minchan@kernel.org; jeyu@ke=
+rnel.org; shuah@kernel.org; bvanassche@acm.org;
+> dan.j.williams@intel.com; joe@perches.com; tglx@linutronix.de; keescook@c=
+hromium.org; rostedt@goodmis.org; linux-
+> spdx@vger.kernel.org; linux-doc@vger.kernel.org; linux-block@vger.kernel.=
+org; linux-fsdevel@vger.kernel.org; linux-
+> kselftest@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v8 03/12] selftests: add tests_sysfs module
+>=20
+> On Mon, Sep 27, 2021 at 09:37:56AM -0700, Luis Chamberlain wrote:
+> > --- /dev/null
+> > +++ b/lib/test_sysfs.c
+> > @@ -0,0 +1,921 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later OR copyleft-next-0.3.1
+> > +/*
+> > + * sysfs test driver
+> > + *
+> > + * Copyright (C) 2021 Luis Chamberlain <mcgrof@kernel.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modif=
+y it
+> > + * under the terms of the GNU General Public License as published by t=
+he Free
+> > + * Software Foundation; either version 2 of the License, or at your op=
+tion any
+> > + * later version; or, when distributed separately from the Linux kerne=
+l or
+> > + * when incorporated into other software packages, subject to the foll=
+owing
+> > + * license:
 
-    zram: remove init_lock in zram_make_request
+This is a very strange license grant, which I'm not sure is covered by any
+current SPDX syntax.
+" when distributed separately from the Linux kernel or when incorporated in=
+to
+other software packages, subject to the following license:"
 
-    Admin could reset zram during I/O operation going on so we have used
-    zram->init_lock as read-side lock in I/O path to prevent sudden zram
-    meta freeing.
+Why would we care about the license used when the code is used in a non-ker=
+nel
+project?  If it is desired for the code to be available outside the kernel =
+under a
+different license, then surely the easiest thing is to make it available se=
+parately
+under that license.  I'm not sure why the kernel needs to carry this licens=
+e for
+non-kernel use of the code.
 
-    However, the init_lock is really troublesome.  We can't do call
-    zram_meta_alloc under init_lock due to lockdep splat because
-    zram_rw_page is one of the function under reclaim path and hold it as
-    read_lock while other places in process context hold it as write_lock.
-    So, we have used allocation out of the lock to avoid lockdep warn but
-    it's not good for readability and fainally, I met another lockdep splat
-    between init_lock and cpu_hotplug from kmem_cache_destroy during working
-    zsmalloc compaction.  :(
+I would recommend giving this a GPLv2 SPDX header, and maybe in the comment
+at the top of the file put a reference to a git repository where the code c=
+an be
+obtained under a different license.
 
-    Yes, the ideal is to remove horrible init_lock of zram in rw path.  This
-    patch removes it in rw path and instead, add atomic refcount for meta
-    lifetime management and completion to free meta in process context.
-    It's important to free meta in process context because some of resource
-    destruction needs mutex lock, which could be held if we releases the
-    resource in reclaim context so it's deadlock, again.
+Just my 2 cents.
+ -- Tim
 
-    As a bonus, we could remove init_done check in rw path because
-    zram_meta_get will do a role for it, instead.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modif=
+y it
+> > + * under the terms of copyleft-next (version 0.3.1 or later) as publis=
+hed
+> > + * at http://copyleft-next.org/.
+>=20
+> Independant of the fact that I don't like sysfs code attempting to be
+> accessed in the kernel with licenses other than GPLv2, you do not need
+> the license "boilerplate" text at all in files.  That's what the SPDX
+> line is for.
+>=20
+> thanks,
+>=20
+> greg k-h
