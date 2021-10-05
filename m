@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6866422379
-	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 12:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A49B422384
+	for <lists+linux-block@lfdr.de>; Tue,  5 Oct 2021 12:29:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234122AbhJEKa5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Oct 2021 06:30:57 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3923 "EHLO
+        id S234285AbhJEKbO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Oct 2021 06:31:14 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3924 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234209AbhJEKau (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Oct 2021 06:30:50 -0400
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HNtyk6KjRz67Xsj;
-        Tue,  5 Oct 2021 18:25:50 +0800 (CST)
+        with ESMTP id S234108AbhJEKaw (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Oct 2021 06:30:52 -0400
+Received: from fraeml711-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HNtyQ1j4mz67NZp;
+        Tue,  5 Oct 2021 18:25:34 +0800 (CST)
 Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ fraeml711-chm.china.huawei.com (10.206.15.60) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 5 Oct 2021 12:28:58 +0200
+ 15.1.2308.8; Tue, 5 Oct 2021 12:29:00 +0200
 Received: from localhost.localdomain (10.69.192.58) by
  lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Tue, 5 Oct 2021 11:28:55 +0100
+ 15.1.2308.8; Tue, 5 Oct 2021 11:28:58 +0100
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <ming.lei@redhat.com>, <hare@suse.de>,
         <linux-scsi@vger.kernel.org>, <kashyap.desai@broadcom.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v5 06/14] blk-mq-sched: Rename blk_mq_sched_free_{requests -> rqs}()
-Date:   Tue, 5 Oct 2021 18:23:31 +0800
-Message-ID: <1633429419-228500-7-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v5 07/14] blk-mq: Pass driver tags to blk_mq_clear_rq_mapping()
+Date:   Tue, 5 Oct 2021 18:23:32 +0800
+Message-ID: <1633429419-228500-8-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1633429419-228500-1-git-send-email-john.garry@huawei.com>
 References: <1633429419-228500-1-git-send-email-john.garry@huawei.com>
@@ -44,89 +44,64 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-To be more concise and consistent in naming, rename
-blk_mq_sched_free_requests() -> blk_mq_sched_free_rqs().
+Function blk_mq_clear_rq_mapping() will be used for shared sbitmap tags
+in future, so pass a driver tags pointer instead of the tagset container
+and HW queue index.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- block/blk-core.c     | 2 +-
- block/blk-mq-sched.c | 6 +++---
- block/blk-mq-sched.h | 2 +-
- block/blk.h          | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ block/blk-mq.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index cf0899a93367..7c869737ce4c 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -407,7 +407,7 @@ void blk_cleanup_queue(struct request_queue *q)
- 	 */
- 	mutex_lock(&q->sysfs_lock);
- 	if (q->elevator)
--		blk_mq_sched_free_requests(q);
-+		blk_mq_sched_free_rqs(q);
- 	mutex_unlock(&q->sysfs_lock);
- 
- 	percpu_ref_exit(&q->q_usage_counter);
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 644b6d554d72..bdbb6c31b433 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -631,7 +631,7 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
- 			ret = e->ops.init_hctx(hctx, i);
- 			if (ret) {
- 				eq = q->elevator;
--				blk_mq_sched_free_requests(q);
-+				blk_mq_sched_free_rqs(q);
- 				blk_mq_exit_sched(q, eq);
- 				kobject_put(&eq->kobj);
- 				return ret;
-@@ -646,7 +646,7 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
- 	if (blk_mq_is_sbitmap_shared(q->tag_set->flags))
- 		blk_mq_exit_sched_shared_sbitmap(q);
- err_free_map_and_rqs:
--	blk_mq_sched_free_requests(q);
-+	blk_mq_sched_free_rqs(q);
- 	blk_mq_sched_tags_teardown(q);
- 	q->elevator = NULL;
- 	return ret;
-@@ -656,7 +656,7 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e)
-  * called in either blk_queue_cleanup or elevator_switch, tagset
-  * is required for freeing requests
-  */
--void blk_mq_sched_free_requests(struct request_queue *q)
-+void blk_mq_sched_free_rqs(struct request_queue *q)
- {
- 	struct blk_mq_hw_ctx *hctx;
- 	int i;
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index f6a1ce9e31f3..e4d367e0b2a3 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -29,7 +29,7 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx);
- 
- int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e);
- void blk_mq_exit_sched(struct request_queue *q, struct elevator_queue *e);
--void blk_mq_sched_free_requests(struct request_queue *q);
-+void blk_mq_sched_free_rqs(struct request_queue *q);
- 
- static inline bool
- blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
-diff --git a/block/blk.h b/block/blk.h
-index deb8393e34ee..762af963b302 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -240,7 +240,7 @@ static inline void elevator_exit(struct request_queue *q,
- {
- 	lockdep_assert_held(&q->sysfs_lock);
- 
--	blk_mq_sched_free_requests(q);
-+	blk_mq_sched_free_rqs(q);
- 	__elevator_exit(q, e);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 9895b55dff61..1bee153e6b7f 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2304,10 +2304,9 @@ static size_t order_to_size(unsigned int order)
  }
  
+ /* called before freeing request pool in @tags */
+-static void blk_mq_clear_rq_mapping(struct blk_mq_tag_set *set,
+-		struct blk_mq_tags *tags, unsigned int hctx_idx)
++static void blk_mq_clear_rq_mapping(struct blk_mq_tags *drv_tags,
++				    struct blk_mq_tags *tags)
+ {
+-	struct blk_mq_tags *drv_tags = set->tags[hctx_idx];
+ 	struct page *page;
+ 	unsigned long flags;
+ 
+@@ -2316,7 +2315,7 @@ static void blk_mq_clear_rq_mapping(struct blk_mq_tag_set *set,
+ 		unsigned long end = start + order_to_size(page->private);
+ 		int i;
+ 
+-		for (i = 0; i < set->queue_depth; i++) {
++		for (i = 0; i < drv_tags->nr_tags; i++) {
+ 			struct request *rq = drv_tags->rqs[i];
+ 			unsigned long rq_addr = (unsigned long)rq;
+ 
+@@ -2340,8 +2339,11 @@ static void blk_mq_clear_rq_mapping(struct blk_mq_tag_set *set,
+ void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+ 		     unsigned int hctx_idx)
+ {
++	struct blk_mq_tags *drv_tags;
+ 	struct page *page;
+ 
++	drv_tags = set->tags[hctx_idx];
++
+ 	if (tags->static_rqs && set->ops->exit_request) {
+ 		int i;
+ 
+@@ -2355,7 +2357,7 @@ void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+ 		}
+ 	}
+ 
+-	blk_mq_clear_rq_mapping(set, tags, hctx_idx);
++	blk_mq_clear_rq_mapping(drv_tags, tags);
+ 
+ 	while (!list_empty(&tags->page_list)) {
+ 		page = list_first_entry(&tags->page_list, struct page, lru);
 -- 
 2.26.2
 
