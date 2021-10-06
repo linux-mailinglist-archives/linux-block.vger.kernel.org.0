@@ -2,105 +2,137 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 190F24242CA
-	for <lists+linux-block@lfdr.de>; Wed,  6 Oct 2021 18:35:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E4DA424444
+	for <lists+linux-block@lfdr.de>; Wed,  6 Oct 2021 19:32:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233690AbhJFQhU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 6 Oct 2021 12:37:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233666AbhJFQhU (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 6 Oct 2021 12:37:20 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F312C061746
-        for <linux-block@vger.kernel.org>; Wed,  6 Oct 2021 09:35:28 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id w10so3442786ilc.13
-        for <linux-block@vger.kernel.org>; Wed, 06 Oct 2021 09:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FYcOruoZxh6lmMsi/LYojQ9n4MU9jWaK2/KXL1DOsqI=;
-        b=111XAdfH/KsPkjwkYLUqSrlGtP01q7izqR1WoNm60TQQ754VyzDA2hgib9Ji4XsCM0
-         gJN62jGFwdzSXgC11EC3dF+nD8qmfnsrG4tsZQWZwVcCbS2LOrJP0k5bdB+zUoDINiSQ
-         sVP5UXQ9F7tkokJjBMYZg2zS4C3Dd6EYKtwdQwL1R+NTlWbFPeVACW1rwnJ9fUhSDQeL
-         V4XgzOVc5siOF5kPNEtpfrnl4AOnyoSrSrzsd9Yr9L90cBXQ3WIktW5xSFxl8uuTYbiN
-         y6NtrCZqb09Ze+oMQ357fn25PLplqWwQqHtPW8aK9DIHlL9DpBgjc1dSdpsB09j9wu9U
-         ecBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FYcOruoZxh6lmMsi/LYojQ9n4MU9jWaK2/KXL1DOsqI=;
-        b=XRPPDXbvislzpwYOvKWNMAC0umbZp2/pBCr1bO7dlMTJlLS967Akn1aSJXg8L93TjR
-         IYHhqGELCJez+4Qi/YnmdxGvY0kS2l7pKvEYSQbIVllM6FeTouuN1ZpHuAdINx5lqe+Q
-         SSpqasjrMtLHYujvxZZkKwdBbszUz5rrNhch8XMWIx4W6sWL1vYfv6/xegnHXEKKWcTb
-         SqePCSPHcCGlEwYycSfTZ+PG4y/H3jqRwTBvh34GslBWZas1hkSOg4uaIJgCSe4foGUG
-         Ulm9+gN9PpcBQPrOcnuVtsVypWyy/O3FZHJkBbJ59PZttNt8i3wB11XWX3Cwgdmhe55n
-         ND2g==
-X-Gm-Message-State: AOAM532nGr38fFaUVp30Ac+r9+caFcRjsS0ceAhTNvZQySx7HjlIfKuw
-        bwfOL+4ecd2PJQ87c/IvUEfwxIuYnhmjoSAKJCc=
-X-Google-Smtp-Source: ABdhPJxIuFMR3fGp2ArnhHHCXGGWM1H14D1LR4f7bQinlqkqtPQE8AolrNJxvOb+7Wsy8EapyEfV4g==
-X-Received: by 2002:a05:6e02:de8:: with SMTP id m8mr1100729ilj.131.1633538127409;
-        Wed, 06 Oct 2021 09:35:27 -0700 (PDT)
-Received: from p1.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id n17sm1911890ile.76.2021.10.06.09.35.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Oct 2021 09:35:26 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-block@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 3/3] io_uring: inform block layer of how many requests we are submitting
-Date:   Wed,  6 Oct 2021 10:35:22 -0600
-Message-Id: <20211006163522.450882-4-axboe@kernel.dk>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211006163522.450882-1-axboe@kernel.dk>
-References: <20211006163522.450882-1-axboe@kernel.dk>
+        id S238855AbhJFRdy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 6 Oct 2021 13:33:54 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:50240 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231678AbhJFRdv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 6 Oct 2021 13:33:51 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id C8B27224DF;
+        Wed,  6 Oct 2021 17:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1633541517; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=MxeXr2d1lbvQmDb8MHYavn82BOMN9IAiRL9yXG4pCvI=;
+        b=yBkkxhw3ym7xoAGpn+RSblZ0mPVR7E54+FWf5HdqH17fddrV5xTz9E8+5HPZYIVCvIfLpx
+        sojpjT68wHDOn+q51LXPfwragvHrQYlHqjFl/bhNNWavqSTxRNJXB0bgWx78gEA0ep+H8h
+        GiUQi+5uYqUp5iWFJEvgLSfwprzOWGI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1633541517;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=MxeXr2d1lbvQmDb8MHYavn82BOMN9IAiRL9yXG4pCvI=;
+        b=OHSZ30lZe3e/FOnWDqaABIrTNZ2F+H2BnEIYaP3JpLS9csQahkzhDc5A0vAlG+AQJfIENl
+        FTHJJ+o3/AiQcECg==
+Received: from quack2.suse.cz (unknown [10.163.28.18])
+        by relay2.suse.de (Postfix) with ESMTP id B1886A3B89;
+        Wed,  6 Oct 2021 17:31:57 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 59EA41F2C8D; Wed,  6 Oct 2021 19:31:57 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     <linux-block@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/8 v3] bfq: Limit number of allocated scheduler tags per cgroup
+Date:   Wed,  6 Oct 2021 19:31:39 +0200
+Message-Id: <20211006164110.10817-1-jack@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4088; h=from:subject:message-id; bh=yUSAzX82wEpA49FQSo1XRvAj0+1W/b2lkZ0Bh/dJdTU=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBhXd1e77MKyH/oq6Hrjy/n/rE1x/fjSelvOVjeOXWY 6TZEoPiJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYV3dXgAKCRCcnaoHP2RA2VSYB/ 4s1fJZ41QrK2wXsbxu2ObEuPJfiQVCcaZ0G6K9lYAc3HV1mWKRWhXyG0A80xS5FRjWyyNaT4D2GU24 FE5WPOiM5xkzzzqcoPB8TV0sYmZog0ki9fdXj66LtQfe8zHr5ZVFT8/VtaPma2kqZxFK3z+61h114W hd9IIbLRk4ZU+gGao8vGmA6U+skTf18LtTHBv63RndJAF34uDAHSmthVlakdjQ8VdBukkNdvejaFf9 oDigVtKxZUkI8glGebqrjahIsXxpLGVpIPPIg0fUivXGikVxBG/s9yMu8/RJjafbYtjhnSrS8h9tZG sQjbZIE8OE5gi6yjwSTwgz4EzteFKl
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The block layer can use this knowledge to make smarter decisions on
-how to handle the request, if it knows that N more may be coming. Switch
-to using blk_start_plug_nr_ios() to pass in that information.
+Hello!
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/io_uring.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Here is the third revision of my patches to fix how bfq weights apply on cgroup
+throughput and on throughput of processes with different IO priorities. Since
+v2 I've added some more patches so that now IO priorities also result in
+service differentiation (previously they had no effect on service
+differentiation on some workloads similarly to cgroup weights). The last patch
+in the series still needs some work as in the current state it causes a
+notable regression (~20-30%) with dbench benchmark for large numbers of
+clients. I've verified that the last patch is indeed necessary for the service
+differentiation with the workload described in its changelog. As we discussed
+with Paolo, I have also found out that if I remove the "waker has enough
+budget" condition from bfq_select_queue(), dbench performance is restored
+and the service differentiation is still good. But we probably need some
+justification or cleaner solution than just removing the condition so that
+is still up to discussion. But first seven patches already noticeably improve
+the situation for lots of workloads so IMO they stand on their own and
+can be merged regardless of how we go about the last patch.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 62dc128e9b6b..c35b0f230be8 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -314,6 +314,8 @@ struct io_submit_state {
- 	bool			plug_started;
- 	bool			need_plug;
- 
-+	unsigned short		submit_nr;
-+
- 	/*
- 	 * Batch completion logic
- 	 */
-@@ -7035,7 +7037,7 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 	 * is potentially a read/write to block based storage.
- 	 */
- 	if (state->need_plug && io_op_defs[req->opcode].plug) {
--		blk_start_plug(&state->plug);
-+		blk_start_plug_nr_ios(&state->plug, state->submit_nr);
- 		state->plug_started = true;
- 		state->need_plug = false;
- 	}
-@@ -7150,6 +7152,7 @@ static void io_submit_state_start(struct io_submit_state *state,
- {
- 	state->plug_started = false;
- 	state->need_plug = max_ios > 2;
-+	state->submit_nr = max_ios;
- 	/* set only head, no need to init link_last in advance */
- 	state->link.head = NULL;
- }
--- 
-2.33.0
+Changes since v2:
+* Rebased on top of current Linus' tree
+* Updated computation of scheduler tag proportions to work correctly even
+  for processes within the same cgroup but with different IO priorities
+* Added comment roughly explaining why we limit tag depth
+* Added patch limiting waker / wakee detection in time so avoid at least the
+  most obvious false positives
+* Added patch to log waker / wakee detections in blktrace for better debugging
+* Added patch properly account injected IO
 
+Changes since v1:
+* Fixed computation of appropriate proportion of scheduler tags for a cgroup
+  to work with deeper cgroup hierarchies.
+
+Original cover letter:
+
+I was looking into why cgroup weights do not have any measurable impact on
+writeback throughput from different cgroups. This actually a regression from
+CFQ where things work more or less OK and weights have roughly the impact they
+should. The problem can be reproduced e.g. by running the following easy fio
+job in two cgroups with different weight:
+
+[writer]
+directory=/mnt/repro/
+numjobs=1
+rw=write
+size=8g
+time_based
+runtime=30
+ramp_time=10
+blocksize=1m
+direct=0
+ioengine=sync
+
+I can observe there's no significat difference in the amount of data written
+from different cgroups despite their weights are in say 1:3 ratio.
+
+After some debugging I've understood the dynamics of the system. There are two
+issues:
+
+1) The amount of scheduler tags needs to be significantly larger than the
+amount of device tags. Otherwise there are not enough requests waiting in BFQ
+to be dispatched to the device and thus there's nothing to schedule on.
+
+2) Even with enough scheduler tags, writers from two cgroups eventually start
+contending on scheduler tag allocation. These are served on first come first
+served basis so writers from both cgroups feed requests into bfq with
+approximately the same speed. Since bfq prefers IO from heavier cgroup, that is
+submitted and completed faster and eventually we end up in a situation when
+there's no IO from the heavier cgroup in bfq and all scheduler tags are
+consumed by requests from the lighter cgroup. At that point bfq just dispatches
+lots of the IO from the lighter cgroup since there's no contender for disk
+throughput. As a result observed throughput for both cgroups are the same.
+
+This series fixes this problem by accounting how many scheduler tags are
+allocated for each cgroup and if a cgroup has more tags allocated than its
+fair share (based on weights) in its service tree, we heavily limit scheduler
+tag bitmap depth for it so that it is not be able to starve other cgroups from
+scheduler tags.
+
+What do people think about this?
+
+								Honza
+
+Previous versions:
+Link: http://lore.kernel.org/r/20210712171146.12231-1-jack@suse.cz # v1
+Link: http://lore.kernel.org/r/20210715132047.20874-1-jack@suse.cz # v2
