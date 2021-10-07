@@ -2,159 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B43B4252E9
-	for <lists+linux-block@lfdr.de>; Thu,  7 Oct 2021 14:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D3F04253FF
+	for <lists+linux-block@lfdr.de>; Thu,  7 Oct 2021 15:25:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241261AbhJGMZJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 7 Oct 2021 08:25:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54416 "EHLO
+        id S241388AbhJGN1j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 Oct 2021 09:27:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241197AbhJGMZI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Oct 2021 08:25:08 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36FE6C061760
-        for <linux-block@vger.kernel.org>; Thu,  7 Oct 2021 05:23:15 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id s17so1367361ioa.13
-        for <linux-block@vger.kernel.org>; Thu, 07 Oct 2021 05:23:15 -0700 (PDT)
+        with ESMTP id S241323AbhJGN1j (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Oct 2021 09:27:39 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885B7C061746
+        for <linux-block@vger.kernel.org>; Thu,  7 Oct 2021 06:25:45 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id j2so6389250ilo.10
+        for <linux-block@vger.kernel.org>; Thu, 07 Oct 2021 06:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=2JAbOu4iCNPv9BCnS4VkAc1VHOsGgK+od/5CGdbnoE4=;
-        b=c/2iJMPmyHifXAI4ghchmsdw0yB600iusn6r+7ZQpzRV+SDvov6y6P2wzpygNZMzzi
-         AQScjxMmXW9h2Wj3At5QqjwqnQhtSW1/6/qHo+2xMCskzg+4fO30ujqBVrMA1NOuuD6p
-         tBmCnct+Hyh4xmxa3TD9jvUoYVSjjKSdx8mktjv5qr4lqw3lxWaz3pE7bdpFNeAYA7+2
-         YJmukbtcLrL8vxOabEipyoLwuRU/n4jJs+nMqbvdunGgUWLPmBvgmdin5Q9+ZPy07zsY
-         xmWwwkm+IuP7xhNKyNX+FcOXZISfR/LQrInH5I9HjV3JBANqZcQQY8XomSinOUFMzTgk
-         UC+g==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=e8iggSHPchh2/syKEAwU5dTtVJBXfGJ7qwPY92Ln6nY=;
+        b=KSzaZHhfVJT+I/SyNiV2YhOMBC9O7C4QuqLHxsm8j+or/ha26PjQxI83X9JjMxhSuP
+         St9S20WU/VOoRkvrzMlRdOvHMrJLixEfbNUo92/cpW/1yy9Th/AJSPUnQPHdoZM9+saj
+         NuUiNuzfbxlWzP81F05SLxu3+uPWmD8EwUtBhNmZ9TihV1ggPWK+CpLWnOTekzWeL4tY
+         Ua20VoRvkIHwkTs59v7ua9fvTbRDI79mCyNHfUDm6Ml5g99n0LiuBuwlICluMZigxVlH
+         EKxpZtb9ObCsufDzBOqZ97IThmg0rD+rIgmsh6OZpFU1IuAqNl2M3xLVHeOlKPqbmhAq
+         C48A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2JAbOu4iCNPv9BCnS4VkAc1VHOsGgK+od/5CGdbnoE4=;
-        b=T8Amdmzb3KgbpX5i18i4/faoOnx4EyDw5DvxrEJKmStZRik6ON8AgmzALtMYQZt3NK
-         Z1PF2voi/kFhMSaW5tPlcN38RtpX3MsXpv3AVHB5I0WNkMyIbPlvIES6q3Jm/L7lOi0s
-         j3UJ5pUd+XM4zJO+8xAgd+NDVgzhr9LAYugpqn8oP9dr7hA3q04uZwkqgeovOuAFg17C
-         GH1f8OFvZwLTy6U/hQ2QFo6kRiSCqynKy3+ICASTx4L9jh3WCql7Y/3V9oGfTGl6J7mK
-         9kI6mOCUawdK/fusG4W8pZdx2U4ZPPU7WKMqUUu3sBbUC53Fvt6VNM/V+X/bpDNVMFhZ
-         MCLQ==
-X-Gm-Message-State: AOAM531w2LEN1BHv25NZwfkb/SEYYWOo6W/V3lUl7fbfOs3F+2kYMLoq
-        OufGzpavB5zzD4KKHHlkCPC8c+y3IwGEIQ==
-X-Google-Smtp-Source: ABdhPJxmUTWfz6LVHLv+t/Z3t4R+wcxwrc8vUIes4XMWLaZ7YTb/qWmi4eM1YxV+zIbtKuq66alGOA==
-X-Received: by 2002:a6b:c94b:: with SMTP id z72mr2780152iof.101.1633609394330;
-        Thu, 07 Oct 2021 05:23:14 -0700 (PDT)
-Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id b6sm12703433iod.55.2021.10.07.05.23.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Oct 2021 05:23:13 -0700 (PDT)
-Subject: Re: kernel BUG in block_invalidatepage
-To:     Hao Sun <sunhao.th@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org
-References: <CACkBjsZh7DCs+N+R=0+mnNqFZW8ck5cSgV4MpGM6ySbfenUJ+g@mail.gmail.com>
- <CACkBjsb0Hxam_e5+vOOanF_BfGAcf5UY+=Cc-pyphQftETTe8Q@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <31d403da-5940-064d-53cc-11423a9031d8@kernel.dk>
-Date:   Thu, 7 Oct 2021 06:23:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=e8iggSHPchh2/syKEAwU5dTtVJBXfGJ7qwPY92Ln6nY=;
+        b=vWymJHnfky5jTJUswPZlbjBz7OM2ibrElOQKlmWxT1TukLA8an4Rt4KRHiz2v5JBl2
+         URTzi3OPrhKtQ8p+mhXyFucbfWAzqbpKDqOQJAcDTXoh+/8FDcGPTzKV2Vn1FliO2hJi
+         kDv+OWJirG/aR3I+EObDOgeKZZU9JhUWmt3jGDuusUZ6xOZDLBA6Y+q/XmzoLLilM8Uw
+         05aWrTnsphzzkt+CRMRZpEJt7TuPOgqwBOm32aQSXCfsIsEaYAdwLkj7hO9U9eyYiT08
+         JdksuTBGQakOKPk0MqZPsjIPoeCgOwqaHxHB1cBh9N5ubpPR8QpUwzIRMChdOWfyJf+V
+         kaLg==
+X-Gm-Message-State: AOAM531OkTLjAA9+K+47+OXdVSDGlyDbuzj3DkU3QK798VUmRIjllBz4
+        O4ZBh7Lx6D6XSxJKasZtLJ0wxIcmvZCG9ZpcnqM=
+X-Google-Smtp-Source: ABdhPJx0CrVIuPJFQGbfZDNR0hSnT6IpUKcpxaMdSlRzbg1aej3clMfbvsgp4b8iFmVdZccWfGVVxqx/r/EvCSQFfyY=
+X-Received: by 2002:a05:6e02:1baa:: with SMTP id n10mr3004341ili.215.1633613144845;
+ Thu, 07 Oct 2021 06:25:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACkBjsb0Hxam_e5+vOOanF_BfGAcf5UY+=Cc-pyphQftETTe8Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a02:b399:0:0:0:0:0 with HTTP; Thu, 7 Oct 2021 06:25:44 -0700 (PDT)
+Reply-To: attsona389@gmail.com
+From:   sona attah <tomas46john@gmail.com>
+Date:   Thu, 7 Oct 2021 14:25:44 +0100
+Message-ID: <CABa4VuBaDLxxjCxSGmzZ=oUfJnv9v-MppkmTJuEhNaEGnCTWQA@mail.gmail.com>
+Subject: hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/7/21 12:40 AM, Hao Sun wrote:
-> Hello,
-> 
-> This crash can still be triggered repeatedly on the latest kernel.
-> 
-> HEAD commit: 60a9483534ed Merge tag 'warning-fixes-20211005'
-> git tree: upstream
-> kernel config: https://drive.google.com/file/d/1u-ncYGLkq3xqdlNQYJz8-G6Fhf3H-moP/view?usp=sharing
-> 
-> ------------[ cut here ]------------
-> kernel BUG at fs/buffer.c:1514!
-> invalid opcode: 0000 [#1] PREEMPT SMP
-> CPU: 3 PID: 25416 Comm: syz-executor Not tainted 5.15.0-rc4+ #22
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:block_invalidatepage+0x27f/0x2a0 fs/buffer.c:1514
-> Code: ff ff e8 b4 fd d6 ff b9 02 00 00 00 be 02 00 00 00 4c 89 ff 48
-> c7 c2 40 b1 25 84 e8 8b 1b c5 02 e9 c9 fe ff ff e8 91 fd d6 ff <0f> 0b
-> e8 8a fd d6 ff 0f 0b e8 83 fd d6 ff 48 8d 5d ff e9 57 ff ff
-> RSP: 0018:ffffc9000538fa70 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: ffffea0004518000 RCX: 0000000000000000
-> RDX: ffff88810dd2a280 RSI: ffffffff8160943f RDI: ffffea0004518000
-> RBP: ffffea0004518000 R08: 0000000000000001 R09: 0000000000000000
-> R10: ffffc9000538f908 R11: 0000000000000001 R12: ffffffff816091c0
-> R13: ffffc9000538fb78 R14: 0000000000000000 R15: ffffc9000538fb00
-> FS:  0000000000000000(0000) GS:ffff88813dd00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020590008 CR3: 000000000588a000 CR4: 0000000000750ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  do_invalidatepage mm/truncate.c:157 [inline]
->  truncate_cleanup_page+0x15c/0x280 mm/truncate.c:176
->  truncate_inode_pages_range+0x169/0xc20 mm/truncate.c:325
->  kill_bdev.isra.16+0x28/0x30 block/bdev.c:77
->  blkdev_flush_mapping+0x4c/0x130 block/bdev.c:658
->  blkdev_put_whole+0x54/0x60 block/bdev.c:689
->  blkdev_put+0x6f/0x210 block/bdev.c:953
->  blkdev_close+0x26/0x30 block/fops.c:460
->  __fput+0xdf/0x380 fs/file_table.c:280
->  task_work_run+0x86/0xd0 kernel/task_work.c:164
->  exit_task_work include/linux/task_work.h:32 [inline]
->  do_exit+0x4f1/0x11c0 kernel/exit.c:825
->  do_group_exit+0x57/0xe0 kernel/exit.c:922
->  get_signal+0x1d0/0x10b0 kernel/signal.c:2868
->  arch_do_signal_or_restart+0xa9/0x860 arch/x86/kernel/signal.c:865
->  handle_signal_work kernel/entry/common.c:148 [inline]
->  exit_to_user_mode_loop kernel/entry/common.c:172 [inline]
->  exit_to_user_mode_prepare+0xf2/0x280 kernel/entry/common.c:207
->  __syscall_exit_to_user_mode_work kernel/entry/common.c:289 [inline]
->  syscall_exit_to_user_mode+0x19/0x60 kernel/entry/common.c:300
->  do_syscall_64+0x40/0xb0 arch/x86/entry/common.c:86
->  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> RIP: 0033:0x4196af
-> Code: Unable to access opcode bytes at RIP 0x419685.
-> RSP: 002b:00007faeee07b9c0 EFLAGS: 00000293 ORIG_RAX: 0000000000000012
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00000000004196af
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000000003 R15: 000000002059c040
-> Modules linked in:
-> Dumping ftrace buffer:
->    (ftrace buffer empty)
-> ---[ end trace bb86c370c06fa387 ]---
-> RIP: 0010:block_invalidatepage+0x27f/0x2a0 fs/buffer.c:1514
-> Code: ff ff e8 b4 fd d6 ff b9 02 00 00 00 be 02 00 00 00 4c 89 ff 48
-> c7 c2 40 b1 25 84 e8 8b 1b c5 02 e9 c9 fe ff ff e8 91 fd d6 ff <0f> 0b
-> e8 8a fd d6 ff 0f 0b e8 83 fd d6 ff 48 8d 5d ff e9 57 ff ff
-> RSP: 0018:ffffc9000538fa70 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: ffffea0004518000 RCX: 0000000000000000
-> RDX: ffff88810dd2a280 RSI: ffffffff8160943f RDI: ffffea0004518000
-> RBP: ffffea0004518000 R08: 0000000000000001 R09: 0000000000000000
-> R10: ffffc9000538f908 R11: 0000000000000001 R12: ffffffff816091c0
-> R13: ffffc9000538fb78 R14: 0000000000000000 R15: ffffc9000538fb00
-> FS:  0000000000000000(0000) GS:ffff88813dd00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f397f798010 CR3: 0000000012392000 CR4: 0000000000750ee0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-
-Some more details would be nice here... What's being run to trigger
-this?
-
--- 
-Jens Axboe
-
+0JTQvtGA0L7Qs9C+0Lkg0LTRgNGD0LMsDQoNCtCc0LXQvdGPINC30L7QstGD0YIg0LHQsNGA0YDQ
+uNGB0YLQtdGAINCh0L7QvdCwINCQ0YLRgtCwLCDQu9C40YfQvdGL0Lkg0L/QvtCy0LXRgNC10L3Q
+vdGL0Lkg0LzQvtC10LPQviDQv9C+0LrQvtC50L3QvtCz0L4NCtC60LvQuNC10L3RgtCwLCDRg9C8
+0LXRgNGI0LXQs9C+INC+0YIg0YHQtdGA0LTQtdGH0L3QvtCz0L4g0L/RgNC40YHRgtGD0L/QsCDQ
+siAyMDA5INCz0L7QtNGDLiDQntC9INC/0L7Qu9C+0LbQuNC7INC30LTQtdGB0YwNCjE1IDUwMCAw
+MDAg0LTQvtC70LvQsNGA0L7QsiDQsiDQsdCw0L3Qui4NCtCe0L0g0YPQvNC10YAsINC90LUg0LjQ
+vNC10Y8g0LfQsNGA0LXQs9C40YHRgtGA0LjRgNC+0LLQsNC90L3Ri9GFINCx0LvQuNC20LDQudGI
+0LjRhSDRgNC+0LTRgdGC0LLQtdC90L3QuNC60L7Qsiwg0YLQsNC6INC60LDQug0K0LHRi9C7INC0
+0LDQstC90L4g0LIg0YDQsNC30LLQvtC00LUg0Lgg0L3QtSDQuNC80LXQuyDQtNC10YLQtdC5Lg0K
+0JHQsNC90Log0YHQstGP0LfQsNC70YHRjyDRgdC+INC80L3QvtC5INC4INGB0LrQsNC30LDQuywg
+0YfRgtC+INC+0L3QuCDQutC+0L3RhNC40YHQutGD0Y7RgiDQtdCz0L4g0YHRh9C10YIg0Lgg0LTQ
+tdC90YzQs9C4LA0K0LXRgdC70Lgg0Y8g0L3QtSDQv9GA0LXQtNGB0YLQsNCy0LvRjiDQutC+0LPQ
+vi3Qu9C40LHQviDQuNC3INC10LPQviDRgNC+0LTRgdGC0LLQtdC90L3QuNC60L7Qsi4g0K8g0YHQ
+stGP0LfQsNC70YHRjyDRgQ0K0LLQsNC80LgsINC/0L7RgtC+0LzRgyDRh9GC0L4g0LLRiyDQvtGC
+0LvQuNGH0L3QviDRgdC/0YDQsNCy0LvRj9C10YLQtdGB0Ywg0YEg0Y3RgtC+0Lkg0YLRgNCw0L3Q
+t9Cw0LrRhtC40LXQuSDQuA0K0L/QvtC00YXQvtC00LjRgtC1INC60LDQuiDQtdCz0L4g0LHQu9C4
+0LbQsNC50YjQuNC1INGA0L7QtNGB0YLQstC10L3QvdC40LrQuCwg0LzRiyDQvNC+0LbQtdC8INGA
+0LDQsdC+0YLQsNGC0Ywg0LLQvNC10YHRgtC1LA0K0YfRgtC+0LHRiyDQv9C+0LvRg9GH0LjRgtGM
+INGN0YLQuCDQtNC10L3RjNCz0Lgg0Lgg0YDQsNC30LTQtdC70LjRgtGMINC40YUgNTAvNTAuINCf
+0L7QttCw0LvRg9C50YHRgtCwLCDQstC10YDQvdC40YLQtdGB0YwNCtC60L4g0LzQvdC1INC4INGB
+0L7QvtCx0YnQuNGC0LUg0YHQstC+0Y4g0LjQvdGE0L7RgNC80LDRhtC40Y4sINC60LDQuiDRg9C6
+0LDQt9Cw0L3QviDQvdC40LbQtSwg0LTQu9GPINC/0L7Qu9GD0YfQtdC90LjRjw0K0LHQvtC70LXQ
+tSDQv9C+0LTRgNC+0LHQvdC+0Lkg0LjQvdGE0L7RgNC80LDRhtC40LguDQoNCtCf0L7Qu9C90L7Q
+tSDQuNC80Y86DQrQmtC+0L3RgtCw0LrRgtC90YvQuSDQsNC00YDQtdGBOg0K0J3QvtC80LXRgCDQ
+vNC+0LHQuNC70YzQvdC+0LPQviDRgtC10LvQtdGE0L7QvdCwOg0KDQrQn9C+0LbQsNC70YPQudGB
+0YLQsCwg0L7RgtCy0LXRgtGM0YLQtSDQvNC90LUg0L3QsCDRjdGC0L7RgiDQsNC00YDQtdGBINGN
+0LvQtdC60YLRgNC+0L3QvdC+0Lkg0L/QvtGH0YLRiyDQtNC70Y8g0L/QvtC70YPRh9C10L3QuNGP
+DQrQsdC+0LvQtdC1INC/0L7QtNGA0L7QsdC90L7QuSDQuNC90YTQvtGA0LzQsNGG0LjQuC4NCmF0
+dHNvbmEzODlAZ21haWwuY29tDQoNCtCY0YHQutGA0LXQvdC90LUg0JLQsNGILA0K0JHQsNGA0YDQ
+uNGB0YLQtdGAINCh0L7QvdCwINCQ0YLRgtCwDQo=
