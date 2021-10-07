@@ -2,104 +2,140 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09E25424A65
-	for <lists+linux-block@lfdr.de>; Thu,  7 Oct 2021 01:13:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1929C424D5B
+	for <lists+linux-block@lfdr.de>; Thu,  7 Oct 2021 08:40:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231154AbhJFXPb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 6 Oct 2021 19:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
+        id S233507AbhJGGme (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 Oct 2021 02:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbhJFXPa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 6 Oct 2021 19:15:30 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5EBC061746
-        for <linux-block@vger.kernel.org>; Wed,  6 Oct 2021 16:13:37 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id x1so724956iof.7
-        for <linux-block@vger.kernel.org>; Wed, 06 Oct 2021 16:13:37 -0700 (PDT)
+        with ESMTP id S232680AbhJGGmd (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Oct 2021 02:42:33 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8C3C061746;
+        Wed,  6 Oct 2021 23:40:40 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id c29so4506786pfp.2;
+        Wed, 06 Oct 2021 23:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fB0J1oLaWn8aQX1qmT2pF+15JxKPoNeiCpTQYqkrAY4=;
-        b=nLas33MUIpZaohjazlCL17urrtmqiKZ3QzMe/8Om2Fpq5nCQQwiuLkYYuUviOpjacy
-         VSqAu7nWldscev6+JBRyILC0rX1rrfCu6TUlWdG5CZwDgClU8DzgW22kUQ3WZi9UfZSm
-         u/AcvsJotbJPNr5Bkugzbdak0iZLfJcMbYFTB7RWD2nOtJTYbzjCjdb4ZLp1yXEVNccx
-         HnALQWp2Fa1RyGTI4dTH50GP+lgJlIJu/abSLCJAMGWQw+cIV2QxflOOTfYgQaWQMv48
-         Vi4p35pX0oCT1fMS9jWIXM7T7YgyRPT7JiQyWwhWV4FYo4vgMs+JoY2dM3v9YRTyUlRK
-         PECA==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=rchYZ1OmvrTj6Dnb5m6nbANunxf9oFlLci7r8WnLUPs=;
+        b=O+7v3Tfioq20KfK+iM0C+zGiMKkOfAsz+ANPc0m+oNdQQOsOiltCkSWLlWzH3uGSAw
+         6VTdx1hFDFjrc2AKEBhK2aNu1U8F5Dqcef+wgfRGfqO+kA86OnmQL+fAqGMGJ6Cgf794
+         2apr60YhCU8TtaK892mqvAlkPPf54ZQLDkmeB/kp2lU/AGyPMwXSv66laka4M0tQoLZ4
+         uV/ieHXAPFvzBTrBe4C8m4y5/UgTdzQcY9gQ9TvpJpzfeg1V4AEjYblTstjiYX2+8QFR
+         DtVpbsVrNOPBb2jH3eXW1FUjU1hFa90FaXO3MyxAAPeEPXv3qHPjpXb+LZe3H1w8lbKO
+         IsmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fB0J1oLaWn8aQX1qmT2pF+15JxKPoNeiCpTQYqkrAY4=;
-        b=xTzIKrIpXYvo/WCZ/1qhBKNyceS3T5+DMpSjqiSI7gjP7vEiMly91vSXQ4rARS0a8G
-         NR7OKcPy/ljRYtIxkz5vshYC4F0T+lnzZ9VmXw6Hv9nE0J5r/drxSVhfj8C+fuaIArpA
-         XAo96SLz5cgpvZXzYViu41IxnnVAhYkdFuO2zCyo4t97v6nrVYe0ZpfhnyezBSpTGUqe
-         0Spx5ZdB/c1XH+56iDYn9lwio9c3GHG19tVDpFVp8gygOjnLtRKu2NTDoHbaQ2tI8Xw/
-         Xpc5RPnCR1BygmM8d3+pgrdtKC/CHbJX/zW1u3qmLEHm4brTyMO+P7eX9L/fpHxaHrgr
-         Q49Q==
-X-Gm-Message-State: AOAM533AT/pXVpPle8mN7/2IJEpxXmiU274OtfLQzRNTb/JmTfQ6u15p
-        QmbKRGf1ny1QjqWshmi0kvKJ2dy+qrMOmQ==
-X-Google-Smtp-Source: ABdhPJw0I/o3+XDl8OxTztxBYD/piLLj1nuhTQ8r5NvmhLggRDnuU+3L1lqRAAeRa8IGwiWX/YKUew==
-X-Received: by 2002:a02:c7d2:: with SMTP id s18mr385807jao.68.1633562016617;
-        Wed, 06 Oct 2021 16:13:36 -0700 (PDT)
-Received: from p1.localdomain ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id o1sm12955203ilj.41.2021.10.06.16.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Oct 2021 16:13:36 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-block@vger.kernel.org
-Cc:     io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 3/3] io_uring: inform block layer of how many requests we are submitting
-Date:   Wed,  6 Oct 2021 17:13:30 -0600
-Message-Id: <20211006231330.20268-4-axboe@kernel.dk>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211006231330.20268-1-axboe@kernel.dk>
-References: <20211006231330.20268-1-axboe@kernel.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=rchYZ1OmvrTj6Dnb5m6nbANunxf9oFlLci7r8WnLUPs=;
+        b=eZB0eAnEDRLkxKE2EbWgwNBPhFZm47FbP7QvcPTTkXxntJooigy0rnoIk/QOUosPmN
+         0Sncq0QRLqQlSaFWS+9OHvb8S9gXqIQqjB8d09C9TzYH82XCtbc54g85oKWIUWnr7fS0
+         VH8qPScG1vtLTI9f2vR681dfzyXu2INoOAcenLLbJXdu5bBSXsB40ECsX8UCM6YNTDfJ
+         JLeG6mMrqlOZM+Y2+rkyuIKzaa3C4hKEKD+MUcel1w6hcdm/eaPVM84kiKqoq5LXcqhz
+         lPsX5TsLVSQHc0LzllZGAwpEu6Ck0ACD1+kPFFh80FzmRDi6brE1fO/IVswUlapCYBHA
+         Jqhg==
+X-Gm-Message-State: AOAM533ZhXfdvv+YYsN8OmLpSvMg08Q21XyzzF7a55xNEFTJSzBkq45u
+        HMx7fVEPCte7a3CHATafbMKi+ffFfKjgPr0IRyp7E6CfaKFB+N0=
+X-Google-Smtp-Source: ABdhPJxrWmcU7AzTy6Llp+zmxjXH3KAy/mRdFUScx+jA5RlbVQ4lgC0RabvXrznpxqpNB3TfgOmg0bxTrCTOmnCrneg=
+X-Received: by 2002:a63:85c6:: with SMTP id u189mr1970797pgd.381.1633588840007;
+ Wed, 06 Oct 2021 23:40:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACkBjsZh7DCs+N+R=0+mnNqFZW8ck5cSgV4MpGM6ySbfenUJ+g@mail.gmail.com>
+In-Reply-To: <CACkBjsZh7DCs+N+R=0+mnNqFZW8ck5cSgV4MpGM6ySbfenUJ+g@mail.gmail.com>
+From:   Hao Sun <sunhao.th@gmail.com>
+Date:   Thu, 7 Oct 2021 14:40:29 +0800
+Message-ID: <CACkBjsb0Hxam_e5+vOOanF_BfGAcf5UY+=Cc-pyphQftETTe8Q@mail.gmail.com>
+Subject: Re: kernel BUG in block_invalidatepage
+To:     Jens Axboe <axboe@kernel.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The block layer can use this knowledge to make smarter decisions on
-how to handle the request, if it knows that N more may be coming. Switch
-to using blk_start_plug_nr_ios() to pass in that information.
+Hello,
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/io_uring.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This crash can still be triggered repeatedly on the latest kernel.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 73135c5c6168..90af264fdac6 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -316,6 +316,7 @@ struct io_submit_state {
- 
- 	bool			plug_started;
- 	bool			need_plug;
-+	unsigned short		submit_nr;
- 	struct blk_plug		plug;
- };
- 
-@@ -7027,7 +7028,7 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 		if (state->need_plug && io_op_defs[opcode].plug) {
- 			state->plug_started = true;
- 			state->need_plug = false;
--			blk_start_plug(&state->plug);
-+			blk_start_plug_nr_ios(&state->plug, state->submit_nr);
- 		}
- 
- 		req->file = io_file_get(ctx, req, READ_ONCE(sqe->fd),
-@@ -7148,6 +7149,7 @@ static void io_submit_state_start(struct io_submit_state *state,
- {
- 	state->plug_started = false;
- 	state->need_plug = max_ios > 2;
-+	state->submit_nr = max_ios;
- 	/* set only head, no need to init link_last in advance */
- 	state->link.head = NULL;
- }
--- 
-2.33.0
+HEAD commit: 60a9483534ed Merge tag 'warning-fixes-20211005'
+git tree: upstream
+kernel config: https://drive.google.com/file/d/1u-ncYGLkq3xqdlNQYJz8-G6Fhf3H-moP/view?usp=sharing
 
+------------[ cut here ]------------
+kernel BUG at fs/buffer.c:1514!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 3 PID: 25416 Comm: syz-executor Not tainted 5.15.0-rc4+ #22
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+RIP: 0010:block_invalidatepage+0x27f/0x2a0 fs/buffer.c:1514
+Code: ff ff e8 b4 fd d6 ff b9 02 00 00 00 be 02 00 00 00 4c 89 ff 48
+c7 c2 40 b1 25 84 e8 8b 1b c5 02 e9 c9 fe ff ff e8 91 fd d6 ff <0f> 0b
+e8 8a fd d6 ff 0f 0b e8 83 fd d6 ff 48 8d 5d ff e9 57 ff ff
+RSP: 0018:ffffc9000538fa70 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffffea0004518000 RCX: 0000000000000000
+RDX: ffff88810dd2a280 RSI: ffffffff8160943f RDI: ffffea0004518000
+RBP: ffffea0004518000 R08: 0000000000000001 R09: 0000000000000000
+R10: ffffc9000538f908 R11: 0000000000000001 R12: ffffffff816091c0
+R13: ffffc9000538fb78 R14: 0000000000000000 R15: ffffc9000538fb00
+FS:  0000000000000000(0000) GS:ffff88813dd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020590008 CR3: 000000000588a000 CR4: 0000000000750ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ do_invalidatepage mm/truncate.c:157 [inline]
+ truncate_cleanup_page+0x15c/0x280 mm/truncate.c:176
+ truncate_inode_pages_range+0x169/0xc20 mm/truncate.c:325
+ kill_bdev.isra.16+0x28/0x30 block/bdev.c:77
+ blkdev_flush_mapping+0x4c/0x130 block/bdev.c:658
+ blkdev_put_whole+0x54/0x60 block/bdev.c:689
+ blkdev_put+0x6f/0x210 block/bdev.c:953
+ blkdev_close+0x26/0x30 block/fops.c:460
+ __fput+0xdf/0x380 fs/file_table.c:280
+ task_work_run+0x86/0xd0 kernel/task_work.c:164
+ exit_task_work include/linux/task_work.h:32 [inline]
+ do_exit+0x4f1/0x11c0 kernel/exit.c:825
+ do_group_exit+0x57/0xe0 kernel/exit.c:922
+ get_signal+0x1d0/0x10b0 kernel/signal.c:2868
+ arch_do_signal_or_restart+0xa9/0x860 arch/x86/kernel/signal.c:865
+ handle_signal_work kernel/entry/common.c:148 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:172 [inline]
+ exit_to_user_mode_prepare+0xf2/0x280 kernel/entry/common.c:207
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:289 [inline]
+ syscall_exit_to_user_mode+0x19/0x60 kernel/entry/common.c:300
+ do_syscall_64+0x40/0xb0 arch/x86/entry/common.c:86
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x4196af
+Code: Unable to access opcode bytes at RIP 0x419685.
+RSP: 002b:00007faeee07b9c0 EFLAGS: 00000293 ORIG_RAX: 0000000000000012
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00000000004196af
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000003 R15: 000000002059c040
+Modules linked in:
+Dumping ftrace buffer:
+   (ftrace buffer empty)
+---[ end trace bb86c370c06fa387 ]---
+RIP: 0010:block_invalidatepage+0x27f/0x2a0 fs/buffer.c:1514
+Code: ff ff e8 b4 fd d6 ff b9 02 00 00 00 be 02 00 00 00 4c 89 ff 48
+c7 c2 40 b1 25 84 e8 8b 1b c5 02 e9 c9 fe ff ff e8 91 fd d6 ff <0f> 0b
+e8 8a fd d6 ff 0f 0b e8 83 fd d6 ff 48 8d 5d ff e9 57 ff ff
+RSP: 0018:ffffc9000538fa70 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffffea0004518000 RCX: 0000000000000000
+RDX: ffff88810dd2a280 RSI: ffffffff8160943f RDI: ffffea0004518000
+RBP: ffffea0004518000 R08: 0000000000000001 R09: 0000000000000000
+R10: ffffc9000538f908 R11: 0000000000000001 R12: ffffffff816091c0
+R13: ffffc9000538fb78 R14: 0000000000000000 R15: ffffc9000538fb00
+FS:  0000000000000000(0000) GS:ffff88813dd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f397f798010 CR3: 0000000012392000 CR4: 0000000000750ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
