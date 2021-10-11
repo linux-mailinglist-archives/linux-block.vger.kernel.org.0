@@ -2,78 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B07894282B7
-	for <lists+linux-block@lfdr.de>; Sun, 10 Oct 2021 19:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D21AE428443
+	for <lists+linux-block@lfdr.de>; Mon, 11 Oct 2021 02:18:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231515AbhJJRuz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 10 Oct 2021 13:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49722 "EHLO
+        id S231648AbhJKAUg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 10 Oct 2021 20:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231134AbhJJRuz (ORCPT
+        with ESMTP id S232931AbhJKAUf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 10 Oct 2021 13:50:55 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E994CC061570
-        for <linux-block@vger.kernel.org>; Sun, 10 Oct 2021 10:48:55 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id s4so33464325ybs.8
-        for <linux-block@vger.kernel.org>; Sun, 10 Oct 2021 10:48:55 -0700 (PDT)
+        Sun, 10 Oct 2021 20:20:35 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434E5C061570
+        for <linux-block@vger.kernel.org>; Sun, 10 Oct 2021 17:18:36 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id u18so50356922wrg.5
+        for <linux-block@vger.kernel.org>; Sun, 10 Oct 2021 17:18:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=J0q5yEEARtPmBq/CrCDN6Q242malRlK8ah5iTRlk7XQ=;
-        b=Rc/1wJzOlFKH9ZrxKu14s89o+zWNVM4DiYb5KEZ7bb/GNY2BYALfH7ULvIG0bSqV5n
-         4qH35rtRVAdaPx4dwW8xtKKSguTfLNhiKwXsiBCTja1P0bmF5AKqPeWMUgSIH6zZVHuk
-         LcQNZwX0ycu8roPgDX47M/ruHVKUJGLIt67kq0y/2m5Xt3NUy9Z4cyMGXWC/sNpvbAOm
-         Gqo/fMm0dAn9cAmoIAXXUwOv8Pby1O9VDMR9HCmwSgCbwnIO5pKPEKGCxGB7H9meao6G
-         FQeHvyI5NXbTwAtSGtM2Ej93Z0t3ef8AYfs3EwOtUy6CbiSKRe6N5xabBEmOldzYJ+Fd
-         mUiA==
+        d=philpotter-co-uk.20210112.gappssmtp.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+ertAYRuBrO4o1phVoXpE4ROiBPxr5B4o34tTZaBB8A=;
+        b=DPfU03D3DqsL+CkdbZ/BDchAbEN5TtBMbdvFV9GkUeSTuTTgA/INSnQlJdCMxC5cQI
+         ybD0bKSGMABhPCrWhW7opF0hAycAKHYKGQbNVBRc3BJ7ls05pGAl6mLWfdu9b36B46/N
+         v10OImb6nVtP5wrgqKce/WtzXxAGHx5J1Zli7xFEBtx+D/5rjv9fNVux7EcEqqyMdYOs
+         xrlmUfrxBVHye0urgF/RzoZRqtuVfIN4Jlaj/QMA+AIqvaqLgAdjSgEFFNL9znvjDQpV
+         2wp5dSDTPpMu9QatmmmptpJgYSK/pwe9YC2GD9i6YukCjMK04OcaIs5ypDP6Up5mWO1U
+         qj4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=J0q5yEEARtPmBq/CrCDN6Q242malRlK8ah5iTRlk7XQ=;
-        b=SPZ40MYhUPHA1vnhWpGW+Q8QV26l8B1+JcDaLK5b8DjP9pixkVNZNvIZpQAdab5y3a
-         mFeygHSPNMO6T4cZMw5IsDhh/qAL6OJeCk4b+WIbH958xkknzXEh2Ndm4DliPHFsa4f5
-         DLkLCnkxm2WIiKcqGJhGzcXARuvL5QGDLyp9d8gJATuq8M4EbYNrjKj58wbk9+TVHdEw
-         kwUz/ui3GSP8LGG6sEnlABxOUbnsbLgYEo5kj1WR5Def1V3UpK9d2hLvN26YFMUzY59B
-         H5G2ZS2oA+J2IVesdhgQB5XlEBx8/ypTJ6ezIVNS+Qo6v+ITtfiOZNhY7EKPL66L/n5z
-         cC3w==
-X-Gm-Message-State: AOAM533mOs9juX/03obLF1y1F1sSleSjTn5PQMmIXso+mDlHc9SQL44j
-        v1IQb/48mFI9JlAr42NBqm9fuAwY75dA3OjnxPo=
-X-Google-Smtp-Source: ABdhPJxO3W+6zs0OUHYKl78AN956cb2ku724f0avw4/DicHzKQ2Sc0+KNHbelOvHGme+MJO/UQOHODaGBFKj/w7vD7k=
-X-Received: by 2002:a25:249:: with SMTP id 70mr16398219ybc.72.1633888134689;
- Sun, 10 Oct 2021 10:48:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+ertAYRuBrO4o1phVoXpE4ROiBPxr5B4o34tTZaBB8A=;
+        b=JOy+2QDP6/MUOOaOuVysLIATtz8EdXXq1QoeUrORPoIFkJsSiL9xjnPsus8A5uKMAn
+         57V0SYUwmP/YS8iTG5kSFzQ4aWuyHg1HbTX56L9XocpLbNguMkhs2sic2yEcIvfTBro/
+         VM3YbqLltuNZ1AbIkjRRTrGE+AZNVnD0C6Bld5opskom7fJ83PDiLMsGCkrQNRRBWBeK
+         EdKH8ZfKg6rsdq9N7/otGyyIjovkiarsCTNva3NYXxyxWrmb8IsG4mpMumA2gkMg/47j
+         gFMjnlUHbexl1zJ7/P5kkCDc+K6Kyt+gwDZ1m7bWH9A0YKOXw1Qa0itcnFTnV/XCsjnN
+         0Vbw==
+X-Gm-Message-State: AOAM533Ff4Cb/6cmczD5ENwd1+3ETjJdvMP0lqNEAeLAxcOX55lvSr96
+        /B7H+M2BOJP6yxx4Eo1adq9QMIX55s00vA==
+X-Google-Smtp-Source: ABdhPJzLmNrhjQpndv3iPH0ThAst4NK4h72w8khYnDOD3zReF83j4toL6PQbN/Ipmxjv69D5fNHlSQ==
+X-Received: by 2002:adf:e101:: with SMTP id t1mr21586690wrz.395.1633911514884;
+        Sun, 10 Oct 2021 17:18:34 -0700 (PDT)
+Received: from equinox (2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.a.1.e.e.d.f.d.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:dfde:e1a0::2])
+        by smtp.gmail.com with ESMTPSA id d8sm6190613wrz.84.2021.10.10.17.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Oct 2021 17:18:34 -0700 (PDT)
+Date:   Mon, 11 Oct 2021 01:18:32 +0100
+From:   Phillip Potter <phil@philpotter.co.uk>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     axboe@kernel.dk, hch@infradead.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lumip@lumip.de
+Subject: Re: [PATCH] cdrom: docs: reformat table in
+ Documentation/userspace-api/ioctl/cdrom.rst
+Message-ID: <YWOC2Iyszh7WAgzf@equinox>
+References: <20211007231720.31997-1-phil@philpotter.co.uk>
+ <464a0b2f-c556-ccda-aa3c-26733fba4617@infradead.org>
 MIME-Version: 1.0
-Reply-To: marannsilvia@gmail.com
-Sender: eliewangrawa@gmail.com
-Received: by 2002:a05:7000:1e91:0:0:0:0 with HTTP; Sun, 10 Oct 2021 10:48:54
- -0700 (PDT)
-From:   "Mrs.m silvia michael" <marannsilvia6@gmail.com>
-Date:   Sun, 10 Oct 2021 10:48:54 -0700
-X-Google-Sender-Auth: PlXWgvlVuIj2EU0wDv1mLyABFVQ
-Message-ID: <CAHZsEYZCtBAPzcSh4rHY0LsegTnStADAhGOOVv_-DTMVx_N7Ew@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <464a0b2f-c556-ccda-aa3c-26733fba4617@infradead.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-How are you doing and your family.I am Mrs.M Silvia Michael,a sick
-widow writing from one of the America hospitals.I am suffering from a
-long time cancer of breast
+On Thu, Oct 07, 2021 at 04:34:13PM -0700, Randy Dunlap wrote:
+> On 10/7/21 4:17 PM, Phillip Potter wrote:
+> > Add extra space to the first column of ioctl values table, and also realign
+> > the text in the second column, to fix a documentation build warning
+> > introduced by: commit 67f1e027c270 ("drivers/cdrom: improved ioctl for
+> > media change detection")
+> > 
+> > Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+> > Fixes: 67f1e027c270 ("drivers/cdrom: improved ioctl for media change detection")
+> > Signed-off-by: Phillip Potter <phil@philpotter.co.uk>
+> 
+> Looks good. Thanks.
+> 
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> 
+> > ---
+> >   Documentation/userspace-api/ioctl/cdrom.rst | 116 ++++++++++----------
+> >   1 file changed, 58 insertions(+), 58 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/ioctl/cdrom.rst b/Documentation/userspace-api/ioctl/cdrom.rst
+> > index bac5bbf93ca0..682948fc88a3 100644
+> > --- a/Documentation/userspace-api/ioctl/cdrom.rst
+> > +++ b/Documentation/userspace-api/ioctl/cdrom.rst
+> 
+> 
+> 
+> -- 
+> ~Randy
 
-my health situation is becoming worse,my life is no longer guaranteed
-hence i want to make this solemn donation.I want to donate my money to
-help the orphans
+Thank you for the review Randy.
 
-widows and handicap people through you because there is no more time
-left for me on this earth.I take this decision because i have no child
-who will inherit my wealth after my death.Please,
-
-i need your urgent reply so that i can tell you more on how you will
-handle my wish before i die.I will be waiting to hear from you
-immediately by God grace amen,
-
-yours sincerely.
-Mrs.M Silvia Michael
+Regards,
+Phil
