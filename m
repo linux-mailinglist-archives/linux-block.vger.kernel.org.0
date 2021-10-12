@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EECF242ABC2
-	for <lists+linux-block@lfdr.de>; Tue, 12 Oct 2021 20:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4802442ABC3
+	for <lists+linux-block@lfdr.de>; Tue, 12 Oct 2021 20:18:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232880AbhJLST5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Oct 2021 14:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
+        id S232898AbhJLST6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 Oct 2021 14:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232898AbhJLSTx (ORCPT
+        with ESMTP id S231586AbhJLST4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 Oct 2021 14:19:53 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C897FC061753
-        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:51 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id b10so9789907iof.12
-        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:51 -0700 (PDT)
+        Tue, 12 Oct 2021 14:19:56 -0400
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B34C061570
+        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:54 -0700 (PDT)
+Received: by mail-io1-xd2e.google.com with SMTP id n7so15840085iod.0
+        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DjfdwdOP2h7oZEEBaaGTV7Ar0fpekZ11g0+z4RlOBFc=;
-        b=bRoG2yUgCYnYvg7NKkf++dKLMYEkxzLOz0jSARY33vIzlpxU1IgRGTM3UDqk7RyeLM
-         J6su0UnY7wxg75qfgtW4CErQHMobfuiipG1EBn6s2WNyQB9la9TurxcemyFXCzD4Q9bQ
-         c2z5OCbCRJL2Ks1OPNQVv2reTG4kLpasVe55/R5azpcoS3FtbIdO0NUY3uxEJFLULwe2
-         cPN7mNqDB0cSDHb0XEUsqakHBGfBqjB2FsVf4OrnlGSNmkTFKrMiHo+4/Pyt5CgbVMdN
-         DQCdribv0ZJIFK+4YuAsSDFnUPj3QSFQ1XEDVrQEkbOp4JBVjeVYni/6LFydo4VYbz6L
-         of+w==
+        bh=02YgnQreYCX7+Oxqq3CeMBFEG37oqt2Ce2mb0JVD220=;
+        b=Eux1eS+TTL560c91wPLqapoKifb21C7tey/OZpPpoGKzlGsNJl79vwVMDUPcZOkSU2
+         GJpDYNmzoZa+aPmTqTBIuQkf6fFclenH2wgXmgr2o7Wy1SKcyfABIasO65EClQJEKmNO
+         WeKHOymXE0PqhjPBUyl1S9sEhbAFubc2+3liCuGGWQZLSQ0nBKImxfHAzoOJNO97x5Kw
+         rZkRuwBNf/mTH27ptlF8GiU+5XcdedWl+V4u1MBpbAaXEJ8m7DB4FpyPaG+4+lYY0gDJ
+         UXBBEzH7trA1BaxyS1iTb5b82DNvHmNYw2KwVSc0AM3VrcnP8SJlietGdzBGZSy9AWau
+         U4Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DjfdwdOP2h7oZEEBaaGTV7Ar0fpekZ11g0+z4RlOBFc=;
-        b=tvAtWgP5b8j2QUBauguXTA8czMA+qzpF2HoykKG2s7AYcP9gzR6PcMg537PmJOO2ba
-         yiABqJqnH78Vv7iQGC1pYS6pj3OPMDqg6SppgAxQnevNYb/Rsr6smfRF1eRaapZStKG8
-         hkRxXKjaz3OPWiRMLwo1mLxRY1Lv+w8yWD6trGyr4R1jskCSTzlm+tXebEkq464fZPxM
-         jCnIIaOu37zXq1WAOuJKpLkuX705qYpV4nBhUx0meep8JGOnBr00txHwXbiv7Lh5c5+X
-         7PrPvfvMDNsp6Vm/kcKs9p1fDtaknn0fbHLAAWKFam6746/SY4g7VXQ5KaZK3FNO6ehD
-         XDyg==
-X-Gm-Message-State: AOAM5331cg2iUBulm4UYpWpZAgJanaUdB/dAa4Y+T8S9RfcEtYQrLAyk
-        JSJ3Y1/I4xewvp8/MmkK1yZw7nCMjtzgWQ==
-X-Google-Smtp-Source: ABdhPJziSe/gtjT2FZNxJ2RLiMM1v05nbamjdJp+BydRrv5XNMyXoHvJawcqB13St6uhac91Fx2U9A==
-X-Received: by 2002:a6b:f816:: with SMTP id o22mr26398442ioh.106.1634062670348;
-        Tue, 12 Oct 2021 11:17:50 -0700 (PDT)
+        bh=02YgnQreYCX7+Oxqq3CeMBFEG37oqt2Ce2mb0JVD220=;
+        b=RSLzmg3qviXL+DiX29FOAlyojgjRM2+vLuMbdTevtbN06ckslSMG/2ZDqc3bvNdmdH
+         2ndCvsjchxdKBGvlv7hNBjW/oCU7Q43rPOn+Sggx7bnJ5SY/mLezApctXYr6wwKqEq/E
+         B2U02zZWL4kIePYyteK8K7bDimTIpaVDko/CT1OSHyoJQEODPV92ZRiwGXRLvA7l+eBL
+         vb/C3BurwnB1T2qPl5wLhDw59hPaoSkiNmAhsvPSnwCnuQgJsbhIPaA/ZBmucXvv5Fbn
+         1wbEAj2U64BVThTZddgZQDl8tOKasqYdYZRQlIDhV5do8UcA80hY1yvL+r174pwkhxbe
+         MaMQ==
+X-Gm-Message-State: AOAM532+/6eEUNhL1EHi+Rn3S1oedDe6NVo/xzEN1C3X8xbp86/MKjiy
+        uhBkZW+fiGZG5SAQKoZr3Z4wKpKZUW1r+A==
+X-Google-Smtp-Source: ABdhPJzLXeyV1eoE+dHJLaLxkTDH6LP3vtSkQOg0svef2OUCzcEZ92ZiNVNGpY5iVdx/jUpkl6Z5bA==
+X-Received: by 2002:a6b:3b85:: with SMTP id i127mr24321080ioa.111.1634062671161;
+        Tue, 12 Oct 2021 11:17:51 -0700 (PDT)
 Received: from p1.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id x5sm2242476ioh.23.2021.10.12.11.17.49
+        by smtp.gmail.com with ESMTPSA id x5sm2242476ioh.23.2021.10.12.11.17.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 11:17:49 -0700 (PDT)
+        Tue, 12 Oct 2021 11:17:50 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 8/9] io_uring: utilize the io_batch infrastructure for more efficient polled IO
-Date:   Tue, 12 Oct 2021 12:17:41 -0600
-Message-Id: <20211012181742.672391-9-axboe@kernel.dk>
+Subject: [PATCH 9/9] nvme: wire up completion batching for the IRQ path
+Date:   Tue, 12 Oct 2021 12:17:42 -0600
+Message-Id: <20211012181742.672391-10-axboe@kernel.dk>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211012181742.672391-1-axboe@kernel.dk>
 References: <20211012181742.672391-1-axboe@kernel.dk>
@@ -63,74 +63,69 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Wire up using an io_batch for f_op->iopoll(). If the lower stack supports
-it, we can handle high rates of polled IO more efficiently.
+Trivial to do now, just need our own io_batch on the stack and pass that
+in to the usual command completion handling.
 
-This raises the single core efficiency on my system from ~6.1M IOPS to
-~6.6M IOPS running a random read workload at depth 128 on two gen2
-Optane drives.
+I pondered making this dependent on how many entries we had to process,
+but even for a single entry there's no discernable difference in
+performance or latency. Running a sync workload over io_uring:
+
+t/io_uring -b512 -d1 -s1 -c1 -p0 -F1 -B1 -n2 /dev/nvme1n1 /dev/nvme2n1
+
+yields the below performance before the patch:
+
+IOPS=254820, BW=124MiB/s, IOS/call=1/1, inflight=(1 1)
+IOPS=251174, BW=122MiB/s, IOS/call=1/1, inflight=(1 1)
+IOPS=250806, BW=122MiB/s, IOS/call=1/1, inflight=(1 1)
+
+and the following after:
+
+IOPS=255972, BW=124MiB/s, IOS/call=1/1, inflight=(1 1)
+IOPS=251920, BW=123MiB/s, IOS/call=1/1, inflight=(1 1)
+IOPS=251794, BW=122MiB/s, IOS/call=1/1, inflight=(1 1)
+
+which definitely isn't slower, about the same if you factor in a bit of
+variance. For peak performance workloads, benchmarking shows a 2%
+improvement.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- fs/io_uring.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/nvme/host/pci.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 082ff64c1bcb..cbf00ad3ac3f 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2390,6 +2390,8 @@ static int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
- {
- 	struct io_wq_work_node *pos, *start, *prev;
- 	unsigned int poll_flags = BLK_POLL_NOSLEEP;
-+	struct file *file = NULL;
-+	struct io_batch ib;
- 	int nr_events = 0;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 4713da708cd4..fb3de6f68eb1 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1076,8 +1076,10 @@ static inline void nvme_update_cq_head(struct nvme_queue *nvmeq)
  
- 	/*
-@@ -2399,11 +2401,17 @@ static int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
- 	if (ctx->poll_multi_queue && force_nonspin)
- 		poll_flags |= BLK_POLL_ONESHOT;
+ static inline int nvme_process_cq(struct nvme_queue *nvmeq)
+ {
++	struct io_batch ib;
+ 	int found = 0;
  
 +	ib.req_list = NULL;
- 	wq_list_for_each(pos, start, &ctx->iopoll_list) {
- 		struct io_kiocb *req = container_of(pos, struct io_kiocb, comp_list);
- 		struct kiocb *kiocb = &req->rw.kiocb;
- 		int ret;
- 
-+		if (!file)
-+			file = kiocb->ki_filp;
-+		else if (file != kiocb->ki_filp)
-+			break;
-+
+ 	while (nvme_cqe_pending(nvmeq)) {
+ 		found++;
  		/*
- 		 * Move completed and retryable entries to our local lists.
- 		 * If we find a request that requires polling, break out
-@@ -2412,19 +2420,21 @@ static int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
- 		if (READ_ONCE(req->iopoll_completed))
- 			break;
- 
--		ret = kiocb->ki_filp->f_op->iopoll(kiocb, NULL, poll_flags);
-+		ret = kiocb->ki_filp->f_op->iopoll(kiocb, &ib, poll_flags);
- 		if (unlikely(ret < 0))
- 			return ret;
- 		else if (ret)
- 			poll_flags |= BLK_POLL_ONESHOT;
- 
- 		/* iopoll may have completed current req */
--		if (READ_ONCE(req->iopoll_completed))
-+		if (ib.req_list || READ_ONCE(req->iopoll_completed))
- 			break;
+@@ -1085,12 +1087,15 @@ static inline int nvme_process_cq(struct nvme_queue *nvmeq)
+ 		 * the cqe requires a full read memory barrier
+ 		 */
+ 		dma_rmb();
+-		nvme_handle_cqe(nvmeq, NULL, nvmeq->cq_head);
++		nvme_handle_cqe(nvmeq, &ib, nvmeq->cq_head);
+ 		nvme_update_cq_head(nvmeq);
  	}
  
--	if (!pos)
-+	if (!pos && !ib.req_list)
- 		return 0;
-+	if (ib.req_list)
-+		ib.complete(&ib);
+-	if (found)
++	if (found) {
++		if (ib.req_list)
++			nvme_pci_complete_batch(&ib);
+ 		nvme_ring_cq_doorbell(nvmeq);
++	}
+ 	return found;
+ }
  
- 	prev = start;
- 	wq_list_for_each_resume(pos, prev) {
 -- 
 2.33.0
 
