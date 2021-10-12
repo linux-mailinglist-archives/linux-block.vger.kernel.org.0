@@ -2,48 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00D4742ABBD
-	for <lists+linux-block@lfdr.de>; Tue, 12 Oct 2021 20:17:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EECF242ABC2
+	for <lists+linux-block@lfdr.de>; Tue, 12 Oct 2021 20:18:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232876AbhJLST4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Oct 2021 14:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56358 "EHLO
+        id S232880AbhJLST5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 Oct 2021 14:19:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232464AbhJLSTw (ORCPT
+        with ESMTP id S232898AbhJLSTx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 Oct 2021 14:19:52 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7CFC061746
-        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:50 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id i189so16998344ioa.1
-        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:50 -0700 (PDT)
+        Tue, 12 Oct 2021 14:19:53 -0400
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C897FC061753
+        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:51 -0700 (PDT)
+Received: by mail-io1-xd34.google.com with SMTP id b10so9789907iof.12
+        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 11:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z2zeWlNcXzeDSXul25b1n8acHol/1mmQeUhHwlA41/8=;
-        b=sXvotjt3S7ftEMTTNQ+B2Hsqq26xL9gBcJDd8i57vOQAzJiSqQXEREKRUSgOOi2VUt
-         gjxd+hGSO/WP+0/SVKr8/uZiqkdO5NQnpAqLl7IZ+2/eJaJpFVoc2qCSF0DB7bUuIxmd
-         7doW5VfQyo9v+rPAlNmPz3bqQX2zmJqzDoffeTjdrFdB+mez/hlWXIQ7VfDNWHFJN5cq
-         r0lSwpRN07HlUl194FrfX8Qji8K+TSdq3L+ucBwuZFdwKIoVhNrJ5xTg6Q0dig0HEexi
-         akvI34rD9/eWzjJN7xLs3j4zZpCdY1hxGLVpVunZtrpNN4ngcPuFBU+hcJDQRgvypVfp
-         9egw==
+        bh=DjfdwdOP2h7oZEEBaaGTV7Ar0fpekZ11g0+z4RlOBFc=;
+        b=bRoG2yUgCYnYvg7NKkf++dKLMYEkxzLOz0jSARY33vIzlpxU1IgRGTM3UDqk7RyeLM
+         J6su0UnY7wxg75qfgtW4CErQHMobfuiipG1EBn6s2WNyQB9la9TurxcemyFXCzD4Q9bQ
+         c2z5OCbCRJL2Ks1OPNQVv2reTG4kLpasVe55/R5azpcoS3FtbIdO0NUY3uxEJFLULwe2
+         cPN7mNqDB0cSDHb0XEUsqakHBGfBqjB2FsVf4OrnlGSNmkTFKrMiHo+4/Pyt5CgbVMdN
+         DQCdribv0ZJIFK+4YuAsSDFnUPj3QSFQ1XEDVrQEkbOp4JBVjeVYni/6LFydo4VYbz6L
+         of+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z2zeWlNcXzeDSXul25b1n8acHol/1mmQeUhHwlA41/8=;
-        b=f3FnKLuL59GISKTCmNDX16RmWgZdHDKSr+HSyWH/MxaTqJcrNLu2N3wFB4FQbmmsw0
-         JThO6WVgth+q1ooXzCMyFdArFLYuYKw1MYjGHl+BnD5hb3lbVc0e71La1pCCyqSWuBfm
-         h5NeR4qaM9O23Ys/rZjxyZlfltg6mtQm3w3wiyvFxiq/Cfg4QYjbXu1INSuq7/cYtWs8
-         hjaXT3xwkDWV/d1ni227PBvK9lEV7H6a8QvJspZQYTiHuHJbRO2ETERO9AeoVtgxZTZc
-         Pt0zncgm1fm7ge8txz/jpuAMDlfPpX1nD26zYvFKjY/Pxj4ZqXpFE1fprM2x4KI/weQs
-         NWRg==
-X-Gm-Message-State: AOAM532RDy7GR+yCMc9Pe2xeuHPzrFtZIx5KlxfGSQGSKoRZiqJ5L+B4
-        zulNRBAcSiUO8SiZ9zQIBrMw2ZQ4vEC30g==
-X-Google-Smtp-Source: ABdhPJws3CbyoVL8ghQ9u/yKAbo7iQU/OIwCGEL3H0IiGdh5rLdXuo2sr3qcUU77cP2eKzMoIt/9Lg==
-X-Received: by 2002:a05:6602:1542:: with SMTP id h2mr14375864iow.198.1634062669754;
-        Tue, 12 Oct 2021 11:17:49 -0700 (PDT)
+        bh=DjfdwdOP2h7oZEEBaaGTV7Ar0fpekZ11g0+z4RlOBFc=;
+        b=tvAtWgP5b8j2QUBauguXTA8czMA+qzpF2HoykKG2s7AYcP9gzR6PcMg537PmJOO2ba
+         yiABqJqnH78Vv7iQGC1pYS6pj3OPMDqg6SppgAxQnevNYb/Rsr6smfRF1eRaapZStKG8
+         hkRxXKjaz3OPWiRMLwo1mLxRY1Lv+w8yWD6trGyr4R1jskCSTzlm+tXebEkq464fZPxM
+         jCnIIaOu37zXq1WAOuJKpLkuX705qYpV4nBhUx0meep8JGOnBr00txHwXbiv7Lh5c5+X
+         7PrPvfvMDNsp6Vm/kcKs9p1fDtaknn0fbHLAAWKFam6746/SY4g7VXQ5KaZK3FNO6ehD
+         XDyg==
+X-Gm-Message-State: AOAM5331cg2iUBulm4UYpWpZAgJanaUdB/dAa4Y+T8S9RfcEtYQrLAyk
+        JSJ3Y1/I4xewvp8/MmkK1yZw7nCMjtzgWQ==
+X-Google-Smtp-Source: ABdhPJziSe/gtjT2FZNxJ2RLiMM1v05nbamjdJp+BydRrv5XNMyXoHvJawcqB13St6uhac91Fx2U9A==
+X-Received: by 2002:a6b:f816:: with SMTP id o22mr26398442ioh.106.1634062670348;
+        Tue, 12 Oct 2021 11:17:50 -0700 (PDT)
 Received: from p1.localdomain ([207.135.234.126])
         by smtp.gmail.com with ESMTPSA id x5sm2242476ioh.23.2021.10.12.11.17.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
@@ -51,9 +51,9 @@ Received: from p1.localdomain ([207.135.234.126])
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 7/9] block: assign batch completion handler in blk_poll()
-Date:   Tue, 12 Oct 2021 12:17:40 -0600
-Message-Id: <20211012181742.672391-8-axboe@kernel.dk>
+Subject: [PATCH 8/9] io_uring: utilize the io_batch infrastructure for more efficient polled IO
+Date:   Tue, 12 Oct 2021 12:17:41 -0600
+Message-Id: <20211012181742.672391-9-axboe@kernel.dk>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211012181742.672391-1-axboe@kernel.dk>
 References: <20211012181742.672391-1-axboe@kernel.dk>
@@ -63,39 +63,74 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If an io_batch is passed in to blk_poll(), we need to assign the batch
-handler associated with this queue. This allows callers to complete
-an io_batch handler on by calling it.
+Wire up using an io_batch for f_op->iopoll(). If the lower stack supports
+it, we can handle high rates of polled IO more efficiently.
+
+This raises the single core efficiency on my system from ~6.1M IOPS to
+~6.6M IOPS running a random read workload at depth 128 on two gen2
+Optane drives.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- block/blk-mq.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/io_uring.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 9509c52a66a4..62fabc65d6b2 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -4107,6 +4107,19 @@ static int blk_mq_poll_classic(struct request_queue *q, blk_qc_t cookie,
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 082ff64c1bcb..cbf00ad3ac3f 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2390,6 +2390,8 @@ static int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
+ {
+ 	struct io_wq_work_node *pos, *start, *prev;
+ 	unsigned int poll_flags = BLK_POLL_NOSLEEP;
++	struct file *file = NULL;
++	struct io_batch ib;
+ 	int nr_events = 0;
  
- 	hctx->poll_considered++;
+ 	/*
+@@ -2399,11 +2401,17 @@ static int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
+ 	if (ctx->poll_multi_queue && force_nonspin)
+ 		poll_flags |= BLK_POLL_ONESHOT;
  
-+	/*
-+	 * If batching is requested but the target doesn't support batched
-+	 * completions, then just clear ib and completions will be handled
-+	 * normally.
-+	 */
-+	if (ib) {
-+		ib->complete = q->mq_ops->complete_batch;
-+		if (!ib->complete) {
-+			WARN_ON_ONCE(ib->req_list);
-+			ib = NULL;
-+		}
-+	}
++	ib.req_list = NULL;
+ 	wq_list_for_each(pos, start, &ctx->iopoll_list) {
+ 		struct io_kiocb *req = container_of(pos, struct io_kiocb, comp_list);
+ 		struct kiocb *kiocb = &req->rw.kiocb;
+ 		int ret;
+ 
++		if (!file)
++			file = kiocb->ki_filp;
++		else if (file != kiocb->ki_filp)
++			break;
 +
- 	do {
- 		hctx->poll_invoked++;
+ 		/*
+ 		 * Move completed and retryable entries to our local lists.
+ 		 * If we find a request that requires polling, break out
+@@ -2412,19 +2420,21 @@ static int io_do_iopoll(struct io_ring_ctx *ctx, bool force_nonspin)
+ 		if (READ_ONCE(req->iopoll_completed))
+ 			break;
  
+-		ret = kiocb->ki_filp->f_op->iopoll(kiocb, NULL, poll_flags);
++		ret = kiocb->ki_filp->f_op->iopoll(kiocb, &ib, poll_flags);
+ 		if (unlikely(ret < 0))
+ 			return ret;
+ 		else if (ret)
+ 			poll_flags |= BLK_POLL_ONESHOT;
+ 
+ 		/* iopoll may have completed current req */
+-		if (READ_ONCE(req->iopoll_completed))
++		if (ib.req_list || READ_ONCE(req->iopoll_completed))
+ 			break;
+ 	}
+ 
+-	if (!pos)
++	if (!pos && !ib.req_list)
+ 		return 0;
++	if (ib.req_list)
++		ib.complete(&ib);
+ 
+ 	prev = start;
+ 	wq_list_for_each_resume(pos, prev) {
 -- 
 2.33.0
 
