@@ -2,84 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F115642A9AF
-	for <lists+linux-block@lfdr.de>; Tue, 12 Oct 2021 18:40:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B478142A9F2
+	for <lists+linux-block@lfdr.de>; Tue, 12 Oct 2021 18:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231352AbhJLQmS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Oct 2021 12:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbhJLQmQ (ORCPT
+        id S229809AbhJLQwQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 Oct 2021 12:52:16 -0400
+Received: from mail-pf1-f182.google.com ([209.85.210.182]:34637 "EHLO
+        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229565AbhJLQwP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 Oct 2021 12:42:16 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC432C061570
-        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 09:40:14 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id q205so24368543iod.8
-        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 09:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sEmrYH4NvVF1ZxwPs0S6iKBLW+ysA/a6Qo/ICdcQRbc=;
-        b=3nL4zjRpwVaQ/p6Pi2tmm87a0617NKBDP/hP2EdeaycDqZhPrYi8bXI8Hiqgri/6g5
-         VJftCyPnnkuf+2QEm1l/z1AYdGYwuGHzn9/clo00ZesG8dTMEqKIJqRPQd7u9xgbV+bu
-         MP1kwo17olTqnuHMwLm1nAIYweS9NweMnOZkgqQd89kT4faQUJ6UU6w0vFxTUhnR15X+
-         vbs0CR4cm5OsqTIitpxh1fEszBvz2OdUUzDTVV6eB0/TrIVvwOS4TOyeYMC0MjJAUmsl
-         Tl+Lm8Aqx2KCRolNxATbY1HoQ5rLE5LLch+7Fwu00uW3USuImIiFjBG9dzG3kRiPEs2D
-         y/mA==
+        Tue, 12 Oct 2021 12:52:15 -0400
+Received: by mail-pf1-f182.google.com with SMTP id g14so91336pfm.1
+        for <linux-block@vger.kernel.org>; Tue, 12 Oct 2021 09:50:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sEmrYH4NvVF1ZxwPs0S6iKBLW+ysA/a6Qo/ICdcQRbc=;
-        b=3quV8qkVNt0tqucXuwTyR4PzxtjcnXey8RRx+iW9XK9qDyCkDbnGKkanE+UDdOLnzR
-         xOMlJ+hAnTpQg/RUHs+h1ByfJIbW1hwoAu58tkIVSRZHIttuC5fX7BEUDqU+ee0reyq9
-         BxgLW7EGwoL9KTuw+ul1lspT4kM+likhvQi+P2xBCvZlqNhrzNLo0K6ZMJFbY+OPPbMO
-         h1NzDMXBvDpfN5aQvuwi6igoRAMtAy9bArx01MqK9LFwYlENrQ48y8CEX6OP+vWOzHSy
-         epbQWs211vuU/Hpy8TUuILe2lajrJwe/CmGUWA9NbRxlv/O1jIcKjZrMSEff9L0OuJoL
-         t1fg==
-X-Gm-Message-State: AOAM533XuKp5vfiHBfrXckeON1mDTSuTluWgMQCOzZUJbeIhvXJn8RLs
-        7/qS9DTGsFUhpNrFpm38FfySzY2csyjZlA==
-X-Google-Smtp-Source: ABdhPJyoCGYA/LBoSf/aWtXK+RRf4FObGtqq6cJ72BENLpdrJuzBTSV/BePKatlqFJOlExnFnKgKAw==
-X-Received: by 2002:a05:6602:2dd4:: with SMTP id l20mr1660574iow.151.1634056814226;
-        Tue, 12 Oct 2021 09:40:14 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id j17sm5807696ilq.1.2021.10.12.09.40.13
+        bh=pyFv6DRp7mj/TLzrQIpVommdcoXtzdvra+rup/vPgR4=;
+        b=YuTtsd16Mmc92E8dVHeXdUtp85Fp2KzkODATclVi98JKeLJMEiNQBeTP8kkiVNjhM6
+         JrFiQxcpOvX1OiZ52K/MeMOfnnzlMJmloB/7SlnC1bs+E57z2NZBP8PPuzX8hsraw0fA
+         lsP5HGe/zHYnKK6aZb2gPBZ4z+TVQk3VvI0Rv/KVdhf28t+rm5fQqpvdNjfDAWL1+HcZ
+         Hzt8l8nFQAjaiS4zTYlrNjFpCrT/LxyfXcdS+BkVPuR3d7LIU/tfXMNjB4nMj/k8BfZc
+         TJfikNZAQLF4+WGX4IY2lXHmSN92cfYUNJSVYLTrV86DNDMrbo34LbQKZoczCCR6C0sR
+         LmHg==
+X-Gm-Message-State: AOAM531qf9qPMac1LemuaCTiH7Ys7hgegWmVo7bPIQevJTuKxC3bFZho
+        ESzHexHA+Unv5XZaOJ1TzKE=
+X-Google-Smtp-Source: ABdhPJwTpBGjULlYiKlbOfc5N6o7DtsijNW+l2r5Ip5ZBV/isIjOmuv6AyEfJPmCNZ7NpziTdyvuTA==
+X-Received: by 2002:a05:6a00:26dd:b0:44d:2531:9f46 with SMTP id p29-20020a056a0026dd00b0044d25319f46mr10473312pfw.46.1634057413516;
+        Tue, 12 Oct 2021 09:50:13 -0700 (PDT)
+Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:8c1a:acb2:4eff:5d13])
+        by smtp.gmail.com with ESMTPSA id k22sm3734836pji.2.2021.10.12.09.50.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Oct 2021 09:40:13 -0700 (PDT)
-Subject: Re: [PATCH] block/rnbd-clt-sysfs: fix a couple uninitialized variable
- bugs
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Gioh Kim <gi-oh.kim@cloud.ionos.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20211012084443.GA31472@kili>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fd6395eb-c237-68fc-f5bb-9c3f563fa6f3@kernel.dk>
-Date:   Tue, 12 Oct 2021 10:40:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 12 Oct 2021 09:50:12 -0700 (PDT)
+Subject: Re: [dm-devel] [PATCH 1/5] block: factor out a chunk_size_left helper
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>
+References: <20211012163613.994933-1-hch@lst.de>
+ <20211012163613.994933-2-hch@lst.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <d5273d1f-dbf1-8921-b03d-0f61d08dbfdc@acm.org>
+Date:   Tue, 12 Oct 2021 09:50:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20211012084443.GA31472@kili>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20211012163613.994933-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/12/21 2:44 AM, Dan Carpenter wrote:
-> These variables are printed on the error path if match_int() fails so
-> they have to be initialized.
+On 10/12/21 9:36 AM, Christoph Hellwig wrote:
+> +/*
+> + * Return how much of the chunk sectors is left to be used for an I/O at the
+> + * given offset.
+> + */
+> +static inline unsigned int chunk_size_left(sector_t offset,
+> +		unsigned int chunk_sectors)
+> +{
+> +	if (unlikely(!is_power_of_2(chunk_sectors)))
+> +		return chunk_sectors - sector_div(offset, chunk_sectors);
+> +	return chunk_sectors - (offset & (chunk_sectors - 1));
+> +}
 
-Applied, thanks.
+No "blk_" prefix for the function name? I think most other functions 
+declared or defined in this header file have such a prefix.
 
--- 
-Jens Axboe
+Thanks,
 
+Bart.
