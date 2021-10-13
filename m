@@ -2,67 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FDEC42C82C
-	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 19:57:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E8442C857
+	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 20:07:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238301AbhJMR76 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Oct 2021 13:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
+        id S229814AbhJMSJO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Oct 2021 14:09:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238341AbhJMR75 (ORCPT
+        with ESMTP id S233315AbhJMSJN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Oct 2021 13:59:57 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9B0C061766
-        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 10:57:53 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id y17so604649ilb.9
-        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 10:57:53 -0700 (PDT)
+        Wed, 13 Oct 2021 14:09:13 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02511C061570
+        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 11:07:10 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id a8so628324ilj.10
+        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 11:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lmUYvCfFjKpeQWiUkixenfQjUoqsESpuzMTo6x0QWjA=;
-        b=IHSf48VHxH8VE1HavZrOcyFjeoUdom1i+o+TUkrjRQ1ghJCSQfize8jAMTiqlZIMIT
-         Aw5xK868p7rUzL2t2Fxr50Id6MMkhindbfoGKwhCPO6I4Se9uNwLy8xhNecpvAOPRJGx
-         5T2qNCDRSCo1Gc/hIDTlPNkudjWkB7UsRBzPoO7eLbxWL9DesuvwJmRhL7cjttRh9DmD
-         w29/jzgzoUlO3+d110i9PGLRsf31Vh4pTxzM4h2TripT8RzLUHKN5e50ysZqodTgitFh
-         U1MaahNOmwQYpZpIPD8pWNPuVvzQvLGte5unMMEsGNzSXwl/2fglLUafFa+v9P64Z8fZ
-         qoNQ==
+        bh=+Lp8nfZ2U5cfuBvpSOi+LGiRvbwAF9gjDxzlP9ljfsw=;
+        b=Ojz7WmDrBisc65S/2u3hXflnAzRWZ1S7nJOzu3JGta6I7FJG1/LU92W7bg2xddqM5y
+         YYQgAeESLV+QSvaC4x+iGMLfiP/qno1DmPvmZkHKDwAfMO2kaxmCEqvUBXiGunb9ZdO8
+         YJgwlk7MQX/aSShh4rq7DsrQ+2UdxQj3R+sfeTjoIwUyvJY3MpB5x4QJA11cBOc9knM1
+         6ChQFuTX5L0tM1JaPFW6zBvAkPP/dqQ89CcP037E/zJZJReTkpUkETdNlFer1TmCtjXR
+         eUKHaZRIDePcWuHvPCJaQWJdLuk16stRdZ2dUcQ0SDfZ5HVf7MeQIjaKi49tvsL19N8f
+         e5ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lmUYvCfFjKpeQWiUkixenfQjUoqsESpuzMTo6x0QWjA=;
-        b=QWW08y+Rwkz2At/IZMwBkCddB1jKfG0U1X0l0QACcT68KZJjLGfgYIcME0juZ2xGXQ
-         WpTUOJLNaZeDkaUcwOTlTW9BzEYUp7KW+u03FrbDUadW44s/VfoFGKjXd7/hJiC7yOL8
-         w7WToHn2vYmSto0atORUITs16vYppQF4SSGnaUzAxTgGWbAlDzTiu5s+XnDFxsRAadE1
-         NyLJe5W9cjI3FUAzPkKr7zuNS4V6JGQ9B+Za5rbre7n/5Lca3dNW70G2++kI7lKf8hsL
-         5T3kizCFggWxXAiDgkA4moVYdaPoX/RfAn91wvzk6BCbiZgRMYrc+2AKLRuYVW8hvAEH
-         UdNg==
-X-Gm-Message-State: AOAM5304+EgfTBg9vZQN6Qm9frGmwxo4iUXyT+mQ5r9UikQ5Zwan3Vg7
-        HivYe2D4PkCAC491pHFQ/6hIfUJJwmZbmw==
-X-Google-Smtp-Source: ABdhPJxfYOiO65muIq5SIWO37kcdwr+H/NfZZPxopN3z9SUKzTLSgcw/P0WYoksy5fSpy5nRhA4u6w==
-X-Received: by 2002:a92:d2c5:: with SMTP id w5mr435234ilg.38.1634147872330;
-        Wed, 13 Oct 2021 10:57:52 -0700 (PDT)
+        bh=+Lp8nfZ2U5cfuBvpSOi+LGiRvbwAF9gjDxzlP9ljfsw=;
+        b=d4yfax3tPMXWV1EeNe0a0pjsB6kJri+XKjJRxiOSDPXdHXhxWF9BCgQEW+KnfUbxPO
+         TiLga24mQGAGax0qY2QkTZMAKhq++hMwgMyEyU7IH01XvfM708d79Xdv12BVbtMWeInB
+         9W/A2oIEdgzaN0hBVpU8TtJONXQIA1Z/RXfwny9o+7YV2pYs2c3G2U1+fsOkxA1qj4Ox
+         B7nUqREex0MSkwHdrDoj+y+ef7Y4kmeOsTUdAXt6WNb87pgMYdHkMeLo133+g3AjNA6C
+         HKgh1CBVA0W7YwjPPHHRYLasuJaCE00ffjWFopvJBmwstuJnaj5C+Q0m7sVSIK0ZB3HQ
+         LWLA==
+X-Gm-Message-State: AOAM5304Z9rybCyvvLpCKmb/9gd+Rw7/SdtzSH8TLVVTnxLomUmX8Kg1
+        uISA9EScgYbZQngfybba1Q4bAn5q4tu1ag==
+X-Google-Smtp-Source: ABdhPJzwWbibzdoC4/Xyj2UZ0w9DqbqvKpLUmj9BurGkwwCwc27c8U5o+GQ/6EQFuX9J7xSaaGz+cA==
+X-Received: by 2002:a05:6e02:190b:: with SMTP id w11mr474300ilu.292.1634148429106;
+        Wed, 13 Oct 2021 11:07:09 -0700 (PDT)
 Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id g13sm92825ilc.54.2021.10.13.10.57.51
+        by smtp.gmail.com with ESMTPSA id w4sm98688ilj.37.2021.10.13.11.07.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Oct 2021 10:57:52 -0700 (PDT)
-Subject: Re: [PATCH 4/4] block: move update request helpers into blk-mq.c
+        Wed, 13 Oct 2021 11:07:08 -0700 (PDT)
+Subject: Re: [PATCH 2/4] block: inline fast path of driver tag allocation
 To:     Christoph Hellwig <hch@infradead.org>
 Cc:     linux-block@vger.kernel.org
 References: <20211013164937.985367-1-axboe@kernel.dk>
- <20211013164937.985367-5-axboe@kernel.dk> <YWcYFywO7J0R4oMb@infradead.org>
- <f55d823f-79ca-67f0-1868-c013d7711fe5@kernel.dk>
- <YWcdXjZPpYvuaJ5O@infradead.org>
+ <20211013164937.985367-3-axboe@kernel.dk> <YWcV52525ZR6ilwx@infradead.org>
+ <ad0cc4dc-1742-87ac-73f7-2d16be37f44f@kernel.dk>
+ <YWcd7NzLHv9Qt7Lx@infradead.org>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2418e448-6df4-ce6e-da2d-99fb7ac41fcb@kernel.dk>
-Date:   Wed, 13 Oct 2021 11:57:51 -0600
+Message-ID: <dfddae28-7ddb-0365-24e0-79aab9351983@kernel.dk>
+Date:   Wed, 13 Oct 2021 12:07:08 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <YWcdXjZPpYvuaJ5O@infradead.org>
+In-Reply-To: <YWcd7NzLHv9Qt7Lx@infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,28 +70,26 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/13/21 11:54 AM, Christoph Hellwig wrote:
-> On Wed, Oct 13, 2021 at 11:46:40AM -0600, Jens Axboe wrote:
->> On 10/13/21 11:32 AM, Christoph Hellwig wrote:
->>> On Wed, Oct 13, 2021 at 10:49:37AM -0600, Jens Axboe wrote:
->>>> For some reason we still have them in blk-core, with the rest of the
->>>> request completion being in blk-mq. That causes and out-of-line call
->>>> for each completion.
->>>>
->>>> Move them into blk-mq.c instead.
+On 10/13/21 11:57 AM, Christoph Hellwig wrote:
+> On Wed, Oct 13, 2021 at 11:46:04AM -0600, Jens Axboe wrote:
+>> On 10/13/21 11:22 AM, Christoph Hellwig wrote:
+>>> On Wed, Oct 13, 2021 at 10:49:35AM -0600, Jens Axboe wrote:
+>>>> If we don't use an IO scheduler or have shared tags, then we don't need
+>>>> to call into this external function at all. This saves ~2% for such
+>>>> a setup.
 >>>
->>> The status/errno helpers really are core code.  And if we change
->>> the block_rq_complete tracepoint to just take the status and do the
->>> conversion inside the trace event to avoid the fast path out of line
->>> call.
+>>> Hmm.  What happens if you just throw an inline tag onto
+>>> blk_mq_get_driver_tag?
 >>
->> It's all core code at this point imho, there's on request based without
->> mq.
+>> I'd be surprised if that's any different than my patch in terms of
+>> performance, the fast path would be about the same. I don't feel
+>> strongly about it, can do that instead.
 > 
-> But the errno mapping is just as relevant for bio based drivers.
+> I find the double indirection in your patch a bit confusing.  Not a big
+> deal if it is actually required, but if we can avoid that I'd prefer
+> not to add the extra indirection.
 
-It's not like they are conditionally enabled, if you get one you get
-the other. But I can shuffle it around if it means a lot to you...
+Tested the variants, and it does seem to be the best one...
 
 -- 
 Jens Axboe
