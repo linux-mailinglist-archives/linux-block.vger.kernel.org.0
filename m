@@ -2,248 +2,171 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6C5742C011
-	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 14:32:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A74FC42C07E
+	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 14:46:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232486AbhJMMeU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Oct 2021 08:34:20 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:14346 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbhJMMeS (ORCPT
+        id S231516AbhJMMsS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Oct 2021 08:48:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31181 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230197AbhJMMsR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Oct 2021 08:34:18 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HTsHH2DHWz8xJP;
-        Wed, 13 Oct 2021 20:27:23 +0800 (CST)
-Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Wed, 13 Oct 2021 20:32:13 +0800
-Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
- (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Wed, 13
- Oct 2021 20:32:12 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <tj@kernel.org>, <axboe@kernel.dk>, <paolo.valente@linaro.org>,
-        <fchecconi@gmail.com>, <avanzini.arianna@gmail.com>,
-        <mkoutny@suse.com>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH v2 -next] blk-cgroup: synchoronize blkg creation against policy deactivation
-Date:   Wed, 13 Oct 2021 20:44:56 +0800
-Message-ID: <20211013124456.3186005-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 13 Oct 2021 08:48:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634129174;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=pio+Rp9lSXqTgcX0jd1ToQMieUTpIAr4Wm8ggp456+o=;
+        b=fDi80G8h49m015tHrzDRZ4dnqOQz0tumxczgdg4RqrZK9kUk+sxseASBtqJwMu98wFSVv+
+        S26k9vkQSgyDok8hhvjNtlVGQc+sWGXq9I+FCQzYrISs42izR6FhOYKkrFLxywRPClTBkd
+        yMxLe2DuDR0GAMUuJa0Ll+tDy/ZZCjw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-526-XTE1s7i2M7KGi33xSKesxQ-1; Wed, 13 Oct 2021 08:46:13 -0400
+X-MC-Unique: XTE1s7i2M7KGi33xSKesxQ-1
+Received: by mail-wr1-f71.google.com with SMTP id f1-20020a5d64c1000000b001611832aefeso1865592wri.17
+        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 05:46:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=pio+Rp9lSXqTgcX0jd1ToQMieUTpIAr4Wm8ggp456+o=;
+        b=4Qux6w+6ixC9dh1UnKzQXPSFZb7OqAgJu4PngkVPErOXY8MXTRwz3gN6s1nBKW3B4p
+         pMWvTTTdoiMn6jpHuyr8p8jpGF7CA6E3h85uZjbdpFUR5TyrR0Kxy70fj4OgEMDLWa2Z
+         NsPZmLQvXJtDBdRLAOhCB4bGEK6mJH4lVu6vrHBoYrzH8Gq7QUSYZf3z7ns82Lfs5hXX
+         pRfa2+HVL3LpoNjkVpOPsk8W/k7Iaow/4SWzr3u2IcndI9M7r2h3G7ZHWZym4zKp9sbk
+         HeY2+HkNfhKy7/iSkrTamEnbWb81/RwHEEXZeMgR/BMbMaGrhxqjsTVGlFNnjo39/ePt
+         X+HA==
+X-Gm-Message-State: AOAM531ecOJfJ3hSinvZHNKKD/UlPSKsXoYJgTsoJPtxyWgygrwQPBGN
+        xXLIIEYMY9EbIO7i4Tye+NLSkrqgszknV2exDtB9ulpH1JWBFb2fHCSaWDcv7XOxvEAJd3ff9iT
+        R5I9Y7xRAAGyUvS0xQsveiRI=
+X-Received: by 2002:a1c:3586:: with SMTP id c128mr12804926wma.78.1634129172062;
+        Wed, 13 Oct 2021 05:46:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxWON28WQcyoAHS7/UuoGSQN5DfnmTJuEAcV0OBwnEccLiKLDK1QD4fr9pYUdKD+eXE6vI3mA==
+X-Received: by 2002:a1c:3586:: with SMTP id c128mr12804894wma.78.1634129171809;
+        Wed, 13 Oct 2021 05:46:11 -0700 (PDT)
+Received: from redhat.com ([2.55.30.112])
+        by smtp.gmail.com with ESMTPSA id s1sm5015348wmc.47.2021.10.13.05.46.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Oct 2021 05:46:11 -0700 (PDT)
+Date:   Wed, 13 Oct 2021 08:46:08 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Xie Yongji <xieyongji@bytedance.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH] Revert "virtio-blk: Add validation for block size in config
+ space"
+Message-ID: <20211013124553.23803-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggema762-chm.china.huawei.com (10.1.198.204)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
+X-Mutt-Fcc: =sent
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Out test report a null pointer dereference:
+It turns out that access to config space before completing the feature
+negotiation is broken for big endian guests at least with QEMU hosts up
+to 6.1 inclusive.  This affects any device that accesses config space in
+the validate callback: at the moment that is virtio-net with
+VIRTIO_NET_F_MTU but since 82e89ea077b9 ("virtio-blk: Add validation for
+block size in config space") that also started affecting virtio-blk with
+VIRTIO_BLK_F_BLK_SIZE. Further, unlike VIRTIO_NET_F_MTU which is off by
+default on QEMU, VIRTIO_BLK_F_BLK_SIZE is on by default, which resulted
+in lots of people not being able to boot VMs on BE.
 
-[  168.534653] ==================================================================
-[  168.535614] Disabling lock debugging due to kernel taint
-[  168.536346] BUG: kernel NULL pointer dereference, address: 0000000000000008
-[  168.537274] #PF: supervisor read access in kernel mode
-[  168.537964] #PF: error_code(0x0000) - not-present page
-[  168.538667] PGD 0 P4D 0
-[  168.539025] Oops: 0000 [#1] PREEMPT SMP KASAN
-[  168.539656] CPU: 13 PID: 759 Comm: bash Tainted: G    B             5.15.0-rc2-next-202100
-[  168.540954] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_0738364
-[  168.542736] RIP: 0010:bfq_pd_init+0x88/0x1e0
-[  168.543318] Code: 98 00 00 00 e8 c9 e4 5b ff 4c 8b 65 00 49 8d 7c 24 08 e8 bb e4 5b ff 4d0
-[  168.545803] RSP: 0018:ffff88817095f9c0 EFLAGS: 00010002
-[  168.546497] RAX: 0000000000000001 RBX: ffff888101a1c000 RCX: 0000000000000000
-[  168.547438] RDX: 0000000000000003 RSI: 0000000000000002 RDI: ffff888106553428
-[  168.548402] RBP: ffff888106553400 R08: ffffffff961bcaf4 R09: 0000000000000001
-[  168.549365] R10: ffffffffa2e16c27 R11: fffffbfff45c2d84 R12: 0000000000000000
-[  168.550291] R13: ffff888101a1c098 R14: ffff88810c7a08c8 R15: ffffffffa55541a0
-[  168.551221] FS:  00007fac75227700(0000) GS:ffff88839ba80000(0000) knlGS:0000000000000000
-[  168.552278] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  168.553040] CR2: 0000000000000008 CR3: 0000000165ce7000 CR4: 00000000000006e0
-[  168.554000] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  168.554929] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  168.555888] Call Trace:
-[  168.556221]  <TASK>
-[  168.556510]  blkg_create+0x1c0/0x8c0
-[  168.556989]  blkg_conf_prep+0x574/0x650
-[  168.557502]  ? stack_trace_save+0x99/0xd0
-[  168.558033]  ? blkcg_conf_open_bdev+0x1b0/0x1b0
-[  168.558629]  tg_set_conf.constprop.0+0xb9/0x280
-[  168.559231]  ? kasan_set_track+0x29/0x40
-[  168.559758]  ? kasan_set_free_info+0x30/0x60
-[  168.560344]  ? tg_set_limit+0xae0/0xae0
-[  168.560853]  ? do_sys_openat2+0x33b/0x640
-[  168.561383]  ? do_sys_open+0xa2/0x100
-[  168.561877]  ? __x64_sys_open+0x4e/0x60
-[  168.562383]  ? __kasan_check_write+0x20/0x30
-[  168.562951]  ? copyin+0x48/0x70
-[  168.563390]  ? _copy_from_iter+0x234/0x9e0
-[  168.563948]  tg_set_conf_u64+0x17/0x20
-[  168.564467]  cgroup_file_write+0x1ad/0x380
-[  168.565014]  ? cgroup_file_poll+0x80/0x80
-[  168.565568]  ? __mutex_lock_slowpath+0x30/0x30
-[  168.566165]  ? pgd_free+0x100/0x160
-[  168.566649]  kernfs_fop_write_iter+0x21d/0x340
-[  168.567246]  ? cgroup_file_poll+0x80/0x80
-[  168.567796]  new_sync_write+0x29f/0x3c0
-[  168.568314]  ? new_sync_read+0x410/0x410
-[  168.568840]  ? __handle_mm_fault+0x1c97/0x2d80
-[  168.569425]  ? copy_page_range+0x2b10/0x2b10
-[  168.570007]  ? _raw_read_lock_bh+0xa0/0xa0
-[  168.570622]  vfs_write+0x46e/0x630
-[  168.571091]  ksys_write+0xcd/0x1e0
-[  168.571563]  ? __x64_sys_read+0x60/0x60
-[  168.572081]  ? __kasan_check_write+0x20/0x30
-[  168.572659]  ? do_user_addr_fault+0x446/0xff0
-[  168.573264]  __x64_sys_write+0x46/0x60
-[  168.573774]  do_syscall_64+0x35/0x80
-[  168.574264]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[  168.574960] RIP: 0033:0x7fac74915130
-[  168.575456] Code: 73 01 c3 48 8b 0d 58 ed 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 444
-[  168.577969] RSP: 002b:00007ffc3080e288 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  168.578986] RAX: ffffffffffffffda RBX: 0000000000000009 RCX: 00007fac74915130
-[  168.579937] RDX: 0000000000000009 RSI: 000056007669f080 RDI: 0000000000000001
-[  168.580884] RBP: 000056007669f080 R08: 000000000000000a R09: 00007fac75227700
-[  168.581841] R10: 000056007655c8f0 R11: 0000000000000246 R12: 0000000000000009
-[  168.582796] R13: 0000000000000001 R14: 00007fac74be55e0 R15: 00007fac74be08c0
-[  168.583757]  </TASK>
-[  168.584063] Modules linked in:
-[  168.584494] CR2: 0000000000000008
-[  168.584964] ---[ end trace 2475611ad0f77a1a ]---
+The spec is very clear that what we are doing is legal so QEMU needs to
+be fixed, but given it's been broken for so many years and no one
+noticed, we need to give QEMU a bit more time before applying this.
 
-This is because blkg_alloc() is called from blkg_conf_prep() without
-holding 'q->queue_lock', and elevator is exited before blkg_create():
+Further, this patch is incomplete (does not check blk size is a power
+of two) and it duplicates the logic from nbd.
 
-thread 1                            thread 2
-blkg_conf_prep
- spin_lock_irq(&q->queue_lock);
- blkg_lookup_check -> return NULL
- spin_unlock_irq(&q->queue_lock);
+Revert for now, and we'll reapply a cleaner logic in the next release.
 
- blkg_alloc
-  blkcg_policy_enabled -> true
-  pd = ->pd_alloc_fn
-  blkg->pd[i] = pd
-                                   blk_mq_exit_sched
-                                    bfq_exit_queue
-                                     blkcg_deactivate_policy
-                                      spin_lock_irq(&q->queue_lock);
-                                      __clear_bit(pol->plid, q->blkcg_pols);
-                                      spin_unlock_irq(&q->queue_lock);
-                                    q->elevator = NULL;
-  spin_lock_irq(&q->queue_lock);
-   blkg_create
-    if (blkg->pd[i])
-     ->pd_init_fn -> q->elevator is NULL
-  spin_unlock_irq(&q->queue_lock);
-
-Because blkcg_deactivate_policy() can take a long time if there are too
-many blkgs in q->blkg_list, fix the problem by adding a mutex in q
-and using it to synchoronize blkg creation against policy deactivation.
-
-Fixes: e21b7a0b9887 ("block, bfq: add full hierarchical scheduling and cgroups support")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 82e89ea077b9 ("virtio-blk: Add validation for block size in config space")
+Cc: Xie Yongji <xieyongji@bytedance.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
-Changes in V2:
- - rename the patch title
- - instead of checking policy in blkg_create(), using a new solution.
+ drivers/block/virtio_blk.c | 37 ++++++-------------------------------
+ 1 file changed, 6 insertions(+), 31 deletions(-)
 
- block/blk-cgroup.c     | 7 +++++++
- block/blk-core.c       | 1 +
- include/linux/blkdev.h | 5 +++++
- 3 files changed, 13 insertions(+)
-
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index eb48090eefce..043f85a1e05e 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -621,6 +621,7 @@ struct block_device *blkcg_conf_open_bdev(char **inputp)
-  */
- int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
- 		   char *input, struct blkg_conf_ctx *ctx)
-+	__acquires(&bdev->bd_disk->queue->blkg_lock)
- 	__acquires(rcu) __acquires(&bdev->bd_disk->queue->queue_lock)
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 9b3bd083b411..303caf2d17d0 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -689,28 +689,6 @@ static const struct blk_mq_ops virtio_mq_ops = {
+ static unsigned int virtblk_queue_depth;
+ module_param_named(queue_depth, virtblk_queue_depth, uint, 0444);
+ 
+-static int virtblk_validate(struct virtio_device *vdev)
+-{
+-	u32 blk_size;
+-
+-	if (!vdev->config->get) {
+-		dev_err(&vdev->dev, "%s failure: config access disabled\n",
+-			__func__);
+-		return -EINVAL;
+-	}
+-
+-	if (!virtio_has_feature(vdev, VIRTIO_BLK_F_BLK_SIZE))
+-		return 0;
+-
+-	blk_size = virtio_cread32(vdev,
+-			offsetof(struct virtio_blk_config, blk_size));
+-
+-	if (blk_size < SECTOR_SIZE || blk_size > PAGE_SIZE)
+-		__virtio_clear_bit(vdev, VIRTIO_BLK_F_BLK_SIZE);
+-
+-	return 0;
+-}
+-
+ static int virtblk_probe(struct virtio_device *vdev)
  {
- 	struct block_device *bdev;
-@@ -634,6 +635,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+ 	struct virtio_blk *vblk;
+@@ -722,6 +700,12 @@ static int virtblk_probe(struct virtio_device *vdev)
+ 	u8 physical_block_exp, alignment_offset;
+ 	unsigned int queue_depth;
  
- 	q = bdev->bd_disk->queue;
++	if (!vdev->config->get) {
++		dev_err(&vdev->dev, "%s failure: config access disabled\n",
++			__func__);
++		return -EINVAL;
++	}
++
+ 	err = ida_simple_get(&vd_index_ida, 0, minor_to_index(1 << MINORBITS),
+ 			     GFP_KERNEL);
+ 	if (err < 0)
+@@ -836,14 +820,6 @@ static int virtblk_probe(struct virtio_device *vdev)
+ 	else
+ 		blk_size = queue_logical_block_size(q);
  
-+	mutex_lock(&q->blkg_lock);
- 	rcu_read_lock();
- 	spin_lock_irq(&q->queue_lock);
- 
-@@ -713,6 +715,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
- fail_unlock:
- 	spin_unlock_irq(&q->queue_lock);
- 	rcu_read_unlock();
-+	mutex_unlock(&q->blkg_lock);
- fail:
- 	blkdev_put_no_open(bdev);
- 	/*
-@@ -738,9 +741,11 @@ EXPORT_SYMBOL_GPL(blkg_conf_prep);
-  */
- void blkg_conf_finish(struct blkg_conf_ctx *ctx)
- 	__releases(&ctx->bdev->bd_disk->queue->queue_lock) __releases(rcu)
-+	__releases(&ctx->bdev->bd_disk->queue->blkg_lock)
- {
- 	spin_unlock_irq(&ctx->bdev->bd_disk->queue->queue_lock);
- 	rcu_read_unlock();
-+	mutex_unlock(&ctx->bdev->bd_disk->queue->blkg_lock);
- 	blkdev_put_no_open(ctx->bdev);
- }
- EXPORT_SYMBOL_GPL(blkg_conf_finish);
-@@ -1401,6 +1406,7 @@ void blkcg_deactivate_policy(struct request_queue *q,
- 	if (queue_is_mq(q))
- 		blk_mq_freeze_queue(q);
- 
-+	mutex_lock(&q->blkg_lock);
- 	spin_lock_irq(&q->queue_lock);
- 
- 	__clear_bit(pol->plid, q->blkcg_pols);
-@@ -1419,6 +1425,7 @@ void blkcg_deactivate_policy(struct request_queue *q,
- 	}
- 
- 	spin_unlock_irq(&q->queue_lock);
-+	mutex_unlock(&q->blkg_lock);
- 
- 	if (queue_is_mq(q))
- 		blk_mq_unfreeze_queue(q);
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d83e56b2f64e..f37fc03b1113 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -544,6 +544,7 @@ struct request_queue *blk_alloc_queue(int node_id)
- 	INIT_LIST_HEAD(&q->icq_list);
- #ifdef CONFIG_BLK_CGROUP
- 	INIT_LIST_HEAD(&q->blkg_list);
-+	mutex_init(&q->blkg_lock);
- #endif
- 
- 	kobject_init(&q->kobj, &blk_queue_ktype);
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index b19172db7eef..c2d5be0f5f37 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -245,6 +245,11 @@ struct request_queue {
- 	DECLARE_BITMAP		(blkcg_pols, BLKCG_MAX_POLS);
- 	struct blkcg_gq		*root_blkg;
- 	struct list_head	blkg_list;
-+	/*
-+	 * used to synchronize blkg allocation and initialization against
-+	 * policy deactivation.
-+	 */
-+	struct mutex		blkg_lock;
- #endif
- 
- 	struct queue_limits	limits;
+-	if (blk_size < SECTOR_SIZE || blk_size > PAGE_SIZE) {
+-		dev_err(&vdev->dev,
+-			"block size is changed unexpectedly, now is %u\n",
+-			blk_size);
+-		err = -EINVAL;
+-		goto out_cleanup_disk;
+-	}
+-
+ 	/* Use topology information if available */
+ 	err = virtio_cread_feature(vdev, VIRTIO_BLK_F_TOPOLOGY,
+ 				   struct virtio_blk_config, physical_block_exp,
+@@ -1009,7 +985,6 @@ static struct virtio_driver virtio_blk = {
+ 	.driver.name			= KBUILD_MODNAME,
+ 	.driver.owner			= THIS_MODULE,
+ 	.id_table			= id_table,
+-	.validate			= virtblk_validate,
+ 	.probe				= virtblk_probe,
+ 	.remove				= virtblk_remove,
+ 	.config_changed			= virtblk_config_changed,
 -- 
-2.31.1
+MST
 
