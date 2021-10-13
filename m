@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4EF842C6DE
+	by mail.lfdr.de (Postfix) with ESMTP id 795F542C6DD
 	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 18:54:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237598AbhJMQ40 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S237563AbhJMQ40 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Wed, 13 Oct 2021 12:56:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55880 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237563AbhJMQ4Z (ORCPT
+        with ESMTP id S237193AbhJMQ40 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Oct 2021 12:56:25 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F60BC061570
+        Wed, 13 Oct 2021 12:56:26 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79E1C061749
         for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 09:54:22 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id r134so426479iod.11
+Received: by mail-il1-x12b.google.com with SMTP id h10so426257ilq.3
         for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 09:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ahqldeCtg66uzCKobXV+3ZUDAi97hwCQoUdjJg1AbOs=;
-        b=VwyWvr7wdYOL9keMvXL/QDfI4sEWrwF/oRAC5cY/WZcR+VdeTnb7a5DnWPvWg7Freo
-         O4S7GaL6xuhltdgGs6p2n1jNukmALmWE+/Q+QtL5UUdcExqax2i38AqBIggPDidVIzPd
-         FyBOraM8sOT5bSFbiaqC9RY+Pi8PrUr8peK0F7JuCy8H9l9U9OtRBArl/+HfDtWsOLBv
-         XdZkg/MBC8eUx/9dDpBChsmJx8lq2bhYIsL1mLxkyUGXINNw0JwCYtHQwig2+xizOsEr
-         yDzGsj0h3mdf21tR8PKFZAFoM9lunBLTGD1RlwywclHPoqwlGukbSffMWHM0rx6lTaI1
-         Wuvg==
+        bh=UWWbxxl1nqVuRPyRl4TrQ64PvIRN1ySCGLzomh2MwOY=;
+        b=CflgU2lNxFISUs7Wvc/XFgDqwIo5d6uA52jlkovsmf2d3JZ4uAkoCdFnq8suCN0ic/
+         Oh0lXdUwWq0YKA/gQES0XUq3P81BmEdIDQpxFiRGjkKitiUtafjm8ksVrehZby7DWjY0
+         GW1hrVL+KIuyhCiKIcso7Drlp/6KtYHYEKCbvVaI+EEFs74aO3ihzw9fXzXMhosEJ8wH
+         rLu3xh9661EdHfkcy+hcH0GoPhIzUUSWT2+kjwxCmSFqk7DRjX3s4WBXSkNJoy0h8ZIW
+         iEsKCx/9EGVZ7rSWjS/IjGPIMp8L0ih1aMF6iR1gN87fVQbd6ts7AZWTn06ZWodaj/5c
+         8Tmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ahqldeCtg66uzCKobXV+3ZUDAi97hwCQoUdjJg1AbOs=;
-        b=tDJfy7snpdsdGxhBLIJym+HVQvY4DA33zlM711mJ0wc12q2YAxfrSU/1PiGtNIOWDj
-         4fnh1K5f9qFvZbnMSki3qCWx5YLGmUczydTcfrnyGssR706wzhKjediogPvC0x93qonQ
-         Zmiqt026z4WeBMlWQCYvw9S/Wc2onI4o8jhq+gsJo4XuMG7Sz0sXpWGwzjGB9CXcNVnC
-         vLkN0w3d3RoGlF+ReysGIiV1P9Fi05VPzsF3g44AlIhM4rd/wgMf1ISGxPuuRcTeZBxr
-         rDhRjT1OvOAPnaJeDDqJceH8VJLmf+88dVn/LlyAZyQRMd2ZEXqXxVcG2BBSDp37ohVG
-         aaug==
-X-Gm-Message-State: AOAM533mfs4NlIkjSuVBFWRl5eSezwWSHt1I6jSlrORvi/yQkI32tfT8
-        8ya8mBHKwYI2sESowoDVhMk1fTgxyk4=
-X-Google-Smtp-Source: ABdhPJz88CJrC6mMo/Pl/ZmskF0eZpMfTcw1jcn3B4HJHPADH2RgtDR+21imLn1NJfl0hOpxlEVYaQ==
-X-Received: by 2002:a05:6602:2ac3:: with SMTP id m3mr306844iov.138.1634144061391;
-        Wed, 13 Oct 2021 09:54:21 -0700 (PDT)
+        bh=UWWbxxl1nqVuRPyRl4TrQ64PvIRN1ySCGLzomh2MwOY=;
+        b=pi7fbkf2Sm/BJXrCuiIlggDwl1KuTImIlYoSdshnw0AxXljIsstjV9jXIZzaPZ2IqP
+         hemOX5j8PphXfzbCtB85c2fDLpRf5dKxsjp6VzMsvZzYs0gH0fnuEEjC/mGXn2awsXVU
+         vsLRnPR/dJVov9fRiNM02B4uamucrE/AJTnARiTtqTKF2fudPKCxh5dR9ffT9dOCCSUM
+         FHrCcozs84dMX4wXuRrZyFaA4nepJebKMJUoG6hRZXgFw96zUxQeVAuAzh3rhg1DyXkA
+         1v/rqt6MOeVimlXm5qKN+Tdd1Yoqc3X99LfSIbc/GelzXDcTohZ+M1gKJR1YzLemZNoI
+         zilw==
+X-Gm-Message-State: AOAM533RMka8m5eg1hQuYo+hYjFxEHr2my/cVuTcqfFX+BCENIYcY8Ou
+        LFYKpuk8JKzHZIEYWOU6cJN2rY+xsltaKg==
+X-Google-Smtp-Source: ABdhPJz0XpqF3ukDwj/1tNTioMwvr6SBUJaon891lNXBWnGTFI6QRM5p1x/cay79NvB7a/TEdCoywA==
+X-Received: by 2002:a05:6e02:1569:: with SMTP id k9mr89672ilu.317.1634144062169;
+        Wed, 13 Oct 2021 09:54:22 -0700 (PDT)
 Received: from p1.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id r7sm65023ior.25.2021.10.13.09.54.20
+        by smtp.gmail.com with ESMTPSA id r7sm65023ior.25.2021.10.13.09.54.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Oct 2021 09:54:20 -0700 (PDT)
+        Wed, 13 Oct 2021 09:54:21 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 3/9] sbitmap: add helper to clear a batch of tags
-Date:   Wed, 13 Oct 2021 10:54:10 -0600
-Message-Id: <20211013165416.985696-4-axboe@kernel.dk>
+Subject: [PATCH 4/9] sbitmap: test bit before calling test_and_set_bit()
+Date:   Wed, 13 Oct 2021 10:54:11 -0600
+Message-Id: <20211013165416.985696-5-axboe@kernel.dk>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211013165416.985696-1-axboe@kernel.dk>
 References: <20211013165416.985696-1-axboe@kernel.dk>
@@ -63,99 +63,28 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-sbitmap currently only supports clearing tags one-by-one, add a helper
-that allows the caller to pass in an array of tags to clear.
+If we come across bits that are already set, then it's quicker to test
+that first and gate the test_and_set_bit() operation on the result of
+the bit test.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- include/linux/sbitmap.h | 11 +++++++++++
- lib/sbitmap.c           | 44 ++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 52 insertions(+), 3 deletions(-)
+ lib/sbitmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index e30b56023ead..4a6ff274335a 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -528,6 +528,17 @@ void sbitmap_queue_min_shallow_depth(struct sbitmap_queue *sbq,
- void sbitmap_queue_clear(struct sbitmap_queue *sbq, unsigned int nr,
- 			 unsigned int cpu);
- 
-+/**
-+ * sbitmap_queue_clear_batch() - Free a batch of allocated bits
-+ * &struct sbitmap_queue.
-+ * @sbq: Bitmap to free from.
-+ * @offset: offset for each tag in array
-+ * @tags: array of tags
-+ * @nr_tags: number of tags in array
-+ */
-+void sbitmap_queue_clear_batch(struct sbitmap_queue *sbq, int offset,
-+				int *tags, int nr_tags);
-+
- static inline int sbq_index_inc(int index)
- {
- 	return (index + 1) & (SBQ_WAIT_QUEUES - 1);
 diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index f398e0ae548e..c6e2f1f2c4d2 100644
+index c6e2f1f2c4d2..11b244a8d00f 100644
 --- a/lib/sbitmap.c
 +++ b/lib/sbitmap.c
-@@ -628,6 +628,46 @@ void sbitmap_queue_wake_up(struct sbitmap_queue *sbq)
- }
- EXPORT_SYMBOL_GPL(sbitmap_queue_wake_up);
+@@ -166,7 +166,7 @@ static int __sbitmap_get_word(unsigned long *word, unsigned long depth,
+ 			return -1;
+ 		}
  
-+static inline void sbitmap_update_cpu_hint(struct sbitmap *sb, int cpu, int tag)
-+{
-+	if (likely(!sb->round_robin && tag < sb->depth))
-+		*per_cpu_ptr(sb->alloc_hint, cpu) = tag;
-+}
-+
-+void sbitmap_queue_clear_batch(struct sbitmap_queue *sbq, int offset,
-+				int *tags, int nr_tags)
-+{
-+	struct sbitmap *sb = &sbq->sb;
-+	unsigned long *addr = NULL;
-+	unsigned long mask = 0;
-+	int i;
-+
-+	smp_mb__before_atomic();
-+	for (i = 0; i < nr_tags; i++) {
-+		const int tag = tags[i] - offset;
-+		unsigned long *this_addr;
-+
-+		/* since we're clearing a batch, skip the deferred map */
-+		this_addr = &sb->map[SB_NR_TO_INDEX(sb, tag)].word;
-+		if (!addr) {
-+			addr = this_addr;
-+		} else if (addr != this_addr) {
-+			atomic_long_andnot(mask, (atomic_long_t *) addr);
-+			mask = 0;
-+			addr = this_addr;
-+		}
-+		mask |= (1UL << SB_NR_TO_BIT(sb, tag));
-+	}
-+
-+	if (mask)
-+		atomic_long_andnot(mask, (atomic_long_t *) addr);
-+
-+	smp_mb__after_atomic();
-+	sbitmap_queue_wake_up(sbq);
-+	sbitmap_update_cpu_hint(&sbq->sb, raw_smp_processor_id(),
-+					tags[nr_tags - 1] - offset);
-+}
-+
- void sbitmap_queue_clear(struct sbitmap_queue *sbq, unsigned int nr,
- 			 unsigned int cpu)
- {
-@@ -652,9 +692,7 @@ void sbitmap_queue_clear(struct sbitmap_queue *sbq, unsigned int nr,
- 	 */
- 	smp_mb__after_atomic();
- 	sbitmap_queue_wake_up(sbq);
--
--	if (likely(!sbq->sb.round_robin && nr < sbq->sb.depth))
--		*per_cpu_ptr(sbq->sb.alloc_hint, cpu) = nr;
-+	sbitmap_update_cpu_hint(&sbq->sb, cpu, nr);
- }
- EXPORT_SYMBOL_GPL(sbitmap_queue_clear);
+-		if (!test_and_set_bit_lock(nr, word))
++		if (!test_bit(nr, word) && !test_and_set_bit_lock(nr, word))
+ 			break;
  
+ 		hint = nr + 1;
 -- 
 2.33.0
 
