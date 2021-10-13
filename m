@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC6942BAFB
-	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 10:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83A9E42BAFD
+	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 10:58:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238943AbhJMJAG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Oct 2021 05:00:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
+        id S238972AbhJMJAH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Oct 2021 05:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbhJMJAG (ORCPT
+        with ESMTP id S238953AbhJMJAG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Wed, 13 Oct 2021 05:00:06 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5619DC061714;
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E519FC061746;
         Wed, 13 Oct 2021 01:58:03 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id m22so5994829wrb.0;
+Received: by mail-wr1-x434.google.com with SMTP id o20so5851369wro.3;
         Wed, 13 Oct 2021 01:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k9Ex5CnexhrA+65j7ahm0iD45c9iTQJ0i/r9QhTU/B8=;
-        b=D+GmuBdOm3blAYl4rRY+0O/BMwo5xOUMCUXX+BQ+0KLOoTXlpAZ5onDD/WI3EDPHn0
-         8Qkb1jYnmzBU7H3qcxEyQ78FGriDRX+N0j0nJOikyqhS46ET5Yt3Y5h6k/nzuJBkaIvV
-         WWgaE7et8yMZNVuuu8QNBYMDhXowVxq/aeHWEDTxNa//hZjpV7n7jCE0fH6DXEE56/9D
-         t2c+oCUwbbjJnMjZdmj8XVk2U/MiIntgkbGIjmURwXRebLjWJAcHV0FiUt1+SZoef5s4
-         tbUmR5M75ImmMRgW4WqPXY3ogNlfnNE4POV1fCTPggmckDmJ9rUl4ln44WZI7cYB/PML
-         6Vbw==
+        bh=8H5Xv2qDNrUZQBRNCggQmvny18tVHGX+5jJO9ZvgXFM=;
+        b=iw+rNa1qt2gBYrQxmTTMiCbZcvTfyKq4EkfJtL5Ri5YC4UoDSPJumIsf2u/f2F8lJd
+         0CCZVYBM2tWiT2C2ucqCWDq1XJd0EVN+IUc1190p1kxDA+zLdRpBbP1IdoeNtyBLbZ5K
+         QLW4Pu8s05NOat/aSr0fMO2T5mGlGgauWt72gADN4ksGpHhujpXHM29jOZ6G3WedceR7
+         D9gK0gjeuzTY73cCEQ1wYhtJQQhCymcLs5kUYlcy8eXsmkOubu8+h0FSUqFBQBWaw0ja
+         kWQz8JP7aPEKzUnZohsiE95cHukM3n3zFlfERdoh3TOuwvNvBLxaDo+1xDHsIlqd243G
+         rCfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k9Ex5CnexhrA+65j7ahm0iD45c9iTQJ0i/r9QhTU/B8=;
-        b=LrKhsFNgLdsuKIog+JtgMzz1BK1mQyTbyEcTl/53+OQ7o1AMDFjK69lTdNNrIT5hgP
-         Vowi/zBTp8dA4jclIljYypbVaXJ1rpZcBJqxGu1BoD8tcvpML0iCvPvTsZ9zqj0QFEmr
-         QMIGto6CV2W2Ugjoep/zgjCc3TqM7qc6y/FiX/bGkH8ufkm2n1NCPb7MSjDaezKJPdwu
-         SzyQ77+1I34UMf486CcbTC2q21Gco7G68TtWDp2x580/QD35D7tr/aeMk7Z4HJjZ02Tq
-         PUUDKny7EDwliZmwrJZfUzXkAQKE1UBdWX8heJFkOJeTm+WaMrFzvEVaARpQ0oT99O3m
-         zG9w==
-X-Gm-Message-State: AOAM532hgsNm325Vkt7H4sc9ndRKiEI4hxa0ykmFBNm/g2F80iEo/qxn
-        EjPnweXMvnZ30gyJZmEaxXU=
-X-Google-Smtp-Source: ABdhPJyau3IxoedXXrVhs5mzIiGQHk1gfFgpJzBpFduAoyzZ0WPU+JDwgTqrmUlM5wcUf4UzQM1Mkg==
-X-Received: by 2002:a05:600c:3223:: with SMTP id r35mr11513295wmp.32.1634115481418;
-        Wed, 13 Oct 2021 01:58:01 -0700 (PDT)
+        bh=8H5Xv2qDNrUZQBRNCggQmvny18tVHGX+5jJO9ZvgXFM=;
+        b=rZcdngfceau/lSzZEqTzq4XESfgVUUe0SHfqGnyg4+fN4QLp98oPrwGXH154PeUUyF
+         JNKQ6iKTpfxK7Q9bAKoGfX/McsoIcyBXFjpJUVLS2AMZV4JZUM74VwVvRYUfTEXg3d8S
+         ZbGiA2gn4h6d6Efo4/RFG/wU1WccnS6+XpNuXkK9nwrkDF8Nndwr2XCZLajF8iEXnKye
+         hrxTZyFBpnaGtP8BPqR32V17GKc0hjd4Vtu9giHnXlUVJwLzOQ2SoKoObWMQiXzPm5wN
+         VJav0gP6nSvqI7n8ZunOJTUM1NxzADUPc095F6uYov8x2ZPQxx20RnMwh4x09PxyWhO9
+         /5ng==
+X-Gm-Message-State: AOAM532dIkFEhJrIZJxHCF9cskd8/9Mj/MWVbovte5MFkHTOcak9iOIn
+        BmH9dl8CCZ1ptV6GoReXgRQGRMAWDo4=
+X-Google-Smtp-Source: ABdhPJxuv8+b2OIqnHlHXY6MpWPX/6PZUGV77xZKnxuD6uNsjR7n+I0rtgQYQl5eAW+4aMafy8iaxg==
+X-Received: by 2002:adf:f10a:: with SMTP id r10mr21081534wro.102.1634115482300;
+        Wed, 13 Oct 2021 01:58:02 -0700 (PDT)
 Received: from localhost.localdomain ([185.69.145.208])
-        by smtp.gmail.com with ESMTPSA id v1sm13187283wro.54.2021.10.13.01.58.00
+        by smtp.gmail.com with ESMTPSA id v1sm13187283wro.54.2021.10.13.01.58.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 13 Oct 2021 01:58:01 -0700 (PDT)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Christoph Hellwig <hch@infradead.org>, asml.silence@gmail.com
-Subject: [PATCH v2 1/3] block: cache bdev in struct file for raw bdev IO
-Date:   Wed, 13 Oct 2021 09:57:11 +0100
-Message-Id: <8415f9fe12e544b9da89593dfbca8de2b52efe03.1634115360.git.asml.silence@gmail.com>
+Subject: [PATCH v2 2/3] block: don't hide inode from block_device users
+Date:   Wed, 13 Oct 2021 09:57:12 +0100
+Message-Id: <2b8c84834a304871d78f91d4ebe153fac2192fd5.1634115360.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <cover.1634115360.git.asml.silence@gmail.com>
 References: <cover.1634115360.git.asml.silence@gmail.com>
@@ -64,119 +64,220 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bdev = &BDEV_I(file->f_mapping->host)->bdev
-
-Getting struct block_device from a file requires 2 memory dereferences
-as illustrated above, that takes a toll on performance, so cache it in
-yet unused file->private_data. That gives a noticeable peak performance
-improvement.
+Instead of tricks with struct bdev_inode, just openly place the inode
+inside struct block_device. First, it allows us to inline I_BDEV, which
+is simple but non-inline nature of it impacts performance. Also, make it
+possible to get rid of ->bd_inode pointer and hooping with extra
+indirection, the amount of which became a noticeable problem for the
+block layer.
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- block/fops.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ block/bdev.c              | 44 ++++++++++-----------------------------
+ block/fops.c              | 20 +++++++-----------
+ include/linux/blk_types.h |  1 +
+ include/linux/blkdev.h    |  8 +++++--
+ 4 files changed, 26 insertions(+), 47 deletions(-)
 
+diff --git a/block/bdev.c b/block/bdev.c
+index 567534c63f3d..541e24d240d1 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -30,22 +30,6 @@
+ #include "../fs/internal.h"
+ #include "blk.h"
+ 
+-struct bdev_inode {
+-	struct block_device bdev;
+-	struct inode vfs_inode;
+-};
+-
+-static inline struct bdev_inode *BDEV_I(struct inode *inode)
+-{
+-	return container_of(inode, struct bdev_inode, vfs_inode);
+-}
+-
+-struct block_device *I_BDEV(struct inode *inode)
+-{
+-	return &BDEV_I(inode)->bdev;
+-}
+-EXPORT_SYMBOL(I_BDEV);
+-
+ static void bdev_write_inode(struct block_device *bdev)
+ {
+ 	struct inode *inode = bdev->bd_inode;
+@@ -389,12 +373,13 @@ static struct kmem_cache * bdev_cachep __read_mostly;
+ 
+ static struct inode *bdev_alloc_inode(struct super_block *sb)
+ {
+-	struct bdev_inode *ei = kmem_cache_alloc(bdev_cachep, GFP_KERNEL);
++	struct block_device *bdev = kmem_cache_alloc(bdev_cachep, GFP_KERNEL);
+ 
+-	if (!ei)
++	if (!bdev)
+ 		return NULL;
+-	memset(&ei->bdev, 0, sizeof(ei->bdev));
+-	return &ei->vfs_inode;
++	memset(bdev, 0, sizeof(*bdev));
++	inode_init_once(&bdev->inode);
++	return &bdev->inode;
+ }
+ 
+ static void bdev_free_inode(struct inode *inode)
+@@ -413,14 +398,7 @@ static void bdev_free_inode(struct inode *inode)
+ 	if (MAJOR(bdev->bd_dev) == BLOCK_EXT_MAJOR)
+ 		blk_free_ext_minor(MINOR(bdev->bd_dev));
+ 
+-	kmem_cache_free(bdev_cachep, BDEV_I(inode));
+-}
+-
+-static void init_once(void *data)
+-{
+-	struct bdev_inode *ei = data;
+-
+-	inode_init_once(&ei->vfs_inode);
++	kmem_cache_free(bdev_cachep, bdev);
+ }
+ 
+ static void bdev_evict_inode(struct inode *inode)
+@@ -462,10 +440,10 @@ void __init bdev_cache_init(void)
+ 	int err;
+ 	static struct vfsmount *bd_mnt;
+ 
+-	bdev_cachep = kmem_cache_create("bdev_cache", sizeof(struct bdev_inode),
+-			0, (SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
+-				SLAB_MEM_SPREAD|SLAB_ACCOUNT|SLAB_PANIC),
+-			init_once);
++	bdev_cachep = kmem_cache_create("bdev_cache",
++			sizeof(struct block_device), 0,
++			(SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
++				SLAB_MEM_SPREAD|SLAB_ACCOUNT|SLAB_PANIC), NULL);
+ 	err = register_filesystem(&bd_type);
+ 	if (err)
+ 		panic("Cannot register bdev pseudo-fs");
+@@ -744,7 +722,7 @@ struct block_device *blkdev_get_no_open(dev_t dev)
+ 	}
+ 
+ 	/* switch from the inode reference to a device mode one: */
+-	bdev = &BDEV_I(inode)->bdev;
++	bdev = I_BDEV(inode);
+ 	if (!kobject_get_unless_zero(&bdev->bd_device.kobj))
+ 		bdev = NULL;
+ 	iput(inode);
 diff --git a/block/fops.c b/block/fops.c
-index 7bb9581a146c..c71e91cd6bcb 100644
+index c71e91cd6bcb..9ae795f27f74 100644
 --- a/block/fops.c
 +++ b/block/fops.c
-@@ -17,7 +17,7 @@
+@@ -17,11 +17,6 @@
  #include <linux/fs.h>
  #include "blk.h"
  
--static struct inode *bdev_file_inode(struct file *file)
-+static inline struct inode *bdev_file_inode(struct file *file)
+-static inline struct inode *bdev_file_inode(struct file *file)
+-{
+-	return file->f_mapping->host;
+-}
+-
+ static int blkdev_get_block(struct inode *inode, sector_t iblock,
+ 		struct buffer_head *bh, int create)
  {
- 	return file->f_mapping->host;
- }
-@@ -54,8 +54,7 @@ static void blkdev_bio_end_io_simple(struct bio *bio)
- static ssize_t __blkdev_direct_IO_simple(struct kiocb *iocb,
- 		struct iov_iter *iter, unsigned int nr_pages)
+@@ -390,7 +385,8 @@ const struct address_space_operations def_blk_aops = {
+  */
+ static loff_t blkdev_llseek(struct file *file, loff_t offset, int whence)
  {
--	struct file *file = iocb->ki_filp;
--	struct block_device *bdev = I_BDEV(bdev_file_inode(file));
-+	struct block_device *bdev = iocb->ki_filp->private_data;
- 	struct bio_vec inline_vecs[DIO_INLINE_BIO_VECS], *vecs;
- 	loff_t pos = iocb->ki_pos;
- 	bool should_dirty = false;
-@@ -143,7 +142,7 @@ static struct bio_set blkdev_dio_pool;
+-	struct inode *bd_inode = bdev_file_inode(file);
++	struct block_device *bdev = file->private_data;
++	struct inode *bd_inode = &bdev->inode;
+ 	loff_t retval;
  
- static int blkdev_iopoll(struct kiocb *kiocb, bool wait)
- {
--	struct block_device *bdev = I_BDEV(kiocb->ki_filp->f_mapping->host);
-+	struct block_device *bdev = kiocb->ki_filp->private_data;
- 	struct request_queue *q = bdev_get_queue(bdev);
- 
- 	return blk_poll(q, READ_ONCE(kiocb->ki_cookie), wait);
-@@ -191,9 +190,7 @@ static void blkdev_bio_end_io(struct bio *bio)
- static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 		unsigned int nr_pages)
- {
--	struct file *file = iocb->ki_filp;
--	struct inode *inode = bdev_file_inode(file);
--	struct block_device *bdev = I_BDEV(inode);
-+	struct block_device *bdev = iocb->ki_filp->private_data;
- 	struct blk_plug plug;
- 	struct blkdev_dio *dio;
- 	struct bio *bio;
-@@ -405,8 +402,7 @@ static loff_t blkdev_llseek(struct file *file, loff_t offset, int whence)
- static int blkdev_fsync(struct file *filp, loff_t start, loff_t end,
- 		int datasync)
- {
--	struct inode *bd_inode = bdev_file_inode(filp);
--	struct block_device *bdev = I_BDEV(bd_inode);
-+	struct block_device *bdev = filp->private_data;
- 	int error;
- 
- 	error = file_write_and_wait_range(filp, start, end);
-@@ -448,6 +444,8 @@ static int blkdev_open(struct inode *inode, struct file *filp)
- 	bdev = blkdev_get_by_dev(inode->i_rdev, filp->f_mode, filp);
- 	if (IS_ERR(bdev))
+ 	inode_lock(bd_inode);
+@@ -446,7 +442,7 @@ static int blkdev_open(struct inode *inode, struct file *filp)
  		return PTR_ERR(bdev);
-+
-+	filp->private_data = bdev;
- 	filp->f_mapping = bdev->bd_inode->i_mapping;
+ 
+ 	filp->private_data = bdev;
+-	filp->f_mapping = bdev->bd_inode->i_mapping;
++	filp->f_mapping = bdev->inode.i_mapping;
  	filp->f_wb_err = filemap_sample_wb_err(filp->f_mapping);
  	return 0;
-@@ -455,7 +453,7 @@ static int blkdev_open(struct inode *inode, struct file *filp)
- 
- static int blkdev_close(struct inode *inode, struct file *filp)
- {
--	struct block_device *bdev = I_BDEV(bdev_file_inode(filp));
-+	struct block_device *bdev = filp->private_data;
- 
- 	blkdev_put(bdev, filp->f_mode);
- 	return 0;
-@@ -470,14 +468,14 @@ static int blkdev_close(struct inode *inode, struct file *filp)
-  */
+ }
+@@ -469,7 +465,7 @@ static int blkdev_close(struct inode *inode, struct file *filp)
  static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
  {
--	struct file *file = iocb->ki_filp;
--	struct inode *bd_inode = bdev_file_inode(file);
-+	struct block_device *bdev = iocb->ki_filp->private_data;
-+	struct inode *bd_inode = bdev->bd_inode;
+ 	struct block_device *bdev = iocb->ki_filp->private_data;
+-	struct inode *bd_inode = bdev->bd_inode;
++	struct inode *bd_inode = &bdev->inode;
  	loff_t size = i_size_read(bd_inode);
  	struct blk_plug plug;
  	size_t shorted = 0;
- 	ssize_t ret;
- 
--	if (bdev_read_only(I_BDEV(bd_inode)))
-+	if (bdev_read_only(bdev))
- 		return -EPERM;
- 
- 	if (IS_SWAPFILE(bd_inode) && !is_hibernate_resume_dev(bd_inode->i_rdev))
-@@ -509,9 +507,8 @@ static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
+@@ -508,7 +504,7 @@ static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
  static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
  {
--	struct file *file = iocb->ki_filp;
--	struct inode *bd_inode = bdev_file_inode(file);
--	loff_t size = i_size_read(bd_inode);
-+	struct block_device *bdev = iocb->ki_filp->private_data;
-+	loff_t size = i_size_read(bdev->bd_inode);
+ 	struct block_device *bdev = iocb->ki_filp->private_data;
+-	loff_t size = i_size_read(bdev->bd_inode);
++	loff_t size = i_size_read(&bdev->inode);
  	loff_t pos = iocb->ki_pos;
  	size_t shorted = 0;
  	ssize_t ret;
+@@ -534,8 +530,8 @@ static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
+ 			     loff_t len)
+ {
+-	struct inode *inode = bdev_file_inode(file);
+-	struct block_device *bdev = I_BDEV(inode);
++	struct block_device *bdev = file->private_data;
++	struct inode *inode = &bdev->inode;
+ 	loff_t end = start + len - 1;
+ 	loff_t isize;
+ 	int error;
+@@ -545,7 +541,7 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
+ 		return -EOPNOTSUPP;
+ 
+ 	/* Don't go off the end of the device. */
+-	isize = i_size_read(bdev->bd_inode);
++	isize = i_size_read(inode);
+ 	if (start >= isize)
+ 		return -EINVAL;
+ 	if (end >= isize) {
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 3b967053e9f5..e94d08eb4fa9 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -49,6 +49,7 @@ struct block_device {
+ #ifdef CONFIG_FAIL_MAKE_REQUEST
+ 	bool			bd_make_it_fail;
+ #endif
++	struct inode		inode;
+ } __randomize_layout;
+ 
+ #define bdev_whole(_bdev) \
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 17705c970d7e..75d2682a8a55 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1141,7 +1141,7 @@ static inline unsigned int blksize_bits(unsigned int size)
+ 
+ static inline unsigned int block_size(struct block_device *bdev)
+ {
+-	return 1 << bdev->bd_inode->i_blkbits;
++	return 1 << bdev->inode.i_blkbits;
+ }
+ 
+ int kblockd_schedule_work(struct work_struct *work);
+@@ -1271,10 +1271,14 @@ void blkdev_put_no_open(struct block_device *bdev);
+ 
+ struct block_device *bdev_alloc(struct gendisk *disk, u8 partno);
+ void bdev_add(struct block_device *bdev, dev_t dev);
+-struct block_device *I_BDEV(struct inode *inode);
+ int truncate_bdev_range(struct block_device *bdev, fmode_t mode, loff_t lstart,
+ 		loff_t lend);
+ 
++static inline struct block_device *I_BDEV(struct inode *inode)
++{
++	return container_of(inode, struct block_device, inode);
++}
++
+ #ifdef CONFIG_BLOCK
+ void invalidate_bdev(struct block_device *bdev);
+ int sync_blockdev(struct block_device *bdev);
 -- 
 2.33.0
 
