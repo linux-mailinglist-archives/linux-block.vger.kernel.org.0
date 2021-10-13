@@ -2,106 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43EFE42BB1B
-	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 11:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 184F842BB4A
+	for <lists+linux-block@lfdr.de>; Wed, 13 Oct 2021 11:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238644AbhJMJIf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Oct 2021 05:08:35 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3974 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbhJMJIe (ORCPT
+        id S230150AbhJMJSW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Oct 2021 05:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230045AbhJMJSW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Oct 2021 05:08:34 -0400
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HTml23zrvz6H6yb;
-        Wed, 13 Oct 2021 17:02:38 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Wed, 13 Oct 2021 11:06:29 +0200
-Received: from [10.47.95.55] (10.47.95.55) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.8; Wed, 13 Oct
- 2021 10:06:28 +0100
-Subject: Re: [PATCH 6/9] nvme: add support for batched completion of polled IO
-To:     Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <20211012181742.672391-1-axboe@kernel.dk>
- <20211012181742.672391-7-axboe@kernel.dk>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <659e549a-db56-ecae-35a3-2f6203dc3a28@huawei.com>
-Date:   Wed, 13 Oct 2021 10:09:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Wed, 13 Oct 2021 05:18:22 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07768C061570;
+        Wed, 13 Oct 2021 02:16:19 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id k7so5876700wrd.13;
+        Wed, 13 Oct 2021 02:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=zyEmz/tB0Rrdz8IwvSoIaxMjG4aLpVCV8hROcWXqRMk=;
+        b=F6rCYzxaQTTyTOj6ZsMzyD9QZkWGNPI8jg2TFOpxZ6Zyk8gyCFQrYq+u1Qr3hqLw10
+         uMDZytBQ4Sw2JrreurmbF4HquFjWcx3Lc4g87eeZx22BkP8oKSMa1WgDvQvpQY1UeUMW
+         VjQNnYxtIXj40FLdFlu3JaR23UQpMnsBzK6vYDQLkfbkrwOgHS2XvkJk5aS/1IIl/rEb
+         JnKEemZlTnSrBwTLhIP+MhgdLUfxZfJf9HYLuYTZr51H5kEOclCd4Rk/URid+2Sbx6J5
+         svC2cHhJ6pwfL9ngVL4kAR6a2BlCtjG27eBpoVIGOrhKYszPGKtF6M5P+R2jwMqLjlkY
+         TkgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=zyEmz/tB0Rrdz8IwvSoIaxMjG4aLpVCV8hROcWXqRMk=;
+        b=aDnFkmfj7ulVNYIpOebCvv9Y7Gdv1+P+CETOO0pGCfBG8uxfQOXvnVedhwKleF0WDV
+         Sf6drq/ip63qpx9zZg5YKRSNlltT/4X/H60TwKaX6vdsVPpJZgl0cmq0FFxFmvRRG6kY
+         Sa4LOKwtaBCpkWs9+iPnSWk+RhAvf2NYx6yRMe47jiEIlnIqLF2NmpCmnsHXbsJr4V5S
+         sDX7j+ILdOKCTEcJ4EUGGJNR0pWoAEHENYO4FYJqYRCnzToEGlnS5uDz/bAPUfFoX2T/
+         CeEZeAYmGr/Gls1owY4SRzlEcejX4OW1LBE10L1rfGoT0L1bpGR1yV3njEJ9KGRBPpVS
+         twHg==
+X-Gm-Message-State: AOAM532UYhg/Jx0ScWd00/bCmEocLsCRWnYnjGX7/HzeDz295ekcRSVF
+        9Z/ea/sPSMYqNcBYVQouvuY=
+X-Google-Smtp-Source: ABdhPJwGRaxSvIX5NpEHodd5tbp9peXVTaepz5YYcWXmrqI73fH1uiFPuaCmA/7KHvwLTV3vJqKC4Q==
+X-Received: by 2002:a5d:47ae:: with SMTP id 14mr4043351wrb.120.1634116577652;
+        Wed, 13 Oct 2021 02:16:17 -0700 (PDT)
+Received: from [192.168.8.197] ([185.69.145.208])
+        by smtp.gmail.com with ESMTPSA id z2sm11824327wrh.44.2021.10.13.02.16.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Oct 2021 02:16:17 -0700 (PDT)
+Message-ID: <e52033e5-bff6-c2a3-9e23-ccfa505b064d@gmail.com>
+Date:   Wed, 13 Oct 2021 10:15:37 +0100
 MIME-Version: 1.0
-In-Reply-To: <20211012181742.672391-7-axboe@kernel.dk>
-Content-Type: text/plain; charset="gbk"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Subject: Re: [PATCH v2 0/3] on top of for-5.16/block
 Content-Language: en-US
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@infradead.org>
+References: <cover.1634115360.git.asml.silence@gmail.com>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <cover.1634115360.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.95.55]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 12/10/2021 19:17, Jens Axboe wrote:
-> Signed-off-by: Jens Axboe<axboe@kernel.dk>
-> ---
->   drivers/nvme/host/pci.c | 69 +++++++++++++++++++++++++++++++++++++----
->   1 file changed, 63 insertions(+), 6 deletions(-)
+On 10/13/21 09:57, Pavel Begunkov wrote:
+
+Bodged subject, should've been block optimisation or so.
+
+> ./io_uring -d32 -s32 -c32 -b512 -p1 /dev/nullb0
+> ~3.3 MIOPS vs 3.5 MIOPS, so gives around extra ~4-5%.
 > 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 4ad63bb9f415..4713da708cd4 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -959,7 +959,7 @@ static blk_status_t nvme_queue_rq(struct blk_mq_hw_ctx *hctx,
->   	return ret;
->   }
->   
-> -static void nvme_pci_complete_rq(struct request *req)
-> +static void nvme_pci_unmap_rq(struct request *req)
->   {
->   	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
->   	struct nvme_dev *dev = iod->nvmeq->dev;
-> @@ -969,9 +969,34 @@ static void nvme_pci_complete_rq(struct request *req)
->   			       rq_integrity_vec(req)->bv_len, rq_data_dir(req));
->   	if (blk_rq_nr_phys_segments(req))
->   		nvme_unmap_data(dev, req);
-> +}
-> +
-> +static void nvme_pci_complete_rq(struct request *req)
-> +{
-> +	nvme_pci_unmap_rq(req);
->   	nvme_complete_rq(req);
->   }
->   
-> +static void nvme_pci_complete_batch(struct io_batch *ib)
-> +{
-> +	struct request *req;
-> +
-> +	req = ib->req_list;
-> +	while (req) {
-> +		nvme_pci_unmap_rq(req);
+> The main part is caching struct block_device + some inlining.
+> 
+> v2: without applied patches, merge previous 6/6 into the second patch
+>      get rid of helpers (Jens, Christoph)
+>      kill bdev_inode and move inode into bdev (Christoph)
+> 
+> Pavel Begunkov (3):
+>    block: cache bdev in struct file for raw bdev IO
+>    block: don't hide inode from block_device users
+>    blk-mq: optimise *end_request non-stat path
+> 
+>   block/bdev.c              | 44 ++++++++++-----------------------------
+>   block/blk-mq.c            | 18 +++++++---------
+>   block/fops.c              | 43 ++++++++++++++++----------------------
+>   include/linux/blk_types.h |  1 +
+>   include/linux/blkdev.h    |  8 +++++--
+>   5 files changed, 44 insertions(+), 70 deletions(-)
+> 
 
-This will do the DMA SG unmap per request. Often this is a performance 
-bottle neck when we have an IOMMU enabled in strict mode. So since we 
-complete in batches, could we combine all the SGs in the batch to do one 
-big DMA unmap SG, and not one-by-one?
-
-Just a thought.
-
-> +		if (req->rq_flags & RQF_SPECIAL_PAYLOAD)
-> +			nvme_cleanup_cmd(req);
-> +		if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
-> +				req_op(req) == REQ_OP_ZONE_APPEND)
-> +			req->__sector = nvme_lba_to_sect(req->q->queuedata,
-> +					le64_to_cpu(nvme_req(req)->result.u64));
-> +		req->status = nvme_error_status(nvme_req(req)->status);
-> +		req = req->rq_next;
-> +	}
-> +
-> +	blk_mq_end_request_batch(ib);
-> +}
-
+-- 
+Pavel Begunkov
