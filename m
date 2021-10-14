@@ -2,69 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F44042DFD8
-	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 19:04:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6437D42DEDE
+	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 18:06:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233151AbhJNRGv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 Oct 2021 13:06:51 -0400
-Received: from smtp.hosts.co.uk ([85.233.160.19]:54728 "EHLO smtp.hosts.co.uk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233025AbhJNRGv (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 Oct 2021 13:06:51 -0400
-X-Greylist: delayed 5331 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Oct 2021 13:06:49 EDT
-Received: from host86-155-223-151.range86-155.btcentralplus.com ([86.155.223.151] helo=[192.168.1.65])
-        by smtp.hosts.co.uk with esmtpa (Exim)
-        (envelope-from <antlists@youngman.org.uk>)
-        id 1mb2lr-0006Lw-DM; Thu, 14 Oct 2021 16:35:51 +0100
-Subject: Re: don't use ->bd_inode to access the block device size
-To:     Kees Cook <keescook@chromium.org>,
-        Dave Kleikamp <dave.kleikamp@oracle.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-bcache@vger.kernel.org" <linux-bcache@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "jfs-discussion@lists.sourceforge.net" 
-        <jfs-discussion@lists.sourceforge.net>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-nilfs@vger.kernel.org" <linux-nilfs@vger.kernel.org>,
-        "linux-ntfs-dev@lists.sourceforge.net" 
-        <linux-ntfs-dev@lists.sourceforge.net>,
-        "ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-        "reiserfs-devel@vger.kernel.org" <reiserfs-devel@vger.kernel.org>
-References: <20211013051042.1065752-1-hch@lst.de>
- <20211014062844.GA25448@lst.de>
- <3AB8052D-DD45-478B-85F2-BFBEC1C7E9DF@tuxera.com>
- <a5eb3c18-deb2-6539-cc24-57e6d5d3500c@oracle.com>
- <202110140813.44C95229@keescook>
-From:   Wol <antlists@youngman.org.uk>
-Message-ID: <e3d2f358-be1a-3413-fdb8-2e86718cde3e@youngman.org.uk>
-Date:   Thu, 14 Oct 2021 16:35:49 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S231447AbhJNQId (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 14 Oct 2021 12:08:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232244AbhJNQId (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 14 Oct 2021 12:08:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CDDEC061755
+        for <linux-block@vger.kernel.org>; Thu, 14 Oct 2021 09:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EZDHMZjr9dwMYerrCv25nFe5sMwH7xY3Tht931Ok2ws=; b=sSlzqd1k+u2UWvYBwryuKmoAO0
+        E3JJPVVL8SJdC3AHGXdBoTFYm5sgl68xnQuWfa0Lnb9T6UnzCEMBtrVnWzjCeBeomnN6I8eAHDDR6
+        TKUVG2nnWA/8LgbnB6AsOV7bRU9XSD5SoSrBB8BSNhXlIcWjdDUzQm9MEaOBKWgvzLHn2IYjNmkph
+        jADeBwk9JUH0P8w7mt2LsC90saqOIBzFu69jizfQ+2PNG8v5GZd/sDfXW68HIaog8W1lwM1pPOWE3
+        mTWKndDFboPTTL9n8QXvpZ2hhbMzn1Re6XgNhuK/dxdKMprpL9br/n+Vu7pjg6yqpidM11g8U1gO4
+        xaOrcVqg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mb3FT-003ms8-Sf; Thu, 14 Oct 2021 16:06:27 +0000
+Date:   Thu, 14 Oct 2021 09:06:27 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/9] block: define io_batch structure
+Message-ID: <YWhVg94mX3RqV9Iz@infradead.org>
+References: <20211013165416.985696-1-axboe@kernel.dk>
+ <20211013165416.985696-2-axboe@kernel.dk>
+ <YWfEALs4P+bGQtY9@infradead.org>
+ <1db96336-fad5-b2bc-98c8-33336790e785@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <202110140813.44C95229@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1db96336-fad5-b2bc-98c8-33336790e785@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 14/10/2021 16:14, Kees Cook wrote:
->> I don't really mind bdev_size since it's analogous to i_size, but
->> bdev_nr_bytes seems good to me.
+On Thu, Oct 14, 2021 at 09:50:10AM -0600, Jens Axboe wrote:
+> On 10/13/21 11:45 PM, Christoph Hellwig wrote:
+> > On Wed, Oct 13, 2021 at 10:54:08AM -0600, Jens Axboe wrote:
+> >> This adds the io_batch structure, and a helper for defining one on the
+> >> stack. It's meant to be used for collecting requests for completion,
+> >> with a completion handler defined to be called at the end.
+> > 
+> > Isn't the name a little misleading given that it is all about
+> > completions?
+> 
+> It is for completions, but I'd rather just keep it short for now.
 
-> I much prefer bdev_nr_bytes(), as "size" has no units.
+I'd go for something like io_comp_batch or something like that at least.
 
-Does it mean size IN bytes, or size OF A byte? :-)
+> > Also I wonder if this should be merged with the next patch as that's
+> > sortof a logical unit.
+> 
+> Actually was like that before, I can fold them again.
 
-Cheers,
-Wol
+I'm fine either way.  Merged just seems a little more logical.
