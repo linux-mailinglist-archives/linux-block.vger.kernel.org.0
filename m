@@ -2,110 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B384742D3B0
-	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 09:31:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02BAB42D3BE
+	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 09:33:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbhJNHda (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 Oct 2021 03:33:30 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:45598 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbhJNHd3 (ORCPT
+        id S230028AbhJNHfl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 14 Oct 2021 03:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230020AbhJNHfl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 Oct 2021 03:33:29 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id EC8092027F;
-        Thu, 14 Oct 2021 07:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1634196683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h8RqeVLpeOfKQUqTektCIXhEptpbud8TNjp9pK1dnv4=;
-        b=1Z1Av9ihyJP9/iahH+83xIOstRF+ELRyXUGZUn/4m6afq52G5MjLiSJXdo4VN2jnn5BTci
-        Ib8nyklboFn2xQ0Iy+Kl9H0qjxnzPF+oulEQkN9cGFYvKdqK9q6vMdevLqjdlolvrv1Xbz
-        eox0DI7YvZ74LHQQktK5Jy01NHnSzAs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1634196683;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h8RqeVLpeOfKQUqTektCIXhEptpbud8TNjp9pK1dnv4=;
-        b=URsuoYRDZcBTtyMqDkDJ8LaY8K0mVQceRV8EGwM1y3j5OQnk6MKeQVxtBDuM6ONWE6eDp5
-        Zt+Gy8Ct8vh6RgBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BF87513D3F;
-        Thu, 14 Oct 2021 07:31:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id PL4QLsvcZ2FeHQAAMHmgww
-        (envelope-from <hare@suse.de>); Thu, 14 Oct 2021 07:31:23 +0000
-Subject: Re: [PATCH 1/7] block: add a ->get_unique_id method
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-References: <20211012120445.861860-1-hch@lst.de>
- <20211012120445.861860-2-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <437deafa-e0b9-8a84-1f2f-381b1c9865b8@suse.de>
-Date:   Thu, 14 Oct 2021 09:31:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Thu, 14 Oct 2021 03:35:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB6AC061570
+        for <linux-block@vger.kernel.org>; Thu, 14 Oct 2021 00:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WVvyuMzRL6LpKSYzxmK77pXbyK5lAmjO9EMwyHaKHzU=; b=SyD2M9Gk7K6lc7eVBuNvf9B/sJ
+        +uJjZIlx3SbsBTADaFKe2EKzrszRMEqpeDZtroVx4dbohvK8hNT7jbdKsE+1i09UG3xO2zignaEyO
+        hTvgtrh/G7xZMqMAbsX7bgPyofD1Gy1aXvl+tdLJrEZizcSsiYO6S/8uqvzyuGukBtT7BuU6gjuUW
+        4F6A8Zu7+y930i8YqTj6591DQ2TQOV1fPipEkwiqWvrCb4r1P6PrddLVUAbJriHTWwyi//4QoYu44
+        gWU40gAbRpfR4grrdUbd2SD+riJ6mHoEUqn6vn44x6tR7blyAEa6lRE/QMPKbzhvotyrI6s8hDoLj
+        Dxbqa65g==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mavE8-0088s3-Ab; Thu, 14 Oct 2021 07:32:47 +0000
+Date:   Thu, 14 Oct 2021 08:32:32 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org
+Subject: Re: [PATCH 5/9] block: add support for blk_mq_end_request_batch()
+Message-ID: <YWfdEPSIVmTzht/1@infradead.org>
+References: <20211013165416.985696-1-axboe@kernel.dk>
+ <20211013165416.985696-6-axboe@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <20211012120445.861860-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211013165416.985696-6-axboe@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/12/21 2:04 PM, Christoph Hellwig wrote:
-> Add a method to query query uniqueue IDs from block devices.  It will be
+> +void blk_mq_end_request_batch(struct io_batch *iob)
+> +{
+> +	int tags[TAG_COMP_BATCH], nr_tags = 0, acct_tags = 0;
+> +	struct blk_mq_hw_ctx *last_hctx = NULL;
+> +	struct request *rq;
+> +	u64 now = 0;
+> +
+> +	while ((rq = rq_list_pop(&iob->req_list)) != NULL) {
+> +		if (!now && blk_mq_need_time_stamp(rq))
+> +			now = ktime_get_ns();
+> +		blk_update_request(rq, rq->status, blk_rq_bytes(rq));
+> +		__blk_mq_end_request_acct(rq, rq->status, now);
+> +
+> +		if (rq->q->elevator) {
+> +			blk_mq_free_request(rq);
+> +			continue;
+> +		}
 
-Maybe engage a spell checker here ...
+So why do we even bother adding requests with an elevator to the batch
+list?  
 
-> used to remove code that deeply pokes into SCSI internals in the NFS
-> server.  The implementation in the sd driver itself can also be much
-> nicer as it can use the cached VPD page instead of always sending a
-> command as the current NFS code does.
-> 
-> For now the interface is kept very minimal but could be easily
-> extended when other users like a block-layer sysfs interface for
-> uniquue IDs shows up.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   include/linux/blkdev.h | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 17705c970d7e1..81f94a7c54521 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -1188,6 +1188,7 @@ struct block_device_operations {
->   	int (*report_zones)(struct gendisk *, sector_t sector,
->   			unsigned int nr_zones, report_zones_cb cb, void *data);
->   	char *(*devnode)(struct gendisk *disk, umode_t *mode);
-> +	int (*get_unique_id)(struct gendisk *disk, u8 id[16], u8 id_type);
->   	struct module *owner;
->   	const struct pr_ops *pr_ops;
->   
-> 
-Cheers,
+> +	/*
+> +	 * csd is used for remote completions, fifo_time at scheduler time.
+> +	 * They are mutually exclusive. result is used at completion time
+> +	 * like csd, but for batched IO. Batched IO does not use IPI
+> +	 * completions.
+> +	 */
+>  	union {
+>  		struct __call_single_data csd;
+>  		u64 fifo_time;
+> +		blk_status_t status;
+>  	};
 
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+The ->status field isn't needed any more now that error completions
+aren't batched.
