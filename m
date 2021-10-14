@@ -2,66 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 496E442D2EB
-	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 08:49:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5235442D36C
+	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 09:20:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbhJNGvI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 Oct 2021 02:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229613AbhJNGvH (ORCPT
+        id S229929AbhJNHWj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 14 Oct 2021 03:22:39 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:42230 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229551AbhJNHWe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 Oct 2021 02:51:07 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63EDC061753
-        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 23:48:56 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id z11so21704976lfj.4
-        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 23:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=TIHNfK3BtPOPJi6SS/FVCjT/dQtiQchf9nV608btOUM=;
-        b=mmpgLjUTMGE5fE1G5r9EgDV5a2aHx1TeBnrWDFjX3DLkaLNL+cAs1ak0UAOCWY1aHx
-         TFCfeVlND8QExG8UoCEJlMt7dAeT1C2/1iGDtVMA0Jv/W05M0TCdQJpjOn1sKw1kFA/b
-         aWBbWPa+29XbULcSswEWszUQV+Y0vM48vmr89mwd+I39vRF8UwS+zNgob+rwo7crO3nQ
-         lOf25kVu+glf8X58IpaBW/6S/L79DKGkGe29WUFw1ZiLcLWpieSBT7pff7cffbVhcpti
-         QlyFC4IRTnc2oU6dmTSwt2sFo0AJRXUV7jUW+0hNSIyRbXWCDYFU1D5WWQgYr9VpYjVn
-         zNTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=TIHNfK3BtPOPJi6SS/FVCjT/dQtiQchf9nV608btOUM=;
-        b=XAnxSVDVlDU0vVhtl6HSnJeuq7fqE2opji1fWAO+zFoqXgIiSrb6Co9Ymzray8D7O5
-         0ZuXMOVLz8wv/gGztFEg0Lz82y5CdBNBFsfIaZ1uwio23p3RySjdl+MuRBF6pJ3vpZpq
-         ik8K6qiq7HhnLtyWJqwItmT1KuG638YohDJJSov9b/qdTN75RSQVwrXQdMrPTI2JaoPP
-         0jeChWaZyewsnyzl0i/gnSKF5pGhg0l5zPCTs5XaxrMewyqPy5V1FOlfM2PFpPs0fkSF
-         nPHkQfFu5o+QrY4gJuLePmEuSU1CDyzSSAcoU5aCuDuGeXPpAUnfKbdXRkfeTBd7gm0w
-         ts7A==
-X-Gm-Message-State: AOAM531d7GUMMl0+Ek6QndgD4dHGZ4jmaMeblrmtpUXxtS1RLOS39HWx
-        ecFUMIp+4kN8O3PaDQoNZgUMzjmnYGg9IZkhctQ=
-X-Google-Smtp-Source: ABdhPJwRDNcvfmAtPuyIUgbPDK5XZHGcrNYXxyy/OBA162JIuMOMR+pVPNi219XPJr9XHbvAFqHirImaSg0GmSQX9Nw=
-X-Received: by 2002:a05:6512:3887:: with SMTP id n7mr3380441lft.356.1634194135004;
- Wed, 13 Oct 2021 23:48:55 -0700 (PDT)
+        Thu, 14 Oct 2021 03:22:34 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 665E021A74;
+        Thu, 14 Oct 2021 07:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1634196029; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aPTi1jqJyanJr/yNq20ScgD69zcuM+p9ZxOZzkcy74A=;
+        b=mk0T43qO+gs1pZQcg5yt0kA/uzk9/YwB09jawrZrsNAviPBypyhCXoOzqCQYFojVwSI+LL
+        gro6hZXd5pbzgHaGRJFz2iXxZq5jiMIHAdbt8/y97cJej3QKh+uLJp20WGGvU8hjHaQCTc
+        reG6LjMlw3h+/wYJX7cMcN+ZXbcCbiY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1634196029;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aPTi1jqJyanJr/yNq20ScgD69zcuM+p9ZxOZzkcy74A=;
+        b=hLrXfej1L/ZECPSWBM2VaEQ39O70S6E51TUwwUoHcPbwES0vHNSyyd8OH+wKJCyTLA7W2w
+        b1FdWO+RPRRIN7Bw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3C63A13D3F;
+        Thu, 14 Oct 2021 07:20:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id p8PqDD3aZ2EQGAAAMHmgww
+        (envelope-from <hare@suse.de>); Thu, 14 Oct 2021 07:20:29 +0000
+Subject: Re: [PATCH 4/9] sbitmap: test bit before calling test_and_set_bit()
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+References: <20211013165416.985696-1-axboe@kernel.dk>
+ <20211013165416.985696-5-axboe@kernel.dk>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <409c693c-4570-b6f4-3839-501633856151@suse.de>
+Date:   Thu, 14 Oct 2021 09:20:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Reply-To: karimahmed0007@outlook.com
-Sender: emrhandase@gmail.com
-Received: by 2002:aa6:c1da:0:b029:fc:9c36:9141 with HTTP; Wed, 13 Oct 2021
- 23:48:54 -0700 (PDT)
-From:   "Mr.Karim Ahmed" <mrkarimahmed9@gmail.com>
-Date:   Wed, 13 Oct 2021 23:48:54 -0700
-X-Google-Sender-Auth: ESheblMZhDvFzWhoAgrLowMo0fY
-Message-ID: <CAOre9ceJZNyA__uDsLi7NUH27h455OaRpn2JU4E+7AP_wFoPRw@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211013165416.985696-5-axboe@kernel.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Friend,
-My names are:Mr.Karim Ahmed,I have a business proposal for
-you, get back to me if you are interested for more details.
+On 10/13/21 6:54 PM, Jens Axboe wrote:
+> If we come across bits that are already set, then it's quicker to test
+> that first and gate the test_and_set_bit() operation on the result of
+> the bit test.
+> 
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> ---
+>   lib/sbitmap.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+> index c6e2f1f2c4d2..11b244a8d00f 100644
+> --- a/lib/sbitmap.c
+> +++ b/lib/sbitmap.c
+> @@ -166,7 +166,7 @@ static int __sbitmap_get_word(unsigned long *word, unsigned long depth,
+>   			return -1;
+>   		}
+>   
+> -		if (!test_and_set_bit_lock(nr, word))
+> +		if (!test_bit(nr, word) && !test_and_set_bit_lock(nr, word))
+>   			break;
+>   
+>   		hint = nr + 1;
+> 
+Hah. Finally something to latch on.
 
-Thanks
-Mr.Karim Ahmed
+I've seen this coding pattern quite a lot in the block layer, and, of 
+course, mostly in the hot path.
+(Kinda the point, I guess :-)
+
+However, my question is this:
+
+While 'test_and_set_bit()' is atomic, the combination of
+'test_bit && !test_and_set_bit()' is not.
+
+IE this change moves an atomic operation into a non-atomic one.
+So how can we be sure that this patch doesn't introduce a race condition?
+And if it doesn't, should we add some comment above the code why this is 
+safe to do here?
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
