@@ -2,83 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2049642CFFA
-	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 03:36:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D8BC42CFF2
+	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 03:33:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbhJNBip (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Oct 2021 21:38:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29931 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229837AbhJNBip (ORCPT
+        id S229660AbhJNBfU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Oct 2021 21:35:20 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:13737 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229496AbhJNBfT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Oct 2021 21:38:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634175401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ojdf6628VplIf3Ky6Hl21LjxxayitntGvwBqERQmdDg=;
-        b=XHLeEFMS5JD/gArvWjViP+sl4Ri7ouWZc7ZzrAaDwoj3B/oTp0baXjGb/D/32bwVTwFZ0Q
-        1vFB1aIi6sD/UqTET/n6rdjfuExr67NKGpjLUCvdL5nsE/W6UzRe4pq1l3mKupbBogriJ2
-        991uZ5qxqgsv8mMKFCWLTMcaPBaSZH0=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-GwCG2IgMOWaBuUjDBwRTrA-1; Wed, 13 Oct 2021 21:36:39 -0400
-X-MC-Unique: GwCG2IgMOWaBuUjDBwRTrA-1
-Received: by mail-yb1-f199.google.com with SMTP id f8-20020a2585480000b02905937897e3daso5303407ybn.2
-        for <linux-block@vger.kernel.org>; Wed, 13 Oct 2021 18:36:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ojdf6628VplIf3Ky6Hl21LjxxayitntGvwBqERQmdDg=;
-        b=UJCvlmInK8oUx/ewvbqRfPHDzHNB2Pkfty7uxEmcFS6CuCeKqyFgAwxv0LXDKEr7EE
-         b1TThDILO1AuqPJNX4ECbnwUfvGTTUqtMINi5fymIS1DIgHhjArMqIqtux03seIMAUmM
-         l+hBkpCvHT+ghc3/0eGZH3ix1IXF8XhjC0DptsZUgKQfNc93ecxC+xkHxs/yQ8++PAZg
-         3CShfK8cffEmFP/Pz04dGAPyLgH0OxIi/4/xS0mD8WSrYmkFAgbzqr2c02GAwtE6ALZT
-         XKjIMmNl1j3rjefETprot9AKZU3SyEKKpPxFeluwFdrxDZplyUZvMT9vbHfsiejG2BUH
-         FgFw==
-X-Gm-Message-State: AOAM53279ruNMWvEFoBtvA+sPjwd8SiZ+3+9dMtCn7FJqVc1Man4cPd9
-        aWyhkf85zyVEUAuA1Qn3jg8NqHPwFQxoVKbUbDG8xjB9H1scMdqi4J+n46QuZ13PuDSqwjSFshn
-        GQIpb6kA1NkYABVZL7PPqFin2C+8SiQo5D7hp/Mw=
-X-Received: by 2002:a25:bd03:: with SMTP id f3mr2924869ybk.412.1634175398983;
-        Wed, 13 Oct 2021 18:36:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyiY3lIjTxO3clXNFiyfz05/uB3sTV9uNsyPOaKWIxDySFH3jYGmdCMD3aQTwqA03xAlUL/rLe/N3pUYpN2U+M=
-X-Received: by 2002:a25:bd03:: with SMTP id f3mr2924862ybk.412.1634175398848;
- Wed, 13 Oct 2021 18:36:38 -0700 (PDT)
+        Wed, 13 Oct 2021 21:35:19 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HVBh75YmzzWk31;
+        Thu, 14 Oct 2021 09:31:35 +0800 (CST)
+Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2308.8; Thu, 14 Oct 2021 09:33:14 +0800
+Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
+ (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.8; Thu, 14
+ Oct 2021 09:33:13 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <paolo.valente@linaro.org>, <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH v4 0/2] optimize the bfq queue idle judgment
+Date:   Thu, 14 Oct 2021 09:45:54 +0800
+Message-ID: <20211014014556.3597008-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <CAHj4cs8poXTLdC+j6u7zypLKR7RpAaG-vxK4dWDz6bCMfPOjsQ@mail.gmail.com>
- <YWaiLsQkwe9aq8pE@infradead.org>
-In-Reply-To: <YWaiLsQkwe9aq8pE@infradead.org>
-From:   Yi Zhang <yi.zhang@redhat.com>
-Date:   Thu, 14 Oct 2021 09:36:27 +0800
-Message-ID: <CAHj4cs-=DbnXS_552yyYxd5dae3wRXzoQftPUpUhSPjNfD-RBQ@mail.gmail.com>
-Subject: Re: kernel NULL pointer triggered with blktests block/025 on latest linux-block/for-next
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-block <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggema762-chm.china.huawei.com (10.1.198.204)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 5:10 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Wed, Oct 13, 2021 at 04:50:13PM +0800, Yi Zhang wrote:
-> > Hello
-> > The below NULL pointer issue was triggered on the latest
-> > linux-block/for-next with blktests, is it one known issue?
->
-> Please try this patchset:
->
-> https://lore.kernel.org/linux-block/20210929071241.934472-1-hch@lst.de/T/#m6591be7882bf30f3538a8baafbac1712f0763ebb
->
+Changes in V4:
+ - fix a compile warning when CONFIG_BLK_CGROUP is not enabled.
 
-Yeah,  the issue was fixed with the patchset, feel free to add:
+Changes in V3:
+ - Instead of tracking each queue in root group, tracking root group
+ directly just like non-root group does.
+ - remove patch 3,4 from these series.
 
-Tested-by: Yi Zhang <yi.zhang@redhat.com>
+Chagnes in V2:
+ - as suggested by Paolo, add support to track if root_group have any
+ pending requests, and use that to handle the situation when only one
+ group is activated while root group doesn't have any pending requests.
+ - modify commit message in patch 2
 
+Yu Kuai (2):
+  block, bfq: counted root group into 'num_groups_with_pending_reqs'
+  block, bfq: do not idle if only one cgroup is activated
+
+ block/bfq-iosched.c | 40 ++++++++++++++++++++++++++++--------
+ block/bfq-wf2q.c    | 50 +++++++++++++++++++++++++++++++++------------
+ 2 files changed, 69 insertions(+), 21 deletions(-)
 
 -- 
-Best Regards,
-  Yi Zhang
+2.31.1
 
