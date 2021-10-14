@@ -2,92 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C86342D5ED
-	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 11:23:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B78A042D679
+	for <lists+linux-block@lfdr.de>; Thu, 14 Oct 2021 11:53:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbhJNJZn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 Oct 2021 05:25:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48989 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229468AbhJNJZn (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 Oct 2021 05:25:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634203418;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zpnHbQU/P3dvZjk8T87puDae5n+9jnJ7vmvPjzHElVE=;
-        b=Jaz9LrFIUOjSJ5wwpKvUaxd7mRO9iW3Y6ZYv7bBYqRDPgSDJZqyHDrbQebkhMWx7ahjeh2
-        PcK5Qf25FftLNCrhO3vbcXFHls2u9vjyHLisCOopTNQbpbpdi/ff6rNjP0yRYqBtb1KF4H
-        G1MVrTjg0jpIFjN91VtPsc8uskmznhE=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-120-CAVijNKIOBS_6ysi-cN9iA-1; Thu, 14 Oct 2021 05:23:36 -0400
-X-MC-Unique: CAVijNKIOBS_6ysi-cN9iA-1
-Received: by mail-yb1-f198.google.com with SMTP id z130-20020a256588000000b005b6b4594129so6330917ybb.15
-        for <linux-block@vger.kernel.org>; Thu, 14 Oct 2021 02:23:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zpnHbQU/P3dvZjk8T87puDae5n+9jnJ7vmvPjzHElVE=;
-        b=J28EV4L5h2gTrewOAt6M8xJASmyByrWSQfPf3F50o+SBkjjjj69wSWAZgk9DcDYC8B
-         gBz5PGNN+AM4vcgFdtgcbiyMk2p8CNWSO2I4LeHwpyOCZEXdyMRq10eC9XVotABNcxvw
-         x1lsAzU8cgUf1jsaXYDgZ5CrIvh/NihfcZyTBPzjbFzVWzCHEq5HtEhl402b4A+GLj1D
-         EWbNPmRyAZx1KWU7adfdyJRzU82F39EUYS5OR5MXJFw8wPgXgoapE61OYnUshMoXsnxs
-         thcXl/dIa/gebvvtLjFT/K4B10BL+NPIYFj2jZRth3/RoCBHJs7AotAOYD68OigMub3z
-         ArPQ==
-X-Gm-Message-State: AOAM530ihVH+DWjROraM/Uq1I2iUxP0CMXpLqQzYiZJZ2Uvm0wPSGMV5
-        bLpqHSFEkJQJIVM37V7hocwjSuUwEEE/3Z+kUpu21+QA18NODqR3ZDrV1kyOCOAfDVm0k8ImSX2
-        c4C+gxaN7XKQgkCcnrCFy4pllW1uv/IALQjFx5zs=
-X-Received: by 2002:a25:3104:: with SMTP id x4mr5066300ybx.512.1634203416178;
-        Thu, 14 Oct 2021 02:23:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxwhlLQYkeARYzsLFNQ4Hlk7VXH35Eo9ANXpgP2MPz3S6LiBmE+ahMkjoO2xkAdlfR7eUOv1BlFaXbx2s4ARtQ=
-X-Received: by 2002:a25:3104:: with SMTP id x4mr5066281ybx.512.1634203415959;
- Thu, 14 Oct 2021 02:23:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210929071241.934472-1-hch@lst.de>
-In-Reply-To: <20210929071241.934472-1-hch@lst.de>
-From:   Yi Zhang <yi.zhang@redhat.com>
-Date:   Thu, 14 Oct 2021 17:23:25 +0800
-Message-ID: <CAHj4cs8tYY-ShH=QdrVirwXqX4Uze6ewZAGew_oRKLL_CCLNJg@mail.gmail.com>
-Subject: Re: tear down file system I/O in del_gendisk v3
+        id S229988AbhJNJzR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Thu, 14 Oct 2021 05:55:17 -0400
+Received: from mgw-01.mpynet.fi ([82.197.21.90]:60924 "EHLO mgw-01.mpynet.fi"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229468AbhJNJzQ (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Thu, 14 Oct 2021 05:55:16 -0400
+X-Greylist: delayed 1139 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Oct 2021 05:55:13 EDT
+Received: from pps.filterd (mgw-01.mpynet.fi [127.0.0.1])
+        by mgw-01.mpynet.fi (8.16.0.43/8.16.0.43) with SMTP id 19E9Pj42091529;
+        Thu, 14 Oct 2021 12:32:59 +0300
+Received: from ex13.tuxera.com (ex13.tuxera.com [178.16.184.72])
+        by mgw-01.mpynet.fi with ESMTP id 3bphjf80v4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 14 Oct 2021 12:32:59 +0300
+Received: from tuxera-exch.ad.tuxera.com (10.20.48.11) by
+ tuxera-exch.ad.tuxera.com (10.20.48.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Thu, 14 Oct 2021 12:32:59 +0300
+Received: from tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789]) by
+ tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789%12]) with mapi id
+ 15.00.1497.023; Thu, 14 Oct 2021 12:32:59 +0300
+From:   Anton Altaparmakov <anton@tuxera.com>
 To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+CC:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
+        Mike Snitzer <snitzer@redhat.com>, Song Liu <song@kernel.org>,
+        David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+        Kees Cook <keescook@chromium.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        Jan Kara <jack@suse.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-bcache@vger.kernel.org" <linux-bcache@vger.kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "jfs-discussion@lists.sourceforge.net" 
+        <jfs-discussion@lists.sourceforge.net>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-nilfs@vger.kernel.org" <linux-nilfs@vger.kernel.org>,
+        "linux-ntfs-dev@lists.sourceforge.net" 
+        <linux-ntfs-dev@lists.sourceforge.net>,
+        "ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
+        "reiserfs-devel@vger.kernel.org" <reiserfs-devel@vger.kernel.org>
+Subject: Re: don't use ->bd_inode to access the block device size
+Thread-Topic: don't use ->bd_inode to access the block device size
+Thread-Index: AQHXv/D8RnQWsWSgAkyxOdAYku+41KvR10wAgAAzeIA=
+Date:   Thu, 14 Oct 2021 09:32:58 +0000
+Message-ID: <3AB8052D-DD45-478B-85F2-BFBEC1C7E9DF@tuxera.com>
+References: <20211013051042.1065752-1-hch@lst.de>
+ <20211014062844.GA25448@lst.de>
+In-Reply-To: <20211014062844.GA25448@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [109.154.241.177]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F1129580E148624C920474BEC9F515C5@ex13.tuxera.com>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-Proofpoint-ORIG-GUID: itBrsNbhZ2FR6MA_DlXhPV1L0UjW3zcs
+X-Proofpoint-GUID: itBrsNbhZ2FR6MA_DlXhPV1L0UjW3zcs
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.790
+ definitions=2021-10-14_02:2021-10-14,2021-10-14 signatures=0
+X-Proofpoint-Spam-Details: rule=mpy_notspam policy=mpy score=0 spamscore=0 mlxlogscore=453 bulkscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
+ definitions=main-2110140057
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patchset fixed the NULL pointer issue triggered by blktests block/025
-https://lore.kernel.org/linux-block/YWfJ06KX3HT1nANX@infradead.org/T/#mbf26cd34c88660ce0221dd7933b294a0b0298319
+Hi Christoph,
 
-Tested-by: Yi Zhang <yi.zhang@redhat.com>
+> On 14 Oct 2021, at 07:28, Christoph Hellwig <hch@lst.de> wrote:
+> 
+> On Wed, Oct 13, 2021 at 07:10:13AM +0200, Christoph Hellwig wrote:
+>> I wondered about adding a helper for looking at the size in byte units
+>> to avoid the SECTOR_SHIFT shifts in various places.  But given that
+>> I could not come up with a good name and block devices fundamentally
+>> work in sector size granularity I decided against that.
+> 
+> So it seems like the biggest review feedback is that we should have
+> such a helper.  I think the bdev_size name is the worst as size does
+> not imply a particular unit.  bdev_nr_bytes is a little better but I'm
+> not too happy.  Any other suggestions or strong opinions?
 
-On Wed, Sep 29, 2021 at 3:14 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> Ming reported that for SCSI we have a lifetime problem now that
-> the BDI moved from the request_queue to the disk as del_gendisk
-> doesn't finish all outstanding file system I/O.  It turns out
-> this actually is an older problem, although the case where it could
-> be hit before was very unusual (unbinding of a SCSI upper driver
-> while the scsi_device stays around).  This series fixes this by
-> draining all I/O in del_gendisk.
->
-> Changes since v2:
->  - move the call to submit_bio_checks into freeze protection
->
-> Changes since v1:
->  - fix a commit log typo
->  - keep the existing nowait vs queue dying semantics in bio_queue_enter
->  - actually keep q_usage_counter in atomic mode after del_gendisk
->
+bdev_byte_size() would seem to address your concerns?
 
+bdev_nr_bytes() would work though - it is analogous to bdev_nr_sectors() after all.
 
+No strong opinion here but I do agree with you that bdev_size() is a bad choice for sure.  It is bound to cause bugs down the line when people forget what unit it is in.
+
+Best regards,
+
+	Anton
 -- 
-Best Regards,
-  Yi Zhang
+Anton Altaparmakov <anton at tuxera.com> (replace at with @)
+Lead in File System Development, Tuxera Inc., http://www.tuxera.com/
+Linux NTFS maintainer
 
