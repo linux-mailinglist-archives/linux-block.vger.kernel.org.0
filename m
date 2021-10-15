@@ -2,31 +2,31 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D869A42FF29
-	for <lists+linux-block@lfdr.de>; Sat, 16 Oct 2021 01:54:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5047E42FF08
+	for <lists+linux-block@lfdr.de>; Sat, 16 Oct 2021 01:52:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239198AbhJOXzK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Oct 2021 19:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43760 "EHLO
+        id S238855AbhJOXzD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Oct 2021 19:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238988AbhJOXzH (ORCPT
+        with ESMTP id S229546AbhJOXzD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Oct 2021 19:55:07 -0400
+        Fri, 15 Oct 2021 19:55:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1007C061570;
-        Fri, 15 Oct 2021 16:53:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C48CC061570;
+        Fri, 15 Oct 2021 16:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=hsYRy5mW2eSZFEqOw8JTWcpX/S1jq2Dljgzx3k3VBB0=; b=4qYouVdUDaZ9hGTY8MQXFlbFyd
-        qSG1TWWt6r4mDH+ndWEvwZquGw21w0+K6x0hLpbV5ZWQg30bDMD2lm0NIioVBlmI9FNXtwh5F3Im3
-        cO1Z6feIyOIr95sNTbAdStTFRwOns15uWcOUEqMUSMsLodOt/EP0CFlMkNj5kkv5qGJoE6Z9wZVSx
-        e597Rd8spjMhtWsfUdteabS8FXKUWM8zb0gLDsx4Cg33y33GpQKoVhxeF0Po4j0Vc1LVAgnw7Ok6b
-        6FtkBnZKvGVXhrSITJ82MFfElkErBY6atCwJMO70CFV81fcMs3cG7cQRZO/hWZ8uLEAueo0l5hPdp
-        or/n0HTQ==;
+        bh=vLYLL0oFZhxGylgSJPWXsGjPK2psQoUWyxkb9au47Xw=; b=VKj0PyAggUPHY58Y64VhZFHAZk
+        FhpZFFJ2m6Cm3SHaekc0CDiJyLp+OD6ip4tp6f0fm0KLP8DzK5r4zUN+TBF+Zr9exRvHYoP1U4ZSo
+        xvSMZDGCzyHG9yaWXd/DzzmwcgGlruPb5+CD0ctA68F79eEVs002wvsQCyuEyhihClXsJYS97NwsL
+        0m5eBo0Qkmdn5r8hNV7zk/1puPeJ1cjcM3zzlg31bplOURK1wIXcWSlBuo2kj1ISDbTfOi3ggEGBn
+        h4r+mufchQFxCHDsxXaWIpgxoqkHJHOwvHKOU/0fa0aDDgmXK1any8EXm3niZiuki8Z2zds4ZpISB
+        ehigutRw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mbWzt-009C35-5A; Fri, 15 Oct 2021 23:52:21 +0000
+        id 1mbWzt-009C37-6Y; Fri, 15 Oct 2021 23:52:21 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, geoff@infradead.org, mpe@ellerman.id.au,
         benh@kernel.crashing.org, paulus@samba.org, jim@jtan.com,
@@ -39,9 +39,9 @@ Cc:     linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mtd@lists.infradead.org, nvdimm@lists.linux.dev,
         linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 06/13] nvdimm/blk: avoid calling del_gendisk() on early failures
-Date:   Fri, 15 Oct 2021 16:52:12 -0700
-Message-Id: <20211015235219.2191207-7-mcgrof@kernel.org>
+Subject: [PATCH 07/13] nvdimm/blk: add error handling support for add_disk()
+Date:   Fri, 15 Oct 2021 16:52:13 -0700
+Message-Id: <20211015235219.2191207-8-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211015235219.2191207-1-mcgrof@kernel.org>
 References: <20211015235219.2191207-1-mcgrof@kernel.org>
@@ -52,65 +52,40 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If nd_integrity_init() fails we'd get del_gendisk() called,
-but that's not correct as we should only call that if we're
-done with device_add_disk(). Fix this by providing unwinding
-prior to the devm call being registered and moving the devm
-registration to the very end.
+We never checked for errors on add_disk() as this function
+returned void. Now that this is fixed, use the shiny new
+error handling.
 
-This should fix calling del_gendisk() if nd_integrity_init()
-fails. I only spotted this issue through code inspection. It
-does not fix any real world bug.
+Since nvdimm/blk uses devm we just need to move the devm
+registration towards the end. And in hindsight, that seems
+to also provide a fix given del_gendisk() should not be
+called unless the disk was already added via add_disk().
+The probably of that issue happening is low though, like
+OOM while calling devm_add_action(), so the fix is minor.
+
+We manually unwind in case of add_disk() failure prior
+to the devm registration.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/nvdimm/blk.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/nvdimm/blk.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/nvdimm/blk.c b/drivers/nvdimm/blk.c
-index 088d3dd6f6fa..591fa1f86f1e 100644
+index 591fa1f86f1e..9f1eb41404ac 100644
 --- a/drivers/nvdimm/blk.c
 +++ b/drivers/nvdimm/blk.c
-@@ -240,6 +240,7 @@ static int nsblk_attach_disk(struct nd_namespace_blk *nsblk)
- 	resource_size_t available_disk_size;
- 	struct gendisk *disk;
- 	u64 internal_nlba;
-+	int rc;
- 
- 	internal_nlba = div_u64(nsblk->size, nsblk_internal_lbasize(nsblk));
- 	available_disk_size = internal_nlba * nsblk_sector_size(nsblk);
-@@ -256,20 +257,26 @@ static int nsblk_attach_disk(struct nd_namespace_blk *nsblk)
- 	blk_queue_logical_block_size(disk->queue, nsblk_sector_size(nsblk));
- 	blk_queue_flag_set(QUEUE_FLAG_NONROT, disk->queue);
- 
--	if (devm_add_action_or_reset(dev, nd_blk_release_disk, disk))
--		return -ENOMEM;
--
- 	if (nsblk_meta_size(nsblk)) {
--		int rc = nd_integrity_init(disk, nsblk_meta_size(nsblk));
-+		rc = nd_integrity_init(disk, nsblk_meta_size(nsblk));
- 
- 		if (rc)
--			return rc;
-+			goto out_before_devm_err;
+@@ -265,7 +265,9 @@ static int nsblk_attach_disk(struct nd_namespace_blk *nsblk)
  	}
  
  	set_capacity(disk, available_disk_size >> SECTOR_SHIFT);
- 	device_add_disk(dev, disk, NULL);
-+
-+	/* nd_blk_release_disk() is called if this fails */
-+	if (devm_add_action_or_reset(dev, nd_blk_release_disk, disk))
-+		return -ENOMEM;
-+
- 	nvdimm_check_and_set_ro(disk);
- 	return 0;
-+
-+out_before_devm_err:
-+	blk_cleanup_disk(disk);
-+	return rc;
- }
+-	device_add_disk(dev, disk, NULL);
++	rc = device_add_disk(dev, disk, NULL);
++	if (rc)
++		goto out_before_devm_err;
  
- static int nd_blk_probe(struct device *dev)
+ 	/* nd_blk_release_disk() is called if this fails */
+ 	if (devm_add_action_or_reset(dev, nd_blk_release_disk, disk))
 -- 
 2.30.2
 
