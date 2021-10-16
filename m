@@ -2,100 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6D85430041
-	for <lists+linux-block@lfdr.de>; Sat, 16 Oct 2021 06:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25324430042
+	for <lists+linux-block@lfdr.de>; Sat, 16 Oct 2021 06:39:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239550AbhJPEhA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 Oct 2021 00:37:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:56709 "EHLO verein.lst.de"
+        id S239469AbhJPEls (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 Oct 2021 00:41:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:56733 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239469AbhJPEhA (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 Oct 2021 00:37:00 -0400
+        id S239415AbhJPElr (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Sat, 16 Oct 2021 00:41:47 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id B422868BEB; Sat, 16 Oct 2021 06:34:50 +0200 (CEST)
-Date:   Sat, 16 Oct 2021 06:34:50 +0200
+        id 1695D68BEB; Sat, 16 Oct 2021 06:39:37 +0200 (CEST)
+Date:   Sat, 16 Oct 2021 06:39:36 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] block: Fix partition check for host-aware zoned block
- devices
-Message-ID: <20211016043450.GA27231@lst.de>
-References: <20211015020740.506425-1-shinichiro.kawasaki@wdc.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, geoff@infradead.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, jim@jtan.com,
+        minchan@kernel.org, ngupta@vflare.org, senozhatsky@chromium.org,
+        richard@nod.at, miquel.raynal@bootlin.com, vigneshr@ti.com,
+        dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, ira.weiny@intel.com, kbusch@kernel.org,
+        hch@lst.de, sagi@grimberg.me, linux-block@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mtd@lists.infradead.org,
+        nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/13] nvme-multipath: add error handling support for
+ add_disk()
+Message-ID: <20211016043936.GB27339@lst.de>
+References: <20211015235219.2191207-1-mcgrof@kernel.org> <20211015235219.2191207-3-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211015020740.506425-1-shinichiro.kawasaki@wdc.com>
+In-Reply-To: <20211015235219.2191207-3-mcgrof@kernel.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 11:07:40AM +0900, Shin'ichiro Kawasaki wrote:
-> To fix the issues, call the helper function disk_has_partitions() in
-> place of disk->part_tbl empty check. Since the function was removed with
-> the commit a33df75c6328, reimplement it to walk through entries in the
-> xarray disk->part_tbl.
+Thanks,
 
-Looks good,
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-
-Matthew,
-
-we talked about possiblig adding a xa_nr_entries helper a while ago.
-This would be a good place for it, as we could just check
-xa_nr_entries() > 1 for example.
-
-> 
-> Fixes: a33df75c6328 ("block: use an xarray for disk->part_tbl")
-> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-> Cc: stable@vger.kernel.org # v5.14+
-> ---
->  block/blk-settings.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-settings.c b/block/blk-settings.c
-> index a7c857ad7d10..b880c70e22e4 100644
-> --- a/block/blk-settings.c
-> +++ b/block/blk-settings.c
-> @@ -842,6 +842,24 @@ bool blk_queue_can_use_dma_map_merging(struct request_queue *q,
->  }
->  EXPORT_SYMBOL_GPL(blk_queue_can_use_dma_map_merging);
->  
-> +static bool disk_has_partitions(struct gendisk *disk)
-> +{
-> +	unsigned long idx;
-> +	struct block_device *part;
-> +	bool ret = false;
-> +
-> +	rcu_read_lock();
-> +	xa_for_each(&disk->part_tbl, idx, part) {
-> +		if (bdev_is_partition(part)) {
-> +			ret = true;
-> +			break;
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * blk_queue_set_zoned - configure a disk queue zoned model.
->   * @disk:	the gendisk of the queue to configure
-> @@ -876,7 +894,7 @@ void blk_queue_set_zoned(struct gendisk *disk, enum blk_zoned_model model)
->  		 * we do nothing special as far as the block layer is concerned.
->  		 */
->  		if (!IS_ENABLED(CONFIG_BLK_DEV_ZONED) ||
-> -		    !xa_empty(&disk->part_tbl))
-> +		    disk_has_partitions(disk))
->  			model = BLK_ZONED_NONE;
->  		break;
->  	case BLK_ZONED_NONE:
-> -- 
-> 2.31.1
----end quoted text---
+applied to nvme-5.16.
