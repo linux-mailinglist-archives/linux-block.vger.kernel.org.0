@@ -2,94 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D33474305EF
-	for <lists+linux-block@lfdr.de>; Sun, 17 Oct 2021 03:35:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64E884305F1
+	for <lists+linux-block@lfdr.de>; Sun, 17 Oct 2021 03:37:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241284AbhJQBht (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 16 Oct 2021 21:37:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39660 "EHLO
+        id S234735AbhJQBkB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 16 Oct 2021 21:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231837AbhJQBht (ORCPT
+        with ESMTP id S231837AbhJQBkB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 16 Oct 2021 21:37:49 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D0DC061765
-        for <linux-block@vger.kernel.org>; Sat, 16 Oct 2021 18:35:40 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id r134so12171465iod.11
-        for <linux-block@vger.kernel.org>; Sat, 16 Oct 2021 18:35:40 -0700 (PDT)
+        Sat, 16 Oct 2021 21:40:01 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627EDC061765
+        for <linux-block@vger.kernel.org>; Sat, 16 Oct 2021 18:37:52 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id i11so11204297ila.12
+        for <linux-block@vger.kernel.org>; Sat, 16 Oct 2021 18:37:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=bV//hRpD4HqQoa/SUF9A6qUUTt0qjW3gj+7fefZux3w=;
-        b=TwfySlWgmGVFFE00agoZD1JBLije4xo67vN0fZOOxmHDiPVkEw0KbpGgUowiw+KJMj
-         XV6FZVhz464UPjR2Aj3/h0ObsxBo9GyPQo+mVvUebsNyR5k4Uql8BuIberKoobBb3bEF
-         lEFuvn+SCnGQkUR3T9gmnVj/0mDHvxlpWiAl2uK4ZKpcKYpV16OogvqsfCVHmI1MD1rI
-         UB8CPlfASX8mBzgNVg/VYnRaVDPfysOBs0vfS+T7XeuRxiGBvzcCULp7HQYqza+WErnP
-         fpwRpOALFJOdDH01Y3kzS8KGM5sDedaxcBGpxTHaT/OVeccTW5sHCWECzUS35sMNf9l4
-         QCsg==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xknGY1Cd1KoqX+iPqx4k2rcP9O/nHmQCHpmV8BGk3hA=;
+        b=Wg8EJBqFYOfSwjmFVGH1nyksmaEJaGj8OR6RvKRNmSoYjwPyF6lPTELLq3bti1UIj1
+         2DO+/SYyXZThzzkRjFczxI/Q1WKnYH9B2HnGtHCN/z5svci/z6dN3iLHRySzcZBu0yP+
+         RXwXvGONiWhf8fWB/7KGbcmGE7ri9n1JxcC65TNZQcotLxFyqezFYznYJIVreY9/ZBdz
+         pE4EtsQ4NhRIz8L5xLWW0GE+N7ztxI5hZ9MbM6vQgTg+ahIiSQFUqH1gcpa+lVYSczcV
+         d8U0J7WZFQ4g9WUbcf0eJjSLIRIi4AdyBAU8/fQu4ft/04KW3W6PIyxwjwlTEty78yae
+         ShlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=bV//hRpD4HqQoa/SUF9A6qUUTt0qjW3gj+7fefZux3w=;
-        b=heg4xhDAdQhyl+AFvRK4PdBL0C9GnFF8py3wPVst/7NtuqkCzv76Ytfv6t3hTA49KL
-         qFUBV8ACI++VmGe2pJC0D8Jxu57ScXBLCZiUtXosJDLQOysFfxdF0T7IqIGiCfGgPW8i
-         Awh7ZTF17YPPdPFTwfOKKU0Rz26kqMRMqEN95cSfBu9JAPrGnliQcVzpiqXNJqjn2Skg
-         Z/o1KFCxRXiqcDGCEegfeEcFQwoOpu3sLr0LZ/riBbj4l40YNtiGSvOmQUaRIDtkxmSL
-         CwRziFCbs2FESvyFFQ94YJHQ8+iWirF3m3fwew4YEIPBhZ3jDX35tzmwoH+0Amf0Eslc
-         9SuQ==
-X-Gm-Message-State: AOAM533TZ0WVxLugN2q0GDn/tF+OkUtkq5H8vro5Lb7tn3pFQeDVP/lR
-        3yBeI9Y1X4Mpg+TO/9Dc7u0TgUnQxuOKPg==
-X-Google-Smtp-Source: ABdhPJyfZkC0qiOF5iuBlOG+3QJY9dUPl8mz391pV5T+5K8Vy4Wu+b6iqhfRZ7NEel98JL61ryOqew==
-X-Received: by 2002:a05:6602:1514:: with SMTP id g20mr9584985iow.9.1634434539795;
-        Sat, 16 Oct 2021 18:35:39 -0700 (PDT)
-Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id i125sm4674929iof.7.2021.10.16.18.35.39
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xknGY1Cd1KoqX+iPqx4k2rcP9O/nHmQCHpmV8BGk3hA=;
+        b=NoKu26+fDqaZe9A4XfoywZ4ejMutTjHyom3O+ZeTtnUqoBK7n2jpiSk0xjCGHtOg+L
+         KYcbEBfcEYKovccFwabtR6tFXr8i03ojC3h9Y3Yo8ZM2vhf0LXWdGnEH81ONe/zWfr06
+         CEhn/uRXCbxjtW3r9l14dnnANVyGcJoTok5VPW/BkqsGdFEeAG1SJucqS4lRzH0B1OYg
+         8sj4Bxzub7+dSaZViQOYxtaomvwh5E5FztlzzgLGxtek3oKGW3TOu932S7U9wjiLN4BT
+         gfiy6p8tlyJlMoQOhOQWqCUDiCqLFNvqKJgvf8KYmB2hZqN9zUINi1etLgNN7IwZRTuG
+         Pmuw==
+X-Gm-Message-State: AOAM532SBiDgnD8zgmqzR97m+Wql0GUsfdA6rmWact3uAg38qewaQhPA
+        /qdvXYqgaz2oC04wdtviJF/84Gf+3R1zgQ==
+X-Google-Smtp-Source: ABdhPJw5+z3j2V4qeuKVw1r3wXk5wIu4Ln6yCrIkI1eexDO0ztNjWbkF5JpdQK+bFzya36Fcr6OO4w==
+X-Received: by 2002:a05:6e02:d8f:: with SMTP id i15mr9865029ilj.62.1634434671576;
+        Sat, 16 Oct 2021 18:37:51 -0700 (PDT)
+Received: from localhost.localdomain ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id j17sm4934383ilq.1.2021.10.16.18.37.51
         for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Oct 2021 18:35:39 -0700 (PDT)
-To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Oct 2021 18:37:51 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH] block: don't dereference request after flush insertion
-Message-ID: <f2f17f46-ff3a-01c4-bfd4-8dec836ec343@kernel.dk>
-Date:   Sat, 16 Oct 2021 19:35:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+To:     linux-block@vger.kernel.org
+Subject: [PATCHSET 0/14] Various block layer optimizations
+Date:   Sat, 16 Oct 2021 19:37:34 -0600
+Message-Id: <20211017013748.76461-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We could have a race here, where the request gets freed before we call
-into blk_mq_run_hw_queue(). If this happens, we cannot rely on the state
-of the request.
+Hi,
 
-Grab the hardware context before inserting the flush.
+Various cleanups and optimizations that I've worked up while pushing
+out IOPS-per-core from ~5.5M to ~8.2M.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
----
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 2197cfbf081f..22b30a89bf3a 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2468,9 +2468,10 @@ void blk_mq_submit_bio(struct bio *bio)
- 	}
- 
- 	if (unlikely(is_flush_fua)) {
-+		struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
- 		/* Bypass scheduler for flush requests */
- 		blk_insert_flush(rq);
--		blk_mq_run_hw_queue(rq->mq_hctx, true);
-+		blk_mq_run_hw_queue(hctx, true);
- 	} else if (plug && (q->nr_hw_queues == 1 ||
- 		   blk_mq_is_shared_tags(rq->mq_hctx->flags) ||
- 		   q->mq_ops->commit_rqs || !blk_queue_nonrot(q))) {
 -- 
 Jens Axboe
+
 
