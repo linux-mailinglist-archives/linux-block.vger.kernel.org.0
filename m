@@ -2,108 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85C41430DD7
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 04:30:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF0A8430DE8
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 04:40:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237634AbhJRCcd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 17 Oct 2021 22:32:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:24595 "EHLO
+        id S1344966AbhJRCmg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 17 Oct 2021 22:42:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59499 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236699AbhJRCcc (ORCPT
+        by vger.kernel.org with ESMTP id S243172AbhJRCmf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 17 Oct 2021 22:32:32 -0400
+        Sun, 17 Oct 2021 22:42:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634524221;
+        s=mimecast20190719; t=1634524824;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ii6iHCtvT88rvAvpzwty6fvd5PmXJkiXwXacRAw1Ink=;
-        b=IMeuhHKovBWnOkZQ40Zsn07txiUn09hAoooV2hfW1kx66SK0KV/TOQ1XUad515sHQ4/uVQ
-        saZgzCcv9MDWXMG3zXz984Y9Q1gOynGhEkVMk/I0h70AEILbfyehcXsZ9RJ49Vbsg2NcyF
-        MMd5Sgnkr2fwbGxut2j5XBKKMLX59zE=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ylU6ZB+fS3KofqmNGAXE9o2W3GSxPdfIECPtC78E914=;
+        b=NYtKpTdHTr2A8RLj50W/hQ8yRGHW5i/j35KL/q1JF7Zg1lAdrPk6rCibVCwHgTxgbLVx2a
+        6XcR6rlT4Om68370WgvMnqWR1KJ37roJhj6j/UiCsv6vN3MaJQV4Ux0Gfr3eKCW43aEgFP
+        SlRqYzHtbzcnoBXiYzL1ymMdDiD9XzA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-9R3NNu_pMGqTmiNqP4fBmg-1; Sun, 17 Oct 2021 22:30:18 -0400
-X-MC-Unique: 9R3NNu_pMGqTmiNqP4fBmg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-156-jqteLvmSPSOOhJy4YMwcrA-1; Sun, 17 Oct 2021 22:40:20 -0400
+X-MC-Unique: jqteLvmSPSOOhJy4YMwcrA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92956802575;
-        Mon, 18 Oct 2021 02:30:17 +0000 (UTC)
-Received: from T590 (ovpn-8-22.pek2.redhat.com [10.72.8.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A273A7093A;
-        Mon, 18 Oct 2021 02:30:11 +0000 (UTC)
-Date:   Mon, 18 Oct 2021 10:30:06 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH] block: don't dereference request after flush insertion
-Message-ID: <YWzcLuH8VWPOf0ZU@T590>
-References: <f2f17f46-ff3a-01c4-bfd4-8dec836ec343@kernel.dk>
- <YWzSqzsuDF8Fl9jB@T590>
- <17362528-4be4-1407-5a05-cfb0a7524910@kernel.dk>
- <YWzVuDdyTVvED1QA@T590>
- <YWzXzd/LQubjXnrY@T590>
- <65db3ed2-9cc5-b136-0a54-d477acec9a58@kernel.dk>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC5CB800685;
+        Mon, 18 Oct 2021 02:40:19 +0000 (UTC)
+Received: from dhcp-12-105.nay.redhat.com (unknown [10.66.61.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B83F4180;
+        Mon, 18 Oct 2021 02:40:18 +0000 (UTC)
+From:   Yi Zhang <yi.zhang@redhat.com>
+To:     osandov@osandov.com, bvanassche@acm.org
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH blktests V2] tests/srp: fix module loading issue during srp tests
+Date:   Mon, 18 Oct 2021 10:40:07 +0800
+Message-Id: <20211018024007.6014-1-yi.zhang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65db3ed2-9cc5-b136-0a54-d477acec9a58@kernel.dk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Oct 17, 2021 at 08:16:25PM -0600, Jens Axboe wrote:
-> On 10/17/21 8:11 PM, Ming Lei wrote:
-> > On Mon, Oct 18, 2021 at 10:02:32AM +0800, Ming Lei wrote:
-> >> On Sun, Oct 17, 2021 at 07:50:24PM -0600, Jens Axboe wrote:
-> >>> On 10/17/21 7:49 PM, Ming Lei wrote:
-> >>>> On Sat, Oct 16, 2021 at 07:35:39PM -0600, Jens Axboe wrote:
-> >>>>> We could have a race here, where the request gets freed before we call
-> >>>>> into blk_mq_run_hw_queue(). If this happens, we cannot rely on the state
-> >>>>> of the request.
-> >>>>>
-> >>>>> Grab the hardware context before inserting the flush.
-> >>>>>
-> >>>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> >>>>>
-> >>>>> ---
-> >>>>>
-> >>>>> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> >>>>> index 2197cfbf081f..22b30a89bf3a 100644
-> >>>>> --- a/block/blk-mq.c
-> >>>>> +++ b/block/blk-mq.c
-> >>>>> @@ -2468,9 +2468,10 @@ void blk_mq_submit_bio(struct bio *bio)
-> >>>>>  	}
-> >>>>>  
-> >>>>>  	if (unlikely(is_flush_fua)) {
-> >>>>> +		struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
-> >>>>>  		/* Bypass scheduler for flush requests */
-> >>>>>  		blk_insert_flush(rq);
-> >>>>> -		blk_mq_run_hw_queue(rq->mq_hctx, true);
-> >>>>> +		blk_mq_run_hw_queue(hctx, true);
-> >>>>
-> >>>> If the request is freed before running queue, the request queue could
-> >>>> be released and the hctx may be freed.
-> >>>
-> >>> No, we still hold a queue enter ref.
-> >>
-> >> But that one is released when rq is freed since ac7c5675fa45 ("blk-mq: allow
-> >> blk_mq_make_request to consume the q_usage_counter reference"), isn't
-> >> it?
-> > 
-> > With commit ac7c5675fa45, any reference to hctx after queuing request could
-> > lead to UAF in the code path of blk_mq_submit_bio(). Maybe we need to grab
-> > two ref in queue enter, and release one after the bio is submitted.
-> 
-> I'd rather audit and see if there are any, because extra get+put isn't
-> exactly free.
+The ib_isert/ib_srpt modules will be automatically loaded after the first
+ time rdma_rxe/siw setup, which will lead srp tests fail.
 
-Only direct issue needn't that, looks others do need grab one extra
-ref if the request has to be queued somewhere before dispatch.
+$ modprobe rdma_rxe
+$ echo eno1 >/sys/module/rdma_rxe/parameters/add
+$ lsmod | grep -E "ib_srpt|iscsi_target_mod|ib_isert"
+ib_srpt               167936  0
+ib_isert              139264  0
+iscsi_target_mod      843776  1 ib_isert
+target_core_mod      1069056  3 iscsi_target_mod,ib_srpt,ib_isert
+rdma_cm               315392  5 rpcrdma,ib_srpt,ib_iser,ib_isert,rdma_ucm
+ib_cm                 344064  2 rdma_cm,ib_srpt
+ib_core              1101824  10 rdma_cm,rdma_rxe,rpcrdma,ib_srpt,iw_cm,ib_iser,ib_isert,rdma_ucm,ib_uverbs,ib_cm
 
+$ ./check srp/001
+srp/001 (Create and remove LUNs)                             [failed]
+    runtime    ...  3.675s
+    --- tests/srp/001.out	2021-10-13 01:18:50.846740093 -0400
+    +++ /root/blktests/results/nodev/srp/001.out.bad	2021-10-14 03:24:18.593852208 -0400
+    @@ -1,3 +1 @@
+    -Configured SRP target driver
+    -count_luns(): 3 <> 3
+    -Passed
+    +insmod: ERROR: could not insert module /lib/modules/5.15.0-rc5.fix+/kernel/drivers/infiniband/ulp/srpt/ib_srpt.ko: File exists
+modprobe: FATAL: Module iscsi_target_mod is in use.
 
-Thanks,
-Ming
+Signed-off-by: Yi Zhang <yi.zhang@redhat.com>
+---
+ tests/srp/rc | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tests/srp/rc b/tests/srp/rc
+index 7239d87..16638a4 100755
+--- a/tests/srp/rc
++++ b/tests/srp/rc
+@@ -497,7 +497,8 @@ start_lio_srpt() {
+ 	if modinfo ib_srpt | grep -q '^parm:[[:blank:]]*rdma_cm_port:'; then
+ 		opts+=("rdma_cm_port=${srp_rdma_cm_port}")
+ 	fi
+-	insmod "/lib/modules/$(uname -r)/kernel/drivers/infiniband/ulp/srpt/ib_srpt."* "${opts[@]}" || return $?
++	unload_module ib_srpt &&
++		insmod "/lib/modules/$(uname -r)/kernel/drivers/infiniband/ulp/srpt/ib_srpt."* "${opts[@]}" || return $?
+ 	i=0
+ 	for r in "${vdev_path[@]}"; do
+ 		if [ -b "$(readlink -f "$r")" ]; then
+@@ -554,7 +555,7 @@ stop_lio_srpt() {
+ 	rmdir /sys/kernel/config/target/*/* >&/dev/null
+ 	rmdir /sys/kernel/config/target/* >&/dev/null
+ 
+-	for m in ib_srpt iscsi_target_mod target_core_pscsi target_core_iblock \
++	for m in ib_srpt ib_isert iscsi_target_mod target_core_pscsi target_core_iblock \
+ 			 target_core_file target_core_stgt target_core_user \
+ 			 target_core_mod
+ 	do
+-- 
+2.21.3
 
