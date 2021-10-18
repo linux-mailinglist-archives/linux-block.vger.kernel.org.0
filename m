@@ -2,118 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EB73432886
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 22:37:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 134054328A4
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 22:52:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbhJRUj4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Oct 2021 16:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49126 "EHLO
+        id S229544AbhJRUy4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Oct 2021 16:54:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230298AbhJRUjz (ORCPT
+        with ESMTP id S229529AbhJRUyz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Oct 2021 16:39:55 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B37C061765
-        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 13:37:43 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id r18so4137347edv.12
-        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 13:37:43 -0700 (PDT)
+        Mon, 18 Oct 2021 16:54:55 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1903AC06161C
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 13:52:44 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id 188so17822273iou.12
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 13:52:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n+HXVcu2x/PFm7UXxUdYHEvn+f68pA4E31anhqTCGNg=;
-        b=n7323djZZwfiCZkP3zhz7OtTc/uPWDLWoGZSLrnCz0Xr4lZjvy7g3yQszATbOwoztQ
-         kBxjuWIsYfknBEgLzUHirUoSTGyfDPsrbgO3qvviZBEMF3VLH20lkC/I55YAr6/YuNRY
-         nlyIrxzPYrSqikZEZeWTwmz6/ulcKUdrXpA1ptHAOjMZQhgXzc7dC4lLZ2ARBE54jzl/
-         r9lTYHYC2Ko7mh25HCYAGluHZrz5vqf8AV5rQJJ3di6pd4UgdUkRsBDVevdY1+cwA5Vh
-         qp+lL5g9QTt0DEVsc2sJ7MDGXCe9wNygvRuSRaE2dkARN2gD+GuBbXBcLNV41N87yOqF
-         Blog==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Yb6fDrcaihf9xOvWSjq7rtKlyMEYMqkVYoeVqHGi14M=;
+        b=Tw+OXhmDqKY5D4HCuOfvlJN+oMihczl+mT7qw9xHk0pDv3hj0y5Az9cX9nOD1y/OqS
+         NPMMjNxM4cxdUtQtbCt/qRXT3i/A9SDl2oYTXxnJAXPzyJ1dCXLe2jU3qiSnmZMN46+O
+         ld19a7f2AUN8ZEAflPzwWVVavEx6kVzutjdfIX79uBZ20/fnCLM4KHxiDRIfpTP/rZEa
+         R9ZoKbxX5l97xTeurxNMiy+Bsv8O9hHZtW2v9jR6BgynCMYGRK4FFMcVr4Jii8A+9hre
+         K87W1OOYljBtuEBpfHiu08jk7G0N3xJb1teZbmPQLYKFKBvvnoNa6Y3BWnI0y7B4ghip
+         sIRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n+HXVcu2x/PFm7UXxUdYHEvn+f68pA4E31anhqTCGNg=;
-        b=Q1fOK7v4nKokEeYtJRf5SIPLnifKbOEQC+1jHfTbTfjrgQy0a/fWLHL71jqt9fHM3T
-         UTfdsracnE+7fRMTmQVBQjH5SHewcI4scX3zmnNjUezli9wFIKlxkZogVS+2GHN/BCw0
-         C59isNnaZojKxf3V2jWJ4f3hwOMAWNY7abNsnJfYq600tN2MFsg21ypP0mHyQdDb7KyG
-         3aeco359yrlxYNPmT42p53XJdD+Tr+ndDBG/XvSl4XRMO4yB+b1/l0n5oTmZzfsWOFuO
-         XtbYpNIVNixTMust7IeumE2QrMuwCK94sI3Lgve9Z1xrWcS+mrGUvlVEb+xKsIX/FfGh
-         vF6g==
-X-Gm-Message-State: AOAM533ABHrTpi8EXAhmkQbDwoaV+MckLoQ78ZAngcqJ9zCRlk9qHjQB
-        G9a5+dHxGiett3LEZGuJ3JbfPuziuwW2oQ==
-X-Google-Smtp-Source: ABdhPJyVTi4CPWbJoHlsIOMm1X4RSjgq3N1NGkIF7aZWKhF5m/c8s4lSUfIT8o9VyjVbJQTCLNZKjQ==
-X-Received: by 2002:a17:907:77c8:: with SMTP id kz8mr32199624ejc.188.1634589461903;
-        Mon, 18 Oct 2021 13:37:41 -0700 (PDT)
-Received: from 127.0.0.1localhost ([185.69.145.213])
-        by smtp.gmail.com with ESMTPSA id y19sm11124889edd.39.2021.10.18.13.37.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Oct 2021 13:37:41 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     linux-block@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH 3/3] block: cache rq_flags inside blk_mq_rq_ctx_init()
-Date:   Mon, 18 Oct 2021 21:37:29 +0100
-Message-Id: <a02c72308106e033b1b0ea9c951ae971e52df2be.1634589262.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <cover.1634589262.git.asml.silence@gmail.com>
-References: <cover.1634589262.git.asml.silence@gmail.com>
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yb6fDrcaihf9xOvWSjq7rtKlyMEYMqkVYoeVqHGi14M=;
+        b=vcLmPfOWKim6ynoIkS1Veup7ZHDJ1CfNSMpACBHtREO28b8c24dH8K2AA7DMMqgk06
+         qyZWmNZQr9vedsZ2Ei9YQSX35NG27szLWV0fID5IzJXHOHjujgAmNlMtBVdpUVcrMALB
+         +QuXUTEcGzhaAbF9X0mYSPfNV44/SC6VkQY2JWHxe3JGywp/fX+OwKOSmZUY4YoRwc21
+         GG5niQOAEkSllIE7yiZlYoegDb0er+dcPzQp98VBc7oTFjnKsA92ICgZCEelaS8BKsm2
+         M35YPhQ5iaWGFezWgYDBwWFBle+hYSHMSWo55A6lNuWz19qc5jctLvZrDzwwvK6pGpVS
+         zK1A==
+X-Gm-Message-State: AOAM531vL1TG5vCgNxic+FaXJMglfnDSQlLFvXi7iGKI5Nlef0pRM5F1
+        MJxQ00RcQtyRfQbWdswGfM6gazbBSlI=
+X-Google-Smtp-Source: ABdhPJyGcx9S1uef3LTD+rpqPuU/K4bpSv1PT75oVviFS+sq8fZN4odtk24QXQE98R4bmQLcOZdOGA==
+X-Received: by 2002:a02:7105:: with SMTP id n5mr1476301jac.64.1634590363389;
+        Mon, 18 Oct 2021 13:52:43 -0700 (PDT)
+Received: from [192.168.1.30] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id d12sm7389875ila.79.2021.10.18.13.52.42
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Oct 2021 13:52:43 -0700 (PDT)
+Subject: Re: Block trees rebased
+From:   Jens Axboe <axboe@kernel.dk>
+To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <795ab0ff-dd7d-d225-e42a-04878bd4d8d1@kernel.dk>
+Message-ID: <8aa58b9a-ee53-0390-1608-7c5363fa4b05@kernel.dk>
+Date:   Mon, 18 Oct 2021 14:52:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <795ab0ff-dd7d-d225-e42a-04878bd4d8d1@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add a local variable for rq_flags, it helps to compile out some of
-rq_flags reloads.
+On 10/18/21 6:31 AM, Jens Axboe wrote:
+> Hi,
+> 
+> Just a heads-up that I've rebased the 5.16 block trees, mainly to avoid
+> a bunch of conflicts with the bdi lifetime fixes that went into -rc6, but
+> also to get rid of a silly post-merge branch that we ended up having.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- block/blk-mq.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+This should now be completed.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index fa4de25c3bcb..633d73580712 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -318,17 +318,23 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	struct elevator_queue *e = q->elevator;
- 	struct blk_mq_tags *tags = blk_mq_tags_from_data(data);
- 	struct request *rq = tags->static_rqs[tag];
-+	unsigned int rq_flags = 0;
- 
- 	if (e) {
--		rq->rq_flags = RQF_ELV;
-+		rq_flags = RQF_ELV;
- 		rq->tag = BLK_MQ_NO_TAG;
- 		rq->internal_tag = tag;
- 	} else {
--		rq->rq_flags = 0;
- 		rq->tag = tag;
- 		rq->internal_tag = BLK_MQ_NO_TAG;
- 	}
- 
-+	if (data->flags & BLK_MQ_REQ_PM)
-+		rq_flags |= RQF_PM;
-+	if (blk_queue_io_stat(q))
-+		rq_flags |= RQF_IO_STAT;
-+	rq->rq_flags = rq_flags;
-+
- 	if (blk_mq_need_time_stamp(rq))
- 		rq->start_time_ns = ktime_get_ns();
- 	else
-@@ -338,10 +344,6 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 	rq->mq_ctx = ctx;
- 	rq->mq_hctx = hctx;
- 	rq->cmd_flags = data->cmd_flags;
--	if (data->flags & BLK_MQ_REQ_PM)
--		rq->rq_flags |= RQF_PM;
--	if (blk_queue_io_stat(q))
--		rq->rq_flags |= RQF_IO_STAT;
- 	rq->rq_disk = NULL;
- 	rq->part = NULL;
- #ifdef CONFIG_BLK_RQ_ALLOC_TIME
 -- 
-2.33.1
+Jens Axboe
 
