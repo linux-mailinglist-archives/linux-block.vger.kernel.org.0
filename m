@@ -2,58 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C31A9432586
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 19:51:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BCE432587
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 19:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbhJRRxZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Oct 2021 13:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
+        id S234135AbhJRRx0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Oct 2021 13:53:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234135AbhJRRxZ (ORCPT
+        with ESMTP id S233383AbhJRRxZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Mon, 18 Oct 2021 13:53:25 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3477C06161C
-        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 10:51:13 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id y67so17227253iof.10
-        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 10:51:13 -0700 (PDT)
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86020C06161C
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 10:51:14 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id n7so17352427iod.0
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 10:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nHdWo5JlPcrT5ny9e2xXLs7Ss2obuQA7vRyruQpssLs=;
-        b=dh+8RZ+gUJBSgu3ijYn8rYkrAMNcTC1VEK2abmNh6zBMaNjF24PxT3h4z++MyjvYH1
-         TCrkqkZ5X8MR44nhaWzYPuwRVZmnSWqwcs3LSGJULSSmO53Vp+SITASt3Ghlc44jFNb7
-         CykIXr7XuKx+NHAXp7u6vtDl3v7JV3Xf5Jn2kr91nUOmHWlZSKqH0q9NDS8W+HW4q3Mc
-         V4zPnDsAZbmypH0cFuA/svtwTs96yh1yaSB2jocP6wIFoNavINQJa5OeytRx7lbFIoA5
-         1lBRwZzF+dJQx3lRmusKC8OEswZKmJ/T7mxLhREmJB2Twqoz0x22Ku6K7GdYoWgXUR8D
-         csPQ==
+        bh=ZRo+0Nv/5yTlZsp5PnfL7gTFHW11KoE6fwo/PS73/zs=;
+        b=HibWV3m6ESAwvkPj/RgK2oFibmOMs4F+q8KgbZuCmfRM7+N90UfAl1fKB2GM3Ozoti
+         8SaoUU4Zu/fX1H6rx1SaU07DHlgriZhlwvAbue/vI6n3YRS59Npn805l5Y+Tg2iCIXSc
+         ewK7rnPD1lE0vFS5SWxaWRXWjYwhubPynpl6MXYbQWSDzgPTBesEy5FRsEeh7Lr5OOfE
+         JmUYZweea6o0fj/HFR0HYOOn9/g4XzcMkkGSTQu25a4WjYWAD0mjiPNrEspVQp018IL6
+         /gjU13HJqFl+L3GnA6agb35/RHBBrbZ5H4KpG+K3rGJw7YFL3n7cI90X8PwOa5CFtZxe
+         AQmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nHdWo5JlPcrT5ny9e2xXLs7Ss2obuQA7vRyruQpssLs=;
-        b=dM8NE6m0tcmysXyGIaKjEG/zbMJRr55FaVy2kGSO9IzFQOUHhakffh6aIlZYkDRJqH
-         dQCdV7GrHiqYdrhbZ5U/hGu7vUDTRMZN/x6hZA1KhzEiY/ETkAGC3xYk3iuEj1vAC2Ap
-         lfBeNkqb/e3QmUf69/+JEXfgi5f069sohFU/dwV0eyo0ILDYV+XLa+bk0/bGEjFUWMPx
-         3Ul4agDVUoB9qWAt+vkkkcyJZTPL26xqgn9+uH6QEVtZ4LR3uQsUgZ9m3/c91M+99mDE
-         Rswj4PfLLcBP7izA7opwjo+qyxK1kd3jEGVUxDVEZQvZ088qDZK7nowlRBHz5d3vIkVs
-         L/WA==
-X-Gm-Message-State: AOAM530ZBPUdH95G6ggxgFhrSZgzZi1t5jynC0hvd0EuIp61jOdLfFWY
-        wkZfVcLiaFLyzBICG5jNwyKyJOS9Og4T/A==
-X-Google-Smtp-Source: ABdhPJxa/HaNYOdtT2bPcoWkljamtjQ+kisWTeNylgcFXnep42QnNj+4W5IVt3CGtIdeMJ5dUFPXIA==
-X-Received: by 2002:a05:6602:1546:: with SMTP id h6mr15133840iow.125.1634579473143;
+        bh=ZRo+0Nv/5yTlZsp5PnfL7gTFHW11KoE6fwo/PS73/zs=;
+        b=5UbiN2HI9e9Ra6jpWywhFvPtxUoaB5WLfGMiK4DkvKjyb1rgy/rbXZHru3AQ9BMPkC
+         Rm9VH889MyuRnYoiWCuDv9J/fEOGGxiTNzPjhcdLHXY0eGJMTzLxaEtuwYR4sCmdRWxk
+         LGfKoDVejWtzfX+zkUm7sT9SekIfkHsqrUNECYJ9GB/kRWND2cXI0najqcSJeqTghcH+
+         Cd1vIo/Q2dfPfrLB3sEzee0fqmrzSYtWxbbyXyMAtC215iFB8jLlLKixSU2BwugNgtBl
+         KaVJRVoQKTXRsh4BZNjGTngJmwQqWpa/Wxk9lEkq3wPmlXEtfd0Zx10cgAXUDAWVuG6z
+         KLVg==
+X-Gm-Message-State: AOAM532R9INSxu9QTQVPlmtHppSOoMRUJYSQSRDfQIsetuAyb3PQzXWH
+        MZRH8X9GclvKV4d+yTZei5crKWsKri50CQ==
+X-Google-Smtp-Source: ABdhPJxI8vnh38YET74M68PBh5L1tmD3cm+0adazAppsZChoHR/6+JLC7i90tCJP1cK/DMx+jwdGfw==
+X-Received: by 2002:a05:6602:2f0a:: with SMTP id q10mr15759272iow.76.1634579473787;
         Mon, 18 Oct 2021 10:51:13 -0700 (PDT)
 Received: from p1.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id v17sm7380017ilh.67.2021.10.18.10.51.12
+        by smtp.gmail.com with ESMTPSA id v17sm7380017ilh.67.2021.10.18.10.51.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Oct 2021 10:51:12 -0700 (PDT)
+        Mon, 18 Oct 2021 10:51:13 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     hch@lst.de, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 2/6] block: return whether or not to unplug through boolean
-Date:   Mon, 18 Oct 2021 11:51:05 -0600
-Message-Id: <20211018175109.401292-3-axboe@kernel.dk>
+Subject: [PATCH 3/6] block: get rid of plug list sorting
+Date:   Mon, 18 Oct 2021 11:51:06 -0600
+Message-Id: <20211018175109.401292-4-axboe@kernel.dk>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211018175109.401292-1-axboe@kernel.dk>
 References: <20211018175109.401292-1-axboe@kernel.dk>
@@ -63,117 +63,59 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of returning the same queue request through a request pointer,
-use a boolean to accomplish the same.
+Even if we have multiple queues in the plug list, chances that they
+are very interspersed is minimal. Don't bother spending CPU cycles
+sorting the list.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- block/blk-merge.c | 11 +++++------
- block/blk-mq.c    | 16 +++++++++-------
- block/blk.h       |  2 +-
- 3 files changed, 15 insertions(+), 14 deletions(-)
+ block/blk-mq.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index ec727234ac48..c273b58378ce 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -1067,9 +1067,8 @@ static enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
-  * @q: request_queue new bio is being queued at
-  * @bio: new bio being queued
-  * @nr_segs: number of segments in @bio
-- * @same_queue_rq: pointer to &struct request that gets filled in when
-- * another request associated with @q is found on the plug list
-- * (optional, may be %NULL)
-+ * @same_queue_rq: output value, will be true if there's an existing request
-+ * from the passed in @q already in the plug list
-  *
-  * Determine whether @bio being queued on @q can be merged with the previous
-  * request on %current's plugged list.  Returns %true if merge was successful,
-@@ -1085,7 +1084,7 @@ static enum bio_merge_status blk_attempt_bio_merge(struct request_queue *q,
-  * Caller must ensure !blk_queue_nomerges(q) beforehand.
-  */
- bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
--		unsigned int nr_segs, struct request **same_queue_rq)
-+		unsigned int nr_segs, bool *same_queue_rq)
- {
- 	struct blk_plug *plug;
- 	struct request *rq;
-@@ -1096,12 +1095,12 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
- 
- 	/* check the previously added entry for a quick merge attempt */
- 	rq = list_last_entry(&plug->mq_list, struct request, queuelist);
--	if (rq->q == q && same_queue_rq) {
-+	if (rq->q == q) {
- 		/*
- 		 * Only blk-mq multiple hardware queues case checks the rq in
- 		 * the same queue, there should be only one such rq in a queue
- 		 */
--		*same_queue_rq = rq;
-+		*same_queue_rq = true;
- 	}
- 	if (blk_attempt_bio_merge(q, rq, bio, nr_segs, false) == BIO_MERGE_OK)
- 		return true;
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index e3ef55f76701..d957b6812a98 100644
+index d957b6812a98..58774267dd95 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -2422,7 +2422,7 @@ void blk_mq_submit_bio(struct bio *bio)
- 	const int is_flush_fua = op_is_flush(bio->bi_opf);
- 	struct request *rq;
- 	struct blk_plug *plug;
--	struct request *same_queue_rq = NULL;
-+	bool same_queue_rq = false;
- 	unsigned int nr_segs = 1;
- 	blk_status_t ret;
+@@ -19,7 +19,6 @@
+ #include <linux/smp.h>
+ #include <linux/interrupt.h>
+ #include <linux/llist.h>
+-#include <linux/list_sort.h>
+ #include <linux/cpu.h>
+ #include <linux/cache.h>
+ #include <linux/sched/sysctl.h>
+@@ -2151,20 +2150,6 @@ void blk_mq_insert_requests(struct blk_mq_hw_ctx *hctx, struct blk_mq_ctx *ctx,
+ 	spin_unlock(&ctx->lock);
+ }
  
-@@ -2515,6 +2515,8 @@ void blk_mq_submit_bio(struct bio *bio)
- 		/* Insert the request at the IO scheduler queue */
- 		blk_mq_sched_insert_request(rq, false, true, true);
- 	} else if (plug && !blk_queue_nomerges(q)) {
-+		struct request *next_rq = NULL;
-+
- 		/*
- 		 * We do limited plugging. If the bio can be merged, do that.
- 		 * Otherwise the existing request in the plug list will be
-@@ -2522,19 +2524,19 @@ void blk_mq_submit_bio(struct bio *bio)
- 		 * The plug list might get flushed before this. If that happens,
- 		 * the plug list is empty, and same_queue_rq is invalid.
- 		 */
--		if (list_empty(&plug->mq_list))
--			same_queue_rq = NULL;
- 		if (same_queue_rq) {
--			list_del_init(&same_queue_rq->queuelist);
-+			next_rq = list_last_entry(&plug->mq_list,
-+							struct request,
-+							queuelist);
-+			list_del_init(&next_rq->queuelist);
- 			plug->rq_count--;
- 		}
- 		blk_add_rq_to_plug(plug, rq);
- 		trace_block_plug(q);
+-static int plug_rq_cmp(void *priv, const struct list_head *a,
+-		       const struct list_head *b)
+-{
+-	struct request *rqa = container_of(a, struct request, queuelist);
+-	struct request *rqb = container_of(b, struct request, queuelist);
+-
+-	if (rqa->mq_ctx != rqb->mq_ctx)
+-		return rqa->mq_ctx > rqb->mq_ctx;
+-	if (rqa->mq_hctx != rqb->mq_hctx)
+-		return rqa->mq_hctx > rqb->mq_hctx;
+-
+-	return blk_rq_pos(rqa) > blk_rq_pos(rqb);
+-}
+-
+ void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
+ {
+ 	LIST_HEAD(list);
+@@ -2172,10 +2157,6 @@ void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
+ 	if (list_empty(&plug->mq_list))
+ 		return;
+ 	list_splice_init(&plug->mq_list, &list);
+-
+-	if (plug->rq_count > 2 && plug->multiple_queues)
+-		list_sort(NULL, &list, plug_rq_cmp);
+-
+ 	plug->rq_count = 0;
  
--		if (same_queue_rq) {
-+		if (next_rq) {
- 			trace_block_unplug(q, 1, true);
--			blk_mq_try_issue_directly(same_queue_rq->mq_hctx,
--						  same_queue_rq);
-+			blk_mq_try_issue_directly(next_rq->mq_hctx, next_rq);
- 		}
- 	} else if ((q->nr_hw_queues > 1 && is_sync) ||
- 		   !rq->mq_hctx->dispatch_busy) {
-diff --git a/block/blk.h b/block/blk.h
-index e80350327e6d..b9729c12fd62 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -218,7 +218,7 @@ void blk_add_timer(struct request *req);
- void blk_print_req_error(struct request *req, blk_status_t status);
- 
- bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
--		unsigned int nr_segs, struct request **same_queue_rq);
-+		unsigned int nr_segs, bool *same_queue_rq);
- bool blk_bio_list_merge(struct request_queue *q, struct list_head *list,
- 			struct bio *bio, unsigned int nr_segs);
- 
+ 	do {
 -- 
 2.33.1
 
