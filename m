@@ -2,66 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1CD2431205
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 10:17:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC98B4311CE
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 10:06:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230469AbhJRITb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Oct 2021 04:19:31 -0400
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21404 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231180AbhJRITb (ORCPT
+        id S230512AbhJRIIT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Oct 2021 04:08:19 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3993 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230472AbhJRIIS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Oct 2021 04:19:31 -0400
-X-Greylist: delayed 910 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Oct 2021 04:19:31 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1634544036; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=ARM3XR8ozbk5ZKj0o0HG2ck/7mjnAPp4awkkTw3VapiUpDnPJ9qBxfM0tRgqxaqk/JdjUC4lVy8jVAruMw9H99mGYUNd27FTYYu2Q8o7wzVFz7GH9ExR1ACawGXRRVeAJO8g6LRUAtwz8hcZmM4LnYMu8bFL1X5jSZ9KzPJo8DM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1634544036; h=Content-Type:Cc:Date:From:MIME-Version:Message-ID:Reply-To:Subject:To; 
-        bh=h49ZUkYbpHvFgd4ygOJoSWfJB1R1I4UzMaRy7bssn/0=; 
-        b=juUmx1ezfKgDa8C/3MBdDsGgAISJpdNYMNRQtFIwuTn1mU+m+WN/HYZPc2r4grhZ/eqkfNhL6xth1SZsFZmK4/FOSVO4Ct3HwxMaw+o/cXofRlvIZVEQqKxWDmZJViKXxFD/nGAqmCRZmLLOAyC39ZB220p7Hz6STsQdEPnuwz0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        spf=pass  smtp.mailfrom=www@aegistudio.net;
-        dmarc=pass header.from=<www@aegistudio.net>
-Received: from aegistudio (115.216.104.229 [115.216.104.229]) by mx.zohomail.com
-        with SMTPS id 1634544032608898.571502480912; Mon, 18 Oct 2021 01:00:32 -0700 (PDT)
-Date:   Mon, 18 Oct 2021 08:00:27 +0000
-From:   Haoran Luo <www@aegistudio.net>
-To:     zhangyoufu@gmail.com
-Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, tj@kernel.org
-Subject: Re: [BUG] blk-throttle panic on 32bit machine after startup
-Message-ID: <YW0pm5xcxgWnW98f@aegistudio>
-Reply-To: CAEKhA2x1Qi3Ywaj9fzdsaChabqDSMe2m2441wReg_V=39_Cuhg@mail.gmail.com
+        Mon, 18 Oct 2021 04:08:18 -0400
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HXq9B2gjpz67Mww;
+        Mon, 18 Oct 2021 16:02:22 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Mon, 18 Oct 2021 10:06:06 +0200
+Received: from [10.47.85.98] (10.47.85.98) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Mon, 18 Oct
+ 2021 09:06:05 +0100
+Subject: Re: [PATCH] blk-mq: Fix blk_mq_tagset_busy_iter() for shared tags
+From:   John Garry <john.garry@huawei.com>
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kashyap.desai@broadcom.com" <kashyap.desai@broadcom.com>,
+        "hare@suse.de" <hare@suse.de>
+References: <1634114459-143003-1-git-send-email-john.garry@huawei.com>
+ <YWalYoOZmpkmAZNK@T590> <79266509-f327-9de3-d22e-0e9fe00387ee@huawei.com>
+ <YWay/n+BJTLm1Alb@T590> <9f3c4d57-6b77-5345-0d4c-275962214b2a@huawei.com>
+ <YWbtRm22vohvY0Ca@T590> <7e142559-1c96-8d84-081a-378c1f6d1306@huawei.com>
+Message-ID: <1065f517-c94b-5a47-34f6-52015b3ef907@huawei.com>
+Date:   Mon, 18 Oct 2021 09:08:57 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-ZohoMailClient: External
+In-Reply-To: <7e142559-1c96-8d84-081a-378c1f6d1306@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.85.98]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-(Sorry for the garbled message due to my mistaken the configuration of mutt)
+On 13/10/2021 16:13, John Garry wrote:
+>> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+>> index 72a2724a4eee..2a2ad6dfcc33 100644
+>> --- a/block/blk-mq-tag.c
+>> +++ b/block/blk-mq-tag.c
+>> @@ -232,8 +232,9 @@ static bool bt_iter(struct sbitmap *bitmap, 
+>> unsigned int bitnr, void *data)
+>>       if (!rq)
+>>           return true;
+>> -    if (rq->q == hctx->queue && rq->mq_hctx == hctx)
+>> -        ret = iter_data->fn(hctx, rq, iter_data->data, reserved);
+>> +    if (rq->q == hctx->queue && (rq->mq_hctx == hctx ||
+>> +                blk_mq_is_shared_tags(hctx->flags)))
+>> +        ret = iter_data->fn(rq->mq_hctx, rq, iter_data->data, reserved);
+>>       blk_mq_put_rq_ref(rq);
+>>       return ret;
+>>   }
+>> @@ -460,6 +461,9 @@ void blk_mq_queue_tag_busy_iter(struct 
+>> request_queue *q, busy_iter_fn *fn,
+>>           if (tags->nr_reserved_tags)
+>>               bt_for_each(hctx, &tags->breserved_tags, fn, priv, true);
+>>           bt_for_each(hctx, &tags->bitmap_tags, fn, priv, false);
+>> +
+>> +        if (blk_mq_is_shared_tags(hctx->flags))
+>> +            break;
+>>       }
+>>       blk_queue_exit(q);
+>>   }
+>>
+> 
+> I suppose that is ok, and means that we iter once.
+> 
+> However, I have to ask, where is the big user of 
+> blk_mq_queue_tag_busy_iter() coming from? I saw this from Kashyap's mail:
+> 
+>  > 1.31%     1.31%  kworker/57:1H-k  [kernel.vmlinux]
+>  >       native_queued_spin_lock_slowpath
+>  >       ret_from_fork
+>  >       kthread
+>  >       worker_thread
+>  >       process_one_work
+>  >       blk_mq_timeout_work
+>  >       blk_mq_queue_tag_busy_iter
+>  >       bt_iter
+>  >       blk_mq_find_and_get_req
+>  >       _raw_spin_lock_irqsave
+>  >       native_queued_spin_lock_slowpath
+> 
+> How or why blk_mq_timeout_work()?
 
-I'm the college of the reporter and I would like to provide more
-information.
+Just some update: I tried hisi_sas with 10x SAS SSDs, megaraid sas with 
+1x SATA HDD (that's all I have), and null blk with lots of devices, and 
+I still can't see high usage of blk_mq_queue_tag_busy_iter().
 
-The code in 5.15-rc6 in "blk-throttle.c" around line 791 is written as
-below:
+So how about we get this patch processed (to fix 
+blk_mq_tagset_busy_iter()), as it is independent of 
+blk_mq_queue_tag_busy_iter()? And then wait for some update or some more 
+info from Kashyap regarding blk_mq_queue_tag_busy_iter()
 
-	/*
-	 * Previous slice has expired. We must have trimmed it after
-	 * last
-	 * bio dispatch. That means since start of last slice, we never
-	 * used
-	 * that bandwidth. Do try to make use of that bandwidth while
-	 * giving
-	 * credit.
-	 */
-	if (time_after_eq(start, tg->slice_start[rw]))
-		tg->slice_start[rw] = start;
-
-I think this piece of code presumes all jiffies values are greater than
-0, which is the initial value assigned when kzalloc-ing throtl_grp. It
-fails on 32-bit linux for the first 5 minutes after booting, since the
-jiffies value then will be less than 0.
+Thanks,
+John
