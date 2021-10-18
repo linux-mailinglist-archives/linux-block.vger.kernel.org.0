@@ -2,67 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AB0C4322CC
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 17:25:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD2D0432384
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 18:10:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231894AbhJRP15 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Oct 2021 11:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34226 "EHLO
+        id S232231AbhJRQMo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Oct 2021 12:12:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbhJRP15 (ORCPT
+        with ESMTP id S232118AbhJRQMo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Oct 2021 11:27:57 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE29BC06161C
-        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 08:25:45 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id n7so16808196iod.0
-        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 08:25:45 -0700 (PDT)
+        Mon, 18 Oct 2021 12:12:44 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54C1C06161C
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 09:10:32 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id b188so12005945iof.8
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 09:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xl1gQhAS96ALQGgsU5bwERUfEXFWE9c4lwvTSUH46RI=;
-        b=S5VdjpnxrXOZev1PnHvNzh1dgSq2KjGhvIK7a78yjp4aVxaTFvjDgNbIl4heHOaKoZ
-         FtgOy31XsTIDH3iYXy8dwB9TXzvmcrwawnYt8inu2rpINNyRWZlYBWQnlDbfrJYmYyXM
-         QB978NdH8hprYfn+fnQATFQ00aP3FTpOLkgrmJHQgJMauih264Ah6i5zX6+y2caXv5bb
-         RSy3Y1qKRtRd4EslAHLcVLxMwiseJkJ4BjCWxQdspTwUTK5QbUR9j7xXLAGvP6Hey7bq
-         i12C/c+W41+drSr26VaMvWEDqjM4gRu052Defkl/V8VDeF/8gWGmwQH8TE7GaflSL988
-         NBOA==
+        bh=WehA1Of8Dgzn3y68QBKKPIWZI7nmPo6prVLYGTh6Scs=;
+        b=K0upSoFhxt8ySNwHKGVj85lxqzWS6XUiOvcopbBSwdLlB7XuLObZUrvFMEkJtrjXng
+         2dBrQOA5YX0BkRUWWaqtoCJiWyJyp2udajW95nFeTlaf97O83ZFtjctGKEleN97pkZwJ
+         iVOzbxzmcBmXS5cnkadQ705xkvcHvEG6zJg5GwE2Z/Divq/JTdIn8rOEyeZtyZa9ncIn
+         uXuYzlAbd+rtgJUUX7ne//eKTcnny0uM3MBbQowsF27NX4Oo1ftcNYkoZRdMLM2qvWLN
+         rJWsjTUN0uKzF+p6m1kBjaZExXZ+Mnwe2fNKpDd4cpio5NEou4WlQxgS8ojtY0do37jE
+         zZsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Xl1gQhAS96ALQGgsU5bwERUfEXFWE9c4lwvTSUH46RI=;
-        b=iTNiUHKfJC/40TLJeSjIc0/mO/3gy78GfybI5VADNyhB9cVozxpF0ZPtJr3pdLIRA0
-         JEeZPEH3MPZIlyZELU/r/DfgGDMO6IJ1/s9HIWOc8o+6OY75JrRZJpA8Z9Y1CJ63F/QY
-         jbOHKqbWZtZYe17Jy8PhPfLWH9V72nKK+i+sWb76051eZnxrh2EkUq4hgcxPXGmU2rG0
-         6hbCbIXMlRmCqJg1llYg6QfAq6LfPqQNo8AbAqQyuRZ7YyMy9yYJ0MvRSFu+gOYwRiHr
-         D8h7jGCgSQ9p0kWKePggxT7yDd3yLWJvb+H51R9V089v5mg+WvjKjreX5a1pbGHMPv+z
-         3XPg==
-X-Gm-Message-State: AOAM5322xmWrnWOUc2OU+kMvi1h72+42rzaf+vBqGlFunOBjaMuqKKu5
-        Jal/NaueFkArsK2+j/MM9g8D8b0w3P46tg==
-X-Google-Smtp-Source: ABdhPJwVNC9wkROB/oWQYPwDWOAz+QcalUgUSsYH+Eyjci4c0NZLQjDvjRm+qMJdwQpHHCQv+foi6w==
-X-Received: by 2002:a05:6602:1542:: with SMTP id h2mr15399400iow.198.1634570745071;
-        Mon, 18 Oct 2021 08:25:45 -0700 (PDT)
+        bh=WehA1Of8Dgzn3y68QBKKPIWZI7nmPo6prVLYGTh6Scs=;
+        b=lWMr95Ybk+EEgLiycDQgAM5JfDzw+pEeRFFeCEq2F5dUy6WbIUwraGfMmx0btMalZG
+         +/q7L5Anen66mUtNp1oTSR2MbjgNMqz8NFzdQmOixnUMbWkJzr1bzW7pyrhOEM6QsohO
+         XpD2eDnYxB9RKSY9lyaMkTPiB4pLgzXley28UzU4nCTZNokMRISduMYZFLGb0bp8oaCE
+         v5JCWnJBPHhwaGKMyavbEzxt4n5Yv6aIUnM7CtCZVYDL5kS4sPrX9bPBykJLrC+h0V82
+         syUzARUpZCt8YsuSne4MOgguRdMz1R1nG0NtragCGAXgp4pVmkMbad4wCAvdlVO8Vv+b
+         +JfA==
+X-Gm-Message-State: AOAM532BfMfuKcE0mDFq8Ub0B8kopIQAJ7YuC5MhK24vSrwfnX8KZFYw
+        TMTuCNOYcadWTdgbjilYsUw2i/VTLBjgGQ==
+X-Google-Smtp-Source: ABdhPJxLRFVCEaHmLeJyHosMqDWS805o9iE+D179fGVLbhqkMhP6G27NykhEmXWlxf/oxrS9R7cQ/A==
+X-Received: by 2002:a02:aa96:: with SMTP id u22mr477071jai.95.1634573431914;
+        Mon, 18 Oct 2021 09:10:31 -0700 (PDT)
 Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id g13sm7218434ilc.54.2021.10.18.08.25.44
+        by smtp.gmail.com with ESMTPSA id r11sm7164910ilt.83.2021.10.18.09.10.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Oct 2021 08:25:44 -0700 (PDT)
-Subject: Re: [PATCH 6/6] nvme: wire up completion batching for the IRQ path
+        Mon, 18 Oct 2021 09:10:31 -0700 (PDT)
+Subject: Re: [PATCH 07/14] block: change plugging to use a singly linked list
 To:     Christoph Hellwig <hch@infradead.org>
 Cc:     linux-block@vger.kernel.org
-References: <20211017020623.77815-1-axboe@kernel.dk>
- <20211017020623.77815-7-axboe@kernel.dk> <YW1K7RR2F+dL9ntI@infradead.org>
- <458fdc6d-e006-48fb-b66c-c4c2b631b236@kernel.dk>
- <YW2PULGTYHdb/PoP@infradead.org>
+References: <20211017013748.76461-1-axboe@kernel.dk>
+ <20211017013748.76461-8-axboe@kernel.dk> <YW08EPYhH73m7nUj@infradead.org>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2540b8f1-7cf4-e688-3a4e-8b88fee1cfff@kernel.dk>
-Date:   Mon, 18 Oct 2021 09:25:44 -0600
+Message-ID: <89a1ae23-d8e1-f4c2-a5f1-d988c2709815@kernel.dk>
+Date:   Mon, 18 Oct 2021 10:10:30 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <YW2PULGTYHdb/PoP@infradead.org>
+In-Reply-To: <YW08EPYhH73m7nUj@infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,20 +68,111 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/18/21 9:14 AM, Christoph Hellwig wrote:
-> On Mon, Oct 18, 2021 at 07:41:30AM -0600, Jens Axboe wrote:
->>> Ok, here the splitt makes sense.  That being said I'd rather only add
->>> what is nvme_poll_cq as a separate function here, and I'd probably
->>> name it __nvme_process_cq as the poll name could create some confusion.
->>
->> Sure, I can shuffle that around. Can I add your reviewed/acked by with
->> that for those two, or do you want the series resent?
+On 10/18/21 3:19 AM, Christoph Hellwig wrote:
+> On Sat, Oct 16, 2021 at 07:37:41PM -0600, Jens Axboe wrote:
+>> Use a singly linked list for the blk_plug. This saves 8 bytes in the
+>> blk_plug struct, and makes for faster list manipulations than doubly
+>> linked lists. As we don't use the doubly linked lists for anything,
+>> singly linked is just fine.
 > 
-> I'm fine with that change included:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> This patch also does a few other thing, like changing the same_queue_rq
+> type and adding a has_elevator flag to the plug.  Can you please split
+> this out and document the changes better?
 
-Great, thanks.
+I'll split it, should probably be 3 patches.
+
+> 
+>> static void blk_mq_plug_issue_direct(struct blk_plug *plug, bool from_schedule)
+>>  {
+>> +	struct blk_mq_hw_ctx *hctx = NULL;
+>> +	int queued = 0;
+>> +	int errors = 0;
+>> +
+>> +	while (!rq_list_empty(plug->mq_list)) {
+>> +		struct request *rq;
+>> +		blk_status_t ret;
+>> +
+>> +		rq = rq_list_pop(&plug->mq_list);
+>>  
+>> +		if (!hctx)
+>> +			hctx = rq->mq_hctx;
+>> +		else if (hctx != rq->mq_hctx && hctx->queue->mq_ops->commit_rqs) {
+>> +			trace_block_unplug(hctx->queue, queued, !from_schedule);
+>> +			hctx->queue->mq_ops->commit_rqs(hctx);
+>> +			queued = 0;
+>> +			hctx = rq->mq_hctx;
+>> +		}
+>> +
+>> +		ret = blk_mq_request_issue_directly(rq,
+>> +						rq_list_empty(plug->mq_list));
+>> +		if (ret != BLK_STS_OK) {
+>> +			if (ret == BLK_STS_RESOURCE ||
+>> +					ret == BLK_STS_DEV_RESOURCE) {
+>> +				blk_mq_request_bypass_insert(rq, false,
+>> +						rq_list_empty(plug->mq_list));
+>> +				break;
+>> +			}
+>> +			blk_mq_end_request(rq, ret);
+>> +			errors++;
+>> +		} else
+>> +			queued++;
+>> +	}
+> 
+> This all looks a bit messy to me.  I'd suggest reordering this a bit
+> including a new helper:
+> 
+> static void blk_mq_commit_rqs(struct blk_mq_hw_ctx *hctx, int *queued,
+> 		bool from_schedule)
+> {
+> 	if (hctx->queue->mq_ops->commit_rqs) {
+> 		trace_block_unplug(hctx->queue, *queued, !from_schedule);
+> 		hctx->queue->mq_ops->commit_rqs(hctx);
+> 	}
+> 	*queued = 0;
+> }
+> 
+> static void blk_mq_plug_issue_direct(struct blk_plug *plug, bool from_schedule)
+> {
+> 	struct blk_mq_hw_ctx *hctx = NULL;
+> 	int queued = 0;
+> 	int errors = 0;
+> 
+> 	while ((rq = rq_list_pop(&plug->mq_list))) {
+> 		bool last = rq_list_empty(plug->mq_list);
+> 		blk_status_t ret;
+> 
+> 		if (hctx != rq->mq_hctx) {
+> 			if (hctx)
+> 				blk_mq_commit_rqs(hctx, &queued, from_schedule);
+> 			hctx = rq->mq_hctx;
+> 		}
+> 
+> 		ret = blk_mq_request_issue_directly(rq, last);
+> 		switch (ret) {
+> 		case BLK_STS_OK:
+> 			queued++;
+> 			break;
+> 		case BLK_STS_RESOURCE:
+> 		case BLK_STS_DEV_RESOURCE:
+> 			blk_mq_request_bypass_insert(rq, false, last);
+> 			blk_mq_commit_rqs(hctx, &queued, from_schedule);
+> 			return;
+> 		default:
+> 			blk_mq_end_request(rq, ret);
+> 			errors++;
+> 			break;
+> 		}
+> 	}
+> 
+> 	/*
+> 	 * If we didn't flush the entire list, we could have told the driver
+> 	 * there was more coming, but that turned out to be a lie.
+> 	 */
+> 	if (errors)
+> 		blk_mq_commit_rqs(hctx, &queued, from_schedule);
+> }
+
+Good suggestion!
 
 -- 
 Jens Axboe
