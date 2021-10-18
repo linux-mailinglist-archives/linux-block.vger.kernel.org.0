@@ -2,95 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 512F7430DDB
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 04:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 406DC430DF0
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 04:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237698AbhJRCgS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 17 Oct 2021 22:36:18 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:14385 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234406AbhJRCgO (ORCPT
+        id S243039AbhJRCqH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 17 Oct 2021 22:46:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23813 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243029AbhJRCqH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 17 Oct 2021 22:36:14 -0400
-Received: from dggeme756-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HXgmh2M9qz906X;
-        Mon, 18 Oct 2021 10:29:08 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggeme756-chm.china.huawei.com
- (10.3.19.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Mon, 18
- Oct 2021 10:34:02 +0800
-From:   Zheng Liang <zhengliang6@huawei.com>
-To:     <tj@kernel.org>, <axboe@kernel.dk>
-CC:     <paolo.valente@linaro.org>, <cgroups@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <zhengliang6@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH v2] block, bfq: fix UAF problem in bfqg_stats_init()
-Date:   Mon, 18 Oct 2021 10:42:25 +0800
-Message-ID: <20211018024225.1493938-1-zhengliang6@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Sun, 17 Oct 2021 22:46:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634525035;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=24awu7awUCOKi36V9SWrgRA1ZbaOc+SStEb3sQlvlgc=;
+        b=Z+PMTp7vElYDgHojDYn7xJSRhiZs7aSI7sYyQQLwTuU3OYMJNzf9XY5QfqVW7J4rd7BGUM
+        wQ+U1AuiSoik7S3NMS2uIETtSgIkSzAMrSutEpG/Xyf+krxqkw9XoCrRu+ByI9cW3pSOJN
+        SG7VrIs0rOVdkIEMjqIaukw9n2EIasU=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-487-kLn7Ul-gNHCDwpGZi9m_PA-1; Sun, 17 Oct 2021 22:43:54 -0400
+X-MC-Unique: kLn7Ul-gNHCDwpGZi9m_PA-1
+Received: by mail-yb1-f197.google.com with SMTP id i21-20020a253b15000000b005b9c0fbba45so18399355yba.20
+        for <linux-block@vger.kernel.org>; Sun, 17 Oct 2021 19:43:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=24awu7awUCOKi36V9SWrgRA1ZbaOc+SStEb3sQlvlgc=;
+        b=g9k2JarM+ioMOuA9pt0KPIwYrQ2IB7c0nC4/fgZmvrf6yxV91UQFrcFl67alo7Vj6E
+         +9khruw1Wjk5CG2tEm954dchMkdxgCBSG+W2+FDHO9Q1AiDKpto4KjlDZgHA1+l+dY52
+         6PaC3G5Iuh5I2fxgSer7CqrSM3FKIJKPSdekZczyvyfnFSOI/dDuvJE82IWaxNd+P7ei
+         qpxD+GA+nkCTDxO5WurJIuknPxJtE4jYrAU4lpAJM4wuDhpeSjRxk1rl3KfOUDVajjbq
+         CWOaIqWnkMGqc1xG9Jsn+fxMkS6tN2KYV5W/e9ZNRubHgeczFXdc75E73ANAZLcsbRC+
+         72JQ==
+X-Gm-Message-State: AOAM531WkTDoyTG04X4OYRWpIdFBYjNFE9namYhnqwnZR+T3kp9jvxUf
+        pOIJ0Lk+//ib0uNgRR6gGxUopATVubMcE277ilqR+9ardVrhWZJSTD9WoMRbemg6eCKXzmVjGSw
+        IGEJamPT79INZ5jC3Fdy+ZSKnYFssUBj2sLYzq3U=
+X-Received: by 2002:a25:3212:: with SMTP id y18mr26370129yby.308.1634525034095;
+        Sun, 17 Oct 2021 19:43:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzs1eNssraNdT+jK9OAQ4JYVymDwppEy4Q2v5UAjOMxe1lPfmqVIgivEI4eg5P4o95MD27a2g2qp0KTSXO83K0=
+X-Received: by 2002:a25:3212:: with SMTP id y18mr26370110yby.308.1634525033886;
+ Sun, 17 Oct 2021 19:43:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggeme756-chm.china.huawei.com (10.3.19.102)
-X-CFilter-Loop: Reflected
+References: <20211014090455.7949-1-yi.zhang@redhat.com> <a24c9629-be0b-145e-414f-327ad35270e9@acm.org>
+In-Reply-To: <a24c9629-be0b-145e-414f-327ad35270e9@acm.org>
+From:   Yi Zhang <yi.zhang@redhat.com>
+Date:   Mon, 18 Oct 2021 10:43:42 +0800
+Message-ID: <CAHj4cs9HXs0+jHPdUZ53TWjeYOTKw_9M59qNPHHQY=n4=pqnoA@mail.gmail.com>
+Subject: Re: [PATCH blktests] tests/srp: fix module loading issue during srp tests
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Omar Sandoval <osandov@osandov.com>,
+        linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In bfq_pd_alloc(), the function bfqg_stats_init() init bfqg. If
-blkg_rwstat_init() init bfqg_stats->bytes successful and init
-bfqg_stats->ios failed, bfqg_stats_init() return failed, bfqg will
-be freed. But blkg_rwstat->cpu_cnt is not deleted from the list of
-percpu_counters. If we traverse the list of percpu_counters, It will
-have UAF problem.
+On Fri, Oct 15, 2021 at 11:30 AM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 10/14/21 02:04, Yi Zhang wrote:
+> > diff --git a/tests/srp/rc b/tests/srp/rc
+> > index 586f007..f89948b 100755
+> > --- a/tests/srp/rc
+> > +++ b/tests/srp/rc
+> > @@ -494,6 +494,7 @@ start_lio_srpt() {
+> >       if modinfo ib_srpt | grep -q '^parm:[[:blank:]]*rdma_cm_port:'; then
+> >               opts+=("rdma_cm_port=${srp_rdma_cm_port}")
+> >       fi
+> > +     unload_module ib_srpt && \
+> >       insmod "/lib/modules/$(uname -r)/kernel/drivers/infiniband/ulp/srpt/ib_srpt."* "${opts[@]}" || return $?
+>
+> A nit: the backslash after && can be removed.
+>
 
-we should use blkg_rwstat_exit() to cleanup bfqg_stats bytes in the
-above scenario.
+Thanks Bart, I've sent V2 to fix it.
 
-Fixes: commit fd41e60331b ("bfq-iosched: stop using blkg->stat_bytes and ->stat_ios")
-Signed-off-by: Zheng Liang <zhengliang6@huawei.com>
----
-Changes since v1:
-    Change some description for this patch
----
- block/bfq-cgroup.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+> Otherwise this patch looks fine to me.
+>
+> Thanks,
+>
+> Bart.
+>
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index e2f14508f2d6..243ffbc1f106 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -463,7 +463,7 @@ static int bfqg_stats_init(struct bfqg_stats *stats, gfp_t gfp)
- {
- 	if (blkg_rwstat_init(&stats->bytes, gfp) ||
- 	    blkg_rwstat_init(&stats->ios, gfp))
--		return -ENOMEM;
-+		goto error;
- 
- #ifdef CONFIG_BFQ_CGROUP_DEBUG
- 	if (blkg_rwstat_init(&stats->merged, gfp) ||
-@@ -476,13 +476,15 @@ static int bfqg_stats_init(struct bfqg_stats *stats, gfp_t gfp)
- 	    bfq_stat_init(&stats->dequeue, gfp) ||
- 	    bfq_stat_init(&stats->group_wait_time, gfp) ||
- 	    bfq_stat_init(&stats->idle_time, gfp) ||
--	    bfq_stat_init(&stats->empty_time, gfp)) {
--		bfqg_stats_exit(stats);
--		return -ENOMEM;
--	}
-+	    bfq_stat_init(&stats->empty_time, gfp))
-+		goto error;
- #endif
- 
- 	return 0;
-+
-+error:
-+	bfqg_stats_exit(stats);
-+	return -ENOMEM;
- }
- 
- static struct bfq_group_data *cpd_to_bfqgd(struct blkcg_policy_data *cpd)
+
 -- 
-2.25.4
+Best Regards,
+  Yi Zhang
 
