@@ -2,110 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB6C9431187
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 09:44:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1CD2431205
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 10:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230326AbhJRHqx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Oct 2021 03:46:53 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:33280 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbhJRHqx (ORCPT
+        id S230469AbhJRITb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Oct 2021 04:19:31 -0400
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21404 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231180AbhJRITb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Oct 2021 03:46:53 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 7A87721A6B;
-        Mon, 18 Oct 2021 07:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1634543081; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uRitaSdTVQaJHWkcEYYfsZh1e5H5O4Y2u6C6EN9RHZw=;
-        b=gUoGOZZobYJpoYjwU2IYPymMA2YuQ+2qgz7MpnioolDyxfQi34gjYGErciu7THulCvDIqH
-        E7qmjTjvluoTqPaG4qvEl19HG8kMSL6uyXSBA/+xPDdly7aws8Gi9L8GNw+9p5mYyMAd4V
-        djR7gC7CKd0VOHwEq/c5fpRQ7D+qZ2o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1634543081;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uRitaSdTVQaJHWkcEYYfsZh1e5H5O4Y2u6C6EN9RHZw=;
-        b=fIfevUhOPCPCtiqRALZ1/X9QKxZrhIYuKH49E96y7E0LnvrY8Z1tbgxJtHXE3fpRTpSYki
-        Fq56TopyYm6xSyBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 504DD13CC9;
-        Mon, 18 Oct 2021 07:44:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id wgNzEuklbWFDFgAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Mon, 18 Oct 2021 07:44:41 +0000
-Message-ID: <11b2fa69-ebcf-fec4-73e5-51ada24c5aaf@suse.cz>
-Date:   Mon, 18 Oct 2021 09:44:40 +0200
+        Mon, 18 Oct 2021 04:19:31 -0400
+X-Greylist: delayed 910 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Oct 2021 04:19:31 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1634544036; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=ARM3XR8ozbk5ZKj0o0HG2ck/7mjnAPp4awkkTw3VapiUpDnPJ9qBxfM0tRgqxaqk/JdjUC4lVy8jVAruMw9H99mGYUNd27FTYYu2Q8o7wzVFz7GH9ExR1ACawGXRRVeAJO8g6LRUAtwz8hcZmM4LnYMu8bFL1X5jSZ9KzPJo8DM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1634544036; h=Content-Type:Cc:Date:From:MIME-Version:Message-ID:Reply-To:Subject:To; 
+        bh=h49ZUkYbpHvFgd4ygOJoSWfJB1R1I4UzMaRy7bssn/0=; 
+        b=juUmx1ezfKgDa8C/3MBdDsGgAISJpdNYMNRQtFIwuTn1mU+m+WN/HYZPc2r4grhZ/eqkfNhL6xth1SZsFZmK4/FOSVO4Ct3HwxMaw+o/cXofRlvIZVEQqKxWDmZJViKXxFD/nGAqmCRZmLLOAyC39ZB220p7Hz6STsQdEPnuwz0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        spf=pass  smtp.mailfrom=www@aegistudio.net;
+        dmarc=pass header.from=<www@aegistudio.net>
+Received: from aegistudio (115.216.104.229 [115.216.104.229]) by mx.zohomail.com
+        with SMTPS id 1634544032608898.571502480912; Mon, 18 Oct 2021 01:00:32 -0700 (PDT)
+Date:   Mon, 18 Oct 2021 08:00:27 +0000
+From:   Haoran Luo <www@aegistudio.net>
+To:     zhangyoufu@gmail.com
+Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, tj@kernel.org
+Subject: Re: [BUG] blk-throttle panic on 32bit machine after startup
+Message-ID: <YW0pm5xcxgWnW98f@aegistudio>
+Reply-To: CAEKhA2x1Qi3Ywaj9fzdsaChabqDSMe2m2441wReg_V=39_Cuhg@mail.gmail.com
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Content-Language: en-US
-To:     Kent Overstreet <kent.overstreet@gmail.com>,
-        David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, linux-raid@vger.kernel.org,
-        linux-block@vger.kernel.org, axboe@kernel.dk,
-        alexander.h.duyck@linux.intel.com,
-        David Rientjes <rientjes@google.com>
-References: <20211013160034.3472923-1-kent.overstreet@gmail.com>
- <20211013160034.3472923-2-kent.overstreet@gmail.com>
- <e29733c7-e65a-935a-4e05-3a060240ea5a@redhat.com>
- <YWhCp/lKbJS9XSqn@moria.home.lan>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 1/5] mm: Make free_area->nr_free per migratetype
-In-Reply-To: <YWhCp/lKbJS9XSqn@moria.home.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ZohoMailClient: External
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/14/21 16:45, Kent Overstreet wrote:
-> On Wed, Oct 13, 2021 at 06:33:06PM +0200, David Hildenbrand wrote:
->> > @@ -9317,6 +9319,7 @@ void __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
->> >  	struct page *page;
->> >  	struct zone *zone;
->> >  	unsigned int order;
->> > +	unsigned int migratetype;
->> >  	unsigned long flags;
->> >  
->> >  	offline_mem_sections(pfn, end_pfn);
->> > @@ -9346,7 +9349,8 @@ void __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
->> >  		BUG_ON(page_count(page));
->> >  		BUG_ON(!PageBuddy(page));
->> >  		order = buddy_order(page);
->> > -		del_page_from_free_list(page, zone, order);
->> > +		migratetype = get_pfnblock_migratetype(page, pfn);
->> 
->> As the free pages are isolated, theoretically this should be
->> MIGRATE_ISOLATE.
-> 
-> Thanks for noticing that - I somehow missed the fact that pageblock migratetypes
-> change at runtime,
+(Sorry for the garbled message due to my mistaken the configuration of mutt)
 
-Not only that. Buddy merging will also merge pages from different
-migratetypes. I think that's the main reason why nr_free is not per
-migratetype. Your patch has been attempted few times already, e.g. here [1].
+I'm the college of the reporter and I would like to provide more
+information.
 
-[1]
-https://lore.kernel.org/all/alpine.DEB.2.10.1611161731350.17379@chino.kir.corp.google.com/
+The code in 5.15-rc6 in "blk-throttle.c" around line 791 is written as
+below:
 
-> so my patch is wrong. I'm going to have to rework my patch to
-> store the migratetype of free pages in the page itself.
+	/*
+	 * Previous slice has expired. We must have trimmed it after
+	 * last
+	 * bio dispatch. That means since start of last slice, we never
+	 * used
+	 * that bandwidth. Do try to make use of that bandwidth while
+	 * giving
+	 * credit.
+	 */
+	if (time_after_eq(start, tg->slice_start[rw]))
+		tg->slice_start[rw] = start;
 
-Yeah that would be the solution. Will likely bring some overhead to
-alloc/free fastpaths, which would have to be worth it, so nobody attempted it.
-
-
+I think this piece of code presumes all jiffies values are greater than
+0, which is the initial value assigned when kzalloc-ing throtl_grp. It
+fails on 32-bit linux for the first 5 minutes after booting, since the
+jiffies value then will be less than 0.
