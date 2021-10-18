@@ -2,46 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5E3A431581
-	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 12:14:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EE7A4315BD
+	for <lists+linux-block@lfdr.de>; Mon, 18 Oct 2021 12:17:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231517AbhJRKQN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Oct 2021 06:16:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:33175 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231907AbhJRKPD (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Oct 2021 06:15:03 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 39B2068AFE; Mon, 18 Oct 2021 12:12:50 +0200 (CEST)
-Date:   Mon, 18 Oct 2021 12:12:50 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Zqiang <qiang.zhang1211@gmail.com>
-Cc:     axboe@kernel.dk, hch@lst.de, willy@infradead.org,
-        sunhao.th@gmail.com, hch@infradead.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: fix incorrect references to disk objects
-Message-ID: <20211018101250.GA6754@lst.de>
-References: <20211018091116.16874-1-qiang.zhang1211@gmail.com>
+        id S229714AbhJRKTL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Oct 2021 06:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231480AbhJRKTG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Mon, 18 Oct 2021 06:19:06 -0400
+Received: from bombadil.infradead.org (unknown [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7388C0617AB
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 03:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JNkYBR1cUnWL9qB3sXUo+Ez1w3yqDn6fqjYIclntqoo=; b=FNoSMUIUdWJExxlEBtTC8aFNIf
+        BLnfLY+A3UbEZat8dKrFHXL1G2fG8KN0DjkrY+cRCyPsLeWo6ecbwtfwILgC/aD5QiFwL7+R8p+ZW
+        eec7PLlh4c545JEVg5h6QvUR4UZ7uBfNodUHa6JQFkH+yDlCKe8n6McecHigbYMM2Z+AIxeymPOST
+        KDAvWCz3ZFNWfSpyDJzvZCyW/hB0ZFC4hYk7HRh8fiVVWVZkhXw6+nXt295YF0/w5RV6cCN6Ptnp7
+        0ho5H/y7VsxZydlv5tPUaqnrLYrY92ov2GpcPmo/3nI/RZfrzoJongQzbwktk0VPRLx8o3AgDf72f
+        fv2qwCSw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mcPgk-00Ex0a-DI; Mon, 18 Oct 2021 10:16:14 +0000
+Date:   Mon, 18 Oct 2021 03:16:14 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org
+Subject: Re: [PATCH 1/6] block: add a struct io_comp_batch argument to
+ fops->iopoll()
+Message-ID: <YW1JbjL3LT6Ah/89@infradead.org>
+References: <20211017020623.77815-1-axboe@kernel.dk>
+ <20211017020623.77815-2-axboe@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211018091116.16874-1-qiang.zhang1211@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20211017020623.77815-2-axboe@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 05:11:16PM +0800, Zqiang wrote:
-> --- a/block/partitions/core.c
-> +++ b/block/partitions/core.c
-> @@ -424,6 +424,7 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
->  	device_del(pdev);
->  out_put:
->  	put_device(pdev);
-> +	disk = NULL;
->  out_put_disk:
->  	put_disk(disk);
->  	return ERR_PTR(err);
+> -int blk_mq_poll(struct request_queue *q, blk_qc_t cookie, unsigned int flags)
+> +int blk_mq_poll(struct request_queue *q, blk_qc_t cookie, struct io_comp_batch *iob,
 
-Stylistic nitpick:  I think directly returning where this currently
-clears disk would be a little easier to follow.
+> +int blk_mq_poll(struct request_queue *q, blk_qc_t cookie, struct io_comp_batch *iob,
+> +		unsigned int flags);
+
+> +	int (*iopoll)(struct kiocb *kiocb, struct io_comp_batch *, unsigned int flags);
+
+Please avoid overly long lines like this.
+
+Otherwise looks good:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
