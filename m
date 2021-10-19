@@ -2,194 +2,200 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DDD0432BCA
-	for <lists+linux-block@lfdr.de>; Tue, 19 Oct 2021 04:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F817432BF2
+	for <lists+linux-block@lfdr.de>; Tue, 19 Oct 2021 04:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbhJSCbS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Oct 2021 22:31:18 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:14826 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231479AbhJSCbR (ORCPT
+        id S229733AbhJSCyO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Oct 2021 22:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229663AbhJSCyN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Oct 2021 22:31:17 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HYHcS0hhCz90Jb;
-        Tue, 19 Oct 2021 10:24:08 +0800 (CST)
-Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.15; Tue, 19 Oct 2021 10:28:58 +0800
-Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
- (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Tue, 19
- Oct 2021 10:28:57 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <tj@kernel.org>, <axboe@kernel.dk>, <paolo.valente@linaro.org>,
-        <avanzini.arianna@gmail.com>, <fchecconi@gmail.com>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH v3 -next 2/2] blk-cgroup: synchoronize blkg creation against policy deactivation
-Date:   Tue, 19 Oct 2021 10:41:32 +0800
-Message-ID: <20211019024132.432458-3-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211019024132.432458-1-yukuai3@huawei.com>
-References: <20211019024132.432458-1-yukuai3@huawei.com>
+        Mon, 18 Oct 2021 22:54:13 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D75D2C06161C
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 19:52:01 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id y17so16991913ilb.9
+        for <linux-block@vger.kernel.org>; Mon, 18 Oct 2021 19:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BfDF92TeEHTQxP8bLh/wY0OUZohtrtucbaSeGErVLVk=;
+        b=fMC4T404AW7PGwZmyTS+GDirNUFC+RzwBRdY0Y8L+KOJVhzpl227NJZKHyg9tgnexw
+         Gmj7gSRCIpx7QAdmzfWNVcM9V261jMh68yvD773eGzXYoAEDuJeJZmkAPyY8gWR3Wd7c
+         G9leyIl2fiI0mD8yjOQ1p0DX9C8NWVuju548csw/566zC+vIYJ+IRWeDn0nYz0OAHu15
+         A6sWchujZZBMuCP+GnzcyDypRZolpYm2RkuDGvOVmNLCu0u580Q3fqs9QLK0Gb4D8+AO
+         4YiYjHRsqlEtKnvW+ZpAkE19xaK8K0HU6PMD1qDcI9OSBPPAgi7l48Q2Y0vf57NokLF2
+         +ZnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BfDF92TeEHTQxP8bLh/wY0OUZohtrtucbaSeGErVLVk=;
+        b=2qAJbRYpUTBQeuK/D4enRSdkihZzzoolb4VpXZSYlXVsaToVhH4o/rlNxX8L6dyS0y
+         GxtphJ7IBoVPxtaQj36ZmFp06vpNXXTkEqR9gNfHba3hlPKDeYlzbAmwQmSRYJO4FjNy
+         SY1R00hQ8qTBsdCyhXNL9B6z7wJmYr1JuKf4UExqG0mSBT/tr6Y993+mq/g6d1Pwsude
+         ll26cnbBY59m2zk4g/RvxmnBbmcf2RjLETQpwI38a57+D9iJA0bTMxtCBSTSMEWI9IEg
+         iRL4BakS7QLmZoBUpwCdxoggt7+uYPoGlrV6eI9xXO/U5mj/uKQnVtGXzRlOapFqgPFz
+         TJ9g==
+X-Gm-Message-State: AOAM531OtC1w+rUu1iK3gQVjtQf15aEpBga5wZK3sgo+4SkFDjC97OZE
+        CAbEQeY/1V7M4Bnv+7BmaD03Ng==
+X-Google-Smtp-Source: ABdhPJzHPrylDUZvb36mcwtMAOgJTM50sYq14uXZCtRLHrnLno2gBFmrakq+0o671I9Ek9ruzJKhlA==
+X-Received: by 2002:a05:6e02:158c:: with SMTP id m12mr16671792ilu.64.1634611920795;
+        Mon, 18 Oct 2021 19:52:00 -0700 (PDT)
+Received: from [192.168.1.116] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id m2sm7920264ilg.72.2021.10.18.19.51.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Oct 2021 19:52:00 -0700 (PDT)
+Subject: =?UTF-8?Q?Re=3a_=f0=9f=92=a5_PANICKED=3a_Waiting_for_review=3a_Test?=
+ =?UTF-8?Q?_report_for_kernel_5=2e15=2e0-rc6_=28block=2c_1983520d=29?=
+To:     Yi Zhang <yi.zhang@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>
+Cc:     skt-results-master@redhat.com,
+        CKI Project <cki-project@redhat.com>,
+        Changhui Zhong <czhong@redhat.com>,
+        Bruno Goncalves <bgoncalv@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>
+References: <cki.1BB6AA01C6.FWO6ZHIQNG@redhat.com>
+ <CAHj4cs_3MSAHXaxwwCreLhpL7c+Tak4+y-Hv_Ld7kDT0ZbCRtw@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8543f0bf-66b8-8688-313a-0d9e21fce184@kernel.dk>
+Date:   Mon, 18 Oct 2021 20:51:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggema762-chm.china.huawei.com (10.1.198.204)
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAHj4cs_3MSAHXaxwwCreLhpL7c+Tak4+y-Hv_Ld7kDT0ZbCRtw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Out test report a null pointer dereference:
+On 10/18/21 8:13 PM, Yi Zhang wrote:
+> Hello
+> 
+> With this commit, the servers boots with NULL pointer[1], pls help check it.
+> 
+>>        Kernel repo: https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
+>>             Commit: 1983520d28d8 - Merge branch 'for-5.16/io_uring' into for-next
+> [1]
+> [    8.614036] Kernel attempted to read user page (f) - exploit
+> attempt? (uid: 0)
+> [    8.614071] BUG: Kernel NULL pointer dereference on read at 0x0000000f
+> [    8.614099] Faulting instruction address: 0xc00000000093b5b4
+> [    8.614118] Oops: Kernel access of bad area, sig: 11 [#1]
+> [    8.614143] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA PowerNV
+> [    8.614192] Modules linked in: zram ip_tables ast i2c_algo_bit
+> drm_vram_helper drm_kms_helper syscopyarea sysfillrect sysimgblt
+> fb_sys_fops cec drm_ttm_helper ttm drm vmx_crypto crc32c_vpmsum
+> i2c_core drm_panel_orientation_quirks
+> [    8.614285] CPU: 52 PID: 0 Comm: swapper/52 Not tainted 5.15.0-rc6+ #1
+> [    8.614323] NIP:  c00000000093b5b4 LR: c00000000093b5a4 CTR: c000000000972c50
+> [    8.614371] REGS: c000000018d3b430 TRAP: 0300   Not tainted  (5.15.0-rc6+)
+> [    8.614409] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR:
+> 44004284  XER: 00000000
+> [    8.614464] CFAR: c000000000972cd0 DAR: 000000000000000f DSISR:
+> 40000000 IRQMASK: 1
+> [    8.614464] GPR00: c00000000093b5a4 c000000018d3b6d0
+> c0000000028aa100 c000000044582a00
+> [    8.614464] GPR04: 00000000ffff8e2c 0000000000000001
+> 0000000000000004 c000000001212930
+> [    8.614464] GPR08: 00000000000001d7 0000000000000007
+> c000000044361f80 0000000000000000
+> [    8.614464] GPR12: c000000000972c50 c000001ffffa7200
+> 0000000000000000 0000000000000100
+> [    8.614464] GPR16: 0000000000000004 0000000004200042
+> 0000000000000000 0000000000000001
+> [    8.614464] GPR20: c0000000028d3a00 c000000002167888
+> 00000000ffff8e2d c000000002167888
+> [    8.614464] GPR24: c0000000021f0580 0000000000000001
+> c000000044582ae0 0000000000000801
+> [    8.614464] GPR28: c000000044361f80 c000000044361f80
+> c00000003b81f800 c000000044582a00
+> [    8.614852] NIP [c00000000093b5b4] blk_mq_free_request+0x74/0x210
+> [    8.614898] LR [c00000000093b5a4] blk_mq_free_request+0x64/0x210
+> [    8.614942] Call Trace:
+> [    8.614961] [c000000018d3b6d0] [c00000000093b8ec]
+> __blk_mq_end_request+0x19c/0x1d0 (unreliable)
+> [    8.615020] [c000000018d3b710] [c00000000092fdfc]
+> blk_flush_complete_seq+0x1ac/0x3d0
+> [    8.615077] [c000000018d3b770] [c0000000009302dc] flush_end_io+0x2bc/0x390
+> [    8.615122] [c000000018d3b7d0] [c00000000093b7cc]
+> __blk_mq_end_request+0x7c/0x1d0
+> [    8.615174] [c000000018d3b810] [c000000000c20684]
+> scsi_end_request+0x124/0x270
+> [    8.615228] [c000000018d3b860] [c000000000c21458]
+> scsi_io_completion+0x1f8/0x740
+> [    8.615250] [c000000018d3b900] [c000000000c13e14]
+> scsi_finish_command+0x134/0x190
+> [    8.615292] [c000000018d3b990] [c000000000c21068] scsi_complete+0xa8/0x200
+> [    8.615345] [c000000018d3ba10] [c000000000939870] blk_complete_reqs+0x80/0xa0
+> [    8.615409] [c000000018d3ba40] [c00000000115dfe0] __do_softirq+0x170/0x3fc
+> [    8.615475] [c000000018d3bb30] [c00000000015df38] __irq_exit_rcu+0x168/0x1a0
+> [    8.615535] [c000000018d3bb60] [c00000000015e140] irq_exit+0x20/0x40
+> [    8.615583] [c000000018d3bb80] [c000000000054670]
+> doorbell_exception+0x120/0x300
+> [    8.615616] [c000000018d3bbc0] [c000000000016cc4]
+> replay_soft_interrupts+0x1e4/0x2c0
+> [    8.615639] [c000000018d3bda0] [c000000000016ed8]
+> arch_local_irq_restore+0x138/0x1a0
+> [    8.615694] [c000000018d3bdd0] [c000000000de1714]
+> cpuidle_enter_state+0x104/0x540
+> [    8.615741] [c000000018d3be30] [c000000000de1bec] cpuidle_enter+0x4c/0x70
+> [    8.615795] [c000000018d3be70] [c0000000001aef18] do_idle+0x2f8/0x3f0
+> [    8.615839] [c000000018d3bf00] [c0000000001af238] cpu_startup_entry+0x38/0x40
+> [    8.615901] [c000000018d3bf30] [c00000000005be6c] start_secondary+0x29c/0x2b0
+> [    8.615969] [c000000018d3bf90] [c00000000000d254]
+> start_secondary_prolog+0x10/0x14
+> [    8.616025] Instruction dump:
+> [    8.616074] 41820048 e93d0008 e9290000 e9890068 2c2c0000 41820010
+> 7d8903a6 4e800421
+> [    8.616136] e8410018 e93f00d8 2c290000 41820140 <e8690008> 4bff6b91
+> 60000000 39400000
+> [    8.616184] ---[ end trace cc3215be892e1be7 ]---
+> [    8.644628] systemd-journald[1408]: Received client request to
+> flush runtime journal.
+> [  OK  ] Finished Create Static Device Nodes in /dev.
+>          Starting Rule-based Manage…for Device Events and Files...
+> [  OK  ] Finished Coldplug All udev Devices.
+>          Starting Wait for udev To …plete Device Initialization...
+> [    8.690954] fuse: init (API version 7.34)
+> [  OK  ] Finished Load Kernel Module fuse.
+> [    8.694411]
+>          Mounting FUSE Control File System...
+> [  OK  ] Mounted FUSE Control File System.
+> [  OK  ] Started Rule-based Manager for Device Events and Files.
+>          Starting Load Kernel Module configfs...
+> [  OK  ] Finished Load Kernel Module configfs.
+> [    8.950307] IPMI message handler: version 39.2
+> [  OK  ] Found device /dev/zram0.
+>          Starting Create swap on /dev/zram0...
+> [    9.008355] zram0: detected capacity change from 0 to 16777216
+> [    9.694430] Kernel panic - not syncing: Aiee, killing interrupt handler!
+> [   11.080031] ---[ end Kernel panic - not syncing: Aiee, killing
+> interrupt handler! ]---
 
-[  168.534653] ==================================================================
-[  168.535614] Disabling lock debugging due to kernel taint
-[  168.536346] BUG: kernel NULL pointer dereference, address: 0000000000000008
-[  168.537274] #PF: supervisor read access in kernel mode
-[  168.537964] #PF: error_code(0x0000) - not-present page
-[  168.538667] PGD 0 P4D 0
-[  168.539025] Oops: 0000 [#1] PREEMPT SMP KASAN
-[  168.539656] CPU: 13 PID: 759 Comm: bash Tainted: G    B             5.15.0-rc2-next-202100
-[  168.540954] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_0738364
-[  168.542736] RIP: 0010:bfq_pd_init+0x88/0x1e0
-[  168.543318] Code: 98 00 00 00 e8 c9 e4 5b ff 4c 8b 65 00 49 8d 7c 24 08 e8 bb e4 5b ff 4d0
-[  168.545803] RSP: 0018:ffff88817095f9c0 EFLAGS: 00010002
-[  168.546497] RAX: 0000000000000001 RBX: ffff888101a1c000 RCX: 0000000000000000
-[  168.547438] RDX: 0000000000000003 RSI: 0000000000000002 RDI: ffff888106553428
-[  168.548402] RBP: ffff888106553400 R08: ffffffff961bcaf4 R09: 0000000000000001
-[  168.549365] R10: ffffffffa2e16c27 R11: fffffbfff45c2d84 R12: 0000000000000000
-[  168.550291] R13: ffff888101a1c098 R14: ffff88810c7a08c8 R15: ffffffffa55541a0
-[  168.551221] FS:  00007fac75227700(0000) GS:ffff88839ba80000(0000) knlGS:0000000000000000
-[  168.552278] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  168.553040] CR2: 0000000000000008 CR3: 0000000165ce7000 CR4: 00000000000006e0
-[  168.554000] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  168.554929] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  168.555888] Call Trace:
-[  168.556221]  <TASK>
-[  168.556510]  blkg_create+0x1c0/0x8c0
-[  168.556989]  blkg_conf_prep+0x574/0x650
-[  168.557502]  ? stack_trace_save+0x99/0xd0
-[  168.558033]  ? blkcg_conf_open_bdev+0x1b0/0x1b0
-[  168.558629]  tg_set_conf.constprop.0+0xb9/0x280
-[  168.559231]  ? kasan_set_track+0x29/0x40
-[  168.559758]  ? kasan_set_free_info+0x30/0x60
-[  168.560344]  ? tg_set_limit+0xae0/0xae0
-[  168.560853]  ? do_sys_openat2+0x33b/0x640
-[  168.561383]  ? do_sys_open+0xa2/0x100
-[  168.561877]  ? __x64_sys_open+0x4e/0x60
-[  168.562383]  ? __kasan_check_write+0x20/0x30
-[  168.562951]  ? copyin+0x48/0x70
-[  168.563390]  ? _copy_from_iter+0x234/0x9e0
-[  168.563948]  tg_set_conf_u64+0x17/0x20
-[  168.564467]  cgroup_file_write+0x1ad/0x380
-[  168.565014]  ? cgroup_file_poll+0x80/0x80
-[  168.565568]  ? __mutex_lock_slowpath+0x30/0x30
-[  168.566165]  ? pgd_free+0x100/0x160
-[  168.566649]  kernfs_fop_write_iter+0x21d/0x340
-[  168.567246]  ? cgroup_file_poll+0x80/0x80
-[  168.567796]  new_sync_write+0x29f/0x3c0
-[  168.568314]  ? new_sync_read+0x410/0x410
-[  168.568840]  ? __handle_mm_fault+0x1c97/0x2d80
-[  168.569425]  ? copy_page_range+0x2b10/0x2b10
-[  168.570007]  ? _raw_read_lock_bh+0xa0/0xa0
-[  168.570622]  vfs_write+0x46e/0x630
-[  168.571091]  ksys_write+0xcd/0x1e0
-[  168.571563]  ? __x64_sys_read+0x60/0x60
-[  168.572081]  ? __kasan_check_write+0x20/0x30
-[  168.572659]  ? do_user_addr_fault+0x446/0xff0
-[  168.573264]  __x64_sys_write+0x46/0x60
-[  168.573774]  do_syscall_64+0x35/0x80
-[  168.574264]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[  168.574960] RIP: 0033:0x7fac74915130
-[  168.575456] Code: 73 01 c3 48 8b 0d 58 ed 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 444
-[  168.577969] RSP: 002b:00007ffc3080e288 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  168.578986] RAX: ffffffffffffffda RBX: 0000000000000009 RCX: 00007fac74915130
-[  168.579937] RDX: 0000000000000009 RSI: 000056007669f080 RDI: 0000000000000001
-[  168.580884] RBP: 000056007669f080 R08: 000000000000000a R09: 00007fac75227700
-[  168.581841] R10: 000056007655c8f0 R11: 0000000000000246 R12: 0000000000000009
-[  168.582796] R13: 0000000000000001 R14: 00007fac74be55e0 R15: 00007fac74be08c0
-[  168.583757]  </TASK>
-[  168.584063] Modules linked in:
-[  168.584494] CR2: 0000000000000008
-[  168.584964] ---[ end trace 2475611ad0f77a1a ]---
+Can you try this?
 
-This is because blkg_alloc() is called from blkg_conf_prep() without
-holding 'q->queue_lock', and elevator is exited before blkg_create():
 
-thread 1                            thread 2
-blkg_conf_prep
- spin_lock_irq(&q->queue_lock);
- blkg_lookup_check -> return NULL
- spin_unlock_irq(&q->queue_lock);
-
- blkg_alloc
-  blkcg_policy_enabled -> true
-  pd = ->pd_alloc_fn
-  blkg->pd[i] = pd
-                                   blk_mq_exit_sched
-                                    bfq_exit_queue
-                                     blkcg_deactivate_policy
-                                      spin_lock_irq(&q->queue_lock);
-                                      __clear_bit(pol->plid, q->blkcg_pols);
-                                      spin_unlock_irq(&q->queue_lock);
-                                    q->elevator = NULL;
-  spin_lock_irq(&q->queue_lock);
-   blkg_create
-    if (blkg->pd[i])
-     ->pd_init_fn -> q->elevator is NULL
-  spin_unlock_irq(&q->queue_lock);
-
-Because blkcg_deactivate_policy() require queue to be freezed, thus grab
-q_usage_counter to synchoronize blkg_conf_prep() against
-blkcg_deactivate_policy().
-
-Fixes: e21b7a0b9887 ("block, bfq: add full hierarchical scheduling and cgroups support")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-cgroup.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index ca60233c8392..e11b7e28b1b2 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -634,6 +634,14 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+diff --git a/block/blk-flush.c b/block/blk-flush.c
+index 4201728bf3a5..e9c0b300a177 100644
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -129,6 +129,9 @@ static void blk_flush_restore_request(struct request *rq)
+ 	/* make @rq a normal request */
+ 	rq->rq_flags &= ~RQF_FLUSH_SEQ;
+ 	rq->end_io = rq->flush.saved_end_io;
++	/* clear pointers overlapping with flush data */
++	rq->elv.icq = NULL;
++	rq->elv.priv[0] = rq->elv.priv[1] = NULL;
+ }
  
- 	q = bdev_get_queue(bdev);
- 
-+	/*
-+	 * blkcg_deactivate_policy() require queue to be freezed, thus grab
-+	 * q_usage_counter to prevent concurrent with blkcg_deactivate_policy().
-+	 */
-+	ret = blk_queue_enter(q, 0);
-+	if (ret)
-+		return ret;
-+
- 	rcu_read_lock();
- 	spin_lock_irq(&q->queue_lock);
- 
-@@ -703,6 +711,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
- 			goto success;
- 	}
- success:
-+	blk_queue_exit(q);
- 	ctx->bdev = bdev;
- 	ctx->blkg = blkg;
- 	ctx->body = input;
-@@ -715,6 +724,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
- 	rcu_read_unlock();
- fail:
- 	blkdev_put_no_open(bdev);
-+	blk_queue_exit(q);
- 	/*
- 	 * If queue was bypassing, we should retry.  Do so after a
- 	 * short msleep().  It isn't strictly necessary but queue
+ static void blk_flush_queue_rq(struct request *rq, bool add_front)
+
 -- 
-2.31.1
+Jens Axboe
 
