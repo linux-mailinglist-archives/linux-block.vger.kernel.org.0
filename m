@@ -2,279 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51E85435343
-	for <lists+linux-block@lfdr.de>; Wed, 20 Oct 2021 20:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3984435358
+	for <lists+linux-block@lfdr.de>; Wed, 20 Oct 2021 21:01:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231338AbhJTS6X (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Oct 2021 14:58:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
+        id S231531AbhJTTDR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Oct 2021 15:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230290AbhJTS6W (ORCPT
+        with ESMTP id S231462AbhJTTDN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Oct 2021 14:58:22 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16ACEC061749
-        for <linux-block@vger.kernel.org>; Wed, 20 Oct 2021 11:56:08 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id s17so25857578ioa.13
-        for <linux-block@vger.kernel.org>; Wed, 20 Oct 2021 11:56:08 -0700 (PDT)
+        Wed, 20 Oct 2021 15:03:13 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC00CC06161C
+        for <linux-block@vger.kernel.org>; Wed, 20 Oct 2021 12:00:58 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id g39so16520768wmp.3
+        for <linux-block@vger.kernel.org>; Wed, 20 Oct 2021 12:00:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sBiOVQO8Jkvj1cgLTkB6Z1YHjRkBGEmLvET6u6LAmpE=;
-        b=YTsDhaEGwMWn4tv3nQjUWRWSTsxOWZOlBVJ089eVjW1mc2f3ceCC1rbVNMf4rc9t4+
-         NIbTyXwng8wWYSCQRcWSzKlgGWYriJbN0MOq+UB4zjs+BZ17TPSGXoVN0XltopNe3SS4
-         hddAqA2G59DpqQE86vD/P/K2DIUArmCWzOZnz70d5L/cXG6MLrQe5Qs+Em+QucD7q5jf
-         5KZZ1CHp8Ft2N9Z9Y5bYaBuPVCk60tEjsliPSAmM1Vnag+zaShIfLBeuGSBm0QQefi5u
-         WyVPK9ZoFQ+OrqQF+VxpjJbA7S1rXU0Y9o7Dx3Drym/6AkU866nGRC75Nwp8Dv+twXgP
-         OgfQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YkHR5tnSmFS8v9UaEJKNF1V4DmYKxDB/n+XexR2baqA=;
+        b=e7FXgItEgqey1DKi5+SsUDbR7knx8oiBZo+UcjlEfgVXS8p9YheOQ3+L3+GQJo8jGr
+         BQKNIU0xNUVv5989Wi0vccazmR7s8TbqL8sDZ70gOpX3IucH4/i2MBmpwdOuyHbqg10Z
+         5/0yleCqeBdGmosU7gfhaNfkc0AfaV8YChGIunH2bBA19aIWQ3jaEPuo/cMD+d6JyoGX
+         YtR/ojVr6TqbKgq2fq/CevRIQmR/5J4qCaYj2U3cB77nLmR2uOCkRTlc4Zf89Jz9M6Sh
+         0TQ3WsyOOWF1T4ZvJfrROsK0hW5fvFAv77KUI3qzfmSnqQzrALRlfC56FZLJzdWE1B9U
+         VRZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=sBiOVQO8Jkvj1cgLTkB6Z1YHjRkBGEmLvET6u6LAmpE=;
-        b=GKhkuOdhVyqjwuIIYRHI5DdwviwQvThny92O4QRSuiaeVO/UaQZT5GFiQQEGFyOmJX
-         XLrPobSowVtilIpIuVl1PH2y+iywG6OEfUu0NqpjR63rD2g0YVYXKygoauoTkVYmXD9o
-         s36WrhNpxNeRqwWsLTaDr4IekCjHSYjqjuUv61NzauBNO3KpBqjGlGi//vnR4+uiY5/Q
-         MocpG5gwKExc79GfDPb6swtmDVdatFAKScEM8SeRUHDuk7LKW8vGLY7StjUkwjiCk6XW
-         tLS5G6S4m7QH533KaZAVRy9mda4myZG9jJ+sDMEjgCQmBevefWy2wMGBNtG46EFxe5fL
-         Mo4Q==
-X-Gm-Message-State: AOAM532sWjRsmAL2Dy68SfprVFDizOOe80Y4b7SI4olv40J9j7K52dHl
-        aWhhC4O+RAb/XiGrACi0k7ONEU2bBk1RtA==
-X-Google-Smtp-Source: ABdhPJxNdy0wPZ4DHYqCDghMP5WIvR8WQgxtEPsfxpukPj4iMVYYIthopd1ZIJB9HOMQWJEhSJOTyg==
-X-Received: by 2002:a02:6064:: with SMTP id d36mr762041jaf.80.1634756167247;
-        Wed, 20 Oct 2021 11:56:07 -0700 (PDT)
-Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id v63sm1449499ioe.17.2021.10.20.11.56.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Oct 2021 11:56:06 -0700 (PDT)
-Subject: Re: [PATCH] fs: kill unused ret2 argument from iocb->ki_complete()
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Jeff Moyer <jmoyer@redhat.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        linux-aio@kvack.org
-References: <ce839d66-1d05-dab8-4540-71b8485fdaf3@kernel.dk>
- <x498ryno93g.fsf@segfault.boston.devel.redhat.com>
- <16a7a029-0d23-6a14-9ae9-79ab8a9adb34@kernel.dk>
- <x494k9bo84w.fsf@segfault.boston.devel.redhat.com>
- <80244d5b-692c-35ac-e468-2581ff869395@kernel.dk>
-Message-ID: <8f5fdbbf-dc66-fabe-db3b-01b2085083b0@kernel.dk>
-Date:   Wed, 20 Oct 2021 12:56:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=YkHR5tnSmFS8v9UaEJKNF1V4DmYKxDB/n+XexR2baqA=;
+        b=b3vXQGEnNPQBQEIk+JkXyBqk8O8JHrcOhx7QE1zT7CVY5aTUxuyfRpC1POpdIRCQ8/
+         b+Bd0tqQkvqUHToLthnx1hDax6nb3bardro9AA6zrp1RHT35HyPkcDmdY+YkYLliONzR
+         q8/s5IcCwbqbAE+IACFf2d2kuz3oFQv5O7UrtygZ0qs5OpnNP8lzibDvX00fQbLWvIyW
+         Rc0VqJt1KRgB17HxTCYW/+h/QJ0cBpCvieY2fhGaJL5ioYZE3yTVLPa6N29uSnJM9g/h
+         PM9jod9k7hN4072JjcX+9HO13G2MJX426M6Sl5O+KNbl42OXGjZe3uCUh3mconzMVbbo
+         y3HQ==
+X-Gm-Message-State: AOAM531vnj5lDDAcVpXI860goEwhXCpm1TQEmYaVdTAaIR5CFHvMlXHp
+        vi+sEuooYLeGhExF0F1BRpXI5490HeHWZg==
+X-Google-Smtp-Source: ABdhPJylBGiH+hoz+fL3m4C7nSN9dw5JGZP0UmioE+q3oPkC2bBuptwHL88RRus8jYbyTTbe2UYXIQ==
+X-Received: by 2002:a05:600c:a42:: with SMTP id c2mr15613463wmq.154.1634756457065;
+        Wed, 20 Oct 2021 12:00:57 -0700 (PDT)
+Received: from 127.0.0.1localhost ([185.69.145.206])
+        by smtp.gmail.com with ESMTPSA id j11sm2743880wmi.24.2021.10.20.12.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Oct 2021 12:00:56 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     linux-block@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Subject: [PATCH 0/3] random simple block cleanups
+Date:   Wed, 20 Oct 2021 20:00:47 +0100
+Message-Id: <cover.1634755800.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-In-Reply-To: <80244d5b-692c-35ac-e468-2581ff869395@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/20/21 12:41 PM, Jens Axboe wrote:
-> Working on just changing it to a 64-bit type instead, then we can pass
-> in both at once with res2 being the upper 32 bits. That'll keep the same
-> API on the aio side.
+Several simple cleanups/optimisations splitted out from
+the optimisation series.
 
-Here's that as an incremental. Since we can only be passing in 32-bits
-anyway across 32/64-bit, we can just make it an explicit 64-bit instead.
-This generates the same code on 64-bit for calling ->ki_complete, and we
-can trivially ignore the usb gadget issue as we now can pass in both
-values (and fill them in on the aio side).
+Pavel Begunkov (3):
+  block: optimise boundary blkdev_read_iter's checks
+  block: clean up blk_mq_submit_bio() merging
+  block: convert fops.c magic constants to SHIFT_SECTOR
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 92b87aa8be86..66c6e0c5d638 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -550,7 +550,7 @@ static void lo_rw_aio_do_completion(struct loop_cmd *cmd)
- 		blk_mq_complete_request(rq);
- }
- 
--static void lo_rw_aio_complete(struct kiocb *iocb, long ret)
-+static void lo_rw_aio_complete(struct kiocb *iocb, u64 ret)
- {
- 	struct loop_cmd *cmd = container_of(iocb, struct loop_cmd, iocb);
- 
-diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-cmd-file.c
-index 80a0f35ae1dc..83a2f5b0a3a0 100644
---- a/drivers/nvme/target/io-cmd-file.c
-+++ b/drivers/nvme/target/io-cmd-file.c
-@@ -123,7 +123,7 @@ static ssize_t nvmet_file_submit_bvec(struct nvmet_req *req, loff_t pos,
- 	return call_iter(iocb, &iter);
- }
- 
--static void nvmet_file_io_done(struct kiocb *iocb, long ret)
-+static void nvmet_file_io_done(struct kiocb *iocb, u64 ret)
- {
- 	struct nvmet_req *req = container_of(iocb, struct nvmet_req, f.iocb);
- 	u16 status = NVME_SC_SUCCESS;
-diff --git a/drivers/target/target_core_file.c b/drivers/target/target_core_file.c
-index 968ace2ddf64..c4ca7fa18e61 100644
---- a/drivers/target/target_core_file.c
-+++ b/drivers/target/target_core_file.c
-@@ -245,7 +245,7 @@ struct target_core_file_cmd {
- 	struct bio_vec	bvecs[];
- };
- 
--static void cmd_rw_aio_complete(struct kiocb *iocb, long ret)
-+static void cmd_rw_aio_complete(struct kiocb *iocb, u64 ret)
- {
- 	struct target_core_file_cmd *cmd;
- 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index e20c19a0f106..8536f19d3c9a 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -831,7 +831,7 @@ static void ffs_user_copy_worker(struct work_struct *work)
- 		kthread_unuse_mm(io_data->mm);
- 	}
- 
--	io_data->kiocb->ki_complete(io_data->kiocb, ret);
-+	io_data->kiocb->ki_complete(io_data->kiocb, ((u64) ret << 32) | ret);
- 
- 	if (io_data->ffs->ffs_eventfd && !kiocb_has_eventfd)
- 		eventfd_signal(io_data->ffs->ffs_eventfd, 1);
-diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
-index ad1739dbfab9..d3deb23eb2ab 100644
---- a/drivers/usb/gadget/legacy/inode.c
-+++ b/drivers/usb/gadget/legacy/inode.c
-@@ -469,7 +469,7 @@ static void ep_user_copy_worker(struct work_struct *work)
- 		ret = -EFAULT;
- 
- 	/* completing the iocb can drop the ctx and mm, don't touch mm after */
--	iocb->ki_complete(iocb, ret);
-+	iocb->ki_complete(iocb, ((u64) ret << 32) | ret);
- 
- 	kfree(priv->buf);
- 	kfree(priv->to_free);
-@@ -492,14 +492,16 @@ static void ep_aio_complete(struct usb_ep *ep, struct usb_request *req)
- 	 * complete the aio request immediately.
- 	 */
- 	if (priv->to_free == NULL || unlikely(req->actual == 0)) {
-+		u64 aio_ret;
-+
- 		kfree(req->buf);
- 		kfree(priv->to_free);
- 		kfree(priv);
- 		iocb->private = NULL;
- 		/* aio_complete() reports bytes-transferred _and_ faults */
--
--		iocb->ki_complete(iocb,
--				req->actual ? req->actual : (long)req->status);
-+		aio_ret = req->actual ? req->actual : (long)req->status;
-+		aio_ret |= (u64) req->status << 32;
-+		iocb->ki_complete(iocb, aio_ret);
- 	} else {
- 		/* ep_copy_to_user() won't report both; we hide some faults */
- 		if (unlikely(0 != req->status))
-diff --git a/fs/aio.c b/fs/aio.c
-index 836dc7e48db7..e39c61dccf37 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1417,7 +1417,7 @@ static void aio_remove_iocb(struct aio_kiocb *iocb)
- 	spin_unlock_irqrestore(&ctx->ctx_lock, flags);
- }
- 
--static void aio_complete_rw(struct kiocb *kiocb, long res)
-+static void aio_complete_rw(struct kiocb *kiocb, u64 res)
- {
- 	struct aio_kiocb *iocb = container_of(kiocb, struct aio_kiocb, rw);
- 
-@@ -1436,8 +1436,8 @@ static void aio_complete_rw(struct kiocb *kiocb, long res)
- 		file_end_write(kiocb->ki_filp);
- 	}
- 
--	iocb->ki_res.res = res;
--	iocb->ki_res.res2 = 0;
-+	iocb->ki_res.res = res & 0xffffffff;
-+	iocb->ki_res.res2 = res >> 32;
- 	iocb_put(iocb);
- }
- 
-diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-index effe37ef8629..b2f44ff8eae2 100644
---- a/fs/cachefiles/io.c
-+++ b/fs/cachefiles/io.c
-@@ -37,11 +37,11 @@ static inline void cachefiles_put_kiocb(struct cachefiles_kiocb *ki)
- /*
-  * Handle completion of a read from the cache.
-  */
--static void cachefiles_read_complete(struct kiocb *iocb, long ret)
-+static void cachefiles_read_complete(struct kiocb *iocb, u64 ret)
- {
- 	struct cachefiles_kiocb *ki = container_of(iocb, struct cachefiles_kiocb, iocb);
- 
--	_enter("%ld", ret);
-+	_enter("%llu", (unsigned long long) ret);
- 
- 	if (ki->term_func) {
- 		if (ret >= 0)
-@@ -159,12 +159,12 @@ static int cachefiles_read(struct netfs_cache_resources *cres,
- /*
-  * Handle completion of a write to the cache.
-  */
--static void cachefiles_write_complete(struct kiocb *iocb, long ret)
-+static void cachefiles_write_complete(struct kiocb *iocb, u64 ret)
- {
- 	struct cachefiles_kiocb *ki = container_of(iocb, struct cachefiles_kiocb, iocb);
- 	struct inode *inode = file_inode(ki->iocb.ki_filp);
- 
--	_enter("%ld", ret);
-+	_enter("%llu", (unsigned long long) ret);
- 
- 	/* Tell lockdep we inherited freeze protection from submission thread */
- 	__sb_writers_acquired(inode->i_sb, SB_FREEZE_WRITE);
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 5ad046145f29..0ed6c199f394 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2672,7 +2672,7 @@ static void __io_complete_rw(struct io_kiocb *req, long res, long res2,
- 	__io_req_complete(req, issue_flags, req->result, io_put_rw_kbuf(req));
- }
- 
--static void io_complete_rw(struct kiocb *kiocb, long res)
-+static void io_complete_rw(struct kiocb *kiocb, u64 res)
- {
- 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw.kiocb);
- 
-@@ -2683,7 +2683,7 @@ static void io_complete_rw(struct kiocb *kiocb, long res)
- 	io_req_task_work_add(req);
- }
- 
--static void io_complete_rw_iopoll(struct kiocb *kiocb, long res)
-+static void io_complete_rw_iopoll(struct kiocb *kiocb, u64 res)
- {
- 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw.kiocb);
- 
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index ac461a499882..ff7db16aea2e 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -272,7 +272,7 @@ static void ovl_aio_cleanup_handler(struct ovl_aio_req *aio_req)
- 	kmem_cache_free(ovl_aio_request_cachep, aio_req);
- }
- 
--static void ovl_aio_rw_complete(struct kiocb *iocb, long res)
-+static void ovl_aio_rw_complete(struct kiocb *iocb, u64 res)
- {
- 	struct ovl_aio_req *aio_req = container_of(iocb,
- 						   struct ovl_aio_req, iocb);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0dcb9020a7b3..3c809ce2518c 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -330,7 +330,7 @@ struct kiocb {
- 	randomized_struct_fields_start
- 
- 	loff_t			ki_pos;
--	void (*ki_complete)(struct kiocb *iocb, long ret);
-+	void (*ki_complete)(struct kiocb *iocb, u64 ret);
- 	void			*private;
- 	int			ki_flags;
- 	u16			ki_hint;
+ block/blk-mq-sched.c |  2 +-
+ block/blk-mq-sched.h | 12 +-----------
+ block/blk-mq.c       | 15 +++++++--------
+ block/fops.c         | 37 +++++++++++++++++++++----------------
+ 4 files changed, 30 insertions(+), 36 deletions(-)
 
 -- 
-Jens Axboe
+2.33.1
 
