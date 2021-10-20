@@ -2,80 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 603DE4349E6
-	for <lists+linux-block@lfdr.de>; Wed, 20 Oct 2021 13:14:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A367434A83
+	for <lists+linux-block@lfdr.de>; Wed, 20 Oct 2021 13:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230105AbhJTLQ4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Oct 2021 07:16:56 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4008 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229864AbhJTLQz (ORCPT
+        id S230168AbhJTLxu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Oct 2021 07:53:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56038 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230092AbhJTLxs (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Oct 2021 07:16:55 -0400
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4HZ7FG37HVz6896K;
-        Wed, 20 Oct 2021 19:10:26 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.15; Wed, 20 Oct 2021 13:14:40 +0200
-Received: from [10.202.227.179] (10.202.227.179) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Wed, 20 Oct 2021 12:14:39 +0100
-Subject: Re: [PATCHSET v3] Batched completions
-To:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>
-References: <20211017020623.77815-1-axboe@kernel.dk>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b47e9ae3-52e0-8cfa-9dcb-bfd46ad4c46d@huawei.com>
-Date:   Wed, 20 Oct 2021 12:14:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Wed, 20 Oct 2021 07:53:48 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19KAMo1E019178;
+        Wed, 20 Oct 2021 07:51:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=3FLO5RAKBT7NtW6jsNlR4yLWz4QjFEuG/baql3doOG8=;
+ b=A3w/2vooK6g0Lcln2kaL0/xdD9kbvnTfji8jdE1N17HaSIYGJaTyHjxvh9yviHboWbVg
+ 0QdNQ5WLXge+tL0KYPquKmmYGELfts3F4DpvGjaM+KpMLdRHZ0FdOUlUZMzItxfsWxiz
+ /Cy9u5cMFjjUY/6cKRtFJKcKXbJpDXpy8BWiMn4Skahufjy2PsK0aJztKY2WW1aPuJDs
+ 03KgBajqnZcP/CePSHSAt3CDkTmYHu36jLjfep0UlY8nx9Y988LPEkaVAh5x9cye9L+z
+ lymPFo8Q9ITXv2MS9tcRdpNA7TXNbw4xFDPtkNbegatJ2847leAL1uZmOXH9MuvryXP2 5w== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3btcaa09ga-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Oct 2021 07:51:30 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19KBlaxw003913;
+        Wed, 20 Oct 2021 11:51:28 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 3bqp0k4287-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Oct 2021 11:51:28 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19KBpOmf2097874
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Oct 2021 11:51:24 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D42885204F;
+        Wed, 20 Oct 2021 11:51:24 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id C1EF45204E;
+        Wed, 20 Oct 2021 11:51:24 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 6B4FCE06A7; Wed, 20 Oct 2021 13:51:24 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/7] s390/dasd: cleanup and small fixes
+Date:   Wed, 20 Oct 2021 13:51:17 +0200
+Message-Id: <20211020115124.1735254-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20211017020623.77815-1-axboe@kernel.dk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.179]
-X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 1F2pX5SDazFG5MJ1YKlw3fGR1J9LyDKS
+X-Proofpoint-ORIG-GUID: 1F2pX5SDazFG5MJ1YKlw3fGR1J9LyDKS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-10-20_04,2021-10-20_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ adultscore=0 clxscore=1015 mlxlogscore=911 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 bulkscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2110200066
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 17/10/2021 03:06, Jens Axboe wrote:
-> Hi,
+Hi Jens,
 
-+linux-scsi
+please apply this patchset for the upcomming merge window.
+There is some code cleanup and some smaller fixes.
 
-> 
-> We now do decent batching of allocations for submit, but we still
-> complete requests individually. This costs a lot of CPU cycles.
-> 
-> This patchset adds support for collecting requests for completion,
-> and then completing them as a batch. This includes things like freeing
-> a batch of tags.
-> 
-> This version is looking pretty good to me now, and should be ready
-> for 5.16.
+Best regards,
+Stefan
 
-Just wondering if anyone was looking at supporting this for SCSI 
-midlayer? I was thinking about looking at it...
+Heiko Carstens (2):
+  s390/dasd: handle request magic consistently as unsigned int
+  s390/dasd: fix kernel doc comment
 
-> 
-> Changes since v2:
-> - Get rid of dev_id
-> - Get rid of mq_ops->complete_batch
-> - Drop now unnecessary ib->complete setting in blk_poll()
-> - Drop one sbitmap patch that was questionnable
-> - Rename io_batch to io_comp_batch
-> - Track need_timestamp on per-iob basis instead of for each request
-> - Drop elevator support for batching, cleaner without
-> - Make the batched driver addition simpler
-> - Unify nvme polled/irq handling
-> - Drop io_uring file checking, no longer neededd
-> - Cleanup io_uring completion side
-> 
+Stefan Haberland (5):
+  s390/dasd: split up dasd_eckd_read_conf
+  s390/dasd: move dasd_eckd_read_fc_security
+  s390/dasd: summarize dasd configuration data in a separate structure
+  s390/dasd: fix missing path conf_data after failed allocation
+  s390/dasd: fix possibly missed path verification
+
+ drivers/s390/block/dasd.c          |   9 +-
+ drivers/s390/block/dasd_3990_erp.c |   6 +-
+ drivers/s390/block/dasd_eckd.c     | 294 ++++++++++++++---------------
+ drivers/s390/block/dasd_eckd.h     |  13 +-
+ drivers/s390/block/dasd_erp.c      |   8 +-
+ drivers/s390/block/dasd_int.h      |  11 +-
+ drivers/s390/block/dasd_ioctl.c    |   4 +-
+ 7 files changed, 171 insertions(+), 174 deletions(-)
+
+-- 
+2.25.1
 
