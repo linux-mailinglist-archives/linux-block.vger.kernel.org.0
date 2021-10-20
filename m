@@ -2,161 +2,160 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F0304345E0
-	for <lists+linux-block@lfdr.de>; Wed, 20 Oct 2021 09:27:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A17ED434630
+	for <lists+linux-block@lfdr.de>; Wed, 20 Oct 2021 09:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbhJTH3m (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Oct 2021 03:29:42 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:14834 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229771AbhJTH3m (ORCPT
+        id S229544AbhJTHwY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Oct 2021 03:52:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25629 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229498AbhJTHwX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Oct 2021 03:29:42 -0400
-Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HZ2BG3Zykz90KB;
-        Wed, 20 Oct 2021 15:22:30 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by dggeme754-chm.china.huawei.com
- (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Wed, 20
- Oct 2021 15:27:26 +0800
-From:   Ye Bin <yebin10@huawei.com>
-To:     <josef@toxicpanda.com>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <nbd@other.debian.org>
-CC:     <linux-kernel@vger.kernel.org>, Ye Bin <yebin10@huawei.com>
-Subject: [PATCH -next] nbd: Fix use-after-free in pid_show
-Date:   Wed, 20 Oct 2021 15:39:59 +0800
-Message-ID: <20211020073959.2679255-1-yebin10@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 20 Oct 2021 03:52:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634716209;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TQQaFj8fX+xwT808brP3uydQHCEZPK2+8ewSFY35jX0=;
+        b=A72y/YseyYO1dH1tX4G7jh8+PFQlSDRyCc4ZjQOjIW92KoPNbBMF+SItcXklrb/sUKZMx+
+        PuHjBa35mOzNJMwFLifpF+Pq7VXuymJlD+fFSLba4T8e1K4TKUga2Rtud93D4J4CIiE8U3
+        d2O8IGOSFQAcjJMuM71eaSmKyV+FnwQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-577-R6b00IKwNyOSzIL1xEArLw-1; Wed, 20 Oct 2021 03:50:07 -0400
+X-MC-Unique: R6b00IKwNyOSzIL1xEArLw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FF61100B704;
+        Wed, 20 Oct 2021 07:50:03 +0000 (UTC)
+Received: from T590 (ovpn-8-41.pek2.redhat.com [10.72.8.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6EBDD62AEE;
+        Wed, 20 Oct 2021 07:49:43 +0000 (UTC)
+Date:   Wed, 20 Oct 2021 15:49:38 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, tj@kernel.org,
+        gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        minchan@kernel.org, jeyu@kernel.org, shuah@kernel.org,
+        bvanassche@acm.org, dan.j.williams@intel.com, joe@perches.com,
+        tglx@linutronix.de, keescook@chromium.org, rostedt@goodmis.org,
+        linux-spdx@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, ming.lei@redhat.com
+Subject: Re: [PATCH v8 11/12] zram: fix crashes with cpu hotplug multistate
+Message-ID: <YW/KEsfWJMIPnz76@T590>
+References: <YWjCpLUNPF3s4P2U@T590>
+ <YWjJ0O7K+31Iz3ox@bombadil.infradead.org>
+ <YWk9e957Hb+I7HvR@T590>
+ <YWm68xUnAofop3PZ@bombadil.infradead.org>
+ <YWq3Z++uoJ/kcp+3@T590>
+ <YW3LuzaPhW96jSBK@bombadil.infradead.org>
+ <YW4uwep3BCe9Vxq8@T590>
+ <alpine.LSU.2.21.2110190820590.15009@pobox.suse.cz>
+ <YW6OptglA6UykZg/@T590>
+ <alpine.LSU.2.21.2110200835490.26817@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggeme754-chm.china.huawei.com (10.3.19.100)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2110200835490.26817@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I got issue as follows:
-[  263.886511] BUG: KASAN: use-after-free in pid_show+0x11f/0x13f
-[  263.888359] Read of size 4 at addr ffff8880bf0648c0 by task cat/746
-[  263.890479] CPU: 0 PID: 746 Comm: cat Not tainted 4.19.90-dirty #140
-[  263.893162] Call Trace:
-[  263.893509]  dump_stack+0x108/0x15f
-[  263.893999]  print_address_description+0xa5/0x372
-[  263.894641]  kasan_report.cold+0x236/0x2a8
-[  263.895696]  __asan_report_load4_noabort+0x25/0x30
-[  263.896365]  pid_show+0x11f/0x13f
-[  263.897422]  dev_attr_show+0x48/0x90
-[  263.898361]  sysfs_kf_seq_show+0x24d/0x4b0
-[  263.899479]  kernfs_seq_show+0x14e/0x1b0
-[  263.900029]  seq_read+0x43f/0x1150
-[  263.900499]  kernfs_fop_read+0xc7/0x5a0
-[  263.903764]  vfs_read+0x113/0x350
-[  263.904231]  ksys_read+0x103/0x270
-[  263.905230]  __x64_sys_read+0x77/0xc0
-[  263.906284]  do_syscall_64+0x106/0x360
-[  263.906797]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+On Wed, Oct 20, 2021 at 08:43:37AM +0200, Miroslav Benes wrote:
+> On Tue, 19 Oct 2021, Ming Lei wrote:
+> 
+> > On Tue, Oct 19, 2021 at 08:23:51AM +0200, Miroslav Benes wrote:
+> > > > > By you only addressing the deadlock as a requirement on approach a) you are
+> > > > > forgetting that there *may* already be present drivers which *do* implement
+> > > > > such patterns in the kernel. I worked on addressing the deadlock because
+> > > > > I was informed livepatching *did* have that issue as well and so very
+> > > > > likely a generic solution to the deadlock could be beneficial to other
+> > > > > random drivers.
+> > > > 
+> > > > In-tree zram doesn't have such deadlock, if livepatching has such AA deadlock,
+> > > > just fixed it, and seems it has been fixed by 3ec24776bfd0.
+> > > 
+> > > I would not call it a fix. It is a kind of ugly workaround because the 
+> > > generic infrastructure lacked (lacks) the proper support in my opinion. 
+> > > Luis is trying to fix that.
+> > 
+> > What is the proper support of the generic infrastructure? I am not
+> > familiar with livepatching's model(especially with module unload), you mean
+> > livepatching have to do the following way from sysfs:
+> > 
+> > 1) during module exit:
+> > 	
+> > 	mutex_lock(lp_lock);
+> > 	kobject_put(lp_kobj);
+> > 	mutex_unlock(lp_lock);
+> > 	
+> > 2) show()/store() method of attributes of lp_kobj
+> > 	
+> > 	mutex_lock(lp_lock)
+> > 	...
+> > 	mutex_unlock(lp_lock)
+> 
+> Yes, this was exactly the case. We then reworked it a lot (see 
+> 958ef1e39d24 ("livepatch: Simplify API by removing registration step"), so 
+> now the call sequence is different. kobject_put() is basically offloaded 
+> to a workqueue scheduled right from the store() method. Meaning that 
+> Luis's work would probably not help us currently, but on the other hand 
+> the issues with AA deadlock were one of the main drivers of the redesign 
+> (if I remember correctly). There were other reasons too as the changelog 
+> of the commit describes.
+> 
+> So, from my perspective, if there was a way to easily synchronize between 
+> a data cleanup from module_exit callback and sysfs/kernfs operations, it 
+> could spare people many headaches.
 
-Reproduce this issue as follows:
-1. nbd-server 8000 /tmp/disk
-2. nbd-client localhost 8000 /dev/nbd1
-3. cat /sys/block/nbd1/pid
-Then trigger use-after-free in pid_show.
+kobject_del() is supposed to do so, but you can't hold a shared lock
+which is required in show()/store() method. Once kobject_del() returns,
+no pending show()/store() any more.
 
-Reason is after do step '2', nbd-client progress is already exit. So
-it's task_struct already freed.
-To solve this issue, revert part of 6521d39a64b3's modify and remove
-useless 'recv_task' member of nbd_device.
+The question is that why one shared lock is required for livepatching to
+delete the kobject. What are you protecting when you delete one kobject?
 
-Fixes: 6521d39a64b3 ("nbd: Remove variable 'pid'")
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- drivers/block/nbd.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+>  
+> > IMO, the above usage simply caused AA deadlock. Even in Luis's patch
+> > 'zram: fix crashes with cpu hotplug multistate', new/same AA deadlock
+> > (hot_remove_store() vs. disksize_store() or reset_store()) is added
+> > because hot_remove_store() isn't called from module_exit().
+> > 
+> > Luis tries to delay unloading module until all show()/store() are done. But
+> > that can be obtained by the following way simply during module_exit():
+> > 
+> > 	kobject_del(lp_kobj); //all pending store()/show() from lp_kobj are done,
+> > 						  //no new store()/show() can come after
+> > 						  //kobject_del() returns	
+> > 	mutex_lock(lp_lock);
+> > 	kobject_put(lp_kobj);
+> > 	mutex_unlock(lp_lock);
+> 
+> kobject_del() already calls kobject_put(). Did you mean __kobject_del(). 
+> That one is internal though.
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 0d064fab6186..0ee104fbb628 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -122,10 +122,10 @@ struct nbd_device {
- 	struct work_struct remove_work;
- 
- 	struct list_head list;
--	struct task_struct *task_recv;
- 	struct task_struct *task_setup;
- 
- 	unsigned long flags;
-+	pid_t pid; /* pid of nbd-client, if attached */
- 
- 	char *backend;
- };
-@@ -223,7 +223,7 @@ static ssize_t pid_show(struct device *dev,
- 	struct gendisk *disk = dev_to_disk(dev);
- 	struct nbd_device *nbd = (struct nbd_device *)disk->private_data;
- 
--	return sprintf(buf, "%d\n", task_pid_nr(nbd->task_recv));
-+	return sprintf(buf, "%d\n", nbd->pid);
- }
- 
- static const struct device_attribute pid_attr = {
-@@ -335,7 +335,7 @@ static int nbd_set_size(struct nbd_device *nbd, loff_t bytesize,
- 	nbd->config->bytesize = bytesize;
- 	nbd->config->blksize_bits = __ffs(blksize);
- 
--	if (!nbd->task_recv)
-+	if (!nbd->pid)
- 		return 0;
- 
- 	if (nbd->config->flags & NBD_FLAG_SEND_TRIM) {
-@@ -1300,7 +1300,7 @@ static void nbd_config_put(struct nbd_device *nbd)
- 		if (test_and_clear_bit(NBD_RT_HAS_PID_FILE,
- 				       &config->runtime_flags))
- 			device_remove_file(disk_to_dev(nbd->disk), &pid_attr);
--		nbd->task_recv = NULL;
-+		nbd->pid = 0;
- 		if (test_and_clear_bit(NBD_RT_HAS_BACKEND_FILE,
- 				       &config->runtime_flags)) {
- 			device_remove_file(disk_to_dev(nbd->disk), &backend_attr);
-@@ -1341,7 +1341,7 @@ static int nbd_start_device(struct nbd_device *nbd)
- 	int num_connections = config->num_connections;
- 	int error = 0, i;
- 
--	if (nbd->task_recv)
-+	if (nbd->pid)
- 		return -EBUSY;
- 	if (!config->socks)
- 		return -EINVAL;
-@@ -1360,7 +1360,7 @@ static int nbd_start_device(struct nbd_device *nbd)
- 	}
- 
- 	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
--	nbd->task_recv = current;
-+	nbd->pid = task_pid_nr(current);
- 
- 	nbd_parse_flags(nbd);
- 
-@@ -1616,8 +1616,8 @@ static int nbd_dbg_tasks_show(struct seq_file *s, void *unused)
- {
- 	struct nbd_device *nbd = s->private;
- 
--	if (nbd->task_recv)
--		seq_printf(s, "recv: %d\n", task_pid_nr(nbd->task_recv));
-+	if (nbd->pid)
-+		seq_printf(s, "recv: %d\n", nbd->pid);
- 
- 	return 0;
- }
-@@ -2198,7 +2198,7 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
- 	mutex_lock(&nbd->config_lock);
- 	config = nbd->config;
- 	if (!test_bit(NBD_RT_BOUND, &config->runtime_flags) ||
--	    !nbd->task_recv) {
-+	    !nbd->pid) {
- 		dev_err(nbd_to_dev(nbd),
- 			"not configured, cannot reconfigure\n");
- 		ret = -EINVAL;
--- 
-2.31.1
+kobject_del() is counter-part of kobject_add(), and kobject_put() will
+call kobject_del() automatically() if it isn't deleted yet, but usually
+kobject_put() is for releasing the object only. It is more often to
+release kobject by calling kobject_del() and kobject_put().
+
+>  
+> > Or can you explain your requirement on kobject/module unload in a bit
+> > details?
+> 
+> Does the above makes sense?
+
+I think now focus is the shared lock between kobject_del() and
+show()/store() of the kobject's attributes.
+
+
+Thanks,
+Ming
 
