@@ -2,70 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B41F14359FF
-	for <lists+linux-block@lfdr.de>; Thu, 21 Oct 2021 06:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C81E435A9B
+	for <lists+linux-block@lfdr.de>; Thu, 21 Oct 2021 08:06:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbhJUE3h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Oct 2021 00:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43042 "EHLO
+        id S229597AbhJUGId (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Oct 2021 02:08:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbhJUE3g (ORCPT
+        with ESMTP id S229499AbhJUGIc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Oct 2021 00:29:36 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C1AC06161C;
-        Wed, 20 Oct 2021 21:27:21 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id g125so12250813oif.9;
-        Wed, 20 Oct 2021 21:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p2FMynZOQufRpN0krg/fWL4lMAv54qnvK4coLS/EU4A=;
-        b=AqSwHZhheu6j2y/Drfa4RgRI3nwNY2JKuGqCu+Xx++xkG4AObI86htgIpb57nuwjpN
-         wu58Sl0HROuB1uMFrz9fZGGghx0tn61tA7J6/V4zbmEvfU8oqpJU9p+DvTzh0mhmiYbU
-         auiGxnA2iTeL/UqkNEe20DJlf8dAnKOFjCQGqW080T8iYVdvoJRPZkHnrYJ8CoYNSdTL
-         2XF+EoOs6rFjGodSO21/dQlXJbzIbNTr8Z+uzB82Sy7U32uTZbkS5ZdfAO45qrDVpnve
-         3163bDwWERrIm+W++Z7OjZItL5Z8Uu6xdwvQhIs8adJ2LtA6w/h0+llXAs/D4ENlZbBS
-         kvRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p2FMynZOQufRpN0krg/fWL4lMAv54qnvK4coLS/EU4A=;
-        b=erEjSZkLWxO5WZSi670DkZKNo63xIOL7BJ1BIb4AIkdFL0OQun17/uUuCoZMHA6QCl
-         ROXfkQqMM7hVQ1QOwXGfT56S+SKjBsl1DvPSz/0Et67qvuFWriZekEBynwSdD3p/am+z
-         mfMP91iJVfXN6Z2+TNwdsyXVls2iPfWI+z412Os+MF85/9hA7IiOObUfRH2jWKVhYQt1
-         ROuDb5j74A0q693OxbxQ2L/rSkpA6Fu5QgVxnlNUnSOGmZBCk57huzojUuzA+Do5CQHu
-         aEsJX2KAKa8lS892FcgD0HseAxJzzG6lxnF0DIPkRK4lTaj7F3AHoBqUMrLc1txADk14
-         ndXg==
-X-Gm-Message-State: AOAM53254u9LG+mZoUXhJTlalJjEgPSGCGenToCkCsyX++SzZivNhwWL
-        /3ceBqNsrrzahthIOCb/tHvIri5TYKOIj+nry6YTB/IlnL8=
-X-Google-Smtp-Source: ABdhPJxSoPGbHjks7D1ifeY43HZk+BwpZCvHxXYjxf0lakr0CAkF6qOoSL32lwbfSJnYQanWn6fe6IBYP+qtbvfb/oM=
-X-Received: by 2002:a54:4381:: with SMTP id u1mr2404872oiv.49.1634790440469;
- Wed, 20 Oct 2021 21:27:20 -0700 (PDT)
+        Thu, 21 Oct 2021 02:08:32 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72883C06161C;
+        Wed, 20 Oct 2021 23:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=mwm/ZOmtYGRRyWr/2SOza/GvMW5RB48APrJrzM9W7CI=; b=OWyYVxMNFVphebNZQcMAwa3hX+
+        bwdjFj/SQ/c5MwarxVDeENQfnD6RsUhnAK69XEynDW8iJKXGwww5NVTOGQiKLBRxjvtZhEMjg6oyW
+        M5xPmsVrVFz0ij+NpGKzaJFso9ZOcNGKLnK3mJ6mf2cLuRPRiWQFNnz2U2E3d+K88a1mB6/a3Anga
+        dEuxOlEoJ7BWJM1ak8yPFrvXUKxmOPDXW4Hw7i983+pZwUl+XFv9MBX3fADLOH0COFaURz0fofOOn
+        oso0CKmGo5VPHRzWUjVwA23fyZb1mH05hWPwWWe8/BlgGMORVEcKt29ofcJAsZG7kWxR5tks5e27Z
+        w/5pZ97Q==;
+Received: from [2001:4bb8:180:8777:7df0:a8d8:40cc:3310] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mdRDO-006U4C-OJ; Thu, 21 Oct 2021 06:06:11 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: remove QUEUE_FLAG_SCSI_PASSTHROUGH v3
+Date:   Thu, 21 Oct 2021 08:06:00 +0200
+Message-Id: <20211021060607.264371-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <CAEKhA2x1Qi3Ywaj9fzdsaChabqDSMe2m2441wReg_V=39_Cuhg@mail.gmail.com>
- <YW8EVVmrQpuiwyEC@slm.duckdns.org>
-In-Reply-To: <YW8EVVmrQpuiwyEC@slm.duckdns.org>
-From:   Youfu Zhang <zhangyoufu@gmail.com>
-Date:   Thu, 21 Oct 2021 12:26:44 +0800
-Message-ID: <CAEKhA2yENaRmCXaEYZFp_S55BnJxm51LwL7AbN24DZ7OpsUDag@mail.gmail.com>
-Subject: Re: [BUG] blk-throttle panic on 32bit machine after startup
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> This doesn't reproduce on 5.14.
+Hi all,
 
-I can reproduce this bug on 5.14 i386.
-I ran the reproducer (slightly modified, sr0 instead of loop0, 11:0
-instead of 8:0) on Debian installer live CD.
-https://cdimage.debian.org/cdimage/daily-builds/daily/current/i386/iso-cd/debian-testing-i386-netinst.iso
-I posted a screen recording at https://youtu.be/ULdoHizTi0k. Please check.
+this series removes the QUEUE_FLAG_SCSI_PASSTHROUGH and thus the last
+remaining SCSI passthrough concept from the block layer.
 
-Thanks.
+The changes to support pktcdvd are a bit ugly, but I can't think of
+anything better (except for removing the driver entirely).
+If we'd want to support packet writing today it would probably live
+entirely inside the sr driver.
+
+Changes since v2:
+ - s/blk_uniqueue_id/blk_unique_id/g
+
+Changes since v1:
+ - use an extra local variable in sd_get_unique_id to make sure we
+   always return the right length
+ - add an enum and a comment to better document ->get_unique_id
+ - spelling fixes
+
+Diffstat:
+ block/blk-core.c                   |    9 --
+ block/blk-mq-debugfs.c             |    1 
+ block/bsg-lib.c                    |   32 +++----
+ drivers/block/Kconfig              |    2 
+ drivers/block/pktcdvd.c            |    7 +
+ drivers/scsi/scsi_bsg.c            |    4 
+ drivers/scsi/scsi_error.c          |    2 
+ drivers/scsi/scsi_ioctl.c          |    4 
+ drivers/scsi/scsi_lib.c            |   27 ++++--
+ drivers/scsi/scsi_scan.c           |    1 
+ drivers/scsi/sd.c                  |   39 +++++++++
+ drivers/scsi/sg.c                  |    4 
+ drivers/scsi/sr.c                  |    2 
+ drivers/scsi/st.c                  |    2 
+ drivers/target/target_core_pscsi.c |    3 
+ fs/nfsd/Kconfig                    |    1 
+ fs/nfsd/blocklayout.c              |  158 +++++++++----------------------------
+ fs/nfsd/nfs4layouts.c              |    5 -
+ include/linux/blk-mq.h             |    5 -
+ include/linux/blkdev.h             |   14 ++-
+ include/scsi/scsi_cmnd.h           |    3 
+ 21 files changed, 148 insertions(+), 177 deletions(-)
