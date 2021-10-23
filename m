@@ -2,92 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 215AB438410
-	for <lists+linux-block@lfdr.de>; Sat, 23 Oct 2021 17:42:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B276438423
+	for <lists+linux-block@lfdr.de>; Sat, 23 Oct 2021 17:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231481AbhJWPpM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 23 Oct 2021 11:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbhJWPpM (ORCPT
+        id S230037AbhJWPpc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 23 Oct 2021 11:45:32 -0400
+Received: from bedivere.hansenpartnership.com ([96.44.175.130]:50666 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229954AbhJWPpb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 23 Oct 2021 11:45:12 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C30C061714
-        for <linux-block@vger.kernel.org>; Sat, 23 Oct 2021 08:42:52 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k7so1264786wrd.13
-        for <linux-block@vger.kernel.org>; Sat, 23 Oct 2021 08:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=F26I+cBcpyIkdxRfcHLvmvj+TTSmfbBclURHJNpWXCA=;
-        b=AYtLHgTG+6uRU7+ihCnpuOHko6pqohXhhQkkijOFNs1K9R3uZtGzQ5Q1/HW70ikQOH
-         to4qY+MneU8Wp5m/9lAfflx+y719nabfpikWCEUlEWf4TV2mCVtwTqCiU9WBe0/PueVA
-         Ai5uemlRsLruanwKtfzO+GeDcAbGf94MhP9fVYsSthGmJThkp9aXQloZUCc7KpPJDIe5
-         ZDHZUIMzc7AFUI4sZuF8c0yufIwBcSuY8XEdvjlaOTWtthy6nwfYJOAMZizkpVyMjWcI
-         yYcYAJzSYs4KyL2X7l5KUECXBatU7ZxHLxcDM7wHj0/uSurwobyzbl1doBaHD0t2U4Ok
-         8KFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=F26I+cBcpyIkdxRfcHLvmvj+TTSmfbBclURHJNpWXCA=;
-        b=UdxI6tJjp2aYRKAEcZQYFQ0a71Ae7XyEJvlViYUo/h6WX372/km/BvSPjdzcuVh1Xj
-         8Fr5PrkXDuJ+6HXVf8U2u2DAUrfuKGBEayU/ifE1vpAws6lJwdRxf2jf+TbADzgbr4SJ
-         mIWP0e3KkFlKcqQYnoNyUghsRSmTVsJVaB3i7hDKYoKZcOJJqt9vtqnoe/FlZ59CKotl
-         idmMoO+bkiImtd/Q8v+thqs4It+kP7ERTP0GLRyV4h/Djtpa0YnUvf3TqbBFttt9gwlA
-         q3NF65JkGcjcrE0LCQYVIxS9PVb2oiIGWmt0yWu30vhV5YoYN7efDlaL3gl96LAHeFTo
-         9xsw==
-X-Gm-Message-State: AOAM530vLI2VYwyrh91ntkbPf2+8qyTokWqzlGQiwLCEe3O2tMBtysxi
-        FKxe5ulh7pEdT11VwX51erflBUg4fDdncALyclU=
-X-Google-Smtp-Source: ABdhPJxbHWCQaA22XVwQFJLeK97z9oroWNyFUNBz/3teSSfazwM0svrL6URXAe5PADGpGE0jjZn5M2av0IBmVyuOXKg=
-X-Received: by 2002:adf:a411:: with SMTP id d17mr3075552wra.232.1635003770995;
- Sat, 23 Oct 2021 08:42:50 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a1c:a916:0:0:0:0:0 with HTTP; Sat, 23 Oct 2021 08:42:50
- -0700 (PDT)
-Reply-To: martinafrancis01@gmail.com
-From:   martinafran42 <martinafran42@gmail.com>
-Date:   Sat, 23 Oct 2021 08:42:50 -0700
-Message-ID: <CAC1Op46rzf-95OpiL4YE=Lzvu2F7NstX11WdGagxm5dfjjFJ3w@mail.gmail.com>
-Subject: =?UTF-8?Q?Dobry_dzie=C5=84_moja_droga?=
-To:     undisclosed-recipients:;
+        Sat, 23 Oct 2021 11:45:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=hansenpartnership.com; s=20151216; t=1635003792;
+        bh=Z6K7LTvBRIJIb0g/+eF6LqIR9On0z/f56XxFPFMQiWY=;
+        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+        b=aL8ymHXZUUKeU0G5rFeg9R5eN6SbAHNeSTiM7nPDjW3PN6IttfMyfKo1HvrxCvaDJ
+         /AwGoyP6x2VkMBw+SBB1hH3b6cKTXmF33zaATtw2H4wFcNCAj/SvsmeysP+a58B9uF
+         8EDkb1GaXE7edRJrf1mg9aaYGcrP6ngJE6FpFxZ4=
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 7970D12805A8;
+        Sat, 23 Oct 2021 11:43:12 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Etrgv-_yR2Hh; Sat, 23 Oct 2021 11:43:12 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=hansenpartnership.com; s=20151216; t=1635003792;
+        bh=Z6K7LTvBRIJIb0g/+eF6LqIR9On0z/f56XxFPFMQiWY=;
+        h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+        b=aL8ymHXZUUKeU0G5rFeg9R5eN6SbAHNeSTiM7nPDjW3PN6IttfMyfKo1HvrxCvaDJ
+         /AwGoyP6x2VkMBw+SBB1hH3b6cKTXmF33zaATtw2H4wFcNCAj/SvsmeysP+a58B9uF
+         8EDkb1GaXE7edRJrf1mg9aaYGcrP6ngJE6FpFxZ4=
+Received: from jarvis.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4300:c551::527])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id C1C1312801A1;
+        Sat, 23 Oct 2021 11:43:10 -0400 (EDT)
+Message-ID: <571fc7393fb043e3c34bca57402bd098a56ea8ac.camel@HansenPartnership.com>
+Subject: Re: please revert the UFS HPB support
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Daejun Park <daejun7.park@samsung.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Date:   Sat, 23 Oct 2021 11:43:09 -0400
+In-Reply-To: <2cba13c3-bcd5-2a47-e4cb-54fa1ca088f3@acm.org>
+References: <20211021144210.GA28195@lst.de>
+         <84fac5a3-135a-2ac8-5929-a1031a311cb7@kernel.dk>
+         <20211021151520.GA31407@lst.de> <20211021151728.GA31600@lst.de>
+         <2cba13c3-bcd5-2a47-e4cb-54fa1ca088f3@acm.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.4 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---=20
-Dobry dzie=C5=84 moja droga
-Jak si=C4=99 masz i twoja rodzina.
-Jestem pani Martina Francis, chora wdowa pisz=C4=85ca ze szpitalnego =C5=82=
-=C3=B3=C5=BCka
-bez dziecka. Kontaktuj=C4=99 si=C4=99 z Pa=C5=84stwem, aby=C5=9Bcie dowiedz=
-ieli si=C4=99 o moim
-pragnieniu przekazania sumy (2 700 000,00 USD MILION=C3=93W USD), kt=C3=B3r=
-=C4=85
-odziedziczy=C5=82am po moim zmar=C5=82ym m=C4=99=C5=BCu na cele charytatywn=
-e, obecnie
-fundusz jest nadal w banku. Niedawno m=C3=B3j lekarz powiedzia=C5=82 mi, =
-=C5=BCe mam
-powa=C5=BCn=C4=85 chorob=C4=99 nowotworow=C4=85 i moje =C5=BCycie nie jest =
-ju=C5=BC gwarantowane,
-dlatego podejmuj=C4=99 t=C4=99 decyzj=C4=99..
+On Thu, 2021-10-21 at 09:22 -0700, Bart Van Assche wrote:
+> On 10/21/21 8:17 AM, Christoph Hellwig wrote:
+> > On Thu, Oct 21, 2021 at 05:15:20PM +0200, Christoph Hellwig wrote:
+> > > > > I just noticed the UFS HPB support landed in 5.15, and just
+> > > > > as before it is completely broken by allocating another
+> > > > > request on the same device and then reinserting it in the
+> > > > > queue.  It is bad enough that we have to live with
+> > > > > blk_insert_cloned_request for dm-mpath, but this is too big
+> > > > > of an API abuse to make it into a release.  We need to drop
+> > > > > this code ASAP, and I can prepare a patch for that.
+> > > > 
+> > > > That sounds awful, do you have a link to the offending
+> > > > commit(s)?
+> > > 
+> > > I'll need to look for it, busy in calls right now, but just grep
+> > > for blk_insert_cloned_request.
+> > 
+> > Might as well finish the git blame:
+> > 
+> > commit 41d8a9333cc96f5ad4dd7a52786585338257d9f1
+> > Author: Daejun Park <daejun7.park@samsung.com>
+> > Date:   Mon Jul 12 18:00:25 2021 +0900
+> > 
+> >      scsi: ufs: ufshpb: Add HPB 2.0 support
+> >          
+> >      Version 2.0 of HBP supports reads of varying sizes from 4KB to
+> > 1MB.
+> > 
+> >      A read operation <= 32KB is supported as single HPB read. A
+> > read between
+> >      36KB and 1MB is supported by a combination of write buffer
+> > command and HPB
+> >      read command to deliver more PPN. The write buffer commands
+> > may not be
+> >      issued immediately due to busy tags. To use HPB read more
+> > aggressively, the
+> >      driver can requeue the write buffer command. The requeue
+> > threshold is
+> >      implemented as timeout and can be modified with
+> > requeue_timeout_ms entry in
+> >      sysfs.
+> 
+> (+Daejun)
+> 
+> Daejun, can the HPB code be reworked such that it does not use 
+> blk_insert_cloned_request()? I'm concerned that if the HPB code is
+> not reworked that it will be removed from the upstream kernel.
 
-Chc=C4=99, aby=C5=9Bcie skorzystali z tego funduszu dla ludzi ubogich,
-maltretowanych dzieci, mniej uprzywilejowanych, ko=C5=9Bcio=C5=82=C3=B3w, s=
-ieroci=C5=84c=C3=B3w
-i cierpi=C4=85cych wd=C3=B3w w spo=C5=82ecze=C5=84stwie.
+Just to give urgency to Bart's request: we have two or three weeks
+before the kernel is due to go final.  Can the problems identified by
+Christoph be fixed within that timeframe?
 
-Prosz=C4=99, wr=C3=B3=C4=87 do mnie natychmiast po przeczytaniu tej wiadomo=
-=C5=9Bci, aby
-uzyska=C4=87 wi=C4=99cej szczeg=C3=B3=C5=82=C3=B3w dotycz=C4=85cych tej age=
-ndy humanitarnej.
+Specifically, looking at the paper you reference, it only uses READ
+BUFFER for the host cache sharing.  Since the JDEC standard appears to
+be proprietary, I have no method of understanding why the driver now
+uses WRITE BUFFER as well, but it appears to be a simple optimization. 
+If you can cut out the WRITE BUFFER code, blk_insert_cloned_request()
+will also be gone and thus the API abuse.  Can you get us a simple
+patch doing this ASAP so we don't have to revert the driver?
 
-Niech B=C3=B3g ci=C4=99 b=C5=82ogos=C5=82awi, kiedy czekam na twoj=C4=85 od=
-powied=C5=BA.
+James
 
-Twoja siostra.
-Pani Martina Francis.
+
