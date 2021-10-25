@@ -2,118 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 427564391B1
-	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 10:47:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30C634392FC
+	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 11:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231940AbhJYIt0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Oct 2021 04:49:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45716 "EHLO
+        id S232685AbhJYJtf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Oct 2021 05:49:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232160AbhJYItZ (ORCPT
+        with ESMTP id S232776AbhJYJsH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Oct 2021 04:49:25 -0400
-Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8487AC061745
-        for <linux-block@vger.kernel.org>; Mon, 25 Oct 2021 01:47:03 -0700 (PDT)
-Received: by mail-oo1-xc36.google.com with SMTP id w10-20020a4a274a000000b002b6e972caa1so3411367oow.11
-        for <linux-block@vger.kernel.org>; Mon, 25 Oct 2021 01:47:03 -0700 (PDT)
+        Mon, 25 Oct 2021 05:48:07 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E12C061348
+        for <linux-block@vger.kernel.org>; Mon, 25 Oct 2021 02:45:44 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id v20so7533876plo.7
+        for <linux-block@vger.kernel.org>; Mon, 25 Oct 2021 02:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QD6S5FcXqbMWnr2NhEbAy6feKFx0sh0idDAxYvo4UWA=;
-        b=sygHC/VOYcly0K34H6f+G/9jVVFyNzaaI0rIUf/2HPloUI5E5b7L6u/6Kr9GqjMNIj
-         31oj9Wj7ZylE/zaHSup06g+cQ8AML1nHrYqo139tQ8UI+yN/J6v/cf4pgskmxAT00PeE
-         s3ho9bL8M8Zr5m8lvJFG9lL3vh796cl9hPObufKgDYkD4n+Fvz3XmAjKLhlaW23tSPzq
-         ZxTfVrYWUANJeaE+fu4gcGTE/Hnllut8n5RYkcLo5GEfyvcgNtD64AC9g5ugn1iywCqU
-         W/CD+r77Goc592kGebk2POeFo/H0UGQhkkJQb2UmmRLiZwBR3PpVlSI2IYw3Ner/bwCg
-         3neQ==
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pPD3abwHwXnuHqOkpauS6OSyWnIWVDUEQ3mrtmK8uvA=;
+        b=oxsWgkuPavApcWBDAr8JzU4NKA7bwzmPbaQKXjKjUTHeBmbANPxD6kGxeCz8evoXuI
+         MiIFaQlRC7tTIGroYg5u6RyTv24HoGEgc9ZAwsMEeGUikqyusonrpF8v87HMOEAzMcrw
+         n4TewbhIq5BES24UPFR4ihl2EPFQ0sLinsOnqdcqPSToOGAenu4XGJQ6/tKLpAvN8Cvy
+         z7dVTI47XOC43LcT852fSV6Wt1kAGdgC4oRwouDHCJP5OXO1UeKmghiYYwXJYsc6LwAM
+         HEOsaj9j03pxnSONl37iOKeaLx63Xelt3tw/8NNaL/RMeCaxkN1LE2Ntjw0PbJExdWJK
+         CCrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QD6S5FcXqbMWnr2NhEbAy6feKFx0sh0idDAxYvo4UWA=;
-        b=vuhcY4QAiZKLVjyMJDdNG/rFA6LU4qKRmnvl0QrWSWhUwB8d89qqkSlvIfr6ZZyH4+
-         XvaBn/z38k2Mw1uMFTEaOtorB+6L212RSmJPAXw4+ynnqEIN1+MqQIub1JimSqBFmoZF
-         zIvqAe4nyz7kMsPOjTivXITDACtpQCdTTKLoBAE90AHdYwSmxahGHJvKiP7MqsrYkDgd
-         3h9kritSj55U/N2yCJ2vB/A9eVYEB6velXQw4ut/s+N6To4M9qkwsxYNyhYE3hgFCNsJ
-         WOBtf7UjiobIYaR5zkgFYNIIXfJZn4aSbNca3YaZq6d+LCngatTtzEeg1ZMfIOeJbw2Z
-         sd2g==
-X-Gm-Message-State: AOAM530Km2L6NFM9F8jLxwXOzQJ5lq3w6kxOpvWaX1cngwFnpJpwh6Mu
-        XQ3ffSZLHFn6FfCAxmj9CEulBF06E5NNlo6Jt1X2JA==
-X-Google-Smtp-Source: ABdhPJzRvj0Lq8NOJOOfTnmTc0kuAGX3WevBNcmF8DvEpgpKBbKX0g1yV0hUJ9yXTFboNOIAfsIzf6KGrK8XFDEAaMQ=
-X-Received: by 2002:a4a:d5c8:: with SMTP id a8mr11131804oot.18.1635151622652;
- Mon, 25 Oct 2021 01:47:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pPD3abwHwXnuHqOkpauS6OSyWnIWVDUEQ3mrtmK8uvA=;
+        b=kYIQpKZ70fXNdJKEPW1m/fvyDpEwP0eCUEr8dPs1t6TcSubES7qB4sLZNrHGNneQgz
+         r+gXiJH5n+p9MYVdXP45RD8RgO2KuTQvdba0Qpzm3vkXJiwb+YPg74lEcrEn2X0rt+td
+         MrP4d7FunEoh9MtFJ6UNzv+m7Baep6ahdv7iNopHldY0HcwTE1VNVw4Bt7wve+Uw5JIH
+         QK3G0WDEdvgsiO+8qpFYR5tjIvr6Q0/i6iRQ0z5o12OhkndIS9qWEbn2a8rSKYfQ2lU5
+         M79CoYIirEyLbYBYTkf3hLWQ28gCWv7IwV4YVmajO/uiihIvAWyPkWRlqc0cYttxtWnD
+         eTgQ==
+X-Gm-Message-State: AOAM531CEOlbT84+YwG7WG0L/B8gCZ3aerI1ZzE2qK7iOw/LwsYRGOOy
+        pN5b/18dXc0f8ITgzBbatN7P
+X-Google-Smtp-Source: ABdhPJxDcVzxvbwQ7LOszVdQOSXCMt3SRb+GDgq7Adixsg3NGvOdY5MKJ02q6bvNGyaFZxOaPXoOgA==
+X-Received: by 2002:a17:90b:1d8e:: with SMTP id pf14mr19081276pjb.125.1635155144236;
+        Mon, 25 Oct 2021 02:45:44 -0700 (PDT)
+Received: from localhost ([139.177.225.237])
+        by smtp.gmail.com with ESMTPSA id g11sm20050222pfc.194.2021.10.25.02.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Oct 2021 02:45:43 -0700 (PDT)
+From:   Xie Yongji <xieyongji@bytedance.com>
+To:     axboe@kernel.dk, hch@lst.de, josef@toxicpanda.com, mst@redhat.com,
+        jasowang@redhat.com, stefanha@redhat.com, kwolf@redhat.com
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH 0/4] Add blk_validate_block_size() helper for drivers to validate block size
+Date:   Mon, 25 Oct 2021 17:43:02 +0800
+Message-Id: <20211025094306.97-1-xieyongji@bytedance.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <000000000000d4e1e105cf235f15@google.com> <a189d065-fb64-b76f-9f45-f866f9d5638c@huawei.com>
-In-Reply-To: <a189d065-fb64-b76f-9f45-f866f9d5638c@huawei.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 25 Oct 2021 10:46:51 +0200
-Message-ID: <CACT4Y+acFmP4kiSTAWniyqVfGf2cHfqNqvy7vfa-Hc1RVigFzg@mail.gmail.com>
-Subject: Re: [syzbot] KASAN: use-after-free Read in blk_mq_sched_tags_teardown
-To:     John Garry <john.garry@huawei.com>
-Cc:     syzbot <syzbot+412ca156285f619b8b62@syzkaller.appspotmail.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hare@suse.de" <hare@suse.de>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, 25 Oct 2021 at 10:39, John Garry <john.garry@huawei.com> wrote:
->
-> On 25/10/2021 02:35, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    51dba6e335ff Add linux-next specific files for 20211020
-> > git tree:       linux-next
-> > console output:https://syzkaller.appspot.com/x/log.txt?x=10171dc8b00000
-> > kernel config:https://syzkaller.appspot.com/x/.config?x=1adca843ed814d57
-> > dashboard link:https://syzkaller.appspot.com/bug?extid=412ca156285f619b8b62
-> > compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-> > syz repro:https://syzkaller.appspot.com/x/repro.syz?x=14f768b4b00000
-> > C reproducer:https://syzkaller.appspot.com/x/repro.c?x=1295a8c7300000
-> >
-> > The issue was bisected to:
-> >
-> > commit 645db34e50501aac141713fb47a315e5202ff890
->
-> I think that it should be e155b0c238b2 ("blk-mq: Use shared tags for
-> shared sbitmap support")
->
-> > Author: John Garry<john.garry@huawei.com>
-> > Date:   Tue Oct 5 10:23:36 2021 +0000
-> >
-> >      blk-mq: Refactor and rename blk_mq_free_map_and_{requests->rqs}()
-> >
-> > bisection log:https://syzkaller.appspot.com/x/bisect.txt?x=1597e130b00000
-> > final oops:https://syzkaller.appspot.com/x/report.txt?x=1797e130b00000
-> > console output:https://syzkaller.appspot.com/x/log.txt?x=1397e130b00000
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by:syzbot+412ca156285f619b8b62@syzkaller.appspotmail.com
-> > Fixes: 645db34e5050 ("blk-mq: Refactor and rename blk_mq_free_map_and_{requests->rqs}()")
-> >
-> > ==================================================================
-> > BUG: KASAN: use-after-free in blk_mq_sched_tags_teardown+0x2a1/0x2d0 block/blk-mq-sched.c:544
-> > Read of size 4 at addr ffff8880760b81e0 by task systemd-udevd/6750
->
-> #syz fix: blk-mq-sched: Don't reference queue tagset in
-> blk_mq_sched_tags_teardown()
+The block layer can't support the block size larger than
+page size yet, so driver needs to validate the block size
+before setting it. Now this validation is done in device drivers
+with some duplicated codes. This series tries to add a block
+layer helper for it and makes loop driver, nbd driver and
+virtio-blk driver use it.
 
-Hi John,
+Xie Yongji (4):
+  block: Add a helper to validate the block size
+  nbd: Use blk_validate_block_size() to validate block size
+  loop: Use blk_validate_block_size() to validate block size
+  virtio-blk: Use blk_validate_block_size() to validate block size
 
-Thanks for updating the bug.
-It looks like the title was line wrapped. There is a hack specifically
-for gmail to put the title onto separate line, it's still parsable
-this way (if the whole title fits into 78 cols of course :))
+ drivers/block/loop.c       | 17 ++---------------
+ drivers/block/nbd.c        |  3 ++-
+ drivers/block/virtio_blk.c |  7 +++++--
+ include/linux/blkdev.h     |  8 ++++++++
+ 4 files changed, 17 insertions(+), 18 deletions(-)
 
-#syz fix:
-blk-mq-sched: Don't reference queue tagset in blk_mq_sched_tags_teardown()
+-- 
+2.11.0
+
