@@ -2,79 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 332AA4392F4
-	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 11:47:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 592964392F1
+	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 11:47:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232717AbhJYJta (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Oct 2021 05:49:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60716 "EHLO
+        id S232695AbhJYJt3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Oct 2021 05:49:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:30788 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232756AbhJYJra (ORCPT
+        by vger.kernel.org with ESMTP id S232755AbhJYJr3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Oct 2021 05:47:30 -0400
+        Mon, 25 Oct 2021 05:47:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635155108;
+        s=mimecast20190719; t=1635155106;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NBxeL6lXA+i9ah1gythSV4TcmYBq3NrYEHG409swYuU=;
-        b=McxUXIuS+rtHJuUtq+4zCS6UxNQZtgluoQGTXEfeJbq+KXFAoT1mG40ZVFIA62Rc2AGN7r
-        2Q9tjAPQXdTPB1DJcA68XokGVoNJ5B8QnYCTwrSVxpGhtGuZXq+N8aW/9sEQO9ZJyHt4SM
-        ohmAK6rhfJ57tmY4mpB6ODQF26lyEu0=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EyFirPMayDHzwLGGiRTyeQ0weH3h+eslLCxAu78O9JI=;
+        b=AmGg/ijE/L2vBOui5CnHpCUP3WdeVeGzVDSui+gZfsqAEm3hN5QcakY9j8GsuHYc0NZelq
+        FTPPbSAj8L5ENjKfH4LlFCs967xQQqMQaXQ+E4UwcCThVfTdF50t+9o7m+yl7IbGCVeOsx
+        Rfl/oi4l0NWPNAb4ACLAOwVietYCJhk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-6fNWlIBOMmq-yAlaJUgMrg-1; Mon, 25 Oct 2021 05:45:03 -0400
-X-MC-Unique: 6fNWlIBOMmq-yAlaJUgMrg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-119-y2xOzSXzMlKNpppbwYCI-w-1; Mon, 25 Oct 2021 05:45:05 -0400
+X-MC-Unique: y2xOzSXzMlKNpppbwYCI-w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5311D10059AB;
-        Mon, 25 Oct 2021 09:44:46 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74646814263;
+        Mon, 25 Oct 2021 09:44:49 +0000 (UTC)
 Received: from localhost (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76D25100238C;
-        Mon, 25 Oct 2021 09:44:45 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A436A1948C;
+        Mon, 25 Oct 2021 09:44:48 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 0/8] loop: improve dio on backing file
-Date:   Mon, 25 Oct 2021 17:44:29 +0800
-Message-Id: <20211025094437.2837701-1-ming.lei@redhat.com>
+Subject: [PATCH 1/8] loop: move flush_dcache_page to ->complete of request
+Date:   Mon, 25 Oct 2021 17:44:30 +0800
+Message-Id: <20211025094437.2837701-2-ming.lei@redhat.com>
+In-Reply-To: <20211025094437.2837701-1-ming.lei@redhat.com>
+References: <20211025094437.2837701-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+Prepare for unifying backing buffered IO code, so move
+flush_dcache_page() into ->complete() of read request.
 
-Improve dio on backing file:
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/block/loop.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-1) cover simple read/write via aio style(lo_rw_aio)
-
-2) fallback to buffered io in case of dio failure
-
-3) relax dio use condition and not check if lo->lo_offset & loop queue's
-bs is aligned with backing queue
-
-4) enable backing dio at default(RFC)
-
-
-Ming Lei (8):
-  loop: move flush_dcache_page to ->complete of request
-  loop: remove always true check
-  loop: add one helper for submitting IO on backing file
-  loop: cover simple read/write via lo_rw_aio()
-  loop: fallback to buffered IO in case of dio submission
-  loop: relax loop dio use condition
-  loop: remove lo->use_dio
-  loop: use backing dio at default
-
- drivers/block/loop.c | 182 +++++++++++++------------------------------
- drivers/block/loop.h |   2 +-
- 2 files changed, 57 insertions(+), 127 deletions(-)
-
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 7bf4686af774..8f140d637435 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -405,8 +405,6 @@ static int lo_read_simple(struct loop_device *lo, struct request *rq,
+ 		if (len < 0)
+ 			return len;
+ 
+-		flush_dcache_page(bvec.bv_page);
+-
+ 		if (len != bvec.bv_len) {
+ 			struct bio *bio;
+ 
+@@ -507,11 +505,24 @@ static int lo_req_flush(struct loop_device *lo, struct request *rq)
+ 	return ret;
+ }
+ 
++static void lo_flush_dcache_for_read(struct request *rq)
++{
++	struct bio_vec bvec;
++	struct req_iterator iter;
++
++	rq_for_each_segment(bvec, rq, iter)
++		flush_dcache_page(bvec.bv_page);
++}
++
+ static void lo_complete_rq(struct request *rq)
+ {
+ 	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
+ 	blk_status_t ret = BLK_STS_OK;
+ 
++	/* Kernel wrote to our pages, call flush_dcache_page */
++	if (req_op(rq) == REQ_OP_READ && !cmd->use_aio && cmd->ret >= 0)
++		lo_flush_dcache_for_read(rq);
++
+ 	if (!cmd->use_aio || cmd->ret < 0 || cmd->ret == blk_rq_bytes(rq) ||
+ 	    req_op(rq) != REQ_OP_READ) {
+ 		if (cmd->ret < 0)
 -- 
 2.31.1
 
