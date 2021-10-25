@@ -2,63 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE7ED439002
-	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 09:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04CE7439007
+	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 09:07:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230395AbhJYHJY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Oct 2021 03:09:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52894 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbhJYHJY (ORCPT
+        id S231134AbhJYHJ1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Oct 2021 03:09:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230472AbhJYHJ0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Oct 2021 03:09:24 -0400
+        Mon, 25 Oct 2021 03:09:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE529C061745;
+        Mon, 25 Oct 2021 00:07:04 -0700 (PDT)
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1635145621;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+xRj/RFeDSYLUfrOMWwjE0Md0VzxsD/tjTPIXybBD7Y=;
-        b=d7VIuOigwNIs1/+xPxXrjZMAtd4Zwzf/gEZJTsuvrLQoFv0FDEA53A4HHjfjul8L+23CQi
-        RWM181APdtNjIQ34txIArYJiOb6QFv4U69ePQ35OwATVgLvjql6KsVZ0IsGgLLmrdv3UPI
-        YCgr42f/eJAnsndsP+/bT5Rg+6NbZ2I6fS+RPTJTHu0hXLCO4np3qScrTKHGgw47FCrUZe
-        /pB0ouGEU8fQ5kjpN35vC+kYZ9n/W2vkCqKXl4eFnG776pNpAbnUrRQP5V2/dLdJpkmUMy
-        qMzwW1n6IC7HWklJU/98cAmqGtF/tFlTSXWJRyvSHiM9vB7DIbo0r9qF8X+PJw==
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qw8LYIRUW5MohI8nU8fJVIRK2sGNzquW52Vwd2NNTmY=;
+        b=2g8rgjSZEQrjnOdVOUArn8AAUfI9L3Rl7Ak5o8RfGhJjnc0lq4rb8hKkUdsc1nd/ZPVvXA
+        IIdVPtN0ORQoCour+jUXJk7Js2WSQxt2tn4IwOpvkOt3i6Ywk5Tu9WVS8KkDBRsQjVU8zh
+        YjY2Vw/M47BYFduWURHYfqCHl4vEPNJ5QM+r6UIUPwwOleWqNE5OWEKLRdTWgoIjSct7TG
+        ZzmNJqqG9KYp7tVtvM/yHjWYZtTpA+jFYhZQxTxA77oKdJ9O64pC5kRQ69rB5NoLNIafjU
+        9f+33lM7WDatG4GTxo0b3gqgkyzZW+FCWCDTHVeLZgvDgo+C2TQ6CHnh0eKKJg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1635145621;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+xRj/RFeDSYLUfrOMWwjE0Md0VzxsD/tjTPIXybBD7Y=;
-        b=AOZBVQpoDD7SOQTC+avwBOJGEMr8KPZDJC/YWFllcYliwvx33YZBtLX2DXktaq9PDlL4co
-        y12s7oVLoMVleQBw==
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qw8LYIRUW5MohI8nU8fJVIRK2sGNzquW52Vwd2NNTmY=;
+        b=jzM9EPBtVRGbBvx6fGtpk9AHiJ4UNHdPAxkor07WfrZ1B6axA035eolu7V6i/PPRqnoG5a
+        HWm9s/77/gHlnuBg==
 To:     linux-block@vger.kernel.org, linux-mmc@vger.kernel.org
 Cc:     tglx@linutronix.de, Ulf Hansson <ulf.hansson@linaro.org>,
         Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v3 0/2] blk-mq: Allow to complete requests directly
-Date:   Mon, 25 Oct 2021 09:06:56 +0200
-Message-Id: <20211025070658.1565848-1-bigeasy@linutronix.de>
+        Christoph Hellwig <hch@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v3 1/2] blk-mq: Add blk_mq_complete_request_direct()
+Date:   Mon, 25 Oct 2021 09:06:57 +0200
+Message-Id: <20211025070658.1565848-2-bigeasy@linutronix.de>
+In-Reply-To: <20211025070658.1565848-1-bigeasy@linutronix.de>
+References: <20211025070658.1565848-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-v2=E2=80=A6v3:
- - Align arguments with the begin of the function name
-   (blk_mq_complete_request_direct).
+Add blk_mq_complete_request_direct() which completes the block request
+directly instead deferring it to softirq for single queue devices.
 
-v1=E2=80=A6v2:
- - Drop the SCSI patch for now.
- - Make blk_mq_complete_request_direct() call the completion handler
-   directly instead going through struct chain (Jens and hch might had
-   the same in mind).
+This is useful for devices which complete the requests in preemptible
+context and raising softirq from means scheduling ksoftirqd.
 
-This series converts a part from the MMC layer which completes the
-requests from kworker/ preemptible context. Its intention is to avoid
-going through the softirq stack in preemptible context which would
-involve the ksoftirqd in this case.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/blk-mq.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 13ba1861e688f..4c0bd305891aa 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -521,6 +521,17 @@ static inline void blk_mq_set_request_complete(struct =
+request *rq)
+ 	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
+ }
+=20
++/*
++ * Complete the request directly instead of deferring it to softirq or
++ * completing it another CPU. Useful in preemptible instead of an interrup=
+t.
++ */
++static inline void blk_mq_complete_request_direct(struct request *rq,
++		   void (*complete)(struct request *rq))
++{
++	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
++	complete(rq);
++}
++
+ void blk_mq_start_request(struct request *rq);
+ void blk_mq_end_request(struct request *rq, blk_status_t error);
+ void __blk_mq_end_request(struct request *rq, blk_status_t error);
+--=20
+2.33.0
 
