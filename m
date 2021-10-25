@@ -2,81 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64029438FFC
-	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 09:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE7ED439002
+	for <lists+linux-block@lfdr.de>; Mon, 25 Oct 2021 09:07:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbhJYHIV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Oct 2021 03:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231335AbhJYHIQ (ORCPT
+        id S230395AbhJYHJY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Oct 2021 03:09:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52894 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230330AbhJYHJY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Oct 2021 03:08:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CFCC061745;
-        Mon, 25 Oct 2021 00:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=AXC2/w3YpyqIN7KuSnBwUBGLzmoGyNL2SawuN6uJg2o=; b=Fcvpi2fbBxgA1O9ZuEjAuspcvv
-        Vc7KCr1eDyXod3ZEXx2yT9hB0Wh8pPajD6gc8n5x+HjJ+d23fiOz2Y3Qjbu+7b7BhKUScBGknRS5l
-        p/TNnlsHWAltZaL+ubYlUFX3+CidCJNzTtuHCskE12MWRYQM2eptbD7wAamrf7jGFIq6d7n7EkMAi
-        FqbGQhF05alfAvU83NjPjRgURtmokV6oJBBNF0R3fWMizX2tCBvFVQvg8mOqV250xBJQJVnlATUiw
-        Fh/quqHfbS7VqxfN3iuPn3oSE4YQDW71HooDKtRoTibLZxMjZKeuZvFUpfgvltCpMI2305HXG/dpb
-        hAHZnQQQ==;
-Received: from [2001:4bb8:184:6dcb:6093:467a:cccc:351c] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1meu3K-00FUaP-HR; Mon, 25 Oct 2021 07:05:50 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH 12/12] block: don't include blk-mq headers in blk-core.c
-Date:   Mon, 25 Oct 2021 09:05:17 +0200
-Message-Id: <20211025070517.1548584-13-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211025070517.1548584-1-hch@lst.de>
-References: <20211025070517.1548584-1-hch@lst.de>
+        Mon, 25 Oct 2021 03:09:24 -0400
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1635145621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+xRj/RFeDSYLUfrOMWwjE0Md0VzxsD/tjTPIXybBD7Y=;
+        b=d7VIuOigwNIs1/+xPxXrjZMAtd4Zwzf/gEZJTsuvrLQoFv0FDEA53A4HHjfjul8L+23CQi
+        RWM181APdtNjIQ34txIArYJiOb6QFv4U69ePQ35OwATVgLvjql6KsVZ0IsGgLLmrdv3UPI
+        YCgr42f/eJAnsndsP+/bT5Rg+6NbZ2I6fS+RPTJTHu0hXLCO4np3qScrTKHGgw47FCrUZe
+        /pB0ouGEU8fQ5kjpN35vC+kYZ9n/W2vkCqKXl4eFnG776pNpAbnUrRQP5V2/dLdJpkmUMy
+        qMzwW1n6IC7HWklJU/98cAmqGtF/tFlTSXWJRyvSHiM9vB7DIbo0r9qF8X+PJw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1635145621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+xRj/RFeDSYLUfrOMWwjE0Md0VzxsD/tjTPIXybBD7Y=;
+        b=AOZBVQpoDD7SOQTC+avwBOJGEMr8KPZDJC/YWFllcYliwvx33YZBtLX2DXktaq9PDlL4co
+        y12s7oVLoMVleQBw==
+To:     linux-block@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc:     tglx@linutronix.de, Ulf Hansson <ulf.hansson@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v3 0/2] blk-mq: Allow to complete requests directly
+Date:   Mon, 25 Oct 2021 09:06:56 +0200
+Message-Id: <20211025070658.1565848-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-All request based code is in the blk-mq files now.
+v2=E2=80=A6v3:
+ - Align arguments with the begin of the function name
+   (blk_mq_complete_request_direct).
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-core.c | 3 ---
- 1 file changed, 3 deletions(-)
+v1=E2=80=A6v2:
+ - Drop the SCSI patch for now.
+ - Make blk_mq_complete_request_direct() call the completion handler
+   directly instead going through struct chain (Jens and hch might had
+   the same in mind).
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index ebcea0dac973d..94b76d62a4396 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -16,7 +16,6 @@
- #include <linux/module.h>
- #include <linux/bio.h>
- #include <linux/blkdev.h>
--#include <linux/blk-mq.h>
- #include <linux/blk-pm.h>
- #include <linux/blk-integrity.h>
- #include <linux/highmem.h>
-@@ -47,8 +46,6 @@
- #include <trace/events/block.h>
- 
- #include "blk.h"
--#include "blk-mq.h"
--#include "blk-mq-sched.h"
- #include "blk-pm.h"
- #include "blk-throttle.h"
- 
--- 
-2.30.2
+This series converts a part from the MMC layer which completes the
+requests from kworker/ preemptible context. Its intention is to avoid
+going through the softirq stack in preemptible context which would
+involve the ksoftirqd in this case.
+
 
