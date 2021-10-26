@@ -2,100 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC99E43B485
-	for <lists+linux-block@lfdr.de>; Tue, 26 Oct 2021 16:42:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98ABB43B487
+	for <lists+linux-block@lfdr.de>; Tue, 26 Oct 2021 16:42:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236870AbhJZOpG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Oct 2021 10:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
+        id S234965AbhJZOpS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Oct 2021 10:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236855AbhJZOpF (ORCPT
+        with ESMTP id S236855AbhJZOpS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Oct 2021 10:45:05 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 007B3C061745
-        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:42:41 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id x66so14509058pfx.13
-        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:42:41 -0700 (PDT)
+        Tue, 26 Oct 2021 10:45:18 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47824C061745
+        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:42:54 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id q2-20020a17090a2e0200b001a0fd4efd49so1436060pjd.1
+        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kq1S4qwrXxntJdVPakPNFVUHYz9PO0MQF46/bxmhu6A=;
-        b=GCOtfNgJc/gWbiXMYXaOiq+mPhYtINAr3+fG/7IaxrGobGnpF99gBf5wTJXTQE38LQ
-         XeTMtthd0FpEylDdPknYwFg9jQ4mtKJKcJGDpjW0WV3ZNwZDToiwa+pVD50cuL4t8pfn
-         VPaeq2Eh6/WmfyZ5wvVsre1sz0bu2qH356BXr2Kt2xqTgCsvcXUHr4geo/AqPdVFxVMe
-         aBGAdnLBDkuABroOnbT+mjL9BDkImCLTS8+X3IppSLxsxGq9YkJTSrDCSBp5QFA7HTIo
-         YTcTspQ8VXNgpe9OKF6FeUp37lGoVuBfOTrRnCcwV9xOj1LHsqxosz+7cKahQ4R8AvWu
-         PUgQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TqXG0/tzAMme0lqJcgyNBNW84HzqzOSloOMxwNDMqnk=;
+        b=4Uoy2ivd6uzyXo6Bmv0aXm5MmnUwpA6xwiPFquzbRkZTyRRY4UNetOEgSK4I/+I4Hs
+         cKQMXQyeDPDR7Z3/e/VHdvzK8auY822368Vkua5jFt2pNRX6WElVvi56m1PXXALhq7Q5
+         9MjGbof65vT4ZVYTsd2S1lNtt8tiNb0TNEVSVjR/FvRhJBKKd/RBuNLBb45aTezTh7ie
+         rHGEwVnlQijC58C7l1SfEHHSIamwkhqqqS5HB2+qVofIJYZBIxWuDAAdXa0VKZi3vf3g
+         7xiCe/YNR030jxAwfiyg+eYkDC8rHzxyNa7ezPLc9GdF7B/KXWS7ZNVuRUvwSiKaX/kA
+         YKNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kq1S4qwrXxntJdVPakPNFVUHYz9PO0MQF46/bxmhu6A=;
-        b=CSfL8AWXjsZTJRT193tneAn9gu8rxXxg8plTwbUza6imxJSMbIRhqqf9CJeB4QdEWK
-         4rj+7MrjS/VWoYWA1JNR7tKZyaTvE+eFPHoMBN9nkEDfrjSzIFxJY9u0yeMrjL7tTXDr
-         SDYARSqOhmXqnSQaQ6vTbHPzMyoiB92LJ8ONZPJHqBc7N+G74ITbLhVw10Tqz2fEf5bj
-         jPMUeQPmNaHvg9vpSvDDDZ7XbIrDID/EFKbasUl6ITIH9mfbTZ8IksmjUnONGuHmdzZN
-         ++dGp4olJCiYO3xw+pyt+B9+AFjhrt4Qhj0+7/aAt8Panmz/Puu11JBoWXfYnpRkCJd8
-         J55Q==
-X-Gm-Message-State: AOAM530bVSTT0o+JJ9+Q9aCrZm6PAsQDZuW6sYPC2z5b3BVFUBQcFS+V
-        uRgRwlOBE7wZ+ErhrXkq/EgA
-X-Google-Smtp-Source: ABdhPJzkY4v2ovqKTCsH10wzAvT6oWtc2VWoqCE+/V11MgxPYQTpmw0eijnhkSRjbEpBTYhsmbADag==
-X-Received: by 2002:a63:9508:: with SMTP id p8mr18874681pgd.413.1635259361434;
-        Tue, 26 Oct 2021 07:42:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TqXG0/tzAMme0lqJcgyNBNW84HzqzOSloOMxwNDMqnk=;
+        b=mrwb54roYN30fqo1ki2Od92ol/RvyD23W8mAQvmKaLIdI6Y2F5R1QfzfLtjlOY2Vub
+         l1TS8IjiR6w6YYwtJN872DJ/WZJrHep55VQdKk5p/oqu1VFN/n7k6Py4+6pEE/j4yuMT
+         KrSlW6OPRJxInS0ldyJruS/vrtaiKgXMxKBpSirZBjzchdFgAKkTPjsMeenm774zPTA4
+         qILqcVKsd83IYn+lQIARSimeBquJ7LL0clDnlcSO4xWxlLU6aKwf10WPXNuAudFOyCzG
+         OUbO1c9pmGVgzTWjDCj8oVHAhO6tuFkQecnBf/dmq0rXtrnz+M3K1B7aJO0E7hCVtx47
+         ps5Q==
+X-Gm-Message-State: AOAM531rUufjcvfS9MyGuaRLipZrQN8nzQyTJKsp/kly8Ma2XeBPtu9O
+        vvlRcinIg619H+CZ4dypWv8+
+X-Google-Smtp-Source: ABdhPJxDwzTaNXwa8zQVleZVpvYopPJy2hn0TFeAdTDt/zvKmOazBfBhS7NJeIu2hl6KbdFN99IGQQ==
+X-Received: by 2002:a17:90b:4c41:: with SMTP id np1mr40155366pjb.18.1635259373880;
+        Tue, 26 Oct 2021 07:42:53 -0700 (PDT)
 Received: from localhost ([139.177.225.237])
-        by smtp.gmail.com with ESMTPSA id p9sm22413642pfn.7.2021.10.26.07.42.29
+        by smtp.gmail.com with ESMTPSA id j19sm3396218pfj.127.2021.10.26.07.42.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Oct 2021 07:42:35 -0700 (PDT)
+        Tue, 26 Oct 2021 07:42:48 -0700 (PDT)
 From:   Xie Yongji <xieyongji@bytedance.com>
 To:     axboe@kernel.dk, hch@lst.de, josef@toxicpanda.com, mst@redhat.com,
         jasowang@redhat.com, stefanha@redhat.com, kwolf@redhat.com
 Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 0/4] Add blk_validate_block_size() helper for drivers to validate block size
-Date:   Tue, 26 Oct 2021 22:40:11 +0800
-Message-Id: <20211026144015.188-1-xieyongji@bytedance.com>
+Subject: [PATCH v3 1/4] block: Add a helper to validate the block size
+Date:   Tue, 26 Oct 2021 22:40:12 +0800
+Message-Id: <20211026144015.188-2-xieyongji@bytedance.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211026144015.188-1-xieyongji@bytedance.com>
+References: <20211026144015.188-1-xieyongji@bytedance.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The block layer can't support the block size larger than
-page size yet, so driver needs to validate the block size
-before setting it. Now this validation is done in device drivers
-with some duplicated codes. This series tries to add a block
-layer helper for it and makes loop driver, nbd driver and
-virtio-blk driver use it.
+There are some duplicated codes to validate the block
+size in block drivers. This limitation actually comes
+from block layer, so this patch tries to add a new block
+layer helper for that.
 
-We tested both invalid block size and valid block size cases
-for loop driver with the example in man page [1] and for
-nbd and virtio-blk driver with qemu-nbd and storage-daemon (vduse)
-in the qemu repo [2].
+Signed-off-by: Xie Yongji <xieyongji@bytedance.com>
+---
+ include/linux/blkdev.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-[1] https://man7.org/linux/man-pages/man4/loop.4.html
-[2] https://github.com/bytedance/qemu/tree/vduse
-
-V2 to V3:
-- Fix some commit logs and print message
-
-V1 to V2:
-- Return and print error if validation fails in virtio-blk driver
-
-Xie Yongji (4):
-  block: Add a helper to validate the block size
-  nbd: Use blk_validate_block_size() to validate block size
-  loop: Use blk_validate_block_size() to validate block size
-  virtio-blk: Use blk_validate_block_size() to validate block size
-
- drivers/block/loop.c       | 17 ++---------------
- drivers/block/nbd.c        |  3 ++-
- drivers/block/virtio_blk.c | 12 ++++++++++--
- include/linux/blkdev.h     |  8 ++++++++
- 4 files changed, 22 insertions(+), 18 deletions(-)
-
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 12b9dbcc980e..805cd02d7914 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -235,6 +235,14 @@ struct request {
+ 	void *end_io_data;
+ };
+ 
++static inline int blk_validate_block_size(unsigned int bsize)
++{
++	if (bsize < 512 || bsize > PAGE_SIZE || !is_power_of_2(bsize))
++		return -EINVAL;
++
++	return 0;
++}
++
+ static inline bool blk_op_is_passthrough(unsigned int op)
+ {
+ 	op &= REQ_OP_MASK;
 -- 
 2.11.0
 
