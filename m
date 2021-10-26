@@ -2,67 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3039743B486
-	for <lists+linux-block@lfdr.de>; Tue, 26 Oct 2021 16:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB4D243B49B
+	for <lists+linux-block@lfdr.de>; Tue, 26 Oct 2021 16:44:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236868AbhJZOpN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Oct 2021 10:45:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58834 "EHLO
+        id S231592AbhJZOqu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Oct 2021 10:46:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236877AbhJZOpM (ORCPT
+        with ESMTP id S234301AbhJZOqr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Oct 2021 10:45:12 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5346C061745
-        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:42:48 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id b188so20717706iof.8
-        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:42:48 -0700 (PDT)
+        Tue, 26 Oct 2021 10:46:47 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAD1C061348
+        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:44:23 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id w15so16034689ilv.5
+        for <linux-block@vger.kernel.org>; Tue, 26 Oct 2021 07:44:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Eh0m6mhz4X/x9uIau1EKlBJBh1kSpnmX4hOEKbGmAXE=;
-        b=hINYsXUgjEusOMHac5nxN+1XD8tNA1rsnPqN/rR2l8CXwWJei//br3+ybvk9UvvtrV
-         GvaB1p8Q3v8yqC5Jo2Oq2SK+SffEWjWtKkyf3RZ+WDgLjeGgtlCROIkR9Q5hjtTUQnvf
-         QcfV81YzHY2sNqVam12RjebugLlbZdlR7m37iSsjlh94FdLgwlbyM9yI2h6Aq3AzQh8b
-         4du53WtRtvepcKZxfbYmD3dKnbQ/yg4/9y/dIB2xffSVEK0oygTDalUtefEQZAUbukEF
-         4NJJjDLCTUsqtETwAzvW5sUbFcJzQaav/6JTIgbQESE99JqsxG7lgoXBlIXUC/Sm5tWb
-         z2AQ==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=aSRP5VozPA44Pw1ebKciKkfKfdnZ7pcI7G3y2YL80+0=;
+        b=708YvNZjwZMbBapuhERenbifkDIevnND+2Dd7X8+gNCtmmX6MDBrO1vbEWIRJOeCbA
+         2v+656A9SZCKJIk0GLHBnwNJNrvp22f+3rjSihomDJZOdJkqpPEkU97tKW1K4cns3Ko+
+         4RzvCqp5gJ+SoWomJGV3JV4+2L7SOowx2vdcJCYsN12Lm8T+fIuM7gNKQlGRH9fZCqKm
+         EsQoe6S+hzegIteeSrMSI/cauduQrLHosXR27pg8JYHqKNpeIWY7mlSjqNGWAQq+zwX3
+         6UOGv3gNDdwezs8TVLkWXSpy60viER/mtEfpUvQazhe+op6ngsLA5ywzmGV2rf7qfHpI
+         C8xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Eh0m6mhz4X/x9uIau1EKlBJBh1kSpnmX4hOEKbGmAXE=;
-        b=vho7tPUhIDCTABYTAnv9XAHQiIjh9N3pR8GRhED3Od/kYrdydPoj4K7NXxfk6H3kO4
-         Q5NFPkmGKifvh8vNF/0ab6icG5yJJP3ggENMEYr2IYw0k+Gc86U57urjjwaCLOnrBm97
-         1/BcY496zrCimmBWa5K5ZgWtzAAIKjBWcccfv7nH1kuaQtyHjvgVRfzfbnUoqVVEjGnG
-         5tAn+OAr/mLyG+3KswnqzMNlvVrD1J6nJDX4n/x12Tl55ryzFUUfeeeXeLH7mPoD/40U
-         CEuhj6js2R5Jo/QDnHaAiQzgu9eZ7RAm5LsFnF1anevox9BQYh8uIvjToEaND8zkF0Ib
-         C5Fw==
-X-Gm-Message-State: AOAM533p/qWx23Co5+9kpy2IqfRKKnvPNh/Z4PjvghXiBwtlIeW2a3Do
-        l1Lq/oAq5LgSTNiltjH+fcGHNQ==
-X-Google-Smtp-Source: ABdhPJwUunPt/Ngy3IntI/GvvhA7VaXFIsVepe7TymxxokbgnCJ3c/PUZZLuEAsADEVcMLAXLljbEw==
-X-Received: by 2002:a05:6602:122c:: with SMTP id z12mr116895iot.188.1635259368032;
-        Tue, 26 Oct 2021 07:42:48 -0700 (PDT)
+        bh=aSRP5VozPA44Pw1ebKciKkfKfdnZ7pcI7G3y2YL80+0=;
+        b=lbGNGA9nwZeVmvu7VVqA0BtvHb3OqZBW12We1SwEoPM2cyOYxxb5Da1aLy8WQWYF7I
+         FgnsCmvqi8w3Axi8DSbbgYktKKIFkIHryfJlK1NbSyLImES22sv++z659D+Hl6ta08Bt
+         aDtiP2oXBUCsmSchT5ir81Pfzj3lvpoC9rlg7P80XfkR5z8BADgm4aZ//xE2mr9ypLiY
+         6SKerRkmWlnijhh/hA1t8yciYsKxFO0URggYuXWZtBbj1Wy47yzk8aV2IhjvhrbvBc1j
+         y6Ox5Eb6zNl+9qRGIHkrVoXLKFu0tfJr19JPB4zPr/hVY169xQD7YZxXH03B2DiEQItB
+         7ITw==
+X-Gm-Message-State: AOAM531zp+8GC+/SEJP2YGCnq7ns8G4iWaQ+bs6D3bweJTnDOCfLeNly
+        sC2HYJZq8Tbw19si4tTZf4gdQs7L9sHQPw==
+X-Google-Smtp-Source: ABdhPJwMx7dB1ZA6dE2GaZNnU9ND2VfZBVq7C8ZzPwa2wl9HHj53syP5WE4ZKcmJIkLF5fRgjSQSyA==
+X-Received: by 2002:a05:6e02:1749:: with SMTP id y9mr2109430ill.278.1635259462248;
+        Tue, 26 Oct 2021 07:44:22 -0700 (PDT)
 Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id e11sm7649059ils.34.2021.10.26.07.42.47
+        by smtp.gmail.com with ESMTPSA id h2sm9992443ioh.14.2021.10.26.07.44.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Oct 2021 07:42:47 -0700 (PDT)
-Subject: Re: [PATCH 2/2] block: attempt direct issue of plug list
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>, Damien Le Moal <Damien.LeMoal@wdc.com>
-References: <20211019120834.595160-1-axboe@kernel.dk>
- <20211019120834.595160-3-axboe@kernel.dk>
- <20211026052036.xdsw6ejx2e2n7jhi@shindev>
+        Tue, 26 Oct 2021 07:44:21 -0700 (PDT)
+Subject: Re: [bug report] blktests block/029 triggered NULL pointer on latest
+ linux-block/for-next
+To:     Yi Zhang <yi.zhang@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>
+References: <CAHj4cs-Co0mnojrWKGs5bhNrywTVW6OGtDp4yVN8RzaHPO4bog@mail.gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e8930e4f-0359-9218-3006-14463d7fe68c@kernel.dk>
-Date:   Tue, 26 Oct 2021 08:42:45 -0600
+Message-ID: <2b2282c2-67f8-db19-cb13-1fc90664dada@kernel.dk>
+Date:   Tue, 26 Oct 2021 08:44:19 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20211026052036.xdsw6ejx2e2n7jhi@shindev>
+In-Reply-To: <CAHj4cs-Co0mnojrWKGs5bhNrywTVW6OGtDp4yVN8RzaHPO4bog@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -70,137 +68,109 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/25/21 11:20 PM, Shinichiro Kawasaki wrote:
-> On Oct 19, 2021 / 06:08, Jens Axboe wrote:
->> If we have just one queue type in the plug list, then we can extend our
->> direct issue to cover a full plug list as well.
->>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+On 10/26/21 3:33 AM, Yi Zhang wrote:
+> Hello
 > 
-> Hi Jens, I tried out for-next branch and observed A WARNING "do not call
-> blocking ops when !TASK_RUNNING" [1]. Reverting this patch from the for-next
-> branch, the warning disappears. The warning was triggered when mkfs.xfs is
-> run for memory backed null_blk devices with "none" scheduler. The commands below
-> recreates it.
-> 
-> # modprobe null_blk nr_devices=0
-> # mkdir /sys/kernel/config/nullb/nullb0
-> # declare sysfs=/sys/kernel/config/nullb/nullb0
-> # echo 1 > "${sysfs}"/memory_backed
-> # echo 1 > "${sysfs}"/power
-> # echo none > /sys/block/nullb0/queue/scheduler
-> # mkfs.xfs /dev/nullb0
-> 
-> 
-> Referring the call stack printed, I walked through the function calls. In
-> __blkdev_direct_IO_simple(), task state is set UNINTERRUPTIBLE. Way
-> down to might_sleep_if() called from null_queue_rq(), it is warned that
-> the task state is not RUNNING. This patch adds blk_mq_plug_issue_direct()
-> call in blk_mq_flush_plug_list(), then the call path was linked from
-> __blkdev_direct_IO_simple() to null_queue_rq().
-> 
-> __blkdev_direct_IO_simple() block/fops.c
->   set_current_state(TASK_UNINTERRUPTIBLE) ... current->__state = TASK_UNINTERRUPTIBLE
->   blk_io_schedule()
->     io_schedule_timeout() kernel/sched/core.c
->       io_schedule_prepare()
->         blk_schedule_flush_plug() include/linux/blkdev.h
->           blk_flush_plug_list() block/blk-core.c
->             blk_mq_flush_plug_list()
->               blk_mq_flush_plug_list() block/blk-mq.c  ... this patch added call to blk_mq_plug_issue_direct()
->                 blk_mq_plug_issue_direct()
->                   blk_mq_reqeust_issue_directly()
->                     __blk_mq_try_issue_directly()
->                       __blk_mq_issue_directly()
->                         q->mq_ops->queue_rq()
->                           null_queue_rq() drivers/block/null_blk/main.c
->                             might_sleep_if(flags & BLK_MQ_F_BLOCKING) include/linux/kernel.h
->                               might_sleep()
->                                 __might_sleep() kernel/sched/core.c ... current->__state != TASK_RUNNING  (WARN_ONCE)
-> 
-> So far, I can't think of a good solution for this warning. Any idea?
-> 
+> Below NULL pointer was triggered[2] with blktests block/029 on latest
+> linux-block/for-next, pls check it.
 > 
 > [1]
+> 9b3b463f3955 (HEAD -> for-next, origin/for-next) Merge branch
+> 'for-5.16/block' into for-next
 > 
-> [60501.340746] null_blk: module loaded
-> [60519.303106] ------------[ cut here ]------------
-> [60519.308485] do not call blocking ops when !TASK_RUNNING; state=2 set at [<000000005ba5e596>] __blkdev_direct_IO_simple+0x3f8/0x6f0
-> [60519.320943] WARNING: CPU: 2 PID: 8929 at kernel/sched/core.c:9486 __might_sleep+0x124/0x160
-> [60519.330001] Modules linked in: null_blk xfs dm_zoned xt_conntrack nf_nat_tftp nf_conntrack_tftp bridge stp llc nft_objref nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_tables ebtable_nat ebtable_broute ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_raw iptable_security ip_set nfnetlink ebtable_filter rfkill ebtables target_core_user target_core_mod ip6table_filter ip6_tables iptable_filter sunrpc intel_rapl_msr intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass iTCO_wdt intel_pmc_bxt iTCO_vendor_support rapl intel_cstate intel_uncore pcspkr joydev ipmi_ssif i2c_i801 lpc_ich i2c_smbus ses enclosure mei_me mei ioatdma wmi acpi_ipmi ipmi_si ipmi_devintf ipmi_msghandler acpi_pad acpi_power_meter zram ip_tables ast
-> [60519.330166]  drm_vram_helper drm_kms_helper cec drm_ttm_helper crct10dif_pclmul ttm crc32_pclmul crc32c_intel drm ghash_clmulni_intel igb mpt3sas nvme dca nvme_core i2c_algo_bit raid_class scsi_transport_sas fuse [last unloaded: null_blk]
-> [60519.438458] CPU: 2 PID: 8929 Comm: mkfs.xfs Not tainted 5.15.0-rc6+ #11
-> [60519.445781] Hardware name: Supermicro Super Server/X10SRL-F, BIOS 2.0 12/17/2015
-> [60519.453893] RIP: 0010:__might_sleep+0x124/0x160
-> [60519.459139] Code: 48 8d bb 98 2c 00 00 48 89 fa 48 c1 ea 03 80 3c 02 00 75 31 48 8b 93 98 2c 00 00 44 89 f6 48 c7 c7 e0 f2 88 8a e8 04 eb f9 01 <0f> 0b e9 6d ff ff ff e8 60 d1 66 00 e9 1c ff ff ff e8 66 d1 66 00
-> [60519.478594] RSP: 0018:ffff8882707ef5a8 EFLAGS: 00010286
-> [60519.484533] RAX: 0000000000000000 RBX: ffff888125cbb280 RCX: 0000000000000000
-> [60519.492379] RDX: 0000000000000004 RSI: 0000000000000008 RDI: ffffed104e0fdeab
-> [60519.500216] RBP: ffffffffc16122c0 R08: 0000000000000001 R09: ffff8888114ad587
-> [60519.508052] R10: ffffed1102295ab0 R11: 0000000000000001 R12: 0000000000000618
-> [60519.515886] R13: 0000000000000000 R14: 0000000000000002 R15: ffff88813160a000
-> [60519.523721] FS:  00007fd79959b400(0000) GS:ffff888811480000(0000) knlGS:0000000000000000
-> [60519.532509] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [60519.538963] CR2: 000055bf4e3dc000 CR3: 000000029e904005 CR4: 00000000001706e0
-> [60519.546803] Call Trace:
-> [60519.549976]  null_queue_rq+0x3ee/0x6b0 [null_blk]
-> [60519.555407]  __blk_mq_try_issue_directly+0x433/0x680
-> [60519.561085]  ? __submit_bio+0x63a/0x780
-> [60519.565636]  ? __blk_mq_get_driver_tag+0x9a0/0x9a0
-> [60519.571144]  blk_mq_flush_plug_list+0x5f6/0xc40
-> [60519.576387]  ? iov_iter_get_pages_alloc+0xf50/0xf50
-> [60519.581980]  ? find_held_lock+0x2c/0x110
-> [60519.586618]  ? blk_mq_insert_requests+0x440/0x440
-> [60519.592044]  ? __blkdev_direct_IO_simple+0x3f8/0x6f0
-> [60519.597719]  blk_flush_plug_list+0x28f/0x410
-> [60519.602710]  ? blk_start_plug_nr_ios+0x270/0x270
-> [60519.608039]  ? __blkdev_direct_IO_simple+0x3f8/0x6f0
-> [60519.613713]  io_schedule_timeout+0xcc/0x150
-> [60519.618621]  __blkdev_direct_IO_simple+0x475/0x6f0
-> [60519.624126]  ? blkdev_llseek+0xc0/0xc0
-> [60519.628598]  ? blkdev_get_block+0xd0/0xd0
-> [60519.633320]  ? filemap_check_errors+0xe0/0xe0
-> [60519.638391]  ? find_held_lock+0x2c/0x110
-> [60519.643024]  ? lock_release+0x1d4/0x690
-> [60519.647574]  blkdev_direct_IO+0x9b2/0x1110
-> [60519.652389]  ? filemap_check_errors+0x56/0xe0
-> [60519.657455]  ? add_watch_to_object+0xa0/0x6e0
-> [60519.662524]  ? blkdev_bio_end_io+0x490/0x490
-> [60519.667518]  generic_file_direct_write+0x1a9/0x4a0
-> [60519.673026]  __generic_file_write_iter+0x1fa/0x480
-> [60519.678526]  ? lock_is_held_type+0xe0/0x110
-> [60519.683420]  blkdev_write_iter+0x319/0x5a0
-> [60519.688231]  ? blkdev_open+0x260/0x260
-> [60519.692690]  ? lock_downgrade+0x6b0/0x6b0
-> [60519.697412]  ? do_raw_spin_unlock+0x55/0x1f0
-> [60519.702392]  new_sync_write+0x359/0x5e0
-> [60519.706941]  ? new_sync_read+0x5d0/0x5d0
-> [60519.711582]  ? __cond_resched+0x15/0x30
-> [60519.716124]  ? inode_security+0x56/0xf0
-> [60519.720688]  vfs_write+0x5e4/0x8e0
-> [60519.724805]  __x64_sys_pwrite64+0x17c/0x1d0
-> [60519.729698]  ? vfs_write+0x8e0/0x8e0
-> [60519.733982]  ? syscall_enter_from_user_mode+0x21/0x70
-> [60519.739747]  do_syscall_64+0x3b/0x90
-> [60519.744037]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> [60519.749796] RIP: 0033:0x7fd7997c125a
-> [60519.754088] Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb ba 0f 1f 00 f3 0f 1e fa 49 89 ca 64 8b 04 25 18 00 00 00 85 c0 75 15 b8 12 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 5e c3 0f 1f 44 00 00 48 83 ec 28 48 89 54 24
-> [60519.773543] RSP: 002b:00007ffe8d456718 EFLAGS: 00000246 ORIG_RAX: 0000000000000012
-> [60519.781816] RAX: ffffffffffffffda RBX: 00007ffe8d456e10 RCX: 00007fd7997c125a
-> [60519.789656] RDX: 0000000000020000 RSI: 000055bf4e3bd600 RDI: 0000000000000004
-> [60519.797494] RBP: 0000000000020000 R08: 000055bf4e3bd600 R09: 00007fd79975fa60
-> [60519.805333] R10: 00000003fffe0000 R11: 0000000000000246 R12: 000055bf4e3b9710
-> [60519.813172] R13: 0000000000000004 R14: 000055bf4e3bd600 R15: 0000000000001000
-> [60519.821028] irq event stamp: 20385
-> [60519.825139] hardirqs last  enabled at (20395): [<ffffffff883481e0>] __up_console_sem+0x60/0x70
-> [60519.834455] hardirqs last disabled at (20404): [<ffffffff883481c5>] __up_console_sem+0x45/0x70
-> [60519.843763] softirqs last  enabled at (20372): [<ffffffff881e6a7c>] __irq_exit_rcu+0x19c/0x200
-> [60519.853079] softirqs last disabled at (20367): [<ffffffff881e6a7c>] __irq_exit_rcu+0x19c/0x200
-> [60519.862389] ---[ end trace be9623465002e439 ]---
+> [2]
+> [  110.508269] run blktests block/029 at 2021-10-26 05:29:11
+> [  110.535182] null_blk: module loaded
+> [  110.674174] Kernel attempted to read user page (d8) - exploit
+> attempt? (uid: 0)
+> [  110.674212] BUG: Kernel NULL pointer dereference on read at 0x000000d8
+> [  110.674236] Faulting instruction address: 0xc0000000009414c4
+> [  110.674251] Oops: Kernel access of bad area, sig: 11 [#1]
+> [  110.674272] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA PowerNV
+> [  110.674308] Modules linked in: null_blk rfkill sunrpc joydev ofpart
+> ses enclosure scsi_transport_sas i40e at24 powernv_flash mtd
+> tpm_i2c_nuvoton regmap_i2c ipmi_powernv rtc_opal crct10dif_vpmsum
+> opal_prd ipmi_devintf i2c_opal ipmi_msghandler fuse zram ip_tables xfs
+> ast i2c_algo_bit drm_vram_helper drm_kms_helper syscopyarea
+> sysfillrect sysimgblt fb_sys_fops cec drm_ttm_helper ttm drm
+> vmx_crypto crc32c_vpmsum i2c_core aacraid drm_panel_orientation_quirks
+> [  110.674485] CPU: 60 PID: 3469 Comm: check Not tainted 5.15.0-rc6+ #3
+> [  110.674520] NIP:  c0000000009414c4 LR: c000000000941638 CTR: 0000000000000000
+> [  110.674556] REGS: c00000003aea77c0 TRAP: 0300   Not tainted  (5.15.0-rc6+)
+> [  110.674580] MSR:  900000000280b033
+> <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 84428482  XER: 00000006
+> [  110.674634] CFAR: c000000000941648 DAR: 00000000000000d8 DSISR:
+> 40000000 IRQMASK: 0
+> [  110.674634] GPR00: c000000000941638 c00000003aea7a60
+> c0000000028a9a00 c00000001ad8a8c0
+> [  110.674634] GPR04: c000000089287e00 0000000000000001
+> 00000000ffffffff ffffffffffffffff
+> [  110.674634] GPR08: 00000000000000d8 0000000000000000
+> 00000000000000d8 0000000000000400
+> [  110.674634] GPR12: 0000000000008000 c000000ffff9e600
+> c00000001ac416c0 0000000000000000
+> [  110.674634] GPR16: 0000000000000001 0000000000000001
+> 0000000000000000 c009dfffff94f300
+> [  110.674634] GPR20: 0000000000000000 0000000000000000
+> c0000000028e72b8 c0000000028e78a0
+> [  110.674634] GPR24: 0000000000000001 0000000000000008
+> c0000000aaa53838 c009dfffff94f388
+> [  110.674634] GPR28: c00000009d527698 c009dfffff94f3a0
+> 0000000000000002 c0000000aaa53858
+> [  110.674942] NIP [c0000000009414c4] blk_mq_map_swqueue+0x1a4/0x490
+> [  110.674982] LR [c000000000941638] blk_mq_map_swqueue+0x318/0x490
+> [  110.675021] Call Trace:
+> [  110.675038] [c00000003aea7a60] [c000000000941638]
+> blk_mq_map_swqueue+0x318/0x490 (unreliable)
+> [  110.675080] [c00000003aea7b10] [c0000000009420e4]
+> blk_mq_update_nr_hw_queues+0x244/0x480
+> [  110.675128] [c00000003aea7bd0] [c00800000f3e2d60]
+> nullb_device_submit_queues_store+0x98/0x120 [null_blk]
+> [  110.675182] [c00000003aea7c20] [c000000000648aa8]
+> configfs_write_iter+0x118/0x1e0
+> [  110.675224] [c00000003aea7c70] [c000000000521494] new_sync_write+0x124/0x1b0
+> [  110.675281] [c00000003aea7d10] [c000000000524794] vfs_write+0x2c4/0x390
+> [  110.675299] [c00000003aea7d60] [c000000000524b08] ksys_write+0x78/0x130
+> [  110.675316] [c00000003aea7db0] [c00000000002d648]
+> system_call_exception+0x188/0x360
+> [  110.675335] [c00000003aea7e10] [c00000000000c1e8]
+> system_call_vectored_common+0xe8/0x278
+> [  110.675355] --- interrupt: 3000 at 0x7fffa1aefee4
+> [  110.675367] NIP:  00007fffa1aefee4 LR: 0000000000000000 CTR: 0000000000000000
+> [  110.675393] REGS: c00000003aea7e80 TRAP: 3000   Not tainted  (5.15.0-rc6+)
+> [  110.675429] MSR:  900000000280f033
+> <SF,HV,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48422488  XER: 00000000
+> [  110.675482] IRQMASK: 0
+> [  110.675482] GPR00: 0000000000000004 00007fffc592dd30
+> 00007fffa1be7000 0000000000000001
+> [  110.675482] GPR04: 0000000143297fc0 0000000000000002
+> 0000000000000010 00000001432bd791
+> [  110.675482] GPR08: 0000000000000000 0000000000000000
+> 0000000000000000 0000000000000000
+> [  110.675482] GPR12: 0000000000000000 00007fffa1d2afa0
+> 0000000000000000 0000000000000000
+> [  110.675482] GPR16: 000000010dfd87b8 000000010dfd94d4
+> 0000000020000000 000000010deeae80
+> [  110.675482] GPR20: 0000000000000000 00007fffc592df54
+> 000000010df83128 000000010dfd89bc
+> [  110.675482] GPR24: 000000010dfd8a50 0000000000000000
+> 0000000143297fc0 0000000000000002
+> [  110.675482] GPR28: 0000000000000002 00007fffa1be16d8
+> 0000000143297fc0 0000000000000002
+> [  110.675718] NIP [00007fffa1aefee4] 0x7fffa1aefee4
+> [  110.675750] LR [0000000000000000] 0x0
+> [  110.675769] --- interrupt: 3000
+> [  110.675789] Instruction dump:
+> [  110.675798] 2c290000 41820168 e91c0600 7bc926e4 e95c0048 7d28482a
+> 7d29a82e 79291f24
+> [  110.675845] 7d2a482a f93d0000 390900d8 7d489214 <7d08a02a> 7d088839
+> 4082004c 7d0050a8
+> [  110.675885] ---[ end trace b9b604499c6b5b71 ]---
+> [  110.814135]
+> [  111.814148] Kernel panic - not syncing: Fatal exception
+> [  113.674122] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-This one should fix it:
-
-https://git.kernel.dk/cgit/linux-block/commit/?h=for-5.16/block&id=ff1552232b3612edff43a95746a4e78e231ef3d4
+Should be fixed in my current for-next branch.
 
 -- 
 Jens Axboe
