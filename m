@@ -2,91 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 121AA43DCE3
-	for <lists+linux-block@lfdr.de>; Thu, 28 Oct 2021 10:19:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D43B43DF56
+	for <lists+linux-block@lfdr.de>; Thu, 28 Oct 2021 12:52:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229934AbhJ1IV1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Oct 2021 04:21:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36687 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229833AbhJ1IVW (ORCPT
+        id S230169AbhJ1Kyp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Oct 2021 06:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230170AbhJ1Kyj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Oct 2021 04:21:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635409135;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pXMrcpHehLRVHJk/nMeA6+QLvzVDo2cx25CECDi4i7A=;
-        b=JAJnUFjPqlv1tq/hh0E+TED8BpilQejxGHjiKBiysXigTdTJqeqCUCUBXaaf4kLzAfyQM6
-        Qc74S11k6+asX8ooLERRU/y4bdY/TkEGhd4QM7WSdOdq67b+N2Xw6Hy/ZxKv3eLgDFiH+1
-        C3JBAQrvzdZTRX/nliMScDC0A35q6qI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-i4Dnxkw1NDyC3baBbDAFUQ-1; Thu, 28 Oct 2021 04:18:51 -0400
-X-MC-Unique: i4Dnxkw1NDyC3baBbDAFUQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 497889F932;
-        Thu, 28 Oct 2021 08:18:50 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E742B57CB9;
-        Thu, 28 Oct 2021 08:18:46 +0000 (UTC)
-Date:   Thu, 28 Oct 2021 09:18:46 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Colin Ian King <colin.i.king@googlemail.com>
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] virtio_blk: Fix spelling mistake: "advertisted" ->
- "advertised"
-Message-ID: <YXpc5l6lzp+aBTaU@stefanha-x1.localdomain>
-References: <20211025102240.22801-1-colin.i.king@gmail.com>
+        Thu, 28 Oct 2021 06:54:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8CDC061230
+        for <linux-block@vger.kernel.org>; Thu, 28 Oct 2021 03:52:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 188so9951781ljj.4
+        for <linux-block@vger.kernel.org>; Thu, 28 Oct 2021 03:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
+        b=MqgQiMnth4O6zLvpsYbAhVLW1BorpgoCleWwfkY0/i+i6OSDuXRZO1jIKzpTTrmehO
+         XtsLWdXiTcL+XCe4naFtf2tTUJnbwwmDpuUkpvRhLd+LEnuxY7nNr11hmTRUVX1WOHsO
+         bN0u1arCg4gm9LHdXRMZFcXOD22U5gDGuBOuhPo6qvWbt6nA2j/p/5IZ88XFHrEsiSW3
+         12hentYJMlWeUfa2lUQkLm+5/fvMSizrI7wGoF2taOa3dgGUV5HKZWb0yAAH7nAXVevJ
+         tDC/xbHNLzSn310XeD3Gkoobjl6MPBQzT5DSLzerNBdTKOdmyp3xvfvOyo80qVUTZIED
+         gaRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
+        b=Pfq+3P35Xla+nctCG1v7deYlQn/OKiienA6ntl6PEgrJ1yBD2+gi0c5xsTaIDFTes6
+         X2tBPMNwMCSLwqIzOFsWJwml7r+sM2HSsYNyHcwpFCLLuEQCSlqtuVZF6TsP2Zh7ROO4
+         TLJaS5fNRyi/nFtQB/dN8RkSq0iheIQs9qXH45yEwdU6hPjQ7o+dsD6ofb7qpfttZhMs
+         C7dfSR6GKjF/7snZEPSw2pk39N0NxqFos8URaqH7hRL9W+X+blPseB8Nkx9s/aIm2F0/
+         l4liXOdGm0Bh9JVWfMVZsVBnrQnOy4cGgjLXky4q4GYOtJiq+Vyqbo1ppjKxm8p5DUNI
+         njjg==
+X-Gm-Message-State: AOAM532UZU5nOh32kjZiO5PiL9C4QDXsmkWI+RIWWdlX8jGlHAumXFhX
+        W+Q5g/l/gdtiAIBGwZneqV2skFX1n6ltucK52TY=
+X-Google-Smtp-Source: ABdhPJw39EF9dJlXS9lAFrZ3adXxB8DVzXcygVzA3uRLiZxWlggxaB9ElCxkEB0P82xisoA6G442GD5iqMe2hCgLIt8=
+X-Received: by 2002:a2e:9a83:: with SMTP id p3mr3750290lji.145.1635418330269;
+ Thu, 28 Oct 2021 03:52:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="U+u1ddsxMsOIkdhu"
-Content-Disposition: inline
-In-Reply-To: <20211025102240.22801-1-colin.i.king@gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Received: by 2002:ab3:6f89:0:0:0:0:0 with HTTP; Thu, 28 Oct 2021 03:52:09
+ -0700 (PDT)
+Reply-To: aabdulwalialhashmi@gmail.com
+From:   Abdulwali Alhashmi <husamalsayed.hs@gmail.com>
+Date:   Thu, 28 Oct 2021 03:52:09 -0700
+Message-ID: <CAF6yYCeS=rm8=_71-kMjVo4oaVK57w9X52R_yv1HDrBe7vh-sA@mail.gmail.com>
+Subject: PLEASE GET BACK TO ME IF I CAN I TRUST YOU
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+-- 
+Greetings,
 
---U+u1ddsxMsOIkdhu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Firstly, I apologize for encroaching into your privacy in this manner
+as it may seem unethical though it is a matter of great importance.
 
-On Mon, Oct 25, 2021 at 11:22:40AM +0100, Colin Ian King wrote:
-> There is a spelling mistake in a dev_err error message. Fix it.
->=20
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  drivers/block/virtio_blk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+I am Abdulwali Alhashmi, I work with Cayman National Bank (Cayman Islands).
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+I am contacting you because my status would not permit me to do this
+alone as it is concerning our customer and an investment placed under
+our bank's management over 5 years ago.
 
---U+u1ddsxMsOIkdhu
-Content-Type: application/pgp-signature; name="signature.asc"
+I have a proposal I would love to discuss with you which will be very
+beneficial to both of us. It's regarding my late client who has a huge
+deposit with my bank.
 
------BEGIN PGP SIGNATURE-----
+He is from your country and shares the same last name with you.
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmF6XOUACgkQnKSrs4Gr
-c8j8vgf9GmyeRUXKxu9ABJAENCKSjxXLD6Vukn+lKvXAMvprvR+m82GgNwtX37u5
-ag8cYzpK3JKZ8pu2U9hmsbormnnXTPhwSv4Xu6rwSsmLK2kx1ZrVjmlh3/z4MA8T
-yoUsJQOpMsIjO6Y0R+t+/Hl/8bzxuH3d4mWWca4GTbIF2ZAvOxEgute1VVGcUr9L
-yiFT3Ym5HVxP7VaHrtXBCwjXl/taWhB+oTo4cToa4OPo6/ccnTaXtuJEn+ytGlTd
-ZBiPFVVGIpPNqasYkZeMcE8Jxxp/4+c5uDW89FVZ3l2NxKoX3TmaLHyfFDk0RqJY
-1tK8mop6eVQvpb7pkQwjikTXOG8/7g==
-=0jkP
------END PGP SIGNATURE-----
+I want to seek your consent to present you as the next of kin to my
+late client who died and left a huge deposit with my bank.
 
---U+u1ddsxMsOIkdhu--
+I would respectfully request that you keep the contents of this mail
+confidential and respect the integrity of the information you come by
+as a result of this mail.
 
+Please kindly get back to me for more details if I can TRUST YOU.{
+aabdulwalialhashmi@gmail.com }
+
+Regards
+Abdulwali Alhashmi
+Treasury and Deposit Management,
+Cayman National Bank Cayman Islands
