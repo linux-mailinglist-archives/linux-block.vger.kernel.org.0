@@ -2,195 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F105343DFF3
-	for <lists+linux-block@lfdr.de>; Thu, 28 Oct 2021 13:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E4F043E39A
+	for <lists+linux-block@lfdr.de>; Thu, 28 Oct 2021 16:25:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230183AbhJ1L1B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Oct 2021 07:27:01 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:57628 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230059AbhJ1L1A (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Oct 2021 07:27:00 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 2978346154;
-        Thu, 28 Oct 2021 11:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1635420271; x=1637234672; bh=YXHgbGA2lhrUJAZurjL9cY1iWV1Um0NwCFc
-        4s9CDP2Q=; b=VNAvups4zh8tcDA22CsB6Px0v0e+p1fuT5OmgV5B53oH8EOOTB/
-        r8GOL2xm7OyfSt26S+clgfqAFMbYrMBvgQWXvbNMnRvxMi47dsFmRsSpDKz0jzRP
-        /36i8BrWe35OBOqwX3T8/sBIELuybBT7T2qjv6KwfHvBsPG0AzL6h8bU=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aTbt68cat-uT; Thu, 28 Oct 2021 14:24:31 +0300 (MSK)
-Received: from T-EXCH-04.corp.yadro.com (t-exch-04.corp.yadro.com [172.17.100.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 3204D46184;
-        Thu, 28 Oct 2021 14:24:31 +0300 (MSK)
-Received: from localhost.localdomain (10.199.10.99) by
- T-EXCH-04.corp.yadro.com (172.17.100.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Thu, 28 Oct 2021 14:24:30 +0300
-From:   "Alexander V. Buev" <a.buev@yadro.com>
-To:     <linux-block@vger.kernel.org>
-CC:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Mikhail Malygin <m.malygin@yadro.com>, <linux@yadro.com>,
-        "Alexander V. Buev" <a.buev@yadro.com>
-Subject: [PATCH 3/3] block: fops: handle IOCB_USE_PI in direct IO
-Date:   Thu, 28 Oct 2021 14:24:06 +0300
-Message-ID: <20211028112406.101314-4-a.buev@yadro.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211028112406.101314-1-a.buev@yadro.com>
-References: <20211028112406.101314-1-a.buev@yadro.com>
+        id S231148AbhJ1O1r (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Oct 2021 10:27:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231220AbhJ1O1q (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 28 Oct 2021 10:27:46 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94F4C061570
+        for <linux-block@vger.kernel.org>; Thu, 28 Oct 2021 07:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=eZtWEg8RFhEVXL60WgstW7U2u2C0E8QASWxDHVHvq6A=; b=ipvx/kZ/sgsS7SQWT4j9zDI8MR
+        pBNUJXP1FG1NNyrlIEITpLkESIs/n6kw4lwf2CxfTixVkHFqluskKD+j0G0mqPkxA7C66vwdQQ+fg
+        dwGuX3TNrygXnMoz+EG27R9IIgnUZ/aqpFGgPR+RZ9SsMV/6sVlbnhn9kxJneRgYXqEcCgPMDz9BF
+        hnvZGZo/j3DqzZbSFfw0lD2QHbvQybt8tJZ4xa2HC1KSGMhX2Y+ofYSOhcdKD0tB0+Aja2OMQi2jj
+        ml4mZ303WdwMKMWOpE0ThnUNUrkiWf4x1yMe55Z3rNso44iTbhAB+QONLI5qGim6dIiM1bLyQMYbA
+        uC7um1Bw==;
+Received: from [2001:4bb8:199:7b1d:487c:3190:e387:3394] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mg6LF-0088Xh-2l; Thu, 28 Oct 2021 14:25:17 +0000
+Date:   Thu, 28 Oct 2021 16:25:13 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Subject: [GIT PULL] nvme fixes for Linux 5.15
+Message-ID: <YXqyyRRUV4GJis4I@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.10.99]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-04.corp.yadro.com (172.17.100.104)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Check that the size of integrity data correspond to device integrity
-profile and data size. Split integrity data to the different bio's
-in case of to big orginal bio (together with normal data).
-Correct offset/size checking at blkdev layer in read/write_iter
-functions.
+The following changes since commit 9fbfabfda25d8774c5a08634fdd2da000a924890:
 
-Signed-off-by: Alexander V. Buev <a.buev@yadro.com>
----
- block/fops.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+  block: fix incorrect references to disk objects (2021-10-18 11:20:38 -0600)
 
-diff --git a/block/fops.c b/block/fops.c
-index 1e970c247e0e..74040314f5f3 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -197,12 +197,39 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 	struct blk_plug plug;
- 	struct blkdev_dio *dio;
- 	struct bio *bio;
-+	struct iovec *pi_iov, _pi_iov;
- 	bool is_poll = (iocb->ki_flags & IOCB_HIPRI) != 0;
- 	bool is_read = (iov_iter_rw(iter) == READ), is_sync;
- 	loff_t pos = iocb->ki_pos;
- 	blk_qc_t qc = BLK_QC_T_NONE;
- 	int ret = 0;
- 
-+	if (iocb->ki_flags & IOCB_USE_PI) {
-+		struct blk_integrity *bi = blk_get_integrity(bdev->bd_disk);
-+		unsigned int intervals;
-+
-+		/* Last iovec contains protection information. */
-+		if (!iter->nr_segs)
-+			return -EINVAL;
-+
-+		iter->nr_segs--;
-+		pi_iov = (struct iovec *)(iter->iov + iter->nr_segs);
-+
-+		/* TODO: seems iter is in charge of this check ? */
-+		if (pi_iov->iov_len > iter->count)
-+			return -EINVAL;
-+
-+		iter->count -= pi_iov->iov_len;
-+
-+		intervals = bio_integrity_intervals(bi, iter->count >> 9);
-+		if (unlikely(intervals * bi->tuple_size > pi_iov->iov_len)) {
-+			pr_err("Integrity & data size mismatch data=%lu integrity=%u intervals=%u tupple=%u",
-+				iter->count, (unsigned int)pi_iov->iov_len,
-+				intervals, bi->tuple_size);
-+				return -EINVAL;
-+		}
-+	}
-+
- 	if ((pos | iov_iter_alignment(iter)) &
- 	    (bdev_logical_block_size(bdev) - 1))
- 		return -EINVAL;
-@@ -258,6 +285,17 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 		dio->size += bio->bi_iter.bi_size;
- 		pos += bio->bi_iter.bi_size;
- 
-+		/* in case we can't add all data to one bio */
-+		/* we must split integrity too */
-+
-+		if (iocb->ki_flags & IOCB_USE_PI) {
-+			struct blk_integrity *bi = bdev_get_integrity(bio->bi_bdev);
-+
-+			_pi_iov.iov_base =  pi_iov->iov_base;
-+			_pi_iov.iov_base += bio_integrity_bytes(bi, (dio->size-bio->bi_iter.bi_size) >> 9);
-+			_pi_iov.iov_len  = bio_integrity_bytes(bi, bio->bi_iter.bi_size >> 9);
-+		}
-+
- 		nr_pages = bio_iov_vecs_to_alloc(iter, BIO_MAX_VECS);
- 		if (!nr_pages) {
- 			bool polled = false;
-@@ -267,6 +305,16 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 				polled = true;
- 			}
- 
-+			/* Add protection information to bio */
-+			if (iocb->ki_flags & IOCB_USE_PI) {
-+				ret = bio_integrity_add_pi_iovec(bio, &_pi_iov);
-+				if (ret) {
-+					bio->bi_status = BLK_STS_IOERR;
-+					bio_endio(bio);
-+					break;
-+				}
-+			}
-+
- 			qc = submit_bio(bio);
- 
- 			if (polled)
-@@ -288,6 +336,16 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 			atomic_inc(&dio->ref);
- 		}
- 
-+
-+		if (iocb->ki_flags & IOCB_USE_PI) {
-+			ret = bio_integrity_add_pi_iovec(bio, &_pi_iov);
-+			if (ret) {
-+				bio->bi_status = BLK_STS_IOERR;
-+				bio_endio(bio);
-+				break;
-+			}
-+		}
-+
- 		submit_bio(bio);
- 		bio = bio_alloc(GFP_KERNEL, nr_pages);
- 	}
-@@ -509,6 +567,12 @@ static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if ((iocb->ki_flags & (IOCB_NOWAIT | IOCB_DIRECT)) == IOCB_NOWAIT)
- 		return -EOPNOTSUPP;
- 
-+	if (iocb->ki_flags & IOCB_USE_PI) {
-+		if (from->nr_segs < 2)
-+			return -EINVAL;
-+		size += from->iov[from->nr_segs-1].iov_len;
-+	}
-+
- 	size -= iocb->ki_pos;
- 	if (iov_iter_count(from) > size) {
- 		shorted = iov_iter_count(from) - size;
-@@ -537,6 +601,13 @@ static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 		return 0;
- 
- 	size -= pos;
-+
-+	if (iocb->ki_flags & IOCB_USE_PI) {
-+		if (to->nr_segs < 2)
-+			return -EINVAL;
-+		size += to->iov[to->nr_segs-1].iov_len;
-+	}
-+
- 	if (iov_iter_count(to) > size) {
- 		shorted = iov_iter_count(to) - size;
- 		iov_iter_truncate(to, size);
--- 
-2.33.0
+are available in the Git repository at:
 
+  git://git.infradead.org/nvme.git tags/nvme-5.15-2021-10-28
+
+for you to fetch changes up to 86aeda32b887cdaeb0f4b7bfc9971e36377181c7:
+
+  nvmet-tcp: fix header digest verification (2021-10-27 09:20:50 +0200)
+
+----------------------------------------------------------------
+nvme fixe for Linux 5.15
+
+ - fix nvmet-tcp header digest verification (Amit Engel)
+ - fix a memory leak in nvmet-tcp when releasing a queue
+   (Maurizio Lombardi)
+ - fix nvme-tcp H2CData PDU send accounting again (Sagi Grimberg)
+ - fix digest pointer calculation in nvme-tcp and nvmet-tcp
+   (Varun Prakash)
+ - fix possible nvme-tcp req->offset corruption (Varun Prakash)
+
+----------------------------------------------------------------
+Amit Engel (1):
+      nvmet-tcp: fix header digest verification
+
+Maurizio Lombardi (1):
+      nvmet-tcp: fix a memory leak when releasing a queue
+
+Sagi Grimberg (1):
+      nvme-tcp: fix H2CData PDU send accounting (again)
+
+Varun Prakash (3):
+      nvme-tcp: fix possible req->offset corruption
+      nvme-tcp: fix data digest pointer calculation
+      nvmet-tcp: fix data digest pointer calculation
+
+ drivers/nvme/host/tcp.c   | 9 ++++++---
+ drivers/nvme/target/tcp.c | 7 +++++--
+ 2 files changed, 11 insertions(+), 5 deletions(-)
