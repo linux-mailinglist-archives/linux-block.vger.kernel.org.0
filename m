@@ -2,77 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 762E1442279
-	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 22:17:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9155D442358
+	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 23:23:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230497AbhKAVTi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 17:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36058 "EHLO
+        id S231161AbhKAWZn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 18:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231312AbhKAVTY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 17:19:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017D2C061764;
-        Mon,  1 Nov 2021 14:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=Bx+F5BQFecP5/NIWNml8fMZvcj9H0D34Vhk0T/k/6XM=; b=RBGype5dL/KUTb42oGbk83TvcN
-        v9X1Sn8Egxcei3h6+KPQRFLl7g9XJN367O57EQCQZSKsaCCww6zgPqyhwQZtj1vWCteybSrwgD25Q
-        fsxpaLfy+zZYjbnrvD3u7DBrs6NglGeq6tllKQJRLCvYMjgoxN44sqC/Z3KnZxK+nyjspYboD7rJO
-        UvZ2qJD7WACcIypeDdLbWl2dtdQGSkFZew3uLd4Z5Zt0w7bQNV/q405uxiJ8rEjMPw61eUtEWWBi5
-        z6r2W5AjE+jawnJBTk48yrb9g8f0doyey7BUk1X/qcmm7/jYExH+bZAR/BQPUbdMj1imX8ylH1SSK
-        U9EwOSSg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mhecd-004247-WF; Mon, 01 Nov 2021 21:14:00 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH 21/21] xfs: Support multi-page folios
-Date:   Mon,  1 Nov 2021 20:39:29 +0000
-Message-Id: <20211101203929.954622-22-willy@infradead.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211101203929.954622-1-willy@infradead.org>
-References: <20211101203929.954622-1-willy@infradead.org>
+        with ESMTP id S230167AbhKAWZn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 18:25:43 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AA2C061714
+        for <linux-block@vger.kernel.org>; Mon,  1 Nov 2021 15:23:09 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id j1so10068397qtq.11
+        for <linux-block@vger.kernel.org>; Mon, 01 Nov 2021 15:23:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20210112.gappssmtp.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DnYnqLqd12gaQARTKVAqqyWq5HzzIA2bkgQBVsVg4s0=;
+        b=gt6wFXhTP2Om3mCyDlaPZAclh5WszLcpD8FoKutfVj8kgeF1LLfIUwzLFBUYIe1Zzb
+         1wZFR2yisz7vylQ/KZ2Ca9Df9MstkiyosiVMAmFpqNmIMQkvqBA+nLzzouUtMElvy+Eh
+         Rbk0LDFkDyDxgzsMF1BjOwes+AihSB4ohirmWfuyQuEPhbNOYQo3ZZbJWFpSxD1bVbzT
+         FS39TzcCWib50StejXPsjWz9cwjpT/8kr8xl1HOgo5uhKK4PDMfbwiLzgnBEMV/tMEiB
+         61A4v1ss0uZPfPNO5JdiHRX1eLDVszL+ITaYkQuWJonGx+1xIITEZQk7hszS792brO9q
+         yfaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DnYnqLqd12gaQARTKVAqqyWq5HzzIA2bkgQBVsVg4s0=;
+        b=pemLr+oKFhTYD9m81SDxGmsXzyo6qkHJfYGNa7DBsusYLgD5wqoNz92gQRVLtVu7fJ
+         aVStXmXRHT3QaKvrG8wQDV7oI++YdelPwxhP2/lEKcOaNJL0qqQNena8vhGuto/aEfLZ
+         bgId7SbczAGe2nMvE9LFWrffSOZlH2cmxc94DzK+LKKK0toZwR475CO2Iru5DPSHq+iG
+         Sx5/H0l3B/nG1lfrV1EF5kDVxq7Z0/JkOfOWZlmU2he1sPzsJrTtkYQcUk2ZE9rZpnry
+         1OyES+LLMwop1x8QDMbbsfWnkAnNLuf5VnoRjXMZupXQQJbWLykmyXZ9Ewathehq5XhP
+         lEww==
+X-Gm-Message-State: AOAM5315vzvm/zL2bVs8RN+izXJkqzsU58SA/G0kZwqzcujET+X1fSyK
+        F8WtgtaAaHAoB+QM4np7kfL9oA==
+X-Google-Smtp-Source: ABdhPJwD/QBrvyYQQ+Lee0e7aoTE8Wb4w7Mf/o3QAWnE91gfpf4OCl5iUbc9xxSha65pB7Z2vE2heA==
+X-Received: by 2002:a05:622a:105:: with SMTP id u5mr16022514qtw.163.1635805388070;
+        Mon, 01 Nov 2021 15:23:08 -0700 (PDT)
+Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
+        by smtp.gmail.com with ESMTPSA id h3sm2063742qkn.73.2021.11.01.15.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Nov 2021 15:23:07 -0700 (PDT)
+Date:   Mon, 1 Nov 2021 18:23:06 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [PATCH] nbd: error out if socket index doesn't match in
+ nbd_handle_reply()
+Message-ID: <YYBoyqYaMdTWro2m@localhost.localdomain>
+References: <20211101092538.1155842-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211101092538.1155842-1-yukuai3@huawei.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that iomap has been converted, XFS is multi-page folio safe.
-Indicate to the VFS that it can now create multi-page folios for XFS.
+On Mon, Nov 01, 2021 at 05:25:38PM +0800, Yu Kuai wrote:
+> commit fcf3d633d8e1 ("nbd: check sock index in nbd_read_stat()") just
+> add error message when socket index doesn't match. Since the request
+> and reply must be transmitted over the same socket, it's ok to error
+> out in such situation.
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/xfs/xfs_icache.c | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index f2210d927481..804507c82455 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -87,6 +87,7 @@ xfs_inode_alloc(
- 	/* VFS doesn't initialise i_mode or i_state! */
- 	VFS_I(ip)->i_mode = 0;
- 	VFS_I(ip)->i_state = 0;
-+	mapping_set_large_folios(VFS_I(ip)->i_mapping);
- 
- 	XFS_STATS_INC(mp, vn_active);
- 	ASSERT(atomic_read(&ip->i_pincount) == 0);
-@@ -336,6 +337,7 @@ xfs_reinit_inode(
- 	inode->i_rdev = dev;
- 	inode->i_uid = uid;
- 	inode->i_gid = gid;
-+	mapping_set_large_folios(inode->i_mapping);
- 	return error;
- }
- 
--- 
-2.33.0
+Thanks,
 
+Josef
