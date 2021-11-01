@@ -2,60 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75B69442012
-	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 19:32:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37CEE442101
+	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 20:42:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231931AbhKASfB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 14:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
+        id S229931AbhKATox (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 15:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbhKASfB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 14:35:01 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6484AC061714
-        for <linux-block@vger.kernel.org>; Mon,  1 Nov 2021 11:32:27 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id y8so2248099ljm.4
-        for <linux-block@vger.kernel.org>; Mon, 01 Nov 2021 11:32:27 -0700 (PDT)
+        with ESMTP id S229896AbhKATov (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 15:44:51 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8D2C061714
+        for <linux-block@vger.kernel.org>; Mon,  1 Nov 2021 12:42:18 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id r194so22902219iod.7
+        for <linux-block@vger.kernel.org>; Mon, 01 Nov 2021 12:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=zmj+VtZWITc++JKRSVOd4uqd+kTUYcgwKJlWfAB8J3U=;
-        b=PGDZXlWK76/BwxBK35lVp7LT6dLx4wFFg5jSGans3IL2iZiZH1N/T4aYAQ2lDUCo/2
-         UydvkcF8gCPjN9uHWSxTAT9zr20t1gMfzIgjrs1NXg89MiI50pP9llfTbG+xn71lrWv1
-         /nGWGh4YnPBbdJVMWDS6FRIqukh8GelFX7FIUB5UAMSFcQmJsnPRFENbFtyP1ZEEVBSD
-         x3EJXHPE50DFCagNgiReksWsFKHhMCfhZyR8tUpjiDdeJzLEcMzjV7rZromoTnCJOqZp
-         7V4avPchxlg5N/WzPKiapjDvdQCmAaduH9bwjgpVQiIE3eEEXT3d1Au99xHX32GWdC5M
-         KQwA==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=SXS5BeSCNTzQoE9Sro7+pSKTW9UOhz2EeDahCPvEpJo=;
+        b=0d41FruYFOkqyRyz3PH/OvFVwbzqwmGMvjH9kACfkBZ5EDQt0LN9OEW+Ea0HW1UYnl
+         Kj2gQqIIRe9Q4JltBmsExIup/FBf1hU0AQM7N9Ymgt7J25sl1GC5ZDP0L6MXwM2YYGY3
+         hLdjC0KWzOBOLFHFXn4dSBK/3i3BhMd40QTpp0C16erjzvjgrAaA8rD1UhVhA8e9iN8H
+         3r3eqQY4vmRwMrdC6p/OCUti4IPX0VpFfON6MLM/dx5TemEqnxhvfA9RM+LfWwe8WLLp
+         NDAl7ITuX3WUws4sc37q9/ERJyO3mRJKm5f6PVY1cZaxUOt2R3QmKBPiYOVHWcByHAAf
+         DG7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=zmj+VtZWITc++JKRSVOd4uqd+kTUYcgwKJlWfAB8J3U=;
-        b=iDG4H0NxUfhnyhcChLOenlR46WwR1XpYZlh99nnXUY1XhBAEGp0pjU1+2cbGalVmBr
-         LsI6WzicWf4FAiEV1RTCg5G9q1MBRnKfZfwJQShI563ICOCTs43kqaJY+yv6RZFwwfq+
-         TxVADqFc2LwsbyTdPvwfF6OaiZyT0r4JOsaEjR7IZp5vXyccyLYKsoLCZJPff6Aao3Jv
-         Oq9L9O0uH4/klE9CkGuppkcJGOorFsWVFzqNreUfa6J5TlDIG+UJGNchsCkGZP9fbD8v
-         A463RxRWaDmKJfAm4jziE5JLLMJJG6Sr1x87fsNlR36sM2pdd/ucY9slLpvs0JG9FjbY
-         xGhw==
-X-Gm-Message-State: AOAM5322IXvm/jCtXKUaJQRsBzQaHscKF7BrvWBAfXze3Lum6Ar1eO1w
-        ZY3KwzE2y6llOXUJDYH/4beBti3u4N0VKKqYP8o=
-X-Google-Smtp-Source: ABdhPJwvEw0Xey36SH/hjuh15W5TjOIhiC1VNuf6EnQ0HJeGfFOGL+0CdLS4k7hRw8SHT1VWWczVNutHqoDSCUlmTI4=
-X-Received: by 2002:a2e:7e02:: with SMTP id z2mr33460238ljc.169.1635791545697;
- Mon, 01 Nov 2021 11:32:25 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=SXS5BeSCNTzQoE9Sro7+pSKTW9UOhz2EeDahCPvEpJo=;
+        b=3dfWHa3pdOuJEieHgvokUffltrJ/o236GNDJ+g8u1Se1HVzTh8f+cHgadyLCUk8tEg
+         +De8G7F0qHClUJziMbTUQQEWQbmQstnLKmfRA0pRp+0nEDDZ+Q9ynbobeCuIR+PBFFMZ
+         2d3ORgg3J81Qob9F66yh49aMcNOGdpdNQNTSF5NX7u6qtUx3h06KTzgGtF/4SplUMdj7
+         y9TRjyMSIMxSUpNb2RLiMPEWot+Y8VmkHTNtt9wlg1MzyDyOn5RknjH9+VjJz6yDf+pm
+         o4DSalnR5Z5eUqqe3oBiveYSEqpV3Ah4rKED+cmf6s1Fc/qTuKZRSq1/onAVvfXS3/Ux
+         X49A==
+X-Gm-Message-State: AOAM533hjRO0OW/lrvg9FAL4BXBM3XL2jr0CCs1tcqYDE/7mfG+FHpwg
+        sT6NUmGDo7r1ZxoAu0U/4iL8srK4iyLHSw==
+X-Google-Smtp-Source: ABdhPJwPT4ACmw5M28/kfqP2w88nF6HyPNjPf3lN688EHfMmJh5kxBqB+Tq5R2A3cWHhT+WlR6HYeg==
+X-Received: by 2002:a5d:9493:: with SMTP id v19mr21977570ioj.34.1635795737162;
+        Mon, 01 Nov 2021 12:42:17 -0700 (PDT)
+Received: from [192.168.1.30] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id k16sm8335046ior.50.2021.11.01.12.42.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Nov 2021 12:42:16 -0700 (PDT)
+To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] block: replace always false argument with 'false'
+Message-ID: <7d6a5cde-1a98-55ef-4094-d9286d51fecd@kernel.dk>
+Date:   Mon, 1 Nov 2021 13:42:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Received: by 2002:a05:651c:1199:0:0:0:0 with HTTP; Mon, 1 Nov 2021 11:32:25
- -0700 (PDT)
-Reply-To: mrsyanwang053@gmail.com
-From:   mrs Wang <assetoukuku7@gmail.com>
-Date:   Mon, 1 Nov 2021 18:32:25 +0000
-Message-ID: <CADDbnPkL4TGOTw8W5bH+3XaH6sykX6fMSujKeqH+A9zdr+jMVg@mail.gmail.com>
-Subject: peace be upon you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-compliment of the season,An Essential proposal for you,
-do write me back for details through this
-Email[mrsyanwang053@gmail.com]
+A previous commit fixed up the condition for doing direct issue, but that
+left the 'from_schedule' argument dead inside the branch. Replace it with
+'false'.
+
+Fixes: ff1552232b36 ("blk-mq: don't issue request directly in case that current is to be blocked")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+
+---
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 4787d5b74aa3..8aed6cea3a34 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2227,7 +2227,7 @@ void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
+ 	plug->rq_count = 0;
+ 
+ 	if (!plug->multiple_queues && !plug->has_elevator && !from_schedule) {
+-		blk_mq_plug_issue_direct(plug, from_schedule);
++		blk_mq_plug_issue_direct(plug, false);
+ 		if (rq_list_empty(plug->mq_list))
+ 			return;
+ 	}
+
+-- 
+Jens Axboe
+
