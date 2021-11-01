@@ -2,81 +2,198 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 640584414BC
-	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 09:05:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2362D4414F2
+	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 09:06:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231576AbhKAIIQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 04:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231475AbhKAIIP (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 04:08:15 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027DBC0613B9
-        for <linux-block@vger.kernel.org>; Mon,  1 Nov 2021 01:05:42 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 205so28041622ljf.9
-        for <linux-block@vger.kernel.org>; Mon, 01 Nov 2021 01:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=J/sLAHxRh6EjJh2rcjPDJLzA40VXjb4DP54UXQAr8IU=;
-        b=V/IbKY0g2EmPf9Psw8/L5H/ix/AU0zvu2OUN3f6n4Fv6NgmpLlFSkK+umz4tcLa+rQ
-         KPHS/U/tha1vFbqZfuKiI6zDNVPEppLWjyRMC297y8Re0TE1J6EAlHSS5afwmMs11biY
-         h6h9pozx9oemeYr42hloFFZRds8Ya+2AP507sW/DcWz6BjqKrxv4hcir1uA1OXS1hEyB
-         w9XZ2qfq7a1kiIG9xUCGZ5ig/Y+IKbMB2fFHseYh6GvlAWlR1PaalxFQ2QVnq2fOdjHW
-         Eb6a7nGCdEyfObn3JBdFXKk3sCBeQVUP9+skggjMAA78OwbRWXloeHcIXoEQjELtBjiU
-         mUaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=J/sLAHxRh6EjJh2rcjPDJLzA40VXjb4DP54UXQAr8IU=;
-        b=K6d5tDRKVWL+GY1s+WJc3bjG0q1UMCOQWPVwcYW7zJM1SARELdA4lgaaRRSDN1LjIe
-         JZ4LeeB/zXkay2OVo/cG73r6e2BgVb4cmDamMbbzr8jJqLF7OQMIVCx1h6JMeksD9Pok
-         9F/tVLHFV3BHPG2rEytZenMUGeY9HE8whu1pxn2ZIFYiSy+nlzwaxKOgDMjn14887pfe
-         x1byPmIkMgIB0VE40C4p+F0xpyGUlDAJQGL3CixE6AO1kQdm+kxjXdZnXw5aLsaz1Tzv
-         FFrICLAD8xep5muGcZbI2VH82B9oXn9oiTzA6uEGHArY3nZzqYgLgby9qT8bc+DRXm6G
-         ZvDg==
-X-Gm-Message-State: AOAM533RgUxrpWdNDoCC3o762ApmDKYFY3jP5+vIMe137nGZkVsXqz52
-        APOpAGSOjQPA7DrkANE8S0p31P8wjO771v8FOMM=
-X-Google-Smtp-Source: ABdhPJxb2IUIUXhKKURBVeICoPrhviYGICVFrEZcryYbGqEFChPtB2pihWtXvX9AOYCQUaOuAHH1W7L8fo+ujk/IU2k=
-X-Received: by 2002:a05:651c:893:: with SMTP id d19mr30641059ljq.236.1635753940302;
- Mon, 01 Nov 2021 01:05:40 -0700 (PDT)
+        id S231749AbhKAIJE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 04:09:04 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:26141 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231806AbhKAII6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 04:08:58 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4HjQXs1cxxz1DHxH;
+        Mon,  1 Nov 2021 16:04:13 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Mon, 1 Nov 2021 16:06:12 +0800
+Received: from [10.174.176.73] (10.174.176.73) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Mon, 1 Nov 2021 16:06:11 +0800
+Subject: Re: [PATCH 0/2] nbd: fix sanity check for first_minor
+From:   "yukuai (C)" <yukuai3@huawei.com>
+To:     Pavel Skripkin <paskripkin@gmail.com>, <josef@toxicpanda.com>,
+        <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
+        <luomeng12@huawei.com>, Christoph Hellwig <hch@lst.de>
+References: <20211021122936.758221-1-yukuai3@huawei.com>
+ <72fb140d-609b-c035-bdd6-d2b8639c116b@gmail.com>
+ <17182476-e5bf-f493-9d9b-fedb2d9c8e1a@huawei.com>
+ <92d9f001-f77b-8263-53a6-aab83daccef9@huawei.com>
+ <9199b0a5-8286-024f-1343-ea386140c206@huawei.com>
+Message-ID: <7f899408-a01c-6300-9296-b5335ab259aa@huawei.com>
+Date:   Mon, 1 Nov 2021 16:06:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Received: by 2002:a05:6512:304b:0:0:0:0 with HTTP; Mon, 1 Nov 2021 01:05:39
- -0700 (PDT)
-Reply-To: aisha.7d@yahoo.com
-From:   Aisha AG <rbx17058@gmail.com>
-Date:   Mon, 1 Nov 2021 00:05:39 -0800
-Message-ID: <CA+KbyydC86ZoU6svaPH_F8XsYFEfUDwRRCtAR6OV3qd_NN0kFw@mail.gmail.com>
-Subject: Hello Dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9199b0a5-8286-024f-1343-ea386140c206@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.176.73]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-
-Hello Dear,
-
-I came across your e-mail contact prior to a private search while in
-need of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col.Muammar Al-Qaddafi.
-Am a Widow and a single Mother with three Children.
-
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar $27.500.000.00, and i need a trusted
-investment Manager/Partner because of my current refugee status,
-however, I am interested in you for investment project assistance in
-your country,may be from there,we can build business relationship
-in the nearest future.
-
-I am willing to negotiate an investment/business profit sharing ratio
-with you based on the future investment earning profits.
-
-If you are willing to handle this project on my behalf kindly reply
-urgently to enable me to provide you more information about the
-investment funds.
-Best Regards
-Mrs Aisha Al-Qaddafi.
+On 2021/10/25 21:41, yukuai (C) wrote:
+> On 2021/10/21 21:37, yukuai (C) wrote:
+>> On 2021/10/21 21:13, yukuai (C) wrote:
+>>> On 2021/10/21 20:35, Pavel Skripkin wrote:
+>>>> On 10/21/21 15:29, Yu Kuai wrote:
+>>>>> Yu Kuai (2):
+>>>>>    nbd: fix max value for 'first_minor'
+>>>>>    nbd: fix possible overflow for 'first_minor' in nbd_dev_add()
+>>>>>
+>>>>>   drivers/block/nbd.c | 6 +++---
+>>>>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>>>>
+>>>>
+>>>> Hi, Yu!
+>>>>
+>>>> Thank you for the fix, but this wrong check should be just removed, 
+>>>> since root case of wrong sysfs file creation was fixed, as Christoph 
+>>>> said [1]
+>>
+>> Hi, Christoph
+>>
+>> By the way, if we remove the checking, there will be two kernel warnings
+>> when the problem happens. Maybe keeping the checking is better?
+> 
+> friendly ping ...
+friendly ping ...
+>>
+>> [   19.860640] sysfs: cannot create duplicate filename '/dev/block/43:0'
+>> [   19.861659] CPU: 1 PID: 872 Comm: modprobe Not tainted 
+>> 5.15.0-rc6-next-20211020-00001-g2f1
+>> [   19.863175] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
+>> BIOS ?-20190727_0738364
+>> [   19.865183] Call Trace:
+>> [   19.866512]  <TASK>
+>> [   19.866863]  ? dump_stack_lvl+0x73/0x9f
+>> [   19.867941]  ? dump_stack+0x13/0x1b
+>> [   19.868475]  ? sysfs_warn_dup.cold+0x27/0x45
+>> [   19.869075]  ? sysfs_do_create_link_sd.isra.0+0x131/0x150
+>> [   19.869818]  ? sysfs_create_link+0x29/0x60
+>> [   19.870459]  ? device_add+0xbd6/0xf60
+>> [   19.871032]  ? _printk+0x5f/0x7d
+>> [   19.871518]  ? device_add_disk+0x153/0x5d0
+>> [   19.872160]  ? nbd_dev_add+0x30e/0x470 [nbd]
+>> [   19.872828]  ? 0xffffffffc0060000
+>> [   19.873332]  ? nbd_init+0x1dc/0x1000 [nbd]
+>> [   19.873924]  ? do_one_initcall+0x71/0x3a0
+>> [   19.874534]  ? gcov_event+0x70/0x690
+>> [   19.875058]  ? do_init_module+0xa6/0x350
+>> [   19.875587]  ? load_module+0x2587/0x2720
+>> [   19.876130]  ? kernel_read+0x31/0xb0
+>> [   19.876638]  ? kernel_read_file+0x15a/0x360
+>> [   19.877271]  ? __do_sys_finit_module+0xe5/0x190
+>> [   19.877951]  ? __do_sys_finit_module+0xe5/0x190
+>> [   19.878563]  ? __x64_sys_finit_module+0x1e/0x30
+>> [   19.879182]  ? do_syscall_64+0x35/0x80
+>> [   19.879700]  ? entry_SYSCALL_64_after_hwframe+0x44/0xae
+>> [   19.880413]  </TASK>
+>> [   19.880806] ------------[ cut here ]------------
+>> [   19.881502] WARNING: CPU: 1 PID: 872 at block/genhd.c:543 
+>> device_add_disk+0x2af/0x5d0
+>> [   19.882695] Modules linked in: nbd(+)
+>> [   19.883290] CPU: 1 PID: 872 Comm: modprobe Not tainted 
+>> 5.15.0-rc6-next-20211020-00001-g2f1
+>> [   19.884823] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
+>> BIOS ?-20190727_0738364
+>> [   19.886866] RIP: 0010:device_add_disk+0x2af/0x5d0
+>> [   19.887606] Code: 6e f2 f2 0b 01 49 8b 76 48 48 8b 3d db 03 f3 0b 
+>> e8 f6 ec a9 ff 48 83 050
+>> [   19.890456] RSP: 0018:ffffc90000e47c70 EFLAGS: 00010202
+>> [   19.891293] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 
+>> 00000000000ae001
+>> [   19.892274] RDX: 00000000000ac001 RSI: ffffffff91b5906b RDI: 
+>> 0000000000000000
+>> [   19.893318] RBP: ffff8881034ad600 R08: 0000000000000000 R09: 
+>> ffffffff915e2e69
+>> [   19.894425] R10: 0000000000000014 R11: 0000000000000001 R12: 
+>> 00000000ffffffef
+>> [   19.895544] R13: 0000000000000000 R14: ffff88817d720600 R15: 
+>> ffff88817d720648
+>> [   19.896652] FS:  00007fc08c7a7040(0000) GS:ffff88882f640000(0000) 
+>> knlGS:0000000000000000
+>> [   19.897902] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   19.898768] CR2: 00007fc08bcf0395 CR3: 000000017c467000 CR4: 
+>> 00000000000006e0
+>> [   19.899754] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
+>> 0000000000000000
+>> [   19.900856] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
+>> 0000000000000400
+>> [   19.901989] Call Trace:
+>> [   19.902387]  <TASK>
+>> [   19.902732]  nbd_dev_add+0x30e/0x470 [nbd]
+>> [   19.903395]  ? 0xffffffffc0060000
+>> [   19.903917]  nbd_init+0x1dc/0x1000 [nbd]
+>> [   19.904536]  do_one_initcall+0x71/0x3a0
+>> [   19.905166]  ? gcov_event+0x70/0x690
+>> [   19.905745]  do_init_module+0xa6/0x350
+>> [   19.906351]  load_module+0x2587/0x2720
+>> [   19.906932]  ? kernel_read+0x31/0xb0
+>> [   19.907509]  ? kernel_read_file+0x15a/0x360
+>> [   19.908195]  ? __do_sys_finit_module+0xe5/0x190
+>> [   19.908894]  __do_sys_finit_module+0xe5/0x190
+>> [   19.909591]  __x64_sys_finit_module+0x1e/0x30
+>> [   19.910289]  do_syscall_64+0x35/0x80
+>> [   19.910855]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+>> [   19.911652] RIP: 0033:0x7fc08bc7a4e9
+>> [   19.912231] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 
+>> 00 48 89 f8 48 89 f7 488
+>> [   19.915026] RSP: 002b:00007fff0ddf6fd8 EFLAGS: 00000246 ORIG_RAX: 
+>> 0000000000000139
+>> [   19.916080] RAX: ffffffffffffffda RBX: 00005596400853e0 RCX: 
+>> 00007fc08bc7a4e9
+>> [   19.917180] RDX: 0000000000000000 RSI: 000055963fe1bc26 RDI: 
+>> 0000000000000003
+>> [   19.918302] RBP: 000055963fe1bc26 R08: 0000000000000000 R09: 
+>> 0000000000000000
+>> [   19.919412] R10: 0000000000000003 R11: 0000000000000246 R12: 
+>> 0000000000000000
+>> [   19.920524] R13: 00005596400854f0 R14: 0000000000040000 R15: 
+>> 00005596400853e0
+>> [   19.921629]  </TASK>
+>> [   19.922005] ---[ end trace e09ecf130812479d ]---
+>>
+>> Thanks,
+>> Kuai
+>>>
+>>> Hi, Pavel
+>>>
+>>> Thanks for your response, with the root cause fixed, patch 1 is not
+>>> needed anymore. However, the overflow case in patch 2 is still
+>>> possible.
+>>>
+>>> Does anyone plan to remove the checking?
+>>>
+>>> Thanks,
+>>> Kuai
+>>>>
+>>>>
+>>>>
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/20211011073556.GA10735@lst.de/
+>>>>
+>>>>
+>>>>
+>>>> With regards,
+>>>> Pavel Skripkin
+>>>> .
+>>>>
