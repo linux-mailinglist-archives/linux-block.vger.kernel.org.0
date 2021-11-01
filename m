@@ -2,71 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8184D441FA5
-	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 18:54:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75B69442012
+	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 19:32:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230451AbhKAR4p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 13:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229802AbhKAR4p (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 1 Nov 2021 13:56:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 00C82610D2;
-        Mon,  1 Nov 2021 17:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635789251;
-        bh=lYi2aGJ1ooV9VTgAd9ni2Aq8I8gmC2AMQ2WBvVmGyXo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=USAxOoUpoPthTp0gPLaP0Dmz+IrOklnbz3hxfaINU34HdN1KKLosqti5cOqQYAaqx
-         vAzwAmlRKJCS4A+x3oMJQC9AcOKtiJT2KoUaJ4cme5I1NotGS1dDN/bvui3u93bbcE
-         B3Rn9jI2etOBKHaGzpWpNSKH8+DKvAoPRJRFBtf6N1zm28ciWQseguItfGTE8S5SGE
-         gJyHvhjcrWhkpnG1mmJggGByc6GpS8LMJMtHSKeqjbFpDR5Mxh0w5yTRZEV8GrOCxe
-         BxgY+sBpcZee82y2ujQ1VYBu2NSTbwyTRob4gcnvVGQ+X4+T1CrWDHjF0DwblF8aJB
-         gzM9v7RS/EqpQ==
-Date:   Mon, 1 Nov 2021 10:54:09 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Hannes Reinecke <hare@suse.de>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "lsf-pc@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>
-Subject: Re: [LSF/MM/BFP ATTEND] [LSF/MM/BFP TOPIC] Storage: Copy Offload
-Message-ID: <20211101175409.GA2651512@dhcp-10-100-145-180.wdc.com>
-References: <PH0PR04MB74161CD0BD15882BBD8838AB9B529@PH0PR04MB7416.namprd04.prod.outlook.com>
- <CGME20210928191342eucas1p23448dcd51b23495fa67cdc017e77435c@eucas1p2.samsung.com>
- <20210928191340.dcoj7qrclpudtjbo@mpHalley.domain_not_set.invalid>
- <c2d0dff9-ad6d-c32b-f439-00b7ee955d69@acm.org>
- <20211006100523.7xrr3qpwtby3bw3a@mpHalley.domain_not_set.invalid>
- <fbe69cc0-36ea-c096-d247-f201bad979f4@acm.org>
- <20211008064925.oyjxbmngghr2yovr@mpHalley.local>
- <2a65e231-11dd-d5cc-c330-90314f6a8eae@nvidia.com>
- <ba6c099b-42bf-4c7d-a923-00e7758fc835@suse.de>
- <5edcab45-afc6-3766-cede-f859da2934d1@acm.org>
+        id S231931AbhKASfB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 14:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229610AbhKASfB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 14:35:01 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6484AC061714
+        for <linux-block@vger.kernel.org>; Mon,  1 Nov 2021 11:32:27 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id y8so2248099ljm.4
+        for <linux-block@vger.kernel.org>; Mon, 01 Nov 2021 11:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=zmj+VtZWITc++JKRSVOd4uqd+kTUYcgwKJlWfAB8J3U=;
+        b=PGDZXlWK76/BwxBK35lVp7LT6dLx4wFFg5jSGans3IL2iZiZH1N/T4aYAQ2lDUCo/2
+         UydvkcF8gCPjN9uHWSxTAT9zr20t1gMfzIgjrs1NXg89MiI50pP9llfTbG+xn71lrWv1
+         /nGWGh4YnPBbdJVMWDS6FRIqukh8GelFX7FIUB5UAMSFcQmJsnPRFENbFtyP1ZEEVBSD
+         x3EJXHPE50DFCagNgiReksWsFKHhMCfhZyR8tUpjiDdeJzLEcMzjV7rZromoTnCJOqZp
+         7V4avPchxlg5N/WzPKiapjDvdQCmAaduH9bwjgpVQiIE3eEEXT3d1Au99xHX32GWdC5M
+         KQwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=zmj+VtZWITc++JKRSVOd4uqd+kTUYcgwKJlWfAB8J3U=;
+        b=iDG4H0NxUfhnyhcChLOenlR46WwR1XpYZlh99nnXUY1XhBAEGp0pjU1+2cbGalVmBr
+         LsI6WzicWf4FAiEV1RTCg5G9q1MBRnKfZfwJQShI563ICOCTs43kqaJY+yv6RZFwwfq+
+         TxVADqFc2LwsbyTdPvwfF6OaiZyT0r4JOsaEjR7IZp5vXyccyLYKsoLCZJPff6Aao3Jv
+         Oq9L9O0uH4/klE9CkGuppkcJGOorFsWVFzqNreUfa6J5TlDIG+UJGNchsCkGZP9fbD8v
+         A463RxRWaDmKJfAm4jziE5JLLMJJG6Sr1x87fsNlR36sM2pdd/ucY9slLpvs0JG9FjbY
+         xGhw==
+X-Gm-Message-State: AOAM5322IXvm/jCtXKUaJQRsBzQaHscKF7BrvWBAfXze3Lum6Ar1eO1w
+        ZY3KwzE2y6llOXUJDYH/4beBti3u4N0VKKqYP8o=
+X-Google-Smtp-Source: ABdhPJwvEw0Xey36SH/hjuh15W5TjOIhiC1VNuf6EnQ0HJeGfFOGL+0CdLS4k7hRw8SHT1VWWczVNutHqoDSCUlmTI4=
+X-Received: by 2002:a2e:7e02:: with SMTP id z2mr33460238ljc.169.1635791545697;
+ Mon, 01 Nov 2021 11:32:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5edcab45-afc6-3766-cede-f859da2934d1@acm.org>
+Received: by 2002:a05:651c:1199:0:0:0:0 with HTTP; Mon, 1 Nov 2021 11:32:25
+ -0700 (PDT)
+Reply-To: mrsyanwang053@gmail.com
+From:   mrs Wang <assetoukuku7@gmail.com>
+Date:   Mon, 1 Nov 2021 18:32:25 +0000
+Message-ID: <CADDbnPkL4TGOTw8W5bH+3XaH6sykX6fMSujKeqH+A9zdr+jMVg@mail.gmail.com>
+Subject: peace be upon you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 09:15:43AM -0700, Bart Van Assche wrote:
-> On 10/28/21 10:51 PM, Hannes Reinecke wrote:
-> > Also Keith presented his work on a simple zone-based remapping block device, which included an in-kernel copy offload facility.
-> > Idea is to lift that as a standalone patch such that we can use it a fallback (ie software) implementation if no other copy offload mechanism is available.
-> 
-> Is a link to the presentation available?
-
-Thanks for the interest.
-
-I didn't post them online as the conference didn't provide it, and I
-don't think the slides would be particularly interesting without the
-prepared speech anyway.
-
-The presentation described a simple prototype implementing a redirection
-table on zone block devices. There was one bullet point explaining how a
-generic kernel implementation would be an improvement. For zoned block
-devices, an "append" like copy offload would be an even better option.
+compliment of the season,An Essential proposal for you,
+do write me back for details through this
+Email[mrsyanwang053@gmail.com]
