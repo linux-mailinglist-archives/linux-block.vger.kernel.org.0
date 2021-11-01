@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06A8C441F45
-	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 18:29:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E493441F44
+	for <lists+linux-block@lfdr.de>; Mon,  1 Nov 2021 18:29:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbhKARb2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S230468AbhKARb2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Mon, 1 Nov 2021 13:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53540 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230321AbhKARb0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        id S230322AbhKARb0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
         Mon, 1 Nov 2021 13:31:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 30DA260E52;
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4183A60EBC;
         Mon,  1 Nov 2021 17:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1635787733;
-        bh=bI61pdt08vh8MTLOrrlBnCBY1xNt4cmu6IlWhzCDEk8=;
+        bh=ELgTIidxlIGwlqRHR8xrkjtnMTjBJyoZ51AW6Z6IiLw=;
         h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=HfZhPgqmxBwIwbG169S5QZ7dzKG4oylgmrgA6dN4PEpU5QXH3yIibSncpkseBRYcR
-         V/Jw7MAeODT75FBRDjeSxZbA7SKhzw4kFZT6kHEVhbThOHnXBOFwdYmANE01Kgp5sE
-         fth2FOoueipsFn3kAzJUqNm8y7Py5u2f/i5gJgxMgTfC5lK/7yHkFIKmwUP9odklmC
-         sGedCkV0L2GWFQllkIvs+7YNh0uSkdHFA/2ZBIqTkpIo12Az66W8pXCPF6ifd26qxx
-         Rw66BKSpTv1SZBb03LT7kQuxDnrBhlhTPGwNFd13YAwfOyTJ2J6lpb1TrcClhptHLu
-         JRCchUIUA3Ivg==
+        b=gmnAmZiQXWpAsQOz1hBWmK/KBnjkzZBILd7c083XgEhKQ+cmb7sNY3mdflYG72kv9
+         oyPn2r4WPIt1/yWU1w2FV/9AIz/CvTNQEtN6ICjBjwmx7wpvIJ7UVHH2z6PljmCQLX
+         EX+ftbEuWsg3JDrZvacl5AZqcN05JJIIlPaJ8zUtghfU9WWeaphiNrzjb2bt3lvp9D
+         sc6mVX2KbaW0dbf3FCStn889UbI24daTRwxVW8VWTSkoLXgZ260AqoE6e4aia7kiqy
+         yBcTo3r8GAYrun0qIuzFELa1R37wxKqDGIeLPH1EMKDUphorq6XrOQzTZYDy6Eq6+g
+         Rt/PZf8ukiUuA==
 Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 264EC609B9;
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 3888A60A90;
         Mon,  1 Nov 2021 17:28:53 +0000 (UTC)
-Subject: Re: [GIT PULL] bdev size cleanups
+Subject: Re: [GIT PULL] block device inode syncing improvements
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <f870c029-140d-3e77-dcd1-1890025b5795@kernel.dk>
-References: <f870c029-140d-3e77-dcd1-1890025b5795@kernel.dk>
+In-Reply-To: <9ba39eb9-2f4a-849e-f502-bdd63c6e7d98@kernel.dk>
+References: <9ba39eb9-2f4a-849e-f502-bdd63c6e7d98@kernel.dk>
 X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <f870c029-140d-3e77-dcd1-1890025b5795@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.16/bdev-size-2021-10-29
-X-PR-Tracked-Commit-Id: 97eeb5fc14cc4b2091df8b841a07a1ac69f2d762
+X-PR-Tracked-Message-Id: <9ba39eb9-2f4a-849e-f502-bdd63c6e7d98@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.16/inode-sync-2021-10-29
+X-PR-Tracked-Commit-Id: 1e03a36bdff4709c1bbf0f57f60ae3f776d51adf
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3f01727f750eae3e61b738b57355b2538ab179f4
-Message-Id: <163578773315.18307.10696461940630948455.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 19901165d90fdca1e57c9baa0d5b4c63d15c476a
+Message-Id: <163578773322.18307.15976957590581838833.pr-tracker-bot@kernel.org>
 Date:   Mon, 01 Nov 2021 17:28:53 +0000
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -46,12 +46,12 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Sun, 31 Oct 2021 13:41:51 -0600:
+The pull request you sent on Sun, 31 Oct 2021 13:41:55 -0600:
 
-> git://git.kernel.dk/linux-block.git tags/for-5.16/bdev-size-2021-10-29
+> git://git.kernel.dk/linux-block.git tags/for-5.16/inode-sync-2021-10-29
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3f01727f750eae3e61b738b57355b2538ab179f4
+https://git.kernel.org/torvalds/c/19901165d90fdca1e57c9baa0d5b4c63d15c476a
 
 Thank you!
 
