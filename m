@@ -2,78 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73BE7442569
-	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 03:03:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12CE8442554
+	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 02:54:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbhKBCGJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 22:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbhKBCGI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 22:06:08 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88AB4C061764
-        for <linux-block@vger.kernel.org>; Mon,  1 Nov 2021 19:03:34 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id q74so43318663ybq.11
-        for <linux-block@vger.kernel.org>; Mon, 01 Nov 2021 19:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=QAYRqexm7ae0TzZC28Cl4ShsUcrd2VpOHB6ajKwv6GLpJ4FaGYEe7QtCLGtAmZlATa
-         PhWq2lcs9ZA9FLnn84S/Cu3RhKsBB8AXsgYJ/lZny0ZkwTz6AcQiGGjAhCsi//0Y5Ff3
-         mWKc0dDs9MScEZjtGAeNRwkPCH8FGTarEBDLJL6S4a7LdL7HL9sRU0c655nhE6dglf2W
-         NRXI0xNCfn9zugKNNOr5ypqdrNGOH34iiVxUKYKZc07ja/Sv4+eNiveQXYzwP8d+zKcl
-         zWhfSdj6N50xMAQsXt4E9A6yiqjK+RoIBvU7nqLVBFEaa6/FYntQXphHr17aAijV92kF
-         E1bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=pBAupLfXXQhYch1Bd/CeMq4ExWjLXJSqiwEEB72ILGv0mMRjS4GYiykR/sAsW0qAZ6
-         PHDTGTaG/rwnT5RFJwmzSTuZHFuhrbMXPCnm1U3AmAch4jzSZyMJBm3a/Xvw0ey3Mehj
-         BouH3K109IX2t0Eg+CnwmzfWxXd8GqMkzSED8Y2XGgOWf+yr1IFOdKgcVZqSztBZP8t6
-         3d3XBVq/iRnlfuPy3hewwMxks4AoyRcNnEiD3cGF0SyHXkcrOLLqs2VUJ0bjHDaZNYxq
-         4jfWtTg0JHxiCdGtVHUxuxr5o7I+88Kn9H9k27piujN5JfLadb39M5ybC0ZD4cMGgLQD
-         3A4Q==
-X-Gm-Message-State: AOAM531yB9iM1GVzPbsP9c5/ySb6HhyFEB0gx3atXu2Z/7TFE4K4mm1F
-        pUM3nVt9tuY8YgNR/CGMdGwpXmzOGMaP8BKtqAk=
-X-Google-Smtp-Source: ABdhPJyQyBohFaMMZgXXdv9Rq0bRcBNpNtLHZkCqW3GzNpaEXV3R+PrNJzmL0f/2SIollwo7BEM8VcqkH/OS7z0kctI=
-X-Received: by 2002:a25:c3c7:: with SMTP id t190mr22224297ybf.460.1635818613614;
- Mon, 01 Nov 2021 19:03:33 -0700 (PDT)
+        id S229526AbhKBB47 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 21:56:59 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:30892 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229486AbhKBB47 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 21:56:59 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HjtBC32Nkzcb4n;
+        Tue,  2 Nov 2021 09:49:39 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Tue, 2 Nov 2021 09:54:19 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Tue, 2 Nov
+ 2021 09:54:18 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <tj@kernel.org>, <axboe@kernel.dk>, <yukuai3@huawei.com>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
+Subject: [PATCH] blk-cgroup: fix missing put device in error path from blkg_conf_pref()
+Date:   Tue, 2 Nov 2021 10:07:05 +0800
+Message-ID: <20211102020705.2321858-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Sender: mr.azzizsalim@gmail.com
-Received: by 2002:a05:7110:1109:b0:103:9d17:37a0 with HTTP; Mon, 1 Nov 2021
- 19:03:33 -0700 (PDT)
-From:   "Mr. Mustafa Ali." <muafalia@gmail.com>
-Date:   Tue, 2 Nov 2021 03:03:33 +0100
-X-Google-Sender-Auth: QXUHD1UsrX-lu1PX9PA-wL_j1UU
-Message-ID: <CADCzDA06jy4h0GT=voLx7hONgLUDGOrzW-2-eWByjHAwwGZJzg@mail.gmail.com>
-Subject: Greetings Dear Friend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Friend,
+If blk_queue_enter() failed due to queue is dying, the
+blkdev_put_no_open() is needed because blkcg_conf_open_bdev() succeeded.
 
-This message might meet you in utmost surprise. However, It's just my
-urgent need for a foreign partner that made me contact you for this
-transaction. I assured you of honesty and reliability to champion this
-business opportunity. I am a banker by profession in Turkey, and
-currently holding the post of Auditor in Standard Chartered Bank.
+Fixes: 0c9d338c8443 ("blk-cgroup: synchronize blkg creation against policy deactivation")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ block/blk-cgroup.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-I have the opportunity of transferring the leftover funds ($15 Million
-Dollars) of one of my clients who died along with his entire family in
-a crisis in Myanmar Asia. I am inviting you for a business deal where
-this money can be shared between us if you agree to my business
-proposal.
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 88b1fce90520..663aabfeba18 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -640,7 +640,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+ 	 */
+ 	ret = blk_queue_enter(q, 0);
+ 	if (ret)
+-		return ret;
++		goto fail;
+ 
+ 	rcu_read_lock();
+ 	spin_lock_irq(&q->queue_lock);
+@@ -676,13 +676,13 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+ 		new_blkg = blkg_alloc(pos, q, GFP_KERNEL);
+ 		if (unlikely(!new_blkg)) {
+ 			ret = -ENOMEM;
+-			goto fail;
++			goto fail_exit_queue;
+ 		}
+ 
+ 		if (radix_tree_preload(GFP_KERNEL)) {
+ 			blkg_free(new_blkg);
+ 			ret = -ENOMEM;
+-			goto fail;
++			goto fail_exit_queue;
+ 		}
+ 
+ 		rcu_read_lock();
+@@ -722,9 +722,10 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+ fail_unlock:
+ 	spin_unlock_irq(&q->queue_lock);
+ 	rcu_read_unlock();
++fail_exit_queue:
++	blk_queue_exit(q);
+ fail:
+ 	blkdev_put_no_open(bdev);
+-	blk_queue_exit(q);
+ 	/*
+ 	 * If queue was bypassing, we should retry.  Do so after a
+ 	 * short msleep().  It isn't strictly necessary but queue
+-- 
+2.31.1
 
-Further details of the transfer will be forwarded to you immediately
-after I receive your return letter.
-
-Best Regards,
-Mr. Mustafa Ali.
-mustafa.ali@rahroco.com
