@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D26E2442544
-	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 02:40:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50E7F442540
+	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 02:39:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbhKBBmd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 21:42:33 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:26143 "EHLO
+        id S229948AbhKBBma (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 21:42:30 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:26144 "EHLO
         szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbhKBBma (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 21:42:30 -0400
-Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4HjswX7274z1DJ5m;
-        Tue,  2 Nov 2021 09:37:48 +0800 (CST)
+        with ESMTP id S229571AbhKBBm3 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 21:42:29 -0400
+Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4HjswY2tchz1DHwD;
+        Tue,  2 Nov 2021 09:37:49 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by dggeme754-chm.china.huawei.com
  (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Tue, 2
@@ -22,9 +22,9 @@ From:   Ye Bin <yebin10@huawei.com>
 To:     <josef@toxicpanda.com>, <axboe@kernel.dk>,
         <linux-block@vger.kernel.org>, <nbd@other.debian.org>
 CC:     <linux-kernel@vger.kernel.org>, Yu Kuai <yukuai3@huawei.com>
-Subject: [PATCH -next v4 1/4] nbd: fix max value for 'first_minor'
-Date:   Tue, 2 Nov 2021 09:52:34 +0800
-Message-ID: <20211102015237.2309763-2-yebin10@huawei.com>
+Subject: [PATCH -next v4 2/4] nbd: fix possible overflow for 'first_minor' in nbd_dev_add()
+Date:   Tue, 2 Nov 2021 09:52:35 +0800
+Message-ID: <20211102015237.2309763-3-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211102015237.2309763-1-yebin10@huawei.com>
 References: <20211102015237.2309763-1-yebin10@huawei.com>
@@ -41,53 +41,32 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-commit b1a811633f73 ("block: nbd: add sanity check for first_minor")
-checks that 'first_minor' should not be greater than 0xff, which is
-wrong. Whitout the commit, the details that when user pass 0x100000,
-it ends up create sysfs dir "/sys/block/43:0" are as follows:
+If 'part_shift' is not zero, then 'index << part_shift' might
+overflow to a value that is not greater than '0xfffff', then sysfs
+might complains about duplicate creation.
 
-nbd_dev_add
- disk->first_minor = index << part_shift
-  -> default part_shift is 5, first_minor is 0x2000000
-  device_add_disk
-   ddev->devt = MKDEV(disk->major, disk->first_minor)
-    -> (0x2b << 20) | (0x2000000) = 0x2b00000
-   device_add
-    device_create_sys_dev_entry
-	 format_dev_t
-	  sprintf(buffer, "%u:%u", MAJOR(dev), MINOR(dev));
-	   -> got 43:0
-	  sysfs_create_link -> /sys/block/43:0
-
-By the way, with the wrong fix, when part_shift is the default value,
-only 8 ndb devices can be created since 8 << 5 is greater than 0xff.
-
-Since the max bits for 'first_minor' should be the same as what
-MKDEV() does, which is 20. Change the upper bound of 'first_minor'
-from 0xff to 0xfffff.
-
-Fixes: b1a811633f73 ("block: nbd: add sanity check for first_minor")
+Fixes: b0d9111a2d53 ("nbd: use an idr to keep track of nbd devices")
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
  drivers/block/nbd.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b47b2a87ae8f..678ee2688f63 100644
+index 678ee2688f63..cc32b5bc0f49 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
 @@ -1803,11 +1803,11 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
  	disk->major = NBD_MAJOR;
  
  	/* Too big first_minor can cause duplicate creation of
--	 * sysfs files/links, since first_minor will be truncated to
--	 * byte in __device_add_disk().
-+	 * sysfs files/links, since MKDEV() expect that the max bits of
-+	 * first_minor is 20.
+-	 * sysfs files/links, since MKDEV() expect that the max bits of
+-	 * first_minor is 20.
++	 * sysfs files/links, since index << part_shift might overflow, or
++	 * MKDEV() expect that the max bits of first_minor is 20.
  	 */
  	disk->first_minor = index << part_shift;
--	if (disk->first_minor > 0xff) {
-+	if (disk->first_minor > MINORMASK) {
+-	if (disk->first_minor > MINORMASK) {
++	if (disk->first_minor < index || disk->first_minor > MINORMASK) {
  		err = -EINVAL;
  		goto out_free_idr;
  	}
