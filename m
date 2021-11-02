@@ -2,30 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32DD344253F
-	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 02:39:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D26E2442544
+	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 02:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229902AbhKBBm3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 21:42:29 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:25335 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbhKBBm3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 21:42:29 -0400
-Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HjssS0jHYzbhVn;
-        Tue,  2 Nov 2021 09:35:08 +0800 (CST)
+        id S230015AbhKBBmd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 21:42:33 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:26143 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229679AbhKBBma (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 21:42:30 -0400
+Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4HjswX7274z1DJ5m;
+        Tue,  2 Nov 2021 09:37:48 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by dggeme754-chm.china.huawei.com
  (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Tue, 2
- Nov 2021 09:39:50 +0800
+ Nov 2021 09:39:51 +0800
 From:   Ye Bin <yebin10@huawei.com>
 To:     <josef@toxicpanda.com>, <axboe@kernel.dk>,
         <linux-block@vger.kernel.org>, <nbd@other.debian.org>
-CC:     <linux-kernel@vger.kernel.org>, Ye Bin <yebin10@huawei.com>
-Subject: [PATCH -next v4 0/4] Fix hungtask when nbd_config_put and sanity check for first_minor
-Date:   Tue, 2 Nov 2021 09:52:33 +0800
-Message-ID: <20211102015237.2309763-1-yebin10@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, Yu Kuai <yukuai3@huawei.com>
+Subject: [PATCH -next v4 1/4] nbd: fix max value for 'first_minor'
+Date:   Tue, 2 Nov 2021 09:52:34 +0800
+Message-ID: <20211102015237.2309763-2-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211102015237.2309763-1-yebin10@huawei.com>
+References: <20211102015237.2309763-1-yebin10@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -37,26 +39,58 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patchset include two patchsets as follows:
-1. Fix hungtask when nbd_config_put
-https://patchwork.kernel.org/project/linux-block/list/?series=573381
-2. nbd: fix sanity check for first_minor
-https://lore.kernel.org/linux-block/20211021122936.758221-1-yukuai3@huawei.com/
+From: Yu Kuai <yukuai3@huawei.com>
 
-I have consulted with Yu Kuai, and his modification has also been confirmed by him.
+commit b1a811633f73 ("block: nbd: add sanity check for first_minor")
+checks that 'first_minor' should not be greater than 0xff, which is
+wrong. Whitout the commit, the details that when user pass 0x100000,
+it ends up create sysfs dir "/sys/block/43:0" are as follows:
 
-Ye Bin (2):
-  nbd: Fix incorrect error handle when first_minor is illegal in
-    nbd_dev_add
-  nbd: Fix hungtask when nbd_config_put
+nbd_dev_add
+ disk->first_minor = index << part_shift
+  -> default part_shift is 5, first_minor is 0x2000000
+  device_add_disk
+   ddev->devt = MKDEV(disk->major, disk->first_minor)
+    -> (0x2b << 20) | (0x2000000) = 0x2b00000
+   device_add
+    device_create_sys_dev_entry
+	 format_dev_t
+	  sprintf(buffer, "%u:%u", MAJOR(dev), MINOR(dev));
+	   -> got 43:0
+	  sysfs_create_link -> /sys/block/43:0
 
-Yu Kuai (2):
-  nbd: fix max value for 'first_minor'
-  nbd: fix possible overflow for 'first_minor' in nbd_dev_add()
+By the way, with the wrong fix, when part_shift is the default value,
+only 8 ndb devices can be created since 8 << 5 is greater than 0xff.
 
- drivers/block/nbd.c | 42 +++++++++++++++++++-----------------------
- 1 file changed, 19 insertions(+), 23 deletions(-)
+Since the max bits for 'first_minor' should be the same as what
+MKDEV() does, which is 20. Change the upper bound of 'first_minor'
+from 0xff to 0xfffff.
 
+Fixes: b1a811633f73 ("block: nbd: add sanity check for first_minor")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/block/nbd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index b47b2a87ae8f..678ee2688f63 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1803,11 +1803,11 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
+ 	disk->major = NBD_MAJOR;
+ 
+ 	/* Too big first_minor can cause duplicate creation of
+-	 * sysfs files/links, since first_minor will be truncated to
+-	 * byte in __device_add_disk().
++	 * sysfs files/links, since MKDEV() expect that the max bits of
++	 * first_minor is 20.
+ 	 */
+ 	disk->first_minor = index << part_shift;
+-	if (disk->first_minor > 0xff) {
++	if (disk->first_minor > MINORMASK) {
+ 		err = -EINVAL;
+ 		goto out_free_idr;
+ 	}
 -- 
 2.31.1
 
