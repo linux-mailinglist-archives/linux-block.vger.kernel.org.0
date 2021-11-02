@@ -2,202 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3CC2442543
-	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 02:40:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73BE7442569
+	for <lists+linux-block@lfdr.de>; Tue,  2 Nov 2021 03:03:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230140AbhKBBmd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 1 Nov 2021 21:42:33 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:30891 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229803AbhKBBmb (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 21:42:31 -0400
-Received: from dggeme754-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HjssV03cmzcb2L;
-        Tue,  2 Nov 2021 09:35:10 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by dggeme754-chm.china.huawei.com
- (10.3.19.100) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.15; Tue, 2
- Nov 2021 09:39:52 +0800
-From:   Ye Bin <yebin10@huawei.com>
-To:     <josef@toxicpanda.com>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <nbd@other.debian.org>
-CC:     <linux-kernel@vger.kernel.org>, Ye Bin <yebin10@huawei.com>
-Subject: [PATCH -next v4 4/4] nbd: Fix hungtask when nbd_config_put
-Date:   Tue, 2 Nov 2021 09:52:37 +0800
-Message-ID: <20211102015237.2309763-5-yebin10@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211102015237.2309763-1-yebin10@huawei.com>
-References: <20211102015237.2309763-1-yebin10@huawei.com>
+        id S229571AbhKBCGJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 1 Nov 2021 22:06:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229505AbhKBCGI (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 1 Nov 2021 22:06:08 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88AB4C061764
+        for <linux-block@vger.kernel.org>; Mon,  1 Nov 2021 19:03:34 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id q74so43318663ybq.11
+        for <linux-block@vger.kernel.org>; Mon, 01 Nov 2021 19:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
+        b=QAYRqexm7ae0TzZC28Cl4ShsUcrd2VpOHB6ajKwv6GLpJ4FaGYEe7QtCLGtAmZlATa
+         PhWq2lcs9ZA9FLnn84S/Cu3RhKsBB8AXsgYJ/lZny0ZkwTz6AcQiGGjAhCsi//0Y5Ff3
+         mWKc0dDs9MScEZjtGAeNRwkPCH8FGTarEBDLJL6S4a7LdL7HL9sRU0c655nhE6dglf2W
+         NRXI0xNCfn9zugKNNOr5ypqdrNGOH34iiVxUKYKZc07ja/Sv4+eNiveQXYzwP8d+zKcl
+         zWhfSdj6N50xMAQsXt4E9A6yiqjK+RoIBvU7nqLVBFEaa6/FYntQXphHr17aAijV92kF
+         E1bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
+        b=pBAupLfXXQhYch1Bd/CeMq4ExWjLXJSqiwEEB72ILGv0mMRjS4GYiykR/sAsW0qAZ6
+         PHDTGTaG/rwnT5RFJwmzSTuZHFuhrbMXPCnm1U3AmAch4jzSZyMJBm3a/Xvw0ey3Mehj
+         BouH3K109IX2t0Eg+CnwmzfWxXd8GqMkzSED8Y2XGgOWf+yr1IFOdKgcVZqSztBZP8t6
+         3d3XBVq/iRnlfuPy3hewwMxks4AoyRcNnEiD3cGF0SyHXkcrOLLqs2VUJ0bjHDaZNYxq
+         4jfWtTg0JHxiCdGtVHUxuxr5o7I+88Kn9H9k27piujN5JfLadb39M5ybC0ZD4cMGgLQD
+         3A4Q==
+X-Gm-Message-State: AOAM531yB9iM1GVzPbsP9c5/ySb6HhyFEB0gx3atXu2Z/7TFE4K4mm1F
+        pUM3nVt9tuY8YgNR/CGMdGwpXmzOGMaP8BKtqAk=
+X-Google-Smtp-Source: ABdhPJyQyBohFaMMZgXXdv9Rq0bRcBNpNtLHZkCqW3GzNpaEXV3R+PrNJzmL0f/2SIollwo7BEM8VcqkH/OS7z0kctI=
+X-Received: by 2002:a25:c3c7:: with SMTP id t190mr22224297ybf.460.1635818613614;
+ Mon, 01 Nov 2021 19:03:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggeme754-chm.china.huawei.com (10.3.19.100)
-X-CFilter-Loop: Reflected
+Sender: mr.azzizsalim@gmail.com
+Received: by 2002:a05:7110:1109:b0:103:9d17:37a0 with HTTP; Mon, 1 Nov 2021
+ 19:03:33 -0700 (PDT)
+From:   "Mr. Mustafa Ali." <muafalia@gmail.com>
+Date:   Tue, 2 Nov 2021 03:03:33 +0100
+X-Google-Sender-Auth: QXUHD1UsrX-lu1PX9PA-wL_j1UU
+Message-ID: <CADCzDA06jy4h0GT=voLx7hONgLUDGOrzW-2-eWByjHAwwGZJzg@mail.gmail.com>
+Subject: Greetings Dear Friend.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I got follow issue:
-[  247.381177] INFO: task kworker/u10:0:47 blocked for more than 120 seconds.
-[  247.382644]       Not tainted 4.19.90-dirty #140
-[  247.383502] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  247.385027] Call Trace:
-[  247.388384]  schedule+0xb8/0x3c0
-[  247.388966]  schedule_timeout+0x2b4/0x380
-[  247.392815]  wait_for_completion+0x367/0x510
-[  247.397713]  flush_workqueue+0x32b/0x1340
-[  247.402700]  drain_workqueue+0xda/0x3c0
-[  247.403442]  destroy_workqueue+0x7b/0x690
-[  247.405014]  nbd_config_put.cold+0x2f9/0x5b6
-[  247.405823]  recv_work+0x1fd/0x2b0
-[  247.406485]  process_one_work+0x70b/0x1610
-[  247.407262]  worker_thread+0x5a9/0x1060
-[  247.408699]  kthread+0x35e/0x430
-[  247.410918]  ret_from_fork+0x1f/0x30
+Hello Friend,
 
-We can reproduce issue as follows:
-1. Inject memory fault in nbd_start_device
--1244,10 +1248,18 @@ static int nbd_start_device(struct nbd_device *nbd)
-        nbd_dev_dbg_init(nbd);
-        for (i = 0; i < num_connections; i++) {
-                struct recv_thread_args *args;
--
--               args = kzalloc(sizeof(*args), GFP_KERNEL);
-+
-+               if (i == 1) {
-+                       args = NULL;
-+                       printk("%s: inject malloc error\n", __func__);
-+               }
-+               else
-+                       args = kzalloc(sizeof(*args), GFP_KERNEL);
-2. Inject delay in recv_work
--757,6 +760,8 @@ static void recv_work(struct work_struct *work)
+This message might meet you in utmost surprise. However, It's just my
+urgent need for a foreign partner that made me contact you for this
+transaction. I assured you of honesty and reliability to champion this
+business opportunity. I am a banker by profession in Turkey, and
+currently holding the post of Auditor in Standard Chartered Bank.
 
-                blk_mq_complete_request(blk_mq_rq_from_pdu(cmd));
-        }
-+       printk("%s: comm=%s pid=%d\n", __func__, current->comm, current->pid);
-+       mdelay(5 * 1000);
-        nbd_config_put(nbd);
-        atomic_dec(&config->recv_threads);
-        wake_up(&config->recv_wq);
-3. Create nbd server
-nbd-server 8000 /tmp/disk
-4. Create nbd client
-nbd-client localhost 8000 /dev/nbd1
-Then will trigger above issue.
+I have the opportunity of transferring the leftover funds ($15 Million
+Dollars) of one of my clients who died along with his entire family in
+a crisis in Myanmar Asia. I am inviting you for a business deal where
+this money can be shared between us if you agree to my business
+proposal.
 
-Reason is when add delay in recv_work, lead to release the last reference
-of 'nbd->config_refs'. nbd_config_put will call flush_workqueue to make
-all work finish. Obviously, it will lead to deadloop.
-To solve this issue, according to Josef's suggestion move 'recv_work'
-init from start device to nbd_dev_add, then destroy 'recv_work'when
-nbd device teardown.
+Further details of the transfer will be forwarded to you immediately
+after I receive your return letter.
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- drivers/block/nbd.c | 36 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 88dc0c49631c..ef31f81d7b31 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -260,7 +260,7 @@ static void nbd_dev_remove(struct nbd_device *nbd)
- 	mutex_lock(&nbd_index_mutex);
- 	idr_remove(&nbd_index_idr, nbd->index);
- 	mutex_unlock(&nbd_index_mutex);
--
-+	destroy_workqueue(nbd->recv_workq);
- 	kfree(nbd);
- }
- 
-@@ -1314,10 +1314,6 @@ static void nbd_config_put(struct nbd_device *nbd)
- 		kfree(nbd->config);
- 		nbd->config = NULL;
- 
--		if (nbd->recv_workq)
--			destroy_workqueue(nbd->recv_workq);
--		nbd->recv_workq = NULL;
--
- 		nbd->tag_set.timeout = 0;
- 		nbd->disk->queue->limits.discard_granularity = 0;
- 		nbd->disk->queue->limits.discard_alignment = 0;
-@@ -1346,14 +1342,6 @@ static int nbd_start_device(struct nbd_device *nbd)
- 		return -EINVAL;
- 	}
- 
--	nbd->recv_workq = alloc_workqueue("knbd%d-recv",
--					  WQ_MEM_RECLAIM | WQ_HIGHPRI |
--					  WQ_UNBOUND, 0, nbd->index);
--	if (!nbd->recv_workq) {
--		dev_err(disk_to_dev(nbd->disk), "Could not allocate knbd recv work queue.\n");
--		return -ENOMEM;
--	}
--
- 	blk_mq_update_nr_hw_queues(&nbd->tag_set, config->num_connections);
- 	nbd->pid = task_pid_nr(current);
- 
-@@ -1779,6 +1767,15 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- 	}
- 	nbd->disk = disk;
- 
-+	nbd->recv_workq = alloc_workqueue("nbd%d-recv",
-+					  WQ_MEM_RECLAIM | WQ_HIGHPRI |
-+					  WQ_UNBOUND, 0, nbd->index);
-+	if (!nbd->recv_workq) {
-+		dev_err(disk_to_dev(nbd->disk), "Could not allocate knbd recv work queue.\n");
-+		err = -ENOMEM;
-+		goto out_err_disk;
-+	}
-+
- 	/*
- 	 * Tell the block layer that we are not a rotational device
- 	 */
-@@ -1809,7 +1806,7 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- 	disk->first_minor = index << part_shift;
- 	if (disk->first_minor < index || disk->first_minor > MINORMASK) {
- 		err = -EINVAL;
--		goto out_err_disk;
-+		goto out_free_work;
- 	}
- 
- 	disk->minors = 1 << part_shift;
-@@ -1818,7 +1815,7 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- 	sprintf(disk->disk_name, "nbd%d", index);
- 	err = add_disk(disk);
- 	if (err)
--		goto out_err_disk;
-+		goto out_free_work;
- 
- 	/*
- 	 * Now publish the device.
-@@ -1827,6 +1824,8 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- 	nbd_total_devices++;
- 	return nbd;
- 
-+out_free_work:
-+	destroy_workqueue(nbd->recv_workq);
- out_err_disk:
- 	blk_cleanup_disk(disk);
- out_free_idr:
-@@ -2082,13 +2081,10 @@ static void nbd_disconnect_and_put(struct nbd_device *nbd)
- 	nbd_disconnect(nbd);
- 	sock_shutdown(nbd);
- 	/*
--	 * Make sure recv thread has finished, so it does not drop the last
--	 * config ref and try to destroy the workqueue from inside the work
--	 * queue. And this also ensure that we can safely call nbd_clear_que()
-+	 * Make sure recv thread has finished, we can safely call nbd_clear_que()
- 	 * to cancel the inflight I/Os.
- 	 */
--	if (nbd->recv_workq)
--		flush_workqueue(nbd->recv_workq);
-+	flush_workqueue(nbd->recv_workq);
- 	nbd_clear_que(nbd);
- 	nbd->task_setup = NULL;
- 	mutex_unlock(&nbd->config_lock);
--- 
-2.31.1
-
+Best Regards,
+Mr. Mustafa Ali.
+mustafa.ali@rahroco.com
