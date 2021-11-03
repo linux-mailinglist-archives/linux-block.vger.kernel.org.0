@@ -2,110 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45DF34447FF
-	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:12:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B488444811
+	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:13:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbhKCSOv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Nov 2021 14:14:51 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:43762 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbhKCSOv (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 14:14:51 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 67802218B2;
-        Wed,  3 Nov 2021 18:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1635963133; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M5xi9zgTrboVqJHeduNb9rmHRIFLMslDpsoc2TkwWhc=;
-        b=k/K7kFYk4Jy275dVNGdH7foeMCeDmSdcbf6Ws2SqvW6QjhZ4sD2Mhkuwv12bFOXJB+1qKU
-        t5pUFI35uCtthCZ/VkuFMvYcFOrJ6KESHDhnzf22DsL4jwzYg2AAsIJc31zGhp2m8XTuR9
-        l7sxY+9POjMKTNATrUa0b26BYbMnYzw=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 457CB13C89;
-        Wed,  3 Nov 2021 18:12:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id uFtBEP3QgmHhCQAAMHmgww
-        (envelope-from <mkoutny@suse.com>); Wed, 03 Nov 2021 18:12:13 +0000
-Date:   Wed, 3 Nov 2021 19:12:12 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 4/8] bfq: Limit number of requests consumed by each cgroup
-Message-ID: <20211103181211.GA10322@blackbody.suse.cz>
-References: <20211006164110.10817-1-jack@suse.cz>
- <20211006173157.6906-4-jack@suse.cz>
- <20211102181658.GA63407@blackbody.suse.cz>
- <20211103130314.GC20482@quack2.suse.cz>
+        id S231576AbhKCSQK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Nov 2021 14:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231379AbhKCSQE (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 14:16:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F327C061203;
+        Wed,  3 Nov 2021 11:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=by6uJflRSZTQtQScy9xY7EdpixGFhaKVKW6/eBoiVlM=; b=uKn9h2k73gti5ReaTupFiVo1FJ
+        /IN/qPsGWYh3/bDZMmzmVHyP879ON62mQBObuTiEwITC3ESnNNg0zSokKE98Exfel6vk0sprqI3FO
+        O6wHnltYeGzDngG1cwu0Ar03cFNukxDjfiXQb6YbZWLVSRTJedkvd3+yVfo5p42eUlQ7hyecANdnH
+        ZNpA9jaj04+TRZLRbo4XZe8xOoraj7E7jqdprlRGDoqDfWKxCSmN72UGJsnwCg8CMvc76xeWIfEKc
+        T2dNERsK/o5HHocXZncvczKFFDBCFWaj1Q89XJd353S9gMCfjfZ2OXILJun0hm3faKv/P8ia4jWgt
+        GF8y4QSA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1miKkt-0068X4-PK; Wed, 03 Nov 2021 18:12:59 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
+        dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, ira.weiny@intel.com, richard@nod.at,
+        miquel.raynal@bootlin.com, vigneshr@ti.com, efremov@linux.com,
+        song@kernel.org, martin.petersen@oracle.com, hare@suse.de,
+        jack@suse.cz, ming.lei@redhat.com, tj@kernel.org, mcgrof@kernel.org
+Cc:     linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] last set for add_disk() error handling
+Date:   Wed,  3 Nov 2021 11:12:54 -0700
+Message-Id: <20211103181258.1462704-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211103130314.GC20482@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Nov 03, 2021 at 02:03:14PM +0100, Jan Kara <jack@suse.cz> wrote:
-> Since we stop the loop at bfq_class_idx(entity)
+This v4 only updates the last 2 patches from my v3 series of stragglers
+to account for Christoph's request to split the __register_blkdev()
+probe call changes into 3 patches, one for documentation, the other 2
+patches for each respective driver.
 
-Aha! I overlooked the for loop ends with the entity's class here and not
-after the full range of classes.
+I also noticed I had a typo on the documentation, so fixed that.
 
-> I.e., we scale available tags proportionally to bfq_queue weight (which
-> scales linearly with IO priority).
+Luis Chamberlain (4):
+  block: update __register_blkdev() probe documentation
+  ataflop: address add_disk() error handling on probe
+  floppy: address add_disk() error handling on probe
+  block: add __must_check for *add_disk*() callers
 
-Yes, you're working within the "order" of the entity's class and it's
-always the last, i.e. least too, so the scale is 1.
+ block/genhd.c           | 11 +++++++----
+ drivers/block/ataflop.c | 16 +++++++++++++---
+ drivers/block/floppy.c  | 15 +++++++++++++--
+ include/linux/genhd.h   |  6 +++---
+ 4 files changed, 36 insertions(+), 12 deletions(-)
 
-> So in principle it can happen that there would be no tag left for a
-> process in lower IO priority class - and that is fine, we don't care,
-> because we don't want to submit IO from lower IO priority class while
-> there is still IO in higher IO priority class.
+-- 
+2.33.0
 
-Actually, can it ever happen that the higher class leaves some tags for
-the lower? (IOW, is the CLS_wsum anytime exceeding sum of all active
-entities of the CLS at the given point in time?) (1)
-
-> Now consider a situation for a process in BE IO priority class in this
-> setting. All processes in BE class can together occupy at most BE_wsum /
-> (RT_wsum * IOPRIO_BE_NR + BE_wsum) fraction of tags. This is admittedly
-> somewhat arbitrary fraction but it makes sure for each process in RT class
-> there are at least as many tags left as for the highest priority process in
-> BE class.
-
-Can it happen that bfqq_request_over_limit() is called for a BE entity
-before calling it for an RT entity (more precisely, not the
-bfqq_request_over_limit() calls but actual allocation of tags)? (2)
-
-> As I wrote above, the highest active IO priority class effectively allows
-> processes in this class to consume all tags available for a cgroup. If
-> there are lower IO priority classes active as well, we allow them to
-> consume some tags but never allow them to consume all of them...
-
-I assume this implies the answer to my previous question (2) is "yes"
-and to the question (1) is: "numerically no, but lower class entity can
-take some tags if it gets to draw them earlier".
-
-> Yes, this is kind of an extension of bfq_io_prio_to_weight() that allows
-> some comparison of queues from different IO priority classes.
-
-I see there's no point using the same values for the weights in the
-bfqq_request_over_limit() calculations as bfq_ioprio_to_weight()
-calculates given the nature of strict ordering of classes above each
-other. Your scoring makes sense to me now.
-
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-
-(this patch only)
