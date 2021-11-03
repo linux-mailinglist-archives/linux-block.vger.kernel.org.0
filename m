@@ -2,57 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D62444846
+	by mail.lfdr.de (Postfix) with ESMTP id 95828444845
 	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:32:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230156AbhKCSfE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S229893AbhKCSfE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Wed, 3 Nov 2021 14:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229893AbhKCSfD (ORCPT
+        with ESMTP id S230011AbhKCSfD (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 14:35:03 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA131C061714
-        for <linux-block@vger.kernel.org>; Wed,  3 Nov 2021 11:32:25 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id r10-20020a056830448a00b0055ac7767f5eso4766337otv.3
-        for <linux-block@vger.kernel.org>; Wed, 03 Nov 2021 11:32:25 -0700 (PDT)
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE73BC061203
+        for <linux-block@vger.kernel.org>; Wed,  3 Nov 2021 11:32:26 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id bg25so4376943oib.1
+        for <linux-block@vger.kernel.org>; Wed, 03 Nov 2021 11:32:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iUVdiKdE3UtLDrSJ4ppTvX/REgJOcEw5TGAopy8ZtZU=;
-        b=P64WAdj+AWI6P8K618uYTEwfAIyIyUvOGoUMaRrR3YGPUJbQ0lZH6k9VvlTHm2yUFG
-         6K7A4zwaKg7GjamFnl9bN0kwMCPe6kLxkjU4NWIOzGGDCaifbNu/nS0SCeghlpneldQM
-         a/QUFylYbVYLHrZo424omwfoV001aSWslv5bhuhz5T5LWUIb+DmeMmBQbgcjx5lWWxo5
-         o2ByKu6nk7wLroB9F2wqHhBDu5N6kVxTUT/9TBq1Ncsihh11mgTJmI9fcgcntqH8rW3e
-         4GhRD5qf3QoYYqwOP9IkjYujHmeakhrhBRFcUNoNa380mytvvh7n5viJqMEWxCDdYJXw
-         BMSw==
+        bh=Bsj5ZLlquf/pPLdn6lhiC7/HYQDntfsyVm6vIVzVNlU=;
+        b=Swa63GpKQpBSghR1qeumFKO5qqLhiewOsM0bu7kWTodUUnHlGW+wHuIktdcJ6PYCg8
+         EPKdZYBVuTWpjfAipaJjYTcQd19qhd0cdRoOgDBhx6IPLyUfgs6hHZ1X2wjowA4gs+U1
+         pUgRpNHRrPaFhlVGjpHB4fzzALhpTvwFiwwzhTV8Clxo/bG2bbpB2iHXt21N3Tvo35md
+         SOQ7MQLzsb93lRS9Hrazjw6lEAdEwmvpN5Ixxixi+cqzC6N+E7EiGQv/xRW5hJ0G1ZjG
+         2U44PnE86XWtdrlNYXhpsxYSQstetIoY8bBNuXrkoRN5Am3MBC/8B8i6dquJ+vdP2Y/O
+         tVlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iUVdiKdE3UtLDrSJ4ppTvX/REgJOcEw5TGAopy8ZtZU=;
-        b=wDkK3UdKw7HRASjDtabfeTJZphuEyfMmuPUfB8sZa97fpp4sX6RiNlOe6WYetVuzkH
-         h6hCcpPfARY7/33DW7OFDuOCmf2iC/QcJxeWs2AFj39fQcs5R4QDOUtsajkmiRKQgF99
-         igBuzWWkCyKtAM8R99juqS0Nt0TFLNnv6tfR8+pHQ9Wn4r5er4UmY16e6Z5848rWugpp
-         dNzisv1Zq6TEdKj/z9XnWZnP+QlN7Vih60us1u+9ea00cKJMkxSPenrD4n1mBWn6f9We
-         JegUqDhHXe1+A0jHHWS1wZVDuiJ0XM2tnx9PVcuMTd2r7YUUj/gCeJKBKauWxd3SD0e8
-         7bhA==
-X-Gm-Message-State: AOAM530OIu5Mb3/wGXXgaetvAHTLaeloqIrE7Hf/oyHMXb9uMYvCLDf5
-        ggDZcTFs9vRzrQuhN5/rHHxW3Pl7f19eVg==
-X-Google-Smtp-Source: ABdhPJwZxpHYCfWA2tjXGDNLEqB31Xl5XsX8bP7nadr9aBZyJzTWeIwy7B3jBuwmXw4M6coDwh40qQ==
-X-Received: by 2002:a9d:1cad:: with SMTP id l45mr1463627ota.343.1635964344990;
-        Wed, 03 Nov 2021 11:32:24 -0700 (PDT)
+        bh=Bsj5ZLlquf/pPLdn6lhiC7/HYQDntfsyVm6vIVzVNlU=;
+        b=PDplI/c/9mNHq+6c60Sdz1Ju4YyNSgm3gZg6Ks5mwpccOzAaQmQiwxnbIRQWjqDgKy
+         1NEZURe2+ZRaDf7911acXhLCgUJ8XhcctxI6xj5RYba3nEen/1BEebDMos6tUxsXLzCq
+         Rud499B4drPsrqiySrMTp8vpix1JJWK4ia3pQaNL4PbnskFudM+1PE0A/5cpLHuaXr82
+         UNzwOyv47mP+7U82QOFmK7s5ubAJuFcebPw2DYEBzfAMT3B72Kjf/yrYRb+sn4OBHl6q
+         z2BZ56gWnV9GqEKzB7YdjgolPzLMA3GG3hq7W5q1NEd/wnW38rM/9gLbCE+rDJ+lGlbX
+         tTsw==
+X-Gm-Message-State: AOAM531+U4FOzLaYjX2FfzVcjKbQHUrh1HpYDcnxjCpKNxmiUg2Pncf8
+        5stVKIU9GAeTAYX1u/1EdqzsCbl1ONx0Sg==
+X-Google-Smtp-Source: ABdhPJz3szlLyzgsIM6jlRM1dX/5oNRG/ffajYqelPQkYI1OrU1l1SL8/Ptla8HASQa29giRMpNn5g==
+X-Received: by 2002:a54:4d89:: with SMTP id y9mr11845941oix.22.1635964345836;
+        Wed, 03 Nov 2021 11:32:25 -0700 (PDT)
 Received: from p1.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id i20sm766056otp.18.2021.11.03.11.32.24
+        by smtp.gmail.com with ESMTPSA id i20sm766056otp.18.2021.11.03.11.32.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Nov 2021 11:32:24 -0700 (PDT)
+        Wed, 03 Nov 2021 11:32:25 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 1/4] block: have plug stored requests hold references to the queue
-Date:   Wed,  3 Nov 2021 12:32:19 -0600
-Message-Id: <20211103183222.180268-2-axboe@kernel.dk>
+Subject: [PATCH 2/4] block: make blk_try_enter_queue() available for blk-mq
+Date:   Wed,  3 Nov 2021 12:32:20 -0600
+Message-Id: <20211103183222.180268-3-axboe@kernel.dk>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211103183222.180268-1-axboe@kernel.dk>
 References: <20211103183222.180268-1-axboe@kernel.dk>
@@ -62,62 +62,94 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Requests that were stored in the cache deliberately didn't hold an enter
-reference to the queue, instead we grabbed one every time we pulled a
-request out of there. That made for awkward logic on freeing the remainder
-of the cached list, if needed, where we had to artificially raise the
-queue usage count before each free.
+Just a prep patch for shifting the queue enter logic.
 
-Grab references up front for cached plug requests. That's safer, and also
-more efficient.
-
-Fixes: 47c122e35d7e ("block: pre-allocate requests if plug is started and is a batch")
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- block/blk-core.c | 2 +-
- block/blk-mq.c   | 7 ++++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ block/blk-core.c | 26 +-------------------------
+ block/blk.h      | 25 +++++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 25 deletions(-)
 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index fd389a16013c..c2d267b6f910 100644
+index c2d267b6f910..e00f5a2287cc 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
-@@ -1643,7 +1643,7 @@ void blk_flush_plug(struct blk_plug *plug, bool from_schedule)
- 		flush_plug_callbacks(plug, from_schedule);
- 	if (!rq_list_empty(plug->mq_list))
- 		blk_mq_flush_plug_list(plug, from_schedule);
--	if (unlikely(!from_schedule && plug->cached_rq))
-+	if (unlikely(!rq_list_empty(plug->cached_rq)))
- 		blk_mq_free_plug_rqs(plug);
+@@ -386,30 +386,6 @@ void blk_cleanup_queue(struct request_queue *q)
+ }
+ EXPORT_SYMBOL(blk_cleanup_queue);
+ 
+-static bool blk_try_enter_queue(struct request_queue *q, bool pm)
+-{
+-	rcu_read_lock();
+-	if (!percpu_ref_tryget_live_rcu(&q->q_usage_counter))
+-		goto fail;
+-
+-	/*
+-	 * The code that increments the pm_only counter must ensure that the
+-	 * counter is globally visible before the queue is unfrozen.
+-	 */
+-	if (blk_queue_pm_only(q) &&
+-	    (!pm || queue_rpm_status(q) == RPM_SUSPENDED))
+-		goto fail_put;
+-
+-	rcu_read_unlock();
+-	return true;
+-
+-fail_put:
+-	blk_queue_exit(q);
+-fail:
+-	rcu_read_unlock();
+-	return false;
+-}
+-
+ /**
+  * blk_queue_enter() - try to increase q->q_usage_counter
+  * @q: request queue pointer
+@@ -442,7 +418,7 @@ int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags)
+ 	return 0;
  }
  
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index c68aa0a332e1..5498454c2164 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -410,7 +410,10 @@ __blk_mq_alloc_requests_batch(struct blk_mq_alloc_data *data,
- 		tag_mask &= ~(1UL << i);
- 		rq = blk_mq_rq_ctx_init(data, tags, tag, alloc_time_ns);
- 		rq_list_add(data->cached_rq, rq);
-+		nr++;
- 	}
-+	/* caller already holds a reference, add for remainder */
-+	percpu_ref_get_many(&data->q->q_usage_counter, nr - 1);
- 	data->nr_tags -= nr;
- 
- 	return rq_list_pop(data->cached_rq);
-@@ -630,10 +633,8 @@ void blk_mq_free_plug_rqs(struct blk_plug *plug)
+-static inline int bio_queue_enter(struct bio *bio)
++int bio_queue_enter(struct bio *bio)
  {
- 	struct request *rq;
+ 	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
  
--	while ((rq = rq_list_pop(&plug->cached_rq)) != NULL) {
--		percpu_ref_get(&rq->q->q_usage_counter);
-+	while ((rq = rq_list_pop(&plug->cached_rq)) != NULL)
- 		blk_mq_free_request(rq);
--	}
- }
+diff --git a/block/blk.h b/block/blk.h
+index 7afffd548daf..f7371d3b1522 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -55,6 +55,31 @@ void blk_free_flush_queue(struct blk_flush_queue *q);
+ void blk_freeze_queue(struct request_queue *q);
+ void __blk_mq_unfreeze_queue(struct request_queue *q, bool force_atomic);
+ void blk_queue_start_drain(struct request_queue *q);
++int bio_queue_enter(struct bio *bio);
++
++static inline bool blk_try_enter_queue(struct request_queue *q, bool pm)
++{
++	rcu_read_lock();
++	if (!percpu_ref_tryget_live_rcu(&q->q_usage_counter))
++		goto fail;
++
++	/*
++	 * The code that increments the pm_only counter must ensure that the
++	 * counter is globally visible before the queue is unfrozen.
++	 */
++	if (blk_queue_pm_only(q) &&
++	    (!pm || queue_rpm_status(q) == RPM_SUSPENDED))
++		goto fail_put;
++
++	rcu_read_unlock();
++	return true;
++
++fail_put:
++	blk_queue_exit(q);
++fail:
++	rcu_read_unlock();
++	return false;
++}
  
- static void req_bio_endio(struct request *rq, struct bio *bio,
+ #define BIO_INLINE_VECS 4
+ struct bio_vec *bvec_alloc(mempool_t *pool, unsigned short *nr_vecs,
 -- 
 2.33.1
 
