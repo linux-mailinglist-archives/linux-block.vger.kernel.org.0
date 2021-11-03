@@ -2,30 +2,30 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49901444803
-	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:13:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8753C44480D
+	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:13:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231147AbhKCSPx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Nov 2021 14:15:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53736 "EHLO
+        id S231392AbhKCSQJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Nov 2021 14:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbhKCSPt (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 14:15:49 -0400
+        with ESMTP id S231345AbhKCSQE (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 14:16:04 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A02C061203;
-        Wed,  3 Nov 2021 11:13:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289E4C061714;
+        Wed,  3 Nov 2021 11:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=/VvXRoVO5D/RYmzfu2Viv3DDMIMX9DlAinlG2alJ+SM=; b=1/rCXzNN+PwirBOGOC8vCCcR8M
-        kySObapW1OL41gTI+sELio+8ML6oU6Y3wEQwuuVfVQt4rpeXAfvwmDHZ4oztyVfVjgVxTy20bhdZi
-        y9R4e5ZAn7bOCRVQNdOJ/KV1KwIdekM5esv+RTeRP7XBFuPIxN9RftKWAKlN2MvPqAFQQUzzQuqcB
-        nDNra97HMYoEi8Br1AXOXrtjZ29T7OjalLZ6QTecRAVGsblz//PBXGwTjdgX2bLRu/OtDGBqUWTLN
-        Nl2wziqcIgxTRTzki0SUxTy7VW7DQet8fvevSCWgnQblDSWc9AhVm9iBUxoJz7MUkvxR88+uPLjfI
-        /U06Y0tg==;
+        bh=7+hD9NoEwudZFuVmk78ozQWIhfst9nLgIC7pZG4lA28=; b=yDjLlasRgH999cIdBWjfzGuZbW
+        B3XBm7aKgSPbukHcGcr7RzETO/d3SVEFhPofIkpxrYjBIY0BdyGALIg1ydwPaK8bdjrnfDOagXmAd
+        jgpq1vYIKoDtYLA75wWO9HkV4JCSN65NZPn9rpQiPkjmZSa57AhF8m95lOPyA5dXOho1JEbn5VkXZ
+        iIp/oNrKA9pgi5ZBBQSPHR8lOlp9ss+kRZJp7McUbYD75D9j8A1Wyfx+RcurggTKL9VkI8X86XAhY
+        czFjXnL6OWFkNGriWDtFCoTIz1qvY55Ok7ebNwzjr0v7pMu6lKEOFns2gjg5691qhhNCH3GIloQ0Z
+        T5CGZQpw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1miKkt-0068XC-RD; Wed, 03 Nov 2021 18:12:59 +0000
+        id 1miKkt-0068XJ-Tc; Wed, 03 Nov 2021 18:12:59 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
         dan.j.williams@intel.com, vishal.l.verma@intel.com,
@@ -36,9 +36,9 @@ To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
 Cc:     linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] block: update __register_blkdev() probe documentation
-Date:   Wed,  3 Nov 2021 11:12:55 -0700
-Message-Id: <20211103181258.1462704-2-mcgrof@kernel.org>
+Subject: [PATCH v4 2/4] ataflop: address add_disk() error handling on probe
+Date:   Wed,  3 Nov 2021 11:12:56 -0700
+Message-Id: <20211103181258.1462704-3-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211103181258.1462704-1-mcgrof@kernel.org>
 References: <20211103181258.1462704-1-mcgrof@kernel.org>
@@ -49,48 +49,51 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-__register_blkdev() is used to register a probe callback, and
-that callback is typically used to call add_disk(). Now that
-we are able to capture errors for add_disk(), we need to fix
-those probe calls where add_disk() fails and clean up resources.
-
-We don't extend the probe call to return the error given:
-
-1) we'd have to always special-case the case where the disk
-   was already present, as otherwise concurrent requests to
-   open an existing block device would fail, and this would be
-   a userspace visible change
-2) the error from ilookup() on blkdev_get_no_open() is sufficient
-3) The only thing the probe call is used for is to support
-   pre-devtmpfs, pre-udev semantics that want to create disks when
-   their pre-created device node is accessed, and so we don't care
-   for failures on probe there.
-
-Expand documentation for the probe callback to ensure users cleanup
-resources if add_disk() is used and to clarify this interface may be
-removed in the future.
+We need to cleanup resources on the probe() callback registered
+with __register_blkdev(), now that add_disk() error handling is
+supported. Address this.
 
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- block/genhd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/block/ataflop.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 4ed87f25276a..2f5b7e24e88a 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -213,7 +213,10 @@ void blkdev_show(struct seq_file *seqf, off_t offset)
-  * @major: the requested major device number [1..BLKDEV_MAJOR_MAX-1]. If
-  *         @major = 0, try to allocate any unused major number.
-  * @name: the name of the new block device as a zero terminated string
-- * @probe: allback that is called on access to any minor number of @major
-+ * @probe: pre-devtmpfs / pre-udev callback used to create disks when their
-+ *	   pre-created device node is accessed. When a probe call uses
-+ *	   add_disk() and it fails the driver must cleanup resources. This
-+ *	   interface may soon be removed.
-  *
-  * The @name must be unique within the system.
-  *
+diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
+index 170dd193cef6..e981b351f37e 100644
+--- a/drivers/block/ataflop.c
++++ b/drivers/block/ataflop.c
+@@ -2012,6 +2012,7 @@ static void ataflop_probe(dev_t dev)
+ {
+ 	int drive = MINOR(dev) & 3;
+ 	int type  = MINOR(dev) >> 2;
++	int err = 0;
+ 
+ 	if (type)
+ 		type--;
+@@ -2019,11 +2020,20 @@ static void ataflop_probe(dev_t dev)
+ 	if (drive >= FD_MAX_UNITS || type >= NUM_DISK_MINORS)
+ 		return;
+ 	if (!unit[drive].disk[type]) {
+-		if (ataflop_alloc_disk(drive, type) == 0) {
+-			add_disk(unit[drive].disk[type]);
+-			unit[drive].registered[type] = true;
++		err = ataflop_alloc_disk(drive, type);
++		if (err == 0) {
++			err = add_disk(unit[drive].disk[type]);
++			if (err)
++				goto err_out;
++			else
++				unit[drive].registered[type] = true;
+ 		}
+ 	}
++	return;
++
++err_out:
++	blk_cleanup_disk(unit[drive].disk[type]);
++	unit[drive].disk[type] = NULL;
+ }
+ 
+ static void atari_floppy_cleanup(void)
 -- 
 2.33.0
 
