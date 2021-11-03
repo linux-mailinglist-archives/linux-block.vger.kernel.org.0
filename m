@@ -2,105 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7A56444B26
-	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 00:05:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7924B444B73
+	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 00:19:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231639AbhKCXH4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Nov 2021 19:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbhKCXH3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 19:07:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D4EC06120A;
-        Wed,  3 Nov 2021 16:04:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=EKg8l7DulUH89IPZrJiJCOmNU6yLebfQUxB2V9YdJy0=; b=UycxkmUl3rgzdcnFEz3/RXqM5M
-        PaFTsRd0X7I1MsSZT6O1RCot3wGIEPfOclPTunIUGD5rE6lqjbHXAtuqk1c+FyjAoOHykuF1ymGJW
-        +lxtbuaK8iRAXbrVdYmNZrWZW3hoWFHnT5HHe0Rl+jyi7CajrCAGYM9x7/c3SR572orSCTxe3z6wU
-        EEqjcy6603frm90YaczwgD3eqe8TT9aDT8BaS6RDBI1Y7W1zznrtLEJZS334R4F3t9TJGUBZ0XDVi
-        WFDj+HfDXrVRJA8ny5i1EPEVm//1qW2WFHjQ2sl4h3rCwdHCMyIk+LseQdpc5WcsnRy6rL0VNgmGm
-        6AoCqpBA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1miPJ8-006sel-US; Wed, 03 Nov 2021 23:04:38 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, ira.weiny@intel.com, richard@nod.at,
-        miquel.raynal@bootlin.com, vigneshr@ti.com, efremov@linux.com,
-        song@kernel.org, martin.petersen@oracle.com, hare@suse.de,
-        jack@suse.cz, ming.lei@redhat.com, tj@kernel.org, mcgrof@kernel.org
-Cc:     linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 14/14] block: add __must_check for *add_disk*() callers
-Date:   Wed,  3 Nov 2021 16:04:37 -0700
-Message-Id: <20211103230437.1639990-15-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211103230437.1639990-1-mcgrof@kernel.org>
-References: <20211103230437.1639990-1-mcgrof@kernel.org>
+        id S229913AbhKCXVs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Nov 2021 19:21:48 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:37911 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229652AbhKCXVr (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 19:21:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1635981551; x=1667517551;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=k64ynEfu975pQWgOL6O+bE+0nql5whpTZa6mWxc4sNg=;
+  b=vfYdhCCNio9Nj2sUAo43ZeQe+DGyJ83NDjaVhjxrMQfAgM+8J2FR4ylD
+   bAzjjvdbLmtmxYBaVatQ/3G594CDBse3NudnQLNCH06JQqdfGBFuiusEy
+   1EbVWdcpAc/fbGwarCLMwqbProBS4a1SFH484AQKf9G4m2UCbGJL/CG3P
+   E=;
+Received: from ironmsg07-lv.qualcomm.com ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 03 Nov 2021 16:19:11 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg07-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2021 16:19:10 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.7;
+ Wed, 3 Nov 2021 16:19:09 -0700
+Received: from gabriel.qualcomm.com (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.7; Wed, 3 Nov 2021
+ 16:19:09 -0700
+From:   Gaurav Kashyap <quic_gaurkash@quicinc.com>
+To:     <linux-scsi@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+CC:     <linux-mmc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>, <thara.gopinath@linaro.org>,
+        <asutoshd@codeaurora.org>,
+        Gaurav Kashyap <quic_gaurkash@quicinc.com>
+Subject: [PATCH 0/4] Adds wrapped key support for inline storage encryption
+Date:   Wed, 3 Nov 2021 16:18:36 -0700
+Message-ID: <20211103231840.115521-1-quic_gaurkash@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that we have done a spring cleaning on all drivers and added
-error checking / handling, let's keep it that way and ensure
-no new drivers fail to stick with it.
+This currently has 4 patches with another coming in shortly for MMC.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/genhd.c         | 6 +++---
- include/linux/genhd.h | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+1. Moves ICE functionality to a common library, so that different storage controllers can use it.
+2. Adds a SCM call for derive raw secret needed for wrapped keys.
+3. Adds a hardware key manager library needed for wrapped keys.
+4. Adds wrapped key support in ufs for storage encryption
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 2f5b7e24e88a..2263f7862241 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -394,8 +394,8 @@ static void disk_scan_partitions(struct gendisk *disk)
-  * This function registers the partitioning information in @disk
-  * with the kernel.
-  */
--int device_add_disk(struct device *parent, struct gendisk *disk,
--		     const struct attribute_group **groups)
-+int __must_check device_add_disk(struct device *parent, struct gendisk *disk,
-+				 const struct attribute_group **groups)
- 
- {
- 	struct device *ddev = disk_to_dev(disk);
-@@ -542,7 +542,7 @@ int device_add_disk(struct device *parent, struct gendisk *disk,
- out_free_ext_minor:
- 	if (disk->major == BLOCK_EXT_MAJOR)
- 		blk_free_ext_minor(disk->first_minor);
--	return WARN_ON_ONCE(ret); /* keep until all callers handle errors */
-+	return ret;
- }
- EXPORT_SYMBOL(device_add_disk);
- 
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 59eabbc3a36b..f7d6810e68b3 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -205,9 +205,9 @@ static inline dev_t disk_devt(struct gendisk *disk)
- void disk_uevent(struct gendisk *disk, enum kobject_action action);
- 
- /* block/genhd.c */
--int device_add_disk(struct device *parent, struct gendisk *disk,
--		const struct attribute_group **groups);
--static inline int add_disk(struct gendisk *disk)
-+int __must_check device_add_disk(struct device *parent, struct gendisk *disk,
-+				 const struct attribute_group **groups);
-+static inline int __must_check add_disk(struct gendisk *disk)
- {
- 	return device_add_disk(NULL, disk, NULL);
- }
+Gaurav Kashyap (4):
+  ufs: move ICE functionality to a common library
+  qcom_scm: scm call for deriving a software secret
+  soc: qcom: add HWKM library for storage encryption
+  soc: qcom: add wrapped key support for ICE
+
+ drivers/firmware/qcom_scm.c       |  61 +++++++
+ drivers/firmware/qcom_scm.h       |   1 +
+ drivers/scsi/ufs/ufs-qcom-ice.c   | 200 ++++++-----------------
+ drivers/scsi/ufs/ufs-qcom.c       |   1 +
+ drivers/scsi/ufs/ufs-qcom.h       |   5 +
+ drivers/scsi/ufs/ufshcd-crypto.c  |  47 ++++--
+ drivers/scsi/ufs/ufshcd.h         |   5 +
+ drivers/soc/qcom/Kconfig          |  14 ++
+ drivers/soc/qcom/Makefile         |   2 +
+ drivers/soc/qcom/qti-ice-common.c | 215 +++++++++++++++++++++++++
+ drivers/soc/qcom/qti-ice-hwkm.c   |  77 +++++++++
+ drivers/soc/qcom/qti-ice-regs.h   | 257 ++++++++++++++++++++++++++++++
+ include/linux/qcom_scm.h          |   5 +
+ include/linux/qti-ice-common.h    |  37 +++++
+ 14 files changed, 766 insertions(+), 161 deletions(-)
+ create mode 100644 drivers/soc/qcom/qti-ice-common.c
+ create mode 100644 drivers/soc/qcom/qti-ice-hwkm.c
+ create mode 100644 drivers/soc/qcom/qti-ice-regs.h
+ create mode 100644 include/linux/qti-ice-common.h
+
 -- 
-2.33.0
+2.17.1
 
