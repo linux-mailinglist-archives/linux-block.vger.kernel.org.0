@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C351344481C
-	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:19:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9218444821
+	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:20:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230030AbhKCSVW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Nov 2021 14:21:22 -0400
-Received: from verein.lst.de ([213.95.11.211]:60724 "EHLO verein.lst.de"
+        id S229893AbhKCSW4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Nov 2021 14:22:56 -0400
+Received: from verein.lst.de ([213.95.11.211]:60744 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230156AbhKCSVV (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Wed, 3 Nov 2021 14:21:21 -0400
+        id S229558AbhKCSW4 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 3 Nov 2021 14:22:56 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id E612668AA6; Wed,  3 Nov 2021 19:18:33 +0100 (CET)
-Date:   Wed, 3 Nov 2021 19:18:33 +0100
+        id 1D09F68AA6; Wed,  3 Nov 2021 19:20:17 +0100 (CET)
+Date:   Wed, 3 Nov 2021 19:20:16 +0100
 From:   Christoph Hellwig <hch@lst.de>
 To:     Luis Chamberlain <mcgrof@kernel.org>
 Cc:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
@@ -25,19 +25,65 @@ Cc:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
         linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] block: update __register_blkdev() probe
- documentation
-Message-ID: <20211103181833.GA7745@lst.de>
-References: <20211103181258.1462704-1-mcgrof@kernel.org> <20211103181258.1462704-2-mcgrof@kernel.org>
+Subject: Re: [PATCH v4 2/4] ataflop: address add_disk() error handling on
+ probe
+Message-ID: <20211103182016.GB7745@lst.de>
+References: <20211103181258.1462704-1-mcgrof@kernel.org> <20211103181258.1462704-3-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211103181258.1462704-2-mcgrof@kernel.org>
+In-Reply-To: <20211103181258.1462704-3-mcgrof@kernel.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good,
+On Wed, Nov 03, 2021 at 11:12:56AM -0700, Luis Chamberlain wrote:
+> We need to cleanup resources on the probe() callback registered
+> with __register_blkdev(), now that add_disk() error handling is
+> supported. Address this.
+> 
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+>  drivers/block/ataflop.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
+> index 170dd193cef6..e981b351f37e 100644
+> --- a/drivers/block/ataflop.c
+> +++ b/drivers/block/ataflop.c
+> @@ -2012,6 +2012,7 @@ static void ataflop_probe(dev_t dev)
+>  {
+>  	int drive = MINOR(dev) & 3;
+>  	int type  = MINOR(dev) >> 2;
+> +	int err = 0;
+>  
+>  	if (type)
+>  		type--;
+> @@ -2019,11 +2020,20 @@ static void ataflop_probe(dev_t dev)
+>  	if (drive >= FD_MAX_UNITS || type >= NUM_DISK_MINORS)
+>  		return;
+>  	if (!unit[drive].disk[type]) {
+> +		err = ataflop_alloc_disk(drive, type);
+> +		if (err == 0) {
+> +			err = add_disk(unit[drive].disk[type]);
+> +			if (err)
+> +				goto err_out;
+> +			else
+> +				unit[drive].registered[type] = true;
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This looks weird.  Why not:
+
+ 	if (unit[drive].disk[type])
+		return;
+
+	if (ataflop_alloc_disk(drive, type))
+		return;
+	if (add_disk(unit[drive].disk[type]))
+		goto cleanup_disk;
+	unit[drive].registered[type] = true;
+	return;
+
+cleanup_disk:
+	blk_cleanup_disk(unit[drive].disk[type]);
+	unit[drive].disk[type] = NULL;
