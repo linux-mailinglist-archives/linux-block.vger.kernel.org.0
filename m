@@ -2,30 +2,30 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB73F444B03
-	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 00:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9290444B1A
+	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 00:05:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbhKCXHa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Nov 2021 19:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
+        id S231509AbhKCXHm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Nov 2021 19:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230237AbhKCXH2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 19:07:28 -0400
+        with ESMTP id S231312AbhKCXHg (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 19:07:36 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48F1C061714;
-        Wed,  3 Nov 2021 16:04:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DABBC061203;
+        Wed,  3 Nov 2021 16:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=bSdQkdtzeMIsv/fiegTTyrgOoGG2IbE1031f9dG1m7k=; b=SOMEVrTyVfZBBL9EopTS4zMZEQ
-        M7N4DqJjNNjkJKn2kClSOYCU1q5RxhTrJdi0zV+36Tf29klTtn6mzy3LHIu83kiogodhSo9zQ/5jp
-        23h0hji/c6S9kRD950LhKEGB3yX87lFGdsit4J0PldpJYfJKidjB3S+EW+h2M10Fll2pvqqD+hf5G
-        ZAGeL8KrHU4MuRD7Gt71ZfrwSl11ewfdWkQoHBxgMYgKsgbUj1A2apPIUlYwSnJ+0NSjfDpG4HRJd
-        FXAfh8uEofnple1tcwfI1G+yG5Ki9pKGfQ3f7kB4Fjcd0nu4ma+taNS4to0gZPg2QzbjtqsiBJYaX
-        tGCVkabg==;
+        bh=PVnqRR193BwJ4M+vx93QvRkriFPDEmeOtcXKAIUa5wk=; b=sdF+I17joo9hobYC/3+76elYa+
+        N4Ca2+CuZ5EXJMTlZjZkAkcGXZyafnteMj/Jcyr+MsALQ8mFIUpoXNC1yE0O4lxi1DdkGSSXn4Eew
+        Gm+FSgjYCpvd5Zmyb+dPujhUO6Sndf/3Hw4IEhtnZJ9Ckr4UZ+G8h6XB/D8KYqlFfsvvjiUO5dZSn
+        ZH4P/l1MqVRvthD2NL1MqAxWY9lwFkhC8eiwNsuaKA9GLcRmYrunLQaIZ2eRMCbPzNos8MXB/5hVL
+        PRtDl25Sds6Xnuvi6yqKEe9tdOTCAZVp/K+xR3JOyO9SKsZLHLJDAh55QUXovrwDQQamoBRQHji2+
+        YMvFnWuA==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1miPJ8-006seX-Mg; Wed, 03 Nov 2021 23:04:38 +0000
+        id 1miPJ8-006seZ-Ne; Wed, 03 Nov 2021 23:04:38 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
         dan.j.williams@intel.com, vishal.l.verma@intel.com,
@@ -36,9 +36,9 @@ To:     axboe@kernel.dk, hch@lst.de, penguin-kernel@i-love.sakura.ne.jp,
 Cc:     linux-mtd@lists.infradead.org, linux-scsi@vger.kernel.org,
         linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 07/14] z2ram: add error handling support for add_disk()
-Date:   Wed,  3 Nov 2021 16:04:30 -0700
-Message-Id: <20211103230437.1639990-8-mcgrof@kernel.org>
+Subject: [PATCH v5 08/14] block/sunvdc: add error handling support for add_disk()
+Date:   Wed,  3 Nov 2021 16:04:31 -0700
+Message-Id: <20211103230437.1639990-9-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211103230437.1639990-1-mcgrof@kernel.org>
 References: <20211103230437.1639990-1-mcgrof@kernel.org>
@@ -51,40 +51,51 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 We never checked for errors on add_disk() as this function
 returned void. Now that this is fixed, use the shiny new
-error handling. Only the disk is cleaned up inside
-z2ram_register_disk() as the caller deals with the rest.
+error handling.
+
+We re-use the same free tag call, so we also add a label for
+that as well.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/block/z2ram.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/block/sunvdc.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/z2ram.c b/drivers/block/z2ram.c
-index 4eef218108c6..ccc52c935faf 100644
---- a/drivers/block/z2ram.c
-+++ b/drivers/block/z2ram.c
-@@ -318,6 +318,7 @@ static const struct blk_mq_ops z2_mq_ops = {
- static int z2ram_register_disk(int minor)
- {
- 	struct gendisk *disk;
-+	int err;
+diff --git a/drivers/block/sunvdc.c b/drivers/block/sunvdc.c
+index 4d4bb810c2ae..6f45a53f7cbf 100644
+--- a/drivers/block/sunvdc.c
++++ b/drivers/block/sunvdc.c
+@@ -826,8 +826,8 @@ static int probe_disk(struct vdc_port *port)
+ 	if (IS_ERR(g)) {
+ 		printk(KERN_ERR PFX "%s: Could not allocate gendisk.\n",
+ 		       port->vio.name);
+-		blk_mq_free_tag_set(&port->tag_set);
+-		return PTR_ERR(g);
++		err = PTR_ERR(g);
++		goto out_free_tag;
+ 	}
  
- 	disk = blk_mq_alloc_disk(&tag_set, NULL);
- 	if (IS_ERR(disk))
-@@ -333,8 +334,10 @@ static int z2ram_register_disk(int minor)
- 		sprintf(disk->disk_name, "z2ram");
+ 	port->disk = g;
+@@ -879,9 +879,17 @@ static int probe_disk(struct vdc_port *port)
+ 	       port->vdisk_size, (port->vdisk_size >> (20 - 9)),
+ 	       port->vio.ver.major, port->vio.ver.minor);
  
- 	z2ram_gendisk[minor] = disk;
--	add_disk(disk);
--	return 0;
-+	err = add_disk(disk);
+-	device_add_disk(&port->vio.vdev->dev, g, NULL);
++	err = device_add_disk(&port->vio.vdev->dev, g, NULL);
 +	if (err)
-+		blk_cleanup_disk(disk);
++		goto out_cleanup_disk;
+ 
+ 	return 0;
++
++out_cleanup_disk:
++	blk_cleanup_disk(g);
++out_free_tag:
++	blk_mq_free_tag_set(&port->tag_set);
 +	return err;
  }
  
- static int __init z2_init(void)
+ static struct ldc_channel_config vdc_ldc_cfg = {
 -- 
 2.33.0
 
