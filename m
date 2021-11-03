@@ -2,119 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E093444848
-	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 19:32:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C37C54448B4
+	for <lists+linux-block@lfdr.de>; Wed,  3 Nov 2021 20:03:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbhKCSfF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 Nov 2021 14:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58062 "EHLO
+        id S230198AbhKCTGO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 Nov 2021 15:06:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230198AbhKCSfF (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 14:35:05 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C561C061714
-        for <linux-block@vger.kernel.org>; Wed,  3 Nov 2021 11:32:28 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id y11so5057617oih.7
-        for <linux-block@vger.kernel.org>; Wed, 03 Nov 2021 11:32:28 -0700 (PDT)
+        with ESMTP id S229772AbhKCTGO (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 Nov 2021 15:06:14 -0400
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEDDFC061203
+        for <linux-block@vger.kernel.org>; Wed,  3 Nov 2021 12:03:36 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id bn12so5227688oib.2
+        for <linux-block@vger.kernel.org>; Wed, 03 Nov 2021 12:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nx4YNyDIu1laRmWmTqB2WvSefHm+x/QcfSPBrmlNO+I=;
-        b=Le/mfW/wLjpuLrGyo/O58PZCIPoV/sSGJqqGmpEaCZSMhJxGlJyfhyw/+rPdLXMpAJ
-         ezjuWA9Dg5AIhHss61ysnG9O61eCHXhCeF8iM4RZugpDTyFfbICs9rnjPNeU5yd0RgZJ
-         q7siGBlAUK2MvAS0tm3q6Jee4IYBzZCf1R4kjsl9kXyz2c2c7zBot2CJ0ai0EBBb4Jny
-         0m9t7NBuj1ZIkjAQisz/Fv/7qOpDkMdTyHTs5U7pbUua735KAV31yL2ONkF3EMZCYpKq
-         vIMdYUB1TG5tueBmeOlTZb3hE+k7yl4luD6svgEkWSY0g7rfLIENxvOmn9srww/IFK9o
-         gxig==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5oaC9OT7PCd2Vr4m+94T0a/jYCQYumzRDNC0eRuxbgg=;
+        b=Tdt5km7jlZggUD/yGLnsTL4FeB/NyUiATf/d8TR3BcaWJEbNrUmWqe5k+mZVlZuWKR
+         9cmy5yV46NiOk/1R0hwOoH/mWvA4fieemyERhOyku4sLWPtIXJ7YJUG2N7omWfNsNQXu
+         goFIxkAuOb5Zay98aWf8WkWOPqYaECdcjUroVI7+B5HJz2PzY+ZvaaHcmRsZng9GtiOv
+         LxtorsRqjqnEyDNuQvQJbcD56ANKsPLHEUo+2rZVz/Ub0WIDganblzoMpL+odv+OUTWy
+         fDuHjEYJRV5zcswU23dpFVIL+w5JGFSGx4G886yhNEjc8JdcAmFAahJktKjkbXA6gcOj
+         6afw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nx4YNyDIu1laRmWmTqB2WvSefHm+x/QcfSPBrmlNO+I=;
-        b=6aaRYlKq2AwbZeoH3O9K2FHE+fOkL6cXjsmSMdSoH6UD038L5U+XvjXwWaIiZ0QiNJ
-         cO1aZS+yR67HdeXK5NrYl/oj1MzBaHUBQA/kFpJbrceDXNPVyhEfdMNynSUWuGSNqQcw
-         iSwwklQZ6m/QJ2LQOnXO+8D3eP6qKT9M6voFcNuV8tBTcbqjjdPjP73PaxHNe2gzj+vt
-         PuBGgJ3W3eqxWuwW51rCSi1YlGfLVTs7VKGOJAtZLwVp80llCIcftKs6GkSHpxRqhb/r
-         +qV7kzkmITtTLBtQ/UhUN9sCyFp1X0NhFPA9R5evF/EXnuLaRCuDJesJeWZzEGkBV3Hz
-         5I5g==
-X-Gm-Message-State: AOAM5339mM9rSlfTliaySln6w7xrjP5crK1lDatpEhIXRXQ0MeyWkBKS
-        p138pJtxeqkuiP4hzSzb0hLtQxfBtAeNgg==
-X-Google-Smtp-Source: ABdhPJzwDxkdLwltU8R8tjTKIyJuWHmBJhHULNIyMZpF9fBjF+p5+aWdeWaKyX37rpUFkdjEJ8T+/w==
-X-Received: by 2002:a05:6808:18a7:: with SMTP id bi39mr12090676oib.136.1635964347483;
-        Wed, 03 Nov 2021 11:32:27 -0700 (PDT)
-Received: from p1.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id i20sm766056otp.18.2021.11.03.11.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Nov 2021 11:32:26 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5oaC9OT7PCd2Vr4m+94T0a/jYCQYumzRDNC0eRuxbgg=;
+        b=Y9d641ggB3UrFLmopj+AInEsW4NLDIhqGkmAsDoBPFAA8t9+lSqeW1cK9QKCEV+NPk
+         dxy3rkVDZk4BRMT2bZ8d6P/eOtkPBbccn3k/UWau0v/+o5iyiV/eOPd89vM2frLbzMoX
+         ksn3a4BhCHKtUPmVNlocCPRC1Ile16r3ZGQd/Dnit0lBPf6eRQoQkc5HpODSRo1+SoDD
+         1KJYMzLlqemq5WJaxtDT3TA/eqW5Kta4Lc06kYsBTftDXv/3ycCrLhvTjOoClqO0l9jw
+         qe59hmD0n//qn8197kLUKAcxoP+6k2sZZPmk5i71ztCHxtbkK8NyKB2zM0UUda9n3UP5
+         8yhA==
+X-Gm-Message-State: AOAM530yZOHco2CxrV9G/lwPIogZxU7LlWhO0f4OGEBdGNshYpUtldP9
+        rC9uVWvUsKrPWwsO37O6cq+Y3A==
+X-Google-Smtp-Source: ABdhPJwuIcO4RpWVlExK2PiHYX6hoYdR1+O8lrLPZzNHQWc3RFpUznlDnPph6yXFelS6iM7aYeGjeg==
+X-Received: by 2002:a05:6808:171c:: with SMTP id bc28mr12306248oib.18.1635966216083;
+        Wed, 03 Nov 2021 12:03:36 -0700 (PDT)
+Received: from [192.168.1.30] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id bc32sm789359oob.12.2021.11.03.12.03.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Nov 2021 12:03:35 -0700 (PDT)
+Subject: Re: [bug report] WARNING: CPU: 1 PID: 1386 at
+ block/blk-mq-sched.c:432 blk_mq_sched_insert_request+0x54/0x178
+To:     Yi Zhang <yi.zhang@redhat.com>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>
+References: <YYIHXGSb2O5va0vA@T590>
+ <85F2E9AC-385F-4BCA-BD3C-7A093442F87F@kernel.dk>
+ <CAHj4cs-pTYoksSQDjfFpK13Xtg0jB6EOvhfOZu5cDHowZa=ueg@mail.gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-block@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4/4] block: move plug rq alloc into helper and ensure queue match
-Date:   Wed,  3 Nov 2021 12:32:22 -0600
-Message-Id: <20211103183222.180268-5-axboe@kernel.dk>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211103183222.180268-1-axboe@kernel.dk>
-References: <20211103183222.180268-1-axboe@kernel.dk>
+Message-ID: <f95deb32-59a0-1fc1-b7b2-92583a5ef4de@kernel.dk>
+Date:   Wed, 3 Nov 2021 13:03:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAHj4cs-pTYoksSQDjfFpK13Xtg0jB6EOvhfOZu5cDHowZa=ueg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We need to improve the logic here a bit, most importantly ensuring that
-the request matches the current queue. If it doesn't, we cannot use it
-and must fallback to normal request alloc.
+On 11/2/21 10:00 PM, Yi Zhang wrote:
+>>>
+>>> Hello Jens,
+>>>
+>>> I guess the issue could be the following code run without grabbing
+>>> ->q_usage_counter from blk_mq_alloc_request() and blk_mq_alloc_request_hctx().
+>>>
+>>> .rq_flags       = q->elevator ? RQF_ELV : 0,
+>>>
+>>> then elevator is switched to real one from none, and check on q->elevator
+>>> becomes not consistent.
+>>
+>> Indeed, that’s where I was going with this. I have a patch, testing it locally but it’s getting late. Will send it out tomorrow. The nice benefit is that it allows dropping the weird ref get on plug flush, and batches getting the refs as well.
+>>
+> 
+> Hi Jens
+> Here is the log in case you still need it. :)
 
-Fixes: 47c122e35d7e ("block: pre-allocate requests if plug is started and is a batch")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- block/blk-mq.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+Can you retry with the updated for-next pulled into -git?
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4bc98c7264fa..e92c36f2326a 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2485,6 +2485,24 @@ static inline bool blk_mq_queue_enter(struct request_queue *q, struct bio *bio)
- 	return true;
- }
- 
-+static inline struct request *blk_get_plug_request(struct request_queue *q,
-+						   struct blk_plug *plug,
-+						   struct bio *bio)
-+{
-+	struct request *rq;
-+
-+	if (plug && !rq_list_empty(plug->cached_rq)) {
-+		rq = rq_list_peek(&plug->cached_rq);
-+		if (rq->q == q) {
-+			rq_qos_throttle(q, bio);
-+			plug->cached_rq = rq_list_next(rq);
-+			INIT_LIST_HEAD(&rq->queuelist);
-+			return rq;
-+		}
-+	}
-+	return NULL;
-+}
-+
- /**
-  * blk_mq_submit_bio - Create and send a request to block device.
-  * @bio: Bio pointer.
-@@ -2523,11 +2541,8 @@ void blk_mq_submit_bio(struct bio *bio)
- 	}
- 
- 	plug = blk_mq_plug(q, bio);
--	if (plug && plug->cached_rq) {
--		rq = rq_list_pop(&plug->cached_rq);
--		INIT_LIST_HEAD(&rq->queuelist);
--		rq_qos_throttle(q, bio);
--	} else {
-+	rq = blk_get_plug_request(q, plug, bio);
-+	if (!rq) {
- 		struct blk_mq_alloc_data data = {
- 			.q		= q,
- 			.nr_tags	= 1,
 -- 
-2.33.1
+Jens Axboe
 
