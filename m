@@ -2,22 +2,22 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A8C444FE2
-	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 09:01:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E214444FDE
+	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 09:01:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230152AbhKDID5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Nov 2021 04:03:57 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:30919 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbhKDID5 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Nov 2021 04:03:57 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HlGDX6zckzcb78;
-        Thu,  4 Nov 2021 15:56:28 +0800 (CST)
+        id S230202AbhKDIDy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Nov 2021 04:03:54 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:27113 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230084AbhKDIDx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Nov 2021 04:03:53 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4HlGHb0Z4yz1DJ7s;
+        Thu,  4 Nov 2021 15:59:07 +0800 (CST)
 Received: from dggpeml500019.china.huawei.com (7.185.36.137) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Thu, 4 Nov 2021 16:01:12 +0800
+ 15.1.2308.15; Thu, 4 Nov 2021 16:01:13 +0800
 Received: from huawei.com (10.175.124.27) by dggpeml500019.china.huawei.com
  (7.185.36.137) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Thu, 4 Nov
@@ -26,10 +26,12 @@ From:   Wu Bo <wubo40@huawei.com>
 To:     <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linfeilong@huawei.com>, <wubo40@huawei.com>
-Subject: [PATCH 0/2] add error handling support for add_disk()
-Date:   Thu, 4 Nov 2021 16:33:17 +0800
-Message-ID: <1636014799-20156-1-git-send-email-wubo40@huawei.com>
+Subject: [PATCH 1/2] brd: add error handling support for add_disk()
+Date:   Thu, 4 Nov 2021 16:33:18 +0800
+Message-ID: <1636014799-20156-2-git-send-email-wubo40@huawei.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1636014799-20156-1-git-send-email-wubo40@huawei.com>
+References: <1636014799-20156-1-git-send-email-wubo40@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.175.124.27]
@@ -45,14 +47,39 @@ returned void. Now that is fixed.
 
 So add error handling support for add_disk().
 
-Wu Bo (2):
-  brd: add error handling support for add_disk()
-  z2ram: add error handling support for add_disk()
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+---
+ drivers/block/brd.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
- drivers/block/brd.c   | 7 ++++++-
- drivers/block/z2ram.c | 8 ++++++--
- 2 files changed, 12 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index aa04727..34a0d9c 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -370,6 +370,7 @@ static int brd_alloc(int i)
+ 	struct brd_device *brd;
+ 	struct gendisk *disk;
+ 	char buf[DISK_NAME_LEN];
++	int err;
+ 
+ 	mutex_lock(&brd_devices_mutex);
+ 	list_for_each_entry(brd, &brd_devices, brd_list) {
+@@ -420,10 +421,14 @@ static int brd_alloc(int i)
+ 	/* Tell the block layer that this is not a rotational device */
+ 	blk_queue_flag_set(QUEUE_FLAG_NONROT, disk->queue);
+ 	blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, disk->queue);
+-	add_disk(disk);
++	err = add_disk(disk);
++	if (err)
++		goto out_cleanup_disk;
+ 
+ 	return 0;
+ 
++out_cleanup_disk:
++	blk_cleanup_disk(disk);
+ out_free_dev:
+ 	mutex_lock(&brd_devices_mutex);
+ 	list_del(&brd->brd_list);
 -- 
 1.8.3.1
 
