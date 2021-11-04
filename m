@@ -2,151 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF3D1445976
-	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 19:16:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 337D7445995
+	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 19:22:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234111AbhKDSTE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Nov 2021 14:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39614 "EHLO
+        id S234159AbhKDSYs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Nov 2021 14:24:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234102AbhKDSTB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Nov 2021 14:19:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55EDAC061714;
-        Thu,  4 Nov 2021 11:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-        bh=jMahL7SwbYkHfS6SGguOr7KGl9dPM47/ttUCLw3AGB0=; b=twe5CLzmwVOGo8TkN/z/9o+80Y
-        GWAmZlPbyVYluDGb/E9lEZuV4aaUVD9E6s203thJy7xe5pLdHs7DfAws8vKcPLetTeGmQn2npwGLV
-        JQ3yu8u/1joIMLWlGeTgP3JABrqhf+xdBGDXFw5lSvzI0uDzarZ9ZNRMuVA0NQeIXCJPpUnVp0cc3
-        OQi/mwPPosC35SosglzJuos9FkMJ3vnBqlWcblkjmOkThFnCQQqll0lg8a7I9AD6UvUVlkugzZhpO
-        YxIDhKyaROdAZljC4D8ZaTkiJEI+C/TD9AY6f98a6pivgpmL81yM/wZ541BSfeVmM3iDBRNPaaSAY
-        rvmj8B8A==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mihHW-009lko-Ax; Thu, 04 Nov 2021 18:16:10 +0000
-Date:   Thu, 4 Nov 2021 11:16:10 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     martin.petersen@oracle.com, miquel.raynal@bootlin.com,
-        hare@suse.de, jack@suse.cz, hch@lst.de, song@kernel.org,
-        dave.jiang@intel.com, richard@nod.at, vishal.l.verma@intel.com,
-        penguin-kernel@i-love.sakura.ne.jp, tj@kernel.org,
-        ira.weiny@intel.com, vigneshr@ti.com, dan.j.williams@intel.com,
-        ming.lei@redhat.com, efremov@linux.com, linux-raid@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v5 00/14] last set for add_disk() error handling
-Message-ID: <YYQjamPUtrq402Cr@bombadil.infradead.org>
-References: <20211103230437.1639990-1-mcgrof@kernel.org>
- <163602655191.22491.10844091970007142957.b4-ty@kernel.dk>
- <4764286a-99b4-39f7-ce5c-9e88cee1a538@kernel.dk>
- <YYQTYctDjaxU2tkQ@bombadil.infradead.org>
- <377b472e-b788-df12-f9cd-7fc7b0887dc0@kernel.dk>
+        with ESMTP id S234120AbhKDSYr (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Nov 2021 14:24:47 -0400
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9DDC061714
+        for <linux-block@vger.kernel.org>; Thu,  4 Nov 2021 11:22:09 -0700 (PDT)
+Received: by mail-ot1-x32a.google.com with SMTP id s19-20020a056830125300b0055ad9673606so8220826otp.0
+        for <linux-block@vger.kernel.org>; Thu, 04 Nov 2021 11:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9yxGy8Q4aKVHJkoSzL/P9cJZrxZ0/OlvRULTMxmGoPQ=;
+        b=47oXwMnpWbqW35XsTwXjKP6ELtmWQxocYwOz9WyF+pIqtr0CVh3WZFeksOSjyNl1T6
+         6s2sYLV+htytMlPMY8iJ8H/U6JY0ZPWwKWQreq86SiF4isp7jN8WMM0k+yz3MS2A5H8/
+         jfgX3G91s9jqZ00CPrCJvz15oz1kmEaovOpxBrMq8LF/PU6LgTiWRuiuIFqArb2I95pJ
+         oYIppGhtxGbtge0OefqmXf30f1ogi1W1+zRU6heSOovDpiQZQczHWuU7RK/1cvElRMtx
+         qYQPs+ausrSnpY7+hurslzg4/0O91Wc9NLlftbgF6HHONbDJal7bOGK+47bvnNK5gWXC
+         Ysyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9yxGy8Q4aKVHJkoSzL/P9cJZrxZ0/OlvRULTMxmGoPQ=;
+        b=UViE/ZquQ2d+5vjEWE9XPDbI1O2iBGE61owBu6wuOvtWJ+zhnJu8+tKeDvcQKk8dS1
+         +QEr8dBWJLpuuBGy/dYwG3s7h44rZIj2xloQYoPtWgbbj2VZlALsMI60fpLPMdOB0OLp
+         ujR2PbeUOyXHpmsaZaSEgTGYJCE/moexMoBRnP1skbNXeOP022tnzUYkClWkAMVnYsbn
+         wsYTNlqHcwNT1z7aTyffuO5rFqoVutzYmt3X4Fz0mEptJ2ft7mjrZrgrMrvmZ9QIPxgj
+         LhHXFP0f/g46axX1CU44RThpkos2CKkTtxTKxmoevDqYw247anfKJ5k/gSJvcv3dL3/q
+         LfNg==
+X-Gm-Message-State: AOAM532wob7Ao6LsTustdujtwiGRJR8wKOzJF3Gs+S1xqX1QkKk320hS
+        nYgS/YyGApWaM0mpi388BfmXjNlb+lbFRQ==
+X-Google-Smtp-Source: ABdhPJxxmMeF/hKGBdVNP2UIcUP0yJOoYabEUCgWkEsTk3zcju1W8UJ2jo4Aq9j2+A4MFHUuYp39yA==
+X-Received: by 2002:a05:6830:70f:: with SMTP id y15mr3152997ots.232.1636050127200;
+        Thu, 04 Nov 2021 11:22:07 -0700 (PDT)
+Received: from p1.localdomain ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id s206sm1595445oia.33.2021.11.04.11.22.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Nov 2021 11:22:06 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     linux-block@vger.kernel.org
+Cc:     hch@infradead.org
+Subject: [PATCHSET v3 0/5] Alloc batch fixes
+Date:   Thu,  4 Nov 2021 12:21:56 -0600
+Message-Id: <20211104182201.83906-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <377b472e-b788-df12-f9cd-7fc7b0887dc0@kernel.dk>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Nov 04, 2021 at 11:10:48AM -0600, Jens Axboe wrote:
-> On 11/4/21 11:07 AM, Luis Chamberlain wrote:
-> > On Thu, Nov 04, 2021 at 06:53:34AM -0600, Jens Axboe wrote:
-> >> On 11/4/21 5:49 AM, Jens Axboe wrote:
-> >>> On Wed, 3 Nov 2021 16:04:23 -0700, Luis Chamberlain wrote:
-> >>>> Jens,
-> >>>>
-> >>>> as requested, I've folded all pending changes into this series. This
-> >>>> v5 pegs on Christoph's reviewed-by tags and since I was respinning I
-> >>>> modified the ataprobe and floppy driver changes as he suggested.
-> >>>>
-> >>>> I think this is it. The world of floppy has been exciting for v5.16.
-> >>>>
-> >>>> [...]
-> >>>
-> >>> Applied, thanks!
-> >>>
-> >>> [01/14] nvdimm/btt: use goto error labels on btt_blk_init()
-> >>>         commit: 2762ff06aa49e3a13fb4b779120f4f8c12c39fd1
-> >>> [02/14] nvdimm/btt: add error handling support for add_disk()
-> >>>         commit: 16be7974ff5d0a5cd9f345571c3eac1c3f6ba6de
-> >>> [03/14] nvdimm/blk: avoid calling del_gendisk() on early failures
-> >>>         commit: b7421afcec0c77ab58633587ddc29d53e6eb95af
-> >>> [04/14] nvdimm/blk: add error handling support for add_disk()
-> >>>         commit: dc104f4bb2d0a652dee010e47bc89c1ad2ab37c9
-> >>> [05/14] nvdimm/pmem: cleanup the disk if pmem_release_disk() is yet assigned
-> >>>         commit: accf58afb689f81daadde24080ea1164ad2db75f
-> >>> [06/14] nvdimm/pmem: use add_disk() error handling
-> >>>         commit: 5a192ccc32e2981f721343c750b8cfb4c3f41007
-> >>> [07/14] z2ram: add error handling support for add_disk()
-> >>>         commit: 15733754ccf35c49d2f36a7ac51adc8b975c1c78
-> >>> [08/14] block/sunvdc: add error handling support for add_disk()
-> >>>         commit: f583eaef0af39b792d74e39721b5ba4b6948a270
-> >>> [09/14] mtd/ubi/block: add error handling support for add_disk()
-> >>>         commit: ed73919124b2e48490adbbe48ffe885a2a4c6fee
-> >>> [10/14] ataflop: remove ataflop_probe_lock mutex
-> >>>         commit: 4ddb85d36613c45bde00d368bf9f357bd0708a0c
-> >>> [11/14] block: update __register_blkdev() probe documentation
-> >>>         commit: 26e06f5b13671d194d67ae8e2b66f524ab174153
-> >>> [12/14] ataflop: address add_disk() error handling on probe
-> >>>         commit: 46a7db492e7a27408bc164cbe6424683e79529b0
-> >>> [13/14] floppy: address add_disk() error handling on probe
-> >>>         commit: ec28fcc6cfcd418d20038ad2c492e87bf3a9f026
-> >>> [14/14] block: add __must_check for *add_disk*() callers
-> >>>         commit: 1698712d85ec2f128fc7e7c5dc2018b5ed2b7cf6
-> >>
-> >> rivers/scsi/sd.c: In function ‘sd_probe’:
-> >> drivers/scsi/sd.c:3573:9: warning: ignoring return value of ‘device_add_disk’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-> >>  3573 |         device_add_disk(dev, gd, NULL);
-> >>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >> drivers/scsi/sr.c: In function ‘sr_probe’:
-> >> drivers/scsi/sr.c:731:9: warning: ignoring return value of ‘device_add_disk’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
-> >>   731 |         device_add_disk(&sdev->sdev_gendev, disk, NULL);
-> >>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>
-> >>
-> >> Dropping the last two patches...
-> > 
-> > Martin K Peterson has the respective patches needed queued up on his tree
-> > for v5.16:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=5.16/scsi-staging&id=e9d658c2175b95a8f091b12ddefb271683aeacd9
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=5.16/scsi-staging&id=2a7a891f4c406822801ecd676b076c64de072c9e
-> > 
-> > Would the last patch be sent once that gets to Linus?
-> 
-> But that dependency wasn't clear in the patches posted,
+Hi,
 
-Sorry my mistake.
+Since the new feedback on v1 arrived post v2, here's a v3 that takes
+it all into account.
 
-> and it leaves me
-> wondering if there are others?
+A few fixes related to the batched allocations:
 
-There should not be, becauase at least my patches on top of linux-next
-compiles fine as per 0-day builds on tons of configs.
+- Have the requests hold a queue reference, flush them on schedule
+  unplug as well.
 
-> I obviously can't queue up a patch that
-> adds a must_check to a function, when we still have callers that don't
-> properly check it.
+- Make sure the queue matches, could be a mismatch if we're driving
+  multiple devices.
 
-Absolutely.
+Since v2:
+- Split both alloc handlers into helpers
+- Retained blk_try_enter_queue() the way that it was, don't want to
+  inline all of bio_queue_enter(). Added justification for that in the
+  commit message.
+- Add fops based submit_bio helper
+Since v1:
+- Reshuffle series to do plug rq alloc helper before enter changes
+- Protect submit_bio_checks() by queue enter reference as well
 
-> That should have been made clear, and that last patch never should've
-> been part of the series. Please send it once Linus's tree has all
-> callers checking the result.
+-- 
+Jens Axboe
 
-Indeed. Will track and will do.
 
-> > Also curious why drop the last two patches instead just the last one for
-> > now?
-> 
-> Sorry, meant just the last one.
-
-Ah ok!
-
-  Luis
