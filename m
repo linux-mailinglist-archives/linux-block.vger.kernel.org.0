@@ -2,90 +2,203 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B367445587
-	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 15:42:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F055D44563B
+	for <lists+linux-block@lfdr.de>; Thu,  4 Nov 2021 16:22:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbhKDOoj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Nov 2021 10:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231325AbhKDOof (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Nov 2021 10:44:35 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C01C06127A
-        for <linux-block@vger.kernel.org>; Thu,  4 Nov 2021 07:41:57 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id c26-20020a9d615a000000b0055bf6efab46so304037otk.6
-        for <linux-block@vger.kernel.org>; Thu, 04 Nov 2021 07:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=e8fd8CcgzD0vvHj18hWmkSikSlqHt0R6Y/TRO3BBSC8=;
-        b=k/WuS4cH0MsvfDcF5t1LEqPGWZQCjC3718j9F9vDE10t9hNCsRhPAxp2KdyQAH4cfV
-         kFTYNLPsZUbP+DImZcZF77JxL1BjUkNLyJGwXBMIigMbiLW705HSDm8ndcLQHlG4hIZx
-         UU2GCLc1QSmqyA01yBujwMeZdWqk+kFi7/vfiX9rv/1mpxye63/LTonLCbDeZ0cD7zcr
-         tP81EyxK0TEqho8Gg3B71fyMf/g9T8xEmL1kSlWqsDs9+ZWJzhJ8O1Zl0GABDii7C3GQ
-         0Yb07Y08fFpseFVIi2BM5bVqsUTCnhCf1uGx68WhnlcJ6chzlCkCxBNhl5SfZI4DzIkh
-         QNyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e8fd8CcgzD0vvHj18hWmkSikSlqHt0R6Y/TRO3BBSC8=;
-        b=x9m47NOpnBv/bi0Kv3T41s7ZZdli1ggetyu1qHxoYv5JV9hjo9H/X+DzXlstQOGK1D
-         tlWV7z6a5vYW18w6VQPPLsKfENFqH88r3EoaOJybN0o8RzQDazgR85GBtwmI8o8IPjF+
-         3HKE+jvizgcpzPsbFLmsvHLOzgzOHubFoAKGu6yOkKNPCi1V39KmOW61pqXgwf+Q9Wun
-         KqITb1rRs5R/qesxQzpxxHpJXaFSpZ0SNro7jGuAwhO4Qz+XLCJEVkAzPFO6OfR1361s
-         mkL8sTVKM/w5wS+W7roc3G3U7s1czHuUnCm49eExzNpHhtmb/SBkeO5umGHwYDxrqFWj
-         hSeg==
-X-Gm-Message-State: AOAM530y4st5W1I7tMTujf2Uu8UNDD0uGB9mqKqoP4UQiYOksX4bjepp
-        a0L4ucDzIrWi190lGyuDMvY0FMG8BQiMvA==
-X-Google-Smtp-Source: ABdhPJy87q6Rdz/f7ZmpA5XvkDkrS4tYBsgC3Msse8Sj6l//vf1mGRFinGvyoRHXEUrTZ6gOzMXK9Q==
-X-Received: by 2002:a9d:6a4d:: with SMTP id h13mr23565568otn.293.1636036916445;
-        Thu, 04 Nov 2021 07:41:56 -0700 (PDT)
-Received: from [192.168.1.30] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id a8sm1401184otr.3.2021.11.04.07.41.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Nov 2021 07:41:56 -0700 (PDT)
-Subject: Re: block: please restore 2d52c58b9c9b ("block, bfq: honor
- already-setup queue merges")
-To:     =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Paolo Valente <paolo.valente@linaro.org>
-References: <65495934-09fe-55b0-62a9-c649dc9940ba@applied-asynchrony.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a66f5127-8b0b-d21a-eda5-73968255b52c@kernel.dk>
-Date:   Thu, 4 Nov 2021 08:41:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S231486AbhKDPZK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Nov 2021 11:25:10 -0400
+Received: from mail-1.ca.inter.net ([208.85.220.69]:33131 "EHLO
+        mail-1.ca.inter.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231403AbhKDPZJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Nov 2021 11:25:09 -0400
+X-Greylist: delayed 343 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Nov 2021 11:25:08 EDT
+Received: from mp-mx11.ca.inter.net (mp-mx11.ca.inter.net [208.85.217.19])
+        by mail-1.ca.inter.net (Postfix) with ESMTP id 61BD72EA1BD;
+        Thu,  4 Nov 2021 11:16:45 -0400 (EDT)
+Received: from mail-1.ca.inter.net ([208.85.220.69])
+        by mp-mx11.ca.inter.net (mp-mx11.ca.inter.net [208.85.217.19]) (amavisd-new, port 10024)
+        with ESMTP id eveuZKOwWI_I; Thu,  4 Nov 2021 11:16:44 -0400 (EDT)
+Received: from [192.168.48.23] (host-45-58-208-241.dyn.295.ca [45.58.208.241])
+        (using TLSv1 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dgilbert@interlog.com)
+        by mail-1.ca.inter.net (Postfix) with ESMTPSA id 78D192EA1A2;
+        Thu,  4 Nov 2021 11:16:42 -0400 (EDT)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [RFC PATCH 0/8] block: add support for REQ_OP_VERIFY
+To:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com
+Cc:     axboe@kernel.dk, agk@redhat.com, snitzer@redhat.com,
+        song@kernel.org, djwong@kernel.org, kbusch@kernel.org, hch@lst.de,
+        sagi@grimberg.me, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        viro@zeniv.linux.org.uk, javier@javigon.com,
+        johannes.thumshirn@wdc.com, bvanassche@acm.org,
+        dongli.zhang@oracle.com, ming.lei@redhat.com, osandov@fb.com,
+        willy@infradead.org, jefflexu@linux.alibaba.com,
+        josef@toxicpanda.com, clm@fb.com, dsterba@suse.com, jack@suse.com,
+        tytso@mit.edu, adilger.kernel@dilger.ca, jlayton@kernel.org,
+        idryomov@gmail.com, danil.kipnis@cloud.ionos.com,
+        ebiggers@google.com, jinpu.wang@cloud.ionos.com,
+        Chaitanya Kulkarni <kch@nvidia.com>
+References: <20211104064634.4481-1-chaitanyak@nvidia.com>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <7f734d14-c107-daa3-aaa8-0eda3c592add@interlog.com>
+Date:   Thu, 4 Nov 2021 11:16:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <65495934-09fe-55b0-62a9-c649dc9940ba@applied-asynchrony.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211104064634.4481-1-chaitanyak@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/4/21 8:04 AM, Holger Hoffstätte wrote:
+On 2021-11-04 2:46 a.m., Chaitanya Kulkarni wrote:
+> From: Chaitanya Kulkarni <kch@nvidia.com>
 > 
-> Hi Jens,
+> Hi,
 > 
-> a simple no-code request:
+> One of the responsibilities of the Operating System, along with managing
+> resources, is to provide a unified interface to the user by creating
+> hardware abstractions. In the Linux Kernel storage stack that
+> abstraction is created by implementing the generic request operations
+> such as REQ_OP_READ/REQ_OP_WRITE or REQ_OP_DISCARD/REQ_OP_WRITE_ZEROES,
+> etc that are mapped to the specific low-level hardware protocol commands
+> e.g. SCSI or NVMe.
 > 
-> Commit d29bd41428cf ("block, bfq: reset last_bfqq_created on group change")
-> fixed a UAF in bfq, which was previously worked-around by ebc69e897e17
-> ("Revert "block, bfq: honor already-setup queue merges"").
+> With that in mind, this RFC patch-series implements a new block layer
+> operation to offload the data verification on to the controller if
+> supported or emulate the operation if not. The main advantage is to free
+> up the CPU and reduce the host link traffic since, for some devices,
+> their internal bandwidth is higher than the host link and offloading this
+> operation can improve the performance of the proactive error detection
+> applications such as file system level scrubbing.
 > 
-> However since then the original commit 2d52c58b9c9b was never restored.
+> * Background *
+> -----------------------------------------------------------------------
 > 
-> Reinstating 2d52c58b9c9b has so far not resulted in any problems for me,
-> and I think it would be nice to bring it back in early just to get
-> feedback as early as possible in this cycle.
+> NVMe Specification provides a controller level Verify command [1] which
+> is similar to the ATA Verify [2] command where the controller is
+> responsible for data verification without transferring the data to the
+> host. (Offloading LBAs verification). This is designed to proactively
+> discover any data corruption issues when the device is free so that
+> applications can protect sensitive data and take corrective action
+> instead of waiting for failure to occur.
+> 
+> The NVMe Verify command is added in order to provide low level media
+> scrubbing and possibly moving the data to the right place in case it has
+> correctable media degradation. Also, this provides a way to enhance
+> file-system level scrubbing/checksum verification and optinally offload
+> this task, which is CPU intensive, to the kernel (when emulated), over
+> the fabric, and to the controller (when supported).
+> 
+> This is useful when the controller's internal bandwidth is higher than
+> the host's bandwith showing a sharp increase in the performance due to
+> _no host traffic or host CPU involvement_.
+> 
+> * Implementation *
+> -----------------------------------------------------------------------
+> 
+> Right now there is no generic interface which can be used by the
+> in-kernel components such as file-system or userspace application
+> (except passthru commands or some combination of write/read/compare) to
+> issue verify command with the central block layer API. This can lead to
+> each userspace applications having protocol specific IOCTL which
+> defeates the purpose of having the OS provide a H/W abstraction.
+> 
+> This patch series introduces a new block layer payloadless request
+> operation REQ_OP_VERIFY that allows in-kernel components & userspace
+> applications to verify the range of the LBAs by offloading checksum
+> scrubbing/verification to the controller that is directly attached to
+> the host. For direct attached devices this leads to decrease in the host
+> DMA traffic and CPU usage and for the fabrics attached device over the
+> network that leads to a decrease in the network traffic and CPU usage
+> for both host & target.
+> 
+> * Scope *
+> -----------------------------------------------------------------------
+> 
+> Please note this only covers the operating system level overhead.
+> Analyzing controller verify command performance for common protocols
+> (SCSI/NVMe) is out of scope for REQ_OP_VERIFY.
+> 
+> * Micro Benchmarks *
+> -----------------------------------------------------------------------
+> 
+> When verifing 500GB of data on NVMeOF with nvme-loop and null_blk as a
+> target backend block device results show almost a 80% performance
+> increase :-
+> 
+> With Verify resulting in REQ_OP_VERIFY to null_blk :-
+> 
+> real	2m3.773s
+> user	0m0.000s
+> sys	0m59.553s
+> 
+> With Emulation resulting in REQ_OP_READ null_blk :-
+> 
+> real	12m18.964s
+> user	0m0.002s
+> sys	1m15.666s
+> 
+> 
+> A detailed test log is included at the end of the cover letter.
+> Each of the following was tested:
+> 
+> 1. Direct Attached REQ_OP_VERIFY.
+> 2. Fabrics Attached REQ_OP_VERIFY.
+> 3. Multi-device (md) REQ_OP_VERIFY.
+> 
+> * The complete picture *
+> -----------------------------------------------------------------------
+> 
+>    For the completeness the whole kernel stack support is divided into
+>    two phases :-
+>   
+>    Phase I :-
+>   
+>     Add and stabilize the support for the Block layer & low level drivers
+>     such as SCSI, NVMe, MD, and NVMeOF, implement necessary emulations in
+>     the block layer if needed and provide block level tools such as
+>     _blkverify_. Also, add appropriate testcases for code-coverage.
+> 
+>    Phase II :-
+>   
+>     Add and stabilize the support for upper layer kernel components such
+>     as file-systems and provide userspace tools such _fsverify_ to route
+>     the request from file systems to block layer to Low level device
+>     drivers.
+> 
+> 
+> Please note that the interfaces for blk-lib.c REQ_OP_VERIFY emulation
+> will change in future I put together for the scope of RFC.
+> 
+> Any comments are welcome.
 
-Adding Paolo.
+Hi,
+You may also want to consider higher level support for the NVME COMPARE
+and SCSI VERIFY(BYTCHK=1) commands. Since PCIe and SAS transports are
+full duplex, replacing two READs (plus a memcmp in host memory) with
+one READ and one COMPARE may be a win on a bandwidth constrained
+system. It is a safe to assume the data-in transfers on a storage transport
+exceed (probably by a significant margin) the data-out transfers. An
+offloaded COMPARE switches one of those data-in transfers to a data-out
+transfer, so it should improve the bandwidth utilization.
 
--- 
-Jens Axboe
+I did some brief benchmarking on a NVME SSD's COMPARE command (its optional)
+and the results were underwhelming. OTOH using my own dd variants (which
+can do compare instead of copy) and a scsi_debug target (i.e. RAM) I have
+seen compare times of > 15 GBps while a copy rarely exceeds 9 GBps.
 
+
+BTW The SCSI VERIFY(BYTCHK=3) command compares one block sent from
+the host with a sequence of logical blocks on the media. So, for example,
+it would be a quick way of checking that a sequence of blocks contained
+zero-ed data.
+
+Doug Gilbert
