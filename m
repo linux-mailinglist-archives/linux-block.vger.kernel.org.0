@@ -2,87 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C001446C44
-	for <lists+linux-block@lfdr.de>; Sat,  6 Nov 2021 04:46:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3278B446D1F
+	for <lists+linux-block@lfdr.de>; Sat,  6 Nov 2021 10:13:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230327AbhKFDsx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 Nov 2021 23:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbhKFDsx (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 Nov 2021 23:48:53 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD61C061570;
-        Fri,  5 Nov 2021 20:46:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DUeLl3GL340iUKIiVJiqtjBe7sAAcyIadJ3zWvIOyGU=; b=XFk2OqW2UNX/DKiU/a4IYDy1eY
-        5Td/YNDnwQYxICncieUyGPoGBBXHFnsxtSuqaYg+NZdoIXxYO9y71QebrlKZyejsKTe4lFv3vWrKV
-        sIRezDA0ssnBH2ySdKC7tzKwB64OYooNkSn7StEqj6IyeeW2NQD47r7E4JeEWxsVZrfWDtxulOFPV
-        p+foN/tCkHT9gPd/o5Z4ozfcmY7ac9i0xw9XDpWJr4Yul/DlYwVXQGT18EryzUKPe6CZ/BvETR4il
-        Uu/SL2RAufcD1ulLw+EAUEh2TBidZFOl0YEm9VC65KXBiGvjYfNqhnqQG2etiFFCOHJvjb40ltVLP
-        VYLXab5Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mjCdA-0071tn-Ae; Sat, 06 Nov 2021 03:45:03 +0000
-Date:   Sat, 6 Nov 2021 03:44:36 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 19/21] iomap: Convert iomap_migrate_page to use folios
-Message-ID: <YYX6JBO/aRy07wgC@casper.infradead.org>
-References: <20211101203929.954622-1-willy@infradead.org>
- <20211101203929.954622-20-willy@infradead.org>
+        id S233923AbhKFJPq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 6 Nov 2021 05:15:46 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:15365 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231987AbhKFJPn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 6 Nov 2021 05:15:43 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HmWqc0llKz90Jk;
+        Sat,  6 Nov 2021 17:12:44 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Sat, 6 Nov 2021 17:12:55 +0800
+Received: from [10.174.176.73] (10.174.176.73) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Sat, 6 Nov 2021 17:12:54 +0800
+Subject: Re: [PATCH] blk-cgroup: fix missing put device in error path from
+ blkg_conf_pref()
+To:     <tj@kernel.org>, <axboe@kernel.dk>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
+References: <20211102020705.2321858-1-yukuai3@huawei.com>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <1677130b-ca7c-00ce-a47e-86adf90d8229@huawei.com>
+Date:   Sat, 6 Nov 2021 17:12:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211101203929.954622-20-willy@infradead.org>
+In-Reply-To: <20211102020705.2321858-1-yukuai3@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.176.73]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Nov 01, 2021 at 08:39:27PM +0000, Matthew Wilcox (Oracle) wrote:
-> +++ b/fs/iomap/buffered-io.c
-> @@ -493,19 +493,21 @@ int
->  iomap_migrate_page(struct address_space *mapping, struct page *newpage,
->  		struct page *page, enum migrate_mode mode)
->  {
-> +	struct folio *folio = page_folio(page);
-> +	struct folio *newfolio = page_folio(newpage);
-
-Re-reviewing this patch, and I don't like the naming.  How about:
-
-	struct folio *src = page_folio(page);
-	struct folio *dest = page_folio(newpage);
-
-... eventually flowing that renaming throughout the migration
-implementations.
-
->  	int ret;
->  
-> -	ret = migrate_page_move_mapping(mapping, newpage, page, 0);
-> +	ret = folio_migrate_mapping(mapping, newfolio, folio, 0);
->  	if (ret != MIGRATEPAGE_SUCCESS)
->  		return ret;
->  
-> -	if (page_has_private(page))
-> -		attach_page_private(newpage, detach_page_private(page));
-> +	if (folio_test_private(folio))
-> +		folio_attach_private(newfolio, folio_detach_private(folio));
->  
->  	if (mode != MIGRATE_SYNC_NO_COPY)
-> -		migrate_page_copy(newpage, page);
-> +		folio_migrate_copy(newfolio, folio);
->  	else
-> -		migrate_page_states(newpage, page);
-> +		folio_migrate_flags(newfolio, folio);
->  	return MIGRATEPAGE_SUCCESS;
->  }
->  EXPORT_SYMBOL_GPL(iomap_migrate_page);
-> -- 
-> 2.33.0
+On 2021/11/02 10:07, Yu Kuai wrote:
+friendly ping...
+> If blk_queue_enter() failed due to queue is dying, the
+> blkdev_put_no_open() is needed because blkcg_conf_open_bdev() succeeded.
+> 
+> Fixes: 0c9d338c8443 ("blk-cgroup: synchronize blkg creation against policy deactivation")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   block/blk-cgroup.c | 9 +++++----
+>   1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+> index 88b1fce90520..663aabfeba18 100644
+> --- a/block/blk-cgroup.c
+> +++ b/block/blk-cgroup.c
+> @@ -640,7 +640,7 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+>   	 */
+>   	ret = blk_queue_enter(q, 0);
+>   	if (ret)
+> -		return ret;
+> +		goto fail;
+>   
+>   	rcu_read_lock();
+>   	spin_lock_irq(&q->queue_lock);
+> @@ -676,13 +676,13 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+>   		new_blkg = blkg_alloc(pos, q, GFP_KERNEL);
+>   		if (unlikely(!new_blkg)) {
+>   			ret = -ENOMEM;
+> -			goto fail;
+> +			goto fail_exit_queue;
+>   		}
+>   
+>   		if (radix_tree_preload(GFP_KERNEL)) {
+>   			blkg_free(new_blkg);
+>   			ret = -ENOMEM;
+> -			goto fail;
+> +			goto fail_exit_queue;
+>   		}
+>   
+>   		rcu_read_lock();
+> @@ -722,9 +722,10 @@ int blkg_conf_prep(struct blkcg *blkcg, const struct blkcg_policy *pol,
+>   fail_unlock:
+>   	spin_unlock_irq(&q->queue_lock);
+>   	rcu_read_unlock();
+> +fail_exit_queue:
+> +	blk_queue_exit(q);
+>   fail:
+>   	blkdev_put_no_open(bdev);
+> -	blk_queue_exit(q);
+>   	/*
+>   	 * If queue was bypassing, we should retry.  Do so after a
+>   	 * short msleep().  It isn't strictly necessary but queue
 > 
