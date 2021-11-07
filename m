@@ -2,71 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BBAB447411
-	for <lists+linux-block@lfdr.de>; Sun,  7 Nov 2021 17:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76A01447566
+	for <lists+linux-block@lfdr.de>; Sun,  7 Nov 2021 20:51:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235308AbhKGQxD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 7 Nov 2021 11:53:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235848AbhKGQxC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 7 Nov 2021 11:53:02 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CEDC061205
-        for <linux-block@vger.kernel.org>; Sun,  7 Nov 2021 08:50:19 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id j5-20020a17090a318500b001a6c749e697so5188668pjb.1
-        for <linux-block@vger.kernel.org>; Sun, 07 Nov 2021 08:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=3KhLtwCKP93j3EcWq+BGTsAWsp8Oi4eBuXX0Ov40ah8=;
-        b=CGgoC4BsgHelzytn+/VTrKwS3n0T68QEW7GeWdpL8zfErEA81MOI4RL138iNx/cHCC
-         3mOCWFKMwLBKqHyI1x8QZIxdZmn/T2z7wxCAL1QJSDwY+yMd/5vpY5vZsY6UEO3VfUIk
-         NmE02Lf+f1FnTMQjl4bIN7/MkullBrFIYleaUA1lhngjIcmWGropAefRtmKn85kF4AjF
-         9REnU8D8TvvsrxnzIdJuHntvDW0z4R21EhRUYYG9p+p2KSbQQtyOBLs4eMyycwEMv9DU
-         iYxtgVtsDfraOGEV3mHhUsdsFHn4Oc6mkCc25JbUs6k1jHra7jUoaikUuMgz3yZaGGWB
-         oWWg==
+        id S236360AbhKGTyb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 7 Nov 2021 14:54:31 -0500
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:43777 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236361AbhKGTyb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 7 Nov 2021 14:54:31 -0500
+Received: by mail-pl1-f176.google.com with SMTP id y1so14394434plk.10;
+        Sun, 07 Nov 2021 11:51:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=3KhLtwCKP93j3EcWq+BGTsAWsp8Oi4eBuXX0Ov40ah8=;
-        b=FYTCl1BnALNbN8FnZx/9NH9TliPVc8KMkiwcKeSTGJ/YhxM52RYM7xBXVRfED8qqaf
-         5reFVFAuwmJwzuAE9AEup287K6JEoS28F7VVypfloqGyHmDZQiOIGLHtcyidA7P7q1LQ
-         1mUhj6ccghF2x2TAEeVvU6WsKVyMQI8wJjCpm9dWVbOMRwGxqyDSg97BZbpK8mtYlOQI
-         ifnxIdcHsdhc+hl/IUpkB+MPHoUfZ/x5chayM7V6sujPiX14lw20WiGP+zvX4qUCxazx
-         uXIwXU2FtLbDb6qxDWALdwAmxEa6I/2JXNFmTkwdqJAIJkE99uyDC5kM5vU4hEIdJuts
-         +PPw==
-X-Gm-Message-State: AOAM530WgAQhUEcuDCsRrhJJHVsAlkTKTs9wBay5vxp+UwKZn79ymQ0a
-        Rl1+uWy3IekmkvlOCywSMTCbWxP+PFNk7ohUHMA=
-X-Google-Smtp-Source: ABdhPJwRzqzdXmZqk+E0BGOtRSVuotVxv3vktjD61tF3yrYnFRN7LmPJ9X2Sktepu1Y4J0ZwltgXDIouReyvwFUOa3w=
-X-Received: by 2002:a17:902:d2ce:b0:141:f710:922 with SMTP id
- n14-20020a170902d2ce00b00141f7100922mr42873278plc.7.1636303818711; Sun, 07
- Nov 2021 08:50:18 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=H5xHYKMniSx/Mg6dS/jtSkwbJD5EXGUsd4tmD0Rxz7s=;
+        b=6xuTt647//pNdnD4ewYE3KhheYBWiVQTgZxPemR3cNC/SJrmy5VCzXOs1OisRIbZ2N
+         jPU7XR1+1TA/js4begp0MbkrygQFi3jkTzLU5AYRptvbGq4zM5waT4kUOsIfBfPEKz1p
+         percux+81YUrGFzlAOndr4KqS8pu7+49ZHoq52e+X+mQFPocfCo2Q+PSGaLUpPMGqBlc
+         KW/ev70LsYxnZTF7Y5uSXMzrmaz0tGY5qer7DKge2FX5cGXmgiPGFOl6Nl+68CVh4r47
+         Y73LvdCG+oVUt4FhwHXmNHOiesgLzsJYjQW9lSGuNFKHA+TQYM+wja7LiQyGNk1Xdbx2
+         SXFg==
+X-Gm-Message-State: AOAM530Z9u3WYUs2Qqx70lHr/5QYmi7Rxhju7ToRrg/+tF446IPqfJxN
+        Envp/idftgiqWHnYPd3Djew=
+X-Google-Smtp-Source: ABdhPJwqUFo5Ny4lkKrHJCjfEQcrraKF9krA1mvWYYoYM/O7i1A1ys/Or4WVRgYR3WgIy/C9kBSiLQ==
+X-Received: by 2002:a17:90a:fe87:: with SMTP id co7mr46071388pjb.21.1636314707819;
+        Sun, 07 Nov 2021 11:51:47 -0800 (PST)
+Received: from ?IPV6:2601:647:4000:d7:d1e7:8937:1ee:f842? ([2601:647:4000:d7:d1e7:8937:1ee:f842])
+        by smtp.gmail.com with ESMTPSA id a2sm10697730pgn.20.2021.11.07.11.51.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Nov 2021 11:51:46 -0800 (PST)
+Message-ID: <ce4f925f-cbf9-9bbb-4bde-dd57059e3c84@acm.org>
+Date:   Sun, 7 Nov 2021 11:51:45 -0800
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:4a14:0:0:0:0 with HTTP; Sun, 7 Nov 2021 08:50:18
- -0800 (PST)
-Reply-To: amabenchambers00@gmail.com
-From:   Amadou Benjamin <ousmanekarim54@gmail.com>
-Date:   Sun, 7 Nov 2021 08:50:18 -0800
-Message-ID: <CAJFAt4ZtDp1d-Lyr-uxqQ9skQkUswz-oAXSiT_oB13J29FH1QQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: Unreliable disk detection order in 5.x
+Content-Language: en-US
+To:     Simon Kirby <sim@hostway.ca>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+References: <20211105064623.GD32560@hostway.ca>
+ <9c14628f-4d23-dedf-3cdc-4b4266d5a694@opensource.wdc.com>
+ <20211107022410.GA6530@hostway.ca>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20211107022410.GA6530@hostway.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-Hello good day.
+On 11/6/21 19:24, Simon Kirby wrote:
+> This occurs regardless of the CONFIG_SCSI_SCAN_ASYNC setting, and
+> also with scsi_mod.scan=sync on vendor kernels. All of these disks
+> are coming from the same driver and card.
+> 
+> I understand that using UUIDs, by-id, etc., is an option to work
+> around this, but then we would have to push IDs for disks in every
+> server to our configuration management. It does not seem that this
+> change is really intentional.
 
-I am Barrister Amadou Benjamin by name, with due respect, I am
-contacting you to help get the deposit 10.5 million Dollars, my late
-client Engineer Vasiliy left in his Bank before his sudden death on
-April 21, 2007, to avoid confiscation by Lloyds bank. Please write me
-back through this email (amabenchambers00@gmail.com)for more
-information about this transaction or send me your private email to
-Contact you myself.
+SCSI disk detection is asynchronous on purpose since a long time. The 
+most recent commit I know of that changed SCSI disk scanning
+behavior is commit f049cf1a7b67 ("scsi: sd: Rely on the driver core for
+asynchronous probing").
 
-Sincerely,
-Barrister Amadou Benjamin Esq
+Please use one of the /dev/disk/by-*/* identifiers as Damien requested.
+
+Thanks,
+
+Bart.
