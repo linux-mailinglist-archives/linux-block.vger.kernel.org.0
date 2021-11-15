@@ -2,36 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CCAC450DFC
-	for <lists+linux-block@lfdr.de>; Mon, 15 Nov 2021 19:06:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 605F1451574
+	for <lists+linux-block@lfdr.de>; Mon, 15 Nov 2021 21:36:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239962AbhKOSJn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Nov 2021 13:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48396 "EHLO mail.kernel.org"
+        id S232326AbhKOUjJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Nov 2021 15:39:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240082AbhKOSFe (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Nov 2021 13:05:34 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5482163265;
-        Mon, 15 Nov 2021 17:41:56 +0000 (UTC)
+        id S1344098AbhKOTXW (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 15 Nov 2021 14:23:22 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 73952633BF;
+        Mon, 15 Nov 2021 18:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1636998116;
-        bh=SY9jJh5EYmDgioZGYbfS3mMq78+zmzdfOThuitvZJEs=;
+        s=korg; t=1637002312;
+        bh=FUUzhV0aQZHF45SsL1ZUN80Nlr/CDWDn2vwQsaJOprA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kp5WEZyDEVW8Ka4jxgZO24CjcPHgcP+8xyLnHGWUYVZvcxs+/0oQloSlrw5+zz0go
-         7y84Hqz+abhYqOrx+d3yVo1q+r2CfQR1PE2IwsIcEmHsxKIB0Sj2CAs9Me7FWNWf57
-         VP6voXka5OMG2VVLXzVc9PcpV47CKtYig8a5X6sQ=
+        b=a4E/bT5O0EjMQueJBw6lrwhJLjCoISqMM4lT8rTAY/nLx30tKhlMbGPYiIdtkSLsa
+         ltEPsrsEJGGpfWjCQ+pXh/FgEVh/K0+sZJP59veJ04iDIqNIbcAidPizuhzY9Z6L9M
+         k37UGei1KazV6czxQQQmkXK5LDzeV1VVpV2EueeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
         linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 360/575] block: ataflop: more blk-mq refactoring fixes
-Date:   Mon, 15 Nov 2021 18:01:25 +0100
-Message-Id: <20211115165356.257023547@linuxfoundation.org>
+Subject: [PATCH 5.15 517/917] block: ataflop: more blk-mq refactoring fixes
+Date:   Mon, 15 Nov 2021 18:00:12 +0100
+Message-Id: <20211115165446.303997101@linuxfoundation.org>
 X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211115165343.579890274@linuxfoundation.org>
-References: <20211115165343.579890274@linuxfoundation.org>
+In-Reply-To: <20211115165428.722074685@linuxfoundation.org>
+References: <20211115165428.722074685@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -86,7 +86,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 39 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
-index 0a86f9d3a3798..94b76c254db9b 100644
+index bbb64331cf8f4..4947e41f89b7d 100644
 --- a/drivers/block/ataflop.c
 +++ b/drivers/block/ataflop.c
 @@ -456,10 +456,20 @@ static DEFINE_TIMER(fd_timer, check_change);
