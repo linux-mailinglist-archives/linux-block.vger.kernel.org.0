@@ -2,89 +2,157 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF792451866
-	for <lists+linux-block@lfdr.de>; Mon, 15 Nov 2021 23:57:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA43451DD3
+	for <lists+linux-block@lfdr.de>; Tue, 16 Nov 2021 01:31:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346795AbhKOW7u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Nov 2021 17:59:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344817AbhKOWpa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Nov 2021 17:45:30 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78739C03AA0F;
-        Mon, 15 Nov 2021 13:58:28 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id d24so33545033wra.0;
-        Mon, 15 Nov 2021 13:58:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dYX6q8WGWQ5Z8sNGXILWcWBIch3nmvzkBGJ63urSjus=;
-        b=QP9fE2mo85wjW8zUgZba8PC4YUCPqVLKxxYnYRao9WzeACaVkLoBYmttcByPVNNZcG
-         cwOxMl4eQjI7MCgbtGGmkSsR41mQUUA1BKQE7PgTcwjutdk2jjyHPdoIl9521ZOpu/sX
-         I93u/lM8T4WBajzx82+GbvCmrY6RRD8VZw/paK4fMIVPocASSdp7G451Nm5Ut7R/qPOn
-         O88Wt7mxkLLnf4WgUWTbBnlRVbCSHWSF/c8+JiPqKvRLqjV3K14A0PD2g+9JJoxR4PRU
-         Al0Lwnjid+T2p0IJYyr8LwbIHnfKPZW8fQs7DZAnDA+yrI0uZwlvSSfOxE0Y4cUwidAP
-         xj3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dYX6q8WGWQ5Z8sNGXILWcWBIch3nmvzkBGJ63urSjus=;
-        b=StZiTjhuV3NQBqCNBR7khfkzNGN1JKuq9xuBYtvVESuywuE7uiQu9IV5DSZIG2aZWT
-         d5nNCkQs3Mbp3LjDratb2N2A9jzgPR3jmr892bgpMq4zq4sUfi1B8ti3Bi+UCqkCNilR
-         3br5/KgcUdEEz0Q7Dbt423COTiPhgy8sS1bfEOAku5Ydhx3gfHqyJINOYQnzOXlfeTZs
-         9gwkTnUVMQ1fmEhnBYCHWlZIMa5S8/DWem3+A0jTGKsPkv8SficfKq+VZk0p2drhTqYU
-         jMviF1rXCh0ZbudMrjNuF/nZUtGb9dhGwjd+YZcVbE37rSWAWbcEGl3LjQHPiZiSTuCV
-         DrrA==
-X-Gm-Message-State: AOAM5328M4U+qhoiZhLsWXjNg2anPwEFjsqJr9acqZP3JY/WocitCF5d
-        MXsA4lxldF/2KRIsVsdZQcI=
-X-Google-Smtp-Source: ABdhPJxmsYflobj+yzoBiZm9T5tiRgsymSvm77aI7YxcmlRy0u5S0gDf28tiBULM0Rh0q+kQrAgxvQ==
-X-Received: by 2002:a5d:48cf:: with SMTP id p15mr2935973wrs.277.1637013507151;
-        Mon, 15 Nov 2021 13:58:27 -0800 (PST)
-Received: from ubuntu-laptop.speedport.ip (p200300e94719c9c4ec5385e631fb47d9.dip0.t-ipconnect.de. [2003:e9:4719:c9c4:ec53:85e6:31fb:47d9])
-        by smtp.gmail.com with ESMTPSA id y142sm463258wmc.40.2021.11.15.13.58.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 13:58:26 -0800 (PST)
-From:   Bean Huo <huobean@gmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bean Huo <beanhuo@micron.com>
-Subject: [PATCH] block: Use REQ_OP_WRITE instead of its integer constant 1 in op_is_write()
-Date:   Mon, 15 Nov 2021 22:58:19 +0100
-Message-Id: <20211115215819.28787-1-huobean@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        id S1343900AbhKPAeN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Nov 2021 19:34:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343959AbhKOTWb (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 15 Nov 2021 14:22:31 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 48B58604D1;
+        Mon, 15 Nov 2021 18:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1637002175;
+        bh=XjXIU3AqPDWK1zsJOZsPevZkNoJfHbMwTbUH/TcPL1c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Mx64++QGZoXEqiA19lSBFjJM0VL3XZQExTdn69mNdoJ1YCj95MK+HHm7mqveSAcGp
+         dv+BMOtzKp13OpT08s8j6+h3+sT2uunYOCpasNxh30UjYbI1StVF6FPymIofcIdj+5
+         7KncrEGk06OCZ737LzpyILy0PIwXQriymzXQMfKY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15 449/917] block: ataflop: fix breakage introduced at blk-mq refactoring
+Date:   Mon, 15 Nov 2021 17:59:04 +0100
+Message-Id: <20211115165444.006421431@linuxfoundation.org>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20211115165428.722074685@linuxfoundation.org>
+References: <20211115165428.722074685@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+From: Michael Schmitz <schmitzmic@gmail.com>
 
-Use the enums REQ_OP_WRITE in op_is_write() to make it less maintenance
-requirement and more readable
+[ Upstream commit 86d46fdaa12ae5befc16b8d73fc85a3ca0399ea6 ]
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
+Refactoring of the Atari floppy driver when converting to blk-mq
+has broken the state machine in not-so-subtle ways:
+
+finish_fdc() must be called when operations on the floppy device
+have completed. This is crucial in order to relase the ST-DMA
+lock, which protects against concurrent access to the ST-DMA
+controller by other drivers (some DMA related, most just related
+to device register access - broken beyond compare, I know).
+
+When rewriting the driver's old do_request() function, the fact
+that finish_fdc() was called only when all queued requests had
+completed appears to have been overlooked. Instead, the new
+request function calls finish_fdc() immediately after the last
+request has been queued. finish_fdc() executes a dummy seek after
+most requests, and this overwrites the state machine's interrupt
+hander that was set up to wait for completion of the read/write
+request just prior. To make matters worse, finish_fdc() is called
+before device interrupts are re-enabled, making certain that the
+read/write interupt is missed.
+
+Shifting the finish_fdc() call into the read/write request
+completion handler ensures the driver waits for the request to
+actually complete. With a queue depth of 2, we won't see long
+request sequences, so calling finish_fdc() unconditionally just
+adds a little overhead for the dummy seeks, and keeps the code
+simple.
+
+While we're at it, kill ataflop_commit_rqs() which does nothing
+but run finish_fdc() unconditionally, again likely wiping out an
+in-flight request.
+
+Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+Fixes: 6ec3938cff95 ("ataflop: convert to blk-mq")
+CC: linux-block@vger.kernel.org
+CC: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Link: https://lore.kernel.org/r/20211019061321.26425-1-schmitzmic@gmail.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/blk_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/ataflop.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index fe065c394fff..5b5924a7e754 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -463,7 +463,7 @@ static inline void bio_set_op_attrs(struct bio *bio, unsigned op,
- 
- static inline bool op_is_write(unsigned int op)
- {
--	return (op & 1);
-+	return (op & REQ_OP_WRITE);
+diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
+index a093644ac39fb..bbb64331cf8f4 100644
+--- a/drivers/block/ataflop.c
++++ b/drivers/block/ataflop.c
+@@ -653,9 +653,6 @@ static inline void copy_buffer(void *from, void *to)
+ 		*p2++ = *p1++;
  }
  
- /*
+-  
+-  
+-
+ /* General Interrupt Handling */
+ 
+ static void (*FloppyIRQHandler)( int status ) = NULL;
+@@ -1228,6 +1225,7 @@ static void fd_rwsec_done1(int status)
+ 	}
+ 	else {
+ 		/* all sectors finished */
++		finish_fdc();
+ 		fd_end_request_cur(BLK_STS_OK);
+ 	}
+ 	return;
+@@ -1475,15 +1473,6 @@ static void setup_req_params( int drive )
+ 			ReqTrack, ReqSector, (unsigned long)ReqData ));
+ }
+ 
+-static void ataflop_commit_rqs(struct blk_mq_hw_ctx *hctx)
+-{
+-	spin_lock_irq(&ataflop_lock);
+-	atari_disable_irq(IRQ_MFP_FDC);
+-	finish_fdc();
+-	atari_enable_irq(IRQ_MFP_FDC);
+-	spin_unlock_irq(&ataflop_lock);
+-}
+-
+ static blk_status_t ataflop_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 				     const struct blk_mq_queue_data *bd)
+ {
+@@ -1491,6 +1480,8 @@ static blk_status_t ataflop_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	int drive = floppy - unit;
+ 	int type = floppy->type;
+ 
++	DPRINT(("Queue request: drive %d type %d last %d\n", drive, type, bd->last));
++
+ 	spin_lock_irq(&ataflop_lock);
+ 	if (fd_request) {
+ 		spin_unlock_irq(&ataflop_lock);
+@@ -1550,8 +1541,6 @@ static blk_status_t ataflop_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	setup_req_params( drive );
+ 	do_fd_action( drive );
+ 
+-	if (bd->last)
+-		finish_fdc();
+ 	atari_enable_irq( IRQ_MFP_FDC );
+ 
+ out:
+@@ -1962,7 +1951,6 @@ static const struct block_device_operations floppy_fops = {
+ 
+ static const struct blk_mq_ops ataflop_mq_ops = {
+ 	.queue_rq = ataflop_queue_rq,
+-	.commit_rqs = ataflop_commit_rqs,
+ };
+ 
+ static int ataflop_alloc_disk(unsigned int drive, unsigned int type)
 -- 
-2.25.1
+2.33.0
+
+
 
