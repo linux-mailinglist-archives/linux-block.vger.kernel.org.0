@@ -2,89 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0122045176B
-	for <lists+linux-block@lfdr.de>; Mon, 15 Nov 2021 23:25:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF792451866
+	for <lists+linux-block@lfdr.de>; Mon, 15 Nov 2021 23:57:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346796AbhKOW1F (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Nov 2021 17:27:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
+        id S1346795AbhKOW7u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Nov 2021 17:59:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347024AbhKOWVO (ORCPT
+        with ESMTP id S1344817AbhKOWpa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Nov 2021 17:21:14 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD42C02555A;
-        Mon, 15 Nov 2021 13:38:04 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id 188so15697884pgb.7;
-        Mon, 15 Nov 2021 13:38:04 -0800 (PST)
+        Mon, 15 Nov 2021 17:45:30 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78739C03AA0F;
+        Mon, 15 Nov 2021 13:58:28 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id d24so33545033wra.0;
+        Mon, 15 Nov 2021 13:58:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VPVmrbQVel0mA72if0mZWdLyJ4gRhL/uwg+URLpfYkE=;
-        b=CUHZ/mHKViMS9M8ILAx4J8v1IB1bL7pb4V+2Jc/fQqJmJ4Xf2KyzHJ1t6JrYP9EFX9
-         KgiVyDD6/sejqc98LZaUQ1iK0aSnCodS3sU71BRUpbUC1KcJbb+4M3GLLuhdyBBo/9Oz
-         vQrfsQUWXOSrWzWc68qGSeWfhBN6LqjfasdFEhWNiUqA7fRLPyz1v1u3HyOtnYdJ1Aha
-         dVmZDPZ87tS9eOLoqAIiZnj3mCS42EeEk5A66e1Ysrpd+ywUXpoCCUEiwZxtjFsbzcfD
-         Pdx5nY/BzV6BlAX0QyY6IjT02XND9xS9GDq7UbLnXiPLJ1XccC4Z5rbAAzslT70i0uWv
-         uXyQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dYX6q8WGWQ5Z8sNGXILWcWBIch3nmvzkBGJ63urSjus=;
+        b=QP9fE2mo85wjW8zUgZba8PC4YUCPqVLKxxYnYRao9WzeACaVkLoBYmttcByPVNNZcG
+         cwOxMl4eQjI7MCgbtGGmkSsR41mQUUA1BKQE7PgTcwjutdk2jjyHPdoIl9521ZOpu/sX
+         I93u/lM8T4WBajzx82+GbvCmrY6RRD8VZw/paK4fMIVPocASSdp7G451Nm5Ut7R/qPOn
+         O88Wt7mxkLLnf4WgUWTbBnlRVbCSHWSF/c8+JiPqKvRLqjV3K14A0PD2g+9JJoxR4PRU
+         Al0Lwnjid+T2p0IJYyr8LwbIHnfKPZW8fQs7DZAnDA+yrI0uZwlvSSfOxE0Y4cUwidAP
+         xj3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=VPVmrbQVel0mA72if0mZWdLyJ4gRhL/uwg+URLpfYkE=;
-        b=plkbBnHM1tPJBg5yiHXXJ4Kxom2NIKth4bkjKNFk0byh1k472zWGjthdlfHlZsH0SJ
-         YJLVWThKAlXc592TVidiDj2sWghfmafUPwmbKHsmHipw394kqoIGil2Va49WOnFVOhXg
-         KFxenqMsKhtyTI+4+h5LKE4bp3EXk/zE22mrPPsm61F3J6YmPeH+l3ob0D5HQTMKgrO9
-         Q4MPsoD6mc7bcqy7ObmNp/MZDpOKeHEflBVsGk6+YxmfIycUL/LoykMONfJ+VD9h+QCR
-         /6QMCsF8NKFYBT7FsFVJq6AbGG2Hordn6kd4LjTx/vzm1ZITL7+RTzmgJvV9LWWqudI3
-         8slQ==
-X-Gm-Message-State: AOAM530T8Lg6BSQy6ZGnPTBnsnaILeyyf+xxPQkU/rINtTuJS0CvVqY3
-        9by6qyHajwYND0uILFo9QeXRnvwO71vhimDT
-X-Google-Smtp-Source: ABdhPJyYigmgnN+saypor+aJ9s3iqqA70d9Ql7CehyLHbL4vlGM/gb4O6Xq8thqvwWJjho7VO9jcNA==
-X-Received: by 2002:a63:5c6:: with SMTP id 189mr1396152pgf.187.1637012284358;
-        Mon, 15 Nov 2021 13:38:04 -0800 (PST)
-Received: from localhost (2603-800c-1a02-1bae-e24f-43ff-fee6-449f.res6.spectrum.com. [2603:800c:1a02:1bae:e24f:43ff:fee6:449f])
-        by smtp.gmail.com with ESMTPSA id f19sm10758886pgj.7.2021.11.15.13.38.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dYX6q8WGWQ5Z8sNGXILWcWBIch3nmvzkBGJ63urSjus=;
+        b=StZiTjhuV3NQBqCNBR7khfkzNGN1JKuq9xuBYtvVESuywuE7uiQu9IV5DSZIG2aZWT
+         d5nNCkQs3Mbp3LjDratb2N2A9jzgPR3jmr892bgpMq4zq4sUfi1B8ti3Bi+UCqkCNilR
+         3br5/KgcUdEEz0Q7Dbt423COTiPhgy8sS1bfEOAku5Ydhx3gfHqyJINOYQnzOXlfeTZs
+         9gwkTnUVMQ1fmEhnBYCHWlZIMa5S8/DWem3+A0jTGKsPkv8SficfKq+VZk0p2drhTqYU
+         jMviF1rXCh0ZbudMrjNuF/nZUtGb9dhGwjd+YZcVbE37rSWAWbcEGl3LjQHPiZiSTuCV
+         DrrA==
+X-Gm-Message-State: AOAM5328M4U+qhoiZhLsWXjNg2anPwEFjsqJr9acqZP3JY/WocitCF5d
+        MXsA4lxldF/2KRIsVsdZQcI=
+X-Google-Smtp-Source: ABdhPJxmsYflobj+yzoBiZm9T5tiRgsymSvm77aI7YxcmlRy0u5S0gDf28tiBULM0Rh0q+kQrAgxvQ==
+X-Received: by 2002:a5d:48cf:: with SMTP id p15mr2935973wrs.277.1637013507151;
+        Mon, 15 Nov 2021 13:58:27 -0800 (PST)
+Received: from ubuntu-laptop.speedport.ip (p200300e94719c9c4ec5385e631fb47d9.dip0.t-ipconnect.de. [2003:e9:4719:c9c4:ec53:85e6:31fb:47d9])
+        by smtp.gmail.com with ESMTPSA id y142sm463258wmc.40.2021.11.15.13.58.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 13:38:03 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date:   Mon, 15 Nov 2021 11:38:02 -1000
-From:   Tejun Heo <tj@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-iocost: drop selecting undefined BLK_RQ_IO_DATA_LEN
-Message-ID: <YZLTOnv3PDmQMTKY@slm.duckdns.org>
-References: <20211112093728.3237-1-lukas.bulwahn@gmail.com>
+        Mon, 15 Nov 2021 13:58:26 -0800 (PST)
+From:   Bean Huo <huobean@gmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Bean Huo <beanhuo@micron.com>
+Subject: [PATCH] block: Use REQ_OP_WRITE instead of its integer constant 1 in op_is_write()
+Date:   Mon, 15 Nov 2021 22:58:19 +0100
+Message-Id: <20211115215819.28787-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211112093728.3237-1-lukas.bulwahn@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Nov 12, 2021 at 10:37:28AM +0100, Lukas Bulwahn wrote:
-> Commit cd006509b0a9 ("blk-iocost: account for IO size when testing
-> latencies") selects the non-existing config BLK_RQ_IO_DATA_LEN in
-> config BLK_CGROUP_IOCOST.
-> 
-> Hence, ./scripts/checkkconfigsymbols.py warns:
-> 
->   BLK_RQ_IO_DATA_LEN
->   Referencing files: block/Kconfig
-> 
-> Probably, this select is just some unintended left-over from an earlier
-> draft version; BLK_RQ_IO_DATA_LEN was never defined in any commit in the
-> repository. So, drop this dead select to an undefined config.
-> 
-> Fixes: cd006509b0a9 ("blk-iocost: account for IO size when testing latencies")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+From: Bean Huo <beanhuo@micron.com>
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Use the enums REQ_OP_WRITE in op_is_write() to make it less maintenance
+requirement and more readable
 
-Thanks.
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+---
+ include/linux/blk_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index fe065c394fff..5b5924a7e754 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -463,7 +463,7 @@ static inline void bio_set_op_attrs(struct bio *bio, unsigned op,
+ 
+ static inline bool op_is_write(unsigned int op)
+ {
+-	return (op & 1);
++	return (op & REQ_OP_WRITE);
+ }
+ 
+ /*
 -- 
-tejun
+2.25.1
+
