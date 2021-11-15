@@ -2,112 +2,157 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E965451B7D
-	for <lists+linux-block@lfdr.de>; Tue, 16 Nov 2021 01:00:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DED4D452778
+	for <lists+linux-block@lfdr.de>; Tue, 16 Nov 2021 03:23:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352295AbhKPAC7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 Nov 2021 19:02:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36279 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349602AbhKPAA4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 Nov 2021 19:00:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637020679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CZ6ST8gfY4AhMZaVMz/YtZ60V0sbQfEZa3icc8pIPSM=;
-        b=UGWkFKm09icC+ovalHIJJ0/t4T8KQRgkusTncjzxDgxEif+Lfm6Sktq0XKfjpZrozTdU7R
-        Nu8wPlCSoCDMSgWzPb0g8+dtlXQjNPqY+zx9bzLV2iGsgvkivXguGot+NEU+oDWOKqI6+M
-        PoZERxknGVcl9dOepmc/h4a9t+yd3UQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-192-mE32Y7F1MIyLHrAtym41RA-1; Mon, 15 Nov 2021 18:57:58 -0500
-X-MC-Unique: mE32Y7F1MIyLHrAtym41RA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EC5D8799E0;
-        Mon, 15 Nov 2021 23:57:57 +0000 (UTC)
-Received: from T590 (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BC691980E;
-        Mon, 15 Nov 2021 23:57:51 +0000 (UTC)
-Date:   Tue, 16 Nov 2021 07:57:46 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Stephen Smith <stephenmsmith@blueyonder.co.uk>
-Subject: Re: [PATCH] block: fix missing queue put in error path
-Message-ID: <YZLz+t+ZiSpkV31B@T590>
-References: <f39193ff-bc6b-53fa-dc05-3127012d70c5@kernel.dk>
+        id S1344929AbhKPCZk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 Nov 2021 21:25:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236856AbhKORYg (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 15 Nov 2021 12:24:36 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 68519614C8;
+        Mon, 15 Nov 2021 17:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1636996680;
+        bh=qp45ZSFt9Bb1J9yFtgyxRTmuRcK4kg/9VrHv3nQHTS8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1DvzUciEw0cXN8ogSHO9o8zIv3lmUl3nO+sUnCgsIgkYXUwLF3JlNFbW+d6Qmfk1n
+         jSoquItQFrDM12E19p+/wqo5XJ9GPJrew56ud1HHebWTZ8w75y8sl41DV8btL/9Xpm
+         CGnE1Xe1CHMLplYhM0bC3ZexRXYL2pXBe53Hdfno=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 228/355] block: ataflop: fix breakage introduced at blk-mq refactoring
+Date:   Mon, 15 Nov 2021 18:02:32 +0100
+Message-Id: <20211115165321.131919639@linuxfoundation.org>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20211115165313.549179499@linuxfoundation.org>
+References: <20211115165313.549179499@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f39193ff-bc6b-53fa-dc05-3127012d70c5@kernel.dk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 02:35:09PM -0700, Jens Axboe wrote:
-> If we fail the submission queue checks, we don't put the queue afterwards.
-> This can cause various issues like stalls on scheduler switch or failure
-> to remove the device, or like in the original bug report, timeout waiting
-> for the device on reboot/restart.
-> 
-> While in there, fix a few whitespace discrepancies in the surrounding
-> code.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215039
-> Fixes: b637108a4022 ("blk-mq: fix filesystem I/O request allocation")
-> Reported-and-tested-by: Stephen Smith <stephenmsmith@blueyonder.co.uk>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
-> ---
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 3ab34c4f20da..5e1c9fd99353 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2543,8 +2543,7 @@ static struct request *blk_mq_get_new_requests(struct request_queue *q,
->  	return NULL;
->  }
->  
-> -static inline bool blk_mq_can_use_cached_rq(struct request *rq,
-> -		struct bio *bio)
-> +static inline bool blk_mq_can_use_cached_rq(struct request *rq, struct bio *bio)
->  {
->  	if (blk_mq_get_hctx_type(bio->bi_opf) != rq->mq_hctx->type)
->  		return false;
-> @@ -2565,7 +2564,6 @@ static inline struct request *blk_mq_get_request(struct request_queue *q,
->  	bool checked = false;
->  
->  	if (plug) {
-> -
->  		rq = rq_list_peek(&plug->cached_rq);
->  		if (rq && rq->q == q) {
->  			if (unlikely(!submit_bio_checks(bio)))
-> @@ -2587,12 +2585,14 @@ static inline struct request *blk_mq_get_request(struct request_queue *q,
->  fallback:
->  	if (unlikely(bio_queue_enter(bio)))
->  		return NULL;
-> -	if (!checked && !submit_bio_checks(bio))
-> -		return NULL;
-> +	if (unlikely(!checked && !submit_bio_checks(bio)))
-> +		goto out_put;
->  	rq = blk_mq_get_new_requests(q, plug, bio, nsegs, same_queue_rq);
-> -	if (!rq)
-> -		blk_queue_exit(q);
-> -	return rq;
-> +	if (rq)
-> +		return rq;
-> +out_put:
-> +	blk_queue_exit(q);
-> +	return NULL;
+From: Michael Schmitz <schmitzmic@gmail.com>
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+[ Upstream commit 86d46fdaa12ae5befc16b8d73fc85a3ca0399ea6 ]
 
+Refactoring of the Atari floppy driver when converting to blk-mq
+has broken the state machine in not-so-subtle ways:
+
+finish_fdc() must be called when operations on the floppy device
+have completed. This is crucial in order to relase the ST-DMA
+lock, which protects against concurrent access to the ST-DMA
+controller by other drivers (some DMA related, most just related
+to device register access - broken beyond compare, I know).
+
+When rewriting the driver's old do_request() function, the fact
+that finish_fdc() was called only when all queued requests had
+completed appears to have been overlooked. Instead, the new
+request function calls finish_fdc() immediately after the last
+request has been queued. finish_fdc() executes a dummy seek after
+most requests, and this overwrites the state machine's interrupt
+hander that was set up to wait for completion of the read/write
+request just prior. To make matters worse, finish_fdc() is called
+before device interrupts are re-enabled, making certain that the
+read/write interupt is missed.
+
+Shifting the finish_fdc() call into the read/write request
+completion handler ensures the driver waits for the request to
+actually complete. With a queue depth of 2, we won't see long
+request sequences, so calling finish_fdc() unconditionally just
+adds a little overhead for the dummy seeks, and keeps the code
+simple.
+
+While we're at it, kill ataflop_commit_rqs() which does nothing
+but run finish_fdc() unconditionally, again likely wiping out an
+in-flight request.
+
+Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+Fixes: 6ec3938cff95 ("ataflop: convert to blk-mq")
+CC: linux-block@vger.kernel.org
+CC: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Link: https://lore.kernel.org/r/20211019061321.26425-1-schmitzmic@gmail.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/ataflop.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/block/ataflop.c b/drivers/block/ataflop.c
+index bd7d3bb8b890b..ad4cf10749100 100644
+--- a/drivers/block/ataflop.c
++++ b/drivers/block/ataflop.c
+@@ -653,9 +653,6 @@ static inline void copy_buffer(void *from, void *to)
+ 		*p2++ = *p1++;
+ }
+ 
+-  
+-  
+-
+ /* General Interrupt Handling */
+ 
+ static void (*FloppyIRQHandler)( int status ) = NULL;
+@@ -1225,6 +1222,7 @@ static void fd_rwsec_done1(int status)
+ 	}
+ 	else {
+ 		/* all sectors finished */
++		finish_fdc();
+ 		fd_end_request_cur(BLK_STS_OK);
+ 	}
+ 	return;
+@@ -1472,15 +1470,6 @@ static void setup_req_params( int drive )
+ 			ReqTrack, ReqSector, (unsigned long)ReqData ));
+ }
+ 
+-static void ataflop_commit_rqs(struct blk_mq_hw_ctx *hctx)
+-{
+-	spin_lock_irq(&ataflop_lock);
+-	atari_disable_irq(IRQ_MFP_FDC);
+-	finish_fdc();
+-	atari_enable_irq(IRQ_MFP_FDC);
+-	spin_unlock_irq(&ataflop_lock);
+-}
+-
+ static blk_status_t ataflop_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 				     const struct blk_mq_queue_data *bd)
+ {
+@@ -1488,6 +1477,8 @@ static blk_status_t ataflop_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	int drive = floppy - unit;
+ 	int type = floppy->type;
+ 
++	DPRINT(("Queue request: drive %d type %d last %d\n", drive, type, bd->last));
++
+ 	spin_lock_irq(&ataflop_lock);
+ 	if (fd_request) {
+ 		spin_unlock_irq(&ataflop_lock);
+@@ -1547,8 +1538,6 @@ static blk_status_t ataflop_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	setup_req_params( drive );
+ 	do_fd_action( drive );
+ 
+-	if (bd->last)
+-		finish_fdc();
+ 	atari_enable_irq( IRQ_MFP_FDC );
+ 
+ out:
+@@ -1958,7 +1947,6 @@ static const struct block_device_operations floppy_fops = {
+ 
+ static const struct blk_mq_ops ataflop_mq_ops = {
+ 	.queue_rq = ataflop_queue_rq,
+-	.commit_rqs = ataflop_commit_rqs,
+ };
+ 
+ static struct kobject *floppy_find(dev_t dev, int *part, void *data)
 -- 
-Ming
+2.33.0
+
+
 
