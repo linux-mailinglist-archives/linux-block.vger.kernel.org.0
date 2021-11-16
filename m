@@ -2,79 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3FFA453612
-	for <lists+linux-block@lfdr.de>; Tue, 16 Nov 2021 16:40:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D43B3453627
+	for <lists+linux-block@lfdr.de>; Tue, 16 Nov 2021 16:43:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238497AbhKPPnE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 16 Nov 2021 10:43:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238411AbhKPPmn (ORCPT
+        id S238401AbhKPPpD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 16 Nov 2021 10:45:03 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42716 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238407AbhKPPoN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 16 Nov 2021 10:42:43 -0500
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3C4C061746
-        for <linux-block@vger.kernel.org>; Tue, 16 Nov 2021 07:39:45 -0800 (PST)
-Received: by mail-wr1-x444.google.com with SMTP id w29so38361238wra.12
-        for <linux-block@vger.kernel.org>; Tue, 16 Nov 2021 07:39:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=2rnU60dRO+TOeEQ8QTvW2o8LrLiuFOFdxntBRWJpoQ8=;
-        b=gSlt42+nerC8lPvGNbzJMcuGn11aXKD0Qw+dXZ0m8E6JbROQZaSZLXYtk5ZoKiams0
-         sbegOrU+q5j/P8dJnB3oZlkHrP103AjCJlFAdFFxvDC8zjVEpDxOGagUS9uRvJH0sIoQ
-         Upjie+IXSHUzuOpsa26TeO3ji88prG/QYZLeagCmEH+gVy0BYQvBW74OV1JbIwnSkkqr
-         MWyOeW9pAFhHT84kIwTkRu4AtnTuIxEkaIVXc2mvSG3t0I07eYJzbcy2wgG6KNxBBnf/
-         CWVek9E8YorN04U9P5jH/tpuVGfSjgxefnh6MPp9MwwKSkiFUXjH5gitZ6zBXK1AoW9h
-         8Hew==
+        Tue, 16 Nov 2021 10:44:13 -0500
+Received: by mail-io1-f71.google.com with SMTP id n25-20020a056602341900b005e7a312f86dso12390560ioz.9
+        for <linux-block@vger.kernel.org>; Tue, 16 Nov 2021 07:41:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=2rnU60dRO+TOeEQ8QTvW2o8LrLiuFOFdxntBRWJpoQ8=;
-        b=psKk2yh9Y3FhysTIfJA3TvS5ZuEFoUS30N8hFvQTjsuNgBlwj20sEOzIsCjN5QOCZk
-         Bo5aQrClHM3UDj7ilOH8dNCCZv4dQ4GoBEp0mZZ7mJ76Cry0t34RGi8jNjO3Wrh1vWn9
-         kp9pevMUUe43rBetrxwdwMr3Rdbz+4Jp3a6qVnHrIqzO6VIDdqpww7n1YeuVg5TuXksZ
-         b+VIG2vBefqW9wKfYLqC9ghsHzt/sqo+Ykcov2IagPnO80IAef45c0THHsNYZGhSHB4q
-         JJIVZYNA1zsOcBc1UAzvWP4CwKJbf2JfShByLSBjag6cj54m83+rvfHFuqBjhrmGOkLw
-         hAHA==
-X-Gm-Message-State: AOAM533CF02oBbFoXjOtx0IW1qEAbUqg1sms2WK8R99guRfxm3cKdS1X
-        1G2SGCX61VxE5VOHLaVVhQpCkyXJz94MrPy/DPA=
-X-Google-Smtp-Source: ABdhPJzauNo7u8LAkyRofHq7NbyKJY0AUETDrSoQu3mA5o9mPjKFZNPEWM+ZyY9MB7/JzVP8YdWbmS5ip4hlYDzSrL4=
-X-Received: by 2002:adf:ef4f:: with SMTP id c15mr10550043wrp.226.1637077184362;
- Tue, 16 Nov 2021 07:39:44 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=yEoiAOZNXI+7ziHDgUkTx2Lv3WSs9sv/eVLYHQ4c5qs=;
+        b=pFair8I7G48S6Vfvt+LNW50rtKHDB1xZe8MfRlB3Gn624VFzA5+0iEpejysz5D8cxu
+         g8Z5jSIgEuK9XDGun2VgNYNpCmFhXqT8sJkUQvuAoFvLmGA1EUIMkiuRWeI/Sv7Zwlhg
+         uBUS7KulC/0RoEQ94hyWjA4aHb/qnyAuuMPj5m9x6KLqP//TSlSZVsmqznZP3AxY8ThH
+         rZbxlDOPxwhXPa8ddOxWMwag35dnXVTSRjlhil1SgPZYt3H+VKBgv2PndAzGcv6Uyzkz
+         s6UIFyuBZ13DsWTpI4TKwIsBawxzyravt4WtkAmrbKUPVBocvsq28cgKSn+tfwutvXwT
+         SP9A==
+X-Gm-Message-State: AOAM531OIlkuOvzTGyJ9cTZ1cod8Mt+tO0AwUYsrvc1RyMAFjD4KEU54
+        2A62bCTkalDLw2Irm84bJDkzP+LAkaMTMyBPYmHjO1Eyg3Di
+X-Google-Smtp-Source: ABdhPJz2QvP079zeX/CSMbBjUQ4yB0Z21xR5DrHse56nG8ecxlTTNjG5d/4SrtAzw+M2+watkTiawRFrq6/9vJ1WSz68jkvpCbf8
 MIME-Version: 1.0
-Received: by 2002:adf:fa04:0:0:0:0:0 with HTTP; Tue, 16 Nov 2021 07:39:43
- -0800 (PST)
-Reply-To: mrsaishag45@gmail.com
-From:   Mrs Aisha Al-Qaddafi <mrsaishag31@gmail.com>
-Date:   Tue, 16 Nov 2021 07:39:43 -0800
-Message-ID: <CANoeRo5qiFAZ0sjqyaUaqbyVTS7U_CJFTQEjfMRN9UPywRsVWw@mail.gmail.com>
-Subject: Dear Friend,
-To:     undisclosed-recipients:;
+X-Received: by 2002:a05:6e02:1847:: with SMTP id b7mr5243399ilv.102.1637077275827;
+ Tue, 16 Nov 2021 07:41:15 -0800 (PST)
+Date:   Tue, 16 Nov 2021 07:41:15 -0800
+In-Reply-To: <00000000000009a2c505bbcaed68@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007ee63e05d0e9c172@google.com>
+Subject: Re: [syzbot] INFO: rcu detected stall in __hrtimer_run_queues
+From:   syzbot <syzbot+de9526ade17c659d8336@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, fweisbec@gmail.com, hch@lst.de, hdanton@sina.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, paulmck@kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Friend,
+syzbot suspects this issue was fixed by commit:
 
-I came across your e-mail contact prior to a private search while in
-need of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
-single Mother and a Widow with three Children.
+commit b60876296847e6cd7f1da4b8b7f0f31399d59aa1
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Fri Oct 15 21:03:52 2021 +0000
 
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
-investment Manager/Partner because of my current refugee status,
-however, I am interested in you for investment project assistance in
-your country, may be from there, we can build business relationship in
-the nearest future.
+    block: improve layout of struct request
 
-I am willing to negotiate an investment/business profit sharing ratio
-with you based on the future investment earning profits.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=137f2d01b00000
+start commit:   f40ddce88593 Linux 5.11
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e53d04227c52a0df
+dashboard link: https://syzkaller.appspot.com/bug?extid=de9526ade17c659d8336
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a81012d00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1282b6d2d00000
 
-Your Urgent Reply Will Be Appreciated
+If the result looks correct, please mark the issue as fixed by replying with:
 
-Best Regards
-Mrs Aisha Al-Qaddafi
+#syz fix: block: improve layout of struct request
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
