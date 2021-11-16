@@ -2,74 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D254533FF
-	for <lists+linux-block@lfdr.de>; Tue, 16 Nov 2021 15:21:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3FFA453612
+	for <lists+linux-block@lfdr.de>; Tue, 16 Nov 2021 16:40:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237340AbhKPOXf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 16 Nov 2021 09:23:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237417AbhKPOX0 (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 16 Nov 2021 09:23:26 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 65FE261502;
-        Tue, 16 Nov 2021 14:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1637072429;
-        bh=Q20/g1l8rwfLVJucsg0fsXG7lkYQoLbtbOKw8Cy6Wn0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qADXFzDwg9EW9wLcTrtUHzWXjLxmsdUkga0I4W3t+MTAQ3ikfHGNlOUnlYaars6ID
-         Xpjfgd0pEt+aTx/WCvXBbxtfTK16YV0hYvBqYUE+wSVh7H3ZBbc9/jZHOgKFLBuCQt
-         GErLyMDwwaGObxBDjnLipH8mF6JiZ3xovAWxsJEQ=
-Date:   Tue, 16 Nov 2021 15:20:26 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kumaravel.Thiagarajan@microchip.com
-Cc:     lee.jones@linaro.org, Pragash.Mangalapandian@microchip.com,
-        Sundararaman.H@microchip.com, axboe@kernel.dk,
-        linux-block@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, linux-mtd@lists.infradead.org,
-        LakshmiPraveen.Kopparthi@microchip.com
-Subject: Re: Reg: New MFD Driver for my PCIe Device
-Message-ID: <YZO+KktO3OhDEtlq@kroah.com>
-References: <CH0PR11MB5380F5BD18F15014BA8B8479E9919@CH0PR11MB5380.namprd11.prod.outlook.com>
- <YYkEP62JRb4rCuXQ@google.com>
- <YYkGkEiPb+6J62hn@kroah.com>
- <YYkJsbbHH6wdPvB9@google.com>
- <YYkR/szsDirtj1FP@kroah.com>
- <CH0PR11MB5380791976D5837E024D5679E9999@CH0PR11MB5380.namprd11.prod.outlook.com>
+        id S238497AbhKPPnE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 16 Nov 2021 10:43:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238411AbhKPPmn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 16 Nov 2021 10:42:43 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3C4C061746
+        for <linux-block@vger.kernel.org>; Tue, 16 Nov 2021 07:39:45 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id w29so38361238wra.12
+        for <linux-block@vger.kernel.org>; Tue, 16 Nov 2021 07:39:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=2rnU60dRO+TOeEQ8QTvW2o8LrLiuFOFdxntBRWJpoQ8=;
+        b=gSlt42+nerC8lPvGNbzJMcuGn11aXKD0Qw+dXZ0m8E6JbROQZaSZLXYtk5ZoKiams0
+         sbegOrU+q5j/P8dJnB3oZlkHrP103AjCJlFAdFFxvDC8zjVEpDxOGagUS9uRvJH0sIoQ
+         Upjie+IXSHUzuOpsa26TeO3ji88prG/QYZLeagCmEH+gVy0BYQvBW74OV1JbIwnSkkqr
+         MWyOeW9pAFhHT84kIwTkRu4AtnTuIxEkaIVXc2mvSG3t0I07eYJzbcy2wgG6KNxBBnf/
+         CWVek9E8YorN04U9P5jH/tpuVGfSjgxefnh6MPp9MwwKSkiFUXjH5gitZ6zBXK1AoW9h
+         8Hew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=2rnU60dRO+TOeEQ8QTvW2o8LrLiuFOFdxntBRWJpoQ8=;
+        b=psKk2yh9Y3FhysTIfJA3TvS5ZuEFoUS30N8hFvQTjsuNgBlwj20sEOzIsCjN5QOCZk
+         Bo5aQrClHM3UDj7ilOH8dNCCZv4dQ4GoBEp0mZZ7mJ76Cry0t34RGi8jNjO3Wrh1vWn9
+         kp9pevMUUe43rBetrxwdwMr3Rdbz+4Jp3a6qVnHrIqzO6VIDdqpww7n1YeuVg5TuXksZ
+         b+VIG2vBefqW9wKfYLqC9ghsHzt/sqo+Ykcov2IagPnO80IAef45c0THHsNYZGhSHB4q
+         JJIVZYNA1zsOcBc1UAzvWP4CwKJbf2JfShByLSBjag6cj54m83+rvfHFuqBjhrmGOkLw
+         hAHA==
+X-Gm-Message-State: AOAM533CF02oBbFoXjOtx0IW1qEAbUqg1sms2WK8R99guRfxm3cKdS1X
+        1G2SGCX61VxE5VOHLaVVhQpCkyXJz94MrPy/DPA=
+X-Google-Smtp-Source: ABdhPJzauNo7u8LAkyRofHq7NbyKJY0AUETDrSoQu3mA5o9mPjKFZNPEWM+ZyY9MB7/JzVP8YdWbmS5ip4hlYDzSrL4=
+X-Received: by 2002:adf:ef4f:: with SMTP id c15mr10550043wrp.226.1637077184362;
+ Tue, 16 Nov 2021 07:39:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH0PR11MB5380791976D5837E024D5679E9999@CH0PR11MB5380.namprd11.prod.outlook.com>
+Received: by 2002:adf:fa04:0:0:0:0:0 with HTTP; Tue, 16 Nov 2021 07:39:43
+ -0800 (PST)
+Reply-To: mrsaishag45@gmail.com
+From:   Mrs Aisha Al-Qaddafi <mrsaishag31@gmail.com>
+Date:   Tue, 16 Nov 2021 07:39:43 -0800
+Message-ID: <CANoeRo5qiFAZ0sjqyaUaqbyVTS7U_CJFTQEjfMRN9UPywRsVWw@mail.gmail.com>
+Subject: Dear Friend,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 11:34:24AM +0000, Kumaravel.Thiagarajan@microchip.com wrote:
-> Dear Greg K-H & Lee Jones,
-> 
-> Thanks for your inputs and I need more of your help to understand things better.
-> 
-> I took this MFD route not just based on the recommendation from Linus Walleij but also based on the kernel documentation @ /Documentation/driver-api/driver-model/platform.rst which states as below.
-> 
-> "Rarely, a platform_device will be connected through a segment of some other kind of bus; but its registers will still be directly addressable."
-> 
-> I visualized these two (GPIO controller & OTP/EEPROM controller) devices as platform devices present on the same PCI function and these two devices are not detectable unless the base PCI function driver enumerates them and anyway their registers are directly addressable.
-> Hence, I thought that the platform driver architecture is inclusive of devices like this.
+Dear Friend,
 
-Sorry, but no.  Again, platform devices are ONLY for actual platform
-devices, not "things on a device that happens to be on another bus
-device".  Like PCI devices.
+I came across your e-mail contact prior to a private search while in
+need of your assistance. I am Aisha Al-Qaddafi, the only biological
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
 
-That is what the auxiliary bus code was written for, please read
-Documentation/driver-api/auxiliary_bus.rst for how to use it.
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+your country, may be from there, we can build business relationship in
+the nearest future.
 
-> Please let me know your comments.
-> 
-> Also please let me know if I can talk to any of you over a webex call to get clarifications on my further doubts.
+I am willing to negotiate an investment/business profit sharing ratio
+with you based on the future investment earning profits.
 
-Email works best, video chats for every patch review does not scale at
-all :)
+Your Urgent Reply Will Be Appreciated
 
-thanks,
-
-greg k-h
+Best Regards
+Mrs Aisha Al-Qaddafi
