@@ -2,32 +2,32 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 572B64540B1
-	for <lists+linux-block@lfdr.de>; Wed, 17 Nov 2021 07:14:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6120D4540B5
+	for <lists+linux-block@lfdr.de>; Wed, 17 Nov 2021 07:14:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbhKQGRU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 Nov 2021 01:17:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56028 "EHLO
+        id S233521AbhKQGRV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 Nov 2021 01:17:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229927AbhKQGRT (ORCPT
+        with ESMTP id S232688AbhKQGRT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Wed, 17 Nov 2021 01:17:19 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89416C061764;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C97BC0613B9;
         Tue, 16 Nov 2021 22:14:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=HhvXg+t7CvF5Dfw/VnDXlrbf8FkqH0fuHrNXW8+Oqr8=; b=FxS3D+VuBXJ/jOvsk0iJE5Cggq
-        hkKiK142RJlaFO/l+aubED/UoDKZ2kPpK50OfE/MBdMUVjohYmcQl/FLgv6arNchvlJYlich92nGL
-        DQi29H+smSKkz4WVGjnDOrCMpUwFv8bIvih9K8kD0ss+w09bhp5wfVIrcsBzr9DvLcg5DpdN8NW5T
-        WuPgmkStUGBbSh8N25NgtYprZf7dwMe411c8dnN9CRXd/uFOZ5SCt7+Tid7NzcghzZ5ZYP+Cwtx8g
-        Y0jeZxrwQZyj+SFX2CVshrV8phri0oFthR//YoF0ntBvqKx29EhpqMqSEeuCpgpc00FBWnA45H4S4
-        1TW0pTqQ==;
+        bh=LjB+PW6droKOhO2mj2A/+eYS7xjIK3FEJ790igEy5r8=; b=AlqY5MsRheu/bSJmGs+30xVC25
+        rAvzNtaIjwPTM0j5hsCxtXTsvzL7kjEIhKYivvjaMQp9uoaIrnnIrHMQDexNSkT0dSCIDpBd4Hr9M
+        QoCvg8p6I7DuCpMq1rSiORlguB+rzdeS6OMMctRCr0TnOgNldxStgv/tRyJzeMLTcJDusBV7/sslb
+        5c7/N2I/3d3Bh6kP3fpsWRa4AqtGIAwSIigY0qY9IXVO/BvBK3keqUhkCW2eIX9X4m60pvNVlwI9O
+        3J1SHAdmh8xaF7LWVLe3cYMsLXMCD13WLSEANEb2tTqk9iry7rUQPTHhWFBpzU8qJkN00kKAq1A9X
+        xzlgs5Gg==;
 Received: from 213-225-5-109.nat.highway.a1.net ([213.225.5.109] helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mnECt-007MEP-8v; Wed, 17 Nov 2021 06:14:08 +0000
+        id 1mnECu-007MER-Q0; Wed, 17 Nov 2021 06:14:09 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
@@ -36,9 +36,9 @@ Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-mtd@lists.infradead.org
-Subject: [PATCH 01/11] block: move blk_rq_err_bytes to scsi
-Date:   Wed, 17 Nov 2021 07:13:54 +0100
-Message-Id: <20211117061404.331732-2-hch@lst.de>
+Subject: [PATCH 02/11] block: remove rq_flush_dcache_pages
+Date:   Wed, 17 Nov 2021 07:13:55 +0100
+Message-Id: <20211117061404.331732-3-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211117061404.331732-1-hch@lst.de>
 References: <20211117061404.331732-1-hch@lst.de>
@@ -49,148 +49,123 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-blk_rq_err_bytes is only used by the scsi midlayer, so move it there.
+This function is trivial, and flush_dcache_page is always defined, so
+just open code it in the 2.5 callers.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-core.c        | 41 ----------------------------------------
- drivers/scsi/scsi_lib.c | 42 ++++++++++++++++++++++++++++++++++++++++-
- include/linux/blk-mq.h  |  3 ---
- 3 files changed, 41 insertions(+), 45 deletions(-)
+ block/blk-core.c          | 19 -------------------
+ drivers/mtd/mtd_blkdevs.c | 10 ++++++++--
+ drivers/mtd/ubi/block.c   |  6 +++++-
+ include/linux/blk-mq.h    | 10 ----------
+ 4 files changed, 13 insertions(+), 32 deletions(-)
 
 diff --git a/block/blk-core.c b/block/blk-core.c
-index 9ee32f85d74e1..e27a659973965 100644
+index e27a659973965..f1ca31a89493a 100644
 --- a/block/blk-core.c
 +++ b/block/blk-core.c
-@@ -1173,47 +1173,6 @@ blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *
+@@ -1297,25 +1297,6 @@ void blk_steal_bios(struct bio_list *list, struct request *rq)
  }
- EXPORT_SYMBOL_GPL(blk_insert_cloned_request);
+ EXPORT_SYMBOL_GPL(blk_steal_bios);
  
+-#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
 -/**
-- * blk_rq_err_bytes - determine number of bytes till the next failure boundary
-- * @rq: request to examine
+- * rq_flush_dcache_pages - Helper function to flush all pages in a request
+- * @rq: the request to be flushed
 - *
 - * Description:
-- *     A request could be merge of IOs which require different failure
-- *     handling.  This function determines the number of bytes which
-- *     can be failed from the beginning of the request without
-- *     crossing into area which need to be retried further.
-- *
-- * Return:
-- *     The number of bytes to fail.
+- *     Flush all pages in @rq.
 - */
--unsigned int blk_rq_err_bytes(const struct request *rq)
+-void rq_flush_dcache_pages(struct request *rq)
 -{
--	unsigned int ff = rq->cmd_flags & REQ_FAILFAST_MASK;
--	unsigned int bytes = 0;
--	struct bio *bio;
+-	struct req_iterator iter;
+-	struct bio_vec bvec;
 -
--	if (!(rq->rq_flags & RQF_MIXED_MERGE))
--		return blk_rq_bytes(rq);
--
--	/*
--	 * Currently the only 'mixing' which can happen is between
--	 * different fastfail types.  We can safely fail portions
--	 * which have all the failfast bits that the first one has -
--	 * the ones which are at least as eager to fail as the first
--	 * one.
--	 */
--	for (bio = rq->bio; bio; bio = bio->bi_next) {
--		if ((bio->bi_opf & ff) != ff)
--			break;
--		bytes += bio->bi_iter.bi_size;
--	}
--
--	/* this could lead to infinite loop */
--	BUG_ON(blk_rq_bytes(rq) && !bytes);
--	return bytes;
+-	rq_for_each_segment(bvec, rq, iter)
+-		flush_dcache_page(bvec.bv_page);
 -}
--EXPORT_SYMBOL_GPL(blk_rq_err_bytes);
+-EXPORT_SYMBOL_GPL(rq_flush_dcache_pages);
+-#endif
 -
- static void update_io_ticks(struct block_device *part, unsigned long now,
- 		bool end)
+ /**
+  * blk_lld_busy - Check if underlying low-level drivers of a device are busy
+  * @q : the queue of the device being checked
+diff --git a/drivers/mtd/mtd_blkdevs.c b/drivers/mtd/mtd_blkdevs.c
+index 4eaba6f4ec680..66f81d42fe778 100644
+--- a/drivers/mtd/mtd_blkdevs.c
++++ b/drivers/mtd/mtd_blkdevs.c
+@@ -46,6 +46,8 @@ static blk_status_t do_blktrans_request(struct mtd_blktrans_ops *tr,
+ 			       struct mtd_blktrans_dev *dev,
+ 			       struct request *req)
  {
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 621d841d819a3..5e8b5ecb3245a 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -617,6 +617,46 @@ static blk_status_t scsi_result_to_blk_status(struct scsi_cmnd *cmd, int result)
- 	}
- }
++	struct req_iterator iter;
++	struct bio_vec bvec;
+ 	unsigned long block, nsect;
+ 	char *buf;
  
-+/**
-+ * scsi_rq_err_bytes - determine number of bytes till the next failure boundary
-+ * @rq: request to examine
-+ *
-+ * Description:
-+ *     A request could be merge of IOs which require different failure
-+ *     handling.  This function determines the number of bytes which
-+ *     can be failed from the beginning of the request without
-+ *     crossing into area which need to be retried further.
-+ *
-+ * Return:
-+ *     The number of bytes to fail.
-+ */
-+static unsigned int scsi_rq_err_bytes(const struct request *rq)
-+{
-+	unsigned int ff = rq->cmd_flags & REQ_FAILFAST_MASK;
-+	unsigned int bytes = 0;
-+	struct bio *bio;
-+
-+	if (!(rq->rq_flags & RQF_MIXED_MERGE))
-+		return blk_rq_bytes(rq);
-+
-+	/*
-+	 * Currently the only 'mixing' which can happen is between
-+	 * different fastfail types.  We can safely fail portions
-+	 * which have all the failfast bits that the first one has -
-+	 * the ones which are at least as eager to fail as the first
-+	 * one.
-+	 */
-+	for (bio = rq->bio; bio; bio = bio->bi_next) {
-+		if ((bio->bi_opf & ff) != ff)
-+			break;
-+		bytes += bio->bi_iter.bi_size;
-+	}
-+
-+	/* this could lead to infinite loop */
-+	BUG_ON(blk_rq_bytes(rq) && !bytes);
-+	return bytes;
-+}
-+
- /* Helper for scsi_io_completion() when "reprep" action required. */
- static void scsi_io_completion_reprep(struct scsi_cmnd *cmd,
- 				      struct request_queue *q)
-@@ -794,7 +834,7 @@ static void scsi_io_completion_action(struct scsi_cmnd *cmd, int result)
- 				scsi_print_command(cmd);
+@@ -76,13 +78,17 @@ static blk_status_t do_blktrans_request(struct mtd_blktrans_ops *tr,
  			}
  		}
--		if (!scsi_end_request(req, blk_stat, blk_rq_err_bytes(req)))
-+		if (!scsi_end_request(req, blk_stat, scsi_rq_err_bytes(req)))
- 			return;
- 		fallthrough;
- 	case ACTION_REPREP:
+ 		kunmap(bio_page(req->bio));
+-		rq_flush_dcache_pages(req);
++
++		rq_for_each_segment(bvec, req, iter)
++			flush_dcache_page(bvec.bv_page);
+ 		return BLK_STS_OK;
+ 	case REQ_OP_WRITE:
+ 		if (!tr->writesect)
+ 			return BLK_STS_IOERR;
+ 
+-		rq_flush_dcache_pages(req);
++		rq_for_each_segment(bvec, req, iter)
++			flush_dcache_page(bvec.bv_page);
++
+ 		buf = kmap(bio_page(req->bio)) + bio_offset(req->bio);
+ 		for (; nsect > 0; nsect--, block++, buf += tr->blksize) {
+ 			if (tr->writesect(dev, block, buf)) {
+diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
+index 062e6c2c45f5f..302426ab30f8d 100644
+--- a/drivers/mtd/ubi/block.c
++++ b/drivers/mtd/ubi/block.c
+@@ -294,6 +294,8 @@ static void ubiblock_do_work(struct work_struct *work)
+ 	int ret;
+ 	struct ubiblock_pdu *pdu = container_of(work, struct ubiblock_pdu, work);
+ 	struct request *req = blk_mq_rq_from_pdu(pdu);
++	struct req_iterator iter;
++	struct bio_vec bvec;
+ 
+ 	blk_mq_start_request(req);
+ 
+@@ -305,7 +307,9 @@ static void ubiblock_do_work(struct work_struct *work)
+ 	blk_rq_map_sg(req->q, req, pdu->usgl.sg);
+ 
+ 	ret = ubiblock_read(pdu);
+-	rq_flush_dcache_pages(req);
++
++	rq_for_each_segment(bvec, req, iter)
++		flush_dcache_page(bvec.bv_page);
+ 
+ 	blk_mq_end_request(req, errno_to_blk_status(ret));
+ }
 diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 2949d9ac74849..a78d9a0f2a1be 100644
+index a78d9a0f2a1be..308edc2a4925b 100644
 --- a/include/linux/blk-mq.h
 +++ b/include/linux/blk-mq.h
-@@ -947,7 +947,6 @@ struct req_iterator {
-  * blk_rq_pos()			: the current sector
-  * blk_rq_bytes()		: bytes left in the entire request
-  * blk_rq_cur_bytes()		: bytes left in the current segment
-- * blk_rq_err_bytes()		: bytes left till the next error boundary
-  * blk_rq_sectors()		: sectors left in the entire request
-  * blk_rq_cur_sectors()		: sectors left in the current segment
-  * blk_rq_stats_sectors()	: sectors of the entire request used for stats
-@@ -971,8 +970,6 @@ static inline int blk_rq_cur_bytes(const struct request *rq)
- 	return bio_iovec(rq->bio).bv_len;
+@@ -1132,14 +1132,4 @@ static inline bool blk_req_can_dispatch_to_zone(struct request *rq)
  }
+ #endif /* CONFIG_BLK_DEV_ZONED */
  
--unsigned int blk_rq_err_bytes(const struct request *rq);
--
- static inline unsigned int blk_rq_sectors(const struct request *rq)
- {
- 	return blk_rq_bytes(rq) >> SECTOR_SHIFT;
+-#ifndef ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+-# error	"You should define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE for your platform"
+-#endif
+-#if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+-void rq_flush_dcache_pages(struct request *rq);
+-#else
+-static inline void rq_flush_dcache_pages(struct request *rq)
+-{
+-}
+-#endif /* ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE */
+ #endif /* BLK_MQ_H */
 -- 
 2.30.2
 
