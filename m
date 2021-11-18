@@ -2,82 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23BBF455C17
-	for <lists+linux-block@lfdr.de>; Thu, 18 Nov 2021 14:02:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5FCC455C84
+	for <lists+linux-block@lfdr.de>; Thu, 18 Nov 2021 14:20:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232351AbhKRNF1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 18 Nov 2021 08:05:27 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:14952 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234332AbhKRNDg (ORCPT
+        id S230437AbhKRNX4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 18 Nov 2021 08:23:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230369AbhKRNXt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 18 Nov 2021 08:03:36 -0500
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Hw0G84bWNzZd8Y;
-        Thu, 18 Nov 2021 20:58:08 +0800 (CST)
-Received: from dggpemm500004.china.huawei.com (7.185.36.219) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 18 Nov 2021 21:00:33 +0800
-Received: from huawei.com (10.175.124.27) by dggpemm500004.china.huawei.com
- (7.185.36.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 18 Nov
- 2021 21:00:32 +0800
-From:   Laibin Qiu <qiulaibin@huawei.com>
-To:     <tj@kernel.org>, <axboe@kernel.dk>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] blk-throttle: Set BIO_THROTTLED when bio has been throttled
-Date:   Thu, 18 Nov 2021 21:15:51 +0800
-Message-ID: <20211118131551.810931-1-qiulaibin@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Thu, 18 Nov 2021 08:23:49 -0500
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACE5C061202
+        for <linux-block@vger.kernel.org>; Thu, 18 Nov 2021 05:20:48 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id f18so25994415lfv.6
+        for <linux-block@vger.kernel.org>; Thu, 18 Nov 2021 05:20:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=o/E5pVansUx3F/k2LuNW2doPkR1FpoTGrLH7703k+v4=;
+        b=ZJ8DLJeZdFHSfQ/25itsimLa50JkvpRX+SA81xN0i0Qv+AsP6Eei13Mf79E2myn1mY
+         QYDHIST3QNvUisYr/eke9EGEXN2J1kG0aQM0Z0vX/Aius2NkH5bV/aR+ARVVdW5JaFtR
+         7suYIqTqxnj7BgnMoy4Z+/3Z/hwCB26yJvMNGKTKi+FiEZ7riuufEttMQkNbay5l45x9
+         eIW8dnSBoIOa9iyu+kuC6t/u1Gm/uvHeJPSe9phrd/4S+7Dl0pax8v48toeDyjk4vqha
+         +OOtGBBBZ5HWWEBjs07V672LMXkdE/OUT3b7m8PetG9rA2KULK7O1bBxKc8SGuTpqlZ4
+         tUtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=o/E5pVansUx3F/k2LuNW2doPkR1FpoTGrLH7703k+v4=;
+        b=m82g0oRf2Zj43lpmWj1BmsiZEF63ZijSujxK390zsd9gJ9yDks0DgUBJxC3+2PH5Fa
+         iEASiXucHvRYHsWBP1H0yWNJETfhdMFmHikMzF7u80F3pcfJt4y0w9hWemHyWOezFp9W
+         Srg4edb9eCmwClnCp8bRGfzx3h1WbVQesy+xl0p7Vpb4jLdDp9ReuEpSkt1cLphBl7io
+         UC353BaYKxCGF1LrtKsSO5EMqi2jwt3x+mp1GBHQriH3A/m8CcEvf/oP0TlE+c9AcftZ
+         1g0rMyiJtTBHtI8AEx+QUq7gQ0G9ys3p2wRaaNf/p++vCOy4gH2xl3MQKhU3b5QmZw9u
+         kMFw==
+X-Gm-Message-State: AOAM530LOxIfxnXtlYzg56wDXH5dQiu550OE5BEW0HJCFCwb2V9MBLEe
+        RETH3jshSfSkszhocjAiViIk+oOByYeAMusjfJBVHHcTuuPCdg==
+X-Google-Smtp-Source: ABdhPJx9isLSrkR5iF/wPCX0wzfwmwoVn6dWoYq8WCOMeBODGctMLS4FPoNPUNNA+tz+Ait67ILWAxcCLDQQbd81GHg=
+X-Received: by 2002:a17:907:6e16:: with SMTP id sd22mr32229395ejc.542.1637241636078;
+ Thu, 18 Nov 2021 05:20:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500004.china.huawei.com (7.185.36.219)
-X-CFilter-Loop: Reflected
+Received: by 2002:a50:cf0b:0:0:0:0:0 with HTTP; Thu, 18 Nov 2021 05:20:35
+ -0800 (PST)
+Reply-To: francoispetit113@outlook.com
+From:   Francois Petit <daphinemsparharmrhonda491@gmail.com>
+Date:   Thu, 18 Nov 2021 14:20:35 +0100
+Message-ID: <CAPd2WpdRibaOC7jU-E6BVEYPcea0W-LsjvXD5=TEuuqKgaaRAQ@mail.gmail.com>
+Subject: TREAT AS CONFIDENTIAL..
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-1.In current process, all bio will set the BIO_THROTTLED flag
-after __blk_throtl_bio().
+Hello,
 
-2.If bio needs to be throttled, it will start the timer and
-stop submit bio directly. Bio will submit in blk_throtl_dispatch_work_fn()
-when the timer expires. But in the current process, if bio is throttled.
-The BIO_THROTTLED will be set to bio after timer start. If the bio
-has been completed, it may cause use-after-free.
+I'm Francois Petit with Societe Generale Bank here in France. I
+sincerely seek to present you as the Next of Kin to a late client who
+left behind $145.5 million dollars in a fixed deposit account in my
+bank before his demise.
 
-Fix this by move BIO_THROTTLED set before timer set.
+The British born client was into Diamond and Gold mining and died
+without a Next of Kin. I shall obtain the legal documents that will
+give you legal rights to make this claim legitimately. I am willing to
+share the funds 60/40 with you and this shall be completed within 72
+hours. With the legal documents, the bank will approve you as the Next
+of Kin and pay out this amount to you within three working days. I
+considered the funds would be of better use to both of us instead of
+letting the bank or some corrupt politician to confiscate the funds.
 
-Signed-off-by: Laibin Qiu <qiulaibin@huawei.com>
----
- block/blk-throttle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Kindly get back to me as soon as possible with your full name,
+address, direct contact number and occupation for the processing of
+the legal documents if you are interested and can be trusted to return
+my own share when you have received the funds in your bank account.
+More information shall be given to you once I hear from you. I put it
+to you that this is probably going to be the best decision you ever
+make in your life.
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 39bb6e68a9a2..ddfbff4465d5 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -2149,6 +2149,7 @@ bool __blk_throtl_bio(struct bio *bio)
- 	td->nr_queued[rw]++;
- 	throtl_add_bio_tg(bio, qn, tg);
- 	throttled = true;
-+	bio_set_flag(bio, BIO_THROTTLED);
- 
- 	/*
- 	 * Update @tg's dispatch time and force schedule dispatch if @tg
-@@ -2163,7 +2164,6 @@ bool __blk_throtl_bio(struct bio *bio)
- 
- out_unlock:
- 	spin_unlock_irq(&q->queue_lock);
--	bio_set_flag(bio, BIO_THROTTLED);
- 
- #ifdef CONFIG_BLK_DEV_THROTTLING_LOW
- 	if (throttled || !td->track_bio_latency)
--- 
-2.22.0
+However, if you are not interested in the offer, kindly delete this
+message from your mailbox and pretend that I never contacted you. I'll
+continue my search for a reliable person that will help out.
 
+Best Wishes,
+Francois Petit
