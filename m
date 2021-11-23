@@ -2,137 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E00845A043
-	for <lists+linux-block@lfdr.de>; Tue, 23 Nov 2021 11:32:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FFCC45A046
+	for <lists+linux-block@lfdr.de>; Tue, 23 Nov 2021 11:32:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235337AbhKWKfJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S235419AbhKWKfJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Tue, 23 Nov 2021 05:35:09 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:57482 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235353AbhKWKfH (ORCPT
+Received: from smtp-out1.suse.de ([195.135.220.28]:49856 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235385AbhKWKfH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 23 Nov 2021 05:35:07 -0500
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id AA7A31FD5D;
+        by smtp-out1.suse.de (Postfix) with ESMTP id B7DD9218DF;
         Tue, 23 Nov 2021 10:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
         t=1637663518; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tp7/8R1LmG938qy5axq4MAM3rTPHcg6t4envA+5B7xo=;
-        b=nWKMVABmByzQ3zIZXP3PskKizx2tX1Mqr+Pf2KBjmUG3iwAxsWcQjJHrpsH03tbnL0jAXY
-        qKl03DPMDL4yP9vI3Z6jB62aUBjhHcHMoTassp3vwuL/5NfJb5w8GvmvemVrHlnYHvoGKF
-        T0TSd8w1/WTOKnFL3z5ZTkitJK1jXtQ=
+        bh=e4TLO3y3BQuWhOjUMzkDpS7bNGTA2cYfv2C3zauDytg=;
+        b=IMNfNKds9jdM0/QyN+XkzXJ4z+etm9d180eQgVvvgfhOtPCEKmRNVMj3v5SNrirYKBVNkN
+        RnSDbxV6x8LDdCZVqPiobIz0G1dcln7pLePdhX6qUvC3WJ2TSuIFKzm2biPlrF+kv1lkkc
+        UQ8AhdUx89SmMaYxWONoQAJygAHYAGQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
         s=susede2_ed25519; t=1637663518;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tp7/8R1LmG938qy5axq4MAM3rTPHcg6t4envA+5B7xo=;
-        b=5VWSmDXIotZmyjURxtK9epV88adVeYS06QX7iGIl2/1X5l+Au7HiUEFNvdnL1t+pa4pcdk
-        Tq1fRW8eVnWrwkAQ==
+        bh=e4TLO3y3BQuWhOjUMzkDpS7bNGTA2cYfv2C3zauDytg=;
+        b=Vvbi4sGuMCUVI8j7nSaXAJxeG/kGGY3v8cTPkpEWXjqz/1x9jjT+1ST4dHPB+wOQfFL7sy
+        0kKv+Kn/8e+p7MDg==
 Received: from quack2.suse.cz (unknown [10.100.200.198])
-        by relay2.suse.de (Postfix) with ESMTP id A290AA3B89;
+        by relay2.suse.de (Postfix) with ESMTP id A3532A3B8B;
         Tue, 23 Nov 2021 10:31:58 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 759C71E3B01; Tue, 23 Nov 2021 11:31:58 +0100 (CET)
+        id 794A91E3B2F; Tue, 23 Nov 2021 11:31:58 +0100 (CET)
 From:   Jan Kara <jack@suse.cz>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     <linux-block@vger.kernel.org>,
         Paolo Valente <paolo.valente@linaro.org>,
         Jan Kara <jack@suse.cz>
-Subject: [PATCH 6/8] bfq: Provide helper to generate bfqq name
-Date:   Tue, 23 Nov 2021 11:29:18 +0100
-Message-Id: <20211123103158.17284-6-jack@suse.cz>
+Subject: [PATCH 7/8] bfq: Log waker detections
+Date:   Tue, 23 Nov 2021 11:29:19 +0100
+Message-Id: <20211123103158.17284-7-jack@suse.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20211123101109.20879-1-jack@suse.cz>
 References: <20211123101109.20879-1-jack@suse.cz>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2907; h=from:subject; bh=lIW8uaLgOKwWPQwZ8mubQz8UhMz485reSQkalNeN/dQ=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBhnMJ9yHX8wjbtONKgxP8uQ+RM1kSJK6/bTo5GIH08 iqxLYvSJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYZzCfQAKCRCcnaoHP2RA2W68CA DomDxuKwQ1TF80s8mqC0OabqkJZ7FzI5l/oe2me/iNX79EWPItu3vY8jXTLyKO4Z8h998eTHKLgiJn WzJoM/g1rpRSTAhA/Ed5pATLQe5Epzg3tXtRVMM7KCt2w41qmRjXVY+YjvY2L7q1XjHv1Zd8R/gYOM 9A3evRzxyTWcl+Zr1ZVN2l8Gpgl8emQ5pGg8yWBvulSNTHU5mI+saFU2SQr77Q2ragYHMLm9brzuA3 QRlS3mqSHQEq9tDR/Ka7BYVXxvZCRO5tHwOe08u5cDmZWAC/F4WU57aHDlcDVc7M0w6OKRVduAUTm8 2Xm0oLINT2MhHfm2eeyucVhgt7UjSH
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1735; h=from:subject; bh=MWtZKXkWbZSQLmzHT/x3s1Vz1BjQSVD7S8zSHXwYzPI=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBhnMJ+hQ9SW7uyKiZlSQGwpaLKNUm6ie4BGuyvzJKA AzG8DT6JATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYZzCfgAKCRCcnaoHP2RA2cXvB/ 9TsoTKgsAhyq8WUb8DW4bZwlJJVxC62i+GvoMWdnoHAko66DMydyj6J+Ci/4bzYUlrdbXWZfH/vVj0 CrWfZmlsmvTIH/v7TI2XZtppIQj5M0gRw3Fyx3NjSjS1Eyb+nXbkkajsD5WnoZzsyHyS4kPuabS9ik zvtNytSM40JNL6j5SJ38QdxARsI/mqtPKOcPYvnQYGd0rZWzn7DV6dV4NjU70s3QNXf7LXeH3OYcCf SA8EKZer+esF6/EyGc58klL3+19OwDn6REMfHD1hdleUdwbkSpSL60U95qlJlzYi9ceHkzSyCcoQEF EanrFrcf8QzBLbLOj/Rlj/FW7BBy40
 X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Instead of having helper formating bfqq pid, provide a helper to
-generate full bfqq name as used in the traces. It saves some code
-duplication and will save more in the coming tracepoints.
+Waker - wakee relationships are important in deciding whether one queue
+can preempt the other one. Print information about detected waker-wakee
+relationships so that scheduling decisions can be better understood from
+block traces.
 
 Acked-by: Paolo Valente <paolo.valente@linaro.org>
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- block/bfq-iosched.h | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ block/bfq-iosched.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index bb8180c52a31..07288b9da389 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -25,7 +25,7 @@
- #define BFQ_DEFAULT_GRP_IOPRIO	0
- #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
- 
--#define MAX_PID_STR_LENGTH 12
-+#define MAX_BFQQ_NAME_LENGTH 16
- 
- /*
-  * Soft real-time applications are extremely more latency sensitive
-@@ -1083,26 +1083,27 @@ void bfq_add_bfqq_busy(struct bfq_data *bfqd, struct bfq_queue *bfqq);
- /* --------------- end of interface of B-WF2Q+ ---------------- */
- 
- /* Logging facilities. */
--static inline void bfq_pid_to_str(int pid, char *str, int len)
-+static inline void bfq_bfqq_name(struct bfq_queue *bfqq, char *str, int len)
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 73eab70cefdb..3f1c8a080b71 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2127,6 +2127,8 @@ static void bfq_update_io_intensity(struct bfq_queue *bfqq, u64 now_ns)
+ static void bfq_check_waker(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 			    u64 now_ns)
  {
--	if (pid != -1)
--		snprintf(str, len, "%d", pid);
-+	char type = bfq_bfqq_sync(bfqq) ? 'S' : 'A';
++	char waker_name[MAX_BFQQ_NAME_LENGTH];
 +
-+	if (bfqq->pid != -1)
-+		snprintf(str, len, "bfq%d%c", bfqq->pid, type);
- 	else
--		snprintf(str, len, "SHARED-");
-+		snprintf(str, len, "bfqSHARED-%c", type);
- }
+ 	if (!bfqd->last_completed_rq_bfqq ||
+ 	    bfqd->last_completed_rq_bfqq == bfqq ||
+ 	    bfq_bfqq_has_short_ttime(bfqq) ||
+@@ -2154,12 +2156,18 @@ static void bfq_check_waker(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 			bfqd->last_completed_rq_bfqq;
+ 		bfqq->num_waker_detections = 1;
+ 		bfqq->waker_detection_started = now_ns;
++		bfq_bfqq_name(bfqq->tentative_waker_bfqq, waker_name,
++			      MAX_BFQQ_NAME_LENGTH);
++		bfq_log_bfqq(bfqd, bfqq, "set tenative waker %s", waker_name);
+ 	} else /* Same tentative waker queue detected again */
+ 		bfqq->num_waker_detections++;
  
- #ifdef CONFIG_BFQ_GROUP_IOSCHED
- struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+ 	if (bfqq->num_waker_detections == 3) {
+ 		bfqq->waker_bfqq = bfqd->last_completed_rq_bfqq;
+ 		bfqq->tentative_waker_bfqq = NULL;
++		bfq_bfqq_name(bfqq->waker_bfqq, waker_name,
++			      MAX_BFQQ_NAME_LENGTH);
++		bfq_log_bfqq(bfqd, bfqq, "set waker %s", waker_name);
  
- #define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	do {			\
--	char pid_str[MAX_PID_STR_LENGTH];	\
-+	char pid_str[MAX_BFQQ_NAME_LENGTH];				\
- 	if (likely(!blk_trace_note_message_enabled((bfqd)->queue)))	\
- 		break;							\
--	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
-+	bfq_bfqq_name((bfqq), pid_str, MAX_BFQQ_NAME_LENGTH);		\
- 	blk_add_cgroup_trace_msg((bfqd)->queue,				\
- 			bfqg_to_blkg(bfqq_group(bfqq))->blkcg,		\
--			"bfq%s%c " fmt, pid_str,			\
--			bfq_bfqq_sync((bfqq)) ? 'S' : 'A', ##args);	\
-+			"%s " fmt, pid_str, ##args);			\
- } while (0)
- 
- #define bfq_log_bfqg(bfqd, bfqg, fmt, args...)	do {			\
-@@ -1113,13 +1114,11 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
- #else /* CONFIG_BFQ_GROUP_IOSCHED */
- 
- #define bfq_log_bfqq(bfqd, bfqq, fmt, args...) do {	\
--	char pid_str[MAX_PID_STR_LENGTH];	\
-+	char pid_str[MAX_BFQQ_NAME_LENGTH];				\
- 	if (likely(!blk_trace_note_message_enabled((bfqd)->queue)))	\
- 		break;							\
--	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
--	blk_add_trace_msg((bfqd)->queue, "bfq%s%c " fmt, pid_str,	\
--			bfq_bfqq_sync((bfqq)) ? 'S' : 'A',		\
--				##args);	\
-+	bfq_bfqq_name((bfqq), pid_str, MAX_BFQQ_NAME_LENGTH);		\
-+	blk_add_trace_msg((bfqd)->queue, "%s " fmt, pid_str, ##args);	\
- } while (0)
- #define bfq_log_bfqg(bfqd, bfqg, fmt, args...)		do {} while (0)
- 
+ 		/*
+ 		 * If the waker queue disappears, then
 -- 
 2.26.2
 
