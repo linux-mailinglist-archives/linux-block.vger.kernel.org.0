@@ -2,66 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFFA745F29D
-	for <lists+linux-block@lfdr.de>; Fri, 26 Nov 2021 18:07:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB90A45F2D4
+	for <lists+linux-block@lfdr.de>; Fri, 26 Nov 2021 18:24:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbhKZRKv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 26 Nov 2021 12:10:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
+        id S234430AbhKZR1z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 26 Nov 2021 12:27:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235047AbhKZRIv (ORCPT
+        with ESMTP id S233585AbhKZRZx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 26 Nov 2021 12:08:51 -0500
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D970CC08E88C
-        for <linux-block@vger.kernel.org>; Fri, 26 Nov 2021 08:38:54 -0800 (PST)
-Received: by mail-io1-xd33.google.com with SMTP id e144so12069291iof.3
-        for <linux-block@vger.kernel.org>; Fri, 26 Nov 2021 08:38:54 -0800 (PST)
+        Fri, 26 Nov 2021 12:25:53 -0500
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2C1C061A27
+        for <linux-block@vger.kernel.org>; Fri, 26 Nov 2021 08:53:17 -0800 (PST)
+Received: by mail-il1-x12d.google.com with SMTP id j7so9602470ilk.13
+        for <linux-block@vger.kernel.org>; Fri, 26 Nov 2021 08:53:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vsDYyD+cqa31UWbKWn3gas7TG3YgDSdxqBh84x5L8ZQ=;
-        b=4ESDl6lIvAIA7bOq6LGoDfK7Gwkb+PT9CmrOAImhA+cOokgC/h2sx79QIXCzGh3gGV
-         yLvyHVLMsBufmmzCdxxhsOe3eh+/0o/hKya/BTEsAT87tDg1ePxhKm4YlmI1MQLJ20Nu
-         wOKeL+/5fpRhAKikI5Pwr/4R+f6vjkHbdxvXZ/L3HymKTWt2t10skpHnfXNUvTkumCJE
-         9YH3ITIqSmXXmlQvD1F3JDX5PzzvffQ6k7tmqmYjuM1nKAHTSnaDxlcCD6GGU4Y2eZxV
-         Js/SoxwpXFtCLkwvnSrZ2350LWT78HEWFdfzF3NIbEll8FQQgKIa0ln/zJZ5Vp0RO4LP
-         LQFw==
+        bh=SDwlRdpjTzYPwAhSnbeW857QP4iA06QyXUK+72xmWO0=;
+        b=Yl7aflVYIKA8NwiU6HKYQgGI1PRZXflwMsUz1SFWlR4vTCFpRc/dIgxUm6Qxec4nSq
+         M0ZAPi9cAnro/JRUdWX3Qn04cLaDsYZgXd46rm9dayPq2OaW3FrWJp07ldoXJH6zhRc1
+         9SOecwWh5/D7lKrUqy74GUSElLBhVBekoiIfQLHMTrNcERUhkEWrgdDDefSeQm1cirua
+         4BX8ztxr/TiTPi55f95UrWEiNVeGK/iLyzW1Wfpzf6syYSVCy/S6L7GhWxDfiL3smE8p
+         U6XkJfsj+S+QvNfjhk1IieB7CyQethVUJYIGmmK27HW7FxkpK0vg790ju5jMqaVYKrjL
+         +qWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vsDYyD+cqa31UWbKWn3gas7TG3YgDSdxqBh84x5L8ZQ=;
-        b=4UCdPUNdcNqKR+u0Hu9r0dztb1Z7fteAlYsilbA+4D5Dv+hUHttw1OQqlAxzqBmEB5
-         N3ynqcfLFWZhfh0ujimR92skCP2+piYq7u2FO1Sxx1vYP7JbUeQT+0VFeibDPUAmxRep
-         Y096wpUfU7uKulotR8yKGtA7aAR8I1A7d8K8JtjUU7Q/uIAD9PR6vsS6wnzxERC3qyuZ
-         Lf6F6VHA9QsaXvV5igHBmKF7HuDk11ol3fEWq3ugZITiKGWG4R3Nw7j1fz6jGd4/Eff/
-         Y+l4Avmfz17srmWtVrHKJ/Ytaqii7c4eadU1Tz7CvUmt3zlmGy9aGfJpDcgehPBCB84v
-         r0HA==
-X-Gm-Message-State: AOAM532OwYvIv0G9mUvbd3akRuE43M8xNqVFVhbJ4RFydsZiM6zL3Ia5
-        WZgMoMfJogM2tJP6A+jW9nPjzEZnfIqEzjsC
-X-Google-Smtp-Source: ABdhPJy6Fr2SyRiPCTw5yO6VHzXFMZvuF8L8jxBUn5IVGPHs47ZI+wXZFvxdK9nYItMMuXbDqmFINw==
-X-Received: by 2002:a05:6638:144f:: with SMTP id l15mr41933014jad.21.1637944734024;
-        Fri, 26 Nov 2021 08:38:54 -0800 (PST)
+        bh=SDwlRdpjTzYPwAhSnbeW857QP4iA06QyXUK+72xmWO0=;
+        b=esv/iQZOtjtEVnPUFvII80eMZlCIMOERNcpehzykTnzCc0vJv93MOJun2u2y+z48EY
+         JxSQdkDW54dqLvOSgmWNTcqf2wnFKxZNPj0Y98xpByxy3ZF63a6NdN6IS5wLo/ksHSYE
+         mxqBrywXnDip8k2I6VlewHVaqfPuOJaNsEtDcPUb+eFu3shrXh++y1lGh1cwC0/BaqVc
+         /xW3NZlTt8mYDcGORgYH/gkZ+OdrUedOhTN6ydoy/RcTTSeMW3oY40LoEPcsmP1bKDgE
+         SYo12SG+UfFZj1BIGgDappy0+cSae+EYNja5tVd3Xm2MTREiOGOoROmaUfwzHZripNRE
+         vJkQ==
+X-Gm-Message-State: AOAM531SVQf86AFgNUhExenJ07MZlvozPi/ILV4sORKQaXBwt7q6p0u1
+        8n5o/om2D900QZvs0UIZljVStQ==
+X-Google-Smtp-Source: ABdhPJzsgw04zJvm5GtiLCxl/tnSLY7FlbjoF4d0/XBEG7n5Y38/jin0OpXq6CLemyKpFpFrUDjbnw==
+X-Received: by 2002:a05:6e02:1b8a:: with SMTP id h10mr30636080ili.14.1637945596380;
+        Fri, 26 Nov 2021 08:53:16 -0800 (PST)
 Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id i8sm3817392ilu.84.2021.11.26.08.38.53
+        by smtp.gmail.com with ESMTPSA id t12sm3192833ilp.8.2021.11.26.08.53.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Nov 2021 08:38:53 -0800 (PST)
-Subject: Re: [bug report] WARNING at block/mq-deadline.c:600
- dd_exit_sched+0x1c6/0x260 triggered with blktests block/031
-To:     Ming Lei <ming.lei@redhat.com>, Yi Zhang <yi.zhang@redhat.com>
-Cc:     linux-block <linux-block@vger.kernel.org>
-References: <CAHj4cs8=xDxBZF62-OekAGtHDtP6ynALKXm7fK2D2ChpNXnGAw@mail.gmail.com>
- <YaBGI7bR/9ot514F@T590> <YaEKWPlAmDJYV6Si@T590>
+        Fri, 26 Nov 2021 08:53:16 -0800 (PST)
+Subject: Re: Write I/O queue hangup at random on recent Linus' kernels
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d909e3a1-942a-efe8-0f8a-f1206676a40f@kernel.dk>
-Date:   Fri, 26 Nov 2021 09:38:52 -0700
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+References: <b3ba57a7-d363-9c17-c4be-9dbe86875@panix.com>
+ <b9c2681f-e63a-4d3b-913d-d8a75e2c2ea0@kernel.dk>
+ <be6a783-97db-c3bf-b16f-e8c62b14755d@panix.com>
+ <17206ea6-506d-b1de-09e8-c935ff308bd6@kernel.dk>
+Message-ID: <903be817-4118-f34e-1b35-a0108045590f@kernel.dk>
+Date:   Fri, 26 Nov 2021 09:53:15 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <YaEKWPlAmDJYV6Si@T590>
+In-Reply-To: <17206ea6-506d-b1de-09e8-c935ff308bd6@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,29 +72,46 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/26/21 9:24 AM, Ming Lei wrote:
-> On Fri, Nov 26, 2021 at 10:27:47AM +0800, Ming Lei wrote:
->> Hi Yi,
+On 11/25/21 2:07 PM, Jens Axboe wrote:
+> On 11/25/21 2:05 PM, Kenneth R. Crudup wrote:
 >>
->> On Thu, Nov 25, 2021 at 07:02:43PM +0800, Yi Zhang wrote:
->>> Hello
->>>
->>> blktests block/031 triggered below WARNING with latest
->>> linux-block/for-next[1], pls check it.
->>>
->>> [1]
->>> f0afafc21027 (HEAD, origin/for-next) Merge branch 'for-5.17/io_uring'
->>> into for-next
+>> On Tue, 23 Nov 2021, Jens Axboe wrote:
 >>
->> After running block/031 for several times in today's linus tree, not
->> reproduce the issue:
+>>> It looks like some missed accounting. You can just disable wbt for now, would
+>>> be a useful data point to see if that fixes it. Just do:
+>>
+>>> echo 0 > /sys/block/nvme0n1/queue/wbt_lat_usec
+>>
+>>> and that will disable writeback throttling on that device.
+>>
+>> It's been about 48 hours and haven't seen the issue since doing this.
 > 
-> Yi, it should be one for-5.17/block only issue, please test the
-> following patch:
+> Great, thanks for verifying. From your report 5.16-rc2 has the issue, is
+> 5.15 fine?
 
-Good catch, again - can't believe this keeps biting us, guess we just
-have to get used to this pattern. Though not expecting many changes
-there in the future, so maybe not a huge issue.
+Can you apply this on top of 5.16-rc2 or current -git and see if it fixes
+it for you?
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 8799fa73ef34..8874a63ae952 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -860,13 +860,14 @@ void blk_mq_end_request_batch(struct io_comp_batch *iob)
+ 		if (iob->need_ts)
+ 			__blk_mq_end_request_acct(rq, now);
+ 
++		rq_qos_done(rq->q, rq);
++
+ 		WRITE_ONCE(rq->state, MQ_RQ_IDLE);
+ 		if (!refcount_dec_and_test(&rq->ref))
+ 			continue;
+ 
+ 		blk_crypto_free_request(rq);
+ 		blk_pm_mark_last_busy(rq);
+-		rq_qos_done(rq->q, rq);
+ 
+ 		if (nr_tags == TAG_COMP_BATCH || cur_hctx != rq->mq_hctx) {
+ 			if (cur_hctx)
 
 -- 
 Jens Axboe
