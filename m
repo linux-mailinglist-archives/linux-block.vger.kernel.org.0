@@ -2,103 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0EDD45F513
-	for <lists+linux-block@lfdr.de>; Fri, 26 Nov 2021 20:16:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB7FD45F667
+	for <lists+linux-block@lfdr.de>; Fri, 26 Nov 2021 22:28:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233500AbhKZTUF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 26 Nov 2021 14:20:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbhKZTSE (ORCPT
+        id S244160AbhKZVbx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 26 Nov 2021 16:31:53 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:54162 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237037AbhKZV3u (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 26 Nov 2021 14:18:04 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9FEC061A14
-        for <linux-block@vger.kernel.org>; Fri, 26 Nov 2021 10:41:25 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id k1so9937564ilo.7
-        for <linux-block@vger.kernel.org>; Fri, 26 Nov 2021 10:41:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Dn3JlSLQT9unLajVMFXj26hJHVTESOPmLbf77Et5Cto=;
-        b=UNjy/Jv4WKcXZelCIVYlBcimUg0Fp/9Y0SMcJdLYa7It/0ARpXcFAH7DXMGioH/USa
-         FcmTsiNaR5DOOqqdIAZsb7zTEnFac9CelF5GI6Zh5xGDPZbn9pxHhbNl9DwaSQBq3NXB
-         pg6xIt2AKWQBhpjx1jsxoBbD9fq79X6ab0ie1Dd8BIfNxzmtcyEhf2S8gfRCvhN10IyW
-         X5GwEKylzoQhqasSxkkWHOwgjo0POyGVrNFu1RubvkX3RkoXf/T7vBIX8kdZVRwKBbcC
-         6UfQH3R9tnOZrpyKI/ldw8y/aPZA5IKcMF6tutHL8gV9tGsdSNJzbcPEVcwzyZqWLMbb
-         qlLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dn3JlSLQT9unLajVMFXj26hJHVTESOPmLbf77Et5Cto=;
-        b=I6XIG8n2C65swJ07MAIZqelL2xP6UKnGC0l1LProtFRRevkIVXeelbzauE8PqVfc9I
-         iqcz6BBx1WG00lHJIKlr1Z1WzbX5+Mfiy9nW2pbYx4d0HyEx8Kms4pP8vyWn1Sb2YeYV
-         iKizZBLOSiuW7tcICxjKtkN1uW5zO55nK/VuG3NYh38ZHHK4EWWRDQnqakgitD8TWnsL
-         IIWU/XPjyimvONtLdCGbxfO9VVyIKdPcQJEwbhixE1W83/JG4QS3stQJ1Q0Hv8UuIKyR
-         hevIIY8COiryeB2GfBzDK70CgWNZwTKgv2lQ9ur+Yg4+bJwjdxyhDssNUTg+HYIgPo3Y
-         zG3g==
-X-Gm-Message-State: AOAM5339OL5nqoXk28iwfACsK2KK4NTzGE61Vj0WCSae1oRYRuV/9Su5
-        4/W5zXe0poG2Dgl/7tgvYeGvLA==
-X-Google-Smtp-Source: ABdhPJzJK9pUIli5rOMIsOCySu1SxFt6BSM8IWUQXMeRmK3cP+2UPpMd/+bu06A3rIg3MRg5+wUwTQ==
-X-Received: by 2002:a92:d38b:: with SMTP id o11mr33208142ilo.35.1637952085029;
-        Fri, 26 Nov 2021 10:41:25 -0800 (PST)
-Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id n12sm3981499ilk.80.2021.11.26.10.41.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Nov 2021 10:41:24 -0800 (PST)
-Subject: Re: Write I/O queue hangup at random on recent Linus' kernels
-To:     "Kenneth R. Crudup" <kenny@panix.com>
-Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-References: <b3ba57a7-d363-9c17-c4be-9dbe86875@panix.com>
- <b9c2681f-e63a-4d3b-913d-d8a75e2c2ea0@kernel.dk>
- <be6a783-97db-c3bf-b16f-e8c62b14755d@panix.com>
- <17206ea6-506d-b1de-09e8-c935ff308bd6@kernel.dk>
- <903be817-4118-f34e-1b35-a0108045590f@kernel.dk>
- <986e942b-d430-783b-5b1c-4525d4a94e48@panix.com>
- <ddc41b84-c414-006a-0840-250281caf1e5@kernel.dk>
- <1ff86d55-f39d-f88b-b8d-b6dfbd2f1b19@panix.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a4d728c2-703d-66be-bffd-3bfde0fddf41@kernel.dk>
-Date:   Fri, 26 Nov 2021 11:41:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 26 Nov 2021 16:29:50 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ED9E2B82808;
+        Fri, 26 Nov 2021 21:26:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49323C004E1;
+        Fri, 26 Nov 2021 21:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637961994;
+        bh=ZQkH4mGansjnXBo02i2YweNtoWlzieOlKca4U14fVNk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MwZ09k7IgJ6L2Lry0RXCndm8k0dD6y7AcsBY05RhNtRYhjUGL/iVDIMHvcf+qg7vl
+         eebwDiEmjkUa7aqnsx3152FtIf9tsV4mzSntiu7gKamW5vT/5L5LpbtRUeBWFbFHxm
+         cTOPWnN73B7n9GcM3Pe6nb11OjihRuDAqCEYnURWPL5BesfGaKXCGoFcObQM0hBPFp
+         7mb8mzVLlJoQclX333NCTBIDFDm1ejKBufqvSanqYlgsQYUNnd4QWMJ8616dJ7jKPm
+         POHoPh4zIMmeYbdfFK9MzxLr73XReYGOb0nqR07wAsWSmVwSRhQyI2rb8c21Y2/dVt
+         n4ohlXIMwa9aQ==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: [PATCH 0/3] block: show crypto capabilities in sysfs
+Date:   Fri, 26 Nov 2021 13:25:11 -0800
+Message-Id: <20211126212514.173334-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <1ff86d55-f39d-f88b-b8d-b6dfbd2f1b19@panix.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/26/21 11:20 AM, Kenneth R. Crudup wrote:
-> 
-> On Fri, 26 Nov 2021, Jens Axboe wrote:
-> 
->> I'd just do what you usually do, that's usually the best way to gain
->> confidence in the fix.
-> ...
->> That said, I'm pretty confident in the fix,
-> 
-> OK, then I'll just continue my normal workflow.
+This series adds sysfs files that expose the inline encryption
+capabilities of request queues.
 
-Sounds good.
+Patches 1 and 2 are some related cleanups for existing blk-sysfs code.
+Patch 3 is the real change; see there for more details.
 
-> ... but am I the first report of this you've seen? (I sometimes wonder how many
-> people use the master branch as a daily driver; an -rc went out a couple of
-> weeks ago that had a commit that broke suspend that manifested right away.)
+This applies to linux-block/for-next.
 
-https://lore.kernel.org/linux-block/20211126095352.bkbrvtgfcmfj3wkj@shindev/
+Eric Biggers (3):
+  block: simplify calling convention of elv_unregister_queue()
+  block: don't delete queue kobject before its children
+  blk-crypto: show crypto capabilities in sysfs
 
-There's another here from today. But this particular window has a pretty
-narrow window, which often means that most people won't hit it, while the
-people that do hit it all the time...
+ Documentation/block/queue-sysfs.rst |  30 +++++
+ block/Makefile                      |   3 +-
+ block/blk-crypto-internal.h         |  12 ++
+ block/blk-crypto-sysfs.c            | 177 ++++++++++++++++++++++++++++
+ block/blk-crypto.c                  |   3 +
+ block/blk-sysfs.c                   |  17 ++-
+ block/elevator.c                    |   8 +-
+ include/linux/blkdev.h              |   1 +
+ 8 files changed, 241 insertions(+), 10 deletions(-)
+ create mode 100644 block/blk-crypto-sysfs.c
 
+base-commit: 4d162e24e9979dcb3d7825229982c172ca4bde54
 -- 
-Jens Axboe
+2.34.1
 
