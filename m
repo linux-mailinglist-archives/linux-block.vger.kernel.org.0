@@ -2,90 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D26FF4604D5
-	for <lists+linux-block@lfdr.de>; Sun, 28 Nov 2021 06:57:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BD81460525
+	for <lists+linux-block@lfdr.de>; Sun, 28 Nov 2021 08:45:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232377AbhK1GAm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 28 Nov 2021 01:00:42 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:46048 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232851AbhK1F6m (ORCPT
+        id S1355151AbhK1HsN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 28 Nov 2021 02:48:13 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52418 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230135AbhK1HqL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 28 Nov 2021 00:58:42 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id F10021FD46;
-        Sun, 28 Nov 2021 05:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1638078813; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vOZb81iwrYdiJvqJLEyz8wCyfDYl486gCXA8Z3dGJQA=;
-        b=lQCzofwuiOr3/4/hUMAIdsnlozUxD1HHt97WxwDTNcG8IqCj2jIIjYueXtiOTtKDzUnXOs
-        QEaOFZcXBXRKT0GQayNX8oyCrfYD8GmzjqdI2zc75SwL8a4MUNFLGqZfzMI/9VCJAJ0Mgj
-        xfHEiTq7rlSjw8JR8GPsDLP7lGZf+QQ=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0564713446;
-        Sun, 28 Nov 2021 05:53:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id WFHFMVwZo2G7fAAAMHmgww
-        (envelope-from <wqu@suse.com>); Sun, 28 Nov 2021 05:53:32 +0000
-From:   Qu Wenruo <wqu@suse.com>
-To:     linux-btrfs@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH RFC 11/11] btrfs: temporarily disable RAID56
-Date:   Sun, 28 Nov 2021 13:52:59 +0800
-Message-Id: <20211128055259.39249-12-wqu@suse.com>
-X-Mailer: git-send-email 2.34.0
-In-Reply-To: <20211128055259.39249-1-wqu@suse.com>
-References: <20211128055259.39249-1-wqu@suse.com>
+        Sun, 28 Nov 2021 02:46:11 -0500
+Received: from fsav116.sakura.ne.jp (fsav116.sakura.ne.jp [27.133.134.243])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 1AS7gdgM042784;
+        Sun, 28 Nov 2021 16:42:39 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav116.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav116.sakura.ne.jp);
+ Sun, 28 Nov 2021 16:42:39 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav116.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 1AS7gcT4042780
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Sun, 28 Nov 2021 16:42:38 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-ID: <20c6dcbd-1b71-eaee-5213-02ded93951fc@i-love.sakura.ne.jp>
+Date:   Sun, 28 Nov 2021 16:42:35 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [syzbot] possible deadlock in blkdev_put (2)
+Content-Language: en-US
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Dave Chinner <dchinner@redhat.com>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+References: <0000000000007f2f5405d1bfe618@google.com>
+ <e4bdc6b1-701d-6cc1-5d42-65564d2aa089@I-love.SAKURA.ne.jp>
+ <bb3c04cf-3955-74d5-1e75-ae37a44f2197@i-love.sakura.ne.jp>
+In-Reply-To: <bb3c04cf-3955-74d5-1e75-ae37a44f2197@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-!!! DON'T MERGE THIS COMMIT !!!
+On 2021/11/28 14:32, Tetsuo Handa wrote:
+> If we can unconditionally start __loop_clr_fd() upon ioctl(LOOP_CLR_FD), I think
+> we can avoid circular locking between disk->open_mutex and flush_workqueue().
 
-There are still some bugs buried deeply inside RAID56 code which is not
-yet compatible with bio split at btrfs_map_bio() time, disable it for
-now.
+Too bad. There is ioctl(LOOP_SET_STATUS) which allows forcing __loop_clr_fd() to be
+called without ioctl(LOOP_CLR_FD). We have to support __loop_clr_fd() upon lo_release().
 
-Signed-off-by: Qu Wenruo <wqu@suse.com>
----
- fs/btrfs/ctree.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index f1dd2486dcb3..aa0b92312f43 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -295,6 +295,10 @@ static_assert(sizeof(struct btrfs_super_block) == BTRFS_SUPER_INFO_SIZE);
- #define BTRFS_FEATURE_COMPAT_RO_SAFE_SET	0ULL
- #define BTRFS_FEATURE_COMPAT_RO_SAFE_CLEAR	0ULL
- 
-+/*
-+ * Temprorayly remove RAID56 from support list due to conflicts with bio
-+ * split at btrfs_map_bio() time.
-+ */
- #define BTRFS_FEATURE_INCOMPAT_SUPP			\
- 	(BTRFS_FEATURE_INCOMPAT_MIXED_BACKREF |		\
- 	 BTRFS_FEATURE_INCOMPAT_DEFAULT_SUBVOL |	\
-@@ -302,7 +306,6 @@ static_assert(sizeof(struct btrfs_super_block) == BTRFS_SUPER_INFO_SIZE);
- 	 BTRFS_FEATURE_INCOMPAT_BIG_METADATA |		\
- 	 BTRFS_FEATURE_INCOMPAT_COMPRESS_LZO |		\
- 	 BTRFS_FEATURE_INCOMPAT_COMPRESS_ZSTD |		\
--	 BTRFS_FEATURE_INCOMPAT_RAID56 |		\
- 	 BTRFS_FEATURE_INCOMPAT_EXTENDED_IREF |		\
- 	 BTRFS_FEATURE_INCOMPAT_SKINNY_METADATA |	\
- 	 BTRFS_FEATURE_INCOMPAT_NO_HOLES	|	\
--- 
-2.34.0
+Is dropping disk->open_mutex inside lo_release()
+( https://lkml.kernel.org/r/e4bdc6b1-701d-6cc1-5d42-65564d2aa089@I-love.SAKURA.ne.jp ) possible?
 
