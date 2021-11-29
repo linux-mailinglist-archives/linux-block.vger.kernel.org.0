@@ -2,78 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A4744614BA
-	for <lists+linux-block@lfdr.de>; Mon, 29 Nov 2021 13:09:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB8784615BE
+	for <lists+linux-block@lfdr.de>; Mon, 29 Nov 2021 14:03:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243074AbhK2MMY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Nov 2021 07:12:24 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:47854 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234638AbhK2MKY (ORCPT
+        id S1377410AbhK2NHH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Nov 2021 08:07:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236537AbhK2NFG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Nov 2021 07:10:24 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EE87CB80F4B;
-        Mon, 29 Nov 2021 12:07:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D414EC004E1;
-        Mon, 29 Nov 2021 12:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638187624;
-        bh=EWMYjNgMHCp0eROVow1StTt9tqAPUUbN9NbYCcwS4dQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=T7SyOLNOcFSVa1U6ZcvE5ZzkC89w8fJT2YUUWHGZoSYVlLO6xnYjq7EERwcIkh6xk
-         e7+YC4h0fgIE6zIKZm+c8OFQRUF5024W1VOlritZiyS2nmyrdUGpq8T6AF9hi/4hmI
-         3K8TLg0bMS9o2nGFp9q+HgbQXbLeKjSKur7cg2p1qGOwMCtr1qzqaPwhDU0t9SAF2z
-         tpvhrMaoBJA597zYC1s6VdD9eWmIq1+T0iOseMlfQhPY2eJToL+S3lGicRsvHJaV0c
-         5JAwT7KwCJfRYxxssQUxg7fVMMibfJ5gCeurI3nfwk58WrYFPtMIOteMr5AZr+M85A
-         1HTMK5D10CJjw==
-Message-ID: <045052dc02ce7bbf01dc73bdcd9809cac36b5e51.camel@kernel.org>
-Subject: Re: [PATCH] rbd: make const pointer speaces a static const array
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Colin Ian King <colin.i.king@googlemail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Jens Axboe <axboe@kernel.dk>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 29 Nov 2021 07:07:02 -0500
-In-Reply-To: <20211127172104.102994-1-colin.i.king@gmail.com>
-References: <20211127172104.102994-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
+        Mon, 29 Nov 2021 08:05:06 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B4AC08EB48;
+        Mon, 29 Nov 2021 03:46:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=FkF4T6LyDRZD+GT3vXQ9zF5ShtYF3Ys/OCkZGkfK2+Y=; b=05kuobI0TGEk0Qbh2JIN2BdBtk
+        CqhqbxF/F4RxxjZmgIxQ17t05TFxBI2DIYlsZo+x2ZJBZ6oYxPf3BjASshWrwLLKP+L0Guy+RQX7P
+        Iyj5dx5ilKdakTfO2dDgqmfzdDxXjBLlsUwQe5XC/ANV43WhIdFt5S+Bng0EhR37RcHIFJMWPUDu6
+        +8bMZJe56139yfO0kXStJsbxFaCJ2ptvcc0hmjeMHboMOEGNVeXgXmULYCnmLbP64IROmon3Mg3aX
+        CDd2NY0oDsu0UfseR0I4SmQ1JMH7BJzs/S9yyVe4uLoLtBmqoA0SXbbVFJn92CjE7cpV+6Eizj5Ii
+        T6OCnfGw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mrf7N-000ZFW-Dh; Mon, 29 Nov 2021 11:46:45 +0000
+Date:   Mon, 29 Nov 2021 03:46:45 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     hch@infradead.org, tj@kernel.org, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [PATCH 2/4] blk-throtl: don't warn in tg_drain_bios()
+Message-ID: <YaS9pfngMscOM3XA@infradead.org>
+References: <20211127101059.477405-1-yukuai3@huawei.com>
+ <20211127101059.477405-3-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211127101059.477405-3-yukuai3@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, 2021-11-27 at 17:21 +0000, Colin Ian King wrote:
-> Don't populate the const array spaces on the stack but make it static
-> const and make the pointer an array to remove a dereference. Shrinks
-> object code a little too.  Also clean up intent, currently it is spaces
-> and should be a tab.
+On Sat, Nov 27, 2021 at 06:10:57PM +0800, Yu Kuai wrote:
+> tg_drain_bios() will iterate until throtl_rb_first() return NULL,
+> don't warn in such situation.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 > ---
->  drivers/block/rbd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  block/blk-throttle.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index 8f140da1efe3..de7ede6aa95a 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -6189,7 +6189,7 @@ static inline size_t next_token(const char **buf)
->          * These are the characters that produce nonzero for
->          * isspace() in the "C" and "POSIX" locales.
->          */
-> -        const char *spaces = " \f\n\r\t\v";
-> +	static const char spaces[] = " \f\n\r\t\v";
+> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+> index 230e300c5856..25822c88bea1 100644
+> --- a/block/blk-throttle.c
+> +++ b/block/blk-throttle.c
+> @@ -497,12 +497,13 @@ static void throtl_pd_free(struct blkg_policy_data *pd)
+>  }
 >  
->          *buf += strspn(*buf, spaces);	/* Find start of token */
+>  static struct throtl_grp *
+> -throtl_rb_first(struct throtl_service_queue *parent_sq)
+> +throtl_rb_first(struct throtl_service_queue *parent_sq, bool warn)
+>  {
+>  	struct rb_node *n;
 >  
+>  	n = rb_first_cached(&parent_sq->pending_tree);
+> -	WARN_ON_ONCE(!n);
+> +	if (warn)
+> +		WARN_ON_ONCE(!n);
+>  	if (!n)
+>  		return NULL;
 
-Thanks, Colin. Merged into our "testing" branch. It should make v5.17.
--- 
-Jeff Layton <jlayton@kernel.org>
+Just shift then WARN_ON_ONCE into the callers that care.
