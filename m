@@ -2,61 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71AA4462CE7
-	for <lists+linux-block@lfdr.de>; Tue, 30 Nov 2021 07:40:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BF18462CF8
+	for <lists+linux-block@lfdr.de>; Tue, 30 Nov 2021 07:43:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238687AbhK3GnR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Nov 2021 01:43:17 -0500
-Received: from verein.lst.de ([213.95.11.211]:57112 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233768AbhK3GnR (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Nov 2021 01:43:17 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5AB1C68B05; Tue, 30 Nov 2021 07:39:55 +0100 (CET)
-Date:   Tue, 30 Nov 2021 07:39:55 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 04/14] bfq: use bfq_bic_lookup in bfq_limit_depth
-Message-ID: <20211130063955.GA10268@lst.de>
-References: <20211126115817.2087431-1-hch@lst.de> <20211126115817.2087431-5-hch@lst.de> <20211129160925.GB29512@quack2.suse.cz>
+        id S234064AbhK3Gqf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Nov 2021 01:46:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233099AbhK3Gqf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Tue, 30 Nov 2021 01:46:35 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC28C061574;
+        Mon, 29 Nov 2021 22:43:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LbNjrOn/TR2DrlvunPAnXmZeUtVG1jTEm/amQL+7ym4=; b=uwQm3elvRY63sSd28fQaOo6GSO
+        qwcqB7PI3Ee+ZNwfoKvARal12tj6fXqox/uqPWdZWzgjas0nWpkw2DPFGmLwha8f6qLIZbmiU5ykM
+        SFCaAlohCL+RqZoejpKVHS64SiqmklbW5mzgofKxuzyCAoFPOOGi/OP6zJyvfCy8BaZ2kqRbnhFeP
+        zc7DjA4qJa1Y1GmVqwL825mt9Tpok0yOWV1yqzj5ij4/yWqj0xlAtC6rqJqrJQBQBohzjZctdytMr
+        iU2HwGIBPSGgPyisnozso/6UaFFR0sigr/lE9CFLBbBqFR3zHbYVv20DJCryAVAQO3YvclMdml6kr
+        19EJViHA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mrwrB-003pTb-6C; Tue, 30 Nov 2021 06:43:13 +0000
+Date:   Mon, 29 Nov 2021 22:43:13 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     hch@infradead.org, tj@kernel.org, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [PATCH v2 1/2] blk-throtl: move WARN_ON_ONCE() from
+ throtl_rb_first() to it's caller
+Message-ID: <YaXIAaMRG7J0sHib@infradead.org>
+References: <20211130011730.2584339-1-yukuai3@huawei.com>
+ <20211130011730.2584339-2-yukuai3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211129160925.GB29512@quack2.suse.cz>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20211130011730.2584339-2-yukuai3@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 05:09:25PM +0100, Jan Kara wrote:
-> On Fri 26-11-21 12:58:07, Christoph Hellwig wrote:
-> > No need to create a new I/O context if there is none present yet in
-> > ->limit_depth.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  block/bfq-iosched.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> > index c990c6409c119..ecc2e57e68630 100644
-> > --- a/block/bfq-iosched.c
-> > +++ b/block/bfq-iosched.c
-> > @@ -663,7 +663,7 @@ static bool bfqq_request_over_limit(struct bfq_queue *bfqq, int limit)
-> >  static void bfq_limit_depth(unsigned int op, struct blk_mq_alloc_data *data)
-> >  {
-> >  	struct bfq_data *bfqd = data->q->elevator->elevator_data;
-> > -	struct bfq_io_cq *bic = icq_to_bic(blk_mq_sched_get_icq(data->q));
-> > +	struct bfq_io_cq *bic = bfq_bic_lookup(data->q);
+On Tue, Nov 30, 2021 at 09:17:29AM +0800, Yu Kuai wrote:
+> Prepare to reintroduce tg_drain_bios(), which will iterate until
+> throtl_rb_first() return NULL.
 > 
-> Maybe I'm missing something but bfq_limit_depth() needs to know to which
-> BFQ queue (and consequently blkcg) this IO is going to be added. And to be
-> able to lookup this queue we are using IO context. So AFAICT we need the
-> IO context allocated already in bfq_limit_depth()?
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  block/blk-throttle.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+> index 39bb6e68a9a2..f7244190cb2f 100644
+> --- a/block/blk-throttle.c
+> +++ b/block/blk-throttle.c
+> @@ -502,7 +502,6 @@ throtl_rb_first(struct throtl_service_queue *parent_sq)
+>  	struct rb_node *n;
+>  
+>  	n = rb_first_cached(&parent_sq->pending_tree);
+> -	WARN_ON_ONCE(!n);
+>  	if (!n)
+>  		return NULL;
+>  	return rb_entry_tg(n);
+> @@ -521,8 +520,10 @@ static void update_min_dispatch_time(struct throtl_service_queue *parent_sq)
+>  	struct throtl_grp *tg;
+>  
+>  	tg = throtl_rb_first(parent_sq);
+> -	if (!tg)
+> +	if (!tg) {
+> +		WARN_ON_ONCE(1);
+>  		return;
 
-But by allocating it you won't now anything, as it will still be empty.
+	if (WARN_ON_ONCE(!tg))
+		return;
+
+>  		tg = throtl_rb_first(parent_sq);
+> -		if (!tg)
+> +		if (!tg) {
+> +			WARN_ON_ONCE(1);
+>  			break;
+> +		}
+
+Same here.
