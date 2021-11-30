@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 035FD4634C3
-	for <lists+linux-block@lfdr.de>; Tue, 30 Nov 2021 13:47:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D48024634C2
+	for <lists+linux-block@lfdr.de>; Tue, 30 Nov 2021 13:47:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231256AbhK3Mun (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S231269AbhK3Mun (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Tue, 30 Nov 2021 07:50:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59732 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232089AbhK3MuY (ORCPT
+        with ESMTP id S232057AbhK3MuY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 30 Nov 2021 07:50:24 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B9DC061757
-        for <linux-block@vger.kernel.org>; Tue, 30 Nov 2021 04:46:52 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937ECC061758
+        for <linux-block@vger.kernel.org>; Tue, 30 Nov 2021 04:46:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=9vrej7Co0BS/WRJ/OE2xz0kPr8K/dbE1m0sG5liWbX8=; b=CvKzYQ2qTiQQ8ffKeEpBPsJKhb
-        8SVQ3eP2lK+HdlvtKcLQG4IlHXV7Wc59ulfjaUHUg/mDv2Z0zwiG6qHLaJLQFw2mFbx1BbltCUF84
-        oFXlPMSUJKasvG5zY0GA7Fin4PhvQ6n6rlEGEA5m15CaB6hnEI4WiNrI+D7AzmHRrFZibRHEuN7EC
-        jjaD5Q/a2mcMUkaxfiiVot1dBO1cPLn/QUkH5NUPo/rOs0K0QxUL129zsUuLkMSUQtWbwXZ239lUW
-        TXkJqKJCnuXRUXW/+if7uvvemdnsHxCYIeiPjc5FC81WnIlvJu/pieytJwfb22UUWwi2X89+eo/Ox
-        DNaqENQw==;
+        bh=iL5jVPLBFjqePJhzbCCqDcgjcEvuK8+6S3TmGqGptZw=; b=JHwZEpDugvXi8QTLNknIS+Jkar
+        /Hvg13eiTERV65ru9e25M1MoMEnHd1Yf/VWzdqKs81DmC3isgGQxW7QjQrKbxbB5wbYIX7wZBwOhu
+        EMlC/SOHolJVQ0pqna0rQsF+XtjRjyXQvBzFvGQEn6mMsSiik+e8GtqO0+9KVTYRlm6VyAIgdA+c0
+        ovFiZlWz6aHFWWyBKgze6a+RbVFVQ0EM7+iXHConypDtcUw2SnG2UD8OaHsEDn1IytavctTx9hbbR
+        wM07JR+zmqslzNd0rc49TGxhs604++nYgZDP0NitRxAAX8k0vyRioKQZP6PksnihX3GqKBJIgUWlT
+        rNBjW38A==;
 Received: from [2001:4bb8:184:4a23:f08:7851:5d49:c683] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ms2X3-00CFcR-BL; Tue, 30 Nov 2021 12:46:50 +0000
+        id 1ms2X4-00CFcq-K2; Tue, 30 Nov 2021 12:46:51 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Paolo Valente <paolo.valente@linaro.org>, Jan Kara <jack@suse.cz>,
         linux-block@vger.kernel.org
-Subject: [PATCH 5/7] block: refactor put_io_context
-Date:   Tue, 30 Nov 2021 13:46:34 +0100
-Message-Id: <20211130124636.2505904-6-hch@lst.de>
+Subject: [PATCH 6/7] block: cleanup ioc_clear_queue
+Date:   Tue, 30 Nov 2021 13:46:35 +0100
+Message-Id: <20211130124636.2505904-7-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211130124636.2505904-1-hch@lst.de>
 References: <20211130124636.2505904-1-hch@lst.de>
@@ -45,70 +45,63 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move the code to delay freeing the icqs into a separate helper.
+Fold __ioc_clear_queue into ioc_clear_queue, remove the spurious RCU
+criticial section and unify the irq locking style.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-ioc.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ block/blk-ioc.c | 31 +++++++++----------------------
+ 1 file changed, 9 insertions(+), 22 deletions(-)
 
 diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 04f3d2b0ca7db..902bca2b273ba 100644
+index 902bca2b273ba..32ae006e1b3e8 100644
 --- a/block/blk-ioc.c
 +++ b/block/blk-ioc.c
-@@ -143,6 +143,24 @@ static void ioc_release_fn(struct work_struct *work)
- 	kmem_cache_free(iocontext_cachep, ioc);
+@@ -192,27 +192,6 @@ void exit_io_context(struct task_struct *task)
+ 	}
  }
  
-+/*
-+ * Releasing icqs requires reverse order double locking and we may already be
-+ ( holding a queue_lock.  Do it asynchronously from a workqueue.
-+ */
-+static bool ioc_delay_free(struct io_context *ioc)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ioc->lock, flags);
-+	if (!hlist_empty(&ioc->icq_list)) {
-+		queue_work(system_power_efficient_wq, &ioc->release_work);
-+		spin_unlock_irqrestore(&ioc->lock, flags);
-+		return true;
-+	}
-+	spin_unlock_irqrestore(&ioc->lock, flags);
-+	return false;
-+}
-+
- /**
-  * put_io_context - put a reference of io_context
-  * @ioc: io_context to put
-@@ -152,26 +170,8 @@ static void ioc_release_fn(struct work_struct *work)
-  */
- void put_io_context(struct io_context *ioc)
- {
+-static void __ioc_clear_queue(struct list_head *icq_list)
+-{
 -	unsigned long flags;
--	bool free_ioc = false;
 -
- 	BUG_ON(atomic_long_read(&ioc->refcount) <= 0);
+-	rcu_read_lock();
+-	while (!list_empty(icq_list)) {
+-		struct io_cq *icq = list_entry(icq_list->next,
+-						struct io_cq, q_node);
+-		struct io_context *ioc = icq->ioc;
 -
--	/*
--	 * Releasing ioc requires reverse order double locking and we may
--	 * already be holding a queue_lock.  Do it asynchronously from wq.
--	 */
--	if (atomic_long_dec_and_test(&ioc->refcount)) {
 -		spin_lock_irqsave(&ioc->lock, flags);
--		if (!hlist_empty(&ioc->icq_list))
--			queue_work(system_power_efficient_wq,
--					&ioc->release_work);
--		else
--			free_ioc = true;
+-		if (icq->flags & ICQ_DESTROYED) {
+-			spin_unlock_irqrestore(&ioc->lock, flags);
+-			continue;
+-		}
+-		ioc_destroy_icq(icq);
 -		spin_unlock_irqrestore(&ioc->lock, flags);
 -	}
+-	rcu_read_unlock();
+-}
 -
--	if (free_ioc)
-+	if (atomic_long_dec_and_test(&ioc->refcount) && !ioc_delay_free(ioc))
- 		kmem_cache_free(iocontext_cachep, ioc);
+ /**
+  * ioc_clear_queue - break any ioc association with the specified queue
+  * @q: request_queue being cleared
+@@ -227,7 +206,15 @@ void ioc_clear_queue(struct request_queue *q)
+ 	list_splice_init(&q->icq_list, &icq_list);
+ 	spin_unlock_irq(&q->queue_lock);
+ 
+-	__ioc_clear_queue(&icq_list);
++	while (!list_empty(&icq_list)) {
++		struct io_cq *icq =
++			list_entry(icq_list.next, struct io_cq, q_node);
++
++		spin_lock_irq(&icq->ioc->lock);
++		if (!(icq->flags & ICQ_DESTROYED))
++			ioc_destroy_icq(icq);
++		spin_unlock_irq(&icq->ioc->lock);
++	}
  }
- EXPORT_SYMBOL_GPL(put_io_context);
+ 
+ static struct io_context *alloc_io_context(gfp_t gfp_flags, int node)
 -- 
 2.30.2
 
