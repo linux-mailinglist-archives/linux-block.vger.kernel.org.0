@@ -2,74 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 299B0462FE8
-	for <lists+linux-block@lfdr.de>; Tue, 30 Nov 2021 10:41:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C77F34630F7
+	for <lists+linux-block@lfdr.de>; Tue, 30 Nov 2021 11:26:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240387AbhK3JpM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 Nov 2021 04:45:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240390AbhK3JpL (ORCPT
+        id S232593AbhK3K32 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 Nov 2021 05:29:28 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:57240 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231216AbhK3K32 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 Nov 2021 04:45:11 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2655C061757
-        for <linux-block@vger.kernel.org>; Tue, 30 Nov 2021 01:41:51 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id r25so18804576edq.7
-        for <linux-block@vger.kernel.org>; Tue, 30 Nov 2021 01:41:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=UcBPTmCi1X1jI8Y2VIsxUbt5jsE7eH++35qZosZ1HhM=;
-        b=e02SLb6rSBPLVf4AoNQdHAsonSSfbtu+27PkkPk9AYSFsYekzfRSa9XZ3TnQjYg+9K
-         KOAZKugVhBPn7FqrknZ9ZekhWrKHbsW27vUEniDmNj01OMzLRIBsiNU803wEwUxDd/7i
-         q4oTGadlImRGb1VRnmDDm/VnQ1c1oih+sO4Bbx8iB15wqivAjeysEFM3jkKh2PcpsSRw
-         HGYZqkkApcNJMiiSpDy+fAeT8+VclBS3TUSAwq23hlUEq9U5L8nAFGhMQ3VC7pIus71s
-         Xx5QpOHZAc/iyZphJ5S8/Iocz56XUsDWqvhtrUA1jLEFOJSrMrnJP+3Ch+UPkOf2QLZx
-         H8yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=UcBPTmCi1X1jI8Y2VIsxUbt5jsE7eH++35qZosZ1HhM=;
-        b=KjGG+wwvr6MowwRbUIXC173Ruq1dMSDFAiGZ0aMfY/pkDYxbGeK8V9GR3pS7D/HbOD
-         rFe4jeH6yPpHdtuXWuQWEmSypRK1u7RY26YhkAbtZ9I5kUePlTjhq4TGxbGbd/y3H89t
-         +v+lx/9bHIFtvfquBOgOnqUf5MO+dA5juhPe/3BXjPkjNBlQwweHfl4GDDI9FgXrx3Hf
-         +KiMtpd8UjthW4pgsdKjA9DNDgi+NbB+bLgVUdUEBptZHGkhIU4Q2EPcU1/5JYy7JCz0
-         s3HDdXhwawj4qdfHiXmE3co9Qw+Z2qczO9ofAlGuRV3+KI034IBozzLpuk7mX4bRgrYT
-         5iKA==
-X-Gm-Message-State: AOAM533i7WjT99BD+S8hhpm5WWvT5ByqLOHTQza5bk/cCSNRsUBpuuGX
-        qCiVgUaBwySW3yV9NEFi3Yy8tDTdOyUS03QR9a0=
-X-Google-Smtp-Source: ABdhPJwgTOxWlT7dMJ5Mq5cCcWMtbHhmk3X6l9r+Kfcjl5EV/euwBWckeNSqbgutDo8ZW6IkFCQkrh0ddLEtJesi6K4=
-X-Received: by 2002:a50:d710:: with SMTP id t16mr80944992edi.50.1638265309485;
- Tue, 30 Nov 2021 01:41:49 -0800 (PST)
+        Tue, 30 Nov 2021 05:29:28 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 68A0A1FD54;
+        Tue, 30 Nov 2021 10:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1638267968; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z5xCEVo0syBfMr10VXyOKlSSa7AIkvzHoHu5qOQ831U=;
+        b=Ehj/n/0S1aIOtvrf60msYTs9x6aRPhc0h2lYX55ZFZZbAfQoiRCgdqf+1gdszAFP6SHeA7
+        lrn/4FQyp1+WZTOnPa5WnmtpdZ5Egr8/HVauwv1n1zyFKUb3UbPtvKIfK2xaZBUcFnP4kU
+        gcxYkTyRpgxTb3vPP9eNnmVULxUFtZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1638267968;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z5xCEVo0syBfMr10VXyOKlSSa7AIkvzHoHu5qOQ831U=;
+        b=JNSZmXxUgK9AdcmXgqwCyTReCETZhPtpITQihG7Hxsceudc7LL9eD+CExzmSZ56W50joba
+        E3FlzKVEczHmVpAw==
+Received: from quack2.suse.cz (unknown [10.100.200.198])
+        by relay2.suse.de (Postfix) with ESMTP id 0C6B2A3B83;
+        Tue, 30 Nov 2021 10:26:07 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 7B7FD1E14AC; Tue, 30 Nov 2021 11:26:06 +0100 (CET)
+Date:   Tue, 30 Nov 2021 11:26:06 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 04/14] bfq: use bfq_bic_lookup in bfq_limit_depth
+Message-ID: <20211130102606.GA7174@quack2.suse.cz>
+References: <20211126115817.2087431-1-hch@lst.de>
+ <20211126115817.2087431-5-hch@lst.de>
+ <20211129160925.GB29512@quack2.suse.cz>
+ <20211130063955.GA10268@lst.de>
 MIME-Version: 1.0
-Received: by 2002:ab4:9a02:0:0:0:0:0 with HTTP; Tue, 30 Nov 2021 01:41:48
- -0800 (PST)
-Reply-To: keree.casmiree@gmail.com
-From:   casmire kere <casmirekere7@gmail.com>
-Date:   Tue, 30 Nov 2021 09:41:48 +0000
-Message-ID: <CADBE2rVGh2x2PTGrwxM+puCKnEe7=HipN-sFecxNo2-Xg4Wv4g@mail.gmail.com>
-Subject: YOUR URGENT REPLY FOR MORE DETAILS!!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211130063955.GA10268@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On Tue 30-11-21 07:39:55, Christoph Hellwig wrote:
+> On Mon, Nov 29, 2021 at 05:09:25PM +0100, Jan Kara wrote:
+> > On Fri 26-11-21 12:58:07, Christoph Hellwig wrote:
+> > > No need to create a new I/O context if there is none present yet in
+> > > ->limit_depth.
+> > > 
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  block/bfq-iosched.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> > > index c990c6409c119..ecc2e57e68630 100644
+> > > --- a/block/bfq-iosched.c
+> > > +++ b/block/bfq-iosched.c
+> > > @@ -663,7 +663,7 @@ static bool bfqq_request_over_limit(struct bfq_queue *bfqq, int limit)
+> > >  static void bfq_limit_depth(unsigned int op, struct blk_mq_alloc_data *data)
+> > >  {
+> > >  	struct bfq_data *bfqd = data->q->elevator->elevator_data;
+> > > -	struct bfq_io_cq *bic = icq_to_bic(blk_mq_sched_get_icq(data->q));
+> > > +	struct bfq_io_cq *bic = bfq_bic_lookup(data->q);
+> > 
+> > Maybe I'm missing something but bfq_limit_depth() needs to know to which
+> > BFQ queue (and consequently blkcg) this IO is going to be added. And to be
+> > able to lookup this queue we are using IO context. So AFAICT we need the
+> > IO context allocated already in bfq_limit_depth()?
+> 
+> But by allocating it you won't now anything, as it will still be empty.
+
+You're right, we'll create only IO context and corresponding bfq_io_cq but
+we won't actually create bfqq in bfq_limit_depth() anyway and without that
+bfq_limit_depth() isn't going to do more. So your patch indeed does not
+change anything in that regard.
+
+								Honza
 -- 
-Good morning,
-
-I am Mr. Kere Casmire  if you were marked safe from the covid-19
-epidemic, my prayers with you. i wish to offer you a business deal
-worth $5.3 million  dollars, if you are interested contact me
-privately Email:(keree.casmiree@gmail.com)
-
-Upon receipt of your reply; I will give you full details
-on how the business  will be executed.
-
-I am waiting for your reply.
-
-Best regards,
-
-Mr.Kere Casmire
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
