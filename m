@@ -2,143 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D112D464B3A
-	for <lists+linux-block@lfdr.de>; Wed,  1 Dec 2021 11:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C9EA464B3D
+	for <lists+linux-block@lfdr.de>; Wed,  1 Dec 2021 11:09:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242635AbhLAKMQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Dec 2021 05:12:16 -0500
-Received: from mail-ua1-f51.google.com ([209.85.222.51]:45588 "EHLO
-        mail-ua1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242474AbhLAKMP (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Dec 2021 05:12:15 -0500
-Received: by mail-ua1-f51.google.com with SMTP id ay21so47712081uab.12;
-        Wed, 01 Dec 2021 02:08:54 -0800 (PST)
+        id S242474AbhLAKMd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Dec 2021 05:12:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348487AbhLAKMa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Dec 2021 05:12:30 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1ADC061574
+        for <linux-block@vger.kernel.org>; Wed,  1 Dec 2021 02:09:10 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id q3so28105852wru.5
+        for <linux-block@vger.kernel.org>; Wed, 01 Dec 2021 02:09:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=YWCyyD+MJMBr+vIyLiJLDP6vS8VirSg1vC1mP9B4Zfg=;
+        b=Wbd4T8a4FFTT7zFVLHPFNZ7qzX2DRnzv8btKjq1ixOBHTYKgjAs5QjkkTn/t1QquMs
+         ebqTRY8Ux59JJJozamrMW8x0fj5dfUeR8q15fykGFD+ybZFOHvyQHaN9J2Ic3V6VgiSn
+         HzExKukaBWoomuXnieguzMctblm7C47M9CiarcLBvKf+yK9BfCRhCkv+ckw++6nyE8CK
+         8VCI7gDSaHIUeQRogvl86TtDkdPRXVFn0fwirU2PiF2YGxxn6iN5zkw2WxRY59yFTmZ8
+         In6z49/QkbaN1Xe1IaxIFIZN6lTEln0AS7xkFNrYSBzXuI5OwfVTNTVw8KLjdf1NMEi8
+         /FAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OPPtbzDfyTfORykbO3S8ExCZdlOUf/q6E0viO28dDok=;
-        b=est6xarIJW0f3uqvw+ijPQS29F3g5d76o1io1CuKRsurdL60TEGEn/1Xjrs9M9ii40
-         zYTlPKyTduWi8XhYGpuetZcMTMqLfrf6It+3NNIyx/4QxsAdI5AqTwieCvJXqsRWf0yq
-         rSSdtfSYszYVqqE0A2MlvSBUKO69COFA8xaTGW39/7NBVcTWPSCyk6qk6McWjdUaSSJF
-         M7No0t3hcJdOejJ3Y9DkuZcLrINMsMzklhN6sfHF23QyBmj7fDf2Ir0q5nfzawQsuSre
-         jdBJ6ie2xLLOQxELur+JQHPKT+oNd6XkU2y05gLuwC++zrXKh3fE6FiVD/M85Y7vGh/2
-         qMGg==
-X-Gm-Message-State: AOAM532brfaRIhOx+JwCpzpWyFGhrC5yhK7e+23uQJSXCzi9ScoXGv6y
-        8kehfcAl8rZIMj51DpCCm8gKv3AFJTHRAw==
-X-Google-Smtp-Source: ABdhPJzONKxO5t51M2gpdgTljeOlTefC+Sx2WyqfaXm+IoqOPGwe4BGteg4WMK9SfHGKNmLDfFBh1g==
-X-Received: by 2002:a05:6102:cd1:: with SMTP id g17mr5770153vst.55.1638353334299;
-        Wed, 01 Dec 2021 02:08:54 -0800 (PST)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id b11sm12359765vsp.6.2021.12.01.02.08.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Dec 2021 02:08:53 -0800 (PST)
-Received: by mail-ua1-f53.google.com with SMTP id p2so47641930uad.11;
-        Wed, 01 Dec 2021 02:08:53 -0800 (PST)
-X-Received: by 2002:a67:c106:: with SMTP id d6mr5459646vsj.77.1638353333064;
- Wed, 01 Dec 2021 02:08:53 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=YWCyyD+MJMBr+vIyLiJLDP6vS8VirSg1vC1mP9B4Zfg=;
+        b=hkHkrrQ6VVHsrCaBk73TSLl9fxostUu8QzoOy4dRMMIyToCedl+AD911Tbxxzo0bhZ
+         58Lz9tws60TfDFuwLpjEShMnSlQ4osAH14d61tj68dCskG+LMxxNS87VHh1tA8Qopu7C
+         n2YxndQjZH3MNUEHwK4IaJizKodJZkEEs6znXfdv0uruj94q7dpJyVZZDPN/eqWTeX8g
+         TEJa8XYbhvfZiPSB8aIsWWAW3DAlbqalLkzyAVFqlgTUQvLnf1b6rgNDDvD8bQk3cNKg
+         U3KGoCCmly/Tr/CKs8fcUE97ue58vez6mnzZVCME50jlUngY82x3RrwHQ74ukvtVUWSK
+         OMig==
+X-Gm-Message-State: AOAM532pDHSR+SVT07eNlNaQaCl2JJsweK0ZBwwUNNhPiBQx7A7uE0Zr
+        0KRobkQMm1tXGNLKCvqfctCXoLKryFKiwgrmO2E=
+X-Google-Smtp-Source: ABdhPJxEY8lSUHH+flbyu0+U3cZ/RBcy0eQNbo2uBLxj8ue/tL7ZOC51CjDXpXPoinlFU2Z84IhXIXpxWZIjoAdU5aE=
+X-Received: by 2002:a05:6000:2c7:: with SMTP id o7mr5686091wry.62.1638353348014;
+ Wed, 01 Dec 2021 02:09:08 -0800 (PST)
 MIME-Version: 1.0
-References: <c26dfdf9ce56e92d23530a09db386b283e62845d.1638289204.git.geert+renesas@glider.be>
- <20211201072328.GA31765@lst.de>
-In-Reply-To: <20211201072328.GA31765@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 Dec 2021 11:08:40 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV7PbXwuBNBn4TtjXUvjzWiOQTYoOJTEACyN-k4DUj5-Q@mail.gmail.com>
-Message-ID: <CAMuHMdV7PbXwuBNBn4TtjXUvjzWiOQTYoOJTEACyN-k4DUj5-Q@mail.gmail.com>
-Subject: Re: [PATCH/RFC -nxt] mtd_blkdevs: Set GENHD_FL_NO_PART
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Michael Walle <michael@walle.cc>,
-        Pratyush Yadav <p.yadav@ti.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        linux-block@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Received: by 2002:a7b:c74a:0:0:0:0:0 with HTTP; Wed, 1 Dec 2021 02:09:07 -0800 (PST)
+From:   Coris International <coris.bf.international23@gmail.com>
+Date:   Wed, 1 Dec 2021 02:09:07 -0800
+Message-ID: <CAPuuUxT4-=q+aKNpQK8MCkt1-fP5bB2QrzR-dvjnvLAW0GDR-g@mail.gmail.com>
+Subject: Notification / Notification/ Notification
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Christoph,
+Att: Client
 
-On Wed, Dec 1, 2021 at 8:23 AM Christoph Hellwig <hch@lst.de> wrote:
-> On Tue, Nov 30, 2021 at 05:23:46PM +0100, Geert Uytterhoeven wrote:
-> > When DT declares the partitions of an spi-nor device using
-> > "fixed-partitions", the individual mtdblockN partitions are now scanned
-> > for partitition tables, which should not happen.
-> >
-> > Fix this by setting the GENHD_FL_NO_PART flag in the MTD block layer
-> > interface.
-> >
-> > Fixes: 1ebe2e5f9d68e94c ("block: remove GENHD_FL_EXT_DEVT")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Seen with e.g. arch/arm/boot/dts/r8a7791-koelsch.dts.
-> > I only noticed because I have debug code to measure QSPI performance,
-> > which informed me about 8 x 512 bytes being read from each partition
-> > detected.
-> >
-> > RFC as I'm not sure this is correct in all cases.
-> > I did verify that in the absence of "fixed-partitions", the spi-nor
-> > device is not scanned for partitions before and after commit
-> > 1ebe2e5f9d68e94c.
->
-> As far as I can tell mtd fixed partitions have nothing to do with
-> the block layer concept of partitions.  What kind of behavior change
-> did you see?
+CORISBANK INTERNATIONAL URGENT NOTIFICATION
 
-After the aforementioned commit, 8 x 512 bytes are being read from
-the start of each partition described by "fixed-partitions".
-Dmesg difference with debug print added to spi_nor_spimem_read_data():
+                          Notification / Notification/ Notification
 
-  renesas_spi e6b10000.spi: registered master spi0
-  spi spi0.0: setup mode 3, 8 bits/w, 30000000 Hz max --> 0
-  spi-nor spi0.0: s25fl512s (65536 Kbytes)
-  3 fixed-partitions partitions found on MTD device spi0.0
-  Creating 3 MTD partitions on "spi0.0":
-  0x000000000000-0x000000080000 : "loader"
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 0 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 512 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 1024 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 1536 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 2048 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 2560 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 3072 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 3584 len 512
-  0x000000080000-0x000000600000 : "user"
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 524288 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 524800 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 525312 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 525824 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 526336 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 526848 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 527360 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 527872 len 512
-  0x000000600000-0x000004000000 : "flash"
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6291456 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6291968 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6292480 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6292992 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6293504 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6294016 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6294528 len 512
-+ spi-nor spi0.0: spi_nor_spimem_read_data: from 6295040 len 512
-  renesas_spi e6b10000.spi: registered child spi0.0
-  renesas_spi e6b10000.spi: probed
+Note, We are writing to inform you officially that Finally the Central
+Bank Financial Authority have approved to transfer your $8.2Million
+which was signed by late Mrs Edes  Banneth the COVID.19 victim that we should
+transfer to you, Late Mrs Edes Banneth the France Lady instructed us to
+transfer her fund that is in our bank to you for Orphanage work before she
+died by the COVID.19
+and as it is now, you will receive your fund through our corresponding
+bank in Dubai [Emirate Investment Bank ] for security reason. Please
+you should reconfirm your details to receive the $8.2Million.
 
-Thanks!
+Name, Country, Address, occupations, Age, Telephone number, account
+Details.  So that we can immediately forward to the Emirate Investment Bank to
+transfer the fund.
+You are advised to comply on timely manner to permit this esteem bank
+transfer your fund as scheduled.
 
-Gr{oetje,eeting}s,
+We look forward to serving you better
+Your Financial Comfort Is A Priority
+Thank you for choosing Corisbank International.
 
-                        Geert
+Sincerely,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Mr Diakarya Ouattara
+Managing Director
+Bank Coris
+Burkina Faso
++226 556 16 37
+bf_info_coris@accountant.com
