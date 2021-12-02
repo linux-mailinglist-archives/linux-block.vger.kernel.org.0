@@ -2,186 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 675EA466409
-	for <lists+linux-block@lfdr.de>; Thu,  2 Dec 2021 13:53:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AFF446646E
+	for <lists+linux-block@lfdr.de>; Thu,  2 Dec 2021 14:20:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347029AbhLBM4L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Dec 2021 07:56:11 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:29083 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358146AbhLBM4J (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Dec 2021 07:56:09 -0500
-Received: from kwepemi100002.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4J4bQK6Q7Wz1DJpp;
-        Thu,  2 Dec 2021 20:50:01 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi100002.china.huawei.com (7.221.188.188) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 2 Dec 2021 20:52:44 +0800
-Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 2 Dec
- 2021 20:52:43 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <hch@infradead.org>, <tj@kernel.org>, <axboe@kernel.dk>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH v4 2/2] block: cancel all throttled bios in del_gendisk()
-Date:   Thu, 2 Dec 2021 21:04:40 +0800
-Message-ID: <20211202130440.1943847-3-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211202130440.1943847-1-yukuai3@huawei.com>
-References: <20211202130440.1943847-1-yukuai3@huawei.com>
+        id S1358203AbhLBNXi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Dec 2021 08:23:38 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47208 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1358205AbhLBNX2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Dec 2021 08:23:28 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3D6ED1F46508;
+        Thu,  2 Dec 2021 13:20:02 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=collabora.com; s=mail;
+        t=1638451203; bh=wb6wZrB6CrdpvFdY2JMiuIUqjBwm6A1CO87QchUy4nY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VTlDz/Ax+F1uGBBpltQyoVCsgarU84mFF+UVCQ3Ukd1WYVMSYH24U2Ds10bXtejP/
+         oqeCyXLz8vWrZ6Mbqi/an1/lKblkS5KXhcCf83fmupll0eap/8+6jh4DIqrnrB/6f/
+         7tBhmcL8nwln0MGuK+0MXef6RxJcWkV3/FhC5qFyA1p4jdI5PS7IXfTVh3r7zMrV5C
+         HQWiP5uP8DAGLMzJ3BKM9AE+kGYXevP9Rm7hGQ/rhVZrnoMx8ySBGWsYC+GmjOfUq9
+         5d+75dS2Kqj6Ce22hJDIYkXlKO077WosM14tAZsvzC7o2NRZrKV58nEtdNl1EiSn7f
+         v0+jYgypeLofA==
+Date:   Thu, 2 Dec 2021 14:19:58 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        sean@geanix.com, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mtd@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Daniel =?UTF-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: [next] WARNING: CPU: 2 PID: 66 at kernel/locking/rwsem.c:1298
+ __up_read
+Message-ID: <20211202141958.638f224b@collabora.com>
+In-Reply-To: <CADYN=9KeKhZ-OSbx1QHKYfXu+p-nXVjubbay1sXd_g75LLSZRg@mail.gmail.com>
+References: <CA+G9fYuupqqemLbgoVL2kYL4d2AtZLBo1xcshWWae7gX5Ln-iA@mail.gmail.com>
+        <CADYN=9KeKhZ-OSbx1QHKYfXu+p-nXVjubbay1sXd_g75LLSZRg@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600009.china.huawei.com (7.193.23.164)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Throttled bios can't be issued after del_gendisk() is done, thus
-it's better to cancel them immediately rather than waiting for
-throttle is done.
+On Thu, 2 Dec 2021 13:28:46 +0100
+Anders Roxell <anders.roxell@linaro.org> wrote:
 
-For example, if user thread is throttled with low bps while it's
-issuing large io, and the device is deleted. The user thread will
-wait for a long time for io to return.
+> On Tue, 30 Nov 2021 at 18:01, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > [Please ignore this email if it is already reported]
+> >
+> > Regression found on qemu_arm64.
+> > Following kernel warnings reported on Linux next-20211130 while booting.  
+> 
+> I bisected down to 1ebe2e5f9d68 ("block: remove GENHD_FL_EXT_DEVT")
+> 
+> and when I reverted 1ebe2e5f9d68 ("block: remove GENHD_FL_EXT_DEVT") and the
+> 3 releated patches so patch 1ebe2e5f9d68 was reverted cleanly I
+> managed to boot without
+> a warning.
+> 
+> Related patches from next-20211130:
+> 9f18db572c97 ("block: don't set GENHD_FL_NO_PART for hidden gendisks")
+> 430cc5d3ab4d ("block: cleanup the GENHD_FL_* definitions")
+> a4561f9fccc5 ("sr: set GENHD_FL_REMOVABLE earlier")
+> 
+> With this said, if I revert 9d6abd489e70 ("mtd: core: protect access
+> to MTD devices while in suspend")
+> I didn't see the warning either.
 
-Noted this patch is mainly from revertion of commit 32e3374304c7
-("blk-throttle: remove tg_drain_bios") and commit b77412372b68
-("blk-throttle: remove blk_throtl_drain").
+I think 9d6abd489e70 ("mtd: core: protect access to MTD devices while
+in suspend") is at fault here. Miquel, would you mind
+reverting/dropping the "mtd: core: protect access to mtd devices while
+in  suspend" series?
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 69 ++++++++++++++++++++++++++++++++++++++++++++
- block/blk-throttle.h |  2 ++
- block/genhd.c        |  2 ++
- 3 files changed, 73 insertions(+)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index fdd57878e862..e60f690e01ad 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -2256,6 +2256,75 @@ void blk_throtl_bio_endio(struct bio *bio)
- }
- #endif
- 
-+/*
-+ * Dispatch all bios from all children tg's queued on @parent_sq.  On
-+ * return, @parent_sq is guaranteed to not have any active children tg's
-+ * and all bios from previously active tg's are on @parent_sq->bio_lists[].
-+ */
-+static void tg_drain_bios(struct throtl_service_queue *parent_sq)
-+{
-+	struct throtl_grp *tg;
-+
-+	while ((tg = throtl_rb_first(parent_sq))) {
-+		struct throtl_service_queue *sq = &tg->service_queue;
-+		struct bio *bio;
-+
-+		throtl_dequeue_tg(tg);
-+
-+		while ((bio = throtl_peek_queued(&sq->queued[READ])))
-+			tg_dispatch_one_bio(tg, bio_data_dir(bio));
-+		while ((bio = throtl_peek_queued(&sq->queued[WRITE])))
-+			tg_dispatch_one_bio(tg, bio_data_dir(bio));
-+	}
-+}
-+
-+/**
-+ * blk_throtl_cancel_bios - cancel throttled bios
-+ * @q: request_queue to cancel throttled bios for
-+ *
-+ * This function is called to error all currently throttled bios on @q.
-+ */
-+void blk_throtl_cancel_bios(struct request_queue *q)
-+{
-+	struct throtl_data *td = q->td;
-+	struct bio_list bio_list_on_stack;
-+	struct blkcg_gq *blkg;
-+	struct cgroup_subsys_state *pos_css;
-+	struct bio *bio;
-+	int rw;
-+
-+	bio_list_init(&bio_list_on_stack);
-+
-+	/*
-+	 * hold queue_lock to prevent concurrent with dispatching
-+	 * throttled bios by timer.
-+	 */
-+	spin_lock_irq(&q->queue_lock);
-+
-+	/*
-+	 * Drain each tg while doing post-order walk on the blkg tree, so
-+	 * that all bios are propagated to td->service_queue.  It'd be
-+	 * better to walk service_queue tree directly but blkg walk is
-+	 * easier.
-+	 */
-+	blkg_for_each_descendant_post(blkg, pos_css, td->queue->root_blkg)
-+		tg_drain_bios(&blkg_to_tg(blkg)->service_queue);
-+
-+	/* finally, transfer bios from top-level tg's into the td */
-+	tg_drain_bios(&td->service_queue);
-+
-+	/* all bios now should be in td->service_queue, cancel them */
-+	for (rw = READ; rw <= WRITE; rw++)
-+		while ((bio = throtl_pop_queued(&td->service_queue.queued[rw],
-+						NULL)))
-+			bio_list_add(&bio_list_on_stack, bio);
-+
-+	spin_unlock_irq(&q->queue_lock);
-+	if (!bio_list_empty(&bio_list_on_stack))
-+		while ((bio = bio_list_pop(&bio_list_on_stack)))
-+			bio_io_error(bio);
-+}
-+
- int blk_throtl_init(struct request_queue *q)
- {
- 	struct throtl_data *td;
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index 175f03abd9e4..9d67d5139954 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -160,12 +160,14 @@ static inline void blk_throtl_exit(struct request_queue *q) { }
- static inline void blk_throtl_register_queue(struct request_queue *q) { }
- static inline void blk_throtl_charge_bio_split(struct bio *bio) { }
- static inline bool blk_throtl_bio(struct bio *bio) { return false; }
-+#define blk_throtl_cancel_bios(q)  do { } while (0)
- #else /* CONFIG_BLK_DEV_THROTTLING */
- int blk_throtl_init(struct request_queue *q);
- void blk_throtl_exit(struct request_queue *q);
- void blk_throtl_register_queue(struct request_queue *q);
- void blk_throtl_charge_bio_split(struct bio *bio);
- bool __blk_throtl_bio(struct bio *bio);
-+void blk_throtl_cancel_bios(struct request_queue *q);
- static inline bool blk_throtl_bio(struct bio *bio)
- {
- 	struct throtl_grp *tg = blkg_to_tg(bio->bi_blkg);
-diff --git a/block/genhd.c b/block/genhd.c
-index 8e9cbf23c510..24fa3356d164 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -28,6 +28,7 @@
- 
- #include "blk.h"
- #include "blk-rq-qos.h"
-+#include "blk-throttle.h"
- 
- static struct kobject *block_depr;
- 
-@@ -619,6 +620,7 @@ void del_gendisk(struct gendisk *disk)
- 
- 	blk_mq_freeze_queue_wait(q);
- 
-+	blk_throtl_cancel_bios(q);
- 	rq_qos_exit(q);
- 	blk_sync_queue(q);
- 	blk_flush_integrity();
--- 
-2.31.1
+> 
+> Any idea what can be wrong here or what a fix could be?
+> 
+> Only apply this patch from Geert
+> https://lore.kernel.org/lkml/c26dfdf9ce56e92d23530a09db386b283e62845d.1638289204.git.geert+renesas@glider.be/
+> makes the warning go away too.
+> 
+> Cheers,
+> Anders
 
