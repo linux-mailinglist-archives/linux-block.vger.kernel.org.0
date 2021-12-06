@@ -2,88 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A4F746AE0B
-	for <lists+linux-block@lfdr.de>; Mon,  6 Dec 2021 23:59:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B793746AE77
+	for <lists+linux-block@lfdr.de>; Tue,  7 Dec 2021 00:28:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359694AbhLFXCu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Dec 2021 18:02:50 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:25287 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1376929AbhLFXCo (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 6 Dec 2021 18:02:44 -0500
+        id S1347953AbhLFXcD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 6 Dec 2021 18:32:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239127AbhLFXcD (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Dec 2021 18:32:03 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B95C0613F8
+        for <linux-block@vger.kernel.org>; Mon,  6 Dec 2021 15:28:33 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso545631pji.0
+        for <linux-block@vger.kernel.org>; Mon, 06 Dec 2021 15:28:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1638831555; x=1670367555;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Ue4j4uhm1swKWHsP5swU+lpTqR0o0aLaH/vHm0ED9Xc=;
-  b=ad6rULnG6q02l8dIRnJ7OwVqPpCyFrwDlqOQvwGawN6eW1em7u2j1Enf
-   1RT8POt1x87ra9/twRa96J1mFqHzsXqsAF7/CyTvrTw6Ui7/ZKpW1n9xJ
-   U1gpItjSvEdYbclYsqutrKsxEvOCu/bv7atHNO50w18W09sLzn7yfFiF9
-   o=;
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 06 Dec 2021 14:59:14 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 14:59:14 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.922.19; Mon, 6 Dec 2021 14:59:13 -0800
-Received: from gabriel.qualcomm.com (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.19; Mon, 6 Dec 2021
- 14:59:13 -0800
-From:   Gaurav Kashyap <quic_gaurkash@quicinc.com>
-To:     <linux-scsi@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-CC:     <linux-mmc@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-fscrypt@vger.kernel.org>, <thara.gopinath@linaro.org>,
-        <quic_neersoni@quicinc.com>, <dineshg@quicinc.com>,
-        Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Subject: [PATCH 10/10] arm64: dts: qcom: sm8350: add ice and hwkm mappings
-Date:   Mon, 6 Dec 2021 14:57:25 -0800
-Message-ID: <20211206225725.77512-11-quic_gaurkash@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211206225725.77512-1-quic_gaurkash@quicinc.com>
-References: <20211206225725.77512-1-quic_gaurkash@quicinc.com>
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iYlong7BFeAPBAo6aJJAOLFXmMpt5I92OzI5hHT+4DQ=;
+        b=ZFk8Cpau3VRTYxRul9UaQIlSGM1KPnxNcxeXeHXgHZ1BacepQ3f1pgT4knSx9jmYc+
+         MC3RIYSKIZjytMmU+O0sZzWJ1Lc+lpKz3pOqma7LdlkdgiHo0ZHwOvixT+EJ95A+zKai
+         2UISRN7nlqeo9huTXdu07jKzUWlLecF5mo29Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iYlong7BFeAPBAo6aJJAOLFXmMpt5I92OzI5hHT+4DQ=;
+        b=dg4anMetov4g7l2docZPSOQZ6KSVSabOuxoSLmDyV8Mta/wenxyys/RSMfCb47vTw4
+         ojm2g7zuyfA72xwzVR8d+aH8IbuhO84Xeiruk5VOYoI9HykMtnudxF/VTwMffZUfXL23
+         CPwIvcWrOPA+VhkMKrX1BVCrNBApI1Kz+EyXObWL4qwA8Bu8CRjpnofhu+WrGMKXxJYw
+         /g+H0bsde8L8v8ofOco/FogpI3wkOLUSy4uVXM/4lkw3gooe85xhV/EJOlRtBsk7Lr/S
+         1Hvp4TaqUrG+F7Mz2dy8RbeyA9TwoEEHfKw86zAsCqQCLWTqMAuJCxaMdcvotdZW7PLy
+         G0LA==
+X-Gm-Message-State: AOAM530YdlmMGhCWykAUQdyhQ7hs5hAeCH1n6j1yxIgYSNlTBqe1RkeA
+        2erqRgBNhoQVLq2OiaKUN2brxQ==
+X-Google-Smtp-Source: ABdhPJyCWRhj7VPjT3NxliyEgMqe+IoDoJvad+ognPbn+ZXCLt+PZpfUdmrv3Mxw6QhEAAsGSoanww==
+X-Received: by 2002:a17:90b:4b4d:: with SMTP id mi13mr2027431pjb.192.1638833313291;
+        Mon, 06 Dec 2021 15:28:33 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h13sm10625918pgg.16.2021.12.06.15.28.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Dec 2021 15:28:33 -0800 (PST)
+Date:   Mon, 6 Dec 2021 15:28:32 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] block: switch to atomic_t for request references
+Message-ID: <202112061455.F23512C3CB@keescook>
+References: <9f2ad6f1-c1bb-dfac-95c8-7d9eaa7110cc@kernel.dk>
+ <Ya2zfVAwh4aQ7KVd@infradead.org>
+ <Ya3KZiLg5lYjsGcQ@hirez.programming.kicks-ass.net>
+ <CAHk-=wjXmGt9-JQp-wvup4y2tFNUCVjvx2W7MHzuAaxpryP4mg@mail.gmail.com>
+ <282666e2-93d4-0302-b2d0-47d03395a6d4@kernel.dk>
+ <202112061247.C5CD07E3C@keescook>
+ <CAHk-=wh0RhnMfZG6xQJ=yHTgmPTaxjQOo1Q2=r+_ZR56yiRi4A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh0RhnMfZG6xQJ=yHTgmPTaxjQOo1Q2=r+_ZR56yiRi4A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add register mappings for ICE (Inline Crypto Engine) and
-HWKM (Hardware Key Manager) slave, which are both part
-of the UFS controller for sm8350.
+On Mon, Dec 06, 2021 at 01:17:17PM -0800, Linus Torvalds wrote:
+> End result: atomics are _better_ in the overflow case, and it's why
+> the page counters could not use the garbage that is refcount_t, and
+> instead did it properly.
+> 
+> See? In absolutely neither case is recount_t "safer". It's only worse.
 
-These are required for inline storage encryption using
-hardware wrapped key.
+Right, I understand your objection; it is valid. One of the dimensions of
+"safe" is "not exploitable", which is _also_ a valid concern. As you
+say, refcount_t works for the "never make them all handle overflows
+properly" case, and I'm fine with using something else where we need a
+better set of behaviors.
 
-Signed-off-by: Gaurav Kashyap <quic_gaurkash@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sm8350.dtsi | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> I like Jens' patches. They take the _good_ code - the code we use for
+> page counters - and make that proper interface available to others.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8350.dtsi b/arch/arm64/boot/dts/qcom/sm8350.dtsi
-index e91cd8a5e535..8e15524731b3 100644
---- a/arch/arm64/boot/dts/qcom/sm8350.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8350.dtsi
-@@ -1019,7 +1019,10 @@
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sm8350-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
--			reg = <0 0x01d84000 0 0x3000>;
-+			reg = <0 0x01d84000 0 0x3000>,
-+			      <0 0x01d88000 0 0x8000>,
-+			      <0 0x01d90000 0 0x9000>;
-+			reg-names = "ufs_mem", "ice", "ice_hwkm";
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&ufs_mem_phy_lanes>;
- 			phy-names = "ufsphy";
+I am fine with whatever can be made safe in all dimensions, but I don't
+want to lose sight of the exploitability dimension. This is a lot like
+the BUG vs WARN situation: BUG is unfixable because there is no recovery.
+WARN allows the code to do something sensible in the pathological case,
+but the code needs to have been designed to handle that case. The
+widely used older atomic_t reference counting code pattern had no path
+to handling failure.
+
+In the proposed API, we get a warning (sometimes) in bad states, but
+there is no handling of the broken reference counter. For example,
+with atomic_ref_inc_not_zero():
+
+- there's no __must_check hint for callers to actually check it happened
+- overflow is silent, so wrapping around to 1 and then having a
+  call to atomic_ref_put_and_test() has no protection against exploitation
+  at all. This particular code pattern mistake (missed "put") is the
+  fundamental path to nearly all the refcount overflow exploits of the
+  past couple decades. e.g. see:
+	- CVE-2016-0728 - Keyring refcount overflow.
+	  Exploit: https://www.exploit-db.com/exploits/39277/
+	- CVE-2016-4558 - BPF reference count mishandling.
+          Explot: https://www.exploit-db.com/exploits/39773/
+  Losing that protection is just inviting these exploits back again (of
+  which we've had none in the past few years).
+
+For the API generally, nothing about the type stops someone from
+accidentally using the standard atomic_t helpers instead, accidentally
+bypassing any potential WARNs. It should do something similar to
+refcount_t so the compiler can help guide people correctly instead of
+blindly accepting an accident.
+
+And if we're speaking to safety/robustness generally, where are the unit
+tests, run-time tests (LKDTM provides this for refcount_t so it should
+be easy to repurpose them), kern-doc, etc?
+
+I'm not arguing for refcount_t -- I'm arguing for an API that isn't a
+regression of features that have been protecting the kernel from bugs.
+
 -- 
-2.17.1
-
+Kees Cook
