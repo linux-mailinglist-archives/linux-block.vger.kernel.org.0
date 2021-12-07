@@ -2,85 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3633546BFEC
-	for <lists+linux-block@lfdr.de>; Tue,  7 Dec 2021 16:51:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC21646C047
+	for <lists+linux-block@lfdr.de>; Tue,  7 Dec 2021 17:04:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239125AbhLGPzZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Dec 2021 10:55:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
+        id S234626AbhLGQHK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Dec 2021 11:07:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239147AbhLGPzY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Dec 2021 10:55:24 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6618C061574;
-        Tue,  7 Dec 2021 07:51:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Omuu2IL2OK0Xy2Bz2WLuZj2MwATjLBReQ+BfkCIXGQ8=; b=RT8HK855qgvzHgWRlY0lHKikpo
-        a19XI/xuH8/aeLDz6I+UuuAkNWQYxdsffiPmWGn96pGzYlxAwt1ymEW34239cr38cZTKw95IIoz5p
-        HCnmF8kFXggD0JS3HsAWN+T6gtiIcL9za+i04McRdYkE4N6QPEFv21KNds26BEq7Psmb2u535Yto4
-        ZoENft3BqeMwgWQ0rney95iz6a/hCKHK1iR5Yq67rbTqp4oUtUryRn9gXen3XlTfwreEAlvEIOMfy
-        /JNB8y3Af8Ueee4eHGMWdw9bMZQTxo/3J+9/8REuxYwH2OEv9O4LnmzVjW5kv5SbOPt+YUAjYEj+l
-        utJ4GcXg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1muckv-002nE3-7v; Tue, 07 Dec 2021 15:51:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 709A3300237;
-        Tue,  7 Dec 2021 16:51:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5BCB0201CA1F6; Tue,  7 Dec 2021 16:51:48 +0100 (CET)
-Date:   Tue, 7 Dec 2021 16:51:48 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        keescook@chromium.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: switch to atomic_t for request references
-Message-ID: <Ya+DFKo6JVuu++cX@hirez.programming.kicks-ass.net>
-References: <9f2ad6f1-c1bb-dfac-95c8-7d9eaa7110cc@kernel.dk>
- <Ya2zfVAwh4aQ7KVd@infradead.org>
- <Ya9E4HDK/LskTV+z@hirez.programming.kicks-ass.net>
- <Ya9hdlBuWYUWRQzs@hirez.programming.kicks-ass.net>
+        with ESMTP id S230146AbhLGQHK (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Dec 2021 11:07:10 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A1DC061746
+        for <linux-block@vger.kernel.org>; Tue,  7 Dec 2021 08:03:39 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id v1so58905359edx.2
+        for <linux-block@vger.kernel.org>; Tue, 07 Dec 2021 08:03:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6REykS5njvBGMivZTFNSyYs1+FcgFY2B6TDMRdG6y74=;
+        b=P8XfxkWGrdPjDAtXf3kITM9nkzXBmtALtIE7T2YGWhJwKi3Q2RahEAxEoFEJKhCNGS
+         Xb5H4EeiW+1PIUN7y/0cl+qNbKvgYcxpBYwZYarEfgRK7oYQ9V8qbqmMyfjA8lllP8sp
+         VdSZ1aJDQrDeda1Su4wXbATTKE686P895iUeM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6REykS5njvBGMivZTFNSyYs1+FcgFY2B6TDMRdG6y74=;
+        b=FRrk5V1iVzx3xopgMhe+STOuNKRLfULE67epUBL17KpPEwln5mWOlNnzEFHyXp38ow
+         qhnvpEjU1V6HRCNrgYYy3WNBWnR9Sgs7KPaJkBCsRe3N77g5hAj+NMdyA8+RLAw7p7SE
+         RUlbiQ42DATuHVj4EdF8a0YlK+42GUxIa9N9ZMxFspbryDohmxkui82OkZNf+kNeRaYg
+         PXLsZzjvFfO3yXE79u6+txeSxyBvzLz5mnQMVsTdNl09h29qy8FPCH9/ZqubY8vVPxoV
+         qbgvCG9Qj8ckbsD1HaMUETmBVjD4B7KYkWtQe6wBMbdBu3hrR+R6khZknDzb0P/RqSZl
+         QPSg==
+X-Gm-Message-State: AOAM530S0UNEBujZsXMH1Gz5f6akpJnePKASAmLrQaGskrRsGkVao77i
+        E2pmoBdhi4d+MCKot+q7ET/pY63rmHgDfSJW
+X-Google-Smtp-Source: ABdhPJzJhsIBgBN+rta9yi+rXr/RiRfb0+WKjxEtkTItussJHlbyVHwJ4rMzZODT1Z/v4LvOWAnbuA==
+X-Received: by 2002:a17:907:a414:: with SMTP id sg20mr293320ejc.183.1638893017057;
+        Tue, 07 Dec 2021 08:03:37 -0800 (PST)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
+        by smtp.gmail.com with ESMTPSA id sb8sm9114984ejc.51.2021.12.07.08.03.36
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Dec 2021 08:03:36 -0800 (PST)
+Received: by mail-wr1-f49.google.com with SMTP id a18so30535769wrn.6
+        for <linux-block@vger.kernel.org>; Tue, 07 Dec 2021 08:03:36 -0800 (PST)
+X-Received: by 2002:a05:6000:1c2:: with SMTP id t2mr50447953wrx.378.1638893016148;
+ Tue, 07 Dec 2021 08:03:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Ya9hdlBuWYUWRQzs@hirez.programming.kicks-ass.net>
+References: <9f2ad6f1-c1bb-dfac-95c8-7d9eaa7110cc@kernel.dk>
+ <Ya2zfVAwh4aQ7KVd@infradead.org> <Ya3KZiLg5lYjsGcQ@hirez.programming.kicks-ass.net>
+ <CAHk-=wjXmGt9-JQp-wvup4y2tFNUCVjvx2W7MHzuAaxpryP4mg@mail.gmail.com>
+ <282666e2-93d4-0302-b2d0-47d03395a6d4@kernel.dk> <202112061247.C5CD07E3C@keescook>
+ <CAHk-=wh0RhnMfZG6xQJ=yHTgmPTaxjQOo1Q2=r+_ZR56yiRi4A@mail.gmail.com>
+ <202112061455.F23512C3CB@keescook> <CAHk-=whLU+dk7EmPu5UC6DDSd76_dO4bVd4BkvxmR4W5-mmAgg@mail.gmail.com>
+ <Ya8qptlJ4yLVUSBi@hirez.programming.kicks-ass.net>
+In-Reply-To: <Ya8qptlJ4yLVUSBi@hirez.programming.kicks-ass.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 Dec 2021 08:03:20 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh6NyZeMEfw8YDyqCeoev7X319DDF41p0YSJFVNEkVQfw@mail.gmail.com>
+Message-ID: <CAHk-=wh6NyZeMEfw8YDyqCeoev7X319DDF41p0YSJFVNEkVQfw@mail.gmail.com>
+Subject: Re: [PATCH] block: switch to atomic_t for request references
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 02:28:22PM +0100, Peter Zijlstra wrote:
-> +static inline void refcount_inc(refcount_t *r)
-> +{
-> +	int one = 1;
-> +
-> +	asm_volatile_goto (LOCK_PREFIX "xaddl %%eax, %[var]\n\t"
-> +			   "addl $1, %%eax\n\t"
-> +			   "je %l[cc_zero]\n\t"
-> +			   "js %l[cc_error]"
-> +			   : : [var] "m" (r->refs.counter), "a" (one)
-> +			   : "memory"
-> +			   : cc_zero, cc_error);
+On Tue, Dec 7, 2021 at 1:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Now, it could be GCC generates atrociously bad code simply because it
+> doesn't know it can use the flags from the XADD in which case we can
+> look at doing an arch asm implementation.
 
-+       asm_volatile_goto (LOCK_PREFIX "xaddl %[reg], %[var]\n\t"
-+                          "addl $1, %[reg]\n\t"
-+                          "jz %l[cc_zero]\n\t"
-+                          "js %l[cc_error]"
-+                          : : [var] "m" (r->refs.counter), [reg] "r" (1)
-+                          : "memory"
-+                          : cc_zero, cc_error);
+That may help.
 
-Is of course a better implementation, but I'm not sure I actually
-understand this code. Afaict: add $1,%[reg], will only set ZF when
-%[reg] was -1 such that the result is now 0.
+This thread started because of alleged performance problems with
+refcount_t.  No numbers, and maybe it was wrong, but they have been
+seen before, so I wouldn't dismiss the issue.
 
-But that's not what the code said; is this GCC going funny in the head
-or should I just stop staring at this...
+What I've seen personally is the horrendous "multiple different calls
+to overflow functions with different arguments", which makes
+__refcount_add() do stupid things and blow up the code. All for
+entirely pointless debugging code.
+
+                  Linus
