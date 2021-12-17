@@ -2,126 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 378694784F1
-	for <lists+linux-block@lfdr.de>; Fri, 17 Dec 2021 07:33:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FDE7478541
+	for <lists+linux-block@lfdr.de>; Fri, 17 Dec 2021 07:44:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233247AbhLQGcz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 17 Dec 2021 01:32:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232191AbhLQGcy (ORCPT
+        id S232166AbhLQGoM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Dec 2021 01:44:12 -0500
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:41738 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230405AbhLQGoL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 17 Dec 2021 01:32:54 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3DEC06173E;
-        Thu, 16 Dec 2021 22:32:54 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id g14so3956786edb.8;
-        Thu, 16 Dec 2021 22:32:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jVz5gmWkvfHnwl1AICB+LrD0LvfkSYpF7pSTjzPszEs=;
-        b=Z/NKcsvrzrquLzVkgn3SArWeTGGKsArSdqDxuzHRyxgYJdTUMmZFGqNx218o4KZ3bi
-         Ji9rMNoA0YP/dXmNbAgN3HetOR14Jbs+vqKfeqU3vrqfhOx/nw3kLxusOR2ZsTUs5j9G
-         5ZHf/W6RXEyoIDe5ljmek6lYSUPZ07YMnDh/nWuTXXU3PhfI5lB0Sb4G71pt4S5I1LIV
-         RfSHP/p9sRZVfOejmRl9lmsb7cwBky5ZGvH1d8BJAECVAV1v2IwuM417movY/kn71kwT
-         ZiWFLvQ4jOROFx0f4l1j3/dzfDDS9PB1NRa31vuxbPabUeqlobZ0Os+oMSlulozH7lIu
-         pwRg==
+        Fri, 17 Dec 2021 01:44:11 -0500
+Received: by mail-lf1-f46.google.com with SMTP id cf39so2586390lfb.8;
+        Thu, 16 Dec 2021 22:44:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jVz5gmWkvfHnwl1AICB+LrD0LvfkSYpF7pSTjzPszEs=;
-        b=I5rp13Lpec+9+aHGuU8Cov6CRPzgS/mSEXfIY9m/ddseGvi5omxqakBme+RNSWL8qL
-         UzIrSV6saeNcI/UCXzqGaIta0QD5BJXFxuABVQDcMm/LTGW1zNpDlCPpC1Q2OYRZmO+c
-         D6Q+iVAi6eUgQRTB+oM004hgOcn/fWQcR2RhE+wMDSYWwY9zHNai2O3WwRorgRAL9ghi
-         ouuu/B9gGlYoF9eAz/vcV2tehA7MS7EY3xhWRhyRiNhMglT6e/NAo0OtBUGMKJ1eA2tH
-         3B65M1KouWgo/1dqjfrv6bb756jtyfePog53wkXAPSVXyGHOvytpzsnLUS8iIZw9SbNd
-         YYXA==
-X-Gm-Message-State: AOAM531jdXxf9r+4hIEBsKEI55/wxwT5/TxzIj4xVbh/hxNCr913dAkq
-        uX1cbPqjHPuaFaQrAFqJaCA=
-X-Google-Smtp-Source: ABdhPJzel5vzdE3ikJ2oPZCrG4tkSHvvw24nnRQFJNtnW88H0qM7WrEzXjsy8HG1Ycdrc7rQBhxJPA==
-X-Received: by 2002:aa7:d495:: with SMTP id b21mr1486049edr.363.1639722773000;
-        Thu, 16 Dec 2021 22:32:53 -0800 (PST)
-Received: from zenorus.myxoz.lan (81-224-108-56-no2390.tbcn.telia.com. [81.224.108.56])
-        by smtp.gmail.com with ESMTPSA id e20sm2490148ejl.189.2021.12.16.22.32.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 22:32:52 -0800 (PST)
-From:   Miko Larsson <mikoxyzzz@gmail.com>
-To:     minchan@kernel.org, ngupta@vflare.org, senozhatsky@chromium.org,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     Miko Larsson <mikoxyzzz@gmail.com>, hch@infradead.org
-Subject: [PATCH v2 2/2] zram: zram_drv: replace 'strlcpy()'
-Date:   Fri, 17 Dec 2021 07:32:24 +0100
-Message-Id: <20211217063224.3474-3-mikoxyzzz@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211217063224.3474-1-mikoxyzzz@gmail.com>
-References: <20211217063224.3474-1-mikoxyzzz@gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=fJUE8k2+qpHDPc4B6+jQ9Hnyt7WdEWRQUyO5Bymsaf8=;
+        b=BG9v8GAgJgPqIe7DO2hOxzFn4s3QpQ1scgvLR6O/beHMQqTlYmUB/GMladROnt2zjf
+         Rh8AYTYVkoPnQt9hZWrC+d5MXMBOPzfibOkRCAeGM1//wpO6g+nNXsWpbWDR7ENVLi5g
+         76rZ40a4P+i68DnLxOqKLmcE35kg1ZKnhLljikvmlHIbUzr0/NaU/QTeRWvMChsakbwO
+         l5OPIgHu8pS7UudU2meBWNodILN+L6pHoZndwQiwWwJSr4gmD9OB1zBYrrNoQoIMd+0W
+         /2//70pUdkHANfi2b/gCS1Q1AaCMyvelaYtniMaPvwM+JwtJyYqPnZ1Pl+RF77n2QUrO
+         KHSA==
+X-Gm-Message-State: AOAM5326LT4CFo0YBQMVeD+pBk5oraO34IGgivtkqbiuA55TSwWoQrbs
+        IiXIkOYMZBhkANfROZbOTZo=
+X-Google-Smtp-Source: ABdhPJxHrH2xosVVOFH0R8QnnEyKiwxocG5OBOcL66n2+ouZn2N5TUdBTPH6I/4v9bKWYqd2OqzTBA==
+X-Received: by 2002:ac2:4857:: with SMTP id 23mr384894lfy.217.1639723449744;
+        Thu, 16 Dec 2021 22:44:09 -0800 (PST)
+Received: from [10.68.32.65] (broadband-109-173-81-86.ip.moscow.rt.ru. [109.173.81.86])
+        by smtp.gmail.com with ESMTPSA id b28sm130017lff.305.2021.12.16.22.44.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Dec 2021 22:44:09 -0800 (PST)
+Message-ID: <aac18497-f420-a04a-16ab-c3e2149904b5@linux.com>
+Date:   Fri, 17 Dec 2021 09:44:10 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Content-Language: en-US
+To:     "Dae R. Jeong" <threeearcat@gmail.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     yjkwon@kaist.ac.kr
+References: <YbbKf6fU7y3GGZum@archdragon>
+From:   Denis Efremov <efremov@linux.com>
+Subject: Re: WARNING in schedule_bh
+In-Reply-To: <YbbKf6fU7y3GGZum@archdragon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-'strlcpy()' shouldn't be used, and should be replaced with safer
-alternatives. Cristoph Hellwig suggested [1] that 'kmemdup_nul()' should
-be used in two cases instead of 'strscpy()', and that a regular
-'strcpy()' should be used in the third case. [2][3]
+Hi,
 
-[1] https://lore.kernel.org/all/YbsRlDYT2BfgrXRX@infradead.org/
-[2] https://lore.kernel.org/all/Ybt8wY3U2ETjQijH@infradead.org/
-[3] https://lore.kernel.org/all/Ybt8554NZpscKx2K@infradead.org/
+> 
+> So, for me, concurrent execution of floppy_shutdown() and
+> fd_locked_ioctl() is suspicious. Could you please check the above
+> scenario is reasonable?
+> 
 
-Signed-off-by: Miko Larsson <mikoxyzzz@gmail.com>
----
- drivers/block/zram/zram_drv.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Thank you for the analysis. You are right and concurrent execution
+of floppy_shutdown() and fd_locked_ioctl() looks suspicious. I know about
+this warning more than 2 years already since I wrote syzkaller descriptions
+for the floppy. I can only wonder why did it take so long for the syzbot
+to find it.
+However, this bug is not reproducible on real hardware. I would prefer not
+to touch the code significantly unless there is a security reason for it.
+The pros here are that bugs should be fixed. The cons here are that changing
+the code more-or-less significantly is hard to test on real hardware
+(there was a regression in UAPI of floppy not so long ago, it took almost
+half of a year before it was reported and it took another couple of months
+before distros released kernels with a fix); floppy driver contains
+undocumented/poorly-documented hacks (e.g. O_ACCMODE
+https://github.com/google/syzkaller/commit/3ea5a3451b2bfa90a3b73397273560f17d587efc#diff-07b38a9cc5b8b1eed725414265f033c41abffbbe537567799ed678dfe9c49d7a);
+/dev/fd0 is accessible only by root/disk user on most of the distros nowadays;
+races are highly likely not reproducible on real hardware because floppy
+devices are slow; from the functional point of view the driver worked with
+this bug almost 10 years (maybe more) and I doubt it's possible to
+face this bug during normal workflow (without direct intention to trigger it);
+I think that usage of floppies inside VMs is limited to some specific
+workflows and I doubt it's really broad.
+If you see an easy way to fix this issue, please send a patch.
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 4de6fe13edaf..c7c751e6ca2e 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -482,7 +482,7 @@ static ssize_t backing_dev_store(struct device *dev,
- 	int err;
- 	struct zram *zram = dev_to_zram(dev);
- 
--	file_name = kmalloc(PATH_MAX, GFP_KERNEL);
-+	file_name = kmemdup_nul(buf, PATH_MAX, GFP_KERNEL);
- 	if (!file_name)
- 		return -ENOMEM;
- 
-@@ -493,7 +493,6 @@ static ssize_t backing_dev_store(struct device *dev,
- 		goto out;
- 	}
- 
--	strlcpy(file_name, buf, PATH_MAX);
- 	/* ignore trailing newline */
- 	sz = strlen(file_name);
- 	if (sz > 0 && file_name[sz - 1] == '\n')
-@@ -1024,10 +1023,10 @@ static ssize_t comp_algorithm_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t len)
- {
- 	struct zram *zram = dev_to_zram(dev);
--	char compressor[ARRAY_SIZE(zram->compressor)];
-+	char *compressor;
- 	size_t sz;
- 
--	strlcpy(compressor, buf, sizeof(compressor));
-+	compressor = kmemdup_nul(buf, sizeof(zram->compressor), GFP_KERNEL);
- 	/* ignore trailing newline */
- 	sz = strlen(compressor);
- 	if (sz > 0 && compressor[sz - 1] == '\n')
-@@ -1981,7 +1980,7 @@ static int zram_add(void)
- 	if (ret)
- 		goto out_cleanup_disk;
- 
--	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
-+	strcpy(zram->compressor, default_compressor);
- 
- 	zram_debugfs_register(zram);
- 	pr_info("Added device: %s\n", zram->disk->disk_name);
--- 
-2.34.1
-
+Thanks,
+Denis
