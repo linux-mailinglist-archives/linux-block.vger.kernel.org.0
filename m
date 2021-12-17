@@ -2,110 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30C4F478363
-	for <lists+linux-block@lfdr.de>; Fri, 17 Dec 2021 03:53:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDAF54784F3
+	for <lists+linux-block@lfdr.de>; Fri, 17 Dec 2021 07:33:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231879AbhLQCxS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Dec 2021 21:53:18 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:33862 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbhLQCxR (ORCPT
+        id S232073AbhLQGdA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Dec 2021 01:33:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233260AbhLQGc7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Dec 2021 21:53:17 -0500
-Received: from kwepemi100007.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JFYSS3L7Qzcbyw;
-        Fri, 17 Dec 2021 10:52:56 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi100007.china.huawei.com (7.221.188.115) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 17 Dec 2021 10:53:14 +0800
-Received: from [10.174.176.73] (10.174.176.73) by
- kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 17 Dec 2021 10:53:14 +0800
-Subject: Re: [PATCH RFC 9/9] block, bfq: decrease
- 'num_groups_with_pending_reqs' earlier
-To:     Paolo Valente <paolo.valente@linaro.org>
-CC:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
-References: <20211127101132.486806-1-yukuai3@huawei.com>
- <20211127101132.486806-10-yukuai3@huawei.com>
- <AA66019E-FD14-4821-B53D-0C56EEC38828@linaro.org>
- <4765e7f8-48b7-3bc6-5eb6-1dc0a569233d@huawei.com>
- <B5C2B1F6-4DF9-4657-AFF4-D53DD04A65DC@linaro.org>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <97642e8d-b93c-c229-d13e-76517d5e654f@huawei.com>
-Date:   Fri, 17 Dec 2021 10:53:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 17 Dec 2021 01:32:59 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2CEC061574;
+        Thu, 16 Dec 2021 22:32:53 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id r11so3941797edd.9;
+        Thu, 16 Dec 2021 22:32:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CWaK4nuZq/Gptqq/StNfBOqK2pmw94eOOpm80CCHM+k=;
+        b=iE2K+o+6yAVWBImSh9JPzbjoWp3pwFjLq1krhSQA4kN0RLevetGuJwsFzcLvVfYRqe
+         DuIdzunsX9k5DnVjsBNaEFoFpNmEU4yVUETLYOeUct9bZe0gaeMeENk2KoDV1uk7yMQ5
+         Hm9i5Tj78s1YfNkJBpAbKky67QV0hSqVdyyGZP4u2mu5L/rzzwpHi17XIrruAY39m2qf
+         h7aR20/k5eop5sC1NMOJfq0cCFEtT37iqJNdkUHEhn4hOBP7tijp++8YUWv5r0LkiLk2
+         pW3AWBPZLl14r90H7YPCd0336hZnxLzozoAuWid8F2vYCQCnOme2KhSrW9/hpr3PozBl
+         ubWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CWaK4nuZq/Gptqq/StNfBOqK2pmw94eOOpm80CCHM+k=;
+        b=QbZT1SL4clNlajxSX80nqKiJcIysM9PQADJfHMdnIc6AQq28kEdQMBn1BVhV7YR2Ig
+         p+19hqCu4l/ibdhYKMrRYx2ntfjCPS4RsrU75xEtwzW8WiXC/yTsUQluhvCAS1uY7j2E
+         DlKF6qLw1jOQ+NbnycEcyTZADp3xMuleL4oawgj5DSo6weg2hJB8VRehGhgO/C5FaLMi
+         ILxw7DZTlWv5kisvSoRafIQ+uHhxzIQqWCSvZUzTMAPuZWTxN+5krvrZ7vGuf+QIL8GU
+         a0+yIHqAHQ3hhJtE0xGGAOPC2x8vtnH2I7Ea+iBKkGWSulBbZJJ6SGqnldgwVZ7wrRqI
+         /6fQ==
+X-Gm-Message-State: AOAM5310SKR2CnB7ZPjAfyuu6fVeBM8qdRv3WKlpEIVNKCYKw7pWOrHC
+        5BZYHjM/3sFMgEpX2YULsEM=
+X-Google-Smtp-Source: ABdhPJysFoJi3jwEJHIV/Ibe7ZZ+j3RrTJD0TV88nz5g/njfLBn2mXqpuMDROgi/LnY2ldSkNEbPaw==
+X-Received: by 2002:a05:6402:84f:: with SMTP id b15mr1491076edz.342.1639722771938;
+        Thu, 16 Dec 2021 22:32:51 -0800 (PST)
+Received: from zenorus.myxoz.lan (81-224-108-56-no2390.tbcn.telia.com. [81.224.108.56])
+        by smtp.gmail.com with ESMTPSA id e20sm2490148ejl.189.2021.12.16.22.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Dec 2021 22:32:51 -0800 (PST)
+From:   Miko Larsson <mikoxyzzz@gmail.com>
+To:     minchan@kernel.org, ngupta@vflare.org, senozhatsky@chromium.org,
+        axboe@kernel.dk, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Cc:     Miko Larsson <mikoxyzzz@gmail.com>, hch@infradead.org
+Subject: [PATCH v2 0/2] Fix some formatting problems
+Date:   Fri, 17 Dec 2021 07:32:22 +0100
+Message-Id: <20211217063224.3474-1-mikoxyzzz@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <B5C2B1F6-4DF9-4657-AFF4-D53DD04A65DC@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.73]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600009.china.huawei.com (7.193.23.164)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-在 2021/12/17 0:34, Paolo Valente 写道:
-> 
-> 
->> Il giorno 11 dic 2021, alle ore 03:10, yukuai (C) <yukuai3@huawei.com> ha scritto:
->>
->> 在 2021/12/10 18:21, Paolo Valente 写道:
->>>> Il giorno 27 nov 2021, alle ore 11:11, Yu Kuai<yukuai3@huawei.com>  ha scritto:
->>>>
->>>> Currently 'num_groups_with_pending_reqs' won't be decreased when
->>>> the group doesn't have any pending requests, while any child group
->>>> have any pending requests. The decrement is delayed to when all the
->>>> child groups doesn't have any pending requests.
->>>>
->>>> For example:
->>>> 1) t1 issue sync io on root group, t2 and t3 issue sync io on the same
->>>> child group. num_groups_with_pending_reqs is 2 now.
->>>> 2) t1 stopped, num_groups_with_pending_reqs is still 2. io from t2 and
->>>> t3 still can't be handled concurrently.
->>>>
->>>> Fix the problem by decreasing 'num_groups_with_pending_reqs'
->>>> immediately upon the deactivation of last entity of the group.
->>>>
->>> I don't understand this patch clearly.
->>> I understand your proposal not to count a group as with pending requests, in case no child process of the group has IO, but only its child groups have pending requests.
->>> So, entities here are only queues for this patch?
->>> If they are only queues, I think it is still incorrect to remove the group from the count of groups with pending IO when all its child queues are deactivated, because there may still be unfinished IO for those queues.
->>
->> Hi, Paolo
->>
->> bfq_weights_tree_remove() will be called when all requests are completed
->> in bfq_queue, thus I recored how many queues have pending requests
->> through weights tree insertion and removal.(Details in patch 7)
->>
->> Thus when calling bfq_weights_tree_remove() for bfqq, I can check if
->> there are no queues have pending requests for parent bfqg:
->>
->> if (!bfqg->num_entities_with_pending_reqs && -> no queues with pending reqs
->>     entity->in_groups_with_pending_reqs) {   -> the group is counted
->>
-> 
-> Ok, I got confused because you use the term deactivation.  Yet you
-> seem to decrement the counter at the right time.  Maybe fix that term,
-> in commit messages and comments.
+Hi,
 
-Ok, I'll fix that term, and thanks for taking time reviewing these
-patches,
-> 
-> Thanks,
-> Paolo
-> 
->> Thanks,
->> Kuai
->>> Am I missing something?
->>> Thanks,
->>> Paolo
-> 
-> .
-> 
+This is v2 of the patch set I sent in two days ago. The subject is
+arguably misleading, since we're doing a bit more than fixing some
+"superficial formatting problems", but I wanted to keep the original
+subject since this is a followup to the previous patch set.
+
+This patch set adds SPDX license identifiers to zram_drv, and replaces
+all uses of 'strlcpy()' with 'kmemdup_nul()' and 'strcpy()'.
+
+Miko Larsson (2):
+  zram: zram_drv: add SPDX license identifiers
+  zram: zram_drv: replace 'strlcpy()'
+
+ drivers/block/zram/zram_drv.c | 18 ++++++------------
+ drivers/block/zram/zram_drv.h |  9 ++-------
+ 2 files changed, 8 insertions(+), 19 deletions(-)
+
+-- 
+2.34.1
+
