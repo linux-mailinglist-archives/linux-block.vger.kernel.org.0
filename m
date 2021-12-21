@@ -2,90 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 849CA47BCCC
-	for <lists+linux-block@lfdr.de>; Tue, 21 Dec 2021 10:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD37747BD14
+	for <lists+linux-block@lfdr.de>; Tue, 21 Dec 2021 10:43:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236299AbhLUJX1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Dec 2021 04:23:27 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:44302 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232251AbhLUJX1 (ORCPT
+        id S236451AbhLUJnO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Dec 2021 04:43:14 -0500
+Received: from relay037.a.hostedemail.com ([64.99.140.37]:6731 "EHLO
+        relay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231744AbhLUJnO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Dec 2021 04:23:27 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F079EB8124B;
-        Tue, 21 Dec 2021 09:23:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0FBC36AE2;
-        Tue, 21 Dec 2021 09:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640078604;
-        bh=vs6i4+czViyI3niT0XaIdGWKKRNE64KCSW1Ge0iJUMQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YFyHD1mTWBetPy/IaSAHNt0jtVC558rU2odGeu0CUBv7mrg/gEEPDUJ3dI5/k+gNs
-         S/RmsgwAx/8pU6/vOHLbVQTP0gIHnDwKBjw8jGNtz9QCbGBFoMkd+KjIb7DZzy8+Dg
-         7jIC2+VjTX3zVG0LBA9+tnzVxTdT9qhclPLrtRgY=
-Date:   Tue, 21 Dec 2021 10:23:22 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     tim@cyberelk.net, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] paride: fix up build warning on mips platforms
-Message-ID: <YcGdCp1lgG2x89y/@kroah.com>
-References: <20211130084626.3215987-1-gregkh@linuxfoundation.org>
- <YcCo8+jTG3b+5GTA@kroah.com>
- <4915ba81-28b1-6008-62f2-50316177fd46@kernel.dk>
+        Tue, 21 Dec 2021 04:43:14 -0500
+X-Greylist: delayed 608 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Dec 2021 04:43:14 EST
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay09.hostedemail.com (Postfix) with ESMTP id 9EF95221EE;
+        Tue, 21 Dec 2021 09:33:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 6ACA72000E;
+        Tue, 21 Dec 2021 09:32:57 +0000 (UTC)
+Message-ID: <b71570d5bc14181c656f8dd7ba69a397fd775495.camel@perches.com>
+Subject: Re: [PATCH v2 1/2] zram: zram_drv: add SPDX license identifiers
+From:   Joe Perches <joe@perches.com>
+To:     Miko Larsson <mikoxyzzz@gmail.com>, minchan@kernel.org,
+        ngupta@vflare.org, senozhatsky@chromium.org, axboe@kernel.dk,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     hch@infradead.org
+Date:   Tue, 21 Dec 2021 01:33:00 -0800
+In-Reply-To: <20211217063224.3474-2-mikoxyzzz@gmail.com>
+References: <20211217063224.3474-1-mikoxyzzz@gmail.com>
+         <20211217063224.3474-2-mikoxyzzz@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4915ba81-28b1-6008-62f2-50316177fd46@kernel.dk>
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: xghxrfynbxtywuk5yfuxjo55arppk9gg
+X-Spam-Status: No, score=-4.77
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 6ACA72000E
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX194+gRph/lCIo+3NsrWZgT6X0FHyRuXw9Y=
+X-HE-Tag: 1640079177-862073
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 09:33:12AM -0700, Jens Axboe wrote:
-> On 12/20/21 9:01 AM, Greg Kroah-Hartman wrote:
-> > On Tue, Nov 30, 2021 at 09:46:26AM +0100, Greg Kroah-Hartman wrote:
-> >> MIPS include files define "PC" so when building the paride driver the
-> >> following build warning shows up:
-> >>
-> >> 	rivers/block/paride/bpck.c:32: warning: "PC" redefined
-> >>
-> >> Fix this by undefining PC before redefining it as is done for other
-> >> defines in this driver.
-> >>
-> >> Cc: Tim Waugh <tim@cyberelk.net>
-> >> Cc: Jens Axboe <axboe@kernel.dk>
-> >> Cc: linux-block@vger.kernel.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> ---
-> >>  drivers/block/paride/bpck.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/drivers/block/paride/bpck.c b/drivers/block/paride/bpck.c
-> >> index f5f63ca2889d..d880a9465e9b 100644
-> >> --- a/drivers/block/paride/bpck.c
-> >> +++ b/drivers/block/paride/bpck.c
-> >> @@ -28,6 +28,7 @@
-> >>  
-> >>  #undef r2
-> >>  #undef w2
-> >> +#undef PC
-> >>  
-> >>  #define PC			pi->private
-> >>  #define r2()			(PC=(in_p(2) & 0xff))
-> >> -- 
-> >> 2.34.1
-> >>
-> > 
-> > Given the lack of objections to this, I'll just take it through one of
-> > my trees for 5.17-rc1.
+On Fri, 2021-12-17 at 07:32 +0100, Miko Larsson wrote:
+> zram_drv lacks an SPDX license identifier in both its source and in its
+> header, so we should add license identifiers based on the copyright info
+> provided by the initial comment block.
 > 
-> Sorry about that, got lost. I can queue it  up too, or you can add my
-> acked-by, either is fine.
+> Signed-off-by: Miko Larsson <mikoxyzzz@gmail.com>
+> ---
+>  drivers/block/zram/zram_drv.c | 9 ++-------
+>  drivers/block/zram/zram_drv.h | 9 ++-------
+>  2 files changed, 4 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+[]
+> @@ -1,15 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
 
-Easy enough for me to take it, now done, thanks!
+GPL v2 is a permissive license and this SPDX tag should probably be
 
-greg k-h
+// SPDX-License-Identifier: GPL-2.0-or-later or BSD-3-Clause
+
+> +
+>  /*
+>   * Compressed RAM block device
+>   *
+>   * Copyright (C) 2008, 2009, 2010  Nitin Gupta
+>   *               2012, 2013 Minchan Kim
+> - *
+> - * This code is released using a dual license strategy: BSD/GPL
+> - * You can choose the licence that better fits your requirements.
+> - *
+> - * Released under the terms of 3-clause BSD License
+> - * Released under the terms of GNU General Public License Version 2.0
+
+
+
