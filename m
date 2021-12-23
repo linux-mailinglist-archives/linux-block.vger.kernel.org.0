@@ -2,99 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9921647E71A
-	for <lists+linux-block@lfdr.de>; Thu, 23 Dec 2021 18:32:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC05C47E7A6
+	for <lists+linux-block@lfdr.de>; Thu, 23 Dec 2021 19:33:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235248AbhLWRcn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Dec 2021 12:32:43 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:58400 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349656AbhLWRcM (ORCPT
+        id S238882AbhLWSdZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Dec 2021 13:33:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235579AbhLWSdY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Dec 2021 12:32:12 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 629591F387;
-        Thu, 23 Dec 2021 17:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1640280730; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CLdWcUxslRhox4mbm09PAaOqxikabSZEH3WG0zJ7e6A=;
-        b=rCWy6ph0y8Qy20nsINIYj4FMVg60gb7b9Xp2KdO2he3LzKbZ8D9LatSmmQstfasCiUSKxe
-        zLRz4s75Fo4Wy5TK14YoFdwtjsMAa7BbKn96Vf7iy60AQQ35Ddch9s88sdYSrdfrXeutdc
-        7pKQWW9Q5+/P3Nk7KcDFhAHirao9/TY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1640280730;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CLdWcUxslRhox4mbm09PAaOqxikabSZEH3WG0zJ7e6A=;
-        b=D9r75/tervm3m0BWnq9artqnfHn/PB/iEmViJqWGR+1pEDlSfTUXax/u8eKDGmlPfvW+LH
-        VO1nhTdFl4H/qTCw==
-Received: from quack2.suse.cz (unknown [10.163.28.18])
-        by relay2.suse.de (Postfix) with ESMTP id 4EA69A3B89;
-        Thu, 23 Dec 2021 17:32:10 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 244661F2BB6; Thu, 23 Dec 2021 18:32:07 +0100 (CET)
-From:   Jan Kara <jack@suse.cz>
-To:     <linux-block@vger.kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        "yukuai (C)" <yukuai3@huawei.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH 3/3] bfq: Split shared queues on move between cgroups
-Date:   Thu, 23 Dec 2021 18:31:59 +0100
-Message-Id: <20211223173207.15388-3-jack@suse.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20211223171425.3551-1-jack@suse.cz>
-References: <20211223171425.3551-1-jack@suse.cz>
+        Thu, 23 Dec 2021 13:33:24 -0500
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA91C061401
+        for <linux-block@vger.kernel.org>; Thu, 23 Dec 2021 10:33:24 -0800 (PST)
+Received: by mail-io1-xd2b.google.com with SMTP id y70so8249231iof.2
+        for <linux-block@vger.kernel.org>; Thu, 23 Dec 2021 10:33:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3TtGTsDOS1sv5VjAapnrKvw759mjru/5vHNygb4N0eQ=;
+        b=JdTfLfrrGmDFScx/OQtMg7HYOPFuDdER34j5YkQsfD8NbSnAoJ1auYNe74thKI8HBQ
+         ixj/9ym6KBf9zWCPoJpdIrjJXHgoNLqR3YpOacJNUxkGWkbUITQwybiRXtKaBfaoK3dn
+         NVQMirY+aGB/9jMjOoxYati/9ByK7hxJm+NXHIunrT8yEz0vvGNZklxJWFdyj9FuAP3G
+         hpn+pJu/VLfAoFePe4Ssyq8QHshR04SYAJmiz6FcYRUzD4kgsc3EZoVuJRNCLInH0DZz
+         1WDYaA40WPxL2iNUKQWTNLetZY8u3r13e5CqC//HrRX6+yo97z/FOQmvUb/Va0GFby59
+         ykRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3TtGTsDOS1sv5VjAapnrKvw759mjru/5vHNygb4N0eQ=;
+        b=bC4mQycr1abeF6T992wFQbASq34ow2z4OaQxknBXSi4VFXS5B/88ke8K37K/k/+6y6
+         BWP3GDEB7v224UK13/GZGYF38/BGKvcccOtiP567xYXcU5BUcWKg/OngJtjmRnD4vQYo
+         kyHHDMooz1As9IJc0J3Ag0kx+/ZgAN5+xU/hnpHJOk8M4jdDllQ2Ke0ikWgMIeUZ/OeI
+         n5mcirT45/2z2bhaYvfZ3qp68UlvRttXDiYa0K/ao7sNWMjfJVn2zyjI/fRsNIKrPUZg
+         wHAr2mKUmXSoo6dlyaT9WtS+KM9CetgLaSMd68aQ8iXpjQGx+gHed1rvLYm2PPcQqJPG
+         Jk2g==
+X-Gm-Message-State: AOAM533JNJKAzr0U/uh+p+bNEEIjIR+1HexHJ5Jb3Y+gL4Tm+D5bYt7q
+        a3cdWbIwwvVjKjHWzpqRNnJ0wA==
+X-Google-Smtp-Source: ABdhPJydAZ45WTRPq5+RzQwSrvcrY4VGXEmM5jOIltHvqumauXgrJtdp1sDGKNOJCQQ5WH5IkXgfzw==
+X-Received: by 2002:a5d:81d3:: with SMTP id t19mr1829959iol.199.1640284403854;
+        Thu, 23 Dec 2021 10:33:23 -0800 (PST)
+Received: from [192.168.1.116] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id a12sm2953694ilv.69.2021.12.23.10.33.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Dec 2021 10:33:23 -0800 (PST)
+Subject: Re: [RFC] remove the paride driver
+To:     Ondrej Zary <linux@zary.sk>, Christoph Hellwig <hch@lst.de>
+Cc:     Tim Waugh <tim@cyberelk.net>, linux-block@vger.kernel.org,
+        linux-parport@lists.infradead.org
+References: <20211223113504.1117836-1-hch@lst.de>
+ <202112231829.25658.linux@zary.sk>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4f88a1e4-1bbb-1c32-79dd-389f18cb3fa4@kernel.dk>
+Date:   Thu, 23 Dec 2021 11:33:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1386; h=from:subject; bh=TGBjtt0Grb1Fs/1iAI39LWcQyjfnAr/HP/ZQxo/mPQw=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBhxLKOGMtYejmo8KCKQGoP/YL7qSr3m0V8J4bziX39 GJO/H3OJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYcSyjgAKCRCcnaoHP2RA2eDCB/ 0dFwPJoP3LEhfO7/cT2HwG6W0Spt/GeFpDckwZfCli+CxFVVgqZOrj23KW8mKb+/ORT81+6PGZ8Zjt jBBfl/qDjj+BGlQOVj1AZhzh+N8ZwRFzUhrBf3X5i1X/Wb1i8trx9fetuqO/sSNAo5KpPgA15fBqO9 UOJNL7/je/e0cf3JdhvosD9TM7m6dvzyiono4K/kEHib3gXrz93J9sCsUv3GHt9bIrsZE5kT8+TLEq FUDkvYpbRUiqWau4OWstVNd9AEBQk8vM5L+SVKtvpf89DLMDm4LFz0jEUc6gjKJjobitGHQQpH1hC3 g1qyuRM9SE2qr4HQiSx3fw4A8+Nkf9
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202112231829.25658.linux@zary.sk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When bfqq is shared by multiple processes it can happen that one of the
-processes gets moved to a different cgroup (or just starts submitting IO
-for different cgroup). In case that happens we need to split the merged
-bfqq as otherwise we will have IO for multiple cgroups in one bfqq and
-we will just account IO time to wrong entities etc.
+On 12/23/21 10:29 AM, Ondrej Zary wrote:
+> On Thursday 23 December 2021 12:35:03 Christoph Hellwig wrote:
+>> Hi Jens,
+>>
+>> the paride driver has been unmaintained for a while and is a significant
+>> maintainance burden, including the fact that it is one of the last
+>> users of the block layer bounce buffering code.  This patch suggest
+>> to remove it assuming no users complain loduly.
+>>
+>> Ondrej: you're the last known users, so please speak up if you still
+>> have a use case!
+> 
+> Looks like I really need to do the libata conversion.
 
-CC: stable@vger.kernel.org
-Fixes: e21b7a0b9887 ("block, bfq: add full hierarchical scheduling and cgroups support")
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/bfq-cgroup.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+That would indeed be great! As mentioned in my reply, I don't want to
+remove drivers that are actively being used. Is the libata conversion
+something you are going to do, or is it more of a dream at this point?
+Ideally we get that done first, and then remove paride.
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 24a5c5329bcd..1f5fb723bed7 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -730,8 +730,18 @@ static struct bfq_group *__bfq_bic_change_cgroup(struct bfq_data *bfqd,
- 
- 	if (sync_bfqq) {
- 		entity = &sync_bfqq->entity;
--		if (entity->sched_data != &bfqg->sched_data)
-+		if (entity->sched_data != &bfqg->sched_data) {
-+			/*
-+			 * Moving bfqq that is shared with another process?
-+			 * Split the queues at the nearest occasion as the
-+			 * processes can be in different cgroups now.
-+			 */
-+			if (bfq_bfqq_coop(sync_bfqq)) {
-+				bic->stably_merged = false;
-+				bfq_mark_bfqq_split_coop(sync_bfqq);
-+			}
- 			bfq_bfqq_move(bfqd, sync_bfqq, bfqg);
-+		}
- 	}
- 
- 	return bfqg;
 -- 
-2.26.2
+Jens Axboe
 
