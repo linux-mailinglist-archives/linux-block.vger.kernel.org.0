@@ -2,51 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E212247EBE5
-	for <lists+linux-block@lfdr.de>; Fri, 24 Dec 2021 07:02:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8884A47EBE8
+	for <lists+linux-block@lfdr.de>; Fri, 24 Dec 2021 07:03:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351436AbhLXGCI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Dec 2021 01:02:08 -0500
-Received: from verein.lst.de ([213.95.11.211]:55691 "EHLO verein.lst.de"
+        id S1351437AbhLXGDO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Dec 2021 01:03:14 -0500
+Received: from verein.lst.de ([213.95.11.211]:55697 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351431AbhLXGCI (ORCPT <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Dec 2021 01:02:08 -0500
+        id S1351445AbhLXGDN (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Fri, 24 Dec 2021 01:03:13 -0500
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 12D2B68AA6; Fri, 24 Dec 2021 07:02:06 +0100 (CET)
-Date:   Fri, 24 Dec 2021 07:02:05 +0100
+        id 6F8EE68AA6; Fri, 24 Dec 2021 07:03:11 +0100 (CET)
+Date:   Fri, 24 Dec 2021 07:03:11 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jan Kara <jack@suse.cz>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
 Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jan Kara <jack@suse.cz>,
         Dan Schatzberg <schatzberg.dan@gmail.com>,
         linux-block@vger.kernel.org
-Subject: Re: fix loop autoclear for xfstets xfs/049
-Message-ID: <20211224060205.GB12234@lst.de>
-References: <20211223112509.1116461-1-hch@lst.de> <20211223134050.GD19129@quack2.suse.cz>
+Subject: Re: [PATCH 1/2] loop: use a global workqueue
+Message-ID: <20211224060311.GC12234@lst.de>
+References: <20211223112509.1116461-1-hch@lst.de> <20211223112509.1116461-2-hch@lst.de> <bb151d84-8a56-f6da-a5dd-b2d8d1fb6cdb@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211223134050.GD19129@quack2.suse.cz>
+In-Reply-To: <bb151d84-8a56-f6da-a5dd-b2d8d1fb6cdb@i-love.sakura.ne.jp>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Dec 23, 2021 at 02:40:50PM +0100, Jan Kara wrote:
-> Hum, I have nothing against this but I'm somewhat wondering: Lockdep was
-> originally complaining because it somehow managed to find a write whose
-> completion was indirectly dependent on disk->open_mutex and
-> destroy_workqueue() could wait for such write to complete under
-> disk->open_mutex. Now your patch will fix this lockdep complaint but we
-> still would wait for the write to complete through blk_mq_freeze_queue()
-> (just lockdep is not clever enough to detect this). So IHMO if there was a
-> deadlock before, it will be still there with your changes. Now I'm not 100%
-> sure the deadlock lockdep was complaining about is real in the first place
-> because it involved some writes to proc files (taking some locks) and
-> hibernation mutex and whatnot.  But it is true that writing to a backing
-> file will grab fs freeze protection and that can bring with it all sorts of
-> interesting dependencies.
+On Thu, Dec 23, 2021 at 11:37:21PM +0900, Tetsuo Handa wrote:
+> > @@ -1115,7 +1107,6 @@ static void __loop_clr_fd(struct loop_device *lo)
+> >  	/* freeze request queue during the transition */
+> >  	blk_mq_freeze_queue(lo->lo_queue);
+> >  
+> > -	destroy_workqueue(lo->workqueue);
+> 
+> is it safe to remove destroy_workqueue() call here?
+> 
+> >  	spin_lock_irq(&lo->lo_work_lock);
+> >  	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
+> >  				idle_list) {
+> 
+> destroy_workqueue() implies flush_workqueue() which is creating the lock
+> ordering problem. And I think that flush_workqueue() is required for making
+> sure that there is no more work to process (i.e. loop_process_work() is
+> no longer running) before start deleting idle workers.
+> 
+> My understanding is that the problem is not the use of a per-device workqueue
+> but the need to call flush_workqueue() in order to make sure that all pending
+> works are completed.
 
-I don't think the problem was a write completion, but the synchronous
-nature of the workqueue operations.  But I also have to admit the whole
-lockdep vs workqueue thing keeps confusing me.
+All the work items are for requests, and the blk_mq_freeze_queue should
+take care of flushing them all out.
