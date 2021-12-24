@@ -2,115 +2,125 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3039F47EE04
-	for <lists+linux-block@lfdr.de>; Fri, 24 Dec 2021 10:48:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6AA747EEB8
+	for <lists+linux-block@lfdr.de>; Fri, 24 Dec 2021 13:06:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352334AbhLXJsy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Dec 2021 04:48:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343853AbhLXJsx (ORCPT
+        id S1352635AbhLXMGR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Dec 2021 07:06:17 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61976 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352634AbhLXMGR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Dec 2021 04:48:53 -0500
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA34C061401
-        for <linux-block@vger.kernel.org>; Fri, 24 Dec 2021 01:48:53 -0800 (PST)
-Received: by mail-qk1-x743.google.com with SMTP id 202so4195105qkg.13
-        for <linux-block@vger.kernel.org>; Fri, 24 Dec 2021 01:48:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=JiqqbWB69DqkNf+sMs24hPGSjPJFHVk1jq6wqKCZLZL1CVrC0VmiKCzP/VgBjKx5pb
-         dsIUB59PLZgIT2JJ6Uzh7oWSP3zLskA83GOGNSb2bKGOnVVw+MbWPPhzz4K9/1tzw6Gc
-         S7OV7Utuw6vefWgsbytaKplD0MO4RERfSkYbOvBvEugzFnFqgn9t/8WZiJzCHwIVBEJr
-         viXgpji+moZuiLZOQ1P13xks6PXBNYGB4ttWksN0o9dTf927jgjnXtB9qqV+XJL7dGaq
-         l7vb7LhNl2TX0+kzqWNWEzbZKw5ovXURmly1INeFF9VARb29c0C2nAuwQURN47Fd4ZLO
-         j48w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=yixL19uInGo6wESvrjqo49S0JTcNgz1VNk5MPb6Ifd+f5W7f+KPySUOOA2FqAGvsMb
-         S8+7sCvkmcb6wCqIsYyM9J7AnxyHqEXYyGCHqf1TkOfjIz/h6o2be6JfeHWx/1h5Y+c6
-         n0hwZOe3sct9oEpflCR9HRQ79JZ4tJOIMHizjtCAYeE0hwNVDXORhoe+Zv3dj+ylpkyC
-         rHYv+wL5f6MOfBWMiKOaLznXNWVVbPE34QZUJAmz9s3sh2fpuwaSlrLH78emgCTBmITR
-         XuQNQW1AJ4e6BtNhBMjqvF6MOrMRaIPIMyjr7NdU0I8/rHylyK8JVCnQxmugcwB+/gt1
-         FDQg==
-X-Gm-Message-State: AOAM530KDzVQRMQWK4ZBslnI87SeJm5p2qIOKds5LCGpj4VflHtV+PVu
-        SxpQymeEHG/hhzBBgj/iflDm6M0v2Ke9cIJcRqQ=
-X-Google-Smtp-Source: ABdhPJzxawpLFc682HnyGwOCnZ17wCPMxXvB7RlXp2GfPyU9ZuKCC0zpGLj5xXZYpCFnyoSEXGM/062g6Fh3MJkWVIA=
-X-Received: by 2002:a05:620a:424c:: with SMTP id w12mr4148560qko.62.1640339332657;
- Fri, 24 Dec 2021 01:48:52 -0800 (PST)
+        Fri, 24 Dec 2021 07:06:17 -0500
+Received: from fsav413.sakura.ne.jp (fsav413.sakura.ne.jp [133.242.250.112])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 1BOC626X005352;
+        Fri, 24 Dec 2021 21:06:02 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav413.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp);
+ Fri, 24 Dec 2021 21:06:01 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 1BOC5uea005336
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 24 Dec 2021 21:06:01 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-ID: <f839a895-bb91-02f8-33fb-5994dd725d24@i-love.sakura.ne.jp>
+Date:   Fri, 24 Dec 2021 21:05:53 +0900
 MIME-Version: 1.0
-Received: by 2002:ad4:5c62:0:0:0:0:0 with HTTP; Fri, 24 Dec 2021 01:48:52
- -0800 (PST)
-Reply-To: williamsreneta2019@gmail.com
-From:   MISS WILLIAMS <info.turvateealfastar@gmail.com>
-Date:   Fri, 24 Dec 2021 01:48:52 -0800
-Message-ID: <CAM-qQYba=eJ8z6wzBJYnqCULta=6iewd+_ar47dMCsuUnBhWCw@mail.gmail.com>
-Subject: Greetings Dearest One,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH 1/2] loop: use a global workqueue
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Dan Schatzberg <schatzberg.dan@gmail.com>,
+        linux-block@vger.kernel.org
+References: <20211223112509.1116461-1-hch@lst.de>
+ <20211223112509.1116461-2-hch@lst.de>
+ <bb151d84-8a56-f6da-a5dd-b2d8d1fb6cdb@i-love.sakura.ne.jp>
+ <20211224060311.GC12234@lst.de>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+In-Reply-To: <20211224060311.GC12234@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Greetings Dearest One,
+On 2021/12/24 15:03, Christoph Hellwig wrote:
+> On Thu, Dec 23, 2021 at 11:37:21PM +0900, Tetsuo Handa wrote:
+>>> @@ -1115,7 +1107,6 @@ static void __loop_clr_fd(struct loop_device *lo)
+>>>  	/* freeze request queue during the transition */
+>>>  	blk_mq_freeze_queue(lo->lo_queue);
+>>>  
+>>> -	destroy_workqueue(lo->workqueue);
+>>
+>> is it safe to remove destroy_workqueue() call here?
+>>
+>>>  	spin_lock_irq(&lo->lo_work_lock);
+>>>  	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
+>>>  				idle_list) {
+>>
+>> destroy_workqueue() implies flush_workqueue() which is creating the lock
+>> ordering problem. And I think that flush_workqueue() is required for making
+>> sure that there is no more work to process (i.e. loop_process_work() is
+>> no longer running) before start deleting idle workers.
+>>
+>> My understanding is that the problem is not the use of a per-device workqueue
+>> but the need to call flush_workqueue() in order to make sure that all pending
+>> works are completed.
+> 
+> All the work items are for requests, and the blk_mq_freeze_queue should
+> take care of flushing them all out.
 
-How are you today, together with your family?Hope fine.I would like to
-use this opportunity to introduce myself to you. I am Miss Reneta
-Williams, From Benin Republic, West Africa. And my late parents are
-Mr. and Mrs. Dikko Williams; my father was a highly reputable business
-magnet who operated in Benin Republic during his days.
+Hmm, OK.
 
-I am writing this mail to you with tears and sorrow from my heart.
-With due respect trust and humanity, I know this mail will come to you
-as a surprise since we haven't known or come across each other before,
-considering the fact that I sourced your email contact through the
-Internet in search of trusted person who can be trusted and will
-assist me.
+(1) loop_queue_rq() calls blk_mq_start_request() and then calls loop_queue_work().
 
-It is sad to say that he passed away mysteriously in France during one
-of his business trips abroad. Though his sudden death was linked or
-rather suspected to have been masterminded by an uncle of his who
-traveled with him at that time. But God knows the truth! My mother
-died when I was just 6yrs old, and since then my father took me so
-special.
+(2) loop_queue_work() allocates "struct work_struct" and calls queue_work().
 
-Before his death, he called me and informed me that he has the sum of
-Eighteen Million Five Hundred , United State Dollar
-(USD$18.500,000.00) left in fixed deposit account in one of the
-leading banks in Africa. He further told me that he deposited the
-money in my name, and also gave me all the necessary but legal
-documents to this fund with the bank.
+(3) loop_handle_cmd() from loop_process_work() from loop_workfn() is called by a WQ thread.
 
-I am 21 years old and a university undergraduate and really don't know
-what to do. Now I want an account overseas where I can transfer this
-funds and after the transaction I will come and reside permanently in
-your country till such a time that it will be convenient for me to
-return back home if I so desire.
+(4) do_req_filebacked() from loop_handle_cmd() performs read/write on lo->lo_backing_file.
 
-The death of my father actually brought sorrow to my life. I also want
-to invest the fund under your care because I am ignorant of business
-world. I am in a sincere desire of your humble assistance in this
-regards. Your suggestions and ideas will be highly regarded.
+(5) Either completion function or loop_handle_cmd() calls blk_mq_complete_request().
 
-Now permit me to ask these few questions:
+Therefore, as long as blk_mq_freeze_queue(lo->lo_queue) waits for completion of (5) and
+blocks new events for (2), there should be no work to process by loop_process_work().
 
-1. Can you honestly help me from your heart?
+Then, we can defer
 
-2. Can I completely trust you?
+	destroy_workqueue(lo->workqueue);
+	spin_lock_irq(&lo->lo_work_lock);
+	list_for_each_entry_safe(worker, pos, &lo->idle_worker_list,
+				idle_list) {
+		list_del(&worker->idle_list);
+		rb_erase(&worker->rb_node, &lo->worker_tree);
+		css_put(worker->blkcg_css);
+		kfree(worker);
+	}
+	spin_unlock_irq(&lo->lo_work_lock);
+	del_timer_sync(&lo->timer);
 
-3. What percentage of the total amount in question will be good for
-you after the money is in your account?
+block in __loop_clr_fd() till loop_remove() if we want. Assuming that
+loop devices are likely created only when there is no free one, a loop
+device is likely reused once created. Then, we don't need to care idle
+workers on every loop_configure()/__loop_clr_fd() pairs?
 
-Please, consider this and get back to me as soon as
-possible.Immediately and confirm your willingness on this my
-email(williamsreneta2019@gmail.com), here is one of my Picture and
-also i will inform you more details involved in this matter.
+By the way, is it safe to use single global WQ if (4) is a synchronous I/O request?
+Since there can be up to 1048576 loop devices, and one loop device can use another
+loop device as lo->lo_backing_file (unless loop_validate_file() finds a circular
+usage), one synchronous I/O request in (4) might recursively involve up to 1048576
+works (which would be too many concurrency to be handled by a WQ) ?
 
-Regards,
+Also, is
 
-Miss Reneta Williams.
+	blk_mq_start_request(rq);
+
+	if (lo->lo_state != Lo_bound)
+		return BLK_STS_IOERR;
+
+in loop_queue_rq() correct? (Not only lo->lo_state test is racy, but wants
+blk_mq_end_request() like lo_complete_rq() does?
