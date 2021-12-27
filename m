@@ -2,43 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 746074801B4
-	for <lists+linux-block@lfdr.de>; Mon, 27 Dec 2021 17:41:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D90A34801B6
+	for <lists+linux-block@lfdr.de>; Mon, 27 Dec 2021 17:41:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbhL0Qlr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Dec 2021 11:41:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbhL0Qlr (ORCPT
+        id S229833AbhL0Qlt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Dec 2021 11:41:49 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:45098 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229755AbhL0Qlt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Dec 2021 11:41:47 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A79C06173E
-        for <linux-block@vger.kernel.org>; Mon, 27 Dec 2021 08:41:46 -0800 (PST)
+        Mon, 27 Dec 2021 11:41:49 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 87CF361126
-        for <linux-block@vger.kernel.org>; Mon, 27 Dec 2021 16:41:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F53AC36AEB;
-        Mon, 27 Dec 2021 16:41:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E8B70B810E5
+        for <linux-block@vger.kernel.org>; Mon, 27 Dec 2021 16:41:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D1EEC36AED;
+        Mon, 27 Dec 2021 16:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1640623306;
-        bh=WoHtcBMvvFU7VPovTMB/F8HHt+DyWm856xyUX8Ln0wA=;
+        bh=EXvrCVLqlbJIq3ahfQk2vdaa75rjTa4g5DSilhy9jUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIRnfL6mDeOA4tAONDJCoSC8mHOEzPxUyyVL0+qruj8sWa6lp9Rn+DN+1kBj9jJIz
-         wBO1kLM/FLY9QhQOGBlH7418g9AJETuAXIXkAEmOff+GhYj5cr3YyMBZe75EUP0bpK
-         Mm4WhcaxIIL2rt4ua/l/tYYMG/37MwiL570Ny6KJ69m/ecXKwwlIOOa00D0RLqekyU
-         IQeta4R/CDFTgV4fsGi2lnBHojPj60r003xoT9iZcpEOgzwqy1J1CX4c8L15padtfo
-         ydmSHEqsBs7amTcQINXxC/nUFMF50mxwU6H/HLjI5IN0ANQoDK7qsJ0656OEUN+Zl4
-         o8B+yoSaRi1Sg==
+        b=H/6gPL94rCXRjEDlAt1TX3UbAoF8TI5T1J3Jr+DVhvxyuHnbdKUYUHGrdhY0x9QSl
+         1swRts3w/G6hPEDxB7qX0V3kuAhaNyPh8MpfRH7sppZv1xVRpQ2OKII/0NWhEDcNXj
+         nUqTUNDcXcNwIFINfJLOdfojK75SdbFSO6cIAyvx53OqY53XFR/bt+btIb40wTRt6x
+         AYDbdtkLDbzs6LeJ48DmlRFmhCo8Swuk+Ghdp1MNZu7r7TcN8TNIcPBr2p75iqYxFW
+         eD27hfab5rE7wG6Yihc2Rv5K2Tep8srnSqGRuKpX1khYZwUbnl2mAYDBNmGdxBbojH
+         /oYLvkjqZAxjw==
 From:   Keith Busch <kbusch@kernel.org>
 To:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
         axboe@kernel.dk
 Cc:     hch@lst.de, sagi@grimberg.me, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 2/3] block: introduce rq_list_move
-Date:   Mon, 27 Dec 2021 08:41:37 -0800
-Message-Id: <20211227164138.2488066-2-kbusch@kernel.org>
+Subject: [PATCHv2 3/3] nvme-pci: fix queue_rqs list splitting
+Date:   Mon, 27 Dec 2021 08:41:38 -0800
+Message-Id: <20211227164138.2488066-3-kbusch@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20211227164138.2488066-1-kbusch@kernel.org>
 References: <20211227164138.2488066-1-kbusch@kernel.org>
@@ -48,45 +45,82 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When iterating a list, a particular request may need to be moved for
-special handling. Provide a helper function to achieve that so drivers
-don't need to reimplement rqlist manipulation.
+If command prep fails, current handling will orphan subsequent requests
+in the list. Consider a simple example:
 
+  rqlist = [ 1 -> 2 ]
+
+When prep for request '1' fails, it will be appended to the
+'requeue_list', leaving request '2' disconnected from the original
+rqlist and no longer tracked. Meanwhile, rqlist is still pointing to the
+failed request '1' and will attempt to submit an unprepped command.
+
+Fix this by updating the rqlist accordingly using the request list
+helper functions.
+
+Fixes: d62cbcf62f2f ("nvme: add support for mq_ops->queue_rqs()")
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- include/linux/blk-mq.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+v1->v2:
 
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 550996cf419c..0efa25abcc1c 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -216,6 +216,25 @@ static inline unsigned short req_get_ioprio(struct request *req)
- #define rq_dma_dir(rq) \
- 	(op_is_write(req_op(rq)) ? DMA_TO_DEVICE : DMA_FROM_DEVICE)
+  Replaced the backward looking iterator with the forward looking
+  version implemented in PATCH 1/3. This is a little easier to read.
+
+  Replaced the driver's list manipulation with the helper function
+  provided in PATCH 2/3.
+
+ drivers/nvme/host/pci.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 50deb8b69c40..992ee314e91b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -999,30 +999,30 @@ static bool nvme_prep_rq_batch(struct nvme_queue *nvmeq, struct request *req)
  
-+/**
-+ * rq_list_move() - move a struct request from one list to another
-+ * @src: The source list @rq is currently in
-+ * @dst: The destination list that @rq will be appended to
-+ * @rq: The request to move
-+ * @prv: The request preceding @rq in @src (NULL if @rq is the head)
-+ * @nxt: The request following @rq in @src (NULL if @rq is the tail)
-+ */
-+static void inline rq_list_move(struct request **src, struct request **dst,
-+				struct request *rq, struct request *prv,
-+				struct request *nxt)
-+{
-+	if (prv)
-+		prv->rq_next = nxt;
-+	else
-+		*src = nxt;
-+	rq_list_add(dst, rq);
-+}
+ static void nvme_queue_rqs(struct request **rqlist)
+ {
+-	struct request *req = rq_list_peek(rqlist), *prev = NULL;
++	struct request *req, *next, *prev = NULL;
+ 	struct request *requeue_list = NULL;
+ 
+-	do {
++	rq_list_for_each_safe(rqlist, req, next) {
+ 		struct nvme_queue *nvmeq = req->mq_hctx->driver_data;
+ 
+ 		if (!nvme_prep_rq_batch(nvmeq, req)) {
+ 			/* detach 'req' and add to remainder list */
+-			if (prev)
+-				prev->rq_next = req->rq_next;
+-			rq_list_add(&requeue_list, req);
+-		} else {
+-			prev = req;
++			rq_list_move(rqlist, &requeue_list, req, prev, next);
 +
- enum blk_eh_timer_return {
- 	BLK_EH_DONE,		/* drivers has completed the command */
- 	BLK_EH_RESET_TIMER,	/* reset timer and try again */
++			req = prev;
++			if (!req)
++				continue;
+ 		}
+ 
+-		req = rq_list_next(req);
+-		if (!req || (prev && req->mq_hctx != prev->mq_hctx)) {
++		if (!next || req->mq_hctx != next->mq_hctx) {
+ 			/* detach rest of list, and submit */
+-			if (prev)
+-				prev->rq_next = NULL;
++			req->rq_next = NULL;
+ 			nvme_submit_cmds(nvmeq, rqlist);
+-			*rqlist = req;
+-		}
+-	} while (req);
++			*rqlist = next;
++			prev = NULL;
++		} else
++			prev = req;
++	}
+ 
+ 	*rqlist = requeue_list;
+ }
 -- 
 2.25.4
 
