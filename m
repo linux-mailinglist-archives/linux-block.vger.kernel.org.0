@@ -2,156 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 597E3486563
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jan 2022 14:41:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5D8F4866EB
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jan 2022 16:45:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239629AbiAFNlM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Jan 2022 08:41:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230323AbiAFNlL (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Jan 2022 08:41:11 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ADC3C061245
-        for <linux-block@vger.kernel.org>; Thu,  6 Jan 2022 05:41:11 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id v18so2058058ilm.11
-        for <linux-block@vger.kernel.org>; Thu, 06 Jan 2022 05:41:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VD+8/yhLW150WYZcVJ/T6/rWWKqvYBJi2PVbyjDXdaA=;
-        b=z1pm/w27Hg8vjqqb0thh/jsLrL/sb1AyUEJ8iwP5+JWs9vxr6nhBijA/QsWk3rQFeU
-         SkHT+LN9Dw0g7IQgB5UICpS0a74LSEcgprAlwNM9vSwJGsMebCWz+gXzpK0wvhWV98By
-         HIZpXNYjnPwAe1fLb1N9bVv3iYGGjp38rQymcOFueusdGtpdo8r2gcJkrBxCb0eYS0OS
-         njdNW5nv3Mogp3W2M5fAFk38AxozmHt7yQA0K+rXRYLTPbIKwRyS4RORElI98TN0n65q
-         IuJ2BDCaQ/qV/zg1uKuppVJvSfJ3UyMU5WX+UQpEr9MSD+imJTebm87zMJG8qxXLtkqU
-         nqXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VD+8/yhLW150WYZcVJ/T6/rWWKqvYBJi2PVbyjDXdaA=;
-        b=fTcae06CZm1LNE7qUfvNCnhXfea6fAcoBkLxNbGAzORNO4kfbPx3ItoA2x+4NbAZE1
-         Dgg28KOwAhxQB1zP79XS0R073CneUgdbvjrJVyhiw0Lu639o2JYiGwkifE1UCFmdFtlS
-         G6cZb2UFeHoOJkgbE+QRtX8B1H7ZZLj6p7x3/ejVFcKzgiJ66jtlrJXhGiV7Q4BjAtSP
-         c19EysZ4f4ztx6urXER1xDbYpnSbWvMdMPio7RxRuheE7lgf7+0z22uEJsQUL3Lzbhgd
-         hYDUxT5pde5PamGuvKt6MfNgddUdbHTgy+bcf9IY/5bS6lD7zSjRJjSJXvfZh6wTimO2
-         9imw==
-X-Gm-Message-State: AOAM533f5zha/kKCmP7kpaXy4wy9eWiArAj0M3PdiKjWKXW3Igi8mGa8
-        ww2rONUY8dUaDsraRkVvRIRxF4HiNptdBg==
-X-Google-Smtp-Source: ABdhPJxqKqaVzjsFIPxqzSJppMN1yLhYZfWoI1qJ6AwCp9fPip86kGZUavjtwEXw3yiQrqKDYYGM+w==
-X-Received: by 2002:a05:6e02:194b:: with SMTP id x11mr3937302ilu.208.1641476470907;
-        Thu, 06 Jan 2022 05:41:10 -0800 (PST)
-Received: from [192.168.1.116] ([66.219.217.159])
-        by smtp.gmail.com with ESMTPSA id g3sm1111380ilq.1.2022.01.06.05.41.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jan 2022 05:41:10 -0800 (PST)
-Subject: Re: [PATCHv2 1/3] block: introduce rq_list_for_each_safe macro
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Keith Busch <kbusch@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, sagi@grimberg.me
-References: <20211227164138.2488066-1-kbusch@kernel.org>
- <20211229173902.GA28058@lst.de>
- <20211229205738.GA2493133@dhcp-10-100-145-180.wdc.com>
- <99b389d6-b18b-7c3b-decb-66c4563dd37b@nvidia.com>
- <20211230153018.GD2493133@dhcp-10-100-145-180.wdc.com>
- <2ed68ef8-5393-80ae-1caa-c00d108aec8c@nvidia.com>
- <20220103181552.GA2498980@dhcp-10-100-145-180.wdc.com>
- <ac74ac4c-15f3-997e-ecd2-5e704a5b4573@nvidia.com>
- <20220105172625.GA3181467@dhcp-10-100-145-180.wdc.com>
- <02a943c0-2919-a4d4-6044-7a6349b9aaf5@nvidia.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <42380959-7a72-1df1-9b6a-dede8cdaebe9@kernel.dk>
-Date:   Thu, 6 Jan 2022 06:41:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S240654AbiAFPpu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Jan 2022 10:45:50 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:47190 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240593AbiAFPpq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Jan 2022 10:45:46 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 5107B1F39E;
+        Thu,  6 Jan 2022 15:45:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1641483945; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=14vcaJeWLzoYqMo5aNvjxM3LWBDBywLknqQjafAzAYM=;
+        b=cFoRphpgYg//vPAzdSTOh3YkeqW1VW9Ud3QiF7H8+hWiiav9zLi697nEswlr54VGjWZ0ZD
+        vxmDYffrEs3T65DBACISN8yrw8flGVZ8EUGD6XT5LXLk2oZrYjC7pi0cU733jaoQ6uaGiE
+        Hb0nZDYVjXjPgJL5JvChW7mNr4ugfOM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1641483945;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=14vcaJeWLzoYqMo5aNvjxM3LWBDBywLknqQjafAzAYM=;
+        b=sy2Pa5IDn5YbF4t38FsIv1zMqC4iH0HAGzjAkeYN2nUtuLR21/mgY6CPLtIFJ3RBMA8E4f
+        Dzm6mvQzNhW7bbAg==
+Received: from quack3.suse.cz (unknown [10.163.43.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 455D9A3B88;
+        Thu,  6 Jan 2022 15:45:45 +0000 (UTC)
+Received: by localhost (Postfix, from userid 1000)
+        id 04AAAA05A4; Mon,  3 Jan 2022 14:16:55 +0100 (CET)
+Date:   Mon, 3 Jan 2022 14:16:54 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 2/3] bfq: Avoid merging queues with different parents
+Message-ID: <20220103131654.7seobu6gqhigjv2m@quack3>
+References: <20211223171425.3551-1-jack@suse.cz>
+ <20211223173207.15388-2-jack@suse.cz>
+ <fec7558a-1559-dae0-fe21-d11876dc7473@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <02a943c0-2919-a4d4-6044-7a6349b9aaf5@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fec7558a-1559-dae0-fe21-d11876dc7473@huawei.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/6/22 3:54 AM, Max Gurtovoy wrote:
+On Fri 24-12-21 09:45:02, yukuai (C) wrote:
+> 在 2021/12/24 1:31, Jan Kara 写道:
+> > diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> > index 056399185c2f..0da47f2ca781 100644
+> > --- a/block/bfq-iosched.c
+> > +++ b/block/bfq-iosched.c
+> > @@ -2638,6 +2638,14 @@ bfq_setup_merge(struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
+> >   	if (process_refs == 0 || new_process_refs == 0)
+> >   		return NULL;
+> > +	/*
+> > +	 * Make sure merged queues belong to the same parent. Parents could
+> > +	 * have changed since the time we decided the two queues are suitable
+> > +	 * for merging.
+> > +	 */
+> > +	if (new_bfqq->entity.parent != bfqq->entity.parent)
+> > +		return NULL;
+> > +
+> Hi,
 > 
-> On 1/5/2022 7:26 PM, Keith Busch wrote:
->> On Tue, Jan 04, 2022 at 02:15:58PM +0200, Max Gurtovoy wrote:
->>> This patch worked for me with 2 namespaces for NVMe PCI.
->>>
->>> I'll check it later on with my RDMA queue_rqs patches as well. There we have
->>> also a tagset sharing with the connect_q (and not only with multiple
->>> namespaces).
->>>
->>> But the connect_q is using a reserved tags only (for the connect commands).
->>>
->>> I saw some strange things that I couldn't understand:
->>>
->>> 1. running randread fio with libaio ioengine didn't call nvme_queue_rqs -
->>> expected
->>>
->>> *2. running randwrite fio with libaio ioengine did call nvme_queue_rqs - Not
->>> expected !!*
->>>
->>> *3. running randread fio with io_uring ioengine (and --iodepth_batch=32)
->>> didn't call nvme_queue_rqs - Not expected !!*
->>>
->>> 4. running randwrite fio with io_uring ioengine (and --iodepth_batch=32) did
->>> call nvme_queue_rqs - expected
->>>
->>> 5. *running randread fio with io_uring ioengine (and --iodepth_batch=32
->>> --runtime=30) didn't finish after 30 seconds and stuck for 300 seconds (fio
->>> jobs required "kill -9 fio" to remove refcounts from nvme_core)   - Not
->>> expected !!*
->>>
->>> *debug pring: fio: job 'task_nvme0n1' (state=5) hasn't exited in 300
->>> seconds, it appears to be stuck. Doing forceful exit of this job.
->>> *
->>>
->>> *6. ***running randwrite fio with io_uring ioengine (and  --iodepth_batch=32
->>> --runtime=30) didn't finish after 30 seconds and stuck for 300 seconds (fio
->>> jobs required "kill -9 fio" to remove refcounts from nvme_core)   - Not
->>> expected !!**
->>>
->>> ***debug pring: fio: job 'task_nvme0n1' (state=5) hasn't exited in 300
->>> seconds, it appears to be stuck. Doing forceful exit of this job.***
->>>
->>>
->>> any idea what could cause these unexpected scenarios ? at least unexpected
->>> for me :)
->> Not sure about all the scenarios. I believe it should call queue_rqs
->> anytime we finish a plugged list of requests as long as the requests
->> come from the same request_queue, and it's not being flushed from
->> io_schedule().
-> 
-> I also see we have batch > 1 only in the start of the fio operation. 
-> After X IO operations batch size == 1 till the end of the fio.
+> This seems unnecessary, the caller of bfq_setup_merge() aready make sure
+> bfqq and new_bfqq are under the same bfqg. Am I missing something?
 
-There are two settings for completion batch, you're likely not setting
-them? That in turn will prevent the submit side from submitting more
-than 1, as that's all that's left.
+Not all the callers of bfq_setup_merge() check that queues belong to the
+same cgroup (e.g. bfq_setup_cooperator() does not seem to check).
 
->> The stuck fio job might be a lost request, which is what this series
->> should address. It would be unusual to see such an error happen in
->> normal operation, though. I had to synthesize errors to verify the bug
->> and fix.
-> 
-> But there is no timeout error and prints in the dmesg.
-> 
-> If there was a timeout prints I would expect the issue might be in the
-> local NVMe device, but there isn't.
-> 
-> Also this phenomena doesn't happen with NVMf/RDMA code I developed
-> locally.
+								Honza
 
-There would only be a timeout if it wasn't lost. Keith's patches fixed a
-case where it was simply dropped from the list. As it was never started,
-it won't get timed out.
-
+> 
+> Thanks,
+> Kuai
+> >   	bfq_log_bfqq(bfqq->bfqd, bfqq, "scheduling merge with queue %d",
+> >   		new_bfqq->pid);
+> > 
 -- 
-Jens Axboe
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
