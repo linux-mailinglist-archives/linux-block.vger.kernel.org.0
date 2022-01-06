@@ -2,102 +2,212 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D0634866F2
-	for <lists+linux-block@lfdr.de>; Thu,  6 Jan 2022 16:45:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17F0D4866D6
+	for <lists+linux-block@lfdr.de>; Thu,  6 Jan 2022 16:41:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240643AbiAFPpt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Jan 2022 10:45:49 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:50276 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240584AbiAFPpq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Jan 2022 10:45:46 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 513652112A;
-        Thu,  6 Jan 2022 15:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1641483945; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+        id S240462AbiAFPk5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Jan 2022 10:40:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44265 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229726AbiAFPk5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 6 Jan 2022 10:40:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641483656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=XI20t3x6VluxG/lEe3pVn9R5bOW+Q1xeNYKAadDibN0=;
-        b=2aMcAwOjv3tN6KVz42xVTCTqcXhUCB3J2tn+LXeQeCMmTq8M2AeOl5ajzhLiA+zDsSkmHO
-        2DQm88d+Vfxfudju2pWYyEvkpTWhAVCj5xS9d8x62dyAA85LpcnMiAYZ4XHvHHCEylRfvU
-        XGfTKecPhpYBiEaOd453ZvdlXEToxnU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1641483945;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XI20t3x6VluxG/lEe3pVn9R5bOW+Q1xeNYKAadDibN0=;
-        b=8YFk5AtUz/abnPVcy9O2O4XZwWFnUsqSJo3h0aTB3Hb9jh5AvnDwKicEDk1ie5hd49XaKo
-        fpbPwZrItw+tpcBg==
-Received: from quack3.suse.cz (unknown [10.163.43.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 4594EA3B89;
-        Thu,  6 Jan 2022 15:45:45 +0000 (UTC)
-Received: by localhost (Postfix, from userid 1000)
-        id D8BC4A084C; Wed,  5 Jan 2022 15:36:39 +0100 (CET)
-From:   Jan Kara <jack@suse.cz>
-To:     <linux-block@vger.kernel.org>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "yukuai (C)" <yukuai3@huawei.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH 5/5] bfq: Update cgroup information before merging bio
-Date:   Wed,  5 Jan 2022 15:36:36 +0100
-Message-Id: <20220105143639.31266-5-jack@suse.cz>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220105143037.20542-1-jack@suse.cz>
-References: <20220105143037.20542-1-jack@suse.cz>
+        bh=tkCTbr45iy5PICy3oH+srONgdc+wbihvOVMyc+AgjdQ=;
+        b=MdeCbCaTvv8JhS6ryRatpuN5yHIUnLlnOpdrtebHbjwRnweaI3K+r1waLRWgrz7DNas/oj
+        DSrV0MXOQ1XEc95/KHbVgCAKN6Ek4nmbJz7DBchELyhyvHiBs+eMtO8biCDRjrf83zvVh1
+        NdOd28TqGeWL9RKDmkuS7OgE5NTWOMQ=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-296-01nzXsavM-WW_a0ukcBlrw-1; Thu, 06 Jan 2022 10:40:53 -0500
+X-MC-Unique: 01nzXsavM-WW_a0ukcBlrw-1
+Received: by mail-qv1-f70.google.com with SMTP id kd7-20020a056214400700b0041195fd2977so2420374qvb.5
+        for <linux-block@vger.kernel.org>; Thu, 06 Jan 2022 07:40:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tkCTbr45iy5PICy3oH+srONgdc+wbihvOVMyc+AgjdQ=;
+        b=SBPtVjePMeKEaAe7nQpU/3NZkDByriUMBW7KZIJjWgGSJxYQ35MGaXGTu2gLJKTFO5
+         /V4pZq0EtSMusRlkZsc/ZRgZHy233KSB4tapaXaB85bmO9bh/HyZWiXa2EVqeZS5fXRo
+         Mq1CaLbR8cdyidXKhOAnbTtNQg15Sx60kju/RQQiEBljNTvYTY9x5AjNRc1Hy8uKPNb5
+         +E2NF9BN1J36hldXg7f+85DMJ72F0voQIrZ5ZTD5UR1+R9gJ0+tB0UcKx92Sp0j1u0S8
+         Laoi8Wy0aZkTvzyFA346CNpnvE0yMPQ8wkHW9mfHhh42Lom5kD0gzDwc8qKVRjko9xTn
+         gZjA==
+X-Gm-Message-State: AOAM5313TgoZ71b5QKD7sHfwg/QCJeuzjkcO5tbEvDQz/X5JfQ/KV4Au
+        78R7GT8NsEd0t0GzsWOJWzV1RCyJDbMdUyc/zT0zXR/IouIleZAGRmKiGT0RjEY9Y5aPvIOOa9+
+        zUxJ6gq9A02suD/66rqI6mg==
+X-Received: by 2002:a05:620a:2588:: with SMTP id x8mr42205361qko.292.1641483653340;
+        Thu, 06 Jan 2022 07:40:53 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJysRc1hv4FjhYX+z2oI9RRSophDyzvxsJdTfukvL3cJ65H4Rx1G6pOt0qNkzLCN3ysMpQ+VKw==
+X-Received: by 2002:a05:620a:2588:: with SMTP id x8mr42205346qko.292.1641483653083;
+        Thu, 06 Jan 2022 07:40:53 -0800 (PST)
+Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
+        by smtp.gmail.com with ESMTPSA id bk25sm1675861qkb.13.2022.01.06.07.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jan 2022 07:40:52 -0800 (PST)
+Date:   Thu, 6 Jan 2022 10:40:51 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com
+Subject: Re: [PATCH 3/3] dm: mark dm queue as blocking if any underlying is
+ blocking
+Message-ID: <YdcNgw14kSg+ENVL@redhat.com>
+References: <20211221141459.1368176-1-ming.lei@redhat.com>
+ <20211221141459.1368176-4-ming.lei@redhat.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1410; h=from:subject; bh=C0+SJ39G5KroczINGXi/DmV/R4t2VczWioMIeh5rfLk=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBh1az0bT4FhjQ/C3K9EvbFmFE27QKGZ0RF44hR8KVz AKfB/uOJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYdWs9AAKCRCcnaoHP2RA2d3gCA CxEIICfQmj0qLCyG49URS9AtsNC7S/UKlG6HzbDjzE16TxVcY0OTuJXEnk7SPqykvMpZ/BkwIjrECJ GaIGUeUruWbMRUfKhiqc3+dyh5sMC8OSqMd9X35stuFg4AiKjWLYDV89dPuwexJP0/whI4/3H8uLD5 o7Z869Qtp8j2KcD7hAH0Bdr1yosJtd2iGosPpMWelDujKFe99LIJWEMPtjKYV/cC68wOjWctAftFIb yuaio53FKWNLXY6BX4oMduVH2PtC9e95UjQczrtyTu6CB0JNuYkEqtV7Hd5Y+ShYJVtTzj3jcqaFH3 MVuRAAMqy7Q4cwDAcXvjbFfhS6alNG
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211221141459.1368176-4-ming.lei@redhat.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the process is migrated to a different cgroup (or in case of
-writeback just starts submitting bios associated with a different
-cgroup) bfq_merge_bio() can operate with stale cgroup information in
-bic. Thus the bio can be merged to a request from a different cgroup or
-it can result in merging of bfqqs for different cgroups or bfqqs of
-already dead cgroups and causing possible use-after-free issues. Fix the
-problem by updating cgroup information in bfq_merge_bio().
+On Tue, Dec 21 2021 at  9:14P -0500,
+Ming Lei <ming.lei@redhat.com> wrote:
 
-CC: stable@vger.kernel.org
-Fixes: e21b7a0b9887 ("block, bfq: add full hierarchical scheduling and cgroups support")
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/bfq-iosched.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+> dm request based driver doesn't set BLK_MQ_F_BLOCKING, so dm_queue_rq()
+> is supposed to not sleep.
+> 
+> However, blk_insert_cloned_request() is used by dm_queue_rq() for
+> queuing underlying request, but the underlying queue may be marked as
+> BLK_MQ_F_BLOCKING, so blk_insert_cloned_request() may become to block
+> current context, then rcu warning is triggered.
+> 
+> Fixes the issue by marking dm request based queue as BLK_MQ_F_BLOCKING
+> if any underlying queue is marked as BLK_MQ_F_BLOCKING, meantime we
+> need to allocate srcu beforehand.
+> 
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>  drivers/md/dm-rq.c    |  5 ++++-
+>  drivers/md/dm-rq.h    |  3 ++-
+>  drivers/md/dm-table.c | 14 ++++++++++++++
+>  drivers/md/dm.c       |  5 +++--
+>  drivers/md/dm.h       |  1 +
+>  5 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+> index 579ab6183d4d..2297d37c62a9 100644
+> --- a/drivers/md/dm-rq.c
+> +++ b/drivers/md/dm-rq.c
+> @@ -535,7 +535,8 @@ static const struct blk_mq_ops dm_mq_ops = {
+>  	.init_request = dm_mq_init_request,
+>  };
+>  
+> -int dm_mq_init_request_queue(struct mapped_device *md, struct dm_table *t)
+> +int dm_mq_init_request_queue(struct mapped_device *md, struct dm_table *t,
+> +			     bool blocking)
+>  {
+>  	struct dm_target *immutable_tgt;
+>  	int err;
+> @@ -550,6 +551,8 @@ int dm_mq_init_request_queue(struct mapped_device *md, struct dm_table *t)
+>  	md->tag_set->flags = BLK_MQ_F_SHOULD_MERGE | BLK_MQ_F_STACKING;
+>  	md->tag_set->nr_hw_queues = dm_get_blk_mq_nr_hw_queues();
+>  	md->tag_set->driver_data = md;
+> +	if (blocking)
+> +		md->tag_set->flags |= BLK_MQ_F_BLOCKING;
+>  
+>  	md->tag_set->cmd_size = sizeof(struct dm_rq_target_io);
+>  	immutable_tgt = dm_table_get_immutable_target(t);
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 654191c6face..f77f79d1d04c 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2337,10 +2337,17 @@ static bool bfq_bio_merge(struct request_queue *q, struct bio *bio,
- 
- 	spin_lock_irq(&bfqd->lock);
- 
--	if (bic)
-+	if (bic) {
-+		/*
-+		 * Make sure cgroup info is uptodate for current process before
-+ 		 * considering the merge.
-+		 */
-+		bfq_bic_update_cgroup(bic, bio);
-+
- 		bfqd->bio_bfqq = bic_to_bfqq(bic, op_is_sync(bio->bi_opf));
--	else
-+	} else {
- 		bfqd->bio_bfqq = NULL;
-+	}
- 	bfqd->bio_bic = bic;
- 
- 	ret = blk_mq_sched_try_merge(q, bio, nr_segs, &free);
--- 
-2.31.1
+As you can see, dm_table_get_immutable_target(t) is called here ^
+
+Rather than pass 'blocking' in, please just call dm_table_has_blocking_dev(t);
+
+But not a big deal, I can clean that up once this gets committed...
+
+> diff --git a/drivers/md/dm-rq.h b/drivers/md/dm-rq.h
+> index 1eea0da641db..5f3729f277d7 100644
+> --- a/drivers/md/dm-rq.h
+> +++ b/drivers/md/dm-rq.h
+> @@ -30,7 +30,8 @@ struct dm_rq_clone_bio_info {
+>  	struct bio clone;
+>  };
+>  
+> -int dm_mq_init_request_queue(struct mapped_device *md, struct dm_table *t);
+> +int dm_mq_init_request_queue(struct mapped_device *md, struct dm_table *t,
+> +			     bool blocking);
+>  void dm_mq_cleanup_mapped_device(struct mapped_device *md);
+>  
+>  void dm_start_queue(struct request_queue *q);
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index aa173f5bdc3d..e4bdd4f757a3 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -1875,6 +1875,20 @@ static bool dm_table_supports_write_zeroes(struct dm_table *t)
+>  	return true;
+>  }
+>  
+> +/* If the device can block inside ->queue_rq */
+> +static int device_is_io_blocking(struct dm_target *ti, struct dm_dev *dev,
+> +			      sector_t start, sector_t len, void *data)
+> +{
+> +	struct request_queue *q = bdev_get_queue(dev->bdev);
+> +
+> +	return blk_queue_blocking(q);
+> +}
+> +
+> +bool dm_table_has_blocking_dev(struct dm_table *t)
+> +{
+> +	return dm_table_any_dev_attr(t, device_is_io_blocking, NULL);
+> +}
+> +
+>  static int device_not_nowait_capable(struct dm_target *ti, struct dm_dev *dev,
+>  				     sector_t start, sector_t len, void *data)
+>  {
+> diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+> index 280918cdcabd..2f72877752dd 100644
+> --- a/drivers/md/dm.c
+> +++ b/drivers/md/dm.c
+> @@ -1761,7 +1761,7 @@ static struct mapped_device *alloc_dev(int minor)
+>  	 * established. If request-based table is loaded: blk-mq will
+>  	 * override accordingly.
+>  	 */
+> -	md->disk = blk_alloc_disk(md->numa_node_id);
+> +	md->disk = blk_alloc_disk_srcu(md->numa_node_id);
+>  	if (!md->disk)
+>  		goto bad;
+>  	md->queue = md->disk->queue;
+> @@ -2046,7 +2046,8 @@ int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t)
+>  	switch (type) {
+>  	case DM_TYPE_REQUEST_BASED:
+>  		md->disk->fops = &dm_rq_blk_dops;
+> -		r = dm_mq_init_request_queue(md, t);
+> +		r = dm_mq_init_request_queue(md, t,
+> +				dm_table_has_blocking_dev(t));
+>  		if (r) {
+>  			DMERR("Cannot initialize queue for request-based dm mapped device");
+>  			return r;
+> diff --git a/drivers/md/dm.h b/drivers/md/dm.h
+> index 742d9c80efe1..f7f92b272cce 100644
+> --- a/drivers/md/dm.h
+> +++ b/drivers/md/dm.h
+> @@ -60,6 +60,7 @@ int dm_calculate_queue_limits(struct dm_table *table,
+>  			      struct queue_limits *limits);
+>  int dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+>  			      struct queue_limits *limits);
+> +bool dm_table_has_blocking_dev(struct dm_table *t);
+>  struct list_head *dm_table_get_devices(struct dm_table *t);
+>  void dm_table_presuspend_targets(struct dm_table *t);
+>  void dm_table_presuspend_undo_targets(struct dm_table *t);
+> -- 
+> 2.31.1
+> 
+
+Reviewed-by: Mike Snitzer <snitzer@redhat.com>
+
+Late, given holidays we know why, but this patchset is needed for 5.17
+(maybe with added: 'Fixes: 704b914f15fb7 "blk-mq: move srcu from
+blk_mq_hw_ctx to request_queue"' to this 3rd patch?)
+
+Jens, can you please pick this patchset up for 5.17?
+
+Thanks,
+Mike
 
