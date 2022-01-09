@@ -2,65 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A09184960B5
-	for <lists+linux-block@lfdr.de>; Fri, 21 Jan 2022 15:27:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE4BB49637E
+	for <lists+linux-block@lfdr.de>; Fri, 21 Jan 2022 17:58:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381032AbiAUO1Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Jan 2022 09:27:25 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:60112 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381061AbiAUO1I (ORCPT
+        id S1381431AbiAUQ6p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Jan 2022 11:58:45 -0500
+Received: from [36.155.112.122] ([36.155.112.122]:49544 "EHLO
+        ecs-42a4.novalocal" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1381169AbiAUQ5g (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Jan 2022 09:27:08 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1AA85617C4
-        for <linux-block@vger.kernel.org>; Fri, 21 Jan 2022 14:27:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 81D6FC340E3;
-        Fri, 21 Jan 2022 14:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642775227;
-        bh=ZGxRIaAiZIkNAgdBGNhAvuRt47w1gyKYhYaLnE4uayU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=dm7RuRTFwoEHCsjjju+QhyjCPMDEHCBKcSCcdC+WUOBg69ZZwFro91IGnSTt7vIDv
-         tMfbfJCL5YIOwOEmBl4eVSbkuHkBwy1TsJSb08dYQz/6EQoWRh7hQ8EJ0M/oHQHSug
-         iB5nQMdappjGWNE4Avd22OYHLaiDzHvrB+Pk5EETIsJte5t1LgLQ/N8SGpKSnRPmJO
-         tWl3XcuNcWCG4W/2IZhRb09U2DHx1WioCKEkSCXCOPNzGUMtIOz6xtyX9KaFXdHm8Z
-         bb0RCYjXOmgS+PdvRXKrLFbM78fOMGxlKu1UnI+1favJkbcYKSyV/V6iILjM3K2MwB
-         hlh4dzmuUsgFA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 713CEF60798;
-        Fri, 21 Jan 2022 14:27:07 +0000 (UTC)
-Subject: Re: [GIT PULL] Block fixes for 5.17-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <bc78bf16-3c07-66a3-fa1b-a07cbc95ac84@kernel.dk>
-References: <bc78bf16-3c07-66a3-fa1b-a07cbc95ac84@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <bc78bf16-3c07-66a3-fa1b-a07cbc95ac84@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/block-5.17-2022-01-21
-X-PR-Tracked-Commit-Id: 46cdc45acb089c811d9a54fd50af33b96e5fae9d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3c7c25038b6c7d66a6816028219914379be6a5cc
-Message-Id: <164277522745.13796.13493167825211771643.pr-tracker-bot@kernel.org>
-Date:   Fri, 21 Jan 2022 14:27:07 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+        Fri, 21 Jan 2022 11:57:36 -0500
+Received: from User (localhost [127.0.0.1])
+        by ecs-42a4.novalocal (Postfix) with SMTP id F273C3045F2;
+        Sun,  9 Jan 2022 13:57:24 +0800 (CST)
+Reply-To: <andbaill228@mail2world.com>
+From:   "Vlieghe" <andbaill228@mail2world.com>
+Subject: Very Importante Notice
+Date:   Sun, 9 Jan 2022 07:55:54 +0200
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-Id: <20220109055724.F273C3045F2@ecs-42a4.novalocal>
+To:     undisclosed-recipients:;
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Fri, 21 Jan 2022 06:41:01 -0700:
+Sir/Madam,
 
-> git://git.kernel.dk/linux-block.git tags/block-5.17-2022-01-21
+Good day to you.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3c7c25038b6c7d66a6816028219914379be6a5cc
+I am Dr.Gertjan Vlieghe personal Secretary to Andrew Bailey who double as the Governor, Bank of England (https://en.wikipedia.org/wiki/Andrew_Bailey_%28banker%29). We have an inheritance of a deceased client, who bear the same name  with your surname. kindly contact Andrew Bailey through his personal email ( andbaill228@mail2world.com ) with your details for more information.
 
-Thank you!
+Thank you.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Dr.Gertjan Vlieghe
