@@ -2,165 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 644E7489A31
-	for <lists+linux-block@lfdr.de>; Mon, 10 Jan 2022 14:42:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 880A7489A17
+	for <lists+linux-block@lfdr.de>; Mon, 10 Jan 2022 14:37:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233008AbiAJNmh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 Jan 2022 08:42:37 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:35694 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232695AbiAJNmh (ORCPT
+        id S232915AbiAJNhT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 Jan 2022 08:37:19 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:34893 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232919AbiAJNgt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 Jan 2022 08:42:37 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 2664C2112B;
-        Mon, 10 Jan 2022 13:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1641822156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LEZG69IvMHeeEqQTSKmf1op1UvQ9cRWEUSHsYHoYGHU=;
-        b=AO4zcq0F06C8iGjRb8P37mvnuQLi9gGlzP8blp9GkCL2K0c28dbJNaT2iAmGyavGSnAUzU
-        a4fYH2xs9VoLfzPy+57uSJDKNBf8iixr9gvKok2/hbt17Tbq2stIJlln3LJr/n8szEniky
-        1Jo80dVjCek5WiMoWxP3btXDN1Q1rko=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1641822156;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LEZG69IvMHeeEqQTSKmf1op1UvQ9cRWEUSHsYHoYGHU=;
-        b=80sG7O/LVlh/yXRU2ABrXMXBQGKYmsMXOQnsjocuXqbCMfB7Dw23fI4nnEZKsE72D6ePfz
-        g11zhH0muNJj+hCQ==
-Received: from quack3.suse.cz (unknown [10.100.224.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id C797BA3B89;
-        Mon, 10 Jan 2022 13:42:34 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 47711A05B4; Mon, 10 Jan 2022 14:42:34 +0100 (CET)
-Date:   Mon, 10 Jan 2022 14:42:34 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Schatzberg <schatzberg.dan@gmail.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Jan Stancek <jstancek@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] loop: use task_work for autoclear operation
-Message-ID: <20220110134234.qebxn5gghqupsc7t@quack3.lan>
-References: <969f764d-0e0f-6c64-de72-ecfee30bdcf7@I-love.SAKURA.ne.jp>
- <bcaf38e6-055e-0d83-fd1d-cb7c0c649372@I-love.SAKURA.ne.jp>
- <20220110103057.h775jv2br2xr2l5k@quack3.lan>
- <fc15d4a1-a9d2-1a26-71dc-827b0445d957@I-love.SAKURA.ne.jp>
+        Mon, 10 Jan 2022 08:36:49 -0500
+Received: from kwepemi100006.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JXZbY2W4vzccTZ;
+        Mon, 10 Jan 2022 21:36:09 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ kwepemi100006.china.huawei.com (7.221.188.165) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Mon, 10 Jan 2022 21:36:47 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Mon, 10 Jan
+ 2022 21:36:46 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <mkoutny@suse.com>, <paulmck@kernel.org>, <tj@kernel.org>,
+        <axboe@kernel.dk>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH v6 0/2] cancel all throttled bios in del_gendisk()
+Date:   Mon, 10 Jan 2022 21:47:56 +0800
+Message-ID: <20220110134758.2233758-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc15d4a1-a9d2-1a26-71dc-827b0445d957@I-love.SAKURA.ne.jp>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon 10-01-22 20:28:28, Tetsuo Handa wrote:
-> On 2022/01/10 19:30, Jan Kara wrote:
-> > Eek, I agree that the patch may improve the situation but is the complexity
-> > and ugliness really worth it?
-> 
-> If we are clear about
-> 
->   Now your patch will fix this lockdep complaint but we
->   still would wait for the write to complete through blk_mq_freeze_queue()
->   (just lockdep is not clever enough to detect this). So IHMO if there was a
->   deadlock before, it will be still there with your changes.
-> 
-> in https://lkml.kernel.org/r/20211223134050.GD19129@quack2.suse.cz ,
-> we can go with the revert approach.
-> 
-> I want to call blk_mq_freeze_queue() without disk->open_mutex held.
-> But currently lo_release() is calling blk_mq_freeze_queue() with
-> disk->open_mutex held. My patch is going towards doing locklessly
-> where possible.
+If del_gendisk() is done when some io are still throttled, such io
+will not be handled until the throttle is done, which is not
+necessary.
 
-I see. But:
-a) We didn't fully establish a real deadlock scenario from the lockdep
-report, did we? The lockdep report involved suspend locks, some locks on
-accessing files in /proc etc. and it was not clear whether it all reflects
-a real deadlock possibility or just a fact that lockdep tracking is rather
-coarse-grained at times. Now lockdep report is unpleasant and loop device
-locking was ugly anyway so your async change made sense but once lockdep is
-silenced we should really establish whether there is real deadlock and more
-work is needed or not.
+Changes in v2:
+ - move WARN_ON_ONCE() from throtl_rb_first() to it's caller
+ - merge some patches into one.
 
-b) Unless we have a realistic plan of moving *all* blk_mq_freeze_queue()
-calls from under open_mutex in loop driver, moving stuff "where possible"
-from under open_mutex is IMO just muddying water.
+Changes in v3:
+ - some code optimization in patch 1
+ - hold queue lock to cancel bios in patch 2
 
-> >                               I mean using task work in
-> > loop_schedule_rundown() makes a lot of sense because the loop
-> > 
-> > while :; do mount -o loop,ro isofs.iso isofs/; umount isofs/; done
-> > 
-> > will not fail because of dangling work in the workqueue after umount ->
-> > __loop_clr_fd().
-> 
-> Using task work from lo_release() is for handling close() => umount() sequence.
-> Using task work in lo_open() is for handling close() => open() sequence.
-> The mount in
-> 
->   while :; do mount -o loop,ro isofs.iso isofs/; umount isofs/; done
-> 
-> fails unless lo_open() waits for __loop_clr_fd() to complete.
+Changes in v4:
+ - delete rcu_read_lock() and rcu_read_unlock() in patch 2
 
-Why? If we use task work, we are guaranteed the loop device is cleaned up
-before umount returns unless some other process also has the loop device
-open.
+Changes in v5:
+ - add comment about rcu lock
 
-> >                  But when other processes like systemd-udevd start to mess
-> > with the loop device, then you have no control whether the following mount
-> > will see isofs.iso busy or not - it depends on when systemd-udevd decides
-> > to close the loop device.
-> 
-> Right. But regarding that part the main problem is that the script is not
-> checking for errors. What we are expected to do is to restore barrier
-> which existed before commit 322c4293ecc58110 ("loop: make autoclear
-> operation asynchronous").
+Changes in v6:
+ - revert to include rcu lock with some comments.
 
-OK, can you explain what you exactly mean by the barrier? Because it my
-understanding your patch only makes one race somewhat less likely.
+Jagan Teki (1):
+  ARM: dts: stm32: Enable LVDS panel on i.Core STM32MP1 EDIMM2.2
 
-> 
-> >                           What your waiting in lo_open() achieves is only
-> > that if __loop_clr_fd() from systemd-udevd happens to run at the same time
-> > as lo_open() from mount, then we won't see EBUSY.
-> 
-> My waiting in lo_open() is to fix a regression that
-> 
->   while :; do mount -o loop,ro isofs.iso isofs/; umount isofs/; done
-> 
-> started to fail.
+Yu Kuai (1):
+  blk-throtl: move WARN_ON_ONCE() from throtl_rb_first() to it's caller
 
-OK, so you claim this loop fails even with using task work in __loop_clr_fd(),
-correct? And does it fail even without systemd-udev?
+Yu Kuai (2):
+  blk-throtl: move WARN_ON_ONCE() from throtl_rb_first() to it's caller
+  block: cancel all throttled bios in del_gendisk()
 
-> >                                                   But IMO that is not worth
-> > the complexity in lo_open() because if systemd-udevd happens to close the
-> > loop device a millisecond later, you will get EBUSY anyway (and you would
-> > get it even in the past) Or am I missing something?
-> 
-> Excuse me, but lo_open() does not return EBUSY?
-> What operation are you talking about?
+ block/blk-throttle.c | 82 ++++++++++++++++++++++++++++++++++++++++++--
+ block/blk-throttle.h |  2 ++
+ block/genhd.c        |  2 ++
+ 3 files changed, 83 insertions(+), 3 deletions(-)
 
-I didn't mean EBUSY from lo_open() but EBUSY from LOOP_SET_FD ioctl(2). But
-maybe I misunderstood the failure. Where exactly does mount(1) fail? Because
-with the options you mention it should do something like:
-  ioctl(LOOP_CTL_GET_FREE) -> get free loop dev
-  ioctl(LOOP_SET_FD) -> bind isofs.iso to free loop dev
-  mount(loop_dev, isofs/)
-
-and I though it is the second syscall that fails.
-
-
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.31.1
+
