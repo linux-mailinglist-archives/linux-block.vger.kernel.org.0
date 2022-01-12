@@ -2,103 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62A8D48C355
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jan 2022 12:39:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3653F48C409
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jan 2022 13:32:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240119AbiALLje (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Jan 2022 06:39:34 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:42136 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239872AbiALLjd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Jan 2022 06:39:33 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id B503C1F3BB;
-        Wed, 12 Jan 2022 11:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1641987571; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pcw0Dz6qCaXjfiGIwaXI/xy2ZlOMa2tLvBlwHG3TYvw=;
-        b=onsstIQttVSLGgFpUSh3I8HnRDo/bROAbMlFewWB3U43RyYQ82nc4hoqFT161CX9+guIzd
-        Jms7ILfI8Y+NMgyYLx5CBZ1R7c+WbgueYVfCUSF8y6x2PnhHAnf12bloWEKM45dWRHQhdX
-        VXB4iTq5M+buNDopk2u4lDh9nWNytbw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1641987571;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pcw0Dz6qCaXjfiGIwaXI/xy2ZlOMa2tLvBlwHG3TYvw=;
-        b=qKNFZ6VjH57hsbem0RH8vQwYgBX3CXct42Clu9pZEGrwTOTZykyQM/60E9IMvf2k26d3+1
-        o8zALtEnkCuUtoCw==
-Received: from quack3.suse.cz (unknown [10.100.200.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A1829A3B87;
-        Wed, 12 Jan 2022 11:39:31 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id C1000A05E1; Wed, 12 Jan 2022 12:39:28 +0100 (CET)
-From:   Jan Kara <jack@suse.cz>
-To:     <linux-block@vger.kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        "yukuai (C)" <yukuai3@huawei.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH 4/4] bfq: Update cgroup information before merging bio
-Date:   Wed, 12 Jan 2022 12:39:22 +0100
-Message-Id: <20220112113928.32349-4-jack@suse.cz>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220112113529.6355-1-jack@suse.cz>
-References: <20220112113529.6355-1-jack@suse.cz>
+        id S240474AbiALMb7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Jan 2022 07:31:59 -0500
+Received: from mga14.intel.com ([192.55.52.115]:52245 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240219AbiALMb5 (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Wed, 12 Jan 2022 07:31:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641990717; x=1673526717;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pBoOKXSUj7v7gJ89NZFrmu1XUSGgJkxV+aXq1SqTpog=;
+  b=QIzgEbrt+srN7jM/E+ZWGv1wXNfpVtD9v1XrcArM8xOYNypkisPLY45+
+   6n1F+Sx3Brh2j7/QzTDMRqRVzI95B6D2KOeISDp/1xXlo8YcCgVXHQOJ4
+   mGQYfg9GQDb7Fz/qsCSiAmHZY7BFv0YKJF8ymZJ5fqa3yuvfXysgz9YuO
+   Q/pRnhuER3KJ6L8t0vG2gRmJCpqDpJK7esd2ME93aEmN3cE4D62wzFdAw
+   sCFITnB1QRy08BikP+RzdIt+1i3+rch2IchTauKsF9zyvS+aFovfWmMGW
+   Og4nfXtrizzWUAr9yEmztpm+WwxAmTPaBeRuazFVxRU82kOmqbI3wUeFg
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="243923292"
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="243923292"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 04:31:42 -0800
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="691367878"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 04:31:39 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n7clm-009gGJ-2T;
+        Wed, 12 Jan 2022 14:30:26 +0200
+Date:   Wed, 12 Jan 2022 14:30:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     QiuLaibin <qiulaibin@huawei.com>
+Cc:     axboe@kernel.dk, ming.lei@redhat.com, john.garry@huawei.com,
+        martin.petersen@oracle.com, hare@suse.de,
+        johannes.thumshirn@wdc.com, bvanassche@acm.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v4] blk-mq: fix tag_get wait task can't be awakened
+Message-ID: <Yd7J4XbkdIm52bVw@smile.fi.intel.com>
+References: <20220111140216.1858823-1-qiulaibin@huawei.com>
+ <Yd2Q6LyJUDAU54Dt@smile.fi.intel.com>
+ <d7f51067-f5a8-e78c-5ece-c1ef132b9b9a@huawei.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1409; h=from:subject; bh=P/+2SbEdiz2xvmkxw/cr+I4TuGV2AeuKw8OJviTNrjg=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBh3r3pQy/HX7G773Vd6m9ykG4cMcysm53jNa0NyqZ3 2jEOnyWJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYd696QAKCRCcnaoHP2RA2SMXB/ 9jRaHsj0cG/dgAOCCu6VA+421DnphVVT+iVOcNsSjpmRH7QvpRl58F+OkMmbSZDP1If4Xjl50txiIb 6RQqBlUkj95eBCT4ufcZlA1e/TGlVIvlB+MS9FGs/a9EYhe4vm4NUde+ihp2AfXGZCb1/v3UrcTHhu pS+DEv8gzxe+qpbvYfDf8Lt8fHyTDNibiYmgs1MqolBOYz9/65MVASylA+AuGLYMnhPpZhNnQ2ds6G efBH0ZiJG9zKeqmGHgirmbKoJqwEVeUWdh0JzKCPhITYMx/1e2esDgZp4aP9KO2VXAN//HibX3KxIY rZQlGH7YPWm42GtOMC7LtZNDbM67HD
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7f51067-f5a8-e78c-5ece-c1ef132b9b9a@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the process is migrated to a different cgroup (or in case of
-writeback just starts submitting bios associated with a different
-cgroup) bfq_merge_bio() can operate with stale cgroup information in
-bic. Thus the bio can be merged to a request from a different cgroup or
-it can result in merging of bfqqs for different cgroups or bfqqs of
-already dead cgroups and causing possible use-after-free issues. Fix the
-problem by updating cgroup information in bfq_merge_bio().
+On Wed, Jan 12, 2022 at 12:18:53PM +0800, QiuLaibin wrote:
+> On 2022/1/11 22:15, Andy Shevchenko wrote:
+> > On Tue, Jan 11, 2022 at 10:02:16PM +0800, Laibin Qiu wrote:
 
-CC: stable@vger.kernel.org
-Fixes: e21b7a0b9887 ("block, bfq: add full hierarchical scheduling and cgroups support")
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/bfq-iosched.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+...
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 361d321b012a..8a088d77a0b6 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2337,10 +2337,17 @@ static bool bfq_bio_merge(struct request_queue *q, struct bio *bio,
- 
- 	spin_lock_irq(&bfqd->lock);
- 
--	if (bic)
-+	if (bic) {
-+		/*
-+		 * Make sure cgroup info is uptodate for current process before
-+		 * considering the merge.
-+		 */
-+		bfq_bic_update_cgroup(bic, bio);
-+
- 		bfqd->bio_bfqq = bic_to_bfqq(bic, op_is_sync(bio->bi_opf));
--	else
-+	} else {
- 		bfqd->bio_bfqq = NULL;
-+	}
- 	bfqd->bio_bic = bic;
- 
- 	ret = blk_mq_sched_try_merge(q, bio, nr_segs, &free);
+> > > +		if (test_bit(QUEUE_FLAG_HCTX_ACTIVE, &q->queue_flags) ||
+> > > +		    test_and_set_bit(QUEUE_FLAG_HCTX_ACTIVE, &q->queue_flags)) {
+> > 
+> > Whoever wrote this code did too much defensive programming, because the first
+> > conditional doesn't make much sense here. Am I right?
+> > 
+> I think because this judgement is in the general IO process, there are also
+> some performance considerations here.
+
+I didn't buy this. Is there any better argument why you need redundant
+test_bit() call?
+
+> > > +			return true;
+
+> > >   	} else {
+> > 
+> > > +		if (test_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state) ||
+> > > +		    test_and_set_bit(BLK_MQ_S_TAG_ACTIVE, &hctx->state)) {
+> > 
+> > Ditto.
+> > 
+> > > +			return true;
+
+> > >   	}
+
+...
+
+> > > +	unsigned int wake_batch = clamp_t(unsigned int,
+> > > +			(sbq->sb.depth + users - 1) / users, 4U, SBQ_WAKE_BATCH);
+> > 
+> > 
+> > 	unsigned int wake_batch;
+> > 
+> > 	wake_batch = clamp_val((sbq->sb.depth + users - 1) / users, 4, SBQ_WAKE_BATCH);
+> > 	...
+> > 
+> > is easier to read, no?
+> 
+> Here I refer to the calculation method in sbq_calc_wake_batch(). And I will
+> separate the definition from the calculation in V5.
+
+I'm not sure I understand how it's related to the style changes I proposed.
+I haven't changed any logic behind.
+
 -- 
-2.31.1
+With Best Regards,
+Andy Shevchenko
+
 
