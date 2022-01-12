@@ -2,69 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 743A348CBB2
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jan 2022 20:15:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41CE248CBAA
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jan 2022 20:13:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344661AbiALTPc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Jan 2022 14:15:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357043AbiALTOm (ORCPT
+        id S1356865AbiALTNv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Jan 2022 14:13:51 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:59532 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356935AbiALTMK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Jan 2022 14:14:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56FBC0254B0
-        for <linux-block@vger.kernel.org>; Wed, 12 Jan 2022 11:12:11 -0800 (PST)
+        Wed, 12 Jan 2022 14:12:10 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 65FD5619FE
-        for <linux-block@vger.kernel.org>; Wed, 12 Jan 2022 19:12:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CCF57C36AEA;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9053861ABD
+        for <linux-block@vger.kernel.org>; Wed, 12 Jan 2022 19:12:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 64CFAC36AEA;
         Wed, 12 Jan 2022 19:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1642014730;
-        bh=kqYP7tVhIUBxPZyHPkL2WEiXOpWIFn/NPQXNzncSSh8=;
+        bh=ZzvJY08BNr5RupD+jtQqtPHJyV+5V2JHWwXGTkVIKVc=;
         h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=T9h22OSQGJgtbBPnbaPFwPiCbienA4sG01H2VGARi/kWInk/MsvgrX2VAf/3DoBj5
-         bqlJhryVpPn2tgF29Y4XRXENp0I9MFLX3z1w1MwTIQmV89ZQxiAU6QeesftGqzzCWF
-         phkrMbU0lctnufPCe3ZTlFJgPfG6ayxZb+YU1tlSVQ3xje77EiRKtUhLsQpUl7F5uA
-         hTB5UK5AHPLiN2yID/5FnTSDNAdjTNiLE0gBI1l1ozotzeIFpAYM6zAeMljvaPRIcg
-         jfuvsMVxKa/elkL3rc4L9I3SatXcCClKF4fcc/hPWuLojBc6kGyJG00YdPv3TxNGKN
-         8caDF3nRLAqUw==
+        b=KaFjruZ7ilsuLvzF5hnDxGlxbywAUxLStx2kaXkQ/kW9LbydvGkuCa2y8oBZshFTJ
+         ykA8z//06eZ9NCvvsuZ9/U3N9FU1TdEGMkNDJwlkAq+mVgcXVz222Zh0LMpG6dRmKs
+         z3uIv8Xd7vYHhdQafJuUYt28JXF8zAG2thVsmf+G2YiL6khiV4DM3m5Ur7Lt4P0fcY
+         QOmFJMODf5DTulyTnZjPbkEx5TZq7MI/G7+Mp4x85AF13YyNX3ERGD2+klV4kwpv55
+         0EDs5McsIA0JFdh73zSLstjqSp6E+d4Lvb+4LqkkbkVx/QgnGmrlvQP9MbYE6CYkj/
+         00jPE9P20u9GA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BB5D8F6078C;
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 55102F6078C;
         Wed, 12 Jan 2022 19:12:10 +0000 (UTC)
-Subject: Re: [git pull] device mapper changes for 5.17
+Subject: Re: [GIT PULL] Block updates for 5.17-rc
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <Yd8AveH8D+Nk2ILp@redhat.com>
-References: <Yd8AveH8D+Nk2ILp@redhat.com>
+In-Reply-To: <c4086937-5e74-b8e8-d8a1-5e203c926c71@kernel.dk>
+References: <c4086937-5e74-b8e8-d8a1-5e203c926c71@kernel.dk>
 X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Yd8AveH8D+Nk2ILp@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.17/dm-changes
-X-PR-Tracked-Commit-Id: eaac0b590a47c717ef36cbfd1c528cd154c965a1
+X-PR-Tracked-Message-Id: <c4086937-5e74-b8e8-d8a1-5e203c926c71@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.17/block-2022-01-11
+X-PR-Tracked-Commit-Id: f029cedb9bb5bab7f1bb3042be348f2dac0ee66e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 49008f0cc1ef0b86ccfa0d1d99e67741d46bd35b
-Message-Id: <164201473075.2601.9666209549315511909.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: d3c810803576d867265277df8e94eee386351c9d
+Message-Id: <164201473034.2601.9578620752394314519.pr-tracker-bot@kernel.org>
 Date:   Wed, 12 Jan 2022 19:12:10 +0000
-To:     Mike Snitzer <snitzer@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        Alasdair G Kergon <agk@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Thornber <ejt@redhat.com>,
-        Kees Cook <keescook@chromium.org>
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Wed, 12 Jan 2022 11:24:29 -0500:
+The pull request you sent on Tue, 11 Jan 2022 14:47:06 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.17/dm-changes
+> git://git.kernel.dk/linux-block.git tags/for-5.17/block-2022-01-11
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/49008f0cc1ef0b86ccfa0d1d99e67741d46bd35b
+https://git.kernel.org/torvalds/c/d3c810803576d867265277df8e94eee386351c9d
 
 Thank you!
 
