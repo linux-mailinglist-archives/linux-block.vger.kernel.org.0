@@ -2,88 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F5148DE87
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jan 2022 21:00:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB83A48E071
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jan 2022 23:38:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232031AbiAMUAt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jan 2022 15:00:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55312 "EHLO
+        id S238018AbiAMWi5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jan 2022 17:38:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbiAMUAs (ORCPT
+        with ESMTP id S238022AbiAMWi4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jan 2022 15:00:48 -0500
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62FDC06173E
-        for <linux-block@vger.kernel.org>; Thu, 13 Jan 2022 12:00:48 -0800 (PST)
-Received: by mail-io1-xd2c.google.com with SMTP id a12so4981894iod.9
-        for <linux-block@vger.kernel.org>; Thu, 13 Jan 2022 12:00:48 -0800 (PST)
+        Thu, 13 Jan 2022 17:38:56 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23E2C061751
+        for <linux-block@vger.kernel.org>; Thu, 13 Jan 2022 14:38:55 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id m21so1145658pfd.3
+        for <linux-block@vger.kernel.org>; Thu, 13 Jan 2022 14:38:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:in-reply-to:references:subject:message-id:date
-         :mime-version:content-transfer-encoding;
-        bh=+bXcVsuUppNYKhF9ZtC6Trbv8FtRnS305N6GIULbySM=;
-        b=R5DKTup50Gfl9IeMM2VI0sXMqVCI6jAQ1VCCrulnjDdxtBlxd2jnkFCiaMivfhwbvH
-         22r1SW7pjHYmHZKN4rsBsJrFm2NU8krSUBPRUerLberQyIkQkuJX6Kwz0uLubLSyjQy/
-         46RChVlrUEsZNIloLoJ8GGbbXCXqrMVIolV6pfEZwcdEQsCeDGSr8Klr+l/yW+xOM7Td
-         BUaHx980l8luPOqghwwo92UOi+HVcCi0Dq+ivpGK90EkzermJ45Vk/RrjuO1WADJUUus
-         m8SRmsnmRZHKzmW/p/4NfoIByeZjUjaIEbBkva4X4WVI3Pgh3XqV4n3A3KBHzQC5JnPZ
-         XChQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=YbEI3Q/NEjCtDTVCV1jkA7nYNYBH/Wfa2wk3IkVyJko=;
+        b=TZSnmiKfh8lQHyoHB+yllzvEmA18to6wFnOGKYs0poMgePC/IzPQirrR4ktwaDnvqN
+         6MtgeXCy1yK/vlfiGBEgBcEWSdlaZhy13ZGg8bropI5LiWLT69uDg3RLIG4RAEnMei/e
+         OLsKu4ckBojbKLqXja5eQdc78QuplSbLUeUuR4YwQsmoJKPsmqAxP6kAsKKrhO2uloGx
+         jgBW3DLRyjuJTQuba5a1bywPT+79uteTY7MRR7+lTs5pNJAoJHK8njIEoPRz5bJHtGc4
+         HFHciKQwdRnv9OQdv5RacscrcPdsiz56D1dXGcQrq4Bp8NviqIrfWkgUqnbc+T36lHWO
+         JWDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=+bXcVsuUppNYKhF9ZtC6Trbv8FtRnS305N6GIULbySM=;
-        b=M6EYZohFvNFGylaYtZ2TdJQwcNc5GBzK1yYZg21qGi1+isN+e8QvKq4uPSTsqmtrfz
-         1tPNipDZTlNjaViLjkpbkAunz4Y8R6y1WLStlLqVgf83HMk+SJoNRyaQIpzNcg6bXvIX
-         GmaM+7TUQvkT8b/XLPRahHCJrgrqlUr49fM/u06B4Que3OojxY/4xig1RF8iUSXpPgEE
-         h6ba4UxdI0vsjyd4Kro+nm60Cy2fhgt916/2VMvXCcRM8HzLSiHMrwAtpC0ZFvNvqJq8
-         M/WK9XFUsJT+BuYexVltgRef89NMMh/bxrcJUnkr51LocCY0ZeTbEKHJw7OswKwoIe+q
-         fsBg==
-X-Gm-Message-State: AOAM530Stm3XMR/AOnFx6EwEoBCedO2YAIomaRbk/0tQj+tiGuuocRte
-        VGZGO5Bf7FG93v/LarGmpO9mCg==
-X-Google-Smtp-Source: ABdhPJwqANTtW8FxiE2ZK0CCdiycPJ1uIvNavWUQqzW2r03sG7uU/KIYOsUbGKs+I+4yN0BdsqPNpw==
-X-Received: by 2002:a05:6602:1409:: with SMTP id t9mr2808021iov.166.1642104048027;
-        Thu, 13 Jan 2022 12:00:48 -0800 (PST)
-Received: from x1.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id n5sm3887025ilk.44.2022.01.13.12.00.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jan 2022 12:00:47 -0800 (PST)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Justin Sanders <justin@coraid.com>,
-        Colin Ian King <colin.i.king@gmail.com>,
-        linux-block@vger.kernel.org
-Cc:     llvm@lists.linux.dev, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20220113000545.1307091-1-colin.i.king@gmail.com>
-References: <20220113000545.1307091-1-colin.i.king@gmail.com>
-Subject: Re: [PATCH] aoe: remove redundant assignment on variable n
-Message-Id: <164210404746.172546.12306036907222392441.b4-ty@kernel.dk>
-Date:   Thu, 13 Jan 2022 13:00:47 -0700
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=YbEI3Q/NEjCtDTVCV1jkA7nYNYBH/Wfa2wk3IkVyJko=;
+        b=K9XozTL7jpvtykRgiRMLlkIqvLPpEuY+GMzZJ/11qrFiQX2egr7QM2L2q0LnnRNA9f
+         7CnOCnQRj4CfcMSEwoWG7p46qVfJ0MgObe5BaaFlrtP6zUBuFk558olH23iKfM61IhSe
+         qqTJAM6aMgZ3nLgqv8/i5VJ10B8BrC/7OZzalJRPkARnuZRpBtqOmCkD760v/ZP4khD/
+         ywemH3gjJYwXa6N1F705/8nRo/OCeiSYZ2LHfCu63YGzgg063tcL4tx1CwbIdj0CzbCb
+         c5DR765t229TfcUFKJqXF7V/pwQoJjg3E5zYTdnU9YurFchmN4ouKBVPUR/k+7Nz5bac
+         VWgA==
+X-Gm-Message-State: AOAM531eN2cEOJGXdxr/CAKonxZ+jClrVx6aLBIc+JxxX5zmrTunt6C1
+        j/hTircR+tnBidUU4gir8hbgXd07AXaPMQw3kmE=
+X-Google-Smtp-Source: ABdhPJxV+CDcXMAaoBlObNCE+WkBdJZDSsiMXXJxSU4qLOl+5GP7wjtV5hGVQqePL03Cw94D/ZrqizECvr4TNYXN3v8=
+X-Received: by 2002:a05:6a00:26c5:b0:4bd:4ad6:9c71 with SMTP id
+ p5-20020a056a0026c500b004bd4ad69c71mr6167765pfw.45.1642113535225; Thu, 13 Jan
+ 2022 14:38:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6a10:f38c:0:0:0:0 with HTTP; Thu, 13 Jan 2022 14:38:54
+ -0800 (PST)
+Reply-To: mchristophdaniel@gmail.com
+From:   Marcus Galois <marcus.galois@gmail.com>
+Date:   Thu, 13 Jan 2022 23:38:54 +0100
+Message-ID: <CANqBaXWLwHBNoawbz2tGySxar8jn5q2OzEiG-GjWCyVh=aJu6w@mail.gmail.com>
+Subject: Good News Finally.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, 13 Jan 2022 00:05:45 +0000, Colin Ian King wrote:
-> The variable n is being bit-wise or'd with a value and reassigned
-> before being returned. The update of n is redundant, replace
-> the |= operator with | instead. Cleans up clang scan warning:
-> 
-> drivers/block/aoe/aoecmd.c:125:9: warning: Although the value stored
-> to 'n' is used in the enclosing expression, the value is never
-> actually read from 'n' [deadcode.DeadStores]
-> 
-> [...]
+Hello friend.
 
-Applied, thanks!
+You might find it so difficult to remember me, though it is indeed a
+very long time, I am much delighted to contact you again after a long
+period of time, I remember you despite circumstances that made things
+not worked out as we projected then. I want to inform you that the
+transaction we're doing together then finally worked out and I decided
+to contact you and to let you know because of your tremendous effort
+to make things work out then.
 
-[1/1] aoe: remove redundant assignment on variable n
-      commit: a6431e351c6ec5bb6800787d259b343088f369a3
+Meanwhile I must inform you that I'm presently in Caribbean Island for
+numerous business negotiation with some partners. with my sincere
+heart i have decided to compensate you with USD$900,000 for your
+dedication then on our transaction, you tried so much that period and
+I appreciated your effort. I wrote a cheque/check on your name, as
+soon as you receive it, you let me know.
 
-Best regards,
--- 
-Jens Axboe
+Contact my secretary now on his email: mchristophdaniel@gmail.com
+Name: Mr. Christoph Daniel
 
+You are to forward to him your Name........ Address.......,Phone
+number......for shipment/dispatch of the cheque/Check to you
 
+Regards,
+Mr. Marcus Galois
