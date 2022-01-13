@@ -2,94 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F072F48CF97
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jan 2022 01:17:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9AC148CFD8
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jan 2022 01:58:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiAMAR1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Jan 2022 19:17:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbiAMARX (ORCPT
+        id S229878AbiAMA65 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Jan 2022 19:58:57 -0500
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:36549 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229792AbiAMA64 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Jan 2022 19:17:23 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C255C061751
-        for <linux-block@vger.kernel.org>; Wed, 12 Jan 2022 16:17:23 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id z22so9844602ybi.11
-        for <linux-block@vger.kernel.org>; Wed, 12 Jan 2022 16:17:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=pCWih811QqNXs4egIk8I2fO93FiGmy1BmpOPH995f5M=;
-        b=n99JvY/cFSr2d5bD3noaIUQ31+cHrM2LcN0EhEwEaova8mOXnuXP/qSwPrjqobtkFt
-         ythiy47tL2hjYXdjbZihU1iF0MtgV7WFy4WinRS/DJ+idW6WdeiILPNfCQhuaCU0MEJq
-         F0J8ZQi2fWlqqi0Fd1azbDOn4r+P0jkp0FdEGpTxIP7SJOUv7xUHcR1KyAU5aokjQw9e
-         KgOv4hma+zKAJwQY2q8m3g9nd4OfB+yzeVpkOAA2HS7jO3I56zyV/dipHDhPnUZnrj/B
-         lYVZDMMICOAMZ8fpiG9DPTNX9F375qFU05bkSJE5bAVgZdncV8XYdmda87rP33Ie4aCh
-         i5Pw==
+        Wed, 12 Jan 2022 19:58:56 -0500
+Received: by mail-wr1-f47.google.com with SMTP id r28so7295387wrc.3
+        for <linux-block@vger.kernel.org>; Wed, 12 Jan 2022 16:58:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=pCWih811QqNXs4egIk8I2fO93FiGmy1BmpOPH995f5M=;
-        b=SvNI70h0shuKxE3ip5RuNBSL82ge1k9C6NH8+T058qsDFv1sOnjrudekSG4RQrmqdV
-         8mQlf47JhE+kRG34yGXN1dxRmUTPXuUv5WwW282hwg9ujVDzDT9sCd9LrZlmcS6owQrX
-         CywkEP3ht8YVLBfIYz7txVq/bxQHsZRlKTjGl+z42BBQPlo+FGPHDbea3cHdTqrCvMsA
-         963HJV1DZg44kFU4FvMpP9y+Jx84DI4TAx4mNTY/ML69fGt1g4ASIJp+TJE/ctx2fh9J
-         b5KVlIbMv8HUirarwmYM2FIYkizG2dxbEV0XUyZSJ5okB579GY7uEgIAnAm0brfC7G5O
-         8r4g==
-X-Gm-Message-State: AOAM531G5i9QtnEVTkwPX0EHO0fyKF+NBehMK0lWPSkrDCyV+0hFMrd2
-        Jwukq091wcAwkxraCaEE8aWj/fsVJ4aaYRZlhjs=
-X-Google-Smtp-Source: ABdhPJy4/6OTf8Dkxm/sEkdFHqN2d1aQpR1dAV1nDyURUe542geq6JJDAIIs3Q/e0IRMByNDLwFvmoVlek3rEcv8csI=
-X-Received: by 2002:a25:dd46:: with SMTP id u67mr2862484ybg.729.1642033042242;
- Wed, 12 Jan 2022 16:17:22 -0800 (PST)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=odbVD9g7tAIK8dQGcnu4Ggb+BPkjbdrd+1ieep80GTY=;
+        b=paXKofIOwI28qG+rRj2s4v1ot9QDaSxuhlCJaC7Ho+FyQEZMeFutmTgrKLNLd3bF+l
+         HHgE3CgmpaegEQPgm1vYCau7XPU5+zTNVVjLGoxuM4XUsqwn/28YRaOd/igzqae7X+Fe
+         tpSdASjxAnFAH17xq713CFQEmCAVIdxTbaAnB0VH3M3BTJXxJJxqLms4Y+tu28tUOsJ9
+         egehnufP9qt3acsQ08a67q2s0zRJS3+tVJiZ7fEGPx4J8t0kny+3Cx+ZlQa0qjJXMQhs
+         8VCUS56++O80wdlX1uHKXysIuNb70dVdWr1y0SDm7xjwdtHuf9JS5W/Z4+bmynadbNm/
+         a+Dg==
+X-Gm-Message-State: AOAM531uDALBFESA49giR8KJoKerO6c8hNwtncm82NoGTWbMm6QaUmM9
+        7sS9ma0lZoszXJTvH4RYTpa4lcuXk3w=
+X-Google-Smtp-Source: ABdhPJxDUXYXBd3HFI/Y5s/Q3YdzzwPl3vIioEi9WC9yhgMMKXoQptPQKhaI4uekVURrvr8gfvh7+A==
+X-Received: by 2002:a5d:64ee:: with SMTP id g14mr1818527wri.52.1642035535693;
+        Wed, 12 Jan 2022 16:58:55 -0800 (PST)
+Received: from localhost ([2a01:4b00:f41a:3600:df86:cebc:8870:2184])
+        by smtp.gmail.com with ESMTPSA id t5sm1121921wrw.12.2022.01.12.16.58.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jan 2022 16:58:55 -0800 (PST)
+Message-ID: <93f6c52690fb84fc79cc634f451a5c5d52df6c5f.camel@debian.org>
+Subject: Re: [PATCH V2] block: sed-opal: Add ioctl to return device status
+From:   Luca Boccassi <bluca@debian.org>
+To:     dougmill@linux.vnet.ibm.com
+Cc:     jonathan.derrick@intel.com, revanth.rajashekar@intel.com,
+        linux-block@vger.kernel.org, hch@infradead.org,
+        sbauer@plzdonthack.me
+Date:   Thu, 13 Jan 2022 00:58:50 +0000
+In-Reply-To: <612795b5.tj7FMS9wzchsMzrK%dougmill@linux.vnet.ibm.com>
+References: <612795b5.tj7FMS9wzchsMzrK%dougmill@linux.vnet.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-iu9Vq1xeG/SJnZ0bhA1R"
+User-Agent: Evolution 3.42.2-1 
 MIME-Version: 1.0
-Reply-To: millasmith3250@gmail.com
-Sender: abusalam1976@gmail.com
-Received: by 2002:a05:7108:1865:0:0:0:0 with HTTP; Wed, 12 Jan 2022 16:17:21
- -0800 (PST)
-From:   "Ms. Milla Smith" <milasm3800@gmail.com>
-Date:   Wed, 12 Jan 2022 16:17:21 -0800
-X-Google-Sender-Auth: AwQPaI9dheCEMdStMvkyM0DZN_Q
-Message-ID: <CAJR+jmu3ZydG-vRBq8ZWRr7p+nD3VD-178F8MhykcaCsJ=skoA@mail.gmail.com>
-Subject: compensation
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear Friend,
 
-I am sorry, but happy to inform you about my success in getting those
-funds transferred under the cooperation of a new partner from Vietnam.
-Though, I tried my best to involve you in the business, but the whole
-situation changed. Presently, I am in Vietnam for investment projects
-with my own share of the total sum. Meanwhile, I did not forget your
-past efforts and attempts to assist me in transferring those funds
-despite that it failed us some at a point.
+--=-iu9Vq1xeG/SJnZ0bhA1R
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now, contact my secretary in Burkina Faso. His name is Ms. Milla Smith
-This is his email address; millasmith3250@gmail.com Ask him to send
-you the total of $850,000.00 (Eight Hundred and Fifty Thousand US
-Dollars) which I kept for your compensation for all the past efforts
-and attempts to assist me in this matter. I appreciated your efforts
-at that time very much. So, feel free and get in touch with my
-secretary, Ms. Milla Smith and instruct him where to send the amount
-to you. Please, do let me know immediately you receive it, so that we
-can share joy after all the sufferings at that time.
+On Thu, 2021-08-26 at 08:23 -0500, dougmill@linux.vnet.ibm.com wrote:
+> Provide a mechanism to retrieve basic status information about
+> the device, including the "supported" flag indicating whether
+> SED-OPAL is supported. The information returned is from the various
+> feature descriptors received during the discovery0 step, and so
+> this ioctl does nothing more than perform the discovery0 step
+> and then save the information received. See "struct opal_status"
+> and OPAL_FL_* bits for the status information currently returned.
+>=20
+> Signed-off-by: Douglas Miller <dougmill@linux.vnet.ibm.com>
+> ---
+> =C2=A0kernel/block/opal_proto.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 ++
+> =C2=A0kernel/block/sed-opal.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 90 ++++++++++++++++++++++++--
+> --
+> =C2=A0kernel/include/linux/sed-opal.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 1 +
+> =C2=A0kernel/include/uapi/linux/sed-opal.h | 12 ++++
+> =C2=A04 files changed, 96 insertions(+), 12 deletions(-)
 
-Finally, I=E2=80=99m very busy here, because of the investment projects whi=
-ch
-I and my new partner are having at hand. I had forwarded instruction
-to the secretary on your behalf to receive that money. He will send
-the funds to you without any delay OK. Extend my greetings to your
-family.
+Hi,
 
+Any update on this patch? It would be very useful, right now it's quite
+difficult to check the status of a sed-opal device. Christoph's review
+comments from v1 were addressed as far as I can see.
 
-My Best regards,
-Yours brother
-Mr. Abu Salam
-Greetings from Vietnam
+https://patchwork.kernel.org/project/linux-block/patch/612795b5.tj7FMS9wzch=
+sMzrK%25dougmill@linux.vnet.ibm.com/
+
+Thanks!
+
+--=20
+Kind regards,
+Luca Boccassi
+
+--=-iu9Vq1xeG/SJnZ0bhA1R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCSqx93EIPGOymuRKGv37813JB4FAmHfeUsACgkQKGv37813
+JB5Osg/+Of8hawEFQYPn77lsDWZUkRQnPnyTFAdBNGsT5OTHitHTJl8majiVldvM
+8OZRcFukcrutXy5v65NBS4EWVpvj6uVYXds62TaTC4SuitSvo+dY5S6kSExRuLdY
+6kdIVXKKtCWBh5dKfhNYkHqBp6ti3ka4Rlx5oDJ+eB5dqkj/J0oIu8OyMRaejjyO
+u8Ka7HBhHW69eM0slhffLbnO5uLVSBzGCpd4aFAH5ekGPHPFvhm87xmRvTPLSJeO
+kLKyJ1+agWYHrEBqVv4CPin8fkoo34kaYZxJkVU0kn4MZvywiC5tr4WjDxuTDvbt
+uMG6EKylOH6SoLmUHwAcUs1QPX1via1L4pnFPRzO/hV++0V6oL/LSqXjTxGwtnOf
+2u12/AgAmR5OIv6NXmi/lEEGuLAd2bYHPg22RljtakEw/N74ZeA19p4I1BDMVh3n
+PeMQtZStqrzYiqGQrT4Ts2msXSODknfsPLv58w4Z0JViZ/kf7NsGl869weJNSKNE
+O/MEKQ0MeSYPBaz9Fmblj1Dt6MBhDzd5QfQtkb7Fc9tBvzxewT9YhQmSNJr+Hc/R
+go9JTfH8bn37Dv1Aj+//kc5r8abmLp1oQuojXbR62ugivELOidS6VQSkAYWWLLCS
+Qme1gk67f51B8ewUhX/p3xvC4La6CXdvuySt5DvxMQ6/LfKXIWA=
+=+FFs
+-----END PGP SIGNATURE-----
+
+--=-iu9Vq1xeG/SJnZ0bhA1R--
