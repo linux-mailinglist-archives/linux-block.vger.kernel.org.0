@@ -2,161 +2,245 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 200D448EEED
-	for <lists+linux-block@lfdr.de>; Fri, 14 Jan 2022 18:02:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93D6048F0B7
+	for <lists+linux-block@lfdr.de>; Fri, 14 Jan 2022 20:58:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243690AbiANRCa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 14 Jan 2022 12:02:30 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:57176 "EHLO
+        id S244181AbiANT6p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 14 Jan 2022 14:58:45 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:36810 "EHLO
         smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243694AbiANRCa (ORCPT
+        with ESMTP id S229471AbiANT6p (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 14 Jan 2022 12:02:30 -0500
+        Fri, 14 Jan 2022 14:58:45 -0500
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 336F41F45F;
-        Fri, 14 Jan 2022 17:02:29 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTP id 3DBCD1F386;
+        Fri, 14 Jan 2022 19:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1642179749; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+        t=1642190324; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=8oZ6OI4vNC5/+gMn7tJ9auCcFWXOZTZeQxpW3Q2dMEo=;
-        b=rfFfOHA5ptlRzAcZGqTxhwqn9Uu0V9XQy9zFn89I88hUkMpNDXROQQ9yMBndh4W1nrH++I
-        yVEsujDrwsWjKDaofaHkewhPa1nDM1gNI9Z9x49aMFoiRazEgSbaGGe0McIBqg+5JEsFAK
-        s+dtGXh3IsJWvCoQbmqVKokPT3kSHQ4=
+        bh=E5i+R3XEiZAqOGm9b/PbA1/tHE/Gec75YDhTldr90Pk=;
+        b=Gyaa0corR49SKK/z82ayItWfurTMrwvs8asemV0gb0dMWnUzniWkBEjIRUIxzDn2Seicrq
+        ROjtPvC1K+fTRdzn6L4p6H/CZ4TMfmg5rXVrSGFDPPQfN1RScYfBriSfjO9LLQGGkhbR74
+        9a4U5UFl4/YT7vMSTl6r3NiYU+BFlpc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1642179749;
+        s=susede2_ed25519; t=1642190324;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=8oZ6OI4vNC5/+gMn7tJ9auCcFWXOZTZeQxpW3Q2dMEo=;
-        b=K1QgnusIdyFQFlMyKytqk1fgxOBydxsza406kdllMamw8uVsNf4KH2428oKA6v2oKtyZzY
-        Mw4rBDTzqmrFU+Bw==
+        bh=E5i+R3XEiZAqOGm9b/PbA1/tHE/Gec75YDhTldr90Pk=;
+        b=mXG2JN7W+HHaKcXoqxv04VbniL/pIGBZm9pbDFnB8yWvucFBLrnmEF4qbf0B/+EwTeMURl
+        TurxjOieZ2wWvgBQ==
 Received: from quack3.suse.cz (unknown [10.100.224.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A983BA3B85;
-        Fri, 14 Jan 2022 17:02:26 +0000 (UTC)
+        by relay2.suse.de (Postfix) with ESMTPS id C59E4A3B83;
+        Fri, 14 Jan 2022 19:58:43 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 667D5A05E5; Fri, 14 Jan 2022 18:02:09 +0100 (CET)
+        id D5435A05DB; Fri, 14 Jan 2022 20:58:40 +0100 (CET)
+Date:   Fri, 14 Jan 2022 20:58:40 +0100
 From:   Jan Kara <jack@suse.cz>
-To:     <linux-block@vger.kernel.org>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "yukuai (C)" <yukuai3@huawei.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH 4/4] bfq: Update cgroup information before merging bio
-Date:   Fri, 14 Jan 2022 18:01:56 +0100
-Message-Id: <20220114170209.8606-4-jack@suse.cz>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220114164215.28972-1-jack@suse.cz>
-References: <20220114164215.28972-1-jack@suse.cz>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Schatzberg <schatzberg.dan@gmail.com>,
+        kernel test robot <oliver.sang@intel.com>,
+        Jan Stancek <jstancek@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] loop: use task_work for autoclear operation
+Message-ID: <20220114195840.kdzegicjx7uyscoq@quack3.lan>
+References: <969f764d-0e0f-6c64-de72-ecfee30bdcf7@I-love.SAKURA.ne.jp>
+ <bcaf38e6-055e-0d83-fd1d-cb7c0c649372@I-love.SAKURA.ne.jp>
+ <20220110103057.h775jv2br2xr2l5k@quack3.lan>
+ <fc15d4a1-a9d2-1a26-71dc-827b0445d957@I-love.SAKURA.ne.jp>
+ <20220110134234.qebxn5gghqupsc7t@quack3.lan>
+ <d1ca4fa4-ac3e-1354-3d94-1bf55f2000a9@I-love.SAKURA.ne.jp>
+ <20220112131615.qsdxx6r7xvnvlwgx@quack3.lan>
+ <20220113104424.u6fj3z2zd34ohthc@quack3.lan>
+ <f893638a-2109-c197-9783-c5e6dced23e5@I-love.SAKURA.ne.jp>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3645; h=from:subject; bh=AYQTSSBM1FNRQJzQY4VA2R1js74Ch1BTbAaz/Tp2LuM=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBh4ayE5S3d98nNhJaUPQn0QhJjhvMS9DmowK/XsE25 34TczWaJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYeGshAAKCRCcnaoHP2RA2f80B/ 9lk5AXqMv4N0rcizkWZgYvboPZytslGgDLyrv5jgf2Ipfxo+UNC712UxFTexA6/QYiSWhTwKkGRA64 ezsHI5sKbiEfCBdSmLCBVS13aCug1U5R+kXNPp5LuIaI9m+EE7eOO5BjZfpfN54mmWiGIjE2z0BHvK EqWfN5aXpJNBAG2W7oR7tYxDubiA2haYfRhsr9lhHmDxzFp+KFcW/NEAQSkFQ7+2sW52eUMLBpoV/9 1IjcYc5oJawKzxCUoNf0EKHkVhbvJTp2SiuWT02/qs0UXMH+nziZFlR6EMAzz2tUUgCdUfGQbXZh1/ qpongWT8fVoH8F2YWHbvG0gxlHWv6G
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="wizfrpswfn5c5lmo"
+Content-Disposition: inline
+In-Reply-To: <f893638a-2109-c197-9783-c5e6dced23e5@I-love.SAKURA.ne.jp>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the process is migrated to a different cgroup (or in case of
-writeback just starts submitting bios associated with a different
-cgroup) bfq_merge_bio() can operate with stale cgroup information in
-bic. Thus the bio can be merged to a request from a different cgroup or
-it can result in merging of bfqqs for different cgroups or bfqqs of
-already dead cgroups and causing possible use-after-free issues. Fix the
-problem by updating cgroup information in bfq_merge_bio().
 
-CC: stable@vger.kernel.org
-Fixes: e21b7a0b9887 ("block, bfq: add full hierarchical scheduling and cgroups support")
+--wizfrpswfn5c5lmo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat 15-01-22 00:50:32, Tetsuo Handa wrote:
+> On 2022/01/13 19:44, Jan Kara wrote:
+> > OK, so I think I understand the lockdep complaint better. Lockdep
+> > essentially complains about the following scenario:
+> > 
+> > blkdev_put()
+> >   lock disk->open_mutex
+> >   lo_release
+> >     __loop_clr_fd()
+> >         |
+> >         | wait for IO to complete
+> >         v
+> > loop worker
+> >   write to backing file
+> >     sb_start_write(file)
+> >         |
+> >         | wait for fs with backing file to unfreeze
+> >         v
+> > process holding fs frozen
+> >   freeze_super()
+> >         |
+> >         | wait for remaining writers on the fs so that fs can be frozen
+> >         v
+> > sendfile()
+> >   sb_start_write()
+> >   do_splice_direct()
+> >         |
+> >         | blocked on read from /sys/power/resume, waiting for kernfs file
+> >         | lock
+> >         v
+> > write() "/dev/loop0" (in whatever form) to /sys/power/resume
+> >   calls blkdev_get_by_dev("/dev/loop0")
+> >     lock disk->open_mutex => deadlock
+> > 
+> 
+> Then, not calling flush_workqueue() from destroy_workqueue() from
+> __loop_clr_fd() will not help because the reason we did not need to call
+> flush_workqueue() is that blk_mq_freeze_queue() waits until all "struct
+> work_struct" which flush_workqueue() would have waited completes?
+
+Yes.
+
+> If flush_workqueue() cannot complete because an I/O request cannot
+> complete, blk_mq_freeze_queue() as well cannot complete because it waits
+> for I/O requests which flush_workqueue() would have waited?
+> 
+> Then, any attempt to revert commit 322c4293ecc58110 ("loop: make
+> autoclear operation asynchronous")
+> (e.g.
+> https://lkml.kernel.org/r/4e7b711f-744b-3a78-39be-c9432a3cecd2@i-love.sakura.ne.jp
+> ) cannot be used?
+
+Well, it could be used but the deadlock would be reintroduced. There are
+still possibilities to fix it in some other way. But for now I think that
+async loop cleanup is probably the least painful solution.
+
+> Now that commit 322c4293ecc58110 already arrived at linux.git, we need to
+> quickly send a fixup patch for these reported regressions. This "[PATCH
+> v2 2/2] loop: use task_work for autoclear operation" did not address "if
+> (lo->lo_state == Lo_bound) { }" part. If we address this part, something
+> like below diff?
+
+Please no. That is too ugly to live. I'd go just with attached version of
+your solution. That should fix the xfstests regression. The LTP regression
+needs to be fixed in mount.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
+
+--wizfrpswfn5c5lmo
+Content-Type: text/x-patch; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-loop-use-task_work-for-autoclear-operation.patch"
+
+From e36d7507bd65a880b1bb032a498a74e101c5368e Mon Sep 17 00:00:00 2001
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Date: Fri, 7 Jan 2022 20:04:31 +0900
+Subject: [PATCH] loop: use task_work for autoclear operation
+
+The kernel test robot is reporting that commit 322c4293ecc58110 ("loop:
+make autoclear operation asynchronous") broke xfstest which does
+
+  umount ext2 image file on xfs
+  umount xfs
+
+sequence. Let's use task work for calling __loop_clr_fd() so that by the
+time umount returns to userspace the loop device is cleaned up (unless
+there are other device users but in that case the problem lies in
+userspace).
+
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- block/bfq-cgroup.c  | 40 ++++++++++++++++++++++------------------
- block/bfq-iosched.c | 11 +++++++++--
- 2 files changed, 31 insertions(+), 20 deletions(-)
+ drivers/block/loop.c | 25 ++++++++++++++++++++-----
+ drivers/block/loop.h |  5 ++++-
+ 2 files changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index dbc117e00783..f6f5f156b9f2 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -729,30 +729,34 @@ static struct bfq_group *__bfq_bic_change_cgroup(struct bfq_data *bfqd,
- 	}
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index b1b05c45c07c..814605e2cbef 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1175,10 +1175,8 @@ static void loop_rundown_completed(struct loop_device *lo)
+ 	module_put(THIS_MODULE);
+ }
  
- 	if (sync_bfqq) {
--		entity = &sync_bfqq->entity;
--		if (entity->sched_data != &bfqg->sched_data) {
-+		struct bfq_queue *orig_bfqq = sync_bfqq;
+-static void loop_rundown_workfn(struct work_struct *work)
++static void loop_rundown_start(struct loop_device *lo)
+ {
+-	struct loop_device *lo = container_of(work, struct loop_device,
+-					      rundown_work);
+ 	struct block_device *bdev = lo->lo_device;
+ 	struct gendisk *disk = lo->lo_disk;
+ 
+@@ -1188,6 +1186,18 @@ static void loop_rundown_workfn(struct work_struct *work)
+ 	loop_rundown_completed(lo);
+ }
+ 
++static void loop_rundown_callbackfn(struct callback_head *callback)
++{
++	loop_rundown_start(container_of(callback, struct loop_device,
++					rundown.callback));
++}
 +
-+		/* Traverse the merge chain to bfqq we will be using */
-+		while (sync_bfqq->new_bfqq)
-+			sync_bfqq = sync_bfqq->new_bfqq;
-+		/*
-+		 * Target bfqq got moved to a different cgroup or this process
-+		 * started submitting bios for different cgroup?
-+		 */
-+		if (sync_bfqq->entity.sched_data != &bfqg->sched_data) {
- 			/*
- 			 * Was the queue we use merged to a different queue?
--			 * Detach process from the queue as merge need not be
--			 * valid anymore. We cannot easily cancel the merge as
--			 * there may be other processes scheduled to this
--			 * queue.
-+			 * Detach process from the queue as the merge is not
-+			 * valid anymore. We cannot easily just cancel the
-+			 * merge (by clearing new_bfqq) as there may be other
-+			 * processes using this queue and holding refs to all
-+			 * queues below sync_bfqq->new_bfqq. Similarly if the
-+			 * merge already happened, we need to detach from bfqq
-+			 * now so that we cannot merge bio to a request from
-+			 * the old cgroup.
- 			 */
--			if (sync_bfqq->new_bfqq) {
--				bfq_put_cooperator(sync_bfqq);
--				bfq_release_process_ref(bfqd, sync_bfqq);
-+			if (orig_bfqq != sync_bfqq || bfq_bfqq_coop(sync_bfqq)) {
-+				bfq_put_cooperator(orig_bfqq);
-+				bfq_release_process_ref(bfqd, orig_bfqq);
- 				bic_set_bfqq(bic, NULL, 1);
- 				return bfqg;
- 			}
--			/*
--			 * Moving bfqq that is shared with another process?
--			 * Split the queues at the nearest occasion as the
--			 * processes can be in different cgroups now.
--			 */
--			if (bfq_bfqq_coop(sync_bfqq)) {
--				bic->stably_merged = false;
--				bfq_mark_bfqq_split_coop(sync_bfqq);
--			}
-+			/* We are the only user of this bfqq, just move it */
- 			bfq_bfqq_move(bfqd, sync_bfqq, bfqg);
- 		}
- 	}
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 361d321b012a..8a088d77a0b6 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2337,10 +2337,17 @@ static bool bfq_bio_merge(struct request_queue *q, struct bio *bio,
- 
- 	spin_lock_irq(&bfqd->lock);
- 
--	if (bic)
-+	if (bic) {
-+		/*
-+		 * Make sure cgroup info is uptodate for current process before
-+		 * considering the merge.
-+		 */
-+		bfq_bic_update_cgroup(bic, bio);
++static void loop_rundown_workfn(struct work_struct *work)
++{
++	loop_rundown_start(container_of(work, struct loop_device,
++					rundown.work));
++}
 +
- 		bfqd->bio_bfqq = bic_to_bfqq(bic, op_is_sync(bio->bi_opf));
--	else
-+	} else {
- 		bfqd->bio_bfqq = NULL;
+ static void loop_schedule_rundown(struct loop_device *lo)
+ {
+ 	struct block_device *bdev = lo->lo_device;
+@@ -1195,8 +1205,13 @@ static void loop_schedule_rundown(struct loop_device *lo)
+ 
+ 	__module_get(disk->fops->owner);
+ 	kobject_get(&bdev->bd_device.kobj);
+-	INIT_WORK(&lo->rundown_work, loop_rundown_workfn);
+-	queue_work(system_long_wq, &lo->rundown_work);
++	if (!(current->flags & PF_KTHREAD)) {
++		init_task_work(&lo->rundown.callback, loop_rundown_callbackfn);
++		if (!task_work_add(current, &lo->rundown.callback, TWA_RESUME))
++			return;
 +	}
- 	bfqd->bio_bic = bic;
++	INIT_WORK(&lo->rundown.work, loop_rundown_workfn);
++	queue_work(system_long_wq, &lo->rundown.work);
+ }
  
- 	ret = blk_mq_sched_try_merge(q, bio, nr_segs, &free);
+ static int loop_clr_fd(struct loop_device *lo)
+diff --git a/drivers/block/loop.h b/drivers/block/loop.h
+index 918a7a2dc025..596472f9cde3 100644
+--- a/drivers/block/loop.h
++++ b/drivers/block/loop.h
+@@ -56,7 +56,10 @@ struct loop_device {
+ 	struct gendisk		*lo_disk;
+ 	struct mutex		lo_mutex;
+ 	bool			idr_visible;
+-	struct work_struct      rundown_work;
++	union {
++		struct work_struct   work;
++		struct callback_head callback;
++	} rundown;
+ };
+ 
+ struct loop_cmd {
 -- 
 2.31.1
 
+
+--wizfrpswfn5c5lmo--
