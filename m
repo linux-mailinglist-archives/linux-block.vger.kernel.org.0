@@ -2,83 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8783448F385
-	for <lists+linux-block@lfdr.de>; Sat, 15 Jan 2022 01:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6363948FAA3
+	for <lists+linux-block@lfdr.de>; Sun, 16 Jan 2022 05:19:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230092AbiAOAej (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 14 Jan 2022 19:34:39 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59067 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231608AbiAOAei (ORCPT
+        id S234255AbiAPETb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 15 Jan 2022 23:19:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58087 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230092AbiAPETa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 14 Jan 2022 19:34:38 -0500
-Received: from fsav314.sakura.ne.jp (fsav314.sakura.ne.jp [153.120.85.145])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 20F0YCXA066023;
-        Sat, 15 Jan 2022 09:34:12 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav314.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp);
- Sat, 15 Jan 2022 09:34:12 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 20F0YBR8066017
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 15 Jan 2022 09:34:12 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <33f360ca-d3e1-7070-654e-26ef22109a61@I-love.SAKURA.ne.jp>
-Date:   Sat, 15 Jan 2022 09:34:10 +0900
+        Sat, 15 Jan 2022 23:19:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642306770;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=aSR7wZ8vFX/nqH53z/KBo89GGQX1uIomEuSwa16CxuE=;
+        b=PL/W5yxt7lNNuG6oBdmdjzuhwdez+rKiVWv/d0tt9cTRFTeCjNWxWyJWmfFKAJZAcfcAec
+        ZfU+Nada9Q0p5vFyNdoO6tfyeVYlWWSamF4kDvX5zsB28uqEjxk+SHWGplaZU19717hAqQ
+        MBuYrKJz671SsZZKYREMDoS9urFt8nU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-468-syI9dbXyNDqCLS0OJD9YeQ-1; Sat, 15 Jan 2022 23:18:59 -0500
+X-MC-Unique: syI9dbXyNDqCLS0OJD9YeQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A48682F26;
+        Sun, 16 Jan 2022 04:18:57 +0000 (UTC)
+Received: from localhost (ovpn-8-23.pek2.redhat.com [10.72.8.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0C0A5ED44;
+        Sun, 16 Jan 2022 04:18:52 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 0/3] block: don't drain file system I/O on del_gendisk
+Date:   Sun, 16 Jan 2022 12:18:12 +0800
+Message-Id: <20220116041815.1218170-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2 2/2] loop: use task_work for autoclear operation
-Content-Language: en-US
-To:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Jan Stancek <jstancek@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>
-References: <969f764d-0e0f-6c64-de72-ecfee30bdcf7@I-love.SAKURA.ne.jp>
- <bcaf38e6-055e-0d83-fd1d-cb7c0c649372@I-love.SAKURA.ne.jp>
- <20220110103057.h775jv2br2xr2l5k@quack3.lan>
- <fc15d4a1-a9d2-1a26-71dc-827b0445d957@I-love.SAKURA.ne.jp>
- <20220110134234.qebxn5gghqupsc7t@quack3.lan>
- <d1ca4fa4-ac3e-1354-3d94-1bf55f2000a9@I-love.SAKURA.ne.jp>
- <20220112131615.qsdxx6r7xvnvlwgx@quack3.lan>
- <20220113104424.u6fj3z2zd34ohthc@quack3.lan>
- <f893638a-2109-c197-9783-c5e6dced23e5@I-love.SAKURA.ne.jp>
- <20220114195840.kdzegicjx7uyscoq@quack3.lan>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20220114195840.kdzegicjx7uyscoq@quack3.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2022/01/15 4:58, Jan Kara wrote:
->> Now that commit 322c4293ecc58110 already arrived at linux.git, we need to
->> quickly send a fixup patch for these reported regressions. This "[PATCH
->> v2 2/2] loop: use task_work for autoclear operation" did not address "if
->> (lo->lo_state == Lo_bound) { }" part. If we address this part, something
->> like below diff?
-> 
-> Please no. That is too ugly to live. I'd go just with attached version of
-> your solution. That should fix the xfstests regression. The LTP regression
-> needs to be fixed in mount.
+Hello,
 
-Yes, this patch is ugly. Since disk->open_mutex => lo->lo_mutex dependency is recorded by
-lo_open()/lo_release(), and blk_mq_freeze_queue() by e.g. loop_set_status() waits for I/O
-completion with lo->lo_mutex held, from locking dependency chain perspective waiting for
-I/O completion with disk->open_mutex held still remains. Therefore, this ugly patch kills
-disk->open_mutex => lo->lo_mutex dependency via not holding lo->lo_mutex from lo_open()/lo_release().
-Waiting for Lo_rundown device after lo_open() is a freebie till a fixed version of /bin/mount is
-used by many users ( https://lkml.kernel.org/r/20220113154735.hdzi4cqsz5jt6asp@quack3.lan ).
+Draining FS I/O on del_gendisk() is added for just avoiding to refer to
+recently added q->disk in IO path, and it isn't actually needed.
 
->> I think lo_open() and lo_release() are doing too much things. I wish "struct block_device_operations"
->> provides open() and release() callbacks without disk->open_mutex held...
+Now we can move killing disk into queue's release handler, see patch 1,
+so no need to drain FS I/O on del_gendisk().
 
-Christoph is not a fan of proliferating the use of task_work_add(). Can we go with exporting task_work_add()
-for this release cycle? Or instead can we go with providing release() callback without disk->open_mutex held
-( https://lkml.kernel.org/r/08d703d1-8b32-ec9b-2b50-54b8376d3d40@i-love.sakura.ne.jp ) ?
+Draining FS I/O on del_gendisk() isn't reliable, see the following
+cases, so revert this behavior.
+
+1) queue freezing can't drain FS I/O for bio based driver
+
+2) it isn't easy to move elevator/cgroup/throttle shutdown during
+del_gendisk, and q->disk can still be referred in these code paths
+
+3) the added flag of GD_DEAD may not be observed reliably in
+__bio_queue_enter() because queue freezing might not imply rcu grace
+period.
+
+
+Ming Lei (3):
+  block: move freeing disk into queue's release handler
+  block: revert aec89dc5d421 block: keep q_usage_counter in atomic mode
+    after del_gendisk
+  block: revert 8e141f9eb803 block: drain file system I/O on del_gendisk
+
+ block/blk-core.c      | 24 ++++++++++++------------
+ block/blk-mq.c        |  9 +--------
+ block/blk-sysfs.c     | 13 +++++++++++++
+ block/blk.h           |  2 --
+ block/genhd.c         | 31 +++++--------------------------
+ include/linux/genhd.h |  1 -
+ 6 files changed, 31 insertions(+), 49 deletions(-)
+
+-- 
+2.31.1
+
