@@ -2,84 +2,238 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE8DA49008B
-	for <lists+linux-block@lfdr.de>; Mon, 17 Jan 2022 04:33:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69590490362
+	for <lists+linux-block@lfdr.de>; Mon, 17 Jan 2022 09:02:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236946AbiAQDdF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 16 Jan 2022 22:33:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25951 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236944AbiAQDdF (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Sun, 16 Jan 2022 22:33:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642390384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ccZ+oKNF9ScPDegB7MEDqYsfYM+gZw4I1frllwTtQlg=;
-        b=BbEzYp5N9wg/BkFE3jKS1/HPVpYoFnr3PUKZHpqk1sVhgqgZCKucHCZi5iXmDUz0CbXycH
-        A1T5w+OvB8s8sOEZO3seqapOLD0t2x3Sije+sL/74rYRZfdG/zr9u4stJ7ZGvpL9hnCLhk
-        57VeiBReXJmw/sZvKwMqnwO2Ri85Ciw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-494-CI-xJHTIODe8jFVZ-UQhiA-1; Sun, 16 Jan 2022 22:33:03 -0500
-X-MC-Unique: CI-xJHTIODe8jFVZ-UQhiA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B2D51853026;
-        Mon, 17 Jan 2022 03:33:02 +0000 (UTC)
-Received: from T590 (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 44FED4BC57;
-        Mon, 17 Jan 2022 03:32:54 +0000 (UTC)
-Date:   Mon, 17 Jan 2022 11:32:49 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org,
-        syzbot+4f789823c1abc5accf13@syzkaller.appspotmail.com
-Subject: Re: [PATCH] block: cleanup q->srcu
-Message-ID: <YeTjYU3KVeU1sstH@T590>
-References: <20220111123401.520192-1-ming.lei@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220111123401.520192-1-ming.lei@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        id S232943AbiAQICy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Jan 2022 03:02:54 -0500
+Received: from m12-12.163.com ([220.181.12.12]:12901 "EHLO m12-12.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235363AbiAQICy (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 17 Jan 2022 03:02:54 -0500
+X-Greylist: delayed 918 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jan 2022 03:02:52 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Mime-Version:Subject:From:Date:Message-Id; bh=0xWEv
+        jxkBNiGQJ1tJZJhccHXlw6lxvHUxfHle5nno3c=; b=d0rc4CBl6mOB3WIUjGPji
+        Doex4OAgrRS9ARSRPEadhpmXXMtdBrVAWRv8qSyQKbcnqT+k5Mn7uoiJRbFJzgiO
+        WS8riU9xOlKJBVZUDP7TxuRqqyPBZpBBQtMVQYerTXzr7e0teRAyVqSohRQe5yvK
+        OudLZYgA+Op7+w9xQOhP/g=
+Received: from smtpclient.apple (unknown [117.89.129.245])
+        by smtp8 (Coremail) with SMTP id DMCowADnffLnHuVhT3yUAg--.24998S3;
+        Mon, 17 Jan 2022 15:46:48 +0800 (CST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.40.0.1.81\))
+Subject: Re: [RFC PATCH 0/7] block: improve iops limit throttle
+From:   163 <lining2020x@163.com>
+X-Priority: 3
+In-Reply-To: <d7c6f47.2d01.17e51b058cc.Coremail.lining2020x@163.com>
+Date:   Mon, 17 Jan 2022 15:46:44 +0800
+Cc:     linux-block@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Chunguang Xu <brookxu@tencent.com>,
+        "weijia.liu@transwarp.io" <weijia.liu@transwarp.io>,
+        "chao.yang@transwarp.io" <chao.yang@transwarp.io>,
+        ning.a.li@transwarp.io
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <30812A09-5FB4-4ED0-81ED-CE80D82870B7@163.com>
+References: <20220111115532.497117-1-ming.lei@redhat.com>
+ <4666c796.5083.17e4d67bb88.Coremail.lining2020x@163.com>
+ <d7c6f47.2d01.17e51b058cc.Coremail.lining2020x@163.com>
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+X-Mailer: Apple Mail (2.3693.40.0.1.81)
+X-CM-TRANSID: DMCowADnffLnHuVhT3yUAg--.24998S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Xr4fWr1xXr1DZw13Xw15XFb_yoWxXF4Upa
+        yfGa1agr18tF4DK3WSgwn09FWFv3yUArZxA3Z0g3y3AFyq9rn7trZrZr4F9F9FgF9ruF4F
+        vw4kXay8KF1UX37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjksgUUUUU=
+X-Originating-IP: [117.89.129.245]
+X-CM-SenderInfo: polqx0bjsqjir06rljoofrz/1tbiLQiLNlSIoTcA0gAAsA
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 08:34:01PM +0800, Ming Lei wrote:
-> srcu structure has to be cleanup via cleanup_srcu_struct(), so fix it.
-> 
-> Reported-by: syzbot+4f789823c1abc5accf13@syzkaller.appspotmail.com
-> Fixes: 704b914f15fb ("blk-mq: move srcu from blk_mq_hw_ctx to request_queue")
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  block/blk-sysfs.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-> index e20eadfcf5c8..8d8549f71311 100644
-> --- a/block/blk-sysfs.c
-> +++ b/block/blk-sysfs.c
-> @@ -811,6 +811,9 @@ static void blk_release_queue(struct kobject *kobj)
->  
->  	bioset_exit(&q->bio_split);
->  
-> +	if (blk_queue_has_srcu(q))
-> +		cleanup_srcu_struct(q->srcu);
-> +
->  	ida_simple_remove(&blk_queue_ida, q->id);
->  	call_rcu(&q->rcu_head, blk_free_queue_rcu);
+( Sorry for sending this mail again,  I am not sure you saw that for the =
+last one was not in pure text format.)
 
-Hello Jens,
+Hi all,
 
-Can we make it into mainline to fix the recent syzbot report?
+In short, Ming=E2=80=99s patchset was tested against kernel master and =
+works well.  Tested-by: lining <lining2020x@163.com>=20
 
 
+The iops limit test result on thin-dm lv shows quite perfect and IO was =
+much more smooth during the testing, very cool!=20
+
+The origin issue is #bz2027241 named `cgroup2: wiops limit doesn't work =
+when doing sequential write on a thin provisioned lv`,
+There are more details about this issue and patch work in this bugzilla =
+ticket [1].
+
+Follows my test result and test script (iops was limit to 10 in my =
+case):
+- dm thin case test result: https://pastebin.com/raw/VgvB2TFY
+- dm plain case test result: https://pastebin.com/raw/UVZMYjTp
+- test script: https://pastebin.com/raw/YXEDH6Ss
+=20
+Here is my code tree info for testing:
+```
+root@ubuntu-r:~/backup/linux# git remote -v=20
+origin	https://github.com/torvalds/linux.git (fetch)
+origin	https://github.com/torvalds/linux.git (push)
+
+root@ubuntu-r:~/backup/linux# git branch -a
+* master
+  remotes/origin/master
+
+root@ubuntu-r:~/backup/linux# git log --oneline -10
+9b977519b97c (HEAD -> master) block: revert 4f1e9630afe6 ("blk-throtl: =
+optimize IOPS throttle for large IO scenarios")
+36beefdf7492 block: don't try to throttle split bio if iops limit isn't =
+set
+722ff89df455 block: throttle split bio in case of iops limit
+778b7c819d8c block: don't check bio in blk_throtl_dispatch_work_fn
+c803548b4623 block: allow to bypass bio check before submitting bio
+936bc02492c2 block: move blk_crypto_bio_prep() out of blk-mq.c
+98e2c0e19ca6 block: move submit_bio_checks() into submit_bio_noacct
+455e73a07f6e (origin/master) Merge tag 'clk-for-linus' of=20
+git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+
+d9b5941bb593 Merge tag 'leds-5.17-rc1' of=20
+git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds
+
+4eb766f64d12 Merge tag 'devicetree-for-5.17' of=20
+git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
+
+```
+
+
+[1] bz2027241:  https://bugzilla.redhat.com/show_bug.cgi?id=3D2027241
+=20
 Thanks,
-Ming
+Ning
+
+> 2022=E5=B9=B41=E6=9C=8813=E6=97=A5 =E4=B8=8B=E5=8D=8812:26=EF=BC=8CNing =
+Li <lining2020x@163.com> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> Hi all,
+>=20
+> The iops limit test result on thin-dm lv shows quite perfect, very =
+cool!  Tested-by: lining <lining2020x@163.com>
+>=20
+> The origin issue is #bz2027241 named `cgroup2: wiops limit doesn't =
+work when doing sequential write on a thin provisioned lv`,
+> There are more details about this issue and patch work in this =
+bugzilla ticket [1].
+>=20
+> Follows my test result and test script (iops was limit to 10 in my =
+case):
+> - dm thin case test result: https://pastebin.com/raw/VgvB2TFY
+> - dm plain case test result: https://pastebin.com/raw/UVZMYjTp
+> - test script: https://pastebin.com/raw/YXEDH6Ss
+> =20
+> Here is my code tree info for testing:
+> ```
+> root@ubuntu-r:~/backup/linux# git remote -v
+> origin	https://github.com/torvalds/linux.git (fetch)
+> origin	https://github.com/torvalds/linux.git (push)
+>=20
+> root@ubuntu-r:~/backup/linux# git branch -a
+> * master
+>   remotes/origin/master
+>=20
+> root@ubuntu-r:~/backup/linux# git log --oneline -10
+> 9b977519b97c (HEAD -> master) block: revert 4f1e9630afe6 ("blk-throtl: =
+optimize IOPS throttle for large IO scenarios")
+> 36beefdf7492 block: don't try to throttle split bio if iops limit =
+isn't set
+> 722ff89df455 block: throttle split bio in case of iops limit
+> 778b7c819d8c block: don't check bio in blk_throtl_dispatch_work_fn
+> c803548b4623 block: allow to bypass bio check before submitting bio
+> 936bc02492c2 block: move blk_crypto_bio_prep() out of blk-mq.c
+> 98e2c0e19ca6 block: move submit_bio_checks() into submit_bio_noacct
+> 455e73a07f6e (origin/master) Merge tag 'clk-for-linus' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+> d9b5941bb593 Merge tag 'leds-5.17-rc1' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds
+> 4eb766f64d12 Merge tag 'devicetree-for-5.17' of =
+git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
+> ```
+>=20
+>=20
+> [1] bz2027241:  https://bugzilla.redhat.com/show_bug.cgi?id=3D2027241
+> =20
+> Thanks,
+> Ning
+>=20
+>=20
+> At 2022-01-12 16:29:10, "Ning Li" <lining2020x@163.com> wrote:
+>=20
+> Cool, I will test it later.
+>=20
+> Thanks,=20
+> Ning
+> At 2022-01-11 19:55:25, "Ming Lei" <ming.lei@redhat.com> wrote:
+> >Hello Guys,
+> >
+> >Lining reported that iops limit throttle doesn't work on dm-thin, =
+also
+> >iops limit throttle works bad on plain disk in case of excessive =
+split.
+> >
+> >Commit 4f1e9630afe6 ("blk-throtl: optimize IOPS throttle for large IO =
+scenarios")
+> >was for addressing this issue, but the taken approach is just to run
+> >post-accounting, then current split bios won't be throttled actually,
+> >so actual iops throttle result isn't good in case of excessive bio
+> >splitting.
+> >
+> >The 1st two patches are cleanup.
+> >
+> >The 3rd and 4th patches add one new helper of __submit_bio_noacct() =
+for
+> >blk_throtl_dispatch_work_fn(), so that bios won't be throttled any =
+more
+> >when blk-throttle code dispatches throttled bios.
+> >
+> >The 5th and 6th patch makes the real difference for throttling split =
+bio wrt.
+> >iops limit.
+> >
+> >The last patch is to revert commit 4f1e9630afe6 ("blk-throtl: =
+optimize IOPS
+> >throttle for large IO scenarios").
+> >
+> >Lining, you should get exact IOPS throttling in your dm-thin test =
+with
+> >this patchset, please test and feedback.
+> >
+> >
+> >Ming Lei (7):
+> >  block: move submit_bio_checks() into submit_bio_noacct
+> >  block: move blk_crypto_bio_prep() out of blk-mq.c
+> >  block: allow to bypass bio check before submitting bio
+> >  block: don't check bio in blk_throtl_dispatch_work_fn
+> >  block: throttle split bio in case of iops limit
+> >  block: don't try to throttle split bio if iops limit isn't set
+> >  block: revert 4f1e9630afe6 ("blk-throtl: optimize IOPS throttle for
+> >    large IO scenarios")
+> >
+> > block/blk-core.c       | 32 +++++++++-------------
+> > block/blk-merge.c      |  2 --
+> > block/blk-mq.c         |  3 ---
+> > block/blk-throttle.c   | 61 =
++++++++++++++++---------------------------
+> > block/blk-throttle.h   | 16 ++++++-----
+> > include/linux/blkdev.h |  7 ++++-
+> > 6 files changed, 51 insertions(+), 70 deletions(-)
+> >
+> >--=20
+> >2.31.1
+>=20
+>=20
+>=20
+> =20
+>=20
+>=20
+> =20
 
