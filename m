@@ -2,33 +2,33 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4008D49197B
-	for <lists+linux-block@lfdr.de>; Tue, 18 Jan 2022 03:54:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7A09491982
+	for <lists+linux-block@lfdr.de>; Tue, 18 Jan 2022 03:54:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351386AbiARCyR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 17 Jan 2022 21:54:17 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56348 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349174AbiARCri (ORCPT
+        id S1346484AbiARCyV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Jan 2022 21:54:21 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:43986 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349739AbiARCuJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 17 Jan 2022 21:47:38 -0500
+        Mon, 17 Jan 2022 21:50:09 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1AACCB81195;
-        Tue, 18 Jan 2022 02:47:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4D3C36AF2;
-        Tue, 18 Jan 2022 02:47:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 38FD16093C;
+        Tue, 18 Jan 2022 02:50:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3C8C36AEF;
+        Tue, 18 Jan 2022 02:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642474055;
-        bh=a9hb7PAZk66mZ6+8D9p6TBWexo8/A2oHykYg6VoBlDE=;
+        s=k20201202; t=1642474208;
+        bh=bRTAZFngHpq5zaKAMLfK5qHk1VtkY42igdybA6ApHnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oE0PY0tdO40wsB2co+zA2iBA2+J/UxpaT8kqDe2GXbjbASzJP6ri/VTbCLa9ssBnr
-         Jg/Z5mmtnXKRVUuzdW+lnhfiC3G5+vY/sKJ0xnQtBYgN5P4SaM+LUxC065wy9fx0Az
-         kAUYDHSAwfDVwF+kV+cWQGN+GSzP5HeGGWolHXd2HVQ3KfuK0b+nh8WBo3dlEbXWW+
-         nbX06Amu72RmJCk6rW5+1ZZQKEpa++vxJSKAvHPWHzfixmLlHuHZSpFwTtw/UFQL2S
-         sMGxI1jlJGckmHhsDibJ5YhwHrIMZegxyQDCGsz5dwl2Cs0ViHGmD2/VqJN0+np2qu
-         fV3jtmwS/BmgQ==
+        b=hysurlzei+Ip5XfkJl7Hs0wuGsNYZ5lgx8kDkmTZi19q3sV38mIeSrZu2WGr+5j70
+         AEIF6EZsdDyFperCRjxmoifth+Y3WgiV8Yhvuc3mRiYYx5v4WGEKQ07TFEnDHy4Pln
+         J68DtRwR+IEI2cTma1lnqWg8G+cMcWv/Qo2KsNmc64zL9PZpPbGazsGIGMcS+1jnXT
+         MA0wYrd/DAR5YLgeMkScN8H/hytndhmp+1T6IxylHNgj/3+O9eLnKlrnglLf/vnh9h
+         LCMzUYEM4dnQTSE3HLmlZu3QwNahlfnQkVRH1a3LZqvqk7KrMaqIh1cxa+NINEYIWb
+         W05QGOajhxIfQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Xiongwei Song <sxwjean@gmail.com>,
@@ -36,12 +36,12 @@ Cc:     Xiongwei Song <sxwjean@gmail.com>,
         Denis Efremov <efremov@linux.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/59] floppy: Add max size check for user space request
-Date:   Mon, 17 Jan 2022 21:46:17 -0500
-Message-Id: <20220118024701.1952911-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 23/56] floppy: Add max size check for user space request
+Date:   Mon, 17 Jan 2022 21:48:35 -0500
+Message-Id: <20220118024908.1953673-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220118024701.1952911-1-sashal@kernel.org>
-References: <20220118024701.1952911-1-sashal@kernel.org>
+In-Reply-To: <20220118024908.1953673-1-sashal@kernel.org>
+References: <20220118024908.1953673-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 8f444b375761c..27cee46c92de1 100644
+index cbf74731cfce6..8cf3cd8df8722 100644
 --- a/drivers/block/floppy.c
 +++ b/drivers/block/floppy.c
-@@ -3123,6 +3123,8 @@ static void raw_cmd_free(struct floppy_raw_cmd **ptr)
+@@ -3118,6 +3118,8 @@ static void raw_cmd_free(struct floppy_raw_cmd **ptr)
  	}
  }
  
@@ -115,7 +115,7 @@ index 8f444b375761c..27cee46c92de1 100644
  static int raw_cmd_copyin(int cmd, void __user *param,
  				 struct floppy_raw_cmd **rcmd)
  {
-@@ -3160,7 +3162,7 @@ static int raw_cmd_copyin(int cmd, void __user *param,
+@@ -3155,7 +3157,7 @@ static int raw_cmd_copyin(int cmd, void __user *param,
  	ptr->resultcode = 0;
  
  	if (ptr->flags & (FD_RAW_READ | FD_RAW_WRITE)) {
