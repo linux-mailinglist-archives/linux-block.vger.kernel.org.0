@@ -2,295 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD72549219A
-	for <lists+linux-block@lfdr.de>; Tue, 18 Jan 2022 09:48:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A795492206
+	for <lists+linux-block@lfdr.de>; Tue, 18 Jan 2022 10:07:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344939AbiARIsb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Jan 2022 03:48:31 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:31166 "EHLO
-        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbiARIsa (ORCPT
+        id S1345148AbiARJGm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Jan 2022 04:06:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345181AbiARJGl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Jan 2022 03:48:30 -0500
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4JdMmg2b24z8wCk;
-        Tue, 18 Jan 2022 16:45:39 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 18 Jan 2022 16:48:27 +0800
-Received: from [10.174.176.73] (10.174.176.73) by
- kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 18 Jan 2022 16:48:27 +0800
-Subject: Re: [PATCH v6 2/2] block: cancel all throttled bios in del_gendisk()
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     <mkoutny@suse.com>, <paulmck@kernel.org>, <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, <cgroups@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
-References: <20220110134758.2233758-1-yukuai3@huawei.com>
- <20220110134758.2233758-3-yukuai3@huawei.com> <Yd5FkuhYX9YcgQkZ@T590>
- <2221953d-be40-3433-d46c-f40acd044482@huawei.com>
- <CAFj5m9KmHB6FtUZ3E42BMZo+=aNNfn2bLu=kNhBOsRdxbfT6nw@mail.gmail.com>
- <c5d1d7b5-b815-0dda-b7d3-8151189a8203@huawei.com> <YeU1AmG4/2wXMgxh@T590>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <e436c92b-efe2-1b18-38c7-f2850b55edef@huawei.com>
-Date:   Tue, 18 Jan 2022 16:48:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 18 Jan 2022 04:06:41 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E44C061748
+        for <linux-block@vger.kernel.org>; Tue, 18 Jan 2022 01:06:40 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id e195so23616869ybb.7
+        for <linux-block@vger.kernel.org>; Tue, 18 Jan 2022 01:06:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
+        b=Soz+QHT0dGLM8FndDi8+DmGrzF8Nand3R01M5J9drC3NXqHN7kmc4VY6l/NuWtUVfL
+         Pw1ipMH9eBCg/ZHqGLeAt2KZPu6XRfsWiJE2xzcq96Ba85LXlrKxOVNuY0HYvfKDfmKc
+         jAQ6EF695L6TTvaCdYqZtBN8gkAnqp1+r0RbNtIeu3qM6gm6h0M3GCKOMUuS25NPcq7T
+         m06EBwLGmWMwlcWjC1WtBCJ/c9tTXkQfsHougCLjPDZp39fgMD8pqVkLYWwbFdfOrAZL
+         FCMwtSnm8Hemf8tY2r2VyBfKOXtSL3AjGIsLn+yMreEST0ocUC4Xu0XEMGJmBV9pdbj2
+         rlHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
+        b=eWW0HtxrKbmVuZgp1+5WfMIO76xjQXOGNCnG/7lpdbU64oen6YoUczao+DMuKuHVPC
+         wueYrLnzMwZB8PwCG7aBH8ZM+G0LA7DZkJe43D9DVpX3nOt2TaTQEzcT442U6szidSSB
+         QjkTuX36rMvT/3linLPGM2lTMc2ZLTmQgP8THp2U74QMT6KJAd1XVT2Q9cS47ghhlqIk
+         GMQqBNv6sEy/g2Ab3ps1n50qNyteGxRcP8Z3I0DUExQBb6jUlRp703gD4KnJdZxiR/G7
+         DdfLLui2HeGqSwD4qBDQPd7z3IZ0s3uUWoF38ufBW87Lf8wEdbPZH70qG4Do+PDTw9GB
+         vgRg==
+X-Gm-Message-State: AOAM5308shkX2DMZGx613eS1n9bj3imQC3sa/FSIfBdjseb3IQxZSLQR
+        kQzBVD/eZbH6z7x6iina5o9EK+zUTJNUBh+ommw=
+X-Google-Smtp-Source: ABdhPJyw0yTCzDjS933NePR8DAFAXJuHa33nOCZujulUZ2idVfAerV+90UYpawy22l7XlVZmlrM9B7gLM03XAJNOkeI=
+X-Received: by 2002:a25:37c2:: with SMTP id e185mr32076301yba.333.1642496799696;
+ Tue, 18 Jan 2022 01:06:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <YeU1AmG4/2wXMgxh@T590>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.73]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600009.china.huawei.com (7.193.23.164)
-X-CFilter-Loop: Reflected
+Received: by 2002:a05:7108:3655:0:0:0:0 with HTTP; Tue, 18 Jan 2022 01:06:38
+ -0800 (PST)
+Reply-To: asil.ajwad@gmail.com
+From:   Asil Ajwad <graceyaogokamboule@gmail.com>
+Date:   Mon, 17 Jan 2022 21:06:38 -1200
+Message-ID: <CA+Yy_gDoLjOfusfXaCVeyK5wpATnnfHVgZ2fw-LqNg4nowYW8A@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-在 2022/01/17 17:21, Ming Lei 写道:
-> On Fri, Jan 14, 2022 at 04:21:04PM +0800, yukuai (C) wrote:
->> 在 2022/01/14 11:05, Ming Lei 写道:
->>> On Thu, Jan 13, 2022 at 04:46:18PM +0800, yukuai (C) wrote:
->>>> 在 2022/01/12 11:05, Ming Lei 写道:
->>>>> Hello Yu Kuai,
->>>>>
->>>>> On Mon, Jan 10, 2022 at 09:47:58PM +0800, Yu Kuai wrote:
->>>>>> Throttled bios can't be issued after del_gendisk() is done, thus
->>>>>> it's better to cancel them immediately rather than waiting for
->>>>>> throttle is done.
->>>>>>
->>>>>> For example, if user thread is throttled with low bps while it's
->>>>>> issuing large io, and the device is deleted. The user thread will
->>>>>> wait for a long time for io to return.
->>>>>>
->>>>>> Noted this patch is mainly from revertion of commit 32e3374304c7
->>>>>> ("blk-throttle: remove tg_drain_bios") and commit b77412372b68
->>>>>> ("blk-throttle: remove blk_throtl_drain").
->>>>>>
->>>>>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>>>>> ---
->>>>>>     block/blk-throttle.c | 77 ++++++++++++++++++++++++++++++++++++++++++++
->>>>>>     block/blk-throttle.h |  2 ++
->>>>>>     block/genhd.c        |  2 ++
->>>>>>     3 files changed, 81 insertions(+)
->>>>>
->>>>> Just wondering why not take the built-in way in throtl_upgrade_state() for
->>>>> canceling throttled bios? Something like the following, then we can avoid
->>>>> to re-invent the wheel.
->>>>>
->>>>>     block/blk-throttle.c | 38 +++++++++++++++++++++++++++++++-------
->>>>>     block/blk-throttle.h |  2 ++
->>>>>     block/genhd.c        |  3 +++
->>>>>     3 files changed, 36 insertions(+), 7 deletions(-)
->>>>>
->>>>> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
->>>>> index cf7e20804f1b..17e56b2e44c4 100644
->>>>> --- a/block/blk-throttle.c
->>>>> +++ b/block/blk-throttle.c
->>>>> @@ -1816,16 +1816,11 @@ static void throtl_upgrade_check(struct throtl_grp *tg)
->>>>>               throtl_upgrade_state(tg->td);
->>>>>     }
->>>>> -static void throtl_upgrade_state(struct throtl_data *td)
->>>>> +static void __throtl_cancel_bios(struct throtl_data *td)
->>>>>     {
->>>>>       struct cgroup_subsys_state *pos_css;
->>>>>       struct blkcg_gq *blkg;
->>>>> -   throtl_log(&td->service_queue, "upgrade to max");
->>>>> -   td->limit_index = LIMIT_MAX;
->>>>> -   td->low_upgrade_time = jiffies;
->>>>> -   td->scale = 0;
->>>>> -   rcu_read_lock();
->>>>>       blkg_for_each_descendant_post(blkg, pos_css, td->queue->root_blkg) {
->>>>>               struct throtl_grp *tg = blkg_to_tg(blkg);
->>>>>               struct throtl_service_queue *sq = &tg->service_queue;
->>>>> @@ -1834,12 +1829,41 @@ static void throtl_upgrade_state(struct throtl_data *td)
->>>>>               throtl_select_dispatch(sq);
->>>>>               throtl_schedule_next_dispatch(sq, true);
->>>> Hi, Ming Lei
->>>>
->>>> I'm confused that how can bios be canceled here?
->>>> tg->iops and tg->bps stay untouched, how can throttled bios
->>>> dispatch?
->>>
->>> I thought that throttled bios will be canceled by 'tg->disptime = jiffies - 1;'
->>> and the following dispatch schedule.
->>>
->>> But looks it isn't enough, since tg_update_disptime() updates
->>> ->disptime. However,
->>> this problem can be solved easily by not updating ->disptime in case that we are
->>> canceling.
->>>
->>>>>       }
->>>>> -   rcu_read_unlock();
->>>>>       throtl_select_dispatch(&td->service_queue);
->>>>>       throtl_schedule_next_dispatch(&td->service_queue, true);
->>>>>       queue_work(kthrotld_workqueue, &td->dispatch_work);
->>>>>     }
->>>>> +void blk_throtl_cancel_bios(struct request_queue *q)
->>>>> +{
->>>>> +   struct cgroup_subsys_state *pos_css;
->>>>> +   struct blkcg_gq *blkg;
->>>>> +
->>>>> +   rcu_read_lock();
->>>>> +   spin_lock_irq(&q->queue_lock);
->>>>> +   __throtl_cancel_bios(q->td);
->>>>> +   spin_unlock_irq(&q->queue_lock);
->>>>> +   rcu_read_unlock();
->>>>> +
->>>>> +   blkg_for_each_descendant_post(blkg, pos_css, q->root_blkg)
->>>>> +           del_timer_sync(&blkg_to_tg(blkg)->service_queue.pending_timer);
->>>>> +   del_timer_sync(&q->td->service_queue.pending_timer);
->>>>
->>>> By the way, I think delete timer will end up io hung here if there are
->>>> some bios still be throttled.
->>>
->>> Firstly ->queue_lock is held by blk_throtl_cancel_bios(), so no new bios
->>> will be throttled.
->>>
->>> Also if we don't update ->disptime, any new bios throttled after releasing
->>> ->queue_lock will be dispatched soon.
->>
->> Hi, Ming Lei
->>
->> Just to be curiosity, I'm still trying to understand the logic here:
->>
->> For example, if bps is set to 1k, and a io with size 16k is just
->> dispatched, then io throtle should wait for 16s untill new io can be
-> 
-> There isn't such wait code in blk-throttle, and the magic is just in
-> how to compute tg->disptime.
-> 
->> dispatched. (details in tg_with_in_bps_limit）.
->>
->> How does such mechanism bypassed here?
-> 
-> The point is that tg->disptime is always set as one past time, so all
-> throttled IOs will be dispatched immediately if ->disptime is older than
-> jiffies, and I have verified that the following patch can work as expected.
-> 
-Hi, Ming Lei
+-- 
+Greetings,
 
-I'm not sure about the logic here yet, however, I tried the following
-patch, and the patch doesn't work as expected in my case:
+I am Mr.Asil Ajwad, I work with United Bank of Africa, can you use
+an ATM Visa Card to withdraw money at, ATM Cash Machine in your
+country, if yes I want to transfer abounded fund the sum of $10.5million
+US-Dollars, to you from my country, this is part of the money that was
+abounded by our late old client a politician who unfortunately lost
+his life and was forced out of power Du to his greedy act, the bank will
 
-1. limit bps to 1k
-2. issue io with bs=16k
+change the account details to your name, and apply for a Visa Card
+with your details, the Visa Card will be send to you, and you can be
+withdrawing money with it always, whatever any amount you withdraw
+daily, you will send 60% to me and you will take 40%, the Visa Card
+and the bank account will be on your name, I will be waiting for your
+response for more details, thanks to you a lot for giving me your time.
 
-In this workload, each io will wait for 16s to complete.
-
-3. when an io is just completed, delete the device
-
-After this is done, what I expected is that the user thread will exit
-immediately(with io error), however, with this patch applied, the user
-thread will wait for about 16s to exit, which is the same without this
-patch.
-
-Thanks,
-Kuai
-> 
-> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-> index 7c462c006b26..d9845afccd97 100644
-> --- a/block/blk-throttle.c
-> +++ b/block/blk-throttle.c
-> @@ -45,6 +45,7 @@ static struct workqueue_struct *kthrotld_workqueue;
->   enum tg_state_flags {
->   	THROTL_TG_PENDING	= 1 << 0,	/* on parent's pending tree */
->   	THROTL_TG_WAS_EMPTY	= 1 << 1,	/* bio_lists[] became non-empty */
-> +	THROTL_TG_CANCELING	= 1 << 2,	/* starts to cancel all bios */
->   };
->   
->   #define rb_entry_tg(node)	rb_entry((node), struct throtl_grp, rb_node)
-> @@ -974,6 +975,9 @@ static void tg_update_disptime(struct throtl_grp *tg)
->   	unsigned long read_wait = -1, write_wait = -1, min_wait = -1, disptime;
->   	struct bio *bio;
->   
-> +	if (tg->flags & THROTL_TG_CANCELING)
-> +		goto update;
-> +
->   	bio = throtl_peek_queued(&sq->queued[READ]);
->   	if (bio)
->   		tg_may_dispatch(tg, bio, &read_wait);
-> @@ -983,6 +987,7 @@ static void tg_update_disptime(struct throtl_grp *tg)
->   		tg_may_dispatch(tg, bio, &write_wait);
->   
->   	min_wait = min(read_wait, write_wait);
-> +update:
->   	disptime = jiffies + min_wait;
->   
->   	/* Update dispatch time */
-> @@ -1836,6 +1841,25 @@ static void throtl_upgrade_state(struct throtl_data *td)
->   	queue_work(kthrotld_workqueue, &td->dispatch_work);
->   }
->   
-> +void blk_throtl_cancel_bios(struct request_queue *q)
-> +{
-> +	struct cgroup_subsys_state *pos_css;
-> +	struct blkcg_gq *blkg;
-> +
-> +	rcu_read_lock();
-> +	spin_lock_irq(&q->queue_lock);
-> +	blkg_for_each_descendant_post(blkg, pos_css, q->root_blkg) {
-> +		struct throtl_grp *tg = blkg_to_tg(blkg);
-> +		struct throtl_service_queue *sq = &tg->service_queue;
-> +
-> +		tg->disptime = jiffies - 1;
-> +		blkg_to_tg(blkg)->flags |= THROTL_TG_CANCELING;
-> +		throtl_schedule_pending_timer(sq, jiffies + 1);
-> +	}
-> +	spin_unlock_irq(&q->queue_lock);
-> +	rcu_read_unlock();
-> +}
-> +
->   static void throtl_downgrade_state(struct throtl_data *td)
->   {
->   	td->scale /= 2;
-> diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-> index 175f03abd9e4..b412a4d7cc1e 100644
-> --- a/block/blk-throttle.h
-> +++ b/block/blk-throttle.h
-> @@ -160,12 +160,14 @@ static inline void blk_throtl_exit(struct request_queue *q) { }
->   static inline void blk_throtl_register_queue(struct request_queue *q) { }
->   static inline void blk_throtl_charge_bio_split(struct bio *bio) { }
->   static inline bool blk_throtl_bio(struct bio *bio) { return false; }
-> +static inline void blk_throtl_cancel_bios(struct request_queue *q) {}
->   #else /* CONFIG_BLK_DEV_THROTTLING */
->   int blk_throtl_init(struct request_queue *q);
->   void blk_throtl_exit(struct request_queue *q);
->   void blk_throtl_register_queue(struct request_queue *q);
->   void blk_throtl_charge_bio_split(struct bio *bio);
->   bool __blk_throtl_bio(struct bio *bio);
-> +void blk_throtl_cancel_bios(struct request_queue *q);
->   static inline bool blk_throtl_bio(struct bio *bio)
->   {
->   	struct throtl_grp *tg = blkg_to_tg(bio->bi_blkg);
-> diff --git a/block/genhd.c b/block/genhd.c
-> index f7577dde18fc..a32d48b87223 100644
-> --- a/block/genhd.c
-> +++ b/block/genhd.c
-> @@ -29,6 +29,7 @@
->   
->   #include "blk.h"
->   #include "blk-mq-sched.h"
-> +#include "blk-throttle.h"
->   
->   static struct kobject *block_depr;
->   
-> @@ -576,6 +577,8 @@ void del_gendisk(struct gendisk *disk)
->   	blk_integrity_del(disk);
->   	disk_del_events(disk);
->   
-> +	blk_throtl_cancel_bios(disk->queue);
-> +
->   	mutex_lock(&disk->open_mutex);
->   	remove_inode_hash(disk->part0->bd_inode);
->   	blk_drop_partitions(disk);
-> 
-> Thanks,
-> Ming
-> 
-> .
-> 
+regards,
+Mr.Asil Ajwad.
