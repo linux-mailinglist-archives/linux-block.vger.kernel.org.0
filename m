@@ -2,97 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4583A493C25
-	for <lists+linux-block@lfdr.de>; Wed, 19 Jan 2022 15:46:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 964F1493C49
+	for <lists+linux-block@lfdr.de>; Wed, 19 Jan 2022 15:56:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355237AbiASOq6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Jan 2022 09:46:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        id S1355313AbiASO4k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Jan 2022 09:56:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355203AbiASOq6 (ORCPT
+        with ESMTP id S1355317AbiASO4i (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Jan 2022 09:46:58 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B7FC061574
-        for <linux-block@vger.kernel.org>; Wed, 19 Jan 2022 06:46:57 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id w26so5500611wmi.0
-        for <linux-block@vger.kernel.org>; Wed, 19 Jan 2022 06:46:57 -0800 (PST)
+        Wed, 19 Jan 2022 09:56:38 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA32C061401
+        for <linux-block@vger.kernel.org>; Wed, 19 Jan 2022 06:56:38 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id ay14-20020a05600c1e0e00b0034d7bef1b5dso7922693wmb.3
+        for <linux-block@vger.kernel.org>; Wed, 19 Jan 2022 06:56:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=ojUN0u5uVJ+Tz37BSBakEsN9ExsLdai8g+LsAJ0a/ow=;
-        b=OP7DL23hvktXNiMf+0vfgMrNUEZR+3WAMMcSSW/DOMz5eoB9UpCi9GXtf0AqFqtTWM
-         mZjainY43DKw2ekHaKzVYOsOYQXhNRrrvF4Ze5fw0k1zEvileRz8FjiH1jKLzCtwrZP1
-         /D8Qw8P3pmjlQAYQsDei/q7+13TpF3naykYfjafyzacFI8H3bJvcD28ShWJIRH/m2tYw
-         AWgYjtM9KAdmG7XRqE1C7FzKrZeYCoVUnqjBhWBIsBwOfGzmI3pK69CH6Cg2ubFVS4a2
-         GYJPJZia25RurCI9bmGCDzNesIThDqPXWSomdamGv538gU2uR5eVfmFO3triBLJfSjB1
-         qv+Q==
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ULZgaauuyoaJwI5e2y8JAvniLbu1yxiPn9oSjW3wkYQ=;
+        b=I4/o+xwa7zVIvvpWHXpBn1Y0s+CrLNn10MAaN73Z0hQPF5OmurKlp4gbtSja9N1gqV
+         iH2iEjju5V22FKR6HJ4EsLw9PEuUGVJLHYiH7czrbJLKabajkRnTApfR/A24XooDn3Ed
+         YzPXoEDJoFl8wDLA/nPHsDujQg/4qc6BAQafIu3PdpKWWAJrdrZBQkEedW1wCVgbHdm8
+         esrey8N7xU7BlCzU39WbI2xlKBgfntEW3gxkoge00UcGHZGbX6y9/6ZZU9sFmXTNFYuF
+         Ffx9v92DCS7RncSqmXxbnNYbrshh+F3PNtjJNWJMIOq30fZ3fQNmtet43xUEzBuA48E/
+         eCJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=ojUN0u5uVJ+Tz37BSBakEsN9ExsLdai8g+LsAJ0a/ow=;
-        b=mH4GK4i8OVl+wbpCn4DOnqDPkkJzazwaMRMcHU7uAQ+YHBPtp1IryY94/RgFWuWdp/
-         HxJl1FCkjuT2FLMGAzPzyQNnBdc2o08g9RTcpa9mjD02I/E0H1yXDDEVCjGORUtqVSU1
-         v9ANiX2Q08C67/Y1KB2K3I9OavF47hedJD+8biJD95AKAdbyfFjsYe+WzhFg9o8Jf90b
-         7Xwavw9c+j4V8NcihnF7jA686CMc+GZkeTDTg2GK5sWFwWDOt1gkHxFJMjIma2HLfH7k
-         qgDJRxVGdThDwkUMl0G7pHBSANYc94bVTEPnKKzZWbMqLhgzKMvD9+VIIbWl074cbKXv
-         DRPw==
-X-Gm-Message-State: AOAM533/cX6r6Ao3YwwrAiJ1WTzm4VGD6rn1doDohxiWGPplVdPhZfJD
-        pFeC5q9a87qckDOGqbh7iP3yHcXM3ysNWh3+sOU=
-X-Google-Smtp-Source: ABdhPJyHmFc79bon59kIZuzdowAvWuBmNSlCMXez+mxVRAmcTVWU06vu5wBkw3DC3dJgWVSwaJaP/V7t45kZldB07bQ=
-X-Received: by 2002:a1c:3543:: with SMTP id c64mr4066889wma.56.1642603612857;
- Wed, 19 Jan 2022 06:46:52 -0800 (PST)
-MIME-Version: 1.0
-Sender: hannahjoseph231@gmail.com
-Received: by 2002:a05:600c:1987:0:0:0:0 with HTTP; Wed, 19 Jan 2022 06:46:51
- -0800 (PST)
-From:   Sophia Erick <sdltdkggl3455@gmail.com>
-Date:   Wed, 19 Jan 2022 15:46:51 +0100
-X-Google-Sender-Auth: 608OU4CC_qUUZBYXCH5Swe6J1zs
-Message-ID: <CAPJQPtAfZamV3TcrvtNoAJXh0emj9oxNBn+6HsLHMriHZ6FNKA@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ULZgaauuyoaJwI5e2y8JAvniLbu1yxiPn9oSjW3wkYQ=;
+        b=cQl0+mT0fus45C0VS5rDXonNBib2GLIghjnQM+2sj3OqHEVEm+OSqdq+f95H3EF859
+         /WlOq+kp98NC+CJSgmx4KVPLTVPG7h624UhwG2Vu5wiAY0RyzNCuXt0Dwv5WwaqtBBZB
+         HbEYBCguvdeughUtjlWYEidi5DMxtReTQleDaWDJ2e1uWgbVO5cMoQyMkN+9iDd4JZ40
+         XVIF/uKEdnCzD9qP7L6W/wm5ju7ihUeNXNBCqL75hu/Nmz6gPyGSnKDUgruoO35ihaf0
+         2J0gMdyWlSlYh/S/ohPiPBa5TjVsrJmCA1qp0HQ11guZ9+awpp1XIVMCJoN3zcWbXpt8
+         MQyw==
+X-Gm-Message-State: AOAM531J+oEkVzxpwTZaIHpyC/Ry36F6VG7GaLwSAMF+tWWjceiane9W
+        Pm0vT85ju5SYwtQQsnZh5ool0g==
+X-Google-Smtp-Source: ABdhPJx0DmqZ6ESIEhpPSkiqt9eqbw1VEX2SoyWrOXnUV+yQ5XF70LJeYPYoh+94BY3urmvoW0RJxQ==
+X-Received: by 2002:a5d:688a:: with SMTP id h10mr1586097wru.415.1642604196518;
+        Wed, 19 Jan 2022 06:56:36 -0800 (PST)
+Received: from wifi-122-dhcprange-122-30.wifi.unimo.it (wifi-122-dhcprange-122-30.wifi.unimo.it. [155.185.122.30])
+        by smtp.gmail.com with ESMTPSA id g17sm7618730wmq.9.2022.01.19.06.56.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jan 2022 06:56:35 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] block/bfq_wf2q: correct weight to ioprio
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20220107065859.25689-1-gaoyahu19@gmail.com>
+Date:   Wed, 19 Jan 2022 15:56:33 +0100
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <27914345-9CBD-4F3C-AB55-243208521B35@linaro.org>
+References: <20220107065859.25689-1-gaoyahu19@gmail.com>
+To:     gaoyahu19@gmail.com
+X-Mailer: Apple Mail (2.3445.104.11)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-May the peace of God be with you ,
 
-   This letter might be a surprise to you, But I believe that you will
-be honest to fulfill my final wish. I bring peace and love to you. It
-is by the grace of god, I had no choice than to do what is lawful and
-right in the sight of God for eternal life and in the sight of man for
-witness of god=E2=80=99s mercy and glory upon my life. My dear, I sent this
-mail praying it will find you in a good condition, since I myself am
-in a very critical health condition in which I sleep every night
-without knowing if I may be alive to see the next day. I am Mrs.Sophia
-Erick, a widow suffering from a long time illness. I have some funds I
-inherited from my late husband, the sum of ($11,000,000.00, Eleven
-Million Dollars) my Doctor told me recently that I have serious
-sickness which is a cancer problem. What disturbs me most is my stroke
-sickness. Having known my condition, I decided to donate this fund to
-a good person that will utilize it the way I am going to instruct
-herein. I need a very honest and God fearing person who can claim this
-money and use it for Charity works, for orphanages and gives justice
-and help to the poor, needy and widows says The Lord." Jeremiah
-22:15-16.=E2=80=9C and also build schools for less privilege that will be
-named after my late husband if possible and to promote the word of god
-and the effort that the house of god is maintained.
 
- I do not want a situation where this money will be used in an ungodly
-manner. That's why I'm taking this decision. I'm not afraid of death,
-so I know where I'm going. I accept this decision because I do not
-have any child who will inherit this money after I die. Please I want
-your sincere and urgent answer to know if you will be able to execute
-this project, and I will give you more information on how the fund
-will be transferred to your bank account. May the grace, peace, love
-and the truth in the Word of god be with you and all those that you
-love and  care for.
+> Il giorno 7 gen 2022, alle ore 07:58, gaoyahu19@gmail.com ha scritto:
+> 
+> From: Yahu Gao <gaoyahu19@gmail.com>
+> 
+> The return value is ioprio * BFQ_WEIGHT_CONVERSION_COEFF or 0.
+> What we want is ioprio or 0.
+> Correct this by changing the calculation.
+> 
+> Signed-off-by: Yahu Gao <gaoyahu19@gmail.com>
+> 
 
-I am waiting for your reply.
-May God Bless you,
-Mrs. Sophia Erick.
+Thanks for spotting this error!
+
+Acked-by: Paolo Valente <paolo.valente@linaro.org>
+
+> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+> index b74cc0da118e..709b901de3ca 100644
+> --- a/block/bfq-wf2q.c
+> +++ b/block/bfq-wf2q.c
+> @@ -519,7 +519,7 @@ unsigned short bfq_ioprio_to_weight(int ioprio)
+> static unsigned short bfq_weight_to_ioprio(int weight)
+> {
+> 	return max_t(int, 0,
+> -		     IOPRIO_NR_LEVELS * BFQ_WEIGHT_CONVERSION_COEFF - weight);
+> +		     IOPRIO_NR_LEVELS - weight / BFQ_WEIGHT_CONVERSION_COEFF);
+> }
+> 
+> static void bfq_get_entity(struct bfq_entity *entity)
+> -- 
+> 2.15.0
+> 
+
