@@ -2,18 +2,18 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C9C2495E7B
-	for <lists+linux-block@lfdr.de>; Fri, 21 Jan 2022 12:40:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E45AB495E82
+	for <lists+linux-block@lfdr.de>; Fri, 21 Jan 2022 12:42:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbiAULky (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Jan 2022 06:40:54 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:53953 "EHLO
+        id S1380209AbiAULmT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Jan 2022 06:42:19 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:56980 "EHLO
         www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231960AbiAULkx (ORCPT
+        with ESMTP id S1380202AbiAULmQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Jan 2022 06:40:53 -0500
+        Fri, 21 Jan 2022 06:42:16 -0500
 Received: from fsav116.sakura.ne.jp (fsav116.sakura.ne.jp [27.133.134.243])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 20LBeFvr048214;
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 20LBeFff048221;
         Fri, 21 Jan 2022 20:40:15 +0900 (JST)
         (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
 Received: from www262.sakura.ne.jp (202.181.97.72)
@@ -22,7 +22,7 @@ Received: from www262.sakura.ne.jp (202.181.97.72)
 X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav116.sakura.ne.jp)
 Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
         (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 20LBe9Hc048197
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 20LBe9Hd048197
         (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
         Fri, 21 Jan 2022 20:40:15 +0900 (JST)
         (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
@@ -30,11 +30,10 @@ From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         Jan Kara <jack@suse.cz>
 Cc:     linux-block@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH v3 2/5] loop: revert "make autoclear operation asynchronous"
-Date:   Fri, 21 Jan 2022 20:40:03 +0900
-Message-Id: <20220121114006.3633-2-penguin-kernel@I-love.SAKURA.ne.jp>
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH v3 3/5] loop: don't hold lo->lo_mutex from lo_open()
+Date:   Fri, 21 Jan 2022 20:40:04 +0900
+Message-Id: <20220121114006.3633-3-penguin-kernel@I-love.SAKURA.ne.jp>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20220121114006.3633-1-penguin-kernel@I-love.SAKURA.ne.jp>
 References: <20220121114006.3633-1-penguin-kernel@I-love.SAKURA.ne.jp>
@@ -42,158 +41,87 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The kernel test robot is reporting that xfstest which does
+Waiting for I/O completion with disk->open_mutex held has possibility of
+deadlock. Since disk->open_mutex => lo->lo_mutex dependency is recorded by
+lo_open(), and blk_mq_freeze_queue() by e.g. loop_set_status() waits for
+I/O completion with lo->lo_mutex held, from locking dependency chain
+perspective waiting for I/O completion with disk->open_mutex held still
+remains.
 
-  umount ext2 on xfs
-  umount xfs
+Introduce loop_delete_spinlock dedicated for protecting lo->lo_state
+versus lo->lo_refcnt race in lo_open() and loop_remove_control().
 
-sequence started failing, for commit 322c4293ecc58110 ("loop: make
-autoclear operation asynchronous") removed a guarantee that fput() of
-backing file is processed before lo_release() from close() returns to
-user mode.
-
-As a preparation for retrying with task_work_add() approach, firstly
-make a clean revert.
-
-Reported-by: kernel test robot <oliver.sang@intel.com>
 Cc: Jan Kara <jack@suse.cz>
 Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
- drivers/block/loop.c | 65 ++++++++++++++++++++------------------------
- drivers/block/loop.h |  1 -
- 2 files changed, 29 insertions(+), 37 deletions(-)
+ drivers/block/loop.c | 33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index b1b05c45c07c..e52a8a5e8cbc 100644
+index e52a8a5e8cbc..5ce8ac2dfa4c 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
-@@ -1082,7 +1082,7 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	return error;
- }
+@@ -89,6 +89,7 @@
+ static DEFINE_IDR(loop_index_idr);
+ static DEFINE_MUTEX(loop_ctl_mutex);
+ static DEFINE_MUTEX(loop_validate_mutex);
++static DEFINE_SPINLOCK(loop_delete_spinlock);
  
--static void __loop_clr_fd(struct loop_device *lo)
-+static void __loop_clr_fd(struct loop_device *lo, bool release)
+ /**
+  * loop_global_lock_killable() - take locks for safe loop_validate_file() test
+@@ -1717,16 +1718,15 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ static int lo_open(struct block_device *bdev, fmode_t mode)
  {
- 	struct file *filp;
- 	gfp_t gfp = lo->old_gfp_mask;
-@@ -1144,6 +1144,8 @@ static void __loop_clr_fd(struct loop_device *lo)
- 	/* let user-space know about this change */
- 	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
- 	mapping_set_gfp_mask(filp->f_mapping, gfp);
-+	/* This is safe: open() is still holding a reference. */
-+	module_put(THIS_MODULE);
- 	blk_mq_unfreeze_queue(lo->lo_queue);
+ 	struct loop_device *lo = bdev->bd_disk->private_data;
+-	int err;
++	int err = 0;
  
- 	disk_force_media_change(lo->lo_disk, DISK_EVENT_MEDIA_CHANGE);
-@@ -1151,52 +1153,44 @@ static void __loop_clr_fd(struct loop_device *lo)
- 	if (lo->lo_flags & LO_FLAGS_PARTSCAN) {
- 		int err;
- 
--		mutex_lock(&lo->lo_disk->open_mutex);
-+		/*
-+		 * open_mutex has been held already in release path, so don't
-+		 * acquire it if this function is called in such case.
-+		 *
-+		 * If the reread partition isn't from release path, lo_refcnt
-+		 * must be at least one and it can only become zero when the
-+		 * current holder is released.
-+		 */
-+		if (!release)
-+			mutex_lock(&lo->lo_disk->open_mutex);
- 		err = bdev_disk_changed(lo->lo_disk, false);
--		mutex_unlock(&lo->lo_disk->open_mutex);
-+		if (!release)
-+			mutex_unlock(&lo->lo_disk->open_mutex);
- 		if (err)
- 			pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
- 				__func__, lo->lo_number, err);
- 		/* Device is gone, no point in returning error */
- 	}
- 
-+	/*
-+	 * lo->lo_state is set to Lo_unbound here after above partscan has
-+	 * finished. There cannot be anybody else entering __loop_clr_fd() as
-+	 * Lo_rundown state protects us from all the other places trying to
-+	 * change the 'lo' device.
-+	 */
- 	lo->lo_flags = 0;
- 	if (!part_shift)
- 		lo->lo_disk->flags |= GENHD_FL_NO_PART;
--
--	fput(filp);
--}
--
--static void loop_rundown_completed(struct loop_device *lo)
--{
- 	mutex_lock(&lo->lo_mutex);
- 	lo->lo_state = Lo_unbound;
- 	mutex_unlock(&lo->lo_mutex);
--	module_put(THIS_MODULE);
--}
--
--static void loop_rundown_workfn(struct work_struct *work)
--{
--	struct loop_device *lo = container_of(work, struct loop_device,
--					      rundown_work);
--	struct block_device *bdev = lo->lo_device;
--	struct gendisk *disk = lo->lo_disk;
--
--	__loop_clr_fd(lo);
--	kobject_put(&bdev->bd_device.kobj);
--	module_put(disk->fops->owner);
--	loop_rundown_completed(lo);
--}
- 
--static void loop_schedule_rundown(struct loop_device *lo)
--{
--	struct block_device *bdev = lo->lo_device;
--	struct gendisk *disk = lo->lo_disk;
--
--	__module_get(disk->fops->owner);
--	kobject_get(&bdev->bd_device.kobj);
--	INIT_WORK(&lo->rundown_work, loop_rundown_workfn);
--	queue_work(system_long_wq, &lo->rundown_work);
-+	/*
-+	 * Need not hold lo_mutex to fput backing file. Calling fput holding
-+	 * lo_mutex triggers a circular lock dependency possibility warning as
-+	 * fput can take open_mutex which is usually taken before lo_mutex.
-+	 */
-+	fput(filp);
+-	err = mutex_lock_killable(&lo->lo_mutex);
+-	if (err)
+-		return err;
+-	if (lo->lo_state == Lo_deleting)
++	spin_lock(&loop_delete_spinlock);
++	/* lo->lo_state may be changed to any Lo_* but Lo_deleting. */
++	if (data_race(lo->lo_state) == Lo_deleting)
+ 		err = -ENXIO;
+ 	else
+ 		atomic_inc(&lo->lo_refcnt);
+-	mutex_unlock(&lo->lo_mutex);
++	spin_unlock(&loop_delete_spinlock);
+ 	return err;
  }
  
- static int loop_clr_fd(struct loop_device *lo)
-@@ -1228,8 +1222,7 @@ static int loop_clr_fd(struct loop_device *lo)
- 	lo->lo_state = Lo_rundown;
+@@ -2112,19 +2112,18 @@ static int loop_control_remove(int idx)
+ 	ret = mutex_lock_killable(&lo->lo_mutex);
+ 	if (ret)
+ 		goto mark_visible;
+-	if (lo->lo_state != Lo_unbound ||
+-	    atomic_read(&lo->lo_refcnt) > 0) {
+-		mutex_unlock(&lo->lo_mutex);
++	spin_lock(&loop_delete_spinlock);
++	/* Mark this loop device no longer open()-able if nobody is using. */
++	if (lo->lo_state != Lo_unbound || atomic_read(&lo->lo_refcnt) > 0)
+ 		ret = -EBUSY;
+-		goto mark_visible;
+-	}
+-	/* Mark this loop device no longer open()-able. */
+-	lo->lo_state = Lo_deleting;
++	else
++		lo->lo_state = Lo_deleting;
++	spin_unlock(&loop_delete_spinlock);
  	mutex_unlock(&lo->lo_mutex);
- 
--	__loop_clr_fd(lo);
--	loop_rundown_completed(lo);
-+	__loop_clr_fd(lo, false);
- 	return 0;
- }
- 
-@@ -1754,7 +1747,7 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
- 		 * In autoclear mode, stop the loop thread
- 		 * and remove configuration after last close.
- 		 */
--		loop_schedule_rundown(lo);
-+		__loop_clr_fd(lo, true);
- 		return;
- 	} else if (lo->lo_state == Lo_bound) {
- 		/*
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index 918a7a2dc025..082d4b6bfc6a 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -56,7 +56,6 @@ struct loop_device {
- 	struct gendisk		*lo_disk;
- 	struct mutex		lo_mutex;
- 	bool			idr_visible;
--	struct work_struct      rundown_work;
- };
- 
- struct loop_cmd {
+-
+-	loop_remove(lo);
+-	return 0;
+-
++	if (!ret) {
++		loop_remove(lo);
++		return 0;
++	}
+ mark_visible:
+ 	/* Show this loop device again. */
+ 	mutex_lock(&loop_ctl_mutex);
 -- 
 2.32.0
 
