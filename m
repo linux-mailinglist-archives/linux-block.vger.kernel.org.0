@@ -2,84 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65C9D498370
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jan 2022 16:22:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F65D498401
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jan 2022 17:01:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240103AbiAXPW1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jan 2022 10:22:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:54854 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235204AbiAXPW1 (ORCPT
+        id S236081AbiAXQBO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jan 2022 11:01:14 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:54440 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240889AbiAXQBM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jan 2022 10:22:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643037746;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X3nzb8Kb2pOdd4W/ZCxjX+bJ2HvpTp4PXFlhCz6DEsY=;
-        b=N0P6jMDKETO1KgYRKAQW1xyOLHBIulwYpqwvlCVkpseh904nHji914ZNSaw/I6XXih4dlT
-        bLxr+PsCjUPMZ0U5UQPxD7WHUMBMPw/p2tt0TnnM7fdfEVS6/dwMQYJ3tUIfq4UWbazzol
-        +yiL39gdEw5xZ9g9ky89TSQa8iTCEoM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-643-T8UMhOmDNu-5avCYif1azQ-1; Mon, 24 Jan 2022 10:22:23 -0500
-X-MC-Unique: T8UMhOmDNu-5avCYif1azQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 24 Jan 2022 11:01:12 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F071835B8F;
-        Mon, 24 Jan 2022 15:22:22 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.22.16.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD9FE798DB;
-        Mon, 24 Jan 2022 15:22:01 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 5D8C8220370; Mon, 24 Jan 2022 10:22:01 -0500 (EST)
-Date:   Mon, 24 Jan 2022 10:22:01 -0500
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, Pei Zhang <pezhang@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-unionfs@vger.kernel.org
-Subject: Re: [PATCH] block: loop: set discard_granularity as PAGE_SIZE if
- sb->s_blocksize is 0
-Message-ID: <Ye7EGS2eYzhJX/e0@redhat.com>
-References: <20220124100628.1327718-1-ming.lei@redhat.com>
- <Ye6yE2Ephyv+WBYY@infradead.org>
+        by ams.source.kernel.org (Postfix) with ESMTPS id AFECBB810FD;
+        Mon, 24 Jan 2022 16:01:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2EDAC340E5;
+        Mon, 24 Jan 2022 16:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643040070;
+        bh=D3cFc/NBIAKXRfJhPp6StLK8ULApGVcFR4ulS3YCWUQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LpXp9TSxT9DE4dWhl8kwwb+u+FDuQ6R5RNmldAa79eAXhv+4zjfK/cR2DNrCGh66T
+         4GpN1b6bmLoZ3osKkobMbihcZgC+XOBs451dIO7hfTvNeqXlw9qRDfXjEk4sviVPHc
+         cvRMBnCN4y/EUq+pWRRADhslAEllBDQX2BqUCkalrTprazEQRlwmrmzrEr2l8vWcm4
+         RrUwYu2gfY4aKJF5udNbRjCkctX8RqIAr4Oo2iSZYmf/1/EVFU/E/hfsIE/7OIiZch
+         46pUfq3eQl+7JFul6fXguYURidLaO7ywGE/iaMyVn7V8Oc0v8/QrOD7DEZaJStBNC4
+         S25nsPZR42T1w==
+From:   Keith Busch <kbusch@kernel.org>
+To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@lst.de, martin.petersen@oracle.com,
+        colyli@suse.de, arnd@arndb.de, Keith Busch <kbusch@kernel.org>
+Subject: [RFC 0/7] 64-bit data integrity field support
+Date:   Mon, 24 Jan 2022 08:01:00 -0800
+Message-Id: <20220124160107.1683901-1-kbusch@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Ye6yE2Ephyv+WBYY@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jan 24, 2022 at 06:05:07AM -0800, Christoph Hellwig wrote:
-> On Mon, Jan 24, 2022 at 06:06:28PM +0800, Ming Lei wrote:
-> > If backing file's filesystem has implemented ->fallocate(), we think the
-> > loop device can support discard, then pass sb->s_blocksize as
-> > discard_granularity. However, some underlying FS, such as overlayfs,
-> > doesn't set sb->s_blocksize, and causes discard_granularity to be set as
-> > zero, then the warning in __blkdev_issue_discard() is triggered.
-> > 
-> > Fix the issue by setting discard_granularity as PAGE_SIZE in this case
-> > since PAGE_SIZE is the most common data unit for FS.
-> 
-> sb->s_blocksize really does not mean anything.  kstat.blksize might
-> be a better choice, even if it someimes errs on the too large side.
+The NVM Express protocol added enhancements to the data integrity field
+formats beyond the T10 defined protection information. A detailed
+description of the new formats can be found in the NVMe's NVM Command
+Set Specification, section 5.2, available at:
 
-[ CC linux-unionfs, Miklos ]
+  https://nvmexpress.org/wp-content/uploads/NVM-Command-Set-Specification-1.0b-2021.12.18-Ratified.pdf
 
-This should work well for overlayfs too. I see it just passes the query
-to underlying filesystem and that should report optimal I/O size.
+This series implements one possible new format: the CRC64 guard with
+48-bit reference tags. This does not add support for the variable
+"storage tag" field.
 
-On my overlayfs instance, I see.
+The NVMe CRC64 parameters (from Rocksoft) were not implemented in the
+kernel, so a software implementation is included in this series based on
+the generated table. This series does not include any possible hardware
+excelleration (ex: x86's pclmulqdq), so it's not very high performant
+right now.
 
-# stat -c '%o' foo.txt
-4096
+Keith Busch (7):
+  block: support pi with extended metadata
+  nvme: allow integrity on extended metadata formats
+  lib: add rocksoft model crc64
+  lib: add crc64 tests
+  asm-generic: introduce be48 unaligned accessors
+  block: add pi for nvme enhanced integrity
+  nvme: add support for enhanced metadata
 
-Vivek
+ block/Kconfig                   |   1 +
+ block/bio-integrity.c           |   1 +
+ block/t10-pi.c                  | 198 +++++++++++++++++++++++++++++++-
+ drivers/nvme/host/core.c        | 167 ++++++++++++++++++++++-----
+ drivers/nvme/host/nvme.h        |   1 +
+ include/asm-generic/unaligned.h |  26 +++++
+ include/linux/blk-integrity.h   |   1 +
+ include/linux/crc64.h           |   2 +
+ include/linux/nvme.h            |  53 ++++++++-
+ include/linux/t10-pi.h          |  20 ++++
+ lib/Kconfig.debug               |   3 +
+ lib/Makefile                    |   1 +
+ lib/crc64.c                     |  79 +++++++++++++
+ lib/gen_crc64table.c            |  33 ++++--
+ lib/test_crc64.c                |  68 +++++++++++
+ 15 files changed, 608 insertions(+), 46 deletions(-)
+ create mode 100644 lib/test_crc64.c
+
+-- 
+2.25.4
 
