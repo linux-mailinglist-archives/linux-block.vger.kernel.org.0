@@ -2,95 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9412499E6D
-	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 00:09:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 088A149A2E0
+	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 03:01:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382597AbiAXWdy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jan 2022 17:33:54 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:37922 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390879AbiAXWRP (ORCPT
+        id S1385924AbiAXXsY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jan 2022 18:48:24 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:47058 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1578846AbiAXWEG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jan 2022 17:17:15 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 5A08E21138;
-        Mon, 24 Jan 2022 22:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1643062631; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zp/ugdyNjv+ZK/vufq42OIU9Itixj/olNJM3ZUEc75M=;
-        b=C/Bc/zdfDjcl6gHQQ6i6LTrmGWKjYDNwlUdo1+hRP0iD3BkOXGIo7i0aFnwQO0PGZPE1AU
-        qdHQhy/k1erNHd+WxVQPRrpWOwEClyKqAKtigGqnhK5MZuC9dCXrN8t8/+3j7BdrIdoV3G
-        0ZTJKqYPJ0FUeoD0h9QeRy75yhdDrQc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1643062631;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zp/ugdyNjv+ZK/vufq42OIU9Itixj/olNJM3ZUEc75M=;
-        b=0IbJcbnZ25FmTgkE60E4ZdoejcWYe0CRZUEhkb7nAcmBSpQ/7if/iRw2Rz+3lp2ZxjHq05
-        MnNPMdF3djj1sFCw==
-Received: from quack3.suse.cz (unknown [10.163.43.118])
+        Mon, 24 Jan 2022 17:04:06 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 4C854A3B8E;
-        Mon, 24 Jan 2022 22:17:11 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 02C89A05E6; Mon, 24 Jan 2022 23:17:09 +0100 (CET)
-Date:   Mon, 24 Jan 2022 23:17:09 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org
-Subject: Re: RFA (Request for Advice): block/bio: get_user_pages() -->
- pin_user_pages()
-Message-ID: <20220124221709.kzsaqkdp3gmjie3z@quack3.lan>
-References: <e83cd4fe-8606-f4de-41ad-33a40f251648@nvidia.com>
- <20220124100501.gwkaoohkm2b6h7xl@quack3.lan>
- <923c30a5-747e-148b-43c9-32dfacda0d0a@nvidia.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4724B615A3;
+        Mon, 24 Jan 2022 22:03:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6D5C340E9;
+        Mon, 24 Jan 2022 22:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643061828;
+        bh=torCgvUQ4OjZaj/EDgDlqqHx/5njlYExaA/ynIldKoI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V5M2s7HimfXibF9pbGSiOOxJaSEFUHGjJqs8UiMM1ZO9NF8YE7aLWF5VMQ9wS0NlU
+         E21D1/wKhH1z1c0pnyupmPh/x/qSMHey4ZPETUd7xp3R0T8PZkZPD3kpDrd7Q0T9jG
+         kbDkNLZhMWlwq65T4jUbaBQPmxMHzlTWhQrp9jvKBtOARhTZYGByJj2X6BrPKxVJcQ
+         4SppDB4vqcnwx7coNu/W+LQTX/qSY1dFyppLvD+b9nFe2Lcc1zRXU1M9qc/miuauZc
+         dkAUmFRmNt46r3JQqfVFpur9a99kWjPrLucuUjKjeN0JYaDL9qDT8S2XgwO1b0b9R7
+         VKmJbaS8T+GeQ==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH v4 0/3] block: show crypto capabilities in sysfs
+Date:   Mon, 24 Jan 2022 13:59:35 -0800
+Message-Id: <20220124215938.2769-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <923c30a5-747e-148b-43c9-32dfacda0d0a@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon 24-01-22 13:06:03, John Hubbard wrote:
-> On 1/24/22 02:05, Jan Kara wrote:
-> ...
-> > > do_direct_IO()
-> > >      dio_zero_block()
-> > >          page = ZERO_PAGE(0); <-- This is a problem
-> > > 
-> > > I'm not sure what to use, instead of that zero page! The zero page
-> > > doesn't need to be allocated nor tracked, and so any replacement
-> > > approaches would need either other storage, or some horrid scheme that I
-> > > won't go so far as to write on the screen. :)
-> > 
-> > Well, I'm not sure if you consider this ugly but currently we use
-> > get_page() in that path exactly so that bio_release_pages() does not have
-> > to care about zero page. So now we could grab pin on the zero page instead
-> > through try_grab_page() or something like that...
-> > 
-> > 								Honza
-> 
-> So it sounds like you prefer this over checking for the zero page in
-> bio_release_pages(). I'll take a look at both ideas, then, and see what
-> it looks like.
+This series adds sysfs files that expose the inline encryption
+capabilities of request queues.
 
-Yes, I somewhat prefer this because it seems more transparent to me.
-Furthermore if e.g. we can have zero page mapped to userspace (not sure if
-we can for normal mappings but at least for DAX mapping we can), and userspace
-provides such mapping as a buffer for direct IO write, then we'll get zero
-page attached to bio through iov_iter_get_pages() and we'd have to be very
-careful to special-case zero page in iov_iter_get_pages() as well. Overall
-it seems fragile to me... So it seems more robust to make sure all pages we
-attach to bio are pinned.
+Patches 1 and 2 are some related cleanups for existing blk-sysfs code.
+Patch 3 is the real change; see there for more details.
 
-								Honza
+This series applies to v5.17-rc1.
+
+Changed v3 => v4:
+   - Reworded a comment in patch 2.
+   - Updated dates in sysfs documentation.
+   - Added more Reviewed-by tags.
+
+Changed v2 => v3:
+   - Moved the documentation into Documentation/ABI/stable/sysfs-block,
+     and improved it a bit.
+   - Write "/sys/block/" instead of "/sys/class/block/".
+   - Added Reviewed-by tags.
+
+Changed v1 => v2:
+   - Use sysfs_emit() instead of sprintf().
+   - Use __ATTR_RO().
+
+Eric Biggers (3):
+  block: simplify calling convention of elv_unregister_queue()
+  block: don't delete queue kobject before its children
+  blk-crypto: show crypto capabilities in sysfs
+
+ Documentation/ABI/stable/sysfs-block |  49 ++++++++
+ block/Makefile                       |   3 +-
+ block/blk-crypto-internal.h          |  12 ++
+ block/blk-crypto-sysfs.c             | 172 +++++++++++++++++++++++++++
+ block/blk-crypto.c                   |   3 +
+ block/blk-sysfs.c                    |  17 ++-
+ block/elevator.c                     |   8 +-
+ include/linux/blkdev.h               |   1 +
+ 8 files changed, 255 insertions(+), 10 deletions(-)
+ create mode 100644 block/blk-crypto-sysfs.c
+
+
+base-commit: e783362eb54cd99b2cac8b3a9aeac942e6f6ac07
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
