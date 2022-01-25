@@ -2,104 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B063749AB72
-	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 06:15:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B664C49ACBA
+	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 07:50:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245455AbiAYE4N (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jan 2022 23:56:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60883 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240932AbiAYEkq (ORCPT
+        id S1376607AbiAYGut (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Jan 2022 01:50:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1359494AbiAYGsI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jan 2022 23:40:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643085638;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=//gd3MlJOe9KhwhDkvV5hXClhf54wEmDqKiRtLDICzw=;
-        b=M2dm6WuJCOyoJbWkZcUJuIxtQRGXmskxTeCv4nj6OROJ9Q7CI6I+JlIhJ8y1nBfHh7eH+f
-        beEZDulkpkp8yxaewBHElzEAVO/Id9C/WYRXKrU4uOTvk2XO1HOIiQ38aKuLs2r7paArR2
-        /+KJsHoAGYJJzgGoAg1WpgngxncioCk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-140-FMIA0xT7MdqVCPq07K3rBQ-1; Mon, 24 Jan 2022 23:40:35 -0500
-X-MC-Unique: FMIA0xT7MdqVCPq07K3rBQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 25 Jan 2022 01:48:08 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98927C09F4A9;
+        Mon, 24 Jan 2022 21:10:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 511E9802926;
-        Tue, 25 Jan 2022 04:40:34 +0000 (UTC)
-Received: from localhost (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E713655F4A;
-        Tue, 25 Jan 2022 04:40:09 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Vivek Goyal <vgoyal@redhat.com>, Pei Zhang <pezhang@redhat.com>
-Subject: [PATCH V2] block: loop:use kstatfs.f_bsize of backing file to set discard granularity
-Date:   Tue, 25 Jan 2022 12:40:05 +0800
-Message-Id: <20220125044005.211943-1-ming.lei@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 34EDB6141C;
+        Tue, 25 Jan 2022 05:10:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C3CC340E0;
+        Tue, 25 Jan 2022 05:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643087440;
+        bh=BEVe+YavO8Zvh19/8pYvNnZ7t8RCY/gLna1go7/ya14=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bCrIjJQS7hpNgbkV+rEqW37A/jDyaOuhYRuE3KqX4NCEcl75D2235fbUzjjg4LN0D
+         iZL/m2epkCPYw+JfZB+RiWgRe1kc/RC3Tw2LnUhSCN1hX63Rd43ZLeh9ric/ZL/Rml
+         kznwICzXU62GNSs1CeJt91XZKO64DB8HmIGHtvgCh4aTVvxIOhz+jtpmGTCXTOTNOO
+         EVoTkSHKMg55xTmaEWVQXpy/kuMIxR1dsUA9J2mlfcDzBX49nVv4uj37x3uaIbaGZB
+         9nKV9OAHKRt0YxL9PUGw7470WHrmMo9XBFaZzuMtHLJw2I1FBNqhKeZ+r7imaSk4d8
+         IMaLIFZ+84UaQ==
+Date:   Mon, 24 Jan 2022 21:10:38 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk, hch@lst.de,
+        martin.petersen@oracle.com, colyli@suse.de, arnd@arndb.de
+Subject: Re: [RFC 3/7] lib: add rocksoft model crc64
+Message-ID: <Ye+GTkrZ5YMe5qGt@sol.localdomain>
+References: <20220124160107.1683901-1-kbusch@kernel.org>
+ <20220124160107.1683901-4-kbusch@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220124160107.1683901-4-kbusch@kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If backing file's filesystem has implemented ->fallocate(), we think the
-loop device can support discard, then pass sb->s_blocksize as
-discard_granularity. However, some underlying FS, such as overlayfs,
-doesn't set sb->s_blocksize, and causes discard_granularity to be set as
-zero, then the warning in __blkdev_issue_discard() is triggered.
+On Mon, Jan 24, 2022 at 08:01:03AM -0800, Keith Busch wrote:
+> Since this model reflects inputs and outputs, a helper table and
+> function are added to reverse bits of 8 and 64 bit values.
 
-Christoph suggested to pass kstatfs.f_bsize as discard granularity, and
-this way is fine because kstatfs.f_bsize means 'Optimal transfer block
-size', which still matches with definition of discard granularity.
+That's a silly way to do a bit-reflected CRC.  The proper way to do it is to
+reflect the bytes too, so that the bits and bytes are ordered consistently, so
+explicitly reflecting the bits isn't needed.  Most CRC-32's are bit-reflected,
+and they are usually implemented this way.  E.g., see crc32_le() in lib/crc32.c.
 
-So fix the issue by setting discard_granularity as kstatfs.f_bsize if it
-is available, otherwise fackback to PAGE_SIZE.
+Here's a Python script that shows that the Rocksoft CRC-64 can be computed
+without explicitly reversing the bits.  It passes the tests from your patch 4:
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Reported-by: Pei Zhang <pezhang@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
-V2:
-	- take Christoph's suggestion to use kstatfs.f_bsize
 
- drivers/block/loop.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+COEFFS = [63, 61, 59, 58, 56, 55, 52, 49, 48, 47, 46, 44, 41, 37, 36, 34, 32,
+          31, 28, 26, 23, 22, 19, 16, 13, 12, 10, 9, 6, 4, 3, 0]
+POLY = sum(1 << (63 - coeff) for coeff in COEFFS)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index b1b05c45c07c..0991f08f79d7 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -79,6 +79,7 @@
- #include <linux/ioprio.h>
- #include <linux/blk-cgroup.h>
- #include <linux/sched/mm.h>
-+#include <linux/statfs.h>
- 
- #include "loop.h"
- 
-@@ -774,8 +775,13 @@ static void loop_config_discard(struct loop_device *lo)
- 		granularity = 0;
- 
- 	} else {
-+		struct kstatfs sbuf;
-+
- 		max_discard_sectors = UINT_MAX >> 9;
--		granularity = inode->i_sb->s_blocksize;
-+		if (!vfs_statfs(&file->f_path, &sbuf))
-+			granularity = sbuf.f_bsize;
-+		else
-+			granularity = PAGE_SIZE;
- 	}
- 
- 	if (max_discard_sectors) {
--- 
-2.31.1
+# Generate the table.
+table = [0] * 256
+for i in range(256):
+    crc = 0
+    byte = i
+    for j in range(8):
+        if ((crc ^ (byte >> j)) & 1) == 1:
+            crc = (crc >> 1) ^ POLY
+        else:
+            crc = crc >> 1
+    table[i] = crc
 
+# Compute the CRC-64 one byte at a time using the table.
+def crc64_rocksoft(data):
+    crc = 0xffffffffffffffff
+    for byte in data:
+        crc = (crc >> 8) ^ table[(crc & 0xff) ^ byte]
+    return crc ^ 0xffffffffffffffff
+
+# Tests
+assert crc64_rocksoft(bytearray([0] * 4096)) == 0x6482D367EB22B64E
+assert crc64_rocksoft(bytearray([255] * 4096)) == 0xC0DDBA7302ECA3AC
+assert crc64_rocksoft(bytearray([i % 256 for i in range(4096)])) == 0x3E729F5F6750449C
+assert crc64_rocksoft(bytearray([(255-i) % 256 for i in range(4096)])) == 0x9A2DF64B8E9E517E
+
+# Print the table.
+print(f'#define CRC64_ROCKSOFT_POLY 0x{POLY:016x}ULL')
+print('')
+print('static const u64 crc64_rocksoft_tab[] = {')
+for i in range(0, 256, 2):
+    print('\t', end='')
+    for j in range(i, i + 2):
+        print(f'0x{table[j]:016x}ULL,', end='')
+        if j != 1:
+            print(' ', end='')
+    print('')
+print('};')
