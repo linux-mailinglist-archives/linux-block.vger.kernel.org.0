@@ -2,53 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC01C49B05A
-	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 10:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB13249AF95
+	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 10:15:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1457031AbiAYJeQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 Jan 2022 04:34:16 -0500
-Received: from mail.belongsenergy.pl ([185.45.112.191]:38460 "EHLO
-        mail.belongsenergy.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1455517AbiAYJ0H (ORCPT
+        id S1452592AbiAYJL4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Jan 2022 04:11:56 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:35864 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1449145AbiAYJJD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 Jan 2022 04:26:07 -0500
-Received: by mail.belongsenergy.pl (Postfix, from userid 1001)
-        id 832B5266D9; Tue, 25 Jan 2022 09:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=belongsenergy.pl;
-        s=mail; t=1643102130;
-        bh=JAEkA4FCBmQ7T7M+WVau75EdqeDf4MEEr9hE2/l61BA=;
-        h=Date:From:To:Subject:From;
-        b=I3gmS0VDRcLPt48nWQyRaawVJs42jO29ONWDjnqv7YesYqWXVabSjqFLgYZ3oD6ko
-         TAXhKGrBoZfPeTHGbFi+81HNk5aqguLawZXZgbA728Z/s3rCodMvHvimADSKXQ88W0
-         6GJ2ZpHG7bHG16l0QsR+NvEjFqPBWNL2Kr6e5OxS7D75P3v29KqCpRW0ms3ljylJf+
-         5R95eR+eeIXeUM/wqrB8IUVkhJIN+A2p9KIkrwJT7ThZwzoL5nnf5XpNdTPo8UeJ5Q
-         MdsmhFgvGZ0M/ZKGTfaAGhIg3MVvRmNJz1t06fjUlwimsuRQW/iYGN74Cfi6jf8za3
-         icJCUk5ViSq1g==
-Received: by mail.belongsenergy.pl for <linux-block@vger.kernel.org>; Tue, 25 Jan 2022 09:15:27 GMT
-Message-ID: <20220125074500-0.1.7.2tw.0.3361n6c78d@belongsenergy.pl>
-Date:   Tue, 25 Jan 2022 09:15:27 GMT
-From:   "Maciej Nitycz" <maciej.nitycz@belongsenergy.pl>
-To:     <linux-block@vger.kernel.org>
-Subject: Wycena paneli fotowoltaicznych
-X-Mailer: mail.belongsenergy.pl
+        Tue, 25 Jan 2022 04:09:03 -0500
+Received: from dggeme756-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JjgxM0YnMzccdv;
+        Tue, 25 Jan 2022 17:08:07 +0800 (CST)
+Received: from localhost.localdomain (10.175.127.227) by
+ dggeme756-chm.china.huawei.com (10.3.19.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Tue, 25 Jan 2022 17:08:55 +0800
+From:   Zhang Wensheng <zhangwensheng5@huawei.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] block: update io_ticks when io hang
+Date:   Tue, 25 Jan 2022 17:19:38 +0800
+Message-ID: <20220125091938.1799001-1-zhangwensheng5@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggeme756-chm.china.huawei.com (10.3.19.102)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dzie=C5=84 dobry,
+When the inflight IOs are slow and no new IOs are issued, we expect
+iostat could manifest the IO hang problem. However after
+commit 5b18b5a73760 ("block: delete part_round_stats and switch to less
+precise counting"), io_tick and time_in_queue will not be updated until
+the end of IO, and the avgqu-sz and %util columns of iostat will be zero.
 
-dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
-irm=C4=85.
+Because it has using stat.nsecs accumulation to express time_in_queue
+which is not suitable to change, and may %util will express the status
+better when io hang occur. To fix io_ticks, we use update_io_ticks and
+inflight to update io_ticks when diskstats_show and part_stat_show
+been called.
 
-=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
-ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
+Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
+Signed-off-by: Zhang Wensheng <zhangwensheng5@huawei.com>
+---
+ block/genhd.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
-ropozycji?
+diff --git a/block/genhd.c b/block/genhd.c
+index 626c8406f21a..df0656ffb4ad 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -913,12 +913,14 @@ ssize_t part_stat_show(struct device *dev,
+ 	struct disk_stats stat;
+ 	unsigned int inflight;
+ 
+-	part_stat_read_all(bdev, &stat);
+ 	if (queue_is_mq(q))
+ 		inflight = blk_mq_in_flight(q, bdev);
+ 	else
+ 		inflight = part_in_flight(bdev);
+ 
++	if (inflight)
++		update_io_ticks(bdev, jiffies, true);
++	part_stat_read_all(bdev, &stat);
+ 	return sprintf(buf,
+ 		"%8lu %8lu %8llu %8u "
+ 		"%8lu %8lu %8llu %8u "
+@@ -1174,12 +1176,14 @@ static int diskstats_show(struct seq_file *seqf, void *v)
+ 	xa_for_each(&gp->part_tbl, idx, hd) {
+ 		if (bdev_is_partition(hd) && !bdev_nr_sectors(hd))
+ 			continue;
+-		part_stat_read_all(hd, &stat);
+ 		if (queue_is_mq(gp->queue))
+ 			inflight = blk_mq_in_flight(gp->queue, hd);
+ 		else
+ 			inflight = part_in_flight(hd);
+ 
++		if (inflight)
++			update_io_ticks(hd, jiffies, true);
++		part_stat_read_all(hd, &stat);
+ 		seq_printf(seqf, "%4d %7d %pg "
+ 			   "%lu %lu %lu %u "
+ 			   "%lu %lu %lu %u "
+-- 
+2.31.1
 
-
-Pozdrawiam,
-Maciej Nitycz
