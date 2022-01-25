@@ -2,54 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46B3949AE86
-	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 09:52:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D2449ADA6
+	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 08:32:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1452901AbiAYIvG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 Jan 2022 03:51:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353952AbiAYIs3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 Jan 2022 03:48:29 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146C4C06E019;
-        Mon, 24 Jan 2022 23:26:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=XhPgf/IFRi9FPIRY19B3TcDzQg
-        eBv9AXt3df0nCifrwiOrFxq39awFtymOU+OOLhyVvBhN45uYlAZkVkFnoij7T1moIfR1eGNyTyQKM
-        eWP62t7EmCG4V8ElKo/VpYzbrTrqvleiE8O8+xdltled/xczpJsYDLiHNDt0MOeIMn9xzc9r/khF/
-        zvf7oTZMYw81RlPtBL/Z/lIKGgVsHB3Yw9uBg+tAmw5PtIWGIlVYawIXNHuTZPsRH+SMkiqFNcE7N
-        H9aehr6GL7Ny0OBX0ucaAeo5f/j+8da0XjDlLCR/RCdxE7I6Qy5vaI46ZMlBYAFUQ5uZ7Dl/uclf6
-        Q0uiRwUQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nCGDO-006iQj-NC; Tue, 25 Jan 2022 07:26:06 +0000
-Date:   Mon, 24 Jan 2022 23:26:06 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-mmc@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v4 2/3] block: don't delete queue kobject before its
- children
-Message-ID: <Ye+mDhRhatxWAyGA@infradead.org>
-References: <20220124215938.2769-1-ebiggers@kernel.org>
- <20220124215938.2769-3-ebiggers@kernel.org>
+        id S1445448AbiAYHah (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Jan 2022 02:30:37 -0500
+Received: from verein.lst.de ([213.95.11.211]:34304 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1445283AbiAYH1s (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Tue, 25 Jan 2022 02:27:48 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 308C868BEB; Tue, 25 Jan 2022 08:27:40 +0100 (CET)
+Date:   Tue, 25 Jan 2022 08:27:39 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH V2 09/13] scsi: force unfreezing queue into atomic mode
+Message-ID: <20220125072739.GA27777@lst.de>
+References: <20220122111054.1126146-1-ming.lei@redhat.com> <20220122111054.1126146-10-ming.lei@redhat.com> <20220124131516.GH27269@lst.de> <Ye80kxTBojm6GN8k@T590>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220124215938.2769-3-ebiggers@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <Ye80kxTBojm6GN8k@T590>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good,
+On Tue, Jan 25, 2022 at 07:21:55AM +0800, Ming Lei wrote:
+> > > @@ -3670,7 +3670,7 @@ static void scsi_disk_release(struct device *dev)
+> > >  	 * in case multiple processes open a /dev/sd... node concurrently.
+> > >  	 */
+> > >  	blk_mq_freeze_queue(q);
+> > > -	blk_mq_unfreeze_queue(q);
+> > > +	__blk_mq_unfreeze_queue(q, true);
+> > 
+> > I think the right thing here is to drop the freeze/unfreeze pair.
+> > Now that del_gendisk properly freezes the queue, we don't need this
+> > protection as the issue that Bart fixed with it can't happen any more.
+> 
+> As you see, the last patch removes freeze/unfreeze pair in del_gendisk(),
+> which looks not very useful: it can't drain IO on bio based driver, and
+> del_gendisk() is supposed to provide consistent behavior for both request
+> and bio based driver.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+So what is the advantage of trying to remove the freeze from where
+it belongs (common unregister code) while keeping it where it is a bandaid
+(driver specific unregister code)?
