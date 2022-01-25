@@ -2,95 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB13249AF95
-	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 10:15:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE6A349B05C
+	for <lists+linux-block@lfdr.de>; Tue, 25 Jan 2022 10:43:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1452592AbiAYJL4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 Jan 2022 04:11:56 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:35864 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1449145AbiAYJJD (ORCPT
+        id S1574462AbiAYJe2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Jan 2022 04:34:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26110 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1380431AbiAYJ2I (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 Jan 2022 04:09:03 -0500
-Received: from dggeme756-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JjgxM0YnMzccdv;
-        Tue, 25 Jan 2022 17:08:07 +0800 (CST)
-Received: from localhost.localdomain (10.175.127.227) by
- dggeme756-chm.china.huawei.com (10.3.19.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Tue, 25 Jan 2022 17:08:55 +0800
-From:   Zhang Wensheng <zhangwensheng5@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] block: update io_ticks when io hang
-Date:   Tue, 25 Jan 2022 17:19:38 +0800
-Message-ID: <20220125091938.1799001-1-zhangwensheng5@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Tue, 25 Jan 2022 04:28:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643102887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/0UnVACW1GCfh61iqXb5gSodARCGb9Db4K+Avgvqrl0=;
+        b=Q44NHJ0QtpQq53PhrjJnqaee4DG5OEqddmYY4J4sSq6Kz53Mtr8o1vQjVvFWFDL2Lb8Yaj
+        k0egYsX6JuRpTshb9hjEf57OFVeba2l06RVAanHS0RsMl8Vz4XJ5OS1PXSYnNH8Ob/podY
+        gnjHm64qN6Oxls4DtvH58BCpxC03BNk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-440-U0aZt6GVOUqp2Zrx6Arb_g-1; Tue, 25 Jan 2022 04:28:05 -0500
+X-MC-Unique: U0aZt6GVOUqp2Zrx6Arb_g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8A281091DA0;
+        Tue, 25 Jan 2022 09:28:04 +0000 (UTC)
+Received: from T590 (ovpn-8-22.pek2.redhat.com [10.72.8.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00B984F86D;
+        Tue, 25 Jan 2022 09:27:41 +0000 (UTC)
+Date:   Tue, 25 Jan 2022 17:27:36 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Vivek Goyal <vgoyal@redhat.com>, Pei Zhang <pezhang@redhat.com>
+Subject: Re: [PATCH V2] block: loop:use kstatfs.f_bsize of backing file to
+ set discard granularity
+Message-ID: <Ye/CiFZSHmHQ3Pfu@T590>
+References: <20220125044005.211943-1-ming.lei@redhat.com>
+ <20220125061057.GA26444@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggeme756-chm.china.huawei.com (10.3.19.102)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220125061057.GA26444@lst.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the inflight IOs are slow and no new IOs are issued, we expect
-iostat could manifest the IO hang problem. However after
-commit 5b18b5a73760 ("block: delete part_round_stats and switch to less
-precise counting"), io_tick and time_in_queue will not be updated until
-the end of IO, and the avgqu-sz and %util columns of iostat will be zero.
+On Tue, Jan 25, 2022 at 07:10:57AM +0100, Christoph Hellwig wrote:
+> On Tue, Jan 25, 2022 at 12:40:05PM +0800, Ming Lei wrote:
+> >  	} else {
+> > +		struct kstatfs sbuf;
+> > +
+> >  		max_discard_sectors = UINT_MAX >> 9;
+> > -		granularity = inode->i_sb->s_blocksize;
+> > +		if (!vfs_statfs(&file->f_path, &sbuf))
+> > +			granularity = sbuf.f_bsize;
+> > +		else
+> > +			granularity = PAGE_SIZE;
+> 
+> If vfs_statfs fails we're pretty much toast and there isn't really any
+> point in continuing here.
 
-Because it has using stat.nsecs accumulation to express time_in_queue
-which is not suitable to change, and may %util will express the status
-better when io hang occur. To fix io_ticks, we use update_io_ticks and
-inflight to update io_ticks when diskstats_show and part_stat_show
-been called.
+But it is configure code path, even though vfs_statfs() fails,
+loop_config_discard() still need to keep discard setting consistent.
 
-Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
-Signed-off-by: Zhang Wensheng <zhangwensheng5@huawei.com>
----
- block/genhd.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Setting granularity as PAGE_SIZE is just for making discard granularity
+matched with max_discard_sectors. Or you have better/simpler handling?
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 626c8406f21a..df0656ffb4ad 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -913,12 +913,14 @@ ssize_t part_stat_show(struct device *dev,
- 	struct disk_stats stat;
- 	unsigned int inflight;
- 
--	part_stat_read_all(bdev, &stat);
- 	if (queue_is_mq(q))
- 		inflight = blk_mq_in_flight(q, bdev);
- 	else
- 		inflight = part_in_flight(bdev);
- 
-+	if (inflight)
-+		update_io_ticks(bdev, jiffies, true);
-+	part_stat_read_all(bdev, &stat);
- 	return sprintf(buf,
- 		"%8lu %8lu %8llu %8u "
- 		"%8lu %8lu %8llu %8u "
-@@ -1174,12 +1176,14 @@ static int diskstats_show(struct seq_file *seqf, void *v)
- 	xa_for_each(&gp->part_tbl, idx, hd) {
- 		if (bdev_is_partition(hd) && !bdev_nr_sectors(hd))
- 			continue;
--		part_stat_read_all(hd, &stat);
- 		if (queue_is_mq(gp->queue))
- 			inflight = blk_mq_in_flight(gp->queue, hd);
- 		else
- 			inflight = part_in_flight(hd);
- 
-+		if (inflight)
-+			update_io_ticks(hd, jiffies, true);
-+		part_stat_read_all(hd, &stat);
- 		seq_printf(seqf, "%4d %7d %pg "
- 			   "%lu %lu %lu %u "
- 			   "%lu %lu %lu %u "
--- 
-2.31.1
+
+Thanks,
+Ming
 
