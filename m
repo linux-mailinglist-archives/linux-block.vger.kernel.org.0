@@ -2,51 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7000C49D872
-	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 03:49:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60D3349D837
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 03:47:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233409AbiA0Ctu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Jan 2022 21:49:50 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:55256 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231881AbiA0Ctt (ORCPT
+        id S235283AbiA0Cr2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Jan 2022 21:47:28 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:54910 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235332AbiA0Cr1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Jan 2022 21:49:49 -0500
+        Wed, 26 Jan 2022 21:47:27 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id BC4B62190B;
-        Thu, 27 Jan 2022 02:49:47 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 5274B1F37C;
+        Thu, 27 Jan 2022 02:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643251787; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1643251645; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OVO5L5oh76QqfW3n1oDvBos2Yawv0E43OsrqMmz97u8=;
-        b=JOFvU7iAGyn/v6BD3Bp+bh089vjSIxSCwY01PObM+BmenfkUZ1j2GJfL9RHxbWRZM/l98u
-        qo/UEFC5lfk1D4MRdyMUcjwh6hIji/NTYfIRlm9cB6k65ocg8RHieVXuXzdIix2W/WWAJB
-        +fCFtWOMn+6HtfPTgy8eWKnyVdE1o0E=
+        bh=jI/D3cF7XEXdB5GQX4lb6Wy9m6GRhCmmHGkuQyOPpFQ=;
+        b=VX2TuVX3kVXj7I3yebeDc8tJhqUeKFahw7htyoPYO3KgwI8voUPLoTgzRNx/JSiLVhU/pI
+        PPvM89l8O0cQ8t5Y4EbvjYgRiyI3ZXJtDxQdExlie++bqkCqSIOkOOHkYuKsMFnZN7za32
+        IJBB7rIe80iXXaofxAvQKJAQL19xGqQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643251787;
+        s=susede2_ed25519; t=1643251645;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OVO5L5oh76QqfW3n1oDvBos2Yawv0E43OsrqMmz97u8=;
-        b=IBhAkB2hVQaF92fXW6Y2P175TbQ6CFUUnjY/M7g7xzSXg9kQBD90kXkX3iZRhhBhPwaHez
-        ofEg50iSvDeTM4BA==
+        bh=jI/D3cF7XEXdB5GQX4lb6Wy9m6GRhCmmHGkuQyOPpFQ=;
+        b=5aAhOmFiE7Zr4YHy1hjvEWZl9gGAb4CzbdFGOZ1ijWoIeTfN0EVmBsbDU+SJDeHhSv2Nsh
+        D2DZQVwETY1/jVCQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B085A13E46;
-        Thu, 27 Jan 2022 02:49:40 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C5FBA13E46;
+        Thu, 27 Jan 2022 02:47:18 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id DVgjG0QI8mF9LAAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 27 Jan 2022 02:49:40 +0000
-Subject: [PATCH 9/9] Remove congestion tracking framework.
+        id Khj7ILYH8mG/KwAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 27 Jan 2022 02:47:18 +0000
+Subject: [PATCH 2/9] Remove bdi_congested() and wb_congested() and related
+ functions
 From:   NeilBrown <neilb@suse.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
@@ -67,7 +68,7 @@ Cc:     linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
         ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
         linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
 Date:   Thu, 27 Jan 2022 13:46:29 +1100
-Message-ID: <164325158960.29787.17588717894058708630.stgit@noble.brown>
+Message-ID: <164325158955.29787.4769373293473421057.stgit@noble.brown>
 In-Reply-To: <164325106958.29787.4865219843242892726.stgit@noble.brown>
 References: <164325106958.29787.4865219843242892726.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -78,151 +79,163 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This framework is no longer used - so discard it.
+These functions are no longer useful as the only bdis that report
+congestion are in ceph, fuse, and nfs.  None of those bdis can be the
+target of the calls in drbd, ext2, nilfs2, or xfs.
+
+Removing the test on bdi_write_contested() in current_may_throttle()
+could cause a small change in behaviour, but only when PF_LOCAL_THROTTLE
+is set.
+
+So replace the calls by 'false' and simplify the code - and remove the
+functions.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- include/linux/backing-dev-defs.h |    8 -----
- include/linux/backing-dev.h      |    2 -
- include/trace/events/writeback.h |   28 -------------------
- mm/backing-dev.c                 |   57 --------------------------------------
- 4 files changed, 95 deletions(-)
+ drivers/block/drbd/drbd_int.h |    3 ---
+ drivers/block/drbd/drbd_req.c |    3 +--
+ fs/ext2/ialloc.c              |    2 --
+ fs/nilfs2/segbuf.c            |   11 -----------
+ fs/xfs/xfs_buf.c              |    3 ---
+ include/linux/backing-dev.h   |   26 --------------------------
+ mm/vmscan.c                   |    4 +---
+ 7 files changed, 2 insertions(+), 50 deletions(-)
 
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 993c5628a726..e863c88df95f 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -207,14 +207,6 @@ struct backing_dev_info {
- #endif
- };
+diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
+index f27d5b0f9a0b..f804b1bfb3e6 100644
+--- a/drivers/block/drbd/drbd_int.h
++++ b/drivers/block/drbd/drbd_int.h
+@@ -638,9 +638,6 @@ enum {
+ 	STATE_SENT,		/* Do not change state/UUIDs while this is set */
+ 	CALLBACK_PENDING,	/* Whether we have a call_usermodehelper(, UMH_WAIT_PROC)
+ 				 * pending, from drbd worker context.
+-				 * If set, bdi_write_congested() returns true,
+-				 * so shrink_page_list() would not recurse into,
+-				 * and potentially deadlock on, this drbd worker.
+ 				 */
+ 	DISCONNECT_SENT,
  
--enum {
--	BLK_RW_ASYNC	= 0,
--	BLK_RW_SYNC	= 1,
--};
+diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
+index 3235532ae077..2e5fb7e442e3 100644
+--- a/drivers/block/drbd/drbd_req.c
++++ b/drivers/block/drbd/drbd_req.c
+@@ -909,8 +909,7 @@ static bool remote_due_to_read_balancing(struct drbd_device *device, sector_t se
+ 
+ 	switch (rbm) {
+ 	case RB_CONGESTED_REMOTE:
+-		return bdi_read_congested(
+-			device->ldev->backing_bdev->bd_disk->bdi);
++		return 0;
+ 	case RB_LEAST_PENDING:
+ 		return atomic_read(&device->local_cnt) >
+ 			atomic_read(&device->ap_pending_cnt) + atomic_read(&device->rs_pending_cnt);
+diff --git a/fs/ext2/ialloc.c b/fs/ext2/ialloc.c
+index df14e750e9fe..d632764da240 100644
+--- a/fs/ext2/ialloc.c
++++ b/fs/ext2/ialloc.c
+@@ -173,8 +173,6 @@ static void ext2_preread_inode(struct inode *inode)
+ 	struct backing_dev_info *bdi;
+ 
+ 	bdi = inode_to_bdi(inode);
+-	if (bdi_rw_congested(bdi))
+-		return;
+ 
+ 	block_group = (inode->i_ino - 1) / EXT2_INODES_PER_GROUP(inode->i_sb);
+ 	gdp = ext2_get_group_desc(inode->i_sb, block_group, NULL);
+diff --git a/fs/nilfs2/segbuf.c b/fs/nilfs2/segbuf.c
+index 43287b0d3e9b..d1ebc9da7130 100644
+--- a/fs/nilfs2/segbuf.c
++++ b/fs/nilfs2/segbuf.c
+@@ -343,17 +343,6 @@ static int nilfs_segbuf_submit_bio(struct nilfs_segment_buffer *segbuf,
+ 	struct bio *bio = wi->bio;
+ 	int err;
+ 
+-	if (segbuf->sb_nbio > 0 &&
+-	    bdi_write_congested(segbuf->sb_super->s_bdi)) {
+-		wait_for_completion(&segbuf->sb_bio_event);
+-		segbuf->sb_nbio--;
+-		if (unlikely(atomic_read(&segbuf->sb_err))) {
+-			bio_put(bio);
+-			err = -EIO;
+-			goto failed;
+-		}
+-	}
 -
--void clear_bdi_congested(struct backing_dev_info *bdi, int sync);
--void set_bdi_congested(struct backing_dev_info *bdi, int sync);
+ 	bio->bi_end_io = nilfs_end_bio_write;
+ 	bio->bi_private = segbuf;
+ 	bio_set_op_attrs(bio, mode, mode_flags);
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index b45e0d50a405..b7ebcfe6b8d3 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -843,9 +843,6 @@ xfs_buf_readahead_map(
+ {
+ 	struct xfs_buf		*bp;
+ 
+-	if (bdi_read_congested(target->bt_bdev->bd_disk->bdi))
+-		return;
 -
- struct wb_lock_cookie {
- 	bool locked;
- 	unsigned long flags;
+ 	xfs_buf_read_map(target, map, nmaps,
+ 		     XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD, &bp, ops,
+ 		     __this_address);
 diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 2d764566280c..87ce24d238f3 100644
+index 860b675c2929..2d764566280c 100644
 --- a/include/linux/backing-dev.h
 +++ b/include/linux/backing-dev.h
-@@ -135,8 +135,6 @@ static inline bool writeback_in_progress(struct bdi_writeback *wb)
+@@ -135,11 +135,6 @@ static inline bool writeback_in_progress(struct bdi_writeback *wb)
  
  struct backing_dev_info *inode_to_bdi(struct inode *inode);
  
--long congestion_wait(int sync, long timeout);
+-static inline int wb_congested(struct bdi_writeback *wb, int cong_bits)
+-{
+-	return wb->congested & cong_bits;
+-}
 -
+ long congestion_wait(int sync, long timeout);
+ 
  static inline bool mapping_can_writeback(struct address_space *mapping)
+@@ -391,27 +386,6 @@ static inline void wb_blkcg_offline(struct blkcg *blkcg)
+ 
+ #endif	/* CONFIG_CGROUP_WRITEBACK */
+ 
+-static inline int bdi_congested(struct backing_dev_info *bdi, int cong_bits)
+-{
+-	return wb_congested(&bdi->wb, cong_bits);
+-}
+-
+-static inline int bdi_read_congested(struct backing_dev_info *bdi)
+-{
+-	return bdi_congested(bdi, 1 << WB_sync_congested);
+-}
+-
+-static inline int bdi_write_congested(struct backing_dev_info *bdi)
+-{
+-	return bdi_congested(bdi, 1 << WB_async_congested);
+-}
+-
+-static inline int bdi_rw_congested(struct backing_dev_info *bdi)
+-{
+-	return bdi_congested(bdi, (1 << WB_sync_congested) |
+-				  (1 << WB_async_congested));
+-}
+-
+ const char *bdi_dev_name(struct backing_dev_info *bdi);
+ 
+ #endif	/* _LINUX_BACKING_DEV_H */
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index ce8492939bd3..0b930556c4f2 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2362,9 +2362,7 @@ static unsigned int move_pages_to_lru(struct lruvec *lruvec,
+  */
+ static int current_may_throttle(void)
  {
- 	return inode_to_bdi(mapping->host)->capabilities & BDI_CAP_WRITEBACK;
-diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-index a345b1e12daf..86b2a82da546 100644
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -735,34 +735,6 @@ TRACE_EVENT(writeback_sb_inodes_requeue,
- 	)
- );
- 
--DECLARE_EVENT_CLASS(writeback_congest_waited_template,
--
--	TP_PROTO(unsigned int usec_timeout, unsigned int usec_delayed),
--
--	TP_ARGS(usec_timeout, usec_delayed),
--
--	TP_STRUCT__entry(
--		__field(	unsigned int,	usec_timeout	)
--		__field(	unsigned int,	usec_delayed	)
--	),
--
--	TP_fast_assign(
--		__entry->usec_timeout	= usec_timeout;
--		__entry->usec_delayed	= usec_delayed;
--	),
--
--	TP_printk("usec_timeout=%u usec_delayed=%u",
--			__entry->usec_timeout,
--			__entry->usec_delayed)
--);
--
--DEFINE_EVENT(writeback_congest_waited_template, writeback_congestion_wait,
--
--	TP_PROTO(unsigned int usec_timeout, unsigned int usec_delayed),
--
--	TP_ARGS(usec_timeout, usec_delayed)
--);
--
- DECLARE_EVENT_CLASS(writeback_single_inode_template,
- 
- 	TP_PROTO(struct inode *inode,
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index eae96dfe0261..7176af65b103 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -1005,60 +1005,3 @@ const char *bdi_dev_name(struct backing_dev_info *bdi)
- 	return bdi->dev_name;
+-	return !(current->flags & PF_LOCAL_THROTTLE) ||
+-		current->backing_dev_info == NULL ||
+-		bdi_write_congested(current->backing_dev_info);
++	return !(current->flags & PF_LOCAL_THROTTLE);
  }
- EXPORT_SYMBOL_GPL(bdi_dev_name);
--
--static wait_queue_head_t congestion_wqh[2] = {
--		__WAIT_QUEUE_HEAD_INITIALIZER(congestion_wqh[0]),
--		__WAIT_QUEUE_HEAD_INITIALIZER(congestion_wqh[1])
--	};
--static atomic_t nr_wb_congested[2];
--
--void clear_bdi_congested(struct backing_dev_info *bdi, int sync)
--{
--	wait_queue_head_t *wqh = &congestion_wqh[sync];
--	enum wb_congested_state bit;
--
--	bit = sync ? WB_sync_congested : WB_async_congested;
--	if (test_and_clear_bit(bit, &bdi->wb.congested))
--		atomic_dec(&nr_wb_congested[sync]);
--	smp_mb__after_atomic();
--	if (waitqueue_active(wqh))
--		wake_up(wqh);
--}
--EXPORT_SYMBOL(clear_bdi_congested);
--
--void set_bdi_congested(struct backing_dev_info *bdi, int sync)
--{
--	enum wb_congested_state bit;
--
--	bit = sync ? WB_sync_congested : WB_async_congested;
--	if (!test_and_set_bit(bit, &bdi->wb.congested))
--		atomic_inc(&nr_wb_congested[sync]);
--}
--EXPORT_SYMBOL(set_bdi_congested);
--
--/**
-- * congestion_wait - wait for a backing_dev to become uncongested
-- * @sync: SYNC or ASYNC IO
-- * @timeout: timeout in jiffies
-- *
-- * Waits for up to @timeout jiffies for a backing_dev (any backing_dev) to exit
-- * write congestion.  If no backing_devs are congested then just wait for the
-- * next write to be completed.
-- */
--long congestion_wait(int sync, long timeout)
--{
--	long ret;
--	unsigned long start = jiffies;
--	DEFINE_WAIT(wait);
--	wait_queue_head_t *wqh = &congestion_wqh[sync];
--
--	prepare_to_wait(wqh, &wait, TASK_UNINTERRUPTIBLE);
--	ret = io_schedule_timeout(timeout);
--	finish_wait(wqh, &wait);
--
--	trace_writeback_congestion_wait(jiffies_to_usecs(timeout),
--					jiffies_to_usecs(jiffies - start));
--
--	return ret;
--}
--EXPORT_SYMBOL(congestion_wait);
+ 
+ /*
 
 
