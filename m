@@ -2,203 +2,134 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F91D49D77B
-	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 02:31:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D8549D71E
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 02:06:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234480AbiA0Ba7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Jan 2022 20:30:59 -0500
-Received: from lgeamrelo13.lge.com ([156.147.23.53]:48317 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231889AbiA0Ba7 (ORCPT
+        id S234221AbiA0BGH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Jan 2022 20:06:07 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:59993 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234153AbiA0BGG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Jan 2022 20:30:59 -0500
-Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
-        by 156.147.23.53 with ESMTP; 27 Jan 2022 10:00:57 +0900
-X-Original-SENDERIP: 156.147.1.126
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO localhost.localdomain) (10.177.244.38)
-        by 156.147.1.126 with ESMTP; 27 Jan 2022 10:00:57 +0900
-X-Original-SENDERIP: 10.177.244.38
-X-Original-MAILFROM: byungchul.park@lge.com
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     torvalds@linux-foundation.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, will@kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, joel@joelfernandes.org, sashal@kernel.org,
-        daniel.vetter@ffwll.ch, chris@chris-wilson.co.uk,
-        duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-        tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-        amir73il@gmail.com, bfields@fieldses.org,
-        gregkh@linuxfoundation.org, kernel-team@lge.com,
-        linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-        minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-        ngupta@vflare.org, linux-block@vger.kernel.org, axboe@kernel.dk,
-        paolo.valente@linaro.org, josef@toxicpanda.com,
-        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        jack@suse.cz, jlayton@kernel.org, dan.j.williams@intel.com,
-        hch@infradead.org, djwong@kernel.org,
-        dri-devel@lists.freedesktop.org, airlied@linux.ie,
-        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-        hamohammed.sa@gmail.com
-Subject: Re: [RFC 00/14] DEPT(DEPendency Tracker)
-Date:   Thu, 27 Jan 2022 10:00:53 +0900
-Message-Id: <1643245254-11122-1-git-send-email-byungchul.park@lge.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1643078204-12663-1-git-send-email-byungchul.park@lge.com>
-References: <1643078204-12663-1-git-send-email-byungchul.park@lge.com>
+        Wed, 26 Jan 2022 20:06:06 -0500
+Received: from fsav113.sakura.ne.jp (fsav113.sakura.ne.jp [27.133.134.240])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 20R15lEu045928;
+        Thu, 27 Jan 2022 10:05:47 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav113.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav113.sakura.ne.jp);
+ Thu, 27 Jan 2022 10:05:47 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav113.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 20R15lAq045925
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 27 Jan 2022 10:05:47 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <7bebf860-2415-7eb6-55a1-47dc4439d9e9@I-love.SAKURA.ne.jp>
+Date:   Thu, 27 Jan 2022 10:05:45 +0900
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: yet another approach to fix loop autoclear for xfstets xfs/049
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>
+References: <20220126155040.1190842-1-hch@lst.de>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20220126155040.1190842-1-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-+cc
+On 2022/01/27 0:50, Christoph Hellwig wrote:
+> Hi Jens, hi Tetsuo,
+> 
+> this series uses the approach from Tetsuo to delay the destroy_workueue
+> call, extended by a delayed teardown of the workers to fix a potential
+> racewindow then the workqueue can be still round after finishing the
+> commands.  It then also removed the queue freeing in release that is
+> not needed to fix the dependency chain for that (which can't be
+> reported by lockdep) as well.
 
-linux-mm@kvack.org
-akpm@linux-foundation.org
-mhocko@kernel.org
-minchan@kernel.org
-hannes@cmpxchg.org
-vdavydov.dev@gmail.com
-sj@kernel.org
-jglisse@redhat.com
-dennis@kernel.org
-cl@linux.com
-penberg@kernel.org
-rientjes@google.com
-vbabka@suse.cz
-ngupta@vflare.org
-linux-block@vger.kernel.org
-axboe@kernel.dk
-paolo.valente@linaro.org
-josef@toxicpanda.com
-linux-fsdevel@vger.kernel.org
-viro@zeniv.linux.org.uk
-jack@suse.cz
-jlayton@kernel.org
-dan.j.williams@intel.com
-hch@infradead.org
-djwong@kernel.org
-dri-devel@lists.freedesktop.org
-airlied@linux.ie
-rodrigosiqueiramelo@gmail.com
-melissa.srw@gmail.com
-hamohammed.sa@gmail.com
+I want to remove disk->open_mutex => lo->lo_mutex => I/O completion chain itself from
+/proc/lockdep . Even if real deadlock does not happen due to lo->lo_refcnt exclusion,
+I consider that disk->open_mutex => lo->lo_mutex dependency being recorded is a bad sign.
+It makes difficult to find real possibility of deadlock when things change in future.
+I consider that lo_release() is doing too much things under disk->open_mutex.
 
---->8---
-From 68ee7ab996fc7d67b6b506f48da106493ca2546a Mon Sep 17 00:00:00 2001
-From: Byungchul Park <byungchul.park@lge.com>
-Date: Tue, 25 Jan 2022 10:12:54 +0900
-Subject: [RFC 00/14] DEPT(DEPendency Tracker)
+I tried to defer lo->lo_mutex in lo_release() as much as possible. But this chain
+still remains.
 
-Hi forks,
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index cf7830a68113..a9abd213b38d 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1706,12 +1706,19 @@ static int lo_open(struct block_device *bdev, fmode_t mode)
+ 	struct loop_device *lo = bdev->bd_disk->private_data;
+ 	int err;
+ 
++	/*
++	 * Since lo_open() and lo_release() are serialized by disk->open_mutex,
++	 * we can racelessly increment/decrement lo->lo_refcnt without holding
++	 * lo->lo_mutex.
++	 */
+ 	if (atomic_inc_return(&lo->lo_refcnt) > 1)
+ 		return 0;
+ 
+ 	err = mutex_lock_killable(&lo->lo_mutex);
+-	if (err)
++	if (err) {
++		atomic_dec(&lo->lo_refcnt);
+ 		return err;
++	}
+ 	if (lo->lo_state == Lo_deleting) {
+ 		atomic_dec(&lo->lo_refcnt);
+ 		err = -ENXIO;
+@@ -1727,16 +1734,18 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
+ 	if (!atomic_dec_and_test(&lo->lo_refcnt))
+ 		return;
+ 
+-	mutex_lock(&lo->lo_mutex);
+-	if (lo->lo_state == Lo_bound &&
+-	    (lo->lo_flags & LO_FLAGS_AUTOCLEAR)) {
+-		lo->lo_state = Lo_rundown;
+-		mutex_unlock(&lo->lo_mutex);
+-		__loop_clr_fd(lo, true);
++	/*
++	 * Since lo_open() and lo_release() are serialized by disk->open_mutex,
++	 * and lo->refcnt == 0 means nobody is using this device, we can read
++	 * lo->lo_state and lo->lo_flags without holding lo->lo_mutex.
++	 */
++	if (lo->lo_state != Lo_bound || !(lo->lo_flags & LO_FLAGS_AUTOCLEAR))
+ 		return;
+-	}
+-
++	mutex_lock(&lo->lo_mutex);
++	lo->lo_state = Lo_rundown;
+ 	mutex_unlock(&lo->lo_mutex);
++	__loop_clr_fd(lo, true);
++	return;
+ }
+ 
+ static const struct block_device_operations lo_fops = {
 
-I've been developing a tool for detecting deadlock possibilities by
-tracking wait/event rather than lock(?) acquisition order to try to
-cover all synchonization machanisms. It's done on v5.10 tag. I bet
-it would work great! Try it and see what's gonna happen.
+In __loop_clr_fd(), it waits for loop_validate_mutex. loop_validate_mutex can be
+held when loop_change_fd() calls blk_mq_freeze_queue(). Loop recursion interacts
+with other loop devices.
 
-Now that there's a porting issue, I made Dept rely on Lockdep. But it
-should be separated from Lockdep once it's considered worth having.
+While each loop device takes care of only single backing file, we can use multiple
+loop devices for multiple backing files within the same mount point (e.g. /dev/loop0
+is attached on /mnt/file0 and /dev/loop1 is attached on /mnt/file1), can't we?
+But fsfreeze is per a mount point (e.g. /mnt/). That is, fsfreeze also interacts
+with other loop devices, doesn't it?
 
-Benifit:
-
-	0. Works with all lock primitives.
-	1. Works with wait_for_completion()/complete().
-	2. Works with 'wait' on PG_locked.
-	3. Works with 'wait' on PG_writeback.
-	4. Works with swait/wakeup.
-	5. Multiple reports are allowed.
-	6. Deduplication control on multiple reports.
-	7. Withstand false positives thanks to 5.
-	8. Easy to tag any wait/event.
-
-Future work:
-
-	0. To make it more stable.
-	1. To separates Dept from Lockdep.
-	2. To improves performance in terms of time and space.
-	3. To use Dept as a dependency engine for Lockdep.
-	4. To add any missing tags of wait/event in the kernel.
-	5. To deduplicate stack trace.
-
-I hope you guys are gonna be satisfied with Dept. Don't hesitate to
-give any feedback. I will adopt any feedbacks if reasonable.
-
-Thanks,
-Byungchul
-
-Byungchul Park (14):
-  llist: Move llist_{head,node} definition to types.h
-  dept: Implement Dept(Dependency Tracker)
-  dept: Embed Dept data in Lockdep
-  dept: Apply Dept to spinlock
-  dept: Apply Dept to mutex families
-  dept: Apply Dept to rwlock
-  dept: Apply Dept to wait_for_completion()/complete()
-  dept: Apply Dept to seqlock
-  dept: Apply Dept to rwsem
-  dept: Add proc knobs to show stats and dependency graph
-  dept: Introduce split map concept and new APIs for them
-  dept: Apply Dept to wait/event of PG_{locked,writeback}
-  dept: Separate out SDT(Single-event Dependency Tracker) header
-  dept: Apply SDT to swait
-
- include/linux/completion.h        |   48 +-
- include/linux/dept.h              |  541 ++++++++
- include/linux/dept_page.h         |   71 +
- include/linux/dept_sdt.h          |   53 +
- include/linux/hardirq.h           |    3 +
- include/linux/irqflags.h          |   33 +-
- include/linux/llist.h             |    9 +-
- include/linux/lockdep.h           |  156 ++-
- include/linux/lockdep_types.h     |    3 +
- include/linux/mutex.h             |   31 +
- include/linux/page-flags.h        |   26 +-
- include/linux/pagemap.h           |    7 +-
- include/linux/percpu-rwsem.h      |   10 +-
- include/linux/rtmutex.h           |   11 +-
- include/linux/rwlock.h            |   48 +
- include/linux/rwlock_api_smp.h    |    8 +-
- include/linux/rwlock_types.h      |    7 +
- include/linux/rwsem.h             |   31 +
- include/linux/sched.h             |    3 +
- include/linux/seqlock.h           |   19 +-
- include/linux/spinlock.h          |   24 +
- include/linux/spinlock_types.h    |   10 +
- include/linux/swait.h             |    4 +
- include/linux/types.h             |    8 +
- init/init_task.c                  |    2 +
- init/main.c                       |    4 +
- kernel/Makefile                   |    1 +
- kernel/dependency/Makefile        |    5 +
- kernel/dependency/dept.c          | 2593 +++++++++++++++++++++++++++++++++++++
- kernel/dependency/dept_hash.h     |   11 +
- kernel/dependency/dept_internal.h |   26 +
- kernel/dependency/dept_object.h   |   14 +
- kernel/dependency/dept_proc.c     |   97 ++
- kernel/exit.c                     |    1 +
- kernel/fork.c                     |    2 +
- kernel/locking/lockdep.c          |   12 +-
- kernel/module.c                   |    2 +
- kernel/sched/completion.c         |   12 +-
- kernel/sched/swait.c              |    8 +
- kernel/softirq.c                  |    6 +-
- kernel/trace/trace_preemptirq.c   |   19 +-
- lib/Kconfig.debug                 |   21 +
- mm/filemap.c                      |   62 +
- mm/page_ext.c                     |    5 +
- 44 files changed, 4009 insertions(+), 58 deletions(-)
- create mode 100644 include/linux/dept.h
- create mode 100644 include/linux/dept_page.h
- create mode 100644 include/linux/dept_sdt.h
- create mode 100644 kernel/dependency/Makefile
- create mode 100644 kernel/dependency/dept.c
- create mode 100644 kernel/dependency/dept_hash.h
- create mode 100644 kernel/dependency/dept_internal.h
- create mode 100644 kernel/dependency/dept_object.h
- create mode 100644 kernel/dependency/dept_proc.c
-
--- 
-1.9.1
+disk->open_mutex is a per a loop device serialization, but loop_validate_mutex and
+fsfreeze are global serialization. It is anxious to involve global serialization under
+individual serialization, when we already know that involvement of sysfs + fsfreeze
+causes possibility of deadlock. I expect that lo_open()/lo_release() are done without
+holding disk->open_mutex.
 
