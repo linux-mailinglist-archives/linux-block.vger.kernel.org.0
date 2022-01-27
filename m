@@ -2,98 +2,203 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC8849D6FA
-	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 01:51:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F91D49D77B
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 02:31:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231587AbiA0AvZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Jan 2022 19:51:25 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:53086 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231533AbiA0AvZ (ORCPT
+        id S234480AbiA0Ba7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Jan 2022 20:30:59 -0500
+Received: from lgeamrelo13.lge.com ([156.147.23.53]:48317 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231889AbiA0Ba7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Jan 2022 19:51:25 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E2EA61B60;
-        Thu, 27 Jan 2022 00:51:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92875C340E3;
-        Thu, 27 Jan 2022 00:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643244683;
-        bh=4Mfk12KQfEEtPKhz5q6wmn/51AroOcN3gjCZnA6JALI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tJ2g3KAU1gh48p97de8DlKNDKULc0D7dZ+zKnvFrJVx5VzYeuPpKZ3f/emBbFQQyb
-         7Q9QUN6h2yerWnY4PPDdviQJT4AOXTGYtCHg0fxukUux66gfKxHq4hZCVmB+yRBocL
-         TuWNvNGnCsUcJrQPda9IRFJq+7zf1LOYCSLrG4H/4AchxSDkFEyk1x6wWzYwqrgKHF
-         wv9g7wVHD8WkFd3VD0jgGQdb/ADZ/ppxdvKx/xOnVjrQv+2GwQ/GTNJyI4sRQINki1
-         +QKi3pozZw4Ow3PfCNr8MWU6X37xwqz3JaY5et9pIaTvCqnwb7RXGY206z04pFk+fY
-         yhTPXC8Y/XD2Q==
-Date:   Wed, 26 Jan 2022 16:51:22 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Gaurav Kashyap <gaurkash@qti.qualcomm.com>
-Cc:     "Gaurav Kashyap (QUIC)" <quic_gaurkash@quicinc.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fscrypt@vger.kernel.org" <linux-fscrypt@vger.kernel.org>,
-        "thara.gopinath@linaro.org" <thara.gopinath@linaro.org>,
-        "Neeraj Soni (QUIC)" <quic_neersoni@quicinc.com>,
-        Dinesh Garg <dineshg@quicinc.com>
-Subject: Re: [PATCH 00/10] Add wrapped key support for Qualcomm ICE
-Message-ID: <YfHsimSOxedhRBdI@sol.localdomain>
-References: <20211206225725.77512-1-quic_gaurkash@quicinc.com>
- <YddHbRx2UGeAOhji@sol.localdomain>
- <BYAPR02MB4071D51F6DFB371E46E424ACE24C9@BYAPR02MB4071.namprd02.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR02MB4071D51F6DFB371E46E424ACE24C9@BYAPR02MB4071.namprd02.prod.outlook.com>
+        Wed, 26 Jan 2022 20:30:59 -0500
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.53 with ESMTP; 27 Jan 2022 10:00:57 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO localhost.localdomain) (10.177.244.38)
+        by 156.147.1.126 with ESMTP; 27 Jan 2022 10:00:57 +0900
+X-Original-SENDERIP: 10.177.244.38
+X-Original-MAILFROM: byungchul.park@lge.com
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     torvalds@linux-foundation.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, will@kernel.org, tglx@linutronix.de,
+        rostedt@goodmis.org, joel@joelfernandes.org, sashal@kernel.org,
+        daniel.vetter@ffwll.ch, chris@chris-wilson.co.uk,
+        duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
+        tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
+        amir73il@gmail.com, bfields@fieldses.org,
+        gregkh@linuxfoundation.org, kernel-team@lge.com,
+        linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
+        minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
+        ngupta@vflare.org, linux-block@vger.kernel.org, axboe@kernel.dk,
+        paolo.valente@linaro.org, josef@toxicpanda.com,
+        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        jack@suse.cz, jlayton@kernel.org, dan.j.williams@intel.com,
+        hch@infradead.org, djwong@kernel.org,
+        dri-devel@lists.freedesktop.org, airlied@linux.ie,
+        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+        hamohammed.sa@gmail.com
+Subject: Re: [RFC 00/14] DEPT(DEPendency Tracker)
+Date:   Thu, 27 Jan 2022 10:00:53 +0900
+Message-Id: <1643245254-11122-1-git-send-email-byungchul.park@lge.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1643078204-12663-1-git-send-email-byungchul.park@lge.com>
+References: <1643078204-12663-1-git-send-email-byungchul.park@lge.com>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Gaurav,
++cc
 
-On Thu, Jan 06, 2022 at 09:14:22PM +0000, Gaurav Kashyap wrote:
-> Hey Eric
-> 
-> > Have you tested that QCOM_SCM_ES_DERIVE_SW_SECRET is working properly?
-> 
-> - You will need updated trustzone build for that (as I was missing a minor detail in the original one pertaining to SW secret) , please request again on the same ticket for the updated build.
-> - I have reminded the people in Qualcomm too to provide you the build.
-> - Note that with the new build you should be using the correct directions, i.e QCOM_SCM_RO where intended
-> 
-> Warm Regards
-> Gaurav Kashyap
-> 
+linux-mm@kvack.org
+akpm@linux-foundation.org
+mhocko@kernel.org
+minchan@kernel.org
+hannes@cmpxchg.org
+vdavydov.dev@gmail.com
+sj@kernel.org
+jglisse@redhat.com
+dennis@kernel.org
+cl@linux.com
+penberg@kernel.org
+rientjes@google.com
+vbabka@suse.cz
+ngupta@vflare.org
+linux-block@vger.kernel.org
+axboe@kernel.dk
+paolo.valente@linaro.org
+josef@toxicpanda.com
+linux-fsdevel@vger.kernel.org
+viro@zeniv.linux.org.uk
+jack@suse.cz
+jlayton@kernel.org
+dan.j.williams@intel.com
+hch@infradead.org
+djwong@kernel.org
+dri-devel@lists.freedesktop.org
+airlied@linux.ie
+rodrigosiqueiramelo@gmail.com
+melissa.srw@gmail.com
+hamohammed.sa@gmail.com
 
-I verified that the latest TrustZone build is working; thanks for the help!
+--->8---
+From 68ee7ab996fc7d67b6b506f48da106493ca2546a Mon Sep 17 00:00:00 2001
+From: Byungchul Park <byungchul.park@lge.com>
+Date: Tue, 25 Jan 2022 10:12:54 +0900
+Subject: [RFC 00/14] DEPT(DEPendency Tracker)
 
-Note, these are the branches I'm using for now:
+Hi forks,
 
-  * Kernel patches: https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git/log/?h=wip-wrapped-keys
-  * fscryptctl tool and test scripts: https://github.com/ebiggers/fscryptctl/tree/wip-wrapped-keys
+I've been developing a tool for detecting deadlock possibilities by
+tracking wait/event rather than lock(?) acquisition order to try to
+cover all synchonization machanisms. It's done on v5.10 tag. I bet
+it would work great! Try it and see what's gonna happen.
 
-The kernel branch is based on v5.17-rc1.  I haven't changed your patches from
-your latest series other than rebasing them and adding a fix
-"qcom_scm: fix return values" on top.
+Now that there's a porting issue, I made Dept rely on Lockdep. But it
+should be separated from Lockdep once it's considered worth having.
 
-Note that v5.16-rc5 and later have a bug where the UFS controller on SM8350
-isn't recognized.  Therefore, my branch contains a fix from Bjorn Andersson for
-that bug, which I applied from the mailing list.
+Benifit:
 
-One oddity I noticed is that if I import the same raw key twice, the long-term
-wrapped key blob is the same.  This implies that the key encryption algorithm
-used by the Qualcomm hardware is deterministic, which is unexpected.  I would
-expect the wrapped key to contain a random nonce.  Do you know why deterministic
-encryption is used?  This probably isn't much of a problem, but it's unexpected.
+	0. Works with all lock primitives.
+	1. Works with wait_for_completion()/complete().
+	2. Works with 'wait' on PG_locked.
+	3. Works with 'wait' on PG_writeback.
+	4. Works with swait/wakeup.
+	5. Multiple reports are allowed.
+	6. Deduplication control on multiple reports.
+	7. Withstand false positives thanks to 5.
+	8. Easy to tag any wait/event.
 
-Besides that, I think the next steps are for you to address the comments I've
-left on this series, and for me to get started on adding ciphertext verification
-tests for this to xfstests (alongside the other fscrypt ciphertext verification
-tests that are already there) so that we can prove this feature is actually
-encrypting the data as intended.
+Future work:
 
-- Eric
+	0. To make it more stable.
+	1. To separates Dept from Lockdep.
+	2. To improves performance in terms of time and space.
+	3. To use Dept as a dependency engine for Lockdep.
+	4. To add any missing tags of wait/event in the kernel.
+	5. To deduplicate stack trace.
+
+I hope you guys are gonna be satisfied with Dept. Don't hesitate to
+give any feedback. I will adopt any feedbacks if reasonable.
+
+Thanks,
+Byungchul
+
+Byungchul Park (14):
+  llist: Move llist_{head,node} definition to types.h
+  dept: Implement Dept(Dependency Tracker)
+  dept: Embed Dept data in Lockdep
+  dept: Apply Dept to spinlock
+  dept: Apply Dept to mutex families
+  dept: Apply Dept to rwlock
+  dept: Apply Dept to wait_for_completion()/complete()
+  dept: Apply Dept to seqlock
+  dept: Apply Dept to rwsem
+  dept: Add proc knobs to show stats and dependency graph
+  dept: Introduce split map concept and new APIs for them
+  dept: Apply Dept to wait/event of PG_{locked,writeback}
+  dept: Separate out SDT(Single-event Dependency Tracker) header
+  dept: Apply SDT to swait
+
+ include/linux/completion.h        |   48 +-
+ include/linux/dept.h              |  541 ++++++++
+ include/linux/dept_page.h         |   71 +
+ include/linux/dept_sdt.h          |   53 +
+ include/linux/hardirq.h           |    3 +
+ include/linux/irqflags.h          |   33 +-
+ include/linux/llist.h             |    9 +-
+ include/linux/lockdep.h           |  156 ++-
+ include/linux/lockdep_types.h     |    3 +
+ include/linux/mutex.h             |   31 +
+ include/linux/page-flags.h        |   26 +-
+ include/linux/pagemap.h           |    7 +-
+ include/linux/percpu-rwsem.h      |   10 +-
+ include/linux/rtmutex.h           |   11 +-
+ include/linux/rwlock.h            |   48 +
+ include/linux/rwlock_api_smp.h    |    8 +-
+ include/linux/rwlock_types.h      |    7 +
+ include/linux/rwsem.h             |   31 +
+ include/linux/sched.h             |    3 +
+ include/linux/seqlock.h           |   19 +-
+ include/linux/spinlock.h          |   24 +
+ include/linux/spinlock_types.h    |   10 +
+ include/linux/swait.h             |    4 +
+ include/linux/types.h             |    8 +
+ init/init_task.c                  |    2 +
+ init/main.c                       |    4 +
+ kernel/Makefile                   |    1 +
+ kernel/dependency/Makefile        |    5 +
+ kernel/dependency/dept.c          | 2593 +++++++++++++++++++++++++++++++++++++
+ kernel/dependency/dept_hash.h     |   11 +
+ kernel/dependency/dept_internal.h |   26 +
+ kernel/dependency/dept_object.h   |   14 +
+ kernel/dependency/dept_proc.c     |   97 ++
+ kernel/exit.c                     |    1 +
+ kernel/fork.c                     |    2 +
+ kernel/locking/lockdep.c          |   12 +-
+ kernel/module.c                   |    2 +
+ kernel/sched/completion.c         |   12 +-
+ kernel/sched/swait.c              |    8 +
+ kernel/softirq.c                  |    6 +-
+ kernel/trace/trace_preemptirq.c   |   19 +-
+ lib/Kconfig.debug                 |   21 +
+ mm/filemap.c                      |   62 +
+ mm/page_ext.c                     |    5 +
+ 44 files changed, 4009 insertions(+), 58 deletions(-)
+ create mode 100644 include/linux/dept.h
+ create mode 100644 include/linux/dept_page.h
+ create mode 100644 include/linux/dept_sdt.h
+ create mode 100644 kernel/dependency/Makefile
+ create mode 100644 kernel/dependency/dept.c
+ create mode 100644 kernel/dependency/dept_hash.h
+ create mode 100644 kernel/dependency/dept_internal.h
+ create mode 100644 kernel/dependency/dept_object.h
+ create mode 100644 kernel/dependency/dept_proc.c
+
+-- 
+1.9.1
+
