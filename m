@@ -2,160 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D5B49D847
-	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 03:48:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8670049D9CB
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 06:04:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232003AbiA0CsL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Jan 2022 21:48:11 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:55164 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231824AbiA0CsL (ORCPT
+        id S232766AbiA0FEI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Jan 2022 00:04:08 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:51304 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232427AbiA0FEI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Jan 2022 21:48:11 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6B0A521959;
-        Thu, 27 Jan 2022 02:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643251689; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Thu, 27 Jan 2022 00:04:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643259847;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VLryoRKmUuPESAB8QyVLfrgvCJTCmPKkdu4P/OX5YBg=;
-        b=Qti4P3eej7SwU9djhiMhUMgJ1ckOKm8O/J1pSaUAEHDRhQb1izQ4dQZrO97++mAvn3WVVr
-        T2k2nCp5oMqLD8x4f8vee6NJClS2lg1UPexxPkHMg0zJIBN6c452+a+u50wURMgo/tIfRv
-        rD3QIr1LCF3psUh7SWng5ZjcDzYoDdQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643251689;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VLryoRKmUuPESAB8QyVLfrgvCJTCmPKkdu4P/OX5YBg=;
-        b=uJ63TZZVZJQxUDYCfYcbm2ZGgBe9Q6Vwcu+8BWf/uQNpUEqXNKCc6PHt7MlRhE+A1sBtn6
-        UgWYWcQsDNRd9WCg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=plPajYXA8B5ZLakDfOB/mq6gwvfYbK84k4ZYLKgoU6w=;
+        b=K/uusz10UWBF0kNGSINnxEN0rCT9PEtgs0Tclz6pdbMLSqFnmN/dtncCELtyt2KO0VO0jp
+        Y4w5DWy3PwS0uxyDYySqf8FwRTs4tQOAoujs2KgIMolnLTikqHKRCKaVoSRc/Nhc/aSOmp
+        3DFiAp4+oaKwgSfPzBhdL7j2CV1GXIY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-307-NGGhIgoONtKk4r22eqt6yQ-1; Thu, 27 Jan 2022 00:03:57 -0500
+X-MC-Unique: NGGhIgoONtKk4r22eqt6yQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E9B1C13E46;
-        Thu, 27 Jan 2022 02:47:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 8ZsrKd4H8mH6KwAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 27 Jan 2022 02:47:58 +0000
-Subject: [PATCH 4/9] f2f2: replace some congestion_wait() calls with
- io_schedule_timeout()
-From:   NeilBrown <neilb@suse.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
-        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Date:   Thu, 27 Jan 2022 13:46:29 +1100
-Message-ID: <164325158957.29787.2116312603613564596.stgit@noble.brown>
-In-Reply-To: <164325106958.29787.4865219843242892726.stgit@noble.brown>
-References: <164325106958.29787.4865219843242892726.stgit@noble.brown>
-User-Agent: StGit/0.23
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E02283DD23;
+        Thu, 27 Jan 2022 05:03:55 +0000 (UTC)
+Received: from T590 (ovpn-8-29.pek2.redhat.com [10.72.8.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6162F5ED2D;
+        Thu, 27 Jan 2022 05:03:40 +0000 (UTC)
+Date:   Thu, 27 Jan 2022 13:03:35 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     Tejun Heo <tj@kernel.org>, mkoutny@suse.com, paulmck@kernel.org,
+        axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH v6 2/2] block: cancel all throttled bios in del_gendisk()
+Message-ID: <YfInp7SsZNNgRfB7@T590>
+References: <20220110134758.2233758-1-yukuai3@huawei.com>
+ <20220110134758.2233758-3-yukuai3@huawei.com>
+ <Yd5FkuhYX9YcgQkZ@T590>
+ <b416e6a6-f2c9-caf3-dacd-f937746207da@huawei.com>
+ <YfF+yukISfkuc9IK@slm.duckdns.org>
+ <630c162b-8bdd-d87e-0d80-c7a78ea267a5@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <630c162b-8bdd-d87e-0d80-c7a78ea267a5@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-As congestion is no longer tracked, contestion_wait() is effectively
-equivalent to io_schedule_timeout().
-It isn't clear to me what these contestion_wait() calls are waiting
-for, so I cannot change them to wait for some particular event.
-So simply change them to io_schedule_timeout(), which will have
-exactly the same behaviour.
+On Thu, Jan 27, 2022 at 10:45:33AM +0800, yukuai (C) wrote:
+> 在 2022/01/27 1:03, Tejun Heo 写道:
+> > On Mon, Jan 24, 2022 at 11:50:11AM +0800, yukuai (C) wrote:
+> > > Both ways can fix the problem, which way do you prefer?
+> > 
+> > Ming's suggested change seems simpler, no?
+> 
+> Hi,
+> 
+> Yes, if Ming don't mind, I can send a new version after Ming's
+> pathset "block: don't drain file system I/O on del_gendisk".
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/f2fs/segment.c |   14 ++++++++------
- fs/f2fs/super.c   |    8 ++++----
- 2 files changed, 12 insertions(+), 10 deletions(-)
+The patch of canceling throttled bios shouldn't be conflicted
+with the above big patchset, and you can send it out now against
+for-5.18/block.
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 1dabc8244083..78e3fbc24e77 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -313,8 +313,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
- skip:
- 		iput(inode);
- 	}
--	congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
--	cond_resched();
-+	set_current_state(TASK_UNINTERRUPTIBLE);
-+	io_schedule_timeout(DEFAULT_IO_TIMEOUT);
- 	if (gc_failure) {
- 		if (++looped >= count)
- 			return;
-@@ -802,9 +802,10 @@ int f2fs_flush_device_cache(struct f2fs_sb_info *sbi)
- 
- 		do {
- 			ret = __submit_flush_wait(sbi, FDEV(i).bdev);
--			if (ret)
--				congestion_wait(BLK_RW_ASYNC,
--						DEFAULT_IO_TIMEOUT);
-+			if (ret) {
-+				set_current_state(TASK_UNINTERRUPTIBLE);
-+				io_schedule_timeout(DEFAULT_IO_TIMEOUT);
-+			}
- 		} while (ret && --count);
- 
- 		if (ret) {
-@@ -3133,7 +3134,8 @@ static unsigned int __issue_discard_cmd_range(struct f2fs_sb_info *sbi,
- 			blk_finish_plug(&plug);
- 			mutex_unlock(&dcc->cmd_lock);
- 			trimmed += __wait_all_discard_cmd(sbi, NULL);
--			congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
-+			set_current_state(TASK_UNINTERRUPTIBLE);
-+			io_schedule_timeout(DEFAULT_IO_TIMEOUT);
- 			goto next;
- 		}
- skip:
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 76e6a3df9aba..ae8dcbb71596 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2135,8 +2135,8 @@ static void f2fs_enable_checkpoint(struct f2fs_sb_info *sbi)
- 	/* we should flush all the data to keep data consistency */
- 	do {
- 		sync_inodes_sb(sbi->sb);
--		cond_resched();
--		congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
-+		set_current_state(TASK_UNINTERRUPTIBLE);
-+		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
- 	} while (get_pages(sbi, F2FS_DIRTY_DATA) && retry--);
- 
- 	if (unlikely(retry < 0))
-@@ -2504,8 +2504,8 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 							&page, &fsdata);
- 		if (unlikely(err)) {
- 			if (err == -ENOMEM) {
--				congestion_wait(BLK_RW_ASYNC,
--						DEFAULT_IO_TIMEOUT);
-+				set_current_state(TASK_UNINTERRUPTIBLE);
-+				io_schedule_timeout(DEFAULT_IO_TIMEOUT);
- 				goto retry;
- 			}
- 			set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
 
+Thanks,
+Ming
 
