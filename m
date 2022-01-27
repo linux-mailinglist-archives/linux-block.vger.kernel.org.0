@@ -2,103 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6AE249DE5A
-	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 10:45:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0921C49DE62
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jan 2022 10:47:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231315AbiA0Jpg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Jan 2022 04:45:36 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:54696 "EHLO
+        id S238823AbiA0Jrj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Jan 2022 04:47:39 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:54920 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238823AbiA0Jpf (ORCPT
+        with ESMTP id S234438AbiA0Jri (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 Jan 2022 04:45:35 -0500
+        Thu, 27 Jan 2022 04:47:38 -0500
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 27D09218D9;
-        Thu, 27 Jan 2022 09:45:33 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTP id DFD54218D9;
+        Thu, 27 Jan 2022 09:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1643276733; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1643276857; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=PE+hIjSotUsBaRUC2mFTNl8Sl4oC3ER/Nuk3uXtDXEg=;
-        b=Kmre6kkTRpNgL29JB44Gd4mUFqV6c+Eeao9NeLjGYNt6pojsTGexOswjwjFJt2eoUoqge8
-        wdKI64TbYm0I6tEMj6LyjSrbfG0Dkq5cwkLNOOqhlXQBxeKUTsbjuyJ6UCqF65g+0fFZSh
-        bz4DuXzOrANFfjABGuZfiJQBDncogmo=
+        bh=fTArBtgVfOFJ+EdgE3cIhfFZp1ZGGBK3TdbMrafduYQ=;
+        b=HP6tzo+0/vd9/gC+ayJ0weKHXhTdjljeBT9s8YPPwwXOKJjsKYbqPMSKQPUQuCY/YpaNOD
+        lnN3Wglsa+CQ5kANDcf+GIBzUK3e1DGOu3z7k1KbDRAHsDf/NMCgnZZxq5l04v+q8a5VJL
+        AESxRaXHa5IBYGY+A1BvHB6N9Ifo0lE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1643276733;
+        s=susede2_ed25519; t=1643276857;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=PE+hIjSotUsBaRUC2mFTNl8Sl4oC3ER/Nuk3uXtDXEg=;
-        b=CmlQQZSvojTarv+u+s8ev2OGwMud+/EyC8tucmtcRaCIGFry9//sCGcCwSveucx44rI7qc
-        LbCnrOaHkngylDBw==
-Received: from quack3.suse.cz (jack.udp.ovpn2.nue.suse.de [10.163.43.118])
+        bh=fTArBtgVfOFJ+EdgE3cIhfFZp1ZGGBK3TdbMrafduYQ=;
+        b=hEG/c0wgTRsRAOsm1J39GENvId+c1pQsIvhcdf9W4dk7QNTIF3pl6sLWDc57zXg0OpuQ2m
+        iJoTPzkIMhP1ZeBA==
+Received: from quack3.suse.cz (unknown [10.163.43.118])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 19B6CA3B8C;
-        Thu, 27 Jan 2022 09:45:33 +0000 (UTC)
+        by relay2.suse.de (Postfix) with ESMTPS id D0D21A3B85;
+        Thu, 27 Jan 2022 09:47:37 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 4945AA05E6; Thu, 27 Jan 2022 10:45:30 +0100 (CET)
-Date:   Thu, 27 Jan 2022 10:45:30 +0100
+        id 8DB2DA05E6; Thu, 27 Jan 2022 10:47:37 +0100 (CET)
+Date:   Thu, 27 Jan 2022 10:47:37 +0100
 From:   Jan Kara <jack@suse.cz>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Jens Axboe <axboe@kernel.dk>,
         Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
         Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org,
         Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH 2/8] loop: initialize the worker tracking fields once
-Message-ID: <20220127094530.wpneoub2nkdxzxmq@quack3.lan>
+Subject: Re: [PATCH 3/8] block: remove the racy bd_inode->i_mapping->nrpages
+ asserts
+Message-ID: <20220127094737.dosrg7xbnwuw3ttx@quack3.lan>
 References: <20220126155040.1190842-1-hch@lst.de>
- <20220126155040.1190842-3-hch@lst.de>
+ <20220126155040.1190842-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220126155040.1190842-3-hch@lst.de>
+In-Reply-To: <20220126155040.1190842-4-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed 26-01-22 16:50:34, Christoph Hellwig wrote:
-> There is no need to reinitialize idle_worker_list, worker_tree and timer
-> every time a loop device is configured.  Just initialize them once at
-> allocation time.
+On Wed 26-01-22 16:50:35, Christoph Hellwig wrote:
+> Nothing prevents a file system or userspace opener of the block device
+> from redirtying the page right afte sync_blockdev returned.  Fortunately
+> data in the page cache during a block device change is mostly harmless
+> anyway.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
+My understanding was these warnings are there to tell userspace it is doing
+something wrong. Something like the warning we issue when DIO races with
+buffered IO... I'm not sure how useful they are but I don't see strong
+reason to remove them either...
 
 								Honza
 
 > ---
->  drivers/block/loop.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+>  drivers/block/loop.c | 20 --------------------
+>  1 file changed, 20 deletions(-)
 > 
 > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index b268bca6e4fb7..6ec55a5d9dfc4 100644
+> index 6ec55a5d9dfc4..d3a7f281ce1b6 100644
 > --- a/drivers/block/loop.c
 > +++ b/drivers/block/loop.c
-> @@ -1052,10 +1052,6 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
+> @@ -1278,15 +1278,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  	/* I/O need to be drained during transfer transition */
+>  	blk_mq_freeze_queue(lo->lo_queue);
 >  
->  	INIT_WORK(&lo->rootcg_work, loop_rootcg_workfn);
->  	INIT_LIST_HEAD(&lo->rootcg_cmd_list);
-> -	INIT_LIST_HEAD(&lo->idle_worker_list);
-> -	lo->worker_tree = RB_ROOT;
-> -	timer_setup(&lo->timer, loop_free_idle_workers_timer,
-> -		TIMER_DEFERRABLE);
->  	lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
->  	lo->lo_device = bdev;
->  	lo->lo_backing_file = file;
-> @@ -1957,6 +1953,9 @@ static int loop_add(int i)
->  	lo = kzalloc(sizeof(*lo), GFP_KERNEL);
->  	if (!lo)
->  		goto out;
-> +	lo->worker_tree = RB_ROOT;
-> +	INIT_LIST_HEAD(&lo->idle_worker_list);
-> +	timer_setup(&lo->timer, loop_free_idle_workers_timer, TIMER_DEFERRABLE);
->  	lo->lo_state = Lo_unbound;
+> -	if (size_changed && lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -		/* If any pages were dirtied after invalidate_bdev(), try again */
+> -		err = -EAGAIN;
+> -		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+> -			__func__, lo->lo_number, lo->lo_file_name,
+> -			lo->lo_device->bd_inode->i_mapping->nrpages);
+> -		goto out_unfreeze;
+> -	}
+> -
+>  	prev_lo_flags = lo->lo_flags;
 >  
->  	err = mutex_lock_killable(&loop_ctl_mutex);
+>  	err = loop_set_status_from_info(lo, info);
+> @@ -1497,21 +1488,10 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+>  	invalidate_bdev(lo->lo_device);
+>  
+>  	blk_mq_freeze_queue(lo->lo_queue);
+> -
+> -	/* invalidate_bdev should have truncated all the pages */
+> -	if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -		err = -EAGAIN;
+> -		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+> -			__func__, lo->lo_number, lo->lo_file_name,
+> -			lo->lo_device->bd_inode->i_mapping->nrpages);
+> -		goto out_unfreeze;
+> -	}
+> -
+>  	blk_queue_logical_block_size(lo->lo_queue, arg);
+>  	blk_queue_physical_block_size(lo->lo_queue, arg);
+>  	blk_queue_io_min(lo->lo_queue, arg);
+>  	loop_update_dio(lo);
+> -out_unfreeze:
+>  	blk_mq_unfreeze_queue(lo->lo_queue);
+>  
+>  	return err;
 > -- 
 > 2.30.2
 > 
