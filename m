@@ -2,185 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68B7549EF4A
-	for <lists+linux-block@lfdr.de>; Fri, 28 Jan 2022 01:26:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9F2849F040
+	for <lists+linux-block@lfdr.de>; Fri, 28 Jan 2022 01:59:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344581AbiA1A0c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Jan 2022 19:26:32 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:46968 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235959AbiA1A00 (ORCPT
+        id S241678AbiA1A7A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Jan 2022 19:59:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241444AbiA1A67 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 Jan 2022 19:26:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=64vXVneAT9A14nJ5Wy4DU2Ru5X/AwQFCZoUVhV2cz8s=; b=ZnQOa3fNCsoceXpkfTOvkkxhQ3
-        YPnv8R6b2Pia3DQGSm/S40Iw4dBsQ5v3Ro2prXcn89tVI0MzOTjtMLCPtkjEysFf36McWDRAuOuxo
-        ZIg7pNMDR3disto8RqevSoa5xVhahTIzavvy5qG++ccgQhBj4GG4J2IwOZXx3/P9xrXDeih/JvVcK
-        uPgAqYGjZgMaZG9WePCJZWo7eMidSu1Yain3cpxonh4FHpfclfmfJsj2uv/5fCZNs0tMHmuR5Q0Db
-        EF3FYDhp3FzdmOhXgut3tml0gqzsP6+8/6TBEGj1FP8uQakf6HyYBWeoW1hFJSf3CO5UxpfraTn2c
-        3fUhej/g==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1nDF5q-005Oca-PY; Thu, 27 Jan 2022 17:26:23 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1nDF5q-0001db-As; Thu, 27 Jan 2022 17:26:22 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Jan 2022 17:26:14 -0700
-Message-Id: <20220128002614.6136-25-logang@deltatee.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220128002614.6136-1-logang@deltatee.com>
-References: <20220128002614.6136-1-logang@deltatee.com>
+        Thu, 27 Jan 2022 19:58:59 -0500
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CDCC06174E
+        for <linux-block@vger.kernel.org>; Thu, 27 Jan 2022 16:58:59 -0800 (PST)
+Received: by mail-io1-xd2d.google.com with SMTP id y84so5951450iof.0
+        for <linux-block@vger.kernel.org>; Thu, 27 Jan 2022 16:58:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OnqrK1B7nE7jhPSJbx7uJGsFsnzMH0p8PmdMrmsnx7c=;
+        b=eiqFDzffYRJHxrlhdAhplyWNbDu7+9XCywnSXd70CEjIhMS+QILhU1gn2PxLfmnCZT
+         bNJ9Uu6Wc0dwdvneqYk7j+Gx1rRovjfECn7zCQ0xWiL4H6hvX9A8b5oKYyqce02E7DCW
+         NTzQ49F7FCqba9EG78FvWG2FJ0q8GVrQIyWy2fIDxxDCLv3njcQzyLih4s1aXLOz0i+/
+         5sSTGgzeA0gu4w3dPuF1jSpGKYFT3eqFqlPbp/g33aBBagrayGA8ak+IubpG+AiehtbE
+         3dsYzg7w2/MbCg9ctg4WDF1ndwIhh6gr6Vd+Zl57wcQBRUaLrzVSaK25RiFiy+diDvja
+         JVRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OnqrK1B7nE7jhPSJbx7uJGsFsnzMH0p8PmdMrmsnx7c=;
+        b=YFN5EULRROR8oZK9piQu8bm31gCfCKX9iLuNphTv0KLN5hpC+PLLOvVg3k4Sfi9CGo
+         +7LC9By+AfWwYAwe43EKIAumg/Sy29rN5dZSK4IJlSIh6rN0WVYcgCSQBF4RQjLWIYX5
+         8lc/5W3T79BDB+OktN5o9vcrEitSt40RWMr4/dOXeCrd/Dah8huar0OWY1/Z2An77NVB
+         ewEOVnG3pu5vgUmnw+C33f4wlsAHv98EW2r6AyzL8msd1Lh6nK0VM1aFp3tYKW+EGp2l
+         k34/MxDKBSMxB0Sc+Le+yJjnPhTzrqs/4Y76f5fsJ5Eied2e7Qzvmaip641m46IWkkQH
+         Hmyg==
+X-Gm-Message-State: AOAM530wCO6DY6J8qEmcLtL9hxLN4LpWMhdK8BogwJ7DtUXzzl2Q/BbU
+        Z2rP2snP21lmeGiQofLdzvBx/C5iev887g==
+X-Google-Smtp-Source: ABdhPJwV/AEHiSXVQGFEZXPZwOlZ61Jpa3Td0l0CjC3IrFA3/SuJ9toHc9iJFAxn2WQdRiu2+bdIdQ==
+X-Received: by 2002:a02:84ef:: with SMTP id f102mr3301483jai.25.1643331538286;
+        Thu, 27 Jan 2022 16:58:58 -0800 (PST)
+Received: from [192.168.1.116] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id m4sm12789023iln.48.2022.01.27.16.58.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jan 2022 16:58:57 -0800 (PST)
+Subject: Re: [PATCH 0/9] Remove remaining parts of congestions tracking code.
+To:     NeilBrown <neilb@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
+        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+References: <164325106958.29787.4865219843242892726.stgit@noble.brown>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2e721a70-bc57-0894-9d76-34a9d58c0cb7@kernel.dk>
+Date:   Thu, 27 Jan 2022 17:58:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, andrzej.jakowski@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, jhubbard@nvidia.com, rcampbell@nvidia.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.6
-Subject: [PATCH v5 24/24] nvme-pci: allow mmaping the CMB in userspace
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <164325106958.29787.4865219843242892726.stgit@noble.brown>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allow userspace to obtain CMB memory by mmaping the controller's
-char device. The mmap call allocates and returns a hunk of CMB memory,
-(the offset is ignored) so userspace does not have control over the
-address within the CMB.
+On 1/26/22 7:46 PM, NeilBrown wrote:
+> Congestion hasn't been reliably tracked for quite some time.
+> Most MM uses of it for guiding writeback decisions were removed in 5.16.
+> Some other uses were removed in 17-rc1.
+> 
+> This series removes the remaining places that test for congestion, and
+> the few places which still set it.
+> 
+> The second patch touches a few filesystems.  I didn't think there was
+> much value in splitting this out by filesystems, but if maintainers
+> would rather I did that, I will.
+> 
+> The f2fs, cephfs, fuse, NFS, and block patches can go through the
+> respective trees proving the final patch doesn't land until after they
+> all do - so maybe it should be held for 5.18-rc2 if all the rest lands
+> by 5.18-rc1.
 
-A VMA allocated in this way will only be usable by drivers that set
-FOLL_PCI_P2PDMA when calling GUP. And inter-device support will be
-checked the first time the pages are mapped for DMA.
+For the series:
 
-Currently this is only supported by O_DIRECT to an PCI NVMe device
-or through the NVMe passthrough IOCTL.
+Acked-by: Jens Axboe <axboe@kernel.dk>
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/host/core.c | 15 +++++++++++++++
- drivers/nvme/host/nvme.h |  2 ++
- drivers/nvme/host/pci.c  | 17 +++++++++++++++++
- 3 files changed, 34 insertions(+)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index ecb01984b55d..54a1c350098e 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3142,6 +3142,10 @@ static int nvme_dev_open(struct inode *inode, struct file *file)
- 	}
- 
- 	file->private_data = ctrl;
-+
-+	if (ctrl->ops->cdev_file_open)
-+		ctrl->ops->cdev_file_open(ctrl, file);
-+
- 	return 0;
- }
- 
-@@ -3155,12 +3159,23 @@ static int nvme_dev_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
-+static int nvme_dev_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct nvme_ctrl *ctrl = file->private_data;
-+
-+	if (!ctrl->ops->mmap_cmb)
-+		return -ENODEV;
-+
-+	return ctrl->ops->mmap_cmb(ctrl, vma);
-+}
-+
- static const struct file_operations nvme_dev_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= nvme_dev_open,
- 	.release	= nvme_dev_release,
- 	.unlocked_ioctl	= nvme_dev_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
-+	.mmap		= nvme_dev_mmap,
- };
- 
- static ssize_t nvme_sysfs_reset(struct device *dev,
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 97efc6d0b146..6b1649d50bdf 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -494,6 +494,8 @@ struct nvme_ctrl_ops {
- 	void (*delete_ctrl)(struct nvme_ctrl *ctrl);
- 	int (*get_address)(struct nvme_ctrl *ctrl, char *buf, int size);
- 	bool (*supports_pci_p2pdma)(struct nvme_ctrl *ctrl);
-+	void (*cdev_file_open)(struct nvme_ctrl *ctrl, struct file *file);
-+	int (*mmap_cmb)(struct nvme_ctrl *ctrl, struct vm_area_struct *vma);
- };
- 
- /*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 330515886dfc..47e47ffc12bf 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2961,6 +2961,21 @@ static bool nvme_pci_supports_pci_p2pdma(struct nvme_ctrl *ctrl)
- 	return dma_pci_p2pdma_supported(dev->dev);
- }
- 
-+static void nvme_pci_cdev_file_open(struct nvme_ctrl *ctrl, struct file *file)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	pci_p2pdma_file_open(pdev, file);
-+}
-+
-+static int nvme_pci_mmap_cmb(struct nvme_ctrl *ctrl,
-+			     struct vm_area_struct *vma)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	return pci_mmap_p2pmem(pdev, vma);
-+}
-+
- static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.name			= "pcie",
- 	.module			= THIS_MODULE,
-@@ -2972,6 +2987,8 @@ static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.submit_async_event	= nvme_pci_submit_async_event,
- 	.get_address		= nvme_pci_get_address,
- 	.supports_pci_p2pdma	= nvme_pci_supports_pci_p2pdma,
-+	.cdev_file_open		= nvme_pci_cdev_file_open,
-+	.mmap_cmb		= nvme_pci_mmap_cmb,
- };
- 
- static int nvme_dev_map(struct nvme_dev *dev)
 -- 
-2.30.2
+Jens Axboe
 
