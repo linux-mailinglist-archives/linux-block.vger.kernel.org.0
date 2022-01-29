@@ -2,84 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EB2B4A2C61
-	for <lists+linux-block@lfdr.de>; Sat, 29 Jan 2022 08:16:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1476F4A2FB6
+	for <lists+linux-block@lfdr.de>; Sat, 29 Jan 2022 14:14:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349266AbiA2HQN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 29 Jan 2022 02:16:13 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:56848 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241663AbiA2HQM (ORCPT
+        id S1350630AbiA2NOq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 29 Jan 2022 08:14:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350519AbiA2NOp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 29 Jan 2022 02:16:12 -0500
-Received: from fsav411.sakura.ne.jp (fsav411.sakura.ne.jp [133.242.250.110])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 20T7FX6b082124;
-        Sat, 29 Jan 2022 16:15:33 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav411.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav411.sakura.ne.jp);
- Sat, 29 Jan 2022 16:15:33 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav411.sakura.ne.jp)
-Received: from localhost.localdomain (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 20T7FSNs082068
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 29 Jan 2022 16:15:33 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Jan Kara <jack@suse.cz>, Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH 7/7] loop: use WQ_MEM_RECLAIM flag
-Date:   Sat, 29 Jan 2022 16:15:00 +0900
-Message-Id: <20220129071500.3566-8-penguin-kernel@I-love.SAKURA.ne.jp>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20220129071500.3566-1-penguin-kernel@I-love.SAKURA.ne.jp>
-References: <20220129071500.3566-1-penguin-kernel@I-love.SAKURA.ne.jp>
+        Sat, 29 Jan 2022 08:14:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E21ADC061714
+        for <linux-block@vger.kernel.org>; Sat, 29 Jan 2022 05:14:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 83FA460DBF
+        for <linux-block@vger.kernel.org>; Sat, 29 Jan 2022 13:14:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EC1CDC340E5;
+        Sat, 29 Jan 2022 13:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643462085;
+        bh=ZwjGg9YckBML13QCp/jVvb5Y2h2YnGT8+N0RAheAoNk=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=SlsxVOf4nQEQYS6NA/EBZjTbVK39wDsgzD5krWZg8ltTSs/GYaPtXXPndxIVt2Wjy
+         gw8qHofWOGRcr40+GkaG4DoRcE1r8/crcXRdnhXDcWbRCYBBR8WxRSyggV9VV9nsKY
+         q2dB6jFbeX4JgfMwGH1m6+A8ZbKGp/u603YV02QfnPZ9N0WtIvE6/I7HYyi3PokfHi
+         d/GLTmBufS1GPkSk0tpqoMjUg9evCiiiAYK4cO3P80yCAbh+3W+UCbfgUVBS5wXtEA
+         09Ey4uwcDlzJW5N2KZG/JEKnB2YY24mOSkjAM6ffxUYDP2+PWRMfuzmXLb1uRCjCB3
+         aLLY5HZnHL/vA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DBCFEE5D07E;
+        Sat, 29 Jan 2022 13:14:44 +0000 (UTC)
+Subject: Re: [GIT PULL] Block fixes for 5.17-rc2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <a6c3f018-4235-3707-75b1-3c79adfbd15c@kernel.dk>
+References: <a6c3f018-4235-3707-75b1-3c79adfbd15c@kernel.dk>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <a6c3f018-4235-3707-75b1-3c79adfbd15c@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/block-5.17-2022-01-28
+X-PR-Tracked-Commit-Id: b879f915bc48a18d4f4462729192435bb0f17052
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: cb323ee75d24e7acc2f188d123ba6df46159cf09
+Message-Id: <164346208489.11910.14645834482247359854.pr-tracker-bot@kernel.org>
+Date:   Sat, 29 Jan 2022 13:14:44 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allocating kworker threads on demand has a risk of OOM deadlock.
-Make sure that each loop device has at least one execution context.
+The pull request you sent on Fri, 28 Jan 2022 15:07:29 -0700:
 
-Cc: Jan Kara <jack@suse.cz>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- drivers/block/loop.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+> git://git.kernel.dk/linux-block.git tags/block-5.17-2022-01-28
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index b45198f2d76b..a2f0397d29e5 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1003,11 +1003,20 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	    !file->f_op->write_iter)
- 		lo->lo_flags |= LO_FLAGS_READ_ONLY;
- 
-+	/*
-+	 * Allocate a WQ for this loop device. We can't use a global WQ because
-+	 * an I/O request will hung when number of active work hits concurrency
-+	 * limit due to stacked loop devices. Also, specify WQ_MEM_RECLAIM in
-+	 * order to guarantee that loop_process_work() can start processing an
-+	 * I/O request even under memory pressure. As a result, this allocation
-+	 * sounds a sort of resource wasting prepared for the worst condition.
-+	 * We hope that people utilize ioctl(LOOP_CTL_GET_FREE) in order to
-+	 * create only minimal number of loop devices.
-+	 */
- 	if (!lo->workqueue)
--		lo->workqueue = alloc_workqueue("loop%d",
--					WQ_UNBOUND | WQ_FREEZABLE,
--					0,
--					lo->lo_number);
-+		lo->workqueue = alloc_workqueue("loop%d", WQ_MEM_RECLAIM |
-+						WQ_UNBOUND | WQ_FREEZABLE,
-+						0, lo->lo_number);
- 	if (!lo->workqueue) {
- 		error = -ENOMEM;
- 		goto out_unlock;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/cb323ee75d24e7acc2f188d123ba6df46159cf09
+
+Thank you!
+
 -- 
-2.32.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
