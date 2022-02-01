@@ -2,95 +2,130 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EBC44A5537
-	for <lists+linux-block@lfdr.de>; Tue,  1 Feb 2022 03:24:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93ABC4A55C1
+	for <lists+linux-block@lfdr.de>; Tue,  1 Feb 2022 04:57:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231890AbiBACYG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Jan 2022 21:24:06 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:43652
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229816AbiBACYG (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Jan 2022 21:24:06 -0500
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id DF0B33F1A3
-        for <linux-block@vger.kernel.org>; Tue,  1 Feb 2022 02:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1643682244;
-        bh=HNbqgIyTl4U/xKe4xsBZV50k1Yf+Ba7ETVwZMbT4bZs=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=Grz7+EIkDYowm3GbDM09KUFHdqInhvOGV5yeddvIwhgoA3+HtZnTj9bJNEsjkB2aq
-         0dMLRZEKiL4/vTaT+9UjWFIB2rm5Wqnd4Q8TwkvyUCJd6NYoSM+C4VGYq80qmwDI7B
-         cvlyaAWhP/95SUDshWOXuFJhUsuWzwZ13/XcNe/ujvcjTcb1Nj/0Fqt6E3iYzp0heh
-         zGvGwM1EV0jse/fakd4+lkxCrwndiZUYcfQbEBoJnqAOPcM71mRkiCHJ6f1PMFAReK
-         SM5pn85ZlUJ8eYoIB6U+0MgZFMikeJPhjO6j0nIv7fkYCIMR4BqAmLFmR+RwcgrmJa
-         m/u/Rs4793gzQ==
-Received: by mail-pj1-f69.google.com with SMTP id mn21-20020a17090b189500b001b4fa60efcbso797767pjb.2
-        for <linux-block@vger.kernel.org>; Mon, 31 Jan 2022 18:24:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HNbqgIyTl4U/xKe4xsBZV50k1Yf+Ba7ETVwZMbT4bZs=;
-        b=ya2BEdODNvwaqFxlWRPHekDJKtis8xT0oM6MW2huaeiBvx/jJjS9Bd64aOdfhFP6LW
-         hUHQlkjTRseEqj3kiY+ICt1tHg7rrg5hNJ1vS4GiLE5gKRuqkJH2lfS2TjoJmsl1f51J
-         sJyZVofsEFXUxsDVmAaRVhzWHF4FgqsLrb1BatDogNap4JcvbP0A2sj0L14nkn3AMVbT
-         k4ayqm0WqlN0BdTcbS6yB0tk1NzA+xD7N+bW2F9Xc+b7Bq3CbGAVJiK0qLOJSSNJ5P32
-         jv24NiBpOifcp742/iTMeAXVzkDc96ECOKzgxFJAvwla6lpwMpmbt4rlNqhogzikwHGq
-         jHCA==
-X-Gm-Message-State: AOAM532uJJq914PTbiwx2sWoJri1i2OUpV8liiJ35AA6aMQjP5OhJuVI
-        aced/pRtWjuf2cbDrCYgW+pI+u46ixDzAbg2MMQ3NjMQ1HsJMQ4dgnKyBxb7HWwDZ7ftfvhxZ89
-        KC24cr0qnDH6beAxEOF44JzoO8MWQpHDuBq+wlVqU61+lW0EEu/v2erH7
-X-Received: by 2002:a17:902:c412:: with SMTP id k18mr23673511plk.142.1643682243186;
-        Mon, 31 Jan 2022 18:24:03 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwUpLi1Kj9iW2239Gl4OCQo7sqjVsLCdg+wb37W63kLcV8MTz5K+4G0SF2M2xMZ1pGQgsrwVqJZb6NZCuH2H+M=
-X-Received: by 2002:a17:902:c412:: with SMTP id k18mr23673491plk.142.1643682242961;
- Mon, 31 Jan 2022 18:24:02 -0800 (PST)
+        id S233245AbiBAD5j (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Jan 2022 22:57:39 -0500
+Received: from smtp.infotech.no ([82.134.31.41]:32865 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232459AbiBAD5i (ORCPT <rfc822;linux-block@vger.kernel.org>);
+        Mon, 31 Jan 2022 22:57:38 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 1107D2041C0;
+        Tue,  1 Feb 2022 04:49:25 +0100 (CET)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uVyeaFfQRPf0; Tue,  1 Feb 2022 04:49:18 +0100 (CET)
+Received: from xtwo70.bingwo.ca (host-45-78-195-155.dyn.295.ca [45.78.195.155])
+        by smtp.infotech.no (Postfix) with ESMTPA id 35560204169;
+        Tue,  1 Feb 2022 04:49:16 +0100 (CET)
+From:   Douglas Gilbert <dgilbert@interlog.com>
+To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     martin.petersen@oracle.com, jejb@linux.vnet.ibm.com, hare@suse.de,
+        bvanassche@acm.org
+Subject: [PATCH v7 0/4] scatterlist: add new capabilities
+Date:   Mon, 31 Jan 2022 22:49:11 -0500
+Message-Id: <20220201034915.183117-1-dgilbert@interlog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220131230255.789059-1-mfo@canonical.com> <20220131154340.e65ebe932d8933bc68c4ddf4@linux-foundation.org>
-In-Reply-To: <20220131154340.e65ebe932d8933bc68c4ddf4@linux-foundation.org>
-From:   Mauricio Faria de Oliveira <mfo@canonical.com>
-Date:   Mon, 31 Jan 2022 23:23:50 -0300
-Message-ID: <CAO9xwp16-q-Ow29VVmTY-wRUtK4wZ+o_pfm+MmNhX4tP1-1=eg@mail.gmail.com>
-Subject: Re: [PATCH v3] mm: fix race between MADV_FREE reclaim and blkdev
- direct IO read
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        "Huang, Ying" <ying.huang@intel.com>, Yu Zhao <yuzhao@google.com>,
-        Yang Shi <shy828301@gmail.com>,
-        Miaohe Lin <linmiaohe@huawei.com>, linux-mm@kvack.org,
-        linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 8:43 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Mon, 31 Jan 2022 20:02:55 -0300 Mauricio Faria de Oliveira <mfo@canonical.com> wrote:
->
-> > Problem:
-> > =======
-> >
-> > Userspace might read the zero-page instead of actual data from a
-> > direct IO read on a block device if the buffers have been called
-> > madvise(MADV_FREE) on earlier (this is discussed below) due to a
-> > race between page reclaim on MADV_FREE and blkdev direct IO read.
-> >
-> > ...
-> >
-> > Fixes: 802a3a92ad7a ("mm: reclaim MADV_FREE pages")
->
-> Five years ago.  As it doesn't seem urgent I targeted 5.18-rc1 for
-> this, and added a cc:stable so it will trickle back into earlier trees.
->
-> How does this plan sound?
+Scatter-gather lists (sgl_s) are frequently used as data carriers in
+the block layer. For example the SCSI and NVMe subsystems interchange
+data with the block layer using sgl_s. The sgl API is declared in
+<linux/scatterlist.h>
 
-That sounds good; it's not urgent, indeed. Thanks!
+This patchset extends the scatterlist API by adding functions to:
+  - copy a sgl to another sgl, stop after copying n_bytes or
+    when either sgl is exhausted [2/4]
+  - compare one sgl against another sgl for equality. Stop when
+    either sgl is exhausted, or a miscompare is detected or when
+    n_bytes are compared. Supply a variant function that gives the
+    position of the miscompare [3/4]
+  - generalize the existing sg_zero_buffer() function with a
+    new sgl_memset function [4/4]
+
+The first patch [1/4] removes a 4 GiB size limitation from the
+sgl_alloc_order() function.
+
+The author changed the backing store (i.e. ramdisks) behind the
+scsi_debug driver from using vmalloc() to using the scatterlist
+API with the above additions. The removal of the 4 GiB size limit
+allows scsi_debug to mimic a disk of larger size. Being able to
+copy one sgl to another simplifies implementing SCSI READ and WRITE
+commands. The sgl_equal_sgl() function both simplifies the SCSI
+VERIFY(BytChk=1) and COMPARE AND WRITE commands and is a performance
+win as there is no need for a temporary buffer to hold the data-out
+transfer associated with these comparison commands.
+
+The target subsystem and NVMe may find these additions to the
+scatterlist API useful.
+
+Changes since v6 [posted 20210118]:
+  - re-add sgl_alloc_order() fix to remove its (undocumented) 4 GiB
+    limit
+  - rebase on lk 5.17.0-rc1
+
+Changes since v5 [posted 20201228]:
+  - incorporate review requests from Jason Gunthorpe
+  - replace integer overflow detection code in sgl_alloc_order()
+    with a pre-condition statement
+  - rebase on lk 5.11.0-rc4
+
+Changes since v4 [posted 20201105]:
+  - rebase on lk 5.10.0-rc2
+
+Changes since v3 [posted 20201019]:
+  - re-instate check on integer overflow of nent calculation in
+    sgl_alloc_order(). Do it in such a way as to not limit the
+    overall sgl size to 4  GiB
+  - introduce sgl_compare_sgl_idx() helper function that, if
+    requested and if a miscompare is detected, will yield the byte
+    index of the first miscompare.
+  - add Reviewed-by tags from Bodo Stroesser
+  - rebase on lk 5.10.0-rc2 [was on lk 5.9.0]
+
+Changes since v2 [posted 20201018]:
+  - remove unneeded lines from sgl_memset() definition.
+  - change sg_zero_buffer() to call sgl_memset() as the former
+    is a subset.
+
+Changes since v1 [posted 20201016]:
+  - Bodo Stroesser pointed out a problem with the nesting of
+    kmap_atomic() [called via sg_miter_next()] and kunmap_atomic()
+    calls [called via sg_miter_stop()] and proposed a solution that
+    simplifies the previous code.
+
+  - the new implementation of the three functions has shorter periods
+    when pre-emption is disabled (but has more them). This should
+    make operations on large sgl_s more pre-emption "friendly" with
+    a relatively small performance hit.
+
+  - sgl_memset return type changed from void to size_t and is the
+    number of bytes actually (over)written. That number is needed
+    anyway internally so may as well return it as it may be useful to
+    the caller.
+
+This patchset is against lk 5.17.0-rc1
+
+
+*** BLURB HERE ***
+
+Douglas Gilbert (4):
+  sgl_alloc_order: remove 4 GiB limit
+  scatterlist: add sgl_copy_sgl() function
+  scatterlist: add sgl_equal_sgl() function
+  scatterlist: add sgl_memset()
+
+ include/linux/scatterlist.h |  33 ++++-
+ lib/scatterlist.c           | 256 +++++++++++++++++++++++++++++++-----
+ 2 files changed, 256 insertions(+), 33 deletions(-)
 
 -- 
-Mauricio Faria de Oliveira
+2.25.1
+
