@@ -2,261 +2,296 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2DC04AC1FB
-	for <lists+linux-block@lfdr.de>; Mon,  7 Feb 2022 15:57:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 636E54AC73F
+	for <lists+linux-block@lfdr.de>; Mon,  7 Feb 2022 18:26:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345162AbiBGOxe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Feb 2022 09:53:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44244 "EHLO
+        id S239316AbiBGR0B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Feb 2022 12:26:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1392455AbiBGOal (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Feb 2022 09:30:41 -0500
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9C5C0401C1
-        for <linux-block@vger.kernel.org>; Mon,  7 Feb 2022 06:30:40 -0800 (PST)
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20220207142320epoutp04adb6176f44fd8f4e890eacf983e17b1c~RhwZYbLWk2679526795epoutp04F
-        for <linux-block@vger.kernel.org>; Mon,  7 Feb 2022 14:23:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20220207142320epoutp04adb6176f44fd8f4e890eacf983e17b1c~RhwZYbLWk2679526795epoutp04F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1644243800;
-        bh=tBQFE3WFiAD3SmmzsrY7l8JP3Ohwj7KJRxzPt0V4dY0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M7fdvdbDAeSLOTOn5lJo7G26jLGvmLveJSWCa5dPrdKyBuT4hk7M2ozYNCttNGRhb
-         Ywuo6aLJT+oFBH95b7u61iYMdHJp0njdq2kXaeQ0/Dq6Ueh01GGBWk40vGtq0cFMlW
-         q166qfF/qieAc0l07Wa5YsEptzFKqSDg2iXKK5FI=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20220207142318epcas5p3b1123df79785323b248f178f11e8fe55~RhwXwSDWL2018020180epcas5p3N;
-        Mon,  7 Feb 2022 14:23:18 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.174]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4JspJw2XFbz4x9Pt; Mon,  7 Feb
-        2022 14:23:12 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4E.5F.06423.05B21026; Mon,  7 Feb 2022 23:23:12 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20220207141958epcas5p25f1cd06726217696d13c2dfbea010565~Rhtdfm5sO3248332483epcas5p2p;
-        Mon,  7 Feb 2022 14:19:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20220207141958epsmtrp1221a394489b65997528cfb37ddda6c9f~RhtdecjlP0764707647epsmtrp1_;
-        Mon,  7 Feb 2022 14:19:58 +0000 (GMT)
-X-AuditID: b6c32a49-b13ff70000001917-62-62012b50a9d0
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F5.04.29871.E8A21026; Mon,  7 Feb 2022 23:19:58 +0900 (KST)
-Received: from test-zns.sa.corp.samsungelectronics.net (unknown
-        [107.110.206.5]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20220207141954epsmtip18bd4227bed3f9bd9d383b66dee449b51~RhtZkitwJ0282702827epsmtip1W;
-        Mon,  7 Feb 2022 14:19:54 +0000 (GMT)
-From:   Nitesh Shetty <nj.shetty@samsung.com>
-To:     mpatocka@redhat.com
-Cc:     javier@javigon.com, chaitanyak@nvidia.com,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        dm-devel@redhat.com, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, axboe@kernel.dk,
-        msnitzer@redhat.com, bvanassche@acm.org,
-        martin.petersen@oracle.com, roland@purestorage.com, hare@suse.de,
-        kbusch@kernel.org, hch@lst.de, Frederick.Knight@netapp.com,
-        zach.brown@ni.com, osandov@fb.com,
-        lsf-pc@lists.linux-foundation.org, djwong@kernel.org,
-        josef@toxicpanda.com, clm@fb.com, dsterba@suse.com, tytso@mit.edu,
-        jack@suse.com, joshi.k@samsung.com, arnav.dawn@samsung.com,
-        nj.shetty@samsung.com, SelvaKumar S <selvakuma.s1@samsung.com>
-Subject: [PATCH v2 10/10] dm kcopyd: use copy offload support
-Date:   Mon,  7 Feb 2022 19:43:48 +0530
-Message-Id: <20220207141348.4235-11-nj.shetty@samsung.com>
-X-Mailer: git-send-email 2.30.0-rc0
-In-Reply-To: <20220207141348.4235-1-nj.shetty@samsung.com>
+        with ESMTP id S1384175AbiBGRSB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Feb 2022 12:18:01 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0835C0401E9
+        for <linux-block@vger.kernel.org>; Mon,  7 Feb 2022 09:17:55 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id s21so15927307ejx.12
+        for <linux-block@vger.kernel.org>; Mon, 07 Feb 2022 09:17:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+x0yu+l5gRNEA0QtHe7jspCvvoGDqhGxc2x1qQ+kRw8=;
+        b=nhjAqvfsGZyoSHJ/ghPwnVbcNlCD5MwcUpxIHy5iYH9yt42hlKEsyEPAHQOnywyXTj
+         Z5/HrzP2LEEwruYd+/KaY0qh44TkHSkdDTuaKd/5RTK+tLRi2j+ZYopKQ79G6cBjAiW+
+         rJcmrfXjKGWydMkaW6XRG1yBtgR6KFZHekFPd0+QZUC+sQuVvpmw9ql2Pkoa2WQ26B+J
+         v8P0UybSnWQKd7bRs1tDz6cxOegh/LPzz3uHCjZz2avbkZTzPVO/2QiJR2b4Mbwgtk21
+         QZLtRzcFNAYWKqS/xYrVM26A5LXSx/VoXNBxQJlLVnL7WU2CBrfgkN3yqWOhY0tmwGiH
+         t1yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+x0yu+l5gRNEA0QtHe7jspCvvoGDqhGxc2x1qQ+kRw8=;
+        b=cFiA3Ac6YjeHK3CY+j7Bf72D5jU5uPUEzQVB95nZWQbRQlvTujmHDb7ZvbdCdhGS1F
+         601R528kE2MSP4/7fTBJzGZH7g6qVmeU5cel127ESZ8W9qexn2IIJtrrdpbVrYAuxXtp
+         tP1CylEGZ4KqLQebg+fk6ttyHRHleA+neW3COU1U71l3VKgEihHQ4zuAIiymHcbRUFiO
+         eY7dTaAYtAE8BJ23+KEdOPw4lW6OifWZ7ECUoXJwIXyusfHC58mK+ZqcjdU6RlBidVYH
+         0zNFDuSop6vsZdcmo1e7zzbuq94JbOy1RhAEcAhu33UdEfHHnoI6fE0nTkLZJB5uSU3H
+         UYBQ==
+X-Gm-Message-State: AOAM531ltuLKyWVxtv0NiMPyIRLYMTr/wjCdqZzCUvb2theP9DIU7p6B
+        axl7AEZVsEAiYEG8rENtPdMz5ixQNCBuvs+z47M=
+X-Google-Smtp-Source: ABdhPJxhlhjoVSVHyqYa16k7/eubuxcbb613lOtvzRolBySylZw3wwseFqKRudnHxquWRIPuMVP8r9u8RMau0KBuFpc=
+X-Received: by 2002:a17:907:3e1c:: with SMTP id hp28mr101272ejc.377.1644254274268;
+ Mon, 07 Feb 2022 09:17:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TezBcZxTvd+/u3ZVW5gapj6lks5rpiEdsw/oYtDORzE01HU07ydS0lVvu
-        YKzdzS6JdkIslVS8qXcHbTo1qEfFK8mipBhWY9XbEBZ5kAQh9WgkuuvS5r/f+Z3fOb9zzjcf
-        Hzep4Vnyg6VhjEJKS4TELk7dbRsbex9b8JXjwBSJ1CPLXFQ2nkKgrMV1HC20THNRekoOD/XN
-        7EaN8/lcpF1TYWi6ehND6p/SMVRS1oahB8XXAIrXaDG0oROhts0nBEpvHQSocdQWqRs7Oajw
-        l3s8lDDUQKCmR404Ku54iaG07wYwdCdvg0B1zwtxdPvuAAeVbSD0aK2TQHGJ6zw01/zl+/uo
-        vn5vKi12nkfFFo1xqL4/w6nq0niCuv7zJSpjuBhQt0aiCSqmuw2ncpaeEdRQdz1GJcXOE9TT
-        e6Mcqk6XxKMWmgYIKrmmFPiY+Ya4BzF0AKMQMFJ/WUCwNNBD6P2J31E/Z7GjyF7kilyEAikd
-        yngIvT70sT8eLNFfSig4T0vC9ZQPrVQKD3u6K2ThYYwgSKYM8xAy8gCJ3EnuoKRDleHSQAcp
-        E+YmcnR811kvPBsSVKOb4sgHBBEVPV1YNFiwvAqM+JB0glWDMRwDNiFvAViwhK6CXXq8BGDi
-        +gSPDVYAvBKjAzsV95eu4GyiEcDk6REuG8RhcKqnVp/h8wnSFmo2+YYCM9IcbmjrgEGDkz9w
-        oWp9dsvPlPSAyyrWm0MehLX1NwkDNibdYG1LCY91s4Y/6lq4Bmyk51c2sjisZg/szJ3Zwji5
-        H8bW5m9NBMlRIxitTuQYhoCkF6xPdWH7mMK5jprtnpZwNuUyj9UnALjWPYGxQQ6AsamxBKt6
-        D/aqX2CGRjhpAytvHmZpK5jZVYGxxrth0vMZjOWNYUPBDraGv1YWbbexgIOrqm1MwYX8YoK9
-        Vj+ALyYWualAkPfKQnmvLJT3v3URwEuBBSNXhgYySme5SMpc+O+Z/WWh1WDr+xw60QDGJxcd
-        WgHGB60A8nGhmfFbCZu0iXEA/fU3jELmpwiXMMpW4Ky/eBpuuddfpv9/0jA/kZOro5NYLHZy
-        PSIWCc2NNYFVtAkZSIcxIQwjZxQ7dRjfyDIaK3PSzmqfulcllHz8u4yvTm4fPfeahLSK/MIz
-        e7a8/PvfOkwrnG/M+WosNInHn7kltNzRXXf0PW9k+0ev6tjSX9p5sdm+/eq/j0pTPaZS1jLP
-        9NS8sfRBXEXHQY9vmyUrHz38J+ltuwtW86vmRx6/E3WO+jTabvn1a+Tn4S6TDyNOUyvrvDOV
-        b/IjNAfMJh0K2q1s5i9etutd87ybyX055r45vAccsI4szD25GinMPtt9LLu4y6s94/GoxraQ
-        mC6PuqQ1cTklLymK59o+6Y+qlDadGq8uKBKTMapASxu/5ppI79OekdV5OblRey+uD8cXLH7W
-        lOUwlPHgZJbg/thaCZ2t4t3oFXKUQbToEK5Q0v8CGEaU48cEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTexjH+Z1zdnYcTI7T2C/tWqwMMjLXy/VHZNd/qqMFRcHCoJeVB5dN
-        XZtmL9zr3Lil00xXSL6EZaU5qcy3rXSmq2Gm6WjOrKvB0hy0nNUikpa7zRH034fn8/0+zz8P
-        hQvcRCR1LCuHVWZJ5SKSR3Q8FkWvKY0FR+JNjxahrldeDmqauEiiio9zOJrtneQg/cUrXGSf
-        CkVmTzUH2b4VYGiyxY+hrjo9hhqbrBhyNdwAqGjAhiGfU4ys/hkS6S2jAJlfr0Zd5n4C1da/
-        46LilyYSdbvNOGrom8dQeaEDQ0NVPhJ1fK/F0eM3DgI1+RByf+sn0b8lc1z0/tHBpGjGPrKD
-        Kdd6uIz22jjB2J/nMi2GIpJpvZnPXBprAEznKzXJaAatOHPl8xeSeTloxJgLWg/JfHr3mmA6
-        nBe4zGy3g2RK2wxgd8R+3uY0Vn7sJKtcu+UwT9bmfEsoHMtO3R1+hqnBbKQOhFCQ3gCnP5/H
-        dYBHCehOAN+Pt4GgWAzrfzzBgxwOG+dd3GBIi8FbBV5SByiKpFfDAT8VyETQQuizdYBABqct
-        HDg/9GGhHE4nQm+BhggwQcfAduNDMsB8ehNs723kBg8sh9edvZwAh/ycf/VVEMFjagDVQ7c5
-        wUIY7K+cWliE00uhtr0aLwN01W+q6jd1DWAGsJhVqDLTM1VihTiLzYtTSTNVuVnpcUezM1vA
-        wj/ErjIBo+FjnAVgFLAASOGiCP6SYr9UwE+Tnj7DKrMPKXPlrMoCoihCJOTbdP2HBHS6NIc9
-        zrIKVvnLYlRIpBoryXceSPFQN/4aMX61uu3liQ6NZgpMG+JD8/SVvLKeIn5MjjpMQ5z06tZH
-        fxL/12z+4/atmV3//LBIzPzE5hUbPfmpb8aqm0z3WsnNldRKoXfprr+NL5IlksGteOp36YCk
-        e3T0KX01Qd63l6Dck7Q+zy+oqHa5ClNQxtlllrHd6gJad27t8FSCXSiPcuW2Z9eHuR6eUkzf
-        mS+xb7nsll0+Uvds3dXQndt7tm14m9GTPFBz+LoxJuPPUn+57ETciPC+eaK2T1zXJdl+aVVC
-        89kht3mCWmSzPv2ShHempiU7IofjZa17sNOF2Qll+2po04HmiQdzxZKo8fCSlJkkEaGSScWx
-        uFIl/R8pW8O7fgMAAA==
-X-CMS-MailID: 20220207141958epcas5p25f1cd06726217696d13c2dfbea010565
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220207141958epcas5p25f1cd06726217696d13c2dfbea010565
-References: <CAOSviJ0HmT9iwdHdNtuZ8vHETCosRMpR33NcYGVWOV0ki3EYgw@mail.gmail.com>
-        <20220207141348.4235-1-nj.shetty@samsung.com>
-        <CGME20220207141958epcas5p25f1cd06726217696d13c2dfbea010565@epcas5p2.samsung.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220205091150.6105-1-chaitanyak@nvidia.com>
+In-Reply-To: <20220205091150.6105-1-chaitanyak@nvidia.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 7 Feb 2022 09:17:42 -0800
+Message-ID: <CAHbLzkp6P_1F2oCPvzT7BP830S6YcyVd46gEJdgvpKSJmwvQ7Q@mail.gmail.com>
+Subject: Re: [PATCH V7 0/2] block: introduce block_rq_error tracepoint
+To:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <kch@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: SelvaKumar S <selvakuma.s1@samsung.com>
+On Sat, Feb 5, 2022 at 1:12 AM Chaitanya Kulkarni <chaitanyak@nvidia.com> wrote:
+>
+> From: Chaitanya Kulkarni <kch@nvidia.com>
+>
+> Hi Yang,
+>
+> I spent sometime generating V7 and testing the same. I kept your
+> original authorship for the 2nd patch and added a prep patch.
+> Let me know if you find anything wrong with this series.
 
-Introduce copy_jobs to use copy-offload, if supported by underlying devices
-otherwise fall back to existing method.
+Hi Chaitanya,
 
-run_copy_jobs() calls block layer copy offload API, if both source and
-destination request queue are same and support copy offload.
-On successful completion, destination regions copied count is made zero,
-failed regions are processed via existing method.
+Thank you so much for preparing the patches. They look good to me. But
+it seems you forgot cc Steven Rostedt. Looped him in.
 
-Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
-Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
----
- drivers/md/dm-kcopyd.c | 57 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 51 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
-index 37b03ab7e5c9..64f17cc7b069 100644
---- a/drivers/md/dm-kcopyd.c
-+++ b/drivers/md/dm-kcopyd.c
-@@ -74,18 +74,20 @@ struct dm_kcopyd_client {
- 	atomic_t nr_jobs;
- 
- /*
-- * We maintain four lists of jobs:
-+ * We maintain five lists of jobs:
-  *
-- * i)   jobs waiting for pages
-- * ii)  jobs that have pages, and are waiting for the io to be issued.
-- * iii) jobs that don't need to do any IO and just run a callback
-- * iv) jobs that have completed.
-+ * i)	jobs waiting to try copy offload
-+ * ii)   jobs waiting for pages
-+ * iii)  jobs that have pages, and are waiting for the io to be issued.
-+ * iv) jobs that don't need to do any IO and just run a callback
-+ * v) jobs that have completed.
-  *
-- * All four of these are protected by job_lock.
-+ * All five of these are protected by job_lock.
-  */
- 	spinlock_t job_lock;
- 	struct list_head callback_jobs;
- 	struct list_head complete_jobs;
-+	struct list_head copy_jobs;
- 	struct list_head io_jobs;
- 	struct list_head pages_jobs;
- };
-@@ -579,6 +581,44 @@ static int run_io_job(struct kcopyd_job *job)
- 	return r;
- }
- 
-+static int run_copy_job(struct kcopyd_job *job)
-+{
-+	int r, i, count = 0;
-+	unsigned long flags = 0;
-+	struct range_entry range;
-+
-+	struct request_queue *src_q, *dest_q;
-+
-+	for (i = 0; i < job->num_dests; i++) {
-+		range.dst = job->dests[i].sector << SECTOR_SHIFT;
-+		range.src = job->source.sector << SECTOR_SHIFT;
-+		range.len = job->source.count << SECTOR_SHIFT;
-+
-+		src_q = bdev_get_queue(job->source.bdev);
-+		dest_q = bdev_get_queue(job->dests[i].bdev);
-+
-+		if (src_q != dest_q && !src_q->limits.copy_offload)
-+			break;
-+
-+		r = blkdev_issue_copy(job->source.bdev, 1, &range,
-+			job->dests[i].bdev, GFP_KERNEL, flags);
-+		if (r)
-+			break;
-+
-+		job->dests[i].count = 0;
-+		count++;
-+	}
-+
-+	if (count == job->num_dests) {
-+		push(&job->kc->complete_jobs, job);
-+	} else {
-+		push(&job->kc->pages_jobs, job);
-+		r = 0;
-+	}
-+
-+	return r;
-+}
-+
- static int run_pages_job(struct kcopyd_job *job)
- {
- 	int r;
-@@ -659,6 +699,7 @@ static void do_work(struct work_struct *work)
- 	spin_unlock_irq(&kc->job_lock);
- 
- 	blk_start_plug(&plug);
-+	process_jobs(&kc->copy_jobs, kc, run_copy_job);
- 	process_jobs(&kc->complete_jobs, kc, run_complete_job);
- 	process_jobs(&kc->pages_jobs, kc, run_pages_job);
- 	process_jobs(&kc->io_jobs, kc, run_io_job);
-@@ -676,6 +717,8 @@ static void dispatch_job(struct kcopyd_job *job)
- 	atomic_inc(&kc->nr_jobs);
- 	if (unlikely(!job->source.count))
- 		push(&kc->callback_jobs, job);
-+	else if (job->source.bdev->bd_disk == job->dests[0].bdev->bd_disk)
-+		push(&kc->copy_jobs, job);
- 	else if (job->pages == &zero_page_list)
- 		push(&kc->io_jobs, job);
- 	else
-@@ -916,6 +959,7 @@ struct dm_kcopyd_client *dm_kcopyd_client_create(struct dm_kcopyd_throttle *thro
- 	spin_lock_init(&kc->job_lock);
- 	INIT_LIST_HEAD(&kc->callback_jobs);
- 	INIT_LIST_HEAD(&kc->complete_jobs);
-+	INIT_LIST_HEAD(&kc->copy_jobs);
- 	INIT_LIST_HEAD(&kc->io_jobs);
- 	INIT_LIST_HEAD(&kc->pages_jobs);
- 	kc->throttle = throttle;
-@@ -971,6 +1015,7 @@ void dm_kcopyd_client_destroy(struct dm_kcopyd_client *kc)
- 
- 	BUG_ON(!list_empty(&kc->callback_jobs));
- 	BUG_ON(!list_empty(&kc->complete_jobs));
-+	WARN_ON(!list_empty(&kc->copy_jobs));
- 	BUG_ON(!list_empty(&kc->io_jobs));
- 	BUG_ON(!list_empty(&kc->pages_jobs));
- 	destroy_workqueue(kc->kcopyd_wq);
--- 
-2.30.0-rc0
-
+>
+> Following is the cover-letter for everyone else:-
+>
+> Currently, rasdaemon uses existing tracepoint block_rq_complete
+> and filters out non-error cases in order to capture block disk errors.
+> The generic tracepoint brings overhead see below and requires filtering
+> for the requests which are failed due to error :-
+>
+> block_rq_complete() tracepint enabled fio randread :-
+>
+>   read: IOPS=107k, BW=418MiB/s (439MB/s)(24.5GiB/60001msec)
+>   read: IOPS=107k, BW=419MiB/s (439MB/s)(24.5GiB/60001msec)
+>   read: IOPS=106k, BW=416MiB/s (436MB/s)(24.4GiB/60001msec)
+>   read: IOPS=107k, BW=417MiB/s (437MB/s)(24.4GiB/60001msec)
+>   read: IOPS=107k, BW=418MiB/s (438MB/s)(24.5GiB/60001msec)
+>   read: IOPS=106k, BW=414MiB/s (434MB/s)(24.3GiB/60001msec)
+>   read: IOPS=107k, BW=418MiB/s (438MB/s)(24.5GiB/60001msec)
+>   read: IOPS=106k, BW=413MiB/s (434MB/s)(24.2GiB/60001msec)
+>   read: IOPS=106k, BW=414MiB/s (434MB/s)(24.2GiB/60001msec)
+>   read: IOPS=109k, BW=425MiB/s (445MB/s)(24.9GiB/60001msec)
+>   AVG = 417 MiB/s
+>
+> block_rq_complete() tracepint disabled fio randread :-
+>   read: IOPS=110k, BW=428MiB/s (449MB/s)(25.1GiB/60001msec)
+>   read: IOPS=107k, BW=418MiB/s (438MB/s)(24.5GiB/60001msec)
+>   read: IOPS=108k, BW=421MiB/s (442MB/s)(24.7GiB/60001msec)
+>   read: IOPS=107k, BW=419MiB/s (439MB/s)(24.5GiB/60001msec)
+>   read: IOPS=108k, BW=422MiB/s (442MB/s)(24.7GiB/60001msec)
+>   read: IOPS=108k, BW=422MiB/s (443MB/s)(24.7GiB/60001msec)
+>   read: IOPS=108k, BW=422MiB/s (442MB/s)(24.7GiB/60001msec)
+>   read: IOPS=108k, BW=422MiB/s (443MB/s)(24.8GiB/60001msec)
+>   read: IOPS=108k, BW=421MiB/s (442MB/s)(24.7GiB/60001msec)
+>   read: IOPS=108k, BW=423MiB/s (443MB/s)(24.8GiB/60001msec)
+>   AVG = 421 MiB/s
+>
+> Introduce a new tracepoint block_rq_error() just for the error case to
+> reduce the overhead of generic block_rq_complete() tracepoint to only
+> trace requests with errors.
+>
+> Below is the detailed log of testing block_rq_complete() and
+> block_rq_error() tracepoints.
+>
+> -ck
+>
+> The v3 patch was submitted in Feb 2020, and Steven reviewed the patch, but
+> it was not merged to upstream. See
+> https://lore.kernel.org/lkml/20200203053650.8923-1-xiyou.wangcong@gmail.com/.
+>
+> The problems fixed by that patch still exist and we do need it to make
+> disk error handling in rasdaemon easier. So this resurrected it and
+> continued the version number.
+>
+> V6 --> V7:
+>  * Declare new trace event block_rq_completion and use it with
+>    bio_rq_complete and bio_rq_error() to avoid code repetation.
+>  * Add cover letter and document details.
+>  * Add performance numbers.
+>
+> v5 --> v6:
+>  * Removed disk name per Christoph and Chaitanya
+>  * Kept errno since I didn't find any other block tracepoints print blk
+>    status code and userspace (i.e. rasdaemon) does expect errno.
+> v4 --> v5:
+>  * Report the actual block layer status code instead of the errno per
+>    Christoph Hellwig.
+> v3 --> v4:
+>  * Rebased to v5.17-rc1.
+>  * Collected reviewed-by tag from Steven.
+>
+>
+> Chaitanya Kulkarni (1):
+>   block: create event class for rq completion
+>
+> Yang Shi (1):
+>   block: introduce block_rq_error tracepoint
+>
+>  block/blk-mq.c               |  4 ++-
+>  include/trace/events/block.h | 49 ++++++++++++++++++++++++++----------
+>  2 files changed, 39 insertions(+), 14 deletions(-)
+>
+>
+>
+> * Detailed test log for two tracepoints block_rq_complete() and
+>   block_rq_error():
+>
+> * Modified null_blk to fail any incoming REQ_OP_WRITE for
+>    testing :-
+>
+> root@dev linux-block (for-next) # git diff drivers/block/null_blk/main.c
+> diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+> index 13004beb48ca..0376d0f46fdf 100644
+> --- a/drivers/block/null_blk/main.c
+> +++ b/drivers/block/null_blk/main.c
+> @@ -1414,6 +1414,9 @@ static blk_status_t null_handle_cmd(struct nullb_cmd *cmd, sector_t sector,
+>                         return sts;
+>         }
+>
+> +       if (op == REQ_OP_WRITE)
+> +               return BLK_STS_IOERR;
+> +
+>         if (op == REQ_OP_FLUSH) {
+>                 cmd->error = errno_to_blk_status(null_handle_flush(nullb));
+>                 goto out;
+> root@dev tracing # modprobe null_blk
+> root@dev tracing # ls -l /dev/nullb0
+> brw-rw----. 1 root disk 251, 0 Feb  4 02:45 /dev/nullb0
+> root@dev tracing # # note the above major number
+>
+> * Test both block_rq_complete() and block_rq_error() tracepoints :-
+>
+> + cd tracing
+> + modprobe -r null_blk
+> + rm -fr /dev/nullb0
+> + modprobe null_blk
+> + sleep 1
+> + set +x
+> ###############################################################
+> # Disable block_rq_[complete|error] tracepoints
+> #
+> + echo 0
+> + echo 0
+> + cat events/block/block_rq_complete/enable
+> 0
+> + cat events/block/block_rq_error/enable
+> 0
+> + set +x
+> ###############################################################
+> # Enable block_rq_complete() tracepoint and generate write error
+> #
+> + echo 1
+> + cat events/block/block_rq_complete/enable
+> 1
+> + dd if=/dev/zero of=/dev/nullb0 bs=64k count=10 oflag=direct seek=1024
+> dd: error writing '/dev/nullb0': Input/output error
+> 1+0 records in
+> 0+0 records out
+> 0 bytes copied, 0.00268675 s, 0.0 kB/s
+> + cat trace
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 1/1   #P:48
+> #
+> #                                _-----=> irqs-off/BH-disabled
+> #                               / _----=> need-resched
+> #                              | / _---=> hardirq/softirq
+> #                              || / _--=> preempt-depth
+> #                              ||| / _-=> migrate-disable
+> #                              |||| /     delay
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #              | |         |   |||||     |         |
+>     kworker/0:1H-1090    [000] .....   586.020342: block_rq_complete: 251,0 WS () 131072 + 128 [-5]
+> + echo ''
+> + set +x
+> ###############################################################
+> # Enable block_rq_[complete|error]() tracepoint and
+> # generate write error
+> #
+> + echo 1
+> + cat events/block/block_rq_error/enable
+> 1
+> + dd if=/dev/zero of=/dev/nullb0 bs=64k count=10 oflag=direct seek=10240
+> dd: error writing '/dev/nullb0': Input/output error
+> 1+0 records in
+> 0+0 records out
+> 0 bytes copied, 0.0022944 s, 0.0 kB/s
+> + cat trace
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 2/2   #P:48
+> #
+> #                                _-----=> irqs-off/BH-disabled
+> #                               / _----=> need-resched
+> #                              | / _---=> hardirq/softirq
+> #                              || / _--=> preempt-depth
+> #                              ||| / _-=> migrate-disable
+> #                              |||| /     delay
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #              | |         |   |||||     |         |
+>     kworker/0:1H-1090    [000] .....   586.064527: block_rq_complete: 251,0 WS () 1310720 + 128 [-5]
+>     kworker/0:1H-1090    [000] .....   586.066135: block_rq_error: 251,0 WS () 1310720 + 128 [-5]
+> + echo ''
+> + set +x
+> ###############################################################
+> # Disable block_rq_complete() and keep block_rq_error()
+> # tracepoint enabled and generate write error
+> #
+> + echo 0
+> + cat events/block/block_rq_complete/enable
+> 0
+> + dd if=/dev/zero of=/dev/nullb0 bs=64k count=10 oflag=direct seek=10240
+> dd: error writing '/dev/nullb0': Input/output error
+> 1+0 records in
+> 0+0 records out
+> 0 bytes copied, 0.00235022 s, 0.0 kB/s
+> + cat trace
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 1/1   #P:48
+> #
+> #                                _-----=> irqs-off/BH-disabled
+> #                               / _----=> need-resched
+> #                              | / _---=> hardirq/softirq
+> #                              || / _--=> preempt-depth
+> #                              ||| / _-=> migrate-disable
+> #                              |||| /     delay
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #              | |         |   |||||     |         |
+>     kworker/0:1H-1090    [000] .....   586.110419: block_rq_error: 251,0 WS () 1310720 + 128 [-5]
+> + echo ''
+> + modprobe -r null_blk
+> + set +x
+>
+> --
+> 2.29.0
+>
