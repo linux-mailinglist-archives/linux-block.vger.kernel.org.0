@@ -2,68 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BBB84AEDBC
-	for <lists+linux-block@lfdr.de>; Wed,  9 Feb 2022 10:14:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17D5C4AEE4C
+	for <lists+linux-block@lfdr.de>; Wed,  9 Feb 2022 10:41:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229652AbiBIJNb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Feb 2022 04:13:31 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:33538 "EHLO
+        id S230138AbiBIJlm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Feb 2022 04:41:42 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:35846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230221AbiBIJNb (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Feb 2022 04:13:31 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D69CE07FDBB
-        for <linux-block@vger.kernel.org>; Wed,  9 Feb 2022 01:13:27 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id a8so5328665ejc.8
-        for <linux-block@vger.kernel.org>; Wed, 09 Feb 2022 01:13:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A0aS6PsHWqLfuEf0mpE1atYMX0+ueYp+jlUgmxEtLqY=;
-        b=DX92WZhCC8pRPSGw5ySiXzzQ8Gfpfd4r+qOKBeQ+3hwXptsaaV61BwpN1/bKIW3J0g
-         hmRXfRjLR13U72gyHqk3KSurv6aiykgsCYy0QdScn98FdtLnHuaPUULwzx91BfOKnwlt
-         T+uuXhCv0nadD0qN257lXBfSWaU4ug8bfmvdQo+5V6aPFNWDRhFjyJW9JhHzPl2okBE/
-         Z+Ws3dzLhvmP8GoQub78NMyDQ3NW5aDSovD9axM2F/if4/8MDZwD7rQjMCTgULbBaN97
-         /gs0bf/1OCVWWdqytVgtXqFdk6OVNDQ6edClQeV6Oo4jxSteyXz10xueZRfvVzEB1iAp
-         Vc9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A0aS6PsHWqLfuEf0mpE1atYMX0+ueYp+jlUgmxEtLqY=;
-        b=Vnea4KlRwgQP3+LQK1+IhTtFCDxBlJd16lLzyRFXj//EfgZwj/4/RERr+KQNl37W9s
-         6dVSkh2/Z7yVi5IDECunQsTKJQAn/1gs9TIGa9MBZVBvpy1E1c23MkkeFwM/C5Re/Eba
-         JK5Aqg2TvfAUscbn1l3GhaZsMSK7i985J3ZaoPIC3UfFKLAY++a4J8kXbR65roTDJMZX
-         wxRqhmqgnKHoLfwGVSc5EIpWhd9edowHKzSsA6Ebz2H60u4N4v4pkjBv84AsC9LDr/Gn
-         gFowgxGYmc/tt2yS3vydfJt2cLa4s7Awb/ifd3DHWsOn0X+Ro/+WuvY/efaoEBgk2fAt
-         a8Aw==
-X-Gm-Message-State: AOAM531RU14QdilAd1g10P2XNiBzUqOwdbhtEpbWGnWEviBey3S+gYvK
-        J4dWlSTJbLoBun5uHNjobPajFWlmz9NbUjHqCWAQ+Q==
-X-Google-Smtp-Source: ABdhPJwXBtBmq59kwj593KMdIS7kgVxhoLsds+ZjZ43rf+IIYpSxMGmDPqwgtWYgnVZDMIdJ2pvE/ZGIfbLuC68TslE=
-X-Received: by 2002:a17:906:2ed1:: with SMTP id s17mr1012913eji.441.1644397998273;
- Wed, 09 Feb 2022 01:13:18 -0800 (PST)
+        with ESMTP id S234808AbiBIJho (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Feb 2022 04:37:44 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B628EC1DC171
+        for <linux-block@vger.kernel.org>; Wed,  9 Feb 2022 01:37:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644399429;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RonBlka76a7wpJqVy2Yldi5/Ip4rcWNV9GLugcF6EX4=;
+        b=h5hWJR9DSFcttSTnIkpyAdTWqmUkk9vz/UpZDZvEs9/ftqcqtBmZ86CgnYPCM4APln6HED
+        N2YiW7y7DfEzHQJAxh7cbIFSw5rvbuwqmnWWkpm7fxK2d7wGyAIO0qHKmOjcLs9ukC3HVa
+        LC1QfyM4otcYzdaUcL9OJUU6hQghHyE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-140-Z-Vr7HmdOwOciq5eJFIrKw-1; Wed, 09 Feb 2022 04:15:09 -0500
+X-MC-Unique: Z-Vr7HmdOwOciq5eJFIrKw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C92E1091DA8;
+        Wed,  9 Feb 2022 09:15:07 +0000 (UTC)
+Received: from localhost (ovpn-8-35.pek2.redhat.com [10.72.8.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5911110589AF;
+        Wed,  9 Feb 2022 09:14:36 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Li Ning <lining2020x@163.com>,
+        Tejun Heo <tj@kernel.org>, Chunguang Xu <brookxu@tencent.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V2 0/7] block: improve iops limit throttle
+Date:   Wed,  9 Feb 2022 17:14:22 +0800
+Message-Id: <20220209091429.1929728-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-References: <20220209082828.2629273-1-hch@lst.de> <20220209082828.2629273-4-hch@lst.de>
- <4f1565b2-0f83-0cfa-58bd-86d5dee48e51@linux.dev>
-In-Reply-To: <4f1565b2-0f83-0cfa-58bd-86d5dee48e51@linux.dev>
-From:   Jinpu Wang <jinpu.wang@ionos.com>
-Date:   Wed, 9 Feb 2022 10:13:07 +0100
-Message-ID: <CAMGffE=FmVj26PJtu5fwtr3rNbtE+-dcfxOrmT4hEt3sO7Kw2A@mail.gmail.com>
-Subject: Re: [PATCH 3/7] rnbd: drop WRITE_SAME support
-To:     Guoqing Jiang <guoqing.jiang@linux.dev>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        martin.petersen@oracle.com, philipp.reisner@linbit.com,
-        lars.ellenberg@linbit.com, target-devel@vger.kernel.org,
-        haris.iqbal@ionos.com, manoj@linux.ibm.com, mrochs@linux.ibm.com,
-        ukrishn@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, drbd-dev@lists.linbit.com,
-        dm-devel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,147 +57,55 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Feb 9, 2022 at 10:05 AM Guoqing Jiang <guoqing.jiang@linux.dev> wro=
-te:
->
->
->
-> On 2/9/22 4:28 PM, Christoph Hellwig wrote:
-> > REQ_OP_WRITE_SAME was only ever submitted by the legacy Linux zeroing
-> > code, which has switched to use REQ_OP_WRITE_ZEROES long before rnbd wa=
-s
-> > even merged.
-> >
-> > Signed-off-by: Christoph Hellwig<hch@lst.de>
-> > ---
-> >   drivers/block/rnbd/rnbd-clt.c   | 7 ++-----
-> >   drivers/block/rnbd/rnbd-clt.h   | 1 -
-> >   drivers/block/rnbd/rnbd-proto.h | 6 ------
-> >   drivers/block/rnbd/rnbd-srv.c   | 3 +--
-> >   4 files changed, 3 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-cl=
-t.c
-> > index c08971de369fc..dc192d2738854 100644
-> > --- a/drivers/block/rnbd/rnbd-clt.c
-> > +++ b/drivers/block/rnbd/rnbd-clt.c
-> > @@ -82,7 +82,6 @@ static int rnbd_clt_set_dev_attr(struct rnbd_clt_dev =
-*dev,
-> >       dev->nsectors               =3D le64_to_cpu(rsp->nsectors);
-> >       dev->logical_block_size     =3D le16_to_cpu(rsp->logical_block_si=
-ze);
-> >       dev->physical_block_size    =3D le16_to_cpu(rsp->physical_block_s=
-ize);
-> > -     dev->max_write_same_sectors =3D le32_to_cpu(rsp->max_write_same_s=
-ectors);
-> >       dev->max_discard_sectors    =3D le32_to_cpu(rsp->max_discard_sect=
-ors);
-> >       dev->discard_granularity    =3D le32_to_cpu(rsp->discard_granular=
-ity);
-> >       dev->discard_alignment      =3D le32_to_cpu(rsp->discard_alignmen=
-t);
-> > @@ -1359,8 +1358,6 @@ static void setup_request_queue(struct rnbd_clt_d=
-ev *dev)
-> >       blk_queue_logical_block_size(dev->queue, dev->logical_block_size)=
-;
-> >       blk_queue_physical_block_size(dev->queue, dev->physical_block_siz=
-e);
-> >       blk_queue_max_hw_sectors(dev->queue, dev->max_hw_sectors);
-> > -     blk_queue_max_write_same_sectors(dev->queue,
-> > -                                      dev->max_write_same_sectors);
-> >
-> >       /*
-> >        * we don't support discards to "discontiguous" segments
-> > @@ -1610,10 +1607,10 @@ struct rnbd_clt_dev *rnbd_clt_map_device(const =
-char *sessname,
-> >       }
-> >
-> >       rnbd_clt_info(dev,
-> > -                    "map_device: Device mapped as %s (nsectors: %zu, l=
-ogical_block_size: %d, physical_block_size: %d, max_write_same_sectors: %d,=
- max_discard_sectors: %d, discard_granularity: %d, discard_alignment: %d, s=
-ecure_discard: %d, max_segments: %d, max_hw_sectors: %d, rotational: %d, wc=
-: %d, fua: %d)\n",
-> > +                    "map_device: Device mapped as %s (nsectors: %zu, l=
-ogical_block_size: %d, physical_block_size: %d, max_discard_sectors: %d, di=
-scard_granularity: %d, discard_alignment: %d, secure_discard: %d, max_segme=
-nts: %d, max_hw_sectors: %d, rotational: %d, wc: %d, fua: %d)\n",
-> >                      dev->gd->disk_name, dev->nsectors,
-> >                      dev->logical_block_size, dev->physical_block_size,
-> > -                    dev->max_write_same_sectors, dev->max_discard_sect=
-ors,
-> > +                    dev->max_discard_sectors,
-> >                      dev->discard_granularity, dev->discard_alignment,
-> >                      dev->secure_discard, dev->max_segments,
-> >                      dev->max_hw_sectors, dev->rotational, dev->wc, dev=
-->fua);
-> > diff --git a/drivers/block/rnbd/rnbd-clt.h b/drivers/block/rnbd/rnbd-cl=
-t.h
-> > index 0c2cae7f39b9f..6946ba23d62e5 100644
-> > --- a/drivers/block/rnbd/rnbd-clt.h
-> > +++ b/drivers/block/rnbd/rnbd-clt.h
-> > @@ -122,7 +122,6 @@ struct rnbd_clt_dev {
-> >       bool                    wc;
-> >       bool                    fua;
-> >       u32                     max_hw_sectors;
-> > -     u32                     max_write_same_sectors;
-> >       u32                     max_discard_sectors;
-> >       u32                     discard_granularity;
-> >       u32                     discard_alignment;
->
-> I am planning to remove more members inside struct rnbd_clt_dev.
->
-> > diff --git a/drivers/block/rnbd/rnbd-proto.h b/drivers/block/rnbd/rnbd-=
-proto.h
-> > index de5d5a8df81d7..3eb8b34bd1886 100644
-> > --- a/drivers/block/rnbd/rnbd-proto.h
-> > +++ b/drivers/block/rnbd/rnbd-proto.h
-> > @@ -249,9 +249,6 @@ static inline u32 rnbd_to_bio_flags(u32 rnbd_opf)
-> >       case RNBD_OP_SECURE_ERASE:
-> >               bio_opf =3D REQ_OP_SECURE_ERASE;
-> >               break;
-> > -     case RNBD_OP_WRITE_SAME:
-> > -             bio_opf =3D REQ_OP_WRITE_SAME;
-> > -             break;
-> >       default:
-> >               WARN(1, "Unknown RNBD type: %d (flags %d)\n",
-> >                    rnbd_op(rnbd_opf), rnbd_opf);
-> > @@ -284,9 +281,6 @@ static inline u32 rq_to_rnbd_flags(struct request *=
-rq)
-> >       case REQ_OP_SECURE_ERASE:
-> >               rnbd_opf =3D RNBD_OP_SECURE_ERASE;
-> >               break;
-> > -     case REQ_OP_WRITE_SAME:
-> > -             rnbd_opf =3D RNBD_OP_WRITE_SAME;
-> > -             break;
-> >       case REQ_OP_FLUSH:
-> >               rnbd_opf =3D RNBD_OP_FLUSH;
-> >               break;
-> > diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-sr=
-v.c
-> > index 132e950685d59..0e6b5687f8321 100644
-> > --- a/drivers/block/rnbd/rnbd-srv.c
-> > +++ b/drivers/block/rnbd/rnbd-srv.c
-> > @@ -548,8 +548,7 @@ static void rnbd_srv_fill_msg_open_rsp(struct rnbd_=
-msg_open_rsp *rsp,
-> >               cpu_to_le16(rnbd_dev_get_max_segs(rnbd_dev));
-> >       rsp->max_hw_sectors =3D
-> >               cpu_to_le32(rnbd_dev_get_max_hw_sects(rnbd_dev));
-> > -     rsp->max_write_same_sectors =3D
-> > -             cpu_to_le32(bdev_write_same(rnbd_dev->bdev));
-> > +     rsp->max_write_same_sectors =3D 0;
->
-> IIUC, I think we can delete max_write_same_sectors from rsp as well given
-> the earlier change in setup_request_queue and rnbd_clt_set_dev_attr.
-No, I don't think it's a good idea, we need to keep the protocol
-compatible, so client for old kernel version
-won't be confused.
+Hello Guys,
 
-The patch looks good to me, but I want to run a regression test before
-give an acked.
+Lining reported that iops limit throttle doesn't work on dm-thin, also
+iops limit throttle works bad on plain disk in case of excessive split.
 
-Thanks!
-Jinpu
->
-> Thanks,
-> Guoqing
+Commit 4f1e9630afe6 ("blk-throtl: optimize IOPS throttle for large IO scenarios")
+was for addressing this issue, but the taken approach is just to run
+post-accounting, then current split bios won't be throttled actually,
+so actual iops throttle result isn't good in case of excessive bio
+splitting.
+
+The 1st three patches are cleanup.
+
+The 4th patches add one new local helper of submit_bio_noacct_nocheck() for
+blk_throtl_dispatch_work_fn(), so that bios won't be throttled any more
+when blk-throttle code dispatches throttled bios.
+
+The 5th and 6th patch makes the real difference for throttling split bio wrt.
+iops limit.
+
+The last patch is to revert commit 4f1e9630afe6 ("blk-throtl: optimize IOPS
+throttle for large IO scenarios").
+
+Lining has verified that iops throttle is improved much on the posted
+RFC V1 version.
+
+V2:
+	- remove RFC
+	- don't add/export __submit_bio_noacct(), instead add one new local
+	helper of submit_bio_noacct_nocheck() per Christoph's suggestion
+
+Ming Lei (7):
+  block: move submit_bio_checks() into submit_bio_noacct
+  block: move blk_crypto_bio_prep() out of blk-mq.c
+  block: don't declare submit_bio_checks in local header
+  block: don't check bio in blk_throtl_dispatch_work_fn
+  block: throttle split bio in case of iops limit
+  block: don't try to throttle split bio if iops limit isn't set
+  block: revert 4f1e9630afe6 ("blk-throtl: optimize IOPS throttle for
+    large IO scenarios")
+
+ block/blk-core.c     | 53 ++++++++++++++++++++------------------
+ block/blk-merge.c    |  2 --
+ block/blk-mq.c       |  3 ---
+ block/blk-throttle.c | 61 ++++++++++++++++----------------------------
+ block/blk-throttle.h | 16 +++++++-----
+ block/blk.h          |  2 +-
+ 6 files changed, 61 insertions(+), 76 deletions(-)
+
+-- 
+2.31.1
+
