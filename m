@@ -2,110 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09A4A4AF046
-	for <lists+linux-block@lfdr.de>; Wed,  9 Feb 2022 12:57:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB85C4AF379
+	for <lists+linux-block@lfdr.de>; Wed,  9 Feb 2022 15:01:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231596AbiBIL5U (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Feb 2022 06:57:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
+        id S233250AbiBIOBO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Feb 2022 09:01:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231651AbiBILzw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Feb 2022 06:55:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9507CE03E21E
-        for <linux-block@vger.kernel.org>; Wed,  9 Feb 2022 02:56:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644404181;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZtxuNgg/Ql6dPXn7TpDXd2+85TTwmHddS11nx4e8hpc=;
-        b=YMwJ5kIj/Fy8MCTG2oYc3XUvEYBJmE9La9tVLgVd1uW74ULWUoJHVSoquZ6wvqZz9G3nLi
-        YznzB7FQBH2F/KEh3VqrrThpis/G9i8M5ujttLpvzm+WQcfDcL4IdfK6SP0PooLj0FeWmr
-        FTeqA3H+7Of5ChUOiovqzFT3uQBpAPY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-64-FAceydIiPfqQDBQBydcYpQ-1; Wed, 09 Feb 2022 03:36:44 -0500
-X-MC-Unique: FAceydIiPfqQDBQBydcYpQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75E0910247D2;
-        Wed,  9 Feb 2022 08:36:24 +0000 (UTC)
-Received: from T590 (ovpn-8-35.pek2.redhat.com [10.72.8.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1093327CC7;
-        Wed,  9 Feb 2022 08:35:59 +0000 (UTC)
-Date:   Wed, 9 Feb 2022 16:35:54 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
+        with ESMTP id S233068AbiBIOBN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Feb 2022 09:01:13 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA8CC0613C9
+        for <linux-block@vger.kernel.org>; Wed,  9 Feb 2022 06:01:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=AMtIJ5aEh+Yk0NI4JGnEVfvq2O
+        jB34tjYW1I6ePhLzvNFEGBi1j1cyyUgcCqIhq1HsrHJE6989ESkg25VBpKRn/BJ2QjHi9PrWBmOH6
+        GrIsRSL4HhcotzV4Bq/Ma6YNIeyy7oUzXa/dwkd9rA4AfoIWjFkYgrbEmHzeiRdTDHZD70DFznDnv
+        H4rE5Bt03oahdFG9QVDDFccd2HbdSvUn+gjTm9uPRlU3lql8L0NkxMK2tUGsMjfq4zWyS9hB+M/Rj
+        fbZ8kKlAvMNRh+Mg3LchWH/GnWalk9rra7+ls/VH4/Tq4mFRManQcMbSfAZNfPtoMrV8tZvVb1ifK
+        ubOn4IMQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nHnWq-000HWN-DD; Wed, 09 Feb 2022 14:01:04 +0000
+Date:   Wed, 9 Feb 2022 06:01:04 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         Li Ning <lining2020x@163.com>, Tejun Heo <tj@kernel.org>,
         Chunguang Xu <brookxu@tencent.com>
-Subject: Re: [RFC PATCH 3/7] block: allow to bypass bio check before
- submitting bio
-Message-ID: <YgN86hJ+Ujzywtoz@T590>
-References: <20220111115532.497117-1-ming.lei@redhat.com>
- <20220111115532.497117-4-ming.lei@redhat.com>
- <YeUnERz9Qoz2UtVn@infradead.org>
- <YgN3e98Px8F5w3q/@T590>
- <YgN4UCKEslA3sQny@infradead.org>
+Subject: Re: [PATCH V2 1/7] block: move submit_bio_checks() into
+ submit_bio_noacct
+Message-ID: <YgPJIE2zFTi2ZP3d@infradead.org>
+References: <20220209091429.1929728-1-ming.lei@redhat.com>
+ <20220209091429.1929728-2-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YgN4UCKEslA3sQny@infradead.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220209091429.1929728-2-ming.lei@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 12:16:16AM -0800, Christoph Hellwig wrote:
-> On Wed, Feb 09, 2022 at 04:12:43PM +0800, Ming Lei wrote:
-> > On Mon, Jan 17, 2022 at 12:21:37AM -0800, Christoph Hellwig wrote:
-> > > 
-> > > >   * systems and other upper level users of the block layer should use
-> > > >   * submit_bio() instead.
-> > > >   */
-> > > > -void submit_bio_noacct(struct bio *bio)
-> > > > +void __submit_bio_noacct(struct bio *bio, bool check)
-> > > >  {
-> > > > -	if (unlikely(!submit_bio_checks(bio)))
-> > > > +	if (unlikely(check && !submit_bio_checks(bio)))
-> > > >  		return;
-> > > 
-> > > This doesn't make sense as an API - you can just move the checks
-> > > into the caller that pass check=true.
-> > 
-> > But submit_bio_checks() is local helper, and it is hard to make it
-> > public to drivers. Not mention there are lots of callers to
-> > submit_bio_noacct().
-> 
-> What I mean is something like:
-> 
-> -void submit_bio_noacct(struct bio *bio)
-> +void submit_bio_noacct_nocheck(struct bio *bio)
->  {
-> -	if (unlikely(!submit_bio_checks(bio)))
-> -		return
-> 
-> ...
-> 
-> +void submit_bio_noacct(struct bio *bio)
-> +{
-> +	if (unlikely(!submit_bio_checks(bio)))
-> +		return
-> +	submit_bio_noacct_nocheck(bio);
-> +}
+Looks good,
 
-OK, that is also very similar with my local version.
-
-
-Thanks,
-Ming
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
