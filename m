@@ -2,82 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 985EE4AEDDE
-	for <lists+linux-block@lfdr.de>; Wed,  9 Feb 2022 10:22:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D1F14AEE5C
+	for <lists+linux-block@lfdr.de>; Wed,  9 Feb 2022 10:44:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbiBIJWd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Feb 2022 04:22:33 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:35184 "EHLO
+        id S231453AbiBIJnv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Feb 2022 04:43:51 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:60190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbiBIJWb (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Feb 2022 04:22:31 -0500
-Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E31DD94E6D;
-        Wed,  9 Feb 2022 01:22:26 -0800 (PST)
-Subject: Re: [PATCH 3/7] rnbd: drop WRITE_SAME support
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1644398508;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G5r0Xdb8ikemnPVF5lI7cPng/XJyVvYg/5LzR+eCPl8=;
-        b=SBWD6cBRt7Y057lo/4qj/+VF2PhBLswY5lpwyGDKDHGR+AtcS3+w+3Xw02pET5ANPPLSkF
-        Pptp3sql6V14GuDWBtZUCNIa2ZQP4S6aLZJyfhxesJBpqDnH2UYJYVvuQSqRWRCcjszb+I
-        FIAGH9YhhzQKy9IhE/O+9W6f2bb5gKc=
-To:     Jinpu Wang <jinpu.wang@ionos.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        martin.petersen@oracle.com, philipp.reisner@linbit.com,
-        lars.ellenberg@linbit.com, target-devel@vger.kernel.org,
-        haris.iqbal@ionos.com, manoj@linux.ibm.com, mrochs@linux.ibm.com,
-        ukrishn@linux.ibm.com, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, drbd-dev@lists.linbit.com,
-        dm-devel@redhat.com
-References: <20220209082828.2629273-1-hch@lst.de>
- <20220209082828.2629273-4-hch@lst.de>
- <4f1565b2-0f83-0cfa-58bd-86d5dee48e51@linux.dev>
- <CAMGffE=FmVj26PJtu5fwtr3rNbtE+-dcfxOrmT4hEt3sO7Kw2A@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Guoqing Jiang <guoqing.jiang@linux.dev>
-Message-ID: <0b8c9d4d-0fb0-1aee-97b2-f4381e124df2@linux.dev>
-Date:   Wed, 9 Feb 2022 17:21:39 +0800
+        with ESMTP id S230338AbiBIJnu (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Feb 2022 04:43:50 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C776E067855
+        for <linux-block@vger.kernel.org>; Wed,  9 Feb 2022 01:43:43 -0800 (PST)
+Received: from canpemm500005.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4JtvWC4WVKzbkLM;
+        Wed,  9 Feb 2022 17:20:55 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by canpemm500005.china.huawei.com
+ (7.192.104.229) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Wed, 9 Feb
+ 2022 17:21:56 +0800
+From:   Zhang Yi <yi.zhang@huawei.com>
+To:     <dm-devel@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <agk@redhat.com>,
+        <snitzer@redhat.com>, <axboe@kernel.dk>, <yi.zhang@huawei.com>,
+        <yukuai3@huawei.com>
+Subject: [PATCH] dm: make sure dm_table is binded before queue request
+Date:   Wed, 9 Feb 2022 17:37:51 +0800
+Message-ID: <20220209093751.2986716-1-yi.zhang@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <CAMGffE=FmVj26PJtu5fwtr3rNbtE+-dcfxOrmT4hEt3sO7Kw2A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: linux.dev
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500005.china.huawei.com (7.192.104.229)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+We found a NULL pointer dereference problem when using dm-mpath target.
+The problem is if we submit IO between loading and binding the table,
+we could neither get a valid dm_target nor a valid dm table when
+submitting request in dm_mq_queue_rq(). BIO based dm target could
+handle this case in dm_submit_bio(). This patch fix this by checking
+the mapping table before submitting request.
 
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ drivers/md/dm-rq.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-On 2/9/22 5:13 PM, Jinpu Wang wrote:
->>> --- a/drivers/block/rnbd/rnbd-srv.c
->>> +++ b/drivers/block/rnbd/rnbd-srv.c
->>> @@ -548,8 +548,7 @@ static void rnbd_srv_fill_msg_open_rsp(struct rnbd_msg_open_rsp *rsp,
->>>                cpu_to_le16(rnbd_dev_get_max_segs(rnbd_dev));
->>>        rsp->max_hw_sectors =
->>>                cpu_to_le32(rnbd_dev_get_max_hw_sects(rnbd_dev));
->>> -     rsp->max_write_same_sectors =
->>> -             cpu_to_le32(bdev_write_same(rnbd_dev->bdev));
->>> +     rsp->max_write_same_sectors = 0;
->> IIUC, I think we can delete max_write_same_sectors from rsp as well given
->> the earlier change in setup_request_queue and rnbd_clt_set_dev_attr.
-> No, I don't think it's a good idea, we need to keep the protocol
-> compatible, so client for old kernel version
-> won't be confused.
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index 579ab6183d4d..af2cf71519e9 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -499,8 +499,15 @@ static blk_status_t dm_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 
+ 	if (unlikely(!ti)) {
+ 		int srcu_idx;
+-		struct dm_table *map = dm_get_live_table(md, &srcu_idx);
+-
++		struct dm_table *map;
++
++		map = dm_get_live_table(md, &srcu_idx);
++		if (!map) {
++			DMERR_LIMIT("%s: mapping table unavailable, erroring io",
++				    dm_device_name(md));
++			dm_put_live_table(md, srcu_idx);
++			return BLK_STS_IOERR;
++		}
+ 		ti = dm_table_find_target(map, 0);
+ 		dm_put_live_table(md, srcu_idx);
+ 	}
+-- 
+2.31.1
 
-Fair enough. Then I guess it is better to add obsolete_ prefix like 
-obsolete_rotational.
-
-Thanks,
-Guoqing
