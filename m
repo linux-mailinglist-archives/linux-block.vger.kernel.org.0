@@ -2,63 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE9744B184A
-	for <lists+linux-block@lfdr.de>; Thu, 10 Feb 2022 23:38:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FC084B184B
+	for <lists+linux-block@lfdr.de>; Thu, 10 Feb 2022 23:38:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345014AbiBJWin (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Feb 2022 17:38:43 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57498 "EHLO
+        id S1345025AbiBJWio (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Feb 2022 17:38:44 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345022AbiBJWim (ORCPT
+        with ESMTP id S1345022AbiBJWio (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Feb 2022 17:38:42 -0500
+        Thu, 10 Feb 2022 17:38:44 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 700BD2664
-        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:43 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F22D82664
+        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644532722;
+        s=mimecast20190719; t=1644532724;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=zWCBM8YnYusetp0OPiRYym7xOF2Me0YViFrrQcnA0W4=;
-        b=cigcee3WcCGboGunEVl1ZU3TPUyg/vFsNE80ECsrxzXRT0EFKQzCUegkM7PxzObeZOFeFw
-        Bq/lCqt8YpGsSUEykKrCpRnPskAqmxYZ1kbHLmKGQG4EMf2VYoncGfSqKE/VsRZ6j8jQsA
-        YunX+jHBQ1VPE9cqBg+WJ3MslvxCL8E=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=TzXjPgdywpvS4JKTWEPuvG6S5tjQ0HqbosRT6X11Ckc=;
+        b=bfCoOBquYIQUJyMZUlzTi5hQT+tOxYEa+ePqIz/x8TACjGpsjRne7EHM/yeraxPMeBZ1rI
+        VsSmFJ+DvLJU44U+h1JCfEZ3soba3yAD4nMJvdAEHxY5LV+NhA0ZI+W3QRq15iF5bjd0aq
+        BFDgBNi6OKUcVF4Z8SAiTxkOFCZYgtA=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-624-L4JXrh2OMrSa4We90k7Xuw-1; Thu, 10 Feb 2022 17:38:41 -0500
-X-MC-Unique: L4JXrh2OMrSa4We90k7Xuw-1
-Received: by mail-qk1-f199.google.com with SMTP id i26-20020a05620a075a00b0047ec29823c0so4579650qki.6
-        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:41 -0800 (PST)
+ us-mta-458-DSzhdcofMkKWGvNh4ULfAg-1; Thu, 10 Feb 2022 17:38:43 -0500
+X-MC-Unique: DSzhdcofMkKWGvNh4ULfAg-1
+Received: by mail-qk1-f198.google.com with SMTP id z205-20020a3765d6000000b0047db3b020dfso4521445qkb.22
+        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=zWCBM8YnYusetp0OPiRYym7xOF2Me0YViFrrQcnA0W4=;
-        b=eXpOPcZ1szAW4UcUSvNC+8PafdF+TTchRaJ4l7/8Tf4ZAak89je8UV7wSrc1PPp/3T
-         /b04jrOO1lYAsgY4zbZ0Z8GQgABC7g8TZGbracTQ6pa0ETfj+xcESo98+9ldYDeMGgk2
-         Sg6Z6N28Sd+d5RQbGNYf2Xdqovw9Ms2sBHuiAE30gQnNZQ/nQsAoHaqVqbTPolZz0bnn
-         nozzoc6nHcpDgWwnB9CIZ3GUVmo3/g0EFG11Q8uMxvwv5J7yWFeXC5G+TJaoH+8L77MG
-         xgfMajRPR9z/77TAKMsO1wu0PnTNpcowQt3XU/ufGtd+hnIp24Kb6Fb+8LVoUYhSqKE6
-         IIuw==
-X-Gm-Message-State: AOAM533xj1uZiWGGRPXyCZIK5IahMns+vF7f8NXE8g/oqFHIfzU+2qv/
-        VG9kOEEj9e//kChDUP2t3irVQxO9cRipYiwdn8NGYZp+hlDQ2+tAQFuI0M2tx+D8xCQccv7Y1od
-        LENxhf2NLYJLLE/d6S5TZyw==
-X-Received: by 2002:a05:620a:8cd:: with SMTP id z13mr4860474qkz.487.1644532721014;
-        Thu, 10 Feb 2022 14:38:41 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyRAUZfBBxSBcOHqSs0cu835y/n502phOPI93DcwbFy1t2ge6HipGrPT3511ZI+QNnRn+BDmg==
-X-Received: by 2002:a05:620a:8cd:: with SMTP id z13mr4860468qkz.487.1644532720833;
-        Thu, 10 Feb 2022 14:38:40 -0800 (PST)
+        bh=TzXjPgdywpvS4JKTWEPuvG6S5tjQ0HqbosRT6X11Ckc=;
+        b=yDa3waKWseD9XjwztGQSTLUAMVU+DNEWtp7SO+YHMNnC5U2GXaLHDJyTGF5fZZDC4D
+         8eCo9G0OD/vrvtsvqhD4tSkCeM3AufAWcHa8eEi/tA16CvV4JktEzaQ65OtoKKifI8+y
+         44WyvjGdGqL/g4NQ/pb8J7evY+7tLJu60arnY35Glw/FviF1JgxgQKZOYip0t+7MGrSW
+         tygYeenWMQ1Dm6ty960pw4MKH+WxQnGTB79zDRb65VQtwnHR9YTRSX8MTxVJvVr6eAlJ
+         uo3lhQJby/9ICB8zKo5Vec6ulSvj5vi8rFnkVuDapMsmLwTXPUtSVG989kOuDe+PG8B/
+         hwfw==
+X-Gm-Message-State: AOAM531HU3s1MeODq1VoPyqczTNKxdeEVS1QKNBwqfuH9qRT+HD8v7Gh
+        VqM1pKiDhAljqXZPmjt0mAXt7nHJ0W9A0++S8HSSU007T3dW5qndUV2is7fP2cSmKi0QXNDgs51
+        BGLK/EeTMJ+Ah2XdfMZ2pwQ==
+X-Received: by 2002:a05:6214:5084:: with SMTP id kk4mr6496956qvb.87.1644532722332;
+        Thu, 10 Feb 2022 14:38:42 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwdUxlHbTKVegt7q96UOVkLZzblVev6PndTCx99qOFkY4DYSKF6tEc5hRZE8V6mEfZmaLcoVA==
+X-Received: by 2002:a05:6214:5084:: with SMTP id kk4mr6496949qvb.87.1644532722175;
+        Thu, 10 Feb 2022 14:38:42 -0800 (PST)
 Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id w3sm11965918qta.13.2022.02.10.14.38.40
+        by smtp.gmail.com with ESMTPSA id v14sm10322732qkl.128.2022.02.10.14.38.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 14:38:40 -0800 (PST)
+        Thu, 10 Feb 2022 14:38:41 -0800 (PST)
 From:   Mike Snitzer <snitzer@redhat.com>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 05/14] dm: remove impossible BUG_ON in __send_empty_flush
-Date:   Thu, 10 Feb 2022 17:38:23 -0500
-Message-Id: <20220210223832.99412-6-snitzer@redhat.com>
+Subject: [PATCH 06/14] dm: remove unused mapped_device argument from free_tio
+Date:   Thu, 10 Feb 2022 17:38:24 -0500
+Message-Id: <20220210223832.99412-7-snitzer@redhat.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20220210223832.99412-1-snitzer@redhat.com>
 References: <20220210223832.99412-1-snitzer@redhat.com>
@@ -72,26 +72,33 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The flush_bio in question was just initialized to be empty, so there
-is no way bio_has_data() will retrun true.  So remove stale BUG_ON().
-
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 ---
- drivers/md/dm.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/md/dm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index cc014e56252e..1985fc3f2a95 100644
+index 1985fc3f2a95..f091bbf8a8dc 100644
 --- a/drivers/md/dm.c
 +++ b/drivers/md/dm.c
-@@ -1255,7 +1255,6 @@ static int __send_empty_flush(struct clone_info *ci)
- 	ci->bio = &flush_bio;
- 	ci->sector_count = 0;
+@@ -539,7 +539,7 @@ static struct dm_io *alloc_io(struct mapped_device *md, struct bio *bio)
+ 	return io;
+ }
  
--	BUG_ON(bio_has_data(ci->bio));
- 	while ((ti = dm_table_get_target(ci->map, target_nr++)))
- 		__send_duplicate_bios(ci, ti, ti->num_flush_bios, NULL);
+-static void free_io(struct mapped_device *md, struct dm_io *io)
++static void free_io(struct dm_io *io)
+ {
+ 	bio_put(&io->tio.clone);
+ }
+@@ -825,7 +825,7 @@ void dm_io_dec_pending(struct dm_io *io, blk_status_t error)
+ 		io_error = io->status;
+ 		start_time = io->start_time;
+ 		stats_aux = io->stats_aux;
+-		free_io(md, io);
++		free_io(io);
+ 		end_io_acct(md, bio, start_time, &stats_aux);
  
+ 		if (io_error == BLK_STS_DM_REQUEUE)
 -- 
 2.15.0
 
