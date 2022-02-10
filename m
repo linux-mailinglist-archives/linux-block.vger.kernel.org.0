@@ -2,63 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B3344B1852
-	for <lists+linux-block@lfdr.de>; Thu, 10 Feb 2022 23:39:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A079B4B1850
+	for <lists+linux-block@lfdr.de>; Thu, 10 Feb 2022 23:39:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345031AbiBJWiw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Feb 2022 17:38:52 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57566 "EHLO
+        id S1345030AbiBJWix (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Feb 2022 17:38:53 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345026AbiBJWiv (ORCPT
+        with ESMTP id S1345032AbiBJWiw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Feb 2022 17:38:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2932D2664
-        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:52 -0800 (PST)
+        Thu, 10 Feb 2022 17:38:52 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 62BEC2664
+        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644532731;
+        s=mimecast20190719; t=1644532732;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=QSJblWqLgyZmlZxEVd+22+iLGNHpkwCdE5Y4iGn/nKk=;
-        b=B75ltYWfx6YwdcMKvPiBLipoM4wJYMkJ9i9xcRjzBaUOtes2kh9BwRgFgpImH4tU/8Q9jV
-        hdrFrD19U4zQ3f8UiJcirIPjhrprwB4hOwOi4biDLRTgb7GTe8eTtvNyok3DnZBvzflU/J
-        mLoeQ2ASwPjAPC9bfj30PYT7sIThxY8=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=CRfDTYNpxGAOLZDzgeFhYGqT+avXL5fj+x7+6gQLvzM=;
+        b=VPy9sfQBKJGIAaT7m/Mhn1n6s4m93/9ka6AIkjgYHRcbI8bxketT05uhGJm0yjI2+hyFMG
+        Pw1l2B8Za5WC2rSq2469sJjgnm/OsrD+BZ9gRoKBFDHqFwqx384GeJRI8EgfXknAWb8oBt
+        UPf7RqIxQ6hAxLVNffDtR7Dv+l1scgM=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-155--OMCaOwqPy29gx78bCWKuw-1; Thu, 10 Feb 2022 17:38:50 -0500
-X-MC-Unique: -OMCaOwqPy29gx78bCWKuw-1
-Received: by mail-qt1-f197.google.com with SMTP id d25-20020ac84e39000000b002d1cf849207so5513244qtw.19
-        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:50 -0800 (PST)
+ us-mta-642-PYCwf096NJ6ySnd8exE2qw-1; Thu, 10 Feb 2022 17:38:51 -0500
+X-MC-Unique: PYCwf096NJ6ySnd8exE2qw-1
+Received: by mail-qv1-f71.google.com with SMTP id ge15-20020a05621427cf00b00421df9f8f23so4991218qvb.17
+        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=QSJblWqLgyZmlZxEVd+22+iLGNHpkwCdE5Y4iGn/nKk=;
-        b=rUBhUKdsCRcnt9kzfDGGqrEuPqo5gHQFR8Th3ofC2zFQZdtfFMYPuGLOXEUhOmVV+R
-         IW7Lwi/nV4f9v5sWXrsriiiXyltgoWLmyyjHXfHEftFmjE+/tAVAPKFFgETC+p9JfjSy
-         HkVXjKa+PMue1E0nM7VMei8/L6M1r0SXcEoMBakePJLPbZUNTTUrM9+z1lQywCAuoWTr
-         NVEHWR1m/ov/kzKxVYx66pEb2GfqGnEbjjU1O+QxoHyZRGjMZJSSigA1p4/EnrepfuEm
-         4dKsb7Q6aVOkg3Pe7w+QKft9snOC8G0+xQovVn+6O+H1OC5PBSHSCY1zB+3TCgwO3Z6k
-         grwg==
-X-Gm-Message-State: AOAM531ovQV2Z2rxYZGuFIrOmZJln+iexgnsTGWTvX2sWcLoSsyuTK66
-        QYRIfp0hr5MZPP3WHfsEEC79mYPx2PzSgrVfKIhTrNwzxx07iH8wI0KmAEf3oYk0xXb7Wydbcac
-        TkLWibT5cEHRkTqSGqJGacQ==
-X-Received: by 2002:a05:622a:411:: with SMTP id n17mr6496115qtx.466.1644532729490;
-        Thu, 10 Feb 2022 14:38:49 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzT+PtvXuOy9fF5SaJVeCa3zFUy2819JDuwEm2PCy3GAfUwDOgDHA08+EaJap4V4vdpA0o8KQ==
-X-Received: by 2002:a05:622a:411:: with SMTP id n17mr6496110qtx.466.1644532729298;
-        Thu, 10 Feb 2022 14:38:49 -0800 (PST)
+        bh=CRfDTYNpxGAOLZDzgeFhYGqT+avXL5fj+x7+6gQLvzM=;
+        b=bswW8RoeP+H7YzEePxXtGNDiCt0uEuYerwnUD+t04uTdeTZqrpwCpouvXlpg8Q1qIa
+         9rN4m7vD9JlqjXipGH2ait4MeTyYO1rIuhZ7j8/YunXS0nytSOd/bPebiuHtpZu6qf9w
+         jNmKrBMdnhz4K77yL6H7ocO4iCnUxlXgdJBKRKBlQA4YO2w+Np1EFEnv/cL/aImL6Kpk
+         T6vJvP2fZE0GXjspqxwnoOAoaw0eOV4dzj8m3lpHk9dEPxHMDzme0hAikTsFq6F+0VCn
+         jIBES5BrCLahgVlpbNx/wPptIWpOf8LnHdE5v63GRAW+K9DVK2JfCCKcE5Bl2A1GA2C1
+         fn4Q==
+X-Gm-Message-State: AOAM5336GepJGYxpTQWgzpl+9y289PrCU9io17MAe8SUusl2VsdwXMaI
+        pHlkOzsFfri95kcD3cXwk9+mEmLz+4H8JUQ99Vdjew7otIIa5ZBFrq03cM5nkX8l3hYyOLFZ54S
+        dXZi2muYw2iIHMnjc7JaVOg==
+X-Received: by 2002:a37:a607:: with SMTP id p7mr5034685qke.763.1644532730799;
+        Thu, 10 Feb 2022 14:38:50 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyxEVIGFiZwGx+fh0BLy5zq1Vh8eVtyQH52OipWCoMyOw9uzoENBF0MFCF33ybEO88rYgtWaw==
+X-Received: by 2002:a37:a607:: with SMTP id p7mr5034680qke.763.1644532730613;
+        Thu, 10 Feb 2022 14:38:50 -0800 (PST)
 Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id j11sm11447294qtx.67.2022.02.10.14.38.48
+        by smtp.gmail.com with ESMTPSA id bj24sm10469903qkb.115.2022.02.10.14.38.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 14:38:48 -0800 (PST)
+        Thu, 10 Feb 2022 14:38:50 -0800 (PST)
 From:   Mike Snitzer <snitzer@redhat.com>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 11/14] dm crypt: use dm_submit_bio_remap
-Date:   Thu, 10 Feb 2022 17:38:29 -0500
-Message-Id: <20220210223832.99412-12-snitzer@redhat.com>
+Subject: [PATCH 12/14] dm delay: dm_submit_bio_remap
+Date:   Thu, 10 Feb 2022 17:38:30 -0500
+Message-Id: <20220210223832.99412-13-snitzer@redhat.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20220210223832.99412-1-snitzer@redhat.com>
 References: <20220210223832.99412-1-snitzer@redhat.com>
@@ -74,48 +74,30 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 ---
- drivers/md/dm-crypt.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/md/dm-delay.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index a5006cb6ee8a..9ea197de08c2 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -1855,7 +1855,7 @@ static int kcryptd_io_read(struct dm_crypt_io *io, gfp_t gfp)
- 		return 1;
+diff --git a/drivers/md/dm-delay.c b/drivers/md/dm-delay.c
+index 59e51d285b0e..8235927a3912 100644
+--- a/drivers/md/dm-delay.c
++++ b/drivers/md/dm-delay.c
+@@ -72,7 +72,7 @@ static void flush_bios(struct bio *bio)
+ 	while (bio) {
+ 		n = bio->bi_next;
+ 		bio->bi_next = NULL;
+-		submit_bio_noacct(bio);
++		dm_submit_bio_remap(bio, NULL);
+ 		bio = n;
  	}
- 
--	submit_bio_noacct(clone);
-+	dm_submit_bio_remap(io->base_bio, clone);
- 	return 0;
  }
- 
-@@ -1881,7 +1881,7 @@ static void kcryptd_io_write(struct dm_crypt_io *io)
- {
- 	struct bio *clone = io->ctx.bio_out;
- 
--	submit_bio_noacct(clone);
-+	dm_submit_bio_remap(io->base_bio, clone);
- }
- 
- #define crypt_io_from_node(node) rb_entry((node), struct dm_crypt_io, rb_node)
-@@ -1960,7 +1960,7 @@ static void kcryptd_crypt_write_io_submit(struct dm_crypt_io *io, int async)
- 
- 	if ((likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) ||
- 	    test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags)) {
--		submit_bio_noacct(clone);
-+		dm_submit_bio_remap(io->base_bio, clone);
- 		return;
- 	}
- 
-@@ -3363,6 +3363,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+@@ -232,6 +232,7 @@ static int delay_ctr(struct dm_target *ti, unsigned int argc, char **argv)
  
  	ti->num_flush_bios = 1;
- 	ti->limit_swap_bios = true;
+ 	ti->num_discard_bios = 1;
 +	ti->accounts_remapped_io = true;
- 
- 	dm_audit_log_ctr(DM_MSG_PREFIX, ti, 1);
+ 	ti->per_io_data_size = sizeof(struct dm_delay_info);
  	return 0;
+ 
 -- 
 2.15.0
 
