@@ -2,63 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9B394B1848
-	for <lists+linux-block@lfdr.de>; Thu, 10 Feb 2022 23:38:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB084B1849
+	for <lists+linux-block@lfdr.de>; Thu, 10 Feb 2022 23:38:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238352AbiBJWil (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Feb 2022 17:38:41 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57470 "EHLO
+        id S1345024AbiBJWin (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Feb 2022 17:38:43 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345014AbiBJWil (ORCPT
+        with ESMTP id S1345014AbiBJWim (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Feb 2022 17:38:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8588D267F
-        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:41 -0800 (PST)
+        Thu, 10 Feb 2022 17:38:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A2FFA267F
+        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644532720;
+        s=mimecast20190719; t=1644532721;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=Dmbgb58sJS1NVsv2MiEVE8minE/+DuIbbyXB20Z/ekE=;
-        b=E/yt9Fb2ar5YRYAso2OWXKf9lhj2BK/UAkroMVEEBkCqSDHvtdRFqMar/RBTfdYOn7b2HS
-        KngeCAV8dwDJXfNphN1odV32uDPeWNz4mVQjX4C0ea2ZGpIHp/jqB3+ALVStu3R4kTpsoW
-        zRU6fFuxCl0xYqPNdTSzvBwNrKOQ1xw=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=N1ZtWuQD/2MiqgkrjoL8yazkFH5KXeFDL5OjLo4UsiQ=;
+        b=FrP/i5qqnH1DFSHSYlOSOsbfjdi2GhPsN7Cxw/bE7fNaLeP/KpI3LBBpEAYGz/re9yOr1U
+        b+5SmRWL/bpHzn7niyCnc0rscvjbRDOIhoaHsfcaL/yh3jExkDY8zaM1qushN4ljxAACDv
+        two9SkOWVag/pMBZr3DgsigvkF7AvAA=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-561-UaIb7MkANWycg3Mbx4ek4w-1; Thu, 10 Feb 2022 17:38:39 -0500
-X-MC-Unique: UaIb7MkANWycg3Mbx4ek4w-1
-Received: by mail-qt1-f198.google.com with SMTP id j6-20020ac85f86000000b002d9c2505d01so4593302qta.15
-        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:39 -0800 (PST)
+ us-mta-270-vl5mJ_c2OFOBoeAlKIvQSw-1; Thu, 10 Feb 2022 17:38:40 -0500
+X-MC-Unique: vl5mJ_c2OFOBoeAlKIvQSw-1
+Received: by mail-qv1-f70.google.com with SMTP id du13-20020a05621409ad00b0042c2949e2c1so4990773qvb.19
+        for <linux-block@vger.kernel.org>; Thu, 10 Feb 2022 14:38:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Dmbgb58sJS1NVsv2MiEVE8minE/+DuIbbyXB20Z/ekE=;
-        b=dsqcYTzna7cX3MIOFXGpJabFEP3Lxh1/axt7n1QyezGi57zGamY8tUSALQm2y5lT6P
-         oJosl9HCkezy3nWSAOpVrLTiEalv9Rnukgz7y1Hs4fbHdxC8OXtVZgxycQIG+aZ6sGYz
-         jE3PSY/C9qnMz9ciZm1VPEmZTTXFivCM4YgRkXxx6hBG1DLg9UZOlRH5YH6DfvAmZfeN
-         OWFmHBgB/YmwrOBBuXZ+UqNzg7p15CISRqL4kIlP5PNzvh452fyUh7ZxwoeTnYD7gbmY
-         DAxfmybnh+pfsIRCOXxEquXtji7mqi1TJoXD46JuSNz7lIoZRh25n3zhatePkDPn/1l0
-         vtSw==
-X-Gm-Message-State: AOAM5309oX1ocfh79Ysi2vifVEn2GvhqB582KFbTtV3Uvd/oGNQXp6B7
-        oGlsV9fs4SM6xMu1tfslvgsJuRiodyCv1Kpuvf1PtUSZZb74PmBSHl2fyd3OFNC37K5TmohhWOH
-        SYExEJZCVJovIsUeAE8hF3A==
-X-Received: by 2002:a37:aac9:: with SMTP id t192mr4866677qke.118.1644532718298;
-        Thu, 10 Feb 2022 14:38:38 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzTEaXKZxCVPUG1VrVNIHN3jO/XBixkQ3uTQnAxaqJnd5AV3P7OpyaOaqfg8/NSZ6NUsUbCKA==
-X-Received: by 2002:a37:aac9:: with SMTP id t192mr4866671qke.118.1644532718037;
-        Thu, 10 Feb 2022 14:38:38 -0800 (PST)
+        bh=N1ZtWuQD/2MiqgkrjoL8yazkFH5KXeFDL5OjLo4UsiQ=;
+        b=tDR/402hd/4MIfdMbVh5qsKrcvNvfRSrpwV88M1QgRk/Ja8PFbY6P8boG+HbtVUedI
+         Sroo+PSVGMl27ITg623fFOY/uB/nyxlwLlCa++IsPJ+wk/QHj/DRsR5eQ8cthqlHH0pS
+         JVhuRxSWWj+Py/Ii+vOfxXLKFh4HM43tPqmXcDWP8HeJuhBdMVkR0CV4e7+2STNNaFwA
+         axQk5Ps3A1hb0J6mMf1Eujhx3UqM/zutcA761EP3iGCw2Bkf0UPJTgux2/DfIhi429ks
+         QzKFD8FYywokvdogK9dAraAE2UZ5ZEKFgifVFokCtKgSIUaOi0olw7jNAj41Pj73SsSB
+         rUuQ==
+X-Gm-Message-State: AOAM5319VkcAnG64z2NIrDVNzR492NiVbbHEMZvob4k95eHaXXkzm5Yo
+        jDKbX2AQO+JcD26RN+SlbtpmF61DlkDnHmgFxGKspUbGd6ilHkNhtMb52geS2NWRQa3IW4t99EV
+        jGxIZnJewGSu6aEOm2J9QHQ==
+X-Received: by 2002:ac8:7771:: with SMTP id h17mr6568557qtu.454.1644532719569;
+        Thu, 10 Feb 2022 14:38:39 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxVQD4DjXjI2TI6RHlCNfSHCzJOeMiWv0AytqCY43O5jsmCNUHGzFo0EsTCPdXZui5wk8R+dw==
+X-Received: by 2002:ac8:7771:: with SMTP id h17mr6568552qtu.454.1644532719407;
+        Thu, 10 Feb 2022 14:38:39 -0800 (PST)
 Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id f4sm10753431qko.72.2022.02.10.14.38.37
+        by smtp.gmail.com with ESMTPSA id h11sm2556932qkp.89.2022.02.10.14.38.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 14:38:37 -0800 (PST)
+        Thu, 10 Feb 2022 14:38:39 -0800 (PST)
 From:   Mike Snitzer <snitzer@redhat.com>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 03/14] dm: refactor dm_split_and_process_bio a bit
-Date:   Thu, 10 Feb 2022 17:38:21 -0500
-Message-Id: <20220210223832.99412-4-snitzer@redhat.com>
+Subject: [PATCH 04/14] dm: reduce code duplication in __map_bio
+Date:   Thu, 10 Feb 2022 17:38:22 -0500
+Message-Id: <20220210223832.99412-5-snitzer@redhat.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20220210223832.99412-1-snitzer@redhat.com>
 References: <20220210223832.99412-1-snitzer@redhat.com>
@@ -72,87 +72,45 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Remove needless branching. Leaves code to catch malformed
-op_is_zone_mgmt bios (they shouldn't have a payload).
+Error path code (for handling DM_MAPIO_REQUEUE and DM_MAPIO_KILL) is
+effectively identical.
 
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 ---
- drivers/md/dm.c | 51 ++++++++++++++++++++++++++-------------------------
- 1 file changed, 26 insertions(+), 25 deletions(-)
+ drivers/md/dm.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 2f1942b61d48..56734aae718d 100644
+index 56734aae718d..cc014e56252e 100644
 --- a/drivers/md/dm.c
 +++ b/drivers/md/dm.c
-@@ -1375,7 +1375,13 @@ static void init_clone_info(struct clone_info *ci, struct mapped_device *md,
- {
- 	ci->map = map;
- 	ci->io = alloc_io(md, bio);
-+	ci->bio = bio;
- 	ci->sector = bio->bi_iter.bi_sector;
-+	ci->sector_count = bio_sectors(bio);
-+
-+	/* Shouldn't happen but sector_count was being set to 0 so... */
-+	if (WARN_ON_ONCE(op_is_zone_mgmt(bio_op(bio)) && ci->sector_count))
-+		ci->sector_count = 0;
- }
- 
- /*
-@@ -1392,34 +1398,29 @@ static void dm_split_and_process_bio(struct mapped_device *md,
- 	if (bio->bi_opf & REQ_PREFLUSH) {
- 		error = __send_empty_flush(&ci);
- 		/* dm_io_dec_pending submits any data associated with flush */
--	} else if (op_is_zone_mgmt(bio_op(bio))) {
--		ci.bio = bio;
--		ci.sector_count = 0;
--		error = __split_and_process_bio(&ci);
--	} else {
--		ci.bio = bio;
--		ci.sector_count = bio_sectors(bio);
--		error = __split_and_process_bio(&ci);
--		if (ci.sector_count && !error) {
--			/*
--			 * Remainder must be passed to submit_bio_noacct()
--			 * so that it gets handled *after* bios already submitted
--			 * have been completely processed.
--			 * We take a clone of the original to store in
--			 * ci.io->orig_bio to be used by end_io_acct() and for
--			 * dm_io_dec_pending() to use for completion handling.
--			 */
--			struct bio *b = bio_split(bio, bio_sectors(bio) - ci.sector_count,
--						  GFP_NOIO, &md->queue->bio_split);
--			ci.io->orig_bio = b;
-+		goto out;
-+	}
- 
--			bio_chain(b, bio);
--			trace_block_split(b, bio->bi_iter.bi_sector);
--			submit_bio_noacct(bio);
+@@ -1161,20 +1161,14 @@ static void __map_bio(struct bio *clone)
+ 		submit_bio_noacct(clone);
+ 		break;
+ 	case DM_MAPIO_KILL:
+-		if (unlikely(swap_bios_limit(ti, clone))) {
+-			struct mapped_device *md = io->md;
+-			up(&md->swap_bios_semaphore);
 -		}
-+	error = __split_and_process_bio(&ci);
-+	if (ci.sector_count && !error) {
-+		/*
-+		 * Remainder must be passed to submit_bio_noacct()
-+		 * so that it gets handled *after* bios already submitted
-+		 * have been completely processed.
-+		 * We take a clone of the original to store in
-+		 * ci.io->orig_bio to be used by end_io_acct() and for
-+		 * dm_io_dec_pending() to use for completion handling.
-+		 */
-+		struct bio *b = bio_split(bio, bio_sectors(bio) - ci.sector_count,
-+					  GFP_NOIO, &md->queue->bio_split);
-+		ci.io->orig_bio = b;
-+
-+		bio_chain(b, bio);
-+		trace_block_split(b, bio->bi_iter.bi_sector);
-+		submit_bio_noacct(bio);
- 	}
-+out:
- 	start_io_acct(ci.io);
--
- 	/* drop the extra reference count */
- 	dm_io_dec_pending(ci.io, errno_to_blk_status(error));
- }
+-		free_tio(clone);
+-		dm_io_dec_pending(io, BLK_STS_IOERR);
+-		break;
+ 	case DM_MAPIO_REQUEUE:
+-		if (unlikely(swap_bios_limit(ti, clone))) {
+-			struct mapped_device *md = io->md;
+-			up(&md->swap_bios_semaphore);
+-		}
++		if (unlikely(swap_bios_limit(ti, clone)))
++			up(&io->md->swap_bios_semaphore);
+ 		free_tio(clone);
+-		dm_io_dec_pending(io, BLK_STS_DM_REQUEUE);
++		if (r == DM_MAPIO_KILL)
++			dm_io_dec_pending(io, BLK_STS_IOERR);
++		else
++			dm_io_dec_pending(io, BLK_STS_DM_REQUEUE);
+ 		break;
+ 	default:
+ 		DMWARN("unimplemented target map return value: %d", r);
 -- 
 2.15.0
 
