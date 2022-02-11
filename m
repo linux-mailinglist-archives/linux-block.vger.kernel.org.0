@@ -2,152 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F15F4B2F8C
-	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 22:41:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF6B04B3018
+	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 23:08:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353761AbiBKVlf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Feb 2022 16:41:35 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54134 "EHLO
+        id S1353933AbiBKWGV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Feb 2022 17:06:21 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353777AbiBKVlf (ORCPT
+        with ESMTP id S1353923AbiBKWGU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Feb 2022 16:41:35 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E564C6D
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 13:41:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644615691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=NzdOPJXGvWlTS8MF/XpfxdYLMQV7NltmT4t/BtAgnos=;
-        b=BSXYUUqZliQy5Gqv0W4SgZin7EXBbMPJmL4SGwAnhU3gzUTwX6JBC9x3aweU6dzIzZY7/E
-        UDdPe3BtDwEKuoQmlObKpDnJvf0PNQXA6SFzbXlZOH20yjlh3/t+0mEGtPYHZc+bmFXAct
-        Hp3wsz1mCAcZ5VWTXTovEs0XzyWBARU=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-460-Yi0wH8rDO-uGBsObKhH1nw-1; Fri, 11 Feb 2022 16:41:30 -0500
-X-MC-Unique: Yi0wH8rDO-uGBsObKhH1nw-1
-Received: by mail-oo1-f70.google.com with SMTP id c124-20020a4a4f82000000b002fb4087a29fso6304447oob.20
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 13:41:30 -0800 (PST)
+        Fri, 11 Feb 2022 17:06:20 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A1DC7E
+        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 14:06:19 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id 10so5745621plj.1
+        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 14:06:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=3eRTsM/Q7+dUjZUJKDd4/vCIs2lGaytBhPl0HjcA0As=;
+        b=yVX55KcikQlRpjxWKgehbDpOXXxoWb5ZcVKU4qS2v0OUszp9Bnf7taF67mLQnhNle/
+         MJWfZM1wq8CWa82iSLV9uC9iO41ZeUJOFVi4VD54NrNOHNSoOTlgUcIV46g3z5I6VBk+
+         PMtT3yHOdG5KU9N5kySUHJ5KKDkGaLoy9KEEnrMhpf2boJ/icuLLBG6ggndGn+I3qJed
+         hnHh8M4NIx7x93FvgW7VNyT/4kP2V05m7LY0r6Vvz7nA3Y7mumUfpaT0yeGZAcYgBdr1
+         dWjHrMlJiab6UJ4qGo85VWSdhX2QSMbEF4AmvA60VhTOt5ilgiHzVQyN+ukviEscqXYj
+         jB5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NzdOPJXGvWlTS8MF/XpfxdYLMQV7NltmT4t/BtAgnos=;
-        b=bmeW1//KEWZBqyhrrzbul+ABGJHyL/orYd4rbtErWwuLaJr2sQrlWUgAe5qobzynms
-         M0/tda1dgY5vS9lh8PEfMWhxqr60bdZBTnk0xrM9VgI3fa9MmbuTZ4TrDz7iINTbt8rI
-         uiOLZzH/8j/Rvap7GEtUU7vxhSmRZs8eUQYWwQd0DhQ++1rpN9muAf9zvyli0YLARU4Q
-         EqIjv113r5TNurZ7zfN+ufQvMX+x+n+Yy9Aeur3qJw456odlQ4rOTpNm+D5Q3/MgLKoG
-         oLABpQQRNHSQL5eozOUZL5T9i58MiZW5k1nEBnUrupFm9b88t/gRTV9UIOsV9hiqeydS
-         omUg==
-X-Gm-Message-State: AOAM532nvyNHzg9GH4/qPhxW8U6+qFYby79CCJFLVDpRwi7xD9E2UfYR
-        DE6/fyyD1/lFvrK8PzHGYx8pbV494ZuT+QsHeYAqxoMd+KEXmiJWxRV/DoURqoXkAuobr7e68Y5
-        C5ttYm+6n3o0yE6uktb/k0w==
-X-Received: by 2002:a05:6808:13d6:: with SMTP id d22mr1174118oiw.184.1644615689069;
-        Fri, 11 Feb 2022 13:41:29 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzjvjfCjbkgODKupEk2FfXco+AHWfmEFNUHW5C40tZr+sBFx1L6qwEAK968vKCKNbAHr0iUvg==
-X-Received: by 2002:a05:6808:13d6:: with SMTP id d22mr1174103oiw.184.1644615688566;
-        Fri, 11 Feb 2022 13:41:28 -0800 (PST)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id o144sm10188855ooo.25.2022.02.11.13.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 13:41:28 -0800 (PST)
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     dm-devel@redhat.com
-Cc:     linux-block@vger.kernel.org
-Subject: [PATCH v2 14/14] dm: move duplicate code in callers of alloc_tio into alloc_tio
-Date:   Fri, 11 Feb 2022 16:40:57 -0500
-Message-Id: <20220211214057.40612-15-snitzer@redhat.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20220211214057.40612-1-snitzer@redhat.com>
-References: <20220211214057.40612-1-snitzer@redhat.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=3eRTsM/Q7+dUjZUJKDd4/vCIs2lGaytBhPl0HjcA0As=;
+        b=E46z3r67lKss24yI27TtoepDxvjJHAjXLVj/u7nbRpK1SzWEp8BwRTrzRtN4AEpKlH
+         j/WS8n8zltaGQOTJ19quEpVCcwOXG+Ux0eVHsvIz3JaeQvjP78eAr8EJJydInhIKkkzY
+         79d2+j/iGoCsrTyfO6gNnyuIfAKJ0QoiIgwrq7nhj6Q4Xy/5jKdbXYu+CI2YTAR7LuLT
+         mER2Ofwi1bniMqwH9buDdWvEYpWZ5qfdMM/hfnzwAShSt3kdD5M7lW2P/6zmyNS5fVdu
+         zasNjmz07mCS0T0uYqs2qv+zygaO1Ipk4oR7PjhQxRKIt2ksrorjPNsifj/TLjG1xfXo
+         +cRg==
+X-Gm-Message-State: AOAM531vC0PX7pogMMaOOop6GqoOTNllVHoHhetio5mEP6s4QT/vkt2b
+        IvT3sVtA/aPorpNiyKpDEEIWow==
+X-Google-Smtp-Source: ABdhPJwY/LaFEKcAJrEEGk71Gv7H7gIxS8Avp1t2fbewESVPSX1udtzSrdbfbjiLfm++43a2GVGDpw==
+X-Received: by 2002:a17:90b:1b0e:: with SMTP id nu14mr2507972pjb.44.1644617178471;
+        Fri, 11 Feb 2022 14:06:18 -0800 (PST)
+Received: from [192.168.1.100] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id q1sm5931642pjd.48.2022.02.11.14.06.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Feb 2022 14:06:17 -0800 (PST)
+Message-ID: <d6e41491-44c9-33e2-13ae-ae2480b9477d@kernel.dk>
+Date:   Fri, 11 Feb 2022 15:06:16 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH] docs: block: biodoc.rst: Drop the obsolete and incorrect
+ content
+Content-Language: en-US
+To:     Christoph Hellwig <hch@infradead.org>,
+        Barry Song <21cnbao@gmail.com>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-block@vger.kernel.org, linuxarm@huawei.com,
+        linux-kernel@vger.kernel.org,
+        Barry Song <song.bao.hua@hisilicon.com>
+References: <20220207074931.20067-1-song.bao.hua@hisilicon.com>
+ <YgN8CKUoRG4TQaqt@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <YgN8CKUoRG4TQaqt@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
----
- drivers/md/dm.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+On 2/9/22 1:32 AM, Christoph Hellwig wrote:
+> I suspect it is timeto just drop that entire file.  It is so stale
+> that it is actively harmful.
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 2461df65e2fe..20c7b1b4d1f7 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -546,13 +546,16 @@ static struct bio *alloc_tio(struct clone_info *ci, struct dm_target *ti,
- 		unsigned target_bio_nr, unsigned *len, gfp_t gfp_mask)
- {
- 	struct dm_target_io *tio;
-+	struct bio *clone;
- 
- 	if (!ci->io->tio.io) {
- 		/* the dm_target_io embedded in ci->io is available */
- 		tio = &ci->io->tio;
-+		/* alloc_io() already initialized embedded clone */
-+		clone = &tio->clone;
- 	} else {
--		struct bio *clone = bio_alloc_clone(ci->bio->bi_bdev, ci->bio,
--						    gfp_mask, &ci->io->md->bs);
-+		clone = bio_alloc_clone(ci->bio->bi_bdev, ci->bio,
-+					gfp_mask, &ci->io->md->bs);
- 		if (!clone)
- 			return NULL;
- 
-@@ -567,7 +570,13 @@ static struct bio *alloc_tio(struct clone_info *ci, struct dm_target *ti,
- 	tio->len_ptr = len;
- 	tio->old_sector = 0;
- 
--	return &tio->clone;
-+	if (len) {
-+		clone->bi_iter.bi_size = to_bytes(*len);
-+		if (bio_integrity(clone))
-+			bio_integrity_trim(clone);
-+	}
-+
-+	return clone;
- }
- 
- static void free_tio(struct bio *clone)
-@@ -1258,17 +1267,12 @@ static void __send_duplicate_bios(struct clone_info *ci, struct dm_target *ti,
- 		break;
- 	case 1:
- 		clone = alloc_tio(ci, ti, 0, len, GFP_NOIO);
--		if (len)
--			clone->bi_iter.bi_size = to_bytes(*len);
- 		__map_bio(clone);
- 		break;
- 	default:
- 		alloc_multiple_bios(&blist, ci, ti, num_bios, len);
--		while ((clone = bio_list_pop(&blist))) {
--			if (len)
--				clone->bi_iter.bi_size = to_bytes(*len);
-+		while ((clone = bio_list_pop(&blist)))
- 			__map_bio(clone);
--		}
- 		break;
- 	}
- }
-@@ -1382,12 +1386,7 @@ static int __split_and_process_bio(struct clone_info *ci)
- 		return r;
- 
- 	len = min_t(sector_t, max_io_len(ti, ci->sector), ci->sector_count);
--
- 	clone = alloc_tio(ci, ti, 0, &len, GFP_NOIO);
--	clone->bi_iter.bi_size = to_bytes(len);
--	if (bio_integrity(clone))
--		bio_integrity_trim(clone);
--
- 	__map_bio(clone);
- 
- 	ci->sector += len;
+I'll apply this one since it's obviously correct, but yes, we
+probably should just kill this file.
+
 -- 
-2.15.0
+Jens Axboe
 
