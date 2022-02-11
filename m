@@ -2,62 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A3FC4B2F87
-	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 22:41:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AC4E4B2F8E
+	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 22:43:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345748AbiBKVlM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Feb 2022 16:41:12 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53400 "EHLO
+        id S1349997AbiBKVnD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Feb 2022 16:43:03 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353715AbiBKVlH (ORCPT
+        with ESMTP id S1353752AbiBKVlK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Feb 2022 16:41:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 509D5C68
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 13:41:06 -0800 (PST)
+        Fri, 11 Feb 2022 16:41:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 327EBC73
+        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 13:41:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644615665;
+        s=mimecast20190719; t=1644615667;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=8b2j/hRlmeRKgxQS01vdbuNTDBEr7G47snWX3xyMZr0=;
-        b=ceItzhN2t7uaNBFU5DVassMY6mjeGSyWtwv0+JGq4UCoJo2vR8BVYFp7d4FLcatzNsBPxT
-        YLuIvl7sce+ojbd+ahed+E1UyOHGhWx6ibWiG5f51JVETcf/4WcIIGTtnDZHieLRDd3ozY
-        bQjN3xr2+6lIFLu1eJ5HX9tIlvCjji0=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=pWHYMVDLAmByoRC12NPUdmnY+6Z0+I5UDqE1eD4oqHM=;
+        b=LtbN58yIWpGy/g5c0vkZJpdZsOJK9gfmsD+7hh0fMNi0oy9FFYG1uWSNeGnsuCKx1lbcSf
+        S1Hhbh8U2LSPl0LaLBMD4GUT/i4NE+fzRlrhPYzhmZYK3An9mS3JEgQTYxQIRTWIjsYXNH
+        cxm4YXIOU/NHOx/yie4ISS1IXziabBs=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-383-ZKhhbOYiM9WcTLS5QM-HfQ-1; Fri, 11 Feb 2022 16:41:04 -0500
-X-MC-Unique: ZKhhbOYiM9WcTLS5QM-HfQ-1
-Received: by mail-ot1-f70.google.com with SMTP id w16-20020a056830111000b005a3e1a958ccso6029634otq.11
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 13:41:04 -0800 (PST)
+ us-mta-160-1XRDYDeHNjqsv96Ktq7JRw-1; Fri, 11 Feb 2022 16:41:06 -0500
+X-MC-Unique: 1XRDYDeHNjqsv96Ktq7JRw-1
+Received: by mail-ot1-f71.google.com with SMTP id h5-20020a9d5545000000b0059ecbfae94eso6010525oti.17
+        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 13:41:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8b2j/hRlmeRKgxQS01vdbuNTDBEr7G47snWX3xyMZr0=;
-        b=EaULrRhMvMjF1hZY+WXLQn+L0RkATXtzbpTv6SyH3LspRCTClkU32c/c4d4xtrqqRV
-         2OK8tAXAt4mIw5+uT/HyVqYiiGoNkoaVdQ4kK+NwOJDrkOXMB+NOLNLRY7cSjli6cXxQ
-         yBXs7WdDJlFT3sY9752AfuExGCFSQf71eILNwsgQCAtzPIjp2D/X7fe/kCp1NOmKdzeH
-         B4WmIot81tSZzRnpXQrb32jycHRljkcRfUfoQKuWrEsSYD9BKpoCAZS9IJ4vSBna6ugd
-         pCBfCaKAyAgER2KmSr7crWKPOXHMyLFjoCguHW1CzV4AtUIbOzJJbMM8onvkS00Ofovn
-         OTVg==
-X-Gm-Message-State: AOAM530rvGgvDD7Wj6nFqFV149pEdPY2XRW74SuGgjuAPcycGb2ql2Fr
-        fY5OTnoxIuPSw1LMpbl+Trf+MHD5a6LYwit/fr0E0QBufEfYtFKiaGMDzplRVCxZ6fpoMif/LvP
-        BMo9g2yeMWmWESXCc0BDFHA==
-X-Received: by 2002:a05:6808:ece:: with SMTP id q14mr1091259oiv.174.1644615662992;
-        Fri, 11 Feb 2022 13:41:02 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzi7P+hhoDWQ7F6Az0Vws24qOdd5k5JsOKRbyjvj6pMufn+nzx1zyZXbHL8fuSV48Uc3NRqJQ==
-X-Received: by 2002:a05:6808:ece:: with SMTP id q14mr1091244oiv.174.1644615662391;
-        Fri, 11 Feb 2022 13:41:02 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=pWHYMVDLAmByoRC12NPUdmnY+6Z0+I5UDqE1eD4oqHM=;
+        b=4CTI1zp9I1IECYlh8qDomzYjyAhW67W9p+G11ezkubqs3AUxfP5j78vdTTDm8FLHHS
+         iJ8lZdBOv0lKr1udti2r9hFiJjN/v6xDYzRdmf05kyMyjreStR2yyJXzLWB+9KOI6PvL
+         iBrmXKdsqRt6lz9QA5sdbostXOCfyv6qzeeVuCMeogK31rXKm4QQ1mSRTo7szt+Gk0L8
+         ybiKISCvlGEgUzNayMnQfONCkXBM7/sLBFVQwiE7b6gWNH/nmz5g4UGetEqx3Tk0ngdl
+         dyU/6RVitN3Fne1t6EEEVjgLbNeMa8gf51swyJpwV+Sa7dhkwBFQr760RN0o+1jv7TzA
+         0g+Q==
+X-Gm-Message-State: AOAM531VodUrqMmt+y0JpSb+C4iW432jkOUvjvXBpPLGAGd3HyNfbxMq
+        WWCDptFjUGX9dgFYnBKjx+nT5D8tdJB9QcpVHoddX6Jhh5BI9KoyqjNTqNtoh66eU3axW6sGNNk
+        PIrWo1hnBK6rStbjvD+Reaw==
+X-Received: by 2002:a05:6870:1318:: with SMTP id 24mr771263oab.28.1644615664761;
+        Fri, 11 Feb 2022 13:41:04 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwgWYNb7rgOCq30q5kQSDDFSZce9nmYQDDcneTKvKmUg8mfutDHI9Zx5YMSBZTnPEY38/Irbg==
+X-Received: by 2002:a05:6870:1318:: with SMTP id 24mr771259oab.28.1644615664550;
+        Fri, 11 Feb 2022 13:41:04 -0800 (PST)
 Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id 1sm9444505oab.16.2022.02.11.13.41.01
+        by smtp.gmail.com with ESMTPSA id q4sm9500794otk.39.2022.02.11.13.41.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 13:41:02 -0800 (PST)
+        Fri, 11 Feb 2022 13:41:03 -0800 (PST)
 From:   Mike Snitzer <snitzer@redhat.com>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH v2 00/14] dm: improve bio-based IO accounting
-Date:   Fri, 11 Feb 2022 16:40:43 -0500
-Message-Id: <20220211214057.40612-1-snitzer@redhat.com>
+Subject: [PATCH v2 01/14] dm: rename split functions
+Date:   Fri, 11 Feb 2022 16:40:44 -0500
+Message-Id: <20220211214057.40612-2-snitzer@redhat.com>
 X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20220211214057.40612-1-snitzer@redhat.com>
+References: <20220211214057.40612-1-snitzer@redhat.com>
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -68,51 +72,89 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+Rename __split_and_process_bio to dm_split_and_process_bio.
+Rename __split_and_process_non_flush to __split_and_process_bio.
 
-All the changes from this patchset are available here:
-https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-5.18
+Also fix a stale comment and whitespace.
 
-This work is based on Jens' for-5.18/block
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+---
+ drivers/md/dm.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-Please see v1's 0th header for context on motivation behind this patchset:
-https://listman.redhat.com/archives/dm-devel/2022-February/msg00193.html
-
-Christoph, I addressed all your feedback from v1 and added the
-Reviewed-by:s you provided. Thanks for your review.
-
-Patch 10 now isolates the block changes like you asked.
-
-All further review of this v2 patchset is welcomed.
-
-Mike
-
-Mike Snitzer (14):
-  dm: rename split functions
-  dm: fold __clone_and_map_data_bio into __split_and_process_bio
-  dm: refactor dm_split_and_process_bio a bit
-  dm: reduce code duplication in __map_bio
-  dm: remove impossible BUG_ON in __send_empty_flush
-  dm: remove unused mapped_device argument from free_tio
-  dm: remove code only needed before submit_bio recursion
-  dm: record old_sector in dm_target_io before calling map function
-  dm: move kicking of suspend queue to dm_io_dec_pending
-  block: add bio_start_io_acct_remapped for the benefit of DM
-  dm: add dm_submit_bio_remap interface
-  dm crypt: use dm_submit_bio_remap
-  dm delay: use dm_submit_bio_remap
-  dm: move duplicate code in callers of alloc_tio into alloc_tio
-
- block/blk-core.c              |  24 ++---
- drivers/md/dm-core.h          |   2 +
- drivers/md/dm-crypt.c         |   9 +-
- drivers/md/dm-delay.c         |   5 +-
- drivers/md/dm.c               | 234 ++++++++++++++++++++++--------------------
- include/linux/blkdev.h        |  16 ++-
- include/linux/device-mapper.h |   7 ++
- include/uapi/linux/dm-ioctl.h |   4 +-
- 8 files changed, 164 insertions(+), 137 deletions(-)
-
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index ab9cc91931f9..2cecb8832936 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1359,7 +1359,7 @@ static bool __process_abnormal_io(struct clone_info *ci, struct dm_target *ti,
+ /*
+  * Select the correct strategy for processing a non-flush bio.
+  */
+-static int __split_and_process_non_flush(struct clone_info *ci)
++static int __split_and_process_bio(struct clone_info *ci)
+ {
+ 	struct dm_target *ti;
+ 	unsigned len;
+@@ -1395,8 +1395,8 @@ static void init_clone_info(struct clone_info *ci, struct mapped_device *md,
+ /*
+  * Entry point to split a bio into clones and submit them to the targets.
+  */
+-static void __split_and_process_bio(struct mapped_device *md,
+-					struct dm_table *map, struct bio *bio)
++static void dm_split_and_process_bio(struct mapped_device *md,
++				     struct dm_table *map, struct bio *bio)
+ {
+ 	struct clone_info ci;
+ 	int error = 0;
+@@ -1409,19 +1409,19 @@ static void __split_and_process_bio(struct mapped_device *md,
+ 	} else if (op_is_zone_mgmt(bio_op(bio))) {
+ 		ci.bio = bio;
+ 		ci.sector_count = 0;
+-		error = __split_and_process_non_flush(&ci);
++		error = __split_and_process_bio(&ci);
+ 	} else {
+ 		ci.bio = bio;
+ 		ci.sector_count = bio_sectors(bio);
+-		error = __split_and_process_non_flush(&ci);
++		error = __split_and_process_bio(&ci);
+ 		if (ci.sector_count && !error) {
+ 			/*
+ 			 * Remainder must be passed to submit_bio_noacct()
+ 			 * so that it gets handled *after* bios already submitted
+ 			 * have been completely processed.
+ 			 * We take a clone of the original to store in
+-			 * ci.io->orig_bio to be used by end_io_acct() and
+-			 * for dec_pending to use for completion handling.
++			 * ci.io->orig_bio to be used by end_io_acct() and for
++			 * dm_io_dec_pending() to use for completion handling.
+ 			 */
+ 			struct bio *b = bio_split(bio, bio_sectors(bio) - ci.sector_count,
+ 						  GFP_NOIO, &md->queue->bio_split);
+@@ -1470,7 +1470,7 @@ static void dm_submit_bio(struct bio *bio)
+ 	if (is_abnormal_io(bio))
+ 		blk_queue_split(&bio);
+ 
+-	__split_and_process_bio(md, map, bio);
++	dm_split_and_process_bio(md, map, bio);
+ out:
+ 	dm_put_live_table(md, srcu_idx);
+ }
+@@ -2283,11 +2283,11 @@ static int __dm_suspend(struct mapped_device *md, struct dm_table *map,
+ 	/*
+ 	 * Here we must make sure that no processes are submitting requests
+ 	 * to target drivers i.e. no one may be executing
+-	 * __split_and_process_bio from dm_submit_bio.
++	 * dm_split_and_process_bio from dm_submit_bio.
+ 	 *
+-	 * To get all processes out of __split_and_process_bio in dm_submit_bio,
++	 * To get all processes out of dm_split_and_process_bio in dm_submit_bio,
+ 	 * we take the write lock. To prevent any process from reentering
+-	 * __split_and_process_bio from dm_submit_bio and quiesce the thread
++	 * dm_split_and_process_bio from dm_submit_bio and quiesce the thread
+ 	 * (dm_wq_work), we set DMF_BLOCK_IO_FOR_SUSPEND and call
+ 	 * flush_workqueue(md->wq).
+ 	 */
 -- 
 2.15.0
 
