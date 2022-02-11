@@ -2,111 +2,175 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65E114B20E2
-	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 10:01:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 969274B2250
+	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 10:43:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239466AbiBKJBp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Feb 2022 04:01:45 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48878 "EHLO
+        id S237122AbiBKJmY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Feb 2022 04:42:24 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235655AbiBKJBp (ORCPT
+        with ESMTP id S232618AbiBKJmV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Feb 2022 04:01:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9B59C101F
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 01:01:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644570103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=MUJ3kp9XV1crkiRU1Q1VRzma3f38pwQD2oCOh9SbY8o=;
-        b=Z/0Lc0VTas0KJCgpLazGew6CpEqe8UYcEbxAzCnAH+t5QEKi6IJ/pcsaD8IFomMsDBLrvE
-        wcMRN35N7xlgEhTSSDNhGm+yDbIfcIY03d0P6iuU3UBA+RY0Y872jFYD05yOttv5tKEF1e
-        RJXeZzifd9UrGF24hSn/JkCH3a0iMfs=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-205-gBqfDK0PN1i8l3gINBHyMg-1; Fri, 11 Feb 2022 04:01:42 -0500
-X-MC-Unique: gBqfDK0PN1i8l3gINBHyMg-1
-Received: by mail-qv1-f70.google.com with SMTP id t5-20020a056214118500b0042c272ede45so5832275qvv.13
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 01:01:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MUJ3kp9XV1crkiRU1Q1VRzma3f38pwQD2oCOh9SbY8o=;
-        b=CyrHl3ve062ysiBg397pu4Uib41M12SZvzJkpztKm864gPyzf2AtheNdjfRz8qTmwg
-         ZE/8NuBWdA1Z+I6t98NbfC04wt1XV6ZtdqajJ/oUaNT57Kf+mzGisBzfJXaupuQ8SuG6
-         bYJ+RdZKwRUrJOyztqXxPhFwVoGbjPMe65H/qghEZH7vkXy1BnOStRWN5Oi21u2YgTLa
-         dxm5Vudg9DXMD0i2+eijwGhAT8vG0yvwGcwMMd19KV92B/9rBt7qNvJlr5WD6G0Jv31l
-         ZRgjhpdFdhWj1Y9X0f0iryV6G7EQc4ks01d+7EX/m2tgncqKR88qBOYPovkWKyNvr6va
-         2ofQ==
-X-Gm-Message-State: AOAM533OMNSS/QMRzxZIg4HLD3ke4IYSuTB/6soicA/7XCVg78sjKT8s
-        8hTQ2QQswha6G+Gkpx0yjiXkDPZ9Lf9yjFpGgmfZ1pVzVb4sCAYqpkHs+CVXAEDpHOsoIJ1U1i8
-        WF+31SXcvjb4uklSxMKKyLcU=
-X-Received: by 2002:a05:620a:40cd:: with SMTP id g13mr235556qko.57.1644570101704;
-        Fri, 11 Feb 2022 01:01:41 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzyNuZXoU1YXd7dflX1tLfs7w8jGDkinb/+LSW7pW/yCk8l/jvZYRrAUOMjJt184Nuyt+EK0A==
-X-Received: by 2002:a05:620a:40cd:: with SMTP id g13mr235544qko.57.1644570101489;
-        Fri, 11 Feb 2022 01:01:41 -0800 (PST)
-Received: from step1g3.redhat.com (host-95-248-229-156.retail.telecomitalia.it. [95.248.229.156])
-        by smtp.gmail.com with ESMTPSA id p70sm10931673qka.62.2022.02.11.01.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 01:01:40 -0800 (PST)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org
-Subject: [PATCH] block: clear iocb->private in blkdev_bio_end_io_async()
-Date:   Fri, 11 Feb 2022 10:01:36 +0100
-Message-Id: <20220211090136.44471-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 11 Feb 2022 04:42:21 -0500
+X-Greylist: delayed 381 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 11 Feb 2022 01:42:20 PST
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DC9109C
+        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 01:42:20 -0800 (PST)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20220211093551euoutp010d768a2563ea0da8e005466b751f0ebe~SsaiA82Bl0546705467euoutp01f
+        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 09:35:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20220211093551euoutp010d768a2563ea0da8e005466b751f0ebe~SsaiA82Bl0546705467euoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1644572151;
+        bh=yDcLop0GXahLhlWZJiqXR1dyUUdSlonjwf1s0tQbvGQ=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Lj7fE7esE1ZKUdzYGqG8CVApdPMi/m8MhKL2UL6ur+aZi5Yp/xhkqSGKsTm7J6Nwa
+         t2E1jeTfTdH6lp6wujmo5J0aH962BqhLFd16LUk8B73KeeoRvaes4c4vb83HPfNB5R
+         ivocwzXNW1pZ7SNDAl1zEPipKDKu1j/dTBqjRRQ0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220211093550eucas1p1cada1d4f319a4c4b988e04963408b25d~SsahLwwKK2914229142eucas1p15;
+        Fri, 11 Feb 2022 09:35:50 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id E7.FA.10260.7FD26026; Fri, 11
+        Feb 2022 09:35:52 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20220211093549eucas1p122dbc242f60ec6fb701617184494dd98~SsagpFS3m2682526825eucas1p1x;
+        Fri, 11 Feb 2022 09:35:49 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20220211093549eusmtrp132478df10337676f350498640570022a~SsagoSFqr1150811508eusmtrp1m;
+        Fri, 11 Feb 2022 09:35:49 +0000 (GMT)
+X-AuditID: cbfec7f5-bddff70000002814-8a-62062df74498
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 72.3A.09522.7FD26026; Fri, 11
+        Feb 2022 09:35:51 +0000 (GMT)
+Received: from localhost (unknown [106.210.248.166]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20220211093549eusmtip10980fd6dbbb816db11ef04f911846bdb~SsagWMYP21096810968eusmtip1v;
+        Fri, 11 Feb 2022 09:35:49 +0000 (GMT)
+From:   Pankaj Raghav <p.raghav@samsung.com>
+To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>
+Cc:     linux-block@vger.kernel.org, Pankaj Raghav <pankydev8@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        kanchan Joshi <joshi.k@samsung.com>,
+        Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v1 0/1] Regression in ZNS devices due to batched completions
+Date:   Fri, 11 Feb 2022 10:34:24 +0100
+Message-Id: <20220211093425.43262-1-p.raghav@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7djPc7o/dNmSDM7vYrKYfljRYvXdfjaL
+        0xMWMVk8vvOZ3eLo/7dsFntvaVvcmPCU0eLz0hZ2izU3n7I4cHrsnHWX3WPzCi2Py2dLPTat
+        6mTz6NuyitHj8ya5ALYoLpuU1JzMstQifbsErozuE3/ZCq4KVlzr+8TWwHiJr4uRk0NCwETi
+        af9G5i5GLg4hgRWMEtMWrmeBcL4wStxZe5QVwvnMKDGl+SozTEvzqeNQieWMEgsPwVS9ZJR4
+        9rsVqJ+Dg01AS6Kxkx2kQUTAXeL+gRNgNcwCS5kk+k8tZQepERbwkbg6WR+khkVAVeJvSzcT
+        SJhXwFJizzcuiF3yEjMvfQcbwysgKHFy5hMWEJsZKN68dTbY2RICazkkHm46wwbSKyHgIrFx
+        qS9Er7DEq+Nb2CFsGYnTk3tYIOr7GSWmtvxhgnBmMEr0HN7MBNFsLdF3JgfEZBbQlFi/Sx+i
+        11Fi9rPzrBAVfBI33gpCnMAnMWnbdGaIMK9ER5sQRLWSxM6fT6C2SkhcbprDAmF7SCxc28gI
+        YgsJxEpM2/GIZQKjwiwkj81C8tgshBsWMDKvYhRPLS3OTU8tNs5LLdcrTswtLs1L10vOz93E
+        CEw+p/8d/7qDccWrj3qHGJk4GA8xSnAwK4nwrrjBmiTEm5JYWZValB9fVJqTWnyIUZqDRUmc
+        NzlzQ6KQQHpiSWp2ampBahFMlomDU6qBySPxh8aqXr8zr//LBGu5CMR8WGYdpCSTGj//yi1n
+        lwc+cUItp6dKlV1ccYjnZu6jFeWOi/aXPC/7P+HD37yIsK355y9Ium1g75MwrRP89jFPvdW8
+        YfuvjycnFDQ8s71/Q1ZNTiZswyWVx+wvpM/NPHTXMD9Zfb12/6aCUCffn39Z6/7+2zuPKyqM
+        e2aGbYTCxgC3B7O9zh89c3KWbyJHukHx+k1y7vyH9pseaO2uUBP1kfVRmXlbf4Zg+b7Chdy7
+        PTc9WbV9aTOv8ocnoSaJ4QamPHV/pipWzF60cfWSVTbrj3r1Cr/tuM2jsr6YKXjp/xcX77Z/
+        +xonbr7lpMH/n/OSrzPVXutu/6nV198WqMRSnJFoqMVcVJwIAJuAGtutAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsVy+t/xu7rfddmSDGb+lrCYfljRYvXdfjaL
+        0xMWMVk8vvOZ3eLo/7dsFntvaVvcmPCU0eLz0hZ2izU3n7I4cHrsnHWX3WPzCi2Py2dLPTat
+        6mTz6NuyitHj8ya5ALYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU
+        1JzMstQifbsEvYzuE3/ZCq4KVlzr+8TWwHiJr4uRk0NCwESi+dRx1i5GLg4hgaWMEr86NzBB
+        JCQkbi9sYoSwhSX+XOtigyh6zijxZPULoCIODjYBLYnGTnaQGhEBT4m2je1gg5gFVjNJ/D3X
+        ywJSIyzgI3F1sj5IDYuAqsTflm6wVl4BS4k937ggxstLzLz0HWwMr4CgxMmZT1hAbGagePPW
+        2cwTGPlmIUnNQpJawMi0ilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzDstx37uXkH47xXH/UO
+        MTJxMB5ilOBgVhLhXXGDNUmINyWxsiq1KD++qDQntfgQoynQeROZpUST84GRl1cSb2hmYGpo
+        YmZpYGppZqwkzutZ0JEoJJCeWJKanZpakFoE08fEwSnVwGQdeD9Rl++9xcLr8mzbuhf8/eXH
+        0rtFpPBVlf2E3GgOH76pi7a4fygrmJFkEzuzSzmdR/T+N+f6/qMv0mr0i5/YijZkLLxhzpFl
+        4pe/4eMjJbdPD5W+X/hv//h61Xz9w9V21+dbrGcMU5aefOLrGg9toyDhWpE1uv3PPSse6tXu
+        mqwv+b8jzEZtM2+O4p1bWUf3fagUMKt7t0u6WqFWfoahlZv6aua5H7bwTg1Z8HPfzMKKr5XZ
+        CuqTBB4m//pjdrNfhvkRczyX4bwzWYHl7R8WPz7KFjfDg6G602qWkPPSJVknfk5NjV2jb8Cw
+        5E52QthPSUfzexImR01UXq9XDtYUn2wWKN9+5lDRnn3hSizFGYmGWsxFxYkAKW2jBQQDAAA=
+X-CMS-MailID: 20220211093549eucas1p122dbc242f60ec6fb701617184494dd98
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20220211093549eucas1p122dbc242f60ec6fb701617184494dd98
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20220211093549eucas1p122dbc242f60ec6fb701617184494dd98
+References: <CGME20220211093549eucas1p122dbc242f60ec6fb701617184494dd98@eucas1p1.samsung.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-iocb_bio_iopoll() expects iocb->private to be cleared before
-releasing the bio.
+Hi Jens,
 
-We already do this in blkdev_bio_end_io(), but we forgot in the
-recently added blkdev_bio_end_io_async().
+  I found the following regression in ZNS devices when executing some basic
+  workload:
+[  182.240375] Call Trace:
+[  182.240517]  <TASK>
+[  182.240656]  btrfs_start_dirty_block_groups+0x6be/0xe80 [btrfs]
+[  182.241091]  ? bio_init+0x398/0x620
+[  182.241307]  ? btrfs_setup_space_cache+0x240/0x240 [btrfs]
+[  182.241731]  ? mutex_unlock+0x80/0xd0
+[  182.241964]  ? __mutex_unlock_slowpath.constprop.0+0x2a0/0x2a0
+[  182.242490]  btrfs_commit_transaction+0x18aa/0x2820 [btrfs]
+[  182.242901]  ? kasan_unpoison+0x23/0x50
+[  182.243156]  ? join_transaction+0x255/0xe80 [btrfs]
+[  182.244105]  ? btrfs_apply_pending_changes+0x50/0x50 [btrfs]
+[  182.244554]  ? vfs_fsync_range+0x210/0x210
+[  182.244839]  ? btrfs_attach_transaction_barrier+0x1f/0x70 [btrfs]
+[  182.245293]  ? vfs_fsync_range+0x210/0x210
+[  182.245563]  iterate_supers+0x109/0x200
+[  182.245794]  ksys_sync+0xa8/0x130
+[  182.245990]  ? vfs_fsync+0x200/0x200
+[  182.246197]  ? do_user_addr_fault+0x31e/0xd60
+[  182.246454]  ? kvm_read_and_reset_apf_flags+0x41/0x60
+[  182.247240]  ? fpregs_assert_state_consistent+0x4a/0xb0
+[  182.247613]  __do_sys_sync+0xa/0x10
+[  182.247827]  do_syscall_64+0x3b/0x90
+[  182.248041]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+[  182.252155]  </TASK>
+[  182.252281] ---[ end trace 0000000000000000 ]---
+[  182.252561] BTRFS: error (device nvme0n2) in btrfs_run_delayed_refs:2159:
+                errno=-17 Object already exists
+[  182.253110] BTRFS info (device nvme0n2): forced readonly
 
-Fixes: 54a88eb838d3 ("block: add single bio async direct IO helper")
-Cc: asml.silence@gmail.com
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-I haven't seen a failure, I was just reading the code to understand iopoll,
-so IIUC we should clean iocb->private in blkdev_bio_end_io_async().
+I am using QEMU with a ZNS drive with zoned.zone_capacity=128M,
+zoned.zone_size=128M.
 
-Thanks,
-Stefano
----
- block/fops.c | 2 ++
- 1 file changed, 2 insertions(+)
+Steps to reproduce:
 
-diff --git a/block/fops.c b/block/fops.c
-index 4f59e0f5bf30..a18e7fbd97b8 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -289,6 +289,8 @@ static void blkdev_bio_end_io_async(struct bio *bio)
- 	struct kiocb *iocb = dio->iocb;
- 	ssize_t ret;
- 
-+	WRITE_ONCE(iocb->private, NULL);
-+
- 	if (likely(!bio->bi_status)) {
- 		ret = dio->size;
- 		iocb->ki_pos += ret;
+$ mkfs.btrfs /dev/nvme0n2 -d single -m single
+$ mount -t btrfs  /dev/nvme0n2 /mnt/btrfs
+$ cd /mnt/btrfs
+$ head --bytes 1048576 /dev/random >> 4k_rand.bin
+$ sync 
+$ head --bytes 1048576 /dev/random >> 4k_rand.bin
+$ sync
+
+Git bisect run pointed the following as the offending commit:
+commit 5581a5ddfe8d ("block: add completion handler for fast path")
+
+The fast path completion handler does not handle the ZONE_APPEND
+requests correctly.
+
+
+Pankaj Raghav (1):
+  block: Add handling for zone append command in blk_complete_request
+
+ block/blk-mq.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
 -- 
-2.34.1
+2.25.1
 
