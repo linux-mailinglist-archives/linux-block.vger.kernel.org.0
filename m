@@ -2,112 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 783054B2247
-	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 10:43:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFBB14B2231
+	for <lists+linux-block@lfdr.de>; Fri, 11 Feb 2022 10:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232618AbiBKJmZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Feb 2022 04:42:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59244 "EHLO
+        id S1348777AbiBKJkB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Feb 2022 04:40:01 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243159AbiBKJmX (ORCPT
+        with ESMTP id S1348745AbiBKJj7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Feb 2022 04:42:23 -0500
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA0AB10A0
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 01:42:20 -0800 (PST)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20220211093603euoutp02540410c3c9913f6fcfc1f0653b6cf4b0~SsatqGIij2463324633euoutp02j
-        for <linux-block@vger.kernel.org>; Fri, 11 Feb 2022 09:36:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20220211093603euoutp02540410c3c9913f6fcfc1f0653b6cf4b0~SsatqGIij2463324633euoutp02j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1644572163;
-        bh=SRQrFTd0rG07SC/2FQxJ9s6G6cclyw5X+oCD+oinaOo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hodlomVhqJq0PHwHBq8Y/hdnzyzWhuon7JgiV/4DzIMI6FBUPz78GIXaoYz6JoDvY
-         P3OeManImmH3nLF/Oj90yM15grY+94Jwnh31r55dodKmIDFUBjAg3iHEK0hnlT/fXk
-         XNR3X2o56+E2359lgw+6afPMHxdI6DB4kT6JBlng=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20220211093602eucas1p11bcd3d7c36fab67e48cb18c15ccbc837~Ssas7uZhz2914829148eucas1p1Q;
-        Fri, 11 Feb 2022 09:36:02 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 91.0B.10260.40E26026; Fri, 11
-        Feb 2022 09:36:04 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20220211093602eucas1p1fe39e931232162a686b2feb06ea1f314~SsasPRwuv2710227102eucas1p1B;
-        Fri, 11 Feb 2022 09:36:02 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20220211093602eusmtrp1bde1100b437552cfc0b526b3e6ba19d9~SsasNct1w1150811508eusmtrp1G;
-        Fri, 11 Feb 2022 09:36:02 +0000 (GMT)
-X-AuditID: cbfec7f5-bddff70000002814-b8-62062e0460a7
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id AF.3A.09522.30E26026; Fri, 11
-        Feb 2022 09:36:03 +0000 (GMT)
-Received: from localhost (unknown [106.210.248.166]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20220211093601eusmtip2d696e68ff5610779f48dda885aa9fe8a~Ssar72FjP2236022360eusmtip2I;
-        Fri, 11 Feb 2022 09:36:01 +0000 (GMT)
-From:   Pankaj Raghav <p.raghav@samsung.com>
-To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>
-Cc:     linux-block@vger.kernel.org, Pankaj Raghav <pankydev8@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier.gonz@samsung.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        kanchan Joshi <joshi.k@samsung.com>,
-        Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH v1 1/1] block: Add handling for zone append command in
- blk_complete_request
-Date:   Fri, 11 Feb 2022 10:34:25 +0100
-Message-Id: <20220211093425.43262-2-p.raghav@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220211093425.43262-1-p.raghav@samsung.com>
+        Fri, 11 Feb 2022 04:39:59 -0500
+Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8373310D5;
+        Fri, 11 Feb 2022 01:39:46 -0800 (PST)
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id EE66F47753;
+        Fri, 11 Feb 2022 09:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        in-reply-to:content-disposition:content-type:content-type
+        :mime-version:references:message-id:subject:subject:from:from
+        :date:date:received:received:received; s=mta-01; t=1644572383;
+         x=1646386784; bh=LQcbOastj9QBIy1juLvBYG/IfneSfYFuWBe1Eqrfur0=; b=
+        VOK8UGz/bM3+KtIcaTXufXxpgsQG/NdrBaJY3VxMFoW4/d3DaBfGMwpjsRG7ntk6
+        mIXFmDdoZa+LrHOIfOENdE5WSgdzlvAObl+Ctag6hjsxN/j0E3RAnacqTgsfDxa3
+        kJaJ+TRwlehT7LhCNyVfrvsFo4G5ElLAojaBrUOUH00=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CWke-Mc8_V0F; Fri, 11 Feb 2022 12:39:43 +0300 (MSK)
+Received: from T-EXCH-04.corp.yadro.com (t-exch-04.corp.yadro.com [172.17.100.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id BBB184783D;
+        Fri, 11 Feb 2022 12:39:42 +0300 (MSK)
+Received: from yadro.com (10.178.114.63) by T-EXCH-04.corp.yadro.com
+ (172.17.100.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 11
+ Feb 2022 12:39:40 +0300
+Date:   Fri, 11 Feb 2022 12:39:38 +0300
+From:   "Alexander V. Buev" <a.buev@yadro.com>
+To:     Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <io-uring@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Mikhail Malygin <m.malygin@yadro.com>, <linux@yadro.com>
+Subject: Re: [PATCH v2 2/3] block: io_uring: add READV_PI/WRITEV_PI operations
+Message-ID: <20220211093938.h2uu5cvaw2hswp3z@yadro.com>
+Mail-Followup-To: "Alexander V. Buev" <a.buev@yadro.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        io-uring@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Mikhail Malygin <m.malygin@yadro.com>, linux@yadro.com
+References: <20220210130825.657520-1-a.buev@yadro.com>
+ <20220210130825.657520-3-a.buev@yadro.com>
+ <6d505bdc-d687-a9e7-54a1-9a2e662e9707@kernel.dk>
+ <20220210190311.driobrtfavnb7ha3@yadro.com>
+ <b8082a03-ab50-8a28-b6fd-1bf6985713ec@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDKsWRmVeSWpSXmKPExsWy7djP87osemxJBr936FhMP6xosfpuP5vF
-        6QmLmCwe3/nMbnH0/1s2i723tC1uTHjKaPF5aQu7xZqbT1kcOD12zrrL7rF5hZbH5bOlHptW
-        dbJ59G1ZxejxeZNcAFsUl01Kak5mWWqRvl0CV8a726dZC26xVby+s42xgXEnaxcjJ4eEgInE
-        5H+NzF2MXBxCAisYJR7e6GOCcL4wSsxf8g4q85lRYkLndnaYlqsndkJVLWeUWLK/nxXCecko
-        MXPJXaAMBwebgJZEYydYg4iAu8T9AyfAapgFljJJ9J9aCpYQFoiV+Nz3iRnEZhFQlWh4+gws
-        zitgKbF3/xKoA+UlZl76zg4yk1PASuL+8UqIEkGJkzOfsIDYzEAlzVtng10qIXCGQ+LRhSmM
-        EL0uEi+evIWaIyzx6vgWqA9kJE5P7mGBaOhnlJja8ocJwpnBKNFzeDPYBxIC1hJ9Z3JATGYB
-        TYn1u/Qheh0ljv+bzgpRwSdx460gxA18EpO2TWeGCPNKdLQJQVQrSez8+QRqq4TE5aY5LBC2
-        h8SKM1+ZJzAqzkLyzSwk38xC2LuAkXkVo3hqaXFuemqxcV5quV5xYm5xaV66XnJ+7iZGYAI6
-        /e/41x2MK1591DvEyMTBeIhRgoNZSYR3xQ3WJCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8yZkb
-        EoUE0hNLUrNTUwtSi2CyTBycUg1MMa83uS3/E8O4+6/ajk9GW5zLJnsZsVzYNXdWg5jSOzP+
-        tDTuoA17J2kF9p9r6s5RzPd/tq0h94np1txThmq9haEb5tcILJEx+Bd/Z3/W0Uq2f9Z5ndYX
-        +Wb/r69yP72vdAnPz5MWAsXdLfuqJeLeynYcTP5Z5TaV/0qDfK15AOuXlrtNn/8tbp15LETO
-        f32EzmvepgPbDjy6FrWyKPmKwMaw4NjnB9hPZFROOfZle9k8CaWT8uH7JlrM+2mbybirdfu8
-        DsOCuq+qx7p+WmnVyVkc/225LXiO60N2jjs/JLdNDFkYevqni0NyQcTvyY/ep3muXBI/lcUq
-        RLx8a0rIuaIEk95Qm8ZyQ6lZGllKLMUZiYZazEXFiQCKFfEkrwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42I5/e/4PV1mPbYkg0ezLSymH1a0WH23n83i
-        9IRFTBaP73xmtzj6/y2bxd5b2hY3JjxltPi8tIXdYs3NpywOnB47Z91l99i8Qsvj8tlSj02r
-        Otk8+rasYvT4vEkugC1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYl
-        NSezLLVI3y5BL+Pd7dOsBbfYKl7f2cbYwLiTtYuRk0NCwETi6omdTCC2kMBSRokjn5Mh4hIS
-        txc2MULYwhJ/rnWxdTFyAdU8Z5Q4s+IcUDMHB5uAlkRjJztIjYiAp0TbxnZWkBpmgdVMEn/P
-        9bKAJIQFoiWmP7kFVsQioCrR8PQZmM0rYCmxd/8SqCPkJWZe+s4OMpNTwEri/vFKiHssJXbP
-        m88IUS4ocXLmE7CRzEDlzVtnM09gFJiFJDULSWoBI9MqRpHU0uLc9NxiQ73ixNzi0rx0veT8
-        3E2MwDjZduzn5h2M81591DvEyMTBeIhRgoNZSYR3xQ3WJCHelMTKqtSi/Pii0pzU4kOMpkBn
-        T2SWEk3OB0ZqXkm8oZmBqaGJmaWBqaWZsZI4r2dBR6KQQHpiSWp2ampBahFMHxMHp1QDU7rl
-        wi8eixrmV9/ielteIl/i3s4292b6JIv561lNxZY8fTijaEN67Tc5rd8FU6aW9TP/+p/iE7Wh
-        7dPU3vnCSz/ZffL6uemZRc60GfdaleuuTCq2/s5eIc9jnvU9/EYK1xqxHf0N/q/sDpmnXMsP
-        lpSf8E/4xMyfx/ydwsNnuDh8+Bh5X0vszn9uMzX3JR/fi2nUvg43k1zY+f5qs4BzqkBNSNl3
-        0d037ve2B5ktanxiFXOF7VVL9AeOFdubqw/uPnju8vYtN9/lW3w8zF/yJVBm4rG3v0UXf4wM
-        3jpPvOr5Fl/9FZUfWr/eeLl3o6e1x1emvDulPmyOpkuCvnw4sPIt44rjQssEVrd0/1AtCVVi
-        Kc5INNRiLipOBAC5kC1xHAMAAA==
-X-CMS-MailID: 20220211093602eucas1p1fe39e931232162a686b2feb06ea1f314
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20220211093602eucas1p1fe39e931232162a686b2feb06ea1f314
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20220211093602eucas1p1fe39e931232162a686b2feb06ea1f314
-References: <20220211093425.43262-1-p.raghav@samsung.com>
-        <CGME20220211093602eucas1p1fe39e931232162a686b2feb06ea1f314@eucas1p1.samsung.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+Content-Disposition: inline
+In-Reply-To: <b8082a03-ab50-8a28-b6fd-1bf6985713ec@kernel.dk>
+X-Originating-IP: [10.178.114.63]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-04.corp.yadro.com (172.17.100.104)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -115,31 +78,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Zone append command needs special handling to update the bi_sector
-field in the bio struct with the actual position of the data in the
-device. It is stored in __sector field of the request struct.
+> On 2/10/22 12:03 PM, Alexander V. Buev wrote:
+> >> On 2/10/22 6:08 AM, Alexander V. Buev wrote:
+> >>> Added new READV_PI/WRITEV_PI operations to io_uring.
+> >>> Added new pi_addr & pi_len fields to SQE struct.
+> >>> Added new pi_iter field and IOCB_USE_PI flag to kiocb struct.
+> >>> Make corresponding corrections to io uring trace event.
+> >>>
+> >>> +struct io_rw_pi_state {
+> >>> +	struct iov_iter			iter;
+> >>> +	struct iov_iter_state		iter_state;
+> >>> +	struct iovec			fast_iov[UIO_FASTIOV_PI];
+> >>> +};
+> >>> +
+> >>> +struct io_rw_pi {
+> >>> +	struct io_rw			rw;
+> >>> +	struct iovec			*pi_iov;
+> >>> +	u32				nr_pi_segs;
+> >>> +	struct io_rw_pi_state		*s;
+> >>> +};
+> >>
+> >> One immediate issue I see here is that io_rw_pi is big, and we try very
+> >> hard to keep the per-command payload to 64-bytes. This would be 88 bytes
+> >> by my count :-/
+> >>
+> >> Do you need everything from io_rw? If not, I'd just make io_rw_pi
+> >> contain the bits you need and see if you can squeeze it into the
+> >> existing cacheline.
+> > 
+> > In short - Yes. Current patch code call existing io_read/io_write functions.
+> > This functions use io_rw struct information and process this data.
+> > I wanted to use existing functions but may be this is wrong way in this 
+> > case.
+> >                                                                                 
+> > The second problem with request size is that the patch adds pi_iter   
+> > pointer to kiocb struct. This also increase whole request union
+> > length.
+> > 
+> > So I can see some (may be possible) solution for this: 
+> > 
+> >  1) do not store whole kiocb struct in request
+> >     and write fully separated io_read/write_pi functions
+> > 
+> >  2) make special CONFIG_XXX variable and simplify hide this code
+> >     as default
+> 
+> Option 2 really sucks, because then obviously everyone wants their
+> feature enabled, and then we are back to square one. So never rely on a
+> config option, if it can be avoided.
+> 
+> I'd like to see what option 1 looks like, that sounds like a far better
+> solution.
+> 
+Accepted. I am starting to prepare v3 in this way. 
 
-Fixes: 5581a5ddfe8d ("block: add completion handler for fast path")
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- block/blk-mq.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks to all for feedback!
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4b868e792ba4..6c2231e52991 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -736,6 +736,10 @@ static void blk_complete_request(struct request *req)
- 
- 		/* Completion has already been traced */
- 		bio_clear_flag(bio, BIO_TRACE_COMPLETION);
-+
-+		if (req_op(req) == REQ_OP_ZONE_APPEND)
-+			bio->bi_iter.bi_sector = req->__sector;
-+
- 		if (!is_flush)
- 			bio_endio(bio);
- 		bio = next;
 -- 
-2.25.1
-
+Alexander Buev
