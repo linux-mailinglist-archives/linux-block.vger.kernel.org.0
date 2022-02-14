@@ -2,130 +2,219 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A30694B53BD
-	for <lists+linux-block@lfdr.de>; Mon, 14 Feb 2022 15:51:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5C544B58D5
+	for <lists+linux-block@lfdr.de>; Mon, 14 Feb 2022 18:44:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353295AbiBNOu6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Feb 2022 09:50:58 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53954 "EHLO
+        id S245303AbiBNRoa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Feb 2022 12:44:30 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231529AbiBNOu5 (ORCPT
+        with ESMTP id S1356631AbiBNRo2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Feb 2022 09:50:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4906D4C7AB
-        for <linux-block@vger.kernel.org>; Mon, 14 Feb 2022 06:50:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644850248;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=D11+cVAG03IUHV0X0HfzlaSQjb7g4OFzkQbP1NRpCco=;
-        b=Iy9h+tG8PtDwDlmqpW1+TYqAaQd6wquGJa39k8ywWDHj8Z4MnBqLV3I60sF1X9HjV6vzXY
-        SjopPNT/ub15DVWMfELIhiBl68GqE+sx4DA56leRBRxZ4E+8cmsQe05/ro2pQt4jZUy+tx
-        z8L4pICRzvv5t2dSHyuITVWf1715Wxk=
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com
- [209.85.222.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-674-eTmlwcf5OLGjSD2nnRgLJg-1; Mon, 14 Feb 2022 09:50:47 -0500
-X-MC-Unique: eTmlwcf5OLGjSD2nnRgLJg-1
-Received: by mail-ua1-f72.google.com with SMTP id q19-20020ab04a13000000b002fef2f854a6so6570070uae.7
-        for <linux-block@vger.kernel.org>; Mon, 14 Feb 2022 06:50:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D11+cVAG03IUHV0X0HfzlaSQjb7g4OFzkQbP1NRpCco=;
-        b=qAb9RidPVsol6tJaff+CMWT5LXXEWXniJNdGjtCslmfS90GN5isUmZI5Zr2TDLXwNq
-         cvxH6gcYl+d5IT+b0UH+j/8z5Ok6meRHn0AKzhpcrSux+aEHmrY2s7e6fZMFZMDCFbcV
-         6g4GwtStPr0bKotQqCE4ju2N6FNvpIjJhX2ZTA3kyu2/XlGKea4ks2JKT6gTpQ3Ac4Lu
-         zkuJlWxQVa+8EakFWi2q22J+Lm9qHCcZRHrOf91zs0k8RAZo6X0b9H1Fdq7ex6qqvQTa
-         qR9Fl8NReiqWua6IkfD1brlfu/c/yV5YdULwOhsyV53YLT7HaS05MofLV6KDkWh4j0X4
-         dyAA==
-X-Gm-Message-State: AOAM533bfthq9ZzlX4odEGsk1ucgpkjPeDz/xiujg6wC0XyAtw/1pqjI
-        fgama6eUj/WdHaP3EG7mt6ok3qAfG7mp8JEabh/Dz+jMz/ahKq4ILYRMY5CNz1A9kQZxUi13FCY
-        2WI+MvuFBmL2c9P5X1AmjRZkFfx9i/EZoa8Rn/Nk=
-X-Received: by 2002:a1f:dc03:: with SMTP id t3mr10747vkg.28.1644850246644;
-        Mon, 14 Feb 2022 06:50:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz4q628KlCa/+wUdfCY2l5tdpIeBtgyv3otR+7O6uT0p81j8fndB1fOtoAgIQwf1FvTSOLT9p91QC6ZtiNFuJE=
-X-Received: by 2002:a1f:dc03:: with SMTP id t3mr10729vkg.28.1644850246393;
- Mon, 14 Feb 2022 06:50:46 -0800 (PST)
+        Mon, 14 Feb 2022 12:44:28 -0500
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25176543A
+        for <linux-block@vger.kernel.org>; Mon, 14 Feb 2022 09:44:20 -0800 (PST)
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.1.2/8.16.1.2) with ESMTP id 21EHPpC5019324
+        for <linux-block@vger.kernel.org>; Mon, 14 Feb 2022 09:44:20 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=m7BP5GqmDIx7PKgEuSQ5KsLYXYPqHLneIHsLUxw8VqM=;
+ b=q7iAOXwnhAV8vL1tvl8A+lof5fKTNAVeDvmM6GjoOo/r5iw1Fy936NzNF3esAJRYjxg3
+ Cd6pNjYKzKXDnQSQZAZCpt3eHdiIRhzFqVPYixUHs9l2iv6+Kk9v/9VXttpapId86UmT
+ 7PbCZaKCWvU/BntOURXgBiJ3zFJDqRNHYyo= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net (PPS) with ESMTPS id 3e7ufp85vc-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Mon, 14 Feb 2022 09:44:19 -0800
+Received: from twshared0654.04.ash8.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Mon, 14 Feb 2022 09:44:18 -0800
+Received: by devvm225.atn0.facebook.com (Postfix, from userid 425415)
+        id 8C557ABBD0F3; Mon, 14 Feb 2022 09:44:09 -0800 (PST)
+From:   Stefan Roesch <shr@fb.com>
+To:     <io-uring@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <kernel-team@fb.com>
+CC:     <shr@fb.com>
+Subject: [PATCH v1 00/14] Support sync buffered writes for io-uring
+Date:   Mon, 14 Feb 2022 09:43:49 -0800
+Message-ID: <20220214174403.4147994-1-shr@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20220131203337.GA17666@redhat> <CAFj5m9Lej-oZx2x9f1aSiEDyND_J2cSNAbyytLcTEJWrDZJBvA@mail.gmail.com>
-In-Reply-To: <CAFj5m9Lej-oZx2x9f1aSiEDyND_J2cSNAbyytLcTEJWrDZJBvA@mail.gmail.com>
-From:   John Pittman <jpittman@redhat.com>
-Date:   Mon, 14 Feb 2022 09:50:35 -0500
-Message-ID: <CA+RJvhynSq7Po=qWiLOTSOU+KVEyKsv42TRzPgStBW+-YDLYDA@mail.gmail.com>
-Subject: Re: [PATCH] blk-mq: avoid extending delays of active hctx from blk_mq_delay_run_hw_queues
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     David Jeffery <djeffery@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Laurence Oberman <loberman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 54CgXJo_TXx2U1-laJCklZfouSijOgwe
+X-Proofpoint-GUID: 54CgXJo_TXx2U1-laJCklZfouSijOgwe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-02-14_07,2022-02-14_03,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=fb_outbound_notspam policy=fb_outbound score=0 mlxlogscore=999
+ spamscore=0 clxscore=1015 priorityscore=1501 suspectscore=0 malwarescore=0
+ mlxscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202140105
+X-FB-Internal: deliver
 X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch has now been tested in the customer environment and results
-were good (fixed the hangs).
+This patch series adds support for async buffered writes. Currently
+io-uring only supports buffered writes in the slow path, by processing
+them in the io workers. With this patch series it is now possible to
+support buffered writes in the fast path. To be able to use the fast
+path the required pages must be in the page cache or they can be loaded
+with noio. Otherwise they still get punted to the slow path.
 
-On Mon, Feb 7, 2022 at 9:45 PM Ming Lei <ming.lei@redhat.com> wrote:
->
-> On Tue, Feb 1, 2022 at 4:34 AM David Jeffery <djeffery@redhat.com> wrote:
-> >
-> > When blk_mq_delay_run_hw_queues sets an hctx to run in the future, it can
-> > reset the delay length for an already pending delayed work run_work. This
-> > creates a scenario where multiple hctx may have their queues set to run,
-> > but if one runs first and finds nothing to do, it can reset the delay of
-> > another hctx and stall the other hctx's ability to run requests.
-> >
-> > To avoid this I/O stall when an hctx's run_work is already pending,
-> > leave it untouched to run at its current designated time rather than
-> > extending its delay. The work will still run which keeps closed the race
-> > calling blk_mq_delay_run_hw_queues is needed for while also avoiding the
-> > I/O stall.
-> >
-> > Signed-off-by: David Jeffery <djeffery@redhat.com>
-> > ---
-> >  block/blk-mq.c |    8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> >
-> > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> > index f3bf3358a3bb..ae46eb4bf547 100644
-> > --- a/block/blk-mq.c
-> > +++ b/block/blk-mq.c
-> > @@ -2177,6 +2177,14 @@ void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs)
-> >         queue_for_each_hw_ctx(q, hctx, i) {
-> >                 if (blk_mq_hctx_stopped(hctx))
-> >                         continue;
-> > +               /*
-> > +                * If there is already a run_work pending, leave the
-> > +                * pending delay untouched. Otherwise, a hctx can stall
-> > +                * if another hctx is re-delaying the other's work
-> > +                * before the work executes.
-> > +                */
-> > +               if (delayed_work_pending(&hctx->run_work))
-> > +                       continue;
->
-> The issue is triggered on BFQ, since BFQ's has_work() may return true,
-> however its ->dispatch_request() may return NULL, so
-> blk_mq_delay_run_hw_queues()
-> is run for delay schedule.
->
-> In case of multiple hw queue, the described issue may be triggered, and cause io
-> stall for long time. And there are only 3 in-tree callers of
-> blk_mq_delay_run_hw_queues(),
-> David's fix works well for the 3 users, so this patch looks fine:
->
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
->
-> Thanks,
->
+If a buffered write request requires more than one page, it is possible
+that only part of the request can use the fast path, the resst will be
+completed by the io workers.
+
+Support for async buffered writes:
+  Patch 1: fs: Add flags parameter to __block_write_begin_int
+    Add a flag parameter to the function __block_write_begin_int
+    to allow specifying a nowait parameter.
+   =20
+  Patch 2: mm: Introduce do_generic_perform_write
+    Introduce a new do_generic_perform_write function. The function
+    is split off from the existing generic_perform_write() function.
+    It allows to specify an additional flag parameter. This parameter
+    is used to specify the nowait flag.
+   =20
+  Patch 3: mm: add noio support in filemap_get_pages
+    This allows to allocate pages with noio, if a page for async
+    buffered writes is not yet loaded in the page cache.
+   =20
+  Patch 4: mm: Add support for async buffered writes
+    For async buffered writes allocate pages without blocking on the
+    allocation.
+
+  Patch 5: fs: split off __alloc_page_buffers function
+    Split off __alloc_page_buffers() function with new gfp_t parameter.
+
+  Patch 6: fs: split off __create_empty_buffers function
+    Split off __create_empty_buffers() function with new gfp_t parameter.
+
+  Patch 7: fs: Add aop_flags parameter to create_page_buffers()
+    Add aop_flags to create_page_buffers() function. Use atomic allocatio=
+n
+    for async buffered writes.
+
+  Patch 8: fs: add support for async buffered writes
+    Return -EAGAIN instead of -ENOMEM for async buffered writes. This
+    will cause the write request to be processed by an io worker.
+
+  Patch 9: io_uring: add support for async buffered writes
+    This enables the async buffered writes for block devices in io_uring.
+    Buffered writes are enabled for blocks that are already in the page
+    cache or can be acquired with noio.
+
+  Patch 10: io_uring: Add tracepoint for short writes
+
+Support for write throttling of async buffered writes:
+  Patch 11: sched: add new fields to task_struct
+    Add two new fields to the task_struct. These fields store the
+    deadline after which writes are no longer throttled.
+
+  Patch 12: mm: support write throttling for async buffered writes
+    This changes the balance_dirty_pages function to take an additonal
+    parameter. When nowait is specified the write throttling code no
+    longer waits synchronously for the deadline to expire. Instead
+    it sets the fields in task_struct. Once the deadline expires the
+    fields are reset.
+   =20
+  Patch 13: io_uring: support write throttling for async buffered writes
+    Adds support to io_uring for write throttling. When the writes
+    are throttled, the write requests are added to the pending io list.
+    Once the write throttling deadline expires, the writes are submitted.
+   =20
+Enable async buffered write support
+  Patch 14: fs: add flag to support async buffered writes
+    This sets the flags that enables async buffered writes for block
+    devices.
+
+
+Testing:
+  This patch has been tested with xfstests and fio.
+
+
+Peformance results:
+  For fio the following results have been obtained with a queue depth of
+  1 and 4k block size (runtime 600 secs):
+
+                 sequential writes:
+                 without patch                 with patch
+  throughput:       329 Mib/s                    1032Mib/s
+  iops:              82k                          264k
+  slat (nsec)      2332                          3340=20
+  clat (nsec)      9017                            60
+                  =20
+  CPU util%:         37%                          78%
+
+
+
+                 random writes:
+                 without patch                 with patch
+  throughput:       307 Mib/s                    909Mib/s
+  iops:              76k                         227k
+  slat (nsec)      2419                         3780=20
+  clat (nsec)      9934                           59
+
+  CPU util%:         57%                          88%
+
+For an io depth of 1, the new patch improves throughput by close to 3
+times and also the latency is considerably reduced. To achieve the same
+or better performance with the exisiting code an io depth of 4 is require=
+d.
+
+Especially for mixed workloads this is a considerable improvement.
+
+
+
+
+Stefan Roesch (14):
+  fs: Add flags parameter to __block_write_begin_int
+  mm: Introduce do_generic_perform_write
+  mm: add noio support in filemap_get_pages
+  mm: Add support for async buffered writes
+  fs: split off __alloc_page_buffers function
+  fs: split off __create_empty_buffers function
+  fs: Add aop_flags parameter to create_page_buffers()
+  fs: add support for async buffered writes
+  io_uring: add support for async buffered writes
+  io_uring: Add tracepoint for short writes
+  sched: add new fields to task_struct
+  mm: support write throttling for async buffered writes
+  io_uring: support write throttling for async buffered writes
+  block: enable async buffered writes for block devices.
+
+ block/fops.c                    |   5 +-
+ fs/buffer.c                     | 103 ++++++++++++++++---------
+ fs/internal.h                   |   3 +-
+ fs/io_uring.c                   | 130 +++++++++++++++++++++++++++++---
+ fs/iomap/buffered-io.c          |   4 +-
+ fs/read_write.c                 |   3 +-
+ include/linux/fs.h              |   4 +
+ include/linux/sched.h           |   3 +
+ include/linux/writeback.h       |   1 +
+ include/trace/events/io_uring.h |  25 ++++++
+ kernel/fork.c                   |   1 +
+ mm/filemap.c                    |  34 +++++++--
+ mm/folio-compat.c               |   4 +
+ mm/page-writeback.c             |  54 +++++++++----
+ 14 files changed, 298 insertions(+), 76 deletions(-)
+
+
+base-commit: f1baf68e1383f6ed93eb9cff2866d46562607a43
+--=20
+2.30.2
 
