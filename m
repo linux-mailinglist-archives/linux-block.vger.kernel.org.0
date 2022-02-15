@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 645E24B68C5
+	by mail.lfdr.de (Postfix) with ESMTP id B04BC4B68C6
 	for <lists+linux-block@lfdr.de>; Tue, 15 Feb 2022 11:06:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232405AbiBOKF7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Feb 2022 05:05:59 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41564 "EHLO
+        id S235153AbiBOKGC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Feb 2022 05:06:02 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231127AbiBOKF7 (ORCPT
+        with ESMTP id S230108AbiBOKGB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Feb 2022 05:05:59 -0500
+        Tue, 15 Feb 2022 05:06:01 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F9A24F
-        for <linux-block@vger.kernel.org>; Tue, 15 Feb 2022 02:05:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C83924F
+        for <linux-block@vger.kernel.org>; Tue, 15 Feb 2022 02:05:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=ReAiumxdBv1XVEkgCdJh8kXAnU3jtNvTIPeXyDr/xfo=; b=ooslR8dyDAPpWIaYY4MDesMLQo
-        OjZRr/+Mv8znXJGwG421jfdyg7KU4nhrj8e2nCZxtLhHkgVncs57X0Qp/7FT3t+YeEpvXk5xR6cz+
-        aMIPNULQVbLXYn7Pme+qP71LG3Ksh4+jodjzqRDES7ViRyiY1poV5sQREqISL2Ysyciop2HL6Nos+
-        n5xjMHHZhYVrqTKqusF5bWeIwfep7afDaNIViVGTBnq47yijs0TcTug5Gs3M2hRccZ8PqUZLukhHx
-        TU1Vb8U+2oufjrmecKN7A22uC3hq05uMALzoNBGSSgQiGVoVs+qs03aoeK1iFzA/Jej6n0+N7+rHk
-        +So7DGTA==;
+        bh=jiV+g/hzm3FCHU1Mry05zuZvudJcJN93Ahz09Tk15VU=; b=rEC8uWtMD7JxVhb2EwUPC6u2Uf
+        b6h6x1ctO/VZFIHfILOvq3dQYKIVSgd1mqiwU3T5+7yq0cx6iVcowneTuqwNWRJL7YsKQapOJoWA2
+        qaXZa6dDuTpIfpj9wIyMRot+HQP2cNC9TTnc//1mgCEeNUeS6QKJp4u3uMWKM2PH9XuaTBzG9++/b
+        18UxX/A0PqONu1gMV6QgZIlaxUni/HI8BbosLYs9cxbFrOySx7Z9/R9zecwG0hO7+mXthNEXkw99K
+        Pgf4d/OY5XeFIj6nYLW+rPDQXtqmKRcQ0nHz02NlPZDbtw368PuvDmx3eLiEsuK1ZoulMAGn7He79
+        uU8mluow==;
 Received: from [2001:4bb8:184:543c:6bdf:22f4:7f0a:fe97] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nJuiS-002E29-2V; Tue, 15 Feb 2022 10:05:48 +0000
+        id 1nJuiU-002E3T-OO; Tue, 15 Feb 2022 10:05:51 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@redhat.com>
 Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org
-Subject: [PATCH 2/5] blk-mq: fold blk_cloned_rq_check_limits into blk_insert_cloned_request
-Date:   Tue, 15 Feb 2022 11:05:37 +0100
-Message-Id: <20220215100540.3892965-3-hch@lst.de>
+Subject: [PATCH 3/5] blk-mq: remove the request_queue argument to blk_insert_cloned_request
+Date:   Tue, 15 Feb 2022 11:05:38 +0100
+Message-Id: <20220215100540.3892965-4-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220215100540.3892965-1-hch@lst.de>
 References: <20220215100540.3892965-1-hch@lst.de>
@@ -50,72 +50,80 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Fold blk_cloned_rq_check_limits into its only caller.
+The request must be submitted to the queue it was allocated for, so
+remove the extra request_queue argument.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-mq.c | 38 +++++---------------------------------
- 1 file changed, 5 insertions(+), 33 deletions(-)
+ block/blk-mq.c         | 9 ++++-----
+ drivers/md/dm-rq.c     | 2 +-
+ include/linux/blk-mq.h | 3 +--
+ 3 files changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index db62d34afb637..fc132933397fb 100644
+index fc132933397fb..886836a54064c 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -2842,26 +2842,14 @@ void blk_mq_submit_bio(struct bio *bio)
- 
+@@ -2843,11 +2843,11 @@ void blk_mq_submit_bio(struct bio *bio)
  #ifdef CONFIG_BLK_MQ_STACKING
  /**
-- * blk_cloned_rq_check_limits - Helper function to check a cloned request
-- *                              for the new queue limits
-- * @q:  the queue
-- * @rq: the request being checked
-- *
-- * Description:
-- *    @rq may have been made based on weaker limitations of upper-level queues
-- *    in request stacking drivers, and it may violate the limitation of @q.
-- *    Since the block layer and the underlying device driver trust @rq
-- *    after it is inserted to @q, it should be checked against @q before
-- *    the insertion using this generic function.
-- *
-- *    Request stacking drivers like request-based dm may change the queue
-- *    limits when retrying requests on other queues. Those requests need
-- *    to be checked against the new queue limits again during dispatch.
-+ * blk_insert_cloned_request - Helper for stacking drivers to submit a request
-+ * @q:  the queue to submit the request
-+ * @rq: the request being queued
+  * blk_insert_cloned_request - Helper for stacking drivers to submit a request
+- * @q:  the queue to submit the request
+  * @rq: the request being queued
   */
--static blk_status_t blk_cloned_rq_check_limits(struct request_queue *q,
--				      struct request *rq)
-+blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *rq)
+-blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *rq)
++blk_status_t blk_insert_cloned_request(struct request *rq)
  {
++	struct request_queue *q = rq->q;
  	unsigned int max_sectors = blk_queue_get_max_sectors(q, req_op(rq));
-+	blk_status_t ret;
+ 	blk_status_t ret;
  
- 	if (blk_rq_sectors(rq) > max_sectors) {
- 		/*
-@@ -2893,22 +2881,6 @@ static blk_status_t blk_cloned_rq_check_limits(struct request_queue *q,
+@@ -2881,8 +2881,7 @@ blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *
  		return BLK_STS_IOERR;
  	}
  
--	return BLK_STS_OK;
--}
--
--/**
-- * blk_insert_cloned_request - Helper for stacking drivers to submit a request
-- * @q:  the queue to submit the request
-- * @rq: the request being queued
-- */
--blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *rq)
--{
--	blk_status_t ret;
--
--	ret = blk_cloned_rq_check_limits(q, rq);
--	if (ret != BLK_STS_OK)
--		return ret;
--
- 	if (rq->q->disk &&
- 	    should_fail_request(rq->q->disk->part0, blk_rq_bytes(rq)))
+-	if (rq->q->disk &&
+-	    should_fail_request(rq->q->disk->part0, blk_rq_bytes(rq)))
++	if (q->disk && should_fail_request(q->disk->part0, blk_rq_bytes(rq)))
  		return BLK_STS_IOERR;
+ 
+ 	if (blk_crypto_insert_cloned_request(rq))
+@@ -2895,7 +2894,7 @@ blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *
+ 	 * bypass a potential scheduler on the bottom device for
+ 	 * insert.
+ 	 */
+-	blk_mq_run_dispatch_ops(rq->q,
++	blk_mq_run_dispatch_ops(q,
+ 			ret = blk_mq_request_issue_directly(rq, true));
+ 	if (ret)
+ 		blk_account_io_done(rq, ktime_get_ns());
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index 579ab6183d4d8..2fcc9b7f391b3 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -311,7 +311,7 @@ static blk_status_t dm_dispatch_clone_request(struct request *clone, struct requ
+ 		clone->rq_flags |= RQF_IO_STAT;
+ 
+ 	clone->start_time_ns = ktime_get_ns();
+-	r = blk_insert_cloned_request(clone->q, clone);
++	r = blk_insert_cloned_request(clone);
+ 	if (r != BLK_STS_OK && r != BLK_STS_RESOURCE && r != BLK_STS_DEV_RESOURCE)
+ 		/* must complete clone in terms of original request */
+ 		dm_complete_request(rq, r);
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index d319ffa59354a..3a41d50b85d3a 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -952,8 +952,7 @@ int blk_rq_prep_clone(struct request *rq, struct request *rq_src,
+ 		struct bio_set *bs, gfp_t gfp_mask,
+ 		int (*bio_ctr)(struct bio *, struct bio *, void *), void *data);
+ void blk_rq_unprep_clone(struct request *rq);
+-blk_status_t blk_insert_cloned_request(struct request_queue *q,
+-		struct request *rq);
++blk_status_t blk_insert_cloned_request(struct request *rq);
+ 
+ struct rq_map_data {
+ 	struct page **pages;
 -- 
 2.30.2
 
