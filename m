@@ -2,29 +2,29 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6674E4B816F
-	for <lists+linux-block@lfdr.de>; Wed, 16 Feb 2022 08:22:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A87CF4B8187
+	for <lists+linux-block@lfdr.de>; Wed, 16 Feb 2022 08:27:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229976AbiBPHXA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Feb 2022 02:23:00 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:39062 "EHLO
+        id S229961AbiBPHX5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Feb 2022 02:23:57 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:44618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbiBPHW7 (ORCPT
+        with ESMTP id S230015AbiBPHXz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Feb 2022 02:22:59 -0500
-Received: from lgeamrelo11.lge.com (lgeamrelo12.lge.com [156.147.23.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 84544E090
-        for <linux-block@vger.kernel.org>; Tue, 15 Feb 2022 23:22:35 -0800 (PST)
-Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
-        by 156.147.23.52 with ESMTP; 16 Feb 2022 15:52:34 +0900
-X-Original-SENDERIP: 156.147.1.125
+        Wed, 16 Feb 2022 02:23:55 -0500
+Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 139CB13FA4
+        for <linux-block@vger.kernel.org>; Tue, 15 Feb 2022 23:23:43 -0800 (PST)
+Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
+        by 156.147.23.51 with ESMTP; 16 Feb 2022 15:53:43 +0900
+X-Original-SENDERIP: 156.147.1.151
 X-Original-MAILFROM: byungchul.park@lge.com
 Received: from unknown (HELO localhost.localdomain) (10.177.244.38)
-        by 156.147.1.125 with ESMTP; 16 Feb 2022 15:52:34 +0900
+        by 156.147.1.151 with ESMTP; 16 Feb 2022 15:53:43 +0900
 X-Original-SENDERIP: 10.177.244.38
 X-Original-MAILFROM: byungchul.park@lge.com
 From:   Byungchul Park <byungchul.park@lge.com>
-To:     damien.lemoal@opensource.wdc.com, linux-ide@vger.kernel.org
+To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org, peterz@infradead.org,
         will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
@@ -46,15 +46,16 @@ Cc:     torvalds@linux-foundation.org, mingo@redhat.com,
         dri-devel@lists.freedesktop.org, airlied@linux.ie,
         rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
         hamohammed.sa@gmail.com
-Subject: RE: [REPORT] libata deadlock possibilities by DEPT
-Date:   Wed, 16 Feb 2022 15:52:29 +0900
-Message-Id: <1644994349-1459-1-git-send-email-byungchul.park@lge.com>
+Subject: RE: [REPORT] net deadlock possibilities by DEPT
+Date:   Wed, 16 Feb 2022 15:53:38 +0900
+Message-Id: <1644994418-2049-1-git-send-email-byungchul.park@lge.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1644984747-26706-1-git-send-email-byungchul.park@lge.com>
-References: <1644984747-26706-1-git-send-email-byungchul.park@lge.com>
+In-Reply-To: <1644984767-26886-1-git-send-email-byungchul.park@lge.com>
+References: <1644984767-26886-1-git-send-email-byungchul.park@lge.com>
 X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
