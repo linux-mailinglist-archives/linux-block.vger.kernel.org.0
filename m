@@ -2,60 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46D144B96AA
-	for <lists+linux-block@lfdr.de>; Thu, 17 Feb 2022 04:28:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10DD24B973C
+	for <lists+linux-block@lfdr.de>; Thu, 17 Feb 2022 04:53:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232795AbiBQD22 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Feb 2022 22:28:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39992 "EHLO
+        id S232502AbiBQDx7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Feb 2022 22:53:59 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbiBQD22 (ORCPT
+        with ESMTP id S229604AbiBQDx7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Feb 2022 22:28:28 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE92C12F417
-        for <linux-block@vger.kernel.org>; Wed, 16 Feb 2022 19:28:14 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id om7so4303095pjb.5
-        for <linux-block@vger.kernel.org>; Wed, 16 Feb 2022 19:28:14 -0800 (PST)
+        Wed, 16 Feb 2022 22:53:59 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 154B71D966C;
+        Wed, 16 Feb 2022 19:53:46 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id i6so3880206pfc.9;
+        Wed, 16 Feb 2022 19:53:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=DafoJMbLw6PCKxXBrE+9+LukVDxAQQTDVtc0OC6LrAQ=;
-        b=WEt8nLsoK0Y747cO6oFFezK7ywa2TE7WXYuL4hVorDM7JmLYIXYP4FAR4AEr11ojKK
-         poJW2iq2nm0vyv+ZH4w2J25HMUIGvaU3QFzXXzpLcM8YR5lqyxBnSkmUFH/02umJknyX
-         NBbsZJFq+MiIsPtG+sRIxlKY1AeylQOEytWvk7mzl2eh9VelYMDWVsWK9SpEjfpP/wCW
-         nd1KfKdifkvgltmUdzPZsKZvFdGCI6NqL22Uew70zt/Z2QA0hbS7GefM9Mbz2awf56e0
-         0435tieZAtKZuZJ/CG7ofUDarxjKzlD8O5gI0suahMwZKhTkGWNh3FX+kvWCXPgOYl5n
-         4dZA==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=anu63ADScUWbvf9kEf9F61i07ll+gpD88rNiTggb59Y=;
+        b=O4x5kUJYhlgOKQCP1W/ATa8vcxLZlyEmDrTCZVOvA3FEu2XISkxvNndUhTM6QNByoq
+         8KMn4855joZ5MJDi6IuP8PivIe19NoRZNdS60cJeLnsUDZ6n4k0QwgSJnM+qRiI+tOdC
+         2UGgpiOXgtqiQu4oKUkuR/Nurh74qOvYAxDanVJeEAlgUE38ROEv30j6edpwmm9Kbn93
+         wgUyVsgOL3E3qtiiyfkxEswvdfwx65PoNyy/udyoQmxuumO8VEcfmpy/1DmiBkgJEVJ3
+         0KiVcyWAP2VW1fh4Qx9QUL97Y8Fpup5v0QRAZfue/ZJwcc7C1ur/VHPyuTTBSzN5j7tO
+         uatQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DafoJMbLw6PCKxXBrE+9+LukVDxAQQTDVtc0OC6LrAQ=;
-        b=EZwxvcEUQoBna0Ck5bDDt3m7Y2OSBjDSnLP8mFJNdZbFEScskq1T1WfvuCNELyqrho
-         bi4yE3i9UZW6sm6mCvs61svZMf6ADLz0Ky8uhAtgdLpyU+ec3SA+j3auifhKYvkXvHAz
-         yZxztlE2UDXZWJmFF8oZDzT6P5y1E3QLJNbfZvlrJMD7+scSI01eXe33qOUzz03UTPyO
-         kBROI9TXrrGrZ32AEM3PpiPKHnSetYqTMdiLdk4wKATlIV5RFJ+W2LkyC4aWQ/fahrqo
-         pr0Gcnn8pZb2JycIvKslBsXJIWh9cUwSq/dBQQPzkKxQScSGbPj+JFsqHA9ZK/K5qJIk
-         Eoqg==
-X-Gm-Message-State: AOAM533vsQtjNY9qa1/B5yn81LnEM25ov5j3gNwhBuZfn9MiioI0Xtc5
-        3DuR7RfODZSr+uE1yptUatM=
-X-Google-Smtp-Source: ABdhPJzhrpBlVKHRxtUHfxnAZPwOfGIyXU58Nk5GB5i29SNTbpPqa48vbh5Y9I0ySdsNCF0kSg2wfg==
-X-Received: by 2002:a17:902:ce86:b0:14c:9139:5839 with SMTP id f6-20020a170902ce8600b0014c91395839mr1039418plg.168.1645068494320;
-        Wed, 16 Feb 2022 19:28:14 -0800 (PST)
-Received: from localhost.localdomain ([61.16.102.70])
-        by smtp.gmail.com with ESMTPSA id 4sm3397691pfh.125.2022.02.16.19.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 19:28:13 -0800 (PST)
-From:   "Wang Jianchao (Kuaishou)" <jianchao.wan9@gmail.com>
-To:     osandov@osandov.com
-Cc:     chaitanyak@nvidia.com, linux-block@vger.kernel.org
-Subject: [RFC V2 blktests] test/block/032: add test cases for switching queue qos
-Date:   Thu, 17 Feb 2022 11:27:04 +0800
-Message-Id: <20220217032704.99150-1-jianchao.wan9@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=anu63ADScUWbvf9kEf9F61i07ll+gpD88rNiTggb59Y=;
+        b=mqdEByVS+ERlCpdPIb/dX8krHvdFWT3/n8m+ceagiHsFAJM2fXd6TC91A7uRy260n/
+         xqagStzDIECN7fq9ByAOZnemaep0a/F4SmU1dO9mZNObRu/2z8qpKGkvg2l4qtwWx00f
+         3C6Ris3J/R/CrJucME7IcExPuubcVv3mnF45hFb+S0rVYFu9JzW9TvthwnPWvNMg7x6u
+         zKk27s1GdD95FsyMybb5PHh7jTyskSribmhOMRVutiCMlPdaz5RFSOKw6upeMUoYT7Hz
+         aFiSIAKp7vpP/ZB47MnrydDP8uzIxw6IcrHADtz4ed33IOM7ll24hqv3t1pHlfIWyAcr
+         58Uw==
+X-Gm-Message-State: AOAM533ZHtFGqyQ6YOo6l39tBo1jLf21GrWfqdEOsYRgxXffeixUVNx1
+        Oj09FNMIQ8JgoR1zhgjTzO4=
+X-Google-Smtp-Source: ABdhPJyGcrJCVxjkv5tQVr/9luHQAKul6vb98q+6FEFGBlevbqifCt8C31CkAnR1GXrhSgnzO+Rs3A==
+X-Received: by 2002:a05:6a00:1787:b0:4c8:aca8:52cd with SMTP id s7-20020a056a00178700b004c8aca852cdmr1056850pfg.10.1645070025580;
+        Wed, 16 Feb 2022 19:53:45 -0800 (PST)
+Received: from [172.20.119.15] ([61.16.102.69])
+        by smtp.gmail.com with ESMTPSA id z13sm6702847pga.84.2022.02.16.19.53.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Feb 2022 19:53:45 -0800 (PST)
+Message-ID: <4b8864f3-c4da-88a8-2c62-39722ef7cd02@gmail.com>
+Date:   Thu, 17 Feb 2022 11:53:41 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.0
+Subject: Re: [RFC V4 0/6] blk: make blk-rq-qos policies pluggable and modular
+Content-Language: en-US
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josef Bacik <jbacik@fb.com>, Tejun Heo <tj@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220217031349.98561-1-jianchao.wan9@gmail.com>
+ <f7936d00-a495-64b9-9497-7eb515d7c15b@kernel.dk>
+From:   Wang Jianchao <jianchao.wan9@gmail.com>
+In-Reply-To: <f7936d00-a495-64b9-9497-7eb515d7c15b@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,93 +76,35 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add test case for switching rq qos policy while doing IO. It will
-select a exist policy randomly to close and open it every round.
 
-Signed-off-by: Wang Jianchao (Kuaishou) <jianchao.wan9@gmail.com>
----
- tests/block/032     | 62 +++++++++++++++++++++++++++++++++++++++++++++
- tests/block/032.out |  2 ++
- 2 files changed, 64 insertions(+)
- create mode 100644 tests/block/032
- create mode 100644 tests/block/032.out
 
-diff --git a/tests/block/032 b/tests/block/032
-new file mode 100644
-index 0000000..aaecc75
---- /dev/null
-+++ b/tests/block/032
-@@ -0,0 +1,62 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2022 Wang Jianchao
-+#
-+# Threads doing IO to a device, while we switch rqos
-+
-+. tests/block/rc
-+
-+DESCRIPTION="switch rqos while doing IO"
-+TIMED=1
-+CAN_BE_ZONED=1
-+
-+requires() {
-+	_have_fio
-+}
-+
-+test_device() {
-+	echo "Running ${TEST_NAME}"
-+
-+	local rqos=("blk-wbt" "blk-iolat" "blk-iocost" "blk-ioprio")
-+
-+	if _test_dev_is_rotational; then
-+		size="32m"
-+	else
-+		size="1g"
-+	fi
-+
-+	# start fio job
-+	_run_fio_rand_io --filename="$TEST_DEV" --size="$size" &
-+
-+	start_time=$(date +%s)
-+	timeout=${TIMEOUT:=900}
-+	while kill -0 $! 2>/dev/null; do
-+		idx=$((RANDOM % ${#rqos[@]}))
-+		pol=${rqos[$idx]}
-+		cat ${TEST_DEV_SYSFS}/queue/qos | grep "\[$pol\]" > /dev/null
-+		if [ $? -eq 0 ];then
-+			echo "-$pol" > ${TEST_DEV_SYSFS}/queue/qos
-+			if [ $? -ne 0 ];then
-+				echo "$pol"
-+				cat ${TEST_DEV_SYSFS}/queue/qos
-+			fi
-+		else
-+			echo "+$pol" > ${TEST_DEV_SYSFS}/queue/qos
-+			if [ $? -ne 0 ];then
-+				echo "$pol"
-+				cat ${TEST_DEV_SYSFS}/queue/qos
-+			fi
-+		fi
-+		sleep .2
-+		end_time=$(date +%s)
-+		if (( end_time - start_time > timeout + 15 )); then
-+			echo "fio did not finish after $timeout seconds!"
-+			break
-+		fi
-+	done
-+
-+	FIO_PERF_FIELDS=("read iops")
-+	_fio_perf_report
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/block/032.out b/tests/block/032.out
-new file mode 100644
-index 0000000..3604e9e
---- /dev/null
-+++ b/tests/block/032.out
-@@ -0,0 +1,2 @@
-+Running block/032
-+Test complete
--- 
-2.17.1
+On 2022/2/17 11:21 上午, Jens Axboe wrote:
+> On 2/16/22 8:13 PM, Wang Jianchao (Kuaishou) wrote:
+>> Hi Jens
+>>
+>> blk-rq-qos is a standalone framework out of io-sched and can be used to
+>> control or observe the IO progress in block-layer with hooks. blk-rq-qos
+>> is a great design but right now, it is totally fixed and built-in and shut
+>> out peoples who want to use it with external module.
+>>
+>> This patchset attempts to make blk-rq-qos framework pluggable and modular.
+>> Then we can update the blk-rq-qos policy module w/o stopping the IO workload.
+>> And it is more convenient to introduce new policy on old machines w/o udgrade
+>> kernel. And we can close all of the blk-rq-qos policy if we needn't any of
+>> them. At the moment, the request_queue.rqos list is empty, we needn't to
+>> waste cpu cyles on them.
+> 
+> I like this patchset, would be a lot more convenient and helps
+> efficiency.
+> 
+> What kind of testing have you done on it?
+> 
+I have run blktests against this patchset in a VM machine along with a new test
+case for switching rqos policies while running IO. 
 
+https://marc.info/?l=linux-block&m=164506848620632&w=2
+
+And also there is a bit different version running on v4.18 with more tests
+
+Thanks
+Jianchao
