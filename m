@@ -2,329 +2,335 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 840864BAEA5
-	for <lists+linux-block@lfdr.de>; Fri, 18 Feb 2022 01:41:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 771B34BB11A
+	for <lists+linux-block@lfdr.de>; Fri, 18 Feb 2022 06:01:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbiBRAly (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Feb 2022 19:41:54 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:54338 "EHLO
+        id S230221AbiBRFBz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Feb 2022 00:01:55 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230164AbiBRAlx (ORCPT
+        with ESMTP id S230339AbiBRFBO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Feb 2022 19:41:53 -0500
-Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1FA9C32EDC
-        for <linux-block@vger.kernel.org>; Thu, 17 Feb 2022 16:41:32 -0800 (PST)
-Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
-        by 156.147.23.51 with ESMTP; 18 Feb 2022 09:41:31 +0900
-X-Original-SENDERIP: 156.147.1.151
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.244.38)
-        by 156.147.1.151 with ESMTP; 18 Feb 2022 09:41:31 +0900
-X-Original-SENDERIP: 10.177.244.38
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Fri, 18 Feb 2022 09:41:24 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-        linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-        joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-        chris@chris-wilson.co.uk, duyuyang@gmail.com,
-        johannes.berg@intel.com, tj@kernel.org, tytso@mit.edu,
-        david@fromorbit.com, amir73il@gmail.com, bfields@fieldses.org,
-        gregkh@linuxfoundation.org, kernel-team@lge.com,
-        linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-        minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-        ngupta@vflare.org, linux-block@vger.kernel.org, axboe@kernel.dk,
-        paolo.valente@linaro.org, josef@toxicpanda.com,
-        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        jack@suse.cz, jack@suse.com, jlayton@kernel.org,
-        dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
-        dri-devel@lists.freedesktop.org, airlied@linux.ie,
-        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-        hamohammed.sa@gmail.com
-Subject: Re: Report 1 in ext4 and journal based on v5.17-rc1
-Message-ID: <20220218004124.GC20620@X58A-UD3R>
-References: <1645095472-26530-1-git-send-email-byungchul.park@lge.com>
- <1645096204-31670-1-git-send-email-byungchul.park@lge.com>
- <Yg5NTs2RlhdTmSQj@casper.infradead.org>
+        Fri, 18 Feb 2022 00:01:14 -0500
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711852BCA83;
+        Thu, 17 Feb 2022 21:00:54 -0800 (PST)
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20220218050052epoutp03d91cfa16b6fa4a5938cf3c95b83c923c~UyLb-sZkN1838918389epoutp03_;
+        Fri, 18 Feb 2022 05:00:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20220218050052epoutp03d91cfa16b6fa4a5938cf3c95b83c923c~UyLb-sZkN1838918389epoutp03_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1645160452;
+        bh=qK0Db7DE4FPkYkFTizqzCYGIigvy1nkNn6Hr9Lykvoc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gOtFxKEQVPkzhX30rY5YgMnbj5s/xh7CiVZTaDACsNpphU8HeO5VxX9LNWxhgH+2o
+         I4X1EYctLQqIfI8zqzDxBf+EXro33sPKB5nQq8Qc3gTC5YOeG5i8QYxP4XPuataa/x
+         Uynud4WA7A5EfX8UUOQAZxhYJ8CSHbwSrNJqfbT0=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20220218050051epcas5p1364c8f46134da12ab9f98c6e135615f5~UyLbWQtpz0935609356epcas5p15;
+        Fri, 18 Feb 2022 05:00:51 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4K0KJr1m5Dz4x9Q8; Fri, 18 Feb
+        2022 05:00:44 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3C.F7.05590.BF72F026; Fri, 18 Feb 2022 14:00:43 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20220217130401epcas5p1c671c22f1b3d8ff7c662763f0cdb9bb5~UlIATE4D-3210232102epcas5p1K;
+        Thu, 17 Feb 2022 13:04:01 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220217130401epsmtrp23758e5a1d5a2620ddbd620ec4d9c6a90~UlIARikU73066630666epsmtrp2C;
+        Thu, 17 Feb 2022 13:04:01 +0000 (GMT)
+X-AuditID: b6c32a4b-739ff700000015d6-59-620f27fb9e31
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9E.BD.08738.1C74E026; Thu, 17 Feb 2022 22:04:01 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20220217130356epsmtip28c51f7f8d8b35afe7c013782e59c1ca4~UlH7t34aT1085610856epsmtip2R;
+        Thu, 17 Feb 2022 13:03:56 +0000 (GMT)
+Date:   Thu, 17 Feb 2022 18:29:01 +0530
+From:   Nitesh Shetty <nj.shetty@samsung.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     hch@lst.de, javier@javigon.com, chaitanyak@nvidia.com,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        dm-devel@redhat.com, linux-nvme@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, axboe@kernel.dk,
+        msnitzer@redhat.com, bvanassche@acm.org,
+        martin.petersen@oracle.com, hare@suse.de, kbusch@kernel.org,
+        Frederick.Knight@netapp.com, osandov@fb.com,
+        lsf-pc@lists.linux-foundation.org, djwong@kernel.org,
+        josef@toxicpanda.com, clm@fb.com, dsterba@suse.com, tytso@mit.edu,
+        jack@suse.com, joshi.k@samsung.com, arnav.dawn@samsung.com,
+        nitheshshetty@gmail.com, SelvaKumar S <selvakuma.s1@samsung.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        James Smart <james.smart@broadcom.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/10] block: Introduce queue limits for copy-offload
+ support
+Message-ID: <20220217125901.GA3781@test-zns>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yg5NTs2RlhdTmSQj@casper.infradead.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220217090700.b7n33vbkx5s4qbfq@garbanzo>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te1BTRxTG3ZvkJtAGrwFhhYmmYWxEXglCWCpYx1p7W+wIQ1tHWwevcAsM
+        kGTysK11FEQ6Gh4CFguxYGo7BdHyKlrkJSCY4SUoBUEEoTxkCgKCKChKEwJt//vtN9939uye
+        ORwGr5Ntz4mQqWmljIoS4pbMazedRK4vRasPiRcTeaig8RYDVXTPsNDl3jM4Ojc1z0CTNYMs
+        lHYmg43ah6xQ5cR5Fmqbi8XQYPEihioupmHo0uV6DD3K+Rmg8p+eYOh0UxuGFgYkqH7xMY7S
+        ajsBGu7QYajyvjOqqGxgovayH3F04ddhNkq4V4qjqrFKBsoxvMZQV8owQLd1CzgqHYoF6GZf
+        BxPlj00y0dhcA46+K5oFKD5xno1aXxlY2x3J9j/9Sd3DFpxMjZtgk9d1vWyyta+IScbpHzDJ
+        9hYNWZx3Gid//+U4ebYrB5Dl3TE4eaK5nkFmTD/FyaS4CZx8MnyfSU5WdeABtvsjfcNpKpRW
+        CmhZiDw0QhbmJ/QPCn4v2EsqlrhKfJC3UCCjomk/4c7dAa67IqKMnygUHKaiNEYpgFKphO7b
+        fJVyjZoWhMtVaj8hrQiNUngq3FRUtEojC3OT0ep3JGKxh5fReDAyPLa0i6WYl36dmyuKAQMu
+        WmDBgYQnLGtux7TAksMjygGsKTnBMh+mAUwZHWKbXDxiBsDY+K0riZFzXcumMmOiu5BtPowA
+        mPXi0VKCSWyEj7XFRheHgxPOsGmRY5JtiE2wKiUJMzGDmMVh6u39Jos18Rlsq95okrmEC0w4
+        1coy8xrYkDnENLEF4Q0vzOmXeC3hCKuvGZa6hkSmJXxW1QNMdSCxE/b0K8x9WsO/DSVsM9vD
+        mYlK3OxPAHCu+eFyOAPAuJQ43Ox6F96peIWZCjGIcJiWKTHLfJjemL/csxVMejmEmXUuLM1e
+        YUd4pUC/XGYd7Hweu8wkNLSP4ub/GQdwNruOkQI26P73ON1/1+mWrnCB+vJp3Cw7wJzXHDM6
+        wYIydz1g5YF1tEIVHUarvBRbZPRX/047RB5dDJYWbLN/Kfirf8qtFmAcUAsghyG04U7VcA/x
+        uKHUN0dopTxYqYmiVbXAyzipVIb92hC5cUNl6mCJp4/YUyqVevpskUqEdtzGsEKKR4RRajqS
+        phW0ciWHcSzsYzAHOUMXZLshN8l2MOb5bqtsjy+aHAzrA6n4T3yo+sQHQRcTUA+6Uey4V5v8
+        VpDdVkrcm2+b47tNfooe44ssQjfta5G6p2YSvgenkoOqpCibVfqtI8RffPl+wXgg2Pub93HF
+        gFPwQmHWScK6rqQ/dp6trY7u2CVL/jSR5ydade8pP/7OpZqrJ9UOoyU5zw4fE+h7q2yyk99c
+        nZXhXEsdW1M7uP2uRvuh2vUqNXj3ut/nctLJ/sCemFseuG4wqUCXLg4+u35iqC49u+vtP66c
+        1+0I4H8kEhzt49/oXdUTaKn6QYNxM/OU+yaOWB/4+IM3+NQeN2LmqJ3vCFkYOf590ZjYVshU
+        hVOSzQylivoHaFGXcekEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTdxTH87v39vZSU70Udb9qmFsVMMXhYEzO2Nh8BW9i2EhmjNscWuUO
+        HBRYCwImizw2JwUGQyVSZVQhNmK2hfpYhZa0ddAhryqipYgLQjXa8dxkEAtshS3zv2/O9/M5
+        55/DkJIzglXMobRMXpWmSJXRIuraDdma16w7lh54fbY3EH662UqCqe8PAVwaKKOhcnyGhDHr
+        kAAqyk4LoWd4KZhHzwjAMZ1PwJBhngDT+QoCLl5qIeCxvhZB07kJAoraHQR4B8OhZX6Ehgrb
+        XQTuXi0BZlcomMxtFPQ0nqWh5oJbCMX3jDQ0e8wk6O1zBDjL3Qi6tF4ajMP5CG486KXgR88Y
+        BZ7pNhqONTxD8HXJjBC6Z+2CzWu5njs7Oe1vnTT3XeGokLuuHRBy3Q8aKK5Qd5/iejqzOEN9
+        Ec1drjvKnXDqEdfUl0dzBR0tJHd68k+aKy0cpbkJt4vixpp76fiVH4veSeRTDx3mVRvf3S9K
+        vmstEGYYI3MmS2oEeahRrkF+DGYj8aNKp0CDRIyENSJ8snZSuFhI8YXZX8jFHIAvzj0WLkLD
+        CFssEwsFxQbhEY3hH5thaDYUt88zvvFydj1uLi8lfDzJPqdxQ7WV9DEB7G7ssAT5GDG7ARcf
+        7/738O8Ie+2d9GLhj9uqhilfJlk5ds49IXwuya7G+rmF/X5sFK6Z1i0gK9i12HLNTpQjf+0L
+        tvYFW/u/rUNkPZLyGWplklIdnhGRxmeHqRVKdVZaUtjBdKUBLfyPXG5EpvrxMBsiGGRDmCFl
+        y8XjVvEBiThRkXuEV6XvU2Wl8mobWs1QspfEDk3bPgmbpMjkU3g+g1f91xKM36o84lxK/hNl
+        wrcrX9WnTyXXuY4/fTOFehTctbu0f2f/kuxcictRUOTwblsz9srllCF3wlbviabnsRtGt3UW
+        Sb98pgs5teuWq/HkN+uKq0gzGbFpy9tv1YKl6haeGahcEhP11GNadzS+qvUvSegXtz9ICEne
+        DpaOwIaHgVNXdB1xnzZvvBI7G3A1Zj9Xqv9c53ffHt1yJDImOI79eZnhs9hl328aTAwZeLn+
+        vS0a6UfVhfKuuDvXSzyi1K/WO+h4zp/8xBrlX5YZXIanf90hzK0jm+Jvtr5RfXvPZoPn/IcH
+        D2fuehjdbuH3KM72B72/IsJzT2rL7hsk8qci9v6wFeVEu0Yo57EcGaVOVoTLSZVa8TfrqJgv
+        rgMAAA==
+X-CMS-MailID: 20220217130401epcas5p1c671c22f1b3d8ff7c662763f0cdb9bb5
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----8TtN9ZnHmYbjupaEpeShJ04PQlBV3ZvePY_ZWnFgjSBPeLtG=_8e144_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220214080605epcas5p16868dae515a6355cf9fecf22df4f3c3d
+References: <20220214080002.18381-1-nj.shetty@samsung.com>
+        <CGME20220214080605epcas5p16868dae515a6355cf9fecf22df4f3c3d@epcas5p1.samsung.com>
+        <20220214080002.18381-3-nj.shetty@samsung.com>
+        <20220217090700.b7n33vbkx5s4qbfq@garbanzo>
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 01:27:42PM +0000, Matthew Wilcox wrote:
-> On Thu, Feb 17, 2022 at 08:10:03PM +0900, Byungchul Park wrote:
-> > [    7.009608] ===================================================
-> > [    7.009613] DEPT: Circular dependency has been detected.
-> > [    7.009614] 5.17.0-rc1-00014-g8a599299c0cb-dirty #30 Tainted: G        W
-> > [    7.009616] ---------------------------------------------------
-> > [    7.009617] summary
-> > [    7.009618] ---------------------------------------------------
-> > [    7.009618] *** DEADLOCK ***
-> > [    7.009618]
-> > [    7.009619] context A
-> > [    7.009619]     [S] (unknown)(&(bit_wait_table + i)->dmap:0)
+------8TtN9ZnHmYbjupaEpeShJ04PQlBV3ZvePY_ZWnFgjSBPeLtG=_8e144_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+
+ Thu, Feb 17, 2022 at 01:07:00AM -0800, Luis Chamberlain wrote:
+> The subject says limits for copy-offload...
 > 
-> Why is the context unknown here?  I don't see a way to debug this
-> without knowing where we acquired the bit wait lock.
+> On Mon, Feb 14, 2022 at 01:29:52PM +0530, Nitesh Shetty wrote:
+> > Add device limits as sysfs entries,
+> >         - copy_offload (RW)
+> >         - copy_max_bytes (RW)
+> >         - copy_max_hw_bytes (RO)
+> >         - copy_max_range_bytes (RW)
+> >         - copy_max_range_hw_bytes (RO)
+> >         - copy_max_nr_ranges (RW)
+> >         - copy_max_nr_ranges_hw (RO)
+> 
+> Some of these seem like generic... and also I see a few more max_hw ones
+> not listed above...
+>
+queue_limits and sysfs entries are differently named.
+All sysfs entries start with copy_* prefix. Also it makes easy to lookup
+all copy sysfs.
+For queue limits naming, I tried to following existing queue limit
+convention (like discard).
 
-ideal view
-------------------
+> > --- a/block/blk-settings.c
+> > +++ b/block/blk-settings.c
+> > +/**
+> > + * blk_queue_max_copy_sectors - set max sectors for a single copy payload
+> > + * @q:  the request queue for the device
+> > + * @max_copy_sectors: maximum number of sectors to copy
+> > + **/
+> > +void blk_queue_max_copy_sectors(struct request_queue *q,
+> > +		unsigned int max_copy_sectors)
+> > +{
+> > +	q->limits.max_hw_copy_sectors = max_copy_sectors;
+> > +	q->limits.max_copy_sectors = max_copy_sectors;
+> > +}
+> > +EXPORT_SYMBOL(blk_queue_max_copy_sectors);
+> 
+> Please use EXPORT_SYMBOL_GPL() for all new things.
+> 
+acked.
 
-context X			context A
+> Why is this setting both? The documentation does't seem to say.
+> What's the point?
+>
 
-request event E to context A	...
-   write REQUESTEVENT		if (can see REQUESTEVENT written)
-...				   notice the request from X [S]
-wait for the event [W]		...
-   write barrier
-   write WAITSTART		
-   actual wait			if (can see REQUESTEVENT written)
-				   consider it's on the way to the event
-...				
-				...
-				finally the event [E]
+This function is used only by driver, while intializing request queue.
+I will put this as part of description next time.
 
-Dept works with the above view wrt. wait and event. [S] point varies
-depending on ways to make context A notice the request so that the event
-context A can start. Of course, by making more effort on identifying
-each way in the kernel, we can figure out the exact point.
+> > +
+> > +/**
+> > + * blk_queue_max_copy_range_sectors - set max sectors for a single range, in a copy payload
+> > + * @q:  the request queue for the device
+> > + * @max_copy_range_sectors: maximum number of sectors to copy in a single range
+> > + **/
+> > +void blk_queue_max_copy_range_sectors(struct request_queue *q,
+> > +		unsigned int max_copy_range_sectors)
+> > +{
+> > +	q->limits.max_hw_copy_range_sectors = max_copy_range_sectors;
+> > +	q->limits.max_copy_range_sectors = max_copy_range_sectors;
+> > +}
+> > +EXPORT_SYMBOL(blk_queue_max_copy_range_sectors);
+> 
+> Same here.
+> 
+> > +/**
+> > + * blk_queue_max_copy_nr_ranges - set max number of ranges, in a copy payload
+> > + * @q:  the request queue for the device
+> > + * @max_copy_nr_ranges: maximum number of ranges
+> > + **/
+> > +void blk_queue_max_copy_nr_ranges(struct request_queue *q,
+> > +		unsigned int max_copy_nr_ranges)
+> > +{
+> > +	q->limits.max_hw_copy_nr_ranges = max_copy_nr_ranges;
+> > +	q->limits.max_copy_nr_ranges = max_copy_nr_ranges;
+> > +}
+> > +EXPORT_SYMBOL(blk_queue_max_copy_nr_ranges);
+> 
+> Same.
+> 
+> > +
+> >  /**
+> >   * blk_queue_max_write_same_sectors - set max sectors for a single write same
+> >   * @q:  the request queue for the device
+> > @@ -541,6 +592,14 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+> >  	t->max_segment_size = min_not_zero(t->max_segment_size,
+> >  					   b->max_segment_size);
+> >  
+> > +	t->max_copy_sectors = min(t->max_copy_sectors, b->max_copy_sectors);
+> > +	t->max_hw_copy_sectors = min(t->max_hw_copy_sectors, b->max_hw_copy_sectors);
+> > +	t->max_copy_range_sectors = min(t->max_copy_range_sectors, b->max_copy_range_sectors);
+> > +	t->max_hw_copy_range_sectors = min(t->max_hw_copy_range_sectors,
+> > +						b->max_hw_copy_range_sectors);
+> > +	t->max_copy_nr_ranges = min(t->max_copy_nr_ranges, b->max_copy_nr_ranges);
+> > +	t->max_hw_copy_nr_ranges = min(t->max_hw_copy_nr_ranges, b->max_hw_copy_nr_ranges);
+> > +
+> >  	t->misaligned |= b->misaligned;
+> >  
+> >  	alignment = queue_limit_alignment_offset(b, start);
+> > diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> > index 9f32882ceb2f..9ddd07f142d9 100644
+> > --- a/block/blk-sysfs.c
+> > +++ b/block/blk-sysfs.c
+> > @@ -212,6 +212,129 @@ static ssize_t queue_discard_zeroes_data_show(struct request_queue *q, char *pag
+> >  	return queue_var_show(0, page);
+> >  }
+> >  
+> > +static ssize_t queue_copy_offload_show(struct request_queue *q, char *page)
+> > +{
+> > +	return queue_var_show(blk_queue_copy(q), page);
+> > +}
+> > +
+> > +static ssize_t queue_copy_offload_store(struct request_queue *q,
+> > +				       const char *page, size_t count)
+> > +{
+> > +	unsigned long copy_offload;
+> > +	ssize_t ret = queue_var_store(&copy_offload, page, count);
+> > +
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	if (copy_offload && !q->limits.max_hw_copy_sectors)
+> > +		return -EINVAL;
+> 
+> 
+> If the kernel schedules, copy_offload may still be true and
+> max_hw_copy_sectors may be set to 0. Is that an issue?
+>
 
-Here, we can also check WAITSTART with a read barrier instead of
-REQUESTEVENT in context A conservatively. That's how Dept works.
+This check ensures that, we dont enable offload if device doesnt support
+offload. I feel it shouldn't be an issue.
 
-Dept's view
-------------------
+> > +
+> > +	if (copy_offload)
+> > +		blk_queue_flag_set(QUEUE_FLAG_COPY, q);
+> > +	else
+> > +		blk_queue_flag_clear(QUEUE_FLAG_COPY, q);
+> 
+> The flag may be set but the queue flag could be set. Is that an issue?
+> 
+> > @@ -597,6 +720,14 @@ QUEUE_RO_ENTRY(queue_nr_zones, "nr_zones");
+> >  QUEUE_RO_ENTRY(queue_max_open_zones, "max_open_zones");
+> >  QUEUE_RO_ENTRY(queue_max_active_zones, "max_active_zones");
+> >  
+> > +QUEUE_RW_ENTRY(queue_copy_offload, "copy_offload");
+> > +QUEUE_RO_ENTRY(queue_copy_max_hw, "copy_max_hw_bytes");
+> > +QUEUE_RW_ENTRY(queue_copy_max, "copy_max_bytes");
+> > +QUEUE_RO_ENTRY(queue_copy_range_max_hw, "copy_max_range_hw_bytes");
+> > +QUEUE_RW_ENTRY(queue_copy_range_max, "copy_max_range_bytes");
+> > +QUEUE_RO_ENTRY(queue_copy_nr_ranges_max_hw, "copy_max_nr_ranges_hw");
+> > +QUEUE_RW_ENTRY(queue_copy_nr_ranges_max, "copy_max_nr_ranges");
+> 
+> Seems like you need to update Documentation/ABI/stable/sysfs-block.
+>
 
-context X			context A
+acked. 
 
-request event E to context A	...
-   write REQUESTEVENT		if (can see REQUESTEVENT written)
-...				   notice the request from X [S]
-wait for the event [W]		...
-   write barrier
-   write WAITSTART		read barrier
-   actual wait			if (can see WAITSTART written)
-				   consider it's on the way to the event
-...				
-				...
-				finally the event [E]
-				   consider all waits in context A so far
-				   that could see WAITSTART written
+> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> > index efed3820cbf7..792e6d556589 100644
+> > --- a/include/linux/blkdev.h
+> > +++ b/include/linux/blkdev.h
+> > @@ -254,6 +254,13 @@ struct queue_limits {
+> >  	unsigned int		discard_alignment;
+> >  	unsigned int		zone_write_granularity;
+> >  
+> > +	unsigned long		max_hw_copy_sectors;
+> > +	unsigned long		max_copy_sectors;
+> > +	unsigned int		max_hw_copy_range_sectors;
+> > +	unsigned int		max_copy_range_sectors;
+> > +	unsigned short		max_hw_copy_nr_ranges;
+> > +	unsigned short		max_copy_nr_ranges;
+> 
+> Before limits start growing more.. I wonder if we should just
+> stuff hw offload stuff to its own struct within queue_limits.
+> 
+> Christoph?
+> 
+>   Luis
+>
+Yeah, would like to know community opinion on this.
 
-Thanks,
-Byungchul
 
-> > [    7.009621]     [W] down_write(&ei->i_data_sem:0)
-> > [    7.009623]     [E] event(&(bit_wait_table + i)->dmap:0)
-> > [    7.009624]
-> > [    7.009625] context B
-> > [    7.009625]     [S] down_read(&ei->i_data_sem:0)
-> > [    7.009626]     [W] wait(&(bit_wait_table + i)->dmap:0)
-> > [    7.009627]     [E] up_read(&ei->i_data_sem:0)
-> > [    7.009628]
-> > [    7.009629] [S]: start of the event context
-> > [    7.009629] [W]: the wait blocked
-> > [    7.009630] [E]: the event not reachable
-> > [    7.009631] ---------------------------------------------------
-> > [    7.009631] context A's detail
-> > [    7.009632] ---------------------------------------------------
-> > [    7.009632] context A
-> > [    7.009633]     [S] (unknown)(&(bit_wait_table + i)->dmap:0)
-> > [    7.009634]     [W] down_write(&ei->i_data_sem:0)
-> > [    7.009635]     [E] event(&(bit_wait_table + i)->dmap:0)
-> > [    7.009636]
-> > [    7.009636] [S] (unknown)(&(bit_wait_table + i)->dmap:0):
-> > [    7.009638] (N/A)
-> > [    7.009638]
-> > [    7.009639] [W] down_write(&ei->i_data_sem:0):
-> > [    7.009639] ext4_truncate (fs/ext4/inode.c:4187) 
-> > [    7.009645] stacktrace:
-> > [    7.009646] down_write (kernel/locking/rwsem.c:1514) 
-> > [    7.009648] ext4_truncate (fs/ext4/inode.c:4187) 
-> > [    7.009650] ext4_da_write_begin (./include/linux/fs.h:827 fs/ext4/truncate.h:23 fs/ext4/inode.c:2963) 
-> > [    7.009652] generic_perform_write (mm/filemap.c:3784) 
-> > [    7.009654] ext4_buffered_write_iter (fs/ext4/file.c:269) 
-> > [    7.009657] ext4_file_write_iter (fs/ext4/file.c:677) 
-> > [    7.009659] new_sync_write (fs/read_write.c:504 (discriminator 1)) 
-> > [    7.009662] vfs_write (fs/read_write.c:590) 
-> > [    7.009663] ksys_write (fs/read_write.c:644) 
-> > [    7.009664] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80) 
-> > [    7.009667] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:113) 
-> > [    7.009669]
-> > [    7.009670] [E] event(&(bit_wait_table + i)->dmap:0):
-> > [    7.009671] __wake_up_common (kernel/sched/wait.c:108) 
-> > [    7.009673] stacktrace:
-> > [    7.009674] dept_event (kernel/dependency/dept.c:2337) 
-> > [    7.009677] __wake_up_common (kernel/sched/wait.c:109) 
-> > [    7.009678] __wake_up_common_lock (./include/linux/spinlock.h:428 (discriminator 1) kernel/sched/wait.c:141 (discriminator 1)) 
-> > [    7.009679] __wake_up_bit (kernel/sched/wait_bit.c:127) 
-> > [    7.009681] ext4_orphan_del (fs/ext4/orphan.c:282) 
-> > [    7.009683] ext4_truncate (fs/ext4/inode.c:4212) 
-> > [    7.009685] ext4_da_write_begin (./include/linux/fs.h:827 fs/ext4/truncate.h:23 fs/ext4/inode.c:2963) 
-> > [    7.009687] generic_perform_write (mm/filemap.c:3784) 
-> > [    7.009688] ext4_buffered_write_iter (fs/ext4/file.c:269) 
-> > [    7.009690] ext4_file_write_iter (fs/ext4/file.c:677) 
-> > [    7.009692] new_sync_write (fs/read_write.c:504 (discriminator 1)) 
-> > [    7.009694] vfs_write (fs/read_write.c:590) 
-> > [    7.009695] ksys_write (fs/read_write.c:644) 
-> > [    7.009696] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80) 
-> > [    7.009698] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:113) 
-> > [    7.009700] ---------------------------------------------------
-> > [    7.009700] context B's detail
-> > [    7.009701] ---------------------------------------------------
-> > [    7.009702] context B
-> > [    7.009702]     [S] down_read(&ei->i_data_sem:0)
-> > [    7.009703]     [W] wait(&(bit_wait_table + i)->dmap:0)
-> > [    7.009704]     [E] up_read(&ei->i_data_sem:0)
-> > [    7.009705]
-> > [    7.009706] [S] down_read(&ei->i_data_sem:0):
-> > [    7.009707] ext4_map_blocks (./arch/x86/include/asm/bitops.h:207 ./include/asm-generic/bitops/instrumented-non-atomic.h:135 fs/ext4/ext4.h:1918 fs/ext4/inode.c:562) 
-> > [    7.009709] stacktrace:
-> > [    7.009709] down_read (kernel/locking/rwsem.c:1461) 
-> > [    7.009711] ext4_map_blocks (./arch/x86/include/asm/bitops.h:207 ./include/asm-generic/bitops/instrumented-non-atomic.h:135 fs/ext4/ext4.h:1918 fs/ext4/inode.c:562) 
-> > [    7.009712] ext4_getblk (fs/ext4/inode.c:851) 
-> > [    7.009714] ext4_bread (fs/ext4/inode.c:903) 
-> > [    7.009715] __ext4_read_dirblock (fs/ext4/namei.c:117) 
-> > [    7.009718] dx_probe (fs/ext4/namei.c:789) 
-> > [    7.009720] ext4_dx_find_entry (fs/ext4/namei.c:1721) 
-> > [    7.009722] __ext4_find_entry (fs/ext4/namei.c:1571) 
-> > [    7.009723] ext4_lookup (fs/ext4/namei.c:1770) 
-> > [    7.009725] lookup_open (./include/linux/dcache.h:361 fs/namei.c:3310) 
-> > [    7.009727] path_openat (fs/namei.c:3401 fs/namei.c:3605) 
-> > [    7.009729] do_filp_open (fs/namei.c:3637) 
-> > [    7.009731] do_sys_openat2 (fs/open.c:1215) 
-> > [    7.009732] do_sys_open (fs/open.c:1231) 
-> > [    7.009734] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80) 
-> > [    7.009736] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:113) 
-> > [    7.009738]
-> > [    7.009738] [W] wait(&(bit_wait_table + i)->dmap:0):
-> > [    7.009739] prepare_to_wait (kernel/sched/wait.c:275) 
-> > [    7.009741] stacktrace:
-> > [    7.009741] __schedule (kernel/sched/sched.h:1318 kernel/sched/sched.h:1616 kernel/sched/core.c:6213) 
-> > [    7.009743] schedule (kernel/sched/core.c:6373 (discriminator 1)) 
-> > [    7.009744] io_schedule (./arch/x86/include/asm/current.h:15 kernel/sched/core.c:8392 kernel/sched/core.c:8418) 
-> > [    7.009745] bit_wait_io (./arch/x86/include/asm/current.h:15 kernel/sched/wait_bit.c:210) 
-> > [    7.009746] __wait_on_bit (kernel/sched/wait_bit.c:49) 
-> > [    7.009748] out_of_line_wait_on_bit (kernel/sched/wait_bit.c:65) 
-> > [    7.009749] ext4_read_bh (./arch/x86/include/asm/bitops.h:207 ./include/asm-generic/bitops/instrumented-non-atomic.h:135 ./include/linux/buffer_head.h:120 fs/ext4/super.c:201) 
-> > [    7.009752] __read_extent_tree_block (fs/ext4/extents.c:545) 
-> > [    7.009754] ext4_find_extent (fs/ext4/extents.c:928) 
-> > [    7.009756] ext4_ext_map_blocks (fs/ext4/extents.c:4099) 
-> > [    7.009757] ext4_map_blocks (fs/ext4/inode.c:563) 
-> > [    7.009759] ext4_getblk (fs/ext4/inode.c:851) 
-> > [    7.009760] ext4_bread (fs/ext4/inode.c:903) 
-> > [    7.009762] __ext4_read_dirblock (fs/ext4/namei.c:117) 
-> > [    7.009764] dx_probe (fs/ext4/namei.c:789) 
-> > [    7.009765] ext4_dx_find_entry (fs/ext4/namei.c:1721) 
-> > [    7.009767]
-> > [    7.009768] [E] up_read(&ei->i_data_sem:0):
-> > [    7.009769] ext4_map_blocks (fs/ext4/inode.c:593) 
-> > [    7.009771] stacktrace:
-> > [    7.009771] up_read (kernel/locking/rwsem.c:1556) 
-> > [    7.009774] ext4_map_blocks (fs/ext4/inode.c:593) 
-> > [    7.009775] ext4_getblk (fs/ext4/inode.c:851) 
-> > [    7.009777] ext4_bread (fs/ext4/inode.c:903) 
-> > [    7.009778] __ext4_read_dirblock (fs/ext4/namei.c:117) 
-> > [    7.009780] dx_probe (fs/ext4/namei.c:789) 
-> > [    7.009782] ext4_dx_find_entry (fs/ext4/namei.c:1721) 
-> > [    7.009784] __ext4_find_entry (fs/ext4/namei.c:1571) 
-> > [    7.009786] ext4_lookup (fs/ext4/namei.c:1770) 
-> > [    7.009788] lookup_open (./include/linux/dcache.h:361 fs/namei.c:3310) 
-> > [    7.009789] path_openat (fs/namei.c:3401 fs/namei.c:3605) 
-> > [    7.009791] do_filp_open (fs/namei.c:3637) 
-> > [    7.009792] do_sys_openat2 (fs/open.c:1215) 
-> > [    7.009794] do_sys_open (fs/open.c:1231) 
-> > [    7.009795] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80) 
-> > [    7.009797] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:113) 
-> > [    7.009799] ---------------------------------------------------
-> > [    7.009800] information that might be helpful
-> > [    7.009800] ---------------------------------------------------
-> > [    7.009801] CPU: 0 PID: 611 Comm: rs:main Q:Reg Tainted: G        W         5.17.0-rc1-00014-g8a599299c0cb-dirty #30
-> > [    7.009804] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-> > [    7.009805] Call Trace:
-> > [    7.009806]  <TASK>
-> > [    7.009807] dump_stack_lvl (lib/dump_stack.c:107) 
-> > [    7.009809] print_circle (./arch/x86/include/asm/atomic.h:108 ./include/linux/atomic/atomic-instrumented.h:258 kernel/dependency/dept.c:157 kernel/dependency/dept.c:762) 
-> > [    7.009812] ? print_circle (kernel/dependency/dept.c:1086) 
-> > [    7.009814] cb_check_dl (kernel/dependency/dept.c:1104) 
-> > [    7.009815] bfs (kernel/dependency/dept.c:860) 
-> > [    7.009818] add_dep (kernel/dependency/dept.c:1423) 
-> > [    7.009820] do_event.isra.25 (kernel/dependency/dept.c:1650) 
-> > [    7.009822] ? __wake_up_common (kernel/sched/wait.c:108) 
-> > [    7.009824] dept_event (kernel/dependency/dept.c:2337) 
-> > [    7.009826] __wake_up_common (kernel/sched/wait.c:109) 
-> > [    7.009828] __wake_up_common_lock (./include/linux/spinlock.h:428 (discriminator 1) kernel/sched/wait.c:141 (discriminator 1)) 
-> > [    7.009830] __wake_up_bit (kernel/sched/wait_bit.c:127) 
-> > [    7.009832] ext4_orphan_del (fs/ext4/orphan.c:282) 
-> > [    7.009835] ? dept_ecxt_exit (./arch/x86/include/asm/current.h:15 kernel/dependency/dept.c:241 kernel/dependency/dept.c:999 kernel/dependency/dept.c:1043 kernel/dependency/dept.c:2478) 
-> > [    7.009837] ext4_truncate (fs/ext4/inode.c:4212) 
-> > [    7.009839] ext4_da_write_begin (./include/linux/fs.h:827 fs/ext4/truncate.h:23 fs/ext4/inode.c:2963) 
-> > [    7.009842] generic_perform_write (mm/filemap.c:3784) 
-> > [    7.009845] ext4_buffered_write_iter (fs/ext4/file.c:269) 
-> > [    7.009848] ext4_file_write_iter (fs/ext4/file.c:677) 
-> > [    7.009851] new_sync_write (fs/read_write.c:504 (discriminator 1)) 
-> > [    7.009854] vfs_write (fs/read_write.c:590) 
-> > [    7.009856] ksys_write (fs/read_write.c:644) 
-> > [    7.009857] ? trace_hardirqs_on (kernel/trace/trace_preemptirq.c:65) 
-> > [    7.009860] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80) 
-> > [    7.009862] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:113) 
-> > [    7.009865] RIP: 0033:0x7f3b160b335d
-> > [ 7.009867] Code: e1 20 00 00 75 10 b8 01 00 00 00 0f 05 48 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 ce fa ff ff 48 89 04 24 b8 01 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 17 fb ff ff 48 89 d0 48 83 c4 08 48 3d 01
-> > All code
-> > ========
-> >    0:	e1 20                	loope  0x22
-> >    2:	00 00                	add    %al,(%rax)
-> >    4:	75 10                	jne    0x16
-> >    6:	b8 01 00 00 00       	mov    $0x1,%eax
-> >    b:	0f 05                	syscall 
-> >    d:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
-> >   13:	73 31                	jae    0x46
-> >   15:	c3                   	retq   
-> >   16:	48 83 ec 08          	sub    $0x8,%rsp
-> >   1a:	e8 ce fa ff ff       	callq  0xfffffffffffffaed
-> >   1f:	48 89 04 24          	mov    %rax,(%rsp)
-> >   23:	b8 01 00 00 00       	mov    $0x1,%eax
-> >   28:	0f 05                	syscall 
-> >   2a:*	48 8b 3c 24          	mov    (%rsp),%rdi		<-- trapping instruction
-> >   2e:	48 89 c2             	mov    %rax,%rdx
-> >   31:	e8 17 fb ff ff       	callq  0xfffffffffffffb4d
-> >   36:	48 89 d0             	mov    %rdx,%rax
-> >   39:	48 83 c4 08          	add    $0x8,%rsp
-> >   3d:	48                   	rex.W
-> >   3e:	3d                   	.byte 0x3d
-> >   3f:	01                   	.byte 0x1
-> > 
-> > Code starting with the faulting instruction
-> > ===========================================
-> >    0:	48 8b 3c 24          	mov    (%rsp),%rdi
-> >    4:	48 89 c2             	mov    %rax,%rdx
-> >    7:	e8 17 fb ff ff       	callq  0xfffffffffffffb23
-> >    c:	48 89 d0             	mov    %rdx,%rax
-> >    f:	48 83 c4 08          	add    $0x8,%rsp
-> >   13:	48                   	rex.W
-> >   14:	3d                   	.byte 0x3d
-> >   15:	01                   	.byte 0x1
-> > [    7.009869] RSP: 002b:00007f3b1340f180 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-> > [    7.009871] RAX: ffffffffffffffda RBX: 00007f3b040010a0 RCX: 00007f3b160b335d
-> > [    7.009873] RDX: 0000000000000300 RSI: 00007f3b040010a0 RDI: 0000000000000001
-> > [    7.009874] RBP: 0000000000000000 R08: fffffffffffffa15 R09: fffffffffffffa05
-> > [    7.009875] R10: 0000000000000000 R11: 0000000000000293 R12: 00007f3b04000df0
-> > [    7.009876] R13: 00007f3b1340f1a0 R14: 0000000000000220 R15: 0000000000000300
-> > [    7.009879]  </TASK>
+-- Nitesh
+
+------8TtN9ZnHmYbjupaEpeShJ04PQlBV3ZvePY_ZWnFgjSBPeLtG=_8e144_
+Content-Type: text/plain; charset="utf-8"
+
+
+------8TtN9ZnHmYbjupaEpeShJ04PQlBV3ZvePY_ZWnFgjSBPeLtG=_8e144_--
