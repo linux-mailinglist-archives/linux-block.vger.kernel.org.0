@@ -2,90 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47E444B9B39
-	for <lists+linux-block@lfdr.de>; Thu, 17 Feb 2022 09:37:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 755E54B9B5A
+	for <lists+linux-block@lfdr.de>; Thu, 17 Feb 2022 09:43:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237420AbiBQIgv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Feb 2022 03:36:51 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59804 "EHLO
+        id S237937AbiBQInY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Feb 2022 03:43:24 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237832AbiBQIgu (ORCPT
+        with ESMTP id S237909AbiBQInX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Feb 2022 03:36:50 -0500
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF12B12FA;
-        Thu, 17 Feb 2022 00:36:36 -0800 (PST)
-Received: by mail-pg1-f175.google.com with SMTP id d16so4391979pgd.9;
-        Thu, 17 Feb 2022 00:36:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c0pu3AOa7Jqr4q26ebNJ4LdMU0x/lC3tR2Tx7zL6lHg=;
-        b=pYdZ8fd+OgIvMVaBzVXM9G+pee4dw7B6jav7njzVGG9zRRStaVJtSKu6R3V6LclkfX
-         Ndeiic8NjpynUj4xGfFljIXUxiqG1f1MA+k2Zm3yvX7WwZ96JcQZeoIxEMY4F0V7JprR
-         TxbOJm6VWNZNzwnJw1xZ+7OhGCZyYjg2aVVv6sFTj1sJ8Sj7WsWoJn8vD2VK0MjAclW8
-         WdmS8N/kMfc8JraWQq3KXPpVxDAKtTCuOGxy0xHTom0EVvBVVJy+E7s0lgkAs0LoY7vt
-         v9VlWid4k05YYAJSsmO30U6jnxiYHsxrXdpO0gZgo/3mdJfW4+V1mbFPCt7MJ+bQ6pyY
-         B/0g==
-X-Gm-Message-State: AOAM531wihTeLV5VIkH2SHkaIgRHU566d73F7pAM6I5sc+JlJwWYTP1U
-        iwsKYqCQiAYxoTxumUKHy28=
-X-Google-Smtp-Source: ABdhPJxBt7Z+O4vFbpVhfGNT3TGbLxz1vmlCiZLvikj1oSVLWqBDGQ3nJ/8d9qgUnXxcV37sMxYLVg==
-X-Received: by 2002:a05:6a00:23cd:b0:4e1:7ab2:334c with SMTP id g13-20020a056a0023cd00b004e17ab2334cmr2123595pfc.4.1645086995489;
-        Thu, 17 Feb 2022 00:36:35 -0800 (PST)
-Received: from garbanzo (136-24-173-63.cab.webpass.net. [136.24.173.63])
-        by smtp.gmail.com with ESMTPSA id g1sm44078801pfu.32.2022.02.17.00.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Feb 2022 00:36:34 -0800 (PST)
-Date:   Thu, 17 Feb 2022 00:36:31 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Nitesh Shetty <nj.shetty@samsung.com>
-Cc:     javier@javigon.com, chaitanyak@nvidia.com,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        dm-devel@redhat.com, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, axboe@kernel.dk,
-        msnitzer@redhat.com, bvanassche@acm.org,
-        martin.petersen@oracle.com, hare@suse.de, kbusch@kernel.org,
-        hch@lst.de, Frederick.Knight@netapp.com, osandov@fb.com,
-        lsf-pc@lists.linux-foundation.org, djwong@kernel.org,
-        josef@toxicpanda.com, clm@fb.com, dsterba@suse.com, tytso@mit.edu,
-        jack@suse.com, joshi.k@samsung.com, arnav.dawn@samsung.com,
-        nitheshshetty@gmail.com, SelvaKumar S <selvakuma.s1@samsung.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        James Smart <james.smart@broadcom.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/10] block: make bio_map_kern() non static
-Message-ID: <20220217083631.34ii6gqdrknrmufv@garbanzo>
-References: <20220214080002.18381-1-nj.shetty@samsung.com>
- <CGME20220214080558epcas5p17c1fb3b659b956908ff7215a61bcc0c9@epcas5p1.samsung.com>
- <20220214080002.18381-2-nj.shetty@samsung.com>
+        Thu, 17 Feb 2022 03:43:23 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98E9222DC9;
+        Thu, 17 Feb 2022 00:43:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=srOPsA2UG/DyG90LXGGf2coqIfcpStSnhfATvzutOpo=; b=Oi0y9I30bfF8XTa3KuI8sK89ov
+        Db1xrUrYgQ3MvGtT9SGZrjouxcnZR4obZFG9Oynu8WSAjGon5BgzYF0IddnJtDkPknFPhyEGCrAhg
+        IAYH+oh5OVt1k/pa4wnP7ELans2RzRVZJXewnuzu9FkGgbubxsfTsGUsCGgz4QU4sPOre7ITEcl+E
+        5gsjiHpYf5jcZgkJwAv/mQm1kjRCztwdTdNQIZHz6G+XsRwVyIYzWie7L/X3hTZPiUliIi9Y5HgfT
+        pbEmBI629DkZ/COtR/fVQtRzj3mv+WbLP83gscr1yVg7JBRqRQKoyGlJr8ei00wUPvBbmF1NNGuOq
+        MU5o5UOQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nKcNT-009X9N-Qc; Thu, 17 Feb 2022 08:43:03 +0000
+Date:   Thu, 17 Feb 2022 00:43:03 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Wang Jianchao (Kuaishou)" <jianchao.wan9@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <jbacik@fb.com>,
+        Tejun Heo <tj@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC V4 0/6] blk: make blk-rq-qos policies pluggable and modular
+Message-ID: <Yg4Kl6EHWS5N3WoH@infradead.org>
+References: <20220217031349.98561-1-jianchao.wan9@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220214080002.18381-2-nj.shetty@samsung.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20220217031349.98561-1-jianchao.wan9@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 01:29:51PM +0530, Nitesh Shetty wrote:
-> From: SelvaKumar S <selvakuma.s1@samsung.com>
+On Thu, Feb 17, 2022 at 11:13:43AM +0800, Wang Jianchao (Kuaishou) wrote:
+> Hi Jens
 > 
-> Make bio_map_kern() non static
-> 
-> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+> blk-rq-qos is a standalone framework out of io-sched and can be used to
+> control or observe the IO progress in block-layer with hooks. blk-rq-qos
+> is a great design but right now, it is totally fixed and built-in and shut
+> out peoples who want to use it with external module.
 
-This patch makes no sense on its own. I'd just merge it with
-its first user.
+And that's got.  External modules do not matter.
 
-  Luis
+That being said this series has a bunch of nice cleanups, but we really
+do not need the exports and modular build.
