@@ -2,142 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E534BC7E5
-	for <lists+linux-block@lfdr.de>; Sat, 19 Feb 2022 12:21:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 862F14BC87A
+	for <lists+linux-block@lfdr.de>; Sat, 19 Feb 2022 14:05:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242225AbiBSK7X (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 19 Feb 2022 05:59:23 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41568 "EHLO
+        id S242324AbiBSNE5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 19 Feb 2022 08:04:57 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242152AbiBSK7M (ORCPT
+        with ESMTP id S234438AbiBSNE5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 19 Feb 2022 05:59:12 -0500
-Received: from lgeamrelo11.lge.com (lgeamrelo13.lge.com [156.147.23.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 447CA674F8
-        for <linux-block@vger.kernel.org>; Sat, 19 Feb 2022 02:58:46 -0800 (PST)
-Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
-        by 156.147.23.53 with ESMTP; 19 Feb 2022 19:58:45 +0900
-X-Original-SENDERIP: 156.147.1.151
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO localhost.localdomain) (10.177.244.38)
-        by 156.147.1.151 with ESMTP; 19 Feb 2022 19:58:45 +0900
-X-Original-SENDERIP: 10.177.244.38
-X-Original-MAILFROM: byungchul.park@lge.com
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     torvalds@linux-foundation.org
-Cc:     damien.lemoal@opensource.wdc.com, linux-ide@vger.kernel.org,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, will@kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, joel@joelfernandes.org, sashal@kernel.org,
-        daniel.vetter@ffwll.ch, chris@chris-wilson.co.uk,
-        duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-        tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-        amir73il@gmail.com, bfields@fieldses.org,
-        gregkh@linuxfoundation.org, kernel-team@lge.com,
-        linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-        minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-        ngupta@vflare.org, linux-block@vger.kernel.org, axboe@kernel.dk,
-        paolo.valente@linaro.org, josef@toxicpanda.com,
-        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        jack@suse.cz, jack@suse.com, jlayton@kernel.org,
-        dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
-        dri-devel@lists.freedesktop.org, airlied@linux.ie,
-        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-        hamohammed.sa@gmail.com
-Subject: [PATCH v2 18/18] dept: Distinguish each work from another
-Date:   Sat, 19 Feb 2022 19:58:31 +0900
-Message-Id: <1645268311-24222-19-git-send-email-byungchul.park@lge.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1645268311-24222-1-git-send-email-byungchul.park@lge.com>
-References: <1645268311-24222-1-git-send-email-byungchul.park@lge.com>
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Sat, 19 Feb 2022 08:04:57 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C22449F8E
+        for <linux-block@vger.kernel.org>; Sat, 19 Feb 2022 05:04:37 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id gb39so21441834ejc.1
+        for <linux-block@vger.kernel.org>; Sat, 19 Feb 2022 05:04:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mH91QnSgxvC4j5tu0SPLOYxEGaLIR81KrmQMR9S7wsg=;
+        b=GFjCtYbL40cTtZhkRLv9Bl1jLjTTM36g7Wt3xQ0smUg5bGzLv9E1pwR4fAckTgHoqs
+         8COpCaHy87WGC3yIAe54CvV7KRCJ0VtUazzfkDnKaHSyIDfspsA0GTOsYPyatHZ0iX9t
+         lPoKXa9riR3D4fuQ77JqbCIzxiMUNSWEBIdd0U1/Br8n62Es9vXtsAP5w75XjP22Yj61
+         0bEN3oHO9B3zR3z/O3gqVdvu2ZOoCZH0afVP1Cth+DXYJwmkEDLdCGnSXFTqSMXoqr+G
+         8Pkz0ziPHqFarTPwkQnMqPlt2918aQQCnCH0z+tYwqkC5q76w0r2ohY3h+1QvSyoB/Xo
+         ysZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mH91QnSgxvC4j5tu0SPLOYxEGaLIR81KrmQMR9S7wsg=;
+        b=nlvYy3tjLl9WXmxHbWIWdY5QpNYGXkboa7Ni1aSHhVicqpAUHI2CsoxUZQjoqb+SgW
+         uLyQ0tqqB3fpg/EfScEU1LTQ1l7aSjPalcdug3VIynSScF6iy8rhLtETP+NMi2NT7spA
+         ANmGei+vZtHIk/8FGKeNCYqXxerfSwzTg2sIYP660cNqsu9alonC8/ewFNIaDUx/S6RL
+         axrVAl1t+nd916g+0OO3r3Pdr6cVapQG/JrQBmnGfNn2YOUS3t8rgvRL6BnHRrLzGcSb
+         kfuTcOh9wY2v0pF6LsqX1qUnohEyIWFK+KE+/kWnmC3Mb/lzLARojIOqZO7b9c/lJwAJ
+         SyNw==
+X-Gm-Message-State: AOAM530wBGU/reo+NShoBY97sObHtnplFCTqT9Yur1oLIXb3YKq1voMU
+        ulGfNrp/rHcV3badVbu9YulhPdIRh9iOTuGLkAOu
+X-Google-Smtp-Source: ABdhPJwYkmpv/EhorhkTuYLKx9EBKD276hUEjdkS5jrdu+Di08dfQayG61gRGyXD2ykmkvTRM7hpzIjgw2YHfNfLiVM=
+X-Received: by 2002:a17:906:974e:b0:6bb:4f90:a6ae with SMTP id
+ o14-20020a170906974e00b006bb4f90a6aemr10115442ejy.452.1645275875999; Sat, 19
+ Feb 2022 05:04:35 -0800 (PST)
+MIME-Version: 1.0
+References: <20211227091241.103-1-xieyongji@bytedance.com> <Ycycda8w/zHWGw9c@infradead.org>
+ <CACycT3usfTdzmK=gOsBf3=-0e8HZ3_0ZiBJqkWb_r7nki7xzYA@mail.gmail.com>
+ <YdMgCS1RMcb5V2RJ@localhost.localdomain> <CACycT3vYt0XNV2GdjKjDS1iyWieY_OV4h=W1qqk_AAAahRZowA@mail.gmail.com>
+ <YdSMqKXv0PUkAwfl@localhost.localdomain> <CACycT3tPZOSkCXPz-oYCXRJ_EOBs3dC0+Juv=FYsa6qRS0GVCw@mail.gmail.com>
+ <CACycT3tTKBpS_B5vVJ8MZ1iuaF2bf-01=9+tAdxUddziF2DQ-g@mail.gmail.com>
+ <CACycT3thVwb466u2JR-oDRHLY5j_uxAx5uXXGmaoCZL5vs__mQ@mail.gmail.com> <Yg+5Wytvc2eG8uLD@localhost.localdomain>
+In-Reply-To: <Yg+5Wytvc2eG8uLD@localhost.localdomain>
+From:   Yongji Xie <xieyongji@bytedance.com>
+Date:   Sat, 19 Feb 2022 21:04:25 +0800
+Message-ID: <CACycT3umMYfwVZRXinEBM=Kh+kQPYH5GBN6eKrt9unZSM8W0qw@mail.gmail.com>
+Subject: Re: [PATCH v2] nbd: Don't use workqueue to handle recv work
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Workqueue already provides concurrency control. By that, any wait in a
-work doesn't prevents events in other works with the control enabled.
-Thus, each work would better be considered a different context.
+On Fri, Feb 18, 2022 at 11:21 PM Josef Bacik <josef@toxicpanda.com> wrote:
+>
+> On Tue, Feb 15, 2022 at 09:17:37PM +0800, Yongji Xie wrote:
+> > Ping again.
+> >
+> > Hi Josef, could you take a look?
+>
+> Sorry Yongji this got lost.  Again in the reconnect case we're still setting up
+> a long running thread, so it's not like it'll happen during a normal reclaim
+> path thing, it'll be acted upon by userspace.  Thanks,
+>
 
-So let Dept assign a different context id to each work.
+During creating this long running thread, we might trigger memory
+reclaim since workqueue will use GFP_KERNEL allocation for it. Then a
+deadlock can occur if the memory reclaim happens to hit the page cache
+on this reconnecting nbd device.
 
-Signed-off-by: Byungchul Park <byungchul.park@lge.com>
----
- include/linux/dept.h     |  2 ++
- kernel/dependency/dept.c | 10 ++++++++++
- kernel/workqueue.c       |  3 +++
- 3 files changed, 15 insertions(+)
-
-diff --git a/include/linux/dept.h b/include/linux/dept.h
-index 1a1c307..55c5ed5 100644
---- a/include/linux/dept.h
-+++ b/include/linux/dept.h
-@@ -486,6 +486,7 @@ struct dept_task {
- extern void dept_event_split_map(struct dept_map_each *me, struct dept_map_common *mc, unsigned long ip, const char *e_fn);
- extern void dept_ask_event_split_map(struct dept_map_each *me, struct dept_map_common *mc);
- extern void dept_kernel_enter(void);
-+extern void dept_work_enter(void);
- 
- /*
-  * for users who want to manage external keys
-@@ -527,6 +528,7 @@ struct dept_task {
- #define dept_event_split_map(me, mc, ip, e_fn)		do { } while (0)
- #define dept_ask_event_split_map(me, mc)		do { } while (0)
- #define dept_kernel_enter()				do { } while (0)
-+#define dept_work_enter()				do { } while (0)
- #define dept_key_init(k)				do { (void)(k); } while (0)
- #define dept_key_destroy(k)				do { (void)(k); } while (0)
- #endif
-diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index c369a8e..ee3faa2 100644
---- a/kernel/dependency/dept.c
-+++ b/kernel/dependency/dept.c
-@@ -1873,6 +1873,16 @@ void dept_disable_hardirq(unsigned long ip)
- 	dept_exit(flags);
- }
- 
-+/*
-+ * Assign a different context id to each work.
-+ */
-+void dept_work_enter(void)
-+{
-+	struct dept_task *dt = dept_task();
-+
-+	dt->cxt_id[DEPT_CXT_PROCESS] += (1UL << DEPT_CXTS_NR);
-+}
-+
- void dept_kernel_enter(void)
- {
- 	struct dept_task *dt = dept_task();
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 33f1106..f5d762c 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -51,6 +51,7 @@
- #include <linux/sched/isolation.h>
- #include <linux/nmi.h>
- #include <linux/kvm_para.h>
-+#include <linux/dept.h>
- 
- #include "workqueue_internal.h"
- 
-@@ -2217,6 +2218,8 @@ static void process_one_work(struct worker *worker, struct work_struct *work)
- 
- 	lockdep_copy_map(&lockdep_map, &work->lockdep_map);
- #endif
-+	dept_work_enter();
-+
- 	/* ensure we're on the correct CPU */
- 	WARN_ON_ONCE(!(pool->flags & POOL_DISASSOCIATED) &&
- 		     raw_smp_processor_id() != pool->cpu);
--- 
-1.9.1
-
+Thanks,
+Yongji
