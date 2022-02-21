@@ -2,179 +2,122 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C96064BE248
-	for <lists+linux-block@lfdr.de>; Mon, 21 Feb 2022 18:55:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4F54BDF13
+	for <lists+linux-block@lfdr.de>; Mon, 21 Feb 2022 18:49:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358045AbiBUMge (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Feb 2022 07:36:34 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51986 "EHLO
+        id S1346408AbiBUNDw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Feb 2022 08:03:52 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358044AbiBUMgd (ORCPT
+        with ESMTP id S1358505AbiBUNDv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Feb 2022 07:36:33 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F6A17ABE;
-        Mon, 21 Feb 2022 04:36:09 -0800 (PST)
-Received: from kwepemi100009.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4K2MDy0MFyz9ssW;
-        Mon, 21 Feb 2022 20:34:26 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi100009.china.huawei.com (7.221.188.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 21 Feb 2022 20:36:07 +0800
-Received: from [10.174.176.73] (10.174.176.73) by
- kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 21 Feb 2022 20:36:07 +0800
-Subject: Re: [PATCH v13 05/12] bcache: bch_nvmpg_free_pages() of the buddy
- allocator
-To:     Coly Li <colyli@suse.de>, <axboe@kernel.dk>
-CC:     <linux-bcache@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        Jianpeng Ma <jianpeng.ma@intel.com>,
-        Qiaowei Ren <qiaowei.ren@intel.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Hannes Reinecke" <hare@suse.de>
-References: <20211212170552.2812-1-colyli@suse.de>
- <20211212170552.2812-6-colyli@suse.de>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <e1e08398-dccb-6c0d-aaa9-da72f0cf9ef1@huawei.com>
-Date:   Mon, 21 Feb 2022 20:36:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 21 Feb 2022 08:03:51 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE333F34
+        for <linux-block@vger.kernel.org>; Mon, 21 Feb 2022 05:03:28 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id 195so14221740pgc.6
+        for <linux-block@vger.kernel.org>; Mon, 21 Feb 2022 05:03:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=r1zJaBUPNQBJIkixJM/WVkMBxWgtgajvPcDkUoia8nw=;
+        b=QnZkls7K0VNfKFBglx6GNOStp6Yq+iqgHp41VtEBvqCXS6w/C9J9NJnnMlf2M6aogJ
+         WHdxc+hZD0FmS01Jv3fAwEU/Q9o74oK0Kn9OGGyrhSO5YxQlkE7nn5192T9lfi40MyU8
+         0EMBAOjyeLXN5D0gBPWl6xeh7Qn2LwiITJ/sJ2oSPRMaW8NMZbkDruWAs/n1iWQcWhPB
+         +SoYQlkKmi8+IO9Ee3clR9oX+NVf5O200F4KKH8WVrzNhlOIESFBTLVxbJSHjK4pmELS
+         QS9LlNAKWe1Z9FDd/sS4CdLo2qvkspIY/x+5PL8e8zZvd0lOvYuQuHpE/F4NLdelkAoy
+         qCYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=r1zJaBUPNQBJIkixJM/WVkMBxWgtgajvPcDkUoia8nw=;
+        b=ZFGK6A6gprh6OdhCab7OrQ9Btp/mRPL67snByxcLVw99BycD+ZBu0MQl1s2p0bY1qa
+         K6FcLzR7xTjmhyGQ0WKSpD2lLwtOfTx85mo1ZQw8vlIaMXEXoDcue1sMiZbvZqXGmE58
+         VXKMzAsjJoqPEhRKn1fhD5B53W8RgBMKtsOPQzbztf1iwtGWTorvWGY6fxzJ23isgQbd
+         AOlZbreTUVHNzlv8ODxPzteFzm5oOGutK+Is87ZpPZR4hXRYQSIIixs685G7+rCfH/I5
+         jFYasHdenbNd+xIuUTduTqzwhh1cvDr8jTYFLIEgS5CI/NRvUY30+9/y2HOn4t1FrRZN
+         WFYg==
+X-Gm-Message-State: AOAM5302d7xvnU/Ckc0W7ZPdpg4DsdNUpFSa8vx0eoj1c0oB3X6Ny3k1
+        phEC/exIq6sFL8gKsGVixNsuvtqRaGDvo2Icuvg=
+X-Google-Smtp-Source: ABdhPJyxm9XQb8UAcmwMjaql0CRPtfGhVq4b3EHRsVqmXF9mIx6HevSbmlzdmUAYK7+fqQ020lp5bYjCVskHIysj7Hs=
+X-Received: by 2002:a05:6a00:2313:b0:4e0:ffa7:bbe0 with SMTP id
+ h19-20020a056a00231300b004e0ffa7bbe0mr19856274pfh.53.1645448608066; Mon, 21
+ Feb 2022 05:03:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211212170552.2812-6-colyli@suse.de>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.73]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600009.china.huawei.com (7.193.23.164)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Reply-To: wallaceharrisonun1@gmail.com
+Sender: mj6455009@gmail.com
+Received: by 2002:a05:6a20:4a09:b0:76:527d:adaa with HTTP; Mon, 21 Feb 2022
+ 05:03:27 -0800 (PST)
+From:   "Mr. wallace harrisonun" <wallaceharrisonun1@gmail.com>
+Date:   Mon, 21 Feb 2022 05:03:27 -0800
+X-Google-Sender-Auth: QWjfpu5pcsO8OfrPFyACyFs2bvM
+Message-ID: <CALQs60wTJYH76=OoaV-fUvQsULozm5ND8uYtOKDCRFJd-ZRn5w@mail.gmail.com>
+Subject: Palliative Empowerment
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,
+        MONEY_FORM_SHORT,MONEY_FRAUD_3,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_FILL_THIS_FORM_SHORT,T_HK_NAME_FM_MR_MRS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:533 listed in]
+        [list.dnswl.org]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [mj6455009[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wallaceharrisonun1[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [mj6455009[at]gmail.com]
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  0.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  0.0 T_FILL_THIS_FORM_SHORT Fill in a short form with personal
+        *      information
+        *  1.0 MONEY_FORM_SHORT Lots of money if you fill out a short form
+        *  3.5 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  0.0 MONEY_FRAUD_3 Lots of money and several fraud phrases
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ÔÚ 2021/12/13 1:05, Coly Li Ð´µÀ:
-> From: Jianpeng Ma <jianpeng.ma@intel.com>
-> 
-> This patch implements the bch_nvmpg_free_pages() of the buddy allocator.
-> 
-> The difference between this and page-buddy-free:
-> it need owner_uuid to free owner allocated pages, and must
-> persistent after free.
-> 
-> Signed-off-by: Jianpeng Ma <jianpeng.ma@intel.com>
-> Co-developed-by: Qiaowei Ren <qiaowei.ren@intel.com>
-> Signed-off-by: Qiaowei Ren <qiaowei.ren@intel.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Hannes Reinecke <hare@suse.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> ---
->   drivers/md/bcache/nvmpg.c | 164 ++++++++++++++++++++++++++++++++++++--
->   drivers/md/bcache/nvmpg.h |   3 +
->   2 files changed, 160 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/nvmpg.c b/drivers/md/bcache/nvmpg.c
-> index a920779eb548..8ce0c4389b42 100644
-> --- a/drivers/md/bcache/nvmpg.c
-> +++ b/drivers/md/bcache/nvmpg.c
-> @@ -248,6 +248,57 @@ static int init_nvmpg_set_header(struct bch_nvmpg_ns *ns)
->   	return rc;
->   }
->   
-> +static void __free_space(struct bch_nvmpg_ns *ns, unsigned long nvmpg_offset,
-> +			 int order)
-> +{
-> +	unsigned long add_pages = (1L << order);
-> +	pgoff_t pgoff;
-> +	struct page *page;
-> +	void *va;
-> +
-> +	if (nvmpg_offset == 0) {
-> +		pr_err("free pages on offset 0\n");
-> +		return;
-> +	}
-> +
-> +	page = bch_nvmpg_va_to_pg(bch_nvmpg_offset_to_ptr(nvmpg_offset));
-> +	WARN_ON((!page) || (page->private != order));
-> +	pgoff = page->index;
-> +
-> +	while (order < BCH_MAX_ORDER - 1) {
-> +		struct page *buddy_page;
-> +
-> +		pgoff_t buddy_pgoff = pgoff ^ (1L << order);
-> +		pgoff_t parent_pgoff = pgoff & ~(1L << order);
-> +
-> +		if ((parent_pgoff + (1L << (order + 1)) > ns->pages_total))
-> +			break;
-> +
-> +		va = bch_nvmpg_pgoff_to_ptr(ns, buddy_pgoff);
-> +		buddy_page = bch_nvmpg_va_to_pg(va);
-> +		WARN_ON(!buddy_page);
-> +
-> +		if (PageBuddy(buddy_page) && (buddy_page->private == order)) {
-> +			list_del((struct list_head *)&buddy_page->zone_device_data);
-> +			__ClearPageBuddy(buddy_page);
-> +			pgoff = parent_pgoff;
-> +			order++;
-> +			continue;
-> +		}
-> +		break;
-> +	}
-> +
-> +	va = bch_nvmpg_pgoff_to_ptr(ns, pgoff);
-> +	page = bch_nvmpg_va_to_pg(va);
-> +	WARN_ON(!page);
-> +	list_add((struct list_head *)&page->zone_device_data,
-> +		 &ns->free_area[order]);
-> +	page->index = pgoff;
-> +	set_page_private(page, order);
-> +	__SetPageBuddy(page);
-> +	ns->free += add_pages;
-> +}
-> +
->   static void bch_nvmpg_init_free_space(struct bch_nvmpg_ns *ns)
->   {
->   	unsigned int start, end, pages;
-> @@ -261,21 +312,19 @@ static void bch_nvmpg_init_free_space(struct bch_nvmpg_ns *ns)
->   		pages = end - start;
->   
->   		while (pages) {
-> -			void *addr;
-> -
->   			for (i = BCH_MAX_ORDER - 1; i >= 0; i--) {
->   				if ((pgoff_start % (1L << i) == 0) &&
->   				    (pages >= (1L << i)))
->   					break;
->   			}
->   
-> -			addr = bch_nvmpg_pgoff_to_ptr(ns, pgoff_start);
-> -			page = bch_nvmpg_va_to_pg(addr);
-> +			page = bch_nvmpg_va_to_pg(
-> +					bch_nvmpg_pgoff_to_ptr(ns, pgoff_start));
->   			set_page_private(page, i);
->   			page->index = pgoff_start;
-> -			__SetPageBuddy(page);
-> -			list_add((struct list_head *)&page->zone_device_data,
-> -				 &ns->free_area[i]);
-> +
-> +			/* In order to update ns->free */
-> +			__free_space(ns, pgoff_start, i);
+Greetings!
 
-Hi,
+ We are writing this message to you from the United Nations Centre to
+inform you that you have been chosen as our Representative in your
+country, to distribute the total sum of $500,000 US Dollars, For
+Palliative Empowerment in order to help the poor people in your city.
+Such as the Disabled people, The homeless, Orphanages, schools, and
+Generals=E2=80=99 Hospitals ,if you receive the message reply to us with yo=
+ur
+details, Your Full Name Your Address: Your Occupation: Via this
+Email:<wallaceharrisonun1@gmail.com>  For more information about the
+payment.
 
-While testing this patchset, we found that this is probably wrong,
-pgoff_start represent page number here, however, __free_space expect
-this to be page offset. Maybe this should be:
-
-__free_space(ns, pgoff_start << PAGE_SHIFT, i);
-
-Thanks,
-Kuai
+Regards
+Dylan.
