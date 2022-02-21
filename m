@@ -2,122 +2,205 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF4F54BDF13
-	for <lists+linux-block@lfdr.de>; Mon, 21 Feb 2022 18:49:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B30CE4BE121
+	for <lists+linux-block@lfdr.de>; Mon, 21 Feb 2022 18:53:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346408AbiBUNDw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Feb 2022 08:03:52 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35644 "EHLO
+        id S1348903AbiBUNJo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Feb 2022 08:09:44 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358505AbiBUNDv (ORCPT
+        with ESMTP id S244170AbiBUNJn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Feb 2022 08:03:51 -0500
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE333F34
-        for <linux-block@vger.kernel.org>; Mon, 21 Feb 2022 05:03:28 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id 195so14221740pgc.6
-        for <linux-block@vger.kernel.org>; Mon, 21 Feb 2022 05:03:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=r1zJaBUPNQBJIkixJM/WVkMBxWgtgajvPcDkUoia8nw=;
-        b=QnZkls7K0VNfKFBglx6GNOStp6Yq+iqgHp41VtEBvqCXS6w/C9J9NJnnMlf2M6aogJ
-         WHdxc+hZD0FmS01Jv3fAwEU/Q9o74oK0Kn9OGGyrhSO5YxQlkE7nn5192T9lfi40MyU8
-         0EMBAOjyeLXN5D0gBPWl6xeh7Qn2LwiITJ/sJ2oSPRMaW8NMZbkDruWAs/n1iWQcWhPB
-         +SoYQlkKmi8+IO9Ee3clR9oX+NVf5O200F4KKH8WVrzNhlOIESFBTLVxbJSHjK4pmELS
-         QS9LlNAKWe1Z9FDd/sS4CdLo2qvkspIY/x+5PL8e8zZvd0lOvYuQuHpE/F4NLdelkAoy
-         qCYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=r1zJaBUPNQBJIkixJM/WVkMBxWgtgajvPcDkUoia8nw=;
-        b=ZFGK6A6gprh6OdhCab7OrQ9Btp/mRPL67snByxcLVw99BycD+ZBu0MQl1s2p0bY1qa
-         K6FcLzR7xTjmhyGQ0WKSpD2lLwtOfTx85mo1ZQw8vlIaMXEXoDcue1sMiZbvZqXGmE58
-         VXKMzAsjJoqPEhRKn1fhD5B53W8RgBMKtsOPQzbztf1iwtGWTorvWGY6fxzJ23isgQbd
-         AOlZbreTUVHNzlv8ODxPzteFzm5oOGutK+Is87ZpPZR4hXRYQSIIixs685G7+rCfH/I5
-         jFYasHdenbNd+xIuUTduTqzwhh1cvDr8jTYFLIEgS5CI/NRvUY30+9/y2HOn4t1FrRZN
-         WFYg==
-X-Gm-Message-State: AOAM5302d7xvnU/Ckc0W7ZPdpg4DsdNUpFSa8vx0eoj1c0oB3X6Ny3k1
-        phEC/exIq6sFL8gKsGVixNsuvtqRaGDvo2Icuvg=
-X-Google-Smtp-Source: ABdhPJyxm9XQb8UAcmwMjaql0CRPtfGhVq4b3EHRsVqmXF9mIx6HevSbmlzdmUAYK7+fqQ020lp5bYjCVskHIysj7Hs=
-X-Received: by 2002:a05:6a00:2313:b0:4e0:ffa7:bbe0 with SMTP id
- h19-20020a056a00231300b004e0ffa7bbe0mr19856274pfh.53.1645448608066; Mon, 21
- Feb 2022 05:03:28 -0800 (PST)
+        Mon, 21 Feb 2022 08:09:43 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5765C1EAFB
+        for <linux-block@vger.kernel.org>; Mon, 21 Feb 2022 05:09:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645448958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=S0mufslNXt75K3JhABrZgA0bQHXouv5QJLdHcq6BX8s=;
+        b=CBTopYGnbDPOZhGM9adzcFoAGSHrNsj20uXxuNs/3MZLla/4hB/KdmVI5Mboy9TGMglfjv
+        2xAzo8gHC+4dE6I7cmAg9VS5cp30wT63uPdw8zZOo8ArDDWt3aXXuLzIBOFbmCkBagFSE5
+        y+agDy1wT612OGZhYWj3yyAQaAsHMBI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-444-xQWVsbQCM26PkZhaCKZEfg-1; Mon, 21 Feb 2022 08:09:17 -0500
+X-MC-Unique: xQWVsbQCM26PkZhaCKZEfg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 322051853026;
+        Mon, 21 Feb 2022 13:09:16 +0000 (UTC)
+Received: from work (unknown [10.40.194.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4BC2E7D70B;
+        Mon, 21 Feb 2022 13:09:15 +0000 (UTC)
+Date:   Mon, 21 Feb 2022 14:09:12 +0100
+From:   Lukas Czerner <lczerner@redhat.com>
+To:     Olaf Fraczyk <olaf.fraczyk@gmail.com>
+Cc:     Karel Zak <kzak@redhat.com>, linux-block@vger.kernel.org
+Subject: Re: blkdiscard BLKDISCARD ioctl failed: Remote I/O error
+Message-ID: <20220221130912.kboxxd2dga7edjkf@work>
+References: <CAJWTG89dq0-HDb=hSJMdT5WyArH3dy+SKZNXDEr9WOWsaUsMEg@mail.gmail.com>
+ <20220221090558.yvkgw2lujwjodhfi@ws.net.home>
+ <CAJWTG8-yrpLevVALX9ONnQGEgFcytYuhSk4ge_-qyi0tQS0keg@mail.gmail.com>
 MIME-Version: 1.0
-Reply-To: wallaceharrisonun1@gmail.com
-Sender: mj6455009@gmail.com
-Received: by 2002:a05:6a20:4a09:b0:76:527d:adaa with HTTP; Mon, 21 Feb 2022
- 05:03:27 -0800 (PST)
-From:   "Mr. wallace harrisonun" <wallaceharrisonun1@gmail.com>
-Date:   Mon, 21 Feb 2022 05:03:27 -0800
-X-Google-Sender-Auth: QWjfpu5pcsO8OfrPFyACyFs2bvM
-Message-ID: <CALQs60wTJYH76=OoaV-fUvQsULozm5ND8uYtOKDCRFJd-ZRn5w@mail.gmail.com>
-Subject: Palliative Empowerment
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,
-        MONEY_FORM_SHORT,MONEY_FRAUD_3,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_FILL_THIS_FORM_SHORT,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:533 listed in]
-        [list.dnswl.org]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mj6455009[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [wallaceharrisonun1[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [mj6455009[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  0.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.0 T_FILL_THIS_FORM_SHORT Fill in a short form with personal
-        *      information
-        *  1.0 MONEY_FORM_SHORT Lots of money if you fill out a short form
-        *  3.5 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  0.0 MONEY_FRAUD_3 Lots of money and several fraud phrases
-X-Spam-Level: *****
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJWTG8-yrpLevVALX9ONnQGEgFcytYuhSk4ge_-qyi0tQS0keg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Greetings!
+Hi,
 
- We are writing this message to you from the United Nations Centre to
-inform you that you have been chosen as our Representative in your
-country, to distribute the total sum of $500,000 US Dollars, For
-Palliative Empowerment in order to help the poor people in your city.
-Such as the Disabled people, The homeless, Orphanages, schools, and
-Generals=E2=80=99 Hospitals ,if you receive the message reply to us with yo=
-ur
-details, Your Full Name Your Address: Your Occupation: Via this
-Email:<wallaceharrisonun1@gmail.com>  For more information about the
-payment.
+the problem is definitelly not in util-linux. In kernel there are checks
+in place that would prevent proceeding with out of range BLKDISCARD ioctl,
+but that's not what we hit here.
 
-Regards
-Dylan.
+In the logs below you can see that the actual discard request failed,
+but it appears to be well within the device range. I don't know what is
+going on, maybe someone in the linux-block have a clue (adding to cc).
+
+Meanwhile please let us know what kernel version do you have and provide
+a blkparse output of the blkdiscard run. You can do this for example
+
+blktrace -a discard -d /dev/sdb -o - | \
+blkparse -o output -f "%D %2c %8s %5T.%9t %6p %2a %3d %10S + %10U (%4e) [%C]\n" -i -
+
+then run the blkdiscard and see the content of output file.
+
+Thanks!
+-Lukas
+
+
+
+On Mon, Feb 21, 2022 at 01:34:57PM +0100, Olaf Fraczyk wrote:
+> Hello,
+> 
+> I had to put the disk in use, and I needed it in MBR format, so I can't
+> create GPT now.
+> 
+> Anyway, the reported size seems to be OK.
+> 
+> I have created 3rd partition to go till the end of the disk, as below:
+> 
+> Device     Boot      Start        End    Sectors   Size Id Type
+> /dev/sdb1             2048    4196351    4194304     2G fd Linux raid
+> autodetect
+> /dev/sdb2          4196352 1874855935 1870659584   892G fd Linux raid
+> autodetect
+> /dev/sdb3       1874855936 1875385007     529072 258.3M 83 Linux
+> 
+> I can fill it to the last sector using dd without problems:
+> 
+> [root@vh3 ~]# dd if=/dev/zero of=/dev/sdb3 bs=1024 count=264536
+> 264536+0 records in
+> 264536+0 records out
+> 270884864 bytes (271 MB, 258 MiB) copied, 4.81622 s, 56.2 MB/s
+> 
+> When I do blkdiscard:
+> 
+> root@vh3 ~]# blkdiscard -l 264536K /dev/sdb3
+> blkdiscard: /dev/sdb3: BLKDISCARD ioctl failed: Remote I/O error
+> [root@vh3 ~]# blkdiscard -l 264535K /dev/sdb3
+> [root@vh3 ~]#
+> 
+> In the /var/log/messages for the failed discard I get:
+> Feb 21 13:19:52 vh3 kernel: sd 1:0:1:0: [sdb] tag#2227 FAILED Result:
+> hostbyte=DID_OK driverbyte=DRIVER_SENSE cmd_age=0s
+> Feb 21 13:19:52 vh3 kernel: sd 1:0:1:0: [sdb] tag#2227 Sense Key : Illegal
+> Request [current]
+> Feb 21 13:19:52 vh3 kernel: sd 1:0:1:0: [sdb] tag#2227 Add. Sense: Logical
+> block address out of range
+> Feb 21 13:19:52 vh3 kernel: sd 1:0:1:0: [sdb] tag#2227 CDB: Unmap/Read
+> sub-channel 42 00 00 00 00 00 00 00 18 00
+> Feb 21 13:19:52 vh3 kernel: blk_update_request: critical target error, dev
+> sdb, sector 1874855936 op 0x3:(DISCARD) flags 0x800 phys_seg 1 prio class 0
+> 
+> I have the drive on a SAS controller - mpt3sas driver, LSI SAS2008
+> 
+> Best regards,
+> 
+> Olaf
+> 
+> 
+> 
+> 
+> 
+> pon., 21 lut 2022 o 10:06 Karel Zak <kzak@redhat.com> napisał(a):
+> 
+> >
+> >  Hi Olaf,
+> >
+> >  from my point of view it seems like kernel (SSD driver) issue. The
+> >  ioctl needs to accept range from 0 to device size. The another
+> >  possibility is that the device itself reports incorrect size. Do you
+> >  see another issue, for example when you try to create GPT partition
+> >  table on the device, or so? Do you see anything in dmesg output?
+> >
+> >  CC: Lukas Czerner who understands kernel part :-)
+> >
+> >     Karel
+> >
+> >
+> > On Thu, Feb 17, 2022 at 10:32:06PM +0100, Olaf Fraczyk wrote:
+> > > Hello,
+> > >
+> > > Tried:
+> > > util-linux-2.32.1-28.el8.x86_64 (Almalinux 8)
+> > > util-linux-2.38-rc1 (compiled from sources)
+> > >
+> > > I have a problem with blkdiscard and Samsung  PM893 SSD 960GB drive.
+> > >
+> > > I tried to trim entire drive but I get the following error:
+> > > [root@vh3 util-linux-2.38-rc1]# ./blkdiscard /dev/sdb
+> > > lt-blkdiscard: /dev/sdb: BLKDISCARD ioctl failed: Remote I/O error
+> > >
+> > > I have done strace and I see:
+> > > ioctl(3, BLKGETSIZE64, [960197124096])  = 0
+> > > ioctl(3, BLKSSZGET, [512])              = 0
+> > > ioctl(3, BLKDISCARD, [0, 960197124096]) = -1 EREMOTEIO (Remote I/O error)
+> > >
+> > > When I do the same giving length explicitly I get the same error.
+> > >
+> > > However when I specify the length 512 bytes smaller, it works without a
+> > > problem:
+> > >
+> > > ioctl(3, BLKGETSIZE64, [960197124096])  = 0
+> > > ioctl(3, BLKSSZGET, [512])              = 0
+> > > ioctl(3, BLKDISCARD, [0, 960197123584]) = 0
+> > >
+> > > Disk size from fdisk:
+> > > [root@vh3 util-linux-2.38-rc1]# fdisk -l /dev/sdb
+> > > Disk /dev/sdb: 894.3 GiB, 960197124096 bytes, 1875385008 sectors
+> > > Units: sectors of 1 * 512 = 512 bytes
+> > > Sector size (logical/physical): 512 bytes / 4096 bytes
+> > > I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+> > >
+> > >
+> > > Is this a problem with the SSD drive or with the blkdiscard command /
+> > ioctl?
+> > > Could you please help me solve this issue?
+> > >
+> > > Best regards,
+> > >
+> > > Olaf Frączyk
+> >
+> > --
+> >  Karel Zak  <kzak@redhat.com>
+> >  http://karelzak.blogspot.com
+> >
+> >
+
