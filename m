@@ -2,178 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7515E4C271B
-	for <lists+linux-block@lfdr.de>; Thu, 24 Feb 2022 10:01:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D18B4C27E0
+	for <lists+linux-block@lfdr.de>; Thu, 24 Feb 2022 10:17:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230419AbiBXIzT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 24 Feb 2022 03:55:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42228 "EHLO
+        id S231462AbiBXJRK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 24 Feb 2022 04:17:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232190AbiBXIzT (ORCPT
+        with ESMTP id S231421AbiBXJRJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 24 Feb 2022 03:55:19 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD221164D2F
-        for <linux-block@vger.kernel.org>; Thu, 24 Feb 2022 00:54:49 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id g1so1302853pfv.1
-        for <linux-block@vger.kernel.org>; Thu, 24 Feb 2022 00:54:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=32DByH6vX/KFle8OsvMqwALHe3eUcgPRF7B5vKXTRIk=;
-        b=lY+Bd7Mqc2ONfTDXwfbUHKf9AyAiX4+yeOBOmqXxzxq2hw4/VGvmp8vdegSUPOh8h7
-         hxItUp3stMQ+uQtxQ4/rxY6wk6n5swKU5LD5zuhsei0raqhXVlvZBpsB3vwByohADs7X
-         319D9CdjGc+LDj3BUYXjC2d8TBdZ+927ua70WCBe5y2i8eEBkzZYZFLSM3WHix0VdDq4
-         ojhRqYS8Hd9fOEX++Ay227HFVZKoa+TDOVs3/CPo5EApCh1PIH/2nrhp9u30pVvJHnJP
-         gtNZRtA3i2TF93NoO+fWsyU+CxK457e2PZBB6Msh1t+AwbzQa0gj1gOmgpeHH/W5tRLa
-         CQIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=32DByH6vX/KFle8OsvMqwALHe3eUcgPRF7B5vKXTRIk=;
-        b=gD5kMleDIol1MjO0+2avbg0R+7txRtfDJcnLSb0kw5s0qKmRlcYeg/z7JS82Mf83AN
-         aX7hqVzJQxBOSCAiuyufxlTFlsacSvMaBTAM5Dqcq+liB2iXGZnV5Bf79E4+cLpCRhRN
-         5WKmj7tdrkifnxUgK+MY1e9Z9PzEccll7Yn/7koDHsB3y2vBE3wnKu81tQt6G5Fl7svV
-         3/oPyWJCH2+UuG+FXCDokfofVqYe6N4Az39Q6Rmls/Ywkai5K84MmHEIJHdiuRk51che
-         4ra7I9Xb+igMHITsEC1Vz+vwF9zzhim8XLyjhpWJcIksAypmSUVAuHYE17RKXwci3h3N
-         h7Tg==
-X-Gm-Message-State: AOAM530zLvm+V5fx+SvRC8Wl/eONQoSHadwQoZUXoR8FYgJHQtv90BO/
-        37s39cVDBh1b4uZBfsXyQ7c=
-X-Google-Smtp-Source: ABdhPJx0Tjbh+2Cb+302RKiqZY3oHYqDGBel8NtW/RVa8dG+FeLk2GSyTxw57l8Xvh3bvczzNt3K9Q==
-X-Received: by 2002:a05:6a00:88e:b0:4d2:4829:156c with SMTP id q14-20020a056a00088e00b004d24829156cmr1804682pfj.47.1645692889277;
-        Thu, 24 Feb 2022 00:54:49 -0800 (PST)
-Received: from localhost.localdomain ([162.219.34.248])
-        by smtp.gmail.com with ESMTPSA id q13sm2799300pfl.210.2022.02.24.00.54.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 00:54:48 -0800 (PST)
-From:   "Wang Jianchao (Kuaishou)" <jianchao.wan9@gmail.com>
-To:     osandov@osandov.com
-Cc:     linux-block@vger.kernel.org
-Subject: [RFC RESEND V3 blktests] block/032: add test case for open and close rqos policy w/ io
-Date:   Thu, 24 Feb 2022 16:53:40 +0800
-Message-Id: <20220224085340.53854-1-jianchao.wan9@gmail.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Thu, 24 Feb 2022 04:17:09 -0500
+X-Greylist: delayed 554 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 24 Feb 2022 01:16:38 PST
+Received: from mail.onlinesuccesses.pl (mail.onlinesuccesses.pl [198.244.150.235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAAD1FA6C
+        for <linux-block@vger.kernel.org>; Thu, 24 Feb 2022 01:16:38 -0800 (PST)
+Received: by mail.onlinesuccesses.pl (Postfix, from userid 1002)
+        id 1227DA4684; Thu, 24 Feb 2022 09:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onlinesuccesses.pl;
+        s=mail; t=1645693593;
+        bh=nE8HqilgMh4dy7+Z8ksfg7Bc9rmPeQtYFq3/3YR2ODU=;
+        h=Date:From:To:Subject:From;
+        b=FH329BKLi46/ATarCg6O+LoRVbRe2lLxMHJV6V9VvfebS28oKkD2XttPwJR+7KrGR
+         JiVnRggdko14K8m3DUrdj86z3twcYRkSCQwuE9ST/iysIpJlY7ITlVKA8p8M6uFCog
+         6SuSUULQYr+z3WYB08Um3x4osmErLiqDg2CAqKBVJlSaoa4k6jBawid7qXHPdA8dHv
+         9HKo0i/4RY4FvS+bszyGHWZR4L5av0Tyy35l68+v++jOXbGSeMMRvfmDriqiuqTbVD
+         HZG8ETt9nsWn4oemAcCq3KGK3rbOdrvd4w96/Y5rIiBaecxUP7aX0dhGu8RiVZFFnJ
+         dBBOa7Mw5f6tA==
+Received: by mail.onlinesuccesses.pl for <linux-block@vger.kernel.org>; Thu, 24 Feb 2022 09:05:53 GMT
+Message-ID: <20220224074501-0.1.2r.ho8k.0.ki6m7vgvi7@onlinesuccesses.pl>
+Date:   Thu, 24 Feb 2022 09:05:53 GMT
+From:   "Wiktor Zielonko" <wiktor.zielonko@onlinesuccesses.pl>
+To:     <linux-block@vger.kernel.org>
+Subject: Ruch z pierwszej pozycji w Google
+X-Mailer: mail.onlinesuccesses.pl
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This test case is to test switching rqos policy w/ io running.
-The fio is running under cgroup with blkio controller opened.
+Dzie=C5=84 dobry,=20
 
-Signed-off-by: Wang Jianchao (Kuaishou) <jianchao.wan9@gmail.com>
----
- tests/block/032     | 86 +++++++++++++++++++++++++++++++++++++++++++++
- tests/block/032.out |  2 ++
- 2 files changed, 88 insertions(+)
- create mode 100755 tests/block/032
- create mode 100644 tests/block/032.out
+jaki=C5=9B czas temu zg=C5=82osi=C5=82a si=C4=99 do nas firma, kt=C3=B3re=
+j strona internetowa nie pozycjonowa=C5=82a si=C4=99 wysoko w wyszukiwarc=
+e Google.=20
 
-diff --git a/tests/block/032 b/tests/block/032
-new file mode 100755
-index 0000000..c256ff2
---- /dev/null
-+++ b/tests/block/032
-@@ -0,0 +1,86 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2022 Wang Jianchao
-+#
-+# Stress test to run the fio in cgroup and iocost/iolatency/ioprio switching
-+# concurrently. It mainly to verify the lifecycle of rqos when rqos policy
-+# is deactivated.
-+
-+. tests/block/rc
-+. common/cgroup
-+
-+DESCRIPTION="Stress test for concurrent fio in cgroup and rqos policy switching"
-+TIMED=1
-+
-+requires() {
-+	_have_cgroup2_controller io && _have_fio
-+}
-+
-+test_device() {
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	_init_cgroup2
-+
-+	# setup cgroups
-+	local cgrp2_dir=$(_cgroup2_base_dir)
-+	echo "+io" > ${cgrp2_dir}/cgroup.subtree_control
-+	echo "+io" > "${CGROUP2_DIR}/cgroup.subtree_control"
-+
-+	if _test_dev_is_rotational; then
-+		size="32m"
-+	else
-+		size="1g"
-+	fi
-+
-+	local rqos=("wbt" "iolat" "iocost" "ioprio")
-+	local devn=`cat ${TEST_DEV_SYSFS}/dev`
-+	local cgrp
-+
-+	fio_jobs=()
-+	for ((cgrp=0; cgrp<8; cgrp++))
-+	do
-+		mkdir -p "$CGROUP2_DIR/block032-$cgrp"
-+		fio_jobs+=("--name=job$cgrp" "--cgroup="blktests/block032-$cgrp"")
-+	done
-+
-+	# start fio job
-+	fio --rw=randread --direct=1 --ioengine=libaio --iodepth=128 \
-+	    --bs=4K --group_reporting=1 --loops=100000 --runtime=120 \
-+	    --filename=${TEST_DEV} --size=${size} \
-+	    "${fio_jobs[@]}" > /dev/null &
-+
-+	start_time=$(date +%s)
-+	timeout=${TIMEOUT:=900}
-+	while kill -0 $! 2>/dev/null; do
-+		idx=$((RANDOM % ${#rqos[@]}))
-+		pol=${rqos[$idx]}
-+		cat ${TEST_DEV_SYSFS}/queue/qos | grep "\[$pol\]" > /dev/null
-+		if [ $? -eq 0 ];then
-+			echo "-$pol" > ${TEST_DEV_SYSFS}/queue/qos
-+		else
-+			echo "+$pol" > ${TEST_DEV_SYSFS}/queue/qos
-+			case $pol in
-+				"iocost")
-+					echo "$devn enable=1 ctrl=auto" > ${cgrp2_dir}/io.cost.qos
-+					echo "$devn ctrl=auto" > ${cgrp2_dir}/io.cost.model
-+					;;
-+				"iolat")
-+					;;
-+				"ioprio")
-+					;;
-+				*)
-+					;;
-+			esac
-+		fi
-+		sleep .2
-+		end_time=$(date +%s)
-+		if (( end_time - start_time > timeout + 15 )); then
-+			echo "fio did not finish after $timeout seconds!"
-+			break
-+		fi
-+	done
-+
-+	_exit_cgroup2
-+	echo "Test complete"
-+}
-diff --git a/tests/block/032.out b/tests/block/032.out
-new file mode 100644
-index 0000000..3604e9e
---- /dev/null
-+++ b/tests/block/032.out
-@@ -0,0 +1,2 @@
-+Running block/032
-+Test complete
--- 
-2.17.1
+Na podstawie wykonanego przez nas audytu SEO zoptymalizowali=C5=9Bmy tre=C5=
+=9Bci na stronie pod k=C4=85tem wcze=C5=9Bniej opracowanych s=C5=82=C3=B3=
+w kluczowych. Nasz wewn=C4=99trzny system codziennie analizuje prawid=C5=82=
+owe dzia=C5=82anie witryny.  Dzi=C4=99ki indywidualnej strategii, firma z=
+dobywa coraz wi=C4=99cej Klient=C3=B3w. =20
 
+Czy chcieliby Pa=C5=84stwo zwi=C4=99kszy=C4=87 liczb=C4=99 os=C3=B3b odwi=
+edzaj=C4=85cych stron=C4=99 internetow=C4=85 firmy? M=C3=B3g=C5=82bym prz=
+edstawi=C4=87 ofert=C4=99?=20
+
+
+Pozdrawiam serdecznie,
+Wiktor Zielonko
