@@ -2,66 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 332784C5DB8
-	for <lists+linux-block@lfdr.de>; Sun, 27 Feb 2022 18:22:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 665B14C5DA9
+	for <lists+linux-block@lfdr.de>; Sun, 27 Feb 2022 18:18:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbiB0RWo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 27 Feb 2022 12:22:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
+        id S229512AbiB0RRq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 27 Feb 2022 12:17:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbiB0RWn (ORCPT
+        with ESMTP id S230515AbiB0RRq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 27 Feb 2022 12:22:43 -0500
-X-Greylist: delayed 1227 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 27 Feb 2022 09:22:02 PST
-Received: from localhost.localdomain (unknown [159.226.5.146])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B200B6C958;
-        Sun, 27 Feb 2022 09:22:02 -0800 (PST)
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTPS id 21RH1Pnb014675
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Mon, 28 Feb 2022 01:01:25 +0800
-Received: (from root@localhost)
-        by localhost.localdomain (8.15.2/8.15.2/Submit) id 21RH1OxJ014674;
-        Mon, 28 Feb 2022 01:01:24 +0800
-Date:   Mon, 28 Feb 2022 01:01:24 +0800
-From:   Nian Yanchuan <yanchuan@nfschina.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] block: remove redundant semicolon
-Message-ID: <20220227170124.GA14658@localhost.localdomain>
+        Sun, 27 Feb 2022 12:17:46 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6484265481;
+        Sun, 27 Feb 2022 09:17:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1+1W3bcZcWwdxZGt68XLVQsJDzEEa3DPMfJ+40hI5ZE=; b=Qmk+ArWtToMpl/lfeapZnRuA+i
+        PrpP0ngA7XYmy9Gc6kV2P9n12jrrsV7XUBTZPhKniH/NRJt3xiLUsoQSQ+Ft50Cdcl6W0AOwA+Md5
+        dC1WO3nZbABs3yFH5hL2CshbLWPfMlFmLXZqG78tLsnQ2fxKSF/2Ox84afzZCXbdfWT4VW8xUIkQI
+        t/m/r7ViW2IaqOCXCC7ZY6Y7CUGw6J831FxUykxsBiYnBFwNAr0OzK+kqsTxY69VgvQ0hwZHWdsW7
+        W6qFUCswdr+I2WSzWlPThBAJ9S1pEht19lBh0nZGUPujtoVBKBtTMr6mBKnDLxkby0ZjFP7t8BMmz
+        IxzPFXzA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nONAE-009roj-8J; Sun, 27 Feb 2022 17:16:54 +0000
+Date:   Sun, 27 Feb 2022 09:16:54 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     ming.lei@redhat.com, tj@kernel.org, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [PATCH v9] block: cancel all throttled bios in del_gendisk()
+Message-ID: <YhuyBgZSS6m/Mwu6@infradead.org>
+References: <20220210115637.1074927-1-yukuai3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,RDNS_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220210115637.1074927-1-yukuai3@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Remove redundant semicolon from block/bdev.c
+On Thu, Feb 10, 2022 at 07:56:37PM +0800, Yu Kuai wrote:
+> Throttled bios can't be issued after del_gendisk() is done, thus
+> it's better to cancel them immediately rather than waiting for
+> throttle is done.
+> 
+> For example, if user thread is throttled with low bps while it's
+> issuing large io, and the device is deleted. The user thread will
+> wait for a long time for io to return.
 
-Signed-off-by: Nian Yanchuan <yanchuan@nfschina.com>
----
- block/bdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/block/bdev.c b/block/bdev.c
-index 102837a37051..4faaf4d8f890 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -678,7 +678,7 @@ static int blkdev_get_whole(struct block_device *bdev, fmode_t mode)
- 	if (test_bit(GD_NEED_PART_SCAN, &disk->state))
- 		bdev_disk_changed(disk, false);
- 	bdev->bd_openers++;
--	return 0;;
-+	return 0;
- }
- 
- static void blkdev_put_whole(struct block_device *bdev, fmode_t mode)
--- 
-2.18.2
-
+FYI, this crashed left rigt and center when running xfstests with
+traces pointing to throtl_pending_timer_fn.
