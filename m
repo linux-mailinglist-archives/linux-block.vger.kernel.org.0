@@ -2,139 +2,159 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A86EE4C6375
-	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 08:00:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3045A4C6394
+	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 08:06:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233479AbiB1G66 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 28 Feb 2022 01:58:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
+        id S233533AbiB1HGi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 28 Feb 2022 02:06:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232045AbiB1G65 (ORCPT
+        with ESMTP id S233521AbiB1HGg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 28 Feb 2022 01:58:57 -0500
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C01E4B1C2
-        for <linux-block@vger.kernel.org>; Sun, 27 Feb 2022 22:58:18 -0800 (PST)
-Received: by mail-pf1-x42e.google.com with SMTP id p8so10248261pfh.8
-        for <linux-block@vger.kernel.org>; Sun, 27 Feb 2022 22:58:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AOsEG/swfZ0Z04TsLKSDtWYdPoi4YB2yxC4g1Jc0j3I=;
-        b=w6SaC8XZyLCAyiCM7SPTWcG2QjBcT3JxtqPi1mF6kpsf7A/zU7XoBALsJLmHa5G3Wy
-         vsYJ7X3gl7p6YpEFwPt7JLSNUlP3lameNMTbojJKPgqH1XhNGzxCjj1PbZZHiw6XBS73
-         RHehVp9fZAThfw+HMASWjK/upM+E495Tm/UaBafiBAxW33jHQIPZBQvAgWPLnrbr5Hod
-         C0xI8Hve1cLAnVbY3+ceFsaCXRmlkMt0Tu7Mu/VIayf68tO7pKett/Yc/sdWjC6aZF4k
-         2xDy5k2CgwWbSW7KlgMJIFh2QBYV3Cz0wyOtgSklVN25mHnxWGNpPHM/J/VI9aAzxRqM
-         sSZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AOsEG/swfZ0Z04TsLKSDtWYdPoi4YB2yxC4g1Jc0j3I=;
-        b=WxTs9MwYLjhPyMBl0P6zZElVMcmzQ/bkOXyNcdI3AYN1X08nkYxpI0QQFRrErss8o5
-         k9Dl8fSILWbYD7IBrItk684u+JxYgudIA2abQPxBSsW9pBScKkvZXPr8usUXKGUQt/Dm
-         ZF0Xv4JFfgoYliu6okHFGX170I30Thn4EiPpT3uETwRhKND+YSPVqMkgKMcJipNGYcb4
-         8Pcpe0ASI7864XJPzLpp5IDvBCTPTAQOjGgxiYLr8AMAMv+xTxlgaKjhznEfwcOHHRoC
-         2Bf7iuNiVQoPqdi4kBMp3su9xzUrZsVMbXrCQeHMggm25POn3m6tWRl8sr99idT7OKk5
-         iqlw==
-X-Gm-Message-State: AOAM532IOTP9GT1Ehq7VylwwFhNps5ck8g1dtJU8++RDbLi8OrIoR34n
-        BNRVINwWFHquUKnBmJ2o6VqSc43fUDT9
-X-Google-Smtp-Source: ABdhPJyJBZD/Qw7T1a/EtvByXy1Bq3rjOzU1OMKaFF281aDQFe4tTYQWFiS4BRMhqooQm1h8kOmUig==
-X-Received: by 2002:a63:eb02:0:b0:370:41e4:6ae6 with SMTP id t2-20020a63eb02000000b0037041e46ae6mr16195969pgh.229.1646031497919;
-        Sun, 27 Feb 2022 22:58:17 -0800 (PST)
-Received: from localhost ([139.177.225.253])
-        by smtp.gmail.com with ESMTPSA id p33-20020a056a000a2100b004dff55a7f08sm12118601pfh.21.2022.02.27.22.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 22:58:17 -0800 (PST)
-From:   Xie Yongji <xieyongji@bytedance.com>
-To:     mst@redhat.com, jasowang@redhat.com, axboe@kernel.dk,
-        hch@infradead.org
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH v2] virtio-blk: Remove BUG_ON() in virtio_queue_rq()
-Date:   Mon, 28 Feb 2022 14:57:20 +0800
-Message-Id: <20220228065720.100-1-xieyongji@bytedance.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 28 Feb 2022 02:06:36 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854DE673D7;
+        Sun, 27 Feb 2022 23:05:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 366BEB80E45;
+        Mon, 28 Feb 2022 07:05:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8451C340F1;
+        Mon, 28 Feb 2022 07:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646031955;
+        bh=J36PJOgeTlo/05NdauMIt29rmiW4FJKTj7+qOHuMfFc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IumIuW+vVgoP+3OQ4WH1GFqGIjggezNH4IL7hlwsnnKf3QZVnSQX1TO7a4ProyA91
+         d5hKuLGtP7wZaeyqSp+Dxj4Z7IsOz30b/6y0kaYceIm9eZW1A4uGOHuWvErDK0Bh9+
+         Xl6wtXMqkI62g1nyjAd25aWIcoF1VogII6Qq9QGe9etGpzR1GEwGZjfaFzC4NDxGqa
+         IKMgBqoWGdAhT8gxdNtbgntTikva9p/b/9Yv5PwXipfMMExU+BXQA2g+F9Y/+rEMmk
+         T5KezDTKNRn9XOo9TzGXM1jdQoBkhSZFBVz1I3nnJsHAaZp9mKxnbPP6qllOTtJlv1
+         5NPu9TNQT4KGA==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org, linux-fscrypt@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com,
+        Gaurav Kashyap <quic_gaurkash@quicinc.com>,
+        Israel Rukshin <israelr@nvidia.com>
+Subject: [PATCH v5 0/3] Support for hardware-wrapped inline encryption keys
+Date:   Sun, 27 Feb 2022 23:05:17 -0800
+Message-Id: <20220228070520.74082-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently we have a BUG_ON() to make sure the number of sg
-list does not exceed queue_max_segments() in virtio_queue_rq().
-However, the block layer uses queue_max_discard_segments()
-instead of queue_max_segments() to limit the sg list for
-discard requests. So the BUG_ON() might be triggered if
-virtio-blk device reports a larger value for max discard
-segment than queue_max_segments(). To fix it, let's simply
-remove the BUG_ON() which has become unnecessary after commit
-02746e26c39e("virtio-blk: avoid preallocating big SGL for data").
-And the unused vblk->sg_elems can also be removed together.
+[This patchset is based on v5.17-rc6.  It can also be retrieved from tag
+"wrapped-keys-v5" of https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git]
 
-Fixes: 1f23816b8eb8 ("virtio_blk: add discard and write zeroes support")
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Xie Yongji <xieyongji@bytedance.com>
----
- drivers/block/virtio_blk.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+This patchset adds block and fscrypt support for hardware-wrapped keys
+when the inline encryption hardware supports them.
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index c443cd64fc9b..a43eb1813cec 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -76,9 +76,6 @@ struct virtio_blk {
- 	 */
- 	refcount_t refs;
- 
--	/* What host tells us, plus 2 for header & tailer. */
--	unsigned int sg_elems;
--
- 	/* Ida index - used to track minor number allocations. */
- 	int index;
- 
-@@ -322,8 +319,6 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	blk_status_t status;
- 	int err;
- 
--	BUG_ON(req->nr_phys_segments + 2 > vblk->sg_elems);
--
- 	status = virtblk_setup_cmd(vblk->vdev, req, vbr);
- 	if (unlikely(status))
- 		return status;
-@@ -783,8 +778,6 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	/* Prevent integer overflows and honor max vq size */
- 	sg_elems = min_t(u32, sg_elems, VIRTIO_BLK_MAX_SG_ELEMS - 2);
- 
--	/* We need extra sg elements at head and tail. */
--	sg_elems += 2;
- 	vdev->priv = vblk = kmalloc(sizeof(*vblk), GFP_KERNEL);
- 	if (!vblk) {
- 		err = -ENOMEM;
-@@ -796,7 +789,6 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	mutex_init(&vblk->vdev_mutex);
- 
- 	vblk->vdev = vdev;
--	vblk->sg_elems = sg_elems;
- 
- 	INIT_WORK(&vblk->config_work, virtblk_config_changed_work);
- 
-@@ -853,7 +845,7 @@ static int virtblk_probe(struct virtio_device *vdev)
- 		set_disk_ro(vblk->disk, 1);
- 
- 	/* We can handle whatever the host told us to handle. */
--	blk_queue_max_segments(q, vblk->sg_elems-2);
-+	blk_queue_max_segments(q, sg_elems);
- 
- 	/* No real sector limit. */
- 	blk_queue_max_hw_sectors(q, -1U);
+Hardware-wrapped keys are inline encryption keys that are wrapped
+(encrypted) by a key internal to the hardware.  The wrapping key is an
+ephemeral per-boot key, except at initial unlocking time.
+Hardware-wrapped keys can only be unwrapped (decrypted) by the hardware,
+e.g. when a key is programmed into a keyslot.  They are never visible to
+software in raw form, except optionally during key generation.  The
+hardware supports importing keys as well as generating keys itself.
+
+This feature protects encryption keys from read-only compromises of
+kernel memory, such as that which can occur during a cold boot attack.
+It does this without limiting the number of keys that can be used, as
+would be the case with solutions that didn't use key wrapping.
+
+Hardware supporting this feature is present on recent Qualcomm SoCs
+(SM8350 and later) as well as on the Google Tensor SoC.
+
+This patchset is organized as follows:
+
+- Patch 1 adds the block support and documentation, excluding the ioctls
+  needed to get a key ready to be used in the first place.
+
+- Patch 2 adds new block device ioctls for importing, generating, and
+  preparing hardware-wrapped keys.
+
+- Patch 3 adds the fscrypt support and documentation.
+
+For full details, see the individual patches, especially the detailed
+documentation they add to Documentation/block/inline-encryption.rst and
+Documentation/filesystems/fscrypt.rst.
+
+This feature also requires UFS driver changes.  For Qualcomm SoCs, these
+are being worked on at
+https://lore.kernel.org/linux-scsi/20211206225725.77512-1-quic_gaurkash@quicinc.com/T/#u.
+I've verified that this feature works end-to-end on the SM8350 HDK with
+the upstream kernel with these two patchsets applied.  (One caveat is
+that a custom TrustZone image needs to be flashed to the board too; I
+understand that Qualcomm is working on addressing that.)
+
+I've also written xfstests which verify that this feature encrypts files
+correctly.  These tests can currently be found at
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/xfstests-dev.git/log/?h=wip-wrapped-keys.
+I'll be sending these tests in a separate patchset.
+
+Changed v4 => v5:
+    - Dropped the RFC tag, now that these patches are actually testable.
+    - Split the BLKCRYPTOCREATEKEY ioctl into BLKCRYPTOIMPORTKEY and
+      BLKCRYPTOGENERATEKEY.  (I'm thinking that these operations are
+      distinct enough that two separate ioctls would be best.)
+    - Added some warning messages in fscrypt_derive_sw_secret().
+    - Rebased onto v5.17-rc6.
+
+Changed v3 => v4:
+    - Rebased onto v5.16-rc1 and dropped a few bits that were upstreamed.
+    - Updated cover letter to link to Gaurav's UFS driver patchset.
+
+Changed v2 => v3:
+    - Dropped some fscrypt cleanups that were applied.
+    - Rebased on top of the latest linux-block and fscrypt branches.
+    - Minor cleanups.
+
+Changed v1 => v2:
+    - Added new ioctls for creating and preparing hardware-wrapped keys.
+    - Rebased onto my patchset which renames blk_keyslot_manager to
+      blk_crypto_profile.
+
+Eric Biggers (3):
+  block: add basic hardware-wrapped key support
+  block: add ioctls to create and prepare hardware-wrapped keys
+  fscrypt: add support for hardware-wrapped keys
+
+ Documentation/block/inline-encryption.rst | 241 +++++++++++++++++++++-
+ Documentation/filesystems/fscrypt.rst     | 154 ++++++++++++--
+ block/blk-crypto-fallback.c               |   5 +-
+ block/blk-crypto-internal.h               |  10 +
+ block/blk-crypto-profile.c                |  97 +++++++++
+ block/blk-crypto.c                        | 190 ++++++++++++++++-
+ block/ioctl.c                             |   5 +
+ drivers/md/dm-table.c                     |   1 +
+ drivers/mmc/host/cqhci-crypto.c           |   2 +
+ drivers/scsi/ufs/ufshcd-crypto.c          |   1 +
+ fs/crypto/fscrypt_private.h               |  72 ++++++-
+ fs/crypto/hkdf.c                          |   4 +-
+ fs/crypto/inline_crypt.c                  |  75 ++++++-
+ fs/crypto/keyring.c                       | 119 ++++++++---
+ fs/crypto/keysetup.c                      |  71 ++++++-
+ fs/crypto/keysetup_v1.c                   |   5 +-
+ fs/crypto/policy.c                        |  11 +-
+ include/linux/blk-crypto-profile.h        |  80 +++++++
+ include/linux/blk-crypto.h                |  70 ++++++-
+ include/uapi/linux/fs.h                   |  26 +++
+ include/uapi/linux/fscrypt.h              |   7 +-
+ 21 files changed, 1153 insertions(+), 93 deletions(-)
+
+
+base-commit: 7e57714cd0ad2d5bb90e50b5096a0e671dec1ef3
 -- 
-2.20.1
+2.35.1
 
