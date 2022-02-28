@@ -2,96 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 612A44C6469
-	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 09:11:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 983664C655C
+	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 10:05:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233003AbiB1IL7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 28 Feb 2022 03:11:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40752 "EHLO
+        id S230421AbiB1JFt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 28 Feb 2022 04:05:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231684AbiB1IL6 (ORCPT
+        with ESMTP id S234198AbiB1JFp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 28 Feb 2022 03:11:58 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCB2692B9;
-        Mon, 28 Feb 2022 00:11:20 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 28 Feb 2022 04:05:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C139E36688
+        for <linux-block@vger.kernel.org>; Mon, 28 Feb 2022 01:05:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646039104;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GwV+MvK/zSZGPMXzfVDE8thEzuuq04VSOgxuZlV7PBc=;
+        b=XJ3WHy32SmpjgydWpbySjRwNo75QttibmiMt0W/Z2PMAmoL5peO5rm73O55/jP6jWJjaz8
+        IPrO0b+SA94fFw+Xph3ZcmCbJP8uiOcJc1mB4KQXGNYKev/eLUmD9hCYULcHp6e0MIE9aL
+        Ft9iFnyi+XvjZVNnuEG8bEhrX2F6kgI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-3-iskJ9kLePHSPEJhL7lsb_g-1; Mon, 28 Feb 2022 04:05:01 -0500
+X-MC-Unique: iskJ9kLePHSPEJhL7lsb_g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 68594B80E47;
-        Mon, 28 Feb 2022 08:11:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2506C340E7;
-        Mon, 28 Feb 2022 08:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646035878;
-        bh=y1tdMpsiRpffhOx2vBGdYD8HZmjyMt0V4WvXxZ/HDI4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V+KDVirnh3eOYCFV8FXguYwOhS1tTrAiJ9F0r9TEI1UpdiS6lrWv/9qsq+Z7R/F8c
-         bZdQLocTorrgNjW1WC7kweF/RNvrUKPNhmWTYwFwMOKrmMLK5+120uQ6abXSs3S2vR
-         +OWwJrC6zjIjrqS72GmHxVXQzFpQqOp5lU/D03q9Dkwg0o+jwIbS+dSeia5FvTnFQf
-         4V+bZGIfy/88ds4iki52ciHTi1GXFyz222Ssuh9RbjH0aL0vAJdlW1GE7eHRF2fY03
-         9iVW81iOYpG++HKlentvm3Vp/hOT9P12a3Ko93wjxX3eZy0PlpsU5BEU4SEtqrIk+/
-         sF/PnIeE17wwQ==
-Date:   Mon, 28 Feb 2022 00:11:16 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 204731006AA6;
+        Mon, 28 Feb 2022 09:05:00 +0000 (UTC)
+Received: from localhost (ovpn-8-17.pek2.redhat.com [10.72.8.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E246C7FA36;
+        Mon, 28 Feb 2022 09:04:41 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-mmc@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v4 0/3] block: show crypto capabilities in sysfs
-Message-ID: <YhyDpNN/Yoajneg/@sol.localdomain>
-References: <20220124215938.2769-1-ebiggers@kernel.org>
- <YhL3obBiHO92EcEc@sol.localdomain>
+Cc:     linux-block@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 0/6] blk-mq: update_nr_hw_queues related improvement & bugfix
+Date:   Mon, 28 Feb 2022 17:04:24 +0800
+Message-Id: <20220228090430.1064267-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YhL3obBiHO92EcEc@sol.localdomain>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Feb 20, 2022 at 06:23:29PM -0800, Eric Biggers wrote:
-> On Mon, Jan 24, 2022 at 01:59:35PM -0800, Eric Biggers wrote:
-> > This series adds sysfs files that expose the inline encryption
-> > capabilities of request queues.
-> > 
-> > Patches 1 and 2 are some related cleanups for existing blk-sysfs code.
-> > Patch 3 is the real change; see there for more details.
-> > 
-> > This series applies to v5.17-rc1.
-> > 
-> > Changed v3 => v4:
-> >    - Reworded a comment in patch 2.
-> >    - Updated dates in sysfs documentation.
-> >    - Added more Reviewed-by tags.
-> > 
-> > Changed v2 => v3:
-> >    - Moved the documentation into Documentation/ABI/stable/sysfs-block,
-> >      and improved it a bit.
-> >    - Write "/sys/block/" instead of "/sys/class/block/".
-> >    - Added Reviewed-by tags.
-> > 
-> > Changed v1 => v2:
-> >    - Use sysfs_emit() instead of sprintf().
-> >    - Use __ATTR_RO().
-> > 
-> > Eric Biggers (3):
-> >   block: simplify calling convention of elv_unregister_queue()
-> >   block: don't delete queue kobject before its children
-> >   blk-crypto: show crypto capabilities in sysfs
-> > 
-> 
-> Any more feedback on this?
-> 
+Hi,
 
-Jens, can you apply this for 5.18?  Is there anything else you're waiting for?
+The 1st patch figures out correct numa node for each kind of hw queue.
 
-- Eric
+The 2nd patch simplifies reallocation of q->queue_hw_ctx a bit.
+
+The 3rd patch re-configures poll capability after queue map is changed.
+
+The 4th patch changes mtip32xx to avoid to refer to q->queue_hw_ctx
+directly.
+
+The 5th & 6th patches fix use-after-free on q->queue_hw_ctx.
+
+
+Ming Lei (6):
+  blk-mq: figure out correct numa node for hw queue
+  blk-mq: simplify reallocation of hw ctxs a bit
+  blk-mq: re-config poll after queue map is changed
+  block: mtip32xx: don't touch q->queue_hw_ctx
+  blk-mq: add helper of blk_mq_get_hctx to retrieve hctx via its index
+  blk-mq: manage hctx map via xarray
+
+ block/blk-mq-sysfs.c              |   2 +-
+ block/blk-mq-tag.c                |   2 +-
+ block/blk-mq.c                    | 125 +++++++++++++++++-------------
+ block/blk-mq.h                    |   2 +-
+ drivers/block/mtip32xx/mtip32xx.c |   4 +-
+ include/linux/blk-mq.h            |   8 +-
+ include/linux/blkdev.h            |   2 +-
+ 7 files changed, 84 insertions(+), 61 deletions(-)
+
+-- 
+2.31.1
+
