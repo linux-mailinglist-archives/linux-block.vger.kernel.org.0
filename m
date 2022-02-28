@@ -2,200 +2,220 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AFCF4C6720
-	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 11:33:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDADD4C65AE
+	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 10:29:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231721AbiB1Kdg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 28 Feb 2022 05:33:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53382 "EHLO
+        id S234311AbiB1J31 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 28 Feb 2022 04:29:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbiB1Kdf (ORCPT
+        with ESMTP id S233538AbiB1J30 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 28 Feb 2022 05:33:35 -0500
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEC21403A
-        for <linux-block@vger.kernel.org>; Mon, 28 Feb 2022 02:32:52 -0800 (PST)
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220228103246epoutp01094c35fd0b6958341d3e4bcc24e3ddce~X7KFVxE4A0456004560epoutp01F
-        for <linux-block@vger.kernel.org>; Mon, 28 Feb 2022 10:32:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220228103246epoutp01094c35fd0b6958341d3e4bcc24e3ddce~X7KFVxE4A0456004560epoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1646044366;
-        bh=DE++bbV4PufN2NIHg235o161XQxS+vRZfeqB10jhsNw=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=RHgaB+8ZsYemWPm3xOW/Xg7L++uIrfQRqVovehx0keIzAPXGo5Q50yY72ilqw9r1X
-         HoMfDVv5Pjbn9RjamuzeW2lTe53AZd4NVaK6UkDlAHM9InwEqqHUkkWo3MDOnrGZwI
-         sbIxtwFNaah014jqshf4kEkxr+YzVRdHYBllTVqU=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20220228103246epcas5p3324c9cbf011223743aec17deb83f08ae~X7KE_5dU31936119361epcas5p39;
-        Mon, 28 Feb 2022 10:32:46 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4K6cC21Ml4z4x9Py; Mon, 28 Feb
-        2022 10:32:30 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E7.EE.06423.2B4AC126; Mon, 28 Feb 2022 19:32:18 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20220228093018epcas5p137f53cb05ce95fed2ac173b8fddf2eee~X6TjJzanh0828708287epcas5p1I;
-        Mon, 28 Feb 2022 09:30:18 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20220228093018epsmtrp1681e2f421ca4701532dc338344b9057b~X6TjJPCIn2992429924epsmtrp1s;
-        Mon, 28 Feb 2022 09:30:18 +0000 (GMT)
-X-AuditID: b6c32a49-b01ff70000001917-c2-621ca4b218d8
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0B.9F.29871.A269C126; Mon, 28 Feb 2022 18:30:18 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.110.206.5]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20220228093018epsmtip1e46703c128df219e77d356741925eb31~X6Tiamwkm1259012590epsmtip1P;
-        Mon, 28 Feb 2022 09:30:17 +0000 (GMT)
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     lsf-pc@lists.linux-foundation.org
-Cc:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
-Subject: [LSF/MM/BPF TOPIC] Towards more useful nvme passthrough
-Date:   Mon, 28 Feb 2022 14:55:11 +0530
-Message-Id: <20220228092511.458285-1-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 28 Feb 2022 04:29:26 -0500
+Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 09C8050B3D
+        for <linux-block@vger.kernel.org>; Mon, 28 Feb 2022 01:28:46 -0800 (PST)
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+        by 156.147.23.51 with ESMTP; 28 Feb 2022 18:28:44 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.244.38)
+        by 156.147.1.121 with ESMTP; 28 Feb 2022 18:28:44 +0900
+X-Original-SENDERIP: 10.177.244.38
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Mon, 28 Feb 2022 18:28:26 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
+        linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
+        joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
+        chris@chris-wilson.co.uk, duyuyang@gmail.com,
+        johannes.berg@intel.com, tj@kernel.org, tytso@mit.edu,
+        willy@infradead.org, david@fromorbit.com, amir73il@gmail.com,
+        bfields@fieldses.org, gregkh@linuxfoundation.org,
+        kernel-team@lge.com, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mhocko@kernel.org, minchan@kernel.org, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, sj@kernel.org, jglisse@redhat.com,
+        dennis@kernel.org, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, vbabka@suse.cz, ngupta@vflare.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk,
+        paolo.valente@linaro.org, josef@toxicpanda.com,
+        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        jack@suse.com, jlayton@kernel.org, dan.j.williams@intel.com,
+        hch@infradead.org, djwong@kernel.org,
+        dri-devel@lists.freedesktop.org, airlied@linux.ie,
+        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
+        hamohammed.sa@gmail.com
+Subject: Re: Report 2 in ext4 and journal based on v5.17-rc1
+Message-ID: <20220228092826.GA5201@X58A-UD3R>
+References: <1645095472-26530-1-git-send-email-byungchul.park@lge.com>
+ <1645096204-31670-1-git-send-email-byungchul.park@lge.com>
+ <1645096204-31670-2-git-send-email-byungchul.park@lge.com>
+ <20220221190204.q675gtsb6qhylywa@quack3.lan>
+ <20220223003534.GA26277@X58A-UD3R>
+ <20220223144859.na2gjgl5efgw5zhn@quack3.lan>
+ <20220224011102.GA29726@X58A-UD3R>
+ <20220224102239.n7nzyyekuacgpnzg@quack3.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEKsWRmVeSWpSXmKPExsWy7bCmhu6mJTJJBo/OsFvsvaVtMX/ZU3aL
-        fa/3Mjswe2xeUu8x+cZyRo/Pm+QCmKOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0t
-        LcyVFPISc1NtlVx8AnTdMnOA1igplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCkwK
-        9IoTc4tL89L18lJLrAwNDIxMgQoTsjOuzZjJWvBDoWJjy122BsYO6S5GTg4JAROJ86+2s4PY
-        QgK7GSW+71DqYuQCsj8xSiw9vYMFwvnGKNEybT8bTMeRdy/YIBJ7GSU2/jjCCuF8ZpRo/nyf
-        qYuRg4NNQFPiwuRSkAYRAVWJv+uPsIDYzAL2Ekcal4MNEhZwkJi4og9sNQtQzbMJn8FsXgFL
-        iXP7fkItk5eYeek7VFxQ4uTMJ1Bz5CWat85mhqhZxy7RdyoEwnaRWPdjFwuELSzx6vgWdghb
-        SuJlfxuUXSzx685RZpCbJQQ6GCWuN8yEarCXuLjnL9j9zED3r9+lDxGWlZh6ah0TxF4+id7f
-        T5gg4rwSO+bB2IoS9yY9ZYWwxSUezlgCZXtIfP+3ghESvLESWx9+ZJnAKD8LyTuzkLwzC2Hz
-        AkbmVYySqQXFuempxaYFhnmp5fB4Tc7P3cQITmxanjsY7z74oHeIkYmD8RCjBAezkggvO6tk
-        khBvSmJlVWpRfnxRaU5q8SFGU2AYT2SWEk3OB6bWvJJ4QxNLAxMzMzMTS2MzQyVx3tPpGxKF
-        BNITS1KzU1MLUotg+pg4OKUamAInhOq5arW+f35G30YsLqGIh8v4ZXzhw8/C89dcuPte9Fmp
-        z7yKjo2TAm92p5+/vHdZWlgP87p7c6dHPDjQtfnXpBspKj+zN73R5JupLSvAbfx6Q9EdU42n
-        sj96+EK3sxRUz45YIrj/tspUV46jedppr9hCd21clzODbZN4zPYcRokbM74rLnySMU3LRTvm
-        y9pXyhdtj6v33U471rrh9tH+wn1LJlfe2cC4fjn3HN2Pk3++2y812fFJ9cNje+uChP9xVK0w
-        9Q3qCj1w4v6cn3c+BIcF82fsmR0Uz3bsva7441//7+V89r/JVK09I0GJdffX/Ga//JW1E5Ze
-        C2A2Ei3jfFf9qyRKt3yWn+oZq1lKLMUZiYZazEXFiQBapGO79QMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCLMWRmVeSWpSXmKPExsWy7bCSnK7WNJkkg58rjSz23tK2mL/sKbvF
-        vtd7mR2YPTYvqfeYfGM5o8fnTXIBzFFcNimpOZllqUX6dglcGddmzGQt+KFQsbHlLlsDY4d0
-        FyMnh4SAicSRdy/Yuhi5OIQEdjNK7J+7jx0iIS7RfO0HlC0ssfLfc3aIoo+MEuv3rAFyODjY
-        BDQlLkwuBakREVCV+Lv+CAuIzSzgKLHs2AxmEFtYwEFi4oo+sDksQDXPJnwGs3kFLCXO7fvJ
-        BjFfXmLmpe9QcUGJkzOfsICMZxZQl1g/TwhipLxE89bZzBMY+WchqZqFUDULSdUCRuZVjJKp
-        BcW56bnFhgWGeanlesWJucWleel6yfm5mxjBAamluYNx+6oPeocYmTgYDzFKcDArifCys0om
-        CfGmJFZWpRblxxeV5qQWH2KU5mBREue90HUyXkggPbEkNTs1tSC1CCbLxMEp1cB0RfZNDzt7
-        dDRbcOO8/M4uwZMXWJIut3JNMfAPab0h9tKz7PytnI/9zn85WD8WWHQpxbbbvgm8ey6rlEVm
-        QwLPxDPFsbXm6WsW/Q9blnLlv476yhkSEXzJVat8/64+dtj4U0MNu/rkPVL2t2t220puSnra
-        1f15knSvpdLBC1zzWY9pevQJee5YP7fnQedBv5OPTiSZTlUV+26Q+vGQ45o564tZf6+Y0/7r
-        x4YyBuHlx9WXpDtNjlhnc/K3R4aS/aN6T7/lxfIfBVnm9X2bY7HivbvZVeO6uA/BInee8DTN
-        eG1kcXrlqpDdV9Z9eiKXkGRRcFTp9O7QvO4FgsGTuh0TbZ/rfBFYYxSn9zDktbYSS3FGoqEW
-        c1FxIgApM1tStwIAAA==
-X-CMS-MailID: 20220228093018epcas5p137f53cb05ce95fed2ac173b8fddf2eee
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220228093018epcas5p137f53cb05ce95fed2ac173b8fddf2eee
-References: <CGME20220228093018epcas5p137f53cb05ce95fed2ac173b8fddf2eee@epcas5p1.samsung.com>
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220224102239.n7nzyyekuacgpnzg@quack3.lan>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Background & Objective:
------------------------
-New storage interfaces/features, especially in NVMe, are emerging
-fast. NVMe now has 3 command sets (NVM, ZNS and KV), and this is only
-going to grow further (e.g. computational storage). Many of these new
-commands do not fit well in the existing block abstraction and/or
-syscalls. Be it somewhat specialized operation, or even a new way of
-doing classical read/write (e.g. zone-append, copy command) - it takes
-a good deal of consensus/time for a new device interface to climb the
-ladders of kernel abstractions and become available for user-space
-consumption. This presents challenges for early adopters of tech, and
-leads to kernel-bypass at times.
+On Thu, Feb 24, 2022 at 11:22:39AM +0100, Jan Kara wrote:
+> On Thu 24-02-22 10:11:02, Byungchul Park wrote:
+> > On Wed, Feb 23, 2022 at 03:48:59PM +0100, Jan Kara wrote:
+> > > > KJOURNALD2(kthread)	TASK1(ksys_write)	TASK2(ksys_write)
+> > > > 
+> > > > wait A
+> > > > --- stuck
+> > > > 			wait B
+> > > > 			--- stuck
+> > > > 						wait C
+> > > > 						--- stuck
+> > > > 
+> > > > wake up B		wake up C		wake up A
+> > > > 
+> > > > where:
+> > > > A is a wait_queue, j_wait_commit
+> > > > B is a wait_queue, j_wait_transaction_locked
+> > > > C is a rwsem, mapping.invalidate_lock
+> > > 
+> > > I see. But a situation like this is not necessarily a guarantee of a
+> > > deadlock, is it? I mean there can be task D that will eventually call say
+> > > 'wake up B' and unblock everything and this is how things were designed to
+> > > work? Multiple sources of wakeups are quite common I'd say... What does
+> > 
+> > Yes. At the very beginning when I desgined Dept, I was thinking whether
+> > to support multiple wakeup sources or not for a quite long time.
+> > Supporting it would be a better option to aovid non-critical reports.
+> > However, I thought anyway we'd better fix it - not urgent tho - if
+> > there's any single circle dependency. That's why I decided not to
+> > support it for now and wanted to gather the kernel guys' opinions. Thing
+> > is which policy we should go with.
+> 
+> I see. So supporting only a single wakeup source is fine for locks I guess.
+> But for general wait queues or other synchronization mechanisms, I'm afraid
+> it will lead to quite some false positive reports. Just my 2c.
 
-Passthrough interface cuts through the abstractions and allows
-applications to use any arbitrary nvme-command readily, similar to
-kernel-bypass solutions. But passthrough does not scale as it travels
-via sync ioctl interface, which is particularly painful for
-fast/parallel NVMe storage.
+Thank you for your feedback.
 
-Objective is to revamp the existing passthru interface and turn it
-into something that applications can readily use to play with
-new/emerging features of NVMe.
+I realized we've been using "false positive" differently. There exist
+the three types of code in terms of dependency and deadlock. It's worth
+noting that dependencies are built from between waits and events in Dept.
 
-Current state of work:
-----------------------
-1. Block-interface is subject to compatibility of course. But now nvme
-exposes a generic char interface (/dev/ng) as well which is not
-subject to conditions [1]. When passthru is combined with this generic
-char interface, applications get a sure-fire way to operate
-nvme-device for any current/future command-set. This settles the
-availability problem.
+---
 
-2. For scalability problem, we are discussing this new facility
-“uring-cmd” that Jens proposed in io_uring [2]. This enables using
-io_uring for any arbitrary command (ioctl, fsctl etc.) exposed by the
-underlying component (driver, FS etc.).
+case 1. Code with an actual circular dependency, but not deadlock.
 
-3. I have posted patches combining nvme-passthru with uring-cmd [3].
-This new uring-passthru path enables a bunch of capabilities – async
-transport, fixed-buffer, async-polling, bio-cache etc. This scales well.
-512b randread KIOPS comparing uring-passthru-over-char (/dev/ng0n1) to
-uring-over-block (/dev/nvme0n1)
+   A circular dependency can be broken by a rescue wakeup source e.g.
+   timeout. It's not a deadlock. If it's okay that the contexts
+   participating in the circular dependency and others waiting for the
+   events in the circle are stuck until it gets broken. Otherwise, say,
+   if it's not meant, then it's anyway problematic.
 
-QD    uring    pt    uring-poll    pt-poll
-8      538     589      831         902
-64     967     1131     1351        1378
-256    1043    1230     1376        1429
+   1-1. What if we judge this code is problematic?
+   1-2. What if we judge this code is good?
 
-Discussion points:
-------------------
-I'd like a propose a session to go over:
+case 2. Code with an actual circular dependency, and deadlock.
 
-- What are the issues in having the above work (uring-cmd and new nvme
-passthru) merged?
+   There's no other wakeup source than those within the circular
+   dependency. Literally deadlock. It's problematic and critical.
 
-- What would be other useful things to add in nvme-passthru. For
-example- lack of vectored-io for passthru was one such missing piece.
-That is covered from nvme 5.18 onwards [4]. But are there other things
-that user-space would need before it starts treating this path as a
-good alternative to kernel-bypass?
+   2-1. What if we judge this code is problematic?
+   2-2. What if we judge this code is good?
 
-- Despite the numbers above, nvme passthru has more room for
-efficiency e.g. unlike regular io, we do copy_to_user to fetch
-command, and put_user to return the result. Eliminating some of this
-may require new ioctl. There may be other opinions on what else needs
-overhaul in this path.
+case 3. Code with no actual circular dependency, and not deadlock.
 
-- What would be a good way to upstream the tests? Nvme-cli may not be
-very useful. Should it be similar to fio’s sg ioengine. But
-unlike sg, here we are combining ng with io_uring, and one would want
-to retain all the tunables of io_uring (register/fixed buffers/sqpoll
-etc.)
+   Must be good.
 
-- All the above is for 2.0 passthru which essentially forms a direct
-path between io_uring and nvme. And io_uring and nvme programming
-model share many similarities. For 3.0 passthru, would it be crazy to
-think of trimming the path further by eliminating the block-layer and
-doing stuff without “struct request”. There is some interest in
-developing user-space block device [5] and FS anyway.
+   3-1. What if we judge this code is problematic?
+   3-2. What if we judge this code is good?
 
-[1] https://lore.kernel.org/linux-nvme/20210421074504.57750-1-minwoo.im.dev@gmail.com/
-[2] https://lore.kernel.org/linux-nvme/20210317221027.366780-1-axboe@kernel.dk/
-[3] https://lore.kernel.org/linux-nvme/20211220141734.12206-1-joshi.k@samsung.com/
-[4] https://lore.kernel.org/linux-nvme/20220216080208.GD10554@lst.de/
-[5] https://lore.kernel.org/linux-block/87tucsf0sr.fsf@collabora.com/
+---
 
--- 
-2.25.1
+I call only 3-1 "false positive" circular dependency. And you call 1-1
+and 3-1 "false positive" deadlock.
 
+I've been wondering if the kernel guys esp. Linus considers code with
+any circular dependency is problematic or not, even if it won't lead to
+a deadlock, say, case 1. Even though I designed Dept based on what I
+believe is right, of course, I'm willing to change the design according
+to the majority opinion.
+
+However, I would never allow case 1 if I were the owner of the kernel
+for better stability, even though the code works anyway okay for now.
+
+Thanks,
+Byungchul
+
+> > > Dept do to prevent false reports in cases like this?
+> > > 
+> > > > The above is the simplest form. And it's worth noting that Dept focuses
+> > > > on wait and event itself rather than grabing and releasing things like
+> > > > lock. The following is the more descriptive form of it.
+> > > > 
+> > > > KJOURNALD2(kthread)	TASK1(ksys_write)	TASK2(ksys_write)
+> > > > 
+> > > > wait @j_wait_commit
+> > > > 			ext4_truncate_failed_write()
+> > > > 			   down_write(mapping.invalidate_lock)
+> > > > 
+> > > > 			   ext4_truncate()
+> > > > 			      ...
+> > > > 			      wait @j_wait_transaction_locked
+> > > > 
+> > > > 						ext_truncate_failed_write()
+> > > > 						   down_write(mapping.invalidate_lock)
+> > > > 
+> > > > 						ext4_should_retry_alloc()
+> > > > 						   ...
+> > > > 						   __jbd2_log_start_commit()
+> > > > 						      wake_up(j_wait_commit)
+> > > > jbd2_journal_commit_transaction()
+> > > >    wake_up(j_wait_transaction_locked)
+> > > > 			   up_write(mapping.invalidate_lock)
+> > > > 
+> > > > I hope this would help you understand the report.
+> > > 
+> > > I see, thanks for explanation! So the above scenario is impossible because
+> > 
+> > My pleasure.
+> > 
+> > > for anyone to block on @j_wait_transaction_locked the transaction must be
+> > > committing, which is done only by kjournald2 kthread and so that thread
+> > > cannot be waiting at @j_wait_commit. Essentially blocking on
+> > > @j_wait_transaction_locked means @j_wait_commit wakeup was already done.
+> > 
+> > kjournal2 repeatedly does the wait and the wake_up so the above scenario
+> > looks possible to me even based on what you explained. Maybe I should
+> > understand how the journal things work more for furhter discussion. Your
+> > explanation is so helpful. Thank you really.
+> 
+> OK, let me provide you with more details for better understanding :) In
+> jbd2 we have an object called 'transaction'. This object can go through
+> many states but for our case is important that transaction is moved to
+> T_LOCKED state and out of it only while jbd2_journal_commit_transaction()
+> function is executing and waiting on j_wait_transaction_locked waitqueue is
+> exactly waiting for a transaction to get out of T_LOCKED state. Function
+> jbd2_journal_commit_transaction() is executed only by kjournald. Hence
+> anyone can see transaction in T_LOCKED state only if kjournald is running
+> inside jbd2_journal_commit_transaction() and thus kjournald cannot be
+> sleeping on j_wait_commit at the same time. Does this explain things?
+> 
+> 								Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
