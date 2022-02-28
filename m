@@ -2,48 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACEFC4C63F8
-	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 08:49:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 612A44C6469
+	for <lists+linux-block@lfdr.de>; Mon, 28 Feb 2022 09:11:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233720AbiB1Htg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 28 Feb 2022 02:49:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
+        id S233003AbiB1IL7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 28 Feb 2022 03:11:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbiB1Hte (ORCPT
+        with ESMTP id S231684AbiB1IL6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 28 Feb 2022 02:49:34 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DE23D1D2;
-        Sun, 27 Feb 2022 23:48:56 -0800 (PST)
+        Mon, 28 Feb 2022 03:11:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCB2692B9;
+        Mon, 28 Feb 2022 00:11:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 72162610A4;
-        Mon, 28 Feb 2022 07:48:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2854CC36AE3;
-        Mon, 28 Feb 2022 07:48:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 68594B80E47;
+        Mon, 28 Feb 2022 08:11:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2506C340E7;
+        Mon, 28 Feb 2022 08:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646034535;
-        bh=dNhFGMROSIDvPCnQSBawc2ub7nxSShPfueI2bzsEfMg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CFLzk888PsDt/RXZezLtV6WOwbd+ubyx26G96Nu2AmrslHMmvif2czdBzcFVZgoBC
-         +rudEBCrT0p7dORa3edlu7/mxBhGQIPI35oBF7cDf+GTsVxGztWoWdmBpziCY32aiw
-         K3PcgYg1pO4oxZ0/4QcgN4EatGCrkqGwb8o+0BFPkOw5dtn+0DNVAIT+AvIO3ErALm
-         BncYn7mzzb39C/e7fInqH38Oihi1WsRTo7H3fShyqr0c91Ua2P76nFdwVR1UGx5FHS
-         lSMTQk19ivZj8rQajRMB/keknSdXH3QaVQP/hmgZkl9hhJ8QoUIE5yly+YqC+EqHDR
-         w4P//ZBGHGKLw==
+        s=k20201202; t=1646035878;
+        bh=y1tdMpsiRpffhOx2vBGdYD8HZmjyMt0V4WvXxZ/HDI4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V+KDVirnh3eOYCFV8FXguYwOhS1tTrAiJ9F0r9TEI1UpdiS6lrWv/9qsq+Z7R/F8c
+         bZdQLocTorrgNjW1WC7kweF/RNvrUKPNhmWTYwFwMOKrmMLK5+120uQ6abXSs3S2vR
+         +OWwJrC6zjIjrqS72GmHxVXQzFpQqOp5lU/D03q9Dkwg0o+jwIbS+dSeia5FvTnFQf
+         4V+bZGIfy/88ds4iki52ciHTi1GXFyz222Ssuh9RbjH0aL0vAJdlW1GE7eHRF2fY03
+         9iVW81iOYpG++HKlentvm3Vp/hOT9P12a3Ko93wjxX3eZy0PlpsU5BEU4SEtqrIk+/
+         sF/PnIeE17wwQ==
+Date:   Mon, 28 Feb 2022 00:11:16 -0800
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     fstests@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Subject: [RFC PATCH 8/8] generic: verify ciphertext with hardware-wrapped keys
-Date:   Sun, 27 Feb 2022 23:47:22 -0800
-Message-Id: <20220228074722.77008-9-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220228074722.77008-1-ebiggers@kernel.org>
-References: <20220228074722.77008-1-ebiggers@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-mmc@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v4 0/3] block: show crypto capabilities in sysfs
+Message-ID: <YhyDpNN/Yoajneg/@sol.localdomain>
+References: <20220124215938.2769-1-ebiggers@kernel.org>
+ <YhL3obBiHO92EcEc@sol.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YhL3obBiHO92EcEc@sol.localdomain>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -54,134 +58,40 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Sun, Feb 20, 2022 at 06:23:29PM -0800, Eric Biggers wrote:
+> On Mon, Jan 24, 2022 at 01:59:35PM -0800, Eric Biggers wrote:
+> > This series adds sysfs files that expose the inline encryption
+> > capabilities of request queues.
+> > 
+> > Patches 1 and 2 are some related cleanups for existing blk-sysfs code.
+> > Patch 3 is the real change; see there for more details.
+> > 
+> > This series applies to v5.17-rc1.
+> > 
+> > Changed v3 => v4:
+> >    - Reworded a comment in patch 2.
+> >    - Updated dates in sysfs documentation.
+> >    - Added more Reviewed-by tags.
+> > 
+> > Changed v2 => v3:
+> >    - Moved the documentation into Documentation/ABI/stable/sysfs-block,
+> >      and improved it a bit.
+> >    - Write "/sys/block/" instead of "/sys/class/block/".
+> >    - Added Reviewed-by tags.
+> > 
+> > Changed v1 => v2:
+> >    - Use sysfs_emit() instead of sprintf().
+> >    - Use __ATTR_RO().
+> > 
+> > Eric Biggers (3):
+> >   block: simplify calling convention of elv_unregister_queue()
+> >   block: don't delete queue kobject before its children
+> >   blk-crypto: show crypto capabilities in sysfs
+> > 
+> 
+> Any more feedback on this?
+> 
 
-Add two tests which verify that encrypted files are encrypted correctly
-when a hardware-wrapped inline encryption key is used.  The two tests
-are identical except that one uses FSCRYPT_POLICY_FLAG_IV_INO_LBLK_64
-and the other uses FSCRYPT_POLICY_FLAG_IV_INO_LBLK_32.  These cover both
-of the settings where hardware-wrapped keys currently may be used.
+Jens, can you apply this for 5.18?  Is there anything else you're waiting for?
 
-I've verified that these tests run and pass when all prerequisites are
-met, namely:
-
-- Hardware supporting the feature must be present.  I tested this on the
-  SM8350 HDK (note: this currently requires a custom TrustZone image);
-  this hardware is compatible with both of IV_INO_LBLK_{64,32}.
-- The kernel patches for hardware-wrapped key support must be applied.
-- The filesystem must be ext4 or f2fs.
-- The kernel must have CONFIG_FS_ENCRYPTION_INLINE_CRYPT=y.
-- The fscryptctl program must be available, and must have patches for
-  hardware-wrapped key support applied.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- tests/generic/900     | 30 ++++++++++++++++++++++++++++++
- tests/generic/900.out |  6 ++++++
- tests/generic/901     | 30 ++++++++++++++++++++++++++++++
- tests/generic/901.out |  6 ++++++
- 4 files changed, 72 insertions(+)
- create mode 100755 tests/generic/900
- create mode 100644 tests/generic/900.out
- create mode 100755 tests/generic/901
- create mode 100644 tests/generic/901.out
-
-diff --git a/tests/generic/900 b/tests/generic/900
-new file mode 100755
-index 00000000..a021732e
---- /dev/null
-+++ b/tests/generic/900
-@@ -0,0 +1,30 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2022 Google LLC
-+#
-+# FS QA Test No. 900
-+#
-+# Verify the ciphertext for encryption policies that use the HW_WRAPPED_KEY and
-+# IV_INO_LBLK_64 flags and that use AES-256-XTS to encrypt file contents and
-+# AES-256-CTS-CBC to encrypt file names.
-+#
-+. ./common/preamble
-+_begin_fstest auto quick encrypt
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/encrypt
-+
-+# real QA test starts here
-+_supported_fs generic
-+
-+# Hardware-wrapped keys require the inlinecrypt mount option.
-+_require_scratch_inlinecrypt
-+export MOUNT_OPTIONS="$MOUNT_OPTIONS -o inlinecrypt"
-+
-+_verify_ciphertext_for_encryption_policy AES-256-XTS AES-256-CTS-CBC \
-+	v2 iv_ino_lblk_64 hw_wrapped_key
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/900.out b/tests/generic/900.out
-new file mode 100644
-index 00000000..9edc012c
---- /dev/null
-+++ b/tests/generic/900.out
-@@ -0,0 +1,6 @@
-+QA output created by 900
-+
-+Verifying ciphertext with parameters:
-+	contents_encryption_mode: AES-256-XTS
-+	filenames_encryption_mode: AES-256-CTS-CBC
-+	options: v2 iv_ino_lblk_64 hw_wrapped_key
-diff --git a/tests/generic/901 b/tests/generic/901
-new file mode 100755
-index 00000000..dd5c6e5f
---- /dev/null
-+++ b/tests/generic/901
-@@ -0,0 +1,30 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2022 Google LLC
-+#
-+# FS QA Test No. 901
-+#
-+# Verify the ciphertext for encryption policies that use the HW_WRAPPED_KEY and
-+# IV_INO_LBLK_32 flags and that use AES-256-XTS to encrypt file contents and
-+# AES-256-CTS-CBC to encrypt file names.
-+#
-+. ./common/preamble
-+_begin_fstest auto quick encrypt
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/encrypt
-+
-+# real QA test starts here
-+_supported_fs generic
-+
-+# Hardware-wrapped keys require the inlinecrypt mount option.
-+_require_scratch_inlinecrypt
-+export MOUNT_OPTIONS="$MOUNT_OPTIONS -o inlinecrypt"
-+
-+_verify_ciphertext_for_encryption_policy AES-256-XTS AES-256-CTS-CBC \
-+	v2 iv_ino_lblk_32 hw_wrapped_key
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/901.out b/tests/generic/901.out
-new file mode 100644
-index 00000000..2f928465
---- /dev/null
-+++ b/tests/generic/901.out
-@@ -0,0 +1,6 @@
-+QA output created by 901
-+
-+Verifying ciphertext with parameters:
-+	contents_encryption_mode: AES-256-XTS
-+	filenames_encryption_mode: AES-256-CTS-CBC
-+	options: v2 iv_ino_lblk_32 hw_wrapped_key
--- 
-2.35.1
-
+- Eric
