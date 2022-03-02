@@ -2,50 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17C654C9F12
-	for <lists+linux-block@lfdr.de>; Wed,  2 Mar 2022 09:24:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAF994C9F1C
+	for <lists+linux-block@lfdr.de>; Wed,  2 Mar 2022 09:26:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240082AbiCBIZY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Mar 2022 03:25:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36322 "EHLO
+        id S240102AbiCBI0s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Mar 2022 03:26:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240088AbiCBIZW (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Mar 2022 03:25:22 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A4EB82CC
-        for <linux-block@vger.kernel.org>; Wed,  2 Mar 2022 00:24:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5NrUbu+ZgnW71bJbKl1P9E2P/k29hNiu61f3MNYu8s4=; b=walHz4nY4MENYzILGeahdzACZr
-        y5fHB9m48BvR4snejBmBsDjFvXVlJJcVi+v6PE5kpoC3Q0H66R8utodfy/oHi6lOo/pFQzK2ksq60
-        IImmiNCd94WkYykOTPfT77rrJvwvsNOBEByRK5bG8LyksYLXQ47Zr3wOSQELDYiC6Tav/iofGT/fp
-        E6Qd/1b76z67QOkTkgusSdLsQDZEYxaxWRiZ916MIp/nIDGwkGMW0vYUKUxRhVsDejBQhpi7Orf/e
-        7a6DLqUS9C7PmEoCUmfq09MwkqjurgTjiwXhHycHsRCGvynZnm6gatWr/T36lnOUikWfTulVoK4vr
-        QRjUSX6Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nPKHj-001qr9-0C; Wed, 02 Mar 2022 08:24:35 +0000
-Date:   Wed, 2 Mar 2022 00:24:34 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Yu Kuai <yukuai3@huawei.com>
-Subject: Re: [PATCH 6/6] blk-mq: manage hctx map via xarray
-Message-ID: <Yh8pwiR5DWC9ELDD@infradead.org>
-References: <20220228090430.1064267-1-ming.lei@redhat.com>
- <20220228090430.1064267-7-ming.lei@redhat.com>
- <Yh4hjS0S3vXfLWlH@infradead.org>
- <Yh7RDCaqiqMmKj1s@T590>
+        with ESMTP id S240093AbiCBI0p (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Mar 2022 03:26:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 897A8B82D9
+        for <linux-block@vger.kernel.org>; Wed,  2 Mar 2022 00:26:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646209562;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YtrInDoeeooDXLH4/ASDNuBM89b2Da/ya3ncv+m8FWA=;
+        b=Dj0qUGBEBdb1PyFKVrQHSAuZA1MHlK1p0CbLFzB+2giIG8HTPLn5pPcq5Hm7H2fH1zqWXf
+        HU+XpXYodwSpy/j/VMFnnz/30qrtRFA2gA7A304QjS5miZhpXyk8j2DimJ57+0pLQRcHxM
+        RZYctjoV/+fkvP+JLeERzvTMOd1A/I4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-326-sAHRB3rVNm6CEswhqULziw-1; Wed, 02 Mar 2022 03:25:57 -0500
+X-MC-Unique: sAHRB3rVNm6CEswhqULziw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F944824FA7;
+        Wed,  2 Mar 2022 08:25:55 +0000 (UTC)
+Received: from T590 (ovpn-8-19.pek2.redhat.com [10.72.8.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 629027FCE4;
+        Wed,  2 Mar 2022 08:25:49 +0000 (UTC)
+Date:   Wed, 2 Mar 2022 16:25:45 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>, yukuai3@huawei.com,
+        linux-next <linux-next@vger.kernel.org>, axboe@kernel.dk,
+        linux-block@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [next-20220225][Oops][ppc] lvm snapshot merge results kernel
+ panics (throtl_pending_timer_fn)
+Message-ID: <Yh8qCS5JM8ZbtqY4@T590>
+References: <d583adf0-2d98-60b6-620c-722912c05852@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yh7RDCaqiqMmKj1s@T590>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+In-Reply-To: <d583adf0-2d98-60b6-620c-722912c05852@linux.vnet.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,13 +64,16 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 10:06:04AM +0800, Ming Lei wrote:
-> I did considered xa_for_each(), but it requires rcu read lock.
+On Wed, Mar 02, 2022 at 01:31:39PM +0530, Abdul Haleem wrote:
+> Greeting's
+> 
+> Linux next kernel 5.17.0-rc5-next-20220225 crashed on my power 10 LPAR when
+> merge lvm snapshot on nvme disk
 
-No, I doesn't.  It just takes a RCU lock internally.
+Please try next-20220301, in which the "bad" patch of 'block: cancel all
+throttled bios in del_gendisk()' is dropped.
 
-> Also queue_for_each_hw_ctx() is supposed to not run in fast path,
-> meantime xa_load() is lightweight enough too, so repeated xa_load()
-> is fine here.
 
-I'd rather have the clarity of the proper iterators.
+Thanks,
+Ming
+
