@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34C4D4CBCCC
-	for <lists+linux-block@lfdr.de>; Thu,  3 Mar 2022 12:36:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 745F84CBCC5
+	for <lists+linux-block@lfdr.de>; Thu,  3 Mar 2022 12:36:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232256AbiCCLfl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Mar 2022 06:35:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50528 "EHLO
+        id S231854AbiCCLfj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Mar 2022 06:35:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232986AbiCCLez (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Mar 2022 06:34:55 -0500
+        with ESMTP id S232256AbiCCLfR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Mar 2022 06:35:17 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A2649906;
-        Thu,  3 Mar 2022 03:32:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 912ED4D275;
+        Thu,  3 Mar 2022 03:32:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=r0bVFbVhsj5LL+wNbkofSLQx6AtPcOg+2fbKjtm7YHo=; b=wQnvgl37SlMhIzoigH4gGfMGzT
-        Mu5xImU4hYUW1yupIm+BaAu1iSBPcQUNyhJXYLL2ErJXJl+U+TxTGj7ZDj4KDEVIIWpV1ZZRXVgnc
-        G4g7HLRNyD+NGGA0Clzz6ti6/SZUPTf4gsk6/khlwLvql2uSkoYdPB50mFMp9bXhSMi7lQiARRv8e
-        GX4xBs0G9tH0i18rVK6H5yksKYk6QJWzDhVmtVMm1ratPHkkFGE+VvK1UMDldbSMpK6hGg07dwYPH
-        +H/rA/wRIycn8oMt9eZRNGgY9rBCBxttqr85THJIJFJakJvHaYsoARACJyM4X/vc4SFMdFR8J2BRc
-        TKjjyV/Q==;
+        bh=e5E6EFviE2jb4KRrMO1+wVe/laDvyFev6ciGNxnhDh0=; b=vOINOJ89TM7VKrAFoQ6zKrQSYD
+        y8f3vQimMuYi+MPSUkluZHPK+MQ5tMzF25PIcTgklQuRhWvt0gDBkgHIMEVG8751TkDRWfPHEvTQl
+        16zrTjYmxnD49Lyw0BeaZcpGJSiRYZGF1P1lDlXYgmBRK2v7YewC2HVZ2cIQAxLy9F5+B5peJPWbW
+        36+8FOEoG5N5vB2OMvV2Md2NS+9dbt2Exjq34Qvg1g5IbOqo9wgmtpF/tvrwoRmZTVCf3mgiAsK8q
+        IGNywHOYKEbTxJ88xO+OxadN9LCJpiv4hHcX9y9qIn6hEA3wJ6hGWMSfM1oigpRSzdTLHWqH8auE3
+        oy1bU3/g==;
 Received: from [91.93.38.115] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nPjhE-006Dds-3l; Thu, 03 Mar 2022 11:32:36 +0000
+        id 1nPjhJ-006DeL-3U; Thu, 03 Mar 2022 11:32:41 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
         Kees Cook <keescook@chromium.org>, linux-block@vger.kernel.org,
         drbd-dev@lists.linbit.com, linux-security-module@vger.kernel.org
-Subject: [PATCH 2/5] block: stop using bdevname in __blkdev_issue_discard
-Date:   Thu,  3 Mar 2022 14:32:20 +0300
-Message-Id: <20220303113223.326220-3-hch@lst.de>
+Subject: [PATCH 3/5] block: stop using bdevname in drbd_report_io_error
+Date:   Thu,  3 Mar 2022 14:32:21 +0300
+Message-Id: <20220303113223.326220-4-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220303113223.326220-1-hch@lst.de>
 References: <20220303113223.326220-1-hch@lst.de>
@@ -55,26 +55,32 @@ Use the %pg format specifier to save on stack consuption and code size.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-lib.c | 6 ++----
+ drivers/block/drbd/drbd_req.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index fc6ea52e74824..a745fc389a7c5 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -34,10 +34,8 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
+index c00ae8619519e..82a9adb7d55ce 100644
+--- a/drivers/block/drbd/drbd_req.c
++++ b/drivers/block/drbd/drbd_req.c
+@@ -511,16 +511,14 @@ static void mod_rq_state(struct drbd_request *req, struct bio_and_error *m,
  
- 	/* In case the discard granularity isn't set by buggy device driver */
- 	if (WARN_ON_ONCE(!q->limits.discard_granularity)) {
--		char dev_name[BDEVNAME_SIZE];
+ static void drbd_report_io_error(struct drbd_device *device, struct drbd_request *req)
+ {
+-        char b[BDEVNAME_SIZE];
 -
--		bdevname(bdev, dev_name);
--		pr_err_ratelimited("%s: Error: discard_granularity is 0.\n", dev_name);
-+		pr_err_ratelimited("%pg: Error: discard_granularity is 0.\n",
-+				   bdev);
- 		return -EOPNOTSUPP;
- 	}
+ 	if (!__ratelimit(&drbd_ratelimit_state))
+ 		return;
  
+-	drbd_warn(device, "local %s IO error sector %llu+%u on %s\n",
++	drbd_warn(device, "local %s IO error sector %llu+%u on %pg\n",
+ 			(req->rq_state & RQ_WRITE) ? "WRITE" : "READ",
+ 			(unsigned long long)req->i.sector,
+ 			req->i.size >> 9,
+-			bdevname(device->ldev->backing_bdev, b));
++			device->ldev->backing_bdev);
+ }
+ 
+ /* Helper for HANDED_OVER_TO_NETWORK.
 -- 
 2.30.2
 
