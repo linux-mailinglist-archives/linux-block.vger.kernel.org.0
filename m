@@ -2,108 +2,147 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A47CD4CCE83
-	for <lists+linux-block@lfdr.de>; Fri,  4 Mar 2022 08:08:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CCB04CCF50
+	for <lists+linux-block@lfdr.de>; Fri,  4 Mar 2022 08:53:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238782AbiCDHJG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 4 Mar 2022 02:09:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36648 "EHLO
+        id S238755AbiCDHyi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Fri, 4 Mar 2022 02:54:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238785AbiCDHIw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Mar 2022 02:08:52 -0500
-Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 025D0192CB2
-        for <linux-block@vger.kernel.org>; Thu,  3 Mar 2022 23:07:14 -0800 (PST)
-Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
-        by 156.147.23.51 with ESMTP; 4 Mar 2022 16:07:09 +0900
-X-Original-SENDERIP: 156.147.1.121
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO localhost.localdomain) (10.177.244.38)
-        by 156.147.1.121 with ESMTP; 4 Mar 2022 16:07:09 +0900
-X-Original-SENDERIP: 10.177.244.38
-X-Original-MAILFROM: byungchul.park@lge.com
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     torvalds@linux-foundation.org
-Cc:     damien.lemoal@opensource.wdc.com, linux-ide@vger.kernel.org,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, will@kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, joel@joelfernandes.org, sashal@kernel.org,
-        daniel.vetter@ffwll.ch, chris@chris-wilson.co.uk,
-        duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-        tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-        amir73il@gmail.com, bfields@fieldses.org,
-        gregkh@linuxfoundation.org, kernel-team@lge.com,
-        linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-        minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        sj@kernel.org, jglisse@redhat.com, dennis@kernel.org, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, vbabka@suse.cz,
-        ngupta@vflare.org, linux-block@vger.kernel.org,
-        paolo.valente@linaro.org, josef@toxicpanda.com,
-        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        jack@suse.cz, jack@suse.com, jlayton@kernel.org,
-        dan.j.williams@intel.com, hch@infradead.org, djwong@kernel.org,
-        dri-devel@lists.freedesktop.org, airlied@linux.ie,
-        rodrigosiqueiramelo@gmail.com, melissa.srw@gmail.com,
-        hamohammed.sa@gmail.com
-Subject: [PATCH v4 24/24] dept: Disable Dept on that map once it's been handled until next turn
-Date:   Fri,  4 Mar 2022 16:06:43 +0900
-Message-Id: <1646377603-19730-25-git-send-email-byungchul.park@lge.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1646377603-19730-1-git-send-email-byungchul.park@lge.com>
-References: <1646377603-19730-1-git-send-email-byungchul.park@lge.com>
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        with ESMTP id S232416AbiCDHyh (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 4 Mar 2022 02:54:37 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E751518CC0B
+        for <linux-block@vger.kernel.org>; Thu,  3 Mar 2022 23:53:49 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-89-FYvCFpCMOBqyNx07Jia5EQ-1; Fri, 04 Mar 2022 07:53:46 +0000
+X-MC-Unique: FYvCFpCMOBqyNx07Jia5EQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.28; Fri, 4 Mar 2022 07:53:44 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.028; Fri, 4 Mar 2022 07:53:44 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Keith Busch' <kbusch@kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: RE: [PATCHv4 5/8] lib: add rocksoft model crc64
+Thread-Topic: [PATCHv4 5/8] lib: add rocksoft model crc64
+Thread-Index: AQHYLzsrMRdzY3NFeE6gsrcF0wQhN6yu0OzA
+Date:   Fri, 4 Mar 2022 07:53:44 +0000
+Message-ID: <30e059eca211460780442e2ded092722@AcuMS.aculab.com>
+References: <20220303201312.3255347-1-kbusch@kernel.org>
+ <20220303201312.3255347-6-kbusch@kernel.org>
+In-Reply-To: <20220303201312.3255347-6-kbusch@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dept works with waits preceeding an event, that might lead a deadlock.
-Once the event has been handled, it's hard to ensure further waits
-actually contibute to deadlock until next turn, which will start when
-a sleep associated with that map happens.
+From: Keith Busch
+> Sent: 03 March 2022 20:13
+> 
+> The NVM Express specification extended data integrity fields to 64 bits
+> using the Rocksoft parameters. Add the poly to the crc64 table
+> generation, and provide a generic library routine implementing the
+> algorithm.
+> 
+> The Rocksoft 64-bit CRC model parameters are as follows:
+>     Poly: 0xAD93D23594C93659
+>     Initial value: 0xFFFFFFFFFFFFFFFF
+>     Reflected Input: True
+>     Reflected Output: True
+>     Xor Final: 0xFFFFFFFFFFFFFFFF
+> 
+> Since this model used reflected bits, the implementation generates the
+> reflected table so the result is ordered consistently.
 
-So let Dept start tracking dependency when a sleep happens and stop
-tracking dependency once the event e.i. wake up, has been handled.
+Since the data is processed least significant bit first the
+table must be setup slightly differently.
 
-Signed-off-by: Byungchul Park <byungchul.park@lge.com>
----
- kernel/dependency/dept.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+...
+> + * crc64rocksoft[256] table is from the Rocksoft specification polynomial
+> + * defined as,
+> + *
+> + * x^64 + x^63 + x^61 + x^59 + x^58 + x^56 + x^55 + x^52 + x^49 + x^48 + x^47 +
+> + * x^46 + x^44 + x^41 + x^37 + x^36 + x^34 + x^32 + x^31 + x^28 + x^26 + x^23 +
+> + * x^22 + x^19 + x^16 + x^13 + x^12 + x^10 + x^9 + x^6 + x^4 + x^3 + 1
 
-diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index cc1b3a3..1c91db8 100644
---- a/kernel/dependency/dept.c
-+++ b/kernel/dependency/dept.c
-@@ -2325,6 +2325,12 @@ void dept_event(struct dept_map *m, unsigned long e_f, unsigned long ip,
- 		do_event((void *)m, c, READ_ONCE(m->wgen), ip);
- 		pop_ecxt((void *)m);
- 	}
-+
-+	/*
-+	 * Keep the map diabled until the next sleep.
-+	 */
-+	WRITE_ONCE(m->wgen, 0);
-+
- 	dept_exit(flags);
- }
- EXPORT_SYMBOL_GPL(dept_event);
-@@ -2447,6 +2453,11 @@ void dept_event_split_map(struct dept_map_each *me,
- 		pop_ecxt((void *)me);
- 	}
- 
-+	/*
-+	 * Keep the map diabled until the next sleep.
-+	 */
-+	WRITE_ONCE(me->wgen, 0);
-+
- 	dept_exit(flags);
- }
- EXPORT_SYMBOL_GPL(dept_event_split_map);
--- 
-1.9.1
+Which matches the Poly: 0xAD93D23594C93659 above.
+
+...
+> +#define CRC64_ROCKSOFT_POLY 0x9A6C9329AC4BC9B5ULL
+
+But that value is clearly different.
+
+You really ought to add a comment that each byte of the constant
+has to be bit reversed from the polynomial coefficients.
+
+> -static void generate_crc64_table(void)
+> +static void generate_reflected_crc64_table(uint64_t table[256], uint64_t poly)
+> +{
+> +	uint64_t i, j, c, crc;
+> +
+> +	for (i = 0; i < 256; i++) {
+> +		crc = 0ULL;
+> +		c = i;
+> +
+> +		for (j = 0; j < 8; j++) {
+> +			if ((crc ^ (c >> j)) & 1)
+> +				crc = (crc >> 1) ^ poly;
+> +			else
+> +				crc >>= 1;
+> +		}
+> +		table[i] = crc;
+> +	}
+> +}
+
+That can be speeded up by using the identity:
+	table[x ^ y] == table[x] ^ table[y]
+
+something like:
+	crc = poly;  /* actually crc(1) */
+	table[0] = 0;
+	table[1] = crc;
+	for (i = 2; i < 8; i++) [
+		crc = crc & 1 ? (crc >> 1) ^ poly : crc >> 1;
+		for (j = 0; j < 1u << i; j++)
+			table[j + (1i << i)] = table[j] ^ crc;
+	}
+
+I think the same code can be used for a normal MSB first crc
+provided both the polynomial and crc(1) are passed in.
+
+OTOH initialisation speed may not matter.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
