@@ -2,80 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBFD94CE36C
-	for <lists+linux-block@lfdr.de>; Sat,  5 Mar 2022 08:33:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9BC74CE3BD
+	for <lists+linux-block@lfdr.de>; Sat,  5 Mar 2022 09:56:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231277AbiCEHeP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 5 Mar 2022 02:34:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56680 "EHLO
+        id S230102AbiCEI5d (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 5 Mar 2022 03:57:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbiCEHeO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 5 Mar 2022 02:34:14 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFE66420
-        for <linux-block@vger.kernel.org>; Fri,  4 Mar 2022 23:33:24 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id hw13so21714414ejc.9
-        for <linux-block@vger.kernel.org>; Fri, 04 Mar 2022 23:33:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20210112.gappssmtp.com; s=20210112;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2vWrfFimlw7a7ILoyiYoEccruaTxPiuM3k59L5Zrbzg=;
-        b=6vgMAORCx6g36NxRQVDr/RDg8JmNMkalkNafmgb5ERo0VmyPFdyyxb/KQ05lmfqURH
-         0zB7IwifxEg0vaKJLrfVguQjIvwh+f/IpEB2rUnQK6Y10uu/tghprPFsA9gqmaQBBTlh
-         y9nQR0bqKuWprrJA1sTvmtK0kLWbUUODtPwr1xUCnwqeE1bcNiz39fB5GP0atkxWdbWk
-         C9U6INOaOXMsTPQKOPeeLdbthwyN7HE/M0ouxG6lKLxJlAt0BxEvY72WhsqlWoadDELQ
-         5nf8YKOcwArkeGjmPGawYSOz/U3lX9EWAkkDxAXI+w26W19V0bKaS2Fgxs+GcyYaU02w
-         i1VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2vWrfFimlw7a7ILoyiYoEccruaTxPiuM3k59L5Zrbzg=;
-        b=KkExiiHCyYYKHFTVKfCnnB7JjQvnUEa7Vq+RY9I83LWBCfxuwNbieKBFmgQAKCAlxn
-         uNunFduvk1qVfgjBlJh3KuALf7g6R51S/OUhQmGNICEjpHdD8wZyb2hGspVSXm8GSIqm
-         Jf09fwWXCRl2fx8u+83q7t3G405xIpXK8m1RsNXTsUfVD+esFlRAgEd4LSH0ObDYJJ+e
-         gCrc0RuwzB9oQwHngswsoLfbEpIpJgHOeqASs7BBuQObkTZapPWCKmlLx8a5kZVKoLjT
-         e1itYnty+65Q7uy3qHDkiYSLvraoPTfGuinZv7SmV3Mbkd0nK03BwWJ7Md8p9UfKWyZq
-         mDiQ==
-X-Gm-Message-State: AOAM531UrvLcNoZ/hW7skLogIH7YEQx0+1nT6ejrx9po3IvQx3aSL1Rr
-        3lDplV6XZynkL+kXhURz3E7uRA==
-X-Google-Smtp-Source: ABdhPJxF/f7q8Vb2XlJFrzoFQigG0MRiz0ymo/PaetaTdaEsScXmEpBI2Qgx93Mm2IGm0s7W8Zuzyg==
-X-Received: by 2002:a17:906:974a:b0:6da:7d4b:a3a1 with SMTP id o10-20020a170906974a00b006da7d4ba3a1mr1886101ejy.454.1646465603207;
-        Fri, 04 Mar 2022 23:33:23 -0800 (PST)
-Received: from localhost (5.186.121.195.cgn.fibianet.dk. [5.186.121.195])
-        by smtp.gmail.com with ESMTPSA id bx1-20020a0564020b4100b00410f01a91f0sm3166956edb.73.2022.03.04.23.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Mar 2022 23:33:22 -0800 (PST)
-From:   "Javier =?utf-8?B?R29uesOhbGV6?=" <javier@javigon.com>
-X-Google-Original-From: Javier =?utf-8?B?R29uesOhbGV6?= <javier.gonz@samsung.com>
-Date:   Sat, 5 Mar 2022 08:33:21 +0100
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, lsf-pc@lists.linux-foundation.org,
-        Matias =?utf-8?B?QmrDuHJsaW5n?= <Matias.Bjorling@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Keith Busch <Keith.Busch@wdc.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        Pankaj Raghav <pankydev8@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>
-Subject: Re: [LSF/MM/BPF BoF] BoF for Zoned Storage
-Message-ID: <20220305073321.5apdknpmctcvo3qj@ArmHalley.localdomain>
-References: <YiASVnlEEsyj8kzN@bombadil.infradead.org>
- <20220304001022.GJ3927073@dread.disaster.area>
- <YiKOQM+HMZXnArKT@bombadil.infradead.org>
- <20220304224257.GN3927073@dread.disaster.area>
- <YiKY6pMczvRuEovI@bombadil.infradead.org>
+        with ESMTP id S229798AbiCEI5c (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 5 Mar 2022 03:57:32 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7328F68C0;
+        Sat,  5 Mar 2022 00:56:41 -0800 (PST)
+Received: from kwepemi100002.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4K9dpd0Q15zdcKv;
+        Sat,  5 Mar 2022 16:55:21 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ kwepemi100002.china.huawei.com (7.221.188.188) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Sat, 5 Mar 2022 16:56:40 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Sat, 5 Mar
+ 2022 16:56:39 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <tj@kernel.org>, <axboe@kernel.dk>, <paolo.valente@linaro.org>,
+        <jack@suse.cz>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH -next 00/11] support concurrent sync io for bfq on a specail occasion
+Date:   Sat, 5 Mar 2022 17:11:54 +0800
+Message-ID: <20220305091205.4188398-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <YiKY6pMczvRuEovI@bombadil.infradead.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,60 +51,108 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 04.03.2022 14:55, Luis Chamberlain wrote:
->On Sat, Mar 05, 2022 at 09:42:57AM +1100, Dave Chinner wrote:
->> On Fri, Mar 04, 2022 at 02:10:08PM -0800, Luis Chamberlain wrote:
->> > On Fri, Mar 04, 2022 at 11:10:22AM +1100, Dave Chinner wrote:
->> > > On Wed, Mar 02, 2022 at 04:56:54PM -0800, Luis Chamberlain wrote:
->> > > > Thinking proactively about LSFMM, regarding just Zone storage..
->> > > >
->> > > > I'd like to propose a BoF for Zoned Storage. The point of it is
->> > > > to address the existing point points we have and take advantage of
->> > > > having folks in the room we can likely settle on things faster which
->> > > > otherwise would take years.
->> > > >
->> > > > I'll throw at least one topic out:
->> > > >
->> > > >   * Raw access for zone append for microbenchmarks:
->> > > >   	- are we really happy with the status quo?
->> > > > 	- if not what outlets do we have?
->> > > >
->> > > > I think the nvme passthrogh stuff deserves it's own shared
->> > > > discussion though and should not make it part of the BoF.
->> > >
->> > > Reading through the discussion on this thread, perhaps this session
->> > > should be used to educate application developers about how to use
->> > > ZoneFS so they never need to manage low level details of zone
->> > > storage such as enumerating zones, controlling write pointers
->> > > safely for concurrent IO, performing zone resets, etc.
->> >
->> > I'm not even sure users are really aware that given cap can be different
->> > than zone size and btrfs uses zone size to compute size, the size is a
->> > flat out lie.
->>
->> Sorry, I don't get what btrfs does with zone management has anything
->> to do with using Zonefs to get direct, raw IO access to individual
->> zones.
->
->You are right for direct raw access. My point was that even for
->filesystem use design I don't think the communication is clear on
->expectations. Similar computation need to be managed by fileystem
->design, for instance.
+Currently, bfq can't handle sync io concurrently as long as they
+are not issued from root group. This is because
+'bfqd->num_groups_with_pending_reqs > 0' is always true in
+bfq_asymmetric_scenario().
 
-Dave,
+This patchset tries to support concurrent sync io if all the sync ios
+are issued from the same cgroup:
 
-I understand that you point to ZoneFS for this. It is true that it was
-presented at the moment as the way to do raw zone access from
-user-space.
+1) Count root_group into 'num_groups_with_pending_reqs', patch 1-5;
 
-However, there is no users of ZoneFS for ZNS devices that I am aware of
-(maybe for SMR this is a different story).  The main open-source
-implementations out there for RocksDB that are being used in production
-(ZenFS and xZTL) rely on either raw zone block access or the generic
-char device in NVMe (/dev/ngXnY). This is because having the capability
-to do zone management from applications that already work with objects
-fits much better.
+2) Don't idle if 'num_groups_with_pending_reqs' is 1, patch 6;
 
-My point is that there is space for both ZoneFS and raw zoned block
-device. And regarding !PO2 zone sizes, my point is that this can be
-leveraged both by btrfs and this raw zone block device.
+3) Don't count the group if the group doesn't have pending requests,
+while it's child groups may have pending requests, patch 7;
+
+This is because, for example:
+if sync ios are issued from cgroup /root/c1/c2, root, c1 and c2
+will all be counted into 'num_groups_with_pending_reqs',
+which makes it impossible to handle sync ios concurrently.
+
+4) Decrease 'num_groups_with_pending_reqs' when the last queue completes
+all the requests, while child groups may still have pending
+requests, patch 8-10;
+
+This is because, for example:
+t1 issue sync io on root group, t2 and t3 issue sync io on the same
+child group. num_groups_with_pending_reqs is 2 now.
+After t1 stopped, num_groups_with_pending_reqs is still 2. sync io from
+t2 and t3 still can't be handled concurrently.
+
+fio test script: startdelay is used to avoid queue merging
+[global]
+filename=/dev/nvme0n1
+allow_mounted_write=0
+ioengine=psync
+direct=1
+ioscheduler=bfq
+offset_increment=10g
+group_reporting
+rw=randwrite
+bs=4k
+
+[test1]
+numjobs=1
+
+[test2]
+startdelay=1
+numjobs=1
+
+[test3]
+startdelay=2
+numjobs=1
+
+[test4]
+startdelay=3
+numjobs=1
+
+[test5]
+startdelay=4
+numjobs=1
+
+[test6]
+startdelay=5
+numjobs=1
+
+[test7]
+startdelay=6
+numjobs=1
+
+[test8]
+startdelay=7
+numjobs=1
+
+test result:
+running fio on root cgroup
+v5.17-rc6:	   550 Mib/s
+v5.17-rc6-patched: 550 Mib/s
+
+running fio on non-root cgroup
+v5.17-rc6:	   349 Mib/s
+v5.17-rc6-patched: 550 Mib/s
+
+Yu Kuai (11):
+  block, bfq: add new apis to iterate bfq entities
+  block, bfq: apply news apis where root group is not expected
+  block, bfq: cleanup for __bfq_activate_requeue_entity()
+  block, bfq: move the increasement of 'num_groups_with_pending_reqs' to
+    it's caller
+  block, bfq: count root group into 'num_groups_with_pending_reqs'
+  block, bfq: do not idle if only one cgroup is activated
+  block, bfq: only count parent bfqg when bfqq is activated
+  block, bfq: record how many queues have pending requests in bfq_group
+  block, bfq: move forward __bfq_weights_tree_remove()
+  block, bfq: decrease 'num_groups_with_pending_reqs' earlier
+  block, bfq: cleanup bfqq_group()
+
+ block/bfq-cgroup.c  | 13 +++----
+ block/bfq-iosched.c | 87 +++++++++++++++++++++++----------------------
+ block/bfq-iosched.h | 41 +++++++++++++--------
+ block/bfq-wf2q.c    | 56 +++++++++++++++--------------
+ 4 files changed, 106 insertions(+), 91 deletions(-)
+
+-- 
+2.31.1
+
