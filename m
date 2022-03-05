@@ -2,187 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E5A54CE57A
-	for <lists+linux-block@lfdr.de>; Sat,  5 Mar 2022 16:14:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20E6A4CE6BE
+	for <lists+linux-block@lfdr.de>; Sat,  5 Mar 2022 21:14:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbiCEPOu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 5 Mar 2022 10:14:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55808 "EHLO
+        id S230200AbiCEUPe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 5 Mar 2022 15:15:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiCEPOu (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 5 Mar 2022 10:14:50 -0500
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE72B1D0D73;
-        Sat,  5 Mar 2022 07:13:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1646493155;
-        bh=m1wvyXcdmqw6SUGsb6WV3jmsFgfj7oNi36tuWjXyAkM=;
-        h=X-UI-Sender-Class:Subject:From:In-Reply-To:Date:Cc:References:To;
-        b=DJN6ASTmsXnmy9508UVvVAWneNbqlhxUUhC1cGGWcsJO5YCylURfI/AZcQX7xZoEf
-         o4V35s3iNdNGuzBK3jl9KBVQlVSgVfu/aPx2k3Z0CNUIO0IDHtJcpSo9fqJKFFdtyE
-         UtOJqK47iuFs7XGmvRmJTnFtEvI8SVNE9k06QOt8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from smtpclient.apple ([98.128.181.196]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MryTF-1nwDfK1uOD-00nwc9; Sat, 05
- Mar 2022 16:12:35 +0100
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.60.0.1.1\))
-Subject: Re: Report 2 in ext4 and journal based on v5.17-rc1
-From:   =?utf-8?Q?Reimar_D=C3=B6ffinger?= <Reimar.Doeffinger@gmx.de>
-In-Reply-To: <20220305145534.GB31268@X58A-UD3R>
-Date:   Sat, 5 Mar 2022 16:12:27 +0100
-Cc:     Theodore Ts'o <tytso@mit.edu>, damien.lemoal@opensource.wdc.com,
-        linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, torvalds@linux-foundation.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, will@kernel.org, tglx@linutronix.de,
-        rostedt@goodmis.org, joel@joelfernandes.org, sashal@kernel.org,
-        daniel.vetter@ffwll.ch, chris@chris-wilson.co.uk,
-        duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-        willy@infradead.org, david@fromorbit.com, amir73il@gmail.com,
-        bfields@fieldses.org, gregkh@linuxfoundation.org,
-        kernel-team@lge.com, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mhocko@kernel.org, minchan@kernel.org, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, sj@kernel.org, jglisse@redhat.com,
-        dennis@kernel.org, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, vbabka@suse.cz, ngupta@vflare.org,
-        linux-block@vger.kernel.org, paolo.valente@linaro.org,
-        josef@toxicpanda.com, linux-fsdevel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, jack@suse.cz, jack@suse.com,
-        jlayton@kernel.org, dan.j.williams@intel.com, hch@infradead.org,
-        djwong@kernel.org, dri-devel@lists.freedesktop.org,
-        airlied@linux.ie, rodrigosiqueiramelo@gmail.com,
-        melissa.srw@gmail.com, hamohammed.sa@gmail.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <56315101-B3A5-4596-947E-5D34A5FFBB37@gmx.de>
-References: <YiAow5gi21zwUT54@mit.edu>
- <1646285013-3934-1-git-send-email-byungchul.park@lge.com>
- <YiDSabde88HJ/aTt@mit.edu> <20220304032002.GD6112@X58A-UD3R>
- <YiLbs9rszWXpHm/P@mit.edu> <20220305145534.GB31268@X58A-UD3R>
-To:     Byungchul Park <byungchul.park@lge.com>
-X-Mailer: Apple Mail (2.3693.60.0.1.1)
-X-Provags-ID: V03:K1:whvk+lhsJ/zxK8CBSH/p6zkUgWk2DoodFfcAiSCDJJDa+Hp52O6
- Nfbhzzi+ktuZGYLtwoW9qfNJSraLEANrCWwT6xWYdnQrtUG7isGY5jyxYDHq4HWVXkcNwht
- L9exf7duZUup6Aj10JBs0SWk28hmicYpdhO/lD+yWMXlJTEBEhIt2rcl05AL/SZCvLbMreY
- BxuBvW4ogWm5Bxp58qVkg==
-X-UI-Out-Filterresults: junk:10;V03:K0:zweSzRTuMLc=:1xDoFGJXHax66F8wkqbjhSe+
- jrZLpaWfX7RdsGmf8c0wJqGXUOnP34+DW7J0BkFSDsySKSvgdL1OmujM86iapxROKsjWBK2at
- AaC7YJVZCyA69Hv3P27MHCgbSK2zzZ4KK2Oe6GrYEmlwpy2FVbSCC/7xeun6zHlkVjuvIiddh
- D4/pwsRjcVcrDUVoJICcsRBTchjbZLhIzt6oU67TpQkTiAEHOXsRgD1jE7K/aARIlal/l2DVl
- xPrJgqJCdEeMD3K9HvWDaPdYPjGsLT+GqqhXDVTE/ZcBhH7gKjsxJ1+6Mx4r/zZIKC+9botr2
- IqYgSgXq5eRA+8vyUQh0uKDBl4f8f86J1pLHhUfqTVAzMUY39gYDS3LotRNJ3MFJABZf/lfjU
- 0cyRUgOdsJ6qqJcIKXfabLzgCot3capLHxR2Y+QRnznXqMxMkuBWP/rfXMs4MV3IkGURCPEoR
- wjCQhSrxHEGzJg0IgcnYcPBWmaLWaoVy2k4UegQ/5MPQzywDfjBbz7bByArBN6HJXmBIwBB9y
- Pnh842Sj+JQ973UNMWaTtagNhqHDCFCUaii/U8GlWHeF0T3tZnXCKT9K+bTK3JEC9wI0mr+N7
- 5c68iMxdADA2W/VhYX6D4ze1a7YULWtNZNMNy3FDWaZyegNOruAYBPRGqiC1ncvx1LUISdbO/
- 8cW5Vg63lSiNWbL7GiPnEdRbk3vOksWKOVO4yhLonUE4f42S4PeEXN8IGr/zcBfEmPt4mImVd
- VWm9zpdNEo757DatvTW65sCdc6d9d4k4HWmXtEImH0pfIKwvELQRKV5KqWKK8AzF0jSCe08yN
- Pi333IVY6GV+LnI6SAxcsz0pac55X8Thf6xgpZKv08yi9/E/8ZPSGr44SrhTn4LnoZTrCkjA9
- +rdNMQQcevr3RF/Clrov3MYdmjcrJdJgY1A5A4/XUa98fnknpSHrjwxR3ZEUQ+U9XNqdW0pqm
- GDTzGpUb3Ha6onL+4oSq75jck6wezug8OqsouYMtWySjuX8G+mKJRihqyBiSNzVlSvOoXp8g/
- 2H4Eb86TLwPlahcEuRGUNI1dWpXZnpZHfWWaVTjpDLy7wPmUwWJY9U6bdxiBhka347RRMDMyY
- OpNYdXIQhCSfFWczlu9AXKQxyo5fAi+eho0to5QLeVlsFKfKAqCn+yg==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FREEMAIL_FROM,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232324AbiCEUPd (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 5 Mar 2022 15:15:33 -0500
+Received: from hosting.gsystem.sk (hosting.gsystem.sk [212.5.213.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0539FE0F5;
+        Sat,  5 Mar 2022 12:14:41 -0800 (PST)
+Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id 9B91E7A01BF;
+        Sat,  5 Mar 2022 21:14:39 +0100 (CET)
+From:   Ondrej Zary <linux@zary.sk>
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Tim Waugh <tim@cyberelk.net>, linux-block@vger.kernel.org,
+        linux-parport@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] pata_parport: paride replacement
+Date:   Sat,  5 Mar 2022 21:13:55 +0100
+Message-Id: <20220305201411.501-1-linux@zary.sk>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
-Sorry to butt in as an outsider, but this seems like a shockingly =
-disrespectful discussion for such a wide CC list.
-I don't want to make rules how you discuss things (I very rarely =
-contribute), and I see the value in a frank discussion, but maybe you =
-could continue with a reduced CC list?
-I find it unlikely that I am the only one who could do without this.
+Hello,
+this is a RFC patch for the new pata_parport libata driver - a paride
+replacement.
 
-Best regards,
-Reimar D=C3=B6ffinger
+Protocol driver registration and device creation was changed since the
+second preview - no more protocol numbers or parport I/O addresses.
 
-> On 5 Mar 2022, at 15:55, Byungchul Park <byungchul.park@lge.com> =
-wrote:
->=20
-> On Fri, Mar 04, 2022 at 10:40:35PM -0500, Theodore Ts'o wrote:
->> On Fri, Mar 04, 2022 at 12:20:02PM +0900, Byungchul Park wrote:
->>>=20
->>> I found a point that the two wait channels don't lead a deadlock in
->>> some cases thanks to Jan Kara. I will fix it so that Dept won't
->>> complain it.
->>=20
->> I sent my last (admittedly cranky) message before you sent this.  I'm
->> glad you finally understood Jan's explanation.  I was trying to tell
->=20
-> Not finally. I've understood him whenever he tried to tell me =
-something.
->=20
->> you the same thing, but apparently I failed to communicate in a
->=20
-> I don't think so. Your point and Jan's point are different. All he has
-> said make sense. But yours does not.
->=20
->> sufficiently clear manner.  In any case, what Jan described is a
->> fundamental part of how wait queues work, and I'm kind of amazed that
->> you were able to implement DEPT without understanding it.  (But maybe
->=20
-> Of course, it was possible because all that Dept has to know for basic
-> work is wait and event. The subtle things like what Jan told me help
-> Dept be better.
->=20
->> that is why some of the DEPT reports were completely incomprehensible
->=20
-> It's because you are blinded to blame at it without understanding how
-> Dept works at all. I will fix those that must be fixed. Don't worry.
->=20
->> to me; I couldn't interpret why in the world DEPT was saying there =
-was
->> a problem.)
->=20
-> I can tell you if you really want to understand why. But I can't if =
-you
-> are like this.
->=20
->> In any case, the thing I would ask is a little humility.  We =
-regularly
->> use lockdep, and we run a huge number of stress tests, throughout =
-each
->> development cycle.
->=20
-> Sure.
->=20
->> So if DEPT is issuing lots of reports about apparently circular
->> dependencies, please try to be open to the thought that the fault is
->=20
-> No one was convinced that Dept doesn't have a fault. I think your
-> worries are too much.
->=20
->> in DEPT, and don't try to argue with maintainers that their code MUST
->> be buggy --- but since you don't understand our code, and DEPT must =
-be
->=20
-> No one argued that their code must be buggy, either. So I don't think
-> you have to worry about what's never happened.
->=20
->> theoretically perfect, that it is up to the Maintainers to prove to
->> you that their code is correct.
->>=20
->> I am going to gently suggest that it is at least as likely, if not
->> more likely, that the failure is in DEPT or your understanding of =
-what
->=20
-> No doubt. I already think so. But it doesn't mean that I have to keep
-> quiet without discussing to imporve Dept. I will keep improving Dept =
-in
-> a reasonable way.
->=20
->> how kernel wait channels and locking works.  After all, why would it
->> be that we haven't found these problems via our other QA practices?
->=20
-> Let's talk more once you understand how Dept works at least 10%. Or I
-> think we cannot talk in a productive way.
->=20
+All parports and all protocol drivers are now probed automatically unless
+probe=0 parameter is used. So just "modprobe epat" is enough for a Imation
+SuperDisk drive to work.
+
+Manual device creation:
+echo auto >/sys/bus/pata_parport/new_device
+echo "parport0 epat 4" >/sys/bus/pata_parport/new_device
+echo "parport0 auto" >/sys/bus/pata_parport/new_device
+echo "auto epat" >/sys/bus/pata_parport/new_device
+
+Deleting devices:
+echo pata_parport.0 >/sys/bus/pata_parport/delete_device
+
+Haven't found any sane way to hook pi_connect() and pi_disconnect() to
+libata. So pi_connect() is called on every protocol driver access and
+pi_disconnect() is called by a timer that's activated after protocol driver
+access.
+
+Found that the EPP-32 mode is buggy in EPAT - and also in many (all?) other
+protocol drivers - they don't handle non-multiple-of-4 block transfers
+correctly. I'll fix that later.
+
+The bpck_connect() in bpck driver seems to need to know if a CD drive is
+attached (weird) but it's called before device detection. This probably
+cannot be fixed without the HW.
+
+I have only two devices and both have the same EPAT chip, unfortunately:
+Imation SupserDisk
+HP C4381A (drive was dead, replaced by TOSHIBA CD-ROM XM-6202B)
+
+The both work:
+# modprobe epat
+[  122.635395] pata_parport: protocol epat registered
+[  122.738114] epat pata_parport.0: epat, Shuttle EPAT chip c6 at 0x378, mode 5 (EPP-32), delay 1
+[  122.789035] scsi host4: pata_parport-epat
+[  122.789226] ata5: PATA max PIO0 port parport0 protocol epat
+[  127.831534] ata5: link is slow to respond, please be patient (ready=0)
+[  132.811623] ata5: device not ready (errno=-16), forcing hardreset
+[  133.015024] ata5.00: ATAPI: TOSHIBA CD-ROM XM-6202B, 1108, max MWDMA2
+[  133.023016] scsi 4:0:0:0: CD-ROM            TOSHIBA  CD-ROM XM-6202B  1108 PQ: 0 ANSI: 5
+[  133.043817] scsi 4:0:0:0: Attached scsi generic sg1 type 5
+[  133.088146] sr 4:0:0:0: [sr0] scsi3-mmc drive: 32x/32x cd/rw xa/form2 cdda tray
+[  133.088163] cdrom: Uniform CD-ROM driver Revision: 3.20
+[  133.125939] sr 4:0:0:0: Attached scsi CD-ROM sr0
+# mount /dev/sr0 /mnt
+mount: /mnt: WARNING: source write-protected, mounted read-only.
+[  157.922575] ISO 9660 Extensions: Microsoft Joliet Level 3
+[  157.991030] ISO 9660 Extensions: RRIP_1991A
+# hdparm -t --direct /dev/sr0
+
+/dev/sr0:
+ Timing O_DIRECT disk reads:   2 MB in  3.08 seconds = 664.47 kB/sec
+
+
+
+# modprobe epat
+[  448.160910] pata_parport: protocol epat registered
+[  448.267068] epat pata_parport.0: epat, Shuttle EPAT chip c6 at 0x378, mode 5 (EPP-32), delay 1
+[  448.301624] scsi host4: pata_parport-epat
+[  448.301769] ata6: PATA max PIO0 port parport0 protocol epat
+[  448.533850] ata6.00: ATAPI: LS-120 COSM   04              UHD Floppy, 0270M09T, max PIO2
+[  448.615500] scsi 4:0:0:0: Direct-Access     MATSHITA LS-120 COSM   04 0270 PQ: 0 ANSI: 5
+[  448.651279] sd 4:0:0:0: Attached scsi generic sg1 type 0
+[  448.686028] sd 4:0:0:0: [sdb] Media removed, stopped polling
+[  448.717879] sd 4:0:0:0: [sdb] Attached SCSI removable disk
+[  472.259786] sd 4:0:0:0: [sdb] Read Capacity(16) failed: Result: hostbyte=DID_ERROR driverbyte=DRIVER_OK
+[  472.259805] sd 4:0:0:0: [sdb] Sense not available.
+[  483.042442] sd 4:0:0:0: [sdb] 246528 512-byte logical blocks: (126 MB/120 MiB)
+[  483.158446] sdb: detected capacity change from 0 to 246528
+[  483.309771]  sdb:
+# hdparm -t --direct /dev/sdb
+
+/dev/sdb:
+ Timing O_DIRECT disk reads:   2 MB in 44.19 seconds =  46.35 kB/sec
+
 
