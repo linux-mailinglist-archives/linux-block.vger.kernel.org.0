@@ -2,75 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F8EE4CE98D
-	for <lists+linux-block@lfdr.de>; Sun,  6 Mar 2022 07:50:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B87E94CEA10
+	for <lists+linux-block@lfdr.de>; Sun,  6 Mar 2022 09:40:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233018AbiCFGvX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 6 Mar 2022 01:51:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60700 "EHLO
+        id S230254AbiCFIln (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 6 Mar 2022 03:41:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232846AbiCFGvW (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 6 Mar 2022 01:51:22 -0500
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0729331935
-        for <linux-block@vger.kernel.org>; Sat,  5 Mar 2022 22:50:29 -0800 (PST)
-Received: by mail-lj1-x22b.google.com with SMTP id 25so2694908ljv.10
-        for <linux-block@vger.kernel.org>; Sat, 05 Mar 2022 22:50:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
-        b=YrElWOnioSvi6agwGYpHn6eZnGGJJfzwROlfAOI7afI3FV4uoIIP6uxre83Z9b2Fh0
-         wQ6KOmzkNElWZABEXIDDtP1L2VjDwznzBB1GC0rXi6dQtUl7wLwBnLPCzmuYdmGAKqEl
-         Pg1+0U3LoYo1om+zDOrLTEuKDciHiwd26bRN8UE7/f0A3L1LQiqPKA5pVLKGJuDpsIFN
-         MuZW5HeDgvRoNrUzxy4HhVZeKq2qZFzUPVtZNg5e/yeJRLpUBCroJEkQOq7U5qgHYgiP
-         r8mMBcda5A1M6t314IKnZgdBqZQs94WFh2xL7O+UQEJ9dtFtkgeAbMvbXLvs2zshWuFc
-         gp3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
-        b=HCHY5Zc6GSTtuayBuLRUSq/IuuDO9bF4zR5+llT4a+HyeVkdbzoobrJx/zvTrn8cnr
-         tSVvMZf20O4CIoEBkcDanOOs0xfynYU+cEnbSY5oDnmpfte+rszb0NoU3NbMoylMQcKm
-         qqtnwimWsv9QGFmuuUHXKyHPF6GE4/FjmtCHrWb6LyUEpRPEhTem24ndx1EQ6yncvtyr
-         ql0VrO0zabSQGtqN5xphRnUU6qr3ZBm6EYfocRbYKVMrHG8xA5SxH4YzPl1J3otbbklL
-         vfPQ0sblwIvv/FnIxNudMIbfTeVrQh7f1/warbBPLuQgmRpZbneg3WgFlSDxWOElV/JM
-         3k+Q==
-X-Gm-Message-State: AOAM533pb+/9IhvD1VmKNfdnG83/v6CUz+EBrw2kDVzKXVHln1ocY8EV
-        zMvbjpPoDVSAnsVfPCNr2A7eLy7artBcpzyL98g=
-X-Google-Smtp-Source: ABdhPJyJ8hMPh4DWVCIiJShT2FiXX6IorN+yUVHTNiqhvLlQ9gEIgZvAzGFDeIGTG5i27pzoQ5fj0JTAXmPMf7ibwQc=
-X-Received: by 2002:a2e:9a98:0:b0:247:e29f:fbd7 with SMTP id
- p24-20020a2e9a98000000b00247e29ffbd7mr897608lji.509.1646549428226; Sat, 05
- Mar 2022 22:50:28 -0800 (PST)
+        with ESMTP id S230026AbiCFIln (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 6 Mar 2022 03:41:43 -0500
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941751D332;
+        Sun,  6 Mar 2022 00:40:51 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 43D9767373; Sun,  6 Mar 2022 09:40:47 +0100 (CET)
+Date:   Sun, 6 Mar 2022 09:40:46 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 04/14] sd: rename the scsi_disk.dev field
+Message-ID: <20220306084046.GA22113@lst.de>
+References: <20220304160331.399757-1-hch@lst.de> <20220304160331.399757-5-hch@lst.de> <7ff2340d-892b-94b5-ec39-355a8f8adc73@acm.org>
 MIME-Version: 1.0
-Reply-To: mrs.susanelwoodhara17@gmail.com
-Sender: mrs.arawyann@gmail.com
-Received: by 2002:ab3:7d89:0:0:0:0:0 with HTTP; Sat, 5 Mar 2022 22:50:27 -0800 (PST)
-From:   Mrs Susan Elwood Hara <mrs.susanelwoodhara17@gmail.com>
-Date:   Sun, 6 Mar 2022 06:50:27 +0000
-X-Google-Sender-Auth: 2IDmeeCswS-nXDmPj-lzApf7VfY
-Message-ID: <CACppo44FdZoD_SnrwVyD-yvu7pHgFq0czow3nR5ViQfkjD1p4g@mail.gmail.com>
-Subject: GOD BLESS YOU AS YOU REPLY URGENTLY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        SUBJ_ALL_CAPS,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ff2340d-892b-94b5-ec39-355a8f8adc73@acm.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-GOD BLESS YOU AS YOU REPLY URGENTLY
+On Sat, Mar 05, 2022 at 05:38:40PM -0800, Bart Van Assche wrote:
+> On 3/4/22 08:03, Christoph Hellwig wrote:
+>> +	/*
+>> +	 * This device is mostly just used to show a bunch of attributes in a
+>> +	 * weird place.  In doubt don't add any new users, and most importantly
+>> +	 * don't use if for any actual refcounting.
+>> +	 */
+>> +	struct device	disk_dev;
+>
+> Isn't "weird place" subjective? How about mentioning the sysfs path 
+> explicitly (/sys/class/scsi_disk/H:C:I:L)? How about explaining why no new 
+> sysfs attributes should be added to that device instance?
 
- Hello Dear,
-Greetings, I am contacting you regarding an important information i
-have for you please reply to confirm your email address and for more
-details Thanks
-Regards
-Mrs Susan Elwood Hara.
+Well, weird place means that all normale drivers would just use
+attributes on the gendisk for it, but sd creates a completely pointless
+device under the gendisk device for it.  If you have a better wording
+I can change it.
