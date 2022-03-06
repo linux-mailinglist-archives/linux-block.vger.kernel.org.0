@@ -2,105 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D67C54CED09
-	for <lists+linux-block@lfdr.de>; Sun,  6 Mar 2022 19:06:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2815F4CEDBC
+	for <lists+linux-block@lfdr.de>; Sun,  6 Mar 2022 21:35:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232315AbiCFSHI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 6 Mar 2022 13:07:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
+        id S232073AbiCFUfc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 6 Mar 2022 15:35:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232159AbiCFSHI (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 6 Mar 2022 13:07:08 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D371574B1
-        for <linux-block@vger.kernel.org>; Sun,  6 Mar 2022 10:06:15 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 6so7208463pgg.0
-        for <linux-block@vger.kernel.org>; Sun, 06 Mar 2022 10:06:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=3IDySe6/HojQ3jDxfjpKc6zpBwkz5pfcZNFnpj0OwBo=;
-        b=ECZvhaTcTYSYuxNQf0dXjupv9p+mdfcNTTw6ViBX4xP0zeXJMhvpwIQK9qTWRQKsVD
-         SQtDRh+omkTij3RdK9ud99NHyowBI2gvl+kctfY8m9J7D3ThNlQNDH+yPjn/dzgq2HXm
-         2JTWmnVhMWChL+QJMuKarlAx+hNcxWxldBAieo0PZnSkx1O1pSIizg87Z3lyOVDTTuug
-         KnXayEwHBgey7lOMeKpKoB9emHN2YgUdy7f3A033WZdOK6lEDPzdtuAFqwcQtULwuojV
-         63zGCRF1wVcH1aP3PvwIGNKv5PX7kI8fxhX2v/p71xw3jOuV10Biivx8AejciDrjQqf4
-         MiGw==
+        with ESMTP id S230145AbiCFUfc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 6 Mar 2022 15:35:32 -0500
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225B25D66B;
+        Sun,  6 Mar 2022 12:34:40 -0800 (PST)
+Received: by mail-pg1-f178.google.com with SMTP id 27so11900038pgk.10;
+        Sun, 06 Mar 2022 12:34:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=3IDySe6/HojQ3jDxfjpKc6zpBwkz5pfcZNFnpj0OwBo=;
-        b=AQZ9x/gG8KrgVwO72IVFJWX000KwqscUhhSaiekXtVE16Nqlfv/F/TVkxvjdRhrVP0
-         C0vp6JPp65wGrRyQV8wmIRorjIrLV0bFAxXNv4js27N2enEtsEebkKu0r5VMBL0XvGNq
-         23Tiz3ReLeb55tDNHvHtu9F1yEq3KI2ve8/laRkLsArGxjIsPNx47oPYooMOK3pkrLFc
-         goJrRM5c1P1KAZoHkclSVRRDBIAjdkGHIcwKOirY9S5dWW4zRdWxTtBrm4Ss/tShE5LS
-         e6VYuJ54IYfc6pQc9DnTGiKgMMP//RdXcRUqNJUTOotCIRPxAf0cREjjCqXkB5dh7+Mn
-         gOSA==
-X-Gm-Message-State: AOAM530e94/+OVRs1ew3aYwZ3PpH4xBPZiVz/BWoVgr1uZODaKwnA5ER
-        5Uu8zSLjwgDgc5A/vs62R5d3vw==
-X-Google-Smtp-Source: ABdhPJzZKQnoFchQw6tzr1OIIZ1uDCy2Ywxdu5LxhrSM3BjvQrLV0Y79FSWzFuuduKBiryJFzTjlfw==
-X-Received: by 2002:a63:d74f:0:b0:374:5bda:909d with SMTP id w15-20020a63d74f000000b003745bda909dmr6973383pgi.215.1646589974835;
-        Sun, 06 Mar 2022 10:06:14 -0800 (PST)
-Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id b16-20020a056a00115000b004f6ff260c9esm931995pfm.207.2022.03.06.10.06.13
+        bh=tkepIC4lMIVuMjQPZfxLhIDE5aSb73BtFhGo4WmZapk=;
+        b=YbijS4XGBhiAhdzDOXM1BqmSgnEEMNOFGOGayYwHzbjcmdZVuKRGISmsD/00iq+2Vj
+         JwGAjxxksNkEl9/4L6h89uUZPoDsCaSQpXc+XSEfMSOouljljMEZP0co76MYHjYLAoML
+         1Lt/8wn1eSd8N/XP9asSOY3lWvpBe2UIdBRq6HeyfbNNAtdr189e/bSZLYpHy4yX9/Ct
+         qIuS4uddqlJ5wK1eWRyDLHMa97G9QSMPPNsJeZ4HDtRmFoF2dOCLJS24jm7xKVDrxXCm
+         B1uRCeObScbOo/NXUfUUOT74zBOhaX7uBvYQ2spg/5jaT5kBZc6WRTCVtq2h8y/XaROY
+         6GBA==
+X-Gm-Message-State: AOAM530kAhQIRyhDZnzHWEthgXoY09tqnnRL9FHKKODUM3g5XgNkk7I3
+        bPuh9ryQQs0y64Dy1hYe2FKWrXXbMho=
+X-Google-Smtp-Source: ABdhPJxi7xF5oPWbisf85OMHp34Qugacxe8OccsHlhz2lNAozZnC4a2JY8ahGvzSVK5l6APlJCim0Q==
+X-Received: by 2002:a63:da0d:0:b0:364:b771:ff4 with SMTP id c13-20020a63da0d000000b00364b7710ff4mr7342369pgh.514.1646598879144;
+        Sun, 06 Mar 2022 12:34:39 -0800 (PST)
+Received: from ?IPV6:2601:647:4000:d7:feaa:14ff:fe9d:6dbd? ([2601:647:4000:d7:feaa:14ff:fe9d:6dbd])
+        by smtp.gmail.com with ESMTPSA id na8-20020a17090b4c0800b001bf191ee347sm9049196pjb.27.2022.03.06.12.34.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Mar 2022 10:06:14 -0800 (PST)
-Message-ID: <f08db783-a665-2df6-5d8e-597aacd1e687@kernel.dk>
-Date:   Sun, 6 Mar 2022 11:06:12 -0700
+        Sun, 06 Mar 2022 12:34:38 -0800 (PST)
+Message-ID: <99dc09a6-95b5-7dd4-2913-216aba35b3ba@acm.org>
+Date:   Sun, 6 Mar 2022 12:34:37 -0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH 2/2] block: remove the per-bio/request write hint
+Subject: Re: [PATCH 04/14] sd: rename the scsi_disk.dev field
 Content-Language: en-US
 To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dave Chinner <david@fromorbit.com>, sagi@grimberg.me,
-        kbusch@kernel.org, song@kernel.org, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org
-References: <20220304175556.407719-1-hch@lst.de>
- <20220304175556.407719-2-hch@lst.de>
- <20220304221255.GL3927073@dread.disaster.area>
- <20220305051929.GA24696@lst.de>
- <20220305214056.GO3927073@dread.disaster.area>
- <2241127c-c600-529a-ae41-30cbcc6b281d@kernel.dk>
- <20220306180115.GA8777@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220306180115.GA8777@lst.de>
-Content-Type: text/plain; charset=UTF-8
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+References: <20220304160331.399757-1-hch@lst.de>
+ <20220304160331.399757-5-hch@lst.de>
+ <7ff2340d-892b-94b5-ec39-355a8f8adc73@acm.org>
+ <20220306084046.GA22113@lst.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20220306084046.GA22113@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
-X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/6/22 11:01 AM, Christoph Hellwig wrote:
-> On Sun, Mar 06, 2022 at 10:11:46AM -0700, Jens Axboe wrote:
->> Yes, I think we should kill it. If we retain the inode hint, the f2fs
->> doesn't need a any changes. And it should be safe to make the per-file
->> fcntl hints return EINVAL, which they would on older kernels anyway.
->> Untested, but something like the below.
+On 3/6/22 00:40, Christoph Hellwig wrote:
+> On Sat, Mar 05, 2022 at 05:38:40PM -0800, Bart Van Assche wrote:
+>> On 3/4/22 08:03, Christoph Hellwig wrote:
+>>> +	/*
+>>> +	 * This device is mostly just used to show a bunch of attributes in a
+>>> +	 * weird place.  In doubt don't add any new users, and most importantly
+>>> +	 * don't use if for any actual refcounting.
+>>> +	 */
+>>> +	struct device	disk_dev;
+>>
+>> Isn't "weird place" subjective? How about mentioning the sysfs path
+>> explicitly (/sys/class/scsi_disk/H:C:I:L)? How about explaining why no new
+>> sysfs attributes should be added to that device instance?
 > 
-> I've sent this off to the testing farm this morning, but EINVAL might
-> be even better:
-> 
-> http://git.infradead.org/users/hch/block.git/shortlog/refs/heads/more-hint-removal
+> Well, weird place means that all normale drivers would just use
+> attributes on the gendisk for it, but sd creates a completely pointless
+> device under the gendisk device for it.  If you have a better wording
+> I can change it.
 
-I do think EINVAL is better, as it just tells the app it's not available
-like we would've done before. With just doing zeroes, that might break
-applications that set-and-verify. Of course there's also the risk of
-that since we retain inode hints (so they work), but fail file hints.
-That's a lesser risk though, and we only know of the inode hints being
-used.
+It's not that important. I wish it would be possible to get rid of this 
+struct device instance. I think this instance was introduced in 2006 by 
+patch "[SCSI] allow displaying and setting of cache type via sysfs".
 
--- 
-Jens Axboe
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
