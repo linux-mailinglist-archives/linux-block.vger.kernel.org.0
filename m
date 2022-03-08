@@ -2,161 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 278094D1003
-	for <lists+linux-block@lfdr.de>; Tue,  8 Mar 2022 07:17:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F0974D106B
+	for <lists+linux-block@lfdr.de>; Tue,  8 Mar 2022 07:42:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344405AbiCHGRV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Mar 2022 01:17:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
+        id S244343AbiCHGnl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Mar 2022 01:43:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344431AbiCHGRN (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 01:17:13 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282223BFA2;
-        Mon,  7 Mar 2022 22:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=8X3c5XDqthuQdXMBmAKyJ50PsF74xYticZhjJF97a3o=; b=uITWO/byir10fw/w7iDmD1tNU+
-        h4Rx6vQ8VwFOEAgn8RGFju0aeGxhCF9oHFGM5lIEQjGKVjufiRS3s7xY6x2DkMGWFx+IMthmluurN
-        1tTw5NXlhIElgCKzH3KIXBwDpqigoQ6Kw1r8+ha1uWMHxm/Pzg7QGBdihic5MlrpUgq8aa/jyxOc1
-        NcYvI8gbU9V5coVyE7Yd+PwoWLz2S2O7K3N0hwG9eUBffZdtKm1yyEH2fGnTJiG8cbasYZ+GwtLc0
-        Y4TAGvAVwtdHCVt4h9qnhFVIeAYiQmS831f2T6Rer+6UXcoHLqyvX/aQUtXbUK5kSJrVYddH18//b
-        roCZpysA==;
-Received: from [2001:4bb8:184:7746:6f50:7a98:3141:c37b] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nRT8h-002lWm-QS; Tue, 08 Mar 2022 06:16:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Coly Li <colyli@suse.de>, Mike Snitzer <snitzer@redhat.com>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: [PATCH 5/5] pktcdvd: stop using bio_reset
-Date:   Tue,  8 Mar 2022 07:15:51 +0100
-Message-Id: <20220308061551.737853-6-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220308061551.737853-1-hch@lst.de>
-References: <20220308061551.737853-1-hch@lst.de>
+        with ESMTP id S244625AbiCHGnk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 01:43:40 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA36ABC23
+        for <linux-block@vger.kernel.org>; Mon,  7 Mar 2022 22:42:43 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 890AE1F397;
+        Tue,  8 Mar 2022 06:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1646721761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WK7ukneFM2l8669YONZms60+1UDSKRoIGv7y6dHaewg=;
+        b=a3maRkt5YXPX4kgRsyRQj4z/KQwNLayCCUHdWu+tTpXvqBrBeuz/zdZyMelPShhZGdHZMA
+        AQM+XjYvTf0MGGoC6VZNMPjvqV/bbSEPb5eMYVWe/T0HgDIoPGmJ6F1CHnjIifldreE/gn
+        HI6U0rGN/i06Z8zOfeJeRa/KrpvMisQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1646721761;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WK7ukneFM2l8669YONZms60+1UDSKRoIGv7y6dHaewg=;
+        b=K0HG0BcR9unmhkVgcCucUEptK7O8BNAyr1bu4FHX3xN7aD+6/+LYSXpNyYdvr+GWUqlQIs
+        5psLd9d7na/f5gBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 58DE513C1D;
+        Tue,  8 Mar 2022 06:42:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 7Y2CEuH6JmLEYgAAMHmgww
+        (envelope-from <hare@suse.de>); Tue, 08 Mar 2022 06:42:41 +0000
+Message-ID: <4f035ae3-6bc9-ce89-abd4-50c82f2b237d@suse.de>
+Date:   Tue, 8 Mar 2022 07:42:40 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] block: emit disk ro uevent in device_add_disk()
+Content-Language: en-US
+To:     Uday Shankar <ushankar@purestorage.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+References: <20220303175219.272938-1-ushankar@purestorage.com>
+ <6f24cfc9-09b9-67bc-d15b-d3aff238d923@suse.de>
+ <20220307205451.GA1765432@dev-ushankar.dev.purestorage.com>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20220307205451.GA1765432@dev-ushankar.dev.purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Just initialize the bios on-demand.
+On 3/7/22 21:54, Uday Shankar wrote:
+> On Mon, Mar 07, 2022 at 07:39:39AM +0100, Hannes Reinecke wrote:
+>> Why not add the 'DISK_RO=1' setting directly to the 'add' event?
+>> That would be the logical thing to do, no?
+> I agree, and initially had a patch that did just this. However, for SCSI
+> disks the DISK_RO property is only ever announced via change uevents,
+> and applications such as dm-multipath may not pick up on DISK_RO if it
+> shows up in an add uevent instead. This patch maintains compatibility
+> with SCSI in that sense.
+> 
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/block/pktcdvd.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+Most rules relating to storage devices test for both, 'add' _and_ 
+'change' as DM devices are only usable after a 'change' event.
+In particular multipath has been coded with that in mind, so I don't see 
+any issues with just adding the RO setting to the 'add' event.
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 5ab43f9027631..335099c4076ee 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -525,7 +525,6 @@ static struct packet_data *pkt_alloc_packet_data(int frames)
- 	pkt->w_bio = bio_kmalloc(frames, GFP_KERNEL);
- 	if (!pkt->w_bio)
- 		goto no_bio;
--	bio_init(pkt->w_bio, NULL, pkt->w_bio->bi_inline_vecs, frames, 0);
- 
- 	for (i = 0; i < frames / FRAMES_PER_PAGE; i++) {
- 		pkt->pages[i] = alloc_page(GFP_KERNEL|__GFP_ZERO);
-@@ -537,26 +536,20 @@ static struct packet_data *pkt_alloc_packet_data(int frames)
- 	bio_list_init(&pkt->orig_bios);
- 
- 	for (i = 0; i < frames; i++) {
--		struct bio *bio = bio_kmalloc(1, GFP_KERNEL);
--		if (!bio)
-+		pkt->r_bios[i] = bio_kmalloc(1, GFP_KERNEL);
-+		if (!pkt->r_bios[i])
- 			goto no_rd_bio;
--		bio_init(bio, NULL, bio->bi_inline_vecs, 1, 0);
--		pkt->r_bios[i] = bio;
- 	}
- 
- 	return pkt;
- 
- no_rd_bio:
--	for (i = 0; i < frames; i++) {
--		if (pkt->r_bios[i])
--			bio_uninit(pkt->r_bios[i]);
-+	for (i = 0; i < frames; i++)
- 		kfree(pkt->r_bios[i]);
--	}
- no_page:
- 	for (i = 0; i < frames / FRAMES_PER_PAGE; i++)
- 		if (pkt->pages[i])
- 			__free_page(pkt->pages[i]);
--	bio_uninit(pkt->w_bio);
- 	kfree(pkt->w_bio);
- no_bio:
- 	kfree(pkt);
-@@ -571,13 +564,10 @@ static void pkt_free_packet_data(struct packet_data *pkt)
- {
- 	int i;
- 
--	for (i = 0; i < pkt->frames; i++) {
--		bio_uninit(pkt->r_bios[i]);
-+	for (i = 0; i < pkt->frames; i++)
- 		kfree(pkt->r_bios[i]);
--	}
- 	for (i = 0; i < pkt->frames / FRAMES_PER_PAGE; i++)
- 		__free_page(pkt->pages[i]);
--	bio_uninit(pkt->w_bio);
- 	kfree(pkt->w_bio);
- 	kfree(pkt);
- }
-@@ -950,6 +940,7 @@ static void pkt_end_io_read(struct bio *bio)
- 
- 	if (bio->bi_status)
- 		atomic_inc(&pkt->io_errors);
-+	bio_uninit(bio);
- 	if (atomic_dec_and_test(&pkt->io_wait)) {
- 		atomic_inc(&pkt->run_sm);
- 		wake_up(&pd->wqueue);
-@@ -967,6 +958,7 @@ static void pkt_end_io_packet_write(struct bio *bio)
- 
- 	pd->stats.pkt_ended++;
- 
-+	bio_uninit(bio);
- 	pkt_bio_finished(pd);
- 	atomic_dec(&pkt->io_wait);
- 	atomic_inc(&pkt->run_sm);
-@@ -1021,7 +1013,7 @@ static void pkt_gather_data(struct pktcdvd_device *pd, struct packet_data *pkt)
- 			continue;
- 
- 		bio = pkt->r_bios[f];
--		bio_reset(bio, pd->bdev, REQ_OP_READ);
-+		bio_init(bio, pd->bdev, bio->bi_inline_vecs, 1, REQ_OP_READ);
- 		bio->bi_iter.bi_sector = pkt->sector + f * (CD_FRAMESIZE >> 9);
- 		bio->bi_end_io = pkt_end_io_read;
- 		bio->bi_private = pkt;
-@@ -1234,7 +1226,8 @@ static void pkt_start_write(struct pktcdvd_device *pd, struct packet_data *pkt)
- {
- 	int f;
- 
--	bio_reset(pkt->w_bio, pd->bdev, REQ_OP_WRITE);
-+	bio_init(pkt->w_bio, pd->bdev, pkt->w_bio->bi_inline_vecs, pkt->frames,
-+		 REQ_OP_WRITE);
- 	pkt->w_bio->bi_iter.bi_sector = pkt->sector;
- 	pkt->w_bio->bi_end_io = pkt_end_io_packet_write;
- 	pkt->w_bio->bi_private = pkt;
+Cheers,
+
+Hannes
 -- 
-2.30.2
-
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
