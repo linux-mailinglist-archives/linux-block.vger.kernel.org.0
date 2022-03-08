@@ -2,58 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 900764D15BE
-	for <lists+linux-block@lfdr.de>; Tue,  8 Mar 2022 12:09:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 584AD4D1BFD
+	for <lists+linux-block@lfdr.de>; Tue,  8 Mar 2022 16:42:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346229AbiCHLKU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Mar 2022 06:10:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
+        id S1344551AbiCHPmz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Mar 2022 10:42:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346270AbiCHLKG (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 06:10:06 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABAA3D1EE;
-        Tue,  8 Mar 2022 03:09:10 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id s18so3517037plp.1;
-        Tue, 08 Mar 2022 03:09:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=861/rT/721223FdWsOC3qzYE3WVOjLIz8rVv6kjIKGM=;
-        b=jyYyK6J9BxbgoL7xHG6kp1cXmUakeGS7Y5anj1UsF8NTj2w3t4YAHIKWxraw96YWdj
-         WcAP7cZKBuwMV0rcBF+/VhLf7tJjM/qVr9wc9dlAUmZqjmydxsYJAuQFBwy0eJ0TmCL6
-         zLr5uJ/qULcYFbct0VPQyFfDTjEhQLcm7sC9eXdKg7KreOtXT0XxPZZNxs1ZWEjvTSn6
-         k+WbyR4XQCNu7vP5w1o5XHyAjaEfoKTd/vcMswpr5tQ6/tbg0wmLlnn7jTOmuQSPNPSG
-         vgD9ghLVWvFuGdP1dvNWZZx4ooL5SrriekGODCSLlZ5K0qt7HumBqnZBthc6v9phnTrx
-         oFxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=861/rT/721223FdWsOC3qzYE3WVOjLIz8rVv6kjIKGM=;
-        b=MKWCLxxjakK22gRPbwz62QuBlL1477qW+YP2a9dZj/WNw0I1P2aDB69cmpjVqVgkMx
-         6mpczYYD6fBy4/DSK1e1Jn6A3FNQ/Dgt/z1+vzN5g7MIswduInGVLZ3HlLmaSbabbYLR
-         2SJWWzJSGNie6LCqBypVO0XdJnDMVHoyB+QoNnVsiVMtt2K7pdh9s+yRMj57UU4LUweg
-         CSXXTh6ec7j5LZn3FDvZZiHzwu1yAlVuvvTu1pt+iZCZwQTT0K77ouvxkjfgJfdkjchx
-         XB0b/ScD42Qd5hBnOrtTwf/NDCrV2Myd0n0yN4sm0rmsanokTfEadHZ+HZLtoNpIdqsz
-         L5aA==
-X-Gm-Message-State: AOAM531ofgooCySEx69GfzRrYloFRkUmxG422qEpOhDBbERhjWIzyNK8
-        PhNlT2a3xIUQXfZgXfFlpcEGHkkiwLq8zxf1iBJPyVWLyuIh
-X-Google-Smtp-Source: ABdhPJzlfDhGKO539ONlOCeBGpj4DbgxjtgkvFGeLe9x9+NjVl6/db66OmTiRXhCyRo0aQE4cmoa47jeKJljHnPFEnY=
-X-Received: by 2002:a17:90a:5407:b0:1bf:43ce:f11b with SMTP id
- z7-20020a17090a540700b001bf43cef11bmr3984060pjh.31.1646737749940; Tue, 08 Mar
- 2022 03:09:09 -0800 (PST)
+        with ESMTP id S1347926AbiCHPmv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 10:42:51 -0500
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04104ECE1
+        for <linux-block@vger.kernel.org>; Tue,  8 Mar 2022 07:41:52 -0800 (PST)
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20220308154147epoutp020d69ba32894fefd644367e816fc6ecca~aciKztdbS2790227902epoutp028
+        for <linux-block@vger.kernel.org>; Tue,  8 Mar 2022 15:41:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20220308154147epoutp020d69ba32894fefd644367e816fc6ecca~aciKztdbS2790227902epoutp028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1646754107;
+        bh=KiMjxqPMgSwlzKAGgUnynmNFgGCy1QEaMYK50C0X4/U=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=p/vhv0Vpq+tV0fPBNkxEUduCstpHfrrDlqMDWnhFU9EIZoLhVsDH97JzyjYWFhMQg
+         j3HGNK/0m8D4aqYMa0TPTnUGGVvxCt1p81bRku9VKpJmvIPVpDwNwi7TqUt7sPK2yR
+         NkatcVf29Rf7rXSqFf45XF+qfMNohIW1tsVSRUBg=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20220308154145epcas5p15b240ae9e4d66dd23faa52d072a8c467~aciJm2aQm2239922399epcas5p1c;
+        Tue,  8 Mar 2022 15:41:45 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.182]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4KCfh64R8Yz4x9Pp; Tue,  8 Mar
+        2022 15:41:42 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B1.AB.05590.63977226; Wed,  9 Mar 2022 00:41:42 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20220308152651epcas5p1ebd2dc7fa01db43dd587c228a3695696~acVIb9tKl1632216322epcas5p1D;
+        Tue,  8 Mar 2022 15:26:51 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220308152651epsmtrp2743c274fcdd1adcb07fb7fc3821c1cd9~acVIbDt__2706527065epsmtrp22;
+        Tue,  8 Mar 2022 15:26:51 +0000 (GMT)
+X-AuditID: b6c32a4b-723ff700000015d6-03-622779361985
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        62.96.03370.BB577226; Wed,  9 Mar 2022 00:26:51 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20220308152649epsmtip19fca21c80039849f8245b1b624d581c8~acVGYcYir1072010720epsmtip1j;
+        Tue,  8 Mar 2022 15:26:48 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk, hch@lst.de, kbusch@kernel.org,
+        asml.silence@gmail.com
+Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, sbates@raithlin.com,
+        logang@deltatee.com, pankydev8@gmail.com, javier@javigon.com,
+        mcgrof@kernel.org, a.manzanares@samsung.com, joshiiitr@gmail.com,
+        anuj20.g@samsung.com
+Subject: [PATCH 00/17] io_uring passthru over nvme
+Date:   Tue,  8 Mar 2022 20:50:48 +0530
+Message-Id: <20220308152105.309618-1-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-From:   Zheyu Ma <zheyuma97@gmail.com>
-Date:   Tue, 8 Mar 2022 19:08:58 +0800
-Message-ID: <CAMhUBj=i4MJ6KH_UU5dy8e+DmviRg4EFA-D5zyD=XfRi9Ma=pg@mail.gmail.com>
-Subject: [BUG] block: sx8: Invalid wait context in carm_queue_rq()
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAJsWRmVeSWpSXmKPExsWy7bCmhq5ZpXqSweTrMhbTDytaNE34y2wx
+        Z9U2RovVd/vZLFauPspk8a71HItF5+kLTBbn3x5msph06Bqjxd5b2hbzlz1lt1jSepzN4saE
+        p4wWa24+ZbH4fGYeqwO/x7Orzxg9ds66y+7RvOAOi8fls6Uem1Z1snlsXlLvsftmA5vHtsUv
+        WT36tqxi9Pi8SS6AKyrbJiM1MSW1SCE1Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VW
+        ycUnQNctMwfoByWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJrVJqQUpOgUmBXnFibnFpXrpe
+        XmqJlaGBgZEpUGFCdsbMs7eZC3plK1bNWsXcwHhIrIuRk0NCwESif24jG4gtJLCbUWLdHL8u
+        Ri4g+xOjxKb/ZxkhnM+MEr8u7WCD6Thw8DRUxy5GiU+HFeGK9qydydzFyMHBJqApcWFyKUiN
+        iICXxP3b71lBapgFupgk3u67D9YsLGAk8X/mGjCbRUBVYuGLR6wgNq+ApcSuO93sEMvkJWZe
+        +s4OEReUODnzCQuIzQwUb946mxlkqITASg6Jz+eWskA0uEh8XLOfCcIWlnh1fAvUICmJz+/2
+        Qn1QLPHrzlGo5g5GiesNM6Ga7SUu7vnLBPIBM9AH63fpQ4RlJaaeWscEsZhPovf3E6j5vBI7
+        5sHYihL3Jj1lhbDFJR7OWAJle0hs6uljhYRWrMSDlTuYJjDKz0Lyzywk/8xC2LyAkXkVo2Rq
+        QXFuemqxaYFxXmo5PGKT83M3MYKTspb3DsZHDz7oHWJk4mA8xCjBwawkwnv/vEqSEG9KYmVV
+        alF+fFFpTmrxIUZTYCBPZJYSTc4H5oW8knhDE0sDEzMzMxNLYzNDJXHeU+kbEoUE0hNLUrNT
+        UwtSi2D6mDg4pRqYcua+S9xrfOs391nJA2JrrkQW8DfGvQwulXuY8OvoNld+Y021jwI67R59
+        E3f9mio0++FbpmfWjzi8zyw98TCS59vctR0q995/ubpv77+QXe9S7QXWvz6xbcr2N4HxgiKu
+        Vj7LGjv5dfbrflpV3ir7yjqB/ePtKYzzam2vSP+J1RPzz9p98d79BgePgglv1M50sh+tMFpw
+        3Dxv4Xn+0+v2LpvJWBp8vUgg30eSr93wtritOMP/1NRI+31S9peT73R3B1WLZQps+n2/M2L7
+        9sLVGvcj5a91vLwX/npWjKvqf3sxP3Oxk9+L84zKdyf1lxznvSHWd1f0eNF5O+tuuy++XK+F
+        W5VS8z5GxL8+qu+mxFKckWioxVxUnAgAVt36IFMEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDLMWRmVeSWpSXmKPExsWy7bCSnO7uUvUkg3n72CymH1a0aJrwl9li
+        zqptjBar7/azWaxcfZTJ4l3rORaLztMXmCzOvz3MZDHp0DVGi723tC3mL3vKbrGk9TibxY0J
+        Txkt1tx8ymLx+cw8Vgd+j2dXnzF67Jx1l92jecEdFo/LZ0s9Nq3qZPPYvKTeY/fNBjaPbYtf
+        snr0bVnF6PF5k1wAVxSXTUpqTmZZapG+XQJXxsyzt5kLemUrVs1axdzAeEisi5GTQ0LAROLA
+        wdNsXYxcHEICOxglzr47wwiREJdovvaDHcIWllj57zk7RNFHRom2a81ARRwcbAKaEhcml4LU
+        iAgESBxsvAxWwywwg0mip/kzC0hCWMBI4v/MNWwgNouAqsTCF49YQWxeAUuJXXe6oRbIS8y8
+        9J0dIi4ocXLmE7BeZqB489bZzBMY+WYhSc1CklrAyLSKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0
+        L10vOT93EyM4QrS0djDuWfVB7xAjEwfjIUYJDmYlEd7751WShHhTEiurUovy44tKc1KLDzFK
+        c7AoifNe6DoZLySQnliSmp2aWpBaBJNl4uCUamAKaJudmH/fvrKJJWTXb4HWXEmWLVwPdPpW
+        adec23/VR2FtqZLvxerT+/lcV8wOEFhQa65mxR4bGXgj8YGp7qbbZRcbzk11lIvh/5Ri8nmP
+        tZp85aGYTfMuykSndcWuFT/9oXHa0buvtyzU890RWbv2cd2coq7nRuXpe4LenHp5eckbr/ly
+        p4PmnPp9sjEyq8dj53HRcy9uSLdFLxPN1jjg8Ubj2la/7pP/5pWdWrb/ZHN7n7OOvsQGOw+/
+        wP1fQn5sKXvnZvz6S62OUIDHosWRX2tXapUW3Tqb0GK4lWNDyg+N5LJt2/9uirrgKub/6nWd
+        Ssgtv8cMcZxn1Avin2yy+PQhh68/iFPKLoVxt4gSS3FGoqEWc1FxIgA5ZTy8/wIAAA==
+X-CMS-MailID: 20220308152651epcas5p1ebd2dc7fa01db43dd587c228a3695696
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220308152651epcas5p1ebd2dc7fa01db43dd587c228a3695696
+References: <CGME20220308152651epcas5p1ebd2dc7fa01db43dd587c228a3695696@epcas5p1.samsung.com>
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,62 +117,99 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+This is a streamlined series with new way of doing uring-cmd, and connects
+nvme-passthrough (over char device /dev/ngX) to it.
+uring-cmd enables using io_uring for any arbitrary command (ioctl,
+fsctl etc.) exposed by the command provider (e.g. driver, fs etc.).
 
-I found a bug in the sx8 driver when probing this driver.
-I have no idea about how this happened, it seems like a misuse of the lock.
+To store the command inline within the sqe, Jens added an option to setup
+the ring with 128-byte SQEs.This gives 80 bytes of space (16 bytes at
+the end of the first sqe + 64 bytes in the second sqe). With inline
+command in sqe, the application avoids explicit allocation and, in the
+kernel, we avoid doing copy_from_user. Command-opcode, length etc.
+are stored in per-op fields of io_uring_sqe.
 
-With LOCKDEP=y, the following log can reveal it:
+Non-inline submission (when command is a user-space pointer rather than
+housed inside sqe) is also supported.
 
-[    3.403123] =============================
-[    3.403205] [ BUG: Invalid wait context ]
-[    3.403205] 5.16.0-rc1+ #29 Not tainted
-[    3.403205] -----------------------------
-[    3.403205] kworker/5:1/68 is trying to lock:
-[    3.403205] ffff888012c80060 (&entry->access){+.+.}-{3:3}, at:
-carm_queue_rq+0x110/0x1290
-[    3.403205] other info that might help us debug this:
-[    3.403205] context-{4:4}
-[    3.403205] 3 locks held by kworker/5:1/68:
-[    3.403205]  #0: ffff888100068d38
-((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x644/0xaf0
-[    3.403205]  #1: ffff888105f17d68
-((work_completion)(&host->fsm_task)){+.+.}-{0:0}, at:
-process_one_work+0x68c/0xaf0
-[    3.403205]  #2: ffffffff8e441b60 (rcu_read_lock){....}-{1:2}, at:
-rcu_lock_acquire+0x0/0x20
-[    3.403205] stack backtrace:
-[    3.403205] CPU: 5 PID: 68 Comm: kworker/5:1 Not tainted 5.16.0-rc1+ #29
-[    3.403205] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-[    3.403205] Workqueue: events carm_fsm_task
-[    3.403205] Call Trace:
-[    3.403205]  <TASK>
-[    3.403205]  dump_stack_lvl+0x5d/0x78
-[    3.403205]  __lock_acquire+0x144a/0x1e20
-[    3.403205]  lock_acquire+0x101/0x2d0
-[    3.403205]  ? carm_queue_rq+0x110/0x1290
-[    3.403205]  _raw_spin_lock+0x2a/0x40
-[    3.403205]  ? carm_queue_rq+0x110/0x1290
-[    3.403205]  carm_queue_rq+0x110/0x1290
-[    3.403205]  ? __blk_mq_get_driver_tag+0x2da/0x780
-[    3.403205]  blk_mq_dispatch_rq_list+0xcd0/0x24f0
-[    3.403205]  ? rcu_read_lock_sched_held+0x2f/0x70
-[    3.403205]  ? lock_release+0x47e/0x720
-[    3.403205]  __blk_mq_sched_dispatch_requests+0x2f8/0x3a0
-[    3.403205]  blk_mq_sched_dispatch_requests+0xc1/0xf0
-[    3.403205]  __blk_mq_run_hw_queue+0x86/0xe0
-[    3.403205]  __blk_mq_delay_run_hw_queue+0x1b3/0x490
-[    3.403205]  ? rcu_lock_acquire+0x20/0x20
-[    3.403205]  blk_mq_run_hw_queue+0x137/0x300
-[    3.403205]  blk_mq_sched_insert_request+0x13e/0x2c0
-[    3.403205]  process_one_work+0x6d8/0xaf0
-[    3.403205]  worker_thread+0x9bd/0x14a0
-[    3.403205]  kthread+0x38b/0x470
-[    3.403205]  ? rcu_lock_release+0x20/0x20
-[    3.403205]  ? kthread_unuse_mm+0x170/0x170
-[    3.403205]  ret_from_fork+0x22/0x30
-[    3.403205]  </TASK>
+io_uring sends this command down by newly introduced ->async_cmd()
+handler in file_operations. The handler does what is required to
+submit, and indicates queued completion.The infra has been added to
+process the completion when it arrives.
 
-Regards,
-Zheyu Ma
+Overall the patches wire up the following capabilities for this path:
+- async
+- fixed-buffer
+- plugging
+- bio-cache
+- sync and async polling.
+
+This scales well. 512b randread perf (KIOPS) comparing
+uring-passthru-over-char (/dev/ng0n1) to
+uring-over-block(/dev/nvme0n1)
+
+QD    uring    pt    uring-poll    pt-poll
+8      538     589      831         902
+64     967     1131     1351        1378
+256    1043    1230     1376        1429
+
+Testing/perf is done with this custom fio that turnes regular-io into
+passthru-io on supplying "uring_cmd=1" option.
+https://github.com/joshkan/fio/tree/big-sqe-pt.v1
+
+Example command-line:
+fio -iodepth=256 -rw=randread -ioengine=io_uring -bs=512 -numjobs=1
+-runtime=60 -group_reporting -iodepth_batch_submit=64
+-iodepth_batch_complete_min=1 -iodepth_batch_complete_max=64
+-fixedbufs=1 -hipri=1 -sqthread_poll=0 -filename=/dev/ng0n1
+-name=io_uring_256 -uring_cmd=1
+
+
+Anuj Gupta (3):
+  io_uring: prep for fixed-buffer enabled uring-cmd
+  nvme: enable passthrough with fixed-buffer
+  nvme: enable non-inline passthru commands
+
+Jens Axboe (5):
+  io_uring: add support for 128-byte SQEs
+  fs: add file_operations->async_cmd()
+  io_uring: add infra and support for IORING_OP_URING_CMD
+  io_uring: plug for async bypass
+  block: wire-up support for plugging
+
+Kanchan Joshi (5):
+  nvme: wire-up support for async-passthru on char-device.
+  io_uring: add support for uring_cmd with fixed-buffer
+  block: factor out helper for bio allocation from cache
+  nvme: enable bio-cache for fixed-buffer passthru
+  io_uring: add support for non-inline uring-cmd
+
+Keith Busch (2):
+  nvme: modify nvme_alloc_request to take an additional parameter
+  nvme: allow user passthrough commands to poll
+
+Pankaj Raghav (2):
+  io_uring: add polling support for uring-cmd
+  nvme: wire-up polling for uring-passthru
+
+ block/bio.c                     |  43 ++--
+ block/blk-map.c                 |  45 +++++
+ block/blk-mq.c                  |  93 ++++-----
+ drivers/nvme/host/core.c        |  21 +-
+ drivers/nvme/host/ioctl.c       | 336 +++++++++++++++++++++++++++-----
+ drivers/nvme/host/multipath.c   |   2 +
+ drivers/nvme/host/nvme.h        |  11 +-
+ drivers/nvme/host/pci.c         |   4 +-
+ drivers/nvme/target/passthru.c  |   2 +-
+ fs/io_uring.c                   | 188 ++++++++++++++++--
+ include/linux/bio.h             |   1 +
+ include/linux/blk-mq.h          |   4 +
+ include/linux/fs.h              |   2 +
+ include/linux/io_uring.h        |  43 ++++
+ include/uapi/linux/io_uring.h   |  21 +-
+ include/uapi/linux/nvme_ioctl.h |   4 +
+ 16 files changed, 689 insertions(+), 131 deletions(-)
+
+-- 
+2.25.1
+
