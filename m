@@ -2,98 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D2554D2555
-	for <lists+linux-block@lfdr.de>; Wed,  9 Mar 2022 02:13:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F0824D25F2
+	for <lists+linux-block@lfdr.de>; Wed,  9 Mar 2022 02:14:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbiCIBOM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Mar 2022 20:14:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
+        id S230256AbiCIBOm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Mar 2022 20:14:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231723AbiCIBNe (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 20:13:34 -0500
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7825015A202
-        for <linux-block@vger.kernel.org>; Tue,  8 Mar 2022 16:57:43 -0800 (PST)
-Received: by mail-pf1-x433.google.com with SMTP id a5so881937pfv.2
-        for <linux-block@vger.kernel.org>; Tue, 08 Mar 2022 16:57:43 -0800 (PST)
+        with ESMTP id S231958AbiCIBNy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 20:13:54 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB8315B3FE
+        for <linux-block@vger.kernel.org>; Tue,  8 Mar 2022 16:58:28 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id mr24-20020a17090b239800b001bf0a375440so3727320pjb.4
+        for <linux-block@vger.kernel.org>; Tue, 08 Mar 2022 16:58:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:in-reply-to:references:subject:message-id:date
          :mime-version:content-transfer-encoding;
-        bh=ibcGiXk54OeOBvZ0Vlw4BQsX8FRRv0YjF+xcJTv4Uo0=;
-        b=UOTc77FA0Rwox8zdOgpA7CUmPD50ywbmTa3N19iM2XyrZc0FqA/+xYy8fE5+e4DRXy
-         yd+3fLuYiRpEOWiV9e4oMomqLzYSnknSExKr48gq0Qphs5b+9WaY2yQhBBy1OAAH9x3o
-         GkxSH/EWinYST+JcuJLsaiPQyYEBEkQb2hyfgdgu5BWjy3x4bEg4MfVlQ2Is5kGm/K23
-         tSUg40/um9ETrFYQsYXJO00ly4fVZZAvnGtEmNUjWIhXmrukgMMqKuMaFkJI/I2/hvWU
-         d8OhAw3iVZ00xgNVPWIWxNlO6VdB+mG3c7dhWgHRp+fBIJ21bQxKJ274+iCA7xJPbdDP
-         su1g==
+        bh=n3kOWYi00wB/JSBNH3Nkdw571Dwb7Z4bxoeFT/f7d74=;
+        b=qDe3CBPnszracgGZ3QHhnX2rqwCMCDyq1b/oMf/CwBtfCmovbYpnAA+VSbJJn6Xa48
+         JtAXVaWA/XjICwCBqyZLkWAgL4gh3yktjXHABN4AEkIRHgy9Cog0P4jN2vZFDx3MEgHx
+         nWDKS8ytclYRe1YHJKzjrhpXXxuI+ewUOlf/Jlbh2/zBxchqIrPm+qTJzFMIGMJitB9i
+         puba+9tOjqVVXsS6wSeZZ7lEUVsEhWIPolVuFEBHYjkXuf3VXVu7ggF0vTR3+lI80jWl
+         ECTGd9vaoR8txjEJk8EqcxqVLMahgNMBWlKkHgTwwuXvp/rlnSIwoN1V5Sg4HWvF8tCn
+         1t5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
          :message-id:date:mime-version:content-transfer-encoding;
-        bh=ibcGiXk54OeOBvZ0Vlw4BQsX8FRRv0YjF+xcJTv4Uo0=;
-        b=dJMNTojse9sgUCILCKGVr39Q1NN2c5Nir/PYqzEoXuoWa6y28yILwlfDVaSRj/Uqun
-         ktFI4GNUps4DSwAe6zIomPU1qlQtyXtQ3zTyRT/KH96KxaEwYCyx0+qgPrcDNj5oDY7h
-         34UpGL6Pf0OKHXrKCQ8PnJ2JP1OfD3dPzg7U7HXHTHzvt9UKZ7bGqqYJE1M/nvoKvpH/
-         dAHdqzbOtaKf3m/LGnqPCs4c4I8mZYfBm7W+vSHJNVAAfICqcdA4Guzho2JeWEAXm+e2
-         V9rVahVWMlO7jQHZ7ZijYxsf78sx/wbPaih8iFflfWb8bP9q3x9JdDOGCX/w5pqwQRnL
-         /sbQ==
-X-Gm-Message-State: AOAM5316Ji7Ox/ABwNzG8yGNlZn2Y4hpAHYw4l5go/tF2r/KylebW/Sz
-        9Vjhd+TA49XlgQ/plnxE938Q27aCXAssjnFh
-X-Google-Smtp-Source: ABdhPJz+xKfxwokBKXnHLHFlCfMI5IKWjfXAWA5GZk+/gdwzZHhH4ItVropgdyfDbqnvnSgHwpfRLg==
-X-Received: by 2002:aa7:9e07:0:b0:4f6:a7e3:1b57 with SMTP id y7-20020aa79e07000000b004f6a7e31b57mr20824465pfq.13.1646787462899;
-        Tue, 08 Mar 2022 16:57:42 -0800 (PST)
+        bh=n3kOWYi00wB/JSBNH3Nkdw571Dwb7Z4bxoeFT/f7d74=;
+        b=xGen0dhJIzaKhrmmaifIXqONFZfQdu1PHeRfEr66jVDWwLT1q1JsMFCozQP9blEAPW
+         gwiaXtiMg6wAb8lpkaa6+m9IbKFeennUE11hrWdMevCu2BtiIezmEHQne4vNLfWb/eQD
+         a2/8O48upTFe8qI3kFcnrELBCtJRNTVQGGMgRQMi9ejyxogLx6Y3b/iSpiBre/yn89Em
+         06w2GOyJXHI+g1kiMUXE65nv9RaXAGQqjAQBOh+b0Pl/lh8Fo0Mdrskq1v1XyjD7o5Ey
+         u8ErLzH1YtcTdpZ1XV/Vu5bI1n24QA3ibQad0upiSD+cO2XOqhsFSVS1XqnbSPDmzHEg
+         ADRA==
+X-Gm-Message-State: AOAM532MqNiHN8b/guEkgSUSYXzblwUpSqF4rjNV5eGNWwvv65U3Cjqn
+        AZGLdFvBiCxRD1wTgYVtLmpI3e7epo3k7PXx
+X-Google-Smtp-Source: ABdhPJydwoFGLZgcz4NmuS/ionLpQBPtHiioJnqmd0mjxHWgfmJTXxpQKkwIkBWtrUrCPm/y2MEKAw==
+X-Received: by 2002:a17:902:930b:b0:14d:b0c0:1f71 with SMTP id bc11-20020a170902930b00b0014db0c01f71mr20409658plb.113.1646787507899;
+        Tue, 08 Mar 2022 16:58:27 -0800 (PST)
 Received: from [127.0.1.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id lb4-20020a17090b4a4400b001b9b20eabc4sm305044pjb.5.2022.03.08.16.57.42
+        by smtp.gmail.com with ESMTPSA id e14-20020a056a001a8e00b004e136d54a15sm298627pfv.105.2022.03.08.16.58.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 16:57:42 -0800 (PST)
+        Tue, 08 Mar 2022 16:58:27 -0800 (PST)
 From:   Jens Axboe <axboe@kernel.dk>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Yu Kuai <yukuai3@huawei.com>, Christoph Hellwig <hch@lst.de>,
-        linux-block@vger.kernel.org
-In-Reply-To: <20220308073219.91173-1-ming.lei@redhat.com>
-References: <20220308073219.91173-1-ming.lei@redhat.com>
-Subject: Re: [PATCH V4 0/6] blk-mq: update_nr_hw_queues related improvement & bugfix
-Message-Id: <164678746208.406543.6112092653609180672.b4-ty@kernel.dk>
-Date:   Tue, 08 Mar 2022 17:57:42 -0700
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+In-Reply-To: <20220308055200.735835-1-hch@lst.de>
+References: <20220308055200.735835-1-hch@lst.de>
+Subject: Re: move more work to disk_release v4
+Message-Id: <164678750695.407482.16938028641587368987.b4-ty@kernel.dk>
+Date:   Tue, 08 Mar 2022 17:58:26 -0700
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, 8 Mar 2022 15:32:13 +0800, Ming Lei wrote:
-> The 1st patch figures out correct numa node for each kind of hw queue.
-> 
-> The 2nd patch simplifies reallocation of q->queue_hw_ctx a bit.
-> 
-> The 3rd patch re-configures poll capability after queue map is changed.
-> 
-> The 4th patch changes mtip32xx to avoid to refer to q->queue_hw_ctx
-> directly.
+On Tue, 8 Mar 2022 06:51:46 +0100, Christoph Hellwig wrote:
+> this series resurrects and forward ports ports larger parts of the
+> "block: don't drain file system I/O on del_gendisk" series from Ming,
+> but does not remove the draining in del_gendisk, but instead the one
+> in the sd driver, which always was a bit ad-hoc.  As part of that sd
+> and sr are switched to use the new ->free_disk method to avoid having
+> to clear disk->private_data and the way to lookup the SCSI ULP is
+> cleaned up as well.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/6] blk-mq: figure out correct numa node for hw queue
-      commit: 4d805131abf219e0019715f1cf29763c613aae07
-[2/6] blk-mq: simplify reallocation of hw ctxs a bit
-      commit: 306f13ee16424805d602d427a66ea38078d473b0
-[3/6] blk-mq: reconfigure poll after queue map is changed
-      commit: 42ee3061293e206bc0f3a084feea1304c61c137a
-[4/6] block: mtip32xx: don't touch q->queue_hw_ctx
-      commit: de0328d3a253a339be14a80fe2a0256ec26867da
-[5/6] blk-mq: prepare for implementing hctx table via xarray
-      commit: 4f481208749a22d3570073e629dbc27d7d27c8da
-[6/6] blk-mq: manage hctx map via xarray
-      commit: 5b3d92d1f9ac5c21b19c90a16c4a1668827aa75b
+[01/14] blk-mq: do not include passthrough requests in I/O accounting
+        commit: 00baefa025651b33a67fefcf8f6bf527af7b085f
+[02/14] blk-mq: handle already freed tags gracefully in blk_mq_free_rqs
+        commit: abcc148ab9236abce466d5e5070f43d290cf72c7
+[03/14] scsi: don't use disk->private_data to find the scsi_driver
+        commit: b55ac66299345b24a81444d9222bf0362920b829
+[04/14] sd: rename the scsi_disk.dev field
+        commit: 695a5b27e06242cfc89988d342016697c5f5ab5f
+[05/14] sd: call sd_zbc_release_disk before releasing the scsi_device reference
+        commit: a22da9716c1375b8c0563b607cacdb422680233b
+[06/14] sd: delay calling free_opal_dev
+        commit: f3ca592e32b3b7a74a57b77bf24cdefff1ea53fc
+[07/14] sd: implement ->free_disk to simplify refcounting
+        commit: d31ece5f112968d7efe70fdffa4d39ed6b876f40
+[08/14] sr: implement ->free_disk to simplify refcounting
+        commit: 719468c6d02fdc1a17d7b40ec73cec155cf05945
+[09/14] block: move blkcg initialization/destroy into disk allocation/release handler
+        commit: 754ddb47bbc48c987cd3c718a1ee9f1d83c001f7
+[10/14] block: don't remove hctx debugfs dir from blk_mq_exit_queue
+        commit: f58dfe31e0cd242f1de93d1aad0fbe8af7a09dc2
+[11/14] block: move q_usage_counter release into blk_queue_release
+        commit: 5407dfa49e67160724567e565fa58086a3ec1b8c
+[12/14] block: move blk_exit_queue into disk_release
+        commit: 0f426c2c2c7ea134562e64d7b6ce0acaef67146e
+[13/14] block: do more work in elevator_exit
+        commit: 3e8f2f0ef1000649dbc7d0dd41c714617a1dbc9c
+[14/14] block: move rq_qos_exit() into disk_release()
+        commit: 641fde02765e74b8b5ae8426a02c21abf0ce3a29
 
 Best regards,
 -- 
