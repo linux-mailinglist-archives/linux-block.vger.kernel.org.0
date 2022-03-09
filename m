@@ -2,88 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF5B44D2536
-	for <lists+linux-block@lfdr.de>; Wed,  9 Mar 2022 02:13:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 864034D25CE
+	for <lists+linux-block@lfdr.de>; Wed,  9 Mar 2022 02:14:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbiCIBIR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Mar 2022 20:08:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
+        id S230326AbiCIBON (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Mar 2022 20:14:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbiCIBIB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 20:08:01 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3F6141FD0
-        for <linux-block@vger.kernel.org>; Tue,  8 Mar 2022 16:49:11 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id 132so593907pga.5
-        for <linux-block@vger.kernel.org>; Tue, 08 Mar 2022 16:49:11 -0800 (PST)
+        with ESMTP id S230340AbiCIBMv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Mar 2022 20:12:51 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2466BBC27
+        for <linux-block@vger.kernel.org>; Tue,  8 Mar 2022 16:55:25 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id q13so582265plk.12
+        for <linux-block@vger.kernel.org>; Tue, 08 Mar 2022 16:55:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:in-reply-to:references:subject:message-id:date
          :mime-version:content-transfer-encoding;
-        bh=7vzogl3snQJdg9bpcyEA/LktrD/7zcyZz0+PLvZ4jnM=;
-        b=4K8nH1sOc4tyxqfsjaMNXKXTq1LhkUrO8Qc/a1TUL0pEqcxAWbjiY31eH0HlnxrUu6
-         bzT3g/lREOZKeDo8CDMKy83OW5TPhgVrub3kpkCUy7R7Q33Hmo7Oi65/qj2CD6myRa8W
-         s0MzZ+RrVPORxZAxdJpDGs3+MkL+/LZKvTR5ZHm86bYZcFs9X4jEV+OvZ0icvP8MPAa4
-         PHSZkafhXXOEtfl81Di5Q/BMV3MnN9zfoHd+GDbk9cwGie60Z829K5a6pohLId6d8Nh4
-         VvVEgCrUD5TkTlhDXRuVoX4wV1lmS2h7Kc+kzywi0ibDbFsceUXZqrMt/nsvvHyzsrkv
-         Jqcw==
+        bh=TSJygurfY607jvzpaSXbGkChO2r02RRc4zcT8idFGSc=;
+        b=cQj5MIXnnya8S4VuATtZHow3Gb7EiUuI/OjHbe4Bsz6nWy6G0t+5bypUdRMHtyDyqv
+         0+m047whb+wGAaimM0vhqdm7fHE2tK7e8v4MVMOHyevRhE0Ekma2X7+vVuYJzUQzBxpg
+         igFv6lDEkbUr5HIsAwfE81MjZaPPKYxQhxuHQAntNEYj9UfnCRS5/JFQ/UUwM0e4XYOi
+         1Y55fztpUG/ZzqjfLMbFkiRI5c6QHvPbIRyAFN9d2XCdb6R/Ud/CQK5iMUGGgkB7eOlR
+         7f1UTVAhJCnEsUjpykO6HRnSTzwIP7w6kTV4dHA9oAHljTpNn/dqezd7EXa8/J+2teX2
+         lZwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
          :message-id:date:mime-version:content-transfer-encoding;
-        bh=7vzogl3snQJdg9bpcyEA/LktrD/7zcyZz0+PLvZ4jnM=;
-        b=ghfgqGuzXKHa1HjXPdgqlpHwA/hTJ3ohCl2CBBmMpN6Hi/A5MjfhIrFUIhbhB5x2R0
-         EyOaJ5xZ6YOxue4EoInvEGF2t9DDK6mxXi+NAhBH8hDzxT/pMILPTjLoCj/3uDYEnTho
-         hFj8aH70gYzvQrx1E4p6kSZQYasE1/oWZ53HqZBFf2T6gztBtWxwskAS8A+LpMJ1Fkai
-         Al+V6qA04yUzlGuG0GPmqfjDk5YR9h9g7c+hO4dZ3a2mwizLYrnT0Gzv0sZIlk26H2kV
-         0LL4bqofJUbzrP8tWYcGB/Q3d+3EmnYZ8TsEhagxGpkNO/P7BsFhLAf87hFPsmmWNxyo
-         Gwdg==
-X-Gm-Message-State: AOAM532BZBqVqbhMq9Mi6dNvq/BXf8ml2v88/Qoya0g288SX68z2DcYL
-        SdKumqeYTxZXIe9YPxpC9kZjgA==
-X-Google-Smtp-Source: ABdhPJyX9ihnw+FheQbcv5OeqXFQ/sFc3U0sHtzYaCn2KPezEoA0iTpvVz1AIE9IAVtjkX0Kae1IZg==
-X-Received: by 2002:a05:6a00:1152:b0:4be:ab79:fcfa with SMTP id b18-20020a056a00115200b004beab79fcfamr20726095pfm.3.1646786950864;
-        Tue, 08 Mar 2022 16:49:10 -0800 (PST)
+        bh=TSJygurfY607jvzpaSXbGkChO2r02RRc4zcT8idFGSc=;
+        b=iAttUJxSlYaOC4PdJJVte8HJy1ukGx1o2lXSXRidwJsePTJC0fvzEdW8/X6irEixXh
+         sYtI2qlkxKllMAeMk/kCU4X8NGS0WBqhXKAraGp94GiipgeabtJLCCtlaIj+yp4b1uRi
+         Yl/Htyn7Tlz9b4yI/zjMrgIw12ZMDX/79ktS+sRHYR8Ii8Zmg0LKeS8rg7AZEEBKfD0C
+         qw2u5tZdJ0Em/Z6yuFoVxBCKjGRKdvq3xv5/WKKcxHxCDnb1YelFM5b41ejW8pOAs5n0
+         PbTvqiEqe+uz+iye1dlp0JWDIL3PyxV5AsJTPzbwSQ99L8ONxRmSaeebgW1UgKuptI42
+         Pudg==
+X-Gm-Message-State: AOAM533w2PBbo/u7lKWjK4jGvEdv8SoDpNP1o48SfbmcdFu7zLQkMxfR
+        FjNn+ZY/7COSHNUMbzCeyRk8JzW5Iznr3GqL
+X-Google-Smtp-Source: ABdhPJzfqta+y5PFpcb2NM6oBxTMwg6z2yK87C1eg5Zj+O7aeUBAto+BmzlkGOcXJ73dc5f0rNRmPw==
+X-Received: by 2002:a17:90a:4682:b0:1bc:236:7e46 with SMTP id z2-20020a17090a468200b001bc02367e46mr7473627pjf.212.1646787324421;
+        Tue, 08 Mar 2022 16:55:24 -0800 (PST)
 Received: from [127.0.1.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id b62-20020a633441000000b0037c794cb68fsm281311pga.9.2022.03.08.16.49.09
+        by smtp.gmail.com with ESMTPSA id j9-20020a056a00130900b004f73df40914sm299756pfu.82.2022.03.08.16.55.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 16:49:10 -0800 (PST)
+        Tue, 08 Mar 2022 16:55:23 -0800 (PST)
 From:   Jens Axboe <axboe@kernel.dk>
-To:     Ming Lei <ming.lei@redhat.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        linux-block@vger.kernel.org
-Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-In-Reply-To: <20220308080915.3473689-1-shinichiro.kawasaki@wdc.com>
-References: <20220308080915.3473689-1-shinichiro.kawasaki@wdc.com>
-Subject: Re: [PATCH] block: fix blk_mq_attempt_bio_merge and rq_qos_throttle protection
-Message-Id: <164678694991.401524.3120405729456177612.b4-ty@kernel.dk>
-Date:   Tue, 08 Mar 2022 17:49:09 -0700
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+In-Reply-To: <20220308060529.736277-2-hch@lst.de>
+References: <20220308060529.736277-1-hch@lst.de> <20220308060529.736277-2-hch@lst.de>
+Subject: Re: [PATCH 1/2] fs: remove kiocb.ki_hint
+Message-Id: <164678732353.405180.15951772868993926898.b4-ty@kernel.dk>
+Date:   Tue, 08 Mar 2022 17:55:23 -0700
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, 8 Mar 2022 17:09:15 +0900, Shin'ichiro Kawasaki wrote:
-> Commit 9d497e2941c3 ("block: don't protect submit_bio_checks by
-> q_usage_counter") moved blk_mq_attempt_bio_merge and rq_qos_throttle
-> calls out of q_usage_counter protection. However, these functions require
-> q_usage_counter protection. The blk_mq_attempt_bio_merge call without
-> the protection resulted in blktests block/005 failure with KASAN null-
-> ptr-deref or use-after-free at bio merge. The rq_qos_throttle call
-> without the protection caused kernel hang at qos throttle.
+On Tue, 8 Mar 2022 07:05:28 +0100, Christoph Hellwig wrote:
+> This field is entirely unused now except for a tracepoint in f2fs, so
+> remove it.
 > 
-> [...]
+> 
 
 Applied, thanks!
 
-[1/1] block: fix blk_mq_attempt_bio_merge and rq_qos_throttle protection
-      commit: 0a5aa8d161d19a1b12fd25b434b32f7c885c73bb
+[1/2] fs: remove kiocb.ki_hint
+      commit: 41d36a9f3e5336f5b48c3adba0777b8e217020d7
+[2/2] fs: remove fs.f_write_hint
+      commit: 7b12e49669c99f63bc12351c57e581f1f14d4adf
 
 Best regards,
 -- 
