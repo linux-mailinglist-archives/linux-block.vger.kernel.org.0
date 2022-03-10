@@ -2,157 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 215454D4649
-	for <lists+linux-block@lfdr.de>; Thu, 10 Mar 2022 12:50:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C56234D46FD
+	for <lists+linux-block@lfdr.de>; Thu, 10 Mar 2022 13:30:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234201AbiCJLvm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Mar 2022 06:51:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
+        id S237432AbiCJMa6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Mar 2022 07:30:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232126AbiCJLvl (ORCPT
+        with ESMTP id S235393AbiCJMa6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Mar 2022 06:51:41 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62ED6145AD8;
-        Thu, 10 Mar 2022 03:50:40 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id r7so8963370lfc.4;
-        Thu, 10 Mar 2022 03:50:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2HCgTW6tUM7DEFamof1h4tm/dHfLYbO8BtWVBOKqMwU=;
-        b=qjSfnZolpLXexD4ysKMJx7z2iy7RSLmEydG1gUF0kZ6pnev5NF4zCn/mc2ym6OXH1h
-         zrDf2WEDTBODUV9dGZHLbkh0nxcrk6skioLy2gvwGhzkOSdfJGfUYaYgl5q+tZfQSezQ
-         nNktgy9uE0lrm09glMwhuHw4gb+bLrj3va6vCteSorTizOgxZ0rmHJ3HWAvpE5nIAu0C
-         8M2Md7Bx3eDT8XXKDZE3zoSpTgsmKEu7HqFAMLWc3YXI48Gu1qtXKAXCJDnuPALg1Itz
-         lygCOlnVNb5jSPmbgPIOAkIGVnIx6ZhAeClUQP99iLzaEAbeeJYGd+fpQg63IPK7JasX
-         jdMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2HCgTW6tUM7DEFamof1h4tm/dHfLYbO8BtWVBOKqMwU=;
-        b=h8GrF4Zo9VBwCt3TtXOwmOehgT9ZFv9yh/+I3defa/KNIswbmBLkXaCww91Y+dtstN
-         s0teBdqtmEfb8t62Jg9YHOvq6A87wn6vX10ny806/3l+sCY55QE0XUCr1Mi/NwHd8PFS
-         m+iJ7fkhuNqfonm8xux2V3f9Ml6lPe6xVn+CJcPdOLMtndsqQZu4IvWT9hTBd5kEa4FC
-         nx+DK7zWl5POqGRxwvhe+BvUvjmNbFjNCGfV1M30QZXKpQ3htNp9fsBRunDP1ksOOsz5
-         HxZ6bmZzc93ej/Gw1Hj/uGFMkLsd2tZXmNUZ/SIozVBgDaAWwph33uq54wu9d/C3dwhz
-         fbzw==
-X-Gm-Message-State: AOAM5324IGjPE9oSJ73xJXQP9UyC8fGopOTylx2iEjN0lHSvRkH8EM+z
-        cXAr0C4Ntw4YPGNLcgu8WSXV3bgF2Ur7UJcy/vE=
-X-Google-Smtp-Source: ABdhPJyjVMSSENplit9xn7OPOjyV+zTxySFK+J9bgJ4QXkoieP+kCGLzFuJAzf/aP0M1vQ3ynfDAfGm0lc6zuCTIu+Y=
-X-Received: by 2002:a05:6512:16a8:b0:448:6188:f8a8 with SMTP id
- bu40-20020a05651216a800b004486188f8a8mr1835823lfb.650.1646913038539; Thu, 10
- Mar 2022 03:50:38 -0800 (PST)
+        Thu, 10 Mar 2022 07:30:58 -0500
+Received: from iris.vrvis.at (iris.vrvis.at [92.60.8.8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7990E818A5;
+        Thu, 10 Mar 2022 04:29:57 -0800 (PST)
+Received: from [10.43.0.34]
+        by iris.vrvis.at with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <valentin@vrvis.at>)
+        id 1nSHLq-0005Vw-31; Thu, 10 Mar 2022 12:53:02 +0100
+Message-ID: <c274db07-9c7d-d857-33ad-4a762819bcdd@vrvis.at>
+Date:   Thu, 10 Mar 2022 12:53:01 +0100
 MIME-Version: 1.0
-References: <20220308152105.309618-1-joshi.k@samsung.com> <CGME20220308152729epcas5p17e82d59c68076eb46b5ef658619d65e3@epcas5p1.samsung.com>
- <20220308152105.309618-18-joshi.k@samsung.com> <20220310083652.GF26614@lst.de>
-In-Reply-To: <20220310083652.GF26614@lst.de>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Thu, 10 Mar 2022 17:20:13 +0530
-Message-ID: <CA+1E3rLaQstG8LWUyJrbK5Qz+AnNpOnAyoK-7H5foFm67BJeFA@mail.gmail.com>
-Subject: Re: [PATCH 17/17] nvme: enable non-inline passthru commands
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, sbates@raithlin.com,
-        logang@deltatee.com, Pankaj Raghav <pankydev8@gmail.com>,
-        =?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Anuj Gupta <anuj20.g@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Content-Language: en-US
+To:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From:   Valentin Kleibel <valentin@vrvis.at>
+Cc:     Jens Axboe <axboe@kernel.dk>, Justin Sanders <justin@coraid.com>,
+        linux-block@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: [PATCH] block: aoe: fix page fault in freedev()
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 2:06 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Tue, Mar 08, 2022 at 08:51:05PM +0530, Kanchan Joshi wrote:
-> > From: Anuj Gupta <anuj20.g@samsung.com>
-> >
-> > On submission,just fetch the commmand from userspace pointer and reuse
-> > everything else. On completion, update the result field inside the
-> > passthru command.
->
-> What is that supposed to mean?  What is the reason to do it.  Remember
-> to always document the why in commit logs.
+There is a bug in the aoe driver module where every forcible removal of 
+an aoe device (eg. "rmmod aoe" with aoe devices available or "aoe-flush 
+ex.x") leads to a page fault.
+The code in freedev() calls blk_mq_free_tag_set() before running 
+blk_cleanup_queue() which leads to this issue 
+(drivers/block/aoe/aoedev.c L281ff).
+This issue was fixed upstream in commit 6560ec9 (aoe: use 
+blk_mq_alloc_disk and blk_cleanup_disk) with the introduction and use of 
+the function blk_cleanup_disk().
 
-I covered some of it in patch 6, but yes I need to expand the
-reasoning here. Felt that retrospectively too.
-So there are two ways/modes of submitting commands:
+This patch applies to kernels 5.4 and 5.10.
 
-Mode 1: inline into sqe. This is the default way when passthru command
-is placed inside a big sqe which has 80 bytes of space.
-The only problem is - passthru command has this 'result' field
-(structure below for quick reference) which is statically embedded and
-not a pointer (like addr and metadata field).
+The function calls are reordered to match the behavior of 
+blk_cleanup_disk() to mitigate this issue.
 
-struct nvme_passthru_cmd64 {
-__u8 opcode;
-__u8 flags;
-__u16 rsvd1;
-__u32 nsid;
-__u32 cdw2;
-__u32 cdw3;
-__u64 metadata;
-__u64 addr;
-__u32 metadata_len;
-__u32 data_len;
-__u32 cdw10;
-__u32 cdw11;
-__u32 cdw12;
-__u32 cdw13;
-__u32 cdw14;
-__u32 cdw15;
-__u32 timeout_ms;
-__u32   rsvd2;
-__u64 result;
-};
-In sync ioctl, we always update this result field by doing put_user on
-completion.
-For async ioctl, since command is inside the the sqe, its lifetime is
-only upto submission. SQE may get reused post submission, leaving no
-way to update the "result" field on completion. Had this field been a
-pointer, we could have saved this on submission and updated on
-completion. But that would require redesigning this structure and
-adding newer ioctl in nvme.
+Fixes: 3582dd2 (aoe: convert aoeblk to blk-mq)
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215647
+Signed-off-by: Valentin Kleibel <valentin@vrvis.at>
+---
+  drivers/block/aoe/aoedev.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Coming back, even though sync-ioctl alway updates this result to
-user-space, only a few nvme io commands (e.g. zone-append, copy,
-zone-mgmt-send) can return this additional result (spec-wise).
-Therefore in nvme, when we are dealing with inline-sqe commands from
-io_uring, we never attempt to update the result. And since we don't
-update the result, we limit support to only read/write passthru
-commands. And fail any other command during submission itself (Patch
-2).
-
-Mode 2: Non-inline/indirect (pointer of command into sqe) submission.
-User-space places a pointer of passthru command, and a flag in
-io_uring saying that this is not inline.
-For this, in nvme (this patch) we always update the 'result' on
-completion and therefore can support all passthru commands.
-
-Hope this makes the reasoning clear?
-Plumbing wise, non-inline support does not create churn (almost all
-the infra of inline-command handling is reused). Extra is
-copy_from_user , and put_user.
-
-> > +static inline bool is_inline_rw(struct io_uring_cmd *ioucmd, struct nvme_command *cmd)
->
-> Overly long line.
-
-Under 100, but sure, can fold it under 80.
-
-
--- 
-Kanchan
+diff --git a/drivers/block/aoe/aoedev.c b/drivers/block/aoe/aoedev.c
+index e2ea2356da06..08c98ea724ea 100644
+--- a/drivers/block/aoe/aoedev.c
++++ b/drivers/block/aoe/aoedev.c
+@@ -277,9 +277,9 @@ freedev(struct aoedev *d)
+         if (d->gd) {
+                 aoedisk_rm_debugfs(d);
+                 del_gendisk(d->gd);
++               blk_cleanup_queue(d->blkq);
+                 put_disk(d->gd);
+                 blk_mq_free_tag_set(&d->tag_set);
+-               blk_cleanup_queue(d->blkq);
+         }
+         t = d->targets;
+         e = t + d->ntargets;
