@@ -2,38 +2,171 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E4634D5398
-	for <lists+linux-block@lfdr.de>; Thu, 10 Mar 2022 22:28:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C0434D5455
+	for <lists+linux-block@lfdr.de>; Thu, 10 Mar 2022 23:12:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343664AbiCJV3Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Mar 2022 16:29:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55706 "EHLO
+        id S1344310AbiCJWM7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Mar 2022 17:12:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245705AbiCJV3Y (ORCPT
+        with ESMTP id S237230AbiCJWM6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Mar 2022 16:29:24 -0500
-Received: from hosting.gsystem.sk (hosting.gsystem.sk [212.5.213.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F0929E33A6;
-        Thu, 10 Mar 2022 13:28:20 -0800 (PST)
-Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 71FBE7A01E6;
-        Thu, 10 Mar 2022 22:28:18 +0100 (CET)
-From:   Ondrej Zary <linux@zary.sk>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Tim Waugh <tim@cyberelk.net>, linux-block@vger.kernel.org,
-        linux-parport@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v0] pata_parport: add driver (PARIDE replacement)
-Date:   Thu, 10 Mar 2022 22:28:12 +0100
-Message-Id: <20220310212812.13944-1-linux@zary.sk>
-X-Mailer: git-send-email 2.20.1
+        Thu, 10 Mar 2022 17:12:58 -0500
+X-Greylist: delayed 1148 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 10 Mar 2022 14:11:56 PST
+Received: from mx0b-003b2802.pphosted.com (mx0b-003b2802.pphosted.com [205.220.180.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43FD31965C4;
+        Thu, 10 Mar 2022 14:11:56 -0800 (PST)
+Received: from pps.filterd (m0278969.ppops.net [127.0.0.1])
+        by mx0a-003b2802.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 22ALhn76014008;
+        Thu, 10 Mar 2022 21:52:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=+Ps9BTRApZBruZj1LJqmbCNfNnDoQ8okH87l+r8SYYQ=;
+ b=ODGcsJ0auZTR1YPjG0sUeoGQXCLFsTkzgmyG9XjbHxiODml2QvCXZWUL75KMe7n30Y9q
+ h3bq+CEnuCxBssrqs+1qMTW5NZ0wptb4ka8j7Y3lHLCxL2sty2ecfsCuj9t/QQi0ka9W
+ eIos4TpFXK6dsFW7BMOfHRgoKEl1qtHGsR90kDDtTejI+SYoKPMxuEvMUTa9VHe6pNbR
+ 49nY9lu/98xK4V1ChL45jlv3SSasxSk3wyUKbR9DJE0M/oRhzhxF0P9ozAXRC0vzU50R
+ 4ig7M/lScihqsvlf/34MfKv8kOGEUqIfmlcgTGSuL50gSynCu7PptwVD07Y49y0/H5BJ Ug== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2175.outbound.protection.outlook.com [104.47.58.175])
+        by mx0a-003b2802.pphosted.com (PPS) with ESMTPS id 3ekwtme8pt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Mar 2022 21:52:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JvuOq7ZO7Q4c8hM0f32rw6xSj/Cm8cUCPrKr8ezFpJG6uKckjRXgX8ZQgAjCoKuHt3NKLVSAGllSVYIuUJLKJDEe0BXiorzFRcFQhrB1k4ikRFDWtKckPMzJvFebr74R8tOKqI1fa4HZFiAWED8W8N09Dvg0kTXd9gta9P+E+bPGx+WD7CezLJQN8goCxVZxRFmNaI++9ex9SRzPqbHeZEdTU6pDl/0Q5A6BKjtouGPT4HhsP6GcxZjcA5GcJ/Gm22Lsc5NtAAqP0RoAiNyTjZXzjHr5A818cg6/G4nd0qgoyuv2ltsDwuLWT1D6gTfUOz0knFb6QKM/PuCy1JgPLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+Ps9BTRApZBruZj1LJqmbCNfNnDoQ8okH87l+r8SYYQ=;
+ b=nLGoRd85vtlFxSgqdNbbcMKiktl5qZm7jEtamgwCMwKKi2yfB6mRcpX/Lc0AigPzhjr2QLYLPi/rICYidgGpBK/SFl/AD/y97EVGk/F06jjEIv4++yli43naHsxNw9F9fiil7Ue8Rf5+kTewvXeBWBYTUnxzF8jWjHwDX+F3oM3Z/wuax9hKmwVlij73OPfKuSccORKz7A62+/Z7HZe/fKYz3euOutSwRIozUCG4zb/c+lOMldmqFinEZr+mMls684ZC4rx1nLSSOGObAx6O/CFUx57ggGz/jtb7JpOUwwJAJNW9/ihXXA1Nbd7eUPbtoAGA2Htzmfs5JW2raZXweQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+Received: from PH0PR08MB7889.namprd08.prod.outlook.com (2603:10b6:510:114::11)
+ by DM6PR08MB6090.namprd08.prod.outlook.com (2603:10b6:5:111::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22; Thu, 10 Mar
+ 2022 21:52:26 +0000
+Received: from PH0PR08MB7889.namprd08.prod.outlook.com
+ ([fe80::486:49b8:9b7d:31a4]) by PH0PR08MB7889.namprd08.prod.outlook.com
+ ([fe80::486:49b8:9b7d:31a4%6]) with mapi id 15.20.5038.031; Thu, 10 Mar 2022
+ 21:52:26 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
+        "Luca Porzio (lporzio)" <lporzio@micron.com>,
+        Manjong Lee <mj0123.lee@samsung.com>,
+        "david@fromorbit.com" <david@fromorbit.com>
+CC:     "hch@lst.de" <hch@lst.de>, "kbusch@kernel.org" <kbusch@kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "song@kernel.org" <song@kernel.org>,
+        "seunghwan.hyun@samsung.com" <seunghwan.hyun@samsung.com>,
+        "sookwan7.kim@samsung.com" <sookwan7.kim@samsung.com>,
+        "nanich.lee@samsung.com" <nanich.lee@samsung.com>,
+        "woosung2.lee@samsung.com" <woosung2.lee@samsung.com>,
+        "yt0928.kim@samsung.com" <yt0928.kim@samsung.com>,
+        "junho89.kim@samsung.com" <junho89.kim@samsung.com>,
+        "jisoo2146.oh@samsung.com" <jisoo2146.oh@samsung.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: RE: [EXT] Re: [PATCH 2/2] block: remove the per-bio/request write
+ hint.
+Thread-Topic: [EXT] Re: [PATCH 2/2] block: remove the per-bio/request write
+ hint.
+Thread-Index: AQHYM215J7vyu92RTE+HlI5mLBGPkay4fs0AgAALUQCAAG5ngIAABaCAgAAGyQCAACIXwA==
+Date:   Thu, 10 Mar 2022 21:52:26 +0000
+Message-ID: <PH0PR08MB7889642784B2E1FC1799A828DB0B9@PH0PR08MB7889.namprd08.prod.outlook.com>
+References: <20220306231727.GP3927073@dread.disaster.area>
+ <CGME20220309042324epcas1p111312e20f4429dc3a17172458284a923@epcas1p1.samsung.com>
+ <20220309133119.6915-1-mj0123.lee@samsung.com>
+ <CO3PR08MB797524ACBF04B861D48AF612DC0B9@CO3PR08MB7975.namprd08.prod.outlook.com>
+ <e98948ae-1709-32ef-e1e4-063be38609b1@kernel.dk>
+ <CO3PR08MB797562AAE72BC201EB951C6CDC0B9@CO3PR08MB7975.namprd08.prod.outlook.com>
+ <d477c7bf-f3a7-ccca-5472-f9cbb05b83c1@kernel.dk>
+ <c27a5ec3-f683-d2a7-d5e7-fd54d2baa278@acm.org>
+In-Reply-To: <c27a5ec3-f683-d2a7-d5e7-fd54d2baa278@acm.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_Enabled=true;
+ MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_SetDate=2022-03-10T21:36:44Z;
+ MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_Method=Standard;
+ MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_Name=Confidential;
+ MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_SiteId=f38a5ecd-2813-4862-b11b-ac1d563c806f;
+ MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_ActionId=52f5eaa8-df6e-4627-93da-eacb75075812;
+ MSIP_Label_37874100-6000-43b6-a204-2d77792600b9_ContentBits=3
+msip_label_37874100-6000-43b6-a204-2d77792600b9_enabled: true
+msip_label_37874100-6000-43b6-a204-2d77792600b9_setdate: 2022-03-10T21:52:23Z
+msip_label_37874100-6000-43b6-a204-2d77792600b9_method: Standard
+msip_label_37874100-6000-43b6-a204-2d77792600b9_name: Confidential
+msip_label_37874100-6000-43b6-a204-2d77792600b9_siteid: f38a5ecd-2813-4862-b11b-ac1d563c806f
+msip_label_37874100-6000-43b6-a204-2d77792600b9_actionid: 7aed9a78-848b-4af9-9b58-de29ec95cec1
+msip_label_37874100-6000-43b6-a204-2d77792600b9_contentbits: 0
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9cee8f6a-d76f-4665-15f9-08da02e04406
+x-ms-traffictypediagnostic: DM6PR08MB6090:EE_
+x-microsoft-antispam-prvs: <DM6PR08MB60903B368CEF3F02F2B0DEC8DB0B9@DM6PR08MB6090.namprd08.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kLZhOCgpXbh8Esj4TthwqGZD8YFPcVporeeLlJhelL6IDArSbc+uTKvx3J/rvQZjeB0oIQsuSX8Q28U5DELj0X4OabliHthdlgdg6nkzAe+fTe94AyvbFLYGQUBOmfc6PbY7l3N11roT5QXefoaCqq5ld9tolJ1e8UdV/yXsIiFd6kuUafPVK9KlkmX/bN+ZPEkXxZz1PqwQcS4kCuv6joZXfSc+Xg9DHq/NyV08thDe4iQ72NtZ1va6ZrT/NJRqNFzKECs8KqL3VaFzhdJUEkAEnJ4T6lYBuH8rZ33Pvke6cKe7yD1UiZ1t6R4bqvZVOxFGHpSUAPBJXxfc/v/udjoXhMfCt1UUbqsQGm+M2SBmHuCYJs04wtrOONp2yd5XVIBMyBXanx0HLp0r/xDcjWBZD5tMHPk2O2g2BWa5i+33x3+6hHUFrkdSpAl0l9ZGDFd+mBbfYMe8V/SmfedMaWvVzYPnRlknhDqQdGMy/1D7wI5LXqGGZkCJ4deOZ6BTuxWmY1/ksL5OX569GG9LPSMOStMmRbD9V23YYiZT/P9acS2L7LmwS/ahCPED6aM/l9R9g8IZQtZWAd8hoIgZcyfnBJ3sWOsgXrP4mtkHKfGBU0W2UUZbgphYx4D+62RMaOy3+Kx4v/tigp7yDpJoK4znQz4sC4390IFQMkHGwcam2wnqtdWYXaHo+JyQLY/8+dVatGybNElrrhLPIR7EbA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR08MB7889.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(55016003)(122000001)(38100700002)(186003)(316002)(54906003)(110136005)(71200400001)(66476007)(76116006)(66946007)(508600001)(38070700005)(83380400001)(66556008)(66446008)(64756008)(4326008)(8676002)(9686003)(86362001)(2906002)(33656002)(26005)(5660300002)(8936002)(7696005)(6506007)(7416002)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RnNUNCtaN1I5a2JMMGpRTzZ5ZjIxL0VoS2gycXFSM1cwcjVaQXFUVVVHN1Fz?=
+ =?utf-8?B?ampJcU84SnVoRmlTSnNnY3FRdmhBbVJ1TVNUMCtYVURNNzJsTGUvdlV1Qk9S?=
+ =?utf-8?B?NVZ4U0diQXFLRlRncmN6SkVFUDBjaXk0MjM3MWpTaG5GR3kxTno3S0N3ajgv?=
+ =?utf-8?B?ZkZ4cjEzN2pMRXJGaGJ2NXZucWh6b1ZpRDlCTkFnRmtEZHQ5Y2t1dm53akFT?=
+ =?utf-8?B?aWhDdlFmLzRKamc0Zk1PY2RNSlh1Y0tUbnBKQ3VxY1RnY1lNVHN0cjhTNkpi?=
+ =?utf-8?B?Z3NXRG5RSEorSHk0RnNtNzNZVXVEcDFEUW90b1kyZmovTmc2dktnQkNtN2lW?=
+ =?utf-8?B?b2F1YmhCQTA0WGdXZUVENzNISUlvNC8yeUJjN1VPcnp5Wi9HclpJdVY1RXVL?=
+ =?utf-8?B?d3Qxa3pCMVNvM1hLSy94b0xtWStwQjVoNXpFcDZEYkY3UldONGxkYzlHcngr?=
+ =?utf-8?B?UVBHaWx3aWx2ZjJLSWRPNVU0S0I2OEc1VEdWZE83c2s1QkpJNEFSS1NidjNH?=
+ =?utf-8?B?M2ZCTi9EcU0raVBsRHVUbzY2czBacHJpUjZBVlZIV2lWaW9WanVRLzBUd0VT?=
+ =?utf-8?B?U2JuS0VwSHBxVkE0VTE3cHNXNU41V3FjWGx6OWc1Q0tRclA5aXgrSFNGRitO?=
+ =?utf-8?B?eUpzUEpkeXJGSVZqbUVHUFpMb3owaXJtM2hWbFd5c3VyZFlJNmFud0I5UUtF?=
+ =?utf-8?B?alNtRmJHK2tiQ1NaSkdNczArdUdCNnlwRWlldU04ODRid05hdWxZRC9POG93?=
+ =?utf-8?B?SENNSlVuUTJXSGNvVExDN25oWW5qRU4vV2pKaExrMGYyNlo5bWg4Z3BKVGtu?=
+ =?utf-8?B?TC9sTGY3UEE3WEd3VFRRTWdVcTZRcG1tT04yTFFNaitkZk1reWhvVVNPQ0Jh?=
+ =?utf-8?B?VWdjWlN6K2Q0UWUxUWwvNkZPUk5oRkRJV2sybkhhYzQ5SVlOU2pHeHNXQUY0?=
+ =?utf-8?B?L0hHMXF5dE1aeDRiaHY3SnpQZ1pZSHVhUDg4eTRwOEp6VTFXOGpyYU8wL3BE?=
+ =?utf-8?B?TDVmR1lFSHJ5VW1yRU5wcFAvNHpyQ3RMQnVtbkJSNmlHNVdEVnlnbW81cmt1?=
+ =?utf-8?B?aTU4VHNvSC84YkZwWkZtSHUyZXZJODZMbFBnS3FlZG9WY1JObjBISVZpcmhN?=
+ =?utf-8?B?TXBrNjMwM3dGOFhQSndwY3pCR2JzK0tlWGgzaGRCNU1XOGVTd2VHdENZMDhE?=
+ =?utf-8?B?TFpQNGlwSTY3bFZMd2JjQ0dlWmxnTEdUK01qTWpnTThNWWxzWlRWenhPSnU0?=
+ =?utf-8?B?dGJhKzkzcVBhMklyK215UXNPY1ZrKzl4U09DQkRhUXRsVjVLcXdVWXNYUlhQ?=
+ =?utf-8?B?b043c3MybEJYMnBjR1VLVEdvWWh6dVRwZ2lyckMzbzM5K2xXaHVucUo1dUxk?=
+ =?utf-8?B?bVBiemFVbEVHSnVkMmx6TGQyWU9HT1hQaWduWk9xWU9ucklFWjdmMjE5UzRw?=
+ =?utf-8?B?aFNURXMwN2FrbUV5ajF1R0kzMUtnalNTa2lKbnFYWFA2eFROV1dXMjlvKzRX?=
+ =?utf-8?B?dmg5QmUrYytVekpyaDNiU01hblVDS3R6SUl6MmlZZlNxeS9ndml3Mjl2S3R0?=
+ =?utf-8?B?ZDBGTWM2TTdKM21DdCtNMmxsZWFjOStkT3hwVjZ0V1BTcjRtMUhGaEhDMlpx?=
+ =?utf-8?B?UHlPaGthbjBxbWJqV2JaU3JzSmRQcThWK3c5MUpLOTNaTExQV1BWelRrL054?=
+ =?utf-8?B?S1dCT09ReDRnWng2eDRHRzV3TmFjRWdoa0RXaGRVdEhBSTFMdVRSUTEzTGdw?=
+ =?utf-8?B?dzcrRjBHbG1aZmhPbWlycEV2ZFJ2ZFBxenFmemRuWHAyemZGQmY4RVlNemk2?=
+ =?utf-8?B?SytjM1ZXb0tmeEIxbWVNOFpkRnZHRUtHYlROdHk5QUNweWd6QVc3Z25wSG40?=
+ =?utf-8?B?T0tHK0xGZWNnYm0zQXBON1BaL0FlOHJ5S0pmMUQ4K0xCbm1mSVBRZFptSTU1?=
+ =?utf-8?Q?Im6NYVvItq5h4OArURhQPgmEaaES+Vd+?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR08MB7889.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cee8f6a-d76f-4665-15f9-08da02e04406
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2022 21:52:26.2120
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3sz5ITlPe3o8/drIAgPrU4A/xLwvQYq0LQIxkNWvE7McJ5krA0kEfhWKj+akyfbhE6hRHEHeUyzTYP18f5LKZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR08MB6090
+X-Proofpoint-GUID: X8MsiqV1gcyq3h1OwMvXoUdmAV8GFW9P
+X-Proofpoint-ORIG-GUID: X8MsiqV1gcyq3h1OwMvXoUdmAV8GFW9P
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -41,1180 +174,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add pata_parport (PARIDE replacement) core libata driver.
-
-The original paride protocol modules are used for now so allow them to
-be compiled without old PARIDE core.
-
-Signed-off-by: Ondrej Zary <linux@zary.sk>
----
- drivers/Makefile                   |   2 +-
- drivers/ata/Kconfig                |  22 +
- drivers/ata/Makefile               |   2 +
- drivers/ata/parport/Makefile       |   3 +
- drivers/ata/parport/pata_parport.c | 805 +++++++++++++++++++++++++++++
- drivers/ata/parport/pata_parport.h | 108 ++++
- drivers/block/paride/Kconfig       |  32 +-
- drivers/block/paride/paride.h      |   5 +
- 8 files changed, 962 insertions(+), 17 deletions(-)
- create mode 100644 drivers/ata/parport/Makefile
- create mode 100644 drivers/ata/parport/pata_parport.c
- create mode 100644 drivers/ata/parport/pata_parport.h
-
-diff --git a/drivers/Makefile b/drivers/Makefile
-index a110338c860c..8ec515f3614e 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -98,7 +98,7 @@ obj-$(CONFIG_DIO)		+= dio/
- obj-$(CONFIG_SBUS)		+= sbus/
- obj-$(CONFIG_ZORRO)		+= zorro/
- obj-$(CONFIG_ATA_OVER_ETH)	+= block/aoe/
--obj-$(CONFIG_PARIDE) 		+= block/paride/
-+obj-y		 		+= block/paride/
- obj-$(CONFIG_TC)		+= tc/
- obj-$(CONFIG_USB_PHY)		+= usb/
- obj-$(CONFIG_USB)		+= usb/
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index e5641e6c52ee..671c27b77a48 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -1161,6 +1161,28 @@ config PATA_WINBOND_VLB
- 	  Support for the Winbond W83759A controller on Vesa Local Bus
- 	  systems.
- 
-+config PATA_PARPORT
-+	tristate "Parallel port IDE device support"
-+	depends on PARPORT_PC && PARIDE=n
-+	help
-+	  There are many external CD-ROM and disk devices that connect through
-+	  your computer's parallel port. Most of them are actually IDE devices
-+	  using a parallel port IDE adapter. This option enables the
-+	  PATA_PARPORT subsystem which contains drivers for many of these
-+	  external drives.
-+	  Read <file:Documentation/admin-guide/blockdev/paride.rst> for more
-+	  information.
-+
-+	  If your parallel port support is in a loadable module, you must build
-+	  PATA_PARPORT as a module. If you built PATA_PARPORT support into your
-+	  kernel, you may still build the individual protocol modules
-+	  as loadable modules. Use the old PARIDE protocol modules.
-+	  If you build this support as a module, it will be called pata_parport.
-+
-+	  Unlike the old PARIDE, there are no high-level drivers needed.
-+	  The IDE devices behind parallel port adapters are handled by the
-+	  ATA layer.
-+
- comment "Generic fallback / legacy drivers"
- 
- config PATA_ACPI
-diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
-index b8aebfb14e82..171045578541 100644
---- a/drivers/ata/Makefile
-+++ b/drivers/ata/Makefile
-@@ -114,6 +114,8 @@ obj-$(CONFIG_PATA_SAMSUNG_CF)	+= pata_samsung_cf.o
- 
- obj-$(CONFIG_PATA_PXA)		+= pata_pxa.o
- 
-+obj-$(CONFIG_PATA_PARPORT)	+= parport/
-+
- # Should be last but two libata driver
- obj-$(CONFIG_PATA_ACPI)		+= pata_acpi.o
- # Should be last but one libata driver
-diff --git a/drivers/ata/parport/Makefile b/drivers/ata/parport/Makefile
-new file mode 100644
-index 000000000000..3ec4a4a66e26
---- /dev/null
-+++ b/drivers/ata/parport/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+obj-$(CONFIG_PATA_PARPORT)		+= pata_parport.o
-diff --git a/drivers/ata/parport/pata_parport.c b/drivers/ata/parport/pata_parport.c
-new file mode 100644
-index 000000000000..3ea8d824091e
---- /dev/null
-+++ b/drivers/ata/parport/pata_parport.c
-@@ -0,0 +1,805 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/parport.h>
-+#include "pata_parport.h"
-+
-+#define DRV_NAME "pata_parport"
-+
-+static DEFINE_IDR(parport_list);
-+static DEFINE_IDR(protocols);
-+static DEFINE_IDA(pata_parport_bus_dev_ids);
-+static DEFINE_MUTEX(pi_mutex);
-+
-+static bool probe = true;
-+module_param(probe, bool, 0644);
-+MODULE_PARM_DESC(probe, "Enable automatic device probing (0=off, 1=on [default])");
-+
-+static bool verbose;
-+module_param(verbose, bool, 0644);
-+MODULE_PARM_DESC(verbose, "Enable verbose messages (0=off [default], 1=on)");
-+
-+#define DISCONNECT_TIMEOUT	(HZ / 10)
-+
-+static void pi_connect(struct pi_adapter *pi)
-+{
-+	del_timer_sync(&pi->timer);
-+	if (!pi->claimed) {
-+		pi->claimed = true;
-+		parport_claim_or_block(pi->pardev);
-+		pi->proto->connect(pi);
-+	}
-+}
-+
-+static void pi_disconnect_timer(struct timer_list *t)
-+{
-+	struct pi_adapter *pi = from_timer(pi, t, timer);
-+
-+	if (pi->claimed) {
-+		pi->proto->disconnect(pi);
-+		parport_release(pi->pardev);
-+		pi->claimed = false;
-+	}
-+}
-+
-+/* functions taken from libata-sff.c and converted from direct port I/O */
-+static void pata_parport_dev_select(struct ata_port *ap, unsigned int device)
-+{
-+	struct pi_adapter *pi = ap->host->private_data;
-+	u8 tmp;
-+
-+	if (device == 0)
-+		tmp = ATA_DEVICE_OBS;
-+	else
-+		tmp = ATA_DEVICE_OBS | ATA_DEV1;
-+
-+	pi_connect(pi);
-+	pi->proto->write_regr(pi, 0, ATA_REG_DEVICE, tmp);
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+	ata_sff_pause(ap);
-+}
-+
-+static bool pata_parport_devchk(struct ata_port *ap, unsigned int device)
-+{
-+	struct pi_adapter *pi = ap->host->private_data;
-+	u8 nsect, lbal;
-+
-+	pata_parport_dev_select(ap, device);
-+
-+	pi_connect(pi);
-+	pi->proto->write_regr(pi, 0, ATA_REG_NSECT, 0x55);
-+	pi->proto->write_regr(pi, 0, ATA_REG_LBAL, 0xaa);
-+
-+	pi->proto->write_regr(pi, 0, ATA_REG_NSECT, 0xaa);
-+	pi->proto->write_regr(pi, 0, ATA_REG_LBAL, 0x55);
-+
-+	pi->proto->write_regr(pi, 0, ATA_REG_NSECT, 055);
-+	pi->proto->write_regr(pi, 0, ATA_REG_LBAL, 0xaa);
-+
-+	nsect = pi->proto->read_regr(pi, 0, ATA_REG_NSECT);
-+	lbal = pi->proto->read_regr(pi, 0, ATA_REG_LBAL);
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+
-+	if ((nsect == 0x55) && (lbal == 0xaa))
-+		return true;	/* we found a device */
-+
-+	return false;		/* nothing found */
-+}
-+
-+static int pata_parport_bus_softreset(struct ata_port *ap, unsigned int devmask,
-+				      unsigned long deadline)
-+{
-+	struct pi_adapter *pi = ap->host->private_data;
-+
-+	pi_connect(pi);
-+	/* software reset.  causes dev0 to be selected */
-+	pi->proto->write_regr(pi, 1, 6, ap->ctl);
-+	udelay(20);
-+	pi->proto->write_regr(pi, 1, 6, ap->ctl | ATA_SRST);
-+	udelay(20);
-+	pi->proto->write_regr(pi, 1, 6, ap->ctl);
-+	ap->last_ctl = ap->ctl;
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+
-+	/* wait the port to become ready */
-+	return ata_sff_wait_after_reset(&ap->link, devmask, deadline);
-+}
-+
-+static int pata_parport_softreset(struct ata_link *link, unsigned int *classes,
-+				  unsigned long deadline)
-+{
-+	struct ata_port *ap = link->ap;
-+	unsigned int devmask = 0;
-+	int rc;
-+	u8 err;
-+
-+	/* determine if device 0/1 are present */
-+	if (pata_parport_devchk(ap, 0))
-+		devmask |= (1 << 0);
-+	if (pata_parport_devchk(ap, 1))
-+		devmask |= (1 << 1);
-+
-+	/* select device 0 again */
-+	pata_parport_dev_select(ap, 0);
-+
-+	/* issue bus reset */
-+	rc = pata_parport_bus_softreset(ap, devmask, deadline);
-+	if (rc && rc != -ENODEV) {
-+		ata_link_err(link, "SRST failed (errno=%d)\n", rc);
-+		return rc;
-+	}
-+
-+	/* determine by signature whether we have ATA or ATAPI devices */
-+	classes[0] = ata_sff_dev_classify(&link->device[0],
-+					  devmask & (1 << 0), &err);
-+	if (err != 0x81)
-+		classes[1] = ata_sff_dev_classify(&link->device[1],
-+						  devmask & (1 << 1), &err);
-+
-+	return 0;
-+}
-+
-+static u8 pata_parport_check_status(struct ata_port *ap)
-+{
-+	u8 status;
-+	struct pi_adapter *pi = ap->host->private_data;
-+
-+	pi_connect(pi);
-+	status = pi->proto->read_regr(pi, 0, ATA_REG_STATUS);
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+
-+	return status;
-+}
-+
-+static u8 pata_parport_check_altstatus(struct ata_port *ap)
-+{
-+	u8 altstatus;
-+	struct pi_adapter *pi = ap->host->private_data;
-+
-+	pi_connect(pi);
-+	altstatus = pi->proto->read_regr(pi, 1, 6);
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+
-+	return altstatus;
-+}
-+
-+static void pata_parport_tf_load(struct ata_port *ap, const struct ata_taskfile *tf)
-+{
-+	struct pi_adapter *pi = ap->host->private_data;
-+
-+	pi_connect(pi);
-+	if (tf->ctl != ap->last_ctl) {
-+		pi->proto->write_regr(pi, 1, 6, tf->ctl);
-+		ap->last_ctl = tf->ctl;
-+		ata_wait_idle(ap);
-+	}
-+
-+	if (tf->flags & ATA_TFLAG_ISADDR) {
-+		if (tf->flags & ATA_TFLAG_LBA48) {
-+			pi->proto->write_regr(pi, 0, ATA_REG_FEATURE, tf->hob_feature);
-+			pi->proto->write_regr(pi, 0, ATA_REG_NSECT, tf->hob_nsect);
-+			pi->proto->write_regr(pi, 0, ATA_REG_LBAL, tf->hob_lbal);
-+			pi->proto->write_regr(pi, 0, ATA_REG_LBAM, tf->hob_lbam);
-+			pi->proto->write_regr(pi, 0, ATA_REG_LBAH, tf->hob_lbah);
-+		}
-+		pi->proto->write_regr(pi, 0, ATA_REG_FEATURE, tf->feature);
-+		pi->proto->write_regr(pi, 0, ATA_REG_NSECT, tf->nsect);
-+		pi->proto->write_regr(pi, 0, ATA_REG_LBAL, tf->lbal);
-+		pi->proto->write_regr(pi, 0, ATA_REG_LBAM, tf->lbam);
-+		pi->proto->write_regr(pi, 0, ATA_REG_LBAH, tf->lbah);
-+	}
-+
-+	if (tf->flags & ATA_TFLAG_DEVICE)
-+		pi->proto->write_regr(pi, 0, ATA_REG_DEVICE, tf->device);
-+
-+	ata_wait_idle(ap);
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+}
-+
-+static void pata_parport_tf_read(struct ata_port *ap, struct ata_taskfile *tf)
-+{
-+	struct pi_adapter *pi = ap->host->private_data;
-+
-+	pi_connect(pi);
-+	tf->status = pi->proto->read_regr(pi, 0, ATA_REG_STATUS);
-+	tf->error = pi->proto->read_regr(pi, 0, ATA_REG_ERR);
-+	tf->nsect = pi->proto->read_regr(pi, 0, ATA_REG_NSECT);
-+	tf->lbal = pi->proto->read_regr(pi, 0, ATA_REG_LBAL);
-+	tf->lbam = pi->proto->read_regr(pi, 0, ATA_REG_LBAM);
-+	tf->lbah = pi->proto->read_regr(pi, 0, ATA_REG_LBAH);
-+	tf->device = pi->proto->read_regr(pi, 0, ATA_REG_DEVICE);
-+
-+	if (tf->flags & ATA_TFLAG_LBA48) {
-+		pi->proto->write_regr(pi, 1, 6, tf->ctl | ATA_HOB);
-+		tf->hob_feature = pi->proto->read_regr(pi, 0, ATA_REG_ERR);
-+		tf->hob_nsect = pi->proto->read_regr(pi, 0, ATA_REG_NSECT);
-+		tf->hob_lbal = pi->proto->read_regr(pi, 0, ATA_REG_LBAL);
-+		tf->hob_lbam = pi->proto->read_regr(pi, 0, ATA_REG_LBAM);
-+		tf->hob_lbah = pi->proto->read_regr(pi, 0, ATA_REG_LBAH);
-+		pi->proto->write_regr(pi, 1, 6, tf->ctl);
-+		ap->last_ctl = tf->ctl;
-+	}
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+}
-+
-+static void pata_parport_exec_command(struct ata_port *ap, const struct ata_taskfile *tf)
-+{
-+	struct pi_adapter *pi = ap->host->private_data;
-+
-+	pi_connect(pi);
-+	pi->proto->write_regr(pi, 0, ATA_REG_CMD, tf->command);
-+	ata_sff_pause(ap);
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+}
-+
-+static unsigned int pata_parport_data_xfer(struct ata_queued_cmd *qc, unsigned char *buf,
-+					   unsigned int buflen, int rw)
-+{
-+	struct ata_port *ap = qc->dev->link->ap;
-+	struct pi_adapter *pi = ap->host->private_data;
-+
-+	pi_connect(pi);
-+	if (rw == READ)
-+		pi->proto->read_block(pi, buf, buflen);
-+	else
-+		pi->proto->write_block(pi, buf, buflen);
-+	mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+
-+	return buflen;
-+}
-+
-+static void pata_parport_drain_fifo(struct ata_queued_cmd *qc)
-+{
-+	int count;
-+	struct ata_port *ap;
-+	struct pi_adapter *pi;
-+	char junk[2];
-+
-+	/* We only need to flush incoming data when a command was running */
-+	if (qc == NULL || qc->dma_dir == DMA_TO_DEVICE)
-+		return;
-+
-+	ap = qc->ap;
-+	pi = ap->host->private_data;
-+	/* Drain up to 64K of data before we give up this recovery method */
-+	for (count = 0; (pata_parport_check_status(ap) & ATA_DRQ)
-+						&& count < 65536; count += 2) {
-+		pi_connect(pi);
-+		pi->proto->read_block(pi, junk, 2);
-+		mod_timer(&pi->timer, jiffies + DISCONNECT_TIMEOUT);
-+	}
-+
-+	if (count)
-+		ata_port_dbg(ap, "drained %d bytes to clear DRQ\n", count);
-+}
-+
-+static void pata_parport_lost_interrupt(struct ata_port *ap)
-+{
-+	u8 status;
-+	struct ata_queued_cmd *qc;
-+
-+	/* Only one outstanding command per SFF channel */
-+	qc = ata_qc_from_tag(ap, ap->link.active_tag);
-+	/* We cannot lose an interrupt on a non-existent or polled command */
-+	if (!qc || qc->tf.flags & ATA_TFLAG_POLLING)
-+		return;
-+	/*
-+	 * See if the controller thinks it is still busy - if so the command
-+	 * isn't a lost IRQ but is still in progress
-+	 */
-+	status = pata_parport_check_altstatus(ap);
-+	if (status & ATA_BUSY)
-+		return;
-+
-+	/*
-+	 * There was a command running, we are no longer busy and we have
-+	 * no interrupt.
-+	 */
-+	ata_port_warn(ap, "lost interrupt (Status 0x%x)\n", status);
-+	/* Run the host interrupt logic as if the interrupt had not been lost */
-+	ata_sff_port_intr(ap, qc);
-+}
-+
-+static struct ata_port_operations pata_parport_port_ops = {
-+	.inherits		= &ata_sff_port_ops,
-+
-+	.softreset		= pata_parport_softreset,
-+	.hardreset		= NULL,
-+
-+	.sff_dev_select		= pata_parport_dev_select,
-+	.sff_check_status	= pata_parport_check_status,
-+	.sff_check_altstatus	= pata_parport_check_altstatus,
-+	.sff_tf_load		= pata_parport_tf_load,
-+	.sff_tf_read		= pata_parport_tf_read,
-+	.sff_exec_command	= pata_parport_exec_command,
-+	.sff_data_xfer		= pata_parport_data_xfer,
-+	.sff_drain_fifo		= pata_parport_drain_fifo,
-+
-+	.lost_interrupt		= pata_parport_lost_interrupt,
-+};
-+
-+static const struct ata_port_info pata_parport_port_info = {
-+	.flags		= ATA_FLAG_SLAVE_POSS | ATA_FLAG_PIO_POLLING,
-+	.pio_mask	= ATA_PIO0,
-+	/* No DMA */
-+	.port_ops	= &pata_parport_port_ops,
-+};
-+
-+static void pi_release(struct pi_adapter *pi)
-+{
-+	parport_unregister_device(pi->pardev);
-+	if (pi->proto->release_proto)
-+		pi->proto->release_proto(pi);
-+	module_put(pi->proto->owner);
-+}
-+
-+static int default_test_proto(struct pi_adapter *pi, char *scratch)
-+{
-+	int j, k;
-+	int e[2] = { 0, 0 };
-+
-+	pi->proto->connect(pi);
-+
-+	for (j = 0; j < 2; j++) {
-+		pi->proto->write_regr(pi, 0, 6, 0xa0 + j * 0x10);
-+		for (k = 0; k < 256; k++) {
-+			pi->proto->write_regr(pi, 0, 2, k ^ 0xaa);
-+			pi->proto->write_regr(pi, 0, 3, k ^ 0x55);
-+			if (pi->proto->read_regr(pi, 0, 2) != (k ^ 0xaa))
-+				e[j]++;
-+		}
-+	}
-+	pi->proto->disconnect(pi);
-+
-+	if (verbose)
-+		dev_info(&pi->dev, "%s: port 0x%x, mode %d, test=(%d,%d)\n",
-+		       pi->proto->name, pi->port,
-+		       pi->mode, e[0], e[1]);
-+
-+	return e[0] && e[1];	/* not here if both > 0 */
-+}
-+
-+static int pi_test_proto(struct pi_adapter *pi, char *scratch)
-+{
-+	int res;
-+
-+	parport_claim_or_block(pi->pardev);
-+	if (pi->proto->test_proto)
-+		res = pi->proto->test_proto(pi, scratch, verbose);
-+	else
-+		res = default_test_proto(pi, scratch);
-+	parport_release(pi->pardev);
-+
-+	return res;
-+}
-+
-+static bool pi_probe_mode(struct pi_adapter *pi, int max, char *scratch)
-+{
-+	int best, range;
-+
-+	if (pi->mode != -1) {
-+		if (pi->mode >= max)
-+			return false;
-+		range = 3;
-+		if (pi->mode >= pi->proto->epp_first)
-+			range = 8;
-+		if (range == 8 && pi->port % 8)
-+			return false;
-+		return !pi_test_proto(pi, scratch);
-+	}
-+	best = -1;
-+	for (pi->mode = 0; pi->mode < max; pi->mode++) {
-+		range = 3;
-+		if (pi->mode >= pi->proto->epp_first)
-+			range = 8;
-+		if (range == 8 && pi->port % 8)
-+			break;
-+		if (!pi_test_proto(pi, scratch))
-+			best = pi->mode;
-+	}
-+	pi->mode = best;
-+	return best > -1;
-+}
-+
-+static bool pi_probe_unit(struct pi_adapter *pi, int unit, char *scratch)
-+{
-+	int max, s, e;
-+
-+	s = unit;
-+	e = s + 1;
-+
-+	if (s == -1) {
-+		s = 0;
-+		e = pi->proto->max_units;
-+	}
-+
-+	if (pi->proto->test_port) {
-+		parport_claim_or_block(pi->pardev);
-+		max = pi->proto->test_port(pi);
-+		parport_release(pi->pardev);
-+	} else {
-+		max = pi->proto->max_mode;
-+	}
-+
-+	if (pi->proto->probe_unit) {
-+		parport_claim_or_block(pi->pardev);
-+		for (pi->unit = s; pi->unit < e; pi->unit++) {
-+			if (pi->proto->probe_unit(pi)) {
-+				parport_release(pi->pardev);
-+				return pi_probe_mode(pi, max, scratch);
-+			}
-+		}
-+		parport_release(pi->pardev);
-+		return false;
-+	}
-+
-+	return pi_probe_mode(pi, max, scratch);
-+}
-+
-+static void pata_parport_dev_release(struct device *dev)
-+{
-+	struct pi_adapter *pi = container_of(dev, struct pi_adapter, dev);
-+
-+	kfree(pi);
-+}
-+
-+static void pata_parport_bus_release(struct device *dev)
-+{
-+	/* nothing to do here but required to avoid warning on device removal */
-+}
-+
-+static struct bus_type pata_parport_bus_type = {
-+	.name = DRV_NAME,
-+};
-+
-+static struct device pata_parport_bus = {
-+	.init_name = DRV_NAME,
-+	.release = pata_parport_bus_release,
-+};
-+
-+/* temporary for old paride protocol modules */
-+static struct scsi_host_template pata_parport_sht = {
-+	PATA_PARPORT_SHT("pata_parport")
-+};
-+
-+static struct pi_adapter *pi_init_one(struct parport *parport,
-+			struct pi_protocol *pr, int mode, int unit, int delay)
-+{
-+	struct pardev_cb par_cb = { };
-+	char scratch[512];
-+	const struct ata_port_info *ppi[] = { &pata_parport_port_info };
-+	struct ata_host *host;
-+	struct pi_adapter *pi;
-+
-+	pi = kzalloc(sizeof(struct pi_adapter), GFP_KERNEL);
-+	if (!pi)
-+		return NULL;
-+
-+	/* set up pi->dev before pi_probe_unit() so it can use dev_printk() */
-+	pi->dev.parent = &pata_parport_bus;
-+	pi->dev.bus = &pata_parport_bus_type;
-+	pi->dev.driver = &pr->driver;
-+	pi->dev.release = pata_parport_dev_release;
-+	pi->dev.id = ida_alloc(&pata_parport_bus_dev_ids, GFP_KERNEL);
-+	if (pi->dev.id < 0)
-+		return NULL; /* pata_parport_dev_release will do kfree(pi) */
-+	dev_set_name(&pi->dev, "pata_parport.%u", pi->dev.id);
-+	if (device_register(&pi->dev)) {
-+		put_device(&pi->dev);
-+		goto out_ida_free;
-+	}
-+
-+	pi->proto = pr;
-+
-+	if (!try_module_get(pi->proto->owner))
-+		goto out_unreg_dev;
-+	if (pi->proto->init_proto && pi->proto->init_proto(pi) < 0)
-+		goto out_module_put;
-+
-+	pi->delay = (delay == -1) ? pi->proto->default_delay : delay;
-+	pi->mode = mode;
-+	pi->port = parport->base;
-+
-+	par_cb.private = pi;
-+	pi->pardev = parport_register_dev_model(parport, dev_name(&pi->dev),
-+						&par_cb, pi->dev.id);
-+	if (!pi->pardev)
-+		goto out_module_put;
-+
-+	if (!pi_probe_unit(pi, unit, scratch)) {
-+		dev_info(&pi->dev, "Adapter not found\n");
-+		goto out_unreg_parport;
-+	}
-+
-+	pi->proto->log_adapter(pi, scratch, verbose);
-+
-+	host = ata_host_alloc_pinfo(&pi->dev, ppi, 1);
-+	if (!host)
-+		goto out_unreg_parport;
-+	dev_set_drvdata(&pi->dev, host);
-+	host->private_data = pi;
-+
-+	ata_port_desc(host->ports[0], "port %s", pi->pardev->port->name);
-+	ata_port_desc(host->ports[0], "protocol %s", pi->proto->name);
-+
-+	timer_setup(&pi->timer, pi_disconnect_timer, 0);
-+
-+	if (ata_host_activate(host, 0, NULL, 0, &pata_parport_sht))
-+		goto out_unreg_parport;
-+
-+	return pi;
-+
-+out_unreg_parport:
-+	parport_unregister_device(pi->pardev);
-+	if (pi->proto->release_proto)
-+		pi->proto->release_proto(pi);
-+out_module_put:
-+	module_put(pi->proto->owner);
-+out_unreg_dev:
-+	device_unregister(&pi->dev);
-+out_ida_free:
-+	ida_free(&pata_parport_bus_dev_ids, pi->dev.id);
-+	return NULL;
-+}
-+
-+int pata_parport_register_driver(struct pi_protocol *pr)
-+{
-+	int error;
-+	struct parport *parport;
-+	int port_num;
-+
-+	pr->driver.bus = &pata_parport_bus_type;
-+	pr->driver.name = pr->name;
-+	error = driver_register(&pr->driver);
-+	if (error)
-+		return error;
-+
-+	mutex_lock(&pi_mutex);
-+	error = idr_alloc(&protocols, pr, 0, 0, GFP_KERNEL);
-+	if (error < 0) {
-+		driver_unregister(&pr->driver);
-+		mutex_unlock(&pi_mutex);
-+		return error;
-+	}
-+
-+	pr_info("pata_parport: protocol %s registered\n", pr->name);
-+
-+	if (probe) {
-+		/* probe all parports using this protocol */
-+		idr_for_each_entry(&parport_list, parport, port_num)
-+			pi_init_one(parport, pr, -1, 0, -1);
-+	}
-+	mutex_unlock(&pi_mutex);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(pata_parport_register_driver);
-+
-+void pata_parport_unregister_driver(struct pi_protocol *pr)
-+{
-+	struct pi_protocol *pr_iter;
-+	int id = -1;
-+
-+	mutex_lock(&pi_mutex);
-+	idr_for_each_entry(&protocols, pr_iter, id) {
-+		if (pr_iter == pr)
-+			break;
-+	}
-+	idr_remove(&protocols, id);
-+	mutex_unlock(&pi_mutex);
-+	driver_unregister(&pr->driver);
-+}
-+EXPORT_SYMBOL(pata_parport_unregister_driver);
-+
-+static ssize_t new_device_store(struct bus_type *bus, const char *buf, size_t count)
-+{
-+	char port[12] = "auto";
-+	char protocol[8] = "auto";
-+	int mode = -1, unit = -1, delay = -1;
-+	struct pi_protocol *pr, *pr_wanted;
-+	struct device_driver *drv;
-+	struct parport *parport;
-+	int port_num, port_wanted, pr_num;
-+	bool ok = false;
-+
-+	if (sscanf(buf, "%11s %7s %d %d %d",
-+			port, protocol, &mode, &unit, &delay) < 1)
-+		return -EINVAL;
-+
-+	if (sscanf(port, "parport%u", &port_wanted) < 1) {
-+		if (!strcmp(port, "auto")) {
-+			port_wanted = -1;
-+		} else {
-+			pr_err("invalid port name %s\n", port);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	drv = driver_find(protocol, &pata_parport_bus_type);
-+	if (!drv) {
-+		if (!strcmp(protocol, "auto")) {
-+			pr_wanted = NULL;
-+		} else {
-+			pr_err("protocol %s not found\n", protocol);
-+			return -EINVAL;
-+		}
-+	} else {
-+		pr_wanted = container_of(drv, struct pi_protocol, driver);
-+	}
-+
-+	mutex_lock(&pi_mutex);
-+	/* walk all parports */
-+	idr_for_each_entry(&parport_list, parport, port_num) {
-+		if (port_num == port_wanted || port_wanted == -1) {
-+			parport = parport_find_number(port_num);
-+			if (!parport) {
-+				pr_err("no such port %s\n", port);
-+				mutex_unlock(&pi_mutex);
-+				return -ENODEV;
-+			}
-+			/* walk all protocols */
-+			idr_for_each_entry(&protocols, pr, pr_num) {
-+				if (pr == pr_wanted || !pr_wanted)
-+					if (pi_init_one(parport, pr, mode, unit,
-+							delay))
-+						ok = true;
-+			}
-+			parport_put_port(parport);
-+		}
-+	}
-+	mutex_unlock(&pi_mutex);
-+	if (!ok)
-+		return -ENODEV;
-+
-+	return count;
-+}
-+static BUS_ATTR_WO(new_device);
-+
-+static void pi_remove_one(struct device *dev)
-+{
-+	struct ata_host *host = dev_get_drvdata(dev);
-+	struct pi_adapter *pi = host->private_data;
-+
-+	ata_host_detach(host);
-+	del_timer_sync(&pi->timer);
-+	if (pi->claimed) {
-+		pi->proto->disconnect(pi);
-+		parport_release(pi->pardev);
-+	}
-+	pi_release(pi);
-+	device_unregister(dev);
-+	ida_free(&pata_parport_bus_dev_ids, dev->id);
-+	/* pata_parport_dev_release will do kfree(pi) */
-+}
-+
-+static ssize_t delete_device_store(struct bus_type *bus, const char *buf, size_t count)
-+{
-+	struct device *dev;
-+	char device_name[32];
-+
-+	if (sscanf(buf, "%31s", device_name) < 1)
-+		return -EINVAL;
-+
-+	mutex_lock(&pi_mutex);
-+	dev = bus_find_device_by_name(bus, NULL, device_name);
-+	if (!dev) {
-+		mutex_unlock(&pi_mutex);
-+		return -ENODEV;
-+	}
-+
-+	pi_remove_one(dev);
-+	mutex_unlock(&pi_mutex);
-+
-+	return count;
-+}
-+static BUS_ATTR_WO(delete_device);
-+
-+static void pata_parport_attach(struct parport *port)
-+{
-+	struct pi_protocol *pr;
-+	int pr_num, id;
-+
-+	mutex_lock(&pi_mutex);
-+	id = idr_alloc(&parport_list, port, port->number, port->number, GFP_KERNEL);
-+	if (id < 0) {
-+		mutex_unlock(&pi_mutex);
-+		return;
-+	}
-+
-+	if (probe) {
-+		/* probe this port using all protocols */
-+		idr_for_each_entry(&protocols, pr, pr_num)
-+			pi_init_one(port, pr, -1, 0, -1);
-+	}
-+	mutex_unlock(&pi_mutex);
-+}
-+
-+static int pi_remove_port(struct device *dev, void *p)
-+{
-+	struct ata_host *host = dev_get_drvdata(dev);
-+	struct pi_adapter *pi = host->private_data;
-+
-+	if (pi->pardev->port == p)
-+		pi_remove_one(dev);
-+
-+	return 0;
-+}
-+
-+static void pata_parport_detach(struct parport *port)
-+{
-+	mutex_lock(&pi_mutex);
-+	bus_for_each_dev(&pata_parport_bus_type, NULL, port, pi_remove_port);
-+	idr_remove(&parport_list, port->number);
-+	mutex_unlock(&pi_mutex);
-+}
-+
-+static struct parport_driver pata_parport_driver = {
-+	.name = DRV_NAME,
-+	.match_port = pata_parport_attach,
-+	.detach = pata_parport_detach,
-+	.devmodel = true,
-+};
-+
-+static __init int pata_parport_init(void)
-+{
-+	int error;
-+
-+	error = bus_register(&pata_parport_bus_type);
-+	if (error) {
-+		pr_err("failed to register pata_parport bus, error: %d\n", error);
-+		return error;
-+	}
-+
-+	error = device_register(&pata_parport_bus);
-+	if (error) {
-+		pr_err("failed to register pata_parport bus, error: %d\n", error);
-+		goto out_unregister_bus;
-+	}
-+
-+	error = bus_create_file(&pata_parport_bus_type, &bus_attr_new_device);
-+	if (error) {
-+		pr_err("unable to create sysfs file, error: %d\n", error);
-+		goto out_unregister_dev;
-+	}
-+
-+	error = bus_create_file(&pata_parport_bus_type, &bus_attr_delete_device);
-+	if (error) {
-+		pr_err("unable to create sysfs file, error: %d\n", error);
-+		goto out_remove_new;
-+	}
-+
-+	error = parport_register_driver(&pata_parport_driver);
-+	if (error) {
-+		pr_err("unable to register parport driver, error: %d\n", error);
-+		goto out_remove_del;
-+	}
-+
-+	return 0;
-+
-+out_remove_del:
-+	bus_remove_file(&pata_parport_bus_type, &bus_attr_delete_device);
-+out_remove_new:
-+	bus_remove_file(&pata_parport_bus_type, &bus_attr_new_device);
-+out_unregister_dev:
-+	device_unregister(&pata_parport_bus);
-+out_unregister_bus:
-+	bus_unregister(&pata_parport_bus_type);
-+	return error;
-+}
-+
-+static __exit void pata_parport_exit(void)
-+{
-+	parport_unregister_driver(&pata_parport_driver);
-+	bus_remove_file(&pata_parport_bus_type, &bus_attr_new_device);
-+	bus_remove_file(&pata_parport_bus_type, &bus_attr_delete_device);
-+	device_unregister(&pata_parport_bus);
-+	bus_unregister(&pata_parport_bus_type);
-+}
-+
-+MODULE_AUTHOR("Ondrej Zary");
-+MODULE_DESCRIPTION("driver for parallel port ATA adapters");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("paride");
-+
-+module_init(pata_parport_init);
-+module_exit(pata_parport_exit);
-diff --git a/drivers/ata/parport/pata_parport.h b/drivers/ata/parport/pata_parport.h
-new file mode 100644
-index 000000000000..d8d45f8bc742
---- /dev/null
-+++ b/drivers/ata/parport/pata_parport.h
-@@ -0,0 +1,108 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ *	pata_parport.h	(c) 1997-8  Grant R. Guenther <grant@torque.net>
-+ *				    Under the terms of the GPL.
-+ *
-+ * This file defines the interface for parallell port IDE adapter chip drivers.
-+ */
-+
-+#include <linux/libata.h>
-+
-+#define PI_PCD	1	/* dummy for paride protocol modules */
-+
-+struct pi_adapter {
-+	struct device dev;
-+	struct pi_protocol *proto;	/* adapter protocol */
-+	int port;			/* base address of parallel port */
-+	int mode;			/* transfer mode in use */
-+	int delay;			/* adapter delay setting */
-+	int devtype;			/* dummy for paride protocol modules */
-+	char *device;			/* dummy for paride protocol modules */
-+	int unit;			/* unit number for chained adapters */
-+	int saved_r0;			/* saved port state */
-+	int saved_r2;			/* saved port state */
-+	unsigned long private;		/* for protocol module */
-+	struct pardevice *pardev;	/* pointer to pardevice */
-+	bool claimed;			/* parport has already been claimed */
-+	struct timer_list timer;	/* disconnect timer */
-+};
-+
-+typedef struct pi_adapter PIA;	/* for paride protocol modules */
-+
-+/* registers are addressed as (cont,regr)
-+ *	cont: 0 for command register file, 1 for control register(s)
-+ *	regr: 0-7 for register number.
-+ */
-+
-+/* macros and functions exported to the protocol modules */
-+#define delay_p			(pi->delay ? udelay(pi->delay) : (void)0)
-+#define out_p(offs, byte)	do { outb(byte, pi->port + offs); delay_p; } while (0)
-+#define in_p(offs)		(delay_p, inb(pi->port + offs))
-+
-+#define w0(byte)		out_p(0, byte)
-+#define r0()			(in_p(0) & 0xff)
-+#define w1(byte)		out_p(1, byte)
-+#define r1()			(in_p(1) & 0xff)
-+#define w2(byte)		out_p(2, byte)
-+#define r2()			(in_p(2) & 0xff)
-+#define w3(byte)		out_p(3, byte)
-+#define w4(byte)		out_p(4, byte)
-+#define r4()			(in_p(4) & 0xff)
-+#define w4w(data)		do { outw(data, pi->port + 4); delay_p; } while (0)
-+#define w4l(data)		do { outl(data, pi->port + 4); delay_p; } while (0)
-+#define r4w()			(delay_p, inw(pi->port + 4) & 0xffff)
-+#define r4l()			(delay_p, inl(pi->port + 4) & 0xffffffff)
-+
-+static inline u16 pi_swab16(char *b, int k)
-+{
-+	union { u16 u; char t[2]; } r;
-+
-+	r.t[0] = b[2 * k + 1]; r.t[1] = b[2 * k];
-+	return r.u;
-+}
-+
-+static inline u32 pi_swab32(char *b, int k)
-+{
-+	union { u32 u; char f[4]; } r;
-+
-+	r.f[0] = b[4 * k + 1]; r.f[1] = b[4 * k];
-+	r.f[2] = b[4 * k + 3]; r.f[3] = b[4 * k + 2];
-+	return r.u;
-+}
-+
-+struct pi_protocol {
-+	char name[8];
-+
-+	int max_mode;
-+	int epp_first;		/* modes >= this use 8 ports */
-+
-+	int default_delay;
-+	int max_units;		/* max chained units probed for */
-+
-+	void (*write_regr)(struct pi_adapter *pi, int cont, int regr, int val);
-+	int (*read_regr)(struct pi_adapter *pi, int cont, int regr);
-+	void (*write_block)(struct pi_adapter *pi, char *buf, int count);
-+	void (*read_block)(struct pi_adapter *pi, char *buf, int count);
-+
-+	void (*connect)(struct pi_adapter *pi);
-+	void (*disconnect)(struct pi_adapter *pi);
-+
-+	int (*test_port)(struct pi_adapter *pi);
-+	int (*probe_unit)(struct pi_adapter *pi);
-+	int (*test_proto)(struct pi_adapter *pi, char *scratch, int verbose);
-+	void (*log_adapter)(struct pi_adapter *pi, char *scratch, int verbose);
-+
-+	int (*init_proto)(struct pi_adapter *pi);
-+	void (*release_proto)(struct pi_adapter *pi);
-+	struct module *owner;
-+	struct device_driver driver;
-+	struct scsi_host_template sht;
-+};
-+
-+#define PATA_PARPORT_SHT ATA_PIO_SHT
-+
-+int pata_parport_register_driver(struct pi_protocol *pr);
-+void pata_parport_unregister_driver(struct pi_protocol *pr);
-+/* defines for old paride protocol modules */
-+#define paride_register pata_parport_register_driver
-+#define paride_unregister pata_parport_unregister_driver
-diff --git a/drivers/block/paride/Kconfig b/drivers/block/paride/Kconfig
-index a295634597ba..01e4ef3655c1 100644
---- a/drivers/block/paride/Kconfig
-+++ b/drivers/block/paride/Kconfig
-@@ -92,11 +92,11 @@ config PARIDE_PG
- 	  later fully support this driver.
- 
- comment "Parallel IDE protocol modules"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 
- config PARIDE_ATEN
- 	tristate "ATEN EH-100 protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the ATEN EH-100 parallel port IDE
- 	  protocol. This protocol is used in some inexpensive low performance
-@@ -109,7 +109,7 @@ config PARIDE_ATEN
- 
- config PARIDE_BPCK
- 	tristate "MicroSolutions backpack (Series 5) protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the Micro Solutions BACKPACK
- 	  parallel port Series 5 IDE protocol.  (Most BACKPACK drives made
-@@ -127,7 +127,7 @@ config PARIDE_BPCK
- 
- config PARIDE_BPCK6
- 	tristate "MicroSolutions backpack (Series 6) protocol"
--	depends on PARIDE && !64BIT
-+	depends on (PARIDE || PATA_PARPORT) && !64BIT
- 	help
- 	  This option enables support for the Micro Solutions BACKPACK
- 	  parallel port Series 6 IDE protocol.  (Most BACKPACK drives made
-@@ -146,7 +146,7 @@ config PARIDE_BPCK6
- 
- config PARIDE_COMM
- 	tristate "DataStor Commuter protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the Commuter parallel port IDE
- 	  protocol from DataStor. If you chose to build PARIDE support
-@@ -157,7 +157,7 @@ config PARIDE_COMM
- 
- config PARIDE_DSTR
- 	tristate "DataStor EP-2000 protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the EP-2000 parallel port IDE
- 	  protocol from DataStor. If you chose to build PARIDE support
-@@ -168,7 +168,7 @@ config PARIDE_DSTR
- 
- config PARIDE_FIT2
- 	tristate "FIT TD-2000 protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the TD-2000 parallel port IDE
- 	  protocol from Fidelity International Technology. This is a simple
-@@ -181,7 +181,7 @@ config PARIDE_FIT2
- 
- config PARIDE_FIT3
- 	tristate "FIT TD-3000 protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the TD-3000 parallel port IDE
- 	  protocol from Fidelity International Technology. This protocol is
-@@ -194,7 +194,7 @@ config PARIDE_FIT3
- 
- config PARIDE_EPAT
- 	tristate "Shuttle EPAT/EPEZ protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the EPAT parallel port IDE protocol.
- 	  EPAT is a parallel port IDE adapter manufactured by Shuttle
-@@ -216,7 +216,7 @@ config PARIDE_EPATC8
- 
- config PARIDE_EPIA
- 	tristate "Shuttle EPIA protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the (obsolete) EPIA parallel port
- 	  IDE protocol from Shuttle Technology. This adapter can still be
-@@ -228,7 +228,7 @@ config PARIDE_EPIA
- 
- config PARIDE_FRIQ
- 	tristate "Freecom IQ ASIC-2 protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for version 2 of the Freecom IQ parallel
- 	  port IDE adapter.  This adapter is used by the Maxell Superdisk
-@@ -240,7 +240,7 @@ config PARIDE_FRIQ
- 
- config PARIDE_FRPW
- 	tristate "FreeCom power protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the Freecom power parallel port IDE
- 	  protocol. If you chose to build PARIDE support into your kernel, you
-@@ -251,7 +251,7 @@ config PARIDE_FRPW
- 
- config PARIDE_KBIC
- 	tristate "KingByte KBIC-951A/971A protocols"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the KBIC-951A and KBIC-971A parallel
- 	  port IDE protocols from KingByte Information Corp. KingByte's
-@@ -264,7 +264,7 @@ config PARIDE_KBIC
- 
- config PARIDE_KTTI
- 	tristate "KT PHd protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the "PHd" parallel port IDE protocol
- 	  from KT Technology. This is a simple (low speed) adapter that is
-@@ -277,7 +277,7 @@ config PARIDE_KTTI
- 
- config PARIDE_ON20
- 	tristate "OnSpec 90c20 protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the (obsolete) 90c20 parallel port
- 	  IDE protocol from OnSpec (often marketed under the ValuStore brand
-@@ -289,7 +289,7 @@ config PARIDE_ON20
- 
- config PARIDE_ON26
- 	tristate "OnSpec 90c26 protocol"
--	depends on PARIDE
-+	depends on PARIDE || PATA_PARPORT
- 	help
- 	  This option enables support for the 90c26 parallel port IDE protocol
- 	  from OnSpec Electronics (often marketed under the ValuStore brand
-diff --git a/drivers/block/paride/paride.h b/drivers/block/paride/paride.h
-index ddb9e589da7f..f3bd01a9c9ec 100644
---- a/drivers/block/paride/paride.h
-+++ b/drivers/block/paride/paride.h
-@@ -1,3 +1,7 @@
-+#if IS_ENABLED(CONFIG_PATA_PARPORT)
-+#include "../../ata/parport/pata_parport.h"
-+
-+#else
- #ifndef __DRIVERS_PARIDE_H__
- #define __DRIVERS_PARIDE_H__
- 
-@@ -170,3 +174,4 @@ void pi_unregister_driver(void *);
- 
- #endif /* __DRIVERS_PARIDE_H__ */
- /* end of paride.h */
-+#endif /* IS_ENABLED(CONFIG_PATA_PARPORT) */
--- 
-Ondrej Zary
-
+TWljcm9uIENvbmZpZGVudGlhbA0KDQo+ID4+DQo+ID4+Pg0KPiA+Pj4gWW91IGRvIGJvdGggcmVh
+bGl6ZSB0aGF0IHRoaXMgaXMganVzdCB0aGUgZmlsZSBzcGVjaWZpYyBoaW50PyBJbm9kZQ0KPiA+
+Pj4gYmFzZWQgaGludHMgd2lsbCBzdGlsbCB3b3JrIGZpbmUgZm9yIFVGUy4NCj4gPj4+DQo+ID4+
+PiAtLQ0KPiA+Pj4gSmVucyBBeGJvZQ0KPiA+Pg0KPiA+PiBKZW5zLA0KPiA+Pg0KPiA+PiBUaGFu
+a3MgZm9yIHRoaXMgcmVwbHkuDQo+ID4+DQo+ID4+IFRoaXMgd2hvbGUgcGF0Y2ggc2VyaWVzIHJl
+bW92ZXMgc3VwcG9ydCBmb3IgcGVyLWJpbyB3cml0ZV9oaW50Lg0KPiA+PiBXaXRob3V0IGJpbyB3
+cml0ZV9oaW50LCBGMkZTIHdvbid0IGJlIGFibGUgdG8gY2FzY2FkZSBIb3QvV2FybS9Db2xkDQo+
+ID4+IGluZm9ybWF0aW9uIHRvIFNDU0kgLyBVRlMgZHJpdmVyLg0KPiA+Pg0KPiA+PiBUaGlzIGlz
+IG15IGN1cnJlbnQgdW5kZXJzdGFuZGluZy4gSSBtaWdodCBiZSB3cm9uZyBidXQgSSBkb24ndCB0
+aGluaw0KPiA+PiB3ZSBBcmUgY29uY2VybmVkIHdpdGggaW5vZGUgaGludCAoYXMgd2VsbCBhcyBm
+aWxlIGhpbnRzKS4NCj4gPg0KPiA+IEJ1dCB1ZnMvc2NzaSBkb2Vzbid0IHVzZSBpdCBpbiBtYWlu
+bGluZSwgYXMgZmFyIGFzIEkgY2FuIHRlbGwuIFNvIGhvdw0KPiA+IGRvZXMgdGhhdCB3b3JrPw0K
+PiANCj4gSGkgTHVjYSwNCj4gDQo+IEknbSBub3QgYXdhcmUgb2YgYW55IEFuZHJvaWQgYnJhbmNo
+IG9uIHdoaWNoIHRoZSBVRlMgZHJpdmVyIG9yIHRoZSBTQ1NJIGNvcmUNCj4gdXNlcyBiaV93cml0
+ZV9oaW50IG9yIHRoZSBzdHJ1Y3QgcmVxdWVzdCB3cml0ZV9oaW50IG1lbWJlci4gRGlkIEkgcGVy
+aGFwcw0KPiBvdmVybG9vayBzb21ldGhpbmc/DQo+IA0KPiBUaGFua3MsDQo+IA0KDQoNCkJhcnQs
+DQoNClllcywgaW4gdXBzdHJlYW0gbGludXggYW5kIHVwc3RyZWFtIGFuZHJvaWQsIHRoZXJlIGlz
+IG5vIHN1Y2ggY29kZS4gQnV0IGFzIHdlIGtub3csDQptb2JpbGUgY3VzdG9tZXJzIGhhdmUgdXNl
+ZCBiaW8tPmJpX3dyaXRlX2hpbnQgaW4gdGhlaXIgcHJvZHVjdHMgZm9yIHllYXJzLiBBbmQgdGhl
+DQpncm91cCBJRCBpcyBzZXQgYWNjb3JkaW5nIHRvIGJpby0+Ymlfd3JpdGVfaGludCBiZWZvcmUg
+cGFzc2luZyB0aGUgQ0RCIHRvIFVGUy4NCg0KDQoJbHJicCA9ICZoYmEtPmxyYlt0YWddOw0KIA0K
+ICAgICAgICAgICAgICBXQVJOX09OKGxyYnAtPmNtZCk7DQogICAgICAgICAgICAgKyBpZihjbWQt
+PmNtbmRbMF0gPT0gV1JJVEVfMTApDQogICAgICAgICAgICAgICt7DQogICAgICAgICAgICAgICAg
+KyAgICAgICAgICAgICBjbWQtPmNtbmRbNl0gPSAoMHgxZiYgY21kLT5yZXF1ZXN0LT5iaW8tPmJp
+X3dyaXRlX2hpbnQpOw0KICAgICAgICAgICAgICArfSAgICAgICAgICAgICANCiAgICAgICAgICAg
+ICAgbHJicC0+Y21kID0gY21kOw0KICAgICAgICAgICAgICBscmJwLT5zZW5zZV9idWZmbGVuID0g
+VUZTX1NFTlNFX1NJWkU7DQogICAgICAgICAgICAgIGxyYnAtPnNlbnNlX2J1ZmZlciA9IGNtZC0+
+c2Vuc2VfYnVmZmVyOw0KDQpJIGRvbid0IGtub3cgd2h5IHRoZXkgZG9uJ3QgcHVzaCB0aGVzZSBj
+aGFuZ2VzIHRvIHRoZSBjb21tdW5pdHksIG1heWJlDQppdCdzIGJlY2F1c2UgY2hhbmdlcyBhY3Jv
+c3MgdGhlIGZpbGUgc3lzdGVtIGFuZCBibG9jayBsYXllcnMgYXJlIHVuYWNjZXB0YWJsZSB0byB0
+aGUNCmJsb2NrIGxheWVyIGFuZCBGUy4gYnV0IGZvciBzdXJlIHdlIHNob3VsZCBub3cgd2FybiB0
+aGVtIHRvIHB1c2ggdG8gdGhlDQpjb21tdW5pdHkgYXMgc29vbiBhcyBwb3NzaWJsZS4gDQoNCkJl
+YW4NCg0KDQoNCk1pY3JvbiBDb25maWRlbnRpYWwNCg==
