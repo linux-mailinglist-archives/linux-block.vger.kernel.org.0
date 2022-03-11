@@ -2,100 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70C3A4D56D4
-	for <lists+linux-block@lfdr.de>; Fri, 11 Mar 2022 01:38:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA3DF4D56F0
+	for <lists+linux-block@lfdr.de>; Fri, 11 Mar 2022 01:49:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237803AbiCKAjc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Mar 2022 19:39:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46206 "EHLO
+        id S241013AbiCKAuM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Mar 2022 19:50:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236698AbiCKAjb (ORCPT
+        with ESMTP id S235560AbiCKAuJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Mar 2022 19:39:31 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415FB506F3
-        for <linux-block@vger.kernel.org>; Thu, 10 Mar 2022 16:38:28 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id z4so6081076pgh.12
-        for <linux-block@vger.kernel.org>; Thu, 10 Mar 2022 16:38:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=7aGbdxDhXZ8wDd++KZCUu5nZoO1j5tDQvd2lHwBG6gQ=;
-        b=QoALnnAujshwavRdNcUsNmYGnQUk0UCd7p0d3d0iTiFV810dm5E41PmYs0J6OgmSom
-         lUSRkW60tzL4GL7b09uCb4rVbYiSBOz28eiTpA0cI+Dr23HHCdxwo+ZYqgo3k/H+G3z7
-         kusxKx44zrR3p2Ss6ZPID4XJSlqLatdlCVDXvl0y+gLT2HFurDSFwSDKCeZkYTacs983
-         jw6F4ye813rjb55/9BOTBHyj8cW4pu8bJCUvOvgJO2iaGTfMoCxSd8RoNPoE6UtEvwwT
-         /v69q2X3wzP87G3dkWG6NlxnWrggieQwa1akAkHVcyjluoiGBTa8b5HRnKk1qzGH4zkF
-         sLfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=7aGbdxDhXZ8wDd++KZCUu5nZoO1j5tDQvd2lHwBG6gQ=;
-        b=dmetapilM/8QD7kU++HU2Nrzo8fi2kPf1KeTaPmHAQPXXACAlb9UyN6tdeBm6/LCgS
-         coXIQ1n/n3TrosCtgfvqB+Qq7Ohzq5KJrmAMA+3sLCZlPrQpG+r5ikSYAoDuwtkTYLJs
-         tojazxm0UZ8lLReH9tRc38mNH4yyD6JSMeHCQca9Wrk5oVv2cqEGGLdxV6CE1ugqBFGL
-         wIYv9oxXOyktkitEZyEoke0B47jsyFFozWW6e1CIcOgXwZS6sr3lapRHISC4G3gA2843
-         ysBOuI54zUFzjFCuO5lrF4KFHH4x55vzY8k57y7xhLfxIU1Z378iXhaBzQ7TceiXbE6s
-         5oXA==
-X-Gm-Message-State: AOAM530EPqVUgsfRop0Y8TgkYmobdnvT2ReopQrdy+7v/Nyfc2+tWVW5
-        4juds4IcRqETBmlAiVFk5k1u9yb0aR4b5PRO
-X-Google-Smtp-Source: ABdhPJxiGWAnrjoZu6vpBcFjJNkjglYBHZWw3rDGcDIMSYQXiuBSnmpSdBvQJ0Zr7CSoOqa5xQbCIg==
-X-Received: by 2002:a05:6a00:174d:b0:4f6:67e3:965 with SMTP id j13-20020a056a00174d00b004f667e30965mr7727461pfc.39.1646959107674;
-        Thu, 10 Mar 2022 16:38:27 -0800 (PST)
-Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id s30-20020a056a001c5e00b004f73f27aa40sm8101678pfw.161.2022.03.10.16.38.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 16:38:27 -0800 (PST)
-Message-ID: <e66ac6f0-ea7d-36d2-bcff-b18a0f84e57b@kernel.dk>
-Date:   Thu, 10 Mar 2022 17:38:26 -0700
+        Thu, 10 Mar 2022 19:50:09 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CCB29FD8;
+        Thu, 10 Mar 2022 16:49:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uYxZAHznPxDG69YtW4XG3s2UEng8dpthSKX9JFM/ivc=; b=ZlVKtnf+J5/YwrXwdNuICI62se
+        qH5Gfx3oATvhaCOjrwBT9IbXBrAraUC/RerntzJmGBfq+SLwhs4C8V7Xa3ofgWYBqeLOV9AgNiCYw
+        o+QfAvYXr0GG4I+mNuebILfVMzbRoJ6fxOohrXZ8uTVDNkfbHFkpf/BjxDhQUO/M+q6AnYDItsp2e
+        5iOIRPfYwx89fxwYmAy52zg6cPAceGRLfT4e87fAVz8sSXyKGj04zNYEMXmp7rLSCYOYgXmymX/kV
+        bhrDK/BLcldvM+L4/c3+//EOFb6MLNkDn50FwVz1KwnKCNFEBSXPqqupSVuBD4fLwUL1oS7jpooy5
+        jFCzvwYA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nSTSs-00ERZL-SG; Fri, 11 Mar 2022 00:49:06 +0000
+Date:   Thu, 10 Mar 2022 16:49:06 -0800
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        lsf-pc@lists.linux-foundation.org,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <Matias.Bjorling@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Keith Busch <Keith.Busch@wdc.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        Pankaj Raghav <pankydev8@gmail.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: Re: [LSF/MM/BPF BoF] BoF for Zoned Storage
+Message-ID: <Yiqcgi7G7ZrEbPHV@bombadil.infradead.org>
+References: <YiASVnlEEsyj8kzN@bombadil.infradead.org>
+ <20220304001022.GJ3927073@dread.disaster.area>
+ <YiKOQM+HMZXnArKT@bombadil.infradead.org>
+ <20220304224257.GN3927073@dread.disaster.area>
+ <YiKY6pMczvRuEovI@bombadil.infradead.org>
+ <20220305073321.5apdknpmctcvo3qj@ArmHalley.localdomain>
+ <20220307071229.GR3927073@dread.disaster.area>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] block: check more requests for multiple_queues in
- blk_attempt_plug_merge
-Content-Language: en-US
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Song Liu <song@kernel.org>
-Cc:     linux-block@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>, stable@vger.kernel.org,
-        Larkin Lowrey <llowrey@nuclearwinter.com>,
-        Wilson Jonathan <i400sjon@gmail.com>,
-        Roger Heflin <rogerheflin@gmail.com>
-References: <20220309064209.4169303-1-song@kernel.org>
- <9516f407-bb91-093b-739d-c32bda1b5d8d@kernel.dk>
- <CAPhsuW5zX96VaBMu-o=JUqDz2KLRBcNFM_gEsT=tHjeYqrngSQ@mail.gmail.com>
- <38f7aaf5-2043-b4f4-1fa5-52a7c883772b@kernel.dk>
- <CAPhsuW7zdYZqxaJ7SOWdnVOx-cASSoXS4OwtWVbms_jOHNh=Kw@mail.gmail.com>
- <2b437948-ba2a-c59c-1059-e937ea8636bd@kernel.dk>
- <CAPhsuW6ueGM_DZuAWvMbaB4PNftA5_MaqzMiY8_Bz7Bqy-ahZA@mail.gmail.com>
- <40ae10bd-6839-2246-c2d7-aa11e671d7d4@kernel.dk>
-In-Reply-To: <40ae10bd-6839-2246-c2d7-aa11e671d7d4@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220307071229.GR3927073@dread.disaster.area>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/10/22 5:36 PM, Jens Axboe wrote:
-> I'm assuming you have a plug setup for doing the reads, which is why you
-> see the big difference (or there would be none). But
-> blk_mq_flush_plug_list() should really take care of this when the plug
-> is flushed, requests should be merged at that point. And from your
-> description, doesn't sound like they are at all.
+On Mon, Mar 07, 2022 at 06:12:29PM +1100, Dave Chinner wrote:
+> The generic interface that the kernel provides for zoned storage is
+> called ZoneFS. Forget about the fact it is a filesystem, all it
+> does is provide userspace with a named zone abstraction for a zoned
+> device: every zone is an append-only file.
 
-Maybe you need a list sort in blk_mq_flush_plug_list(). If you
-round-robin all the drives, then we'll hit that "run queue" path for
-each of them when we flush.
+We seem to be reaching consensus on a path forward to use ZoneFS for
+raw access.
 
--- 
-Jens Axboe
+> > My point is that there is space for both ZoneFS and raw zoned block
+> > device. And regarding !PO2 zone sizes, my point is that this can be
+> > leveraged both by btrfs and this raw zone block device.
+> 
+> On that I disagree - any argument that starts with "we need raw
+> zoned block device access to ...." is starting from an invalid
+> premise.
 
+This seems reasonable given the possibility to bring folks forward
+with ZoneFS.
+
+> We should be hiding hardware quirks from userspace, not
+> exposing them further.
+
+ZoneFS requires a block device and such block device cannot be exposed
+if the zone size != PO2. So sadly ZoneFS cannot be used by !PO2 ZNS
+drives.
+
+> IMO, we want writing zone storage native applications to be simple
+> and approachable by anyone who knows how to write to append-only
+> files.  We do not want such applications to be limited to people who
+> have deep and rare expertise in the dark details of, say, largely
+> undocumented niche NVMe ZNS specification and protocol quirks.
+>
+> ZoneFS provides us with a path to the former, what you are
+> advocating is the latter....
+
+That surely simplifies things if we can use ZoneFS!
+
+Some filesystems who want to support zone storage natively have been
+extended to do things to help with these quirks. My concerns were the
+divergence on approaches to how filesystems use ZNS as well. Do you have
+any plans to consider such efforts for XFS or would you rather build on
+ZoneFS somehow?
+
+  Luis
