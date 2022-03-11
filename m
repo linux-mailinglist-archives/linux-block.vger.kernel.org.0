@@ -2,84 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9D694D6A4D
-	for <lists+linux-block@lfdr.de>; Sat, 12 Mar 2022 00:26:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BD5E4D6ACB
+	for <lists+linux-block@lfdr.de>; Sat, 12 Mar 2022 00:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230102AbiCKWxo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Mar 2022 17:53:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
+        id S229583AbiCKWoj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Mar 2022 17:44:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231127AbiCKWx1 (ORCPT
+        with ESMTP id S229673AbiCKWob (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Mar 2022 17:53:27 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA75B111DC2
-        for <linux-block@vger.kernel.org>; Fri, 11 Mar 2022 14:27:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 11 Mar 2022 17:44:31 -0500
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FBABE034;
+        Fri, 11 Mar 2022 14:20:05 -0800 (PST)
+Received: from [192.168.0.3] (ip5f5aef8b.dynamic.kabel-deutschland.de [95.90.239.139])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B2E961FBC
-        for <linux-block@vger.kernel.org>; Fri, 11 Mar 2022 21:31:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8779EC340E9;
-        Fri, 11 Mar 2022 21:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647034265;
-        bh=hYel3HbpvLen6sZ3euben+avywStvvz0gp95k3KsGBk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qpUuCWrCbsGl/LITMp1atVWBazFlnkYOWtEbc3DsKA1++oysWd5hGW3/PXkhS7ZY0
-         CpKdqSlg9/3iwHmT0vTqdf7tXpplB6NPuoqnlDf8nLqRs5QF7ojqd6R+WYXC3lqoqc
-         TkgSoYtCNLGAEeCZNv7aT1hg3sUKBpD6CposEQkRKdJFNFi1rk8W1XLZDUJDbXEWw0
-         BwS26apkIj8l9pqKb6G+ElCEk6ELp9mDMA7eaon6rTbtOEAtF487QSpoMXGg1PUZb0
-         2LZFD93Sf/Fg6pzvjLjbh9eyCdXfgZO4lASBKSBA04rjA5MgjKTLYqfrC7Fr35lzB4
-         O8jwE1TKTUznw==
-Date:   Fri, 11 Mar 2022 13:31:02 -0800
-From:   Keith Busch <kbusch@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier.gonz@samsung.com>,
-        jiangbo.365@bytedance.com, kanchan Joshi <joshi.k@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <matias.bjorling@wdc.com>,
-        Pankaj Raghav <pankydev8@gmail.com>,
-        Kanchan Joshi <joshiiitr@gmail.com>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Subject: Re: [PATCH 0/6] power_of_2 emulation support for NVMe ZNS devices
-Message-ID: <20220311213102.GA2309@dhcp-10-100-145-180.wdc.com>
-References: <CGME20220308165414eucas1p106df0bd6a901931215cfab81660a4564@eucas1p1.samsung.com>
- <20220308165349.231320-1-p.raghav@samsung.com>
- <20220310094725.GA28499@lst.de>
- <e02dfd21-31c6-95b6-1127-3f18c79116ee@samsung.com>
- <20220310144449.GA1695@lst.de>
- <Yiuu2h38owO9ioIW@bombadil.infradead.org>
- <20220311205135.GA413653@dhcp-10-100-145-180.wdc.com>
- <Yiu5YzxU/PjxLiUL@bombadil.infradead.org>
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id CCD1E61EA1927;
+        Fri, 11 Mar 2022 22:41:56 +0100 (CET)
+Message-ID: <11a4c611-ed0c-789f-b5d0-8a127539daf1@molgen.mpg.de>
+Date:   Fri, 11 Mar 2022 22:41:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yiu5YzxU/PjxLiUL@bombadil.infradead.org>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.2
+Subject: Re: [PATCH] block: check more requests for multiple_queues in
+ blk_attempt_plug_merge
+Content-Language: en-US
+To:     Song Liu <song@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-raid@vger.kernel.org, stable@vger.kernel.org,
+        Larkin Lowrey <llowrey@nuclearwinter.com>,
+        Wilson Jonathan <i400sjon@gmail.com>,
+        Roger Heflin <rogerheflin@gmail.com>
+References: <20220309064209.4169303-1-song@kernel.org>
+ <9516f407-bb91-093b-739d-c32bda1b5d8d@kernel.dk>
+ <CAPhsuW5zX96VaBMu-o=JUqDz2KLRBcNFM_gEsT=tHjeYqrngSQ@mail.gmail.com>
+ <38f7aaf5-2043-b4f4-1fa5-52a7c883772b@kernel.dk>
+ <CAPhsuW7zdYZqxaJ7SOWdnVOx-cASSoXS4OwtWVbms_jOHNh=Kw@mail.gmail.com>
+ <2b437948-ba2a-c59c-1059-e937ea8636bd@kernel.dk>
+ <84310ba2-a413-22f4-1349-59a09f4851a1@kernel.dk>
+ <CAPhsuW492+zrVCyckgct_ju+5V_2grn4-s--TU2QVA7pkYtyzA@mail.gmail.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <CAPhsuW492+zrVCyckgct_ju+5V_2grn4-s--TU2QVA7pkYtyzA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Mar 11, 2022 at 01:04:35PM -0800, Luis Chamberlain wrote:
-> On Fri, Mar 11, 2022 at 12:51:35PM -0800, Keith Busch wrote:
-> 
-> > I'm starting to like the previous idea of creating an unholey
-> > device-mapper for such users...
-> 
-> Won't that restrict nvme with chunk size crap. For instance later if we
-> want much larger block sizes.
+Dear Song,
 
-I'm not sure I understand. The chunk_size has nothing to do with the
-block size. And while nvme is a user of this in some circumstances, it
-can't be used concurrently with ZNS because the block layer appropriates
-the field for the zone size.
+
+Am 11.03.22 um 17:59 schrieb Song Liu:
+
+> On Fri, Mar 11, 2022 at 6:16 AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 3/10/22 5:07 PM, Jens Axboe wrote:
+>>> In any case, just doing larger reads would likely help quite a bit, but
+>>> would still be nice to get to the bottom of why we're not seeing the
+>>> level of merging we expect.
+>>
+>> Song, can you try this one? It'll do the dispatch in a somewhat saner
+>> fashion, bundling identical queues. And we'll keep iterating the plug
+>> list for a merge if we have multiple disks, until we've seen a queue
+>> match and checked.
+> 
+> This one works great! We are seeing 99% read request merge and
+> 500kB+ average read size. The original patch in this thread only got
+> 88% and 34kB for these two metrics.
+
+Nice. I am curious, how these metrics can be obtained?
+
+[…]
+
+
+Kind regards,
+
+Paul
