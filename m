@@ -2,69 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D53004D6AC7
-	for <lists+linux-block@lfdr.de>; Sat, 12 Mar 2022 00:27:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B88D14D6A9F
+	for <lists+linux-block@lfdr.de>; Sat, 12 Mar 2022 00:26:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbiCKWwV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 11 Mar 2022 17:52:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
+        id S229746AbiCKWrG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 11 Mar 2022 17:47:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229952AbiCKWwO (ORCPT
+        with ESMTP id S229640AbiCKWqq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 11 Mar 2022 17:52:14 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E8EF3933
-        for <linux-block@vger.kernel.org>; Fri, 11 Mar 2022 14:30:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 13A7760EDF
-        for <linux-block@vger.kernel.org>; Fri, 11 Mar 2022 22:30:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8AEEC340E9;
-        Fri, 11 Mar 2022 22:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647037836;
-        bh=4qAmf848tVCoto8fyRKeB+O8cV3hMrlD10emBl9050w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dhgwiYDEnBy7NbwgBcJArz4oWWBs0JOvO3uDZO3zpKs6GrTGV725J3d3wsMh8lcVA
-         2TpBIC5GBhPleOZOSaPsmUln2ndPCpK4dqTHckKn/loM5WZjVfpedqyhyMXjfkJVKd
-         hMee2AY7nqrPsHkbbNNdDsxfzXQmC8lqjGj9d26kmPJkRsTvqKBfvicVlpmdRRoMs9
-         jvn6kGXHRvxJZpsAB9A3PzH9RuIZipXAat2SLthp8k2UKAjOzPVlSe62dTki8olVbd
-         GqAp3hkoFPhQlRl/cEmIKE0ypfNFCU4hEpkKMw0eqEItzdzI9a37KuKB3xYclN9ggp
-         Jnce1lAweUz7g==
-Date:   Fri, 11 Mar 2022 14:30:32 -0800
-From:   Keith Busch <kbusch@kernel.org>
-To:     Adam Manzanares <a.manzanares@samsung.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier.gonz@samsung.com>,
-        "jiangbo.365@bytedance.com" <jiangbo.365@bytedance.com>,
-        kanchan Joshi <joshi.k@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <matias.bjorling@wdc.com>,
-        Pankaj Raghav <pankydev8@gmail.com>,
-        Kanchan Joshi <joshiiitr@gmail.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Subject: Re: [PATCH 0/6] power_of_2 emulation support for NVMe ZNS devices
-Message-ID: <20220311223032.GA2439@dhcp-10-100-145-180.wdc.com>
-References: <CGME20220308165414eucas1p106df0bd6a901931215cfab81660a4564@eucas1p1.samsung.com>
- <20220308165349.231320-1-p.raghav@samsung.com>
- <20220310094725.GA28499@lst.de>
- <e02dfd21-31c6-95b6-1127-3f18c79116ee@samsung.com>
- <20220310144449.GA1695@lst.de>
- <Yiuu2h38owO9ioIW@bombadil.infradead.org>
- <20220311205135.GA413653@dhcp-10-100-145-180.wdc.com>
- <20220311222326.GA110401@bgt-140510-bm01>
+        Fri, 11 Mar 2022 17:46:46 -0500
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F342DBB83
+        for <linux-block@vger.kernel.org>; Fri, 11 Mar 2022 14:37:03 -0800 (PST)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-2dc28791ecbso109149697b3.4
+        for <linux-block@vger.kernel.org>; Fri, 11 Mar 2022 14:37:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DREXPNc2JSl0V5RZY2vCdvrUUa88K+pQUjqT8ymWxMk=;
+        b=O5Q8bxA/KkmDCq6uqRmKbEj/kc8mUESHJC5dAzxPo/3xd3SdDKMrP2QVqRMCCgr3TH
+         MocubDdpCRCus/XBr2Ilzqbxokz5l8MQJdMGCOleXY7keRw5WHYICMvC770ECBYk43MN
+         jBs9nx1C5E3cOPY8PUqY1eacT+koo1SGbBuuY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DREXPNc2JSl0V5RZY2vCdvrUUa88K+pQUjqT8ymWxMk=;
+        b=7QklI5bEAQvGhqsKhxpqKJugNNV3I4wfVPMGFxB9kc2eQ/pt5o1sc1JQgMiBUdW9Vx
+         64tzjbCySeIziGIChlrVg6s1Rhd848Ed+apRFPhx2XmAIubTyjIigc01R2gVNqrdEYBp
+         ZAS+NrwQFS9X5/SPezIId+zAQLghEdldXOZJ9VPdgbjWfIe4SaHBWUOfa1hJjJuVoGeZ
+         usI3Pb79T07QyN4L5fDerZGXrzT0stAs39WpMedgOC2KiCnhMG1xQRMQ/TVG4WBzgxLu
+         1WyTiPLGxy8jQRUYKFsK0vt4FClIV/aemd+DVAsrTUDmTQFf8dGe4Xq/qnmy2DTiqidv
+         080Q==
+X-Gm-Message-State: AOAM532+6h9gFImcMKsBha4VneVJdEubKKHu/uEBeAyTivrj2yU3c8JW
+        /3Tex72IExzhNVPTQxQHYKfYaNOqQeEUyIO0MI+/AA==
+X-Google-Smtp-Source: ABdhPJxD9C+lmjCFUuGqD3d+t0UpXnibKp2g1hAFOkt/GuhNL0o7REY2rjJEqu0+69tDgnz526pRiNrNgibT2VMGHTc=
+X-Received: by 2002:a81:74d4:0:b0:2dc:5a9f:c830 with SMTP id
+ p203-20020a8174d4000000b002dc5a9fc830mr10697375ywc.32.1647038222492; Fri, 11
+ Mar 2022 14:37:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220311222326.GA110401@bgt-140510-bm01>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <CABWYdi2a=Tc3dRfQ+037PG0GHKvZd5SEXJxBBbNspsrHK1zNpQ@mail.gmail.com>
+ <CAOUHufb=GQaX_2Bp2YfY4ntBZj8iwb8z9mvxUFXw+KkySRu+KA@mail.gmail.com>
+In-Reply-To: <CAOUHufb=GQaX_2Bp2YfY4ntBZj8iwb8z9mvxUFXw+KkySRu+KA@mail.gmail.com>
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Fri, 11 Mar 2022 14:36:51 -0800
+Message-ID: <CABWYdi3iJ45pSgj-OrxATVXR7-MHb3DZ-UkERPvo9L=h_qtzgA@mail.gmail.com>
+Subject: Re: zram corruption due to uninitialized do_swap_page fault
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,20 +69,17 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Mar 11, 2022 at 10:23:33PM +0000, Adam Manzanares wrote:
-> On Fri, Mar 11, 2022 at 12:51:35PM -0800, Keith Busch wrote:
-> > And po2 does not even seem to be the real problem here. The holes seem
-> > to be what's causing a concern, which you have even without po2 zones.
-> > I'm starting to like the previous idea of creating an unholey
-> > device-mapper for such users...
-> 
-> I see holes as being caused by having to make zone size po2 when capacity is 
-> not po2. po2 should be tied to the holes, unless I am missing something. 
+On Fri, Mar 11, 2022 at 2:30 PM Yu Zhao <yuzhao@google.com> wrote:
+>
+> On Fri, Mar 11, 2022 at 12:52 PM Ivan Babrou <ivan@cloudflare.com> wrote:
+> >
+> > Hello,
+> >
+> > We're looking into using zram, but unfortunately we ran into some
+> > corruption issues.
+>
+> Kernel version(s) please?
 
-Practically speaking, you're probably not missing anything. The spec,
-however, doesn't constrain the existence of holes to any particular zone
-size.
-
-> BTW if we go down the dm route can we start calling it dm-unholy.
-
-I was thinking "dm-evil" but unholy works too. :)
+You can see 5.16 in dmesg output. I've also replicated on 5.17-rc7 and
+5.15.26. The latter is the LTS version we use in production, where
+coredumps and rocksdb corruptions were observed.
