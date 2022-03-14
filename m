@@ -2,132 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24D464D893E
-	for <lists+linux-block@lfdr.de>; Mon, 14 Mar 2022 17:33:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE67F4D8A8D
+	for <lists+linux-block@lfdr.de>; Mon, 14 Mar 2022 18:10:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229873AbiCNQe3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Mar 2022 12:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37216 "EHLO
+        id S237555AbiCNRMC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Mar 2022 13:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232757AbiCNQe2 (ORCPT
+        with ESMTP id S233904AbiCNRMC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Mar 2022 12:34:28 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2076.outbound.protection.outlook.com [40.107.236.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 383B462EB
-        for <linux-block@vger.kernel.org>; Mon, 14 Mar 2022 09:33:17 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B01HfEbCCDPRPhwD2mIlaSW5yeNQ5qspUj9n89KSuyWHVQHUJ37A4gug2BPJ+d4PlrL5Qzjco/anVrowm5tiDY/EWLUwg6swrikc3QU4nOrn4pbkEoIHzPUPULYpvpe97xxh8K3mJ5RuXaAk55fRWRfgX1/PWFBYnWKS405ckhe6FV6N9cfn1TLCNMK9KBrAzlsaX2AKCgDgAcg5QWQcM3rptb4ITDtgBkVP7Rbxqs/eLa5bwulg0FFBsYjPkZALUMNzYBVW2x5apiUboU919Me3VgXCA6RMzSV5ohxTBG52Y1+E2+uP+1jEcSwlULj/1PCE/BHav3Sqbcm1IFZ/kA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C0YEizlfw8xj3cO0Zqj75NTL/gg9mp0Ztkwm4mxcbjc=;
- b=SlhrQgrAqE9Wdqjf/2dObb389eQaUuKEhmJsBm3Wr8b5IFMj9dLZp/kvYHjSwZlYnUuxXzjkfcwNKT6A60Yf84aXiNRYS/QQCLjcO+GfYN0nxv7YyCG+qMfRFfR7aajDovZKSPYEqS+cU/s3vG7leeYF4WUp4jyxQ1ma5ahuztgVbN1auVDj9WIVp9SoJMcppNp5nH057KNHfsnmyjIL4pQvdDq6JuSOXz1rbgdKymaxmbvqUGWOfS5Sy0yQ+gOYrUdI0MN9OclVYcG5jboowMe6I9ScEiZ1qQACQdagKkKCFKzU67BZ/BI9IQga9ap79s8ZFrpT8n0Ww/KAFGcYsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C0YEizlfw8xj3cO0Zqj75NTL/gg9mp0Ztkwm4mxcbjc=;
- b=J4gi8JLipAGlUZtxZhqTdFiuIXZ0YIQlvQVAwvXzNZq5XCVwXdJju909E/Ahrq1LBgxLalzz9sj/B88myfmb1YZV9qjJ8qIP1ZrShwTm9lxDDSa+2P3I6fkT/meJTMyO8iKej0tl2Rl5dbMvF9S+zgEd0GwATq5zSq+N2nQK4gZVP4NOsG/Y0hTCOO94nJAJnGJFkEg3TaI5KTkPTp3TrYvM8JB9Oi3gDFs/43veKCREt0cJRHMInCRrYL0AnKmhn58maOazUwC5BOBYkvh8lM+Zx+vNFSX8/+DWMjC7YDbhyxbcOdf+YD3nPAyF35KZUGLqlbhIGSIJKu6vlsreOg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
- by MWHPR1201MB2559.namprd12.prod.outlook.com (2603:10b6:300:e0::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22; Mon, 14 Mar
- 2022 16:33:13 +0000
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::f037:e2a1:f108:125a]) by DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::f037:e2a1:f108:125a%8]) with mapi id 15.20.5061.028; Mon, 14 Mar 2022
- 16:33:13 +0000
-Message-ID: <332c35ec-734b-d2bd-dd0f-c577b1c6174b@nvidia.com>
-Date:   Mon, 14 Mar 2022 18:33:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH] virtio-blk: support polling I/O
-Content-Language: en-US
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Suwan Kim <suwan.kim027@gmail.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, jasowang@redhat.com,
-        pbonzini@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-References: <20220311152832.17703-1-suwan.kim027@gmail.com>
- <20220311103549-mutt-send-email-mst@kernel.org>
- <YitzuxYHywdCRKVO@localhost.localdomain>
- <c91ad1e9-8c5b-ff1e-7e7f-8590ea6c67e8@nvidia.com>
- <Yi8OSE2hYoS8rSEo@localhost.localdomain>
- <e441429b-90ef-a2e4-1365-3f55c7ff21d0@nvidia.com>
- <20220314071222-mutt-send-email-mst@kernel.org>
- <d9121e3c-abe5-fe4d-8088-8339c418c7a8@nvidia.com>
- <20220314111306-mutt-send-email-mst@kernel.org>
-From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-In-Reply-To: <20220314111306-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM6PR04CA0029.eurprd04.prod.outlook.com
- (2603:10a6:20b:92::42) To DM4PR12MB5040.namprd12.prod.outlook.com
- (2603:10b6:5:38b::19)
+        Mon, 14 Mar 2022 13:12:02 -0400
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3B73DDFF
+        for <linux-block@vger.kernel.org>; Mon, 14 Mar 2022 10:10:51 -0700 (PDT)
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20220314171047epoutp042b10547315331b6df2456b19bd51d3ce~cTnmKRSNY2751427514epoutp04v
+        for <linux-block@vger.kernel.org>; Mon, 14 Mar 2022 17:10:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20220314171047epoutp042b10547315331b6df2456b19bd51d3ce~cTnmKRSNY2751427514epoutp04v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1647277847;
+        bh=Fje2hdOAeJXeMwXLGbynketnbDdN2GmtQrq3rcfIgFo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=urn3I3Sl6c27zbe8HCRzM+vI0wi/hCmtjY3zcVqOybxZBD3Qacfq4ErzJt9aq5+uI
+         lNLYn71DWpjPm8cBe5WAjQMorIeUX7HBhRs1wJ4Yqk4Uc/x6gMLW+HtEnaocz3JqpR
+         ktWbbhsk4MNri/08rLDJaDkiK/FsqPKzan7+LV9o=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20220314171047epcas5p11fd141c158ab59472725d22a9d5d38e2~cTnluSK7Z0110001100epcas5p1S;
+        Mon, 14 Mar 2022 17:10:47 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.174]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4KHNN401cnz4x9Pp; Mon, 14 Mar
+        2022 17:10:44 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F6.39.05590.3177F226; Tue, 15 Mar 2022 02:10:43 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20220314162858epcas5p4a383d0b0d9a316b664858260309da317~cTDFbSjda1648016480epcas5p4j;
+        Mon, 14 Mar 2022 16:28:58 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220314162858epsmtrp295265bf240e5a0dcee04cd1605987834~cTDFagFk_2854328543epsmtrp2z;
+        Mon, 14 Mar 2022 16:28:58 +0000 (GMT)
+X-AuditID: b6c32a4b-723ff700000015d6-1d-622f7713336d
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AA.AD.29871.A4D6F226; Tue, 15 Mar 2022 01:28:58 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20220314162856epsmtip156951fa6e16a482e0c694ce1cfe6dd5a~cTDDajiyG2640826408epsmtip1f;
+        Mon, 14 Mar 2022 16:28:56 +0000 (GMT)
+Date:   Mon, 14 Mar 2022 21:53:56 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, kbusch@kernel.org, asml.silence@gmail.com,
+        io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, sbates@raithlin.com,
+        logang@deltatee.com, pankydev8@gmail.com, javier@javigon.com,
+        mcgrof@kernel.org, a.manzanares@samsung.com, joshiiitr@gmail.com,
+        anuj20.g@samsung.com
+Subject: Re: [PATCH 05/17] nvme: wire-up support for async-passthru on
+ char-device.
+Message-ID: <20220314162356.GA13902@test-zns>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ea95ec18-ea4f-4426-e52e-08da05d85547
-X-MS-TrafficTypeDiagnostic: MWHPR1201MB2559:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR1201MB255992F59C0628525B9C38AADE0F9@MWHPR1201MB2559.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: njP4oOZGH1vVZgofRRBYaaHuIxdbaQLa+glHj75HPkveDJpCl+MbsdKHDRofFQHEP3/P+PfxC0d0a7XYjXA6qcpcaq0aB3S6g/d1C3waxMl1QcH2ktPAvRIdZ1NxMH7hBXTXxbd5KDA9kFCGMHcdhUEzmUIvJjVJoqnUgycZ+BcoiQqBYxO9EjmXSiLhn+ilD5DoosfDd01qntsdqqsINHxJfkdN6rj1US17nZ/j9U4i5rJTYbvoyVhTIePwnlT4knMLw/tFAEL7Um/JCRkAz4tEVv/37gAWkf6I6Bof4jCfnE+wTWeQugDt3ROdXE71n1ZceYa2zSAHE64Zpz9QbEtDRNXX+TkOkCXKMC7BpBc6tU3T0wOhcCif3IfYDPByTeNvRGkNPXxsEAqvl+5UuDrv/LMj3EBxJIgdym1ETgpu/tPb0qToxUUJlgWqYFY7Qsb3ddnFoQxgyCKhBrEWr/3d/SubbJ21abXgBBhap/JO7O+k16jaGWFJY/ZPA+jI5Lji/hVEeqFHm2KUg5vce8nJYsJrcmEms/JJ2iA+NjbRaWDfRAsgIQQ9jlICI49x1aNQA00+sL2Ob1I8ow0xODECwwFIx4auqvI7yBnk1EQBLGiyENDWcbyVX4j/68dzFIDVwpqunkJPdV1DcMZh447ZJHqODN85muSgLRlfZCw7UhBzW3y4h6FoR1ZACZysXw2dHolvq4tGS8knTj3AntjyBiJ8f1Pc4izuwF12UsfN8HvxLomoVw6j5K0KU3Bl
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(2616005)(316002)(508600001)(4326008)(8676002)(66946007)(66556008)(66476007)(6486002)(26005)(31686004)(53546011)(6506007)(83380400001)(36756003)(186003)(2906002)(6512007)(5660300002)(54906003)(6916009)(31696002)(8936002)(86362001)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UDN0SFBXM05ndzlBQ054OVhIL0ZpS2VrRnVua2g1Z3hmanRiYlRaeHYwMHIx?=
- =?utf-8?B?S2lSUzhaNm9uQ1VQT1BYS1hrL3lQWmZHUW5xUnBzeVF1OU93ODQ3cENsMXBN?=
- =?utf-8?B?Z3pLV09jdXJTQTNZeExVOGNHRUlJZTdJUGpXejdya0dEejBRQTFnRkFDWElu?=
- =?utf-8?B?M0VqWW1penVpektoTkRFR285Wkh6eVVuSWE5eDJnT0tDSDFGczVscktoa0g3?=
- =?utf-8?B?WXQxVlNuUWkwWmdSR0thMi9GVFgyUEloVmorajU4eTcxVURzV1ZSTWk3ODVQ?=
- =?utf-8?B?dndtNUF3RDhtZmZmQXZiR1JRNTNVb0J5bERWTEVFMElpR2l6NTNXYWNRR1dZ?=
- =?utf-8?B?VzZYVWttMjhLRGJLMXNpdE42QVJLcVJDYnVCTVA4ekMvZndDb0RwNk9NOXp2?=
- =?utf-8?B?Z0JaT2ZYamdJcnR4UjdKL3F6bFVJaWFtOWkrT1MrV0ZzZ21nSVZpdjV6cWZw?=
- =?utf-8?B?My8zQnEzSWNlejJ2TFdVQytnY1JucXlwR1M0ZThaK1NPei8zOVpLSWhsVDM4?=
- =?utf-8?B?Y3o2a0p0WGx6K29kS2Zua3l0dzVPSzAva2YzTWJTaVh4ZVZRMWZack5jczNW?=
- =?utf-8?B?N2lqNVVFanlkcWlXQjU5dE1ETFpVRXVVY1FKTkpiTmttc0tMekdYRy93UG0z?=
- =?utf-8?B?NTR1em44SGt6REI0MHlxeTdFZ2JQWUE4bVA3RGNWYy9qOG5xZDNXZXlMbUc5?=
- =?utf-8?B?a21ZZVhoeDBBSkduRWRGZytOakQvdW5xODY0MXFqR3UvR1JCRWhjcis4RDZr?=
- =?utf-8?B?VzhOaHlIZGhHOTBia1ZYWSszblh5Mm1GSnEwOUhSUWFOV1BqbUVMbjdEUmpi?=
- =?utf-8?B?cTB2cTdzdkdySHNGbmJUMnNnek9CV2VHTjEyd1RTUmRVRnNkMnJXaUlZOEhv?=
- =?utf-8?B?UEVIc25EaHYyUFlvT1F6a3QxZXFSMGc2cjVJT3ZNU2NDTGJOK2xobWxybW5F?=
- =?utf-8?B?SWlLRzNINFUxOEczVFNBdHhFay8rTjhzd2JjdjN5aGNlVDFFTlFNSVNTdkVz?=
- =?utf-8?B?K3Zna3NJdlZPUS9CdU9pcGN2eGZveDR5L0FiNkNkZXZXMWhzOTA5d21ocTFo?=
- =?utf-8?B?L3c4RWhHUjgraUNsclZxQkk2dUFDTmZoejQ3d1F6eUU0Zm5KS1hwTHJ6SGJI?=
- =?utf-8?B?S0ZYVjlkUjVZSElsdmFVbGdjbVdrTVJXNC9NdTZOR2pHZ2hobXZLN1l6QWhD?=
- =?utf-8?B?NWt0bUM4QkRtY0FFemlWQ0pyellmNTZJbVZpOTdpTURyY2hmYjRob1JHSjky?=
- =?utf-8?B?VUU2aEtvUTdWRlBCd0h6K0lmK0czL1hvdGZsWG5TMXkwMUZVN3hnTjIvZ3dV?=
- =?utf-8?B?VFRTSjhBZWxmTnp2ZkRPeVZMZU9MdkxubUtCRGp2anlsUWo2Q05OQTZVSjhl?=
- =?utf-8?B?TURWR2Zna1ZqZ000NG92ZGgzcXlxQnhlVUU0NGlKczh5RlFza1NGNzhFb0tS?=
- =?utf-8?B?ZzJ4QU1mU2JpNi93U0pFRHJsTHd2djVNRDZOWGp1NWR0VnIyRlVvSjdBUmR5?=
- =?utf-8?B?cUlDOGpERDJ3ZmVsbDdCWGZTQXhDVVJXdDBvMGFhbmo2QmRZYVc5NTZzOEZz?=
- =?utf-8?B?YTZhUm5FZERMa0hDaks1aC9PcUZYTGZtYmVCSmh2NlRLQlNzZWRudkovcE10?=
- =?utf-8?B?YjBQOEZibFdVOEVwWFNycXhNUEd3VHdxTSs1Nmt2V1VSTUZoUFV5N1RlcWh0?=
- =?utf-8?B?NFBDUzVJTGJjMWkrUGNNdnlObnhySVVzUTNjQ2NYZ1RaVkF3UHprSGF0dVZl?=
- =?utf-8?B?cTNDTmJqa3BxbnZFLzd6a2V1VisrTTdTakZvejBua0l3VDZob2ZBVmhKU2FI?=
- =?utf-8?B?dDhoRHV3ZnhMb1hnbWNCZHpiL2xMQm85RnJBNjNOYU1mSDk3MnBEWnlwTGl5?=
- =?utf-8?B?S1ZuTldIenByUEdYUjdWSFIxSy9KRHAvdkVpTGFiR3VpZTNoaEE0N3lIZ3pY?=
- =?utf-8?B?cDRvNHJUUG5GWEZiTmE0SmxNcXR5L0IyZmpQVU9NR2tKcnRNUXBmNGliZkFn?=
- =?utf-8?B?amd0d29qTXNBPT0=?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea95ec18-ea4f-4426-e52e-08da05d85547
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2022 16:33:13.0539
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YZjXvESoVCVOB0RNzggSqSTkMgkStYRmIIAYR1ajTJ0ROo3pPK+h7HaxjcNcyZf9ELoq0kz+hd/ehMjjTXsrqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB2559
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+In-Reply-To: <20220311070148.GA17881@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOJsWRmVeSWpSXmKPExsWy7bCmuq5wuX6Swbw2C4vphxUtmib8ZbaY
+        s2obo8Xqu/1sFitXH2WyeNd6jsWi8/QFJovzbw8zWUw6dI3RYu8tbYv5y56yWyxpPc5mcWPC
+        U0aLNTefslh8PjOP1YHf49nVZ4weO2fdZfdoXnCHxePy2VKPTas62Tw2L6n32H2zgc1j2+KX
+        rB59W1YxenzeJBfAFZVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr
+        5OIToOuWmQP0g5JCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwKRArzgxt7g0L10v
+        L7XEytDAwMgUqDAhO2PtHp2C+eYVV+d9YWpgXKnWxcjBISFgIrH0sVgXIxeHkMBuRonPW3vZ
+        IJxPjBKT3pxh7mLkBHK+MUrs+C4LYoM0LN8/nR2iaC+jxO2eVijnGaPE+/bVTCBVLAKqEntn
+        vGMGWcEmoClxYXIpSFhEQEni6auzjCD1zAInmCTm3psHVi8sECrR0toNZvMK6Erc+3aNBcIW
+        lDg58wmYzSmgI7Hj4kQwW1RAWeLAtuNMIIMkBG5wSFz9cJEV4jwXiUWX37ND2MISr45vgbKl
+        JD6/28sGYRdL/LpzlBmiuYNR4nrDTBaIhL3ExT1/wa5gFsiU2PxhA9RQWYmpp9ZBxfkken8/
+        YYKI80rsmAdjK0rcm/QUql5c4uGMJayQAPaQWDJbGhJC9xklXrY/YJvAKD8LyXOzkKyDsK0k
+        Oj80AdkcQLa0xPJ/HBCmpsT6XfoLGFlXMUqmFhTnpqcWmxYY56WWw+M7OT93EyM4hWt572B8
+        9OCD3iFGJg7GQ4wSHMxKIrxWS/WShHhTEiurUovy44tKc1KLDzGaAiNrIrOUaHI+MIvklcQb
+        mlgamJiZmZlYGpsZKonznkrfkCgkkJ5YkpqdmlqQWgTTx8TBKdXAdNVbh+n7aqdrq0IS370/
+        7PXv2vYYwevNOo9PJPxWEz6hwMSQ42f18fxLddWFpWWiTXl7L9y5uXbuukIrL6nXf9rLPbau
+        e6lk3Jwk/N2y79Ae5bqnm1Mt9Y9d8rM+yRK/4Vcqm8vE6kyz4kVPJHPOaCe/fv3N+bXhcsfa
+        2x1iDzUnHHP0VHcJWS/6I/mUU5asK+vquy9/fos0NyuTWM174/dBTin9WJFF8yvYF8iHXnFe
+        pceqL/HzzEFj4b9xC8O1w9eaeqdNz6lRbHmpN61rxv+EI82saw+2zPKout/5V1em9t6CrLdb
+        WfOclXWLnzzWPbv/ge2bLaXzvLuOheoErhF/muhmWRGzLP3OOQVdJZbijERDLeai4kQA1cys
+        KWoEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSnK5Xrn6SQfdMOYvphxUtmib8ZbaY
+        s2obo8Xqu/1sFitXH2WyeNd6jsWi8/QFJovzbw8zWUw6dI3RYu8tbYv5y56yWyxpPc5mcWPC
+        U0aLNTefslh8PjOP1YHf49nVZ4weO2fdZfdoXnCHxePy2VKPTas62Tw2L6n32H2zgc1j2+KX
+        rB59W1YxenzeJBfAFcVlk5Kak1mWWqRvl8CV8eTSfvaCcyYVJ09tZ25g/KTcxcjJISFgIrF8
+        /3T2LkYuDiGB3YwS95susUMkxCWar/2AsoUlVv57DlX0hFHi5b9bYAkWAVWJvTPeMXcxcnCw
+        CWhKXJhcChIWEVCSePrqLCNIPbPAKSaJhm3vwOqFBUIlWlq7mUBsXgFdiXvfrrFADL3PKHFm
+        2TuohKDEyZlPWEBsZgEziXmbH4ItYBaQllj+jwMkzCmgI7Hj4kSwElEBZYkD244zTWAUnIWk
+        exaS7lkI3QsYmVcxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgTHn5bmDsbtqz7oHWJk
+        4mA8xCjBwawkwmu1VC9JiDclsbIqtSg/vqg0J7X4EKM0B4uSOO+FrpPxQgLpiSWp2ampBalF
+        MFkmDk6pBqa1rw6ofvN+ZsS31XfPgl19CjNulZxsMdJIzz58QPSrY4uj3/ZShRtKz9Tfne9Y
+        9ykx49Wv9hlikrf0nZjnL3Dr7T/+/p6XhWnffDHN5vbi/dLt3Zr/zR13S80wnb6+ITygYGPs
+        vLA/0jmph6xz1sZMXcL2/X/JdGte54PaHAvvJn15b+t35FWcWKd84vk3D8IzrjAIxMw5HSSY
+        uF9ujcqCZUamtqy1+yZZOk/4eU/6QHzQEaVFJyz9Su41fV6UNLPvk+SmRyaeG+bpq36t+SHw
+        UfnsHZ0/DY/nHn4ducji9vW3RhVHd4lPV7/3Ja2We7+En9VuvyL5f9ZlktMUOTOmWi0+M3PO
+        dReT3Hfrwz4osRRnJBpqMRcVJwIARqwT0C4DAAA=
+X-CMS-MailID: 20220314162858epcas5p4a383d0b0d9a316b664858260309da317
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----whw7GLWDXQn0DNT5QbpmV5iNJmL06zVCQqLt8G63uv36fYb2=_110027_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220308152702epcas5p1eb1880e024ac8b9531c85a82f31a4e78
+References: <20220308152105.309618-1-joshi.k@samsung.com>
+        <CGME20220308152702epcas5p1eb1880e024ac8b9531c85a82f31a4e78@epcas5p1.samsung.com>
+        <20220308152105.309618-6-joshi.k@samsung.com>
+        <20220311070148.GA17881@lst.de>
+X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -135,77 +126,184 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+------whw7GLWDXQn0DNT5QbpmV5iNJmL06zVCQqLt8G63uv36fYb2=_110027_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-On 3/14/2022 5:15 PM, Michael S. Tsirkin wrote:
-> On Mon, Mar 14, 2022 at 03:26:13PM +0200, Max Gurtovoy wrote:
->> On 3/14/2022 1:15 PM, Michael S. Tsirkin wrote:
->>> On Mon, Mar 14, 2022 at 12:25:08PM +0200, Max Gurtovoy wrote:
->>>> On 3/14/2022 11:43 AM, Suwan Kim wrote:
->>>>> On Sun, Mar 13, 2022 at 12:37:21PM +0200, Max Gurtovoy wrote:
->>>>>> On 3/11/2022 6:07 PM, Suwan Kim wrote:
->>>>>>> On Fri, Mar 11, 2022 at 10:38:07AM -0500, Michael S. Tsirkin wrote:
->>>>>>>> On Sat, Mar 12, 2022 at 12:28:32AM +0900, Suwan Kim wrote:
->>>>>>>>> diff --git a/include/uapi/linux/virtio_blk.h b/include/uapi/linux/virtio_blk.h
->>>>>>>>> index d888f013d9ff..3fcaf937afe1 100644
->>>>>>>>> --- a/include/uapi/linux/virtio_blk.h
->>>>>>>>> +++ b/include/uapi/linux/virtio_blk.h
->>>>>>>>> @@ -119,8 +119,9 @@ struct virtio_blk_config {
->>>>>>>>>      	 * deallocation of one or more of the sectors.
->>>>>>>>>      	 */
->>>>>>>>>      	__u8 write_zeroes_may_unmap;
->>>>>>>>> +	__u8 unused1;
->>>>>>>>> -	__u8 unused1[3];
->>>>>>>>> +	__virtio16 num_poll_queues;
->>>>>>>>>      } __attribute__((packed));
->>>>>>>> Same as any virtio UAPI change, this has to go through the virtio TC.
->>>>>>>> In particular I don't think gating a new config field on
->>>>>>>> an existing feature flag is a good idea.
->>>>>>> Did you mean that the polling should be based on a new feature like
->>>>>>> "VIRTIO_BLK_F_POLL" and be added at the end of features_legacy[]
->>>>>>> and features[]? If then, I will add the new feture flag and resend it.
->>>>>> Isn't there a way in the SPEC today to create a queue without interrupt
->>>>>> vector ?
->>>>> It seems that it is not possible to create a queue without interrupt
->>>>> vector. If it is possible, we can expect more polling improvement.
->>> Yes, it's possible:
->>>
->>> Writing a valid MSI-X Table entry number, 0 to 0x7FF, to
->>> \field{config_msix_vector}/\field{queue_msix_vector} maps interrupts triggered
->>> by the configuration change/selected queue events respectively to
->>> the corresponding MSI-X vector. To disable interrupts for an
->>> event type, the driver unmaps this event by writing a special NO_VECTOR
->>> value:
->>>
->>> \begin{lstlisting}
->>> /* Vector value used to disable MSI for queue */
->>> #define VIRTIO_MSI_NO_VECTOR            0xffff
->>> \end{lstlisting}
->>>
->>>
->>>
->>>> MST/Jason/Stefan,
->>>>
->>>> can you confirm that please ?
->>>>
->>>> what does VIRTQ_AVAIL_F_NO_INTERRUPT supposed to do ?
->>> This is a hint to the device not to send interrupts.
->> Why do you need a hint if the driver implicitly wrote 0xffff to disable MSI
->> for a virtqueue ?
+On Fri, Mar 11, 2022 at 08:01:48AM +0100, Christoph Hellwig wrote:
+>On Tue, Mar 08, 2022 at 08:50:53PM +0530, Kanchan Joshi wrote:
+>> +/*
+>> + * This overlays struct io_uring_cmd pdu.
+>> + * Expect build errors if this grows larger than that.
+>> + */
+>> +struct nvme_uring_cmd_pdu {
+>> +	u32 meta_len;
+>> +	union {
+>> +		struct bio *bio;
+>> +		struct request *req;
+>> +	};
+>> +	void *meta; /* kernel-resident buffer */
+>> +	void __user *meta_buffer;
+>> +} __packed;
 >
-> VIRTIO_MSI_NO_VECTOR is an expensive write into config space, followed
-> by an even more expensive read. Reliable and appropriate if you turn
-> events on/off very rarely.
->
-> VIRTQ_AVAIL_F_NO_INTERRUPT is an in-memory write so it's much cheaper,
-> but it's less reliable. Appropriate if you need to turn events on/off a
-> lot.
+>Why is this marked __packed?
+Did not like doing it, but had to.
+If not packed, this takes 32 bytes of space. While driver-pdu in struct
+io_uring_cmd can take max 30 bytes. Packing nvme-pdu brought it down to
+28 bytes, which fits and gives 2 bytes back.
 
-An "expensive" operation in the ctrl path during vq creation is fine IMO.
+For quick reference - 
+struct io_uring_cmd {
+        struct file *              file;                 /*     0     8 */
+        void *                     cmd;                  /*     8     8 */
+        union {
+                void *             bio;                  /*    16     8 */
+                void               (*driver_cb)(struct io_uring_cmd *); /*    16     8 */
+        };                                               /*    16     8 */
+        u32                        flags;                /*    24     4 */
+        u32                        cmd_op;               /*    28     4 */
+        u16                        cmd_len;              /*    32     2 */
+        u16                        unused;               /*    34     2 */
+        u8                         pdu[28];              /*    36    28 */
 
-I see that nobody even used VIRTQ_AVAIL_F_NO_INTERRUPT in-memory write 
-in Linux.
+        /* size: 64, cachelines: 1, members: 8 */
+};
+io_uring_cmd struct goes into the first cacheline of io_kiocb.
+Last field is pdu, taking 28 bytes. Will be 30 if I evaporate above
+field.
+nvme-pdu after packing:
+struct nvme_uring_cmd_pdu {
+        u32                        meta_len;             /*     0     4 */
+        union {
+                struct bio *       bio;                  /*     4     8 */
+                struct request *   req;                  /*     4     8 */
+        };                                               /*     4     8 */
+        void *                     meta;                 /*    12     8 */
+        void *                     meta_buffer;          /*    20     8 */
 
+        /* size: 28, cachelines: 1, members: 4 */
+        /* last cacheline: 28 bytes */
+} __attribute__((__packed__));
+
+>In general I'd be much more happy if the meta elelements were a
+>io_uring-level feature handled outside the driver and typesafe in
+>struct io_uring_cmd, with just a normal private data pointer for the
+>actual user, which would remove all the crazy casting.
+
+Not sure if I got your point.
+
++static struct nvme_uring_cmd_pdu *nvme_uring_cmd_pdu(struct io_uring_cmd *ioucmd)
++{
++       return (struct nvme_uring_cmd_pdu *)&ioucmd->pdu;
++}
++
++static void nvme_pt_task_cb(struct io_uring_cmd *ioucmd)
++{
++       struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
+
+Do you mean crazy casting inside nvme_uring_cmd_pdu()?
+Somehow this looks sane to me (perhaps because it used to be crazier
+earlier).
+
+And on moving meta elements outside the driver, my worry is that it
+reduces scope of uring-cmd infra and makes it nvme passthru specific.
+At this point uring-cmd is still generic async ioctl/fsctl facility
+which may find other users (than nvme-passthru) down the line. 
+Organization of fields within "struct io_uring_cmd" is around the rule
+that a field is kept out (of 28 bytes pdu) only if is accessed by both
+io_uring and driver. 
+
+>> +static void nvme_end_async_pt(struct request *req, blk_status_t err)
+>> +{
+>> +	struct io_uring_cmd *ioucmd = req->end_io_data;
+>> +	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
+>> +	/* extract bio before reusing the same field for request */
+>> +	struct bio *bio = pdu->bio;
+>> +
+>> +	pdu->req = req;
+>> +	req->bio = bio;
+>> +	/* this takes care of setting up task-work */
+>> +	io_uring_cmd_complete_in_task(ioucmd, nvme_pt_task_cb);
 >
+>This is a bit silly.  First we defer the actual request I/O completion
+>from the block layer to a different CPU or softirq and then we have
+>another callback here.  I think it would be much more useful if we
+>could find a way to enhance blk_mq_complete_request so that it could
+>directly complet in a given task.  That would also be really nice for
+>say normal synchronous direct I/O.
+
+I see, so there is room for adding some efficiency.
+Hope it will be ok if I carry this out as a separate effort.
+Since this is about touching blk_mq_complete_request at its heart, and
+improving sync-direct-io, this does not seem best-fit and slow this
+series down.
+
+FWIW, I ran the tests with counters inside blk_mq_complete_request_remote()
+
+        if (blk_mq_complete_need_ipi(rq)) {
+                blk_mq_complete_send_ipi(rq);
+                return true;
+        }
+
+        if (rq->q->nr_hw_queues == 1) {
+                blk_mq_raise_softirq(rq);
+                return true;
+        }
+Deferring by ipi or softirq never occured. Neither for block nor for
+char. Softirq is obvious since I was not running against scsi (or nvme with
+single queue). I could not spot whether this is really a overhead, at
+least for nvme.
+
+
+>> +	if (ioucmd) { /* async dispatch */
+>> +		if (cmd->common.opcode == nvme_cmd_write ||
+>> +				cmd->common.opcode == nvme_cmd_read) {
 >
->>>>> Regards,
->>>>> Suwan Kim
+>No we can't just check for specific commands in the passthrough handler.
+
+Right. This is for inline-cmd approach. 
+Last two patches of the series undo this (for indirect-cmd).
+I will do something about it.
+
+>> +			nvme_setup_uring_cmd_data(req, ioucmd, meta, meta_buffer,
+>> +					meta_len);
+>> +			blk_execute_rq_nowait(req, 0, nvme_end_async_pt);
+>> +			return 0;
+>> +		} else {
+>> +			/* support only read and write for now. */
+>> +			ret = -EINVAL;
+>> +			goto out_meta;
+>> +		}
+>
+>Pleae always handle error in the first branch and don't bother with an
+>else after a goto or return.
+
+Yes, that'll be better.
+>> +static int nvme_ns_async_ioctl(struct nvme_ns *ns, struct io_uring_cmd *ioucmd)
+>> +{
+>> +	int ret;
+>> +
+>> +	BUILD_BUG_ON(sizeof(struct nvme_uring_cmd_pdu) > sizeof(ioucmd->pdu));
+>> +
+>> +	switch (ioucmd->cmd_op) {
+>> +	case NVME_IOCTL_IO64_CMD:
+>> +		ret = nvme_user_cmd64(ns->ctrl, ns, NULL, ioucmd);
+>> +		break;
+>> +	default:
+>> +		ret = -ENOTTY;
+>> +	}
+>> +
+>> +	if (ret >= 0)
+>> +		ret = -EIOCBQUEUED;
+>
+>That's a weird way to handle the returns.  Just return -EIOCBQUEUED
+>directly from the handler (which as said before should be split from
+>the ioctl handler anyway).
+
+Indeed. That will make it cleaner.
+
+------whw7GLWDXQn0DNT5QbpmV5iNJmL06zVCQqLt8G63uv36fYb2=_110027_
+Content-Type: text/plain; charset="utf-8"
+
+
+------whw7GLWDXQn0DNT5QbpmV5iNJmL06zVCQqLt8G63uv36fYb2=_110027_--
