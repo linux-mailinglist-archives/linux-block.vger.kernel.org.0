@@ -2,52 +2,147 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A82F84D7D32
-	for <lists+linux-block@lfdr.de>; Mon, 14 Mar 2022 09:05:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F8074D7D65
+	for <lists+linux-block@lfdr.de>; Mon, 14 Mar 2022 09:12:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237469AbiCNIG0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Mar 2022 04:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        id S237624AbiCNINg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Mar 2022 04:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239023AbiCNIEv (ORCPT
+        with ESMTP id S237733AbiCNINL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Mar 2022 04:04:51 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399C54338E;
-        Mon, 14 Mar 2022 01:02:43 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id AF0DB68AFE; Mon, 14 Mar 2022 09:02:09 +0100 (CET)
-Date:   Mon, 14 Mar 2022 09:02:09 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: remove fs.f_write_hint
-Message-ID: <20220314080209.GC4921@lst.de>
-References: <20220307104701.607750-1-hch@lst.de> <20220307104701.607750-3-hch@lst.de> <Yi1Dc0x9j5bPAlQz@zeniv-ca.linux.org.uk>
+        Mon, 14 Mar 2022 04:13:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DC7383DA6D
+        for <linux-block@vger.kernel.org>; Mon, 14 Mar 2022 01:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647245521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e3fpUD1WBNJDewOagkvGRBUT0zzMkStT2pshcTX95+8=;
+        b=M4Ls4c9Uv88rwcC95NVi0yT/lccGWtH+Wv3vVt7nArIoVe9+IcRxrnFrSfWoM7Asl/cCW6
+        yfFWtA44aV7ClcuCWPzussc5muW8SKkTD/KmxxqvDMw65LC34467Y0N1P6ydW3v4sWcO51
+        8ygJt98KkSjCl6jOcKmhO0TdKjhqCS4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-373-XB3U27EkODunVOXDt7E-wA-1; Mon, 14 Mar 2022 04:11:57 -0400
+X-MC-Unique: XB3U27EkODunVOXDt7E-wA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3941C185A79C;
+        Mon, 14 Mar 2022 08:11:57 +0000 (UTC)
+Received: from T590 (ovpn-8-17.pek2.redhat.com [10.72.8.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 782EB40D019C;
+        Mon, 14 Mar 2022 08:11:50 +0000 (UTC)
+Date:   Mon, 14 Mar 2022 16:11:44 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Yu Kuai <yukuai3@huawei.com>, Saravanan D <saravanand@fb.com>,
+        Christopher Obbard <chris.obbard@collabora.com>
+Subject: Re: [PATCH block-5.17] fix rq-qos breakage from skipping
+ rq_qos_done_bio()
+Message-ID: <Yi74wAHBvU+8QGrP@T590>
+References: <Yi7rdrzQEHjJLGKB@slm.duckdns.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yi1Dc0x9j5bPAlQz@zeniv-ca.linux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <Yi7rdrzQEHjJLGKB@slm.duckdns.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Mar 13, 2022 at 01:05:55AM +0000, Al Viro wrote:
-> On Mon, Mar 07, 2022 at 11:47:01AM +0100, Christoph Hellwig wrote:
-> > The value is now completely unused except for reporting it back through
-> > the F_GET_FILE_RW_HINT ioctl, so remove the value and the two ioctls
-> > for it.
+On Sun, Mar 13, 2022 at 09:15:02PM -1000, Tejun Heo wrote:
+> a647a524a467 ("block: don't call rq_qos_ops->done_bio if the bio isn't
+> tracked") made bio_endio() skip rq_qos_done_bio() if BIO_TRACKED is not set.
+> While this fixed a potential oops, it also broke blk-iocost by skipping the
+> done_bio callback for merged bios.
 > 
-> Obvious question - which userland code issues these ioctls?  I obviously
-> like the series, but...
+> Before, whether a bio goes through rq_qos_throttle() or rq_qos_merge(),
+> rq_qos_done_bio() would be called on the bio on completion with BIO_TRACKED
+> distinguishing the former from the latter. rq_qos_done_bio() is not called
+> for bios which wenth through rq_qos_merge(). This royally confuses
+> blk-iocost as the merged bios never finish and are considered perpetually
+> in-flight.
+> 
+> One reliably reproducible failure mode is an intermediate cgroup geting
+> stuck active preventing its children from being activated due to the
+> leaf-only rule, leading to loss of control. The following is from
+> resctl-bench protection scenario which emulates isolating a web server like
+> workload from a memory bomb run on an iocost configuration which should
+> yield a reasonable level of protection.
+> 
+>   # cat /sys/block/nvme2n1/device/model
+>   Samsung SSD 970 PRO 512GB               
+>   # cat /sys/fs/cgroup/io.cost.model
+>   259:0 ctrl=user model=linear rbps=834913556 rseqiops=93622 rrandiops=102913 wbps=618985353 wseqiops=72325 wrandiops=71025
+>   # cat /sys/fs/cgroup/io.cost.qos
+>   259:0 enable=1 ctrl=user rpct=95.00 rlat=18776 wpct=95.00 wlat=8897 min=60.00 max=100.00
+>   # resctl-bench -m 29.6G -r out.json run protection::scenario=mem-hog,loops=1
+>   ...
+>   Memory Hog Summary
+>   ==================
+> 
+>   IO Latency: R p50=242u:336u/2.5m p90=794u:1.4m/7.5m p99=2.7m:8.0m/62.5m max=8.0m:36.4m/350m
+>               W p50=221u:323u/1.5m p90=709u:1.2m/5.5m p99=1.5m:2.5m/9.5m max=6.9m:35.9m/350m
+> 
+>   Isolation and Request Latency Impact Distributions:
+> 
+>                 min   p01   p05   p10   p25   p50   p75   p90   p95   p99   max  mean stdev
+>   isol%       15.90 15.90 15.90 40.05 57.24 59.07 60.01 74.63 74.63 90.35 90.35 58.12 15.82 
+>   lat-imp%        0     0     0     0     0  4.55 14.68 15.54 233.5 548.1 548.1 53.88 143.6 
+> 
+>   Result: isol=58.12:15.82% lat_imp=53.88%:143.6 work_csv=100.0% missing=3.96%
+> 
+> The isolation result of 58.12% is close to what this device would show
+> without any IO control.
+> 
+> Fix it by introducing a new flag BIO_QOS_MERGED to mark merged bios and
+> calling rq_qos_done_bio() on them too. For consistency and clarity, rename
+> BIO_TRACKED to BIO_QOS_THROTTLED. The flag checks are moved into
+> rq_qos_done_bio() so that it's next to the code paths that set the flags.
+> 
+> With the patch applied, the above same benchmark shows:
+> 
+>   # resctl-bench -m 29.6G -r out.json run protection::scenario=mem-hog,loops=1
+>   ...
+>   Memory Hog Summary
+>   ==================
+> 
+>   IO Latency: R p50=123u:84.4u/985u p90=322u:256u/2.5m p99=1.6m:1.4m/9.5m max=11.1m:36.0m/350m
+>               W p50=429u:274u/995u p90=1.7m:1.3m/4.5m p99=3.4m:2.7m/11.5m max=7.9m:5.9m/26.5m
+> 
+>   Isolation and Request Latency Impact Distributions:
+> 
+>                 min   p01   p05   p10   p25   p50   p75   p90   p95   p99   max  mean stdev
+>   isol%       84.91 84.91 89.51 90.73 92.31 94.49 96.36 98.04 98.71 100.0 100.0 94.42  2.81 
+>   lat-imp%        0     0     0     0     0  2.81  5.73 11.11 13.92 17.53 22.61  4.10  4.68 
+> 
+>   Result: isol=94.42:2.81% lat_imp=4.10%:4.68 work_csv=58.34% missing=0%
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Fixes: a647a524a467 ("block: don't call rq_qos_ops->done_bio if the bio isn't tracked")
+> Cc: stable@vger.kernel.org # v5.15+
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Cc: Yu Kuai <yukuai3@huawei.com>
 
-The only places I've ever found are fio and ceph.  Despite all the noise
-about Android, the google code search for Android does not actually find
-a user there.
+Looks fine since rq always holds one .q_usage_counter in case of merge:
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+
+
+Thanks,
+Ming
+
