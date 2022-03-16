@@ -2,47 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7BA74DADAC
-	for <lists+linux-block@lfdr.de>; Wed, 16 Mar 2022 10:42:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6C234DAE2F
+	for <lists+linux-block@lfdr.de>; Wed, 16 Mar 2022 11:24:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348894AbiCPJnt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Mar 2022 05:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39104 "EHLO
+        id S1344510AbiCPKZ1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Mar 2022 06:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244653AbiCPJnr (ORCPT
+        with ESMTP id S241893AbiCPKZZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Mar 2022 05:43:47 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB5B6548B
-        for <linux-block@vger.kernel.org>; Wed, 16 Mar 2022 02:42:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=AsIUq7+RSnqQQnR7oUJiLxsWazVuQ1qtZlXnVGn+QTU=; b=1/uLy0v/FCjpGeFg5RGjFTCn/q
-        O6FcRKVxY32cZph4lEKD6NOFJZCY6NAPeBOsDvTT0oq0tY6HbNMjP8yw/HxlS8ruvJjyH7/yoXbTh
-        qpTDcquMbUjxJnUA+SUlG+o4Rsrt2iqMn1DIe4O/H3BaE2yK3z4lcpRuKphbcjW/XSzbt5PslM4gj
-        2jIpORFOv3bHPZsuq8JjKAU+FHeOfccVmK/3Y/ynv1Ta/6NFrCjq+ljvNfK9LocG864tAfp1SYQ5N
-        CetnLyHZaSTCb2tFNsfIsmoo0pDUoTF69ljGsta1K2kD9jduxGcUcMTt5s0Ul+ph6i4OUHFUGa6Ud
-        4zxkSG7Q==;
-Received: from [46.140.54.162] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nUQAp-00CLip-7J; Wed, 16 Mar 2022 09:42:31 +0000
-Date:   Wed, 16 Mar 2022 10:42:28 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-Subject: [GIT PULL] nvme fix for Linux 5.17
-Message-ID: <YjGxBNRRK/VLVYsF@infradead.org>
+        Wed, 16 Mar 2022 06:25:25 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4D344757
+        for <linux-block@vger.kernel.org>; Wed, 16 Mar 2022 03:24:12 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id D906B21108;
+        Wed, 16 Mar 2022 10:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1647426250; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mO8SKUZsZIQ4xJh7x5seCmL/ZpaQWkzd2cjMt+W1s18=;
+        b=3AG6q2jgFEJDBPsa2ssTGvPuDLmt+0xm+VvxFegtUzvc6u3RU+RmOwigPkus3xPZ6nQHmt
+        e/a+MFR8NrP4rXKhwe754Ly6pL1iadtal1IjCow0XZD32SPRQfPz8/aCmLnhH38OHQ/xvL
+        grpspzKglUmdqvjneCSKXNvSK8Fc8Ow=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1647426250;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mO8SKUZsZIQ4xJh7x5seCmL/ZpaQWkzd2cjMt+W1s18=;
+        b=jL8zs8i3YjTix6lKRFQoo9W+jPQH0op+LvZyi4W8me1P8xgu8CRiTjdotdfeNwVbPVyJdb
+        hHhlWmFNOkakqIDw==
+Received: from quack3.suse.cz (unknown [10.163.28.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 9D892A3B81;
+        Wed, 16 Mar 2022 10:24:10 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 12D55A0615; Wed, 16 Mar 2022 11:24:10 +0100 (CET)
+Date:   Wed, 16 Mar 2022 11:24:10 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jan Kara <jack@suse.cz>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH 3/8] loop: remove the racy bd_inode->i_mapping->nrpages
+ asserts
+Message-ID: <20220316102410.j3ugylmeu3j2hgvm@quack3.lan>
+References: <20220316084519.2850118-1-hch@lst.de>
+ <20220316084519.2850118-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20220316084519.2850118-4-hch@lst.de>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,28 +68,70 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The following changes since commit c2700d2886a87f83f31e0a301de1d2350b52c79b:
+On Wed 16-03-22 09:45:14, Christoph Hellwig wrote:
+> Nothing prevents a file system or userspace opener of the block device
+> from redirtying the page right afte sync_blockdev returned.  Fortunately
+> data in the page cache during a block device change is mostly harmless
+> anyway.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Darrick J. Wong <djwong@kernel.org>
 
-  nvme-tcp: send H2CData PDUs based on MAXH2CDATA (2022-02-23 14:43:11 +0100)
+Looks good. Feel free to add:
 
-are available in the Git repository at:
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-  git://git.infradead.org/nvme.git tags/nvme-5.17-2022-03-16
+								Honza
 
-for you to fetch changes up to 0c48645a7f3988a624767d025fa3275ae24b6ca1:
-
-  nvmet: revert "nvmet: make discovery NQN configurable" (2022-03-15 10:39:26 +0100)
-
-----------------------------------------------------------------
-nvme fix for Linux 5.17
-
- - last minute revert of a nvmet feature added in Linux 5.16
-   (Hannes Reinecke)
-
-----------------------------------------------------------------
-Hannes Reinecke (1):
-      nvmet: revert "nvmet: make discovery NQN configurable"
-
- drivers/nvme/target/configfs.c | 39 ---------------------------------------
- drivers/nvme/target/core.c     |  3 +--
- 2 files changed, 1 insertion(+), 41 deletions(-)
+> ---
+>  drivers/block/loop.c | 20 --------------------
+>  1 file changed, 20 deletions(-)
+> 
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 2d344fefda6b8..e3361c6b22150 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -1276,15 +1276,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  	/* I/O need to be drained during transfer transition */
+>  	blk_mq_freeze_queue(lo->lo_queue);
+>  
+> -	if (size_changed && lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -		/* If any pages were dirtied after invalidate_bdev(), try again */
+> -		err = -EAGAIN;
+> -		pr_warn("%s: loop%d (%s) still has dirty pages (nrpages=%lu)\n",
+> -			__func__, lo->lo_number, lo->lo_file_name,
+> -			lo->lo_device->bd_inode->i_mapping->nrpages);
+> -		goto out_unfreeze;
+> -	}
+> -
+>  	prev_lo_flags = lo->lo_flags;
+>  
+>  	err = loop_set_status_from_info(lo, info);
+> @@ -1495,21 +1486,10 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+>  	invalidate_bdev(lo->lo_device);
+>  
+>  	blk_mq_freeze_queue(lo->lo_queue);
+> -
+> -	/* invalidate_bdev should have truncated all the pages */
+> -	if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -		err = -EAGAIN;
+> -		pr_warn("%s: loop%d (%s) still has dirty pages (nrpages=%lu)\n",
+> -			__func__, lo->lo_number, lo->lo_file_name,
+> -			lo->lo_device->bd_inode->i_mapping->nrpages);
+> -		goto out_unfreeze;
+> -	}
+> -
+>  	blk_queue_logical_block_size(lo->lo_queue, arg);
+>  	blk_queue_physical_block_size(lo->lo_queue, arg);
+>  	blk_queue_io_min(lo->lo_queue, arg);
+>  	loop_update_dio(lo);
+> -out_unfreeze:
+>  	blk_mq_unfreeze_queue(lo->lo_queue);
+>  
+>  	return err;
+> -- 
+> 2.30.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
