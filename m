@@ -2,122 +2,153 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1E64E212F
-	for <lists+linux-block@lfdr.de>; Mon, 21 Mar 2022 08:23:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D9FA4E23DD
+	for <lists+linux-block@lfdr.de>; Mon, 21 Mar 2022 11:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243768AbiCUHYY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Mar 2022 03:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
+        id S233782AbiCUKBw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Mar 2022 06:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232949AbiCUHYW (ORCPT
+        with ESMTP id S232096AbiCUKBv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Mar 2022 03:24:22 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2051.outbound.protection.outlook.com [40.107.244.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A275AECD
-        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 00:22:57 -0700 (PDT)
+        Mon, 21 Mar 2022 06:01:51 -0400
+Received: from esa3.hc3370-68.iphmx.com (esa3.hc3370-68.iphmx.com [216.71.145.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EA660F9;
+        Mon, 21 Mar 2022 03:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1647856824;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=4RckOyHuQ5kYI0KTpTlxEdTuSeWl8kDZa4B0qCmjOyw=;
+  b=Lo1gg80pLusbju6jdA6LvDPahNROEAnJcgd/PyVdDOySTWhAZ0rS7DgV
+   PwmDXbQM2dkPT4Hi+wnXaQnYg+CezyTq+CSXQNaZhX2V8OphRkhlKAn/K
+   rZVek8F7K2Pwv9TKPud7sSWZwBUzK5DTH1ho8ZwgT7Gf/q1VGUAP9Wm/9
+   I=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=pass (signature verified) header.i=@citrix.onmicrosoft.com
+X-SBRS: 5.1
+X-MesageID: 66745199
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.156.83
+X-Policy: $RELAYED
+IronPort-Data: A9a23:A0pLa6nPgzHnKsQaygorzzro5gwGJkRdPkR7XQ2eYbSJt1+Wr1Gzt
+ xIaD2nSbv7YN2T8f9snOY2/9EwCvcPRnIBrSFBo/npnRCMWpZLJC+rCIxarNUt+DCFioGGLT
+ Sk6QoOdRCzhZiaE/n9BCpC48T8kk/vgqoPUUIYoAAgoLeNfYHpn2EoLd9IR2NYy24DiWVrV4
+ LsenuWEULOb828sWo4rw/rrRCNH5JwebxtB4zTSzdgS1LPvvyF94KA3fMldHFOhKmVgJcaoR
+ v6r8V2M1jixEyHBqD+Suu2TnkUiGtY+NOUV45Zcc/DKbhNq/kTe3kunXRa1hIg+ZzihxrhMJ
+ NtxWZOYGRclNJHtksshTzpTTCdAOLJcpIDKCC3q2SCT5xWun3rExvxvCAc9PJEC+/YxCmZLn
+ RAaAGlTNFbZ3bvwme/lDLk37iggBJCD0Ic3oHZvwCufFf87aZvCX7/L9ZlT2zJYasVmQ6iBO
+ 5dAOGsHgBLoXS8VFFkFCosHjMjzuWTdSC1qolDFqv9ii4TU5FMoi+W8WDbPQfSJSN9Tk0Ldp
+ GvA/nj+GAoyKtOS03yG/2iqi+uJmjn0MKoWFbul5rtpjUeVy2g7FhIbTx24rOO/h0r4XMhQQ
+ 2QQ/jQrhawz71CwCN38WQCo5nKJoHY0X9tWDv1/4gWKwan8/QmUHC4HQyRHZdhgs9U5LRQh0
+ VuImZXoQz9utrK9RneU97PSpjS3UQAcPWUFaAcHQBED7t2lrIJbpgLCSJNvHbC4ivXxGCrs2
+ HaaoS4mnbIRgMUXkaKh8jj6bymE/8aTCFRvv0OOAzzjvlgRiJOZi5KAuUjX58phJqmlUnqK4
+ 346nteEsN8DJMTY/MCSe9klELas7veDFTTTh19zApUsnwiQF26fkZN4u28nehowWioQUXqwO
+ RKI51sNjHNGFCHyBZKbdb5dHCjDIULIMd3+Hs7ZYdNVCnSaXF/WpXo+DaJ8Mo2EraTNrU3dE
+ crAGSpPJSxDYUiC8NZRb71BuYLHPghkmQvuqWnTlnxLK4a2an+PUqsiO1CTdO0/567siFyLr
+ 4kPbpPTkkUGC7yWjszrHWk7dw1iEJTGLcqu95w/mhCrfGKK513N+9eOmOh8KuSJboxel/vS/
+ 2HVZ6Or4AGXuJEzEi3TMioLQOq2Bf5X9CtnVQRxbQfA8yVyOu6HsfZAH6bbiJF6rYSPO9YvF
+ KJbEyhBa9wSIgn6F8M1NsCs8tY9KEz12Wpj/UONOVACQnKpfCSQkvfMdQrz7igeSC2xsMo1u
+ bq70Q3HB5EEQmxf4Az+MppDE3vZUaAhpd9P
+IronPort-HdrOrdr: A9a23:vQWcVaPv/ZwJfcBcTyP155DYdb4zR+YMi2TDiHofdfUFSKClfp
+ 6V8cjztSWUtN4QMEtQ/uxoHJPwO080kqQFnLX5XI3SJzUO3VHHEGgM1/qB/9SNIVyaygcZ79
+ YdT0EcMqyAMbEZt7eC3ODQKb9Jq7PmgcOVbKXlvg9QpGlRGt9dBmxCe2Cm+yNNNW177c1TLu
+ vi2iMLnUvpRV0nKuCAQlUVVenKoNPG0LrgfB49HhYirC2Dlymh5rLWGwWRmk52aUIE/Z4StU
+ z+1yDp7KSqtP+2jjfaym/o9pxT3P/s0MFKCsCggtUcbh/slgGrToJ8XKDqhkF/nMifrHIR1P
+ XcqRYpOMp+r1vXY2GOuBPonzLt1T4/gkWSvmOwsD/Gm4jUVTg6A81OicZyaR3C8Xctu9l6ze
+ Ziw3+Zn4A/N2KOoA3No/zzEz16nEu9pnQv1cQJiWZEbIcYYLhN6aQC4UJuFosaFi6S0vFqLA
+ BXNrCc2B9qSyLbU5iA1VMfg+BEH05DUytue3Jy9PB8iFNt7TJEJ0hx/r1qop5PzuN5d3B+3Z
+ W2Dk1ZrsA/ciYoV9MOOA4ge7rANoWfe2OEDIqtSW6XYZ3vfUi976LK3A==
+X-IronPort-AV: E=Sophos;i="5.90,198,1643691600"; 
+   d="scan'208";a="66745199"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NxyJbMCEFiAZazyZNADzbxUFQ+yTbTeXllsquUFidQs7BzwbDB570FE+zK+8lfgIsc+932l3iGzXZotB31Zoi/4cnSjZ8pNNWwbZAoCkbBmDsQFWjHRz36Ohr3+ygWQOB/pP5/C9+V7hNvcFtvOt1RSGX4Bo6vmAQRw2hrLQ2UNueFFdcAse4gJGIlR7tU2PKAuAvwMBI3cXpRayF9z1yJcVmmCqhfsiaFuokXKZF+OUXzHxUYuWnBfTCKn1gyBu2BLGcNupIeSSQIz2uYVkba4BSxlj76rOzMGPOcoaOF+iA8wjHdmVDqmVTO2gPrSYJy0k0C0ezuTP1jr+WnnyCg==
+ b=FH0GUeUe9+XOTHqYtAraBj4C2XnrHeoM96AcgSsK6b1nc7vdtInAi9j/B3XqkqFITd1+oXJFfAlPpWPTEqNAh+06GcJo5wEQB6KCxdAcoCtzcahmTM7lByxJwjcqOmG74ANE9rFI70JW84OZ+Ypp9bVuiBM/oZarVsu1VP1uacPKPEztsFwuEattbPIjEKVdJPgY+XNmBlUwo7ebtKvbOwfzWU1LypnvxDWTT0KUWoY6uu7z5NOY5dX/rd5QBgQBYDJXoOJ2pAmFyP2A7EZHGxpBnRd4L+9I+cvnrcvYzjCvyzOSVJ+CrYCZ1JxoThKBcQJsP9ZOVDaJIHT0u552Bg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6fPAvr5gl8O9B0TMMbAZpfU16p13bv61Thpa9Bzpa5o=;
- b=JXexzN02BDl/JvKUSQUWFgHjWXl83FD9imd2hswNGQ7pFEASXAvM4nv9bqY5FuxIfnf73TYa9w09nPaQghgZhUVIkZksY5WpQjFJ6iHoFrF9FKZGeP6NU8tFF1AfLMwdzwbwASBsuZwi67K3u3VQNxCK6jeLgHCKXwk09w94fVHB9sB+u66KCBeQwxQmtlxqWWpFAUEkLlmghAAROb14ED9CSy95DMJJP2YnIoG54aIfpW3l3KHb0m8RYkVU1PdPuD5BuMevzmCfqMuLKOX/FscJGqNm+9dpxkv/EBC6espBtedUBqFNBeG/+slIsOwlSK7o4FejV9la0JnJK14h9A==
+ bh=LJxLXOd/g+NcgzFBMKk/6O/8OuPEssPXeeYfnKDPtG0=;
+ b=A50FAf01qR7bF9Glx54iJv603uLfyzarwcGG7uNUmVlxIhelTJUzuRsK51wYIH8ZOWuV/CTKH5V4t8Jc/YHEozMFC7D31/2vt2eK7HZxYss+ha4HrIPhibc59Om8xtVhte8bLo8wDptFDzYXrMFjN6vOWbpXU/3R+FvH22TDA61EREtUaat0ZFW87QARNaHHrAyJTN5G8MWyoCeMLczVWEK6b9KQlIyFpdJFwHyoYfgxp4ARUmtV4yZDFZ03UfBgJSTphWCYb5yn1pIeI6gJrqWe1mzitKFfNFQ7aRk+HsTplId7ww+KD+3bql750poKtKHLkY13rgrA2uElElFQmA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
+ dkim=pass header.d=citrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6fPAvr5gl8O9B0TMMbAZpfU16p13bv61Thpa9Bzpa5o=;
- b=IXQM0xXHemyNNw3Zz5K9k1IGVmuniyCFf7W0jXBgu1ravR6kj3ldXDoTn6T/5FptG4qhDRDmKNEUUUTI+DGTIHm1annKVDf7s4IVAYSijBGrKRqELaou9SU3638RVXbGZANFuwEa3fz1ZaJm5fgU9qi1XDuVrY+IgkO3NsPofP/yvQY0+i1/gYldXLhBr7mOcWOia9h79DUPVnm/1MqBbbOlKdmLMF07FJwwVo1BHUmOkQVuLvVeTcLknoDW/3nV4MQes7GHvSdYPSEyABW7HJSgc5QHF80IDkLe3knlSWQWH8HrFBs3iOmv/0hCWimMEiisyL3W7wm6f1CiWN5Pqw==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by BL1PR12MB5269.namprd12.prod.outlook.com (2603:10b6:208:30b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.18; Mon, 21 Mar
- 2022 07:22:55 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::204b:bbcb:d388:64a2]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::204b:bbcb:d388:64a2%4]) with mapi id 15.20.5081.023; Mon, 21 Mar 2022
- 07:22:55 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Jackie Liu <liu.yun@linux.dev>, "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH] n64cart: convert bi_disk to bi_bdev->bd_disk fix build
-Thread-Topic: [PATCH] n64cart: convert bi_disk to bi_bdev->bd_disk fix build
-Thread-Index: AQHYPPMUhSUC17FQ6EGMljGFBhkXZ6zJbxCA
-Date:   Mon, 21 Mar 2022 07:22:55 +0000
-Message-ID: <af81b502-a5ae-b215-71f3-64eeba8774af@nvidia.com>
-References: <20220321071216.1549596-1-liu.yun@linux.dev>
-In-Reply-To: <20220321071216.1549596-1-liu.yun@linux.dev>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 43d44570-a089-42af-a09e-08da0b0b9e8e
-x-ms-traffictypediagnostic: BL1PR12MB5269:EE_
-x-microsoft-antispam-prvs: <BL1PR12MB5269E4150CCAE6C5B4C1CB35A3169@BL1PR12MB5269.namprd12.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LDzuTo4Vr0evmQAaSDC3T+WNcTUAjBmibyJ5G2FIYOVfMgn3mdofocTFwXsx9YJ9R5JLcf9CPNPldw7MNA9nhTqvM5l4NXm7XckTzwnElvlbQPdjutZqDBIf9Rrix+WCfV34hFW0DYrmY5oEUZbnjS2IzfsFsY6U9R83ZAa/432v1IJJ8nGM5NwqDjRrTKlvIYTGHgxWFu33HlNCN/R902WxX+PztyBeH9zHEhrKsxWRRKeIR2rBf9d/glk0nOiD4hBGnh7uj6FcVebBRgV365gDNx509DI0ktfnRVFW5FVKERX+0yfcS3ohhi/hI2KZZhkRLVhgyOL5B8iPB+API3rRDiN9ywjAw2D/0hcDXmgsvPtpIXIHlMSUguIX4LiCaMgvc8bzTR+0Pp8hxNJ9mt33bIqXksjxzSM7K1I6/9I4QsSPjgg1edjLEvxU2jWCAMwggMjVDLgi6R2RpPrRhhsmwgAs7hdHVvUJIRvcTIN1etdNLLst2j4ekzW+0JtUcRgz2VPwMoCIamW5fXS2ov7JvrZjrPoTIXthLsmMtvuQHJth5HtuuUaUaoEtKSMQm693BtXOLdK9TF055ExKGrcJZs9LGKR09jVdroiwjoKgjAXLR2mfPHTgAaIBJDp6esiVobphNc6sIF5ae0IBujHY52TTgd2F0mPd1uxUH40dsrJhBs7PfIhSz4WxMYFl29wBkUVFQInapZmhpSbhA9WJFMn4SLBgh5RM0AiKPN4YlqABXsN1VqwTHSxN5uceXiH9OiVQJbEFVAn5LYHDBQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(31696002)(71200400001)(86362001)(186003)(4744005)(26005)(5660300002)(6512007)(83380400001)(53546011)(316002)(6506007)(110136005)(2906002)(36756003)(2616005)(6486002)(66946007)(91956017)(4326008)(31686004)(8676002)(76116006)(64756008)(66476007)(66446008)(66556008)(38100700002)(38070700005)(8936002)(508600001)(122000001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NHhPY1RFeVFxa0diY0xZSmpPUWZ1SDlCSnMzMERsc21NYUdaZnRzUDluVmZy?=
- =?utf-8?B?ZU01YVcwTG96eXd6STdncFhsRU9vMmZJY3hsTktUOUZUeFVLTGY4QUVDQkEz?=
- =?utf-8?B?UDRwYXJpbDRnMmFsRTRNY0xQRHBIVFpzZWRZVHoxWFc1ZytNRmtUZm8reXEv?=
- =?utf-8?B?b1Z1ZnhjZVYzLytzRERnNkNaTDlmQmJSdnpBSnZrTWJ0WEhEVWZVcTV0aVBw?=
- =?utf-8?B?aWdENEVVc1k0aTJRL25tNmQ0QUJNQjlmZURDL0doM1NkRmdCTytwblptQWNK?=
- =?utf-8?B?QkZESWQ5V2NmZ0N4dmNjQmFQZWJsS3VQMEkwaSthVm1XSGlJTmxXYnJoeGgr?=
- =?utf-8?B?SWJIdGF5N1RZL3N5cy8yWTJlMlliTE5QMGowWEl5TENWcFBqMWlheFRvTmh5?=
- =?utf-8?B?N2ZzVmQ1NW5ob1g4a01BVUoycU9NaHdoYU5TbzN6NFI5ME9VaU1XSWM5ZnFK?=
- =?utf-8?B?Sm9pTG1EaTNyc040dERYV1h5RDFXUkp6OCs0WFZ5Wnp4L3ZzRkVqcTd4SHQ2?=
- =?utf-8?B?TGc0aHhqMVVYVkhLYjFUN1cwTWhjUEJPQmI1MnpzWjJJT05VZUlDTVMrdGs2?=
- =?utf-8?B?dnI5ZFBMOVlLT1drUVRERTA3L2dnbUFXWHVqMUtSS3VOYS9WUFdyWHRndFE1?=
- =?utf-8?B?QUx1OThXczd0bzBWZFVMQk8xbTZ2V3h3RHIwQnkvYTBrb1ErOVIrMUJMd1c1?=
- =?utf-8?B?Y2x6OFpLd0VtWFBRckRtTmExUGF1ZXN2YlR4U3ErVXA2MXB1QjZBRU4yK2lG?=
- =?utf-8?B?c3ltVFF1bUg1TmtXSm9ibXNVRDVzcTROa1FQSW5jK0hiL1B3ZlNJc01wZyt6?=
- =?utf-8?B?dGVEODIrR2V6MzhodjN0dUZPK05kZ0JvcjJGV3M0bXBFeTlGTGh4R1hhL2cr?=
- =?utf-8?B?cm1kcjRLWStnOU51bHZEUWFqVzUvNUZlRE94RWl5RFNta0haR3VzcXBWa2lk?=
- =?utf-8?B?NzdNYUVUcXBCM3JKSk5pS0xZU0N3QnZtVkVCM2xkM2xEMmw5QURpckp6SWVI?=
- =?utf-8?B?SnFBSEFRRFFWQmlNKzR5QXFqV2VyNUhrZ0J5TTV3Q1gwTGlkYXpKNm1abjBs?=
- =?utf-8?B?NVFpaHNqTXRlektIbXJNNE1LWkQ2SlkxMWVzYkxLRGhSN1pNK2JYOStSRGFo?=
- =?utf-8?B?NHdDK3NIMVZBSjdMS3FvcEZzS1Vuc0dzMUZqaWpTa2FnYU9CMGYzTSsxSDI1?=
- =?utf-8?B?V2FCa2RlT1lGdS9JK0d1Y3AxZUdPc0w4VXFjZVR5N2RMeWhORmRpNWRtTGtE?=
- =?utf-8?B?QjF4SFVZOVlFbVZOZk5aemtOU3hmZFg1YTZHSHJyWVN0VEV3K1RCZ3llVkdJ?=
- =?utf-8?B?L1hRRDNIMU9WcEpvSGdUdjR3ajl1T1Q1Vmk2a0RuT2dkVkMydXlibGdSWFRa?=
- =?utf-8?B?MkhOK3o2SHZsbjUvSXlmMFFYZGtHNHdXVTNXdVVBU2lGei9ZQzU3RFZISS94?=
- =?utf-8?B?ajFPSnhaWlBkS0NrZzBFSnlDZzdlUTEvazhQTkNmMmJEQmxsTHMzM2JLRDh1?=
- =?utf-8?B?czZqaDhyZ050QzUrYTBnUVFpTE5ieml2c0lYdWpPUFkvdVZvdTFHeGw0RFdp?=
- =?utf-8?B?VGdVWUVkY2U5aHd1V2t0ZHZOVDh6VDNsYVlyeEl4QWViNHFFaldOTE13YU1B?=
- =?utf-8?B?YXdrSktleDR0MHEwMTh2T3VubTBDbzJDVk54dHF4TnBKejlPY0I5V2hLdjlt?=
- =?utf-8?B?eG5LeSszZjdVczdaY1hwNEowYytGSWNhTThTaVE5M3Y5Q0J5aXluVnVSLzcr?=
- =?utf-8?B?NmxzVnF1UTJGOXBzeXRjY2dPdlNBRHA2V3lnSWUzQnJNV3JsZjA1RnF1bjY0?=
- =?utf-8?B?SXJKUTZJb2FmanNMK0Ixa1hHSkFlOE5mdC8zRWlsTER0Qk5ja0NjRWNRSnJY?=
- =?utf-8?B?UkEyV2dTd1g0ck00VGRRdlRZWFJpL0c3S0dqUzB6d0MzejJLdVdlb2F0Qmoz?=
- =?utf-8?Q?TGe7JJDprwgWh4+UmsbBxQPi0itQEkKH?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FE6BCC638126A84EADF7C6C10B35E9FA@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ bh=LJxLXOd/g+NcgzFBMKk/6O/8OuPEssPXeeYfnKDPtG0=;
+ b=hRlQ2QNydZbs7MZMO1KvtkrBRuRkLZwBUG42Ek518GlXXVSXk9JCG38xpjCQ7vE6jramEwoBU8J3HQusSfaqVqER5N8dAFW1eWsVrb2GU9mMpRDLlENrDtGn2a19wC6NTe2unGeWHN4T1WhIk1rA6k12Qe9IewvCcUyZp3upkl8=
+Date:   Mon, 21 Mar 2022 11:00:13 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Colin Ian King <colin.i.king@gmail.com>
+CC:     Jens Axboe <axboe@kernel.dk>, <xen-devel@lists.xenproject.org>,
+        <linux-block@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>
+Subject: Re: [PATCH] xen-blkback: remove redundant assignment to variable i
+Message-ID: <YjhMre8vckI1HbSS@Air-de-Roger>
+References: <20220317234646.78158-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220317234646.78158-1-colin.i.king@gmail.com>
+X-ClientProxiedBy: LO2P265CA0241.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8a::13) To DS7PR03MB5608.namprd03.prod.outlook.com
+ (2603:10b6:5:2c9::18)
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 889f5f94-f5a8-48a9-f05d-08da0b219ab6
+X-MS-TrafficTypeDiagnostic: PH7PR03MB6944:EE_
+X-Microsoft-Antispam-PRVS: <PH7PR03MB6944166296D4E2C6802A04878F169@PH7PR03MB6944.namprd03.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 50Mk5dI1AbaE+zveTAmqMcD0J+N9zbjq1kfTbL/bTjpVrYDLFXnAPg19bmMHVyDxes7bnAyfoBKE3YmMO2tFNznIPE0JfPa643m1fxYaVwq2xgD4WfhEL4Lg0L2j9NZL3EfkbKJ01KLdKWcPqtjYxmip5RRFku1HilWblK14SIImo9Cu9sYUPJHLTHc6ay62iEiAxcibnIhBL9ly9BDYgPdJFAFeMxALad0rq7i6LxKnlgBl7QPP+U+XhflYwNn3vFHUGz5qkwto3qHQrg0hupd/wfZyufmcZAoMkWbTJaaLTf+NxMXzpHSZKhG8yMAEG6fdqqqrbT9zHWFsvH9abyHuoHB8JIwOtIxDJ6fAMgHQWzBWoAu5c6SB1jWq5haYcsh0cmfNKN61TNhdOI8Vlz+wYGy6fZlM05SnT6lUZ/5GEbEnf8EFe6ZHvW+rSgtdw50z8j1+BOQojAMWIwYpFcfaV6r5C8QgpJfRMuYy+qyS0g8iy6Spy9qSQZ/38Ap2h4RSofGXLzc/bkC/rW14baDdAXCe9gPOohCZzkcski2/9zSvziJsvAXqg0WFOA8byPpm02Xoh/9qiU9kML9aBSXyrBKtDAm1JkYVL41NJ0odaiFzRhoII1Iw7rKCip1gQ7BENc/4HhRoSXqxsGmBpV0BqkaAqS21m3ZOX7ErtO1OVgERI8VSJBJnmPSoQ5QUS4JizGNYQmu7u1faxEKJNg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR03MB5608.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(7916004)(366004)(2906002)(9686003)(6512007)(6666004)(33716001)(86362001)(83380400001)(66946007)(66556008)(8936002)(66476007)(85182001)(4326008)(508600001)(8676002)(6506007)(26005)(82960400001)(186003)(6916009)(4744005)(5660300002)(316002)(6486002)(38100700002)(129723003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OGMvakdRM2dwR1ZGQUk0SVIwclhVdFpwaTRVQ0lhWUMxbDFabEYxOHcxa0tI?=
+ =?utf-8?B?OTg4SEpwOC9meDNPcHVFYWVyVFEyZ0Q4eXFSSk9MZnVYMzNNOTRIeWtVMEpF?=
+ =?utf-8?B?UERrWnAyZkYyVnRCRWVsMzF6bG9YU0NhdzR4Q3RvSXpDa21LcDZLTzRQVTRC?=
+ =?utf-8?B?cFF2cCtqMDlLSXVoR2pDSUErVGo2aDdZRlJyNlhBM1BRS3FoWUlnR1lJMGpG?=
+ =?utf-8?B?YjZidFRSV1BlN1pkVitkVldrUGhDaEplMkdHem9Cbk5ZSk41WjNCOXN3MCti?=
+ =?utf-8?B?UEF1MDhRK1hBdkJnRWlTdy94ZVZZWjZrMUZkTElyd1QvR085aFhZVFdkdlpL?=
+ =?utf-8?B?NFJFdnA3NE5Gazk4M253Sldrb0JlTXBQYTNHd1hRVndlUEF5bllNMmtLZllQ?=
+ =?utf-8?B?U1o1YjFLUHNCNEdsQ1BNS2UzRlIwZTBYN3prNGZoM2xmU202d1NhUUxQby8w?=
+ =?utf-8?B?ZG1BMVRqK1hlTDVRTjZQSzF1UzI5RGFjWXdFQWJadC9UYzBEalJpdjFGYUNZ?=
+ =?utf-8?B?bWVEQ0N1bGxzNloxMVNIbmdCdmp4NmUyUDhQMVlYOFNBUmxkT1hPRjdPcGxk?=
+ =?utf-8?B?d3VlY2ppS01GT2RkMEVQYWpTQnZETTRKMmtYemNwMWx3dVpaQXozcHg4aWdO?=
+ =?utf-8?B?ekRxTkQxblUzT2kwMG9KbnhNK2h2TXFGWmNLN2Z4NlJDcDhhTVlkbTVGaDU3?=
+ =?utf-8?B?UEwvaHlFTEp3d2tHR1hIZklEeTdlUDNIbHVET3gwRXp0YzZxNXNiM0FmL3Rt?=
+ =?utf-8?B?VElIMlF3dGw3ZjM4Rzg1K0JsbU4vUzhMWTA3T0RSR25HYzNtYld3YWVYU2gz?=
+ =?utf-8?B?QnBNdlo3Nk52RzBNQW10L0ltY3dJL0h2NUR1UTdkT0pUKy9WN1V1SGh3eGlJ?=
+ =?utf-8?B?TVorT2o4eDZkdFJ2MGNSS0czVlBZek5sRFVTOEVJUDZVUWY5M0JLam5PSTB6?=
+ =?utf-8?B?ZWI5N25IRzBndE5rY2ZJK2pQbm5YWVJTU1Y4S240N0hKanc5RWV0YlJZc296?=
+ =?utf-8?B?cGpNcWxyNXJNRTQvSktudlRlVzl0ZlozaE83ZDB1ZlNhZ3dUQXJzamo2UDYz?=
+ =?utf-8?B?VHUyY1BIbnQwMzYvbnZpb0FqLzl2UFZaQ0tkN1dQWVFDeXRLcXAzM3NleCt1?=
+ =?utf-8?B?aGpXcDZrWG1UUy9WSGNLVUZZNmpsZVFkdUFNU2tGV2s0MUlyY050bThCNVJY?=
+ =?utf-8?B?S1lQVC9wcllJdDVKSStKMHZwWWQzaWVNbS84MmRkelFSUEtCdmZrUm1kU2F5?=
+ =?utf-8?B?N1FQMHJMQWhRcWV2RThGYXVRRWRpeFdMZXVYNW40bVpOalVTODRmRjBNYU02?=
+ =?utf-8?B?am85SGY2ZUFCQU93MkZOZ213NVNBWS93ckpOL2xIUkpOSzdGSTlYVFd3OFI3?=
+ =?utf-8?B?cEZVNUlwbVhnRmw1QzI5VGRkbXAwVE1iSjlLVVREOE5EbHJ6cHBkcVhjcEVZ?=
+ =?utf-8?B?T1NjbTdKK0JMaGZnOWdkUjRjSDRJQW16MGg0cTNiN2I2RVVkdHZFQ3NqV1RV?=
+ =?utf-8?B?QXQ2dGp0WlJWSmZiaFREMFNRWWRFdE8vYll3MUx1NHg1OEZjUm5mZ3lEZFlt?=
+ =?utf-8?B?c0FCdE9Yb3NYOFhqR251VXovOFpoeDM2S0ZTTUFjVVFlaHNMU0JVay9LSE8z?=
+ =?utf-8?B?d2FJTThtYVM0YlUxVnV4SENZbmk3UWt1YnZGUXpOdzkyWnEyMGZoQ210bmY5?=
+ =?utf-8?B?cDQ5Z3JrMmRrOHNObVBUc0hKcVpwdlBrc0JKeUZiVjJ5MXVDaHFRd0dncmtw?=
+ =?utf-8?B?ZStJZGFBQURXcHNFZHQyaEhnbTF6WUY0MHdLRnlCYWcyblJXT1lUc1oybW1j?=
+ =?utf-8?B?T1VmcXpvTjNRUXV4ajFZTW9PU3ZaOHVHVWhtS1RJallTcFhSelo1aklsVUNO?=
+ =?utf-8?B?QmxPOFJWY0xDcnNFNFpITURTamJLbUZvTE5ZTE5wMW43TDE5TXdaMFBQWTla?=
+ =?utf-8?B?OVFuRzJQOHBUNVlLSTRVNFJIcGxycXZPK21VOURUTUVNeW9UdnpBMDJra0Nk?=
+ =?utf-8?B?aGdHalI4dXdRPT0=?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 889f5f94-f5a8-48a9-f05d-08da0b219ab6
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR03MB5608.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43d44570-a089-42af-a09e-08da0b0b9e8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2022 07:22:55.7945
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2022 10:00:18.4946
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Wg+YRxbQhwtPWFnVkBPyLCBaCYEVmDAGt//DdeeB5VNL6V1iHAywjRvmlsbxFCtk+i1Hw/+yq2NWfllZjOVAFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5269
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CSxd25QMo8d1nkDYATJGnZ8HAwfUk1uR9jct47LiURPY7APTQhZEWmnH0+gTsdkiPbgzEUQb9E+hBeBygge2Cg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR03MB6944
+X-OriginatorOrg: citrix.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -126,21 +157,18 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-T24gMy8yMS8yMiAwMDoxMiwgSmFja2llIExpdSB3cm90ZToNCj4gRnJvbTogSmFja2llIExpdSA8
-bGl1eXVuMDFAa3lsaW5vcy5jbj4NCj4gDQo+IE15IGtlcm5lbCByb2JvdCByZXBvcnQgYmVsb3c6
-DQo+IA0KPiAgICBkcml2ZXJzL2Jsb2NrL242NGNhcnQuYzogSW4gZnVuY3Rpb24g4oCYbjY0Y2Fy
-dF9zdWJtaXRfYmlv4oCZOg0KPiAgICBkcml2ZXJzL2Jsb2NrL242NGNhcnQuYzo5MToyNjogZXJy
-b3I6IOKAmHN0cnVjdCBiaW/igJkgaGFzIG5vIG1lbWJlciBuYW1lZCDigJhiaV9kaXNr4oCZDQo+
-ICAgICAgIDkxIHwgIHN0cnVjdCBkZXZpY2UgKmRldiA9IGJpby0+YmlfZGlzay0+cHJpdmF0ZV9k
-YXRhOw0KPiAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICBefg0KPiAgICAgIEND
-ICAgICAgZHJpdmVycy9zbGltYnVzL3Fjb20tY3RybC5vDQo+ICAgICAgQ0MgICAgICBkcml2ZXJz
-L2F1eGRpc3BsYXkvaGQ0NDc4MC5vDQo+ICAgICAgQ0MgICAgICBkcml2ZXJzL3dhdGNoZG9nL3dh
-dGNoZG9nX2NvcmUubw0KPiAgICAgIENDICAgICAgZHJpdmVycy9udm1lL2hvc3QvZmF1bHRfaW5q
-ZWN0Lm8NCj4gICAgICBBUiAgICAgIGRyaXZlcnMvYWNjZXNzaWJpbGl0eS9icmFpbGxlL2J1aWx0
-LWluLmENCj4gICAgbWFrZVsyXTogKioqIFtzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjI4ODogZHJp
-dmVycy9ibG9jay9uNjRjYXJ0Lm9dIEVycm9yIDENCj4gDQo+IEZpeGVzOiAzMDlkY2EzMDlmYzMg
-KCJibG9jazogc3RvcmUgYSBibG9ja19kZXZpY2UgcG9pbnRlciBpbiBzdHJ1Y3QgYmlvIik7DQo+
-IFJlcG9ydGVkLWJ5OiBrMmNpIDxrZXJuZWwtYm90QGt5bGlub3MuY24+DQo+IFNpZ25lZC1vZmYt
-Ynk6IEphY2tpZSBMaXUgPGxpdXl1bjAxQGt5bGlub3MuY24+DQo+IC0tLQ0KDQpMb29rcyBnb29k
-Lg0KDQpSZXZpZXdlZC1ieTogQ2hhaXRhbnlhIEt1bGthcm5pIDxrY2hAbnZpZGlhLmNvbT4NCg0K
-LWNrDQoNCg0K
+On Thu, Mar 17, 2022 at 11:46:46PM +0000, Colin Ian King wrote:
+> Variable i is being assigned a value that is never read, it is being
+> re-assigned later in a for-loop. The assignment is redundant and can
+> be removed.
+> 
+> Cleans up clang scan build warning:
+> drivers/block/xen-blkback/blkback.c:934:14: warning: Although the value
+> stored to 'i' is used in the enclosing expression, the value is never
+> actually read from 'i' [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+
+Thanks, Roger.
