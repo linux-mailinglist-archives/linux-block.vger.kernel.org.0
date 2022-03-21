@@ -2,116 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AF524E2ABF
-	for <lists+linux-block@lfdr.de>; Mon, 21 Mar 2022 15:30:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC3FA4E2AF0
+	for <lists+linux-block@lfdr.de>; Mon, 21 Mar 2022 15:35:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349248AbiCUOa3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Mar 2022 10:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46118 "EHLO
+        id S1349557AbiCUOfd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Mar 2022 10:35:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349408AbiCUOaP (ORCPT
+        with ESMTP id S1349560AbiCUOe7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Mar 2022 10:30:15 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8497558E5B
-        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 07:26:14 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id g138so7910321ybf.5
-        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 07:26:14 -0700 (PDT)
+        Mon, 21 Mar 2022 10:34:59 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BA15F4C3
+        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 07:33:22 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id k7so6090461qvc.4
+        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 07:33:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=wZHnqBSae63vK9bA1tspxWUm/wGqXcwXQvPA20fn1E8=;
-        b=RxoXLnoM/seN72WejG4jeqZCW3u9lcqPFeyYzL5bFZ/M7TGoWzCHPeLf7WEaRufeoO
-         cBhuBJESuTnsEi5g9yk+wf1IJb9IQhiJvqmWzbqRRltYAoTxN2BhkZsrkae8bQ4qq40Z
-         AF2Kx37zA3iG06IdplevsX91W2/wc2FgCld9G0xgXI5PVmoI9sW7S8CEEU5fPiQP1kmL
-         N47bzt1kHhTiP/0X2WQUQc5qL4tZ2uTtlaMDSKKwVefv9y4LEpzWM7Zvy5LtTAV9qoBu
-         30y8haPCJW3i5ozsacvPHMjS5Ff8pvAPjfs159VesuTzQ0+Qh0FDtpKeXbVrSGvRH/d/
-         g4bw==
+        d=cmpxchg-org.20210112.gappssmtp.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=us46s+4EPzPx/x4i+BKRoQL7SxJrfbc5izH2Jmo2exM=;
+        b=DIuqnBQJ+D8uHwQ7rRY5uyiULjBVtGxEIduobDz0t0FBX5mpZcJsO2XEa7VcfdYkTV
+         Id4JSNKheF4QVSr29xg2y4dpXKa+mNZ2kUnP5A3CPEDMxNUr4EWymy9l4Vn/3RxTAMbI
+         5lTmrOiCAUkcw9k+dUBjP1pCVh5tgyhxuqknjM25vCB2aVtaav/IDcqyxrW7OWFOMHT8
+         bYMlSIU0PtnhAcyoLIXRIBv0xnx6zpiWOJNkCu5n+1hFtDdOBF6/ex9VAFmP3vHQTLif
+         pbOlH6lxjYZilIi5w3jrbWEPu0N5CQvdlTVbazta9mjupWBYWjNxrn9mm96PMVaICDk7
+         iucA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=wZHnqBSae63vK9bA1tspxWUm/wGqXcwXQvPA20fn1E8=;
-        b=x4I+SbfjGOG+YIMgxj8yFeQWUTgbjVbOT5cShWRDWlVZQc7cPaPYpupzTAqqWTW5/z
-         Tyc6s8TjLNV5wY9dXXW5ieEyeyMNEeCEXuPzCEvwrlZJ9QCEXs8cwT4MHmzjSOUGrR9c
-         BT3qjNeKCEPvjz1vfm7TqFmpXuGYFbc9WCcz/bs5BoIGfLAJJd4lvFjfQIwWdgLd25x3
-         z4jR8vcBovsGTO2mWxeXd0hX76L08Cq12sSJzx+yY4fJV7KA/9UoHHMzKfkmc2rhB4hj
-         +q1+6r3HXkZsG4nOHRmHB3em+RQasNHIFHPzlRGj4KIn8ezOLnm3lGiAZfyAxiG777jv
-         u1Ww==
-X-Gm-Message-State: AOAM530qnVHFGujXHz60bajSzwy86fYjQwMycP7ir0T6+Oc2ex0jFlqo
-        PtlhfzYz4lZKi6wV4swZ1H8ceeCIgBe2Om4ycG8=
-X-Google-Smtp-Source: ABdhPJyQ+BcbNvMRleX5zh7GojOOVirMgwa7oT6tJvw4PeOws0/+OhSl6ZaY5KxPQpgFDuGcI9y2x6bG4IiBYbJLumQ=
-X-Received: by 2002:a05:6902:1388:b0:624:6892:5495 with SMTP id
- x8-20020a056902138800b0062468925495mr22381739ybu.379.1647872773809; Mon, 21
- Mar 2022 07:26:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=us46s+4EPzPx/x4i+BKRoQL7SxJrfbc5izH2Jmo2exM=;
+        b=yVRjW7gd1KKEDwn/OY1kHfW5AmiI8CenB+2NdJ1vhdR0GcTjb7DOMH2t24RV1I/Qmp
+         IVoNBU2uqi0gMTwlDXS+jofmg1m4ZJx8BT76M4ahH3Bfrl2Ulp+WY7JVt1iPgOK0rOHl
+         gt8ogbhrnYVF8cOihkBvIvMJFnv7uj2N6S04GfaXld+3j+PCWcJ0tJAATSRLdrr2xCKo
+         SQ5B2Mto1I7ORii2qWAL9RzlYQDkPYboEJKdTxYfLv8imqN2st/1FYyMp3VaZZFTcXiJ
+         KglPNiyZSBUcf2VrezuzGEuqwQGkO4X+ISsXYnNghAc6Io22gSuOIgrmR0QFwn28TuiM
+         KNRg==
+X-Gm-Message-State: AOAM531J3oXTyXs9vCPB9Qg0sL3AkSVh2RV9cXwuPHq1tJ/pIl4GQocP
+        vDNV07SgYXYfNF5U1cLjdVWJ4Q==
+X-Google-Smtp-Source: ABdhPJzuIjrelcElq9DwcPDy1CDAqt1nawinhreHQoL5wDrjqG6A6BI3rtIwaguRYBMUW2VDRm2ACA==
+X-Received: by 2002:ad4:5f8e:0:b0:441:3dbf:15d5 with SMTP id jp14-20020ad45f8e000000b004413dbf15d5mr801181qvb.108.1647873202008;
+        Mon, 21 Mar 2022 07:33:22 -0700 (PDT)
+Received: from localhost (cpe-98-15-154-102.hvc.res.rr.com. [98.15.154.102])
+        by smtp.gmail.com with ESMTPSA id j11-20020a05622a038b00b002e1f0bc2e8csm9636047qtx.81.2022.03.21.07.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Mar 2022 07:33:21 -0700 (PDT)
+Date:   Mon, 21 Mar 2022 10:33:20 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     cgel.zte@gmail.com
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
+        Yang Yang <yang.yang29@zte.com.cn>,
+        Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Subject: Re: [PATCH] block/psi: make PSI annotations of submit_bio only work
+ for file pages
+Message-ID: <YjiMsGoXoDU+FwsS@cmpxchg.org>
+References: <20220316063927.2128383-1-yang.yang29@zte.com.cn>
 MIME-Version: 1.0
-Received: by 2002:a05:7000:1713:0:0:0:0 with HTTP; Mon, 21 Mar 2022 07:26:13
- -0700 (PDT)
-Reply-To: orlandomoris56@gmail.com
-From:   Orlando Moris <pedroati060@gmail.com>
-Date:   Mon, 21 Mar 2022 14:26:13 +0000
-Message-ID: <CAKX=hRsVXW_MEwqDDswSg+Awv=2LjhqMfNfCX0w9QyZQAT5fzw@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=7.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b36 listed in]
-        [list.dnswl.org]
-        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [pedroati060[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [pedroati060[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [orlandomoris56[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.8 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  3.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220316063927.2128383-1-yang.yang29@zte.com.cn>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Po=C5=A1tovani, obavje=C5=A1tavamo vas da ova e-poruka koja je stigla u va=
-=C5=A1
-po=C5=A1tanski sandu=C4=8Di=C4=87 nije pogre=C5=A1ka, ve=C4=87 je bila izri=
-=C4=8Dito upu=C4=87ena vama
-kako biste odmah razmotrili. Imam prijedlog od (7.500.000.00 USD) koji
-je ostavio moj pokojni klijent in=C5=BEenjer Carlos koji nosi isto ime s
-vama, koji je radio i =C5=BEivio ovdje u Lome Togou Moj pokojni klijent i
-obitelj sudjelovali su u prometnoj nesre=C4=87i koja im je odnijela =C5=BEi=
-vote
-. Javljam Vam se kao najbli=C5=BEoj rodbini pokojnika kako biste mogli
-dobiti sredstva po potra=C5=BEivanjima. Nakon va=C5=A1eg brzog odgovora
-obavijestit =C4=87u vas o na=C4=8Dinima
-izvr=C5=A1enje ovog ugovora., kontaktirajte me na ovu e-po=C5=A1tu
-(orlandomoris56@gmail.com)
+On Wed, Mar 16, 2022 at 06:39:28AM +0000, cgel.zte@gmail.com wrote:
+> From: Yang Yang <yang.yang29@zte.com.cn>
+> 
+> psi tracks the time spent on submitting the IO of refaulting file pages
+> and anonymous pages[1]. But after we tracks refaulting anonymous pages
+> in swap_readpage[2][3], there is no need to track refaulting anonymous
+> pages in submit_bio.
+> 
+> So this patch can reduce redundant calling of psi_memstall_enter. And
+> make it easier to track refaulting file pages and anonymous pages
+> separately.
+
+I don't think this is an improvement.
+
+psi_memstall_enter() will check current->in_memstall once, detect the
+nested call, and bail. Your patch checks PageSwapBacked for every page
+being added. It's more branches for less robust code.
