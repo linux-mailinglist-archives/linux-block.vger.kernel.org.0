@@ -2,50 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 585DA4E31F0
-	for <lists+linux-block@lfdr.de>; Mon, 21 Mar 2022 21:38:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 364E94E34D0
+	for <lists+linux-block@lfdr.de>; Tue, 22 Mar 2022 00:49:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351072AbiCUUjB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Mar 2022 16:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
+        id S233291AbiCUXr2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Mar 2022 19:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351883AbiCUUjA (ORCPT
+        with ESMTP id S233428AbiCUXr0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Mar 2022 16:39:00 -0400
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD36A173374
-        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 13:37:33 -0700 (PDT)
-Received: by mail-il1-f200.google.com with SMTP id m3-20020a056e02158300b002b6e3d1f97cso8064706ilu.19
-        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 13:37:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SUwtGSAW8MMzqRMHGMLu+LQIXzYxE9UsH0DlufN6LeU=;
-        b=CvB2oV6cdH8xlrkBUHOtisr5PYuTtrwMbaR+FR4pnBNv2sAf7MPM4z4cZfTEthyS0D
-         ZL0epngl9tmzIzbDmsYDo5L0t+bSmdbAz3XIqjBPSw2tZ8vLBrzQFX4E6hjzLTJtWLqu
-         YAOXGjO8ZH3akvcA7/N+P3E0ee2pai6nspaUBdbNHSN1YPTTELu15F9qb2k2xWQUOHDi
-         dzewGt2JF5Aqq+4UjJ0Vy5JQxSUGyRiISSUy3Dkf0IQsm51XJxWQUtre9JddYt4gTTXa
-         UhLTjNmdjXHdz+TxPkQfen8Oa2FfOSFOLdonTVhYPkHfhk0VOdM+6iwHfAJaORwtYYN2
-         scLQ==
-X-Gm-Message-State: AOAM532cSGoQhJcGyc5JxhF3M7ekTMNsueT9UY64+E0Wopq2Y8dhgUcm
-        DOLhovNKnZ3I2TyLnLj3gNnAZMSpjJkcYJUrxEY+x0GQkhEg
-X-Google-Smtp-Source: ABdhPJwKTDzyXORVwoKfIj+AtNMIGVq2e/lKaKXQhn+gh8RogL9w1Z6Eaua0SIjw8/7Q4P/D64l7R6CLqB+u1eZUhMRKngWlKXjs
+        Mon, 21 Mar 2022 19:47:26 -0400
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C381697A1
+        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 16:45:59 -0700 (PDT)
+Received: from fsav314.sakura.ne.jp (fsav314.sakura.ne.jp [153.120.85.145])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 22LMrtkt061922;
+        Tue, 22 Mar 2022 07:53:55 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav314.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp);
+ Tue, 22 Mar 2022 07:53:55 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav314.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 22LMrs9u061919
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 22 Mar 2022 07:53:54 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <886dee4b-ea74-a352-c9bf-cac16acffaa9@I-love.SAKURA.ne.jp>
+Date:   Tue, 22 Mar 2022 07:53:49 +0900
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:148d:b0:2c8:a1a:ab98 with SMTP id
- n13-20020a056e02148d00b002c80a1aab98mr6684829ilk.194.1647895053265; Mon, 21
- Mar 2022 13:37:33 -0700 (PDT)
-Date:   Mon, 21 Mar 2022 13:37:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000046f08405dac07714@google.com>
-Subject: [syzbot] WARNING in blk_release_queue
-From:   syzbot <syzbot+bd9d63403ded496c6d3c@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH] loop: add WQ_MEM_RECLAIM flag to per device workqueue
+Content-Language: en-US
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+References: <e0a0bc94-e6de-b0e5-ee46-a76cd1570ea6@I-love.SAKURA.ne.jp>
+ <YjNHzyTFHjh9v6k4@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
+ <5542ef88-dcc9-0db5-7f01-ad5779d9bc07@I-love.SAKURA.ne.jp>
+ <YjS+Jr6QudSKMSGy@slm.duckdns.org>
+ <61f41e56-3650-f0fc-9ef5-7e19fe84e6b7@I-love.SAKURA.ne.jp>
+ <YjiuGnLVjj0Ouxtd@slm.duckdns.org>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <YjiuGnLVjj0Ouxtd@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_SBL,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,91 +62,119 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+On 2022/03/22 1:55, Tejun Heo wrote:
+> No, just fix the abusers. There are four abusers in the kernel and they
+> aren't difficult to fix.
 
-syzbot found the following issue on:
-
-HEAD commit:    f9006d9269ea Add linux-next specific files for 20220321
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1768caeb700000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c1619ffa2b0259a1
-dashboard link: https://syzkaller.appspot.com/bug?extid=bd9d63403ded496c6d3c
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+bd9d63403ded496c6d3c@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-do not call blocking ops when !TASK_RUNNING; state=2 set at [<ffffffff815a3faa>] prepare_to_wait_exclusive+0x7a/0x2b0 kernel/sched/wait.c:286
-WARNING: CPU: 1 PID: 5480 at kernel/sched/core.c:9689 __might_sleep+0x105/0x150 kernel/sched/core.c:9689
-Modules linked in:
-CPU: 1 PID: 5480 Comm: syz-executor.3 Tainted: G        W         5.17.0-next-20220321-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__might_sleep+0x105/0x150 kernel/sched/core.c:9689
-Code: 70 02 00 48 8d bb f8 16 00 00 48 89 fa 48 c1 ea 03 80 3c 02 00 75 34 48 8b 93 f8 16 00 00 48 c7 c7 60 dc cb 89 e8 67 74 c8 07 <0f> 0b e9 75 ff ff ff e8 4f 37 73 00 e9 26 ff ff ff 89 34 24 e8 52
-RSP: 0018:ffffc900001e0d88 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff88801c178000 RCX: 0000000000000000
-RDX: ffff88801c178000 RSI: ffffffff815fc918 RDI: fffff5200003c1a3
-RBP: ffffffff8a2485c0 R08: 0000000000000000 R09: 0000000000000001
-R10: ffffffff815f72de R11: 0000000000000000 R12: 00000000000002fe
-R13: 0000000000000000 R14: ffffffff8a2489c0 R15: 0000000000000000
-FS:  00007f37479ec700(0000) GS:ffff8880b9d00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000002000c000 CR3: 000000007c560000 CR4: 00000000003506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- blk_release_queue+0x1f/0x320 block/blk-sysfs.c:766
- kobject_cleanup lib/kobject.c:705 [inline]
- kobject_release lib/kobject.c:736 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1c8/0x540 lib/kobject.c:753
- blkg_free.part.0+0x112/0x1f0 block/blk-cgroup.c:86
- blkg_free block/blk-cgroup.c:78 [inline]
- __blkg_release+0x105/0x160 block/blk-cgroup.c:102
- rcu_do_batch kernel/rcu/tree.c:2535 [inline]
- rcu_core+0x7b1/0x1880 kernel/rcu/tree.c:2786
- __do_softirq+0x29b/0x9c2 kernel/softirq.c:558
- do_softirq.part.0+0xde/0x130 kernel/softirq.c:459
- </IRQ>
- <TASK>
- do_softirq kernel/softirq.c:451 [inline]
- __local_bh_enable_ip+0x102/0x120 kernel/softirq.c:383
- spin_unlock_bh include/linux/spinlock.h:399 [inline]
- __lock_sock+0x138/0x260 net/core/sock.c:2769
- lock_sock_nested+0xd6/0xf0 net/core/sock.c:3317
- lock_sock include/net/sock.h:1682 [inline]
- sk_wait_data+0x20a/0x450 net/core/sock.c:2836
- tcp_recvmsg_locked+0xe28/0x1fd0 net/ipv4/tcp.c:2459
- tcp_recvmsg+0x137/0x610 net/ipv4/tcp.c:2574
- inet_recvmsg+0x11b/0x5e0 net/ipv4/af_inet.c:850
- sock_recvmsg_nosec net/socket.c:948 [inline]
- sock_recvmsg net/socket.c:966 [inline]
- sock_recvmsg net/socket.c:962 [inline]
- ____sys_recvmsg+0x2c4/0x600 net/socket.c:2632
- ___sys_recvmsg+0x127/0x200 net/socket.c:2674
- __sys_recvmsg+0xe2/0x1a0 net/socket.c:2704
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x35/0x80 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x44/0xae
-RIP: 0033:0x7f3746889049
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f37479ec168 EFLAGS: 00000246 ORIG_RAX: 000000000000002f
-RAX: ffffffffffffffda RBX: 00007f374699c030 RCX: 00007f3746889049
-RDX: 0000000000000100 RSI: 0000000020001500 RDI: 0000000000000003
-RBP: 00007f37468e308d R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007ffd774bdcef R14: 00007f37479ec300 R15: 0000000000022000
- </TASK>
-
+So, are you expecting that a change shown below happens, by adding WQ_MEM_RECLAIM
+flag to all WQs which may hit "workqueue: WQ_MEM_RECLAIM %s:%ps is flushing
+!WQ_MEM_RECLAIM %s:%ps" warning? Otherwise, __WQ_LEGACY flag will continue
+serving as a hack for suppressing this warning.
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/cpufreq/tegra194-cpufreq.c  | 2 +-
+ drivers/scsi/hosts.c                | 2 +-
+ drivers/scsi/libiscsi.c             | 2 +-
+ drivers/scsi/scsi_transport_iscsi.c | 2 +-
+ include/linux/workqueue.h           | 7 +++----
+ kernel/workqueue.c                  | 3 +--
+ 6 files changed, 8 insertions(+), 10 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/cpufreq/tegra194-cpufreq.c b/drivers/cpufreq/tegra194-cpufreq.c
+index ac381db25dbe..5d72ef07f9ed 100644
+--- a/drivers/cpufreq/tegra194-cpufreq.c
++++ b/drivers/cpufreq/tegra194-cpufreq.c
+@@ -379,7 +379,7 @@ static int tegra194_cpufreq_probe(struct platform_device *pdev)
+ 	if (IS_ERR(bpmp))
+ 		return PTR_ERR(bpmp);
+ 
+-	read_counters_wq = alloc_workqueue("read_counters_wq", __WQ_LEGACY, 1);
++	read_counters_wq = alloc_workqueue("read_counters_wq", 0, 1);
+ 	if (!read_counters_wq) {
+ 		dev_err(&pdev->dev, "fail to create_workqueue\n");
+ 		err = -EINVAL;
+diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
+index f69b77cbf538..4485f65d5e92 100644
+--- a/drivers/scsi/hosts.c
++++ b/drivers/scsi/hosts.c
+@@ -277,7 +277,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
+ 		snprintf(shost->work_q_name, sizeof(shost->work_q_name),
+ 			 "scsi_wq_%d", shost->host_no);
+ 		shost->work_q = alloc_workqueue("%s",
+-			WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | WQ_UNBOUND,
++			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_UNBOUND,
+ 			1, shost->work_q_name);
+ 
+ 		if (!shost->work_q) {
+diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
+index 059dae8909ee..c923d2a1086e 100644
+--- a/drivers/scsi/libiscsi.c
++++ b/drivers/scsi/libiscsi.c
+@@ -2801,7 +2801,7 @@ struct Scsi_Host *iscsi_host_alloc(struct scsi_host_template *sht,
+ 		snprintf(ihost->workq_name, sizeof(ihost->workq_name),
+ 			"iscsi_q_%d", shost->host_no);
+ 		ihost->workq = alloc_workqueue("%s",
+-			WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | WQ_UNBOUND,
++			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_UNBOUND,
+ 			1, ihost->workq_name);
+ 		if (!ihost->workq)
+ 			goto free_host;
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index 554b6f784223..b4f0b7584112 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -4876,7 +4876,7 @@ static __init int iscsi_transport_init(void)
+ 	}
+ 
+ 	iscsi_eh_timer_workq = alloc_workqueue("%s",
+-			WQ_SYSFS | __WQ_LEGACY | WQ_MEM_RECLAIM | WQ_UNBOUND,
++			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_UNBOUND,
+ 			1, "iscsi_eh");
+ 	if (!iscsi_eh_timer_workq) {
+ 		err = -ENOMEM;
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index 7fee9b6cfede..666c4cc73f6b 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -337,7 +337,6 @@ enum {
+ 
+ 	__WQ_DRAINING		= 1 << 16, /* internal: workqueue is draining */
+ 	__WQ_ORDERED		= 1 << 17, /* internal: workqueue is ordered */
+-	__WQ_LEGACY		= 1 << 18, /* internal: create*_workqueue() */
+ 	__WQ_ORDERED_EXPLICIT	= 1 << 19, /* internal: alloc_ordered_workqueue() */
+ 
+ 	WQ_MAX_ACTIVE		= 512,	  /* I like 512, better ideas? */
+@@ -420,12 +419,12 @@ alloc_workqueue(const char *fmt, unsigned int flags, int max_active, ...);
+ 			__WQ_ORDERED_EXPLICIT | (flags), 1, ##args)
+ 
+ #define create_workqueue(name)						\
+-	alloc_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, 1, (name))
++	alloc_workqueue("%s", WQ_MEM_RECLAIM, 1, (name))
+ #define create_freezable_workqueue(name)				\
+-	alloc_workqueue("%s", __WQ_LEGACY | WQ_FREEZABLE | WQ_UNBOUND |	\
++	alloc_workqueue("%s", WQ_FREEZABLE | WQ_UNBOUND |	\
+ 			WQ_MEM_RECLAIM, 1, (name))
+ #define create_singlethread_workqueue(name)				\
+-	alloc_ordered_workqueue("%s", __WQ_LEGACY | WQ_MEM_RECLAIM, name)
++	alloc_ordered_workqueue("%s", WQ_MEM_RECLAIM, name)
+ 
+ extern void destroy_workqueue(struct workqueue_struct *wq);
+ 
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 33f1106b4f99..aba3b1505292 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -2643,8 +2643,7 @@ static void check_flush_dependency(struct workqueue_struct *target_wq,
+ 	WARN_ONCE(current->flags & PF_MEMALLOC,
+ 		  "workqueue: PF_MEMALLOC task %d(%s) is flushing !WQ_MEM_RECLAIM %s:%ps",
+ 		  current->pid, current->comm, target_wq->name, target_func);
+-	WARN_ONCE(worker && ((worker->current_pwq->wq->flags &
+-			      (WQ_MEM_RECLAIM | __WQ_LEGACY)) == WQ_MEM_RECLAIM),
++	WARN_ONCE(worker && (worker->current_pwq->wq->flags & WQ_MEM_RECLAIM),
+ 		  "workqueue: WQ_MEM_RECLAIM %s:%ps is flushing !WQ_MEM_RECLAIM %s:%ps",
+ 		  worker->current_pwq->wq->name, worker->current_func,
+ 		  target_wq->name, target_func);
+-- 
+2.32.0
+
+
