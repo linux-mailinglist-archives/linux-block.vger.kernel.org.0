@@ -2,116 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97AAD4E3457
-	for <lists+linux-block@lfdr.de>; Tue, 22 Mar 2022 00:33:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12A614E355B
+	for <lists+linux-block@lfdr.de>; Tue, 22 Mar 2022 01:25:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232673AbiCUXaH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Mar 2022 19:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
+        id S233852AbiCVASb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Mar 2022 20:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233008AbiCUX3j (ORCPT
+        with ESMTP id S233748AbiCVASb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Mar 2022 19:29:39 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A695D328A85;
-        Mon, 21 Mar 2022 16:27:28 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id mp6-20020a17090b190600b001c6841b8a52so789229pjb.5;
-        Mon, 21 Mar 2022 16:27:28 -0700 (PDT)
+        Mon, 21 Mar 2022 20:18:31 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 717CC63AD
+        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 17:15:49 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id s25so22020965lji.5
+        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 17:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hh1RoZK4FawxC3f0a2bLkgNzcQFznKw/bRPe/9nXSXc=;
-        b=YD4Z62P0H6wDspxBlxgwXmL3Ye9mMkA/YC8aX1BB5EiLzbij/mmBIw0B6aHNRPEBS6
-         fVq4K03nZLOn6aJ8/gCbJ7g3HQzejqVrxQys063SfqpPdw6P9GQCdtdXX75ocewRlC5g
-         1opg7QvRnNzy+kT4EsWXPdTY+gfEppQ6VrAYL1kCDax1mpJ9DnEHviARGDLpAdf6c7aL
-         eu4UwnD8+t5wzJJRH02jUYmC2/j9KQFzMofrMby/jjF8J6du+qd+3vQCBaKhvFK2Ajc2
-         DdBsn7omCoJiVwvKYOSQUi0IpaCQ42c/MTdDQgIV2APKxEceSTBnKLYz5M/pR4oRn6e2
-         BeMQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=csvJ0QvkeDX9zhaH3ynhXpLSXNMu2MD5+Co07Dq20kM=;
+        b=WrI+JXUpOR6988UTRR43/d/5SpiOnCk94apAlrMoAxFTcVfdSTgZRTsfAQlZ3vATU0
+         /iqRtxTQemfTxCIIXXEOeHbGVLbqiPApRQWzyLoJMGDA7hXy75BKh1IVDDLAT2/SWlPb
+         egjcZygj11BpczvpnzvbN58n7B8Jd7lkgSvNU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Hh1RoZK4FawxC3f0a2bLkgNzcQFznKw/bRPe/9nXSXc=;
-        b=KyTAsp6j8KCOWgzswA4IKRUnp9WutcOdp1g07HB6T8eQNphogj2pYjeTofz+aHedFY
-         rTZEgSmKXKbU9DhXfKI4NyoL4e806s0QcRRMgqDCEl4np7WEumZ3dDEtXKhjGpBQHE8M
-         0/fatFLcH3ijI77Y2EjHDGN99LcJ0eFcGSd4MuR6uDEcTPNbIkW0S/PpVnFqzQ/livzw
-         xxyflNk8aGNLaNy9KuGQkQmFGXuCmGMMbAl9XpDGhja5p1z0nPG6uf/jP4ZfkxVFJSuw
-         1z2nOSRWw9Z8LUf1IsMFao/JmeczND3/AVIgP0BlXNXxGReAt4hl3sP6e1rNBy4hP0jC
-         doSA==
-X-Gm-Message-State: AOAM530/JKQ4VRsDX0x6qO8d7YrnJ/rekEaAo3bhsPQFtkpHN0yZZMCJ
-        Mo/pIRnR4k513k4TGJp7NcM=
-X-Google-Smtp-Source: ABdhPJx4S150ue7FtCtDBwGeTVJo5HvHWBmr5O+oCyOd4BodvDzriJEC2IJbwLEmKIzOISICdNTUxw==
-X-Received: by 2002:a17:90a:3e4e:b0:1c6:586a:4d6a with SMTP id t14-20020a17090a3e4e00b001c6586a4d6amr1639142pjm.214.1647905248034;
-        Mon, 21 Mar 2022 16:27:28 -0700 (PDT)
-Received: from localhost (2603-800c-1a02-1bae-e24f-43ff-fee6-449f.res6.spectrum.com. [2603:800c:1a02:1bae:e24f:43ff:fee6:449f])
-        by smtp.gmail.com with ESMTPSA id s3-20020a056a00194300b004f6664d26eesm20165727pfk.88.2022.03.21.16.27.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Mar 2022 16:27:27 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date:   Mon, 21 Mar 2022 13:27:25 -1000
-From:   Tejun Heo <tj@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] loop: add WQ_MEM_RECLAIM flag to per device workqueue
-Message-ID: <YjkJ3S/1c8PxiA2Q@slm.duckdns.org>
-References: <e0a0bc94-e6de-b0e5-ee46-a76cd1570ea6@I-love.SAKURA.ne.jp>
- <YjNHzyTFHjh9v6k4@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
- <5542ef88-dcc9-0db5-7f01-ad5779d9bc07@I-love.SAKURA.ne.jp>
- <YjS+Jr6QudSKMSGy@slm.duckdns.org>
- <61f41e56-3650-f0fc-9ef5-7e19fe84e6b7@I-love.SAKURA.ne.jp>
- <YjiuGnLVjj0Ouxtd@slm.duckdns.org>
- <886dee4b-ea74-a352-c9bf-cac16acffaa9@I-love.SAKURA.ne.jp>
- <YjkEjYVjLuo8imtn@slm.duckdns.org>
- <1c455861-3b42-c530-a99e-cce13e932f53@I-love.SAKURA.ne.jp>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=csvJ0QvkeDX9zhaH3ynhXpLSXNMu2MD5+Co07Dq20kM=;
+        b=TMcoct2knOJQ1TUKz6LupX3hz1YqzCrClb9atYWqIIOh+081SPHd6BHaLdB/dJqmtx
+         6YLMdy+2HjX+kRtUOloeqVMR2ZxZp326uPkiiUYTHD59LwOB19gMPzxP1Bq7oL46fCqS
+         /PYvh7YeL39kb/VISZVTfM8Q2Ohb/0Mbx6/HXFgWcFVMSQC62ZDQZ4cBNl8BwWLaaimI
+         OQQJ3H3/FtEFGTcaesj+r6A4k37DiDv3bcwhWqnJkSiJ3TvUVUxQYcgloMmbaTQfBlQc
+         aFW2iK4GCYYFHAEMZBVqLBN6zXKj/Z6UCXkvKEULBNiN4Rfc4wQI4DCAptWrv7xYTF0i
+         NZMg==
+X-Gm-Message-State: AOAM533kn+5/IvqdLdFdBKRegR2noCYLR/0SV6lreOYFeC9Ha+ZaOPTU
+        UZVukaOyFQuIRosQ8I1KmCHCnqC3Xn0JzNcLDsg=
+X-Google-Smtp-Source: ABdhPJzRUGuNqTv3hx/rvhDqNTjsTiSjqujeu2UgvPYcwLCOfUTo33/+Zt9BECAyUA6+Y9kZJwvHww==
+X-Received: by 2002:a2e:8853:0:b0:246:179d:7638 with SMTP id z19-20020a2e8853000000b00246179d7638mr10787351ljj.186.1647908043544;
+        Mon, 21 Mar 2022 17:14:03 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id t5-20020ac25485000000b0044833ffc127sm1960243lfk.185.2022.03.21.17.14.02
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Mar 2022 17:14:03 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id w7so27196937lfd.6
+        for <linux-block@vger.kernel.org>; Mon, 21 Mar 2022 17:14:02 -0700 (PDT)
+X-Received: by 2002:ac2:4f92:0:b0:448:7eab:c004 with SMTP id
+ z18-20020ac24f92000000b004487eabc004mr16058452lfs.27.1647908042714; Mon, 21
+ Mar 2022 17:14:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c455861-3b42-c530-a99e-cce13e932f53@I-love.SAKURA.ne.jp>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+References: <83ce22b4-bae1-9c97-1ad5-10835d6c5424@kernel.dk>
+In-Reply-To: <83ce22b4-bae1-9c97-1ad5-10835d6c5424@kernel.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 21 Mar 2022 17:13:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiXy_WR5=z+tWFY8NiuXtwfnOC5cOZeFN41MjBGcG4tsg@mail.gmail.com>
+Message-ID: <CAHk-=wiXy_WR5=z+tWFY8NiuXtwfnOC5cOZeFN41MjBGcG4tsg@mail.gmail.com>
+Subject: Re: [GIT PULL] Block driver updates for 5.18-rc1
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Mar 22, 2022 at 08:17:43AM +0900, Tetsuo Handa wrote:
-> On 2022/03/22 8:04, Tejun Heo wrote:
-> > But why are you dropping the flag from their intended users?
-> 
-> As far as I can see, the only difference __WQ_LEGACY makes is whether
-> "workqueue: WQ_MEM_RECLAIM %s:%ps is flushing !WQ_MEM_RECLAIM %s:%ps"
-> warning is printed or not. What are the intended users?
+On Fri, Mar 18, 2022 at 2:59 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> This will throw a merge conflict in drivers/nvme/target/configfs.c,
+> resolution is just to delete the two discovery helpers and the configfs
+> attribute, basically everything in the conflict section. This is due to
+> conflicting with a last minute revert in 5.17.
 
-The old create_workqueue() and friends always imply WQ_MEM_RECLAIM because
-they all used to be served dedicated kthreads. The growing number of
-kthreads used this way became a headache. There were too many of these
-kthreads sitting around doing nothing. In some niche configurations, they
-ate up enough PIDs to cause boot failrues.
+Only because I looked at this conflict did I notice that some of the
+changes are kind of pointless..
 
-To address the issue, the new implementation made the workqueues share pools
-of workers. However, this means that forward progress can't be guaranteed
-under memory pressure, so workqueues which are depended upon during memory
-reclaim now need to set WQ_MEM_RECLAIM explicitly to request a dedicated
-rescuer thread.
+I mean, this is well-meaning, but I'm really not convinced it's
+actually *useful*:
 
-The legacy flushing warning is telling us that those workqueues can be
-converted to alloc_workqueue + WQ_MEM_RECLAIM as we know them to be
-participating in memory reclaim (as they're flushing one of the explicitly
-marked workqueues). So, if you spot them, the right thing to do is
-converting all the involved workqueues to use alloc_workqueue() +
-WQ_MEM_RECLAIM.
+  -   return sprintf(page, "\n");
+  +   return snprintf(page, PAGE_SIZE, "\n");
 
-Thanks.
+It's not like a two-byte copy can ever overflow PAGE_SIZE.
 
--- 
-tejun
+Sometimes 'sprintf() -> snprintf()' conversions don't really buy you anything.
+
+                Linus
