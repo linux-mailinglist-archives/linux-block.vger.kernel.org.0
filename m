@@ -2,130 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 713E94E3CCF
-	for <lists+linux-block@lfdr.de>; Tue, 22 Mar 2022 11:47:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BDB94E3D3E
+	for <lists+linux-block@lfdr.de>; Tue, 22 Mar 2022 12:09:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233507AbiCVKsj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Mar 2022 06:48:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54550 "EHLO
+        id S232103AbiCVLKl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Mar 2022 07:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233799AbiCVKsI (ORCPT
+        with ESMTP id S231492AbiCVLKj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Mar 2022 06:48:08 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F68283009;
-        Tue, 22 Mar 2022 03:46:24 -0700 (PDT)
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KN7QM4npFz67l7t;
-        Tue, 22 Mar 2022 18:44:11 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 22 Mar 2022 11:46:22 +0100
-Received: from localhost.localdomain (10.69.192.58) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 22 Mar 2022 10:46:18 +0000
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>, <damien.lemoal@opensource.wdc.com>,
-        <bvanassche@acm.org>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <hch@lst.de>, <ming.lei@redhat.com>,
-        <hare@suse.de>
-CC:     <chenxiang66@hisilicon.com>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ide@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <dm-devel@redhat.com>,
-        <beanhuo@micron.com>, John Garry <john.garry@huawei.com>
-Subject: [PATCH 11/11] scsi: hisi_sas: Remove private tag management
-Date:   Tue, 22 Mar 2022 18:39:45 +0800
-Message-ID: <1647945585-197349-12-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1647945585-197349-1-git-send-email-john.garry@huawei.com>
-References: <1647945585-197349-1-git-send-email-john.garry@huawei.com>
+        Tue, 22 Mar 2022 07:10:39 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0C3B6
+        for <linux-block@vger.kernel.org>; Tue, 22 Mar 2022 04:09:12 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5E9D268AFE; Tue, 22 Mar 2022 12:09:08 +0100 (CET)
+Date:   Tue, 22 Mar 2022 12:09:08 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH 7/8] loop: remove lo_refcount and avoid lo_mutex in
+ ->open / ->release
+Message-ID: <20220322110908.GA28931@lst.de>
+References: <20220316084519.2850118-1-hch@lst.de> <20220316084519.2850118-8-hch@lst.de> <20220316112258.6hjksrv7yqiqcncu@quack3.lan> <26f0d3da-d45e-72aa-de2f-62ead4d2c25b@I-love.SAKURA.ne.jp> <20220316143855.sqm2dk77rbvxtxh7@quack3.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220316143855.sqm2dk77rbvxtxh7@quack3.lan>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now every sas_task which the driver sees has a SCSI command and also
-request associated, so drop the internal tag management.
+On Wed, Mar 16, 2022 at 03:38:55PM +0100, Jan Kara wrote:
+> Well, but another effect of READ_ONCE() / WRITE_ONCE() is that it
+> effectively forces the compiler to not store any intermediate value in
+> bd_openers. If you have code like bdev->bd_openers++, and bd_openers has
+> value say 1, the compiler is fully within its rights if unlocked reader
+> sees values, 1, 0, 3, 2. It would have to be a vicious compiler but the C
+> standard allows that and some of the optimizations compilers end up doing
+> result in code which is not far from this (read more about KCSAN and the
+> motivation behind it for details). So data_race() annotation is *not*
+> enough for unlocked bd_openers usage.
+> 
+> > Use of atomic_t for lo->lo_disk->part0->bd_openers does not help, for
+> > currently lo->lo_mutex is held in order to avoid races. That is, it is
+> > disk->open_mutex which loop_clr_fd() needs to hold when accessing
+> > lo->lo_disk->part0->bd_openers.
+> 
+> It does help because with atomic_t, seeing any intermediate values is not
+> possible even for unlocked readers.
 
-No reserved tags have been set aside in the tagset yet, but this is simple
-to do.
-
-For v2 HW we need to continue to allocate the tag internally as the HW is
-so broken and we need to use special rules for tag allocation, see
-slot_index_alloc_quirk_v2_hw()
-
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c | 37 +--------------------------
- 1 file changed, 1 insertion(+), 36 deletions(-)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index b3e03c229cb5..19c9ed169c91 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -169,41 +169,6 @@ static void hisi_sas_slot_index_free(struct hisi_hba *hisi_hba, int slot_idx)
- 	}
- }
- 
--static void hisi_sas_slot_index_set(struct hisi_hba *hisi_hba, int slot_idx)
--{
--	void *bitmap = hisi_hba->slot_index_tags;
--
--	__set_bit(slot_idx, bitmap);
--}
--
--static int hisi_sas_slot_index_alloc(struct hisi_hba *hisi_hba,
--				     struct sas_task *task)
--{
--	int index;
--	void *bitmap = hisi_hba->slot_index_tags;
--
--	if (task)
--		return sas_task_to_unique_tag(task);
--
--	spin_lock(&hisi_hba->lock);
--	index = find_next_zero_bit(bitmap, hisi_hba->slot_index_count,
--				   hisi_hba->last_slot_index + 1);
--	if (index >= hisi_hba->slot_index_count) {
--		index = find_next_zero_bit(bitmap,
--				hisi_hba->slot_index_count,
--				HISI_SAS_UNRESERVED_IPTT);
--		if (index >= hisi_hba->slot_index_count) {
--			spin_unlock(&hisi_hba->lock);
--			return -SAS_QUEUE_FULL;
--		}
--	}
--	hisi_sas_slot_index_set(hisi_hba, index);
--	hisi_hba->last_slot_index = index;
--	spin_unlock(&hisi_hba->lock);
--
--	return index;
--}
--
- void hisi_sas_slot_task_free(struct hisi_hba *hisi_hba, struct sas_task *task,
- 			     struct hisi_sas_slot *slot)
- {
-@@ -556,7 +521,7 @@ static int hisi_sas_queue_command(struct sas_task *task, gfp_t gfp_flags)
- 	if (!internal_abort && hisi_hba->hw->slot_index_alloc)
- 		rc = hisi_hba->hw->slot_index_alloc(hisi_hba, device);
- 	else
--		rc = hisi_sas_slot_index_alloc(hisi_hba, task);
-+		rc = sas_task_to_unique_tag(task);
- 
- 	if (rc < 0)
- 		goto err_out_dif_dma_unmap;
--- 
-2.26.2
-
+The Linux memory model guarantees atomic reads from 32-bit integers.
+But if it makes everyone happier I could do a READ_ONCE here.
