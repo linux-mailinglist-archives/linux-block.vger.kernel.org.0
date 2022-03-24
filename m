@@ -2,166 +2,135 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AC464E69E4
-	for <lists+linux-block@lfdr.de>; Thu, 24 Mar 2022 21:35:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A6964E6A1D
+	for <lists+linux-block@lfdr.de>; Thu, 24 Mar 2022 22:09:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353435AbiCXUhG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 24 Mar 2022 16:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46618 "EHLO
+        id S1347040AbiCXVK4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 24 Mar 2022 17:10:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353433AbiCXUhF (ORCPT
+        with ESMTP id S1353945AbiCXVKx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 24 Mar 2022 16:37:05 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC85A8EDE
-        for <linux-block@vger.kernel.org>; Thu, 24 Mar 2022 13:35:32 -0700 (PDT)
-Received: by mail-qt1-f171.google.com with SMTP id s11so4949792qtc.3
-        for <linux-block@vger.kernel.org>; Thu, 24 Mar 2022 13:35:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Yd52i0i0a5XNUmDGQ87h84LHgrvu7ZnpYDPKqDqFs1o=;
-        b=0DCFYxKERySlNgZly77x++YC8Jr96+PvXeX6mo3Lhk0/k23MnJGKWhkZUb4zFUv0OZ
-         rQ35h33tzcSNen9eHReCuLh7ZBs7R3f5BSWucBHqB17VyiqXJU+CZB3+IntDZKfSgCN6
-         oxGy5ha9wgkP3fQsLw72ZWNbQPa//bShBM3ChbiicOcaXU/wou5BsvDILjHhgRTRR+Cb
-         kQhDGtYbdil6VbUgwg136Eb+S9m9PAi7c/jQU8suCxelLb5WcYbsJPjzf9oWURjLEg1r
-         OwNZNmAnVB3zaHQ2Gx4++TdRqQGiQBcqPVRCGd9mIs/bEJ2XGgtCfEry4Epq6JkJyX+g
-         5uXg==
-X-Gm-Message-State: AOAM531tLD0huMs1n78p5fF5uGqMfpzi23GJsU9lv5E3e8sC5Y0C1jd5
-        mc4DKly4JqIK+Kk6V9QO8377uXq1NInN
-X-Google-Smtp-Source: ABdhPJxZ6t3UdQbj3qpY2z9A3nIrwL17ZMx/IWJPv3yGVUOB5gE/GLjHEMCnf/vE7K3JiRWmi0un2w==
-X-Received: by 2002:ac8:7e8d:0:b0:2e0:6314:d5f3 with SMTP id w13-20020ac87e8d000000b002e06314d5f3mr6313001qtj.352.1648154131721;
-        Thu, 24 Mar 2022 13:35:31 -0700 (PDT)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id k1-20020ac85fc1000000b002e1c6420790sm3492494qta.40.2022.03.24.13.35.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 13:35:31 -0700 (PDT)
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     axboe@kernel.dk
-Cc:     ming.lei@redhat.com, hch@lst.de, dm-devel@redhat.com,
-        linux-block@vger.kernel.org
-Subject: [PATCH v3 3/3] dm: conditionally enable BIOSET_PERCPU_CACHE for dm_io bioset
-Date:   Thu, 24 Mar 2022 16:35:26 -0400
-Message-Id: <20220324203526.62306-4-snitzer@kernel.org>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20220324203526.62306-1-snitzer@kernel.org>
-References: <20220324203526.62306-1-snitzer@kernel.org>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        Thu, 24 Mar 2022 17:10:53 -0400
+Received: from SJSMAIL01.us.kioxia.com (usmailhost21.kioxia.com [12.0.68.226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A0076281;
+        Thu, 24 Mar 2022 14:09:20 -0700 (PDT)
+Received: from SJSMAIL01.us.kioxia.com (10.90.133.90) by
+ SJSMAIL01.us.kioxia.com (10.90.133.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Thu, 24 Mar 2022 14:09:18 -0700
+Received: from SJSMAIL01.us.kioxia.com ([fe80::b962:3005:acea:aa09]) by
+ SJSMAIL01.us.kioxia.com ([fe80::b962:3005:acea:aa09%5]) with mapi id
+ 15.01.2176.014; Thu, 24 Mar 2022 14:09:18 -0700
+From:   Clay Mayers <Clay.Mayers@kioxia.com>
+To:     Kanchan Joshi <joshi.k@samsung.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "asml.silence@gmail.com" <asml.silence@gmail.com>
+CC:     "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "sbates@raithlin.com" <sbates@raithlin.com>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        "pankydev8@gmail.com" <pankydev8@gmail.com>,
+        "javier@javigon.com" <javier@javigon.com>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "a.manzanares@samsung.com" <a.manzanares@samsung.com>,
+        "joshiiitr@gmail.com" <joshiiitr@gmail.com>,
+        "anuj20.g@samsung.com" <anuj20.g@samsung.com>
+Subject: RE: [PATCH 17/17] nvme: enable non-inline passthru commands
+Thread-Topic: [PATCH 17/17] nvme: enable non-inline passthru commands
+Thread-Index: AQHYMwoHCN0mZHqKz0OTQ9/5LjtdfKzOvDUg
+Date:   Thu, 24 Mar 2022 21:09:18 +0000
+Message-ID: <6a1cf782310d481aa5ef2fc172f55826@kioxia.com>
+References: <20220308152105.309618-1-joshi.k@samsung.com>
+ <CGME20220308152729epcas5p17e82d59c68076eb46b5ef658619d65e3@epcas5p1.samsung.com>
+ <20220308152105.309618-18-joshi.k@samsung.com>
+In-Reply-To: <20220308152105.309618-18-joshi.k@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.93.77.13]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-A bioset's per-cpu alloc cache may have broader utility in the future
-but for now constrain it to being tightly coupled to QUEUE_FLAG_POLL.
-
-Also change dm_io_complete() to use bio_clear_polled() so that it
-properly clears all associated bio state on requeue.
-
-This commit improves DM's hipri bio polling (REQ_POLLED) perf by
-7 - 20% depending on the system.
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- drivers/md/dm-table.c | 11 ++++++++---
- drivers/md/dm.c       |  8 ++++----
- drivers/md/dm.h       |  4 ++--
- 3 files changed, 14 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index c0be4f60b427..7ebc70e3eb2f 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1002,6 +1002,8 @@ bool dm_table_request_based(struct dm_table *t)
- 	return __table_type_request_based(dm_table_get_type(t));
- }
- 
-+static int dm_table_supports_poll(struct dm_table *t);
-+
- static int dm_table_alloc_md_mempools(struct dm_table *t, struct mapped_device *md)
- {
- 	enum dm_queue_mode type = dm_table_get_type(t);
-@@ -1009,21 +1011,24 @@ static int dm_table_alloc_md_mempools(struct dm_table *t, struct mapped_device *
- 	unsigned min_pool_size = 0;
- 	struct dm_target *ti;
- 	unsigned i;
-+	bool poll_supported = false;
- 
- 	if (unlikely(type == DM_TYPE_NONE)) {
- 		DMWARN("no table type is set, can't allocate mempools");
- 		return -EINVAL;
- 	}
- 
--	if (__table_type_bio_based(type))
-+	if (__table_type_bio_based(type)) {
- 		for (i = 0; i < t->num_targets; i++) {
- 			ti = t->targets + i;
- 			per_io_data_size = max(per_io_data_size, ti->per_io_data_size);
- 			min_pool_size = max(min_pool_size, ti->num_flush_bios);
- 		}
-+		poll_supported = !!dm_table_supports_poll(t);
-+	}
- 
--	t->mempools = dm_alloc_md_mempools(md, type, t->integrity_supported,
--					   per_io_data_size, min_pool_size);
-+	t->mempools = dm_alloc_md_mempools(md, type, per_io_data_size, min_pool_size,
-+					   t->integrity_supported, poll_supported);
- 	if (!t->mempools)
- 		return -ENOMEM;
- 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index b762a48d3fdf..b3e32116c31f 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -898,7 +898,7 @@ static void dm_io_complete(struct dm_io *io)
- 		 * may only reflect a subset of the pre-split original,
- 		 * so clear REQ_POLLED in case of requeue
- 		 */
--		bio->bi_opf &= ~REQ_POLLED;
-+		bio_clear_polled(bio);
- 		return;
- 	}
- 
-@@ -2915,8 +2915,8 @@ int dm_noflush_suspending(struct dm_target *ti)
- EXPORT_SYMBOL_GPL(dm_noflush_suspending);
- 
- struct dm_md_mempools *dm_alloc_md_mempools(struct mapped_device *md, enum dm_queue_mode type,
--					    unsigned integrity, unsigned per_io_data_size,
--					    unsigned min_pool_size)
-+					    unsigned per_io_data_size, unsigned min_pool_size,
-+					    bool integrity, bool poll)
- {
- 	struct dm_md_mempools *pools = kzalloc_node(sizeof(*pools), GFP_KERNEL, md->numa_node_id);
- 	unsigned int pool_size = 0;
-@@ -2932,7 +2932,7 @@ struct dm_md_mempools *dm_alloc_md_mempools(struct mapped_device *md, enum dm_qu
- 		pool_size = max(dm_get_reserved_bio_based_ios(), min_pool_size);
- 		front_pad = roundup(per_io_data_size, __alignof__(struct dm_target_io)) + DM_TARGET_IO_BIO_OFFSET;
- 		io_front_pad = roundup(per_io_data_size,  __alignof__(struct dm_io)) + DM_IO_BIO_OFFSET;
--		ret = bioset_init(&pools->io_bs, pool_size, io_front_pad, 0);
-+		ret = bioset_init(&pools->io_bs, pool_size, io_front_pad, poll ? BIOSET_PERCPU_CACHE : 0);
- 		if (ret)
- 			goto out;
- 		if (integrity && bioset_integrity_create(&pools->io_bs, pool_size))
-diff --git a/drivers/md/dm.h b/drivers/md/dm.h
-index 9013dc1a7b00..3f89664fea01 100644
---- a/drivers/md/dm.h
-+++ b/drivers/md/dm.h
-@@ -221,8 +221,8 @@ void dm_kcopyd_exit(void);
-  * Mempool operations
-  */
- struct dm_md_mempools *dm_alloc_md_mempools(struct mapped_device *md, enum dm_queue_mode type,
--					    unsigned integrity, unsigned per_bio_data_size,
--					    unsigned min_pool_size);
-+					    unsigned per_io_data_size, unsigned min_pool_size,
-+					    bool integrity, bool poll);
- void dm_free_md_mempools(struct dm_md_mempools *pools);
- 
- /*
--- 
-2.15.0
-
+PiBGcm9tOiBLYW5jaGFuIEpvc2hpDQo+IFNlbnQ6IFR1ZXNkYXksIE1hcmNoIDgsIDIwMjIgNzoy
+MSBBTQ0KPiBUbzogYXhib2VAa2VybmVsLmRrOyBoY2hAbHN0LmRlOyBrYnVzY2hAa2VybmVsLm9y
+ZzsNCj4gYXNtbC5zaWxlbmNlQGdtYWlsLmNvbQ0KPiBDYzogaW8tdXJpbmdAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1udm1lQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBibG9ja0B2Z2Vy
+Lmtlcm5lbC5vcmc7IHNiYXRlc0ByYWl0aGxpbi5jb207IGxvZ2FuZ0BkZWx0YXRlZS5jb207DQo+
+IHBhbmt5ZGV2OEBnbWFpbC5jb207IGphdmllckBqYXZpZ29uLmNvbTsgbWNncm9mQGtlcm5lbC5v
+cmc7DQo+IGEubWFuemFuYXJlc0BzYW1zdW5nLmNvbTsgam9zaGlpaXRyQGdtYWlsLmNvbTsgYW51
+ajIwLmdAc2Ftc3VuZy5jb20NCj4gU3ViamVjdDogW1BBVENIIDE3LzE3XSBudm1lOiBlbmFibGUg
+bm9uLWlubGluZSBwYXNzdGhydSBjb21tYW5kcw0KPiANCj4gRnJvbTogQW51aiBHdXB0YSA8YW51
+ajIwLmdAc2Ftc3VuZy5jb20+DQo+IA0KPiBPbiBzdWJtaXNzaW9uLGp1c3QgZmV0Y2ggdGhlIGNv
+bW1tYW5kIGZyb20gdXNlcnNwYWNlIHBvaW50ZXIgYW5kIHJldXNlDQo+IGV2ZXJ5dGhpbmcgZWxz
+ZS4gT24gY29tcGxldGlvbiwgdXBkYXRlIHRoZSByZXN1bHQgZmllbGQgaW5zaWRlIHRoZSBwYXNz
+dGhydQ0KPiBjb21tYW5kLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW51aiBHdXB0YSA8YW51ajIw
+LmdAc2Ftc3VuZy5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEthbmNoYW4gSm9zaGkgPGpvc2hpLmtA
+c2Ftc3VuZy5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9udm1lL2hvc3QvaW9jdGwuYyB8IDI5ICsr
+KysrKysrKysrKysrKysrKysrKysrKystLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0
+aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL252bWUv
+aG9zdC9pb2N0bC5jIGIvZHJpdmVycy9udm1lL2hvc3QvaW9jdGwuYyBpbmRleA0KPiA3MDFmZWFl
+Y2FiYmUuLmRkYjdlNTg2NGJlNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9udm1lL2hvc3QvaW9j
+dGwuYw0KPiArKysgYi9kcml2ZXJzL252bWUvaG9zdC9pb2N0bC5jDQo+IEBAIC02NSw2ICs2NSwx
+NCBAQCBzdGF0aWMgdm9pZCBudm1lX3B0X3Rhc2tfY2Ioc3RydWN0IGlvX3VyaW5nX2NtZA0KPiAq
+aW91Y21kKQ0KPiAgCX0NCj4gIAlrZnJlZShwZHUtPm1ldGEpOw0KPiANCj4gKwlpZiAoaW91Y21k
+LT5mbGFncyAmIElPX1VSSU5HX0ZfVUNNRF9JTkRJUkVDVCkgew0KPiArCQlzdHJ1Y3QgbnZtZV9w
+YXNzdGhydV9jbWQ2NCBfX3VzZXIgKnB0Y21kNjQgPSBpb3VjbWQtDQo+ID5jbWQ7DQo+ICsJCXU2
+NCByZXN1bHQgPSBsZTY0X3RvX2NwdShudm1lX3JlcShyZXEpLT5yZXN1bHQudTY0KTsNCj4gKw0K
+PiArCQlpZiAocHV0X3VzZXIocmVzdWx0LCAmcHRjbWQ2NC0+cmVzdWx0KSkNCj4gKwkJCXN0YXR1
+cyA9IC1FRkFVTFQ7DQoNCldoZW4gdGhlIHRocmVhZCB0aGF0IHN1Ym1pdHRlZCB0aGUgaW9fdXJp
+bmdfY21kIGhhcyBleGl0ZWQsIHRoZSBDQiBpcw0KY2FsbGVkIGJ5IGEgc3lzdGVtIHdvcmtlciBp
+bnN0ZWFkIHNvIHB1dF91c2VyKCkgZmFpbHMuICBUaGUgY3FlIGlzIHN0aWxsDQpjb21wbGV0ZWQg
+YW5kIHRoZSBwcm9jZXNzIHNlZXMgYSBmYWlsZWQgaS9vIHN0YXR1cywgYnV0IHRoZSBpL28gZGlk
+IG5vdA0KZmFpbC4gIFRoZSBzYW1lIGlzIHRydWUgZm9yIG1ldGEgZGF0YSBiZWluZyByZXR1cm5l
+ZCBpbiBwYXRjaCA1Lg0KDQpJIGNhbid0IHNheSBpZiBpdCdzIGEgcmVxdWlyZW1lbnQgdG8gc3Vw
+cG9ydCB0aGlzIGNhc2UuICBJdCBkb2VzIGJyZWFrIG91cg0KY3VycmVudCBwcm90by10eXBlIGJ1
+dCB3ZSBjYW4gYWRqdXN0Lg0KDQo+ICsJfQ0KPiArDQo+ICAJaW9fdXJpbmdfY21kX2RvbmUoaW91
+Y21kLCBzdGF0dXMpOw0KPiAgfQ0KPiANCj4gQEAgLTE0Myw2ICsxNTEsMTMgQEAgc3RhdGljIGlu
+bGluZSBib29sIG52bWVfaXNfZml4ZWRiX3Bhc3N0aHJ1KHN0cnVjdA0KPiBpb191cmluZ19jbWQg
+KmlvdWNtZCkNCj4gIAlyZXR1cm4gKChpb3VjbWQpICYmIChpb3VjbWQtPmZsYWdzICYNCj4gSU9f
+VVJJTkdfRl9VQ01EX0ZJWEVEQlVGUykpOyAgfQ0KPiANCj4gK3N0YXRpYyBpbmxpbmUgYm9vbCBp
+c19pbmxpbmVfcncoc3RydWN0IGlvX3VyaW5nX2NtZCAqaW91Y21kLCBzdHJ1Y3QNCj4gK252bWVf
+Y29tbWFuZCAqY21kKSB7DQo+ICsJcmV0dXJuICgoaW91Y21kLT5mbGFncyAmIElPX1VSSU5HX0Zf
+VUNNRF9JTkRJUkVDVCkgfHwNCj4gKwkJCShjbWQtPmNvbW1vbi5vcGNvZGUgPT0gbnZtZV9jbWRf
+d3JpdGUgfHwNCj4gKwkJCSBjbWQtPmNvbW1vbi5vcGNvZGUgPT0gbnZtZV9jbWRfcmVhZCkpOyB9
+DQo+ICsNCj4gIHN0YXRpYyBpbnQgbnZtZV9zdWJtaXRfdXNlcl9jbWQoc3RydWN0IHJlcXVlc3Rf
+cXVldWUgKnEsDQo+ICAJCXN0cnVjdCBudm1lX2NvbW1hbmQgKmNtZCwgdTY0IHVidWZmZXIsDQo+
+ICAJCXVuc2lnbmVkIGJ1ZmZsZW4sIHZvaWQgX191c2VyICptZXRhX2J1ZmZlciwgdW5zaWduZWQN
+Cj4gbWV0YV9sZW4sIEBAIC0xOTMsOCArMjA4LDcgQEAgc3RhdGljIGludCBudm1lX3N1Ym1pdF91
+c2VyX2NtZChzdHJ1Y3QNCj4gcmVxdWVzdF9xdWV1ZSAqcSwNCj4gIAkJfQ0KPiAgCX0NCj4gIAlp
+ZiAoaW91Y21kKSB7IC8qIGFzeW5jIGRpc3BhdGNoICovDQo+IC0JCWlmIChjbWQtPmNvbW1vbi5v
+cGNvZGUgPT0gbnZtZV9jbWRfd3JpdGUgfHwNCj4gLQkJCQljbWQtPmNvbW1vbi5vcGNvZGUgPT0g
+bnZtZV9jbWRfcmVhZCkgew0KPiArCQlpZiAoaXNfaW5saW5lX3J3KGlvdWNtZCwgY21kKSkgew0K
+PiAgCQkJaWYgKGJpbyAmJiBpc19wb2xsaW5nX2VuYWJsZWQoaW91Y21kLCByZXEpKSB7DQo+ICAJ
+CQkJaW91Y21kLT5iaW8gPSBiaW87DQo+ICAJCQkJYmlvLT5iaV9vcGYgfD0gUkVRX1BPTExFRDsN
+Cj4gQEAgLTIwNCw3ICsyMTgsNyBAQCBzdGF0aWMgaW50IG52bWVfc3VibWl0X3VzZXJfY21kKHN0
+cnVjdA0KPiByZXF1ZXN0X3F1ZXVlICpxLA0KPiAgCQkJYmxrX2V4ZWN1dGVfcnFfbm93YWl0KHJl
+cSwgMCwgbnZtZV9lbmRfYXN5bmNfcHQpOw0KPiAgCQkJcmV0dXJuIDA7DQo+ICAJCX0gZWxzZSB7
+DQo+IC0JCQkvKiBzdXBwb3J0IG9ubHkgcmVhZCBhbmQgd3JpdGUgZm9yIG5vdy4gKi8NCj4gKwkJ
+CS8qIHN1cHBvcnQgb25seSByZWFkIGFuZCB3cml0ZSBmb3IgaW5saW5lICovDQo+ICAJCQlyZXQg
+PSAtRUlOVkFMOw0KPiAgCQkJZ290byBvdXRfbWV0YTsNCj4gIAkJfQ0KPiBAQCAtMzcyLDcgKzM4
+NiwxNCBAQCBzdGF0aWMgaW50IG52bWVfdXNlcl9jbWQ2NChzdHJ1Y3QgbnZtZV9jdHJsICpjdHJs
+LA0KPiBzdHJ1Y3QgbnZtZV9ucyAqbnMsDQo+ICAJfSBlbHNlIHsNCj4gIAkJaWYgKGlvdWNtZC0+
+Y21kX2xlbiAhPSBzaXplb2Yoc3RydWN0IG52bWVfcGFzc3RocnVfY21kNjQpKQ0KPiAgCQkJcmV0
+dXJuIC1FSU5WQUw7DQo+IC0JCWNwdHIgPSAoc3RydWN0IG52bWVfcGFzc3RocnVfY21kNjQgKilp
+b3VjbWQtPmNtZDsNCj4gKwkJaWYgKGlvdWNtZC0+ZmxhZ3MgJiBJT19VUklOR19GX1VDTURfSU5E
+SVJFQ1QpIHsNCj4gKwkJCXVjbWQgPSAoc3RydWN0IG52bWVfcGFzc3RocnVfY21kNjQgX191c2Vy
+DQo+ICopaW91Y21kLT5jbWQ7DQo+ICsJCQlpZiAoY29weV9mcm9tX3VzZXIoJmNtZCwgdWNtZCwg
+c2l6ZW9mKGNtZCkpKQ0KPiArCQkJCXJldHVybiAtRUZBVUxUOw0KPiArCQkJY3B0ciA9ICZjbWQ7
+DQo+ICsJCX0gZWxzZSB7DQo+ICsJCQljcHRyID0gKHN0cnVjdCBudm1lX3Bhc3N0aHJ1X2NtZDY0
+ICopaW91Y21kLT5jbWQ7DQo+ICsJCX0NCj4gIAl9DQo+ICAJaWYgKGNwdHItPmZsYWdzICYgTlZN
+RV9ISVBSSSkNCj4gIAkJcnFfZmxhZ3MgfD0gUkVRX1BPTExFRDsNCj4gLS0NCj4gMi4yNS4xDQoN
+Cg==
