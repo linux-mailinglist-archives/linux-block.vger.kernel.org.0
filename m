@@ -2,148 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 255D64E6E4C
-	for <lists+linux-block@lfdr.de>; Fri, 25 Mar 2022 07:40:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 581454E6EDE
+	for <lists+linux-block@lfdr.de>; Fri, 25 Mar 2022 08:30:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347543AbiCYGmI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Mar 2022 02:42:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
+        id S1347210AbiCYHbV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Mar 2022 03:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358488AbiCYGmG (ORCPT
+        with ESMTP id S237022AbiCYHbU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Mar 2022 02:42:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D7B49AE75
-        for <linux-block@vger.kernel.org>; Thu, 24 Mar 2022 23:40:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=bB/XPHDelsXpg9wVf6zNnXdYkaqzTiJaHZxOpLu8A0U=; b=QRo0HoFNjl/zpXBOKBTJMDf/Xe
-        o9mAIqWappMaI2sicN+hDyGrMG7OP7sHFDQhF4a02DWbVSHoshl0d7HsggkDbU4nkiPhjC73G5SLW
-        9LVfHwK6qq/QfmvH+8QXDYnovrz7CHnt0t6JiiDd2NpR8THt1tHw7gn5Z+lM+WR8iRE9JRgtk+8fD
-        LkpS6JGY2CTzOMcFyiGTAvZCtMG8VSOaNs1+6sJxg2AZqV3ZfjZQ6gmhgtXjLdY9089YSxEa3WEOq
-        wkSFpQVJWHXIbp6R5TJFcwFRZCMbmibsMxJ+5znLT53ZidXc7dHLqEKcmErwq8c8WcOzNu378+rPb
-        b8+3N4EA==;
-Received: from 089144194144.atnat0003.highway.a1.net ([89.144.194.144] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nXdcX-001HU0-V0; Fri, 25 Mar 2022 06:40:26 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Jan Kara <jack@suse.cz>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        syzbot+6479585dfd4dedd3f7e1@syzkaller.appspotmail.com
-Subject: [PATCH 14/14] loop: don't destroy lo->workqueue in __loop_clr_fd
-Date:   Fri, 25 Mar 2022 07:39:29 +0100
-Message-Id: <20220325063929.1773899-15-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220325063929.1773899-1-hch@lst.de>
-References: <20220325063929.1773899-1-hch@lst.de>
+        Fri, 25 Mar 2022 03:31:20 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF631BF01C;
+        Fri, 25 Mar 2022 00:29:46 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KPtwn6bMSzfZvx;
+        Fri, 25 Mar 2022 15:28:09 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 25 Mar 2022 15:29:44 +0800
+Received: from [10.174.176.73] (10.174.176.73) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 25 Mar 2022 15:29:43 +0800
+Subject: Re: [PATCH 0/3] optimizations for io accounting
+To:     <axboe@kernel.dk>, <mpatocka@redhat.com>, <snitzer@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yi.zhang@huawei.com>
+References: <20220317112653.1019490-1-yukuai3@huawei.com>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <29eab4a3-10de-0ea3-cbcc-7031aa394cb2@huawei.com>
+Date:   Fri, 25 Mar 2022 15:29:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20220317112653.1019490-1-yukuai3@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.174.176.73]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is no need to destroy the workqueue when clearing unbinding
-a loop device from a backing file.  Not doing so on the other hand
-avoid creating a complex lock dependency chain involving the global
-system_transition_mutex.
+friently ping ...
 
-Based on a patch from Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>.
-
-Reported-by: syzbot+6479585dfd4dedd3f7e1@syzkaller.appspotmail.com
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Tested-by: syzbot+6479585dfd4dedd3f7e1@syzkaller.appspotmail.com
----
- drivers/block/loop.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 8ad8cfffdcbdc..2043d3efbc491 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -817,7 +817,6 @@ struct loop_worker {
- };
- 
- static void loop_workfn(struct work_struct *work);
--static void loop_rootcg_workfn(struct work_struct *work);
- 
- #ifdef CONFIG_BLK_CGROUP
- static inline int queue_on_root_worker(struct cgroup_subsys_state *css)
-@@ -1055,20 +1054,19 @@ static int loop_configure(struct loop_device *lo, fmode_t mode,
- 	    !file->f_op->write_iter)
- 		lo->lo_flags |= LO_FLAGS_READ_ONLY;
- 
--	lo->workqueue = alloc_workqueue("loop%d",
--					WQ_UNBOUND | WQ_FREEZABLE,
--					0,
--					lo->lo_number);
- 	if (!lo->workqueue) {
--		error = -ENOMEM;
--		goto out_unlock;
-+		lo->workqueue = alloc_workqueue("loop%d",
-+						WQ_UNBOUND | WQ_FREEZABLE,
-+						0, lo->lo_number);
-+		if (!lo->workqueue) {
-+			error = -ENOMEM;
-+			goto out_unlock;
-+		}
- 	}
- 
- 	disk_force_media_change(lo->lo_disk, DISK_EVENT_MEDIA_CHANGE);
- 	set_disk_ro(lo->lo_disk, (lo->lo_flags & LO_FLAGS_READ_ONLY) != 0);
- 
--	INIT_WORK(&lo->rootcg_work, loop_rootcg_workfn);
--	INIT_LIST_HEAD(&lo->rootcg_cmd_list);
- 	lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
- 	lo->lo_device = bdev;
- 	lo->lo_backing_file = file;
-@@ -1169,10 +1167,6 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
- 	if (!release)
- 		blk_mq_freeze_queue(lo->lo_queue);
- 
--	destroy_workqueue(lo->workqueue);
--	loop_free_idle_workers(lo, true);
--	del_timer_sync(&lo->timer);
--
- 	spin_lock_irq(&lo->lo_lock);
- 	filp = lo->lo_backing_file;
- 	lo->lo_backing_file = NULL;
-@@ -1766,6 +1760,10 @@ static void lo_free_disk(struct gendisk *disk)
- {
- 	struct loop_device *lo = disk->private_data;
- 
-+	if (lo->workqueue)
-+		destroy_workqueue(lo->workqueue);
-+	loop_free_idle_workers(lo, true);
-+	del_timer_sync(&lo->timer);
- 	mutex_destroy(&lo->lo_mutex);
- 	kfree(lo);
- }
-@@ -2029,6 +2027,8 @@ static int loop_add(int i)
- 	lo->lo_number		= i;
- 	spin_lock_init(&lo->lo_lock);
- 	spin_lock_init(&lo->lo_work_lock);
-+	INIT_WORK(&lo->rootcg_work, loop_rootcg_workfn);
-+	INIT_LIST_HEAD(&lo->rootcg_cmd_list);
- 	disk->major		= LOOP_MAJOR;
- 	disk->first_minor	= i << part_shift;
- 	disk->minors		= 1 << part_shift;
--- 
-2.30.2
-
+ÔÚ 2022/03/17 19:26, Yu Kuai Ð´µÀ:
+> Yu Kuai (3):
+>    block: don't show disk stats if io accounting is disabled
+>    block: factor out common code for part_stat_show() and
+>      diskstats_show()
+>    block: update nsecs[] in part_stat_show() and diskstats_show()
+> 
+>   block/bdev.c              |   2 +
+>   block/blk-mq.c            |  63 +++++++++++++++-
+>   block/blk-mq.h            |   2 +
+>   block/genhd.c             | 154 ++++++++++++++++++--------------------
+>   include/linux/blk-mq.h    |   2 +
+>   include/linux/blk_types.h |   5 ++
+>   6 files changed, 146 insertions(+), 82 deletions(-)
+> 
