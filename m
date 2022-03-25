@@ -2,56 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B3754E6DD0
-	for <lists+linux-block@lfdr.de>; Fri, 25 Mar 2022 06:39:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF2EA4E6E41
+	for <lists+linux-block@lfdr.de>; Fri, 25 Mar 2022 07:39:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243776AbiCYFkd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Mar 2022 01:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57436 "EHLO
+        id S1346242AbiCYGlX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Mar 2022 02:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231767AbiCYFkc (ORCPT
+        with ESMTP id S1358467AbiCYGlU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Mar 2022 01:40:32 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E871D1EEDE;
-        Thu, 24 Mar 2022 22:38:59 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 009BE68B05; Fri, 25 Mar 2022 06:38:55 +0100 (CET)
-Date:   Fri, 25 Mar 2022 06:38:55 +0100
+        Fri, 25 Mar 2022 02:41:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA20580C7
+        for <linux-block@vger.kernel.org>; Thu, 24 Mar 2022 23:39:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=GZoXaYyF7vEJO3Tu4Gtd0TaYRNuVudX60qmzVoPMimI=; b=eRzr4xdNNrKyrjzXNs4dzDIOa6
+        I1HYdNEP6UBHi9Th1ebhX+M+5iMryuPTociS5EDycWJvWaguE1A1nd/I7AQUhc0XPnVh5SpQbfx8W
+        ZEGadEmp6h+UtGMDz4+NH9F4PrBvZ89vkim53AqTbfwqIjCZBlcv8vqhyVJVm1Ugs9b4WGZENDZ3k
+        ptmMuAx33R8xUr3MHTHF3eqkwaMAstnjlMXTRGK5z1/5W1dNaCjku2rb+0QmYx/AthwcBSaCJB8Rd
+        nxjnff7SYl0qM9qBthWYXF3XyMFi3idGl6NzXxoY1Vc2pvXMbG7bLAPIrS62eO58PHgDFhHLpHKcj
+        oYieguxw==;
+Received: from 089144194144.atnat0003.highway.a1.net ([89.144.194.144] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nXdbh-001HFl-6C; Fri, 25 Mar 2022 06:39:34 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Kanchan Joshi <joshiiitr@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, sbates@raithlin.com,
-        logang@deltatee.com, Pankaj Raghav <pankydev8@gmail.com>,
-        Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Anuj Gupta <anuj20.g@samsung.com>
-Subject: Re: [PATCH 11/17] block: factor out helper for bio allocation from
- cache
-Message-ID: <20220325053855.GA5344@lst.de>
-References: <20220308152105.309618-1-joshi.k@samsung.com> <CGME20220308152716epcas5p3d38d2372c184259f1a10c969f7e4396f@epcas5p3.samsung.com> <20220308152105.309618-12-joshi.k@samsung.com> <20220310083503.GE26614@lst.de> <CA+1E3rLF7D4jThUPZYbxpXs9LLdQ7Ek=Qy+rXZE=xgwBcLoaWQ@mail.gmail.com> <20220324063011.GA12660@lst.de> <CA+1E3rJAK9fPuS6g_po_vpvde_LpOjkuoU=E5h=v9rnHhc3+mw@mail.gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jan Kara <jack@suse.cz>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        linux-block@vger.kernel.org, nbd@other.debian.org
+Subject: yet another approach to fix the loop lock order inversions v5
+Date:   Fri, 25 Mar 2022 07:39:15 +0100
+Message-Id: <20220325063929.1773899-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+1E3rJAK9fPuS6g_po_vpvde_LpOjkuoU=E5h=v9rnHhc3+mw@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 11:15:20PM +0530, Kanchan Joshi wrote:
-> Thanks, that can be reused here too. But to enable this feature - we
-> need to move to a bioset from bio_kmalloc in nvme, and you did not
-> seem fine with that.
+Hi all,
 
-Yeah, kmalloc already does percpu caches, so we don't even need it.
+this series uses the approach from Tetsuo to delay the destroy_workueue
+call, extended by a delayed teardown of the workers to fix a potential
+race window then the workqueue can be still round after finishing the
+commands. 
+
+Changes since v4:
+ - keep the (questionable) __invalidate_device call in nbd as-is for now
+ - suppress uevents while reconfiguring
+
+Changes since v3:
+ - change bd_openers into a atomic_t, including a bunch of cleanups
+   and fix found while adding those
+
+Changes since v2:
+ - rebased to the lastest block for-next tree, which has the async
+   clear reverted and ->free_disk
+ - impkement ->free_disk for loop to handle open vs delete races
+   more gracefully
+ - get rid of lo_refcnt entirely
+
+Changes since v1:
+ - add comments to document the lo_refcnt synchronization
+ - fix comment typos
