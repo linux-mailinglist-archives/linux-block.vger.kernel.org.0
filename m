@@ -2,88 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F2474E83A4
-	for <lists+linux-block@lfdr.de>; Sat, 26 Mar 2022 20:16:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97FB84E8422
+	for <lists+linux-block@lfdr.de>; Sat, 26 Mar 2022 21:18:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234373AbiCZTSC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 26 Mar 2022 15:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        id S235503AbiCZUUJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 26 Mar 2022 16:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234184AbiCZTSA (ORCPT
+        with ESMTP id S235449AbiCZUTw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 26 Mar 2022 15:18:00 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33F07C157
-        for <linux-block@vger.kernel.org>; Sat, 26 Mar 2022 12:16:23 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id v12so1514988ljd.3
-        for <linux-block@vger.kernel.org>; Sat, 26 Mar 2022 12:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cnXQMxTCjuK4qy9Z6rkrcod3DmyuqMLPfF2FwH3SpN8=;
-        b=bCs57BhhsoW00lBzQRMs/4XoNlbiHwKv6eU2ZdjBDNdcCDmE9zNM57EzubgpNI/NHO
-         HyB/nCCaDT/nI7Oi5Rdh1FKr96y/zNtFfDRi1rtF9iqq26EQraSkZLdtTTuIbuc4NJhV
-         tFpXwXn6oKsMB3DKgM8hDJ/rtV4Jqa+p0K8fg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cnXQMxTCjuK4qy9Z6rkrcod3DmyuqMLPfF2FwH3SpN8=;
-        b=RtqK5TAbLlysIEgfIs4o/UAq2iE9bli879eYvSDcwpqFOZ6aTv8qQ8aj+Y4dUF/PmQ
-         qc515OZe86JxgQ4R9hn/YyWM6TpXWj/qLHnfSK57B3MrumZLt5UqO4HT4ZkPmFzEbGOj
-         I6to9def1arI4heFTK+0+tLjJq+obqGxJgL35m0F0HDgMlGA5EwFn49E6FCH4DajFgsf
-         R3mTE8qgX9fSsyIhtoog4ZmmjHW8gasTwYYIFzySe0MxNfv2cp4OI0fOrPu6dgYDbjn0
-         W07JX1uvc25qX2RZP6p8492MtJacHGk/jKc99+yXbXocoT1MVjfwOwMdt5GRnUAUmvfg
-         k20g==
-X-Gm-Message-State: AOAM530nJX6Hsu0JKpyjWJYeZfPnNZHVpntcM1JbYHeCcrnYBPvzCGqy
-        +zQx9N8ZBW1++fZdcViv0jdY7TL6OgF9XjRIT6Q=
-X-Google-Smtp-Source: ABdhPJxfskYBZb5hAgsAG6tJo2MYuH9Ly9Nk/V7NVfpwkTpEbfSAIb0bS0pu5WMZWfPnP8P5OQNW/Q==
-X-Received: by 2002:a2e:4b1a:0:b0:248:484:b45c with SMTP id y26-20020a2e4b1a000000b002480484b45cmr12953711lja.419.1648322182057;
-        Sat, 26 Mar 2022 12:16:22 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id y22-20020a2e9796000000b00249b86a210bsm650870lji.91.2022.03.26.12.16.20
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Mar 2022 12:16:21 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id p10so12653427lfa.12
-        for <linux-block@vger.kernel.org>; Sat, 26 Mar 2022 12:16:20 -0700 (PDT)
-X-Received: by 2002:a19:e048:0:b0:448:2caa:7ed2 with SMTP id
- g8-20020a19e048000000b004482caa7ed2mr13301860lfj.449.1648322180275; Sat, 26
- Mar 2022 12:16:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <37e3c459-0de0-3d23-11d2-7d7d39e5e941@kernel.dk> <CAHk-=wh5AdZUOR8xYc6cxM2wZ_CtanV+e+B6b6pBsha9XXwxbA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh5AdZUOR8xYc6cxM2wZ_CtanV+e+B6b6pBsha9XXwxbA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 26 Mar 2022 12:16:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whW+8NP5hgm7f5CuoOOKgda4kE3pXM20UY=ttjgiL6B5Q@mail.gmail.com>
-Message-ID: <CAHk-=whW+8NP5hgm7f5CuoOOKgda4kE3pXM20UY=ttjgiL6B5Q@mail.gmail.com>
-Subject: Re: [GIT PULL] Support for 64-bit data integrity
-To:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        Sat, 26 Mar 2022 16:19:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD07F195307;
+        Sat, 26 Mar 2022 13:18:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E7525B80979;
+        Sat, 26 Mar 2022 20:18:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AE0CEC340E8;
+        Sat, 26 Mar 2022 20:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648325889;
+        bh=v4Ew2qBn5T+NKEBCgc0Jm8dbEJw5u1ZsaiY6KvXBYb4=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=P0XelicKuEOsabfUOJNqInhJFH4VKt8KimH64Rsev03puV2KNjt7VDV03tON03ffZ
+         S4dQR+yEGl33Zh/gsf0uE2cNB7M8d/jpcXzgUxadBaR+MT9n0MVD+EqBW7Qnm2o/el
+         xNSt2n2u7XJlwQLpimZfH90APqvJwVyUdnf6c4a+rTJZxoEE4elsUyNRJqwYxelvMu
+         XSrlBQlKOHNQJJWcWfdpnsIan1MXg7L/G6HLhbP2YH1dDSQHLaJS+NR18akudtS0Jo
+         5GcbO3XbG0U6eHSAy+7ssT+bn8BiGz4gzTUG1LZNeZ4pO6lPNYyrEFhTE3+RwfXAll
+         jegO0IngXslBw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9C1D8E6D402;
+        Sat, 26 Mar 2022 20:18:09 +0000 (UTC)
+Subject: Re: [GIT PULL] Remove write streams support
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <72c1ee9c-2abb-3ee7-7511-e6d972f4413f@kernel.dk>
+References: <72c1ee9c-2abb-3ee7-7511-e6d972f4413f@kernel.dk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <72c1ee9c-2abb-3ee7-7511-e6d972f4413f@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.18/write-streams-2022-03-18
+X-PR-Tracked-Commit-Id: 7b12e49669c99f63bc12351c57e581f1f14d4adf
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 561593a048d7d6915889706f4b503a65435c033a
+Message-Id: <164832588963.7233.669851893757228499.pr-tracker-bot@kernel.org>
+Date:   Sat, 26 Mar 2022 20:18:09 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Mar 26, 2022 at 12:14 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> It isn't generic enough to make sense. "48" just isn't a common enough number.
->
-> Maybe
+The pull request you sent on Fri, 25 Mar 2022 09:08:59 -0600:
 
-This got sent out early by mistake. That "Maybe" was supposed to continue
+> git://git.kernel.dk/linux-block.git tags/for-5.18/write-streams-2022-03-18
 
-  Maybe a generic mask implementation could be useful, but not this
-special case.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/561593a048d7d6915889706f4b503a65435c033a
 
-or similar.
+Thank you!
 
-           Linus
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
