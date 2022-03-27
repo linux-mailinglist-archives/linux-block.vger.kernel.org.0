@@ -2,74 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20BE24E8425
-	for <lists+linux-block@lfdr.de>; Sat, 26 Mar 2022 21:19:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 603494E866D
+	for <lists+linux-block@lfdr.de>; Sun, 27 Mar 2022 09:09:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235476AbiCZUT6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 26 Mar 2022 16:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53056 "EHLO
+        id S235586AbiC0HLJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 27 Mar 2022 03:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235472AbiCZUTw (ORCPT
+        with ESMTP id S231994AbiC0HLD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 26 Mar 2022 16:19:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C84184624
-        for <linux-block@vger.kernel.org>; Sat, 26 Mar 2022 13:18:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A4BB60DE3
-        for <linux-block@vger.kernel.org>; Sat, 26 Mar 2022 20:18:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B4E85C340ED;
-        Sat, 26 Mar 2022 20:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648325890;
-        bh=oKbLoCo7V2EBcQ1WeDDYruA5FqrD6dDbHkGj+MyzrAM=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=OZJ7ByVfSFlaswNgYEdg9+hfa+Wrh5Fca7iWmO1iPkunecxRWLUE06deH4RjnvW5Z
-         pQoUmw2AkFvSn5z+lNKcGmrR+V2BzvjAAXef9GWpMxwVzUkg8mxMChsX49QyYK7+ps
-         3DDSfxBcR7tdVHLrFLcyfLR5ReuukfqmCo1FJp+xq0D98GWFSJIxaWDPv+WuOxIZDf
-         DiyQegymG2IZEpZXuUFFck/tNmP4KS9PS0hbXzXjn6w+VUcPqTYIUI5+WyDwnWXH8p
-         WudA44CtRo1ujZ0ttQWUu95/at6c6z9aI8i6D1Ua1fNb5PuoHkKbEtscFPzUBlyvXy
-         dMz5DRkCOfgog==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A3057E6D402;
-        Sat, 26 Mar 2022 20:18:10 +0000 (UTC)
-Subject: Re: [GIT PULL] Follow up bio allocation fixup
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <a3c160b2-1e7d-06cd-4644-b2edf136726a@kernel.dk>
-References: <a3c160b2-1e7d-06cd-4644-b2edf136726a@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <a3c160b2-1e7d-06cd-4644-b2edf136726a@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.18/alloc-cleanups-2022-03-25
-X-PR-Tracked-Commit-Id: 61285ff72ae59e1603f908b13363e99883d67e09
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 752d422e74c41084c3c9c9a159cb8d2795fa0c22
-Message-Id: <164832589066.7233.10565568245897793070.pr-tracker-bot@kernel.org>
-Date:   Sat, 26 Mar 2022 20:18:10 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Sun, 27 Mar 2022 03:11:03 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7AD1D31F;
+        Sun, 27 Mar 2022 00:09:26 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id w7so7229063pfu.11;
+        Sun, 27 Mar 2022 00:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=Dswsk0jetBijYktZ7SH96xaSPfRhbnA9l3ZIGPdBlrI=;
+        b=i6+b2XSkalNg6DOhuZPtEKFGG0z1vvDdmoEcVQ4ypDwvzICeXJOv4LFhwpx2x18QS+
+         AhlWIC4s2MpT+zM5Ora+fCociP/CzNaaxGO+mJO+Z7nuQbZL7hQ1oRJlNk+n19Hq4lgb
+         7A4rHk02cWxNisZq8XWes7odzO7hdXfD5DMzQIuPQjiRbP1yr1N0cCB7cM7R8ohpRLPx
+         YINtCTy1tB07UxDqqu34cU/PVkwNZBOMFK0p8ZA/Dr3q9nYRJ8HLG8q214dSGaW1ETG9
+         QrK6+hgJlceQmK7rDuk2ew0kSGyBPUZ1iORntFv13yzMoDOr4mqV6wloQ1dkju8jS0pY
+         qzMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Dswsk0jetBijYktZ7SH96xaSPfRhbnA9l3ZIGPdBlrI=;
+        b=NcSGL6uQpOQSa0RiOjLuqWars9ssyBuYTw7Dya365IVU0YJOZ4t9AH0T5p0kbYSI6x
+         1RHT3eBwdfZ9xFn9sSg0U+jJNX5OPppH6/XJQSMtG7hWaM2XoKv+gPcGhxK7GYpOauG9
+         I3buVK+nZJMDqW2cDq2IyjRx5LdtK2rAct9BJhXlzwi0Wa6zIodJucDsOvUUzmnJ+FJs
+         PMW5KdCFp1CIhV7t/nj/0JowlEW3f8o5gZlaDJRMu+zo8/dNIOe5oBcLo72i91c/ykFQ
+         H64XxmZ8WCVpGHHe0jQnT0ver5Lktdxyb9RYcXSrrPcCd0N91tFKR8WBzNN7ybJ6i788
+         DlIw==
+X-Gm-Message-State: AOAM531sXJcYJtlL5ZlyUXH3QIszTPcgeYrZ0w/OVahIJLoGgv55WaYT
+        dTAgtJKNxWtlMZaAwX4ITpw=
+X-Google-Smtp-Source: ABdhPJymh6IMTtnDyhTTmlhAfbLgWrj5zjZfypZgJnag3MlTplfc8wEo9bq0GVF9wmHFKQk5NpcMMg==
+X-Received: by 2002:a63:de0c:0:b0:378:9365:c3c6 with SMTP id f12-20020a63de0c000000b003789365c3c6mr5894337pgg.301.1648364965504;
+        Sun, 27 Mar 2022 00:09:25 -0700 (PDT)
+Received: from localhost ([115.220.243.108])
+        by smtp.gmail.com with ESMTPSA id k14-20020aa7820e000000b004f7134a70cdsm11349504pfi.61.2022.03.27.00.09.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 27 Mar 2022 00:09:24 -0700 (PDT)
+From:   Xiaomeng Tong <xiam0nd.tong@gmail.com>
+To:     philipp.reisner@linbit.com
+Cc:     lars.ellenberg@linbit.com, axboe@kernel.dk, agruen@linbit.com,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Xiaomeng Tong <xiam0nd.tong@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] drbd: fix an invalid memory access caused by incorrect use of list iterator
+Date:   Sun, 27 Mar 2022 15:09:18 +0800
+Message-Id: <20220327070918.8465-1-xiam0nd.tong@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Fri, 25 Mar 2022 17:32:15 -0600:
+The bug is here:
+	idr_remove(&connection->peer_devices, vnr);
 
-> git://git.kernel.dk/linux-block.git tags/for-5.18/alloc-cleanups-2022-03-25
+If the previous for_each_connection() don't exit early (no goto hit
+inside the loop), the iterator 'connection' after the loop will be a
+bogus pointer to an invalid structure object containing the HEAD
+(&resource->connections). As a result, the use of 'connection' above
+will lead to a invalid memory access (including a possible invalid free
+as idr_remove could call free_layer).
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/752d422e74c41084c3c9c9a159cb8d2795fa0c22
+The original intention should have been to remove all peer_devices,
+but the following lines have already done the work. So just remove
+this line and the unneeded label, to fix this bug.
 
-Thank you!
+Cc: stable@vger.kernel.org
+Fixes: c06ece6ba6f1b ("drbd: Turn connection->volumes into connection->peer_devices")
+Signed-off-by: Xiaomeng Tong <xiam0nd.tong@gmail.com>
+---
+ drivers/block/drbd/drbd_main.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 6f450816c4fa..5d5beeba3ed4 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -2793,12 +2793,12 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
+ 
+ 	if (init_submitter(device)) {
+ 		err = ERR_NOMEM;
+-		goto out_idr_remove_vol;
++		goto out_idr_remove_from_resource;
+ 	}
+ 
+ 	err = add_disk(disk);
+ 	if (err)
+-		goto out_idr_remove_vol;
++		goto out_idr_remove_from_resource;
+ 
+ 	/* inherit the connection state */
+ 	device->state.conn = first_connection(resource)->cstate;
+@@ -2812,8 +2812,6 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
+ 	drbd_debugfs_device_add(device);
+ 	return NO_ERROR;
+ 
+-out_idr_remove_vol:
+-	idr_remove(&connection->peer_devices, vnr);
+ out_idr_remove_from_resource:
+ 	for_each_connection(connection, resource) {
+ 		peer_device = idr_remove(&connection->peer_devices, vnr);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.17.1
+
