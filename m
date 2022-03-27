@@ -2,85 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 190314E8925
-	for <lists+linux-block@lfdr.de>; Sun, 27 Mar 2022 19:58:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78D284E8966
+	for <lists+linux-block@lfdr.de>; Sun, 27 Mar 2022 20:48:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236236AbiC0R4N (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 27 Mar 2022 13:56:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34982 "EHLO
+        id S236361AbiC0SuQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 27 Mar 2022 14:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236231AbiC0R4M (ORCPT
+        with ESMTP id S236348AbiC0SuP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 27 Mar 2022 13:56:12 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB28BF45
-        for <linux-block@vger.kernel.org>; Sun, 27 Mar 2022 10:54:34 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id z12so7386660lfu.10
-        for <linux-block@vger.kernel.org>; Sun, 27 Mar 2022 10:54:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9RRo28ZJgxNtm0LxGk4jcyTDu6M+7JuDAPmhILttShY=;
-        b=CQHKZ1HJv46CMKFC/9NHyeb8GX2/NuT7YFjHLDpMxUzWDIZMf+tV2ISipfQrhQK4jK
-         IHPXlZC8p8e0aSUutE9AXbCI0I9GILAy9avHD3w0cQZ907uc67pmTfI8ojN5DFOXvUXA
-         +DbZUf+cv84PYxC9stg+YgliFWxMQe1Y/V0QQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9RRo28ZJgxNtm0LxGk4jcyTDu6M+7JuDAPmhILttShY=;
-        b=wU/Ngv4riKkSBf0ufJ5W/ot1ep9KbZ7KAm9zsU4ZYzjmL16Jb2qU79CnFKEFQtRLRo
-         +CY9Dc7ihfhyUh5yBrgSEXDOBJm2IivSqamjhLg3VU3PPYVw7XdD9tyUakFejmKcKwAj
-         CsA1qwa7ecTqSEgkxs4DDo3S8Wn35ncj6cdREPTr6f4jVoEPYEoZZdn3B++AMySZBf9p
-         U1W15+LCDu2Tl9FaUL/anbbl/bMab4xsYXVrE0ClHuAETw1F9bVlkkzWq4Mt+BxNa8GI
-         kA8nVbUVPpY+d6VuI6AQ6CJSIV91EUXhAJPIEbE5nZkIFEIKrQiYR/6rb1DjXd+6NMKB
-         Y7Dw==
-X-Gm-Message-State: AOAM5308ErVgNcLMOxQtS6O5aF+j0AC9YDJK5rqE1rljmR3oQL5xEqLP
-        q+RYejft2i6Ie2lCNebqDOrgQ1e4N+YA5CDpaq4=
-X-Google-Smtp-Source: ABdhPJxCTyT4lAaEW7HUExfHX3Pl8r5+PPvSIgvg65/WFbd1xwF4JQmVCf/adbEuhbuVN92b3LPaDQ==
-X-Received: by 2002:a05:6512:ac7:b0:44a:9c24:a5b7 with SMTP id n7-20020a0565120ac700b0044a9c24a5b7mr169158lfu.199.1648403671840;
-        Sun, 27 Mar 2022 10:54:31 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id l17-20020a2ea311000000b00249667be913sm1447901lje.102.2022.03.27.10.54.29
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Mar 2022 10:54:30 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id r22so16407988ljd.4
-        for <linux-block@vger.kernel.org>; Sun, 27 Mar 2022 10:54:29 -0700 (PDT)
-X-Received: by 2002:a2e:9041:0:b0:24a:ce83:dcb4 with SMTP id
- n1-20020a2e9041000000b0024ace83dcb4mr2136622ljg.291.1648403669304; Sun, 27
- Mar 2022 10:54:29 -0700 (PDT)
+        Sun, 27 Mar 2022 14:50:15 -0400
+Received: from smtp.smtpout.orange.fr (smtp04.smtpout.orange.fr [80.12.242.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865141148
+        for <linux-block@vger.kernel.org>; Sun, 27 Mar 2022 11:48:34 -0700 (PDT)
+Received: from pop-os.home ([90.126.236.122])
+        by smtp.orange.fr with ESMTPA
+        id YXwFnGd76nyGdYXwFnJOjt; Sun, 27 Mar 2022 20:48:32 +0200
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sun, 27 Mar 2022 20:48:32 +0200
+X-ME-IP: 90.126.236.122
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        linux-block@vger.kernel.org
+Subject: [PATCH 1/2] null_blk: Fix an error handling path in null_add_dev()
+Date:   Sun, 27 Mar 2022 20:48:30 +0200
+Message-Id: <876904b8334049a3be89d8bd278b04a421601baa.1648406899.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20220327173316.315-1-kbusch@kernel.org> <CAHk-=whktuOOGYoNC=pAVX3KOMo4AD8dFsVdD_CAesMqef_9JQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whktuOOGYoNC=pAVX3KOMo4AD8dFsVdD_CAesMqef_9JQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 27 Mar 2022 10:54:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjrNHfwp4BM_xXNfoix4YSgkSZJ-Tq_R9NiFLqL1v0dHw@mail.gmail.com>
-Message-ID: <CAHk-=wjrNHfwp4BM_xXNfoix4YSgkSZJ-Tq_R9NiFLqL1v0dHw@mail.gmail.com>
-Subject: Re: [PATCH] block: move lower_48_bits() to block
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Mar 27, 2022 at 10:53 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Because admittedly the 21st century has been all that great so far,
+In case of error, call to ida_simple_get() must be undone in the error
+handling path.
 
- *hasn't
+Fixes: a0725ab0c753 ("Merge branch 'for-4.14/block' of git://git.kernel.dk/linux-block")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/block/null_blk/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Duh.
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index 05b1120e6623..a330a118659d 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -2074,6 +2074,7 @@ static int null_add_dev(struct nullb_device *dev)
+ 	return 0;
+ out_cleanup_zone:
+ 	null_free_zoned_dev(dev);
++	ida_free(&nullb_indexes, nullb->index);
+ out_cleanup_disk:
+ 	blk_cleanup_disk(nullb->disk);
+ out_cleanup_tags:
+-- 
+2.32.0
 
-             Linus
