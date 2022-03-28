@@ -2,50 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB1E04E94A1
-	for <lists+linux-block@lfdr.de>; Mon, 28 Mar 2022 13:29:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 429F14E94F4
+	for <lists+linux-block@lfdr.de>; Mon, 28 Mar 2022 13:38:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241418AbiC1LbG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 28 Mar 2022 07:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39422 "EHLO
+        id S241479AbiC1Lcl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 28 Mar 2022 07:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241421AbiC1Laa (ORCPT
+        with ESMTP id S241489AbiC1Lb2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 28 Mar 2022 07:30:30 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D6F456420;
-        Mon, 28 Mar 2022 04:24:16 -0700 (PDT)
+        Mon, 28 Mar 2022 07:31:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED1A57499;
+        Mon, 28 Mar 2022 04:24:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DA8ACB8105B;
-        Mon, 28 Mar 2022 11:24:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4855C36AE9;
-        Mon, 28 Mar 2022 11:24:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 262B360F43;
+        Mon, 28 Mar 2022 11:24:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFB69C340ED;
+        Mon, 28 Mar 2022 11:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648466649;
-        bh=6u4aBbe7i69Fsu1VOhKUiFkUhrWR5ouoCib/ZwTmlgo=;
+        s=k20201202; t=1648466661;
+        bh=rLsO+ntsnTh0EzAnd/PjkFHrU+ojDgLX96KW1jxcRh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyWjSa0EQSMoRBASfHQwd0FItK4uITlKyQamYbpra32vjiQ75WaP2Ai55nt/FBQvw
-         VRMNcS2erqMHbuhjuBHtP93BK/6/bdnGY07guTOqvv0VXhvNy60vOHJCAgVZtKcuNh
-         vTUnrFTU0KwjeGpH09IYKVXJYb4yDY5og03a3zxIC8w272dZh3oSmqtYY6zmz2ttSI
-         R90UHVRBthmXr41TeVc7YvjWuaYfXendaBHLdBhftHJTYDOobikvxIu0w1ixukpF0t
-         yvyqx2ZIEoD4OKBqgEtwc1MTf8C6lXPRffILX28JXtDKMOM5yBHocjxWUffJvE2z4C
-         ovcn8IOgzQeNA==
+        b=Z8BiODu4WuPordFkxBrJ1pg0wWczddBALNfUnSTZgqTgfLAYPDoODxiOBgCT5H6jX
+         Bh7i9pyldUdgrwXyu/E3xsGyPtino8wEKopRNrxlkZxZ+4pxfawKWrDU/AFN5mRiXK
+         Ki1biKUxdgIqG7MQi4X+vYBwBSf+5Qsoa1Cjju1j2LxQk/AP9UPfKgPU+vWVxb3AaM
+         PvdsZAmduIoQywIkZQlYBSBBULWZqCgJxRY5g5JKQfo+wg8TcWCmOvqWyo6lz2mTrQ
+         DOuA7Oc0zIkpvE8BusrrWeBaKFfTShd3GTIK+LLXdp73cv65U+kIkc1ahNJM4vBvIB
+         1hLhUQojSM9+Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= 
-        <holger@applied-asynchrony.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/16] Revert "Revert "block, bfq: honor already-setup queue merges""
-Date:   Mon, 28 Mar 2022 07:23:42 -0400
-Message-Id: <20220328112345.1556601-13-sashal@kernel.org>
+Cc:     Chaitanya Kulkarni <kch@nvidia.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/12] loop: use sysfs_emit() in the sysfs xxx show()
+Date:   Mon, 28 Mar 2022 07:24:07 -0400
+Message-Id: <20220328112417.1556946-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220328112345.1556601-1-sashal@kernel.org>
-References: <20220328112345.1556601-1-sashal@kernel.org>
+In-Reply-To: <20220328112417.1556946-1-sashal@kernel.org>
+References: <20220328112417.1556946-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,73 +58,71 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Chaitanya Kulkarni <kch@nvidia.com>
 
-[ Upstream commit 15729ff8143f8135b03988a100a19e66d7cb7ecd ]
+[ Upstream commit b27824d31f09ea7b4a6ba2c1b18bd328df3e8bed ]
 
-A crash [1] happened to be triggered in conjunction with commit
-2d52c58b9c9b ("block, bfq: honor already-setup queue merges"). The
-latter was then reverted by commit ebc69e897e17 ("Revert "block, bfq:
-honor already-setup queue merges""). Yet, the reverted commit was not
-the one introducing the bug. In fact, it actually triggered a UAF
-introduced by a different commit, and now fixed by commit d29bd41428cf
-("block, bfq: reset last_bfqq_created on group change").
+sprintf does not know the PAGE_SIZE maximum of the temporary buffer
+used for outputting sysfs content and it's possible to overrun the
+PAGE_SIZE buffer length.
 
-So, there is no point in keeping commit 2d52c58b9c9b ("block, bfq:
-honor already-setup queue merges") out. This commit restores it.
+Use a generic sysfs_emit function that knows the size of the
+temporary buffer and ensures that no overrun is done for offset
+attribute in
+loop_attr_[offset|sizelimit|autoclear|partscan|dio]_show() callbacks.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=214503
-
-Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Link: https://lore.kernel.org/r/20211125181510.15004-1-paolo.valente@linaro.org
+Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Link: https://lore.kernel.org/r/20220215213310.7264-2-kch@nvidia.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/block/loop.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 38c39d50ae04..1d443d17cf7c 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2523,6 +2523,15 @@ bfq_setup_merge(struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
- 	 * are likely to increase the throughput.
- 	 */
- 	bfqq->new_bfqq = new_bfqq;
-+	/*
-+	 * The above assignment schedules the following redirections:
-+	 * each time some I/O for bfqq arrives, the process that
-+	 * generated that I/O is disassociated from bfqq and
-+	 * associated with new_bfqq. Here we increases new_bfqq->ref
-+	 * in advance, adding the number of processes that are
-+	 * expected to be associated with new_bfqq as they happen to
-+	 * issue I/O.
-+	 */
- 	new_bfqq->ref += process_refs;
- 	return new_bfqq;
- }
-@@ -2582,6 +2591,10 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 19042b42a8ba..c31a76485c9c 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -795,33 +795,33 @@ static ssize_t loop_attr_backing_file_show(struct loop_device *lo, char *buf)
+ 
+ static ssize_t loop_attr_offset_show(struct loop_device *lo, char *buf)
  {
- 	struct bfq_queue *in_service_bfqq, *new_bfqq;
+-	return sprintf(buf, "%llu\n", (unsigned long long)lo->lo_offset);
++	return sysfs_emit(buf, "%llu\n", (unsigned long long)lo->lo_offset);
+ }
  
-+	/* if a merge has already been setup, then proceed with that first */
-+	if (bfqq->new_bfqq)
-+		return bfqq->new_bfqq;
-+
- 	/*
- 	 * Do not perform queue merging if the device is non
- 	 * rotational and performs internal queueing. In fact, such a
-@@ -2636,9 +2649,6 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 	if (bfq_too_late_for_merging(bfqq))
- 		return NULL;
+ static ssize_t loop_attr_sizelimit_show(struct loop_device *lo, char *buf)
+ {
+-	return sprintf(buf, "%llu\n", (unsigned long long)lo->lo_sizelimit);
++	return sysfs_emit(buf, "%llu\n", (unsigned long long)lo->lo_sizelimit);
+ }
  
--	if (bfqq->new_bfqq)
--		return bfqq->new_bfqq;
--
- 	if (!io_struct || unlikely(bfqq == &bfqd->oom_bfqq))
- 		return NULL;
+ static ssize_t loop_attr_autoclear_show(struct loop_device *lo, char *buf)
+ {
+ 	int autoclear = (lo->lo_flags & LO_FLAGS_AUTOCLEAR);
  
+-	return sprintf(buf, "%s\n", autoclear ? "1" : "0");
++	return sysfs_emit(buf, "%s\n", autoclear ? "1" : "0");
+ }
+ 
+ static ssize_t loop_attr_partscan_show(struct loop_device *lo, char *buf)
+ {
+ 	int partscan = (lo->lo_flags & LO_FLAGS_PARTSCAN);
+ 
+-	return sprintf(buf, "%s\n", partscan ? "1" : "0");
++	return sysfs_emit(buf, "%s\n", partscan ? "1" : "0");
+ }
+ 
+ static ssize_t loop_attr_dio_show(struct loop_device *lo, char *buf)
+ {
+ 	int dio = (lo->lo_flags & LO_FLAGS_DIRECT_IO);
+ 
+-	return sprintf(buf, "%s\n", dio ? "1" : "0");
++	return sysfs_emit(buf, "%s\n", dio ? "1" : "0");
+ }
+ 
+ LOOP_ATTR_RO(backing_file);
 -- 
 2.34.1
 
