@@ -2,126 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 018A54EAA84
-	for <lists+linux-block@lfdr.de>; Tue, 29 Mar 2022 11:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE8E4EAAA5
+	for <lists+linux-block@lfdr.de>; Tue, 29 Mar 2022 11:42:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234662AbiC2J2d (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Mar 2022 05:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33022 "EHLO
+        id S234742AbiC2Jnu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Mar 2022 05:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234687AbiC2J1p (ORCPT
+        with ESMTP id S234527AbiC2Jnt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Mar 2022 05:27:45 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E09498F63;
-        Tue, 29 Mar 2022 02:26:02 -0700 (PDT)
-Received: from kwepemi100007.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KSPK26vctzfZB8;
-        Tue, 29 Mar 2022 17:24:22 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi100007.china.huawei.com (7.221.188.115) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 29 Mar 2022 17:26:00 +0800
-Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 29 Mar
- 2022 17:25:59 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <axboe@kernel.dk>, <andriy.shevchenko@linux.intel.com>,
-        <john.garry@huawei.com>, <ming.lei@redhat.com>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH -next RFC 6/6] sbitmap: force tag preemption if free tags are sufficient
-Date:   Tue, 29 Mar 2022 17:40:48 +0800
-Message-ID: <20220329094048.2107094-7-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220329094048.2107094-1-yukuai3@huawei.com>
-References: <20220329094048.2107094-1-yukuai3@huawei.com>
+        Tue, 29 Mar 2022 05:43:49 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 839C64B422
+        for <linux-block@vger.kernel.org>; Tue, 29 Mar 2022 02:42:06 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 372B621614;
+        Tue, 29 Mar 2022 09:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1648546925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bd2RgASabPUF53MD8kPW9HA/VZftYdPTsYUe1/q/32M=;
+        b=zzqKCPqtz7T1GfQriG2fM3yXZMBd/gXxCNgK4ZIOWkMXlQZ7d7X7r8vB7uyy0zI+GCoMTg
+        ZjKgSFeDGo6PAMdg1/1snQBCsTBEI0Cj6PcKTvy2753aV6KChevkwLmEx6r+HbucFtZgHo
+        G5ymRKH7/CtQun3KJuA6ORFVYZh5PlA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1648546925;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Bd2RgASabPUF53MD8kPW9HA/VZftYdPTsYUe1/q/32M=;
+        b=p5kSxPjVdRzBVHnBFXsEuWz0LnccB8S37/6MRGOib1DjMduyr8bHReq6MAREBN1s4EiSLp
+        jomTPmUMXGs2mhDg==
+Received: from quack3.suse.cz (unknown [10.163.28.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 89300A3B82;
+        Tue, 29 Mar 2022 09:42:04 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 98AB2A0610; Tue, 29 Mar 2022 11:42:03 +0200 (CEST)
+Date:   Tue, 29 Mar 2022 11:42:03 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jan Kara <jack@suse.cz>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dave Chinner <david@fromorbit.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        nbd@other.debian.org
+Subject: Re: [PATCH 12/13] loop: remove lo_refcount and avoid lo_mutex in
+ ->open / ->release
+Message-ID: <20220329094203.zkgkqtumix7nygs2@quack3.lan>
+References: <20220324075119.1556334-1-hch@lst.de>
+ <20220324075119.1556334-13-hch@lst.de>
+ <20220324141321.pqesnshaswwk3svk@quack3.lan>
+ <96a4e2e7-e16e-7e89-255d-8aa29ffca68b@I-love.SAKURA.ne.jp>
+ <20220324172335.GA28299@lst.de>
+ <0b47dbee-ce17-7502-6bf3-fad939f89bb7@I-love.SAKURA.ne.jp>
+ <20220325162331.GA16355@lst.de>
+ <20220328083045.ryoh7rbhauxgezgn@quack3.lan>
+ <20220329063921.GA19778@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600009.china.huawei.com (7.193.23.164)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220329063921.GA19778@lst.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If tag preemption is disabled and system is under high io pressure,
-inflight io should use up tags. Since new io will wait directly, this
-rely on waked up threads will obtain at least 'wake_batch' tags.
-However, this might be broken if 8 waitqueues is unbalanced.
+On Tue 29-03-22 08:39:21, Christoph Hellwig wrote:
+> On Mon, Mar 28, 2022 at 10:30:45AM +0200, Jan Kara wrote:
+> > On Fri 25-03-22 17:23:31, Christoph Hellwig wrote:
+> > > On Fri, Mar 25, 2022 at 07:54:15PM +0900, Tetsuo Handa wrote:
+> > > > > But for now I'd really prefer to stop moving the goalpost further and
+> > > > > further.
+> > > > 
+> > > > Then, why not kill this code?
+> > > 
+> > > I think we should eventually do that, and I've indeed tested a patch
+> > > that is only cosmetically different.  I wasn't really convinced we
+> > > should do it in this series, but if there is consensus that we should
+> > > do it now I can respin the series with a patch like this included.
+> > 
+> > I'd defer it to a separate patchset. Because as much as the change to
+> > disallow LOOP_CLR_FD ioctl for used loop device makes sense, I'm not sure
+> > there isn't some framework using loop devices somewhere which relies on
+> > this just getting magically translated to setting LO_AUTOCLEAR flag. So IMO
+> > this has a big potential of userspace visible regression and as such I'd
+> > prefer doing it separately from the bugfixes.
+> 
+> At least my idea would not be to disallow LOOP_CLR_FD on a used block
+> devices as that would go back to the udev problems before Dave turned
+> it into a magic LO_AUTOCLEAR.  But to remove the lo_refcnt check
+> entirely, as loop_clr_fd now is safe against concurrent users - it
+> has to anyway as there can be other users even without an open.
 
-This patch tries to calculate free tags each time a 'ws' is woken up,
-and force tag preemption if free tags are sufficient.
+Ah, OK, so you'd always set LO_AUTOCLEAR and leave cleanup to happen
+from lo_release()? That makes sense to me.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-mq-tag.c      | 3 ++-
- include/linux/sbitmap.h | 6 ++++++
- lib/sbitmap.c           | 5 +++++
- 3 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 4e485bcc5820..55139a011e75 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -131,7 +131,8 @@ static inline bool preempt_tag(struct blk_mq_alloc_data *data,
- 			       struct sbitmap_queue *bt)
- {
- 	return data->preemption ||
--	       atomic_read(&bt->ws_active) <= SBQ_WAIT_QUEUES;
-+	       atomic_read(&bt->ws_active) <= SBQ_WAIT_QUEUES ||
-+	       READ_ONCE(bt->force_tag_preemption);
- }
- 
- unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
-diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
-index 9c8c6da3d820..7a0ea8c0692b 100644
---- a/include/linux/sbitmap.h
-+++ b/include/linux/sbitmap.h
-@@ -118,6 +118,12 @@ struct sbitmap_queue {
- 	 */
- 	unsigned int wake_batch;
- 
-+	/**
-+	 * @force_tag_preemption: prrempt tag even is tag preemption is
-+	 * disabled.
-+	 */
-+	bool force_tag_preemption;
-+
- 	/**
- 	 * @wake_index: Next wait queue in @ws to wake up.
- 	 */
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 1655c15ee11d..49241b44f163 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -432,6 +432,7 @@ int sbitmap_queue_init_node(struct sbitmap_queue *sbq, unsigned int depth,
- 
- 	sbq->min_shallow_depth = UINT_MAX;
- 	sbq->wake_batch = sbq_calc_wake_batch(sbq, depth);
-+	sbq->force_tag_preemption = 0;
- 	atomic_set(&sbq->wake_index, 0);
- 	atomic_set(&sbq->ws_active, 0);
- 
-@@ -650,6 +651,10 @@ static bool __sbq_wake_up(struct sbitmap_queue *sbq)
- 		 */
- 		ret = atomic_cmpxchg(&ws->wait_cnt, wait_cnt, wake_batch);
- 		if (ret == wait_cnt) {
-+			bool force = (sbq->sb.depth - sbitmap_weight(&sbq->sb) >
-+				      READ_ONCE(sbq->wake_batch) * 2);
-+
-+			WRITE_ONCE(sbq->force_tag_preemption, force);
- 			sbq_index_atomic_inc(&sbq->wake_index);
- 			wake_up_nr(&ws->wait, get_wake_nr(ws, &wake_batch));
- 			if (wake_batch)
+								Honza
 -- 
-2.31.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
