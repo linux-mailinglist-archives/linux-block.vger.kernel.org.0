@@ -2,80 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7312D4EAAC0
-	for <lists+linux-block@lfdr.de>; Tue, 29 Mar 2022 11:50:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DC2B4EAD14
+	for <lists+linux-block@lfdr.de>; Tue, 29 Mar 2022 14:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234844AbiC2Jvr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Mar 2022 05:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40590 "EHLO
+        id S236262AbiC2M0I (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Mar 2022 08:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234843AbiC2Jvp (ORCPT
+        with ESMTP id S236267AbiC2M0H (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Mar 2022 05:51:45 -0400
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4735F9BBA1
-        for <linux-block@vger.kernel.org>; Tue, 29 Mar 2022 02:50:02 -0700 (PDT)
-Received: from fsav113.sakura.ne.jp (fsav113.sakura.ne.jp [27.133.134.240])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 22T9o0tM091330;
-        Tue, 29 Mar 2022 18:50:00 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav113.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav113.sakura.ne.jp);
- Tue, 29 Mar 2022 18:50:00 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav113.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 22T9o07I091327
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 29 Mar 2022 18:50:00 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <2459d1c3-2f4b-6607-7c0b-6a5834edf8eb@I-love.SAKURA.ne.jp>
-Date:   Tue, 29 Mar 2022 18:49:56 +0900
+        Tue, 29 Mar 2022 08:26:07 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BAE4D9C3
+        for <linux-block@vger.kernel.org>; Tue, 29 Mar 2022 05:24:23 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id d30so217185pjk.0
+        for <linux-block@vger.kernel.org>; Tue, 29 Mar 2022 05:24:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=DbHeqBmeub3IXNgpNpXwxQEP5KJEOmozlPFdl+jrVb4=;
+        b=3IFSkxrjEY0kgqIH5AF3jinprwQV6MupXoDqc/cYBqfY/yqMU2lDyZr+OhQlFdBOia
+         Eh0BHSWzVdlKCoTUtRr/AgxhqKc4QuskCaWi156M7MIb1FZH/ZDQL7JHuwo2/THS7h1F
+         gvT0YF9WHeBDrkKFKloBRzvigQdr4tqYq2NeTXDWFFKrjAhJkofGN5MY0Wq8wHIjewF8
+         CVKZniazVDjsqUtjnQtNoxDUNK633AMJJGlk2Q8lMBGty9VlgXvr7+4GHWBVb2YJT5mR
+         d+v4+33oMH71tiIo/WLEcyvteR/DV1jwQwI1pb9cqPY6h2C/Iov3z4tHiY2onEHygIKf
+         Xp0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=DbHeqBmeub3IXNgpNpXwxQEP5KJEOmozlPFdl+jrVb4=;
+        b=MVQqNtUIOIunJE0ul/oAEVFwKTaXCORFDbQLImZPH/sfW13B7E7VnqZeff58grsyhV
+         MincKRBb0CVCKSwDZRJ9qpB2JqcBEE2Mi972/9KAYt4w5BNOskHUwRS9yOjoP0HrPYbP
+         mpx+bKrXrctNEmUX6gkQ+g9c4ZtRddoKl0+DnNjGTZ2w1v6nTzZ6duScfl12c8pOR4Lz
+         POZIgHEm+lQXSZSLJ2FjyMXz8Z5oyucnR+JHC38Yp/kBESIZp9ZvPRwxSzCA6QcQvFhW
+         Drqy8+O+f5xrvwo/N5piPBu6gqcSQriCJIxcSab0wqA38R1G8lr6COXnJw/ROK8ssNe2
+         i5ew==
+X-Gm-Message-State: AOAM533JM476UYhUeO12wAbPUHx2zqEDbhaAOH7WEr96gQO8WjkK6UJB
+        JEcIBr0dRXIDDG9F2RFgY/xl8+OA9IFvbVad
+X-Google-Smtp-Source: ABdhPJwpVnKb/gfRQoAuLbAhnBEbGdj5ibalqQ5j3N6zvFHH5YG7i9hzQst4uYti3ZHYMUZUmWvwZw==
+X-Received: by 2002:a17:902:8491:b0:14e:dad4:5ce5 with SMTP id c17-20020a170902849100b0014edad45ce5mr29253372plo.76.1648556662491;
+        Tue, 29 Mar 2022 05:24:22 -0700 (PDT)
+Received: from [192.168.1.100] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id t34-20020a056a0013a200b004faa8346e83sm20386224pfg.2.2022.03.29.05.24.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Mar 2022 05:24:21 -0700 (PDT)
+Message-ID: <69c1b01b-df24-d6b3-c1ca-06f3f3f850c0@kernel.dk>
+Date:   Tue, 29 Mar 2022 06:24:20 -0600
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: [PATCH 12/13] loop: remove lo_refcount and avoid lo_mutex in
- ->open / ->release
+Subject: Re: [GIT PULL] nvme fixes for Linux 5.18
 Content-Language: en-US
-To:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>
-Cc:     Dave Chinner <david@fromorbit.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        nbd@other.debian.org
-References: <20220324075119.1556334-1-hch@lst.de>
- <20220324075119.1556334-13-hch@lst.de>
- <20220324141321.pqesnshaswwk3svk@quack3.lan>
- <96a4e2e7-e16e-7e89-255d-8aa29ffca68b@I-love.SAKURA.ne.jp>
- <20220324172335.GA28299@lst.de>
- <0b47dbee-ce17-7502-6bf3-fad939f89bb7@I-love.SAKURA.ne.jp>
- <20220325162331.GA16355@lst.de> <20220328083045.ryoh7rbhauxgezgn@quack3.lan>
- <20220329063921.GA19778@lst.de> <20220329094203.zkgkqtumix7nygs2@quack3.lan>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20220329094203.zkgkqtumix7nygs2@quack3.lan>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+References: <YkK14fRnn3GVpGxQ@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <YkK14fRnn3GVpGxQ@infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2022/03/29 18:42, Jan Kara wrote:
-> Ah, OK, so you'd always set LO_AUTOCLEAR and leave cleanup to happen
-> from lo_release()? That makes sense to me.
+On 3/29/22 1:31 AM, Christoph Hellwig wrote:
+> git://git.infradead.org/nvme.git tags/nvme-5.18-2022-03-29
 
-"loop: remove lo_refcount and avoid lo_mutex in ->open / ->release" is going to
-make "not always" set LO_AUTOCLEAR due to lack of disk->open_mutex serialization.
+Pulled, thanks.
 
-That's why this topic is discussed.
-
-We could use loop_global_lock_killable()/loop_global_unlock() in order to compensate
-for lack of disk->open_mutex serialization, as described in the bottom half of
-https://lkml.kernel.org/r/03628e13-ca56-4ed0-da5a-ee698c83f48d@I-love.SAKURA.ne.jp .
+-- 
+Jens Axboe
 
