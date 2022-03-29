@@ -2,73 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6F454EB118
-	for <lists+linux-block@lfdr.de>; Tue, 29 Mar 2022 17:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA6BB4EB0E6
+	for <lists+linux-block@lfdr.de>; Tue, 29 Mar 2022 17:46:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238845AbiC2P4l (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Mar 2022 11:56:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48992 "EHLO
+        id S238944AbiC2PqB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Mar 2022 11:46:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237925AbiC2P4k (ORCPT
+        with ESMTP id S238938AbiC2PqA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Mar 2022 11:56:40 -0400
-X-Greylist: delayed 908 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 29 Mar 2022 08:54:55 PDT
-Received: from sender2-op-o12.zoho.com.cn (sender2-op-o12.zoho.com.cn [163.53.93.243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE1333E02
-        for <linux-block@vger.kernel.org>; Tue, 29 Mar 2022 08:54:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1648568368;
-        s=zohomail; d=mykernel.net; i=cgxu519@mykernel.net;
-        h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-        bh=ExbH/1Mg/33VE9cb4EWJfjCuel9VvkxSQ11tAA2xglk=;
-        b=SS7NJW4J/1LoolGPHZD8gVs9fYwb3V9DvtG+yji+QAAasFK3rjFNSULDzu0BlEB5
-        jHjng6uB6Y8jBH1VvEoiOB43f7o2Br2W1tN7arUFmHs8XGjlfzIiDrgKycIBLMTg6iR
-        TO+LNhmLzFj8HFdnE75pBLYolVPr791K3gHTiwpg=
-Received: from localhost.localdomain (81.71.33.115 [81.71.33.115]) by mx.zoho.com.cn
-        with SMTPS id 1648568365388769.7425638737615; Tue, 29 Mar 2022 23:39:25 +0800 (CST)
-From:   Chengguang Xu <cgxu519@mykernel.net>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>
-Message-ID: <20220329153923.306795-1-cgxu519@mykernel.net>
-Subject: [PATCH] block: fix misleading comment for major number of block device
-Date:   Tue, 29 Mar 2022 23:39:23 +0800
-X-Mailer: git-send-email 2.27.0
+        Tue, 29 Mar 2022 11:46:00 -0400
+Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B47EE13CD3
+        for <linux-block@vger.kernel.org>; Tue, 29 Mar 2022 08:44:15 -0700 (PDT)
+Received: by mail-vk1-xa31.google.com with SMTP id q85so9984518vkq.4
+        for <linux-block@vger.kernel.org>; Tue, 29 Mar 2022 08:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linbit-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cFXlp32xQw7/OjMn3uGU844211qFMDFeLujMZW6rFtE=;
+        b=JqKDQ8MKvspOvGXGqMIk6wdMVNm2l+b4NyGw6XjLHvS4btBEqsAfnlyweRKHI4yMJG
+         ghyNvZ3eYnf2Zor1uhlE1bG1HzDFRUTP7PMo7n3K63z+CtY6PMp+ACAjJZfIbgzqFp90
+         dgEixgbPzK/xbL2DhnDrF0A+GFWKW9kK5u5AiazLqE+YSJHzqmcTH/kU2+j0gmpSo/K+
+         tzBUrvWpmsdBIMHKH+y1Y7W42wYDLHBvBmnbvUvRxmd7Lr7PrD3kr+k+USKm9anB8Kbh
+         icgrwgZdiP1VOnpV3IhtWS9kmwb6OgSbkglXY/R7vfdcXfv2gdQA86buPDgejlP+0TIA
+         jNbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cFXlp32xQw7/OjMn3uGU844211qFMDFeLujMZW6rFtE=;
+        b=LOZVZW82yqA4RzmqORnKfWvIKF9bQLoDTD/oDr9Gaf/g4/eSxQk5TxGABgTkQBkyAa
+         QxyTgkzOjXqVkZeaZ8NtuxJL171wR/J59nNS06P4D31gytotae9dJoFcT1YGArD73tnZ
+         FAAyuUD1vsDyJ7nQ7Fov+cejtSOTjzpl1ks6qYvooneTYzU4g8CG3CenuZuGwGEBEZMt
+         ScjD+SgdlZJAkO3PHiCIkaVAaznIp3CCVCiYiid0DUjc6OQXxbigqLhlus4r+XrotGkH
+         lMAYn86QgKF+hiNkzND+cq8DpWndOdL6VsmmviocGxbgOnK/2zxJ8UddN9OGemzUy/AV
+         GGpA==
+X-Gm-Message-State: AOAM533/9Ix3s8Wb9vboNeK+jktM4H3taeJNgJaQls/yURd5UB0YwHfW
+        pMf80rv7WA7f31rk09QcNvEKuRb6elqGc45C3ToDww==
+X-Google-Smtp-Source: ABdhPJyW12LjVa8kn/B0znyep6GosCNAp/KjjP9BVBaJg4O8d/25oaPhxtDrGS8yhBe02srwIag4mfxCnCj/FF/ECuM=
+X-Received: by 2002:a1f:6a82:0:b0:33f:7eeb:5989 with SMTP id
+ f124-20020a1f6a82000000b0033f7eeb5989mr17894292vkc.29.1648568654813; Tue, 29
+ Mar 2022 08:44:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220329070618.GA20396@lst.de> <CADGDV=UgjZAbmAN-2bO1nyDvA=XCC9Lf2dxWHZ0BwxF12nnztQ@mail.gmail.com>
+ <20220329073254.GA20691@lst.de> <CADGDV=U5jwe0CZ12174cMahfD_h-GsBswWaA1VOJbHaC1nsrUw@mail.gmail.com>
+ <f9d89282-3a67-ad97-149f-52325e23607c@kernel.dk>
+In-Reply-To: <f9d89282-3a67-ad97-149f-52325e23607c@kernel.dk>
+From:   Philipp Reisner <philipp.reisner@linbit.com>
+Date:   Tue, 29 Mar 2022 17:44:03 +0200
+Message-ID: <CADGDV=WN2TFR6dO7ZdiQ2ijPjs+7HSsvk0ZCHsHj6ZG5t-oEdA@mail.gmail.com>
+Subject: Re: state of drbd in mainline
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Actually the maximum dynamic major number of block device will
-be BLKDEV_MAJOR_HASH_SIZE-1, so just fix the function comment
-correctly.
+Jens, my intention is to keep it in-tree, and at some point update it.
+Regarding your questions:
 
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
----
- block/genhd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
 
-diff --git a/block/genhd.c b/block/genhd.c
-index c9a4fc90d3e9..0965f10813da 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -231,7 +231,7 @@ void blkdev_show(struct seq_file *seqf, off_t offset)
-  *    then the function returns zero on success, or a negative error code
-  *  - if any unused major number was requested with @major =3D 0 parameter
-  *    then the return value is the allocated major number in range
-- *    [1..BLKDEV_MAJOR_MAX-1] or a negative error code otherwise
-+ *    [1..BLKDEV_MAJOR_HASH_SIZE-1] or a negative error code otherwise
-  *
-  * See Documentation/admin-guide/devices.txt for the list of allocated
-  * major numbers.
---=20
-2.27.0
+> - Why aren't the drbd maintainers responding to posted patches? They seem
+>   to simply be ignored, and I'm left to pickup the trivial ones that look
+>   fine to me. In-kernel drbd appears largely unmaintained, and has been for
+>   years.
 
+The team here has grown, we are busy. Since you started to pick up the
+trivial patches yourself, I thought it is not necessary that I collect them and
+send a pull request in merge-window time.
 
+> - Even if out-of-band communication is used for in-kernel users of drbd,
+>   that doesn't result in any patches or fixes that should go upstream?
+
+This one:
+https://patchwork.kernel.org/project/linux-block/patch/20210426163032.3454129-1-christoph.boehmwalder@linbit.com/
+(relevant to users that have DRBD on top of md raid)
+
+> - If there's zero activity for in-kernel drbd, all users are using the
+>   out-of-tree version?
+
+There are users of the in-tree version, some with huge fleets.
+Some do not need the newer out-of-tree DRBD, and the in-tree version is a
+lot easier to compile. You need coccinelle for the out-of-tree version,
+and that can already be a hindering barrier for some.
+
+> As far as I can tell, drbd upstream is stone cold dead, and has been for
+> years. Why shouldn't it just get removed?
+
+Because there are users.
+
+> Is it just bait to get people to use an out-of-tree version?
+
+No.
+
+> --
+> Jens Axboe
