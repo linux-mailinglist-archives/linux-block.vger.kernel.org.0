@@ -2,143 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECDB94ECD2C
-	for <lists+linux-block@lfdr.de>; Wed, 30 Mar 2022 21:23:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 538B34ECB54
+	for <lists+linux-block@lfdr.de>; Wed, 30 Mar 2022 20:07:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350620AbiC3TZG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Mar 2022 15:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
+        id S238591AbiC3SIb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Mar 2022 14:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241000AbiC3TZE (ORCPT
+        with ESMTP id S1349748AbiC3SI0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Mar 2022 15:25:04 -0400
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D021237
-        for <linux-block@vger.kernel.org>; Wed, 30 Mar 2022 12:23:16 -0700 (PDT)
-Received: by mail-pf1-f171.google.com with SMTP id x31so13123768pfh.9
-        for <linux-block@vger.kernel.org>; Wed, 30 Mar 2022 12:23:16 -0700 (PDT)
+        Wed, 30 Mar 2022 14:08:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CC023DA4B
+        for <linux-block@vger.kernel.org>; Wed, 30 Mar 2022 11:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1648663590;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uWSt8FFFTI4rhck3dPnwbJuLsSit8PUXxQiArFyosm8=;
+        b=WEK//vBvxC37iXc3DA9hZctU8Z54IiLfgECTawzCJcEpeKzVTrMOBl8wyyw7l92iUMM3EN
+        HmJMTVHs/045r/tyVIVehFYEtwULNvJ382IAKK1HyDPyOq8SO0DC5+JxiABkBPvPlbcxBf
+        kBnEmrWPMpC7eNUynP0K5V8URs9oDRk=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-31-lRM0IlUsPv-MC-E-ViBk5g-1; Wed, 30 Mar 2022 14:06:29 -0400
+X-MC-Unique: lRM0IlUsPv-MC-E-ViBk5g-1
+Received: by mail-qv1-f69.google.com with SMTP id h18-20020a05621402f200b00440cedaa9a2so16635205qvu.17
+        for <linux-block@vger.kernel.org>; Wed, 30 Mar 2022 11:06:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ZHtyaTDCFwT16k5cdDfPF/P2EA5gPFqUR2PCvm4ECgI=;
-        b=YQfob1wgJ8QhpYSvS1CfnB2Df1MJFbEXTXCNza5VUvu8+wThcuvOvK08J/zTZ4Qbdm
-         1GxBpCLPfS2ilJhgRSeOPcSLxVsNQkIttpUi8oqmd2oUbLxFeIvZxUpMrXZCWE3v/PCo
-         sUzMJPWZK6HKPXpgBTsIJGH4ejQoATg7infOmEj8NG9uxgXORVkwCxBRi67/xp1JyfHL
-         ZmdChelr/5IM3NTkn+5Nw5vOf5Z1g31imRSUT4HqISREpyLAqqz0JRfYA89x66y8mKxc
-         mlvlcwYq6cLW51vYS+ekfpOmIhFppu3Mg5LZU8UUsZ9tZyaZ1MobS8fFifGBCsp3xcAD
-         73SA==
-X-Gm-Message-State: AOAM533ytZfYvrRc4tV4AL7ljBEiT2nZ3m524yBHhc2TuWLcYUVLWs2F
-        TIqi+rcREOyNfxn9oNnUeAd0WkrcyMM=
-X-Google-Smtp-Source: ABdhPJzwW5Uj3tPdbpOaNG5QzaofCKC1qF7aDIo6ArraeWowHZ4NFFbLL3rxw31k/agc3F4ivB+E5w==
-X-Received: by 2002:a05:6a00:ad0:b0:4f7:a357:6899 with SMTP id c16-20020a056a000ad000b004f7a3576899mr34729945pfl.80.1648668195778;
-        Wed, 30 Mar 2022 12:23:15 -0700 (PDT)
-Received: from fedora (136-24-99-118.cab.webpass.net. [136.24.99.118])
-        by smtp.gmail.com with ESMTPSA id h6-20020a056a00218600b004f65315bb37sm26083117pfi.13.2022.03.30.12.23.14
+        bh=uWSt8FFFTI4rhck3dPnwbJuLsSit8PUXxQiArFyosm8=;
+        b=i1DBgWmnVlk+U1pBBov53SP8jjEj0dFUh14Dr5/jW43xiFuwrUDFHvd6SEUolhFsUT
+         KhoD3RyvRCgk2LVRALC7Xh/mEAWPP3vFYTgStcf4Pp1o01zQcSPLMDleS6XtHx3NcwQF
+         Uh3Paiy2H1QAn84LvRns4e0Q0BKw1Q87/7wg3vFTyOxk4tZez1f39qMLtXshWVAo9Qes
+         cXj0pTPFG+zB/LaxdgvuSu+0vvvMBJ7GGWiCETS8OIoW9Hx5I7dGc9zA+/m91Mx+4ifd
+         BL/nGjme685jWIPcMVOn+i7Z2/HZ2yPV8Xu1F0v5z4qRjf9NKUtuo/bXgv/HeiVYD1fB
+         UAkQ==
+X-Gm-Message-State: AOAM533t8/ic3XNQH4gFyhgLFE5kTU3Gtc/Nk7Iy1OhfthWpe1gfFb6B
+        UcJ/9gpJNeyvE1+fi8S8YQfmoYRXucQQbUO/D3+XjYsm/nVJ/xIHOU6rNn+Kkp8G73F5ixca9AM
+        0Iut0rDpeCy/YgFdKPZW+Aw==
+X-Received: by 2002:ad4:5be3:0:b0:441:7bd1:29bd with SMTP id k3-20020ad45be3000000b004417bd129bdmr733374qvc.14.1648663586921;
+        Wed, 30 Mar 2022 11:06:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzkima55vXfIXB4/YhL8vxRAGITI8NXaa0gII7X9gZDBJaWlIZfDnbZH36cgG+Ixq8NEncA6A==
+X-Received: by 2002:ad4:5be3:0:b0:441:7bd1:29bd with SMTP id k3-20020ad45be3000000b004417bd129bdmr733356qvc.14.1648663586730;
+        Wed, 30 Mar 2022 11:06:26 -0700 (PDT)
+Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
+        by smtp.gmail.com with ESMTPSA id u20-20020a05620a455400b0067ec0628661sm12639056qkp.110.2022.03.30.11.06.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Mar 2022 12:23:15 -0700 (PDT)
-Date:   Wed, 30 Mar 2022 08:28:28 -0400
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Mike Snitzer <snitzer@kernel.org>
-Cc:     tj@kernel.org, axboe@kernel.dk, linux-block@vger.kernel.org,
-        dm-devel@redhat.com
-Subject: Re: can we reduce bio_set_dev overhead due to bio_associate_blkg?
-Message-ID: <YkRM7Iyp8m6A1BCl@fedora>
-References: <YkSK6mU1fja2OykG@redhat.com>
+        Wed, 30 Mar 2022 11:06:26 -0700 (PDT)
+Date:   Wed, 30 Mar 2022 14:06:25 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Philipp Reisner <philipp.reisner@linbit.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: state of drbd in mainline
+Message-ID: <YkScIas+/Ev0trcZ@redhat.com>
+References: <20220329070618.GA20396@lst.de>
+ <CADGDV=UgjZAbmAN-2bO1nyDvA=XCC9Lf2dxWHZ0BwxF12nnztQ@mail.gmail.com>
+ <20220329073254.GA20691@lst.de>
+ <CADGDV=U5jwe0CZ12174cMahfD_h-GsBswWaA1VOJbHaC1nsrUw@mail.gmail.com>
+ <f9d89282-3a67-ad97-149f-52325e23607c@kernel.dk>
+ <CADGDV=WN2TFR6dO7ZdiQ2ijPjs+7HSsvk0ZCHsHj6ZG5t-oEdA@mail.gmail.com>
+ <3c42b1ed-7c03-64e6-409e-e92247288cac@kernel.dk>
+ <CADGDV=WcTSSC70yG61dazo-WyoLOzp3r+nOk-Eg2x_Ncx=3nRg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YkSK6mU1fja2OykG@redhat.com>
-X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <CADGDV=WcTSSC70yG61dazo-WyoLOzp3r+nOk-Eg2x_Ncx=3nRg@mail.gmail.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Mike,
+On Wed, Mar 30 2022 at 11:23P -0400,
+Philipp Reisner <philipp.reisner@linbit.com> wrote:
 
-On Wed, Mar 30, 2022 at 12:52:58PM -0400, Mike Snitzer wrote:
-> Hey Tejun and Dennis,
+> > > Jens, my intention is to keep it in-tree, and at some point update it.
+> > > Regarding your questions:
+> >
+> > That'd be great, but it's been years since there was any significant
+> > updates to the in-kernel drbd... I would strongly suggest that the
+> > in-kernel be brought closer to what people are mostly running, as it
+> > stands it's basically unmaintained.
 > 
-> I recently found that due to bio_set_dev()'s call to
-> bio_associate_blkg(), bio_set_dev() needs much more cpu than ideal;
-> especially when doing 4K IOs via io_uring's HIPRI bio-polling.
-> 
-> I'm very naive about blk-cgroups.. so I'm hopeful you or others can
-> help me cut through this to understand what the ideal outcome should
-> be for DM's bio clone + remap heavy use-case as it relates to
-> bio_associate_blkg.
-> 
-> If I hack dm-linear with a local __bio_set_dev that simply removes
-> the call to bio_associate_blkg() my IOPS go from ~980K to 995K.
-> 
-> Looking at what is happening a bit, relative to this DM bio cloning
-> usecase, it seems __bio_clone() calls bio_clone_blkg_association() to
-> clone the blkg from DM device, then dm-linear.c:linear_map's call
-> to bio_set_dev() will cause bio_associate_blkg(bio) to reuse the css
-> but then it triggers an update because the bdev is being remapped in
-> the bio (due to linear_map sending the IO to the real underlying
-> device). End result _seems_ like collective wasteful effort to get the
-> blk-cgroup resources setup properly in the face of a simple remap.
-> 
-> Seems the current DM pattern is causing repeat blkg work for _every_
-> remapped bio?  Do you see a way to speed up repeat calls to
-> bio_associate_blkg()?
-> 
+> The changes we worked on over many Years in the more recent drbd-9.x
+> branches are just too fundamental to do them in small chunks, we could
+> upstream bit by bit.  We need to get that reviewed in a big series.  If I
+> started to dump them on linux-block right away, nobody would look at it
+> seriously, since it would be too much.  I intend to get people from red
+> hat/suse assigned to do such a review. Then we will do that on linux-block,
+> so that everyone who cares sees what happens.
 
-I must admit I wrote this with limited knowledge of bio cloning at the
-time. I can fill in the thought process here.
+Why do you think Red Hat, SUSE or any other distro vendor's engineers
+should be made to review what amounts to be a massive dump of changes
+you developed over years?
 
-The idea was every bio should have a blkg associated with it for io
-accounting and things like blk-iolatency and blk-iocost. The device
-abstraction I believe means we can set limits here as well on submission
-rate to the md device.
+Presummably you have heard of "upstream first"!?  Why do you think it
+doesn't apply to drbd?
 
-I think cloning is a special case that I might have gotten wrong. If
-there is a bio_set_dev() call after each clone(), then the
-bio_clone_blkg_association() is excess work. We'd need to audit how
-bio_alloc_clone() is being used to be safe. Alternatively, we could opt
-for a bio_alloc_clone_noblkg(), but that's a little bit uglier.
+It'd be one thing if drbd never went upstream but _it did_.  As is
+your development model is completely wrong.
 
-1. bio_set_dev() above md <- needed so we can do throttling on the md.
-2. bio_alloc_clone() <- doesn't need to clone the blkg() info.
-3. bio_set_dev() in md <- sets the right underlying device association.
+Mike
 
-Thanks,
-Dennis
-
-> Test kernel is my latest dm-5.19 branch (though latest Linus 5.18-rc0
-> kernel should be fine too):
-> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-5.19
-> 
-> I'm using dm-linear ontop on a 16G blk-mq null_blk device:
-> 
-> modprobe null_blk queue_mode=2 poll_queues=2 bs=4096 gb=16
-> SIZE=`blockdev --getsz /dev/nullb0`
-> echo "0 $SIZE linear /dev/nullb0 0" | dmsetup create linear
-> 
-> And running the workload with fio using this wrapper script:
-> io_uring.sh 20 1 /dev/mapper/linear 4096
-> 
-> #!/bin/bash
-> 
-> RTIME=$1
-> JOBS=$2
-> DEV=$3
-> BS=$4
-> 
-> QD=64
-> BATCH=16
-> HI=1
-> 
-> fio --bs=$BS --ioengine=io_uring --fixedbufs --registerfiles --hipri=$HI \
->         --iodepth=$QD \
->         --iodepth_batch_submit=$BATCH \
->         --iodepth_batch_complete_min=$BATCH \
->         --filename=$DEV \
->         --direct=1 --runtime=$RTIME --numjobs=$JOBS --rw=randread \
->         --name=test --group_reporting
