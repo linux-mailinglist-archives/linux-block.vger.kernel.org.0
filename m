@@ -2,120 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F8954ECBDA
-	for <lists+linux-block@lfdr.de>; Wed, 30 Mar 2022 20:24:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D4C44ECC05
+	for <lists+linux-block@lfdr.de>; Wed, 30 Mar 2022 20:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350111AbiC3SZT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Mar 2022 14:25:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59952 "EHLO
+        id S1350526AbiC3S0l (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Mar 2022 14:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351384AbiC3SYx (ORCPT
+        with ESMTP id S1350596AbiC3S0L (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Mar 2022 14:24:53 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F7B4B419
-        for <linux-block@vger.kernel.org>; Wed, 30 Mar 2022 11:22:25 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 5FDC81F45F1F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1648664543;
-        bh=sYm9jFXdrgdVFCDucYlpXP1Kp/s8ldkKOJ7mfqFc47g=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=aIZcFo5g1HqWaoOkPGUjVdIx3TE8m0Li0nQHSAI+ebjOiNJ4Bttags1vgirq7SeEz
-         rOFHGLfBfkeKZaS6uGONwAjzX9p/MrcACJlMlxxcBceoZK2oMf1oq+aiXBlGBQKeUv
-         Zp+GzlarvnxVmLOlYnDgIcZL2B5CD1RyCZtV9V+Wtq1kyPBVxoGJHO6jiY3Sg81KI5
-         /tomjYsrjzmSzs95G7/aE0Fr2FDB8uq0zShFL5LqHpIDZHJfaD37O8kzh0pGei9sad
-         ZFIcBbu76ONDUE3nQ5JmjBI81oUWjOVaSa/QNBd21I5b4sZlBUUIsUUmVSAlNzhOBd
-         YyHBv/J9UBZhA==
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Hannes Reinecke <hare@suse.de>, lsf-pc@lists.linux-foundation.org,
-        linux-block@vger.kernel.org,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        linux-mm@kvack.org
-Subject: Re: [LSF/MM/BPF TOPIC] block drivers in user space
-Organization: Collabora
-References: <87tucsf0sr.fsf@collabora.com>
-        <986caf55-65d1-0755-383b-73834ec04967@suse.de> <YkCSVSk1SwvtABIW@T590>
-        <87o81prfrg.fsf@collabora.com> <YkJTQW7aAjDGKL9p@T590>
-        <87bkxor7ye.fsf@collabora.com> <YkO4rFBHCdjCJndV@T590>
-Date:   Wed, 30 Mar 2022 14:22:20 -0400
-In-Reply-To: <YkO4rFBHCdjCJndV@T590> (Ming Lei's message of "Wed, 30 Mar 2022
-        09:55:56 +0800")
-Message-ID: <87tubfpag3.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+        Wed, 30 Mar 2022 14:26:11 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7E24924D
+        for <linux-block@vger.kernel.org>; Wed, 30 Mar 2022 11:23:39 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id w8so21240985pll.10
+        for <linux-block@vger.kernel.org>; Wed, 30 Mar 2022 11:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=6PnxJaVdYHTfEoSreao3ANO+XeqxY/p/4dxKSObIH1I=;
+        b=U1oUia1Thamt6Z7oWm6PGNKOk9RXK6Jv76DGrI1cLcYRcY5/d1Tt5qepQRdZm6lsyq
+         RBa/xpJM28ShOu5ibphzafHjPKptRC4OMeOVco0xYKihrCNFhnaGQOBDSvUdgHWgE3gf
+         cWTbx+dPO2nv/wujOZrrbxfJpePUzp7QZ1RCloUPxJhGXTvBKUziPieC1LSkK8oSaB+t
+         E85QJNBGnQK8HE8wei7Zq5jQSpeI5JY8kzofCGcJSUHLIHQXWsBy6ta+brl9WPLZzyWA
+         2jPBZlOFyxLxFI8awBJCcZtcLmSyu35IRMr8cJ72zb2pokIUUqe6EUB9pKUwVKwbq4my
+         ou5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=6PnxJaVdYHTfEoSreao3ANO+XeqxY/p/4dxKSObIH1I=;
+        b=2QUe8WbBr+VzigNdDDY2NTlNAdhuKifF7B8xc6THFOLt3c6fKy9tJkzhfyBt14/131
+         KtE5b6hbs8yBZ4Loh8uYHaWeQS6ZeCMRVha/iRkvMMPqougQ+AJR55NCPkIEGvuL8hTW
+         5wiD00/QTYpw5Oxd+xiPfGVSR+ATmapwIPRqd2BDAW21vyXR210oKrBL/uXre6qID5ZJ
+         Bk7apwXtn7ACS1beBm5Is847M2kkfBx0FDYHKFxN1iMjo9dWXzMcpEbyZ0hGkfD7a7g9
+         Fy5mNkeIeoJqump72wBd6jYkfU22ae6XUykYrHaXA1ARdo8KNSprgrgIZ9mntXuBrfvk
+         mY2g==
+X-Gm-Message-State: AOAM531mMmJHZR4Gb0u7Bj5X12YN1bx3glCA0lswGr43x+/po27G5ell
+        7WtejEOu4SZuRTEfiOEOXQaHcXwjKFLi+Yke/A==
+X-Google-Smtp-Source: ABdhPJzkTl+tJbylc9dRvis6ZhULbTl7j4ynIkLgm4b/Lu4YSrf6PCWjehKBvofPJCmWKHUKJGD0xbE01MjL0VC50Jo=
+X-Received: by 2002:a17:90b:3143:b0:1c7:5cee:3948 with SMTP id
+ ip3-20020a17090b314300b001c75cee3948mr852445pjb.140.1648664618224; Wed, 30
+ Mar 2022 11:23:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Reply-To: isabellasayouba0@gmail.com
+Sender: 040stherchurch@gmail.com
+Received: by 2002:a05:6a20:691d:b0:76:6cf5:d552 with HTTP; Wed, 30 Mar 2022
+ 11:23:37 -0700 (PDT)
+From:   Mrs Isabella Sayouba <isabellasayouba0@gmail.com>
+Date:   Wed, 30 Mar 2022 18:23:37 +0000
+X-Google-Sender-Auth: _Xe1kByDkvq-Dn04BagO7gok_qM
+Message-ID: <CAAzQq761QVaWKiKernxpKjqNCK+6V9mRKHBnOcqF8rXJO9Y+aA@mail.gmail.com>
+Subject: =?UTF-8?B?44GC44GE44GV44Gk44CC?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_99,BAYES_999,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Ming Lei <ming.lei@redhat.com> writes:
-
-> On Tue, Mar 29, 2022 at 01:20:57PM -0400, Gabriel Krisman Bertazi wrote:
->> Ming Lei <ming.lei@redhat.com> writes:
->> 
->> >> I was thinking of something like this, or having a way for the server to
->> >> only operate on the fds and do splice/sendfile.  But, I don't know if it
->> >> would be useful for many use cases.  We also want to be able to send the
->> >> data to userspace, for instance, for userspace networking.
->> >
->> > I understand the big point is that how to pass the io data to ubd driver's
->> > request/bio pages. But splice/sendfile just transfers data between two FDs,
->> > then how can the block request/bio's pages get filled with expected data?
->> > Can you explain a bit in detail?
->> 
->> Hi Ming,
->> 
->> My idea was to split the control and dataplanes in different file
->> descriptors.
->> 
->> A queue has a fd that is mapped to a shared memory area where the
->> request descriptors are.  Submission/completion are done by read/writing
->> the index of the request on the shared memory area.
->> 
->> For the data plane, each request descriptor in the queue has an
->> associated file descriptor to be used for data transfer, which is
->> preallocated at queue creation time.  I'm mapping the bio linearly, from
->> offset 0, on these descriptors on .queue_rq().  Userspace operates on
->> these data file descriptors with regular RW syscalls, direct splice to
->> another fd or pipe, or mmap it to move data around. The data is
->> available on that fd until IO is completed through the queue fd.  After
->> an operation is completed, the fds are reused for the next IO on that
->> queue position.
->> 
->> Hannes has pointed out the issues with fd limits. :)
->
-> OK, thanks for the detailed explanation!
->
-> Also you may switch to map each request queue/disk into a FD, and every
-> request is mapped to one fixed extent of the 'file' via rq->tag since we
-> have max sectors limit for each request, then fd limits can be avoided.
->
-> But I am wondering if this way is friendly to userspace side implementation,
-> since there isn't buffer, only FDs visible to userspace.
-
-The advantages would be not mapping the request data in userspace if we
-could avoid it, since it would be possible to just forward the data
-inside the kernel.  But my latest understanding is that most use cases
-will want to directly manipulate the data anyway, maybe to checksum, or
-even for sending through userspace networking.  It is not clear to me
-anymore that we'd benefit from not always mapping the requests to
-userspace.
-
-I've been looking at your implementation and I really like how simple it
-is. I think it's the most promising approach for this feature I've
-reviewed so far.  I'd like to send you a few patches for bugs I found
-when testing it and keep working on making it upstreamable.  How can I
-send you those patches?  Is it fine to just email you or should I also
-cc linux-block, even though this is yet out-of-tree code?
-
--- 
-Gabriel Krisman Bertazi
+44GC44GE44GV44Gk44CCDQoNCua2meOCkua1geOBl+OBquOBjOOCieOBk+OBruODoeODvOODq+OC
+kuabuOOBhOOBpuOBhOOBvuOBmeOAguengeOBruebruOBq+OBr+Wkp+OBjeOBquaCsuOBl+OBv+OB
+jOOBguOCiuOBvuOBmeOAguengeOBruWQjeWJjeOBr+OCpOOCtuODmeODqeODu+OCteODqOOCpuOD
+kOOBleOCk+OBp+OBmeOAguODgeODpeODi+OCuOOCouWHuui6q+OBp+OAgeODluODq+OCreODiuOD
+leOCoeOCveOBrueXhemZouOBi+OCiemAo+e1oeOCkuWPluOCiuOBvuOBmeOAguengeOBr+OBguOB
+quOBn+OBq+W/g+OCkumWi+OBhOOBpuaEn+WLleOBl+OBn+OBruOBp+OAgeOBguOBquOBn+OBq+ip
+seOBmeS7peWkluOBq+mBuOaKnuiCouOBr+OBguOCiuOBvuOBm+OCk+OAguengeOBr+OAgTIwMTHl
+ubTjgavkuqHjgY/jgarjgovliY3jgavjg5bjg6vjgq3jg4rjg5XjgqHjgr3jga7jg4Hjg6Xjg4vj
+grjjgqLlpKfkvb/jgag55bm06ZaT5YON44GE44Gm44GE44GfU2F5b3ViYQ0KQnJvd27msI/jgajn
+tZDlqZrjgZfjgb7jgZfjgZ/jgILlrZDkvpvjgarjgZfjgacxMeW5tOmWk+e1kOWpmuOBl+OBn+OA
+gg0KDQrlvbzjga/jgZ/jgaPjgZ815pel6ZaT57aa44GE44Gf55+t44GE55eF5rCX44Gu5b6M44Gn
+5q2744Gr44G+44GX44Gf44CC5b2844Gu5q275b6M44CB56eB44Gv5YaN5ama44GX44Gq44GE44GT
+44Go44Gr5rG644KB44G+44GX44Gf44CC5Lqh44GP44Gq44Gj44Gf5aSr44GM55Sf44GN44Gm44GE
+44Gf44Go44GN44CB5b2844Gv57eP6aGNODUw5LiH44OJ44Or44KS6aCQ44GR44G+44GX44Gf44CC
+DQrvvIg4MDDkuIc1MDAw44OJ44Or77yJ6KW/44Ki44OV44Oq44Kr44Gu44OW44Or44Kt44OK44OV
+44Kh44K944Gu6aaW6YO944Ov44Ks44OJ44Kl44Kw44O844Gu6YqA6KGM44Gn44CC54++5Zyo44CB
+44GT44Gu44GK6YeR44Gv44G+44Gg6YqA6KGM44Gr44GC44KK44G+44GZ44CC5b2844Gv44GT44Gu
+44GK6YeR44KS44OW44Or44Kt44OK44OV44Kh44K944Gu6Ymx5qWt44GL44KJ44Gu6YeR44Gu6Ly4
+5Ye644Gr5Yip55So44Gn44GN44KL44KI44GG44Gr44GX44G+44GX44Gf44CCDQoNCuacgOi/keOA
+geengeOBruWMu+iAheOBr+engeOBjOeZjOOBqOiEs+WNkuS4reOBruWVj+mhjOOBruOBn+OCgeOB
+qzfjg7bmnIjplpPjga/ntprjgYvjgarjgYTjgaDjgo3jgYbjgajnp4HjgavoqIDjgYTjgb7jgZfj
+gZ/jgILnp4HjgpLmnIDjgoLmgqnjgb7jgZvjgabjgYTjgovjga7jga/ohLPljZLkuK3jga7nl4Xm
+sJfjgafjgZnjgILnp4Hjga7nirbmhYvjgpLnn6XjgaPjgZ/jga7jgafjgIHnp4Hjga/jgZPjga7j
+gYrph5HjgpLjgYLjgarjgZ/jgavmuKHjgZfjgabjgIHmgbXjgb7jgozjgarjgYTkurrjgIXjga7k
+uJboqbHjgpLjgZnjgovjgZPjgajjgavjgZfjgb7jgZfjgZ/jgILjgYLjgarjgZ/jga/jgZPjga7j
+gYrph5HjgpLnp4HjgYzjgZPjgZPjgafmjIfnpLrjgZnjgovmlrnms5XjgafliKnnlKjjgZnjgovj
+gafjgZfjgofjgYbjgILnp4Hjga/jgYLjgarjgZ/jgavjgYLjgarjgZ/jga7lgIvkurrnmoTjgark
+vb/nlKjjga7jgZ/jgoHjgavnt4/jgYrph5Hjga4zMOODkeODvOOCu+ODs+ODiOOCkuWPluOBo+OB
+puassuOBl+OBhOOBp+OBmeOAguOBiumHkeOBrjcw77yF44Gv56eB44Gu5ZCN5YmN44Gn5a2k5YWQ
+6Zmi44KS5bu644Gm44CB6YCa44KK44Gu6LKn44GX44GE5Lq644CF44KS5Yqp44GR44KL44Gf44KB
+44Gr5L2/44GG44Gn44GX44KH44GG44CC56eB44Gv5a2k5YWQ44Go44GX44Gm6IKy44Gh44G+44GX
+44Gf44GM44CB56We44Gu5a6244KS57at5oyB44GZ44KL44Gf44KB44Gg44GR44Gr44CB5a625peP
+44Gr44Gv6Kqw44KC44GE44G+44Gb44KT44CC44GT44Gu55eF5rCX44GM56eB44KS44Go44Gm44KC
+6Ium44GX44KB44Gf44Gu44Gn44CB56We44GM56eB44Gu572q44KS6LWm44GX44CB5qW95ZyS44Gn
+56eB44Gu6a2C44KS5Y+X44GR5YWl44KM44KL44KI44GG44Gr44GT44KM44KS44GX44Gm44GE44KL
+44Gu44Gn44GZ44CCDQoNCui/lOS/oeOCkuWPl+OBkeWPluOCiuasoeesrOOAgeODluODq+OCreOD
+iuODleOCoeOCveOBrumKgOihjOOBrumAo+e1oeWFiOOCkuOBiuefpeOCieOBm+OBl+OBvuOBmeOA
+guOBvuOBn+OAgemKgOihjOOBruePvuWcqOOBruWPl+WPluS6uuOBp+OBguOCi+OBk+OBqOOCkuio
+vOaYjuOBmeOCi+aoqemZkOabuOOCkueZuuihjOOBmeOCi+OCiOOBhumKgOihjOmVt+OBq+aMh+ek
+uuOBl+OBvuOBmeOAguengeOBjOOBk+OBk+OBp+i/sOOBueOBn+OCiOOBhuOBq+OBguOBquOBn+OB
+jOOBneOCjOOBq+W/nOOBmOOBpuihjOWLleOBmeOCi+OBk+OBqOOCkuengeOBq+S/neiovOOBl+OB
+puOBj+OBoOOBleOBhOOAgg0KDQrjgqTjgrbjg5njg6njg7vjgrXjg6jjgqbjg5DlpKvkurrjgYvj
+gonjgIINCg==
