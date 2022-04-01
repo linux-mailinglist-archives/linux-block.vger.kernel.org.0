@@ -2,114 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73DE54EEB41
-	for <lists+linux-block@lfdr.de>; Fri,  1 Apr 2022 12:28:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A3BD4EED2C
+	for <lists+linux-block@lfdr.de>; Fri,  1 Apr 2022 14:31:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245687AbiDAK3w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 1 Apr 2022 06:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
+        id S243390AbiDAMdW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 1 Apr 2022 08:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245635AbiDAK3r (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 1 Apr 2022 06:29:47 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7EF26E56E;
-        Fri,  1 Apr 2022 03:27:55 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id A15131FD03;
-        Fri,  1 Apr 2022 10:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1648808874; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tA0rKXsxf77nc7Y9wimslw6o3kvPAaCI532S6Fi8Ku8=;
-        b=JTpL/yQ35Uo0cdyHthSMpwo+YYr9z9gbqEVfbnlwtm21i1pPikC5BwnHiJFfwEH4wMQOa/
-        d4smprMTtGFMDt99t6UwNOX+824oE5uZdUy/814GNlYDYcRh2AZYCbA9OIqJHKBsVMQxHe
-        BNA6ivLPACoKsUlieD372btioLxvB0E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1648808874;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tA0rKXsxf77nc7Y9wimslw6o3kvPAaCI532S6Fi8Ku8=;
-        b=JweEsUcElcwq2AE3MqnVDYuqWGUXa7Ic1doIZQzk+ycT4MEhnss9WChRssxOgY3o6sF41o
-        e28Eb49SIPkFKtDg==
-Received: from quack3.suse.cz (unknown [10.163.28.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 821DFA3B88;
-        Fri,  1 Apr 2022 10:27:54 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id A709CA061F; Fri,  1 Apr 2022 12:27:52 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     <linux-block@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        "yukuai (C)" <yukuai3@huawei.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH 9/9] bfq: Make sure bfqg for which we are queueing requests is online
-Date:   Fri,  1 Apr 2022 12:27:50 +0200
-Message-Id: <20220401102752.8599-9-jack@suse.cz>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220401102325.17617-1-jack@suse.cz>
-References: <20220401102325.17617-1-jack@suse.cz>
+        with ESMTP id S231284AbiDAMdW (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 1 Apr 2022 08:33:22 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFDC5F278
+        for <linux-block@vger.kernel.org>; Fri,  1 Apr 2022 05:31:31 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id n35so1581925wms.5
+        for <linux-block@vger.kernel.org>; Fri, 01 Apr 2022 05:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linbit-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DjHen8SjurGesv2/euau4gflSw1KQFpZxY2bQ80GWWc=;
+        b=4nmMhJBetoYm1lZlMCb31TT7Q/YqTMXFw/vdDDCiqMQui8pdlrPAgDSr4iLNLk81lt
+         P4L7OZEbahfo6oNPilxT3fAnrGwcQemIOCzIyvg/Jlh9luW+74eaHIsWgXQ+gSacnCtb
+         quzW+wSAWHt89ynaCi6u/Sj4hKMIoRbGzKbW6CNEkgHiqiVKMDz4hm6MKC1FT8vqXI9w
+         nMfOLDSgBfsbypS1MRrXzUKuBFkal+Mbdyu2Qhh1tSMRWO6k0YAvAst4gto2/HjQG8rs
+         a98p7sGLSQxmKh6G2U/AXLdknnV7dKcKKbiCZtcPkkj6GoAfqV0ctTLKiSYTQ7kvjnFk
+         lyew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DjHen8SjurGesv2/euau4gflSw1KQFpZxY2bQ80GWWc=;
+        b=ZBa5TAbdJ9cM8hE9v1rIPubA3GgNEzWSX00mkSPeNpvuTZBCcYHZ4teG/04ZLgdE4V
+         h40pu6mxx8FCPLMH/qRnCgHqQFIrqISbna+Kl8H2RS6aPzHW1m4C4EqP4KcZegcwtoHl
+         sywkN2cf6O6vhHjjSzuO9osKzWTPPZEbUC7ygvGlGLvCd1YsMjWbZJCBHT3OKirbQFoR
+         LfDOf3TbwLPZzyKdnOug4nK+aaUlS29RNKCRdEOjrT61gaqf0nv65RKR8Wr3SS5Yj22P
+         kBbgg37Cfe/44PI64a/bzVy4W1O1KqFZYykazsEFNiYZX/uhUQ8TiTR2l0uYwNl2Oo4J
+         pxGA==
+X-Gm-Message-State: AOAM530tSPQeVAa/jUazvGiYqWUfXCVfUnuw9HPGACqnuxMxCK6TUdqW
+        jbGCJ1vbQOOn+5v8XjBis3HOpQZGLQQPWfCJ4wSMeQ==
+X-Google-Smtp-Source: ABdhPJz4Cw8Lc3YzkpvNHzTnf1J5O+dJbnkNlNzONropveVyQes/R3govCZ1BmuhcVKV3tOg49L9fnv0+pqgJWj6/OM=
+X-Received: by 2002:a05:600c:3009:b0:381:194a:8cb5 with SMTP id
+ j9-20020a05600c300900b00381194a8cb5mr8871178wmh.43.1648816289933; Fri, 01 Apr
+ 2022 05:31:29 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1568; h=from:subject; bh=sgAPcAQrJvyNTY55SSAru4QatmfaUnmjg+zxK4TmvNM=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBiRtOlKklLhNNV3RGbf7D1KUJYUgBsxgg8XSM1TWU0 HAuk0saJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYkbTpQAKCRCcnaoHP2RA2WUuB/ 45d/A4FWTboIVYdZ+QTKDERa161jYw4o75MeQV0qFUxjSiBn1+H1MSA5bPrLHZUGJhfAsD+RMefQIg oxOjs4FUnRMk2utm8NFp39DvIwTryxvAhI85kRUFLpXS5TOQrk6j6WQAeybv4ucYN/opBfH7ikQBEe iDW+Okuhm4+wzbxoEBOitpzukCfF6eK3aky2OeiHz78HU672Df1Gx22XTmXF3mstLzoFP35yonrra6 HZMnZIZCAvtjxOsozE5Dv0E5WnuPq4q0M9r95UaHad4mUF9kltwKmYuluyi9CvyS6QjKruRzVf3l1Z kYLXABUvmFhNAIiYt4qTATjJmfQsi6
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220401083637.2407766-1-lv.ruyi@zte.com.cn>
+In-Reply-To: <20220401083637.2407766-1-lv.ruyi@zte.com.cn>
+From:   Philipp Reisner <philipp.reisner@linbit.com>
+Date:   Fri, 1 Apr 2022 14:31:18 +0200
+Message-ID: <CADGDV=Wf9MpS7_3C6=RNTBO5rqxjtWOz170=7K215R9X38yc5w@mail.gmail.com>
+Subject: Re: [PATCH] block: fix potential dereference null pointer
+To:     cgel.zte@gmail.com
+Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
+        =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lv Ruyi <lv.ruyi@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Bios queued into BFQ IO scheduler can be associated with a cgroup that
-was already offlined. This may then cause insertion of this bfq_group
-into a service tree. But this bfq_group will get freed as soon as last
-bio associated with it is completed leading to use after free issues for
-service tree users. Fix the problem by making sure we always operate on
-online bfq_group. If the bfq_group associated with the bio is not
-online, we pick the first online parent.
+Hi Lv Ruyi,
 
-CC: stable@vger.kernel.org
-Fixes: e21b7a0b9887 ("block, bfq: add full hierarchical scheduling and cgroups support")
-Tested-by: "yukuai (C)" <yukuai3@huawei.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/bfq-cgroup.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+This patch does not make sense to me. A request can only get "TO_BE_SENT"
+when the connection is established with the corresponding
+cstate. Establishing a connection can only work if net_conf is set. net_conf
+can be exchanged to a new one, but never become NULL.
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index 32d2c2a47480..09574af83566 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -612,10 +612,19 @@ static void bfq_link_bfqg(struct bfq_data *bfqd, struct bfq_group *bfqg)
- struct bfq_group *bfq_bio_bfqg(struct bfq_data *bfqd, struct bio *bio)
- {
- 	struct blkcg_gq *blkg = bio->bi_blkg;
-+	struct bfq_group *bfqg;
- 
--	if (!blkg)
--		return bfqd->root_group;
--	return blkg_to_bfqg(blkg);
-+	while (blkg) {
-+		bfqg = blkg_to_bfqg(blkg);
-+		if (bfqg->online) {
-+			bio_associate_blkg_from_css(bio, &blkg->blkcg->css);
-+			return bfqg;
-+		}
-+		blkg = blkg->parent;
-+	}
-+	bio_associate_blkg_from_css(bio,
-+				&bfqg_to_blkg(bfqd->root_group)->blkcg->css);
-+	return bfqd->root_group;
- }
- 
- /**
--- 
-2.34.1
+Please share more details why you think this NULL check is necessary here?
 
+
+
+On Fri, Apr 1, 2022 at 10:36 AM <cgel.zte@gmail.com> wrote:
+>
+> From: Lv Ruyi <lv.ruyi@zte.com.cn>
+>
+> rcu_dereference may return NULL, so check the returned pointer.
+>
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: Lv Ruyi <lv.ruyi@zte.com.cn>
+> ---
+>  drivers/block/drbd/drbd_req.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
+> index e1e58e91ee58..8ab6da155e2f 100644
+> --- a/drivers/block/drbd/drbd_req.c
+> +++ b/drivers/block/drbd/drbd_req.c
+> @@ -577,6 +577,10 @@ int __req_mod(struct drbd_request *req, enum drbd_req_event what,
+>                 D_ASSERT(device, !(req->rq_state & RQ_NET_MASK));
+>                 rcu_read_lock();
+>                 nc = rcu_dereference(connection->net_conf);
+> +               if (!nc) {
+> +                       rcu_read_unlock();
+> +                       break;
+> +               }
+>                 p = nc->wire_protocol;
+>                 rcu_read_unlock();
+>                 req->rq_state |=
+> @@ -690,6 +694,10 @@ int __req_mod(struct drbd_request *req, enum drbd_req_event what,
+>                 /* close the epoch, in case it outgrew the limit */
+>                 rcu_read_lock();
+>                 nc = rcu_dereference(connection->net_conf);
+> +               if (!nc) {
+> +                       rcu_read_unlock();
+> +                       break;
+> +               }
+>                 p = nc->max_epoch_size;
+>                 rcu_read_unlock();
+>                 if (connection->current_tle_writes >= p)
+> --
+> 2.25.1
+>
