@@ -2,75 +2,363 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BAC04F08DC
-	for <lists+linux-block@lfdr.de>; Sun,  3 Apr 2022 13:01:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73BF34F09FD
+	for <lists+linux-block@lfdr.de>; Sun,  3 Apr 2022 15:38:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234678AbiDCLC4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 3 Apr 2022 07:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43742 "EHLO
+        id S236453AbiDCNkU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 3 Apr 2022 09:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234614AbiDCLC4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 3 Apr 2022 07:02:56 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E6B31538
-        for <linux-block@vger.kernel.org>; Sun,  3 Apr 2022 04:01:02 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id y36so9472203lfa.6
-        for <linux-block@vger.kernel.org>; Sun, 03 Apr 2022 04:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=YVJDxNPPESnWyXncfNCf0wvGb0N0arKBS71GbYEv53s=;
-        b=HeE4+RKxmcZ5WXBaFCLMBJPg1Tg6gAPGVvPPwwZdCkaORikWGa9FtiRFdhpsVP4eY+
-         Jk5X6viP7Jg20UuhWQJdTUym5sluPcW+p0RWhAa1VM9fbGd0vXrOI3l3HTlwtDYWCZFv
-         JuODIsAicoYginlqNIvDXvLxMoJn2TtDZtsy+vXEorCyoRsk6ZNR8j/HcvhNsNMk+1z9
-         ooQY1zC0V8PuvNqKdWN6SCjKhM5q2gGaM+/8LTjPZKd1/wJRuP7cT2KsEy93NBaX3a18
-         ExmsfphUNMTX6XPXtRj0/a8uhfIlvhy8zfrCs++ytA6gEf5XviD251T7RZcMnqLM04V0
-         w01w==
+        with ESMTP id S235942AbiDCNkT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 3 Apr 2022 09:40:19 -0400
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35F7186
+        for <linux-block@vger.kernel.org>; Sun,  3 Apr 2022 06:38:22 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id y4-20020a6bd804000000b0064c68fa4f70so4763275iob.2
+        for <linux-block@vger.kernel.org>; Sun, 03 Apr 2022 06:38:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=YVJDxNPPESnWyXncfNCf0wvGb0N0arKBS71GbYEv53s=;
-        b=6Op8md3wxCRncrJmJbBXxMiV7Ry3ZDYQzu7lgIk0j35a8Zc+Yy3CNScXBVudRrl4yH
-         2/OC8TIlFKRT+3B1YnuqD9tmcQwvnNPapf3P0q617ougzrxabujwsLE5Zuott5CztVQc
-         wljGbrAUmKQ8UzIKuW55rOuTGa/9825b/sjfOiA08lMuC5eALZIg9c6v3P9Qa4LbtnTf
-         HzSqtxDGZJNi0Bopz6GpIQ8By6ivQJp7WFa+qfnhBGNZE0lMugGYrxUgjJrNG9aioT6d
-         ZppFiMdrnYRiGQyiEF8Oqu4BcrajRpWfRacecr4Q2zCBJScPEGumE7YzviojvVllrDj4
-         y6/w==
-X-Gm-Message-State: AOAM530S6wL6BhY1YzphwI8Wtq9FBjWYkPO5xODpmdcrOzUhbk5FnSy0
-        8vOggS0A8T4FLeaU02XjbEohAzrbgklBkaVQ/eA=
-X-Google-Smtp-Source: ABdhPJwY51rJALhnpqB+TVvnlHwaExbU48AnKH4IUG6AzwfL4TGkwQUEcyPVeSV2NXL75WVwQUon/YdW1cDsuolOjsc=
-X-Received: by 2002:ac2:4194:0:b0:442:ed9e:4a25 with SMTP id
- z20-20020ac24194000000b00442ed9e4a25mr18666159lfh.629.1648983660522; Sun, 03
- Apr 2022 04:01:00 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=jRiN7vFWUg7EVsgEtKjNWgX5el9xUaFmICxGrQuUQ7o=;
+        b=lqhQhi1lMY3MO0PyL0V6tCUHwZJI1F1P+bz0JtTTD3CN3I7c9KZgia/5w913wIHsGY
+         UTEGtI19vwTSA7LXF1slMB3n7USNdAk5mkG3OEkkiQUgFmU6BHe+LHURYMY87GRIa9A0
+         InZEulVj6eM1EG+Qopvp6qrd0lQDfHhWHTBnS532oLs/3dN8Y9OrHvUmkeI3TORyKy0p
+         JDa/J+P3IJbksG4sW9n2yPsRSQA0rEI67bXwZCNt9gxtmaKgv1sy2XbnsRcgAk6YBwI2
+         yidZvJXhikK0D3M1Zh367GYVmWWjn+7rc+FcRltIm854Flvo3aBQEe7xJj/J+fYqeSex
+         oiQA==
+X-Gm-Message-State: AOAM531jm/oTngQicQilQdjO6ss3pYOjeOdVmeTq37M9A5af1JtzPhFc
+        r35NUKZBN9HbJvg8/U0FOVdZZ9Txxn4U9k05fOpr52oskqCy
+X-Google-Smtp-Source: ABdhPJwgecakUOLPyO/0zjZDahmyr2pj4SH1iIdZaG7UUZhi+5HDGMeRoqqCxJ4L0khIqKSnOn/DMiy4UGoN8qekscRX9SjfxB49
 MIME-Version: 1.0
-Received: by 2002:a05:6520:1d6:b0:1a5:e97a:9064 with HTTP; Sun, 3 Apr 2022
- 04:00:59 -0700 (PDT)
-Reply-To: sara.adner@outlook.com
-From:   SARA ANDERSON <sara.adners@gmail.com>
-Date:   Sun, 3 Apr 2022 12:00:59 +0100
-Message-ID: <CAC9w2dJPBggWmSxOWRkUQNNZfaY51LCCX8hFuhEkat9cyvxgog@mail.gmail.com>
-Subject: Hello,
-To:     undisclosed-recipients:;
+X-Received: by 2002:a05:6638:2512:b0:323:e54d:711 with SMTP id
+ v18-20020a056638251200b00323e54d0711mr877337jat.132.1648993102235; Sun, 03
+ Apr 2022 06:38:22 -0700 (PDT)
+Date:   Sun, 03 Apr 2022 06:38:22 -0700
+In-Reply-To: <000000000000c341cc05db38c1b0@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000188c9705dbc020de@google.com>
+Subject: Re: [syzbot] memory leak in blk_mq_init_tags
+From:   syzbot <syzbot+f08c77040fa163a75a46@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, dan.carpenter@oracle.com, fmdefrancesco@gmail.com,
+        haowenchao@huawei.com, hch@infradead.org, jejb@linux.ibm.com,
+        linfeilong@huawei.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, syzkaller-bugs@googlegroups.com,
+        wubo40@huawei.com
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_40,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
+        HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+syzbot has found a reproducer for the following issue on:
 
-My name is Sara Anderson. I came across your contact and noticed we can
-be of value to each other. I have a proposal that i want to share with
-you.
+HEAD commit:    be2d3ecedd99 Merge tag 'perf-tools-for-v5.18-2022-04-02' o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17c30c5f700000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=58ae7615fea18863
+dashboard link: https://syzkaller.appspot.com/bug?extid=f08c77040fa163a75a46
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11aff7e7700000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1195476b700000
 
-Your prompt response will be appreciated for more details.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f08c77040fa163a75a46@syzkaller.appspotmail.com
 
-Sincerely,
-Sara Anderson
+BUG: memory leak
+unreferenced object 0xffff88810dbc1240 (size 192):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 17.570s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    02 00 00 00 06 00 00 00 01 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ffffffff822c3f2b>] kmalloc_node include/linux/slab.h:599 [inline]
+    [<ffffffff822c3f2b>] kzalloc_node include/linux/slab.h:725 [inline]
+    [<ffffffff822c3f2b>] blk_mq_init_tags+0x4b/0xc0 block/blk-mq-tag.c:578
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+    [<ffffffff826fc6bf>] __device_attach_async_helper+0xcf/0x110 drivers/base/dd.c:927
+    [<ffffffff8127ce74>] async_run_entry_fn+0x24/0xf0 kernel/async.c:127
+    [<ffffffff8126b28f>] process_one_work+0x2bf/0x600 kernel/workqueue.c:2289
+    [<ffffffff8126bbb9>] worker_thread+0x59/0x5b0 kernel/workqueue.c:2436
+
+BUG: memory leak
+unreferenced object 0xffff888109d6da00 (size 128):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 17.570s)
+  hex dump (first 32 bytes):
+    03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ffffffff814a70de>] kmalloc_node include/linux/slab.h:604 [inline]
+    [<ffffffff814a70de>] kvmalloc_node+0x3e/0x130 mm/util.c:580
+    [<ffffffff8240fbee>] kvzalloc_node include/linux/slab.h:735 [inline]
+    [<ffffffff8240fbee>] sbitmap_init_node+0xde/0x2d0 lib/sbitmap.c:113
+    [<ffffffff8241045c>] sbitmap_queue_init_node+0x3c/0x1f0 lib/sbitmap.c:428
+    [<ffffffff822c3e47>] bt_alloc block/blk-mq-tag.c:543 [inline]
+    [<ffffffff822c3e47>] blk_mq_init_bitmaps+0x57/0xf0 block/blk-mq-tag.c:555
+    [<ffffffff822c3f68>] blk_mq_init_tags+0x88/0xc0 block/blk-mq-tag.c:586
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+
+BUG: memory leak
+unreferenced object 0xffff88810c0e1600 (size 512):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 17.570s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    10 16 0e 0c 81 88 ff ff 10 16 0e 0c 81 88 ff ff  ................
+  backtrace:
+    [<ffffffff82410528>] kmalloc_node include/linux/slab.h:599 [inline]
+    [<ffffffff82410528>] kzalloc_node include/linux/slab.h:725 [inline]
+    [<ffffffff82410528>] sbitmap_queue_init_node+0x108/0x1f0 lib/sbitmap.c:438
+    [<ffffffff822c3e47>] bt_alloc block/blk-mq-tag.c:543 [inline]
+    [<ffffffff822c3e47>] blk_mq_init_bitmaps+0x57/0xf0 block/blk-mq-tag.c:555
+    [<ffffffff822c3f68>] blk_mq_init_tags+0x88/0xc0 block/blk-mq-tag.c:586
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+    [<ffffffff826fc6bf>] __device_attach_async_helper+0xcf/0x110 drivers/base/dd.c:927
+    [<ffffffff8127ce74>] async_run_entry_fn+0x24/0xf0 kernel/async.c:127
+
+BUG: memory leak
+unreferenced object 0xffff88810dbc1240 (size 192):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 20.380s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    02 00 00 00 06 00 00 00 01 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ffffffff822c3f2b>] kmalloc_node include/linux/slab.h:599 [inline]
+    [<ffffffff822c3f2b>] kzalloc_node include/linux/slab.h:725 [inline]
+    [<ffffffff822c3f2b>] blk_mq_init_tags+0x4b/0xc0 block/blk-mq-tag.c:578
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+    [<ffffffff826fc6bf>] __device_attach_async_helper+0xcf/0x110 drivers/base/dd.c:927
+    [<ffffffff8127ce74>] async_run_entry_fn+0x24/0xf0 kernel/async.c:127
+    [<ffffffff8126b28f>] process_one_work+0x2bf/0x600 kernel/workqueue.c:2289
+    [<ffffffff8126bbb9>] worker_thread+0x59/0x5b0 kernel/workqueue.c:2436
+
+BUG: memory leak
+unreferenced object 0xffff888109d6da00 (size 128):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 20.380s)
+  hex dump (first 32 bytes):
+    03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ffffffff814a70de>] kmalloc_node include/linux/slab.h:604 [inline]
+    [<ffffffff814a70de>] kvmalloc_node+0x3e/0x130 mm/util.c:580
+    [<ffffffff8240fbee>] kvzalloc_node include/linux/slab.h:735 [inline]
+    [<ffffffff8240fbee>] sbitmap_init_node+0xde/0x2d0 lib/sbitmap.c:113
+    [<ffffffff8241045c>] sbitmap_queue_init_node+0x3c/0x1f0 lib/sbitmap.c:428
+    [<ffffffff822c3e47>] bt_alloc block/blk-mq-tag.c:543 [inline]
+    [<ffffffff822c3e47>] blk_mq_init_bitmaps+0x57/0xf0 block/blk-mq-tag.c:555
+    [<ffffffff822c3f68>] blk_mq_init_tags+0x88/0xc0 block/blk-mq-tag.c:586
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+
+BUG: memory leak
+unreferenced object 0xffff88810c0e1600 (size 512):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 20.380s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    10 16 0e 0c 81 88 ff ff 10 16 0e 0c 81 88 ff ff  ................
+  backtrace:
+    [<ffffffff82410528>] kmalloc_node include/linux/slab.h:599 [inline]
+    [<ffffffff82410528>] kzalloc_node include/linux/slab.h:725 [inline]
+    [<ffffffff82410528>] sbitmap_queue_init_node+0x108/0x1f0 lib/sbitmap.c:438
+    [<ffffffff822c3e47>] bt_alloc block/blk-mq-tag.c:543 [inline]
+    [<ffffffff822c3e47>] blk_mq_init_bitmaps+0x57/0xf0 block/blk-mq-tag.c:555
+    [<ffffffff822c3f68>] blk_mq_init_tags+0x88/0xc0 block/blk-mq-tag.c:586
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+    [<ffffffff826fc6bf>] __device_attach_async_helper+0xcf/0x110 drivers/base/dd.c:927
+    [<ffffffff8127ce74>] async_run_entry_fn+0x24/0xf0 kernel/async.c:127
+
+BUG: memory leak
+unreferenced object 0xffff88810dbc1240 (size 192):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 21.330s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    02 00 00 00 06 00 00 00 01 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ffffffff822c3f2b>] kmalloc_node include/linux/slab.h:599 [inline]
+    [<ffffffff822c3f2b>] kzalloc_node include/linux/slab.h:725 [inline]
+    [<ffffffff822c3f2b>] blk_mq_init_tags+0x4b/0xc0 block/blk-mq-tag.c:578
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+    [<ffffffff826fc6bf>] __device_attach_async_helper+0xcf/0x110 drivers/base/dd.c:927
+    [<ffffffff8127ce74>] async_run_entry_fn+0x24/0xf0 kernel/async.c:127
+    [<ffffffff8126b28f>] process_one_work+0x2bf/0x600 kernel/workqueue.c:2289
+    [<ffffffff8126bbb9>] worker_thread+0x59/0x5b0 kernel/workqueue.c:2436
+
+BUG: memory leak
+unreferenced object 0xffff888109d6da00 (size 128):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 21.330s)
+  hex dump (first 32 bytes):
+    03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ffffffff814a70de>] kmalloc_node include/linux/slab.h:604 [inline]
+    [<ffffffff814a70de>] kvmalloc_node+0x3e/0x130 mm/util.c:580
+    [<ffffffff8240fbee>] kvzalloc_node include/linux/slab.h:735 [inline]
+    [<ffffffff8240fbee>] sbitmap_init_node+0xde/0x2d0 lib/sbitmap.c:113
+    [<ffffffff8241045c>] sbitmap_queue_init_node+0x3c/0x1f0 lib/sbitmap.c:428
+    [<ffffffff822c3e47>] bt_alloc block/blk-mq-tag.c:543 [inline]
+    [<ffffffff822c3e47>] blk_mq_init_bitmaps+0x57/0xf0 block/blk-mq-tag.c:555
+    [<ffffffff822c3f68>] blk_mq_init_tags+0x88/0xc0 block/blk-mq-tag.c:586
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+
+BUG: memory leak
+unreferenced object 0xffff88810c0e1600 (size 512):
+  comm "kworker/u4:2", pid 53, jiffies 4294997418 (age 21.330s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    10 16 0e 0c 81 88 ff ff 10 16 0e 0c 81 88 ff ff  ................
+  backtrace:
+    [<ffffffff82410528>] kmalloc_node include/linux/slab.h:599 [inline]
+    [<ffffffff82410528>] kzalloc_node include/linux/slab.h:725 [inline]
+    [<ffffffff82410528>] sbitmap_queue_init_node+0x108/0x1f0 lib/sbitmap.c:438
+    [<ffffffff822c3e47>] bt_alloc block/blk-mq-tag.c:543 [inline]
+    [<ffffffff822c3e47>] blk_mq_init_bitmaps+0x57/0xf0 block/blk-mq-tag.c:555
+    [<ffffffff822c3f68>] blk_mq_init_tags+0x88/0xc0 block/blk-mq-tag.c:586
+    [<ffffffff822ba7ba>] blk_mq_alloc_rq_map+0xea/0x1a0 block/blk-mq.c:3168
+    [<ffffffff822bf686>] blk_mq_alloc_map_and_rqs+0x26/0xb0 block/blk-mq.c:3619
+    [<ffffffff822c6f37>] blk_mq_sched_alloc_map_and_rqs block/blk-mq-sched.c:507 [inline]
+    [<ffffffff822c6f37>] blk_mq_init_sched+0x127/0x2e0 block/blk-mq-sched.c:587
+    [<ffffffff822a2f69>] elevator_init_mq+0x1f9/0x240 block/elevator.c:709
+    [<ffffffff822cabad>] device_add_disk+0x4d/0x520 block/genhd.c:425
+    [<ffffffff82833357>] sd_probe+0x457/0x670 drivers/scsi/sd.c:3475
+    [<ffffffff826fce97>] call_driver_probe drivers/base/dd.c:541 [inline]
+    [<ffffffff826fce97>] really_probe.part.0+0xe7/0x310 drivers/base/dd.c:620
+    [<ffffffff826fd1cc>] really_probe drivers/base/dd.c:582 [inline]
+    [<ffffffff826fd1cc>] __driver_probe_device+0x10c/0x1e0 drivers/base/dd.c:751
+    [<ffffffff826fd2ca>] driver_probe_device+0x2a/0x120 drivers/base/dd.c:781
+    [<ffffffff826fdb36>] __device_attach_driver+0xf6/0x140 drivers/base/dd.c:898
+    [<ffffffff826fa037>] bus_for_each_drv+0xb7/0x100 drivers/base/bus.c:427
+    [<ffffffff826fc6bf>] __device_attach_async_helper+0xcf/0x110 drivers/base/dd.c:927
+    [<ffffffff8127ce74>] async_run_entry_fn+0x24/0xf0 kernel/async.c:127
+
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+executing program
+executing program
+executing program
+executing program
+executing program
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+write to /proc/sys/kernel/hung_task_check_interval_secs failed: No such file or directory
+write to /proc/sys/kernel/softlockup_all_cpu_backtrace failed: No such file or directory
+
