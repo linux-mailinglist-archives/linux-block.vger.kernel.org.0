@@ -2,193 +2,175 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 707FE4F17FD
-	for <lists+linux-block@lfdr.de>; Mon,  4 Apr 2022 17:10:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 755754F1AD8
+	for <lists+linux-block@lfdr.de>; Mon,  4 Apr 2022 23:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233327AbiDDPL6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 4 Apr 2022 11:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37474 "EHLO
+        id S1379245AbiDDVTE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 4 Apr 2022 17:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238001AbiDDPL5 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 4 Apr 2022 11:11:57 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8AD2F3B7;
-        Mon,  4 Apr 2022 08:09:59 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=xiaoguang.wang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0V9DFo9t_1649084996;
-Received: from 30.32.77.251(mailfrom:xiaoguang.wang@linux.alibaba.com fp:SMTPD_---0V9DFo9t_1649084996)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 04 Apr 2022 23:09:57 +0800
-Message-ID: <7038dcfd-4f66-2d8c-d988-132a84193b33@linux.alibaba.com>
-Date:   Mon, 4 Apr 2022 23:09:56 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH v2 3/3] scsi: target: tcmu: Use
- address_space->invalidate_lock
+        with ESMTP id S1378972AbiDDQNX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 4 Apr 2022 12:13:23 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F400C2F007
+        for <linux-block@vger.kernel.org>; Mon,  4 Apr 2022 09:11:26 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 234G0182006378;
+        Mon, 4 Apr 2022 16:11:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=mCmat2kyRImUEnUcsJZFHMHgUF9ZMK6jvPkPQbywEWQ=;
+ b=rdntlevTI8ogtYC783Z0VtjHW2Vm59aRg9aC72au73ubuidJUeDkcO+NqKUPGd0HLW8Z
+ HHRZJB46IJJfZXS9TyIgmK0KmHGzjR23GrSnA4g2qLYIED0WhNVKsMZQaB8Kc+vnxPB/
+ HJ1zcyaestv33M/5L3AKY+ivpGMUJMtUEnqgPuXEcv9FmBKCx/e6rhsy1iyrKgrA9a9a
+ gMmZVwPtwYoaZf5D05dFXlhjDTgSKvyomRZC/X5fSn7hQ/swv87RY2bkDY3wHS6Xi3gq
+ D4jh0o7ikB+k8GPhn3QKwwsYTijTzLzMIoN07E2vHldEu8ybybW7DWv4STujzts0/kyO 3g== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3f6d31bs6a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Apr 2022 16:11:17 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 234G6jnD021593;
+        Mon, 4 Apr 2022 16:11:16 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2046.outbound.protection.outlook.com [104.47.56.46])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3f6cx2mwjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Apr 2022 16:11:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ixUlsAoNY07sPymfck54Jt9yTqesKJ940ClUyh3bKriYzBiSqRE5s2bDc6iWVdR2ATJej/pVR7rl5B+pv7fhbpbXwJnQ0YwTneMBE9l610ca21eAfL2jfZqY+aDcf8SzNRk9NeZPVvFuIZczh87lOTUnGaW5Ls+mvN6tgi2bXw0zWGgK0zGi5CmJ5EkOZ3TnIfugqXEnxlTrbnaRcRa/FIbMHiHb78SwZd4E2GZtRE1tysOA5vQaZiyGrFc7Tb2Mzxh8vDJVtxn3Sa+/sBjkOsQP/9G2WWAnG5ItbR7zcpU+ayglBnkl6YLD4yhjz/bHHQYVXhlrt/WcB9yInF9sKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mCmat2kyRImUEnUcsJZFHMHgUF9ZMK6jvPkPQbywEWQ=;
+ b=SE1bGDedlFno2Wh8oasKy/2ttHMbtNbskFRiteyCpnhfhBsfMWxUD5ZVMRGhWKiPKYCMo+wC4aVtkRMIv5aF2stApPOdBZWpDFnMV/O7SHhvT/AAj5nzZCat9JyoLbrdy97L0fhY3q1p/aeUv2+Y3Xkdw/n8R1sbG0jzl6P+4h6yHvyVm8u3GhQ4It10jYiiI25moTU0GU+bAUYqIbb/JJlRSDQxKtatfppntmD78Re9F9BzQrG0Qok6rMhaU5Aufww8+d5D6sJx54mV0RIyJuPAggoS6cda5jr2FzguOAhkw6BXz3oCinBDBxHjpBj49uKz8Q/gU9UdjZvfCpv6bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mCmat2kyRImUEnUcsJZFHMHgUF9ZMK6jvPkPQbywEWQ=;
+ b=IEPXwIxIJieAvFdKjiIGQMDA0bSgaafvlHqwbR47veidjzZEXxZxD3fDvTcaCkM3PufVxY3dk31ZxfzjSl90seAj0DgdscpoBDSbCLtbPR5rB/xMPSr2l2Liv2lf6WzH6zsI3l4l5yVErQG8SEqh0fFuGAloZHwrRLaeHuLHgRU=
+Received: from SN6PR10MB2943.namprd10.prod.outlook.com (2603:10b6:805:d4::19)
+ by BN8PR10MB3203.namprd10.prod.outlook.com (2603:10b6:408:c6::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Mon, 4 Apr
+ 2022 16:11:14 +0000
+Received: from SN6PR10MB2943.namprd10.prod.outlook.com
+ ([fe80::59ee:c799:39cb:c54b]) by SN6PR10MB2943.namprd10.prod.outlook.com
+ ([fe80::59ee:c799:39cb:c54b%6]) with mapi id 15.20.5123.031; Mon, 4 Apr 2022
+ 16:11:14 +0000
+From:   Himanshu Madhani <himanshu.madhani@oracle.com>
+To:     Alan Adamson <alan.adamson@oracle.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "osandov@fb.com" <osandov@fb.com>
+Subject: Re: Issues running nvme-tcp/rdma passthru blktests
+Thread-Topic: Issues running nvme-tcp/rdma passthru blktests
+Thread-Index: AQHYRUjB7B8SuGFkOUKkBTNdBTVbSazf8qSA
+Date:   Mon, 4 Apr 2022 16:11:14 +0000
+Message-ID: <19889C9D-608A-4772-8B43-E2E4B118D801@oracle.com>
+References: <20220331214526.95529-1-alan.adamson@oracle.com>
+In-Reply-To: <20220331214526.95529-1-alan.adamson@oracle.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Bodo Stroesser <bostroesser@gmail.com>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org
-References: <20220323134940.31463-1-xiaoguang.wang@linux.alibaba.com>
- <20220323134940.31463-4-xiaoguang.wang@linux.alibaba.com>
- <5226b4ae-33fe-2bee-b88a-240994231d1c@gmail.com>
-From:   Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-In-Reply-To: <5226b4ae-33fe-2bee-b88a-240994231d1c@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-10.5 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3693.60.0.1.1)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 062b2163-5079-4e24-dac1-08da1655be00
+x-ms-traffictypediagnostic: BN8PR10MB3203:EE_
+x-microsoft-antispam-prvs: <BN8PR10MB3203F2AFBA067F519D1ACF08E6E59@BN8PR10MB3203.namprd10.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: N0uPh71UIOoYAjK7jJlWK0L/ni3s12fTvL/+HYu3xsyVX7akLAYju9ii5elyAQ0J9JwZCE85/cuRfGUrnhfh77816cfYNzdVKrWjcBZ1DhRzhv2zyyj4MWoEsY4tV5PaLyqlQCuhcTWney95ZWUJJvTssO1BvA+aFAH5HlntNjH2evx+uL4cjRHLLiBI8VE3q5x9UavOUMmctoAE0yc7gujbJ3mOkknIkihAROjoeTr80ozQDBgK3GKoldR/AEnSYx9HMJm4uCzXfq+EMF8ZIUDrylrhS2XV9eQr2YHFw2QcKUn9IQrts6P2AKpB8PYJBjDLLP7QgCDXxsTF+d1Wqy4QEcLCzOEY5I/YCidfWeIkC4+1VvY9Mi2o3o0pvmNODvqqG6jo4X1dHqV6WG/m9lxK9Pof6MX04m9XzTUbdMGy+khgc2uwMmGRj/qrWnLpC2d7IAKc9/4+/BXQRHnzVOY1C9jHJjBrKP7dFbRwaA3r4WIp+sytIpLPtQT7W/s7LOjjHyMPjwJiB2/VF8asbVnKYYgUTCBwdQv4DJHP4bqddi38Jf0xh748YYJH8qAE9wRgty9QMu3kY1C5C7XUyE1P+GECCgSUKYa9bUIN/KkdkMR8Pz+h8w1gjU/Nn2okd1pSUAiey+GkGWJOIlPV/cEd8k9wfXTBoBQMzSvnRlxIP4OImiINABzFDbGNwUH/e+53bVoxAXJNr4huviKd3XTPzZax37vAHuKCMRxZqh9xjcSNKfObaYVgYfLZvxuK
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR10MB2943.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(8936002)(33656002)(6512007)(508600001)(122000001)(26005)(86362001)(6486002)(186003)(2616005)(38070700005)(5660300002)(4744005)(2906002)(53546011)(71200400001)(54906003)(37006003)(91956017)(6506007)(76116006)(6636002)(316002)(36756003)(44832011)(66446008)(64756008)(8676002)(4326008)(66556008)(66476007)(66946007)(6862004)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Yg3TQStnJj0DhwPg54HkL/hph6qSYoKgf3xKB+JjyQ7NV/BcTVCdEGEHIqok?=
+ =?us-ascii?Q?J4VQMrgUMQB/xgf4Q9LW8lwpJVShqNeWsStSHoQVFCXom8oMnSymI9x3uN+u?=
+ =?us-ascii?Q?KMJshNGYcGZrOpY+5L1TL/cMlwXMo82i6vry79WQ9Rq80/vh/H+FLtImfTCP?=
+ =?us-ascii?Q?GeVDqHHUvtHgWQuyCuPuQGTHS6FgNrv7iJetLfSgnxpMYTPX440yJQzkIvMD?=
+ =?us-ascii?Q?1IwFZURA52dH7CU9uRhZktcaPV4lUcZJX5qYUKPnwOOaUcv0stcMyM2zawCc?=
+ =?us-ascii?Q?DtfeZMpK193kSs3kDtVJn8rrML0qJ3vHeic+6WTSkWNzEPajbyyiN0BXFVgn?=
+ =?us-ascii?Q?7qAZPOd3z8Jn9pbooSW5XPZY6HbgrVvmyMgR0wvggAAc6Hq6zVRXb5PSAkH0?=
+ =?us-ascii?Q?NIHOfXNRd/TLesvcD1ASvGI3+WjTaBNrD7yv5rfHVhtI3VbTl06TikgOPjrd?=
+ =?us-ascii?Q?/wpVTKghnz6wrwJs1e27Y/ZLuYi10FYMec/nec6IItt6AjNSZf0zbpveaQDb?=
+ =?us-ascii?Q?EdeNyMyhRreUDCMfAUbG9wd/yuQGk/9QBGMLD+2bbEKRQeBZU+XlkjsO24vx?=
+ =?us-ascii?Q?XW9/XU8q4CXd+MX+m0WuNpMIWT50v9zchwvfMz05utvnK/iEOmXDOD5pfq/n?=
+ =?us-ascii?Q?f3dglLh7xcmXqAnJEcbJv4TJcLr2fIFLR1UrpSHcYpfFrhlXhtGt4E/hZ0DK?=
+ =?us-ascii?Q?jMEkG11ZAg7HZOWb/p1nMCiZVMxEMiPxCTpO0++4dyoNrE702Blsv6eg4nfz?=
+ =?us-ascii?Q?weQPWR5boDi6G6YfBp0n5smUL1W9y8x1PjHOIizpFuLJx4svA832eily3Sxp?=
+ =?us-ascii?Q?WkS994Z1H4RJqg8y4DdrGm/Hiipt6leVuAsOyJs3K4i9dRmDtsi84AcAhYfK?=
+ =?us-ascii?Q?EhkHxo3LyUyGkpkcBacf2oNqc+59iOHzeCmb226n+vYxwqcSPLBT9e9v2hId?=
+ =?us-ascii?Q?RjhV1vZ4ueG2yjKDmsIxQHcPODlXjo+aRB43ScnJ8QMTnWqS6yU1ic52FSVx?=
+ =?us-ascii?Q?ojVZbew6mEkCe6bcL8pVFgpvdVj31YGf06SDUEzwSL041o9FLtgXHLqz6a5m?=
+ =?us-ascii?Q?cTMjnF9lavbMFvoVwcIvL2tGtAeFkJuS/lxqOs1iD4oeSbEdgTZZqayFU3q7?=
+ =?us-ascii?Q?3nno6n/4WAHSiFO3lm5ro1hu5L57GIkmG2pXcy6z6mJWj5so9KlNYFDOjpb6?=
+ =?us-ascii?Q?akEDK26JjUT25LYKXTJ4ElnImuqwOQqHQgXcU83QFFeXH3PKayU3Xzfq/X22?=
+ =?us-ascii?Q?PgBiS1OVVel2w7v/S7mz1LPn/yh38fD43UpGK+pTDVMgMY5bMTQNj1/FL0x4?=
+ =?us-ascii?Q?bGB28WDPonNifb53nL0GNdL1bdjffl4PqhfHF4ielFv5kxeRqRHBaAwoZ2Mf?=
+ =?us-ascii?Q?OnQ6plUPfGrrHJexbMiN1+eOguE728y7pMB+UilKn57+v6cnCb6FSmZ00ycX?=
+ =?us-ascii?Q?PtEpgHN0Dwch2SxzEunDGXeUrTI2knjsNypi4M+ERxxZb6VmiiYSMoJOM3BB?=
+ =?us-ascii?Q?KGAFR6iQ/9FRyM49hJh25y/rbQpib4+FkCADdmru5KD6Dd9QEEQ7i3LQV6nK?=
+ =?us-ascii?Q?KmCrnLiW7igVNnSJuinDyR17wdFBZm5JIqAxgnSQCAG6QRu0BdLq02OMh5be?=
+ =?us-ascii?Q?fwYW4fZ4C+xvRAcfVp3IDOjChmscYQxs8ki6RWGsRgbFDAyzyib50yyr9fUQ?=
+ =?us-ascii?Q?E1CApo6KpmoxjE0wMlYkPQOILMkAOkn0aOlvCa5DVcO5R+35+nkbjFX5lQOi?=
+ =?us-ascii?Q?4sNTCBSR+WiQIOGeEldEwyRr4OFQeESag3TYO2T0k+xNEU5RTmpn?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <066640EBD930A348ABCE0C8A59F92E83@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR10MB2943.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 062b2163-5079-4e24-dac1-08da1655be00
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2022 16:11:14.1323
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PZzey/9SWF4W9BWS1URx+9Mybxq+EwLB4sy5YMpDYj3EGkZKxQlkYthb+f8Sf86nd7txXfK+cvvbERa4BrwU6aq/XhwWvh7D99rsWWholTU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3203
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.850
+ definitions=2022-04-04_06:2022-03-30,2022-04-04 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 adultscore=0 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204040092
+X-Proofpoint-GUID: -XI4Q-XV5eOA_2VOVtgHY9XCZnV3zfMQ
+X-Proofpoint-ORIG-GUID: -XI4Q-XV5eOA_2VOVtgHY9XCZnV3zfMQ
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-hi,
-
-> On 23.03.22 14:49, Xiaoguang Wang wrote:
->> Currently tcmu_vma_fault() uses udev->cmdr_lock to avoid concurrent
->> find_free_blocks(), which unmaps idle pages and truncates them. This
->> work is really like many filesystem's truncate operations, but they
->> use address_space->invalidate_lock to protect race.
->>
->> This patch replaces cmdr_lock with address_space->invalidate_lock in
->> tcmu fault procedure, which will also make page-fault have concurrency.
->>
->
-> Page fault happens only once for each allocated data page. After the
-> page fault was processed, the page is re-used for many cmds without
-> further page faults.
-Oh, right, I almost have forgotten that, thanks.
-
->
-> Of course, if find_free_blocks released a page and tcmu after that
-> allocates a new one, another page fault will occur. But that is a
-> very rare case.
-Yeah, now I agree it will happen rarely, but will still happen, especially
-in the early stages of page fault establishment when tcmu device is
-freshly created.
-
-And in current codes, tcmu normally reclaim free pages under such
-conditions:
-        if (atomic_read(&global_page_count) > tcmu_global_max_pages &&
-            xa_empty(&udev->commands) && list_empty(&udev->qfull_queue)) {
-                /*
-                 * Allocated blocks exceeded global block limit, currently no
-                 * more pending or waiting commands so try to reclaim blocks.
-                 */
-                schedule_delayed_work(&tcmu_unmap_work, 0);
-        }
-
-I'm not sure whether this method is good, seems other subsystems use
-mm shrinker feature to reclaim free pages when system memory is low.
-tcmu_global_max_pages is 512k, 2GB memory, that means if tcmu devices
-really have allocated 2GB memory, these memory won't be tried to be freed
-even whole system memory is very low.
-What I want to express is that though currently page fault occurs rarely,
-but if we use a better memory reclaim method later, page fault may occur
-more.
-
->
-> So, what is the advantage of concurrency here?
-cmdr_lock is a mutex, so it meas that tcmu page fault could not happen
-concurrently, and indeed mm subsystem allows page fault to run concurrently.
-If we change to use filemap_invalidate_lock_shared() in tcmu page fault,
-I think there will be two advantages:
-1) Though page fault will happen rarely in tcmu if system memory is
-enough, in the early stages of page fault establishment, say we'll
-finally make the default 1GB data area have page fault happened.
-At least in this stage, page fault will have concurrency.
-Also if page fault happens with queue_cmd_ring() at the same time,
-for big io size, queue_cmd_ring() may hold cmdr_lock for long time
-because of data area and sgl pages copy, page fault will be stalled
-for a long time, which will result in long tail latency.
-
-2) If we latter try to support zero copy successfully, we'll need to
-call zap_page_range() in tcmu_handle_completion(), which needs to
-hold mm_struct's mmap_lock, then we may have "abba" dead lock issue:
-  page fault: hold mm_struct's mmap_lock, then try to hold cmdr_lock
-  cmd completion: hold cmdr_lock, then try to hold mm_struct's mmap_lock.
-
-Or we can define a new "struct rw_semaphore i_mmap_sem;" in
-tcmu_dev, and use it rather than filemap_invalidate_lock_shared(mapping);
-
->
-> OTOH, I don't like the switch from tcmu's cmdr_lock to
-> filemap_invalidate_* without a real technical reason.
-Anyway, at least I don't see any obvious disadvantages
-about this patch.
 
 
-Regards,
-Xiaoguang Wang
->
->
->> Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
->> ---
->>   drivers/target/target_core_user.c | 14 ++++++++++----
->>   1 file changed, 10 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
->> index 9196188504ec..81bfa553cc67 100644
->> --- a/drivers/target/target_core_user.c
->> +++ b/drivers/target/target_core_user.c
->> @@ -1820,13 +1820,14 @@ static int tcmu_find_mem_index(struct vm_area_struct *vma)
->>     static struct page *tcmu_try_get_data_page(struct tcmu_dev *udev, uint32_t dpi)
->>   {
->> +    struct address_space *mapping = udev->inode->i_mapping;
->>       struct page *page;
->>   -    mutex_lock(&udev->cmdr_lock);
->> +    filemap_invalidate_lock_shared(mapping);
->>       page = xa_load(&udev->data_pages, dpi);
->>       if (likely(page)) {
->>           get_page(page);
->> -        mutex_unlock(&udev->cmdr_lock);
->> +        filemap_invalidate_unlock_shared(mapping);
->>           return page;
->>       }
->>   @@ -1836,7 +1837,7 @@ static struct page *tcmu_try_get_data_page(struct tcmu_dev *udev, uint32_t dpi)
->>        */
->>       pr_err("Invalid addr to data page mapping (dpi %u) on device %s\n",
->>              dpi, udev->name);
->> -    mutex_unlock(&udev->cmdr_lock);
->> +    filemap_invalidate_unlock_shared(mapping);
->>         return NULL;
->>   }
->> @@ -3116,6 +3117,7 @@ static void find_free_blocks(void)
->>       loff_t off;
->>       u32 pages_freed, total_pages_freed = 0;
->>       u32 start, end, block, total_blocks_freed = 0;
->> +    struct address_space *mapping;
->>         if (atomic_read(&global_page_count) <= tcmu_global_max_pages)
->>           return;
->> @@ -3139,6 +3141,8 @@ static void find_free_blocks(void)
->>               continue;
->>           }
->>   +        mapping = udev->inode->i_mapping;
->> +        filemap_invalidate_lock(mapping);
->>           end = udev->dbi_max + 1;
->>           block = find_last_bit(udev->data_bitmap, end);
->>           if (block == udev->dbi_max) {
->> @@ -3146,6 +3150,7 @@ static void find_free_blocks(void)
->>                * The last bit is dbi_max, so it is not possible
->>                * reclaim any blocks.
->>                */
->> +            filemap_invalidate_unlock(mapping);
->>               mutex_unlock(&udev->cmdr_lock);
->>               continue;
->>           } else if (block == end) {
->> @@ -3159,10 +3164,11 @@ static void find_free_blocks(void)
->>             /* Here will truncate the data area from off */
->>           off = udev->data_off + (loff_t)start * udev->data_blk_size;
->> -        unmap_mapping_range(udev->inode->i_mapping, off, 0, 1);
->> +        unmap_mapping_range(mapping, off, 0, 1);
->>             /* Release the block pages */
->>           pages_freed = tcmu_blocks_release(udev, start, end - 1);
->> +        filemap_invalidate_unlock(mapping);
->>           mutex_unlock(&udev->cmdr_lock);
->>             total_pages_freed += pages_freed;
+> On Mar 31, 2022, at 2:45 PM, Alan Adamson <ALAN.ADAMSON@ORACLE.COM> wrote=
+:
+>=20
+> When executing blktest nvme tests with tcp and rdma, and with=20
+> CONFIG_NVME_TARGET_PASSTHRU enabled, tests nvme/034-037 did not
+> complete.
+>=20
+> This was because the nvme/rc helper for setting up passthru targets
+> hardcoded trtype to "loop" which resulted in the nvme connect to
+> fail.
+>=20
+> The following patch resolves this.
+>=20
+> Alan
+>=20
+
+Can you resend with the patch included?=20
+
+--
+Himanshu Madhani	 Oracle Linux Engineering
 
