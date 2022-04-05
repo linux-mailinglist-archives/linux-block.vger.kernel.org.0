@@ -2,109 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB7604F31D4
-	for <lists+linux-block@lfdr.de>; Tue,  5 Apr 2022 14:46:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1D04F3AF2
+	for <lists+linux-block@lfdr.de>; Tue,  5 Apr 2022 17:06:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239039AbiDEJfM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Apr 2022 05:35:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60042 "EHLO
+        id S239213AbiDELuP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Apr 2022 07:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345268AbiDEJWY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Apr 2022 05:22:24 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF73840A2F
-        for <linux-block@vger.kernel.org>; Tue,  5 Apr 2022 02:10:05 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id D212F210F1;
-        Tue,  5 Apr 2022 09:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1649149803; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qm9Fw/mp1MiVZAnqKrxlsmgbwUCwCkA3r+UnMXLYLWg=;
-        b=Vl1Lcf2uahRzky6OrpFam+WV5gyh6UhK36AhnrxkhDplU6GKZThjF25KBL0a8Y0cqNm58C
-        OO6RvKOBAK1ub2bohI7VALe3P6w7+mDzWwyWp12QMDGNGj2wFLOwh6PSrwr2sz/9noOlxq
-        vdzyJwlUBkJSIb+Wl0CPjQ+8CIiAwzU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1649149803;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qm9Fw/mp1MiVZAnqKrxlsmgbwUCwCkA3r+UnMXLYLWg=;
-        b=ldiVcerhgle2I+ScrQb+bng8wgkqa5Bvd80KZMKi792G8TAQbz4dSAOEsAnKwCC9l2xyhI
-        hSixvqipPRdTo4Bw==
-Received: from quack3.suse.cz (unknown [10.100.224.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id B6018A3B89;
-        Tue,  5 Apr 2022 09:10:03 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 2C569A0615; Tue,  5 Apr 2022 11:10:03 +0200 (CEST)
-Date:   Tue, 5 Apr 2022 11:10:03 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jan Kara <jack@suse.cz>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: Re: yet another approach to fix the loop lock order inversions v6
-Message-ID: <20220405091003.gmeuhtrwj7nzebyx@quack3.lan>
-References: <20220330052917.2566582-1-hch@lst.de>
- <20220404074235.GA1046@lst.de>
- <499de381-c81e-4bd0-b5f7-1ee6be45821d@I-love.SAKURA.ne.jp>
- <20220405062838.GA24373@lst.de>
+        with ESMTP id S1356534AbiDEKX7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Apr 2022 06:23:59 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EECF2BD89E
+        for <linux-block@vger.kernel.org>; Tue,  5 Apr 2022 03:08:31 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id i10-20020a17090a2aca00b001ca56c9ab16so1564024pjg.1
+        for <linux-block@vger.kernel.org>; Tue, 05 Apr 2022 03:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AFZlzhQRYQmWlcxY6uWkNd8Iq+nKCCpPlY/EOCThoMQ=;
+        b=SxaS2wRPijdzWAjSRtnfxCsnSZYpeG2Ao0WEXpxGe4mIZD4qTwFi8fdGBlS6xFqLXF
+         NJjclKg1eSpxDVmjnDMqN5aBaYzd+koEQJSCHGRSjNrALtc18lkyMMF06NLmrA2bE95S
+         lKw7smML6PKadf6LBOgP9QHICn9CnaOADJRVffWy0FY+cK/jNyoQrVEZkTUu/plCXm44
+         QLw69MWA60bAN+6bqV4mJaCw8q1wz3YzrgTsD99EEcpKLLLSLsCdc5qa2m4FxYlTX4C6
+         y9IuZWySXpFyg9OyUSGDmZQQqQ0fLEwUgW5K74cfcG02jiSLmX2yyoM/AX+etNnGSbN1
+         2PgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AFZlzhQRYQmWlcxY6uWkNd8Iq+nKCCpPlY/EOCThoMQ=;
+        b=p1/TwEucPg6sPcM+UztDMNpSVkQQDYcl6Pe6JHYo1NV4mCi+wu+fdgdAq2+OUIWW38
+         zYsl0j4G8WoKjHGrPM23bJmYUno8L3/72jxoyhgWpu3s+3UzcJxNgbFAllQ14QxxobBM
+         mNsuHx78YH1IJIHqnPYp3Uqw1BQ70xAcD8gjYmN+QZraEXOisYzlEu14vDWgABA52/d2
+         94jvaFpRRkRyLFSTPtS/SdUbFVnFV9l4owMs7A6ChE7/A0odRWbZvRekqQ5qlNAgHW2P
+         qGkTiHYGtTDU84oS8CQuNQ/1By72LMBMxdD8mVBCz9lnlKLBW2tYqd4doUVfQM4Ekomo
+         dLeQ==
+X-Gm-Message-State: AOAM531qQTUq7LRdbU9tSdryVVU44awQ2KBOy3rUIoQhN2Pa7vZc3V3X
+        /4umBKMGrLeFoBWVlRgO/sk=
+X-Google-Smtp-Source: ABdhPJwVZ2O7lZLfPbbpY/nfeqiAWK8ZBuCgB9p0mU2eHUiT/wjI6HHJdlsImHbLjF+6XCRo1EvbXg==
+X-Received: by 2002:a17:90b:3908:b0:1c7:7a14:2083 with SMTP id ob8-20020a17090b390800b001c77a142083mr3186635pjb.230.1649153311233;
+        Tue, 05 Apr 2022 03:08:31 -0700 (PDT)
+Received: from localhost.localdomain ([114.200.4.15])
+        by smtp.gmail.com with ESMTPSA id on12-20020a17090b1d0c00b001c7a548e4efsm1983962pjb.54.2022.04.05.03.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Apr 2022 03:08:30 -0700 (PDT)
+Date:   Tue, 5 Apr 2022 19:08:23 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     mst@redhat.com, jasowang@redhat.com, pbonzini@redhat.com,
+        mgurtovoy@nvidia.com, dongli.zhang@oracle.com,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] virtio-blk: support polling I/O
+Message-ID: <YkwVF3f2DsESU84x@localhost.localdomain>
+References: <20220405053122.77626-1-suwan.kim027@gmail.com>
+ <20220405053122.77626-2-suwan.kim027@gmail.com>
+ <YkvvKr9nCfza5KRa@stefanha-x1.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220405062838.GA24373@lst.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <YkvvKr9nCfza5KRa@stefanha-x1.localdomain>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue 05-04-22 08:28:38, Christoph Hellwig wrote:
-> On Mon, Apr 04, 2022 at 06:39:31PM +0900, Tetsuo Handa wrote:
-> > Two bugs which Jan has found in /bin/mount might not be yet fixed in
-> > versions developers/users are using. Thus, let's wait for a while
-> > before committing to linux.git.
+On Tue, Apr 05, 2022 at 08:26:34AM +0100, Stefan Hajnoczi wrote:
+> On Tue, Apr 05, 2022 at 02:31:21PM +0900, Suwan Kim wrote:
+> > +static int virtblk_poll(struct blk_mq_hw_ctx *hctx, struct io_comp_batch *iob)
+> > +{
+> > +	struct virtio_blk *vblk = hctx->queue->queuedata;
+> > +	struct virtio_blk_vq *vq = hctx->driver_data;
+> > +	struct virtblk_req *vbr;
+> > +	bool req_done = false;
+> > +	unsigned long flags;
+> > +	unsigned int len;
+> > +	int found = 0;
+> > +
+> > +	spin_lock_irqsave(&vq->lock, flags);
+> > +
+> > +	while ((vbr = virtqueue_get_buf(vq->vq, &len)) != NULL) {
+> > +		struct request *req = blk_mq_rq_from_pdu(vbr);
+> >  
+> > -	return blk_mq_virtio_map_queues(&set->map[HCTX_TYPE_DEFAULT],
+> > -					vblk->vdev, 0);
+> > +		found++;
+> > +		if (!blk_mq_add_to_batch(req, iob, vbr->status,
+> > +						virtblk_complete_batch))
+> > +			blk_mq_complete_request(req);
+> > +		req_done = true;
+> > +	}
+> > +
+> > +	if (req_done)
 > 
-> Jan, which loop bugs might be relevant here?
+> Minor nit: req_done can be replaced with found > 0.
 
-So there was a bug in libmount code trying to reuse already setup loop
-devices and changes in timing & removing the lo_mutex from lo_open() +
-suitable racing with systemd-udev probing devices caused these bugs to
-manifest. The visible effect was that a loop like:
+It looks better. I will fix it.
+Thanks for the feedback!
 
-while :; do mount -o loop,ro isofs.iso isofs/; umount isofs/; done
-
-often failed with:
-
-mount: /mnt: can't read superblock on /dev/loop0.
-umount: /mnt: not mounted.
-
-Bugs are fixed now by commits 3e1fc3bbe ("mount: Fix race in loop device
-reuse code"), fb4b6b115 ("loopdev: Properly translate errors from
-ul_path_read_*()"), 562990b552 ("loopdev: Do not treat errors when
-detecting overlap as fatal") in util-linux git.
-
-The only real-world impact I've heard about was LTP failing due to these
-problems and those guys should be capable enough to update their util-linux
-when we tell them. So I think we should be OK with pushing the kernel fixes
-upstream but it may generate some noise from automated testers before
-util-linux is updated on all of them...
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards,
+Suwan Kim
