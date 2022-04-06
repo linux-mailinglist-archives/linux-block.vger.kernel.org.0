@@ -2,63 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D7094F6BA1
-	for <lists+linux-block@lfdr.de>; Wed,  6 Apr 2022 22:49:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63AA74F6BA3
+	for <lists+linux-block@lfdr.de>; Wed,  6 Apr 2022 22:50:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbiDFUvu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 6 Apr 2022 16:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60226 "EHLO
+        id S232931AbiDFUvy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 6 Apr 2022 16:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbiDFUve (ORCPT
+        with ESMTP id S234302AbiDFUve (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Wed, 6 Apr 2022 16:51:34 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17EC02FF588
-        for <linux-block@vger.kernel.org>; Wed,  6 Apr 2022 12:07:34 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id ot30so6169567ejb.12
-        for <linux-block@vger.kernel.org>; Wed, 06 Apr 2022 12:07:34 -0700 (PDT)
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8019D3CBF32
+        for <linux-block@vger.kernel.org>; Wed,  6 Apr 2022 12:07:35 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id ot30so6169659ejb.12
+        for <linux-block@vger.kernel.org>; Wed, 06 Apr 2022 12:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linbit-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=c/zihez/h+mzXfDfKYfT6QVLBkQq8Rn6YB77YCPC8z0=;
-        b=vB0aQHaGkI3teNHscNCb9ZmZXWEHRU+XumY9K6E9fOqNCVDebbIZFBygMSg425zqKV
-         vdNgtKhGaiH/WSzEKdWbJU/69wMElpiqe3z3skLzQ8GWjHSVxjVBt9CzxklRuW1tNyPi
-         iRmKFWpsIerNIOwQ53m9IM6+rwjRNTHDGwLkRPbhYjDYl71MARSx7UhaeWILT0KB0IJX
-         Pq/jFCj+Gruco/niVvr75/9vgPTxFteWDGVDi3JbHIrGDi0ow/EoDv7u+TSbglue828y
-         GzrN9R/pvt1SHeEg0LbcRSSPptGZnYMtxXCe3rqVlFaXKkESgYidWE+ctAbXVlxInWZU
-         nDTw==
+        bh=0vcoWpko5M6BsO9WO6BZaEztSvAjnr2wIhZH0Y0nwWU=;
+        b=mi8paDeGJ9FgOE5KAUIYIDlCD6t9WRIXW8Zbxzongj6zFKj7quoAet0fhWDUc5SmZZ
+         xayddIqSEyI7Dea/HQIrpqGu5yheJHlfO1suXNQxYPDr5klhiDG31V04CeBKUxei7+ca
+         0uTdz7MsCQGNpsEQ70paHowFP/DBIK5J6Fj6tWvzXh/hUpmCtlYstrUvlG+Xi7Rdloz/
+         N3iDKbQcXbxEI5pj/fUur06ak9ZOnuD6GrGbyxTMSB+111T9S1hz1sv8/cNJS7W1FVSm
+         rbKM2LzDMGzWgcX65SRXCJqlKq3vguzKAH5r7POFaeMyJ13qps80aqz+e8GmhQpmmike
+         4C4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=c/zihez/h+mzXfDfKYfT6QVLBkQq8Rn6YB77YCPC8z0=;
-        b=CTBZ2JW0hrQPlDqPWU2RgDGRWF2avJeH9LyvhYip+0j5mUAZTnQtxL4ubXwAJ5NlBw
-         4TUdrDqqZGiC74hwB3H4juRNNYCIgJtSiFCddWWTHG7ZOq9eNDOQJaueM/temvE2ex4C
-         /gG3mhw2z21FU+QTVX1ELHfRptvVEhUuv4+i7mYXBNMB5GvTtMrioMScYHcFoBLWdGpl
-         +qlUI3IREImaAu+/Qe6xOI5LkBBMdIX+84k4F2izqvLQO+N91AYHoxORURGbE1pvDngD
-         5GDeX+R6I3rRxVzXqNxfk6Jj3OlkSLumzkjjWjjIJuFJiDsTNmHaaUTjTMqOVDCAIyMf
-         FEhw==
-X-Gm-Message-State: AOAM532dEBC2pUgICnKbOkYsBC+ojgAvqYiuS+ellJp76MD0jse71NRB
-        iB8zV2aLj2ASTB89lDPL/h3I4w==
-X-Google-Smtp-Source: ABdhPJxWI/reqSRbs4HBj3AoEgi/XmuoEqdfIbNcLAijgQMdbFysWX+mVK3VuK2IqRmMkXOekoatlg==
-X-Received: by 2002:a17:907:7f04:b0:6e0:39a2:79a6 with SMTP id qf4-20020a1709077f0400b006e039a279a6mr9472703ejc.243.1649272052611;
-        Wed, 06 Apr 2022 12:07:32 -0700 (PDT)
+        bh=0vcoWpko5M6BsO9WO6BZaEztSvAjnr2wIhZH0Y0nwWU=;
+        b=VIeuonIUVJzRc9SOgxCUNvY1syW6Z6gn5JX0lvsq08UFb9OFGeTpzn6paTfmoRSHix
+         gV4l6y54/uBhJBzg42MlFr/Ia8+FKWLiVr1+oVb4FJ+AemLkytB0L6TFjP5pmRPMXPAD
+         30283IeVkOX8KYGCCx4oW6b/LvKM+vVEy0WqZhQdSMStOoAgmxIMc3SENJwiP11o5H26
+         OdtulrOE/nNVza7Arzlb9sOmn8ZyZP/wQmIHflYzdKQus2xT+VUEsf+UjjGvlQEGfbCZ
+         NM0ByEVGoJYNzHq5Iq3Umsq+2OZFJ7Wk8Gennm+HIMGo7kfQXymJDb0yS5KOSQZ6CWCT
+         Yn9Q==
+X-Gm-Message-State: AOAM532qQYrcxrhYEzJE37uWgrTZX6ST07D1qiLK53Th4OatpGMtpmNC
+        L3+GxHEbBAvZX3z5o8K/JoOzWA==
+X-Google-Smtp-Source: ABdhPJwS75mCEvIsWowddkngt4NmRn8+jLBJvmrzPpQ7wLwXC5KAdkj6Vik6DmpRxwMlJAQJjznehg==
+X-Received: by 2002:a17:907:6da3:b0:6e6:ec5e:c2f7 with SMTP id sb35-20020a1709076da300b006e6ec5ec2f7mr9677283ejc.309.1649272053940;
+        Wed, 06 Apr 2022 12:07:33 -0700 (PDT)
 Received: from localhost (85-127-190-169.dsl.dynamic.surfer.at. [85.127.190.169])
-        by smtp.gmail.com with ESMTPSA id gv55-20020a1709072bf700b006e82ef9b910sm110685ejc.70.2022.04.06.12.07.31
+        by smtp.gmail.com with ESMTPSA id n5-20020a1709065e0500b006e4dae9b1besm6503475eju.145.2022.04.06.12.07.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 12:07:32 -0700 (PDT)
+        Wed, 06 Apr 2022 12:07:33 -0700 (PDT)
 From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
         <christoph.boehmwalder@linbit.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     drbd-dev@lists.linbit.com, linux-kernel@vger.kernel.org,
         Lars Ellenberg <lars.ellenberg@linbit.com>,
         Philipp Reisner <philipp.reisner@linbit.com>,
-        linux-block@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-block@vger.kernel.org,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>,
         =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
         <christoph.boehmwalder@linbit.com>
-Subject: [PATCH 2/7] drbd: address enum mismatch warnings
-Date:   Wed,  6 Apr 2022 21:07:10 +0200
-Message-Id: <20220406190715.1938174-3-christoph.boehmwalder@linbit.com>
+Subject: [PATCH 3/7] block: drbd: drbd_receiver: Remove redundant assignment to err
+Date:   Wed,  6 Apr 2022 21:07:11 +0200
+Message-Id: <20220406190715.1938174-4-christoph.boehmwalder@linbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220406190715.1938174-1-christoph.boehmwalder@linbit.com>
 References: <20220406190715.1938174-1-christoph.boehmwalder@linbit.com>
@@ -75,114 +77,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-gcc -Wextra warns about mixing drbd_state_rv with drbd_ret_code
-in a couple of places:
+Variable err is set to '-EIO' but this value is never read as
+it is overwritten or not used later on, hence it is a redundant
+assignment and can be removed.
 
-drivers/block/drbd/drbd_nl.c: In function 'drbd_adm_set_role':
-drivers/block/drbd/drbd_nl.c:777:14: warning: comparison between 'enum drbd_state_rv' and 'enum drbd_ret_code' [-Wenum-compare]
-  777 |  if (retcode != NO_ERROR)
-      |              ^~
-drivers/block/drbd/drbd_nl.c:784:12: warning: implicit conversion from 'enum drbd_ret_code' to 'enum drbd_state_rv' [-Wenum-conversion]
-  784 |    retcode = ERR_MANDATORY_TAG;
-      |            ^
-drivers/block/drbd/drbd_nl.c: In function 'drbd_adm_attach':
-drivers/block/drbd/drbd_nl.c:1965:10: warning: implicit conversion from 'enum drbd_state_rv' to 'enum drbd_ret_code' [-Wenum-conversion]
- 1965 |  retcode = rv;  /* FIXME: Type mismatch. */
-      |          ^
-drivers/block/drbd/drbd_nl.c: In function 'drbd_adm_connect':
-drivers/block/drbd/drbd_nl.c:2690:10: warning: implicit conversion from 'enum drbd_state_rv' to 'enum drbd_ret_code' [-Wenum-conversion]
- 2690 |  retcode = conn_request_state(connection, NS(conn, C_UNCONNECTED), CS_VERBOSE);
-      |          ^
-drivers/block/drbd/drbd_nl.c: In function 'drbd_adm_disconnect':
-drivers/block/drbd/drbd_nl.c:2803:11: warning: implicit conversion from 'enum drbd_state_rv' to 'enum drbd_ret_code' [-Wenum-conversion]
- 2803 |   retcode = rv;  /* FIXME: Type mismatch. */
-      |           ^
+Clean up the following clang-analyzer warning:
 
-In each case, both are passed into drbd_adm_finish(), which just takes
-a 32-bit integer and is happy with either, presumably intentionally.
+drivers/block/drbd/drbd_receiver.c:3955:5: warning: Value stored to
+'err' is never read [clang-analyzer-deadcode.DeadStores].
 
-Restructure the code to pass either type directly in there in most
-cases, avoiding the warnings.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Acked-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
 ---
- drivers/block/drbd/drbd_nl.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index 02030c9c4d3b..074b884ec225 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -770,6 +770,7 @@ int drbd_adm_set_role(struct sk_buff *skb, struct genl_info *info)
- 	struct set_role_parms parms;
- 	int err;
- 	enum drbd_ret_code retcode;
-+	enum drbd_state_rv rv;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 08da922f81d1..911c26753556 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -3903,7 +3903,6 @@ static int receive_SyncParam(struct drbd_connection *connection, struct packet_i
+ 				drbd_err(device, "verify-alg of wrong size, "
+ 					"peer wants %u, accepting only up to %u byte\n",
+ 					data_size, SHARED_SECRET_MAX);
+-				err = -EIO;
+ 				goto reconnect;
+ 			}
  
- 	retcode = drbd_adm_prepare(&adm_ctx, skb, info, DRBD_ADM_NEED_MINOR);
- 	if (!adm_ctx.reply_skb)
-@@ -790,14 +791,14 @@ int drbd_adm_set_role(struct sk_buff *skb, struct genl_info *info)
- 	mutex_lock(&adm_ctx.resource->adm_mutex);
- 
- 	if (info->genlhdr->cmd == DRBD_ADM_PRIMARY)
--		retcode = (enum drbd_ret_code)drbd_set_role(adm_ctx.device,
--						R_PRIMARY, parms.assume_uptodate);
-+		rv = drbd_set_role(adm_ctx.device, R_PRIMARY, parms.assume_uptodate);
- 	else
--		retcode = (enum drbd_ret_code)drbd_set_role(adm_ctx.device,
--						R_SECONDARY, 0);
-+		rv = drbd_set_role(adm_ctx.device, R_SECONDARY, 0);
- 
- 	mutex_unlock(&adm_ctx.resource->adm_mutex);
- 	genl_lock();
-+	drbd_adm_finish(&adm_ctx, info, rv);
-+	return 0;
- out:
- 	drbd_adm_finish(&adm_ctx, info, retcode);
- 	return 0;
-@@ -2502,6 +2503,7 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
- 	struct drbd_resource *resource;
- 	struct drbd_connection *connection;
- 	enum drbd_ret_code retcode;
-+	enum drbd_state_rv rv;
- 	int i;
- 	int err;
- 
-@@ -2621,12 +2623,11 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
- 	}
- 	rcu_read_unlock();
- 
--	retcode = (enum drbd_ret_code)conn_request_state(connection,
--					NS(conn, C_UNCONNECTED), CS_VERBOSE);
-+	rv = conn_request_state(connection, NS(conn, C_UNCONNECTED), CS_VERBOSE);
- 
- 	conn_reconfig_done(connection);
- 	mutex_unlock(&adm_ctx.resource->adm_mutex);
--	drbd_adm_finish(&adm_ctx, info, retcode);
-+	drbd_adm_finish(&adm_ctx, info, rv);
- 	return 0;
- 
- fail:
-@@ -2734,11 +2735,12 @@ int drbd_adm_disconnect(struct sk_buff *skb, struct genl_info *info)
- 
- 	mutex_lock(&adm_ctx.resource->adm_mutex);
- 	rv = conn_try_disconnect(connection, parms.force_disconnect);
--	if (rv < SS_SUCCESS)
--		retcode = (enum drbd_ret_code)rv;
--	else
--		retcode = NO_ERROR;
- 	mutex_unlock(&adm_ctx.resource->adm_mutex);
-+	if (rv < SS_SUCCESS) {
-+		drbd_adm_finish(&adm_ctx, info, rv);
-+		return 0;
-+	}
-+	retcode = NO_ERROR;
-  fail:
- 	drbd_adm_finish(&adm_ctx, info, retcode);
- 	return 0;
 -- 
 2.35.1
 
