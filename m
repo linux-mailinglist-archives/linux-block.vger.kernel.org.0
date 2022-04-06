@@ -2,170 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 179F24F43C1
-	for <lists+linux-block@lfdr.de>; Wed,  6 Apr 2022 00:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AA364F576C
+	for <lists+linux-block@lfdr.de>; Wed,  6 Apr 2022 10:15:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233906AbiDET63 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Apr 2022 15:58:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46760 "EHLO
+        id S232166AbiDFH0s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 6 Apr 2022 03:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1457530AbiDEQFw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Apr 2022 12:05:52 -0400
-Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06C0310;
-        Tue,  5 Apr 2022 09:03:51 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xiaoguang.wang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0V9HeY9c_1649174628;
-Received: from 30.32.95.104(mailfrom:xiaoguang.wang@linux.alibaba.com fp:SMTPD_---0V9HeY9c_1649174628)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 06 Apr 2022 00:03:48 +0800
-Message-ID: <e5923923-375f-c696-0c87-ca5def984d84@linux.alibaba.com>
-Date:   Wed, 6 Apr 2022 00:03:47 +0800
+        with ESMTP id S1576243AbiDFGqH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 6 Apr 2022 02:46:07 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0E5474A37
+        for <linux-block@vger.kernel.org>; Tue,  5 Apr 2022 22:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=CT9E1WyFV78lNGbgBTxuNPDqR29ylS3lVr+dNAQX09g=; b=lv6KXqr9v6E+H897+r+bibfh6z
+        2VctEoqicC7uA4zxq4DFvgDDPsmsbDKXlsQrIsnKflXPMuNBvRsIrLNhsUC46hsSKLPI/4Of5ZWZj
+        JVe5SHSnQ0Ivef0aCrUbRBkS+A+KYYj2zz5YL4jRL50Lolvep2QFlv6HlvuHz15tfcMzkvK20JNnM
+        n7jqLGOaP+wBhoqdDi1z9ArDU0juyg29qIynpgs11yo9Z/5cJjXTzpCl+/nHrnpk4+ZwiM/9UEEPI
+        Gm0PYMgjniX3BG0Y4K0K3honl671KG3jzPYLg44ClLKeaDmDo4/h5sd5bXKU783CMrr6jlS9Vbphx
+        nYg0slPg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nbxmP-003mxi-Ub; Wed, 06 Apr 2022 05:00:29 +0000
+Date:   Tue, 5 Apr 2022 22:00:29 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Suwan Kim <suwan.kim027@gmail.com>
+Cc:     mst@redhat.com, jasowang@redhat.com, stefanha@redhat.com,
+        pbonzini@redhat.com, mgurtovoy@nvidia.com, dongli.zhang@oracle.com,
+        hch@infradead.org, virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] virtio-blk: support polling I/O
+Message-ID: <Yk0ebS3cl95XtOuj@infradead.org>
+References: <20220405150924.147021-1-suwan.kim027@gmail.com>
+ <20220405150924.147021-2-suwan.kim027@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH v2 2/3] scsi: target: tcmu: Fix possible data corruption
-Content-Language: en-US
-To:     Bodo Stroesser <bostroesser@gmail.com>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org
-References: <20220323134940.31463-1-xiaoguang.wang@linux.alibaba.com>
- <20220323134940.31463-3-xiaoguang.wang@linux.alibaba.com>
- <b6280955-d3f5-f11b-5f62-07ab83cff4ac@gmail.com>
-From:   Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-In-Reply-To: <b6280955-d3f5-f11b-5f62-07ab83cff4ac@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-10.5 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220405150924.147021-2-suwan.kim027@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-hi,
+On Wed, Apr 06, 2022 at 12:09:23AM +0900, Suwan Kim wrote:
+> +        for (i = 0; i < num_vqs - num_poll_vqs; i++) {
+> +                callbacks[i] = virtblk_done;
+> +                snprintf(vblk->vqs[i].name, VQ_NAME_LEN, "req.%d", i);
+> +                names[i] = vblk->vqs[i].name;
+> +        }
+> +
+> +        for (; i < num_vqs; i++) {
+> +                callbacks[i] = NULL;
+> +                snprintf(vblk->vqs[i].name, VQ_NAME_LEN, "req_poll.%d", i);
+> +                names[i] = vblk->vqs[i].name;
+> +        }
 
-> On 23.03.22 14:49, Xiaoguang Wang wrote:
->> When tcmu_vma_fault() gets one page successfully, before the current
->> context completes page fault procedure, find_free_blocks() may run in
->> and call unmap_mapping_range() to unmap this page. Assume when
->> find_free_blocks() completes its job firstly, previous page fault
->> procedure starts to run again and completes, then one truncated page has
->> beed mapped to use space, but note that tcmu_vma_fault() has gotten one
->> refcount for this page, so any other subsystem won't use this page,
->> unless later the use space addr is unmapped.
->>
->> If another command runs in later and needs to extends dbi_thresh, it may
->> reuse the corresponding slot to previous page in data_bitmap, then thouth
->> we'll allocate new page for this slot in data_area, but no page fault will
->> happen again, because we have a valid map, real request's data will lose.
->
-> I don't think, this is a safe fix. It is possible that not only
-> find_free_blocks runs before page fault procedure completes, but also
-> allocation for next cmd happens. In that case the new call to
-> unmap_mapping_range would also happen before page fault completes ->
-> data corruption.
->
-> AFAIK, no one ever has seen this this bug in real life, as
-Yeah, I know, just find this maybe an issue by reading codes :)
+This uses spaces for indentation.
 
-> find_free_blocks only runs seldomly and userspace would have to access
-> a data page the very first time while the cmd that owned this page
-> already has been completed by userspace. Therefore I think we should
-> apply a perfect fix only.
->
-> I'm wondering whether there really is such a race. If so, couldn't the
-> same race happen in other drivers or even when truncating mapped files?
-Indeed, I have described how filesystem implementations avoid this issue
-in patch's commit message:
+> +		/*
+> +		 * Regular queues have interrupts and hence CPU affinity is
+> +		 * defined by the core virtio code, but polling queues have
+> +		 * no interrupts so we let the block layer assign CPU affinity.
+> +		 */
+> +		if (i != HCTX_TYPE_POLL)
+> +			blk_mq_virtio_map_queues(&set->map[i], vblk->vdev, 0);
+> +		else
+> +			blk_mq_map_queues(&set->map[i]);
 
-  Filesystem implementations will also run into this issue, but they
-  usually lock page when vm_operations_struct->fault gets one page, and
-  unlock page after finish_fault() completes. In truncate sides, they
-  lock pages in truncate_inode_pages() to protect race with page fault.
-  We can also have similar codes like filesystem to fix this issue.
+Nit, but I would have just done a "positive" check here as that is ab it
+easier to read:
 
+		if (i == HCTX_TYPE_POLL)
+			blk_mq_map_queues(&set->map[i]);
+		else
+			blk_mq_virtio_map_queues(&set->map[i], vblk->vdev, 0);
 
-Take ext4 as example, a file in ext4 is mapped to user space, if then a truncate
-operation occurs, ext4 calls truncate_pagecache():
-void truncate_pagecache(struct inode *inode, loff_t newsize)
-{
-        struct address_space *mapping = inode->i_mapping;
-        loff_t holebegin = round_up(newsize, PAGE_SIZE);
+Otherwise looks good:
 
-        /*
-         * unmap_mapping_range is called twice, first simply for
-         * efficiency so that truncate_inode_pages does fewer
-         * single-page unmaps.  However after this first call, and
-         * before truncate_inode_pages finishes, it is possible for
-         * private pages to be COWed, which remain after
-         * truncate_inode_pages finishes, hence the second
-         * unmap_mapping_range call must be made for correctness.
-         */
-        unmap_mapping_range(mapping, holebegin, 0, 1);
-        truncate_inode_pages(mapping, newsize);
-        unmap_mapping_range(mapping, holebegin, 0, 1);
-}
-
-In truncate_inode_pages(), it'll lock page and set page->mapping
-to be NULL, and in ext4's filemap_fault(), it'll lock page and check whether
-page->mapping has been changed, if it's true, it'll just fail the page
-fault procedure.
-
-For tcmu, though the data area's pages don't have a valid mapping,
-but we can apply similar method.
-In tcmu_vma_fault(), we lock the page and set VM_FAULT_LOCKED
-flag, in find_free_blocks(), we firstly try to lock pages which are going
-to be released, if lock_page() returns, we can ensure that there are
-not inflight running page fault procedure, and following unmap_mapping_range()
-will also ensure that all user maps will be cleared.
-Seems that it'll resolve this possible issue, please have a check, thanks.
-
-
-Regards,
-Xiaoguang Wang
-
-
->
->
->>
->> To fix this issue, when extending dbi_thresh, we'll need to call
->> unmap_mapping_range() to unmap use space data area which may exist,
->> which I think it's a simple method.
->>
->> Filesystem implementations will also run into this issue, but they
->> ususally lock page when vm_operations_struct->fault gets one page, and
->> unlock page after finish_fault() completes. In truncate sides, they
->> lock pages in truncate_inode_pages() to protect race with page fault.
->> We can also have similar codes like filesystem to fix this issue.
->>
->> Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
->> ---
->>   drivers/target/target_core_user.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
->> index 06a5c4086551..9196188504ec 100644
->> --- a/drivers/target/target_core_user.c
->> +++ b/drivers/target/target_core_user.c
->> @@ -862,6 +862,7 @@ static int tcmu_alloc_data_space(struct tcmu_dev *udev, struct tcmu_cmd *cmd,
->>       if (space < cmd->dbi_cnt) {
->>           unsigned long blocks_left =
->>                   (udev->max_blocks - udev->dbi_thresh) + space;
->> +        loff_t off, len;
->>             if (blocks_left < cmd->dbi_cnt) {
->>               pr_debug("no data space: only %lu available, but ask for %u\n",
->> @@ -870,6 +871,10 @@ static int tcmu_alloc_data_space(struct tcmu_dev *udev, struct tcmu_cmd *cmd,
->>               return -1;
->>           }
->>   +        off = udev->data_off + (loff_t)udev->dbi_thresh * udev->data_blk_size;
->> +        len = cmd->dbi_cnt * udev->data_blk_size;
->> +        unmap_mapping_range(udev->inode->i_mapping, off, len, 1);
->> +
->>           udev->dbi_thresh += cmd->dbi_cnt;
->>           if (udev->dbi_thresh > udev->max_blocks)
->>               udev->dbi_thresh = udev->max_blocks;
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
