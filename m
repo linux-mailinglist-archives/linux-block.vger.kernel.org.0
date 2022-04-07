@@ -2,104 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D29C4F8166
-	for <lists+linux-block@lfdr.de>; Thu,  7 Apr 2022 16:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13ED74F81B7
+	for <lists+linux-block@lfdr.de>; Thu,  7 Apr 2022 16:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242899AbiDGOST (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 7 Apr 2022 10:18:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
+        id S1344010AbiDGOeX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 Apr 2022 10:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231286AbiDGOST (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Apr 2022 10:18:19 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CC7E181D9F
-        for <linux-block@vger.kernel.org>; Thu,  7 Apr 2022 07:16:18 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 2263B1F85A;
-        Thu,  7 Apr 2022 14:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1649340977; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qge20Ekuk8Pm3DEgLGtbIznDg/k54NnfqX3Glve+OeQ=;
-        b=16aybM8S/PRIrOvyUcthbbtTQQxgg2RG1VkJzoWdzZGAPUFZ22djAS/ccWEyEVyJG8GGxy
-        10rOrA/9Z3TI5/pJJ5+z/pK9T/R6xNHjhYlnMbQA+VdPAbi0Pihhh7F13reqa/vamP0Cxv
-        IiwUF21QuxMnqvlJt8spMawRzG+5Rfw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1649340977;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qge20Ekuk8Pm3DEgLGtbIznDg/k54NnfqX3Glve+OeQ=;
-        b=h1LBBVzkt+txlFFsMYhgN/Wk/2UsVzJ8eiFGaixA8Bpc6USTYP8KYarl3Y7MlLsKrrKAuW
-        EYReOlvTuN/ZmMDA==
-Received: from quack3.suse.cz (unknown [10.163.43.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 10CE3A3B94;
-        Thu,  7 Apr 2022 14:16:17 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id BAE93A061A; Thu,  7 Apr 2022 16:16:16 +0200 (CEST)
-Date:   Thu, 7 Apr 2022 16:16:16 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "yukuai (C)" <yukuai3@huawei.com>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Chris Murphy <lists@colorremedies.com>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: 5.17, WARNING: at block/bfq-iosched.c:602
- bfqq_request_over_limit+0x122/0x3a0
-Message-ID: <20220407141616.koxfr7vhhi4brqyg@quack3.lan>
-References: <CAJCQCtTw_2C7ZSz7as5Gvq=OmnDiio=HRkQekqWpKot84sQhFA@mail.gmail.com>
- <d6626daa-94a3-6f76-53d9-a350e1db2d53@kernel.dk>
- <5C015FDB-B35D-45D3-9CE7-E3B2544DAA67@linaro.org>
- <6f72e1fa-6651-005a-7935-93b0450dce9f@huawei.com>
- <20220406160359.5stdu2unbu2kiva5@quack3.lan>
+        with ESMTP id S1344006AbiDGOeW (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Apr 2022 10:34:22 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9688D198526;
+        Thu,  7 Apr 2022 07:32:12 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KZ3gw30svz681Z4;
+        Thu,  7 Apr 2022 22:30:20 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 7 Apr 2022 16:32:10 +0200
+Received: from [10.47.80.129] (10.47.80.129) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 7 Apr
+ 2022 15:32:09 +0100
+Message-ID: <3e1914a8-5f6b-8fcf-7fb3-2d1edb9766e1@huawei.com>
+Date:   Thu, 7 Apr 2022 15:32:07 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220406160359.5stdu2unbu2kiva5@quack3.lan>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 03/11] libata: Send internal commands through the block
+ layer
+To:     Christoph Hellwig <hch@lst.de>
+CC:     <axboe@kernel.dk>, <damien.lemoal@opensource.wdc.com>,
+        <bvanassche@acm.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
+        <hare@suse.de>, <chenxiang66@hisilicon.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-ide@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <dm-devel@redhat.com>, <beanhuo@micron.com>
+References: <1647945585-197349-1-git-send-email-john.garry@huawei.com>
+ <1647945585-197349-4-git-send-email-john.garry@huawei.com>
+ <20220322112057.GC29270@lst.de>
+In-Reply-To: <20220322112057.GC29270@lst.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.80.129]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed 06-04-22 18:03:59, Jan Kara wrote:
-> Hello!
-> 
-> On Wed 06-04-22 09:44:55, yukuai (C) wrote:
-> > 在 2022/04/04 22:35, Paolo Valente 写道:
-> > > This seems to have to do with Jan's patches on tag allocation. I'm CCing him too. Jan, I'm willing to provide my usual dev version for testing, if useful.
-> > 
-> > I had observed this warning for a long time, and it's very to reporduce
-> > by our reporducer for the problem that Jan fixed recently.
-> > 
-> > I thougt this warning is due to bfqq is associated with wrong cgroup,
-> > which should be fixed by Jan's patch.
-> > 
-> > What do you think, Jan ?
-> 
-> Hum, the warning suggests that the blkcg's idea of cgroup hierarchy is not in
-> sync with BFQ's idea of cgroup hierarchy. One possibility how this could
-> happen is if bfqq is moved from one bfqg to another between the depth check
-> and the for_each_entity() loop. This should actually get fixed as a
-> side-effect of my patches because they change the logic so that alive bfqq
-> can change parent only if they contain a single process. But nevertheless
-> we should make the logic inside bfqq_request_over_limit() more robust in
-> place of process moving between cgroups. So I'll send a patch for that on
-> top of my patches.
+On 22/03/2022 11:20, Christoph Hellwig wrote:
+> On Tue, Mar 22, 2022 at 06:39:37PM +0800, John Garry wrote:
+>> When SCSI HBA device drivers are required to process an ATA internal
+>> command they still need a tag for the IO. This often requires the driver
+>> to set aside a set of tags for these sorts of IOs and manage the tags
+>> themselves.
+>>
+>> If we associate a SCSI command (and request) with an ATA internal command
+>> then the tag is already provided, so introduce the change to send ATA
+>> internal commands through the block layer with a set of custom blk-mq ops.
+>>
+>> note: I think that the timeout handling needs to be fixed up.
 
-Posted: https://lore.kernel.org/all/20220407140738.9723-1-jack@suse.cz
+Hi Christoph,
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Any reason to not just send them through an ATA_16 passthrough CDB and
+> just use all the normal SCSI command handling?
+
+I had a go at implementing this but I have come up against a few issues:
+
+- ATA_16 handling translates the passthrough CDB to a ATA TF. However 
+ata_exec_internal_sg() is passed a TF already. So what to do? Change the 
+callers to generate a ATA_16 CDB? I guess not. Otherwise we could put 
+the already-generated TF in the SCSI cmd CDB somehow and use directly.
+
+- We may have no SCSI device (yet) for the target when issuing an 
+internal command, but only the ATA port+dev. So need a method to pass 
+these pointers to ATA_16 handling
+
+- we would need to change ata_scsi_translate(), ata_scsi_pass_thru() and 
+other friends to deal with ATA_TAG_INTERNAL and its peculiarities - 
+today it just deals with regular qc's.
+
+It still does seem a reasonable idea to use ATA_16, but it looks like 
+significant modifications would be required....
+
+Thanks,
+John
