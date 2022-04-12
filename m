@@ -2,120 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A427D4FE9EC
-	for <lists+linux-block@lfdr.de>; Tue, 12 Apr 2022 23:26:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE1174FEAA4
+	for <lists+linux-block@lfdr.de>; Wed, 13 Apr 2022 01:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbiDLV0p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Apr 2022 17:26:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39454 "EHLO
+        id S229511AbiDLXX1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 Apr 2022 19:23:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229865AbiDLV0o (ORCPT
+        with ESMTP id S229809AbiDLXW6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 Apr 2022 17:26:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D344018A3CF
-        for <linux-block@vger.kernel.org>; Tue, 12 Apr 2022 14:07:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649797509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oSGlSFmkV0dQpkxytbOFilmxcRdv/gtOoUcqeFDKH3U=;
-        b=MlzMACl03MZB834aLxWt+8b+fIkiCwhQkaRUENj7HBYaqAf+hs70SLobIXcFnPe6ZXlHsI
-        vYUb92jN2RVM980yOBawDFapz4Bq039XAHf2Frb7JKoCVRO/35lRHld7X2WnTW0I2P9dAN
-        WNQ8NNm+kgfFGBa0PIVdPLrs5WemwXs=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-608-9MTeKuy8Mo2JdyLaLJLU1A-1; Tue, 12 Apr 2022 16:52:42 -0400
-X-MC-Unique: 9MTeKuy8Mo2JdyLaLJLU1A-1
-Received: by mail-qt1-f198.google.com with SMTP id u29-20020a05622a199d00b002e06ae2f56cso15652664qtc.12
-        for <linux-block@vger.kernel.org>; Tue, 12 Apr 2022 13:52:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oSGlSFmkV0dQpkxytbOFilmxcRdv/gtOoUcqeFDKH3U=;
-        b=ofTDfVJtEl0OkZNeWvLhGGTlcSmagE6KnL2SBRMpXTPkrx1deUoOPgKZwksMwzDuRX
-         onThyLcML7pe4wmQT2E+hHbPbKMi0GEh2JhYvGLX0cu+FLkazgUMoI4tqJWgKbDSKe6m
-         llpJHRwHW0gqWZzT/oy1IT34ByIsH+OKvA/MgVbYvfn05eHFPjB45J1n5t3UcbNP/FJ0
-         NwTe893qQJqO/RnhanR/CCbrOdJMHM+zj5pABvEP//yC2g3OUaOfzO3bPS2gL3JG5DnR
-         NPFz95w7kdReWPupuecW0b2e3tTNDoK3wlxL3gUGYgWZHCDw1lZy7BZDHsmJti0tPjG5
-         qyFg==
-X-Gm-Message-State: AOAM530plAsTHOyJegYu/OI/gYGh06SlmQI/29/8K8Tr6OUkSpA9PBt/
-        itAkOIlc2Wuw/L6DUprizI56V2RZx7JO8VkSFO7hJs/C35Gy6Er9NNTL8enwWoinWYdNH/gGHrT
-        Ig0661s8A2iSVesOmALlrDQ==
-X-Received: by 2002:a37:82c7:0:b0:69c:1612:53f9 with SMTP id e190-20020a3782c7000000b0069c161253f9mr4447736qkd.408.1649796762099;
-        Tue, 12 Apr 2022 13:52:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxbRAr69KUXZHA1hFRyE0EoPeOfDydesoZY9+W/e1MtrwpsCB2KNNv+dCQFRLorPvnzr6Oeog==
-X-Received: by 2002:a37:82c7:0:b0:69c:1612:53f9 with SMTP id e190-20020a3782c7000000b0069c161253f9mr4447723qkd.408.1649796761847;
-        Tue, 12 Apr 2022 13:52:41 -0700 (PDT)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id a7-20020a05622a064700b002e238d6db02sm28512669qtb.54.2022.04.12.13.52.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 13:52:41 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 16:52:40 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        dm-devel@redhat.com,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Subject: Re: [PATCH 5/8] dm: always setup ->orig_bio in alloc_io
-Message-ID: <YlXmmB6IO7usz2c1@redhat.com>
-References: <20220412085616.1409626-1-ming.lei@redhat.com>
- <20220412085616.1409626-6-ming.lei@redhat.com>
+        Tue, 12 Apr 2022 19:22:58 -0400
+Received: from mail-41104.protonmail.ch (mail-41104.protonmail.ch [185.70.41.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68F0CFB8E
+        for <linux-block@vger.kernel.org>; Tue, 12 Apr 2022 15:09:28 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 21:59:16 +0000
+Authentication-Results: mail-41104.protonmail.ch;
+        dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="M2J2L0iK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+        s=protonmail2; t=1649800761;
+        bh=JJtIRzBfNpDrJ/fFtvW6vi1j9+8vDctIDP1NHWiTvOk=;
+        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:From:To:Cc:Date:
+         Subject:Reply-To:Feedback-ID:Message-ID;
+        b=M2J2L0iK2Kc/JQTIjkwhDUkVqWiZJr3O/27pjBoOkV0WQ7k3QLKoWiEY4P8AO2cMT
+         OApMkeZx7jZ147jSo5zdtUJ4MYUQI3LZGgFLt5lQy2IbjAyfDr3JdfIat6WFFXrrpK
+         w6L6qXuzVppbmyai1QnXQf3zVPlwQmukLWSYtXStunKKc6w2+Je+8XmI1/jRXcuKZM
+         ugzbjMCdqaBj+SICra5VB2NALMPCUFd/dOxLuvqDVK4p7PmM55sl91uTxRYp3lYwIP
+         Wplktu5ck2NSYZL+AmRdzhMhpS9KKb3ZVDMPNH0oQPlAk2NVHCT0SYTlSBPdbNDOXO
+         jnYDIIyAsO8UQ==
+To:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Lobakin <alobakin@pm.me>
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: [PATCH RESEND] asm-generic: fix __get_unaligned_be48() on 32 bit platforms
+Message-ID: <20220412215220.75677-1-alobakin@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220412085616.1409626-6-ming.lei@redhat.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Apr 12 2022 at  4:56P -0400,
-Ming Lei <ming.lei@redhat.com> wrote:
+While testing the new macros for working with 48 bit containers,
+I faced a weird problem:
 
-> The current DM codes setup ->orig_bio after __map_bio() returns,
-> and not only cause kernel panic for dm zone, but also a bit ugly
-> and tricky, especially the waiting until ->orig_bio is set in
-> dm_submit_bio_remap().
-> 
-> The reason is that one new bio is cloned from original FS bio to
-> represent the mapped part, which just serves io accounting.
-> 
-> Now we have switched to bdev based io accounting interface, and we
-> can retrieve sectors/bio_op from both the real original bio and the
-> added fields of .sector_offset & .sectors easily, so the new cloned
-> bio isn't necessary any more.
-> 
-> Not only fixes dm-zone's kernel panic, but also cleans up dm io
-> accounting & split a bit.
+32 + 16: 0x2ef6e8da 0x79e60000
+48: 0xffffe8da + 0x79e60000
 
-You're conflating quite a few things here.  DM zone really has no
-business accessing io->orig_bio (dm-zone.c can just as easily inspect
-the tio->clone, because it hasn't been remapped yet it reflects the
-io->origin_bio, so there is no need to look at io->orig_bio) -- but
-yes I clearly broke things during the 5.18 merge and it needs fixing
-ASAP.
+All the bits starting from the 32nd were getting 1d in 9/10 cases.
+The debug showed:
 
-But I'm (ab)using io->orig_bio assignment to indicate to completion
-that it may proceed.  See these dm-5.19 commits to see it imposed even
-further:
-https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.19&id=311a8e6650601a79079000466db77386c5ec2abb
-https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.19&id=56219ebb5f5c84785aa821f755d545eae41bdb1a
+p[0]: 0x00002e0000000000
+p[1]: 0x00002ef600000000
+p[2]: 0xffffffffe8000000
+p[3]: 0xffffffffe8da0000
+p[4]: 0xffffffffe8da7900
+p[5]: 0xffffffffe8da79e6
 
-And then leveraged here:
-https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.19&id=4aa7a368370c2a172d5a0b8927c6332c4b6a3514
+that the value becomes a garbage after the third OR, i.e. on
+`p[2] << 24`.
+When the 31st bit is 1 and there's no explicit cast to an unsigned,
+it's being considered as a signed int and getting sign-extended on
+OR, so `e8000000` becomes `ffffffffe8000000` and messes up the
+result.
+Cast the @p[2] to u64 as well to avoid this. Now:
 
-Could be all these dm-5.19 changes suck.. but I do know dm-zone.c is
-too tightly coupled to DM core.  So I'll focus on that first, fix
-5.18, and then circle back to "what's next?".
+32 + 16: 0x7ef6a490 0xddc10000
+48: 0x7ef6a490 + 0xddc10000
 
-Mike
+p[0]: 0x00007e0000000000
+p[1]: 0x00007ef600000000
+p[2]: 0x00007ef6a4000000
+p[3]: 0x00007ef6a4900000
+p[4]: 0x00007ef6a490dd00
+p[5]: 0x00007ef6a490ddc1
+
+Fixes: c2ea5fcf53d5 ("asm-generic: introduce be48 unaligned accessors")
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+---
+Resend: target linux-block, expand Ccs a bit
+
+ include/asm-generic/unaligned.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/asm-generic/unaligned.h b/include/asm-generic/unaligne=
+d.h
+index 8fc637379899..df30f11b4a46 100644
+--- a/include/asm-generic/unaligned.h
++++ b/include/asm-generic/unaligned.h
+@@ -143,7 +143,7 @@ static inline void put_unaligned_be48(const u64 val, vo=
+id *p)
+
+ static inline u64 __get_unaligned_be48(const u8 *p)
+ {
+-=09return (u64)p[0] << 40 | (u64)p[1] << 32 | p[2] << 24 |
++=09return (u64)p[0] << 40 | (u64)p[1] << 32 | (u64)p[2] << 24 |
+ =09=09p[3] << 16 | p[4] << 8 | p[5];
+ }
+
+--
+2.35.2
+
 
