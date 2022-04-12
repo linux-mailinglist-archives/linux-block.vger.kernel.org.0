@@ -2,203 +2,111 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09BDB4FDC12
-	for <lists+linux-block@lfdr.de>; Tue, 12 Apr 2022 13:00:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACC7C4FE30B
+	for <lists+linux-block@lfdr.de>; Tue, 12 Apr 2022 15:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357571AbiDLKML (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Apr 2022 06:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
+        id S1356269AbiDLNtS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 Apr 2022 09:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355125AbiDLJzB (ORCPT
+        with ESMTP id S1354684AbiDLNtN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 Apr 2022 05:55:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9183669CD7
-        for <linux-block@vger.kernel.org>; Tue, 12 Apr 2022 01:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649753855;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZViay8Atj9fI2mxNzuWrjkywphoTmR+UT4F6gB4pnCs=;
-        b=cHn2wTAN+av9JEytJt5MtcvoNBxKl01jvVLRYNQB6MPqC7Xdu6qC3PQCVwTPgqWfZLMFfS
-        OvF7IMimQ5ZmNJuTMrGevT4hOUfxc6JEOl80Yzb6D0SNDso1zlLRiM9RJOvoSlCCrX9ubB
-        CDVuvNjJ0kBlordjgwJZuxejaPo4uiI=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-553-jOr_z8DLMM6vlMKIlhYVTw-1; Tue, 12 Apr 2022 04:57:32 -0400
-X-MC-Unique: jOr_z8DLMM6vlMKIlhYVTw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E87FA3803914;
-        Tue, 12 Apr 2022 08:57:31 +0000 (UTC)
-Received: from localhost (ovpn-8-19.pek2.redhat.com [10.72.8.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 206CBC44B1D;
-        Tue, 12 Apr 2022 08:57:30 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 8/8] dm: put all polled io into one single list
-Date:   Tue, 12 Apr 2022 16:56:16 +0800
-Message-Id: <20220412085616.1409626-9-ming.lei@redhat.com>
-In-Reply-To: <20220412085616.1409626-1-ming.lei@redhat.com>
-References: <20220412085616.1409626-1-ming.lei@redhat.com>
+        Tue, 12 Apr 2022 09:49:13 -0400
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2629A54BDE
+        for <linux-block@vger.kernel.org>; Tue, 12 Apr 2022 06:46:56 -0700 (PDT)
+Received: from fsav312.sakura.ne.jp (fsav312.sakura.ne.jp [153.120.85.143])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 23CDkmc8037512;
+        Tue, 12 Apr 2022 22:46:48 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav312.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav312.sakura.ne.jp);
+ Tue, 12 Apr 2022 22:46:48 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav312.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 23CDkmRf037508
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 12 Apr 2022 22:46:48 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <becb2389-e249-0aa2-7701-2c02155aedf2@I-love.SAKURA.ne.jp>
+Date:   Tue, 12 Apr 2022 22:46:48 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Content-Language: en-US
+To:     "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Jack Wang <jinpu.wang@ionos.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH] block/rnbd: client: avoid flush_workqueue(system_long_wq)
+ usage
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If bio_split() isn't involved, it is a bit overkill to link dm_io into hlist,
-given there is only single dm_io in the list, so convert to single list
-for holding all dm_io instances associated with this bio.
+Flushing system-wide workqueues is dangerous and will be forbidden.
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Since system_long_wq is used only inside rnbd_destroy_sessions(),
+let's use list_head than creating a local workqueue for tracking
+work_struct to flush.
+
+Link: https://lkml.kernel.org/r/49925af7-78a8-a3dd-bce6-cfc02e1a9236@I-love.SAKURA.ne.jp
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
- drivers/md/dm-core.h |  2 +-
- drivers/md/dm.c      | 46 +++++++++++++++++++++++---------------------
- 2 files changed, 25 insertions(+), 23 deletions(-)
+Notice: This patch is only compile tested. Please test before applying.
 
-diff --git a/drivers/md/dm-core.h b/drivers/md/dm-core.h
-index 811c0ccbc63d..7f51957913e8 100644
---- a/drivers/md/dm-core.h
-+++ b/drivers/md/dm-core.h
-@@ -257,7 +257,7 @@ struct dm_io {
- 	spinlock_t lock;
- 	unsigned long start_time;
- 	void *data;
--	struct hlist_node node;
-+	struct dm_io *next;
- 	struct task_struct *map_task;
- 	struct dm_stats_aux stats_aux;
- 	/* last member of dm_target_io is 'struct bio' */
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 2987f7cf7b47..db23efd6bbf6 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1492,7 +1492,7 @@ static bool __process_abnormal_io(struct clone_info *ci, struct dm_target *ti,
- }
- 
- /*
-- * Reuse ->bi_private as hlist head for storing all dm_io instances
-+ * Reuse ->bi_private as dm_io list head for storing all dm_io instances
-  * associated with this bio, and this bio's bi_private needs to be
-  * stored in dm_io->data before the reuse.
-  *
-@@ -1500,14 +1500,14 @@ static bool __process_abnormal_io(struct clone_info *ci, struct dm_target *ti,
-  * touch it after splitting. Meantime it won't be changed by anyone after
-  * bio is submitted. So this reuse is safe.
-  */
--static inline struct hlist_head *dm_get_bio_hlist_head(struct bio *bio)
-+static inline struct dm_io **dm_poll_list_head(struct bio *bio)
+ drivers/block/rnbd/rnbd-clt.c | 5 ++++-
+ drivers/block/rnbd/rnbd-clt.h | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
+index b66e8840b94b..b14e7c15133e 100644
+--- a/drivers/block/rnbd/rnbd-clt.c
++++ b/drivers/block/rnbd/rnbd-clt.c
+@@ -1730,6 +1730,7 @@ static void rnbd_destroy_sessions(void)
  {
--	return (struct hlist_head *)&bio->bi_private;
-+	return (struct dm_io **)&bio->bi_private;
- }
+ 	struct rnbd_clt_session *sess, *sn;
+ 	struct rnbd_clt_dev *dev, *tn;
++	LIST_HEAD(list);
  
- static void dm_queue_poll_io(struct bio *bio, struct dm_io *io)
- {
--	struct hlist_head *head = dm_get_bio_hlist_head(bio);
-+	struct dm_io **head = dm_poll_list_head(bio);
- 
- 	if (!(bio->bi_opf & REQ_DM_POLL_LIST)) {
- 		bio->bi_opf |= REQ_DM_POLL_LIST;
-@@ -1517,19 +1517,20 @@ static void dm_queue_poll_io(struct bio *bio, struct dm_io *io)
- 		 */
- 		io->data = bio->bi_private;
- 
--		INIT_HLIST_HEAD(head);
--
- 		/* tell block layer to poll for completion */
- 		bio->bi_cookie = ~BLK_QC_T_NONE;
-+
-+		io->next = NULL;
- 	} else {
- 		/*
- 		 * bio recursed due to split, reuse original poll list,
- 		 * and save bio->bi_private too.
- 		 */
--		io->data = hlist_entry(head->first, struct dm_io, node)->data;
-+		io->data = (*head)->data;
-+		io->next = *head;
- 	}
- 
--	hlist_add_head(&io->node, head);
-+	*head = io;
- }
- 
- /*
-@@ -1682,18 +1683,16 @@ static bool dm_poll_dm_io(struct dm_io *io, struct io_comp_batch *iob,
- static int dm_poll_bio(struct bio *bio, struct io_comp_batch *iob,
- 		       unsigned int flags)
- {
--	struct hlist_head *head = dm_get_bio_hlist_head(bio);
--	struct hlist_head tmp = HLIST_HEAD_INIT;
--	struct hlist_node *next;
--	struct dm_io *io;
-+	struct dm_io **head = dm_poll_list_head(bio);
-+	struct dm_io *list = *head;
-+	struct dm_io *tmp = NULL;
-+	struct dm_io *curr, *next;
- 
- 	/* Only poll normal bio which was marked as REQ_DM_POLL_LIST */
- 	if (!(bio->bi_opf & REQ_DM_POLL_LIST))
- 		return 0;
- 
--	WARN_ON_ONCE(hlist_empty(head));
--
--	hlist_move_list(head, &tmp);
-+	WARN_ON_ONCE(!list);
- 
- 	/*
- 	 * Restore .bi_private before possibly completing dm_io.
-@@ -1704,24 +1703,27 @@ static int dm_poll_bio(struct bio *bio, struct io_comp_batch *iob,
- 	 * clearing REQ_DM_POLL_LIST here.
- 	 */
- 	bio->bi_opf &= ~REQ_DM_POLL_LIST;
--	bio->bi_private = hlist_entry(tmp.first, struct dm_io, node)->data;
-+	bio->bi_private = list->data;
- 
--	hlist_for_each_entry_safe(io, next, &tmp, node) {
--		if (dm_poll_dm_io(io, iob, flags)) {
--			hlist_del_init(&io->node);
-+	for (curr = list, next = curr->next; curr; curr = next, next =
-+			curr ? curr->next : NULL) {
-+		if (dm_poll_dm_io(curr, iob, flags)) {
- 			/*
- 			 * clone_endio() has already occurred, so passing
- 			 * error as 0 here doesn't override io->status
+ 	/* Firstly forbid access through sysfs interface */
+ 	rnbd_clt_destroy_sysfs_files();
+@@ -1762,11 +1763,13 @@ static void rnbd_destroy_sessions(void)
  			 */
--			dm_io_dec_pending(io, 0);
-+			dm_io_dec_pending(curr, 0);
-+		} else {
-+			curr->next = tmp;
-+			tmp = curr;
+ 			INIT_WORK(&dev->unmap_on_rmmod_work, unmap_device_work);
+ 			queue_work(system_long_wq, &dev->unmap_on_rmmod_work);
++			list_add_tail(&dev->unmap_on_rmmod_list, &list);
  		}
+ 		rnbd_clt_put_sess(sess);
  	}
+ 	/* Wait for all scheduled unmap works */
+-	flush_workqueue(system_long_wq);
++	list_for_each_entry(dev, &list, unmap_on_rmmod_list)
++		flush_work(&dev->unmap_on_rmmod_work);
+ 	WARN_ON(!list_empty(&sess_list));
+ }
  
- 	/* Not done? */
--	if (!hlist_empty(&tmp)) {
-+	if (tmp) {
- 		bio->bi_opf |= REQ_DM_POLL_LIST;
- 		/* Reset bio->bi_private to dm_io list head */
--		hlist_move_list(&tmp, head);
-+		*head = tmp;
- 		return 0;
- 	}
- 	return 1;
+diff --git a/drivers/block/rnbd/rnbd-clt.h b/drivers/block/rnbd/rnbd-clt.h
+index 2e2e8c4a85c1..a6d704abda61 100644
+--- a/drivers/block/rnbd/rnbd-clt.h
++++ b/drivers/block/rnbd/rnbd-clt.h
+@@ -136,6 +136,7 @@ struct rnbd_clt_dev {
+ 	char			*blk_symlink_name;
+ 	refcount_t		refcount;
+ 	struct work_struct	unmap_on_rmmod_work;
++	struct list_head	unmap_on_rmmod_list;
+ };
+ 
+ /* rnbd-clt.c */
 -- 
-2.31.1
-
+2.32.0
