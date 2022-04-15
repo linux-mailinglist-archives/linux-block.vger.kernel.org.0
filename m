@@ -2,34 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17F52502371
-	for <lists+linux-block@lfdr.de>; Fri, 15 Apr 2022 07:08:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 435D6502374
+	for <lists+linux-block@lfdr.de>; Fri, 15 Apr 2022 07:08:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349385AbiDOFJX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Apr 2022 01:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35250 "EHLO
+        id S1349699AbiDOFJb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Apr 2022 01:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351881AbiDOFGY (ORCPT
+        with ESMTP id S1352183AbiDOFGk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Apr 2022 01:06:24 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7DB109E
-        for <linux-block@vger.kernel.org>; Thu, 14 Apr 2022 21:59:30 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BC99F68B05; Fri, 15 Apr 2022 06:59:27 +0200 (CEST)
-Date:   Fri, 15 Apr 2022 06:59:27 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org
-Subject: Re: [PATCH] block: don't print I/O error warning for dead disks
-Message-ID: <20220415045927.GA22669@lst.de>
-References: <20220323163815.1526998-1-hch@lst.de>
+        Fri, 15 Apr 2022 01:06:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78AB75DA77
+        for <linux-block@vger.kernel.org>; Thu, 14 Apr 2022 22:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=FwyfvshCqsOyUWe+mRot2kKKs7MrlOQVeRHh4KfZtGk=; b=bybxW/gB1JnSH36w8OK/bPbG2t
+        llA2Hd3i3vSDh27kckiO49hau3Mx4puUr2JepHRjNknygb2CA9OhAQyys7XQoL3vAsqXqbWpIMoUi
+        rgZyz43XmBqk3EeXjcio4fWoghfiGVeyiFRGrO8CN1QqqwYxF2GIxYI6Y/kxG3DV8Hw3xrOz2W7H1
+        myxge20h+7Fc7qzMAwgpEGJYfR7kD9SemgmwYwcpbNBbv5zhi9U88mYEc0wTxu4C0sy4rfiL/M6hv
+        dU2iWI9HbLgbe7PeG/e1mC9TXQnY217WCEYYGysTJW8J9OuqShGj+dITO+US78X0wyaalQ/nEJzVn
+        GpozD//w==;
+Received: from [2a02:1205:504b:4280:f5dd:42a4:896c:d877] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nfE52-008Ve3-8Y; Fri, 15 Apr 2022 05:01:12 +0000
+Date:   Fri, 15 Apr 2022 07:01:09 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Subject: [GIT PULL] nvme fixes for Linux 5.18
+Message-ID: <Ylj8FUYefzczGF92@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220323163815.1526998-1-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -38,31 +50,35 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-ping?
+The following changes since commit 3e3876d322aef82416ecc496a4d4a587e0fdf7a3:
 
-On Wed, Mar 23, 2022 at 05:38:15PM +0100, Christoph Hellwig wrote:
-> When a disk has been marked dead, don't print warnings for I/O errors
-> as they are very much expected.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  block/blk-mq.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 8e659dc5fcf37..5b6a7c9d0d992 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -794,7 +794,8 @@ bool blk_update_request(struct request *req, blk_status_t error,
->  #endif
->  
->  	if (unlikely(error && !blk_rq_is_passthrough(req) &&
-> -		     !(req->rq_flags & RQF_QUIET))) {
-> +		     !(req->rq_flags & RQF_QUIET)) &&
-> +		     !test_bit(GD_DEAD, &req->q->disk->state)) {
->  		blk_print_req_error(req, error);
->  		trace_block_rq_error(req, error, nr_bytes);
->  	}
-> -- 
-> 2.30.2
----end quoted text---
+  block: null_blk: end timed out poll request (2022-04-14 10:16:33 -0600)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/nvme.git tags/nvme-5.18-2022-04-15
+
+for you to fetch changes up to 66dd346b84d79fde20832ed691a54f4881eac20d:
+
+  nvme-pci: disable namespace identifiers for Qemu controllers (2022-04-15 06:56:17 +0200)
+
+----------------------------------------------------------------
+nvme fixes for Linux 5.18
+
+ - tone down the error logging added this merge window a bit
+   (Chaitanya Kulkarni)
+ - quirk devices with non-unique unique identifiers (me)
+
+----------------------------------------------------------------
+Chaitanya Kulkarni (1):
+      nvme: don't print verbose errors for internal passthrough requests
+
+Christoph Hellwig (3):
+      nvme: add a quirk to disable namespace identifiers
+      nvme-pci: disable namespace identifiers for the MAXIO MAP1002/1202
+      nvme-pci: disable namespace identifiers for Qemu controllers
+
+ drivers/nvme/host/core.c | 27 ++++++++++++++++++++-------
+ drivers/nvme/host/nvme.h |  5 +++++
+ drivers/nvme/host/pci.c  |  9 ++++++++-
+ 3 files changed, 33 insertions(+), 8 deletions(-)
