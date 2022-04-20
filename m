@@ -2,122 +2,135 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 483C5507DD8
-	for <lists+linux-block@lfdr.de>; Wed, 20 Apr 2022 02:57:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE12E507DDC
+	for <lists+linux-block@lfdr.de>; Wed, 20 Apr 2022 02:57:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348106AbiDTBAI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 Apr 2022 21:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43340 "EHLO
+        id S1348110AbiDTBAM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 Apr 2022 21:00:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233996AbiDTBAG (ORCPT
+        with ESMTP id S1348108AbiDTBAI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 Apr 2022 21:00:06 -0400
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F2913CEA
-        for <linux-block@vger.kernel.org>; Tue, 19 Apr 2022 17:57:22 -0700 (PDT)
+        Tue, 19 Apr 2022 21:00:08 -0400
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02EB13CEA
+        for <linux-block@vger.kernel.org>; Tue, 19 Apr 2022 17:57:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1650416241; x=1681952241;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=33nciO+pLAAW19HNxBfC5hfEpTMHr8acGfGzWB5a1GQ=;
-  b=d/6TCN+t1mWxIL0ucQfJSpUXmjB/PLVu8AlMk+GymNP6XOkm16H8E/tg
-   8qMXJYIN5n54LPEtFnR6yeMj/rL0SrFYagDWSrT33NKxFDrPra6+hdlFu
-   vufV5GYThQe2GywsDPQteug8qcGvTdUh6XhwC9S5Sbme7tRst6afBF5Z6
-   fd3Vwa7sP7KM1xVPkDaSDm1IuY9tlFf5x4hp+8ZPwntvb4MvDefiN7kTX
-   JyQkn+aXviUgK/g8jch4rokXShi0L4DUIXr9Vfj547iz7pvHwnZFhNChp
-   AnOJulVD5+981oo4aCBcUcoP24NL/s2ItmEEqD2B76pdOvd9Mqp1TtWC/
+  t=1650416244; x=1681952244;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nuvLET3FkxQ2IhEHfvY2HsBqxfN20BNRsXCgeBTTX/g=;
+  b=cVpbD6YH7G6cB7WHlLAxyQj+c04cDbsiVmjVsBXW/OjoiSgOo70bFB/x
+   XSGn/P8w55H395I/BoVvIyh1G9zQoSy1BSB6Q9kUBZjg/7HOdU5lOQSRe
+   wpDRY3isliwhLWmZ5Hvtal43xEGfEyQInhmpcl3Yp3RG5xdh0HL1s19Hj
+   Xayd3xE26Fulw1jK9NWzc9Oxm7KRQBQwSK0oELDX3p10k/VeOX1FzKpfy
+   NPZ6memS/LGrBmweDNNMVUQ/hpC774B13/d6gf63nY0yVBGtHUxUuRQfp
+   ljrYfy8Xo7GDWtPZRschrBZLEdRMymGvgHAx4y2snGjM7wjyGgTin4FlZ
    Q==;
 X-IronPort-AV: E=Sophos;i="5.90,274,1643644800"; 
-   d="scan'208";a="198310327"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2022 08:57:20 +0800
-IronPort-SDR: bVfZh1C6T2IOPXxX3EftcqDHe0PuCV80r2FV2jKINoiVefDVui0wUJAu4Z0stpK+RJTwh51Vcj
- gS1rGz3hUdyXeZdedB8UFsVb3bsy27rxh8zSsWZV0DrVgPcTsjM0HrVQYyqtgO0wQPqC/8AzNm
- dNYop7fHoj3Lcle2E4MVFsG/cpZuCZedABkLQgvR15o6mbk5h8FDl6jGrW+r2VvN+22Hqm+Y/x
- V5HoKq0o5xJYowfgEKYMOs9ATetrTFC+2Ry6o7zABh2IsMa4yu3o54vlZMp5qYWkW6faoC9Iau
- TJVvHhrHNMq8H4QQYN3oJuqZ
+   d="scan'208";a="302507267"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2022 08:57:23 +0800
+IronPort-SDR: PNkcZfHOurDGJko3a4Y2jy/MRjKt2YjVnpASFYrzOA9vK+zaB8mxOyoiYfw+UI1j4MhW9OyTLj
+ UhlIhyrxzeY4BNnZ6D+9Y6SSt1M5rgDeZ7lfppdUehjTxB58x9XeZWSZuTT8lMoGj4eL21fxR3
+ kUknLT7WKhCGl+VDxizul1zUkn/a800naFjdIuRNRtp1dPBUFkUNEBxKiJ+9ZCv/eEjhTswZVW
+ GisszcWGqD41NIAO2PPIl21aRytertV5pm+NU2Bw8zIZgvGlK5I6ELECstNjgLrmGaynjfA5Hc
+ 1xfpCa+Qfip5SNK7gQMFbNoo
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Apr 2022 17:27:40 -0700
-IronPort-SDR: Oe4uFLaxfIpgbvLE/L8Gb4NvS5ERvme0NnPX3y5ybAbXSxu8rzY3ozbXZxWPdkfDOqWbUt64H4
- E1GvTzSFGmTWV3+DZJKvqhHEcBfiNuM2xECaoFtEt/mQU0VJPib/hQZ91kIhK8weSfTucV9ne9
- Uy3q94fDuglfWdh7dfirU34S36jwFO57Z29ZVBwT+hjJ2pf6LrmsovMH1pRwMWRFhB9BY5VDyj
- Hl99yz8Cyx44Z8MCgxlrC5Nh1TKP+GwumMsw3auxOp9avFt+D2qns/52QCaP2KHamqStjnRGWw
- EWg=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Apr 2022 17:27:41 -0700
+IronPort-SDR: DiESS+jYYJ0JeYzKhs91GfD4Jh2xhVuWGahpkv3FMKycP/gsri3HqQwH8aq1uCfqvSZ1aTW9bg
+ 5mP9ymbFFI4PE4cSBKcceU6t33F4LEwGIzI/uM+OzeS1cppYuW+GJvm0T6TlfJhmjTxMedWSNI
+ IONMjhaW0Vt2Fj7YrVgdK2C6+Whm/M4COziwFTKnlqXZqS70CagPxseugezReV6HOGHBMrXcgX
+ IgiXX5/pRmSnIahiAEiXYOnkD0CAB1khuR3W4FVhbGRYNjJ+hJ5Lohw6adAWnLR9S+pnlO4qDo
+ Td4=
 WDCIronportException: Internal
 Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Apr 2022 17:57:22 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Apr 2022 17:57:23 -0700
 Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4Kjj1s3ZqVz1SVp0
-        for <linux-block@vger.kernel.org>; Tue, 19 Apr 2022 17:57:21 -0700 (PDT)
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4Kjj1t0yxQz1SHwl
+        for <linux-block@vger.kernel.org>; Tue, 19 Apr 2022 17:57:22 -0700 (PDT)
 Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
         reason="pass (just generated, assumed good)"
         header.d=opensource.wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
         opensource.wdc.com; h=content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1650416241;
-         x=1653008242; bh=33nciO+pLAAW19HNxBfC5hfEpTMHr8acGfGzWB5a1GQ=; b=
-        Yo9S5RjwCBOEBiMx9fJ/qfR7WoWb5XWnWFGRH/UOFtbHLT3fgVEfsRG4yoUG2Q0l
-        WydFbtCfy8Ig7sCp7S5/vyby3k1FryMJLoxPQatUdmTrLrFfgQu9JT5XuaT9kssi
-        XhT2sbzBXt3nSuqAhIvUhZZw2l2cCxGbvUGtsqOwngrd+t92MkxTPov6aJfpqFQ7
-        FAtNFFit1PsIxjgJtPud27WetntHnZ4tEbiUW/dmkvltod4egIc6WnDgVdk5xiD7
-        MIpuw7/ig1b/fuU4tnmq/qSDd6bKQrQZ1gLxSGxe399xJT1zZrG+u47efvI9Ceex
-        Ujq13apnq4o2sVtksee/Nw==
+        :references:in-reply-to:x-mailer:message-id:date:subject:to
+        :from; s=dkim; t=1650416241; x=1653008242; bh=nuvLET3FkxQ2IhEHfv
+        Y2HsBqxfN20BNRsXCgeBTTX/g=; b=Mi3xm1m1+XNlMT/kpVJM8REw6hKfkGZ+TS
+        kn4cvYXN9IwQKibxrEHatuid7kl4VjVHeeDqXbxmgtnAisxbrgkO8w67l0VxnAcI
+        qvlHVuQZ2+FuJ7XO1aMLM5ZyxKsJF81gOPu+Ly9x05dEnOjwpB71hN2nldKFsrMi
+        y/xjiNi9GeaSBb9Mgtzn7upPSx1BSo6pj1fkjrAFAa6hZpSzp7jHl5mGqEpO01na
+        fbTmV3JB17pDRMub/GMnUnZLKL747gnJqIh/KmtHPNentAHHSkLNVlMU2G/ac6UF
+        XW5RD4F4efH70EqLUhIQcIqXkO/4J/9xURiNzZ7wc5dykmnZ2nRw==
 X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
 Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
         by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id rXC7kG3S41Fz for <linux-block@vger.kernel.org>;
+        with ESMTP id VmSHTHYxf6Hx for <linux-block@vger.kernel.org>;
         Tue, 19 Apr 2022 17:57:21 -0700 (PDT)
 Received: from washi.fujisawa.hgst.com (washi.fujisawa.hgst.com [10.149.53.254])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4Kjj1r2W2Gz1Rvlx;
-        Tue, 19 Apr 2022 17:57:20 -0700 (PDT)
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4Kjj1s1YtCz1Rwrw;
+        Tue, 19 Apr 2022 17:57:21 -0700 (PDT)
 From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
 Cc:     Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH v2 0/4] null_blk cleanup and device naming improvements
-Date:   Wed, 20 Apr 2022 09:57:14 +0900
-Message-Id: <20220420005718.3780004-1-damien.lemoal@opensource.wdc.com>
+Subject: [PATCH v2 1/4] block: null_blk: Fix code style issues
+Date:   Wed, 20 Apr 2022 09:57:15 +0900
+Message-Id: <20220420005718.3780004-2-damien.lemoal@opensource.wdc.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220420005718.3780004-1-damien.lemoal@opensource.wdc.com>
+References: <20220420005718.3780004-1-damien.lemoal@opensource.wdc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The first 3 patches of this series are simple code cleanups.
+Fix message grammar and code style issues (brackets and indentation) in
+null_init().
 
-The last patch changes the device naming scheme for devices created
-through configfs: the configfs device directory name is used as the disk
-name. This name is also checked against potentially exiting nullb
-devices created during modprobe when the nr_device module option is not
-0.
+Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+---
+ drivers/block/null_blk/main.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-This series falls short of pre-populating configfs with directories
-corresponding to the devices created during modprobe as this is not
-easily feasible. However, the added device name check avoids mistakes by
-users about reusing configfs names already used by existing devices.
-
-Changes from v1:
-* Modified patch 3 to use the pr_fmt() macro instead of manually adding
-  null_blk prefix to messages.
-* Fixed patch 4 commit message
-
-Damien Le Moal (4):
-  block: null_blk: Fix code style issues
-  block: null_blk: Cleanup device creation and deletion
-  block: null_blk: Cleanup messages
-  block: null_blk: Improve device creation with configfs
-
- drivers/block/null_blk/main.c  | 91 +++++++++++++++++++++++++---------
- drivers/block/null_blk/zoned.c |  7 ++-
- 2 files changed, 73 insertions(+), 25 deletions(-)
-
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.=
+c
+index c441a4972064..1aa4897685f6 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -2113,19 +2113,21 @@ static int __init null_init(void)
+ 	}
+=20
+ 	if (g_queue_mode =3D=3D NULL_Q_RQ) {
+-		pr_err("legacy IO path no longer available\n");
++		pr_err("legacy IO path is no longer available\n");
+ 		return -EINVAL;
+ 	}
++
+ 	if (g_queue_mode =3D=3D NULL_Q_MQ && g_use_per_node_hctx) {
+ 		if (g_submit_queues !=3D nr_online_nodes) {
+ 			pr_warn("submit_queues param is set to %u.\n",
+-							nr_online_nodes);
++				nr_online_nodes);
+ 			g_submit_queues =3D nr_online_nodes;
+ 		}
+-	} else if (g_submit_queues > nr_cpu_ids)
++	} else if (g_submit_queues > nr_cpu_ids) {
+ 		g_submit_queues =3D nr_cpu_ids;
+-	else if (g_submit_queues <=3D 0)
++	} else if (g_submit_queues <=3D 0) {
+ 		g_submit_queues =3D 1;
++	}
+=20
+ 	if (g_queue_mode =3D=3D NULL_Q_MQ && shared_tags) {
+ 		ret =3D null_init_tag_set(NULL, &tag_set);
 --=20
 2.35.1
 
