@@ -2,100 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D531A50CA79
-	for <lists+linux-block@lfdr.de>; Sat, 23 Apr 2022 15:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF2C850CB5C
+	for <lists+linux-block@lfdr.de>; Sat, 23 Apr 2022 16:40:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235689AbiDWNSp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 23 Apr 2022 09:18:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33482 "EHLO
+        id S229456AbiDWOnU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 23 Apr 2022 10:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235717AbiDWNSn (ORCPT
+        with ESMTP id S231387AbiDWOnN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 23 Apr 2022 09:18:43 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7EE1F310F
-        for <linux-block@vger.kernel.org>; Sat, 23 Apr 2022 06:15:46 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id a15so10526720pfv.11
-        for <linux-block@vger.kernel.org>; Sat, 23 Apr 2022 06:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:in-reply-to:references:subject:message-id:date
-         :mime-version:content-transfer-encoding;
-        bh=DkpznYvxl1/xMx0A04k/2Fl0ZC/HbF/iN3ydwHQpN/4=;
-        b=4uaKF5hlFr8mNsqJ8TWB7F13SlhEEPo6NAAmtKTt7hIpuOSLzZWSskb28us+DcoQai
-         09KbaV2Jk+l5ZnE7rzVymd9zCGCRy8hf4ZQquJgFVgtYVhmnJTTi9egqygeeC6Eau+0I
-         k2CdEmIWlEgDev5uEE2Qlex6Z0WJIf2G0lkFBf3uql+/uYQ27+tlRpNSxJzb3FsIx0kR
-         lKVexeAUZv+LP6mLjN3G/Hc1to0dpN6PfwdsZ+w/dkw6VE8StSH8H+kgWrMPLs8MvIFe
-         O2soPkbclypAAE5smTL11bCHL13QTHaCSvsIKTgQh4ocExW52yAe45JL6xrsvJSjbrkY
-         LtWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=DkpznYvxl1/xMx0A04k/2Fl0ZC/HbF/iN3ydwHQpN/4=;
-        b=WaquN+SGusPljUbg4grUxOjjxAG798UYqp6tDnpquQPRIXlQaPH2N9e4DVoIj+Z3XE
-         s3WpaqJiHXB4yGSBkt42RuwZY833VFz1sK5W6D3odXJPnZRAXK0I/G2GuY7d0odGTyQ7
-         AiYc2VFrygRKWOp7n/Xs4iPDnIcuFqh1izVxMFy7pxQYroYfsfH+ZCAMH3BoNS9rWGsA
-         sJb7G0oO+TPZ92f71RQmhu7CJVfRITjN6A44AbyE1hgZGdhlHYwsAOr9tgnaConjLS7W
-         0643TKRUfOwSZ1kkbNW53FZcgbSRPINQOSvhEkhD+bM1XvXRRh8hFzY8gNcr+Grwrhqg
-         OyVg==
-X-Gm-Message-State: AOAM531J6uxyS1Tpbt5NxzloWFlclmKZ3gvm/oUmtSMOjmGZUp4+IgUF
-        Kkrr0M81SeIaxI9/36gxsnEcZw==
-X-Google-Smtp-Source: ABdhPJzi//fAeVhht0V7uQhZj5Kv/AcBUYnzTjirTu0TP+mQl1OLLisyNtf8gYG/7eAbKd4x7ErVrQ==
-X-Received: by 2002:a05:6a00:b52:b0:508:31e1:7d35 with SMTP id p18-20020a056a000b5200b0050831e17d35mr10083737pfo.33.1650719745503;
-        Sat, 23 Apr 2022 06:15:45 -0700 (PDT)
-Received: from [127.0.1.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id t66-20020a628145000000b0050ca37e60eesm5935627pfd.57.2022.04.23.06.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Apr 2022 06:15:45 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     ndesaulniers@google.com, michalorzel.eng@gmail.com,
-        trix@redhat.com, nathan@kernel.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-In-Reply-To: <20220423113811.13335-1-michalorzel.eng@gmail.com>
-References: <20220423113811.13335-1-michalorzel.eng@gmail.com>
-Subject: Re: [PATCH RESEND v2 1/5] block/badblocks: Remove redundant assignments
-Message-Id: <165071974452.502130.12676791188164630002.b4-ty@kernel.dk>
-Date:   Sat, 23 Apr 2022 07:15:44 -0600
+        Sat, 23 Apr 2022 10:43:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 060762EC
+        for <linux-block@vger.kernel.org>; Sat, 23 Apr 2022 07:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1650724813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IkzhhVnkUxYjT/7gR1JFnmPpfNe00fJimbaY0ZI0gSg=;
+        b=D62wGlUUUwJgQbz7xcGMElHqxUOIEiEE9l0meG1zCXv0buuhYgKqF3bx0ub6jcxAV9nMfJ
+        szbyz7332PzbUT9M/vBmToZJ39Aq32yD3BIItd4lo7zBzJnL0jSlmb3zkvr3pHe2WIeTeG
+        tFwVMvIjbp1zpopeoEZ+H1J0In6hU2M=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-331-iCPWoP0oMsSqycxLPCWBAg-1; Sat, 23 Apr 2022 10:40:07 -0400
+X-MC-Unique: iCPWoP0oMsSqycxLPCWBAg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E8C941C04B48;
+        Sat, 23 Apr 2022 14:40:05 +0000 (UTC)
+Received: from localhost (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DA6ED5739A2;
+        Sat, 23 Apr 2022 14:40:04 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V2 0/2] block: fix "Directory XXXXX with parent 'block' already present!"
+Date:   Sat, 23 Apr 2022 22:39:50 +0800
+Message-Id: <20220423143952.3162999-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, 23 Apr 2022 13:38:07 +0200, Michal Orzel wrote:
-> Get rid of redundant assignments to a variable sectors from functions
-> badblocks_check and badblocks_clear. This variable, that is a function
-> parameter, is being assigned a value that is never read until the end of
-> function.
-> 
-> Reported by clang-tidy [deadcode.DeadStores]
-> 
-> [...]
+Hello,
 
-Applied, thanks!
+The 1st patch fixes declaration of debugfs_rename for avoiding warning
+caused by the 2nd patch.
 
-[1/5] block/badblocks: Remove redundant assignments
-      commit: 3de2e5f28cb133f1d9c1b2403079722d0e7b671e
-[2/5] block/blk-map: Remove redundant assignment
-      commit: 7ab89db979017255c2163880de5c63d8c9726aef
-[3/5] block/partitions/acorn: Remove redundant assignments
-      commit: 834726828b47c08e84df02f975e30c5c65bf316b
-[4/5] block/partitions/atari: Remove redundant assignment
-      commit: 87420fa94f6cdd2ae8aa3e1d8602bfa549794fac
-[5/5] block/partitions/ldm: Remove redundant assignments
-      commit: e233fe1aa02815f38588a5a965a197bbcabfb125
+The 2nd patch fixes warning of "Directory XXXXX with parent 'block'
+already present!"
 
-Best regards,
+Ming Lei (2):
+  debugfs: fix declaration of debugfs_rename
+  block: fix "Directory XXXXX with parent 'block' already present!"
+
+ block/blk-core.c        | 4 ++++
+ block/blk-sysfs.c       | 4 ++--
+ block/genhd.c           | 8 ++++++++
+ include/linux/debugfs.h | 2 +-
+ 4 files changed, 15 insertions(+), 3 deletions(-)
+
 -- 
-Jens Axboe
-
+2.31.1
 
