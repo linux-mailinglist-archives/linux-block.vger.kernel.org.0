@@ -2,142 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0317450C9A5
-	for <lists+linux-block@lfdr.de>; Sat, 23 Apr 2022 13:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D531A50CA79
+	for <lists+linux-block@lfdr.de>; Sat, 23 Apr 2022 15:15:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235274AbiDWLlj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 23 Apr 2022 07:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58584 "EHLO
+        id S235689AbiDWNSp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 23 Apr 2022 09:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235270AbiDWLli (ORCPT
+        with ESMTP id S235717AbiDWNSn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 23 Apr 2022 07:41:38 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3821A1BBFAF;
-        Sat, 23 Apr 2022 04:38:42 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id q185so3304607ljb.5;
-        Sat, 23 Apr 2022 04:38:42 -0700 (PDT)
+        Sat, 23 Apr 2022 09:18:43 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7EE1F310F
+        for <linux-block@vger.kernel.org>; Sat, 23 Apr 2022 06:15:46 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id a15so10526720pfv.11
+        for <linux-block@vger.kernel.org>; Sat, 23 Apr 2022 06:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:in-reply-to:references:subject:message-id:date
          :mime-version:content-transfer-encoding;
-        bh=QY0mU5IQPj8GUMEzISz7+Bwc6i+ATuzEN8MJe22534Q=;
-        b=OJaPQBzpJJf272sB2uLtTOPemnNlOXU6YeasEZvihIG1rPvnz3sH+b9StAe+NSxYEC
-         0sx3HSg6Rr5+DFTPpqe6oc5cCMZNCQTrFWRhZV9tlBXXcmcA16V0c5Z6V5fDYsKk6b55
-         zhXYFYUJnBsiIVEpjK0tChNiDy13HXcsbJm81ffByrGzYxTQIlBzSYWVbxhvhlkclwtD
-         u+QsazlgFIaGx7RhWNe2Do9yj5+zoQbs129/65wkiwkXqQMX+QTXFZ4fiOoRUuPr6uPt
-         L+1c38G8j5vo3MpRN7JF+8XW/kjGwysK3y9puLcJqAH2+mDrVoMQsPzuGpSiuQJ0m5tm
-         68eA==
+        bh=DkpznYvxl1/xMx0A04k/2Fl0ZC/HbF/iN3ydwHQpN/4=;
+        b=4uaKF5hlFr8mNsqJ8TWB7F13SlhEEPo6NAAmtKTt7hIpuOSLzZWSskb28us+DcoQai
+         09KbaV2Jk+l5ZnE7rzVymd9zCGCRy8hf4ZQquJgFVgtYVhmnJTTi9egqygeeC6Eau+0I
+         k2CdEmIWlEgDev5uEE2Qlex6Z0WJIf2G0lkFBf3uql+/uYQ27+tlRpNSxJzb3FsIx0kR
+         lKVexeAUZv+LP6mLjN3G/Hc1to0dpN6PfwdsZ+w/dkw6VE8StSH8H+kgWrMPLs8MvIFe
+         O2soPkbclypAAE5smTL11bCHL13QTHaCSvsIKTgQh4ocExW52yAe45JL6xrsvJSjbrkY
+         LtWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QY0mU5IQPj8GUMEzISz7+Bwc6i+ATuzEN8MJe22534Q=;
-        b=c60xljU3NGcwQHE3Wmp/VDMwNEtGnJdHEe5Kd3xQcPu8Iqtx9sgFcNnK448nTP5k4s
-         JxXYYDYm4wZCu6R5g284g6UH628IYII1g8D7lThQBvbYNUBzOyK161LD/d2SRZ9KTL+C
-         GgMXIn+neGGxXzT9HhDUgfZPgzW24VUmpnwjm+IWLvMGyWn38PFwXrGCwx2zGnirYwsn
-         Ay5c7m0jV/U0eYHBVzxhb+URP3A9JYYBmtNY0BU+qlIczJxkn31O0rwTMTdBhcJBVRYX
-         bBO+B5Er0xXHTxkTCjIJPShoE2zQnxDNPs8/2xDsj8ugEqUXkljaOMAfR1gB/o0EHpZb
-         JgtQ==
-X-Gm-Message-State: AOAM532dJo8h+IdT35h37CEQymx6WoWvuWym2VkhpEB8tLeYZGNq+95P
-        L0suLR0wh2fKs8q9+acw0GA=
-X-Google-Smtp-Source: ABdhPJzkPXL24FJCVC+QG+e6xitqgwC/AInXdEr713qRfRkeELiYX7ajov9hzfkCPLUx/YjM2pjsMw==
-X-Received: by 2002:a05:651c:210f:b0:24e:ec3d:6b8c with SMTP id a15-20020a05651c210f00b0024eec3d6b8cmr5443531ljq.321.1650713920541;
-        Sat, 23 Apr 2022 04:38:40 -0700 (PDT)
-Received: from morzel-asus.lan (static-91-225-135-18.devs.futuro.pl. [91.225.135.18])
-        by smtp.gmail.com with ESMTPSA id g17-20020a2e9cd1000000b0024db538c2absm526411ljj.7.2022.04.23.04.38.39
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
+         :message-id:date:mime-version:content-transfer-encoding;
+        bh=DkpznYvxl1/xMx0A04k/2Fl0ZC/HbF/iN3ydwHQpN/4=;
+        b=WaquN+SGusPljUbg4grUxOjjxAG798UYqp6tDnpquQPRIXlQaPH2N9e4DVoIj+Z3XE
+         s3WpaqJiHXB4yGSBkt42RuwZY833VFz1sK5W6D3odXJPnZRAXK0I/G2GuY7d0odGTyQ7
+         AiYc2VFrygRKWOp7n/Xs4iPDnIcuFqh1izVxMFy7pxQYroYfsfH+ZCAMH3BoNS9rWGsA
+         sJb7G0oO+TPZ92f71RQmhu7CJVfRITjN6A44AbyE1hgZGdhlHYwsAOr9tgnaConjLS7W
+         0643TKRUfOwSZ1kkbNW53FZcgbSRPINQOSvhEkhD+bM1XvXRRh8hFzY8gNcr+Grwrhqg
+         OyVg==
+X-Gm-Message-State: AOAM531J6uxyS1Tpbt5NxzloWFlclmKZ3gvm/oUmtSMOjmGZUp4+IgUF
+        Kkrr0M81SeIaxI9/36gxsnEcZw==
+X-Google-Smtp-Source: ABdhPJzi//fAeVhht0V7uQhZj5Kv/AcBUYnzTjirTu0TP+mQl1OLLisyNtf8gYG/7eAbKd4x7ErVrQ==
+X-Received: by 2002:a05:6a00:b52:b0:508:31e1:7d35 with SMTP id p18-20020a056a000b5200b0050831e17d35mr10083737pfo.33.1650719745503;
+        Sat, 23 Apr 2022 06:15:45 -0700 (PDT)
+Received: from [127.0.1.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id t66-20020a628145000000b0050ca37e60eesm5935627pfd.57.2022.04.23.06.15.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Apr 2022 04:38:40 -0700 (PDT)
-From:   Michal Orzel <michalorzel.eng@gmail.com>
-To:     "Richard Russon (FlatCap)" <ldm@flatcap.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Cc:     Michal Orzel <michalorzel.eng@gmail.com>,
-        linux-ntfs-dev@lists.sourceforge.net, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: [PATCH RESEND v2 5/5] block/partitions/ldm: Remove redundant assignments
-Date:   Sat, 23 Apr 2022 13:38:11 +0200
-Message-Id: <20220423113811.13335-5-michalorzel.eng@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 23 Apr 2022 06:15:45 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     ndesaulniers@google.com, michalorzel.eng@gmail.com,
+        trix@redhat.com, nathan@kernel.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
 In-Reply-To: <20220423113811.13335-1-michalorzel.eng@gmail.com>
 References: <20220423113811.13335-1-michalorzel.eng@gmail.com>
+Subject: Re: [PATCH RESEND v2 1/5] block/badblocks: Remove redundant assignments
+Message-Id: <165071974452.502130.12676791188164630002.b4-ty@kernel.dk>
+Date:   Sat, 23 Apr 2022 07:15:44 -0600
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Get rid of the following redundant assignments:
-- to a variable r_cols from function ldm_parse_cmp3
-- to variables r_id1 and r_id2 from functions ldm_parse_dgr3 and ldm_parse_dgr4
-- to a variable r_index from function ldm_parse_prt3
-that end up in values not being read until the end of function.
+On Sat, 23 Apr 2022 13:38:07 +0200, Michal Orzel wrote:
+> Get rid of redundant assignments to a variable sectors from functions
+> badblocks_check and badblocks_clear. This variable, that is a function
+> parameter, is being assigned a value that is never read until the end of
+> function.
+> 
+> Reported by clang-tidy [deadcode.DeadStores]
+> 
+> [...]
 
-Reported by clang-tidy [deadcode.DeadStores]
+Applied, thanks!
 
-Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
----
- block/partitions/ldm.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+[1/5] block/badblocks: Remove redundant assignments
+      commit: 3de2e5f28cb133f1d9c1b2403079722d0e7b671e
+[2/5] block/blk-map: Remove redundant assignment
+      commit: 7ab89db979017255c2163880de5c63d8c9726aef
+[3/5] block/partitions/acorn: Remove redundant assignments
+      commit: 834726828b47c08e84df02f975e30c5c65bf316b
+[4/5] block/partitions/atari: Remove redundant assignment
+      commit: 87420fa94f6cdd2ae8aa3e1d8602bfa549794fac
+[5/5] block/partitions/ldm: Remove redundant assignments
+      commit: e233fe1aa02815f38588a5a965a197bbcabfb125
 
-diff --git a/block/partitions/ldm.c b/block/partitions/ldm.c
-index 27f6c7d9c776..38e58960ae03 100644
---- a/block/partitions/ldm.c
-+++ b/block/partitions/ldm.c
-@@ -736,7 +736,6 @@ static bool ldm_parse_cmp3 (const u8 *buffer, int buflen, struct vblk *vb)
- 		len = r_cols;
- 	} else {
- 		r_stripe = 0;
--		r_cols   = 0;
- 		len = r_parent;
- 	}
- 	if (len < 0)
-@@ -783,11 +782,8 @@ static int ldm_parse_dgr3 (const u8 *buffer, int buflen, struct vblk *vb)
- 		r_id1 = ldm_relative (buffer, buflen, 0x24, r_diskid);
- 		r_id2 = ldm_relative (buffer, buflen, 0x24, r_id1);
- 		len = r_id2;
--	} else {
--		r_id1 = 0;
--		r_id2 = 0;
-+	} else
- 		len = r_diskid;
--	}
- 	if (len < 0)
- 		return false;
- 
-@@ -826,11 +822,8 @@ static bool ldm_parse_dgr4 (const u8 *buffer, int buflen, struct vblk *vb)
- 		r_id1 = ldm_relative (buffer, buflen, 0x44, r_name);
- 		r_id2 = ldm_relative (buffer, buflen, 0x44, r_id1);
- 		len = r_id2;
--	} else {
--		r_id1 = 0;
--		r_id2 = 0;
-+	} else
- 		len = r_name;
--	}
- 	if (len < 0)
- 		return false;
- 
-@@ -963,10 +956,8 @@ static bool ldm_parse_prt3(const u8 *buffer, int buflen, struct vblk *vb)
- 			return false;
- 		}
- 		len = r_index;
--	} else {
--		r_index = 0;
-+	} else
- 		len = r_diskid;
--	}
- 	if (len < 0) {
- 		ldm_error("len %d < 0", len);
- 		return false;
+Best regards,
 -- 
-2.25.1
+Jens Axboe
+
 
