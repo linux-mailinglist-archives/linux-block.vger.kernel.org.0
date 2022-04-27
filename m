@@ -2,158 +2,287 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12E8E5115BF
-	for <lists+linux-block@lfdr.de>; Wed, 27 Apr 2022 13:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EDAA5114FE
+	for <lists+linux-block@lfdr.de>; Wed, 27 Apr 2022 12:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232346AbiD0LDN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Apr 2022 07:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38266 "EHLO
+        id S229845AbiD0Kpv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Apr 2022 06:45:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232265AbiD0LC6 (ORCPT
+        with ESMTP id S229805AbiD0Kpu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Apr 2022 07:02:58 -0400
-Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F94E3FFE55;
-        Wed, 27 Apr 2022 03:45:00 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mail.sberdevices.ru (Postfix) with ESMTP id 0154A5FD14;
-        Wed, 27 Apr 2022 13:03:58 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1651053838;
-        bh=xDaCZThPN1hiRJLuo77xGJjD3YT8oMl+cH5JOqy6XdM=;
-        h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-        b=hUXihnSfgpZaOTLVqBNsn+GqjMS/ZBmcNCl2C+HSuMNp3hLMHp4tk4UMK9Y+UqwfP
-         fUglnqUJtzdRFkpwUoxAPfbrfFWAEyK378LLJyorkp0T/13zFbNlEStIlromddme33
-         M/7BORyYibDNBlD77Pih5ENzFTJO1Hbe5WLtBHxWy3SpctWup2sVTt9UJ/9txONHcd
-         u09Z5BaEQeHVGWFXZKSNLnjD+oFaSrHtQZW/k20zVQvzM+Z3xMqJ1y0kP9vVMAiJh5
-         aN+E9CqTPKIbbHF8xtPTNzvXeUF9Rmq2yPVm96xARCu3gw1s36U7iBCCsk3pcm4xce
-         piXWKvcft4Yig==
-Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
-        by mail.sberdevices.ru (Postfix) with ESMTP;
-        Wed, 27 Apr 2022 13:03:57 +0300 (MSK)
-From:   Alexey Romanov <avromanov@sberdevices.ru>
-To:     <minchan@kernel.org>, <ngupta@vflare.org>,
-        <senozhatsky@chromium.org>, <linux-block@vger.kernel.org>
-CC:     <axboe@chromium.org>, <kernel@sberdevices.ru>,
-        <linux-kernel@vger.kernel.org>, <mnitenko@gmail.com>,
-        Alexey Romanov <avromanov@sberdevices.ru>,
-        Dmitry Rokosov <ddrokosov@sberdevices.ru>
-Subject: [PATCH v2] zram: remove double compression logic
-Date:   Wed, 27 Apr 2022 13:03:45 +0300
-Message-ID: <20220427100345.29461-1-avromanov@sberdevices.ru>
-X-Mailer: git-send-email 2.33.0
+        Wed, 27 Apr 2022 06:45:50 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A499284D47;
+        Wed, 27 Apr 2022 03:29:18 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 63E961F388;
+        Wed, 27 Apr 2022 10:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1651055356; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rJ68u8jd1pGMMpvwjEOkdhZXSNG8xLLCdO1Cn+Xq+gA=;
+        b=gDV+xrS2GbcllQPvhcHYRsIZ5JmMF2CTqkJH2hZzzFtDP0TXmtJZrpUuuojh3t96ebXcco
+        MAc0BQ67VewzXUn+zMa2QyCdDcBvaXF2/Fq9ddaIFETQCt9fte7B7E4o+krYi72nEXZLYM
+        2ZEuZ2TIjVXu6V9ocZWj7LvaM3Bftfc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1651055356;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rJ68u8jd1pGMMpvwjEOkdhZXSNG8xLLCdO1Cn+Xq+gA=;
+        b=EkM4US2Ur6JYETOSv0kVXMTGm4wfX9NWB6vWzYaHSmzhLafSzMfv1PShz4hn4/DwHAF+XD
+        EYzGw+r4D0s0dBCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 193711323E;
+        Wed, 27 Apr 2022 10:29:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 24OHBfwaaWJ/AQAAMHmgww
+        (envelope-from <hare@suse.de>); Wed, 27 Apr 2022 10:29:16 +0000
+Message-ID: <2082148f-890f-e5f4-c304-b99212aa377e@suse.de>
+Date:   Wed, 27 Apr 2022 12:29:15 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Content-Language: en-US
+To:     Nitesh Shetty <nj.shetty@samsung.com>
+Cc:     chaitanyak@nvidia.com, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org, dm-devel@redhat.com,
+        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        axboe@kernel.dk, msnitzer@redhat.com, bvanassche@acm.org,
+        martin.petersen@oracle.com, kbusch@kernel.org, hch@lst.de,
+        Frederick.Knight@netapp.com, osandov@fb.com,
+        lsf-pc@lists.linux-foundation.org, djwong@kernel.org,
+        josef@toxicpanda.com, clm@fb.com, dsterba@suse.com, tytso@mit.edu,
+        jack@suse.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
+        Arnav Dawn <arnav.dawn@samsung.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        James Smart <james.smart@broadcom.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org
+References: <20220426101241.30100-1-nj.shetty@samsung.com>
+ <CGME20220426101921epcas5p341707619b5e836490284a42c92762083@epcas5p3.samsung.com>
+ <20220426101241.30100-3-nj.shetty@samsung.com>
+From:   Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v4 02/10] block: Add copy offload support infrastructure
+In-Reply-To: <20220426101241.30100-3-nj.shetty@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.16.1.6]
-X-ClientProxiedBy: S-MS-EXCH02.sberdevices.ru (172.16.1.5) To
- S-MS-EXCH01.sberdevices.ru (172.16.1.4)
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/04/27 08:28:00 #19366970
-X-KSMG-AntiVirus-Status: Clean, skipped
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The 2nd trial allocation under per-cpu presumption has been
-used to prevent regression of allocation failure. However, it
-makes trouble for maintenance without significant benefit.
-The slowpath branch is executed extremely rarely: getting
-there is problematic. Therefore, we delete this branch.
+On 4/26/22 12:12, Nitesh Shetty wrote:
+> Introduce blkdev_issue_copy which supports source and destination bdevs,
+> and an array of (source, destination and copy length) tuples.
+> Introduce REQ_COPY copy offload operation flag. Create a read-write
+> bio pair with a token as payload and submitted to the device in order.
+> Read request populates token with source specific information which
+> is then passed with write request.
+> This design is courtesy Mikulas Patocka's token based copy
+> 
+> Larger copy will be divided, based on max_copy_sectors,
+> max_copy_range_sector limits.
+> 
+> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+> Signed-off-by: Arnav Dawn <arnav.dawn@samsung.com>
+> ---
+>   block/blk-lib.c           | 232 ++++++++++++++++++++++++++++++++++++++
+>   block/blk.h               |   2 +
+>   include/linux/blk_types.h |  21 ++++
+>   include/linux/blkdev.h    |   2 +
+>   include/uapi/linux/fs.h   |  14 +++
+>   5 files changed, 271 insertions(+)
+> 
+> diff --git a/block/blk-lib.c b/block/blk-lib.c
+> index 09b7e1200c0f..ba9da2d2f429 100644
+> --- a/block/blk-lib.c
+> +++ b/block/blk-lib.c
+> @@ -117,6 +117,238 @@ int blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+>   }
+>   EXPORT_SYMBOL(blkdev_issue_discard);
+>   
+> +/*
+> + * Wait on and process all in-flight BIOs.  This must only be called once
+> + * all bios have been issued so that the refcount can only decrease.
+> + * This just waits for all bios to make it through bio_copy_end_io. IO
+> + * errors are propagated through cio->io_error.
+> + */
+> +static int cio_await_completion(struct cio *cio)
+> +{
+> +	int ret = 0;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&cio->lock, flags);
+> +	if (cio->refcount) {
+> +		cio->waiter = current;
+> +		__set_current_state(TASK_UNINTERRUPTIBLE);
+> +		spin_unlock_irqrestore(&cio->lock, flags);
+> +		blk_io_schedule();
+> +		/* wake up sets us TASK_RUNNING */
+> +		spin_lock_irqsave(&cio->lock, flags);
+> +		cio->waiter = NULL;
+> +		ret = cio->io_err;
+> +	}
+> +	spin_unlock_irqrestore(&cio->lock, flags);
+> +	kvfree(cio);
+> +
+> +	return ret;
+> +}
+> +
+> +static void bio_copy_end_io(struct bio *bio)
+> +{
+> +	struct copy_ctx *ctx = bio->bi_private;
+> +	struct cio *cio = ctx->cio;
+> +	sector_t clen;
+> +	int ri = ctx->range_idx;
+> +	unsigned long flags;
+> +	bool wake = false;
+> +
+> +	if (bio->bi_status) {
+> +		cio->io_err = bio->bi_status;
+> +		clen = (bio->bi_iter.bi_sector << SECTOR_SHIFT) - ctx->start_sec;
+> +		cio->rlist[ri].comp_len = min_t(sector_t, clen, cio->rlist[ri].comp_len);
+> +	}
+> +	__free_page(bio->bi_io_vec[0].bv_page);
+> +	kfree(ctx);
+> +	bio_put(bio);
+> +
+> +	spin_lock_irqsave(&cio->lock, flags);
+> +	if (((--cio->refcount) <= 0) && cio->waiter)
+> +		wake = true;
+> +	spin_unlock_irqrestore(&cio->lock, flags);
+> +	if (wake)
+> +		wake_up_process(cio->waiter);
+> +}
+> +
+> +/*
+> + * blk_copy_offload	- Use device's native copy offload feature
+> + * Go through user provide payload, prepare new payload based on device's copy offload limits.
+> + */
+> +int blk_copy_offload(struct block_device *src_bdev, int nr_srcs,
+> +		struct range_entry *rlist, struct block_device *dst_bdev, gfp_t gfp_mask)
+> +{
+> +	struct request_queue *sq = bdev_get_queue(src_bdev);
+> +	struct request_queue *dq = bdev_get_queue(dst_bdev);
+> +	struct bio *read_bio, *write_bio;
+> +	struct copy_ctx *ctx;
+> +	struct cio *cio;
+> +	struct page *token;
+> +	sector_t src_blk, copy_len, dst_blk;
+> +	sector_t remaining, max_copy_len = LONG_MAX;
+> +	unsigned long flags;
+> +	int ri = 0, ret = 0;
+> +
+> +	cio = kzalloc(sizeof(struct cio), GFP_KERNEL);
+> +	if (!cio)
+> +		return -ENOMEM;
+> +	cio->rlist = rlist;
+> +	spin_lock_init(&cio->lock);
+> +
+> +	max_copy_len = min_t(sector_t, sq->limits.max_copy_sectors, dq->limits.max_copy_sectors);
+> +	max_copy_len = min3(max_copy_len, (sector_t)sq->limits.max_copy_range_sectors,
+> +			(sector_t)dq->limits.max_copy_range_sectors) << SECTOR_SHIFT;
+> +
+> +	for (ri = 0; ri < nr_srcs; ri++) {
+> +		cio->rlist[ri].comp_len = rlist[ri].len;
+> +		src_blk = rlist[ri].src;
+> +		dst_blk = rlist[ri].dst;
+> +		for (remaining = rlist[ri].len; remaining > 0; remaining -= copy_len) {
+> +			copy_len = min(remaining, max_copy_len);
+> +
+> +			token = alloc_page(gfp_mask);
+> +			if (unlikely(!token)) {
+> +				ret = -ENOMEM;
+> +				goto err_token;
+> +			}
+> +
+> +			ctx = kzalloc(sizeof(struct copy_ctx), gfp_mask);
+> +			if (!ctx) {
+> +				ret = -ENOMEM;
+> +				goto err_ctx;
+> +			}
+> +			ctx->cio = cio;
+> +			ctx->range_idx = ri;
+> +			ctx->start_sec = dst_blk;
+> +
+> +			read_bio = bio_alloc(src_bdev, 1, REQ_OP_READ | REQ_COPY | REQ_NOMERGE,
+> +					gfp_mask);
+> +			if (!read_bio) {
+> +				ret = -ENOMEM;
+> +				goto err_read_bio;
+> +			}
+> +			read_bio->bi_iter.bi_sector = src_blk >> SECTOR_SHIFT;
+> +			__bio_add_page(read_bio, token, PAGE_SIZE, 0);
+> +			/*__bio_add_page increases bi_size by len, so overwrite it with copy len*/
+> +			read_bio->bi_iter.bi_size = copy_len;
+> +			ret = submit_bio_wait(read_bio);
+> +			bio_put(read_bio);
+> +			if (ret)
+> +				goto err_read_bio;
+> +
+> +			write_bio = bio_alloc(dst_bdev, 1, REQ_OP_WRITE | REQ_COPY | REQ_NOMERGE,
+> +					gfp_mask);
+> +			if (!write_bio) {
+> +				ret = -ENOMEM;
+> +				goto err_read_bio;
+> +			}
+> +			write_bio->bi_iter.bi_sector = dst_blk >> SECTOR_SHIFT;
+> +			__bio_add_page(write_bio, token, PAGE_SIZE, 0);
+> +			/*__bio_add_page increases bi_size by len, so overwrite it with copy len*/
+> +			write_bio->bi_iter.bi_size = copy_len;
+> +			write_bio->bi_end_io = bio_copy_end_io;
+> +			write_bio->bi_private = ctx;
+> +
+> +			spin_lock_irqsave(&cio->lock, flags);
+> +			++cio->refcount;
+> +			spin_unlock_irqrestore(&cio->lock, flags);
+> +
+> +			submit_bio(write_bio);
+> +			src_blk += copy_len;
+> +			dst_blk += copy_len;
+> +		}
+> +	}
+> +
 
-Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
-Signed-off-by: Dmitry Rokosov <ddrokosov@sberdevices.ru>
----
- drivers/block/zram/zram_drv.c | 38 +++++++++--------------------------
- drivers/block/zram/zram_drv.h |  1 -
- 2 files changed, 9 insertions(+), 30 deletions(-)
+Hmm. I'm not sure if I like the copy loop.
+What I definitely would do is to allocate the write bio before reading 
+data; after all, if we can't allocate the write bio reading is pretty 
+much pointless.
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index cb253d80d72b..4be6caf43b1d 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1153,9 +1153,8 @@ static ssize_t debug_stat_show(struct device *dev,
- 
- 	down_read(&zram->init_lock);
- 	ret = scnprintf(buf, PAGE_SIZE,
--			"version: %d\n%8llu %8llu\n",
-+			"version: %d\n%8llu\n",
- 			version,
--			(u64)atomic64_read(&zram->stats.writestall),
- 			(u64)atomic64_read(&zram->stats.miss_free));
- 	up_read(&zram->init_lock);
- 
-@@ -1373,7 +1372,6 @@ static int __zram_bvec_write(struct zram *zram, struct bio_vec *bvec,
- 	}
- 	kunmap_atomic(mem);
- 
--compress_again:
- 	zstrm = zcomp_stream_get(zram->comp);
- 	src = kmap_atomic(page);
- 	ret = zcomp_compress(zstrm, src, &comp_len);
-@@ -1388,33 +1386,15 @@ static int __zram_bvec_write(struct zram *zram, struct bio_vec *bvec,
- 
- 	if (comp_len >= huge_class_size)
- 		comp_len = PAGE_SIZE;
--	/*
--	 * handle allocation has 2 paths:
--	 * a) fast path is executed with preemption disabled (for
--	 *  per-cpu streams) and has __GFP_DIRECT_RECLAIM bit clear,
--	 *  since we can't sleep;
--	 * b) slow path enables preemption and attempts to allocate
--	 *  the page with __GFP_DIRECT_RECLAIM bit set. we have to
--	 *  put per-cpu compression stream and, thus, to re-do
--	 *  the compression once handle is allocated.
--	 *
--	 * if we have a 'non-null' handle here then we are coming
--	 * from the slow path and handle has already been allocated.
--	 */
--	if (!handle)
--		handle = zs_malloc(zram->mem_pool, comp_len,
--				__GFP_KSWAPD_RECLAIM |
--				__GFP_NOWARN |
--				__GFP_HIGHMEM |
--				__GFP_MOVABLE);
--	if (!handle) {
-+
-+	handle = zs_malloc(zram->mem_pool, comp_len,
-+			__GFP_KSWAPD_RECLAIM |
-+			__GFP_NOWARN |
-+			__GFP_HIGHMEM |
-+			__GFP_MOVABLE);
-+
-+	if (unlikely(!handle)) {
- 		zcomp_stream_put(zram->comp);
--		atomic64_inc(&zram->stats.writestall);
--		handle = zs_malloc(zram->mem_pool, comp_len,
--				GFP_NOIO | __GFP_HIGHMEM |
--				__GFP_MOVABLE);
--		if (handle)
--			goto compress_again;
- 		return -ENOMEM;
- 	}
- 
-diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
-index 80c3b43b4828..158c91e54850 100644
---- a/drivers/block/zram/zram_drv.h
-+++ b/drivers/block/zram/zram_drv.h
-@@ -81,7 +81,6 @@ struct zram_stats {
- 	atomic64_t huge_pages_since;	/* no. of huge pages since zram set up */
- 	atomic64_t pages_stored;	/* no. of pages currently stored */
- 	atomic_long_t max_used_pages;	/* no. of maximum pages stored */
--	atomic64_t writestall;		/* no. of write slow paths */
- 	atomic64_t miss_free;		/* no. of missed free */
- #ifdef	CONFIG_ZRAM_WRITEBACK
- 	atomic64_t bd_count;		/* no. of pages in backing device */
+But the real issue I have with this is that it's doing synchronous 
+reads, thereby limiting the performance.
+
+Can't you submit the write bio from the end_io function of the read bio?
+That would disentangle things, and we should be getting a better 
+performance.
+
+Cheers,
+
+Hannes
 -- 
-2.30.1
-
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
