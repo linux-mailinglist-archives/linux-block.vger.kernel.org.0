@@ -2,95 +2,158 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E25251150C
-	for <lists+linux-block@lfdr.de>; Wed, 27 Apr 2022 12:47:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12E8E5115BF
+	for <lists+linux-block@lfdr.de>; Wed, 27 Apr 2022 13:33:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229537AbiD0Kl6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Apr 2022 06:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39466 "EHLO
+        id S232346AbiD0LDN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Apr 2022 07:03:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiD0Kl6 (ORCPT
+        with ESMTP id S232265AbiD0LC6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Apr 2022 06:41:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0469136EE13
-        for <linux-block@vger.kernel.org>; Wed, 27 Apr 2022 03:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651054801;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OpIunjeIYPh5Rz1kLsEA2FMELtrbur+qP4oN0kQVy8o=;
-        b=Wb6na531/Xto0pwyqFuDm1g9tntaiuksKLJnl224TpJCAASzvX3hjnXx8h6Py3My+CDOS1
-        1pyuaszxZ3vy9t9vK83DkUg5tgJoITvL0rvGHGx8drGzb5tB62Vbfw1Cp6heJmf4mwmu32
-        44yPKhJF9gJzRMyp6Kl8zTcA5Z94zmw=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-54-vpCXn147NkCXlJjdA95btQ-1; Wed, 27 Apr 2022 05:57:30 -0400
-X-MC-Unique: vpCXn147NkCXlJjdA95btQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EB63B38035A0;
-        Wed, 27 Apr 2022 09:57:29 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D51FC2812C;
-        Wed, 27 Apr 2022 09:57:29 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 23R9vTpg010661;
-        Wed, 27 Apr 2022 05:57:29 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 23R9vTw8010657;
-        Wed, 27 Apr 2022 05:57:29 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Wed, 27 Apr 2022 05:57:29 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     "Jayaramappa, Srilakshmi" <sjayaram@akamai.com>
-cc:     "yukuai (C)" <yukuai3@huawei.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "Hunt, Joshua" <johunt@akamai.com>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>
-Subject: Re: Precise disk statistics
-In-Reply-To: <1651017390610.22782@akamai.com>
-Message-ID: <alpine.LRH.2.02.2204270549490.10147@file01.intranet.prod.int.rdu2.redhat.com>
-References: <1650661324247.40468@akamai.com> <1650915337169.63486@akamai.com>,<87031651-ba75-2b6f-8a5e-b0b4ef41c65f@huawei.com> <1651017390610.22782@akamai.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Wed, 27 Apr 2022 07:02:58 -0400
+Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F94E3FFE55;
+        Wed, 27 Apr 2022 03:45:00 -0700 (PDT)
+Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
+        by mail.sberdevices.ru (Postfix) with ESMTP id 0154A5FD14;
+        Wed, 27 Apr 2022 13:03:58 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+        s=mail; t=1651053838;
+        bh=xDaCZThPN1hiRJLuo77xGJjD3YT8oMl+cH5JOqy6XdM=;
+        h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+        b=hUXihnSfgpZaOTLVqBNsn+GqjMS/ZBmcNCl2C+HSuMNp3hLMHp4tk4UMK9Y+UqwfP
+         fUglnqUJtzdRFkpwUoxAPfbrfFWAEyK378LLJyorkp0T/13zFbNlEStIlromddme33
+         M/7BORyYibDNBlD77Pih5ENzFTJO1Hbe5WLtBHxWy3SpctWup2sVTt9UJ/9txONHcd
+         u09Z5BaEQeHVGWFXZKSNLnjD+oFaSrHtQZW/k20zVQvzM+Z3xMqJ1y0kP9vVMAiJh5
+         aN+E9CqTPKIbbHF8xtPTNzvXeUF9Rmq2yPVm96xARCu3gw1s36U7iBCCsk3pcm4xce
+         piXWKvcft4Yig==
+Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
+        by mail.sberdevices.ru (Postfix) with ESMTP;
+        Wed, 27 Apr 2022 13:03:57 +0300 (MSK)
+From:   Alexey Romanov <avromanov@sberdevices.ru>
+To:     <minchan@kernel.org>, <ngupta@vflare.org>,
+        <senozhatsky@chromium.org>, <linux-block@vger.kernel.org>
+CC:     <axboe@chromium.org>, <kernel@sberdevices.ru>,
+        <linux-kernel@vger.kernel.org>, <mnitenko@gmail.com>,
+        Alexey Romanov <avromanov@sberdevices.ru>,
+        Dmitry Rokosov <ddrokosov@sberdevices.ru>
+Subject: [PATCH v2] zram: remove double compression logic
+Date:   Wed, 27 Apr 2022 13:03:45 +0300
+Message-ID: <20220427100345.29461-1-avromanov@sberdevices.ru>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.16.1.6]
+X-ClientProxiedBy: S-MS-EXCH02.sberdevices.ru (172.16.1.5) To
+ S-MS-EXCH01.sberdevices.ru (172.16.1.4)
+X-KSMG-Rule-ID: 4
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiPhishing: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/04/27 08:28:00 #19366970
+X-KSMG-AntiVirus-Status: Clean, skipped
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> [+ Mikulas and Ming]
-> 
-> I see. Thank you for the response, Kuai, appreciate it.
-> 
-> The conversation here https://lkml.org/lkml/2020/3/24/1870 hints at 
-> potential improvements to io_ticks tracking.
-> 
-> @Mikulas, Mike, please let us know if you have plans for more accurate 
-> accounting or if there is some idea we can work on and submit a patch.
+The 2nd trial allocation under per-cpu presumption has been
+used to prevent regression of allocation failure. However, it
+makes trouble for maintenance without significant benefit.
+The slowpath branch is executed extremely rarely: getting
+there is problematic. Therefore, we delete this branch.
 
-I know that the accounting is not accurate, but more accurate accounting 
-needed a shared atomic variable and it caused performance degradation. So, 
-we don't plan to improve the accounting.
+Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
+Signed-off-by: Dmitry Rokosov <ddrokosov@sberdevices.ru>
+---
+ drivers/block/zram/zram_drv.c | 38 +++++++++--------------------------
+ drivers/block/zram/zram_drv.h |  1 -
+ 2 files changed, 9 insertions(+), 30 deletions(-)
 
-Mikulas
-
-> 
-> Thanks
-> -Sri
-> 
-> 
-> 
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index cb253d80d72b..4be6caf43b1d 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1153,9 +1153,8 @@ static ssize_t debug_stat_show(struct device *dev,
+ 
+ 	down_read(&zram->init_lock);
+ 	ret = scnprintf(buf, PAGE_SIZE,
+-			"version: %d\n%8llu %8llu\n",
++			"version: %d\n%8llu\n",
+ 			version,
+-			(u64)atomic64_read(&zram->stats.writestall),
+ 			(u64)atomic64_read(&zram->stats.miss_free));
+ 	up_read(&zram->init_lock);
+ 
+@@ -1373,7 +1372,6 @@ static int __zram_bvec_write(struct zram *zram, struct bio_vec *bvec,
+ 	}
+ 	kunmap_atomic(mem);
+ 
+-compress_again:
+ 	zstrm = zcomp_stream_get(zram->comp);
+ 	src = kmap_atomic(page);
+ 	ret = zcomp_compress(zstrm, src, &comp_len);
+@@ -1388,33 +1386,15 @@ static int __zram_bvec_write(struct zram *zram, struct bio_vec *bvec,
+ 
+ 	if (comp_len >= huge_class_size)
+ 		comp_len = PAGE_SIZE;
+-	/*
+-	 * handle allocation has 2 paths:
+-	 * a) fast path is executed with preemption disabled (for
+-	 *  per-cpu streams) and has __GFP_DIRECT_RECLAIM bit clear,
+-	 *  since we can't sleep;
+-	 * b) slow path enables preemption and attempts to allocate
+-	 *  the page with __GFP_DIRECT_RECLAIM bit set. we have to
+-	 *  put per-cpu compression stream and, thus, to re-do
+-	 *  the compression once handle is allocated.
+-	 *
+-	 * if we have a 'non-null' handle here then we are coming
+-	 * from the slow path and handle has already been allocated.
+-	 */
+-	if (!handle)
+-		handle = zs_malloc(zram->mem_pool, comp_len,
+-				__GFP_KSWAPD_RECLAIM |
+-				__GFP_NOWARN |
+-				__GFP_HIGHMEM |
+-				__GFP_MOVABLE);
+-	if (!handle) {
++
++	handle = zs_malloc(zram->mem_pool, comp_len,
++			__GFP_KSWAPD_RECLAIM |
++			__GFP_NOWARN |
++			__GFP_HIGHMEM |
++			__GFP_MOVABLE);
++
++	if (unlikely(!handle)) {
+ 		zcomp_stream_put(zram->comp);
+-		atomic64_inc(&zram->stats.writestall);
+-		handle = zs_malloc(zram->mem_pool, comp_len,
+-				GFP_NOIO | __GFP_HIGHMEM |
+-				__GFP_MOVABLE);
+-		if (handle)
+-			goto compress_again;
+ 		return -ENOMEM;
+ 	}
+ 
+diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
+index 80c3b43b4828..158c91e54850 100644
+--- a/drivers/block/zram/zram_drv.h
++++ b/drivers/block/zram/zram_drv.h
+@@ -81,7 +81,6 @@ struct zram_stats {
+ 	atomic64_t huge_pages_since;	/* no. of huge pages since zram set up */
+ 	atomic64_t pages_stored;	/* no. of pages currently stored */
+ 	atomic_long_t max_used_pages;	/* no. of maximum pages stored */
+-	atomic64_t writestall;		/* no. of write slow paths */
+ 	atomic64_t miss_free;		/* no. of missed free */
+ #ifdef	CONFIG_ZRAM_WRITEBACK
+ 	atomic64_t bd_count;		/* no. of pages in backing device */
+-- 
+2.30.1
 
