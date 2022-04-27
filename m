@@ -2,93 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C44551231E
-	for <lists+linux-block@lfdr.de>; Wed, 27 Apr 2022 21:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2AFB512498
+	for <lists+linux-block@lfdr.de>; Wed, 27 Apr 2022 23:34:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234653AbiD0Ty6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Apr 2022 15:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45106 "EHLO
+        id S234154AbiD0VhQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Apr 2022 17:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234917AbiD0Tyy (ORCPT
+        with ESMTP id S239524AbiD0Vf1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Apr 2022 15:54:54 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBC160059
-        for <linux-block@vger.kernel.org>; Wed, 27 Apr 2022 12:51:40 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id r17so659333iln.9
-        for <linux-block@vger.kernel.org>; Wed, 27 Apr 2022 12:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:in-reply-to:references:subject:message-id:date
-         :mime-version:content-transfer-encoding;
-        bh=A3SuMQQGPXuzThm/aM6O06njtTvaZhBmlWvPZYpCL2M=;
-        b=KP1HDZ4wptfcj0/cthgpkBLKrOPHem9S0qnn9gwCy5uZg1T6JFdVO34uWPhSQ2OGnh
-         QpMw5xtcg0dPsyhyQKDwfaQN/qd24/pZdx42411N3huZzwpDOahme9p+aZgS/4E6mUT+
-         w4nQYb7oAQ5jU9AcvPuyIwkf9FyzkkLAo1Rnt507+13b4tBI/vh59MHraZMa3tA2yGsp
-         gP9Ht7wG4mpm/DTJEfJgHMZd0LVlaw5VOJY4aspS6bddWpoRIxVUB/IqJF3fV4PRGRfm
-         A7s3XEBoGoKrK57M23wClox4n0QRE8rO7uekRsrIPU6Ep6TCVKE7+JVB76s8DueRp8+2
-         6ueQ==
+        Wed, 27 Apr 2022 17:35:27 -0400
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020E127153
+        for <linux-block@vger.kernel.org>; Wed, 27 Apr 2022 14:32:15 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id p6so2670816plf.9
+        for <linux-block@vger.kernel.org>; Wed, 27 Apr 2022 14:32:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=A3SuMQQGPXuzThm/aM6O06njtTvaZhBmlWvPZYpCL2M=;
-        b=E4mLhi4NEHpo3sYVtxPY6XksT4BADRW6oSqx1RV5gruQyPe6P+A+5ywf+vBl3QHLae
-         tr3iWQLRUbSUVjseNHhmhfVr5+VGaysvaquV4F73IphK7iQl9AZ5qnzN/t+QVrp2mpuw
-         yu80g0iOClnk2Xc/IgBuGmiH7Sb6R2mvldVodL6gdRiouNhLIts18Npf46lKAJS8f2xz
-         x7DKAINt5crF+83/1u/QWsv+gI8Q87zvvsTiP2n0gQL8iVHDa7JjZpEMy7ESQu7VeiaA
-         buVrp2Dmd7xi2Wv4HDu4xkoQbv4sgIjW7V0LyfNpWOGpfMlqgfgKPjJ176C44o2x/gmy
-         pU7Q==
-X-Gm-Message-State: AOAM533+0xtVUfjR9pwE7HzlU3K6Au8qEQsWACz1YBIXnSVJA6MWXMu6
-        t+Eqlt8E4r+6gwI/yHnfaYy/3fgW8HxRUQ==
-X-Google-Smtp-Source: ABdhPJw/VADmvZzVCQb095A1Ngx6/rnHArBaR5Oj+OxIFthrh6JB7HWwRaKDnQ/+58IoRtEE9m9a4A==
-X-Received: by 2002:a05:6e02:1748:b0:2cd:a0ea:8ff4 with SMTP id y8-20020a056e02174800b002cda0ea8ff4mr6054458ill.269.1651089099496;
-        Wed, 27 Apr 2022 12:51:39 -0700 (PDT)
-Received: from [127.0.1.1] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id u4-20020a92d1c4000000b002cc14bf22ddsm10050294ilg.77.2022.04.27.12.51.38
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xb894kKqMCbIsOzS7hWHe8SWoEAxpACx1g/g3a5/MwI=;
+        b=hHyrv8YORSddyXcEq/1S6e8cGnQoz1oP8n9PsLFZ7by5d2ueccaDrSwW7rb+TUHAYB
+         IzYtraB6DCgqjunR/LyfekyIfehFXOmenoP6e35eSCOy5t/IhXX0Zm5tG8DQB364gMmL
+         yT96iidjqxSUWJzZiy5K2L5iHUxV7ylRuESF0oYyYZRls9nm4gZF7oUh+AW7x4P/hM4k
+         8kZ0Y4oIMtGx7BQ+vb/wTGZ3mwnh/tFYL1dRXJp5UKFl/xk0YoIeewmDzcSNDLqHmfYA
+         4TJOwidyw7zglRdLUJZ8AkrqC4viC0RcezBh0P/mA43bdaE/SO8iiboJsTqHBH87NKAK
+         2ZqQ==
+X-Gm-Message-State: AOAM531f5XzMYnaar6EpRvL0KspIEfri6PvY+yLFICPV3a1qds9GU9X9
+        buQwBtcEpwZc6iUyAnKw413nskkshKytQA==
+X-Google-Smtp-Source: ABdhPJzggr5snTMtDiWslXWNSl/bNI2ftiWdZQmO7MhE+U6dZpO81tj4XF2YSJIjkVS6KZtmuItUfw==
+X-Received: by 2002:a17:902:db10:b0:15c:e4d6:4b10 with SMTP id m16-20020a170902db1000b0015ce4d64b10mr24513498plx.44.1651095134240;
+        Wed, 27 Apr 2022 14:32:14 -0700 (PDT)
+Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:6cbb:d78e:9b3:bb62])
+        by smtp.gmail.com with ESMTPSA id nm6-20020a17090b19c600b001cd4989fedbsm7700112pjb.39.2022.04.27.14.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 12:51:39 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     tj@kernel.org
-Cc:     linux-block@vger.kernel.org, saravanand@fb.com,
-        chris.obbard@collabora.com, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <YmmeOLfo5lzc+8yI@slm.duckdns.org>
-References: <YmmeOLfo5lzc+8yI@slm.duckdns.org>
-Subject: Re: [PATCH block-5.18] Revert "block: inherit request start time from bio for BLK_CGROUP"
-Message-Id: <165108909873.140853.15966713411862913960.b4-ty@kernel.dk>
-Date:   Wed, 27 Apr 2022 13:51:38 -0600
+        Wed, 27 Apr 2022 14:32:13 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Omar Sandoval <osandov@fb.com>
+Cc:     linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH blktests 0/3] Add QD=1 and gap zone tests
+Date:   Wed, 27 Apr 2022 14:31:40 -0700
+Message-Id: <20220427213143.2490653-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 27 Apr 2022 09:49:12 -1000, Tejun Heo wrote:
-> This reverts commit 0006707723233cb2a9a23ca19fc3d0864835704c. It has a
-> couple problems:
-> 
-> * bio_issue_time() is stored in bio->bi_issue truncated to 51 bits. This
->   overflows in slightly over 26 days. Setting rq->io_start_time_ns with it
->   means that io duration calculation would yield >26days after 26 days of
->   uptime. This, for example, confuses kyber making it cause high IO
->   latencies.
-> 
-> [...]
+Hi Omar,
 
-Applied, thanks!
+This patch series adds two tests for queue depth one and two tests for SCSI
+devices with gap zones. Please consider these patches for inclusion in the
+official blktests repository.
 
-[1/1] Revert "block: inherit request start time from bio for BLK_CGROUP"
-      commit: 4cddeacad6d4b23493a108d0705e7d2ab89ba5a3
+Thanks,
 
-Best regards,
--- 
-Jens Axboe
+Bart.
 
+Bart Van Assche (3):
+  Introduce the io_schedulers() function
+  Add I/O scheduler tests for queue depth 1
+  tests/scsi: Add tests for SCSI devices with gap zones
+
+ common/iosched             | 12 +++++++
+ common/multipath-over-rdma | 11 ------
+ common/rc                  |  5 +++
+ tests/block/005            |  4 +--
+ tests/block/014            |  7 ++--
+ tests/block/015            |  7 ++--
+ tests/block/020            |  7 ++--
+ tests/block/021            |  6 ++--
+ tests/block/032            | 62 +++++++++++++++++++++++++++++++++
+ tests/block/032.out        |  2 ++
+ tests/nvmeof-mp/012        |  3 +-
+ tests/scsi/008             | 63 ++++++++++++++++++++++++++++++++++
+ tests/scsi/008.out         |  2 ++
+ tests/scsi/009             | 56 ++++++++++++++++++++++++++++++
+ tests/scsi/009.out         |  2 ++
+ tests/scsi/010             | 70 ++++++++++++++++++++++++++++++++++++++
+ tests/scsi/010.out         |  2 ++
+ tests/srp/012              |  3 +-
+ 18 files changed, 290 insertions(+), 34 deletions(-)
+ create mode 100644 common/iosched
+ create mode 100755 tests/block/032
+ create mode 100644 tests/block/032.out
+ create mode 100755 tests/scsi/008
+ create mode 100644 tests/scsi/008.out
+ create mode 100755 tests/scsi/009
+ create mode 100644 tests/scsi/009.out
+ create mode 100644 tests/scsi/010
+ create mode 100644 tests/scsi/010.out
 
