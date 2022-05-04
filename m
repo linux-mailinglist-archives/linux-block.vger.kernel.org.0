@@ -2,125 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DC9C51B046
-	for <lists+linux-block@lfdr.de>; Wed,  4 May 2022 23:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB45D51B376
+	for <lists+linux-block@lfdr.de>; Thu,  5 May 2022 01:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357515AbiEDVWb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 May 2022 17:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
+        id S1382462AbiEDX3O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 May 2022 19:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbiEDVWb (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 May 2022 17:22:31 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628E751580;
-        Wed,  4 May 2022 14:18:54 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id BABED210E5;
-        Wed,  4 May 2022 21:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1651699132;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=npPu7v4PVxjYw5k81v34byZcxUoLWsQ8uewcVPzgU3Y=;
-        b=tM1dspGpfMipCiAbW0HO2dZVPEAgyrff0KMavj6bZk8T37R9hRgCKrWvzwgeAGT0wBlOIm
-        ubeLZ7ieBvBdZyh1MDcuOhs1j09imPderIadxrCmq/Rsm19BAfVTGh1hT5vsADF9X2YLOS
-        su7DARpA5vqfoa0MkPB71ULlFqjV3/w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1651699132;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=npPu7v4PVxjYw5k81v34byZcxUoLWsQ8uewcVPzgU3Y=;
-        b=vS6Y/NRPgUhS2xB+r59V5ZgrZyl8A56t3CcwGyemIqz6M8o7VVvzu6uPNAFvfQz1MtnccG
-        5x8uPy6F8/V4gpDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B60DD131BD;
-        Wed,  4 May 2022 21:18:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id ptTKKrvtcmJMMQAAMHmgww
-        (envelope-from <dsterba@suse.cz>); Wed, 04 May 2022 21:18:51 +0000
-Date:   Wed, 4 May 2022 23:14:40 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Pankaj Raghav <p.raghav@samsung.com>
-Cc:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "snitzer@kernel.org" <snitzer@kernel.org>,
-        "hch@lst.de" <hch@lst.de>, "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "damien.lemoal@opensource.wdc.com" <damien.lemoal@opensource.wdc.com>,
-        "dsterba@suse.com" <dsterba@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "clm@fb.com" <clm@fb.com>,
-        "gost.dev@samsung.com" <gost.dev@samsung.com>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "jonathan.derrick@linux.dev" <jonathan.derrick@linux.dev>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "kch@nvidia.com" <kch@nvidia.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "jiangbo.365@bytedance.com" <jiangbo.365@bytedance.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <Matias.Bjorling@wdc.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 00/16] support non power of 2 zoned devices
-Message-ID: <20220504211440.GU18596@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Pankaj Raghav <p.raghav@samsung.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "snitzer@kernel.org" <snitzer@kernel.org>,
-        "hch@lst.de" <hch@lst.de>, "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "damien.lemoal@opensource.wdc.com" <damien.lemoal@opensource.wdc.com>,
-        "dsterba@suse.com" <dsterba@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "clm@fb.com" <clm@fb.com>,
-        "gost.dev@samsung.com" <gost.dev@samsung.com>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "jonathan.derrick@linux.dev" <jonathan.derrick@linux.dev>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "kch@nvidia.com" <kch@nvidia.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "jiangbo.365@bytedance.com" <jiangbo.365@bytedance.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <Matias.Bjorling@wdc.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <CGME20220427160256eucas1p2db2b58792ffc93026d870c260767da14@eucas1p2.samsung.com>
- <20220427160255.300418-1-p.raghav@samsung.com>
- <PH0PR04MB74167FC8BA634A3DA09586489BC19@PH0PR04MB7416.namprd04.prod.outlook.com>
- <a702c7f7-9719-9f3e-63de-1e96f2912432@samsung.com>
+        with ESMTP id S1385217AbiEDXIc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 May 2022 19:08:32 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED215713C;
+        Wed,  4 May 2022 16:02:51 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id c1-20020a17090a558100b001dca2694f23so2390981pji.3;
+        Wed, 04 May 2022 16:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1Rr+WgHXJv8rOOI8pvpQMjOVULuqwXfp5l5Kbj5eI/U=;
+        b=SJbLsdWh+UCFEXw+niLLiz84rSSbYf4dPLAlVoObpohxf7hMpHJwLy+enb5HNLi19L
+         hikuHFoIhAekv5BaCwo2WYTlXgCn/q+Gupv5sEAiNrU6fjxuig/xYU0idZMXBF5h1Hq6
+         0ZAvPgRKq7XnRajXONVgln3pi86ViAf0QWeeVNpvuMQwk27O2n4uc5ZPJsmAfPlWdxEN
+         Id2clkYhIv+RqnaBOvtsNszjAuw7gtbk5xGUfg8DxG01lglnPfF+UcUOf2ozvPXDBqTz
+         ASjbas5Lk98Aha7vA5lgZyP7XCn+zrPvJgO2EZGik0wJkBfO8AZnJxxolpUHi5vD+agU
+         +NKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=1Rr+WgHXJv8rOOI8pvpQMjOVULuqwXfp5l5Kbj5eI/U=;
+        b=oifTj7VapLQ1nALggrpE3DnBUNKDsBKEpX6roSaaSf9Q+F/3Yh7xoD9xDo7jmnVaGF
+         CtSQUC81IAyUYrPL6I/pGBWX2iVesNDf0OtT85kdOLcc6NxLI219VUTNb4s39d730SCe
+         H5jPV6cc2SZoukpFFn+jEvbEMdYLPtpqc5QZQd0d3zEeMC3BNTBSvBsUIW1xlGTYjGMO
+         yMEvAmZBNxdzIAH+MBcvk+vtHeaBV90NBk9hhlzf6skW6x/xak3JjkBIn3dK8dsEoHV0
+         Fw3EeoHy0euz1j4aK8bA1SmliG6yLbtUEuRWCFq4KwKqcf1kaE2kzwM1Ct3K+GNuhoRx
+         SjEA==
+X-Gm-Message-State: AOAM531Wa3MeAXX0rOCA3a5H6xjdBDptOkkx3yl4ZGJi3j+/Kl1jewbL
+        dwVpI6o/1+wNyMHjQ2Y3XLA=
+X-Google-Smtp-Source: ABdhPJz5g1/ObcqQ/7zif9FdDIYAQu3KDWw5Ct7spx/oki1o3ZwqqFDirM0depnLfLZRUYIuN/T53w==
+X-Received: by 2002:a17:90b:8d8:b0:1dc:932d:3108 with SMTP id ds24-20020a17090b08d800b001dc932d3108mr2306855pjb.132.1651705370641;
+        Wed, 04 May 2022 16:02:50 -0700 (PDT)
+Received: from google.com ([2620:15c:211:201:8435:b3e7:62fc:4dfa])
+        by smtp.gmail.com with ESMTPSA id u20-20020aa78394000000b0050dc76281a7sm8776540pfm.129.2022.05.04.16.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 May 2022 16:02:50 -0700 (PDT)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date:   Wed, 4 May 2022 16:02:48 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Alexey Romanov <avromanov@sberdevices.ru>
+Cc:     ngupta@vflare.org, senozhatsky@chromium.org,
+        linux-block@vger.kernel.org, axboe@chromium.org,
+        kernel@sberdevices.ru, linux-kernel@vger.kernel.org,
+        mnitenko@gmail.com, Dmitry Rokosov <ddrokosov@sberdevices.ru>
+Subject: Re: [PATCH v4] zram: remove double compression logic
+Message-ID: <YnMGGMitdYg/5e4z@google.com>
+References: <20220504121243.63407-1-avromanov@sberdevices.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a702c7f7-9719-9f3e-63de-1e96f2912432@samsung.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+In-Reply-To: <20220504121243.63407-1-avromanov@sberdevices.ru>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -128,31 +73,28 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, May 03, 2022 at 11:12:04AM +0200, Pankaj Raghav wrote:
-> Hi Johannes,
-> On 2022-05-03 00:07, Johannes Thumshirn wrote:
-> >> There was an effort previously [1] to add support to non po2 devices via
-> >> device level emulation but that was rejected with a final conclusion
-> >> to add support for non po2 zoned device in the complete stack[2].
-> > 
-> > Hey Pankaj,
-> > 
-> > One thing I'm concerned with this patches is, once we have npo2 zones (or to be precise 
-> > not fs_info->sectorsize aligned zones) we have to check on every allocation if we still 
-> > have at least have fs_info->sectorsize bytes left in a zone. If not we need to 
-> > explicitly finish the zone, otherwise we'll run out of max active zones. 
-> > 
-> This commit: `btrfs: zoned: relax the alignment constraint for zoned
-> devices` makes sure the zone size is BTRFS_STRIPE_LEN aligned (64K). So
-> even the npo2 zoned device should be aligned to `fs_info->sectorsize`,
-> which is typically 4k.
-> 
-> This was one of the comment that came from David Sterba:
-> https://lore.kernel.org/all/20220315142740.GU12643@twin.jikos.cz/
-> where he suggested to have some sane alignment for the zone sizes.
+On Wed, May 04, 2022 at 03:12:43PM +0300, Alexey Romanov wrote:
+> The 2nd trial allocation under per-cpu presumption has been
+> used to prevent regression of allocation failure. However, it
+> makes trouble for maintenance without significant benefit.
+> The slowpath branch is executed extremely rarely: getting
+> there is problematic. Therefore, we delete this branch.
 
-My idea of 'sane' value would be 1M, that we have 4K for sectors is
-because of the 1:1 mapping to pages, but RAM sizes are on a different
-scale than storage devices. The 4K is absolute minimum but if the page
-size is taken as a basic constraint, ARM has 64K and there are some 256K
-arches.
+Let's add about the stable_write, too in the description.
+
+
+"Since b09ab054b69b, zram has used QUEUE_FLAG_STABLE_WRITES to prevent
+buffer change between 1st and 2nd memory allocations. Since we remove
+second trial memory allocation logic, we could remove the STABLE_WRITES
+flag because there is no change buffer to be modified under us"
+
+> 
+> Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
+> Signed-off-by: Dmitry Rokosov <ddrokosov@sberdevices.ru>
+
+Other than that, looks good to me.
+
+Acked-by: Minchan Kim <minchan@kernel.org>
+
+Please send the updated patch again with To: Andrew Morton <akpm@linux-foundation.org>
+with keeping Ccing.
