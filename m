@@ -2,99 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB45D51B376
-	for <lists+linux-block@lfdr.de>; Thu,  5 May 2022 01:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDDCA51B405
+	for <lists+linux-block@lfdr.de>; Thu,  5 May 2022 02:08:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382462AbiEDX3O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 May 2022 19:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
+        id S235912AbiEEAGT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 May 2022 20:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385217AbiEDXIc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 May 2022 19:08:32 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED215713C;
-        Wed,  4 May 2022 16:02:51 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id c1-20020a17090a558100b001dca2694f23so2390981pji.3;
-        Wed, 04 May 2022 16:02:51 -0700 (PDT)
+        with ESMTP id S1359549AbiEDX5m (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 May 2022 19:57:42 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D35950B2C
+        for <linux-block@vger.kernel.org>; Wed,  4 May 2022 16:54:01 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id l9-20020a056830268900b006054381dd35so1948120otu.4
+        for <linux-block@vger.kernel.org>; Wed, 04 May 2022 16:54:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1Rr+WgHXJv8rOOI8pvpQMjOVULuqwXfp5l5Kbj5eI/U=;
-        b=SJbLsdWh+UCFEXw+niLLiz84rSSbYf4dPLAlVoObpohxf7hMpHJwLy+enb5HNLi19L
-         hikuHFoIhAekv5BaCwo2WYTlXgCn/q+Gupv5sEAiNrU6fjxuig/xYU0idZMXBF5h1Hq6
-         0ZAvPgRKq7XnRajXONVgln3pi86ViAf0QWeeVNpvuMQwk27O2n4uc5ZPJsmAfPlWdxEN
-         Id2clkYhIv+RqnaBOvtsNszjAuw7gtbk5xGUfg8DxG01lglnPfF+UcUOf2ozvPXDBqTz
-         ASjbas5Lk98Aha7vA5lgZyP7XCn+zrPvJgO2EZGik0wJkBfO8AZnJxxolpUHi5vD+agU
-         +NKA==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=Dn1MT8x7p4Rbn+pctwVkt7IgIdUxT0LRLjox/JaF9ttsZ2N8sUUglHFRxQa3sl75aK
+         h1U1JpCoOjPff8rV+LL0edQuBh+YvYlTbZ4zx127Qa80qMcS49J0d2nS2s7mVVadwp/M
+         vGp6wV8qQhR9tMRiQjyWHIJslgvG4HigF7p24aLxixJ1l99K68kLikab9Y0HgtSpkDYW
+         0+riuhXlj9dAnGs04evyYz4sFXKtm0FlJKiBI2Dtbo7ebvKr6E7XJkxgxzCXhReMwL1D
+         yv9OUeo9KjH+/RIlVXefhsYivAQRdlwo604eWoXrrvRFVxcSgXwgPis+UtVhyLpBWx3z
+         WyWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=1Rr+WgHXJv8rOOI8pvpQMjOVULuqwXfp5l5Kbj5eI/U=;
-        b=oifTj7VapLQ1nALggrpE3DnBUNKDsBKEpX6roSaaSf9Q+F/3Yh7xoD9xDo7jmnVaGF
-         CtSQUC81IAyUYrPL6I/pGBWX2iVesNDf0OtT85kdOLcc6NxLI219VUTNb4s39d730SCe
-         H5jPV6cc2SZoukpFFn+jEvbEMdYLPtpqc5QZQd0d3zEeMC3BNTBSvBsUIW1xlGTYjGMO
-         yMEvAmZBNxdzIAH+MBcvk+vtHeaBV90NBk9hhlzf6skW6x/xak3JjkBIn3dK8dsEoHV0
-         Fw3EeoHy0euz1j4aK8bA1SmliG6yLbtUEuRWCFq4KwKqcf1kaE2kzwM1Ct3K+GNuhoRx
-         SjEA==
-X-Gm-Message-State: AOAM531Wa3MeAXX0rOCA3a5H6xjdBDptOkkx3yl4ZGJi3j+/Kl1jewbL
-        dwVpI6o/1+wNyMHjQ2Y3XLA=
-X-Google-Smtp-Source: ABdhPJz5g1/ObcqQ/7zif9FdDIYAQu3KDWw5Ct7spx/oki1o3ZwqqFDirM0depnLfLZRUYIuN/T53w==
-X-Received: by 2002:a17:90b:8d8:b0:1dc:932d:3108 with SMTP id ds24-20020a17090b08d800b001dc932d3108mr2306855pjb.132.1651705370641;
-        Wed, 04 May 2022 16:02:50 -0700 (PDT)
-Received: from google.com ([2620:15c:211:201:8435:b3e7:62fc:4dfa])
-        by smtp.gmail.com with ESMTPSA id u20-20020aa78394000000b0050dc76281a7sm8776540pfm.129.2022.05.04.16.02.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 May 2022 16:02:50 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date:   Wed, 4 May 2022 16:02:48 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Alexey Romanov <avromanov@sberdevices.ru>
-Cc:     ngupta@vflare.org, senozhatsky@chromium.org,
-        linux-block@vger.kernel.org, axboe@chromium.org,
-        kernel@sberdevices.ru, linux-kernel@vger.kernel.org,
-        mnitenko@gmail.com, Dmitry Rokosov <ddrokosov@sberdevices.ru>
-Subject: Re: [PATCH v4] zram: remove double compression logic
-Message-ID: <YnMGGMitdYg/5e4z@google.com>
-References: <20220504121243.63407-1-avromanov@sberdevices.ru>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=GgjUgvcZv+ku3XEuN8j+fCoqxaOgy74QWCB8LQBHDZx6tFBB1+gj4PrnC97tz8SwZa
+         xg6l3XY9o4tep4fX7S9oG8L0BOoT0ryNvDfwyHtNSXprw9OP7mit1+uXacqCOfZdoro5
+         R9goIVuuLCczW2Nrmu9gy+m0iIWYb6VURAcpXAdCR8izveuFwJBDE01EgmDYf3eHIipN
+         PpLmyhD9pWtFI2tEvb2y+BWHQYWtVK7WDTMov4/H6CsQ6leYaTu6Ite9Dn87gK1m1sys
+         liiX+E7nLmUHw1cL4xIwoIpbg/ms3EefeLoGvEFTmq17Ti4bcqGIpRO+tNJfKozzBEQm
+         IgFw==
+X-Gm-Message-State: AOAM530hK4aqQcl+E4GHIHqROEuTQxgly5044/1jZ+o4HhyG4eeF8CPU
+        Hisgqro/mWGUAI1fN4xEDUsjcJ9FYrW1GEyCq5zG6Trr5eAxTA==
+X-Google-Smtp-Source: ABdhPJyXbFHNtxfp8+qt+M9kuv/iG7XfFeFFPd7I4/fmpdxuycMtmf6dIJw5ghtZAT2CwgvAVE/kUl0HxsirxLIU8v0=
+X-Received: by 2002:a9d:6b16:0:b0:605:e0eb:d3d6 with SMTP id
+ g22-20020a9d6b16000000b00605e0ebd3d6mr8263208otp.213.1651708440302; Wed, 04
+ May 2022 16:54:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220504121243.63407-1-avromanov@sberdevices.ru>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6802:1a9:0:0:0:0 with HTTP; Wed, 4 May 2022 16:53:59
+ -0700 (PDT)
+Reply-To: ortegainvestmmentforrealinvest@gmail.com
+From:   Info <joybhector64@gmail.com>
+Date:   Thu, 5 May 2022 05:23:59 +0530
+Message-ID: <CAP7KLYgH9LcKHS-KgR0zObHAgC6Fr3D+dOJSbDKurTc_12+iFw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:341 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [joybhector64[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [joybhector64[at]gmail.com]
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, May 04, 2022 at 03:12:43PM +0300, Alexey Romanov wrote:
-> The 2nd trial allocation under per-cpu presumption has been
-> used to prevent regression of allocation failure. However, it
-> makes trouble for maintenance without significant benefit.
-> The slowpath branch is executed extremely rarely: getting
-> there is problematic. Therefore, we delete this branch.
+-- 
+I am an investor. I came from the USA and I have many investments all
+over the world.
 
-Let's add about the stable_write, too in the description.
-
-
-"Since b09ab054b69b, zram has used QUEUE_FLAG_STABLE_WRITES to prevent
-buffer change between 1st and 2nd memory allocations. Since we remove
-second trial memory allocation logic, we could remove the STABLE_WRITES
-flag because there is no change buffer to be modified under us"
-
-> 
-> Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
-> Signed-off-by: Dmitry Rokosov <ddrokosov@sberdevices.ru>
-
-Other than that, looks good to me.
-
-Acked-by: Minchan Kim <minchan@kernel.org>
-
-Please send the updated patch again with To: Andrew Morton <akpm@linux-foundation.org>
-with keeping Ccing.
+I want you to partner with me to invest in your country I am into many
+investment such as real Estate or buying of properties i can also
+invest money in any of existing business with equity royalty or by %
+percentage so on,
+Warm regards
