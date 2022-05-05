@@ -2,125 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5181351C232
-	for <lists+linux-block@lfdr.de>; Thu,  5 May 2022 16:17:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B59051C581
+	for <lists+linux-block@lfdr.de>; Thu,  5 May 2022 18:57:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380527AbiEEOVX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 May 2022 10:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46554 "EHLO
+        id S1382255AbiEERBE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 May 2022 13:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380519AbiEEOVV (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 May 2022 10:21:21 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845C95A585;
-        Thu,  5 May 2022 07:17:40 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 245E5eEA023423;
-        Thu, 5 May 2022 14:17:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=A9FO4rGpiKu+NJHDhwiIsa3Jthrv6Dd5NFWQHWYbd8A=;
- b=pyrc6nTYw7e722zWQeJd7jJmk+kD3L/mamwXefK7D/lSNsXeNClV7lcYNSloZUt7DcmK
- 37RH4j11QhFwLYlkdntjmXKKvbxe2Itd7BUzqyPaKGcL9A21AVH4RESA3YmVVzPKJ4rQ
- YHivz5YpC3Tl4oJk1QCW7cWgTtU8nYW7wRapVa1wfrKn4y4ftCBixz/al0H4xOfl4ojr
- oaB3h3UjZTJF3xgwfh1zsVKeVCG9An8UqEGCAK0Z8aEkJLfWowS6PszTau/DYdgN1SSJ
- Nuz90XOF+lMHgLwz1H1StlQK4LUhWJep29UsYM7k6gUdVduKyXGcDNHiMNiBvb21onTl dg== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fve8cay8d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 May 2022 14:17:39 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 245EEM4N015387;
-        Thu, 5 May 2022 14:17:37 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 3fttcj36m7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 May 2022 14:17:36 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 245EHXJF56295812
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 May 2022 14:17:33 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB3FBA404D;
-        Thu,  5 May 2022 14:17:33 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97D7CA4040;
-        Thu,  5 May 2022 14:17:33 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  5 May 2022 14:17:33 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id 18932E040D; Thu,  5 May 2022 16:17:33 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 5/5] s390/dasd: Use kzalloc instead of kmalloc/memset
-Date:   Thu,  5 May 2022 16:17:33 +0200
-Message-Id: <20220505141733.1989450-6-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220505141733.1989450-1-sth@linux.ibm.com>
-References: <20220505141733.1989450-1-sth@linux.ibm.com>
+        with ESMTP id S1354735AbiEERBC (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 May 2022 13:01:02 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88FBB5C84C;
+        Thu,  5 May 2022 09:57:04 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 202so4060920pgc.9;
+        Thu, 05 May 2022 09:57:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gLSrukFuN1JT85xjZBxcJ9Q6yUhYQqPZheqHwdhEg7U=;
+        b=EKhBGUnGBYw2xmGFpRKZDvm+Gh13g3mCjpWQiTZSpTPei0JV5ZgCBH9Oxvyji5VBuU
+         PqYXCDhWkvHLFMxZ/Ni2Kkub8AuPe4eyJaqzw4RvqWU7r3BqkE1kAD6OMsTO9vdurJKK
+         WyVB4xrkHIrnfDp43sbRELj93B3KdGhyoxHZ/jvQbbMaT57d0BEhNiCly7IQUbLdXeWO
+         psSrNSQyfu6EmEIqqjyaMVI8aSciM/mz7sVYxATpQ8S1ujE2qIpMALTJqL70cYML2Yj7
+         +ivv0MOzSpe/EwSDFcbJOumobB0gM+MX8/GF+jMfkGx5UuO8t85s6l1fA+jkLUfex2g/
+         fJRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=gLSrukFuN1JT85xjZBxcJ9Q6yUhYQqPZheqHwdhEg7U=;
+        b=kiQWUAKBTG3JgWXOPKOHIg4Mke5aooRTNNrpr2yj1ZIB9cBHRZMl4Q47k12kv1auUT
+         XGHgqKOLwve2XduP8WMvnU2X1KlbtzQtqh43ljK3JT2AdJDsXhsH50O68eyAGXLQDrdY
+         c8XiPlAGBo3ehNmw5H47EgvOd2NqevTpnTuly6Ozv0A9a8fUvOlHQssmiUk1R0oq4BRF
+         gYwPhVwtAKEc1jn3V766NpbfFUxO43xXUW/MkWwl0E82tZu6P12xXtA61RMzp527SHtj
+         TEI7JvuNJRujjoYOKqmSAiApAYZPeHnXwPVWfbnG6aDzbVJI36S8dRV/8KWTvJteyYgC
+         SdHQ==
+X-Gm-Message-State: AOAM531qy/MkNP2j75ZYvdpeZgdkIwFcFjbCCXCizockQPHenh/jn5M6
+        afVjZpm+o6QsgXXrLEsTqiU=
+X-Google-Smtp-Source: ABdhPJy9XDrGdVUvOftS6Oi4+mMdvrkbx3+EWJx/3U1/ctK7WY72JKO4bqE965kTvk+ZECHhQ2ARuw==
+X-Received: by 2002:a05:6a00:26cf:b0:4f6:fc52:7b6a with SMTP id p15-20020a056a0026cf00b004f6fc527b6amr26567624pfw.39.1651769824001;
+        Thu, 05 May 2022 09:57:04 -0700 (PDT)
+Received: from google.com ([2620:15c:211:201:1c0c:8050:e4d3:12f5])
+        by smtp.gmail.com with ESMTPSA id z18-20020a170902ccd200b0015e8d4eb221sm1751056ple.107.2022.05.05.09.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 09:57:03 -0700 (PDT)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date:   Thu, 5 May 2022 09:57:01 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Alexey Romanov <avromanov@sberdevices.ru>
+Cc:     akpm@linux-foundation.org, ngupta@vflare.org,
+        senozhatsky@chromium.org, linux-block@vger.kernel.org,
+        axboe@chromium.org, kernel@sberdevices.ru,
+        linux-kernel@vger.kernel.org, mnitenko@gmail.com,
+        Dmitry Rokosov <ddrokosov@sberdevices.ru>
+Subject: Re: [PATCH v5] zram: remove double compression logic
+Message-ID: <YnQB3X2wy7lEku+y@google.com>
+References: <20220505094443.11728-1-avromanov@sberdevices.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: cYqld-nGdH4NhIB9xAdRS7NcZu4SOCbo
-X-Proofpoint-GUID: cYqld-nGdH4NhIB9xAdRS7NcZu4SOCbo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-05_05,2022-05-05_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=886 spamscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 priorityscore=1501 adultscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205050099
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220505094443.11728-1-avromanov@sberdevices.ru>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Haowen Bai <baihaowen@meizu.com>
+On Thu, May 05, 2022 at 12:44:43PM +0300, Alexey Romanov wrote:
+> The 2nd trial allocation under per-cpu presumption has been used to
+> prevent regression of allocation failure. However, it makes trouble
+> for maintenance without significant benefit. The slowpath branch is
+> executed extremely rarely: getting there is problematic. Therefore,
+> we delete this branch.
+> 
+> Since b09ab054b69b, zram has used QUEUE_FLAG_STABLE_WRITES to prevent
+> buffer change between 1st and 2nd memory allocations. Since we remove
+> second trial memory allocation logic, we could remove the STABLE_WRITES
+> flag because there is no change buffer to be modified under us.
+> 
+> Signed-off-by: Alexey Romanov <avromanov@sberdevices.ru>
+> Signed-off-by: Dmitry Rokosov <ddrokosov@sberdevices.ru>
 
-Use kzalloc rather than duplicating its implementation, which
-makes code simple and easy to understand.
-
-Signed-off-by: Haowen Bai <baihaowen@meizu.com>
-Reviewed-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
----
- drivers/s390/block/dasd_eckd.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index e46461b4d8a7..836838f7d686 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -1480,7 +1480,7 @@ static int dasd_eckd_pe_handler(struct dasd_device *device,
- {
- 	struct pe_handler_work_data *data;
- 
--	data = kmalloc(sizeof(*data), GFP_ATOMIC | GFP_DMA);
-+	data = kzalloc(sizeof(*data), GFP_ATOMIC | GFP_DMA);
- 	if (!data) {
- 		if (mutex_trylock(&dasd_pe_handler_mutex)) {
- 			data = pe_handler_worker;
-@@ -1488,9 +1488,6 @@ static int dasd_eckd_pe_handler(struct dasd_device *device,
- 		} else {
- 			return -ENOMEM;
- 		}
--	} else {
--		memset(data, 0, sizeof(*data));
--		data->isglobal = 0;
- 	}
- 	INIT_WORK(&data->worker, do_pe_handler_work);
- 	dasd_get_device(device);
--- 
-2.32.0
-
+Acked-by: Minchan Kim <minchan@kernel.org>
