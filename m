@@ -2,100 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDDCA51B405
-	for <lists+linux-block@lfdr.de>; Thu,  5 May 2022 02:08:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FCFE51B4B4
+	for <lists+linux-block@lfdr.de>; Thu,  5 May 2022 02:31:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235912AbiEEAGT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 May 2022 20:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
+        id S232331AbiEEAeQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 May 2022 20:34:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359549AbiEDX5m (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 May 2022 19:57:42 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D35950B2C
-        for <linux-block@vger.kernel.org>; Wed,  4 May 2022 16:54:01 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id l9-20020a056830268900b006054381dd35so1948120otu.4
-        for <linux-block@vger.kernel.org>; Wed, 04 May 2022 16:54:01 -0700 (PDT)
+        with ESMTP id S232166AbiEEAeL (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 May 2022 20:34:11 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3933626542
+        for <linux-block@vger.kernel.org>; Wed,  4 May 2022 17:30:33 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id k1so2945089pll.4
+        for <linux-block@vger.kernel.org>; Wed, 04 May 2022 17:30:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
-        b=Dn1MT8x7p4Rbn+pctwVkt7IgIdUxT0LRLjox/JaF9ttsZ2N8sUUglHFRxQa3sl75aK
-         h1U1JpCoOjPff8rV+LL0edQuBh+YvYlTbZ4zx127Qa80qMcS49J0d2nS2s7mVVadwp/M
-         vGp6wV8qQhR9tMRiQjyWHIJslgvG4HigF7p24aLxixJ1l99K68kLikab9Y0HgtSpkDYW
-         0+riuhXlj9dAnGs04evyYz4sFXKtm0FlJKiBI2Dtbo7ebvKr6E7XJkxgxzCXhReMwL1D
-         yv9OUeo9KjH+/RIlVXefhsYivAQRdlwo604eWoXrrvRFVxcSgXwgPis+UtVhyLpBWx3z
-         WyWg==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:in-reply-to:references:subject:message-id:date
+         :mime-version:content-transfer-encoding;
+        bh=RcDR4isR1g1B75C+ge2gLuR1U3I8zdlTjgq5xpVQhKA=;
+        b=HS3sAKjRUTNwGuoJshoICQI94tUaKf0k69F9lckoWuOGMsg1s1MpmKTCFjRh82UmuC
+         +7J3MmBJh1kBCurUVRvbBCz8zNeDWGYjX3Fl+OjPc/hS0j0OV2XsDrQVxi+uq+IB2Oun
+         NisnHdzbNyfEvchAg4aS/KszTkoZOKUMNnslK96LFkYBO13ei6rExM5bko4d9iRwqyYq
+         dWJNlgRKiH+GkwFYxgGyGII6E+X3bjbA4HwCWfZpcK5fwi97Z/gA3Q6AtDliE3ZEs7Df
+         DLjnVT7cH0wUdqzDWGeuKN5vNlngwZS4S3OEnll2I5bUi+O72ChEVDSMn/HbhCpuFm5x
+         jQsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
-        b=GgjUgvcZv+ku3XEuN8j+fCoqxaOgy74QWCB8LQBHDZx6tFBB1+gj4PrnC97tz8SwZa
-         xg6l3XY9o4tep4fX7S9oG8L0BOoT0ryNvDfwyHtNSXprw9OP7mit1+uXacqCOfZdoro5
-         R9goIVuuLCczW2Nrmu9gy+m0iIWYb6VURAcpXAdCR8izveuFwJBDE01EgmDYf3eHIipN
-         PpLmyhD9pWtFI2tEvb2y+BWHQYWtVK7WDTMov4/H6CsQ6leYaTu6Ite9Dn87gK1m1sys
-         liiX+E7nLmUHw1cL4xIwoIpbg/ms3EefeLoGvEFTmq17Ti4bcqGIpRO+tNJfKozzBEQm
-         IgFw==
-X-Gm-Message-State: AOAM530hK4aqQcl+E4GHIHqROEuTQxgly5044/1jZ+o4HhyG4eeF8CPU
-        Hisgqro/mWGUAI1fN4xEDUsjcJ9FYrW1GEyCq5zG6Trr5eAxTA==
-X-Google-Smtp-Source: ABdhPJyXbFHNtxfp8+qt+M9kuv/iG7XfFeFFPd7I4/fmpdxuycMtmf6dIJw5ghtZAT2CwgvAVE/kUl0HxsirxLIU8v0=
-X-Received: by 2002:a9d:6b16:0:b0:605:e0eb:d3d6 with SMTP id
- g22-20020a9d6b16000000b00605e0ebd3d6mr8263208otp.213.1651708440302; Wed, 04
- May 2022 16:54:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
+         :message-id:date:mime-version:content-transfer-encoding;
+        bh=RcDR4isR1g1B75C+ge2gLuR1U3I8zdlTjgq5xpVQhKA=;
+        b=E02hNchmjaXrt9vLld0KLc7KaOq0cszFKRcUeogAC5exG9MdoiXPc/5Gx8HRzGalv/
+         LpfqD0O7Dwcc6pfNvOWAKpE/XfY2oy92EQukjMz/r5g09JrDqJtB2P4wQysU8xW51tTx
+         1w83NgStYt04yr99NX6tzMbIqSVZakfv8KgbEcWDn3KMkW2Lks1UMeevfFr+oBwWPp3/
+         ySEUSSS+hLsSNXtaunIeeAP7zUpc/IZUMZxlj4HLpCc9Jn7r/TWIv7BTR4dRBkvWN0+b
+         W8lT5235hhiHoajgI8gPipNFfQf7NL+WZk7qCxGx5+Cbyu9GPYWAhcNhWtin9Csmmq8h
+         x1nw==
+X-Gm-Message-State: AOAM530/9JHkP14fIovSmK9L58wB5Ri24pCbV729pDVnX3ZrGaQ95ijG
+        5yuYm+Wb+W7Psqonwf27oy++Nyv/Xae43g==
+X-Google-Smtp-Source: ABdhPJzJ18ZT0x6sB7P8RgakHVHYH3BESqESsK0UxhgsUJpRvbgw8SEXEqJddnYCbjwpGHxHDOsO7A==
+X-Received: by 2002:a17:90a:e2cb:b0:1da:35d6:3a08 with SMTP id fr11-20020a17090ae2cb00b001da35d63a08mr2689016pjb.223.1651710632470;
+        Wed, 04 May 2022 17:30:32 -0700 (PDT)
+Received: from [127.0.1.1] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id 23-20020aa79157000000b0050dc76281d4sm9077672pfi.174.2022.05.04.17.30.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 May 2022 17:30:31 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-block@vger.kernel.org, snitzer@kernel.org
+In-Reply-To: <20220504142950.567582-2-hch@lst.de>
+References: <20220504142950.567582-1-hch@lst.de> <20220504142950.567582-2-hch@lst.de>
+Subject: Re: [PATCH 1/2] block: remove superfluous calls to blkcg_bio_issue_init
+Message-Id: <165171063131.26309.15825043724277860543.b4-ty@kernel.dk>
+Date:   Wed, 04 May 2022 18:30:31 -0600
 MIME-Version: 1.0
-Received: by 2002:a05:6802:1a9:0:0:0:0 with HTTP; Wed, 4 May 2022 16:53:59
- -0700 (PDT)
-Reply-To: ortegainvestmmentforrealinvest@gmail.com
-From:   Info <joybhector64@gmail.com>
-Date:   Thu, 5 May 2022 05:23:59 +0530
-Message-ID: <CAP7KLYgH9LcKHS-KgR0zObHAgC6Fr3D+dOJSbDKurTc_12+iFw@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:341 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [joybhector64[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [joybhector64[at]gmail.com]
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-I am an investor. I came from the USA and I have many investments all
-over the world.
+On Wed, 4 May 2022 07:29:49 -0700, Christoph Hellwig wrote:
+> blkcg_bio_issue_init is called in submit_bio.  There is no need to have
+> extra calls that just get overriden in __bio_clone and the two places
+> that copy and pasted from it.
+> 
+> 
 
-I want you to partner with me to invest in your country I am into many
-investment such as real Estate or buying of properties i can also
-invest money in any of existing business with equity royalty or by %
-percentage so on,
-Warm regards
+Applied, thanks!
+
+[1/2] block: remove superfluous calls to blkcg_bio_issue_init
+      commit: 513616843d736fb7161b4460cdfe5aa825c5902c
+[2/2] block: allow passing a NULL bdev to bio_alloc_clone/bio_init_clone
+      commit: 7ecc56c62b27d93838ee67fc2c7a1c3c480aea04
+
+Best regards,
+-- 
+Jens Axboe
+
+
