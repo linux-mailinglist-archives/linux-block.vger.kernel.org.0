@@ -2,100 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C753451DE53
-	for <lists+linux-block@lfdr.de>; Fri,  6 May 2022 19:23:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBB4A51E0A0
+	for <lists+linux-block@lfdr.de>; Fri,  6 May 2022 23:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237371AbiEFR1h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 6 May 2022 13:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56308 "EHLO
+        id S1444324AbiEFVJe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 6 May 2022 17:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444167AbiEFR1f (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 6 May 2022 13:27:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E5123BD2;
-        Fri,  6 May 2022 10:23:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C92A3620B2;
-        Fri,  6 May 2022 17:23:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6385C385A8;
-        Fri,  6 May 2022 17:23:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651857831;
-        bh=nXZ3Q1jTbaZ/sK8x9V920nhEF4T7dJ3ktr0gnhCZATw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OfYs4mRhp6lLGqo13sQacwVW9iittAZ7SAI7kb+r6hxxdi/apElxndNV2zhleIjOa
-         R19ikT+HJLadc/9Ye9/w48Cbh2j2zDiXP1448RufOjTjoKrwQLOpaYs7svQda8uNHl
-         1yp0T2hge2QaBesrUXtuFaOu7mz+e+agAvK9ixsfGkCLNaHFlC3+EC8Cd5CNeCOX3J
-         v498ZxqcSIobrgKGg/YVtjgFYXl3l/djT+e/iwLJwUmjgvQDs6QaZFv0sqApMzlbYU
-         uRHapzwdExq7H7WLMD+rjjwqt1kgyHR0gJHvZWb9+1I3CwwnqPnicF0+eHdFs1YRp5
-         atMpv+P/D1hUQ==
-Date:   Fri, 6 May 2022 12:23:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Peng Liu <liupeng256@huawei.com>
-Cc:     bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rafael@kernel.org, lenb@kernel.org,
-        akpm@linux-foundation.org, logang@deltatee.com,
-        martin.oliveira@eideticom.com, thunder.leizhen@huawei.com,
-        axboe@kernel.dk, kch@nvidia.com, ming.lei@redhat.com,
-        shinichiro.kawasaki@wdc.com, mcgrof@kernel.org,
-        jiangguoqing@kylinos.cn, jpittman@redhat.com, dave@stgolabs.net,
-        wangkefeng.wang@huawei.com, linux-block@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/2] include/linux/nodemask.h: create node_available()
- helper
-Message-ID: <20220506172348.GA543299@bhelgaas>
+        with ESMTP id S1444361AbiEFVJF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 6 May 2022 17:09:05 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31309BCC
+        for <linux-block@vger.kernel.org>; Fri,  6 May 2022 14:05:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id i17so8571652pla.10
+        for <linux-block@vger.kernel.org>; Fri, 06 May 2022 14:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
+         :subject:to;
+        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
+        b=Pikzf05RvlgsNiSN1x8VQddbQlHNU8w6b4F5093LpuzcM0ntMpgrUYdcKzhnhHB48+
+         nxofPjncbzlNuBNgooKcMle2Y5ylBJZ6O8MOl6jmb+4GXhkX7JY7QlgBzU7KDKtY2S+t
+         hdYkJvFaRkTyMTuFzz2JqLAY96/AXzO6tgScVG1YJD9G5UO3G+tZ8nGL14yI0+9uPzhC
+         wx/zFVXeSa1h7d0nK/9Qv4fLpnyxu41DB2or0mzOQHpWd2RcmeWfuVLsEUjsRWphAt0g
+         4hy8H6gBdpRcYFXBRhobSZg5COn6SmVmFJv6lpApXA5BMZTju/Hca9z5AiK8OWFQZRyE
+         91pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
+         :from:date:message-id:subject:to;
+        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
+        b=5bgq0/anJw6WWZbF8fC9XrfLJv7scZ674B++KiseHbkqKcstURcK05xck2Rsc7gF1s
+         rfoQwyL79jMT+AQAeHy3PIJWeUXYBBQsHolFbeZkJqBEo1QV2RKtvi3Fto4EhVs4hZ6L
+         g1YF626Vq8od3ECdoqvnQF+k4d9ix3hVWS6gDxpxiBcNEtKIDVs7hnBScz57bCvjIXVo
+         F5z26DfyKw3ckDvouOBfFr6cADa6XpKOU7/fe51DIsx/rshXgIPWuyWP0VaExgySS8Ua
+         wCDXYEc1Avhwzc0Dq4midopIdH3bMTmrJIB8z9X59/4pVdYiNiq1h27ZUSNiESwYkf7J
+         SH2Q==
+X-Gm-Message-State: AOAM532zL1cl+34uPHQ1lOQHJ/rDzXCOJyH6LR+7NQm0IrgwtUb/GGX4
+        02BXx601YoWCO9xZlLcOT8ms5cWScQg9u2b5JQ==
+X-Google-Smtp-Source: ABdhPJx7z4moOE2gpr/KlS+3C9TQAnAO3wCwszoE5VU4KaQgpBr5SM/EngTmKFwvPUIFIAmNZ9KZadvdCoWslU4jbxM=
+X-Received: by 2002:a17:90a:b106:b0:1d9:7cde:7914 with SMTP id
+ z6-20020a17090ab10600b001d97cde7914mr6294782pjq.56.1651871119761; Fri, 06 May
+ 2022 14:05:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220506015801.757918-2-liupeng256@huawei.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:ac4:9906:0:b0:4ba:807b:b8f3 with HTTP; Fri, 6 May 2022
+ 14:05:18 -0700 (PDT)
+Reply-To: warren001buffett@gmail.com
+In-Reply-To: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
+References: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
+From:   Warren Buffett <guidayema@gmail.com>
+Date:   Fri, 6 May 2022 21:05:18 +0000
+Message-ID: <CAD_xG_pXizBD6pW=-K0ttmT_EZuS+8BZv7pSZcaHdzR-qQhVZA@mail.gmail.com>
+Subject: Fwd: My name is Warren Buffett, an American businessman.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:643 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4985]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [guidayema[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Subject line convention looks like "numa: ..."
+My name is Warren Buffett, an American businessman and investor I have
+something important to discuss with you.
 
-On Fri, May 06, 2022 at 01:58:00AM +0000, Peng Liu wrote:
-> Lots of code dose
-               does
-
-> 	node != NUMA_NO_NODE && !node_online(node)
-> or
-> 	node == NUMA_NO_NODE || node_online(node)
-> so create node_available to do this to simplify code.
-            node_available()
-
-I'm not really sure what meaning "node_available" conveys, though.
-Probably just because I don't understand NUMA.
-
-Should the test for NUMA_NO_NODE be folded into node_state() or
-node_online() directly instead of adding a new node_available()
-interface?
-
-NUMA_NO_NODE is -1.  It's not clear to me that node_state()/
-node_isset()/test_bit() would do the right thing given -1.  I doubt
-all node_online() callers ensure they don't pass NUMA_NO_NODE.
-
-> --- a/include/linux/nodemask.h
-> +++ b/include/linux/nodemask.h
-> @@ -70,6 +70,7 @@
->   *
->   * int node_online(node)		Is some node online?
->   * int node_possible(node)		Is some node possible?
-> + * int node_available(node)		Is some node available(online or NUMA_NO_NODE)?
-
-Existing file generally fits in 80 columns; follow that lead unless
-you have a really good reason.  E.g., maybe this?
-
-  + * int node_available(node)		Node online or NUMA_NO_NODE
+Mr. Warren Buffett
+warren001buffett@gmail.com
+Chief Executive Officer: Berkshire Hathaway
+aphy/Warren-Edward-Buffett
