@@ -2,97 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBB4A51E0A0
-	for <lists+linux-block@lfdr.de>; Fri,  6 May 2022 23:05:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE6F51E37B
+	for <lists+linux-block@lfdr.de>; Sat,  7 May 2022 04:11:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1444324AbiEFVJe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 6 May 2022 17:09:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
+        id S1348537AbiEGCOo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 6 May 2022 22:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1444361AbiEFVJF (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 6 May 2022 17:09:05 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31309BCC
-        for <linux-block@vger.kernel.org>; Fri,  6 May 2022 14:05:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id i17so8571652pla.10
-        for <linux-block@vger.kernel.org>; Fri, 06 May 2022 14:05:20 -0700 (PDT)
+        with ESMTP id S1356890AbiEGCOn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 6 May 2022 22:14:43 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EBD85D5E5
+        for <linux-block@vger.kernel.org>; Fri,  6 May 2022 19:10:59 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id e5so7468935pgc.5
+        for <linux-block@vger.kernel.org>; Fri, 06 May 2022 19:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
-         :subject:to;
-        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
-        b=Pikzf05RvlgsNiSN1x8VQddbQlHNU8w6b4F5093LpuzcM0ntMpgrUYdcKzhnhHB48+
-         nxofPjncbzlNuBNgooKcMle2Y5ylBJZ6O8MOl6jmb+4GXhkX7JY7QlgBzU7KDKtY2S+t
-         hdYkJvFaRkTyMTuFzz2JqLAY96/AXzO6tgScVG1YJD9G5UO3G+tZ8nGL14yI0+9uPzhC
-         wx/zFVXeSa1h7d0nK/9Qv4fLpnyxu41DB2or0mzOQHpWd2RcmeWfuVLsEUjsRWphAt0g
-         4hy8H6gBdpRcYFXBRhobSZg5COn6SmVmFJv6lpApXA5BMZTju/Hca9z5AiK8OWFQZRyE
-         91pg==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc:from
+         :subject:content-transfer-encoding;
+        bh=4gOUiw5uQxUeOp2fX0fTYX1gJsz8NeIQ4cZ12I3BaOc=;
+        b=74K8/WcX21yZKre/WRJ6g72xA49qIaoNpuMo1klv6oQEGu2j3fB7XEQvKThEUfniN1
+         ubsUjpzUugwd9IBhJ+DDTtK43BMfS3CA0ymHDqTooM4GYb0GMiifC6SOt7+C2mZcSRsO
+         iC/jrGmz/IMKQheGClAHOrW5T/FW692bF0J84v8BuQPKNdURIuBjvo2t4L3CNGhOyJA1
+         XB9L0ouRkzQaZvLUFrYwO5gOnRr2SMG2COYUGI09830PagQfbgpIu0KCp76MS8VSWnrJ
+         QGvp1WjtQ9yxItxcOjsskyPqeFYqCmdEfXr4sF/y5Ocu3xYAa5df0RIQHCK4omfKx8uY
+         Xj9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
-         :from:date:message-id:subject:to;
-        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
-        b=5bgq0/anJw6WWZbF8fC9XrfLJv7scZ674B++KiseHbkqKcstURcK05xck2Rsc7gF1s
-         rfoQwyL79jMT+AQAeHy3PIJWeUXYBBQsHolFbeZkJqBEo1QV2RKtvi3Fto4EhVs4hZ6L
-         g1YF626Vq8od3ECdoqvnQF+k4d9ix3hVWS6gDxpxiBcNEtKIDVs7hnBScz57bCvjIXVo
-         F5z26DfyKw3ckDvouOBfFr6cADa6XpKOU7/fe51DIsx/rshXgIPWuyWP0VaExgySS8Ua
-         wCDXYEc1Avhwzc0Dq4midopIdH3bMTmrJIB8z9X59/4pVdYiNiq1h27ZUSNiESwYkf7J
-         SH2Q==
-X-Gm-Message-State: AOAM532zL1cl+34uPHQ1lOQHJ/rDzXCOJyH6LR+7NQm0IrgwtUb/GGX4
-        02BXx601YoWCO9xZlLcOT8ms5cWScQg9u2b5JQ==
-X-Google-Smtp-Source: ABdhPJx7z4moOE2gpr/KlS+3C9TQAnAO3wCwszoE5VU4KaQgpBr5SM/EngTmKFwvPUIFIAmNZ9KZadvdCoWslU4jbxM=
-X-Received: by 2002:a17:90a:b106:b0:1d9:7cde:7914 with SMTP id
- z6-20020a17090ab10600b001d97cde7914mr6294782pjq.56.1651871119761; Fri, 06 May
- 2022 14:05:19 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:from:subject:content-transfer-encoding;
+        bh=4gOUiw5uQxUeOp2fX0fTYX1gJsz8NeIQ4cZ12I3BaOc=;
+        b=1Z0ShZD3lVWf9GGnB3VDfln1MpjMVqKyNDiv8OSiz3du05QsyL7k4e2plEyg7YLTFa
+         +VzpyXFD6jtX+ylJrLNaQNN/nS04GbUsAUjgeS8r5OBYfCooyLs70JDZEbtd+n4Beks1
+         czmumz3SFhMLn2AdqfXOz5vj0gemr4xz4xmyakg1ayWC/+EveCQIkX3M4XtuxHnucskI
+         P1x1cfpv7aILs9w+B/xKiwzDM4xHz5V3lkL820r2XbZ5iz2J4ImcCLzfS6eJYVxubwAO
+         fpoMCHGzrYLP8LHLNA5OJeTFB2PG2ivZz542677YL0yyFAE8V1tvyfbjMoiJXeidLn2H
+         Qq6Q==
+X-Gm-Message-State: AOAM530UNAXpRdZ9+iOlVPr7N+iQ0FKE4/+yaYgkSSHCHFalaWB7aAZS
+        Mmt3XDgFcoRj7WHySIb1UEaDmbgPyEzR/Q==
+X-Google-Smtp-Source: ABdhPJwv5HWeC0MazIbUWT8tK7JpG4LStC/zh9JJ4OdY/zdBMKy9FUkYtrbUOU1J4S4XMncFDJNGdg==
+X-Received: by 2002:a63:e51:0:b0:3a4:9d22:1fd5 with SMTP id 17-20020a630e51000000b003a49d221fd5mr5181433pgo.586.1651889458760;
+        Fri, 06 May 2022 19:10:58 -0700 (PDT)
+Received: from [192.168.4.166] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id n23-20020a17090a929700b001d7f3bb11d7sm8008464pjo.53.2022.05.06.19.10.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 May 2022 19:10:58 -0700 (PDT)
+Message-ID: <c9ef8d83-8f8e-0b03-b197-bd6d6105059a@kernel.dk>
+Date:   Fri, 6 May 2022 20:10:57 -0600
 MIME-Version: 1.0
-Received: by 2002:ac4:9906:0:b0:4ba:807b:b8f3 with HTTP; Fri, 6 May 2022
- 14:05:18 -0700 (PDT)
-Reply-To: warren001buffett@gmail.com
-In-Reply-To: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
-References: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
-From:   Warren Buffett <guidayema@gmail.com>
-Date:   Fri, 6 May 2022 21:05:18 +0000
-Message-ID: <CAD_xG_pXizBD6pW=-K0ttmT_EZuS+8BZv7pSZcaHdzR-qQhVZA@mail.gmail.com>
-Subject: Fwd: My name is Warren Buffett, an American businessman.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:643 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4985]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [guidayema[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Content-Language: en-US
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 5.18-rc6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-My name is Warren Buffett, an American businessman and investor I have
-something important to discuss with you.
+Hi Linus,
 
-Mr. Warren Buffett
-warren001buffett@gmail.com
-Chief Executive Officer: Berkshire Hathaway
-aphy/Warren-Edward-Buffett
+Single revert for a change that isn't needed in 5.18, and a small series
+for s390/dasd. Please pull!
+
+
+The following changes since commit 09df6a75fffa68169c5ef9bef990cd7ba94f3eef:
+
+  bfq: Fix warning in bfqq_request_over_limit() (2022-04-29 06:45:37 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/block-5.18-2022-05-06
+
+for you to fetch changes up to f1c8781ac9d87650ccf45a354c0bbfa3f9230371:
+
+  s390/dasd: Use kzalloc instead of kmalloc/memset (2022-05-05 20:08:27 -0600)
+
+----------------------------------------------------------------
+block-5.18-2022-05-06
+
+----------------------------------------------------------------
+Haowen Bai (1):
+      s390/dasd: Use kzalloc instead of kmalloc/memset
+
+Jan Höppner (2):
+      s390/dasd: Fix read for ESE with blksize < 4k
+      s390/dasd: Fix read inconsistency for ESE DASD devices
+
+Ming Lei (1):
+      Revert "block: release rq qos structures for queue without disk"
+
+Stefan Haberland (2):
+      s390/dasd: fix data corruption for ESE devices
+      s390/dasd: prevent double format of tracks for ESE devices
+
+ block/blk-core.c               |  4 ----
+ drivers/s390/block/dasd.c      | 18 +++++++++++++++---
+ drivers/s390/block/dasd_eckd.c | 33 ++++++++++++++++++++++-----------
+ drivers/s390/block/dasd_int.h  | 14 ++++++++++++++
+ 4 files changed, 51 insertions(+), 18 deletions(-)
+
+-- 
+Jens Axboe
+
