@@ -2,104 +2,139 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7326251EAD7
-	for <lists+linux-block@lfdr.de>; Sun,  8 May 2022 04:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D500651ECA8
+	for <lists+linux-block@lfdr.de>; Sun,  8 May 2022 11:49:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234119AbiEHCTD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 7 May 2022 22:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
+        id S231545AbiEHJxg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 8 May 2022 05:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235229AbiEHCTC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 7 May 2022 22:19:02 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CFE11157
-        for <linux-block@vger.kernel.org>; Sat,  7 May 2022 19:15:13 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id a21so12619646edb.1
-        for <linux-block@vger.kernel.org>; Sat, 07 May 2022 19:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Cr4jqiwCZqgvtQ1mPAG6hA/aEXX0FhXJr8HGvR+MOF4=;
-        b=hIE5zwv2rTKn+CswdyopQHf0jMYKWFxRBF6odjeCxWBM/WRdVHzPYHl78NQfbEd29K
-         9enqxTUB9ZAvVAoyjF8AWhpC+f5IVcnJoMj+unQol6NBiW/KIRN+RPaYSq7RoP62yjw1
-         2X5NuVc9b98bRcPhXJz7ydAIkaPKYIMfoxEKnd5fu9ZsX03fmWcqseP8+bykpooAanlU
-         h5RINDqd4mWKTcsWni5bShtEPJLQkkRYT8dOneNqwF1lDvdzymwuLYp+4P1W1ToIwe8o
-         DNyWfhk7sajXrmDQAaFVYyGNgCHChouTJ3BZcW21ISZxH2nUIlO4cSJ32UEeiIotkomt
-         QV/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Cr4jqiwCZqgvtQ1mPAG6hA/aEXX0FhXJr8HGvR+MOF4=;
-        b=TOx51Y191eDRZNhsFCGvPdfGIonnW4SGdMYAeHgC13oEVPSneLi2xORiAvcFjAbgDd
-         1znmf70AiOjlvgSSUQbGv9vz3hVm+mzy8rXhY/NEfMoRmmyisfqNpieLaRt/r7LQwMEA
-         XLSQc5GZ2NTgaBflN3C0JI/64rDbwYgIQWaNtivzjxjMAIIN5rc8QBZlENGqxI7j15X7
-         s4zdDhCEQiSsTMkf6ZYg1Yo5W+OHViPX50WgVmBxq96r1+4Hs/ehep4Hp2B6pdjI6Euv
-         FoRGgOgIg3ejg1TJXcSy3I7UA7dxdFn8XIVhG8avyF/OfaH+etOMKicWiCa09QAYNFvu
-         7yCQ==
-X-Gm-Message-State: AOAM533uOnGLCwHbvFapUjKktR6+YAM+IcDYaVmSJvs62LhTnOY9ataH
-        5JKKapB1zonu3aZeMnAOjSo0e1YTPFbJGrdHEE8=
-X-Google-Smtp-Source: ABdhPJzTI/QqRCdwIAmphqF9OzyyYNq5Vx7Ax17gRaKdquRTzXBKHWHIi7p9/pNhdRsw+jE0joTHzv2TJm/aPiu3TUo=
-X-Received: by 2002:a50:ed0e:0:b0:425:e476:f4ed with SMTP id
- j14-20020a50ed0e000000b00425e476f4edmr10770566eds.32.1651976112082; Sat, 07
- May 2022 19:15:12 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a50:3554:0:0:0:0:0 with HTTP; Sat, 7 May 2022 19:15:11 -0700 (PDT)
-Reply-To: wijh555@gmail.com
-From:   "Mr. David Kabore" <dkabore16@gmail.com>
-Date:   Sat, 7 May 2022 19:15:11 -0700
-Message-ID: <CANLKR0vzXK+xff8dc1NLRToAvTmMja99WOdUionm413PVRoNow@mail.gmail.com>
-Subject: Good Day,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        HK_NAME_FM_MR_MRS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        with ESMTP id S244834AbiEHJlS (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 8 May 2022 05:41:18 -0400
+Received: from 1wt.eu (wtarreau.pck.nerim.net [62.212.114.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B4BD1DEC0;
+        Sun,  8 May 2022 02:37:26 -0700 (PDT)
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 2489bFex024590;
+        Sun, 8 May 2022 11:37:15 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Minh Yuan <yuanmingbuaa@gmail.com>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 1/3] floppy: use a statically allocated error counter
+Date:   Sun,  8 May 2022 11:37:07 +0200
+Message-Id: <20220508093709.24548-1-w@1wt.eu>
+X-Mailer: git-send-email 2.17.5
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:52e listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5001]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [wijh555[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [dkabore16[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [dkabore16[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 HK_NAME_FM_MR_MRS No description available.
-        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-Hello,
-I'm Mr. David Kabore, how are you doing hope you are in good health,
-the Board irector try to reach you on phone several times Meanwhile,
-your number was not connecting. before he ask me to send you an email
-to hear from you if you are fine. hope to hear you are in good Health.
+Interrupt handler bad_flp_intr() may cause a UAF on the recently freed
+request just to increment the error count. There's no point keeping
+that one in the request anyway, and since the interrupt handler uses
+a static pointer to the error which cannot be kept in sync with the
+pending request, better make it use a static error counter that's
+reset for each new request. This reset now happens when entering
+redo_fd_request() for a new request via set_next_request().
 
-Thanks,
-Mr. David Kabore.
+One initial concern about a single error counter was that errors on
+one floppy drive could be reported on another one, but this problem
+is not real given that the driver uses a single drive at a time, as
+that PC-compatible controllers also have this limitation by using
+shared signals. As such the error count is always for the "current"
+drive.
+
+Reported-by: Minh Yuan <yuanmingbuaa@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linuxfoundation.org>
+Tested-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+---
+ drivers/block/floppy.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index d5b9ff9bcbb2..015841f50f4e 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -509,8 +509,8 @@ static unsigned long fdc_busy;
+ static DECLARE_WAIT_QUEUE_HEAD(fdc_wait);
+ static DECLARE_WAIT_QUEUE_HEAD(command_done);
+ 
+-/* Errors during formatting are counted here. */
+-static int format_errors;
++/* errors encountered on the current (or last) request */
++static int floppy_errors;
+ 
+ /* Format request descriptor. */
+ static struct format_descr format_req;
+@@ -530,7 +530,6 @@ static struct format_descr format_req;
+ static char *floppy_track_buffer;
+ static int max_buffer_sectors;
+ 
+-static int *errors;
+ typedef void (*done_f)(int);
+ static const struct cont_t {
+ 	void (*interrupt)(void);
+@@ -1455,7 +1454,7 @@ static int interpret_errors(void)
+ 			if (drive_params[current_drive].flags & FTD_MSG)
+ 				DPRINT("Over/Underrun - retrying\n");
+ 			bad = 0;
+-		} else if (*errors >= drive_params[current_drive].max_errors.reporting) {
++		} else if (floppy_errors >= drive_params[current_drive].max_errors.reporting) {
+ 			print_errors();
+ 		}
+ 		if (reply_buffer[ST2] & ST2_WC || reply_buffer[ST2] & ST2_BC)
+@@ -2095,7 +2094,7 @@ static void bad_flp_intr(void)
+ 		if (!next_valid_format(current_drive))
+ 			return;
+ 	}
+-	err_count = ++(*errors);
++	err_count = ++floppy_errors;
+ 	INFBOUND(write_errors[current_drive].badness, err_count);
+ 	if (err_count > drive_params[current_drive].max_errors.abort)
+ 		cont->done(0);
+@@ -2241,9 +2240,8 @@ static int do_format(int drive, struct format_descr *tmp_format_req)
+ 		return -EINVAL;
+ 	}
+ 	format_req = *tmp_format_req;
+-	format_errors = 0;
+ 	cont = &format_cont;
+-	errors = &format_errors;
++	floppy_errors = 0;
+ 	ret = wait_til_done(redo_format, true);
+ 	if (ret == -EINTR)
+ 		return -EINTR;
+@@ -2759,10 +2757,11 @@ static int set_next_request(void)
+ 	current_req = list_first_entry_or_null(&floppy_reqs, struct request,
+ 					       queuelist);
+ 	if (current_req) {
+-		current_req->error_count = 0;
++		floppy_errors = 0;
+ 		list_del_init(&current_req->queuelist);
++		return 1;
+ 	}
+-	return current_req != NULL;
++	return 0;
+ }
+ 
+ /* Starts or continues processing request. Will automatically unlock the
+@@ -2821,7 +2820,6 @@ static void redo_fd_request(void)
+ 		_floppy = floppy_type + drive_params[current_drive].autodetect[drive_state[current_drive].probed_format];
+ 	} else
+ 		probing = 0;
+-	errors = &(current_req->error_count);
+ 	tmp = make_raw_rw_request();
+ 	if (tmp < 2) {
+ 		request_done(tmp);
+-- 
+2.17.5
+
