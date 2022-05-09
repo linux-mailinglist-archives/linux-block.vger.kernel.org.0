@@ -2,147 +2,103 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A7575204DE
-	for <lists+linux-block@lfdr.de>; Mon,  9 May 2022 20:59:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E60EC52051F
+	for <lists+linux-block@lfdr.de>; Mon,  9 May 2022 21:18:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240422AbiEITCo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 May 2022 15:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34592 "EHLO
+        id S240504AbiEITUf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 May 2022 15:20:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240412AbiEITCn (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 9 May 2022 15:02:43 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DC42854BE;
-        Mon,  9 May 2022 11:58:48 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 7AF061F96C;
-        Mon,  9 May 2022 18:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1652122727;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=w16vchMYkyFzvUDJDkFpExZGWWDGv88fe0vQkjsLWNM=;
-        b=mlwTaZePSYYE+AM6xPPGqmoaln0IagFvo9KKgNNA4Uz66qywNk6uF9/skqurvX0+4SQsTk
-        UJoUGdTg3x8JIPYFK35e6+W609tsTHvyuFkLN8zUuM5Y6yjYFjh4XdOfahdlwnluavSp7v
-        s3SJEovsDRoQEco1xf6AO+Dr6kV3n2Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1652122727;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=w16vchMYkyFzvUDJDkFpExZGWWDGv88fe0vQkjsLWNM=;
-        b=XoAgV38ZQFsVXsLl2q0Y/LuyEaHZ7SnRRkLm8/ZoXITtGX7+VWngPcr6IpaTqKZE5vbtWk
-        ZaBqkBsEIZSIRUCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DE59313AA5;
-        Mon,  9 May 2022 18:58:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id C0pQNWZkeWIhcgAAMHmgww
-        (envelope-from <dsterba@suse.cz>); Mon, 09 May 2022 18:58:46 +0000
-Date:   Mon, 9 May 2022 20:54:32 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Pankaj Raghav <p.raghav@samsung.com>
-Cc:     jaegeuk@kernel.org, hare@suse.de, dsterba@suse.com,
-        axboe@kernel.dk, hch@lst.de, damien.lemoal@opensource.wdc.com,
-        snitzer@kernel.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, bvanassche@acm.org,
-        linux-fsdevel@vger.kernel.org, matias.bjorling@wdc.com,
-        Jens Axboe <axboe@fb.com>, gost.dev@samsung.com,
-        jonathan.derrick@linux.dev, jiangbo.365@bytedance.com,
-        linux-nvme@lists.infradead.org, dm-devel@redhat.com,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        linux-kernel@vger.kernel.org, Johannes Thumshirn <jth@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Alasdair Kergon <agk@redhat.com>, linux-block@vger.kernel.org,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Keith Busch <kbusch@kernel.org>, linux-btrfs@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v3 11/11] dm-zoned: ensure only power of 2 zone sizes are
- allowed
-Message-ID: <20220509185432.GB18596@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Pankaj Raghav <p.raghav@samsung.com>,
-        jaegeuk@kernel.org, hare@suse.de, dsterba@suse.com, axboe@kernel.dk,
-        hch@lst.de, damien.lemoal@opensource.wdc.com, snitzer@kernel.org,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        bvanassche@acm.org, linux-fsdevel@vger.kernel.org,
-        matias.bjorling@wdc.com, Jens Axboe <axboe@fb.com>,
-        gost.dev@samsung.com, jonathan.derrick@linux.dev,
-        jiangbo.365@bytedance.com, linux-nvme@lists.infradead.org,
-        dm-devel@redhat.com, Naohiro Aota <naohiro.aota@wdc.com>,
-        linux-kernel@vger.kernel.org, Johannes Thumshirn <jth@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Alasdair Kergon <agk@redhat.com>,
-        linux-block@vger.kernel.org, Chaitanya Kulkarni <kch@nvidia.com>,
-        Keith Busch <kbusch@kernel.org>, linux-btrfs@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-References: <20220506081105.29134-1-p.raghav@samsung.com>
- <CGME20220506081118eucas1p17f3c29cc36d748c3b5a3246f069f434a@eucas1p1.samsung.com>
- <20220506081105.29134-12-p.raghav@samsung.com>
+        with ESMTP id S240502AbiEITUe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 May 2022 15:20:34 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20E613B8C2
+        for <linux-block@vger.kernel.org>; Mon,  9 May 2022 12:16:39 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id bo5so13056663pfb.4
+        for <linux-block@vger.kernel.org>; Mon, 09 May 2022 12:16:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=osandov-com.20210112.gappssmtp.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xMQqri0afWvEcgziBjV/OJ4ZcWGFGAdMGg73mCxF+hU=;
+        b=zHtsslvNtb6u8JNJWRqD5MfQ3dRa0V3IYQchS8XdDoQuJuD9ZvqcNiIhTE/1lhBhAB
+         hXgR5iVG8hX2IIdbKwiPrn6oylVmu92m/pz8l66klVElDzyQdpQ6P4oEz+779UbIyMgO
+         4QjVAHKSuOaIjRrqQf+pagUwFIO54zGvp0mgkzEjChMVmsdYsZ3wO2Bjt20At62Gl0+R
+         hQw3HFLZRzfiz5V1H1eqZFOCZoIwLJarC/sbIZCDMhMiREvpgtyoJ/aFri/yV77rryOW
+         vlhGXJYKdlb5bcIAJCtkrPFb0ZSCxy5OUxySyBzDxleC9HzJeY99bo6lyfdg61CgdKB2
+         /kpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xMQqri0afWvEcgziBjV/OJ4ZcWGFGAdMGg73mCxF+hU=;
+        b=UKHIyjKPMMcpltr6yP96Z4YFxyDHcbI9y5duM/DjMsLENldkXM5ox9zxOMnNYekLz3
+         QnFj6znUb8SoL5tIdVOUC5wTbbUVEZORGYUzRgawK/9R4pbvcVZ4y24X5NmwxhPJj64q
+         zlVd6/DGDRLh25Ko2k2khVkab27NY5XPcWO9g80sOaWe9cUH71I4b/JqWJcM/WlMii8B
+         PrieHxJn1q7AoiM4DjZqM7YIY8p4pU9Wy9eNmChQ+ce+GeTLmSO5Z+9CBgz++QRmhMrB
+         7lV5qJQjyjCW41h8qwjHg8T/NN6eMnOA5nVFip8sNf/FkJyPGpc4C9NyLVQ3GoukZM+E
+         K8iw==
+X-Gm-Message-State: AOAM532v5l65ejW/pfdYTc1on5SzRagHqQdPQKvF+XcMy5gCySioWBe9
+        /kXTMEv2rBrIf2NUQVraXznhPQ==
+X-Google-Smtp-Source: ABdhPJzDhURpCVvAG7i6HKR3FeCLri2Fh3G+sdoU6dYC/cLVLHF9hR+M5ZXRFAy2xmi1vr1UG+uozQ==
+X-Received: by 2002:a63:5464:0:b0:3c1:4930:fbd5 with SMTP id e36-20020a635464000000b003c14930fbd5mr13844414pgm.94.1652123799270;
+        Mon, 09 May 2022 12:16:39 -0700 (PDT)
+Received: from relinquished.localdomain ([2620:10d:c090:500::3:a403])
+        by smtp.gmail.com with ESMTPSA id n52-20020a056a000d7400b0050dc762812asm9009919pfv.4.2022.05.09.12.16.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 May 2022 12:16:38 -0700 (PDT)
+Date:   Mon, 9 May 2022 12:16:36 -0700
+From:   Omar Sandoval <osandov@osandov.com>
+To:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc:     linux-block@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>
+Subject: Re: [PATCH blktests 0/6] extend zoned mode coverage for scsi devices
+Message-ID: <YnlolE+R/MHTW18s@relinquished.localdomain>
+References: <20220330013215.463555-1-shinichiro.kawasaki@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220506081105.29134-12-p.raghav@samsung.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220330013215.463555-1-shinichiro.kawasaki@wdc.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, May 06, 2022 at 10:11:05AM +0200, Pankaj Raghav wrote:
-> From: Luis Chamberlain <mcgrof@kernel.org>
+On Wed, Mar 30, 2022 at 10:32:09AM +0900, Shin'ichiro Kawasaki wrote:
+> This patch series extends blktests coverage in zoned mode on scsi devices.
+> Recently scsi_debug introduced ZBC support and can work in zoned mode. The first
+> patch adds a new test case zbd/008 using scsi_debug in zoned mode. The second
+> and third patches allow test cases block/027 and scsi/004 to run in zoned mode
+> using scsi_debug. Following three patches are scsi test group improvements
+> unrelated to scsi_debug. The fourth patch allows scsi/006 to run on SCSI devices
+> in zoned mode. The fifth patch is a bug fix in scsi/006. The last patch removes
+> an unnecessary scsi/003 out file.
 > 
-> Today dm-zoned relies on the assumption that you have a zone size
-> with a power of 2. Even though the block layer today enforces this
-> requirement, these devices do exist and so provide a stop-gap measure
-> to ensure these devices cannot be used by mistake
+> Shin'ichiro Kawasaki (6):
+>   zbd/008: check no stale page cache after BLKRESETZONE ioctl
+>   common/scsi_debug: prepare scsi_debug in zoned mode
+>   block/027, scsi/004: whitelist scsi_debug test cases for zoned mode
+>   scsi/006: whitelist for zoned mode
+>   scsi/006: skip cache types which disable read cache for SATA drives
+>   scsi/003: remove unnecessary out file
 > 
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> ---
->  drivers/md/dm-zone.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/md/dm-zone.c b/drivers/md/dm-zone.c
-> index 3e7b1fe15..27dc4ddf2 100644
-> --- a/drivers/md/dm-zone.c
-> +++ b/drivers/md/dm-zone.c
-> @@ -231,6 +231,18 @@ static int dm_revalidate_zones(struct mapped_device *md, struct dm_table *t)
->  	struct request_queue *q = md->queue;
->  	unsigned int noio_flag;
->  	int ret;
-> +	struct block_device *bdev = md->disk->part0;
-> +	sector_t zone_sectors;
-> +	char bname[BDEVNAME_SIZE];
-> +
-> +	zone_sectors = bdev_zone_sectors(bdev);
-> +
-> +	if (!is_power_of_2(zone_sectors)) {
+>  common/scsi_debug  | 11 +++++++++-
+>  tests/block/027    |  1 +
+>  tests/scsi/003.out |  7 ------
+>  tests/scsi/004     |  1 +
+>  tests/scsi/006     |  5 +++++
+>  tests/scsi/rc      |  4 ++++
+>  tests/zbd/008      | 54 ++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/zbd/008.out  |  2 ++
+>  8 files changed, 77 insertions(+), 8 deletions(-)
+>  delete mode 100644 tests/scsi/003.out
+>  create mode 100755 tests/zbd/008
+>  create mode 100644 tests/zbd/008.out
 
-is_power_of_2 takes 'unsigned long' and sector_t is u64, so this is not
-32bit clean and we had an actual bug where value 1<<48 was not
-recognized as power of 2.
-
-> +		DMWARN("%s: %s only power of two zone size supported\n",
-> +		       dm_device_name(md),
-> +		       bdevname(bdev, bname));
-> +		return 1;
-> +	}
->  
->  	/*
->  	 * Check if something changed. If yes, cleanup the current resources
-> -- 
-> 2.25.1
+Thank you for the patches, applied.
