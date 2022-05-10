@@ -2,195 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 255B8521301
-	for <lists+linux-block@lfdr.de>; Tue, 10 May 2022 13:00:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2D4D52138D
+	for <lists+linux-block@lfdr.de>; Tue, 10 May 2022 13:20:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240546AbiEJLEq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 May 2022 07:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56368 "EHLO
+        id S240883AbiEJLYd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 May 2022 07:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235102AbiEJLEo (ORCPT
+        with ESMTP id S240912AbiEJLY3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 May 2022 07:04:44 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76BEA166097
-        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 04:00:43 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id y32so28607190lfa.6
-        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 04:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lvqbIjZaqqz8v9VA2vUEgbSJLXck1rk/XGndPKUI8M4=;
-        b=As6px3bRkV/WYceyt6eqCbvizxSd854/raXBKyf31lxnaAJmSn49+dvMLMVXwO39NQ
-         k7h+5f6UaivYfJHAvl3V09m3PE74R0z6M6z75QkKfR5qLZZzXN0ZTJ6tJhbEiaZmgK0R
-         AKKA7uM1YVN9EUnaSVoLGJHEh1H23U+QcIXJP8/VbRU5M/I/Sjch4cbTFIf0trkAajla
-         RopZhRJKDcazJG111TrByaXgvTMNj1oUL/BrFhyFoiAl3FTHQw7GqiOWVqUUCa3KKmFD
-         RC9+TYqeedTnNg6KQ/Lr31abjBy5LXXGJvVtNM76Zd6tZ78FvThB1ou90Ufkuy2cABnn
-         /RJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lvqbIjZaqqz8v9VA2vUEgbSJLXck1rk/XGndPKUI8M4=;
-        b=xCKtYZefBxOsHrPgP648Q+NqmlyHqNJTeoyrkE34kptFIDmMAWKrLyonT1HD6OABMa
-         2aCyDB4VLJJqkRqHLjWnlJpgQtcrTsAwGTKHklmhXwU1+1NcqTzsUw6V5I2RQbih6BIt
-         YjgD+kphZ39M519l8xshM58MBO7a16hxXx2QfaImExrmQ6RqcSXtt9ISmzcZvD8ELgS9
-         hzFSdcJcHEIUT9GnPHjj+J5icYV+501XJUWj0aeZ/D8L4Xfg7jGeP8ANOqPATP0nwt+s
-         Wy7q/CbqJMtixiNghFLWAGHmd0ovgotj5s/e8Nj4n8r152sh4PYLjIHFixNkIkNcB75p
-         QiYg==
-X-Gm-Message-State: AOAM532SVlL2xlKY7YjtqgGapimVVyLe0bCZYkl5HVOtpgDFZGW1mm0V
-        X3aLI10y7ekSppumXifl2YEOSAU4D0jxP+886DvMAbCEuNs=
-X-Google-Smtp-Source: ABdhPJzs6FKfad9LRIJMUJG5aJGzOXpIrCTsPgsKEEQS+bty+cdf9FmnJFJ34reO05TPlj13fA/XDyp+df5E6xA3FW0=
-X-Received: by 2002:a05:6512:e84:b0:474:12f3:cb53 with SMTP id
- bi4-20020a0565120e8400b0047412f3cb53mr11556679lfb.254.1652180441697; Tue, 10
- May 2022 04:00:41 -0700 (PDT)
+        Tue, 10 May 2022 07:24:29 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB8A1BDDBF;
+        Tue, 10 May 2022 04:20:25 -0700 (PDT)
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KyFqc0SLRz6GD99;
+        Tue, 10 May 2022 19:17:00 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 10 May 2022 13:20:23 +0200
+Received: from localhost.localdomain (10.69.192.58) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 10 May 2022 12:20:20 +0100
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>
+Subject: [RFC PATCH 0/2] sbitmap: NUMA node spreading
+Date:   Tue, 10 May 2022 19:14:32 +0800
+Message-ID: <1652181274-136198-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <20220429152118.3617303-1-vincent.whitchurch@axis.com>
-In-Reply-To: <20220429152118.3617303-1-vincent.whitchurch@axis.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 May 2022 13:00:04 +0200
-Message-ID: <CAPDyKFqV5V7dyOZw98tp8vDdFFb6pVmQwFxdeUMD=Ls4tQhO8A@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: support zeroout using TRIM
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     kernel@axis.com, linux-block@vger.kernel.org, tytso@mit.edu,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Avri Altman <avri.altman@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-+ Avri
+Hi Jens, guys,
 
-On Fri, 29 Apr 2022 at 17:22, Vincent Whitchurch
-<vincent.whitchurch@axis.com> wrote:
->
-> If the device supports TRIM and indicates that it erases to zeros, we
-> can use it to support hardware offloading of REQ_OP_WRITE_ZEROES.
->
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+I am sending this as an RFC to see if there is any future in it or ideas
+on how to make better. I also need to improve some items (as mentioned in
+2/2 commit message) and test a lot more.
 
-Thanks for the patch, this certainly makes sense to me too.
+The general idea is that we change from allocating a single array of
+sbitmap words to allocating an sub-array per NUMA node. And then each CPU
+in that node is hinted to use that sub-array
 
-So, applied for next (with a slightly updated commit message) and by
-adding Avri's reviewed-by tag, thanks!
+Initial performance looks decent.
 
-Kind regards
-Uffe
+Some figures:
+System: 4-nodes (with memory on all nodes), 128 CPUs
 
+null blk config block:
+20 devs, submit_queues=NR_CPUS, shared_tags, shared_tag_bitmap,
+hw_queue_depth=256
 
-> ---
->
-> Notes:
->     https://lore.kernel.org/lkml/20160303182146.GG9772@thunk.org/ seems to agree
->     that BLKZEROOUT can use TRIM on eMMC.
->
->     BLKDISCARD uses DISCARD when available so it can't be used to send TRIM.
->
->     If TRIM should not be used for BLKZEROOUT for some reason I guess the only way
->     is to use MMC_IOC_MULTI_CMD like in this commit in mmc-utils but that's a
->     rather low-level interface:
->
->      https://git.kernel.org/pub/scm/utils/mmc/mmc-utils.git/commit/?id=43282e80e174cc73b09b81a4d17cb3a7b4dc5cfc
->
->  drivers/mmc/core/block.c | 26 ++++++++++++++++++++++----
->  drivers/mmc/core/queue.c |  2 ++
->  2 files changed, 24 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> index 506dc900f5c7..0398b205a285 100644
-> --- a/drivers/mmc/core/block.c
-> +++ b/drivers/mmc/core/block.c
-> @@ -126,6 +126,7 @@ struct mmc_blk_data {
->  #define MMC_BLK_DISCARD                BIT(2)
->  #define MMC_BLK_SECDISCARD     BIT(3)
->  #define MMC_BLK_CQE_RECOVERY   BIT(4)
-> +#define MMC_BLK_TRIM           BIT(5)
->
->         /*
->          * Only set in main mmc_blk_data associated
-> @@ -1090,12 +1091,13 @@ static void mmc_blk_issue_drv_op(struct mmc_queue *mq, struct request *req)
->         blk_mq_end_request(req, ret ? BLK_STS_IOERR : BLK_STS_OK);
->  }
->
-> -static void mmc_blk_issue_discard_rq(struct mmc_queue *mq, struct request *req)
-> +static void mmc_blk_issue_erase_rq(struct mmc_queue *mq, struct request *req,
-> +                                  int type, unsigned int erase_arg)
->  {
->         struct mmc_blk_data *md = mq->blkdata;
->         struct mmc_card *card = md->queue.card;
->         unsigned int from, nr;
-> -       int err = 0, type = MMC_BLK_DISCARD;
-> +       int err = 0;
->         blk_status_t status = BLK_STS_OK;
->
->         if (!mmc_can_erase(card)) {
-> @@ -1111,13 +1113,13 @@ static void mmc_blk_issue_discard_rq(struct mmc_queue *mq, struct request *req)
->                 if (card->quirks & MMC_QUIRK_INAND_CMD38) {
->                         err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->                                          INAND_CMD38_ARG_EXT_CSD,
-> -                                        card->erase_arg == MMC_TRIM_ARG ?
-> +                                        erase_arg == MMC_TRIM_ARG ?
->                                          INAND_CMD38_ARG_TRIM :
->                                          INAND_CMD38_ARG_ERASE,
->                                          card->ext_csd.generic_cmd6_time);
->                 }
->                 if (!err)
-> -                       err = mmc_erase(card, from, nr, card->erase_arg);
-> +                       err = mmc_erase(card, from, nr, erase_arg);
->         } while (err == -EIO && !mmc_blk_reset(md, card->host, type));
->         if (err)
->                 status = BLK_STS_IOERR;
-> @@ -1127,6 +1129,19 @@ static void mmc_blk_issue_discard_rq(struct mmc_queue *mq, struct request *req)
->         blk_mq_end_request(req, status);
->  }
->
-> +static void mmc_blk_issue_trim_rq(struct mmc_queue *mq, struct request *req)
-> +{
-> +       mmc_blk_issue_erase_rq(mq, req, MMC_BLK_TRIM, MMC_TRIM_ARG);
-> +}
-> +
-> +static void mmc_blk_issue_discard_rq(struct mmc_queue *mq, struct request *req)
-> +{
-> +       struct mmc_blk_data *md = mq->blkdata;
-> +       struct mmc_card *card = md->queue.card;
-> +
-> +       mmc_blk_issue_erase_rq(mq, req, MMC_BLK_DISCARD, card->erase_arg);
-> +}
-> +
->  static void mmc_blk_issue_secdiscard_rq(struct mmc_queue *mq,
->                                        struct request *req)
->  {
-> @@ -2327,6 +2342,9 @@ enum mmc_issued mmc_blk_mq_issue_rq(struct mmc_queue *mq, struct request *req)
->                 case REQ_OP_SECURE_ERASE:
->                         mmc_blk_issue_secdiscard_rq(mq, req);
->                         break;
-> +               case REQ_OP_WRITE_ZEROES:
-> +                       mmc_blk_issue_trim_rq(mq, req);
-> +                       break;
->                 case REQ_OP_FLUSH:
->                         mmc_blk_issue_flush(mq, req);
->                         break;
-> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-> index c69b2d9df6f1..bbe2ea829ea7 100644
-> --- a/drivers/mmc/core/queue.c
-> +++ b/drivers/mmc/core/queue.c
-> @@ -191,6 +191,8 @@ static void mmc_queue_setup_discard(struct request_queue *q,
->                 q->limits.discard_granularity = SECTOR_SIZE;
->         if (mmc_can_secure_erase_trim(card))
->                 blk_queue_flag_set(QUEUE_FLAG_SECERASE, q);
-> +       if (mmc_can_trim(card) && card->erased_byte == 0)
-> +               blk_queue_max_write_zeroes_sectors(q, max_discard);
->  }
->
->  static unsigned short mmc_get_max_segments(struct mmc_host *host)
-> --
-> 2.34.1
->
+fio config:
+bs=4096, iodepth=128, numjobs=10, cpus_allowed_policy=split, rw=read,
+ioscheduler=none
+
+Before:
+7130K
+
+After:
+7630K
+
+So a +7% IOPS gain.
+
+Any comments welcome, thanks!.
+
+Based on v5.18-rc6.
+
+John Garry (2):
+  sbitmap: Make sbitmap.map a double pointer
+  sbitmap: Spread sbitmap word allocation over NUMA nodes
+
+ include/linux/sbitmap.h | 16 +++++---
+ lib/sbitmap.c           | 83 +++++++++++++++++++++++++++++++++--------
+ 2 files changed, 79 insertions(+), 20 deletions(-)
+
+-- 
+2.26.2
+
