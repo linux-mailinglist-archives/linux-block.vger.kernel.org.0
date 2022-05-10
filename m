@@ -2,157 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA3E152134B
-	for <lists+linux-block@lfdr.de>; Tue, 10 May 2022 13:10:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0509C52157D
+	for <lists+linux-block@lfdr.de>; Tue, 10 May 2022 14:29:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233018AbiEJLNI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 May 2022 07:13:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34838 "EHLO
+        id S241776AbiEJMdw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 May 2022 08:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232692AbiEJLNH (ORCPT
+        with ESMTP id S238445AbiEJMdv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 May 2022 07:13:07 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF123106366;
-        Tue, 10 May 2022 04:09:09 -0700 (PDT)
-Received: from kwepemi500020.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KyFd84Fk7zfbXF;
-        Tue, 10 May 2022 19:07:56 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi500020.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 10 May 2022 19:09:07 +0800
-Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 10 May
- 2022 19:09:07 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH] blk-mq: don't queue 'hctx->run_work' if the queue is dead
-Date:   Tue, 10 May 2022 19:23:02 +0800
-Message-ID: <20220510112302.1215092-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Tue, 10 May 2022 08:33:51 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BFAB2A376A
+        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 05:29:54 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id n18so16609946plg.5
+        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 05:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Jp7HjFBFx3m1li+wnracJc1zJal8gZ4hoEqGbVeKt/I=;
+        b=dQ9mqsipznukUKDUkmGqQ6cNYBKwXMZ6FykGsE/msGVDR87AK14dpp08ZVEpPQzJ5e
+         dadLbFK2qQsI2ASI+cILavLkdHwguE51X6a896gLTxd7pS+k2pMbbmfux4zNkQrIBCfm
+         XQLVRknw18d84O0e16om6yLrPQ/nHttcRSddgewV3rh6FC6/UTZbfZR7zxZDynpjTctQ
+         OY3HP76EtZCi2sTUssIj4yml6XGZIaVfns5p2VtyBXHNN9/ASxJoiYvUt5LkNBoP8bBv
+         XQZ7dqo3urs1YpRnZCdP9P9KIJbsSGVifu13+MPT/2WJoghejG/UMHb13aw0z0/bL0AQ
+         4E6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Jp7HjFBFx3m1li+wnracJc1zJal8gZ4hoEqGbVeKt/I=;
+        b=tyvGWtkL7PHk/5DXsbzUSkQ1SgyVjHPFK39Ah0JdrcySy0vMcIT0avldqmfiqmEnQL
+         LX7Kifa3EoEJfV1/tJZLYA/ICH+J3AXp4QmhsIpONYDUpkwyyVwetzvt7NmsUEaOOG/t
+         7x145K+nQGc1f+t8kMsxcKZD2BGJRfIUMoEEvVnE6w8rjFqgFXO+jQg3KD8Jvq58tckt
+         YNEmid64lZ0lClExj1OpZuextDf3GLd8zOzfTc86HWeZUqQ0GHHQQepj7MjDq0FvXWaA
+         +ljmb5R1KU2SIuApoZG0zZlT2G/OSN5jfjmnkbZsBktfVtkSisKOfOGKV5A+Jmq1NjOk
+         MYDw==
+X-Gm-Message-State: AOAM531RpHHwZk/xjNfZQOdG0/S1qr6YAYTm+CaxYj3palEdPsQmCNL4
+        SkyEgTTGQeQo1j501Cma53SRuQ==
+X-Google-Smtp-Source: ABdhPJwgJU11iFqgteUqesG2Y4aoSdv556T/SpO5vBCJUnsWGbRSoSZAfC+9tXV7a2csI0sDnod51g==
+X-Received: by 2002:a17:90a:c595:b0:1d9:532e:52fd with SMTP id l21-20020a17090ac59500b001d9532e52fdmr23180190pjt.79.1652185794001;
+        Tue, 10 May 2022 05:29:54 -0700 (PDT)
+Received: from [192.168.1.100] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id j5-20020a170902c3c500b0015e8d4eb2besm1861400plj.264.2022.05.10.05.29.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 May 2022 05:29:53 -0700 (PDT)
+Message-ID: <c393d0dd-05a9-2a12-92a2-eebd8d49c2dd@kernel.dk>
+Date:   Tue, 10 May 2022 06:29:52 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600009.china.huawei.com (7.193.23.164)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: SPDX tag and top of file comment cleanups for the loop driver
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>, tytso <tytso@mit.edu>
+Cc:     linux-block@vger.kernel.org, linux-spdx@vger.kernel.org
+References: <20220419063303.583106-1-hch@lst.de> <YnGLRAuS8QGaSADK@mit.edu>
+ <20220503201334.GA7325@lst.de> <YnGgP7ubsXxFTaZE@mit.edu>
+ <20220510072243.GB11929@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20220510072243.GB11929@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Our test report a following crash:
+On 5/10/22 1:22 AM, Christoph Hellwig wrote:
+> Jens,
+> 
+> are the comments from Ted here enough to apply the series?  Or do
+> we need a formal Acked-by to be on the safe side?
 
-BUG: kernel NULL pointer dereference, address: 0000000000000018
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP NOPTI
-CPU: 6 PID: 265 Comm: kworker/6:1H Kdump: loaded Tainted: G           O      5.10.0-60.17.0.h43.eulerosv2r11.x86_64 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-20220320_160524-szxrtosci10000 04/01/2014
-Workqueue: kblockd blk_mq_run_work_fn
-RIP: 0010:blk_mq_delay_run_hw_queues+0xb6/0xe0
-RSP: 0018:ffffacc6803d3d88 EFLAGS: 00010246
-RAX: 0000000000000006 RBX: ffff99e2c3d25008 RCX: 00000000ffffffff
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff99e2c911ae18
-RBP: ffffacc6803d3dd8 R08: 0000000000000000 R09: ffff99e2c0901f6c
-R10: 0000000000000018 R11: 0000000000000018 R12: ffff99e2c911ae18
-R13: 0000000000000000 R14: 0000000000000003 R15: ffff99e2c911ae18
-FS:  0000000000000000(0000) GS:ffff99e6bbf00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000018 CR3: 000000007460a006 CR4: 00000000003706e0
-Call Trace:
- __blk_mq_do_dispatch_sched+0x2a7/0x2c0
- ? newidle_balance+0x23e/0x2f0
- __blk_mq_sched_dispatch_requests+0x13f/0x190
- blk_mq_sched_dispatch_requests+0x30/0x60
- __blk_mq_run_hw_queue+0x47/0xd0
- process_one_work+0x1b0/0x350
- worker_thread+0x49/0x300
- ? rescuer_thread+0x3a0/0x3a0
- kthread+0xfe/0x140
- ? kthread_park+0x90/0x90
- ret_from_fork+0x22/0x30
+Looks conclusive enough to me - if not, Ted, please holler. I'll
+queue it up.
 
-After digging from vmcore, I found that the queue is cleaned
-up(blk_cleanup_queue() is done) and tag set is
-freed(blk_mq_free_tag_set() is done).
-
-There are two problems here:
-
-1) blk_mq_delay_run_hw_queues() will only be called from
-__blk_mq_do_dispatch_sched() if e->type->ops.has_work() return true.
-This seems impossible because blk_cleanup_queue() is done, and there
-should be no io. However, bfq_has_work() can return true even if no
-io is queued. This is because bfq_has_work() is using busy queues, and
-bfq_queue can stay busy after dispatching all the requests.
-
-2) 'hctx->run_work' still exists after blk_cleanup_queue().
-blk_mq_cancel_work_sync() is called from blk_cleanup_queue() to cancel
-all the 'run_work'. However, there is no guarantee that new 'run_work'
-won't be queued after that(and before blk_mq_exit_queue() is done).
-
-The first problem is not the root cause, this patch just fix the second
-problem by checking the 'QUEUE_FLAG_DEAD' before queuing 'hctx->run_work',
-and using 'queue_lock' to synchronize queuing new work and cacelling the
-old work.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-core.c |  3 +++
- block/blk-mq.c   | 10 ++++++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index c3f1e46ddd43..2609805861be 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -318,7 +318,10 @@ void blk_cleanup_queue(struct request_queue *q)
- 	/* cleanup rq qos structures for queue without disk */
- 	rq_qos_exit(q);
- 
-+	/* New 'hctx->run_work' can't be queued after setting the dead flag */
-+	spin_lock_irq(&q->queue_lock);
- 	blk_queue_flag_set(QUEUE_FLAG_DEAD, q);
-+	spin_unlock_irq(&q->queue_lock);
- 
- 	blk_sync_queue(q);
- 	if (queue_is_mq(q)) {
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 2cf011b57cf9..34b4914204dd 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2042,6 +2042,8 @@ static int blk_mq_hctx_next_cpu(struct blk_mq_hw_ctx *hctx)
- static void __blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
- 					unsigned long msecs)
- {
-+	unsigned long flag;
-+
- 	if (unlikely(blk_mq_hctx_stopped(hctx)))
- 		return;
- 
-@@ -2056,8 +2058,12 @@ static void __blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async,
- 		put_cpu();
- 	}
- 
--	kblockd_mod_delayed_work_on(blk_mq_hctx_next_cpu(hctx), &hctx->run_work,
--				    msecs_to_jiffies(msecs));
-+	spin_lock_irqsave(&hctx->queue->queue_lock, flag);
-+	if (!blk_queue_dead(hctx->queue))
-+		kblockd_mod_delayed_work_on(blk_mq_hctx_next_cpu(hctx),
-+					    &hctx->run_work,
-+					    msecs_to_jiffies(msecs));
-+	spin_unlock_irqrestore(&hctx->queue->queue_lock, flag);
- }
- 
- /**
 -- 
-2.31.1
+Jens Axboe
 
