@@ -2,56 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F039D521F80
-	for <lists+linux-block@lfdr.de>; Tue, 10 May 2022 17:46:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C251552218D
+	for <lists+linux-block@lfdr.de>; Tue, 10 May 2022 18:44:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346274AbiEJPuD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 May 2022 11:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33508 "EHLO
+        id S1347671AbiEJQrz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 May 2022 12:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346333AbiEJPsZ (ORCPT
+        with ESMTP id S1347660AbiEJQrf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 May 2022 11:48:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635FA281348;
-        Tue, 10 May 2022 08:44:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5073C614EA;
-        Tue, 10 May 2022 15:44:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D20A7C385A6;
-        Tue, 10 May 2022 15:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652197465;
-        bh=/WySDu8wnTntCqGUHjerN/beg29yM9aeGgeUfEc+4Zw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vp1NArSQX7IHrY/mvLkEpoZsUte3mziph4Zz74bmyBPS/zviPdQEGVOUCgL9Ve6yz
-         ++J1wC8M/g62BUOKYFrz5/kSrI3RSxjVpYXEglIOcs3VjbqkQSGtELHHMdByIWf7l6
-         FBMpTWX8YD8mb3ureGu1WFgohHXHGyTw6yZkr2DF1J9sFWeiU2IyY8U7ePaoFGcphl
-         XXLWATWFgmRYhOWrxbhhUADpC/cXpBFMzzwwVhZFreHM3guSk9vzr9f4uW/LP0BAAC
-         WTVT7m4stusszdsSQyFsHIooLQ57i4CntD2DuJ5olqRKG4kcN5Ie7ghK0IYzMMPabH
-         ZsKbE3+qfkuSQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, axboe@kernel.dk,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 20/21] block: Do not call folio_next() on an unreferenced folio
-Date:   Tue, 10 May 2022 11:43:39 -0400
-Message-Id: <20220510154340.153400-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220510154340.153400-1-sashal@kernel.org>
-References: <20220510154340.153400-1-sashal@kernel.org>
+        Tue, 10 May 2022 12:47:35 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004BAB36D1
+        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 09:43:27 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24AF0bhF024483;
+        Tue, 10 May 2022 16:43:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2021-07-09; bh=L7WT2PZP9lCaY2OiXLy2iEOGPpGUZCS/JZbi4PID7Dc=;
+ b=M8bhntWCC6PDHsuYIlTZIUyuBrnj1bfVqGCi+F1ODHznsG3mg8reMk+38yEtnjV3Eubv
+ TXvxXT89dpXdH2VW0Wh0/ryF4v/Zgb9cT+14zu8HK1MyNe5AXPdWWnSm4GP3fI4xo/yB
+ jrJ5DwxTAt0a+t5dLDtSF/ualCsQd4I3SAWCbTQBy62NLKMywfWbohnAA5D8sv/u/cx8
+ B6JhXHlSSpRZICCt28eDx7lA9rJEz8usgW185ElG7EjC/gm53+S6C3oeB9fOUWi50BI9
+ cWirqiujAn1cZ/j3oRU2e72TT7glBYRP+94dQHPQ6fuS6ekpkQdkzHr7gh/e3ofqLvWl gA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fwfj2fd54-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 May 2022 16:43:18 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24AGPdiB036801;
+        Tue, 10 May 2022 16:43:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3fwf738sjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 May 2022 16:43:17 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 24AGhHnR030233;
+        Tue, 10 May 2022 16:43:17 GMT
+Received: from dhcp-10-39-195-127.vpn.oracle.com (dhcp-10-39-195-127.vpn.oracle.com [10.39.195.127])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3fwf738sj7-1;
+        Tue, 10 May 2022 16:43:16 +0000
+From:   Alan Adamson <alan.adamson@oracle.com>
+To:     linux-block@vger.kernel.org
+Cc:     alan.adamson@oracle.com, linux-nvme@lists.infradead.org,
+        osandov@fb.com
+Subject: tests/nvme: add tests for error logging
+Date:   Tue, 10 May 2022 12:43:03 -0400
+Message-Id: <20220510164304.86178-1-alan.adamson@oracle.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Proofpoint-ORIG-GUID: gmfs7kvyFJEcD1PR6o1Rphby7qcF59GC
+X-Proofpoint-GUID: gmfs7kvyFJEcD1PR6o1Rphby7qcF59GC
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,66 +65,25 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Test nvme error logging by injecting errors. Kernel must have FAULT_INJECTION
+and FAULT_INJECTION_DEBUG_FS configured to use error injector. Tests can be
+run with or without NVME_VERBOSE_ERRORS configured.
 
-[ Upstream commit 170f37d6aa6ad4582eefd7459015de79e244536e ]
+These test verify the functionality delivered by the follow:
+        commit bd83fe6f2cd2 ("nvme: add verbose error logging")
 
-It is unsafe to call folio_next() on a folio unless you hold a reference
-on it that prevents it from being split or freed.  After returning
-from the iterator, iomap calls folio_end_writeback() which may drop
-the last reference to the page, or allow the page to be split.  If that
-happens, the iterator will not advance far enough through the bio_vec,
-leading to assertion failures like the BUG() in folio_end_writeback()
-that checks we're not trying to end writeback on a page not currently
-under writeback.  Other assertion failures were also seen, but they're
-all explained by this one bug.
+V2 - Update from suggestions from shinichiro.kawasaki@wdc.com
 
-Fix the bug by remembering where the next folio starts before returning
-from the iterator.  There are other ways of fixing this bug, but this
-seems the simplest.
 
-Reported-by: Darrick J. Wong <djwong@kernel.org>
-Tested-by: Darrick J. Wong <djwong@kernel.org>
-Reported-by: Brian Foster <bfoster@redhat.com>
-Tested-by: Brian Foster <bfoster@redhat.com>
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/bio.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Alan Adamson (1):
+  tests/nvme: add tests for error logging
 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 117d7f248ac9..2ca54c084d5a 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -272,6 +272,7 @@ struct folio_iter {
- 	size_t offset;
- 	size_t length;
- 	/* private: for use by the iterator */
-+	struct folio *_next;
- 	size_t _seg_count;
- 	int _i;
- };
-@@ -286,6 +287,7 @@ static inline void bio_first_folio(struct folio_iter *fi, struct bio *bio,
- 			PAGE_SIZE * (bvec->bv_page - &fi->folio->page);
- 	fi->_seg_count = bvec->bv_len;
- 	fi->length = min(folio_size(fi->folio) - fi->offset, fi->_seg_count);
-+	fi->_next = folio_next(fi->folio);
- 	fi->_i = i;
- }
- 
-@@ -293,9 +295,10 @@ static inline void bio_next_folio(struct folio_iter *fi, struct bio *bio)
- {
- 	fi->_seg_count -= fi->length;
- 	if (fi->_seg_count) {
--		fi->folio = folio_next(fi->folio);
-+		fi->folio = fi->_next;
- 		fi->offset = 0;
- 		fi->length = min(folio_size(fi->folio), fi->_seg_count);
-+		fi->_next = folio_next(fi->folio);
- 	} else if (fi->_i + 1 < bio->bi_vcnt) {
- 		bio_first_folio(fi, bio, fi->_i + 1);
- 	} else {
+ tests/nvme/039     | 185 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/039.out |   7 ++
+ 2 files changed, 192 insertions(+)
+ create mode 100755 tests/nvme/039
+ create mode 100644 tests/nvme/039.out
+
 -- 
-2.35.1
+2.27.0
 
