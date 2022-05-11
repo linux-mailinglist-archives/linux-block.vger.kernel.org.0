@@ -2,114 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85E0E522A80
-	for <lists+linux-block@lfdr.de>; Wed, 11 May 2022 05:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8FCB522B22
+	for <lists+linux-block@lfdr.de>; Wed, 11 May 2022 06:39:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231894AbiEKDmt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 May 2022 23:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49558 "EHLO
+        id S238569AbiEKEj0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 May 2022 00:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231319AbiEKDmr (ORCPT
+        with ESMTP id S234960AbiEKEjW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 May 2022 23:42:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B8374889E
-        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 20:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652240565;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sefl67FwsXBtmKFEQpUouuXzLQl1QnxCDGfEfEODxe0=;
-        b=dNMpPoBBAhsjpySzJnrVMf3pOiuS7KJ0oDljXZcfabIvt3/nCvK8eD0xt0PzDDoSVMjFEI
-        z5j2ZbqrHUOmJ7V+t16XgtNj5v4SgfBnLfiO4PHcusubp34LERa6uVb3gWCsowaxDLCDvY
-        4DuD69lOzGNaqFfvD1ibvzFkf0L9r1w=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-126-bq7dTUSbPiGkqidj7a478A-1; Tue, 10 May 2022 23:42:43 -0400
-X-MC-Unique: bq7dTUSbPiGkqidj7a478A-1
-Received: by mail-pl1-f199.google.com with SMTP id l5-20020a170902ec0500b0015cf1cfa4eeso414589pld.17
-        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 20:42:43 -0700 (PDT)
+        Wed, 11 May 2022 00:39:22 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C79214C764
+        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 21:39:12 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id t11-20020a17090ad50b00b001d95bf21996so3820447pju.2
+        for <linux-block@vger.kernel.org>; Tue, 10 May 2022 21:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=s3Cdswvtyrq8qHVwuRB9YRoTAIoD9G/2//h6WeFZHzo=;
+        b=nrkBIDyCffFbQz5WNhQU88q5l+bx8m1CoLNL/nRcxBFZRgp3B2RwRJzpJi69hjmFPQ
+         Eotn36CVTQor8sTwq84btYhQQ+OsypTpYdHIfGkC/Ekjg8a9U0HkQq0T/gbcQg5/if4Y
+         i1yzcJYhTRMm8ny1NIiOYUNRazrfloxlCC/1XVxW2+TG0ItQpx2/G3cXjgMuOALgO1Rc
+         auxKHXwS3ghK6vFFIfR8essc70JXfRi2oIpi3YT/VLqISCMTaVWCOI/Xf0rWfpfTmlnw
+         XgqCFC8jOuHD5AjsEtox3h0b9tzcHlVM0fA1RrJyDFubK9aS707t1BYf/K43qSc4slo4
+         wrQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sefl67FwsXBtmKFEQpUouuXzLQl1QnxCDGfEfEODxe0=;
-        b=bglEgyMD8E5ZUtqRpvgQNH5666CkCju/LWsLeflHMo6f+anIyjeeYNOohdJjxx78DZ
-         D4+lx8f7iY3JxUBSk67bhjlh22HIpgxFqZdYxnl/Pwf9ym67CL29TKOBOvIavzMFurAa
-         neR6zKbeXlbV/WqnYrSdGsrTeCj+T9flfVkwmOSIKpN4nZfEekaG2F2UqvhZy5YMu9wB
-         2Edm+HvWTbVYtctboZcaP+zTmzE6rWqm2aqDdkKChpNwwmzsslWlturc63jQGiXjJxMm
-         S+zbSQ7xgF1hIwDROwKedmIUTiuYtNyQK+o3nIcgQDLGvOEAE3TbP1Pmamwcz/OkEjlN
-         zwcQ==
-X-Gm-Message-State: AOAM533KzTGO3wDL23Au55I2sWebMY4IMekMORZpBoR8HyrzOtB2QtS/
-        DDfIGycbpHOqvzwfKGbT1yo1Yi4EChK6H3vHhWREopxHtk/YUSItDTfYEJBRz1ix7EG8GI0eJaB
-        BKJGwuP6MKRa2Ob0Pe3IF0KMsBkMWJutXWVwnNzU=
-X-Received: by 2002:a63:184c:0:b0:3c5:fd55:1e9e with SMTP id 12-20020a63184c000000b003c5fd551e9emr18998488pgy.315.1652240562709;
-        Tue, 10 May 2022 20:42:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJztazOUgg5olbz82DOxLtma9DpeokrEtTyX/BGQtk04ZFBOeOsGkvV3fknOEohClfRmbAXOmzxPFs84jB1r30Y=
-X-Received: by 2002:a63:184c:0:b0:3c5:fd55:1e9e with SMTP id
- 12-20020a63184c000000b003c5fd551e9emr18998476pgy.315.1652240562465; Tue, 10
- May 2022 20:42:42 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=s3Cdswvtyrq8qHVwuRB9YRoTAIoD9G/2//h6WeFZHzo=;
+        b=KcuPezCvT74sGgD9+QG9a4Nnh+OZvOIQEeR+V3dzBIu3D+KZcuFuL8GrKKrbJ2hXLU
+         8K+twDvqL/Yw/RGEaonPx+doS4MY/HLbzr376EbFM/3m8XRdY08BdK2cBOmas1AtpgxU
+         tZlpAJY2j8aaNWQNUqB5oGXEuYNnS1wO6J6s2CXObLbOtGMjB0uJf4gRwomgGf7s7Znw
+         QYWx+a5QMv3+aZzlSfGcMKWZE20imznBVBDm2GNStozfy/yq1Cu7uS850L3n1sjYaazs
+         G3v0mfcjw/3QK8ki2pgo1iDewO/Gs7ub+jLNABIFti8f29llEuKKAJ8px1N24Sbn24ee
+         DByg==
+X-Gm-Message-State: AOAM532Ca4QXN2g/KJiXYTthjoJBRccUnSJEwIcYxTsz4fu4cmPaHpB8
+        t8QW2MmD+KwLMK8M/CFpS1DiOd5m8LmSIdBAw4w=
+X-Google-Smtp-Source: ABdhPJwbKHmbnZDflMHBZCcp2YbZAAZvFdPcM4owWeuPIkoxodmwIZJ+Xpgi08ylB1RFXLrw63SQRxJzumbwJKMTxhs=
+X-Received: by 2002:a17:90b:1007:b0:1dc:9862:68af with SMTP id
+ gm7-20020a17090b100700b001dc986268afmr3261389pjb.205.1652243951499; Tue, 10
+ May 2022 21:39:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220511030059.205953-1-yangx.jy@fujitsu.com>
-In-Reply-To: <20220511030059.205953-1-yangx.jy@fujitsu.com>
-From:   Yi Zhang <yi.zhang@redhat.com>
-Date:   Wed, 11 May 2022 11:42:30 +0800
-Message-ID: <CAHj4cs96m4OActiqs4DZMq3TBZo2_L3C58q8HibeXh3uY7R6jQ@mail.gmail.com>
-Subject: Re: [PATCH blktests] Documentation: Fix typo nvme-trtype -> nvme_trtype
-To:     Xiao Yang <yangx.jy@fujitsu.com>
-Cc:     osandov@fb.com, linux-block <linux-block@vger.kernel.org>
+Received: by 2002:a05:6a10:319:0:0:0:0 with HTTP; Tue, 10 May 2022 21:39:10
+ -0700 (PDT)
+From:   Private Mail <privatemail1961@gmail.com>
+Date:   Tue, 10 May 2022 21:39:10 -0700
+Message-ID: <CANjAOAiiVcSrSv31FjThCVmeppS54UVvGVj3SRSvMfxOB+T8DA@mail.gmail.com>
+Subject: Have you had this? It is for your Benefit
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=4.3 required=5.0 tests=ADVANCE_FEE_4_NEW_MONEY,
+        BAYES_50,DEAR_BENEFICIARY,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+        DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLY,
+        LOTS_OF_MONEY,MONEY_FRAUD_5,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Thanks for the fix.
+Our Ref: BG/WA0151/2022
 
-Reviewed-by: Yi Zhang <yi.zhang@redhat.com>
+Dear Beneficiary
 
-On Wed, May 11, 2022 at 11:01 AM Xiao Yang <yangx.jy@fujitsu.com> wrote:
->
-> Fixes: 3be78490def5 ("Documentation: add document for nvme-rdma nvmeof-mp srp tests")
-> Signed-off-by: Xiao Yang <yangx.jy@fujitsu.com>
-> ---
->  Documentation/running-tests.md | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/running-tests.md b/Documentation/running-tests.md
-> index 713d7ba..586be0b 100644
-> --- a/Documentation/running-tests.md
-> +++ b/Documentation/running-tests.md
-> @@ -103,12 +103,12 @@ RUN_ZONED_TESTS=1
->  Most of these tests will use the rdma_rxe (soft-RoCE) driver by default. The siw (soft-iWARP) driver is also supported.
->  ```sh
->  To use the rdma_rxe driver:
-> -nvme-trtype=rdma ./check nvme/
-> +nvme_trtype=rdma ./check nvme/
->  ./check nvmeof-mp/
->  ./check srp/
->
->  To use the siw driver:
-> -use_siw=1 nvme-trtype=rdma ./check nvme/
-> +use_siw=1 nvme_trtype=rdma ./check nvme/
->  use_siw=1 ./check nvmeof-mp/
->  use_siw=1 ./check srp/
->  ```
-> --
-> 2.25.4
->
->
->
+Subject: An Estate of US$15.8 Million
 
+Blount and Griffin Genealogical Investigators specializes in probate
+research to locate missing heirs and beneficiaries to estates in the
+United Kingdom and Europe.
 
--- 
-Best Regards,
-  Yi Zhang
+We can also help you find wills, obtain copies of certificates, help
+you to administer an estate, as well as calculating how an estate,
+intestacy or trust should be distributed.
 
+You may be entitled to a large pay out for an inheritance in Europe
+worth US$15.8 million. We have discovered an estate belonging to the
+late Depositor has remained unclaimed since he died in 2011 and we
+have strong reasons to believe you are the closest living relative to
+the deceased we can find.
+
+You may unknowingly be the heir of this person who died without
+leaving a will (intestate). We will conduct a probate research to
+prove your entitlement, and can submit a claim on your behalf all at
+no risk to yourselves.
+
+Our service fee of 10% will be paid to us after you have received the estate.
+
+The estate transfer process should take just a matter of days as we
+have the mechanism and expertise to get this done very quickly. This
+message may come to you as a shock, however we hope to work with you
+to transfer the estate to you as quickly as possible.
+
+Feel free to email our senior case worker Mr. Malcolm Casey on email:
+malcolmcasey68@yahoo.com for further discussions.
+
+With warm regards,
+
+Mr. Blount W. Gort, CEO.
+Blount and Griffin Associates Inc
