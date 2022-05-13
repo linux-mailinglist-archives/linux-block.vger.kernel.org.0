@@ -2,122 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B5D0526A7F
-	for <lists+linux-block@lfdr.de>; Fri, 13 May 2022 21:38:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 559AC526D4F
+	for <lists+linux-block@lfdr.de>; Sat, 14 May 2022 01:03:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383852AbiEMTij (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 May 2022 15:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44816 "EHLO
+        id S232744AbiEMXD1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 May 2022 19:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346242AbiEMTii (ORCPT
+        with ESMTP id S230360AbiEMXDY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 May 2022 15:38:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4B76FD36;
-        Fri, 13 May 2022 12:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=GAZcGk03ehrHc5Dtxk7odt4Ht5+ef2Nl5pEGHuLhXTc=; b=o1Xegp6GbvaEkEIroQaEaDuJbO
-        2zmGch5vozo3M0a8yTt7EHCU0DiarL2Ecc/pGhadzqhihoMrvMA/UnuhfGRNLraCmW9/o34DKzN49
-        ZmbWrhS09pw8kvvEkHw9EAOA2JFVUIP1ag3FXllW6g1dSEQPS3fFRrBj3n/niwLkP3co8XQBkG9Su
-        /0u+ggTYZKC9F8Db/gZkKRKDsnIueDBlSksFHNLILEgfAU5yRm1yxjPS86xaCFE1XIgmEPnyF1aV3
-        jLugS7RYjt+DaoPY7z6DyT1iH4ZWWGjXZ/TT/hBuG96asJomP91qLFFwLNb+VJvBfMONMVt4UOTm4
-        RVNNI4kA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1npb7T-00HM23-Nh; Fri, 13 May 2022 19:38:35 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     patches@lists.linux.dev, amir73il@gmail.com, pankydev8@gmail.com,
-        tytso@mit.edu, josef@toxicpanda.com, jmeneghi@redhat.com,
-        jake@lwn.net, mcgrof@kernel.org
-Subject: [PATCH 4/4] kdevops: make linux-kdevops the default tree
-Date:   Fri, 13 May 2022 12:38:31 -0700
-Message-Id: <20220513193831.4136212-5-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220513193831.4136212-1-mcgrof@kernel.org>
-References: <20220513193831.4136212-1-mcgrof@kernel.org>
+        Fri, 13 May 2022 19:03:24 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1DF9C2D7
+        for <linux-block@vger.kernel.org>; Fri, 13 May 2022 16:03:03 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id qe3-20020a17090b4f8300b001dc24e4da73so8727591pjb.1
+        for <linux-block@vger.kernel.org>; Fri, 13 May 2022 16:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:in-reply-to:references:subject:message-id:date
+         :mime-version:content-transfer-encoding;
+        bh=6xaAu02FF7S11HYpek6hRqx+NCHUYDjPRfx4y0T8z3E=;
+        b=V6xom6/0lgskip6JR2Evkg3tO7PLMpehl9J7oFzK9m5uaykyLW7e1r6bvNkPQuGl/H
+         z926omi4RzBbZrGWdblsNQXcBltzEPWEyYqPeDmcQfxNbS3C7Jrru5Da/ZA34Zt2QqO2
+         OWbaPH2MKVGj1956w5iRPuF/tV/t5M6n1tse4mPgSRmw5PG8fjWlKYMXJIQ0g18Nlsu6
+         adfX+0rTF09LTsJx1KXVWws346iX5oeRnD6ibeUBmNi0sNgixx1nAavgkGvT2yBFvdb0
+         RC2m2JX2EaLOmLElEyIo2IVCx3d2tDqZflTeGXH3BqlYkcIHEzMY+odkceu/UGe1dym7
+         63ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
+         :message-id:date:mime-version:content-transfer-encoding;
+        bh=6xaAu02FF7S11HYpek6hRqx+NCHUYDjPRfx4y0T8z3E=;
+        b=6Amdf9gNMCpJFurB84o7HIwNw85Z/sCYx2cZnbgxdmktjRZE+HRG5cB75XDuh5NntN
+         y7WHdfDehjnZNcN6/kVmobFzdFsOd95gJAbOOCTJanqzfNo7D1dPGmMHFsTHviVmEKkA
+         QHvwtwbVBcRMgozBG5aVJV54N1k2rdrqJsQ73s3pRPqYsg9E24L0NYNJ9uaRozD65/5o
+         LBl9wKV2d10yMPBoP9JhGylE/x5WHQ8uuLgstrdhgQGHwmEZ24qrDe7illKwg+VNz2sy
+         NmU7e4Egy51Xm//XeaKTueL6j4jni396THC6WDjs2iTx7djFMRgndUbciJ3NAWaDt+Rl
+         dniQ==
+X-Gm-Message-State: AOAM530mpN3FWnDlJDB/nTqcEU8Uw6g84D7eSQKlX2LTxmbAbgQIsP0v
+        YZTN0DfM9cPY80FyFar/+GR3zSo7hG5okg==
+X-Google-Smtp-Source: ABdhPJzuLANEqWJD0q1kRrim5pw3+aMsBidUbC9/1V+3qY1+2TDDxLw4wBY4Ko/n+ZlpLRmeCpFfiQ==
+X-Received: by 2002:a17:90b:4a0f:b0:1dc:b062:da20 with SMTP id kk15-20020a17090b4a0f00b001dcb062da20mr6995287pjb.51.1652482983366;
+        Fri, 13 May 2022 16:03:03 -0700 (PDT)
+Received: from [127.0.1.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id fz9-20020a17090b024900b001cd4989fec9sm4091026pjb.21.2022.05.13.16.03.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 May 2022 16:03:02 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     bvanassche@acm.org
+Cc:     jaegeuk@kernel.org, damien.lemoal@opensource.wdc.com,
+        ming.lei@redhat.com, Christoph Hellwig <hch@lst.de>,
+        linux-block@vger.kernel.org
+In-Reply-To: <20220513171307.32564-1-bvanassche@acm.org>
+References: <20220513171307.32564-1-bvanassche@acm.org>
+Subject: Re: [PATCH] block/mq-deadline: Set the fifo_time member also if inserting at head
+Message-Id: <165248298241.316645.5558458299382840061.b4-ty@kernel.dk>
+Date:   Fri, 13 May 2022 17:03:02 -0600
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-At LSFMM 2022 at Palm Springs it was discussed that we should
-*strive* towards a shared expunge list for fstests / blktests. Although
-that effort requires splitting out the expunge list from kdevops to a
-new git subtree, sharing a git tree for commit work for kdevops seems
-also innevitable and desirable since some of us are already
-collaborating on at least one shared test runner, kdevops.
+On Fri, 13 May 2022 10:13:07 -0700, Bart Van Assche wrote:
+> Before commit 322cff70d46c the fifo_time member of requests on a dispatch
+> list was not used. Commit 322cff70d46c introduces code that reads the
+> fifo_time member of requests on dispatch lists. Hence this patch that sets
+> the fifo_time member when adding a request to a dispatch list.
+> 
+> 
 
-So we can start by using a shared organization for what we need
-to share, we call this organization linux-kdevops [0]. This encompasses a
-few usual suspects git trees which can be used by both fstests and
-blktests picking a "stable" sort of git sha1sum for each and always
-striving towards the latest:
+Applied, thanks!
 
-  * fstests
-  * blktests
-  * dbench
-  * ndd
+[1/1] block/mq-deadline: Set the fifo_time member also if inserting at head
+      commit: 725f22a1477c9c15aa67ad3af96fe28ec4fe72d2
 
-We'll be using the linux-kdevops organization for what trees we use and
-trust that those in the organization will communicate what is needed before
-making controversial changes.
-
-This is perhaps the first controversial change, but it only applies to
-kdevops, so if you are not using kdevops as a test runner you probably
-won't care.
-
-Those using kdevops should become aware that they should change
-their default upstream to use linux-kdevops URL now:
-
-So we switch from:
-https://github.com/mcgrof/kdevops
-To:
-https://github.com/linux-kdevops/kdevops
-
-Users which change this on a live environemtn would also then just have
-to change the CONFIG_WORKFLOW_KDEVOPS_GIT on their configuration so
-they'd just run:
-
- make menuconfig # set CONFIG_WORKFLOW_KDEVOPS_GIT to https://github.com/linux-kdevops/kdevops
- make
- make kdevops-git-reset
-
-Those who have commit access to the organization linux-kdevops can
-then just commit as needed to help move baselines forwards and if
-and when something comes up which really seems controversial we can
-use the mailing lists as with this change.
-
-[0] https://github.com/orgs/linux-kdevops/
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- kconfigs/workflows/Kconfig.shared | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kconfigs/workflows/Kconfig.shared b/kconfigs/workflows/Kconfig.shared
-index 4cccfbe..4a2ecf6 100644
---- a/kconfigs/workflows/Kconfig.shared
-+++ b/kconfigs/workflows/Kconfig.shared
-@@ -47,7 +47,7 @@ endif
- 
- config WORKFLOW_KDEVOPS_GIT
- 	string "Git tree of kdevops to clone on targets"
--	default "https://github.com/mcgrof/kdevops.git" if !GIT_ALTERNATIVES && !HAVE_CUSTOM_KDEVOPS_GIT
-+	default "https://github.com/linux-kdevops/kdevops.git" if !GIT_ALTERNATIVES && !HAVE_CUSTOM_KDEVOPS_GIT
- 	default "https://github.com/linux-kdevops/kdevops.git" if GIT_LINUX_KDEVOPS_GITHUB
- 	default "https://gitlab.com/linux-kdevops/kdevops.git" if GIT_LINUX_KDEVOPS_GITLAB
- 	default CUSTOM_KDEVOPS_GIT if HAVE_CUSTOM_KDEVOPS_GIT
+Best regards,
 -- 
-2.35.1
+Jens Axboe
+
 
