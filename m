@@ -2,103 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9C7F5266D7
-	for <lists+linux-block@lfdr.de>; Fri, 13 May 2022 18:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91885526703
+	for <lists+linux-block@lfdr.de>; Fri, 13 May 2022 18:28:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381327AbiEMQO1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 May 2022 12:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35212 "EHLO
+        id S235498AbiEMQ2r (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 May 2022 12:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379689AbiEMQOF (ORCPT
+        with ESMTP id S235278AbiEMQ2q (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 May 2022 12:14:05 -0400
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B5653DDEA
-        for <linux-block@vger.kernel.org>; Fri, 13 May 2022 09:14:03 -0700 (PDT)
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24DFAmr6013679
-        for <linux-block@vger.kernel.org>; Fri, 13 May 2022 09:14:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=MIWeVQr0AeMqvbFOFL6kqzObRQGshHG578oRNvU8WpE=;
- b=XUTinstr+ANDgzYKfddJ2VkV7wZ1feDsYS98/ItPa9yzWJo/LKaCpOJkNKMOoX54R6BH
- iDkdO6OqQIp7vsoH5p6KnofKLYupEh22FXNxm7Geyau933uU0gI9sdV+WWS6ALcxNcBK
- 17zIBaXnHHJ5W0R6lQR2QWgCED4zdVdC/ro= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3g19w9wrhm-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Fri, 13 May 2022 09:14:02 -0700
-Received: from twshared41237.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 13 May 2022 09:14:01 -0700
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id AD6E33E459A4; Fri, 13 May 2022 09:13:56 -0700 (PDT)
-From:   Keith Busch <kbusch@fb.com>
-To:     <linux-block@vger.kernel.org>
-CC:     <axboe@kernel.dk>, Kernel Team <kernel-team@fb.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 3/3] block: ensure direct io is a block size
-Date:   Fri, 13 May 2022 09:13:39 -0700
-Message-ID: <20220513161339.1580042-3-kbusch@fb.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220513161339.1580042-1-kbusch@fb.com>
-References: <20220513161339.1580042-1-kbusch@fb.com>
+        Fri, 13 May 2022 12:28:46 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC2391567;
+        Fri, 13 May 2022 09:28:43 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id n8so8450275plh.1;
+        Fri, 13 May 2022 09:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ewPlolLGmE/a959g4ZA9emiwMLzM/HuRgbAmtM/bKKM=;
+        b=hBiN6IheDSJjCVGBGxNiJqN1NO8KxR5odY3itzDXivs7PJf8NZMHpFBtiOwWS44KpC
+         5QByrr9xl4phn4Ex2VvkCcHFs7vkuwG83TbENksSTbJdRJfDqAyJoFkeIWC0OmVnNYwJ
+         anTAfEIj0J+TXXUq8DOCMGeeJy4GwiDk5eMQlqXmvBI1ciYLvFqOREiudh/miO3Ug2lp
+         Sem0FDhxzNBnr8WKZmCbmJ+xgk0k0Z/+JmJLa3zxOnDTJfwDMn4qRo3ynvCG1rJk3rqz
+         UONgy6PF+YxDv4fwpfWtlrwBWekAQfPxtH74R5/TdAENGRNc44h2zM8/RoYnOpGYnYSm
+         qKoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=ewPlolLGmE/a959g4ZA9emiwMLzM/HuRgbAmtM/bKKM=;
+        b=CzgYh7HRobHxXhj9Rh7tqETu/PK708J07pnsuM3bHBqeg5wnpj1xq0xDjTNmM84ur6
+         EF4N+oZFekw7xibRo0JRI96+RpxI1xZR/GvV8VZAQ7RhIkgQotNIs8JNwRiecVyNmBwd
+         mt1slcCKp3kFTibh2DA9rwCNDM5kELp7LzFHFy65VKf72yJn8VWm//B9epUx3E/etkps
+         t3NKrRjlSF9Fksmm9M9g7hdwqysF6eMW/N1jGVswNXtcu87wklcxYe2YDSi54lEJw5uM
+         RXOl3+Ygjqfhgas/0V++Zc+ip/O3qkh8w122fUtNNgJVeYTwC8NqKInz8jsiZU60rJ4S
+         57WQ==
+X-Gm-Message-State: AOAM532J2lfmzz0K7+mM/HbzbLtYe/jtaktFHQKtYrITpHjk0xzLiBIv
+        cvQZdP3g7pSL5ZuGK5jfJl0=
+X-Google-Smtp-Source: ABdhPJwT/dE+TDl8hBshKtguIUYZXsn7hWUYiz6ETIvxyAm9GztrLfAZoYOm3xuWA6x2QvGGXpC94A==
+X-Received: by 2002:a17:902:b94b:b0:15e:f33b:ec22 with SMTP id h11-20020a170902b94b00b0015ef33bec22mr5512470pls.119.1652459323334;
+        Fri, 13 May 2022 09:28:43 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::4:5607])
+        by smtp.gmail.com with ESMTPSA id u12-20020a62d44c000000b0050dc7628159sm1961602pfl.51.2022.05.13.09.28.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 May 2022 09:28:43 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Fri, 13 May 2022 06:28:41 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Yahu Gao <gaoyahu19@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, Yahu Gao <yahugao@didiglobal.com>,
+        Kunhai Dai <daikunhai@didiglobal.com>
+Subject: Re: [PATCH] block,iocost: fix potential kernel NULL
+Message-ID: <Yn6HOSAE/aAeMGLU@slm.duckdns.org>
+References: <20220513145928.29766-1-gaoyahu19@gmail.com>
+ <20220513145928.29766-2-gaoyahu19@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: ueOvbh9N39U8PgGy3WYKkIdOKYgfOgcw
-X-Proofpoint-GUID: ueOvbh9N39U8PgGy3WYKkIdOKYgfOgcw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-13_08,2022-05-13_01,2022-02-23_01
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220513145928.29766-2-gaoyahu19@gmail.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+Hello,
 
-If the iterator has an offset, filling a bio to the max bvecs may result
-in a size that isn't aligned to the block size. Mask off bytes for the
-bio being constructed.
+On Fri, May 13, 2022 at 10:59:28PM +0800, Yahu Gao wrote:
+> From: Yahu Gao <yahugao@didiglobal.com>
+> 
+> Some inode pinned dying memory cgroup and its parent destroyed at first.
+> The parent's pd of iocost won't be allocated during function
+> blkcg_activate_policy.
+> Ignore the DYING CSS to avoid kernel NULL during iocost policy data init.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- block/bio.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks for the analysis and patch but I'm not quite sure the analysis is
+correct. When a cgroup goes down, its blkgs are destroyed
+blkcg_destroy_blkgs() which is invoked by blkcg_unpin_online() when its
+online_pin reaches zero which is incremented and decremented recursively, so
+an ancestor's blkgs should be destroyed before a descendant's if the code is
+working as intended. Can you guys dig a bit deeper and why we're losing
+ancestor blkgs before descendants?
 
-diff --git a/block/bio.c b/block/bio.c
-index 4259125e16ab..b42a9e3ff068 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1144,6 +1144,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
-, struct iov_iter *iter)
- {
- 	unsigned short nr_pages =3D bio->bi_max_vecs - bio->bi_vcnt;
- 	unsigned short entries_left =3D bio->bi_max_vecs - bio->bi_vcnt;
-+	struct request_queue *q =3D bdev_get_queue(bio->bi_bdev);
- 	struct bio_vec *bv =3D bio->bi_io_vec + bio->bi_vcnt;
- 	struct page **pages =3D (struct page **)bv;
- 	bool same_page =3D false;
-@@ -1160,6 +1161,9 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
-, struct iov_iter *iter)
- 	pages +=3D entries_left * (PAGE_PTRS_PER_BVEC - 1);
-=20
- 	size =3D iov_iter_get_pages(iter, pages, LONG_MAX, nr_pages, &offset);
-+	if (size > 0)
-+		size =3D size & ~(queue_logical_block_size(q) - 1);
-+
- 	if (unlikely(size <=3D 0))
- 		return size ? size : -EFAULT;
-=20
---=20
-2.30.2
+Thanks.
 
+-- 
+tejun
