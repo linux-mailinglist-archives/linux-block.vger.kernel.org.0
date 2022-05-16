@@ -2,75 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F40C45293A9
-	for <lists+linux-block@lfdr.de>; Tue, 17 May 2022 00:35:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B5CD52947A
+	for <lists+linux-block@lfdr.de>; Tue, 17 May 2022 01:00:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346718AbiEPWfe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 May 2022 18:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53022 "EHLO
+        id S237644AbiEPW7u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 May 2022 18:59:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbiEPWfc (ORCPT
+        with ESMTP id S1350127AbiEPW7m (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 May 2022 18:35:32 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F9636B43;
-        Mon, 16 May 2022 15:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=NpPlI000Df83tLILxBmUWAGtNMcZvLgAm6/3k71RE7c=; b=nbbvOq1l/AOdW8AAdrmqYaX3SU
-        +BKP4b1ioPIDOKq5mxiC8mxgQx+PJa8pqsNHrgF9heI1XStQtL1VX0tf8YSfIeC5w751r6d+sGV4m
-        YCJFqNXQKwgefLzj15o31jE+GfMK9z76fYxadtGnYb6i1FY8ViSnTzZpTyFZpPgGCEuUhOxKi5nQK
-        WJT6Mvc2WszLg5OliMAGH7cR5pd8ttOWl3E9TEyQMAcmT2ojXYYVSMGZ9dYV0NQR93BLhEDhzYmBC
-        M1DHMP1xM4/0qw7GLD84zbXyXZ3nZo4nwnI3t7/sGUsGgETlEkwd5jum/jgKn5WGfRo2VcUk4VTcz
-        z7jevUug==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1nqjJC-0009d5-0n; Mon, 16 May 2022 16:35:22 -0600
-Message-ID: <06e36931-33bf-7c3a-9b7f-afdd9686ccc5@deltatee.com>
-Date:   Mon, 16 May 2022 16:35:21 -0600
+        Mon, 16 May 2022 18:59:42 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41AC47579
+        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 15:58:18 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24GKrC3q027282;
+        Mon, 16 May 2022 22:55:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2021-07-09; bh=qLmV2A/FfXX4Z1qISVXxXZ0NbRja0Rh9FDzBmYDHRqE=;
+ b=DjnGMps7szT0QJJvZmEjPO25tHJR+o5D0qmWbMf7C93Lv+oolSRN7YpSej1wPc8Q6kt7
+ lbbTbIdZ63H2HLAK007uB0g+EvxUls3FBi/yWwyAYLfQjlItL7osd450hnc/nIaKSUyW
+ Kwu903xfs0CABK+Naiy1pj55uo6DOAVXSMQ3euDAZ6b9xsa/9tJU4eiNwP3+DpBWaD0d
+ A366nLxj2xq72Rp+GYol4RKGttotB6M4ghe8wRWkp8IcKH/KUvSHF9YfEqMjrHJD+JnY
+ Ks3L8cyIK3VXwlONaxDvVchwh3pJcmcn3GqM6As+v2OS7P7LAjn0Y8+DNJZuOUKlaCEW UQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g2371vqfe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 May 2022 22:55:57 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24GMttQx013392;
+        Mon, 16 May 2022 22:55:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3g22v7xv2v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 May 2022 22:55:56 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 24GMtul3013443;
+        Mon, 16 May 2022 22:55:56 GMT
+Received: from dhcp-10-65-131-124.vpn.oracle.com (dhcp-10-65-131-124.vpn.oracle.com [10.65.131.124])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3g22v7xuyu-1;
+        Mon, 16 May 2022 22:55:56 +0000
+From:   Alan Adamson <alan.adamson@oracle.com>
+To:     linux-block@vger.kernel.org
+Cc:     alan.adamson@oracle.com, linux-nvme@lists.infradead.org,
+        osandov@fb.com
+Subject: blktests v4 tests/nvme: add tests for error logging
+Date:   Mon, 16 May 2022 15:55:37 -0700
+Message-Id: <20220516225539.81588-1-alan.adamson@oracle.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Content-Language: en-CA
-To:     Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-References: <20220407154717.7695-1-logang@deltatee.com>
- <32d5901d-f7d3-0701-0b72-1493897b025e@nvidia.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <32d5901d-f7d3-0701-0b72-1493897b025e@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: chaitanyak@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, iommu@lists.linux-foundation.org
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 9FuhQWjKqQtzvQ5hJWlQB6xZmC6SUEQV
+X-Proofpoint-ORIG-GUID: 9FuhQWjKqQtzvQ5hJWlQB6xZmC6SUEQV
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: Re: [PATCH v6 00/21] Userspace P2PDMA with O_DIRECT NVMe devices
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Test nvme error logging by injecting errors. Kernel must have FAULT_INJECTION
+and FAULT_INJECTION_DEBUG_FS configured to use error injector. Tests can be
+run with or without NVME_VERBOSE_ERRORS configured.
 
+These test verify the functionality delivered by the follow:
+        commit bd83fe6f2cd2 ("nvme: add verbose error logging")
 
-On 2022-05-16 16:31, Chaitanya Kulkarni wrote:
-> Do you have any plans to re-spin this ?
+V2 - Update from suggestions from shinichiro.kawasaki@wdc.com
+V3 - Add error injector helper functions to nvme/rc
+V4 - Comments from shinichiro.kawasaki@wdc.com 
 
-I didn't get any feedback this cycle, so there haven't been any changes.
-I'll probably do a rebase and resend after the merge window.
+Alan Adamson (2):
+  tests/nvme: add helper routine to use error injector
+  tests/nvme: add tests for error logging
 
-Logan
+ tests/nvme/039     | 153 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/039.out |   7 +++
+ tests/nvme/rc      |  44 +++++++++++++
+ 3 files changed, 204 insertions(+)
+ create mode 100755 tests/nvme/039
+ create mode 100644 tests/nvme/039.out
+
+-- 
+2.27.0
+
