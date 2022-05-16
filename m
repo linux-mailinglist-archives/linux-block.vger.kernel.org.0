@@ -2,93 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 670A6528C26
-	for <lists+linux-block@lfdr.de>; Mon, 16 May 2022 19:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31D01528C2C
+	for <lists+linux-block@lfdr.de>; Mon, 16 May 2022 19:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242101AbiEPRjm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 May 2022 13:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46772 "EHLO
+        id S1344407AbiEPRlO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 May 2022 13:41:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232511AbiEPRjl (ORCPT
+        with ESMTP id S230270AbiEPRkz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 May 2022 13:39:41 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8127536B42
-        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 10:39:40 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id h85so16729172iof.12
-        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 10:39:40 -0700 (PDT)
+        Mon, 16 May 2022 13:40:55 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121B43701D
+        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 10:40:54 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id e194so16714209iof.11
+        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 10:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:in-reply-to:references:subject:message-id:date
-         :mime-version:content-transfer-encoding;
-        bh=mh56sie1dPkPYUnwa6mvPMhYEaqSra4iS7JfXXMW55U=;
-        b=qAJHetIbc57mNL80Bx30Z2qPkvcxnQSos1cYB90vvXD8rMCvUcp7tK+Ih0E+Uiaps6
-         88iqtYzkzieHEKtlccMzu4XSr9aYh7Uc6X5fsNQvNZkoSSOtgEV0ItopxSe051SaPc8q
-         utRyEINUgmS+GuC13Y0MWbXuUmUvv1g5GXftp0KAq+Bfvasck0TqP2+S2BRzI0KoX6pX
-         Wwu88Nd/qrf9opIcav2IF2irJNp0+VDMN7wxGOoSy6A0+oAfSdXhLavHnf1IuP30OqnM
-         ixsRa4y/YWE1SG8ReCh/DbVE+G2Aj6sHoj9DJWtaNvxEjj1GkQhPll2ZShQhxqgCIaI+
-         +x5Q==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=bkBYbqFw8Uqt2LrlL3b8A2k4CheYeXwKOqf0DAmC3h4=;
+        b=n1mNAB+0PSwsAxiakcc+rlhe/EZVDgezWHiyER1cVuh4UPi8Ymz2Syc3w6wYTymETD
+         pr2G+uID5qk/YWsWl0tUYPtYQBsBW9gAfcctEIWpNzFxIm/5/SoH/ZugZXxd8dr/9Se4
+         DwAg20e8QGCXPzZ0AaTnlCL1hCBAjwXIyhURn+858wfM4tfuL+JPpem6qUf0vDQbC5dl
+         Fs4gXpfr0ZH7NCdNV6gDoN2V3k/rejOnfR08RACy0bUvkXOXWwFdyuW1EQIq3kHJxXNv
+         OHeH/C6qrx0Okx7gnHjXHm28c6ZlvLzHWsmSyKs9c5g5n9fH85Wz/H147j7CK8XXZD1T
+         Ujxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=mh56sie1dPkPYUnwa6mvPMhYEaqSra4iS7JfXXMW55U=;
-        b=xvAT2lg6JDVYIKjSklIY0CJRWYrYhK2ihp25G1XRSEjpjPVK+5G5wo3fwnJVuAC9u8
-         K3fhHKG1vPnhf1AbMrv/oCh7TGS/bSRdyq0qEYvjbjW8dmV334hX9/i3IKaIF3+TQG+M
-         IzkMnMC+zB9FbjidjrLnmhkVic+i0N27jcG+PTkMcLpiFfTTITBPIAC6q0hf6gtZhjyW
-         WWiFWkAQnnhfJffSWz732v7a26dJqKty9NkPI7EVF9AgmYVzUs9p6BfnS09exFICCoJy
-         0NZp/NY5n4n+iL21yyBhJqwef+bL2rdfYNzTG/LQmca/jT9n8hrvIJLZ7/MrIZkxyLRB
-         g7wQ==
-X-Gm-Message-State: AOAM533rrcoMkarunxkYNO202JzW9DXiK/1o+vRi9FWWnzgLcw4DUD2f
-        lv33K/L8JRKynDqUw9vrhm9kGW1wirbnLA==
-X-Google-Smtp-Source: ABdhPJwOSAmiOY0EvbJnF1yn1IJ4NBeO1tm5aNU1l6890ES/z1ezm2dDKuRp3U6XlZ2eqcTsaci5yw==
-X-Received: by 2002:a05:6602:1501:b0:65a:c412:2eeb with SMTP id g1-20020a056602150100b0065ac4122eebmr8148723iow.29.1652722779743;
-        Mon, 16 May 2022 10:39:39 -0700 (PDT)
-Received: from [127.0.1.1] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id c11-20020a02c9cb000000b0032b75b98013sm2953165jap.148.2022.05.16.10.39.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 May 2022 10:39:39 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     yukuai3@huawei.com, jack@suse.cz, paolo.valente@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        yi.zhang@huawei.com
-In-Reply-To: <20220513023507.2625717-1-yukuai3@huawei.com>
-References: <20220513023507.2625717-1-yukuai3@huawei.com>
-Subject: Re: [PATCH -next v2 0/2] block, bfq: make bfq_has_work() more accurate
-Message-Id: <165272277894.181860.12420245970045700212.b4-ty@kernel.dk>
-Date:   Mon, 16 May 2022 11:39:38 -0600
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=bkBYbqFw8Uqt2LrlL3b8A2k4CheYeXwKOqf0DAmC3h4=;
+        b=NTdW8CUfPgoUNjYTQybFZB+EwgzDgLb3eIVbY09ff2Y4Nqq0pkwHpLRjfLHycIw4xC
+         KuxzZjf7tIGaMiVTJ/S9EcUGb9ANVikdMBo1VqdpYyXUz6EZdUDnbzIo1OyRE83Q7K+L
+         G98Zz8iqTmvqIWD0o/6qRXLrC9ka6fdzflNS6EZc+EDEtZxZNHG0wLS13qhgRIaLSfoa
+         1WawdcQVv+2goQpcsKwdED+xWqayJwBVcugOTh6H7vpKjlwR3RqvFpVtCod/6Nq8F4GV
+         AqkXak2tLLjNNiX/Gvah3L3rb/B7htGgRmiZqMw21BdWtR1ZyqovGRc68bTZ6IRzPjVr
+         ZwAA==
+X-Gm-Message-State: AOAM5303EdZLSynyFKgBkk/Ku5ERuPHFEqGwYLjsKtMCK8isFG95mjAa
+        Vf+FDnS7sdc8NlgQEFZY9OhS0g==
+X-Google-Smtp-Source: ABdhPJwzFS9gS5AVmSDi/Y7kLQ3Xm6tjAaR656Vkq1IYvhBKxr5hb7ksEb4pvoQfzpinz9N7d7RqLQ==
+X-Received: by 2002:a05:6638:196:b0:32d:fde1:582d with SMTP id a22-20020a056638019600b0032dfde1582dmr8912456jaq.134.1652722853481;
+        Mon, 16 May 2022 10:40:53 -0700 (PDT)
+Received: from [192.168.1.172] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id n11-20020a02714b000000b0032e16c566adsm1757970jaf.109.2022.05.16.10.40.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 May 2022 10:40:52 -0700 (PDT)
+Message-ID: <83042952-30e9-849a-be31-c31e951e8d70@kernel.dk>
+Date:   Mon, 16 May 2022 11:40:51 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH] blk-iocos: fix inuse clamp when iocg deactivate or free
+Content-Language: en-US
+To:     Chengming Zhou <zhouchengming@bytedance.com>, tj@kernel.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        duanxiongchun@bytedance.com, songmuchun@bytedance.com
+References: <20220516101909.99768-1-zhouchengming@bytedance.com>
+ <bbd8744f-d938-c4a5-cb02-145c9875ea53@bytedance.com>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <bbd8744f-d938-c4a5-cb02-145c9875ea53@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, 13 May 2022 10:35:05 +0800, Yu Kuai wrote:
-> Changes in v2:
->  - add reviewed-by tag for patch 1
->  - use WRITE_ONCE() for updating of 'bfqd->queued' in patch 2
-> 
-> This patchset try to make bfq_has_work() more accurate, patch 1 is a
-> small problem found by code review.
-> 
-> [...]
+On 5/16/22 6:18 AM, Chengming Zhou wrote:
+> Then this effect is very small, unlikely to have an impact in
+> practice. Should I modify the commit message to send v2 or just drop
+> it?
 
-Applied, thanks!
+Send a v2 please.
 
-[1/2] block, bfq: protect 'bfqd->queued' by 'bfqd->lock'
-      commit: 181490d5321806e537dc5386db5ea640b826bf78
-[2/2] block, bfq: make bfq_has_work() more accurate
-      commit: ddc25c86b466d2359b57bc7798f167baa1735a44
-
-Best regards,
 -- 
 Jens Axboe
-
 
