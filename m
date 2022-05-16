@@ -2,88 +2,112 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46F92528C1B
-	for <lists+linux-block@lfdr.de>; Mon, 16 May 2022 19:37:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4C72528C27
+	for <lists+linux-block@lfdr.de>; Mon, 16 May 2022 19:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245546AbiEPRhN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 May 2022 13:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
+        id S1344337AbiEPRjn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 May 2022 13:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243262AbiEPRhN (ORCPT
+        with ESMTP id S1344248AbiEPRjm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 May 2022 13:37:13 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED4820D
-        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 10:37:11 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id a10so16712673ioe.9
-        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 10:37:11 -0700 (PDT)
+        Mon, 16 May 2022 13:39:42 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B94036B42;
+        Mon, 16 May 2022 10:39:41 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id l16so19492027oil.6;
+        Mon, 16 May 2022 10:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=YwuisP7uDoVDfdXBJmqd9YIRoCZ/b+H6kmPLu7NDx7o=;
-        b=v3hXidxNGYqAeo+c7zqaHOYF0box7qSqlGLxtatUMn6AKByIl1VWHUM69zV60ZTOs2
-         bSfCBwo+0Niu3CsybHlfev1BraoJSubByQxXjbcbACJVD7TQ7YTTnEAi99XCU2V26WMW
-         YuxCxNb8E86RXzGh3qWjAZ6gXLA2cxnuAAwbNHbaz5xsozTxdjmSINHD2f3iNIfayDGO
-         crOM/KCpytP6ij9c52sVNQ0XxcI9ft+ESz3tMB7ucHiYEhxcV0hkWkznnjqWtwqDPxqP
-         d3L0g6P4KsA5lxW4oek8XSkQvDijHB2cdkGgsFQslr71Anvj4kktfrDF441taFisy0yz
-         8BxQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4QlC2UOYMPKKudwLjLWBF40eX+oeG8Yvuxzp6LWYy94=;
+        b=lN5q6KoGnMVKq8KOjsovYc0Ea9Rz2wCpQaF48i5eMxFhf3pMQhJODDGAvdMNRqWL2n
+         1kuhXkOG7R5wJOM/NAWz7J4UIEiIRaBQzILAI5v2Su+zwhL0GL/t0lZWPP9pPWi9X5w1
+         TRmLsarTXjfHK8MzG/jFj58z06sJ6O70HdWHKxHpNJMABQaWzn4ySx0XB977Cqy6L+Ms
+         68LQaNkjgqCJaydfqryJPKMsb++N4qxHLOKJWhJR9AvA7TVZ0iSC6ytp/1cGqiViasIS
+         jDUUNTS1nVh0xyNxGTDlH8awrM/IWxq4zVYrTKv/Qp1yO7yesfSIN0YJWuUzfIiCwqMP
+         08PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YwuisP7uDoVDfdXBJmqd9YIRoCZ/b+H6kmPLu7NDx7o=;
-        b=va67J+iSDebdjtWaDc0xtxKZmfG6Z/e0lOEiOAEGQ01FqBhS/ZCrDzpzKRyTP7+33t
-         DI+KZ1RBxd8JCcxcMHHKCLYWEBkJi/5gqlR1CUoUBgsJNovyLp31b2ApxOz3IbjthuWl
-         9h/FuAk+fOnfjd6pH3rEK21tIe5HYoZKKexNA6HxEstv7qgx3hQKxJFFYsnwimP2J4cT
-         fnj2NfrTIvk5KHHntl1+b9P+umCq+vj4YJBU0e3keNJ9VLQjmyKst7V7BWUxjH0w5HPH
-         /6YLX1Rcj7F7SSpbtx742wL8zHTE5fuXNKYx0+RW55r+OmdUE7fVWg+26cJyvrt7qx4V
-         QSmQ==
-X-Gm-Message-State: AOAM531h+sMRuLTe47QEpPmTj4xExcXcGi4jMVGMa4RXFjk1o1mhuLSz
-        49NlRymT/9eLCOGTQQ44MX5njQ==
-X-Google-Smtp-Source: ABdhPJwT/3nonpz1WJw0lbRiEjMo1gw1L6LCJetWMq6L414QjHZUkay1am15FXkVXTr1Gb+dYQTG3g==
-X-Received: by 2002:a02:6a19:0:b0:32d:df4d:9da with SMTP id l25-20020a026a19000000b0032ddf4d09damr9300423jac.149.1652722630482;
-        Mon, 16 May 2022 10:37:10 -0700 (PDT)
-Received: from [192.168.1.172] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id k23-20020a026617000000b0032b5e78bfcbsm2951441jac.135.2022.05.16.10.37.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 May 2022 10:37:09 -0700 (PDT)
-Message-ID: <c9c389a0-650f-aea4-fe87-c5ebccc7129c@kernel.dk>
-Date:   Mon, 16 May 2022 11:37:08 -0600
+        bh=4QlC2UOYMPKKudwLjLWBF40eX+oeG8Yvuxzp6LWYy94=;
+        b=PrrEPO3UnuNlR/bEApMOP3sHY/XbqzTnnXMP3jqLlb1LD31D7cdZHHhseJIMjLs6pj
+         iideI1NSAyEWkx2dyf4v0zuh5lCwl7R3/ZMTcR1I01DYKDWfISJT7BNWM1ng3llrcYrH
+         93R3ITf79Wdi525htb2D9RYrhx5BsB1ypPg0bC8v2kly1NmpZOiYiR7pdlpqYhTi+3y9
+         bD2T/1b1iMWn0VgHlX6Y6mYcBCI2JPz4kcYLDYvUU9fIpYrcMSFxb2GsXMDSbCRFq3JF
+         W6N/2+eA6Wy+iUyvP7GX7MgeMcJaUGUAmmk4JwqAbKUIl7+UaJWgLCbB+uvyHAUp1h7B
+         mJzQ==
+X-Gm-Message-State: AOAM533EBZ0Lq1VQhPu17HpWUaecnvIyrIqqwrtptbnMEf6HydQJ7UTR
+        jHt2RQOJrzCEAKjTjIQxB8Y=
+X-Google-Smtp-Source: ABdhPJygSNZJhhtbXnU4GGWyPg8tyF+H+RqlJkjIxzimnUGLIq1vRXiWXdwn9GweAfMMT4GBb11GiQ==
+X-Received: by 2002:a05:6808:2117:b0:326:4798:88cc with SMTP id r23-20020a056808211700b00326479888ccmr14071383oiw.78.1652722780974;
+        Mon, 16 May 2022 10:39:40 -0700 (PDT)
+Received: from localhost ([199.180.249.178])
+        by smtp.gmail.com with ESMTPSA id o129-20020acabe87000000b003264e122a9asm4002748oif.54.2022.05.16.10.39.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 May 2022 10:39:40 -0700 (PDT)
+From:   bh1scw@gmail.com
+To:     tj@kernel.org, axboe@kernel.dk
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, songmuchun@bytedance.com,
+        Fanjun Kong <bh1scw@gmail.com>
+Subject: [PATCH] blk-cgroup: Remove unnecessary rcu_read_lock/unlock()
+Date:   Tue, 17 May 2022 01:39:30 +0800
+Message-Id: <20220516173930.159535-1-bh1scw@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH] block: cleanup the VM accounting in submit_bio
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     linux-block@vger.kernel.org
-References: <20220516063654.2782792-1-hch@lst.de>
- <43ae0d52-9ed7-757c-4a01-4b4ca71a00ba@opensource.wdc.com>
- <20220516141141.GA11736@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220516141141.GA11736@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/16/22 8:11 AM, Christoph Hellwig wrote:
-> On Mon, May 16, 2022 at 03:45:08PM +0200, Damien Le Moal wrote:
->> I know it is the same value, but for consistency, wouldn't it be better to use
->> REQ_OP_WRITE here ?
-> 
-> Yes, it absolutely would.  The use of WRITE wasn't even initentional.
+From: Fanjun Kong <bh1scw@gmail.com>
 
-I'll fix it up.
+spin_lock_irq/spin_unlock_irq contains preempt_disable/enable().
+Which can serve as RCU read-side critical region, so remove
+rcu_read_lock/unlock().
 
+Signed-off-by: Fanjun Kong <bh1scw@gmail.com>
+---
+ block/blk-cgroup.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index a91f8ae18b49..7bdc16a36560 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1283,14 +1283,13 @@ int blkcg_init_queue(struct request_queue *q)
+ 	preloaded = !radix_tree_preload(GFP_KERNEL);
+ 
+ 	/* Make sure the root blkg exists. */
+-	rcu_read_lock();
++	/* spin_lock_irq can serve as RCU read-side critical section. */
+ 	spin_lock_irq(&q->queue_lock);
+ 	blkg = blkg_create(&blkcg_root, q, new_blkg);
+ 	if (IS_ERR(blkg))
+ 		goto err_unlock;
+ 	q->root_blkg = blkg;
+ 	spin_unlock_irq(&q->queue_lock);
+-	rcu_read_unlock();
+ 
+ 	if (preloaded)
+ 		radix_tree_preload_end();
+@@ -1316,7 +1315,6 @@ int blkcg_init_queue(struct request_queue *q)
+ 	return ret;
+ err_unlock:
+ 	spin_unlock_irq(&q->queue_lock);
+-	rcu_read_unlock();
+ 	if (preloaded)
+ 		radix_tree_preload_end();
+ 	return PTR_ERR(blkg);
 -- 
-Jens Axboe
+2.36.0
 
