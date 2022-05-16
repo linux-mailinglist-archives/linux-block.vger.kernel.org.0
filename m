@@ -2,50 +2,97 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D27DD527A78
-	for <lists+linux-block@lfdr.de>; Sun, 15 May 2022 23:51:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 219F3527B02
+	for <lists+linux-block@lfdr.de>; Mon, 16 May 2022 02:32:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233096AbiEOVvO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 15 May 2022 17:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
+        id S236611AbiEPAcE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 15 May 2022 20:32:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231150AbiEOVvN (ORCPT
+        with ESMTP id S229508AbiEPAcD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 15 May 2022 17:51:13 -0400
-X-Greylist: delayed 499 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 15 May 2022 14:51:10 PDT
-Received: from mail.apparet.it (mail.apparet.it [217.69.254.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D594DE94
-        for <linux-block@vger.kernel.org>; Sun, 15 May 2022 14:51:09 -0700 (PDT)
-Received: by mail.apparet.it (Postfix, from userid 1044)
-        id 1AF6A2048FE; Sun, 15 May 2022 23:42:03 +0200 (CEST)
-To:     linux-block@vger.kernel.org
-Subject: =?us-ascii?Q?Anfrage_aus_dem_Kontaktformular_HOY-REHA.com_"y?=  =?us-ascii?Q?ou605"?=
-Date:   Sun, 15 May 2022 21:42:03 +0000
-From:   WordPress <info@hoy-reha.com>
-Message-ID: <eUh8aa1Ahw7PAxmLGeRPneLn6IX1w5kNXWAs6riXY@www.hoy-reha.com>
-X-Mailer: PHPMailer 6.5.3 (https://github.com/PHPMailer/PHPMailer)
+        Sun, 15 May 2022 20:32:03 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA069B1E9
+        for <linux-block@vger.kernel.org>; Sun, 15 May 2022 17:32:01 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id o13-20020a17090a9f8d00b001df3fc52ea7so1922848pjp.3
+        for <linux-block@vger.kernel.org>; Sun, 15 May 2022 17:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:in-reply-to:references:subject:message-id:date
+         :mime-version:content-transfer-encoding;
+        bh=oABzOL0ZZUROajzpGcdQcCRjEutzvvQvaz7gOGjVZmU=;
+        b=M1Hf+mAYP99z7QHAsv0TSsXIHPcwz/vgbK5W/eNohsehDsGpVeHj6BFqLBKR+3B4PW
+         /QEOgmQAOfG8vj+BTHbfFAliiS/x0gGbdqnOg1HQs2pJlt8tPRNypajlRVp/z5YPTFib
+         A/0COj0WO85m/vAMtx4mGoWw6JZJKvOnvQPvQwmgFCjA6DiPDV+6BIbZ/82hZqHiosie
+         3/AqSb1DDs/EmKyLnqhIR1YKy1WcN7/QCVaHGav4K3SqVBNQ2iBwxKSMYzUHFET5eSot
+         DgYSs2vN0fp0mIiWgDSZiiEpheysny2v5hxDVi7X++CIa86vTNR5S2c+X1IiPvD5WQwN
+         3SFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
+         :message-id:date:mime-version:content-transfer-encoding;
+        bh=oABzOL0ZZUROajzpGcdQcCRjEutzvvQvaz7gOGjVZmU=;
+        b=e+s2sElgJx62J7il32otwEwW7dWL1/FxIEY1jUHZjX2cCLXWCYEwz2j95yXsBqY+D0
+         +dGjfWz92CWu0A9tH4OObbDvWIaIPC6se6QrAx/VEspwAndaxinQ+t77sPyKgwUE3LNf
+         OJoXXq25tu3AWPE1z1SfoaiAw7Ns+8vr3//MsBozq8X5tlt8V18Gd/m3JTkv7huzy0tD
+         z1GN5X1gj4Sg6oU9f1p6mXNgK4pl/LcxV7h0t4s6IQl9BKnP/GFNM18Bu5/EPpkHdWZY
+         TiKFaaHZZD75QS6zTKu8Ha0oT/25HIqskX/iOAUvlOPfXd/H4r4t37EdJBvLLkPHRn2z
+         lmvQ==
+X-Gm-Message-State: AOAM532i7HVNukZ61FUfUMvot5hibvee/YokYy8nFJ2z1TGDkKe8nIlj
+        fuRUMqdHzUyIzFGbWzS3v0hWLly0mjrKbg==
+X-Google-Smtp-Source: ABdhPJxROl6kOCTqfjdadqG8usmR5ExAOaY+8pHFfGP04vHAC5NrXLXVXFPwLnv1P99ihZvDtOOeYQ==
+X-Received: by 2002:a17:90a:a096:b0:1df:58d7:5b20 with SMTP id r22-20020a17090aa09600b001df58d75b20mr2085451pjp.212.1652661121413;
+        Sun, 15 May 2022 17:32:01 -0700 (PDT)
+Received: from [127.0.1.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id g4-20020a170902868400b0016160b3331bsm2176893plo.305.2022.05.15.17.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 May 2022 17:32:00 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     phil@philpotter.co.uk
+Cc:     linux-block@vger.kernel.org
+In-Reply-To: <20220515205833.944139-1-phil@philpotter.co.uk>
+References: <20220515205833.944139-1-phil@philpotter.co.uk>
+Subject: Re: [PATCH 0/5] cdrom: patches for 5.19 merge window
+Message-Id: <165266112040.697362.10355647770292207089.b4-ty@kernel.dk>
+Date:   Sun, 15 May 2022 18:32:00 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=3.5 required=5.0 tests=BAYES_80,
-        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_ABUSE_SURBL autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ***
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Von: 💚 Have you ever tried this sex game before? GIVE IT A TRY: https://sklbx.com/ny3g0ufO?vqzzc 💚 <linux-block@vger.kernel.org>
-Betreff: you605
+On Sun, 15 May 2022 21:58:28 +0100, Phillip Potter wrote:
+> Please apply the patches from this series, including my own patch to
+> remove the 'To Do' entry from drivers/cdrom/cdrom.c.
+> 
+> As previously discussed, Paul's block patch is included in this series
+> too, and I've fixed it up to remove any parts that repeat changes
+> already made by others, so it merges cleanly with upstream now.
+> 
+> [...]
 
-Nachrichtentext:
-c11dbe
+Applied, thanks!
 
-Bestätigung: Ich bin einverstanden.
+[1/5] cdrom: make EXPORT_SYMBOL follow exported function
+      commit: eeef7565e8ba1718e8e1f835f145125fa6cc8494
+[2/5] cdrom: remove the unused driver specific disc change ioctl
+      commit: 03fea699b050805ad6ee111f9db04f223f3e835e
+[3/5] cdrom: mark CDROMGETSPINDOWN/CDROMSETSPINDOWN obsolete
+      commit: 8fa10ee183c3a1ecb53e81c95895ed5bc2a5530a
+[4/5] block: remove last remaining traces of IDE documentation
+      commit: e24ccaaf7ec44e647dc56c1af2bc8d1ab67b4a11
+[5/5] cdrom: remove obsolete TODO list
+      commit: 2e10a1d693b9f1c8921bd797838cff0be7cdd537
 
+Best regards,
 -- 
-Diese E-Mail wurde vom Kontaktformular der HOY-REHA Görlitz (http://www.hoy-reha.com) gesendet.
+Jens Axboe
+
 
