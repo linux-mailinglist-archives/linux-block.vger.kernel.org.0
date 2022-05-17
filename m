@@ -2,259 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19D145293E1
-	for <lists+linux-block@lfdr.de>; Tue, 17 May 2022 00:56:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD7A1529661
+	for <lists+linux-block@lfdr.de>; Tue, 17 May 2022 03:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348873AbiEPW4g (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 May 2022 18:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
+        id S230180AbiEQA7W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 May 2022 20:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349865AbiEPW4M (ORCPT
+        with ESMTP id S240813AbiEQA7U (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 May 2022 18:56:12 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE110B1E1
-        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 15:56:10 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24GKmYn0027268;
-        Mon, 16 May 2022 22:55:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2021-07-09;
- bh=4cSRM56yx314zwddwl96r4nlqQm6Po1u05oEsxosimg=;
- b=PQTQppW1WbRErAzLQMGQpqJDZsjONdhwnhqysU3LYs9ImNT46o4gZhTuS0lltC4pUS+0
- HugauyuuzsREZ90LPAV7my/dqgnGHWMEcdXq4l3r72ZH37TrmEYZdkXRvVMeeejfLHfU
- yCEuft7/ITmgReOSxdrq6IOUSgs5DC/dfcmPnEg7L7ri8U+MGpQe1rK6RfastwombzfS
- i0PAJvE7FUP66jjN92KZJ2Ny6v9lyWLC3dRg3kQdxwAnAkW8dk+nMpL2Oh/xtzJmnVD4
- Pyx88oaFcX/4PML8BfBR+/2QLndB/IUKzt3g9IHXkze8UcTfaCcTu9H1mRq3IzTLzpSj JA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g2371vqfg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 May 2022 22:55:59 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24GMtt2g013381;
-        Mon, 16 May 2022 22:55:59 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3g22v7xv3t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 May 2022 22:55:59 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 24GMtul7013443;
-        Mon, 16 May 2022 22:55:58 GMT
-Received: from dhcp-10-65-131-124.vpn.oracle.com (dhcp-10-65-131-124.vpn.oracle.com [10.65.131.124])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3g22v7xuyu-3;
-        Mon, 16 May 2022 22:55:58 +0000
-From:   Alan Adamson <alan.adamson@oracle.com>
-To:     linux-block@vger.kernel.org
-Cc:     alan.adamson@oracle.com, linux-nvme@lists.infradead.org,
-        osandov@fb.com
-Subject: [PATCH v4 blktests 2/2] tests/nvme: add tests for error logging
-Date:   Mon, 16 May 2022 15:55:39 -0700
-Message-Id: <20220516225539.81588-3-alan.adamson@oracle.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20220516225539.81588-1-alan.adamson@oracle.com>
-References: <20220516225539.81588-1-alan.adamson@oracle.com>
+        Mon, 16 May 2022 20:59:20 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB3AF443C7
+        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 17:59:18 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 191so4453922pgf.4
+        for <linux-block@vger.kernel.org>; Mon, 16 May 2022 17:59:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Rbi1cvE5ak+hokclc7/2ypGdn+hwauLG7pccARXZlxA=;
+        b=L7/wFcUdrihAHg2tWxQZVZ5Ma8QOx+e3d/RecGna7IX0vFVaBzoBUEJkuTNpyd/j0c
+         0Oo/Zd+HKFURzHqmVR/0k7INDLW3PyHQdpBAby5k/TGUJeixpsypg/t7oqC1gIveV6dT
+         u3WOWOu2USXZ9vuv/0aGn3njErWsZiFp3jRnEBqcsgaxTrgZvKxFapKsLzYw8tp+6h6H
+         pyl947i29Eh62sRHPDrjnX4ng5kLkhrf2BmS7gXtWkMIyB68JrqaWnSROPsB6AvBUqwz
+         5sTOWvcKK++i+qGn66jOc0600o+NHYS8nSngeLjxUvToGDv3Xk1onjeaaWbr3K4ybWkw
+         18ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Rbi1cvE5ak+hokclc7/2ypGdn+hwauLG7pccARXZlxA=;
+        b=JEw+V6cCzC2sxFpoTwKCsMHBMqSbOwvn9mtgdSKnNeQ7wYEogfPcYZWRbZcxQcxm3e
+         ek7eTtZCOt3eGxBKasLbjgNP6Abnefx/7wb7PF0ieCZWQ1C13zmaNUOw2NEMPWkZWKVN
+         ReAHdEI4VeCuYoluh8P3ies3JuM6eT+aUXGwVtZhXav+6j7qd5f0Mu0h3B7nMWZ+RPvZ
+         m605jELP5m/oVeRH1TII/j/RqS6wbMKW8iASdSCucR4XngqKMDMF904jmSa60IwX4o08
+         aP/+bhcdy0s0zS0zYvx++RpWRveknkOf8ojtdjEJqLaAGiCPi93pvdLh/clBLqfy1xi/
+         vrhQ==
+X-Gm-Message-State: AOAM533G/mR1ix3v35XXVMMMPfkVb6oYRbdGazzdV6+V3PZMJOeM07Ty
+        CbqDjutJZRWMiHBnAk6y1r7f5YVH2V+R5g==
+X-Google-Smtp-Source: ABdhPJyDkWFZSIWGdJi2+hm9e5X8axcTewLtO8q0CfFLeV14161+OanEVvu8b1FeF9pghca3/OgklA==
+X-Received: by 2002:a05:6a00:1d8f:b0:510:9430:8021 with SMTP id z15-20020a056a001d8f00b0051094308021mr20031512pfw.55.1652749158260;
+        Mon, 16 May 2022 17:59:18 -0700 (PDT)
+Received: from [10.254.192.228] ([139.177.225.229])
+        by smtp.gmail.com with ESMTPSA id a1-20020a170902900100b0015e8d4eb2dfsm7531269plp.297.2022.05.16.17.59.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 May 2022 17:59:17 -0700 (PDT)
+Message-ID: <bcd0956a-9aa0-3211-801b-1f1eace6de79@bytedance.com>
+Date:   Tue, 17 May 2022 08:57:55 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 2PTVGG9CHBW_ikiMBQQ9CbrjiEhV5wx6
-X-Proofpoint-ORIG-GUID: 2PTVGG9CHBW_ikiMBQQ9CbrjiEhV5wx6
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.0
+Subject: Re: [Phishing Risk] [External] Re: [PATCH] blk-iocost: fix very large
+ vtime when iocg activate
+Content-Language: en-US
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, duanxiongchun@bytedance.com,
+        songmuchun@bytedance.com
+References: <20220516084045.96004-1-zhouchengming@bytedance.com>
+ <YoKb7wpkz3xoCS6s@slm.duckdns.org>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <YoKb7wpkz3xoCS6s@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Test nvme error logging by injecting errors. Kernel must have FAULT_INJECTION
-and FAULT_INJECTION_DEBUG_FS configured to use error injector. Tests can be
-run with or without NVME_VERBOSE_ERRORS configured.
+On 2022/5/17 02:46, Tejun Heo wrote:
+> On Mon, May 16, 2022 at 04:40:45PM +0800, Chengming Zhou wrote:
+>> When the first iocg activate after blk_iocost_init(), now->vnow
+>> maybe smaller than ioc->margins.target, cause very large vtarget
+>> since it's u64.
+>>
+>> 	vtarget = now->vnow - ioc->margins.target;
+>> 	atomic64_add(vtarget - vtime, &iocg->vtime);
+>>
+>> Then the iocg's vtime will be very large too, larger than now->vnow.
+> 
+> It's a wrapping counter. Please take a look at how time_before64() and
+> friends work.
 
-Test for commit bd83fe6f2cd2 ("nvme: add verbose error logging").
+Hi Tejun, below is from the trace of test on original code:
 
-Signed-off-by: Alan Adamson <alan.adamson@oracle.com>
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
----
- tests/nvme/039     | 153 +++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/039.out |   7 +++
- 2 files changed, 160 insertions(+)
- create mode 100755 tests/nvme/039
- create mode 100644 tests/nvme/039.out
+iocost_iocg_activate: [vda:/user.slice] now=38343468:2171657838 vrate=137438 \
+period=0->0 vtime=18446744007162209454 weight=6553600/6553600 hweight=65536/65536
 
-diff --git a/tests/nvme/039 b/tests/nvme/039
-new file mode 100755
-index 000000000000..9ed5059787a3
---- /dev/null
-+++ b/tests/nvme/039
-@@ -0,0 +1,153 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2022 Oracle and/or its affiliates
-+#
-+# Test nvme error logging by injecting errors. Kernel must have FAULT_INJECTION
-+# and FAULT_INJECTION_DEBUG_FS configured to use error injector. Tests can be
-+# run with or without NVME_VERBOSE_ERRORS configured.
-+#
-+# Test for commit bd83fe6f2cd2 ("nvme: add verbose error logging").
-+
-+. tests/nvme/rc
-+DESCRIPTION="test error logging"
-+QUICK=1
-+
-+requires() {
-+	_nvme_requires
-+	_have_kernel_option FAULT_INJECTION && \
-+	    _have_kernel_option FAULT_INJECTION_DEBUG_FS
-+}
-+
-+inject_unrec_read_on_read()
-+{
-+	# Inject a 'Unrecovered Read Error' (0x281) status error on a READ
-+	_nvme_enable_err_inject "$1" 0 100 1 0x281 1
-+
-+	dd if=/dev/"$1" of=/dev/null bs=512 count=1 iflag=direct \
-+	    2> /dev/null 1>&2
-+
-+	_nvme_disable_err_inject "$1"
-+
-+	if ${nvme_verbose_errors}; then
-+		dmesg -t | tail -2 | grep "Unrecovered Read Error (" | \
-+		    sed 's/nvme.*://g'
-+	else
-+		dmesg -t | tail -2 | grep "Cmd(" | sed 's/I\/O Cmd/Read/g' | \
-+		    sed 's/I\/O Error/Unrecovered Read Error/g' | \
-+		    sed 's/nvme.*://g'
-+	fi
-+}
-+
-+inject_invalid_status_on_read()
-+{
-+	# Inject an invalid status (0x375) on a READ
-+	_nvme_enable_err_inject "$1" 0 100 1 0x375 1
-+
-+	dd if=/dev/"$1" of=/dev/null bs=512 count=1 iflag=direct \
-+	    2> /dev/null 1>&2
-+
-+	_nvme_disable_err_inject "$1"
-+
-+	if ${nvme_verbose_errors}; then
-+		dmesg -t | tail -2 | grep "Unknown (" | \
-+		    sed 's/nvme.*://g'
-+	else
-+		dmesg -t | tail -2 | grep "Cmd(" | sed 's/I\/O Cmd/Read/g' | \
-+		    sed 's/I\/O Error/Unknown/g' | \
-+		    sed 's/nvme.*://g'
-+	fi
-+}
-+
-+inject_write_fault_on_write()
-+{
-+	# Inject a 'Write Fault' 0x280 status error on a WRITE
-+	_nvme_enable_err_inject "$1" 0 100 1 0x280 1
-+
-+	dd if=/dev/zero of=/dev/"$1" bs=512 count=1 oflag=direct \
-+	    2> /dev/null 1>&2
-+
-+	_nvme_disable_err_inject "$1"
-+
-+	if ${nvme_verbose_errors}; then
-+		dmesg -t | tail -2 | grep "Write Fault (" | \
-+		    sed 's/nvme.*://g'
-+	else
-+		dmesg -t | tail -2 | grep "Cmd(" | sed 's/I\/O Cmd/Write/g' | \
-+		    sed 's/I\/O Error/Write Fault/g' | \
-+		    sed 's/nvme.*://g'
-+	fi
-+}
-+
-+inject_access_denied_on_identify()
-+{
-+	# Inject a 'Access Denied' (0x286) status error on an
-+	# Identify admin command
-+	_nvme_enable_err_inject "$1" 0 100 1 0x286 1
-+
-+	nvme admin-passthru /dev/"$1" --opcode=0x06 --data-len=4096 \
-+	    --cdw10=1 -r 2> /dev/null 1>&2
-+
-+	_nvme_disable_err_inject "$1"
-+
-+	if ${nvme_verbose_errors}; then
-+		dmesg -t | tail -1 | grep "Access Denied (" | \
-+		    sed 's/nvme.*://g'
-+	else
-+		dmesg -t | tail -1 | grep "Admin Cmd(" | \
-+		    sed 's/Admin Cmd/Identify/g' | \
-+		    sed 's/I\/O Error/Access Denied/g' | \
-+		    sed 's/nvme.*://g'
-+	fi
-+}
-+
-+inject_invalid_admin_cmd()
-+{
-+	# Inject a 'Invalid Command Opcode' (0x1) on an invalid command (0x96)
-+	 _nvme_enable_err_inject "$1" 0 100 1 0x1 1
-+
-+	nvme admin-passthru /dev/"$1" --opcode=0x96 --data-len=4096 \
-+	    --cdw10=1 -r 2> /dev/null 1>&2
-+
-+	_nvme_disable_err_inject "$1"
-+
-+	if ${nvme_verbose_errors}; then
-+		dmesg -t | tail -1 | grep "Invalid Command Opcode (" | \
-+		    sed 's/nvme.*://g'
-+	else
-+		dmesg -t | tail -1 | grep "Admin Cmd(" | \
-+		    sed 's/Admin Cmd/Unknown/g' | \
-+		    sed 's/I\/O Error/Invalid Command Opcode/g' | \
-+		    sed 's/nvme.*://g'
-+	fi
-+}
-+
-+test_device() {
-+	local nvme_verbose_errors
-+	local ns_dev
-+	local ctrl_dev
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	if _have_kernel_option NVME_VERBOSE_ERRORS; then
-+		nvme_verbose_errors=true
-+	else
-+		unset SKIP_REASON
-+		nvme_verbose_errors=false
-+	fi
-+
-+	ns_dev=${TEST_DEV##*/}
-+	ctrl_dev=${ns_dev%n*}
-+
-+	_nvme_err_inject_setup "${ns_dev}" "${ctrl_dev}"
-+
-+	inject_unrec_read_on_read "${ns_dev}"
-+	inject_invalid_status_on_read "${ns_dev}"
-+	inject_write_fault_on_write "${ns_dev}"
-+
-+	inject_access_denied_on_identify "${ctrl_dev}"
-+	inject_invalid_admin_cmd "${ctrl_dev}"
-+
-+	_nvme_err_inject_cleanup "${ns_dev}" "${ctrl_dev}"
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/039.out b/tests/nvme/039.out
-new file mode 100644
-index 000000000000..162935eb1d7b
---- /dev/null
-+++ b/tests/nvme/039.out
-@@ -0,0 +1,7 @@
-+Running nvme/039
-+ Read(0x2) @ LBA 0, 1 blocks, Unrecovered Read Error (sct 0x2 / sc 0x81) DNR 
-+ Read(0x2) @ LBA 0, 1 blocks, Unknown (sct 0x3 / sc 0x75) DNR 
-+ Write(0x1) @ LBA 0, 1 blocks, Write Fault (sct 0x2 / sc 0x80) DNR 
-+ Identify(0x6), Access Denied (sct 0x2 / sc 0x86) DNR 
-+ Unknown(0x96), Invalid Command Opcode (sct 0x0 / sc 0x1) DNR 
-+Test complete
--- 
-2.27.0
+The vtime value is very large, much larger than vnow. Maybe the commit message
+is a little misleading?
 
+And I take a look at how time_before64() work:
+
+#define time_after64(a,b)	\
+	(typecheck(__u64, a) &&	\
+	 typecheck(__u64, b) && \
+	 ((__s64)((b) - (a)) < 0))
+#define time_before64(a,b)	time_after64(b,a)
+
+I still don't get why my changes are wrong. :-)
+
+> 
+> Nacked-by: Tejun Heo <tj@kernel.org>
+> 
+> Again, please spend more effort understanding the code before sending these
+> subtle patches.
+
+Ok, will do. This problem is found from the trace of test, then verified fixed
+using the trace of the same test with this patch.
+
+Thanks.
+
+> 
+> Thanks.
+> 
