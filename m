@@ -2,69 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBDD652B33D
-	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 09:28:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B00D52B335
+	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 09:28:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232097AbiERH10 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 May 2022 03:27:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59404 "EHLO
+        id S231940AbiERHOM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 May 2022 03:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232115AbiERH1Z (ORCPT
+        with ESMTP id S231945AbiERHOL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 May 2022 03:27:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FB65C864
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 00:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KrOGjE8ph4fsDqFnPoybk0p+WwHmXP/l4xSU8S8a9Pg=; b=D3+TL/FK/VUl2zKlpVngwos4CV
-        7Uj0t2HuZ5mfhK+3nXIwcHIkb7FfccnqGjdAXr7kybTwRGhD8RMkz61z70hg+4NLD/WiDpsz9YiNn
-        vAPZmjt8kQZJiGjYZhLbqP9GJ1wrOcyYuF/ASUHVNk3ZTKxGGuV1ZvONiwf59DvKyWfkR1nybv/s/
-        GkkNbAeODnKRspjSy+A5em4kZNzYNhA6D7hLLnAwKg/dUCNPhXdNJLycQaI1wcjZELNn9Kp6+r4df
-        oNHI1c6b7iIjg/EwHFF2yhtL41iJ75CPnnYUz2VfCcISq6xOe64P0ZHlNSA8VFB2x3BjyoEjdfSkt
-        HHoh6WRQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nrE5Z-0004h0-7W; Wed, 18 May 2022 07:27:21 +0000
-Date:   Wed, 18 May 2022 00:27:21 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        linux-block@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-Subject: Re: [GIT PULL] nvme updates for Linux 5.19
-Message-ID: <YoSf2UvYcW9fHebf@infradead.org>
-References: <YoSWZoB1/38DdP4S@infradead.org>
- <8ff06ce2-0aa7-5999-8987-1f9d9935e4e5@suse.de>
+        Wed, 18 May 2022 03:14:11 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1046E1116CA;
+        Wed, 18 May 2022 00:14:10 -0700 (PDT)
+Received: from kwepemi100026.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4L343055l1zhZ1V;
+        Wed, 18 May 2022 15:13:32 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ kwepemi100026.china.huawei.com (7.221.188.60) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 18 May 2022 15:14:08 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
+ 2022 15:14:07 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <tj@kernel.org>, <axboe@kernel.dk>, <ming.lei@redhat.com>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH -next v2 0/2] bugfix for blk-throttle
+Date:   Wed, 18 May 2022 15:27:49 +0800
+Message-ID: <20220518072751.1188163-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ff06ce2-0aa7-5999-8987-1f9d9935e4e5@suse.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, May 18, 2022 at 09:23:45AM +0200, Hannes Reinecke wrote:
-> On 5/18/22 08:47, Christoph Hellwig wrote:
-> > The following changes since commit c23d47abee3a54e4991ed3993340596d04aabd6a:
-> > 
-> >    loop: remove most the top-of-file boilerplate comment from the UAPI header (2022-05-10 06:30:05 -0600)
-> > 
-> Hmm. So how do we progress with the authentication patches?
-> Shall I resubmit them?
-> Will you be picking them up?
-> Is there anything I need to fix up?
+Changes in v2:
+ - use a new solution suggested by Ming
+ - change the title of patch 1
+ - add patch 2
 
-I'm a little worried adding it this late in the cycle, especially with
-the (although rather trivial) crypto patches not having any reviews from
-the crypto maintainers.  If you can get those we should be ready early
-for the next merge window which is going to start in just a few days.
+Patch 1 fix that blk-throttle can't work if multiple bios are throttle,
+Patch 2 fix io hung due to configuration updates.
+
+Previous version:
+v1 : https://lore.kernel.org/all/20220517134909.2910251-1-yukuai3@huawei.com/
+
+Yu Kuai (2):
+  blk-throttle: fix that io throttle can only work for single bio
+  blk-throttle: fix io hung due to configuration updates
+
+ block/blk-throttle.c | 88 ++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 69 insertions(+), 19 deletions(-)
+
+-- 
+2.31.1
+
