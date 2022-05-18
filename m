@@ -2,90 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D0DC52C67D
-	for <lists+linux-block@lfdr.de>; Thu, 19 May 2022 00:45:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29FAD52C6F5
+	for <lists+linux-block@lfdr.de>; Thu, 19 May 2022 00:57:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbiERWpV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 May 2022 18:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56896 "EHLO
+        id S231239AbiERW5N (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 May 2022 18:57:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbiERWpT (ORCPT
+        with ESMTP id S231211AbiERW5A (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 May 2022 18:45:19 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307A217789E
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 15:45:18 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id n10so3449332pjh.5
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 15:45:18 -0700 (PDT)
+        Wed, 18 May 2022 18:57:00 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC495F76
+        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 15:56:55 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id x2so5821693ybi.8
+        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 15:56:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=n3iurgYZFISFcgs5X6Ldo3ldCenlvZbMBwRmkDfrSRQ=;
-        b=5rG+sdyHVtjwPwhb1iNcxH+nhvlYTDGmCKevlJ5V2Hqe8fzZSMRLDSC4t6Yjnbc2gV
-         c60YVPIbyfdWFhUCtEuKUCnHK8CPW2drGqeayOHEGueeUKnWTMsI1tEdSOwhgeAygOJJ
-         ASSed+aKowoMDjmUDKFRLkO4lpKQ3upYsOTAUVd/NL7ZnmXV5Oef+MzvSN/Huc1UUpfx
-         1BbbqmQyj5iP55U84fbu5A8yTh2asAyal+teKaUSUFezFX906W3TWIiDQGjutmjMLoJj
-         wLoFu9xrR5qntkZmbBEHa0iBPoIPo9zyCjLxBpTpkXtbgxHtMqZpVva9FcKkrJCxcT/i
-         abqA==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
+        b=ovbcf3BPb/ZrA/FpQ+ZjErGDIEZ9sF3fYOxqsE4Z0xdiTlYY9UY36hS3ty6MLllddq
+         FdZzNc2PcFHW5cwKZ0FlQqx6F8uTY06Ab/cmT+eL89dkm6I4fHT5v6DDGzwY+fqIjM8b
+         RjeYQt93Ckr4p0lPVWY342OwWKznH6xDl4nV36uj7bwrBPcHFh3ePzF5GNEmu/mQBhIV
+         GwWDekgJIDWSV60014hyLdzt2NtjUStY8MI6SiwBWMH8LEBnRGkE0W6Db0zUE9IYWmDQ
+         Ifd6nbhkESdcIbQrjo3sdEfmdPtb1VAIHCw/LAZv1DOtvQwqLYnhML4dVDmuoYeMmVFn
+         q7TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=n3iurgYZFISFcgs5X6Ldo3ldCenlvZbMBwRmkDfrSRQ=;
-        b=5UyOpq+M0oxM25ochx+Xz5y77rO/mwZuJkqIXmK7xtZ03a8yg+qbI+IzpRPsRzwRnK
-         l2+9iVIelhE8uEMn51F8spQfmlL5e4sRWW7Snhd4Q9/ecNjJGE9TxkquhOzV4zDeOXM+
-         S8pvqk+JJTG/GmT4GRUHYHkV8WEM1/3Ra0rq0NW30+y31cftRCtvS0bDWKqXyI3K2FAd
-         RuGDWimbPxwZKeLdXsg/FDxUxiALs5xCyAK2WXK90hfs+5D6PJC+bTY4S8auyeLxkiF+
-         S7tFe0ifq95bkes88azbIGhkk0nnXbPvC1f+j539MS0zriY1UN08RYjllzRhWP3nyFx/
-         xcXQ==
-X-Gm-Message-State: AOAM531h20A7zrspprGU4gf9VmCH77ERtTTUQid6PfTnIlkYE78AwJWZ
-        H2xtlKWg1fXZYKtnxxmfnjzD4Q==
-X-Google-Smtp-Source: ABdhPJy3YhvhjlQnttfqmRtz2KT4IM2BrtBedUcYiqsNfPkqD69wW5klYhC5CpiiFiI1W0I9GAAsJw==
-X-Received: by 2002:a17:902:d48d:b0:15e:c236:4fd3 with SMTP id c13-20020a170902d48d00b0015ec2364fd3mr1784979plg.113.1652913917682;
-        Wed, 18 May 2022 15:45:17 -0700 (PDT)
-Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id x21-20020a1709027c1500b001613dfe1678sm2185354pll.273.2022.05.18.15.45.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 May 2022 15:45:16 -0700 (PDT)
-Message-ID: <dc8e7b85-fba1-b45e-231e-9c8054aea505@kernel.dk>
-Date:   Wed, 18 May 2022 16:45:10 -0600
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
+        b=RFvqF4pcAWXh5ceXfiMf2cCXv5jFx8krHe5minKje9YgQBH4xw8qadLNILqxKjHR3h
+         YaGnW4UXhWmphuNnj89HZlqAa9CmLZ5bxNzaN3/oM2O9SWcfK6q+RDWqVuksMvRZc5aP
+         DmKPpkUil10sZdC115rsiTsAgwOoHCjxg7Hgn+rkMcfEZRDhysReaHNtjVCHrZQKi1vU
+         FbnxPNDqp4VtL53gi88Cx+SC6dz6x32HGAFxcGm+c0Rnbw2m2gUNT1gkgPPO1e4hy2/O
+         di6zPIZBVchKxBRy10yrkosthlu1ayz8LwyKj7DpSHcS0/MRBsGF7M2trB291kocqmqi
+         S8Tw==
+X-Gm-Message-State: AOAM531uwlzWlCQVtWgHR7YezhuEAU/vDhGG6pGLIQ58Jz0iw372jb33
+        jJ0NX1AUngBW5kTqnlOBWWRpSzxEueCuVrgU3gM=
+X-Google-Smtp-Source: ABdhPJyyLDAg+sVdsLTxwEXiZ5avjedwK/uWMP/Y3UWcChEjwDE+iXuY4kOycHY8vIqM/rcV0hLTcVdg0IN0RAQYgBc=
+X-Received: by 2002:a5b:f87:0:b0:64a:9aa6:e181 with SMTP id
+ q7-20020a5b0f87000000b0064a9aa6e181mr1852277ybh.157.1652914614913; Wed, 18
+ May 2022 15:56:54 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCHv2 0/3] direct io alignment relax
-Content-Language: en-US
-To:     Keith Busch <kbusch@fb.com>, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     Kernel Team <Kernel-team@fb.com>, hch@lst.de, bvanassche@acm.org,
-        damien.lemoal@opensource.wdc.com, Keith Busch <kbusch@kernel.org>
-References: <20220518171131.3525293-1-kbusch@fb.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220518171131.3525293-1-kbusch@fb.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7000:7143:0:0:0:0 with HTTP; Wed, 18 May 2022 15:56:53
+ -0700 (PDT)
+Reply-To: tonywenn@asia.com
+From:   Tony Wen <weboutloock4@gmail.com>
+Date:   Thu, 19 May 2022 06:56:53 +0800
+Message-ID: <CAE2_YrD=5bo8j9+ah-xptEBBV-HEC4=Gb0SRHf996phiopc3WQ@mail.gmail.com>
+Subject: engage
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b29 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4933]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [weboutloock4[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [weboutloock4[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.4 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/18/22 11:11 AM, Keith Busch wrote:
-> From: Keith Busch <kbusch@kernel.org>
-> 
-> Including the fs list this time.
-> 
-> I am still working on a better interface to report the dio alignment to
-> an application. The most recent suggestion of using statx is proving to
-> be less straight forward than I thought, but I don't want to hold this
-> series up for that.
-
-This looks good to me. Anyone object to queueing this one up?
-
--- 
-Jens Axboe
-
+Can I engage your services?
