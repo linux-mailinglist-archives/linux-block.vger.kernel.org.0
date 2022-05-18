@@ -2,103 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3412252BA47
-	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 14:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29AD452B996
+	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 14:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236345AbiERMTt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 May 2022 08:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49306 "EHLO
+        id S236271AbiERMMt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 May 2022 08:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236253AbiERMTs (ORCPT
+        with ESMTP id S236220AbiERMMj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 May 2022 08:19:48 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7409A5B88B;
-        Wed, 18 May 2022 05:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=kQKtiTZ0LH/w5S3uWV2zXb3ODADItlkkeofFb+AnfrE=; b=Wv5U2pmuhaGCoLOzHzJK+Nq6cQ
-        EGJBrHRoJFiP/8QEBn6R+hA6bbpRr8oLNh5EVEtnLyyKpJePXmTEnVYtGLqGDlyKTwfy0WSbgi6My
-        iSvOJjjGqikleFr50AmwdM1qnWFvIi3QyjQ786H9g1LQOYSReGILeRYHV25ojKWRg7h4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1nrIeB-003K0L-QZ; Wed, 18 May 2022 14:19:23 +0200
-Date:   Wed, 18 May 2022 14:19:23 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vivek Kumar <quic_vivekuma@quicinc.com>
-Cc:     corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
-        tglx@linutronix.de, maz@kernel.org, axboe@kernel.dk,
-        rafael@kernel.org, akpm@linux-foundation.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-mm@kvack.org, len.brown@intel.com,
-        pavel@ucw.cz, paulmck@kernel.org, bp@suse.de,
-        keescook@chromium.org, songmuchun@bytedance.com,
-        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
-        pasha.tatashin@soleen.com, tabba@google.com, ardb@kernel.org,
-        tsoni@quicinc.com, quic_psodagud@quicinc.com,
-        quic_svaddagi@quicinc.com,
-        Prasanna Kumar <quic_kprasan@quicinc.com>
-Subject: Re: [RFC 2/6] PM: Hibernate: Add option to disable disk offset
- randomization
-Message-ID: <YoTkSx96vt1NTdZ/@lunn.ch>
-References: <1652860121-24092-1-git-send-email-quic_vivekuma@quicinc.com>
- <1652860121-24092-3-git-send-email-quic_vivekuma@quicinc.com>
+        Wed, 18 May 2022 08:12:39 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70CAA14AF73;
+        Wed, 18 May 2022 05:12:37 -0700 (PDT)
+Received: from kwepemi100021.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L3Bch6M3gzQkBC;
+        Wed, 18 May 2022 20:09:40 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ kwepemi100021.china.huawei.com (7.221.188.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 18 May 2022 20:12:35 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
+ 2022 20:12:34 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <ming.lei@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH -next v2 0/6] nbd: bugfix and cleanup patches
+Date:   Wed, 18 May 2022 20:26:12 +0800
+Message-ID: <20220518122618.1702997-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1652860121-24092-3-git-send-email-quic_vivekuma@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, May 18, 2022 at 01:18:37PM +0530, Vivek Kumar wrote:
-> Add a kernel parameter to disable the disk offset randomization
-> for SSD devices in which such feature is available at the
-> firmware level. This is helpful in improving hibernation
-> resume time.
-> 
-> Signed-off-by: Vivek Kumar <quic_vivekuma@quicinc.com>
-> Signed-off-by: Prasanna Kumar <quic_kprasan@quicinc.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 11 +++++++++++
->  kernel/power/swap.c                             |  9 +++++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 666ade9..06b4f10 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5192,6 +5192,17 @@
->  			Useful for devices that are detected asynchronously
->  			(e.g. USB and MMC devices).
->  
-> +	noswap_randomize
-> +			Kernel uses random disk offsets to help with wear-levelling
-> +			of SSD devices, while saving the hibernation snapshot image to
-> +			disk. Use this parameter to disable this feature for SSD
-> +			devices in scenarios when, such randomization is addressed at
-> +			the firmware level and hibenration image is not re-generated
-> +			frequently.
-> +			(Useful for improving hibernation resume time as snapshot pages
-> +			are available in disk serially and can be read in bigger chunks
-> +			without seeking)
+Changes in v2:
+ - in patch 3, instead of clear and then reset the flag if rq is not
+ completed, test first and clear if rq is going to complete.
 
-Seeking is a NOP for SSD, so it seems odd you mentioned that. Is the
-real problem here that the bootloader driver is very simple, it does
-not queue multiple reads to the hardware, but does it one block at a
-time?
+path 1-2 fix races between nbd setup and module removal.
+patch 3 fix io can't be completed in some error path.
+patch 4 fix io hung when disconnecting failed.
+patch 5 fix sysfs warning about duplicate creation.
+patch 6 use pr_err to output error message.
 
-Do you have performance numbers for both the bootloader and Linux?
-Does Linux performance reading the snapshot increase as much as for
-the bootloader?
+Previous versions:
+v1: https://patchwork.kernel.org/project/linux-block/cover/20220426130746.885140-1-yukuai3@huawei.com/
 
-	Andrew
+Yu Kuai (5):
+  nbd: call genl_unregister_family() first in nbd_cleanup()
+  nbd: fix race between nbd_alloc_config() and module removal
+  nbd: don't clear 'NBD_CMD_INFLIGHT' flag if request is not completed
+  nbd: fix io hung while disconnecting device
+  nbd: use pr_err to output error message
+
+Zhang Wensheng (1):
+  nbd: fix possible overflow on 'first_minor' in nbd_dev_add()
+
+ drivers/block/nbd.c | 110 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 68 insertions(+), 42 deletions(-)
+
+-- 
+2.31.1
+
