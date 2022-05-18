@@ -2,186 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A412352C00D
-	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 19:09:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEA8F52C195
+	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 19:51:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240575AbiERQ4P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 May 2022 12:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38160 "EHLO
+        id S240894AbiERRL4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 May 2022 13:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240506AbiERQz6 (ORCPT
+        with ESMTP id S240900AbiERRLr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 May 2022 12:55:58 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A26519287
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 09:55:56 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id n10so5005308ejk.5
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 09:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+RcN5J0ur4waoOrpP5dEneSJvtTucrgzrBX0vuvDNzg=;
-        b=jqT/3rdeSfMtEpH8kcA4/nn+EfeZSUuf8LPPqhLKI9etfw6hQt/jE/5RB9+wAn7N+Z
-         Ehawr2Lnj8Xy/V9rEAUasHDJAEfZoSITtIIF1X9hmH3oDXIBNzCPI0/8wWj68x+PdNBs
-         CYcJUtEpJeYfXt4e7pO3nCwPPYgiL7h53DO5Fuujh2Y6lzOqlHXACtVhqvzimDu3Oual
-         tfhtqDL4wOAzaNxnKSix47hX+w5GxeHrTuVV+uT6Gaq249kr69g+Sjjj703raStyIOke
-         zlWbjfU2A5GEbVZtSf4efh8q1kIlRtND9i+ESBSanFHpCYBuGyVgZ0dkOIm+//g3Sp7O
-         /xlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+RcN5J0ur4waoOrpP5dEneSJvtTucrgzrBX0vuvDNzg=;
-        b=3oEI2P+4VvoEKp9bx0ZvgS6iOSD5RjLWXMOlByje2YS1UxbTrZYdpxNaV3VJqcDLvj
-         ajmMdkNdctDbG/XU7vcxxHD8boyM3ZvtQGzN2dqtpw6Yxt6OZTt6ILkRhsN9GBXMWpIf
-         O+5rk8salabU82tMeEsqiFwoNMKgDxEMGjiLPTLoZ9EyrQyQ5OP4ObHCc2ZQxVcu2uxw
-         GGRN7nDfhQck9ueJWsn5IlL6/R3EZmO0ZnJPdYECexg2iF4G/PgZTZsM+fVS0tTaTt4r
-         +bNz4OUBbF7hCAidgoigEHz1R0U7XuVaOQnVhCFRukbtRaQK3MZXIOszDylcezPRhSJ+
-         E+zQ==
-X-Gm-Message-State: AOAM533nCBivty9cOjN3Fi2ud2/daxApvMg++Gkt85+6euOm3UGTFfNp
-        JJrRPpg12lraNIGNrMHbT7i9WEzodjZP+FPgUm5uTQ==
-X-Google-Smtp-Source: ABdhPJzoDOL5onqSCpBWW4lu7fFIE11dPS6M11PWkiCu5oUw/XsvL6IBRO8qySJCvzfyvrHLY+M/j+7SW0BKghv5pwQ=
-X-Received: by 2002:a17:907:1c8a:b0:6e9:2a0d:d7b7 with SMTP id
- nb10-20020a1709071c8a00b006e92a0dd7b7mr479411ejc.572.1652892954798; Wed, 18
- May 2022 09:55:54 -0700 (PDT)
+        Wed, 18 May 2022 13:11:47 -0400
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C305FF10
+        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 10:11:46 -0700 (PDT)
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.17.1.5/8.17.1.5) with ESMTP id 24IFiRHx026201
+        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 10:11:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=OcInhUsRx51dXvL17G/5A7NhO4ajDUxZ85f5+B1xdbA=;
+ b=PbNufXDWABvlfxQOFXSHGbenva9/dp8YRVuBL1Nv9NFqfZgp4IylJ8xY56K5Ds+jem9z
+ Zp+QH/oarBKr9cBGDHh+vWToNSb3OarXXJwIiVbSJkbs9Am0hJgl2XVHLIQT2QdI4SWu
+ iN9sRzoImRJ++o/z5fMQbHH/4e8/uJpIs7w= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net (PPS) with ESMTPS id 3g4836u91n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 10:11:45 -0700
+Received: from twshared13345.18.frc3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 18 May 2022 10:11:44 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id 28FE0414B925; Wed, 18 May 2022 10:11:32 -0700 (PDT)
+From:   Keith Busch <kbusch@fb.com>
+To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>
+CC:     <axboe@kernel.dk>, Kernel Team <Kernel-team@fb.com>, <hch@lst.de>,
+        <bvanassche@acm.org>, <damien.lemoal@opensource.wdc.com>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv2 0/3] direct io alignment relax
+Date:   Wed, 18 May 2022 10:11:28 -0700
+Message-ID: <20220518171131.3525293-1-kbusch@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <1652860121-24092-1-git-send-email-quic_vivekuma@quicinc.com>
-In-Reply-To: <1652860121-24092-1-git-send-email-quic_vivekuma@quicinc.com>
-From:   Pasha Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 18 May 2022 12:55:18 -0400
-Message-ID: <CA+CK2bDDphX6ANu_=8SPTy7gbB5aajtE3uVLGZrpaczZQKw4QA@mail.gmail.com>
-Subject: Re: [RFC 0/6] Bootloader based hibernation
-To:     Vivek Kumar <quic_vivekuma@quicinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-pm@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        len.brown@intel.com, Pavel Machek <pavel@ucw.cz>,
-        paulmck@kernel.org, Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        damien.lemoal@opensource.wdc.com, Fuad Tabba <tabba@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>, tsoni@quicinc.com,
-        quic_psodagud@quicinc.com, quic_svaddagi@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: S0FiEvNEiOLtPUyD5LXaLBBJ8qI0rb1_
+X-Proofpoint-ORIG-GUID: S0FiEvNEiOLtPUyD5LXaLBBJ8qI0rb1_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-18_06,2022-05-17_02,2022-02-23_01
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Vivek,
+From: Keith Busch <kbusch@kernel.org>
 
-Interesting stuff.
+Including the fs list this time.
 
-On Wed, May 18, 2022 at 3:49 AM Vivek Kumar <quic_vivekuma@quicinc.com> wrote:
->
-> Kernel Hibernation
->
-> Linux Kernel has been already supporting hibernation, a process which
-> involves freezing of all userspace tasks, followed by quiescing of all
-> kernel device drivers and then a DDR snapshot is taken which is saved
-> to disc-swap partition, after the save, the system can either shutdown
-> or continue further. Generally during the next power cycle when kernel
-> boots and after probing almost all of the drivers, in the late_init()
-> part, it checks if a hibernation image is present in the specified swap
-> slot, if a valid hibernation image is found, it superimposes the currently
-> executing Kernel with an older kernel from the snapshot, moving further,
-> it calls the restore of the drivers and unfreezes the userspace tasks.
-> CONFIG_HIBERNATION and a designated swap partition needs to be present
-> for to enable Hibernation.
->
-> Bootloader Based Hibernation:
->
-> Automotive usecases require better boot KPIs, Hence we are proposing a
-> bootloader based hibernation restore. Purpose of bootloader based
-> hibernation is to improve the overall boot time till the first display
-> frame is seen on the screen or a camera application can be launched from
-> userspace after the power on reset key is pressed. This RFC patchset
-> implements a slightly tweaked version of hibernation in which the
-> restoration of an older snapshot into DDR is being carried out from the
-> bootloader (ABL) itself, by doing this we are saving some time
-> (1 second measured on msm-4.14 Kernel) by not running a
-> temporary kernel and figuring out the hibernation image at late_init().
+I am still working on a better interface to report the dio alignment to
+an application. The most recent suggestion of using statx is proving to
+be less straight forward than I thought, but I don't want to hold this
+series up for that.
 
-I wonder where most of the time is spent? Is it initializing struct
-pages? Potentially we could enlighten bootloader to determine whether
-hibernation image is stored or not on the swap device, and change boot
-parameter for the kernel accordingly. The booting kernel would know
-from the very beginning of boot that it will eventually resume a
-hibernated image, and therefore skip some of initilization parts, and
-perhaps limit amount of memory that it initializes.
+Changes from v1:
 
-> In order to achieve the same bootloader checks for the hibernation
-> image at a very early stage from swap partition, it parses the image and
-> loads it in the DDR instead of loading boot image form boot partition.
-> Since we are not running the temporary kernel,which would have done some
-> basic ARM related setup like, MMU enablement, EL2 setup, CPU setup etc,
+  Included a prep patch to unify rw with zone append (Damien)
 
-What boot loader is used? I suspect bootloader enables MMU to load the
-hibernated image into memory, otherwise the performance would be very
-poor. After the image is loaded, and prior to jumping into the entry
-address of loaded image the MMU is probably disabled.
+  Using ALIGN macro instead of reimplementing it (Bart)
 
-> entry point into hibernation snapshot image directly from bootloader is
-> different, on similar lines, all device drivers are now re-programming
-> the IO-mapped registers as part of the restore callback (which is
-> triggered from the hibernation framework) to bring back the HW/SW sync.
->
-> Other factors like, read-speed of the secondary storage device and
-> organization of the hibernation image in the swap partition effects the
-> total image restore time and the overall boot time. In our current
-> implementation we have serialized the allocation of swap-partition's slots
-> in kernel, so when hibernation image is being saved to disc, each page is
-> not scattered across various swap-slot offsets, rather it in a serial
-> manner. For example, if a DDR page at Page frame number 0x8005 is
-> located at a swap-slot offset 50, the next valid DDR page at PFN 0x8005
-> will be preset at the swap-slot offset 51. With this optimization in
-> place, bootloader can utilize the max capacity of issuing a disc-read
-> for reading a bigger chunk (~50 MBs at once) from the swap slot,
-> and also parsing of the image becomes simpler as it is available
-> contiguously.
+  Squashed the segment size alignment patch into the "relax" patch since
+  the check is only needed because of that patch.
 
-This optimization seems generic enough that it would benefit both
-types of resume: from bootloader and from kernel.
+  Fixed a check for short r/w in the _simple case.=20
 
-Thanks,
-Pasha
+Keith Busch (3):
+  block/bio: remove duplicate append pages code
+  block: export dma_alignment attribute
+  block: relax direct io memory alignment
 
->
->
->
-> Vivek Kumar (6):
->   arm64: hibernate: Introduce new entry point to kernel
->   PM: Hibernate: Add option to disable disk offset randomization
->   block: gendisk: Add a new genhd capability flag
->   mm: swap: Add randomization check for swapon/off calls
->   Hibernate: Add check for pte_valid in saveable page
->   irqchip/gic-v3: Re-init GIC hardware upon hibernation restore
->
->  Documentation/admin-guide/kernel-parameters.txt |  11 ++
->  arch/arm64/kernel/hibernate.c                   |   9 ++
->  drivers/irqchip/irq-gic-v3.c                    | 138 ++++++++++++++++-
->  include/linux/blkdev.h                          |   1 +
->  kernel/power/snapshot.c                         |  43 ++++++++
->  kernel/power/swap.c                             |  12 +++
->  mm/swapfile.c                                   |   6 +-
->  7 files changed, 216 insertions(+), 4 deletions(-)
->
-> --
-> 2.7.4
->
+ block/bio.c            | 93 +++++++++++++++++++-----------------------
+ block/blk-sysfs.c      |  7 ++++
+ block/fops.c           | 20 ++++++---
+ fs/direct-io.c         | 11 +++--
+ fs/iomap/direct-io.c   |  3 +-
+ include/linux/blkdev.h |  5 +++
+ 6 files changed, 76 insertions(+), 63 deletions(-)
+
+--=20
+2.30.2
+
