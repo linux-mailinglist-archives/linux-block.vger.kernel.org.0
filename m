@@ -2,49 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDE6652B33F
-	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 09:28:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 816DC52B39D
+	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 09:39:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231962AbiERHOU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 May 2022 03:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47794 "EHLO
+        id S232171AbiERHdv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 May 2022 03:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231958AbiERHOT (ORCPT
+        with ESMTP id S232200AbiERHdu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 May 2022 03:14:19 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB7CC108AB8;
-        Wed, 18 May 2022 00:14:11 -0700 (PDT)
-Received: from kwepemi100023.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4L34320FdzzhZ90;
-        Wed, 18 May 2022 15:13:34 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi100023.china.huawei.com (7.221.188.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 18 May 2022 15:14:09 +0800
-Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
- 2022 15:14:08 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <tj@kernel.org>, <axboe@kernel.dk>, <ming.lei@redhat.com>
-CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH -next v2 2/2] blk-throttle: fix io hung due to configuration updates
-Date:   Wed, 18 May 2022 15:27:51 +0800
-Message-ID: <20220518072751.1188163-3-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220518072751.1188163-1-yukuai3@huawei.com>
-References: <20220518072751.1188163-1-yukuai3@huawei.com>
+        Wed, 18 May 2022 03:33:50 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422F67A80E
+        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 00:33:48 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 974471F9A5;
+        Wed, 18 May 2022 07:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1652859227; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5i67IRZUWh6H4k0Lxd0QpcjTTp3wGYXXb5+WyloeGIA=;
+        b=rs4YE8r81XygKk2RtwejdGcaj/+mXr+oykE8VQupYIpVIceyO0hlNhSfC7HI9gq4mc+IFO
+        PCPivhzuA+VK4+zqxc+wdpNsXovbDNzcuOq1WtPWvZ5M7gBy4+U/zDYPO+vEO4MUivTLIf
+        cZOQIMx0hDOPDzpwO4+pG583WTKGuzw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1652859227;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5i67IRZUWh6H4k0Lxd0QpcjTTp3wGYXXb5+WyloeGIA=;
+        b=iJA93DJSCiaqjkuLAOEdGiXyOrAvScXoQI9Eb14jN52+xSIj45MSqycTDe2r/2H08U++wd
+        DgeBI4NWp35bOpAw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 871C4133F5;
+        Wed, 18 May 2022 07:33:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id LlavIFuhhGLtUQAAMHmgww
+        (envelope-from <hare@suse.de>); Wed, 18 May 2022 07:33:47 +0000
+Message-ID: <5ed3aa33-7188-4d84-218a-ae1a50af0ebf@suse.de>
+Date:   Wed, 18 May 2022 09:33:46 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600009.china.huawei.com (7.193.23.164)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [GIT PULL] nvme updates for Linux 5.19
+Content-Language: en-US
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        linux-block@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+References: <YoSWZoB1/38DdP4S@infradead.org>
+ <8ff06ce2-0aa7-5999-8987-1f9d9935e4e5@suse.de>
+ <YoSf2UvYcW9fHebf@infradead.org>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <YoSf2UvYcW9fHebf@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,157 +77,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If new configuration is submitted while a bio is throttled, then new
-waiting time is recaculated regardless that the bio might aready wait
-for some time:
+On 5/18/22 09:27, Christoph Hellwig wrote:
+> On Wed, May 18, 2022 at 09:23:45AM +0200, Hannes Reinecke wrote:
+>> On 5/18/22 08:47, Christoph Hellwig wrote:
+>>> The following changes since commit c23d47abee3a54e4991ed3993340596d04aabd6a:
+>>>
+>>>     loop: remove most the top-of-file boilerplate comment from the UAPI header (2022-05-10 06:30:05 -0600)
+>>>
+>> Hmm. So how do we progress with the authentication patches?
+>> Shall I resubmit them?
+>> Will you be picking them up?
+>> Is there anything I need to fix up?
+> 
+> I'm a little worried adding it this late in the cycle, especially with
+> the (although rather trivial) crypto patches not having any reviews from
+> the crypto maintainers.  If you can get those we should be ready early
+> for the next merge window which is going to start in just a few days.
 
-tg_conf_updated
- throtl_start_new_slice
-  tg_update_disptime
-  throtl_schedule_next_dispatch
+Right. Will see what I can do.
 
-Then io hung can be triggered by always submmiting new configuration
-before the throttled bio is dispatched.
+Cheers,
 
-Fix the problem by respecting the time that throttled bio aready waited.
-In order to do that, instead of start new slice in tg_conf_updated(),
-just update 'bytes_disp' and 'io_disp' based on the new configuration.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 64 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 51 insertions(+), 13 deletions(-)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 6f69859eae23..1c3dfd3d3d9a 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -1271,7 +1271,42 @@ static int tg_print_conf_uint(struct seq_file *sf, void *v)
- 	return 0;
- }
- 
--static void tg_conf_updated(struct throtl_grp *tg, bool global)
-+static u64 throtl_update_bytes_disp(u64 dispatched, u64 new_limit,
-+				    u64 old_limit)
-+{
-+	if (new_limit == old_limit)
-+		return dispatched;
-+
-+	if (new_limit == U64_MAX)
-+		return 0;
-+
-+	return dispatched * new_limit / old_limit;
-+}
-+
-+static u32 throtl_update_io_disp(u32 dispatched, u32 new_limit, u32 old_limit)
-+{
-+	if (new_limit == old_limit)
-+		return dispatched;
-+
-+	if (new_limit == UINT_MAX)
-+		return 0;
-+
-+	return dispatched * new_limit / old_limit;
-+}
-+
-+static void throtl_update_slice(struct throtl_grp *tg, u64 *old_limits)
-+{
-+	tg->bytes_disp[READ] = throtl_update_bytes_disp(tg->bytes_disp[READ],
-+			tg_bps_limit(tg, READ), old_limits[0]);
-+	tg->bytes_disp[WRITE] = throtl_update_bytes_disp(tg->bytes_disp[WRITE],
-+			tg_bps_limit(tg, WRITE), old_limits[1]);
-+	tg->io_disp[READ] = throtl_update_io_disp(tg->io_disp[READ],
-+			tg_iops_limit(tg, READ), (u32)old_limits[2]);
-+	tg->io_disp[WRITE] = throtl_update_io_disp(tg->io_disp[WRITE],
-+			tg_iops_limit(tg, WRITE), (u32)old_limits[3]);
-+}
-+
-+static void tg_conf_updated(struct throtl_grp *tg, u64 *old_limits, bool global)
- {
- 	struct throtl_service_queue *sq = &tg->service_queue;
- 	struct cgroup_subsys_state *pos_css;
-@@ -1310,16 +1345,7 @@ static void tg_conf_updated(struct throtl_grp *tg, bool global)
- 				parent_tg->latency_target);
- 	}
- 
--	/*
--	 * We're already holding queue_lock and know @tg is valid.  Let's
--	 * apply the new config directly.
--	 *
--	 * Restart the slices for both READ and WRITES. It might happen
--	 * that a group's limit are dropped suddenly and we don't want to
--	 * account recently dispatched IO with new low rate.
--	 */
--	throtl_start_new_slice(tg, READ);
--	throtl_start_new_slice(tg, WRITE);
-+	throtl_update_slice(tg, old_limits);
- 
- 	if (tg->flags & THROTL_TG_PENDING) {
- 		tg_update_disptime(tg);
-@@ -1327,6 +1353,14 @@ static void tg_conf_updated(struct throtl_grp *tg, bool global)
- 	}
- }
- 
-+static void tg_get_limits(struct throtl_grp *tg, u64 *limits)
-+{
-+	limits[0] = tg_bps_limit(tg, READ);
-+	limits[1] = tg_bps_limit(tg, WRITE);
-+	limits[2] = tg_iops_limit(tg, READ);
-+	limits[3] = tg_iops_limit(tg, WRITE);
-+}
-+
- static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 			   char *buf, size_t nbytes, loff_t off, bool is_u64)
- {
-@@ -1335,6 +1369,7 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 	struct throtl_grp *tg;
- 	int ret;
- 	u64 v;
-+	u64 old_limits[4];
- 
- 	ret = blkg_conf_prep(blkcg, &blkcg_policy_throtl, buf, &ctx);
- 	if (ret)
-@@ -1347,13 +1382,14 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 		v = U64_MAX;
- 
- 	tg = blkg_to_tg(ctx.blkg);
-+	tg_get_limits(tg, old_limits);
- 
- 	if (is_u64)
- 		*(u64 *)((void *)tg + of_cft(of)->private) = v;
- 	else
- 		*(unsigned int *)((void *)tg + of_cft(of)->private) = v;
- 
--	tg_conf_updated(tg, false);
-+	tg_conf_updated(tg, old_limits, false);
- 	ret = 0;
- out_finish:
- 	blkg_conf_finish(&ctx);
-@@ -1523,6 +1559,7 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
- 	struct blkg_conf_ctx ctx;
- 	struct throtl_grp *tg;
- 	u64 v[4];
-+	u64 old_limits[4];
- 	unsigned long idle_time;
- 	unsigned long latency_time;
- 	int ret;
-@@ -1533,6 +1570,7 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
- 		return ret;
- 
- 	tg = blkg_to_tg(ctx.blkg);
-+	tg_get_limits(tg, old_limits);
- 
- 	v[0] = tg->bps_conf[READ][index];
- 	v[1] = tg->bps_conf[WRITE][index];
-@@ -1624,7 +1662,7 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
- 			tg->td->limit_index = LIMIT_LOW;
- 	} else
- 		tg->td->limit_index = LIMIT_MAX;
--	tg_conf_updated(tg, index == LIMIT_LOW &&
-+	tg_conf_updated(tg, old_limits, index == LIMIT_LOW &&
- 		tg->td->limit_valid[LIMIT_LOW]);
- 	ret = 0;
- out_finish:
+Hannes
 -- 
-2.31.1
-
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
