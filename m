@@ -2,242 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AF3852C190
-	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 19:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5693C52C210
+	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 20:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240897AbiERRLn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 May 2022 13:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53366 "EHLO
+        id S241388AbiERSTq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 May 2022 14:19:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240823AbiERRLm (ORCPT
+        with ESMTP id S241339AbiERSTp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 May 2022 13:11:42 -0400
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C028552B31
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 10:11:40 -0700 (PDT)
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24IFiBwh014227
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 10:11:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=oWw+bc+rJhlNN3apliQ9xsJQL9S1G4MZnFOj+WYiR5w=;
- b=Fsd+vV/keQUYdqoCHJ7XVQHZ+rYT8uK8PvUFgHI22X9cm29EwB6XQPQLbL6iu5HGcfB7
- NBmh8ehxar+tf6W7GwT+OmNeba/lK5wxduFFmd2Ci59GbCgkiUmUm4rvzeaAbXQl5NNq
- jlOk3adlepEs5337FZBCzbv2KZYOFsJOz2c= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3g4ap6tey3-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 10:11:39 -0700
-Received: from twshared8508.05.ash9.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 18 May 2022 10:11:37 -0700
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id 5DE4C414B92B; Wed, 18 May 2022 10:11:32 -0700 (PDT)
-From:   Keith Busch <kbusch@fb.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>
-CC:     <axboe@kernel.dk>, Kernel Team <Kernel-team@fb.com>, <hch@lst.de>,
-        <bvanassche@acm.org>, <damien.lemoal@opensource.wdc.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 3/3] block: relax direct io memory alignment
-Date:   Wed, 18 May 2022 10:11:31 -0700
-Message-ID: <20220518171131.3525293-4-kbusch@fb.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220518171131.3525293-1-kbusch@fb.com>
-References: <20220518171131.3525293-1-kbusch@fb.com>
+        Wed, 18 May 2022 14:19:45 -0400
+X-Greylist: delayed 449 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 18 May 2022 11:19:44 PDT
+Received: from relay5.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B929C1C765B
+        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 11:19:44 -0700 (PDT)
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay07.hostedemail.com (Postfix) with ESMTP id C66A02086D;
+        Wed, 18 May 2022 18:12:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id 42ABB6000E;
+        Wed, 18 May 2022 18:12:12 +0000 (UTC)
+Message-ID: <f0acebb66b9b46ad472e0d0989dc0f5810cac3dd.camel@perches.com>
+Subject: Re: [PATCH -next v2 6/6] nbd: use pr_err to output error message
+From:   Joe Perches <joe@perches.com>
+To:     Yu Kuai <yukuai3@huawei.com>, josef@toxicpanda.com,
+        axboe@kernel.dk, ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Date:   Wed, 18 May 2022 11:12:11 -0700
+In-Reply-To: <20220518122618.1702997-7-yukuai3@huawei.com>
+References: <20220518122618.1702997-1-yukuai3@huawei.com>
+         <20220518122618.1702997-7-yukuai3@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: NiFAFK9xWyK3dewiVwHqaUfk8KUfWT7C
-X-Proofpoint-ORIG-GUID: NiFAFK9xWyK3dewiVwHqaUfk8KUfWT7C
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-18_06,2022-05-17_02,2022-02-23_01
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
+        KHOP_HELO_FCRDNS,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Stat-Signature: w4co9fngahnb146d6hsxcz85b1hfpa7z
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 42ABB6000E
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19oEFmBk8xUFTV8bdFQZy9WR91s/9xDnsE=
+X-HE-Tag: 1652897532-761824
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+On Wed, 2022-05-18 at 20:26 +0800, Yu Kuai wrote:
+> Instead of using the long printk(KERN_ERR "nbd: ...") to
+> output error message, defining pr_fmt and using
+> the short pr_err("") to do that. The replacemen is done
+> by using the following command:
+> 
+>   sed -i 's/printk(KERN_ERR "nbd: /pr_err("/g' \
+> 		  drivers/block/nbd.c
 
-Use the address alignment requirements from the hardware for direct io
-instead of requiring addresses be aligned to the block size. User space
-can discover the alignment requirements from the dma_alignment queue
-attribute.
+It's also good to rewrap to 80 columns where possible.
 
-User space can specify any hardware compatible DMA offset for each
-segment, but every segment length is still required to be a multiple of
-the block size.
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+[]
+> @@ -2130,13 +2130,13 @@ static int nbd_genl_disconnect(struct sk_buff *skb, struct genl_info *info)
+>  	nbd = idr_find(&nbd_index_idr, index);
+>  	if (!nbd) {
+>  		mutex_unlock(&nbd_index_mutex);
+> -		printk(KERN_ERR "nbd: couldn't find device at index %d\n",
+> +		pr_err("couldn't find device at index %d\n",
+>  		       index);
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
-v1->v2:
+like here
 
-  Squashed the alignment patch into this one
+>  		return -EINVAL;
+>  	}
+>  	if (!refcount_inc_not_zero(&nbd->refs)) {
+>  		mutex_unlock(&nbd_index_mutex);
+> -		printk(KERN_ERR "nbd: device at index %d is going down\n",
+> +		pr_err("device at index %d is going down\n",
+>  		       index);
 
-  Use ALIGN_DOWN macro instead of reimplementing it
+and here and below...
 
-  Check for unalignment in _simple case
+> @@ -2170,7 +2170,7 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
+>  	nbd = idr_find(&nbd_index_idr, index);
+>  	if (!nbd) {
+>  		mutex_unlock(&nbd_index_mutex);
+> -		printk(KERN_ERR "nbd: couldn't find a device at index %d\n",
+> +		pr_err("couldn't find a device at index %d\n",
+>  		       index);
+>  		return -EINVAL;
+>  	}
+> @@ -2192,7 +2192,7 @@ static int nbd_genl_reconfigure(struct sk_buff *skb, struct genl_info *info)
+>  	}
+>  	if (!refcount_inc_not_zero(&nbd->refs)) {
+>  		mutex_unlock(&nbd_index_mutex);
+> -		printk(KERN_ERR "nbd: device at index %d is going down\n",
+> +		pr_err("device at index %d is going down\n",
+>  		       index);
+>  		return -EINVAL;
+>  	}
 
- block/bio.c            |  3 +++
- block/fops.c           | 20 ++++++++++++++------
- fs/direct-io.c         | 11 +++++++----
- fs/iomap/direct-io.c   |  3 ++-
- include/linux/blkdev.h |  5 +++++
- 5 files changed, 31 insertions(+), 11 deletions(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index 320514a47527..bde9b475a4d8 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1207,6 +1207,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
-, struct iov_iter *iter)
- {
- 	unsigned short nr_pages =3D bio->bi_max_vecs - bio->bi_vcnt;
- 	unsigned short entries_left =3D bio->bi_max_vecs - bio->bi_vcnt;
-+	struct request_queue *q =3D bdev_get_queue(bio->bi_bdev);
- 	struct bio_vec *bv =3D bio->bi_io_vec + bio->bi_vcnt;
- 	struct page **pages =3D (struct page **)bv;
- 	bool same_page =3D false;
-@@ -1223,6 +1224,8 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
-, struct iov_iter *iter)
- 	pages +=3D entries_left * (PAGE_PTRS_PER_BVEC - 1);
-=20
- 	size =3D iov_iter_get_pages(iter, pages, LONG_MAX, nr_pages, &offset);
-+	if (size > 0)
-+		size =3D ALIGN_DOWN(size, queue_logical_block_size(q));
- 	if (unlikely(size <=3D 0))
- 		return size ? size : -EFAULT;
-=20
-diff --git a/block/fops.c b/block/fops.c
-index b9b83030e0df..d8537c29602f 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -54,8 +54,9 @@ static ssize_t __blkdev_direct_IO_simple(struct kiocb *=
-iocb,
- 	struct bio bio;
- 	ssize_t ret;
-=20
--	if ((pos | iov_iter_alignment(iter)) &
--	    (bdev_logical_block_size(bdev) - 1))
-+	if ((pos | iov_iter_count(iter)) & (bdev_logical_block_size(bdev) - 1))
-+		return -EINVAL;
-+	if (iov_iter_alignment(iter) & bdev_dma_alignment(bdev))
- 		return -EINVAL;
-=20
- 	if (nr_pages <=3D DIO_INLINE_BIO_VECS)
-@@ -80,6 +81,11 @@ static ssize_t __blkdev_direct_IO_simple(struct kiocb =
-*iocb,
- 	ret =3D bio_iov_iter_get_pages(&bio, iter);
- 	if (unlikely(ret))
- 		goto out;
-+	if (unlikely(iov_iter_count(iter))) {
-+		/* iov is not aligned for a single bio */
-+		ret =3D -EINVAL;
-+		goto out;
-+	}
- 	ret =3D bio.bi_iter.bi_size;
-=20
- 	if (iov_iter_rw(iter) =3D=3D WRITE)
-@@ -173,8 +179,9 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb,=
- struct iov_iter *iter,
- 	loff_t pos =3D iocb->ki_pos;
- 	int ret =3D 0;
-=20
--	if ((pos | iov_iter_alignment(iter)) &
--	    (bdev_logical_block_size(bdev) - 1))
-+	if ((pos | iov_iter_count(iter)) & (bdev_logical_block_size(bdev) - 1))
-+		return -EINVAL;
-+	if (iov_iter_alignment(iter) & bdev_dma_alignment(bdev))
- 		return -EINVAL;
-=20
- 	if (iocb->ki_flags & IOCB_ALLOC_CACHE)
-@@ -298,8 +305,9 @@ static ssize_t __blkdev_direct_IO_async(struct kiocb =
-*iocb,
- 	loff_t pos =3D iocb->ki_pos;
- 	int ret =3D 0;
-=20
--	if ((pos | iov_iter_alignment(iter)) &
--	    (bdev_logical_block_size(bdev) - 1))
-+	if ((pos | iov_iter_count(iter)) & (bdev_logical_block_size(bdev) - 1))
-+		return -EINVAL;
-+	if (iov_iter_alignment(iter) & bdev_dma_alignment(bdev))
- 		return -EINVAL;
-=20
- 	if (iocb->ki_flags & IOCB_ALLOC_CACHE)
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index 840752006f60..64cc176be60c 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -1131,7 +1131,7 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, st=
-ruct inode *inode,
- 	struct dio_submit sdio =3D { 0, };
- 	struct buffer_head map_bh =3D { 0, };
- 	struct blk_plug plug;
--	unsigned long align =3D offset | iov_iter_alignment(iter);
-+	unsigned long align =3D iov_iter_alignment(iter);
-=20
- 	/*
- 	 * Avoid references to bdev if not absolutely needed to give
-@@ -1165,11 +1165,14 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, =
-struct inode *inode,
- 		goto fail_dio;
- 	}
-=20
--	if (align & blocksize_mask) {
--		if (bdev)
-+	if ((offset | align) & blocksize_mask) {
-+		if (bdev) {
- 			blkbits =3D blksize_bits(bdev_logical_block_size(bdev));
-+			if (align & bdev_dma_alignment(bdev))
-+				goto fail_dio;
-+		}
- 		blocksize_mask =3D (1 << blkbits) - 1;
--		if (align & blocksize_mask)
-+		if ((offset | count) & blocksize_mask)
- 			goto fail_dio;
- 	}
-=20
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 80f9b047aa1b..0256d28baa8e 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -244,7 +244,8 @@ static loff_t iomap_dio_bio_iter(const struct iomap_i=
-ter *iter,
- 	size_t copied =3D 0;
- 	size_t orig_count;
-=20
--	if ((pos | length | align) & ((1 << blkbits) - 1))
-+	if ((pos | length) & ((1 << blkbits) - 1) ||
-+	    align & bdev_dma_alignment(iomap->bdev))
- 		return -EINVAL;
-=20
- 	if (iomap->type =3D=3D IOMAP_UNWRITTEN) {
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 5bdf2ac9142c..834b981ef01b 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1365,6 +1365,11 @@ static inline int queue_dma_alignment(const struct=
- request_queue *q)
- 	return q ? q->dma_alignment : 511;
- }
-=20
-+static inline unsigned int bdev_dma_alignment(struct block_device *bdev)
-+{
-+	return queue_dma_alignment(bdev_get_queue(bdev));
-+}
-+
- static inline int blk_rq_aligned(struct request_queue *q, unsigned long =
-addr,
- 				 unsigned int len)
- {
---=20
-2.30.2
 
