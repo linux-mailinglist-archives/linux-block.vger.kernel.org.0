@@ -2,143 +2,103 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 727B152B9A4
-	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 14:14:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3412252BA47
+	for <lists+linux-block@lfdr.de>; Wed, 18 May 2022 14:38:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236045AbiERMDV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 18 May 2022 08:03:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39760 "EHLO
+        id S236345AbiERMTt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 18 May 2022 08:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236024AbiERMDV (ORCPT
+        with ESMTP id S236253AbiERMTs (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 18 May 2022 08:03:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3C1C51332
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 05:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652875398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QXuzzet92SbtqRuzz00+sjnF/sjZKVtGRrKvRCDQAJI=;
-        b=NRhz37p+HW8FXabVotom98xdtZbDrzuriFcuwqOv2Nhi4MDxxTfWW2YJ2ww1lQFItKpC92
-        eHUkCLetk3YO9fLqLtwz5j4Eh7ER7gfxX3JpNk+uipTUEigl3QvOS7WJEWUWJVwHtoS0Ie
-        ZZQfm7KfLQgEPQmsh9flhCUAcROj598=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-114-7-tSXt_eO6CeR0PH_nsiCA-1; Wed, 18 May 2022 08:03:17 -0400
-X-MC-Unique: 7-tSXt_eO6CeR0PH_nsiCA-1
-Received: by mail-pj1-f71.google.com with SMTP id m6-20020a17090a730600b001d9041534e4so933864pjk.7
-        for <linux-block@vger.kernel.org>; Wed, 18 May 2022 05:03:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QXuzzet92SbtqRuzz00+sjnF/sjZKVtGRrKvRCDQAJI=;
-        b=ULG3vLnzUlhES2IPL1hDOANcvOlsuqkuGtcuNWRutvhyp7NtxmFYjs324fi251Cz6P
-         cB+RElUeLEyf5er4mcUSt1Ka/PUdTs/2rkh7pSMF/ZxqD3GZvwUVZD9eN1lgvIxePJ2K
-         l4D4hjfuJ/EVc0QbRMs8KsGLpmmIMb6e1V04AGncqwxIXG9EUPIS+Ro094QKS7XEwT9K
-         UesydzCxrdADS+dOAWPnyQL4NUcHpAGHDHSJLZT5VZ3xPrl+tZCqFzdkxVXQ4pXvnNiW
-         pQNvrepZ8WIUnmG2p7UkoTq+YkRCL7KpoXfKZ2ZVo3XET7hwJ9X53BScSGitoX72GQ0g
-         ZaFQ==
-X-Gm-Message-State: AOAM5322OBVOZ57U7wNrWQuIrjPNbayr7QRFN/iP4499UKXgFHh5Gq18
-        +H/PwhPh21JYV3VouGAWmx1ImufKuQVxOr95J0oglpwnX/Rld4003suMlwOmjzaplDkFqX/NTxf
-        Iiq0R2oYj8+gpO1zRovevnPF3CCSRROiLdoIOGiA=
-X-Received: by 2002:a63:68c6:0:b0:380:3fbc:dfb6 with SMTP id d189-20020a6368c6000000b003803fbcdfb6mr23558292pgc.326.1652875396475;
-        Wed, 18 May 2022 05:03:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfHjJ7wOc7EfzoDw9bz9TZPPeqDCyi/9W2OTJ/0vStXrGncq07B+IOFJmoSAHUllEg6FQfXCkwecUQS45sisE=
-X-Received: by 2002:a63:68c6:0:b0:380:3fbc:dfb6 with SMTP id
- d189-20020a6368c6000000b003803fbcdfb6mr23558282pgc.326.1652875396187; Wed, 18
- May 2022 05:03:16 -0700 (PDT)
+        Wed, 18 May 2022 08:19:48 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7409A5B88B;
+        Wed, 18 May 2022 05:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=kQKtiTZ0LH/w5S3uWV2zXb3ODADItlkkeofFb+AnfrE=; b=Wv5U2pmuhaGCoLOzHzJK+Nq6cQ
+        EGJBrHRoJFiP/8QEBn6R+hA6bbpRr8oLNh5EVEtnLyyKpJePXmTEnVYtGLqGDlyKTwfy0WSbgi6My
+        iSvOJjjGqikleFr50AmwdM1qnWFvIi3QyjQ786H9g1LQOYSReGILeRYHV25ojKWRg7h4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1nrIeB-003K0L-QZ; Wed, 18 May 2022 14:19:23 +0200
+Date:   Wed, 18 May 2022 14:19:23 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vivek Kumar <quic_vivekuma@quicinc.com>
+Cc:     corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+        tglx@linutronix.de, maz@kernel.org, axboe@kernel.dk,
+        rafael@kernel.org, akpm@linux-foundation.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org, len.brown@intel.com,
+        pavel@ucw.cz, paulmck@kernel.org, bp@suse.de,
+        keescook@chromium.org, songmuchun@bytedance.com,
+        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
+        pasha.tatashin@soleen.com, tabba@google.com, ardb@kernel.org,
+        tsoni@quicinc.com, quic_psodagud@quicinc.com,
+        quic_svaddagi@quicinc.com,
+        Prasanna Kumar <quic_kprasan@quicinc.com>
+Subject: Re: [RFC 2/6] PM: Hibernate: Add option to disable disk offset
+ randomization
+Message-ID: <YoTkSx96vt1NTdZ/@lunn.ch>
+References: <1652860121-24092-1-git-send-email-quic_vivekuma@quicinc.com>
+ <1652860121-24092-3-git-send-email-quic_vivekuma@quicinc.com>
 MIME-Version: 1.0
-References: <20220518034443.46803-1-yangx.jy@fujitsu.com>
-In-Reply-To: <20220518034443.46803-1-yangx.jy@fujitsu.com>
-From:   Yi Zhang <yi.zhang@redhat.com>
-Date:   Wed, 18 May 2022 20:03:04 +0800
-Message-ID: <CAHj4cs9istDHj28KRDCFoE0Y_Hqui4=Fg3em+5YfnNN+byhnFQ@mail.gmail.com>
-Subject: Re: [PATCH blktests] nvmeof-mp/001: Set expected count properly
-To:     Xiao Yang <yangx.jy@fujitsu.com>
-Cc:     osandov@fb.com, Bart Van Assche <bvanassche@acm.org>,
-        linux-block <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1652860121-24092-3-git-send-email-quic_vivekuma@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-I also met this failure during my previous testing, thanks.
-
-Reviewed-by: Yi Zhang <yi.zhang@redhat.com>
-
-On Wed, May 18, 2022 at 11:44 AM Xiao Yang <yangx.jy@fujitsu.com> wrote:
->
-> The number of block devices will increase according
-> to the number of RDMA-capable NICs.
-> For example, nvmeof-mp/001 with two RDMA-capable NICs
-> got the following error:
-> -------------------------------------
->     Configured NVMe target driver
->     -count_devices(): 1 <> 1
->     +count_devices(): 2 <> 1
->     Passed
-> -------------------------------------
->
-> Set expected count properly by calculating the number
-> of RDMA-capable NICs.
->
-> Signed-off-by: Xiao Yang <yangx.jy@fujitsu.com>
+On Wed, May 18, 2022 at 01:18:37PM +0530, Vivek Kumar wrote:
+> Add a kernel parameter to disable the disk offset randomization
+> for SSD devices in which such feature is available at the
+> firmware level. This is helpful in improving hibernation
+> resume time.
+> 
+> Signed-off-by: Vivek Kumar <quic_vivekuma@quicinc.com>
+> Signed-off-by: Prasanna Kumar <quic_kprasan@quicinc.com>
 > ---
->  tests/nvmeof-mp/001     | 7 +++++--
->  tests/nvmeof-mp/001.out | 1 -
->  2 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/tests/nvmeof-mp/001 b/tests/nvmeof-mp/001
-> index f3e6394..82cb298 100755
-> --- a/tests/nvmeof-mp/001
-> +++ b/tests/nvmeof-mp/001
-> @@ -18,7 +18,11 @@ count_devices() {
->  }
->
->  wait_for_devices() {
-> -       local expected=1 i devices
-> +       local expected=0 i devices
-> +
-> +       for i in $(rdma_network_interfaces); do
-> +               ((expected++))
-> +       done
->
->         use_blk_mq y || return $?
->         for ((i=0;i<100;i++)); do
-> @@ -27,7 +31,6 @@ wait_for_devices() {
->                 sleep .1
->         done
->         echo "count_devices(): $devices <> $expected" >>"$FULL"
-> -       echo "count_devices(): $devices <> $expected"
->         [ "$devices" -ge $expected ]
->  }
->
-> diff --git a/tests/nvmeof-mp/001.out b/tests/nvmeof-mp/001.out
-> index 2ce8d17..a7d4cb9 100644
-> --- a/tests/nvmeof-mp/001.out
-> +++ b/tests/nvmeof-mp/001.out
-> @@ -1,3 +1,2 @@
->  Configured NVMe target driver
-> -count_devices(): 1 <> 1
->  Passed
-> --
-> 2.34.1
->
->
->
+>  Documentation/admin-guide/kernel-parameters.txt | 11 +++++++++++
+>  kernel/power/swap.c                             |  9 +++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 666ade9..06b4f10 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5192,6 +5192,17 @@
+>  			Useful for devices that are detected asynchronously
+>  			(e.g. USB and MMC devices).
+>  
+> +	noswap_randomize
+> +			Kernel uses random disk offsets to help with wear-levelling
+> +			of SSD devices, while saving the hibernation snapshot image to
+> +			disk. Use this parameter to disable this feature for SSD
+> +			devices in scenarios when, such randomization is addressed at
+> +			the firmware level and hibenration image is not re-generated
+> +			frequently.
+> +			(Useful for improving hibernation resume time as snapshot pages
+> +			are available in disk serially and can be read in bigger chunks
+> +			without seeking)
 
+Seeking is a NOP for SSD, so it seems odd you mentioned that. Is the
+real problem here that the bootloader driver is very simple, it does
+not queue multiple reads to the hardware, but does it one block at a
+time?
 
--- 
-Best Regards,
-  Yi Zhang
+Do you have performance numbers for both the bootloader and Linux?
+Does Linux performance reading the snapshot increase as much as for
+the bootloader?
 
+	Andrew
