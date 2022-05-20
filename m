@@ -2,107 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 288C052E331
-	for <lists+linux-block@lfdr.de>; Fri, 20 May 2022 05:42:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FA0952E35F
+	for <lists+linux-block@lfdr.de>; Fri, 20 May 2022 05:50:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239759AbiETDmE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 May 2022 23:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
+        id S1345204AbiETDrn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 19 May 2022 23:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345182AbiETDmD (ORCPT
+        with ESMTP id S1345207AbiETDrl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 May 2022 23:42:03 -0400
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B123C1EF1
-        for <linux-block@vger.kernel.org>; Thu, 19 May 2022 20:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1653018122; x=1684554122;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vsP9rR0bmsdYi/b/kU26DDrdo3eIaFFijAIs7ZCN7N4=;
-  b=ZnxQKA7eICsLBJC/Bn9FPoMXDC49oDaLTI2fLUgpC/DMOpygde6uPo9P
-   8o8TaQ5efl34ipeICndxhqxoR/T+b71baJbV/HscmgYBelxliO09MebdE
-   ygFE8KZITnOJzczAaUNAsQkPF9vITxHpYf2K12mwO+edpRtelW0331znQ
-   9lT1oYe9ydhoStqPlwDAXC4ppy/PlZFOzNZo8+/mbyEH9rCduTCj2EOa8
-   N3tS15TBPBoW7i0PEn0bOK11eLKOOQja43uKqe3Koe4Q4eEh90fC0fVV0
-   RBmIyYemA6luqeAmNt237eQ83LqM7T4nqOkhhx6H7VSWrU8SYHd3cZhqY
-   A==;
-X-IronPort-AV: E=Sophos;i="5.91,238,1647273600"; 
-   d="scan'208";a="312850101"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 20 May 2022 11:42:01 +0800
-IronPort-SDR: piVJCNAg3I1Ec7M9S06Fq3cb7UbJVc/L5/CuqTAH/jc/Q2h4gpTiX88BjfO+jX4ghJTG90Rr6C
- WhJY/Fo58zZFkJWgMq+nIYchKDSbWTNU/FZBlkEjCy+QFBnulF/z9GjJy0lGsIK8OUILGTqKwx
- zdXqCEr0MPgPSykTsNoPP2dbvXvveHOcEtoq/pSfhqYRWH6/SheXkgIF0x5ROcbe6FQnQPQvFM
- OdM+ymePxXfci+3M4fyHXdsy6rj217WJe0ShQbVaa5lcIJPam1XPCYy2JQ3GYASFmH8hNIvLO1
- AuI8iHut6fqdruzgM6uqayE/
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 May 2022 20:04:52 -0700
-IronPort-SDR: 0TAPPHXo3hFA6Nbsl/EGaYv3lsrS/M/wPHDRh96rlsYIornTXvWezKHYP8dZawyHcUEASHeNcl
- 9odzK4b2NGx5DnzShPKagZn0ypV2cnSeEpYxPOm4UNOgcJFFmORd11gueZfKydf5siZuaDxFiE
- Dq2aXPVvmOcl0D/FL9wP6G1jzi3HwsojACYFnrMLwgaobKusJKoCBME1yqbeWoK8hrnAXCJmM+
- pCLYk6b3X9I322L5XzsQAUDzL08MmwFdAN2gAWjhW4aoeZ3azjjZVmzXZ4xbCHBDrKFYD6iqMY
- 87U=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 May 2022 20:41:54 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4L4CFs4d3Nz1SVp3
-        for <linux-block@vger.kernel.org>; Thu, 19 May 2022 20:41:53 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1653018112; x=1655610113; bh=vsP9rR0bmsdYi/b/kU26DDrdo3eIaFFijAI
-        s7ZCN7N4=; b=TOOPyIZkc/aHTy2wEvoXXElTfusvRXNu1QsteanVuHg5bqU7wWO
-        mwbjBiXuQbiTRw7xOyeeg1G9XUUTu1p7ojInIix0A20JmYpba9eWGV64Io5bxJAX
-        YM2UKPXaoFkpFvWRoEEF3xbTnSWhxN0Ur4ew39qYPlfCIPZoRhPdEn1d6JvvFvnC
-        vaxvAvp50cS5sqgaHhkvG+W+GB7GOB7JDE7zHiORzahyLnZEifUqJ8UnvoCDbblp
-        QQPrHhnakW49nTbPvFpfzOrvstlSaJp7ilas6c1UXq+ywivUEYDpx3eIHWuHMhuE
-        a2qqGH20HOi7zag1S+AceVtOJ8x2SsAWXPQ==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 56hXLDgAm5jc for <linux-block@vger.kernel.org>;
-        Thu, 19 May 2022 20:41:52 -0700 (PDT)
-Received: from [10.225.163.45] (unknown [10.225.163.45])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4L4CFp71jmz1Rvlc;
-        Thu, 19 May 2022 20:41:50 -0700 (PDT)
-Message-ID: <e4b57864-a685-d7a4-b8dd-1078547f7b0b@opensource.wdc.com>
-Date:   Fri, 20 May 2022 12:41:49 +0900
+        Thu, 19 May 2022 23:47:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B97FF19038
+        for <linux-block@vger.kernel.org>; Thu, 19 May 2022 20:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653018457;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mn5/zChRgElfsV6pHRiw650DaZl7NGWZZmRDGYbnb4k=;
+        b=HJWbn8ysfd2Kz/Ibm+MQgtdDYrTSOiprQeDSKoK0TM4NeoL4G8LAkH/sM6Gql7JocmNaV4
+        AtsdZsfWdBXmsCZyjpTR+YJhnWvLcRxh/S58OP0bqPozHXT965UGl2GSC71OhYdazv5XFk
+        sJBRPJGRGqZGI0UE5pka32yQNDMEBdg=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-644-foT4a6fnPbCy13bpjGtvxA-1; Thu, 19 May 2022 23:47:33 -0400
+X-MC-Unique: foT4a6fnPbCy13bpjGtvxA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7D0E638107AB;
+        Fri, 20 May 2022 03:47:33 +0000 (UTC)
+Received: from T590 (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 90F7940D361B;
+        Fri, 20 May 2022 03:44:56 +0000 (UTC)
+Date:   Fri, 20 May 2022 11:44:51 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [PATCH -next v2] blk-mq: fix panic during blk_mq_run_work_fn()
+Message-ID: <YocOsw6n3y11lNym@T590>
+References: <20220520032542.3331610-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCHv2 3/3] block: relax direct io memory alignment
-Content-Language: en-US
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Keith Busch <kbusch@kernel.org>, Keith Busch <kbusch@fb.com>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        axboe@kernel.dk, Kernel Team <Kernel-team@fb.com>, hch@lst.de,
-        bvanassche@acm.org
-References: <20220518171131.3525293-4-kbusch@fb.com>
- <YoWL+T8JiIO5Ln3h@sol.localdomain>
- <YoWWtwsiKGqoTbVU@kbusch-mbp.dhcp.thefacebook.com>
- <YoWjBxmKDQC1mCIz@sol.localdomain>
- <YoWkiCdduzyQxHR+@kbusch-mbp.dhcp.thefacebook.com>
- <YoWmi0mvoIk3CfQN@sol.localdomain>
- <YoWqlqIzBcYGkcnu@kbusch-mbp.dhcp.thefacebook.com>
- <YoW5Iy+Vbk4Rv3zT@sol.localdomain>
- <YoXN5CpSGGe7+OJs@kbusch-mbp.dhcp.thefacebook.com>
- <283d37e8-868a-990b-e953-4b7bb940135c@opensource.wdc.com>
- <YoZ8OKDXZBiNd9XB@sol.localdomain>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <YoZ8OKDXZBiNd9XB@sol.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220520032542.3331610-1-yukuai3@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -110,52 +60,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/20/22 02:19, Eric Biggers wrote:
-> On Thu, May 19, 2022 at 08:45:55AM +0200, Damien Le Moal wrote:
->> On 2022/05/19 6:56, Keith Busch wrote:
->>> On Wed, May 18, 2022 at 08:27:31PM -0700, Eric Biggers wrote:
->>>>
->>>> So the bio ends up with a total length that is a multiple of the logical block
->>>> size, but the lengths of the individual bvecs in the bio are *not* necessarily
->>>> multiples of the logical block size.  That's the problem.
->>>
->>> I'm surely missing something here. I know the bvecs are not necessarily lbs
->>> aligned, but why does that matter? Is there some driver that can only take
->>> exactly 1 bvec, but allows it to be unaligned? If so, we could take the segment
->>> queue limit into account, but I am not sure that we need to.
->>
->> For direct IO, the first bvec will always be aligned to a logical block size.
->> See __blkdev_direct_IO() and __blkdev_direct_IO_simple():
->>
->>         if ((pos | iov_iter_alignment(iter)) &
->>             (bdev_logical_block_size(bdev) - 1))
->>                 return -EINVAL;
->>
->> And given that, all bvecs should also be LBA aligned since the LBA size is
->> always a divisor of the page size. Since splitting is always done on an LBA
->> boundary, I do not see how we can ever get bvecs that are not LBA aligned.
->> Or I am missing something too...
->>
+On Fri, May 20, 2022 at 11:25:42AM +0800, Yu Kuai wrote:
+> Our test report a following crash:
 > 
-> You're looking at the current upstream code.  This patch changes that to:
+> BUG: kernel NULL pointer dereference, address: 0000000000000018
+> PGD 0 P4D 0
+> Oops: 0000 [#1] SMP NOPTI
+> CPU: 6 PID: 265 Comm: kworker/6:1H Kdump: loaded Tainted: G           O      5.10.0-60.17.0.h43.eulerosv2r11.x86_64 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-20220320_160524-szxrtosci10000 04/01/2014
+> Workqueue: kblockd blk_mq_run_work_fn
+> RIP: 0010:blk_mq_delay_run_hw_queues+0xb6/0xe0
+> RSP: 0018:ffffacc6803d3d88 EFLAGS: 00010246
+> RAX: 0000000000000006 RBX: ffff99e2c3d25008 RCX: 00000000ffffffff
+> RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffff99e2c911ae18
+> RBP: ffffacc6803d3dd8 R08: 0000000000000000 R09: ffff99e2c0901f6c
+> R10: 0000000000000018 R11: 0000000000000018 R12: ffff99e2c911ae18
+> R13: 0000000000000000 R14: 0000000000000003 R15: ffff99e2c911ae18
+> FS:  0000000000000000(0000) GS:ffff99e6bbf00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000018 CR3: 000000007460a006 CR4: 00000000003706e0
+> Call Trace:
+>  __blk_mq_do_dispatch_sched+0x2a7/0x2c0
+>  ? newidle_balance+0x23e/0x2f0
+>  __blk_mq_sched_dispatch_requests+0x13f/0x190
+>  blk_mq_sched_dispatch_requests+0x30/0x60
+>  __blk_mq_run_hw_queue+0x47/0xd0
+>  process_one_work+0x1b0/0x350
+>  worker_thread+0x49/0x300
+>  ? rescuer_thread+0x3a0/0x3a0
+>  kthread+0xfe/0x140
+>  ? kthread_park+0x90/0x90
+>  ret_from_fork+0x22/0x30
 > 
-> 	if ((pos | iov_iter_count(iter)) & (bdev_logical_block_size(bdev) - 1))
-> 		return -EINVAL;
-> 	if (iov_iter_alignment(iter) & bdev_dma_alignment(bdev))
-> 		return -EINVAL;
+> After digging from vmcore, I found that the queue is cleaned
+> up(blk_cleanup_queue() is done) and tag set is
+> freed(blk_mq_free_tag_set() is done).
 > 
-> So, if this patch is accepted, then the file position and total I/O length will
-> need to be logical block aligned (as before), but the memory address and length
-> of each individual iovec will no longer need to be logical block aligned.  How
-> the iovecs get turned into bios (and thus bvecs) is a little complicated, but
-> the result is that logical blocks will be able to span bvecs.
-
-Indeed. I missed that change in patch 3. Got it.
-
+> There are two problems here:
 > 
-> - Eric
+> 1) blk_mq_delay_run_hw_queues() will only be called from
+> __blk_mq_do_dispatch_sched() if e->type->ops.has_work() return true.
+> This seems impossible because blk_cleanup_queue() is done, and there
+> should be no io. Commit ddc25c86b466 ("block, bfq: make bfq_has_work()
+> more accurate") fix the problem in bfq. And currently ohter schedulers
+> don't have such problem.
+> 
+> 2) 'hctx->run_work' still exists after blk_cleanup_queue().
+> blk_mq_cancel_work_sync() is called from blk_cleanup_queue() to cancel
+> all the 'run_work'. However, there is no guarantee that new 'run_work'
+> won't be queued after that(and before blk_mq_exit_queue() is done).
+
+It is blk_mq_run_hw_queue() caller's responsibility to grab
+->q_usage_counter for avoiding queue cleaned up, so please fix the user
+side.
 
 
--- 
-Damien Le Moal
-Western Digital Research
+Thanks, 
+Ming
+
