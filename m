@@ -2,46 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE06F52FB01
-	for <lists+linux-block@lfdr.de>; Sat, 21 May 2022 13:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC7B052FC53
+	for <lists+linux-block@lfdr.de>; Sat, 21 May 2022 14:21:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242763AbiEULMj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 21 May 2022 07:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47288 "EHLO
+        id S233879AbiEUMVd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 21 May 2022 08:21:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242810AbiEULML (ORCPT
+        with ESMTP id S232452AbiEUMVc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 21 May 2022 07:12:11 -0400
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C22B2B26F;
-        Sat, 21 May 2022 04:12:05 -0700 (PDT)
+        Sat, 21 May 2022 08:21:32 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C4A1FA5C
+        for <linux-block@vger.kernel.org>; Sat, 21 May 2022 05:21:30 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id v10so9825845pgl.11
+        for <linux-block@vger.kernel.org>; Sat, 21 May 2022 05:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=8kYNFUV9Zcxq+xozkt4bW19kyeKPdHmTSaJ76s0D2PY=;
-  b=rBnQigwpigXvemnKVHRMnppReKpXFazeFf/5iX9yAfpVBPclg5jRlHRr
-   WFW5ZPV27eLCogs7SoZZv3mGlrGQZnY65EM0jit46xwR13WNcgT60XFjs
-   WyB+dW77pjMeJ5ajTnp6Uqhp0DI6e0TOVUkSk2hDkBFUQTqyqtB6aAqLv
-   0=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.91,242,1647298800"; 
-   d="scan'208";a="14727924"
-Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 13:11:57 +0200
-From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     kernel-janitors@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] blk-mq: fix typo in comment
-Date:   Sat, 21 May 2022 13:10:39 +0200
-Message-Id: <20220521111145.81697-29-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 2.20.1
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=gfHmtlCQtYvyaOp3BTWx/NwfcevCZ/dQvENt+OCB6OU=;
+        b=i1Z7sKvKg/r7Fu90Re3JGKGo4OH8g8Rh6cF/OLtxysHA/ntRqQvqKVSVq2oF1hT6L4
+         cNnY4wBcAg9kqs771D/Xc0PAxFm6ZZUDIHEvQjJlLqiY3ZTF1MkvntDJylyJoP3yjEBy
+         aEgkl0OIh0MepffoSk4c1rEgxTlrxXHO0w8y7AoWrX0RPPOstSM83S7ponJCoxe2/3Fk
+         cwTavtZmoY0/bOt2sJHHNhlb66apetZalZEVahMDSTFRMRHJpK3IFC3Iowh6/6VEjb2O
+         U9kKXX8EL0eVtbcvNrYJg2Z3WKlp5dK6tZVXG5aOLhqu829Yw3YQXHKun68AuCwVTcgC
+         vCTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=gfHmtlCQtYvyaOp3BTWx/NwfcevCZ/dQvENt+OCB6OU=;
+        b=E8w3IKiuMGQHkAPbqGBrb09qA18P5rqyAB4iOkVBx9LbzxCCSh4VBMFuHNI0uV1crK
+         Ntgmg/tp5pRfScLKKfq2kpuqL9NUBRBvpwdpkxkMC00p9wmKivmix8/bUOM4B258QSeY
+         jBJJQvCu1SuXgbfVGyxBsUUZ6OUqdeOC9+85wmExPkrTHk31uRa7p0+SsyAISieJSQsU
+         fKyoETSQddhzrtwFrJW34FwW90zRB7nwnBiwc6wbJEM/cc+LRKYVnafe5EYamkoTQMay
+         AkY/yjlC53+9NVNHeB1GWwA3nd/7kzRvKgJOnwcG8iCryHA4B6UQNa96rZ5Fyoill7sU
+         QoVA==
+X-Gm-Message-State: AOAM530ecnFvk6N1J0WWqsQEUpj59TYBVYapFF7di8gCXiT56bLJMDIE
+        aYUtxCp+yffkQ3/yPDwd+tuDZQ==
+X-Google-Smtp-Source: ABdhPJw+5j9W+uGqvyx64pvj2Pi9VtZZrzR4LWDDdBMSzozlbeja1Pr6gXBE/S71yWDyxP7HGY8Qjg==
+X-Received: by 2002:a63:3c05:0:b0:3f2:6ea8:aff2 with SMTP id j5-20020a633c05000000b003f26ea8aff2mr12765049pga.340.1653135689908;
+        Sat, 21 May 2022 05:21:29 -0700 (PDT)
+Received: from [192.168.1.100] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id t71-20020a63784a000000b003db610ebdd0sm1403982pgc.65.2022.05.21.05.21.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 May 2022 05:21:29 -0700 (PDT)
+Message-ID: <d5a90a08-1ac6-587a-e900-0436bd45543a@kernel.dk>
+Date:   Sat, 21 May 2022 06:21:28 -0600
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH -next v5 0/3] support concurrent sync io for bfq on a
+ specail occasion
+Content-Language: en-US
+To:     "yukuai (C)" <yukuai3@huawei.com>, paolo.valente@linaro.org
+Cc:     jack@suse.cz, tj@kernel.org, linux-block@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com
+References: <20220428120837.3737765-1-yukuai3@huawei.com>
+ <d50df657-d859-79cf-c292-412eaa383d2c@huawei.com>
+ <61b67d5e-829c-8130-7bda-81615d654829@huawei.com>
+ <81411289-e13c-20f5-df63-c059babca57a@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <81411289-e13c-20f5-df63-c059babca57a@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,26 +78,25 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Spelling mistake (triple letters) in comment.
-Detected with the help of Coccinelle.
+On 5/21/22 1:22 AM, yukuai (C) wrote:
+> 在 2022/05/14 17:29, yukuai (C) 写道:
+>> 在 2022/05/05 9:00, yukuai (C) 写道:
+>>> Hi, Paolo
+>>>
+>>> Can you take a look at this patchset? It has been quite a long time
+>>> since we spotted this problem...
+>>>
+>>
+>> friendly ping ...
+> friendly ping ...
 
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+I can't speak for Paolo, but I've mentioned before that the majority
+of your messages end up in my spam. That's still the case, in fact
+I just marked maybe 10 of them as not spam.
 
----
- block/blk-mq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You really need to get this issued sorted out, or you will continue
+to have patches ignore because folks may simply not see them.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ed1869a305c4..ae116b755648 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1083,7 +1083,7 @@ bool blk_mq_complete_request_remote(struct request *rq)
- 	WRITE_ONCE(rq->state, MQ_RQ_COMPLETE);
- 
- 	/*
--	 * For a polled request, always complete locallly, it's pointless
-+	 * For a polled request, always complete locally, it's pointless
- 	 * to redirect the completion.
- 	 */
- 	if (rq->cmd_flags & REQ_POLLED)
+-- 
+Jens Axboe
 
