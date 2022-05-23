@@ -2,99 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B3B5531C1F
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 22:57:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 002D5531AEF
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 22:56:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232548AbiEWUQ2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 16:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52348 "EHLO
+        id S232913AbiEWUTu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 16:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233390AbiEWUQQ (ORCPT
+        with ESMTP id S232809AbiEWUTm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 16:16:16 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E32C91FCC5
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:16:14 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id i27so31127476ejd.9
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:16:14 -0700 (PDT)
+        Mon, 23 May 2022 16:19:42 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AADFEBC6C1
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:19:40 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id l7-20020a17090aaa8700b001dd1a5b9965so307862pjq.2
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:19:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EA3FIBNNDoj02Qd5UyhoYbcYuhDKnQDkuCoIXsHPGWY=;
-        b=Nfn7ww9o3d0ammGcjT3qgI9xxfAGwUBtkBtWkmxyujjnhZ5owJd6qJrN9TUYSY4B0G
-         C8sS56B0FTy0zY8TGSBy7mCZaTgAYNDgfE2spXBFYauQ0VIko+BXGY6hGxZXyllmvji6
-         JZ9lWCVYiTDJz49RoARM4qI73Jd0TIJVA2Yow=
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=X6KzDWV2s9CddCeS2n3xLkn5ljOP7g4ucSnb8sgeU+g=;
+        b=Junva1dQ9VVrtil0/VpAz8ZRAtOPljAlGJVh05PqgLdrJhGyiHPb7kbuqAuAAxGIE7
+         gznLGGFfa94LmzfgcSigDTio2gqW3/nwqKVWoyDOaLD9k5uuwxT4+F0toncGxj1+ccfJ
+         3Me7uu2SBTRg2wvnFbtpnAUWBlpWG6VOt3SGMYz9uiRs/NFLGSww8HPDSX1KAtvqKPlx
+         Q+TWhEIh53KZp75I4AI0GD0i47vRV82w6zcC1yk1hie6QObR5Azm9pvoLfsQTVSB/OpS
+         tYWuCJYLFbhCC8Gth4ilRFHlY5bXVVT5ZxroqDiYWubXmqwATuCgwu/N4/AHm2ICgJY2
+         5VUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EA3FIBNNDoj02Qd5UyhoYbcYuhDKnQDkuCoIXsHPGWY=;
-        b=oo7y/aa/duHDlFXwlN0o3v2YOITjjVnL3MkfRTp8e/sCNUTBy5K72UalxEV7zPmvpa
-         WWoELKOtTpK5MXwiw6eI+I6Q9gm6sGFNFWLKojsCjpW1f6jwmpawO9NAs9yTDCn4Ghsf
-         b32cUxdnZIIiwOqQ+KZaJdnnOo8wVKqqEjEAOwVfJtvlR2/OuRWjaCyD5PhTaewjInEY
-         RlAOdG0t361hknr1xKvmcVCMS2i7F5lAdMUiW2H+gi6mNoKW1Zs/cP+zWhCEaOVx2cBs
-         IetELaafzIZ6bMBeQR91yODGWJMY1PBj/cauND863LI8o4wLh6VBrAsU4SBGSV+hNKn6
-         bV+g==
-X-Gm-Message-State: AOAM533zfhz0/WPPsO298xvDUHetSrSGY5zAINVrK/TYc9FQ/uBxLRxe
-        6SldD0r3rCx3uJUoXR9Oddd0xZ4oqRmzGr6H3Os=
-X-Google-Smtp-Source: ABdhPJz1M+GDgLgeMlWXtBf0TVJlvhEvurL1poHK9PWOUD0HS/TMgiPdam/eoR8z8lJinV+vifeLNg==
-X-Received: by 2002:a17:907:c21:b0:6fe:e94b:3a52 with SMTP id ga33-20020a1709070c2100b006fee94b3a52mr5134515ejc.171.1653336973033;
-        Mon, 23 May 2022 13:16:13 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id md17-20020a170906ae9100b006feaf472637sm3986713ejb.53.2022.05.23.13.16.12
-        for <linux-block@vger.kernel.org>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=X6KzDWV2s9CddCeS2n3xLkn5ljOP7g4ucSnb8sgeU+g=;
+        b=P/JMsTEL+ckjEh9aeetoDuZOk32aEcDIQQLspTJ5ERyCqBNYxfmsGkAi+yFVEhGRmp
+         xibSIdYB/wtpPd5Ie3PhqIwqnB6IU2jKKv9sO32vnERQqa31R7CB5isqQNGoHynGQ2rs
+         TFPY29YhVrQag2abB1xN1FGq5jnRd+ahJNXIFAC46xIXoqCXaP0taHRvl6PhG8DRJbz2
+         OKC3FF9kY0zAqbqeEGT5rOQe8KS2tcW5uRisIvLzrAclccokHy2bUJPiej2PLD8LyItC
+         t0+dJvinPupasiKtwkQt918vE4Yf/sfNbZWchPlI0bq2pHwsLLqcjLtcyhC1/l5sURvM
+         XKkQ==
+X-Gm-Message-State: AOAM533xYfJNg6wzo5g80b8hn/ogahaDsnqmr1Lk2tubqbyES6jxFwhx
+        2BW7gK6xXBYC3Ne3dzEKd9muWlEbIfneoA==
+X-Google-Smtp-Source: ABdhPJwE2FyhUuyJfb2fxL0s3tzgZw/zFzPrpAe0yTUW02/5PzAcT2O1SW5Msdq10Wsdt/kQI9SVVQ==
+X-Received: by 2002:a17:902:e94e:b0:158:91e6:501 with SMTP id b14-20020a170902e94e00b0015891e60501mr24261902pll.29.1653337180154;
+        Mon, 23 May 2022 13:19:40 -0700 (PDT)
+Received: from [192.168.1.100] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id ck18-20020a17090afe1200b001cb6527ca39sm129991pjb.0.2022.05.23.13.19.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 May 2022 13:16:12 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id t13so3730975wrg.9
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:16:12 -0700 (PDT)
-X-Received: by 2002:a5d:6da6:0:b0:20f:bc8a:9400 with SMTP id
- u6-20020a5d6da6000000b0020fbc8a9400mr14025325wrs.274.1653336971796; Mon, 23
- May 2022 13:16:11 -0700 (PDT)
+        Mon, 23 May 2022 13:19:39 -0700 (PDT)
+Message-ID: <caa5e85c-2bfe-b9e3-1e32-c11f78e6ad29@kernel.dk>
+Date:   Mon, 23 May 2022 14:19:38 -0600
 MIME-Version: 1.0
-References: <6f712c75-c849-ae89-d763-b2a18da52844@kernel.dk>
-In-Reply-To: <6f712c75-c849-ae89-d763-b2a18da52844@kernel.dk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 23 May 2022 13:15:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whfi3FE3O7KrziqPbyGvAmNFas3xxLz2O+ttzBkCOQmfw@mail.gmail.com>
-Message-ID: <CAHk-=whfi3FE3O7KrziqPbyGvAmNFas3xxLz2O+ttzBkCOQmfw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
 Subject: Re: [GIT PULL] io_uring passthrough support
-To:     Jens Axboe <axboe@kernel.dk>
+Content-Language: en-US
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     io-uring <io-uring@vger.kernel.org>,
         "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <6f712c75-c849-ae89-d763-b2a18da52844@kernel.dk>
+ <CAHk-=whfi3FE3O7KrziqPbyGvAmNFas3xxLz2O+ttzBkCOQmfw@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CAHk-=whfi3FE3O7KrziqPbyGvAmNFas3xxLz2O+ttzBkCOQmfw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, May 22, 2022 at 2:26 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> This will cause a merge conflict as well, with the provided buffer
-> change from the core branch, and adding CQE32 support for NOP in this
-> branch.
+On 5/23/22 2:15 PM, Linus Torvalds wrote:
+> On Sun, May 22, 2022 at 2:26 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> This will cause a merge conflict as well, with the provided buffer
+>> change from the core branch, and adding CQE32 support for NOP in this
+>> branch.
+> 
+> Ugh, that really hits home how ugly this CQE32 support was.
+> 
+> Dammit, it shouldn't have been done this way. That io_nop() code is
+> disgusting, and how it wants that separate "with extra info" case is
+> just nasty.
+> 
+> I've pulled this, but with some swearing. That whole "extra1" and
+> "extra2" is ugly as hell, and just the naming shows that it has no
+> sane semantics, much less documentation.
+> 
+> And the way it's randomly hidden in 'struct io_nop' *and* then a union
+> with that hash_node is just disgusting beyond words. Why do you need
+> both fields when you just copy one to the other at cmd start and then
+> back at cmd end?
+> 
+> I must be missing something, but that it is incredibly ugly is clear.
 
-Ugh, that really hits home how ugly this CQE32 support was.
+I think you are! The NOP case is just a sample way of exercising the
+CQE32 support, with extra1+2 being what is passed back in the bigger
+CQE. The NOP command exists purely to test things, and the CQE32 support
+there is a bit forced because NOP just always completes with '0' in the
+normal res field.
 
-Dammit, it shouldn't have been done this way. That io_nop() code is
-disgusting, and how it wants that separate "with extra info" case is
-just nasty.
+We can obviously dump this as it isn't integral to anything, and
+honestly now that the NVMe is wired up, there's no great need to have a
+separate test for it. But it doesn't really hurt and there are already
+regression tests for it.
 
-I've pulled this, but with some swearing. That whole "extra1" and
-"extra2" is ugly as hell, and just the naming shows that it has no
-sane semantics, much less documentation.
+-- 
+Jens Axboe
 
-And the way it's randomly hidden in 'struct io_nop' *and* then a union
-with that hash_node is just disgusting beyond words. Why do you need
-both fields when you just copy one to the other at cmd start and then
-back at cmd end?
-
-I must be missing something, but that it is incredibly ugly is clear.
-
-                 Linus
