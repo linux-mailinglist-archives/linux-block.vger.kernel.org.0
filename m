@@ -2,79 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD40153101B
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 15:19:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0536E531E32
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 23:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235489AbiEWMhF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 08:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
+        id S230040AbiEWVuG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 17:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235722AbiEWMhC (ORCPT
+        with ESMTP id S229515AbiEWVuF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 08:37:02 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3C44CD4F
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 05:37:00 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id j21so13349078pga.13
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 05:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=L18DlrO1XtDATl5hYjR3u+d9RECswhbrU+Pb38Js3ks=;
-        b=JPrsnrHfNbDWW8uJ6kKFgzO5szuJhqQJLtNpQJjh4Q321Oq3Dg2PJSwb344Snwl0aT
-         6XvysX8RCg64WjCOz9hKQCekBRzdVnbvnWZBx2vl3DXsfMe6252Nh/8UA0xydXuCjfqP
-         hqi4H3Vo0ZxSzk6qfBC+lAtshlsEebYPectaMGWkwKMpy2wxiHUF+F3GGuw9mtS5n/5C
-         Om9NqySHY1pJx59ONDkraeOaSRduGCCNMnv/46+11kwCRSfHgKx7ht5oIBpJIa49jrqG
-         bIPVZrHUwUVxzhPBrU+ujxfWluAP7f+yhsnBPpTNa2rq8GcRlJCw9MZ0qGRfGJ2nmu9C
-         faUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=L18DlrO1XtDATl5hYjR3u+d9RECswhbrU+Pb38Js3ks=;
-        b=ncnNmatp56j/zm8Fs3LSGue+RUI6KVAbVfUThh75afjkNwAV8Sl98yrAiSssGhrNJ2
-         kflcSKmnfGphG//wCPx4AsOD0y3jauHoJ5oVg7C8bQ/7rwLY6D6ABGPeKdKOm4iPyeQT
-         +C6tnAn4BMhkerol6cQ1V5DGlXCUa06CNjf1DUlempIa5l7bkrWJgnF3LP2E4lgIkfCX
-         caFDK5SNKlkvdWyvk+tno93wB0TwzcPmlvbuqyRVehhvVJ7Wb+KI9mi1wcezlH/PRfKh
-         IjVQRkSKJmGL5osQcjHx4C9awZvhJkAKxTNBVdx4bM01J3gOJr004cJ81k2TqY+wLIoa
-         Xwag==
-X-Gm-Message-State: AOAM532VM9sRZvfwGQZvGw6ZSH7wG3bFFiqquaeS3ZhfCvqoyfppN6DJ
-        GkoqLmsexSB7JccinxjqdSbIGA==
-X-Google-Smtp-Source: ABdhPJz+Ih+6rif1P5tA46q5pJ1od0Rs4C8Ji7Eb8o9LdISTbXYMMTGTFtnK3wBVca3+wPcuaXSpPQ==
-X-Received: by 2002:a63:2209:0:b0:3ab:113b:9a2b with SMTP id i9-20020a632209000000b003ab113b9a2bmr20357561pgi.235.1653309420117;
-        Mon, 23 May 2022 05:37:00 -0700 (PDT)
-Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id i7-20020a1709026ac700b0015e8d4eb25asm5000680plt.164.2022.05.23.05.36.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 May 2022 05:36:59 -0700 (PDT)
-Message-ID: <25f6703e-9e10-75d9-a893-6df1e6b75254@kernel.dk>
-Date:   Mon, 23 May 2022 06:36:58 -0600
+        Mon, 23 May 2022 17:50:05 -0400
+X-Greylist: delayed 5425 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 May 2022 14:50:01 PDT
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE0526C1
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 14:50:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=XGWyS9M4v/8rYbPomtgL43gdQZPyiCqFsQGUPRBoEE8=; b=jNJY8+U4ieTF5pw5yCPUYrQQeJ
+        eAMrGcxb8toU27SrvnmOckiH2cW5J3IbdrTHEVBhFqcikl3MlZsyS6tR7cLki+4Gelg+bdRF+mKFd
+        icOXGQlihA0qFmnNRTH+QA/NRc4V62c74evkbg9IRBzAPnEhgA0wJlQDDe/w0p7RTHG7bfo+mMOo7
+        zu1b7ndtsmvkItGFlj5+v5SiRb4xw5OZZP6VpZtwtxPGg6yS6K651JQk5Xim5R8415uFb7GYH1DQh
+        9GGbwlG6azepMd8cfZhAQ/mlW3cUFBEmPik5KaUG2/t0wGPOCsWPs8+o4lDkQ2jwFgJq0Ext4sboh
+        aBLvia6Q==;
+Received: from [2001:4bb8:18c:7298:c299:b72c:6660:451c] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nt7Or-004Fq2-5z; Mon, 23 May 2022 12:43:05 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH] block: use bio_queue_enter instead of blk_queue_enter in bio_poll
+Date:   Mon, 23 May 2022 14:43:02 +0200
+Message-Id: <20220523124302.526186-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH -next v5 0/3] support concurrent sync io for bfq on a
- specail occasion
-Content-Language: en-US
-To:     Jan Kara <jack@suse.cz>, "yukuai (C)" <yukuai3@huawei.com>
-Cc:     paolo.valente@linaro.org, tj@kernel.org,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
-References: <20220428120837.3737765-1-yukuai3@huawei.com>
- <d50df657-d859-79cf-c292-412eaa383d2c@huawei.com>
- <61b67d5e-829c-8130-7bda-81615d654829@huawei.com>
- <81411289-e13c-20f5-df63-c059babca57a@huawei.com>
- <d5a90a08-1ac6-587a-e900-0436bd45543a@kernel.dk>
- <55919e29-1f22-e8aa-f3d2-08c57d9e1c22@huawei.com>
- <20220523085902.wmxoebyq3crerecr@quack3.lan>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220523085902.wmxoebyq3crerecr@quack3.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,50 +49,28 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/23/22 2:59 AM, Jan Kara wrote:
-> On Mon 23-05-22 09:10:38, yukuai (C) wrote:
->> ? 2022/05/21 20:21, Jens Axboe ??:
->>> On 5/21/22 1:22 AM, yukuai (C) wrote:
->>>> ? 2022/05/14 17:29, yukuai (C) ??:
->>>>> ? 2022/05/05 9:00, yukuai (C) ??:
->>>>>> Hi, Paolo
->>>>>>
->>>>>> Can you take a look at this patchset? It has been quite a long time
->>>>>> since we spotted this problem...
->>>>>>
->>>>>
->>>>> friendly ping ...
->>>> friendly ping ...
->>>
->>> I can't speak for Paolo, but I've mentioned before that the majority
->>> of your messages end up in my spam. That's still the case, in fact
->>> I just marked maybe 10 of them as not spam.
->>>
->>> You really need to get this issued sorted out, or you will continue
->>> to have patches ignore because folks may simply not see them.
->>>
->> Hi,
->>
->> Thanks for your notice.
->>
->> Is it just me or do you see someone else's messages from *huawei.com
->> end up in spam? I tried to seek help from our IT support, however, they
->> didn't find anything unusual...
-> 
-> So actually I have noticed that a lot of (valid) email from huawei.com (not
-> just you) ends up in the spam mailbox. For me direct messages usually pass
-> (likely matching SPF records for originating mail server save the email
-> from going to spam) but messages going through mailing lists are flagged as
-> spam because the emails are missing valid DKIM signature but huawei.com
-> DMARC config says there should be DKIM signature (even direct messages are
-> missing DKIM so this does not seem as a mailing list configuration issue).
-> So this seems as some misconfiguration of the mails on huawei.com side
-> (likely missing DKIM signing of outgoing email).
+We want to have a valid live gendisk to call ->poll and not just a
+request_queue, so call the right helper.
 
-SPF/DKIM was indeed a problem earlier for yukaui patches, but I don't
-see that anymore. Maybe it's still an issue for some emails, from them
-or Huawei in general?
+Fixes: 3e08773c3841 ("block: switch polling to be bio based")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/blk-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 80fa73c419a99..06ff5bbfe8f66 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -939,7 +939,7 @@ int bio_poll(struct bio *bio, struct io_comp_batch *iob, unsigned int flags)
+ 
+ 	blk_flush_plug(current->plug, false);
+ 
+-	if (blk_queue_enter(q, BLK_MQ_REQ_NOWAIT))
++	if (bio_queue_enter(bio))
+ 		return 0;
+ 	if (queue_is_mq(q)) {
+ 		ret = blk_mq_poll(q, cookie, iob, flags);
 -- 
-Jens Axboe
+2.30.2
 
