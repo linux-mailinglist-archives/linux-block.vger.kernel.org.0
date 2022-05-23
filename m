@@ -2,74 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8FAD531D85
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 23:15:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1B10531D9E
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 23:22:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231715AbiEWVPz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 17:15:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55714 "EHLO
+        id S230089AbiEWVWj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 17:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231767AbiEWVPk (ORCPT
+        with ESMTP id S229555AbiEWVWi (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 17:15:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C25FE27A8
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 14:15:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 15AD2B81632
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 21:15:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CF533C34115;
-        Mon, 23 May 2022 21:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653340502;
-        bh=MRbAwsdPcay5LPhIKOWbyGLG23DM9oRlHURQdGShUaU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=vDPGLNuOb5CwVPWNOnCqKbogMbGG0fqWGuZOSfwx5QCWbQbDZcpVmgb1hIct7TECZ
-         WIkObDifzE0JfKcGEg8MmShzPVRmEqDAaQC7vW5wACglpTluawUYw0MrPQAa0eNyFR
-         dXXqEOgovJA9T39A3zvVU9f7gR2cK5QkRx85wIAVBBENRgVkHrEs5CX05vu9o8H56m
-         WY+iPDk7DHY+JA7otCKgeHDg/s6rilr7H5rdo85/2ivIlKvSCIiymoyPvM1kT1Vaq5
-         rhPmN1sxONlAAMXlNzAb8Wc032pxmC9DatKmvZNKHy3U4oLMrYnz1tok0d6OArNfby
-         Xc6QW2glpJG4g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BABF8F03938;
-        Mon, 23 May 2022 21:15:02 +0000 (UTC)
-Subject: Re: [GIT PULL] Block changes for 5.19-rc
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <4cf566ad-d7c6-cf62-3dd5-ed2069e3c2de@kernel.dk>
-References: <4cf566ad-d7c6-cf62-3dd5-ed2069e3c2de@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <4cf566ad-d7c6-cf62-3dd5-ed2069e3c2de@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.19/block-2022-05-22
-X-PR-Tracked-Commit-Id: 2aaf516084184e4e6f80da01b2b3ed882fd20a79
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 115cd47132d71bd7e4aa1093e15d861a59e73a94
-Message-Id: <165334050276.6568.16004522538915587132.pr-tracker-bot@kernel.org>
-Date:   Mon, 23 May 2022 21:15:02 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Mon, 23 May 2022 17:22:38 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B96939A2;
+        Mon, 23 May 2022 14:22:38 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1653340956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=59DfhzYe72S2hFk3ZpzXUpbAoT1XkzoxJ1ayQv+aGxs=;
+        b=XRNrsXdvZ/svutzu4W0qC2B5F0dKf/1VcNM0aY/b6p1XFSu2lbe7mnf/2JEF9hSQityyKe
+        nCc3JaO0JHTdrddoXESum0RZA4aNm2qIr2KPmJhEilgnkVkuhSVgv/ZeaHD36/I91s0fnF
+        YkB4WlZvqMeJCG1O9f2u8CZD7e++8fsYEUewtwYWMIgpXiXR3ztUcIqbbhSmIZuFrFv4B/
+        6navIvFI06g6Kc7Icv5SwU+vKIS4MP1xncmslyuAGBbr++XXoj/nYrCU9gThBt3CG10xDn
+        baM8N7KA0miLmNYkGGewvwt3y0l0FOPsdd7CNjhTOpqs6F9h+iG1NvYPd59W9g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1653340956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=59DfhzYe72S2hFk3ZpzXUpbAoT1XkzoxJ1ayQv+aGxs=;
+        b=GzuEXz4lAMUxV3PWK9SCtm1vnrVCmYCYuy16Y+0kilnaAoyOxElbE6W5Amp68QChjt2Vsm
+        UIWuDnKIp8lFJ7Cw==
+To:     Luis Chamberlain <mcgrof@kernel.org>, tj@kernel.org,
+        gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        jeyu@kernel.org, shuah@kernel.org
+Cc:     bvanassche@acm.org, dan.j.williams@intel.com, joe@perches.com,
+        mcgrof@kernel.org, keescook@chromium.org, rostedt@goodmis.org,
+        minchan@kernel.org, linux-spdx@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        Kuno Woudt <kuno@frob.nl>,
+        Richard Fontana <fontana@sharpeleven.org>,
+        copyleft-next@lists.fedorahosted.org,
+        Ciaran Farrell <Ciaran.Farrell@suse.com>,
+        Christopher De Nicolo <Christopher.DeNicolo@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH v9 1/6] LICENSES: Add the copyleft-next-0.3.1 license
+In-Reply-To: <20211029184500.2821444-2-mcgrof@kernel.org>
+References: <20211029184500.2821444-1-mcgrof@kernel.org>
+ <20211029184500.2821444-2-mcgrof@kernel.org>
+Date:   Mon, 23 May 2022 23:22:36 +0200
+Message-ID: <87ee0k0wrn.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Sun, 22 May 2022 15:49:45 -0600:
+On Fri, Oct 29 2021 at 11:44, Luis Chamberlain wrote:
+> --- /dev/null
+> +++ b/LICENSES/dual/copyleft-next-0.3.1
+> @@ -0,0 +1,237 @@
+> +Valid-License-Identifier: copyleft-next-0.3.1
+> +SPDX-URL: https://spdx.org/licenses/copyleft-next-0.3.1
+> +Usage-Guide:
+> +  This license can be used in code, it has been found to be GPLv2 compatible
+> +  by attorneys at Redhat and SUSE, however to air on the side of caution,
 
-> git://git.kernel.dk/linux-block.git tags/for-5.19/block-2022-05-22
+air ?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/115cd47132d71bd7e4aa1093e15d861a59e73a94
+> +  it's best to only use it together with a GPL2 compatible license using "OR".
 
-Thank you!
+This paragraph is not really understandable for Joe Developer.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+  copyleft-next-0.3.1 is explicitly compatible with GPLv2 (or later) and
+  can therefore be used for kernel code. Though the best and recommended
+  practice is to express this in the SPDX license identifier by
+  licensing the code under both licenses expressed by the OR operator.
+
+Hmm?
+
+> +  To use the copyleft-next-0.3.1 license put the following SPDX tag/value
+> +  pair into a comment according to the placement guidelines in the
+> +  licensing rules documentation:
+> +    SPDX-License-Identifier: GPL-2.0 OR copyleft-next-0.3.1
+> +    SPDX-License-Identifier: GPL-2.0-only OR copyleft-next 0.3.1
+> +    SPDX-License-Identifier: GPL-2.0+ OR copyleft-next-0.3.1
+> +    SPDX-License-Identifier: GPL-2.0-or-later OR copyleft-next-0.3.1
+
+Please don't propagate the GPL-2.0 and GPL-2.0+ tags. They are
+outdated (still valid) in the SPDX spec, which reminds me that I should
+update the relevant documentation...
+
+Thanks,
+
+        tglx
