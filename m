@@ -2,79 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E5DD531DAD
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 23:28:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBCF2531EA5
+	for <lists+linux-block@lfdr.de>; Tue, 24 May 2022 00:36:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbiEWV2G (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 17:28:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
+        id S229526AbiEWWgL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 18:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231808AbiEWV1m (ORCPT
+        with ESMTP id S229542AbiEWWgK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 17:27:42 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99069859B;
-        Mon, 23 May 2022 14:27:36 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1653341254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lyoADbaI9emEad6jxvsYrqkAZsvu9nykyZtsZApDNGk=;
-        b=U5JSdkBfUq+/gQs6cgBxyfnRFOkp3Zi8j+l4uZcB0Kl8MdOLSVnp6TTibzHBwIUixnPKV2
-        Rtde+pvh2XvPAEX2n6oOFAiiR5aG5TDmwijdyvwEyHUXs/VrIDHg0G+OycqrPlB4XeS+1t
-        x46iIVpcqgmy1iMi6m7fkBxNDmPkU7UWHDQuwAX8XaY7kRNZI5ujTeIp36qt6ah3Gtpd1Q
-        a69DJyOnkP3forcj4Vju+62Y8+EYWoL+W80/BO42YfRUe5sM46RhApf0IEiZpEC6TRPuwd
-        FlxSXvkflX9xQ82ypW5chavkGnICUkKjzUQpGqr0DdwZzPQIqakzTZd+h+ZMjg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1653341254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lyoADbaI9emEad6jxvsYrqkAZsvu9nykyZtsZApDNGk=;
-        b=ZRFd0DHKFx2tvHdvBqapAmLm1Gtb088QyRoFCfzolsaPjkOVDT7sbYSSrJPENH443xtZnY
-        djojoPCD2iM4FFBg==
-To:     Luis Chamberlain <mcgrof@kernel.org>, tj@kernel.org,
-        gregkh@linuxfoundation.org, akpm@linux-foundation.org,
-        jeyu@kernel.org, shuah@kernel.org
-Cc:     bvanassche@acm.org, dan.j.williams@intel.com, joe@perches.com,
-        mcgrof@kernel.org, keescook@chromium.org, rostedt@goodmis.org,
-        minchan@kernel.org, linux-spdx@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Kuno Woudt <kuno@frob.nl>,
-        Richard Fontana <fontana@sharpeleven.org>,
-        copyleft-next@lists.fedorahosted.org,
-        Ciaran Farrell <Ciaran.Farrell@suse.com>,
-        Christopher De Nicolo <Christopher.DeNicolo@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v9 1/6] LICENSES: Add the copyleft-next-0.3.1 license
-In-Reply-To: <20211029184500.2821444-2-mcgrof@kernel.org>
-References: <20211029184500.2821444-1-mcgrof@kernel.org>
- <20211029184500.2821444-2-mcgrof@kernel.org>
-Date:   Mon, 23 May 2022 23:27:34 +0200
-Message-ID: <87bkvo0wjd.ffs@tglx>
+        Mon, 23 May 2022 18:36:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F168055B3;
+        Mon, 23 May 2022 15:36:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8FF7661540;
+        Mon, 23 May 2022 22:36:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BAC6C385A9;
+        Mon, 23 May 2022 22:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653345368;
+        bh=EE0WUvON5ejJQLkBWGV/tDflACpI5x3JMK2sZqhb/4U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CC5Vp4lrbHj9V1ccl5SdDoFbcHiWK5BO+R40hsCl9NoRxMav99+ONFpUyqXktj6Jk
+         27fb7G61UI6BSXDJ8pu/EOT/Q1GZY2Fm+6RVKI46K9nd9gxCXHQHaKmhkZVo0f/L7E
+         1aKRJWCycFJbh1gRWQBAa0L8i1QMtEbx6LmnI/wess6hn+kK7lxKwokfdEwbsVeqT8
+         m1ULKspWnvGIH9jzOZDKPXaiYj16rXgB1YG0asYZu34mQnbB/+2PZ4IArwtOxbp34D
+         3bzGNBTuDdNJTm4rvbMvTzkC25IKXjhmjE2XmG9zJLIJJKOL7ldOqtq4BTebO4JQgO
+         NxwNCPzk8hmjA==
+Date:   Mon, 23 May 2022 16:36:04 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, Changhui Zhong <czhong@redhat.com>
+Subject: Re: [PATCH V2] block: ignore RWF_HIPRI hint for sync dio
+Message-ID: <YowMVODoNIyaqVdC@kbusch-mbp.dhcp.thefacebook.com>
+References: <20220420143110.2679002-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220420143110.2679002-1-ming.lei@redhat.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Oct 29 2021 at 11:44, Luis Chamberlain wrote:
-> +    "FSF-Free" means classified as 'free' by the Free Software Foundation.
-> +
-> +    "OSI-Approved" means approved as 'Open Source' by the Open Source
-> +    Initiative.
+On Wed, Apr 20, 2022 at 10:31:10PM +0800, Ming Lei wrote:
+> So far bio is marked as REQ_POLLED if RWF_HIPRI/IOCB_HIPRI is passed
+> from userspace sync io interface, then block layer tries to poll until
+> the bio is completed. But the current implementation calls
+> blk_io_schedule() if bio_poll() returns 0, and this way causes io hang or
+> timeout easily.
 
-copyleft-next is neither nor. Confused...
+Wait a second. The task's current state is TASK_RUNNING when bio_poll() returns
+zero, so calling blk_io_schedule() isn't supposed to hang.
