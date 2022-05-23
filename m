@@ -2,52 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F5F8531A09
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 22:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C13FB531B68
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 22:56:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232754AbiEWUTg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 16:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37652 "EHLO
+        id S241020AbiEWSex (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 14:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbiEWUTf (ORCPT
+        with ESMTP id S240753AbiEWSeh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 16:19:35 -0400
-X-Greylist: delayed 1069 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 May 2022 13:19:34 PDT
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33978BCE9E;
-        Mon, 23 May 2022 13:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NPVP0vP+ExmNroRIHFq1qAD6xpWTFjMAiNHPjfVwZHs=; b=ELvOYeRnaJaljBF9bn7TrryW0X
-        Idy3hj2oF4skLt14h3gGeXSbKVmNEQ+zOmAq+TfdEh9NbZ/0XGz/MXFB0xU8fuJuUp2NnxmLFkd/E
-        tz9t12EEbZ6SYURJp/2/fSBW+kDV3tq0tF+O05/5NHSLVQdy5GIl2YBTiPhzzcs4wqHrm7Ux3TTCp
-        IJB/Kb7KeoU2wu5FF4yqeh+HJQ7EMxjcTmD4bwiYlHWZc5KVqiwSrjEAdNUDVhAh80joDt0vp9MtF
-        wcyB2EP0oDwJPsQcsPx+Jhtmw7fZQScA53pA/FIH7+P//5cENFcALfga+orkN77ZbuMFs9PGfKiHI
-        ovXWuwIA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ntC0w-005Q5a-21; Mon, 23 May 2022 17:38:42 +0000
-Date:   Mon, 23 May 2022 10:38:42 -0700
+        Mon, 23 May 2022 14:34:37 -0400
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722AF6CF69;
+        Mon, 23 May 2022 11:12:30 -0700 (PDT)
+Received: by mail-pl1-f180.google.com with SMTP id q18so13802279pln.12;
+        Mon, 23 May 2022 11:12:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YcM2V9lJrQoILVWR8hE1O3AxcExnhJbF35MwvFVRNF0=;
+        b=HVcTY5h0SXw5cM3/Ek/o0D5DVjf/WsJlpNVHctMRLPp8t+zDxV01ifHwl3D7cQHWeR
+         zPpMiQGWGXkPCIQsy9ukBrpPfwcl2quH0andP5ZFcqzOaOZD64NMyl1X3nlx3ykj60iH
+         +2mfx5eUW3gRjuaW18Gv5x9Kghrbgf9EetwN4m9CYGg5ebw0ZQLDgE08a7sWv5L4Kyux
+         aSsiJukb8UnAzzUaaV0cL96KzvORKdve6cPhbTPda6ChALkUDN4IFb+ViESD9+feri6u
+         wEHOqAovvpmsnnucdxtXmYYre95Pmu3YGITH8Ke8rRMjTeFiig/FI8OQvWVgsQFB+Ath
+         NzDA==
+X-Gm-Message-State: AOAM532aeeTe0pdigX1wfrhBeL6O7hRa4JXauLVguew4Gvlg+Y9Z1QWC
+        G4FCX5XjoQTZKNxnvXsy8HI=
+X-Google-Smtp-Source: ABdhPJyM/CwxpvBVN9kqgJt3dUJYAsl5xQQzoLnJApp0k9u48+L0bdeBCHhzQQ+qLqqg/d0Knkk4fQ==
+X-Received: by 2002:a17:90a:8807:b0:1df:78c7:c215 with SMTP id s7-20020a17090a880700b001df78c7c215mr247975pjn.234.1653329485047;
+        Mon, 23 May 2022 11:11:25 -0700 (PDT)
+Received: from garbanzo (136-24-173-63.cab.webpass.net. [136.24.173.63])
+        by smtp.gmail.com with ESMTPSA id x3-20020a654143000000b003c14af50610sm5025690pgp.40.2022.05.23.11.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 May 2022 11:11:24 -0700 (PDT)
+Date:   Mon, 23 May 2022 11:11:22 -0700
 From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Pankaj Raghav <pankydev8@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        patches@lists.linux.dev, amir73il@gmail.com, tytso@mit.edu,
-        josef@toxicpanda.com, jmeneghi@redhat.com, jake@lwn.net
-Subject: Re: [PATCH 3/4] playbooks: add a common playbook a git reset task
- for kdevops
-Message-ID: <YovGojXJQMbGQkqu@bombadil.infradead.org>
-References: <20220513193831.4136212-1-mcgrof@kernel.org>
- <20220513193831.4136212-4-mcgrof@kernel.org>
- <20220520144405.uzzejos24qizwa5c@quentin>
+To:     Pankaj Raghav <p.raghav@samsung.com>
+Cc:     axboe@kernel.dk, hch@lst.de, snitzer@redhat.com,
+        damien.lemoal@opensource.wdc.com, hare@suse.de,
+        Johannes.Thumshirn@wdc.com, linux-nvme@lists.infradead.org,
+        dm-devel@redhat.com, dsterba@suse.com, jiangbo.365@bytedance.com,
+        linux-kernel@vger.kernel.org, gost.dev@samsung.com,
+        linux-block@vger.kernel.org, jaegeuk@kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>
+Subject: Re: [PATCH v5 6/7] null_blk: use zone_size_sects_shift for power of
+ 2 zoned devices
+Message-ID: <20220523181122.3vjizmsx7a2mpf6z@garbanzo>
+References: <20220523161601.58078-1-p.raghav@samsung.com>
+ <CGME20220523161612eucas1p102a76ba431c934230309042521018915@eucas1p1.samsung.com>
+ <20220523161601.58078-7-p.raghav@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220520144405.uzzejos24qizwa5c@quentin>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+In-Reply-To: <20220523161601.58078-7-p.raghav@samsung.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,59 +68,16 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, May 20, 2022 at 04:44:05PM +0200, Pankaj Raghav wrote:
-> Hi Luis,
+On Mon, May 23, 2022 at 06:16:00PM +0200, Pankaj Raghav wrote:
+> Instead of doing is_power_of_2 and ilog2 operation for every IO, cache
+> the zone_size_sects_shift variable and use it for power of 2 zoned
+> devices.
 > 
-> On Fri, May 13, 2022 at 12:38:30PM -0700, Luis Chamberlain wrote:
-> > Two playbooks share the concept of git cloning kdevops into
-> > the target nodes (guests, cloud hosts, baremetal hosts) so that
-> > expunge files can be used for avoiding tests. If you decide
-> > you want to change the URL for that git tree it may not be
-> > so obvious what to do.
-> > 
-> > Fortunately the solution is simple. You just tell ansible to use
-> > the new git tree URL. That's it. It won't remove the old directory
-> > and things work as expected.
-> > 
-> > But since we use the kdevops git tree on both fstests and blktests
-> > it is not so obvious to developers that the thing to do here is
-> > to just run 'make fstests' or 'make blktests' and even that is not
-> > as efficient as that will also re-clone the fstests or blktests
-> > tree respectively. When we just want to reset the kdevops git tree
-> > we currently have no semantics to specify that. But since this is
-> > a common post-deployment goal, just add a common playbook that let's
-> > us do common tasks.
-> > 
-> > All we need then is the kconfig logic to define when some commmon
-> > tasks might make sense. So to reset your kdevops git tree, all you
-> > have to do now is change the configuration for it, then run:
-> > 
-> > make
-> > make kdevops-git-reset
-> > 
+> This variable will be set to zero for non power of 2 zoned devices.
 > 
-> While I do like the idea of having this option, I still do not
-> understand the main use case to have it as a separate make target.
-> Wouldn't the developer already put the custom kdevops tree with
-> CONFIG_WORKFLOW_KDEVOPS_GIT during the initial make menuconfig phase?
+> Suggested-by: Damien Le Moal <damien.lemoal@wdc.com>
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 
-For initial setup yes. The value of the new make target is for when
-you already deployed kdevops, and now you want to change the git URL
-for the guests if they have workflows which clone kdevops for using
-expunges when testing such as with fstests and blktest.
-
-> I am just trying to understand the usecase when someone wants to change
-> the kdevops tree after a test run. Maybe I am missing something here.
-
-That is right, the use case here of the new make target is so that a
-user can change the target kdevops tree on the guests if they are
-working with fstests and blktests. Otherwise then the git tree will
-only change on the host. If you ran 'make fstests' for instance you
-git cloned fstests, compiled and installed it, but the kdevops tree
-was also cloned and used on each guest so to ensure only tests which
-are not expunged for the target test are run. Without this new make
-target if you wanted to reset the git tree on the guests you'd have to
-re-run 'make fstests'. Where as with the new target, it's just a one
-liner.
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
   Luis
