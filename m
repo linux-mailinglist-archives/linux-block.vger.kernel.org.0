@@ -2,65 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B55075310F1
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 15:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE8A45310E0
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 15:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235488AbiEWM2y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 08:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35118 "EHLO
+        id S235526AbiEWMgd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 08:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235484AbiEWM2x (ORCPT
+        with ESMTP id S235641AbiEWMeL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 08:28:53 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D639841632
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 05:28:51 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id ob14-20020a17090b390e00b001dff2a43f8cso6060257pjb.1
-        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 05:28:51 -0700 (PDT)
+        Mon, 23 May 2022 08:34:11 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C984442A3B
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 05:34:10 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id q18so12953561pln.12
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 05:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:in-reply-to:references:subject:message-id:date
-         :mime-version:content-transfer-encoding;
-        bh=BQG28UlEYcr8A85oce3InSxdg5B3vG0GxSj7UdX4+lw=;
-        b=Tzc2jBqSorBWlTvHNHN3J56nJpaB2gvtmIahJMNSXGXeQp0JiJd2wrRQB6zQx8J4i9
-         vlTYgc1xWYPBdGVCp0aVzcCpvfrG4pt6rODRiajfh07yZZOxBv90OzkaTs5PZoFvJCAM
-         FmmRoYI9U0bd6Qw6xVP/CQLZWEFXyLrJLIwlzdPxVgsM+Km+OIyGFj4Tg+CioLjNRvnz
-         pG2+/HYbs1pQSE9X360fLmSUkuQk32XFf+PAdfrfMzkqFZAAOcDz1sN+99nqvckbjfxl
-         rvEZeutRD8+V/v0QryhIIwMkQc0nbldXvPGRQCVp8zK8gRBHEaan+SptkyCttyUpOWhC
-         P5mQ==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=GCE2nGwlSzDm4FRAKR9XWUKV2cYGLHBtnDJjqTUCz3g=;
+        b=AUD1k/5Il6KA9nnZTRKy51zxMg8hpIWppmF4I8Uq7kwfO4N0BNxkUkR8vSrWNW+0QT
+         JDNSeq3l/+4fQqS/qGn9CwHw7c1mcAx1l5O+MQeH0utxCCJVT6snY8oB2qwhwHTfDW3i
+         V1okNcXPCrDilUi5gWzX1lfwwy6xvmR9hKNw0aB66aPg+DCrTEAA1O0X2xPK4uVxXoUZ
+         pBEHpZbcgUavV5sNyrmE1478ivZoCgLLT+h7+1EmIi2HSH9VbyeSuM1IrWjnFM8BL9z3
+         isx02vSybd+XlNVJp4Nt3WtRmkh7FXPA8V+he7D6O2lbNQV/uEyl3H+WNFZbbRBwxRHU
+         Z3gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=BQG28UlEYcr8A85oce3InSxdg5B3vG0GxSj7UdX4+lw=;
-        b=zIkrSpe3CDoJFBc2Xh+K8+uUEFhTPJC5rmtp3+O8nXu6h3IUyySTPk4NvahfP776QI
-         sTmcKtfs+5Gu0vVPJKVAaFBXXf4acTep838qJm3I78UridAtY7rsZUe+/67MRBmQVdMh
-         Q145GPLEK5Sbv4lNNUsv/lwmQdDAgTzcPa1n3nged007/F6B4C+EudGeLz4MTNxHsKj8
-         dJ2vzeHPeSOkoQ31Zn3/hRI5BaCL6W/SWNWcLsJGtZXY8eMP2ASh9cr91u7YymsvJSLo
-         RGJZZ+T2Ase/F3gnl9VMx1PTU4sHT+CqCq1SWcgUPm1SwVBO9jXKywMiMxta3XPoX4wM
-         7qIg==
-X-Gm-Message-State: AOAM531XxvvbdJmynam1pw6twrmYxv3r+YGUeKX///qguytXf79afznf
-        whSBio6i3VhkZgMULMtLvrKZV7iOtP2COQ==
-X-Google-Smtp-Source: ABdhPJwsYBLu6eoFsvyNaQNTkFYbNgelSEItCSF9TU3j+Uja0+5qNOIoSffjHfwZnsAKgku3zKG3GQ==
-X-Received: by 2002:a17:90b:1b43:b0:1e0:4bda:13bf with SMTP id nv3-20020a17090b1b4300b001e04bda13bfmr5573438pjb.109.1653308931137;
-        Mon, 23 May 2022 05:28:51 -0700 (PDT)
-Received: from [127.0.1.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id n13-20020a056a0007cd00b0051844a64d3dsm7146881pfu.25.2022.05.23.05.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 May 2022 05:28:50 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     ming.lei@redhat.com
-Cc:     linux-block@vger.kernel.org, jack@suse.cz, yukuai3@huawei.com
-In-Reply-To: <20220522122350.743103-1-ming.lei@redhat.com>
-References: <20220522122350.743103-1-ming.lei@redhat.com>
-Subject: Re: [PATCH] blk-mq: don't touch ->tagset in blk_mq_get_sq_hctx
-Message-Id: <165330893019.361005.16959517425064628353.b4-ty@kernel.dk>
-Date:   Mon, 23 May 2022 06:28:50 -0600
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=GCE2nGwlSzDm4FRAKR9XWUKV2cYGLHBtnDJjqTUCz3g=;
+        b=6aUMrvVZipbHjd5n0/1/ZUHVnGjXM1gh3cEPu6h9Dm7PMQlaU28Smq2HS9UCpaWZ2y
+         tsAcUJt5J3pOGCCNZvjKzyWWX3n4Lycfxr34OQnUbqDOv7AkE9Rk/ia/iKho5T4OV8X3
+         jA3xu+xb1JTy93y++NEcR1o5jCsnjF2DemZSu5qqpKB7deLo9qIqsxNrKuCmS5OPkyrw
+         dbf8e+FyPgZHQCQM9cAsNvvQqpMWoPGWLKcl4FfBpUMolc44Bxp6WVkKMUhd/UjhYTSb
+         POeWzMbaRXpMY8jVxe8yGpPFfHSjiVkf8yT7n4NIMErJZUngY4CphRO+AiR/Ow0CxaVV
+         uVYA==
+X-Gm-Message-State: AOAM532h4420t3GFVY1USkVTVValWLhs515iUejQWjgYSrXbHuvSSfk0
+        EtjlgIuVpPciLD+NED4B4MNz1A==
+X-Google-Smtp-Source: ABdhPJzgoOyGNawu3EG5PhFUkCLxs26tbNXp/x3LWQH9HJyu0iQ7D/qLRRHPfLvKpd0iKudcqH3otw==
+X-Received: by 2002:a17:90b:3b81:b0:1e0:3ebf:c6ae with SMTP id pc1-20020a17090b3b8100b001e03ebfc6aemr7486040pjb.186.1653309250207;
+        Mon, 23 May 2022 05:34:10 -0700 (PDT)
+Received: from [192.168.1.100] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id ms16-20020a17090b235000b001d5943e826asm7336604pjb.20.2022.05.23.05.34.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 May 2022 05:34:09 -0700 (PDT)
+Message-ID: <e6f9a552-bf9a-ae80-d8be-55f23d6050eb@kernel.dk>
+Date:   Mon, 23 May 2022 06:34:08 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 0/4] bcache patches for Linux v5.19 (1st wave)
+Content-Language: en-US
+To:     Coly Li <colyli@suse.de>
+Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org
+References: <20220522170736.6582-1-colyli@suse.de>
+ <ece7e00e-5d03-41c0-4013-75809958e9d7@kernel.dk>
+ <9c3fddec-1741-872f-1cdb-b44316e2ff64@suse.de>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <9c3fddec-1741-872f-1cdb-b44316e2ff64@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,25 +74,59 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, 22 May 2022 20:23:50 +0800, Ming Lei wrote:
-> blk_mq_run_hw_queues() could be run when there isn't queued request and
-> after queue is cleaned up, at that time tagset is freed, because tagset
-> lifetime is covered by driver, and often freed after blk_cleanup_queue()
-> returns.
+On 5/23/22 12:26 AM, Coly Li wrote:
+> On 5/23/22 1:43 AM, Jens Axboe wrote:
+>> On 5/22/22 11:07 AM, Coly Li wrote:
+>>> Hi Jens,
+>>>
+>>> The bcache has 4 patches for Linux v5.19 merge window, all from me.
+>>> - The first 2 patches are code clean up and potential bug fixes for
+>>> multi- threaded btree nodes check (for cache device) and dirty sectors
+>>> counting (for backing device), although no report from mailing list for
+>>> them, it is good to have the fixes.
+>>> - The 3rd patch removes incremental dirty sectors counting because it
+>>> is conflicted with multithreaded dirty sectors counting and the latter
+>>> one is 10x times faster.
+>>> - The last patch fixes a journal no-space deadlock during cache device
+>>> registration, it always reserves one journal bucket and only uses it
+>>> in registration time, so the no-spance condition won't happen anymore.
+>>>
+>>> There are still 2 fixes are still under the long time I/O pressure
+>>> testing, once they are accomplished, I will submit to you in later
+>>> RC cycles.
+>>>
+>>> Please take them, and thanks in advance.
+>> It's late for sending in that stuff, now I have to do a round 2 or
+>> your patches would get zero time in linux-next. Please send patches
+>> a week in advance at least, not on the day of release...
+>>
+> Hi Jens,
 > 
-> So don't touch ->tagset for figuring out current default hctx by the mapping
-> built in request queue, so use-after-free on tagset can be avoided. Meantime
-> this way should be fast than retrieving mapping from tagset.
+> This time the situation was awkward, indeed I didn't expect I can
+> submit the fix in this merge window, but just around 1 week before I
+> found the difficult was from influence by other depending issues.
+> After fixed all of them and do I/O pressure testing for 24x2 hours, it
+> comes to such close day to the merge window.
 > 
-> [...]
+> My confusion was, it was very close to the merge window so maybe I
+> should submit them in next merge window (5.20), but this series were
+> bug fixes which should go into mainline earlier. It seems neither
+> option was proper, so I chose the first one...
+> 
+> Could you give me a hint, what is the proper way that I should do for
+> such situation? Then I will try to follow that and avoid adding more
+> workload to you.
 
-Applied, thanks!
+It would help if the submission came with an explanation of why they are
+being submitted so late, as I really do expect it to happen around -rc7
+time. Sometimes it's just because people are a bit lazy getting changes
+submitted, and then do it at that last minute. That makes me a bit
+annoyed. And other times there are totally legitimate reasons for why
+they are being submitted late, like your explanation above.
 
-[1/1] blk-mq: don't touch ->tagset in blk_mq_get_sq_hctx
-      commit: 5d05426e2d5fd7df8afc866b78c36b37b00188b7
+It really depends on the scope of the changes, too. Simple fixes are
+obviously fair game at any time.
 
-Best regards,
 -- 
 Jens Axboe
-
 
