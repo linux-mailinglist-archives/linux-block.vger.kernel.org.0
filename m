@@ -2,122 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57A14530A3A
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 10:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF516530BEF
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 11:03:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbiEWHdE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 03:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
+        id S231857AbiEWIbc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 04:31:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbiEWHcg (ORCPT
+        with ESMTP id S231927AbiEWIba (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 03:32:36 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365EE2600;
-        Mon, 23 May 2022 00:31:34 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C529A1F383;
-        Mon, 23 May 2022 06:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1653287191; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tWdRYkYeTd6L1kFlWAZqosjLUp2g2JWMcn4ZCfMoyaE=;
-        b=MUunQvOlxIOLBymvojg7kwEf0Fbin7+nEyYmtSE5BudcRbOIWYiNhDdJb+bWEw7pSpiGr1
-        Et6xkbpJf0C0y4taW5t6NaSM3qwsDho9FagM8xigLBP2jfxZbVV0yjVkDAqqcUGq30uPH6
-        ED2zLwll9WBxw2twcPgAd6sMLkNp6ug=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1653287191;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tWdRYkYeTd6L1kFlWAZqosjLUp2g2JWMcn4ZCfMoyaE=;
-        b=rzRIP95V4SHfqW8hnDoxWJ2P5s3+LZbohbqSa3MqDGMxDCIQ0rSYbzZYzdHMluYmG3uT8D
-        EAosH2b+wB72c9CQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C550113AA5;
-        Mon, 23 May 2022 06:26:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id RFjLIRYpi2IFfQAAMHmgww
-        (envelope-from <colyli@suse.de>); Mon, 23 May 2022 06:26:30 +0000
-Message-ID: <9c3fddec-1741-872f-1cdb-b44316e2ff64@suse.de>
-Date:   Mon, 23 May 2022 14:26:28 +0800
+        Mon, 23 May 2022 04:31:30 -0400
+X-Greylist: delayed 954 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 May 2022 01:31:24 PDT
+Received: from mail.tireplot.pl (mail.tireplot.pl [46.183.184.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A68A65B4
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 01:31:24 -0700 (PDT)
+Received: by mail.tireplot.pl (Postfix, from userid 1001)
+        id 9D4394486A; Mon, 23 May 2022 10:06:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tireplot.pl; s=mail;
+        t=1653293217; bh=Rfzvu4C+yJ1wyuJ4V+t/udh6cgYEQVnY6S5ltO4wdNg=;
+        h=Date:From:To:Subject:From;
+        b=Hxc87ZXQ32a+fwe0MNcDXd3BZiFFYCthc40DpTc42SRpqtxurX39kQ5764N3ZxSsR
+         GH9n8vJNEwh2+uqq80pFtOY6d7TeeIAPAIpt6+m/++ApMZg+s45EK707SYWKCydacY
+         NJ9HyZS3Sbx3sAgBHUyc8WVdQ/OmQoVKrAP4Y2G921l1eVQ664zL2RDVCD48TOYqMj
+         YIg+Jt2VvksuQKbDbLuEtqeGUf/wJ1dws072KQ1aewJXwc5/V0Y65ogxmPoFZzRRYu
+         2qbt05RVxi2qDTEpLpONfvZQLvIpm5SHGGV/0848svNUYeyzZBaMrHRpwZ0WZPDpf7
+         SfK49f2PPAJZw==
+Received: by mail.tireplot.pl for <linux-block@vger.kernel.org>; Mon, 23 May 2022 08:05:32 GMT
+Message-ID: <20220523084501-0.1.2k.fyde.0.0c3ifd85xm@tireplot.pl>
+Date:   Mon, 23 May 2022 08:05:32 GMT
+From:   =?UTF-8?Q? "Arkadiusz_Soko=C5=82owski" ?= 
+        <arkadiusz.sokolowski@tireplot.pl>
+To:     <linux-block@vger.kernel.org>
+Subject: Koszty instalacji fotowoltaicznej
+X-Mailer: mail.tireplot.pl
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.9.1
-Subject: Re: [PATCH 0/4] bcache patches for Linux v5.19 (1st wave)
-Content-Language: en-US
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org
-References: <20220522170736.6582-1-colyli@suse.de>
- <ece7e00e-5d03-41c0-4013-75809958e9d7@kernel.dk>
-From:   Coly Li <colyli@suse.de>
-In-Reply-To: <ece7e00e-5d03-41c0-4013-75809958e9d7@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/23/22 1:43 AM, Jens Axboe wrote:
-> On 5/22/22 11:07 AM, Coly Li wrote:
->> Hi Jens,
->>
->> The bcache has 4 patches for Linux v5.19 merge window, all from me.
->> - The first 2 patches are code clean up and potential bug fixes for
->> multi- threaded btree nodes check (for cache device) and dirty sectors
->> counting (for backing device), although no report from mailing list for
->> them, it is good to have the fixes.
->> - The 3rd patch removes incremental dirty sectors counting because it
->> is conflicted with multithreaded dirty sectors counting and the latter
->> one is 10x times faster.
->> - The last patch fixes a journal no-space deadlock during cache device
->> registration, it always reserves one journal bucket and only uses it
->> in registration time, so the no-spance condition won't happen anymore.
->>
->> There are still 2 fixes are still under the long time I/O pressure
->> testing, once they are accomplished, I will submit to you in later
->> RC cycles.
->>
->> Please take them, and thanks in advance.
-> It's late for sending in that stuff, now I have to do a round 2 or
-> your patches would get zero time in linux-next. Please send patches
-> a week in advance at least, not on the day of release...
->
-Hi Jens,
+Dzie=C5=84 dobry,
 
-This time the situation was awkward, indeed I didn't expect I can submit 
-the fix in this merge window, but just around 1 week before I found the 
-difficult was from influence by other depending issues. After fixed all 
-of them and do I/O pressure testing for 24x2 hours, it comes to such 
-close day to the merge window.
+stworzyli=C5=9Bmy specjaln=C4=85 ofert=C4=99 dla firm, na kompleksow=C4=85=
+ obs=C5=82ug=C4=99 inwestycji w fotowoltaik=C4=99. =20
 
-My confusion was, it was very close to the merge window so maybe I 
-should submit them in next merge window (5.20), but this series were bug 
-fixes which should go into mainline earlier. It seems neither option was 
-proper, so I chose the first one...
+Specjalizujemy si=C4=99 w zakresie doboru, monta=C5=BCu i serwisie instal=
+acji fotowoltaicznych, dysponujemy najnowocze=C5=9Bniejszymi rozwi=C4=85z=
+ania, kt=C3=B3re zapewni=C4=85 Pa=C5=84stwu oczekiwane rezultaty.
 
-Could you give me a hint, what is the proper way that I should do for 
-such situation? Then I will try to follow that and avoid adding more 
-workload to you.
+Mo=C5=BCemy przygotowa=C4=87 dla Pa=C5=84stwa wst=C4=99pn=C4=85 kalkulacj=
+=C4=99 i przeanalizowa=C4=87 efekty mo=C5=BCliwe do osi=C4=85gni=C4=99cia=
+=2E
 
-Thanks in advance.
+Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
+temacie?
 
-
-Coly Li
-
+Pozdrawiam
+Arkadiusz Soko=C5=82owski
