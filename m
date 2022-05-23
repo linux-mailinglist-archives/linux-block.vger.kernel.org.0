@@ -2,89 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC9B8531DB9
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 23:28:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B3B5531C1F
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 22:57:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbiEWV2y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 17:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        id S232548AbiEWUQ2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 16:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbiEWV2w (ORCPT
+        with ESMTP id S233390AbiEWUQQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 17:28:52 -0400
-X-Greylist: delayed 5226 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 May 2022 14:28:51 PDT
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 089C0A2056;
-        Mon, 23 May 2022 14:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0TgBdWDrgCwk3/yiVL4MjST4OruMage9l2vL9QRHrUI=; b=DEPNVraFW2DF3xnuijyQYottQI
-        EnzvrRqNHh6tdFjrww5RoRUiKbcMnwDONbrvvay2nocBtbdlpj6vOkSk82OCn6LO7yGqjCa8mTFGP
-        1unIyHtE8ceJZphYFwv/RAGJlsR00fpL9uMACN/7kz1yKM+SaopXnXn2N8S2BWamZqidXlSYrSRip
-        SeO/AzJLndNbm5diDt1KOmBF9QNaXiIzfF8s4Hsc0kdDE8d4/C4LDjg0wp7xajO+12IWm11+S82S0
-        iNRZBktO0eWh7LwCLFJaFhPmwY4Zym97HGYjIhdxL77wFwVNWNWiCitM3w+m18cmGkLIBUsLUQVuu
-        mIRJ0BAA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ntDrR-005iLS-B4; Mon, 23 May 2022 19:37:01 +0000
-Date:   Mon, 23 May 2022 12:37:01 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, tj@kernel.org,
-        akpm@linux-foundation.org, jeyu@kernel.org, shuah@kernel.org,
-        bvanassche@acm.org, dan.j.williams@intel.com, joe@perches.com,
-        keescook@chromium.org, rostedt@goodmis.org, minchan@kernel.org,
-        linux-spdx@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 3/6] selftests: add tests_sysfs module
-Message-ID: <YoviXT37FAUqpQEu@bombadil.infradead.org>
-References: <20211029184500.2821444-1-mcgrof@kernel.org>
- <20211029184500.2821444-4-mcgrof@kernel.org>
- <Yao3vtSKBKLyQY1E@kroah.com>
- <87fsl1iqg0.ffs@tglx>
- <YopM5XGMdqVCU+bL@kroah.com>
- <87czg5ip2z.ffs@tglx>
+        Mon, 23 May 2022 16:16:16 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E32C91FCC5
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:16:14 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id i27so31127476ejd.9
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EA3FIBNNDoj02Qd5UyhoYbcYuhDKnQDkuCoIXsHPGWY=;
+        b=Nfn7ww9o3d0ammGcjT3qgI9xxfAGwUBtkBtWkmxyujjnhZ5owJd6qJrN9TUYSY4B0G
+         C8sS56B0FTy0zY8TGSBy7mCZaTgAYNDgfE2spXBFYauQ0VIko+BXGY6hGxZXyllmvji6
+         JZ9lWCVYiTDJz49RoARM4qI73Jd0TIJVA2Yow=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EA3FIBNNDoj02Qd5UyhoYbcYuhDKnQDkuCoIXsHPGWY=;
+        b=oo7y/aa/duHDlFXwlN0o3v2YOITjjVnL3MkfRTp8e/sCNUTBy5K72UalxEV7zPmvpa
+         WWoELKOtTpK5MXwiw6eI+I6Q9gm6sGFNFWLKojsCjpW1f6jwmpawO9NAs9yTDCn4Ghsf
+         b32cUxdnZIIiwOqQ+KZaJdnnOo8wVKqqEjEAOwVfJtvlR2/OuRWjaCyD5PhTaewjInEY
+         RlAOdG0t361hknr1xKvmcVCMS2i7F5lAdMUiW2H+gi6mNoKW1Zs/cP+zWhCEaOVx2cBs
+         IetELaafzIZ6bMBeQR91yODGWJMY1PBj/cauND863LI8o4wLh6VBrAsU4SBGSV+hNKn6
+         bV+g==
+X-Gm-Message-State: AOAM533zfhz0/WPPsO298xvDUHetSrSGY5zAINVrK/TYc9FQ/uBxLRxe
+        6SldD0r3rCx3uJUoXR9Oddd0xZ4oqRmzGr6H3Os=
+X-Google-Smtp-Source: ABdhPJz1M+GDgLgeMlWXtBf0TVJlvhEvurL1poHK9PWOUD0HS/TMgiPdam/eoR8z8lJinV+vifeLNg==
+X-Received: by 2002:a17:907:c21:b0:6fe:e94b:3a52 with SMTP id ga33-20020a1709070c2100b006fee94b3a52mr5134515ejc.171.1653336973033;
+        Mon, 23 May 2022 13:16:13 -0700 (PDT)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
+        by smtp.gmail.com with ESMTPSA id md17-20020a170906ae9100b006feaf472637sm3986713ejb.53.2022.05.23.13.16.12
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 May 2022 13:16:12 -0700 (PDT)
+Received: by mail-wr1-f45.google.com with SMTP id t13so3730975wrg.9
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 13:16:12 -0700 (PDT)
+X-Received: by 2002:a5d:6da6:0:b0:20f:bc8a:9400 with SMTP id
+ u6-20020a5d6da6000000b0020fbc8a9400mr14025325wrs.274.1653336971796; Mon, 23
+ May 2022 13:16:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87czg5ip2z.ffs@tglx>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+References: <6f712c75-c849-ae89-d763-b2a18da52844@kernel.dk>
+In-Reply-To: <6f712c75-c849-ae89-d763-b2a18da52844@kernel.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 23 May 2022 13:15:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whfi3FE3O7KrziqPbyGvAmNFas3xxLz2O+ttzBkCOQmfw@mail.gmail.com>
+Message-ID: <CAHk-=whfi3FE3O7KrziqPbyGvAmNFas3xxLz2O+ttzBkCOQmfw@mail.gmail.com>
+Subject: Re: [GIT PULL] io_uring passthrough support
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, May 22, 2022 at 05:06:44PM +0200, Thomas Gleixner wrote:
-> On Sun, May 22 2022 at 16:47, Greg KH wrote:
-> > On Sun, May 22, 2022 at 04:37:19PM +0200, Thomas Gleixner wrote:
-> >> On Fri, Dec 03 2021 at 16:29, Greg KH wrote:
-> >> 
-> >> While I agree that we want to keep the number of licenses as small as
-> >> possible, we cannot really dictate which dual licensing options a
-> >> submitter selects unless the license is GPL-2.0-only incompatible, which
-> >> copyleft-next is not.
-> >> 
-> >> Can we just get over this, add the license with the SPDX identifier and
-> >> move on?
-> >
-> > From what I recall, I had technical reasons I didn't take this series,
-> > but that was a long time ago and I would be glad to review it again if
-> > it were rebased and resubmitted after the next merge window is closed.
-> 
-> The license addition and the SPDX identifier cleanup should be seperated
-> from the new test code which was part of the series.
+On Sun, May 22, 2022 at 2:26 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> This will cause a merge conflict as well, with the provided buffer
+> change from the core branch, and adding CQE32 support for NOP in this
+> branch.
 
-I'll send a re-spin after the merge window and split this up.
+Ugh, that really hits home how ugly this CQE32 support was.
 
-And FWIW, AFAICT I addressed all the comments, so I can resend after
-the spdx stuff gets merged so to make the series easier to read /
-review.
+Dammit, it shouldn't have been done this way. That io_nop() code is
+disgusting, and how it wants that separate "with extra info" case is
+just nasty.
 
-  Luis
+I've pulled this, but with some swearing. That whole "extra1" and
+"extra2" is ugly as hell, and just the naming shows that it has no
+sane semantics, much less documentation.
+
+And the way it's randomly hidden in 'struct io_nop' *and* then a union
+with that hash_node is just disgusting beyond words. Why do you need
+both fields when you just copy one to the other at cmd start and then
+back at cmd end?
+
+I must be missing something, but that it is incredibly ugly is clear.
+
+                 Linus
