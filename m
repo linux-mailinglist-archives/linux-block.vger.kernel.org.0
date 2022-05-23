@@ -2,108 +2,161 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0EA4530FF5
-	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 15:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3349530FDD
+	for <lists+linux-block@lfdr.de>; Mon, 23 May 2022 15:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235810AbiEWM7E (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 08:59:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
+        id S235958AbiEWNL3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 09:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235726AbiEWM66 (ORCPT
+        with ESMTP id S236116AbiEWNL0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 08:58:58 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9018353A74;
-        Mon, 23 May 2022 05:58:57 -0700 (PDT)
-Received: from kwepemi500004.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4L6HT95KyrzDqLt;
-        Mon, 23 May 2022 20:58:53 +0800 (CST)
+        Mon, 23 May 2022 09:11:26 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B5D27160
+        for <linux-block@vger.kernel.org>; Mon, 23 May 2022 06:11:25 -0700 (PDT)
+Received: from kwepemi100003.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L6Hh86zjyzQk9W;
+        Mon, 23 May 2022 21:08:24 +0800 (CST)
 Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi500004.china.huawei.com (7.221.188.17) with Microsoft SMTP Server
+ kwepemi100003.china.huawei.com (7.221.188.122) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 23 May 2022 20:58:55 +0800
+ 15.1.2375.24; Mon, 23 May 2022 21:11:23 +0800
 Received: from [10.174.176.73] (10.174.176.73) by
  kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 23 May 2022 20:58:54 +0800
-Subject: Re: [PATCH -next v5 0/3] support concurrent sync io for bfq on a
- specail occasion
-To:     Jens Axboe <axboe@kernel.dk>, <paolo.valente@linaro.org>
-CC:     <jack@suse.cz>, <tj@kernel.org>, <linux-block@vger.kernel.org>,
-        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yi.zhang@huawei.com>
-References: <20220428120837.3737765-1-yukuai3@huawei.com>
- <d50df657-d859-79cf-c292-412eaa383d2c@huawei.com>
- <61b67d5e-829c-8130-7bda-81615d654829@huawei.com>
- <81411289-e13c-20f5-df63-c059babca57a@huawei.com>
- <d5a90a08-1ac6-587a-e900-0436bd45543a@kernel.dk>
- <55919e29-1f22-e8aa-f3d2-08c57d9e1c22@huawei.com>
- <b32ed748-a141-862c-ed35-debb474962ed@kernel.dk>
- <1172d00f-0843-1d7c-721f-fdb60a0945cb@huawei.com>
- <dfd2ac0b-74da-85f4-ff66-2eb307578d93@kernel.dk>
+ 15.1.2375.24; Mon, 23 May 2022 21:11:23 +0800
+Subject: Re: [PATCH V2 2/2] block: fix "Directory XXXXX with parent 'block'
+ already present!"
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20220423143952.3162999-1-ming.lei@redhat.com>
+ <20220423143952.3162999-3-ming.lei@redhat.com>
 From:   Yu Kuai <yukuai3@huawei.com>
-Message-ID: <8f0b5115-6a96-d5eb-5243-0be832cf121b@huawei.com>
-Date:   Mon, 23 May 2022 20:58:53 +0800
+Message-ID: <15f31e85-9023-0e31-0237-206a20ce38e6@huawei.com>
+Date:   Mon, 23 May 2022 21:11:22 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <dfd2ac0b-74da-85f4-ff66-2eb307578d93@kernel.dk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20220423143952.3162999-3-ming.lei@redhat.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.174.176.73]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemm600009.china.huawei.com (7.193.23.164)
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SCC_BODY_URI_ONLY,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-åœ¨ 2022/05/23 20:36, Jens Axboe å†™é“:
-> On 5/23/22 2:18 AM, Yu Kuai wrote:
->> ? 2022/05/23 9:24, Jens Axboe ??:
->>> On 5/22/22 7:10 PM, yukuai (C) wrote:
->>>> ? 2022/05/21 20:21, Jens Axboe ??:
->>>>> On 5/21/22 1:22 AM, yukuai (C) wrote:
->>>>>> ? 2022/05/14 17:29, yukuai (C) ??:
->>>>>>> ? 2022/05/05 9:00, yukuai (C) ??:
->>>>>>>> Hi, Paolo
->>>>>>>>
->>>>>>>> Can you take a look at this patchset? It has been quite a long time
->>>>>>>> since we spotted this problem...
->>>>>>>>
->>>>>>>
->>>>>>> friendly ping ...
->>>>>> friendly ping ...
->>>>>
->>>>> I can't speak for Paolo, but I've mentioned before that the majority
->>>>> of your messages end up in my spam. That's still the case, in fact
->>>>> I just marked maybe 10 of them as not spam.
->>>>>
->>>>> You really need to get this issued sorted out, or you will continue
->>>>> to have patches ignore because folks may simply not see them.
->>>>>
->>>> Hi,
->>>>
->>>> Thanks for your notice.
->>>>
->>>> Is it just me or do you see someone else's messages from *huawei.com
->>>> end up in spam? I tried to seek help from our IT support, however, they
->>>> didn't find anything unusual...
->>>
->>> Not sure, I think it's just you. It may be the name as well "yukuai (C)"
->> Hi, Jens
->>
->> I just change this default name "yukuai (C)" to "Yu Kuai", can you
->> please have a check if following emails still go to spam?
->>
->> https://lore.kernel.org/all/20220523082633.2324980-1-yukuai3@huawei.com/
+Hi, Ming
+
+Is there aggrement on the solution? I really hope this problem can be
+solved...
+
+Thansk,
+Kuai
+
+ÔÚ 2022/04/23 22:39, Ming Lei Ð´µÀ:
+> q->debugfs_dir is used by blk-mq debugfs and blktrace. The dentry is
+> created when adding disk, and removed when releasing request queue.
 > 
-> These did not go into spam, were delivered just fine.
+> There is small window between releasing disk and releasing request
+> queue, and during the period, one disk with same name may be created
+> and added, so debugfs_create_dir() may complain with "Directory XXXXX
+> with parent 'block' already present!"
 > 
-Cheers for solving this, I'll resend this patchset just in case they are
-in spam for Paolo...
+> Fixes the issue by moving debugfs_create_dir() into blk_alloc_queue(),
+> and the dir name is named with q->id from beginning, and switched to
+> disk name when adding disk, and finally changed to q->id in disk_release().
+> 
+> Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Reported-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: yukuai (C) <yukuai3@huawei.com>
+> Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>   block/blk-core.c  | 4 ++++
+>   block/blk-sysfs.c | 4 ++--
+>   block/genhd.c     | 8 ++++++++
+>   3 files changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index f305cb66c72a..245ec664753d 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -438,6 +438,7 @@ struct request_queue *blk_alloc_queue(int node_id, bool alloc_srcu)
+>   {
+>   	struct request_queue *q;
+>   	int ret;
+> +	char q_name[16];
+>   
+>   	q = kmem_cache_alloc_node(blk_get_queue_kmem_cache(alloc_srcu),
+>   			GFP_KERNEL | __GFP_ZERO, node_id);
+> @@ -495,6 +496,9 @@ struct request_queue *blk_alloc_queue(int node_id, bool alloc_srcu)
+>   	blk_set_default_limits(&q->limits);
+>   	q->nr_requests = BLKDEV_DEFAULT_RQ;
+>   
+> +	sprintf(q_name, "%d", q->id);
+> +	q->debugfs_dir = debugfs_create_dir(q_name, blk_debugfs_root);
+> +
+>   	return q;
+>   
+>   fail_stats:
+> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> index 88bd41d4cb59..1f986c20a07b 100644
+> --- a/block/blk-sysfs.c
+> +++ b/block/blk-sysfs.c
+> @@ -837,8 +837,8 @@ int blk_register_queue(struct gendisk *disk)
+>   	}
+>   
+>   	mutex_lock(&q->debugfs_mutex);
+> -	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> -					    blk_debugfs_root);
+> +	q->debugfs_dir = debugfs_rename(blk_debugfs_root, q->debugfs_dir,
+> +			blk_debugfs_root, kobject_name(q->kobj.parent));
+>   	mutex_unlock(&q->debugfs_mutex);
+>   
+>   	if (queue_is_mq(q)) {
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 36532b931841..08895f9f7087 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -25,6 +25,7 @@
+>   #include <linux/pm_runtime.h>
+>   #include <linux/badblocks.h>
+>   #include <linux/part_stat.h>
+> +#include <linux/debugfs.h>
+>   #include "blk-throttle.h"
+>   
+>   #include "blk.h"
+> @@ -1160,6 +1161,7 @@ static void disk_release_mq(struct request_queue *q)
+>   static void disk_release(struct device *dev)
+>   {
+>   	struct gendisk *disk = dev_to_disk(dev);
+> +	char q_name[16];
+>   
+>   	might_sleep();
+>   	WARN_ON_ONCE(disk_live(disk));
+> @@ -1173,6 +1175,12 @@ static void disk_release(struct device *dev)
+>   	kfree(disk->random);
+>   	xa_destroy(&disk->part_tbl);
+>   
+> +	mutex_lock(&disk->queue->debugfs_mutex);
+> +	sprintf(q_name, "%d", disk->queue->id);
+> +	disk->queue->debugfs_dir = debugfs_rename(blk_debugfs_root,
+> +			disk->queue->debugfs_dir, blk_debugfs_root, q_name);
+> +	mutex_unlock(&disk->queue->debugfs_mutex);
+> +
+>   	disk->queue->disk = NULL;
+>   	blk_put_queue(disk->queue);
+>   
+> 
