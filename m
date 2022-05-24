@@ -2,59 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54C25532799
-	for <lists+linux-block@lfdr.de>; Tue, 24 May 2022 12:30:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F4079532775
+	for <lists+linux-block@lfdr.de>; Tue, 24 May 2022 12:25:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236133AbiEXKa1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 May 2022 06:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
+        id S236038AbiEXKX4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 24 May 2022 06:23:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236128AbiEXKa0 (ORCPT
+        with ESMTP id S234220AbiEXKXz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 May 2022 06:30:26 -0400
-X-Greylist: delayed 689 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 24 May 2022 03:30:18 PDT
-Received: from oftenbest.adminbbserv.bond (adminbbserv.bond [213.108.199.214])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FAE41572D;
-        Tue, 24 May 2022 03:30:18 -0700 (PDT)
-Received: from webmail.adminbbserv.bond (localhost.localdomain [IPv6:::1])
-        by oftenbest.adminbbserv.bond (Postfix) with ESMTPSA id 50A0C5D0A;
-        Tue, 24 May 2022 06:16:17 -0400 (EDT)
-Authentication-Results: oftenbest.adminbbserv.bond;
-        spf=pass (sender IP is ::1) smtp.mailfrom=trade@adminbbserv.bond smtp.helo=webmail.adminbbserv.bond
-Received-SPF: pass (oftenbest.adminbbserv.bond: connection is authenticated)
+        Tue, 24 May 2022 06:23:55 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1095484A07;
+        Tue, 24 May 2022 03:23:54 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id B5FF021A33;
+        Tue, 24 May 2022 10:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1653387832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=iplS/TeHF/CtFHpdgLxbValjglTQrNdayPcu3zU7Chs=;
+        b=gZxl+ooFGUmwPMzPe4+/jc0OQvDjFo7r5H/ZWydrGVKpU+jWNkihI5S0YGQbWWc3a5QXJe
+        OQLhCIzKZPkhj8bvhuaE6YX2ZfSdaIqXpqtx3iz84rWR0lmiHRqjWLZaN6MNUFdDOzbavW
+        Pxpq88cnRdC67z5qkRBSLS7eoVkkEWY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1653387832;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=iplS/TeHF/CtFHpdgLxbValjglTQrNdayPcu3zU7Chs=;
+        b=uusiBaP6zkyC6B89uxPWRPSXxBYo8RYvM6sX0dcYBieE20aLuYDx9Pcxtsc/1qCsFdezN/
+        xs20f5TZkZ1D65Ag==
+Received: from localhost.localdomain (colyli.tcp.ovpn1.nue.suse.de [10.163.16.22])
+        by relay2.suse.de (Postfix) with ESMTP id 48CF32C141;
+        Tue, 24 May 2022 10:23:51 +0000 (UTC)
+From:   Coly Li <colyli@suse.de>
+To:     axboe@kernel.dk
+Cc:     linux-bcache@vger.kernel.org, linux-block@vger.kernel.org,
+        Coly Li <colyli@suse.de>
+Subject: [Resend PATCH v2 0/4] bcache fixes for Linux v5.19 (1st wave)
+Date:   Tue, 24 May 2022 18:23:32 +0800
+Message-Id: <20220524102336.10684-1-colyli@suse.de>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Date:   Tue, 24 May 2022 11:16:17 +0100
-From:   HR <trade@adminbbserv.bond>
-To:     undisclosed-recipients:;
-Subject: Alkalmaz
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <8d7038d276995d925b2df35d32728886@adminbbserv.bond>
-X-Sender: trade@adminbbserv.bond
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
-        KHOP_HELO_FCRDNS,MIXED_ES,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi Jens,
 
+Thank you for taking the late arrived series, they are all for bcache
+fixes when I work on the bcache journal no-space deadlock issue. It
+spent me quite long time to fix because other issues interfered my debug
+and analysis. When all the depending issues were fixed and my fix for
+the journal no-space deadlock is verified, this submission is late for
+Linux v5.19 submission. But it is still worthy to take them into v5.19
+because real issues are fixed by this series.
 
-Helló,
+The bcache has 4 patches for Linux v5.19 merge window, all from me.
+- The first 2 patches are code clean up and potential bug fixes for
+multi- threaded btree nodes check (for cache device) and dirty sectors
+counting (for backing device), although no report from mailing list for
+them, it is good to have the fixes.
+- The 3rd patch removes incremental dirty sectors counting because it
+is conflicted with multithreaded dirty sectors counting and the latter
+one is 10x times faster.
+- The last patch fixes a journal no-space deadlock during cache device
+registration, it always reserves one journal bucket and only uses it
+in registration time, so the no-spance condition won't happen anymore.
 
-Örömmel értesítjük Önt egy elérhető távmunka részmunkaidős ügyintézői 
-állásról, heti 500 eurós bérért. Ha az időbeosztása elég rugalmas ahhoz, 
-hogy betöltse ezt a pozíciót, kérjük, írjon az 
-"apply@blenheimbuildings.uk" címre a pozícióval kapcsolatos további 
-részletekért. Kérjük, jelentkezéskor tüntesse fel mobiltelefonszámát, 
-valamint a lakóhelyét. Figyelem: Ez a pozíció érkezési sorrendben 
-foglalható el.
+There are still 2 fixes are still under the long time I/O pressure
+testing, once they are accomplished, I will submit to you in later
+RC cycles.
 
-Üdvözlettel
-Bánkiné Józsa Mária
-HR vezető/tanácsadó
-Magyarországi Munkaügyi Hivatal.
+The v2 series fixed previously detectd oversize stack frame issue, in
+my test I don't observed the stack frame oversize warning and normal
+bcache operations work as expected.
+
+Thank you in advance.
+
+Coly Li
+---
+
+Coly Li (4):
+  bcache: improve multithreaded bch_btree_check()
+  bcache: improve multithreaded bch_sectors_dirty_init()
+  bcache: remove incremental dirty sector counting for
+    bch_sectors_dirty_init()
+  bcache: avoid journal no-space deadlock by reserving 1 journal bucket
+
+ drivers/md/bcache/btree.c     |  58 +++++++++----------
+ drivers/md/bcache/btree.h     |   2 +-
+ drivers/md/bcache/journal.c   |  31 +++++++++--
+ drivers/md/bcache/journal.h   |   2 +
+ drivers/md/bcache/super.c     |   1 +
+ drivers/md/bcache/writeback.c | 101 +++++++++++++---------------------
+ drivers/md/bcache/writeback.h |   2 +-
+ 7 files changed, 94 insertions(+), 103 deletions(-)
+
+-- 
+2.35.3
+
