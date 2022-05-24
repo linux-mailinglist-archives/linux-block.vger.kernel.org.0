@@ -2,54 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C2A532033
-	for <lists+linux-block@lfdr.de>; Tue, 24 May 2022 03:13:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27FEE532067
+	for <lists+linux-block@lfdr.de>; Tue, 24 May 2022 03:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231460AbiEXBNq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 23 May 2022 21:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44394 "EHLO
+        id S232810AbiEXBvR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 23 May 2022 21:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiEXBNq (ORCPT
+        with ESMTP id S232814AbiEXBvN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 23 May 2022 21:13:46 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52118939C7;
-        Mon, 23 May 2022 18:13:44 -0700 (PDT)
-Received: from kwepemi100019.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4L6bmz63z7zDqMC;
-        Tue, 24 May 2022 09:13:39 +0800 (CST)
+        Mon, 23 May 2022 21:51:13 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDA017061;
+        Mon, 23 May 2022 18:51:11 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L6cXp2hSrzQkKB;
+        Tue, 24 May 2022 09:48:10 +0800 (CST)
 Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
- kwepemi100019.china.huawei.com (7.221.188.189) with Microsoft SMTP Server
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 24 May 2022 09:13:42 +0800
+ 15.1.2375.24; Tue, 24 May 2022 09:51:09 +0800
 Received: from [10.174.176.73] (10.174.176.73) by
  kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 24 May 2022 09:13:41 +0800
-Subject: Re: [PATCH -next v5 0/3] support concurrent sync io for bfq on a
- specail occasion
-To:     Jan Kara <jack@suse.cz>
-CC:     <paolo.valente@linaro.org>, <tj@kernel.org>,
-        <linux-block@vger.kernel.org>, <cgroups@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>
-References: <20220428120837.3737765-1-yukuai3@huawei.com>
- <d50df657-d859-79cf-c292-412eaa383d2c@huawei.com>
- <61b67d5e-829c-8130-7bda-81615d654829@huawei.com>
- <81411289-e13c-20f5-df63-c059babca57a@huawei.com>
- <d5a90a08-1ac6-587a-e900-0436bd45543a@kernel.dk>
- <55919e29-1f22-e8aa-f3d2-08c57d9e1c22@huawei.com>
- <20220523085902.wmxoebyq3crerecr@quack3.lan>
- <25f6703e-9e10-75d9-a893-6df1e6b75254@kernel.dk>
- <20220523152516.7sr247i3bzwhr44w@quack3.lan>
+ 15.1.2375.24; Tue, 24 May 2022 09:51:08 +0800
+Subject: Re: [PATCH -next v3 3/6] nbd: don't clear 'NBD_CMD_INFLIGHT' flag if
+ request is not completed
 From:   Yu Kuai <yukuai3@huawei.com>
-Message-ID: <13ad158e-7859-ca61-209e-7d1fe99d0bdb@huawei.com>
-Date:   Tue, 24 May 2022 09:13:40 +0800
+To:     Josef Bacik <josef@toxicpanda.com>
+CC:     <axboe@kernel.dk>, <ming.lei@redhat.com>,
+        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
+References: <20220521073749.3146892-1-yukuai3@huawei.com>
+ <20220521073749.3146892-4-yukuai3@huawei.com>
+ <YouWXEcyoBNUXLb7@localhost.localdomain>
+ <6a549193-909b-6f6e-532b-99cd2898ad80@huawei.com>
+Message-ID: <ee5ee5f2-74ea-cac1-00e1-0645c04893ee@huawei.com>
+Date:   Tue, 24 May 2022 09:51:08 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20220523152516.7sr247i3bzwhr44w@quack3.lan>
-Content-Type: text/plain; charset="gbk"; format=flowed
+In-Reply-To: <6a549193-909b-6f6e-532b-99cd2898ad80@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.174.176.73]
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
@@ -64,72 +58,100 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-�� 2022/05/23 23:25, Jan Kara д��:
-> On Mon 23-05-22 06:36:58, Jens Axboe wrote:
->> On 5/23/22 2:59 AM, Jan Kara wrote:
->>> On Mon 23-05-22 09:10:38, yukuai (C) wrote:
->>>> ? 2022/05/21 20:21, Jens Axboe ??:
->>>>> On 5/21/22 1:22 AM, yukuai (C) wrote:
->>>>>> ? 2022/05/14 17:29, yukuai (C) ??:
->>>>>>> ? 2022/05/05 9:00, yukuai (C) ??:
->>>>>>>> Hi, Paolo
->>>>>>>>
->>>>>>>> Can you take a look at this patchset? It has been quite a long time
->>>>>>>> since we spotted this problem...
->>>>>>>>
->>>>>>>
->>>>>>> friendly ping ...
->>>>>> friendly ping ...
->>>>>
->>>>> I can't speak for Paolo, but I've mentioned before that the majority
->>>>> of your messages end up in my spam. That's still the case, in fact
->>>>> I just marked maybe 10 of them as not spam.
->>>>>
->>>>> You really need to get this issued sorted out, or you will continue
->>>>> to have patches ignore because folks may simply not see them.
->>>>>
->>>> Hi,
->>>>
->>>> Thanks for your notice.
->>>>
->>>> Is it just me or do you see someone else's messages from *huawei.com
->>>> end up in spam? I tried to seek help from our IT support, however, they
->>>> didn't find anything unusual...
+在 2022/05/24 9:07, Yu Kuai 写道:
+> 在 2022/05/23 22:12, Josef Bacik 写道:
+>> On Sat, May 21, 2022 at 03:37:46PM +0800, Yu Kuai wrote:
+>>> Otherwise io will hung because request will only be completed if the
+>>> cmd has the flag 'NBD_CMD_INFLIGHT'.
 >>>
->>> So actually I have noticed that a lot of (valid) email from huawei.com (not
->>> just you) ends up in the spam mailbox. For me direct messages usually pass
->>> (likely matching SPF records for originating mail server save the email
->>> from going to spam) but messages going through mailing lists are flagged as
->>> spam because the emails are missing valid DKIM signature but huawei.com
->>> DMARC config says there should be DKIM signature (even direct messages are
->>> missing DKIM so this does not seem as a mailing list configuration issue).
->>> So this seems as some misconfiguration of the mails on huawei.com side
->>> (likely missing DKIM signing of outgoing email).
+>>> Fixes: 07175cb1baf4 ("nbd: make sure request completion won't 
+>>> concurrent")
+>>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>>> ---
+>>>   drivers/block/nbd.c | 18 ++++++++++++++----
+>>>   1 file changed, 14 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+>>> index 2ee1e376d5c4..a0d0910dae2a 100644
+>>> --- a/drivers/block/nbd.c
+>>> +++ b/drivers/block/nbd.c
+>>> @@ -403,13 +403,14 @@ static enum blk_eh_timer_return 
+>>> nbd_xmit_timeout(struct request *req,
+>>>       if (!mutex_trylock(&cmd->lock))
+>>>           return BLK_EH_RESET_TIMER;
+>>> -    if (!__test_and_clear_bit(NBD_CMD_INFLIGHT, &cmd->flags)) {
+>>> +    if (!test_bit(NBD_CMD_INFLIGHT, &cmd->flags)) {
+>>>           mutex_unlock(&cmd->lock);
+>>>           return BLK_EH_DONE;
+>>>       }
+>>>       if (!refcount_inc_not_zero(&nbd->config_refs)) {
+>>>           cmd->status = BLK_STS_TIMEOUT;
+>>> +        __clear_bit(NBD_CMD_INFLIGHT, &cmd->flags);
+>>>           mutex_unlock(&cmd->lock);
+>>>           goto done;
+>>>       }
+>>> @@ -478,6 +479,7 @@ static enum blk_eh_timer_return 
+>>> nbd_xmit_timeout(struct request *req,
+>>>       dev_err_ratelimited(nbd_to_dev(nbd), "Connection timed out\n");
+>>>       set_bit(NBD_RT_TIMEDOUT, &config->runtime_flags);
+>>>       cmd->status = BLK_STS_IOERR;
+>>> +    __clear_bit(NBD_CMD_INFLIGHT, &cmd->flags);
+>>>       mutex_unlock(&cmd->lock);
+>>>       sock_shutdown(nbd);
+>>>       nbd_config_put(nbd);
+>>> @@ -745,7 +747,7 @@ static struct nbd_cmd *nbd_handle_reply(struct 
+>>> nbd_device *nbd, int index,
+>>>       cmd = blk_mq_rq_to_pdu(req);
+>>>       mutex_lock(&cmd->lock);
+>>> -    if (!__test_and_clear_bit(NBD_CMD_INFLIGHT, &cmd->flags)) {
+>>> +    if (!test_bit(NBD_CMD_INFLIGHT, &cmd->flags)) {
+>>>           dev_err(disk_to_dev(nbd->disk), "Suspicious reply %d 
+>>> (status %u flags %lu)",
+>>>               tag, cmd->status, cmd->flags);
+>>>           ret = -ENOENT;
+>>> @@ -854,8 +856,16 @@ static void recv_work(struct work_struct *work)
+>>>           }
+>>>           rq = blk_mq_rq_from_pdu(cmd);
+>>> -        if (likely(!blk_should_fake_timeout(rq->q)))
+>>> -            blk_mq_complete_request(rq);
+>>> +        if (likely(!blk_should_fake_timeout(rq->q))) {
+>>> +            bool complete;
+>>> +
+>>> +            mutex_lock(&cmd->lock);
+>>> +            complete = __test_and_clear_bit(NBD_CMD_INFLIGHT,
+>>> +                            &cmd->flags);
+>>> +            mutex_unlock(&cmd->lock);
+>>> +            if (complete)
+>>> +                blk_mq_complete_request(rq);
+>>> +        }
 >>
->> SPF/DKIM was indeed a problem earlier for yukaui patches, but I don't
->> see that anymore. Maybe it's still an issue for some emails, from them
->> or Huawei in general?
+>> I'd rather this be handled in nbd_handle_reply.  We should return with it
+>> cleared if it's ready to be completed.  Thanks,
+> Hi,
 > 
-> Hum, for me all emails from Huawei I've received even today fail the DKIM
-> check. After some more digging there is interesting inconsistency in DMARC
-> configuration for huawei.com domain. There is DMARC record for huawei.com
-> like:
-> 
-> huawei.com.		600	IN	TXT	"v=DMARC1;p=none;rua=mailto:dmarc@edm.huawei.com"
-> 
-> which means no DKIM is required but _dmarc.huawei.com has:
-> 
-> _dmarc.huawei.com.	600	IN	TXT	"v=DMARC1;p=quarantine;ruf=mailto:dmarc@huawei.com;rua=mailto:dmarc@huawei.com"
-> 
-> which says that DKIM is required. I guess this inconsistency may be the
-> reason why there are problems with DKIM validation for senders from
-> huawei.com. Yu Kuai, can you perhaps take this to your IT support to fix
-> this? Either make sure huawei.com emails get properly signed with DKIM or
-> remove the 'quarantine' record from _dmarc.huawei.com. Thanks!
-Of course, I'll try to contact our IT support.
+> Thanks for your advice, I'll do that in next version. I'll still have to
+> hold the lock to set the bit again in case blk_should_fake_timeout()
+> pass...
+
+Hi, Josef
+
+I just found out that this way is problematic:
+t1:			t2:
+recv_work
+  nbd_handle_reply
+   __clear_bit
+			nbd_xmit_timeout
+			 test_bit(NBD_CMD_INFLIGHT, &cmd->flags) -> fail
+			 return BLK_EH_DONE -> rq can't complete
+  blk_should_fake_timeout -> true
+  __set_bit
+
+__clear_bit and then __set_bit from recv_work leaves a window, and
+concurrent nbd_xmit_timeout() may lead to that request can't be
+completed through both timeout and recv_work().
+
+Do you think it's ok to keep the current implementation with some
+comments to explain the above scenario?
 
 Thanks,
 Kuai
-> 
-> 								Honza
-> 
