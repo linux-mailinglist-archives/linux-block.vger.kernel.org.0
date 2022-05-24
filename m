@@ -2,54 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E05CB5329E3
-	for <lists+linux-block@lfdr.de>; Tue, 24 May 2022 14:02:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13985532A23
+	for <lists+linux-block@lfdr.de>; Tue, 24 May 2022 14:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235811AbiEXMBj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 May 2022 08:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
+        id S235417AbiEXMOg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 24 May 2022 08:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233268AbiEXMBi (ORCPT
+        with ESMTP id S230394AbiEXMOe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 May 2022 08:01:38 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4593E289B4
-        for <linux-block@vger.kernel.org>; Tue, 24 May 2022 05:01:37 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A4E8068AFE; Tue, 24 May 2022 14:01:34 +0200 (CEST)
-Date:   Tue, 24 May 2022 14:01:34 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        shinichiro.kawasaki@wdc.com, dan.j.williams@intel.com,
-        yukuai3@huawei.com, linux-block@vger.kernel.org
+        Tue, 24 May 2022 08:14:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AFF496F492
+        for <linux-block@vger.kernel.org>; Tue, 24 May 2022 05:14:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653394472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9JI11b85ofkZF9fW3eAAZPAx9w5swJPzDrsDSmuEDHo=;
+        b=OE34eTElvNxk9abGAhgiAmev5mXCZFcpzfyuA4760+CT2O0KqX5mHXIknBvO2LfEPRyGJq
+        tVf0fcabL3gIIbz/zconwjUaqSwo/hMXFhpe1g2sBEmJACEm/GZ+hiWzvvmlrKl+JWvkSn
+        WPocKtrYuUWTBvdd+ilCk2cCudIc4Kk=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-510--HnNk4O4Nce-xzdg-sLThw-1; Tue, 24 May 2022 08:14:29 -0400
+X-MC-Unique: -HnNk4O4Nce-xzdg-sLThw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C0D91D32362;
+        Tue, 24 May 2022 12:14:29 +0000 (UTC)
+Received: from T590 (ovpn-8-20.pek2.redhat.com [10.72.8.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B27C2166B25;
+        Tue, 24 May 2022 12:14:23 +0000 (UTC)
+Date:   Tue, 24 May 2022 20:14:18 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, shinichiro.kawasaki@wdc.com,
+        dan.j.williams@intel.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org
 Subject: Re: [PATCH] block: remove per-disk debugfs files in
  blk_unregister_queue
-Message-ID: <20220524120134.GB17563@lst.de>
-References: <20220524083325.833981-1-hch@lst.de> <YozFt0qFCvZVt67m@T590>
+Message-ID: <YozMGvN/3TJirE3N@T590>
+References: <20220524083325.833981-1-hch@lst.de>
+ <YozFt0qFCvZVt67m@T590>
+ <20220524120134.GB17563@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YozFt0qFCvZVt67m@T590>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220524120134.GB17563@lst.de>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, May 24, 2022 at 07:47:03PM +0800, Ming Lei wrote:
-> Not look into details yet, but as one blk-mq debugfs user, I don't like
-> the idea, since I often see io hang issue when calling
-> blk_mq_freeze_queue_wait(), and blk-mq debugfs is very helpful for
-> investigating this kind of issue.
+On Tue, May 24, 2022 at 02:01:34PM +0200, Christoph Hellwig wrote:
+> On Tue, May 24, 2022 at 07:47:03PM +0800, Ming Lei wrote:
+> > Not look into details yet, but as one blk-mq debugfs user, I don't like
+> > the idea, since I often see io hang issue when calling
+> > blk_mq_freeze_queue_wait(), and blk-mq debugfs is very helpful for
+> > investigating this kind of issue.
+> > 
+> > But now blk-mq debugfs is gone with this patch __before__ draining IO in
+> > del_gendisk, and it becomes not useful as before.
 > 
-> But now blk-mq debugfs is gone with this patch __before__ draining IO in
-> del_gendisk, and it becomes not useful as before.
+> This is the way hot it is set up, so in doubt I want it to be torn down
+> synchronously.  There might be a way to move the teardown later, but
+> that will require a very careful audit.
 
-This is the way hot it is set up, so in doubt I want it to be torn down
-synchronously.  There might be a way to move the teardown later, but
-that will require a very careful audit.
+Then please move it to disk release at least, when blk-mq debug becomes
+less useful.
+
+In theory, blk_cleanup_queue() may have similar issue, but most of
+drivers release disk after blk_cleanup_queue() except for scsi disk.
+
+So from user viewpoint, the best place to tear down blk-mq debugfs is
+still in queue release handler.
+
+Thanks,
+Ming
+
