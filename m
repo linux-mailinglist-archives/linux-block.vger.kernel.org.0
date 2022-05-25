@@ -2,95 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95A9C533882
-	for <lists+linux-block@lfdr.de>; Wed, 25 May 2022 10:32:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A9A0533DFE
+	for <lists+linux-block@lfdr.de>; Wed, 25 May 2022 15:37:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230336AbiEYIcR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 May 2022 04:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34886 "EHLO
+        id S241480AbiEYNhy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 May 2022 09:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233543AbiEYIcP (ORCPT
+        with ESMTP id S231968AbiEYNhx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 May 2022 04:32:15 -0400
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758251026
-        for <linux-block@vger.kernel.org>; Wed, 25 May 2022 01:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1653467531; x=1685003531;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qw6jbP3OUMfdTIpTFPu6JgcWcEnoCdQxVB/Kp7Z7stk=;
-  b=eWfnOXj/f9iYCH4j/6ESofmUJepVHPVrXLR9BWXAHe5g83N9ASmjAIVK
-   CCdAgCTwSxbLzXoOjAYYtByCCzQhmpNrsyqsvm6A3YyE5T0vL7BwMy1CG
-   Q95KfVlcSpycCZMDXmNEIvuljEX2R8KALTNQC8cJM6nKd0oGLCqOtukMZ
-   loHEzh5E1moT+mPx/vhqSkyewOGrzP3qkzv/ARaPfnUNL4LS4d10VUBxO
-   ebDHx18+f4W7xLldugMdT9RRh3AWfn7Q5ZJo/HYEiwwc7w2KUF1A8IA+Z
-   HdHe6qISHtZ/RYPppdNVk21hejPALqQmIpH05m/M3AUJakmgWMzgs78kk
-   w==;
-X-IronPort-AV: E=Sophos;i="5.91,250,1647273600"; 
-   d="scan'208";a="206247121"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 25 May 2022 16:32:07 +0800
-IronPort-SDR: kUKi3C7vFJPADTYeDauztnFT+6go+LIc0RsaIoMHkuUqDO8kd2nRhx4Xr+vkJ3VNsahdmVAcfR
- L6iIWcTnpWQUP8EwFEiML0A+0mZ1qb4iqy1T3yzHFjShlRBFBiDGpOEgkj3t93vnq/7QIGX/OW
- F9l25XN5WBQY0YJQQ5w1btR0s1cQIF0B/D5hLj9T8j152G00HgIM0UqFhgkoqvC004H4vktxLF
- 1t9myGmvY1CLDPVzLSaCHtB+93O9frc7w99TxNzURfZcbhmgcGq8RrbOshEzJ9LCJWs5tFghDv
- QLfIBx10wyFCD70Qtz/d4qo2
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 May 2022 00:56:04 -0700
-IronPort-SDR: IAPWJeZ69oNEGVIPocNx2zhKe3aZcwnH8T0tsd2Wm9w8z5aPrzmkPWEuDSdhIGPXRA9ShQtZ1q
- veFOcb+KO2fOZYl8KWM/ZRcsDOeqqkKFvZZNXtA2K7SPLKhM0k7DdFNkiFXYAOvknx/9hUKmCf
- cYLrn/OyZbX3r98UuOkpuRnm7mUeJRRCMtfa892cE/zW0tUaCkUPI6Tb9W4LYgeo5Qgzwl0NWZ
- vjUQ3LyfQAuAmv6W+E4gcRQbL+GKNDQBS2qM34lY3SGrjrvkrYYvHYjnltryjCIUgM5ga2M+t+
- Ync=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 May 2022 01:32:08 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4L7PSS1CDnz1Rvlx
-        for <linux-block@vger.kernel.org>; Wed, 25 May 2022 01:32:08 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1653467527; x=1656059528; bh=qw6jbP3OUMfdTIpTFPu6JgcWcEnoCdQxVB/
-        Kp7Z7stk=; b=qanQrtuJ+bc1RTB9IC7sFrYfFvFv2wLg4Kc1DsFK91onCLb4dJS
-        MydtjotfEYmGHuSYO0mjiOPwmzT6QX1v0tVNJNvKwn2IeMHJiJkY9IowxjHd95mR
-        rwTTKxofg4kzBMaCy3SSqLJ7ocLaaYuhA2z+YHphTzaG78KxA2J8PRzPnG10a1MC
-        dN3z80yHlrYNvcUqnuH2daEDRoXeplktZNhdg8emNTWK0sR1uS48HTVjlmWBHkTO
-        B/p/1yA9Fx0P7dFmrIeqyk5jSWrSImcvrPVSQumt7iZmNSeWTm9EAineVKHCSKbd
-        j+26qlmSLR+X8pEAV1AkzgpiHOB3r8LUYhw==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id o161W9UbwVLK for <linux-block@vger.kernel.org>;
-        Wed, 25 May 2022 01:32:07 -0700 (PDT)
-Received: from [10.225.163.54] (unknown [10.225.163.54])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4L7PSR0T89z1Rvlc;
-        Wed, 25 May 2022 01:32:06 -0700 (PDT)
-Message-ID: <987d343f-d634-030b-a3be-9cdd8a2904a2@opensource.wdc.com>
-Date:   Wed, 25 May 2022 17:32:05 +0900
+        Wed, 25 May 2022 09:37:53 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A37E6BFD9;
+        Wed, 25 May 2022 06:37:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B7C38B81D99;
+        Wed, 25 May 2022 13:37:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C71C34117;
+        Wed, 25 May 2022 13:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653485869;
+        bh=xlUASOGBdGw6fvHq4BDNMenv9iWftkupHWxoGxdfLaw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eE28Gc/PPxzo7SmaqHsc80YkSvcgEe/itl6cQrG/3QpssQkcnYHDGOXl+slhMlm7q
+         zcpWmuSWKAyaJKTcRh5SRNz8n0dUeKH1RgxmPcixzUYsmaGIjoae7unscy85w7rCcR
+         nuXh1fdaroFusYK9lbpZZ6sJxDFE8XShoa4Ga7nxP1tIBMIzxhJYBl+X7QwqB1hBf2
+         ZN08pUufYR8X4ycr3pcd/BnZJp/2vGtwx97d3SYjIwzYY1pct9lfztsdG+r/aSnj/s
+         f5rzOK9B+poekFzTHVGZAEPnr+0JH0lgsw0aaH7u/BpiSvanJ0m+Bk3haO2emQqHUp
+         jRdA5R7pVP/AA==
+Date:   Wed, 25 May 2022 07:37:45 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Pankaj Raghav <pankydev8@gmail.com>
+Cc:     Keith Busch <kbusch@fb.com>, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk,
+        Kernel Team <Kernel-team@fb.com>, hch@lst.de,
+        bvanassche@acm.org, damien.lemoal@opensource.wdc.com,
+        ebiggers@kernel.org, Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCHv3 1/6] block/bio: remove duplicate append pages code
+Message-ID: <Yo4xKSEI9Kh93gtf@kbusch-mbp.dhcp.thefacebook.com>
+References: <20220523210119.2500150-1-kbusch@fb.com>
+ <20220523210119.2500150-2-kbusch@fb.com>
+ <20220524141754.msmt6s4spm4istsb@quentin>
+ <Yoz7+O2CAQTNfvlV@kbusch-mbp.dhcp.thefacebook.com>
+ <20220525074941.2biavbbrjdjcnlsd@quentin>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH blktests] CONTIRIBUTING, README: transfer maintainer role
-Content-Language: en-US
-To:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc:     Omar Sandoval <osandov@fb.com>
-References: <20220525020424.14131-1-shinichiro.kawasaki@wdc.com>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <20220525020424.14131-1-shinichiro.kawasaki@wdc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220525074941.2biavbbrjdjcnlsd@quentin>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -98,52 +61,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/25/22 11:04, Shin'ichiro Kawasaki wrote:
-> To offload blktests maintenance overhead from Omar, I volunteer to take
-> the blktests maintainer role. Replace Omar's name and e-mail address in
-> CONTRIBUTING.md with mine. Also note his original authorship in
-> README.md.
-> 
-> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+On Wed, May 25, 2022 at 09:49:41AM +0200, Pankaj Raghav wrote:
+> On Tue, May 24, 2022 at 09:38:32AM -0600, Keith Busch wrote:
+> > On Tue, May 24, 2022 at 04:17:54PM +0200, Pankaj Raghav wrote:
+> > > On Mon, May 23, 2022 at 02:01:14PM -0700, Keith Busch wrote:
+> > > > -	if (WARN_ON_ONCE(!max_append_sectors))
+> > > > -		return 0;
+> > > I don't see this check in the append path. Should it be added in
+> > > bio_iov_add_zone_append_page() function?
+> > 
+> > I'm not sure this check makes a lot of sense. If it just returns 0 here, then
+> > won't that get bio_iov_iter_get_pages() stuck in an infinite loop? The bio
+> > isn't filling, the iov isn't advancing, and 0 indicates keep-going.
+> Yeah but if max_append_sectors is zero, then bio_add_hw_page() also
+> returns 0 as follows:
+> ....
+> 	if (((bio->bi_iter.bi_size + len) >> 9) > max_sectors)
+> 		return 0;
+> ....
+> With WARN_ON_ONCE, we at least get a warning message if it gets stuck in an
+> infinite loop because of max_append_sectors being zero right?
 
-Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+The return for this function is the added length, not an indicator of success.
+And we already handle '0' as an error from bio_iov_add_zone_append_page():
 
-> ---
->  CONTRIBUTING.md | 4 ++--
->  README.md       | 3 ++-
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
-> index 9bda2c4..fd232b7 100644
-> --- a/CONTRIBUTING.md
-> +++ b/CONTRIBUTING.md
-> @@ -2,8 +2,8 @@
->  
->  You can contribute to blktests by opening a pull request to the [blktests
->  GitHub repository](https://github.com/osandov/blktests) or by sending patches
-> -to the <linux-block@vger.kernel.org> mailing list and Omar Sandoval
-> -<osandov@fb.com>. If sending patches, please generate the patch with `git
-> +to the <linux-block@vger.kernel.org> mailing list and Shin'ichiro Kawasaki
-> +<shinichiro.kawasaki@wdc.com>. If sending patches, please generate the patch with `git
->  format-patch --subject-prefix="PATCH blktests"`. Consider configuring git to do
->  this for you with `git config --local format.subjectPrefix "PATCH blktests"`.
->  
-> diff --git a/README.md b/README.md
-> index fcf07ff..4a1d73f 100644
-> --- a/README.md
-> +++ b/README.md
-> @@ -4,7 +4,8 @@
->  
->  blktests is a test framework for the Linux kernel block layer and storage
->  stack. It is inspired by the [xfstests](https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/)
-> -filesystem testing framework.
-> +filesystem testing framework. It was originally written by Omar Sandoval
-> +<osandov@fb.com> and [announced in 2017](https://lore.kernel.org/linux-block/20170512184905.GA15267@vader.DHCP.thefacebook.com/).
->  
->  ## Getting Started
->  
-
-
--- 
-Damien Le Moal
-Western Digital Research
+	if (bio_add_hw_page(q, bio, page, len, offset,
+			queue_max_zone_append_sectors(q), &same_page) != len)
+		return -EINVAL;
