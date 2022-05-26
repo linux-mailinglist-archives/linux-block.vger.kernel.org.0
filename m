@@ -2,129 +2,143 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A8825347DF
-	for <lists+linux-block@lfdr.de>; Thu, 26 May 2022 03:09:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F8C534855
+	for <lists+linux-block@lfdr.de>; Thu, 26 May 2022 03:48:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344932AbiEZBIs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 25 May 2022 21:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59734 "EHLO
+        id S231230AbiEZBsV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 25 May 2022 21:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232046AbiEZBIo (ORCPT
+        with ESMTP id S230192AbiEZBsU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 25 May 2022 21:08:44 -0400
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F119344D
-        for <linux-block@vger.kernel.org>; Wed, 25 May 2022 18:08:41 -0700 (PDT)
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24PGtaTI031464
-        for <linux-block@vger.kernel.org>; Wed, 25 May 2022 18:08:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=rloVwIFmva/Mw8+w//LHl9STezmnJzPW30nB4MxWxeg=;
- b=LMX7bFMBChiFKnvLc7zxxRioAWJzpqw1184RAgHobRms8gu6TiqAFnL9jgNIx+jUQ1ja
- 4yqnxP7GkIDRIkWDmsQ/CyASx91wMmSabPLUdP2wNw90w9d4cCzaa5xGbTQ5ahtI1QLq
- vEC/FltPS68w6mnSSVGEi5IObPvyCxZRZ8g= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3g9bky7667-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Wed, 25 May 2022 18:08:40 -0700
-Received: from twshared19572.14.frc2.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c085:11d::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Wed, 25 May 2022 18:08:39 -0700
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id 30C3145C0BE0; Wed, 25 May 2022 18:06:20 -0700 (PDT)
-From:   Keith Busch <kbusch@fb.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>
-CC:     <axboe@kernel.dk>, Kernel Team <Kernel-team@fb.com>, <hch@lst.de>,
-        <bvanassche@acm.org>, <damien.lemoal@opensource.wdc.com>,
-        <ebiggers@kernel.org>, <pankydev8@gmail.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv4 9/9] fs: add support for dma aligned direct-io
-Date:   Wed, 25 May 2022 18:06:13 -0700
-Message-ID: <20220526010613.4016118-10-kbusch@fb.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220526010613.4016118-1-kbusch@fb.com>
-References: <20220526010613.4016118-1-kbusch@fb.com>
+        Wed, 25 May 2022 21:48:20 -0400
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03EB8DDD2
+        for <linux-block@vger.kernel.org>; Wed, 25 May 2022 18:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1653529698; x=1685065698;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FME4v/EvPahQmZZ4OvbyPPXbKI1vSzlssNTi3dekI9U=;
+  b=nBC6cOWnnZ9E7Ba/YXj1XU8tAIx2JycPIliyeexS5ygvirLaULBrGwmz
+   KZPhDwgb5pKm64EVydFP3+3s0pgpGJL1Rzbnnhe8a8peCBV2UOJ57Sc7f
+   KOGLfu5EINoKdbz8dQw7DEiSBf6YM245pRRDquJO3BNMwRep1HsSjtGN1
+   x/A+SUxeRbjTnv3WFySFcxm03gZ1I9yxXzicS1lz4Y4WSNjT0W1b1UP9D
+   s2wbrFdoo3CFmJntUbavC6qr0qNU1lOSMjqY5AmYnvOSPqvvwN+tMGBB5
+   Eda/qtKBGlEWA5yADK+1g3tArl0JY4dhk1Wh5HJsMErq3CiU2gLYrKrZF
+   A==;
+X-IronPort-AV: E=Sophos;i="5.91,252,1647273600"; 
+   d="scan'208";a="305693463"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 26 May 2022 09:48:17 +0800
+IronPort-SDR: TOuNNJuEPlrQA5wazG1s1BJd9JruX8u2OiUbspiwMX+dlKvjef/fjhM2wqLUSL5QvnCidWGkZo
+ V3Ow0WJJICv+sM+ZnxxAQmHQnJ2rZdqGFf+c9RfO64GsNzTCkuUsfKyGIMRY35BPza8N40ae4d
+ Rs14eo8xFkbf2nH2FbBA0c8rmKn4a2u3ZUy8o5WxP0NZ5nI4ocfYEuE/cPX5i7piNI5puZ6zqW
+ XS1+HGVLXWtL/r5WygLlom8I1surQHHAZrYy1BomExYKjDMtkqNL1qwkIU+82SPPEi99NnwPSt
+ 6HtV/fF6V/WRll0/D4Pn3J/J
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 May 2022 18:12:11 -0700
+IronPort-SDR: xn1iSVmDXCdIf3oB4Ipp92xVQbSth9sUddIAIkYrR/GYER5p3pR/OolY3OCN+SHWMO0s47qmE+
+ td1MHrMXMqYYzGjcYODDJ3/Wrj7HZ/mn0qlh/Trq9Kg/SB3F1zDejr7wrRr6uUVQ7AsVIX0EwO
+ xKoF9hzbJsXindE/qvf7sZEj/ANIDZxP0aPf8QKGqvEmQYdG15SS9tFH2ezx0qeE/Dlyl9CFGj
+ q6w1MoFMEms/KB3W4HZuRopxWl8co+0Go5F+3M087XNFTaXFQnHhwleZhiXBcleisCFnY8ql/L
+ xNQ=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 May 2022 18:48:16 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4L7rRz6w9Lz1SVny
+        for <linux-block@vger.kernel.org>; Wed, 25 May 2022 18:48:15 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1653529695; x=1656121696; bh=FME4v/EvPahQmZZ4OvbyPPXbKI1vSzlssNT
+        i3dekI9U=; b=Fx0wKIHJ+JDiE1SD2WiE4srfh71/huzJ3xospp7ZZaUzHD7ihGk
+        RQHUhJsRjvtR6YeYvOPp5jIPH0hjuJAND3dEGFfww7Lcw/sx3Lvbri0zlM/WZ2Zw
+        KnMQHfTxQS+ZtJ6PY1lHBDazZg04KnXIYvL5UuMSip6PLOX9YcGMmSAiFFXUj3un
+        9xYPgc8IWHI0f03PFXqa9H1u6zfE9BowxTwDd6G3VUGPS1PSLa/Lp6YGgv/kn6GT
+        xES39eNzj/Iz92JsAAQMeLCbaHsxKO/YUvPW7Oq7/cUOoUNcVVdAno7R1FeQYaDH
+        2VFVfmssDJFjNcmnk3X9tBinhyRPc5JbVkA==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id qxuzdRDGJsqL for <linux-block@vger.kernel.org>;
+        Wed, 25 May 2022 18:48:15 -0700 (PDT)
+Received: from [10.225.54.48] (unknown [10.225.54.48])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4L7rRx5hf6z1Rvlc;
+        Wed, 25 May 2022 18:48:13 -0700 (PDT)
+Message-ID: <e87bd23a-1316-0396-0bb0-658c6105eaab@opensource.wdc.com>
+Date:   Thu, 26 May 2022 10:48:12 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: e10VpbaO4oRVwn1h1rR9EVxbWAcggz3P
-X-Proofpoint-ORIG-GUID: e10VpbaO4oRVwn1h1rR9EVxbWAcggz3P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-25_07,2022-05-25_02,2022-02-23_01
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.1
+Subject: Re: [PATCHv4 1/9] block: fix infiniate loop for invalid zone append
+Content-Language: en-US
+To:     Keith Busch <kbusch@fb.com>, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Cc:     axboe@kernel.dk, Kernel Team <Kernel-team@fb.com>, hch@lst.de,
+        bvanassche@acm.org, ebiggers@kernel.org, pankydev8@gmail.com,
+        Keith Busch <kbusch@kernel.org>
+References: <20220526010613.4016118-1-kbusch@fb.com>
+ <20220526010613.4016118-2-kbusch@fb.com>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <20220526010613.4016118-2-kbusch@fb.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+On 2022/05/26 10:06, Keith Busch wrote:
+> From: Keith Busch <kbusch@kernel.org>
+> 
 
-Use the address alignment requirements from the hardware for direct io
-instead of requiring addresses be aligned to the block size.
+s/infiniate/infinite in the patch title.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- fs/direct-io.c       | 11 +++++++----
- fs/iomap/direct-io.c |  3 ++-
- 2 files changed, 9 insertions(+), 5 deletions(-)
+> Returning 0 early from __bio_iov_append_get_pages() for the
+> max_append_sectors warning just creates an infinite loop since 0 means
+> success, and the bio will never fill from the unadvancing iov_iter. We
+> could turn the return into an error value, but it will already be turned
+> into an error value later on, so just remove the warning. Clearly no one
+> ever hit it anyway.
+> 
+> Fixes: 0512a75b98f84 ("block: Introduce REQ_OP_ZONE_APPEND")
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> ---
+>  block/bio.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/block/bio.c b/block/bio.c
+> index a3893d80dccc..e249f6414fd5 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -1228,9 +1228,6 @@ static int __bio_iov_append_get_pages(struct bio *bio, struct iov_iter *iter)
+>  	size_t offset;
+>  	int ret = 0;
+>  
+> -	if (WARN_ON_ONCE(!max_append_sectors))
+> -		return 0;
+> -
+>  	/*
+>  	 * Move page array up in the allocated memory for the bio vecs as far as
+>  	 * possible so that we can start filling biovecs from the beginning
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index 840752006f60..64cc176be60c 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -1131,7 +1131,7 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, st=
-ruct inode *inode,
- 	struct dio_submit sdio =3D { 0, };
- 	struct buffer_head map_bh =3D { 0, };
- 	struct blk_plug plug;
--	unsigned long align =3D offset | iov_iter_alignment(iter);
-+	unsigned long align =3D iov_iter_alignment(iter);
-=20
- 	/*
- 	 * Avoid references to bdev if not absolutely needed to give
-@@ -1165,11 +1165,14 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, =
-struct inode *inode,
- 		goto fail_dio;
- 	}
-=20
--	if (align & blocksize_mask) {
--		if (bdev)
-+	if ((offset | align) & blocksize_mask) {
-+		if (bdev) {
- 			blkbits =3D blksize_bits(bdev_logical_block_size(bdev));
-+			if (align & bdev_dma_alignment(bdev))
-+				goto fail_dio;
-+		}
- 		blocksize_mask =3D (1 << blkbits) - 1;
--		if (align & blocksize_mask)
-+		if ((offset | count) & blocksize_mask)
- 			goto fail_dio;
- 	}
-=20
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 80f9b047aa1b..0256d28baa8e 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -244,7 +244,8 @@ static loff_t iomap_dio_bio_iter(const struct iomap_i=
-ter *iter,
- 	size_t copied =3D 0;
- 	size_t orig_count;
-=20
--	if ((pos | length | align) & ((1 << blkbits) - 1))
-+	if ((pos | length) & ((1 << blkbits) - 1) ||
-+	    align & bdev_dma_alignment(iomap->bdev))
- 		return -EINVAL;
-=20
- 	if (iomap->type =3D=3D IOMAP_UNWRITTEN) {
---=20
-2.30.2
+Otherwise looks good.
 
+Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+
+-- 
+Damien Le Moal
+Western Digital Research
