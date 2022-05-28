@@ -2,138 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 855E45369EA
-	for <lists+linux-block@lfdr.de>; Sat, 28 May 2022 03:52:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E438C5369FD
+	for <lists+linux-block@lfdr.de>; Sat, 28 May 2022 03:59:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242118AbiE1Bw2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 May 2022 21:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47442 "EHLO
+        id S1354487AbiE1B7J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 May 2022 21:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231386AbiE1Bw0 (ORCPT
+        with ESMTP id S1352313AbiE1B7J (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 May 2022 21:52:26 -0400
-Received: from mx.ewheeler.net (mx.ewheeler.net [173.205.220.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7C814D14;
-        Fri, 27 May 2022 18:52:24 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mx.ewheeler.net (Postfix) with ESMTP id BA8D981;
-        Fri, 27 May 2022 18:52:23 -0700 (PDT)
-X-Virus-Scanned: amavisd-new at ewheeler.net
-Received: from mx.ewheeler.net ([127.0.0.1])
-        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id x3FTyepQWAUe; Fri, 27 May 2022 18:52:23 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.ewheeler.net (Postfix) with ESMTPSA id BB3C3B;
-        Fri, 27 May 2022 18:52:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx.ewheeler.net BB3C3B
-Date:   Fri, 27 May 2022 18:52:22 -0700 (PDT)
-From:   Eric Wheeler <bcache@lists.ewheeler.net>
-To:     Christoph Hellwig <hch@infradead.org>
-cc:     Keith Busch <kbusch@kernel.org>, Coly Li <colyli@suse.de>,
-        Adriano Silva <adriano_da_silva@yahoo.com.br>,
-        Bcache Linux <linux-bcache@vger.kernel.org>,
-        Matthias Ferdinand <bcache@mfedv.net>,
-        linux-block@vger.kernel.org
-Subject: Re: [RFC] Add sysctl option to drop disk flushes in bcache? (was:
- Bcache in writes direct with fsync)
-In-Reply-To: <Yo28kDw8rZgFWpHu@infradead.org>
-Message-ID: <a2ed37b8-2f4a-ef7a-c097-d58c2b965af3@ewheeler.net>
-References: <958894243.922478.1652201375900.ref@mail.yahoo.com> <958894243.922478.1652201375900@mail.yahoo.com> <9d59af25-d648-4777-a5c0-c38c246a9610@ewheeler.net> <27ef674d-67e-5739-d5d8-f4aa2887e9c2@ewheeler.net> <YoxuYU4tze9DYqHy@infradead.org>
- <5486e421-b8d0-3063-4cb9-84e69c41b7a3@ewheeler.net> <Yo1BRxG3nvGkQoyG@kbusch-mbp.dhcp.thefacebook.com> <7759781b-dac-7f84-ff42-86f4b1983ca1@ewheeler.net> <Yo28kDw8rZgFWpHu@infradead.org>
+        Fri, 27 May 2022 21:59:09 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF35C5B3CA;
+        Fri, 27 May 2022 18:59:07 -0700 (PDT)
+Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4L94Yl6WH3z1JCBP;
+        Sat, 28 May 2022 09:57:31 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 28 May 2022 09:59:05 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Sat, 28 May
+ 2022 09:59:04 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <ming.lei@redhat.com>,
+        <yukuai3@huawei.com>
+CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
+Subject: [PATCH -next v4 0/6] nbd: bugfix and cleanup patches
+Date:   Sat, 28 May 2022 10:12:29 +0800
+Message-ID: <20220528021235.2120995-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1504673015-1653701678=:2952"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Changes in v4
+ - in patch 3, return from nbd_handle_reply() with flag cleared if
+ request is ready to complete.
+ - add reviewed-by tag for patch 1-2, 4-6.
+Changes in v3:
+ - rewrap to 80 columns where possible in patch 6
+Changes in v2:
+ - in patch 3, instead of clear and then reset the flag if rq is not
+ completed, test first and clear if rq is going to complete.
 
---8323328-1504673015-1653701678=:2952
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
+path 1-2 fix races between nbd setup and module removal.
+patch 3 fix io can't be completed in some error path.
+patch 4 fix io hung when disconnecting failed.
+patch 5 fix sysfs warning about duplicate creation.
+patch 6 use pr_err to output error message.
 
-On Tue, 24 May 2022, Christoph Hellwig wrote:
-> On Tue, May 24, 2022 at 02:34:23PM -0700, Eric Wheeler wrote:
-> > Is this flag influced at all when /sys/block/sdX/queue/scheduler is set 
-> > to "none", or does the write_cache flag operate independently of the 
-> > selected scheduler?
-> 
-> This in completely independent from ﬆhe scheduler.
-> 
-> > Does the block layer stop sending flushes at the first device in the stack 
-> > that is set to "write back"?  For example, if a device mapper target is 
-> > writeback will it strip flushes on the way to the backing device?
-> 
-> This is up to the stacking driver.  dm and tend to pass through flushes
-> where needed.
-> 
-> > This confirms what I have suspected all along: We have an LSI MegaRAID 
-> > SAS-3516 where the write policy is "write back" in the LUN, but the cache 
-> > is flagged in Linux as write-through:
-> > 
-> > 	]# cat /sys/block/sdb/queue/write_cache 
-> > 	write through
+Previous versions:
+v1: https://lore.kernel.org/all/20220426130746.885140-1-yukuai3@huawei.com/
+v2: https://lore.kernel.org/all/20220518122618.1702997-1-yukuai3@huawei.com/
+v3: https://lore.kernel.org/all/20220521073749.3146892-1-yukuai3@huawei.com/
 
-Hi Keith, Christoph:
+Yu Kuai (5):
+  nbd: call genl_unregister_family() first in nbd_cleanup()
+  nbd: fix race between nbd_alloc_config() and module removal
+  nbd: don't clear 'NBD_CMD_INFLIGHT' flag if request is not completed
+  nbd: fix io hung while disconnecting device
+  nbd: use pr_err to output error message
 
-Adriano who started this thread (cc'ed) reported that setting 
-queue/write_cache to "write back" provides much higher latency on his NVMe 
-than "write through"; I tested a system here and found the same thing.
+Zhang Wensheng (1):
+  nbd: fix possible overflow on 'first_minor' in nbd_dev_add()
 
-Here is Adriano's summary:
+ drivers/block/nbd.c | 109 +++++++++++++++++++++++++-------------------
+ 1 file changed, 63 insertions(+), 46 deletions(-)
 
-        # cat /sys/block/nvme0n1/queue/write_cache
-        write through
-        # ioping -c10 /dev/nvme0n1 -D -Y -WWW -s4K
-        ...
-        min/avg/max/mdev = 60.0 us / 78.7 us / 91.2 us / 8.20 us
-                                     ^^^^ ^^
+-- 
+2.31.1
 
-        # for i in /sys/block/*/queue/write_cache; do echo 'write back' > $i; done
-        # ioping -c10 /dev/nvme0n1 -D -Y -WWW -s4K
-        ...
-        min/avg/max/mdev = 1.81 ms / 1.89 ms / 2.01 ms / 82.3 us
-                                     ^^^^ ^^
-
-Interestingly, Adriano's is 24.01x and ours is 23.97x higher latency
-higher (see below).  These 24x numbers seem too similar to be a
-coincidence on such different configurations.  He's running Linux 5.4
-and we are on 4.19.
-
-Is this expected?
-
-
-More info:
-
-The stack where I verified the behavior Adriano reported is slightly
-different, NVMe's are under md RAID1 with LVM on top, so latency is
-higher, but still basically the same high latency difference with
-writeback enabled:
-
-	]# cat /sys/block/nvme[01]n1/queue/write_cache
-	write through
-	write through
-	]# ionice -c1 -n1 ioping -c10 /dev/ssd/ssd-test -D -s4k -WWW -Y
-	...
-	min/avg/max/mdev = 119.1 us / 754.9 us / 2.67 ms / 1.02 ms
-
-
-	]# cat /sys/block/nvme[01]n1/queue/write_cache
-	write back
-	write back
-	]# ionice -c1 -n1 ioping -c10 /dev/ssd/ssd-test -D -s4k -WWW -Y
-	...
-	min/avg/max/mdev = 113.4 us / 18.1 ms / 29.2 ms / 9.53 ms
-
-
---
-Eric Wheeler
---8323328-1504673015-1653701678=:2952--
