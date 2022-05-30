@@ -2,44 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3668C537C4E
-	for <lists+linux-block@lfdr.de>; Mon, 30 May 2022 15:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A544C537CFF
+	for <lists+linux-block@lfdr.de>; Mon, 30 May 2022 15:41:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236907AbiE3N2t (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 May 2022 09:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
+        id S237809AbiE3Niv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 May 2022 09:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236905AbiE3N12 (ORCPT
+        with ESMTP id S237468AbiE3Ngr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 May 2022 09:27:28 -0400
+        Mon, 30 May 2022 09:36:47 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A8584A1D;
-        Mon, 30 May 2022 06:26:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E682ADF0E;
+        Mon, 30 May 2022 06:30:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 376CFB80DA9;
-        Mon, 30 May 2022 13:25:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DECEC36AE7;
-        Mon, 30 May 2022 13:25:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D8289B80DA8;
+        Mon, 30 May 2022 13:30:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F3EEC36AE3;
+        Mon, 30 May 2022 13:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653917144;
-        bh=MryhVYwL20qdpycWJZzLIYovOEL+Bs5lNHa/2TnV0EA=;
+        s=k20201202; t=1653917412;
+        bh=y3bhC0rUOrF3icDOfUWiGnm7BKnScQLuWa8qmBsViaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dKxLbBOKfSBeA9wLI0UOft+82dBc1ayyO7LgZdz71KbG1qs18NiR6knTbgmTgecmI
-         13lWI6cA2zeW+ak7PEtMFhx9rfr4v1/fY0H2ItaRjNNQBbfdFgL9s+2T6dMONR0eGi
-         e0mhK8PE2zHSAs3XGfdJ8FaFgCqGuT2RjoJSMSLJOjqXCNeCgOE8G90p+YwrKceTUJ
-         /e6Y4IpY22a1U4VlHWck5aU1yo1Ja8/XsTAiKIwBbM2UX0XkcOQ4iWU/puPXpi0gPH
-         se/c5pGHgtqikof0W70prot0ZOVKhLoU5TuDmSz+wBAz5YKz+mvwIWikMqXVhr/l85
-         POTCLDH8N8ZgA==
+        b=gS7JqJPDuop2TRgoVTntfUNVRJuqIWlK2hxboYk/LN8/FpLf1yiRp28HbmXwRh0zE
+         OJmh6Y3sHzxi45eqQ6ZhRVC9mCYZW32XQQNNo+2NSLKrf8iT9PH6ePvSstvKbbLwNf
+         wL6EUtTMmJsTvOaz9pRQwqOOrBknQ5JrWu7DtDHBMHTm0m/VItx3YonwvPkjKAcWcw
+         zJtZGGDSLjGRGIhGmTiHYaeT8hFXZg9qC70e1TOdxeZajeMRLeXnC5rC32jNCsKKiR
+         t1zfM4FQB82dqgBMPaoVnjOFhYUPHuajGv/fflaLucobRtH9iMNg+wmNqCFXcop92Y
+         C4rDcZvWQ8Qvw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+Cc:     Xie Yongji <xieyongji@bytedance.com>,
+        Xu Jianhai <zero.xu@bytedance.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 034/159] loop: implement ->free_disk
-Date:   Mon, 30 May 2022 09:22:19 -0400
-Message-Id: <20220530132425.1929512-34-sashal@kernel.org>
+        linux-block@vger.kernel.org, nbd@other.debian.org
+Subject: [PATCH AUTOSEL 5.18 128/159] nbd: Fix hung on disconnect request if socket is closed before
+Date:   Mon, 30 May 2022 09:23:53 -0400
+Message-Id: <20220530132425.1929512-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220530132425.1929512-1-sashal@kernel.org>
 References: <20220530132425.1929512-1-sashal@kernel.org>
@@ -57,71 +59,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Xie Yongji <xieyongji@bytedance.com>
 
-[ Upstream commit d2c7f56f8b5256d57f9e3fc7794c31361d43bdd9 ]
+[ Upstream commit 491bf8f236fdeec698fa6744993f1ecf3fafd1a5 ]
 
-Ensure that the lo_device which is stored in the gendisk private
-data is valid until the gendisk is freed.  Currently the loop driver
-uses a lot of effort to make sure a device is not freed when it is
-still in use, but to to fix a potential deadlock this will be relaxed
-a bit soon.
+When userspace closes the socket before sending a disconnect
+request, the following I/O requests will be blocked in
+wait_for_reconnect() until dead timeout. This will cause the
+following disconnect request also hung on blk_mq_quiesce_queue().
+That means we have no way to disconnect a nbd device if there
+are some I/O requests waiting for reconnecting until dead timeout.
+It's not expected. So let's wake up the thread waiting for
+reconnecting directly when a disconnect request is sent.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20220330052917.2566582-12-hch@lst.de
+Reported-by: Xu Jianhai <zero.xu@bytedance.com>
+Signed-off-by: Xie Yongji <xieyongji@bytedance.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Link: https://lore.kernel.org/r/20220322080639.142-1-xieyongji@bytedance.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/block/nbd.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index a58595f5ee2c..ed7bec11948c 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1768,6 +1768,14 @@ static void lo_release(struct gendisk *disk, fmode_t mode)
- 	mutex_unlock(&lo->lo_mutex);
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 5a1f98494ddd..284557041336 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -947,11 +947,15 @@ static int wait_for_reconnect(struct nbd_device *nbd)
+ 	struct nbd_config *config = nbd->config;
+ 	if (!config->dead_conn_timeout)
+ 		return 0;
+-	if (test_bit(NBD_RT_DISCONNECTED, &config->runtime_flags))
++
++	if (!wait_event_timeout(config->conn_wait,
++				test_bit(NBD_RT_DISCONNECTED,
++					 &config->runtime_flags) ||
++				atomic_read(&config->live_connections) > 0,
++				config->dead_conn_timeout))
+ 		return 0;
+-	return wait_event_timeout(config->conn_wait,
+-				  atomic_read(&config->live_connections) > 0,
+-				  config->dead_conn_timeout) > 0;
++
++	return !test_bit(NBD_RT_DISCONNECTED, &config->runtime_flags);
  }
  
-+static void lo_free_disk(struct gendisk *disk)
-+{
-+	struct loop_device *lo = disk->private_data;
-+
-+	mutex_destroy(&lo->lo_mutex);
-+	kfree(lo);
-+}
-+
- static const struct block_device_operations lo_fops = {
- 	.owner =	THIS_MODULE,
- 	.open =		lo_open,
-@@ -1776,6 +1784,7 @@ static const struct block_device_operations lo_fops = {
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl =	lo_compat_ioctl,
- #endif
-+	.free_disk =	lo_free_disk,
- };
- 
- /*
-@@ -2090,15 +2099,14 @@ static void loop_remove(struct loop_device *lo)
- {
- 	/* Make this loop device unreachable from pathname. */
- 	del_gendisk(lo->lo_disk);
--	blk_cleanup_disk(lo->lo_disk);
-+	blk_cleanup_queue(lo->lo_disk->queue);
- 	blk_mq_free_tag_set(&lo->tag_set);
- 
- 	mutex_lock(&loop_ctl_mutex);
- 	idr_remove(&loop_index_idr, lo->lo_number);
- 	mutex_unlock(&loop_ctl_mutex);
--	/* There is no route which can find this loop device. */
--	mutex_destroy(&lo->lo_mutex);
--	kfree(lo);
-+
-+	put_disk(lo->lo_disk);
- }
- 
- static void loop_probe(dev_t dev)
+ static int nbd_handle_cmd(struct nbd_cmd *cmd, int index)
+@@ -2082,6 +2086,7 @@ static void nbd_disconnect_and_put(struct nbd_device *nbd)
+ 	mutex_lock(&nbd->config_lock);
+ 	nbd_disconnect(nbd);
+ 	sock_shutdown(nbd);
++	wake_up(&nbd->config->conn_wait);
+ 	/*
+ 	 * Make sure recv thread has finished, we can safely call nbd_clear_que()
+ 	 * to cancel the inflight I/Os.
 -- 
 2.35.1
 
