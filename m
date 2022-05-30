@@ -2,89 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BDC653823A
-	for <lists+linux-block@lfdr.de>; Mon, 30 May 2022 16:34:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FF12538294
+	for <lists+linux-block@lfdr.de>; Mon, 30 May 2022 16:35:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237824AbiE3OWZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 May 2022 10:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40188 "EHLO
+        id S239444AbiE3OYh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 30 May 2022 10:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241395AbiE3ORd (ORCPT
+        with ESMTP id S242231AbiE3OSe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 May 2022 10:17:33 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB26690CC4
-        for <linux-block@vger.kernel.org>; Mon, 30 May 2022 06:46:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=GgEdfIAwgIGH5YP8c/JQol2oJF+0f2WQqtcED/uBNWE=; b=L4a5MI3Vy1EHUrKqJrZ1yPPE3o
-        Ltbz9flOXntx5UdAras1lQ1v4eN8N/VEB+gcScELfcEb6nqVtVH7WaWA4N5xGxm9e/U5iqwa4XB/8
-        2OwdK7PDw3D6egef4Ffl0gOyU/DDCrapc+2y5qCPW5sI34d0r2zuQdJ+OloICsSFRCsP4CYw//vTB
-        6Xjhbhi/FSQcWYDudRHNSKEdogzOssKetE0689qeJVkePpbfvJfnk7B0rrdBbdMsv6RN8AXP2Nnen
-        d0R6Yh2eZc6NeCOLLSd8NrZ5bEwmMu6leGZEjc3Gplvwwgxyy4DuwRbYbtwSGA/bCbQzDIHa+OrWq
-        mkDCZIfQ==;
-Received: from [2001:4bb8:185:a81e:fda9:da32:3b0c:8358] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nvfiZ-006rQ9-3b; Mon, 30 May 2022 13:45:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     shinichiro.kawasaki@wdc.com, dan.j.williams@intel.com,
-        yukuai3@huawei.com, ming.lei@redhat.com,
-        linux-block@vger.kernel.org
-Subject: [PATCH 3/3] block: freeze the queue earlier in del_gendisk
-Date:   Mon, 30 May 2022 15:45:48 +0200
-Message-Id: <20220530134548.3108185-4-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220530134548.3108185-1-hch@lst.de>
-References: <20220530134548.3108185-1-hch@lst.de>
+        Mon, 30 May 2022 10:18:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0438611CB79;
+        Mon, 30 May 2022 06:49:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 79F6760F24;
+        Mon, 30 May 2022 13:49:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF80FC3411C;
+        Mon, 30 May 2022 13:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653918539;
+        bh=Tda2yIK/e/Kan92RH1YHYbg3Uneascketgw7j/W6VgU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MX0euYwhwkShw3pc0PsOJz6iJlghB8gfNZgIGvHsyRtWGgVJxSS1xX7AVsnGi9E9i
+         mMi1gGgQ1Ekr2S0hobeM6C7GvUG05vPLy81GbHLIwz9w1KiLSUI6ptQgkPzbn1XMZG
+         99vZNquxTLQRTTWjz2XWq0MTLA2FjDDt597BmNZTBoRJINWAq9elptNNtmTjKbiEv6
+         NkqOFWAWLynN7OUMvHUTEdk7v6jgQYa6ARLBFC676VipZ5Bus8Nt+B9VezQjaKtXmy
+         YPCvT84ttk/IGO6bQc0ZP8ThLGfXNVz4yG5AnvXynjFoSKYzv6yV1GwNw0EcT6aveN
+         EkMR7u34Fku8A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xie Yongji <xieyongji@bytedance.com>,
+        Xu Jianhai <zero.xu@bytedance.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org, nbd@other.debian.org
+Subject: [PATCH AUTOSEL 5.4 47/55] nbd: Fix hung on disconnect request if socket is closed before
+Date:   Mon, 30 May 2022 09:46:53 -0400
+Message-Id: <20220530134701.1935933-47-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220530134701.1935933-1-sashal@kernel.org>
+References: <20220530134701.1935933-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Freeze the queue earlier in del_gendisk so that the state does not
-change while we remove debugfs and sysfs files.
+From: Xie Yongji <xieyongji@bytedance.com>
 
-Ming mentioned that being able to observer request in debugfs might
-be useful while the queue is being frozen in del_gendisk, which is
-made possible by this change.
+[ Upstream commit 491bf8f236fdeec698fa6744993f1ecf3fafd1a5 ]
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+When userspace closes the socket before sending a disconnect
+request, the following I/O requests will be blocked in
+wait_for_reconnect() until dead timeout. This will cause the
+following disconnect request also hung on blk_mq_quiesce_queue().
+That means we have no way to disconnect a nbd device if there
+are some I/O requests waiting for reconnecting until dead timeout.
+It's not expected. So let's wake up the thread waiting for
+reconnecting directly when a disconnect request is sent.
+
+Reported-by: Xu Jianhai <zero.xu@bytedance.com>
+Signed-off-by: Xie Yongji <xieyongji@bytedance.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Link: https://lore.kernel.org/r/20220322080639.142-1-xieyongji@bytedance.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/genhd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/block/nbd.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 36532b9318419..8ff5b187791af 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -621,6 +621,7 @@ void del_gendisk(struct gendisk *disk)
- 	 * Prevent new I/O from crossing bio_queue_enter().
- 	 */
- 	blk_queue_start_drain(q);
-+	blk_mq_freeze_queue_wait(q);
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 25e81b1a59a5..510e75435c43 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -865,11 +865,15 @@ static int wait_for_reconnect(struct nbd_device *nbd)
+ 	struct nbd_config *config = nbd->config;
+ 	if (!config->dead_conn_timeout)
+ 		return 0;
+-	if (test_bit(NBD_RT_DISCONNECTED, &config->runtime_flags))
++
++	if (!wait_event_timeout(config->conn_wait,
++				test_bit(NBD_RT_DISCONNECTED,
++					 &config->runtime_flags) ||
++				atomic_read(&config->live_connections) > 0,
++				config->dead_conn_timeout))
+ 		return 0;
+-	return wait_event_timeout(config->conn_wait,
+-				  atomic_read(&config->live_connections) > 0,
+-				  config->dead_conn_timeout) > 0;
++
++	return !test_bit(NBD_RT_DISCONNECTED, &config->runtime_flags);
+ }
  
- 	if (!(disk->flags & GENHD_FL_HIDDEN)) {
- 		sysfs_remove_link(&disk_to_dev(disk)->kobj, "bdi");
-@@ -644,8 +645,6 @@ void del_gendisk(struct gendisk *disk)
- 	pm_runtime_set_memalloc_noio(disk_to_dev(disk), false);
- 	device_del(disk_to_dev(disk));
- 
--	blk_mq_freeze_queue_wait(q);
--
- 	blk_throtl_cancel_bios(disk->queue);
- 
- 	blk_sync_queue(q);
+ static int nbd_handle_cmd(struct nbd_cmd *cmd, int index)
+@@ -2014,6 +2018,7 @@ static void nbd_disconnect_and_put(struct nbd_device *nbd)
+ 	mutex_lock(&nbd->config_lock);
+ 	nbd_disconnect(nbd);
+ 	sock_shutdown(nbd);
++	wake_up(&nbd->config->conn_wait);
+ 	/*
+ 	 * Make sure recv thread has finished, so it does not drop the last
+ 	 * config ref and try to destroy the workqueue from inside the work
 -- 
-2.30.2
+2.35.1
 
