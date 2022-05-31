@@ -2,38 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BF405396D3
-	for <lists+linux-block@lfdr.de>; Tue, 31 May 2022 21:17:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1B315396C3
+	for <lists+linux-block@lfdr.de>; Tue, 31 May 2022 21:13:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346839AbiEaTRD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 May 2022 15:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
+        id S1346378AbiEaTNv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 May 2022 15:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347023AbiEaTRC (ORCPT
+        with ESMTP id S1346344AbiEaTNu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 May 2022 15:17:02 -0400
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D7BA186
-        for <linux-block@vger.kernel.org>; Tue, 31 May 2022 12:17:00 -0700 (PDT)
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.17.1.5/8.17.1.5) with ESMTP id 24VFiHXV013628
-        for <linux-block@vger.kernel.org>; Tue, 31 May 2022 12:17:00 -0700
+        Tue, 31 May 2022 15:13:50 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE3F674FC
+        for <linux-block@vger.kernel.org>; Tue, 31 May 2022 12:13:50 -0700 (PDT)
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24VFiPpV020101
+        for <linux-block@vger.kernel.org>; Tue, 31 May 2022 12:13:50 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=Mbib1ViGeF93pbpt1Bcfb59VC28wz2gnpd4HmD/hJts=;
- b=AWQUm4u+BfxjPb8xSB0y0h6y1hQbdqNC04gGkOZoktGVMtiidHvuuuQg7+qAgSp0YlCu
- SP6xKkCbJJOb3f/u02y8auTIcLtZ0s1eW+aA1s+cC8ZI0IuPg6ZAsbocFTCLLnHTMir2
- kSpA0u2Xm5KdaKFYFidwnacqKIHyOormT9c= 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=2A9g7lOqg1/RobT9/8ycPm/h1/V/agiJy74TxI+fFok=;
+ b=iVqxCtgBCcI0a/ow8V5LGvAmm8FK1XfIiuAWgM/BlivM7ptaoM08sQ7R/Q7ssloc352k
+ kV0gzZYO21svDya6FhygZrBlSsaPTC/ytVnnfvIxP+ZBr7heYWlPwkmFMgtGDeh666wW
+ QS2DLZHR1M3c7jMmKKUi32fT9Kb9DzDPZj4= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net (PPS) with ESMTPS id 3gbfdtg5gc-13
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3gbfsj00an-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Tue, 31 May 2022 12:17:00 -0700
-Received: from twshared19572.14.frc2.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
+        for <linux-block@vger.kernel.org>; Tue, 31 May 2022 12:13:49 -0700
+Received: from twshared26317.07.ash9.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Tue, 31 May 2022 12:16:58 -0700
+ 15.1.2375.28; Tue, 31 May 2022 12:13:48 -0700
 Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id C123E4924B08; Tue, 31 May 2022 12:11:38 -0700 (PDT)
+        id D306B4924B0B; Tue, 31 May 2022 12:11:38 -0700 (PDT)
 From:   Keith Busch <kbusch@fb.com>
 To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
         <linux-nvme@lists.infradead.org>
@@ -41,16 +42,18 @@ CC:     <axboe@kernel.dk>, Kernel Team <Kernel-team@fb.com>, <hch@lst.de>,
         <bvanassche@acm.org>, <damien.lemoal@opensource.wdc.com>,
         <ebiggers@kernel.org>, <pankydev8@gmail.com>,
         Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv5 00/11] direct-io dma alignment
-Date:   Tue, 31 May 2022 12:11:26 -0700
-Message-ID: <20220531191137.2291467-1-kbusch@fb.com>
+Subject: [PATCHv5 01/11] block: fix infinite loop for invalid zone append
+Date:   Tue, 31 May 2022 12:11:27 -0700
+Message-ID: <20220531191137.2291467-2-kbusch@fb.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220531191137.2291467-1-kbusch@fb.com>
+References: <20220531191137.2291467-1-kbusch@fb.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: G7cyj6wyeuKT_ryJPDGgwkZXgwUS4HoH
-X-Proofpoint-GUID: G7cyj6wyeuKT_ryJPDGgwkZXgwUS4HoH
+X-Proofpoint-GUID: WO4xLK-r-hHK0znm1N1Wrd7CdKdV0vvE
+X-Proofpoint-ORIG-GUID: WO4xLK-r-hHK0znm1N1Wrd7CdKdV0vvE
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
  definitions=2022-05-31_07,2022-05-30_03,2022-02-23_01
@@ -66,66 +69,37 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Keith Busch <kbusch@kernel.org>
 
-The most significant change from v4 is the alignment is now checked
-prior to building the bio. This gets the expected EINVAL error for
-misaligned userspace iovecs in all cases now (Eric Biggers).
+Returning 0 early from __bio_iov_append_get_pages() for the
+max_append_sectors warning just creates an infinite loop since 0 means
+success, and the bio will never fill from the unadvancing iov_iter. We
+could turn the return into an error value, but it will already be turned
+into an error value later on, so just remove the warning. Clearly no one
+ever hit it anyway.
 
-I've removed the legacy fs change, so only iomap filesystems get to use
-this alignement capability (Christoph Hellwig).
+Fixes: 0512a75b98f84 ("block: Introduce REQ_OP_ZONE_APPEND")
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ block/bio.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-The block fops check for alignment returns a bool now (Damien).
-
-Adjusted some comments, docs, and other minor style issues.
-
-Reviews added for unchanged or trivially changed patches, removed
-reviews for ones that changed more significantly.
-
-As before, I tested using 'fio' with forced misaligned user buffers on
-raw block, xfs, and ext4 (example raw block profile below).
-
-  [global]
-  filename=3D/dev/nvme0n1
-  ioengine=3Dio_uring
-  verify=3Dcrc32c
-  rw=3Drandwrite
-  iodepth=3D64
-  direct=3D1
-
-  [small]
-  stonewall
-  bsrange=3D4k-64k
-  iomem_align=3D4
-
-  [large]
-  stonewall
-  bsrange=3D512k-4M
-  iomem_align=3D100
-
-Keith Busch (11):
-  block: fix infinite loop for invalid zone append
-  block/bio: remove duplicate append pages code
-  block: export dma_alignment attribute
-  block: introduce bdev_dma_alignment helper
-  block: add a helper function for dio alignment
-  block/merge: count bytes instead of sectors
-  block/bounce: count bytes instead of sectors
-  iov: introduce iov_iter_aligned
-  block: introduce bdev_iter_is_aligned helper
-  block: relax direct io memory alignment
-  fs: add support for dma aligned direct-io
-
- Documentation/ABI/stable/sysfs-block |   9 +++
- block/bio.c                          | 114 ++++++++++++---------------
- block/blk-merge.c                    |  41 ++++++----
- block/blk-sysfs.c                    |   7 ++
- block/bounce.c                       |  13 ++-
- block/fops.c                         |  16 ++--
- fs/iomap/direct-io.c                 |   4 +-
- include/linux/blkdev.h               |  12 +++
- include/linux/uio.h                  |   2 +
- lib/iov_iter.c                       |  92 +++++++++++++++++++++
- 10 files changed, 219 insertions(+), 91 deletions(-)
-
+diff --git a/block/bio.c b/block/bio.c
+index a3893d80dccc..e249f6414fd5 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1228,9 +1228,6 @@ static int __bio_iov_append_get_pages(struct bio *b=
+io, struct iov_iter *iter)
+ 	size_t offset;
+ 	int ret =3D 0;
+=20
+-	if (WARN_ON_ONCE(!max_append_sectors))
+-		return 0;
+-
+ 	/*
+ 	 * Move page array up in the allocated memory for the bio vecs as far a=
+s
+ 	 * possible so that we can start filling biovecs from the beginning
 --=20
 2.30.2
 
