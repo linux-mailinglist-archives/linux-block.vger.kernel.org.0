@@ -2,76 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75CA95385A8
-	for <lists+linux-block@lfdr.de>; Mon, 30 May 2022 17:59:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDA8E538B33
+	for <lists+linux-block@lfdr.de>; Tue, 31 May 2022 08:12:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240612AbiE3P6w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 30 May 2022 11:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51322 "EHLO
+        id S244165AbiEaGMC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 May 2022 02:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240904AbiE3P6k (ORCPT
+        with ESMTP id S235006AbiEaGMB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 30 May 2022 11:58:40 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E269EAE
-        for <linux-block@vger.kernel.org>; Mon, 30 May 2022 08:50:09 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id t25so17405411lfg.7
-        for <linux-block@vger.kernel.org>; Mon, 30 May 2022 08:50:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=m/H8RjStCv6hVv65KzAZgkQzcHdDtuUqNpn5uu8u3WA=;
-        b=m5RSpmpJBah+4lRzVn/fbIaVs0XcWhic1GjZ7CDpnw2aCAN1qiGOKCTJRPIZIu4lSv
-         hIBKmlQYpOR1pmXj1aR6D2/vS1xqAj8RSiQp75KwfMhwcN8/A3bZzBbAfhi1FQYbEDGa
-         oLjInceL22Kh3gZb6P1OJXLau2Ain5wvWwWPiLpEh/dAfeoIEREeXn37qqXb2ccdjV6j
-         dFeVJhZ29ZR0w33y+4bN6MOAywwOWqWE7KiXIY2/n1ySWL0LXoYd0I44PwYQubFrEou3
-         BHJyIemx7HIAN61XAB+z/MavDbomQxGdPtOQzQgDgGh6bIk4zkdTAKSEI2HjAjULa1QZ
-         gVbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=m/H8RjStCv6hVv65KzAZgkQzcHdDtuUqNpn5uu8u3WA=;
-        b=Exk0RRVC+1NgUGHbwUscVZH8M0y6/a8+r0LPgcWdr1HJm8FB2nk+i/oVF4P2dfNIVZ
-         BXcAvveCJW+eFO7vWSUGChwF4MkLvEUlp9XWI8lA6h1nr1wtAhUAWwLI9HRbxJGeh6mf
-         JSQDiMJIfJlf1yLbDTMLrTRy74xQobnSQZxIb+3no4fQRLmnhwjYBkT1PvjTYLoRx5Fc
-         Z8X0xlahU3rJHRQC8yvKPKstNdT6VSnZK2YCHNehMvxKh/wRYxW8gAz5UUi1g+lgwaHI
-         BJW7kQgwqE7hBQnkHEvagkl4cx+YOrRBBKG3nazN5bktZzbT4Ban8Paa5WgrxW7hZj3G
-         dmqA==
-X-Gm-Message-State: AOAM530T8EhmXoHprW8CQ0Lt+iwe9M731Z2Fx7C68zG6Km6ia93g634Y
-        blRu1XdDr0MRSWYohb10VsNL+wp/mulXCUrrG34=
-X-Google-Smtp-Source: ABdhPJyts9y9Pdt89TN05BzK0tePeCTtCE6497hjB4ReqVQkr8TQIKW2IVuIf26YqgsFX3TvdpjeXCGK3sNtR/4W8RE=
-X-Received: by 2002:a05:6512:239c:b0:478:efa9:9533 with SMTP id
- c28-20020a056512239c00b00478efa99533mr32959lfv.661.1653925807654; Mon, 30 May
- 2022 08:50:07 -0700 (PDT)
+        Tue, 31 May 2022 02:12:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB51C43AF6;
+        Mon, 30 May 2022 23:11:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=K6NX6TML8cMFb/94Pony4ZKvrLquBcu1LBU/oFppeD0=; b=q1nhoMFJyIEwB44vi2o+lT+xYL
+        xuUmhHCMspky/xW5AYQ4uzJpBSE7aqWmAILzbtffxkyYTXgr/fyKOGgJSFDbP3TTNU9LHukwVMC/A
+        Di2L5kJFfl0ZzUSE0dBgilUeCrYETB0evF2XJAMR+85hheUHwBCJpdKGrGTKfaVV4bsD7+tYuA4ZG
+        rfSpXqXuHvhEv2Q2fOD+VcdcAl9tXCAd6CR34N6lao3bo06OBCwNGKVax38Lcn+1ZKh98ICUlMwCp
+        xTz0F7h6ym0ws0H4hKQEOOLYaAgSJwovo3IQnEqYbgL0basTbt+CrsSeG8SxbE5TWNheFOcsC/9Hn
+        bRxjrhlw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nvv6Z-009W2p-4J; Tue, 31 May 2022 06:11:47 +0000
+Date:   Mon, 30 May 2022 23:11:47 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Guoqing Jiang <guoqing.jiang@linux.dev>,
+        Donald Buczek <buczek@molgen.mpg.de>,
+        Song Liu <song@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-block@vger.kernel.org
+Subject: Re: [Update PATCH V3] md: don't unregister sync_thread with
+ reconfig_mutex held
+Message-ID: <YpWxo7rCmarXMdVa@infradead.org>
+References: <CAPhsuW6U3g-Xikbw4mAJOH1-kN42rYHLiq_ocv==436azhm33g@mail.gmail.com>
+ <b4244eab-d9e2-20a0-ebce-1a96e8fadb91@deltatee.com>
+ <836b2a93-65be-8d6c-8610-18373b88f86d@molgen.mpg.de>
+ <5b0584a3-c128-cb53-7c8a-63744c60c667@linux.dev>
+ <4edc9468-d195-6937-f550-211bccbd6756@molgen.mpg.de>
+ <954f9c33-7801-b6d2-65e3-9e5237905886@linux.dev>
+ <82a08e9c-e3f4-4eb6-cb06-58b96c0f01a8@deltatee.com>
+ <775d6734-2b08-21a8-a093-f750d31ce6ce@linux.dev>
+ <ae6d294a-e9ec-a81d-6085-a9341ed8a470@deltatee.com>
+ <20220526115336.2whsfdcuqwfzk5fk@quack3.lan>
 MIME-Version: 1.0
-Reply-To: sgtkaylama@gmail.com
-Sender: sgtkaylamanthey32@gmail.com
-Received: by 2002:a05:6520:4281:b0:18f:1b94:87b8 with HTTP; Mon, 30 May 2022
- 08:50:07 -0700 (PDT)
-From:   sgtkaylama <sgtkaylama@gmail.com>
-Date:   Mon, 30 May 2022 15:50:07 +0000
-X-Google-Sender-Auth: mBlDzxmHewOdedfyNyfHOxhqW2E
-Message-ID: <CALsSCysU1qzaq0ASDWxtVVykmB2XxjpMpNE0NhDn5doAZ4Xhmw@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220526115336.2whsfdcuqwfzk5fk@quack3.lan>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Greetings, did you get my two previous email that I sent to you?
-please check and reply to me
+On Thu, May 26, 2022 at 01:53:36PM +0200, Jan Kara wrote:
+> So I've debugged this. The crash happens on the very first bio submitted to
+> the md0 device. The problem is that this bio gets remapped to loop0 - this
+> happens through bio_alloc_clone() -> __bio_clone() which ends up calling
+> bio_clone_blkg_association(). Now the resulting bio is inconsistent - it's
+> dst_bio->bi_bdev is pointing to loop0 while dst_bio->bi_blkg is pointing to
+> blkcg_gq associated with md0 request queue. And this breaks BFQ because
+> when this bio is inserted to loop0 request queue, BFQ looks at
+> bio->bi_blkg->q (it is a bit more complex than that but this is the gist
+> of the problem), expects its data there but BFQ is not initialized for md0
+> request_queue.
+> 
+> Now I think this is a bug in __bio_clone() but the inconsistency in the bio
+> is very much what we asked bio_clone_blkg_association() to do so maybe I'm
+> missing something and bios that are associated with one bdev but pointing
+> to blkg of another bdev are fine and controllers are supposed to handle
+> that (although I'm not sure how should they do that). So I'm asking here
+> before I just go and delete bio_clone_blkg_association() from
+> __bio_clone()...
 
-Pozdrowienia, czy dosta=C5=82e=C5=9B moje dwa poprzednie e-maile, kt=C3=B3r=
-e ci
-wys=C5=82a=C5=82em? prosz=C4=99 sprawd=C5=BA i odpowiedz mi
+This behavior probably goes back to my commit here:
+
+ommit d92c370a16cbe0276954c761b874bd024a7e4fac
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Sat Jun 27 09:31:48 2020 +0200
+
+    block: really clone the block cgroup in bio_clone_blkg_association
+
+and it seems everyone else was fine with that behavior so far.
