@@ -2,113 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AC6F53A935
-	for <lists+linux-block@lfdr.de>; Wed,  1 Jun 2022 16:29:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B998253A963
+	for <lists+linux-block@lfdr.de>; Wed,  1 Jun 2022 16:51:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355007AbiFAO3U (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Jun 2022 10:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51910 "EHLO
+        id S1343741AbiFAOvP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Jun 2022 10:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355026AbiFAO3K (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 10:29:10 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075F8338BC;
-        Wed,  1 Jun 2022 07:28:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S1346832AbiFAOvO (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 10:51:14 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DFE5DD1F
+        for <linux-block@vger.kernel.org>; Wed,  1 Jun 2022 07:51:12 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 45F3821ADE;
+        Wed,  1 Jun 2022 14:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1654095071; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=Jm3NkriK10clZPdZrhmicq7ayC5LHLat0jAGAYbr4Ig=;
+        b=bArtzjr2MOhTfEoX7wMv8NAF0mDCwoLzjigECO9orZd/3LQr1qvUZRjnb+DHC1Ryb8z2IC
+        +bCxXHwcUiM0Xd/M2nIE0K4i2M6AmTwivqjDg6HNULpAGC8cKLEBOmS6mhuhOH7mSZ47k3
+        zJZB/3mHbjpCTiONCtE6DGfkNQFzZIU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1654095071;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=Jm3NkriK10clZPdZrhmicq7ayC5LHLat0jAGAYbr4Ig=;
+        b=EOxJBaPUnyIAOQI/vlaGIt3BDWJDKVqe7zeB29qAGBYDPhScwdyhdAkhBbySuwudLZQ8fn
+        EPiPOft73gH4hsDA==
+Received: from quack3.suse.cz (unknown [10.163.28.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B53C3B81AFD;
-        Wed,  1 Jun 2022 14:28:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 726A0C385B8;
-        Wed,  1 Jun 2022 14:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654093715;
-        bh=Ec+zMVVKrO00wokaNCpHD7B2w9xPUMaWVPh3i5kRk/k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HQMzxI85XfijhGCJjmQB3WIT5rNx6fMwGub/IZd5uRVMkJ4POuA5V2GYRreQfi5V3
-         Gv9KgKeR7hO/S9+i7QOcekhbAEY0SEmks6JMIqFOQb+jk0PxtqefWvXxoy1tsoebUO
-         rQKOlA4Gvu1nWUQQrbPyrN4iVpR9WXuZRxYlAEJxFJWtOUM1DHBknDgbcu1gFi65PL
-         /JuLOlIV7t94R1CF5VdBr0aGP5PUHSjMIc6YK0COHtQWaftZdaZ0hR/eaXb0A4h3NV
-         ty7YXBL8VtTFJxURMBmem7iU0O/UbwSHZq0neEpjGH2EbfnTaQxk5dtaCiB85YYLQa
-         xXzNmNSIzxk8Q==
-Date:   Wed, 1 Jun 2022 08:28:31 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Keith Busch <kbusch@fb.com>, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        axboe@kernel.dk, Kernel Team <Kernel-team@fb.com>, hch@lst.de,
-        bvanassche@acm.org, damien.lemoal@opensource.wdc.com,
-        pankydev8@gmail.com
-Subject: Re: [PATCHv5 00/11] direct-io dma alignment
-Message-ID: <Ypd3j9ABXhIuQDbt@kbusch-mbp.dhcp.thefacebook.com>
-References: <20220531191137.2291467-1-kbusch@fb.com>
- <YpcRLKwZpN+NQRxn@sol.localdomain>
+        by relay2.suse.de (Postfix) with ESMTPS id 0D4DB2C142;
+        Wed,  1 Jun 2022 14:51:11 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id B6645A0633; Wed,  1 Jun 2022 16:51:10 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/3] block: Fix IO priority mess
+Date:   Wed,  1 Jun 2022 16:51:03 +0200
+Message-Id: <20220601132347.13543-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YpcRLKwZpN+NQRxn@sol.localdomain>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1002; h=from:subject:message-id; bh=v2aEFdIVh/JRqrASgYvHiy3Nnk812G6k/4Y8Whj+9Cs=; b=owGbwMvMwME4Z+4qdvsUh5uMp9WSGJKm11xsbGN3PfDvrqRC/f6Fu8Pmnt/1T4nFoa5N1n1N+o2o VPODnYzGLAyMHAyyYoosqyMval+bZ9S1NVRDBmYQKxPIFAYuTgGYyHsBDoaZ9rdT3Z6LRW7Z6llQFx Ttamfr6KLr4GEeGppe33QhTcBij1je2cRwbX/dfSJLL+Vssj2WZ7FmOXvbxfSwjidCt0oqDxY+iu34 YHP9b/jOyAi7r273Tz63XRDlupzTUNZ54qUmlb8mkzUDW8+or5c7NPnTl0WVB2U0Virovyr3yP2zIG W6290r/ssaV6w5bnRYa+H0Ry4Fry7brJ5dNavO4niqYttZeRErb62Hf1iXaGpUrWFn4ogsdlJ7EHRJ kH2GvJmSu8wjxxXrF7YV63gJdjUITS7Zk3tXSqtZVPmNVMKGmTpH5z8N4Zm77pzI7tbVIQ+SNooXe9 cr5Gk3lhvfFI4OSdpmGrrSbYYXAA==
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 12:11:40AM -0700, Eric Biggers wrote:
-> On Tue, May 31, 2022 at 12:11:26PM -0700, Keith Busch wrote:
-> > From: Keith Busch <kbusch@kernel.org>
-> > 
-> > The most significant change from v4 is the alignment is now checked
-> > prior to building the bio. This gets the expected EINVAL error for
-> > misaligned userspace iovecs in all cases now (Eric Biggers).
-> > 
-> > I've removed the legacy fs change, so only iomap filesystems get to use
-> > this alignement capability (Christoph Hellwig).
-> > 
-> > The block fops check for alignment returns a bool now (Damien).
-> > 
-> > Adjusted some comments, docs, and other minor style issues.
-> > 
-> > Reviews added for unchanged or trivially changed patches, removed
-> > reviews for ones that changed more significantly.
-> > 
-> > As before, I tested using 'fio' with forced misaligned user buffers on
-> > raw block, xfs, and ext4 (example raw block profile below).
-> > 
-> 
-> I still don't think you've taken care of all the assumptions that bv_len is a
-> multiple of logical block size, or at least SECTOR_SIZE.  Try this:
-> 
-> 	git grep -E 'bv_len (>>|/)'
+Hello,
 
-There are only 8 drivers that set the request_queue's dma alignment, which are
-the only ones that could be affected from this patch series. The drivers
-returned from the above don't set dma alignment, so they're fine to assume
-those lengths.
+recently I've been looking into 10% regression reported by our performance
+measurement infrastructure in reaim benchmark that was bisected down to
+5a9d041ba2f6 ("block: move io_context creation into where it's needed"). This
+didn't really make much sense and it took me a while to understand this but the
+culprit is actually in even older commit e70344c05995 ("block: fix default IO
+priority handling") and 5a9d041ba2f6 just made the breakage visible.
+Essentially the problem was that after these commits some IO was queued with IO
+priority class IOPRIO_CLASS_BE while other IO was queued with IOPRIO_CLASS_NONE
+and as a result they could not be merged together resulting in performance
+regression. I think what commit e70344c05995 ("block: fix default IO
+priority handling") did is actually broken not only because of this performance
+regression but because of other reasons as well (see changelog of patch 3/3
+for details) so this patch set aims at fixing it.
 
-I don't think the above query captures enough since it misses things like
-nfhd_submit_bio() that shifts 9 on the following line. Not that that example
-matters either for the same reason.
- 
-> Also:
-> 
-> 	git grep '<.*bv_len;'
->
-> Also take a look at bio_for_each_segment(), specifically how iter->bi_sector is
-> updated.
-
-I'm not finding any driver user of this macro that's set the dma alignment
-where this would break. They either never set it, or they're stacking drivers
-that always get the safe default.
-
-Outside drivers, blk-integrity doesn't operate on sector lengths, so that's
-fine, and blk-crypto would prevent such unalignment much earlier. And btrfs
-bounces this type of direct IO, so that's also fine.
-
-Even if we assume all the existing users are safe, I suppose we could say this
-type of assumption is potentially fragile. For example, I think drivers like
-pmem or null_blk could readily reduce their queue's dma alignment limit, but
-that may break their current usage.
+								Honza
