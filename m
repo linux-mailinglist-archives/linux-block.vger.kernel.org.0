@@ -2,72 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63CF053AABF
-	for <lists+linux-block@lfdr.de>; Wed,  1 Jun 2022 18:12:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD89B53AB03
+	for <lists+linux-block@lfdr.de>; Wed,  1 Jun 2022 18:23:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355125AbiFAQMc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Jun 2022 12:12:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
+        id S1347656AbiFAQX2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Jun 2022 12:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354085AbiFAQMb (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 12:12:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CC52F03F;
-        Wed,  1 Jun 2022 09:12:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B6636158B;
-        Wed,  1 Jun 2022 16:12:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22701C385A5;
-        Wed,  1 Jun 2022 16:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654099950;
-        bh=jSnrwYSVVVvv/EVLj+vJtrVjvZIMaAqiU7n/yR71jag=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BcO4g5pMQyTvHAaJh0kq+ldttn7ioefubEEGsAsNtV9459J87cLQEvJ2AuWleSaF4
-         IeoJlH5F5Mvjt+mX9KLQfIKuRcqmALpsVyPaypdfk1XtjMibbVwx9zKbxEg7eUfv43
-         AeHz55hf49N5ylHSX4CBa2CRdpp9psYWINWSSIZrnzFvuj+z46v/CUfElQ6v2ahIXg
-         1nEd+ogKt6kj+4wQpBdN8hRuVPC4lKAGHRqXSFO1xN/O/oOEuH/fUbP0lqDRxPmLjt
-         aQa5C2NBQsJ/SuUZgWXJEXv7vbnUDarSFJ/5vvzsdnQ8WBEsUQdzw1NKAYenzKBmiu
-         wrcC3meP4XWrA==
-Date:   Wed, 1 Jun 2022 10:12:26 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Keith Busch <kbusch@fb.com>, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        axboe@kernel.dk, Kernel Team <Kernel-team@fb.com>, hch@lst.de,
-        bvanassche@acm.org, damien.lemoal@opensource.wdc.com,
-        pankydev8@gmail.com
-Subject: Re: [PATCHv5 00/11] direct-io dma alignment
-Message-ID: <YpeP6u0XXAPra3MV@kbusch-mbp.dhcp.thefacebook.com>
-References: <20220531191137.2291467-1-kbusch@fb.com>
- <YpcRLKwZpN+NQRxn@sol.localdomain>
- <Ypd3j9ABXhIuQDbt@kbusch-mbp.dhcp.thefacebook.com>
+        with ESMTP id S1356214AbiFAQXU (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 12:23:20 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764DD3D4B1;
+        Wed,  1 Jun 2022 09:23:17 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id e11so2429638pfj.5;
+        Wed, 01 Jun 2022 09:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TXmcbpS90c6cPs5yYXuKNTVjXQN/kwuO3h1E2mahOJQ=;
+        b=OIIziShah+SIqCYkZ2hpQ8ztiPri03CRgwsAgzGoGc+gCBV4WnTZanGCwO3ZAVwOkp
+         iAnyq90+hw53VI5qPY2cnSSKWEWSSrtfNc6lUxPjLcLlRFKysQh1Fluo6hgqKfLmY/1P
+         TIkH5+HLNH5t1cynBxuwQq+Tg0qvYLXw2/jEIrkOtjoWD91xo6tWLkS6yZIVrIKkSQKc
+         l9ggoB1W4xvrn3wztxxMPH1SUf3HKSMa7YSNtZx/GLSa2prG1x6euAU1SYqaL+bpl72L
+         w5rdbS4Lsyumr2J2WMUZknwQher3KfxIqauU7HbW/o7TXPTWVxLusThAPXFeNN/W99tu
+         Z8oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=TXmcbpS90c6cPs5yYXuKNTVjXQN/kwuO3h1E2mahOJQ=;
+        b=WraE6+BLDi06oQD63EmD//F478awz10R6kfIAdaA/C3DMNJlAPB1IvWbNeDtrnv2ac
+         SriSAmJJlTrRKHFrZl5NSWh0UNbWREsEqCM9Up1vebJSjwpG7YG8jtr1hb0hURmD6nYb
+         RSPEW4jYrVdu3dC6d/3AuInLXZc3Yk3UMYz6GlZua1eS4+mdEBC8q/8VTbmsxJVoZK9K
+         Q40wEA+TKxg0RcC0zfcUF4BTwWKruL4cy06hPPNltCfNFOcrmFE0haOuk092kgwFnJIa
+         8jBC7EByC4XY2Ixr/yJEfXaKXfEJji/jRYOy4ncxR3umExzF40XAz4NKGyXsaJEmpJpx
+         +fvA==
+X-Gm-Message-State: AOAM533xoaoyNUznaAZSXrfy4Z6a0x6F6YsIwShID0/LGorjwlPtKtnN
+        h32vjeDN9zjX9jDs/gQdRjk=
+X-Google-Smtp-Source: ABdhPJy5NaAJAwcdBWVbCBE+v8EFNGENmF1xslwE7g06Df/I2ptaJbXFWoeRD2wxbrsIkxUK+xDC6A==
+X-Received: by 2002:a05:6a00:24c1:b0:518:c52f:f5 with SMTP id d1-20020a056a0024c100b00518c52f00f5mr347753pfv.15.1654100596743;
+        Wed, 01 Jun 2022 09:23:16 -0700 (PDT)
+Received: from localhost (2603-800c-1a02-1bae-a7fa-157f-969a-4cde.res6.spectrum.com. [2603:800c:1a02:1bae:a7fa:157f:969a:4cde])
+        by smtp.gmail.com with ESMTPSA id k7-20020aa79987000000b005104c6d7941sm1750753pfh.31.2022.06.01.09.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jun 2022 09:23:16 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Wed, 1 Jun 2022 06:23:14 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] blk-iocost: only flush wait and indebt stat deltas
+ when needed
+Message-ID: <YpeSct3LJcBjnZ2x@slm.duckdns.org>
+References: <20220601122007.1057-1-zhouchengming@bytedance.com>
+ <20220601122007.1057-2-zhouchengming@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Ypd3j9ABXhIuQDbt@kbusch-mbp.dhcp.thefacebook.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220601122007.1057-2-zhouchengming@bytedance.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 08:28:31AM -0600, Keith Busch wrote:
-> On Wed, Jun 01, 2022 at 12:11:40AM -0700, Eric Biggers wrote:
-> > I still don't think you've taken care of all the assumptions that bv_len is a
-> > multiple of logical block size, or at least SECTOR_SIZE.  Try this:
-> > 
-> > 	git grep -E 'bv_len (>>|/)'
-> 
-> There are only 8 drivers that set the request_queue's dma alignment, which are
-> the only ones that could be affected from this patch series.
+On Wed, Jun 01, 2022 at 08:20:07PM +0800, Chengming Zhou wrote:
+> We only need to flush wait and indebt stat deltas when the iocg
+> is in these status.
 
-It's actually even simpler to audit than that. Of the 8 drivers that explicitly
-set dma alignment, only 3 set it to something smaller than a sector size. None
-of them assume any particular bv_len, so I think we're fine.
+Hey, so, I'm not seeing any actual benefits of the suggested patches and
+none of them has actual justifications. For the time being, I'm gonna be
+ignoring these patches.
+
+Thanks.
+
+-- 
+tejun
