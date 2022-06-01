@@ -2,91 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20AF8539DEA
-	for <lists+linux-block@lfdr.de>; Wed,  1 Jun 2022 09:11:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66C05539E35
+	for <lists+linux-block@lfdr.de>; Wed,  1 Jun 2022 09:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245562AbiFAHLo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Jun 2022 03:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
+        id S1350204AbiFAH2J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Jun 2022 03:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347985AbiFAHLn (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 03:11:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468BF1094;
-        Wed,  1 Jun 2022 00:11:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD10561348;
-        Wed,  1 Jun 2022 07:11:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF87AC385B8;
-        Wed,  1 Jun 2022 07:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654067502;
-        bh=msvXeenbVZkFFjDrBwDGhupiSlP9tbiX4Ft0x4Ech6Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uZEnabnhlnptNTwlqLetggxM0qB9RfzMjTfcYWooe8t39hTdz3Neg44WxfFOcxWZu
-         GseZdVPiLFptSKd3XGZrDbTo0pqhWAuzVVytqByTMVvrg7cTHwE5Us4XzXdaC1HF2A
-         N7C/oVr7CcFSN7FzyEo5KvBCsd05XUmyRQWCU8fAifVwI3KXc2jMeaPQLOV2YzvPgL
-         kQwoBIZv/IQN/ugsODtQsBIXGRrpjAqSJw2oNo3+a00mim7kk7GVOHTsm81sGj98yl
-         rGA8dmLVmIrzLofXBsyt6/uCMb+3xHt8UV0mZ4S4ty748cnysXqJMXPeWgKtyEfQVg
-         unHxy8dSjbJjw==
-Date:   Wed, 1 Jun 2022 00:11:40 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Keith Busch <kbusch@fb.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, axboe@kernel.dk,
-        Kernel Team <Kernel-team@fb.com>, hch@lst.de,
-        bvanassche@acm.org, damien.lemoal@opensource.wdc.com,
-        pankydev8@gmail.com, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCHv5 00/11] direct-io dma alignment
-Message-ID: <YpcRLKwZpN+NQRxn@sol.localdomain>
-References: <20220531191137.2291467-1-kbusch@fb.com>
+        with ESMTP id S1347233AbiFAH2I (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 03:28:08 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A8E38AD
+        for <linux-block@vger.kernel.org>; Wed,  1 Jun 2022 00:28:07 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1A1D668AFE; Wed,  1 Jun 2022 09:14:30 +0200 (CEST)
+Date:   Wed, 1 Jun 2022 09:14:29 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org,
+        syzbot+3e3f419f4a7816471838@syzkaller.appspotmail.com
+Subject: Re: [PATCH] block: disable the elevator int del_gendisk
+Message-ID: <20220601071429.GA24431@lst.de>
+References: <20220531160535.3444915-1-hch@lst.de> <Ypa4xrAHUslpQPhN@T590> <20220601064329.GB22915@lst.de> <YpcQpjUlX/CTORmp@T590>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220531191137.2291467-1-kbusch@fb.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <YpcQpjUlX/CTORmp@T590>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, May 31, 2022 at 12:11:26PM -0700, Keith Busch wrote:
-> From: Keith Busch <kbusch@kernel.org>
+On Wed, Jun 01, 2022 at 03:09:26PM +0800, Ming Lei wrote:
+> > Yes, we probably need a blk_mq_quiesce_queue call like in the incremental
+> > patch below.  Do you have any good reproducer, though?
 > 
-> The most significant change from v4 is the alignment is now checked
-> prior to building the bio. This gets the expected EINVAL error for
-> misaligned userspace iovecs in all cases now (Eric Biggers).
-> 
-> I've removed the legacy fs change, so only iomap filesystems get to use
-> this alignement capability (Christoph Hellwig).
-> 
-> The block fops check for alignment returns a bool now (Damien).
-> 
-> Adjusted some comments, docs, and other minor style issues.
-> 
-> Reviews added for unchanged or trivially changed patches, removed
-> reviews for ones that changed more significantly.
-> 
-> As before, I tested using 'fio' with forced misaligned user buffers on
-> raw block, xfs, and ext4 (example raw block profile below).
-> 
+> blktests block/027 should cover this.
 
-I still don't think you've taken care of all the assumptions that bv_len is a
-multiple of logical block size, or at least SECTOR_SIZE.  Try this:
+That did not trigger the problem for me.
 
-	git grep -E 'bv_len (>>|/)'
+> >  	if (q->elevator) {
+> > +		blk_mq_quiesce_queue(q);
+> > +
+> >  		mutex_lock(&q->sysfs_lock);
+> >  		elevator_exit(q);
+> >  		mutex_unlock(&q->sysfs_lock);
+> > +
+> > +		blk_mq_unquiesce_queue(q);
+> >  	}
+> >  
+> 
+> I am afraid the above way may slow down disk shutdown a lot, see
+> the following commit, that is also the reason why I moved it into disk
+> release handler, when any sync io submission are done.
 
-Also:
-
-	git grep '<.*bv_len;'
-
-Also take a look at bio_for_each_segment(), specifically how iter->bi_sector is
-updated.
-
-- Eric
+SCSI devices that are just probed and never had a disk attached will
+not have q->elevator set and not hit this quiesce at all.
