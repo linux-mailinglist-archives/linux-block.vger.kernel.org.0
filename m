@@ -2,97 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA8BB53B17A
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 04:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1334A53B17B
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 04:12:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232904AbiFBBxf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Jun 2022 21:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        id S233098AbiFBByl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Jun 2022 21:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232944AbiFBBxf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 21:53:35 -0400
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 255B025F434
-        for <linux-block@vger.kernel.org>; Wed,  1 Jun 2022 18:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1654134811; x=1685670811;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ubD3ntNWmcpNqwymZFWCFjx8IkEeXWsf6dOGoduVlaU=;
-  b=ffgKB17PGbRsL8cLKPVOBodOZUtl+EN7DoixfkWI1tzFk+sv90iB8JNU
-   Gp8eggzoY8j1YKw/zwplTmXVCzVQEN0k8l1UL88He+hc+9XgxJRFfv86G
-   Bp2n+0LoNw4oq/Y7N4Cwk2+ysZ3nzqjxtB+dRD9Nkpin2LpJRz63OGEL1
-   haEbJBXD1HydU/Y5BN+Aj0JWwihfZdOReI6mSbXBhSgNPo3272QEEafvp
-   rOCEs8ZTlMytiui8CptbTGRZwmuEzaq0RRxJnsd24EVaFJcysxoK3aLz0
-   o3fuFkvZrZR7WOcyjHkuSIFTkecp6LjEAIop0VSnm6MlubbYwSgkAFIyr
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.91,270,1647273600"; 
-   d="scan'208";a="206911461"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Jun 2022 09:53:31 +0800
-IronPort-SDR: M+vVtdUGuvm9tgYgFqN9383Vb3dzsm+X4cAFEwI/FWy9KBt9UF/yFqQB8Ol6S9+/8jcIjl1Hrs
- E7+PyD54pcSsCZfW2blRsj4dxkdsxe6+KtYTO8bt0Imh5WjTtmMkSNnffMfoW4SvDdT+GS7boL
- XF32atX+yNMD46DO6UfZQ8UCaw4iYlRpOo5AipvWddxB5sOxvCDK6tSXLLpmenIuv51b7+92mN
- Zn8UPO7VZh2amHDAsg1r4664xby5VumEcSKuJtGF8OeKwpLhyqj41jdjhRC40Qj37EKBoY9bSn
- JtQui8ecKc1jb1/BBUJQUHyD
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Jun 2022 18:17:13 -0700
-IronPort-SDR: 7XJDhyKUCeDJehI+iMO2QRYlN/VAHZDp/O0ANYDIpfOjr7p5YvCA12EUbTL9LTd+C9LImZhLaT
- Ek+9gsML3yMSlw+H8dHuhktGIO5UD+JNLchPycWgQwKpkPH2BDdUFb7LmVTxCVy+/EaPHN96YJ
- TnNMq18H2kY36nuCWqh5+Riid4KekWXb8fBDTk1vDvQIBpt75eyIqW/AKf1ocDkTOIxMcEWig8
- ZJjL0DB9oahjRFuCe8qx4VO+S9qKKB4koxfc7mwd48k3UqdCGSFQYjth9ywG4fsv7ae2v4vNgN
- Iss=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Jun 2022 18:53:33 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4LD8Dr3Gsgz1Rwrw
-        for <linux-block@vger.kernel.org>; Wed,  1 Jun 2022 18:53:32 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1654134811; x=1656726812; bh=ubD3ntNWmcpNqwymZFWCFjx8IkEeXWsf6dO
-        GoduVlaU=; b=QA89cWzQFZFkPmS9rLQOKILtu/sn/dlO8VWvuDG6RmcKZufnX+t
-        +qSqKglS9y5/6xjchHQ2BdfHatyv3FE4nb7UzA/LLcSRol73q0qHnez8KGo+FoR+
-        ti3srcAGDIV0NlomCGBb2d9if7OpSl/kuqBtpZT3SShDtx3nFx1iis/4oWWazRB9
-        FKlr0BZ3tvvGd0FvUYhSmEsGQn1DtiOyUAudiDLgVzQeD0lVeedg1KOBEnhS8MV3
-        gk/l/ujNbNDqJu2neJu0l8hXwFe/MRYnrsHQo4vRSYkGq9XkLGPp1a1AAj3bAbTx
-        1pKy3/d4hR7ZolLvPG1jQH2a1Ftya3qi5Lw==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4zf-jHjb8937 for <linux-block@vger.kernel.org>;
-        Wed,  1 Jun 2022 18:53:31 -0700 (PDT)
-Received: from [10.89.84.115] (c02drav6md6t.dhcp.fujisawa.hgst.com [10.89.84.115])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4LD8Dq0Wh3z1Rvlc;
-        Wed,  1 Jun 2022 18:53:30 -0700 (PDT)
-Message-ID: <c79b25f4-88dc-c432-e69b-ef5abdf37720@opensource.wdc.com>
-Date:   Thu, 2 Jun 2022 10:53:29 +0900
+        with ESMTP id S232959AbiFBByk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Jun 2022 21:54:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A7A7B29B2EA
+        for <linux-block@vger.kernel.org>; Wed,  1 Jun 2022 18:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654134876;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=krg4xzAgfamwYF1F/rhaXbuzS4T74775dwOrPwxuSlc=;
+        b=J8JHd7f7IOKFLw2Tc4ecJSYi43kvubo0nEaRTLoZZtSlMkljqWi9fyI/j+l6Bxgg+CmbgG
+        //CQgPTxC2eR7AaQqbo01j3Iv22fyjmNxJEvoq8qIC9mw5qKMSVDZG1MWEANTaHJ+aeIj1
+        xhrvYR9kXQiM4efcLM4GZ7pK8IeLKWE=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-251-H95KER2SMi-vmLV86JRF8w-1; Wed, 01 Jun 2022 21:54:35 -0400
+X-MC-Unique: H95KER2SMi-vmLV86JRF8w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E82E83C0D19D;
+        Thu,  2 Jun 2022 01:54:34 +0000 (UTC)
+Received: from llong.com (unknown [10.22.32.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 83C2D40E80E0;
+        Thu,  2 Jun 2022 01:54:34 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v4 2/2] blk-cgroup: Optimize blkcg_rstat_flush()
+Date:   Wed,  1 Jun 2022 21:54:19 -0400
+Message-Id: <20220602015419.99168-1-longman@redhat.com>
+In-Reply-To: <20220601211824.89626-1-longman@redhat.com>
+References: <20220601211824.89626-1-longman@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.9.1
-Subject: Re: [PATCH 3/3] block: fix default IO priority handling again
-Content-Language: en-US
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>
-References: <20220601132347.13543-1-jack@suse.cz>
- <20220601145110.18162-3-jack@suse.cz>
- <cadb5688-cfba-3311-52d4-533f6afab96e@opensource.wdc.com>
- <20220601160443.v5cu4oxijjasxhj7@quack3.lan>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <20220601160443.v5cu4oxijjasxhj7@quack3.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -100,202 +61,225 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2022/06/02 1:04, Jan Kara wrote:
-> On Thu 02-06-22 00:08:28, Damien Le Moal wrote:
->> On 2022/06/01 23:51, Jan Kara wrote:
->>> Commit e70344c05995 ("block: fix default IO priority handling")
->>> introduced an inconsistency in get_current_ioprio() that tasks without
->>> IO context return IOPRIO_DEFAULT priority while tasks with freshly
->>> allocated IO context will return 0 (IOPRIO_CLASS_NONE/0) IO priority.
->>> Tasks without IO context used to be rare before 5a9d041ba2f6 ("block:
->>> move io_context creation into where it's needed") but after this commit
->>> they became common because now only BFQ IO scheduler setups task's IO
->>> context. Similar inconsistency is there for get_task_ioprio() so this
->>> inconsistency is now exposed to userspace and userspace will see
->>> different IO priority for tasks operating on devices with BFQ compared
->>> to devices without BFQ. Furthemore the changes done by commit
->>> e70344c05995 change the behavior when no IO priority is set for BFQ IO
->>> scheduler which is also documented in ioprio_set(2) manpage - namely
->>> that tasks without set IO priority will use IO priority based on their
->>> nice value.
->>>
->>> So make sure we default to IOPRIO_CLASS_NONE as used to be the case
->>> before commit e70344c05995. Also cleanup alloc_io_context() to
->>> explicitely set this IO priority for the allocated IO context.
->>>
->>> Fixes: e70344c05995 ("block: fix default IO priority handling")
->>> Signed-off-by: Jan Kara <jack@suse.cz>
->>> ---
->>>  block/blk-ioc.c        | 2 ++
->>>  include/linux/ioprio.h | 2 +-
->>>  2 files changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/block/blk-ioc.c b/block/blk-ioc.c
->>> index df9cfe4ca532..63fc02042408 100644
->>> --- a/block/blk-ioc.c
->>> +++ b/block/blk-ioc.c
->>> @@ -247,6 +247,8 @@ static struct io_context *alloc_io_context(gfp_t gfp_flags, int node)
->>>  	INIT_HLIST_HEAD(&ioc->icq_list);
->>>  	INIT_WORK(&ioc->release_work, ioc_release_fn);
->>>  #endif
->>> +	ioc->ioprio = IOPRIO_DEFAULT;
->>> +
->>>  	return ioc;
->>>  }
->>>  
->>> diff --git a/include/linux/ioprio.h b/include/linux/ioprio.h
->>> index 774bb90ad668..d9dc78a15301 100644
->>> --- a/include/linux/ioprio.h
->>> +++ b/include/linux/ioprio.h
->>> @@ -11,7 +11,7 @@
->>>  /*
->>>   * Default IO priority.
->>>   */
->>> -#define IOPRIO_DEFAULT	IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, IOPRIO_BE_NORM)
->>> +#define IOPRIO_DEFAULT	IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0)
->>
->> "man ioprio_set" says:
->>
->> IOPRIO_CLASS_BE (2)
->> This is the best-effort scheduling class, which is the default for any process
->> that hasn't set  a  specific I/O  priority.
->>
->> Which is why patch e70344c05995 introduced IOPRIO_DEFAULT definition using the
->> BE class, to have the kernel in sync with the manual.
-> 
-> Yes, but it also has:
-> 
->        If no I/O scheduler has been set for a thread, then by default the  I/O
->        priority  will  follow  the  CPU nice value (setpriority(2)).  In Linux
->        kernels before version 2.6.24, once an I/O priority had been set  using
->        ioprio_set(),  there was no way to reset the I/O scheduling behavior to
->        the default.  Since Linux 2.6.24, specifying ioprio as 0 can be used to
->        reset to the default I/O scheduling behavior.
-> 
-> So apparently even the manpage itself is inconsistent ;) (and I will
-> neglect the mistake that the text says "no I/O scheduler" instead of "no
-> I/O priority"). And there is actually code in BFQ (and there used to be
-> code in CFQ) that does:
+For a system with many CPUs and block devices, the time to do
+blkcg_rstat_flush() from cgroup_rstat_flush() can be rather long. It
+can be especially problematic as interrupt is disabled during the flush.
+It was reported that it might take seconds to complete in some extreme
+cases leading to hard lockup messages.
 
-Arg, indeed, it is a mess. We need to fix this manpage too.
+As it is likely that not all the percpu blkg_iostat_set's has been
+updated since the last flush, those stale blkg_iostat_set's don't need
+to be flushed in this case. This patch optimizes blkcg_rstat_flush()
+by keeping a lockless list of recently updated blkg_iostat_set's in a
+newly added percpu blkcg->lhead pointer.
 
+The blkg_iostat_set is added to the lockless list on the update side
+in blk_cgroup_bio_start(). It is removed from the lockless list when
+flushed in blkcg_rstat_flush(). Due to racing, it is possible that
+blk_iostat_set's in the lockless list may have no new IO stats to be
+flushed. To protect against destruction of blkg, a percpu reference is
+gotten when putting into the lockless list and put back when removed.
 
->         switch (ioprio_class) {
-> 	...
->         case IOPRIO_CLASS_NONE:
->                 /*
->                  * No prio set, inherit CPU scheduling settings.
->                  */
->                 bfqq->new_ioprio = task_nice_ioprio(tsk);
->                 bfqq->new_ioprio_class = task_nice_ioclass(tsk);
->                 break;
-> 	
-> So IOPRIO_CLASS_NONE indeed has a meaning and it used to be the default
-> one until Christoph's 5a9d041ba2f6 in most cases. Your change e70344c05995
-> happening before that actually didn't change much practically because IO
-> contexts were initialized with 0 priority anyway and that was what
-> get_current_ioprio() was returning.
+A blkg_iostat_set can determine if it is in a lockless list by checking
+the content of its lnode.next pointer which will be non-NULL when in
+a lockless list. This requires the presence of a special llist_last
+sentinel node to be put at the end of the lockless list.
 
-5a9d041ba2f6 was from Jens, but agreed, io priority initialization never has
-been correct.
+When booting up an instrumented test kernel with this patch on a
+2-socket 96-thread system with cgroup v2, out of the 2051 calls to
+cgroup_rstat_flush() after bootup, 1788 of the calls were exited
+immediately because of empty lockless list. After an all-cpu kernel
+build, the ratio became 6295424/6340513. That was more than 99%.
 
-> 
->> The different ioprio leading to no BIO merging is definitely a problem
->> but this patch is not really fixing anything in my opinion. It simply
->> gets back to the previous "all 0s" ioprio initialization, which do not
->> show the places where we actually have missing ioprio initialization to
->> IOPRIO_DEFAULT.
-> 
-> So I agree we should settle on how to treat IOs with unset IO priority. The
-> behavior to use task's CPU priority when IO priority is unset is there for
-> a *long* time and so I think we should preserve that. The question is where
-> in the stack should the switch from "unset" value to "effective ioprio"
-> happen. Switching in IO context is IMO too early since userspace needs to
-> be able to differentiate "unset" from "set to
-> IOPRIO_CLASS_BE,IOPRIO_BE_NORM". But we could have a helper like
-> current_effective_ioprio() that will do the magic with mangling unset IO
-> priority based on task's CPU priority.
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+ block/blk-cgroup.c | 84 ++++++++++++++++++++++++++++++++++++++++++----
+ block/blk-cgroup.h |  9 +++++
+ 2 files changed, 87 insertions(+), 6 deletions(-)
 
-I agree that the task's CPU priority is a more sensible default. However, I do
-not understand your point about the IO context being too early to set the
-effective priority. If we do not do that, getting the issuer CPU priority will
-not be easily possible, right ?
-
-> 
-> The fact is that bio->bi_ioprio gets set to anything only for direct IO in
-> iomap_dio_rw(). The rest of the IO has priority unset (BFQ fetches the
-> priority from task's IO context and ignores priority on bios BTW). And the
-> only place where req->ioprio (inherited from bio->bi_ioprio) gets used is
-> in a few drivers to set HIGHPRI flag for IOPRIO_CLASS_RT IO and then the
-> relatively new code in mq-deadline.
-
-Yes, only IOPRIO_CLASS_RT has an effect at the hardware level right now.
-Everything else is only for the IO scheduler to play with. I am preparing a
-patch series to support scsi/ata command duration limits though. That adds a new
-IOPRIO_CLASS_DL and that one will also have an effect on the hardware.
-
-Note that if a process/thread use ioprio_set(), we should also honor the ioprio
-set for buffered reads, at least those page IOs that are issued directly from
-the IO issuer context (which may include readahead... hmmm).
-
-> 
-> So it all is very inconsistent mess :-|
-
-Indeed it is.
-
-> 
->> Isn't it simply that IOPRIO_DEFAULT should be set as the default for any bio
->> being allocated (in bio_alloc ?) before it is setup and inherits the user io
->> priority ? Otherwise, the bio io prio is indeed IOPRIO_CLASS_NONE/0 and changing
->> IOPRIO_DEFAULT to that value removes the differences you observed.
-> 
-> Yes, I think that would make sence although as I explain above this is
-> somewhat independent to what the default IO priority behavior should be.
-I am OK with the use of the task CPU priority/ionice value as the default when
-no other ioprio is set for a bio using the user aio_reqprio or ioprio_set(). If
-this relies on task_nice_ioclass() as it is today (I see no reason to change
-that), then the default class for regular tasks remains IOPRIO_CLASS_BE as is
-defined by IOPRIO_DEFAULT.
-
-But to avoid the performance regression you observed, we really need to be 100%
-sure that all bios have their ->bi_ioprio field correctly initialized. Something
-like:
-
-void bio_set_effective_ioprio(struct *bio)
-{
-	switch (IOPRIO_PRIO_CLASS(bio->bi_ioprio)) {
-	case IOPRIO_CLASS_RT:
-	case IOPRIO_CLASS_BE:
-	case IOPRIO_CLASS_IDLE:
-		/*
-		 * the bio ioprio was already set from an aio kiocb ioprio
-		 * (aio->aio_reqprio) or from the issuer context ioprio if that
-		 * context used ioprio_set().
-		 */;
-		return;
-	case IOPRIO_CLASS_NONE:
-	default:
-		/* Use the current task CPU priority */
-		bio->ioprio =
-			IOPRIO_PRIO_VALUE(task_nice_ioclass(current),
-					  task_nice_ioprio(current));
-		return;
-	}
-}
-
-being called before a bio is inserted in a scheduler or bypass inserted in the
-dispatch queues should result in all BIOs having an ioprio that is set to
-something other than IOPRIO_CLASS_NONE. And the obvious place may be simply at
-the beginning of submit_bio(), before submit_bio_noacct() is called.
-
-I am tempted to argue that block device drivers should never see any req with an
-ioprio set to IOPRIO_CLASS_NONE, which means that no bio should ever enter the
-block stack with that ioprio either. With the above solution, bios from DM
-targets submitted with submit_bio_noacct() could still have IOPRIO_CLASS_NONE...
-So would submit_bio_noacct() be the better place to call the effective ioprio
-helper ?
-
-
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index acd9b0aa8dc8..1b74df5f2710 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -59,6 +59,56 @@ static struct workqueue_struct *blkcg_punt_bio_wq;
+ 
+ #define BLKG_DESTROY_BATCH_SIZE  64
+ 
++/*
++ * lnode.next of the last entry in a lockless list is NULL. To enable us to
++ * use lnode.next as a boolean flag to indicate its presence in a lockless
++ * list, we have to make it non-NULL for all. This is done by using a
++ * sentinel node at the end of the lockless list. All the percpu lhead's
++ * are initialized to point to that sentinel node as being empty.
++ */
++static struct llist_node llist_last;
++
++static bool blkcg_llist_empty(struct llist_head *lhead)
++{
++	return lhead->first == &llist_last;
++}
++
++static void init_blkcg_llists(struct blkcg *blkcg)
++{
++	int cpu;
++
++	for_each_possible_cpu(cpu)
++		per_cpu_ptr(blkcg->lhead, cpu)->first = &llist_last;
++}
++
++static struct llist_node *fetch_delete_blkcg_llist(struct llist_head *lhead)
++{
++	return xchg(&lhead->first, &llist_last);
++}
++
++static struct llist_node *fetch_delete_lnode_next(struct llist_node *lnode)
++{
++	struct llist_node *next = READ_ONCE(lnode->next);
++	struct blkcg_gq *blkg = llist_entry(lnode, struct blkg_iostat_set,
++					    lnode)->blkg;
++
++	WRITE_ONCE(lnode->next, NULL);
++	percpu_ref_put(&blkg->refcnt);
++	return next;
++}
++
++/*
++ * The retrieved blkg_iostat_set is immediately marked as not in the
++ * lockless list by clearing its node->next pointer. It could be put
++ * back into the list by a parallel update before the iostat's are
++ * finally flushed including probably the new update.
++ */
++#define blkcg_llist_for_each_entry_safe(pos, node, nxt)			\
++	for (; (node != &llist_last) &&					\
++	       (pos = llist_entry(node, struct blkg_iostat_set, lnode),	\
++		nxt = fetch_delete_lnode_next(node), true);		\
++		node = nxt)
++
+ /**
+  * blkcg_css - find the current css
+  *
+@@ -236,8 +286,10 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
+ 	blkg->blkcg = blkcg;
+ 
+ 	u64_stats_init(&blkg->iostat.sync);
+-	for_each_possible_cpu(cpu)
++	for_each_possible_cpu(cpu) {
+ 		u64_stats_init(&per_cpu_ptr(blkg->iostat_cpu, cpu)->sync);
++		per_cpu_ptr(blkg->iostat_cpu, cpu)->blkg = blkg;
++	}
+ 
+ 	for (i = 0; i < BLKCG_MAX_POLS; i++) {
+ 		struct blkcg_policy *pol = blkcg_policy[i];
+@@ -852,17 +904,23 @@ static void blkg_iostat_sub(struct blkg_iostat *dst, struct blkg_iostat *src)
+ static void blkcg_rstat_flush(struct cgroup_subsys_state *css, int cpu)
+ {
+ 	struct blkcg *blkcg = css_to_blkcg(css);
+-	struct blkcg_gq *blkg;
++	struct llist_head *lhead = per_cpu_ptr(blkcg->lhead, cpu);
++	struct llist_node *lnode, *lnext;
++	struct blkg_iostat_set *bisc;
+ 
+ 	/* Root-level stats are sourced from system-wide IO stats */
+ 	if (!cgroup_parent(css->cgroup))
+ 		return;
+ 
++	if (blkcg_llist_empty(lhead))
++		return;
++
+ 	rcu_read_lock();
+ 
+-	hlist_for_each_entry_rcu(blkg, &blkcg->blkg_list, blkcg_node) {
++	lnode = fetch_delete_blkcg_llist(lhead);
++	blkcg_llist_for_each_entry_safe(bisc, lnode, lnext) {
++		struct blkcg_gq *blkg = bisc->blkg;
+ 		struct blkcg_gq *parent = blkg->parent;
+-		struct blkg_iostat_set *bisc = per_cpu_ptr(blkg->iostat_cpu, cpu);
+ 		struct blkg_iostat cur, delta;
+ 		unsigned long flags;
+ 		unsigned int seq;
+@@ -1192,6 +1250,11 @@ blkcg_css_alloc(struct cgroup_subsys_state *parent_css)
+ 		}
+ 	}
+ 
++	blkcg->lhead = alloc_percpu_gfp(struct llist_head, GFP_KERNEL);
++	if (!blkcg->lhead)
++		goto free_blkcg;
++	init_blkcg_llists(blkcg);
++
+ 	for (i = 0; i < BLKCG_MAX_POLS ; i++) {
+ 		struct blkcg_policy *pol = blkcg_policy[i];
+ 		struct blkcg_policy_data *cpd;
+@@ -1233,7 +1296,8 @@ blkcg_css_alloc(struct cgroup_subsys_state *parent_css)
+ 	for (i--; i >= 0; i--)
+ 		if (blkcg->cpd[i])
+ 			blkcg_policy[i]->cpd_free_fn(blkcg->cpd[i]);
+-
++	free_percpu(blkcg->lhead);
++free_blkcg:
+ 	if (blkcg != &blkcg_root)
+ 		kfree(blkcg);
+ unlock:
+@@ -1997,6 +2061,7 @@ static int blk_cgroup_io_type(struct bio *bio)
+ 
+ void blk_cgroup_bio_start(struct bio *bio)
+ {
++	struct blkcg *blkcg = bio->bi_blkg->blkcg;
+ 	int rwd = blk_cgroup_io_type(bio), cpu;
+ 	struct blkg_iostat_set *bis;
+ 	unsigned long flags;
+@@ -2015,9 +2080,16 @@ void blk_cgroup_bio_start(struct bio *bio)
+ 	}
+ 	bis->cur.ios[rwd]++;
+ 
++	if (!READ_ONCE(bis->lnode.next)) {
++		struct llist_head *lhead = per_cpu_ptr(blkcg->lhead, cpu);
++
++		llist_add(&bis->lnode, lhead);
++		percpu_ref_get(&bis->blkg->refcnt);
++	}
++
+ 	u64_stats_update_end_irqrestore(&bis->sync, flags);
+ 	if (cgroup_subsys_on_dfl(io_cgrp_subsys))
+-		cgroup_rstat_updated(bio->bi_blkg->blkcg->css.cgroup, cpu);
++		cgroup_rstat_updated(blkcg->css.cgroup, cpu);
+ 	put_cpu();
+ }
+ 
+diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
+index d4de0a35e066..2c36362a332e 100644
+--- a/block/blk-cgroup.h
++++ b/block/blk-cgroup.h
+@@ -18,6 +18,7 @@
+ #include <linux/cgroup.h>
+ #include <linux/kthread.h>
+ #include <linux/blk-mq.h>
++#include <linux/llist.h>
+ 
+ struct blkcg_gq;
+ struct blkg_policy_data;
+@@ -43,6 +44,8 @@ struct blkg_iostat {
+ 
+ struct blkg_iostat_set {
+ 	struct u64_stats_sync		sync;
++	struct llist_node		lnode;
++	struct blkcg_gq		       *blkg;
+ 	struct blkg_iostat		cur;
+ 	struct blkg_iostat		last;
+ };
+@@ -97,6 +100,12 @@ struct blkcg {
+ 	struct blkcg_policy_data	*cpd[BLKCG_MAX_POLS];
+ 
+ 	struct list_head		all_blkcgs_node;
++
++	/*
++	 * List of updated percpu blkg_iostat_set's since the last flush.
++	 */
++	struct llist_head __percpu	*lhead;
++
+ #ifdef CONFIG_BLK_CGROUP_FC_APPID
+ 	char                            fc_app_id[FC_APPID_LEN];
+ #endif
 -- 
-Damien Le Moal
-Western Digital Research
+2.31.1
+
