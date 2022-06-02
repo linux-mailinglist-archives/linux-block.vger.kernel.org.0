@@ -2,89 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FFC453B97F
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 15:12:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 040D153B9DD
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 15:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233755AbiFBNMM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Jun 2022 09:12:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38220 "EHLO
+        id S235412AbiFBNf6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Jun 2022 09:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235253AbiFBNMK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jun 2022 09:12:10 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9559CE13
-        for <linux-block@vger.kernel.org>; Thu,  2 Jun 2022 06:12:08 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id e29so662629wra.11
-        for <linux-block@vger.kernel.org>; Thu, 02 Jun 2022 06:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:in-reply-to:references:subject:message-id:date:mime-version
-         :content-transfer-encoding;
-        bh=U5vSY/Se5tCRuMsr60pEuEsyusSTL3gl1RsNPtBDXgI=;
-        b=f/dg/vDLrX6sQtck7kt3m6xtRfx8XXT+A9mE+7I16l1RLXFHXB+jF/YFexshTCxaZ4
-         ZSmhAO9AP46xNjz4CEeRx2N0VmaoghwhovazO6SubCVgWFgCrXseUBdZvky9MQRtTV8G
-         90n1ZDGzerM5rFOUljUoP+qxVIcDTmTodjCE7FtfrMBH/tAwbP7k0UoCGHo9cjV6NAPY
-         sBH/87iFLDYNhte30gTAjX4upE3zN1q8sC4PoAMIuRnFHsKW2ZeO7d1JAWsBho8Qs7yJ
-         BcaHZnRFpoWTHZfgmk7uCKrUu6IEhmNBxes7IFPlRR1bXNtTbJv/+ZQD5Z9+BW6RBFsa
-         IiXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=U5vSY/Se5tCRuMsr60pEuEsyusSTL3gl1RsNPtBDXgI=;
-        b=T7DQmKFXt/tXrbMmOMqP9Oos9JuNCtuXDdejBQ0zPahfLDjIclGiSnhghCnpkpGt6G
-         uOns/HxuowihtF0S5aPPZnKRm1cgXc7WYlONKGValGKhUIRAkRp1iNFpSfHLhvww0tFN
-         xIZBH7B9Pvr1obz3M08vOGLdIK5YfUvzDXLmtQDgKAI7Pdz3/Bt7P5lURp/9lcQl+7kN
-         Hxkd/46j/V/1i6n78nuureiooPcmZTlET1phMuRNK709OH4nwhaL/CBE02W2nYqyfr4/
-         uCgz3bE9/RDSmVRLlhdHDjft3BhIlM9CYJkV3qKBJI3UVN5k38Er1wOuIpQySmrEf/XR
-         +xDw==
-X-Gm-Message-State: AOAM532pLya6UVItnAUiFgovwKtAUG867mRn7PffJtkJuf8QjFyQ1++P
-        M01th2M8pZK2Axagltw2a7MlKMTeQQLWoXnv
-X-Google-Smtp-Source: ABdhPJyzscxowSdg1vjQ6CCMxR8E0tZFcYcKAkFXPxUGfP0r1y7o7jdDxFT76Q1iaIc/P3l0biamqw==
-X-Received: by 2002:a5d:650f:0:b0:20d:77b:702b with SMTP id x15-20020a5d650f000000b0020d077b702bmr3664590wru.78.1654175526748;
-        Thu, 02 Jun 2022 06:12:06 -0700 (PDT)
-Received: from [127.0.1.1] ([193.52.24.5])
-        by smtp.gmail.com with ESMTPSA id t67-20020a1c4646000000b003942a244f33sm8599364wma.12.2022.06.02.06.12.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jun 2022 06:12:06 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-block@vger.kernel.org, damien.lemoal@opensource.wdc.com
-In-Reply-To: <20220602120344.1365329-1-damien.lemoal@opensource.wdc.com>
-References: <20220602120344.1365329-1-damien.lemoal@opensource.wdc.com>
-Subject: Re: [PATCH] block: null_blk: Fix null_zone_write()
-Message-Id: <165417552595.7731.1271657336358651866.b4-ty@kernel.dk>
-Date:   Thu, 02 Jun 2022 07:12:05 -0600
+        with ESMTP id S235383AbiFBNf4 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jun 2022 09:35:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A3036EB34
+        for <linux-block@vger.kernel.org>; Thu,  2 Jun 2022 06:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654176955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RM/VM/BkJCFXBDQbLQtl/dczfhsVjGbr9q7yL7pUo/s=;
+        b=QA/3Iap+GlzPb876wRGr6EHw9SD6QlDq2FIwoJOtwx65w8Wu4ysUkDMqBy59qpAvE9NPnP
+        wY/xmq3PH2ZbCWSwIV04kstp3mLomGRFiXzHBYYDmv2l7pSWwhWqMuW5Lec3v8fAZ61Sbh
+        Gs2l5xoJtxZZCciMoHigM+zLk1Y6v7U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-644-QpfwInDINwOXB57FDsZcwA-1; Thu, 02 Jun 2022 09:35:52 -0400
+X-MC-Unique: QpfwInDINwOXB57FDsZcwA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D160B811E81;
+        Thu,  2 Jun 2022 13:35:51 +0000 (UTC)
+Received: from llong.com (unknown [10.22.32.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6AF3C2166B2C;
+        Thu,  2 Jun 2022 13:35:51 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v5 0/3] blk-cgroup: Optimize blkcg_rstat_flush()
+Date:   Thu,  2 Jun 2022 09:35:40 -0400
+Message-Id: <20220602133543.128088-1-longman@redhat.com>
+In-Reply-To: <20220601211824.89626-1-longman@redhat.com>
+References: <20220601211824.89626-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, 2 Jun 2022 21:03:44 +0900, Damien Le Moal wrote:
-> The bio and rq fields of struct nullb_cmd are now overlapping in a
-> union. So we cannot use a test on ->bio being non-NULL to detect the
-> NULL_Q_BIO queue mode. null_zone_write() use such broken test to set the
-> sector position of a zone append write in the command bio or request.
-> When the null_blk device uses the NULL_Q_MQ queue mode,
-> null_zone_write() wrongly end up setting the bio sector position,
-> resulting in the command request to be broken and random crashes
-> following.
-> 
-> [...]
+ v5:
+  - Add a new patch 2 to eliminate the use of intermediate "ret"
+    variable in blkcg_css_alloc() to fix compilation warning reported
+    by kernel test robot.
 
-Applied, thanks!
+ v4:
+  - Update comment and eliminate "inline" keywords as suggested by TJ.
 
-[1/1] block: null_blk: Fix null_zone_write()
-      commit: aacae8c469f9ce4b303a2eb61593ff522c1420bc
+ v3:
+  - Update comments in patch 2.
+  - Put rcu_read_lock/unlock() in blkcg_rstat_flush().
+  - Use READ_ONCE/WRITE_ONCE() to access lnode->next to reduce data
+    races.
+  - Get a blkg reference when putting into the lockless list and put it
+    back when removed.
+ 
+This patch series improves blkcg_rstat_flush() performance by eliminating
+unnecessary blkg enumeration and flush operations for those blkg's and
+blkg_iostat_set's that haven't been updated since the last flush.
 
-Best regards,
+Waiman Long (3):
+  blk-cgroup: Correctly free percpu iostat_cpu in blkg on error exit
+  blk-cgroup: Return -ENOMEM directly in blkcg_css_alloc() error path
+  blk-cgroup: Optimize blkcg_rstat_flush()
+
+ block/blk-cgroup.c | 103 ++++++++++++++++++++++++++++++++++++++-------
+ block/blk-cgroup.h |   9 ++++
+ 2 files changed, 96 insertions(+), 16 deletions(-)
+
 -- 
-Jens Axboe
-
+2.31.1
 
