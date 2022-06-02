@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 040D153B9DD
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 15:36:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4901D53B9E1
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 15:36:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235412AbiFBNf6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Jun 2022 09:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51676 "EHLO
+        id S235425AbiFBNgB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Jun 2022 09:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235383AbiFBNf4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jun 2022 09:35:56 -0400
+        with ESMTP id S235428AbiFBNgA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jun 2022 09:36:00 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A3036EB34
-        for <linux-block@vger.kernel.org>; Thu,  2 Jun 2022 06:35:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5E40E70379
+        for <linux-block@vger.kernel.org>; Thu,  2 Jun 2022 06:35:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654176955;
+        s=mimecast20190719; t=1654176958;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RM/VM/BkJCFXBDQbLQtl/dczfhsVjGbr9q7yL7pUo/s=;
-        b=QA/3Iap+GlzPb876wRGr6EHw9SD6QlDq2FIwoJOtwx65w8Wu4ysUkDMqBy59qpAvE9NPnP
-        wY/xmq3PH2ZbCWSwIV04kstp3mLomGRFiXzHBYYDmv2l7pSWwhWqMuW5Lec3v8fAZ61Sbh
-        Gs2l5xoJtxZZCciMoHigM+zLk1Y6v7U=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=YXLuT1Yk9DAXTYl5NoX/oMeS35ik4rQo8uu3jun7bK8=;
+        b=KHk8Q0w88jKlWb3n+xQS225haxcacaJ8aBPgvh4NmJKIPPUB1tIQhWpmDmDbnmAGzg4B68
+        yW1QClx/IA8DbkKaBxR9UslDK0e9kXSaXdCzbgW3IWS/TFEJvS5dODtYQDEvfgB7iupY2E
+        AX61bzFZnqPbitOdkUIOBbfNchcjEx0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-644-QpfwInDINwOXB57FDsZcwA-1; Thu, 02 Jun 2022 09:35:52 -0400
-X-MC-Unique: QpfwInDINwOXB57FDsZcwA-1
+ us-mta-610-kEgn3EQiObSe0z98QPm7CQ-1; Thu, 02 Jun 2022 09:35:52 -0400
+X-MC-Unique: kEgn3EQiObSe0z98QPm7CQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D160B811E81;
-        Thu,  2 Jun 2022 13:35:51 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2F00B3C7B139;
+        Thu,  2 Jun 2022 13:35:52 +0000 (UTC)
 Received: from llong.com (unknown [10.22.32.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6AF3C2166B2C;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DD7D02166B26;
         Thu,  2 Jun 2022 13:35:51 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
 Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v5 0/3] blk-cgroup: Optimize blkcg_rstat_flush()
-Date:   Thu,  2 Jun 2022 09:35:40 -0400
-Message-Id: <20220602133543.128088-1-longman@redhat.com>
+Subject: [PATCH v5 1/3] blk-cgroup: Correctly free percpu iostat_cpu in blkg on error exit
+Date:   Thu,  2 Jun 2022 09:35:41 -0400
+Message-Id: <20220602133543.128088-2-longman@redhat.com>
 In-Reply-To: <20220601211824.89626-1-longman@redhat.com>
 References: <20220601211824.89626-1-longman@redhat.com>
 MIME-Version: 1.0
@@ -61,35 +61,47 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
- v5:
-  - Add a new patch 2 to eliminate the use of intermediate "ret"
-    variable in blkcg_css_alloc() to fix compilation warning reported
-    by kernel test robot.
+Commit f73316482977 ("blk-cgroup: reimplement basic IO stats using cgroup
+rstat") changes block cgroup IO stats to use the rstat APIs. It added
+a new percpu iostat_cpu field into blkg. The blkg_alloc() was modified
+to allocate the new percpu iostat_cpu but didn't free it when an error
+happened. Fix this by freeing the percpu iostat_cpu on error exit.
 
- v4:
-  - Update comment and eliminate "inline" keywords as suggested by TJ.
+Fixes: f73316482977 ("blk-cgroup: reimplement basic IO stats using cgroup rstat")
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+ block/blk-cgroup.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- v3:
-  - Update comments in patch 2.
-  - Put rcu_read_lock/unlock() in blkcg_rstat_flush().
-  - Use READ_ONCE/WRITE_ONCE() to access lnode->next to reduce data
-    races.
-  - Get a blkg reference when putting into the lockless list and put it
-    back when removed.
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 40161a3f68d0..acd9b0aa8dc8 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -219,11 +219,11 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
+ 		return NULL;
  
-This patch series improves blkcg_rstat_flush() performance by eliminating
-unnecessary blkg enumeration and flush operations for those blkg's and
-blkg_iostat_set's that haven't been updated since the last flush.
-
-Waiman Long (3):
-  blk-cgroup: Correctly free percpu iostat_cpu in blkg on error exit
-  blk-cgroup: Return -ENOMEM directly in blkcg_css_alloc() error path
-  blk-cgroup: Optimize blkcg_rstat_flush()
-
- block/blk-cgroup.c | 103 ++++++++++++++++++++++++++++++++++++++-------
- block/blk-cgroup.h |   9 ++++
- 2 files changed, 96 insertions(+), 16 deletions(-)
-
+ 	if (percpu_ref_init(&blkg->refcnt, blkg_release, 0, gfp_mask))
+-		goto err_free;
++		goto err_free_blkg;
+ 
+ 	blkg->iostat_cpu = alloc_percpu_gfp(struct blkg_iostat_set, gfp_mask);
+ 	if (!blkg->iostat_cpu)
+-		goto err_free;
++		goto err_free_blkg;
+ 
+ 	if (!blk_get_queue(q))
+ 		goto err_free;
+@@ -259,6 +259,9 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
+ 	return blkg;
+ 
+ err_free:
++	free_percpu(blkg->iostat_cpu);
++
++err_free_blkg:
+ 	blkg_free(blkg);
+ 	return NULL;
+ }
 -- 
 2.31.1
 
