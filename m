@@ -2,87 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCD3F53BB51
-	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 17:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DBEA53BB81
+	for <lists+linux-block@lfdr.de>; Thu,  2 Jun 2022 17:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236322AbiFBPCT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Jun 2022 11:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32928 "EHLO
+        id S232948AbiFBPVY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Jun 2022 11:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236330AbiFBPCS (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jun 2022 11:02:18 -0400
-X-Greylist: delayed 133 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Jun 2022 08:02:17 PDT
-Received: from mail1.wrs.com (unknown-3-146.windriver.com [147.11.3.146])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A765411E1F8;
-        Thu,  2 Jun 2022 08:02:17 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com [147.11.82.252])
-        by mail1.wrs.com (8.15.2/8.15.2) with ESMTPS id 252F2AvY010739
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 Jun 2022 08:02:10 -0700
-Received: from otp-dpanait-l2.corp.ad.wrs.com (128.224.125.150) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Thu, 2 Jun 2022 08:02:08 -0700
-From:   Dragos-Marian Panait <dragos.panait@windriver.com>
-To:     <stable@vger.kernel.org>
-CC:     Haimin Zhang <tcs.kernel@gmail.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Dragos-Marian Panait <dragos.panait@windriver.com>
-Subject: [PATCH 4.14 1/1] block-map: add __GFP_ZERO flag for alloc_page in function bio_copy_kern
-Date:   Thu, 2 Jun 2022 18:01:57 +0300
-Message-ID: <20220602150157.2255674-2-dragos.panait@windriver.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220602150157.2255674-1-dragos.panait@windriver.com>
-References: <20220602150157.2255674-1-dragos.panait@windriver.com>
+        with ESMTP id S229899AbiFBPVX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Jun 2022 11:21:23 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5112A5515;
+        Thu,  2 Jun 2022 08:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=JIw8aKjJnDAUMfW/ZoAS3ykhzT+7C9tK1kg2A9Q7aFE=; b=dYtKQhtFUXzYAr4tHRCc7eIobY
+        OqE7Yfif70F45glOPSt41CFw8FgQ2zhaeZ3A/xgayBzLDgf+ROvjy8kRRwlJaAYsMz/YEwBiWD/sB
+        ZrLliJldX1+hlCnicbZof+iHBL23JEPGsqhvZhH5j4CUn5DYwW1ul0zhElxLUFKBwFL6NBGvCAmZF
+        4CBDk8rDX9m4nRfBovQRJQN8n18btfznjKeXOG8KfT0WtgyAqS75TbN/w1hhD4EdZtpBz3pzvSIkZ
+        AoSEugHfWhTAQKEYwcckFIspB8DdPsM8Ku00B6z52MznXh+xLsicwOMlmM26FQZcLmxAgCjaiozEF
+        P0lBVFRA==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nwmdU-003gSj-6r; Thu, 02 Jun 2022 15:21:20 +0000
+Date:   Thu, 2 Jun 2022 08:21:20 -0700
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Amir Goldstein <amir73il@gmail.com>, pankydev8@gmail.com,
+        Josef Bacik <josef@toxicpanda.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        a.manzanares@samsung.com, Tyler Hicks <code@tyhicks.com>,
+        Leah Rumancik <lrumancik@google.com>,
+        Klaus Jensen <its@irrelevant.dk>,
+        Zorro Lang <zlang@redhat.com>, shirley.ma@oracle.com,
+        chandan.babu@oracle.com, konrad.wilk@oracle.com, mcgrof@kernel.org
+Subject: [ANN] Discord server for testing Linux with kdevops
+Message-ID: <YpjVcHuxhEQwPusN@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [128.224.125.150]
-X-ClientProxiedBy: ala-exchng01.corp.ad.wrs.com (147.11.82.252) To
- ala-exchng01.corp.ad.wrs.com (147.11.82.252)
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Haimin Zhang <tcs.kernel@gmail.com>
+I've setup a discord server for general discussions around Linux
+kernel testing with kdevops. This should help with coordination
+around kdevops in an accessible way for:
 
-commit cc8f7fe1f5eab010191aa4570f27641876fa1267 upstream.
+  * The shared kdevops repository and dependent trees on the linux-kdevops
+    organization: https://github.com/linux-kdevops/
+  * Sharing of expunges for fstests / blktests for different
+    filesystems / configuration / kernel releases
+  * Shared hardware resources such as the public Super Micro bigtwin server
+    currently used to help test fstests and blktests
+  * Future potential shared cloud credits
+  * Streamlining reports for new issues found on stable kernels or
+    Linus's tree or linux-next
+  * Storing / sharing test failure artifacts
 
-Add __GFP_ZERO flag for alloc_page in function bio_copy_kern to initialize
-the buffer of a bio.
+The discord server:
 
-Signed-off-by: Haimin Zhang <tcs.kernel@gmail.com>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20220216084038.15635-1-tcs.kernel@gmail.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-[DP: Backported to 4.14: Manually added __GFP_ZERO flag]
-Signed-off-by: Dragos-Marian Panait <dragos.panait@windriver.com>
----
- block/bio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://discord.gg/pWgZZhRp
 
-diff --git a/block/bio.c b/block/bio.c
-index 30df1b45dde8..1eaf31976702 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1657,7 +1657,7 @@ struct bio *bio_copy_kern(struct request_queue *q, void *data, unsigned int len,
- 		if (bytes > len)
- 			bytes = len;
- 
--		page = alloc_page(q->bounce_gfp | gfp_mask);
-+		page = alloc_page(q->bounce_gfp | __GFP_ZERO | gfp_mask);
- 		if (!page)
- 			goto cleanup;
- 
--- 
-2.36.1
-
+  Luis
