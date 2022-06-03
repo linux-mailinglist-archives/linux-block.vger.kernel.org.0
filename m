@@ -2,54 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61B4E53D1C1
-	for <lists+linux-block@lfdr.de>; Fri,  3 Jun 2022 20:50:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAC2D53D275
+	for <lists+linux-block@lfdr.de>; Fri,  3 Jun 2022 21:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239800AbiFCSuY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 Jun 2022 14:50:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52752 "EHLO
+        id S1346162AbiFCTp0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 Jun 2022 15:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349103AbiFCSuJ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Jun 2022 14:50:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9870B2870D
-        for <linux-block@vger.kernel.org>; Fri,  3 Jun 2022 11:50:06 -0700 (PDT)
+        with ESMTP id S243277AbiFCTp0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Jun 2022 15:45:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C2339BA8;
+        Fri,  3 Jun 2022 12:45:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7CF9EB82469
-        for <linux-block@vger.kernel.org>; Fri,  3 Jun 2022 18:50:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4A81BC36AEA;
-        Fri,  3 Jun 2022 18:50:03 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 44B37B82473;
+        Fri,  3 Jun 2022 19:45:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABB0C385A9;
+        Fri,  3 Jun 2022 19:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654282203;
-        bh=qrbF4NIzQoWUa0lGx1ExUCn+Hfnha6TUf4L7VhpPaec=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=VV2fTU6dfp+82mtijRiIT/5P1It+JzraX8ICAIZ+9mBy2guK3ALqwwI6YSE0vNsPx
-         ZYUWms0PAJy0wKv+dbdZ3eM6e4tTFm12eAUqT1f1XZfo3ozUvoNYymHvtwlbi8h6y+
-         qGmzhdca4tT1dGwRqWU3Pldf/3gTWNP1zyaLKVVHkuhdIelIvuU4xaVwePm/YmUOj6
-         qH0a+t9FDkUP02AqVFmO2qL6w0Vqozxu1q9vQcuti3LwkTsooZM7ifX1yGjph/Dbqa
-         uDdnYc5wat+b2lYn9S1EN2JqMr18EYu20eMQ18rqetRHULWK5FIEij2gYpWoFG/5qk
-         zvOWS7R1twH+A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 354DAF03953;
-        Fri,  3 Jun 2022 18:50:03 +0000 (UTC)
-Subject: Re: [GIT PULL] Block exec cleanup series
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <0d5a62fc-6d6a-5dc8-bb15-d494184909b9@kernel.dk>
-References: <0d5a62fc-6d6a-5dc8-bb15-d494184909b9@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <0d5a62fc-6d6a-5dc8-bb15-d494184909b9@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/for-5.19/block-exec-2022-06-02
-X-PR-Tracked-Commit-Id: e2e530867245d051dc7800b0d07193b3e581f5b9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 72fbbc3d0e3e3117c29a73d0b4d928dc00ed99ce
-Message-Id: <165428220321.10974.2428487377776466789.pr-tracker-bot@kernel.org>
-Date:   Fri, 03 Jun 2022 18:50:03 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+        s=k20201202; t=1654285522;
+        bh=XJaRD04oRRXFBbqfn+wig4ArZZfb1t/k8rqJpmWG+Io=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a/QxqztmMqOnYCtI6bSqJU2okwbGR15O9RuE7N1KEw13uUhZXJrJ1IudWdLeJEvCx
+         XVs6iaAFb3ne62yIqZzjaPYbgKMAjWWJuwhfvqhjsuyfxszSojXpHKdad4qNc7XVE/
+         KuG9aKwNQTzY6dMg1mUNRhIbJfYj03Ee/3pOi0Bg0kMszz+hW1UNg26aQ6VwCn0EHu
+         ifsTz+LvU0Zwmjq5O/sATbYVfCQnCOyA70qCtppn5/DALHpVo42xEZp7PqIrR6YJNW
+         b/w9rP6iVl0JD8PEVi+s/EL4v54biQEKEJsQlcZR6+1AX6oLVV78A96o/Mcm+Ges3L
+         hrBWp3ATDk1yw==
+Date:   Fri, 3 Jun 2022 13:45:19 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Mike Christie <michael.christie@oracle.com>
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        snitzer@kernel.org, hch@lst.de, axboe@kernel.dk,
+        martin.petersen@oracle.com, james.bottomley@hansenpartnership.com,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
+Subject: Re: [PATCH 09/11] block, nvme: Add error for reservation conflicts.
+Message-ID: <Yppkz4HIPVxr54hn@kbusch-mbp.dhcp.thefacebook.com>
+References: <20220603065536.5641-1-michael.christie@oracle.com>
+ <20220603065536.5641-10-michael.christie@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220603065536.5641-10-michael.christie@oracle.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,15 +56,18 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Thu, 2 Jun 2022 23:32:23 -0600:
+On Fri, Jun 03, 2022 at 01:55:34AM -0500, Mike Christie wrote:
+> @@ -171,6 +171,7 @@ static const struct {
+>  	/* zone device specific errors */
+>  	[BLK_STS_ZONE_OPEN_RESOURCE]	= { -ETOOMANYREFS, "open zones exceeded" },
+>  	[BLK_STS_ZONE_ACTIVE_RESOURCE]	= { -EOVERFLOW, "active zones exceeded" },
+> +	[BLK_STS_RSV_CONFLICT]	= { -EBADE,	"resevation conflict" },
 
-> git://git.kernel.dk/linux-block.git tags/for-5.19/block-exec-2022-06-02
+You misspelled "reservation". :)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/72fbbc3d0e3e3117c29a73d0b4d928dc00ed99ce
+And since you want a different error, why reuse EBADE for the errno? That is
+already used for BLK_STS_NEXUS that you're trying to differentiate from, right?
+At least for nvme, this error code is returned when the host lacks sufficient
+rights, so something like EACCESS might make sense.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Looks good otherwise.
