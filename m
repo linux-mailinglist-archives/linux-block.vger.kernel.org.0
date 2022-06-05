@@ -2,93 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5030353D992
-	for <lists+linux-block@lfdr.de>; Sun,  5 Jun 2022 06:01:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A53D753D998
+	for <lists+linux-block@lfdr.de>; Sun,  5 Jun 2022 06:10:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236110AbiFEEBg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 5 Jun 2022 00:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
+        id S243735AbiFEEKN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 5 Jun 2022 00:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbiFEEBf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 5 Jun 2022 00:01:35 -0400
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955864D9CF;
-        Sat,  4 Jun 2022 21:01:33 -0700 (PDT)
-Received: by mail-pg1-f177.google.com with SMTP id q123so10326385pgq.6;
-        Sat, 04 Jun 2022 21:01:33 -0700 (PDT)
+        with ESMTP id S243491AbiFEEKL (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 5 Jun 2022 00:10:11 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E6A4DF55
+        for <linux-block@vger.kernel.org>; Sat,  4 Jun 2022 21:10:09 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id l204so20276637ybf.10
+        for <linux-block@vger.kernel.org>; Sat, 04 Jun 2022 21:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=3x72/ah7oVy1n7hZQ2TRq4JYjiu8oyFxE5Jon1kCtcA=;
+        b=m2MotxmnxmWCcLS1bCzOQl4JZVWyZ58OqqFbmIEb2MqVGfuY17hEKe33k+cBV2kTmF
+         hWNAxWuyuCL/R8Q2g06PdqUu26GZg5bpyJDSPirBXRCw8CFoiWk7DRX5TT1VMym/ZFNx
+         TYUwRs/th2AAmguHDsRe2K1x6V/ZMv1N0P0Cm5combCRsCce4mjoMhfeAoFziQnZXDVh
+         A1G9mdxEJmvd92/VghrdUlYslyXwqLycadENIAIdHWQ1lqHXvN7+JKDVbAmL/6RpddI+
+         JWJeIz4Fdrb8yvASx0ms5Rukjru6Ul476f0qP3471VIPva5N/BZglAipifkRI7eaO8wP
+         9vXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=kuBV28makeSJfzsiM72bJh6iWdW/+SIKOX/bljICWXs=;
-        b=YzJOEeVDr2tehRbeWtQN1+yxNXrlSG9BRXvpmUEXqglbctnxn9CEXN3pblLsHIXy9j
-         vjuqh6R8fDqY1IJXDwsYnMxcPa1fxL82SFOl7h7W/Bz3ifubsW/A1w/wM160idiINY2W
-         ghedBMRPJta9Tc1Oj4946ttWBRon9A4uae10ktUFCtP9sz5A/dTyChjt5WA/npPMjdIq
-         SQQU1aHs33bGbVeanPj3A76pZ+0SjmUBt4Tq+Y4ZjBiGvtDII6EnPE3XJeH7QpxbIB6Q
-         5xc5iDQ7hBcMzvzCxWtJLrUzNTP/XdBukDyCQCqWYNHNdh+uph/F08grOTNQrJZyXiPL
-         wjJw==
-X-Gm-Message-State: AOAM530n0AOEss2OYNnrz84Smu5zQhdxDJCtlZ74NCm20otw31c1gBgv
-        ZFtgWPHUHSnb2/WAJMbmU54=
-X-Google-Smtp-Source: ABdhPJwYW0FtIavUiAKHq2ahwqUsR7QXrUYXGE2TjFS43H3ZZMXLSDtjSEEEhAGF0VfBDFPuWNQxzw==
-X-Received: by 2002:a63:f5e:0:b0:3fd:23e1:e086 with SMTP id 30-20020a630f5e000000b003fd23e1e086mr9499008pgp.61.1654401692985;
-        Sat, 04 Jun 2022 21:01:32 -0700 (PDT)
-Received: from ?IPV6:2601:647:4000:d7:feaa:14ff:fe9d:6dbd? ([2601:647:4000:d7:feaa:14ff:fe9d:6dbd])
-        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b0015e8d4eb267sm8148225plp.177.2022.06.04.21.01.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Jun 2022 21:01:32 -0700 (PDT)
-Message-ID: <923053d3-adf8-e4b4-9ef3-8e920ae90a79@acm.org>
-Date:   Sat, 4 Jun 2022 21:01:30 -0700
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=3x72/ah7oVy1n7hZQ2TRq4JYjiu8oyFxE5Jon1kCtcA=;
+        b=uD6IbuRgS9x7lbCO/+OQxbzKrH0DDND1ze2b2oYq44GzBsCSXZa89rsIfJWH5HSxb8
+         3E+p4AlHXp5yMd6TG/9OaDlaU4xckfjxasZaMzdxHqh/qR0X3SMz5mhmKE1u35NP3nWd
+         yyc8TO3S40LkURP4Wp8LQTJ5dyPIxQTJyQey+kukZd1u3XynKUY5w/FIN9tKpID1Us4F
+         xMCFr6sgq8JfWBFZcWsXtzt6ApNQHM30AqolsJkvDknil04Y39aQv0FrxXdBXzYZ0To7
+         OChtVE5MVb/nAO+OpOWto0/l36FdMwNbXjN0sPEknxpjcA0+eFmLpCDresf+cK3NUh5T
+         Rb+g==
+X-Gm-Message-State: AOAM533jtGbrIEgdLPbkLiyladrWqQaugiz+OJNhyRpJ2VEXxU3nwWHJ
+        i5TWZ9PpO2kNhO7CBkt9UOqhQHXExDddvmY6Z8o=
+X-Google-Smtp-Source: ABdhPJyLuRyUqVo3qdwlHYox5OP+26Yo7OSjr/7agA+lqVWiNNWcxczs5eIyKKGKzkDGwAvnuMLbFFGjNkiLzR3jpRA=
+X-Received: by 2002:a25:d609:0:b0:65c:f2a1:6cf0 with SMTP id
+ n9-20020a25d609000000b0065cf2a16cf0mr19059420ybg.417.1654402208855; Sat, 04
+ Jun 2022 21:10:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [dm-devel] [PATCH 0/8] Use block pr_ops in LIO
-Content-Language: en-US
-To:     Mike Christie <michael.christie@oracle.com>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        snitzer@kernel.org, hch@lst.de, axboe@kernel.dk,
-        martin.petersen@oracle.com, james.bottomley@hansenpartnership.com,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
-References: <20220603065536.5641-1-michael.christie@oracle.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20220603065536.5641-1-michael.christie@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:6918:7906:b0:bd:b847:5058 with HTTP; Sat, 4 Jun 2022
+ 21:10:08 -0700 (PDT)
+Reply-To: mrstheresaheidi8@gmail.com
+From:   Ms Theresa Heidi <hovossourafiatou@gmail.com>
+Date:   Sat, 4 Jun 2022 21:10:08 -0700
+Message-ID: <CAJK1sRR_+Qs6M9rpHEXnVUeYBSMqjZ541mBfJE-M+cuuLAj3+w@mail.gmail.com>
+Subject: =?UTF-8?B?5oCl5LqL5rGC5Yqp77yB?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: Yes, score=7.6 required=5.0 tests=BAYES_99,BAYES_999,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b44 listed in]
+        [list.dnswl.org]
+        *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
+        *      [score: 1.0000]
+        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
+        *      [score: 1.0000]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mrstheresaheidi8[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [hovossourafiatou[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/2/22 23:55, Mike Christie wrote:
-> The following patches were built over Linus's tree. They allow us to use
-> the block pr_ops with LIO's target_core_iblock module to support cluster
-> applications in VMs.
-> 
-> Currently, to use something like windows clustering in VMs with LIO and
-> vhost-scsi, you have to use tcmu or pscsi or use a cluster aware
-> FS/framework for the LIO pr file. Setting up a cluster FS/framework is
-> pain and waste when your real backend device is already a distributed
-> device, and pscsi and tcmu are nice for specific use cases, but iblock
-> gives you the best performance and allows you to use stacked devices
-> like dm-multipath. So these patches allow iblock to work like pscsi/tcmu
-> where they can pass a PR command to the backend module. And then iblock
-> will use the pr_ops to pass the PR command to the real devices similar
-> to what we do for unmap today.
-> 
-> Note that this is patchset does not attempt to support every PR SCSI
-> feature in iblock. It has the same limitations as tcmu and pscsi where
-> you can have a single I_T nexus per device and only supports what is
-> needed for windows clustering right now.
-
-How has this patch series been tested? Does LIO pass the libiscsi 
-persistent reservation tests with this patch series applied?
-
-Thanks,
-
-Bart.
+5oWI5ZaE5o2Q5qy+77yBDQoNCuivt+S7lOe7humYheivu++8jOaIkeefpemBk+i/meWwgeS/oeeh
+ruWunuWPr+iDveS8mue7meS9oOS4gOS4quaDiuWWnOOAgiDmiJHlnKjpnIDopoHkvaDluK7liqnn
+moTml7blgJnpgJrov4fnp4HkurrmkJzntKLpgYfliLDkuobkvaDnmoTnlLXlrZDpgq7ku7bogZTn
+s7vjgIINCuaIkeaAgOedgOayiemHjeeahOaCsuS8pOWGmei/meWwgemCruS7tue7meS9oO+8jOaI
+kemAieaLqemAmui/h+S6kuiBlOe9keS4juS9oOiBlOezu++8jOWboOS4uuWug+S7jeeEtuaYr+ac
+gOW/q+eahOayn+mAmuWqkuS7i+OAgg0KDQrmiJHmmK82MuWygeeahOeJueiVvuiOjirmtbfokoLl
+pKvkurrvvIznm67liY3lm6DogrrnmYzlnKjku6XoibLliJfnmoTkuIDlrrbnp4Hnq4vljLvpmaLk
+vY/pmaLmsrvnlpfjgIINCjTlubTliY3vvIzmiJHnmoTkuIjlpKvljrvkuJblkI7vvIzmiJHnq4vl
+jbPooqvor4rmlq3lh7rmgqPmnInogrrnmYzvvIzku5bmiorku5bmiYDmnInnmoTkuIDliIfpg73n
+lZnnu5nkuobmiJHjgIIg5oiR5bim552A5oiR55qE56yU6K6w5pys55S16ISR5Zyo5LiA5a625Yy7
+6Zmi6YeM77yM5oiR5LiA55u05Zyo5o6l5Y+X6IK66YOo55mM55eH55qE5rK755aX44CCDQoNCuaI
+keS7juaIkeW3suaVheeahOS4iOWkq+mCo+mHjOe7p+aJv+S6huS4gOeslOi1hOmHke+8jOWPquac
+iTI1MOS4h+e+juWFg++8iDI1MOS4h+e+juWFg++8ieOAgueOsOWcqOW+iOaYjuaYvu+8jOaIkeat
+o+WcqOaOpei/keeUn+WRveeahOacgOWQjuWHoOWkqe+8jOaIkeiupOS4uuaIkeS4jeWGjemcgOim
+gei/meeslOmSseS6huOAgg0K5oiR55qE5Yy755Sf6K6p5oiR5piO55m977yM55Sx5LqO6IK655mM
+55qE6Zeu6aKY77yM5oiR5LiN5Lya5oyB57ut5LiA5bm044CCDQoNCui/meeslOmSsei/mOWcqOWb
+veWklumTtuihjO+8jOeuoeeQhuWxguS7peecn+ato+eahOS4u+S6uueahOi6q+S7veWGmeS/oee7
+meaIke+8jOimgeaxguaIkeWHuumdouaUtumSse+8jOaIluiAheetvuWPkeaOiOadg+S5pu+8jOiu
+qeWIq+S6uuS7o+aIkeaUtumSse+8jOWboOS4uuaIkeeUn+eXheS4jeiDvei/h+adpeOAgg0K5aaC
+5p6c5LiN6YeH5Y+W6KGM5Yqo77yM6ZO26KGM5Y+v6IO95Lya5Zug5Li65L+d5oyB6L+Z5LmI6ZW/
+5pe26Ze06ICM6KKr5rKh5pS26LWE6YeR44CCDQoNCuaIkeWGs+WumuS4juaCqOiBlOezu++8jOWm
+guaenOaCqOaEv+aEj+W5tuacieWFtOi2o+W4ruWKqeaIkeS7juWkluWbvemTtuihjOaPkOWPlui/
+meeslOmSse+8jOeEtuWQjuWwhui1hOmHkeeUqOS6juaFiOWWhOS6i+S4mu+8jOW4ruWKqeW8seWK
+v+e+pOS9k+OAgg0K5oiR6KaB5L2g5Zyo5oiR5Ye65LqL5LmL5YmN55yf6K+a5Zyw5aSE55CG6L+Z
+5Lqb5L+h5omY5Z+66YeR44CCIOi/meS4jeaYr+S4gOeslOiiq+ebl+eahOmSse+8jOS5n+ayoeac
+iea2ieWPiueahOWNsemZqeaYrzEwMCXnmoTpo47pmanlhY3otLnkuI7lhYXliIbnmoTms5Xlvovo
+r4HmmI7jgIINCg0K5oiR6KaB5L2g5ou/NDUl55qE6ZKx57uZ5L2g5Liq5Lq65L2/55So77yM6ICM
+NTUl55qE6ZKx5bCG55So5LqO5oWI5ZaE5bel5L2c44CCDQrmiJHlsIbmhJ/osKLmgqjlnKjov5nk
+u7bkuovkuIrmnIDlpKfnmoTkv6Hku7vlkozkv53lr4bvvIzku6Xlrp7njrDmiJHnmoTlhoXlv4Pm
+hL/mnJvvvIzlm6DkuLrmiJHkuI3mg7PopoHku7vkvZXkvJrljbHlj4rmiJHmnIDlkI7nmoTmhL/m
+nJvnmoTkuJzopb/jgIINCuaIkeW+iOaKseatie+8jOWmguaenOaCqOaUtuWIsOi/meWwgeS/oeWc
+qOaCqOeahOWeg+WcvumCruS7tu+8jOaYr+eUseS6juacgOi/keeahOi/nuaOpemUmeivr+WcqOi/
+memHjOeahOWbveWutuOAgg0KDQrkvaDkurLniLHnmoTlprnlprnjgIINCueJueiVvuiOjirmtbfo
+koLlpKvkuroNCg==
