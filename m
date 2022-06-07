@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F5F853FF60
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jun 2022 14:48:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8C1253FF62
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jun 2022 14:48:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244199AbiFGMsY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Jun 2022 08:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37482 "EHLO
+        id S244207AbiFGMs3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Jun 2022 08:48:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244197AbiFGMsT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jun 2022 08:48:19 -0400
+        with ESMTP id S244212AbiFGMsY (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jun 2022 08:48:24 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29338BD0D
-        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 05:48:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D30712EC
+        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 05:48:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=dSY9q8SiyA9w6r6j8Ui3CeYMf/mJmCFyCSTGI67/BE0=; b=Y/gLPNOT+jJx+7aMO7p4ydhSkl
-        pzQ34Q0hIIrsMc3HouNiUp65EoP3D0DaKzkgx6l3hwr7zCEF6DV5D+vtbrlni/zvZPvOlQCIyxrdt
-        xhLH0j1YomkGcCI+niFOte0COejebHNNVJ6OBDarI5Qco0Ir36qjr4LQARHj8GkLwtlWS9TlTgnDy
-        FOyIwgF0xdIGMqZN80op8D57JfgHgirQ3cgI1TOr4HcDjruHTXhSKF6PcbSqIwDD4UJNo75tpzdF0
-        sHt8EsxHgjFgMmUn0XdKK0z1ZY/QoF9egxRUeoHAFpNWZy1jXWo43MdzoRc/pY1iiiHyac6zz+S+T
-        guXw2Q9g==;
+        bh=65paewg8yS0KNWz5DhHsYMpKIlKFDfT9YdBgnnfnxcU=; b=rLNa4Q87lZvYgqI7ErbjxKb88E
+        coz6mt8MIYxsjAd1VnljGe5cqqiH57f2T1cNmzjvG398YrxmU7ds4oOq+o+zgnJjEHtIzVye5Swch
+        ddL6pZ/gyUofPaALPHHdICPGTTlgvVBvNLD5qRdnvUJaC719mKi/u/npXuZ6mxi+zFQUSdEslEwnh
+        mqcWXjSi/BvTJzTt3CCMEyy6xEYIN61dESbgEwJozMfkkMzgEPF5JTApkP7ht8PJMsJBZ9vJM/fzK
+        pVNorfRoVRO8i1AJO+jh0oifue3YOJqSY9IM/yco1uerF/YAjtaCAMJt7sIdjqKrzxecB2uFwExcH
+        XgYQ4qyg==;
 Received: from [2001:4bb8:190:726c:b34a:228:52ee:6d34] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nyYd0-007Sj7-Eu; Tue, 07 Jun 2022 12:48:10 +0000
+        id 1nyYd3-007Ski-6G; Tue, 07 Jun 2022 12:48:13 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH blktests 10/13] block/021: convert to use _configure_null_blk
-Date:   Tue,  7 Jun 2022 14:47:36 +0200
-Message-Id: <20220607124739.1259977-11-hch@lst.de>
+Subject: [PATCH blktests 11/13] block/023: convert to use _configure_null_blk
+Date:   Tue,  7 Jun 2022 14:47:37 +0200
+Message-Id: <20220607124739.1259977-12-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220607124739.1259977-1-hch@lst.de>
 References: <20220607124739.1259977-1-hch@lst.de>
@@ -54,41 +54,28 @@ supported, which implies not using the default nullb0 device.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- tests/block/021 | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tests/block/023 | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tests/block/021 b/tests/block/021
-index a1bbf45..89ebcd0 100755
---- a/tests/block/021
-+++ b/tests/block/021
-@@ -20,7 +20,7 @@ requires() {
- test() {
- 	echo "Running ${TEST_NAME}"
+diff --git a/tests/block/023 b/tests/block/023
+index 0f20f4a..db1cbe0 100755
+--- a/tests/block/023
++++ b/tests/block/023
+@@ -21,10 +21,11 @@ test() {
  
--	if ! _init_null_blk; then
-+	if ! _configure_null_blk nullb1 power=1; then
- 		return 1
- 	fi
- 
-@@ -28,14 +28,14 @@ test() {
- 	local nr
- 	local scheds
- 	# shellcheck disable=SC2207
--	scheds=($(sed 's/[][]//g' /sys/block/nullb0/queue/scheduler))
-+	scheds=($(sed 's/[][]//g' /sys/block/nullb1/queue/scheduler))
- 
- 	for sched in "${scheds[@]}"; do
- 		echo "Testing $sched" >> "$FULL"
--		echo "$sched" > /sys/block/nullb0/queue/scheduler
--		max_nr="$(cat /sys/block/nullb0/queue/nr_requests)"
-+		echo "$sched" > /sys/block/nullb1/queue/scheduler
-+		max_nr="$(cat /sys/block/nullb1/queue/nr_requests)"
- 		for ((nr = 4; nr <= max_nr; nr++)); do
--			echo "$nr" > /sys/block/nullb0/queue/nr_requests
-+			echo "$nr" > /sys/block/nullb1/queue/nr_requests
- 		done
+ 	local queue_mode
+ 	for queue_mode in 0 2; do
+-		if _init_null_blk gb=1 queue_mode="$queue_mode"; then
++		if _configure_null_blk nullb1 size=1024 \
++				queue_mode="$queue_mode" power=1; then
+ 			echo "Queue mode $queue_mode"
+-			dd if=/dev/nullb0 of=/dev/null iflag=direct bs=64k status=none
+-			dd if=/dev/null of=/dev/nullb0 oflag=direct bs=64k status=none
++			dd if=/dev/nullb1 of=/dev/null iflag=direct bs=64k status=none
++			dd if=/dev/null of=/dev/nullb1 oflag=direct bs=64k status=none
+ 			_exit_null_blk
+ 		fi
  	done
- 
 -- 
 2.30.2
 
