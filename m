@@ -2,110 +2,148 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B54D53F71F
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jun 2022 09:25:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72DB753F757
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jun 2022 09:36:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229937AbiFGHZW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Jun 2022 03:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
+        id S233294AbiFGHgh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Jun 2022 03:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237638AbiFGHZT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jun 2022 03:25:19 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BA8C5E6D
-        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 00:25:15 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id me5so32807816ejb.2
-        for <linux-block@vger.kernel.org>; Tue, 07 Jun 2022 00:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
-        b=qVrDof9vanH1ajQ6IVWvHD4BBDe5xTcJt7Q9aWkjfamvnkXfamNdFsiBONFS752ZFR
-         Cgy6wyT4ak/7aOcCecYWKTGfd0TKtOI7cmdD2hPaRnMhaLG83G4nJbM+bjMcMB/ToGrI
-         D1NyLnTJguZWAoVKBY5Z28c9ZOhWFjaBEzfWIsYw7EymiN2g1Hw1mOc7AS4DEVMsZBm9
-         CPOs83Yg8AD9uISa27J2G6ueYuuO1ETOMYkyS0ifCrKMsDaX3XlNEXRQLwdpSWuQ4pyQ
-         i6/mAMU8mP+86CIxhsnjpeoRb9v6weeJiulIuF17z+8LzAW28Fbz+aJDAKIfjl+0ciy0
-         kneA==
+        with ESMTP id S236186AbiFGHgf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jun 2022 03:36:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0D1F4674DC
+        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 00:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654587389;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=poSLf3SQpSQVqGAvfY9ZUAc4mDsdNw09sPQoA12+Xn0=;
+        b=AnwFfg7BdLSbFcs97gpTUo3tRJ6L222XQlmGjMQ7pEHlWI/L60/SbRsxlUk+X3hwbbILed
+        9g0vjy/xTeOZDQHUcSctAEuDpa5jR7Dr3eWgZOwZ3n8J/ZAku4RbFbJVQZZq7R2X9n/JWs
+        aSjfDRl70naDPtEtS4IxmIyiorFAexI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-47-kYZp5S9QMROH15v7f26IUQ-1; Tue, 07 Jun 2022 03:36:25 -0400
+X-MC-Unique: kYZp5S9QMROH15v7f26IUQ-1
+Received: by mail-wr1-f71.google.com with SMTP id m18-20020adff392000000b0021848a78a53so1043024wro.19
+        for <linux-block@vger.kernel.org>; Tue, 07 Jun 2022 00:36:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
-        b=oWTsDfion/UNKVjucA9AivwMILR0k+jyU+PYbh6G/wpLCheqpYMlOE5SxmcY+ooykq
-         4KhSxP0WXOV4UBSvEzJV1TISzIhfcpmWIvVnAiUAaYjDaAI2l/52DmymY5OZbM3a94CL
-         WMeHbIYnA9FarkTbPgVEC9/GjcO+bNVGdDfq1rX+jhiW1pr4LTSi+u37+y6jsuUlGADH
-         fyJUu3ZCmDv5kFu5+JIsRkrOJP41PCMcgrXx5dMcvhU+/nP94hNdcDbvV1K64lXxsXbY
-         FvT0vzWLjuLRA3NlCyaxvXQPf1LxjglwIKs+R81YO5C5P22X7wl54sOHb5G9CoqEQxRp
-         SN4A==
-X-Gm-Message-State: AOAM531WBcROGllglFuhbwHmMU4Z8wUG6ANNsqGkbjBMachpOeNm6bcA
-        8+23AqcSNxyCHXNZocPgFHQQm/lTSAPUkdzFY6M=
-X-Google-Smtp-Source: ABdhPJwIvD3vOdI13uReqiZuVnPYUIN4V5zgHQ/dHq27CvUTKvdGXZZijRoxENuELWvoKRaRJg1HqWzhZb88K61h7aU=
-X-Received: by 2002:a17:906:1c4e:b0:707:959:8cfd with SMTP id
- l14-20020a1709061c4e00b0070709598cfdmr25339945ejg.738.1654586713970; Tue, 07
- Jun 2022 00:25:13 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=poSLf3SQpSQVqGAvfY9ZUAc4mDsdNw09sPQoA12+Xn0=;
+        b=sVJ+8qyz2J3sqUv7E3GYuyaX5SucSBf74T0GY5VmBwDm6R8K9KShnDMYelraUHqOCy
+         mOKETjP+4WIFvDSnUf3OvR4Nx2cYTCVOvvEHLXHKJUBYfSd2dfMDUzHX5nWgh3zcFG0F
+         aQIWT3jFlvX/T7NBu418RZs23NhlYg3b2eFvr6suhZOlQehNkRAFZK5LYyn8PpdsA8Wn
+         USC28FEJNu+8vvbnC645V8opymTk6CONElGcthQQ42T4oKev+ulUleAPIEOpm9NqPgQc
+         msVijo2IQWIF/QZFWWEsE4UP/J9jRhvZFXpBBNzuoC6mBC5TCc7qc39Hi+vEyrQBgSYG
+         n0Pw==
+X-Gm-Message-State: AOAM531RB+TCJsmrpjSqj4vfPiVENquDiYEty5d6hhqW2bAi58+T+kFk
+        bqE24xC4fjaEgJMa4PibyDp38ylSbfWxZUcMVSDTLsUw0Up7hzveisYCALiZ9dQMGC7IV+FQ/6M
+        yO71kLNoYCRj1wfnWCr5iqMU=
+X-Received: by 2002:a05:600c:4ec9:b0:397:750a:798a with SMTP id g9-20020a05600c4ec900b00397750a798amr56010321wmq.169.1654587384025;
+        Tue, 07 Jun 2022 00:36:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz/TT1zDaD6ih4ST/0Z6l6/VJexv/LUjWrit9gRiSM2S633qB8aLjqIdjv8Hs+falCUt0H+YA==
+X-Received: by 2002:a05:600c:4ec9:b0:397:750a:798a with SMTP id g9-20020a05600c4ec900b00397750a798amr56010293wmq.169.1654587383789;
+        Tue, 07 Jun 2022 00:36:23 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c709:500:4c8d:4886:f874:7b6f? (p200300cbc70905004c8d4886f8747b6f.dip0.t-ipconnect.de. [2003:cb:c709:500:4c8d:4886:f874:7b6f])
+        by smtp.gmail.com with ESMTPSA id j37-20020a05600c1c2500b0039c235fb6a5sm19943141wms.8.2022.06.07.00.36.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jun 2022 00:36:22 -0700 (PDT)
+Message-ID: <e4d017a4-556d-bb5f-9830-a8843591bc8d@redhat.com>
+Date:   Tue, 7 Jun 2022 09:36:21 +0200
 MIME-Version: 1.0
-Received: by 2002:a05:6402:26c8:0:0:0:0 with HTTP; Tue, 7 Jun 2022 00:25:13
- -0700 (PDT)
-Reply-To: andyhalford22@gmail.com
-From:   Andy Halford <fameyemrf@gmail.com>
-Date:   Tue, 7 Jun 2022 00:25:13 -0700
-Message-ID: <CAATdNateRSa_FebwZe5nba7aC_MVE_=LP4vy1DCLzAk67XF5Qw@mail.gmail.com>
-Subject: Dear Friend
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=6.8 required=5.0 tests=BAYES_50,DEAR_FRIEND,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:644 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [fameyemrf[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [andyhalford22[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: ******
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 15/20] balloon: Convert to migrate_folio
+Content-Language: en-US
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@oss.oracle.com,
+        linux-mtd@lists.infradead.org,
+        virtualization@lists.linux-foundation.org
+References: <20220606204050.2625949-1-willy@infradead.org>
+ <20220606204050.2625949-16-willy@infradead.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20220606204050.2625949-16-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 06.06.22 22:40, Matthew Wilcox (Oracle) wrote:
+> This is little more than changing the types over; there's no real work
+> being done in this function.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  mm/balloon_compaction.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+> index 4b8eab4b3f45..3f75b876ad76 100644
+> --- a/mm/balloon_compaction.c
+> +++ b/mm/balloon_compaction.c
+> @@ -230,11 +230,10 @@ static void balloon_page_putback(struct page *page)
+>  
+>  
+>  /* move_to_new_page() counterpart for a ballooned page */
+> -static int balloon_page_migrate(struct address_space *mapping,
+> -		struct page *newpage, struct page *page,
+> -		enum migrate_mode mode)
+> +static int balloon_migrate_folio(struct address_space *mapping,
+> +		struct folio *dst, struct folio *src, enum migrate_mode mode)
+>  {
+> -	struct balloon_dev_info *balloon = balloon_page_device(page);
+> +	struct balloon_dev_info *balloon = balloon_page_device(&src->page);
+>  
+>  	/*
+>  	 * We can not easily support the no copy case here so ignore it as it
+> @@ -244,14 +243,14 @@ static int balloon_page_migrate(struct address_space *mapping,
+>  	if (mode == MIGRATE_SYNC_NO_COPY)
+>  		return -EINVAL;
+>  
+> -	VM_BUG_ON_PAGE(!PageLocked(page), page);
+> -	VM_BUG_ON_PAGE(!PageLocked(newpage), newpage);
+> +	VM_BUG_ON_FOLIO(!folio_test_locked(src), src);
+> +	VM_BUG_ON_FOLIO(!folio_test_locked(dst), dst);
+>  
+> -	return balloon->migratepage(balloon, newpage, page, mode);
+> +	return balloon->migratepage(balloon, &dst->page, &src->page, mode);
+>  }
+>  
+>  const struct address_space_operations balloon_aops = {
+> -	.migratepage = balloon_page_migrate,
+> +	.migrate_folio = balloon_migrate_folio,
+>  	.isolate_page = balloon_page_isolate,
+>  	.putback_page = balloon_page_putback,
+>  };
+
+I assume you're working on conversion of the other callbacks as well,
+because otherwise, this ends up looking a bit inconsistent and confusing :)
+
+Change LGTM.
+
 -- 
-Hello Sir
+Thanks,
 
+David / dhildenb
 
-
-  I am Andy Halford from London, UK. Nice to meet you. Sorry for the
-inconvenience it's because of the time difference. I contacted you
-specifically regarding an important piece of information I intend
-sharing with you that will be of interest to you. Having gone through
-an intelligent methodical search, I decided to specifically contact
-you hoping that you will find this information useful. Kindly confirm
-I got the correct email by replying via same email to ensure I don't
-send the information to the wrong person.
-
-
-
-REGARDS
-Andy Halford
