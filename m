@@ -2,67 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98A93540469
-	for <lists+linux-block@lfdr.de>; Tue,  7 Jun 2022 19:10:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8A46540A91
+	for <lists+linux-block@lfdr.de>; Tue,  7 Jun 2022 20:23:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345547AbiFGRKN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Jun 2022 13:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
+        id S1344752AbiFGSXI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Jun 2022 14:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345476AbiFGRKM (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jun 2022 13:10:12 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706F390CE6
-        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 10:10:10 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id s39so4623724ybi.0
-        for <linux-block@vger.kernel.org>; Tue, 07 Jun 2022 10:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=P/gAWYTYcE9jrOxJP6iVGHeZQzn3G/Awl1C3CYU0ggw=;
-        b=VXII/SB83wb/H7vaEllfp+qolXwA53Jspz/m3zQC+mAcIKQGnMclloaomhvdrQ8owB
-         vHO+Uly527y09F5DuLehOkJ0mwZ30gZgyk4g+U2wxwHl0Y4mgV7S9RqtLgSETdNyx6OK
-         8wsp+Y0MkbwvJsfsXmdr6DrYRUD/m0pnxwbu4ivj1VDOAf7zsCj+Ktal0VQ7rxQPrYRu
-         evoywSOsVTSGWCD45fXiF7PxxA2UqM85zCTd9mNp4mxBdN1I/K+pmrs8z9//RXW9UQ6Z
-         9+tq5ACnviSi88l2ctFEs/bsJAV9hXkEtq0QnXCfz7aME/5cbdjMuehnAIQURMtCzTDA
-         gtAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=P/gAWYTYcE9jrOxJP6iVGHeZQzn3G/Awl1C3CYU0ggw=;
-        b=WuEZ88tWak9KHOMZpeppxQ3wX91G8BqFkY8vdwvzfHiF02R52VjbMqNSIQ3B+XM17+
-         3Hf7ImY4r4zvHkZjCH8hQu8Ru+CrzQ2LPDkMqXw15/ru2P2J8SpMPxLlGlmPtFYGm9nk
-         biBd90BYGKaexwq8EBYzPERmXB8AlQSCoDiPqu8Za2Up3Ej2F1q7BoFAQt38j+InbGSW
-         CNj6X3Z8r2j7ljyWaO4wFu+gk5+j9NrY1In9hI3Da8D1bNV0vJE/p5KfKB+OV/vzLMkQ
-         eQNE22rFF/59UzzjLMVjtXE8qbRNKhS0KqdkPgDt8zSQ2b7LRswIB5G7JGIAgZc630x5
-         Ykdw==
-X-Gm-Message-State: AOAM533sHLCxXbeoyrGc/Mf8WIenDF3DxctwiKN45H3YM40Tacj/6KpM
-        GNyPglWU8PL+fF0RGVukbW6aNRoTCMFyW//xb0mzpQ==
-X-Google-Smtp-Source: ABdhPJxpq/x/7JkNme4htfnqYHKUS7ec2XhW2i49YnLrj8HJECrnh2rhb90mOqlSloG8c/1l1755jAZFUZHfIMAjA2o=
-X-Received: by 2002:a25:22d7:0:b0:663:c13a:893a with SMTP id
- i206-20020a2522d7000000b00663c13a893amr7638158ybi.98.1654621809618; Tue, 07
- Jun 2022 10:10:09 -0700 (PDT)
+        with ESMTP id S1352634AbiFGSRY (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Jun 2022 14:17:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5F913AF2C;
+        Tue,  7 Jun 2022 10:52:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 132BE617C3;
+        Tue,  7 Jun 2022 17:52:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BBFC385A5;
+        Tue,  7 Jun 2022 17:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654624346;
+        bh=j3uNHWslQx2TMq4plPlTP9lh0uFCqJRr0z3ou4Fl1Z8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I+Nn2ut0W7CqlXeze/AoCN1AiZ7Tfh3dKZfFw2wEVUF6RdN2miM/1pTzpFed8YKnL
+         mBIRywyQBmVMDMkaG2ZlwlG17zqYChYfHBEvXoh5r+RTEp+3S5/ESYDrrKW/KUkKL8
+         qgKQVIqQrt3hpd7DHg55NqwomFvSC8avfpeG79RiUTSq+F+Rn+NwWEhReuKy61gxVU
+         SSzQ4NG5dFZ1HecvpGjLBreaE3YJ2+CpZ7IbBtL/UiBzyRmkeoHBmwAZkuEV/nryGm
+         LCDY1KUmkXO0G4D9wcm76vOu0MpTE1toZgEQ9jC+b/s8TxaN5wu1cCtBmu8LAFHysM
+         NRHup8QzaYdxQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yu Kuai <yukuai3@huawei.com>, Hou Tao <houtao1@huawei.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org, nbd@other.debian.org
+Subject: [PATCH AUTOSEL 5.18 56/68] nbd: call genl_unregister_family() first in nbd_cleanup()
+Date:   Tue,  7 Jun 2022 13:48:22 -0400
+Message-Id: <20220607174846.477972-56-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220607174846.477972-1-sashal@kernel.org>
+References: <20220607174846.477972-1-sashal@kernel.org>
 MIME-Version: 1.0
-From:   Yongqin Liu <yongqin.liu@linaro.org>
-Date:   Wed, 8 Jun 2022 01:09:54 +0800
-Message-ID: <CAMSo37WW9veYH6=tHqUR2pa_7YX1UuzHqLBHit60P2QyzQmCEw@mail.gmail.com>
-Subject: Please help cherry pick four mmc related changes into the 4.14 stable kernel
-To:     stable@vger.kernel.org
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Benjamin Copeland <benjamin.copeland@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>,
-        Alistair Delva <adelva@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Bajjuri, Praneeth" <praneeth@ti.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,59 +57,72 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi, All
+From: Yu Kuai <yukuai3@huawei.com>
 
-With the 4.14.281 version[1], there were three mmc related changes merged,
-but that causes one boot failure with the X15 Android builds, a problem
-similar to one reported before here[2].
-After being confirmed with Ulf Hansson, and verified with the X15 Android build,
-it needs to have the following four commits cherry-picked to the 4.14
-branch as well.
+[ Upstream commit 06c4da89c24e7023ea448cadf8e9daf06a0aae6e ]
 
-    4f32b45c9a2c mmc: core: Allow host controllers to require R1B for CMD6
-    5fc615c1e3eb mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
-    d091259b8d7a mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
-    23161bed631a mmc: sdhci-omap: Fix busy detection by enabling
-MMC_CAP_NEED_RSP_BUSY
+Otherwise there may be race between module removal and the handling of
+netlink command, which can lead to the oops as shown below:
 
-The above four commits are from the 4.19 branch, as they are a little
-easier to be cherry-picked
-into the 4.14 branch, compared to the commits from the mainline branch.
-(I have confirmed that the four commits are all in 4.19, 5.4, 5.10 and
-mainline branches already).
+  BUG: kernel NULL pointer dereference, address: 0000000000000098
+  Oops: 0002 [#1] SMP PTI
+  CPU: 1 PID: 31299 Comm: nbd-client Tainted: G            E     5.14.0-rc4
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
+  RIP: 0010:down_write+0x1a/0x50
+  Call Trace:
+   start_creating+0x89/0x130
+   debugfs_create_dir+0x1b/0x130
+   nbd_start_device+0x13d/0x390 [nbd]
+   nbd_genl_connect+0x42f/0x748 [nbd]
+   genl_family_rcv_msg_doit.isra.0+0xec/0x150
+   genl_rcv_msg+0xe5/0x1e0
+   netlink_rcv_skb+0x55/0x100
+   genl_rcv+0x29/0x40
+   netlink_unicast+0x1a8/0x250
+   netlink_sendmsg+0x21b/0x430
+   ____sys_sendmsg+0x2a4/0x2d0
+   ___sys_sendmsg+0x81/0xc0
+   __sys_sendmsg+0x62/0xb0
+   __x64_sys_sendmsg+0x1f/0x30
+   do_syscall_64+0x3b/0xc0
+   entry_SYSCALL_64_after_hwframe+0x44/0xae
+  Modules linked in: nbd(E-)
 
-Saying that, there will be still one merge conflict reported when
-cherry picking the commit of
-4f32b45c9a2c, it's easy to resolve though.
-To avoid the merge conflict, it could be done like this as well:
-1. revert the 327b6689898b commit from 4.14 first, so that the commits in step#2
-    could be cherry-picked without any problem
-        327b6689898b mmc: core: Default to generic_cmd6_time as
-timeout in __mmc_switch()
-2. git cherry-pick the following commits from 4.19 into the 4.14 branch
-        4f32b45c9a2c mmc: core: Allow host controllers to require R1B for CMD6
-        5fc615c1e3eb mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for
-erase/trim/discard
-        d091259b8d7a mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC
-sleep command
-        23161bed631a mmc: sdhci-omap: Fix busy detection by enabling
-MMC_CAP_NEED_RSP_BUSY
-        26c6f614cf02 mmc: mmc: core: Default to generic_cmd6_time as
-timeout in __mmc_switch()
-    The last commit of 26c6f614cf02 is for the revert in step#1.
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Link: https://lore.kernel.org/r/20220521073749.3146892-2-yukuai3@huawei.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/nbd.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-I am not sure which way is more convenient for the maintenance work
-here, so just list both of them here
-for your information.
-And please let me know if there is anything else I could help on this
-cherry pick work here.
-
-[1]: https://lore.kernel.org/lkml/16534624745741@kroah.com/T/
-[2]: https://lore.kernel.org/lkml/CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com/
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 5a1f98494ddd..9dc27f9e9ddc 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2529,6 +2529,12 @@ static void __exit nbd_cleanup(void)
+ 	struct nbd_device *nbd;
+ 	LIST_HEAD(del_list);
+ 
++	/*
++	 * Unregister netlink interface prior to waiting
++	 * for the completion of netlink commands.
++	 */
++	genl_unregister_family(&nbd_genl_family);
++
+ 	nbd_dbg_close();
+ 
+ 	mutex_lock(&nbd_index_mutex);
+@@ -2547,7 +2553,6 @@ static void __exit nbd_cleanup(void)
+ 	destroy_workqueue(nbd_del_wq);
+ 
+ 	idr_destroy(&nbd_index_idr);
+-	genl_unregister_family(&nbd_genl_family);
+ 	unregister_blkdev(NBD_MAJOR, "nbd");
+ }
+ 
 -- 
-Best Regards,
-Yongqin Liu
----------------------------------------------------------------
-#mailing list
-linaro-android@lists.linaro.org
-http://lists.linaro.org/mailman/listinfo/linaro-android
+2.35.1
+
