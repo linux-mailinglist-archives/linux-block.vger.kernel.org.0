@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45056542696
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jun 2022 08:57:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A26054269D
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jun 2022 08:58:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231146AbiFHGoE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jun 2022 02:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46328 "EHLO
+        id S231192AbiFHGoV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jun 2022 02:44:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245646AbiFHGeX (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jun 2022 02:34:23 -0400
+        with ESMTP id S232222AbiFHGe1 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jun 2022 02:34:27 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C214CD42
-        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 23:34:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1BB81124C1
+        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 23:34:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=UdZSCEsLRpAGi8czk+fKN4XQfjZ7ouzZjvFceRqLSu8=; b=YC5i8ksVaOep/YVD4l8GkJ3YDD
-        uYB880zOdmCbVV618jMn5D9vnTbjTK0ExES0YMLaVjBZj5UndJ07ySUu0RuiuTnUI9Ex7Pk+QFQ78
-        GObv5Sw9eyq8DCgoQgiD+CkUa4H9pFpdCkkL1K+s+7h1+0JWDW6nZRgXCOk0gsSTvH9evkUwb96tU
-        vcODRQ4pyRXMoSxHMkVoLeCWQWm8UsB7edKA3QBSVB0+3pX+0yGW+klB0KzxaSqksK/b0nSUt/l0M
-        3FlImtZ6vyCesX53jTbvlXbvni3Ruo2HRU8VMaY38M2Sg6By5FGDijnesiCVzRTlt0aWTVVdBxYFC
-        NdmHRCPg==;
+        bh=5N8rks/VHjkMGWyiLxmxppfeU8oBlBsPR4sAbRItpP4=; b=VIQT3Qt4kg8DxyVE1LE4M3uMoj
+        pCrRSCYGtiuIWGCtQB06h69qpyo9nQwzH0GDL132NKrniGhz4ldsG9W4aNQTxtsv7acOsMCwfDXcY
+        sLdElfaTa3fAnW+bFe5hkY1pHnhZAzFCuo5UCpHdPjoCTXzgHkDZxun8VG996Ik7ZsrzOL94vPkYm
+        Dp7dm89Wj2eq5PzoEWbMrQyYFRttRgSzgEX1mMU+LD8TrG8OjIHXQOjgP/pn3tanW8he020BiZOjy
+        OJl4UVn44DUnon2ZwqTUDHJOURi61o8yTP2BFdmZve6UqJxVEixKXrNHGhSp84uCdaUk/YFHIP1qe
+        zdBT5IxQ==;
 Received: from [2001:4bb8:190:726c:66c4:f635:4b37:bdda] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nypGj-00BJTz-Jv; Wed, 08 Jun 2022 06:34:18 +0000
+        id 1nypGm-00BJUG-8D; Wed, 08 Jun 2022 06:34:20 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Mike Snitzer <snitzer@kernel.org>
 Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
         linux-block@vger.kernel.org
-Subject: [PATCH 2/4] block: remove bioset_init_from_src
-Date:   Wed,  8 Jun 2022 08:34:07 +0200
-Message-Id: <20220608063409.1280968-3-hch@lst.de>
+Subject: [PATCH 3/4] dm: unexport dm_get_reserved_rq_based_ios
+Date:   Wed,  8 Jun 2022 08:34:08 +0200
+Message-Id: <20220608063409.1280968-4-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220608063409.1280968-1-hch@lst.de>
 References: <20220608063409.1280968-1-hch@lst.de>
@@ -50,58 +50,26 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Unused now, and the interface never really made a whole lot of sense to
-start with.
+dm_get_reserved_rq_based_ios is only used in the core dm code, so
+remove the export.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/bio.c         | 20 --------------------
- include/linux/bio.h |  1 -
- 2 files changed, 21 deletions(-)
+ drivers/md/dm-rq.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index be3937b84e68a..f3cce7f267a98 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1745,26 +1745,6 @@ int bioset_init(struct bio_set *bs,
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index a83b98a8d2a99..4f49bbcce4f1a 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -43,7 +43,6 @@ unsigned dm_get_reserved_rq_based_ios(void)
+ 	return __dm_get_module_param(&reserved_rq_based_ios,
+ 				     RESERVED_REQUEST_BASED_IOS, DM_RESERVED_MAX_IOS);
  }
- EXPORT_SYMBOL(bioset_init);
+-EXPORT_SYMBOL_GPL(dm_get_reserved_rq_based_ios);
  
--/*
-- * Initialize and setup a new bio_set, based on the settings from
-- * another bio_set.
-- */
--int bioset_init_from_src(struct bio_set *bs, struct bio_set *src)
--{
--	int flags;
--
--	flags = 0;
--	if (src->bvec_pool.min_nr)
--		flags |= BIOSET_NEED_BVECS;
--	if (src->rescue_workqueue)
--		flags |= BIOSET_NEED_RESCUER;
--	if (src->cache)
--		flags |= BIOSET_PERCPU_CACHE;
--
--	return bioset_init(bs, src->bio_pool.min_nr, src->front_pad, flags);
--}
--EXPORT_SYMBOL(bioset_init_from_src);
--
- static int __init init_bio(void)
+ static unsigned dm_get_blk_mq_nr_hw_queues(void)
  {
- 	int i;
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 1cf3738ef1ea6..992ee987f2738 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -403,7 +403,6 @@ enum {
- extern int bioset_init(struct bio_set *, unsigned int, unsigned int, int flags);
- extern void bioset_exit(struct bio_set *);
- extern int biovec_init_pool(mempool_t *pool, int pool_entries);
--extern int bioset_init_from_src(struct bio_set *bs, struct bio_set *src);
- 
- struct bio *bio_alloc_bioset(struct block_device *bdev, unsigned short nr_vecs,
- 			     unsigned int opf, gfp_t gfp_mask,
 -- 
 2.30.2
 
