@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB5D0542390
-	for <lists+linux-block@lfdr.de>; Wed,  8 Jun 2022 08:51:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2827C54245C
+	for <lists+linux-block@lfdr.de>; Wed,  8 Jun 2022 08:52:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233535AbiFHFZW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 8 Jun 2022 01:25:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54060 "EHLO
+        id S233694AbiFHF2c (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 8 Jun 2022 01:28:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234666AbiFHFYy (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jun 2022 01:24:54 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61F66466
-        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 19:39:58 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id w13-20020a17090a780d00b001e8961b355dso5372528pjk.5
-        for <linux-block@vger.kernel.org>; Tue, 07 Jun 2022 19:39:58 -0700 (PDT)
+        with ESMTP id S233741AbiFHF2O (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 8 Jun 2022 01:28:14 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F7F177054
+        for <linux-block@vger.kernel.org>; Tue,  7 Jun 2022 19:42:41 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id s14so16425716plk.8
+        for <linux-block@vger.kernel.org>; Tue, 07 Jun 2022 19:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=6bOa4esw0xksLVfNdAT6B93rV/P/8VSGEKMP6EjzR0E=;
-        b=K6KpXwM81tTGGNFDdq17Lj1eMk1q3eODHH8nocGcaU9nWe7rFntrd/gnI4dJmrX5ot
-         jelT47mS9pdJT0S2PzSCrNgL5Sh63CeXCG+aYcN+ywbxrVtSsSCUllZRXU38BSZmlUri
-         DAKxKJgyjtIwfLg5ysES88sOtfU39kmTixM4U=
+        bh=eACAcP76K1gXeQHMPXfrh6MRwMHogkqclcM3ucohxaU=;
+        b=DtL5BKl38TK1JmQCoo9VNTuilRXtIQQb8aA+2j5JWDKkTJMcHWV5I4ayrf85wEAp/D
+         +SPamuT0V/GS1H3+TGA7bsJrj/vQJTAzHMhmUFqbAjw6QppecD8ydZLJWGxGusTbuS3B
+         DrmzebuZhbfui1ZylFkqA44lBIOUX+RiD7kEk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6bOa4esw0xksLVfNdAT6B93rV/P/8VSGEKMP6EjzR0E=;
-        b=MKZUKujbxIr5npY0+KU3Ac6rjL7EJZpbeQMXa4E7swKtvtcoIc8deEMo5hUlC7QPrG
-         tv0ozxYZWWMV5b2VZtTAagSbe6Xf8CrO551En6fh+hOAUHwcxh+razwUH5t7yjsJayA3
-         Aw9UZ3Wi19Jlw4y0tZ0pve/q88AXlqWijqFsPNID8Hn8QiFrhI1bS7Y+EAWsMURdjJyt
-         3lwlTqsEHRci1RPmskYR4uLes/wSUa3y/TyE8ZZuYg3qKrLn7ilpbZEdq26OiQzyM/4t
-         cFA6plve1/gN5mV2n05EbR/jtr55TI4b0QPJta8F7R3WJ4LzNIXgzuq7h0lp7zwxUm5d
-         u0VA==
-X-Gm-Message-State: AOAM5315CFWMAOWnWKD5RrBgHaQIsQF63Aw6wEsMVPd4mDUnJxYM/rdm
-        QpA0aEkodP67iYraMGkDnVwesA==
-X-Google-Smtp-Source: ABdhPJyJZwIgrQupdT+vh6Z2lrRhM1s6jhssKdeRPoFc/TqToiSIDBj6GM5p6VPlbfki0O4rCxkesQ==
-X-Received: by 2002:a17:90b:3a8f:b0:1e8:7669:8a2f with SMTP id om15-20020a17090b3a8f00b001e876698a2fmr16728205pjb.55.1654655998366;
-        Tue, 07 Jun 2022 19:39:58 -0700 (PDT)
+        bh=eACAcP76K1gXeQHMPXfrh6MRwMHogkqclcM3ucohxaU=;
+        b=iW1aPxPC80cn8l4KCALpqOMXzRs2KSyPHS551ZcZ6+gvg1KYCNTuWmFu2ZLoP8WYrY
+         dvmuK7FWhvhIeUK/jgyy0Lq5tznZKhiEV6KyPtFrGTYdSz0m34ykG06+lF5R8a8snzQV
+         cDArt5X4gK3XCT94T1qnhR/XBhGCPw+OVR+L/8EWazgdMhv86fVEV5mUWwqCGFhOhl3d
+         zyMVb/kKpkNsu8FJKUdVmpIrqFXR6xn4jkSMiXF3xgzr8t3jS3hExUBWbWhzFPV0GLz1
+         6za1nDBQFIfh4FNf8tF6yuddQRVbfh1mHHVAyHnXVkevkzcsc1q8px5yFu8uELFUkwZZ
+         j/BA==
+X-Gm-Message-State: AOAM532Q1FSlYCToU1XRaleRl/2OBF3EotWaqkQ+cA4Eq3oDEBrLhHI1
+        tBkSC3kV8BJr+8hG9+JP4P82qg==
+X-Google-Smtp-Source: ABdhPJzYCcpDtcoi5LZAO+0GSYALVef0pXg5v/EV8ii/oeXqYV5OV4RF4wJ5iDiynw1qdkxhjkSp7A==
+X-Received: by 2002:a17:902:6bc6:b0:166:3c39:50a1 with SMTP id m6-20020a1709026bc600b001663c3950a1mr31493176plt.36.1654656158650;
+        Tue, 07 Jun 2022 19:42:38 -0700 (PDT)
 Received: from google.com ([2401:fa00:8f:203:463d:a192:6128:66e])
-        by smtp.gmail.com with ESMTPSA id 84-20020a621857000000b0050dc7628158sm13612168pfy.50.2022.06.07.19.39.55
+        by smtp.gmail.com with ESMTPSA id n7-20020aa78a47000000b0051bb61c0eacsm13512317pfa.20.2022.06.07.19.42.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 19:39:57 -0700 (PDT)
-Date:   Wed, 8 Jun 2022 11:39:52 +0900
+        Tue, 07 Jun 2022 19:42:38 -0700 (PDT)
+Date:   Wed, 8 Jun 2022 11:42:33 +0900
 From:   Sergey Senozhatsky <senozhatsky@chromium.org>
 To:     Minchan Kim <minchan@kernel.org>
 Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
@@ -55,19 +55,20 @@ Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
         <linux-kselftest@vger.kernel.org>,
         linux-block <linux-block@vger.kernel.org>,
         regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Nitin Gupta <ngupta@vflare.org>
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
 Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
  dereference at virtual address 00000140
-Message-ID: <YqAL+HeZDk5Wug28@google.com>
+Message-ID: <YqAMmTiwcyS3Ttla@google.com>
 References: <CA+G9fYtVOfWWpx96fa3zzKzBPKiNu1w3FOD4j++G8MOG3Vs0EA@mail.gmail.com>
  <Yp47DODPCz0kNgE8@google.com>
  <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
  <Yp/kpPA7GdbArXDo@google.com>
+ <YqAL+HeZDk5Wug28@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yp/kpPA7GdbArXDo@google.com>
+In-Reply-To: <YqAL+HeZDk5Wug28@google.com>
 X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -78,35 +79,40 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On (22/06/07 16:52), Minchan Kim wrote:
-> > rootfs: https://oebuilds.tuxbuild.com/29zhlbEc3EWq2wod9Uy964Bp27q/images/am57xx-evm/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4.gz
-> > kernel: https://builds.tuxbuild.com/29zhqJJizU2Y7Ka7ArhryUOrNDC/zImage
+On (22/06/08 11:39), Sergey Senozhatsky wrote:
+> On (22/06/07 16:52), Minchan Kim wrote:
+> > > rootfs: https://oebuilds.tuxbuild.com/29zhlbEc3EWq2wod9Uy964Bp27q/images/am57xx-evm/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4.gz
+> > > kernel: https://builds.tuxbuild.com/29zhqJJizU2Y7Ka7ArhryUOrNDC/zImage
+> > > 
+> > > Boot command,
+> > >  /usr/bin/qemu-system-aarch64 -cpu host,aarch64=off -machine
+> > > virt-2.10,accel=kvm -nographic -net
+> > > nic,model=virtio,maaacaddr=BA:DD:AD:CC:09:04 -net tap -m 2048 -monitor
+> > > none -kernel kernel/zImage --append "console=ttyAMA0 root=/dev/vda rw"
+> > > -hda rootfs/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4
+> > > -m 4096 -smp 2
+> > > 
+> > > # cd /opt/kselftests/default-in-kernel/zram
+> > > # ./zram.sh
+> > > 
+> > > Allow me sometime I will try to bisect this problem.
 > > 
-> > Boot command,
-> >  /usr/bin/qemu-system-aarch64 -cpu host,aarch64=off -machine
-> > virt-2.10,accel=kvm -nographic -net
-> > nic,model=virtio,maaacaddr=BA:DD:AD:CC:09:04 -net tap -m 2048 -monitor
-> > none -kernel kernel/zImage --append "console=ttyAMA0 root=/dev/vda rw"
-> > -hda rootfs/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4
-> > -m 4096 -smp 2
+> > Thanks for sharing the info. 
 > > 
-> > # cd /opt/kselftests/default-in-kernel/zram
-> > # ./zram.sh
+> > I managed to work your rootfs with my local arm build
+> > based on the problematic git tip. 
+> > However, I couldn't suceed to reproduce it.
 > > 
-> > Allow me sometime I will try to bisect this problem.
+> > I needed to build zsmalloc/zram built-in instead of modules
+> > Is it related? Hmm,
+> > 
+> > Yeah, It would be very helpful if you could help to bisect it.
 > 
-> Thanks for sharing the info. 
-> 
-> I managed to work your rootfs with my local arm build
-> based on the problematic git tip. 
-> However, I couldn't suceed to reproduce it.
-> 
-> I needed to build zsmalloc/zram built-in instead of modules
-> Is it related? Hmm,
-> 
-> Yeah, It would be very helpful if you could help to bisect it.
+> This looks like a NULL lock->name dereference in lockdep. I suspect
+> that somehow local_lock doesn't get .dep_map initialized. Maybe running
+> the kernel with CONFIG_DEBUG_LOCK_ALLOC would help us? Naresh, can you
+> help us with this?
 
-This looks like a NULL lock->name dereference in lockdep. I suspect
-that somehow local_lock doesn't get .dep_map initialized. Maybe running
-the kernel with CONFIG_DEBUG_LOCK_ALLOC would help us? Naresh, can you
-help us with this?
+Hmm, actually, hold on. mapping_area is per-CPU, so what happens if CPU
+get offlined and onlined again? I don't see us re-initializing mapping_area
+local_lock_init(&zs_map_area.lock) and so on.
