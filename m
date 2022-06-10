@@ -2,385 +2,199 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 524185459B1
-	for <lists+linux-block@lfdr.de>; Fri, 10 Jun 2022 03:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 061AB5459DA
+	for <lists+linux-block@lfdr.de>; Fri, 10 Jun 2022 04:04:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237331AbiFJBxT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Jun 2022 21:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38382 "EHLO
+        id S243048AbiFJCEZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Jun 2022 22:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242210AbiFJBxN (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Jun 2022 21:53:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DB9AD220FC2
-        for <linux-block@vger.kernel.org>; Thu,  9 Jun 2022 18:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654825991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xmmaPFipZtWgGS15GnP0nxoz6LYFbNPObNJ/8AvuP4c=;
-        b=KlAik8BZDfdiiTdGkBF0MNk6+Hf2lVqucShclqKFocL4hytx0Lk+hx22vzXHFMK0nq6QFL
-        L0A9vrEa3QXy7oIqK7Uzhzq0WO3EGY6dMMjshtPE1yNL1ciIvMM61+ess5EPZsaGNnjjXT
-        1JOqQ4lq80+fXIAslLVSKYcOzmZ5RPI=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-613-riay9_iON9CozCfn_JatVA-1; Thu, 09 Jun 2022 21:53:05 -0400
-X-MC-Unique: riay9_iON9CozCfn_JatVA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 317E11C0518D;
-        Fri, 10 Jun 2022 01:53:05 +0000 (UTC)
-Received: from T590 (ovpn-8-17.pek2.redhat.com [10.72.8.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D39D91415100;
-        Fri, 10 Jun 2022 01:52:59 +0000 (UTC)
-Date:   Fri, 10 Jun 2022 09:52:53 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        lsf-pc@lists.linux-foundation.org, linux-block@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, linux-fsdevel@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] block drivers in user space
-Message-ID: <YqKj9UqPjbYqnSii@T590>
-References: <YhXMu/GcceyDx637@B-P7TQMD6M-0146.local>
- <a55211a1-a610-3d86-e21a-98751f20f21e@opensource.wdc.com>
- <YhXsQdkOpBY2nmFG@B-P7TQMD6M-0146.local>
- <3702afe7-2918-42e7-110b-efa75c0b58e8@opensource.wdc.com>
- <YhbYOeMUv5+U1XdQ@B-P7TQMD6M-0146.local>
- <YqFUc8jhYp5ijS/C@T590>
- <YqFashbvU+v5lGZy@B-P7TQMD6M-0146.local>
- <YqFx2GGACopPmLaM@T590>
- <YqF9X0sJjeCxwxBb@B-P7TQMD6M-0146.local>
+        with ESMTP id S1346110AbiFJCEO (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Jun 2022 22:04:14 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E79616D942;
+        Thu,  9 Jun 2022 19:03:51 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LK44d49t1zDqjd;
+        Fri, 10 Jun 2022 10:03:29 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 10 Jun 2022 10:03:49 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 10 Jun
+ 2022 10:03:48 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <paolo.valente@linaro.org>, <jack@suse.cz>,
+        <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>
+CC:     <tj@kernel.org>, <axboe@kernel.dk>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH -next v10 0/4] support concurrent sync io for bfq on a specail occasion
+Date:   Fri, 10 Jun 2022 10:16:57 +0800
+Message-ID: <20220610021701.2347602-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YqF9X0sJjeCxwxBb@B-P7TQMD6M-0146.local>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 12:55:59PM +0800, Gao Xiang wrote:
-> On Thu, Jun 09, 2022 at 12:06:48PM +0800, Ming Lei wrote:
-> > On Thu, Jun 09, 2022 at 10:28:02AM +0800, Gao Xiang wrote:
-> > > On Thu, Jun 09, 2022 at 10:01:23AM +0800, Ming Lei wrote:
-> > > > On Thu, Feb 24, 2022 at 08:58:33AM +0800, Gao Xiang wrote:
-> > > > > On Thu, Feb 24, 2022 at 07:40:47AM +0900, Damien Le Moal wrote:
-> > > > > > On 2/23/22 17:11, Gao Xiang wrote:
-> > > > > > > On Wed, Feb 23, 2022 at 04:46:41PM +0900, Damien Le Moal wrote:
-> > > > > > >> On 2/23/22 14:57, Gao Xiang wrote:
-> > > > > > >>> On Mon, Feb 21, 2022 at 02:59:48PM -0500, Gabriel Krisman Bertazi wrote:
-> > > > > > >>>> I'd like to discuss an interface to implement user space block devices,
-> > > > > > >>>> while avoiding local network NBD solutions.  There has been reiterated
-> > > > > > >>>> interest in the topic, both from researchers [1] and from the community,
-> > > > > > >>>> including a proposed session in LSFMM2018 [2] (though I don't think it
-> > > > > > >>>> happened).
-> > > > > > >>>>
-> > > > > > >>>> I've been working on top of the Google iblock implementation to find
-> > > > > > >>>> something upstreamable and would like to present my design and gather
-> > > > > > >>>> feedback on some points, in particular zero-copy and overall user space
-> > > > > > >>>> interface.
-> > > > > > >>>>
-> > > > > > >>>> The design I'm pending towards uses special fds opened by the driver to
-> > > > > > >>>> transfer data to/from the block driver, preferably through direct
-> > > > > > >>>> splicing as much as possible, to keep data only in kernel space.  This
-> > > > > > >>>> is because, in my use case, the driver usually only manipulates
-> > > > > > >>>> metadata, while data is forwarded directly through the network, or
-> > > > > > >>>> similar. It would be neat if we can leverage the existing
-> > > > > > >>>> splice/copy_file_range syscalls such that we don't ever need to bring
-> > > > > > >>>> disk data to user space, if we can avoid it.  I've also experimented
-> > > > > > >>>> with regular pipes, But I found no way around keeping a lot of pipes
-> > > > > > >>>> opened, one for each possible command 'slot'.
-> > > > > > >>>>
-> > > > > > >>>> [1] https://dl.acm.org/doi/10.1145/3456727.3463768
-> > > > > > >>>> [2] https://www.spinics.net/lists/linux-fsdevel/msg120674.html
-> > > > > > >>>
-> > > > > > >>> I'm interested in this general topic too. One of our use cases is
-> > > > > > >>> that we need to process network data in some degree since many
-> > > > > > >>> protocols are application layer protocols so it seems more reasonable
-> > > > > > >>> to process such protocols in userspace. And another difference is that
-> > > > > > >>> we may have thousands of devices in a machine since we'd better to run
-> > > > > > >>> containers as many as possible so the block device solution seems
-> > > > > > >>> suboptimal to us. Yet I'm still interested in this topic to get more
-> > > > > > >>> ideas.
-> > > > > > >>>
-> > > > > > >>> Btw, As for general userspace block device solutions, IMHO, there could
-> > > > > > >>> be some deadlock issues out of direct reclaim, writeback, and userspace
-> > > > > > >>> implementation due to writeback user requests can be tripped back to
-> > > > > > >>> the kernel side (even the dependency crosses threads). I think they are
-> > > > > > >>> somewhat hard to fix with user block device solutions. For example,
-> > > > > > >>> https://lore.kernel.org/r/CAM1OiDPxh0B1sXkyGCSTEpdgDd196-ftzLE-ocnM8Jd2F9w7AA@mail.gmail.com
-> > > > > > >>
-> > > > > > >> This is already fixed with prctl() support. See:
-> > > > > > >>
-> > > > > > >> https://lore.kernel.org/linux-fsdevel/20191112001900.9206-1-mchristi@redhat.com/
-> > > > > > > 
-> > > > > > > As I mentioned above, IMHO, we could add some per-task state to avoid
-> > > > > > > the majority of such deadlock cases (also what I mentioned above), but
-> > > > > > > there may still some potential dependency could happen between threads,
-> > > > > > > such as using another kernel workqueue and waiting on it (in principle
-> > > > > > > at least) since userspace program can call any syscall in principle (
-> > > > > > > which doesn't like in-kernel drivers). So I think it can cause some
-> > > > > > > risk due to generic userspace block device restriction, please kindly
-> > > > > > > correct me if I'm wrong.
-> > > > > > 
-> > > > > > Not sure what you mean with all this. prctl() works per process/thread
-> > > > > > and a context that has PR_SET_IO_FLUSHER set will have PF_MEMALLOC_NOIO
-> > > > > > set. So for the case of a user block device driver, setting this means
-> > > > > > that it cannot reenter itself during a memory allocation, regardless of
-> > > > > > the system call it executes (FS etc): all memory allocations in any
-> > > > > > syscall executed by the context will have GFP_NOIO.
-> > > > > 
-> > > > > I mean,
-> > > > > 
-> > > > > assuming PR_SET_IO_FLUSHER is already set on Thread A by using prctl,
-> > > > > but since it can call any valid system call, therefore, after it
-> > > > > received data due to direct reclaim and writeback, it is still
-> > > > > allowed to call some system call which may do something as follows:
-> > > > > 
-> > > > >    Thread A (PR_SET_IO_FLUSHER)   Kernel thread B (another context)
-> > > > > 
-> > > > >    (call some syscall which)
-> > > > > 
-> > > > >    submit something to Thread B
-> > > > >                                   
-> > > > >                                   ... (do something)
-> > > > > 
-> > > > >                                   memory allocation with GFP_KERNEL (it
-> > > > >                                   may trigger direct memory reclaim
-> > > > >                                   again and reenter the original fs.)
-> > > > > 
-> > > > >                                   wake up Thread A
-> > > > > 
-> > > > >    wait Thread B to complete
-> > > > > 
-> > > > > Normally such system call won't cause any problem since userspace
-> > > > > programs cannot be in a context out of writeback and direct reclaim.
-> > > > > Yet I'm not sure if it works under userspace block driver
-> > > > > writeback/direct reclaim cases.
-> > > > 
-> > > > Hi Gao Xiang,
-> > > > 
-> > > > I'd rather to reply you in this original thread, and the recent
-> > > > discussion is from the following link:
-> > > > 
-> > > > https://lore.kernel.org/linux-block/Yp1jRw6kiUf5jCrW@B-P7TQMD6M-0146.local/
-> > > > 
-> > > > kernel loop & nbd is really in the same situation.
-> > > > 
-> > > > For example of kernel loop, PF_MEMALLOC_NOIO is added in commit
-> > > > d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread"),
-> > > > so loop's worker thread can be thought as the above Thread A, and
-> > > > of course, writeback/swapout IO can reach the loop worker thread(
-> > > > the above Thread A), then loop just calls into FS from the worker
-> > > > thread for handling the loop IO, that is same with user space driver's
-> > > > case, and the kernel 'thread B' should be in FS code.
-> > > > 
-> > > > Your theory might be true, but it does depend on FS's implementation,
-> > > > and we don't see such report in reality.
-> > > > 
-> > > > Also you didn't mentioned that what kernel thread B exactly is? And what
-> > > > the allocation is in kernel thread B.
-> > > > 
-> > > > If you have actual report, I am happy to take account into it, otherwise not
-> > > > sure if it is worth of time/effort in thinking/addressing one pure theoretical
-> > > > concern.
-> > > 
-> > > Hi Ming,
-> > > 
-> > > Thanks for your look & reply.
-> > > 
-> > > That is not a wild guess. That is a basic difference between
-> > > in-kernel native block-based drivers and user-space block drivers.
-> > 
-> > Please look at my comment, wrt. your pure theoretical concern, userspace
-> > block driver is same with kernel loop/nbd.
-> 
-> Hi Ming,
-> 
-> I don't have time to audit some potential risky system call, but I guess
-> security folks or researchers may be interested in finding such path.
+There are some problem in our mail server, resend v9 because Paolo seems
+didn't receive them(hopefully v10 will be fine).
 
-Why do you think system call has potential risk? Isn't syscall designed
-for userspace? Any syscall called from the userspace context is covered
-by PR_SET_IO_FLUSHER, and your concern is just in Kernel thread B,
-right?
+Changes in v10:
+ - Add reviewed-tag for patch 2
 
-If yes, let's focus on this scenario, so I posted it one more time:
+Changes in v9:
+ - also update how many bfqqs have pending_reqs bfq_bfqq_move().
+ - fix one language in patch 4
+ - Add reviewed-tag for patch 1,3,4
 
->    Thread A (PR_SET_IO_FLUSHER)   Kernel thread B (another context)
-> 
->    (call some syscall which)
-> 
->    submit something to Thread B
->                                   
->                                   ... (do something)
-> 
->                                   memory allocation with GFP_KERNEL (it
->                                   may trigger direct memory reclaim
->                                   again and reenter the original fs.)
-> 
->                                   wake up Thread A
-> 
->    wait Thread B to complete
+Changes in v8:
+ - Instead of using whether bfqq is busy, using whether bfqq has pending
+ requests. As Paolo pointed out the former way is problematic.
 
-You didn't mention why normal writeback IO from other context won't call
-into this kind of kernel thread B too, so can you explain it a bit?
+Changes in v7:
+ - fix mismatch bfq_inc/del_busy_queues() and bfqq_add/del_bfqq_busy(),
+ also retest this patchset on v5.18 to make sure functionality is
+ correct.
+ - move the updating of 'bfqd->busy_queues' into new apis
 
-As I said, both loop/nbd has same situation, for example of loop, thread
-A is loop worker thread with PF_MEMALLOC_NOIO, and generic FS code(read,
-write, fallocate, fsync, ...) is called into from the worker thread, so
-there might be the so called kernel thread B for loop. But we don't see
-such report.
+Changes in v6:
+ - add reviewed-by tag for patch 1
 
-Yeah, you may argue that other non-FS syscalls may be involved in
-userspace driver. But in reality, userspace block driver should only deal
-with FS and network IO most of times, and both network and FS code path
-are already in normal IO code path for long time, so your direct claim
-concern shouldn't be one problem. Not mention nbd/tcmu/... have been used
-or long long time, so far so good. 
+Changes in v5:
+ - rename bfq_add_busy_queues() to bfq_inc_busy_queues() in patch 1
+ - fix wrong definition in patch 1
+ - fix spelling mistake in patch 2: leaset -> least
+ - update comments in patch 3
+ - add reviewed-by tag in patch 2,3
 
-If you think it is real risk, please find it for nbd/tcmu/dm-multipath/...
-first. IMO, it isn't useful to say there is such generic concern without
-further investigation and without providing any detail, and devil is always
-in details.
+Changes in v4:
+ - split bfq_update_busy_queues() to bfq_add/dec_busy_queues(),
+   suggested by Jan Kara.
+ - remove unused 'in_groups_with_pending_reqs',
 
-> 
-> The big problem is, you cannot avoid people to write such system call (or 
-> ioctls) in their user daemon, since most system call (or ioctls)
-> implementation assumes that they're never called under the kernel memory
-> direct reclaim context (even with PR_SET_IO_FLUSHER) but userspace block
-> driver can give such context to userspace and user problems can do
-> whatever they do in principle.
-> 
-> IOWs, we can audit in-kernel block drivers and fix all buggy paths with
-> GFP_NOIO since the source code is already there and they should be fixed.
-> 
-> But you have no way to audit all user programs to call proper system calls
-> or random ioctls which can be safely worked in the direct reclaim context
-> (even with PR_SET_IO_FLUSHER).
-> 
-> > 
-> > Did you see such report on loop & nbd? Can you answer my questions wrt.
-> > kernel thread B?
-> 
-> I don't think it has some relationship with in-kernel loop device, since
-> the loop device I/O paths are all under control.
+Changes in v3:
+ - remove the cleanup patch that is irrelevant now(I'll post it
+   separately).
+ - instead of hacking wr queues and using weights tree insertion/removal,
+   using bfq_add/del_bfqq_busy() to count the number of groups
+   (suggested by Jan Kara).
 
-No, it is completely same situation wrt. your concern, please look at the above
-scenario.
+Changes in v2:
+ - Use a different approch to count root group, which is much simple.
 
-> 
-> > 
-> > > 
-> > > That is userspace block driver can call _any_ system call if they want.
-> > > Since users can call any system call and any _new_ system call can be
-> > > introduced later, you have to audit all system calls "Which are safe
-> > > and which are _not_ safe" all the time. Otherwise, attacker can make
-> > 
-> > Isn't nbd server capable of calling any system call? Is there any
-> > security risk for nbd?
-> 
-> Note that I wrote this email initially as a generic concern (prior to your
-> ubd annoucement ), so that isn't related to your ubd from my POV.
+Currently, bfq can't handle sync io concurrently as long as they
+are not issued from root group. This is because
+'bfqd->num_groups_with_pending_reqs > 0' is always true in
+bfq_asymmetric_scenario().
 
-OK, I guess I needn't to waste time on this 'generic concern'.
+The way that bfqg is counted into 'num_groups_with_pending_reqs':
 
-> 
-> > 
-> > > use of it to hung the system if such userspace driver is used widely.
-> > 
-> > >From the beginning, only ADMIN can create ubd, that is same with
-> > nbd/loop, and it gets default permission as disk device.
-> 
-> loop device is different since the path can be totally controlled by the
-> kernel.
-> 
-> > 
-> > ubd is really in same situation with nbd wrt. security, the only difference
-> > is just that nbd uses socket for communication, and ubd uses io_uring, that
-> > is all.
-> > 
-> > Yeah, Stefan Hajnoczi and I discussed to make ubd as one container
-> > block device, so normal user can create & use ubd, but it won't be done
-> > from the beginning, and won't be enabled until the potential security
-> > risks are addressed, and there should be more limits on ubd when normal user
-> > can create & use it, such as:
-> > 
-> > - not allow unprivileged ubd device to be mounted
-> > - not allow unprivileged ubd device's partition table to be read from
-> >   kernel
-> > - not support buffered io for unprivileged ubd device, and only direct io
-> >   is allowed
-> 
-> How could you do that? I think it needs a wide modification to mm/fs.
-> and how about mmap I/O?
+Before this patchset:
+ 1) root group will never be counted.
+ 2) Count if bfqg or it's child bfqgs have pending requests.
+ 3) Don't count if bfqg and it's child bfqgs complete all the requests.
 
-Firstly mount isn't allowed, then we can deal with mmap on def_blk_fops, and
-only allow open with O_DIRECT.
+After this patchset:
+ 1) root group is counted.
+ 2) Count if bfqg has pending requests.
+ 3) Don't count if bfqg complete all the requests.
 
-> 
-> > - maybe more limit for minimizing security risk.
-> > 
-> > > 
-> > > IOWs, in my humble opinion, that is quite a fundamental security
-> > > concern of all userspace block drivers.
-> > 
-> > But nbd is still there and widely used, and there are lots of people who
-> > shows interest in userspace block device. Then think about who is wrong?
-> > 
-> > As one userspace block driver, it is normal to see some limits there,
-> > but I don't agree that there is fundamental security issue.
-> 
-> That depends, if you think it's a real security issue that there could be
-> a path reported to public to trigger that after it's widely used, that is
-> fine.
+With the above changes, concurrent sync io can be supported if only
+one group is activated.
 
-But nbd/tcmu is widely used already...
+fio test script(startdelay is used to avoid queue merging):
+[global]
+filename=/dev/sda
+allow_mounted_write=0
+ioengine=psync
+direct=1
+ioscheduler=bfq
+offset_increment=10g
+group_reporting
+rw=randwrite
+bs=4k
 
-> 
-> > 
-> > > 
-> > > Actually, you cannot ignore block I/O requests if they actually push
-> > 
-> > Who wants to ignore block I/O? And why ignore it?
-> 
-> I don't know how to express that properly. Sorry for my bad English.
-> 
-> For example, userspace FS implementation can ignore any fs operations
-> triggered under direct reclaim.
-> 
-> But if you runs a userspace block driver under a random fs, they will
-> just send data & metadata I/O to your driver unconditionally. I think
-> that is too late to avoid such deadlock.
+[test1]
+numjobs=1
 
-What is the deadlock? Is that triggered with your kernel thread B deadlock?
+[test2]
+startdelay=1
+numjobs=1
 
-> 
-> > 
-> > > into block layer, since that is too late if I/O actually is submitted
-> > > by some FS. And you don't even know which type of such I/O is.
-> > 
-> > We do know the I/O type.
-> 
-> 1) you don't know meta or data I/O. I know there is a REQ_META, but
->    that is not a strict mark.
-> 
-> 2) even you know an I/O is under direct reclaim, how to deal with that?
->   just send to userspace unconditionally?
+[test3]
+startdelay=2
+numjobs=1
 
-All block driver doesn't care REQ_META, why is it special for userspace
-block driver?
+[test4]
+startdelay=3
+numjobs=1
+
+[test5]
+startdelay=4
+numjobs=1
+
+[test6]
+startdelay=5
+numjobs=1
+
+[test7]
+startdelay=6
+numjobs=1
+
+[test8]
+startdelay=7
+numjobs=1
+
+test result:
+running fio on root cgroup
+v5.18:	   112 Mib/s
+v5.18-patched: 112 Mib/s
+
+running fio on non-root cgroup
+v5.18:	   51.2 Mib/s
+v5.18-patched: 112 Mib/s
+
+Note that I also test null_blk with "irqmode=2
+completion_nsec=100000000(100ms) hw_queue_depth=1", and tests show
+that service guarantees are still preserved.
+
+Previous versions:
+RFC: https://lore.kernel.org/all/20211127101132.486806-1-yukuai3@huawei.com/
+v1: https://lore.kernel.org/all/20220305091205.4188398-1-yukuai3@huawei.com/
+v2: https://lore.kernel.org/all/20220416093753.3054696-1-yukuai3@huawei.com/
+v3: https://lore.kernel.org/all/20220427124722.48465-1-yukuai3@huawei.com/
+v4: https://lore.kernel.org/all/20220428111907.3635820-1-yukuai3@huawei.com/
+v5: https://lore.kernel.org/all/20220428120837.3737765-1-yukuai3@huawei.com/
+v6: https://lore.kernel.org/all/20220523131818.2798712-1-yukuai3@huawei.com/
+v7: https://lore.kernel.org/all/20220528095020.186970-1-yukuai3@huawei.com/
 
 
-Thanks,
-Ming
+Yu Kuai (4):
+  block, bfq: support to track if bfqq has pending requests
+  block, bfq: record how many queues have pending requests
+  block, bfq: refactor the counting of 'num_groups_with_pending_reqs'
+  block, bfq: do not idle if only one group is activated
+
+ block/bfq-cgroup.c  | 10 ++++++++++
+ block/bfq-iosched.c | 47 +++------------------------------------------
+ block/bfq-iosched.h | 21 +++++++++++---------
+ block/bfq-wf2q.c    | 47 ++++++++++++++++++++++++++++++---------------
+ 4 files changed, 57 insertions(+), 68 deletions(-)
+
+-- 
+2.31.1
 
