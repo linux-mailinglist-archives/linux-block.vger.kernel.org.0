@@ -2,108 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A08D546E21
-	for <lists+linux-block@lfdr.de>; Fri, 10 Jun 2022 22:16:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 920A8546FCC
+	for <lists+linux-block@lfdr.de>; Sat, 11 Jun 2022 01:02:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350564AbiFJUQQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 10 Jun 2022 16:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42484 "EHLO
+        id S1347495AbiFJXCW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 10 Jun 2022 19:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350528AbiFJUQP (ORCPT
+        with ESMTP id S1347609AbiFJXCU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 10 Jun 2022 16:16:15 -0400
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA5024C0B9
-        for <linux-block@vger.kernel.org>; Fri, 10 Jun 2022 13:16:14 -0700 (PDT)
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25AHidpd024989
-        for <linux-block@vger.kernel.org>; Fri, 10 Jun 2022 13:16:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=ngiycs0SqGNoBcBOOiS6n513hBNhAYc94F0OBqdAAPA=;
- b=NqOkwff1ndriV/TqQJAtJRzR/JpvvR4lbX+fxMfx67z+bs2ijggeFi+39k+wAQGAWNL4
- 0gOQgflYbrkdH1971CCxabjXgApJatfZLuB38WHbBwvotbjy77Yi0m31qTPtFQ5SJelR
- Rlr1taJtGb4I6ZY3wNiRa8R9DZEri3nmduE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3gmam8ryq4-9
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Fri, 10 Jun 2022 13:16:14 -0700
-Received: from twshared5131.09.ash9.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Fri, 10 Jun 2022 13:16:12 -0700
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id 408614E9D6AC; Fri, 10 Jun 2022 12:58:32 -0700 (PDT)
-From:   Keith Busch <kbusch@fb.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-nvme@lists.infradead.org>
-CC:     <axboe@kernel.dk>, Kernel Team <Kernel-team@fb.com>, <hch@lst.de>,
-        <bvanassche@acm.org>, <damien.lemoal@opensource.wdc.com>,
-        <ebiggers@kernel.org>, <pankydev8@gmail.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv6 11/11] iomap: add support for dma aligned direct-io
-Date:   Fri, 10 Jun 2022 12:58:30 -0700
-Message-ID: <20220610195830.3574005-12-kbusch@fb.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220610195830.3574005-1-kbusch@fb.com>
-References: <20220610195830.3574005-1-kbusch@fb.com>
+        Fri, 10 Jun 2022 19:02:20 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1EF1D088B
+        for <linux-block@vger.kernel.org>; Fri, 10 Jun 2022 16:02:17 -0700 (PDT)
+Received: by mail-qk1-f171.google.com with SMTP id n197so296571qke.1
+        for <linux-block@vger.kernel.org>; Fri, 10 Jun 2022 16:02:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=9LGrN71hGYmCGD2rOU7fZmr62+xJ1Vp6jjk3/W+3clI=;
+        b=rR3ahiRBwEyxtKXCEFUMFIHKKoqaMxK2irYzVtE4JqD6G8G5/CRKq6C8PvQZirKmy6
+         2r4bg6jyAoHlctY4kchFGxK1+Hu8rTByx/xwzo/qbkVmiTgP6mJq08BdG1Ihc2l48rOQ
+         vQkxL5nAIoA6coCOLJQYXoSWnrjtVK3aNop60wfv9htXu5wqHyFP+/GgozWHbtMqVHbC
+         nP2/Rx5vyr2jJmjlgPXmhbOwvYfkt/mBJShcaeEuFv9uG3dEzV+qSKkQ55cde06wz+tZ
+         lvmqJ7xj48+J1Y/RdtlLfGYD7cBqstu8VeWeM4pAvu6Dl1gDRS8fqjZTSwoXZHUjUWTn
+         RdkA==
+X-Gm-Message-State: AOAM533Q24kmshDJJ34maMn3xfOKUghdgVkG7LgNYAdkJplXoI7BfHcJ
+        h6M2uF06HUjz5gnN7BX8UXCD
+X-Google-Smtp-Source: ABdhPJy9eMmKIo9FfcxP4rXP3miTML9aPzFtMs1wjmo4pmTYde2sojL+C8P77Bnn0rwBp9BsZbBlKA==
+X-Received: by 2002:a05:620a:1a1b:b0:6a7:aa:d474 with SMTP id bk27-20020a05620a1a1b00b006a700aad474mr11216024qkb.680.1654902136194;
+        Fri, 10 Jun 2022 16:02:16 -0700 (PDT)
+Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
+        by smtp.gmail.com with ESMTPSA id q12-20020a05622a030c00b00304dd83a9b1sm296245qtw.82.2022.06.10.16.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jun 2022 16:02:15 -0700 (PDT)
+Date:   Fri, 10 Jun 2022 19:02:15 -0400
+From:   Mike Snitzer <snitzer@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
+        Alasdair G Kergon <agk@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [git pull] device mapper fixes for 5.19-rc2
+Message-ID: <YqPNd1xK0MIqRnev@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: YpZOQ_p8Tfhh3irUaxmMRrgJyP946SqS
-X-Proofpoint-ORIG-GUID: YpZOQ_p8Tfhh3irUaxmMRrgJyP946SqS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-10_08,2022-06-09_02,2022-02-23_01
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+Hi Linus,
 
-Use the address alignment requirements from the block_device for direct
-io instead of requiring addresses be aligned to the block size.
+The following changes since commit f2906aa863381afb0015a9eb7fefad885d4e5a56:
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/direct-io.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  Linux 5.19-rc1 (2022-06-05 17:18:54 -0700)
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 370c3241618a..5d098adba443 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -242,7 +242,6 @@ static loff_t iomap_dio_bio_iter(const struct iomap_i=
-ter *iter,
- 	struct inode *inode =3D iter->inode;
- 	unsigned int blkbits =3D blksize_bits(bdev_logical_block_size(iomap->bd=
-ev));
- 	unsigned int fs_block_size =3D i_blocksize(inode), pad;
--	unsigned int align =3D iov_iter_alignment(dio->submit.iter);
- 	loff_t length =3D iomap_length(iter);
- 	loff_t pos =3D iter->pos;
- 	unsigned int bio_opf;
-@@ -253,7 +252,8 @@ static loff_t iomap_dio_bio_iter(const struct iomap_i=
-ter *iter,
- 	size_t copied =3D 0;
- 	size_t orig_count;
-=20
--	if ((pos | length | align) & ((1 << blkbits) - 1))
-+	if ((pos | length) & ((1 << blkbits) - 1) ||
-+	    !bdev_iter_is_aligned(iomap->bdev, dio->submit.iter))
- 		return -EINVAL;
-=20
- 	if (iomap->type =3D=3D IOMAP_UNWRITTEN) {
---=20
-2.30.2
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-5.19/dm-fixes-2
+
+for you to fetch changes up to dddf30564054796696bcd4c462b232a5beacf72c:
+
+  dm: fix zoned locking imbalance due to needless check in clone_endio (2022-06-10 15:23:54 -0400)
+
+Please pull, thanks.
+Mike
+
+----------------------------------------------------------------
+- Fix DM core's bioset initialization so that blk integrity pool is
+  properly setup. Remove now unused bioset_init_from_src.
+
+- Fix DM zoned hang from locking imbalance due to needless check in
+  clone_endio().
+
+----------------------------------------------------------------
+Christoph Hellwig (2):
+      dm: fix bio_set allocation
+      block: remove bioset_init_from_src
+
+Mike Snitzer (1):
+      dm: fix zoned locking imbalance due to needless check in clone_endio
+
+ block/bio.c           |  20 ---------
+ drivers/md/dm-core.h  |  11 ++++-
+ drivers/md/dm-rq.c    |   2 +-
+ drivers/md/dm-table.c |  11 -----
+ drivers/md/dm.c       | 110 +++++++++++++++++---------------------------------
+ drivers/md/dm.h       |   2 -
+ include/linux/bio.h   |   1 -
+ 7 files changed, 46 insertions(+), 111 deletions(-)
