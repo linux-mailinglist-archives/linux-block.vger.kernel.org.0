@@ -2,110 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F9755497E3
-	for <lists+linux-block@lfdr.de>; Mon, 13 Jun 2022 18:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 714B4549B6C
+	for <lists+linux-block@lfdr.de>; Mon, 13 Jun 2022 20:24:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233209AbiFMQfg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 13 Jun 2022 12:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33984 "EHLO
+        id S236857AbiFMSYd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 13 Jun 2022 14:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244374AbiFMQep (ORCPT
+        with ESMTP id S245232AbiFMSX2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 13 Jun 2022 12:34:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C3DA82E695
-        for <linux-block@vger.kernel.org>; Mon, 13 Jun 2022 07:23:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655130220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/omQrhtKCh0gY0pTreoozcYZAMAMovcyZBqWjqmq8hc=;
-        b=EoY/EBsfq9xOkIymQCpBade9IL3JxWMUzOyGK+JPVAwNzpAmwRhVXWSPymOiVeS0RZJFjm
-        eAqj2/UG3o/RlS0LHv9ASpbxemsIFjpfdjEhKMPnF3OmzDACOc82WdTy+5n6eHV/XVmZ8W
-        lTClyvzju/IZfbQ8Qud0nnU0bYXLXGY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-509-rrIBOTmpPZO2IYVSWlTIng-1; Mon, 13 Jun 2022 10:23:28 -0400
-X-MC-Unique: rrIBOTmpPZO2IYVSWlTIng-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D29418E5388;
-        Mon, 13 Jun 2022 14:23:28 +0000 (UTC)
-Received: from T590 (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07B1AC28118;
-        Mon, 13 Jun 2022 14:23:25 +0000 (UTC)
-Date:   Mon, 13 Jun 2022 22:23:21 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Yi Zhang <yi.zhang@redhat.com>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>
-Subject: Re: [bug report] kmemleak observed from blktests on latest
- linux-block/for-next
-Message-ID: <YqdIWcgnEylFuSci@T590>
-References: <CAHj4cs8iJPnQ+zGHNTapR9HWMk9nBXUPbhYi5k-vKZf4qRmz_A@mail.gmail.com>
- <YqavC8hwLXwPVnor@T590>
- <CAHj4cs8y5HHYjr0FtWm1AmkEY=ZqOL4OmgzrWBEhbRpu5V8dWA@mail.gmail.com>
+        Mon, 13 Jun 2022 14:23:28 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E390CABE5A
+        for <linux-block@vger.kernel.org>; Mon, 13 Jun 2022 07:32:19 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4821368AFE; Mon, 13 Jun 2022 16:32:10 +0200 (CEST)
+Date:   Mon, 13 Jun 2022 16:32:10 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ron Economos <w6rz@comcast.net>
+Cc:     linux-block@vger.kernel.org, hch@lst.de
+Subject: Re: loop device failure on 5.19-rc1 RISC-V
+Message-ID: <20220613143210.GB4110@lst.de>
+References: <849cea40-4665-14fe-fa46-e555af730214@comcast.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHj4cs8y5HHYjr0FtWm1AmkEY=ZqOL4OmgzrWBEhbRpu5V8dWA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <849cea40-4665-14fe-fa46-e555af730214@comcast.net>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 09:08:11PM +0800, Yi Zhang wrote:
-> Hi Ming
-> 
-> The kmemleak also can be reproduced on 5.19.0-rc2, pls try to enable
-> nvme_core multipath and retest.
-> 
-> # cat /sys/module/nvme_core/parameters/multipath
-> Y
+On Sat, Jun 11, 2022 at 02:46:33AM -0700, Ron Economos wrote:
+> The following error messages occur on 5.19-rc1 RISC-V Ubuntu 22.04:
 >
+> Jun 08 21:00:20 riscv64 kernel: Dev loop0: unable to read RDB block 8
+> Jun 08 21:00:20 riscv64 kernel:  loop0: unable to read partition table
+> Jun 08 21:00:20 riscv64 kernel: loop0: partition table beyond EOD, truncated
+>
+> This happens when the snapd daemon tries to mount loop0.
+>
+> Reverting commit b9684a71fca793213378dd410cd11675d973eaa1
+>
+> block, loop: support partitions without scanning
 
-OK, I can understand the reason now since rqos is only removed for blk-mq queue,
-then rqos allocated for bio queue is leaked, see disk_release_mq().
-
-The following patch should fix it:
-
-diff --git a/block/genhd.c b/block/genhd.c
-index 556d6e4b38d9..6e7ca8c302aa 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1120,9 +1120,10 @@ static const struct attribute_group *disk_attr_groups[] = {
- 	NULL
- };
- 
--static void disk_release_mq(struct request_queue *q)
-+static void disk_release_queue(struct request_queue *q)
- {
--	blk_mq_cancel_work_sync(q);
-+	if (queue_is_mq(q))
-+		blk_mq_cancel_work_sync(q);
- 
- 	/*
- 	 * There can't be any non non-passthrough bios in flight here, but
-@@ -1166,8 +1167,7 @@ static void disk_release(struct device *dev)
- 	might_sleep();
- 	WARN_ON_ONCE(disk_live(disk));
- 
--	if (queue_is_mq(disk->queue))
--		disk_release_mq(disk->queue);
-+	disk_release_queue(disk->queue);
- 
- 	blkcg_exit_queue(disk->queue);
- 
-
-Thanks,
-Ming
-
+In which case the snapd daemon explicitly asks for a partitions scan,
+and we fixed a regression that makes it behave like it did in 5.16
+and earlier.  But why do you have support for Amiga partitions enabled
+on RISC-V anyway?
