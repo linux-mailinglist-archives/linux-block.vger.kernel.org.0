@@ -2,61 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54A6E54CE73
-	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F069C54CE6D
+	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:19:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354702AbiFOQTI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Jun 2022 12:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42322 "EHLO
+        id S1345676AbiFOQTO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Jun 2022 12:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348905AbiFOQSS (ORCPT
+        with ESMTP id S1354888AbiFOQSR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Jun 2022 12:18:18 -0400
+        Wed, 15 Jun 2022 12:18:17 -0400
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA92755379
-        for <linux-block@vger.kernel.org>; Wed, 15 Jun 2022 09:16:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840AE55485
+        for <linux-block@vger.kernel.org>; Wed, 15 Jun 2022 09:16:42 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id D2F1E1F97E;
+        by smtp-out2.suse.de (Postfix) with ESMTP id DD8721F981;
         Wed, 15 Jun 2022 16:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
         t=1655309778; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DqpItv11q9RFz4JOFsyAcCZ02pSGUPVwPnv55+p1+qw=;
-        b=REa5iSpbS1FAxzwUVoxuo6vCNIt1i60JXhhKVbO8UO74xqL1chteFyQeT7GFAER8yvJV/2
-        FoymVNnG/cDZirArtWxkNNMy1Bp7I/YoXCI5eak7yfLG1ABk+I6+u3q0YyDNSyBgVQLWjp
-        OAfPBUDOHqEYaf7ivl+u6x64EQkGk9U=
+        bh=gEBpPJCz8/bsKbGbLSHxdhAcO0Jh7iiRRT/PkSSqJ5Q=;
+        b=tPVDlTIIi/CpVRDKJkQBkQCPUV07HVFaknZvwbyQsUy7py+09SYsFpjw+0Tvkd+y7aiWi+
+        YkqYH+eL14B8puwKCx+2OFYA8tKKYyBfMusgIz4Es+RFLWC3q5k0RBYzMQVtxcwVUNU4mt
+        zAjFJWfEyKiALciUXlTHcjAEyxzorBM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
         s=susede2_ed25519; t=1655309778;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DqpItv11q9RFz4JOFsyAcCZ02pSGUPVwPnv55+p1+qw=;
-        b=eskKPzttw6e7hx5thiclXeGwfk170kyMvOU/Y7z5xRE4gHisfWmH/L3NQymIEpyFXnTPS+
-        oOIITXeZOMzSMxBA==
+        bh=gEBpPJCz8/bsKbGbLSHxdhAcO0Jh7iiRRT/PkSSqJ5Q=;
+        b=qCLBmcaZ0RF+c/QYr6qwbgiBWyHcd1+UqUT1/NxH/YWxcsaFav+DLv+sIRyRWQ2rTOFAac
+        QsDxKfRbAjSxxTAg==
 Received: from quack3.suse.cz (unknown [10.163.28.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id C56D22C149;
+        by relay2.suse.de (Postfix) with ESMTPS id CA2622C14F;
         Wed, 15 Jun 2022 16:16:18 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id E3778A0639; Wed, 15 Jun 2022 18:16:16 +0200 (CEST)
+        id EA636A063A; Wed, 15 Jun 2022 18:16:16 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     <linux-block@vger.kernel.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Niklas Cassel <Niklas.Cassel@wdc.com>,
         Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 5/8] blk-ioprio: Remove unneeded field
-Date:   Wed, 15 Jun 2022 18:16:08 +0200
-Message-Id: <20220615161616.5055-5-jack@suse.cz>
+Subject: [PATCH 6/8] blk-ioprio: Convert from rqos policy to direct call
+Date:   Wed, 15 Jun 2022 18:16:09 +0200
+Message-Id: <20220615161616.5055-6-jack@suse.cz>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <20220615160437.5478-1-jack@suse.cz>
 References: <20220615160437.5478-1-jack@suse.cz>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1907; h=from:subject; bh=aeKHE3LvhJoWaFM7YpJcwiDk+5O0mTw/oPPCBn0n9AM=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBiqgXIzGQLNJUmPklWz6HkDZPusSIiVep4XVNpKKnw dxcwcHeJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYqoFyAAKCRCcnaoHP2RA2Z+ZCA CUn1Q1FxxhIsM14y0uZKzZX8IJ3nlJ4QSMjrMqPaTFHYwzPjA09LcxR4B3P8X42FPv5OyKUSLVl38k hqlFz9LTvcrX+Dx/b1J4H2tGNYDOjNIEezngScnId+dlw9ZGaXLmF8eJnM77412FlLKiFQIozy7qf4 nY+eZDRc2L0swc1336MmYfucN7+H9jeBFSCEBTVzhKzJV8O5nXp4W3qvurJ9hJ1lzFdxmA/u660ON1 Aunzg7wpUtqhMQEa8rNqjMC9KoP29j3JsvGvwENQ4uQNw+0fbs7Xic4N6jGxRzXAz9oE+dIVz4kkhm qRFvs9sWBM/wePjmmifkzW2ZJ9U+2S
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4547; h=from:subject; bh=ECoFLx4eh//cI4rGpxOBBAOY0ZfPr9sTKA2GSSz6C54=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBiqgXJf6HOw5oGkoLu+DfDyVmCr1VTk4ceCf2I3wLl aQKq96qJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYqoFyQAKCRCcnaoHP2RA2XWXCA CnUKxaWxIdHhG4B7TP5VjICQtSrFY/1UKDAfMkdqNDOL1d3bySVzhO/r0u2ij5YE2rO+0Lmrc3vFHB aOzoexGxTJxEGxph2oKr4x7WIfODfvQDd2/Ji4SPGGuUM+uQiB0Y4LGNDPh9ZcIr0VavyjuEzqXUv/ NUZYJ7aMlE5L6IKbCCaL9v7GzZ38cYncwtI91xlGyCNd2pa4ywFCrrimE4jBXGUQRTQMB7rN+FWcra 4fpK+rdO+Gp5svChe7lwUDTKqTusm7hmVyzf+JWcmL3S3LE5Fr2vDXKDEJ243a8ncKwu8UIpVAuMqq IbDMDH9KPX9HVIWt52cE56cqTnR3F1
 X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,56 +69,171 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-blkcg->ioprio_set field is not really useful except for avoiding
-possibly more expensive checks inside blkcg_ioprio_track(). The check
-for blkcg->prio_policy being equal to POLICY_NO_CHANGE does the same
-service so just remove the ioprio_set field and replace the check.
+Convert blk-ioprio handling from a rqos policy to a direct call from
+blk_mq_submit_bio(). Firstly, blk-ioprio is not a much of a rqos policy
+anyway, it just needs a hook in bio submission path to set the bio's IO
+priority. Secondly, the rqos .track hook gets actually called too late
+for blk-ioprio purposes and introducing a special rqos hook just for
+blk-ioprio looks even weirder.
 
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- block/blk-ioprio.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ block/blk-cgroup.c |  1 +
+ block/blk-ioprio.c | 50 +++++-----------------------------------------
+ block/blk-ioprio.h |  9 +++++++++
+ block/blk-mq.c     |  8 ++++++++
+ 4 files changed, 23 insertions(+), 45 deletions(-)
 
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 764e740b0c0f..6906981563f8 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1299,6 +1299,7 @@ int blkcg_init_queue(struct request_queue *q)
+ 	ret = blk_iolatency_init(q);
+ 	if (ret) {
+ 		blk_throtl_exit(q);
++		blk_ioprio_exit(q);
+ 		goto err_destroy_all;
+ 	}
+ 
 diff --git a/block/blk-ioprio.c b/block/blk-ioprio.c
-index 79e797f5d194..3f605583598b 100644
+index 3f605583598b..c00060a02c6e 100644
 --- a/block/blk-ioprio.c
 +++ b/block/blk-ioprio.c
-@@ -62,7 +62,6 @@ struct ioprio_blkg {
- struct ioprio_blkcg {
- 	struct blkcg_policy_data cpd;
- 	enum prio_policy	 prio_policy;
--	bool			 prio_set;
+@@ -181,17 +181,12 @@ static struct blkcg_policy ioprio_policy = {
+ 	.pd_free_fn	= ioprio_free_pd,
  };
  
- static inline struct ioprio_blkg *pd_to_ioprio(struct blkg_policy_data *pd)
-@@ -113,7 +112,6 @@ static ssize_t ioprio_set_prio_policy(struct kernfs_open_file *of, char *buf,
- 	if (ret < 0)
- 		return ret;
- 	blkcg->prio_policy = ret;
--	blkcg->prio_set = true;
- 	return nbytes;
- }
- 
-@@ -193,16 +191,15 @@ static void blkcg_ioprio_track(struct rq_qos *rqos, struct request *rq,
+-struct blk_ioprio {
+-	struct rq_qos rqos;
+-};
+-
+-static void blkcg_ioprio_track(struct rq_qos *rqos, struct request *rq,
+-			       struct bio *bio)
++void blkcg_set_ioprio(struct bio *bio)
+ {
  	struct ioprio_blkcg *blkcg = ioprio_blkcg_from_bio(bio);
  	u16 prio;
  
--	if (!blkcg->prio_set)
-+	if (blkcg->prio_policy == POLICY_NO_CHANGE)
+-	if (blkcg->prio_policy == POLICY_NO_CHANGE)
++	if (!blkcg || blkcg->prio_policy == POLICY_NO_CHANGE)
  		return;
  
  	/*
- 	 * Except for IOPRIO_CLASS_NONE, higher I/O priority numbers
- 	 * correspond to a lower priority. Hence, the max_t() below selects
- 	 * the lower priority of bi_ioprio and the cgroup I/O priority class.
--	 * If the cgroup policy has been set to POLICY_NO_CHANGE == 0, the
--	 * bio I/O priority is not modified. If the bio I/O priority equals
--	 * IOPRIO_CLASS_NONE, the cgroup I/O priority is assigned to the bio.
-+	 * If the bio I/O priority equals IOPRIO_CLASS_NONE, the cgroup I/O
-+	 * priority is assigned to the bio.
- 	 */
- 	prio = max_t(u16, bio->bi_ioprio,
- 			IOPRIO_PRIO_VALUE(blkcg->prio_policy, 0));
+@@ -207,49 +202,14 @@ static void blkcg_ioprio_track(struct rq_qos *rqos, struct request *rq,
+ 		bio->bi_ioprio = prio;
+ }
+ 
+-static void blkcg_ioprio_exit(struct rq_qos *rqos)
++void blk_ioprio_exit(struct request_queue *q)
+ {
+-	struct blk_ioprio *blkioprio_blkg =
+-		container_of(rqos, typeof(*blkioprio_blkg), rqos);
+-
+-	blkcg_deactivate_policy(rqos->q, &ioprio_policy);
+-	kfree(blkioprio_blkg);
++	blkcg_deactivate_policy(q, &ioprio_policy);
+ }
+ 
+-static struct rq_qos_ops blkcg_ioprio_ops = {
+-	.track	= blkcg_ioprio_track,
+-	.exit	= blkcg_ioprio_exit,
+-};
+-
+ int blk_ioprio_init(struct request_queue *q)
+ {
+-	struct blk_ioprio *blkioprio_blkg;
+-	struct rq_qos *rqos;
+-	int ret;
+-
+-	blkioprio_blkg = kzalloc(sizeof(*blkioprio_blkg), GFP_KERNEL);
+-	if (!blkioprio_blkg)
+-		return -ENOMEM;
+-
+-	ret = blkcg_activate_policy(q, &ioprio_policy);
+-	if (ret) {
+-		kfree(blkioprio_blkg);
+-		return ret;
+-	}
+-
+-	rqos = &blkioprio_blkg->rqos;
+-	rqos->id = RQ_QOS_IOPRIO;
+-	rqos->ops = &blkcg_ioprio_ops;
+-	rqos->q = q;
+-
+-	/*
+-	 * Registering the rq-qos policy after activating the blk-cgroup
+-	 * policy guarantees that ioprio_blkcg_from_bio(bio) != NULL in the
+-	 * rq-qos callbacks.
+-	 */
+-	rq_qos_add(q, rqos);
+-
+-	return 0;
++	return blkcg_activate_policy(q, &ioprio_policy);
+ }
+ 
+ static int __init ioprio_init(void)
+diff --git a/block/blk-ioprio.h b/block/blk-ioprio.h
+index a7785c2f1aea..5a1eb550e178 100644
+--- a/block/blk-ioprio.h
++++ b/block/blk-ioprio.h
+@@ -6,14 +6,23 @@
+ #include <linux/kconfig.h>
+ 
+ struct request_queue;
++struct bio;
+ 
+ #ifdef CONFIG_BLK_CGROUP_IOPRIO
+ int blk_ioprio_init(struct request_queue *q);
++void blk_ioprio_exit(struct request_queue *q);
++void blkcg_set_ioprio(struct bio *bio);
+ #else
+ static inline int blk_ioprio_init(struct request_queue *q)
+ {
+ 	return 0;
+ }
++static inline void blk_ioprio_exit(struct request_queue *q)
++{
++}
++static inline void blkcg_set_ioprio(struct bio *bio)
++{
++}
+ #endif
+ 
+ #endif /* _BLK_IOPRIO_H_ */
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index e9bf950983c7..67a7bfa58b7c 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -42,6 +42,7 @@
+ #include "blk-stat.h"
+ #include "blk-mq-sched.h"
+ #include "blk-rq-qos.h"
++#include "blk-ioprio.h"
+ 
+ static DEFINE_PER_CPU(struct llist_head, blk_cpu_done);
+ 
+@@ -2790,6 +2791,11 @@ static inline struct request *blk_mq_get_cached_request(struct request_queue *q,
+ 	return rq;
+ }
+ 
++static void bio_set_ioprio(struct bio *bio)
++{
++	blkcg_set_ioprio(bio);
++}
++
+ /**
+  * blk_mq_submit_bio - Create and send a request to block device.
+  * @bio: Bio pointer.
+@@ -2830,6 +2836,8 @@ void blk_mq_submit_bio(struct bio *bio)
+ 
+ 	trace_block_getrq(bio);
+ 
++	bio_set_ioprio(bio);
++
+ 	rq_qos_track(q, rq, bio);
+ 
+ 	blk_mq_bio_to_request(rq, bio, nr_segs);
 -- 
 2.35.3
 
