@@ -2,232 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50CB754CE07
-	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5EAA54CE74
+	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:19:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349248AbiFOQNA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Jun 2022 12:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39834 "EHLO
+        id S1346087AbiFOQTK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Jun 2022 12:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348685AbiFOQMx (ORCPT
+        with ESMTP id S1355278AbiFOQSP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Jun 2022 12:12:53 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C9A6479;
-        Wed, 15 Jun 2022 09:12:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=X1Y+xHoeQH3UW63rjymiD/emNoqwBnemSVoIxTF9EbY=; b=iKgX6plSnGYTUQgEz3h2eQ8oq4
-        FGlAIFJWTusbVwsUGEKQv5w3YldIr+Zb7y9e5Tci57QG4okfn/WNYoSJSPedAWtRsJ317QnqZ3tYN
-        B1fywGUu5iwDLF9GPEgBC7jVnfl/bzFg+cc/N6mZ6JQngmxQwJYFT1EsGSRC6XIG1doRvnySpVRU/
-        tzfXsXC/u1Ur26GJQGnmxT26Dpy7yBQ61LA/ooaFX1WIMUL63WFzcYKEzecykYtWm5V8bVzy+p78C
-        Z+iMAawOzUWIvBjOXPztbfswoP+njdZ1jiGYb3TqxWthTb6w8cx/ik5VmwwPqeARrQ2tc76XIBIjc
-        0eUneuvg==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1o1VdO-0084iQ-Ox; Wed, 15 Jun 2022 10:12:47 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1o1VdJ-0004b4-QT; Wed, 15 Jun 2022 10:12:41 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Wed, 15 Jun 2022 10:12:33 -0600
-Message-Id: <20220615161233.17527-22-logang@deltatee.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220615161233.17527-1-logang@deltatee.com>
-References: <20220615161233.17527-1-logang@deltatee.com>
+        Wed, 15 Jun 2022 12:18:15 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6562346CAE
+        for <linux-block@vger.kernel.org>; Wed, 15 Jun 2022 09:16:39 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 8DA3121C26;
+        Wed, 15 Jun 2022 16:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1655309778; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=lwXQl80fjTi5XuvsQsJDbw/RJCC5Zwh52h6Zf6hq/SE=;
+        b=KrYXSJurbirJafG4I6EfHBy88jBuDcH7rLs4Xhs1LgqsSzKMDXO/41BH+hgPkQrHbNp/PN
+        o8WwjrN2RjpHr/47Z4gx8VaZZIGDLJrzYQvwp38DWgHeiO9GZwxuihEurZ4/NWNDd/OtkM
+        R/NqY+O8Zd8+H+rN4RmX0P3oDUd+sog=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1655309778;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=lwXQl80fjTi5XuvsQsJDbw/RJCC5Zwh52h6Zf6hq/SE=;
+        b=FkoXCe+WmH8++QVatBC2vdbInEOJWuhUxrGxWbz7jsadWJh/KZHXWa7TYnX6FCqpF8oIy6
+        KnCTDIkmvH1lVEAw==
+Received: from quack3.suse.cz (unknown [10.163.28.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 2BCA52C141;
+        Wed, 15 Jun 2022 16:16:17 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id C1672A062E; Wed, 15 Jun 2022 18:16:16 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     <linux-block@vger.kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/8 v2] block: Fix IO priority mess
+Date:   Wed, 15 Jun 2022 18:16:03 +0200
+Message-Id: <20220615160437.5478-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1804; h=from:subject:message-id; bh=YRCj12ML/yWF5B/utN7Gj64XNvEtrg8I5GA+PhX55fk=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBiqgW+XU982EGC1IMBWYBJcGQpHipz+Vepkm5ERRNN zo9gfYGJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYqoFvgAKCRCcnaoHP2RA2ZgMCA Ds9vH5KP6SHagbYvXLbqzUJoxmcYwi9tvsBsRgWYsy+gvcqWUT8B6XMDa/SXp2eQLcvGEkv+LJg/J/ YMGX4GLeLLXoXgeY7M5KfUq9RTjUHIzbzJRJITefbK7guqEzpCRfPBOW+wuznwM13BLDra7w39Y/cu ItWd3jah3B14uuwI5d7Xsk9a30WDo9f5l5lzGD6rk5DcKRFgPcFcyuTLZW+la1hNUiEcBnmc/eJKgR e1KUZxUoTtYi01B6ZF6V4zboc+M4xteF2aR5nwQlqK/JuWQ8R4l8In/FvJWXIlLn1WDUbja43FkO0A dGRueLcg/Dl/NA7CLKNjQWEZ/QGT6m
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, jhubbard@nvidia.com, rcampbell@nvidia.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH v7 21/21] nvme-pci: allow mmaping the CMB in userspace
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allow userspace to obtain CMB memory by mmaping the controller's
-char device. The mmap call allocates and returns a hunk of CMB memory,
-(the offset is ignored) so userspace does not have control over the
-address within the CMB.
+Hello,
 
-A VMA allocated in this way will only be usable by drivers that set
-FOLL_PCI_P2PDMA when calling GUP. And inter-device support will be
-checked the first time the pages are mapped for DMA.
+This is the second revision of my patches fixing IO priority handling in the
+block layer. Recently, I've been looking into 10% regression reported by our
+performance measurement infrastructure in reaim benchmark that was bisected
+down to 5a9d041ba2f6 ("block: move io_context creation into where it's
+needed"). This didn't really make much sense and it took me a while to
+understand this but the culprit is actually in even older commit e70344c05995
+("block: fix default IO priority handling") and 5a9d041ba2f6 just made the
+breakage visible.  Essentially the problem was that after these commits some IO
+was queued with IO priority class IOPRIO_CLASS_BE while other IO was queued
+with IOPRIO_CLASS_NONE and as a result they could not be merged together
+resulting in performance regression. I think what commit e70344c05995 ("block:
+fix default IO priority handling") did is actually broken not only because of
+this performance regression but because of other reasons as well (see changelog
+of patch 3/8 for details). Besides this problem, there are multiple other
+inconsistencies in the IO priority handling throughout the block stack we have
+identified when discussing this with Damien Le Moal. So this patch set aims at
+fixing all these various issues.
 
-Currently this is only supported by O_DIRECT to an PCI NVMe device
-or through the NVMe passthrough IOCTL.
+Note that there are a few choices I've made I'm not 100% sold on. In particular
+the conversion of blk-ioprio from rqos is somewhat disputable since it now
+incurs a cost similar to blk-throttle in the bio submission fast path (need to
+load bio->bi_blkg->pd[ioprio_policy.plid]).  If people think the removed
+boilerplate code is not worth the cost, I can certainly go via the "additional
+rqos hook" path.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/host/core.c | 35 +++++++++++++++++++++++++++++++----
- drivers/nvme/host/nvme.h |  3 +++
- drivers/nvme/host/pci.c  | 23 +++++++++++++++++++++++
- 3 files changed, 57 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index d6e76f2dc293..23fe4b544bf1 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3166,6 +3166,7 @@ static int nvme_dev_open(struct inode *inode, struct file *file)
- {
- 	struct nvme_ctrl *ctrl =
- 		container_of(inode->i_cdev, struct nvme_ctrl, cdev);
-+	int ret = -EINVAL;
- 
- 	switch (ctrl->state) {
- 	case NVME_CTRL_LIVE:
-@@ -3175,13 +3176,25 @@ static int nvme_dev_open(struct inode *inode, struct file *file)
- 	}
- 
- 	nvme_get_ctrl(ctrl);
--	if (!try_module_get(ctrl->ops->module)) {
--		nvme_put_ctrl(ctrl);
--		return -EINVAL;
--	}
-+	if (!try_module_get(ctrl->ops->module))
-+		goto err_put_ctrl;
- 
- 	file->private_data = ctrl;
-+
-+	if (ctrl->ops->cdev_file_open) {
-+		ret = ctrl->ops->cdev_file_open(ctrl, file);
-+		if (ret)
-+			goto err_put_mod;
-+	}
-+
- 	return 0;
-+
-+err_put_mod:
-+	module_put(ctrl->ops->module);
-+err_put_ctrl:
-+	nvme_put_ctrl(ctrl);
-+	return ret;
-+
- }
- 
- static int nvme_dev_release(struct inode *inode, struct file *file)
-@@ -3189,11 +3202,24 @@ static int nvme_dev_release(struct inode *inode, struct file *file)
- 	struct nvme_ctrl *ctrl =
- 		container_of(inode->i_cdev, struct nvme_ctrl, cdev);
- 
-+	if (ctrl->ops->cdev_file_release)
-+		ctrl->ops->cdev_file_release(file);
-+
- 	module_put(ctrl->ops->module);
- 	nvme_put_ctrl(ctrl);
- 	return 0;
- }
- 
-+static int nvme_dev_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct nvme_ctrl *ctrl = file->private_data;
-+
-+	if (!ctrl->ops->mmap_cmb)
-+		return -ENODEV;
-+
-+	return ctrl->ops->mmap_cmb(ctrl, vma);
-+}
-+
- static const struct file_operations nvme_dev_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= nvme_dev_open,
-@@ -3201,6 +3227,7 @@ static const struct file_operations nvme_dev_fops = {
- 	.unlocked_ioctl	= nvme_dev_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
- 	.uring_cmd	= nvme_dev_uring_cmd,
-+	.mmap		= nvme_dev_mmap,
- };
- 
- static ssize_t nvme_sysfs_reset(struct device *dev,
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 957f79420cf3..44ff05d8e24d 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -503,6 +503,9 @@ struct nvme_ctrl_ops {
- 	void (*delete_ctrl)(struct nvme_ctrl *ctrl);
- 	int (*get_address)(struct nvme_ctrl *ctrl, char *buf, int size);
- 	bool (*supports_pci_p2pdma)(struct nvme_ctrl *ctrl);
-+	int (*cdev_file_open)(struct nvme_ctrl *ctrl, struct file *file);
-+	void (*cdev_file_release)(struct file *file);
-+	int (*mmap_cmb)(struct nvme_ctrl *ctrl, struct vm_area_struct *vma);
- };
- 
- /*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 52b52a7efa9a..8ef3752b7ddb 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2972,6 +2972,26 @@ static bool nvme_pci_supports_pci_p2pdma(struct nvme_ctrl *ctrl)
- 	return dma_pci_p2pdma_supported(dev->dev);
- }
- 
-+static int nvme_pci_cdev_file_open(struct nvme_ctrl *ctrl, struct file *file)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	return pci_p2pdma_file_open(pdev, file);
-+}
-+
-+static void nvme_pci_cdev_file_release(struct file *file)
-+{
-+	pci_p2pdma_file_release(file);
-+}
-+
-+static int nvme_pci_mmap_cmb(struct nvme_ctrl *ctrl,
-+			     struct vm_area_struct *vma)
-+{
-+	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
-+
-+	return pci_mmap_p2pmem(pdev, vma);
-+}
-+
- static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.name			= "pcie",
- 	.module			= THIS_MODULE,
-@@ -2983,6 +3003,9 @@ static const struct nvme_ctrl_ops nvme_pci_ctrl_ops = {
- 	.submit_async_event	= nvme_pci_submit_async_event,
- 	.get_address		= nvme_pci_get_address,
- 	.supports_pci_p2pdma	= nvme_pci_supports_pci_p2pdma,
-+	.cdev_file_open		= nvme_pci_cdev_file_open,
-+	.cdev_file_release	= nvme_pci_cdev_file_release,
-+	.mmap_cmb		= nvme_pci_mmap_cmb,
- };
- 
- static int nvme_dev_map(struct nvme_dev *dev)
--- 
-2.30.2
-
+								Honza
+Previous versions:
+Link: http://lore.kernel.org/r/20220601132347.13543-1-jack@suse.cz # v1
