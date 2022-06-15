@@ -2,55 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5EAA54CE74
-	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DC1A54CE6E
+	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:19:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346087AbiFOQTK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Jun 2022 12:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
+        id S1354872AbiFOQTN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Jun 2022 12:19:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355278AbiFOQSP (ORCPT
+        with ESMTP id S1353677AbiFOQSP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Wed, 15 Jun 2022 12:18:15 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6562346CAE
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536A149B4A
         for <linux-block@vger.kernel.org>; Wed, 15 Jun 2022 09:16:39 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 8DA3121C26;
+        by smtp-out2.suse.de (Postfix) with ESMTP id 8B6AC1F96C;
         Wed, 15 Jun 2022 16:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
         t=1655309778; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=lwXQl80fjTi5XuvsQsJDbw/RJCC5Zwh52h6Zf6hq/SE=;
-        b=KrYXSJurbirJafG4I6EfHBy88jBuDcH7rLs4Xhs1LgqsSzKMDXO/41BH+hgPkQrHbNp/PN
-        o8WwjrN2RjpHr/47Z4gx8VaZZIGDLJrzYQvwp38DWgHeiO9GZwxuihEurZ4/NWNDd/OtkM
-        R/NqY+O8Zd8+H+rN4RmX0P3oDUd+sog=
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zdHGHI4Ev58b/pl0dNaAGHgKtCtHQQd4DQ4+opUALT0=;
+        b=ZKIFAaa9x20cf8eb21YT708pM1jiWkTdZoKbW208/bLgFz9Rk04mC5+/UpxuazpxSCS5a6
+        oYID15OgKRn1jG2d6V9+2jI5vuYEE63pIi/28G5RaI2s1Dtl7YSxeV1SIn7DMkRaccRLPV
+        E3VCBTalsIm1M9Oy9dJYovuTFMqp3Q0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
         s=susede2_ed25519; t=1655309778;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=lwXQl80fjTi5XuvsQsJDbw/RJCC5Zwh52h6Zf6hq/SE=;
-        b=FkoXCe+WmH8++QVatBC2vdbInEOJWuhUxrGxWbz7jsadWJh/KZHXWa7TYnX6FCqpF8oIy6
-        KnCTDIkmvH1lVEAw==
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zdHGHI4Ev58b/pl0dNaAGHgKtCtHQQd4DQ4+opUALT0=;
+        b=p/R3wstH9a+z6T8c68t4eyyEFpUouQiOHJorvtFFst78o4zMl4lv2imxOzKyrku0ALIJ8j
+        ZvTEvKjvNwBBraAA==
 Received: from quack3.suse.cz (unknown [10.163.28.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 2BCA52C141;
+        by relay2.suse.de (Postfix) with ESMTPS id 2C18F2C142;
         Wed, 15 Jun 2022 16:16:17 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id C1672A062E; Wed, 15 Jun 2022 18:16:16 +0200 (CEST)
+        id C7876A058D; Wed, 15 Jun 2022 18:16:16 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     <linux-block@vger.kernel.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Niklas Cassel <Niklas.Cassel@wdc.com>,
         Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 0/8 v2] block: Fix IO priority mess
-Date:   Wed, 15 Jun 2022 18:16:03 +0200
-Message-Id: <20220615160437.5478-1-jack@suse.cz>
+Subject: [PATCH 1/8] block: Fix handling of tasks without ioprio in ioprio_get(2)
+Date:   Wed, 15 Jun 2022 18:16:04 +0200
+Message-Id: <20220615161616.5055-1-jack@suse.cz>
 X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20220615160437.5478-1-jack@suse.cz>
+References: <20220615160437.5478-1-jack@suse.cz>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1804; h=from:subject:message-id; bh=YRCj12ML/yWF5B/utN7Gj64XNvEtrg8I5GA+PhX55fk=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBiqgW+XU982EGC1IMBWYBJcGQpHipz+Vepkm5ERRNN zo9gfYGJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYqoFvgAKCRCcnaoHP2RA2ZgMCA Ds9vH5KP6SHagbYvXLbqzUJoxmcYwi9tvsBsRgWYsy+gvcqWUT8B6XMDa/SXp2eQLcvGEkv+LJg/J/ YMGX4GLeLLXoXgeY7M5KfUq9RTjUHIzbzJRJITefbK7guqEzpCRfPBOW+wuznwM13BLDra7w39Y/cu ItWd3jah3B14uuwI5d7Xsk9a30WDo9f5l5lzGD6rk5DcKRFgPcFcyuTLZW+la1hNUiEcBnmc/eJKgR e1KUZxUoTtYi01B6ZF6V4zboc+M4xteF2aR5nwQlqK/JuWQ8R4l8In/FvJWXIlLn1WDUbja43FkO0A dGRueLcg/Dl/NA7CLKNjQWEZ/QGT6m
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1501; h=from:subject; bh=9KD3aySqtPBkLpNodH9xvh4U02ybJw2mmf5dcbjI88g=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBiqgXEYfqwMx2mXUc/W3d23Pk3TGBQcOIl9EQiNkKN 4Wc0ZKaJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYqoFxAAKCRCcnaoHP2RA2fk7B/ 9UkES+O6bz4btxCgvDAETpvsgq2JS3VKJHuxfz1765SK1gCrblXh1UCs6PTj+BpWT3UjTr/GXIUZZV N95np4nenzfb0ZHuzG69LmTCv1HAI+vrdW3I8WjOuRvieiRKKzfZj2JhKkNrau1qjPkoL9GzxXCYFo jXMVZsZIXfhP9D+eRxgPNaoetVNx7x/zWxbcCY0bmF37L39l7Vq0zk4cGaLNZNBspRRozahNT/R07q 9J0Nr5Ped8c3oZo7tPLZnlH/eeVQW/9kBE+tCqLb6DXxTfGSgxjR3MWZ4LJG2xMjCadMsY2OCGJlIw 8J93rHVTwKO4HyG1lmG/Fgmmy6+sjp
 X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -63,33 +69,44 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+ioprio_get(2) can be asked to return the best IO priority from several
+tasks (IOPRIO_WHO_PGRP, IOPRIO_WHO_USER). Currently the call treats
+tasks without set IO priority as having priority
+IOPRIO_CLASS_BE/IOPRIO_BE_NORM however this does not really reflect the
+IO priority the task will get (which depends on task's nice value) and
+with the following fix it will not even match returned IO priority for a
+single task.
 
-This is the second revision of my patches fixing IO priority handling in the
-block layer. Recently, I've been looking into 10% regression reported by our
-performance measurement infrastructure in reaim benchmark that was bisected
-down to 5a9d041ba2f6 ("block: move io_context creation into where it's
-needed"). This didn't really make much sense and it took me a while to
-understand this but the culprit is actually in even older commit e70344c05995
-("block: fix default IO priority handling") and 5a9d041ba2f6 just made the
-breakage visible.  Essentially the problem was that after these commits some IO
-was queued with IO priority class IOPRIO_CLASS_BE while other IO was queued
-with IOPRIO_CLASS_NONE and as a result they could not be merged together
-resulting in performance regression. I think what commit e70344c05995 ("block:
-fix default IO priority handling") did is actually broken not only because of
-this performance regression but because of other reasons as well (see changelog
-of patch 3/8 for details). Besides this problem, there are multiple other
-inconsistencies in the IO priority handling throughout the block stack we have
-identified when discussing this with Damien Le Moal. So this patch set aims at
-fixing all these various issues.
+Fix IO priority comparison to treat unset IO priority as the lowest
+possible one. This way we will return IOPRIO_CLASS_NONE priority only if
+none of the considered tasks has explicitely set IO priority, otherwise
+we return the highest set IO priority. This changes userspace visible
+behavior but this way the caller really gets back the highest set IO
+priority without contaminating the result with
+IOPRIO_CLASS_BE/IOPRIO_BE_NORM from tasks which have IO priority unset.
 
-Note that there are a few choices I've made I'm not 100% sold on. In particular
-the conversion of blk-ioprio from rqos is somewhat disputable since it now
-incurs a cost similar to blk-throttle in the bio submission fast path (need to
-load bio->bi_blkg->pd[ioprio_policy.plid]).  If people think the removed
-boilerplate code is not worth the cost, I can certainly go via the "additional
-rqos hook" path.
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ block/ioprio.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-								Honza
-Previous versions:
-Link: http://lore.kernel.org/r/20220601132347.13543-1-jack@suse.cz # v1
+diff --git a/block/ioprio.c b/block/ioprio.c
+index 2fe068fcaad5..62890391fc80 100644
+--- a/block/ioprio.c
++++ b/block/ioprio.c
+@@ -157,10 +157,9 @@ static int get_task_ioprio(struct task_struct *p)
+ int ioprio_best(unsigned short aprio, unsigned short bprio)
+ {
+ 	if (!ioprio_valid(aprio))
+-		aprio = IOPRIO_DEFAULT;
++		return bprio;
+ 	if (!ioprio_valid(bprio))
+-		bprio = IOPRIO_DEFAULT;
+-
++		return aprio;
+ 	return min(aprio, bprio);
+ }
+ 
+-- 
+2.35.3
+
