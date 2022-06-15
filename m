@@ -2,66 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3534254CE75
-	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:19:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F8FB54CEFD
+	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 18:47:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349414AbiFOQTP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Jun 2022 12:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41860 "EHLO
+        id S242728AbiFOQrj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Jun 2022 12:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355555AbiFOQSS (ORCPT
+        with ESMTP id S245195AbiFOQrh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Jun 2022 12:18:18 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA08A48387
-        for <linux-block@vger.kernel.org>; Wed, 15 Jun 2022 09:16:41 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id D8A6E21C53;
-        Wed, 15 Jun 2022 16:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1655309778; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vTBV4GVJAyuQOnq7Eqd7AQEyBKr2b9T1PTHtj8WIfgs=;
-        b=Ej03qcuyjOIrR3YiDk6zf+JIiyFUYC9G45VsAyngUP8HRXkLocPlcasElRuyWRGS7XWKFS
-        02BzT0XzTHz3TL1P8CaFdiqLBlAhJ0Y3v+grqlfDk8oLIAOfux0VEOOzqwdR34/8iTELdN
-        VGnriq5hVAv6JjGLcRyc6PGk+po+w98=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1655309778;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vTBV4GVJAyuQOnq7Eqd7AQEyBKr2b9T1PTHtj8WIfgs=;
-        b=Fr0sxROVC5BHwqjjexPnWvBzfRguHNAbZdUi81bl8RxY2E3OzSws8WNY6Uj/zJYKewwp48
-        nYJeIOEU6LLpVfCQ==
-Received: from quack3.suse.cz (unknown [10.163.28.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id C9FE22C14B;
-        Wed, 15 Jun 2022 16:16:18 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 040DBA063C; Wed, 15 Jun 2022 18:16:17 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     <linux-block@vger.kernel.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 8/8] block: Always initialize bio IO priority on submit
-Date:   Wed, 15 Jun 2022 18:16:11 +0200
-Message-Id: <20220615161616.5055-8-jack@suse.cz>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20220615160437.5478-1-jack@suse.cz>
-References: <20220615160437.5478-1-jack@suse.cz>
+        Wed, 15 Jun 2022 12:47:37 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C97A12080;
+        Wed, 15 Jun 2022 09:47:34 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id i64so11945637pfc.8;
+        Wed, 15 Jun 2022 09:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9LNaObpm8Up+d88THK7j7rjplRd3qN/NAg8yWi2diNY=;
+        b=SEzTgTqa1tibXsbn9UFQMy9G1j3oY2LzsGeP1/MsJ5JJXf0sd7nyHGFUJ6/LOFFYdY
+         H4EyGJK07bylBZJ7bWTbCDXGivk/AHDglGYTakidrgvK7ug3j2zUIb4bIjMmAUVf7T7X
+         A7r2GSjnNOIRo9mArxNglUNnA141QT33PijaYjcvmcidjrfJppErZnv1ZExyZ+zbgvE8
+         t+qt4QFLbrXBcns+UIsJXSJPv6aEX6xvL2dnHhguwHn28wfAF2b9jFg+tHQDnSb+Ps3n
+         ftojStBruMb0ksJ36aCYFYwIfEoPTvtvpcrm0hxN8ngBIL51TfQKLIYq727o9PXGuNi+
+         PPCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=9LNaObpm8Up+d88THK7j7rjplRd3qN/NAg8yWi2diNY=;
+        b=vcIi4+W29e9ymxXoV4LjDdpP1bDVO/45i1f9CG6npbLfYKxPcA1oMKj4csdDVpo3tc
+         JYJCJO8/ELPUPL5JDvrgvnRSAMTfK8beNAF7AP5pUK7Az5mqUeEAZRshBij1H6jEn3pR
+         Tq9GtosPO5nDEikxKAxtHFYc235Eg5FvwRavIb9ybT8+rY2OsiFF2HMDvOTEj9A2+/td
+         09vfCVXMAvIreuQsmxX295e1XD+WNfVJmvKCxSvfy7q/EKik0yi+7WNDWNEUZEphoMQN
+         TMMDIH62fd7wXuxQ9NzlzvIhjQ1j9L49lZhfLW5PRGrPzFQKGYMG1MRfXwhXNvyNYWtq
+         SJFw==
+X-Gm-Message-State: AJIora/j7yPwLZSkONMPxe0tbHa/JD+WYNt5XC7lzcMc6+L/xEEdOTP9
+        QXlPtVhiKwJ9KzxJPH88BOE=
+X-Google-Smtp-Source: AGRyM1u3viDRQjQA5a9+XRpLEHSUbaKAGBHEbFtATV5l0RU0mettXUmjuzH+0a0EmpJMHBNq6wak1g==
+X-Received: by 2002:a05:6a00:1690:b0:517:cc9e:3e2d with SMTP id k16-20020a056a00169000b00517cc9e3e2dmr527231pfc.0.1655311653545;
+        Wed, 15 Jun 2022 09:47:33 -0700 (PDT)
+Received: from google.com ([2620:15c:211:201:aa45:48f4:5c45:8d55])
+        by smtp.gmail.com with ESMTPSA id l1-20020a17090a384100b001e307d66123sm2024477pjf.25.2022.06.15.09.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 09:47:32 -0700 (PDT)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date:   Wed, 15 Jun 2022 09:47:30 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     umgwanakikbuti@gmail.com, bigeasy@linutronix.de,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
+        Nitin Gupta <ngupta@vflare.org>
+Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
+ dereference at virtual address 00000140
+Message-ID: <YqoNIgqYl8lWRFTZ@google.com>
+References: <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
+ <Yp/kpPA7GdbArXDo@google.com>
+ <YqAL+HeZDk5Wug28@google.com>
+ <YqAMmTiwcyS3Ttla@google.com>
+ <YqANP1K/6oRNCUKZ@google.com>
+ <YqBRZcsfrRMZXMCC@google.com>
+ <CA+G9fYvjpCOcTVdpnHTOWaf3KcDeTM3Njn_NnXvU37ppoHH5uw@mail.gmail.com>
+ <YqbtH9F47dkZghJ7@google.com>
+ <Yqdqfz4Ycbg33k1R@google.com>
+ <Yqf+PC+cKePAsaNI@google.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1090; h=from:subject; bh=294Oi1TS0R+sTtvAWIrlNByf+vKBwPZJ3GDBJ8IBplU=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBiqgXLlPdqbWvvzQGioc3zcit8ZN/sDhbTEpIOQJjs XJ5ngECJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYqoFywAKCRCcnaoHP2RA2WsOB/ 4sWcBtp2toW6eEGKFbcTPF0ZXam0cwn+aKd/9H+jlbRGJurJ1ZlbUdscETIWqvRQAssH/zP+r7OWv+ iZ2gMSnir1Bo5JsLA0XNHyBx176ltB3fOIzH5FHG1Ol5ECygLhBDwMZ0QjH3Gvr6FwaNvcJJ/cGbRo SLn6A6CywG/wd2hZz05AXz7o/eP3gj8Yf/VJZHYKLGwkMaXeywzCpg5VpNuou6TXXtGELlNITZvU4m BJIw5wBwKPOTMiatt5yiiNuvEdJC72wnaRzUw9b19kczzT54WJHPmZStviMCIr1g6VaFJ8K6sxFh4x mm7WKb+nhGq1KmR+42o0M69rQUr5P2
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yqf+PC+cKePAsaNI@google.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,36 +90,40 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently, IO priority set in task's IO context is not reflected in the
-bio->bi_ioprio for most IO (only io_uring and direct IO set it). This
-results in odd results where process is submitting some bios with one
-priority and other bios with a different (unset) priority and due to
-differing priorities bios cannot be merged. Make sure bio->bi_ioprio is
-always set on bio submission.
+On Tue, Jun 14, 2022 at 12:19:24PM +0900, Sergey Senozhatsky wrote:
+> On (22/06/13 09:49), Minchan Kim wrote:
+> > > Many thanks for the tests.
+> > > 
+> > > Quite honestly I was hoping that the patch would not help :) Well, ok,
+> > > we now know that it's mapping area lock and the lockdep part of its
+> > > memory is zero-ed out. The question is - "why?" It really should not
+> > > be zeroed out.
+> > 
+> > Ccing Mike and Sebastian who are author/expert of the culprit patch
+> > 
+> > Naresh found zsmalloc crashed on the testing [1] and confirmed
+> > that Sergey's patch[2] fixed the problem.
+> > However, I don't understand why we need reinit the local_lock
+> > on cpu_up handler[3].
+> > 
+> > Could you guys shed some light?
+> 
+> My guess is that it's either something very specific to Naresh's arch/config
+> or a bug somewhere, which memset() per-CPU memory. Not sure how to track it
+> down. KASAN maybe?
+> 
+> We certainly don't expect that
+> 
+> 	static DEFINE_PER_CPU(struct mapping_area, zs_map_area) = {
+> 	        .lock   = INIT_LOCAL_LOCK(lock),
+> 	};
+> 
+> would produce un-initialized dep_map. So I guess we start off with a
+> valid per-CPU lock, but then it somehow gets zeroed-out.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/blk-mq.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Yes, I don't think we need to reinitialize the local_lock.
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index e17d822e6051..e976f696babc 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2793,7 +2793,13 @@ static inline struct request *blk_mq_get_cached_request(struct request_queue *q,
- 
- static void bio_set_ioprio(struct bio *bio)
- {
-+	unsigned short ioprio_class;
-+
- 	blkcg_set_ioprio(bio);
-+	ioprio_class = IOPRIO_PRIO_CLASS(bio->bi_ioprio);
-+	/* Nobody set ioprio so far? Initialize it based on task's nice value */
-+	if (ioprio_class == IOPRIO_CLASS_NONE)
-+		bio->bi_ioprio = get_current_ioprio();
- }
- 
- /**
--- 
-2.35.3
+Naresh, we believe the patch Sergey provided for the test
+was just band aid to hide the problem.
 
+Could you please try to bisect it?
