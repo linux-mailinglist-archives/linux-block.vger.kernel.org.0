@@ -2,76 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0742454C329
-	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 10:11:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D692554C356
+	for <lists+linux-block@lfdr.de>; Wed, 15 Jun 2022 10:18:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242751AbiFOILs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Jun 2022 04:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47242 "EHLO
+        id S241354AbiFOIS3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Jun 2022 04:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236475AbiFOILr (ORCPT
+        with ESMTP id S236297AbiFOIS2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Jun 2022 04:11:47 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B402AE02;
-        Wed, 15 Jun 2022 01:11:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 4C4FCCE1D62;
-        Wed, 15 Jun 2022 08:11:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353B6C34115;
-        Wed, 15 Jun 2022 08:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655280703;
-        bh=G8h+IDpJR0CvhZVQBHmA8xXUGMUALrZIeamkPUOOwAc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=J6Y3XOcwoC/TgUHQEi+SmCxARb6tPwZNqAYZg5XUTUI3Q/ll5OApOdFtKbROVKu0J
-         G3wBk9/2zrpVCGzGGdhz1ESbgkoh73YGsKSRIOJUxvsHV+/K5Zd6avT4WMepRjY9H4
-         wamp6FUhQPTuGWEhQiYvx6IJuRvj3n1pbZp2ZHUm41s47toXZ4TP69nqNoX31VqQXs
-         PJkwswu6LBuH667SA02KF13mHrfORzWm/2zDlI2HgW90bjJCTh4CmOq+CyWlVyareR
-         TNZ8wmpjenOnCxxJfBdf7GMJYbuk/uABYuIiv48owX1ckCCiZaFExYBEBPHV4h2PdO
-         DbPuKfjHUQGOA==
-Message-ID: <5fdec03e-efb6-554b-55b3-49e7e7f2be5e@kernel.org>
-Date:   Wed, 15 Jun 2022 16:11:36 +0800
+        Wed, 15 Jun 2022 04:18:28 -0400
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBF2275DB;
+        Wed, 15 Jun 2022 01:18:24 -0700 (PDT)
+Received: from ([60.208.111.195])
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id KGI00017;
+        Wed, 15 Jun 2022 16:18:17 +0800
+Received: from localhost.localdomain (10.200.104.97) by
+ jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server id
+ 15.1.2308.27; Wed, 15 Jun 2022 16:18:19 +0800
+From:   Bo Liu <liubo03@inspur.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bo Liu <liubo03@inspur.com>
+Subject: [PATCH] block: Directly use ida_alloc()/free()
+Date:   Wed, 15 Jun 2022 04:18:16 -0400
+Message-ID: <20220615081816.4342-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [f2fs-dev] [PATCH v2 14/19] f2fs: Convert to
- filemap_migrate_folio()
-Content-Language: en-US
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-aio@kvack.org, linux-nfs@vger.kernel.org,
-        cluster-devel@redhat.com, linux-ntfs-dev@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-ext4@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
-References: <20220608150249.3033815-1-willy@infradead.org>
- <20220608150249.3033815-15-willy@infradead.org>
-From:   Chao Yu <chao@kernel.org>
-In-Reply-To: <20220608150249.3033815-15-willy@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-9.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.200.104.97]
+tUid:   2022615161817e7cde56c8b56f5d215d9d2f0915e296f
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2022/6/8 23:02, Matthew Wilcox (Oracle) wrote:
-> filemap_migrate_folio() fits f2fs's needs perfectly.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Use ida_alloc()/ida_free() instead of
+ida_simple_get()/ida_simple_remove().
+The latter is deprecated and more verbose.
 
-Acked-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Bo Liu <liubo03@inspur.com>
+---
+ block/blk-core.c  | 4 ++--
+ block/blk-sysfs.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 06ff5bbfe8f6..eb86c756a7fd 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -448,7 +448,7 @@ struct request_queue *blk_alloc_queue(int node_id, bool alloc_srcu)
+ 
+ 	q->last_merge = NULL;
+ 
+-	q->id = ida_simple_get(&blk_queue_ida, 0, 0, GFP_KERNEL);
++	q->id = ida_alloc(&blk_queue_ida, GFP_KERNEL);
+ 	if (q->id < 0)
+ 		goto fail_srcu;
+ 
+@@ -498,7 +498,7 @@ struct request_queue *blk_alloc_queue(int node_id, bool alloc_srcu)
+ fail_split:
+ 	bioset_exit(&q->bio_split);
+ fail_id:
+-	ida_simple_remove(&blk_queue_ida, q->id);
++	ida_free(&blk_queue_ida, q->id);
+ fail_srcu:
+ 	if (alloc_srcu)
+ 		cleanup_srcu_struct(q->srcu);
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 14607565d781..2ed9e7d52b47 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -799,7 +799,7 @@ static void blk_release_queue(struct kobject *kobj)
+ 	if (blk_queue_has_srcu(q))
+ 		cleanup_srcu_struct(q->srcu);
+ 
+-	ida_simple_remove(&blk_queue_ida, q->id);
++	ida_free(&blk_queue_ida, q->id);
+ 	call_rcu(&q->rcu_head, blk_free_queue_rcu);
+ }
+ 
+-- 
+2.27.0
+
