@@ -2,96 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8E9254E0DD
-	for <lists+linux-block@lfdr.de>; Thu, 16 Jun 2022 14:32:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C45154E37C
+	for <lists+linux-block@lfdr.de>; Thu, 16 Jun 2022 16:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376851AbiFPMcv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Jun 2022 08:32:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
+        id S235435AbiFPOfF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Jun 2022 10:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229708AbiFPMcv (ORCPT
+        with ESMTP id S230393AbiFPOfC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Jun 2022 08:32:51 -0400
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8748B1CFC4;
-        Thu, 16 Jun 2022 05:32:48 -0700 (PDT)
-Received: from SHSend.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id 25GCUq8Y095041
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NO);
-        Thu, 16 Jun 2022 20:30:52 +0800 (CST)
-        (envelope-from zhaoyang.huang@unisoc.com)
-Received: from bj03382pcu.spreadtrum.com (10.0.74.65) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 16 Jun 2022 20:30:53 +0800
-From:   "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Zhaoyang Huang <huangzhaoyang@gmail.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ke.wang@unisoc.com>
-Subject: [RFC PATCHv2] block: set bdi congested when no tag available
-Date:   Thu, 16 Jun 2022 20:30:31 +0800
-Message-ID: <1655382631-3037-1-git-send-email-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 16 Jun 2022 10:35:02 -0400
+Received: from smtpbg.qq.com (smtpbg123.qq.com [175.27.65.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A22120A5;
+        Thu, 16 Jun 2022 07:34:56 -0700 (PDT)
+X-QQ-mid: bizesmtp81t1655389959t3qlb9eq
+Received: from localhost.localdomain ( [153.0.97.30])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Thu, 16 Jun 2022 22:32:35 +0800 (CST)
+X-QQ-SSF: 01000000003000D0I000B00A0000000
+X-QQ-FEAT: Lg5IqoGaTUjbL3PLubDSpHKxYIBIqmoLpF7UXENKR/1iBB8hXmAN+cf7h3TS/
+        OeAqv0rj6e4J0JKyGqkzxSY2aNXDlXkZ1B5Y5OT6c6RETSBFI5LjQIYQAV1Oe6Spp/KACY2
+        vf07GiwvhPWn2RDeYqCsenUR/cknqgs/m+vMdfgi4bGXB92hSGR4IIncxQ8GFbAPImJ6vHH
+        HxHj8jCYFxyqNyszMObqHi4W4MfXPVrqOPUov3xnnnlD3VULvb6m/M7MES+qokod2KIw/Cq
+        fHyabLHxRLRHytdtVukGtS0jxH2vG+bG3/Xj0vEwHdz1Ssc+lQeLh9AV5yTLCXqP538ztBd
+        DpkLFJWFhLAWRb2qKw0Bk5csEYkrw==
+X-QQ-GoodBg: 0
+From:   Xiang wangx <wangxiang@cdjrlc.com>
+To:     axboe@kernel.dk
+Cc:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
+        christoph.boehmwalder@linbit.com, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiang wangx <wangxiang@cdjrlc.com>
+Subject: [PATCH] drbd: Fix typo in comment
+Date:   Thu, 16 Jun 2022 22:32:27 +0800
+Message-Id: <20220616143227.4004-1-wangxiang@cdjrlc.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.0.74.65]
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL: SHSQR01.spreadtrum.com 25GCUq8Y095041
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybgspam:qybgspam8
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Delete the redundant word 'and'.
 
-In previous version, block layer will set bdi to be congested when
-get_request fail, which may throttle direct_reclaim. Move them back
-under current blk-mq design.
+Signed-off-by: Xiang wangx <wangxiang@cdjrlc.com>
+---
+ drivers/block/drbd/drbd_bitmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
----
-v2: simplify the code
----
----
- block/blk-mq-tag.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 995336a..0cbc445 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -11,6 +11,7 @@
+diff --git a/drivers/block/drbd/drbd_bitmap.c b/drivers/block/drbd/drbd_bitmap.c
+index 9e060e49b3f8..8afdde400e37 100644
+--- a/drivers/block/drbd/drbd_bitmap.c
++++ b/drivers/block/drbd/drbd_bitmap.c
+@@ -86,7 +86,7 @@ struct drbd_bitmap {
  
- #include <linux/blk-mq.h>
- #include <linux/delay.h>
-+#include <linux/backing-dev.h>
- #include "blk.h"
- #include "blk-mq.h"
- #include "blk-mq-sched.h"
-@@ -126,6 +127,8 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
- 	if (tag != BLK_MQ_NO_TAG)
- 		goto found_tag;
- 
-+	set_bdi_congested(data->q->disk->bdi,BLK_RW_SYNC);
-+	set_bdi_congested(data->q->disk->bdi,BLK_RW_ASYNC);
- 	if (data->flags & BLK_MQ_REQ_NOWAIT)
- 		return BLK_MQ_NO_TAG;
- 
-@@ -190,6 +193,8 @@ unsigned int blk_mq_get_tag(struct blk_mq_alloc_data *data)
- 		blk_mq_put_tag(tags, data->ctx, tag + tag_offset);
- 		return BLK_MQ_NO_TAG;
- 	}
-+	clear_bdi_congested(data->q->disk->bdi,BLK_RW_SYNC);
-+	clear_bdi_congested(data->q->disk->bdi,BLK_RW_ASYNC);
- 	return tag + tag_offset;
- }
- 
+ 	/* exclusively to be used by __al_write_transaction(),
+ 	 * drbd_bm_mark_for_writeout() and
+-	 * and drbd_bm_write_hinted() -> bm_rw() called from there.
++	 * drbd_bm_write_hinted() -> bm_rw() called from there.
+ 	 */
+ 	unsigned int n_bitmap_hints;
+ 	unsigned int al_bitmap_hints[AL_UPDATES_PER_TRANSACTION];
 -- 
-1.9.1
+2.36.1
 
