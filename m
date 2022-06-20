@@ -2,63 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3124B5521F8
-	for <lists+linux-block@lfdr.de>; Mon, 20 Jun 2022 18:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E03355228A
+	for <lists+linux-block@lfdr.de>; Mon, 20 Jun 2022 18:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242503AbiFTQMD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Jun 2022 12:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37726 "EHLO
+        id S239245AbiFTQ5o (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Jun 2022 12:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243051AbiFTQL5 (ORCPT
+        with ESMTP id S231153AbiFTQ5n (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Jun 2022 12:11:57 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E10120BCF
-        for <linux-block@vger.kernel.org>; Mon, 20 Jun 2022 09:11:56 -0700 (PDT)
+        Mon, 20 Jun 2022 12:57:43 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B5C19FA7
+        for <linux-block@vger.kernel.org>; Mon, 20 Jun 2022 09:57:42 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id A75141F913;
-        Mon, 20 Jun 2022 16:11:54 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTP id A052921C11;
+        Mon, 20 Jun 2022 16:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1655741514; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+        t=1655744261; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=weAAY5vzMZxLYO8eCbj69OrJkVAZGGP14yJXmPoHuTY=;
-        b=h7sHo5cUGkH3v2m2Lpt5X2qpldXEa8GDwcz7GR3Agb5Dsx5zmU4Y2H/UtfTvi//+82CsvI
-        /idTaccCWtunV5eAJjGFVeQ/WQbeY/RW8rVBOqdnCOUZAOdkvqMOCtLkIUxYQqEICaiDRv
-        NnGYNUp/lx5WT07isxwWnVj/9iD42tM=
+        bh=v0YGzMiBi4MK6hT6tip6IwORa43TG+1oMIWF7rOjG/0=;
+        b=i7SzBMElbtctJ9EhNnXQZ5/jaqMWLqJTVzlSVaxfDskCEQSy48zE3eccFma40HZA76LZ4P
+        Z5rxtCG5OTTYO07QeEKd0EtZDLeh9uBjV+pibGT/fBNx6pVDJ1e+00xJtg4TpZB7kVPDvF
+        GNchvh+aa4+hB4fvFd6870Rp+a/8OIM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1655741514;
+        s=susede2_ed25519; t=1655744261;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=weAAY5vzMZxLYO8eCbj69OrJkVAZGGP14yJXmPoHuTY=;
-        b=c8fVtA9aGYyobCe7fdPHMyX4Gl5YuX2TELnBMzgImY260ehTUK78lvDITCI7CZ5DbxG334
-        THy621XzSFJUJkDA==
+        bh=v0YGzMiBi4MK6hT6tip6IwORa43TG+1oMIWF7rOjG/0=;
+        b=s6K8CBdDiBacdzYL0MoIcMUS7jYSHfN2slM1NQzNEv+M9bRNF3IAQzrC49FlgdsnPlnkp+
+        XmVNBRE2M/kmZIAA==
 Received: from quack3.suse.cz (unknown [10.100.224.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 9A1922C143;
-        Mon, 20 Jun 2022 16:11:54 +0000 (UTC)
+        by relay2.suse.de (Postfix) with ESMTPS id 4DC4D2C142;
+        Mon, 20 Jun 2022 16:57:41 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 658ACA063E; Mon, 20 Jun 2022 18:11:53 +0200 (CEST)
+        id 8B02CA0636; Mon, 20 Jun 2022 18:57:40 +0200 (CEST)
+Date:   Mon, 20 Jun 2022 18:57:40 +0200
 From:   Jan Kara <jack@suse.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     <linux-block@vger.kernel.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 8/8] block: Always initialize bio IO priority on submit
-Date:   Mon, 20 Jun 2022 18:11:49 +0200
-Message-Id: <20220620161153.11741-8-jack@suse.cz>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20220620160726.19798-1-jack@suse.cz>
-References: <20220620160726.19798-1-jack@suse.cz>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org,
+        Laibin Qiu <qiulaibin@huawei.com>
+Subject: Re: Races in sbitmap batched wakeups
+Message-ID: <20220620165740.x4sbau7b5olwc65q@quack3.lan>
+References: <20220616172102.yrxod3ptmhiuvqsw@quack3.lan>
+ <9a0f1ea5-c62c-4439-b80f-0319b9a15fd5@huawei.com>
+ <20220617113112.rlmx7npkavwkhcxx@quack3>
+ <65beb6c4-6780-1f48-866b-63d4c4625c31@huawei.com>
+ <20220620115740.dnj56do2egfzrebo@quack3.lan>
+ <26f88ff1-5e01-7f2d-798b-4b96e46f46ec@huawei.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1013; h=from:subject; bh=qrJSja6cK1OVHuXY8zd4J5m/Hx2yD5nZJYW+nTm82wE=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBisJxF7tg/DFgZrptH3B9sVd5U2hBXDR2dXEahleS3 4cXvwIaJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYrCcRQAKCRCcnaoHP2RA2SB5CA CH1bIOQf6wUi6goASTjrQqs5pxHum+YYRO6hIpHg2qWWeYbspu3rizMrer3xAlDrGq6TVton1Z40+E heBC206049MbOOpyse1K18hPWCGMFk4sC8JOGHPxGu1cqfqXpNmWLY+ZrdsSIL44QqXMgKFjGtV/v7 /l6hTj94WF6NV+i8GBalPVR5ouGQffNEaTs3Qte3Gv/wESu5MC7GrmcLF4Wk5IyJWM9NPTtaMis+zH GYp54NXBD5yVjF8vc8GgGzpUafJUiyfPMRJzT6Db7yFaVZPWi5FGKmUVVRYPe11VFg2nmBXte80JF+ jwg7cDvL33GgdyKj2fc6i3D4b5fOhx
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <26f88ff1-5e01-7f2d-798b-4b96e46f46ec@huawei.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -69,32 +72,105 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Currently, IO priority set in task's IO context is not reflected in the
-bio->bi_ioprio for most IO (only io_uring and direct IO set it). This
-results in odd results where process is submitting some bios with one
-priority and other bios with a different (unset) priority and due to
-differing priorities bios cannot be merged. Make sure bio->bi_ioprio is
-always set on bio submission.
+On Mon 20-06-22 21:11:25, Yu Kuai wrote:
+> 在 2022/06/20 19:57, Jan Kara 写道:
+> > Hello!
+> > 
+> > On Fri 17-06-22 20:50:17, Yu Kuai wrote:
+> > > 在 2022/06/17 19:31, Jan Kara 写道:
+> > > > On Fri 17-06-22 09:40:11, Yu Kuai wrote:
+> > > > > 在 2022/06/17 1:21, Jan Kara 写道:
+> > > > > > I've been debugging some customer reports of tasks hanging (forever)
+> > > > > > waiting for free tags when in fact all tags are free. After looking into it
+> > > > > > for some time I think I know what it happening. First, keep in mind that
+> > > > > > it concerns a device which uses shared tags. There are 127 tags available
+> > > > > > and the number of active queues using these tags is easily 40 or more. So
+> > > > > > number of tags available for each device is rather small. Now I'm not sure
+> > > > > > how batched wakeups can ever work in such situations, but maybe I'm missing
+> > > > > > something.
+> > > > > > 
+> > > > > > So take for example a situation where two tags are available for a device,
+> > > > > > they are both currently used. Now a process comes into blk_mq_get_tag() and
+> > > > > > wants to allocate tag and goes to sleep. Now how can it ever be woken up if
+> > > > > > wake_batch is 4? If the two IOs complete, sbitmap will get two wakeups but
+> > > > > > that's not enough to trigger the batched wakeup to really wakeup the
+> > > > > > waiter...
+> > > > > > 
+> > > > > > Even if we have say 4 tags available so in theory there should be enough
+> > > > > > wakeups to fill the batch, there can be the following problem. So 4 tags
+> > > > > > are in use, two processes come to blk_mq_get_tag() and sleep, one on wait
+> > > > > > queue 0, one on wait queue 1. Now four IOs complete so
+> > > > > > sbitmap_queue_wake_up() gets called 4 times and the fourth call decrements
+> > > > > > wait_cnt to 0 so it ends up calling wake_up_nr(wq0, 4). Fine, one of the
+> > > > > > waiters is woken up but the other one is still sleeping in wq1 and there
+> > > > > > are not enough wakeups to fill the batch and wake it up? This is
+> > > > > > essentially because we have lost three wakeups on wq0 because it didn't
+> > > > > > have enough waiters to wake...
+> > > > > 
+> > > > >   From what I see, if tags are shared for multiple devices, wake_batch
+> > > > > should make sure that all waiter will be woke up:
+> > > > > 
+> > > > > For example:
+> > > > > there are total 64 tags shared for two devices, then wake_batch is 4(if
+> > > > > both devices are active).  If there are waiters, which means at least 32
+> > > > > tags are grabed, thus 8 queues will ensure to wake up at least once
+> > > > > after 32 tags are freed.
+> > > > 
+> > > > Well, yes, wake_batch is updated but as my example above shows it is not
+> > > > enough to fix "wasted" wakeups.
+> > > 
+> > > Tags can be preempted, which means new thread can be added to waitqueue
+> > > only if there are no free tags.
+> > 
+> > Yes.
+> > 
+> > > With the above condition, I can't think of any possibility how the
+> > > following scenario can be existed(dispite the wake ups can be missed):
+> > > 
+> > > Only wake_batch tags are still in use, while multiple waitqueues are
+> > > still active.
+> > > 
+> > > If you think this is possible, can you share the initial conditions and
+> > > how does it end up to the problematic scenario?
+> > 
+> > Very easily AFAICT. I've described the scenario in my original email but
+> > let me maybe write it here with more detail. Let's assume we have 4 tags
+> > available for our device, wake_batch is 4, wait_index is 0, wait_cnt is 4
+> > for all waitqueues. All four tags are currently in use.
+> > 
+> > Now task T1 comes, wants a new tag:
+> > blk_mq_get_tag()
+> >    bt_wait_ptr() -> gets ws 0, wait_index incremented to 1
+> >    goes to sleep on ws 0
+> > 
+> > Now task T2 comes, wants a new tag:
+> > blk_mq_get_tag()
+> >    bt_wait_ptr() -> gets ws 1, wait_index incremented to 2
+> >    goes to sleep on ws 1
+> > 
+> > Now all four requests complete, this generates 4 calls to
+> > sbitmap_queue_wake_up() for ws 0, which decrements wait_cnt on ws 0 to 0
+> > and we do wake_up_nr(&ws->wait, 4). This wakes T1.
+> > 
+> > T1 allocates a tag, does IO, IO completes. sbitmap_queue_wake_up() is
+> > called for ws 1. wait_cnt is decremented to 3.
+> > 
+> > Now there's no IO in flight but we still have task sleeping in ws 1.
+> > Everything is stuck until someone submits more IO (which may never happen
+> > because everything ends up waiting on completion of IO T2 does).
+> 
+> I assum that there should be at least 32 total tags, and at least 8
+> device are issuing io, so that there are only 4 tags available for
+> the devcie? (due to fair share).
+> 
+> If so, io from other devcies should trigger new wakeup.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/blk-mq.c | 3 +++
- 1 file changed, 3 insertions(+)
+Well, there isn't necessarily any IO going on on other devices, there may
+be 4 tags used on our device, the rest is free but we are not allowed to
+use them. Sure eventually we should detect other devices are idle and
+decrease tags->active_queues but that can take 30s or more...
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index e17d822e6051..7548f8aebea8 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2793,6 +2793,9 @@ static inline struct request *blk_mq_get_cached_request(struct request_queue *q,
- 
- static void bio_set_ioprio(struct bio *bio)
- {
-+	/* Nobody set ioprio so far? Initialize it based on task's nice value */
-+	if (IOPRIO_PRIO_CLASS(bio->bi_ioprio) == IOPRIO_CLASS_NONE)
-+		bio->bi_ioprio = get_current_ioprio();
- 	blkcg_set_ioprio(bio);
- }
- 
+								Honza
 -- 
-2.35.3
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
