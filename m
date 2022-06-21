@@ -2,108 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66EA0552EAE
-	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 11:41:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F1EC552FAD
+	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 12:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349310AbiFUJj5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Jun 2022 05:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51584 "EHLO
+        id S1348533AbiFUKZC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Jun 2022 06:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349250AbiFUJjt (ORCPT
+        with ESMTP id S232502AbiFUKY7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Jun 2022 05:39:49 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F20827B0D
-        for <linux-block@vger.kernel.org>; Tue, 21 Jun 2022 02:39:46 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-3177f4ce3e2so101130457b3.5
-        for <linux-block@vger.kernel.org>; Tue, 21 Jun 2022 02:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=NKhg6kSkfnglJlsPDVUWhCY3Iibudx7OhZC5CePFgeNekYJKNrcmU8wB8gkktmjPqY
-         f0o4DET3nwW7oGb1WQAmWVCm6yLISrVrQXMY/9qoCppMNLX7K/jA/JZ+JMs1mNT38j+N
-         qSlM2vTiSOIkQo5cZ6oY4dkMVda7fWn0vzKRT295Q67AStI8u0BTanvw38uSxo4IMvFm
-         mtbeFJOQugEk6bmbrSLJZHxNWvSEoU0AT9TQz59V3jAGDZbWiI6U0Fx8UlroTYMr9wGQ
-         +xC78kHT5AZK7k/f6wmWhdDj3ThC5Cy20ctCKCcYvb/idPExEpgvQXB/UX/ziCu3vO07
-         Q2/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=qN1p10XxEIXXbdGBYMtaTVrTpMsTCzDZ38GMGK9nI9quu4nSdAVE9kSraHOoZLaHJY
-         B0toL0AAsad2bcit0vhNbnR/uhmBi9Nq4LMPPESxbZStabubQ8Jr3+L+kqkNdCZz3HEk
-         rzsEpdgQHliMBe1E2hFfuDPMsHQbBKauAiDoFDIYyZbW3bC/+4wS4vBPuf6/9TdInw+Q
-         63oJGHPy2qvKPdMZjD52s8b7yKY9f0eypvRS3MnBUtjIFziyyVdH6gnzHbx2EE/o1GXP
-         LCt29lEHl4MHaWszn03Yx1bFfwEAJ3xj2ykmbEgGwkOtqKlvZ9VTmZwpUCtZEn7lvT5H
-         i2OQ==
-X-Gm-Message-State: AJIora8NjLgPiWIQGo0g//nR5m2jpSR7f1VX/VLVEAqZGrXacin5DM8U
-        AxamIQhZOtBFFSdQ5abBfwu6Hk3uWYc5S7+xoVg=
-X-Google-Smtp-Source: AGRyM1sTF/SvvxCyraPE52znD36ZX02jNmxmam87lP8bWzXT3yTfChS1a9JgJI9LjBXh9tpS4qLO5E/t+5efudcEruY=
-X-Received: by 2002:a0d:d7c7:0:b0:317:bfe8:4f2 with SMTP id
- z190-20020a0dd7c7000000b00317bfe804f2mr12417910ywd.276.1655804384555; Tue, 21
- Jun 2022 02:39:44 -0700 (PDT)
+        Tue, 21 Jun 2022 06:24:59 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BA328983
+        for <linux-block@vger.kernel.org>; Tue, 21 Jun 2022 03:24:58 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 2300121C3D;
+        Tue, 21 Jun 2022 10:24:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1655807097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=2CAXuLTDZIZNbf9vRD34yjqmPsqm43rIiepk0XWkSDk=;
+        b=nT4btGae9ChFzIaygvNfKQHZnN6JaGb47STNjElj9QN8rjkVhGeCWX0N5lUCQlzpDfyHbN
+        rYeMJpIVERznY5+j4Sp6HvvK3n8Li6Ap999zxy4xC0b9YPuXTXesLyoYSBeZstSVR01jGi
+        k7fvfD/UgiPDXr6I4mp5vwaE2R5qOnE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1655807097;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=2CAXuLTDZIZNbf9vRD34yjqmPsqm43rIiepk0XWkSDk=;
+        b=mlLtbUBjesINTerxtNnBGd4MVWVMk1nhtiFw64ik3rJV4cjz6gkFRI606F8/vBHP9HaeB4
+        QI5AUzJStLeMwvDg==
+Received: from quack3.suse.cz (unknown [10.100.224.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id B24542C143;
+        Tue, 21 Jun 2022 10:24:56 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id C795EA062B; Tue, 21 Jun 2022 12:24:55 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     <linux-block@vger.kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/9 v4] block: Fix IO priority mess
+Date:   Tue, 21 Jun 2022 12:24:37 +0200
+Message-Id: <20220621102201.26337-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Received: by 2002:a05:7010:e10a:b0:2d9:e631:94d0 with HTTP; Tue, 21 Jun 2022
- 02:39:44 -0700 (PDT)
-Reply-To: dimitryedik@gmail.com
-From:   Dimitry Edik <lsbthdwrds@gmail.com>
-Date:   Tue, 21 Jun 2022 02:39:44 -0700
-Message-ID: <CAGrL05aBO8rbFuij24J-APa+Luis69gEjhj35iv_GZfkHCVYDQ@mail.gmail.com>
-Subject: Dear Partner,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:112c listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [lsbthdwrds[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
-        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2304; h=from:subject:message-id; bh=h3D7NBsFhH6HxjmHIGSnH0R7cWP35Tdb37tW3si15Tk=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBisZxfdrTRHeMsE1BPg5dt+gG08zdCDBK11tyzD9hy FTGYIIqJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYrGcXwAKCRCcnaoHP2RA2XvaCA CpRODIdiJsjAe+6wSllTXdQ16CB2WRUd22PSL2+e3Qcxz4TQvRywRXQnpsL5Jl65H+/TE67L4U/oYI VFw6tcRE56xx9D0zjoMHx7FrwrfWEtBAljW3jKfh60ApFv55QyN/i5iHGyetkkjm6WNpuzttOqnRnk iaX2BC+z7cNVxt1AfmY8gyKzEs9zjl2FMl+McscUuSs4iFLQfzGKRlQJO3oc5Jejnrtp7PGw9wc0HJ /T3/leJzro/qgfUaM1z3Rw291/gMd+BrdKEIpGEsWXEStIwup4LV2iCipHJeVhoj0gExR+UeLsWbdD RfmqVzh/GqBLfDkft/iJEUcSI0CVIf
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Dear,
+Hello,
 
-My Name is Dimitry Edik from Russia A special assistance to my Russia
-boss who deals in oil import and export He was killed by the Ukraine
-soldiers at the border side. He supplied
-oil to the Philippines company and he was paid over 90 per cent of the
-transaction and the remaining $18.6 Million dollars have been paid into a
-Taiwan bank in the Philippines..i want a partner that will assist me
-with the claims. Is a (DEAL ) 40% for you and 60% for me
-I have all information for the claims.
-Kindly read and reply to me back is 100 per cent risk-free
+This is the fourth revision of my patches fixing IO priority handling in the
+block layer.
 
-Yours Sincerely
-Dimitry Edik
+Changes since v3:
+* Added Reviewed-by tags from Damien
+* Fixed build failure without CONFIG_BLOCK
+* Separated refactoring of get_current_ioprio() into a separate patch
+
+Changes since v2:
+* added some comments to better explain things
+* changed handling of ioprio_get(2)
+* a few small tweaks based on Damien's feedback
+
+Original cover letter:
+Recently, I've been looking into 10% regression reported by our performance
+measurement infrastructure in reaim benchmark that was bisected down to
+5a9d041ba2f6 ("block: move io_context creation into where it's needed"). This
+didn't really make much sense and it took me a while to understand this but the
+culprit is actually in even older commit e70344c05995 ("block: fix default IO
+priority handling") and 5a9d041ba2f6 just made the breakage visible.
+Essentially the problem was that after these commits some IO was queued with IO
+priority class IOPRIO_CLASS_BE while other IO was queued with IOPRIO_CLASS_NONE
+and as a result they could not be merged together resulting in performance
+regression. I think what commit e70344c05995 ("block: fix default IO priority
+handling") did is actually broken not only because of this performance
+regression but because of other reasons as well (see changelog of patch 3/8 for
+details). Besides this problem, there are multiple other inconsistencies in the
+IO priority handling throughout the block stack we have identified when
+discussing this with Damien Le Moal. So this patch set aims at fixing all these
+various issues.
+
+Note that there are a few choices I've made I'm not 100% sold on. In particular
+the conversion of blk-ioprio from rqos is somewhat disputable since it now
+incurs a cost similar to blk-throttle in the bio submission fast path (need to
+load bio->bi_blkg->pd[ioprio_policy.plid]).  If people think the removed
+boilerplate code is not worth the cost, I can certainly go via the "additional
+rqos hook" path.
+
+								Honza
+Previous versions:
+Link: http://lore.kernel.org/r/20220601132347.13543-1-jack@suse.cz # v1
+Link: http://lore.kernel.org/r/20220615160437.5478-1-jack@suse.cz # v2
+Link: http://lore.kernel.org/r/20220620160726.19798-1-jack@suse.cz # v3
