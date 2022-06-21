@@ -2,82 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A59955398B
-	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 20:31:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 675EF553D37
+	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 23:11:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243045AbiFUSb0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Jun 2022 14:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
+        id S1355539AbiFUVAt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Jun 2022 17:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbiFUSbZ (ORCPT
+        with ESMTP id S1355200AbiFUU52 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Jun 2022 14:31:25 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC38245A6
-        for <linux-block@vger.kernel.org>; Tue, 21 Jun 2022 11:31:24 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id o73so10783006qke.7
-        for <linux-block@vger.kernel.org>; Tue, 21 Jun 2022 11:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0NlM4xJVC+aQrSrJgSgq0lw3fSCtXD7f9PJ3WEW+snY=;
-        b=T9DeH1tdcsY6/y90jaWZn9sBSMreY/6fYy5JfAnBkqFhi8U06WJsRV1yPwPdRoZhmb
-         t1a4+QBP4IugIjOrKvkbhvnH9bKSZ1y7mmOjw4hKFa/bBGbqZwC4BgHvdvDtBy6qWu/S
-         G/nYqb9MGVjH5blyIZbYwbKnXO4jnyjP7Ek07TvvEabDEMRt8BIC6AgfPopzcjS3LkKp
-         5KVuRpCLtCHJyyAtI0ngnM82eaeZDfY2P/nzySkK5Nw9/xwitBevsp0m/hT0YMNF2u0r
-         utQSWGq8Av6erTGkUfrH5RYPeYpN7WIEvc2U9Ti+awbRtU9X0C2QVHJq9HBH9uOZBIAZ
-         nHGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0NlM4xJVC+aQrSrJgSgq0lw3fSCtXD7f9PJ3WEW+snY=;
-        b=UPwxKm21gRLWgXzHGyxLtZqyyjde4vob6T+4GTTPMEWiyzm8a3FLadvw6OpZQ57ISX
-         aufYdFdLt9Vaz+djoypegIy9SbEsfQJ6E+3ZwctWq3djc/PnGw+x8+D4zen44jG8MbXb
-         hMpHXBajV/K3JMkRR62vzELAUWhIzrw3thBtg8VQvzaIXIWYvjrd/vYRLffZHLXkeG7B
-         AMjQDudr3FTbnLXnq3/adaKMFEXGBMKQWaruiZxfDyg5t+p4PG1r3XwIhCGW84UifmDF
-         RjstZ9CoHTCm1RtlI/ziu0tcYV6a7Hi7hDjglh/3QIIZisS156n3yUg0XfS2BKa3Mtas
-         bB0g==
-X-Gm-Message-State: AJIora8DLZSmTgQb3zwlcTL/TnFJaaF9lwyByvXIcd34sJaKSpSB0xJ+
-        czBIsMTLUCXoRBioEWe2a70GtE82Wm2+BnlF68kuRQ==
-X-Google-Smtp-Source: AGRyM1s0ZNh6AJMrXbJKR18iOitLzcO1NyUz0Tk/gIvDUtjovASPYxds/P0hzU4wYhaZ7pEJgWzg3R9X4kmRhOCq/HQ=
-X-Received: by 2002:a05:620a:9c4:b0:6a6:9c07:c243 with SMTP id
- y4-20020a05620a09c400b006a69c07c243mr21511010qky.783.1655836283892; Tue, 21
- Jun 2022 11:31:23 -0700 (PDT)
+        Tue, 21 Jun 2022 16:57:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D493C32049;
+        Tue, 21 Jun 2022 13:50:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E8F161898;
+        Tue, 21 Jun 2022 20:50:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64409C385A9;
+        Tue, 21 Jun 2022 20:50:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655844605;
+        bh=J5m5i5dzI1UUCzGpjS/3F4end8AvHQMe1eGEtL7AjtU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j3Homdr35W00ExIv1UtOMM7YG7ai++OinQfiR4jWc2z7r3/cN46dljXFdEU4Mcjmy
+         koMKS7EzfnSNtAWVtvXwshhLIn9hjW8xUXRTAYJk/TJGwVxX13v8LEu5A/hsXB8XGs
+         0wao+qObdlJja1tiD9pF6NfqVfGg1NBU09wrB8SD5qcLF58EOoFt9qvmYltmN4DIGw
+         LWQMbiJNHf+HUfKBNkoXb8EbX5su4sES1xzveICMMVKkhEaMWitgssw3RhRgAuEqnI
+         PGL7EUiJ84w3NwRsn6u8dmEvUs1EQOwQmLMg1x7YIy/fGd2//O6kIC3+aIYPVneonR
+         DnqOZtx9K8pKw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.18 18/22] blk-mq: protect q->elevator by ->sysfs_lock in blk_mq_elv_switch_none
+Date:   Tue, 21 Jun 2022 16:49:24 -0400
+Message-Id: <20220621204928.249907-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220621204928.249907-1-sashal@kernel.org>
+References: <20220621204928.249907-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20220620202602.2805912-1-changyuanl@google.com> <f21b7a51-ccb0-b8dc-a48e-94a7a0f7e125@acm.org>
-In-Reply-To: <f21b7a51-ccb0-b8dc-a48e-94a7a0f7e125@acm.org>
-From:   Changyuan Lyu <changyuanl@google.com>
-Date:   Tue, 21 Jun 2022 11:30:48 -0700
-Message-ID: <CAGzOjsqoZ3CoogdsN23tAMMSoGbqXvhSXSiQiMbCf8gTuxtwDQ@mail.gmail.com>
-Subject: Re: [PATCH] trace: events: scsi: Print driver_tag and scheduler_tag
- in SCSI trace
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Rajat Jain <rajatja@google.com>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Vishakha Channapattan <vishakhavc@google.com>,
-        Jolly Shah <jollys@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 06/20/2022 20:56, Bart Van Assche <bvanassche@acm.org> wrote:
-> Despite the above comments, thanks for the detailed and very
-> informative patch description.
+From: Ming Lei <ming.lei@redhat.com>
 
-Thanks for helping me improve the commit message. I fixed these
-issues in v2.
+[ Upstream commit 5fd7a84a09e640016fe106dd3e992f5210e23dc7 ]
 
-Best,
-Changyuan Lyu
+elevator can be tore down by sysfs switch interface or disk release, so
+hold ->sysfs_lock before referring to q->elevator, then potential
+use-after-free can be avoided.
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Link: https://lore.kernel.org/r/20220616014401.817001-2-ming.lei@redhat.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/blk-mq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index de7fc6957271..45139910db8f 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -4436,12 +4436,14 @@ static bool blk_mq_elv_switch_none(struct list_head *head,
+ 	if (!qe)
+ 		return false;
+ 
++	/* q->elevator needs protection from ->sysfs_lock */
++	mutex_lock(&q->sysfs_lock);
++
+ 	INIT_LIST_HEAD(&qe->node);
+ 	qe->q = q;
+ 	qe->type = q->elevator->type;
+ 	list_add(&qe->node, head);
+ 
+-	mutex_lock(&q->sysfs_lock);
+ 	/*
+ 	 * After elevator_switch_mq, the previous elevator_queue will be
+ 	 * released by elevator_release. The reference of the io scheduler
+-- 
+2.35.1
+
