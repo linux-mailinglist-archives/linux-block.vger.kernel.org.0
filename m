@@ -2,61 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 628A2552FAF
-	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 12:25:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC271552FB4
+	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 12:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346796AbiFUKZD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Jun 2022 06:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
+        id S1348556AbiFUKZH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Jun 2022 06:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348456AbiFUKZA (ORCPT
+        with ESMTP id S1348528AbiFUKZB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Jun 2022 06:25:00 -0400
+        Tue, 21 Jun 2022 06:25:01 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E14028997
-        for <linux-block@vger.kernel.org>; Tue, 21 Jun 2022 03:24:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D7328726
+        for <linux-block@vger.kernel.org>; Tue, 21 Jun 2022 03:25:00 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 9F4D221E18;
+        by smtp-out1.suse.de (Postfix) with ESMTP id B095521E2A;
         Tue, 21 Jun 2022 10:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
         t=1655807097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TU+VB9FLVByEd3dua4vGm7KA60JO5fn9ySddRdhTlZk=;
-        b=LHrflqPe7IuETS0m/lpSmvNz7clvubUxcObJQvKT5KPdbxcJxowJUjDi4VXUyvhukKb+rz
-        WFi5uipZCo1GKu0mvuawVHKa+3vEjOZ4aijMCiw1cWYEHCyJbz1Rz/IN/K0xGGnGsi4wqO
-        dh1MNtKFzy1QkKWqqS6q0ZOJvt/I2DE=
+        bh=4kC6rjFDlsoZbHR5CLGsg9tbqVMXxLLOhXzA+rqhzIU=;
+        b=AhFVhZPxenMh9p2/aqGmnVh7NyyLjRjh6+nWtJdeaz88iNgryCf9pinRLmvwbwddnAb5JX
+        HIQjNX5oqhBV6gefnXcGVfcrG7UQWcvVe6ZccbIPZKi9v13JYQuyyXEV+HdQtGPjuM/ifm
+        5vXFjz1M32jiziFH59eN3DvQnharQp0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
         s=susede2_ed25519; t=1655807097;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TU+VB9FLVByEd3dua4vGm7KA60JO5fn9ySddRdhTlZk=;
-        b=pnqbrQ3r+sYE+GbYGNmOdCLHj8Gq4a49u/GK2Klu01mxnPDTq2uVVmJy/bWPZs5nfzoLm0
-        5x8T8KSpig7QC4AQ==
+        bh=4kC6rjFDlsoZbHR5CLGsg9tbqVMXxLLOhXzA+rqhzIU=;
+        b=5Is+O+V3z2Uio1pV5sTJ+VTEZU0D6pE762g+NW58JApAjHjKxWes4r0ptkvHni1yjJpE1w
+        yBqylhDz+/e+xoDQ==
 Received: from quack3.suse.cz (unknown [10.100.224.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 907FB2C149;
+        by relay2.suse.de (Postfix) with ESMTPS id 9B1112C152;
         Tue, 21 Jun 2022 10:24:57 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 0D1EDA063F; Tue, 21 Jun 2022 12:24:56 +0200 (CEST)
+        id 14303A0640; Tue, 21 Jun 2022 12:24:56 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     <linux-block@vger.kernel.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Bart Van Assche <bvanassche@acm.org>,
         Niklas Cassel <Niklas.Cassel@wdc.com>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 8/9] block: Initialize bio priority earlier
-Date:   Tue, 21 Jun 2022 12:24:45 +0200
-Message-Id: <20220621102455.13183-8-jack@suse.cz>
+Subject: [PATCH 9/9] block: Always initialize bio IO priority on submit
+Date:   Tue, 21 Jun 2022 12:24:46 +0200
+Message-Id: <20220621102455.13183-9-jack@suse.cz>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <20220621102201.26337-1-jack@suse.cz>
 References: <20220621102201.26337-1-jack@suse.cz>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=966; h=from:subject; bh=ToM3nKfji8UyBGmYo0J4IX46p7CgkI9nwQg5TxlG+ms=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBisZxs0nH7AJLmGTjHh/hmBGnZkV5SUQeHqiNpZWRS BTqzHr6JATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYrGcbAAKCRCcnaoHP2RA2cE9B/ 4+LdMvrHkEVisL4mrugY+Cl0R+llEMg4OwwImzSlT3IsNQSGcSIgWXYzwuy/bBVQtNd4+M4z/DpDHl II1COAKK75lRfWdejT7pJcygGkSUSXunyCBLoDM0WL90pBw9Aj96bKD90o0E+kas6o4Q7SplQ61ucT ebKuOGHn+bv4EoPV20uQAOX/BDnoXJSGL80dDbGj6X5Jo9p9p92KDOOZLTrAdq6aQMKMyAv/zxQ05O ELKItcNG4Fgy4e7W/qM4Vbv/dHN/XMDtwuCITIoLMlg0nXV7+6N43p9jsHf2bg4B/XQi6TUQf7x2w6 uya0fYUyTKYTVxqnOCI+uc3c18WLfm
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1077; h=from:subject; bh=LJzShUwYAe4N1tAr4q1jrBbjZR2RONUIkCyA8INg9kM=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBisZxtKkrEjuXUIhwRb0SFwOaiQQsBJGvIZqjb7Gez IEYeUoKJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYrGcbQAKCRCcnaoHP2RA2ecGB/ 9K3Kgp1h6Bu8oSzveKILh6N61qDhuateivPoOOESKFXKd/LpdqFYRqSOJAsJ3/cx6CjjhDZxAd3sb4 qIm+JfUsyxKkHdn4TtxKqcw5uszl7nV4ZyNnDI/M0KJ7RvPW4o9mWadWkPnVSaIColADS7ENOiAPIJ 9AQwaf8/OGppYAPZN1qaYtKWLvB5NamAG4MxNncVc8vKpk99h7UGos+yhryXBqz6/chpT4nkO0WeF6 MKSJI7Am5gxfnfXXxgOcfUHCp4Ew++h/Ixnq09p+r08RUYRY32MHlp4VGVozS5b0Ih9O6f3E0XPdul MarnD4ii2lry12Od8e5pjr0J+QWDNU
 X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,38 +69,33 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Bio's IO priority needs to be initialized before we try to merge the bio
-with other bios. Otherwise we could merge bios which would otherwise
-receive different IO priorities leading to possible QoS issues.
+Currently, IO priority set in task's IO context is not reflected in the
+bio->bi_ioprio for most IO (only io_uring and direct IO set it). This
+results in odd results where process is submitting some bios with one
+priority and other bios with a different (unset) priority and due to
+differing priorities bios cannot be merged. Make sure bio->bi_ioprio is
+always set on bio submission.
 
 Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- block/blk-mq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/blk-mq.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 67a7bfa58b7c..e17d822e6051 100644
+index e17d822e6051..7548f8aebea8 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -2825,6 +2825,8 @@ void blk_mq_submit_bio(struct bio *bio)
- 	if (!bio_integrity_prep(bio))
- 		return;
+@@ -2793,6 +2793,9 @@ static inline struct request *blk_mq_get_cached_request(struct request_queue *q,
  
-+	bio_set_ioprio(bio);
-+
- 	rq = blk_mq_get_cached_request(q, plug, &bio, nr_segs);
- 	if (!rq) {
- 		if (!bio)
-@@ -2836,8 +2838,6 @@ void blk_mq_submit_bio(struct bio *bio)
+ static void bio_set_ioprio(struct bio *bio)
+ {
++	/* Nobody set ioprio so far? Initialize it based on task's nice value */
++	if (IOPRIO_PRIO_CLASS(bio->bi_ioprio) == IOPRIO_CLASS_NONE)
++		bio->bi_ioprio = get_current_ioprio();
+ 	blkcg_set_ioprio(bio);
+ }
  
- 	trace_block_getrq(bio);
- 
--	bio_set_ioprio(bio);
--
- 	rq_qos_track(q, rq, bio);
- 
- 	blk_mq_bio_to_request(rq, bio, nr_segs);
 -- 
 2.35.3
 
