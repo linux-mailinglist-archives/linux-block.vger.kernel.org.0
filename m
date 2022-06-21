@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99486553D05
-	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 23:11:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F532553C5A
+	for <lists+linux-block@lfdr.de>; Tue, 21 Jun 2022 23:10:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355335AbiFUU5Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Jun 2022 16:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55482 "EHLO
+        id S1355696AbiFUVAv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Jun 2022 17:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354870AbiFUU4e (ORCPT
+        with ESMTP id S1355410AbiFUU5o (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Jun 2022 16:56:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A6D62DD58;
-        Tue, 21 Jun 2022 13:50:37 -0700 (PDT)
+        Tue, 21 Jun 2022 16:57:44 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA213205A;
+        Tue, 21 Jun 2022 13:50:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F4227B81A9A;
-        Tue, 21 Jun 2022 20:50:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 051FFC385A9;
-        Tue, 21 Jun 2022 20:50:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C9040B81B46;
+        Tue, 21 Jun 2022 20:50:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0995C341C7;
+        Tue, 21 Jun 2022 20:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655844607;
-        bh=muuLMwyq22RXpPtWQ8HWF194/A0xd8vK/W1Fo8RCJE4=;
+        s=k20201202; t=1655844635;
+        bh=lGYMb0noynPJBGvmNQGp+A9u4UxmxItW8wjaBl01wE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j3YZTplrizLP/1cdM+3t+6QJQby6y8v9hE1iswZ4Prw0Jx/6K8ouNwa6hVPOcz7TX
-         5yq9H2LdYGXPxDyBddcOByEXpW2L6tplvBpRHedaKoRAkk1Rn7XHaGQ+Jini/KOFv4
-         5J85DgaXk9Hm6k0Gk6dNZptIHkuI5cbt4BDeEX3H0dLUBBKSmgPeRn+p4WvjHDNN1k
-         GVF3QgSVSF4XBaw9kk2KwUn9o6HwfOQi3KUhAnKXrZiAH7AOmU4JWAn/ryh3aXNnCd
-         kPeXAFPDHgaVysUFSxPh7k3fCt/RQEvaReOHfkDEW81ASim0Ua4WqlsPti5Y6uKMdH
-         8Dw1ZfreQT4qw==
+        b=nZlxgGLDCpVHxwb5A4TRf5e3BjrIfrlDwiC+RLXSxmJsI265pxDYbYLQz7l3LH7Nh
+         /7Cz4+jMS/gjDOFqTocOrh7Gtn/FZb2ijvkfq2Kmz1KNDC4zp9tSPqnsSOVTwsLkcS
+         dGQ4oOGKkMFa+lrbWl+TG5Fipw7+QU6kszkboTh095Lge8o+rWP6IOaj1aREumonB4
+         b0qCjIe94ef8ykKxRXu9yIt81ReYfxp/A7btQ39ylshMES0AOU/9iZYDenjBXiM0LJ
+         /4RV6kY5MHxrtg7/+uB1cMSg6PiB2WstqBkmnRRyGGdH4jTS9E8Mo3wNh7UrsmMBU3
+         L0c67VlysdMVA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Yu Kuai <yukuai3@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 20/22] blk-mq: don't clear flush_rq from tags->rqs[]
-Date:   Tue, 21 Jun 2022 16:49:26 -0400
-Message-Id: <20220621204928.249907-20-sashal@kernel.org>
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.17 16/20] blk-mq: protect q->elevator by ->sysfs_lock in blk_mq_elv_switch_none
+Date:   Tue, 21 Jun 2022 16:50:06 -0400
+Message-Id: <20220621205010.250185-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220621204928.249907-1-sashal@kernel.org>
-References: <20220621204928.249907-1-sashal@kernel.org>
+In-Reply-To: <20220621205010.250185-1-sashal@kernel.org>
+References: <20220621205010.250185-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,46 +59,41 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 6cfeadbff3f8905f2854735ebb88e581402c16c4 ]
+[ Upstream commit 5fd7a84a09e640016fe106dd3e992f5210e23dc7 ]
 
-commit 364b61818f65 ("blk-mq: clearing flush request reference in
-tags->rqs[]") is added to clear the to-be-free flush request from
-tags->rqs[] for avoiding use-after-free on the flush rq.
-
-Yu Kuai reported that blk_mq_clear_flush_rq_mapping() slows down boot time
-by ~8s because running scsi probe which may create and remove lots of
-unpresent LUNs on megaraid-sas which uses BLK_MQ_F_TAG_HCTX_SHARED and
-each request queue has lots of hw queues.
-
-Improve the situation by not running blk_mq_clear_flush_rq_mapping if
-disk isn't added when there can't be any flush request issued.
+elevator can be tore down by sysfs switch interface or disk release, so
+hold ->sysfs_lock before referring to q->elevator, then potential
+use-after-free can be avoided.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reported-by: Yu Kuai <yukuai3@huawei.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Link: https://lore.kernel.org/r/20220616014401.817001-4-ming.lei@redhat.com
+Link: https://lore.kernel.org/r/20220616014401.817001-2-ming.lei@redhat.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ block/blk-mq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 78f67bf19564..c9c7bc359c74 100644
+index f18e1c9c3f4a..5021e8ed2053 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -3427,8 +3427,9 @@ static void blk_mq_exit_hctx(struct request_queue *q,
- 	if (blk_mq_hw_queue_mapped(hctx))
- 		blk_mq_tag_idle(hctx);
+@@ -4433,12 +4433,14 @@ static bool blk_mq_elv_switch_none(struct list_head *head,
+ 	if (!qe)
+ 		return false;
  
--	blk_mq_clear_flush_rq_mapping(set->tags[hctx_idx],
--			set->queue_depth, flush_rq);
-+	if (blk_queue_init_done(q))
-+		blk_mq_clear_flush_rq_mapping(set->tags[hctx_idx],
-+				set->queue_depth, flush_rq);
- 	if (set->ops->exit_request)
- 		set->ops->exit_request(set, flush_rq, hctx_idx);
++	/* q->elevator needs protection from ->sysfs_lock */
++	mutex_lock(&q->sysfs_lock);
++
+ 	INIT_LIST_HEAD(&qe->node);
+ 	qe->q = q;
+ 	qe->type = q->elevator->type;
+ 	list_add(&qe->node, head);
  
+-	mutex_lock(&q->sysfs_lock);
+ 	/*
+ 	 * After elevator_switch_mq, the previous elevator_queue will be
+ 	 * released by elevator_release. The reference of the io scheduler
 -- 
 2.35.1
 
