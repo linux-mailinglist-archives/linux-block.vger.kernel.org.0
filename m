@@ -2,106 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3474554C5A
-	for <lists+linux-block@lfdr.de>; Wed, 22 Jun 2022 16:13:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A84B554E41
+	for <lists+linux-block@lfdr.de>; Wed, 22 Jun 2022 17:03:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358097AbiFVONL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Jun 2022 10:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34646 "EHLO
+        id S1358907AbiFVPDn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Jun 2022 11:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358061AbiFVONA (ORCPT
+        with ESMTP id S1358856AbiFVPDm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Jun 2022 10:13:00 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3F3FC1
-        for <linux-block@vger.kernel.org>; Wed, 22 Jun 2022 07:12:57 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id eo8so24154438edb.0
-        for <linux-block@vger.kernel.org>; Wed, 22 Jun 2022 07:12:57 -0700 (PDT)
+        Wed, 22 Jun 2022 11:03:42 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3B532069
+        for <linux-block@vger.kernel.org>; Wed, 22 Jun 2022 08:03:41 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id t3-20020a17090a510300b001ea87ef9a3dso17065736pjh.4
+        for <linux-block@vger.kernel.org>; Wed, 22 Jun 2022 08:03:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=fG5D+uGBwwK40MTabwUY6wsv1epKDtgAgJdk4dbADg8=;
-        b=AVxqSYm2tQicUHoKP/CQ7yVFeY1/yS3p6olpcI8LxibnzNqI0LwIFgedn3fJON+uLF
-         4y/ScsW+Av9Owd0pW239PDzkOZAGy5EYoLVnJqLECv3CE8N6mltknxWBBRtWeUk+JTP8
-         PL5kUFzheHzaWkGqv3gEUmN7pMTipy2e3YNdtuxY+QSnHEPKQUEudnxqNhbY4BfxDpd+
-         7uCRZUaFSxaWpKM3+SBtXo7OvWUXYhf/Rcy4NEJIr1y+f3hm6rn6cHazffo3Xu4r7Bwi
-         lJP+t9S171aqRH1t76uT2Wzxg1EurjYBhMYT0oz7dYAL7SJw7NFP+DIT/jDkFq84YOzR
-         3ezA==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=lmXhPRDXrnlbYClAFJkfHZYdowqXsf1nTuDLZnU/Y1W/T6TJ8ApbIv950i47frAtN/
+         OtndHJQoWJG+weygm2GuosJduERMEzUHLtTF4oGKopzqXa+c5O1ob2p5JuwuGNaCZz0D
+         0k2iO6ZG6gpeVsjTt5A+NLMvCH8qDkpG8Ex3xIMBpunG6BNJWrlCGLJYo7boJK6pvBIx
+         W4x550ST0gVpK9sdxwL58OfMVVl7H7xG/39bSvJCxipLUGbdwSBY6WRzvY6hd28wfB/N
+         vDKUfqITg8PxsgA4g6gEDGmS0K0dBg3KSntFmGDvcmLKkvSy/F4e+TYysqkO/txSQBCJ
+         afFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=fG5D+uGBwwK40MTabwUY6wsv1epKDtgAgJdk4dbADg8=;
-        b=BAmk1tAPKDPPlb/FMipBZ+d8ynq2wJGjGIVb1a1Y/7OeXQlm5GwSuP+NEEiYYPfFnW
-         bpMw8qfVncLozD8Ka6yAa/yJNOFvt49Bf5PwQcs3dfHNtV4+783lxtPr/HNJ23Uz9fdO
-         7LH+YctWKvCS+D5drsh0kTBDsBIZs4msZ/qkllS84vemKkpf0TkdWkNkizp1od5ffwr9
-         TjWpH5WdzkRYa9wYVjpCsk940tyqL2zKgEVWvYdkAfp7iBSvaYYw56LN2nWmb7Nk/j1I
-         Gd0KWVIuh6fga2rSb6HdPpRuR1m2nRf/la5q0sHDprz7BOorLCOlMVm9o+2BPWnJz5x9
-         x2Rw==
-X-Gm-Message-State: AJIora9V4ek5DP4M2CuC9zRjrh9XAFJ5REiO/XDlMZO6l5e20Q/SwXSx
-        /1l4vlOdbjv2489p95O5WNxsCA==
-X-Google-Smtp-Source: AGRyM1uUESYrbLTpgv2oZVuiUBydC1onWAi2Dy56rj0mDfvLHWZ0vYGmEitukPRk/QfY457MKqHLxQ==
-X-Received: by 2002:a05:6402:3587:b0:435:b9a1:d5c5 with SMTP id y7-20020a056402358700b00435b9a1d5c5mr2403935edc.219.1655907176277;
-        Wed, 22 Jun 2022 07:12:56 -0700 (PDT)
-Received: from [192.168.178.55] (h082218028181.host.wavenet.at. [82.218.28.181])
-        by smtp.gmail.com with ESMTPSA id ch11-20020a0564021bcb00b0043586bee560sm6526365edb.68.2022.06.22.07.12.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jun 2022 07:12:55 -0700 (PDT)
-Message-ID: <b628a808-bb07-c94f-9d70-6bd4eb4be690@linbit.com>
-Date:   Wed, 22 Jun 2022 16:12:54 +0200
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=vSQi07c0TcxUmKMCC9An9q4rXyH5qBwEezNELp8iRbdw1C7dcYENWpvKViRjXTa224
+         JyL6XiGnMHRq3uGAQV53N6RCjccjuXGKNEeFM0yvvWW0dflW6HzXk0an6UPjf/S+Qw4D
+         k8eLCoBxWCGFS+Svo6dirY7z0oLramsg+NkfUHKbuL/RxjPqvTHZq6idPDUkEWwzQmlz
+         TuVIrm9MncaebSSmxj0qnYidkjw8aidjaA56BkI5ZG59nA7TI21GblhHStwBuS6+vJP6
+         gpvdPoThXZC7gHnqUqeQrsFtD2Oi7UF3NIqYTlj/N9CyIUsf3+KBegX7z3X+xLRKx+aD
+         uG1g==
+X-Gm-Message-State: AJIora9bKNcacXuILc7ifXpOxFFdoAIGeuTjvMbQUyl7TdY5bZ4Fj0Ib
+        wwTgX9RlWjMt6GCx9YIVHW8exF2y4f2B5zmZOWs=
+X-Google-Smtp-Source: AGRyM1ulxotWsDV/SS5wzW6q4zt5LXu3F658bS4StYWI/FgPuIBqBz38zqk7aydOTm9FXxU+wDfnf428k+eRTEG/aD8=
+X-Received: by 2002:a17:90b:1988:b0:1ec:f52d:90d4 with SMTP id
+ mv8-20020a17090b198800b001ecf52d90d4mr1796737pjb.70.1655910220864; Wed, 22
+ Jun 2022 08:03:40 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] drbd: Fix typo in comment
-Content-Language: en-US
-To:     Xiang wangx <wangxiang@cdjrlc.com>
-Cc:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk
-References: <20220616143227.4004-1-wangxiang@cdjrlc.com>
-From:   =?UTF-8?Q?Christoph_B=c3=b6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>
-In-Reply-To: <20220616143227.4004-1-wangxiang@cdjrlc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a17:903:2308:b0:16a:1b3f:f74b with HTTP; Wed, 22 Jun 2022
+ 08:03:40 -0700 (PDT)
+Reply-To: sales0212@asonmedsystemsinc.com
+From:   Prasad Ronni <lerwickfinance7@gmail.com>
+Date:   Wed, 22 Jun 2022 16:03:40 +0100
+Message-ID: <CAFkto5vTxj70kORZJZdwOGowXjsZ399eo6DJj=8T==7paSuHTw@mail.gmail.com>
+Subject: Service Needed.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Am 16.06.22 um 16:32 schrieb Xiang wangx:
-> Delete the redundant word 'and'.
-> 
-> Signed-off-by: Xiang wangx <wangxiang@cdjrlc.com>
-> ---
->  drivers/block/drbd/drbd_bitmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/block/drbd/drbd_bitmap.c b/drivers/block/drbd/drbd_bitmap.c
-> index 9e060e49b3f8..8afdde400e37 100644
-> --- a/drivers/block/drbd/drbd_bitmap.c
-> +++ b/drivers/block/drbd/drbd_bitmap.c
-> @@ -86,7 +86,7 @@ struct drbd_bitmap {
->  
->  	/* exclusively to be used by __al_write_transaction(),
->  	 * drbd_bm_mark_for_writeout() and
-> -	 * and drbd_bm_write_hinted() -> bm_rw() called from there.
-> +	 * drbd_bm_write_hinted() -> bm_rw() called from there.
->  	 */
->  	unsigned int n_bitmap_hints;
->  	unsigned int al_bitmap_hints[AL_UPDATES_PER_TRANSACTION];
-
-Thanks!
-
-Acked-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
-
 -- 
-Christoph Böhmwalder
-LINBIT | Keeping the Digital World Running
-DRBD HA —  Disaster Recovery — Software defined Storage
+Hi,
+
+Are you currently open to work as our executive company representative
+on contractual basis working remotely? If yes, we will be happy to
+share more details. Looking forward to your response.
+
+Regards,
