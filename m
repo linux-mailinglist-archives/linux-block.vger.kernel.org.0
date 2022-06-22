@@ -2,75 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39FFC554094
-	for <lists+linux-block@lfdr.de>; Wed, 22 Jun 2022 04:37:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 716BD554112
+	for <lists+linux-block@lfdr.de>; Wed, 22 Jun 2022 05:58:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233508AbiFVChp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Jun 2022 22:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51142 "EHLO
+        id S1356330AbiFVD6O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Jun 2022 23:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232651AbiFVCho (ORCPT
+        with ESMTP id S1355783AbiFVD6N (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Jun 2022 22:37:44 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033ED31220;
-        Tue, 21 Jun 2022 19:37:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1655865454;
-        bh=ZYmy+gYNPHc14IB9uGAmLHWZKGdmbfK5J4VuU0lNF54=;
-        h=X-UI-Sender-Class:Date:To:References:From:Subject:In-Reply-To;
-        b=f1SgIT2iUfgK6JGidPc7x5swAWtiCdhwcCIxLQXex6dQXJDGMnkl7phfhga1TL7Nf
-         kfNUM4YRy09UqrBzotPExrAmUBlt7HyIVSxURDZSd4AkUIjsnO0rXWlPgeaE5gs9U0
-         +V3FMee13nztLIH5LeN5k3EpJ07VuPvCRyCHghdw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MEFzx-1nwSNc0Xht-00AGB9; Wed, 22
- Jun 2022 04:37:34 +0200
-Message-ID: <d15f352d-41b8-8ade-4724-8370ef17db8d@gmx.com>
-Date:   Wed, 22 Jun 2022 10:37:29 +0800
+        Tue, 21 Jun 2022 23:58:13 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B470240A0;
+        Tue, 21 Jun 2022 20:58:10 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LSV1R1Y3PzkWLt;
+        Wed, 22 Jun 2022 11:56:27 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 22 Jun 2022 11:58:07 +0800
+Received: from [10.174.176.73] (10.174.176.73) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 22 Jun 2022 11:58:01 +0800
+Subject: Re: [PATCH RFC -next] sbitmap: fix possible io hung due to lost
+ wakeups
+To:     Jan Kara <jack@suse.cz>
+CC:     <axboe@kernel.dk>, <ming.lei@redhat.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yi.zhang@huawei.com>
+References: <20220617141125.3024491-1-yukuai3@huawei.com>
+ <20220620122413.2fewshn5u6t2y4oi@quack3.lan>
+ <20220620124831.g7bswgivvg5urv3d@quack3.lan>
+ <d0e2639b-885e-2789-7d1b-13057abc67f4@huawei.com>
+ <20220620170231.c656cs4ksqcve4td@quack3.lan>
+From:   Yu Kuai <yukuai3@huawei.com>
+Message-ID: <4fbc3052-b9b7-607d-1b8c-6ad8b21dfc3c@huawei.com>
+Date:   Wed, 22 Jun 2022 11:58:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Content-Language: en-US
-To:     Doug Ledford <dledford@redhat.com>,
-        Wols Lists <antlists@youngman.org.uk>,
-        linux-raid@vger.kernel.org,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>
-References: <d4163d9f-8900-1ec1-ffb8-c3834c512279@gmx.com>
- <63a9cfb7-4999-d902-a7df-278e2ec37593@youngman.org.uk>
- <1704788b-fb7d-b532-4911-238e4f7fd448@gmx.com>
- <06365833-bd91-7dcf-4541-f8e15ed3bef2@youngman.org.uk>
- <87cb53c4f08cc7b18010e62b9b3178ed70e06e8d.camel@redhat.com>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Subject: Re: About the md-bitmap behavior
-In-Reply-To: <87cb53c4f08cc7b18010e62b9b3178ed70e06e8d.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3Jp0t3SNb5hovnXTWcX0Y75lNujLSTLUMhszvt05CUtW0LPK5FN
- wgWtuV9B8yjedzRpMicYZ6nmcTkvKCvJlAnHAl3TRvSz3WElQjOq2/ufR4WBSktr0cq4b3R
- dqklbyb6nyyFX0YiR8oVCsjI5neUuo3r7EcJi7njQJL/oLgdRWmWMbjaTtuwqI8NLdVUMY+
- aNokqKBv9cZMSb54Dt8Zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WjMGLs+vJDU=:+G9gRlgq924fxm6CLceAx4
- alNEP4MJLH0VdlshdkD1AoWvYSjdo9fG4myQpLzSWPk3kLCeWt1gX2X2B5wc63FdXO8Ud7PYe
- 4JaHYABWPzrshzj2vqr/CVGRmVSXz4HQfDsUyjrDXSr2chzKy88CbqytNOMukWxNm1ym254Fi
- hUyJdD2ci92f3Lkjax4y2HqQZ0RzpIZHqIC0Qy+vppR6oATC5hPVgmp6LTzYFzeLPEuQDhHtR
- KKM/F3dUSqHwBj1J97udoIuv3bQ3rWb1F/WmcKqR06lPXNBR7vsyVhcr+cMHnT27XECbOVWhL
- QNBcwpivYpW5OFPnzSPY2S79lhX4ae3PiitFxTJ6r6+XZcjHJ09OMr6AJdILgq7V5u1iZ1F3J
- AT2foyPDHIm1/erYGkDzVDQEIx1lmyd9i8w7YnIepiScYeq4ywFcgIATBoGtbIKK+9SY/dibZ
- IIxY7SBGStOUqNVqitdIxR8wg8jXPMP2rsx398UFotl3KQGfmPb+V/OfuqqTHhk1rh3gzNOiq
- 1nPqowmMRBJctrDmQlFBphPRNu/ALBvMJKRbs6IGGoiJaLfn/Xb2wMUOtdPzEiAALqTdNgBEh
- MTiwa+1oVFN/lJ7HA6LKpPERuNeYZoy6HY7dHy18TK3fsLqTr+00RxleJcfs1wG+Txr+K2pv6
- CmUgEiND4kBuUbI8u50bAArUFzvCLIrt/TQWYIVua2qaxu3K8n3vfsnpIqJZ8z821Sq0BSNkP
- 9PP12CO1Fz49miZ+mD/ifjnZwbNmeA2etRtnP62MROm87bs9/m78H20+Ug1Cu5ahoJ2eY1Umx
- HHdonOlNHFj5qXkIuJbCpF9eNOk/elwu1rtbDyzETqOe+wq87WN5f+BhOQKb11a8XAMSBNm5f
- hKbBKMEwFsi5+1uFHw6/b4eJ2FBfLbGEv+LVVGvRG5kbvLqJKg9DXT88jIBDE23LZA1oFWNGZ
- X0QLzjGVEzEp85hcL8dy80I2fkGxVj6HaQYaYJ+30MiszqTIJZio14EuekvK8nJkvMtHBHI18
- qXbVvK1O3gb8Kj0N7361dDXzGIP4w0oKNJBbEwBO2DZKf22u03KiH0xCMMmsirnviz+gA6REb
- l/JR0uCLCzw2lWmPAl9WLJzp8ARkSD3932OGhscizjya3CbTZqHfC22yA==
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+In-Reply-To: <20220620170231.c656cs4ksqcve4td@quack3.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.176.73]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,75 +59,247 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-
-On 2022/6/22 10:15, Doug Ledford wrote:
-> On Mon, 2022-06-20 at 10:56 +0100, Wols Lists wrote:
->> On 20/06/2022 08:56, Qu Wenruo wrote:
->>>> The write-hole has been addressed with journaling already, and
->>>> this will
->>>> be adding a new and not-needed feature - not saying it wouldn't be
->>>> nice
->>>> to have, but do we need another way to skin this cat?
->>>
->>> I'm talking about the BTRFS RAID56, not md-raid RAID56, which is a
->>> completely different thing.
->>>
->>> Here I'm just trying to understand how the md-bitmap works, so that
->>> I
->>> can do a proper bitmap for btrfs RAID56.
+在 2022/06/21 1:02, Jan Kara 写道:
+> On Mon 20-06-22 21:44:16, Yu Kuai wrote:
+>> 在 2022/06/20 20:48, Jan Kara 写道:
+>>> On Mon 20-06-22 14:24:13, Jan Kara wrote:
+>>>> On Fri 17-06-22 22:11:25, Yu Kuai wrote:
+>>>>> Currently, same waitqueue might be woken up continuously:
+>>>>>
+>>>>> __sbq_wake_up		__sbq_wake_up
+>>>>>    sbq_wake_ptr -> assume	0
+>>>>> 			 sbq_wake_ptr -> 0
+>>>>>    atomic_dec_return
+>>>>> 			atomic_dec_return
+>>>>>    atomic_cmpxchg -> succeed
+>>>>> 			 atomic_cmpxchg -> failed
+>>>>> 			  return true
+>>>>>
+>>>>> 			__sbq_wake_up
+>>>>> 			 sbq_wake_ptr
+>>>>> 			  atomic_read(&sbq->wake_index) -> still 0
+>>>>>    sbq_index_atomic_inc -> inc to 1
+>>>>> 			  if (waitqueue_active(&ws->wait))
+>>>>> 			   if (wake_index != atomic_read(&sbq->wake_index))
+>>>>> 			    atomic_set -> reset from 1 to 0
+>>>>>    wake_up_nr -> wake up first waitqueue
+>>>>> 			    // continue to wake up in first waitqueue
+>>>>>
+>>>>> What's worse, io hung is possible in theory because wakeups might be
+>>>>> missed. For example, 2 * wake_batch tags are put, while only wake_batch
+>>>>> threads are worken:
+>>>>>
+>>>>> __sbq_wake_up
+>>>>>    atomic_cmpxchg -> reset wait_cnt
+>>>>> 			__sbq_wake_up -> decrease wait_cnt
+>>>>> 			...
+>>>>> 			__sbq_wake_up -> wait_cnt is decreased to 0 again
+>>>>> 			 atomic_cmpxchg
+>>>>> 			 sbq_index_atomic_inc -> increase wake_index
+>>>>> 			 wake_up_nr -> wake up and waitqueue might be empty
+>>>>>    sbq_index_atomic_inc -> increase again, one waitqueue is skipped
+>>>>>    wake_up_nr -> invalid wake up because old wakequeue might be empty
+>>>>>
+>>>>> To fix the problem, refactor to make sure waitqueues will be woken up
+>>>>> one by one,
+>>>>>
+>>>>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>>>>
+>>>> So as far as I can tell your patch does not completely fix this race. See
+>>>> below:
+>>>>
+>>>>> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+>>>>> index ae4fd4de9ebe..dc2959cb188c 100644
+>>>>> --- a/lib/sbitmap.c
+>>>>> +++ b/lib/sbitmap.c
+>>>>> @@ -574,66 +574,69 @@ void sbitmap_queue_min_shallow_depth(struct sbitmap_queue *sbq,
+>>>>>    }
+>>>>>    EXPORT_SYMBOL_GPL(sbitmap_queue_min_shallow_depth);
+>>>>> -static struct sbq_wait_state *sbq_wake_ptr(struct sbitmap_queue *sbq)
+>>>>> +static void sbq_update_wake_index(struct sbitmap_queue *sbq,
+>>>>> +				  int old_wake_index)
+>>>>>    {
+>>>>>    	int i, wake_index;
+>>>>> -
+>>>>> -	if (!atomic_read(&sbq->ws_active))
+>>>>> -		return NULL;
+>>>>> +	struct sbq_wait_state *ws;
+>>>>>    	wake_index = atomic_read(&sbq->wake_index);
+>>>>> -	for (i = 0; i < SBQ_WAIT_QUEUES; i++) {
+>>>>> -		struct sbq_wait_state *ws = &sbq->ws[wake_index];
+>>>>> +	if (old_wake_index != wake_index)
+>>>>> +		return;
+>>>>> +	for (i = 1; i < SBQ_WAIT_QUEUES; i++) {
+>>>>> +		wake_index = sbq_index_inc(wake_index);
+>>>>> +		ws = &sbq->ws[wake_index];
+>>>>> +		/* Find the next active waitqueue in round robin manner */
+>>>>>    		if (waitqueue_active(&ws->wait)) {
+>>>>> -			if (wake_index != atomic_read(&sbq->wake_index))
+>>>>> -				atomic_set(&sbq->wake_index, wake_index);
+>>>>> -			return ws;
+>>>>> +			atomic_cmpxchg(&sbq->wake_index, old_wake_index,
+>>>>> +				       wake_index);
+>>>>> +			return;
+>>>>>    		}
+>>>>> -
+>>>>> -		wake_index = sbq_index_inc(wake_index);
+>>>>>    	}
+>>>>> -
+>>>>> -	return NULL;
+>>>>>    }
+>>>>>    static bool __sbq_wake_up(struct sbitmap_queue *sbq)
+>>>>>    {
+>>>>>    	struct sbq_wait_state *ws;
+>>>>>    	unsigned int wake_batch;
+>>>>> -	int wait_cnt;
+>>>>> +	int wait_cnt, wake_index;
+>>>>> -	ws = sbq_wake_ptr(sbq);
+>>>>> -	if (!ws)
+>>>>> +	if (!atomic_read(&sbq->ws_active))
+>>>>>    		return false;
+>>>>> -	wait_cnt = atomic_dec_return(&ws->wait_cnt);
+>>>>> -	if (wait_cnt <= 0) {
+>>>>> -		int ret;
+>>>>> -
+>>>>> -		wake_batch = READ_ONCE(sbq->wake_batch);
+>>>>> -
+>>>>> -		/*
+>>>>> -		 * Pairs with the memory barrier in sbitmap_queue_resize() to
+>>>>> -		 * ensure that we see the batch size update before the wait
+>>>>> -		 * count is reset.
+>>>>> -		 */
+>>>>> -		smp_mb__before_atomic();
+>>>>> +	wake_index = atomic_read(&sbq->wake_index);
+>>>>> +	ws = &sbq->ws[wake_index];
+>>>>> +	/*
+>>>>> +	 * This can only happen in the first wakeup when sbitmap waitqueues
+>>>>> +	 * are no longer idle.
+>>>>> +	 */
+>>>>> +	if (!waitqueue_active(&ws->wait)) {
+>>>>> +		sbq_update_wake_index(sbq, wake_index);
+>>>>> +		return true;
+>>>>> +	}
+>>>>> -		/*
+>>>>> -		 * For concurrent callers of this, the one that failed the
+>>>>> -		 * atomic_cmpxhcg() race should call this function again
+>>>>> -		 * to wakeup a new batch on a different 'ws'.
+>>>>> -		 */
+>>>>> -		ret = atomic_cmpxchg(&ws->wait_cnt, wait_cnt, wake_batch);
+>>>>> -		if (ret == wait_cnt) {
+>>>>> -			sbq_index_atomic_inc(&sbq->wake_index);
+>>>>> -			wake_up_nr(&ws->wait, wake_batch);
+>>>>> -			return false;
+>>>>> -		}
+>>>>> +	wait_cnt = atomic_dec_return(&ws->wait_cnt);
+>>>>> +	if (wait_cnt > 0)
+>>>>> +		return false;
+>>>>
+>>>> The following race is still possible:
+>>>>
+>>>> CPU1					CPU2
+>>>> __sbq_wake_up				__sbq_wake_up
+>>>>     wake_index = atomic_read(&sbq->wake_index);
+>>>> 					  wake_index = atomic_read(&sbq->wake_index);
+>>>>
+>>>>     if (!waitqueue_active(&ws->wait)) -> not taken
+>>>> 					  if (!waitqueue_active(&ws->wait)) -> not taken
+>>>>     wait_cnt = atomic_dec_return(&ws->wait_cnt);
+>>>>     /* decremented to 0 now */
+>>>>     if (wait_cnt > 0) -> not taken
+>>>>     sbq_update_wake_index(sbq, wake_index);
+>>>>     if (wait_cnt < 0) -> not taken
+>>>>     ...
+>>>>     atomic_set(&ws->wait_cnt, wake_batch);
+>>>>     wake_up_nr(&ws->wait, wake_batch);
+>>>> 					  wait_cnt = atomic_dec_return(&ws->wait_cnt);
+>>>> 					  /*
+>>>> 					   * decremented to wake_batch - 1 but
+>>>> 					   * there are no tasks waiting anymore
+>>>> 					   * so the wakeup should have gone
+>>>> 					   * to a different waitqueue.
+>>>> 					   */
+>>>>
+>>>> I have an idea how to fix all these lost wakeups, I'll try to code it
+>>>> whether it would look usable...
+>> Hi, Jan
 >>
->> Ah. Okay.
+>> Thanks for the analysis, it's right this is possible.
+>>>
+>>> Thinking a bit more about it your code would just need a small tweak like:
+>>>
+>>> 	wait_cnt = atomic_dec_return(&ws->wait_cnt);
+>>> 	/*
+>>> 	 * Concurrent callers should call this function again
+>>> 	 * to wakeup a new batch on a different 'ws'.
+>>> 	 */
+>>> 	if (wait_cnt < 0 || !waitqueue_active(&ws->wait)) {
+>>> 		sbq_update_wake_index(sbq, wake_index);
+>>> 		return true;
+>>> 	}
 >>
->> Neil Brown is likely to be the best help here as I believe he wrote a
->> lot of the code, although I don't think he's much involved with md-
->> raid
->> any more.
->
-> I can't speak to how it is today, but I know it was *designed* to be
-> sync flush of the dirty bit setting, then lazy, async write out of the
-> clear bits.  But, yes, in order for the design to be reliable, you must
-> flush out the dirty bits before you put writes in flight.
+>> I'm thinking that if the wait_queue is still active, this will decrease
+>> 'wait_cnt' in old waitqueue while 'wake_index' is already moved to next
+>> waitqueue. This really broke the design...
+> 
+> I agree this can happen and it is not ideal. On the other hand the wakeup
+> is not really lost, just effectively delayed until we select this waitqueue
+> again so it should not result in any hangs. And other ways to avoid the
+> race seem more expensive to me...
 
-Thank you very much confirming my concern.
+Hi, Jan
 
-So maybe it's me not checking the md-bitmap code carefully enough to
-expose the full picture.
-
->
-> One thing I'm not sure about though, is that MD RAID5/6 uses fixed
-> stripes.  I thought btrfs, since it was an allocation filesystem, didn't
-> have to use full stripes?  Am I wrong about that?
-
-Unfortunately, we only go allocation for the RAID56 chunks. In side a
-RAID56 the underlying devices still need to go the regular RAID56 full
-stripe scheme.
-
-Thus the btrfs RAID56 is still the same regular RAID56 inside one btrfs
-RAID56 chunk, but without bitmap/journal.
-
->  Because it would seem
-> that if your data isn't necessarily in full stripes, then a bitmap might
-> not work so well since it just marks a range of full stripes as
-> "possibly dirty, we were writing to them, do a parity resync to make
-> sure".
-
-For the resync part is where btrfs shines, as the extra csum (for the
-untouched part) and metadata COW ensures us only see the old untouched
-data, and with the extra csum, we can safely rebuild the full stripe.
-
-Thus as long as no device is missing, a write-intent-bitmap is enough to
-address the write hole in btrfs (at least for COW protected data and all
-metadata).
-
->
-> In any case, Wols is right, probably want to ping Neil on this.  Might
-> need to ping him directly though.  Not sure he'll see it just on the
-> list.
->
-
-Adding Neil into this thread. Any clue on the existing
-md_bitmap_startwrite() behavior?
+Before you reviewed this version, I aready posted v2... It semms v2 is
+using exactly the same logic that you suggested here 😉.
 
 Thanks,
-Qu
+Kuai
+> 
+> 								Honza
+> 
+>>> 	if (wait_cnt > 0)
+>>> 		return false;
+>>> 	sbq_update_wake_index(sbq, wake_index);
+>>>
+>>> 	wake_batch = READ_ONCE(sbq->wake_batch);
+>>> 	wake_up_nr(&ws->wait, wake_batch);
+>>> 	/*
+>>> 	 * Pairs with the memory barrier in sbitmap_queue_resize() to
+>>> 	 * ensure that we see the batch size update before the wait
+>>> 	 * count is reset.
+>>> 	 *
+>>> 	 * Also pairs with the implicit barrier between decrementing
+>>> 	 * wait_cnt and checking for waitqueue_active() to make sure
+>>> 	 * waitqueue_active() sees results of the wakeup if
+>>> 	 * atomic_dec_return() has seen results of the atomic_set.
+>>> 	 */
+>>> 	smp_mb__before_atomic();
+>>> 	atomic_set(&ws->wait_cnt, wake_batch);
+>>>
+>>> 								Honza
+>>>
+>>>>> +	sbq_update_wake_index(sbq, wake_index);
+>>>>> +	/*
+>>>>> +	 * Concurrent callers should call this function again
+>>>>> +	 * to wakeup a new batch on a different 'ws'.
+>>>>> +	 */
+>>>>> +	if (wait_cnt < 0)
+>>>>>    		return true;
+>>>>> -	}
+>>>>> +
+>>>>> +	wake_batch = READ_ONCE(sbq->wake_batch);
+>>>>> +	/*
+>>>>> +	 * Pairs with the memory barrier in sbitmap_queue_resize() to
+>>>>> +	 * ensure that we see the batch size update before the wait
+>>>>> +	 * count is reset.
+>>>>> +	 */
+>>>>> +	smp_mb__before_atomic();
+>>>>> +	atomic_set(&ws->wait_cnt, wake_batch);
+>>>>> +	wake_up_nr(&ws->wait, wake_batch);
+>>>>>    	return false;
+>>>>>    }
+>>>>> -- 
+>>>>> 2.31.1
+>>>>>
+>>>> -- 
+>>>> Jan Kara <jack@suse.com>
+>>>> SUSE Labs, CR
