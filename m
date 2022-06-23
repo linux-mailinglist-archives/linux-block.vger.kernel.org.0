@@ -2,44 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A661557442
-	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 09:46:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 535EF557476
+	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 09:49:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbiFWHqt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Jun 2022 03:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
+        id S230027AbiFWHsx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Jun 2022 03:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbiFWHqs (ORCPT
+        with ESMTP id S230235AbiFWHsQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Jun 2022 03:46:48 -0400
-Received: from mail.onlinesuccesses.pl (mail.onlinesuccesses.pl [198.244.150.235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861BD46B39
-        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 00:46:47 -0700 (PDT)
-Received: by mail.onlinesuccesses.pl (Postfix, from userid 1002)
-        id 325ADAF0C1; Thu, 23 Jun 2022 07:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onlinesuccesses.pl;
-        s=mail; t=1655970273;
-        bh=nE8HqilgMh4dy7+Z8ksfg7Bc9rmPeQtYFq3/3YR2ODU=;
-        h=Date:From:To:Subject:From;
-        b=CT/4LAA1MGJxGyLbIsZhGpAwfUDlZFS2Lt9nuhNU1VVAMePcT7sbqptmuE3SWOu8K
-         WDOmUHRAc3L4ft1FX0aLCfrJdSSEIRPjQv2GO/tHwLgtaY5QU94DheiZV7cqwjE27i
-         3hSz3r74JRK/oSeKtWsE1oR6hZgK1e2GFIHDbDYeX4IALvvQmD/Yb+sUaXHZr+gXah
-         N6RIk/Z237K35lAOYF+LFpz5YAeJFdsuHX0jLmUERR4Mujr08WuvZIeFX5gUZIJ+6E
-         C0WEBKyEbUKueE4v74A3aozPSv/eEw6DVUs7gfbUlCFgUAv4IgEgtwm0U2nO9IiUev
-         KiUn5G/0I/4CA==
-Received: by mail.onlinesuccesses.pl for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 07:41:20 GMT
-Message-ID: <20220623064501-0.1.51.1mry8.0.aq7wylqfjq@onlinesuccesses.pl>
-Date:   Thu, 23 Jun 2022 07:41:20 GMT
-From:   "Wiktor Zielonko" <wiktor.zielonko@onlinesuccesses.pl>
-To:     <linux-block@vger.kernel.org>
-Subject: Ruch z pierwszej pozycji w Google
-X-Mailer: mail.onlinesuccesses.pl
+        Thu, 23 Jun 2022 03:48:16 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5516A120A5
+        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 00:48:13 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id F088121D34;
+        Thu, 23 Jun 2022 07:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1655970491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=43nJFzKPp9lru1TVC3g9kCuDrrDoLnO4s4j3Bu4v2uA=;
+        b=X9v8kdfIgw1NhcTsFzd1/eQtaK6ksNaA6gckH1hbcB3+YDBrYRobAziU30tnJWBOPzrk2t
+        lyuol9GA/xXw/yt+RguhDR3OPVVyQlHjK/d8We9/SbQamfsrxQHXTjsDpac6gI5SBH9z4d
+        thD/cgohi7mYUHcptCsGgxvEV7ahF0Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1655970491;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=43nJFzKPp9lru1TVC3g9kCuDrrDoLnO4s4j3Bu4v2uA=;
+        b=kJT1wFezvdIQXoLREXjWy+i2nsQEpyNGV2qC7jcpgg8qjfDkC74BnAewoox2BVIvablcNw
+        rgbziiLgbjlSkiBw==
+Received: from quack3.suse.cz (unknown [10.100.224.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 058B92C145;
+        Thu, 23 Jun 2022 07:48:06 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 3FBB8A062B; Thu, 23 Jun 2022 09:48:11 +0200 (CEST)
+Date:   Thu, 23 Jun 2022 09:48:11 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>
+Subject: Re: [PATCH 0/9 v4] block: Fix IO priority mess
+Message-ID: <20220623074811.3yrkevoa5n3jarkz@quack3.lan>
+References: <20220621102201.26337-1-jack@suse.cz>
+ <217a12c7-fd02-1e3d-16cc-207e7c55551b@opensource.wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <217a12c7-fd02-1e3d-16cc-207e7c55551b@opensource.wdc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,22 +65,57 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dzie=C5=84 dobry,=20
+On Thu 23-06-22 09:24:56, Damien Le Moal wrote:
+> On 6/21/22 19:24, Jan Kara wrote:
+> > Hello,
+> > 
+> > This is the fourth revision of my patches fixing IO priority handling in the
+> > block layer.
+> 
+> Hey,
+> 
+> I ran some tests with RT IO class on an ATA HDD with NCQ priority.
+> Results look good:
+> 
+> randread: (groupid=0, jobs=1): err= 0: pid=1862: Thu Jun 23 09:22:42 2022
+>   read: IOPS=152, BW=19.1MiB/s (20.0MB/s)(11.1GiB/592929msec)
+>     slat (usec): min=37, max=3280, avg=174.96, stdev=120.90
+>     clat (msec): min=7, max=918, avg=156.95, stdev=149.43
+>      lat (msec): min=7, max=918, avg=157.13, stdev=149.43
+>     clat prio 0/0 (msec): min=7, max=918, avg=171.68, stdev=150.48
+>     clat prio 1/0 (msec): min=8, max=166, avg=24.64, stdev= 5.93
+>     clat percentiles (msec):
+>      |  1.00th=[   15],  5.00th=[   20], 10.00th=[   23], 20.00th=[   32],
+>      | 30.00th=[   51], 40.00th=[   77], 50.00th=[  108], 60.00th=[  146],
+>      | 70.00th=[  194], 80.00th=[  262], 90.00th=[  372], 95.00th=[  477],
+>      | 99.00th=[  659], 99.50th=[  701], 99.90th=[  793], 99.95th=[  818],
+>      | 99.99th=[  885]
+>     clat prio 0/0 (89.99% of IOs) percentiles (msec):
+>      |  1.00th=[   15],  5.00th=[   21], 10.00th=[   27], 20.00th=[   46],
+>      | 30.00th=[   68], 40.00th=[   94], 50.00th=[  126], 60.00th=[  163],
+>      | 70.00th=[  213], 80.00th=[  279], 90.00th=[  388], 95.00th=[  489],
+>      | 99.00th=[  659], 99.50th=[  709], 99.90th=[  793], 99.95th=[  827],
+>      | 99.99th=[  885]
+>     clat prio 1/0 (10.01% of IOs) percentiles (msec):
+>      |  1.00th=[   14],  5.00th=[   17], 10.00th=[   18], 20.00th=[   20],
+>      | 30.00th=[   22], 40.00th=[   23], 50.00th=[   25], 60.00th=[   26],
+>      | 70.00th=[   28], 80.00th=[   30], 90.00th=[   33], 95.00th=[   35],
+>      | 99.00th=[   40], 99.50th=[   42], 99.90th=[   47], 99.95th=[   50],
+>      | 99.99th=[  167]
+> 
+> Clearly significantly lower tail latencies for the 10% of IOs with class
+> RT (1/0), as expected. This is with "none" scheduler at QD=24 (128K random
+> read).
 
-jaki=C5=9B czas temu zg=C5=82osi=C5=82a si=C4=99 do nas firma, kt=C3=B3re=
-j strona internetowa nie pozycjonowa=C5=82a si=C4=99 wysoko w wyszukiwarc=
-e Google.=20
+Nice! :)
 
-Na podstawie wykonanego przez nas audytu SEO zoptymalizowali=C5=9Bmy tre=C5=
-=9Bci na stronie pod k=C4=85tem wcze=C5=9Bniej opracowanych s=C5=82=C3=B3=
-w kluczowych. Nasz wewn=C4=99trzny system codziennie analizuje prawid=C5=82=
-owe dzia=C5=82anie witryny.  Dzi=C4=99ki indywidualnej strategii, firma z=
-dobywa coraz wi=C4=99cej Klient=C3=B3w. =20
+> Feel free to add:
+> 
+> Tested-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 
-Czy chcieliby Pa=C5=84stwo zwi=C4=99kszy=C4=87 liczb=C4=99 os=C3=B3b odwi=
-edzaj=C4=85cych stron=C4=99 internetow=C4=85 firmy? M=C3=B3g=C5=82bym prz=
-edstawi=C4=87 ofert=C4=99?=20
+Thanks for testing! I'll post the final patch version shortly.
 
-
-Pozdrawiam serdecznie,
-Wiktor Zielonko
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
