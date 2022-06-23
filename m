@@ -2,49 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 292BF558811
-	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 21:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BF46558813
+	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 21:01:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbiFWTAx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Jun 2022 15:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43478 "EHLO
+        id S230413AbiFWTA7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Jun 2022 15:00:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiFWTAa (ORCPT
+        with ESMTP id S231714AbiFWTAe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Jun 2022 15:00:30 -0400
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D1A10CD3B
-        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:53 -0700 (PDT)
-Received: by mail-pg1-f172.google.com with SMTP id d129so151604pgc.9
-        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:53 -0700 (PDT)
+        Thu, 23 Jun 2022 15:00:34 -0400
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA3DA1E10
+        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:55 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id a17so16856228pls.6
+        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vCfdY54E0YpQf9NQo2iEL3i0DfKluI5hrZD6kzUYhhs=;
-        b=iq51Fr0VAxCdxLqMm7RYLumlWLUkDgmkyodgeB0e0GLxIkyO0kEVRBGlIJlJD3eH3v
-         QfSTqGZkmepvy5CUkrJlG/SVnQjvt/E+yCzXbrzT/uP53CW+9wSMY+pcGD2n9i7yCoWt
-         iuWpcicIhS8B614l20x9xg+ssMwlTXYPpGGJiHb+0weyFVg/vHstxi84JY3798CLfRJJ
-         b9uRPKHVt0Dk7RL2vzTxFWyWOvnhwadiHz4+YLhahor2CC7DTggm04IjPzx8uD0/FKhh
-         UYeOErDSX2qhPcuN4gNIZ77enR8KRhQyNc3D7dAjuPuQtWcUcReIBaIhymFaDZaiI/QW
-         UECA==
-X-Gm-Message-State: AJIora9tu25IH2555a/wVZsurjngznsluokjr6S/WNuqiQG6KhI5Dt0M
-        wNkHcTMfR8w8ZiVP1S6mivo=
-X-Google-Smtp-Source: AGRyM1szxafbZCYS6RlRWWim5d7G9WmghAD0i9A0W/cBCi+88Nft6nzqbR1DNstmPQ6zz3uOcsOkCQ==
-X-Received: by 2002:a63:b1e:0:b0:3fd:43d9:5354 with SMTP id 30-20020a630b1e000000b003fd43d95354mr8530167pgl.294.1656007552472;
-        Thu, 23 Jun 2022 11:05:52 -0700 (PDT)
+        bh=au1a8taQE5BsDHVNYY/5GNZPJ3Dny1f3djPadh9DsWk=;
+        b=Vg6kvAfGTtPxZLp2gaMxfDjaKqDgB+tVwOxRWMX3/qmtsQMUEzeUuzhmmwCvZYN9EP
+         XV4kqcZ3G0NRqatGtl9QQzlBd5gbcmn+vQSPrMbiORbfAdNeXS9fDM1RI7NAxmzT8Lqe
+         fDdHt4YnKHaUY0PBcD/PQm59RVm8B2ZT5hYEs7Y4WBXxnz8lMXS6g8Qydr2+Qw/EqGMK
+         LerARZYQ2pi1UI0VSvyyUXb1KHh+NW6BkEgf0Em+SldloLQ+SdMDxAwHo6BtUNKvGZ6q
+         tMqa/vkClzlALicqGGHm+Z8Bkuvm3J/g5siCjHrgWO+njG1nYKMvp3hRYuWn9SdAYZ+D
+         sHGA==
+X-Gm-Message-State: AJIora9gULsqyAo+tiMaGMvdNgw6qVGDx5G6c6bTxBtUtmA4EYKe9d7X
+        lA0rVS6tRYNzyw2euQhwVo8=
+X-Google-Smtp-Source: AGRyM1tkSvkqZHJohnEfsyxfiPs4oGhb3Jh1qLiH02VWaFUWLkYwyeo0RpNSJ+Tvn2RZ1/edNPX+oQ==
+X-Received: by 2002:a17:903:183:b0:16a:5c43:9a9c with SMTP id z3-20020a170903018300b0016a5c439a9cmr3593869plg.153.1656007554559;
+        Thu, 23 Jun 2022 11:05:54 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:70af:1dc5:d20:a563])
-        by smtp.gmail.com with ESMTPSA id a18-20020a056a000c9200b0051c4ecb0e3dsm16019967pfv.193.2022.06.23.11.05.51
+        by smtp.gmail.com with ESMTPSA id a18-20020a056a000c9200b0051c4ecb0e3dsm16019967pfv.193.2022.06.23.11.05.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jun 2022 11:05:51 -0700 (PDT)
+        Thu, 23 Jun 2022 11:05:53 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 12/51] block/null_blk: Fix sparse warnings in tracing code
-Date:   Thu, 23 Jun 2022 11:04:49 -0700
-Message-Id: <20220623180528.3595304-13-bvanassche@acm.org>
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Subject: [PATCH 13/51] um: Use enum req_op where appropriate
+Date:   Thu, 23 Jun 2022 11:04:50 -0700
+Message-Id: <20220623180528.3595304-14-bvanassche@acm.org>
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
 In-Reply-To: <20220623180528.3595304-1-bvanassche@acm.org>
 References: <20220623180528.3595304-1-bvanassche@acm.org>
@@ -52,49 +53,44 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since the tracing infrastructure does not support bitwise types, store
-the request operation as an int. This patch does not change any
-functionality.
+Improve static type checking by using type enum req_op instead of int where
+appropriate.
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/block/null_blk/trace.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/um/drivers/ubd_kern.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/null_blk/trace.h b/drivers/block/null_blk/trace.h
-index 6b2b370e786f..f79467e5310f 100644
---- a/drivers/block/null_blk/trace.h
-+++ b/drivers/block/null_blk/trace.h
-@@ -36,19 +36,19 @@ TRACE_EVENT(nullb_zone_op,
- 	    TP_ARGS(cmd, zone_no, zone_cond),
- 	    TP_STRUCT__entry(
- 		__array(char, disk, DISK_NAME_LEN)
--		__field(enum req_op, op)
-+		__field(int, op)
- 		__field(unsigned int, zone_no)
- 		__field(unsigned int, zone_cond)
- 	    ),
- 	    TP_fast_assign(
--		__entry->op = req_op(cmd->rq);
-+		__entry->op = (__force int)req_op(cmd->rq);
- 		__entry->zone_no = zone_no;
- 		__entry->zone_cond = zone_cond;
- 		__assign_disk_name(__entry->disk, cmd->rq->q->disk);
- 	    ),
- 	    TP_printk("%s req=%-15s zone_no=%u zone_cond=%-10s",
- 		      __print_disk_name(__entry->disk),
--		      blk_op_str(__entry->op),
-+		      blk_op_str((__force enum req_op)__entry->op),
- 		      __entry->zone_no,
- 		      blk_zone_cond_str(__entry->zone_cond))
- );
+diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+index c4344b67628d..e2a0ebe4872f 100644
+--- a/arch/um/drivers/ubd_kern.c
++++ b/arch/um/drivers/ubd_kern.c
+@@ -1262,7 +1262,7 @@ static void ubd_map_req(struct ubd *dev, struct io_thread_req *io_req,
+ 	struct req_iterator iter;
+ 	int i = 0;
+ 	unsigned long byte_offset = io_req->offset;
+-	int op = req_op(req);
++	enum req_op op = req_op(req);
+ 
+ 	if (op == REQ_OP_WRITE_ZEROES || op == REQ_OP_DISCARD) {
+ 		io_req->io_desc[0].buffer = NULL;
+@@ -1325,7 +1325,7 @@ static int ubd_submit_request(struct ubd *dev, struct request *req)
+ 	int segs = 0;
+ 	struct io_thread_req *io_req;
+ 	int ret;
+-	int op = req_op(req);
++	enum req_op op = req_op(req);
+ 
+ 	if (op == REQ_OP_FLUSH)
+ 		segs = 0;
