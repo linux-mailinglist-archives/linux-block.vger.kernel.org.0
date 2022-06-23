@@ -2,59 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 535EF557476
-	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 09:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CCEE557471
+	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 09:49:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbiFWHsx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Jun 2022 03:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33322 "EHLO
+        id S230225AbiFWHs6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Jun 2022 03:48:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230235AbiFWHsQ (ORCPT
+        with ESMTP id S231205AbiFWHso (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Jun 2022 03:48:16 -0400
+        Thu, 23 Jun 2022 03:48:44 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5516A120A5
-        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 00:48:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A7DA2983A
+        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 00:48:42 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id F088121D34;
-        Thu, 23 Jun 2022 07:48:11 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTP id 0400F21D34;
+        Thu, 23 Jun 2022 07:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1655970491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=43nJFzKPp9lru1TVC3g9kCuDrrDoLnO4s4j3Bu4v2uA=;
-        b=X9v8kdfIgw1NhcTsFzd1/eQtaK6ksNaA6gckH1hbcB3+YDBrYRobAziU30tnJWBOPzrk2t
-        lyuol9GA/xXw/yt+RguhDR3OPVVyQlHjK/d8We9/SbQamfsrxQHXTjsDpac6gI5SBH9z4d
-        thD/cgohi7mYUHcptCsGgxvEV7ahF0Q=
+        t=1655970521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=5i9Z32duoelG/wbN9pv07VHvWXlD2mTcOg9tUIarTho=;
+        b=2a/LT3itC5cSSXifcSHZtUV4Zf9JyFZ1S+G1EEgSdu2a23LUbyj7h7bYNSqaZPi2Z/rhUL
+        vu2G/RV1pdDGWE4T+a4AVp8AlVSA9uvyjDmafnOGs//wTIm/UbZY2WQjLupB9divy03/RN
+        Y+5iB6EqN4KuCekYooljHZskpk1EXUA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1655970491;
+        s=susede2_ed25519; t=1655970521;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=43nJFzKPp9lru1TVC3g9kCuDrrDoLnO4s4j3Bu4v2uA=;
-        b=kJT1wFezvdIQXoLREXjWy+i2nsQEpyNGV2qC7jcpgg8qjfDkC74BnAewoox2BVIvablcNw
-        rgbziiLgbjlSkiBw==
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=5i9Z32duoelG/wbN9pv07VHvWXlD2mTcOg9tUIarTho=;
+        b=cPdVM60MtUGTlAIPbTIcunqJpMD040HnlpgbizP8qp+E7tlS/7HUMnYCqdvW5kWLceSZP+
+        6AX8MeQo/J7uesBA==
 Received: from quack3.suse.cz (unknown [10.100.224.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 058B92C145;
-        Thu, 23 Jun 2022 07:48:06 +0000 (UTC)
+        by relay2.suse.de (Postfix) with ESMTPS id 5ABDE2C145;
+        Thu, 23 Jun 2022 07:48:35 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 3FBB8A062B; Thu, 23 Jun 2022 09:48:11 +0200 (CEST)
-Date:   Thu, 23 Jun 2022 09:48:11 +0200
+        id A8D16A062B; Thu, 23 Jun 2022 09:48:40 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>
-Subject: Re: [PATCH 0/9 v4] block: Fix IO priority mess
-Message-ID: <20220623074811.3yrkevoa5n3jarkz@quack3.lan>
-References: <20220621102201.26337-1-jack@suse.cz>
- <217a12c7-fd02-1e3d-16cc-207e7c55551b@opensource.wdc.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     <linux-block@vger.kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/9 v5] block: Fix IO priority mess
+Date:   Thu, 23 Jun 2022 09:48:25 +0200
+Message-Id: <20220623074450.30550-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <217a12c7-fd02-1e3d-16cc-207e7c55551b@opensource.wdc.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2595; h=from:subject:message-id; bh=nog9PvcsNRTxgT1QQidhv9FJ0lhKw9XGHX5kGq0eF5g=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBitBrEd5tdcaOruJmaHGWYJDuMXF4Sx4SF6YsyPlqu /q2g4N2JATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYrQaxAAKCRCcnaoHP2RA2UDSB/ 4/8DTLjdhhtXne1wDenD55/J+vLZSwGLCXnrGlm79hHu9cYHumsEsCwNG5cDTFYtvZw/Wz2ynSV0nu BVZ5JLg1VfgMDbEelXorz0XK0/8g2iRmpo+SERDB3buUqO0psxD1pHr6T5Xvuyasbzx068EPEoXoc8 9x2SsVfLcB+W3c9rXpXFiNO0EDMZ5KqbszleC3mA67eGxMdvasdSi3IlnC7ODBDWotiqCd2OcVzQPS W22aMIqJqp8IsxpR/1PHR+p7UN6Mpy4C+tLAVqDtGXj7yC/Hx904vxm7UaP5PiLMSZlWD81yDP+Lzu zn3RD+eaLjOZP9Keqm5WEzHa4pASRh
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -65,57 +63,54 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu 23-06-22 09:24:56, Damien Le Moal wrote:
-> On 6/21/22 19:24, Jan Kara wrote:
-> > Hello,
-> > 
-> > This is the fourth revision of my patches fixing IO priority handling in the
-> > block layer.
-> 
-> Hey,
-> 
-> I ran some tests with RT IO class on an ATA HDD with NCQ priority.
-> Results look good:
-> 
-> randread: (groupid=0, jobs=1): err= 0: pid=1862: Thu Jun 23 09:22:42 2022
->   read: IOPS=152, BW=19.1MiB/s (20.0MB/s)(11.1GiB/592929msec)
->     slat (usec): min=37, max=3280, avg=174.96, stdev=120.90
->     clat (msec): min=7, max=918, avg=156.95, stdev=149.43
->      lat (msec): min=7, max=918, avg=157.13, stdev=149.43
->     clat prio 0/0 (msec): min=7, max=918, avg=171.68, stdev=150.48
->     clat prio 1/0 (msec): min=8, max=166, avg=24.64, stdev= 5.93
->     clat percentiles (msec):
->      |  1.00th=[   15],  5.00th=[   20], 10.00th=[   23], 20.00th=[   32],
->      | 30.00th=[   51], 40.00th=[   77], 50.00th=[  108], 60.00th=[  146],
->      | 70.00th=[  194], 80.00th=[  262], 90.00th=[  372], 95.00th=[  477],
->      | 99.00th=[  659], 99.50th=[  701], 99.90th=[  793], 99.95th=[  818],
->      | 99.99th=[  885]
->     clat prio 0/0 (89.99% of IOs) percentiles (msec):
->      |  1.00th=[   15],  5.00th=[   21], 10.00th=[   27], 20.00th=[   46],
->      | 30.00th=[   68], 40.00th=[   94], 50.00th=[  126], 60.00th=[  163],
->      | 70.00th=[  213], 80.00th=[  279], 90.00th=[  388], 95.00th=[  489],
->      | 99.00th=[  659], 99.50th=[  709], 99.90th=[  793], 99.95th=[  827],
->      | 99.99th=[  885]
->     clat prio 1/0 (10.01% of IOs) percentiles (msec):
->      |  1.00th=[   14],  5.00th=[   17], 10.00th=[   18], 20.00th=[   20],
->      | 30.00th=[   22], 40.00th=[   23], 50.00th=[   25], 60.00th=[   26],
->      | 70.00th=[   28], 80.00th=[   30], 90.00th=[   33], 95.00th=[   35],
->      | 99.00th=[   40], 99.50th=[   42], 99.90th=[   47], 99.95th=[   50],
->      | 99.99th=[  167]
-> 
-> Clearly significantly lower tail latencies for the 10% of IOs with class
-> RT (1/0), as expected. This is with "none" scheduler at QD=24 (128K random
-> read).
+Hello,
 
-Nice! :)
+This is the fifth revision of my patches fixing IO priority handling in the
+block layer. Damien has reviewed all the patches and tested them as well so
+I think patches are ready to be merged.
 
-> Feel free to add:
-> 
-> Tested-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Changes since v4:
+* Added Reviewed-by and Tested-by tags
+* Fixed prototype of stub function for !CONFIG_BLOCK
 
-Thanks for testing! I'll post the final patch version shortly.
+Changes since v3:
+* Added Reviewed-by tags from Damien
+* Fixed build failure without CONFIG_BLOCK
+* Separated refactoring of get_current_ioprio() into a separate patch
+
+Changes since v2:
+* added some comments to better explain things
+* changed handling of ioprio_get(2)
+* a few small tweaks based on Damien's feedback
+
+Original cover letter:
+Recently, I've been looking into 10% regression reported by our performance
+measurement infrastructure in reaim benchmark that was bisected down to
+5a9d041ba2f6 ("block: move io_context creation into where it's needed"). This
+didn't really make much sense and it took me a while to understand this but the
+culprit is actually in even older commit e70344c05995 ("block: fix default IO
+priority handling") and 5a9d041ba2f6 just made the breakage visible.
+Essentially the problem was that after these commits some IO was queued with IO
+priority class IOPRIO_CLASS_BE while other IO was queued with IOPRIO_CLASS_NONE
+and as a result they could not be merged together resulting in performance
+regression. I think what commit e70344c05995 ("block: fix default IO priority
+handling") did is actually broken not only because of this performance
+regression but because of other reasons as well (see changelog of patch 3/8 for
+details). Besides this problem, there are multiple other inconsistencies in the
+IO priority handling throughout the block stack we have identified when
+discussing this with Damien Le Moal. So this patch set aims at fixing all these
+various issues.
+
+Note that there are a few choices I've made I'm not 100% sold on. In particular
+the conversion of blk-ioprio from rqos is somewhat disputable since it now
+incurs a cost similar to blk-throttle in the bio submission fast path (need to
+load bio->bi_blkg->pd[ioprio_policy.plid]).  If people think the removed
+boilerplate code is not worth the cost, I can certainly go via the "additional
+rqos hook" path.
 
 								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Previous versions:
+Link: http://lore.kernel.org/r/20220601132347.13543-1-jack@suse.cz # v1
+Link: http://lore.kernel.org/r/20220615160437.5478-1-jack@suse.cz # v2
+Link: http://lore.kernel.org/r/20220620160726.19798-1-jack@suse.cz # v3
+Link: http://lore.kernel.org/r/20220621102201.26337-1-jack@suse.cz # v4
