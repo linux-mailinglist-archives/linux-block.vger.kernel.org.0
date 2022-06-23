@@ -2,61 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92EAD55746E
-	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 09:48:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0612455746F
+	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 09:49:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbiFWHsx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 23 Jun 2022 03:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34966 "EHLO
+        id S229686AbiFWHtA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 23 Jun 2022 03:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbiFWHso (ORCPT
+        with ESMTP id S231208AbiFWHso (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 23 Jun 2022 03:48:44 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1B12C640
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E452BB13
         for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 00:48:42 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 17D3A21D3D;
+        by smtp-out2.suse.de (Postfix) with ESMTP id 191261FD3D;
         Thu, 23 Jun 2022 07:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
         t=1655970521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FDV83hsVfY2ZNIyLWdNXdAzjSRvhop8S8h3xh9/rThg=;
-        b=WbyaFSgTRHXQaWtFeacmi7INA2KFP5125Wf4JBdkbjq7JzH9DG91A2QTJ/zdIk6eOR+Zbh
-        q3POb9rY8mxjYle2SnK+QDY75pqQx5r9n6ljNiMJ1pO40/E3tZ+GTdm0rH9+gD1fN/0G16
-        2vXh0Gnu2iNFzlIxshOt9W6uG2iPVj8=
+        bh=4Fe7KrmHSZpLPz9yJPwVaEgjCjeMQ+t/dg6ntxma6pE=;
+        b=rrJQ5vVkRFmA2g+Vak7spCALqHy3PMyYpj/KCufIT3JaNE9rtdi6bShFJut5ptIG1E89OM
+        IfbXqpZzIkiXZxHWokJ+EoMgdnped2ItUI8S/0n4D4U+RpGvYL4WzB7qGEXhYKPaV32xGE
+        MKhmCyrjSmsh9TxSg7OloNlSuzH5lxc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
         s=susede2_ed25519; t=1655970521;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FDV83hsVfY2ZNIyLWdNXdAzjSRvhop8S8h3xh9/rThg=;
-        b=aRX8U2z/YXMb671/z/uVuYlVCo7b8MzVIVvZmC308NPrFRO60LMBZxdtidT9PcWmowxneR
-        dqqf9I2CRqOdcbAQ==
+        bh=4Fe7KrmHSZpLPz9yJPwVaEgjCjeMQ+t/dg6ntxma6pE=;
+        b=mSYPJrtzMHLyCwGBAHDcqGkHNz2n+WcSoTnXQblD5a3ZZfndIvNCEE1X4T0rvJ6lQYMt2p
+        Ww2UILlfIFHBjECw==
 Received: from quack3.suse.cz (unknown [10.100.224.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 6E8DA2C15C;
+        by relay2.suse.de (Postfix) with ESMTPS id 6FD7B2C16B;
         Thu, 23 Jun 2022 07:48:35 +0000 (UTC)
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id B77A2A0639; Thu, 23 Jun 2022 09:48:40 +0200 (CEST)
+        id BE02DA063A; Thu, 23 Jun 2022 09:48:40 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     <linux-block@vger.kernel.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Bart Van Assche <bvanassche@acm.org>,
         Niklas Cassel <Niklas.Cassel@wdc.com>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 2/9] block: Return effective IO priority from get_current_ioprio()
-Date:   Thu, 23 Jun 2022 09:48:27 +0200
-Message-Id: <20220623074840.5960-2-jack@suse.cz>
+Subject: [PATCH 3/9] block: Generalize get_current_ioprio() for any task
+Date:   Thu, 23 Jun 2022 09:48:28 +0200
+Message-Id: <20220623074840.5960-3-jack@suse.cz>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <20220623074450.30550-1-jack@suse.cz>
 References: <20220623074450.30550-1-jack@suse.cz>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1236; h=from:subject; bh=+1Tzs3ltee4pP0iXIHD+6UM/ZVl4By/ycGmxzX3amRQ=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBitBrL8ZtxsTisTWjL9RIxw38tHqKfJEe+WtHgcdns guTTFumJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYrQaywAKCRCcnaoHP2RA2YBSB/ 97prQjVmo/UalKzhkgv5/5J7f5dTX3mku66ZOJwH4mUFKdnVvJk9XroHFxSWt8iCIiHrJveU3tA3/g BMKwOXCK8Cmxs+tH41j3xjSy5HIMiZuVUdgJ5iW5FJGum53WPQbq35oY8fAXwqcSpB3OXq0Lbpq10R OUsFXX/lGzmEPPZeDQlQLgkEluVmKLasr2wlg2rMFnzW8xdfBa0gyTZHFX97HfgtgrQA1dSW1IY0k5 O7hMCHbm9zlUy/u51APbK1qnFzGfGbATHlyZnr5wS5hX4mhvUzDmK1dgYY0Ehu9sGt9/xTkIh1IPL1 qX59xkYG76R1OcUMNoNjA9wf3v2FVH
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2604; h=from:subject; bh=nnEJuXFVsjIzIcp2wWmkBloBi4x4LTLaOeRvPsp51v8=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBitBrMr/1fdXsdLendb3WGbhiZPjMfKbhCF/13DeyJ +BUIk6WJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYrQazAAKCRCcnaoHP2RA2RPRB/ 4kNNFm3u44aGb0Dqb5GvWfUjJWJgzZ3D0fBi4cwHZjb2BWHHVN2rfr484rL0UazdCJ8GnvBFMY/2IF qbbrq4X5XSMlUqWWfjZbcBpE1knQUyYIzZOubeicTu5LO9Jc2UR1NF2/Li3XOepethsg/hcfJx9dGe xl0Yx0O1DGqAt5BLItQRelft+A+JvvtdnzYwZP09C53GgWkJEB/RJfAPe3p6L8ZU+zzhZ0ZtZVsYjA wit0Ka+/Px9QvIjqLMa3vwj7kMkmoyAyNKgMz4Kt7sALetw1XnkqhuGJhhML2BO5/ORPj7NEs/P2ev up/8dAjFBkqTmFN8cf1Ghik7GGAisH
 X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,40 +69,92 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-get_current_ioprio() is used to initialize IO priority of various
-requests. As such it should be returning the effective IO priority of
-the task (i.e., reflecting the fact that unset IO priority should get
-set based on task's CPU priority) so that the conversion is concentrated
-in one place.
+get_current_ioprio() operates only on current task. We will need the
+same functionality for other tasks as well. Generalize
+get_current_ioprio() for that and also move the bulk out of the header
+file because it is large enough.
 
 Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Tested-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Signed-off-by: Jan Kara <jack@suse.cz>
 ---
- include/linux/ioprio.h | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ block/ioprio.c         | 26 ++++++++++++++++++++++++++
+ include/linux/ioprio.h | 26 ++++++++++----------------
+ 2 files changed, 36 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/ioprio.h b/include/linux/ioprio.h
-index 3d088a88f832..61ed6bb4998e 100644
---- a/include/linux/ioprio.h
-+++ b/include/linux/ioprio.h
-@@ -53,10 +53,17 @@ static inline int task_nice_ioclass(struct task_struct *task)
- static inline int get_current_ioprio(void)
- {
- 	struct io_context *ioc = current->io_context;
-+	int prio;
+diff --git a/block/ioprio.c b/block/ioprio.c
+index 2a34cbca18ae..c4e3476155a1 100644
+--- a/block/ioprio.c
++++ b/block/ioprio.c
+@@ -138,6 +138,32 @@ SYSCALL_DEFINE3(ioprio_set, int, which, int, who, int, ioprio)
+ 	return ret;
+ }
  
- 	if (ioc)
--		return ioc->ioprio;
--	return IOPRIO_DEFAULT;
++/*
++ * If the task has set an I/O priority, use that. Otherwise, return
++ * the default I/O priority.
++ *
++ * Expected to be called for current task or with task_lock() held to keep
++ * io_context stable.
++ */
++int __get_task_ioprio(struct task_struct *p)
++{
++	struct io_context *ioc = p->io_context;
++	int prio;
++
++	if (p != current)
++		lockdep_assert_held(&p->alloc_lock);
++	if (ioc)
 +		prio = ioc->ioprio;
 +	else
 +		prio = IOPRIO_DEFAULT;
 +
 +	if (IOPRIO_PRIO_CLASS(prio) == IOPRIO_CLASS_NONE)
-+		prio = IOPRIO_PRIO_VALUE(task_nice_ioclass(current),
-+					 task_nice_ioprio(current));
++		prio = IOPRIO_PRIO_VALUE(task_nice_ioclass(p),
++					 task_nice_ioprio(p));
 +	return prio;
++}
++EXPORT_SYMBOL_GPL(__get_task_ioprio);
++
+ static int get_task_ioprio(struct task_struct *p)
+ {
+ 	int ret;
+diff --git a/include/linux/ioprio.h b/include/linux/ioprio.h
+index 61ed6bb4998e..9752cf4a9c7c 100644
+--- a/include/linux/ioprio.h
++++ b/include/linux/ioprio.h
+@@ -46,24 +46,18 @@ static inline int task_nice_ioclass(struct task_struct *task)
+ 		return IOPRIO_CLASS_BE;
+ }
+ 
+-/*
+- * If the calling process has set an I/O priority, use that. Otherwise, return
+- * the default I/O priority.
+- */
+-static inline int get_current_ioprio(void)
++#ifdef CONFIG_BLOCK
++int __get_task_ioprio(struct task_struct *p);
++#else
++static inline int __get_task_ioprio(struct task_struct *p)
+ {
+-	struct io_context *ioc = current->io_context;
+-	int prio;
+-
+-	if (ioc)
+-		prio = ioc->ioprio;
+-	else
+-		prio = IOPRIO_DEFAULT;
++	return IOPRIO_DEFAULT;
++}
++#endif /* CONFIG_BLOCK */
+ 
+-	if (IOPRIO_PRIO_CLASS(prio) == IOPRIO_CLASS_NONE)
+-		prio = IOPRIO_PRIO_VALUE(task_nice_ioclass(current),
+-					 task_nice_ioprio(current));
+-	return prio;
++static inline int get_current_ioprio(void)
++{
++	return __get_task_ioprio(current);
  }
  
  /*
