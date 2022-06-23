@@ -2,50 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABD6555880D
-	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 21:00:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62D2455880E
+	for <lists+linux-block@lfdr.de>; Thu, 23 Jun 2022 21:00:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbiFWTAq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S229492AbiFWTAq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 23 Jun 2022 15:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46758 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbiFWTAR (ORCPT
+        with ESMTP id S231510AbiFWTAS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 23 Jun 2022 15:00:17 -0400
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49BF6B8F89
-        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:45 -0700 (PDT)
-Received: by mail-pg1-f180.google.com with SMTP id 9so161235pgd.7
-        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:45 -0700 (PDT)
+        Thu, 23 Jun 2022 15:00:18 -0400
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E5710CD20
+        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:46 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id x1-20020a17090abc8100b001ec7f8a51f5so3412525pjr.0
+        for <linux-block@vger.kernel.org>; Thu, 23 Jun 2022 11:05:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+dTxO9J04Elz45/3vEyCUSSDzClsVp9+z6jqAAoby5c=;
-        b=G6D6mtqUpHbd1hiyHjapeyGjKN3ty9dKpO34BbUADtwmxAzI5xJ8fUm0vNuCJ7RuQl
-         jmDVULdOO1HFuiqmdu28thE9idkNJul2RfiRK51K4h1M7qVFFogetZk2yD1gSkNn9kAR
-         v7F3CE3aifwC8CtMJa8xPuU5UZrAKVC7PAMq7saP2ICHtdmHVNN2l9j8R7FOz7WlzYxo
-         8ea7/cHFJ3RelpuqE9UIC9RwPWgScNQku3rEZ5w3rQPUVyEM6IDRXwfJV0d7QzS9RD6N
-         prtTAP6bWmhZTtdP+ByZH9tsXjRUgO0sljY82UmGpLvyqj6gOZgeTsjMWXS9+PieiAiY
-         pqDA==
-X-Gm-Message-State: AJIora9vBtoAcxhlG/jRgV0BpvM7d3Xb4LZdm8BQZvdxvrq8QhQcwW+0
-        jWuUvyjilqDd/Fb63UgCkxk=
-X-Google-Smtp-Source: AGRyM1u+ceztbV8BqMSu1bl0YS9khoj1JzbMJbT/HvmMv7jSyts0nRPwbhIRlLTQM6t8G0XTcS8sFw==
-X-Received: by 2002:a63:3fcb:0:b0:40c:4da1:555a with SMTP id m194-20020a633fcb000000b0040c4da1555amr8574581pga.3.1656007544566;
-        Thu, 23 Jun 2022 11:05:44 -0700 (PDT)
+        bh=CB1xiHV0NGk+yjyEhzG5/AEKBrtijo9o4tlzumPY0/0=;
+        b=2nljDR3D1AFa6/4Et825dvofiHJQrOaFPMx5nzRXvR7kB0HmWOSMTIEXPv5Oqodw/Q
+         nqnY2Yp6LDONvKMMnxzDT+w5WatbIK/5xJ5+4QJtglkTwCeQK90wOCuESCDPtE4jKSGp
+         OJwhZACYP1nhCbRQjp3G6NT0cOTypkIADs+DMqdF7YcPmARxKaIGE9k0yBSgocGlcaIp
+         VMpJOHDGr/Esd1pAyRGpZMbvxNcxNNhLFJBhWwNODYYmKchDfTau1dh4x1MTWn2TuDZl
+         Fq5LDYx4I+Is4fyv5HL3HQi2OePShdU5GG+9KRvNIwcv7YVFn06bQlSxu4fDHr3/5nov
+         KLjQ==
+X-Gm-Message-State: AJIora8DxLAkGkmKdeKXWhT9bEsgV0zm7n+wrxliAb8898pkh0svZfvv
+        JACU42IjRgwl7znmo9cVLWw=
+X-Google-Smtp-Source: AGRyM1vqIkBzc5KiTUa59m1N7Ox6JzaMxg+Jr1G4JSiZfvsWiDPpUZbCjSz6xJ41/v4r/b3BqdsDGA==
+X-Received: by 2002:a17:902:d2d1:b0:16a:1dd9:4d3d with SMTP id n17-20020a170902d2d100b0016a1dd94d3dmr23746961plc.18.1656007546261;
+        Thu, 23 Jun 2022 11:05:46 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:70af:1dc5:d20:a563])
-        by smtp.gmail.com with ESMTPSA id a18-20020a056a000c9200b0051c4ecb0e3dsm16019967pfv.193.2022.06.23.11.05.43
+        by smtp.gmail.com with ESMTPSA id a18-20020a056a000c9200b0051c4ecb0e3dsm16019967pfv.193.2022.06.23.11.05.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jun 2022 11:05:43 -0700 (PDT)
+        Thu, 23 Jun 2022 11:05:45 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
-        Li Zefan <lizf@cn.fujitsu.com>,
-        Steven Rostedt <srostedt@redhat.com>
-Subject: [PATCH 07/51] blktrace: Use the new blk_opf_t type
-Date:   Thu, 23 Jun 2022 11:04:44 -0700
-Message-Id: <20220623180528.3595304-8-bvanassche@acm.org>
+        Mike Snitzer <snitzer@kernel.org>,
+        Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: [PATCH 08/51] blktrace: Trace remap operations correctly
+Date:   Thu, 23 Jun 2022 11:04:45 -0700
+Message-Id: <20220623180528.3595304-9-bvanassche@acm.org>
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
 In-Reply-To: <20220623180528.3595304-1-bvanassche@acm.org>
 References: <20220623180528.3595304-1-bvanassche@acm.org>
@@ -62,98 +62,28 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Improve static type checking by using the new blk_opf_t type for a function
-argument that represents a combination of a request operation and request
-flags. Rename that argument from 'op' into 'opf' to make its role more
-clear.
+Trace the remapped operation instead of only the data direction of
+remapped operations. This issue was detected by analyzing the warnings
+reported by sparse related to the new blk_opf_t type.
 
-Cc: Li Zefan <lizf@cn.fujitsu.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Steven Rostedt <srostedt@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Fixes: b0da3f0dada7 ("Add a tracepoint for block request remapping")
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- include/linux/blktrace_api.h |  3 ++-
- kernel/trace/blktrace.c      | 20 ++++++++++----------
- 2 files changed, 12 insertions(+), 11 deletions(-)
+ kernel/trace/blktrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 623e22492afa..de9ef5bb57a7 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -7,6 +7,7 @@
- #include <linux/compat.h>
- #include <uapi/linux/blktrace_api.h>
- #include <linux/list.h>
-+#include <linux/blk_types.h>
- 
- #if defined(CONFIG_BLK_DEV_IO_TRACE)
- 
-@@ -115,7 +116,7 @@ struct compat_blk_user_trace_setup {
- 
- #endif
- 
--void blk_fill_rwbs(char *rwbs, unsigned int op);
-+void blk_fill_rwbs(char *rwbs, blk_opf_t opf);
- 
- static inline sector_t blk_rq_trace_sector(struct request *rq)
- {
 diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 10a32b0f2deb..f24c7351071c 100644
+index f24c7351071c..d9e0530080e2 100644
 --- a/kernel/trace/blktrace.c
 +++ b/kernel/trace/blktrace.c
-@@ -205,7 +205,7 @@ static const u32 ddir_act[2] = { BLK_TC_ACT(BLK_TC_READ),
- #define BLK_TC_PREFLUSH		BLK_TC_FLUSH
+@@ -1061,7 +1061,7 @@ static void blk_add_trace_rq_remap(void *ignore, struct request *rq, dev_t dev,
+ 	r.sector_from = cpu_to_be64(from);
  
- /* The ilog2() calls fall out because they're constant */
--#define MASK_TC_BIT(rw, __name) ((rw & REQ_ ## __name) << \
-+#define MASK_TC_BIT(rw, __name) ((__force u32)(rw & REQ_ ## __name) <<	\
- 	  (ilog2(BLK_TC_ ## __name) + BLK_TC_SHIFT - __REQ_ ## __name))
- 
- /*
-@@ -213,8 +213,8 @@ static const u32 ddir_act[2] = { BLK_TC_ACT(BLK_TC_READ),
-  * blk_io_trace structure and places it in a per-cpu subbuffer.
-  */
- static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
--		     int op, int op_flags, u32 what, int error, int pdu_len,
--		     void *pdu_data, u64 cgid)
-+		     enum req_op op, blk_opf_t op_flags, u32 what, int error,
-+		     int pdu_len, void *pdu_data, u64 cgid)
- {
- 	struct task_struct *tsk = current;
- 	struct ring_buffer_event *event = NULL;
-@@ -1895,14 +1895,14 @@ void blk_trace_remove_sysfs(struct device *dev)
-  *     caller with resulting string.
-  *
-  **/
--void blk_fill_rwbs(char *rwbs, unsigned int op)
-+void blk_fill_rwbs(char *rwbs, blk_opf_t opf)
- {
- 	int i = 0;
- 
--	if (op & REQ_PREFLUSH)
-+	if (opf & REQ_PREFLUSH)
- 		rwbs[i++] = 'F';
- 
--	switch (op & REQ_OP_MASK) {
-+	switch (opf & REQ_OP_MASK) {
- 	case REQ_OP_WRITE:
- 		rwbs[i++] = 'W';
- 		break;
-@@ -1923,13 +1923,13 @@ void blk_fill_rwbs(char *rwbs, unsigned int op)
- 		rwbs[i++] = 'N';
- 	}
- 
--	if (op & REQ_FUA)
-+	if (opf & REQ_FUA)
- 		rwbs[i++] = 'F';
--	if (op & REQ_RAHEAD)
-+	if (opf & REQ_RAHEAD)
- 		rwbs[i++] = 'A';
--	if (op & REQ_SYNC)
-+	if (opf & REQ_SYNC)
- 		rwbs[i++] = 'S';
--	if (op & REQ_META)
-+	if (opf & REQ_META)
- 		rwbs[i++] = 'M';
- 
- 	rwbs[i] = '\0';
+ 	__blk_add_trace(bt, blk_rq_pos(rq), blk_rq_bytes(rq),
+-			rq_data_dir(rq), 0, BLK_TA_REMAP, 0,
++			req_op(rq), 0, BLK_TA_REMAP, 0,
+ 			sizeof(r), &r, blk_trace_request_get_cgid(rq));
+ 	rcu_read_unlock();
+ }
