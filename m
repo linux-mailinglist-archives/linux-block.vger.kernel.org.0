@@ -2,102 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C7F155CB57
-	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 14:59:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AB7155D125
+	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 15:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238755AbiF0PhM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Jun 2022 11:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
+        id S234686AbiF0UiQ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Mon, 27 Jun 2022 16:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238819AbiF0PhE (ORCPT
+        with ESMTP id S237732AbiF0UiO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Jun 2022 11:37:04 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 512551AD92;
-        Mon, 27 Jun 2022 08:37:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 09C11B8187D;
-        Mon, 27 Jun 2022 15:37:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DFCC3411D;
-        Mon, 27 Jun 2022 15:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656344220;
-        bh=CuWQqDJRWxJQ6RoyWnytqv86/5mnNlfI8V08ozRBjFI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cTyii0/1g8OM0TNyfu2I1K6ecK0kjKlapjUP1nhlKneu1qzZn+cM4GzTZsKO08b32
-         fOldkFG8sR3Ggx0khePLHV63JLu+VXzpLZn3/mTD8Cm1pSaNzLoKO60o/7Xrkk6p92
-         9ejBxUWiEoUoWj3ImtuJMh4UmBU0i3n+fFqOIKzaBovRZj1r74so+mqbH/C7OV9BNL
-         TUVCP76VntSyT9KLb+Nna9QYxXCW85vDcOFey31DbB9TsyYdzgkJBlkOnD6k/qXTT5
-         LsCcyxad+npePYbFp6JHYUBqEKF8i95hI6ywxRoiJ3zURfRE9IS2ur7tH15Uennbdz
-         seaO7RMKDoSSw==
-Date:   Mon, 27 Jun 2022 09:36:56 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Keith Busch <kbusch@fb.com>, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        axboe@kernel.dk, Kernel Team <Kernel-team@fb.com>, hch@lst.de,
-        bvanassche@acm.org, damien.lemoal@opensource.wdc.com,
-        ebiggers@kernel.org, pankydev8@gmail.com,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCHv6 11/11] iomap: add support for dma aligned direct-io
-Message-ID: <YrnOmOUPukGe8xCq@kbusch-mbp.dhcp.thefacebook.com>
-References: <20220610195830.3574005-1-kbusch@fb.com>
- <20220610195830.3574005-12-kbusch@fb.com>
- <ab1bc062b4a1d0ad7f974b6068dc3a6dbf624820.camel@linux.ibm.com>
- <YrS2HLsYOe7vnbPG@kbusch-mbp>
- <YrS6/chZXbHsrAS8@kbusch-mbp>
- <e2b08a5c452d4b8322566cba4ed33b58080f03fa.camel@linux.ibm.com>
- <e0038866ac54176beeac944c9116f7a9bdec7019.camel@linux.ibm.com>
- <c5affe3096fd7b7996cb5fbcb0c41bbf3dde028e.camel@linux.ibm.com>
+        Mon, 27 Jun 2022 16:38:14 -0400
+X-Greylist: delayed 518 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 27 Jun 2022 13:38:10 PDT
+Received: from mail01.quadron.li (unknown [144.76.121.144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 857B1B29
+        for <linux-block@vger.kernel.org>; Mon, 27 Jun 2022 13:38:09 -0700 (PDT)
+Received: from mail01.quadron.li (mail01.quadron.li [144.76.121.144])
+        by mail01.quadron.li (Postfix) with ESMTP id AD5BF51A032;
+        Mon, 27 Jun 2022 23:30:26 +0300 (EEST)
+Date:   Mon, 27 Jun 2022 23:30:26 +0300 (EEST)
+From:   Patricia <showroom.zliten@alnakhlatein.ly>
+Reply-To: patriciagnsson@gmail.com
+Message-ID: <249696333.1274.1656361826688.JavaMail.root@alnakhlatein.ly>
+Subject: =?utf-8?Q?Re:_Gute_Werke_und_N=C3=A4chstenliebe?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c5affe3096fd7b7996cb5fbcb0c41bbf3dde028e.camel@linux.ibm.com>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Zimbra 7.2.0_GA_2669 (ZimbraWebClient - GC101 (Win)/7.2.0_GA_2669)
+To:     undisclosed-recipients:;
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_95,
+        FREEMAIL_FORGED_REPLYTO,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  3.0 BAYES_95 BODY: Bayes spam probability is 95 to 99%
+        *      [score: 0.9631]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 11:21:20AM -0400, Eric Farman wrote:
-> 
-> Apologies, it took me an extra day to get back to this, but it is
-> indeed this pass through that's causing our boot failures. I note that
-> the old code (in iomap_dio_bio_iter), did:
-> 
->         if ((pos | length | align) & ((1 << blkbits) - 1))
->                 return -EINVAL;
-> 
-> With blkbits equal to 12, the resulting mask was 0x0fff against an
-> align value (from iov_iter_alignment) of x200 kicks us out.
-> 
-> The new code (in iov_iter_aligned_iovec), meanwhile, compares this:
-> 
->                 if ((unsigned long)(i->iov[k].iov_base + skip) &
-> addr_mask)
->                         return false;
-> 
-> iov_base (and the output of the old iov_iter_aligned_iovec() routine)
-> is x200, but since addr_mask is x1ff this check provides a different
-> response than it used to.
-> 
-> To check this, I changed the comparator to len_mask (almost certainly
-> not the right answer since addr_mask is then unused, but it was good
-> for a quick test), and our PV guests are able to boot again with -next
-> running in the host.
+Lieber geliebter.
 
-This raises more questions for me. It sounds like your process used to get an
-EINVAL error, and it wants to continue getting an EINVAL error instead of
-letting the direct-io request proceed. Is that correct? If so, could you
-provide more details on what issue occurs with dispatching this request?
+Mein Name ist Frau Patricia Gunnarsson aus Irland, verheiratet mit dem verstorbenen Engr. George Gunnarsson {PhD}, der vor seinem Tod am 25. August 2020 19 Jahre lang für Tullow Oil plc, ein multinationales Öl- und Gasexplorationsunternehmen mit Sitz in London, geschrieben hat.
+Wir waren 24 Jahre ohne Kinder verheiratet. Mein Mann starb nach kurzer Krankheit, die nur vier Tage dauerte. Als mein verstorbener Ehemann noch lebte, hatte er ungefähr 3.200.000 $ auf seinem Offshore-Konto hier bei der Cahoot Bank London, und dieser Fonds liegt derzeit bei der Bank und wartet auf den Tag, an dem ich ihn verwenden werde.
 
-If you really need to restrict address' alignment to the storage's logical
-block size, I think your storage driver needs to set the dma_alignment queue
-limit to that value.
+Bevor ich geheiratet habe, war ich Lungenkrebspatientin und kürzlich sagte mir mein Arzt, dass ich nicht länger als die nächsten 3 Monate leben würde, weil mein Lungenkrebs jetzt schlimmer ist. Was mich am meisten stört, ist mein Schlaganfall. Nachdem ich meinen Zustand erkannt hatte, beschloss ich, eine ehrliche Person zu finden, die mit mir zusammenarbeitet und diesen Fonds einer Kirche oder besser gesagt den Häusern der mutterlosen Kinder spendet.
+
+Ich kontaktiere Sie, weil ich möchte, dass eine Kirche oder eine Einzelperson dieses Geld verwendet, um Kirchen, Waisenhäuser und Witwen zu finanzieren, um sicherzustellen, dass der Wille Gottes bewahrt wird. Ich habe diese Entscheidung getroffen, weil ich keine Kinder habe, die dieses Geld erben werden.
+
+Ich kann mich nicht mehr auf die Familie meines verstorbenen Mannes verlassen, weil sie das Geld nie so verwenden wird, wie es Gott gefällt. Stattdessen könnten sie das Geld nur für ihre persönlichen Bedürfnisse verwenden, und ich möchte nicht, dass das vorübergehend passiert
+
+In diesem Zusammenhang bitte ich Sie aufrichtig um Ihre Unterstützung bei dieser humanitären Arbeit für Christus. Ich möchte, dass die Bank meines verstorbenen Mannes diesen Betrag auf Ihr Bankkonto überweist, damit Sie 60 % des Betrags verwenden, um den Waisenhäusern in Ihrer Nähe zu helfen. Und nutzen Sie dann die restlichen 40 % des Fonds für sich und Ihre Familie. Wenn Sie diese humanitäre Arbeit annehmen, müssen Sie mir versprechen, dass Sie mich nicht verraten, wenn die Bank meines Mannes den Betrag auf Ihr Bankkonto in Ihrem Land überweist.
+Außerdem müssen Sie mir versichern, dass Sie 60 % des Geldes für den angegebenen Zweck verwenden werden
+
+Dieses Geld auf dem Konto meines verstorbenen Mannes habe ich bis heute geheim gehalten. Und jetzt habe ich beschlossen, den Fonds auf eine Weise zu verwenden, die Christus ehrt, damit meine Seele im Himmel willkommen geheißen wird, wie ich Ihnen diese E-Mail vom Krankenhausbett aus geschickt habe, und mein medizinischer Bericht zeigt dies
+Ich würde wegen meines Lungenkrebses nicht länger als die nächsten 3 Monate leben
+
+Wenn Sie an diesem Werk Gottes interessiert sind, antworten Sie mir bitte, damit ich Ihnen alle Einzelheiten über die Bank mitteilen kann und wie das Geld zu diesem Zweck auf Ihr Bankkonto überwiesen wird.
+
+Für weitere Informationen kontaktieren Sie mich bitte unter meiner privaten E-Mail-Adresse: patriciagnsson@gmail.com
+
+Mit freundlichen Grüße,
+
+Frau Patricia
