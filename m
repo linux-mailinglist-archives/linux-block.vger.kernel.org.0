@@ -2,70 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AB7155D125
-	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 15:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B83AA55DB38
+	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 15:24:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234686AbiF0UiQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Mon, 27 Jun 2022 16:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58420 "EHLO
+        id S241656AbiF0Xnt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Jun 2022 19:43:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237732AbiF0UiO (ORCPT
+        with ESMTP id S235245AbiF0Xnt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Jun 2022 16:38:14 -0400
-X-Greylist: delayed 518 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 27 Jun 2022 13:38:10 PDT
-Received: from mail01.quadron.li (unknown [144.76.121.144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 857B1B29
-        for <linux-block@vger.kernel.org>; Mon, 27 Jun 2022 13:38:09 -0700 (PDT)
-Received: from mail01.quadron.li (mail01.quadron.li [144.76.121.144])
-        by mail01.quadron.li (Postfix) with ESMTP id AD5BF51A032;
-        Mon, 27 Jun 2022 23:30:26 +0300 (EEST)
-Date:   Mon, 27 Jun 2022 23:30:26 +0300 (EEST)
-From:   Patricia <showroom.zliten@alnakhlatein.ly>
-Reply-To: patriciagnsson@gmail.com
-Message-ID: <249696333.1274.1656361826688.JavaMail.root@alnakhlatein.ly>
-Subject: =?utf-8?Q?Re:_Gute_Werke_und_N=C3=A4chstenliebe?=
+        Mon, 27 Jun 2022 19:43:49 -0400
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976D113D5C
+        for <linux-block@vger.kernel.org>; Mon, 27 Jun 2022 16:43:48 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id i64so10411461pfc.8
+        for <linux-block@vger.kernel.org>; Mon, 27 Jun 2022 16:43:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mPEnshaUEAGoNI4ffNkDG+b9cRihYYn55w5+nX6xUys=;
+        b=lo4j75cmCv5DX9q/LU++4eAE06XO+BCINBgN0CBV4Xx+NPXezW5BaJXR69+xdHlrYg
+         xPnJ9pZa8kfAey8UAB3uUSdIadgvLooIuOfj+xg8z1cLZj/yWZM8yRd633d8m4KOhdMy
+         xrwEm+0T1IcDiKN36US8c4glPoYiNlhWPf2TYVNh8NE0aVPReJb4qjwc74vi7tjAVbi/
+         54+TdZ+f8vg0PzGoV5o3BAWx5DR14xd6Q2uHg2+5BDGkGxdwYrT7LBg7jN7IlbTt7Ds/
+         cW2riE98yoEK8gaadqEah9x7Ix1vhYsc/KkJfnALTznyWgqWJOUt6lcjY6TQO/GPXJw8
+         ouYw==
+X-Gm-Message-State: AJIora9goSK0cfZWMCzEgqJ3TSSXHocXKbu9JsH5aF7S5wVLVdu3drWv
+        VdI3YxBwX255ml7CTnS+11Q=
+X-Google-Smtp-Source: AGRyM1vAULk0VNpvqwfhfHnFMp6GmZ7gXHEiN8k/MKeStCcuW98hkIwvV/p4T4k9qZV2Zv5kuZwvrQ==
+X-Received: by 2002:a63:301:0:b0:411:442b:bb7d with SMTP id 1-20020a630301000000b00411442bbb7dmr3531224pgd.112.1656373427957;
+        Mon, 27 Jun 2022 16:43:47 -0700 (PDT)
+Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:3879:b18f:db0d:205])
+        by smtp.gmail.com with ESMTPSA id md6-20020a17090b23c600b001e305f5cd22sm7907456pjb.47.2022.06.27.16.43.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 16:43:47 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH v3 0/8] Improve zoned storage write performance
+Date:   Mon, 27 Jun 2022 16:43:27 -0700
+Message-Id: <20220627234335.1714393-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Zimbra 7.2.0_GA_2669 (ZimbraWebClient - GC101 (Win)/7.2.0_GA_2669)
-To:     undisclosed-recipients:;
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_95,
-        FREEMAIL_FORGED_REPLYTO,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  3.0 BAYES_95 BODY: Bayes spam probability is 95 to 99%
-        *      [score: 0.9631]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-X-Spam-Level: *****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Lieber geliebter.
+Hi Jens,
 
-Mein Name ist Frau Patricia Gunnarsson aus Irland, verheiratet mit dem verstorbenen Engr. George Gunnarsson {PhD}, der vor seinem Tod am 25. August 2020 19 Jahre lang für Tullow Oil plc, ein multinationales Öl- und Gasexplorationsunternehmen mit Sitz in London, geschrieben hat.
-Wir waren 24 Jahre ohne Kinder verheiratet. Mein Mann starb nach kurzer Krankheit, die nur vier Tage dauerte. Als mein verstorbener Ehemann noch lebte, hatte er ungefähr 3.200.000 $ auf seinem Offshore-Konto hier bei der Cahoot Bank London, und dieser Fonds liegt derzeit bei der Bank und wartet auf den Tag, an dem ich ihn verwenden werde.
+Measurements have shown that limiting the queue depth to one per sequential
+zone has a significant negative performance impact for zoned UFS devices. Hence
+this patch series that increases the queue depth for write commands for
+sequential zones when using the mq-deadline scheduler.
 
-Bevor ich geheiratet habe, war ich Lungenkrebspatientin und kürzlich sagte mir mein Arzt, dass ich nicht länger als die nächsten 3 Monate leben würde, weil mein Lungenkrebs jetzt schlimmer ist. Was mich am meisten stört, ist mein Schlaganfall. Nachdem ich meinen Zustand erkannt hatte, beschloss ich, eine ehrliche Person zu finden, die mit mir zusammenarbeitet und diesen Fonds einer Kirche oder besser gesagt den Häusern der mutterlosen Kinder spendet.
+Please consider this patch series for kernel v5.20.
 
-Ich kontaktiere Sie, weil ich möchte, dass eine Kirche oder eine Einzelperson dieses Geld verwendet, um Kirchen, Waisenhäuser und Witwen zu finanzieren, um sicherzustellen, dass der Wille Gottes bewahrt wird. Ich habe diese Entscheidung getroffen, weil ich keine Kinder habe, die dieses Geld erben werden.
+Thanks,
 
-Ich kann mich nicht mehr auf die Familie meines verstorbenen Mannes verlassen, weil sie das Geld nie so verwenden wird, wie es Gott gefällt. Stattdessen könnten sie das Geld nur für ihre persönlichen Bedürfnisse verwenden, und ich möchte nicht, dass das vorübergehend passiert
+Bart.
 
-In diesem Zusammenhang bitte ich Sie aufrichtig um Ihre Unterstützung bei dieser humanitären Arbeit für Christus. Ich möchte, dass die Bank meines verstorbenen Mannes diesen Betrag auf Ihr Bankkonto überweist, damit Sie 60 % des Betrags verwenden, um den Waisenhäusern in Ihrer Nähe zu helfen. Und nutzen Sie dann die restlichen 40 % des Fonds für sich und Ihre Familie. Wenn Sie diese humanitäre Arbeit annehmen, müssen Sie mir versprechen, dass Sie mich nicht verraten, wenn die Bank meines Mannes den Betrag auf Ihr Bankkonto in Ihrem Land überweist.
-Außerdem müssen Sie mir versichern, dass Sie 60 % des Geldes für den angegebenen Zweck verwenden werden
+Changes compared to v2:
+- Included the patches again that enable write pipelining for NVMe ZNS SSDs.
+- Disabled merging in the null_blk test script. As a result, the test script
+  now shows a 14x improvement with pipelining enabled.
+- Renamed blk_rq_is_zoned_seq_write() into blk_rq_is_seq_zone_write().
 
-Dieses Geld auf dem Konto meines verstorbenen Mannes habe ich bis heute geheim gehalten. Und jetzt habe ich beschlossen, den Fonds auf eine Weise zu verwenden, die Christus ehrt, damit meine Seele im Himmel willkommen geheißen wird, wie ich Ihnen diese E-Mail vom Krankenhausbett aus geschickt habe, und mein medizinischer Bericht zeigt dies
-Ich würde wegen meines Lungenkrebses nicht länger als die nächsten 3 Monate leben
+Changes compared to v1:
+- Left out the patch for the UFS driver.
+- Included patches for the null_blk driver.
 
-Wenn Sie an diesem Werk Gottes interessiert sind, antworten Sie mir bitte, damit ich Ihnen alle Einzelheiten über die Bank mitteilen kann und wie das Geld zu diesem Zweck auf Ihr Bankkonto überwiesen wird.
+Bart Van Assche (8):
+  block: Document blk_queue_zone_is_seq() and blk_rq_zone_is_seq()
+  block: Introduce the blk_rq_is_seq_zone_write() function
+  block: Introduce a request queue flag for pipelining zoned writes
+  block/mq-deadline: Only use zone locking if necessary
+  block/null_blk: Refactor null_queue_rq()
+  block/null_blk: Add support for pipelining zoned writes
+  nvme: Make the number of retries command specific
+  nvme: Enable pipelining of zoned writes
 
-Für weitere Informationen kontaktieren Sie mich bitte unter meiner privaten E-Mail-Adresse: patriciagnsson@gmail.com
+ block/blk-zoned.c                 | 17 +++--------------
+ block/mq-deadline.c               | 18 ++++++++++++------
+ drivers/block/null_blk/main.c     | 30 ++++++++++++++++++++----------
+ drivers/block/null_blk/null_blk.h |  3 +++
+ drivers/block/null_blk/zoned.c    | 13 ++++++++++++-
+ drivers/nvme/host/core.c          |  9 ++++++++-
+ drivers/nvme/host/nvme.h          |  1 +
+ drivers/nvme/host/zns.c           |  2 ++
+ include/linux/blk-mq.h            | 30 ++++++++++++++++++++++++++++++
+ include/linux/blkdev.h            | 16 ++++++++++++++++
+ 10 files changed, 107 insertions(+), 32 deletions(-)
 
-Mit freundlichen Grüße,
-
-Frau Patricia
