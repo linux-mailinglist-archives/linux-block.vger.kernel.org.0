@@ -2,127 +2,186 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B95555E65E
-	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 18:27:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20C255E823
+	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 18:35:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346751AbiF1Ogn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 28 Jun 2022 10:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46980 "EHLO
+        id S1346352AbiF1PVP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 Jun 2022 11:21:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346391AbiF1Ogn (ORCPT
+        with ESMTP id S1344555AbiF1PVO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 28 Jun 2022 10:36:43 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC362A429
-        for <linux-block@vger.kernel.org>; Tue, 28 Jun 2022 07:36:42 -0700 (PDT)
-Received: from canpemm500004.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LXRsL0js4zTgHb;
-        Tue, 28 Jun 2022 22:33:10 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by canpemm500004.china.huawei.com
- (7.192.104.92) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 28 Jun
- 2022 22:36:39 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <tj@kernel.org>, <jack@suse.cz>, <hch@lst.de>, <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH 2/2] blk-cgroup: factor out blkcg_free_all_cpd()
-Date:   Tue, 28 Jun 2022 22:49:21 +0800
-Message-ID: <20220628144921.2190275-3-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220628144921.2190275-1-yanaijie@huawei.com>
-References: <20220628144921.2190275-1-yanaijie@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500004.china.huawei.com (7.192.104.92)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Tue, 28 Jun 2022 11:21:14 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CC433343;
+        Tue, 28 Jun 2022 08:21:13 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SFHp2u018978;
+        Tue, 28 Jun 2022 15:20:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=myzpEHdG0SHhteTqPMwMNlaiMJZ9fOBXbBrHcrj47MM=;
+ b=PKaUpLA//gB/cgq1x9qZAjqjIl9yvVlLFHPiaoA1KCVgbYZEpWzlGzOKlHh6wqS+BReV
+ xX9GsZSp3ZvjNRvAnmbWMeNpJfMpp/vr+zHUTaom/ZX7xnhuxux+IABcTDN/x1J8GKpH
+ efdwM1/bs/lXMVJ74/hFixNzKx+JFlTmYrAONI/ZVj9deEJc+UAi7YMw3z3n1+7Cxe6I
+ sT8Bm3yw2vDfARIBg02jJd1iyE6MY3gR1nuJGEptu2LKJ7K5sBlUSXggbkqiZXq1XgrC
+ ojkpdIKJi2GEGE8X7Eg0+XHBZ4i+X0HjDQG7tXhUK0OYHUnkOZwEi3pUqL/f0vv24zOC VQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h045jr2ge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jun 2022 15:20:50 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25SFJF6P027356;
+        Tue, 28 Jun 2022 15:20:50 GMT
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h045jr2g1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jun 2022 15:20:50 +0000
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SF80E3026731;
+        Tue, 28 Jun 2022 15:20:49 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma05wdc.us.ibm.com with ESMTP id 3gwt09x8ew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jun 2022 15:20:49 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SFKmvs13697412
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jun 2022 15:20:48 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC957AC059;
+        Tue, 28 Jun 2022 15:20:48 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 674CCAC05B;
+        Tue, 28 Jun 2022 15:20:45 +0000 (GMT)
+Received: from farman-thinkpad-t470p (unknown [9.211.96.189])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jun 2022 15:20:45 +0000 (GMT)
+Message-ID: <83e65083890a7ac9c581c5aee0361d1b49e6abd9.camel@linux.ibm.com>
+Subject: Re: [PATCHv6 11/11] iomap: add support for dma aligned direct-io
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>, Keith Busch <kbusch@kernel.org>
+Cc:     Keith Busch <kbusch@fb.com>, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        axboe@kernel.dk, Kernel Team <Kernel-team@fb.com>, hch@lst.de,
+        bvanassche@acm.org, damien.lemoal@opensource.wdc.com,
+        ebiggers@kernel.org, pankydev8@gmail.com
+Date:   Tue, 28 Jun 2022 11:20:44 -0400
+In-Reply-To: <20220628110024.01fcf84f.pasic@linux.ibm.com>
+References: <20220610195830.3574005-1-kbusch@fb.com>
+         <20220610195830.3574005-12-kbusch@fb.com>
+         <ab1bc062b4a1d0ad7f974b6068dc3a6dbf624820.camel@linux.ibm.com>
+         <YrS2HLsYOe7vnbPG@kbusch-mbp> <YrS6/chZXbHsrAS8@kbusch-mbp>
+         <e2b08a5c452d4b8322566cba4ed33b58080f03fa.camel@linux.ibm.com>
+         <e0038866ac54176beeac944c9116f7a9bdec7019.camel@linux.ibm.com>
+         <c5affe3096fd7b7996cb5fbcb0c41bbf3dde028e.camel@linux.ibm.com>
+         <YrnOmOUPukGe8xCq@kbusch-mbp.dhcp.thefacebook.com>
+         <20220628110024.01fcf84f.pasic@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: LyMatUSkhFxtAa0fPtjTaFMsaiG8XWqk
+X-Proofpoint-GUID: BxWXK2NqfjMWLv3qM9DKv1U3bwvuXAqo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-06-28_08,2022-06-28_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
+ definitions=main-2206280062
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-To reduce some duplicated code, factor out blkcg_free_all_cpd(). No
-functional change.
+On Tue, 2022-06-28 at 11:00 +0200, Halil Pasic wrote:
+> On Mon, 27 Jun 2022 09:36:56 -0600
+> Keith Busch <kbusch@kernel.org> wrote:
+> 
+> > On Mon, Jun 27, 2022 at 11:21:20AM -0400, Eric Farman wrote:
+> > > Apologies, it took me an extra day to get back to this, but it is
+> > > indeed this pass through that's causing our boot failures. I note
+> > > that
+> > > the old code (in iomap_dio_bio_iter), did:
+> > > 
+> > >         if ((pos | length | align) & ((1 << blkbits) - 1))
+> > >                 return -EINVAL;
+> > > 
+> > > With blkbits equal to 12, the resulting mask was 0x0fff against
+> > > an
+> > > align value (from iov_iter_alignment) of x200 kicks us out.
+> > > 
+> > > The new code (in iov_iter_aligned_iovec), meanwhile, compares
+> > > this:
+> > > 
+> > >                 if ((unsigned long)(i->iov[k].iov_base + skip) &
+> > > addr_mask)
+> > >                         return false;
+> > > 
+> > > iov_base (and the output of the old iov_iter_aligned_iovec()
+> > > routine)
+> > > is x200, but since addr_mask is x1ff this check provides a
+> > > different
+> > > response than it used to.
+> > > 
+> > > To check this, I changed the comparator to len_mask (almost
+> > > certainly
+> > > not the right answer since addr_mask is then unused, but it was
+> > > good
+> > > for a quick test), and our PV guests are able to boot again with
+> > > -next
+> > > running in the host.  
+> > 
+> > This raises more questions for me. It sounds like your process used
+> > to get an
+> > EINVAL error, and it wants to continue getting an EINVAL error
+> > instead of
+> > letting the direct-io request proceed. Is that correct? 
+> 
+> Is my understanding as well. But I'm not familiar enough with the
+> code to
+> tell where and how that -EINVAL gets handled.
+> 
+> BTW let me just point out that the bounce buffering via swiotlb
+> needed
+> for PV is not unlikely to mess up the alignment of things. But I'm
+> not
+> sure if that is relevant here.
+> 
+> Regards,
+> Halil
+> 
+> > If so, could you
+> > provide more details on what issue occurs with dispatching this
+> > request?
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- block/blk-cgroup.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+This error occurs reading the initial boot record for a guest, stating
+QEMU was unable to read block zero from the device. The code that
+complains doesn't appear to have anything that says "oh, got EINVAL,
+try it this other way" but I haven't chased down if/where something in
+between is expecting that and handling it in some unique way. I -think-
+ I have an easier reproducer now, so maybe I'd be able to get a better
+answer to this question.
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 60d205ec213e..22268af435bd 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1532,6 +1532,18 @@ void blkcg_deactivate_policy(struct request_queue *q,
- }
- EXPORT_SYMBOL_GPL(blkcg_deactivate_policy);
- 
-+static void blkcg_free_all_cpd(struct blkcg_policy *pol)
-+{
-+	struct blkcg *blkcg;
-+
-+	list_for_each_entry(blkcg, &all_blkcgs, all_blkcgs_node) {
-+		if (blkcg->cpd[pol->plid]) {
-+			pol->cpd_free_fn(blkcg->cpd[pol->plid]);
-+			blkcg->cpd[pol->plid] = NULL;
-+		}
-+	}
-+}
-+
- /**
-  * blkcg_policy_register - register a blkcg policy
-  * @pol: blkcg policy to register
-@@ -1596,14 +1608,9 @@ int blkcg_policy_register(struct blkcg_policy *pol)
- 	return 0;
- 
- err_free_cpds:
--	if (pol->cpd_free_fn) {
--		list_for_each_entry(blkcg, &all_blkcgs, all_blkcgs_node) {
--			if (blkcg->cpd[pol->plid]) {
--				pol->cpd_free_fn(blkcg->cpd[pol->plid]);
--				blkcg->cpd[pol->plid] = NULL;
--			}
--		}
--	}
-+	if (pol->cpd_free_fn)
-+		blkcg_free_all_cpd(pol);
-+
- 	blkcg_policy[pol->plid] = NULL;
- err_unlock:
- 	mutex_unlock(&blkcg_pol_mutex);
-@@ -1620,8 +1627,6 @@ EXPORT_SYMBOL_GPL(blkcg_policy_register);
-  */
- void blkcg_policy_unregister(struct blkcg_policy *pol)
- {
--	struct blkcg *blkcg;
--
- 	mutex_lock(&blkcg_pol_register_mutex);
- 
- 	if (WARN_ON(blkcg_policy[pol->plid] != pol))
-@@ -1636,14 +1641,9 @@ void blkcg_policy_unregister(struct blkcg_policy *pol)
- 	/* remove cpds and unregister */
- 	mutex_lock(&blkcg_pol_mutex);
- 
--	if (pol->cpd_free_fn) {
--		list_for_each_entry(blkcg, &all_blkcgs, all_blkcgs_node) {
--			if (blkcg->cpd[pol->plid]) {
--				pol->cpd_free_fn(blkcg->cpd[pol->plid]);
--				blkcg->cpd[pol->plid] = NULL;
--			}
--		}
--	}
-+	if (pol->cpd_free_fn)
-+		blkcg_free_all_cpd(pol);
-+
- 	blkcg_policy[pol->plid] = NULL;
- 
- 	mutex_unlock(&blkcg_pol_mutex);
--- 
-2.31.1
+> > 
+> > If you really need to restrict address' alignment to the storage's
+> > logical
+> > block size, I think your storage driver needs to set the
+> > dma_alignment queue
+> > limit to that value.
+
+It's possible that there's a problem in the virtio stack here, but the
+failing configuration is a qcow image on the host rootfs, so it's not
+using any distinct driver. The bdev request queue that ends up being
+used is the same allocated out of blk_alloc_queue, so changing
+dma_alignment there wouldn't work.
 
