@@ -2,107 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0072955DF25
-	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 15:30:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBE7A55E78D
+	for <lists+linux-block@lfdr.de>; Tue, 28 Jun 2022 18:33:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241951AbiF1MfP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 28 Jun 2022 08:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34598 "EHLO
+        id S234769AbiF1Omz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 Jun 2022 10:42:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230459AbiF1MfO (ORCPT
+        with ESMTP id S1346095AbiF1Omx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 28 Jun 2022 08:35:14 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 970912ED77
-        for <linux-block@vger.kernel.org>; Tue, 28 Jun 2022 05:35:13 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id l6so10922748plg.11
-        for <linux-block@vger.kernel.org>; Tue, 28 Jun 2022 05:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=IrDX84KRZKsKpKj5DTV5f5ssGpOVWEQyjPMtbK6Ke8A=;
-        b=u5peKV+R+mkhdM4DPvEFbxYDbUvjlQidNZgW7hpYf2ehOjHKop3sOvQXAUQEF4gyRJ
-         JPojBBUQpv5TcMOpq4JH0u3xjZiQBer0SHbAk9UVHNtjBydvMvA0DivhDFIT/JH40ikA
-         YJtbYWaNIi2vdZs7KvEL7ZjySEmR/elw6X75HkqPJoeYU5twvIkamwyQnuhLVmzEw8KJ
-         p/jx6nTeP/xeCTiS/pqG1MH/BGAViz1MnJ9kfJCDqE9efhlQZ71DU2nRwGj+qYQUjneg
-         JJKI+fyhIAM9VuCpfYBclRYaM4kBRIYKnrPa/QdpyCL+/oJIoeiTlII6RWGTDTGO6jSz
-         CrCA==
+        Tue, 28 Jun 2022 10:42:53 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 602622E6BB
+        for <linux-block@vger.kernel.org>; Tue, 28 Jun 2022 07:42:52 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id h14-20020a1ccc0e000000b0039eff745c53so7715164wmb.5
+        for <linux-block@vger.kernel.org>; Tue, 28 Jun 2022 07:42:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=IrDX84KRZKsKpKj5DTV5f5ssGpOVWEQyjPMtbK6Ke8A=;
-        b=rdXDWHBH6hTl0Usg+iP08yVIoCLEbZHHGqKSosnTQaDoCk2s9QSUtgFVDdm+t3jchI
-         dHkO0epDuXsYVNTU1BTPapN5PdbNA8On8jjr8h1+bxDo/Uy5X/PlGF0+JqN+Wdm2180U
-         J/xQZB357gaW+o6AZWZ01vVY0lc7eM9glWqPNv1ONMbZmk3MdfbMMoErk7u1EFAsqYMQ
-         pLXCST0/1D4t+hV/+EeENL4O2zS1Y6XP5co9XJIEqzmAdA1DnSVdC9Ef8tzSx20RRkAY
-         GzBB9ZEn1eVpcjl8Y0Uslj5KJZwXzvq8Io3c4ahYo4eH1X5dN5RG9A/Z7q7vJTzTIwvL
-         zR3g==
-X-Gm-Message-State: AJIora9ZotyhwQDYP6X6p95IamaUQIjKU9YDsfU6qk5xwCj83Lg4E38M
-        AP81V9UVANLDTp1xVgJSo4oxpg==
-X-Google-Smtp-Source: AGRyM1t4qhGVRUSo5Yi2KBjSfewDtU8fqoe/ghv2WmySeGa5w7DTYMfuejGUYIAAxO0iPFNbjS9+jw==
-X-Received: by 2002:a17:90b:4cd0:b0:1ec:b260:db49 with SMTP id nd16-20020a17090b4cd000b001ecb260db49mr21712701pjb.193.1656419712969;
-        Tue, 28 Jun 2022 05:35:12 -0700 (PDT)
-Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id a17-20020aa78e91000000b005251e8d8b73sm9326415pfr.131.2022.06.28.05.35.11
+        bh=sRgiTQE3Kf/O2zn9zI4tUobp4J47g0upsarV56Uw538=;
+        b=dABgO9wJPqRlyT+EOetnYLZCTCEGLONMxmfvitZszyMUSg9WtMN33NMjSl4bQel7BV
+         BFeiA2r3UncVS+UgEQ6SK+AguzDGKRK2KsSUBwS8EfA31g+QHmu8Ks9AFccm46Eh49Hp
+         8iPRFWVlMpZT1aQGpQd1upycJWSrdWaw2p6OcNr9x0HiSXiHIb51NddB6Ke0WahC3YPf
+         V92GxaufT+6/yNE03FEBHhr3cue86+cPD43rkrBv/+wvTAsqQ1gUePSMRZ91A7x/0b6Y
+         /k3/kxWOVKBrPI3hLIs+XumhrVJMIE9U1wnYrFtCRXBYnag/akfG8itRI+vAvyU+jnfm
+         YGgQ==
+X-Gm-Message-State: AJIora+Bn5Kp9vuxonmDc5f6OB7p5/mFdBqQNUFuPQriEq6mSJ2unThv
+        kZrcVDu0vtzCy/ygLRcF3biWzdemjss=
+X-Google-Smtp-Source: AGRyM1uy+QSLQiVIO4OASpMa0OjW4C8CBiRSTQiNkPNpbQsRE1YbuH/s2F6OcGEkQJarD0Vs9+mCkw==
+X-Received: by 2002:a1c:ed08:0:b0:39c:80b1:b0b3 with SMTP id l8-20020a1ced08000000b0039c80b1b0b3mr22466838wmh.134.1656427370669;
+        Tue, 28 Jun 2022 07:42:50 -0700 (PDT)
+Received: from [192.168.64.180] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
+        by smtp.gmail.com with ESMTPSA id h2-20020adff4c2000000b0021d221daccfsm1012686wrp.78.2022.06.28.07.42.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jun 2022 05:35:12 -0700 (PDT)
-Message-ID: <a8427658-4b9f-5486-433e-21c636030e6a@kernel.dk>
-Date:   Tue, 28 Jun 2022 06:35:11 -0600
+        Tue, 28 Jun 2022 07:42:50 -0700 (PDT)
+Message-ID: <6401e5b6-a964-227e-c661-7557790d918e@grimberg.me>
+Date:   Tue, 28 Jun 2022 17:42:48 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: fully tear down the queue in del_gendisk
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 6/6] block: remove blk_cleanup_disk
 Content-Language: en-US
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org
+To:     Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        linux-block@vger.kernel.org
 References: <20220619060552.1850436-1-hch@lst.de>
- <67dd8d1c-658c-8833-9630-79ade736b348@kernel.dk>
- <20220620060948.GA10485@lst.de>
- <1e3f054e-eec6-be87-7039-e2b4260addc2@kernel.dk>
- <20220628051139.GA22701@lst.de>
- <bb56a578-741a-6eb4-a66f-3c774d0a24da@kernel.dk>
-In-Reply-To: <bb56a578-741a-6eb4-a66f-3c774d0a24da@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
+ <20220619060552.1850436-7-hch@lst.de>
+ <25329ddf-73d1-70e9-cd2f-372309e509ba@suse.de>
+ <20220620085647.GA13464@lst.de>
+From:   Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20220620085647.GA13464@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/28/22 6:29 AM, Jens Axboe wrote:
-> On 6/27/22 11:11 PM, Christoph Hellwig wrote:
->> On Mon, Jun 20, 2022 at 05:16:03AM -0600, Jens Axboe wrote:
->>> On 6/20/22 12:09 AM, Christoph Hellwig wrote:
->>>> On Sun, Jun 19, 2022 at 04:21:39PM -0600, Jens Axboe wrote:
->>>>> On 6/19/22 12:05 AM, Christoph Hellwig wrote:
->>>>>> Note that while intended or 5.20, this series is generated against the
->>>>>> block-5.19 branch as that contains fixes in this area that haven't
->>>>>> made it to the for-5.10/block branch yet.
->>>>>
->>>>> Side note - I rebased on -rc3 anyway because of the series that went
->>>>> into -rc2, so we should be fine there.
->>>>
->>>> It depends on elevator/debugfs teardown series that has not made it
->>>> into -rc3.
->>>
->>> Guess we'll rebase for -rc4 again...
->>
->> As you'd done that, can you consider this series now?
+
+>> I wish we could have blktests for tearing down device-drivers; doing a
+>> regression test here will be really hard.
 > 
-> It doesn't apply cleanly. I'll check if it's something minor...
+> The problem with a remove is that while we have a generic device remove
+> attribute, it:
+> 
+>   a) isn't always in the same place relatively to the disk
+>   b) once removed we have no generic way to add the device back for
+>      further testing
+> 
+> nvme/032 has basic remove testing for nvme, and I think I can also
+> wire up my scsi bind/unbind testing for blktests using scsi_debug without
+> too much effort.  But that still isn't exactly a generic test.
 
-Minor thing in xen-blkfront for the last patch, hand edited the patch:
-
-https://git.kernel.dk/cgit/linux-block/commit/?h=for-5.20/block&id=8b9ab62662048a3274361c7e5f64037c2c133e2c
-
--- 
-Jens Axboe
-
+It should be trivial to add a similar test for fabrics with toggling
+nvmet $ns/enable config knob...
