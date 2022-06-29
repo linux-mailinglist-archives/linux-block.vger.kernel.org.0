@@ -2,22 +2,22 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF95A55F6DC
-	for <lists+linux-block@lfdr.de>; Wed, 29 Jun 2022 08:42:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46C9955F6E3
+	for <lists+linux-block@lfdr.de>; Wed, 29 Jun 2022 08:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbiF2Glj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 Jun 2022 02:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
+        id S229511AbiF2Glv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 Jun 2022 02:41:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232329AbiF2Gl2 (ORCPT
+        with ESMTP id S231143AbiF2Glt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 Jun 2022 02:41:28 -0400
+        Wed, 29 Jun 2022 02:41:49 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80C02E68C;
-        Tue, 28 Jun 2022 23:41:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D7829C8C;
+        Tue, 28 Jun 2022 23:41:46 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 12CE467373; Wed, 29 Jun 2022 08:41:25 +0200 (CEST)
-Date:   Wed, 29 Jun 2022 08:41:24 +0200
+        id 0870067373; Wed, 29 Jun 2022 08:41:44 +0200 (CEST)
+Date:   Wed, 29 Jun 2022 08:41:43 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -42,15 +42,15 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v7 07/21] dma-mapping: add flags to dma_map_ops to
- indicate PCI P2PDMA support
-Message-ID: <20220629064124.GH17234@lst.de>
-References: <20220615161233.17527-1-logang@deltatee.com> <20220615161233.17527-8-logang@deltatee.com>
+        Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v7 09/21] nvme-pci: check DMA ops when indicating
+ support for PCI P2PDMA
+Message-ID: <20220629064143.GI17234@lst.de>
+References: <20220615161233.17527-1-logang@deltatee.com> <20220615161233.17527-10-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220615161233.17527-8-logang@deltatee.com>
+In-Reply-To: <20220615161233.17527-10-logang@deltatee.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
