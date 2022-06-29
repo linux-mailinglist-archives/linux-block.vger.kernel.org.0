@@ -2,50 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F3C6560D86
-	for <lists+linux-block@lfdr.de>; Thu, 30 Jun 2022 01:34:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D337E560D89
+	for <lists+linux-block@lfdr.de>; Thu, 30 Jun 2022 01:34:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231329AbiF2XeA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 Jun 2022 19:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42038 "EHLO
+        id S231820AbiF2XeG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 Jun 2022 19:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231872AbiF2Xdg (ORCPT
+        with ESMTP id S231925AbiF2Xdq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 Jun 2022 19:33:36 -0400
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52259255B9
-        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:33:24 -0700 (PDT)
-Received: by mail-pg1-f181.google.com with SMTP id d129so16761836pgc.9
-        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:33:24 -0700 (PDT)
+        Wed, 29 Jun 2022 19:33:46 -0400
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77BD47644
+        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:33:27 -0700 (PDT)
+Received: by mail-pg1-f175.google.com with SMTP id x8so12168844pgj.13
+        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:33:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fwZgRIbeTJ8+UmoWbPxfXxKQtrGzbjX7MkK2nUi2Kgk=;
-        b=iB1O3O7ricWQhynp2pvQ3vle1cFOPF7692UpoLu5MfXvjJskudFBqoHlNHrRdPjkJq
-         r/qiYeRzZZbNp1Ec/kpkg1nAUrahyUI5J4T7TrlnUa6DPnWR+yPngKfsZz8qRy4ppXuF
-         JITK5Ijn6P7KvkM2X2y0XSqGtsYkCD+DelwvI9TqVXyQE9d7itYcRP+gMOcLyCXhK1zB
-         WKwZnsan0mr6ZIR9Z4fqsyqiDaNN/sjBSmuiXhl00nNLaIkhcBqmxSBGGxKmG80dSFnf
-         hj1JL554C3KeJtX5H2MYxj4rZNtUX47q1Bs6EpkoxDDhxxU8FFeQS8IiyMDv4JFQcNXy
-         EjjA==
-X-Gm-Message-State: AJIora/Hjqzmcl6Rpi1SBSM3/Xn+HnrYfoyGs9rj3tS1/z8Awn+FakX1
-        PUBZPTgjYbY5ifvuneVFs1A=
-X-Google-Smtp-Source: AGRyM1sfW4BtJCPpZ9mLrIW7QgXlnCqwlfy6R/SACDLis9Ptm1+vhz7IP7qyNfmxKtpcbBI7hGw6yw==
-X-Received: by 2002:a63:6f43:0:b0:408:d61b:77b0 with SMTP id k64-20020a636f43000000b00408d61b77b0mr4845013pgc.529.1656545599930;
-        Wed, 29 Jun 2022 16:33:19 -0700 (PDT)
+        bh=uoPiXPJ41RkMIDIBXB/dxmN7DuDhtDvtY8AJfvsQi9A=;
+        b=W6eecNvnLq/2TbE/FKsFjsr3hT6W7+EUusnbP+Yp9grZnRHlwSze1Uqr0yb6dv/LQ3
+         JR2lHetPp3igZ+fpiOv0zoykGhO0Y0pXUmQqFEe0/I6A7mC8RsKZCJxK62M/QCUNN9j6
+         DwTKgNwd483QbIHTHIRqNDb3dULF52e7Hev+fkx2c97dmwEauVFxd1M0F0ySgN8LVJ63
+         a9ujbbZEZ38ki59PH8M3j5xVF9HL5KAAN8l0aDfF6D8NOvnt6I5hyriAIcz16dD4Gbnu
+         X/Zqx3aJmneYtKLzYJUD4/VnTIASaZTGrsNpfQwV5Vt+GMUbSdMoj/6xyG1lqWb7athK
+         OWNA==
+X-Gm-Message-State: AJIora+mJCzXqQSazqg1qVsjudamkyDdrzx2Y5j1mNiFxINUFyFeo0rK
+        0H8WNdcKl11khvcBdpftYAg=
+X-Google-Smtp-Source: AGRyM1vjvQHcgnaO0cHAD+RajmdhZ09z6Zs6LytGvITbCquzZr0GWnl9FRLfgWpOevXnUECWNFP1sw==
+X-Received: by 2002:a62:6dc2:0:b0:525:43c8:79f7 with SMTP id i185-20020a626dc2000000b0052543c879f7mr12497502pfc.49.1656545601521;
+        Wed, 29 Jun 2022 16:33:21 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:3841:49ce:cba5:1586])
-        by smtp.gmail.com with ESMTPSA id b21-20020a17090a8c9500b001ec8d191db4sm2763687pjo.17.2022.06.29.16.33.18
+        by smtp.gmail.com with ESMTPSA id b21-20020a17090a8c9500b001ec8d191db4sm2763687pjo.17.2022.06.29.16.33.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 16:33:19 -0700 (PDT)
+        Wed, 29 Jun 2022 16:33:20 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>
-Subject: [PATCH v2 57/63] fs/nfs: Use enum req_op where appropriate
-Date:   Wed, 29 Jun 2022 16:31:39 -0700
-Message-Id: <20220629233145.2779494-58-bvanassche@acm.org>
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Subject: [PATCH v2 58/63] fs/nilfs2: Use the enum req_op and blk_opf_t types
+Date:   Wed, 29 Jun 2022 16:31:40 -0700
+Message-Id: <20220629233145.2779494-59-bvanassche@acm.org>
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
 In-Reply-To: <20220629233145.2779494-1-bvanassche@acm.org>
 References: <20220629233145.2779494-1-bvanassche@acm.org>
@@ -53,77 +52,207 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Improve static type checking by using enum req_op for request operations.
-Rename an 'rw' argument into 'op' since that name is typically used for
-request operations. This patch does not change any functionality. Note:
-REQ_OP_READ = READ = 0 and REQ_OP_WRITE = WRITE = 1.
+Improve static type checking by using the enum req_op type for variables
+that represent a request operation and the new blk_opf_t type for
+variables that represent request flags. Combine the 'mode' and
+'mode_flags' arguments of nilfs_btnode_submit_block into a single
+argument 'opf'.
 
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ryusuke Konishi <konishi.ryusuke@gmail.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- fs/nfs/blocklayout/blocklayout.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ fs/nilfs2/btnode.c            |  8 ++++----
+ fs/nilfs2/btnode.h            |  4 ++--
+ fs/nilfs2/btree.c             |  6 +++---
+ fs/nilfs2/gcinode.c           |  5 ++---
+ fs/nilfs2/mdt.c               | 19 ++++++++++---------
+ include/trace/events/nilfs2.h |  4 ++--
+ 6 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
-index 79a8b451791f..943aeea1eb16 100644
---- a/fs/nfs/blocklayout/blocklayout.c
-+++ b/fs/nfs/blocklayout/blocklayout.c
-@@ -121,7 +121,7 @@ static bool offset_in_map(u64 offset, struct pnfs_block_dev_map *map)
+diff --git a/fs/nilfs2/btnode.c b/fs/nilfs2/btnode.c
+index 5c39efbf733f..e74fda212620 100644
+--- a/fs/nilfs2/btnode.c
++++ b/fs/nilfs2/btnode.c
+@@ -70,7 +70,7 @@ nilfs_btnode_create_block(struct address_space *btnc, __u64 blocknr)
  }
  
- static struct bio *
--do_add_page_to_bio(struct bio *bio, int npg, int rw, sector_t isect,
-+do_add_page_to_bio(struct bio *bio, int npg, enum req_op op, sector_t isect,
- 		struct page *page, struct pnfs_block_dev_map *map,
- 		struct pnfs_block_extent *be, bio_end_io_t end_io,
- 		struct parallel_io *par, unsigned int offset, int *len)
-@@ -131,7 +131,7 @@ do_add_page_to_bio(struct bio *bio, int npg, int rw, sector_t isect,
- 	u64 disk_addr, end;
+ int nilfs_btnode_submit_block(struct address_space *btnc, __u64 blocknr,
+-			      sector_t pblocknr, int mode, int mode_flags,
++			      sector_t pblocknr, blk_opf_t opf,
+ 			      struct buffer_head **pbh, sector_t *submit_ptr)
+ {
+ 	struct buffer_head *bh;
+@@ -103,13 +103,13 @@ int nilfs_btnode_submit_block(struct address_space *btnc, __u64 blocknr,
+ 		}
+ 	}
  
- 	dprintk("%s: npg %d rw %d isect %llu offset %u len %d\n", __func__,
--		npg, rw, (unsigned long long)isect, offset, *len);
-+		npg, (__force u32)op, (unsigned long long)isect, offset, *len);
+-	if (mode_flags & REQ_RAHEAD) {
++	if (opf & REQ_RAHEAD) {
+ 		if (pblocknr != *submit_ptr + 1 || !trylock_buffer(bh)) {
+ 			err = -EBUSY; /* internal code */
+ 			brelse(bh);
+ 			goto out_locked;
+ 		}
+-	} else { /* mode == READ */
++	} else { /* opf == REQ_OP_READ */
+ 		lock_buffer(bh);
+ 	}
+ 	if (buffer_uptodate(bh)) {
+@@ -122,7 +122,7 @@ int nilfs_btnode_submit_block(struct address_space *btnc, __u64 blocknr,
+ 	bh->b_blocknr = pblocknr; /* set block address for read */
+ 	bh->b_end_io = end_buffer_read_sync;
+ 	get_bh(bh);
+-	submit_bh(mode | mode_flags, bh);
++	submit_bh(opf, bh);
+ 	bh->b_blocknr = blocknr; /* set back to the given block address */
+ 	*submit_ptr = pblocknr;
+ 	err = 0;
+diff --git a/fs/nilfs2/btnode.h b/fs/nilfs2/btnode.h
+index bd5544e63a01..4bc5612dff94 100644
+--- a/fs/nilfs2/btnode.h
++++ b/fs/nilfs2/btnode.h
+@@ -34,8 +34,8 @@ void nilfs_init_btnc_inode(struct inode *btnc_inode);
+ void nilfs_btnode_cache_clear(struct address_space *);
+ struct buffer_head *nilfs_btnode_create_block(struct address_space *btnc,
+ 					      __u64 blocknr);
+-int nilfs_btnode_submit_block(struct address_space *, __u64, sector_t, int,
+-			      int, struct buffer_head **, sector_t *);
++int nilfs_btnode_submit_block(struct address_space *, __u64, sector_t,
++			      blk_opf_t, struct buffer_head **, sector_t *);
+ void nilfs_btnode_delete(struct buffer_head *);
+ int nilfs_btnode_prepare_change_key(struct address_space *,
+ 				    struct nilfs_btnode_chkey_ctxt *);
+diff --git a/fs/nilfs2/btree.c b/fs/nilfs2/btree.c
+index f544c22fff78..9f4d9432d38a 100644
+--- a/fs/nilfs2/btree.c
++++ b/fs/nilfs2/btree.c
+@@ -477,7 +477,7 @@ static int __nilfs_btree_get_block(const struct nilfs_bmap *btree, __u64 ptr,
+ 	sector_t submit_ptr = 0;
+ 	int ret;
  
- 	/* translate to device offset */
- 	isect += be->be_v_offset;
-@@ -154,7 +154,7 @@ do_add_page_to_bio(struct bio *bio, int npg, int rw, sector_t isect,
+-	ret = nilfs_btnode_submit_block(btnc, ptr, 0, REQ_OP_READ, 0, &bh,
++	ret = nilfs_btnode_submit_block(btnc, ptr, 0, REQ_OP_READ, &bh,
+ 					&submit_ptr);
+ 	if (ret) {
+ 		if (ret != -EEXIST)
+@@ -495,8 +495,8 @@ static int __nilfs_btree_get_block(const struct nilfs_bmap *btree, __u64 ptr,
+ 			ptr2 = nilfs_btree_node_get_ptr(ra->node, i, ra->ncmax);
  
- retry:
- 	if (!bio) {
--		bio = bio_alloc(map->bdev, bio_max_segs(npg), rw, GFP_NOIO);
-+		bio = bio_alloc(map->bdev, bio_max_segs(npg), op, GFP_NOIO);
- 		bio->bi_iter.bi_sector = disk_addr >> SECTOR_SHIFT;
- 		bio->bi_end_io = end_io;
- 		bio->bi_private = par;
-@@ -291,7 +291,7 @@ bl_read_pagelist(struct nfs_pgio_header *header)
- 		} else {
- 			bio = do_add_page_to_bio(bio,
- 						 header->page_array.npages - i,
--						 READ,
-+						 REQ_OP_READ,
- 						 isect, pages[i], &map, &be,
- 						 bl_end_io_read, par,
- 						 pg_offset, &pg_len);
-@@ -420,9 +420,8 @@ bl_write_pagelist(struct nfs_pgio_header *header, int sync)
+ 			ret = nilfs_btnode_submit_block(btnc, ptr2, 0,
+-							REQ_OP_READ, REQ_RAHEAD,
+-							&ra_bh, &submit_ptr);
++						REQ_OP_READ | REQ_RAHEAD,
++						&ra_bh, &submit_ptr);
+ 			if (likely(!ret || ret == -EEXIST))
+ 				brelse(ra_bh);
+ 			else if (ret != -EBUSY)
+diff --git a/fs/nilfs2/gcinode.c b/fs/nilfs2/gcinode.c
+index 847def8af315..b0d22ff24b67 100644
+--- a/fs/nilfs2/gcinode.c
++++ b/fs/nilfs2/gcinode.c
+@@ -129,9 +129,8 @@ int nilfs_gccache_submit_read_node(struct inode *inode, sector_t pbn,
+ 	struct inode *btnc_inode = NILFS_I(inode)->i_assoc_inode;
+ 	int ret;
  
- 		pg_len = PAGE_SIZE;
- 		bio = do_add_page_to_bio(bio, header->page_array.npages - i,
--					 WRITE, isect, pages[i], &map, &be,
--					 bl_end_io_write, par,
--					 0, &pg_len);
-+					 REQ_OP_WRITE, isect, pages[i], &map,
-+					 &be, bl_end_io_write, par, 0, &pg_len);
- 		if (IS_ERR(bio)) {
- 			header->pnfs_error = PTR_ERR(bio);
- 			bio = NULL;
+-	ret = nilfs_btnode_submit_block(btnc_inode->i_mapping,
+-					vbn ? : pbn, pbn, REQ_OP_READ, 0,
+-					out_bh, &pbn);
++	ret = nilfs_btnode_submit_block(btnc_inode->i_mapping, vbn ? : pbn, pbn,
++					REQ_OP_READ, out_bh, &pbn);
+ 	if (ret == -EEXIST) /* internal code (cache hit) */
+ 		ret = 0;
+ 	return ret;
+diff --git a/fs/nilfs2/mdt.c b/fs/nilfs2/mdt.c
+index 66e8811c2528..cbf4fa60eea2 100644
+--- a/fs/nilfs2/mdt.c
++++ b/fs/nilfs2/mdt.c
+@@ -111,8 +111,8 @@ static int nilfs_mdt_create_block(struct inode *inode, unsigned long block,
+ }
+ 
+ static int
+-nilfs_mdt_submit_block(struct inode *inode, unsigned long blkoff,
+-		       int mode, int mode_flags, struct buffer_head **out_bh)
++nilfs_mdt_submit_block(struct inode *inode, unsigned long blkoff, blk_opf_t opf,
++		       struct buffer_head **out_bh)
+ {
+ 	struct buffer_head *bh;
+ 	__u64 blknum = 0;
+@@ -126,12 +126,12 @@ nilfs_mdt_submit_block(struct inode *inode, unsigned long blkoff,
+ 	if (buffer_uptodate(bh))
+ 		goto out;
+ 
+-	if (mode_flags & REQ_RAHEAD) {
++	if (opf & REQ_RAHEAD) {
+ 		if (!trylock_buffer(bh)) {
+ 			ret = -EBUSY;
+ 			goto failed_bh;
+ 		}
+-	} else /* mode == READ */
++	} else /* opf == REQ_OP_READ */
+ 		lock_buffer(bh);
+ 
+ 	if (buffer_uptodate(bh)) {
+@@ -148,10 +148,11 @@ nilfs_mdt_submit_block(struct inode *inode, unsigned long blkoff,
+ 
+ 	bh->b_end_io = end_buffer_read_sync;
+ 	get_bh(bh);
+-	submit_bh(mode | mode_flags, bh);
++	submit_bh(opf, bh);
+ 	ret = 0;
+ 
+-	trace_nilfs2_mdt_submit_block(inode, inode->i_ino, blkoff, mode);
++	trace_nilfs2_mdt_submit_block(inode, inode->i_ino, blkoff,
++				      opf & REQ_OP_MASK);
+  out:
+ 	get_bh(bh);
+ 	*out_bh = bh;
+@@ -172,7 +173,7 @@ static int nilfs_mdt_read_block(struct inode *inode, unsigned long block,
+ 	int i, nr_ra_blocks = NILFS_MDT_MAX_RA_BLOCKS;
+ 	int err;
+ 
+-	err = nilfs_mdt_submit_block(inode, block, REQ_OP_READ, 0, &first_bh);
++	err = nilfs_mdt_submit_block(inode, block, REQ_OP_READ, &first_bh);
+ 	if (err == -EEXIST) /* internal code */
+ 		goto out;
+ 
+@@ -182,8 +183,8 @@ static int nilfs_mdt_read_block(struct inode *inode, unsigned long block,
+ 	if (readahead) {
+ 		blkoff = block + 1;
+ 		for (i = 0; i < nr_ra_blocks; i++, blkoff++) {
+-			err = nilfs_mdt_submit_block(inode, blkoff, REQ_OP_READ,
+-						     REQ_RAHEAD, &bh);
++			err = nilfs_mdt_submit_block(inode, blkoff,
++						REQ_OP_READ | REQ_RAHEAD, &bh);
+ 			if (likely(!err || err == -EEXIST))
+ 				brelse(bh);
+ 			else if (err != -EBUSY)
+diff --git a/include/trace/events/nilfs2.h b/include/trace/events/nilfs2.h
+index 84ee31fc04cc..8efc6236f57c 100644
+--- a/include/trace/events/nilfs2.h
++++ b/include/trace/events/nilfs2.h
+@@ -192,7 +192,7 @@ TRACE_EVENT(nilfs2_mdt_submit_block,
+ 	    TP_PROTO(struct inode *inode,
+ 		     unsigned long ino,
+ 		     unsigned long blkoff,
+-		     int mode),
++		     enum req_op mode),
+ 
+ 	    TP_ARGS(inode, ino, blkoff, mode),
+ 
+@@ -200,7 +200,7 @@ TRACE_EVENT(nilfs2_mdt_submit_block,
+ 		    __field(struct inode *, inode)
+ 		    __field(unsigned long, ino)
+ 		    __field(unsigned long, blkoff)
+-		    __field(int, mode)
++		    __field(enum req_op, mode)
+ 	    ),
+ 
+ 	    TP_fast_assign(
