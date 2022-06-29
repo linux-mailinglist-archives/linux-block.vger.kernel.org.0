@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D92AF560D6D
-	for <lists+linux-block@lfdr.de>; Thu, 30 Jun 2022 01:32:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0D3560D6F
+	for <lists+linux-block@lfdr.de>; Thu, 30 Jun 2022 01:32:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231740AbiF2Xct (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 Jun 2022 19:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39418 "EHLO
+        id S231736AbiF2Xcu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 Jun 2022 19:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231736AbiF2Xcr (ORCPT
+        with ESMTP id S231751AbiF2Xct (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 Jun 2022 19:32:47 -0400
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE387B01
-        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:32:46 -0700 (PDT)
-Received: by mail-pf1-f176.google.com with SMTP id bo5so16512155pfb.4
-        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:32:46 -0700 (PDT)
+        Wed, 29 Jun 2022 19:32:49 -0400
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4C8CC8
+        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:32:48 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id c4so15475982plc.8
+        for <linux-block@vger.kernel.org>; Wed, 29 Jun 2022 16:32:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KTrDKBRbhjdsx+OGEpxSwrjVQ1ShQO8gv8693CNLUuA=;
-        b=OL59wcVMB3nLhHfFMqcEPsgv8+oJLhkedwP8iVG2+B5zxd2QMexn2B0+jOU1z4jpAY
-         2DYkOR8BQx/N7v3cBEzGbzdsA0OdSoegW7S5PSMCUpQhHjUIum8+EuYZnFvvBA2sD1AT
-         B6NE8rARf5qYHZga2KSWsqGwisGbTaAvBIDaxoBSK0aFV7mEylboAOXi72vLSCXODybw
-         7Y4IpK1W9uBqbnWr6jCSUtECwhIwnDUWzATUoMA1iz/YOtJlVgFAPQFq6L7Up8++fGTL
-         I7+vial3YTVTVIOH8iVXkeSmXyfVx/Q0NnWi1B+pNtQclDV/RIabac1auWAQhx6g1LPY
-         WGKQ==
-X-Gm-Message-State: AJIora+Vy6i6qJFkNQkKxfKCCVkKwCO4yCONDKeXogdFAVaxorVob3zX
-        stoJEhoHZz1+SxNW+8JFAl0=
-X-Google-Smtp-Source: AGRyM1uIwzUvp+Es1+czoSF5PsCkcWY+zDqH2Jv/BVhWF8wZhi+/s41nJIuHvGBRKcXnTgmaUNVvEw==
-X-Received: by 2002:a63:904b:0:b0:40d:1d01:39aa with SMTP id a72-20020a63904b000000b0040d1d0139aamr4919303pge.68.1656545566136;
-        Wed, 29 Jun 2022 16:32:46 -0700 (PDT)
+        bh=AtXVXh5FV9AcqLhi64ZzdFomJLYfgKOVTpUx1aD64bY=;
+        b=B94XS8r426pvz4wCB0GwzzmY+eUxBhDaGtm30lq5L+FmxDNcyn//aZAQnW2ityrXB7
+         fUpUD/C3g+3Ql9ybPeMD96TXyAIS9QhA4+feE2D87dM2QwbQvORCpttkrs4Icu7O+wNy
+         tOEcCqnbsGS7N/ClmmhoaW6F677FUdsAY9h4WkvenJwadpWzUqtf8v6+P8TfJBsQOAn0
+         G9NugB2Rdxp7nXZq7ymUJ/I7wUO5lJ4un8vFqKA5ca+/9G2FoN2rREgcW+MyMlOntCVP
+         OwjQsBIQpVNHcyTG28tdXnogETuYcfX0PjMBvej6051Ct0JRzL3acMuUC65DhdwmBA5y
+         bkxw==
+X-Gm-Message-State: AJIora83bTv2604Bb7wGIVyttq1fuY/jaPK7nrn+JHxjX3rHWSfoA86T
+        tqLxQdiSW6Cp0XIoIhZqeTCeREqkpwo95g==
+X-Google-Smtp-Source: AGRyM1sHC3opzn3JRAH1d6xDBZZMbsbjy+H12SPHPuPVk/x1nfS6RT/rUTEtdVF3uqjYL2K8IFVneA==
+X-Received: by 2002:a17:902:9887:b0:151:6e1c:7082 with SMTP id s7-20020a170902988700b001516e1c7082mr11443050plp.162.1656545567625;
+        Wed, 29 Jun 2022 16:32:47 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:3841:49ce:cba5:1586])
-        by smtp.gmail.com with ESMTPSA id b21-20020a17090a8c9500b001ec8d191db4sm2763687pjo.17.2022.06.29.16.32.44
+        by smtp.gmail.com with ESMTPSA id b21-20020a17090a8c9500b001ec8d191db4sm2763687pjo.17.2022.06.29.16.32.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 16:32:45 -0700 (PDT)
+        Wed, 29 Jun 2022 16:32:47 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
         Song Liu <song@kernel.org>
-Subject: [PATCH v2 34/63] md/raid1: Use the new blk_opf_t type
-Date:   Wed, 29 Jun 2022 16:31:16 -0700
-Message-Id: <20220629233145.2779494-35-bvanassche@acm.org>
+Subject: [PATCH v2 35/63] md/raid10: Use the new blk_opf_t type
+Date:   Wed, 29 Jun 2022 16:31:17 -0700
+Message-Id: <20220629233145.2779494-36-bvanassche@acm.org>
 X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
 In-Reply-To: <20220629233145.2779494-1-bvanassche@acm.org>
 References: <20220629233145.2779494-1-bvanassche@acm.org>
@@ -52,8 +52,9 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -61,26 +62,39 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 Improve static type checking by using the new blk_opf_t type for
-variables that represent request flags.
+variables that represent a request flags.
 
 Cc: Song Liu <song@kernel.org>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/md/raid1.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/raid10.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index e7cd1d30d68a..8180b57be040 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1220,8 +1220,8 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
- 	struct raid1_info *mirror;
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 910d3cd73105..ac8bc7d2565a 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -1136,8 +1136,8 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
+ {
+ 	struct r10conf *conf = mddev->private;
  	struct bio *read_bio;
- 	struct bitmap *bitmap = mddev->bitmap;
 -	const int op = bio_op(bio);
 -	const unsigned long do_sync = (bio->bi_opf & REQ_SYNC);
 +	const enum req_op op = bio_op(bio);
 +	const blk_opf_t do_sync = bio->bi_opf & REQ_SYNC;
  	int max_sectors;
- 	int rdisk;
- 	bool r1bio_existed = !!r1_bio;
+ 	struct md_rdev *rdev;
+ 	char b[BDEVNAME_SIZE];
+@@ -1230,9 +1230,9 @@ static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
+ 				  struct bio *bio, bool replacement,
+ 				  int n_copy)
+ {
+-	const int op = bio_op(bio);
+-	const unsigned long do_sync = (bio->bi_opf & REQ_SYNC);
+-	const unsigned long do_fua = (bio->bi_opf & REQ_FUA);
++	const enum req_op op = bio_op(bio);
++	const blk_opf_t do_sync = bio->bi_opf & REQ_SYNC;
++	const blk_opf_t do_fua = bio->bi_opf & REQ_FUA;
+ 	unsigned long flags;
+ 	struct blk_plug_cb *cb;
+ 	struct raid1_plug_cb *plug = NULL;
