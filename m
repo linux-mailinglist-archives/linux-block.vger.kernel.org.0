@@ -2,71 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D31CF562404
-	for <lists+linux-block@lfdr.de>; Thu, 30 Jun 2022 22:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4736562473
+	for <lists+linux-block@lfdr.de>; Thu, 30 Jun 2022 22:42:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230362AbiF3UQb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 30 Jun 2022 16:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45462 "EHLO
+        id S237077AbiF3Umq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 30 Jun 2022 16:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236609AbiF3UQ3 (ORCPT
+        with ESMTP id S237227AbiF3Umo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 30 Jun 2022 16:16:29 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D54443E9
-        for <linux-block@vger.kernel.org>; Thu, 30 Jun 2022 13:16:27 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 9so370937pgd.7
-        for <linux-block@vger.kernel.org>; Thu, 30 Jun 2022 13:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=9JGRYdL+NhBmDdxP0DtJXAMH0Xw0VEt3PcBHxt+iWhE=;
-        b=U4VwhHgWpLYbo1yfhPVQYypekxNNnEGuOM39MrAR9tkg1SltW/yMrcL+tHOb19/5Ld
-         U/uBofEPFhpyT5K89997+zTpHQ5hX/fT89PzFr0/T8qk2YraR0QsVV2WyweYsSHzdhjV
-         fXPtvlVryE/DgGWZfQPZ3hpc3RzzHwwHzShjd88g5TwXjZqt4w9Ii5J3G3YTOGjXeiuZ
-         GQQYLgI1bEe0Y9r7QDshAARZHioszMPiKSttRie9LhXN7bxHAkakbXC6VUoUbACwDt3M
-         8D5I36plM/3/cAd6huDtkkvDdPEhMsQv/Qg8JKR3nuW5rXOm2D698SlpKQEXDDAl4CjU
-         QYVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=9JGRYdL+NhBmDdxP0DtJXAMH0Xw0VEt3PcBHxt+iWhE=;
-        b=AsQOJ/xoN+SOtt1SVkGtPoyd7Q+4DRHnu73exlkHZHOFMgq2gNLltivz75wjDnj4MI
-         9J2/INghvg+axvmS+5eEUDieldfGOTBanUZ8d9NYEdB4noCZp/F08mz8+1OHrBtq/SnK
-         amhPN4hRMWoBGRvZk7RJ7rCgpeTls3jGZ9nEYfyssm5zM6HpNezpdJPqnCcCZUkat12L
-         PBulpgoGt5UjY5yA1971VVdBJ4mEyJljxMLf3UM7GcblORLqBPQH5Tj6s5jWaevFlRVt
-         dQ+sC9pv7qGy9YrkhXyX+bi4tH5jW4fhnVU3VDKmF6yCOKp2ZKpZ9jrS1loOBaXwqPq0
-         5fXw==
-X-Gm-Message-State: AJIora+t1BB6MGpgRMq+KKQLfh/ILplP4SIcS5Z1xugg6wHJP2x3+9Vf
-        bgHlsG9Ly8IYLZvpvRaxfUZbJDhFziZVFw==
-X-Google-Smtp-Source: AGRyM1vlDQn9cUzTQTt5cUwURyDkBcN61qK5SuSsmMxNNVX03FweUi2PyEwMtvC53jflfXsY/iBXKA==
-X-Received: by 2002:a65:6bd6:0:b0:39d:4f85:9ecf with SMTP id e22-20020a656bd6000000b0039d4f859ecfmr9392530pgw.336.1656620187287;
-        Thu, 30 Jun 2022 13:16:27 -0700 (PDT)
-Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id y11-20020a63de4b000000b0040c644e82efsm13705811pgi.43.2022.06.30.13.16.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jun 2022 13:16:26 -0700 (PDT)
-Message-ID: <a0fd82a0-f0fa-c9ec-cd55-b6db6b60f326@kernel.dk>
-Date:   Thu, 30 Jun 2022 14:16:25 -0600
+        Thu, 30 Jun 2022 16:42:44 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2FEB491
+        for <linux-block@vger.kernel.org>; Thu, 30 Jun 2022 13:42:43 -0700 (PDT)
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25UH0plA002850
+        for <linux-block@vger.kernel.org>; Thu, 30 Jun 2022 13:42:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=0xc3C+DXiwfPrlt4XSU9WIovS0CAm1/2e62U38mNxyc=;
+ b=ZFsXMrTM1X8gcmIiwcWiyqIlNCU3OO7An8JzvXGBgo6qoY9vJ2Ppys7HzRhDjgYR+yWO
+ 6jhppSbO0mJgQMbW00nHDiuoGtvZDHizQIrblgYllWZ4C7FY6Cym9lBxA4KPZKpY/V+I
+ SWCVmaNgEh0KIx/QGhr+ZfQETEGAZnAX2UU= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3h150eebc4-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Thu, 30 Jun 2022 13:42:42 -0700
+Received: from twshared14577.08.ash8.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Thu, 30 Jun 2022 13:42:41 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id 1293D5932DB4; Thu, 30 Jun 2022 13:42:29 -0700 (PDT)
+From:   Keith Busch <kbusch@fb.com>
+To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>
+CC:     <axboe@kernel.dk>, Kernel Team <Kernel-team@fb.com>, <hch@lst.de>,
+        <willy@infradead.org>, <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 00/12] block: support for partial sector reads
+Date:   Thu, 30 Jun 2022 13:42:00 -0700
+Message-ID: <20220630204212.1265638-1-kbusch@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [GIT PULL] nvmes fixes for Linux 5.19
-Content-Language: en-US
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-References: <Yr39dC2Hf2/LtgXq@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Yr39dC2Hf2/LtgXq@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: xsbAt_Z1Cy6l7aBgGCY4UkDLqNh4d2HV
+X-Proofpoint-ORIG-GUID: xsbAt_Z1Cy6l7aBgGCY4UkDLqNh4d2HV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-06-30_14,2022-06-28_01,2022-06-22_01
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,31 +63,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/30/22 1:45 PM, Christoph Hellwig wrote:
-> The following changes since commit fbb564a557809466c171b95f8d593a0972450ff2:
-> 
->   lib/sbitmap: Fix invalid loop in __sbitmap_queue_get_batch() (2022-06-25 10:58:55 -0600)
-> 
-> are available in the Git repository at:
-> 
->   git://git.infradead.org/nvme.git tags/nvme-5.19-2022-06-30
-> 
-> for you to fetch changes up to e1c70d79346356bb1ede3f79436df80917845ab9:
-> 
->   nvme-pci: add NVME_QUIRK_BOGUS_NID for ADATA IM2P33F8ABR1 (2022-06-30 08:24:33 +0200)
-> 
-> ----------------------------------------------------------------
-> nvme fixes for Linux 5.19
-> 
->  - more quirks (Lamarque Vieira Souza, Pablo Greco)
->  - fix a fabrics disconnect regression (Ruozhu Li)
->  - fix a nvmet-tcp data_digest calculation regression (Sagi Grimberg)
->  - fix nvme-tcp send failure handling (Sagi Grimberg)
->  - fix a regression with nvmet-loop and passthrough controllers
->    (Alan Adamson)
+From: Keith Busch <kbusch@kernel.org>
 
-Pulled, thanks.
+At LSFMM nearly 2 months ago, I discussed how some storage hardware
+supports the ability to read at granularities smaller than a sector, and
+the nvme protocol feature that enables this capability, "bit buckets".
+This is useful in scenarios where only parts of sectors are used by the
+application, and the primary benefits to support this are:
 
--- 
-Jens Axboe
+  * Improved link bandwidth usage
+  * Reduced memory utilization
+
+This series enables the block layer and nvme to set up bit bucket
+descriptors for read commands, then enables user space direct-io to make
+use of this capability by allowing the user to specify an arbitrary
+offset and length. This allows truncating an arbitrary number of bytes
+off sectors from the front and end of the transfer. =20
+
+There are no current in-kernel users beyond the direct-io cases, but
+this could also be used for to truncate bytes out of the middle of a
+transfer as well. For example, if you wanted to read a page and knew you
+wer going to immediately dirty some number of bytes in the middle, you
+could set up a read request to skip those in the data transfer.
+
+Keith Busch (12):
+  block: move direct io alignment check to common
+  iomap: save copy of bdev for direct io
+  iomap: get logical block size directly
+  iomap: use common blkdev alignment check
+  block: add bit bucket capabilities
+  nvme: add support for bit buckets
+  block: allow copying pre-registered bvecs
+  block: add bio number of vecs helper for partials
+  block: add partial sector parameter helper
+  block: add direct-io partial sector read support
+  iomap: add direct io partial sector read support
+  block: export and document bit_bucket attribute
+
+ Documentation/ABI/stable/sysfs-block |  9 +++
+ block/bio.c                          | 42 +++++++++++-
+ block/blk-core.c                     |  5 ++
+ block/blk-merge.c                    |  3 +-
+ block/blk-mq.c                       |  2 +
+ block/blk-sysfs.c                    |  3 +
+ block/fops.c                         | 97 ++++++++++++++++++----------
+ drivers/nvme/host/core.c             |  3 +
+ drivers/nvme/host/nvme.h             |  6 ++
+ drivers/nvme/host/pci.c              | 17 ++++-
+ fs/iomap/direct-io.c                 | 43 ++++++++----
+ include/linux/bio.h                  | 11 ++++
+ include/linux/blk-mq.h               |  2 +
+ include/linux/blk_types.h            |  1 +
+ include/linux/blkdev.h               | 41 ++++++++++++
+ include/linux/nvme.h                 |  2 +
+ 16 files changed, 236 insertions(+), 51 deletions(-)
+
+--=20
+2.30.2
 
