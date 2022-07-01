@@ -2,150 +2,177 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 819BC562D24
-	for <lists+linux-block@lfdr.de>; Fri,  1 Jul 2022 09:55:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 487B1562EB9
+	for <lists+linux-block@lfdr.de>; Fri,  1 Jul 2022 10:48:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235626AbiGAHzS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 1 Jul 2022 03:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
+        id S236074AbiGAIr5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 1 Jul 2022 04:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235567AbiGAHzO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 1 Jul 2022 03:55:14 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FC46D579;
-        Fri,  1 Jul 2022 00:55:13 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4LZ6SY3FN0zKJtk;
-        Fri,  1 Jul 2022 15:35:57 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP3 (Coremail) with SMTP id _Ch0CgAXFWgIpL5igL73AA--.48972S13;
-        Fri, 01 Jul 2022 15:36:46 +0800 (CST)
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     tj@kernel.org, mkoutny@suse.com, axboe@kernel.dk,
-        ming.lei@redhat.com
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com
-Subject: [PATCH v6 8/8] blk-throttle: clean up flag 'THROTL_TG_PENDING'
-Date:   Fri,  1 Jul 2022 15:49:23 +0800
-Message-Id: <20220701074923.657426-10-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220701074923.657426-1-yukuai3@huawei.com>
-References: <20220701074923.657426-1-yukuai3@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgAXFWgIpL5igL73AA--.48972S13
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF4UuFy7GF4UAFy3Xr18Zrb_yoW5Ar1Dpr
-        y3AF1fGw48tr4qgrWYqF47GFWfZan3JrWSy3srJa1ftr42vr92qr1DZFyFvayFyFZ3GrW3
-        ZF4Dt395Aa1UX37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUQab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6r1j6r18M7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-        Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-        rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-        AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-        14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
-        xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Y
-        z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7Iv64x0x7Aq67IIx4CEVc8vx2IErcIFxwACI4
-        02YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij28I
-        cwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-        x2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw2
-        0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-        67AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UuuWdUUUUU=
-Sender: yukuai1@huaweicloud.com
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S231298AbiGAIrz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 1 Jul 2022 04:47:55 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09DF8735B3
+        for <linux-block@vger.kernel.org>; Fri,  1 Jul 2022 01:47:51 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b11-20020a5b008b000000b00624ea481d55so1458077ybp.19
+        for <linux-block@vger.kernel.org>; Fri, 01 Jul 2022 01:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=NuZanDiX6ZABSMbfniI1TGr/DxYkHBykbUx4x4ghkJs=;
+        b=CZLCtNgssNVr6nSXDn6fB604VBq+KkeWkf1tsogW0rqBqDsWGig719MPVJL6gYAvgY
+         9RLRb9A15yblqEPywZl4Lgr6YSf9RXOrCrx05owdb7fROgwlMHPgEHweT+hfEokeoi8o
+         LNHODCorIbIyKm8aLbO68fc481xtKztaTjZzYQOWZdYOt+CAO+QwI1YDcZSKV3SuqVOA
+         FJ1LmVHx3rC43z4OWzucakfkXECe5G+RwAjDe0BEzlgwIeQv+q77AUOJhIdqm3JQLg0q
+         MP46dyYMh7yz1bpDLglsTAKkhXu3eoWqjeliptD0SJta9R4nLcM52BDKD2JG16NnEN4l
+         O7Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=NuZanDiX6ZABSMbfniI1TGr/DxYkHBykbUx4x4ghkJs=;
+        b=6KQzV+upApLyqQjr5IgKCQTrNYW9VFNS36rEMshiBQrm4L6yyJRBpjWDoBoo9y7v1C
+         +G2Mk6B21vdSikV5YWs1r6IY1PS76cXfT7APAbRqX1k7umCqE4nCRxhNxETjAs+oI+iP
+         HHYrxLV7mv5GJWu2kSMSnLQ5xoYwj9voZGGJTmlgw3aAzsh/r+/9Qlrh6belIvarS+yW
+         nZy5HZvKdmU8iQZ/XKSwFvmWXIxa6KJNbzOc5ubpCs4eCy1l9bNofs3uMV+DxtQAjU7N
+         B7dvcvYndhWL4WDV9f6UbGyN5sJ5UFL3ZKFJp8LpGyfDIR3X4FjayGCClYh7hoojp+V1
+         Ykig==
+X-Gm-Message-State: AJIora+19SC7+6VUIhHmz99PBjGN9g/g3sYnSbZ3VzFU/1bNGMTYotoq
+        6EROnQ7jstqD7K8uT9LUaLiKs07vQ5b/DQ==
+X-Google-Smtp-Source: AGRyM1ueeVhwlJQ7zRKjLy1gM9/U9w/+eRK9KccBKyOEVw0DgaknmIifOXTfkG/tj2NIxQjOyOX+A2D1Xy7eSg==
+X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
+ (user=davidgow job=sendgmr) by 2002:a25:d292:0:b0:66c:8adb:ce55 with SMTP id
+ j140-20020a25d292000000b0066c8adbce55mr14348011ybg.131.1656665270212; Fri, 01
+ Jul 2022 01:47:50 -0700 (PDT)
+Date:   Fri,  1 Jul 2022 16:47:41 +0800
+Message-Id: <20220701084744.3002019-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.0.rc0.161.g10f37bed90-goog
+Subject: [PATCH v4 1/4] panic: Taint kernel if tests are run
+From:   David Gow <davidgow@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     David Gow <davidgow@google.com>,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Joe Fradley <joefradley@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-All related operations are inside 'queue_lock', there is no need to use
-the flag, we only need to make sure throtl_enqueue_tg() is called when
-the first bio is throttled, and throtl_dequeue_tg() is called when the
-last throttled bio is dispatched.
+Most in-kernel tests (such as KUnit tests) are not supposed to run on
+production systems: they may do deliberately illegal things to trigger
+errors, and have security implications (for example, KUnit assertions
+will often deliberately leak kernel addresses).
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Add a new taint type, TAINT_TEST to signal that a test has been run.
+This will be printed as 'N' (originally for kuNit, as every other
+sensible letter was taken.)
+
+This should discourage people from running these tests on production
+systems, and to make it easier to tell if tests have been run
+accidentally (by loading the wrong configuration, etc.)
+
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: David Gow <davidgow@google.com>
 ---
- block/blk-throttle.c | 22 ++++++++--------------
- block/blk-throttle.h |  7 +++----
- 2 files changed, 11 insertions(+), 18 deletions(-)
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 473f0b651ef0..29e9f7f6573c 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -561,23 +561,16 @@ static void tg_service_queue_add(struct throtl_grp *tg)
+Finally getting back to this, with the addition of a MODULE_INFO()
+to mark a module as a test module. This is automatically set for modules
+in the "tools/testing" directory by modpost (see patch #2).
+
+The 'N' character for the taint is even less useful now that it's no
+longer short for kuNit, but all the letters in TEST are taken. :-(
+
+Changes since v3:
+https://lore.kernel.org/lkml/20220513083212.3537869-1-davidgow@google.com/
+- Remove the mention of KUnit from the documentation.
+- Add Luis and Brendan's Acked/Reviewed-by tags.
+
+Changes since v2:
+https://lore.kernel.org/linux-kselftest/20220430030019.803481-1-davidgow@google.com/
+- Rename TAINT_KUNIT -> TAINT_TEST.
+- Split into separate patches for adding the taint, and triggering it.
+- Taint on a kselftest_module being loaded (patch 3/3)
+
+Changes since v1:
+https://lore.kernel.org/linux-kselftest/20220429043913.626647-1-davidgow@google.com/
+- Make the taint per-module, to handle the case when tests are in
+  (longer lasting) modules. (Thanks Greg KH).
+
+Note that this still has checkpatch.pl warnings around bracket
+placement, which are intentional as part of matching the surrounding
+code.
+
+---
+ Documentation/admin-guide/tainted-kernels.rst | 1 +
+ include/linux/panic.h                         | 3 ++-
+ kernel/panic.c                                | 1 +
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
+index ceeed7b0798d..7d80e8c307d1 100644
+--- a/Documentation/admin-guide/tainted-kernels.rst
++++ b/Documentation/admin-guide/tainted-kernels.rst
+@@ -100,6 +100,7 @@ Bit  Log  Number  Reason that got the kernel tainted
+  15  _/K   32768  kernel has been live patched
+  16  _/X   65536  auxiliary taint, defined for and used by distros
+  17  _/T  131072  kernel was built with the struct randomization plugin
++ 18  _/N  262144  an in-kernel test has been run
+ ===  ===  ======  ========================================================
  
- static void throtl_enqueue_tg(struct throtl_grp *tg)
- {
--	if (!(tg->flags & THROTL_TG_PENDING)) {
--		tg_service_queue_add(tg);
--		tg->flags |= THROTL_TG_PENDING;
--		tg->service_queue.parent_sq->nr_pending++;
--	}
-+	tg_service_queue_add(tg);
-+	tg->service_queue.parent_sq->nr_pending++;
- }
+ Note: The character ``_`` is representing a blank in this table to make reading
+diff --git a/include/linux/panic.h b/include/linux/panic.h
+index e71161da69c4..c7759b3f2045 100644
+--- a/include/linux/panic.h
++++ b/include/linux/panic.h
+@@ -68,7 +68,8 @@ static inline void set_arch_panic_timeout(int timeout, int arch_default_timeout)
+ #define TAINT_LIVEPATCH			15
+ #define TAINT_AUX			16
+ #define TAINT_RANDSTRUCT		17
+-#define TAINT_FLAGS_COUNT		18
++#define TAINT_TEST			18
++#define TAINT_FLAGS_COUNT		19
+ #define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
  
- static void throtl_dequeue_tg(struct throtl_grp *tg)
- {
--	if (tg->flags & THROTL_TG_PENDING) {
--		struct throtl_service_queue *parent_sq =
--			tg->service_queue.parent_sq;
-+	struct throtl_service_queue *parent_sq = tg->service_queue.parent_sq;
- 
--		throtl_rb_erase(&tg->rb_node, parent_sq);
--		--parent_sq->nr_pending;
--		tg->flags &= ~THROTL_TG_PENDING;
--	}
-+	throtl_rb_erase(&tg->rb_node, parent_sq);
-+	--parent_sq->nr_pending;
- }
- 
- /* Call with queue lock held */
-@@ -1021,8 +1014,9 @@ static void throtl_add_bio_tg(struct bio *bio, struct throtl_qnode *qn,
- 
- 	throtl_qnode_add_bio(bio, qn, &sq->queued[rw]);
- 
-+	if (!sq->nr_queued[READ] && !sq->nr_queued[WRITE])
-+		throtl_enqueue_tg(tg);
- 	sq->nr_queued[rw]++;
--	throtl_enqueue_tg(tg);
- }
- 
- static void tg_update_disptime(struct throtl_grp *tg)
-@@ -1377,7 +1371,7 @@ static void tg_conf_updated(struct throtl_grp *tg, bool global)
- 	throtl_start_new_slice(tg, READ, false);
- 	throtl_start_new_slice(tg, WRITE, false);
- 
--	if (tg->flags & THROTL_TG_PENDING) {
-+	if (sq->nr_queued[READ] || sq->nr_queued[WRITE]) {
- 		tg_update_disptime(tg);
- 		throtl_schedule_next_dispatch(sq->parent_sq, true);
- 	}
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index 371d624af845..fba48afbcff3 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -53,10 +53,9 @@ struct throtl_service_queue {
+ struct taint_flag {
+diff --git a/kernel/panic.c b/kernel/panic.c
+index a3c758dba15a..6b3369e21026 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -428,6 +428,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+ 	[ TAINT_LIVEPATCH ]		= { 'K', ' ', true },
+ 	[ TAINT_AUX ]			= { 'X', ' ', true },
+ 	[ TAINT_RANDSTRUCT ]		= { 'T', ' ', true },
++	[ TAINT_TEST ]			= { 'N', ' ', true },
  };
  
- enum tg_state_flags {
--	THROTL_TG_PENDING	= 1 << 0,	/* on parent's pending tree */
--	THROTL_TG_WAS_EMPTY	= 1 << 1,	/* bio_lists[] became non-empty */
--	THROTL_TG_HAS_IOPS_LIMIT = 1 << 2,	/* tg has iops limit */
--	THROTL_TG_CANCELING	= 1 << 3,	/* starts to cancel bio */
-+	THROTL_TG_WAS_EMPTY	= 1 << 0,	/* bio_lists[] became non-empty */
-+	THROTL_TG_HAS_IOPS_LIMIT = 1 << 1,	/* tg has iops limit */
-+	THROTL_TG_CANCELING	= 1 << 2,	/* starts to cancel bio */
- };
- 
- enum {
+ /**
 -- 
-2.31.1
+2.37.0.rc0.161.g10f37bed90-goog
 
