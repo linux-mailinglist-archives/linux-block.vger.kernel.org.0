@@ -2,120 +2,125 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80DC6567032
-	for <lists+linux-block@lfdr.de>; Tue,  5 Jul 2022 16:04:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4650356730E
+	for <lists+linux-block@lfdr.de>; Tue,  5 Jul 2022 17:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231682AbiGEOE1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Jul 2022 10:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56062 "EHLO
+        id S232568AbiGEPrB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Jul 2022 11:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231797AbiGEOEO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Jul 2022 10:04:14 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874893885
-        for <linux-block@vger.kernel.org>; Tue,  5 Jul 2022 06:51:04 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id he28so13691690qtb.13
-        for <linux-block@vger.kernel.org>; Tue, 05 Jul 2022 06:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aXXqCO4eYEW7ihl1nkLRPlC9zfL+9NshKktoq8vfUqo=;
-        b=cDfN+bQczbdMb2leah0e/N44YCVFwIYBhS6uK2yvKAxV/VrnPHyc+hyWjNAaUg1PfL
-         kVcyYs7o5yY5RdPBbZ1Uy12G+gaOeGz7GPvyLzJpp7K+3AfzkxCHdfURo3kwOoQVGHsB
-         CgYT4nV/UQd7IrmpI3kE+7IkazWCK3VkAF/AOUDIg9vA84UJqgb+kOFEqstZkexFUiOW
-         t4uMNrJQXIZB/yeHytTtD8UoGO1NLRJoiAFfgFOvXzUbr67CkUchXLiOTkdsKPw7QrA5
-         0GMzIsPAHjhYnDnVJ1sJYE4BoAvaoerhS04hqo2hF28Qc0NfnJdWsyByjW3v2jzln7ab
-         r2qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aXXqCO4eYEW7ihl1nkLRPlC9zfL+9NshKktoq8vfUqo=;
-        b=4OD7Ga9Rc/j02j3zlG2Wc+zVb9JxNGW1GdUky9bPE/vlSgT/cjjd1cc9XQYsCu8M3a
-         9Io+iHPOt2/UNrayyBkqX7msT1BpeCjpQxueXA6nFafJPvrZpnoHI9eJ3acFvFwfT0sg
-         lQwYvVABAfi7Wbb7uq8oM+M7lVUoM012Q/P2xp4Ox46mXegVRIgI5iXvl1BoyRqQlTyz
-         NHkDLRYOLehDMjd/dL8qgfzO9VuiDquhEdRqBLqZkyJDcgCSmdnGhWWrBaX/qlPwbYKV
-         wDajMa0ZU4588wEHCW+9EmjqYo4Kh4CnhxgWVUAWySoBqc1KbueCEJ2bebo1MkGPDUiH
-         NYtA==
-X-Gm-Message-State: AJIora85rrNIILgNMwJ/6pj937Ux5qFKlM7MvhG2bheFo8W4+DjuUPQ7
-        iRC8e+DBvgBlt5c7fPUwXvNH2w==
-X-Google-Smtp-Source: AGRyM1tiQ1fXhmwo7QGB7JVrZMkNllap136sZt6NhU7vlDBe2k8co+srzJapO8MDIuFHQGrnlFDnUA==
-X-Received: by 2002:a05:6214:5005:b0:472:e6b0:1fb2 with SMTP id jo5-20020a056214500500b00472e6b01fb2mr12627413qvb.124.1657029063626;
-        Tue, 05 Jul 2022 06:51:03 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id f10-20020a05620a280a00b006a69d7f390csm27745242qkp.103.2022.07.05.06.51.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Jul 2022 06:51:02 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1o8ixC-006VQ4-6E; Tue, 05 Jul 2022 10:51:02 -0300
-Date:   Tue, 5 Jul 2022 10:51:02 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 20/21] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
-Message-ID: <20220705135102.GE23621@ziepe.ca>
-References: <20220615161233.17527-1-logang@deltatee.com>
- <20220615161233.17527-21-logang@deltatee.com>
- <20220629064854.GD17576@lst.de>
- <99242789-66a6-bbd2-b56a-e47891f4522e@deltatee.com>
- <20220629175906.GU23621@ziepe.ca>
- <20220705075108.GB17451@lst.de>
+        with ESMTP id S232415AbiGEPqP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Jul 2022 11:46:15 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51A41C10B
+        for <linux-block@vger.kernel.org>; Tue,  5 Jul 2022 08:46:08 -0700 (PDT)
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 265FDkhp013675
+        for <linux-block@vger.kernel.org>; Tue, 5 Jul 2022 08:46:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=xFgG8Xc6eIABxXYm/O+u+rzOX/O2jGRK+u7+j6UP5fA=;
+ b=N1oQETHku8zOM6DPcOmWmGdOLL8ChDBXFKdPJuwrYDUE0cjPmCl0wbo/i2QPucaMtHI3
+ DcZYfFkSl9V/SxvqYAw3MK6yCpMUoHRfwtw66LujtT+TyhbctSVOvKpQLK2d8QjDejpn
+ +UjaQIHyKnqBrBHUTi6MmI26wtdb1AklnUs= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3h2hbqrwe6-8
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Tue, 05 Jul 2022 08:46:08 -0700
+Received: from snc-exhub201.TheFacebook.com (2620:10d:c085:21d::7) by
+ snc-exhub101.TheFacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Tue, 5 Jul 2022 08:46:01 -0700
+Received: from twshared18317.08.ash9.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c085:21d::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Tue, 5 Jul 2022 08:45:33 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id 407A55C1F910; Tue,  5 Jul 2022 08:45:10 -0700 (PDT)
+From:   Keith Busch <kbusch@fb.com>
+To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>
+CC:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        "Keith Busch" <kbusch@kernel.org>
+Subject: [PATCH 1/3] block: ensure iov_iter advances for added pages
+Date:   Tue, 5 Jul 2022 08:45:04 -0700
+Message-ID: <20220705154506.2993693-1-kbusch@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220705075108.GB17451@lst.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: QqOayhV1a9PZ2y1G69FPZNNgOvTgPpWM
+X-Proofpoint-ORIG-GUID: QqOayhV1a9PZ2y1G69FPZNNgOvTgPpWM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-05_12,2022-06-28_01,2022-06-22_01
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jul 05, 2022 at 09:51:08AM +0200, Christoph Hellwig wrote:
+From: Keith Busch <kbusch@kernel.org>
 
-> But what also really matters here:  I don't want every user that
-> wants to be able to mmap a character device to do all this work.
-> The layering is simply wrong, it needs some character device
-> based helpers, not be open code everywhere.
+There are cases where a bio may not accept additional pages, and the iov
+needs to advance to the last data length that was accepted. The zone
+append used to handle this correctly, but was inadvertently broken when
+the setup was made common with the normal r/w case.
 
-I think alot (all?) cases would be happy if the inode was 1:1 with the
-cdev struct device. I suppose the cdev code would still have to create
-pseudo fs, but at least that is hidden.
+Fixes: 576ed9135489c ("block: use bio_add_page in bio_iov_iter_get_pages"=
+)
+Fixes: c58c0074c54c2 ("block/bio: remove duplicate append pages code")
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ block/bio.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> In fact I'm not even sure this should be a character device, it seems
-> to fit it way better with the PCI sysfs hierchacy, just like how we
-> map MMIO resources, which these are anyway.  And once it is on sysfs
-> we do have a uniqueue inode and need none of the pseudofs stuff, and
-> don't need all the glue code in nvme either.
+diff --git a/block/bio.c b/block/bio.c
+index 933ea3210954..fdd58461b78f 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1211,6 +1211,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
+, struct iov_iter *iter)
+ 	ssize_t size, left;
+ 	unsigned len, i;
+ 	size_t offset;
++	int ret =3D 0;
+=20
+ 	/*
+ 	 * Move page array up in the allocated memory for the bio vecs as far a=
+s
+@@ -1235,7 +1236,6 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
+, struct iov_iter *iter)
+=20
+ 	for (left =3D size, i =3D 0; left > 0; left -=3D len, i++) {
+ 		struct page *page =3D pages[i];
+-		int ret;
+=20
+ 		len =3D min_t(size_t, PAGE_SIZE - offset, left);
+ 		if (bio_op(bio) =3D=3D REQ_OP_ZONE_APPEND)
+@@ -1246,13 +1246,13 @@ static int __bio_iov_iter_get_pages(struct bio *b=
+io, struct iov_iter *iter)
+=20
+ 		if (ret) {
+ 			bio_put_pages(pages + i, left, offset);
+-			return ret;
++			break;
+ 		}
+ 		offset =3D 0;
+ 	}
+=20
+-	iov_iter_advance(iter, size);
+-	return 0;
++	iov_iter_advance(iter, size - left);
++	return ret;
+ }
+=20
+ /**
+--=20
+2.30.2
 
-Shouldn't there be an allocator here? It feels a bit weird that the
-entire CMB is given to a single process, it is a sharable resource,
-isn't it?
-
-Jason
