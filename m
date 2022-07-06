@@ -2,160 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2767E567EEE
-	for <lists+linux-block@lfdr.de>; Wed,  6 Jul 2022 08:50:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BD7A567F49
+	for <lists+linux-block@lfdr.de>; Wed,  6 Jul 2022 09:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbiGFGt5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 6 Jul 2022 02:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45456 "EHLO
+        id S230298AbiGFHDz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 6 Jul 2022 03:03:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiGFGt4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 6 Jul 2022 02:49:56 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2BC14D0B
-        for <linux-block@vger.kernel.org>; Tue,  5 Jul 2022 23:49:54 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Ld96w6hD5zTgRB;
-        Wed,  6 Jul 2022 14:46:16 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 6 Jul 2022 14:49:39 +0800
-Received: from huawei.com (10.175.127.227) by kwepemm600010.china.huawei.com
- (7.193.23.86) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 6 Jul
- 2022 14:49:38 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <linux-block@vger.kernel.org>, <shinichiro.kawasaki@wdc.com>
-CC:     <sunke32@huawei.com>
-Subject: [PATCH blktests] nbd: add a module install and device connect test
-Date:   Wed, 6 Jul 2022 15:02:09 +0800
-Message-ID: <20220706070209.1494417-1-sunke32@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S229849AbiGFHDz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 6 Jul 2022 03:03:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8AA5D5A;
+        Wed,  6 Jul 2022 00:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=FNPTWfp4mk8fJGbONDFfJNnSLRYFpC010l13Y9aXWQ8=; b=z7xVdIuu3H3x41dq61eVCF6X7P
+        203Nf5e3o9KTwJfCIvCVaL8+2rLtAVD8zjUk/8/hdo+lBP2H+O+VZVp/EOSBA04QIYA9q+UGm+ndF
+        Htzq08g7menFmb/WuDB/KD6PPbugjJgZrxFcTEn0CqoRhON7oQrd+2Z3USZhLb7QLOUKOQ59CYzV1
+        z+U29+jL50yR0+H411LiPbBYF/GzpkFWcl5p4LKWOW+YtL6dJcPwW4mDcIFmK6dqtJ+uWxD7lBWVm
+        l03L6e5LbsqY7HutLnmStnt2d5TEIx+8o8WH53OxTRmodpUMhUc52NZIJR1dDeJe7mCIGEqhN4DND
+        cP3JEVVA==;
+Received: from [2001:4bb8:189:3c4a:f22c:c36a:4e84:c723] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o8z4i-006uoJ-K5; Wed, 06 Jul 2022 07:03:53 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: clean up zoned device information v2
+Date:   Wed,  6 Jul 2022 09:03:34 +0200
+Message-Id: <20220706070350.1703384-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is a regression test for commit 06c4da89c24e
-nbd: call genl_unregister_family() first in nbd_cleanup()
+Hi all,
 
-Two concurrent processes，one install and uninstall nbd module
-cyclically, the other one connect and disconnect nbd device cyclically.
-Last for 10 seconds.
+this cleans up the block layer zoned device information APIs and
+moves all fields currently in the request_queue to the gendisk as
+they aren't relevant for passthrough I/O.
 
-Signed-off-by: Sun Ke <sunke32@huawei.com>
----
- tests/nbd/004     | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/nbd/004.out |  2 ++
- tests/nbd/rc      | 18 ++++++++++++++++++
- 3 files changed, 72 insertions(+)
- create mode 100755 tests/nbd/004
- create mode 100644 tests/nbd/004.out
+Changes since v1:
+ - drop the blk-zoned/nvmet code sharing for now
+ - use a helper a little earlier
+ - various spelling fixes
 
-diff --git a/tests/nbd/004 b/tests/nbd/004
-new file mode 100755
-index 0000000..8c23425
---- /dev/null
-+++ b/tests/nbd/004
-@@ -0,0 +1,52 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2022 Sun Ke
-+#
-+# Regression test for commit 06c4da89c24e
-+# nbd: call genl_unregister_family() first in nbd_cleanup()
-+
-+. tests/nbd/rc
-+
-+DESCRIPTION="module install/uninstall concurrently with connect/disconnect"
-+QUICK=1
-+
-+requires() {
-+	_have_nbd
-+}
-+
-+module_install_and_remove() {
-+	while true; do
-+		modprobe nbd >/dev/null 2>&1
-+		modprobe -r nbd >/dev/null 2>&1
-+	done
-+}
-+
-+connect_and_disconnect() {
-+	while true; do
-+		_netlink_connect >/dev/null 2>&1
-+		_netlink_disconnect >/dev/null 2>&1
-+	done
-+}
-+
-+test() {
-+	echo "Running ${TEST_NAME}"
-+
-+	_start_nbd_server_netlink
-+
-+	module_install_and_remove &
-+	pid1=$!
-+	connect_and_disconnect &
-+	pid2=$!
-+
-+	sleep 10
-+	{
-+		kill -9 $pid1
-+		wait $pid1
-+		kill -9 $pid2
-+		wait $pid2
-+	} 2>/dev/null
-+
-+	_stop_nbd_server_netlink
-+	echo "Test complete"
-+}
-+
-diff --git a/tests/nbd/004.out b/tests/nbd/004.out
-new file mode 100644
-index 0000000..05ced0c
---- /dev/null
-+++ b/tests/nbd/004.out
-@@ -0,0 +1,2 @@
-+Running nbd/004
-+Test complete
-diff --git a/tests/nbd/rc b/tests/nbd/rc
-index 118553c..b0e7d91 100644
---- a/tests/nbd/rc
-+++ b/tests/nbd/rc
-@@ -76,3 +76,21 @@ _stop_nbd_server() {
- 	rm -f "${TMPDIR}/nbd.pid"
- 	rm -f "${TMPDIR}/export"
- }
-+
-+_start_nbd_server_netlink() {
-+	truncate -s 10G "${TMPDIR}/export"
-+	nbd-server 8000 "${TMPDIR}/export" >/dev/null 2>&1
-+}
-+
-+_stop_nbd_server_netlink() {
-+	killall -SIGTERM nbd-server
-+	rm -f "${TMPDIR}/export"
-+}
-+
-+_netlink_connect() {
-+	nbd-client localhost 8000 /dev/nbd0 >> "$FULL" 2>&1
-+}
-+
-+_netlink_disconnect() {
-+	nbd-client -d /dev/nbd0 >> "$FULL" 2>&1
-+}
--- 
-2.13.6
-
+Diffstat:
+ block/bio.c                    |    2 
+ block/blk-core.c               |   13 +--
+ block/blk-merge.c              |    2 
+ block/blk-mq-debugfs-zoned.c   |    6 -
+ block/blk-mq.c                 |    2 
+ block/blk-mq.h                 |   18 ++---
+ block/blk-settings.c           |   11 +--
+ block/blk-sysfs.c              |    8 --
+ block/blk-zoned.c              |   85 ++++++++++++------------
+ block/blk.h                    |    8 +-
+ block/genhd.c                  |    1 
+ block/ioctl.c                  |    2 
+ block/partitions/core.c        |    2 
+ drivers/block/null_blk/zoned.c |    8 +-
+ drivers/md/dm-table.c          |    6 -
+ drivers/md/dm-zone.c           |   86 +++++++++++-------------
+ drivers/md/dm-zoned-target.c   |   25 +++----
+ drivers/md/dm.c                |    2 
+ drivers/nvme/host/multipath.c  |    2 
+ drivers/nvme/host/zns.c        |    6 -
+ drivers/nvme/target/zns.c      |   14 +--
+ drivers/scsi/sd.c              |    6 -
+ drivers/scsi/sd_zbc.c          |   10 +-
+ fs/zonefs/super.c              |   17 ++--
+ include/linux/blk-mq.h         |    8 +-
+ include/linux/blkdev.h         |  144 +++++++++++++++--------------------------
+ 26 files changed, 227 insertions(+), 267 deletions(-)
