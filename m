@@ -2,164 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DFD15698DF
-	for <lists+linux-block@lfdr.de>; Thu,  7 Jul 2022 05:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B9BD569975
+	for <lists+linux-block@lfdr.de>; Thu,  7 Jul 2022 06:49:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235001AbiGGDns (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 6 Jul 2022 23:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57026 "EHLO
+        id S235007AbiGGEtX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 Jul 2022 00:49:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbiGGDnr (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 6 Jul 2022 23:43:47 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062502FFD2
-        for <linux-block@vger.kernel.org>; Wed,  6 Jul 2022 20:43:46 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LdhzT4QVyzcmyc;
-        Thu,  7 Jul 2022 11:41:41 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 7 Jul 2022 11:43:44 +0800
-Received: from huawei.com (10.175.127.227) by kwepemm600010.china.huawei.com
- (7.193.23.86) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 7 Jul
- 2022 11:43:43 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <linux-block@vger.kernel.org>, <shinichiro.kawasaki@wdc.com>
-CC:     <sunke32@huawei.com>, <hch@infradead.org>
-Subject: [PATCH blktests v2] nbd: add a module load and device connect test
-Date:   Thu, 7 Jul 2022 11:56:10 +0800
-Message-ID: <20220707035610.3175550-1-sunke32@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S235011AbiGGEtA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Jul 2022 00:49:00 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709C631DF7
+        for <linux-block@vger.kernel.org>; Wed,  6 Jul 2022 21:47:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=msiY5ulhhPfEaqSn9xyI2Cdraep9Ia+p0gPBkqmdojw=; b=BJQnsE8V877/GSIyFpX6h2bXQz
+        SG+s17Lx4I1mbvkfx3efMlctsamFp3Ot+Z5FIXP+nAGNrBKqxws27fPkSsoKtl0iCJRSTWDMmP5j3
+        OaQgxiuhKMsNFM+XX+x1vNa/EtiyFX9YPm8R4m5G0bKDLktqogA44xu3EGVVfsX3Kqf7eulPLxwGK
+        +0+uBtF9c20l2HoHFQ7krkhcphZLfjVtaPJoaqJy8bKTaVL632rM+jn96VluvOCzepfKvVuFU1UzY
+        +ODQbMbcJQVJNEIJ/h//paoJgxn4xXsibBQ23qI0dhT0VmLkRClZhXlSp9CHeZr0D86cwd8jpGy2Q
+        wtZjTxaA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o9JQ7-00DXvx-8t; Thu, 07 Jul 2022 04:47:19 +0000
+Date:   Wed, 6 Jul 2022 21:47:19 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mike Snitzer <snitzer@kernel.org>
+Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org
+Subject: Re: [5.20 PATCH v3 1/2] dm: add bio_rewind() API to DM core
+Message-ID: <YsZlV9x6McVEEi64@infradead.org>
+References: <20220706174403.79317-1-snitzer@kernel.org>
+ <20220706174403.79317-2-snitzer@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220706174403.79317-2-snitzer@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This is a regression test for commit 06c4da89c24e
-nbd: call genl_unregister_family() first in nbd_cleanup()
-
-Two concurrent processes，one load and unlock nbd module
-cyclically, the other one connect and disconnect nbd device cyclically.
-Last for 10 seconds.
-
-Signed-off-by: Sun Ke <sunke32@huawei.com>
----
-v1->v2: 
-1.change install/uninstall to load/unlock
-2.use _have_modules instead
-
- tests/nbd/004     | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/nbd/004.out |  2 ++
- tests/nbd/rc      | 18 ++++++++++++++++++
- 3 files changed, 72 insertions(+)
- create mode 100755 tests/nbd/004
- create mode 100644 tests/nbd/004.out
-
-diff --git a/tests/nbd/004 b/tests/nbd/004
-new file mode 100755
-index 0000000..6b2c5ff
---- /dev/null
-+++ b/tests/nbd/004
-@@ -0,0 +1,52 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2022 Sun Ke
-+#
-+# Regression test for commit 06c4da89c24e
-+# nbd: call genl_unregister_family() first in nbd_cleanup()
-+
-+. tests/nbd/rc
-+
-+DESCRIPTION="module load/unlock concurrently with connect/disconnect"
-+QUICK=1
-+
-+requires() {
-+	_have_modules
-+}
-+
-+module_load_and_unlock() {
-+	while true; do
-+		modprobe nbd >/dev/null 2>&1
-+		modprobe -r nbd >/dev/null 2>&1
-+	done
-+}
-+
-+connect_and_disconnect() {
-+	while true; do
-+		_netlink_connect >/dev/null 2>&1
-+		_netlink_disconnect >/dev/null 2>&1
-+	done
-+}
-+
-+test() {
-+	echo "Running ${TEST_NAME}"
-+
-+	_start_nbd_server_netlink
-+
-+	module_load_and_unlock &
-+	pid1=$!
-+	connect_and_disconnect &
-+	pid2=$!
-+
-+	sleep 10
-+	{
-+		kill -9 $pid1
-+		wait $pid1
-+		kill -9 $pid2
-+		wait $pid2
-+	} 2>/dev/null
-+
-+	_stop_nbd_server_netlink
-+	echo "Test complete"
-+}
-+
-diff --git a/tests/nbd/004.out b/tests/nbd/004.out
-new file mode 100644
-index 0000000..05ced0c
---- /dev/null
-+++ b/tests/nbd/004.out
-@@ -0,0 +1,2 @@
-+Running nbd/004
-+Test complete
-diff --git a/tests/nbd/rc b/tests/nbd/rc
-index 118553c..b0e7d91 100644
---- a/tests/nbd/rc
-+++ b/tests/nbd/rc
-@@ -76,3 +76,21 @@ _stop_nbd_server() {
- 	rm -f "${TMPDIR}/nbd.pid"
- 	rm -f "${TMPDIR}/export"
- }
-+
-+_start_nbd_server_netlink() {
-+	truncate -s 10G "${TMPDIR}/export"
-+	nbd-server 8000 "${TMPDIR}/export" >/dev/null 2>&1
-+}
-+
-+_stop_nbd_server_netlink() {
-+	killall -SIGTERM nbd-server
-+	rm -f "${TMPDIR}/export"
-+}
-+
-+_netlink_connect() {
-+	nbd-client localhost 8000 /dev/nbd0 >> "$FULL" 2>&1
-+}
-+
-+_netlink_disconnect() {
-+	nbd-client -d /dev/nbd0 >> "$FULL" 2>&1
-+}
--- 
-2.13.6
+If this now lives in dm (which I'm not really sold on, but I guess it
+is the way forward..), can you please give the functions dm_ prefixes?
 
