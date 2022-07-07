@@ -2,107 +2,127 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20FEA56AA20
-	for <lists+linux-block@lfdr.de>; Thu,  7 Jul 2022 19:58:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 597EB56AD05
+	for <lists+linux-block@lfdr.de>; Thu,  7 Jul 2022 22:54:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231572AbiGGR6R (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 7 Jul 2022 13:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60696 "EHLO
+        id S236145AbiGGUyQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 Jul 2022 16:54:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230313AbiGGR6R (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Jul 2022 13:58:17 -0400
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C18B153D24
-        for <linux-block@vger.kernel.org>; Thu,  7 Jul 2022 10:58:16 -0700 (PDT)
-Received: by mail-pg1-f170.google.com with SMTP id 145so19850879pga.12
-        for <linux-block@vger.kernel.org>; Thu, 07 Jul 2022 10:58:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ho4YF1TF5QwEy3FU6og3Bg4EnhPBQa43lL1RvxN+E5g=;
-        b=ezRAvyiPH7dVEYpDDOceRookRhXvAF4FXFJM8lWz+VZJSc2NwnnAzcRU0el3Apo70E
-         ymfHO+8zCAH7H7EM7aOwft2gO331DH3JJrd4DLzY6/T5+AiHEULRTUNLveM4RvDNZ3Cl
-         597divz/IDib764O7BmtsLCiBpyVPtIQjTUp95FnQalAZ/WKz3XQkVF2DBjRKWWuvhNM
-         elZCGZLuIyTCMWndaxOttyC4nzr7EdAXEqSSlQXjPGiUeGFKjMtXF0IDUaPEpQUPd11A
-         W3eXElwBKWH6rEMULSivJclrivZIYHt2yhjyusocp/XxPrW/J1YMotFe586LkXGrXySW
-         X9fA==
-X-Gm-Message-State: AJIora8fzWKSwN9uHMEyxme2E6uBrQMaG1+1nr7QTH6YAYZnq/n9uc8p
-        99sd7/90prpsztJuQs/zHph1+62rkhE=
-X-Google-Smtp-Source: AGRyM1sIJUSJ94mEBYgSIfnu0RucK6RiN99TzBxpMgeQO38xscYH2k8biS1i8hjCMNLFhRYRXJWZMw==
-X-Received: by 2002:a17:90b:390d:b0:1ed:3058:45e5 with SMTP id ob13-20020a17090b390d00b001ed305845e5mr6448681pjb.141.1657216696183;
-        Thu, 07 Jul 2022 10:58:16 -0700 (PDT)
-Received: from ?IPV6:2601:647:4000:d7:feaa:14ff:fe9d:6dbd? ([2601:647:4000:d7:feaa:14ff:fe9d:6dbd])
-        by smtp.gmail.com with ESMTPSA id k3-20020aa792c3000000b005252680aa30sm27085915pfa.3.2022.07.07.10.58.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Jul 2022 10:58:15 -0700 (PDT)
-Message-ID: <ef46a115-62eb-2fa5-5e7c-264be950bda8@acm.org>
-Date:   Thu, 7 Jul 2022 10:58:13 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2 63/63] fs/zonefs: Use the enum req_op type for request
- operations
+        with ESMTP id S236497AbiGGUyO (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Jul 2022 16:54:14 -0400
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D5AC2ED6D
+        for <linux-block@vger.kernel.org>; Thu,  7 Jul 2022 13:54:12 -0700 (PDT)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220707205408usoutp014a35be4ef1f304cc8f90130eccc7be78~-p2blxZK51458514585usoutp01g;
+        Thu,  7 Jul 2022 20:54:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220707205408usoutp014a35be4ef1f304cc8f90130eccc7be78~-p2blxZK51458514585usoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1657227248;
+        bh=OTaFPl7pNfjbVQIasNX4U8UhTKJbeXyDaRbKTsVUEiw=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=q/ED6PiQtTe8XzxhiDYIzxUV3eqiuufRPic2jcdjZ20AQoT8tk9rW9imEJTTKG4VO
+         WjVVd7de7kxPoFIZuR6Lqp1dou/O4bBplIVWHyj6HeNIURhDOH9SuhV1Mj9fyUXjED
+         pNYswkOhxHMji8pObQeJfGdeOD9CHZ90rOWSP77c=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220707205408uscas1p24b90336c0e1c7971f745b442df9c15ad~-p2bZ9gHS0168401684uscas1p2K;
+        Thu,  7 Jul 2022 20:54:08 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id 46.C8.09642.FE747C26; Thu, 
+        7 Jul 2022 16:54:08 -0400 (EDT)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220707205407uscas1p10e5bf9f9758dc5acfa3712c3f3c848c6~-p2bCx8jw0573005730uscas1p1U;
+        Thu,  7 Jul 2022 20:54:07 +0000 (GMT)
+X-AuditID: cbfec36f-c15ff700000025aa-fd-62c747ef492c
+Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 9F.BC.52349.FE747C26; Thu, 
+        7 Jul 2022 16:54:07 -0400 (EDT)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Thu, 7 Jul 2022 13:54:06 -0700
+Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
+        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Thu,
+        7 Jul 2022 13:54:06 -0700
+From:   Vincent Fu <vincent.fu@samsung.com>
+To:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+CC:     "gost.dev@samsung.com" <gost.dev@samsung.com>,
+        Vincent Fu <vincent.fu@samsung.com>
+Subject: [PATCH 0/2] null_blk: harmonize some module parameter and configfs
+ options
+Thread-Topic: [PATCH 0/2] null_blk: harmonize some module parameter and
+        configfs options
+Thread-Index: AQHYkkOy2ZlLii6YFkuT20APqeTVuw==
+Date:   Thu, 7 Jul 2022 20:54:06 +0000
+Message-ID: <20220707205401.81664-1-vincent.fu@samsung.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>
-References: <20220629233145.2779494-1-bvanassche@acm.org>
- <20220629233145.2779494-64-bvanassche@acm.org>
- <f42c76ef-ae9a-71ee-e1e0-1aa3cbbad154@opensource.wdc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <f42c76ef-ae9a-71ee-e1e0-1aa3cbbad154@opensource.wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEIsWRmVeSWpSXmKPExsWy7djX87of3I8nGcx7wGSx+m4/m8XeW9oO
+        TB6Xz5Z6fN4kF8AUxWWTkpqTWZZapG+XwJXRN+UsS0ErS8XNRetZGhiXMHcxcnJICJhIHNh4
+        lQnEFhJYySixYHJAFyMXkN3KJLF9zRYWmKI9v/ewQhStZZSYetMSougjo8TX93dYIJyljBKX
+        Dy9n7GLk4GAT0JR4u78ApEFEIE3ixJUV7CA2s0CERPOCeWCbhQVCJdoP/2EHKRcRiJLY9qEE
+        wtSTOHk+C6SCRUBFonNqC9gJvALWEh9u3WIEsRkFxCS+n1rDBDFRXOLWk/lMEGcKSiyavQfq
+        LzGJf7seskHYihL3v7+EukBP4sbUKWwQtrbEsoWvmSHmC0qcnPkE6l1JiYMrboB9JSHwlV2i
+        89lPqEEuEn0rdrFD2NISV69PZYYoameUmLvxC1T3BEaJ60+kIGxriX+d16A280n8/fUIHDwS
+        ArwSHW1CExiVZiH5YRaS+2YhuW8WkvsWMLKsYhQvLS7OTU8tNspLLdcrTswtLs1L10vOz93E
+        CEwWp/8dzt/BeP3WR71DjEwcjIcYJTiYlUR445WPJwnxpiRWVqUW5ccXleakFh9ilOZgURLn
+        XZa5IVFIID2xJDU7NbUgtQgmy8TBKdXAFPZ3rY5lu/GmuTpF3O9r8nwavuqdjtrUoB5fuFTq
+        Z9dL/8xX16+6Xef4aeywfPOM547VO6bf6st/++qSixKPSs3C6K69TT3x631uZK+LtuAqmlpi
+        /D5jM1fq7yOey3z0zzlxthU+WjEpk/12lJ9F6b64Cw/5JlRFx/js3Si9bv87ZsHiQyqqWhf3
+        lcu923h9l+AV6dx7y5eqzV740Lt95qENOnPlFl9VSjm50q/0x2zLz/tkmzcsnhrkUdcx3+/K
+        57Q5xvUpvv3d92IXvmu4e0DA953Kq1kb7k96+Vl65a2C5qd1U+8u3rZwm1b3+q+rHa7yfp1/
+        1dDLVmj523cP1vq+nPZie16qzUn2ju5ThWFKLMUZiYZazEXFiQDjam9ehQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsWS2cA0Sfe9+/Ekg+X7lCxW3+1ns9h7S9uB
+        yePy2VKPz5vkApiiuGxSUnMyy1KL9O0SuDL6ppxlKWhlqbi5aD1LA+MS5i5GTg4JAROJPb/3
+        sHYxcnEICaxmlOh/0sEM4XxklOi5MZkRpEpIYCmjxN4fVV2MHBxsApoSb/cXgIRFBNIkTlxZ
+        wQ5iMwtESDQvmAc2VFggVKL98B92iJooiYP9UxhBWkUE9CROns8CCbMIqEh0Tm1hAbF5Bawl
+        Pty6BbaJUUBM4vupNUwQI8Ulbj2ZzwRxp4DEkj3noW4WlXj5+B8rhK0ocf/7S6gT9CRuTJ3C
+        BmFrSyxb+JoZYr6gxMmZT1gg6iUlDq64wTKBUXQWkhWzkLTPQtI+C0n7AkaWVYzipcXFuekV
+        xYZ5qeV6xYm5xaV56XrJ+bmbGIExcvrf4cgdjEdvfdQ7xMjEwXiIUYKDWUmEN175eJIQb0pi
+        ZVVqUX58UWlOavEhRmkOFiVxXiHXifFCAumJJanZqakFqUUwWSYOTqkGpjyHS17uaw7W+un/
+        6TsVl6wT7KP7VaNk6vZTzE03LNZ+btmx7KiytVDlDk3++9uurvQ0/eua8yY5ymDdnNuBssxe
+        9sK72Sdz164oitcOXWIgue7P44i/LTezWI4KKS3793HvG+6ff1eqe23rfV24p8C0mXGR5q3u
+        5o/ltX+4vDevWWsWH357gX2VcR8D49tXqs9XPz6/YcFfiRgZ25Xqs7S2b91yJE7o0LT8p43M
+        eyKztJmE5M/OSDP+cCls0TWWlDSPzGWOk7x4LXj28X82ecF7ZILa5aO2N25XLz+79/Cct1UP
+        7WbO/G8naJrTdecQ7+zk1W9EWpLP3HfZwLZ/trVMUta6gs63BZbmnk2HjymxFGckGmoxFxUn
+        AgCOfPZwAAMAAA==
+X-CMS-MailID: 20220707205407uscas1p10e5bf9f9758dc5acfa3712c3f3c848c6
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20220707205407uscas1p10e5bf9f9758dc5acfa3712c3f3c848c6
+References: <CGME20220707205407uscas1p10e5bf9f9758dc5acfa3712c3f3c848c6@uscas1p1.samsung.com>
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/30/22 16:39, Damien Le Moal wrote:
-> On 6/30/22 08:31, Bart Van Assche wrote:
->> Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
->> Cc: Naohiro Aota <naohiro.aota@wdc.com>
->> Cc: Johannes Thumshirn <jth@kernel.org>
->> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
->> ---
->>   fs/zonefs/trace.h | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/fs/zonefs/trace.h b/fs/zonefs/trace.h
->> index 21501da764bd..42edcfd393ed 100644
->> --- a/fs/zonefs/trace.h
->> +++ b/fs/zonefs/trace.h
->> @@ -25,7 +25,7 @@ TRACE_EVENT(zonefs_zone_mgmt,
->>   	    TP_STRUCT__entry(
->>   			     __field(dev_t, dev)
->>   			     __field(ino_t, ino)
->> -			     __field(int, op)
->> +			     __field(enum req_op, op)
->>   			     __field(sector_t, sector)
->>   			     __field(sector_t, nr_sectors)
->>   	    ),
-> 
-> Nit: the patch title could be more to the point, E.g.
-> 
-> fs/zonefs: Use the enum req_op type for zone operation trace events
-> 
-> Otherwise, looks good.
-> 
-> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+These patches add plumbing to allow some options that could formerly only b=
+e
+set via module parameters to now be set via configfs and vice versa.
 
-How about using the title "fs/zonefs: Use the enum req_op type for 
-tracing request operations"?
+Vincent Fu (2):
+  null_blk: add module parameters for 4 options
+  null_blk: add configfs variables for 2 options
 
-Thanks,
+ Documentation/block/null_blk.rst  | 22 ++++++++++++++++++
+ drivers/block/null_blk/main.c     | 38 ++++++++++++++++++++++++++++---
+ drivers/block/null_blk/null_blk.h |  2 ++
+ 3 files changed, 59 insertions(+), 3 deletions(-)
 
-Bart.
+--=20
+2.25.1
