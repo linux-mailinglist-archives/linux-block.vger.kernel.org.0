@@ -2,226 +2,215 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C69D56BF83
-	for <lists+linux-block@lfdr.de>; Fri,  8 Jul 2022 20:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4612256BFAC
+	for <lists+linux-block@lfdr.de>; Fri,  8 Jul 2022 20:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239334AbiGHQvX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 Jul 2022 12:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
+        id S238664AbiGHRuC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 Jul 2022 13:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239216AbiGHQvR (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Jul 2022 12:51:17 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E462272EC9;
-        Fri,  8 Jul 2022 09:51:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Cc:To:From:content-disposition;
-        bh=8e834mcfkj5DyYp2F7UpIZpl608YuXQCo9cN4RiJA8E=; b=WQyaLzDGqtTKF10L2+k70xp9Zo
-        NYO4sof7irrsBjsiQVjw1cHzkTxZgXB1h5a5O6NMRW89IIoXRNEpVv7KFcBTW6j1OvJcmHsLoJCxn
-        /mEJsikT4B81IGCKUlRCAWy1fZAyQtibqwdtEx9aZxIEgxlSPuXnj12feUz+Be1smzXTtG3cMnLpr
-        dTw46g/FTQ55xAU5+nCGsBrSJ/7qPQcXPPeoZynV3DebYjPLYCOff7+AaQKaksgShCUC08bgOokwT
-        J0OuyWraBgjmAEa2EuGyOYPvCqb2K1T55hrlC5reJaTouQYCjCr2r5r2JIgBk9y/EtpL+8b/QMTdL
-        ELRV/teQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1o9rCD-009xkH-83; Fri, 08 Jul 2022 10:51:14 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1o9rCB-0001KT-5B; Fri, 08 Jul 2022 10:51:11 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        iommu@lists.linux.dev
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>
-Date:   Fri,  8 Jul 2022 10:51:04 -0600
-Message-Id: <20220708165104.5005-14-logang@deltatee.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220708165104.5005-1-logang@deltatee.com>
-References: <20220708165104.5005-1-logang@deltatee.com>
+        with ESMTP id S239093AbiGHRuB (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Jul 2022 13:50:01 -0400
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 929F12A406
+        for <linux-block@vger.kernel.org>; Fri,  8 Jul 2022 10:49:57 -0700 (PDT)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20220708174952usoutp010ee5fc66c9c3f9f88031428793a34f71~-6_1X5Wqo1314813148usoutp01y;
+        Fri,  8 Jul 2022 17:49:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20220708174952usoutp010ee5fc66c9c3f9f88031428793a34f71~-6_1X5Wqo1314813148usoutp01y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1657302592;
+        bh=dKvuV+Vke9yXzQKdji7pOnqSjxR/gIZILkZLC2ZX7nY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=ov7wI++3oKFVHgVVVr1OWjXQpnXyAbyPBIj9Bfmw2qj+FwdHac801ubbHQP4LpUon
+         IVGY3pnH7UDu8CYV/nNo4nMdDAJtIqifoWBLQUzZVFngXnGU28Uz7q26aTWbXmonUH
+         Pl1yXgF3CsSwB3k68IaGELhOOakpilgYGjRJy33s=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20220708174952uscas1p1beacdaeb81d1979499f9ffc9786c3244~-6_1RZf8e0960309603uscas1p1H;
+        Fri,  8 Jul 2022 17:49:52 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id DF.19.09642.04E68C26; Fri, 
+        8 Jul 2022 13:49:52 -0400 (EDT)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+        [203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220708174952uscas1p25f5532b41eb96fe2ddc7a1a06b1a78af~-6_1Ag0pF2800328003uscas1p2W;
+        Fri,  8 Jul 2022 17:49:52 +0000 (GMT)
+X-AuditID: cbfec36f-bfdff700000025aa-d3-62c86e405aee
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 96.29.57470.F3E68C26; Fri, 
+        8 Jul 2022 13:49:51 -0400 (EDT)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Fri, 8 Jul 2022 10:49:50 -0700
+Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
+        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Fri,
+        8 Jul 2022 10:49:50 -0700
+From:   Vincent Fu <vincent.fu@samsung.com>
+To:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+CC:     "gost.dev@samsung.com" <gost.dev@samsung.com>,
+        Vincent Fu <vincent.fu@samsung.com>
+Subject: [PATCH for-next v2 2/2] null_blk: add configfs variables for 2
+ options
+Thread-Topic: [PATCH for-next v2 2/2] null_blk: add configfs variables for 2
+        options
+Thread-Index: AQHYkvMe9xNxCgftmEOX50bAHtW65Q==
+Date:   Fri, 8 Jul 2022 17:49:49 +0000
+Message-ID: <20220708174943.87787-3-vincent.fu@samsung.com>
+In-Reply-To: <20220708174943.87787-1-vincent.fu@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, iommu@lists.linux.dev, sbates@raithlin.com, hch@lst.de, jgg@ziepe.ca, christian.koenig@amd.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, logang@deltatee.com, bhelgaas@google.com, jhubbard@nvidia.com, rcampbell@nvidia.com, jgg@nvidia.com, mgurtovoy@nvidia.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOIsWRmVeSWpSXmKPExsWy7djX87oOeSeSDOZeE7JYfbefzWLvLW0H
+        Jo/LZ0s9Pm+SC2CK4rJJSc3JLEst0rdL4MpYN7ePuWChdMWDL8eYGhh3incxcnJICJhIbPl+
+        jK2LkYtDSGAlo8Tn/12sEE4rk8Sc1qmMMFV9N34xQiTWMkrcXNXDDuF8ZJRo/jIVqn8po8TG
+        U4eZuhg5ONgENCXe7i8A6RYRSJM4cWUFO4jNLBAh0bxgHjOILSwQKDF/ewc7RE2YxOWFb9kg
+        bD2J9gfbmEBsFgEVidb/R1hBbF4Ba4kT11+AXcQpYCNx+9ZvFhCbUUBM4vupNUwQ88Ulbj2Z
+        zwRxtaDEotl7mCFsMYl/ux6yQdiKEve/v4S6R0/ixtQpbBC2tsSyha+ZIXYJSpyc+YQFol5S
+        4uCKGywgP0oIdHJIXL3cBDXIRWLSih1QC6Ql/t5dxgRR1M4oMXfjF6juCYwS159IQdjWEv86
+        r0Ft5pP4++sR4wRG5VlIDp+F5KhZSI6aheSoBYwsqxjFS4uLc9NTi43yUsv1ihNzi0vz0vWS
+        83M3MQLTxul/h/N3MF6/9VHvECMTB+MhRgkOZiUR3njl40lCvCmJlVWpRfnxRaU5qcWHGKU5
+        WJTEeZdlbkgUEkhPLEnNTk0tSC2CyTJxcEo1MDlGScznUS4zeZx01TR0x7G+/p/6NZemnk/x
+        iLyuM2XiKukmmdsPzppqPrun7vUgde+Tmc98G1bzeT/ttBKKsZwzSfVtyaE7x94L7NsmciFj
+        wyETs/0pNedmStQ8XaijqnskK+poxoqyQ44TFU9t8OD2FfRf822X3aH2Xz79H6tmNs+2nS/o
+        VvVg0R62zo5e2VdfGpkuurmlfHZbEJ7h+fMT00uLt2IKz7f5B1RfkMrk022f9LCC5eR8h/1G
+        KREy81VXMXYb/M9TL3t/1+7Muwk2T24KxnDN57p48LP03aroh87zD9h+vW5klBoqWprwNX33
+        cTbPbx0my8UeXXq6I2mtqKfdprRHly+qfmt58U2JpTgj0VCLuag4EQAsVIkRigMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LJbGCapGufdyLJ4OFZG4vVd/vZLPbe0nZg
+        8rh8ttTj8ya5AKYoLpuU1JzMstQifbsErox1c/uYCxZKVzz4coypgXGneBcjJ4eEgIlE341f
+        jF2MXBxCAqsZJWa/2AflfGSUmHnpKhuEs5RRYsafr0AOBwebgKbE2/0FIN0iAmkSJ66sYAex
+        mQUiJJoXzGMGsYUFAiXmb+9gh6gJk/i0eR4rhK0n0f5gGxOIzSKgItH6/whYnFfAWuLE9ReM
+        ILYQkH1z9gY2EJtTwEbi9q3fLCA2o4CYxPdTa5ggdolL3HoynwniAwGJJXvOM0PYohIvH/9j
+        hbAVJe5/fwl1m57EjalT2CBsbYllC18zQ+wVlDg58wkLRL2kxMEVN1gmMIrPQrJiFpL2WUja
+        ZyFpX8DIsopRvLS4ODe9otgoL7Vcrzgxt7g0L10vOT93EyMwrk7/Oxy9g/H2rY96hxiZOBgP
+        MUpwMCuJ8MYrH08S4k1JrKxKLcqPLyrNSS0+xCjNwaIkzvsyamK8kEB6YklqdmpqQWoRTJaJ
+        g1Oqganu1efjhT9ft1ZO4nM86iApOf321L+/P0snr+PW564xjBDY4fD+5Ylzknl8xzKePvus
+        2/56+q/D5+fplFQ3Rnj/k3M4988kQfrWmtKvOaYfjX/WNdbsW/E3ae/1BYkpi9L6Sry5DVmX
+        tym84A9dZfo6s3ZRjoqdVtus8Lw/yiWHzxefmPpzwoYdUtpfrt8stTe+Y6i14LJv/8KQDw8S
+        3Nt5/cWnLbH6LDFvctUNA+dTevPkVr/6UMhUNaUibt9sxRdM+26XvFiYqWwWWsES93HrWfN1
+        F/ef2FGxbvUP/lTbj18WSn00/HNU40nO5ly+/1/eh2YsnPVapf6/vMm0vs+7c2f/mbFK9OOD
+        WzMuS2hXKrEUZyQaajEXFScCAP01jboaAwAA
+X-CMS-MailID: 20220708174952uscas1p25f5532b41eb96fe2ddc7a1a06b1a78af
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20220708174952uscas1p25f5532b41eb96fe2ddc7a1a06b1a78af
+References: <20220708174943.87787-1-vincent.fu@samsung.com>
+        <CGME20220708174952uscas1p25f5532b41eb96fe2ddc7a1a06b1a78af@uscas1p2.samsung.com>
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-Subject: [PATCH v8 13/13] PCI/P2PDMA: Remove pci_p2pdma_[un]map_sg()
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This interface is superseded by support in dma_map_sg() which now supports
-heterogeneous scatterlists. There are no longer any users, so remove it.
+Allow setting via configfs these two options:
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Max Gurtovoy <mgurtovoy@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+no_sched
+shared_tag_bitmap
+
+Previously these could only be activated as module parameters.
+
+Still missing are:
+
+shared_tags
+timeout
+requeue
+init_hctx
+
+Signed-off-by: Vincent Fu <vincent.fu@samsung.com>
 ---
- drivers/pci/p2pdma.c       | 66 --------------------------------------
- include/linux/pci-p2pdma.h | 27 ----------------
- 2 files changed, 93 deletions(-)
+ drivers/block/null_blk/main.c     | 18 +++++++++++++++---
+ drivers/block/null_blk/null_blk.h |  2 ++
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 5d2538aa0778..4496a7c5c478 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -872,72 +872,6 @@ static enum pci_p2pdma_map_type pci_p2pdma_map_type(struct dev_pagemap *pgmap,
- 	return type;
- }
- 
--static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
--		struct device *dev, struct scatterlist *sg, int nents)
--{
--	struct scatterlist *s;
--	int i;
--
--	for_each_sg(sg, s, nents, i) {
--		s->dma_address = sg_phys(s) + p2p_pgmap->bus_offset;
--		sg_dma_len(s) = s->length;
--	}
--
--	return nents;
--}
--
--/**
-- * pci_p2pdma_map_sg_attrs - map a PCI peer-to-peer scatterlist for DMA
-- * @dev: device doing the DMA request
-- * @sg: scatter list to map
-- * @nents: elements in the scatterlist
-- * @dir: DMA direction
-- * @attrs: DMA attributes passed to dma_map_sg() (if called)
-- *
-- * Scatterlists mapped with this function should be unmapped using
-- * pci_p2pdma_unmap_sg_attrs().
-- *
-- * Returns the number of SG entries mapped or 0 on error.
-- */
--int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
--		int nents, enum dma_data_direction dir, unsigned long attrs)
--{
--	struct pci_p2pdma_pagemap *p2p_pgmap =
--		to_p2p_pgmap(sg_page(sg)->pgmap);
--
--	switch (pci_p2pdma_map_type(sg_page(sg)->pgmap, dev)) {
--	case PCI_P2PDMA_MAP_THRU_HOST_BRIDGE:
--		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
--	case PCI_P2PDMA_MAP_BUS_ADDR:
--		return __pci_p2pdma_map_sg(p2p_pgmap, dev, sg, nents);
--	default:
--		/* Mapping is not Supported */
--		return 0;
--	}
--}
--EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
--
--/**
-- * pci_p2pdma_unmap_sg_attrs - unmap a PCI peer-to-peer scatterlist that was
-- *	mapped with pci_p2pdma_map_sg()
-- * @dev: device doing the DMA request
-- * @sg: scatter list to map
-- * @nents: number of elements returned by pci_p2pdma_map_sg()
-- * @dir: DMA direction
-- * @attrs: DMA attributes passed to dma_unmap_sg() (if called)
-- */
--void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
--		int nents, enum dma_data_direction dir, unsigned long attrs)
--{
--	enum pci_p2pdma_map_type map_type;
--
--	map_type = pci_p2pdma_map_type(sg_page(sg)->pgmap, dev);
--
--	if (map_type == PCI_P2PDMA_MAP_THRU_HOST_BRIDGE)
--		dma_unmap_sg_attrs(dev, sg, nents, dir, attrs);
--}
--EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
--
- /**
-  * pci_p2pdma_map_segment - map an sg segment determining the mapping type
-  * @state: State structure that should be declared outside of the for_each_sg()
-diff --git a/include/linux/pci-p2pdma.h b/include/linux/pci-p2pdma.h
-index 8318a97c9c61..2c07aa6b7665 100644
---- a/include/linux/pci-p2pdma.h
-+++ b/include/linux/pci-p2pdma.h
-@@ -30,10 +30,6 @@ struct scatterlist *pci_p2pmem_alloc_sgl(struct pci_dev *pdev,
- 					 unsigned int *nents, u32 length);
- void pci_p2pmem_free_sgl(struct pci_dev *pdev, struct scatterlist *sgl);
- void pci_p2pmem_publish(struct pci_dev *pdev, bool publish);
--int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
--		int nents, enum dma_data_direction dir, unsigned long attrs);
--void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
--		int nents, enum dma_data_direction dir, unsigned long attrs);
- int pci_p2pdma_enable_store(const char *page, struct pci_dev **p2p_dev,
- 			    bool *use_p2pdma);
- ssize_t pci_p2pdma_enable_show(char *page, struct pci_dev *p2p_dev,
-@@ -83,17 +79,6 @@ static inline void pci_p2pmem_free_sgl(struct pci_dev *pdev,
- static inline void pci_p2pmem_publish(struct pci_dev *pdev, bool publish)
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index 8f821fa94..c955a07db 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -425,6 +425,8 @@ NULLB_DEVICE_ATTR(zone_nr_conv, uint, NULL);
+ NULLB_DEVICE_ATTR(zone_max_open, uint, NULL);
+ NULLB_DEVICE_ATTR(zone_max_active, uint, NULL);
+ NULLB_DEVICE_ATTR(virt_boundary, bool, NULL);
++NULLB_DEVICE_ATTR(no_sched, bool, NULL);
++NULLB_DEVICE_ATTR(shared_tag_bitmap, bool, NULL);
+=20
+ static ssize_t nullb_device_power_show(struct config_item *item, char *pag=
+e)
  {
- }
--static inline int pci_p2pdma_map_sg_attrs(struct device *dev,
--		struct scatterlist *sg, int nents, enum dma_data_direction dir,
--		unsigned long attrs)
--{
--	return 0;
--}
--static inline void pci_p2pdma_unmap_sg_attrs(struct device *dev,
--		struct scatterlist *sg, int nents, enum dma_data_direction dir,
--		unsigned long attrs)
--{
--}
- static inline int pci_p2pdma_enable_store(const char *page,
- 		struct pci_dev **p2p_dev, bool *use_p2pdma)
+@@ -548,6 +550,8 @@ static struct configfs_attribute *nullb_device_attrs[] =
+=3D {
+ 	&nullb_device_attr_zone_max_open,
+ 	&nullb_device_attr_zone_max_active,
+ 	&nullb_device_attr_virt_boundary,
++	&nullb_device_attr_no_sched,
++	&nullb_device_attr_shared_tag_bitmap,
+ 	NULL,
+ };
+=20
+@@ -604,7 +608,13 @@ nullb_group_drop_item(struct config_group *group, stru=
+ct config_item *item)
+ static ssize_t memb_group_features_show(struct config_item *item, char *pa=
+ge)
  {
-@@ -119,16 +104,4 @@ static inline struct pci_dev *pci_p2pmem_find(struct device *client)
- 	return pci_p2pmem_find_many(&client, 1);
+ 	return snprintf(page, PAGE_SIZE,
+-			"memory_backed,discard,bandwidth,cache,badblocks,zoned,zone_size,zone_c=
+apacity,zone_nr_conv,zone_max_open,zone_max_active,blocksize,max_sectors,vi=
+rt_boundary\n");
++			"badblocks,blocking,blocksize,cache_size,"
++			"completion_nsec,discard,home_node,hw_queue_depth,"
++			"irqmode,max_sectors,mbps,memory_backed,no_sched,"
++			"poll_queues,power,queue_mode,shared_tag_bitmap,size,"
++			"submit_queues,use_per_node_hctx,virt_boundary,zoned,"
++			"zone_capacity,zone_max_active,zone_max_open,"
++			"zone_nr_conv,zone_size\n");
  }
- 
--static inline int pci_p2pdma_map_sg(struct device *dev, struct scatterlist *sg,
--				    int nents, enum dma_data_direction dir)
--{
--	return pci_p2pdma_map_sg_attrs(dev, sg, nents, dir, 0);
--}
--
--static inline void pci_p2pdma_unmap_sg(struct device *dev,
--		struct scatterlist *sg, int nents, enum dma_data_direction dir)
--{
--	pci_p2pdma_unmap_sg_attrs(dev, sg, nents, dir, 0);
--}
--
- #endif /* _LINUX_PCI_P2P_H */
--- 
-2.30.2
-
+=20
+ CONFIGFS_ATTR_RO(memb_group_, features);
+@@ -678,6 +688,8 @@ static struct nullb_device *null_alloc_dev(void)
+ 	dev->zone_max_open =3D g_zone_max_open;
+ 	dev->zone_max_active =3D g_zone_max_active;
+ 	dev->virt_boundary =3D g_virt_boundary;
++	dev->no_sched =3D g_no_sched;
++	dev->shared_tag_bitmap =3D g_shared_tag_bitmap;
+ 	return dev;
+ }
+=20
+@@ -1899,9 +1911,9 @@ static int null_init_tag_set(struct nullb *nullb, str=
+uct blk_mq_tag_set *set)
+ 	set->numa_node =3D nullb ? nullb->dev->home_node : g_home_node;
+ 	set->cmd_size	=3D sizeof(struct nullb_cmd);
+ 	set->flags =3D BLK_MQ_F_SHOULD_MERGE;
+-	if (g_no_sched)
++	if (nullb->dev->no_sched)
+ 		set->flags |=3D BLK_MQ_F_NO_SCHED;
+-	if (g_shared_tag_bitmap)
++	if (nullb->dev->shared_tag_bitmap)
+ 		set->flags |=3D BLK_MQ_F_TAG_HCTX_SHARED;
+ 	set->driver_data =3D nullb;
+ 	if (poll_queues)
+diff --git a/drivers/block/null_blk/null_blk.h b/drivers/block/null_blk/nul=
+l_blk.h
+index 8359b4384..ce5c810c1 100644
+--- a/drivers/block/null_blk/null_blk.h
++++ b/drivers/block/null_blk/null_blk.h
+@@ -113,6 +113,8 @@ struct nullb_device {
+ 	bool discard; /* if support discard */
+ 	bool zoned; /* if device is zoned */
+ 	bool virt_boundary; /* virtual boundary on/off for the device */
++	bool no_sched; /* no IO scheduler for the device */
++	bool shared_tag_bitmap; /* use hostwide shared tags */
+ };
+=20
+ struct nullb {
+--=20
+2.25.1
