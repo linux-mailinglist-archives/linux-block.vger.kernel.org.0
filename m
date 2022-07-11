@@ -2,94 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FF2A5706BC
-	for <lists+linux-block@lfdr.de>; Mon, 11 Jul 2022 17:12:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD9C6570728
+	for <lists+linux-block@lfdr.de>; Mon, 11 Jul 2022 17:35:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232203AbiGKPMj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Jul 2022 11:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40868 "EHLO
+        id S229979AbiGKPe5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Jul 2022 11:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbiGKPMg (ORCPT
+        with ESMTP id S229578AbiGKPe5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Jul 2022 11:12:36 -0400
-Received: from hr2.samba.org (hr2.samba.org [IPv6:2a01:4f8:192:486::2:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DFE474E0C;
-        Mon, 11 Jul 2022 08:12:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-        s=42; h=From:Cc:To:Date:Message-ID;
-        bh=K+A7Xq0Dtg1M28AX2pm6iq7+K2wlhOA1YKzGE8z96xA=; b=ratBO5EA5ds+0wKQOD4let/B32
-        Aj2p5qOJmxyMmtY0WdwaAVsGUumqNmum7z3V+13nIUCI3uwXpoGoMQYumZYYC8Fj0s6K5v6eJQCxf
-        vcbx471HkEdRoS+ZJXccc7y07U8mAUhLrxoR9UJT8hYUE63gAGxZDC7l9HW9e6TiCpdBk3HSeh5Lb
-        Zo6bAeTbGVzwoug5qeRckCXmmDQai/wsUwHN+Jy9FqXwY8JdjTjtfhtSWoHtZ9Tf8Re0puRh65VZ4
-        5To4VC9qOKFVdSvaT/aqXun/rqArJjv/HTPqNueC7e+nLGfpScQIkP0Fo2WTi6cknKlOBXtAAzRhB
-        XNppXIItFtblsBHmujlJOJDSMi6SwM23q6tVW2uzOTJXir+h3ptwR9doqsXd+qFuSu6PcQxBkU/GY
-        xgBC4DDOlr5M/RXY00cpAcc/W4snU6cGCDjXYrVS19R12nyWHUpOjl9QcC0aD8hji7zmfR1ELKg+W
-        zEpdqk34C2kWsJtW1OBIIWYE;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-        by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-        (Exim)
-        id 1oAv5D-004BnU-TL; Mon, 11 Jul 2022 15:12:23 +0000
-Message-ID: <5c71b8f6-afec-8ef6-0a70-d13e71ded79c@samba.org>
-Date:   Mon, 11 Jul 2022 17:12:23 +0200
+        Mon, 11 Jul 2022 11:34:57 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3F46113C;
+        Mon, 11 Jul 2022 08:34:56 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id C13EC203A0;
+        Mon, 11 Jul 2022 15:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1657553694;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ibgfxck5aA+CZ8n/I3QasCKRlyOnnCdyT/M8j1pRBNI=;
+        b=mZxWhYRUcjf1M7Gk9lTlPfnaYdhUuBuG3WLL8byEwJdh5K05OHxnZKGe7Hyiyf+yRyNQzm
+        sf0Z5DLKezRvxqv0rJxAJhOTCJx6ll6uMWz363kFYBIr5RpJNyiqM+PSK/+X6fUL/J4pO4
+        74LOMGnOMb0wbqOjCWnGOHS3n3q2OvM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1657553694;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ibgfxck5aA+CZ8n/I3QasCKRlyOnnCdyT/M8j1pRBNI=;
+        b=PnFmZKyZiNQSna10gPjmonoLB1i/QSlPNArYvasIMjyqsgyWqOlsWvr67m8JPRVDeB+gos
+        KjzbGYJSt8aOprDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9260213322;
+        Mon, 11 Jul 2022 15:34:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id i020Ih5DzGJ0ZQAAMHmgww
+        (envelope-from <dsterba@suse.cz>); Mon, 11 Jul 2022 15:34:54 +0000
+Date:   Mon, 11 Jul 2022 17:30:05 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc:     Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 03/13] btrfs: replace BTRFS_MAX_EXTENT_SIZE with
+ fs_info->max_extent_size
+Message-ID: <20220711153005.GZ15169@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <cover.1657321126.git.naohiro.aota@wdc.com>
+ <f5c4db672fc1862b1cec6fc3ee75c5aab85f75f1.1657321126.git.naohiro.aota@wdc.com>
+ <PH0PR04MB7416D26D6BC98BC13EBD09309B859@PH0PR04MB7416.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH for-next 4/4] nvme-multipath: add multipathing for
- uring-passthrough commands
-Content-Language: en-US
-To:     Sagi Grimberg <sagi@grimberg.me>,
-        Kanchan Joshi <joshi.k@samsung.com>, hch@lst.de,
-        kbusch@kernel.org, axboe@kernel.dk
-Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, asml.silence@gmail.com,
-        joshiiitr@gmail.com, anuj20.g@samsung.com, gost.dev@samsung.com
-References: <20220711110155.649153-1-joshi.k@samsung.com>
- <CGME20220711110827epcas5p3fd81f142f55ca3048abc38a9ef0d0089@epcas5p3.samsung.com>
- <20220711110155.649153-5-joshi.k@samsung.com>
- <3fc68482-fb24-1f39-5428-faa3a8db9ecb@grimberg.me>
-From:   Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <3fc68482-fb24-1f39-5428-faa3a8db9ecb@grimberg.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR04MB7416D26D6BC98BC13EBD09309B859@PH0PR04MB7416.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Sagi,
+On Sat, Jul 09, 2022 at 11:36:45AM +0000, Johannes Thumshirn wrote:
+> On 09.07.22 01:21, Naohiro Aota wrote:
+> > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> > index 3194eca41635..cedc94a7d5b2 100644
+> > --- a/fs/btrfs/extent_io.c
+> > +++ b/fs/btrfs/extent_io.c
+> > @@ -2021,10 +2021,16 @@ noinline_for_stack bool find_lock_delalloc_range(struct inode *inode,
+> >  				    struct page *locked_page, u64 *start,
+> >  				    u64 *end)
+> >  {
+> > +	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+> >  	struct extent_io_tree *tree = &BTRFS_I(inode)->io_tree;
+> >  	const u64 orig_start = *start;
+> >  	const u64 orig_end = *end;
+> > -	u64 max_bytes = BTRFS_MAX_EXTENT_SIZE;
+> > +#ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+> > +	/* The sanity tests may not set a valid fs_info. */
+> > +	u64 max_bytes = fs_info ? fs_info->max_extent_size : BTRFS_MAX_EXTENT_SIZE;
+> > +#else
+> > +	u64 max_bytes = fs_info->max_extent_size;
+> > +#endif
+> 
+> Do we really need the ifdef here? I don't think there will be a lot
+> of performance penalty from the 1 compare that we safe with the ifdef.
 
->> @@ -189,6 +190,12 @@ enum {
->>       NVME_REQ_USERCMD        = (1 << 1),
->>   };
->> +static inline struct nvme_uring_cmd_pdu *nvme_uring_cmd_pdu(
->> +        struct io_uring_cmd *ioucmd)
->> +{
-
-Shouldn't we have a BUILD_BUG_ON(sizeof(struct nvme_uring_cmd_pdu) > sizeof(ioucmd->pdu));
-here?
-
->> +    return (struct nvme_uring_cmd_pdu *)&ioucmd->pdu;
->> +}
->> +
-
->> diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
->> index d734599cbcd7..57f4dfc83316 100644
->> --- a/include/linux/io_uring.h
->> +++ b/include/linux/io_uring.h
->> @@ -15,6 +15,8 @@ enum io_uring_cmd_flags {
->>       IO_URING_F_SQE128        = 4,
->>       IO_URING_F_CQE32        = 8,
->>       IO_URING_F_IOPOLL        = 16,
->> +    /* to indicate that it is a MPATH req*/
->> +    IO_URING_F_MPATH        = 32,
-
-Isn't that nvme specific? If so I don't think it belongs in io_uring.h at all...
-
-metze
-
-
+You're right that performce-wise it does not make much improvement
+however with the explicit ifdef it's clear that it's there for tests,
+otherwise finding the conditional fs_info check would be hard to spot. A
+search for CONFIG_BTRFS_FS_RUN_SANITY_TESTS would find it. On the other
+hand the whole function is EXPORT_FOR_TESTS so we can expect exceptions
+for tests. So this could be the pattern to follow should we need it in
+the future (ie. no ifdef).
