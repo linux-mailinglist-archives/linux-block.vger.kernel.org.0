@@ -2,114 +2,161 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0D55570020
-	for <lists+linux-block@lfdr.de>; Mon, 11 Jul 2022 13:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A693570093
+	for <lists+linux-block@lfdr.de>; Mon, 11 Jul 2022 13:28:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231133AbiGKLV0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Jul 2022 07:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33290 "EHLO
+        id S231171AbiGKL24 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Jul 2022 07:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231152AbiGKLUO (ORCPT
+        with ESMTP id S230448AbiGKL2Q (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Jul 2022 07:20:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E51112871E
-        for <linux-block@vger.kernel.org>; Mon, 11 Jul 2022 03:44:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657536291;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cc4YCGlT5mNKlbQEPPOYGJvAwmuI9Lc6pbXcTrCWK8Y=;
-        b=HhKCo5Km7Z25zXeKiDUB9GjpsJjvlXmvA/ULTNwzJGCqDdp6eUP4Zyqr0M5bNUFEQUA6T1
-        t2Y5whKRAW7jEIAl+MK2Y4g70rRX0Yyoj7/qBahf7zsxi3oNO2IpsyhC0YeSDYHKthx9ej
-        aTTcgDF75pWryz4Rz424je7MS5izvEc=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-522-iZAzedaxOPyZxjDPXXJBpQ-1; Mon, 11 Jul 2022 06:44:37 -0400
-X-MC-Unique: iZAzedaxOPyZxjDPXXJBpQ-1
-Received: by mail-pj1-f72.google.com with SMTP id r13-20020a17090a454d00b001f04dfc6195so241687pjm.2
-        for <linux-block@vger.kernel.org>; Mon, 11 Jul 2022 03:44:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cc4YCGlT5mNKlbQEPPOYGJvAwmuI9Lc6pbXcTrCWK8Y=;
-        b=g/SBXh2l/3M0qyWU4bDuAorxHBjF3fFmk+g6XDXoCsj3S+rgm1VV8EWDkDdkjzVSFA
-         yM3MEeDdIO7zU+gf9BcssfbhIWLEqh+6Knzdy1xVMvNlVWgGlVYCWT6m2emcw7vfBrCK
-         8gZwA7QXQVhD+N0EGuCdQbUCnDe/Q428LJ0SzppNBdIZPXWMhjBzU+xo/sbejak9wz6V
-         FQrqzJtkqQeYDwi9+HGwF/Pl2HeNm85ag2VZq2wFnA9pC85ir7HSLVbX07NBQa3Bj7LX
-         b5cRruc1pOUNcDK0flRAPy5QLK8TZTDaAplZGbC1gH1flPty6AZyARJqRDAbSINpR6R8
-         RN3Q==
-X-Gm-Message-State: AJIora9646ydWHjFGWXellW58uaNY0JRrebRl1aeexaVZ41jhMW0fphU
-        4jE7inBvwy/eAosRcG5hCQseGXsTYKvmeBrqBFjhlcxKLm4Yd1R6BQCdzMUyp8rqPF8FapTvfOP
-        SB35PRemyBKbtb+rHZALMT1ZdIcleje1pzwK4z68=
-X-Received: by 2002:a05:6a00:23c9:b0:52a:cedd:3992 with SMTP id g9-20020a056a0023c900b0052acedd3992mr5137995pfc.43.1657536276205;
-        Mon, 11 Jul 2022 03:44:36 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uYnrOw+uRMOO/c8vIUctc1rvWmK0ZrqojXQg4WeaNm2BClRjrUewK/w7HbyvrDFnWyFbiVoVncLj9L6foJtg0=
-X-Received: by 2002:a05:6a00:23c9:b0:52a:cedd:3992 with SMTP id
- g9-20020a056a0023c900b0052acedd3992mr5137972pfc.43.1657536275864; Mon, 11 Jul
- 2022 03:44:35 -0700 (PDT)
+        Mon, 11 Jul 2022 07:28:16 -0400
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA876382
+        for <linux-block@vger.kernel.org>; Mon, 11 Jul 2022 04:08:02 -0700 (PDT)
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20220711110757epoutp04bc95187db409cc7c5962bccc1a64ada3~Awbw7n2A13101131011epoutp04Q
+        for <linux-block@vger.kernel.org>; Mon, 11 Jul 2022 11:07:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20220711110757epoutp04bc95187db409cc7c5962bccc1a64ada3~Awbw7n2A13101131011epoutp04Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1657537677;
+        bh=rfBwCyaPTWgve+aNLgO7YznJVxf6LVxBLuPK/IeYRRc=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=F+hXuGoBJ6QKBCMAyP9aiiuQZEPtpYXgK38YjcSA+pODmEzQXy0NA5IhNScEcXYee
+         CN01+PU6xlBwfiVcu8DgVBQl2oBp5dg5DZgkI9BUYS501vuF7UCmNqNYWhEq3VfTUn
+         2AWMaKvnSVuE2m1XdYp7fwY4+ZDMoPcgq4fHk5jo=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20220711110756epcas5p10847bd1317dc4be3e3fa169081c35b62~AwbwOTEhI1352413524epcas5p18;
+        Mon, 11 Jul 2022 11:07:56 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.181]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4LhLhV2MlMz4x9Pt; Mon, 11 Jul
+        2022 11:07:54 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        55.20.09566.A840CC26; Mon, 11 Jul 2022 20:07:54 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20220711110753epcas5p4169b9e288d15ca35740dbb66a6f6983a~AwbtzOTky0387003870epcas5p4j;
+        Mon, 11 Jul 2022 11:07:53 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220711110753epsmtrp22fc9aa1e8677181c1165fc0e32b6db35~AwbtyZxb_2556725567epsmtrp22;
+        Mon, 11 Jul 2022 11:07:53 +0000 (GMT)
+X-AuditID: b6c32a4a-b8dff7000000255e-6e-62cc048afe11
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D7.89.08802.9840CC26; Mon, 11 Jul 2022 20:07:53 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20220711110751epsmtip2af1d1762efbc5c9c0992382025e8908a~AwbsAefGg0337803378epsmtip2B;
+        Mon, 11 Jul 2022 11:07:51 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@kernel.dk
+Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, asml.silence@gmail.com,
+        joshiiitr@gmail.com, anuj20.g@samsung.com, gost.dev@samsung.com,
+        Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH for-next 0/4] nvme-multipathing for uring-passthrough
+Date:   Mon, 11 Jul 2022 16:31:51 +0530
+Message-Id: <20220711110155.649153-1-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220711090808.259682-1-ming.lei@redhat.com>
-In-Reply-To: <20220711090808.259682-1-ming.lei@redhat.com>
-From:   Yi Zhang <yi.zhang@redhat.com>
-Date:   Mon, 11 Jul 2022 18:44:24 +0800
-Message-ID: <CAHj4cs85rWQHUY4+9axMNitJo67kD22=UjDHpK25e3i1uuYZTg@mail.gmail.com>
-Subject: Re: [PATCH] blk-mq: don't create hctx debugfs dir until
- q->debugfs_dir is created
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-block <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmpm4Xy5kkg9vr+SyaJvxltpizahuj
+        xeq7/WwWNw/sZLJYufook8W71nMsFkf/v2WzOP/2MJPFpEPXGC323tK2mL/sKbvFutfvWRx4
+        PHbOusvucf7eRhaPy2dLPTat6mTz2Lyk3mP3zQY2j74tqxg9Pm+SC+CIyrbJSE1MSS1SSM1L
+        zk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAbpVSaEsMacUKBSQWFyspG9n
+        U5RfWpKqkJFfXGKrlFqQklNgUqBXnJhbXJqXrpeXWmJlaGBgZApUmJCdMWnSZdaCJ7wVf7dt
+        ZWtgXMLdxcjJISFgIrH48yaWLkYuDiGB3YwSFw7/ZYJwPjFK3Nn9iRnC+cwo0bmhlwWm5cXV
+        DqiqXYwST/p/McFV7Ty+A6iKg4NNQFPiwuRSkAYRAReJzqbprCA1zAJ3GSUadq1mBEkIC7hK
+        dJ5cywhSzyKgKnFueyVImFfAUuLkztfsEMvkJWZe+s4OEReUODnzCdgRzEDx5q2zwa6TEGjl
+        kDhwfT3UdS4S538vYYKwhSVeHd8CNUhK4vO7vWwQdrLEpZnnoGpKJB7vOQhl20u0nupnBrmH
+        Gej+9bv0IXbxSfT+fsIEEpYQ4JXoaBOCqFaUuDfpKSuELS7xcMYSKNtDYseju8wgtpBArMTl
+        139ZJzDKzULywSwkH8xCWLaAkXkVo2RqQXFuemqxaYFRXmo5PC6T83M3MYJTqZbXDsaHDz7o
+        HWJk4mA8xCjBwawkwvvn7KkkId6UxMqq1KL8+KLSnNTiQ4ymwFCdyCwlmpwPTOZ5JfGGJpYG
+        JmZmZiaWxmaGSuK8Xlc3JQkJpCeWpGanphakFsH0MXFwSjUw7fH1dTM2X3OgsHCff4LUFVOX
+        7RbPT8x9etj27FH3FN+Lq713vjoiKGD5/nqd8OONUnGGq6QsmzY+yuUL7uuX3a/WcTzj+5Or
+        iolbb/UclmTQm1sWv6u0yGCh4+/zv1taZDaouiuVMvu8D7vmILzvHZ/rl74y3bKP/JyfJ0UL
+        vzqpd2PL/tAjXBqHpJvS8yS8jJ5YlOb84Tn5x8OY6/p833u2xtPd5yzslrI9Hrj0zZzC9yV5
+        Lst3ip+IF5j45OCbXQcmaetZ6x+9fPnoTNmdN+6/k8w+qc0fN0OptedjtIuq9d28g8U+nmLr
+        XmbcOcV14lf4veUcd672nkjZNWvyxj9Fh1e0TFp9xnMuw6NF65VYijMSDbWYi4oTAbe2JGEu
+        BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsWy7bCSvG4ny5kkg7eXFS2aJvxltpizahuj
+        xeq7/WwWNw/sZLJYufook8W71nMsFkf/v2WzOP/2MJPFpEPXGC323tK2mL/sKbvFutfvWRx4
+        PHbOusvucf7eRhaPy2dLPTat6mTz2Lyk3mP3zQY2j74tqxg9Pm+SC+CI4rJJSc3JLEst0rdL
+        4MqYNOkya8ET3oq/27ayNTAu4e5i5OSQEDCReHG1g6mLkYtDSGAHo0T70m3MEAlxieZrP9gh
+        bGGJlf+es0MUfWSUOPrlPmMXIwcHm4CmxIXJpSA1IgJeEit6/oANYhZ4yigxeVY/I0hCWMBV
+        ovPkWrB6FgFViXPbK0HCvAKWEid3voaaLy8x89J3doi4oMTJmU9YQGxmoHjz1tnMExj5ZiFJ
+        zUKSWsDItIpRMrWgODc9t9iwwCgvtVyvODG3uDQvXS85P3cTIzjctbR2MO5Z9UHvECMTB+Mh
+        RgkOZiUR3j9nTyUJ8aYkVlalFuXHF5XmpBYfYpTmYFES573QdTJeSCA9sSQ1OzW1ILUIJsvE
+        wSnVwCT82/aO16mNke1JZuUGKnf7ew838dxN/O9jmbJZTEfnkvo9WZ41ZxOLytwfOqn1M4Qp
+        V5UWnNlzMmTiMWve5uPc11yfx9v3GspbpL7b0X746Yvt22Of3Z6xglGa8a1h1qsXkvJT33NM
+        MmmKPHJlG2da0d+MT+o6upUXPZc0/Jh+lsvXwW1Pb5Ntv+cXhlIORrlXKxXiK4N82Zan/oq9
+        LJrqoC+w+KHzrrUOD98mOYi3nf55IORkhddrlY8bT/Isyfv5fz5DeHnRxM0v9/wR9ea8wvw4
+        1PJXnPJPpQ7373GCTrxm1VOc93jJBrzxXHv0xf335at7/0nPW1Dw2O+PxSMN1yuvfXyE2WYL
+        rljWo8RSnJFoqMVcVJwIALhWjX7mAgAA
+X-CMS-MailID: 20220711110753epcas5p4169b9e288d15ca35740dbb66a6f6983a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220711110753epcas5p4169b9e288d15ca35740dbb66a6f6983a
+References: <CGME20220711110753epcas5p4169b9e288d15ca35740dbb66a6f6983a@epcas5p4.samsung.com>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Verified on linux-block/for-next,
-Tested-by: Yi Zhang <yi.zhang@redhat.com>
+nvme passthrough lacks multipathing capability and some of us have
+already expressed interest to see this plumbed. Most recently during LSFMM,
+around 2 months back.
 
-On Mon, Jul 11, 2022 at 5:08 PM Ming Lei <ming.lei@redhat.com> wrote:
->
-> blk_mq_debugfs_register_hctx() can be called by blk_mq_update_nr_hw_queues
-> when gendisk isn't added yet, such as nvme tcp.
->
-> Fixes the warning of 'debugfs: Directory 'hctx0' with parent '/' already present!'
-> which can be observed reliably when running blktests nvme/005.
->
-> Reported-by: Yi Zhang <yi.zhang@redhat.com>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  block/blk-mq-debugfs.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-> index b80fae7ab1d9..28adb01f6441 100644
-> --- a/block/blk-mq-debugfs.c
-> +++ b/block/blk-mq-debugfs.c
-> @@ -728,6 +728,9 @@ void blk_mq_debugfs_register_hctx(struct request_queue *q,
->         char name[20];
->         int i;
->
-> +       if (!q->debugfs_dir)
-> +               return;
-> +
->         snprintf(name, sizeof(name), "hctx%u", hctx->queue_num);
->         hctx->debugfs_dir = debugfs_create_dir(name, q->debugfs_dir);
->
-> --
-> 2.31.1
->
+This series wires up multipathing for uring-passthrough commands.
+Attempt is not to affect the common path (i.e. when
+requeue/failover does not trigger) with allocation or deferral. The
+most important design bit is to treat "struct io_uring_cmd" in the same
+way as "struct bio" is treated by the block-based nvme multipath.
+Uring-commands are queued when path is not available, and resubmitted on
+discovery of new path. Also if passthrough command on multipath-node is
+failed, it is resubmitted on a different path.
 
+Testing:
+Using the upstream fio that support uring-passthrough:
+
+fio -iodepth=16 -rw=randread -ioengine=io_uring_cmd -bs=4k -numjobs=4
+-size=1G -iodepth_batch_submit=16 -group_reporting -cmd_type=nvme
+-filename=/dev/ng0n1 -name=uring-pt
+
+1. Multiple failover - every command is retried 1-5 times before completion
+2. Fail nvme_find_path() - this tests completion post requeue
+3. Combine above two
+4. Repeat above but for passthrough commands which do not generate bio
+(e.g. flush command)
+
+
+Anuj Gupta (2):
+  nvme: compact nvme_uring_cmd_pdu struct
+  nvme-multipath: add multipathing for uring-passthrough commands
+
+Kanchan Joshi (2):
+  io_uring, nvme: rename a function
+  io_uring: grow a field in struct io_uring_cmd
+
+ drivers/nvme/host/ioctl.c     | 157 +++++++++++++++++++++++++++++-----
+ drivers/nvme/host/multipath.c |  36 +++++++-
+ drivers/nvme/host/nvme.h      |  26 ++++++
+ include/linux/io_uring.h      |  44 +++++++++-
+ io_uring/uring_cmd.c          |   4 +-
+ 5 files changed, 237 insertions(+), 30 deletions(-)
 
 -- 
-Best Regards,
-  Yi Zhang
+2.25.1
 
