@@ -2,99 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D9B8571F1A
-	for <lists+linux-block@lfdr.de>; Tue, 12 Jul 2022 17:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35FF0571F5F
+	for <lists+linux-block@lfdr.de>; Tue, 12 Jul 2022 17:33:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232182AbiGLP1z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Jul 2022 11:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
+        id S233653AbiGLPdi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 Jul 2022 11:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbiGLP1x (ORCPT
+        with ESMTP id S234102AbiGLPdQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 Jul 2022 11:27:53 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBFCBC25;
-        Tue, 12 Jul 2022 08:27:53 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id ss3so8920145ejc.11;
-        Tue, 12 Jul 2022 08:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DgrpeUlEg7dspJm0u/Xa9mdZFkQ0wTFNU4ocm1l1BOA=;
-        b=k7cv85FzcOc5t49cOOmfHFuJOLh2saADD2PdsnMZGEXYbOAC5YzCr5qZ00zipRE346
-         mmELpdeP6OVRqXO7sgxYtIT12jjh0g/ccm61y2PTo8FGTWpUmp4DKnRrb2EiLkL8tL2E
-         DiDYDGGGXf6bVa5wKzoM/Z6lmBkSTotUELzV+Dj4iGCWOAiuxMnvWEprh731Q9qM9O5p
-         fP49p28XbPHH868sMHRlCMhGXfSM4pnbo/9aWtCtD7W2MnXbAcfoXdtwlzVcUUdbDp5D
-         nUu3BOC7B4BeEzoH8Sq4rUteot59NXe7cR/hR8qgwX1M7qcHx8FLcE16ozle0UMXXZvt
-         OSnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DgrpeUlEg7dspJm0u/Xa9mdZFkQ0wTFNU4ocm1l1BOA=;
-        b=ylEOgCBUpYjc1uSgpniHIIFmMyuQy6duBoLGhYicXcceS7sSBJYrLkhT4P6eKXTtTA
-         FENN2tv2SXCs7hyiPUwuKMtUYPOBTdXMFtoUuIWB3lQ+xl/vIcVxitu5vqtqhJ1H8w5u
-         2YA6qu+zwbwPedjRalBI1ZYRrLtKDCic6VCwpGsZNbCC7BJx1WvjUY0tqhyB1e34jeg8
-         p9HOlgy2sP6wjUGkHaIWjkTU46Dom3RLATRw6PbaEspgEwV7yddbYY7ANBm6J1g+bSsx
-         osaFCdMfNkb73bmogPYOWbRko8HWY9MevUuK/yXY4nEqHsx5OE0Nh0azpm4Yetgq3o5d
-         Zn8A==
-X-Gm-Message-State: AJIora8QRiTrTtOG0NnR4rd18hjKFx7QPs8PCnDefNcxVnjPmwxVZ4cH
-        E3gpOHSd98pIyu6XuY/kbbp7uWINkfg=
-X-Google-Smtp-Source: AGRyM1vUtFVhV4+kPGrdeDT4LK7IBeZdd8UAgg6ZbrNcnulYaM1rX/AF7tFce9aCgtmRFhNpGhjK8w==
-X-Received: by 2002:a17:907:3e15:b0:72b:879a:eec7 with SMTP id hp21-20020a1709073e1500b0072b879aeec7mr2193711ejc.136.1657639671490;
-        Tue, 12 Jul 2022 08:27:51 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id c1-20020a17090618a100b0072b4e4cd346sm2701487ejf.188.2022.07.12.08.27.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 08:27:51 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v2] block: Use try_cmpxchg in update_io_ticks
-Date:   Tue, 12 Jul 2022 17:27:41 +0200
-Message-Id: <20220712152741.7324-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.35.3
+        Tue, 12 Jul 2022 11:33:16 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9399FE14
+        for <linux-block@vger.kernel.org>; Tue, 12 Jul 2022 08:33:13 -0700 (PDT)
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26C9iCsv006700
+        for <linux-block@vger.kernel.org>; Tue, 12 Jul 2022 08:33:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=xFgG8Xc6eIABxXYm/O+u+rzOX/O2jGRK+u7+j6UP5fA=;
+ b=ZyNu+P0u3K9TTVLqZdsUtUWuCgObU0K/RRtN7NzUdIOq0mywF/RTlm1QukURWBjIRFka
+ 7E+FID5rWCS2ZqaWxshULTYj8Y1JOX4WwagS33mqxNSFY3t0lhzm4yKk1HxZZw/qoSAc
+ zCE6vkG70IRJoynec8YbEGte1nExtTtzXbs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3h8pgny49f-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Tue, 12 Jul 2022 08:33:12 -0700
+Received: from twshared22934.08.ash9.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Tue, 12 Jul 2022 08:33:10 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id 7BF5F60739D8; Tue, 12 Jul 2022 08:32:58 -0700 (PDT)
+From:   Keith Busch <kbusch@fb.com>
+To:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>
+CC:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv2 1/3] block: ensure iov_iter advances for added pages
+Date:   Tue, 12 Jul 2022 08:32:54 -0700
+Message-ID: <20220712153256.2202024-1-kbusch@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: KBG2jZHy6TOL0VlITJX0nTOCkCzJkt2H
+X-Proofpoint-GUID: KBG2jZHy6TOL0VlITJX0nTOCkCzJkt2H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-12_10,2022-07-12_01,2022-06-22_01
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use try_cmpxchg instead of cmpxchg (*ptr, old, new) == old in
-update_io_ticks. x86 CMPXCHG instruction returns success in ZF flag,
-so this change saves a compare after cmpxchg (and related
-move instruction in front of cmpxchg).
+From: Keith Busch <kbusch@kernel.org>
 
-No functional change intended.
+There are cases where a bio may not accept additional pages, and the iov
+needs to advance to the last data length that was accepted. The zone
+append used to handle this correctly, but was inadvertently broken when
+the setup was made common with the normal r/w case.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>
+Fixes: 576ed9135489c ("block: use bio_add_page in bio_iov_iter_get_pages"=
+)
+Fixes: c58c0074c54c2 ("block/bio: remove duplicate append pages code")
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
-v2: Split patch from the original big patch
----
- block/blk-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bio.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 27fb1357ad4b..628b965356db 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -987,7 +987,7 @@ void update_io_ticks(struct block_device *part, unsigned long now, bool end)
- again:
- 	stamp = READ_ONCE(part->bd_stamp);
- 	if (unlikely(time_after(now, stamp))) {
--		if (likely(cmpxchg(&part->bd_stamp, stamp, now) == stamp))
-+		if (likely(try_cmpxchg(&part->bd_stamp, &stamp, now)))
- 			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
+diff --git a/block/bio.c b/block/bio.c
+index 933ea3210954..fdd58461b78f 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1211,6 +1211,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
+, struct iov_iter *iter)
+ 	ssize_t size, left;
+ 	unsigned len, i;
+ 	size_t offset;
++	int ret =3D 0;
+=20
+ 	/*
+ 	 * Move page array up in the allocated memory for the bio vecs as far a=
+s
+@@ -1235,7 +1236,6 @@ static int __bio_iov_iter_get_pages(struct bio *bio=
+, struct iov_iter *iter)
+=20
+ 	for (left =3D size, i =3D 0; left > 0; left -=3D len, i++) {
+ 		struct page *page =3D pages[i];
+-		int ret;
+=20
+ 		len =3D min_t(size_t, PAGE_SIZE - offset, left);
+ 		if (bio_op(bio) =3D=3D REQ_OP_ZONE_APPEND)
+@@ -1246,13 +1246,13 @@ static int __bio_iov_iter_get_pages(struct bio *b=
+io, struct iov_iter *iter)
+=20
+ 		if (ret) {
+ 			bio_put_pages(pages + i, left, offset);
+-			return ret;
++			break;
+ 		}
+ 		offset =3D 0;
  	}
- 	if (part->bd_partno) {
--- 
-2.35.3
+=20
+-	iov_iter_advance(iter, size);
+-	return 0;
++	iov_iter_advance(iter, size - left);
++	return ret;
+ }
+=20
+ /**
+--=20
+2.30.2
 
