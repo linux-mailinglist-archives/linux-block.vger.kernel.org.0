@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FD3E5712C4
-	for <lists+linux-block@lfdr.de>; Tue, 12 Jul 2022 09:05:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3CDB5712C0
+	for <lists+linux-block@lfdr.de>; Tue, 12 Jul 2022 09:04:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232090AbiGLHFF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Jul 2022 03:05:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46296 "EHLO
+        id S232280AbiGLHEO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 12 Jul 2022 03:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232312AbiGLHED (ORCPT
+        with ESMTP id S232314AbiGLHED (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 12 Jul 2022 03:04:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EDDC21E02;
-        Tue, 12 Jul 2022 00:03:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1D7222B5;
+        Tue, 12 Jul 2022 00:03:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=0JLzuoaC7nW3s5hxRaC/qqyoK8M7u9apwCZLzl0G/70=; b=RSFks6mNQQfVI8KIqaWXROJAwA
-        AevKjH/MNEQrD3DorF0MELIK775DA1wB5Thqr+T3Fo2E9EmhaCetrC1X4rZtrKv4qv8WMLN3U0Dsz
-        SphekHYLl/qrJ+/PiCB2S0QN42yRvw1XeCjLJCaSt0tyPe3qla0mLaAATs61o7W2TTstwWhxs1XnA
-        J1EoIDx9Qs+SgG3TRlmOZDrH+Oufs1ygUdxPLav0ERLKPUnrlrlqP79t2EYDTFZ8ptoNjNyV0+FjV
-        L6NuYFmr/r0FAim0g8r0sI2yaCPfo8dPyKUe9YEwO1ys//aYHp2VWFhJszoBfuSbGXKIskeJeKSeB
-        2YI/ugIA==;
+        bh=VTm6s9SmDuZ9dA5svbuA0w1568aKRNH1L+rjycJno/c=; b=p4RVydkImXOQrBnsOTrKN+GtYq
+        IrkRYZILTucK6GivH6pVNeOg8CKSkYH8/w4nJA3ULSDtLDkEczcYffEN08kbaofsr+TFChFgZdbRC
+        nGFqyoQ3R65l/sZHb4a53i8qESnfgQbdaghbo3Lj6XLXgOW1wXObh6uyE5BS4S/EJLpDZrPsgFaBa
+        gn2oGe9rUoa6H3qJpaxX0yE+oY6/YNie4CBDFa41xfTvuJI8nlCnQGMV5zs1MSd488ZUfRcRn373E
+        F8vzLNug/xCPOTHHEP90YTnb4ZkjxVFKMlvUBO+YlMeYnjoq9o264DNE0YRsM9vm7bf7T2BZHLolb
+        ZFAumzlw==;
 Received: from ip4d15c27d.dynamic.kabel-deutschland.de ([77.21.194.125] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oB9w1-008DbJ-IL; Tue, 12 Jul 2022 07:03:54 +0000
+        id 1oB9w4-008DcU-E7; Tue, 12 Jul 2022 07:03:56 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Song Liu <song@kernel.org>
 Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-raid@vger.kernel.org,
         linux-block@vger.kernel.org
-Subject: [PATCH 7/8] md: only delete entries from all_mddevs when the disk is freed
-Date:   Tue, 12 Jul 2022 09:03:30 +0200
-Message-Id: <20220712070331.1390700-8-hch@lst.de>
+Subject: [PATCH 8/8] md: simplify md_open
+Date:   Tue, 12 Jul 2022 09:03:31 +0200
+Message-Id: <20220712070331.1390700-9-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220712070331.1390700-1-hch@lst.de>
 References: <20220712070331.1390700-1-hch@lst.de>
@@ -51,191 +51,79 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This ensures device names don't get prematurely reused.  Instead add a
-deleted flag to skip already deleted devices in mddev_get and other
-places that only want to see live mddevs.
+Now that devices are on the all_mddevs list until the gendisk is freed,
+there can't be any duplicates.  Remove the global list lookup and just
+grab a reference.
 
-Reported-by; Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/md/md.c | 58 ++++++++++++++++++++++++++++++++++---------------
- drivers/md/md.h |  1 +
- 2 files changed, 42 insertions(+), 17 deletions(-)
+ drivers/md/md.c | 42 +++++++++++++++---------------------------
+ 1 file changed, 15 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index f15bc6bb65f2d..9afc438a08e4d 100644
+index 9afc438a08e4d..53a92b306b1fc 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -625,6 +625,10 @@ EXPORT_SYMBOL(md_flush_request);
+@@ -7753,45 +7753,33 @@ static int md_set_read_only(struct block_device *bdev, bool ro)
  
- static inline struct mddev *mddev_get(struct mddev *mddev)
+ static int md_open(struct block_device *bdev, fmode_t mode)
  {
-+	lockdep_assert_held(&all_mddevs_lock);
-+
-+	if (mddev->deleted)
-+		return NULL;
- 	atomic_inc(&mddev->active);
- 	return mddev;
- }
-@@ -639,7 +643,7 @@ static void mddev_put(struct mddev *mddev)
- 	    mddev->ctime == 0 && !mddev->hold_active) {
- 		/* Array is not configured at all, and not held active,
- 		 * so destroy it */
--		list_del_init(&mddev->all_mddevs);
-+		mddev->deleted = true;
- 
- 		/*
- 		 * Call queue_work inside the spinlock so that
-@@ -720,8 +724,8 @@ static struct mddev *mddev_find(dev_t unit)
- 
- 	spin_lock(&all_mddevs_lock);
- 	mddev = mddev_find_locked(unit);
--	if (mddev)
--		mddev_get(mddev);
-+	if (mddev && !mddev_get(mddev))
-+		mddev = NULL;
- 	spin_unlock(&all_mddevs_lock);
- 
- 	return mddev;
-@@ -3330,6 +3334,8 @@ static bool md_rdev_overlaps(struct md_rdev *rdev)
- 
- 	spin_lock(&all_mddevs_lock);
- 	list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
-+		if (mddev->deleted)
-+			continue;
- 		rdev_for_each(rdev2, mddev) {
- 			if (rdev != rdev2 && rdev->bdev == rdev2->bdev &&
- 			    md_rdevs_overlap(rdev, rdev2)) {
-@@ -5504,11 +5510,10 @@ md_attr_show(struct kobject *kobj, struct attribute *attr, char *page)
- 	if (!entry->show)
- 		return -EIO;
- 	spin_lock(&all_mddevs_lock);
--	if (list_empty(&mddev->all_mddevs)) {
-+	if (!mddev_get(mddev)) {
- 		spin_unlock(&all_mddevs_lock);
- 		return -EBUSY;
- 	}
--	mddev_get(mddev);
- 	spin_unlock(&all_mddevs_lock);
- 
- 	rv = entry->show(mddev, page);
-@@ -5529,11 +5534,10 @@ md_attr_store(struct kobject *kobj, struct attribute *attr,
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EACCES;
- 	spin_lock(&all_mddevs_lock);
--	if (list_empty(&mddev->all_mddevs)) {
-+	if (!mddev_get(mddev)) {
- 		spin_unlock(&all_mddevs_lock);
- 		return -EBUSY;
- 	}
--	mddev_get(mddev);
- 	spin_unlock(&all_mddevs_lock);
- 	rv = entry->store(mddev, page, length);
- 	mddev_put(mddev);
-@@ -7815,6 +7819,10 @@ static void md_free_disk(struct gendisk *disk)
- {
- 	struct mddev *mddev = disk->private_data;
+-	/*
+-	 * Succeed if we can lock the mddev, which confirms that
+-	 * it isn't being stopped right now.
+-	 */
+-	struct mddev *mddev = mddev_find(bdev->bd_dev);
++	struct mddev *mddev;
+ 	int err;
  
 +	spin_lock(&all_mddevs_lock);
-+	list_del_init(&mddev->all_mddevs);
++	mddev = mddev_get(bdev->bd_disk->private_data);
 +	spin_unlock(&all_mddevs_lock);
+ 	if (!mddev)
+ 		return -ENODEV;
+ 
+-	if (mddev->gendisk != bdev->bd_disk) {
+-		/* we are racing with mddev_put which is discarding this
+-		 * bd_disk.
+-		 */
+-		mddev_put(mddev);
+-		/* Wait until bdev->bd_disk is definitely gone */
+-		if (work_pending(&mddev->del_work))
+-			flush_workqueue(md_misc_wq);
+-		return -EBUSY;
+-	}
+-	BUG_ON(mddev != bdev->bd_disk->private_data);
+-
+-	if ((err = mutex_lock_interruptible(&mddev->open_mutex)))
++	err = mutex_lock_interruptible(&mddev->open_mutex);
++	if (err)
+ 		goto out;
+ 
+-	if (test_bit(MD_CLOSING, &mddev->flags)) {
+-		mutex_unlock(&mddev->open_mutex);
+-		err = -ENODEV;
+-		goto out;
+-	}
++	err = -ENODEV;
++	if (test_bit(MD_CLOSING, &mddev->flags))
++		goto out_unlock;
+ 
+-	err = 0;
+ 	atomic_inc(&mddev->openers);
+ 	mutex_unlock(&mddev->open_mutex);
+ 
+ 	bdev_check_media_change(bdev);
+- out:
+-	if (err)
+-		mddev_put(mddev);
++	return 0;
 +
- 	percpu_ref_exit(&mddev->writes_pending);
- 	bioset_exit(&mddev->bio_set);
- 	bioset_exit(&mddev->sync_set);
-@@ -8131,6 +8139,8 @@ static void *md_seq_start(struct seq_file *seq, loff_t *pos)
- 		if (!l--) {
- 			mddev = list_entry(tmp, struct mddev, all_mddevs);
- 			mddev_get(mddev);
-+			if (!mddev_get(mddev))
-+				continue;
- 			spin_unlock(&all_mddevs_lock);
- 			return mddev;
- 		}
-@@ -8144,25 +8154,35 @@ static void *md_seq_next(struct seq_file *seq, void *v, loff_t *pos)
- {
- 	struct list_head *tmp;
- 	struct mddev *next_mddev, *mddev = v;
-+	struct mddev *to_put = NULL;
- 
- 	++*pos;
- 	if (v == (void*)2)
- 		return NULL;
- 
- 	spin_lock(&all_mddevs_lock);
--	if (v == (void*)1)
-+	if (v == (void*)1) {
- 		tmp = all_mddevs.next;
--	else
-+	} else {
-+		to_put = mddev;
- 		tmp = mddev->all_mddevs.next;
--	if (tmp != &all_mddevs)
--		next_mddev = mddev_get(list_entry(tmp,struct mddev,all_mddevs));
--	else {
--		next_mddev = (void*)2;
--		*pos = 0x10000;
- 	}
-+
-+	for (;;) {
-+		if (tmp == &all_mddevs) {
-+			next_mddev = (void*)2;
-+			*pos = 0x10000;
-+			break;
-+		}
-+		next_mddev = list_entry(tmp, struct mddev, all_mddevs);
-+		if (mddev_get(next_mddev))
-+			break;
-+		mddev = next_mddev;
-+		tmp = mddev->all_mddevs.next;
-+	};
- 	spin_unlock(&all_mddevs_lock);
- 
--	if (v != (void*)1)
-+	if (to_put)
- 		mddev_put(mddev);
- 	return next_mddev;
- 
-@@ -8732,6 +8752,8 @@ void md_do_sync(struct md_thread *thread)
- 			goto skip;
- 		spin_lock(&all_mddevs_lock);
- 		list_for_each_entry(mddev2, &all_mddevs, all_mddevs) {
-+			if (mddev2->deleted)
-+				continue;
- 			if (mddev2 == mddev)
- 				continue;
- 			if (!mddev->parallel_resync
-@@ -9530,7 +9552,8 @@ static int md_notify_reboot(struct notifier_block *this,
- 
- 	spin_lock(&all_mddevs_lock);
- 	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
--		mddev_get(mddev);
-+		if (!mddev_get(mddev))
-+			continue;
- 		spin_unlock(&all_mddevs_lock);
- 		if (mddev_trylock(mddev)) {
- 			if (mddev->pers)
-@@ -9885,7 +9908,8 @@ static __exit void md_exit(void)
- 
- 	spin_lock(&all_mddevs_lock);
- 	list_for_each_entry_safe(mddev, n, &all_mddevs, all_mddevs) {
--		mddev_get(mddev);
-+		if (!mddev_get(mddev))
-+			continue;
- 		spin_unlock(&all_mddevs_lock);
- 		export_array(mddev);
- 		mddev->ctime = 0;
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index cf2cbb17acbd4..e731a2fdc6ac1 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -488,6 +488,7 @@ struct mddev {
- 
- 	atomic_t			max_corr_read_errors; /* max read retries */
- 	struct list_head		all_mddevs;
-+	bool				deleted;
- 
- 	const struct attribute_group	*to_remove;
++out_unlock:
++	mutex_unlock(&mddev->open_mutex);
++out:
++	mddev_put(mddev);
+ 	return err;
+ }
  
 -- 
 2.30.2
