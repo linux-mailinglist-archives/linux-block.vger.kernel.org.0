@@ -2,80 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BD9857384D
-	for <lists+linux-block@lfdr.de>; Wed, 13 Jul 2022 16:04:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA0FE57385C
+	for <lists+linux-block@lfdr.de>; Wed, 13 Jul 2022 16:07:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235692AbiGMOER (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Jul 2022 10:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
+        id S236297AbiGMOHa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Jul 2022 10:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236348AbiGMOEM (ORCPT
+        with ESMTP id S236321AbiGMOH1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Jul 2022 10:04:12 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7500330F62;
-        Wed, 13 Jul 2022 07:04:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 Jul 2022 10:07:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 151D332473
+        for <linux-block@vger.kernel.org>; Wed, 13 Jul 2022 07:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657721245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=167YRn++fYV6uBWm30cEoRObvG1upqHih6YB0tP+W1Q=;
+        b=HyAgpb+s4zzo4vzkO3NuBAUSXVqz+vF9y+SlavRtWUXknJiIOkqJ5ZIQVyGnVFcC8mTQrz
+        y+TzSC4KscjjrTtLExjfGFs9bJ1TDX0uP8mpzAwB3vdE6u+nBmZyrEj9k6zoUvANd5QcEE
+        3hDbSNIJ6dIt1e/l07FnpvqizcCcGGw=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-626-wQegNj3LOqyM9K909Bg6aQ-1; Wed, 13 Jul 2022 10:07:19 -0400
+X-MC-Unique: wQegNj3LOqyM9K909Bg6aQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 329CAB81FC6;
-        Wed, 13 Jul 2022 14:04:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0153C34114;
-        Wed, 13 Jul 2022 14:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657721049;
-        bh=ZAU0L5kK4Sf9McbG926Hj/XUT0R01MpGmbcgsJYk0eo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JfznMmDaQH8d32YdV1e+uqSCeYmXGCrB04FZaz89S34KHt+hYUNSByGZqfuyt8WaJ
-         OXEs5vq9mIuJZVjZSfiO3VQGq17tu956YqCQYKrTviTMbGlc/FmaBatE1ij2Un8cJu
-         ma92AqTrKLaKbwKsTf3ddF93RILXggb102oGrWXD7NNZjvJ0hxyvCPlaUMGd3Ubtz/
-         P+fi5Q43yiUn4WjZ/LMf/PljTOCIuc0JYEQpQedQnEJpRE9jzeed85Y7qufijypS2/
-         Q46HfTgC5K/9xlwN6PWBZk/CAVeoGTHOEELqfB+2XjR98j1PjCER8gYkAAQGulFCBe
-         XpJ/yVKe1IYTA==
-Date:   Wed, 13 Jul 2022 08:04:03 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "song@kernel.org" <song@kernel.org>,
-        "djwong@kernel.org" <djwong@kernel.org>, "hch@lst.de" <hch@lst.de>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "javier@javigon.com" <javier@javigon.com>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "dongli.zhang@oracle.com" <dongli.zhang@oracle.com>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "jefflexu@linux.alibaba.com" <jefflexu@linux.alibaba.com>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "clm@fb.com" <clm@fb.com>, "dsterba@suse.com" <dsterba@suse.com>,
-        "jack@suse.com" <jack@suse.com>, "tytso@mit.edu" <tytso@mit.edu>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "idryomov@gmail.com" <idryomov@gmail.com>,
-        "danil.kipnis@cloud.ionos.com" <danil.kipnis@cloud.ionos.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "jinpu.wang@cloud.ionos.com" <jinpu.wang@cloud.ionos.com>
-Subject: Re: [PATCH 0/6] block: add support for REQ_OP_VERIFY
-Message-ID: <Ys7Q020ELE80OL+X@kbusch-mbp.dhcp.thefacebook.com>
-References: <20220630091406.19624-1-kch@nvidia.com>
- <YsXJdXnXsMtaC8DJ@casper.infradead.org>
- <5ffe57d3-354c-eabe-ea38-9c4201c13970@nvidia.com>
- <Ys639LsjBUGPNErd@casper.infradead.org>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6EC223801F5D;
+        Wed, 13 Jul 2022 14:07:18 +0000 (UTC)
+Received: from localhost (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 69B361121314;
+        Wed, 13 Jul 2022 14:07:17 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        io-uring@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
+        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V5 0/2] ublk: add io_uring based userspace block driver
+Date:   Wed, 13 Jul 2022 22:07:09 +0800
+Message-Id: <20220713140711.97356-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Ys639LsjBUGPNErd@casper.infradead.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,20 +61,145 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 01:17:56PM +0100, Matthew Wilcox wrote:
-> The firmware needs to prove to me that it *did something*.  That it
-> actually read those bytes that it claims to have verified.  The simplest
-> way to do so is to calculate a hash over the blocks which were read
-> (maybe the host needs to provide a nonce as part of the VERIFY command
-> so the drive can't "remember" the checksum).
+Hello Guys,
 
-From a protocol perspective, NVMe's verify command currently leaves 8-bytes in
-the response unused, so this could be a reasonable way to return something like
-a crc64 of the verified blocks. The verify command starts at an arbitrary block
-and spans an arbitrary number of them, so I think a device "remembering" all
-possible combinations as a way to cheat may be harder than just doing the work
-:).
+ublk driver is one kernel driver for implementing generic userspace block
+device/driver, which delivers io request from ublk block device(/dev/ublkbN) into
+ublk server[1] which is the userspace part of ublk for communicating
+with ublk driver and handling specific io logic by its target module.
 
-But this is just theoretical; it'd be some time before we'd see devices
-supporting such a scheme, assuming there's support from the standards
-committees.
+Another thing ublk driver handles is to copy data between user space buffer
+and request/bio's pages, or take zero copy if mm is ready for support it in
+future. ublk driver doesn't handle any IO logic of the specific driver, so
+it is small/simple, and all io logics are done by the target code in ublkserver.
+
+The above two are main jobs done by ublk driver.
+
+ublk driver can help to move IO logic into userspace, in which the
+development work is easier/more effective than doing in kernel, such as,
+ublk-loop takes < 200 lines of loop specific code to get basically same 
+function with kernel loop block driver, meantime the performance is
+is even better than kernel loop with same setting. ublksrv[1] provide built-in
+test for comparing both by running "make test T=loop", for example, see
+the test result running on VM which is over my lattop(root disk is
+nvme/device mapper/xfs):
+
+	[root@ktest-36 ubdsrv]#make -s -C /root/git/ubdsrv/tests run T=loop/001 R=10
+	running loop/001
+		fio (ublk/loop(/root/git/ubdsrv/tests/tmp/ublk_loop_VqbMA), libaio, bs 4k, dio, hw queues:1)...
+		randwrite: jobs 1, iops 32572
+		randread: jobs 1, iops 143052
+		rw: jobs 1, iops read 29919 write 29964
+	
+	[root@ktest-36 ubdsrv]# make test T=loop/003
+	make -s -C /root/git/ubdsrv/tests run T=loop/003 R=10
+	running loop/003
+		fio (kernel_loop/kloop(/root/git/ubdsrv/tests/tmp/ublk_loop_ZIVnG), libaio, bs 4k, dio, hw queues:1)...
+		randwrite: jobs 1, iops 27436
+		randread: jobs 1, iops 95273
+		rw: jobs 1, iops read 22542 write 22543 
+
+
+Another example is high performance qcow2 support[2], which could be built with
+ublk framework more easily than doing it inside kernel.
+
+Also there are more people who express interests on userspace block driver[3],
+Gabriel Krisman Bertazi proposes this topic in lsf/mm/ebpf 2022 and mentioned
+requirement from Google. Ziyang Zhang from Alibaba said they "plan to
+replace TCMU by UBD as a new choice" because UBD can get better throughput than
+TCMU even with single queue[4], meantime UBD is simple. Also there is userspace
+storage service for providing storage to containers.
+
+It is io_uring based: io request is delivered to userspace via new added
+io_uring command which has been proved as very efficient for making nvme
+passthrough IO to get better IOPS than io_uring(READ/WRITE). Meantime one
+shared/mmap buffer is used for sharing io descriptor to userspace, the
+buffer is readonly for userspace, each IO just takes 24bytes so far.
+It is suggested to use io_uring in userspace(target part of ublk server)
+to handle IO request too. And it is still easy for ublkserver to support
+io handling by non-io_uring, and this work isn't done yet, but can be
+supported easily with help o eventfd.
+
+This way is efficient since no extra io command copy is required, no sleep
+is needed in transferring io command to userspace. Meantime the communication
+protocol is simple and efficient, one single command of
+UBD_IO_COMMIT_AND_FETCH_REQ can handle both fetching io request desc and commit
+command result in one trip. IO handling is often batched after single
+io_uring_enter() returns, both IO requests from ublk server target and
+IO commands could be handled as a whole batch.
+
+And the patch by patch change can be found in the following
+tree:
+
+https://github.com/ming1/linux/tree/my_for-5.20-ubd-devel_v4
+
+ublk server repo(master branch):
+
+	https://github.com/ming1/ubdsrv
+
+Any comments are welcome!
+
+Since V4:
+- drop patch of "ublk_drv: add UBLK_IO_REFETCH_REQ for supporting to build as module",
+instead of using io_uring_cmd_complete_in_task for building driver as module
+
+- simplify aborting code
+
+
+Since V3:
+- address Gabriel Krisman Bertazi's comments on V3: add userspace data
+  validation before handling command, remove warning, ...
+- remove UBLK_IO_COMMIT_REQ command as suggested by Zixiang and Gabriel Krisman Bertazi
+- fix one request double free when running abort
+- rewrite/cleanup ublk_copy_pages(), then this handling becomes very
+  clean
+- add one command of UBLK_IO_REFETCH_REQ for allowing ublk_drv to build
+  as module
+
+Since V2:
+- fix one big performance problem:
+	https://github.com/ming1/linux/commit/3c9fd476951759858cc548dee4cedc074194d0b0
+- rename as ublk, as suggested by Gabriel Krisman Bertazi 
+- lots of cleanup & code improvement & bugfix, see details in git
+  hisotry
+
+
+Since V1:
+
+Remove RFC now because ublk driver codes gets lots of cleanup, enhancement and
+bug fixes since V1:
+
+- cleanup uapi: remove ublk specific error code,  switch to linux error code,
+remove one command op, remove one field from cmd_desc
+
+- add monitor mechanism to handle ubq_daemon being killed, ublksrv[1]
+  includes builtin tests for covering heavy IO with deleting ublk / killing
+  ubq_daemon at the same time, and V2 pass all the two tests(make test T=generic),
+  and the abort/stop mechanism is simple
+
+- fix MQ command buffer mmap bug, and now 'xfstetests -g auto' works well on
+  MQ ublk-loop devices(test/scratch)
+
+- improve batching submission as suggested by Jens
+
+- improve handling for starting device, replace random wait/poll with
+completion
+
+- all kinds of cleanup, bug fix,..
+
+
+Ming Lei (2):
+  ublk_drv: add io_uring based userspace block driver
+  ublk_drv: support to complete io command via task_work_add
+
+ drivers/block/Kconfig         |    6 +
+ drivers/block/Makefile        |    2 +
+ drivers/block/ublk_drv.c      | 1589 +++++++++++++++++++++++++++++++++
+ include/uapi/linux/ublk_cmd.h |  162 ++++
+ 4 files changed, 1759 insertions(+)
+ create mode 100644 drivers/block/ublk_drv.c
+ create mode 100644 include/uapi/linux/ublk_cmd.h
+
+-- 
+2.31.1
+
