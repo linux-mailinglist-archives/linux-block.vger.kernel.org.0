@@ -2,96 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63BEF57386E
-	for <lists+linux-block@lfdr.de>; Wed, 13 Jul 2022 16:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BD9857384D
+	for <lists+linux-block@lfdr.de>; Wed, 13 Jul 2022 16:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236536AbiGMOJq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 13 Jul 2022 10:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        id S235692AbiGMOER (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 13 Jul 2022 10:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236487AbiGMOJa (ORCPT
+        with ESMTP id S236348AbiGMOEM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 13 Jul 2022 10:09:30 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C69938A
-        for <linux-block@vger.kernel.org>; Wed, 13 Jul 2022 07:09:28 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id o15so12174415pjh.1
-        for <linux-block@vger.kernel.org>; Wed, 13 Jul 2022 07:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IZUCsCUFTB3hUkWYK46U+VsvZBxdvNM3Fkqu8Dxi8pc=;
-        b=Cn/jpQyig6YQIyCLHkn4YaP7UZR5ml4Q9/jM/qWHFT8jzNZxvfWZdaVAlBy206ad7N
-         pE1scK5mgeZYVQq6z/R/5AN20t9Gs/e1e3BMDsMtvjpaEz9mjHwlsnYQFxSHMYdQORKu
-         LmZEmrcfGRK9gCw6EuVk5VVOaH+qxczVX007bw+bmQxmVuA0T9S5lzOdLP98F/7Pem51
-         WvIdP9WAI41JgutJjyTuzGlSXvXFrZy7i2fr8AnhnCXEvDyJfpinG3E8ntorApKIcLYT
-         d5WQDwlJ2jhRZQK9hAGuhEi9JkrbEXHlQEiHSYzbXixem49nWfplucI2sNSKjaF1tH3O
-         ss1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IZUCsCUFTB3hUkWYK46U+VsvZBxdvNM3Fkqu8Dxi8pc=;
-        b=ka4FyzaquPHogt07nhjSo6PpLCmOuxBd3Om79iFMsuRCTbTtZVEfpOis+EPAdocy3h
-         I088PvE8bNJ9s45OWVV+4LS19lgXQ6IkO64zvgJ6N63EW8YYrZdxgfZk7irSefFKz5d+
-         6PWP630AqYpUjbB11pJ/NySV6TEA8vM6AJI1EMRmWDJ90GFNrbROyxVWhDH1zZZJR87Z
-         VU0CKb9itMN2gdhTICJrF8RwhOMzb3dOlh+clmXz/WiPdAY67c6i/cUo3xUsAFIkpN1M
-         BEee0MvN8C/lWClCiKaJTVVUozEMO5mDaTDOLHj1koKQDq6RSy7uzuw+JD/S/bkGyWxO
-         0plg==
-X-Gm-Message-State: AJIora+sf6stXOfICtxwxBJ3L4ybAS7RwkBVAZv5j12yOHN0K42jUJBO
-        N6VOrIu8VHMlnpy3OFI8hBi5uA==
-X-Google-Smtp-Source: AGRyM1ue1MoP4IWh46nK55SBZDgiY7nb8CbRRXsJl/DmE7gN3+60bd97mvAZFdyOMgJmskZsh3ZRLg==
-X-Received: by 2002:a17:90a:e008:b0:1ef:831a:1fff with SMTP id u8-20020a17090ae00800b001ef831a1fffmr10183337pjy.221.1657721367885;
-        Wed, 13 Jul 2022 07:09:27 -0700 (PDT)
-Received: from FVFYT0MHHV2J.bytedance.net ([2408:8207:18d5:ce0:b14a:8f36:de08:545f])
-        by smtp.gmail.com with ESMTPSA id y4-20020a655b44000000b004126f343fc9sm7920738pgr.67.2022.07.13.07.09.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Jul 2022 07:09:27 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     axboe@kernel.dk, snitzer@kernel.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@lst.de, Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] block: fix missing blkcg_bio_issue_init
-Date:   Wed, 13 Jul 2022 22:02:26 +0800
-Message-Id: <20220713140226.68135-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.32.1 (Apple Git-133)
+        Wed, 13 Jul 2022 10:04:12 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7500330F62;
+        Wed, 13 Jul 2022 07:04:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 329CAB81FC6;
+        Wed, 13 Jul 2022 14:04:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0153C34114;
+        Wed, 13 Jul 2022 14:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657721049;
+        bh=ZAU0L5kK4Sf9McbG926Hj/XUT0R01MpGmbcgsJYk0eo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JfznMmDaQH8d32YdV1e+uqSCeYmXGCrB04FZaz89S34KHt+hYUNSByGZqfuyt8WaJ
+         OXEs5vq9mIuJZVjZSfiO3VQGq17tu956YqCQYKrTviTMbGlc/FmaBatE1ij2Un8cJu
+         ma92AqTrKLaKbwKsTf3ddF93RILXggb102oGrWXD7NNZjvJ0hxyvCPlaUMGd3Ubtz/
+         P+fi5Q43yiUn4WjZ/LMf/PljTOCIuc0JYEQpQedQnEJpRE9jzeed85Y7qufijypS2/
+         Q46HfTgC5K/9xlwN6PWBZk/CAVeoGTHOEELqfB+2XjR98j1PjCER8gYkAAQGulFCBe
+         XpJ/yVKe1IYTA==
+Date:   Wed, 13 Jul 2022 08:04:03 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "agk@redhat.com" <agk@redhat.com>,
+        "song@kernel.org" <song@kernel.org>,
+        "djwong@kernel.org" <djwong@kernel.org>, "hch@lst.de" <hch@lst.de>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "javier@javigon.com" <javier@javigon.com>,
+        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "dongli.zhang@oracle.com" <dongli.zhang@oracle.com>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "jefflexu@linux.alibaba.com" <jefflexu@linux.alibaba.com>,
+        "josef@toxicpanda.com" <josef@toxicpanda.com>,
+        "clm@fb.com" <clm@fb.com>, "dsterba@suse.com" <dsterba@suse.com>,
+        "jack@suse.com" <jack@suse.com>, "tytso@mit.edu" <tytso@mit.edu>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "idryomov@gmail.com" <idryomov@gmail.com>,
+        "danil.kipnis@cloud.ionos.com" <danil.kipnis@cloud.ionos.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "jinpu.wang@cloud.ionos.com" <jinpu.wang@cloud.ionos.com>
+Subject: Re: [PATCH 0/6] block: add support for REQ_OP_VERIFY
+Message-ID: <Ys7Q020ELE80OL+X@kbusch-mbp.dhcp.thefacebook.com>
+References: <20220630091406.19624-1-kch@nvidia.com>
+ <YsXJdXnXsMtaC8DJ@casper.infradead.org>
+ <5ffe57d3-354c-eabe-ea38-9c4201c13970@nvidia.com>
+ <Ys639LsjBUGPNErd@casper.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ys639LsjBUGPNErd@casper.infradead.org>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The commit 513616843d73 ("block: remove superfluous calls to
-blkcg_bio_issue_init") has removed blkcg_bio_issue_init from
-__bio_clone since submit_bio will override ->bi_issue.
-However, __blk_queue_split is called after blkcg_bio_issue_init
-(see blk_mq_submit_bio) in submit_bio. In this case, the
-->bi_issue is 0. Fix it.
+On Wed, Jul 13, 2022 at 01:17:56PM +0100, Matthew Wilcox wrote:
+> The firmware needs to prove to me that it *did something*.  That it
+> actually read those bytes that it claims to have verified.  The simplest
+> way to do so is to calculate a hash over the blocks which were read
+> (maybe the host needs to provide a nonce as part of the VERIFY command
+> so the drive can't "remember" the checksum).
 
-Fixes: 513616843d73 ("block: remove superfluous calls to blkcg_bio_issue_init")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- block/blk-merge.c | 1 +
- 1 file changed, 1 insertion(+)
+From a protocol perspective, NVMe's verify command currently leaves 8-bytes in
+the response unused, so this could be a reasonable way to return something like
+a crc64 of the verified blocks. The verify command starts at an arbitrary block
+and spans an arbitrary number of them, so I think a device "remembering" all
+possible combinations as a way to cheat may be harder than just doing the work
+:).
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 5abf5aa5a5f0..a5bfe7f18f42 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -355,6 +355,7 @@ void __blk_queue_split(struct request_queue *q, struct bio **bio,
- 		/* there isn't chance to merge the splitted bio */
- 		split->bi_opf |= REQ_NOMERGE;
- 
-+		blkcg_bio_issue_init(split);
- 		bio_chain(split, *bio);
- 		trace_block_split(split, (*bio)->bi_iter.bi_sector);
- 		submit_bio_noacct(*bio);
--- 
-2.11.0
-
+But this is just theoretical; it'd be some time before we'd see devices
+supporting such a scheme, assuming there's support from the standards
+committees.
