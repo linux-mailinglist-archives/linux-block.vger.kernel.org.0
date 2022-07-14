@@ -2,49 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55B8057549B
-	for <lists+linux-block@lfdr.de>; Thu, 14 Jul 2022 20:09:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08E3957549C
+	for <lists+linux-block@lfdr.de>; Thu, 14 Jul 2022 20:09:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240529AbiGNSJc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S240235AbiGNSJc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 14 Jul 2022 14:09:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240581AbiGNSJS (ORCPT
+        with ESMTP id S240582AbiGNSJS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 14 Jul 2022 14:09:18 -0400
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79555222BB
-        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:09:01 -0700 (PDT)
-Received: by mail-pf1-f172.google.com with SMTP id b9so2537862pfp.10
-        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:09:01 -0700 (PDT)
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEDC0255BC
+        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:09:03 -0700 (PDT)
+Received: by mail-pj1-f47.google.com with SMTP id 89-20020a17090a09e200b001ef7638e536so9346146pjo.3
+        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:09:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2gp0UvqLbsoA0Ni6cyG6gP2JZx76ey6eHskW647sBT4=;
-        b=ma/MI6oV9ihntp3ifVb4HbsbmsTEOfuZbn4bwIqV8nmszRKQaU7RBhcD6p4Kt/5E2P
-         Fjil21nTUaJ048Yj1jNoBytSkA3kPrnAKIJ3aWyBkytuOixQw+6rBgM3J9e82wa2qSzJ
-         rx7xWbDUdwKeqm4+nIApz5+YvYlwKfHNTprFMisKyq7L60KxVPm4VHdg5faYXJ+IsKfE
-         W14TILTTo5lHB706O2tFcEB40lkaxsZv7jRNTJZFqoPUVcleIU0jTpQMrdacEPCOhfkU
-         xrSsw6hQm0HDw/aGMZhF+fV0ePCoKIU40reE+MwJ1ZB6Rq5quGihytVXTyDvEyYrRPog
-         344A==
-X-Gm-Message-State: AJIora/ttXTyDDibxmfSeg4dorlg8XqjQBxqpEHq+31lfhmozNnhNiqa
-        sN0ZPuHxgcSXEJ87nTbWI5s=
-X-Google-Smtp-Source: AGRyM1tt7NvJ5xuM2/LMj/7h68pAvPw+rdO8ZfW0J8lyxDhJYJmW+1sTGO/NcNgJB4zb5xWPz/LroQ==
-X-Received: by 2002:a05:6a00:26cf:b0:4f6:fc52:7b6a with SMTP id p15-20020a056a0026cf00b004f6fc527b6amr9679286pfw.39.1657822141225;
-        Thu, 14 Jul 2022 11:09:01 -0700 (PDT)
+        bh=8++QWhqhcQOZANXJkJ0l1AWsqDRP4OOaVT65wqSgGZ8=;
+        b=h/4TscRANdn+F3mgNsjXk0NIaYrXlqA1ZAjKxhh4vpkFXrmN6kvWnQVnPoRttrfDcr
+         qF5PgNjeMMGtq+4holKNosrYGlTAWF2YN8oUQxQRlRdz1TIT4lyZmly7fdWqPwr9fl3T
+         tzJiaWF+QHeswn4YdzOujjvuTGyGona+vil5Ep/Z24kXzS8sG2jZbRATSPQjQrr0iDub
+         9lS7Chf+RFimy+oWyC/exv1rvIHgtnRy7zywhkdGRRN8DmBQVoe2s6lwujI54xGkOcf2
+         7uqxOxw2vOKGXhLeyI/IZonrhT5kF/VOYyJ3ymlvY+89FaaNVcFClFFqU1SH9aQxLDG7
+         XwUA==
+X-Gm-Message-State: AJIora8gokI3g8oW4uHbzgcZeElrbrqmmY0v0KlORSgFfm1Y1sXnsgzp
+        gEmsJM8N9lA9eWxMRvoT/c2tRC5UgQQ=
+X-Google-Smtp-Source: AGRyM1sdPyHhUNCqqHV65vk5VnlpJ1N3NHA2jjp6THeDk1IazpEl/HnqV1u+jim9JNsnLGCWZ9hcEQ==
+X-Received: by 2002:a17:90b:240e:b0:1e0:775b:f8fc with SMTP id nr14-20020a17090b240e00b001e0775bf8fcmr11119872pjb.132.1657822143370;
+        Thu, 14 Jul 2022 11:09:03 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:9fab:70d1:f0e7:922b])
-        by smtp.gmail.com with ESMTPSA id m5-20020a170902db0500b0016bebb0cb96sm1781846plx.266.2022.07.14.11.08.59
+        by smtp.gmail.com with ESMTPSA id m5-20020a170902db0500b0016bebb0cb96sm1781846plx.266.2022.07.14.11.09.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 11:09:00 -0700 (PDT)
+        Thu, 14 Jul 2022 11:09:02 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v3 52/63] fs/f2fs: Use the enum req_op and blk_opf_t types
-Date:   Thu, 14 Jul 2022 11:07:18 -0700
-Message-Id: <20220714180729.1065367-53-bvanassche@acm.org>
+        Bart Van Assche <bvanassche@acm.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Subject: [PATCH v3 53/63] fs/gfs2: Use the enum req_op and blk_opf_t types
+Date:   Thu, 14 Jul 2022 11:07:19 -0700
+Message-Id: <20220714180729.1065367-54-bvanassche@acm.org>
 X-Mailer: git-send-email 2.37.0.170.g444d1eabd0-goog
 In-Reply-To: <20220714180729.1065367-1-bvanassche@acm.org>
 References: <20220714180729.1065367-1-bvanassche@acm.org>
@@ -52,8 +54,9 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -62,165 +65,126 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Improve static type checking by using the enum req_op type for variables
 that represent a request operation and the new blk_opf_t type for
-variables that represent request flags.
+variables that represent request flags. Combine the first two
+gfs2_submit_bhs() arguments into a single argument.
 
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- fs/f2fs/data.c              | 11 ++++++-----
- fs/f2fs/f2fs.h              |  6 +++---
- fs/f2fs/node.c              |  2 +-
- fs/f2fs/segment.c           |  2 +-
- include/trace/events/f2fs.h | 22 +++++++++++-----------
- 5 files changed, 22 insertions(+), 21 deletions(-)
+ fs/gfs2/log.c     | 4 ++--
+ fs/gfs2/log.h     | 2 +-
+ fs/gfs2/lops.c    | 4 ++--
+ fs/gfs2/lops.h    | 2 +-
+ fs/gfs2/meta_io.c | 9 ++++-----
+ 5 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 7fcbcf979737..5c13ee321940 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -387,11 +387,11 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
- 	return 0;
- }
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index f0ee3ff6f9a8..eec4159b08aa 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -823,7 +823,7 @@ void gfs2_flush_revokes(struct gfs2_sbd *sdp)
  
--static unsigned int f2fs_io_flags(struct f2fs_io_info *fio)
-+static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
+ void gfs2_write_log_header(struct gfs2_sbd *sdp, struct gfs2_jdesc *jd,
+ 			   u64 seq, u32 tail, u32 lblock, u32 flags,
+-			   int op_flags)
++			   blk_opf_t op_flags)
  {
- 	unsigned int temp_mask = (1 << NR_TEMP_TYPE) - 1;
- 	unsigned int fua_flag, meta_flag, io_flag;
--	unsigned int op_flags = 0;
-+	blk_opf_t op_flags = 0;
+ 	struct gfs2_log_header *lh;
+ 	u32 hash, crc;
+@@ -905,7 +905,7 @@ void gfs2_write_log_header(struct gfs2_sbd *sdp, struct gfs2_jdesc *jd,
  
- 	if (fio->op != REQ_OP_WRITE)
- 		return 0;
-@@ -999,7 +999,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- }
- 
- static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
--				      unsigned nr_pages, unsigned op_flag,
-+				      unsigned nr_pages, blk_opf_t op_flag,
- 				      pgoff_t first_idx, bool for_write)
+ static void log_write_header(struct gfs2_sbd *sdp, u32 flags)
  {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-@@ -1047,7 +1047,8 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
+-	int op_flags = REQ_PREFLUSH | REQ_FUA | REQ_META | REQ_SYNC;
++	blk_opf_t op_flags = REQ_PREFLUSH | REQ_FUA | REQ_META | REQ_SYNC;
+ 	enum gfs2_freeze_state state = atomic_read(&sdp->sd_freeze_state);
  
- /* This can handle encryption stuffs */
- static int f2fs_submit_page_read(struct inode *inode, struct page *page,
--				 block_t blkaddr, int op_flags, bool for_write)
-+				 block_t blkaddr, blk_opf_t op_flags,
-+				 bool for_write)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct bio *bio;
-@@ -1181,7 +1182,7 @@ int f2fs_get_block(struct dnode_of_data *dn, pgoff_t index)
- }
- 
- struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
--						int op_flags, bool for_write)
-+				     blk_opf_t op_flags, bool for_write)
- {
- 	struct address_space *mapping = inode->i_mapping;
- 	struct dnode_of_data dn;
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index d9bbecd008d2..868170b72de9 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1183,8 +1183,8 @@ struct f2fs_io_info {
- 	nid_t ino;		/* inode number */
- 	enum page_type type;	/* contains DATA/NODE/META/META_FLUSH */
- 	enum temp_type temp;	/* contains HOT/WARM/COLD */
--	int op;			/* contains REQ_OP_ */
--	int op_flags;		/* req_flag_bits */
-+	enum req_op op;		/* contains REQ_OP_ */
-+	blk_opf_t op_flags;	/* req_flag_bits */
- 	block_t new_blkaddr;	/* new block address to be written */
- 	block_t old_blkaddr;	/* old block address before Cow */
- 	struct page *page;	/* page to be written */
-@@ -3741,7 +3741,7 @@ int f2fs_reserve_new_block(struct dnode_of_data *dn);
- int f2fs_get_block(struct dnode_of_data *dn, pgoff_t index);
- int f2fs_reserve_block(struct dnode_of_data *dn, pgoff_t index);
- struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
--			int op_flags, bool for_write);
-+			blk_opf_t op_flags, bool for_write);
- struct page *f2fs_find_data_page(struct inode *inode, pgoff_t index);
- struct page *f2fs_get_lock_data_page(struct inode *inode, pgoff_t index,
- 			bool for_write);
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index cf6f7fc83c08..04a145f1dcfc 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1327,7 +1327,7 @@ struct page *f2fs_new_node_page(struct dnode_of_data *dn, unsigned int ofs)
-  * 0: f2fs_put_page(page, 0)
-  * LOCKED_PAGE or error: f2fs_put_page(page, 1)
+ 	gfs2_assert_withdraw(sdp, (state != SFS_FROZEN));
+diff --git a/fs/gfs2/log.h b/fs/gfs2/log.h
+index fc905c2af53c..653cffcbf869 100644
+--- a/fs/gfs2/log.h
++++ b/fs/gfs2/log.h
+@@ -82,7 +82,7 @@ extern void gfs2_log_reserve(struct gfs2_sbd *sdp, struct gfs2_trans *tr,
+ 			     unsigned int *extra_revokes);
+ extern void gfs2_write_log_header(struct gfs2_sbd *sdp, struct gfs2_jdesc *jd,
+ 				  u64 seq, u32 tail, u32 lblock, u32 flags,
+-				  int op_flags);
++				  blk_opf_t op_flags);
+ extern void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl,
+ 			   u32 type);
+ extern void gfs2_log_commit(struct gfs2_sbd *sdp, struct gfs2_trans *trans);
+diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
+index 6ba51cbb94cf..90a2d7bc91c4 100644
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -238,7 +238,7 @@ static void gfs2_end_log_write(struct bio *bio)
+  * there is no pending bio, then this is a no-op.
   */
--static int read_node_page(struct page *page, int op_flags)
-+static int read_node_page(struct page *page, blk_opf_t op_flags)
+ 
+-void gfs2_log_submit_bio(struct bio **biop, int opf)
++void gfs2_log_submit_bio(struct bio **biop, blk_opf_t opf)
  {
- 	struct f2fs_sb_info *sbi = F2FS_P_SB(page);
- 	struct node_info ni;
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 874c1b9c41a2..c7afc588cf26 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1082,7 +1082,7 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
- 	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
- 					&(dcc->fstrim_list) : &(dcc->wait_list);
--	int flag = dpolicy->sync ? REQ_SYNC : 0;
-+	blk_opf_t flag = dpolicy->sync ? REQ_SYNC : 0;
- 	block_t lstart, start, len, total_len;
- 	int err = 0;
+ 	struct bio *bio = *biop;
+ 	if (bio) {
+@@ -292,7 +292,7 @@ static struct bio *gfs2_log_alloc_bio(struct gfs2_sbd *sdp, u64 blkno,
+  */
  
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 513e889ef8aa..f1e922237736 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -66,7 +66,7 @@ TRACE_DEFINE_ENUM(CP_RESIZE);
+ static struct bio *gfs2_log_get_bio(struct gfs2_sbd *sdp, u64 blkno,
+-				    struct bio **biop, int op,
++				    struct bio **biop, enum req_op op,
+ 				    bio_end_io_t *end_io, bool flush)
+ {
+ 	struct bio *bio = *biop;
+diff --git a/fs/gfs2/lops.h b/fs/gfs2/lops.h
+index f707601597dc..1412ffba1d44 100644
+--- a/fs/gfs2/lops.h
++++ b/fs/gfs2/lops.h
+@@ -16,7 +16,7 @@ extern u64 gfs2_log_bmap(struct gfs2_jdesc *jd, unsigned int lbn);
+ extern void gfs2_log_write(struct gfs2_sbd *sdp, struct gfs2_jdesc *jd,
+ 			   struct page *page, unsigned size, unsigned offset,
+ 			   u64 blkno);
+-extern void gfs2_log_submit_bio(struct bio **biop, int opf);
++extern void gfs2_log_submit_bio(struct bio **biop, blk_opf_t opf);
+ extern void gfs2_pin(struct gfs2_sbd *sdp, struct buffer_head *bh);
+ extern int gfs2_find_jhead(struct gfs2_jdesc *jd,
+ 			   struct gfs2_log_header_host *head, bool keep_cache);
+diff --git a/fs/gfs2/meta_io.c b/fs/gfs2/meta_io.c
+index 3570739f005d..7e70e0ba5a6c 100644
+--- a/fs/gfs2/meta_io.c
++++ b/fs/gfs2/meta_io.c
+@@ -34,7 +34,7 @@ static int gfs2_aspace_writepage(struct page *page, struct writeback_control *wb
+ {
+ 	struct buffer_head *bh, *head;
+ 	int nr_underway = 0;
+-	int write_flags = REQ_META | REQ_PRIO | wbc_to_write_flags(wbc);
++	blk_opf_t write_flags = REQ_META | REQ_PRIO | wbc_to_write_flags(wbc);
  
- #define F2FS_OP_FLAGS (REQ_RAHEAD | REQ_SYNC | REQ_META | REQ_PRIO |	\
- 			REQ_PREFLUSH | REQ_FUA)
--#define F2FS_BIO_FLAG_MASK(t)	(t & F2FS_OP_FLAGS)
-+#define F2FS_BIO_FLAG_MASK(t) (__force u32)((t) & F2FS_OP_FLAGS)
+ 	BUG_ON(!PageLocked(page));
+ 	BUG_ON(!page_has_buffers(page));
+@@ -217,14 +217,13 @@ static void gfs2_meta_read_endio(struct bio *bio)
+  * Submit several consecutive buffer head I/O requests as a single bio I/O
+  * request.  (See submit_bh_wbc.)
+  */
+-static void gfs2_submit_bhs(int op, int op_flags, struct buffer_head *bhs[],
+-			    int num)
++static void gfs2_submit_bhs(blk_opf_t opf, struct buffer_head *bhs[], int num)
+ {
+ 	while (num > 0) {
+ 		struct buffer_head *bh = *bhs;
+ 		struct bio *bio;
  
- #define show_bio_type(op,op_flags)	show_bio_op(op),		\
- 						show_bio_op_flags(op_flags)
-@@ -75,12 +75,12 @@ TRACE_DEFINE_ENUM(CP_RESIZE);
+-		bio = bio_alloc(bh->b_bdev, num, op | op_flags, GFP_NOIO);
++		bio = bio_alloc(bh->b_bdev, num, opf, GFP_NOIO);
+ 		bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
+ 		while (num > 0) {
+ 			bh = *bhs;
+@@ -288,7 +287,7 @@ int gfs2_meta_read(struct gfs2_glock *gl, u64 blkno, int flags,
+ 		}
+ 	}
  
- #define show_bio_op_flags(flags)					\
- 	__print_flags(F2FS_BIO_FLAG_MASK(flags), "|",			\
--		{ REQ_RAHEAD,		"R" },				\
--		{ REQ_SYNC,		"S" },				\
--		{ REQ_META,		"M" },				\
--		{ REQ_PRIO,		"P" },				\
--		{ REQ_PREFLUSH,		"PF" },				\
--		{ REQ_FUA,		"FUA" })
-+		{ (__force u32)REQ_RAHEAD,	"R" },			\
-+		{ (__force u32)REQ_SYNC,	"S" },			\
-+		{ (__force u32)REQ_META,	"M" },			\
-+		{ (__force u32)REQ_PRIO,	"P" },			\
-+		{ (__force u32)REQ_PREFLUSH,	"PF" },			\
-+		{ (__force u32)REQ_FUA,		"FUA" })
+-	gfs2_submit_bhs(REQ_OP_READ, REQ_META | REQ_PRIO, bhs, num);
++	gfs2_submit_bhs(REQ_OP_READ | REQ_META | REQ_PRIO, bhs, num);
+ 	if (!(flags & DIO_WAIT))
+ 		return 0;
  
- #define show_data_type(type)						\
- 	__print_symbolic(type,						\
-@@ -1036,8 +1036,8 @@ DECLARE_EVENT_CLASS(f2fs__submit_page_bio,
- 		__field(pgoff_t, index)
- 		__field(block_t, old_blkaddr)
- 		__field(block_t, new_blkaddr)
--		__field(int, op)
--		__field(int, op_flags)
-+		__field(enum req_op, op)
-+		__field(blk_opf_t, op_flags)
- 		__field(int, temp)
- 		__field(int, type)
- 	),
-@@ -1092,8 +1092,8 @@ DECLARE_EVENT_CLASS(f2fs__bio,
- 	TP_STRUCT__entry(
- 		__field(dev_t,	dev)
- 		__field(dev_t,	target)
--		__field(int,	op)
--		__field(int,	op_flags)
-+		__field(enum req_op,	op)
-+		__field(blk_opf_t,	op_flags)
- 		__field(int,	type)
- 		__field(sector_t,	sector)
- 		__field(unsigned int,	size)
