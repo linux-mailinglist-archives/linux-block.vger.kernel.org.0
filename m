@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0AFB575486
-	for <lists+linux-block@lfdr.de>; Thu, 14 Jul 2022 20:08:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3592F575487
+	for <lists+linux-block@lfdr.de>; Thu, 14 Jul 2022 20:08:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232679AbiGNSI1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 14 Jul 2022 14:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
+        id S240493AbiGNSI2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 14 Jul 2022 14:08:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240493AbiGNSIU (ORCPT
+        with ESMTP id S240395AbiGNSIW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 14 Jul 2022 14:08:20 -0400
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110286871D
-        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:08:20 -0700 (PDT)
-Received: by mail-pl1-f180.google.com with SMTP id 5so1116737plk.9
-        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:08:20 -0700 (PDT)
+        Thu, 14 Jul 2022 14:08:22 -0400
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 990BC68733
+        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:08:21 -0700 (PDT)
+Received: by mail-pf1-f180.google.com with SMTP id v7so2601102pfb.0
+        for <linux-block@vger.kernel.org>; Thu, 14 Jul 2022 11:08:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NYN+z8YXhiwlM9h20/i7DEnZqOdFe4dlzQhIALAAaSk=;
-        b=hw47DXxxTj2B50RW17cmaRtnG/EP6GBnfz6zS9++Je3KqBvD+Dio+cIxpPba4RAXnd
-         op8o1QBoXjhnE/hOqg5P0X8IgpNV4z7Xv4KvLASmf+D5cbjwJL6FAnCTRXEg0l+wXuCL
-         bIdrZnG4LisSF/CjgCPU51JNiLYquxtfG4tTvNQ1ON/umtGGG5vLGOqK5t5g3zkikLiI
-         jV+bYn3DVHYzJ8ZbYU2XEKPRtCVjzSmn5hSkAXmsHjDSa0+DTo69E4thKDFX4si2ih4+
-         ri1hhwdPbW6mx3LKJ2jSR/mS/e7kjoWbP+K+v8jPbfVo6bWH7g6U8NGrZvnXKrFYLGL7
-         Eu5A==
-X-Gm-Message-State: AJIora81g/f2Ri4XoYv4LOmoGlhI7jarQg1Krd6aRJAOz5V8/M1mka1j
-        D56SVzvrvR2lLlxhYSVH5Dg=
-X-Google-Smtp-Source: AGRyM1sRC/bhCPiPLeM5cRC54Is3jCsSEycT/S9ZIBSdZpS9YWgb9kJF74+6UOTWHbB+3yZuJiMYTg==
-X-Received: by 2002:a17:902:f54e:b0:16c:5119:d4a8 with SMTP id h14-20020a170902f54e00b0016c5119d4a8mr9384046plf.22.1657822099710;
-        Thu, 14 Jul 2022 11:08:19 -0700 (PDT)
+        bh=Cr168tYQgG0su4Z1z0svUMsQj1YVnx98U6fmpHkkkWU=;
+        b=U6gAA0CwfyP49j1OQw7KIMNWpi2WN5zZjXUrqeDg+d6QM4uQo3+1iIDQcbi1rLlttb
+         +czp/s2d/j3PvsoyfIq3EnosfELSY3kGnhX2Trcd9MbRumLyHuYhOEoQVjkRmwOw39nk
+         KaEZuXNWE9b0DkMavbwphpnYkUWV9jNnZ9XUNHsJH7OpegNOGr0HavoV6vH3JYfffNzN
+         vXQYqlN3Gs3gdbkM+KGDvSjwD6S5e/Ppj4Axuz62so9kr2bivOBXua4FeW2EQlW5hHRJ
+         NZj+NOaS/PXiJn2boQsERdifck3tK8hcI/LqPDGDYN33EgnZf215lw+ZoGXccMG8WNKy
+         wHJg==
+X-Gm-Message-State: AJIora8XP73Nbmo1ofq+M0hTdsjNb31+Gg74mbOW69JvAJSBK8RYKUkV
+        SQfpAlxBehM6qHxHxeYg0P8=
+X-Google-Smtp-Source: AGRyM1skZEZRzGy67Hut6ttNRJEiXiyQt0o0FCHHoKQidmAAN/fbZ/H94mp3wI1kAldQFRYBcVBpOQ==
+X-Received: by 2002:a05:6a00:1aca:b0:528:1f7d:4ffe with SMTP id f10-20020a056a001aca00b005281f7d4ffemr9914371pfv.16.1657822101208;
+        Thu, 14 Jul 2022 11:08:21 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:9fab:70d1:f0e7:922b])
-        by smtp.gmail.com with ESMTPSA id m5-20020a170902db0500b0016bebb0cb96sm1781846plx.266.2022.07.14.11.08.18
+        by smtp.gmail.com with ESMTPSA id m5-20020a170902db0500b0016bebb0cb96sm1781846plx.266.2022.07.14.11.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 11:08:19 -0700 (PDT)
+        Thu, 14 Jul 2022 11:08:20 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -45,9 +45,9 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Alasdair Kergon <agk@redhat.com>,
         Mike Snitzer <snitzer@kernel.org>,
         Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH v3 27/63] dm mirror log: Use the new blk_opf_t type
-Date:   Thu, 14 Jul 2022 11:06:53 -0700
-Message-Id: <20220714180729.1065367-28-bvanassche@acm.org>
+Subject: [PATCH v3 28/63] dm-snap: Combine request operation type and flags
+Date:   Thu, 14 Jul 2022 11:06:54 -0700
+Message-Id: <20220714180729.1065367-29-bvanassche@acm.org>
 X-Mailer: git-send-email 2.37.0.170.g444d1eabd0-goog
 In-Reply-To: <20220714180729.1065367-1-bvanassche@acm.org>
 References: <20220714180729.1065367-1-bvanassche@acm.org>
@@ -64,27 +64,108 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Improve static type checking by using the new blk_opf_t type for a function
-argument that represents a request operation type.
+Pass the request operation and its flags as a single argument to improve
+kernel code uniformity.
 
 Cc: Alasdair Kergon <agk@redhat.com>
 Cc: Mike Snitzer <snitzer@kernel.org>
 Cc: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/md/dm-log.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-snap-persistent.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/dm-log.c b/drivers/md/dm-log.c
-index 56ad13f9347b..cf10fa667797 100644
---- a/drivers/md/dm-log.c
-+++ b/drivers/md/dm-log.c
-@@ -291,7 +291,7 @@ static void header_from_disk(struct log_header_core *core, struct log_header_dis
- 	core->nr_regions = le64_to_cpu(disk->nr_regions);
+diff --git a/drivers/md/dm-snap-persistent.c b/drivers/md/dm-snap-persistent.c
+index eaf969de3d3a..f46f930eedf9 100644
+--- a/drivers/md/dm-snap-persistent.c
++++ b/drivers/md/dm-snap-persistent.c
+@@ -226,8 +226,8 @@ static void do_metadata(struct work_struct *work)
+ /*
+  * Read or write a chunk aligned and sized block of data from a device.
+  */
+-static int chunk_io(struct pstore *ps, void *area, chunk_t chunk, int op,
+-		    int op_flags, int metadata)
++static int chunk_io(struct pstore *ps, void *area, chunk_t chunk, blk_opf_t opf,
++		    int metadata)
+ {
+ 	struct dm_io_region where = {
+ 		.bdev = dm_snap_cow(ps->store->snap)->bdev,
+@@ -235,7 +235,7 @@ static int chunk_io(struct pstore *ps, void *area, chunk_t chunk, int op,
+ 		.count = ps->store->chunk_size,
+ 	};
+ 	struct dm_io_request io_req = {
+-		.bi_opf = op | op_flags,
++		.bi_opf = opf,
+ 		.mem.type = DM_IO_VMA,
+ 		.mem.ptr.vma = area,
+ 		.client = ps->io_client,
+@@ -281,11 +281,11 @@ static void skip_metadata(struct pstore *ps)
+  * Read or write a metadata area.  Remembering to skip the first
+  * chunk which holds the header.
+  */
+-static int area_io(struct pstore *ps, int op, int op_flags)
++static int area_io(struct pstore *ps, blk_opf_t opf)
+ {
+ 	chunk_t chunk = area_location(ps, ps->current_area);
+ 
+-	return chunk_io(ps, ps->area, chunk, op, op_flags, 0);
++	return chunk_io(ps, ps->area, chunk, opf, 0);
  }
  
--static int rw_header(struct log_c *lc, int op)
-+static int rw_header(struct log_c *lc, enum req_op op)
+ static void zero_memory_area(struct pstore *ps)
+@@ -296,7 +296,7 @@ static void zero_memory_area(struct pstore *ps)
+ static int zero_disk_area(struct pstore *ps, chunk_t area)
  {
- 	lc->io_req.bi_opf = op;
+ 	return chunk_io(ps, ps->zero_area, area_location(ps, area),
+-			REQ_OP_WRITE, 0, 0);
++			REQ_OP_WRITE, 0);
+ }
+ 
+ static int read_header(struct pstore *ps, int *new_snapshot)
+@@ -328,7 +328,7 @@ static int read_header(struct pstore *ps, int *new_snapshot)
+ 	if (r)
+ 		return r;
+ 
+-	r = chunk_io(ps, ps->header_area, 0, REQ_OP_READ, 0, 1);
++	r = chunk_io(ps, ps->header_area, 0, REQ_OP_READ, 1);
+ 	if (r)
+ 		goto bad;
+ 
+@@ -389,7 +389,7 @@ static int write_header(struct pstore *ps)
+ 	dh->version = cpu_to_le32(ps->version);
+ 	dh->chunk_size = cpu_to_le32(ps->store->chunk_size);
+ 
+-	return chunk_io(ps, ps->header_area, 0, REQ_OP_WRITE, 0, 1);
++	return chunk_io(ps, ps->header_area, 0, REQ_OP_WRITE, 1);
+ }
+ 
+ /*
+@@ -733,8 +733,8 @@ static void persistent_commit_exception(struct dm_exception_store *store,
+ 	/*
+ 	 * Commit exceptions to disk.
+ 	 */
+-	if (ps->valid && area_io(ps, REQ_OP_WRITE,
+-				 REQ_PREFLUSH | REQ_FUA | REQ_SYNC))
++	if (ps->valid && area_io(ps, REQ_OP_WRITE | REQ_PREFLUSH | REQ_FUA |
++				 REQ_SYNC))
+ 		ps->valid = 0;
+ 
+ 	/*
+@@ -774,7 +774,7 @@ static int persistent_prepare_merge(struct dm_exception_store *store,
+ 			return 0;
+ 
+ 		ps->current_area--;
+-		r = area_io(ps, REQ_OP_READ, 0);
++		r = area_io(ps, REQ_OP_READ);
+ 		if (r < 0)
+ 			return r;
+ 		ps->current_committed = ps->exceptions_per_area;
+@@ -811,7 +811,7 @@ static int persistent_commit_merge(struct dm_exception_store *store,
+ 	for (i = 0; i < nr_merged; i++)
+ 		clear_exception(ps, ps->current_committed - 1 - i);
+ 
+-	r = area_io(ps, REQ_OP_WRITE, REQ_PREFLUSH | REQ_FUA);
++	r = area_io(ps, REQ_OP_WRITE | REQ_PREFLUSH | REQ_FUA);
+ 	if (r < 0)
+ 		return r;
  
