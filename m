@@ -2,55 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50C34578226
-	for <lists+linux-block@lfdr.de>; Mon, 18 Jul 2022 14:22:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D57957823C
+	for <lists+linux-block@lfdr.de>; Mon, 18 Jul 2022 14:24:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbiGRMWf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Jul 2022 08:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43848 "EHLO
+        id S233963AbiGRMY4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Jul 2022 08:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233757AbiGRMWc (ORCPT
+        with ESMTP id S234845AbiGRMYl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Jul 2022 08:22:32 -0400
+        Mon, 18 Jul 2022 08:24:41 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C42A8252A5
-        for <linux-block@vger.kernel.org>; Mon, 18 Jul 2022 05:22:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E68D31145
+        for <linux-block@vger.kernel.org>; Mon, 18 Jul 2022 05:24:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658146946;
+        s=mimecast20190719; t=1658147069;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=bvxF+1nm4ejzx/oywUSDx+mIwnBOp0e1gFt2K3gvk8U=;
-        b=bsOGmUEm4ShqCtAReHe2rMN9UwdOJ+uXgkDdnEIlXOBUH4D6idPXl1ZHS41d0IfWs1FUb8
-        XMgn+EKufdNNh5SZ0mTKjzEnhH42ZmWD8RpANltaDTmGl3ZvPZE5HN9Y0jck17SXTaJHi9
-        gRVpBbcvmI4HBp3A+/c3JTIeLheXjug=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=JaN8Md9qX08DyikgPic0MhdnqduPbYVgd0e7WGFGJB4=;
+        b=QHD2/JND/OQA5eACpAUQSlDGvTTPYBSgwTThSma65fKa/vS41dwrAW+lL6/RKG+6sVp6as
+        Yz3H+uW44B8pbKfJNSfyRxXgneUqHLW/5DEsljvpY3sIB/OL7NTnEejVjkpuMCCsE/p9Xo
+        mVaFogKtW4wdlWDKrI3VyYd1eYNXHUo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-481-nO59eXNaMdm_2xTcEfERVA-1; Mon, 18 Jul 2022 08:22:25 -0400
-X-MC-Unique: nO59eXNaMdm_2xTcEfERVA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-75-Z51wG6CsPO2t0CPE9CF8Lw-1; Mon, 18 Jul 2022 08:24:25 -0400
+X-MC-Unique: Z51wG6CsPO2t0CPE9CF8Lw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EC6532919EB7;
-        Mon, 18 Jul 2022 12:22:24 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5F90085A581;
+        Mon, 18 Jul 2022 12:24:25 +0000 (UTC)
 Received: from T590 (ovpn-8-29.pek2.redhat.com [10.72.8.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D5D72026D64;
-        Mon, 18 Jul 2022 12:22:20 +0000 (UTC)
-Date:   Mon, 18 Jul 2022 20:22:15 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 18D1590A00;
+        Mon, 18 Jul 2022 12:24:21 +0000 (UTC)
+Date:   Mon, 18 Jul 2022 20:24:16 +0800
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Dan Carpenter <dan.carpenter@oracle.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, ming.lei@redhat.com
-Subject: Re: [PATCH 2/3] ublk_drv: uninitialized error code in
- ublk_ctrl_get_queue_affinity()
-Message-ID: <YtVQdxZCXID2eWXH@T590>
-References: <YtVAijzg2MTzfMnh@kili>
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 3/3] ublk_drv: missing error code in ublk_add_dev()
+Message-ID: <YtVQ8OComr1XD4SM@T590>
+References: <YtVAlDAfLLRolN/X@kili>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YtVAijzg2MTzfMnh@kili>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+In-Reply-To: <YtVAlDAfLLRolN/X@kili>
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -60,29 +59,33 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 02:14:18PM +0300, Dan Carpenter wrote:
-> Initialize the "ret" variable so we don't return uninitialized data if
-> ublk_get_device_from_id() fails.
+On Mon, Jul 18, 2022 at 02:14:28PM +0300, Dan Carpenter wrote:
+> This error path accidentally returns success instead of a negative
+> error code.
 > 
-> Fixes: 71f28f3136af ("ublk_drv: add io_uring based userspace block driver")
+> Fixes: cebbe577cb17 ("ublk_drv: fix request queue leak")
 > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 > ---
->  drivers/block/ublk_drv.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/block/ublk_drv.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index 97725d13e4bd..c0f9a5b4ed58 100644
+> index c0f9a5b4ed58..332472901ff8 100644
 > --- a/drivers/block/ublk_drv.c
 > +++ b/drivers/block/ublk_drv.c
-> @@ -1298,13 +1298,12 @@ static int ublk_ctrl_get_queue_affinity(struct io_uring_cmd *cmd)
->  	struct ublk_device *ub;
->  	unsigned long queue;
->  	unsigned int retlen;
-> -	int ret;
-> +	int ret = -EINVAL;
+> @@ -1169,8 +1169,10 @@ static int ublk_add_dev(struct ublk_device *ub)
+>  		goto out_deinit_queues;
+>  
+>  	ub->ub_queue = blk_mq_init_queue(&ub->tag_set);
+> -	if (IS_ERR(ub->ub_queue))
+> +	if (IS_ERR(ub->ub_queue)) {
+> +		err = PTR_ERR(ub->ub_queue);
+>  		goto out_cleanup_tags;
+> +	}
 
-This one has been fixed in for-5.20/block by "ublk_drv: fix build warning with
--Wmaybe-uninitialized and one sparse warning".
+Yang Yingliang has posted one same patch:
+
+https://lore.kernel.org/linux-block/YtUOhUXBKG28bew4@T590/T/#t
 
 
 Thanks,
