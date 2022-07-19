@@ -2,73 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 330135793CE
-	for <lists+linux-block@lfdr.de>; Tue, 19 Jul 2022 09:06:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C103D5793AC
+	for <lists+linux-block@lfdr.de>; Tue, 19 Jul 2022 09:00:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234401AbiGSHGW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 Jul 2022 03:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40048 "EHLO
+        id S229914AbiGSHAJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 Jul 2022 03:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233740AbiGSHGV (ORCPT
+        with ESMTP id S232009AbiGSHAG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 Jul 2022 03:06:21 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE3D25C54;
-        Tue, 19 Jul 2022 00:06:20 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 0895E343ED;
-        Tue, 19 Jul 2022 07:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1658214379; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cy4axjJOXMKfMat433GrfT6j697ploUrhzgwUKUDuV0=;
-        b=xJO5IxoPGhgcRkO+Ug+rhPc1RXbe29QTfIGBzei1JpjQ6TDStXIUABzGmBOSApWJaOgnTJ
-        Z7tR0zlpOfqWLkBzFPUnxnbWKdh3YuJTPwy8x2CqpAe27KbqAFr4Xa6xM+YsShgfemNLLU
-        R5CN2hTc5wpSDkCLh0XUNF2uKVp2PeE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1658214379;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cy4axjJOXMKfMat433GrfT6j697ploUrhzgwUKUDuV0=;
-        b=JxedaWY37X1Ba9JtNF8xG8oPXCC0EGj0fkMg43ZhjQTSwigNxp89lDLDSYz2dL/4xlyCYd
-        vF5gmlUfzOP7lrCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E469913A72;
-        Tue, 19 Jul 2022 07:06:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id pYMsN+pX1mKJJAAAMHmgww
-        (envelope-from <hare@suse.de>); Tue, 19 Jul 2022 07:06:18 +0000
-Message-ID: <a109419a-b52b-e155-b7a2-77d452662deb@suse.de>
-Date:   Tue, 19 Jul 2022 09:06:18 +0200
+        Tue, 19 Jul 2022 03:00:06 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7685583
+        for <linux-block@vger.kernel.org>; Tue, 19 Jul 2022 00:00:05 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Ln8ms3ZcNzlWDS;
+        Tue, 19 Jul 2022 14:58:21 +0800 (CST)
+Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 19 Jul 2022 15:00:02 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600010.china.huawei.com
+ (7.193.23.86) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 19 Jul
+ 2022 15:00:01 +0800
+From:   Sun Ke <sunke32@huawei.com>
+To:     <linux-block@vger.kernel.org>, <shinichiro.kawasaki@wdc.com>
+CC:     <sunke32@huawei.com>, <hch@infradead.org>
+Subject: [PATCH blktests v3] nbd: add a module load and device connect test
+Date:   Tue, 19 Jul 2022 15:12:16 +0800
+Message-ID: <20220719071216.1555636-1-sunke32@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 08/10] md: stop using for_each_mddev in md_exit
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Song Liu <song@kernel.org>, Logan Gunthorpe <logang@deltatee.com>,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org
-References: <20220718063410.338626-1-hch@lst.de>
- <20220718063410.338626-9-hch@lst.de>
- <61d08fa6-91e4-f809-1074-d1ba2b1a3758@suse.de>
- <20220719070306.GA28422@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20220719070306.GA28422@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600010.china.huawei.com (7.193.23.86)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,26 +48,127 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 7/19/22 09:03, Christoph Hellwig wrote:
-> On Mon, Jul 18, 2022 at 09:10:59AM +0200, Hannes Reinecke wrote:
->>
->> Having thought about it some more ... wouldn't it make sense to modify
->> mddev_get() to
->>
->> if (atomic_inc_not_zero(&mddev->active))
->>      return NULL;
->>
->> to ensure we're not missing any use-after-free issues, which previously
->> would have been caught by the 'for_each_mddev()' macro?
-> 
-> No.  mddev->active = 0 can still be a perfectly valid mddev and they
-> are not automatically deleted.  Check the conditions in mddev_put.
+This is a regression test for commit 06c4da89c24e
+nbd: call genl_unregister_family() first in nbd_cleanup()
 
-Sigh. Okay.
-MD is a mess anyway.
+Two concurrent processes，one load and unload nbd module
+cyclically, the other one connect and disconnect nbd device cyclically.
+Last for 10 seconds.
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+---
+v2->v3:
+catch error and warning message
 
-Cheers,
+v1->v2: 
+1.change install/uninstall to load/unlock
+2.use _have_modules instead
 
-Hannes
+ tests/nbd/004     | 58 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nbd/004.out |  2 ++
+ tests/nbd/rc      | 18 +++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100755 tests/nbd/004
+ create mode 100644 tests/nbd/004.out
+
+diff --git a/tests/nbd/004 b/tests/nbd/004
+new file mode 100755
+index 0000000..98afd09
+--- /dev/null
++++ b/tests/nbd/004
+@@ -0,0 +1,58 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-3.0+
++# Copyright (C) 2022 Sun Ke
++#
++# Regression test for commit 06c4da89c24e
++# nbd: call genl_unregister_family() first in nbd_cleanup()
++
++. tests/nbd/rc
++
++DESCRIPTION="module load/unload concurrently with connect/disconnect"
++QUICK=1
++
++requires() {
++	_have_modules nbd
++}
++
++module_load_and_unload() {
++	while true; do
++		modprobe nbd >/dev/null 2>&1
++		modprobe -r nbd >/dev/null 2>&1
++	done
++}
++
++connect_and_disconnect() {
++	while true; do
++		_netlink_connect >/dev/null 2>&1
++		_netlink_disconnect >/dev/null 2>&1
++	done
++}
++
++test() {
++	echo "Running ${TEST_NAME}"
++
++	_start_nbd_server_netlink
++
++	module_load_and_unload &
++	pid1=$!
++	connect_and_disconnect &
++	pid2=$!
++
++	sleep 10
++	{
++		kill -9 $pid1
++		wait $pid1
++		kill -9 $pid2
++		wait $pid2
++	} 2>/dev/null
++
++	_stop_nbd_server_netlink
++
++	if _dmesg_since_test_start | grep -q -e "couldn't allocate config" \
++		-e "cannot create duplicate filename"; then
++			echo "Fail"
++	fi
++
++	echo "Test complete"
++}
++
+diff --git a/tests/nbd/004.out b/tests/nbd/004.out
+new file mode 100644
+index 0000000..05ced0c
+--- /dev/null
++++ b/tests/nbd/004.out
+@@ -0,0 +1,2 @@
++Running nbd/004
++Test complete
+diff --git a/tests/nbd/rc b/tests/nbd/rc
+index 118553c..b0e7d91 100644
+--- a/tests/nbd/rc
++++ b/tests/nbd/rc
+@@ -76,3 +76,21 @@ _stop_nbd_server() {
+ 	rm -f "${TMPDIR}/nbd.pid"
+ 	rm -f "${TMPDIR}/export"
+ }
++
++_start_nbd_server_netlink() {
++	truncate -s 10G "${TMPDIR}/export"
++	nbd-server 8000 "${TMPDIR}/export" >/dev/null 2>&1
++}
++
++_stop_nbd_server_netlink() {
++	killall -SIGTERM nbd-server
++	rm -f "${TMPDIR}/export"
++}
++
++_netlink_connect() {
++	nbd-client localhost 8000 /dev/nbd0 >> "$FULL" 2>&1
++}
++
++_netlink_disconnect() {
++	nbd-client -d /dev/nbd0 >> "$FULL" 2>&1
++}
+-- 
+2.13.6
+
