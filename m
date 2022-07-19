@@ -2,129 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63CFA579386
-	for <lists+linux-block@lfdr.de>; Tue, 19 Jul 2022 08:54:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AD6A5793AE
+	for <lists+linux-block@lfdr.de>; Tue, 19 Jul 2022 09:01:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233430AbiGSGyT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 19 Jul 2022 02:54:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59102 "EHLO
+        id S233889AbiGSHAz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 19 Jul 2022 03:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbiGSGyS (ORCPT
+        with ESMTP id S234016AbiGSHAt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 19 Jul 2022 02:54:18 -0400
-Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [205.139.111.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9596F2A707
-        for <linux-block@vger.kernel.org>; Mon, 18 Jul 2022 23:54:17 -0700 (PDT)
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-550-h5d0l6MvOry9tQjiREc1Yw-1; Tue, 19 Jul 2022 02:54:06 -0400
-X-MC-Unique: h5d0l6MvOry9tQjiREc1Yw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 19 Jul 2022 03:00:49 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B5B12D12;
+        Tue, 19 Jul 2022 00:00:47 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A57641857F06;
-        Tue, 19 Jul 2022 06:54:05 +0000 (UTC)
-Received: from dreadlord.bne.redhat.com (fdacunha.bne.redhat.com [10.64.0.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45023141511F;
-        Tue, 19 Jul 2022 06:54:01 +0000 (UTC)
-From:   Dave Airlie <airlied@gmail.com>
-To:     torvalds@linux-foundation.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, gregkh@linuxfoundation.org,
-        Daniel Vetter <daniel@ffwll.ch>, mcgrof@kernel.org
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.sf.net,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-media@vger.kernel.org,
-        linux-block@vger.kernel.org, Dave Airlie <airlied@redhat.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH] docs: driver-api: firmware: add driver firmware guidelines. (v2)
-Date:   Tue, 19 Jul 2022 16:53:57 +1000
-Message-Id: <20220719065357.2705918-1-airlied@gmail.com>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id BB6D33420E;
+        Tue, 19 Jul 2022 07:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1658214045; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3C2pVUcGTQozX2Sr39YyNDIz2u0qnZ5YgwRlGR0ttiw=;
+        b=grYSWVoDT5Eazf3P1hlLmY9c+cx5ZswoqHHv4cuhNXos2qkBfqAPZfWC1an6xZ7MPN837e
+        pPIkyTZ+fWU592zTuniOn/rC+cP11xvW9CHbkF6MkjOuH26/JMplfWeKdt3CuFSw1aa7TO
+        WrMV9NWyXa7BqY3Ob9f/YonLPPQHhjA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1658214045;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3C2pVUcGTQozX2Sr39YyNDIz2u0qnZ5YgwRlGR0ttiw=;
+        b=kpoIEx0v5aYfahsL7CxfmFVtifcdYamD7eL8YFXJMz8LF5A/yxnJlI4FXQXggZGxmXDPO9
+        +9rPdQBBSwWXfNDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9D1C913A72;
+        Tue, 19 Jul 2022 07:00:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id yh5/JZ1W1mI3IgAAMHmgww
+        (envelope-from <hare@suse.de>); Tue, 19 Jul 2022 07:00:45 +0000
+Message-ID: <25244480-78bc-8a37-d056-60c9db8c4d63@suse.de>
+Date:   Tue, 19 Jul 2022 09:00:45 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_SOFTFAIL,SPOOFED_FREEMAIL,SPOOF_GMAIL_MID
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 09/10] md: only delete entries from all_mddevs when the
+ disk is freed
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>, Song Liu <song@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-block@vger.kernel.org
+References: <20220718063410.338626-1-hch@lst.de>
+ <20220718063410.338626-10-hch@lst.de>
+ <b8521a53-fb41-279c-dc43-580e8d0de045@suse.de>
+ <CAPhsuW6VYLt0hPsa667mr5+Zn1pxjY_670NaD8+No=2ZjoOzYg@mail.gmail.com>
+ <20220719050655.GA26785@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20220719050655.GA26785@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+On 7/19/22 07:06, Christoph Hellwig wrote:
+> On Mon, Jul 18, 2022 at 11:20:39AM -0700, Song Liu wrote:
+>>>>    static inline struct mddev *mddev_get(struct mddev *mddev)
+>>>>    {
+>>>> +     lockdep_assert_held(&all_mddevs_lock);
+>>>> +
+>>>> +     if (mddev->deleted)
+>>>> +             return NULL;
+>>>>        atomic_inc(&mddev->active);
+>>>>        return mddev;
+>>>>    }
+>>>
+>>> Why can't we use 'atomic_inc_unless_zero' here and do away with the
+>>> additional 'deleted' flag?
+> 
+>> I think atomic_inc_unless_zero() should work here. Alternatively, we can
+>> also grab a big from mddev->flags as MD_DELETED.
+> 
+> s/big/bit/ ?
+> 
+> Yes, this could use mddev->flags.  I don't think atomic_inc_unless_zero
+> would work, as an array can have a refcount of 0 but we still allow
+> to take new references to it, the deletion only happens if the other
+> conditions in mddev_put are met.
+> 
+> Do you want me to repin the series using a flag?
 
-A recent snafu where Intel ignored upstream feedback on a firmware
-change, led to a late rc6 fix being required. In order to avoid this
-in the future we should document some expectations around
-linux-firmware.
+I would vote for it.
 
-I was originally going to write this for drm, but it seems quite generic
-advice.
+Cheers,
 
-v2: rewritten with suggestions from Thorsten Leemhuis.
-
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
----
- Documentation/driver-api/firmware/core.rst    |  1 +
- .../firmware/firmware-usage-guidelines.rst    | 34 +++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/driver-api/firmware/firmware-usage-guidelines.rst
-
-diff --git a/Documentation/driver-api/firmware/core.rst b/Documentation/driver-api/firmware/core.rst
-index 1d1688cbc078..803cd574bbd7 100644
---- a/Documentation/driver-api/firmware/core.rst
-+++ b/Documentation/driver-api/firmware/core.rst
-@@ -13,4 +13,5 @@ documents these features.
-    direct-fs-lookup
-    fallback-mechanisms
-    lookup-order
-+   firmware-usage-guidelines
- 
-diff --git a/Documentation/driver-api/firmware/firmware-usage-guidelines.rst b/Documentation/driver-api/firmware/firmware-usage-guidelines.rst
-new file mode 100644
-index 000000000000..34d2412e78c6
---- /dev/null
-+++ b/Documentation/driver-api/firmware/firmware-usage-guidelines.rst
-@@ -0,0 +1,34 @@
-+===================
-+Firmware Guidelines
-+===================
-+
-+Drivers that use firmware from linux-firmware should attempt to follow
-+the rules in this guide.
-+
-+* Firmware should be versioned with at least a major/minor version. It
-+  is suggested that the firmware files in linux-firmware be named with
-+  some device specific name, and just the major version. The
-+  major/minor/patch versions should be stored in a header in the
-+  firmware file for the driver to detect any non-ABI fixes/issues. The
-+  firmware files in linux-firmware should be overwritten with the newest
-+  compatible major version. Newer major version firmware should remain
-+  compatible with all kernels that load that major number.
-+
-+* Users should *not* have to install newer firmware to use existing
-+  hardware when they install a newer kernel.  If the hardware isn't
-+  enabled by default or under development, this can be ignored, until
-+  the first kernel release that enables that hardware.  This means no
-+  major version bumps without the kernel retaining backwards
-+  compatibility for the older major versions.  Minor version bumps
-+  should not introduce new features that newer kernels depend on
-+  non-optionally.
-+
-+* If a security fix needs lockstep firmware and kernel fixes in order to
-+  be successful, then all supported major versions in the linux-firmware
-+  repo should be updated with the security fix, and the kernel patches
-+  should detect if the firmware is new enough to declare if the security
-+  issue is fixed.  All communications around security fixes should point
-+  at both the firmware and kernel fixes. If a security fix requires
-+  deprecating old major versions, then this should only be done as a
-+  last option, and be stated clearly in all communications.
-+
--- 
-2.36.1
+Hannes
 
