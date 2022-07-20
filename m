@@ -2,67 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E79F57B36D
-	for <lists+linux-block@lfdr.de>; Wed, 20 Jul 2022 11:00:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB5E357B3E4
+	for <lists+linux-block@lfdr.de>; Wed, 20 Jul 2022 11:31:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231251AbiGTJAp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Jul 2022 05:00:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37614 "EHLO
+        id S232105AbiGTJb1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Jul 2022 05:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231143AbiGTJAp (ORCPT
+        with ESMTP id S230246AbiGTJbX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Jul 2022 05:00:45 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361A928721
-        for <linux-block@vger.kernel.org>; Wed, 20 Jul 2022 02:00:44 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 89D6568AFE; Wed, 20 Jul 2022 11:00:40 +0200 (CEST)
-Date:   Wed, 20 Jul 2022 11:00:40 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 2/2] Revert "ublk_drv: fix request queue leak"
-Message-ID: <20220720090040.GA18210@lst.de>
-References: <20220718062928.335399-1-hch@lst.de> <20220718062928.335399-2-hch@lst.de> <YtalgzqC/q3JpYCR@T590> <20220720060705.GB6734@lst.de> <YtezD/apQ1dM0n33@T590>
+        Wed, 20 Jul 2022 05:31:23 -0400
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F7AB54CBE
+        for <linux-block@vger.kernel.org>; Wed, 20 Jul 2022 02:31:19 -0700 (PDT)
+X-QQ-mid: bizesmtp65t1658309464t5kcqyci
+Received: from eureka.localdomain ( [123.124.208.226])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Wed, 20 Jul 2022 17:30:51 +0800 (CST)
+X-QQ-SSF: 01400000002000B0D000000A0000020
+X-QQ-FEAT: hoArX50alxG/Em5tr+cjD56eDWqOPkiKaRqdDQ9vGGbrlnaAHGGwmB+D0Nsox
+        OI9UqoySXCx41SDJA5Ofz1EJIBoDdK4d9gmoSc4YUoQeQG2/xjIr04w+qutBGoM92YUDf3y
+        1+3pN3kuapLW2zbJs/aAkxNnelPShvLMVAhbcmX19iHrrJ5Zy9giqyCWt8bMYjP7hv2wjaC
+        y1ACKxCStoTnT5iObt5JMD9LeUqtSV8LUJpmVBDI1529XhbwpXVXSLOQ9i3xL13KXuEdFN4
+        TeT/QrKz8Ka6awfkWTB1d0yzJdE7y0f1R2+S/yuiBeOkXQdeatuLCZawllNd+TNDr269SjE
+        FIP3ms0L+W2e4EH+/t77SpAeaS7uj63EZ5d1hLGHBSrnEWLXcdhM+yIkWkEU7sNahAkS2/u
+        RWXZ5L+pVv4=
+X-QQ-GoodBg: 1
+From:   Wang You <wangyoua@uniontech.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@lst.de, jaegeuk@kernel.org, fio@vger.kernel.org,
+        ming.lei@redhat.com, wangyoua@uniontech.com,
+        wangxiaohua@uniontech.com
+Subject: [PATCH 0/2] Improve mq-deadline performance in HDD
+Date:   Wed, 20 Jul 2022 17:30:46 +0800
+Message-Id: <20220720093048.225944-1-wangyoua@uniontech.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YtezD/apQ1dM0n33@T590>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybgforeign:qybgforeign4
+X-QQ-Bgrelay: 1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 03:47:27PM +0800, Ming Lei wrote:
-> > What is broken in START_DEV/STOP_DEV?  Please explain the semantics you
-> > want and what doesn't work.  FYI, there is nothing in the test suite the
-> > complains.  And besides the obvious block layer bug that Jens found you
-> > seemed to be perfectly happy with the semantics.
-> 
-> START_DEV calls add_disk(), and STOP_DEV calls del_gendisk(), but if 
-> GD_OWNS_QUEUE is set, blk_mq_exit_queue() will be called in
-> del_gendisk(), then the following START_DEV will stuck.
+Hi jens,
 
-Uh, yeah.  alloc_disk and add_disk are supposed to be paired and
-not split over different ioctls.  The lifetime rules here are
-rather broken.
+We already know that batching requests can increase the storage
+performance of some devices, but after testing, I found that it
+will reduce the performance of some low and medium speed devices
+when using the scheduler (especially mq-deadline), such as
+rotational disks connected to a raid.
 
-> > > similar with scsi's, in which disk rebind needs to be supported
-> > > and GD_OWNS_QUEUE can't be set.
-> > 
-> > SCSI needs it because it needs the request_queue to probe for what ULP
-> > to bind to, and it allows to unbind the ULP.  None of that is the case
-> > here.  And managing the lifetimes separately is a complete mess, so
-> > don't do it.  Especially not in a virtual driver where you don't have
-> > to cater to a long set protocol like SCSI.
-> 
-> If blk_mq_exit_queue is called in del_gendisk() for scsi, how can
-> re-bind work as expected since it needs one completely workable
-> request queue instead of partial exited one?
+In order to balance the performance difference between different
+devices, a more sophisticated mechanism may be needed to control
+the number of batching (such as sometimes 1 is better),
+but obviously this is not easy.
 
-For !GD_OWNS_QUEUE blk_mq_exit_queue is not called from del_gendisk().
+At the same time I noticed that when the mq-deadline scheduler select
+a request for a higher sector outside the batch, deadline_fifo_request
+is used to select the request within the fifo and restart the batch.
+Selecting a request from a fifo tends to satisfy the request's timeline,
+but it is not always very urgent.
+
+So in the case of no expire, can the selection strategy of the first
+request in the batch be changed? Because in devices with rotation
+characteristics, proper sector access order is beneficial to performance.
+
+This patch series includes the following two parts:
+
+- Added a temporary sys interface nr_sched_batch to control the number
+  of batching requests.
+
+- Added a deadline_head_request function to select the request from the
+  first of the red-black tree instead of the fifo when appropriate.
+
+Thanks,
+
+Wang.
+
+Wang You (2):
+  block: Introduce nr_sched_batch sys interface
+  block/mq-deadline: Prioritize first request
+
+ block/blk-mq-sched.c   |  4 +++-
+ block/blk-sysfs.c      | 34 ++++++++++++++++++++++++++++++++++
+ block/mq-deadline.c    | 42 +++++++++++++++++++++++++++++++++++++++---
+ include/linux/blkdev.h |  1 +
+ 4 files changed, 77 insertions(+), 4 deletions(-)
+
+-- 
+2.27.0
+
+
+
+
