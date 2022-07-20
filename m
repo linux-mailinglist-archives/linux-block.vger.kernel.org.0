@@ -2,166 +2,266 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DDC157B3E3
-	for <lists+linux-block@lfdr.de>; Wed, 20 Jul 2022 11:31:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54D1057B3FA
+	for <lists+linux-block@lfdr.de>; Wed, 20 Jul 2022 11:36:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbiGTJb0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Jul 2022 05:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32824 "EHLO
+        id S237447AbiGTJgt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Jul 2022 05:36:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbiGTJbW (ORCPT
+        with ESMTP id S232156AbiGTJgo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Jul 2022 05:31:22 -0400
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F92458848
-        for <linux-block@vger.kernel.org>; Wed, 20 Jul 2022 02:31:19 -0700 (PDT)
-X-QQ-mid: bizesmtp65t1658309470tox533d0
-Received: from eureka.localdomain ( [123.124.208.226])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 20 Jul 2022 17:31:09 +0800 (CST)
-X-QQ-SSF: 01400000002000B0D000000A0000020
-X-QQ-FEAT: Zf2po6e9he4aYUlcKXg5HBZNLlmaErk3YUM5+bv5OQWzmDN/KBJPtIJFWpNwH
-        TC+d2e+s/YjkDXMlwS34CVe5t8Nee/Mrt7dYdXGIJ1B9/1H2LdjrYJY6mr56iQeKjhAZs5E
-        x4hCvPOdpSxR/8HkZXMgCTVL7sbr112w42FcGHHrCvlMZx350X6mGPDvc7EkprPI4J0cJYO
-        oqTfw7EcNflNCDvuI/ATkVfsXqelXU9yJ58xzA83Y+b4I/qeX0JvWMpcpPD6jthLiL8fGDO
-        iMsq8nfR9lMm6HHsIjhN4fWxlg4mMj9tp5NDzPduvGQpQLuGsUuI/KLxMqmjDuv63KPpCj1
-        EW0ir0vPJPupkTpTwPOG4Mni8+PdpHzFPsnOcEe7HcbO+kZemuIgQi90q2khjGH01goGm8c
-        gETk3gXg1rnSYA0D8pSnPQ==
-X-QQ-GoodBg: 1
-From:   Wang You <wangyoua@uniontech.com>
-To:     axboe@kernel.dk
+        Wed, 20 Jul 2022 05:36:44 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4336F65D6B
+        for <linux-block@vger.kernel.org>; Wed, 20 Jul 2022 02:36:35 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id j1-20020a17090aeb0100b001ef777a7befso3340742pjz.0
+        for <linux-block@vger.kernel.org>; Wed, 20 Jul 2022 02:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oXKrqXNoQbGqXRKsJ331SBJ7YG/0WKRR7aaK+WgaUgE=;
+        b=joNrTJHxlVPnJRGb4f5KBM5NAjHQOSGvKdfYEBNnHb8bcv1/Cdl6rj5AtCz2mXeGsc
+         +zeKQDsw5+SGysz+Zn8WbGnYPEOF9wEd8xMZr60qGCNCFk7lUkxLi7bF7xKlvFVr6lam
+         3TXrUBnFuLI3eDmOUseVnQV+2f8rBmyqjlHAN1ZLBPXNqC0UPGcEyqSjDfQRad2lcj70
+         31HL/lKNDBycUOE5opjsi7vGRYVlh6XQHrM52h6Pnn0TGM9joWEB2HY/it4SzmjknpuI
+         xKjTJE8SF8n4ik1FteRU7FclP6t3uzinZkzJsc2YGJs1pqgMLWtGZ/U03nKtca6ZhOFm
+         SLQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oXKrqXNoQbGqXRKsJ331SBJ7YG/0WKRR7aaK+WgaUgE=;
+        b=QGPc7ip4M6Z3uS1Ith2UJZzOEd6jX1zWFhcKAjhlkjRBmQpVI7b7MC4mQqeoojPsD+
+         ufSwwRX+aqqhzBO9oVXmh/MUJZThrRgbm0UOpIHDe+X857EfILiIAQg0QG7l4Um0/x+h
+         juw9W/A1aTHY+uV9Ho5Mqz7Bc8d72W1yHf9tWSVv5EM4Fp+yaQAC2N1RaMyv1qsR/C0a
+         iGDSiW5ygFddtvnabCRVeNkWJRtw+h6SgpOWjzgpO3IybVdSIVwp6X2gZZcENlsMOVkl
+         OHuFJc3bjCmtt/5//7O2NqUzwYlzaRYeAg4xOzdb2S7fd0DEq/RCF4X2LgZ/JweuQZUw
+         fQnw==
+X-Gm-Message-State: AJIora9rgmWMqwJUDgQFbQgpQxnS5mSk9ypBjMISnA0Np5Krf6ctlUhp
+        ABhkeF7z8JzIkto6Jb0rMBE38Q==
+X-Google-Smtp-Source: AGRyM1vJd0HvTrmLBpXtrQNAYeXvkixWEGjOk8pk9/gZVY4S2kx0V2mdBKCX5F7RInlezFy6V4SvJg==
+X-Received: by 2002:a17:90b:3ec2:b0:1f0:3e9e:4f1d with SMTP id rm2-20020a17090b3ec200b001f03e9e4f1dmr4476777pjb.172.1658309794699;
+        Wed, 20 Jul 2022 02:36:34 -0700 (PDT)
+Received: from C02GD5ZHMD6R.bytedance.net ([61.120.150.77])
+        by smtp.gmail.com with ESMTPSA id w15-20020a63c10f000000b004114cc062f0sm11355811pgf.65.2022.07.20.02.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jul 2022 02:36:34 -0700 (PDT)
+From:   Jinke Han <hanjinke.666@bytedance.com>
+X-Google-Original-From: Jinke Han <hnajinke.666@bytedance>
+To:     axboe@kernel.dk, tj@kernel.org
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@lst.de, jaegeuk@kernel.org, fio@vger.kernel.org,
-        ming.lei@redhat.com, wangyoua@uniontech.com,
-        wangxiaohua@uniontech.com
-Subject: [PATCH 2/2] block/mq-deadline: Prioritize first request
-Date:   Wed, 20 Jul 2022 17:30:48 +0800
-Message-Id: <20220720093048.225944-3-wangyoua@uniontech.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220720093048.225944-1-wangyoua@uniontech.com>
-References: <20220720093048.225944-1-wangyoua@uniontech.com>
+        cgroups@vger.kernel.org, Jinke Han <hanjinke.666@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>, stable@vger.kernel.org
+Subject: [PATCH v4] block: don't allow the same type rq_qos add more than once
+Date:   Wed, 20 Jul 2022 17:36:16 +0800
+Message-Id: <20220720093616.70584-1-hanjinke.666@bytedance.com>
+X-Mailer: git-send-email 2.32.0 (Apple Git-132)
+In-Reply-To: <20220719165313.51887-1-hanjinke.666@bytedance.com>
+References: <20220719165313.51887-1-hanjinke.666@bytedance.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybgforeign:qybgforeign9
-X-QQ-Bgrelay: 1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The function deadline_head_request can select the request located at
-the head from the sector red-black tree of the mq-deadline scheduler,
-dispatch such a request may cause the disk access address to return
-to the head, so as to prevent it from swinging back and forth.
+From: Jinke Han <hanjinke.666@bytedance.com>
 
-- The presence of the scheduler batching requests may reduce or
-  even eliminate its ability to fuse and sort, so I sometimes set
-  it to 1.
+In our test of iocost, we encountered some list add/del corruptions of
+inner_walk list in ioc_timer_fn.
 
-- This pathc may exacerbate the risk of expire, I don't know if
-  a more absolute expire detection is necessary.
+The reason can be described as follow:
+cpu 0						cpu 1
+ioc_qos_write					ioc_qos_write
 
-- Tested some disks (mainly rotational disks and some SSDs) with
-  the fio tool (using sync, direct, etc. parameters), the results
-  show that they increase the disk's small sector sequential read
-  and write performance, does this imply that changing
-  nr_sched_batch is reasonable?
+ioc = q_to_ioc(bdev_get_queue(bdev));
+if (!ioc) {
+        ioc = kzalloc();			ioc = q_to_ioc(bdev_get_queue(bdev));
+						if (!ioc) {
+							ioc = kzalloc();
+							...
+							rq_qos_add(q, rqos);
+						}
+        ...
+        rq_qos_add(q, rqos);
+        ...
+}
 
-The test hardware is:
-Kunpeng-920, HW-SAS3508+(MG04ACA400N * 2), RAID0.
+When the io.cost.qos file is written by two cpus concurrently, rq_qos may
+be added to one disk twice. In that case, there will be two iocs enabled
+and running on one disk. They own different iocgs on their active list.
+In the ioc_timer_fn function, because of the iocgs from two iocs have the
+same root iocg, the root iocg's walk_list may be overwritten by each
+other and this leads to list add/del corruptions in building or destroying
+the inner_walk list.
 
-The test command is:
-fio -ioengine=psync -lockmem=1G -buffered=0 -time_based=1 -direct=1
--iodepth=1 -thread -bs=512B -size=110g -numjobs=16 -runtime=300
--group_reporting -name=read -filename=/dev/sdb14
--ioscheduler=mq-deadline -rw=read[,write,rw]
+And so far, the blk-rq-qos framework works in case that one instance for
+one type rq_qos per queue by default. This patch make this explicit and
+also fix the crash above.
 
-The following is the test data:
-origin/master:
-read iops: 152421       write iops: 136959      rw iops: 54593,54581
-
-nr_sched_batch = 1:
-read iops: 166449       write iops: 139477      rw iops: 55363,55355
-
-nr_sched_batch = 1, use deadline_head_request:
-read iops: 171177       write iops: 184431      rw iops: 56178,56169
-
-Signed-off-by: Wang You <wangyoua@uniontech.com>
+Signed-off-by: Jinke Han <hanjinke.666@bytedance.com>
+Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>
 ---
- block/mq-deadline.c | 42 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 3 deletions(-)
+Changes in v2
+-use goto pattern in iocost and rename the ebusy label
+Changes in v3
+-use goto in all places
+Changes in v4
+-correct some spell errors and resolve conflict with next kernel
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 1a9e835e816c..e155f49d7a70 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -344,6 +344,35 @@ deadline_next_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
- 	return rq;
+ block/blk-iocost.c    | 20 +++++++++++++-------
+ block/blk-iolatency.c | 18 +++++++++++-------
+ block/blk-rq-qos.h    | 11 ++++++++++-
+ block/blk-wbt.c       | 12 +++++++++++-
+ 4 files changed, 45 insertions(+), 16 deletions(-)
+
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index b7082f2aed9c..7936e5f5821c 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -2886,15 +2886,21 @@ static int blk_iocost_init(struct request_queue *q)
+ 	 * called before policy activation completion, can't assume that the
+ 	 * target bio has an iocg associated and need to test for NULL iocg.
+ 	 */
+-	rq_qos_add(q, rqos);
++	ret = rq_qos_add(q, rqos);
++	if (ret)
++		goto err_free_ioc;
++
+ 	ret = blkcg_activate_policy(q, &blkcg_policy_iocost);
+-	if (ret) {
+-		rq_qos_del(q, rqos);
+-		free_percpu(ioc->pcpu_stat);
+-		kfree(ioc);
+-		return ret;
+-	}
++	if (ret)
++		goto err_del_qos;
+ 	return 0;
++
++err_del_qos:
++	rq_qos_del(q, rqos);
++err_free_ioc:
++	free_percpu(ioc->pcpu_stat);
++	kfree(ioc);
++	return ret;
  }
  
-+static inline struct request *
-+deadline_head_request(struct deadline_data *dd, struct dd_per_prio *per_prio, int data_dir)
-+{
-+	struct rb_node *node = rb_first(&per_prio->sort_list[data_dir]);
-+	struct request *rq;
-+	unsigned long flags;
+ static struct blkcg_policy_data *ioc_cpd_alloc(gfp_t gfp)
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index 79745c6d8e15..e285152345a2 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -771,19 +771,23 @@ int blk_iolatency_init(struct request_queue *q)
+ 	rqos->ops = &blkcg_iolatency_ops;
+ 	rqos->q = q;
+ 
+-	rq_qos_add(q, rqos);
+-
++	ret = rq_qos_add(q, rqos);
++	if (ret)
++		goto err_free;
+ 	ret = blkcg_activate_policy(q, &blkcg_policy_iolatency);
+-	if (ret) {
+-		rq_qos_del(q, rqos);
+-		kfree(blkiolat);
+-		return ret;
+-	}
++	if (ret)
++		goto err_qos_del;
+ 
+ 	timer_setup(&blkiolat->timer, blkiolatency_timer_fn, 0);
+ 	INIT_WORK(&blkiolat->enable_work, blkiolatency_enable_work_fn);
+ 
+ 	return 0;
 +
-+	if (!node)
-+		return NULL;
++err_qos_del:
++	rq_qos_del(q, rqos);
++err_free:
++	kfree(blkiolat);
++	return ret;
+ }
+ 
+ static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
+diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
+index 0e46052b018a..08b856570ad1 100644
+--- a/block/blk-rq-qos.h
++++ b/block/blk-rq-qos.h
+@@ -86,7 +86,7 @@ static inline void rq_wait_init(struct rq_wait *rq_wait)
+ 	init_waitqueue_head(&rq_wait->wait);
+ }
+ 
+-static inline void rq_qos_add(struct request_queue *q, struct rq_qos *rqos)
++static inline int rq_qos_add(struct request_queue *q, struct rq_qos *rqos)
+ {
+ 	/*
+ 	 * No IO can be in-flight when adding rqos, so freeze queue, which
+@@ -98,6 +98,8 @@ static inline void rq_qos_add(struct request_queue *q, struct rq_qos *rqos)
+ 	blk_mq_freeze_queue(q);
+ 
+ 	spin_lock_irq(&q->queue_lock);
++	if (rq_qos_id(q, rqos->id))
++		goto ebusy;
+ 	rqos->next = q->rq_qos;
+ 	q->rq_qos = rqos;
+ 	spin_unlock_irq(&q->queue_lock);
+@@ -109,6 +111,13 @@ static inline void rq_qos_add(struct request_queue *q, struct rq_qos *rqos)
+ 		blk_mq_debugfs_register_rqos(rqos);
+ 		mutex_unlock(&q->debugfs_mutex);
+ 	}
 +
-+	rq = rb_entry_rq(node);
-+	if (data_dir == DD_READ || !blk_queue_is_zoned(rq->q))
-+		return rq;
++	return 0;
++ebusy:
++	spin_unlock_irq(&q->queue_lock);
++	blk_mq_unfreeze_queue(q);
++	return -EBUSY;
 +
-+	/*
-+	 * Look for a write request that can be dispatched, that is one with
-+	 * an unlocked target zone.
-+	 */
-+	spin_lock_irqsave(&dd->zone_lock, flags);
-+	while (rq) {
-+		if (blk_req_can_dispatch_to_zone(rq))
-+			break;
-+		rq = deadline_latter_request(rq);
-+	}
-+	spin_unlock_irqrestore(&dd->zone_lock, flags);
-+
-+	return rq;
-+}
-+
- /*
-  * Returns true if and only if @rq started after @latest_start where
-  * @latest_start is in jiffies.
-@@ -429,13 +458,20 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
- 	 * we are not running a batch, find best request for selected data_dir
+ }
+ 
+ static inline void rq_qos_del(struct request_queue *q, struct rq_qos *rqos)
+diff --git a/block/blk-wbt.c b/block/blk-wbt.c
+index f2e4bf1dca47..a9982000b667 100644
+--- a/block/blk-wbt.c
++++ b/block/blk-wbt.c
+@@ -820,6 +820,7 @@ int wbt_init(struct request_queue *q)
+ {
+ 	struct rq_wb *rwb;
+ 	int i;
++	int ret;
+ 
+ 	rwb = kzalloc(sizeof(*rwb), GFP_KERNEL);
+ 	if (!rwb)
+@@ -846,7 +847,10 @@ int wbt_init(struct request_queue *q)
+ 	/*
+ 	 * Assign rwb and add the stats callback.
  	 */
- 	next_rq = deadline_next_request(dd, per_prio, data_dir);
--	if (deadline_check_fifo(per_prio, data_dir) || !next_rq) {
-+	if (deadline_check_fifo(per_prio, data_dir)) {
- 		/*
- 		 * A deadline has expired, the last request was in the other
--		 * direction, or we have run out of higher-sectored requests.
--		 * Start again from the request with the earliest expiry time.
-+		 * direction. Start again from the request with the earliest
-+		 * expiry time.
- 		 */
- 		rq = deadline_fifo_request(dd, per_prio, data_dir);
-+	} else if (!next_rq) {
-+		/*
-+		 * There is no operation expired, and we have run out of
-+		 * higher-sectored requests. Look for the sector at the head
-+		 * which may reduce disk seek consumption.
-+		 */
-+		rq = deadline_head_request(dd, per_prio, data_dir);
- 	} else {
- 		/*
- 		 * The last req was the same dir and we have a next request in
+-	rq_qos_add(q, &rwb->rqos);
++	ret = rq_qos_add(q, &rwb->rqos);
++	if (ret)
++		goto err_free;
++
+ 	blk_stat_add_callback(q, rwb->cb);
+ 
+ 	rwb->min_lat_nsec = wbt_default_latency_nsec(q);
+@@ -855,4 +859,10 @@ int wbt_init(struct request_queue *q)
+ 	wbt_set_write_cache(q, test_bit(QUEUE_FLAG_WC, &q->queue_flags));
+ 
+ 	return 0;
++
++err_free:
++	blk_stat_free_callback(rwb->cb);
++	kfree(rwb);
++	return ret;
++
+ }
 -- 
-2.27.0
-
-
+2.20.1
 
