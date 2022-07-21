@@ -2,52 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D81E657C3AA
-	for <lists+linux-block@lfdr.de>; Thu, 21 Jul 2022 07:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D5B957C3B1
+	for <lists+linux-block@lfdr.de>; Thu, 21 Jul 2022 07:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbiGUFMw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jul 2022 01:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
+        id S229849AbiGUFQn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jul 2022 01:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiGUFMv (ORCPT
+        with ESMTP id S229441AbiGUFQm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jul 2022 01:12:51 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786E074E3F
-        for <linux-block@vger.kernel.org>; Wed, 20 Jul 2022 22:12:50 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BC59C68AFE; Thu, 21 Jul 2022 07:12:46 +0200 (CEST)
-Date:   Thu, 21 Jul 2022 07:12:46 +0200
+        Thu, 21 Jul 2022 01:16:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D8B79685
+        for <linux-block@vger.kernel.org>; Wed, 20 Jul 2022 22:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=fc8QV1X1iKaXhzgry1xfjfhVtXpABQdYuFVoYOaVbx4=; b=pFhfdf7r81gX3kJhE0xrX4OrzY
+        w9/c5s2ZhpBPwbRTdG9ps7olG14Dsopr/WpZqSeqhSj9uuFjHE8JDj+IEsl/HOneIfjrEinzbr+RT
+        ZCBapzx576yynW3E75g9m7Bu9CwWABgJ8K3ErBrzz9BMt7MZTzTkFyzAZh8Eo7pz/XBq2X2ksjbqw
+        Oacla+Mk3jRft+NOR6CxqJY6IrDA+6XqOOJxt3y0K3TNTGrYxq1sLQoZS2aAix0ToXo2Q8NCfzGRA
+        DzeJE1jWJy3nabn4x6kb527UxBSdk/+MzjNsONzqRZMypU+RPKg3ra6NFJhXjVPGBN6HBZ2yKb9F3
+        pWI66W2g==;
+Received: from 089144198117.atnat0007.highway.a1.net ([89.144.198.117] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oEOY7-00HDOo-Pg; Thu, 21 Jul 2022 05:16:36 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 2/2] Revert "ublk_drv: fix request queue leak"
-Message-ID: <20220721051246.GA19522@lst.de>
-References: <20220718062928.335399-1-hch@lst.de> <20220718062928.335399-2-hch@lst.de> <YtalgzqC/q3JpYCR@T590> <20220720060705.GB6734@lst.de> <YtezD/apQ1dM0n33@T590> <20220720090040.GA18210@lst.de> <YtfXmlbhN9WAPK71@T590> <20220720130845.GA11940@lst.de> <YtggRH5AJpKYmmwt@T590>
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org
+Subject: ublk fixups
+Date:   Thu, 21 Jul 2022 07:16:24 +0200
+Message-Id: <20220721051632.1676890-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YtggRH5AJpKYmmwt@T590>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 11:33:24PM +0800, Ming Lei wrote:
-> I meant that request queue is supposed to be low level stuff for implementing
-> disk function, and request queue hasn't to be released and re-allocated
-> after each disk whole lifetime(alloc disk, add disk, del_gendisk, release disk).
+Hi Ming, hi Jens,
 
-It doesn't have to.  But it is pretty damn convenient if we can.
+this series has a bunch of fixes and cleanups of ublk.  The most important
+one is the last one, which moves ublk over to a proper gendisk life cycle.
 
-What we can't easily do is to re-add a disk after del_gendisk was
-called but before the final reference went away, which is what ublk
-does do currently.  In other words it does not even follow the SCSI
-model, which works but is somewhat cumbersome, but comes up with
-yet another weird model that is probably going to fall apart pretty
-quickly when doing STAT_DEV, STOP_DEV loops.
+This series passes the ubdsrv tests.
+
+Diffstat:
+ MAINTAINERS                   |    7 
+ drivers/block/ublk_drv.c      |  530 ++++++++++++++++++------------------------
+ include/uapi/linux/ublk_cmd.h |    1 
+ 3 files changed, 241 insertions(+), 297 deletions(-)
