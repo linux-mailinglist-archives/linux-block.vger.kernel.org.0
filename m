@@ -2,38 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90A8E57CB76
-	for <lists+linux-block@lfdr.de>; Thu, 21 Jul 2022 15:09:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6B8957CB79
+	for <lists+linux-block@lfdr.de>; Thu, 21 Jul 2022 15:09:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233887AbiGUNJ3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Jul 2022 09:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45580 "EHLO
+        id S233923AbiGUNJb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Jul 2022 09:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234244AbiGUNJZ (ORCPT
+        with ESMTP id S234252AbiGUNJ1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Jul 2022 09:09:25 -0400
+        Thu, 21 Jul 2022 09:09:27 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D72A11A
-        for <linux-block@vger.kernel.org>; Thu, 21 Jul 2022 06:09:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E72710D
+        for <linux-block@vger.kernel.org>; Thu, 21 Jul 2022 06:09:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=gs3gxv7YI30wcMrn3hKT8kRkLYOeC85Hk4qn2bIHk7Y=; b=SGp0H93lCIfb+TGBvjMc2dnCID
-        wz89b0thndHkfbs2Ee1bhpI7S/0R4i9PDmaMvT2Ae0OW/WUEdahyol5dT/L2vLBX8Ps0K81DTTeqA
-        THdtFYskZBg2CcHcmgfAx+mhkWSCRq5xYH+J1P3rjlk0fVRJTw5qOvE9fMm/pkGkXxij8L6iyBjkG
-        C/ThjxP0axb3DECwMbdwcq/qqk3dFr1/h4VT8ApL09yDFMUpFdfY8RFwKT4I627rk8lCcVAL2MZRW
-        acdYtmx4zRe2h65ZYWufryhUXovjhkEQfE2jgdc0XjYOULf9IRXtPpFAj3Jp52J6r7H2kX7HHUYdX
-        YGyFXatQ==;
+        bh=fhurzq5Ky3KZAEeKT61HqARYTnyoiALrdPLL7WycFIg=; b=Z6DCqURQmvedNkZeXgA8S4tznx
+        7eAkCV2sOmiJS/7F2K7IUxn6zDLXJy6s1SROpmvDbGa02E3CwV/pU9nI3+GIIz+SbH1wmjJu048oI
+        kTc0Vj3DR6+TogSqOfPXqsvqcfIV76MLX28ARn7eKnv0Rpb9pjrTW2FUOSOvVz13vLNjnKgKGqUI8
+        jx3UxSpsvToNFalObHQpf3YowH+xZXpG6Nny/ynq2ToTlLl6P4/b1NUHYEei1itOT6VVXTLTpREku
+        WMLa10jD0WSJzPcy1PiyaoN8HZH5ax/W3RHbN8VYs5C2hwkrOjU9p/lnpa4g87xnt+G1bcfyDm8+v
+        2Ez09Uig==;
 Received: from [2001:4bb8:18a:6f7a:1b03:4d0e:b929:ebb2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oEVvd-006mkB-QX; Thu, 21 Jul 2022 13:09:22 +0000
+        id 1oEVvg-006mmJ-Eu; Thu, 21 Jul 2022 13:09:24 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 1/8] ublk: add a MAINTAINERS entry
-Date:   Thu, 21 Jul 2022 15:09:09 +0200
-Message-Id: <20220721130916.1869719-2-hch@lst.de>
+Subject: [PATCH 2/8] ublk: remove UBLK_IO_F_PREFLUSH
+Date:   Thu, 21 Jul 2022 15:09:10 +0200
+Message-Id: <20220721130916.1869719-3-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220721130916.1869719-1-hch@lst.de>
 References: <20220721130916.1869719-1-hch@lst.de>
@@ -50,32 +50,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make get_maintainers.pl work for ublk.
+REQ_PREFLUSH is turned into REQ_OP_FLUSH by the flush state machine
+and thus never seen by a blk-mq based driver.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/block/ublk_drv.c      | 3 ---
+ include/uapi/linux/ublk_cmd.h | 1 -
+ 2 files changed, 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fe5daf1415013..8a4bbca9f28f4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20415,6 +20415,13 @@ F:	Documentation/filesystems/ubifs-authentication.rst
- F:	Documentation/filesystems/ubifs.rst
- F:	fs/ubifs/
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index b90481b295a74..07913b5bccd90 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -392,9 +392,6 @@ static inline unsigned int ublk_req_build_flags(struct request *req)
+ 	if (req->cmd_flags & REQ_FUA)
+ 		flags |= UBLK_IO_F_FUA;
  
-+UBLK USERSPACE BLOCK DRIVER
-+M:	Ming Lei <ming.lei@redhat.com>
-+L:	linux-block@vger.kernel.org
-+S:	Maintained
-+F:	drivers/block/ublk_drv.c
-+F:	include/uapi/linux/ublk_cmd.h
-+
- UCLINUX (M68KNOMMU AND COLDFIRE)
- M:	Greg Ungerer <gerg@linux-m68k.org>
- L:	linux-m68k@lists.linux-m68k.org
+-	if (req->cmd_flags & REQ_PREFLUSH)
+-		flags |= UBLK_IO_F_PREFLUSH;
+-
+ 	if (req->cmd_flags & REQ_NOUNMAP)
+ 		flags |= UBLK_IO_F_NOUNMAP;
+ 
+diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
+index d6879eea2fde0..917580b341984 100644
+--- a/include/uapi/linux/ublk_cmd.h
++++ b/include/uapi/linux/ublk_cmd.h
+@@ -107,7 +107,6 @@ struct ublksrv_ctrl_dev_info {
+ #define		UBLK_IO_F_FAILFAST_DRIVER	(1U << 10)
+ #define		UBLK_IO_F_META			(1U << 11)
+ #define		UBLK_IO_F_FUA			(1U << 13)
+-#define		UBLK_IO_F_PREFLUSH		(1U << 14)
+ #define		UBLK_IO_F_NOUNMAP		(1U << 15)
+ #define		UBLK_IO_F_SWAP			(1U << 16)
+ 
 -- 
 2.30.2
 
