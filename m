@@ -2,55 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38B3E57E021
-	for <lists+linux-block@lfdr.de>; Fri, 22 Jul 2022 12:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13FA357E023
+	for <lists+linux-block@lfdr.de>; Fri, 22 Jul 2022 12:38:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234298AbiGVKih (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 22 Jul 2022 06:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
+        id S234784AbiGVKim (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 22 Jul 2022 06:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234497AbiGVKie (ORCPT
+        with ESMTP id S234804AbiGVKil (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 22 Jul 2022 06:38:34 -0400
+        Fri, 22 Jul 2022 06:38:41 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C7777BA261
-        for <linux-block@vger.kernel.org>; Fri, 22 Jul 2022 03:38:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2E2ABA266
+        for <linux-block@vger.kernel.org>; Fri, 22 Jul 2022 03:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658486312;
+        s=mimecast20190719; t=1658486318;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sjSWyHWO6jJVcJhU60ldSPRxnXEbptCP+9cQdj1Kz1o=;
-        b=XB3vCGd+yJnWYenF+iIVu50ei2Zv29PpN5MSc4m75tyiPcV1vBJJzKnRqj7/jJzXjwk1DE
-        NGMxk71hzVjiYZjezsV+bj/K3D2dQqs9s0IKO9EnFj2JvNG+KcaxctBb8rEVvDLxaJDraO
-        /n2FVPJI29AuWWqtURHVQ29m3qM+0a4=
+        bh=DE3xGJSFSS6qbZ8sB3xcASvELVcO7nZp5IMJjBA2izI=;
+        b=UC7xBTxqCuKykwIfWRZDlVNL9DGk6PK9BSNiXpG6TGlwScVle5MzFP5mtXUqAgIBPOouS1
+        ygfeiaEeenrAUfJIAGIaz3S6/6QNd+a6wFbXoZg6GxmMBKa+54LdIgX3HJk4DdydcFxGvv
+        lVOwRpyekJi0J9WJ0Hg5eP0LecsXRUU=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-381-E3L35-RRNH6U6a0DaK1ssA-1; Fri, 22 Jul 2022 06:38:28 -0400
-X-MC-Unique: E3L35-RRNH6U6a0DaK1ssA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-207-EWMccJ_MP2mBSFKHOIJcGw-1; Fri, 22 Jul 2022 06:38:33 -0400
+X-MC-Unique: EWMccJ_MP2mBSFKHOIJcGw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0C49B802D2C;
-        Fri, 22 Jul 2022 10:38:28 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DCCB4802D2C;
+        Fri, 22 Jul 2022 10:38:32 +0000 (UTC)
 Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDF40C35979;
-        Fri, 22 Jul 2022 10:38:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A703A90A04;
+        Fri, 22 Jul 2022 10:38:31 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
         Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V4 1/2] ublk_drv: fix error handling of ublk_add_dev
-Date:   Fri, 22 Jul 2022 18:38:16 +0800
-Message-Id: <20220722103817.631258-2-ming.lei@redhat.com>
+Subject: [PATCH V4 2/2] ublk_drv: make sure that correct flags(features) returned to userspace
+Date:   Fri, 22 Jul 2022 18:38:17 +0800
+Message-Id: <20220722103817.631258-3-ming.lei@redhat.com>
 In-Reply-To: <20220722103817.631258-1-ming.lei@redhat.com>
 References: <20220722103817.631258-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -60,192 +60,101 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+Userspace may support more features or new added flags, but the driver
+side can be old, so make sure correct flags(features) returned to
+userpsace, then userspace can work as expected.
 
-__ublk_destroy_dev() is called for handling error in ublk_add_dev(),
-but either tagset isn't allocated or mutex isn't initialized.
+Also mark the 2nd flags as reversed, just use the 1st one. When we run
+out of flags, the reserved one can be handled at that time.
 
-So fix the issue by letting replacing ublk_add_dev with a
-ublk_add_tag_set function that is much more limited in scope and
-instead unwind every single step directly in ublk_ctrl_add_dev.
-To allow for this refactor the device freeing so that there is
-a helper for freeing the device number instead of coupling that
-with freeing the mutex and the memory.
-
-Note that this now copies the dev_info to userspace before adding
-the character device.  This not only simplifies the erro handling
-in ublk_ctrl_add_dev, but also means that the character device
-can only be seen by userspace if the device addition succeeded.
-
-Based on a patch from Ming Lei.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: ZiyangZhang <ZiyangZhang@linux.alibaba.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c | 100 +++++++++++++++++++--------------------
- 1 file changed, 48 insertions(+), 52 deletions(-)
+ drivers/block/ublk_drv.c      | 17 ++++++++++++++---
+ include/uapi/linux/ublk_cmd.h |  7 ++++---
+ 2 files changed, 18 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index f058f40b639c..67f91a80a7ab 100644
+index 67f91a80a7ab..255b2de46a24 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -1005,7 +1005,7 @@ static int ublk_init_queues(struct ublk_device *ub)
- 	return ret;
- }
+@@ -46,6 +46,9 @@
  
--static int __ublk_alloc_dev_number(struct ublk_device *ub, int idx)
-+static int ublk_alloc_dev_number(struct ublk_device *ub, int idx)
+ #define UBLK_MINORS		(1U << MINORBITS)
+ 
++/* All UBLK_F_* have to be included into UBLK_F_ALL */
++#define UBLK_F_ALL (UBLK_F_SUPPORT_ZERO_COPY | UBLK_F_URING_CMD_COMP_IN_TASK)
++
+ struct ublk_rq_data {
+ 	struct callback_head work;
+ };
+@@ -953,7 +956,7 @@ static int ublk_init_queue(struct ublk_device *ub, int q_id)
+ 	void *ptr;
+ 	int size;
+ 
+-	ubq->flags = ub->dev_info.flags[0];
++	ubq->flags = ub->dev_info.flags;
+ 	ubq->q_id = q_id;
+ 	ubq->q_depth = ub->dev_info.queue_depth;
+ 	size = ublk_queue_cmd_buf_size(ub, q_id);
+@@ -1246,7 +1249,7 @@ static int ublk_ctrl_get_queue_affinity(struct io_uring_cmd *cmd)
+ static inline void ublk_dump_dev_info(struct ublksrv_ctrl_dev_info *info)
  {
- 	int i = idx;
- 	int err;
-@@ -1027,16 +1027,12 @@ static int __ublk_alloc_dev_number(struct ublk_device *ub, int idx)
- 	return err;
- }
- 
--static void __ublk_destroy_dev(struct ublk_device *ub)
-+static void ublk_free_dev_number(struct ublk_device *ub)
- {
- 	spin_lock(&ublk_idr_lock);
- 	idr_remove(&ublk_index_idr, ub->ub_number);
- 	wake_up_all(&ublk_idr_wq);
- 	spin_unlock(&ublk_idr_lock);
--
--	mutex_destroy(&ub->mutex);
--
--	kfree(ub);
- }
- 
- static void ublk_cdev_rel(struct device *dev)
-@@ -1045,8 +1041,9 @@ static void ublk_cdev_rel(struct device *dev)
- 
- 	blk_mq_free_tag_set(&ub->tag_set);
- 	ublk_deinit_queues(ub);
--
--	__ublk_destroy_dev(ub);
-+	ublk_free_dev_number(ub);
-+	mutex_destroy(&ub->mutex);
-+	kfree(ub);
- }
- 
- static int ublk_add_chdev(struct ublk_device *ub)
-@@ -1092,24 +1089,8 @@ static void ublk_align_max_io_size(struct ublk_device *ub)
- 		round_down(max_rq_bytes, PAGE_SIZE) >> ub->bs_shift;
- }
- 
--/* add tag_set & cdev, cleanup everything in case of failure */
--static int ublk_add_dev(struct ublk_device *ub)
-+static int ublk_add_tag_set(struct ublk_device *ub)
- {
--	int err = -ENOMEM;
--
--	/* We are not ready to support zero copy */
--	ub->dev_info.flags[0] &= ~UBLK_F_SUPPORT_ZERO_COPY;
--
--	ub->bs_shift = ilog2(ub->dev_info.block_size);
--	ub->dev_info.nr_hw_queues = min_t(unsigned int,
--			ub->dev_info.nr_hw_queues, nr_cpu_ids);
--
--	INIT_WORK(&ub->stop_work, ublk_stop_work_fn);
--	INIT_DELAYED_WORK(&ub->monitor_work, ublk_daemon_monitor_work);
--
--	if (ublk_init_queues(ub))
--		goto out_destroy_dev;
--
- 	ub->tag_set.ops = &ublk_mq_ops;
- 	ub->tag_set.nr_hw_queues = ub->dev_info.nr_hw_queues;
- 	ub->tag_set.queue_depth = ub->dev_info.queue_depth;
-@@ -1117,22 +1098,7 @@ static int ublk_add_dev(struct ublk_device *ub)
- 	ub->tag_set.cmd_size = sizeof(struct ublk_rq_data);
- 	ub->tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
- 	ub->tag_set.driver_data = ub;
--	err = blk_mq_alloc_tag_set(&ub->tag_set);
--	if (err)
--		goto out_deinit_queues;
--
--	ublk_align_max_io_size(ub);
--	mutex_init(&ub->mutex);
--	spin_lock_init(&ub->mm_lock);
--
--	/* add char dev so that ublksrv daemon can be setup */
--	return ublk_add_chdev(ub);
--
--out_deinit_queues:
--	ublk_deinit_queues(ub);
--out_destroy_dev:
--	__ublk_destroy_dev(ub);
--	return err;
-+	return blk_mq_alloc_tag_set(&ub->tag_set);
- }
- 
- static void ublk_remove(struct ublk_device *ub)
-@@ -1318,26 +1284,56 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
- 	ub = kzalloc(sizeof(*ub), GFP_KERNEL);
- 	if (!ub)
- 		goto out_unlock;
-+	mutex_init(&ub->mutex);
-+	spin_lock_init(&ub->mm_lock);
-+	INIT_WORK(&ub->stop_work, ublk_stop_work_fn);
-+	INIT_DELAYED_WORK(&ub->monitor_work, ublk_daemon_monitor_work);
- 
--	ret = __ublk_alloc_dev_number(ub, header->dev_id);
--	if (ret < 0) {
--		kfree(ub);
--		goto out_unlock;
--	}
-+	ret = ublk_alloc_dev_number(ub, header->dev_id);
-+	if (ret < 0)
-+		goto out_free_ub;
- 
- 	memcpy(&ub->dev_info, &info, sizeof(info));
- 
+ 	pr_devel("%s: dev id %d flags %llx\n", __func__,
+-			info->dev_id, info->flags[0]);
++			info->dev_id, info->flags);
+ 	pr_devel("\t nr_hw_queues %d queue_depth %d block size %d dev_capacity %lld\n",
+ 			info->nr_hw_queues, info->queue_depth,
+ 			info->block_size, info->dev_blocks);
+@@ -1298,8 +1301,16 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
  	/* update device id */
  	ub->dev_info.dev_id = ub->ub_number;
  
--	ret = ublk_add_dev(ub);
-+	/* We are not ready to support zero copy */
-+	ub->dev_info.flags[0] &= ~UBLK_F_SUPPORT_ZERO_COPY;
-+
-+	ub->bs_shift = ilog2(ub->dev_info.block_size);
-+	ub->dev_info.nr_hw_queues = min_t(unsigned int,
-+			ub->dev_info.nr_hw_queues, nr_cpu_ids);
-+	ublk_align_max_io_size(ub);
-+
-+	ret = ublk_init_queues(ub);
- 	if (ret)
--		goto out_unlock;
-+		goto out_free_dev_number;
- 
--	if (copy_to_user(argp, &ub->dev_info, sizeof(info))) {
--		ublk_remove(ub);
--		ret = -EFAULT;
--	}
-+	ret = ublk_add_tag_set(ub);
-+	if (ret)
-+		goto out_deinit_queues;
-+
-+	ret = -EFAULT;
-+	if (copy_to_user(argp, &ub->dev_info, sizeof(info)))
-+		goto out_free_tag_set;
-+
 +	/*
-+	 * Add the char dev so that ublksrv daemon can be setup.
-+	 * ublk_add_chdev() will cleanup everything if it fails.
++	 * 64bit flags will be copied back to userspace as feature
++	 * negotiation result, so have to clear flags which driver
++	 * doesn't support yet, then userspace can get correct flags
++	 * (features) to handle.
 +	 */
-+	ret = ublk_add_chdev(ub);
-+	goto out_unlock;
++	ub->dev_info.flags &= UBLK_F_ALL;
 +
-+out_free_tag_set:
-+	blk_mq_free_tag_set(&ub->tag_set);
-+out_deinit_queues:
-+	ublk_deinit_queues(ub);
-+out_free_dev_number:
-+	ublk_free_dev_number(ub);
-+out_free_ub:
-+	mutex_destroy(&ub->mutex);
-+	kfree(ub);
- out_unlock:
- 	mutex_unlock(&ublk_ctl_mutex);
- 	return ret;
+ 	/* We are not ready to support zero copy */
+-	ub->dev_info.flags[0] &= ~UBLK_F_SUPPORT_ZERO_COPY;
++	ub->dev_info.flags &= ~UBLK_F_SUPPORT_ZERO_COPY;
+ 
+ 	ub->bs_shift = ilog2(ub->dev_info.block_size);
+ 	ub->dev_info.nr_hw_queues = min_t(unsigned int,
+diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
+index 917580b34198..ca33092354ab 100644
+--- a/include/uapi/linux/ublk_cmd.h
++++ b/include/uapi/linux/ublk_cmd.h
+@@ -46,13 +46,13 @@
+  * zero copy requires 4k block size, and can remap ublk driver's io
+  * request into ublksrv's vm space
+  */
+-#define UBLK_F_SUPPORT_ZERO_COPY	(1UL << 0)
++#define UBLK_F_SUPPORT_ZERO_COPY	(1ULL << 0)
+ 
+ /*
+  * Force to complete io cmd via io_uring_cmd_complete_in_task so that
+  * performance comparison is done easily with using task_work_add
+  */
+-#define UBLK_F_URING_CMD_COMP_IN_TASK	(1UL << 1)
++#define UBLK_F_URING_CMD_COMP_IN_TASK	(1ULL << 1)
+ 
+ /* device state */
+ #define UBLK_S_DEV_DEAD	0
+@@ -88,7 +88,8 @@ struct ublksrv_ctrl_dev_info {
+ 
+ 	__s32	ublksrv_pid;
+ 	__s32	reserved0;
+-	__u64	flags[2];
++	__u64	flags;
++	__u64	flags_reserved;
+ 
+ 	/* For ublksrv internal use, invisible to ublk driver */
+ 	__u64	ublksrv_flags;
 -- 
 2.31.1
 
