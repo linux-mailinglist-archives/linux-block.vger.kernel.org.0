@@ -2,90 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10DAE57DAE7
-	for <lists+linux-block@lfdr.de>; Fri, 22 Jul 2022 09:14:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D877257DB42
+	for <lists+linux-block@lfdr.de>; Fri, 22 Jul 2022 09:30:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234475AbiGVHOU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 22 Jul 2022 03:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37306 "EHLO
+        id S229559AbiGVHad (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 22 Jul 2022 03:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234344AbiGVHOH (ORCPT
+        with ESMTP id S229519AbiGVHac (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 22 Jul 2022 03:14:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A6A93C37;
-        Fri, 22 Jul 2022 00:14:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 22 Jul 2022 03:30:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D5A352AC65
+        for <linux-block@vger.kernel.org>; Fri, 22 Jul 2022 00:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658475030;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yl4cgmWTixnuyPnVrsmLdQpSe7MWXstQaWSZ2jLxH4I=;
+        b=KBY4fWnzwZ/7do3aYYygx31xYyXDNsIn9+MAiVQv0MJw+QkYhnszi+BG/8oiRJMfjKuoBl
+        2rvvOieP6LvQNe8AXz1dsyN0ev75CeEw1ngUqkN1+QTqkoGUduxsViQ+53toBJFrkEl4R3
+        3+5t0697wSMPeyyaASK006sqUvcXNw0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-507-_fAvuH7UOR-OZHi4xS67wA-1; Fri, 22 Jul 2022 03:30:29 -0400
+X-MC-Unique: _fAvuH7UOR-OZHi4xS67wA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2BABD6218C;
-        Fri, 22 Jul 2022 07:14:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0077C385A5;
-        Fri, 22 Jul 2022 07:14:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658474046;
-        bh=vRMBs3p3k29TcKDOjHrOzYfkIvFsVQJZG7mrxyu++ts=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eKeG5bGyliUl/1pyKmdtZZa0HOvtmSTtj9U4sC95NA5D8IDsq+Vegw9IPhy3zbjWv
-         VqBDKe1x8aTlQjYpZmOMT+hUh8Aesxl0g1m7dUutCmVaHepkeaFHOzBQ+bMhojs9ly
-         /WvlzVL8NEAuDYHcRJY4G6MbYT3B+y7a85CKNjHSv7sa9w11u6gXPuSWPqIx6s8FEq
-         CBjT4NrDoDakb2YfI9wXiBl4aVMWoXX5NaOKuAMrM65vruCbF1lQRkQWGIdtzy3DOj
-         HyUTCFpCWZcPAT8omY/l/15TzbUHaoqDQY9UCrKT6K/a1YkdC2IqrFuYv6I7tmEbOh
-         F8uJYZfxDcI0A==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-xfs@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH v4 9/9] xfs: support STATX_DIOALIGN
-Date:   Fri, 22 Jul 2022 00:12:28 -0700
-Message-Id: <20220722071228.146690-10-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.37.0
-In-Reply-To: <20220722071228.146690-1-ebiggers@kernel.org>
-References: <20220722071228.146690-1-ebiggers@kernel.org>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E7BFB800124;
+        Fri, 22 Jul 2022 07:30:28 +0000 (UTC)
+Received: from T590 (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 857BB1415118;
+        Fri, 22 Jul 2022 07:30:23 +0000 (UTC)
+Date:   Fri, 22 Jul 2022 15:30:17 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>, ming.lei@redhat.com
+Subject: Re: [PATCH V2 2/2] ublk_drv: make sure that correct flags(features)
+ returned to userspace
+Message-ID: <YtpSCX5ZC3cnWakM@T590>
+References: <20220722050930.611232-1-ming.lei@redhat.com>
+ <20220722050930.611232-3-ming.lei@redhat.com>
+ <Yto6s09YN1FK2Zi6@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yto6s09YN1FK2Zi6@infradead.org>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Thu, Jul 21, 2022 at 10:50:43PM -0700, Christoph Hellwig wrote:
+> On Fri, Jul 22, 2022 at 01:09:30PM +0800, Ming Lei wrote:
+> > +	unsigned long *map = (unsigned long *)&ub->dev_info.flags[0];
+> > +
+> > +	/* We are not ready to support zero copy */
+> > +	ub->dev_info.flags[0] &= ~UBLK_F_SUPPORT_ZERO_COPY;
+> > +
+> > +	/*
+> > +	 * 128bit flags will be copied back to userspace as feature
+> > +	 * negotiation result, so have to clear flags which driver
+> > +	 * doesn't support yet, then userspace can get correct flags
+> > +	 * (features) to handle.
+> > +	 */
+> > +	bitmap_clear(map, __UBLK_F_NR_BITS, 128 - __UBLK_F_NR_BITS);
+> 
+> Please don't do the cast and bitmap ops.  In fact I think the current
+> ABI is rather nasty.  To make everyones life easier just use a single
+> u64 flags, an mark the second one reserved so that we can extent into
+> it with extra flags or something else.  That way normal C operator
+> leve bitops just work.
 
-Add support for STATX_DIOALIGN to xfs, so that direct I/O alignment
-restrictions are exposed to userspace in a generic way.
+OK.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- fs/xfs/xfs_iops.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> 
+> > +enum ublk_flag_bits {
+> > +	__UBLK_F_SUPPORT_ZERO_COPY,
+> > +	__UBLK_F_URING_CMD_COMP_IN_TASK,
+> > +	__UBLK_F_NR_BITS,
+> > +};
+> 
+> Please make these #defines so that userspace can detect if they
+> exist in a header using #ifdef.
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 29f5b8b8aca69a..bac3f56141801e 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -605,6 +605,15 @@ xfs_vn_getattr(
- 		stat->blksize = BLKDEV_IOSIZE;
- 		stat->rdev = inode->i_rdev;
- 		break;
-+	case S_IFREG:
-+		if (request_mask & STATX_DIOALIGN) {
-+			struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
-+
-+			stat->result_mask |= STATX_DIOALIGN;
-+			stat->dio_mem_align = target->bt_logical_sectorsize;
-+			stat->dio_offset_align = target->bt_logical_sectorsize;
-+		}
-+		fallthrough;
- 	default:
- 		stat->blksize = xfs_stat_blksize(ip);
- 		stat->rdev = 0;
--- 
-2.37.0
+userspace is supposed to only use UBLK_F_* instead of __UBLK_F_*, one
+benefit of using enum is that UBLK_F_NR_BITS can be figured out
+automatically, otherwise how can we figure out the max bits?
+
+
+thanks,
+Ming
 
