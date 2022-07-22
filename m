@@ -2,57 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F41057DF27
-	for <lists+linux-block@lfdr.de>; Fri, 22 Jul 2022 12:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8814357E022
+	for <lists+linux-block@lfdr.de>; Fri, 22 Jul 2022 12:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbiGVKDu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 22 Jul 2022 06:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
+        id S233950AbiGVKii (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 22 Jul 2022 06:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiGVKDt (ORCPT
+        with ESMTP id S230509AbiGVKih (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 22 Jul 2022 06:03:49 -0400
+        Fri, 22 Jul 2022 06:38:37 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 25FAA54CBA
-        for <linux-block@vger.kernel.org>; Fri, 22 Jul 2022 03:03:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5104CBA266
+        for <linux-block@vger.kernel.org>; Fri, 22 Jul 2022 03:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658484227;
+        s=mimecast20190719; t=1658486314;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XikMw7huSxN9xYF9wCnHL+DNUUU5UCfpipCLmE1uN00=;
-        b=SCH6/WIZtNslE92eycDjxs81ebPudIC59W/NU3+NBwJDNMntaDeBlChAHZ8SxXnAMNo0G0
-        Z6n2gy6RM+AsktNHyDVi7W+MnwN4zHc7Cm4znOyTPPTw1B+dGmAyu4lR3cV273gqy/msD9
-        qrtQtXQClKrW+2qKJ0a0GE+wWGx6c/8=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=7mF/hiZ45HX3O2OhffWBtT/nSlS6y0VascD3mEndGLE=;
+        b=F8fvjXCtA7iFgSf042Duzf7a6pJIVTixY7FDinEO/o+KcZajK/dOYZMGiObjKYk4wZELBm
+        2wPcNciriNfKYmswa4AaJyEY3FJyzxb11Lg0egi+RUrX3jNIEtVngU3cQOrLndCtp2Zh41
+        cNZnxvYhRxu/9i3U5Gda4fJmQZ4PAnc=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-104-Iq8ZpeUGNlOliFZ8nGJh0Q-1; Fri, 22 Jul 2022 06:03:41 -0400
-X-MC-Unique: Iq8ZpeUGNlOliFZ8nGJh0Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-104-tJ38ClodM6-e6CNs8ZORzw-1; Fri, 22 Jul 2022 06:38:24 -0400
+X-MC-Unique: tJ38ClodM6-e6CNs8ZORzw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 68BC2811E76;
-        Fri, 22 Jul 2022 10:03:41 +0000 (UTC)
-Received: from T590 (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1CFB2026D64;
-        Fri, 22 Jul 2022 10:03:37 +0000 (UTC)
-Date:   Fri, 22 Jul 2022 18:03:31 +0800
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 21FA8185A7A4;
+        Fri, 22 Jul 2022 10:38:24 +0000 (UTC)
+Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 96488492C3B;
+        Fri, 22 Jul 2022 10:38:23 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>
-Subject: Re: [PATCH V3 2/2] ublk_drv: make sure that correct flags(features)
- returned to userspace
-Message-ID: <Ytp18+v8gwQk2SpQ@T590>
-References: <20220722084516.624457-1-ming.lei@redhat.com>
- <20220722084516.624457-3-ming.lei@redhat.com>
- <20220722095319.GA13942@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V4 0/2] ublk_drv: make sure that correct flags(features) returned to userspace
+Date:   Fri, 22 Jul 2022 18:38:15 +0800
+Message-Id: <20220722103817.631258-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220722095319.GA13942@lst.de>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -62,25 +57,35 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Jul 22, 2022 at 11:53:19AM +0200, Christoph Hellwig wrote:
-> On Fri, Jul 22, 2022 at 04:45:16PM +0800, Ming Lei wrote:
-> >  	/* We are not ready to support zero copy */
-> > +	ub->dev_info.flags &= ~UBLK_F_SUPPORT_ZERO_COPY;
-> 
-> Nit: I'd move this below the clearing of UBLK_F_ALL.  Not because it
-> makes much of a differece, but because it flows more logical.
+Hello Jens,
 
-OK.
+The 1st patch cleans ublk_add_dev a bit, meantime fix one potential
+free un-allocated buffer issue.
 
-> 
-> > +/* All UBLK_F_* have to be included into UBLK_F_ALL */
-> > +#define UBLK_F_ALL (UBLK_F_SUPPORT_ZERO_COPY | UBLK_F_URING_CMD_COMP_IN_TASK)
-> 
-> And this should not be in the uapi header but only kernel internal.
+The 2nd one makes sure that driver supported flags returned to
+userspace, this way is important for maintaining compatibility.
 
-Yeah, but that may cause UBLK_F_ALL not updated easily, :-(
+V4:
+- move UBLK_F_ALL out of uapi header, and change order of clearing
+dev_info.flags as suggested by Chrisotph
+
+V3:
+- cleanup ublk_ctrl_add_dev by Christoph
+
+V2:
+- avoid double free device in case that char dev is failed to add
 
 
-Thanks,
-Ming
+Christoph Hellwig (1):
+  ublk_drv: fix error handling of ublk_add_dev
+
+Ming Lei (1):
+  ublk_drv: make sure that correct flags(features) returned to userspace
+
+ drivers/block/ublk_drv.c      | 115 ++++++++++++++++++----------------
+ include/uapi/linux/ublk_cmd.h |   7 ++-
+ 2 files changed, 65 insertions(+), 57 deletions(-)
+
+-- 
+2.31.1
 
