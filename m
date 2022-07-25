@@ -2,76 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AED9580581
-	for <lists+linux-block@lfdr.de>; Mon, 25 Jul 2022 22:25:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23C8E5807E5
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 01:01:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236984AbiGYUZo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 25 Jul 2022 16:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60336 "EHLO
+        id S237658AbiGYXB4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 25 Jul 2022 19:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236236AbiGYUZn (ORCPT
+        with ESMTP id S237652AbiGYXB4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 25 Jul 2022 16:25:43 -0400
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C2D637C
-        for <linux-block@vger.kernel.org>; Mon, 25 Jul 2022 13:25:41 -0700 (PDT)
-Received: by mail-qk1-x72b.google.com with SMTP id c24so9579449qkm.4
-        for <linux-block@vger.kernel.org>; Mon, 25 Jul 2022 13:25:41 -0700 (PDT)
+        Mon, 25 Jul 2022 19:01:56 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94514248EB
+        for <linux-block@vger.kernel.org>; Mon, 25 Jul 2022 16:01:53 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id q41-20020a17090a1b2c00b001f2043c727aso11603907pjq.1
+        for <linux-block@vger.kernel.org>; Mon, 25 Jul 2022 16:01:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jQ7HI45z5wixFb+/1Im4pHzErViUmi/CF5+gTInj3AE=;
-        b=oqOA072L/kD87nOMc3gKe/vkv/qvVP0z8KtLLpIDVI1nhUlt9u9vM/8Kza+NEHD8WV
-         CId7cKZYxhcQywmKBqKVftF223zsI+KZQEcZ0FieRSM3rEih+WvReAub29AapTxNn5sF
-         kzv+rzDScT0ARSmviIiEonye1f7pEosRNcEgKVr6yQPOB+YkNTL5DUIYNtM7hXtiz3TC
-         UHpwY5pyj1pGB9YV7fD7AHA2Y16v8uIKmYp/NCSiC4VYZuOKbJLQWLz8Wywm66uCZhvw
-         J+bXiJTHp5UaYiqs4ZCE1LtVegqkjCmmO/ROmd6WF3qotpciJby5fOS5elY0ik5pesBy
-         ozlQ==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:in-reply-to:references:subject:message-id:date
+         :mime-version:content-transfer-encoding;
+        bh=46K29R/jzyxgb2qSaTV9iMS7TQPCalfZVfhX2Tr92gY=;
+        b=CIaHQMCs5XgyB1WYNkmfhOi7jd/IYdCWke0DlBatUWbzMxBkNArtPdRWi90eBcE7ZU
+         0A3WCdfrALjJymKpX2+4qoQPsEBAFPScYl1wc3JX/2inncWIeim2M9vQfGq/mSMmsR4s
+         4VBdu25E76ZR5QBIY56alMfW32wkuhV7upB2bR8mxKHr6Om2UIS3PXjlqPW63w/rVrgj
+         ECwWTQwLuY0vRiUOYwiL5eMXB7GocuUkYUrhIVS2s6x+jKgqV5Spct4v/TMT7T11BLHs
+         G2zR8WjA5GdOWE1f6z3j6uX+rfC8aILXhoEf+C5M1y48Tk/Gsod7vXBNUuaq3MNF/8aT
+         Nlyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jQ7HI45z5wixFb+/1Im4pHzErViUmi/CF5+gTInj3AE=;
-        b=glPI+YJCpVB9cxhbKX1Xxct+dtNbmoqLR+13a/Ib8LUeTRZ8g3tGWIE2yxDPSE00Vw
-         zheuo+jfMHK40jOfQqA62sITPCl02WUI35aPWdfceuT+SoNEbZZkNL34fF9yhdeVR6sp
-         xqipv4a0ZnFzEYRszTPrdnw/GB9Z3mLzljxnrIJ06AkR2520Hkq1gOqHumoe5RGvERM3
-         rmTN57xpm1q80kye6mm6EPmOiijBq+doqC/EvZB/FfouLjUpLvNh4Y6+lr7xuII/UZsb
-         AyD8tHegxGvglG8wrbh/iz+Z6bAn4TNjDOY/9XfrZwI78i4mX+FlGE4mxnrBYQl8BZwL
-         c2Dg==
-X-Gm-Message-State: AJIora9A2vilYUI8vvlhdYGJBSuRNLcL15M8Lk3OGUd0ESTbSS3KdYcH
-        pKr7R+IElVh/C2fhnO6r8e2ds/Vb3GmIRA==
-X-Google-Smtp-Source: AGRyM1uTG4HZVwBBzArzy/8u/TGwyAfj5s8K5Dg5PUsYAJUdOT12doKcBg3ssTXnOYySh4d4KA3L5w==
-X-Received: by 2002:a05:620a:13b9:b0:6b5:f7a0:ff7a with SMTP id m25-20020a05620a13b900b006b5f7a0ff7amr10539094qki.298.1658780740285;
-        Mon, 25 Jul 2022 13:25:40 -0700 (PDT)
-Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
-        by smtp.gmail.com with ESMTPSA id i10-20020a05622a08ca00b0031e9fa40c2esm7822025qte.27.2022.07.25.13.25.39
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
+         :message-id:date:mime-version:content-transfer-encoding;
+        bh=46K29R/jzyxgb2qSaTV9iMS7TQPCalfZVfhX2Tr92gY=;
+        b=Qoqin/QuNEMLXWeobF42ocYQ1N7ETMcSP0V29tr4FpstRrlX04l/Y1d4TvTE7HMP2a
+         X7UNo9bdvSOwOmfrXzVZZxWj3zO78of3V/fdUCqfLj9rbAHRKG9ItjTwZc2aj7ltkZsz
+         NuGd0t3up2uog9pyFmnyxaGqo78G+2VeoIZHYIDbfbA5M0CaJKvWfZFpjQrWpWHFnfLR
+         iCW/7v3rSgh4HLHGgfyZIEdjR3A4qS2ZNbcLP27tQJa6wqatojc+RtDaKjOkEWy2YyJz
+         LZTXwvDVRSnG8FgDRF3rMep061JfYUmkJZg4Ahke4OnzHTJAwVt1/AltRQpInSFqWhIr
+         BZzg==
+X-Gm-Message-State: AJIora/zO/SzFn35AgSE5zt2oVOhnhGSSRGYagkT0HEjzstPNJaksb95
+        gXh9jhjfSQbMgukDs8hizBVmxA==
+X-Google-Smtp-Source: AGRyM1sBYRQJfc/HWpmo8/5mg+wOFnvP9N5PLTvA5O8z4Xakspc4+PQVo+SumV5LXkcdWrBeMwfdQQ==
+X-Received: by 2002:a17:902:778c:b0:16d:9d4d:51f9 with SMTP id o12-20020a170902778c00b0016d9d4d51f9mr498919pll.19.1658790113013;
+        Mon, 25 Jul 2022 16:01:53 -0700 (PDT)
+Received: from [127.0.1.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id w3-20020a170902e88300b0016d2f0b67e0sm9648333plg.309.2022.07.25.16.01.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 13:25:39 -0700 (PDT)
-Date:   Mon, 25 Jul 2022 16:25:38 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     joe@perches.com, axboe@kernel.dk, yukuai3@huawei.com,
-        houtao1@huawei.com, linux-block@vger.kernel.org,
-        nbd@other.debian.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com
-Subject: Re: [PATCH v2] nbd: add missing definition of pr_fmt
-Message-ID: <Yt78QrEvSap5YadH@localhost.localdomain>
-References: <20220723082427.3890655-1-yukuai1@huaweicloud.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Mon, 25 Jul 2022 16:01:52 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     houtao1@huawei.com, yukuai1@huaweicloud.com, josef@toxicpanda.com,
+        yukuai3@huawei.com, joe@perches.com
+Cc:     nbd@other.debian.org, yi.zhang@huawei.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
 In-Reply-To: <20220723082427.3890655-1-yukuai1@huaweicloud.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220723082427.3890655-1-yukuai1@huaweicloud.com>
+Subject: Re: [PATCH v2] nbd: add missing definition of pr_fmt
+Message-Id: <165879011117.1265523.8426782568331317022.b4-ty@kernel.dk>
+Date:   Mon, 25 Jul 2022 17:01:51 -0600
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Jul 23, 2022 at 04:24:27PM +0800, Yu Kuai wrote:
+On Sat, 23 Jul 2022 16:24:27 +0800, Yu Kuai wrote:
 > From: Yu Kuai <yukuai3@huawei.com>
 > 
 > commit 1243172d5894 ("nbd: use pr_err to output error message") tries
@@ -80,11 +80,15 @@ On Sat, Jul 23, 2022 at 04:24:27PM +0800, Yu Kuai wrote:
 > 
 > This patch also remove existing "nbd:" inside pr_err().
 > 
-> Fixes: 1243172d5894 ("nbd: use pr_err to output error message")
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> [...]
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Applied, thanks!
 
-Thanks,
+[1/1] nbd: add missing definition of pr_fmt
+      commit: b182198426ac3130f3543b1ad67855a84c4c5af2
 
-Josef
+Best regards,
+-- 
+Jens Axboe
+
+
