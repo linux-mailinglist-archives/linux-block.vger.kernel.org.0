@@ -2,67 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9E405819BA
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 20:30:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46B035819CB
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 20:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230419AbiGZSal (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jul 2022 14:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48182 "EHLO
+        id S239182AbiGZSdy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jul 2022 14:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231620AbiGZSaj (ORCPT
+        with ESMTP id S233999AbiGZSdx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jul 2022 14:30:39 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AB0B482
-        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 11:30:38 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d10so13952378pfd.9
-        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 11:30:38 -0700 (PDT)
+        Tue, 26 Jul 2022 14:33:53 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7908720F65
+        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 11:33:52 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id c6so10015019plc.5
+        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 11:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:in-reply-to:references:subject:message-id:date
-         :mime-version:content-transfer-encoding;
-        bh=FLXa0nbDXsZ+vL/FvW/ivGkItaQ8+NiszDubboZHV+4=;
-        b=tBxl2XsnT0UvG7y63UlNq6ZaEUvROQ0MHYpaphHCFglPzqagwz3XImxX/ckF9kjV4c
-         sAZF1rPVeT+zzl2imR+Zeb/9pb6BO/AQVRI7PlyU8GT8VZATbGP+LmtC6sytHEGnuG8l
-         q9AD+G02jheCB+lEDSCiiS6+mRDLd/rMfMIpVa9+UJbACaefvEkMDOK3G65FaO+LBgJm
-         v0xkwRRTWBf0wBn+sxo+Rrn+Zq2lj8DutZmt/J9NaVK0fPwPCIj04b+gQfX7kRWrwYZm
-         85+QbuCpWILke2toxJVB/HPo/BW63W9atEx5PHKqQ+U5ReK/eDEkupbhx+AHA0tw4rOL
-         fe6Q==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=SYUKQQO+B9D4HsdUTzY4dBddAzyB3mOX8vLGkHBgReI=;
+        b=HsCrB6v828BHxR0IeOAT4B2AKQZlHZZQyrsGwbJk9ugK4YIeYpxC9ohznWBUNYxcLp
+         Iy3iHazdQXhHgLkg6HNaIofXYYWDTOK3Pqw0Ci6aMNWIQOp/axo/bc1bN6rvcgoG9IpY
+         jT37CkIhoUpc1ch4Jx6jdsSrkE++H5quzDrNvH3gPsa7LNlFMfFE9zJWKuI6yTv3iPrK
+         Amd4pcD35+5uKDBh9bxs06Nda5ueMvSvAIGzSReOZkaPJoYXS7n9iWklW7OQQcob6WNT
+         frgwu36L6E/eTNe/YJYNKpXq5CcEsMqgmy9LzFnJP01SBdykiKSgwM802KSWI8eM7s8J
+         +Umg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=FLXa0nbDXsZ+vL/FvW/ivGkItaQ8+NiszDubboZHV+4=;
-        b=N+h7datGrmb/LG0mns3YrNdL34ywhNoiDbfRSCYeQVsZ2WQnFfPRQ8hpmWNKHrbk4d
-         IxprMIOOfgbWy7jJI8ojhO4tSHtiPpnFnlqNHf0pvHguCmSSRJ0CYwrAgTtboYX3wCAD
-         zXiZPPrd4ir9UvoEquEe5JBKR5b5R11h1M4pDeBfKpkrHXBvj7TBH8IYSPlXl6TueiGV
-         WtOjpQDMA91/oP7plgUHnDsCJEKpFJ9sIZ+gF625RmkLF7ARZbDZJSku5/RX/NOnlcbl
-         sQgKDutx+1j4impBmVRvdREryvqKJzGgyzCEtvsxfAr3XcDQYCL5+C/w02msPfTpYaPz
-         2tVw==
-X-Gm-Message-State: AJIora8iWrjmzoJkVdRjcgXeB7Mp05Ce9siU635+0hNMpp3Gsq7FzgMb
-        aWP4IKBBHpQ9av64CwEzGgK9gpTVaU+j3w==
-X-Google-Smtp-Source: AGRyM1vXugtp8/huehQJFWMzvdzFyJBHWnHc5ad7vEGtguX2DehQ2H+XmdBhJ+BmFFqDtuxuMcztsg==
-X-Received: by 2002:a62:3086:0:b0:52b:fd6c:a49d with SMTP id w128-20020a623086000000b0052bfd6ca49dmr8916113pfw.26.1658860238108;
-        Tue, 26 Jul 2022 11:30:38 -0700 (PDT)
-Received: from [127.0.1.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id h2-20020a17090a054200b001f0ade18babsm13356932pjf.55.2022.07.26.11.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 11:30:37 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     ming.lei@redhat.com, Christoph Hellwig <hch@lst.de>,
-        dan.carpenter@oracle.com
-Cc:     kernel-janitors@vger.kernel.org, linux-block@vger.kernel.org
-In-Reply-To: <Yt/2R/+MJf/MSoyl@kili>
-References: <Yt/2R/+MJf/MSoyl@kili>
-Subject: Re: [PATCH] ublk_drv: fix double shift bug
-Message-Id: <165886023723.1524809.5862125257342957251.b4-ty@kernel.dk>
-Date:   Tue, 26 Jul 2022 12:30:37 -0600
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=SYUKQQO+B9D4HsdUTzY4dBddAzyB3mOX8vLGkHBgReI=;
+        b=lla+bDxdNr79qHWQPyerlvmQo874lih+y6eGgyMmvvRlJn5GxQObT2YIU0y4XTlTVx
+         lWthn6+N1o0SXE3rn/FFrEC7cr96tWqOdQ1ilkw4smx1dLIw6vKH/93nV2a0EnK3rlJm
+         /xsfjTwngKjBMtL60OkcaJWYRgGcbFnsig/L5BiWx7q3QeNUOsBaFCLR+gCmh+Jc46fM
+         xdybMKP9VsH0Vmb1qBSMeq7P+eEhypmUPyR0sMFXYckvnT2HIjk0jWpb04M857MRtrP3
+         12Ndde0AynFQfO31g2t/W6whOfCZobiKVSRfkPY+rl4tcZL3FhHU02cgpjVDu52F5pJT
+         vYlA==
+X-Gm-Message-State: AJIora9GVUFkHHjZycRq8QnrCa/zeSGghZkVL10zunq46sgdJ6yTOFTu
+        fezyNjKdz9XTou2BHxCPqoVuWA==
+X-Google-Smtp-Source: AGRyM1s3eX5knPyIjzJ67pRAW2auHoNfXzbcf9efbkWFJYTjyu8U5/Thh77TB/D/v8nCkIXt8IVauw==
+X-Received: by 2002:a17:902:f790:b0:16b:d796:3696 with SMTP id q16-20020a170902f79000b0016bd7963696mr17647790pln.97.1658860431935;
+        Tue, 26 Jul 2022 11:33:51 -0700 (PDT)
+Received: from [192.168.1.100] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id k27-20020aa79d1b000000b00528c22038f5sm12453139pfp.14.2022.07.26.11.33.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Jul 2022 11:33:51 -0700 (PDT)
+Message-ID: <d8bcd233-680b-e822-d752-18dbb9048bb6@kernel.dk>
+Date:   Tue, 26 Jul 2022 12:33:49 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: bio splitting cleanups v3
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-block@vger.kernel.org
+References: <20220726183029.2950008-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20220726183029.2950008-1-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,23 +73,21 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, 26 Jul 2022 17:12:23 +0300, Dan Carpenter wrote:
-> The test/clear_bit() functions take a bit number, but this code is
-> passing as shifted value.  It's the equivalent of saying BIT(BIT(0))
-> instead of just BIT(0).
+On 7/26/22 12:30 PM, Christoph Hellwig wrote:
+> Hi Jens,
 > 
-> This doesn't affect runtime because numbers are small and it's done
-> consistently.
+> this series has two parts:  the first part moves the ->bio_split
+> bio_set to the gendisk as it only is used for file system style I/O.
 > 
-> [...]
+> The other patches reshuffle the bio splitting code so that in the future
+> blk_bio_segment_split can be used to split REQ_OP_ZONE_APPEND bios
+> under file system / remapping driver control.  I plan to use that in
+> btrfs in the next merge window.
 
-Applied, thanks!
+Applied to a temp branch so we can shove it into linux-next, then the
+plan is to rebase this into block-5.20 once the dependent branches
+have been merged upstream in the merge window.
 
-[1/1] ublk_drv: fix double shift bug
-      commit: 8d9fdb6011b4d413271eba3a62e10f89efecc419
-
-Best regards,
 -- 
 Jens Axboe
-
 
