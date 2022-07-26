@@ -2,145 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D847D580A4B
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 06:21:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A30B580A98
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 06:57:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbiGZEVg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jul 2022 00:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
+        id S236868AbiGZE55 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jul 2022 00:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbiGZEVf (ORCPT
+        with ESMTP id S236998AbiGZE54 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jul 2022 00:21:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 18E4524BDD
-        for <linux-block@vger.kernel.org>; Mon, 25 Jul 2022 21:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658809293;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vozal9Eu1i70NCpSRKE6fRuasNJPAr2zUeKK0YEFUFU=;
-        b=RRcHmQuCN/IO9ycv4ohTjaotKzuDzHzmrhnrncpqjvCDxkkMsxdNIBVLOlmXkBhVkylrmL
-        E8FqzajVgl7ROnQRUG/voSdrJxioEcGJJkznfXbdCp0eoMoRfgZA5JnznxLHaYIw1bInMR
-        tBkpxFqkfpM9+2n0mfR7XHE0q8K3pKg=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-443-EdLU_uJYOAuBIAwHEL3kVQ-1; Tue, 26 Jul 2022 00:21:28 -0400
-X-MC-Unique: EdLU_uJYOAuBIAwHEL3kVQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3CA2E38025E1;
-        Tue, 26 Jul 2022 04:21:27 +0000 (UTC)
-Received: from T590 (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9168794561;
-        Tue, 26 Jul 2022 04:21:09 +0000 (UTC)
-Date:   Tue, 26 Jul 2022 12:21:00 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     axboe@kernel.dk, osandov@fb.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yi.zhang@huawei.com
-Subject: Re: [PATCH v2] blk-mq: fix io hung due to missing commit_rqs
-Message-ID: <Yt9rrL62zW2orGys@T590>
-References: <20220726033519.4002586-1-yukuai1@huaweicloud.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220726033519.4002586-1-yukuai1@huaweicloud.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        Tue, 26 Jul 2022 00:57:56 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79CF26AE1;
+        Mon, 25 Jul 2022 21:57:53 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id e132so12199854pgc.5;
+        Mon, 25 Jul 2022 21:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=OOsbGRJHrD/a6HapTby2zw5mB5E6t8uLTz45iTXTcS4=;
+        b=Mh3qdoJ4CRmYIw4CbhzOfhnxeqKa3MeBvx1zT0AaJTKvTTj31a9VTXz6HyqLCWzxvE
+         DjI0KCTtEiTeJSA0h0dboC+aIcZWOnqP5+oRp20UmJORLK7pP0/QZWxTqJkS7LqwGkvW
+         Uv6DATG88fJBMVYBE7iAOW0XAIytqEWSaW5qRVUhzN/FXNjYqgvQh3LEMWnbNSNQC+8L
+         c+TkV3F2gV0SDLdwMPUJj3ud3u4/UukfB2c87zEN7XxAuuqN0fS6mvB4xX/yjO+p/NQM
+         LXYebG73z9hxZRC9NSC1pIJ4wxIxZWmptIMBNkIXxw0myt5I2sc2dd/dKvc8TO3I4NNI
+         Kwig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OOsbGRJHrD/a6HapTby2zw5mB5E6t8uLTz45iTXTcS4=;
+        b=2jZlj2wlG3WhXkAVoIpeG5W3xs4QiidDnUeKoHzGYFogkBQJ0uLHWZ9v7YYVaXnLNw
+         3PtdcssGPlpbhjq2qbBIPNxG3siLdb4+RHsi1xONn2tjr2IMvaRqmADNMwZqzc8RcRDR
+         /3vGb249+/lo1F/ms6/j7BUKUJ9LGabtLKpHbPZIcMmAuvBzaXtLt9uOzQS1yvH0rsvo
+         VoiMx+q/oN/yDBvT6Zqts+TQ2d4xA5Mlu4w5Yjpy9l3IPvSThtWsQPQks++l/fk4v9RH
+         pWnBc3DYwK51pScWctpa5IQplGngfVX9bZ8J02mkfEjYNvfQwcWgMW+Yz5rNy8ZOPBvq
+         YCmQ==
+X-Gm-Message-State: AJIora8Z/TWQDJHAbeNrNUMDS3LrqvW0qnN0ZUETF/3OSVS+y9oXvCcc
+        /9GsFCyC/5PY/oPou3DBNK0CVlsKKFM=
+X-Google-Smtp-Source: AGRyM1sRaNczYP6kEORYgYh5nvx6dR1ojF2WgnTtqMrTD/QTvlJKQkGmVfRpDHqu7LnN8FDdaQ8HpA==
+X-Received: by 2002:a63:fc0c:0:b0:41a:8177:35f with SMTP id j12-20020a63fc0c000000b0041a8177035fmr13507094pgi.285.1658811473283;
+        Mon, 25 Jul 2022 21:57:53 -0700 (PDT)
+Received: from xplor.waratah.dyndns.org (222-155-0-244-adsl.sparkbb.co.nz. [222.155.0.244])
+        by smtp.gmail.com with ESMTPSA id u6-20020a62d446000000b00528d41a998csm10773177pfl.15.2022.07.25.21.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jul 2022 21:57:52 -0700 (PDT)
+Received: by xplor.waratah.dyndns.org (Postfix, from userid 1000)
+        id B273636020D; Tue, 26 Jul 2022 16:57:49 +1200 (NZST)
+From:   Michael Schmitz <schmitzmic@gmail.com>
+To:     linux-block@vger.kernel.org, axboe@kernel.dk
+Cc:     linux-m68k@vger.kernel.org, geert@linux-m68k.org
+Subject: [PATCH v8 0/2] Amiga RDB partition support fixes
+Date:   Tue, 26 Jul 2022 16:57:45 +1200
+Message-Id: <20220726045747.4779-1-schmitzmic@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 11:35:19AM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Currently, in virtio_scsi, if 'bd->last' is not set to true while
-> dispatching request, such io will stay in driver's queue, and driver
-> will wait for block layer to dispatch more rqs. However, if block
-> layer failed to dispatch more rq, it should trigger commit_rqs to
-> inform driver.
-> 
-> There is a problem in blk_mq_try_issue_list_directly() that commit_rqs
-> won't be called:
-> 
-> // assume that queue_depth is set to 1, list contains two rq
-> blk_mq_try_issue_list_directly
->  blk_mq_request_issue_directly
->  // dispatch first rq
->  // last is false
->   __blk_mq_try_issue_directly
->    blk_mq_get_dispatch_budget
->    // succeed to get first budget
->    __blk_mq_issue_directly
->     scsi_queue_rq
->      cmd->flags |= SCMD_LAST
->       virtscsi_queuecommand
->        kick = (sc->flags & SCMD_LAST) != 0
->        // kick is false, first rq won't issue to disk
->  queued++
-> 
->  blk_mq_request_issue_directly
->  // dispatch second rq
->   __blk_mq_try_issue_directly
->    blk_mq_get_dispatch_budget
->    // failed to get second budget
->  ret == BLK_STS_RESOURCE
->   blk_mq_request_bypass_insert
->  // errors is still 0
-> 
->  if (!list_empty(list) || errors && ...)
->   // won't pass, commit_rqs won't be called
-> 
-> In this situation, first rq relied on second rq to dispatch, while
-> second rq relied on first rq to complete, thus they will both hung.
-> And same problem exists in blk_mq_dispatch_rq_list()
-> 
-> Fix the problem by also treat 'BLK_STS_*RESOURCE' as 'errors' since
-> it means that request is not queued successfully.
-> 
-> Fixes: d666ba98f849 ("blk-mq: add mq_ops->commit_rqs()")
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
-> Changes in v2:
->  - suggested by Ming, handle blk_mq_dispatch_rq_list() as well.
->  - change title and modify commit message.
-> 
->  block/blk-mq.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 70177ee74295..ee1e065fe63f 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -1909,6 +1909,7 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
->  			fallthrough;
->  		case BLK_STS_DEV_RESOURCE:
->  			blk_mq_handle_dev_resource(rq, list);
-> +			errors++;
->  			goto out;
->  		case BLK_STS_ZONE_RESOURCE:
->  			/*
-> @@ -1918,6 +1919,7 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
->  			 */
->  			blk_mq_handle_zone_resource(rq, &zone_list);
->  			needs_resource = true;
-> +			errors++;
+Resend of the final version of the Amiga RDB partition table patch,
+updated to current linux-block.
+ 
+I've split off the part fixing the incorrect use of signed int
+for partition start address and size as separate patch. It does fix the
+bug that Martin Steigerwald reported six years ago for a 2 TB disk.
+I have tested this patch with the identical RDB partition data that
+Martin saw the bug with. I have incorporated Andreas' feedback on proper
+use of casts to avoid integer overflow in this version.
 
-But accounting error here may break return value of
-blk_mq_dispatch_rq_list(), see:
+The simple fix still leaves ample room for overflows in calculating start
+address and size of a RDB partition, though such overflows should only be 
+seen in rather unusual cases. To address these potential overflows, checks
+are added in the second patch of this series. Comments by Geert have been   
+addressed in full. 
 
-/* Returns true if we did some work AND can potentially do more. */
+Both patches now reviewed by Geert - Reviewed-by tags added. 
 
+Cheers,
 
-thanks,
-Ming
+        Michael
 
