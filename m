@@ -2,111 +2,171 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17EF8581240
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 13:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8735A581243
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 13:45:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232542AbiGZLm7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jul 2022 07:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
+        id S233067AbiGZLpO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jul 2022 07:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238913AbiGZLm6 (ORCPT
+        with ESMTP id S232513AbiGZLpL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jul 2022 07:42:58 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33CF2A438;
-        Tue, 26 Jul 2022 04:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CZoNUVo1igbcpZTrqOvs2Pa5+5Pl6Ps0T7FgFnqQLac=; b=YFJv3l+Blv122NP4DU9w3ZxtKn
-        QXc6wsYWgJLF7WXZNzFpuaY9vk0f3N24JZh9Z3kPZhOLEDpCNOqlnzcrq4sgTVLv6vZwxt4M5F8/F
-        UNUu7+zRmjFcBAg0hLASI2dsdM5a82s0AnpoA4Wu3INxRlVV2U7+9gJPtL/nvq6rnrwvfJ96l2WhX
-        RGlmqya+Y7zcYtls/B+J9oUR2yyqXjR+XPWzc5INj1N8D9KOjCnjn4bnjmuhMmmz4PQQ9I7JkiJ36
-        sTuS2SvKF2mzwts2UJCHiz94o6hoTxgdBtN5YXgiJKJqTy7rofsnB9ur56x34ZS/cGNsg0daFmmok
-        3gZmJPPQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oGIxk-00GEFF-VA; Tue, 26 Jul 2022 11:42:56 +0000
-Date:   Tue, 26 Jul 2022 04:42:56 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Michael Schmitz <schmitzmic@gmail.com>
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        linux-m68k@vger.kernel.org, geert@linux-m68k.org
-Subject: Re: [PATCH v8 2/2] block: add overflow checks for Amiga partition
- support
-Message-ID: <Yt/TQOJQZEhZE+2p@infradead.org>
-References: <20220726045747.4779-1-schmitzmic@gmail.com>
- <20220726045747.4779-3-schmitzmic@gmail.com>
+        Tue, 26 Jul 2022 07:45:11 -0400
+Received: from out199-6.us.a.mail.aliyun.com (out199-6.us.a.mail.aliyun.com [47.90.199.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF6CBEE
+        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 04:45:08 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=ziyangzhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VKVM10E_1658835900;
+Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VKVM10E_1658835900)
+          by smtp.aliyun-inc.com;
+          Tue, 26 Jul 2022 19:45:05 +0800
+From:   ZiyangZhang <ZiyangZhang@linux.alibaba.com>
+To:     axboe@kernel.dk, ming.lei@redhat.com
+Cc:     ZiyangZhang@linux.alibaba.com, linux-block@vger.kernel.org,
+        xiaoguang.wang@linux.alibaba.com
+Subject: [PATCH V2 0/2] ublk: add support for UBLK_IO_NEED_GET_DATA
+Date:   Tue, 26 Jul 2022 19:44:03 +0800
+Message-Id: <20220726114405.116013-1-ZiyangZhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220726045747.4779-3-schmitzmic@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 04:57:47PM +1200, Michael Schmitz wrote:
-> The Amiga partition parser module uses signed int for partition sector
-> address and count, which will overflow for disks larger than 1 TB.
-> 
-> Use u64 as type for sector address and size to allow using disks up to
-> 2 TB without LBD support, and disks larger than 2 TB with LBD. The RBD
-> format allows to specify disk sizes up to 2^128 bytes (though native
-> OS limitations reduce this somewhat, to max 2^68 bytes), so check for
-> u64 overflow carefully to protect against overflowing sector_t.
-> 
-> Bail out if sector addresses overflow 32 bits on kernels without LBD
-> support.
-> 
-> This bug was reported originally in 2012, and the fix was created by
-> the RDB author, Joanne Dow <jdow@earthlink.net>. A patch had been
-> discussed and reviewed on linux-m68k at that time but never officially
-> submitted (now resubmitted as separate patch).
-> This patch adds additional error checking and warning messages.
-> 
-> Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=43511
-> Reported-by: Martin Steigerwald <Martin@lichtvoll.de>
-> Message-ID: <201206192146.09327.Martin@lichtvoll.de>
-> Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
->  block/partitions/amiga.c | 111 +++++++++++++++++++++++++++++++--------
->  1 file changed, 89 insertions(+), 22 deletions(-)
-> 
-> diff --git a/block/partitions/amiga.c b/block/partitions/amiga.c
-> index f98191545d9a..7356b39cbe10 100644
-> --- a/block/partitions/amiga.c
-> +++ b/block/partitions/amiga.c
-> @@ -11,10 +11,18 @@
->  #define pr_fmt(fmt) fmt
->  
->  #include <linux/types.h>
-> +#include <linux/mm_types.h>
-> +#include <linux/overflow.h>
->  #include <linux/affs_hardblocks.h>
->  
->  #include "check.h"
->  
-> +/* magic offsets in partition DosEnvVec */
-> +#define NR_HD	3
-> +#define NR_SECT	5
-> +#define LO_CYL	9
-> +#define	HI_CYL	10
+1. Introduction:
+UBLK_IO_NEED_GET_DATA is a new ublk IO command. It is designed for a user
+application who wants to allocate IO buffer and set IO buffer address
+only after it receives an IO request from ublksrv. This is a reasonable
+scenario because these users may use a RPC framework as one IO backend
+to handle IO requests passed from ublksrv. And a RPC framework may
+allocate its own buffer(or memory pool).
 
-The last line has a tab after the #define while the previous three
-don't.  Pick one style and stick to it for the others.
+This new feature (UBLK_F_NEED_GET_DATA) is optional for ublk users.
+Related userspace code has been added in ublksrv[1] as one pull request.
 
->  		if (!data) {
-> -			pr_err("Dev %s: unable to read RDB block %d\n",
-> -			       state->disk->disk_name, blk);
-> +			pr_err("Dev %s: unable to read RDB block %llu\n",
-> +			       state->disk->disk_name, (u64) blk);
+We have add some test cases in ublksrv and all of them pass. The
+performance result shows that this new feature does bring additional
+latency because one IO is issued back to ublk_drv once again to copy data
+from bio vectors to user-provided data buffer.
 
-No need for the various printk casts, a sector_t is always an
-unsigned long long.
+2. Background:
+For now, ublk requires the user to set IO buffer address in advance(with
+last UBLK_IO_COMMIT_AND_FETCH_REQ command)so the user has to
+pre-allocate IO buffer.
+
+For READ requests, this work flow looks good because the data copy
+happens after user application gets a cqe and the kernel copies data.
+So user application can allocate IO buffer, copy data to be read into
+it, and issues a sqe with the newly allocated IO buffer.
+
+However, for WRITE requests, this work flow looks weird because
+the data copy happens in a task_work before the user application gets one
+cqe. So it is inconvenient for users who allocates(or fetch from a
+memory pool)buffer after it gets one request(and know the actual data
+size). For these users, they have to memcpy from ublksrv's pre-allocated
+buffer to their internal buffer(such as RPC buffer). We think this
+additional memcpy could be a bottleneck and it is avoidable.
+
+2. Design:
+Consider add a new feature flag: UBLK_F_NEED_GET_DATA.
+
+If user sets this new flag(through libublksrv) and pass it to kernel
+driver, ublk kernel driver should returns a cqe with
+UBLK_IO_RES_NEED_GET_DATA after a new blk-mq WRITE request comes.
+
+A user application now can allocate data buffer for writing and pass its
+address in UBLK_IO_NEED_GET_DATA command after ublk kernel driver returns
+cqe with UBLK_IO_RES_NEED_GET_DATA.
+
+After the kernel side gets the sqe (UBLK_IO_NEED_GET_DATA command), it
+now copies(address pinned, indeed) data to be written from bio vectors
+to newly returned IO data buffer.
+
+Finally, the kernel side returns UBLK_IO_RES_OK and ublksrv handles the
+IO request as usual.The new feature: UBLK_F_NEED_GET_DATA is enabled on
+demand ublksrv still can pre-allocate data buffers with task_work.
+
+3. Evaluation:
+Related userspace code and tests have been added in ublksrv[1] as one
+pull request. We evaluate performance based on this PR.
+
+We have tested write latency with:
+  (1)  No UBLK_F_NEED_GET_DATA(the old commit) as baseline
+  (2)  UBLK_F_NEED_GET_DATA enabled/disabled
+on demo_null and demo_event of newest ublksrv project.
+
+Config of fio:bs=4k, iodepth=1, numjobs=1, rw=write/randwrite, direct=1,
+ioengine=libaio.
+
+Here is the comparison of lat(usec) in fio:
+
+demo_null:
+write:        28.74(baseline) -- 28.77(disable) -- 57.20(enable)
+randwrite:    27.81(baseline) -- 28.51(disable) -- 54.81(enable)
+
+demo_event:
+write:        46.45(baseline) -- 43.31(disable) -- 75.50(enable)
+randwrite:    45.39(baseline) -- 43.66(disable) -- 76.02(enable)
+
+Looks like:
+  (1) UBLK_F_NEED_GET_DATA does not introduce additional overhead when
+      comparing baseline and disable.
+  (2) enabling UBLK_F_NEED_GET_DATA adds about two times more latency
+      than disabling it. And it is reasonable since the IO goes through
+      the total ublk IO stack(ubd_drv <--> ublksrv) once again.
+  (3) demo_null and demo_event are both null targets. And I think this
+      overhead is not too heavy if real data handling backend is used.
+
+Without UBLK_IO_NEED_GET_DATA, an additional memcpy(from pre-allocated
+ublksrv buffer to user's buffer) is necessary for a WRITE request.
+However, UBLK_IO_NEED_GET_DATA does bring addtional syscall
+(io_uring_enter). To prove the value of UBLK_IO_NEED_GET_DATA, we test
+the single IO latency (usec) of demo_null with:
+  (1) UBLK_F_NEED_GET_DATA disabled; additional memcpy
+  (2) UBLK_F_NEED_GET_DATA enabled
+
+Config of fio:iodepth=1, numjobs=1, rw=randwrite, direct=1,
+ioengine=libaio.
+
+For block size, we choose 4k/64k/128k/256k/512k/1m. Note that with 1m block
+size, the original IO request will be split into two blk-mq requests.
+
+Here is the comparison of lat(usec) in fio:
+
+                 2 memcpy, w/o NEED_GET_DATA     1 memcpy, w/ NEED_GET_DATA
+4k-randwrite:               9.65                            10.06
+64k-randwrite:              15.19                           13.38
+128k-randwrite:             19.47                           17.77
+256k-randwrite:             32.63                           25.33
+512k-randwrite:             90.57                           46.08
+1m-randwrite:               177.06                          117.26
+
+We find that with bigger block size, cases with one memcpy w/ NEED_GET_DATA
+result in lower latency than cases with two memcpy w/o NEED_GET_DATA.
+Therefore, we think NEED_GET_DATA is suitable for bigger block size,
+such as 512B or 1MB.
+
+[1] https://github.com/ming1/ubdsrv
+
+Since V1:
+
+(1) Add tests to compare (1)2 memcpy, w/o NEED_GET_DATA and (2)1 memcpy,
+    w/ NEED_GET_DATA to show value of UBLK_IO_NEED_GET_DATA.
+(2) rebase on the newest version of ublk_drv
+
+ZiyangZhang (2):
+  ublk_cmd.h: add one new ublk command: UBLK_IO_NEED_GET_DATA
+  ublk_drv: add support for UBLK_IO_NEED_GET_DATA
+
+ drivers/block/ublk_drv.c      | 88 +++++++++++++++++++++++++++++++----
+ include/uapi/linux/ublk_cmd.h | 18 +++++++
+ 2 files changed, 97 insertions(+), 9 deletions(-)
+
+-- 
+2.34.1
+
