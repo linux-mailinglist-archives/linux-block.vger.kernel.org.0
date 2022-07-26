@@ -2,93 +2,155 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D44B5816D5
-	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 17:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2309F58187D
+	for <lists+linux-block@lfdr.de>; Tue, 26 Jul 2022 19:38:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234171AbiGZPzg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Jul 2022 11:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47404 "EHLO
+        id S239474AbiGZRi2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 26 Jul 2022 13:38:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233208AbiGZPz1 (ORCPT
+        with ESMTP id S239386AbiGZRi0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Jul 2022 11:55:27 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9ADAE37;
-        Tue, 26 Jul 2022 08:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=Ms6Eo/4vk2U2FvUSJ1ASbG7HxuQl+uR0mXnaHaYNTv4=; b=NrrgVQUsop8jszUXB0cv9CDrL+
-        fdEfO5urrJbCJWNS1Iq22L1BvAroUNoor2CQLfdd2fNdrd3IpBRHKvsxSYOo0vvWmym8s+v4433IL
-        y1rGN9rbsQ+UvIDbRjl0eOWA1J1Qc4CPH33eBIJYfVPowrgNDYqlXANBYBSkVqIHAY8T5hiM3eVzj
-        bzA9109KtzluUUx/kVOjSvMQWDprJiiWIwyH2jZiYrOkhSLoqIahhj2e9nvvPHfP6OEWaepTh3iLQ
-        9EDAlLY/HgG/NpsGsYFpP2sAW6PiYh6LvI5jOulinFHwJ3MJcCIZZSwUI6umqKiVvyjyiGmC/P1g4
-        7WdDWlCQ==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1oGMtz-000rlz-Bq; Tue, 26 Jul 2022 09:55:20 -0600
-Message-ID: <a9a1641a-aa5c-ce29-e4a4-c266f4494004@deltatee.com>
-Date:   Tue, 26 Jul 2022 09:55:13 -0600
+        Tue, 26 Jul 2022 13:38:26 -0400
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E681C2E9DA
+        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 10:38:22 -0700 (PDT)
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26QEw3MC020156
+        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 10:38:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=TQ4x8cQWq9MYenRRcsAzpxkvl0fQnbZVQyviX3DQONI=;
+ b=dEcb/ru4htwPplD7PFRDUk/nfCfhXVED4nYTkHnqJf7jq7KMS1XpQpQclO+vcwqIgC0q
+ 14IdIMlxNCY8TzTBgV/Pp+KA31Y5YYnbBrY6j5Oy26aAEeolNMeaMFkiPiQIO/fZfpie
+ 8m/i6UUydVSSL8Yhlo0URLa5doc7lHZNqfI= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3hgett2574-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Tue, 26 Jul 2022 10:38:22 -0700
+Received: from twshared6324.05.ash7.facebook.com (2620:10d:c085:108::8) by
+ mail.thefacebook.com (2620:10d:c085:11d::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Tue, 26 Jul 2022 10:38:20 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id 4492F698E4A6; Tue, 26 Jul 2022 10:38:15 -0700 (PDT)
+From:   Keith Busch <kbusch@fb.com>
+To:     <linux-nvme@lists.infradead.org>, <linux-block@vger.kernel.org>,
+        <io-uring@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+CC:     <axboe@kernel.dk>, <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 0/5] dma mapping optimisations
+Date:   Tue, 26 Jul 2022 10:38:09 -0700
+Message-ID: <20220726173814.2264573-1-kbusch@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Content-Language: en-CA
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        iommu@lists.linux.dev, Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>
-References: <20220708165104.5005-1-logang@deltatee.com>
- <20220726112906.GA2169@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <20220726112906.GA2169@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: hch@lst.de, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, iommu@lists.linux.dev, sbates@raithlin.com, dan.j.williams@intel.com, jgg@ziepe.ca, christian.koenig@amd.com, jhubbard@nvidia.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, dave.b.minturn@intel.com, jason@jlekstrand.net, dave.hansen@linux.intel.com, jianxin.xiong@intel.com, helgaas@kernel.org, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, rcampbell@nvidia.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: fZBTqZBLHhec-Ol6_gZbbcqyjeaYyoIW
+X-Proofpoint-GUID: fZBTqZBLHhec-Ol6_gZbbcqyjeaYyoIW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-26_05,2022-07-26_01,2022-06-22_01
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v8 00/13] DMA Mapping P2PDMA Pages
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Keith Busch <kbusch@kernel.org>
 
+The typical journey a user address takes for a read or write to a block
+device undergoes various represenations for every IO. Each consumes
+memory and CPU cycles. When the backing storage is NVMe, the sequence
+looks something like the following:
 
-On 2022-07-26 05:29, Christoph Hellwig wrote:
-> I've applied this to the dma-mapping for-next branch.
-> 
-> I'd have liked a review from Robin, but as he seems to be out and the
-> rework was to fit his comments I'd rather have us unblocked before
-> the end of the merge window.
+  __user void *
+  struct iov_iter
+  struct pages[]
+  struct bio_vec[]
+  struct scatterlist[]
+  __le64[]
 
-Great thanks! If Robin has some feedback when he gets back I'd be happy
-to make a couple more cleanup patches.
+Applications will often use the same buffer for many IO, though, so
+these per-IO transformations to reach the exact same hardware descriptor
+is unnecessary.
 
-Logan
+The io_uring interface already provides a way for users to register
+buffers to get to the 'struct bio_vec[]'. That still leaves the
+scatterlist needed for the repeated dma_map_sg(), then transform to
+nvme's PRP list format.
+
+This series takes the registered buffers a step further. A block driver
+can implement a new .dma_map() callback to complete the to the
+hardware's DMA mapped address representation, and return a cookie so a
+user can reference it later for any given IO. When used, the block stack
+can skip significant amounts of code, improving CPU utilization, and, if
+not bandwidth limited, IOPs. The larger the IO, the more signficant the
+improvement.
+
+The implementation is currently limited to mapping a registered buffer
+to a single block device.
+
+Here's some perf profiling 128k random read tests demonstrating the CPU
+savings:
+
+With premapped bvec:
+
+  --46.84%--blk_mq_submit_bio
+            |
+            |--31.67%--blk_mq_try_issue_directly
+                       |
+                        --31.57%--__blk_mq_try_issue_directly
+                                  |
+                                   --31.39%--nvme_queue_rq
+                                             |
+                                             |--25.35%--nvme_prep_rq.part=
+.68
+
+With premapped DMA:
+
+  --25.86%--blk_mq_submit_bio
+            |
+            |--12.95%--blk_mq_try_issue_directly
+                       |
+                        --12.84%--__blk_mq_try_issue_directly
+                                  |
+                                   --12.53%--nvme_queue_rq
+                                             |
+                                             |--5.01%--nvme_prep_rq.part.=
+68
+
+Keith Busch (5):
+  blk-mq: add ops to dma map bvec
+  iov_iter: introduce type for preregistered dma tags
+  block: add dma tag bio type
+  io_uring: add support for dma pre-mapping
+  nvme-pci: implement dma_map support
+
+ block/bdev.c                  |  20 +++
+ block/bio.c                   |  25 ++-
+ block/blk-merge.c             |  18 +++
+ drivers/nvme/host/pci.c       | 291 +++++++++++++++++++++++++++++++++-
+ include/linux/bio.h           |  21 +--
+ include/linux/blk-mq.h        |  25 +++
+ include/linux/blk_types.h     |   6 +-
+ include/linux/blkdev.h        |  16 ++
+ include/linux/uio.h           |   9 ++
+ include/uapi/linux/io_uring.h |  12 ++
+ io_uring/io_uring.c           | 129 +++++++++++++++
+ io_uring/net.c                |   2 +-
+ io_uring/rsrc.c               |  13 +-
+ io_uring/rsrc.h               |  16 +-
+ io_uring/rw.c                 |   2 +-
+ lib/iov_iter.c                |  25 ++-
+ 16 files changed, 600 insertions(+), 30 deletions(-)
+
+--=20
+2.30.2
+
