@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7364582ACD
-	for <lists+linux-block@lfdr.de>; Wed, 27 Jul 2022 18:24:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CDE8582AF7
+	for <lists+linux-block@lfdr.de>; Wed, 27 Jul 2022 18:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235708AbiG0QYr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Jul 2022 12:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        id S236219AbiG0QZe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Jul 2022 12:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236253AbiG0QYT (ORCPT
+        with ESMTP id S236507AbiG0QYZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Jul 2022 12:24:19 -0400
+        Wed, 27 Jul 2022 12:24:25 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6F54D16C
-        for <linux-block@vger.kernel.org>; Wed, 27 Jul 2022 09:23:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBBAB4E62F
+        for <linux-block@vger.kernel.org>; Wed, 27 Jul 2022 09:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=viut8uvu1QJ71RFs5TxtOBKR4g93U6FLq4nGpzCxvDk=; b=5CzO4zhFqfn7vTIPVigVJ5MCU6
-        VfxbbLTaPoDBn/NwdPN9auQndZazfbsDq72xUL919TEPvKl4kLiznquLm3ahW4ftt+EI6GJyyi5+p
-        lKo6xz3RRLjBCZ3NXpaxESk9hNvt2V79CX32eDf95k1WqJawp+uJ/foWfkq0zWOE4l70PCfe+eoyP
-        A1/Xd9H5qIDSWpMFTRKiZ/BDRkdQ5oPfz+41caGy6E7LD3KcgW8Yp05PadRvrPgQqFWPlFd7Wm5z6
-        jWYGgDO+1a705N450OotG9VCYXmjCPO70txbOjSyogQLTGn2ff377lFHnTRvl3VnCqfncL/GMhyiu
-        PzWoND2w==;
+        bh=XZGZy0s7RnfoncuceJb1Wsb4ySM0ED0d66bgJt25KAs=; b=CqCnEwWPa3S38R1C/EqT7BNLYr
+        LQeBwFEWCEQ0CNEdRysZlhIWTlwMmjXa7f9gd3tCj4VcHOf1PwTe7RtxuznDiv2VGmlCrxsMOAB7/
+        XBqcGSDmcT5FwthyYrVMPmjccQDkZ9h7Qu1BJbPyzRN2l4ERGhN057m77FejQc+D5XSZRgrw/IgW+
+        xOndmZLdaaxWw7Ye/yJrpaw9BvsuTW09wDz8tzflKQWa3IMjCIOc2gc2hJ8pyzCnsU+gAGluC6QdN
+        NPgRQvS9E/5aUyXRDxcBPWuqhDLnBPoyHUf8XmIabZkJNUhqU87Bk8ZnDV9rvEGfk+f5zPvkS5dyg
+        NQsHQ8jA==;
 Received: from [2607:fb90:18d2:b6be:6d6f:ba8a:ca81:9775] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oGjoY-00FUj4-6c; Wed, 27 Jul 2022 16:23:14 +0000
+        id 1oGjoa-00FUkd-99; Wed, 27 Jul 2022 16:23:16 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 4/6] block: move the call to get_max_io_size out of blk_bio_segment_split
-Date:   Wed, 27 Jul 2022 12:22:58 -0400
-Message-Id: <20220727162300.3089193-5-hch@lst.de>
+Subject: [PATCH 5/6] block: move bio_allowed_max_sectors to blk-merge.c
+Date:   Wed, 27 Jul 2022 12:22:59 -0400
+Message-Id: <20220727162300.3089193-6-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220727162300.3089193-1-hch@lst.de>
 References: <20220727162300.3089193-1-hch@lst.de>
@@ -52,59 +52,58 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Prepare for reusing blk_bio_segment_split for (file system controlled)
-splits of REQ_OP_ZONE_APPEND bios by letting the caller control the
-maximum size of the bio.
+Move this helper into the only file where it is used.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- block/blk-merge.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ block/blk-merge.c | 10 ++++++++++
+ block/blk.h       | 10 ----------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 30872a3537648..ce73b3b6c2a71 100644
+index ce73b3b6c2a71..c2bf8723f30c6 100644
 --- a/block/blk-merge.c
 +++ b/block/blk-merge.c
-@@ -250,11 +250,12 @@ static bool bvec_split_segs(const struct request_queue *q,
-  * @q:    [in] request queue pointer
-  * @segs: [out] number of segments in the bio with the first half of the sectors
-  * @bs:	  [in] bio set to allocate the clone from
-+ * @max_bytes: [in] maximum number of bytes per bio
-  *
-  * Clone @bio, update the bi_iter of the clone to represent the first sectors
-  * of @bio and update @bio->bi_iter to represent the remaining sectors. The
-  * following is guaranteed for the cloned bio:
-- * - That it has at most get_max_io_size(@bio, @q) sectors.
-+ * - That it has at most @max_bytes worth of data
-  * - That it has at most queue_max_segments(@q) segments.
-  *
-  * Except for discard requests the cloned bio will point at the bi_io_vec of
-@@ -264,12 +265,11 @@ static bool bvec_split_segs(const struct request_queue *q,
-  * split bio has finished.
-  */
- static struct bio *bio_split_rw(struct bio *bio, struct request_queue *q,
--		unsigned *segs, struct bio_set *bs)
-+		unsigned *segs, struct bio_set *bs, unsigned max_bytes)
+@@ -95,6 +95,16 @@ static inline bool req_gap_front_merge(struct request *req, struct bio *bio)
+ 	return bio_will_gap(req->q, NULL, bio, req->bio);
+ }
+ 
++/*
++ * The max size one bio can handle is UINT_MAX becasue bvec_iter.bi_size
++ * is defined as 'unsigned int', meantime it has to be aligned to with the
++ * logical block size, which is the minimum accepted unit by hardware.
++ */
++static unsigned int bio_allowed_max_sectors(struct request_queue *q)
++{
++	return round_down(UINT_MAX, queue_logical_block_size(q)) >> 9;
++}
++
+ static struct bio *bio_split_discard(struct bio *bio, struct request_queue *q,
+ 		unsigned *nsegs, struct bio_set *bs)
  {
- 	struct bio_vec bv, bvprv, *bvprvp = NULL;
- 	struct bvec_iter iter;
- 	unsigned nsegs = 0, bytes = 0;
--	const unsigned max_bytes = get_max_io_size(bio, q) << 9;
- 	const unsigned max_segs = queue_max_segments(q);
+diff --git a/block/blk.h b/block/blk.h
+index 1cc813241cd4f..19dd12ade8087 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -349,16 +349,6 @@ static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+ 		q->last_merge = NULL;
+ }
  
- 	bio_for_each_bvec(bv, bio, iter) {
-@@ -343,7 +343,8 @@ struct bio *__bio_split_to_limits(struct bio *bio, struct request_queue *q,
- 		split = bio_split_write_zeroes(bio, q, nr_segs, bs);
- 		break;
- 	default:
--		split = bio_split_rw(bio, q, nr_segs, bs);
-+		split = bio_split_rw(bio, q, nr_segs, bs,
-+				get_max_io_size(bio, q) << SECTOR_SHIFT);
- 		break;
- 	}
- 
+-/*
+- * The max size one bio can handle is UINT_MAX becasue bvec_iter.bi_size
+- * is defined as 'unsigned int', meantime it has to aligned to with logical
+- * block size which is the minimum accepted unit by hardware.
+- */
+-static inline unsigned int bio_allowed_max_sectors(struct request_queue *q)
+-{
+-	return round_down(UINT_MAX, queue_logical_block_size(q)) >> 9;
+-}
+-
+ /*
+  * Internal io_context interface
+  */
 -- 
 2.30.2
 
