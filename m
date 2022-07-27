@@ -2,99 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55191582C21
-	for <lists+linux-block@lfdr.de>; Wed, 27 Jul 2022 18:42:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E6AD5832A0
+	for <lists+linux-block@lfdr.de>; Wed, 27 Jul 2022 21:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239864AbiG0Qmh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Jul 2022 12:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57232 "EHLO
+        id S230293AbiG0TCG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Jul 2022 15:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239745AbiG0Ql6 (ORCPT
+        with ESMTP id S231666AbiG0TBt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Jul 2022 12:41:58 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF255C343
-        for <linux-block@vger.kernel.org>; Wed, 27 Jul 2022 09:29:53 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id n13so9097130ilk.1
-        for <linux-block@vger.kernel.org>; Wed, 27 Jul 2022 09:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:in-reply-to:references:subject:message-id:date
-         :mime-version:content-transfer-encoding;
-        bh=/SSf5BVafpijdSXMMngYQC9Ps4BVJNDNF+wR9WJ49aY=;
-        b=Nkx20mSS5MczpPiOvjgvQ1R7ZCL7Bl7U1/Qu9WIh21JP9tNxHoWKy5pxgHRILiVQjW
-         4u1O3lDiE6zHnpPAlaW9/sLHWb3sza3Yvr9MgQBh2r/mw0BHAYQvDyFFmBVnu0eKB72C
-         4rgINqvC2VFgy4jKKmvuUufRWw1I8tBTLwya611erERbgv4hRvJhUqPGbeSkbg+nsk0P
-         d2sO9cgFZTgluXUyWLGDG2eahL+cRQPQvrMACxY3EolaZniYU+A3fDoYZCfHshoDxdvW
-         WWyVfatwRd7lgCpVmPJ3/N8Lnp7yPPUsTWOxbQJBETTzZ3Ga1HCEyEojY/1mvpbckCEk
-         QyYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
-         :message-id:date:mime-version:content-transfer-encoding;
-        bh=/SSf5BVafpijdSXMMngYQC9Ps4BVJNDNF+wR9WJ49aY=;
-        b=Gr2PLfo4HV3pWbybTZBoEsMbDYcAuGCCIwYlfd6CrPO3weJpPm76S3fPVnHNdZZcBN
-         bJZchr0tvD6kfcxzvnt7QqTnov7mh4BC1asNAqSHeq65AW3/iaTROAk2/kUnhiyJ39BY
-         hKjapulWVMIOVvSLJVH1dnr5pj8bV67p0WfCMWGowyUZEWvRPho3H9lQkSNXbRL3KbV+
-         UVvzYuXarG+mGM9p7aUs3VCvFp5ZRKu9lVBzDhAcV8N2Xcyie8W81RjorwZS/cDC1qOf
-         3tP3EVVfD+5gv/xtpRDnwwPcHztDCED8WqTYNqGGSyZSfG6MbbQH+bovZglzl6a/e4oq
-         R2nw==
-X-Gm-Message-State: AJIora8jb9ZUxZpDaHUTgklpCuIb4hiXp1LPrECMkwJPLRoYIuuj+sRU
-        PUIAgQhlkXIS8uQSLMTWYTESXNpfxY3tQw==
-X-Google-Smtp-Source: AGRyM1u5iCKgESsTDjmfNJWSQuosMGPLohgU2bpjwaq1iZUpaQFJU9Sq1nFLw/+ZdEWCM4SOs95EWg==
-X-Received: by 2002:a05:6e02:1b8f:b0:2dd:8f33:d8d6 with SMTP id h15-20020a056e021b8f00b002dd8f33d8d6mr3576759ili.81.1658939392558;
-        Wed, 27 Jul 2022 09:29:52 -0700 (PDT)
-Received: from [127.0.1.1] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id p13-20020a02780d000000b0033f8af36a96sm7857530jac.165.2022.07.27.09.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jul 2022 09:29:51 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org
-In-Reply-To: <20220727162300.3089193-2-hch@lst.de>
-References: <20220727162300.3089193-1-hch@lst.de> <20220727162300.3089193-2-hch@lst.de>
-Subject: Re: [PATCH 1/6] block: change the blk_queue_split calling convention
-Message-Id: <165893939161.1603239.13356247879677746620.b4-ty@kernel.dk>
-Date:   Wed, 27 Jul 2022 10:29:51 -0600
+        Wed, 27 Jul 2022 15:01:49 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D40FD3B4;
+        Wed, 27 Jul 2022 11:14:32 -0700 (PDT)
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26RI0mnf017174;
+        Wed, 27 Jul 2022 18:14:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=mX9UjlQhgON6JzhcyOXEP4/7UWi/azjDmN7basxV9w4=;
+ b=eb4QHb0yOZ5Aab85KBu/TUXHxEwa0VYTMVzhsngE2H4Y2Ou3M0EM2nUTtOED8Q7J5ld6
+ OORpmB9dixRB8NXlbwiWcrmxBQryXDCu10KIHA7WEgM0XP2y/1CFFPmRd8WYZCZnvk/X
+ 9fz5a92FeFQtCIg42VlMoFw8UTg0STDNcwPcUG16P3YlgWxrFwX41J+5r7KtFGJ2GMuv
+ MvbdeMrF5LpBspKsLsCKKau2B0ZyadjGomGBJ5S08RlSu/GvX1NXI0faGCXfAfaAWrvE
+ tkTSrP0nM7D2DBzTKRRCrC427ur7ctc/TUhznZM04FotlDD8mXKVMutAxeXNDqdJT8JO RQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hka8tgdcx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Jul 2022 18:14:27 +0000
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26RI14Kd017856;
+        Wed, 27 Jul 2022 18:14:27 GMT
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hka8tgdbt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Jul 2022 18:14:27 +0000
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26RI7vJO004915;
+        Wed, 27 Jul 2022 18:14:26 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma03wdc.us.ibm.com with ESMTP id 3hg97s2rmn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Jul 2022 18:14:26 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26RIEPSC57147686
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Jul 2022 18:14:25 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64E33124055;
+        Wed, 27 Jul 2022 18:14:25 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D3EB7124053;
+        Wed, 27 Jul 2022 18:14:24 +0000 (GMT)
+Received: from rhel-laptop.ibm.com.com (unknown [9.77.138.167])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Jul 2022 18:14:24 +0000 (GMT)
+From:   gjoyce@linux.vnet.ibm.com
+To:     linux-block@vger.kernel.org
+Cc:     keyrings@vger.kernel.org, dhowells@redhat.com, jarkko@kernel.org,
+        jonathan.derrick@linux.dev, brking@linux.vnet.ibm.com,
+        gjoyce@ibm.com, nayna@linux.ibm.com
+Subject: [PATCH 0/3] sed-opal: keyrings, discovery, revert and key store
+Date:   Wed, 27 Jul 2022 13:14:19 -0500
+Message-Id: <20220727181422.3504563-1-gjoyce@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: pKTIM34pTdDRo0d_8pFL7ucruvS1N2S0
+X-Proofpoint-GUID: ADRxlWOyMgT7n4RtQcQkWsQiDQ1U6s8s
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-27_07,2022-07-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501
+ mlxscore=0 phishscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2207270077
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 27 Jul 2022 12:22:55 -0400, Christoph Hellwig wrote:
-> The double indirect bio leads to somewhat suboptimal code generation.
-> Instead return the (original or split) bio, and make sure the
-> request_queue arguments to the lower level helpers is passed after the
-> bio to avoid constant reshuffling of the argument passing registers.
-> 
-> Also give it and the helpers used to implement it more descriptive names.
-> 
-> [...]
+From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
 
-Applied, thanks!
+The current TCG SED Opal implementation in the block
+driver requires that authentication keys be provided
+in an ioctl so that they can be presented to the
+underlying SED Opal capable drive. Currently, the key
+is typically entered by a user with an application
+like sedutil or sedcli. While this process works, it
+does not lend itself to automation like unlock by a udev
+rule.
 
-[1/6] block: change the blk_queue_split calling convention
-      commit: b1b9c6f4d078f50b62e8cc0f4d3bd4c87d411377
-[2/6] block: change the blk_queue_bounce calling convention
-      commit: 4d70e071de1fe363e81fdfd7b0b1686355120fdb
-[3/6] block: move ->bio_split to the gendisk
-      commit: 1be3479b85330141b54a102903e5f07948362695
-[4/6] block: move the call to get_max_io_size out of blk_bio_segment_split
-      commit: 0ef1e5aa4337e291e9fe590e01e1da3021be6743
-[5/6] block: move bio_allowed_max_sectors to blk-merge.c
-      commit: fa785c340621a4da8f6ee70b6e5ad263c4c4bbb5
-[6/6] block: pass struct queue_limits to the bio splitting helpers
-      commit: c9ca8dcc66a99d1123f0fdc2dc161436b93d194b
+Extend the SED block driver so it can alternatively
+obtain a key from a sed-opal kernel keyring. The SED
+ioctls will indicate the source of the key, either
+directly in the ioctl data or from the keyring.
 
-Best regards,
+Two new SED ioctls have also been added. These are:
+  1) IOC_OPAL_REVERT_LSP to revert LSP state
+  2) IOC_OPAL_DISCOVERY to discover drive capabilities/state
+
+Also, for platforms that have a permanent key store, the
+platform may provide unique platform dependent functions
+to read/write variables. The SED block driver has been
+modified to attempt to read a key from the platform key
+store. If successful, the key value is saved in the kernel
+sed-opal keyring. If the platform does not support a
+permanent key store, the read will fail and a key will
+not be added to the keyring. This patchset does not include
+any providers of the variable read/write functions.
+
+Updates:
+	- removed platform functions for persistent variable storage
+	- replaced key update logic with key_create_or_update()
+	- minor bracing and padding changes
+	- add error returns
+	- opal_key structure is application provided but kernel
+	  verified
+
+Greg Joyce (3):
+  block: sed-opal: Implement IOC_OPAL_DISCOVERY
+  block: sed-opal: Implement IOC_OPAL_REVERT_LSP
+  block: sed-opal: keyring support for SED Opal keys
+
+ block/Kconfig                 |   1 +
+ block/opal_proto.h            |   4 +
+ block/sed-opal.c              | 252 +++++++++++++++++++++++++++++++++-
+ include/linux/sed-opal.h      |   5 +
+ include/uapi/linux/sed-opal.h |  25 +++-
+ 5 files changed, 281 insertions(+), 6 deletions(-)
+
+
+Signed-off-by: Greg Joyce <gjoyce@linux.vnet.ibm.com>
+Reported-by: kernel test robot <lkp@intel.com>
+base-commit: ff6992735ade75aae3e35d16b17da1008d753d28
 -- 
-Jens Axboe
-
+2.27.0
 
