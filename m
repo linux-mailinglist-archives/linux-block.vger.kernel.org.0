@@ -2,36 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF815829FE
-	for <lists+linux-block@lfdr.de>; Wed, 27 Jul 2022 17:52:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CC7B582A06
+	for <lists+linux-block@lfdr.de>; Wed, 27 Jul 2022 17:54:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234157AbiG0PwJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Jul 2022 11:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53860 "EHLO
+        id S233752AbiG0Pyl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Jul 2022 11:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232399AbiG0PwJ (ORCPT
+        with ESMTP id S233607AbiG0Pyk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Jul 2022 11:52:09 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6342610E
-        for <linux-block@vger.kernel.org>; Wed, 27 Jul 2022 08:52:07 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D405668AA6; Wed, 27 Jul 2022 17:52:02 +0200 (CEST)
-Date:   Wed, 27 Jul 2022 17:52:02 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 1/6] block: change the blk_queue_split calling
- convention
-Message-ID: <20220727155202.GA18260@lst.de>
-References: <20220726183029.2950008-1-hch@lst.de> <20220726183029.2950008-2-hch@lst.de> <219efcde-fbdb-d379-5c14-874490f8c886@opensource.wdc.com>
+        Wed, 27 Jul 2022 11:54:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330422A702
+        for <linux-block@vger.kernel.org>; Wed, 27 Jul 2022 08:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=WQYkpy+Ys/D1auBSZUAVXib7a0WAy5gtMoYU+H97DjU=; b=Po388BffC1OOnkc7ZLBiMhYFhI
+        8vvcpcrTYK5jXF8A+wt6HzIev3khiRSeDrZ8rXsQ5jy916df09KNgQSf1txMMocxhxHa5/rLI6mgj
+        1NR1aGXKnkJu3bG0jgOzLA3HX05e/vH2MLEUTPZpwCNcwybCnkuMPuz+EFWXqMNE5IE4A/i8Rb5r/
+        tBxH11NFrLYXsQfct/hb/WzfuyAVRpYt0NH5KOVpI+ZWAdDMKBSPB1aOrry5hNMS8RHrKQCPjcNqh
+        06SlChfyD6/fFqK8+VxoEJcjM0nzNvnF3pOEq1CYsvqF+rsrnXt+/ER1T3SnzSC9+7Y7sW/vaKcqA
+        fn3B/6yQ==;
+Received: from [2607:fb90:18d2:b6be:6d6f:ba8a:ca81:9775] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oGjMo-00FFfc-2q; Wed, 27 Jul 2022 15:54:34 +0000
+Date:   Wed, 27 Jul 2022 11:54:31 -0400
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Subject: [GIT PULL] nvme fix for Linux 5.19
+Message-ID: <YuFftyWcAMRP/NC5@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <219efcde-fbdb-d379-5c14-874490f8c886@opensource.wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -39,15 +49,26 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jul 27, 2022 at 08:26:13AM +0900, Damien Le Moal wrote:
-> >  		/* there isn't chance to merge the splitted bio */
-> >  		split->bi_opf |= REQ_NOMERGE;
-> >  
-> > -		blkcg_bio_issue_init(split);
-> 
-> Is removing this init call intentional ? If yes, isn't that a problem ?
+The following changes since commit 82e094f7bd988c02df27f8c8d81af8f750660b2a:
 
-No.  This was actually added back in the drivers-post tree by
-"block: fix missing blkcg_bio_issue_init" and I messed up the rebase.
+  Merge branch 'md-fixes' of https://git.kernel.org/pub/scm/linux/kernel/git/song/md into block-5.19 (2022-07-19 12:42:33 -0600)
 
-Jens, do you want me to send a fixup, or are you going to do it locally?
+are available in the Git repository at:
+
+  git://git.infradead.org/nvme.git tags/nvme-5.19-2022-07-27
+
+for you to fetch changes up to d6c52fa3e955b97f8eb3ac824d2a3e0af147b3ce:
+
+  nvme-pci: Crucial P2 has bogus namespace ids (2022-07-25 07:34:07 +0200)
+
+----------------------------------------------------------------
+nvme fix for Linux 5.19
+
+ - yet another duplicate ID quirk (Tobias Gruetzmacher)
+
+----------------------------------------------------------------
+Tobias Gruetzmacher (1):
+      nvme-pci: Crucial P2 has bogus namespace ids
+
+ drivers/nvme/host/pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
