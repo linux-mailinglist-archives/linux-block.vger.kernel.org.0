@@ -2,177 +2,135 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D36A585995
-	for <lists+linux-block@lfdr.de>; Sat, 30 Jul 2022 11:28:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37DBA585A38
+	for <lists+linux-block@lfdr.de>; Sat, 30 Jul 2022 13:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233455AbiG3J26 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 30 Jul 2022 05:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57962 "EHLO
+        id S234233AbiG3LR4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 30 Jul 2022 07:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232055AbiG3J25 (ORCPT
+        with ESMTP id S234131AbiG3LRz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 30 Jul 2022 05:28:57 -0400
+        Sat, 30 Jul 2022 07:17:55 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F244D41D1E
-        for <linux-block@vger.kernel.org>; Sat, 30 Jul 2022 02:28:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2F8A41EEDF
+        for <linux-block@vger.kernel.org>; Sat, 30 Jul 2022 04:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659173336;
+        s=mimecast20190719; t=1659179873;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=9zAY7rf3e+TIKgHeyfrUHfnS97dxLhcLqPgvcWfz0rc=;
-        b=MThwAQ3Vn5Vw4VL9MIsSYguANJaf5E8TCa/RIRrOLl0WYJsS4ksA0T4uN4CeLqXfnT847I
-        tyuqdHZkoZsC9KOuRQ189FrTSu0gWSkEezRdoAVeFdEYCI9JbvAh2ndM47jw6BEzvLrmSf
-        KyuoFYs7m85fVz5b2TilUSm+haVa+xo=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ajeH2EPldj0oFW5NJlh68z51lwf7zGjC5FfPekouKAo=;
+        b=K/oqLsJR9vzL6Ns280aqnin31IffffEJsIMPO7a7pO05QDFXGlQUb0a1rm2h9zm7CQg1sD
+        D65wEq9YJfj0/SR9s25f72Yicaricr34cb8tE158EX6u7QFOQ9yxQ7dzqA/NCGUy5n04oF
+        S/ga0FS4peZqNgFl/u4kwiRoZ9wrxns=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-669-HOgbO-rsPXuiTSwfxOFiWw-1; Sat, 30 Jul 2022 05:28:52 -0400
-X-MC-Unique: HOgbO-rsPXuiTSwfxOFiWw-1
+ us-mta-13-Ok_HGvXdP6SII63yWAl8ww-1; Sat, 30 Jul 2022 07:17:50 -0400
+X-MC-Unique: Ok_HGvXdP6SII63yWAl8ww-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 11C853C025AD;
-        Sat, 30 Jul 2022 09:28:52 +0000 (UTC)
-Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2757B2026D64;
-        Sat, 30 Jul 2022 09:28:49 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5C008101A54E;
+        Sat, 30 Jul 2022 11:17:49 +0000 (UTC)
+Received: from T590 (ovpn-8-20.pek2.redhat.com [10.72.8.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CAC6A2026D07;
+        Sat, 30 Jul 2022 11:17:43 +0000 (UTC)
+Date:   Sat, 30 Jul 2022 19:17:38 +0800
 From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V4 4/4] ublk_drv: cleanup ublksrv_ctrl_dev_info
-Date:   Sat, 30 Jul 2022 17:27:50 +0800
-Message-Id: <20220730092750.1118167-5-ming.lei@redhat.com>
-In-Reply-To: <20220730092750.1118167-1-ming.lei@redhat.com>
-References: <20220730092750.1118167-1-ming.lei@redhat.com>
+To:     syzbot <syzbot+934ebb67352c8a490bf3@syzkaller.appspotmail.com>
+Cc:     axboe@kernel.dk, cgroups@vger.kernel.org, hdanton@sina.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tj@kernel.org,
+        Yufen Yu <yuyufen@huawei.com>
+Subject: Re: [syzbot] possible deadlock in throtl_pending_timer_fn
+Message-ID: <YuUTUkxYFTKr6Ih3@T590>
+References: <000000000000921fd405db62096a@google.com>
+ <0000000000004e96a405e4fd5051@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000004e96a405e4fd5051@google.com>
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SORTED_RECIPS,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Remove all block device related info from ublksrv_ctrl_dev_info,
-meantime reduce its size into 64 bytes because:
+On Fri, Jul 29, 2022 at 08:25:08PM -0700, syzbot wrote:
+> syzbot has bisected this issue to:
+> 
+> commit 0a9a25ca78437b39e691bcc3dc8240455b803d8d
+> Author: Ming Lei <ming.lei@redhat.com>
+> Date:   Fri Mar 18 13:01:43 2022 +0000
+> 
+>     block: let blkcg_gq grab request queue's refcnt
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c3cfc2080000
+> start commit:   cb71b93c2dc3 Add linux-next specific files for 20220628
+> git tree:       linux-next
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=15c3cfc2080000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11c3cfc2080000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=badbc1adb2d582eb
+> dashboard link: https://syzkaller.appspot.com/bug?extid=934ebb67352c8a490bf3
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17713dee080000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d24952080000
+> 
+> Reported-by: syzbot+934ebb67352c8a490bf3@syzkaller.appspotmail.com
+> Fixes: 0a9a25ca7843 ("block: let blkcg_gq grab request queue's refcnt")
 
-1) ublksrv_ctrl_dev_info becomes cleaner without including any
-block related info
+No, this lockdep warning isn't related with the above commit, which
+caused another regression, but fixed by commit d578c770c852
+("block: avoid calling blkg_free() in atomic context"). Looks syzbot
+can't recognize difference between the two different issues.
 
-2) generic set/get parameter command can be used to set block
-related setting easily and cleanly
+This specific issue of '[syzbot] possible deadlock in throtl_pending_timer_fn',
+is actually introduced by commit ("27029b4b18aa blkcg: fix memleak for iolatency").
 
-3) generic set/get parameter command can be used for extending
-ublk without needing more info in ublksrv_ctrl_dev_info
+blk_throtl_exit() isn't safe to be called before blkg_destroy_all().
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- drivers/block/ublk_drv.c      | 18 +++++++-----------
- include/uapi/linux/ublk_cmd.h | 15 ++++++++-------
- 2 files changed, 15 insertions(+), 18 deletions(-)
+The following change should avoid the issue:
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 20ad83b25318..2b3cd671a653 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -122,7 +122,6 @@ struct ublk_device {
- 	char	*__queues;
- 
- 	unsigned short  queue_size;
--	unsigned short  bs_shift;
- 	struct ublksrv_ctrl_dev_info	dev_info;
- 
- 	struct blk_mq_tag_set	tag_set;
-@@ -223,8 +222,7 @@ static int ublk_validate_params(const struct ublk_device *ub)
- 		if (p->logical_bs_shift > p->physical_bs_shift)
- 			return -EINVAL;
- 
--		if (p->max_sectors > (ub->dev_info.rq_max_blocks <<
--					(ub->bs_shift - 9)))
-+		if (p->max_sectors > (ub->dev_info.max_io_buf_bytes >> 9))
- 			return -EINVAL;
- 	} else
- 		return -EINVAL;
-@@ -1185,13 +1183,13 @@ static void ublk_stop_work_fn(struct work_struct *work)
- 	ublk_stop_dev(ub);
- }
- 
--/* align maximum I/O size to PAGE_SIZE */
-+/* align max io buffer size with PAGE_SIZE */
- static void ublk_align_max_io_size(struct ublk_device *ub)
+
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index 869af9d72bcf..1606acb917fd 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1268,6 +1268,7 @@ static int blkcg_css_online(struct cgroup_subsys_state *css)
+ int blkcg_init_queue(struct request_queue *q)
  {
--	unsigned int max_rq_bytes = ub->dev_info.rq_max_blocks << ub->bs_shift;
-+	unsigned int max_io_bytes = ub->dev_info.max_io_buf_bytes;
+ 	struct blkcg_gq *new_blkg, *blkg;
++	bool need_exit_throtl = false;
+ 	bool preloaded;
+ 	int ret;
  
--	ub->dev_info.rq_max_blocks =
--		round_down(max_rq_bytes, PAGE_SIZE) >> ub->bs_shift;
-+	ub->dev_info.max_io_buf_bytes =
-+		round_down(max_io_bytes, PAGE_SIZE);
- }
+@@ -1301,7 +1302,7 @@ int blkcg_init_queue(struct request_queue *q)
  
- static int ublk_add_tag_set(struct ublk_device *ub)
-@@ -1348,9 +1346,8 @@ static inline void ublk_dump_dev_info(struct ublksrv_ctrl_dev_info *info)
- {
- 	pr_devel("%s: dev id %d flags %llx\n", __func__,
- 			info->dev_id, info->flags);
--	pr_devel("\t nr_hw_queues %d queue_depth %d block size %d dev_capacity %lld\n",
--			info->nr_hw_queues, info->queue_depth,
--			info->block_size, info->dev_blocks);
-+	pr_devel("\t nr_hw_queues %d queue_depth %d\n",
-+			info->nr_hw_queues, info->queue_depth);
- }
+ 	ret = blk_iolatency_init(q);
+ 	if (ret) {
+-		blk_throtl_exit(q);
++		need_exit_throtl = true;
+ 		blk_ioprio_exit(q);
+ 		goto err_destroy_all;
+ 	}
+@@ -1310,6 +1311,8 @@ int blkcg_init_queue(struct request_queue *q)
  
- static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
-@@ -1410,7 +1407,6 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
- 	/* We are not ready to support zero copy */
- 	ub->dev_info.flags &= ~UBLK_F_SUPPORT_ZERO_COPY;
- 
--	ub->bs_shift = ilog2(ub->dev_info.block_size);
- 	ub->dev_info.nr_hw_queues = min_t(unsigned int,
- 			ub->dev_info.nr_hw_queues, nr_cpu_ids);
- 	ublk_align_max_io_size(ub);
-diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index 54d065426f06..57d86d0e8c5b 100644
---- a/include/uapi/linux/ublk_cmd.h
-+++ b/include/uapi/linux/ublk_cmd.h
-@@ -80,22 +80,23 @@ struct ublksrv_ctrl_cmd {
- struct ublksrv_ctrl_dev_info {
- 	__u16	nr_hw_queues;
- 	__u16	queue_depth;
--	__u16	block_size;
- 	__u16	state;
-+	__u16	pad0;
- 
--	__u32	rq_max_blocks;
-+	__u32	max_io_buf_bytes;
- 	__u32	dev_id;
- 
--	__u64   dev_blocks;
--
- 	__s32	ublksrv_pid;
--	__s32	reserved0;
-+	__u32	pad1;
-+
- 	__u64	flags;
--	__u64	flags_reserved;
- 
- 	/* For ublksrv internal use, invisible to ublk driver */
- 	__u64	ublksrv_flags;
--	__u64	reserved1[9];
-+
-+	__u64	reserved0;
-+	__u64	reserved1;
-+	__u64   reserved2;
- };
- 
- #define		UBLK_IO_OP_READ		0
--- 
-2.31.1
+ err_destroy_all:
+ 	blkg_destroy_all(q);
++	if (need_exit_throtl)
++		blk_throtl_exit(q);
+ 	return ret;
+ err_unlock:
+ 	spin_unlock_irq(&q->queue_lock);
+
+
+
+Thanks,
+Ming
 
