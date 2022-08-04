@@ -2,74 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37907589F7C
-	for <lists+linux-block@lfdr.de>; Thu,  4 Aug 2022 18:42:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47EF258A2D8
+	for <lists+linux-block@lfdr.de>; Thu,  4 Aug 2022 23:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231665AbiHDQm3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 Aug 2022 12:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51682 "EHLO
+        id S236514AbiHDVqU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 Aug 2022 17:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231355AbiHDQm2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Aug 2022 12:42:28 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D453A485
-        for <linux-block@vger.kernel.org>; Thu,  4 Aug 2022 09:42:26 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id 17so56524pfy.0
-        for <linux-block@vger.kernel.org>; Thu, 04 Aug 2022 09:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=+CnBeoe7uqEcxaB+1aAe8bKxhqf9IbvpUHHTGwUqr4U=;
-        b=WmRCslE9kOuIR6KnPHmII1JL58W/uouaQW7Tcin9RLlyJDDrGFhgfwB1M8A5f3tMAf
-         Aw41mRetrEtddPH+vaIptXu8+gpN1C7OlGiMoXSm9a5QgNzUpBt7XodP79FPPQmegTNr
-         hkgUSOE7Lpj4XmSo7rksCTRKaD2kvBQ13I8sKOYpu/iFPLFofommLFjx9+DEntWY7s47
-         OLbnacVu6uy2MY34Qq5d6L6EoUtBTEFaheopOEHNog0y5QeQCkZmz0/TKyC38y8YBkt2
-         3h1Ab7b9GkCKg5PuFmOLIThaSSll6kXXslvaSgKdYWMHNv59lC432ht+tAV8ug48Ebfn
-         CU1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+CnBeoe7uqEcxaB+1aAe8bKxhqf9IbvpUHHTGwUqr4U=;
-        b=wyN1evykby83cAy5q96vSKhe+UnyRd8BavKmGSk1LvWMtiocIy3XqVyMNrNDWU81Wy
-         EqzZF+Eo6pER0iPLJBilnyGczLaBCMmh2s+cc3cJjFCQBUr8iL/Tkt//uR+0KKCBxdZg
-         TTtbmnnXIBzffvth1+jqZLrhRCLUKs5yA4ShBqrWc1hKFM0GpXIMyngDV7j8DdaPUX+k
-         2s53YSV/TjXQ0X/lUBEwFMH/vdzgU4F1PQQPiVK4D5bJ+gqGm5Q5c9M3wdZfOm79me+t
-         ung/9renS3yirSFqZG9Z/fGqBDgSHBrinNmu4t175fDPCpUpOLSQMS7HyMWk0mCX/Q2t
-         r5FA==
-X-Gm-Message-State: ACgBeo0xbxhB6XcxfhGCeHr9M1Gxuv+WDE8773nxM+WgjWggooTaSxsT
-        U/Vs3TYB5ELIdOOgjHc+1z3oTg==
-X-Google-Smtp-Source: AA6agR6kMtN9endtZcnUlYAQ+oFGuA9Xrr1w70/pFRQoDTBxqaqU9fUwrglmB1vgkcAfMZVmAWfUrg==
-X-Received: by 2002:a63:5353:0:b0:419:f140:2dae with SMTP id t19-20020a635353000000b00419f1402daemr2253734pgl.526.1659631346066;
-        Thu, 04 Aug 2022 09:42:26 -0700 (PDT)
-Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id s25-20020aa78bd9000000b0052e0b928c3csm1132114pfd.219.2022.08.04.09.42.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Aug 2022 09:42:25 -0700 (PDT)
-Message-ID: <d72ea27d-ba80-2b9b-11e0-7fff11c8bf3f@kernel.dk>
-Date:   Thu, 4 Aug 2022 10:42:24 -0600
+        with ESMTP id S236308AbiHDVqU (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 Aug 2022 17:46:20 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D852715FE4;
+        Thu,  4 Aug 2022 14:46:17 -0700 (PDT)
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 274LaA5S027764;
+        Thu, 4 Aug 2022 21:46:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=/uOFam9X8SevFfDFCNCnxwF0rblPgcD8JoODUEYhOfQ=;
+ b=i2usgC1/MsSHGZCwcuX002KiSoojchGMxRJ8Ih0s1VcZWwiAyofw+e1B8lPOiyvasBIz
+ uxCcq9QmrTniJz0mWWC0RRL9mH9yaqJ71IBmeMCDAJ5F1yrMgAMRs415/I0JfWD95iNQ
+ bH0RxEwvUTXY/pyqbeQbb5LBeD1U2VSjlKhPGljXkc2nqWnMYBIhT4iaMBdOxYNro/s1
+ 4riWjZZt/YYktR6JfROFVM5H42L/bDG2EoTDkcF3n86tvWJv/uRTje7N7RCDFJ5X1lpt
+ fVWfeR1I2UpniTKfe6go/dqJmh4u/5F6jHTwIe5Y7mxJDbOY+WDym7LpD9WS0EFORbB3 Gw== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hrp6189h7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Aug 2022 21:46:12 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 274LLm3i021623;
+        Thu, 4 Aug 2022 21:46:09 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04fra.de.ibm.com with ESMTP id 3hmv98mx0p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Aug 2022 21:46:09 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 274Lk6Hx7536948
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Aug 2022 21:46:06 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6F127AE04D;
+        Thu,  4 Aug 2022 21:46:06 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5BDC5AE051;
+        Thu,  4 Aug 2022 21:46:06 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Aug 2022 21:46:06 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 2CAE6E0229; Thu,  4 Aug 2022 23:39:26 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Jiang Jian <jiangjian@cdjrlc.com>
+Subject: [PATCH 0/2] s390/dasd: fix DMA alignment
+Date:   Thu,  4 Aug 2022 23:39:24 +0200
+Message-Id: <20220804213926.3361574-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCHv2 0/7] dma mapping optimisations
-Content-Language: en-US
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Keith Busch <kbusch@fb.com>, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, hch@lst.de,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Team <Kernel-team@fb.com>
-References: <20220802193633.289796-1-kbusch@fb.com>
- <5f8fc910-8fad-f71a-704b-8017d364d0ed@kernel.dk>
- <YuvzqbcXwGUMtKmm@kbusch-mbp.dhcp.thefacebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <YuvzqbcXwGUMtKmm@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: delNBgyF4wISwt9u9uDZteam_qq8qHBf
+X-Proofpoint-ORIG-GUID: delNBgyF4wISwt9u9uDZteam_qq8qHBf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-04_03,2022-08-04_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ spamscore=0 clxscore=1015 mlxscore=0 phishscore=0 mlxlogscore=859
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2208040090
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,59 +85,23 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/4/22 10:28 AM, Keith Busch wrote:
-> On Wed, Aug 03, 2022 at 02:52:11PM -0600, Jens Axboe wrote:
->> I ran this on my test box to see how we'd do. First the bad news:
->> smaller block size IO seems slower. I ran with QD=8 and used 24 drives,
->> and using t/io_uring (with registered buffers, polled, etc) and a 512b
->> block size I get:
->>
->> IOPS=44.36M, BW=21.66GiB/s, IOS/call=1/1
->> IOPS=44.64M, BW=21.80GiB/s, IOS/call=2/2
->> IOPS=44.69M, BW=21.82GiB/s, IOS/call=1/1
->> IOPS=44.55M, BW=21.75GiB/s, IOS/call=2/2
->> IOPS=44.93M, BW=21.94GiB/s, IOS/call=1/1
->> IOPS=44.79M, BW=21.87GiB/s, IOS/call=1/2
->>
->> and adding -D1 I get:
->>
->> IOPS=43.74M, BW=21.36GiB/s, IOS/call=1/1
->> IOPS=44.04M, BW=21.50GiB/s, IOS/call=1/1
->> IOPS=43.63M, BW=21.30GiB/s, IOS/call=2/2
->> IOPS=43.67M, BW=21.32GiB/s, IOS/call=1/1
->> IOPS=43.57M, BW=21.28GiB/s, IOS/call=1/2
->> IOPS=43.53M, BW=21.25GiB/s, IOS/call=2/1
->>
->> which does regress that workload.
-> 
-> Bummer, I would expect -D1 to be no worse. My test isn't nearly as consistent
-> as yours, so I'm having some trouble measuring. I'm only coming with a few
-> micro-optimizations that might help. A diff is below on top of this series. I
-> also created a branch with everything folded in here:
+Hi Jens,
 
-That seemed to do the trick! Don't pay any attention to the numbers
-being slightly different than before for -D0, it's a slightly different
-kernel. But same test, -d8 -s2 -c2, polled:
+please apply the following patches.
+The first fixes a comment typo and the second fixes DMA alignment after
+a change to the iomap code.
 
--D0 -B1
-IOPS=45.39M, BW=22.16GiB/s, IOS/call=1/1
-IOPS=46.06M, BW=22.49GiB/s, IOS/call=2/1
-IOPS=45.70M, BW=22.31GiB/s, IOS/call=1/1
-IOPS=45.71M, BW=22.32GiB/s, IOS/call=2/2
-IOPS=45.83M, BW=22.38GiB/s, IOS/call=1/1
-IOPS=45.64M, BW=22.29GiB/s, IOS/call=2/2
+Eric Farman (1):
+  s390/dasd: Establish DMA alignment
 
--D1 -B1
-IOPS=45.94M, BW=22.43GiB/s, IOS/call=1/1
-IOPS=46.08M, BW=22.50GiB/s, IOS/call=1/1
-IOPS=46.27M, BW=22.59GiB/s, IOS/call=2/1
-IOPS=45.88M, BW=22.40GiB/s, IOS/call=1/1
-IOPS=46.18M, BW=22.55GiB/s, IOS/call=2/1
-IOPS=46.13M, BW=22.52GiB/s, IOS/call=2/2
-IOPS=46.40M, BW=22.66GiB/s, IOS/call=1/1
+Jiang Jian (1):
+  s390/dasd: drop unexpected word 'for' in comments
 
-which is a smidge higher, and definitely not regressing now.
+ drivers/s390/block/dasd.c      | 2 +-
+ drivers/s390/block/dasd_diag.c | 1 +
+ drivers/s390/block/dasd_eckd.c | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
 -- 
-Jens Axboe
+2.34.1
 
