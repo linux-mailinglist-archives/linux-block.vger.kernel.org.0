@@ -2,212 +2,188 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87C4358BC48
-	for <lists+linux-block@lfdr.de>; Sun,  7 Aug 2022 20:14:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E804C58BC7F
+	for <lists+linux-block@lfdr.de>; Sun,  7 Aug 2022 20:45:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234126AbiHGSOj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 7 Aug 2022 14:14:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52128 "EHLO
+        id S235150AbiHGSps (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 7 Aug 2022 14:45:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235543AbiHGSOQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 7 Aug 2022 14:14:16 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA1B9FFE
-        for <linux-block@vger.kernel.org>; Sun,  7 Aug 2022 11:14:12 -0700 (PDT)
-Received: by mail-qt1-f179.google.com with SMTP id z3so5160892qtv.5
-        for <linux-block@vger.kernel.org>; Sun, 07 Aug 2022 11:14:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=uszpsfQkA+n/mZQMeMzaHtYhGxV7ZrgTx0FwG51IMxk=;
-        b=Nr+IvIEUv3j9mcE2Wccj5lIILgfbb/+2Uyohbv++sbcge/FNfjX3to2HZldFk5gFF1
-         7pqfgBa1XvibVPYdtFNm4zU7pLVs//DUH/fqavUZ/iua4rO3ZV2mpGn94mBut+WZ+UCa
-         tQPeMSKl39/u+RVMZu9rmdMdymJDQcvXW0ZxZ0iqogtsqJ3cTyexHMOseFwdiGZ07NxL
-         Z6bXWS5Kw+6n/s6hevWlQVBJjql/IaV3AjVQX4NV4+kCTo3sZi+A6dTi9fDVP6CJ/kkj
-         riFymk3BkX9G0V43eShpmd/Xygf0EkF3r+KyG3m/XoO6bpfdHe2lkV8NzqkitKSvzDPb
-         qcTQ==
-X-Gm-Message-State: ACgBeo0R2vUrC9Kg6+XC8ceCPUtx/QmcWF2Qe1P3laPbr+oOsjiNAU5Q
-        wBwYTFtfPH+birxuy0CBct0M
-X-Google-Smtp-Source: AA6agR6/KgTQI6IHVHe5/he7j5Khvjn4y41cYM25rOSJkcCqUqeqS34j9+6cwADmtwyEyP30dJ4JCw==
-X-Received: by 2002:ac8:5cc7:0:b0:342:f760:5bc0 with SMTP id s7-20020ac85cc7000000b00342f7605bc0mr2317560qta.658.1659896051683;
-        Sun, 07 Aug 2022 11:14:11 -0700 (PDT)
-Received: from localhost (pool-68-160-173-162.bstnma.fios.verizon.net. [68.160.173.162])
-        by smtp.gmail.com with ESMTPSA id b19-20020ac844d3000000b00342f8143599sm1077098qto.13.2022.08.07.11.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Aug 2022 11:14:11 -0700 (PDT)
-Date:   Sun, 7 Aug 2022 14:14:09 -0400
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     Milan Broz <gmazyland@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [git pull] Additional device mapper changes for 6.0
-Message-ID: <YvAA8fI37owuSe7y@redhat.com>
-References: <YugiaQ1TO+vT1FQ5@redhat.com>
- <Yu1rOopN++GWylUi@redhat.com>
- <CAHk-=wj5w+Nga81wGmO6aYtcLrn6c_R_-gQrtnKwjzOZczko=A@mail.gmail.com>
- <Yu6zXVPLmwjqGg4V@redhat.com>
- <CAHk-=wj+ywtyBEp7pmEKxgwRE+iJBct6iih=ssGk2EWqaYL_yg@mail.gmail.com>
- <99e17678-8801-ac41-de20-a5f6f60da524@gmail.com>
+        with ESMTP id S231853AbiHGSpr (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 7 Aug 2022 14:45:47 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7920C2BD7
+        for <linux-block@vger.kernel.org>; Sun,  7 Aug 2022 11:45:46 -0700 (PDT)
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20220807184544epoutp01e604ae298aa59a7cfdebb794acfda7e5~JJGLaF8MB0226902269epoutp01l
+        for <linux-block@vger.kernel.org>; Sun,  7 Aug 2022 18:45:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20220807184544epoutp01e604ae298aa59a7cfdebb794acfda7e5~JJGLaF8MB0226902269epoutp01l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1659897944;
+        bh=dNDGoNtSy82gQ5DZRnxvo9DsOvTaJLP3HC+k2aL1q5E=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=KlmnJdW+cqSylKH+eCRluepmJukzJ7pU6vuq/j/Bjf4rWjowtNVkRLeI5Xwx6g0n5
+         OyFeBwyQUHidmo2OcidvTmqjX0+KL4bDKkpI6UMjbIsOynAew87xXtb+aygT0gWFwy
+         yz2Vl9MPQGxvMuxNfL0DL2xOpwhNE5qeWJ7Oa3As=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20220807184544epcas5p186e13e1335048706de0c10b2cc344fd8~JJGK-RbGe0979209792epcas5p17;
+        Sun,  7 Aug 2022 18:45:44 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.174]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4M17ZF5yRvz4x9Pp; Sun,  7 Aug
+        2022 18:45:41 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EF.4F.09662.55800F26; Mon,  8 Aug 2022 03:45:41 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20220807184540epcas5p41f496a87fe65cff524740ddde071b4bb~JJGH4PONI2500925009epcas5p48;
+        Sun,  7 Aug 2022 18:45:40 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20220807184540epsmtrp19136506506469e80ef0c5b56e13c865f~JJGH3g5ux3253032530epsmtrp1K;
+        Sun,  7 Aug 2022 18:45:40 +0000 (GMT)
+X-AuditID: b6c32a49-885ff700000025be-c9-62f008553017
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1E.79.08802.45800F26; Mon,  8 Aug 2022 03:45:40 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20220807184539epsmtip293184cfaeb93d5abd27f140208ad23ef~JJGGaXGGM2084620846epsmtip2g;
+        Sun,  7 Aug 2022 18:45:39 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk, hch@lst.de
+Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, ming.lei@redhat.com,
+        gost.dev@samsung.com, Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH for-next v2 0/4] iopoll support for io_uring/nvme
+Date:   Mon,  8 Aug 2022 00:06:03 +0530
+Message-Id: <20220807183607.352351-1-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99e17678-8801-ac41-de20-a5f6f60da524@gmail.com>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFKsWRmVeSWpSXmKPExsWy7bCmhm4ox4ckg2cbdSxW3+1ns7h5YCeT
+        xcrVR5ks3rWeY7E4+v8tm8XeW9oW85c9Zbc4NLmZyYHD4/LZUo/NS+o9dt9sYPN4v+8qm0ff
+        llWMHp83yQWwRWXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE
+        6Lpl5gBdo6RQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMCnQK07MLS7NS9fLSy2x
+        MjQwMDIFKkzIztjV3cdU0CVWsWPOYpYGxn8CXYycHBICJhLzp11n72Lk4hAS2M0o0XztDytI
+        QkjgE6PE+t92EInPjBK3lu1hhel4ve88G0RiF6PEtndb2OCqNr97BlTFwcEmoClxYXIpSIOI
+        gLzEl9trWUBqmAXWMkqc3vuFCaRGWMBRYssefRCTRUBVYudFDZByXgFLiZZzD9ghdslLzLz0
+        nR0iLihxcuYTFhCbGSjevHU2M8hICYF77BITL01nhmhwkThw7AmULSzx6vgWqEFSEi/726Ds
+        ZIlLM88xQdglEo/3HISy7SVaT/Uzg9zDDHT++l36ELv4JHp/PwG7WEKAV6KjTQiiWlHi3qSn
+        0CARl3g4YwmU7SFx6vVDdpByIYFYiZ4bKRMY5WYheWAWkgdmIexawMi8ilEytaA4Nz212LTA
+        MC+1HB6Ryfm5mxjBiVDLcwfj3Qcf9A4xMnEwHmKU4GBWEuE9svZ9khBvSmJlVWpRfnxRaU5q
+        8SFGU2CgTmSWEk3OB6bivJJ4QxNLAxMzMzMTS2MzQyVxXq+rm5KEBNITS1KzU1MLUotg+pg4
+        OKUamGZN4BFhW9vz2f5XaDp/VTGn3FLPSVeb/wn4nLt14dvrfzx617aZcIX+9XZ6m77DTFlu
+        +eXahC2lLydYHPWfrN96TCBPfQsv14O3cQoRZwWCFKdm2c5mtNzyYr3E502WilJqWRcjei6V
+        Tn0kP9PyhIx7S5Zh4KL4HTKTH+uc6/7BlzvLbIJBh4fd4ucnBJabvi28tmfHk1qH7x1SO8rn
+        pZsvLzTYaNyx6VyufnaiZXFr6qd5FidUHyb/iEuM+dN9udVjx2VzpRczX/dc8T0iKe2e6Gy2
+        NHCjvMjtpjvscl9urDkrLp5zztSBJ8zA1CPs9rPLT47ZTymMOuFwxTb/qMsCDmbLqENfdvcr
+        rTe8osRSnJFoqMVcVJwIAO7fZXcNBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCLMWRmVeSWpSXmKPExsWy7bCSvG4Ix4ckg65JWhar7/azWdw8sJPJ
+        YuXqo0wW71rPsVgc/f+WzWLvLW2L+cueslscmtzM5MDhcflsqcfmJfUeu282sHm833eVzaNv
+        yypGj8+b5ALYorhsUlJzMstSi/TtErgydnX3MRV0iVXsmLOYpYHxn0AXIyeHhICJxOt959m6
+        GLk4hAR2MEpcntvPDJEQl2i+9oMdwhaWWPnvOTtE0UdGiV99DaxdjBwcbAKaEhcml4LUiAgo
+        Smz82MQIUsMssJlR4tPpY8wgNcICjhJb9uiDmCwCqhI7L2qAlPMKWEq0nHsANV5eYual7+wQ
+        cUGJkzOfsIDYzEDx5q2zmScw8s1CkpqFJLWAkWkVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpe
+        cn7uJkZwwGpp7WDcs+qD3iFGJg7GQ4wSHMxKIrxH1r5PEuJNSaysSi3Kjy8qzUktPsQozcGi
+        JM57oetkvJBAemJJanZqakFqEUyWiYNTqoFpXefu9VNC46LYFV/enPTsxJFjmQtcc3N83mfF
+        NM3bV57MtPLxPfWN5wr0m3VkDTi4tx14yv5UKq6th7X0r8LbiMJLvTaTmiovrwg75bbHO/nw
+        g9s+DKw6d3aJa3H4fppf8lbDaffu43sbT+2/+v00+5p/Jl+Ef50+MfWE0jXV2oOb08RiLS5V
+        zCyeq3p53b2uvWdn/r70LflrEb9ZvUzm2k8ZjP68S/Pe3wxuP8Bn6dWj/1nlP9es9yIbdy7f
+        Udyn03j425ZrZ102tL7qPqu1+PTyF/XTnlTsm9GxYeU/b6PKaYHTXyz8pssdvslC6Cl3lpTN
+        eo5XntffTFg49e2HFtGLGffOzU2c/O+tkkVk53QlluKMREMt5qLiRABtKK7PxwIAAA==
+X-CMS-MailID: 20220807184540epcas5p41f496a87fe65cff524740ddde071b4bb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220807184540epcas5p41f496a87fe65cff524740ddde071b4bb
+References: <CGME20220807184540epcas5p41f496a87fe65cff524740ddde071b4bb@epcas5p4.samsung.com>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Aug 07 2022 at  3:37P -0400,
-Milan Broz <gmazyland@gmail.com> wrote:
+Hi,
 
-> Hi,
-> 
-> Just a few notes on why we use target versions in libcryptsetup,
-> as I am perhaps one user of this field there.
-> 
-> TL;DR: it is *only* for hinting to users what is possibly wrong
-> after activation fails because there is *no* proper error reporting
-> from the device-mapper.
+Series enables async polling on io_uring command, and nvme passthrough
+(for io-commands) is wired up to leverage that.
 
-DM's core and target versions aren't intended to be in service of
-error reporting. You abusing them like that is a fundamental problem.
+Changes since v1:
+- corrected variable name (Jens)
+- fix for a warning (test-robot)
 
-[[Unfortunate tangent but you've left me no choice:
+Performance impact:
+Pre TLDR: polling gives clear win.
 
-Your general tone and misinformation-using-broad-strokes makes me both
-sad and angry. I will restrain myself in this reply but your position
-drips with general FUD and loathing. This is way more "Milan being
-Milan" than I've ever experienced. Could be you've been storing it and
-it all just gushed out, no idea. But it's a lot to try to take with
-grace.
+512b randread performance (KIOPS):
 
-As you know I'm a very direct person. I speak my mind too. But I've
-learned to try to avoid alarmist rhetoric that amounts to throwing
-people(s) under the bus (better late than never). But if you're going
-to resort that you better be _very_ certain it's justified. Yet as
-cathartic as it might seem, even then it isn't the correct answer. If
-you want to remain being respected please treat others with respect.
+QD_batch    block    passthru    passthru-poll   block-poll
+1_1          80        81          158            157
+8_2         406       470          680            700
+16_4        620       656          931            920
+128_32      879       1056        1120            1132
 
-Only you know why you are flailing about with such an attitude, please
-come to terms with that. I wish you well and certainly don't want DM
-to be some constant or reoccurring source of such negativity (for you
-or anyone).]]
+Upstream fio is used for testing. Polled queues set to 1 in nvme.
 
-> On 06/08/2022 20:36, Linus Torvalds wrote:
-> > On Sat, Aug 6, 2022 at 11:30 AM Mike Snitzer <snitzer@kernel.org> wrote:
-> ...
-> > > Yes, I know you mentioned this before and I said I'd look to switch to
-> > > feature bitmasks. Yet here we are. Sorry about that, but I will take
-> > > a serious look at fixing this over the next development cycle(s).
-> 
-> Please don't just replace it with bitmaps.
-> 
-> It will not bring any better interface while adding more magic with
-> handling compatibility, as we need to use both... see below.
+passthru command line:
+fio -iodepth=64 -rw=randread -ioengine=io_uring_cmd -bs=512 -numjobs=1
+-runtime=60 -group_reporting -iodepth_batch_submit=16
+-iodepth_batch_complete_min=1 -iodepth_batch_complete_max=16
+-cmd_type=nvme -hipri=0 -filename=/dev/ng1n1 -name=io_uring_cmd_64
 
-(I saw your "below", it lacked a coherent explanation for why "we need
-to use both" as a rule moving forward)
+block command line:
+fio -direct=1 -iodepth=64 -rw=randread -ioengine=io_uring -bs=512
+-numjobs=1 -runtime=60 -group_reporting -iodepth_batch_submit=16
+-iodepth_batch_complete_min=1 -iodepth_batch_complete_max=16
+-hipri=0 -filename=/dev/nvme1n1 name=io_uring_64
 
-When done properly it will _not_ require both. The version number would
-be incremented one final time and would serve to allow existing
-userspace to run unmodified. But from that point on the bitmap flags
-should be used and all userspace converted to use them.
+Bit of code  went into non-passthrough path for io_uring (patch 2) but I
+do not see that causing any performance regression.
+peak-perf test showed 2.3M IOPS with or without this series for
+block-io.
 
-> > Well, right now we're in the situation where there are certain kernels
-> > that say that they implement "version 1.9" of the thing, but they
-> > don't actually implement the "version 1.8.1" extensions.
-> 
-> I cannot speak for the others, but for veritysetup (libcryptsetup),
-> the worst that can happen is that the user will get a wrong error message
-> (or just a generic message "something failed, bye").
+io_uring: Running taskset -c 0,12 t/io_uring -b512 -d128 -c32 -s32 -p1
+-F1 -B1 -n2  /dev/nvme0n1
+submitter=0, tid=3089, file=/dev/nvme0n1, node=-1
+submitter=1, tid=3090, file=/dev/nvme0n1, node=-1
+polled=1, fixedbufs=1/0, register_files=1, buffered=0, QD=128
+Engine=io_uring, sq_ring=128, cq_ring=128
+polled=1, fixedbufs=1/0, register_files=1, buffered=0, QD=128
+Engine=io_uring, sq_ring=128, cq_ring=128
+IOPS=2.31M, BW=1126MiB/s, IOS/call=31/31
+IOPS=2.30M, BW=1124MiB/s, IOS/call=32/31
+IOPS=2.30M, BW=1123MiB/s, IOS/call=32/32 
 
-You know how to send email to report specific problems and/or submit
-patches. But I really don't recall anything in this category being
-reported by you, certainly not recently... maybe you've just
-internalized or I somehow missed it?
+Kanchan Joshi (4):
+  fs: add file_operations->uring_cmd_iopoll
+  io_uring: add iopoll infrastructure for io_uring_cmd
+  block: export blk_rq_is_poll
+  nvme: wire up async polling for io passthrough commands
 
-> (All the crypto options are tricky, I would like to keep at least basic
-> usability and better errors like "seems tasklets are not supported,
-> retrying without tasklets flags.")
+ block/blk-mq.c                |  3 +-
+ drivers/nvme/host/core.c      |  1 +
+ drivers/nvme/host/ioctl.c     | 73 ++++++++++++++++++++++++++++++++---
+ drivers/nvme/host/multipath.c |  1 +
+ drivers/nvme/host/nvme.h      |  2 +
+ include/linux/blk-mq.h        |  1 +
+ include/linux/fs.h            |  1 +
+ include/linux/io_uring.h      |  8 +++-
+ io_uring/io_uring.c           |  6 +++
+ io_uring/opdef.c              |  1 +
+ io_uring/rw.c                 |  8 +++-
+ io_uring/uring_cmd.c          | 11 +++++-
+ 12 files changed, 105 insertions(+), 11 deletions(-)
 
-dm-verity's optional "try_verify_in_tasklet" is using tasklets as an
-implementation detail, if they cannot be used (e.g. for FEC) then why
-would fallback to normal verification using a workqueue be reported?
 
-Or are you referring to something you saw when using dm-crypt's
-no_{read,write}_workqueue options?
+base-commit: ece775e9aa8232963cc1bddf5cc91285db6233af
+-- 
+2.25.1
 
-Or are you saying that both the new dm-verity try_verify_in_tasklet
-option and the dm-crypt no_{read,write}_workqueue options should
-fallback to removing those flags and try without them?
-
-That is a level of AI I have no interest in adding or supporting.
-The user asked for something, if it isn't possible then it should
-fail.
-
-But please be more specific.
-
-> In principle, we use activation flags/options as Linus describes - try
-> to set it, then deal with the failure.
->
-> And *this* is the real problem that needs to be solved - there is no proper
-> userspace interface that says what went wrong.
-> 
-> The userspace sees only -EINVAL from ioctl() and a generic message.
-
-"Please extend the DM ioctls to somehow add ti->error to the userspace
-response" is a fine feature request. Should help no matter what.
-
-(Can look to have a phased approach to the error reporting payload,
-start with errno and error message, add more "structured" payload over
-time. Are you referring to JSON or some other format? Whatever systemd
-uses?).
-
-> Perhaps in the syslog is more info, but usually only at debug level
-> (that is often not visible), and parsing syslog is not the option for us either.
-
-All errors should be emitted with pr_err() using DMERR(). I've made a
-conscious effort to convert DMWARN() to DMERR() when appropriate. But
-I'll audit all the DM core code and then work through the various
-targets.
-
-If there are incorrect log levels being used it is a bug, please
-report and/or fix.
-
-> What is even more problematic is that the error string in DM target is
-> often set (e.g. ti->error = "Integrity profile tag size mismatch.";) but later
-> discarded, and it never reaches neither log nor userspace calling the failing
-> ioctl().
-
-Again, if you see a bug: please report and/or fix it.
-
-> If the device-mapper can fix this, we can easily thrash the magic that
-> consults the target version and determines what went wrong.
-
-There is no way to properly use version numbers to derive what
-actually went wrong. Could you narrow down and isolate the possible
-failure based on version in specific cases? Sure.. but it is insanely
-fragile (especially with stable@ and distro kernels).
-
-> Then you can forget the version and feature bitmaps and send
-> us a proper (ideally structured) error message in ioctl() reply.
-
-OK, I can just avoid switching to feature bitmaps entirely, stop
-bumping version numbers, and focus on better error reporting. Then all
-of userspace can rely on errors reported to fail and inform user
-actions.
-
-But I'm pretty confident lvm2 will have something to say on
-this... I'll take all input into consideration.
-
-Mike
