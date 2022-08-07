@@ -2,67 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70F2E58BC7D
-	for <lists+linux-block@lfdr.de>; Sun,  7 Aug 2022 20:45:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E15558BC90
+	for <lists+linux-block@lfdr.de>; Sun,  7 Aug 2022 20:46:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234986AbiHGSpY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 7 Aug 2022 14:45:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38062 "EHLO
+        id S235638AbiHGSqt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 7 Aug 2022 14:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232582AbiHGSpX (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 7 Aug 2022 14:45:23 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8E210EE
-        for <linux-block@vger.kernel.org>; Sun,  7 Aug 2022 11:45:21 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id x2-20020a17090ab00200b001f4da5cdc9cso12625061pjq.0
-        for <linux-block@vger.kernel.org>; Sun, 07 Aug 2022 11:45:21 -0700 (PDT)
+        with ESMTP id S235617AbiHGSqs (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 7 Aug 2022 14:46:48 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D5162BD4
+        for <linux-block@vger.kernel.org>; Sun,  7 Aug 2022 11:46:47 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id 17so6742504plj.10
+        for <linux-block@vger.kernel.org>; Sun, 07 Aug 2022 11:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc;
-        bh=eQt1kg8EcaWTWGzydG+NN0DWHYWcmYFFjlzGWtVlLLk=;
-        b=8RuByZd9OJUSI7rjo+BOQRlYKQRYxsP/1ViGZg+jhlTvq1ltDhJwWo+BZ6Kcat2RjV
-         dyOHEf30Bujf06X86OAxjkPUaVf+vnVoSdNxUNpAVaa+8+OBvPZadeUzUXXsvYPLBrI7
-         p43Kgm4E0dXHtof/gGJdIMwEtdhK48jzRqkeSvHDEEIE5o8iRMys4NO86e9QxkRJhnqS
-         2eSl24o0BtqhzJv+F/5Q9iT/nCcxWTXXpRgqgYwJxLlZXg6su8DFM3/Ai1C3qWmHt2wP
-         kbb5qDfvaaGBgCdt3rMqm/5uMxM2mOf7B9quFdkpRP7bbwbTRIpMHbj+ZMDRmhfzFMej
-         IRCA==
+        bh=fRF6tDwiED09Qm8+jjF0m2XwEBk/N1T42MZbGGhUU2s=;
+        b=sUfIjnfFg6C7BTgJCAUiobCnbcymxCqjth0VgNCg5PRpdOLoFXN06GP/722jVG/hut
+         4X/7qgNXMYcShr8q27lbxVxfQ21iOwZdtwyZmgX8B72vmSMeYt2fLKSFupJubJr7uXAz
+         bIz7blhJEPqDbCHiBgiaBkm9/9AiWj1jDbf2w0cgyUeGKRlvs72m0HeNSYhJBhb06cru
+         GAJV2EIdUH2dYA6Vj1qmWmrRyWb2wpxuW9W2/7qjWeavx9CM5E59Ip9GnyxEE0GLELSd
+         QQuhncoy6aalVGBpadAattGstyajxkl5ceqlxvc/h1nN4eA8unicErsc1OGzuRb8ytB2
+         Yjbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc;
-        bh=eQt1kg8EcaWTWGzydG+NN0DWHYWcmYFFjlzGWtVlLLk=;
-        b=XKPf2UGuiqmrhMY/K8ce82kq3i853XQEWV9Qc0R5xju74pybTQ/r3S8yLZzgtnDk/i
-         WAJSjisF0r/3Xn/qZWq81jFDHhDYxO8w5O/Tc8xP9dh6cYvgjxywU7xKvhzwyJdj5yJV
-         OfsP35tQQ0Cn+K72pmZvzUJ59lvnWnlkgbVFT/Ux58ZXtw1Dq5dnYy7MLHLt1WoIMn5b
-         NaCjGZNkj0vTLNLtJk3nqIObRMK0icFOVp6PgNHVG3Q2AH+Y8qQtC74LtaVsKL4n+WH6
-         Z26G7uV0Cuv3Uik4ZZAeqrwxf2cXFaZPhrkfjntB6qBcevVCGplAnM/4OvizfaF5g1ia
-         UFVw==
-X-Gm-Message-State: ACgBeo3wFvb2X1OYEsKvE66iPMYExmQLpsidmfwU0966fGwh4wJ2csvk
-        DGj8qdBRar+Rt2nJs616UELvDV14Ln104w==
-X-Google-Smtp-Source: AA6agR6dvAtna4vRPmouEj3NJfTiGOVwc+PrBgc3WawSL9/4Ucdf+g8LcF8gVMoI//28ULsqAeBeTg==
-X-Received: by 2002:a17:903:2291:b0:16e:cf55:5c72 with SMTP id b17-20020a170903229100b0016ecf555c72mr15645616plh.121.1659897921094;
-        Sun, 07 Aug 2022 11:45:21 -0700 (PDT)
+        bh=fRF6tDwiED09Qm8+jjF0m2XwEBk/N1T42MZbGGhUU2s=;
+        b=tGiaKQce+eNDa4CbCW1fUwbLuvJ3CQv3yDxDpEFcLNvY9xdcnONDGKiShIJR8M9nyn
+         QxAWkVzxvsgP0BMDQFDgpFfC/qcIjAp4dE1O/6SUxj4kjfer+MnohVPE7UjTUlov0WMV
+         TWCLnkrcxHsxLA+Cf5RUPtFv3lra2Hk0meiZ/ipzcCe4/OhCg7SR3VcwoDtM0aklJAKm
+         gEXCN+yQ3Y9enClsvyaI72hUEgJhcb7xTojWxos/BvYGRJnjevszQcSwJM3I2kcR1Tok
+         0FhTw2pXkFDOkWM1Ix5zy9Ldx9BeuKXJ+re92O6EUZarWY1AgWdVPmCpgyiAaex5iS9z
+         vU9A==
+X-Gm-Message-State: ACgBeo3MiJgHSpgRBpSRUSBCkJEk5ernNIQwMCRyqUX0g3FOIv7fUb41
+        h29v+UJQheLVnmDC9kx9B7mDWWNbiSM8aA==
+X-Google-Smtp-Source: AA6agR52R7nPXz6hA/NEJIpwExQy73zN+UQ2YPf1Pb4UGZRqFX/ApCGAZKP7G39++6dymp7prQKsLg==
+X-Received: by 2002:a17:902:c40a:b0:16e:cc02:b9ab with SMTP id k10-20020a170902c40a00b0016ecc02b9abmr15621295plk.81.1659898006947;
+        Sun, 07 Aug 2022 11:46:46 -0700 (PDT)
 Received: from [192.168.1.100] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id j17-20020a170902da9100b0016efbccf2c0sm7004113plx.56.2022.08.07.11.45.20
+        by smtp.gmail.com with ESMTPSA id i25-20020a635419000000b0041c89bba5a8sm4787876pgb.25.2022.08.07.11.46.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Aug 2022 11:45:20 -0700 (PDT)
-Message-ID: <a59f6328-b81a-c529-7553-2bef94f9b5a2@kernel.dk>
-Date:   Sun, 7 Aug 2022 12:45:19 -0600
+        Sun, 07 Aug 2022 11:46:46 -0700 (PDT)
+Message-ID: <068737bb-7729-decd-bd3b-60380c6443fc@kernel.dk>
+Date:   Sun, 7 Aug 2022 12:46:45 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH 2/3] block: enable bio caching use for passthru IO
+Subject: Re: [PATCH 0/4] iopoll support for io_uring/nvme passthrough
 Content-Language: en-US
 To:     Kanchan Joshi <joshi.k@samsung.com>
-Cc:     linux-block@vger.kernel.org, kbusch@kernel.org
-References: <20220806152004.382170-1-axboe@kernel.dk>
- <CGME20220806152012epcas5p41ebe594bc59a4a0ac0733ea1c052f241@epcas5p4.samsung.com>
- <20220806152004.382170-3-axboe@kernel.dk> <20220807180855.GA30655@test-zns>
+Cc:     Keith Busch <kbusch@kernel.org>, hch@lst.de,
+        io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, ming.lei@redhat.com,
+        joshiiitr@gmail.com, gost.dev@samsung.com
+References: <CGME20220805155300epcas5p1b98722e20990d0095238964e2be9db34@epcas5p1.samsung.com>
+ <20220805154226.155008-1-joshi.k@samsung.com>
+ <78f0ac8e-cd45-d71d-4e10-e6d2f910ae45@kernel.dk>
+ <a2a5184d-f3ab-0941-6cc4-87cf231d5333@kernel.dk>
+ <Yu1dTRhrcOSXmYoN@kbusch-mbp.dhcp.thefacebook.com>
+ <6bd091d6-e0e6-3095-fc6b-d32ec89db054@kernel.dk>
+ <20220807175803.GA13140@test-zns>
 From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220807180855.GA30655@test-zns>
+In-Reply-To: <20220807175803.GA13140@test-zns>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -76,30 +83,55 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/7/22 12:08 PM, Kanchan Joshi wrote:
-> On Sat, Aug 06, 2022 at 09:20:03AM -0600, Jens Axboe wrote:
->> bdev based polled O_DIRECT is currently quite a bit faster than
->> passthru on the same device, and one of the reaons is that we're not
->> able to use the bio caching for passthru IO.
+On 8/7/22 11:58 AM, Kanchan Joshi wrote:
+> On Fri, Aug 05, 2022 at 12:15:24PM -0600, Jens Axboe wrote:
+>> On 8/5/22 12:11 PM, Keith Busch wrote:
+>>> On Fri, Aug 05, 2022 at 11:18:38AM -0600, Jens Axboe wrote:
+>>>> On 8/5/22 11:04 AM, Jens Axboe wrote:
+>>>>> On 8/5/22 9:42 AM, Kanchan Joshi wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> Series enables async polling on io_uring command, and nvme passthrough
+>>>>>> (for io-commands) is wired up to leverage that.
+>>>>>>
+>>>>>> 512b randread performance (KIOP) below:
+>>>>>>
+>>>>>> QD_batch    block    passthru    passthru-poll   block-poll
+>>>>>> 1_1          80        81          158            157
+>>>>>> 8_2         406       470          680            700
+>>>>>> 16_4        620       656          931            920
+>>>>>> 128_32      879       1056        1120            1132
+>>>>>
+>>>>> Curious on why passthru is slower than block-poll? Are we missing
+>>>>> something here?
+>>>>
+>>>> I took a quick peek, running it here. List of items making it slower:
+>>>>
+>>>> - No fixedbufs support for passthru, each each request will go through
+>>>>   get_user_pages() and put_pages() on completion. This is about a 10%
+>>>>   change for me, by itself.
+>>>
+>>> Enabling fixed buffer support through here looks like it will take a
+>>> little bit of work. The driver needs an opcode or flag to tell it the
+>>> user address is a fixed buffer, and io_uring needs to export its
+>>> registered buffer for a driver like nvme to get to.
 >>
->> If REQ_POLLED is set on the request, use the fs bio set for grabbing a
->> bio from the caches, if available. This saves 5-6% of CPU over head
->> for polled passthru IO.
+>> Yeah, it's not a straight forward thing. But if this will be used with
+>> recycled buffers, then it'll definitely be worthwhile to look into.
 > 
-> For passthru path, bio is always freed in the task-context (and not in
-> irq) so must this be tied to polled-io only?
+> Had posted bio-cache and fixedbufs in the initial round but retracted
+> to get the foundation settled first.
+> https://lore.kernel.org/linux-nvme/20220308152105.309618-1-joshi.k@samsung.com/
+> 
+> I see that you brought back bio-cache already. I can refresh fixedbufs.
 
-Right, that's why it's tied to polled. If polling gets cleared, then it
-will be freed normally on completion rather than inserted into the
-cache.
+Excellent, yes please bring back the fixedbufs. It's a 5-10% win,
+nothing to sneeze at.
 
-I do have patches for irq bio caching too, that'll work fine with
-io_uring:
+> Completion-batching seems too tightly coupled to block-path.
 
-https://git.kernel.dk/cgit/linux-block/commit/?h=perf-wip&id=ab3d4371227a34a5561e4d594a17baaad03bf1b7
-
-I'll post that too, would be nice if we can figure out a clean way to do
-this. I have posted it before, iirc.
+It's really not, in fact it'd be even simpler to do for passthru. The
+rq->end_io handler just needs to know about it.
 
 -- 
 Jens Axboe
