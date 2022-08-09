@@ -2,198 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9414058E03E
-	for <lists+linux-block@lfdr.de>; Tue,  9 Aug 2022 21:33:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2978A58E2D7
+	for <lists+linux-block@lfdr.de>; Wed, 10 Aug 2022 00:16:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245475AbiHITdO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 9 Aug 2022 15:33:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36938 "EHLO
+        id S229518AbiHIWQS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 9 Aug 2022 18:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245720AbiHITdF (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 9 Aug 2022 15:33:05 -0400
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9D12250A;
-        Tue,  9 Aug 2022 12:33:04 -0700 (PDT)
-Received: by mail-pj1-f46.google.com with SMTP id c19-20020a17090ae11300b001f2f94ed5c6so1798715pjz.1;
-        Tue, 09 Aug 2022 12:33:04 -0700 (PDT)
+        with ESMTP id S229701AbiHIWPJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 9 Aug 2022 18:15:09 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773D519C1E
+        for <linux-block@vger.kernel.org>; Tue,  9 Aug 2022 15:15:04 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id y141so12027584pfb.7
+        for <linux-block@vger.kernel.org>; Tue, 09 Aug 2022 15:15:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=QTP95oQi+RYhXbI8sz4RyTZp0RSE4jP48cyyUmWbTiK1ItvOHbADVtjkGHK/8zFbqv
+         EIzUG3d4HgG5eAQxnVHuBpH33ycuIiNpMEXk8S0LHARhhQGb6AufQVVn/40aQfLvP77W
+         778oK7qnpGZXO0Q2aGCYT4Mad4FGDHlh1br3s7D4D+9Vr7gPQrhXDR8bwR1fyz6kQ1n2
+         /mI7/+oIm6xqfpBjeRephfywWnzvzUcqvvdKwYuFsxmTm/GRVEQb9jKfBsLPvHEPeyBR
+         SLk52BQ10Zm7GZ4Mv5gugSKJZhGFXVOipaGDVsAOq6ABLyMrmGMv+5RYTjL3cqduwO+M
+         O1Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=to:subject:message-id:date:from:reply-to:mime-version
          :x-gm-message-state:from:to:cc;
-        bh=f+0qvG5LpZ/YCrirnG9rg8hMNbrBXBa71sPfrtvKm9k=;
-        b=ql8K1a0GRsOwdjQmw3bqWsqTlaoDUeSjApF2nBtg+B8lwg3xfu3+AUKfKCo0HeMKcg
-         DZAL4gCnSsU82o1XlWjwKih7cw3Rkx31p/99YipROZaXyXQJ8y9udNy6oCWEOPmGWxob
-         GmiaoP1YbWAv4qPnKoiSWdgzIYgFDZx4+yCrsiRu7/qmLqMgZHOEA9K5dYKsnQZ9Eksp
-         +4ELWxyGColWXG20dnpSf/iivMJVBHgl3qcQKXRYvyvoy3AQmpeMzEGJDM+A/VNSi2ee
-         Sm3jukwtxAsc33CbfhsPX2gEIrTNK3565WA3K4kVSRcv6WMwyqSe0m4GZeCKF7TSljYb
-         ubfA==
-X-Gm-Message-State: ACgBeo2cqEmDcr0Ch1SDhhrO9w5jbBFMfLgQu+0P6e2C5tKJn9I+AO3i
-        ciD2OtgGSHERpkQNDJOWwHiytlX3RT0=
-X-Google-Smtp-Source: AA6agR5b3k6/3uuXU2uCikVcoZWIFTOMmR2vQDrfIljSBaQQd1XN66Nj9Fx1iPA0NtYy8Ovw7IMVMA==
-X-Received: by 2002:a17:902:e891:b0:16f:a8:9b9c with SMTP id w17-20020a170902e89100b0016f00a89b9cmr24397129plg.8.1660073583617;
-        Tue, 09 Aug 2022 12:33:03 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:61e9:2f41:c2d4:73d? ([2620:15c:211:201:61e9:2f41:c2d4:73d])
-        by smtp.gmail.com with ESMTPSA id d14-20020a170902654e00b0016d12adc282sm11204466pln.147.2022.08.09.12.33.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Aug 2022 12:33:03 -0700 (PDT)
-Message-ID: <4768d11e-06c6-1b74-9822-b2421a3f59bb@acm.org>
-Date:   Tue, 9 Aug 2022 12:33:00 -0700
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=Xi22M+9X6JRZR3hj2Atj8t/9Cr7mIwvK/gbzvttT5TcTaG2uZRzfmtXEpMUyomnbyP
+         QW7RaK6+6Y66wLxz0OjvP0t/CzBZgicokvkhk2mo/895D1V+kbr1bmq7UJel2YxbOiNZ
+         BWr4wXOo/jRAZYwS+lGYEgyP/tdeR79Abhult40DRaeLhrkhde1zLJEMAJAwhbMGcYEC
+         E0XWjyyoEjh699tKjmVevf/BmnEJ6symSzzq7Zee2Wt7M7ALBUOX7M+kz7fsjpm3w02G
+         ha1377yJLovkHHwnt7/Mh1uYJNKtd10Cw0WEuVu6awmcIuoza2Qi9lNpV4lYJGq7Ynlw
+         GPTQ==
+X-Gm-Message-State: ACgBeo0dA60u1AHFy8QJuEVvR91yh7q2z/S7/V2Js2yICTFxvaz0F2XU
+        vNxOkq7RxoxoIhHumZo/aq/uxSYrGr843/9hPvk=
+X-Google-Smtp-Source: AA6agR7pJ6r7fhR2kV9XLe+oV3h+/ej1weqLnpTQS1YP5ule1vsDwGSNCnOW6LlEIY2xTapZFY+hu5KXPqSjTYpoaJM=
+X-Received: by 2002:a63:4642:0:b0:41b:d353:c5c7 with SMTP id
+ v2-20020a634642000000b0041bd353c5c7mr20359415pgk.568.1660083303718; Tue, 09
+ Aug 2022 15:15:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 12/20] block,nvme,scsi,dm: Add blk_status to pr_ops
- callouts.
-Content-Language: en-US
-To:     Mike Christie <michael.christie@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
-        snitzer@kernel.org, axboe@kernel.dk,
-        linux-nvme@lists.infradead.org, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, james.bottomley@hansenpartnership.com
-References: <20220809000419.10674-1-michael.christie@oracle.com>
- <20220809000419.10674-13-michael.christie@oracle.com>
- <20220809072155.GF11161@lst.de>
- <4af2a4d3-04d1-966a-5fd5-5e443b593c8b@oracle.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <4af2a4d3-04d1-966a-5fd5-5e443b593c8b@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a10:e8a6:b0:2d4:fb1c:cc5e with HTTP; Tue, 9 Aug 2022
+ 15:15:03 -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Dr. Ali Moses" <alimoses07@gmail.com>
+Date:   Tue, 9 Aug 2022 15:15:03 -0700
+Message-ID: <CADWzZe65tcOX2+bMZfMLLauGpHEQ9Cdv814nLU=uQvKzDFrEVg@mail.gmail.com>
+Subject: Good Day,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:433 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [alimoses07[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [alimoses07[at]gmail.com]
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/9/22 11:08, Mike Christie wrote:
-> On 8/9/22 2:21 AM, Christoph Hellwig wrote:
->> On Mon, Aug 08, 2022 at 07:04:11PM -0500, Mike Christie wrote:
->>> To handle both cases, this patch adds a blk_status_t arg to the pr_ops
->>> callouts. The lower levels will convert their device specific error to
->>> the blk_status_t then the upper levels can easily check that code
->>> without knowing the device type. It also allows us to keep userspace
->>> compat where it expects a negative -Exyz error code if the command fails
->>> before it's sent to the device or a device/tranport specific value if the
->>> error is > 0.
->>
->> Why do we need two return values here?
-> 
-> I know the 2 return values are gross :) I can do it in one, but I wasn't sure
-> what's worse. See below for the other possible solutions. I think they are all
-> bad.
-> 
-> 
-> 0. Convert device specific conflict error to -EBADE then back:
-> 
-> sd_pr_command()
-> 
-> .....
-> 
-> /* would add similar check for NVME_SC_RESERVATION_CONFLICT in nvme */
-> if (result == SAM_STAT_CHECK_CONDITION)
-> 	return -EBADE;
-> else
-> 	return result;
-> 
-> 
-> LIO then just checks for -EBADE but when going to userspace we have to
-> convert:
-> 
-> 
-> blkdev_pr_register()
-> 
-> ...
-> 	result = ops->pr_register()
-> 	if (result < 0) {
-> 		/* For compat we must convert back to the nvme/scsi code */
-> 		if (result == -EBADE) {
-> 			/* need some helper for this that calls down the stack */
-> 			if (bdev == SCSI)
-> 				return SAM_STAT_RESERVATION_CONFLICT
-> 			else
-> 				return NVME_SC_RESERVATION_CONFLICT
-> 		} else
-> 			return blk_status_to_str(result)
-> 	} else
-> 		return result;
-> 
-> 
-> The conversion is kind of gross and I was thinking in the future it's going
-> to get worse. I'm going to want to have more advanced error handling in LIO
-> and dm-multipath. Like dm-multipath wants to know if an pr_op failed because
-> of a path failure, so it can retry another one, or a hard device/target error.
-> It would be nice for LIO if an PGR had bad/illegal values and the device
-> returned an error than I could detect that.
-> 
-> 
-> 1. Drop the -Exyz error type and use blk_status_t in the kernel:
-> 
-> sd_pr_command()
-> 
-> .....
-> if (result < 0)
-> 	return -errno_to_blk_status(result);
-> else if (result == SAM_STAT_CHECK_CONDITION)
-> 	return -BLK_STS_NEXUS;
-> else
-> 	return result;
-> 
-> blkdev_pr_register()
-> 
-> ...
-> 	result = ops->pr_register()
-> 	if (result < 0) {
-> 		/* For compat we must convert back to the nvme/scsi code */
-> 		if (result == -BLK_STS_NEXUS) {
-> 			/* need some helper for this that calls down the stack */
-> 			if (bdev == SCSI)
-> 				return SAM_STAT_RESERVATION_CONFLICT
-> 			else
-> 				return NVME_SC_RESERVATION_CONFLICT
-> 		} else
-> 			return blk_status_to_str(result)
-> 	} else
-> 		return result;
-> 
-> This has similar issues as #0 where we have to convert before returning to
-> userspace.
-> 
-> 
-> Note: In this case, if the block layer uses an -Exyz error code there's not
-> BLK_STS for then we would return -EIO to userspace now. I was thinking
-> that might not be ok but I could also just add a BLK_STS error code
-> for errors like EINVAL, EWOULDBLOCK, ENOMEM, etc so that doesn't happen.
-> 
-> 
-> 2. We could do something like below where the low levels are not changed but the
-> caller converts:
-> 
-> sd_pr_command()
-> 	/* no changes */
-> 
-> lio()
-> 	result = ops->pr_register()
-> 	if (result > 0) {
-> 		/* add some stacked helper again that goes through dm and
-> 		 * to the low level device
-> 		 */
-> 		if (bdev == SCSI) {
-> 			result = scsi_result_to_blk_status(result)
-> 		else
-> 			result = nvme_error_status(result)
-> 
-> 
-> This looks simple, but it felt wrong having upper layers having to
-> know the device type and calling conversion functions.
+-- 
+Hello,
+We the Board Directors believe you are in good health, doing great and
+with the hope that this mail will meet you in good condition, We are
+privileged and delighted to reach you via email" And we are urgently
+waiting to hear from you. and again your number is not connecting.
 
-Has it been considered to introduce a new enumeration type instead of 
-choosing (0), (1) or (2)?
+My regards,
+Dr. Ali Moses..
 
-Thanks,
-
-Bart.
+Sincerely,
+Prof. Chin Guang
