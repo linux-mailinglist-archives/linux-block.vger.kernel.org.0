@@ -2,29 +2,29 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D8C458D641
-	for <lists+linux-block@lfdr.de>; Tue,  9 Aug 2022 11:17:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E17B58D643
+	for <lists+linux-block@lfdr.de>; Tue,  9 Aug 2022 11:18:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234902AbiHIJR6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 9 Aug 2022 05:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
+        id S234438AbiHIJSQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 9 Aug 2022 05:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237461AbiHIJRp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 9 Aug 2022 05:17:45 -0400
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2584522B3E
-        for <linux-block@vger.kernel.org>; Tue,  9 Aug 2022 02:17:42 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=ziyangzhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VLpL3fk_1660036659;
-Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VLpL3fk_1660036659)
+        with ESMTP id S236075AbiHIJSP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 9 Aug 2022 05:18:15 -0400
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AD91A804
+        for <linux-block@vger.kernel.org>; Tue,  9 Aug 2022 02:18:12 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=ziyangzhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VLpL3fz_1660036660;
+Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VLpL3fz_1660036660)
           by smtp.aliyun-inc.com;
           Tue, 09 Aug 2022 17:17:40 +0800
 From:   ZiyangZhang <ZiyangZhang@linux.alibaba.com>
 To:     ming.lei@redhat.com, axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, xiaoguang.wang@linux.alibaba.com,
         ZiyangZhang <ZiyangZhang@linux.alibaba.com>
-Subject: [PATCH 1/3] ublk_drv: check ubq_daemon_is_dying() in __ublk_rq_task_work()
-Date:   Tue,  9 Aug 2022 17:16:27 +0800
-Message-Id: <20220809091629.104682-2-ZiyangZhang@linux.alibaba.com>
+Subject: [PATCH 2/3] ublk_drv: update comment for __ublk_fail_req()
+Date:   Tue,  9 Aug 2022 17:16:28 +0800
+Message-Id: <20220809091629.104682-3-ZiyangZhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220809091629.104682-1-ZiyangZhang@linux.alibaba.com>
 References: <20220809091629.104682-1-ZiyangZhang@linux.alibaba.com>
@@ -40,37 +40,34 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Replace direct check on PF_EXITING in __ublk_rq_task_work() by the
-existing wrapper. Also inline ubq_daemon_is_dying().
+Since __ublk_rq_task_work always fails requests immediately during
+exiting, __ublk_fail_req() is only called from abort context during
+exiting. So lock is unnecessary.
 
 Signed-off-by: ZiyangZhang <ZiyangZhang@linux.alibaba.com>
 ---
- drivers/block/ublk_drv.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/block/ublk_drv.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 2b7d1db5c4a7..3797bd64c3c3 100644
+index 3797bd64c3c3..bedef46f6abf 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -555,7 +555,7 @@ static inline struct ublk_uring_cmd_pdu *ublk_get_uring_cmd_pdu(
- 	return (struct ublk_uring_cmd_pdu *)&ioucmd->pdu;
+@@ -605,11 +605,9 @@ static void ublk_complete_rq(struct request *req)
  }
  
--static bool ubq_daemon_is_dying(struct ublk_queue *ubq)
-+static inline bool ubq_daemon_is_dying(struct ublk_queue *ubq)
+ /*
+- * __ublk_fail_req() may be called from abort context or ->ubq_daemon
+- * context during exiting, so lock is required.
+- *
+- * Also aborting may not be started yet, keep in mind that one failed
+- * request may be issued by block layer again.
++ * Since __ublk_rq_task_work always fails requests immediately during
++ * exiting, __ublk_fail_req() is only called from abort context during
++ * exiting. So lock is unnecessary.
+  */
+ static void __ublk_fail_req(struct ublk_io *io, struct request *req)
  {
- 	return ubq->ubq_daemon->flags & PF_EXITING;
- }
-@@ -644,8 +644,7 @@ static inline void __ublk_rq_task_work(struct request *req)
- 	struct ublk_device *ub = ubq->dev;
- 	int tag = req->tag;
- 	struct ublk_io *io = &ubq->ios[tag];
--	bool task_exiting = current != ubq->ubq_daemon ||
--		(current->flags & PF_EXITING);
-+	bool task_exiting = current != ubq->ubq_daemon || ubq_daemon_is_dying(ubq);
- 	unsigned int mapped_bytes;
- 
- 	pr_devel("%s: complete: op %d, qid %d tag %d io_flags %x addr %llx\n",
 -- 
 2.14.4.44.g2045bb6
 
