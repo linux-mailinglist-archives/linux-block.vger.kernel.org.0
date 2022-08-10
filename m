@@ -2,110 +2,197 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBC9958ECE5
-	for <lists+linux-block@lfdr.de>; Wed, 10 Aug 2022 15:17:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 998DB58EC60
+	for <lists+linux-block@lfdr.de>; Wed, 10 Aug 2022 14:55:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231889AbiHJNRU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 10 Aug 2022 09:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
+        id S232303AbiHJMzV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 10 Aug 2022 08:55:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232517AbiHJNRB (ORCPT
+        with ESMTP id S232283AbiHJMzQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 10 Aug 2022 09:17:01 -0400
-X-Greylist: delayed 1314 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 10 Aug 2022 06:16:57 PDT
-Received: from bout01.mta.xmission.com (bout01.mta.xmission.com [166.70.11.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AFE6220FC
-        for <linux-block@vger.kernel.org>; Wed, 10 Aug 2022 06:16:57 -0700 (PDT)
-Received: from mx03.mta.xmission.com ([166.70.13.213]:47938)
-        by bout01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1oLlEW-002gz0-FT; Wed, 10 Aug 2022 06:54:48 -0600
-Received: from plesk14-shared.xmission.com ([166.70.198.161]:43280 helo=plesk05.xmission.com)
-        by mx03.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1oLlEV-00EaNV-9T; Wed, 10 Aug 2022 06:54:48 -0600
-Received: from hacktheplanet (unknown [207.180.170.2])
-        by plesk05.xmission.com (Postfix) with ESMTPSA id 04383656A6;
-        Wed, 10 Aug 2022 12:54:45 +0000 (UTC)
-Date:   Wed, 10 Aug 2022 08:54:39 -0400
-From:   Scott Bauer <sbauer@plzdonthack.me>
-To:     luca.boccassi@gmail.com
-Cc:     linux-block@vger.kernel.org, hch@infradead.org,
-        Jonathan.Derrick@solidigmtechnology.com,
-        dougmill@linux.vnet.ibm.com, brauner@kernel.org,
-        gmazyland@gmail.com
-Message-ID: <20220810125439.GA17977@hacktheplanet>
-References: <20220810123551.18268-1-luca.boccassi@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220810123551.18268-1-luca.boccassi@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-XM-SPF: eid=1oLlEV-00EaNV-9T;;;mid=<20220810125439.GA17977@hacktheplanet>;;;hst=mx03.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=pass
-X-SA-Exim-Connect-IP: 166.70.198.161
-X-SA-Exim-Mail-From: sbauer@plzdonthack.me
+        Wed, 10 Aug 2022 08:55:16 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF4317E0F;
+        Wed, 10 Aug 2022 05:55:15 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id a8so14637973pjg.5;
+        Wed, 10 Aug 2022 05:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc;
+        bh=q5pzR9cYI26uHb2cy0Dx2bZk76nwKD6XUexNgn2JD3g=;
+        b=aCpqMOCjzmlO9Q+T6z3yMZv6hE5ss39fR7nIWjwLtApQs8ZD7SXYe5jCCot/gwAFKx
+         VSzitsyCRP2TSw999TCe69gY3X9srVC+cPxa8eHBh8990A9A7PcgggnGLvIrTQJSRhyR
+         ujF+6KJgfJILAW1b950XTL8kuAH9wJdgTwe3tvT6tNruN1PSPtQ2fMTm9NdK/ob5KHx8
+         uAkqZiPatMfO+YI2+PAjivtIZQ2XzCb/ZvSS4g6o0dGnfGuzKU+7XM23xt1sKEwt2FU+
+         Gs66XoJvPLd5nUDUqagBQJnQHduWQ6sgFt1NiISf+B30/A7v4QedA1Ayw1pqg/H2Ji0l
+         PK5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc;
+        bh=q5pzR9cYI26uHb2cy0Dx2bZk76nwKD6XUexNgn2JD3g=;
+        b=1Gs4e1W7s7IWpX3llRtWoLVJ0fg/NacqmJFPcPe26UAHNKmE6wWfBclElWSJnX0+Zr
+         CSVPYi+/gFrBcSPnxR12LkCn04ZSssjlibL4zX2p1UyBKFC2fA3GXWSmqPjWU/sJS+3h
+         tanGRz+K+KhvRlRMbWicKTQtP94UyOIl+DWhOvd47hZ4VTA9hrYyvO1KByTMQZbt/LQe
+         4DBmzKBI6gg2LYWJ79kyr5wYDp8740S7rgK9UCGZbpcjQ+gD6srtYuvDWd8JOZs9iOMv
+         pQ2RQ9R1fJ2v4OKAyLCvwuinRM6kgoHSjqPpCGpUk5erxt8QrRZ1z9Cez/K2A6Q745Zt
+         eSng==
+X-Gm-Message-State: ACgBeo0kDwVI+/RLXq2c97cCE2bhAlNctqROC6YU6bF094ILQjWM6+lF
+        24tk3Y3iEXs07Dv0GeFtiw==
+X-Google-Smtp-Source: AA6agR6XFPySjhsoFztTXrEROd+fI8QbhtrR8lGEm8TdR23Z6SzvCV3ZyaBCtdaOCqEDRmUViVGb3A==
+X-Received: by 2002:a17:90b:1e0c:b0:1f5:4e52:4866 with SMTP id pg12-20020a17090b1e0c00b001f54e524866mr3679074pjb.230.1660136115053;
+        Wed, 10 Aug 2022 05:55:15 -0700 (PDT)
+Received: from localhost ([240d:1a:c0d:9f00:4f2f:926a:23dd:8588])
+        by smtp.gmail.com with ESMTPSA id 7-20020a620407000000b0052d3e81886fsm1908364pfe.42.2022.08.10.05.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Aug 2022 05:55:14 -0700 (PDT)
+Date:   Wed, 10 Aug 2022 21:55:10 +0900 (JST)
+Message-Id: <20220810.215510.73630597636704879.shigeru.yoshida@gmail.com>
+To:     mst@redhat.com
+Cc:     jasowang@redhat.com, axboe@kernel.dk, pbonzini@redhat.com,
+        stefanha@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] virtio-blk: Avoid use-after-free on suspend/resume
+From:   Shigeru Yoshida <shigeru.yoshida@gmail.com>
+In-Reply-To: <20220810084053-mutt-send-email-mst@kernel.org>
+References: <20220731070951.196831-1-shigeru.yoshida@gmail.com>
+        <20220810.204556.441522765735488771.shigeru.yoshida@gmail.com>
+        <20220810084053-mutt-send-email-mst@kernel.org>
+X-Mailer: Mew version 6.8 on Emacs 28.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: **;luca.boccassi@gmail.com
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 584 ms - load_scoreonly_sql: 0.08 (0.0%),
-        signal_user_changed: 12 (2.0%), b_tie_ro: 10 (1.7%), parse: 1.82
-        (0.3%), extract_message_metadata: 19 (3.3%), get_uri_detail_list: 3.3
-        (0.6%), tests_pri_-1000: 16 (2.8%), tests_pri_-950: 1.66 (0.3%),
-        tests_pri_-900: 1.21 (0.2%), tests_pri_-90: 168 (28.8%), check_bayes:
-        166 (28.4%), b_tokenize: 8 (1.3%), b_tok_get_all: 9 (1.5%),
-        b_comp_prob: 2.7 (0.5%), b_tok_touch_all: 143 (24.4%), b_finish: 1.01
-        (0.2%), tests_pri_0: 341 (58.4%), check_dkim_signature: 0.69 (0.1%),
-        check_dkim_adsp: 4.4 (0.8%), poll_dns_idle: 2.4 (0.4%), tests_pri_10:
-        3.4 (0.6%), tests_pri_500: 16 (2.7%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH v6] block: sed-opal: Add ioctl to return device status
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on mx03.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Aug 10, 2022 at 01:35:51PM +0100, luca.boccassi@gmail.com wrote:
-> From: "dougmill@linux.vnet.ibm.com" <dougmill@linux.vnet.ibm.com>
-> 
-> Provide a mechanism to retrieve basic status information about
-> the device, including the "supported" flag indicating whether
-> SED-OPAL is supported. The information returned is from the various
-> feature descriptors received during the discovery0 step, and so
-> this ioctl does nothing more than perform the discovery0 step
-> and then save the information received. See "struct opal_status"
-> and OPAL_FL_* bits for the status information currently returned.
-> 
-> This is necessary to be able to check whether a device is OPAL
-> enabled, set up, locked or unlocked from userspace programs
-> like systemd-cryptsetup and libcryptsetup. Right now we just
-> have to assume the user 'knows' or blindly attempt setup/lock/unlock
-> operations.
-> 
-> Signed-off-by: Douglas Miller <dougmill@linux.vnet.ibm.com>
-> Tested-by: Luca Boccassi <bluca@debian.org>
-> ---
-> v2: https://patchwork.kernel.org/project/linux-block/patch/612795b5.tj7FMS9wzchsMzrK%25dougmill@linux.vnet.ibm.com/
-> v3: resend on request, after rebasing and testing on my machine
->     https://patchwork.kernel.org/project/linux-block/patch/20220125215248.6489-1-luca.boccassi@gmail.com/
-> v4: it's been more than 7 months and no alternative approach has appeared.
->     we really need to be able to identify and query the status of a sed-opal
->     device, so rebased and resending.
-> v5: as requested by reviewer, add __32 reserved to the UAPI ioctl struct to align to 64
->     bits and to reserve space for future expansion
-> v6: as requested by reviewer, update commit message with use case
-> 
->  block/opal_proto.h            |  5 ++
->  block/sed-opal.c              | 90 ++++++++++++++++++++++++++++++-----
->  include/linux/sed-opal.h      |  1 +
->  include/uapi/linux/sed-opal.h | 13 +++++
->  4 files changed, 97 insertions(+), 12 deletions(-)
 
-looks fine
-Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
+On Wed, 10 Aug 2022 08:41:04 -0400, Michael S. Tsirkin wrote:
+> On Wed, Aug 10, 2022 at 08:45:56PM +0900, Shigeru Yoshida wrote:
+>> ping?
+>> 
+>> On Sun, 31 Jul 2022 16:09:51 +0900, Shigeru Yoshida wrote:
+>> > hctx->user_data is set to vq in virtblk_init_hctx().  However, vq is
+>> > freed on suspend and reallocated on resume.  So, hctx->user_data is
+>> > invalid after resume, and it will cause use-after-free accessing which
+>> > will result in the kernel crash something like below:
+>> > 
+>> > [   22.428391] Call Trace:
+>> > [   22.428899]  <TASK>
+>> > [   22.429339]  virtqueue_add_split+0x3eb/0x620
+>> > [   22.430035]  ? __blk_mq_alloc_requests+0x17f/0x2d0
+>> > [   22.430789]  ? kvm_clock_get_cycles+0x14/0x30
+>> > [   22.431496]  virtqueue_add_sgs+0xad/0xd0
+>> > [   22.432108]  virtblk_add_req+0xe8/0x150
+>> > [   22.432692]  virtio_queue_rqs+0xeb/0x210
+>> > [   22.433330]  blk_mq_flush_plug_list+0x1b8/0x280
+>> > [   22.434059]  __blk_flush_plug+0xe1/0x140
+>> > [   22.434853]  blk_finish_plug+0x20/0x40
+>> > [   22.435512]  read_pages+0x20a/0x2e0
+>> > [   22.436063]  ? folio_add_lru+0x62/0xa0
+>> > [   22.436652]  page_cache_ra_unbounded+0x112/0x160
+>> > [   22.437365]  filemap_get_pages+0xe1/0x5b0
+>> > [   22.437964]  ? context_to_sid+0x70/0x100
+>> > [   22.438580]  ? sidtab_context_to_sid+0x32/0x400
+>> > [   22.439979]  filemap_read+0xcd/0x3d0
+>> > [   22.440917]  xfs_file_buffered_read+0x4a/0xc0
+>> > [   22.441984]  xfs_file_read_iter+0x65/0xd0
+>> > [   22.442970]  __kernel_read+0x160/0x2e0
+>> > [   22.443921]  bprm_execve+0x21b/0x640
+>> > [   22.444809]  do_execveat_common.isra.0+0x1a8/0x220
+>> > [   22.446008]  __x64_sys_execve+0x2d/0x40
+>> > [   22.446920]  do_syscall_64+0x37/0x90
+>> > [   22.447773]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+>> > 
+>> > This patch fixes this issue by getting vq from vblk, and removes
+>> > virtblk_init_hctx().
+>> > 
+>> > Signed-off-by: Shigeru Yoshida <shigeru.yoshida@gmail.com>
+> 
+> Fixes: 4e0400525691 ("virtio-blk: support polling I/O")
+> Cc: "Suwan Kim" <suwan.kim027@gmail.com>
+> 
+> I assume?
+
+Yes, this patch fixes the commit you mentioned.
+
+Thanks,
+Shigeru
+
+> 
+>> > ---
+>> >  drivers/block/virtio_blk.c | 24 ++++++++++--------------
+>> >  1 file changed, 10 insertions(+), 14 deletions(-)
+>> > 
+>> > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+>> > index 6fc7850c2b0a..d756423e0059 100644
+>> > --- a/drivers/block/virtio_blk.c
+>> > +++ b/drivers/block/virtio_blk.c
+>> > @@ -101,6 +101,14 @@ static inline blk_status_t virtblk_result(struct virtblk_req *vbr)
+>> >  	}
+>> >  }
+>> >  
+>> > +static inline struct virtio_blk_vq *get_virtio_blk_vq(struct blk_mq_hw_ctx *hctx)
+>> > +{
+>> > +	struct virtio_blk *vblk = hctx->queue->queuedata;
+>> > +	struct virtio_blk_vq *vq = &vblk->vqs[hctx->queue_num];
+>> > +
+>> > +	return vq;
+>> > +}
+>> > +
+>> >  static int virtblk_add_req(struct virtqueue *vq, struct virtblk_req *vbr)
+>> >  {
+>> >  	struct scatterlist hdr, status, *sgs[3];
+>> > @@ -416,7 +424,7 @@ static void virtio_queue_rqs(struct request **rqlist)
+>> >  	struct request *requeue_list = NULL;
+>> >  
+>> >  	rq_list_for_each_safe(rqlist, req, next) {
+>> > -		struct virtio_blk_vq *vq = req->mq_hctx->driver_data;
+>> > +		struct virtio_blk_vq *vq = get_virtio_blk_vq(req->mq_hctx);
+>> >  		bool kick;
+>> >  
+>> >  		if (!virtblk_prep_rq_batch(req)) {
+>> > @@ -837,7 +845,7 @@ static void virtblk_complete_batch(struct io_comp_batch *iob)
+>> >  static int virtblk_poll(struct blk_mq_hw_ctx *hctx, struct io_comp_batch *iob)
+>> >  {
+>> >  	struct virtio_blk *vblk = hctx->queue->queuedata;
+>> > -	struct virtio_blk_vq *vq = hctx->driver_data;
+>> > +	struct virtio_blk_vq *vq = get_virtio_blk_vq(hctx);
+>> >  	struct virtblk_req *vbr;
+>> >  	unsigned long flags;
+>> >  	unsigned int len;
+>> > @@ -862,22 +870,10 @@ static int virtblk_poll(struct blk_mq_hw_ctx *hctx, struct io_comp_batch *iob)
+>> >  	return found;
+>> >  }
+>> >  
+>> > -static int virtblk_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
+>> > -			  unsigned int hctx_idx)
+>> > -{
+>> > -	struct virtio_blk *vblk = data;
+>> > -	struct virtio_blk_vq *vq = &vblk->vqs[hctx_idx];
+>> > -
+>> > -	WARN_ON(vblk->tag_set.tags[hctx_idx] != hctx->tags);
+>> > -	hctx->driver_data = vq;
+>> > -	return 0;
+>> > -}
+>> > -
+>> >  static const struct blk_mq_ops virtio_mq_ops = {
+>> >  	.queue_rq	= virtio_queue_rq,
+>> >  	.queue_rqs	= virtio_queue_rqs,
+>> >  	.commit_rqs	= virtio_commit_rqs,
+>> > -	.init_hctx	= virtblk_init_hctx,
+>> >  	.complete	= virtblk_request_done,
+>> >  	.map_queues	= virtblk_map_queues,
+>> >  	.poll		= virtblk_poll,
+>> > -- 
+>> > 2.37.1
+>> > 
+> 
