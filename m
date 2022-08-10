@@ -2,156 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A22E58EC47
-	for <lists+linux-block@lfdr.de>; Wed, 10 Aug 2022 14:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBC9958ECE5
+	for <lists+linux-block@lfdr.de>; Wed, 10 Aug 2022 15:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231650AbiHJMuv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 10 Aug 2022 08:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44498 "EHLO
+        id S231889AbiHJNRU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 10 Aug 2022 09:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230378AbiHJMut (ORCPT
+        with ESMTP id S232517AbiHJNRB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 10 Aug 2022 08:50:49 -0400
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0573127CF8;
-        Wed, 10 Aug 2022 05:50:49 -0700 (PDT)
-Received: by mail-ua1-x92d.google.com with SMTP id s18so5733959uac.10;
-        Wed, 10 Aug 2022 05:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc;
-        bh=u9HzZ8DsgI9iKYzLtTEMKzhlDYNmnztrsJyoQBfbgiU=;
-        b=X2AC8TYKn79PMiUuJjYrx+fcXLeQdfsmRyi7XrPmlxf0WYPsKLZjPvOFIZkDka22b5
-         YJ7JgdwQCELjH0h9u9wL2e7VQ5/x3rfsMOdafH9br5+WN+OjPS51otDaRiP+zeL78hq3
-         jJf+7ee3V26hsG/RRNl+pJYMZ2CYgkuEh6FEILyRUght7P2vbIwlDdZVDMKLikY/T1Ov
-         7XOEDy8ABnv3CzQpVuFLDWXN5blavp7nAxYJwi2YdgqpaJIO3XbXIs7nJ+2DFqaTzuxv
-         EbEu0dHGZgtlHW0vOVcWf4Kk6bz+wEsVCCREsCDCpkS6+NU1fSsl2RP/05lggL4npsLu
-         fO6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc;
-        bh=u9HzZ8DsgI9iKYzLtTEMKzhlDYNmnztrsJyoQBfbgiU=;
-        b=HuPx8BonUdZ1DOT24DHxs0I4CQSb8oCl9iOJV45VyDplpFWHoIFKVP2RIfIbHndhZ4
-         0U5/eDHM+09qOJddbEA1vr8M5DRo9LZ0Y+RlalO66MmeNlNBm0sUIU1MohWcpBJxogUw
-         OxbUy0HB9qV5BC9sq3tQUAUOFLkfyYm+iXxdzYxmAkmZWLs6IYoc0Lu+V7fBHgwqwZZj
-         V35TEXDao5t7AjsV/wzVbwDl5Eyuw8kvIT/fK8icXo+J9UDLrEPkMryzHojvjTGF9oV7
-         uJi5wdausHFc1dnyimh2oqYnfITWX36WhveRHbs8EfZ2OnhRmUsMt4vXXEABPH3OzqFH
-         MErw==
-X-Gm-Message-State: ACgBeo0JW3xGAKiHSFtxy2IwQ9POdy7hOZ11pl05UWPZG8RYz0yiG/fH
-        xNK0hIfJRY8fd5jtD5QzPicsUUQgkNIxV1hkH4w=
-X-Google-Smtp-Source: AA6agR65zs/dCLuEvTYFrTnwBgMLevuPGb9hbni2HeonS9akr8SPN2zjZH+C9jN7S7mxFmLVYb0J+F1odGaeBZYeH7E=
-X-Received: by 2002:ab0:6197:0:b0:387:8e6e:91b8 with SMTP id
- h23-20020ab06197000000b003878e6e91b8mr11955716uan.26.1660135848002; Wed, 10
- Aug 2022 05:50:48 -0700 (PDT)
+        Wed, 10 Aug 2022 09:17:01 -0400
+X-Greylist: delayed 1314 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 10 Aug 2022 06:16:57 PDT
+Received: from bout01.mta.xmission.com (bout01.mta.xmission.com [166.70.11.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AFE6220FC
+        for <linux-block@vger.kernel.org>; Wed, 10 Aug 2022 06:16:57 -0700 (PDT)
+Received: from mx03.mta.xmission.com ([166.70.13.213]:47938)
+        by bout01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1oLlEW-002gz0-FT; Wed, 10 Aug 2022 06:54:48 -0600
+Received: from plesk14-shared.xmission.com ([166.70.198.161]:43280 helo=plesk05.xmission.com)
+        by mx03.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <sbauer@plzdonthack.me>)
+        id 1oLlEV-00EaNV-9T; Wed, 10 Aug 2022 06:54:48 -0600
+Received: from hacktheplanet (unknown [207.180.170.2])
+        by plesk05.xmission.com (Postfix) with ESMTPSA id 04383656A6;
+        Wed, 10 Aug 2022 12:54:45 +0000 (UTC)
+Date:   Wed, 10 Aug 2022 08:54:39 -0400
+From:   Scott Bauer <sbauer@plzdonthack.me>
+To:     luca.boccassi@gmail.com
+Cc:     linux-block@vger.kernel.org, hch@infradead.org,
+        Jonathan.Derrick@solidigmtechnology.com,
+        dougmill@linux.vnet.ibm.com, brauner@kernel.org,
+        gmazyland@gmail.com
+Message-ID: <20220810125439.GA17977@hacktheplanet>
+References: <20220810123551.18268-1-luca.boccassi@gmail.com>
 MIME-Version: 1.0
-From:   Rondreis <linhaoguo86@gmail.com>
-Date:   Wed, 10 Aug 2022 20:50:37 +0800
-Message-ID: <CAB7eex+XpF0RdFTe_ZWhTpKou=WzA2-1Q2DUxoUBb3yo9f3e0g@mail.gmail.com>
-Subject: warn in mceusb_dev_probe in linux v5.18
-To:     justin@coraid.com, axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220810123551.18268-1-luca.boccassi@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-XM-SPF: eid=1oLlEV-00EaNV-9T;;;mid=<20220810125439.GA17977@hacktheplanet>;;;hst=mx03.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=pass
+X-SA-Exim-Connect-IP: 166.70.198.161
+X-SA-Exim-Mail-From: sbauer@plzdonthack.me
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: **;luca.boccassi@gmail.com
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 584 ms - load_scoreonly_sql: 0.08 (0.0%),
+        signal_user_changed: 12 (2.0%), b_tie_ro: 10 (1.7%), parse: 1.82
+        (0.3%), extract_message_metadata: 19 (3.3%), get_uri_detail_list: 3.3
+        (0.6%), tests_pri_-1000: 16 (2.8%), tests_pri_-950: 1.66 (0.3%),
+        tests_pri_-900: 1.21 (0.2%), tests_pri_-90: 168 (28.8%), check_bayes:
+        166 (28.4%), b_tokenize: 8 (1.3%), b_tok_get_all: 9 (1.5%),
+        b_comp_prob: 2.7 (0.5%), b_tok_touch_all: 143 (24.4%), b_finish: 1.01
+        (0.2%), tests_pri_0: 341 (58.4%), check_dkim_signature: 0.69 (0.1%),
+        check_dkim_adsp: 4.4 (0.8%), poll_dns_idle: 2.4 (0.4%), tests_pri_10:
+        3.4 (0.6%), tests_pri_500: 16 (2.7%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH v6] block: sed-opal: Add ioctl to return device status
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on mx03.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Title: WARNING in mceusb_dev_probe
+On Wed, Aug 10, 2022 at 01:35:51PM +0100, luca.boccassi@gmail.com wrote:
+> From: "dougmill@linux.vnet.ibm.com" <dougmill@linux.vnet.ibm.com>
+> 
+> Provide a mechanism to retrieve basic status information about
+> the device, including the "supported" flag indicating whether
+> SED-OPAL is supported. The information returned is from the various
+> feature descriptors received during the discovery0 step, and so
+> this ioctl does nothing more than perform the discovery0 step
+> and then save the information received. See "struct opal_status"
+> and OPAL_FL_* bits for the status information currently returned.
+> 
+> This is necessary to be able to check whether a device is OPAL
+> enabled, set up, locked or unlocked from userspace programs
+> like systemd-cryptsetup and libcryptsetup. Right now we just
+> have to assume the user 'knows' or blindly attempt setup/lock/unlock
+> operations.
+> 
+> Signed-off-by: Douglas Miller <dougmill@linux.vnet.ibm.com>
+> Tested-by: Luca Boccassi <bluca@debian.org>
+> ---
+> v2: https://patchwork.kernel.org/project/linux-block/patch/612795b5.tj7FMS9wzchsMzrK%25dougmill@linux.vnet.ibm.com/
+> v3: resend on request, after rebasing and testing on my machine
+>     https://patchwork.kernel.org/project/linux-block/patch/20220125215248.6489-1-luca.boccassi@gmail.com/
+> v4: it's been more than 7 months and no alternative approach has appeared.
+>     we really need to be able to identify and query the status of a sed-opal
+>     device, so rebased and resending.
+> v5: as requested by reviewer, add __32 reserved to the UAPI ioctl struct to align to 64
+>     bits and to reserve space for future expansion
+> v6: as requested by reviewer, update commit message with use case
+> 
+>  block/opal_proto.h            |  5 ++
+>  block/sed-opal.c              | 90 ++++++++++++++++++++++++++++++-----
+>  include/linux/sed-opal.h      |  1 +
+>  include/uapi/linux/sed-opal.h | 13 +++++
+>  4 files changed, 97 insertions(+), 12 deletions(-)
 
-Hello,
-
-When fuzzing the Linux kernel driver v5.18.0, the following crash was triggered.
-
-HEAD commit: 4b0986a3613c92f4ec1bdc7f60ec66fea135991f (HEAD, tag: v5.18)
-git tree: upstream
-
-kernel config: https://pastebin.com/KecL2gaG
-C reproducer: https://pastebin.com/UyrcmcDs
-console output: https://pastebin.com/XT7jayHs
-
-Basically, in the c reproducer, we use the gadget module to emulate
-the process of attaching a usb device (vendor id: 0x45e, product id:
-0x6d, with function: loopback_null).
-To reproduce this crash, we utilize a third-party library to emulate
-the attaching process: https://github.com/linux-usb-gadgets/libusbgx.
-Just clone this repository, make install it, and compile the c
-reproducer with ``` gcc crash.c -lusbgx -o crash ``` will do the
-trick.
-
-The crash report is as follow:
-
-```
-input: Media Center Ed. eHome Infrared Remote Transceiver (045e:006d)
-as /devices/platform/dummy_hcd.5/usb6/6-1/6-1:1.0/rc/rc0/input4
-------------[ cut here ]------------
-usb 6-1: BOGUS control dir, pipe 80000380 doesn't match bRequestType 40
-WARNING: CPU: 0 PID: 2465 at drivers/usb/core/urb.c:410
-usb_submit_urb+0x1326/0x1820 drivers/usb/core/urb.c:410
-Modules linked in:
-CPU: 0 PID: 2465 Comm: kworker/0:2 Not tainted 5.19.0-rc4-00208-g69cb6c6556ad #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.13.0-1ubuntu1.1 04/01/2014
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:usb_submit_urb+0x1326/0x1820 drivers/usb/core/urb.c:410
-Code: 7c 24 40 e8 ac 23 91 fd 48 8b 7c 24 40 e8 b2 70 1b ff 45 89 e8
-44 89 f1 4c 89 e2 48 89 c6 48 c7 c7 a0 30 a9 86 e8 48 07 11 02 <0f> 0b
-e9 1c f0 ff ff e8 7e 23 91 fd 0f b6 1d 63 22 83 05 31 ff 41
-RSP: 0018:ffffc900032becf0 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8881100f3058 RCX: 0000000000000000
-RDX: ffffc90004961000 RSI: ffff888114c6d580 RDI: fffff52000657d90
-RBP: ffff888105ad90f0 R08: ffffffff812c3638 R09: 0000000000000000
-R10: 0000000000000005 R11: ffffed1023504ef1 R12: ffff888105ad9000
-R13: 0000000000000040 R14: 0000000080000380 R15: ffff88810ba96500
-FS: 0000000000000000(0000) GS:ffff88811a800000(0000) knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffe810bda58 CR3: 000000010b720000 CR4: 0000000000350ef0
-Call Trace:
-<TASK>
-usb_start_wait_urb+0x101/0x4c0 drivers/usb/core/message.c:58
-usb_internal_control_msg drivers/usb/core/message.c:102 [inline]
-usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:153
-mceusb_gen1_init drivers/media/rc/mceusb.c:1431 [inline]
-mceusb_dev_probe+0x258e/0x33f0 drivers/media/rc/mceusb.c:1807
-usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:396
-call_driver_probe drivers/base/dd.c:555 [inline]
-really_probe drivers/base/dd.c:634 [inline]
-really_probe+0x23e/0xa80 drivers/base/dd.c:579
-__driver_probe_device+0x338/0x4d0 drivers/base/dd.c:764
-driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:794
-__device_attach_driver+0x20b/0x2f0 drivers/base/dd.c:917
-bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:427
-__device_attach+0x283/0x490 drivers/base/dd.c:989
-bus_probe_device+0x1e4/0x290 drivers/base/bus.c:487
-device_add+0xc9b/0x1da0 drivers/base/core.c:3417
-usb_set_configuration+0x1019/0x1900 drivers/usb/core/message.c:2170
-usb_generic_driver_probe+0x9d/0xe0 drivers/usb/core/generic.c:238
-usb_probe_device+0xd9/0x2a0 drivers/usb/core/driver.c:293
-call_driver_probe drivers/base/dd.c:555 [inline]
-really_probe drivers/base/dd.c:634 [inline]
-really_probe+0x23e/0xa80 drivers/base/dd.c:579
-__driver_probe_device+0x338/0x4d0 drivers/base/dd.c:764
-driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:794
-__device_attach_driver+0x20b/0x2f0 drivers/base/dd.c:917
-bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:427
-__device_attach+0x283/0x490 drivers/base/dd.c:989
-bus_probe_device+0x1e4/0x290 drivers/base/bus.c:487
-device_add+0xc9b/0x1da0 drivers/base/core.c:3417
-usb_new_device.cold+0x4b8/0x10ca drivers/usb/core/hub.c:2566
-hub_port_connect drivers/usb/core/hub.c:5363 [inline]
-hub_port_connect_change drivers/usb/core/hub.c:5507 [inline]
-port_event drivers/usb/core/hub.c:5663 [inline]
-hub_event+0x232d/0x4180 drivers/usb/core/hub.c:5745
-process_one_work+0x9cc/0x1650 kernel/workqueue.c:2289
-worker_thread+0x623/0x1070 kernel/workqueue.c:2436
-kthread+0x2ef/0x3a0 kernel/kthread.c:376
-ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:302
-</TASK>
-
-
-```
+looks fine
+Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
