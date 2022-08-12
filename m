@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68E9959169A
-	for <lists+linux-block@lfdr.de>; Fri, 12 Aug 2022 23:09:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54A7759169D
+	for <lists+linux-block@lfdr.de>; Fri, 12 Aug 2022 23:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbiHLVI3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Aug 2022 17:08:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58720 "EHLO
+        id S230114AbiHLVIa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 Aug 2022 17:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233675AbiHLVIK (ORCPT
+        with ESMTP id S233793AbiHLVIM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Aug 2022 17:08:10 -0400
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FC8B4426
-        for <linux-block@vger.kernel.org>; Fri, 12 Aug 2022 14:08:09 -0700 (PDT)
-Received: by mail-pl1-f179.google.com with SMTP id m2so1749851pls.4
-        for <linux-block@vger.kernel.org>; Fri, 12 Aug 2022 14:08:09 -0700 (PDT)
+        Fri, 12 Aug 2022 17:08:12 -0400
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B552B4426
+        for <linux-block@vger.kernel.org>; Fri, 12 Aug 2022 14:08:11 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id y141so1937678pfb.7
+        for <linux-block@vger.kernel.org>; Fri, 12 Aug 2022 14:08:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=jergAwzYxFwIRDZ7smxypohSe4H0FutPEesfPOIeVGw=;
-        b=TTVTJgHhco9UQVxPyH9jS+J1Dqc5SywUKIvjgELQz0pY1exotXcCXubwCOzKTrNzSo
-         owMwQszlG8LCXyGSDdWNPE40wAAOLjQ/veAZkvkK3HMCJh8rNYFYdLfykWyM07LGDFFN
-         YLC75A9N4FzSQzi1JCa7EFDTyY19VjMhLawxxDDOG/EuuBy6e1lAsLM90uKYakV8q0ex
-         0CdOTf36sO1U+SX90mVYIyCEpTATQqw3p9ahHv+ia4Os4MsWBGVDCTbCX4HBZM/7+f7x
-         4cIPY6hwoXwRS59MPRnh7DXL5PQJleNFY1gGiIMcpgUxaJ5i4wnTf23DIbDDWuBAVcRW
-         KRHg==
-X-Gm-Message-State: ACgBeo0ZH/DQyNp6DtDAx3OfdLxOYaJaAmhsElF8jMuM5E4emKkImiqN
-        nML0OWkPOOTiK9l5J8lvQ+VR/mGPeuw=
-X-Google-Smtp-Source: AA6agR5U1OKSyAaYcHlcaJSozNFmdm7l6/WVmsgfEgHUiufAnasEuo4gFjIVLrGRfjo8ylIXKtB1Bg==
-X-Received: by 2002:a17:902:c945:b0:16e:d24d:1b27 with SMTP id i5-20020a170902c94500b0016ed24d1b27mr5900690pla.51.1660338489164;
-        Fri, 12 Aug 2022 14:08:09 -0700 (PDT)
+        bh=LsmXrLkuvPDoYrBSFGfCDAwOUzDQtSz/zVykfiuT9BA=;
+        b=uGiiO4D4HyQZp1Rvk2uxGtBbfP9H7t6mDXkFVwqyaf41XNYjl8Ck1oM0ObVguhNWU9
+         c8DMq6okD5uss/R7JTvLliasH8jd9qk9Km1cBZE/GFe5eFKncpqN3L8umDH4Ndfr7O0L
+         875bTWOPRQCQbv5duGDg5+PtlvgEW7E1hJAuCnFUAI2VXnb2J735lLisW5W0iKMSlzex
+         vA9vHC+8N2G0Gq2Mqllb5Yq1Xa2FT5ysAKTgNM8yhycG/YYQC5fBJ+ObdglP582Wvfsy
+         qTfymogA2UFoY0adTmCS3xgppl28jtgrx+WBVar9qYdtF3yc5JuyUwyRm3UCy/9/Owz/
+         Dpzw==
+X-Gm-Message-State: ACgBeo3gkOKj73dQkONshYKrAnwW8qsaROYRwlTETsVzWdY8sGw4NyIO
+        sq+bHXPCbCBtCNCOYiaref4=
+X-Google-Smtp-Source: AA6agR4VpH3m8i/5qvRfZxiSiL5Qnui2lmtL/R3aJ4muy10C3lTBzm1ewRevbr4eekiBy86iV2PjGQ==
+X-Received: by 2002:a65:6d86:0:b0:41c:d0c0:d6b5 with SMTP id bc6-20020a656d86000000b0041cd0c0d6b5mr4674536pgb.534.1660338490939;
+        Fri, 12 Aug 2022 14:08:10 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:2414:9f13:41de:d21d])
-        by smtp.gmail.com with ESMTPSA id w62-20020a17090a6bc400b001f3095af6a9sm245905pjj.38.2022.08.12.14.08.07
+        by smtp.gmail.com with ESMTPSA id w62-20020a17090a6bc400b001f3095af6a9sm245905pjj.38.2022.08.12.14.08.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 14:08:08 -0700 (PDT)
+        Fri, 12 Aug 2022 14:08:10 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -44,9 +44,9 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Keith Busch <keith.busch@intel.com>
-Subject: [PATCH 1/6] block: Change the return type of blk_mq_map_queues() into void
-Date:   Fri, 12 Aug 2022 14:07:55 -0700
-Message-Id: <20220812210800.2253972-2-bvanassche@acm.org>
+Subject: [PATCH 2/6] block: Change the return type of blk_mq_pci_map_queues() into void
+Date:   Fri, 12 Aug 2022 14:07:56 -0700
+Message-Id: <20220812210800.2253972-3-bvanassche@acm.org>
 X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
 In-Reply-To: <20220812210800.2253972-1-bvanassche@acm.org>
 References: <20220812210800.2253972-1-bvanassche@acm.org>
@@ -54,161 +54,140 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since blk_mq_map_queues() always returns 0, change its return type into
-void. Most callers ignore the returned value anyway.
+Since blk_mq_pci_map_queues() always returns 0, change its return type
+into void. Most callers ignore the returned value anyway.
 
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Cc: Keith Busch <keith.busch@intel.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-mq-cpumap.c         | 4 +---
- block/blk-mq-rdma.c           | 3 ++-
- block/blk-mq-virtio.c         | 3 ++-
- block/blk-mq.c                | 3 ++-
- drivers/scsi/qla2xxx/qla_os.c | 4 ++--
- drivers/scsi/scsi_lib.c       | 3 ++-
- drivers/ufs/core/ufshcd.c     | 5 ++---
- include/linux/blk-mq.h        | 2 +-
- 8 files changed, 14 insertions(+), 13 deletions(-)
+ block/blk-mq-pci.c                     | 7 +++----
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 4 ++--
+ drivers/scsi/qla2xxx/qla_nvme.c        | 6 +-----
+ drivers/scsi/qla2xxx/qla_os.c          | 5 ++---
+ drivers/scsi/smartpqi/smartpqi_init.c  | 5 +++--
+ include/linux/blk-mq-pci.h             | 4 ++--
+ 6 files changed, 13 insertions(+), 18 deletions(-)
 
-diff --git a/block/blk-mq-cpumap.c b/block/blk-mq-cpumap.c
-index 3db84d3197f1..9c2fce1a7b50 100644
---- a/block/blk-mq-cpumap.c
-+++ b/block/blk-mq-cpumap.c
-@@ -32,7 +32,7 @@ static int get_first_sibling(unsigned int cpu)
- 	return cpu;
- }
- 
--int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
-+void blk_mq_map_queues(struct blk_mq_queue_map *qmap)
+diff --git a/block/blk-mq-pci.c b/block/blk-mq-pci.c
+index b595a94c4d16..a90b88fd1332 100644
+--- a/block/blk-mq-pci.c
++++ b/block/blk-mq-pci.c
+@@ -23,8 +23,8 @@
+  * that maps a queue to the CPUs that have irq affinity for the corresponding
+  * vector.
+  */
+-int blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
+-			    int offset)
++void blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
++			   int offset)
  {
- 	unsigned int *map = qmap->mq_map;
- 	unsigned int nr_queues = qmap->nr_queues;
-@@ -70,8 +70,6 @@ int blk_mq_map_queues(struct blk_mq_queue_map *qmap)
- 				map[cpu] = map[first_sibling];
- 		}
+ 	const struct cpumask *mask;
+ 	unsigned int queue, cpu;
+@@ -38,11 +38,10 @@ int blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
+ 			qmap->mq_map[cpu] = qmap->queue_offset + queue;
  	}
--
+ 
+-	return 0;
++	return;
+ 
+ fallback:
+ 	WARN_ON_ONCE(qmap->nr_queues > 1);
+ 	blk_mq_clear_mq_map(qmap);
 -	return 0;
  }
- EXPORT_SYMBOL_GPL(blk_mq_map_queues);
+ EXPORT_SYMBOL_GPL(blk_mq_pci_map_queues);
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index efe8c5be5870..c1e541dcbac0 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3176,8 +3176,8 @@ static int hisi_sas_map_queues(struct Scsi_Host *shost)
+ 	struct hisi_hba *hisi_hba = shost_priv(shost);
+ 	struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
  
-diff --git a/block/blk-mq-rdma.c b/block/blk-mq-rdma.c
-index 14f968e58b8f..18c2e00ba0d1 100644
---- a/block/blk-mq-rdma.c
-+++ b/block/blk-mq-rdma.c
-@@ -39,6 +39,7 @@ int blk_mq_rdma_map_queues(struct blk_mq_queue_map *map,
- 	return 0;
- 
- fallback:
--	return blk_mq_map_queues(map);
-+	blk_mq_map_queues(map);
+-	return blk_mq_pci_map_queues(qmap, hisi_hba->pci_dev,
+-				     BASE_VECTORS_V3_HW);
++	blk_mq_pci_map_queues(qmap, hisi_hba->pci_dev, BASE_VECTORS_V3_HW);
 +	return 0;
  }
- EXPORT_SYMBOL_GPL(blk_mq_rdma_map_queues);
-diff --git a/block/blk-mq-virtio.c b/block/blk-mq-virtio.c
-index 7b8a42c35102..fa84e748cb69 100644
---- a/block/blk-mq-virtio.c
-+++ b/block/blk-mq-virtio.c
-@@ -41,6 +41,7 @@ int blk_mq_virtio_map_queues(struct blk_mq_queue_map *qmap,
  
- 	return 0;
- fallback:
--	return blk_mq_map_queues(qmap);
-+	blk_mq_map_queues(qmap);
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(blk_mq_virtio_map_queues);
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 530aad95cc33..0b0fcd01c0e2 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -4220,7 +4220,8 @@ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
- 		return set->ops->map_queues(set);
- 	} else {
- 		BUG_ON(set->nr_maps > 1);
--		return blk_mq_map_queues(&set->map[HCTX_TYPE_DEFAULT]);
-+		blk_mq_map_queues(&set->map[HCTX_TYPE_DEFAULT]);
-+		return 0;
- 	}
+ static struct scsi_host_template sht_v3_hw = {
+diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
+index 7450c3458be7..02fdeb0d31ec 100644
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -684,12 +684,8 @@ static void qla_nvme_map_queues(struct nvme_fc_local_port *lport,
+ 		struct blk_mq_queue_map *map)
+ {
+ 	struct scsi_qla_host *vha = lport->private;
+-	int rc;
+ 
+-	rc = blk_mq_pci_map_queues(map, vha->hw->pdev, vha->irq_offset);
+-	if (rc)
+-		ql_log(ql_log_warn, vha, 0x21de,
+-		       "pci map queue failed 0x%x", rc);
++	blk_mq_pci_map_queues(map, vha->hw->pdev, vha->irq_offset);
  }
  
+ static void qla_nvme_localport_delete(struct nvme_fc_local_port *lport)
 diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 0bd0fd1042df..c4e7dd14930d 100644
+index c4e7dd14930d..26cd27684410 100644
 --- a/drivers/scsi/qla2xxx/qla_os.c
 +++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -7996,12 +7996,12 @@ qla_pci_reset_done(struct pci_dev *pdev)
+@@ -7996,15 +7996,14 @@ qla_pci_reset_done(struct pci_dev *pdev)
  
  static int qla2xxx_map_queues(struct Scsi_Host *shost)
  {
--	int rc;
-+	int rc = 0;
+-	int rc = 0;
  	scsi_qla_host_t *vha = (scsi_qla_host_t *)shost->hostdata;
  	struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
  
  	if (USER_CTRL_IRQ(vha->hw) || !vha->hw->mqiobase)
--		rc = blk_mq_map_queues(qmap);
-+		blk_mq_map_queues(qmap);
+ 		blk_mq_map_queues(qmap);
  	else
- 		rc = blk_mq_pci_map_queues(qmap, vha->hw->pdev, vha->irq_offset);
- 	return rc;
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 4dbd29ab1dcc..4ea75b35ce9b 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1855,7 +1855,8 @@ static int scsi_map_queues(struct blk_mq_tag_set *set)
- 
- 	if (shost->hostt->map_queues)
- 		return shost->hostt->map_queues(shost);
--	return blk_mq_map_queues(&set->map[HCTX_TYPE_DEFAULT]);
-+	blk_mq_map_queues(&set->map[HCTX_TYPE_DEFAULT]);
+-		rc = blk_mq_pci_map_queues(qmap, vha->hw->pdev, vha->irq_offset);
+-	return rc;
++		blk_mq_pci_map_queues(qmap, vha->hw->pdev, vha->irq_offset);
 +	return 0;
  }
  
- void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 3bc0709a5dc2..a619622b894a 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -2703,7 +2703,7 @@ static inline bool is_device_wlun(struct scsi_device *sdev)
-  */
- static int ufshcd_map_queues(struct Scsi_Host *shost)
+ struct scsi_host_template qla2xxx_driver_template = {
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index 7a8c2c75acba..bc43f3fe5ba5 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -6440,8 +6440,9 @@ static int pqi_map_queues(struct Scsi_Host *shost)
  {
--	int i, ret;
-+	int i;
+ 	struct pqi_ctrl_info *ctrl_info = shost_to_hba(shost);
  
- 	for (i = 0; i < shost->nr_maps; i++) {
- 		struct blk_mq_queue_map *map = &shost->tag_set.map[i];
-@@ -2720,8 +2720,7 @@ static int ufshcd_map_queues(struct Scsi_Host *shost)
- 			WARN_ON_ONCE(true);
- 		}
- 		map->queue_offset = 0;
--		ret = blk_mq_map_queues(map);
--		WARN_ON_ONCE(ret);
-+		blk_mq_map_queues(map);
- 	}
+-	return blk_mq_pci_map_queues(&shost->tag_set.map[HCTX_TYPE_DEFAULT],
+-					ctrl_info->pci_dev, 0);
++	blk_mq_pci_map_queues(&shost->tag_set.map[HCTX_TYPE_DEFAULT],
++			      ctrl_info->pci_dev, 0);
++	return 0;
+ }
  
- 	return 0;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index effee1dc715a..5fc5d6b2d55a 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -881,7 +881,7 @@ void blk_mq_freeze_queue_wait(struct request_queue *q);
- int blk_mq_freeze_queue_wait_timeout(struct request_queue *q,
- 				     unsigned long timeout);
+ static inline bool pqi_is_tape_changer_device(struct pqi_scsi_dev *device)
+diff --git a/include/linux/blk-mq-pci.h b/include/linux/blk-mq-pci.h
+index 0b1f45c62623..ca544e1d3508 100644
+--- a/include/linux/blk-mq-pci.h
++++ b/include/linux/blk-mq-pci.h
+@@ -5,7 +5,7 @@
+ struct blk_mq_queue_map;
+ struct pci_dev;
  
--int blk_mq_map_queues(struct blk_mq_queue_map *qmap);
-+void blk_mq_map_queues(struct blk_mq_queue_map *qmap);
- void blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set, int nr_hw_queues);
+-int blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
+-			  int offset);
++void blk_mq_pci_map_queues(struct blk_mq_queue_map *qmap, struct pci_dev *pdev,
++			   int offset);
  
- void blk_mq_quiesce_queue_nowait(struct request_queue *q);
+ #endif /* _LINUX_BLK_MQ_PCI_H */
