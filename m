@@ -2,352 +2,216 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47EF35916A0
-	for <lists+linux-block@lfdr.de>; Fri, 12 Aug 2022 23:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 238855918F5
+	for <lists+linux-block@lfdr.de>; Sat, 13 Aug 2022 07:59:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231698AbiHLVIb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 Aug 2022 17:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
+        id S230147AbiHMF7H (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 13 Aug 2022 01:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233872AbiHLVIX (ORCPT
+        with ESMTP id S229507AbiHMF7G (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 Aug 2022 17:08:23 -0400
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 313A9B56E3
-        for <linux-block@vger.kernel.org>; Fri, 12 Aug 2022 14:08:21 -0700 (PDT)
-Received: by mail-pl1-f179.google.com with SMTP id x23so1739645pll.7
-        for <linux-block@vger.kernel.org>; Fri, 12 Aug 2022 14:08:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=2VzsOM24s765PKEeca8bFaT6JYwE/lxbD0CDgbloRRk=;
-        b=D49WiuFkstZXcy3Twjww5ZPFgSBk5qr0tS6l5au8OcLrrr2cM+gYCaXXrRDArAtw9Y
-         w94IRLw2nd03jzIUyIsm0WAXRHUcu60VegKJHpoBNmFIQpy78DlvWGg8YJSjo4+8/55T
-         QZM2hAQ+qCAEW1QW3Sc0ZBWX+CFAIt6ysYxHyJJHN40UMKZPeuY+J+lSeP8WbxPf4Wes
-         9dOfR0W0fdB8bz/EeUNdDMycYag5X5f1FnUvmWznbIenEoU5EXe5G4Ovj/Vr3SL4qU9S
-         1UqF6AmQdjqVGe847BYLPquItvXSPBYGA36/Yn+CtpaCxxFCfoB6RnLtVSNFVStRM09Y
-         ZLmQ==
-X-Gm-Message-State: ACgBeo2FtQSztYUiGeGMp2KfuQtCEeD6f9wL+RloEawfDu3T6PTnX1O5
-        HSQdZvNFVkcdshKZZgoI4Lc=
-X-Google-Smtp-Source: AA6agR6tFP/huoXLi5DxlTv3pBUtvYiOplSwT8Dz0EdkLxWxDRr82mm/pVj7uUXh9Fe434sgmw6lbg==
-X-Received: by 2002:a17:903:124e:b0:171:4c36:a6c8 with SMTP id u14-20020a170903124e00b001714c36a6c8mr5780401plh.169.1660338500608;
-        Fri, 12 Aug 2022 14:08:20 -0700 (PDT)
-Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:2414:9f13:41de:d21d])
-        by smtp.gmail.com with ESMTPSA id w62-20020a17090a6bc400b001f3095af6a9sm245905pjj.38.2022.08.12.14.08.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 14:08:19 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Keith Busch <keith.busch@intel.com>
-Subject: [PATCH 6/6] block: Change the return type of .map_queues() into void
-Date:   Fri, 12 Aug 2022 14:08:00 -0700
-Message-Id: <20220812210800.2253972-7-bvanassche@acm.org>
-X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
-In-Reply-To: <20220812210800.2253972-1-bvanassche@acm.org>
-References: <20220812210800.2253972-1-bvanassche@acm.org>
+        Sat, 13 Aug 2022 01:59:06 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3987B41D3F;
+        Fri, 12 Aug 2022 22:59:05 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4M4VFF5nbqzKJY5;
+        Sat, 13 Aug 2022 13:57:37 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgA3PfqjPfdi_zsfAQ--.8775S3;
+        Sat, 13 Aug 2022 13:59:01 +0800 (CST)
+Subject: Re: [PATCH] sbitmap: fix possible io hung due to lost wakeup
+To:     Yu Kuai <yukuai1@huaweicloud.com>, jack@suse.cz, axboe@kernel.dk,
+        osandov@fb.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20220803121504.212071-1-yukuai1@huaweicloud.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <d31edf9b-bae2-b1f0-b95b-743fd705ba25@huaweicloud.com>
+Date:   Sat, 13 Aug 2022 13:58:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20220803121504.212071-1-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-CM-TRANSID: gCh0CgA3PfqjPfdi_zsfAQ--.8775S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF48Wr4DWw1fury3XryxKrg_yoW7Jr4kpr
+        W3JF1vva9YyrWIywsrGr4jv3WF9w4vgrZrGr43Kw15Cr12qr1Ykr109r45ury8ArZ8W345
+        tr13JFZ3CFyUJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4U
+        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUU
+        UU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-All .map_queues() implementations return 0. Hence change the return type
-of these callback functions and also of blk_mq_update_queue_map() into
-void.
+ÔÚ 2022/08/03 20:15, Yu Kuai Ð´µÀ:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> There are two problems can lead to lost wakeup:
+> 
+> 1) invalid wakeup on the wrong waitqueue:
+> 
+> For example, 2 * wake_batch tags are put, while only wake_batch threads
+> are woken:
+> 
+> __sbq_wake_up
+>   atomic_cmpxchg -> reset wait_cnt
+> 			__sbq_wake_up -> decrease wait_cnt
+> 			...
+> 			__sbq_wake_up -> wait_cnt is decreased to 0 again
+> 			 atomic_cmpxchg
+> 			 sbq_index_atomic_inc -> increase wake_index
+> 			 wake_up_nr -> wake up and waitqueue might be empty
+>   sbq_index_atomic_inc -> increase again, one waitqueue is skipped
+>   wake_up_nr -> invalid wake up because old wakequeue might be empty
+> 
+> To fix the problem, increasing 'wake_index' before resetting 'wait_cnt'.
+> 
+> 2) 'wait_cnt' can be decreased while waitqueue is empty
+> 
+> As pointed out by Jan Kara, following race is possible:
+> 
+> CPU1				CPU2
+> __sbq_wake_up			 __sbq_wake_up
+>   sbq_wake_ptr()			 sbq_wake_ptr() -> the same
+>   wait_cnt = atomic_dec_return()
+>   /* decreased to 0 */
+>   sbq_index_atomic_inc()
+>   /* move to next waitqueue */
+>   atomic_set()
+>   /* reset wait_cnt */
+>   wake_up_nr()
+>   /* wake up on the old waitqueue */
+> 				 wait_cnt = atomic_dec_return()
+> 				 /*
+> 				  * decrease wait_cnt in the old
+> 				  * waitqueue, while it can be
+> 				  * empty.
+> 				  */
+> 
+> Fix the problem by waking up before updating 'wake_index' and
+> 'wait_cnt'.
+> 
+> With this patch, noted that 'wait_cnt' is still decreased in the old
+> empty waitqueue, however, the wakeup is redirected to a active waitqueue,
+> and the extra decrement on the old empty waitqueue is not handled.
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- block/blk-mq-rdma.c           | 5 ++---
- block/blk-mq.c                | 9 +++------
- drivers/block/null_blk/main.c | 4 +---
- drivers/block/rnbd/rnbd-clt.c | 4 +---
- drivers/block/virtio_blk.c    | 4 +---
- drivers/nvme/host/fc.c        | 3 +--
- drivers/nvme/host/pci.c       | 4 +---
- drivers/nvme/host/rdma.c      | 4 +---
- drivers/nvme/host/tcp.c       | 4 +---
- drivers/scsi/scsi_lib.c       | 9 +++------
- include/linux/blk-mq-rdma.h   | 2 +-
- include/linux/blk-mq.h        | 2 +-
- 12 files changed, 17 insertions(+), 37 deletions(-)
+friendly ping ...
+> 
+> Fixes: 88459642cba4 ("blk-mq: abstract tag allocation out into sbitmap library")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> ---
+> Changes in official version:
+> - fix spelling mistake in comments
+> - add review tag
+> Changes in rfc v4:
+>   - remove patch 1, which improve fairness with overhead
+>   - merge patch2 and patch 3
+> Changes in rfc v3:
+>   - rename patch 2, and add some comments.
+>   - add patch 3, which fixes a new issue pointed out by Jan Kara.
+> Changes in rfc v2:
+>   - split to spearate patches for different problem.
+>   - add fix tag
+> 
+>   previous versions:
+> rfc v1: https://lore.kernel.org/all/20220617141125.3024491-1-yukuai3@huawei.com/
+> rfc v2: https://lore.kernel.org/all/20220619080309.1630027-1-yukuai3@huawei.com/
+> rfc v3: https://lore.kernel.org/all/20220710042200.20936-1-yukuai1@huaweicloud.com/
+> rfc v4: https://lore.kernel.org/all/20220723024122.2990436-1-yukuai1@huaweicloud.com/
+>   lib/sbitmap.c | 55 ++++++++++++++++++++++++++++++---------------------
+>   1 file changed, 33 insertions(+), 22 deletions(-)
+> 
+> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+> index 29eb0484215a..1aa55806f6a5 100644
+> --- a/lib/sbitmap.c
+> +++ b/lib/sbitmap.c
+> @@ -611,32 +611,43 @@ static bool __sbq_wake_up(struct sbitmap_queue *sbq)
+>   		return false;
+>   
+>   	wait_cnt = atomic_dec_return(&ws->wait_cnt);
+> -	if (wait_cnt <= 0) {
+> -		int ret;
+> +	/*
+> +	 * For concurrent callers of this, callers should call this function
+> +	 * again to wakeup a new batch on a different 'ws'.
+> +	 */
+> +	if (wait_cnt < 0 || !waitqueue_active(&ws->wait))
+> +		return true;
+>   
+> -		wake_batch = READ_ONCE(sbq->wake_batch);
+> +	if (wait_cnt > 0)
+> +		return false;
+>   
+> -		/*
+> -		 * Pairs with the memory barrier in sbitmap_queue_resize() to
+> -		 * ensure that we see the batch size update before the wait
+> -		 * count is reset.
+> -		 */
+> -		smp_mb__before_atomic();
+> +	wake_batch = READ_ONCE(sbq->wake_batch);
+>   
+> -		/*
+> -		 * For concurrent callers of this, the one that failed the
+> -		 * atomic_cmpxhcg() race should call this function again
+> -		 * to wakeup a new batch on a different 'ws'.
+> -		 */
+> -		ret = atomic_cmpxchg(&ws->wait_cnt, wait_cnt, wake_batch);
+> -		if (ret == wait_cnt) {
+> -			sbq_index_atomic_inc(&sbq->wake_index);
+> -			wake_up_nr(&ws->wait, wake_batch);
+> -			return false;
+> -		}
+> +	/*
+> +	 * Wake up first in case that concurrent callers decrease wait_cnt
+> +	 * while waitqueue is empty.
+> +	 */
+> +	wake_up_nr(&ws->wait, wake_batch);
+>   
+> -		return true;
+> -	}
+> +	/*
+> +	 * Pairs with the memory barrier in sbitmap_queue_resize() to
+> +	 * ensure that we see the batch size update before the wait
+> +	 * count is reset.
+> +	 *
+> +	 * Also pairs with the implicit barrier between decrementing wait_cnt
+> +	 * and checking for waitqueue_active() to make sure waitqueue_active()
+> +	 * sees result of the wakeup if atomic_dec_return() has seen the result
+> +	 * of atomic_set().
+> +	 */
+> +	smp_mb__before_atomic();
+> +
+> +	/*
+> +	 * Increase wake_index before updating wait_cnt, otherwise concurrent
+> +	 * callers can see valid wait_cnt in old waitqueue, which can cause
+> +	 * invalid wakeup on the old waitqueue.
+> +	 */
+> +	sbq_index_atomic_inc(&sbq->wake_index);
+> +	atomic_set(&ws->wait_cnt, wake_batch);
+>   
+>   	return false;
+>   }
+> 
 
-diff --git a/block/blk-mq-rdma.c b/block/blk-mq-rdma.c
-index 18c2e00ba0d1..29c1f4d6eb04 100644
---- a/block/blk-mq-rdma.c
-+++ b/block/blk-mq-rdma.c
-@@ -21,7 +21,7 @@
-  * @set->nr_hw_queues, or @dev does not provide an affinity mask for a
-  * vector, we fallback to the naive mapping.
-  */
--int blk_mq_rdma_map_queues(struct blk_mq_queue_map *map,
-+void blk_mq_rdma_map_queues(struct blk_mq_queue_map *map,
- 		struct ib_device *dev, int first_vec)
- {
- 	const struct cpumask *mask;
-@@ -36,10 +36,9 @@ int blk_mq_rdma_map_queues(struct blk_mq_queue_map *map,
- 			map->mq_map[cpu] = map->queue_offset + queue;
- 	}
- 
--	return 0;
-+	return;
- 
- fallback:
- 	blk_mq_map_queues(map);
--	return 0;
- }
- EXPORT_SYMBOL_GPL(blk_mq_rdma_map_queues);
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 0b0fcd01c0e2..96742de0475f 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -4187,7 +4187,7 @@ static int blk_mq_alloc_set_map_and_rqs(struct blk_mq_tag_set *set)
- 	return 0;
- }
- 
--static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
-+static void blk_mq_update_queue_map(struct blk_mq_tag_set *set)
- {
- 	/*
- 	 * blk_mq_map_queues() and multiple .map_queues() implementations
-@@ -4217,11 +4217,10 @@ static int blk_mq_update_queue_map(struct blk_mq_tag_set *set)
- 		for (i = 0; i < set->nr_maps; i++)
- 			blk_mq_clear_mq_map(&set->map[i]);
- 
--		return set->ops->map_queues(set);
-+		set->ops->map_queues(set);
- 	} else {
- 		BUG_ON(set->nr_maps > 1);
- 		blk_mq_map_queues(&set->map[HCTX_TYPE_DEFAULT]);
--		return 0;
- 	}
- }
- 
-@@ -4320,9 +4319,7 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
- 		set->map[i].nr_queues = is_kdump_kernel() ? 1 : set->nr_hw_queues;
- 	}
- 
--	ret = blk_mq_update_queue_map(set);
--	if (ret)
--		goto out_free_mq_map;
-+	blk_mq_update_queue_map(set);
- 
- 	ret = blk_mq_alloc_set_map_and_rqs(set);
- 	if (ret)
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index 535059209693..1f154f92f4c2 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -1528,7 +1528,7 @@ static bool should_requeue_request(struct request *rq)
- 	return false;
- }
- 
--static int null_map_queues(struct blk_mq_tag_set *set)
-+static void null_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct nullb *nullb = set->driver_data;
- 	int i, qoff;
-@@ -1579,8 +1579,6 @@ static int null_map_queues(struct blk_mq_tag_set *set)
- 		qoff += map->nr_queues;
- 		blk_mq_map_queues(map);
- 	}
--
--	return 0;
- }
- 
- static int null_poll(struct blk_mq_hw_ctx *hctx, struct io_comp_batch *iob)
-diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.c
-index 04da33a22ef4..9d01e7ab33e4 100644
---- a/drivers/block/rnbd/rnbd-clt.c
-+++ b/drivers/block/rnbd/rnbd-clt.c
-@@ -1165,7 +1165,7 @@ static int rnbd_rdma_poll(struct blk_mq_hw_ctx *hctx, struct io_comp_batch *iob)
- 	return cnt;
- }
- 
--static int rnbd_rdma_map_queues(struct blk_mq_tag_set *set)
-+static void rnbd_rdma_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct rnbd_clt_session *sess = set->driver_data;
- 
-@@ -1194,8 +1194,6 @@ static int rnbd_rdma_map_queues(struct blk_mq_tag_set *set)
- 			set->map[HCTX_TYPE_DEFAULT].nr_queues,
- 			set->map[HCTX_TYPE_READ].nr_queues);
- 	}
--
--	return 0;
- }
- 
- static struct blk_mq_ops rnbd_mq_ops = {
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 30255fcaf181..23c5a1239520 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -802,7 +802,7 @@ static const struct attribute_group *virtblk_attr_groups[] = {
- 	NULL,
- };
- 
--static int virtblk_map_queues(struct blk_mq_tag_set *set)
-+static void virtblk_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct virtio_blk *vblk = set->driver_data;
- 	int i, qoff;
-@@ -827,8 +827,6 @@ static int virtblk_map_queues(struct blk_mq_tag_set *set)
- 		else
- 			blk_mq_virtio_map_queues(&set->map[i], vblk->vdev, 0);
- 	}
--
--	return 0;
- }
- 
- static void virtblk_complete_batch(struct io_comp_batch *iob)
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 9987797620b6..23b356c649b6 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -2858,7 +2858,7 @@ nvme_fc_complete_rq(struct request *rq)
- 	nvme_fc_ctrl_put(ctrl);
- }
- 
--static int nvme_fc_map_queues(struct blk_mq_tag_set *set)
-+static void nvme_fc_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct nvme_fc_ctrl *ctrl = set->driver_data;
- 	int i;
-@@ -2878,7 +2878,6 @@ static int nvme_fc_map_queues(struct blk_mq_tag_set *set)
- 		else
- 			blk_mq_map_queues(map);
- 	}
--	return 0;
- }
- 
- static const struct blk_mq_ops nvme_fc_mq_ops = {
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index de1b4463142d..7a35ac0fe32d 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -450,7 +450,7 @@ static int queue_irq_offset(struct nvme_dev *dev)
- 	return 0;
- }
- 
--static int nvme_pci_map_queues(struct blk_mq_tag_set *set)
-+static void nvme_pci_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct nvme_dev *dev = set->driver_data;
- 	int i, qoff, offset;
-@@ -477,8 +477,6 @@ static int nvme_pci_map_queues(struct blk_mq_tag_set *set)
- 		qoff += map->nr_queues;
- 		offset += map->nr_queues;
- 	}
--
--	return 0;
- }
- 
- /*
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 3100643be299..ba08851e42c3 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -2188,7 +2188,7 @@ static void nvme_rdma_complete_rq(struct request *rq)
- 	nvme_complete_rq(rq);
- }
- 
--static int nvme_rdma_map_queues(struct blk_mq_tag_set *set)
-+static void nvme_rdma_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct nvme_rdma_ctrl *ctrl = set->driver_data;
- 	struct nvmf_ctrl_options *opts = ctrl->ctrl.opts;
-@@ -2231,8 +2231,6 @@ static int nvme_rdma_map_queues(struct blk_mq_tag_set *set)
- 		ctrl->io_queues[HCTX_TYPE_DEFAULT],
- 		ctrl->io_queues[HCTX_TYPE_READ],
- 		ctrl->io_queues[HCTX_TYPE_POLL]);
--
--	return 0;
- }
- 
- static const struct blk_mq_ops nvme_rdma_mq_ops = {
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index e82dcfcda29b..7bf83d119f91 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -2468,7 +2468,7 @@ static blk_status_t nvme_tcp_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	return BLK_STS_OK;
- }
- 
--static int nvme_tcp_map_queues(struct blk_mq_tag_set *set)
-+static void nvme_tcp_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct nvme_tcp_ctrl *ctrl = set->driver_data;
- 	struct nvmf_ctrl_options *opts = ctrl->ctrl.opts;
-@@ -2509,8 +2509,6 @@ static int nvme_tcp_map_queues(struct blk_mq_tag_set *set)
- 		ctrl->io_queues[HCTX_TYPE_DEFAULT],
- 		ctrl->io_queues[HCTX_TYPE_READ],
- 		ctrl->io_queues[HCTX_TYPE_POLL]);
--
--	return 0;
- }
- 
- static int nvme_tcp_poll(struct blk_mq_hw_ctx *hctx, struct io_comp_batch *iob)
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index ab40e2a2633a..677f632d6fd3 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1849,16 +1849,13 @@ static int scsi_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
- 	return 0;
- }
- 
--static int scsi_map_queues(struct blk_mq_tag_set *set)
-+static void scsi_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct Scsi_Host *shost = container_of(set, struct Scsi_Host, tag_set);
- 
--	if (shost->hostt->map_queues) {
--		shost->hostt->map_queues(shost);
--		return 0;
--	}
-+	if (shost->hostt->map_queues)
-+		return shost->hostt->map_queues(shost);
- 	blk_mq_map_queues(&set->map[HCTX_TYPE_DEFAULT]);
--	return 0;
- }
- 
- void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
-diff --git a/include/linux/blk-mq-rdma.h b/include/linux/blk-mq-rdma.h
-index 5cc5f0f36218..53b58c610e76 100644
---- a/include/linux/blk-mq-rdma.h
-+++ b/include/linux/blk-mq-rdma.h
-@@ -5,7 +5,7 @@
- struct blk_mq_tag_set;
- struct ib_device;
- 
--int blk_mq_rdma_map_queues(struct blk_mq_queue_map *map,
-+void blk_mq_rdma_map_queues(struct blk_mq_queue_map *map,
- 		struct ib_device *dev, int first_vec);
- 
- #endif /* _LINUX_BLK_MQ_RDMA_H */
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 5fc5d6b2d55a..b1ae475e34a7 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -630,7 +630,7 @@ struct blk_mq_ops {
- 	 * @map_queues: This allows drivers specify their own queue mapping by
- 	 * overriding the setup-time function that builds the mq_map.
- 	 */
--	int (*map_queues)(struct blk_mq_tag_set *set);
-+	void (*map_queues)(struct blk_mq_tag_set *set);
- 
- #ifdef CONFIG_BLK_DEBUG_FS
- 	/**
