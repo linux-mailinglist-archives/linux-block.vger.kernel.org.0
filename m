@@ -2,87 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BA62595288
-	for <lists+linux-block@lfdr.de>; Tue, 16 Aug 2022 08:30:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637095952D8
+	for <lists+linux-block@lfdr.de>; Tue, 16 Aug 2022 08:46:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbiHPGaD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 16 Aug 2022 02:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
+        id S230329AbiHPGqI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 16 Aug 2022 02:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230028AbiHPG3g (ORCPT
+        with ESMTP id S230230AbiHPGpp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 16 Aug 2022 02:29:36 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209067645F;
-        Mon, 15 Aug 2022 17:44:11 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-33387bf0c4aso8394877b3.11;
-        Mon, 15 Aug 2022 17:44:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc;
-        bh=CsC+j0kptQXyDU8jUOJJkLIgy9EO57j1cJI24xW/Lks=;
-        b=HR1SRzlAc6A+jKkxiSeTn7zBxq84sbDNzQ8EjnD5LQjD7/Jv4uCKQ7PsK4ShUN598D
-         YJ44WChMo+PTbLKHC939js2KpEenZpa0W6/X4lembTFpYdEySWoBKzMuqtGzARQ3KacB
-         JXqs+N6zQe3GNtFq3ya8BKPtYHhMltx7R5t38uzRMmO/utU/vyhaWt75JR1IZq+Lsih+
-         DrHoKI0NaeBpDZGdzn+ldMsTQCpENA9O5dOtKZdD/d4F47hFtJNl5SUlKRrisRD33t1F
-         eHeSDlq2Cs6guhlFXtEAWaa2NR1gYTRj8HBDamjN8gmXpmFfTN64ufkQ+bTcUEzEFN6c
-         /OsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc;
-        bh=CsC+j0kptQXyDU8jUOJJkLIgy9EO57j1cJI24xW/Lks=;
-        b=mb1DN1siBbGfxtw68xUpMkZYKHScGtdXE1JbTxnLDLYWF02RA8RnkedHmCyKkqIiR1
-         FOynfoC6Uk/hpzdGHn1JqR0gCEUDc1uay2+geRmnRQnhSoFuZZBHimdnxCEVhM3l6yr7
-         WlXg4M0Vkj6QDeM891qMG9GjgxIu0x0PBfihwBvHu5Nc6dfy0Jwk1zbregjGN/38oEpQ
-         oW2V+FTSemTrpIBA2NeTRMJiEBAtiGGr1hyr6k05BJGLMODZW7SxJa/UgKUUUrBmA/19
-         JOEMKcMBPTO/TLPJu53x9QPbfoiVQMWg6naam/T/XqY9evg1k6ZyCfoLwpZbg1nb68G5
-         dWjQ==
-X-Gm-Message-State: ACgBeo1FEzm744jHGo6vgtYi2irfodNMeiKqnfRftdb0hcJiYCx+adDP
-        bNYbGOE6TXsx+qNK1ZfHlR7+jkdlRIRt3K8YgaN1VuxXAg9625A25OI=
-X-Google-Smtp-Source: AA6agR5A7f3m84c1TtI6f2r6XmTxvD13yN6Dg+5eE1cWCdEqLisdawEIlErejWKWe55LX3f7hyEwsc6WKkkCnwttmQc=
-X-Received: by 2002:a25:4282:0:b0:67a:6a4a:e138 with SMTP id
- p124-20020a254282000000b0067a6a4ae138mr13665637yba.395.1660610650217; Mon, 15
- Aug 2022 17:44:10 -0700 (PDT)
+        Tue, 16 Aug 2022 02:45:45 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20484FF200;
+        Mon, 15 Aug 2022 18:44:54 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4M6DSX23GTzKQ5v;
+        Tue, 16 Aug 2022 09:43:24 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP4 (Coremail) with SMTP id gCh0CgBnu_iS9vpicjqdAQ--.63281S4;
+        Tue, 16 Aug 2022 09:44:52 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     jack@suse.cz, axboe@kernel.dk, paolo.valente@linaro.org
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+        yukuai1@huaweicloud.com, yi.zhang@huawei.com
+Subject: [PATCH -next 0/3] bfq simple cleanups
+Date:   Tue, 16 Aug 2022 09:56:28 +0800
+Message-Id: <20220816015631.1323948-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-From:   Alec Ari <neotheuser@gmail.com>
-Date:   Mon, 15 Aug 2022 19:43:59 -0500
-Message-ID: <CAM5Ud7OqLyi=iSAT7fUuA2yZSqvhJ7hNZND=L5woMV9UxnBn8A@mail.gmail.com>
-Subject: [PATCH] init/Kconfig: Preserve mtimes in initramfs only if BLK_DEV_INITRD
-To:     linux-block@vger.kernel.org, linux-config@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgBnu_iS9vpicjqdAQ--.63281S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5_7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Alec Ari <alec@onelabs.com>
-Date: Mon, 15 Aug 2022 19:13:12 -0500
-Subject: crypto: Make FIPS_SIGNATURE_SELFTEST depend on CRYPTO_FIPS
+From: Yu Kuai <yukuai3@huawei.com>
 
-Would running FIPS selftests be necessary if FIPS is disabled?
+Yu Kuai (3):
+  block: bfq: remove unused functions
+  block, bfq: remove useless checking in bfq_put_queue()
+  block, bfq: remove useless parameter for bfq_add/del_bfqq_busy()
 
-Signed-off-by: Alec Ari <alec@onelabs.com>
----
- crypto/asymmetric_keys/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ block/bfq-cgroup.c  |  5 -----
+ block/bfq-iosched.c | 14 ++++++--------
+ block/bfq-iosched.h | 18 ++++++++++--------
+ block/bfq-wf2q.c    |  9 ++++++---
+ 4 files changed, 22 insertions(+), 24 deletions(-)
 
-diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
-index 3df3fe4ed..562bbd774 100644
---- a/crypto/asymmetric_keys/Kconfig
-+++ b/crypto/asymmetric_keys/Kconfig
-@@ -81,6 +81,7 @@ config FIPS_SIGNATURE_SELFTEST
-          This option causes some selftests to be run on the signature
-          verification code, using some built in data.  This is required
-          for FIPS.
-+       depends on CRYPTO_FIPS
-        depends on KEYS
-        depends on ASYMMETRIC_KEY_TYPE
-        depends on PKCS7_MESSAGE_PARSER
 -- 
-2.37.2
+2.31.1
+
