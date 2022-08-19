@@ -2,240 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26F035999DD
-	for <lists+linux-block@lfdr.de>; Fri, 19 Aug 2022 12:43:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72B5A599A28
+	for <lists+linux-block@lfdr.de>; Fri, 19 Aug 2022 12:55:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348446AbiHSKk5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 19 Aug 2022 06:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
+        id S1347334AbiHSKqK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 19 Aug 2022 06:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348450AbiHSKky (ORCPT
+        with ESMTP id S1347538AbiHSKqJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 19 Aug 2022 06:40:54 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937C0F43A3
-        for <linux-block@vger.kernel.org>; Fri, 19 Aug 2022 03:40:52 -0700 (PDT)
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20220819104050epoutp0219c7144e720c3d3a3e52ca2422ebd525~MuOO_tF321795917959epoutp02R
-        for <linux-block@vger.kernel.org>; Fri, 19 Aug 2022 10:40:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20220819104050epoutp0219c7144e720c3d3a3e52ca2422ebd525~MuOO_tF321795917959epoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1660905650;
-        bh=jVFwLJ5FLHYEcU2SFU9ctfDNtTJjbt60WwBHMemg378=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T08z+p+PcofxMh4fGG1A6kSspvqIuGE6RjEOUtyGgZldTIxDW5LJez7NF8QztERuv
-         8E5VGCFlSHTAqZ7Cxz2RyXHjbA6M0m972g6B2btqwT9c9Qzocq3DwT/jj8jftpFYfY
-         0WKuM2Qy3ydlNk9EIfqgbra5EAne1VswG5m6pV24=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20220819104049epcas5p132ffb16b2ee1ad35f40b6daf94608be4~MuON3huIn0663706637epcas5p1v;
-        Fri, 19 Aug 2022 10:40:49 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.183]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4M8JFC6nY3z4x9Py; Fri, 19 Aug
-        2022 10:40:47 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        31.30.09494.DA86FF26; Fri, 19 Aug 2022 19:40:45 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20220819104045epcas5p117a9fcb0c3143e877e75e24ceba4f381~MuOKBZuMo0658906589epcas5p1r;
-        Fri, 19 Aug 2022 10:40:45 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20220819104045epsmtrp107ad4c1773c12ffcfddd701f2f479a73~MuOKAraCY1513515135epsmtrp1M;
-        Fri, 19 Aug 2022 10:40:45 +0000 (GMT)
-X-AuditID: b6c32a4a-1ebff70000012516-2d-62ff68ad2660
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CA.85.08802.DA86FF26; Fri, 19 Aug 2022 19:40:45 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.110.206.5]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20220819104043epsmtip179a427156a083ce978bdad743c917f7f~MuOIhIS3p0577205772epsmtip1j;
-        Fri, 19 Aug 2022 10:40:43 +0000 (GMT)
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     axboe@kernel.dk, hch@lst.de, kbusch@kernel.org
-Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, ming.lei@redhat.com,
-        gost.dev@samsung.com, Kanchan Joshi <joshi.k@samsung.com>,
-        Anuj Gupta <anuj20.g@samsung.com>
-Subject: [PATCH for-next 4/4] nvme: wire up fixed buffer support for nvme
- passthrough
-Date:   Fri, 19 Aug 2022 16:00:21 +0530
-Message-Id: <20220819103021.240340-5-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220819103021.240340-1-joshi.k@samsung.com>
+        Fri, 19 Aug 2022 06:46:09 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBECFF4389
+        for <linux-block@vger.kernel.org>; Fri, 19 Aug 2022 03:46:06 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id q14so2033383vke.9
+        for <linux-block@vger.kernel.org>; Fri, 19 Aug 2022 03:46:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=IhG8Oy5T7tOwfiDRsMTf1YaWBJ/K7pb1xkFCd/q0YDo=;
+        b=5PDMZ/tQE9C3+HOQu92AEtYXdIVVCvwuCfdvD5n4YCWZLj6NbfXzwnMVDJHoAHVoqS
+         xU5AqwiU7OPDE/O59BZpj8VY3ok2eywRea2BA2L9VQQc5CV0Fr8q0lsj4eQLsE7uELUt
+         evRYUUZFkA5EO42qQfshqQdXs+cpjyrBqPnKC/5QAHXpWAS9EyQTvHC8XseC/yQfyDro
+         yVzrmo1K27Cbhiyr9Sku1uDpTAG8EYfX4YqcJi1Qpyn+Keopeb+91sNaXywdOJG2hZgd
+         Zh5OE5ve8/1Z0hs/GgVz5sXpmAB2lHbbMm6dMoMO7JcJMeizHhO3uy4BTzsuPfcw2GC8
+         9MBQ==
+X-Gm-Message-State: ACgBeo3Cl7rhiO1nYsK0BQbgQQHkSe1pXmMzGOEzemsn+FaJK7BskK7t
+        DBNR4gKoetzd2XVZE0jojZNS2zMGyUPUEg==
+X-Google-Smtp-Source: AA6agR6ofoS71fgi7ainthEQ3EBgwJOCxOelrZ1zV9TY+zdsnqvdjLo493dpBSdme1BQPRQunfTGHg==
+X-Received: by 2002:a05:6122:2d4:b0:377:7cf1:5e3b with SMTP id k20-20020a05612202d400b003777cf15e3bmr2800998vki.9.1660905965762;
+        Fri, 19 Aug 2022 03:46:05 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id h186-20020a1fd0c3000000b003793fcd6747sm2181474vkg.13.2022.08.19.03.46.05
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Aug 2022 03:46:05 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id h67so3089093vsc.11
+        for <linux-block@vger.kernel.org>; Fri, 19 Aug 2022 03:46:05 -0700 (PDT)
+X-Received: by 2002:a05:6102:321c:b0:390:217d:df6d with SMTP id
+ r28-20020a056102321c00b00390217ddf6dmr874776vsf.35.1660905965127; Fri, 19 Aug
+ 2022 03:46:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBJsWRmVeSWpSXmKPExsWy7bCmhu7ajP9JBmcabSyaJvxltlh9t5/N
-        4uaBnUwWK1cfZbJ413qOxeLo/7dsFpMOXWO02HtL22L+sqfsFocmNzM5cHlcPlvqsWlVJ5vH
-        5iX1HrtvNrB5vN93lc2jb8sqRo/Pm+QC2KOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwM
-        dQ0tLcyVFPISc1NtlVx8AnTdMnOAjlNSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTk
-        FJgU6BUn5haX5qXr5aWWWBkaGBiZAhUmZGec2jyVqeC/csX3OxfZGxgXy3YxcnBICJhI/D+f
-        3sXIxSEksJtR4tPeHlYI5xOjxJv7rWwQzmdGiTlTfrN3MXKCdbTu/QxVtYtR4sfuRcxwVbdX
-        rGUGmcsmoClxYXIpSIOIgJHE/k8nwRqYBS4wStzbeZMFJCEsEC6x43g7K4jNIqAqsehRLzOI
-        zStgKXHxWS8bxDZ5iZmXvoNt5hSwkpi19CobRI2gxMmZT8DmMAPVNG+dDXaEhEAvh8T1TXOh
-        TnWReDNtKhOELSzx6vgWqLiUxMv+Nig7WeLSzHNQNSUSj/cchLLtJVpP9YM9wwz0zPpd+hC7
-        +CR6fz9hgoQdr0RHmxBEtaLEvUlPWSFscYmHM5awQpR4SNyfoQMJnl5giG7tZ5zAKD8LyQez
-        kHwwC2HZAkbmVYySqQXFuempxaYFRnmp5fB4Tc7P3cQITqJaXjsYHz74oHeIkYmD8RCjBAez
-        kgjvjTt/koR4UxIrq1KL8uOLSnNSiw8xmgKDeCKzlGhyPjCN55XEG5pYGpiYmZmZWBqbGSqJ
-        83pd3ZQkJJCeWJKanZpakFoE08fEwSnVwFRU+LJuq0hlX7jR1/f7aqfnz722Ysn6zQ5ZO5VY
-        X2nENRYLunDOcItNqNFi36a7Qbjr+s3phi+CTQ85nHkp+DhNY8LJ/QdrOw91CpxP8O2+8yl/
-        kYh5WfAtgxkv+VUUP+ovip3irLZzzd8DK3IOr2XhfrIh5IpYTMTmpqYjyTwsKc85LZ+GfddJ
-        FVli0PZbWm3Pzm0TQ9xDzGtZ9mwtefTr2QNehlNrLOLTvTa8araN51OJZU1ewjn32LG0+UEW
-        c2dczbyvd2nHR77+3PluO67O2cz7eUKPzJ3Izh+ZDFZvLRbPnsactVpycmuv3o636zLszm/k
-        OnXmRny+ruuvTgl9kcbn3BHlXp/4P2lvvarEUpyRaKjFXFScCACBHKnCKwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLLMWRmVeSWpSXmKPExsWy7bCSnO7ajP9JBkcnSVk0TfjLbLH6bj+b
-        xc0DO5ksVq4+ymTxrvUci8XR/2/ZLCYdusZosfeWtsX8ZU/ZLQ5NbmZy4PK4fLbUY9OqTjaP
-        zUvqPXbfbGDzeL/vKptH35ZVjB6fN8kFsEdx2aSk5mSWpRbp2yVwZZzaPJWp4L9yxfc7F9kb
-        GBfLdjFyckgImEi07v3M2sXIxSEksINR4tuP9WwQCXGJ5ms/2CFsYYmV/56zQxR9ZJT4MeM8
-        UBEHB5uApsSFyaUgNSICZhJLD69hAalhFrjBKLGvdwoTSEJYIFRi3uwuZhCbRUBVYtGjXjCb
-        V8BS4uKzXqhl8hIzL30HW8YpYCUxa+lVsLgQUM2vvx1MEPWCEidnPmEBsZmB6pu3zmaewCgw
-        C0lqFpLUAkamVYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwTGgpbWDcc+qD3qHGJk4
-        GA8xSnAwK4nw3rjzJ0mINyWxsiq1KD++qDQntfgQozQHi5I474Wuk/FCAumJJanZqakFqUUw
-        WSYOTqkGJpfm19t+rpScX7Ep5/uTR0of2+5tW6B/S3nqoVvFt5LntE1aprXl7PpFKw69M7yU
-        U+P30zbO8SkH0/VKtQVu9cvyn9sJLOXr8Pn0YKnDDv6C34Yb33L8WNwjvXyyqL472zbHedaO
-        F983FqnIXKp2FLbbFXe3NKRkxZZ9ui93ijzJjdjq/iM2+bbt/LbOOe8shDvbbjH6++dmqJ53
-        YO3mPOkUvGRjj1XYpY7yY9/vfexO2Omce6hK8e6eiqAFt49wfdReFq79QTdT7mP9F8X08t9z
-        xVqft81elxKY0i2//x5jpaXLaaWm+kWeHknXogV2he8Urj3IK7974/FU7gNv9760WtnmP0tp
-        7YH6p88/b1BiKc5INNRiLipOBAAkQHBq8AIAAA==
-X-CMS-MailID: 20220819104045epcas5p117a9fcb0c3143e877e75e24ceba4f381
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220819104045epcas5p117a9fcb0c3143e877e75e24ceba4f381
-References: <20220819103021.240340-1-joshi.k@samsung.com>
-        <CGME20220819104045epcas5p117a9fcb0c3143e877e75e24ceba4f381@epcas5p1.samsung.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220816140713.84893-1-luca.boccassi@gmail.com>
+In-Reply-To: <20220816140713.84893-1-luca.boccassi@gmail.com>
+From:   Luca Boccassi <bluca@debian.org>
+Date:   Fri, 19 Aug 2022 11:45:54 +0100
+X-Gmail-Original-Message-ID: <CAMw=ZnRSV3uF+HFjvL5Fdb_S_RB=3YrWT4ZqtG9e4ZmJTpehVQ@mail.gmail.com>
+Message-ID: <CAMw=ZnRSV3uF+HFjvL5Fdb_S_RB=3YrWT4ZqtG9e4ZmJTpehVQ@mail.gmail.com>
+Subject: Re: [PATCH v7] block: sed-opal: Add ioctl to return device status
+To:     linux-block@vger.kernel.org
+Cc:     Milan Broz <gmazyland@gmail.com>, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-if io_uring sends passthrough command with IO_URING_F_FIXEDBUFS flag,
-use the pre-registered buffer to form the bio.
-While at it modify nvme_submit_user_cmd to take ubuffer as plain integer
-argument, and do away with nvme_to_user_ptr conversion in callers.
+On Tue, 16 Aug 2022 at 15:07, <luca.boccassi@gmail.com> wrote:
+>
+> From: "dougmill@linux.vnet.ibm.com" <dougmill@linux.vnet.ibm.com>
+>
+> Provide a mechanism to retrieve basic status information about
+> the device, including the "supported" flag indicating whether
+> SED-OPAL is supported. The information returned is from the various
+> feature descriptors received during the discovery0 step, and so
+> this ioctl does nothing more than perform the discovery0 step
+> and then save the information received. See "struct opal_status"
+> and OPAL_FL_* bits for the status information currently returned.
+>
+> This is necessary to be able to check whether a device is OPAL
+> enabled, set up, locked or unlocked from userspace programs
+> like systemd-cryptsetup and libcryptsetup. Right now we just
+> have to assume the user 'knows' or blindly attempt setup/lock/unlock
+> operations.
+>
+> Signed-off-by: Douglas Miller <dougmill@linux.vnet.ibm.com>
+> Tested-by: Luca Boccassi <bluca@debian.org>
+> Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
+> Acked-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+> ---
+> v2: https://patchwork.kernel.org/project/linux-block/patch/612795b5.tj7FMS9wzchsMzrK%25dougmill@linux.vnet.ibm.com/
+> v3: resend on request, after rebasing and testing on my machine
+>     https://patchwork.kernel.org/project/linux-block/patch/20220125215248.6489-1-luca.boccassi@gmail.com/
+> v4: it's been more than 7 months and no alternative approach has appeared.
+>     we really need to be able to identify and query the status of a sed-opal
+>     device, so rebased and resending.
+> v5: as requested by reviewer, add __32 reserved to the UAPI ioctl struct to align to 64
+>     bits and to reserve space for future expansion
+> v6: as requested by reviewer, update commit message with use case
+> v7: as requested by reviewer, remove braces around single-line 'if'
+>     added received acked-by/reviewed-by tags
+>
+>  block/opal_proto.h            |  5 ++
+>  block/sed-opal.c              | 89 ++++++++++++++++++++++++++++++-----
+>  include/linux/sed-opal.h      |  1 +
+>  include/uapi/linux/sed-opal.h | 13 +++++
+>  4 files changed, 96 insertions(+), 12 deletions(-)
 
-Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
----
- drivers/nvme/host/ioctl.c | 38 ++++++++++++++++++++++++++------------
- 1 file changed, 26 insertions(+), 12 deletions(-)
+Hello Jens,
 
-diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-index 7756b439a688..5f2e2d31f5c7 100644
---- a/drivers/nvme/host/ioctl.c
-+++ b/drivers/nvme/host/ioctl.c
-@@ -65,10 +65,11 @@ static int nvme_finish_user_metadata(struct request *req, void __user *ubuf,
- }
- 
- static struct request *nvme_alloc_user_request(struct request_queue *q,
--		struct nvme_command *cmd, void __user *ubuffer,
-+		struct nvme_command *cmd, u64 ubuffer,
- 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
- 		u32 meta_seed, void **metap, unsigned timeout, bool vec,
--		blk_opf_t rq_flags, blk_mq_req_flags_t blk_flags)
-+		blk_opf_t rq_flags, blk_mq_req_flags_t blk_flags,
-+		struct io_uring_cmd *ioucmd, bool fixedbufs)
- {
- 	bool write = nvme_is_write(cmd);
- 	struct nvme_ns *ns = q->queuedata;
-@@ -89,14 +90,27 @@ static struct request *nvme_alloc_user_request(struct request_queue *q,
- 
- 	if (ubuffer && bufflen) {
- 		if (!vec)
--			ret = blk_rq_map_user(q, req, NULL, ubuffer, bufflen,
--				GFP_KERNEL);
-+			if (fixedbufs) {
-+				struct iov_iter iter;
-+
-+				ret = io_uring_cmd_import_fixed(ubuffer,
-+						bufflen, rq_data_dir(req),
-+						&iter, ioucmd);
-+				if (ret < 0)
-+					goto out;
-+				ret = blk_rq_map_user_fixedb(req, &iter);
-+			} else {
-+				ret = blk_rq_map_user(q, req, NULL,
-+						nvme_to_user_ptr(ubuffer),
-+						bufflen, GFP_KERNEL);
-+			}
- 		else {
- 			struct iovec fast_iov[UIO_FASTIOV];
- 			struct iovec *iov = fast_iov;
- 			struct iov_iter iter;
- 
--			ret = import_iovec(rq_data_dir(req), ubuffer, bufflen,
-+			ret = import_iovec(rq_data_dir(req),
-+					nvme_to_user_ptr(ubuffer), bufflen,
- 					UIO_FASTIOV, &iov, &iter);
- 			if (ret < 0)
- 				goto out;
-@@ -132,7 +146,7 @@ static struct request *nvme_alloc_user_request(struct request_queue *q,
- }
- 
- static int nvme_submit_user_cmd(struct request_queue *q,
--		struct nvme_command *cmd, void __user *ubuffer,
-+		struct nvme_command *cmd, u64 ubuffer,
- 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
- 		u32 meta_seed, u64 *result, unsigned timeout, bool vec)
- {
-@@ -142,7 +156,7 @@ static int nvme_submit_user_cmd(struct request_queue *q,
- 	int ret;
- 
- 	req = nvme_alloc_user_request(q, cmd, ubuffer, bufflen, meta_buffer,
--			meta_len, meta_seed, &meta, timeout, vec, 0, 0);
-+			meta_len, meta_seed, &meta, timeout, vec, 0, 0, NULL, 0);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
- 
-@@ -220,7 +234,7 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
- 	c.rw.appmask = cpu_to_le16(io.appmask);
- 
- 	return nvme_submit_user_cmd(ns->queue, &c,
--			nvme_to_user_ptr(io.addr), length,
-+			io.addr, length,
- 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0,
- 			false);
- }
-@@ -274,7 +288,7 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 		timeout = msecs_to_jiffies(cmd.timeout_ms);
- 
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			cmd.addr, cmd.data_len,
- 			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
- 			0, &result, timeout, false);
- 
-@@ -320,7 +334,7 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 		timeout = msecs_to_jiffies(cmd.timeout_ms);
- 
- 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
--			nvme_to_user_ptr(cmd.addr), cmd.data_len,
-+			cmd.addr, cmd.data_len,
- 			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
- 			0, &cmd.result, timeout, vec);
- 
-@@ -457,11 +471,11 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 		rq_flags |= REQ_POLLED;
- 
- retry:
--	req = nvme_alloc_user_request(q, &c, nvme_to_user_ptr(d.addr),
-+	req = nvme_alloc_user_request(q, &c, d.addr,
- 			d.data_len, nvme_to_user_ptr(d.metadata),
- 			d.metadata_len, 0, &meta, d.timeout_ms ?
- 			msecs_to_jiffies(d.timeout_ms) : 0, vec, rq_flags,
--			blk_flags);
-+			blk_flags, ioucmd, issue_flags & IO_URING_F_FIXEDBUFS);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
- 	req->end_io = nvme_uring_cmd_end_io;
--- 
-2.25.1
+Is there anything else I can do for this patch? I've got two acks. We
+really need this interface in place to start working on supporting
+sed/opal in cryptsetup.
 
+Thanks!
+
+Kind regards,
+Luca Boccassi
