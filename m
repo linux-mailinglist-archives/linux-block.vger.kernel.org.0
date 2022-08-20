@@ -2,60 +2,110 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FFD459AA1B
-	for <lists+linux-block@lfdr.de>; Sat, 20 Aug 2022 02:37:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D851C59AADD
+	for <lists+linux-block@lfdr.de>; Sat, 20 Aug 2022 05:20:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245319AbiHTAeN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 19 Aug 2022 20:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39026 "EHLO
+        id S239003AbiHTDRP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 19 Aug 2022 23:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245489AbiHTAd4 (ORCPT
+        with ESMTP id S242928AbiHTDRM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 19 Aug 2022 20:33:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F8ED13E33;
-        Fri, 19 Aug 2022 17:33:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CD9E61900;
-        Sat, 20 Aug 2022 00:33:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46A39C433D7;
-        Sat, 20 Aug 2022 00:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660955618;
-        bh=2UioO3jIqUCggDOliY/3dPwIKxowKS7N1pNMvwgRRJY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p7YXCiqntWaRVlaJVs0qsv0/0okcSkkBv5tX156c0hQa69FiHuFAOuyU2H14/uhPh
-         qkFkQqxM4QZW8Uk24/T8GgmF1hsH9T7n23yOG11yBTTC78vlPfWfsuoSmR6p/47Zwd
-         S7rQFXLxLwXMyC84969EnRkhQDcVdOTnKURgs1tJrEqikdWe3N0un1XrVFCRdz704n
-         Ievfd5LYGzKFanXasRnR0PNi5+gnbYVmn2sZlUsswTIJIYEs4ag4Vyn/LqgZa4kkcK
-         eAom2kY4OTnmNb9mf0PNZqubwgxSrHGt6gCL1UeiAtkbhFzyiP5LLMH88dZk/owdi9
-         YbUQ3xISxHF3Q==
-Date:   Fri, 19 Aug 2022 17:33:36 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v4 6/9] f2fs: don't allow DIO reads but not DIO writes
-Message-ID: <YwAr4MKgnjljdXiA@sol.localdomain>
-References: <20220722071228.146690-1-ebiggers@kernel.org>
- <20220722071228.146690-7-ebiggers@kernel.org>
- <YtyoF89iOg8gs7hj@google.com>
- <Yt7dCcG0ns85QqJe@sol.localdomain>
- <YuXyKh8Zvr56rR4R@google.com>
- <YvrrEcw4E+rpDLwM@sol.localdomain>
- <YwAlbsorBsshkxfU@google.com>
+        Fri, 19 Aug 2022 23:17:12 -0400
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918EDEA33C
+        for <linux-block@vger.kernel.org>; Fri, 19 Aug 2022 20:17:09 -0700 (PDT)
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20220820031704epoutp0258c253bcc74179060090cd6a2806cbe4~M70DoPg8o3018930189epoutp02U
+        for <linux-block@vger.kernel.org>; Sat, 20 Aug 2022 03:17:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20220820031704epoutp0258c253bcc74179060090cd6a2806cbe4~M70DoPg8o3018930189epoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1660965424;
+        bh=LYBfCmNEBDUP3UppdMbGtkjVR2WxW77Y7LC7GOlGc+Q=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=AjsoaCHheqfZHquL17ks9m+Z2PMK7Slnlu4adFZkixGyIAHOr3QeSMEdsFCU1uKOw
+         ccAQd4t/iHN+SmxHJGbVKWNSHTdacdbuif75/cdVbHsxabOLcicmB1lks6XYsFemvF
+         lBD3q5sd1Yn2mtpr9XOkXZqthzn+CpQgOwxnvEHQ=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20220820031704epcas5p4d0c5e9c896b337d6247af2444e8b4ae7~M70DGut4m0638706387epcas5p47;
+        Sat, 20 Aug 2022 03:17:04 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.182]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4M8kLj2XTGz4x9Pv; Sat, 20 Aug
+        2022 03:17:01 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C2.E8.49477.D2250036; Sat, 20 Aug 2022 12:17:01 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20220820031700epcas5p3b9a08cb9d15344e5a5d978b1dac81da1~M70AMNU5A0596905969epcas5p3K;
+        Sat, 20 Aug 2022 03:17:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20220820031700epsmtrp164827e0e029d491ab1c95e1ac7b2d642~M70ALa5DO2284922849epsmtrp1l;
+        Sat, 20 Aug 2022 03:17:00 +0000 (GMT)
+X-AuditID: b6c32a49-82dff7000000c145-d7-6300522d6df7
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        86.39.08905.C2250036; Sat, 20 Aug 2022 12:17:00 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20220820031659epsmtip13542c61eff985ebd6339522951bc52a3~M7z_1KWrp1949119491epsmtip1U;
+        Sat, 20 Aug 2022 03:16:59 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk, hch@lst.de, kbusch@kernel.org
+Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, ming.lei@redhat.com,
+        gost.dev@samsung.com, Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH for-next v2 0/4] fixed-buffer for uring-cmd/passthrough
+Date:   Sat, 20 Aug 2022 08:36:16 +0530
+Message-Id: <20220820030620.59003-1-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YwAlbsorBsshkxfU@google.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjk+LIzCtJLcpLzFFi42LZdlhTU1c3iCHZ4MQTQYvVd/vZLG4e2Mlk
+        sXL1USaLd63nWCyO/n/LZjHp0DVGi723tC3mL3vKbnFocjOTA6fH5bOlHptWdbJ5bF5S77H7
+        ZgObx/t9V9k8+rasYvT4vEkugD0q2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJc
+        SSEvMTfVVsnFJ0DXLTMH6C4lhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJgV5x
+        Ym5xaV66Xl5qiZWhgYGRKVBhQnbGwpZTTAUP+Co691o0MN7k7mLk5JAQMJGY8uwXWxcjF4eQ
+        wG5GiWkXLrNCOJ8YJXZ33GMFqRIS+MYo8exxNUzH3Cl7oTr2MkqsaTkB1fGZUeLtuoksXYwc
+        HGwCmhIXJpeCNIgIGEns/3QSrIZZYC2jxOm9X5hAEsIC7hIvX6xlAbFZBFQlLk+bCxbnFbCQ
+        WP/zHzPENnmJmZe+s0PEBSVOznwCVs8MFG/eOpsZZKiEwFt2ic+P1rFDNLhI/GyZyQhhC0u8
+        Or4FKi4l8bK/DcpOlrg08xwThF0i8XjPQSjbXqL1VD8zyAPMQA+s36UPsYtPovf3EyaQsIQA
+        r0RHmxBEtaLEvUlPWSFscYmHM5ZA2R4S/z8cYocEXKxEz9Uu5gmMcrOQfDALyQezEJYtYGRe
+        xSiZWlCcm55abFpgmJdaDo/K5PzcTYzgBKnluYPx7oMPeocYmTgYDzFKcDArifDeuPMnSYg3
+        JbGyKrUoP76oNCe1+BCjKTBYJzJLiSbnA1N0Xkm8oYmlgYmZmZmJpbGZoZI4r9fVTUlCAumJ
+        JanZqakFqUUwfUwcnFINTBtfKjcLPXG3tI/48rBjm7bH4kVzl340vqTVtvrtsgb7nCeplWqa
+        KWlSLqelPJYf8PI608psc7xh+/cdnO+YVR9a3V7eY/0+vXzte/EzE2furprm628dM6dcovtE
+        2cJo9x3xyzcsyb/NyzW/Xp85zP7mq4u25Xv2rHyVGiIs3nLSfsI8xbDXlw/dXrLycrca04Rz
+        /4XWVXqtc191/8i5xMfi5/uPzzwYdyBy60TL1pK0pXHHZs2uWirfwZNrcdClKMO3bOFGUVPD
+        czoi3vWd/37tW2sx0daNf+EarVeGCh9Eo5/v+r3tzf3IU/Xq+baTu2bUZR6ZOFkn273lm9W1
+        wxIPptn9Enfrt8gqrnLmMVJiKc5INNRiLipOBAAvhfSoGQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPLMWRmVeSWpSXmKPExsWy7bCSnK5OEEOywf13xhar7/azWdw8sJPJ
+        YuXqo0wW71rPsVgc/f+WzWLSoWuMFntvaVvMX/aU3eLQ5GYmB06Py2dLPTat6mTz2Lyk3mP3
+        zQY2j/f7rrJ59G1ZxejxeZNcAHsUl01Kak5mWWqRvl0CV8bCllNMBQ/4Kjr3WjQw3uTuYuTk
+        kBAwkZg7ZS9bFyMXh5DAbkaJj/fXsEAkxCWar/1gh7CFJVb+e84OUfSRUeLs1AWMXYwcHGwC
+        mhIXJpeC1IgImEksPQzSy8XBLLCZUeLT6WPMIAlhAXeJly/Wgg1lEVCVuDxtLhOIzStgIbH+
+        5z9miAXyEjMvfWeHiAtKnJz5BKyeGSjevHU28wRGvllIUrOQpBYwMq1ilEwtKM5Nzy02LDDM
+        Sy3XK07MLS7NS9dLzs/dxAgOYy3NHYzbV33QO8TIxMF4iFGCg1lJhPfGnT9JQrwpiZVVqUX5
+        8UWlOanFhxilOViUxHkvdJ2MFxJITyxJzU5NLUgtgskycXBKNTDFr3bSnFI/Pcn9fen+4/0R
+        CSwJ8ya0txbdmT1hs882669H7Pc1/1j9JXmXY6RarOKr/VcfvTJdYdVsrVX4/9wt683Kl0/u
+        vlhreG9Xy70kzfiGO0/3L81cUZnD6bzzbe6ls3EWH/i4z8mlNKbMfsJ5nbWIW9A/Vyx83fFy
+        +R+u5U6JF09ejJq28hVb2iXR6Puc0mZz9l06fvVVienbX8kHL2kJfu76ND17Euex+MNsaSLy
+        +5fafBOcY1uWan3eaO2O6h32p9jjw5daPZL0in15NukzC8uljP9amyu41De6H3Kazanz/Utl
+        +/TLn9eubFa53bcmhp0pO/wRM+MqK/0JMT9YbUKYTJafcrr0RPKeEktxRqKhFnNRcSIA9ppL
+        BNICAAA=
+X-CMS-MailID: 20220820031700epcas5p3b9a08cb9d15344e5a5d978b1dac81da1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220820031700epcas5p3b9a08cb9d15344e5a5d978b1dac81da1
+References: <CGME20220820031700epcas5p3b9a08cb9d15344e5a5d978b1dac81da1@epcas5p3.samsung.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,79 +113,56 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Aug 19, 2022 at 05:06:06PM -0700, Jaegeuk Kim wrote:
-> On 08/15, Eric Biggers wrote:
-> > On Sat, Jul 30, 2022 at 08:08:26PM -0700, Jaegeuk Kim wrote:
-> > > On 07/25, Eric Biggers wrote:
-> > > > On Sat, Jul 23, 2022 at 07:01:59PM -0700, Jaegeuk Kim wrote:
-> > > > > On 07/22, Eric Biggers wrote:
-> > > > > > From: Eric Biggers <ebiggers@google.com>
-> > > > > > 
-> > > > > > Currently, if an f2fs filesystem is mounted with the mode=lfs and
-> > > > > > io_bits mount options, DIO reads are allowed but DIO writes are not.
-> > > > > > Allowing DIO reads but not DIO writes is an unusual restriction, which
-> > > > > > is likely to be surprising to applications, namely any application that
-> > > > > > both reads and writes from a file (using O_DIRECT).  This behavior is
-> > > > > > also incompatible with the proposed STATX_DIOALIGN extension to statx.
-> > > > > > Given this, let's drop the support for DIO reads in this configuration.
-> > > > > 
-> > > > > IIRC, we allowed DIO reads since applications complained a lower performance.
-> > > > > So, I'm afraid this change will make another confusion to users. Could
-> > > > > you please apply the new bahavior only for STATX_DIOALIGN?
-> > > > > 
-> > > > 
-> > > > Well, the issue is that the proposed STATX_DIOALIGN fields cannot represent this
-> > > > weird case where DIO reads are allowed but not DIO writes.  So the question is
-> > > > whether this case actually matters, in which case we should make STATX_DIOALIGN
-> > > > distinguish between DIO reads and DIO writes, or whether it's some odd edge case
-> > > > that doesn't really matter, in which case we could just fix it or make
-> > > > STATX_DIOALIGN report that DIO is unsupported.  I was hoping that you had some
-> > > > insight here.  What sort of applications want DIO reads but not DIO writes?
-> > > > Is this common at all?
-> > > 
-> > > I think there's no specific application to use the LFS mode at this
-> > > moment, but I'd like to allow DIO read for zoned device which will be
-> > > used for Android devices.
-> > > 
-> > 
-> > So if the zoned device feature becomes widely adopted, then STATX_DIOALIGN will
-> > be useless on all Android devices?  That sounds undesirable. 
-> 
-> Do you have a plan to adopt STATX_DIOALIGN in android?
+Hi,
 
-Nothing specific, but statx() is among the system calls that are supported by
-Android's libc and that apps are allowed to use.  So STATX_DIOALIGN would become
-available as well.  I'd prefer if it actually worked properly if apps, or
-Android system components, do actually try to use it (or need to use it)...
+Currently uring-cmd lacks the ability to leverage the pre-registered
+buffers. This series adds new fixed-buffer variant of uring command
+IORING_OP_URING_CMD_FIXED, and plumbs nvme passthrough to work with
+that.
 
-> > What we need to do is make a decision about whether this means we should build
-> > in a stx_dio_direction field (indicating no support / readonly support /
-> > writeonly support / readwrite support) into the API from the beginning.  If we
-> > don't do that, then I don't think we could simply add such a field later, as the
-> > statx_dio_*_align fields will have already been assigned their meaning.  I think
-> > we'd instead have to "duplicate" the API, with STATX_DIOROALIGN and
-> > statx_dio_ro_*_align fields.  That seems uglier than building a directional
-> > indicator into the API from the beginning.  On the other hand, requiring all
-> > programs to check stx_dio_direction would add complexity to using the API.
-> > 
-> > Any thoughts on this?
-> 
-> I haven't seen the details of the implementation tho, why not supporting it
-> only if filesystem has the same DIO RW policy?
+Patch 1, 3 = prep/infrastructure
+Patch 2 = expand io_uring command to use registered-buffers
+Patch 4 = expand nvme passthrough to use registered-buffers
 
-As I've mentioned, we could of course make STATX_DIOALIGN report that DIO is
-unsupported when the DIO support is read-only.
+Using registered-buffers showed 9-12% IOPS gain in my setup.
+QD   Without     With
+8     853        928
+32    1370       1528
+128   1505       1631
 
-The thing that confuses me based on the responses so far is that there seem to
-be two camps of people: (1) people who really want STATX_DIOALIGN, and who don't
-think that read-only DIO support should exist so they don't want STATX_DIOALIGN
-to support it; and (2) people who feel that read-only DIO support is perfectly
-reasonable and useful, and who don't care whether STATX_DIOALIGN supports it
-because they don't care about STATX_DIOALIGN in the first place.
+This series is prepared on top of:
+for-next + iopoll-passthru series [1] + passthru optimization series [2].
+A unified branch with all that is present here:
+https://github.com/OpenMPDK/linux/commits/feat/pt_fixedbufs_v1
 
-While both camps seem to agree that STATX_DIOALIGN shouldn't support read-only
-DIO, it is for totally contradictory reasons, so it's not very convincing.  We
-should ensure that we have rock-solid reasoning before committing to a new UAPI
-that will have to be permanently supported...
+Fio that can use IORING_OP_URING_CMD_FIXED (on specifying fixedbufs=1)
+is here -
+https://github.com/joshkan/fio/commit/300f1187f75aaf2c502c180041943c340670d0ac
 
-- Eric
+Changes since v1:
+- Fix a naming issue for an exported helper
+
+[1] https://lore.kernel.org/linux-block/20220807183607.352351-1-joshi.k@samsung.com/
+[2] https://lore.kernel.org/linux-block/20220806152004.382170-1-axboe@kernel.dk/
+
+Anuj Gupta (2):
+  io_uring: introduce io_uring_cmd_import_fixed
+  io_uring: introduce fixed buffer support for io_uring_cmd
+
+Kanchan Joshi (2):
+  block: add helper to map bvec iterator for passthrough
+  nvme: wire up fixed buffer support for nvme passthrough
+
+ block/blk-map.c               | 71 +++++++++++++++++++++++++++++++++++
+ drivers/nvme/host/ioctl.c     | 38 +++++++++++++------
+ include/linux/blk-mq.h        |  1 +
+ include/linux/io_uring.h      | 10 +++++
+ include/uapi/linux/io_uring.h |  1 +
+ io_uring/opdef.c              | 10 +++++
+ io_uring/rw.c                 |  3 +-
+ io_uring/uring_cmd.c          | 26 +++++++++++++
+ 8 files changed, 147 insertions(+), 13 deletions(-)
+
+-- 
+2.25.1
+
