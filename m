@@ -2,72 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1573359B535
-	for <lists+linux-block@lfdr.de>; Sun, 21 Aug 2022 17:51:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0F1D59B666
+	for <lists+linux-block@lfdr.de>; Sun, 21 Aug 2022 23:00:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229851AbiHUPvf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 21 Aug 2022 11:51:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49444 "EHLO
+        id S231461AbiHUU7k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 21 Aug 2022 16:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231328AbiHUPve (ORCPT
+        with ESMTP id S230281AbiHUU7j (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 21 Aug 2022 11:51:34 -0400
-Received: from mail-yw1-x1142.google.com (mail-yw1-x1142.google.com [IPv6:2607:f8b0:4864:20::1142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A511FCF9
-        for <linux-block@vger.kernel.org>; Sun, 21 Aug 2022 08:51:33 -0700 (PDT)
-Received: by mail-yw1-x1142.google.com with SMTP id 00721157ae682-33387bf0c4aso233795157b3.11
-        for <linux-block@vger.kernel.org>; Sun, 21 Aug 2022 08:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :mime-version:from:to:cc;
-        bh=lYgoSzYrNdAJHRDpvyMHA0AN8YmF5hdaYVpe90B0Tz8=;
-        b=G129SMtU59wTnXy7MwiVG+nTpWQiUzpSux/o6wewBlRFz0zPQ1/Z8IRQRyRWquc9qs
-         syqUwjIjxASz/a0t8a0omw75LNc4kxXe10lIXgT8Ml0ToLlkYXRLGGpNbTirKk7viSMl
-         NGGiQ2qV9CH+ASxTFSCD9sT6MtFK0oVcE5E24RTvemldBIXUS4VTqSj61T0mINZq8ghB
-         iLyWHD2k4BT5vc6ret9By7e6tYtuSFbne/CvYsTZ1FBsJ9YUfOj2+pklrbi9joWx/bJL
-         bK8LqucgegxItDHiTPRHyUuawJahyIdVXUDg/TNOYvNbTL8XLtjyeJUOEQCgL4aN8ayK
-         FtIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=lYgoSzYrNdAJHRDpvyMHA0AN8YmF5hdaYVpe90B0Tz8=;
-        b=uoE/gkycV6jNO6gkVDc5Yg6jMkOFy0iuCedB1IT2oI0u4gupsFnmgRPoUlzIKJ6XvI
-         w2geVQ/MNVewObDGVeirM+GW5aminkBmvRK1C8qHXKkMj+hfMVMuCE6U8cegTrw+hWCm
-         g/b2MfZJNE5DhEYioEPz4zV54vAdmX5tbt9gEFWNTfePewgPMwE+dbCVlMGaNRCWI/bD
-         6uoDbGHCoSSW0llXBcZd26ifK+AowR88SaFYf1bqt8r9gws9xpmutbaUdtae5/iMNaWE
-         nv1NPKktY7HrOdtU26TQ7srE0+LZBiMscdZh1Q7dqObW1dFaJM8bCYxghZ7WHj/BtIiN
-         iU/A==
-X-Gm-Message-State: ACgBeo1rLMEEtuB/QHlaV2gzgF0igfmGRb6+jlYdOfs0X7in8WBGnlPU
-        0gHqVlShBaIqIZczVBcz0WXo3EaYZcec9y83dio=
-X-Google-Smtp-Source: AA6agR5bTJ4M4PETne0iMMuN0ZjK7/wR++cUluLx7hI75BThYXXyq6W8cieq3t2p8+FucOCs3476tWRZXUL3iAgYqU0=
-X-Received: by 2002:a81:817:0:b0:333:c5c9:dfb4 with SMTP id
- 23-20020a810817000000b00333c5c9dfb4mr16304549ywi.476.1661097092813; Sun, 21
- Aug 2022 08:51:32 -0700 (PDT)
+        Sun, 21 Aug 2022 16:59:39 -0400
+Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D39E20BF5;
+        Sun, 21 Aug 2022 13:59:38 -0700 (PDT)
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+        (No client certificate requested)
+        by mail.lichtvoll.de (Postfix) with ESMTPSA id 7B2214C45AF;
+        Sun, 21 Aug 2022 22:59:34 +0200 (CEST)
+From:   Martin Steigerwald <martin@lichtvoll.de>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Michael Schmitz <schmitzmic@gmail.com>
+Cc:     linux-m68k@vger.kernel.org, geert@linux-m68k.org
+Subject: Re: [PATCH v7 2/2] block: add overflow checks for Amiga partition support
+Date:   Sun, 21 Aug 2022 22:59:32 +0200
+Message-ID: <2669426.mvXUDI8C0e@lichtvoll.de>
+In-Reply-To: <0bf2e4f9-a1c1-3847-a2b5-d9b9eaaa783a@gmail.com>
+References: <1539570747-19906-1-git-send-email-schmitzmic@gmail.com> <71d9f2fe-42d1-2a09-a860-702b42a3a733@kernel.dk> <0bf2e4f9-a1c1-3847-a2b5-d9b9eaaa783a@gmail.com>
 MIME-Version: 1.0
-Sender: shadainarang444@gmail.com
-Received: by 2002:a05:7010:628e:b0:2ee:fd59:7df0 with HTTP; Sun, 21 Aug 2022
- 08:51:32 -0700 (PDT)
-From:   Pavillion Tchi <tchipavillion7@gmail.com>
-Date:   Sun, 21 Aug 2022 15:51:32 +0000
-X-Google-Sender-Auth: 8xZbKLvR_GWLtosofcHxMj5rGb4
-Message-ID: <CAME1XYdcyb4q+6azGVj2GaLw_1xW80TupzRjD8ALnSDmOSCJxg@mail.gmail.com>
-Subject: Bonjour
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Authentication-Results: mail.lichtvoll.de;
+        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---=20
-Bonjour
-Avez-vous re=C3=A7u mon pr=C3=A9c=C3=A9dent e-mail ?
+Michael Schmitz - 26.07.22, 05:58:40 CEST:
+> Am 26.07.2022 um 15:40 schrieb Jens Axboe:
+> > On 7/25/22 7:53 PM, Michael Schmitz wrote:
+> >> Hi Jens,
+> >> 
+> >> there's been quite a bit of review on this patch series back in the
+> >> day (most of that would have been on linux-m68k IIRC; see Geert's
+> >> Reviewed-By tag), and I addressed the issues raised but as you say,
+> >> it did never get merged.
+> >> 
+> >> I've found a copy of the linux-block repo that has these patches,
+> >> will see if I can get them updated to apply to current
+> >> linux-block.> 
+> > Thanks, please do resend them and we can get them applied.
+> 
+> Will do - running final compile tests.
+
+Just reminding. Did this go in meanwhile?
+
+Thanks,
+-- 
+Martin
+
+
