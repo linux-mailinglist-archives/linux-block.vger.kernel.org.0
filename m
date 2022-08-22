@@ -2,72 +2,127 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 902A559B981
-	for <lists+linux-block@lfdr.de>; Mon, 22 Aug 2022 08:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BD4A59B9F7
+	for <lists+linux-block@lfdr.de>; Mon, 22 Aug 2022 09:04:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233071AbiHVGcB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Aug 2022 02:32:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51948 "EHLO
+        id S229545AbiHVHEC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Aug 2022 03:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233050AbiHVGcA (ORCPT
+        with ESMTP id S231469AbiHVHEA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Aug 2022 02:32:00 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C8E27141
-        for <linux-block@vger.kernel.org>; Sun, 21 Aug 2022 23:31:59 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id bd26-20020a05600c1f1a00b003a5e82a6474so5419550wmb.4
-        for <linux-block@vger.kernel.org>; Sun, 21 Aug 2022 23:31:59 -0700 (PDT)
+        Mon, 22 Aug 2022 03:04:00 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C3F17044
+        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 00:03:49 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id cb8so7279357qtb.0
+        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 00:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
-        bh=o31t8HDG7QptfeLJ+04Jkz8j9NFHlDWTE2XxPfy4mY4=;
-        b=WkmBV7ApXFb3L+10iHMOyXMb9NfH558TJP7OMkIyv+1tZVGb+gPc0RyeiYIe/h4GdO
-         InXpIRUzRApofByqxum4fqgXaPfxHb2G1afLnvfGzQlMH4YTBPcj7Rm3IMkECkhm8G4H
-         yMopm1tbOpl/bHkh59n3MxephKEAAelE3btKwr8EIkuZjfuugfTpIoY0cEhAhFDzxfcH
-         /gJfMR/dIc6KI+6Ge22i7baeR6+DSf8K2fZQ6RiVjyqisJLiB5/R9HEAfqcPP4M84Qzb
-         3RYHnWbVAtriTSLnmChYUH773cEqEH1/3sNs0PvCMynhC8i1pUwJmJDzHnRwSyGzduQP
-         QWCQ==
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=h4xDRqYCiaGRv1ItVhiQ+mh8fznESfcIxmJt6SE9yb8=;
+        b=Uj6YwMEAbO2HqM/XvyubHVb/BgQj6iJ/Xx/jPDMvoccLyDV2sE9VdHmRvLVAos6U7A
+         SFXoEPEyGsFTvz+FepzlXj8B80e/+310EmrBEX0omod2t8DqK10JZc3iUrJ1t0m6y+zM
+         QoHoMUjHxcx7kiMWPRIaIpeblh+KUpJfuLnrE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=o31t8HDG7QptfeLJ+04Jkz8j9NFHlDWTE2XxPfy4mY4=;
-        b=YPm3xqL1qgF74KZooJMrzbrB35+R+/YPgtA0W2ufPqs6HyzbMaBAFMmNKo/0GSlQgZ
-         52qPLsnV2zbTGa/MB1H5eNJlNf44u1XCWPbGTMajmyXAdI5nn8sHa5czzxMl7eVkMgF7
-         9+0SxNYVRyUO5FI3xb4wnnNlfonWC0N9mofrpgyaHIVAYh2IwpI3VWjgW7bgEP4xl2nz
-         1QlVIBgtBEWYwKS3zazBLwzkK3ZxZYP6T6gDkJ4LtU6soviV5nxV/FSug8CIPQZzZnFX
-         hlnY689Gt0aWbFRPkrKfckb/ZPrC6Tf+piWK3ZpKMK4eTLIwDRwYpSqEJ9F4QL8NEk+T
-         kuHQ==
-X-Gm-Message-State: ACgBeo0Wv8aFV1FCXDv86SzmE7v0DwyaWs4Egp5aFxMIWIhA7LMZoCsf
-        33FLHDSJST7d5bd3SfHe+dMyJ6Et1GUtKL8ItwI=
-X-Google-Smtp-Source: AA6agR54gcObDCJwTIDbuVf+gqlwPTpmOCYwBTpzBk78YiVmVkXSLWAmPKqNPbv8q1S8h8D8RBFCBUuxdh1tVNe3Vms=
-X-Received: by 2002:a05:600c:5008:b0:3a6:1cd8:570d with SMTP id
- n8-20020a05600c500800b003a61cd8570dmr11190552wmr.57.1661149919293; Sun, 21
- Aug 2022 23:31:59 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=h4xDRqYCiaGRv1ItVhiQ+mh8fznESfcIxmJt6SE9yb8=;
+        b=m787hafu737f7zox3K349EwRpecbAF1AGs5+/aP24mUEk+O2xuoLxSSra/gZmTzL7g
+         2FEnIPTQdreYE9TsLTVV6Qps7KJd98GPwjOMitgsk5AszCpOhS3h3O/ebMvkIQYWbJtt
+         /AhD0FrHuGURervKD5Re/79QcMo5ceX6ZXFwvFC7w65Bww0t/7BygHulybnsouJw0jZp
+         1QS4etholb4Q9Nq5sXEm4maZTUWDXV9TfHI4pMKEfI1Let7ybKcGCo2yMUdCR6uBaO6M
+         Tu99Wdwg7jrlGK+AfIXikeCkuZm6HurZDluJSeVDgbrzlW26rOjNrNNIZzdIPcu9W6J5
+         VLZw==
+X-Gm-Message-State: ACgBeo3q51QjSJ5M8cv1vGnNzDYpbcsMkqEKQSNe4CQYp1QpATWRvUIg
+        bxerBXh6YcggUZl1z4b+ha0aCBH4sBSYk8dh
+X-Google-Smtp-Source: AA6agR5X0rvTq1QT8RG+cu8Wf/Y/yA9V48AjKg+YoDA4co0VgclNZUUyW1oLChFWXP1v3yFauUXV/Q==
+X-Received: by 2002:a05:622a:1710:b0:343:77f7:15d0 with SMTP id h16-20020a05622a171000b0034377f715d0mr14377924qtk.248.1661151828603;
+        Mon, 22 Aug 2022 00:03:48 -0700 (PDT)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id j5-20020a05620a410500b006b640efe6dasm10853427qko.132.2022.08.22.00.03.48
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Aug 2022 00:03:48 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-3376851fe13so234609217b3.6
+        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 00:03:48 -0700 (PDT)
+X-Received: by 2002:a81:4850:0:b0:33c:922b:5739 with SMTP id
+ v77-20020a814850000000b0033c922b5739mr1399542ywa.515.1661151827783; Mon, 22
+ Aug 2022 00:03:47 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a5d:5444:0:0:0:0:0 with HTTP; Sun, 21 Aug 2022 23:31:58
- -0700 (PDT)
-Reply-To: maddahabdwabbo@gmail.com
-From:   Abd-jaafari Maddah <sheishenalyeshmanbetovichu@gmail.com>
-Date:   Sun, 21 Aug 2022 23:31:58 -0700
-Message-ID: <CALX-7+1EtAH-+94sA4Gcb6NRLviVCbhzAAc+WfsyZBEwsKnfJQ@mail.gmail.com>
-Subject: Why No Response Yet?
-To:     undisclosed-recipients:;
+References: <CAPBb6MUP5sH2Ohgrm4UE9ygOF2nKK4dEYWsrwfDUbSMH5Lb=ew@mail.gmail.com>
+ <CAFNWusbavuD9vMuTjV0fEFjTCnMCd1+HPkUC+GsF2FYewrDJ_Q@mail.gmail.com>
+ <CAPBb6MW0Ou8CcWCD-n+9-B0daiviP1Uk9A9C0QBp=B2oFECF3w@mail.gmail.com> <CAFNWusYr_3FjZtALxjq8ty=-FvWqzW=j1K7Mynuz0W9Vh8tD5A@mail.gmail.com>
+In-Reply-To: <CAFNWusYr_3FjZtALxjq8ty=-FvWqzW=j1K7Mynuz0W9Vh8tD5A@mail.gmail.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Mon, 22 Aug 2022 16:03:36 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MV74xgOKUBfej3etF4ZDuVEHhGciCwYyzOBfOBY27v2qg@mail.gmail.com>
+Message-ID: <CAPBb6MV74xgOKUBfej3etF4ZDuVEHhGciCwYyzOBfOBY27v2qg@mail.gmail.com>
+Subject: Re: WARN_ON_ONCE reached with "virtio-blk: support mq_ops->queue_rqs()"
+To:     Kim Suwan <suwan.kim027@gmail.com>
+Cc:     linux-block@vger.kernel.org,
+        virtualization <virtualization@lists.linux-foundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=3.9 required=5.0 tests=BAYES_40,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-Dear,
-I had sent you a mail but i don't think you received it that's why am writing
-you again,it's important we discuss.
-Am waiting,
-Abd-Jafaari Maddah
+Hi Suwan, apologies for taking so long to come back to this.
+
+On Tue, Aug 2, 2022 at 11:50 PM Kim Suwan <suwan.kim027@gmail.com> wrote:
+>
+> Hi Alexandre
+>
+> On Tue, Aug 2, 2022 at 11:12 AM Alexandre Courbot <acourbot@chromium.org> wrote:
+> >
+> >  Hi Suwan,
+> >
+> > Thanks for the fast reply!
+> >
+> > On Tue, Aug 2, 2022 at 1:55 AM Kim Suwan <suwan.kim027@gmail.com> wrote:
+> > >
+> > > Hi Alexandre,
+> > >
+> > > Thanks for reporting the issue.
+> > >
+> > > I think a possible scenario is that request fails at
+> > > virtio_queue_rqs() and it is passed to normal path (virtio_queue_rq).
+> > >
+> > > In this procedure, It is possible that blk_mq_start_request()
+> > > was called twice changing request state from MQ_RQ_IN_FLIGHT to
+> > > MQ_RQ_IN_FLIGHT.
+> >
+> > I have checked whether virtblk_prep_rq_batch() within
+> > virtio_queue_rqs() ever returns 0, and it looks like it never happens.
+> > So as far as I can tell all virtio_queue_rqs() are processed
+> > successfully - but maybe the request can also fail further down the
+> > line? Is there some extra instrumentation I can do to check that?
+> >
+>
+> I'm looking at one more suspicious code.
+> If virtblk_add_req() fails within virtblk_add_req_batch(),
+> virtio_queue_rqs() passes the failed request to the normal path also
+> (virtio_queue_rq). Then, it can call blk_mq_start_request() twice.
+>
+> Because I can't reproduce the issue on my vm, Could you test
+> the below patch?
+> I defer the blk_mq_start_request() call after virtblk_add_req()
+> to ensure that we call blk_mq_start_request() after all the
+> preparations finish.
+
+Your patch seems to solve the problem! I am not seeing the warning
+anymore and the block device looks happy.
+
+Let me know if I can do anything else.
+
+Cheers,
+Alex.
