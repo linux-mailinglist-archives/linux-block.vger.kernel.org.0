@@ -2,52 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0CFC59C827
-	for <lists+linux-block@lfdr.de>; Mon, 22 Aug 2022 21:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87B8559CA2B
+	for <lists+linux-block@lfdr.de>; Mon, 22 Aug 2022 22:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238262AbiHVTKw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Aug 2022 15:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
+        id S231887AbiHVUik (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Aug 2022 16:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238464AbiHVTKf (ORCPT
+        with ESMTP id S232020AbiHVUij (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Aug 2022 15:10:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9969150060;
-        Mon, 22 Aug 2022 12:09:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EAAC1611EB;
-        Mon, 22 Aug 2022 19:09:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D247C43470;
-        Mon, 22 Aug 2022 19:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661195351;
-        bh=CEz0U84h1VnpwxeDHmIBe3cV02cBnqQBBBJ87mDRENw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etPBVMKMSbJI0u4BB1dspYI0qg2hw2UoTXh3jqG/HvWZVe43sTHr4Va9qtd/rwWwt
-         /gCC80imT+Vcl8eI6mNeHabyx/q5vlxcUxeTP5/hlXPh3DQUbv7v0/Cb3QMfVIO2wK
-         bKl+JFjJXiCWOZv1L++OEXm0gXDo2sfeAd1ZH7q8cDix+VLUGZAtzOLfUF4HxV3Rs/
-         oV+GQFhdE6J5wI0panNpoGxwrkd0bStGoDGGe7xFsK/SOSWLp3HT1oBEpxBKQz6GjO
-         nBk0ppWnEkDo++0MaEFopQbgNSQ4zqqKl4wBzyQePNoztbD34WYafIJf5aTEBWvCNo
-         VYAj/jb2SD0hg==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fscrypt@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v3 3/3] fscrypt: work on block_devices instead of request_queues
-Date:   Mon, 22 Aug 2022 12:08:12 -0700
-Message-Id: <20220822190812.54581-4-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220822190812.54581-1-ebiggers@kernel.org>
-References: <20220822190812.54581-1-ebiggers@kernel.org>
+        Mon, 22 Aug 2022 16:38:39 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9605D13D22;
+        Mon, 22 Aug 2022 13:38:38 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id r14-20020a17090a4dce00b001faa76931beso15150996pjl.1;
+        Mon, 22 Aug 2022 13:38:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=8+bbzyZJBA3STFYzhSS/rUuL8EtOuxDK7o0s5W9SIzk=;
+        b=T3YrQWR1c83tFgmgmkexx1hcRmJLZ6l9aGjFRHH2JngMTvJ0nGH6F2/hy+pZZJJDhI
+         eOzsBvUQY3dfosIQhZoD5GhSjh1xiYeADOrOQ0tuJt3n0nOZlOFqzDEWMdJmI3jSBDtS
+         tNDCvSwtJIvcXpCr8V+iSH47iy27+MFzugdBFt/AjbR5+jJtPUCpCQBPmMxFqHChygia
+         FSjCsvHaOpOy8Elvq8Jyc2UmfYqPT1Gyk4haVbzXWydpNVvWXW6oBbieRJED8lbcdsT5
+         qjS2/G2r+szKMnrTHjkqjo6qmmssPhVC95YZh+mS1Idb3F7aAavSbJ8hkxbEdVUl4iGJ
+         3QaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=8+bbzyZJBA3STFYzhSS/rUuL8EtOuxDK7o0s5W9SIzk=;
+        b=IUGGDJ1qhjuHUUb/rqnvGG8PDJL2s1K5t+TEGHN9qUT0CEP9h97wSDUlOn+6YIzBdo
+         PU2JbHe7+Z0xkHc0Xde49fva0RbFzXhLKZ9Qt0/VtEtjiaV6Or1gRQv01Tzy7lLOaTdV
+         Crdro17ia207ZUMZWmHhp13AUCURxe1EgRuz9DcCSSxWfYDJ+D1froFlcJB/m9Q7dVF7
+         6IKVk2Z0LpVofLjY+mhVivQtcDtKLoehUAKCc9tjteVGR9tGWVS3LhgW/QXzDBcOCJ37
+         Gmxu4rKzHoSwF8ZnKMkQl+/9nI030VjMpIBomPsF+E0QbeeNWx9zp+aGmrHBlg9gqzmh
+         NLsA==
+X-Gm-Message-State: ACgBeo1C7XklQdMMJ0eBWQhwmOrFh23HwrAW/diOXx5v8zZXNX8YOE0i
+        7YRZDeJkqI93CL/IICiLaTt32To8r4c=
+X-Google-Smtp-Source: AA6agR786402sCYAz5zihq7rt7I3AziqCmMLoJRBciesipL+5ImGHp46yGBBYpdLgYcthhr0cN8xmg==
+X-Received: by 2002:a17:902:cec1:b0:172:e677:553b with SMTP id d1-20020a170902cec100b00172e677553bmr7525994plg.99.1661200718077;
+        Mon, 22 Aug 2022 13:38:38 -0700 (PDT)
+Received: from ?IPV6:2001:df0:0:200c:642a:8878:46a3:c3df? ([2001:df0:0:200c:642a:8878:46a3:c3df])
+        by smtp.gmail.com with ESMTPSA id 2-20020a17090a0a8200b001fb08830742sm4581804pjw.44.2022.08.22.13.38.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Aug 2022 13:38:37 -0700 (PDT)
+Message-ID: <81e8bd2a-bb3f-6da0-ed39-b522a6b822be@gmail.com>
+Date:   Tue, 23 Aug 2022 08:38:32 +1200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v8 2/2] block: add overflow checks for Amiga partition
+ support
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+References: <20220726045747.4779-1-schmitzmic@gmail.com>
+ <20220726045747.4779-3-schmitzmic@gmail.com> <Yt/TQOJQZEhZE+2p@infradead.org>
+ <CAMuHMdWW1=kXC14H6iUFF61sMOnsbfXodKS=mpdNbCtvgvjqKA@mail.gmail.com>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+In-Reply-To: <CAMuHMdWW1=kXC14H6iUFF61sMOnsbfXodKS=mpdNbCtvgvjqKA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,299 +81,63 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+Hi Geert,
 
-request_queues are a block layer implementation detail that should not
-leak into file systems.  Change the fscrypt inline crypto code to
-retrieve block devices instead of request_queues from the file system.
-As part of that, clean up the interaction with multi-device file systems
-by returning both the number of devices and the actual device array in a
-single method call.
+On 11/08/22 23:40, Geert Uytterhoeven wrote:
+> Hi Christoph,
+>
+> On Tue, Jul 26, 2022 at 1:43 PM Christoph Hellwig <hch@infradead.org> wrote:
+>> On Tue, Jul 26, 2022 at 04:57:47PM +1200, Michael Schmitz wrote:
+>>> The Amiga partition parser module uses signed int for partition sector
+>>> address and count, which will overflow for disks larger than 1 TB.
+>>>
+>>> Use u64 as type for sector address and size to allow using disks up to
+>>> 2 TB without LBD support, and disks larger than 2 TB with LBD. The RBD
+>>> format allows to specify disk sizes up to 2^128 bytes (though native
+>>> OS limitations reduce this somewhat, to max 2^68 bytes), so check for
+>>> u64 overflow carefully to protect against overflowing sector_t.
+>>>
+>>> Bail out if sector addresses overflow 32 bits on kernels without LBD
+>>> support.
+>>>
+>>> This bug was reported originally in 2012, and the fix was created by
+>>> the RDB author, Joanne Dow <jdow@earthlink.net>. A patch had been
+>>> discussed and reviewed on linux-m68k at that time but never officially
+>>> submitted (now resubmitted as separate patch).
+>>> This patch adds additional error checking and warning messages.
+>>>
+>>> Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=43511
+>>> Reported-by: Martin Steigerwald <Martin@lichtvoll.de>
+>>> Message-ID: <201206192146.09327.Martin@lichtvoll.de>
+>>> Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+>>> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> --- a/block/partitions/amiga.c
+>>> +++ b/block/partitions/amiga.c
+>>>                if (!data) {
+>>> -                     pr_err("Dev %s: unable to read RDB block %d\n",
+>>> -                            state->disk->disk_name, blk);
+>>> +                     pr_err("Dev %s: unable to read RDB block %llu\n",
+>>> +                            state->disk->disk_name, (u64) blk);
+>> No need for the various printk casts, a sector_t is always an
+>> unsigned long long.
+> That is true, as of commit 72deb455b5ec619f
+> ("block: remove CONFIG_LBDAF") in v5.2.
+> Since 4.9, 4.14, and 4.19 are still receiving stable updates, the
+> cast should be re-added when this is backported.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[ebiggers: bug fixes and minor tweaks]
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- fs/crypto/inline_crypt.c | 107 ++++++++++++++++++++-------------------
- fs/f2fs/super.c          |  24 ++++-----
- include/linux/fscrypt.h  |  21 ++++----
- 3 files changed, 76 insertions(+), 76 deletions(-)
+Does this require a note in the commit message, or explicit CC to Greg?
 
-diff --git a/fs/crypto/inline_crypt.c b/fs/crypto/inline_crypt.c
-index a3225fe2291361..afcdd8bb3fa7c3 100644
---- a/fs/crypto/inline_crypt.c
-+++ b/fs/crypto/inline_crypt.c
-@@ -21,20 +21,22 @@
- 
- #include "fscrypt_private.h"
- 
--static int fscrypt_get_num_devices(struct super_block *sb)
-+static struct block_device **fscrypt_get_devices(struct super_block *sb,
-+						 unsigned int *num_devs)
- {
--	if (sb->s_cop->get_num_devices)
--		return sb->s_cop->get_num_devices(sb);
--	return 1;
--}
-+	struct block_device **devs;
- 
--static void fscrypt_get_devices(struct super_block *sb, int num_devs,
--				struct request_queue **devs)
--{
--	if (num_devs == 1)
--		devs[0] = bdev_get_queue(sb->s_bdev);
--	else
--		sb->s_cop->get_devices(sb, devs);
-+	if (sb->s_cop->get_devices) {
-+		devs = sb->s_cop->get_devices(sb, num_devs);
-+		if (devs)
-+			return devs;
-+	}
-+	devs = kmalloc(sizeof(*devs), GFP_KERNEL);
-+	if (!devs)
-+		return ERR_PTR(-ENOMEM);
-+	devs[0] = sb->s_bdev;
-+	*num_devs = 1;
-+	return devs;
- }
- 
- static unsigned int fscrypt_get_dun_bytes(const struct fscrypt_info *ci)
-@@ -68,15 +70,17 @@ static unsigned int fscrypt_get_dun_bytes(const struct fscrypt_info *ci)
-  * helpful for debugging problems where the "wrong" implementation is used.
-  */
- static void fscrypt_log_blk_crypto_impl(struct fscrypt_mode *mode,
--					struct request_queue **devs,
--					int num_devs,
-+					struct block_device **devs,
-+					unsigned int num_devs,
- 					const struct blk_crypto_config *cfg)
- {
--	int i;
-+	unsigned int i;
- 
- 	for (i = 0; i < num_devs; i++) {
-+		struct request_queue *q = bdev_get_queue(devs[i]);
-+
- 		if (!IS_ENABLED(CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK) ||
--		    __blk_crypto_cfg_supported(devs[i]->crypto_profile, cfg)) {
-+		    __blk_crypto_cfg_supported(q->crypto_profile, cfg)) {
- 			if (!xchg(&mode->logged_blk_crypto_native, 1))
- 				pr_info("fscrypt: %s using blk-crypto (native)\n",
- 					mode->friendly_name);
-@@ -93,9 +97,9 @@ int fscrypt_select_encryption_impl(struct fscrypt_info *ci)
- 	const struct inode *inode = ci->ci_inode;
- 	struct super_block *sb = inode->i_sb;
- 	struct blk_crypto_config crypto_cfg;
--	int num_devs;
--	struct request_queue **devs;
--	int i;
-+	struct block_device **devs;
-+	unsigned int num_devs;
-+	unsigned int i;
- 
- 	/* The file must need contents encryption, not filenames encryption */
- 	if (!S_ISREG(inode->i_mode))
-@@ -123,20 +127,20 @@ int fscrypt_select_encryption_impl(struct fscrypt_info *ci)
- 		return 0;
- 
- 	/*
--	 * On all the filesystem's devices, blk-crypto must support the crypto
--	 * configuration that the file would use.
-+	 * On all the filesystem's block devices, blk-crypto must support the
-+	 * crypto configuration that the file would use.
- 	 */
- 	crypto_cfg.crypto_mode = ci->ci_mode->blk_crypto_mode;
- 	crypto_cfg.data_unit_size = sb->s_blocksize;
- 	crypto_cfg.dun_bytes = fscrypt_get_dun_bytes(ci);
--	num_devs = fscrypt_get_num_devices(sb);
--	devs = kmalloc_array(num_devs, sizeof(*devs), GFP_KERNEL);
--	if (!devs)
--		return -ENOMEM;
--	fscrypt_get_devices(sb, num_devs, devs);
-+
-+	devs = fscrypt_get_devices(sb, &num_devs);
-+	if (IS_ERR(devs))
-+		return PTR_ERR(devs);
- 
- 	for (i = 0; i < num_devs; i++) {
--		if (!blk_crypto_config_supported(devs[i], &crypto_cfg))
-+		if (!blk_crypto_config_supported(bdev_get_queue(devs[i]),
-+						 &crypto_cfg))
- 			goto out_free_devs;
- 	}
- 
-@@ -157,10 +161,10 @@ int fscrypt_prepare_inline_crypt_key(struct fscrypt_prepared_key *prep_key,
- 	struct super_block *sb = inode->i_sb;
- 	enum blk_crypto_mode_num crypto_mode = ci->ci_mode->blk_crypto_mode;
- 	struct blk_crypto_key *blk_key;
--	int num_devs;
--	struct request_queue **devs = NULL;
-+	struct block_device **devs;
-+	unsigned int num_devs;
-+	unsigned int i;
- 	int err;
--	int i;
- 
- 	blk_key = kmalloc(sizeof(*blk_key), GFP_KERNEL);
- 	if (!blk_key)
-@@ -174,21 +178,23 @@ int fscrypt_prepare_inline_crypt_key(struct fscrypt_prepared_key *prep_key,
- 	}
- 
- 	/* Start using blk-crypto on all the filesystem's block devices. */
--	num_devs = fscrypt_get_num_devices(sb);
--	devs = kmalloc_array(num_devs, sizeof(*devs), GFP_KERNEL);
--	if (!devs) {
--		err = -ENOMEM;
-+	devs = fscrypt_get_devices(sb, &num_devs);
-+	if (IS_ERR(devs)) {
-+		err = PTR_ERR(devs);
- 		goto out;
- 	}
--	fscrypt_get_devices(sb, num_devs, devs);
- 	for (i = 0; i < num_devs; i++) {
--		err = blk_crypto_start_using_key(blk_key, devs[i]);
--		if (err) {
--			fscrypt_err(inode,
--				    "error %d starting to use blk-crypto", err);
--			goto out;
--		}
-+		err = blk_crypto_start_using_key(blk_key,
-+						 bdev_get_queue(devs[i]));
-+		if (err)
-+			break;
-+	}
-+	kfree(devs);
-+	if (err) {
-+		fscrypt_err(inode, "error %d starting to use blk-crypto", err);
-+		goto out;
- 	}
-+
- 	/*
- 	 * Pairs with the smp_load_acquire() in fscrypt_is_key_prepared().
- 	 * I.e., here we publish ->blk_key with a RELEASE barrier so that
-@@ -196,10 +202,9 @@ int fscrypt_prepare_inline_crypt_key(struct fscrypt_prepared_key *prep_key,
- 	 * possible for per-mode keys, not for per-file keys.
- 	 */
- 	smp_store_release(&prep_key->blk_key, blk_key);
--	blk_key = NULL;
--	err = 0;
-+	return 0;
-+
- out:
--	kfree(devs);
- 	kfree_sensitive(blk_key);
- 	return err;
- }
-@@ -208,17 +213,15 @@ void fscrypt_destroy_inline_crypt_key(struct super_block *sb,
- 				      struct fscrypt_prepared_key *prep_key)
- {
- 	struct blk_crypto_key *blk_key = prep_key->blk_key;
--	int num_devs;
--	struct request_queue **devs;
--	int i;
-+	struct block_device **devs;
-+	unsigned int num_devs;
-+	unsigned int i;
- 
- 	/* Evict the key from all the filesystem's block devices. */
--	num_devs = fscrypt_get_num_devices(sb);
--	devs = kmalloc_array(num_devs, sizeof(*devs), GFP_KERNEL);
--	if (devs) {
--		fscrypt_get_devices(sb, num_devs, devs);
-+	devs = fscrypt_get_devices(sb, &num_devs);
-+	if (!IS_ERR(devs)) {
- 		for (i = 0; i < num_devs; i++)
--			blk_crypto_evict_key(devs[i], blk_key);
-+			blk_crypto_evict_key(bdev_get_queue(devs[i]), blk_key);
- 		kfree(devs);
- 	}
- 	kfree_sensitive(blk_key);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 2451623c05a7a8..26817b5aeac781 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3039,23 +3039,24 @@ static void f2fs_get_ino_and_lblk_bits(struct super_block *sb,
- 	*lblk_bits_ret = 8 * sizeof(block_t);
- }
- 
--static int f2fs_get_num_devices(struct super_block *sb)
-+static struct block_device **f2fs_get_devices(struct super_block *sb,
-+					      unsigned int *num_devs)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
-+	struct block_device **devs;
-+	int i;
- 
--	if (f2fs_is_multi_device(sbi))
--		return sbi->s_ndevs;
--	return 1;
--}
-+	if (!f2fs_is_multi_device(sbi))
-+		return NULL;
- 
--static void f2fs_get_devices(struct super_block *sb,
--			     struct request_queue **devs)
--{
--	struct f2fs_sb_info *sbi = F2FS_SB(sb);
--	int i;
-+	devs = kmalloc_array(sbi->s_ndevs, sizeof(*devs), GFP_KERNEL);
-+	if (!devs)
-+		return ERR_PTR(-ENOMEM);
- 
- 	for (i = 0; i < sbi->s_ndevs; i++)
--		devs[i] = bdev_get_queue(FDEV(i).bdev);
-+		devs[i] = FDEV(i).bdev;
-+	*num_devs = sbi->s_ndevs;
-+	return devs;
- }
- 
- static const struct fscrypt_operations f2fs_cryptops = {
-@@ -3066,7 +3067,6 @@ static const struct fscrypt_operations f2fs_cryptops = {
- 	.empty_dir		= f2fs_empty_dir,
- 	.has_stable_inodes	= f2fs_has_stable_inodes,
- 	.get_ino_and_lblk_bits	= f2fs_get_ino_and_lblk_bits,
--	.get_num_devices	= f2fs_get_num_devices,
- 	.get_devices		= f2fs_get_devices,
- };
- #endif
-diff --git a/include/linux/fscrypt.h b/include/linux/fscrypt.h
-index d86f43bd955029..3a3f7cb7b90f67 100644
---- a/include/linux/fscrypt.h
-+++ b/include/linux/fscrypt.h
-@@ -161,24 +161,21 @@ struct fscrypt_operations {
- 				      int *ino_bits_ret, int *lblk_bits_ret);
- 
- 	/*
--	 * Return the number of block devices to which the filesystem may write
--	 * encrypted file contents.
-+	 * Return an array of pointers to the block devices to which the
-+	 * filesystem may write encrypted file contents, NULL if the filesystem
-+	 * only has a single such block device, or an ERR_PTR() on error.
-+	 *
-+	 * On successful non-NULL return, *num_devs is set to the number of
-+	 * devices in the returned array.  The caller must free the returned
-+	 * array using kfree().
- 	 *
- 	 * If the filesystem can use multiple block devices (other than block
- 	 * devices that aren't used for encrypted file contents, such as
- 	 * external journal devices), and wants to support inline encryption,
- 	 * then it must implement this function.  Otherwise it's not needed.
- 	 */
--	int (*get_num_devices)(struct super_block *sb);
--
--	/*
--	 * If ->get_num_devices() returns a value greater than 1, then this
--	 * function is called to get the array of request_queues that the
--	 * filesystem is using -- one per block device.  (There may be duplicate
--	 * entries in this array, as block devices can share a request_queue.)
--	 */
--	void (*get_devices)(struct super_block *sb,
--			    struct request_queue **devs);
-+	struct block_device **(*get_devices)(struct super_block *sb,
-+					     unsigned int *num_devs);
- };
- 
- static inline struct fscrypt_info *fscrypt_get_info(const struct inode *inode)
--- 
-2.37.2
+Cheers,
 
+     Michael
+
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                  -- Linus Torvalds
