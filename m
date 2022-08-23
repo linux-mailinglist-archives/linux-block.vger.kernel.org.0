@@ -2,83 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29A9759CF60
-	for <lists+linux-block@lfdr.de>; Tue, 23 Aug 2022 05:23:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8F3259CF65
+	for <lists+linux-block@lfdr.de>; Tue, 23 Aug 2022 05:23:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239213AbiHWDWU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Aug 2022 23:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
+        id S239946AbiHWDUJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Aug 2022 23:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240044AbiHWDWT (ORCPT
+        with ESMTP id S239944AbiHWDUH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Aug 2022 23:22:19 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269BE50718
-        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 20:22:16 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id s3-20020a17090a2f0300b001facfc6fdbcso12651775pjd.1
-        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 20:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20210112.gappssmtp.com; s=20210112;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:from:to:cc;
-        bh=t5TO7xdQGMXaC5TRTQFcqhFSnLRjgf1D8C0Y6A6YDxE=;
-        b=WmzvvmXH5e7wP/UE3SOCEoTxUnalykJ3N3TkckdsZzxqPN6OxAvOMEhsFJIg72/pec
-         dV+HIGE92uLWsaavfgjKM+C+A5n4EiV88XdKFsoxydVAFe5nmQZ3wXK7pbUiZnpPSViH
-         9wcRuFbEeMk6CuUC5TU2Fsvnjo++S7A79RBLzB6Aur+2C1mdRPNWR6V9hkWGd33kuaZ6
-         xcCba0irYI0fzWODf7B+oUYh3cw5uD53qZpQUEbxAvY5/4dbEDBWYTz1DS09LYro3uwm
-         G9+kpUhWzIhcfbKMcEQU1XlfvHYa+Duf15Pq6vyDet2odUshI95kkV9niiVxvoEj4EEl
-         OWIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:x-gm-message-state:from:to:cc;
-        bh=t5TO7xdQGMXaC5TRTQFcqhFSnLRjgf1D8C0Y6A6YDxE=;
-        b=K+DPfO0gpjfsEyRK2GXp3u2vGQ9bfaJYIa58SoHLKwh2PlXbdvxEeWmgu3vEyfTL4v
-         MppYK2xwOv3SL4+hPBrW5I4MC4ZdXLfbaaEJ+LSPzReNBeH4slkw2lVSmWDqPIK9GfLt
-         n5vunxtG58Thbog0lquFHcvp82wuSS8Wa1MI2YZCbm/d3tEb6zRGyGmZtNyBshNbqe70
-         VjU53E+w5cOXsn2id553ZWKyfvkfnhRbxeCpJ8Mx3CkSjP5gfOisNEhs1x08N4JBkTyw
-         i41ktlYh3ds4UgY8j5Z/QIeWa9AlStHx9YowxaGXE2qRcvjaYIQ9F4RnoIIn+A9d8W9E
-         SnSw==
-X-Gm-Message-State: ACgBeo03EjctjAssWaQEVLiJKAaqvevaso7bAMWFe4oCZGI68i+iARTP
-        Q68r+W6gOhpRNc1Nf0hIhYxLuA==
-X-Google-Smtp-Source: AA6agR6bYAoLnjuq/NI/816MPUccS4/TdIQzRNkgRVQfsY/JSoRbcW6B7pyoAJACabZ0K9rJNxD0pA==
-X-Received: by 2002:a17:903:18b:b0:16e:f09c:919b with SMTP id z11-20020a170903018b00b0016ef09c919bmr23613380plg.135.1661224935485;
-        Mon, 22 Aug 2022 20:22:15 -0700 (PDT)
-Received: from cabot.adilger.int (S01061cabc081bf83.cg.shawcable.net. [70.77.221.9])
-        by smtp.gmail.com with ESMTPSA id b9-20020a1709027e0900b00172d52b7c03sm5372011plm.125.2022.08.22.20.22.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Aug 2022 20:22:14 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <21923F1E-1C54-44FB-AF7C-4CD8B4B35433@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_8E3621BA-8A02-4654-8DC0-856F43CB7C0C";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v4 6/9] f2fs: don't allow DIO reads but not DIO writes
-Date:   Mon, 22 Aug 2022 21:22:11 -0600
-In-Reply-To: <YwAYPFxW7VV4M9D1@sol.localdomain>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        xfs <linux-xfs@vger.kernel.org>, linux-api@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-References: <20220722071228.146690-1-ebiggers@kernel.org>
- <20220722071228.146690-7-ebiggers@kernel.org> <YtyoF89iOg8gs7hj@google.com>
- <Yt7dCcG0ns85QqJe@sol.localdomain> <YuXyKh8Zvr56rR4R@google.com>
- <YvrrEcw4E+rpDLwM@sol.localdomain>
- <20220816090312.GU3600936@dread.disaster.area>
- <D1CDACE3-EC7E-43E4-8F49-EEA2B6E71A41@dilger.ca>
- <YwAYPFxW7VV4M9D1@sol.localdomain>
-X-Mailer: Apple Mail (2.3273)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        Mon, 22 Aug 2022 23:20:07 -0400
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9157B4D140;
+        Mon, 22 Aug 2022 20:20:05 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4MBZF14Tdrz6V2rm;
+        Tue, 23 Aug 2022 11:18:29 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP1 (Coremail) with SMTP id cCh0CgDXkO1fRwRj66O+Ag--.4888S4;
+        Tue, 23 Aug 2022 11:20:00 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     axboe@kernel.dk, tj@kernel.org, ming.lei@redhat.com,
+        mkoutny@suse.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, yukuai3@huawei.com,
+        yukuai1@huaweicloud.com, yi.zhang@huawei.com
+Subject: [PATCH v8 0/4] blk-throttle bugfix
+Date:   Tue, 23 Aug 2022 11:31:26 +0800
+Message-Id: <20220823033130.874230-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgDXkO1fRwRj66O+Ag--.4888S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WrW3tFWktFykAF1rCr15Jwb_yoW8tF4fpF
+        WSgr45Cr17urn7G3y3Ca1a9Fy5Kan5Xry5WwnxJw1rCF4q9ryUCwn29w45uFyIvrZ3K3yI
+        qrnIyFn2kryUZ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+        Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+        UdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,121 +61,63 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Yu Kuai <yukuai3@huawei.com>
 
---Apple-Mail=_8E3621BA-8A02-4654-8DC0-856F43CB7C0C
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+Changes in v8:
+ - use a new solution in patch 1
+ - move cleanups to a separate patchset
+ - rename bytes/io_skipped to carryover_bytes/ios in patch 4
+Changes in v7:
+ - add patch 5 to improve handling of re-entered bio for bps limit
+ - as suggested by Tejun, add some comments
+ - sdd some Acked tag by Tejun
+Changes in v6:
+ - rename parameter in patch 3
+ - add comments and reviewed tag for patch 4
+Changes in v5:
+ - add comments in patch 4
+ - clear bytes/io_skipped in throtl_start_new_slice_with_credit() in
+ patch 4
+ - and cleanup patches 5-8
+Changes in v4:
+ - add reviewed-by tag for patch 1
+ - add patch 2,3
+ - use a different way to fix io hung in patch 4
+Changes in v3:
+ - fix a check in patch 1
+ - fix link err in patch 2 on 32-bit platform
+ - handle overflow in patch 2
+Changes in v2:
+ - use a new solution suggested by Ming
+ - change the title of patch 1
+ - add patch 2
 
-On Aug 19, 2022, at 5:09 PM, Eric Biggers <ebiggers@kernel.org> wrote:
->=20
-> On Tue, Aug 16, 2022 at 10:42:29AM -0600, Andreas Dilger wrote:
->>=20
->> IMHO, this whole discussion is putting the cart before the horse.
->> Changing existing (and useful) IO behavior to accommodate an API that
->> nobody has ever used, and is unlikely to even be widely used, doesn't
->> make sense to me.  Most applications won't check or care about the =
-new
->> DIO size fields, since they've lived this long without statx() =
-returning
->> this info, and will just pick a "large enough" size (4KB, 1MB, =
-whatever)
->> that gives them the performance they need.  They *WILL* care if the =
-app
->> is suddenly unable to read data from a file in ways that have worked =
-for
->> a long time.
->>=20
->> Even if apps are modified to check these new DIO size fields, and =
-then
->> try to DIO write to a file in f2fs that doesn't allow it, then f2fs =
-will
->> return an error, which is what it would have done without the statx()
->> changes, so no harm done AFAICS.
->>=20
->> Even with a more-complex DIO status return that handles a "direction"
->> field (which IMHO is needlessly complex), there is always the =
-potential
->> for a TOCTOU race where a file changes between checking and access, =
-so
->> the userspace code would need to handle this.
->=20
-> I'm having trouble making sense of your argument here; you seem to be =
-saying
-> that STATX_DIOALIGN isn't useful, so it doesn't matter if we design it
-> correctly?  That line of reasoning is concerning, as it's certainly =
-intended
-> to be useful, and if it's not useful there's no point in adding it.
->=20
-> Are there any specific concerns that you have, besides TOCTOU races =
-and the
-> lack of support for read-only DIO?
+Patch 1 fix that blk-throttle can't work if multiple bios are throttle.
+Patch 2 fix overflow while calculating wait time.
+Patch 3,4 fix io hung due to configuration updates.
 
-My main concern is disabling useful functionality that exists today to =
-appease
-the new DIO size API.  Whether STATX_DIOALIGN will become widely used by
-applications or not is hard to say at this point.
+Previous version:
+v1: https://lore.kernel.org/all/20220517134909.2910251-1-yukuai3@huawei.com/
+v2: https://lore.kernel.org/all/20220518072751.1188163-1-yukuai3@huawei.com/
+v3: https://lore.kernel.org/all/20220519085811.879097-1-yukuai3@huawei.com/
+v4: https://lore.kernel.org/all/20220523082633.2324980-1-yukuai3@huawei.com/
+v5: https://lore.kernel.org/all/20220528064330.3471000-1-yukuai3@huawei.com/
+v6: https://lore.kernel.org/all/20220701093441.885741-1-yukuai1@huaweicloud.com/
+v7: https://lore.kernel.org/all/20220802140415.2960284-1-yukuai1@huaweicloud.com/
+Yu Kuai (4):
+  blk-throttle: fix that io throttle can only work for single bio
+  blk-throttle: prevent overflow while calculating wait time
+  blk-throttle: factor out code to calculate ios/bytes_allowed
+  blk-throttle: fix io hung due to configuration updates
 
-If there were separate STATX_DIOREAD and STATX_DIOWRITE flags in the =
-returned
-data, and the alignment is provided as it is today, that would be enough =
-IMHO
-to address the original use case without significant complexity.
+ block/bio.c               |   2 -
+ block/blk-merge.c         |   7 ++
+ block/blk-throttle.c      | 138 +++++++++++++++++++++++++++-----------
+ block/blk-throttle.h      |  15 ++++-
+ include/linux/bio.h       |   6 +-
+ include/linux/blk_types.h |   6 +-
+ 6 files changed, 125 insertions(+), 49 deletions(-)
 
-> I don't think that TOCTOU races are a real concern here.  Generally =
-DIO
-> constraints would only change if the application doing DIO =
-intentionally does
-> something to the file, or if there are changes that involve the =
-filesystem
-> being taken offline, e.g. the filesystem being mounted with =
-significantly
-> different options or being moved to a different block device.  And, =
-well,
-> everything else in stat()/statx() is subject to TOCTOU as well, but is =
-still
-> used...
+-- 
+2.31.1
 
-I was thinking of background filesystem operations like compression, LVM
-migration to new storage with a different sector size, etc. that may =
-change
-the DIO characteristics of the file even while it is open.  Not that I =
-think
-this will happen frequently, but it is possible, and applications =
-shouldn't
-explode if the DIO parameters change and they get an error.
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_8E3621BA-8A02-4654-8DC0-856F43CB7C0C
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmMER+MACgkQcqXauRfM
-H+D5gBAAjf5qhCdnFlyRgIkdcPs1zELiCu4+Jw0PH5rkavcu3tVPwEBTCbHxXVMN
-6ZsFra7ARjxxj58mUSEtN9NDHwpiQreGlgqDoP+uYYb3EwiFZstja2fl0mTAytE5
-lMb8zBxkfCh8xexTnnVk7ULsOrTO+/xYTUbmRIqQvK6PTicVuO6H8FtzYFHjilnn
-/RZ8yRCndDsFmRpZCApwy26cPcP3UyrtUqz8rKk1iy5oBIC1ALvx8baYjY/Wi7Fs
-vMq1ExdKsjPPVQT5dmj1ISPRXpxTGezKhqvxNvbR/IMwKW2PzEMZzClRQnYKuWe5
-GBu6zW0mWe5l+Bg1amzve/WteBX/5i6rrkknoD58zBL8SL4LDh+uQGaM2q7EzegR
-lEc1/IpOtR1WrfmP+tOqEIfdwa4jMikNm4NKHYoQA2OQcxEzmYgtBHeeVbGOFCEq
-PRKVZbxxF2bVFWuBVbsSbAar9o6G6Ucm11LBDHkKEpn8RTqN/UeXBrcslIk9NczK
-2qtnn0jbek1OgtMEpGaajobjeqBqQUIC6/cUkU0S7Ga1LsV7D8eH5TV9EF3rWwLe
-0MJ2IWgAmbMDp7gYNVZYrsJJMrqcjphRO33u2JvwFisboKU1DD4qtfnG1vvF8u1n
-RHpWdRBE/l0VC15dWox4zVKfVgH52rkeKE8ZVkTj83NDSIidz94=
-=WmyJ
------END PGP SIGNATURE-----
-
---Apple-Mail=_8E3621BA-8A02-4654-8DC0-856F43CB7C0C--
