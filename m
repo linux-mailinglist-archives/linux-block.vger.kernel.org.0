@@ -2,102 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C0D59CDDC
-	for <lists+linux-block@lfdr.de>; Tue, 23 Aug 2022 03:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B6AD59CEC0
+	for <lists+linux-block@lfdr.de>; Tue, 23 Aug 2022 04:46:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239235AbiHWB0q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 Aug 2022 21:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
+        id S238943AbiHWCoE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 Aug 2022 22:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233491AbiHWB0p (ORCPT
+        with ESMTP id S239325AbiHWCoE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 Aug 2022 21:26:45 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 751A95A2D4;
-        Mon, 22 Aug 2022 18:26:44 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4MBWkD6wbszKySj;
-        Tue, 23 Aug 2022 09:25:08 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP4 (Coremail) with SMTP id gCh0CgAHDPnPLARj9WfNAg--.16985S8;
-        Tue, 23 Aug 2022 09:26:42 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     tj@kernel.org, axboe@kernel.dk
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com
-Subject: [PATCH 4/4] blk-throttle: cleanup throtl_dequeue_tg()
-Date:   Tue, 23 Aug 2022 09:38:10 +0800
-Message-Id: <20220823013810.406075-5-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220823013810.406075-1-yukuai1@huaweicloud.com>
-References: <20220823013810.406075-1-yukuai1@huaweicloud.com>
+        Mon, 22 Aug 2022 22:44:04 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544125A2C4
+        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 19:44:03 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id h22so9450028qtu.2
+        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 19:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=tZOc80YqXReLRj3XwKQICtZOCu5oz6GBClY7zU+fdCI=;
+        b=HwinV7FVcpJhc+iWyLyx+yozmkQ7f2ItJwEaujApX5+O/73Wi5QEYngSt3p2hnyAKM
+         OuG+EaR+ezddTE1xNbCgyAGU9v+2Z+Nw45PuaGZUAI7XizPWq56u2AiFKGvXtYcee/Yn
+         1E/gn+HdwnA8D0egSprswrwMb4eFOao+6+1ug=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=tZOc80YqXReLRj3XwKQICtZOCu5oz6GBClY7zU+fdCI=;
+        b=5xSd39Anf7AdJtyOLtggFbBlpg3MLBcmtKsAfhqpQL6BtN936MaaPZbKnd2WS42zvf
+         2no2Nkc6azTDLl3A5qO1RPaP+YQlylNs1eg3arqVTbMaCfzRdwHBw2LqHnK9jxKcdhS7
+         tPNfwx9MHIRRZ/8MahoDtlMY93GPkSeHA7k7J1mpzJuqCtOrzz/OwZER3BuIx1OtINeW
+         5IgHTKrKTdv2Cq6fRDhuU21/e0C8ejfelO/rZrFvIUYEO9TPQmpEWsiVF4i9aZKAAAq3
+         r2DCCUi8e9qt82l1eCFnom+3h5VjU6aT25+Q2LJtJNamWx044Bscy9BLRDukI6GIzymi
+         Tdzg==
+X-Gm-Message-State: ACgBeo3UAYWUQ+i2nCdPzP/QPe9bRIQjYMDNtvhCExZzysaSpIZpJ+sH
+        2xeB0fZG3QPLruzE0Tgt63dc3QtthPyoOs3I
+X-Google-Smtp-Source: AA6agR6Ubo8aP0wWOXco1LuX8fUrzgBK3OL3k3d62Smsaz48gGC5ZuOHwfpnsEDWZRHB0rhCHaO1jg==
+X-Received: by 2002:a05:622a:1302:b0:344:8a9d:817d with SMTP id v2-20020a05622a130200b003448a9d817dmr17947954qtk.339.1661222642433;
+        Mon, 22 Aug 2022 19:44:02 -0700 (PDT)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id c13-20020ac8054d000000b00343681ee2e2sm9936280qth.35.2022.08.22.19.44.01
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Aug 2022 19:44:01 -0700 (PDT)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-3375488624aso315680097b3.3
+        for <linux-block@vger.kernel.org>; Mon, 22 Aug 2022 19:44:01 -0700 (PDT)
+X-Received: by 2002:a25:7616:0:b0:695:9024:1c23 with SMTP id
+ r22-20020a257616000000b0069590241c23mr10851291ybc.177.1661222641337; Mon, 22
+ Aug 2022 19:44:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgAHDPnPLARj9WfNAg--.16985S8
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr1kJr4UtFW7Wr4fXFyUtrb_yoWkuFg_Za
-        4xCrWrKF18Gwn7Jr98Aw15uFWYk3yUury2qa1jkFW5GFnxX3WkAay7ZrWY9r47uay5Wry3
-        Cw1DGr42yr4akjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbTxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-        F7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-        1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-        M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-        v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48JMx
-        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-        wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-        vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-        0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-        W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbmZX7UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <CAPBb6MUP5sH2Ohgrm4UE9ygOF2nKK4dEYWsrwfDUbSMH5Lb=ew@mail.gmail.com>
+ <CAFNWusbavuD9vMuTjV0fEFjTCnMCd1+HPkUC+GsF2FYewrDJ_Q@mail.gmail.com>
+ <CAPBb6MW0Ou8CcWCD-n+9-B0daiviP1Uk9A9C0QBp=B2oFECF3w@mail.gmail.com>
+ <CAFNWusYr_3FjZtALxjq8ty=-FvWqzW=j1K7Mynuz0W9Vh8tD5A@mail.gmail.com>
+ <CAPBb6MV74xgOKUBfej3etF4ZDuVEHhGciCwYyzOBfOBY27v2qg@mail.gmail.com> <CAFNWusYobFdqaEj12ND7Ee9pT+GRxPQwYNEEAG1LMEXCgUQjDA@mail.gmail.com>
+In-Reply-To: <CAFNWusYobFdqaEj12ND7Ee9pT+GRxPQwYNEEAG1LMEXCgUQjDA@mail.gmail.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Tue, 23 Aug 2022 11:43:50 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MVG62C6vTPjQWzRkrqHMX1GZzWKyoFrqF1Cf1HLvpJV0Q@mail.gmail.com>
+Message-ID: <CAPBb6MVG62C6vTPjQWzRkrqHMX1GZzWKyoFrqF1Cf1HLvpJV0Q@mail.gmail.com>
+Subject: Re: WARN_ON_ONCE reached with "virtio-blk: support mq_ops->queue_rqs()"
+To:     Kim Suwan <suwan.kim027@gmail.com>
+Cc:     linux-block@vger.kernel.org,
+        virtualization <virtualization@lists.linux-foundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi Suwan,
 
-Now that throtl_dequeue_tg() is called when the last bio is dispatched,
-there is no need to check the flag THROTL_TG_PENDING, since it's ensured
-to be set when bio is throttled.
+On Tue, Aug 23, 2022 at 1:23 AM Kim Suwan <suwan.kim027@gmail.com> wrote:
+>
+> Hi Alexandre,
+>
+> On Mon, Aug 22, 2022 at 4:03 PM Alexandre Courbot <acourbot@chromium.org> wrote:
+> >
+> > Hi Suwan, apologies for taking so long to come back to this.
+> >
+> > On Tue, Aug 2, 2022 at 11:50 PM Kim Suwan <suwan.kim027@gmail.com> wrote:
+> > >
+> > > Hi Alexandre
+> > >
+> > > On Tue, Aug 2, 2022 at 11:12 AM Alexandre Courbot <acourbot@chromium.org> wrote:
+> > > >
+> > > >  Hi Suwan,
+> > > >
+> > > > Thanks for the fast reply!
+> > > >
+> > > > On Tue, Aug 2, 2022 at 1:55 AM Kim Suwan <suwan.kim027@gmail.com> wrote:
+> > > > >
+> > > > > Hi Alexandre,
+> > > > >
+> > > > > Thanks for reporting the issue.
+> > > > >
+> > > > > I think a possible scenario is that request fails at
+> > > > > virtio_queue_rqs() and it is passed to normal path (virtio_queue_rq).
+> > > > >
+> > > > > In this procedure, It is possible that blk_mq_start_request()
+> > > > > was called twice changing request state from MQ_RQ_IN_FLIGHT to
+> > > > > MQ_RQ_IN_FLIGHT.
+> > > >
+> > > > I have checked whether virtblk_prep_rq_batch() within
+> > > > virtio_queue_rqs() ever returns 0, and it looks like it never happens.
+> > > > So as far as I can tell all virtio_queue_rqs() are processed
+> > > > successfully - but maybe the request can also fail further down the
+> > > > line? Is there some extra instrumentation I can do to check that?
+> > > >
+> > >
+> > > I'm looking at one more suspicious code.
+> > > If virtblk_add_req() fails within virtblk_add_req_batch(),
+> > > virtio_queue_rqs() passes the failed request to the normal path also
+> > > (virtio_queue_rq). Then, it can call blk_mq_start_request() twice.
+> > >
+> > > Because I can't reproduce the issue on my vm, Could you test
+> > > the below patch?
+> > > I defer the blk_mq_start_request() call after virtblk_add_req()
+> > > to ensure that we call blk_mq_start_request() after all the
+> > > preparations finish.
+> >
+> > Your patch seems to solve the problem! I am not seeing the warning
+> > anymore and the block device looks happy.
+>
+> Good news! Thanks for the test!
+>
+> > Let me know if I can do anything else.
+>
+> Could you test one more patch?
+> I move blk_mq_start_request(req) before spinlock() to reduce time
+> holding the lock within virtio_queue_rq().
+> If it is ok, I will send the patch.
 
-There are no functional changes.
+Yup, it seems to be happy with this patch as well. Thanks!
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 47142a1dd102..e47506a8ef47 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -570,14 +570,11 @@ static void throtl_enqueue_tg(struct throtl_grp *tg)
- 
- static void throtl_dequeue_tg(struct throtl_grp *tg)
- {
--	if (tg->flags & THROTL_TG_PENDING) {
--		struct throtl_service_queue *parent_sq =
--			tg->service_queue.parent_sq;
-+	struct throtl_service_queue *parent_sq = tg->service_queue.parent_sq;
- 
--		throtl_rb_erase(&tg->rb_node, parent_sq);
--		--parent_sq->nr_pending;
--		tg->flags &= ~THROTL_TG_PENDING;
--	}
-+	throtl_rb_erase(&tg->rb_node, parent_sq);
-+	--parent_sq->nr_pending;
-+	tg->flags &= ~THROTL_TG_PENDING;
- }
- 
- /* Call with queue lock held */
--- 
-2.31.1
-
+Cheers,
+Alex.
