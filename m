@@ -2,31 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F17305A0791
-	for <lists+linux-block@lfdr.de>; Thu, 25 Aug 2022 05:17:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA8155A07B6
+	for <lists+linux-block@lfdr.de>; Thu, 25 Aug 2022 05:55:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbiHYDR0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 24 Aug 2022 23:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
+        id S229510AbiHYDzj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 24 Aug 2022 23:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbiHYDRY (ORCPT
+        with ESMTP id S229437AbiHYDzi (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 24 Aug 2022 23:17:24 -0400
+        Wed, 24 Aug 2022 23:55:38 -0400
 Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9457B1E7
-        for <linux-block@vger.kernel.org>; Wed, 24 Aug 2022 20:17:19 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=gumi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VNBLGlP_1661397432;
-Received: from nu1m11355.sqa.nu8.tbsite.net(mailfrom:gumi@linux.alibaba.com fp:SMTPD_---0VNBLGlP_1661397432)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC54077E9B
+        for <linux-block@vger.kernel.org>; Wed, 24 Aug 2022 20:55:36 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=gumi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VNBZfMj_1661399732;
+Received: from LR9115VM81021(mailfrom:gumi@linux.alibaba.com fp:SMTPD_---0VNBZfMj_1661399732)
           by smtp.aliyun-inc.com;
-          Thu, 25 Aug 2022 11:17:17 +0800
-From:   Gu Mi <gumi@linux.alibaba.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, Gu Mi <gumi@linux.alibaba.com>
-Subject: [PATCH] block: I/O error occurs during SATA disk stress test
-Date:   Thu, 25 Aug 2022 11:17:10 +0800
-Message-Id: <1661397430-117734-1-git-send-email-gumi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+          Thu, 25 Aug 2022 11:55:33 +0800
+From:   "Gu Mi" <gumi@linux.alibaba.com>
+To:     <axboe@kernel.dk>
+Cc:     <linux-block@vger.kernel.org>, "'Gu Mi'" <gumi@linux.alibaba.com>
+Subject: =?gb2312?B?s7e72DogW1BBVENIXSBibG9jazogSS9PIGVycm9yIG9jY3VycyBkdQ==?=
+        =?gb2312?B?cmluZyBTQVRBIGRpc2sgc3RyZXNzIHRlc3Q=?=
+Date:   Thu, 25 Aug 2022 11:55:31 +0800
+Message-ID: <!&!LgAAAAAAAAA+cJVipGqMRY7WdQXblWOfAQDDto4Q93URzrTNAKoAu7bmAAAAAAAOAABGAAAAAAAAAD5wlWKkaoxFjtZ1BduVY58HAMO2jhD3dRHOtM0AqgC7tuYAAAAAAA4AANlTnCJhprtFudq2LHCBs8EBAJQHAAAAAAAAAAAEAAAAHgAAAD0AAABbUEFUQ0hdIGJsb2NrOiBJL08gZXJyb3Igb2NjdXJzIGR1cmluZyBTQVRBIGRpc2sgc3RyZXNzIHRlc3QA@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+        boundary="----=_NextPart_000_0000_01D8B879.9472BA50"
+X-Mailer: Microsoft Outlook 16.0
+Expiry-Date: Sat, 27 Aug 2022 11:55:29 +0800
+X-MS-TNEF-Correlator: 000000003E709562A46A8C458ED67505DB95639F0700C3B68E10F77511CEB4CD00AA00BBB6E600000000000D00007D838588F6766F448482B20C0B235C270000000026080000
+X-Spam-Status: No, score=-8.0 required=5.0 tests=BAYES_20,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,
         USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
@@ -36,41 +42,52 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The problem occurs in two async processes, One is when a new IO
-calls the blk_mq_start_request() interface to start sending,The other
-is that the block layer timer process calls the blk_mq_req_expired
-interface to check whether there is an IO timeout.
+This is a multipart message in MIME format.
 
-When an instruction out of sequence occurs between blk_add_timer
-and WRITE_ONCE(rq->state,MQ_RQ_IN_FLIGHT) in the interface
-blk_mq_start_request,at this time, the block timer is checking the
-new IO timeout, Since the req status has been set to MQ_RQ_IN_FLIGHT
-and req->deadline is 0 at this time, the new IO will be misjudged as
-a timeout.
+------=_NextPart_000_0000_01D8B879.9472BA50
+Content-Type: text/plain;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
 
-Our repair plan is for the deadline to be 0, and we do not think
-that a timeout occurs. At the same time, because the jiffies of the
-32-bit system will be reversed shortly after the system is turned on,
-we will add 1 jiffies to the deadline at this time.
+R3UgTWkgvauzt7vY08q8/qGwW1BBVENIXSBibG9jazogSS9PIGVycm9yIG9jY3VycyBkdXJpbmcg
+U0FUQSBkaXNrIHN0cmVzcw0KdGVzdKGxoaMNCg==
 
-Signed-off-by: Gu Mi <gumi@linux.alibaba.com>
----
- block/blk-mq.c | 2 ++
- 1 file changed, 2 insertions(+)
+------=_NextPart_000_0000_01D8B879.9472BA50
+Content-Type: application/ms-tnef;
+	name="winmail.dat"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="winmail.dat"
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 4b90d2d..6defaa1 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1451,6 +1451,8 @@ static bool blk_mq_req_expired(struct request *rq, unsigned long *next)
- 		return false;
- 
- 	deadline = READ_ONCE(rq->deadline);
-+	if (unlikely(deadline == 0))
-+		return false;
- 	if (time_after_eq(jiffies, deadline))
- 		return true;
- 
--- 
-1.8.3.1
+eJ8+IiADAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAAqAMAAAAAAACrAAEIgAcAEwAAAElQTS5PdXRs
+b29rLlJlY2FsbACCBgEDkAYADAYAABoAAAADACYAAQAAAAIBMQABAAAApgEAAFBDREZFQjA5AAEA
+AgDMAAAAAAAAADihuxAF5RAaobsIACsqVsIAAHBzdHByeC5kbGwAAAAAAAAAAOkv63WWUESGg7h9
+5SKqSUgAAEMAOgBcAFUAcwBlAHIAcwBcAEcAdQBNAGkAXABBAHAAcABEAGEAdABhAFwATABvAGMA
+YQBsAFwATQBpAGMAcgBvAHMAbwBmAHQAXABPAHUAdABsAG8AbwBrAFwAZwB1AG0AaQBAAGwAaQBu
+AHUAeAAuAGEAbABpAGIAYQBiAGEALgBjAG8AbQAuAG8AcwB0AAAALgAAAAAAAAA+cJVipGqMRY7W
+dQXblWOfAQDDto4Q93URzrTNAKoAu7bmAAAAAAAOAABGAAAAAAAAAD5wlWKkaoxFjtZ1BduVY58H
+AMO2jhD3dRHOtM0AqgC7tuYAAAAAAA4AANlTnCJhprtFudq2LHCBs8EBAJQHAAAAAAAAAAAEAAAA
+HgAAAD0AAABbUEFUQ0hdIGJsb2NrOiBJL08gZXJyb3Igb2NjdXJzIGR1cmluZyBTQVRBIGRpc2sg
+c3RyZXNzIHRlc3QAAAAeAHAAAQAAAEUAAAABBbO3u9g6IFtQQVRDSF0gYmxvY2s6IEkvTyBlcnJv
+ciBvY2N1cnMgZHVyaW5nIFNBVEEgZGlzayBzdHJlc3MgdGVzdAAAAAALAAEOAQAAAAMAFA4BAAAA
+HgAoDgEAAAA3AAAAMDAwMDAwMDIBZ3VtaUBsaW51eC5hbGliYWJhLmNvbQFndW1pQGxpbnV4LmFs
+aWJhYmEuY29tAAAeACkOAQAAADcAAAAwMDAwMDAwMgFndW1pQGxpbnV4LmFsaWJhYmEuY29tAWd1
+bWlAbGludXguYWxpYmFiYS5jb20AAB4A+j8BAAAAFwAAAGd1bWlAbGludXguYWxpYmFiYS5jb20A
+AAIBAGgBAAAABAAAAB4AAAADAE6ACCAGAAAAAADAAAAAAAAARgAAAAAahQAAAQAAAAsAHw4BAAAA
+AgH4DwEAAAAQAAAA6HPNhIlJWUasOVNthb6fxwIB+g8BAAAAEAAAAD5wlWKkaoxFjtZ1BduVY58D
+AP4PBQAAAAIBCRABAAAANgEAADIBAADuAQAATFpGdYFRxCgDAAoAcmNwZzEyNSIyA0N0ZXgFQmJp
+/mQEAAMwAQMB9wqAAqQD4wkCAGNoCsBzZXQw/iAHEwKAEHMAUARWCFUHsu8SRQ5RAwERRzIGAAbD
+EkVOMwRGEUkTX2Y0EN4xjDM0BgAHcHN1bgKAtxJTCO8J9zsbXw4wNRJCnQxgYwBQCwkBZDM2EdDD
+C6YDMGh0bWwAIRiFpwwBIEUR0Ed1BdBpAzD0J2ILMCcMoSJQFlAiUGY3IkEisWQ4I4Ei8WPGYSJB
+AOAnZmUigQBQASJQMFtQQVRDSARdIAJgb2NrOiDwSS9PIASQA2AFwCXglmMIcAQgZAhxbmcGAA0l
+YEEnMAQAayBzdH8bYAQRDrAoUCTFJPEk4mF3FlAgRQKxfSFICqIKgH0BK9AAAAMADTT9P60OAwAP
+NP0/rQ4CARQ0AQAAABAAAADpL+t1llBEhoO4feUiqklIAgHiZQEAAAAUAAAAAtNilc0u6kqySWZA
+ApYxqQAAXBkCAeNlAQAAABUAAAAUAtNilc0u6kqySWZAApYxqQAAXBkAAAACAX8AAQAAAI0AAAAw
+MDAwMDAwMDNFNzA5NTYyQTQ2QThDNDU4RUQ2NzUwNURCOTU2MzlGMDcwMEMzQjY4RTEwRjc3NTEx
+Q0VCNENEMDBBQTAwQkJCNkU2MDAwMDAwMDAwMDBEMDAwMDdEODM4NTg4RjY3NjZGNDQ4NDgyQjIw
+QzBCMjM1QzI3MDAwMDAwMDAyNjA4MDAwMAAAAAADAAYQ2mbuJQMABxBFAAAAAwAQEAAAAAADABEQ
+AAAAAB4ACBABAAAARgAAAEdVTUm9q7O3u9jTyrz+obBQQVRDSEJMT0NLOkkvT0VSUk9ST0NDVVJT
+RFVSSU5HU0FUQURJU0tTVFJFU1NURVNUobGhowAAAAyG
+
+------=_NextPart_000_0000_01D8B879.9472BA50--
 
