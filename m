@@ -2,58 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 997355A40DF
-	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 04:09:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10F265A40FD
+	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 04:14:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiH2CI2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 28 Aug 2022 22:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45474 "EHLO
+        id S229457AbiH2COM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 28 Aug 2022 22:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbiH2CI1 (ORCPT
+        with ESMTP id S229446AbiH2COL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 28 Aug 2022 22:08:27 -0400
+        Sun, 28 Aug 2022 22:14:11 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748A12F008
-        for <linux-block@vger.kernel.org>; Sun, 28 Aug 2022 19:08:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697F62F019
+        for <linux-block@vger.kernel.org>; Sun, 28 Aug 2022 19:14:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661738905;
+        s=mimecast20190719; t=1661739249;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=KIRE7tLozpF13xOfhfNz9hpJ1HAcNIfOccgt3ayzJTM=;
-        b=AvhAwZ0wtz4uQQDqYwfn5n4wl1Yzy+5ne+FWJ9Q9yhRp0cLR5D4jk4aGlULaXg+bJtcoKX
-        XLRPxgn8iFjztkCErFmm5Xl20Q4Vjy8PtBR9n4yqWWwTGy9EGPqRTqNod+oqTDyajF7xMN
-        kS2uzBiqQj6lKb8FRvTufUQ9u19xUpc=
+        bh=rM5zbaZYRZ9vm1GKLWu/oktNFyVDEDu0Q1Ep8JEXMfs=;
+        b=ILmD9itEsL51ukidTS9k9zA2r/XBWNBfvVFQfuBkauM3dUxqx8IbuA+M/CmJr7Z1xlHEnd
+        57KCcx6Aq/7uf4dwUd78AjUcFMp5y3kyfh4W6jpFJGFFh2F0L3FSdaxREgfbbAQniBffb6
+        2fpf2G6aSv2UEKD7cUurEpDAhng7D0g=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-235-PO_VuX-wMBaFVBYLINPJrQ-1; Sun, 28 Aug 2022 22:08:22 -0400
-X-MC-Unique: PO_VuX-wMBaFVBYLINPJrQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-227-qsRXAeZfPRmYk2LBYW96eQ-1; Sun, 28 Aug 2022 22:14:06 -0400
+X-MC-Unique: qsRXAeZfPRmYk2LBYW96eQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D563B1C05136;
-        Mon, 29 Aug 2022 02:08:21 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E33D13C02B77;
+        Mon, 29 Aug 2022 02:14:05 +0000 (UTC)
 Received: from T590 (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63B412026D64;
-        Mon, 29 Aug 2022 02:08:15 +0000 (UTC)
-Date:   Mon, 29 Aug 2022 10:08:11 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 422829459C;
+        Mon, 29 Aug 2022 02:14:01 +0000 (UTC)
+Date:   Mon, 29 Aug 2022 10:13:58 +0800
 From:   Ming Lei <ming.lei@redhat.com>
 To:     ZiyangZhang <ZiyangZhang@linux.alibaba.com>
 Cc:     axboe@kernel.dk, xiaoguang.wang@linux.alibaba.com,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joseph.qi@linux.alibaba.com, ming.lei@redhat.com
-Subject: Re: [RFC PATCH 0/9] ublk_drv: add USER_RECOVERY support
-Message-ID: <Ywwfi7Dgi0JC2kQ/@T590>
+        joseph.qi@linux.alibaba.com
+Subject: Re: [RFC PATCH 1/9] ublk_drv: check 'current' instead of 'ubq_daemon'
+Message-ID: <Ywwg5hCZSh0QQfYF@T590>
 References: <20220824054744.77812-1-ZiyangZhang@linux.alibaba.com>
+ <20220824054744.77812-2-ZiyangZhang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220824054744.77812-1-ZiyangZhang@linux.alibaba.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+In-Reply-To: <20220824054744.77812-2-ZiyangZhang@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,156 +62,47 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Aug 24, 2022 at 01:47:35PM +0800, ZiyangZhang wrote:
-> ublk_drv is a driver simply passes all blk-mq rqs to ublksrv[1] in
-> userspace. For each ublk queue, there is one ubq_daemon(pthread).
-> All ubq_daemons share the same process which opens /dev/ublkcX.
-> The ubq_daemon code infinitely loops on io_uring_enter() to
-> send/receive io_uring cmds which pass information of blk-mq
-> rqs.
+On Wed, Aug 24, 2022 at 01:47:36PM +0800, ZiyangZhang wrote:
+> This check is not atomic. So with recovery feature, ubq_daemon may be
+> updated simultaneously by recovery task. Instead, check 'current' is
+> safe here because 'current' never changes.
 > 
-> Now, if one ubq_daemon(pthread) or the process crashes, ublk_drv
-> must abort the dying ubq, stop the device and release everything.
-> This is not a good choice in practice because users do not expect
-> aborted requests, I/O errors and a released device. They may want
-> a recovery machenism so that no requests are aborted and no I/O
-> error occurs. Anyway, users just want everything works as uaual.
+> Also add comment explaining this check, which is really important for
+> understanding recovery feature.
+> 
+> Signed-off-by: ZiyangZhang <ZiyangZhang@linux.alibaba.com>
+> ---
+>  drivers/block/ublk_drv.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> index 6a4a94b4cdf4..c39b67d7133d 100644
+> --- a/drivers/block/ublk_drv.c
+> +++ b/drivers/block/ublk_drv.c
+> @@ -645,14 +645,22 @@ static inline void __ublk_rq_task_work(struct request *req)
+>  	struct ublk_device *ub = ubq->dev;
+>  	int tag = req->tag;
+>  	struct ublk_io *io = &ubq->ios[tag];
+> -	bool task_exiting = current != ubq->ubq_daemon || ubq_daemon_is_dying(ubq);
+>  	unsigned int mapped_bytes;
+>  
+>  	pr_devel("%s: complete: op %d, qid %d tag %d io_flags %x addr %llx\n",
+>  			__func__, io->cmd->cmd_op, ubq->q_id, req->tag, io->flags,
+>  			ublk_get_iod(ubq, req->tag)->addr);
+>  
+> -	if (unlikely(task_exiting)) {
+> +	/*
+> +	 * Task is exiting if either:
+> +	 *
+> +	 * (1) current != ubq_daemon.
+> +	 * io_uring_cmd_complete_in_task() tries to run task_work
+> +	 * in a workqueue if ubq_daemon(cmd's task) is PF_EXITING.
+> +	 *
+> +	 * (2) current->flags & PF_EXITING.
+> +	 */
+> +	if (unlikely(current != ubq->ubq_daemon || current->flags & PF_EXITING)) {
 
-I understand the requirement is that both /dev/ublkbN and /dev/ublkcN
-won't be deleted & re-added from user viewpoint after user recovery,
-so the device context won't be lost.
-
-> 
-> This RFC patchset implements USER_RECOVERY support. If the process
-> crashes, we allow ublksrv to provide new process and ubq_daemons.
-> We do not support single ubq_daemon(pthread) recovery because a
-> pthread rarely crashes.
-> 
-> Recovery feature is quite useful for products do not expect to
-> return any I/O error to frontend users.
-
-That looks one very ideal requirement. To be honest, no any block driver
-can guarantee that 100%, so it is just one soft requirement?
-
-Cause memory allocation may fail, network may be disconnected,
-re-creating pthread or process may fail too, ...
-
-> In detail, we support
-> this scenario:
-> (1) The /dev/ublkc0 is opened by process 0;
-> (2) Fio is running on /dev/ublkb0 exposed by ublk_drv and all
->     rqs are handled by process 0.
-> (3) Process 0 suddenly crashes(e.g. segfault);
-> (4) Fio is still running and submit IOs(but these IOs cannot
->     complete now)
-> (5) User recovers with process 1 and attach it to /dev/ublkc0
-> (6) All rqs are handled by process 1 now and IOs can be
->     completed now.
-> 
-> Note: The backend must tolerate double-write because we re-issue
-> a rq sent to the old(dying) process before. We allow users to
-> choose whether re-issue these rqs or not, please see patch 7 for
-> more detail.
-> 
-> We provide a sample script here to simulate the above steps:
-> 
-> ***************************script***************************
-> LOOPS=10
-> 
-> __ublk_get_pid() {
-> 	pid=`./ublk list -n 0 | grep "pid" | awk '{print $7}'`
-> 	echo $pid
-> }
-> 
-> ublk_recover_kill()
-> {
-> 	for CNT in `seq $LOOPS`; do
-> 		dmesg -C
->                 pid=`__ublk_get_pid`
->                 echo -e "*** kill $pid now ***"
-> 		kill -9 $pid
-> 		sleep 2
->                 echo -e "*** recover now ***"
->                 ./ublk recover -n 0
-
-The current behavior is that /dev/ublkb* is removed after device is
-aborted because ubq daemon is killed.
-
-What if 'ublk recover' command isn't sent? So the current behavior
-without recovery is changed? Or just changed with this feature enabled?
-
-BTW, I do not mean the change isn't reasonable, but suggest to document
-the user visible change, so it can get reviewed from either user
-viewpoint and technical point.
-
-> 		sleep 4
-> 	done
-> }
-> 
-> ublk_test()
-> {
->         dmesg -C
->         echo -e "*** add ublk device ***"
->         ./ublk add -t null -d 4 -i 1
->         sleep 2
->         echo -e "*** start fio ***"
->         fio --bs=4k \
->             --filename=/dev/ublkb0 \
->             --runtime=100s \
->             --rw=read &
->         sleep 4
->         ublk_recover_kill
->         wait
->         echo -e "*** delete ublk device ***"
->         ./ublk del -n 0
-> }
-> 
-> for CNT in `seq 4`; do
->         modprobe -rv ublk_drv
->         modprobe ublk_drv
->         echo -e "************ round $CNT ************"
->         ublk_test
->         sleep 5
-> done
-> ***************************script***************************
-> 
-> You may run it with our modified ublksrv[3] which supports
-> recovey feature. No I/O error occurs and you can verify it
-> by typing
->     $ perf-tools/bin/tpoint block:block_rq_error
-> 
-> The basic idea of USER_RECOVERY is quite straightfoward:
-> 
-> (1) release/free everything belongs to the dying process.
-> 
->     Note: Since ublk_drv does save information about user process,
->     this work is important because we don't expect any resource
->     lekage. Particularly, ioucmds from the dying ubq_daemons
->     need to be completed(freed). Current ublk_drv code cannot satisfy
->     our need while considering USER_RECOVERY. So we refactor some code
->     shown in patch 1-5 to gracefully free all ioucmds.
-> 
-> (2) init ublk queues including requeuing/aborting rqs.
-> 
-> (3) allow new ubq_daemons issue FETCH_REQ.
-> 
-> Here is steps to reocver:
-> 
-> (1) For a user, after a process crash(how he detect a crash is not related
->     to this patchset), he sends START_USER_RECOVERY ctrl-cmd to
-
-I'd suggest to describe crash detector a bit at least, as one whole use case,
-crash detector should be the input of the use case of user recovery, which is
-usually one part of use case when modeling software requirement/design.
-
-Such as, crash is detected after the ubq daemon pthread/process is crashed?
-Will you consider io hang in the daemon pthread/process? IMO, long-term,
-the crash detector utility should be part of ublksrv.
-
-We don't implement ublk driver's IO timeout yet, but that implementation may be
-related with this recovery feature closely, such as, one simple approach is to
-kill ubq-daemon if we can't move on after retrying several times, then
-let userspace detect & recovery.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 
 Thanks,
