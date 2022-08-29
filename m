@@ -2,157 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 865545A4C09
-	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 14:37:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D909E5A4BB4
+	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 14:26:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbiH2Mh5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 29 Aug 2022 08:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
+        id S232071AbiH2M0y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Aug 2022 08:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbiH2Mhm (ORCPT
+        with ESMTP id S229810AbiH2M00 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 29 Aug 2022 08:37:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958F4A6C2A
-        for <linux-block@vger.kernel.org>; Mon, 29 Aug 2022 05:21:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661775678;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xvRlmqs214Dpgefm9SAxkwz6k6CnKHpZ0dlz408l89w=;
-        b=Liz7p0niJwOoZkvl8/emaYNL/c7bdcbi/8w0BtbSHeaIHxjytHp7fXIRjE61UTrzOLUrqI
-        RByS5Zqam9P3x+go+U+NV2qAdK2t53xW8agZhZktY8j1saUSC1m46b7eJA9WCiIMxa7mpI
-        Wo+fVf4rTzWPxZgbpx/8Z2j+fbmX9pw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-357-DQoaDj-WNGOFVTa8YobbaQ-1; Mon, 29 Aug 2022 08:07:55 -0400
-X-MC-Unique: DQoaDj-WNGOFVTa8YobbaQ-1
-Received: by mail-wm1-f72.google.com with SMTP id a17-20020a05600c349100b003a545125f6eso8372598wmq.4
-        for <linux-block@vger.kernel.org>; Mon, 29 Aug 2022 05:07:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc;
-        bh=xvRlmqs214Dpgefm9SAxkwz6k6CnKHpZ0dlz408l89w=;
-        b=aSgL6ds/vZumJ+4jYWwSgsWz9gRMCPUObmnApLVZk37bStIQW3u3MYKNDTqgsHYbYF
-         CDwDk9CoiACmFItJ1KLjbYbzmrhD2m1hf2dyIoeu2St22kgXygcuF+ZSdUP/CeIZuzm/
-         wqQWQIsGzrpumKc1RDcRK53AaJWLFUoYIRzLBxRbbGjNnYcpUAHz6kX68UQBwiYRjq8v
-         gCYx/p7b1MLTw1r46uBoAxDQXpogNb1Mobn5WvmbhpSlZ1TYn9yp4c6QQxAOlFBPOuXb
-         RWMdIcNjW8EY9ehDHuf7Nmoc6eZS04/rOoKIrX6vUJq8XmiGr2JtJyonoT6lgast63mO
-         mNqA==
-X-Gm-Message-State: ACgBeo2mbms1BclVaxFqjAsB3SinMVY85PzkddI2vo+F6oJ3FPUB/qg5
-        xzPwAqoy/hYYFzfvFwj2jCvJv5z2hS2/eDAZCDbWrsUIOWSuuMeXWW/JwtWjOorZ6/dPWnPT7G3
-        fEtM5OdpwP+dJW0/hmOLna/0=
-X-Received: by 2002:a5d:68c9:0:b0:225:330b:2d0 with SMTP id p9-20020a5d68c9000000b00225330b02d0mr5809298wrw.243.1661774873806;
-        Mon, 29 Aug 2022 05:07:53 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR40B6aIc3Kd7HqO+pm6F4fpndLD4ybKX0vv6qIxnrSvSPYic+blNQ9JwBkZ3/6303cVEkP7JA==
-X-Received: by 2002:a5d:68c9:0:b0:225:330b:2d0 with SMTP id p9-20020a5d68c9000000b00225330b02d0mr5809271wrw.243.1661774873476;
-        Mon, 29 Aug 2022 05:07:53 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:3900:658b:bed0:4260:4c25? (p200300cbc7073900658bbed042604c25.dip0.t-ipconnect.de. [2003:cb:c707:3900:658b:bed0:4260:4c25])
-        by smtp.gmail.com with ESMTPSA id f17-20020adfdb51000000b002252cb35184sm6771976wrj.25.2022.08.29.05.07.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Aug 2022 05:07:53 -0700 (PDT)
-Message-ID: <10a9d33a-58a3-10b3-690b-53100d4e5440@redhat.com>
-Date:   Mon, 29 Aug 2022 14:07:52 +0200
+        Mon, 29 Aug 2022 08:26:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8968C30F55;
+        Mon, 29 Aug 2022 05:10:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AE09BB80F93;
+        Mon, 29 Aug 2022 12:10:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5EA1FC433D6;
+        Mon, 29 Aug 2022 12:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661775017;
+        bh=fK7S2U9FH3Mh1H4KPhuYrCAu21172KjX+5QYn8bZxhw=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=TBIvehqlXAnaUEIBMGrGtucuAxZHCjYUbH9gZTzp39B5ATUAioe8WO3EhAjb3uXxe
+         dMkxYY6hb+WC6eHZyS/cPa8r2CKTI01EB9MGyg1IsF1/oZT7KJghqNmyKNC9XH8ves
+         Cj3pIf4EmX/G+vS/jKdpHZhOleUGsARHnbS9xEcHQZhYvclYHJsMAatPyh4hKIzTRv
+         ajwmDjfIKqrpsF4i7DFIPFPAdyZsb0nMzw3IdNk/hNCLbimS7UVtlTLrinQs2UaKDw
+         YTwmujROS5OWbAtqbFtveKef90uGKF6IuQSib+pIDDHdy0cvO/DcGODQekO/LzgUrc
+         qkbrfSs4DNb4A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4809AE924D7;
+        Mon, 29 Aug 2022 12:10:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 1/6] mm/gup: introduce pin_user_page()
-Content-Language: en-US
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <20220827083607.2345453-1-jhubbard@nvidia.com>
- <20220827083607.2345453-2-jhubbard@nvidia.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20220827083607.2345453-2-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] genetlink: start to validate reserved header bytes
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <166177501728.22813.10790787483082655487.git-patchwork-notify@kernel.org>
+Date:   Mon, 29 Aug 2022 12:10:17 +0000
+References: <20220825001830.1911524-1-kuba@kernel.org>
+In-Reply-To: <20220825001830.1911524-1-kuba@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
+        pabeni@redhat.com, jiri@resnulli.us, johannes@sipsolutions.net,
+        linux-block@vger.kernel.org, osmocom-net-gprs@lists.osmocom.org,
+        linux-wpan@vger.kernel.org, wireguard@lists.zx2c4.com,
+        linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-pm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        mptcp@lists.linux.dev, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dev@openvswitch.org,
+        linux-s390@vger.kernel.org, tipc-discussion@lists.sourceforge.net
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 27.08.22 10:36, John Hubbard wrote:
-> pin_user_page() is an externally-usable version of try_grab_page(), but
-> with semantics that match get_page(), so that it can act as a drop-in
-> replacement for get_page(). Specifically, pin_user_page() has a void
-> return type.
+Hello:
+
+This patch was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
+
+On Wed, 24 Aug 2022 17:18:30 -0700 you wrote:
+> We had historically not checked that genlmsghdr.reserved
+> is 0 on input which prevents us from using those precious
+> bytes in the future.
 > 
-> pin_user_page() elevates a page's refcount using FOLL_PIN rules. This
-> means that the caller must release the page via unpin_user_page().
+> One use case would be to extend the cmd field, which is
+> currently just 8 bits wide and 256 is not a lot of commands
+> for some core families.
 > 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  include/linux/mm.h |  1 +
->  mm/gup.c           | 33 +++++++++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 982f2607180b..85a105157334 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1869,6 +1869,7 @@ long pin_user_pages_remote(struct mm_struct *mm,
->  long get_user_pages(unsigned long start, unsigned long nr_pages,
->  			    unsigned int gup_flags, struct page **pages,
->  			    struct vm_area_struct **vmas);
-> +void pin_user_page(struct page *page);
->  long pin_user_pages(unsigned long start, unsigned long nr_pages,
->  		    unsigned int gup_flags, struct page **pages,
->  		    struct vm_area_struct **vmas);
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 5abdaf487460..245ccb41ed8c 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -3213,6 +3213,39 @@ long pin_user_pages(unsigned long start, unsigned long nr_pages,
->  }
->  EXPORT_SYMBOL(pin_user_pages);
->  
-> +/**
-> + * pin_user_page() - apply a FOLL_PIN reference to a page
-> + *
-> + * @page: the page to be pinned.
-> + *
-> + * This is similar to get_user_pages(), except that the page's refcount is
-> + * elevated using FOLL_PIN, instead of FOLL_GET.
-> + *
-> + * IMPORTANT: The caller must release the page via unpin_user_page().
-> + *
-> + */
-> +void pin_user_page(struct page *page)
-> +{
-> +	struct folio *folio = page_folio(page);
-> +
-> +	WARN_ON_ONCE(folio_ref_count(folio) <= 0);
-> +
+> [...]
 
-We should warn if the page is anon and !exclusive.
+Here is the summary with links:
+  - [net-next] genetlink: start to validate reserved header bytes
+    https://git.kernel.org/netdev/net-next/c/9c5d03d36251
 
-I assume the intend is to use pin_user_page() only to duplicate pins, right?
-
-
+You are awesome, thank you!
 -- 
-Thanks,
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-David / dhildenb
 
