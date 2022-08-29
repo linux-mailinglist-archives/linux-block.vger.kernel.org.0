@@ -2,272 +2,209 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 889E95A40F1
-	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 04:11:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BFF65A4122
+	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 04:49:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbiH2CLb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 28 Aug 2022 22:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49720 "EHLO
+        id S229449AbiH2CtD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 28 Aug 2022 22:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229685AbiH2CL1 (ORCPT
+        with ESMTP id S229379AbiH2CtC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 28 Aug 2022 22:11:27 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FB93B954;
-        Sun, 28 Aug 2022 19:11:24 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4MGDQv4wXNzKHSn;
-        Mon, 29 Aug 2022 10:09:43 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP2 (Coremail) with SMTP id Syh0CgAnenNFIAxjqVZKAA--.51100S8;
-        Mon, 29 Aug 2022 10:11:22 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     axboe@kernel.dk, tj@kernel.org, mkoutny@suse.com,
-        ming.lei@redhat.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, yukuai3@huawei.com,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com
-Subject: [PATCH v9 4/4] blk-throttle: fix io hung due to configuration updates
-Date:   Mon, 29 Aug 2022 10:22:40 +0800
-Message-Id: <20220829022240.3348319-5-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220829022240.3348319-1-yukuai1@huaweicloud.com>
-References: <20220829022240.3348319-1-yukuai1@huaweicloud.com>
+        Sun, 28 Aug 2022 22:49:02 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB08C3CBCC
+        for <linux-block@vger.kernel.org>; Sun, 28 Aug 2022 19:49:01 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id c24so6481657pgg.11
+        for <linux-block@vger.kernel.org>; Sun, 28 Aug 2022 19:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=2jx0mwW81FasX+Vweg9adU+37g1pOQYePNCrjzO4RNE=;
+        b=HUPV40vG6ZiXKHxi3+dHm70BSwWJwuibuzCEAOfDv4bt9gA8SDvaEZVy5ErmbqCCaj
+         O1LgrhP5HvMcPRGLfbOFs38q3ka0jH54xC9z1Dj8OwCrDiW9VVZu1viPuONpul1q+Qma
+         atfbOqCiAeiI1cL3d7zj9kVQQ1Db9bzErWXJwyTOsNTFitr2zImk9rrooGGvKLCUlOV4
+         +0pUSrFw8PEjjqmR5lUDiEyU5N/0e52Yana5bq8t/qQvyTYZ3lJgYz+rpY89ab4fBxEh
+         S1bJSKv0EtHWJDWLzGy7E5/opxs0eNaFZSXCCztQI/Y4JHWzJ5VP4ynauurJv2BMIIc/
+         wFCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=2jx0mwW81FasX+Vweg9adU+37g1pOQYePNCrjzO4RNE=;
+        b=GmMaZGWs+CQNml+HRO8gb3Cgqzppc5HdBg/Dz6iYPsKh0P+g5DP7PfIdVorQRzN0fs
+         uJUSehTfgGD+dChy2Jn8ra2YeqMb3vHmd/x6O4uzl8OYkMeQzzwsLIz52OMe2FAyIaQQ
+         2hidJ8ePX2x6U7ysC39rRCUctdFOW9qI9qaJ3m8Mi8Q+70wMnllL0oyg/R8Mi3gqsXNu
+         dybnzk1e2qTzHz5WI+8luQIzYBZY0rT+gbfbTYB3lALf1qyGWuPEYTqkpDiuhtugYzbH
+         +SNT2E126aYMKL6Y6AjXHOjzd0E4tLEVd51m3R3cy5MwOqaCshDvpmtO48sZ0p3kl17v
+         1mjA==
+X-Gm-Message-State: ACgBeo3iuW0EZgi+xMK3g28cLU//PogE5AbLN4Z5PgIdB8M3FEgbkaEb
+        5Xp9+VxNZPl/MAMUw7pcTL0=
+X-Google-Smtp-Source: AA6agR5lDFFaGB75bvCA5Uv26Wy3nwGeiTZJppyTi4faLKw5owYeYfBk00XPUbZl+3w6xw/E0P59iw==
+X-Received: by 2002:a05:6a00:15cb:b0:52e:6100:e7a7 with SMTP id o11-20020a056a0015cb00b0052e6100e7a7mr14247760pfu.23.1661741341344;
+        Sun, 28 Aug 2022 19:49:01 -0700 (PDT)
+Received: from localhost.localdomain ([114.200.4.15])
+        by smtp.gmail.com with ESMTPSA id l64-20020a622543000000b00537b1aa9191sm6113008pfl.178.2022.08.28.19.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Aug 2022 19:49:00 -0700 (PDT)
+Date:   Mon, 29 Aug 2022 11:48:36 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, jasowang@redhat.com,
+        pbonzini@redhat.com, linux-block@vger.kernel.org,
+        virtualization <virtualization@lists.linux-foundation.org>,
+        suwan.kim027@gmail.com
+Subject: Re: [PATCH] virtio-blk: Fix WARN_ON_ONCE in virtio_queue_rq()
+Message-ID: <YwwpBBQgLMqFjoPb@localhost.localdomain>
+References: <20220823145005.26356-1-suwan.kim027@gmail.com>
+ <YwU/EVxT0a6q2BfD@fedora>
+ <CAFNWusaXc3H78kx1wxUDLht3PuV0A_VxvdmmY-yMJNefvih-1Q@mail.gmail.com>
+ <YwZgqf5kMqKHwcxR@fedora>
+ <CAFNWusbESeNm6f7wqvUpEhu9HYxN=FgzmBBBx3m0UvRXvzjqDQ@mail.gmail.com>
+ <CAPBb6MUOP9j_Zd4tu0=rLKu2T3w6h-XhSOkU_ei70vJywHcPqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgAnenNFIAxjqVZKAA--.51100S8
-X-Coremail-Antispam: 1UD129KBjvJXoW3GFyDGr1DGF4kKry5CrW8tFb_yoWxtw43pF
-        WFkan0qw45Xan7KFZxC3Z0yay0qws7Jry3J3y7Gr1rAF1YkryktFn8ZrWYyay8AF97ua1I
-        vw1qgF9xCF42vrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUPY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-        kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-        z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-        4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-        3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-        IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-        kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-        14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-        kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-        wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-        4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQSdkU
-        UUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPBb6MUOP9j_Zd4tu0=rLKu2T3w6h-XhSOkU_ei70vJywHcPqA@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Fri, Aug 26, 2022 at 10:41:39AM +0900, Alexandre Courbot wrote:
+> On Thu, Aug 25, 2022 at 11:50 PM Suwan Kim <suwan.kim027@gmail.com> wrote:
+> >
+> > On Thu, Aug 25, 2022 at 2:32 AM Stefan Hajnoczi <stefanha@redhat.com> wrote:
+> > >
+> > > On Wed, Aug 24, 2022 at 10:16:10PM +0900, Kim Suwan wrote:
+> > > > Hi Stefan,
+> > > >
+> > > > On Wed, Aug 24, 2022 at 5:56 AM Stefan Hajnoczi <stefanha@redhat.com> wrote:
+> > > > >
+> > > > > On Tue, Aug 23, 2022 at 11:50:05PM +0900, Suwan Kim wrote:
+> > > > > > @@ -409,6 +409,8 @@ static bool virtblk_add_req_batch(struct virtio_blk_vq *vq,
+> > > > > >                       virtblk_unmap_data(req, vbr);
+> > > > > >                       virtblk_cleanup_cmd(req);
+> > > > > >                       rq_list_add(requeue_list, req);
+> > > > > > +             } else {
+> > > > > > +                     blk_mq_start_request(req);
+> > > > > >               }
+> > > > >
+> > > > > The device may see new requests as soon as virtblk_add_req() is called
+> > > > > above. Therefore the device may complete the request before
+> > > > > blk_mq_start_request() is called.
+> > > > >
+> > > > > rq->io_start_time_ns = ktime_get_ns() will be after the request was
+> > > > > actually submitted.
+> > > > >
+> > > > > I think blk_mq_start_request() needs to be called before
+> > > > > virtblk_add_req().
+> > > > >
+> > > >
+> > > > But if blk_mq_start_request() is called before virtblk_add_req()
+> > > > and virtblk_add_req() fails, it can trigger WARN_ON_ONCE() at
+> > > > virtio_queue_rq().
+> > > >
+> > > > With regard to the race condition between virtblk_add_req() and
+> > > > completion, I think that the race condition can not happen because
+> > > > virtblk_add_req() holds vq lock with irq saving and completion side
+> > > > (virtblk_done, virtblk_poll) need to acquire the vq lock also.
+> > > > Moreover, virtblk_done() is irq context so I think it can not be
+> > > > executed until virtblk_add_req() releases the lock.
+> > >
+> > > I agree there is no race condition regarding the ordering of
+> > > blk_mq_start_request() and request completion. The spinlock prevents
+> > > that and I wasn't concerned about that part.
+> > >
+> > > The issue is that the timestamp will be garbage. If we capture the
+> > > timestamp during/after the request is executing, then the collected
+> > > statistics will be wrong.
+> > >
+> > > Can you look for another solution that doesn't break the timestamp?
+> > >
+> > > FWIW I see that the rq->state state machine allows returning to the idle
+> > > state once the request has been started: __blk_mq_requeue_request().
+> >
+> > I considered blk_mq_requeue_request() to handle error cases but
+> > I didn't use it because I think it can make the error path request
+> > processing slower than requeuing an error request to plug list again.
+> >
+> > But there doesn't seem to be any other option that doesn't break
+> > the timestamp.
+> >
+> > As you said, I will use __blk_mq_requeue_request() and send
+> > new patch soon.
+> >
+> > To Alexandre,
+> >
+> > I will share new diff soon. Could you please test one more time?
+> 
+> Absolutely! Thanks for looking into this.
 
-If new configuration is submitted while a bio is throttled, then new
-waiting time is recalculated regardless that the bio might already wait
-for some time:
+Hi Alexandre,
 
-tg_conf_updated
- throtl_start_new_slice
-  tg_update_disptime
-  throtl_schedule_next_dispatch
+Could you test this path?
+If it works, I will send v2 patch.
 
-Then io hung can be triggered by always submmiting new configuration
-before the throttled bio is dispatched.
+Regards,
+Suwan Kim
 
-Fix the problem by respecting the time that throttled bio already waited.
-In order to do that, add new fields to record how many bytes/io are
-waited, and use it to calculate wait time for throttled bio under new
-configuration.
-
-Some simple test:
-1)
-cd /sys/fs/cgroup/blkio/
-echo $$ > cgroup.procs
-echo "8:0 2048" > blkio.throttle.write_bps_device
-{
-        sleep 2
-        echo "8:0 1024" > blkio.throttle.write_bps_device
-} &
-dd if=/dev/zero of=/dev/sda bs=8k count=1 oflag=direct
-
-2)
-cd /sys/fs/cgroup/blkio/
-echo $$ > cgroup.procs
-echo "8:0 1024" > blkio.throttle.write_bps_device
-{
-        sleep 4
-        echo "8:0 2048" > blkio.throttle.write_bps_device
-} &
-dd if=/dev/zero of=/dev/sda bs=8k count=1 oflag=direct
-
-test results: io finish time
-	before this patch	with this patch
-1)	10s			6s
-2)	8s			6s
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Acked-by: Tejun Heo <tj@kernel.org>
 ---
- block/blk-throttle.c | 58 +++++++++++++++++++++++++++++++++++++++-----
- block/blk-throttle.h |  9 +++++++
- 2 files changed, 61 insertions(+), 6 deletions(-)
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 04c72d3283a5..7179b5cd42dc 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -642,6 +642,8 @@ static inline void throtl_start_new_slice_with_credit(struct throtl_grp *tg,
- {
- 	tg->bytes_disp[rw] = 0;
- 	tg->io_disp[rw] = 0;
-+	tg->carryover_bytes[rw] = 0;
-+	tg->carryover_ios[rw] = 0;
- 
- 	/*
- 	 * Previous slice has expired. We must have trimmed it after last
-@@ -659,12 +661,17 @@ static inline void throtl_start_new_slice_with_credit(struct throtl_grp *tg,
- 		   tg->slice_end[rw], jiffies);
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 30255fcaf181..dd9a05174726 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -322,14 +322,14 @@ static blk_status_t virtblk_prep_rq(struct blk_mq_hw_ctx *hctx,
+        if (unlikely(status))
+                return status;
+
+-       blk_mq_start_request(req);
+-
+        vbr->sg_table.nents = virtblk_map_data(hctx, req, vbr);
+        if (unlikely(vbr->sg_table.nents < 0)) {
+                virtblk_cleanup_cmd(req);
+                return BLK_STS_RESOURCE;
+        }
+
++       blk_mq_start_request(req);
++
+        return BLK_STS_OK;
  }
- 
--static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw)
-+static inline void throtl_start_new_slice(struct throtl_grp *tg, bool rw,
-+					  bool clear_carryover)
- {
- 	tg->bytes_disp[rw] = 0;
- 	tg->io_disp[rw] = 0;
- 	tg->slice_start[rw] = jiffies;
- 	tg->slice_end[rw] = jiffies + tg->td->throtl_slice;
-+	if (clear_carryover) {
-+		tg->carryover_bytes[rw] = 0;
-+		tg->carryover_ios[rw] = 0;
-+	}
- 
- 	throtl_log(&tg->service_queue,
- 		   "[%c] new slice start=%lu end=%lu jiffies=%lu",
-@@ -786,6 +793,41 @@ static u64 calculate_bytes_allowed(u64 bps_limit, unsigned long jiffy_elapsed)
- 	return mul_u64_u64_div_u64(bps_limit, (u64)jiffy_elapsed, (u64)HZ);
+
+@@ -391,8 +391,7 @@ static bool virtblk_prep_rq_batch(struct request *req)
  }
- 
-+static void __tg_update_carryover(struct throtl_grp *tg, bool rw)
-+{
-+	unsigned long jiffy_elapsed = jiffies - tg->slice_start[rw];
-+	u64 bps_limit = tg_bps_limit(tg, rw);
-+	u32 iops_limit = tg_iops_limit(tg, rw);
-+
-+	/*
-+	 * If config is updated while bios are still throttled, calculate and
-+	 * accumulate how many bytes/ios are waited across changes. And
-+	 * carryover_bytes/ios will be used to calculate new wait time under new
-+	 * configuration.
-+	 */
-+	if (bps_limit != U64_MAX)
-+		tg->carryover_bytes[rw] +=
-+			calculate_bytes_allowed(bps_limit, jiffy_elapsed) -
-+			tg->bytes_disp[rw];
-+	if (iops_limit != UINT_MAX)
-+		tg->carryover_ios[rw] +=
-+			calculate_io_allowed(iops_limit, jiffy_elapsed) -
-+			tg->io_disp[rw];
-+}
-+
-+static void tg_update_carryover(struct throtl_grp *tg)
-+{
-+	if (tg->service_queue.nr_queued[READ])
-+		__tg_update_carryover(tg, READ);
-+	if (tg->service_queue.nr_queued[WRITE])
-+		__tg_update_carryover(tg, WRITE);
-+
-+	/* see comments in struct throtl_grp for meaning of these fields. */
-+	throtl_log(&tg->service_queue, "%s: %llu %llu %u %u\n", __func__,
-+		   tg->carryover_bytes[READ], tg->carryover_bytes[WRITE],
-+		   tg->carryover_ios[READ], tg->carryover_ios[WRITE]);
-+}
-+
- static bool tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio,
- 				 u32 iops_limit, unsigned long *wait)
+
+ static bool virtblk_add_req_batch(struct virtio_blk_vq *vq,
+-                                       struct request **rqlist,
+-                                       struct request **requeue_list)
++                                       struct request **rqlist)
  {
-@@ -803,7 +845,8 @@ static bool tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio,
- 
- 	/* Round up to the next throttle slice, wait time must be nonzero */
- 	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg->td->throtl_slice);
--	io_allowed = calculate_io_allowed(iops_limit, jiffy_elapsed_rnd);
-+	io_allowed = calculate_io_allowed(iops_limit, jiffy_elapsed_rnd) +
-+		     tg->carryover_ios[rw];
- 	if (tg->io_disp[rw] + 1 <= io_allowed) {
- 		if (wait)
- 			*wait = 0;
-@@ -840,7 +883,8 @@ static bool tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
- 		jiffy_elapsed_rnd = tg->td->throtl_slice;
- 
- 	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
--	bytes_allowed = calculate_bytes_allowed(bps_limit, jiffy_elapsed_rnd);
-+	bytes_allowed = calculate_bytes_allowed(bps_limit, jiffy_elapsed_rnd) +
-+			tg->carryover_bytes[rw];
- 	if (tg->bytes_disp[rw] + bio_size <= bytes_allowed) {
- 		if (wait)
- 			*wait = 0;
-@@ -901,7 +945,7 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
- 	 * slice and it should be extended instead.
- 	 */
- 	if (throtl_slice_used(tg, rw) && !(tg->service_queue.nr_queued[rw]))
--		throtl_start_new_slice(tg, rw);
-+		throtl_start_new_slice(tg, rw, true);
- 	else {
- 		if (time_before(tg->slice_end[rw],
- 		    jiffies + tg->td->throtl_slice))
-@@ -1325,8 +1369,8 @@ static void tg_conf_updated(struct throtl_grp *tg, bool global)
- 	 * that a group's limit are dropped suddenly and we don't want to
- 	 * account recently dispatched IO with new low rate.
- 	 */
--	throtl_start_new_slice(tg, READ);
--	throtl_start_new_slice(tg, WRITE);
-+	throtl_start_new_slice(tg, READ, false);
-+	throtl_start_new_slice(tg, WRITE, false);
- 
- 	if (tg->flags & THROTL_TG_PENDING) {
- 		tg_update_disptime(tg);
-@@ -1354,6 +1398,7 @@ static ssize_t tg_set_conf(struct kernfs_open_file *of,
- 		v = U64_MAX;
- 
- 	tg = blkg_to_tg(ctx.blkg);
-+	tg_update_carryover(tg);
- 
- 	if (is_u64)
- 		*(u64 *)((void *)tg + of_cft(of)->private) = v;
-@@ -1540,6 +1585,7 @@ static ssize_t tg_set_limit(struct kernfs_open_file *of,
- 		return ret;
- 
- 	tg = blkg_to_tg(ctx.blkg);
-+	tg_update_carryover(tg);
- 
- 	v[0] = tg->bps_conf[READ][index];
- 	v[1] = tg->bps_conf[WRITE][index];
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index ee7299e6dea9..66b4292b1b92 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -121,6 +121,15 @@ struct throtl_grp {
- 	uint64_t last_bytes_disp[2];
- 	unsigned int last_io_disp[2];
- 
-+	/*
-+	 * The following two fields are updated when new configuration is
-+	 * submitted while some bios are still throttled, they record how many
-+	 * bytes/ios are waited already in previous configuration, and they will
-+	 * be used to calculate wait time under new configuration.
-+	 */
-+	uint64_t carryover_bytes[2];
-+	unsigned int carryover_ios[2];
-+
- 	unsigned long last_check_time;
- 
- 	unsigned long latency_target; /* us */
--- 
-2.31.1
+        unsigned long flags;
+        int err;
+@@ -408,7 +407,7 @@ static bool virtblk_add_req_batch(struct virtio_blk_vq *vq,
+                if (err) {
+                        virtblk_unmap_data(req, vbr);
+                        virtblk_cleanup_cmd(req);
+-                       rq_list_add(requeue_list, req);
++                       blk_mq_requeue_request(req, true);
+                }
+        }
+
+@@ -436,7 +435,7 @@ static void virtio_queue_rqs(struct request **rqlist)
+
+                if (!next || req->mq_hctx != next->mq_hctx) {
+                        req->rq_next = NULL;
+-                       kick = virtblk_add_req_batch(vq, rqlist, &requeue_list);
++                       kick = virtblk_add_req_batch(vq, rqlist);
+                        if (kick)
+                                virtqueue_notify(vq->vq);
+
 
