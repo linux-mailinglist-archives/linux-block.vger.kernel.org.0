@@ -2,82 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34E7A5A419F
-	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 05:58:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0DEA5A41A4
+	for <lists+linux-block@lfdr.de>; Mon, 29 Aug 2022 06:00:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbiH2D6Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 28 Aug 2022 23:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34038 "EHLO
+        id S229561AbiH2EAb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 29 Aug 2022 00:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiH2D6Y (ORCPT
+        with ESMTP id S229544AbiH2EAa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 28 Aug 2022 23:58:24 -0400
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC27941D3B;
-        Sun, 28 Aug 2022 20:58:23 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VNW3tRh_1661745498;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VNW3tRh_1661745498)
-          by smtp.aliyun-inc.com;
-          Mon, 29 Aug 2022 11:58:20 +0800
-Date:   Mon, 29 Aug 2022 11:58:16 +0800
-From:   Gao Xiang <hsiangkao@linux.alibaba.com>
-To:     "Richard W.M. Jones" <rjones@redhat.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-doc@vger.kernel.org, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-Subject: Re: [PATCH] Docs: ublk: add ublk document
-Message-ID: <Yww5WIqBHysu0CmT@B-P7TQMD6M-0146.local>
-Mail-Followup-To: "Richard W.M. Jones" <rjones@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-doc@vger.kernel.org, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-References: <20220828045003.537131-1-ming.lei@redhat.com>
- <20220828150911.GW7484@redhat.com>
+        Mon, 29 Aug 2022 00:00:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525EAA44F
+        for <linux-block@vger.kernel.org>; Sun, 28 Aug 2022 21:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661745628;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=eQVsuwgc8uXKILvzGyvbWtTjg/syLvD78qexD18++Io=;
+        b=ZKD7gDiQXkPVR020BNzew7J+NWO3RT+R1BLOkhRQ9yhck2M4l4GElfps+SlGczumjxHUJO
+        MIEIvGFdSIM9cXFKlDE/1xWpLv0DuWqN1b2+IpaCa3bU3z+Y9n7HuxEuGHNSY3nBEi9d6k
+        6ezxV/ZPH/RkJEnyooWDXFl0GhXlBGs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-195-MGX3IdgNPZqK4dLJHzLY1A-1; Mon, 29 Aug 2022 00:00:21 -0400
+X-MC-Unique: MGX3IdgNPZqK4dLJHzLY1A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C4935185A7B2;
+        Mon, 29 Aug 2022 04:00:20 +0000 (UTC)
+Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0001E1121314;
+        Mon, 29 Aug 2022 04:00:19 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] kernel: export task_work_add
+Date:   Mon, 29 Aug 2022 12:00:13 +0800
+Message-Id: <20220829040013.549212-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220828150911.GW7484@redhat.com>
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Aug 28, 2022 at 04:09:11PM +0100, Richard W.M. Jones wrote:
+Firstly task_work_add() is used in several drivers. In ublk driver's
+usage, request batching submission can only be applied with task_work_add,
+and usually get better IOPS.
 
-...
+Secondly from this API's definition, the added work is always run in
+the task context, and when task is exiting, either the work is rejected
+to be added, or drained in do_exit(). In this way, not see obvious
+disadvantage or potential issue by exporting it for module's usage.
 
-> > +
-> > +ublk driver doesn't handle any IO logic, and its function is well defined
-> > +so far, and very limited userspace interfaces are needed, and each one is
-> > +well defined too, then it is very likely to make ublk device one
-> > +container-ware block device in future, as Stefan Hajnoczi suggested[3], by
-> > +removing ADMIN privilege.
-> 
-> Is it advisable for non-root to be able create arbitrary /dev devices?
-> It sounds like a security nightmare because you're exposing
-> potentially any arbitrary, malicious filesystem to the kernel to
-> parse.
+So export it, then ublk driver can get simplified, meantime with better
+performance.
 
-+1, such malicious daemons can also dynamically update/attack fs metadata
-runtimely, I think most current fs corruption tests are for pre-built fs
-images but not for runtime attack via daemon itself or network,
-unprivileged daemon makes all local fses life harder.
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ kernel/task_work.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Also for swap device use cases, malicious unprivileged daemons enlarge
-the possibility of corrupting/attacking any anonymous memory (maybe
-belong to privileged processes) on purpose regardless of other concerns.
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index dff75bcde151..5f9a42a388f1 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -73,6 +73,7 @@ int task_work_add(struct task_struct *task, struct callback_head *work,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(task_work_add);
+ 
+ /**
+  * task_work_cancel_match - cancel a pending work added by task_work_add()
+-- 
+2.31.1
 
-Thanks,
-Gao Xiang
