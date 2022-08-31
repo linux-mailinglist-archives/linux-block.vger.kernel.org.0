@@ -2,148 +2,216 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EFB75A8255
-	for <lists+linux-block@lfdr.de>; Wed, 31 Aug 2022 17:53:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C2C35A8250
+	for <lists+linux-block@lfdr.de>; Wed, 31 Aug 2022 17:52:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231968AbiHaPxV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 31 Aug 2022 11:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
+        id S231958AbiHaPwq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 31 Aug 2022 11:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232126AbiHaPxI (ORCPT
+        with ESMTP id S231959AbiHaPwp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 31 Aug 2022 11:53:08 -0400
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CA3AED89;
-        Wed, 31 Aug 2022 08:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1661961181; x=1693497181;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=vyta+/0lDuDRefxlgv1vkaHwbgOICyXw1l+oC05BEd8=;
-  b=mafclWGesZ3jvzZETYDcjf4bC8djX5xdvQtADiiwinehnSIOaHFjnWWZ
-   kL0FB0QgYZ/4JyASV4c37L0KekWDItM20Fdmcl3qDKPCVrzSH02NfqVcC
-   Jg73Ppls/v0U6UjP8rqEVSD9pZUNXXlTFbbDWVhnVzmZ7gLiHZsVKL0u1
-   c=;
-X-IronPort-AV: E=Sophos;i="5.93,278,1654560000"; 
-   d="scan'208";a="125407135"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-0bfdb89e.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 15:50:53 +0000
-Received: from EX13D08EUB002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-iad-1e-0bfdb89e.us-east-1.amazon.com (Postfix) with ESMTPS id C7B80E00BA;
-        Wed, 31 Aug 2022 15:50:49 +0000 (UTC)
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D08EUB002.ant.amazon.com (10.43.166.232) with Microsoft SMTP Server (TLS)
- id 15.0.1497.38; Wed, 31 Aug 2022 15:50:48 +0000
-Received: from dev-dsk-ptyadav-1c-613f0921.eu-west-1.amazon.com (10.15.8.155)
- by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
- 15.0.1497.38 via Frontend Transport; Wed, 31 Aug 2022 15:50:47 +0000
-Received: by dev-dsk-ptyadav-1c-613f0921.eu-west-1.amazon.com (Postfix, from userid 23027615)
-        id 0804D25976; Wed, 31 Aug 2022 15:50:45 +0000 (UTC)
-Date:   Wed, 31 Aug 2022 15:50:45 +0000
-From:   Pratyush Yadav <ptyadav@amazon.de>
-To:     SeongJae Park <sj@kernel.org>
-CC:     <jgross@suse.com>, <roger.pau@citrix.com>,
-        <marmarek@invisiblethingslab.com>, <mheyne@amazon.de>,
-        <xen-devel@lists.xenproject.org>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] xen-blkfront: Advertise feature-persistent as user
- requested
-Message-ID: <20220831155045.kxopdchlc67fmi5n@yadavpratyush.com>
-References: <20220825161511.94922-1-sj@kernel.org>
- <20220825161511.94922-3-sj@kernel.org>
+        Wed, 31 Aug 2022 11:52:45 -0400
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9C5AB405;
+        Wed, 31 Aug 2022 08:52:33 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=ziyangzhang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VNrdnpg_1661961144;
+Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VNrdnpg_1661961144)
+          by smtp.aliyun-inc.com;
+          Wed, 31 Aug 2022 23:52:29 +0800
+From:   ZiyangZhang <ZiyangZhang@linux.alibaba.com>
+To:     ming.lei@redhat.com, axboe@kernel.dk
+Cc:     xiaoguang.wang@linux.alibaba.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>
+Subject: [RFC PATCH V2 0/6] ublk_drv: add USER_RECOVERY support
+Date:   Wed, 31 Aug 2022 23:51:30 +0800
+Message-Id: <20220831155136.23434-1-ZiyangZhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220825161511.94922-3-sj@kernel.org>
-X-Spam-Status: No, score=-11.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 25/08/22 04:15PM, SeongJae Park wrote:
-> Commit e94c6101e151 ("xen-blkback: Apply 'feature_persistent' parameter
-> when connect") made blkback to advertise its support of the persistent
-> grants feature only if the user sets the 'feature_persistent' parameter
-> of the driver and the frontend advertised its support of the feature.
-> However, following commit 402c43ea6b34 ("xen-blkfront: Apply
-> 'feature_persistent' parameter when connect") made the blkfront to work
-> in the same way.  That is, blkfront also advertises its support of the
-> persistent grants feature only if the user sets the 'feature_persistent'
-> parameter of the driver and the backend advertised its support of the
-> feature.
-> 
-> Hence blkback and blkfront will never advertise their support of the
-> feature but wait until the other advertises the support, even though
-> users set the 'feature_persistent' parameters of the drivers.  As a
-> result, the persistent grants feature is disabled always regardless of
-> the 'feature_persistent' values[1].
-> 
-> The problem comes from the misuse of the semantic of the advertisement
-> of the feature.  The advertisement of the feature should means only
-> availability of the feature not the decision for using the feature.
-> However, current behavior is working in the wrong way.
-> 
-> This commit fixes the issue by making the blkfront advertises its
-> support of the feature as user requested via 'feature_persistent'
-> parameter regardless of the otherend's support of the feature.
-> 
-> [1] https://lore.kernel.org/xen-devel/bd818aba-4857-bc07-dc8a-e9b2f8c5f7cd@suse.com/
-> 
-> Fixes: 402c43ea6b34 ("xen-blkfront: Apply 'feature_persistent' parameter when connect")
-> Cc: <stable@vger.kernel.org> # 5.10.x
-> Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-> Suggested-by: Juergen Gross <jgross@suse.com>
-> Signed-off-by: SeongJae Park <sj@kernel.org>
-> ---
->  drivers/block/xen-blkfront.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-> index 8e56e69fb4c4..dfae08115450 100644
-> --- a/drivers/block/xen-blkfront.c
-> +++ b/drivers/block/xen-blkfront.c
-> @@ -213,6 +213,9 @@ struct blkfront_info
->  	unsigned int feature_fua:1;
->  	unsigned int feature_discard:1;
->  	unsigned int feature_secdiscard:1;
-> +	/* Connect-time cached feature_persistent parameter */
-> +	unsigned int feature_persistent_parm:1;
-> +	/* Persistent grants feature negotiation result */
->  	unsigned int feature_persistent:1;
->  	unsigned int bounce:1;
->  	unsigned int discard_granularity;
-> @@ -1848,7 +1851,7 @@ static int talk_to_blkback(struct xenbus_device *dev,
->  		goto abort_transaction;
->  	}
->  	err = xenbus_printf(xbt, dev->nodename, "feature-persistent", "%u",
-> -			info->feature_persistent);
-> +			info->feature_persistent_parm);
->  	if (err)
->  		dev_warn(&dev->dev,
->  			 "writing persistent grants feature to xenbus");
-> @@ -2281,7 +2284,8 @@ static void blkfront_gather_backend_features(struct blkfront_info *info)
->  	if (xenbus_read_unsigned(info->xbdev->otherend, "feature-discard", 0))
->  		blkfront_setup_discard(info);
->  
-> -	if (feature_persistent)
-> +	info->feature_persistent_parm = feature_persistent;
+ublk_drv is a driver simply passes all blk-mq rqs to ublksrv[1] in
+userspace. For each ublk queue, there is one ubq_daemon(pthread).
+All ubq_daemons share the same process which opens /dev/ublkcX.
+The ubq_daemon code infinitely loops on io_uring_enter() to
+send/receive io_uring cmds which pass information of blk-mq
+rqs.
 
-Same question as before. Why not just use feature_persistent directly?
+Since the real IO handler(the process opening /dev/ublkcX) is in
+userspace, it could crash if:
+(1) the user kills -9 it because of IO hang on backend, system
+    reboot, etc...
+(2) the process catches a exception(segfault, divisor error, oom...)
+Therefore, the kernel driver has to deal with a dying process.
 
-> +	if (info->feature_persistent_parm)
->  		info->feature_persistent =
->  			!!xenbus_read_unsigned(info->xbdev->otherend,
->  					       "feature-persistent", 0);
+Now, if one ubq_daemon(pthread) or the process crashes, ublk_drv
+must abort the dying ubq, stop the device and release everything.
+This is not a good choice in practice because users do not expect
+aborted requests, I/O errors and a released device. They may want
+a recovery machenism so that no requests are aborted and no I/O
+error occurs. Anyway, users just want everything works as uaual.
 
-Aside: IMO this would look nicer as below:
+This RFC patchset implements USER_RECOVERY support. If the process
+crashes, we allow ublksrv to provide new process and ubq_daemons.
+We do not support single ubq_daemon(pthread) recovery because a
+pthread rarely crashes.
 
-	info->feature_persistent = feature_persistent && !!xenbus_read_unsigned();
+Note: The responsibility of recovery belongs to the user who opens
+/dev/ublkcX. After a process crash, the kernel driver only switch
+the device's status to be ready for recovery or termination(STOP_DEV).
+This patchset does not provide how to detect such a process crash in
+userspace. A very straightfoward idea may be adding a watchdog.
+
+Recovery feature is quite useful for real products. In detail,
+we support this scenario:
+(1) The /dev/ublkc0 is opened by process 0;
+(2) Fio is running on /dev/ublkb0 exposed by ublk_drv and all
+    rqs are handled by process 0.
+(3) Process 0 suddenly crashes(e.g. segfault);
+(4) Fio is still running and submit IOs(but these IOs cannot
+    complete now)
+(5) User recovers with process 1 and attach it to /dev/ublkc0
+(6) All rqs are handled by process 1 now and IOs can be
+    completed now.
+
+Note: The backend must tolerate double-write because we re-issue
+a rq sent to the old(dying) process before. We allow users to
+choose whether re-issue these rqs or not, please see patch 7 for
+more detail.
+
+We provide a sample script here to simulate the above steps:
+
+***************************script***************************
+LOOPS=10
+
+__ublk_get_pid() {
+	pid=`./ublk list -n 0 | grep "pid" | awk '{print $7}'`
+	echo $pid
+}
+
+ublk_recover_kill()
+{
+	for CNT in `seq $LOOPS`; do
+		dmesg -C
+                pid=`__ublk_get_pid`
+                echo -e "*** kill $pid now ***"
+		kill -9 $pid
+		sleep 6
+                echo -e "*** recover now ***"
+                ./ublk recover -n 0
+		sleep 6
+	done
+}
+
+ublk_test()
+{
+        dmesg -C
+        echo -e "*** add ublk device ***"
+        ./ublk add -t null -d 4 -i 1
+        sleep 2
+        echo -e "*** start fio ***"
+        fio --bs=4k \
+            --filename=/dev/ublkb0 \
+            --runtime=140s \
+            --rw=read &
+        sleep 4
+        ublk_recover_kill
+        wait
+        echo -e "*** delete ublk device ***"
+        ./ublk del -n 0
+}
+
+for CNT in `seq 4`; do
+        modprobe -rv ublk_drv
+        modprobe ublk_drv
+        echo -e "************ round $CNT ************"
+        ublk_test
+        sleep 5
+done
+***************************script***************************
+
+You may run it with our modified ublksrv[2] which supports
+recovey feature. No I/O error occurs and you can verify it
+by typing
+    $ perf-tools/bin/tpoint block:block_rq_error
+
+The basic idea of USER_RECOVERY is quite straightfoward:
+
+(1) release/free everything belongs to the dying process.
+
+    Note: Since ublk_drv does save information about user process,
+    this work is important because we don't expect any resource
+    lekage. Particularly, ioucmds from the dying ubq_daemons
+    need to be completed(freed).
+
+(2) init ublk queues including requeuing/aborting rqs.
+
+(3) allow new ubq_daemons issue FETCH_REQ.
+
+Here is steps to reocver:
+
+(1) The monitor_work detects a crash, and it should requeue/abort inflight
+    rqs, complete old ioucmds and quiesce request queue to ban any incoming
+    ublk_queue_rq(). Then the ublk device is ready for a recovery/stop
+    procedure.
+
+(2) For a user, after a process crash, he sends START_USER_RECOVERY
+    ctrl-cmd to /dev/ublk-control with a dev_id X (such as 3 for
+    /dev/ublkc3).
+
+(2) Then ublk_drv should perpare for a new process to attach /dev/ublkcX.
+    All ublk_io structures are cleared and ubq_daemons are reset.
+
+(3) Then, user should start a new process and ubq_daemons(pthreads) and
+    send FETCH_REQ by io_uring_enter() to make all ubqs be ready. The
+    user must correctly setup queues, flags and so on(how to persist
+    user's information is not related to this patchset).
+
+(4) The user sends END_USER_RECOVERY ctrl-cmd to /dev/ublk-control with a
+    dev_id X.
+
+(5) ublk_drv waits for all ubq_daemons getting ready. Then it unquiesces
+    request queue and new rqs are allowed.
+
+You should use ublksrv[2] and tests[3] provided by us. We add 2 additional
+tests to verify that recovery feature works. Our code will be PR-ed to
+Ming's repo soon.
+
+[1] https://github.com/ming1/ubdsrv
+[2] https://github.com/old-memories/ubdsrv/tree/recovery-v1
+[3] https://github.com/old-memories/ubdsrv/tree/recovery-v1/tests/generic
+
+Since V1:
+(1) refactor cover letter. Add intruduction on "how to detect a crash" and
+    "why we need recovery feature".
+(2) do not refactor task_work and ublk_queue_rq().
+(3) allow users freely stop/recover the device.
+(4) add comment on ublk_cancel_queue().
+(5) refactor monitor_work and aborting machenism since we add recovery
+    machenism in monitor_work.
+
+ZiyangZhang (6):
+  ublk_drv: check 'current' instead of 'ubq_daemon'
+  ublk_drv: refactor ublk_cancel_queue()
+  ublk_drv: define macros for recovery feature and check them
+  ublk_drv: requeue rqs with recovery feature enabled
+  ublk_drv: consider recovery feature in aborting mechanism
+  ublk_drv: add START_USER_RECOVERY and END_USER_RECOVERY support
+
+ drivers/block/ublk_drv.c      | 439 +++++++++++++++++++++++++++++++---
+ include/uapi/linux/ublk_cmd.h |   7 +
+ 2 files changed, 419 insertions(+), 27 deletions(-)
+
+-- 
+2.27.0
+
