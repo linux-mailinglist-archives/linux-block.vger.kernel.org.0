@@ -2,221 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E49875A8268
-	for <lists+linux-block@lfdr.de>; Wed, 31 Aug 2022 17:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B2E85A8246
+	for <lists+linux-block@lfdr.de>; Wed, 31 Aug 2022 17:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbiHaPy6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 31 Aug 2022 11:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
+        id S231784AbiHaPwe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 31 Aug 2022 11:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231419AbiHaPyn (ORCPT
+        with ESMTP id S229547AbiHaPwd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 31 Aug 2022 11:54:43 -0400
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C98E1AB4FE;
-        Wed, 31 Aug 2022 08:54:41 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=ziyangzhang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VNrdoMu_1661961264;
-Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VNrdoMu_1661961264)
-          by smtp.aliyun-inc.com;
-          Wed, 31 Aug 2022 23:54:37 +0800
-From:   ZiyangZhang <ZiyangZhang@linux.alibaba.com>
-To:     ming.lei@redhat.com, axboe@kernel.dk
-Cc:     xiaoguang.wang@linux.alibaba.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>
-Subject: [RFC PATCH V2 6/6] ublk_drv: add START_USER_RECOVERY and END_USER_RECOVERY support
-Date:   Wed, 31 Aug 2022 23:51:36 +0800
-Message-Id: <20220831155136.23434-7-ZiyangZhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220831155136.23434-1-ZiyangZhang@linux.alibaba.com>
-References: <20220831155136.23434-1-ZiyangZhang@linux.alibaba.com>
+        Wed, 31 Aug 2022 11:52:33 -0400
+Received: from smtpbg.qq.com (bg4.exmail.qq.com [43.154.221.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C55AAA3D36
+        for <linux-block@vger.kernel.org>; Wed, 31 Aug 2022 08:52:28 -0700 (PDT)
+X-QQ-mid: bizesmtp74t1661961142tdlpgpme
+Received: from localhost.localdomain ( [182.148.13.26])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Wed, 31 Aug 2022 23:52:17 +0800 (CST)
+X-QQ-SSF: 01000000002000B0C000B00A0000000
+X-QQ-FEAT: fs34Pe/+C2RlUBgjEo7luOwwSkKiAMk93nlvfLjuxUSLiIhgnJxSQYBw2jsQz
+        7IMtjRKq1MfbgUiMCgwWgERTivz1lS9cfaiPu06c2Ze1Gtl0/r1sPL2XN0A/GcI+J4fJG+l
+        Vns6/cdr4OXCryW4XMpUBMF8kxTPJxrlY9leoTOtpOQ/zf9Trvoocy0nSsJgnFDNjBu8ih4
+        qjybyeZTBu5e/JwJuiHV26S9/BCw8VUkbxFBnKb5bINz0bJe3y01PuraPF6wxkqqrteCSHD
+        KFJEv8dSXuTZBMlFDJEv/vykGodULdP6QVp4zeaUxUwsTuwyQRXKaLHNX56s1gvOTl1akg1
+        bcrrQWdcwmRySC+8okSVVdQUxkIQG77riVOW1gTOo6plUtBYEJm0oOhnvOAsJP3hPEJRWcY
+X-QQ-GoodBg: 0
+From:   Shaomin Deng <dengshaomin@cdjrlc.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org
+Cc:     Shaomin Deng <dengshaomin@cdjrlc.com>
+Subject: [PATCH] block: Fix double word in comments
+Date:   Wed, 31 Aug 2022 11:52:16 -0400
+Message-Id: <20220831155216.2552-1-dengshaomin@cdjrlc.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr4
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-START_USER_RECOVERY and END_USER_RECOVERY are two new control commands
-to support user recovery feature.
+Fix the double word "is is" in comments.
 
-After a crash, user should send START_USER_RECOVERY, it will:
-(1) check if (a)current ublk_device is UBLK_S_DEV_RECOVERING which was
-    set by monitor_work and (b)the file struct is released. We always
-	expect crash of the ublksrv 'process', not exit of a single
-	ubq_daemon 'pthread'.
-(2) reinit all ubqs, including:
-    (a) put the dying task(thread) and reset ->ubq_daemon to NULL.
-    (b) reset all ublk_io.
-(3) reset ub->mm to NULL.
-
-Then, user should start a new 'process' and send FETCH_REQ on each
-ubq_daemon.
-
-Finally, user should send END_USER_RECOVERY, it will:
-(1) wait for all new ubq_daemons getting ready.
-(2) unquiesce the request queue and expect incoming ublk_queue_rq()
-(3) convert state to UBLK_S_DEV_LIVE
-(4) schedule monitor_work again
-
-Signed-off-by: ZiyangZhang <ZiyangZhang@linux.alibaba.com>
+Signed-off-by: Shaomin Deng <dengshaomin@cdjrlc.com>
 ---
- drivers/block/ublk_drv.c | 130 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 130 insertions(+)
+ drivers/block/mtip32xx/mtip32xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 0e185d1fa2c4..2d1f3e032606 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -1964,6 +1964,130 @@ static int ublk_ctrl_set_params(struct io_uring_cmd *cmd)
- 	return ret;
- }
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index 562725d222a7..82a4812e74e3 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -2487,7 +2487,7 @@ static int mtip_service_thread(void *data)
  
-+static void ublk_queue_start_recovery(struct ublk_device *ub, struct ublk_queue *ubq)
-+{
-+	int i;
-+
-+	/* All old ioucmds have to be completed/canceled by io_uring_cmd_done(). */
-+	WARN_ON_ONCE(ubq->nr_io_ready);
-+
-+	/* old daemon is PF_EXITING, put it now */
-+	put_task_struct(ubq->ubq_daemon);
-+	/* have to set it to NULL, otherwise ub won't accept new FETCH_REQ */
-+	ubq->ubq_daemon = NULL;
-+
-+	for (i = 0; i < ubq->q_depth; i++) {
-+		struct ublk_io *io = &ubq->ios[i];
-+
-+		/* forget everything now and be ready for new FETCH_REQ */
-+		io->flags = 0;
-+		io->cmd = NULL;
-+		io->addr = 0;
-+	}
-+}
-+
-+static int ublk_ctrl_start_recovery(struct io_uring_cmd *cmd)
-+{
-+	struct ublksrv_ctrl_cmd *header = (struct ublksrv_ctrl_cmd *)cmd->cmd;
-+	struct ublk_device *ub;
-+	int ret = -EINVAL;
-+	int i;
-+
-+	ub = ublk_get_device_from_id(header->dev_id);
-+	if (!ub)
-+		return ret;
-+
-+	mutex_lock(&ub->mutex);
-+
-+	if (!ublk_can_use_recovery(ub))
-+		goto out_unlock;
-+
-+	/*
-+	 * START_RECOVERY is only allowd after:
-+	 *
-+	 * (1) UB_STATE_OPEN is not set, which means the dying process is exited
-+	 *     and related io_uring ctx is freed so file struct of /dev/ublkcX is
-+	 *     released.
-+	 *
-+	 * (2) UBLK_S_DEV_RECOVERING is set, which means the monitor_work:
-+	 *     (a)has requeued all inflight rqs whose io_flags is ACTIVE
-+	 *     (b)has requeued/aborted all inflight rqs whose io_flags is NOT ACTIVE
-+	 *     (c)has completed/camceled all ioucmds owned by ther dying process
-+	 */
-+	if (test_bit(UB_STATE_OPEN, &ub->state) ||
-+			ub->dev_info.state != UBLK_S_DEV_RECOVERING) {
-+		ret = -EBUSY;
-+		goto out_unlock;
-+	}
-+
-+	pr_devel("%s: start recovery for dev id %d.\n", __func__, header->dev_id);
-+
-+	for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
-+		struct ublk_queue *ubq = ublk_get_queue(ub, i);
-+
-+		WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq)));
-+		pr_devel("%s: prepare for recovering qid %d\n", __func__, ubq->q_id);
-+		ublk_queue_start_recovery(ub, ubq);
-+	}
-+
-+	/* set to NULL, otherwise new ubq_daemon cannot mmap the io_cmd_buf */
-+	ub->mm = NULL;
-+	ub->nr_queues_ready = 0;
-+	init_completion(&ub->completion);
-+	ret = 0;
-+
-+ out_unlock:
-+	mutex_unlock(&ub->mutex);
-+	ublk_put_device(ub);
-+	return ret;
-+}
-+
-+static int ublk_ctrl_end_recovery(struct io_uring_cmd *cmd)
-+{
-+	struct ublksrv_ctrl_cmd *header = (struct ublksrv_ctrl_cmd *)cmd->cmd;
-+	int ublksrv_pid = (int)header->data[0];
-+	struct ublk_device *ub;
-+	int ret = -EINVAL;
-+
-+	ub = ublk_get_device_from_id(header->dev_id);
-+	if (!ub)
-+		return ret;
-+
-+	pr_devel("%s: Waiting for new ubq_daemon is ready, dev id %d...\n",
-+			__func__, header->dev_id);
-+	/* wait until new ubq_daemon sending all FETCH_REQ */
-+	wait_for_completion_interruptible(&ub->completion);
-+	pr_devel("%s: All new ubq_daemon is ready, dev id %d\n",
-+			__func__, header->dev_id);
-+
-+	mutex_lock(&ub->mutex);
-+
-+	if (!ublk_can_use_recovery(ub))
-+		goto out_unlock;
-+
-+	/* monitor_work should set UBLK_S_DEV_RECOVERING */
-+	if (ub->dev_info.state != UBLK_S_DEV_RECOVERING) {
-+		ret = -EBUSY;
-+		goto out_unlock;
-+	}
-+	ub->dev_info.ublksrv_pid = ublksrv_pid;
-+	pr_devel("%s: new ublksrv_pid %d, dev id %d\n",
-+			__func__, ublksrv_pid, header->dev_id);
-+	blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+	pr_devel("%s: queue unquiesced, dev id %d.\n",
-+			__func__, header->dev_id);
-+
-+	ub->dev_info.state = UBLK_S_DEV_LIVE;
-+	schedule_delayed_work(&ub->monitor_work, UBLK_DAEMON_MONITOR_PERIOD);
-+	/* We are good to redo requests now */
-+	blk_mq_kick_requeue_list(ub->ub_disk->queue);
-+	ret = 0;
-+ out_unlock:
-+	mutex_unlock(&ub->mutex);
-+	ublk_put_device(ub);
-+	return ret;
-+}
-+
- static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
- 		unsigned int issue_flags)
- {
-@@ -2005,6 +2129,12 @@ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
- 	case UBLK_CMD_SET_PARAMS:
- 		ret = ublk_ctrl_set_params(cmd);
- 		break;
-+	case UBLK_CMD_START_USER_RECOVERY:
-+		ret = ublk_ctrl_start_recovery(cmd);
-+		break;
-+	case UBLK_CMD_END_USER_RECOVERY:
-+		ret = ublk_ctrl_end_recovery(cmd);
-+		break;
- 	default:
- 		break;
- 	}
+ 		/*
+ 		 * the condition is to check neither an internal command is
+-		 * is in progress nor error handling is active
++		 * in progress nor error handling is active
+ 		 */
+ 		wait_event_interruptible(port->svc_wait, (port->flags) &&
+ 			(port->flags & MTIP_PF_SVC_THD_WORK));
 -- 
-2.27.0
+2.35.1
 
