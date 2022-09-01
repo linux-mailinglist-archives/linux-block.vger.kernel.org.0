@@ -2,320 +2,145 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 180C05AA00A
-	for <lists+linux-block@lfdr.de>; Thu,  1 Sep 2022 21:33:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D38BE5AA0D5
+	for <lists+linux-block@lfdr.de>; Thu,  1 Sep 2022 22:22:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234292AbiIATdX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Sep 2022 15:33:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59054 "EHLO
+        id S234885AbiIAUWd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Sep 2022 16:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234216AbiIATdQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Sep 2022 15:33:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE517C503;
-        Thu,  1 Sep 2022 12:33:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D01A61E11;
-        Thu,  1 Sep 2022 19:33:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBAEFC433B5;
-        Thu,  1 Sep 2022 19:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662060793;
-        bh=SkdS+xROn4bRaFI1lIubPayCXNPKCvqepI4eeR5Jx10=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rp6mt1eOK/kJvOpInYbZkOLFtUZeO9kitihmHwQmPl/aQ0WzfkPvA4omwdJmqpPLd
-         bfXcIxCX6nU5R3wQsP7JmsMPw8X1HAZXSgdiWKsSTHgXbj4AUVZbqwr/mN5nwsXERW
-         wt2+aQRhBkoPjRe0fg90BPqysfJbu2jxB0o8OVXwsfAJE+YHb2xPvvJoo7YUdT2Egq
-         Mjo74kU81rDXnFA9yfvjAQg+37hEsFjFMgrYONQW+9jAgklUIoOPq1cf7AqBT6cBBu
-         F72EkmYaqKx6xeF7eUfyqaD3b0WDfTu/TJwoig64EEC7phq3Fa6VAMDXhwbHB/WUDy
-         ILxh/a6rj7B0Q==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fscrypt@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v4 3/3] fscrypt: work on block_devices instead of request_queues
-Date:   Thu,  1 Sep 2022 12:32:08 -0700
-Message-Id: <20220901193208.138056-4-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220901193208.138056-1-ebiggers@kernel.org>
-References: <20220901193208.138056-1-ebiggers@kernel.org>
+        with ESMTP id S233374AbiIAUWb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Sep 2022 16:22:31 -0400
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217A76F24D
+        for <linux-block@vger.kernel.org>; Thu,  1 Sep 2022 13:22:30 -0700 (PDT)
+Received: by mail-io1-f72.google.com with SMTP id bf4-20020a056602368400b0068baaa4f99bso11720iob.3
+        for <linux-block@vger.kernel.org>; Thu, 01 Sep 2022 13:22:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=BTFxe77WWd3NzcfLpg8ofoPcbrQKuZjmz/hqFy6+W8I=;
+        b=YIHj7EV7JSF3F6/r766mgaOaa/5RLpYIKUU4TDreFI0HtTLIRMf+8oJSZue8CzjEha
+         XYGo/Ed47LbARzmxTvfdhSpeMBeSyzpvAwo5cRQXVcfdwT73nMGrX2/LXWsHruL31aJg
+         ck7FeArAR21Kuui6PdqSuvWQT6qs59hhc7y/IwfE9mTubwqEqPoz1U5VlLGzGiWBWE/0
+         dT+ing+NuKD13Rc1YkAUODFdPNyQdE2dcymFEmKCeV7VxE1E8rhPuGNrkvJiYagGEA1+
+         t0grFvwYTcUaEnGy/K8lv1hwYfH+VX976X5oNAev8cfJJYoOWxRcZVH0xkuvVlq3i+1f
+         10Gw==
+X-Gm-Message-State: ACgBeo3vzC4raFF55biANmFuv7DmDSGFyeXI6K9w2M4V/hJEdjmK1g3N
+        BeurOQeAZYB0JA3QLFa7cx6seuji6psDwVzS7oRmOPQ8I7/F
+X-Google-Smtp-Source: AA6agR7gvwViqI19wdSQETxaBt6FWFc8WlMRc9kl3GMEX6z/rfV2CenGPBsZ6HJFWVIX7hNNdqcRX++Q3esAzk6DjzOONMs69j8O
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Received: by 2002:a05:6602:2c95:b0:689:e4e2:2c02 with SMTP id
+ i21-20020a0566022c9500b00689e4e22c02mr15267879iow.94.1662063749454; Thu, 01
+ Sep 2022 13:22:29 -0700 (PDT)
+Date:   Thu, 01 Sep 2022 13:22:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000615f3905e7a35f9d@google.com>
+Subject: [syzbot] general protection fault in start_motor (2)
+From:   syzbot <syzbot+30e9df1b3f1d5117d77f@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, efremov@linux.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+Hello,
 
-request_queues are a block layer implementation detail that should not
-leak into file systems.  Change the fscrypt inline crypto code to
-retrieve block devices instead of request_queues from the file system.
-As part of that, clean up the interaction with multi-device file systems
-by returning both the number of devices and the actual device array in a
-single method call.
+syzbot found the following issue on:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[ebiggers: bug fixes and minor tweaks]
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+HEAD commit:    10d4879f9ef0 Merge tag 'thermal-6.0-rc3' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=116400e5080000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=312be25752c7fe30
+dashboard link: https://syzkaller.appspot.com/bug?extid=30e9df1b3f1d5117d77f
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=126b8675080000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+30e9df1b3f1d5117d77f@syzkaller.appspotmail.com
+
+floppy1: FDC access conflict!
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 PID: 12 Comm: kworker/u16:1 Not tainted 6.0.0-rc2-syzkaller-00283-g10d4879f9ef0 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.14.0-2 04/01/2014
+Workqueue: floppy floppy_work_workfn
+RIP: 0010:start_motor+0x3a/0x3f0 drivers/block/floppy.c:1905
+Code: 08 e8 7a 39 e0 fc 48 8b 1d 63 54 ae 0c 48 b8 00 00 00 00 00 fc ff df 0f b6 2d b2 3e ae 0c 48 89 da 48 c1 ea 03 89 e9 41 89 ed <0f> b6 04 02 83 e1 03 41 83 e5 03 84 c0 74 08 3c 03 0f 8e be 02 00
+RSP: 0018:ffffc900005ffc98 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: ffffffff849b0096 RDI: ffffffff849b2f00
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff849b2f00
+R13: 0000000000000001 R14: ffff888012459400 R15: ffff888011875800
+FS:  0000000000000000(0000) GS:ffff88802c900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0afb5ff718 CR3: 000000001b6a0000 CR4: 0000000000150ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ floppy_ready+0x83/0x1940 drivers/block/floppy.c:1932
+ process_one_work+0x991/0x1610 kernel/workqueue.c:2289
+ worker_thread+0x665/0x1080 kernel/workqueue.c:2436
+ kthread+0x2e4/0x3a0 kernel/kthread.c:376
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:306
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:start_motor+0x3a/0x3f0 drivers/block/floppy.c:1905
+Code: 08 e8 7a 39 e0 fc 48 8b 1d 63 54 ae 0c 48 b8 00 00 00 00 00 fc ff df 0f b6 2d b2 3e ae 0c 48 89 da 48 c1 ea 03 89 e9 41 89 ed <0f> b6 04 02 83 e1 03 41 83 e5 03 84 c0 74 08 3c 03 0f 8e be 02 00
+RSP: 0018:ffffc900005ffc98 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: ffffffff849b0096 RDI: ffffffff849b2f00
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff849b2f00
+R13: 0000000000000001 R14: ffff888012459400 R15: ffff888011875800
+FS:  0000000000000000(0000) GS:ffff88802c900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0afb5ff718 CR3: 00000000284ad000 CR4: 0000000000150ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	08 e8                	or     %ch,%al
+   2:	7a 39                	jp     0x3d
+   4:	e0 fc                	loopne 0x2
+   6:	48 8b 1d 63 54 ae 0c 	mov    0xcae5463(%rip),%rbx        # 0xcae5470
+   d:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  14:	fc ff df
+  17:	0f b6 2d b2 3e ae 0c 	movzbl 0xcae3eb2(%rip),%ebp        # 0xcae3ed0
+  1e:	48 89 da             	mov    %rbx,%rdx
+  21:	48 c1 ea 03          	shr    $0x3,%rdx
+  25:	89 e9                	mov    %ebp,%ecx
+  27:	41 89 ed             	mov    %ebp,%r13d
+* 2a:	0f b6 04 02          	movzbl (%rdx,%rax,1),%eax <-- trapping instruction
+  2e:	83 e1 03             	and    $0x3,%ecx
+  31:	41 83 e5 03          	and    $0x3,%r13d
+  35:	84 c0                	test   %al,%al
+  37:	74 08                	je     0x41
+  39:	3c 03                	cmp    $0x3,%al
+  3b:	0f                   	.byte 0xf
+  3c:	8e                   	.byte 0x8e
+  3d:	be                   	.byte 0xbe
+  3e:	02 00                	add    (%rax),%al
+
+
 ---
- fs/crypto/inline_crypt.c | 81 ++++++++++++++++++++--------------------
- fs/f2fs/super.c          | 24 ++++++------
- include/linux/fscrypt.h  | 21 +++++------
- 3 files changed, 62 insertions(+), 64 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/crypto/inline_crypt.c b/fs/crypto/inline_crypt.c
-index 7d1e2ec722538a..c40bd55bc78127 100644
---- a/fs/crypto/inline_crypt.c
-+++ b/fs/crypto/inline_crypt.c
-@@ -21,20 +21,22 @@
- 
- #include "fscrypt_private.h"
- 
--static int fscrypt_get_num_devices(struct super_block *sb)
-+static struct block_device **fscrypt_get_devices(struct super_block *sb,
-+						 unsigned int *num_devs)
- {
--	if (sb->s_cop->get_num_devices)
--		return sb->s_cop->get_num_devices(sb);
--	return 1;
--}
-+	struct block_device **devs;
- 
--static void fscrypt_get_devices(struct super_block *sb, int num_devs,
--				struct request_queue **devs)
--{
--	if (num_devs == 1)
--		devs[0] = bdev_get_queue(sb->s_bdev);
--	else
--		sb->s_cop->get_devices(sb, devs);
-+	if (sb->s_cop->get_devices) {
-+		devs = sb->s_cop->get_devices(sb, num_devs);
-+		if (devs)
-+			return devs;
-+	}
-+	devs = kmalloc(sizeof(*devs), GFP_KERNEL);
-+	if (!devs)
-+		return ERR_PTR(-ENOMEM);
-+	devs[0] = sb->s_bdev;
-+	*num_devs = 1;
-+	return devs;
- }
- 
- static unsigned int fscrypt_get_dun_bytes(const struct fscrypt_info *ci)
-@@ -68,15 +70,17 @@ static unsigned int fscrypt_get_dun_bytes(const struct fscrypt_info *ci)
-  * helpful for debugging problems where the "wrong" implementation is used.
-  */
- static void fscrypt_log_blk_crypto_impl(struct fscrypt_mode *mode,
--					struct request_queue **devs,
--					int num_devs,
-+					struct block_device **devs,
-+					unsigned int num_devs,
- 					const struct blk_crypto_config *cfg)
- {
--	int i;
-+	unsigned int i;
- 
- 	for (i = 0; i < num_devs; i++) {
-+		struct request_queue *q = bdev_get_queue(devs[i]);
-+
- 		if (!IS_ENABLED(CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK) ||
--		    __blk_crypto_cfg_supported(devs[i]->crypto_profile, cfg)) {
-+		    __blk_crypto_cfg_supported(q->crypto_profile, cfg)) {
- 			if (!xchg(&mode->logged_blk_crypto_native, 1))
- 				pr_info("fscrypt: %s using blk-crypto (native)\n",
- 					mode->friendly_name);
-@@ -93,9 +97,9 @@ int fscrypt_select_encryption_impl(struct fscrypt_info *ci)
- 	const struct inode *inode = ci->ci_inode;
- 	struct super_block *sb = inode->i_sb;
- 	struct blk_crypto_config crypto_cfg;
--	int num_devs;
--	struct request_queue **devs;
--	int i;
-+	struct block_device **devs;
-+	unsigned int num_devs;
-+	unsigned int i;
- 
- 	/* The file must need contents encryption, not filenames encryption */
- 	if (!S_ISREG(inode->i_mode))
-@@ -123,20 +127,20 @@ int fscrypt_select_encryption_impl(struct fscrypt_info *ci)
- 		return 0;
- 
- 	/*
--	 * On all the filesystem's devices, blk-crypto must support the crypto
--	 * configuration that the file would use.
-+	 * On all the filesystem's block devices, blk-crypto must support the
-+	 * crypto configuration that the file would use.
- 	 */
- 	crypto_cfg.crypto_mode = ci->ci_mode->blk_crypto_mode;
- 	crypto_cfg.data_unit_size = sb->s_blocksize;
- 	crypto_cfg.dun_bytes = fscrypt_get_dun_bytes(ci);
--	num_devs = fscrypt_get_num_devices(sb);
--	devs = kmalloc_array(num_devs, sizeof(*devs), GFP_KERNEL);
--	if (!devs)
--		return -ENOMEM;
--	fscrypt_get_devices(sb, num_devs, devs);
-+
-+	devs = fscrypt_get_devices(sb, &num_devs);
-+	if (IS_ERR(devs))
-+		return PTR_ERR(devs);
- 
- 	for (i = 0; i < num_devs; i++) {
--		if (!blk_crypto_config_supported(devs[i], &crypto_cfg))
-+		if (!blk_crypto_config_supported(bdev_get_queue(devs[i]),
-+						 &crypto_cfg))
- 			goto out_free_devs;
- 	}
- 
-@@ -157,7 +161,7 @@ int fscrypt_prepare_inline_crypt_key(struct fscrypt_prepared_key *prep_key,
- 	struct super_block *sb = inode->i_sb;
- 	enum blk_crypto_mode_num crypto_mode = ci->ci_mode->blk_crypto_mode;
- 	struct blk_crypto_key *blk_key;
--	struct request_queue **devs;
-+	struct block_device **devs;
- 	unsigned int num_devs;
- 	unsigned int i;
- 	int err;
-@@ -174,15 +178,14 @@ int fscrypt_prepare_inline_crypt_key(struct fscrypt_prepared_key *prep_key,
- 	}
- 
- 	/* Start using blk-crypto on all the filesystem's block devices. */
--	num_devs = fscrypt_get_num_devices(sb);
--	devs = kmalloc_array(num_devs, sizeof(*devs), GFP_KERNEL);
--	if (!devs) {
--		err = -ENOMEM;
-+	devs = fscrypt_get_devices(sb, &num_devs);
-+	if (IS_ERR(devs)) {
-+		err = PTR_ERR(devs);
- 		goto fail;
- 	}
--	fscrypt_get_devices(sb, num_devs, devs);
- 	for (i = 0; i < num_devs; i++) {
--		err = blk_crypto_start_using_key(blk_key, devs[i]);
-+		err = blk_crypto_start_using_key(blk_key,
-+						 bdev_get_queue(devs[i]));
- 		if (err)
- 			break;
- 	}
-@@ -210,7 +213,7 @@ void fscrypt_destroy_inline_crypt_key(struct super_block *sb,
- 				      struct fscrypt_prepared_key *prep_key)
- {
- 	struct blk_crypto_key *blk_key = prep_key->blk_key;
--	struct request_queue **devs;
-+	struct block_device **devs;
- 	unsigned int num_devs;
- 	unsigned int i;
- 
-@@ -218,12 +221,10 @@ void fscrypt_destroy_inline_crypt_key(struct super_block *sb,
- 		return;
- 
- 	/* Evict the key from all the filesystem's block devices. */
--	num_devs = fscrypt_get_num_devices(sb);
--	devs = kmalloc_array(num_devs, sizeof(*devs), GFP_KERNEL);
--	if (devs) {
--		fscrypt_get_devices(sb, num_devs, devs);
-+	devs = fscrypt_get_devices(sb, &num_devs);
-+	if (!IS_ERR(devs)) {
- 		for (i = 0; i < num_devs; i++)
--			blk_crypto_evict_key(devs[i], blk_key);
-+			blk_crypto_evict_key(bdev_get_queue(devs[i]), blk_key);
- 		kfree(devs);
- 	}
- 	kfree_sensitive(blk_key);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 2451623c05a7a8..26817b5aeac781 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3039,23 +3039,24 @@ static void f2fs_get_ino_and_lblk_bits(struct super_block *sb,
- 	*lblk_bits_ret = 8 * sizeof(block_t);
- }
- 
--static int f2fs_get_num_devices(struct super_block *sb)
-+static struct block_device **f2fs_get_devices(struct super_block *sb,
-+					      unsigned int *num_devs)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
-+	struct block_device **devs;
-+	int i;
- 
--	if (f2fs_is_multi_device(sbi))
--		return sbi->s_ndevs;
--	return 1;
--}
-+	if (!f2fs_is_multi_device(sbi))
-+		return NULL;
- 
--static void f2fs_get_devices(struct super_block *sb,
--			     struct request_queue **devs)
--{
--	struct f2fs_sb_info *sbi = F2FS_SB(sb);
--	int i;
-+	devs = kmalloc_array(sbi->s_ndevs, sizeof(*devs), GFP_KERNEL);
-+	if (!devs)
-+		return ERR_PTR(-ENOMEM);
- 
- 	for (i = 0; i < sbi->s_ndevs; i++)
--		devs[i] = bdev_get_queue(FDEV(i).bdev);
-+		devs[i] = FDEV(i).bdev;
-+	*num_devs = sbi->s_ndevs;
-+	return devs;
- }
- 
- static const struct fscrypt_operations f2fs_cryptops = {
-@@ -3066,7 +3067,6 @@ static const struct fscrypt_operations f2fs_cryptops = {
- 	.empty_dir		= f2fs_empty_dir,
- 	.has_stable_inodes	= f2fs_has_stable_inodes,
- 	.get_ino_and_lblk_bits	= f2fs_get_ino_and_lblk_bits,
--	.get_num_devices	= f2fs_get_num_devices,
- 	.get_devices		= f2fs_get_devices,
- };
- #endif
-diff --git a/include/linux/fscrypt.h b/include/linux/fscrypt.h
-index d86f43bd955029..3a3f7cb7b90f67 100644
---- a/include/linux/fscrypt.h
-+++ b/include/linux/fscrypt.h
-@@ -161,24 +161,21 @@ struct fscrypt_operations {
- 				      int *ino_bits_ret, int *lblk_bits_ret);
- 
- 	/*
--	 * Return the number of block devices to which the filesystem may write
--	 * encrypted file contents.
-+	 * Return an array of pointers to the block devices to which the
-+	 * filesystem may write encrypted file contents, NULL if the filesystem
-+	 * only has a single such block device, or an ERR_PTR() on error.
-+	 *
-+	 * On successful non-NULL return, *num_devs is set to the number of
-+	 * devices in the returned array.  The caller must free the returned
-+	 * array using kfree().
- 	 *
- 	 * If the filesystem can use multiple block devices (other than block
- 	 * devices that aren't used for encrypted file contents, such as
- 	 * external journal devices), and wants to support inline encryption,
- 	 * then it must implement this function.  Otherwise it's not needed.
- 	 */
--	int (*get_num_devices)(struct super_block *sb);
--
--	/*
--	 * If ->get_num_devices() returns a value greater than 1, then this
--	 * function is called to get the array of request_queues that the
--	 * filesystem is using -- one per block device.  (There may be duplicate
--	 * entries in this array, as block devices can share a request_queue.)
--	 */
--	void (*get_devices)(struct super_block *sb,
--			    struct request_queue **devs);
-+	struct block_device **(*get_devices)(struct super_block *sb,
-+					     unsigned int *num_devs);
- };
- 
- static inline struct fscrypt_info *fscrypt_get_info(const struct inode *inode)
--- 
-2.37.2
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
