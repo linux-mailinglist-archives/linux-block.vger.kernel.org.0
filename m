@@ -2,145 +2,136 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A460A5AA686
-	for <lists+linux-block@lfdr.de>; Fri,  2 Sep 2022 05:45:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EFDA5AA76A
+	for <lists+linux-block@lfdr.de>; Fri,  2 Sep 2022 07:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235307AbiIBDp3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Sep 2022 23:45:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
+        id S235233AbiIBFyH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 2 Sep 2022 01:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235357AbiIBDp1 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Sep 2022 23:45:27 -0400
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B602A24F
-        for <linux-block@vger.kernel.org>; Thu,  1 Sep 2022 20:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1662090325; x=1693626325;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Vk0eJ8lsz1a98jZ70czxJnVa9yr/83zvWoTmuaOaYEo=;
-  b=cK+E2qZdg26lfQSd4py2y4CvBQ7SJf/kCPr1Ysh5KI0aam+0TEFOW12t
-   cl5Llz77LsCcKVpZgPrJ/ldv/W/Phf+nm1fO2znSXhJklS6y0irC/kg68
-   zfQD04UwMrNIW48GHaaoOrj7vDCjt1dKe11dySPnuLs4COgVrDhnNE+9o
-   bl/mz6LtIFtf35y58w/w1htKUE8S32ZSIjaBFKkfZHA7PZa8AB5NsQ80e
-   mWJZRfl7EybZ4uq/UatWAKeZm2hoK389EvMeTVrExAb8z+wXj2G/3Yv61
-   2gH0p8FY/ZBPKNvWWJU6n6t5hV/MX5VYFrLESADVXBspacPIBDxrqly84
-   g==;
-X-IronPort-AV: E=Sophos;i="5.93,281,1654531200"; 
-   d="scan'208";a="322404169"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2022 11:45:24 +0800
-IronPort-SDR: vJdordwn4qEvDk/zVPulSZWJeOQkTpHGI6faev4uRKBhjensMi5jA5FFwbH4oruqlSk/gWUW0y
- aYT0CUgPSKudnW5w5Z3hx6qOVULnfPEwC7LUqaVLXGVz8SzYQ12Aw1vSkKhmOBGhi3hMzO2VtR
- ZBAuPO6/y+2GoGXygJkUEf5RDZ2lwJqFSw6lSmzTmZV2V/V0ZXK4HF6tID/iapl7mJXyDxVdh9
- eyTqqwwjI32cQmtQiAY2opotdHT0RBaYRN9ntWn3+gsK1L9jEk08loexWGtr3rYgDAoXtAvtaK
- 6ufhzOzR2KSr8B9+yQOLvmfi
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Sep 2022 20:05:53 -0700
-IronPort-SDR: 2RZw9NvKwETdiuIpABB6cVwrHvXr1DlAy2RVHExxzYL7EDzt44aRPfMUgeKbvIu0NSgtSpN3nx
- 7QoeUol+V/2f4CsDGvSvyAfY2YWf6goMVvIWZbxC9paC8mas6T5n9DJCV0UqJ2C+/ji2eVHt3L
- mmYxJ3feWx8mH8cR03lfZ7gaInBNslpnV01e3Xugya9MZi1Zbcnh4nW/wDqr2XHtEl+lkw65Jq
- PyKbIcg2IWYSt4by6hg8C2M+KbBUyzaefbn6IJ2EjkcEWoh7iRv4rU6m9mfi1RZ7AQil7mOqEq
- mYc=
-WDCIronportException: Internal
-Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.52.207])
-  by uls-op-cesaip02.wdc.com with ESMTP; 01 Sep 2022 20:45:24 -0700
-From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To:     linux-block@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 5/5] Revert "nbd/rc: load nbd module explicitly"
-Date:   Fri,  2 Sep 2022 12:45:16 +0900
-Message-Id: <20220902034516.223173-6-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220902034516.223173-1-shinichiro.kawasaki@wdc.com>
-References: <20220902034516.223173-1-shinichiro.kawasaki@wdc.com>
+        with ESMTP id S232927AbiIBFyG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Sep 2022 01:54:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1B8B2DA6;
+        Thu,  1 Sep 2022 22:54:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 17AECB829E2;
+        Fri,  2 Sep 2022 05:54:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA39C433D6;
+        Fri,  2 Sep 2022 05:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1662098042;
+        bh=ZCVrwOVxOedAeqF2VJSJ1MqkSUOoFJ5Np/T1O/uuDaQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GGEJaSZJ8TfObC5gfj4WAIRrRx68MXYadMFrna4EP4/bOJpTVng5KpRT9w2WMvQ9A
+         aJ72J6pQIjZkfyU24srJC0MhvFk0SUv+cm02ezR/h5yw3zm4CbOLw6b6r+bLStgM86
+         bnLuLeyBgv0eBlvCCB0w1mbRqh6w2xNBKZFV+Ih4=
+Date:   Fri, 2 Sep 2022 07:53:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v9 7/8] PCI/P2PDMA: Allow userspace VMA allocations
+ through sysfs
+Message-ID: <YxGad5h2Nn/Ejslc@kroah.com>
+References: <20220825152425.6296-1-logang@deltatee.com>
+ <20220825152425.6296-8-logang@deltatee.com>
+ <YxDb2MyRx6o/wDAz@kroah.com>
+ <4a4bca1e-bebf-768f-92d4-92eb8ae714e1@deltatee.com>
+ <YxDhEO9ycZDTnbZm@kroah.com>
+ <cc9a24a8-dd3a-9d21-d9a7-5ee4b0ad7a57@deltatee.com>
+ <YxD7uZYaV75gJS9d@kroah.com>
+ <fb9d7948-43fe-87c5-5275-70f280181ad1@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb9d7948-43fe-87c5-5275-70f280181ad1@deltatee.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This reverts commit 78271b8bb8c939e1d0b9cfa3ea321a4ed06635bd.
+On Thu, Sep 01, 2022 at 01:16:54PM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2022-09-01 12:36, Greg Kroah-Hartman wrote:
+> > On Thu, Sep 01, 2022 at 12:14:25PM -0600, Logan Gunthorpe wrote:
+> >> Well we haven't plugged in a remove call into p2pdma, that would be more
+> >> work and more interfaces touching the PCI code. Note: this code isn't a
+> >> driver but a set of PCI helpers available to other PCI drivers.
+> >> Everything that's setup is using the devm interfaces and gets torn down
+> >> with the same. So I don't really see the benefit of making the change
+> >> you propose.
+> > 
+> > The issue is the classic one with the devm helpers.  They do not lend
+> > themselves to resource management issues that require ordering or other
+> > sort of dependencies.  Please do not use them here, just put in a remove
+> > callback as you eventually will need it anyway, as you have a strong
+> > requirement for what gets freed when, and the devm api does not provide
+> > for that well.
+> 
+> This surprises me. Can you elaborate on this classic issue?
 
-Once I thought explicit nbd module load in nbd/rc is required due to the
-commit 06a0ba866d90 ("common/rc: avoid module load in _have_driver()").
-However, it was not a good solution and _have_driver() was modified
-again to load module. Hence, revert explicit nbd module load in nbd/rc.
+There's long threads about it on the ksummit discuss mailing list and
+other places.
 
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- tests/nbd/rc | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+> I've definitely seen uses of devm that expect the calls will be torn
+> down in reverse order they are added.
 
-diff --git a/tests/nbd/rc b/tests/nbd/rc
-index 32eea45..9c1c15b 100644
---- a/tests/nbd/rc
-+++ b/tests/nbd/rc
-@@ -28,21 +28,17 @@ _have_nbd() {
- }
- 
- _have_nbd_netlink() {
--	local ret=0
--
- 	if ! _have_nbd; then
- 		return 1
- 	fi
- 	if ! _have_program genl-ctrl-list; then
- 		return 1
- 	fi
--	modprobe -q nbd
- 	if ! genl-ctrl-list | grep -q nbd; then
- 		SKIP_REASONS+=("nbd does not support netlink")
--		ret=1
-+		return 1
- 	fi
--	modprobe -qr nbd
--	return $ret
-+	return 0
- }
- 
- _wait_for_nbd_connect() {
-@@ -66,7 +62,6 @@ _wait_for_nbd_disconnect() {
- }
- 
- _start_nbd_server() {
--	modprobe -q nbd
- 	truncate -s 10G "${TMPDIR}/export"
- 	cat > "${TMPDIR}/nbd.conf" << EOF
- [generic]
-@@ -78,20 +73,17 @@ EOF
- 
- _stop_nbd_server() {
- 	kill -SIGTERM "$(cat "${TMPDIR}/nbd.pid")"
--	modprobe -qr nbd
- 	rm -f "${TMPDIR}/nbd.pid"
- 	rm -f "${TMPDIR}/export"
- }
- 
- _start_nbd_server_netlink() {
--	modprobe -q nbd
- 	truncate -s 10G "${TMPDIR}/export"
- 	nbd-server 8000 "${TMPDIR}/export" >/dev/null 2>&1
- }
- 
- _stop_nbd_server_netlink() {
- 	killall -SIGTERM nbd-server
--	modprobe -qr nbd
- 	rm -f "${TMPDIR}/export"
- }
- 
--- 
-2.37.1
+Sorry, I didn't mean to imply the ordering of the devm code is
+incorrect, that's fine.
 
+It's when you have things in the devm "chain" that need to be freed in a
+different order that stuff gets messy.  Like irqs and clocks and other
+types of resources that have "actions" associated with them.
+
+> The existing p2pdma code will
+> certainly fail quite significantly if a devm_kzalloc() releases its
+> memory before the devm_memmap_pages() cleans up. There's also already an
+> action that is used to cleanup before the last devm_kzalloc() call
+> happens. If ordering is not guaranteed, then devm seems fairly broken
+> and unusable and I'd have to drop all uses from this code and go back to
+> the error prone method. Also what's the point of
+> devm_add_action_or_reset() if it doesn't guarantee the ordering or the
+> release?
+
+I have never used devm_add_action_or_reset() so I can't say why it is
+there.  I am just pointing out that manually messing with a sysfs group
+from a driver is a huge flag that something is wrong.  A driver should
+almost never be touching a raw kobject or calling any sysfs_* call if
+all is normal, which is why I questioned this.
+
+> But if it's that important I can make the change to these patches for v10.
+
+Try it the way I suggest, with a remove() callback, and see if that
+looks simpler and easier to follow and maintain over time.
+
+thanks,
+
+greg k-h
