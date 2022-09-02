@@ -2,98 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4E45AB560
-	for <lists+linux-block@lfdr.de>; Fri,  2 Sep 2022 17:39:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C51EF5AB596
+	for <lists+linux-block@lfdr.de>; Fri,  2 Sep 2022 17:46:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235545AbiIBPjF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 2 Sep 2022 11:39:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52252 "EHLO
+        id S237086AbiIBPqt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 2 Sep 2022 11:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235907AbiIBPi1 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Sep 2022 11:38:27 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 870C0E3C12
-        for <linux-block@vger.kernel.org>; Fri,  2 Sep 2022 08:25:48 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id n202so1883591iod.6
-        for <linux-block@vger.kernel.org>; Fri, 02 Sep 2022 08:25:48 -0700 (PDT)
+        with ESMTP id S237137AbiIBPq3 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Sep 2022 11:46:29 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2975F97
+        for <linux-block@vger.kernel.org>; Fri,  2 Sep 2022 08:35:08 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id i77so1900580ioa.7
+        for <linux-block@vger.kernel.org>; Fri, 02 Sep 2022 08:35:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=fxq1owxnTH3V7as3vtwlM0mTq14/nO0sQyftu/XKdXg=;
-        b=CmazcpeKfh7KTOIax1/y9v+8DY18LhM+cUURdBj+oSP+2Q+Dp22RYprOiFPQpTXknn
-         zQoGJN7hWIBygoRsRfMQboJVz6/MkPW6mtvaOsL4FCTf5GwSrq3J4C8BafPBZO24UQAq
-         rJO1eutqZ6c0M2CysqYsbKORLuyT837SZVm8a9vrnHAE5CuGsxqbmUXoRJ9fXq7kevb8
-         pukB8+c4yyqyCxAlxCZJc1ULEixyja41kfwxWI6ShfzeWOfftp5WOBupGOuXlBnxGUCL
-         Jk3YXT9YtgoOHjBnHMJswK/tumnluuKcnGROSYuhYkwdNKBM3l+REXVon5MrW4NYtn9w
-         KXVA==
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date;
+        bh=kmWx6GQdEOtF/uL3thdhLU+yeJiJgGxBRHmkDdY8oDM=;
+        b=u022k6EYXiOXMch99qyEGcZPDNWmlAKj0DNCn+w1cCZ1xdp4kimxRT8y3JB6kTXXlu
+         dJo1S3YC7adSKZULoccPxd/74sppKhrenMLOSlqKR7V//ezSBTsQSZOFsLUhCxXFxcSR
+         b8krgNQFz+GYhd+MnQAN1zJ9CfU6vp+uecvw604ydbfuULNwxQC+fUrnVy22Vgbod+Tz
+         ZPMCX/M7xo2odcW06zRyET9u7dAaWHMw9pS2mXqYGngdoAuSkPEBztjWYyv3LDp/TYvw
+         0J5S3AmLE0BA7OAdA0JM9ySULTOK7k+fSmc5cKMP3F+L4vOAo3/WKAOKeOuzXrUqppei
+         L3Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=fxq1owxnTH3V7as3vtwlM0mTq14/nO0sQyftu/XKdXg=;
-        b=VDlcWWslpW8Dqd49riKLZ7NrCdNVo8lVMJrW5jpHPMzekrzUuHzkTs+DfjJWSWz+Wx
-         jN0mg9vQk23Nbx1OQpFWVUF/qKGJQb2aORLze04FgdlI4Tyl0m1P6BX4mzL4GaRU/b33
-         1aoE5gxIcQsxbJcyMCTkxAc3Eqoh/QEy7PfYZQTFh2rc+zrSIoQowhYaMeGf53ehfNU9
-         Nt6OYLAv5TSzL8hqHnNZovkF49vGc/ukzWVTOvVACw6LfoqNmsg06v7u6PsNpX9v58p/
-         PmgGG4ZGLrntmqQg6JQNzOZbUMynDyRQn3qDYYfkAmnyaxQn6HGfnnYSS3+t05qSe7z1
-         oQeQ==
-X-Gm-Message-State: ACgBeo24GmDYVSNgB0o54FVYrS4jnV96Du1yekyOfpnJsx/gf7Slg+9L
-        7GgGCfJpRE2fj2cX2FJCSBSikUmll3hrlA==
-X-Google-Smtp-Source: AA6agR6IQavXVVzu8pV/9ULn0HUlUyl8IazWjzGSOoiVlyIExQjf08KsmToAnfJRIhWIxr3/sb/SeQ==
-X-Received: by 2002:a05:6602:2b94:b0:68b:3263:f92f with SMTP id r20-20020a0566022b9400b0068b3263f92fmr13102037iov.171.1662132347498;
-        Fri, 02 Sep 2022 08:25:47 -0700 (PDT)
-Received: from [192.168.1.94] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id ck12-20020a0566383f0c00b0034fdf8771b3sm246297jab.31.2022.09.02.08.25.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Sep 2022 08:25:46 -0700 (PDT)
-Message-ID: <6be00631-eb53-c180-7716-a615680d6a6c@kernel.dk>
-Date:   Fri, 2 Sep 2022 09:25:42 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH V4 1/1] Documentation: document ublk
-Content-Language: en-US
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Richard W . M . Jones" <rjones@redhat.com>,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>
-References: <20220902152302.757375-1-ming.lei@redhat.com>
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=kmWx6GQdEOtF/uL3thdhLU+yeJiJgGxBRHmkDdY8oDM=;
+        b=jIgf+O3mScJIMkhamlddm+WNrxg3L/h759WjthNpZqbU9qXUYEIJOIV5Fvoh+Kr13V
+         8snoWopt/CkYz/iKJoVXdHRzSn3ScMNGzDvR4DVfYTYE8ZOkKhir3IvapCzt7Cv8nzC5
+         k1sFWIKfs/Uoq+5bnra4ulYB/v7EDuBqlFqN8wPHh9/RFazIVmOlfIoXhVcTQWOzvw9F
+         AqqXr5zRMCdI9SfLWCllm5WsYcbAFp6CqTk67+6UVMlh14peJLcdn3Sl/PxpmWJyCn/H
+         lm/7ce5iulaQfJalxfKMSLQNqNi26kjJbJ8RwQ3fbXPZLZ8CB6iU9ATWjd4G+IiFg5G6
+         FF2A==
+X-Gm-Message-State: ACgBeo2c1gJaeR3PohoPlGe/L4DaTQijJSrmNNgdIMw1AOiBY2OGu50S
+        j7o6nTsineieAjGpBvOx9aqcmMxESSdySw==
+X-Google-Smtp-Source: AA6agR7vi1T5kgnb2NiyyRAj3pUZQ0IJrIIFQrve79mFhm3NWuLo63V9wBE9wZcZmYId2u5+g2bnsg==
+X-Received: by 2002:a6b:ba44:0:b0:688:876b:61c6 with SMTP id k65-20020a6bba44000000b00688876b61c6mr17159855iof.51.1662132907624;
+        Fri, 02 Sep 2022 08:35:07 -0700 (PDT)
+Received: from [127.0.0.1] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id i3-20020a02ca03000000b00349eece079dsm946495jak.35.2022.09.02.08.35.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Sep 2022 08:35:06 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220902152302.757375-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     kbusch@kernel.org, Kanchan Joshi <joshi.k@samsung.com>,
+        asml.silence@gmail.com, hch@lst.de
+Cc:     gost.dev@samsung.com, io-uring@vger.kernel.org,
+        linux-nvme@lists.infradead.org, ming.lei@redhat.com,
+        linux-block@vger.kernel.org
+In-Reply-To: <20220823161443.49436-1-joshi.k@samsung.com>
+References: <CGME20220823162504epcas5p22a67e394c0fe1f563432b2f411b2fad3@epcas5p2.samsung.com>
+ <20220823161443.49436-1-joshi.k@samsung.com>
+Subject: Re: [PATCH for-next v3 0/4] iopoll support for io_uring/nvme
+Message-Id: <166213290569.98725.590739918203033888.b4-ty@kernel.dk>
+Date:   Fri, 02 Sep 2022 09:35:05 -0600
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.10.0-dev-65ba7
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/2/22 9:23 AM, Ming Lei wrote:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f512b430c7cb..08a5c465a160 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20760,6 +20760,7 @@ UBLK USERSPACE BLOCK DRIVER
->  M:	Ming Lei <ming.lei@redhat.com>
->  L:	linux-block@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/block/index.rst
+On Tue, 23 Aug 2022 21:44:39 +0530, Kanchan Joshi wrote:
+> Series enables async polling on io_uring command, and nvme passthrough
+> (for io-commands) is wired up to leverage that.
+> This gives nice IOPS hike (even 100% at times) particularly on lower
+> queue-depths.
+> 
+> Changes since v2:
+> - rebase against for-next (which now has bio-cache that can operate on
+>   polled passthrough IO)
+> - bit of rewording in commit description
+> 
+> [...]
 
-Documentation/block/ublk.rst
+Applied, thanks!
 
-?
+[1/4] fs: add file_operations->uring_cmd_iopoll
+      commit: acdb4c6b62aa229c14a57422e4effab233b2c455
+[2/4] io_uring: add iopoll infrastructure for io_uring_cmd
+      commit: 585cee108ddaa8893611f95611e32ed605fc6936
+[3/4] block: export blk_rq_is_poll
+      commit: 2dd9d642edf01043885cefeaaa06d9c8e1aa4503
+[4/4] nvme: wire up async polling for io passthrough commands
+      commit: 5760ebead11801cdb73cdf3841e73231968f6af4
 
-I'll make the edit when applying.
-
+Best regards,
 -- 
 Jens Axboe
+
+
