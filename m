@@ -2,42 +2,61 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C385AD01B
-	for <lists+linux-block@lfdr.de>; Mon,  5 Sep 2022 12:33:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3620E5AD1B0
+	for <lists+linux-block@lfdr.de>; Mon,  5 Sep 2022 13:42:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236787AbiIEK2s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 5 Sep 2022 06:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
+        id S236506AbiIELmJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 5 Sep 2022 07:42:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237632AbiIEK2j (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Sep 2022 06:28:39 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB4C114E;
-        Mon,  5 Sep 2022 03:28:38 -0700 (PDT)
-Received: from canpemm500002.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MLl6N5vkTznV2y;
-        Mon,  5 Sep 2022 18:26:04 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by canpemm500002.china.huawei.com
- (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 5 Sep
- 2022 18:28:36 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] block: remove unneeded return value of bio_check_ro()
-Date:   Mon, 5 Sep 2022 18:27:54 +0800
-Message-ID: <20220905102754.1942-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.23.0
+        with ESMTP id S236202AbiIELmJ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Sep 2022 07:42:09 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9BD5A3F7
+        for <linux-block@vger.kernel.org>; Mon,  5 Sep 2022 04:42:07 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id u6so10940136eda.12
+        for <linux-block@vger.kernel.org>; Mon, 05 Sep 2022 04:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=kPhqrZI190RrT5dmSAXDRJ04O2Jq0fRqXUjgTNlv3yA=;
+        b=YjlsZ9kdl/GbTdeAhP+TubZOB35Ze+WFiBjYTH65t5kik2RGIjE7H89o42vEQDeRMn
+         TQGHQEx7S2AveGlzRryLgqJ74pTJFmBRJq71HM+SA/1y5avph3NtixqnzComqWF4yIcz
+         WFiPWKWMM+yZibJ+CRpTxOZk+rzWrA+94zsTUioQzdTPA5QRe1FtV6OwKEbypqmSCwR1
+         naLuVSYCZmSeCdFpQ8bkkp6zoLGpavtfVAS1q7Cuy06qG27ep1F5E7OTapx713ZPnT6p
+         p0kdJPUYYUiyEr+/8WuNCSDdyYdARmzzYyJ0ooTARJldLfv1T1RCaM9bYqryLkHjdJm7
+         xStA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=kPhqrZI190RrT5dmSAXDRJ04O2Jq0fRqXUjgTNlv3yA=;
+        b=X5Ulpl51ABHs+eKVBxhkSVRLmYNLzvJRkxDwZTyDSVu7/mMGDtiKZvQ3j1nfXc8AWK
+         yWzZZYKBQ61DXi8nvvbzWPkSt9uuD7PTkt/zBZVrshvnDskXdOjTiXOQg3YCOlgupdMO
+         Fa9MdUH+/BS7VYRzxyjkK56ljZ77HH0BDjJ2lZyJpUmqza2BqmUEWF2JnhUHxvSWTndq
+         M88g+BohZVLfM7aey2/rUsAiGXhijezG1+WYk3TFhN6hPYgg62xOnxJw0Nh9ZL//MLi0
+         wOFtLDipSuqMGxsbEDKCOyen9GawznQ2hjO+wRj+RlGgIKUvFuiYteotOeOK1UTqKo9i
+         kfDg==
+X-Gm-Message-State: ACgBeo3PWEbju/4ZBJUjT890sWyPIQcbR/RVYhPf4bCG5O9x0BUggKyg
+        myiMOFqv7HTXoRg9UKQtOCDhwSNju1qiek7iigQs1w==
+X-Google-Smtp-Source: AA6agR6jpQhscHMrzBaaaAPeZK2h4prZE1fpXrWV6LVit+6JLRtgq3zoKtPPtnfW5jKuRXw0wBiP6gkL36aVlz6jr5Y=
+X-Received: by 2002:a05:6402:510a:b0:43d:ab25:7d68 with SMTP id
+ m10-20020a056402510a00b0043dab257d68mr42601300edd.102.1662378126456; Mon, 05
+ Sep 2022 04:42:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500002.china.huawei.com (7.192.104.244)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <20220902100055.25724-1-guoqing.jiang@linux.dev> <20220902100055.25724-2-guoqing.jiang@linux.dev>
+In-Reply-To: <20220902100055.25724-2-guoqing.jiang@linux.dev>
+From:   Haris Iqbal <haris.iqbal@ionos.com>
+Date:   Mon, 5 Sep 2022 13:41:55 +0200
+Message-ID: <CAJpMwygCbd5ZSEHDjBug8GpSWnh0ooQeQW-rs5ByO6PhNo1AKA@mail.gmail.com>
+Subject: Re: [PATCH V2 1/3] rnbd-srv: add comment in rnbd_srv_rdma_ev
+To:     Guoqing Jiang <guoqing.jiang@linux.dev>
+Cc:     jinpu.wang@ionos.com, axboe@kernel.dk, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,49 +64,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bio_check_ro() always return false now. Remove this unneeded return value
-and cleanup the sole caller. No functional change intended.
+On Fri, Sep 2, 2022 at 12:01 PM Guoqing Jiang <guoqing.jiang@linux.dev> wrote:
+>
+> Let's add some explanations here given the err handling is not obvious.
+>
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
+> ---
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- block/blk-core.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Acked-by: Md Haris Iqbal <haris.iqbal@ionos.com>
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index a0d1104c5590..fe6b27e3a513 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -487,18 +487,15 @@ static int __init fail_make_request_debugfs(void)
- late_initcall(fail_make_request_debugfs);
- #endif /* CONFIG_FAIL_MAKE_REQUEST */
- 
--static inline bool bio_check_ro(struct bio *bio)
-+static inline void bio_check_ro(struct bio *bio)
- {
- 	if (op_is_write(bio_op(bio)) && bdev_read_only(bio->bi_bdev)) {
- 		if (op_is_flush(bio->bi_opf) && !bio_sectors(bio))
--			return false;
-+			return;
- 		pr_warn("Trying to write to read-only block-device %pg\n",
- 			bio->bi_bdev);
- 		/* Older lvm-tools actually trigger this */
--		return false;
- 	}
--
--	return false;
- }
- 
- static noinline int should_fail_bio(struct bio *bio)
-@@ -722,8 +719,7 @@ void submit_bio_noacct(struct bio *bio)
- 
- 	if (should_fail_bio(bio))
- 		goto end_io;
--	if (unlikely(bio_check_ro(bio)))
--		goto end_io;
-+	bio_check_ro(bio);
- 	if (!bio_flagged(bio, BIO_REMAPPED)) {
- 		if (unlikely(bio_check_eod(bio)))
- 			goto end_io;
--- 
-2.23.0
+Thanks.
 
+>  drivers/block/rnbd/rnbd-srv.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+> index 3f6c268e04ef..a229dd87c322 100644
+> --- a/drivers/block/rnbd/rnbd-srv.c
+> +++ b/drivers/block/rnbd/rnbd-srv.c
+> @@ -402,6 +402,11 @@ static int rnbd_srv_rdma_ev(void *priv,
+>                 return -EINVAL;
+>         }
+>
+> +       /*
+> +        * Since ret is passed to rtrs to handle the failure case, we
+> +        * just return 0 at the end otherwise callers in rtrs would call
+> +        * send_io_resp_imm again to print redundant err message.
+> +        */
+>         rtrs_srv_resp_rdma(id, ret);
+>         return 0;
+>  }
+> --
+> 2.31.1
+>
