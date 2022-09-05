@@ -2,55 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BFBF5AD898
-	for <lists+linux-block@lfdr.de>; Mon,  5 Sep 2022 19:50:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DAF95AD8A3
+	for <lists+linux-block@lfdr.de>; Mon,  5 Sep 2022 19:55:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231859AbiIERuZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 5 Sep 2022 13:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
+        id S230431AbiIERzg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 5 Sep 2022 13:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231533AbiIERuY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Sep 2022 13:50:24 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E93C5F122
-        for <linux-block@vger.kernel.org>; Mon,  5 Sep 2022 10:50:23 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id u9-20020a17090a1f0900b001fde6477464so12744032pja.4
-        for <linux-block@vger.kernel.org>; Mon, 05 Sep 2022 10:50:23 -0700 (PDT)
+        with ESMTP id S232197AbiIERxo (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Sep 2022 13:53:44 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED0C5F132
+        for <linux-block@vger.kernel.org>; Mon,  5 Sep 2022 10:53:43 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id n65-20020a17090a5ac700b001fbb4fad865so9194630pji.1
+        for <linux-block@vger.kernel.org>; Mon, 05 Sep 2022 10:53:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=PNaCX0S9iGhKAlyPWJAoKRpsa01FH9FlALaZF1PJLS0=;
-        b=lMnZ13siCUzc0zOynH5OarlVG770rcTKcozKwKhb4GoNXLZfY5qo+9mE7Rm0XEkk4a
-         7+b9inDvYw4dIC8yt82RCx0511+bCZvHLylAQVe083yQrOokin8d4Bu3HfKuV8CbVJRA
-         EhJOGja7bkAuGXfJEMJrqCAC+0bBEoAJ8NzdfFy3Ye4uHrtYsANZomFnRc7ReT3dtOxA
-         Tny4ZaZ8Z7mRAtzJcKiOSUfRnpFgEMc+IAx5tVYfGT+f3C2vL9f9efDWiKMUbsqQhCUS
-         /7uLU76kveNyfhJz3meNYUioN4Kodaak/BlvSmO+zX+o1pSAJQ+cXnLiZyy8e4MSnhwd
-         5kKA==
+        bh=zeGc0vwJDgBIJyeNrQDrz976x5n1fo0aH2VcrMu6kPU=;
+        b=3TzLFPJsgQVoyzIEgelyj96PTJ9RA2qoPFKMvnvgNEGKK3Xg7EfO0JMiwAXt32iElf
+         vfYSQMKS+7btTv0zYBL+JqK4B164T+u6A4q65qijRqZyjFwAkIJp873GODXmEqUbmCCl
+         a4PU+gLa9IJVBoluV1WyE8I2Zq7+YUslviqLsKLMihwruNHwSorxpHp+7VzMqUYi3TBx
+         YFyW7ALBsYtKGUQT/cNuSBySGtF5RFshRyz4JQlfcDDqnfeOdKj2rIW3G6/Iq+Iicinq
+         dqOHLOCjuAfw7X/gYLQhSZJIUxQsokZNds8p706H8863+sWLzEVugxnU1gj8eVaU8mZ3
+         4+sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=PNaCX0S9iGhKAlyPWJAoKRpsa01FH9FlALaZF1PJLS0=;
-        b=7rRQJwdmcQbUrt9HdiCExWEAbNCKjK3jmSJaXxa/5bhRPQKK2GkV+xc3t24OqjcXZv
-         kwnQcSSO7JlckJc+04EZW+byPnCfW0wm78ngxr7j1Jwu08/Uh2vzkzI9UDMtBdh2X7t5
-         dFXE0qAksl1OSd0IwTlG9sCI9vetTQ0BHV2NkkChqeaDpTT9Nk40mhuYn29toTH0rLm3
-         Z7oSf+n3NnSx4qDAA8+uecRqNy8ly3tHj+sz7AKQhx5terIJaM06gO2hpIgtq7Bqbv8q
-         WEI35CBIK4px3Hi4hK8N4BU5ReoclmIL9eESIRKba9XjrKg9SJcK14p8oNtwda/UT1kt
-         uzug==
-X-Gm-Message-State: ACgBeo3QC1rrUJwUQvUzuk2zf2/GVN9b9XGdJZDRnrBu8X0PgTZhYjbp
-        HyDiAO/c3oJekwt9tAAoBtc/CpoytCiCLw==
-X-Google-Smtp-Source: AA6agR5R9puDZtsQGlvBHmoPXUZgxeA3Szf5wt3UY93HyWP9kB/FpM7r9D8ZOEgLdp4cZ5V/aaVWYw==
-X-Received: by 2002:a17:90b:4b81:b0:1fd:d736:9d04 with SMTP id lr1-20020a17090b4b8100b001fdd7369d04mr20794110pjb.121.1662400222422;
-        Mon, 05 Sep 2022 10:50:22 -0700 (PDT)
+        bh=zeGc0vwJDgBIJyeNrQDrz976x5n1fo0aH2VcrMu6kPU=;
+        b=PCimA0WaXL9qCfDnleJspOi+CPKetgDZQ8LJIf1qMNpGso9GgISXdYF5yhDmLUiNDP
+         hK59GazTEiUfwPi/0dITGRJtjYLdHLcLEUVb4R51VDmV6gdSoJND+IRE8aKN3X4PXhO3
+         RJd3sXQleaGjuEc7bKYKqyuKD/SLRtT3j21CG4AcxQ2yaEqeJJNQr6+PG3aiaUe6Rh70
+         x4Bd/HmimyZ664Td6mz4yuhQtvKg5B8pG8cY1NEKm1e3hcZZdcYqT/26Ffm9M9QOLOW7
+         NuqJkUkFzR3UvVRv0ssnZSG3B/cVlhYGRQdYkFiIlhgvme4yezPpQ3dxkvMlTG4N4Q/e
+         4mrQ==
+X-Gm-Message-State: ACgBeo3HqJ3WXyvAHYibOM7kJVMYd8M8JDs4KUFJXaaYWAmeViRdGfac
+        9sxX+2dzeD7FA40So+rfy6YM4w==
+X-Google-Smtp-Source: AA6agR7DiMNf6wfT4ZoG5rsHUmL/ehmUhw+ETrtpWSzJRoiOawk/VgiGVH9Vb1lT8IaVGei10sbUSg==
+X-Received: by 2002:a17:902:e848:b0:176:c746:1f69 with SMTP id t8-20020a170902e84800b00176c7461f69mr1501581plg.125.1662400422716;
+        Mon, 05 Sep 2022 10:53:42 -0700 (PDT)
 Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id x12-20020a170902ec8c00b0017543086eb3sm7914486plg.274.2022.09.05.10.50.21
+        by smtp.gmail.com with ESMTPSA id u67-20020a626046000000b00537e1b30793sm8331899pfb.11.2022.09.05.10.53.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Sep 2022 10:50:21 -0700 (PDT)
-Message-ID: <8a6f1186-e202-7d0c-6e4a-6a456cf7f4f7@kernel.dk>
-Date:   Mon, 5 Sep 2022 11:50:20 -0600
+        Mon, 05 Sep 2022 10:53:42 -0700 (PDT)
+Message-ID: <5a0f98a5-8710-0719-91e6-e75af1818b1b@kernel.dk>
+Date:   Mon, 5 Sep 2022 11:53:41 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
  Thunderbird/102.1.2
@@ -71,8 +71,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -80,56 +79,34 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 9/5/22 7:48 AM, Kanchan Joshi wrote:
-> From: Anuj Gupta <anuj20.g@samsung.com>
-> 
-> This is a new helper that callers can use to obtain a bvec iterator for
-> the previously mapped buffer. This is preparatory work to enable
-> fixed-buffer support for io_uring_cmd.
-> 
-> Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> ---
->  include/linux/io_uring.h |  8 ++++++++
->  io_uring/uring_cmd.c     | 11 +++++++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-> index 58676c0a398f..dba6fb47aa6c 100644
-> --- a/include/linux/io_uring.h
-> +++ b/include/linux/io_uring.h
-> @@ -4,6 +4,7 @@
+> @@ -124,3 +125,13 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
 >  
->  #include <linux/sched.h>
->  #include <linux/xarray.h>
-> +#include <uapi/linux/io_uring.h>
->  
->  enum io_uring_cmd_flags {
->  	IO_URING_F_COMPLETE_DEFER	= 1,
-> @@ -32,6 +33,8 @@ struct io_uring_cmd {
->  };
->  
->  #if defined(CONFIG_IO_URING)
-> +int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
-> +		struct iov_iter *iter, void *ioucmd);
->  void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret, ssize_t res2);
->  void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
->  			void (*task_work_cb)(struct io_uring_cmd *));
-> @@ -59,6 +62,11 @@ static inline void io_uring_free(struct task_struct *tsk)
->  		__io_uring_free(tsk);
+>  	return IOU_ISSUE_SKIP_COMPLETE;
 >  }
->  #else
-> +int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
-> +		struct iov_iter *iter, void *ioucmd)
+> +
+> +int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len,
+> +		int rw, struct iov_iter *iter, void *ioucmd)
 > +{
-> +	return -1;
+> +	struct io_kiocb *req = cmd_to_io_kiocb(ioucmd);
+> +	struct io_mapped_ubuf *imu = req->imu;
+> +
+> +	return io_import_fixed(rw, iter, imu, ubuf, len);
 > +}
+> +EXPORT_SYMBOL_GPL(io_uring_cmd_import_fixed);
 
-Is this right? Shouldn't it return -EOPNOTSUPP or another suitable actual
-error value?
+Oh, and since we're probably respinning this one anyway, I'd do:
 
-Apart from that, I think the patchset looks fine now.
+int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
+			      struct iov_iter *iter, void *ioucmd)
+{
+	struct io_kiocb *req = cmd_to_io_kiocb(ioucmd);
+
+	return io_import_fixed(rw, iter, req->imu, ubuf, len);
+}
+EXPORT_SYMBOL_GPL(io_uring_cmd_import_fixed);
+
+to both fix the indentation and get rid of the 'imu' variable that isn't
+really necessary.
 
 -- 
 Jens Axboe
-
-
