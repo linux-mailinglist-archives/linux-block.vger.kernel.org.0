@@ -2,116 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 654155AE00C
-	for <lists+linux-block@lfdr.de>; Tue,  6 Sep 2022 08:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF1255ADFE6
+	for <lists+linux-block@lfdr.de>; Tue,  6 Sep 2022 08:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232930AbiIFGn0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Sep 2022 02:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
+        id S238440AbiIFGgY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Sep 2022 02:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238328AbiIFGnZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Sep 2022 02:43:25 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281BE6DAC5
-        for <linux-block@vger.kernel.org>; Mon,  5 Sep 2022 23:43:23 -0700 (PDT)
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20220906064321epoutp03ca5f971d4991fa0843434f418678d28b~SMmA6I3lK2123721237epoutp03H
-        for <linux-block@vger.kernel.org>; Tue,  6 Sep 2022 06:43:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20220906064321epoutp03ca5f971d4991fa0843434f418678d28b~SMmA6I3lK2123721237epoutp03H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1662446601;
-        bh=tFz/u5eudbZmuZ5IBaxyO4rRD70ftNseSzcgxZbVS9g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XIKdto73uFRHs0DdDLEbWuP9AxVTfM8Reov9BZBQTkDLOM610xBvJBbn4Wh2vH7h7
-         o4eVmD2B1pmF8fe2KId2EGIhRh3SusgbuxnwOjWhrYO2dT172I+Al5u6VoYP8UqVlV
-         9ajYynq5bIZH+5QKTQZ1R2/ANG19Dn6VBSPziU94=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20220906064320epcas5p3ff78d71fd03d582b045d49aff86e2393~SMmAeGw5Y1445614456epcas5p3h;
-        Tue,  6 Sep 2022 06:43:20 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4MMG6t3gkkz4x9QG; Tue,  6 Sep
-        2022 06:43:18 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DC.5E.54060.20CE6136; Tue,  6 Sep 2022 15:43:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20220906064314epcas5p20f26e7075aea4c6067281c10a0abac33~SMl6t1RdL2836928369epcas5p2F;
-        Tue,  6 Sep 2022 06:43:14 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20220906064314epsmtrp2998aee2f5b5ce079df0dc0b7559b2101~SMl6sxNrq1725217252epsmtrp2N;
-        Tue,  6 Sep 2022 06:43:14 +0000 (GMT)
-X-AuditID: b6c32a4b-3f15ba800000d32c-d8-6316ec02bcb5
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3C.16.14392.20CE6136; Tue,  6 Sep 2022 15:43:14 +0900 (KST)
-Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20220906064313epsmtip25a40853d01ff441856eb237c0014d67f~SMl5OnhhP0041800418epsmtip2D;
-        Tue,  6 Sep 2022 06:43:12 +0000 (GMT)
-Date:   Tue, 6 Sep 2022 12:03:29 +0530
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, kbusch@kernel.org, asml.silence@gmail.com,
-        io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, gost.dev@samsung.com,
-        Anuj Gupta <anuj20.g@samsung.com>
-Subject: Re: [PATCH for-next v4 3/4] block: add helper to map bvec iterator
- for passthrough
-Message-ID: <20220906063329.GA27127@test-zns>
+        with ESMTP id S238420AbiIFGgX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Sep 2022 02:36:23 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569494622B;
+        Mon,  5 Sep 2022 23:36:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kFNZmmVwOhX3BjOPJ3tln3iTlg4hrSY3aWoS1Dwfdhg=; b=yGw6sWaI79F1sxKkVQaLBqfkMn
+        ciPMa49hRCEsXC2e6QaC54/IVuW1x7URn7p9FAd8AYvAjhg/l+1gdoUkyxzOIxNQSBREX9xh7Ddi7
+        q2c0xDaqVAW+qvoITRmcqt4ZgncEoEdCsyZ+if/g0K63wSpNDe759gtusSOfiypyV3ckYrrwNjqKy
+        fw+hMWUso0tMaAGn4D5npZ88RTr1mhqS1sde0A6s/XS2WYHo+CKamVL67MufxQdIBBU7Cql8EAIJ8
+        2S3PpJWk6hCoYJk1DgBfZbJROPvkE3hHk70QgGadjMpxViBoTBeQ/LLfjrtGr9lkOg7brY3tIdMCT
+        o3mXVCUA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oVSBm-00AS9k-Lz; Tue, 06 Sep 2022 06:36:02 +0000
+Date:   Mon, 5 Sep 2022 23:36:02 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] convert most filesystems to pin_user_pages_fast()
+Message-ID: <YxbqUvDJ/rJsLMPZ@infradead.org>
+References: <20220831041843.973026-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20220906062522.GA1566@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmui7TG7Fkg79LrS2aJvxltpizahuj
-        xeq7/WwWNw/sZLJYufook8W71nMsFpMOXWO02HtL22L+sqfsDpweO2fdZfe4fLbUY9OqTjaP
-        zUvqPXbfbGDz6NuyitHj8ya5APaobJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtz
-        JYW8xNxUWyUXnwBdt8wcoLuUFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQUmBXrF
-        ibnFpXnpenmpJVaGBgZGpkCFCdkZxy5NYSp4zlEx/cdBxgbGFexdjBwcEgImEktm1XQxcnEI
-        CexmlGid9YS5i5ETyPnEKHHjpB+E/Y1R4sXtYBAbpL55+jpWiIa9jBI3f79ggnCeMUpseNfO
-        AjKVRUBFovWeN4jJJqApcWFyKUiviICSxNNXZxlBypkFrjBKPOlaxwSSEBaIlfjXexTM5hXQ
-        lbg6+TA7hC0ocXLmExYQm1NAW+LN3ImMILaogLLEgW3HwfZKCMzlkNh5Zx4bxHUuEvOmvWSF
-        sIUlXh3fwg5hS0l8frcXqiZZ4tLMc0wQdonE4z0HoWx7idZT/WDfMwtkSHS1nmaDsPkken8/
-        YYKEFq9ER5sQRLmixL1JT6FWiUs8nLEEyvaQONu0gR0SJjcYJdr//GSbwCg3C8k/s5CsgLCt
-        JDo/NLHOAlrBLCAtsfwfB4SpKbF+l/4CRtZVjJKpBcW56anFpgXGeanl8BhOzs/dxAhOp1re
-        OxgfPfigd4iRiYPxEKMEB7OSCG/KDpFkId6UxMqq1KL8+KLSnNTiQ4ymwOiZyCwlmpwPTOh5
-        JfGGJpYGJmZmZiaWxmaGSuK8U7QZk4UE0hNLUrNTUwtSi2D6mDg4pRqYzPSv+/Z22zKuLHRY
-        dnRV1rEvl6LnzrxUaJtR8a3t1MyqW6vT7ic4PbJw7J8tsPpDXfoG/lcPmGwtH1/MrVuzc7ry
-        8ce3/3bLrDdg++hlKrlmkmHJsyl/Xb3zd815/dbyV1/5iZnvvB1uMSfcWRM7n9VL32/B3mun
-        tGccrrydnr18pXPokvnc3eXGjYvr+O3Sb/1ZOVOiZ/HBh3Of7l26/G5+evgUhcTi5EeTNaU9
-        DlXlJf9RyG3luLmyUHWBrPLrc6sista6usjlZU++x5zFnzCnd8KEOcEcnhPfvT2U1hW/5NHq
-        4xKuC3h0Pv0v4Vje9+X+nK8GOQ37jvLFtm3d6RY/K9Xs+Cu23euvSTa3TFNiKc5INNRiLipO
-        BABtyU8vMAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsWy7bCSvC7TG7FkgyXL5CyaJvxltpizahuj
-        xeq7/WwWNw/sZLJYufook8W71nMsFpMOXWO02HtL22L+sqfsDpweO2fdZfe4fLbUY9OqTjaP
-        zUvqPXbfbGDz6NuyitHj8ya5APYoLpuU1JzMstQifbsEroy1jy8yFsxkq2j7doqpgfELSxcj
-        J4eEgIlE8/R1rF2MXBxCArsZJX7NnskGkRCXaL72gx3CFpZY+e85mC0k8IRRYsNm9S5GDg4W
-        ARWJ1nveICabgKbEhcmlIBUiAkoST1+dZQQZySxwhVHiz/4lrCAJYYFYiX+9R5lAbF4BXYmr
-        kw+zQ+y9xSix/vNjFoiEoMTJmU/AbGYBM4l5mx8ygyxgFpCWWP6PAyTMKaAt8WbuREYQW1RA
-        WeLAtuNMExgFZyHpnoWkexZC9wJG5lWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMEx
-        oqW5g3H7qg96hxiZOBgPMUpwMCuJ8KbsEEkW4k1JrKxKLcqPLyrNSS0+xCjNwaIkznuh62S8
-        kEB6YklqdmpqQWoRTJaJg1OqgUk7hoGJ7ZWGQ8f8jcZfOZkUC5JdVvDEFgkdV/yTKnJ85+GM
-        Tzwv5gsF/lfxkZqQpRRu3LFx2mS1lyE5fj2O3/5+57fJnC7/5+2m1LTCtbvSFlYoHw1OqJUN
-        ee23fhf/bPdA50svn/57dmzG/qR9++avs1j610moO+HoseROp7nLlfLDjl9es/quTeYrhflf
-        voTqxeRdvlEVauqQNSmb+3adgUfl9zR9rozrd09N26i4/uc6FcNb00NXqaxQb1gWcipu1d3f
-        l6b+Td0srrBTlTPzAd8r/q9GU6SKG6Xs1A5fnSmRXR+WVJ4s80vyMlfX4R+zt2t8j13+8HHF
-        0mOrlokxaUtFuBY65Ob1xWvMUVdiKc5INNRiLipOBABUuM7aAAMAAA==
-X-CMS-MailID: 20220906064314epcas5p20f26e7075aea4c6067281c10a0abac33
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----W1bEPTvsorsTcy9-0QGogbD0KLvGmowfrJUeCoG.R5S2F01G=_e34e4_"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220905135851epcas5p3d107b140fd6cba1feb338c1a31c4feb1
-References: <20220905134833.6387-1-joshi.k@samsung.com>
-        <CGME20220905135851epcas5p3d107b140fd6cba1feb338c1a31c4feb1@epcas5p3.samsung.com>
-        <20220905134833.6387-4-joshi.k@samsung.com> <20220906062522.GA1566@lst.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220831041843.973026-1-jhubbard@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -119,31 +60,13 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------W1bEPTvsorsTcy9-0QGogbD0KLvGmowfrJUeCoG.R5S2F01G=_e34e4_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On Tue, Aug 30, 2022 at 09:18:36PM -0700, John Hubbard wrote:
+> The conversion is temporarily guarded by
+> CONFIG_BLK_USE_PIN_USER_PAGES_FOR_DIO. In the future (not part of this
+> series), when we are certain that all filesystems have converted their
+> Direct IO paths to FOLL_PIN, then we can do the final step, which is to
+> get rid of CONFIG_BLK_USE_PIN_USER_PAGES_FOR_DIO and search-and-replace
+> the dio_w_*() functions with their final names (see bvec.h changes).
 
-On Tue, Sep 06, 2022 at 08:25:22AM +0200, Christoph Hellwig wrote:
->On Mon, Sep 05, 2022 at 07:18:32PM +0530, Kanchan Joshi wrote:
->> +static struct bio *bio_map_get(struct request *rq, unsigned int nr_vecs,
->>  		gfp_t gfp_mask)
->>  {
->> @@ -259,13 +252,31 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
->>  		bio = bio_alloc_bioset(NULL, nr_vecs, opf, gfp_mask,
->>  					&fs_bio_set);
->>  		if (!bio)
->> -			return -ENOMEM;
->> +			return NULL;
->
->This context looks weird?  That bio_alloc_bioset should not be there,
->as biosets are only used for file system I/O, which this is not.
-
-if you think it's a deal-breaker, maybe I can add a new bioset in nvme and
-pass that as argument to this helper. Would you prefer that over the
-current approach.
-
-------W1bEPTvsorsTcy9-0QGogbD0KLvGmowfrJUeCoG.R5S2F01G=_e34e4_
-Content-Type: text/plain; charset="utf-8"
-
-
-------W1bEPTvsorsTcy9-0QGogbD0KLvGmowfrJUeCoG.R5S2F01G=_e34e4_--
+What is the the point of these wrappers?  We should be able to
+convert one caller at a time in an entirely safe way.
