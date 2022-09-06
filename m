@@ -2,49 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90C585AF73F
-	for <lists+linux-block@lfdr.de>; Tue,  6 Sep 2022 23:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7F955AF7A7
+	for <lists+linux-block@lfdr.de>; Wed,  7 Sep 2022 00:08:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbiIFVsS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Sep 2022 17:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
+        id S229740AbiIFWI4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Sep 2022 18:08:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbiIFVsS (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Sep 2022 17:48:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C93804A2
-        for <linux-block@vger.kernel.org>; Tue,  6 Sep 2022 14:48:17 -0700 (PDT)
+        with ESMTP id S229449AbiIFWIz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Sep 2022 18:08:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25D087690;
+        Tue,  6 Sep 2022 15:08:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 09E40616EF
-        for <linux-block@vger.kernel.org>; Tue,  6 Sep 2022 21:48:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECFA6C433D6;
-        Tue,  6 Sep 2022 21:48:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3580E616FE;
+        Tue,  6 Sep 2022 22:08:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433FFC433C1;
+        Tue,  6 Sep 2022 22:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662500896;
-        bh=8vgpKeAV2cJUA6tfBfYc+UIphSdbmCSC9Mpg2TLEHf0=;
+        s=k20201202; t=1662502133;
+        bh=uyaghLFUj0ZUpYv1BfsnZYUsPz1vG7taUX0PRzOUbWM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=REpkMKw8WMqflmEdYV2KWo+cPYDxY2ugTbfQsK2b8wcc24vXpsUGtLZwKnjHnRPT1
-         QCb7cErsbc2ddw/d5WRPg9/qM5kcWV0wEVe3aeYIllzBa/uBsOfY0kdN8/Tqx/oCWl
-         MKVspjzhoxsiaufH3I3uGRr2nXNzM83L0Rwq0lDe2nYxF3WePN6NkoA1Bn9ez98VW4
-         h1wk6WHDxfeIMWjo7Jj1vbU1V0PJEW1qdZy0pAVXOo9SWBFIZ8NmwiT+4fuDCN7Eiy
-         NrkQuFFTAhCxjkEFIxG6hGryNxjqS6FfBXsgpVFJClAl+VXDiqfzDIBkf+AlJU+wPZ
-         ue60oRvl+MAuw==
-Date:   Tue, 6 Sep 2022 15:48:13 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Keith Busch <kbusch@fb.com>,
-        pankydev8@gmail.com, hare@suse.de
-Subject: Re: [PATCHv3] sbitmap: fix batched wait_cnt accounting
-Message-ID: <YxfAHRC7IlshWj+t@kbusch-mbp.dhcp.thefacebook.com>
-References: <20220825145312.1217900-1-kbusch@fb.com>
- <166205058410.59240.3725947759855970973.b4-ty@kernel.dk>
- <e742813b-ce5c-0d58-205b-1626f639b1bd@kernel.dk>
+        b=V38ZoxcxLYyfWiUeHT6Fl+831Rgi6pJi6COWb6dgkYbZBhuGgqt1X+ndhxdRu8NcH
+         PhQMZPmU2h0D39SdC2RSKkt1HyFT8NdUl89oV6Ixn9pI17mj7ER4d2Hc9huXWeCbNq
+         i+3i8uYL5SnvLWF9WFqcnE99gSR2YmtDv75VhV5qGNsNOxhiapoN8pvJ9ncdsdAIX4
+         bvVdcog5eFVzlkDnJf3hJMHUE9BSTikEfHZbG5nhBuv+yjnoIy7446EGgl9bQEN5w4
+         6CQIL+JCmEpSFleBZP0kvFhoiQ63H/GuEzJnaKlanPcBDK9nzEN0FReaF0ufHZbnRW
+         3HmhWtJtQr0HQ==
+Date:   Tue, 6 Sep 2022 15:08:51 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH v5 0/8] make statx() return DIO alignment information
+Message-ID: <YxfE8zjqkT6Zn+Vn@quark>
+References: <20220827065851.135710-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e742813b-ce5c-0d58-205b-1626f639b1bd@kernel.dk>
+In-Reply-To: <20220827065851.135710-1-ebiggers@kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,44 +56,13 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Sep 04, 2022 at 06:39:14AM -0600, Jens Axboe wrote:
-> On 9/1/22 10:43 AM, Jens Axboe wrote:
-> > On Thu, 25 Aug 2022 07:53:12 -0700, Keith Busch wrote:
-> >> From: Keith Busch <kbusch@kernel.org>
-> >>
-> >> Batched completions can clear multiple bits, but we're only decrementing
-> >> the wait_cnt by one each time. This can cause waiters to never be woken,
-> >> stalling IO. Use the batched count instead.
-> >>
-> >>
-> >> [...]
-> > 
-> > Applied, thanks!
-> > 
-> > [1/1] sbitmap: fix batched wait_cnt accounting
-> >       commit: 16ede66973c84f890c03584f79158dd5b2d725f5
-> 
-> This is causing CPU stalls for me running make -j256 with the source
-> hosted on an ATA device with QD=32. It's not running with a scheduler.
-> It just goes spammy on most/all CPUs so  hard to get a real trace out of
-> it, but it looks like we're just looping forever off
-> sbitmap_queue_wake_up().
-> 
-> I'm going to revert this one for now until we can investigate what is
-> going on here.
+On Fri, Aug 26, 2022 at 11:58:43PM -0700, Eric Biggers wrote:
+> This patchset makes the statx() system call return direct I/O (DIO)
+> alignment information.  This allows userspace to easily determine
+> whether a file supports DIO, and if so with what alignment restrictions.
 
-I was able to reproduce this without much trouble. I think it needs to restore
-the wait_cnt if we're racing with wait_active. I think the problem even exists
-without this patch ([1]), but you'd be unlikely to hit it decrementing wait_cnt
-just one at a time when the wait_batch is > 1. The diff on top of this patch
-should fix it:
+Al, any thoughts on this patchset, and do you plan to apply it for 6.1?  Ideally
+this would go through the VFS tree.  If not, I suppose I'll need to have it
+added to linux-next and send the pull request myself.
 
----
--	if (!waitqueue_active(&ws->wait))
-+	if (!waitqueue_active(&ws->wait)) {
-+		atomic_add(nr, &ws->wait_cnt);
-		return true;
-+	}
---
-
-[1] https://lore.kernel.org/linux-block/Yxe7V3yfBcADoYLE@kbusch-mbp.dhcp.thefacebook.com/T/#t
+- Eric
