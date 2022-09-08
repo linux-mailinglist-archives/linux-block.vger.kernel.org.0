@@ -2,139 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F76F5B2328
-	for <lists+linux-block@lfdr.de>; Thu,  8 Sep 2022 18:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D7705B2379
+	for <lists+linux-block@lfdr.de>; Thu,  8 Sep 2022 18:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbiIHQJq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Sep 2022 12:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54404 "EHLO
+        id S229455AbiIHQUz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Sep 2022 12:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbiIHQJp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Sep 2022 12:09:45 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BFE1AF0A
-        for <linux-block@vger.kernel.org>; Thu,  8 Sep 2022 09:09:44 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y127so18414851pfy.5
-        for <linux-block@vger.kernel.org>; Thu, 08 Sep 2022 09:09:44 -0700 (PDT)
+        with ESMTP id S230330AbiIHQUy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Sep 2022 12:20:54 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89770E7FAD
+        for <linux-block@vger.kernel.org>; Thu,  8 Sep 2022 09:20:52 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id z191so389407iof.10
+        for <linux-block@vger.kernel.org>; Thu, 08 Sep 2022 09:20:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date;
-        bh=9ZFpt/foVGQHDYdWFxLDfNkzYkIk3H2JJygdZbdIkYI=;
-        b=CKd584PJC4V0DVJotodveSDCdGCm9jOXzEkqpUHJj3DlRcgAvqhVsZ+KsZCCaRu9ZR
-         gdczgohzBS+jl71eEZN/iX3pnBJBwaiJvTl46mOzUOywyX0gjgXkTeexP9kZqOS8r9c7
-         APsRTyTcZZcYM34a47jlZX6l5/vWZQbuWJs30kjt0nfyXlk6C5OQmiWyFkYEDvLvwzQK
-         TBxQ/fboQu9BFD5u51KPAS0+5wpzpHvrWH4f6mF8kLXfy1aH6boCKO1C3nBKlL2fdXLd
-         BVWgQS8J+ETEGEZXC9n+YTAv9i+9hGrZTTOvE51oqZAh2YckrhyzPKvUBLHdLF6pug0A
-         S1zA==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=7dIs3wIU/eOuY42tjUqQIb5hvTxPnOyZmdhm58qw250=;
+        b=g+GRDZEFcMsYo9rekqdIoa5Hg2iXa3uKfZ46Kt+XF33CAkT5r2PuNlezw6p7CqOkRJ
+         ZTzhch5ZNm2rCTZ//ncC0HGQjZH+z4M9RE3ouRfslW3H/boUfvJjXWL2bok/ySkIqn+y
+         lkKrbLWSUCuXZtKTy0jWIKcU28JZRDDtWckN1msYo3e/WWZ4W3b2RdHYB14Z4aGMaMbR
+         sqr09sIBnlUQRR1wWiPp1FwvqVY4zFWiHaUgyMQbubzILOJqviZw3xDrqFhsOwjkOauv
+         wBR+1Yw3bSzkUEMwA6p/HuwYNEMzHU2qvnoWs9oKVOvX5Xy5i28WQkBOHo3VKtRFU1Dx
+         mCjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=9ZFpt/foVGQHDYdWFxLDfNkzYkIk3H2JJygdZbdIkYI=;
-        b=HHjn///m5WKl3HtyxqbuJmD0814e7BmZvv5iN3zjYjhOZPYUBT4Gn/R7s4Fr1pSqYJ
-         Lbue3GIKC23TOUVCpIMxrFZS7s7vAVQK8xgSp8nUf30/kSDMrIy3Lk5ElHikjTboZzos
-         JwefOAWKxIjylq+BzJrJYXX3nbPfAhKUier3RujPOX68jxE2zk+Pz0NkBafON5s7tmV/
-         mTRvEI6a3EzJb2TlSpQCANRLGEXb4wZhXzKqg1zXMMzBO/iXDhzubNXMCMEJNP3DA6Hp
-         /gtJEe21FMyBw/OXy0xE3OL+eIewTRvRyzTRRtc88zQZU6CCQ04x9gTkD0KTeNexizp3
-         MXSg==
-X-Gm-Message-State: ACgBeo3abAfEabPvbUFua0KZYXHUpzC0120gt5z8h8S4Y6VMKz+IJG8m
-        EdhWhsSBBfnv0V/SzsoWMsWyBkANuUoCex0zYpo=
-X-Google-Smtp-Source: AA6agR5M3PDAG/BAQXrY9Wg5Elxe5LLElJvItb0d5ErGW1XEc4pY9y3o4EbcqDP0N+J0XJ+/Z1l+IhcRO0wUyEKZqzU=
-X-Received: by 2002:a63:170b:0:b0:430:93ec:7772 with SMTP id
- x11-20020a63170b000000b0043093ec7772mr8385034pgl.144.1662653383179; Thu, 08
- Sep 2022 09:09:43 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=7dIs3wIU/eOuY42tjUqQIb5hvTxPnOyZmdhm58qw250=;
+        b=HjuN3CgDdBYWDsh5zDHhLY16pEEnI52iK3vN0RDnk+FR2tG5WNhCVzsbuB0zIJEFel
+         Tu6GWOgXytumlzDKVGkQDCoN2zfVI1BRV+5oOmtsm88mZ+Nd4SMoDFY/ZQ3OHPbOLe4D
+         B9xLN44PMjAJ9DYoKW+o7ShC4Zbc9MF4mXQgHhYGx90IwaaJ/8ZnFGOkxdDUS510P7E4
+         Bz0A4Sp3wBpjfy77r4tB8eahWY9oLyeEjtqB/W9zkUl+OHOgOahW0IIOgOAuRrHgLgTX
+         A8Jl04SPn7ckKAh9RJ3HfpPp9r63PyXZTtwEqfgYo3lmA+U0JlG+Cwl8lnqU3MEH74gM
+         +1pg==
+X-Gm-Message-State: ACgBeo2PGOOTNgSNcTlvOKqp+aeaWKJoWHESy5J13PkjMAmfP++8rhSe
+        JUpnj0Ccd+60SMDDW9o+r18V5w==
+X-Google-Smtp-Source: AA6agR7VJ8j0hKXexix+zZNZGjqFwxTKwdptIZ3mwCSF5QurOjI2nsEuLfEZ2lkPEf15lqjmVu4xMg==
+X-Received: by 2002:a05:6638:3e0a:b0:34c:ff3:57ff with SMTP id co10-20020a0566383e0a00b0034c0ff357ffmr5342528jab.105.1662654051747;
+        Thu, 08 Sep 2022 09:20:51 -0700 (PDT)
+Received: from [192.168.1.94] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id d91-20020a0285e4000000b003584d00a0b9sm205077jai.20.2022.09.08.09.20.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Sep 2022 09:20:51 -0700 (PDT)
+Message-ID: <a2db93db-4cca-5a72-62c9-75f76f19221d@kernel.dk>
+Date:   Thu, 8 Sep 2022 10:20:49 -0600
 MIME-Version: 1.0
-Received: by 2002:a17:902:788e:b0:172:abb9:6761 with HTTP; Thu, 8 Sep 2022
- 09:09:42 -0700 (PDT)
-Reply-To: cfc.ubagroup09@gmail.com
-From:   Kristalina Georgieva <unitedbankafricau9@gmail.com>
-Date:   Thu, 8 Sep 2022 09:09:42 -0700
-Message-ID: <CA+WUezMhkh_aLnoA0Am2fWpbp+DHLnJEEHTbR6X6PzW6iCbBCQ@mail.gmail.com>
-Subject: XUSH HABAR
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:443 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [cfc.ubagroup09[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [unitedbankafricau9[at]gmail.com]
-        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [unitedbankafricau9[at]gmail.com]
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [GIT PULL] nvme fixes for Linux 6.0
+Content-Language: en-US
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Keith Busch <kbusch@kernel.org>, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+References: <YxoLsUEjritZcoK9@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <YxoLsUEjritZcoK9@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hurmatli Benefisiar,
-Men sizga bir oy oldin bu xatni yuborgan edim, lekin sizdan xabar yo'q, yo'=
-q
-Ishonchim komilki, siz uni oldingiz va shuning uchun uni yana sizga yubordi=
-m,
-Avvalo, men Kristalina Georgieva xonim, boshqaruvchi direktor va
-Xalqaro valyuta jamg'armasi prezidenti.
+On 9/8/22 9:35 AM, Christoph Hellwig wrote:
+> The following changes since commit 748008e1da926a814cc0a054c81ca614408b1b0c:
+> 
+>   block: don't add partitions if GD_SUPPRESS_PART_SCAN is set (2022-09-03 11:29:03 -0600)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.infradead.org/nvme.git tags/nvme-6.0-2022-09-08
 
-Aslida, biz atrofdagi barcha to'siqlar va muammolarni ko'rib chiqdik
-sizning to'liq bo'lmagan tranzaksiyangiz va to'lovlarni to'lay olmasligingi=
-z
-o'tkazish to'lovlari olinadi, sizga qarshi, imkoniyatlari uchun
-oldingi transferlar, tasdiqlash uchun bizning saytimizga tashrif buyuring 3=
-8
-=C2=B0 53'56 =E2=80=B3 N 77 =C2=B0 2 =E2=80=B2 39 =E2=80=B3 Vt
+Pulled, thanks.
 
-Biz Direktorlar kengashi, Jahon banki va Valyuta jamg'armasimiz
-Vashingtondagi Xalqaro (XVF) Departamenti bilan birgalikda
-Amerika Qo'shma Shtatlari G'aznachiligi va boshqa ba'zi tergov idoralari
-Amerika Qo'shma Shtatlarida bu erda tegishli. buyurdi
-Bizning Chet eldagi to'lov pul o'tkazmalari bo'limi, Birlashgan Bank
-Afrika Lome Togo, sizga VISA kartasini chiqarish uchun, bu erda $
-Sizning fondingizdan ko'proq pul olish uchun 1,5 million.
+-- 
+Jens Axboe
 
-Tekshiruvimiz davomida biz aniqladik
-Sizning to'lovingiz korruptsionerlar tomonidan kechiktirilganidan xafa bo'l=
-ing
-Sizning mablag'laringizni hisoblaringizga yo'naltirishga harakat qilayotgan=
- bank
-xususiy.
 
-Va bugun biz sizning mablag'ingiz Kartaga o'tkazilganligi haqida xabar bera=
-miz
-UBA Bank tomonidan VISA va u ham yetkazib berishga tayyor. Hozir
-UBA Bank direktori bilan bog'laning, uning ismi janob Toni
-Elumelu, elektron pochta: (cfc.ubagroup09@gmail.com)
-ATM VISA kartangizni qanday qabul qilishni aytib berish.
-
-Hurmat bilan,
-
-Kristalina Georgieva xonim
