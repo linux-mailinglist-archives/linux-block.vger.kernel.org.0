@@ -2,173 +2,149 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27C3D5B31A1
-	for <lists+linux-block@lfdr.de>; Fri,  9 Sep 2022 10:25:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 904095B32A4
+	for <lists+linux-block@lfdr.de>; Fri,  9 Sep 2022 11:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbiIIIZA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Sep 2022 04:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48806 "EHLO
+        id S230386AbiIIJCV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Sep 2022 05:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbiIIIY7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Sep 2022 04:24:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5413327FE0
-        for <linux-block@vger.kernel.org>; Fri,  9 Sep 2022 01:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662711897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zLgBFhbjWgsxc9dWG54TSxsLPfsBKw+Wx4DaHZWpGNc=;
-        b=bvu5VZxPCUBBlVT7o27Xgihi1lvB0GBGeS6ZiuGPO3DOSQXNDHeRf8QzY7WRHeHJIIrnzX
-        2H9dYgEAfsotqGQS3QUDSDsuqtc++haKrrib14UZns4dUJg5zSYtBpqADol2K1KKP5HU1I
-        n0WEyIYlTVrbkeWZs13M7GTMeLygues=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-240-xfWXhLT0N96_XNj2orK8-g-1; Fri, 09 Sep 2022 04:24:54 -0400
-X-MC-Unique: xfWXhLT0N96_XNj2orK8-g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D6EAE185A7B2;
-        Fri,  9 Sep 2022 08:24:53 +0000 (UTC)
-Received: from T590 (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 444422026D4C;
-        Fri,  9 Sep 2022 08:24:47 +0000 (UTC)
-Date:   Fri, 9 Sep 2022 16:24:40 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dusty Mabe <dusty@dustymabe.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, ming.lei@redhat.com
-Subject: Re: regression caused by block: freeze the queue earlier in
- del_gendisk
-Message-ID: <Yxr4SD4d0rZ9TZik@T590>
-References: <017845ae-fbae-70f6-5f9e-29aff2742b8c@dustymabe.com>
- <YxBZ4BBjxvAkvI2A@T590>
- <20220907073324.GB23826@lst.de>
+        with ESMTP id S231714AbiIIJBN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Sep 2022 05:01:13 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C807F2EF3D;
+        Fri,  9 Sep 2022 02:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662714070; x=1694250070;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5EfSaT6CA7O3ibItsXtQNbp51h72/TK2+889SmrkfPk=;
+  b=KoJ5o6OcbR1cURHjvEBjQ+9oeJ6HJUZXpFbdUlZkOxeI1aJ5+eckb1tR
+   /iWUC4pY4Jx4lXdv2JA/+xI/XF4QOgI3jTVLY8pZ/ZQcYp0tOiazDNTYG
+   QDBWpiz7Ik9AyPg7veDOWqYqnI6ylevM3laM1EQUUJIs22ftmNi/W/leb
+   OF4viaNvUxdFxYHG5rQcA4esP+It/e8+C7arj1OOzHn926qHvE6YSzRxt
+   z8fkyfkOZ87PER+Prbu8cEnfVrEuWT1SJ3396AaBIfjZgKmOnsRIwSCqn
+   j8AxwyR/oG2aTFsPn3kkRPuyb/mGOoE9DAifSin0VhXKRrzUVWmH0KEBL
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="280456434"
+X-IronPort-AV: E=Sophos;i="5.93,302,1654585200"; 
+   d="scan'208";a="280456434"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 02:01:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,302,1654585200"; 
+   d="scan'208";a="648375395"
+Received: from lkp-server02.sh.intel.com (HELO b2938d2e5c5a) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 09 Sep 2022 02:01:02 -0700
+Received: from kbuild by b2938d2e5c5a with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oWZsk-0000xP-0o;
+        Fri, 09 Sep 2022 09:01:02 +0000
+Date:   Fri, 9 Sep 2022 17:00:36 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Alexander V. Buev" <a.buev@yadro.com>, linux-block@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, io-uring@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Mikhail Malygin <m.malygin@yadro.com>, linux@yadro.com,
+        "Alexander V. Buev" <a.buev@yadro.com>
+Subject: Re: [PATCH v3 2/3] block: io-uring: add READV_PI/WRITEV_PI operations
+Message-ID: <202209091641.ayJsNmnv-lkp@intel.com>
+References: <20220909063257.1072450-3-a.buev@yadro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220907073324.GB23826@lst.de>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220909063257.1072450-3-a.buev@yadro.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 09:33:24AM +0200, Christoph Hellwig wrote:
-> On Thu, Sep 01, 2022 at 03:06:08PM +0800, Ming Lei wrote:
-> > It is a bit hard to associate the above commit with reported issue.
-> 
-> So the messages clearly are about something trying to open a device
-> that went away at the block layer, but somehow does not get removed
-> in time by udev (which seems to be a userspace bug in CoreOS).  But
-> even with that we really should not hang.
+Hi Alexander,
 
-Xiao Ni provides one script[1] which can reproduce the issue more or less.
+Thank you for the patch! Perhaps something to improve:
 
-- create raid
-#./imsm.sh imsm /dev/md/test 1 /dev/sda /dev/sdb
-#ls /dev/md/
-[root@ktest-36 md]# ls -l /dev/md/
-total 0
-lrwxrwxrwx. 1 root root 8 Sep  9 08:10 imsm -> ../md127
-lrwxrwxrwx. 1 root root 8 Sep  9 08:10 test -> ../md126
+[auto build test WARNING on axboe-block/for-next]
+[also build test WARNING on linus/master v6.0-rc4 next-20220908]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-- destroy the two raid devices
-# mdadm --stop /dev/md/test /dev/md/imsm
-mdadm: stopped /dev/md/test
-mdadm: stopped /dev/md/imsm
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-V-Buev/implement-direct-IO-with-integrity/20220909-143807
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20220909/202209091641.ayJsNmnv-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/eda3c42ce63fd33731304cc2ec9a8e1704270690
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Alexander-V-Buev/implement-direct-IO-with-integrity/20220909-143807
+        git checkout eda3c42ce63fd33731304cc2ec9a8e1704270690
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
 
-# lsblk
-...
-md126     9:126  0    0B  0 md
-md127     9:127  0    0B  0 md
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-md126 is actually added after it is deleted, and with the log of "block
-device autoloading is deprecated and will be removed.", and bcc stack trace
-shows that the device is added by mdadm.
+All warnings (new ones prefixed by >>):
 
-08:20:03 456     456     kworker/6:2     del_gendisk      disk b'md126'
-        b'del_gendisk+0x1 [kernel]'
-        b'md_kobj_release+0x34 [kernel]'
-        b'kobject_put+0x87 [kernel]'
-        b'process_one_work+0x1c4 [kernel]'
-        b'worker_thread+0x4d [kernel]'
-        b'kthread+0xe6 [kernel]'
-        b'ret_from_fork+0x1f [kernel]'
-
-08:20:03 2476    2476    mdadm           device_add_disk  disk b'md126'
-        b'device_add_disk+0x1 [kernel]'
-        b'md_alloc+0x3ba [kernel]'
-        b'md_probe+0x25 [kernel]'
-        b'blk_request_module+0x5f [kernel]'
-        b'blkdev_get_no_open+0x5c [kernel]'
-        b'blkdev_get_by_dev.part.0+0x1e [kernel]'
-        b'blkdev_open+0x52 [kernel]'
-        b'do_dentry_open+0x1ce [kernel]'
-        b'path_openat+0xc43 [kernel]'
-        b'do_filp_open+0xa1 [kernel]'
-        b'do_sys_openat2+0x7c [kernel]'
-        b'__x64_sys_openat+0x5c [kernel]'
-        b'do_syscall_64+0x37 [kernel]'
-        b'entry_SYSCALL_64_after_hwframe+0x63 [kernel]'
+   io_uring/rw_pi.c:181:5: warning: no previous prototype for 'kiocb_done' [-Wmissing-prototypes]
+     181 | int kiocb_done(struct io_kiocb *req, ssize_t ret,
+         |     ^~~~~~~~~~
+   io_uring/rw_pi.c: In function 'io_import_iovecs_pi':
+>> io_uring/rw_pi.c:266:16: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     266 |         uvec = (struct iovec *)rw->addr;
+         |                ^
 
 
-Also the md device is delayed to remove by scheduling wq, and it is
-actually deleted in mddev's release handler:
+vim +266 io_uring/rw_pi.c
 
-mddev_delayed_delete():
-	kobject_put(&mddev->kobj)
+   255	
+   256	
+   257	static inline int
+   258	io_import_iovecs_pi(int io_dir, struct io_kiocb *req, struct iovec **iovec,
+   259				struct io_rw_state *s_data, struct __io_rw_pi_state *s_pi)
+   260	{
+   261		struct io_rw_pi *rw = io_kiocb_to_cmd(req, struct io_rw_pi);
+   262		struct iovec __user *uvec;
+   263		ssize_t ret;
+   264	
+   265		/* data */
+ > 266		uvec = (struct iovec *)rw->addr;
+   267		iovec[DATA] = s_data->fast_iov;
+   268		ret = __import_iovec(io_dir, uvec, rw->nr_segs,
+   269					UIO_FASTIOV, iovec + DATA,
+   270					&s_data->iter, req->ctx->compat);
+   271	
+   272		if (unlikely(ret <= 0))
+   273			return (ret) ? ret : -EINVAL;
+   274		/* pi */
+   275		uvec = (struct iovec *)rw->kiocb.private;
+   276		iovec[PI] = s_pi->fast_iov;
+   277		ret = __import_iovec(io_dir, uvec, rw->nr_pi_segs,
+   278					UIO_FASTIOV_PI, iovec + PI,
+   279					&s_pi->iter, req->ctx->compat);
+   280		if (unlikely(ret <= 0)) {
+   281			if (iovec[DATA])
+   282				kfree(iovec[DATA]);
+   283			return (ret) ? ret : -EINVAL;
+   284		}
+   285	
+   286		/* save states */
+   287		io_rw_pi_state_iter_save(s_data, s_pi);
+   288	
+   289		return 0;
+   290	}
+   291	
 
-...
-
-md_kobj_release():
-	del_gendisk(mddev->gendisk);
-
-> 
-> Now that fact that it did hang before and this now becomes reproducible
-> also makes me assume the change is not the root cause.  It might still
-> be a good vehicle to fix the issue for real, but it really broadens
-> the scope.
-> 
-
-[1] create one imsm raid1 
-
-./imsm.sh imsm /dev/md/test 1 /dev/sda /dev/sdb
-
-#!/bin/bash
-export IMSM_NO_PLATFORM=1
-export IMSM_DEVNAME_AS_SERIAL=1
-
-echo ""
-echo "==========================================================="
-echo "./test.sh container raid devlist level devnum"
-echo "example: ./test.sh imsm /dev/md/test 1 /dev/loop0 /dev/loop1"
-echo "==========================================================="
-echo ""
-
-container=$1
-raid=$2
-level=$3
-
-shift 3
-dev_num=$#
-dev_list=$@
-
-mdadm -CR $container -e imsm -n $dev_num $dev_list
-mdadm -CR $raid -l $level -n $dev_num $dev_list
-
-[2] destroy created raid devices
-mdadm --stop /dev/md/test /dev/md/imsm
-
-Thanks,
-Ming
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
