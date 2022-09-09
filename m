@@ -2,226 +2,259 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B06535B37A6
-	for <lists+linux-block@lfdr.de>; Fri,  9 Sep 2022 14:24:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08DAB5B38A3
+	for <lists+linux-block@lfdr.de>; Fri,  9 Sep 2022 15:09:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231781AbiIIMWe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Sep 2022 08:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58112 "EHLO
+        id S229544AbiIINHe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Sep 2022 09:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231466AbiIIMWF (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Sep 2022 08:22:05 -0400
-Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A9C85FF6;
-        Fri,  9 Sep 2022 05:21:04 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 1EAAB56D1B;
-        Fri,  9 Sep 2022 12:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received:received; s=
-        mta-01; t=1662726061; x=1664540462; bh=gMxdHuGYRwTuopHTFooGl2Pgd
-        /f9+WV3Q6zWRfpmhjk=; b=iPGSAm0WP68Mx/juvXY7LWmKwvVqyEoz+SVHRKTNL
-        vOeyNu3Ag02gX+qO0mekYw4hd/cyjdg8JH4Td5oTFckUQi6I9i8jjgXEyRo9QzGe
-        s/7FsRthC8el1ZwNf1Yu1vdBJtZvtWTbDEvQCZ1ZlpkPN2gbGx7zxthlAc5hw8eU
-        cI=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id shy5bBdbV5Pn; Fri,  9 Sep 2022 15:21:01 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (T-EXCH-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 9698956C77;
-        Fri,  9 Sep 2022 15:21:01 +0300 (MSK)
-Received: from T-EXCH-09.corp.yadro.com (172.17.11.59) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 9 Sep 2022 15:21:01 +0300
-Received: from altair.lan (10.199.18.119) by T-EXCH-09.corp.yadro.com
- (172.17.11.59) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1118.9; Fri, 9 Sep 2022
- 15:21:00 +0300
-From:   "Alexander V. Buev" <a.buev@yadro.com>
-To:     <linux-block@vger.kernel.org>
-CC:     <io-uring@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        "Christoph Hellwig" <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Mikhail Malygin <m.malygin@yadro.com>, <linux@yadro.com>,
-        "Alexander V. Buev" <a.buev@yadro.com>
-Subject: [PATCH v4 3/3] block: fops: handle IOCB_USE_PI in direct IO
-Date:   Fri, 9 Sep 2022 15:20:40 +0300
-Message-ID: <20220909122040.1098696-4-a.buev@yadro.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220909122040.1098696-1-a.buev@yadro.com>
-References: <20220909122040.1098696-1-a.buev@yadro.com>
+        with ESMTP id S231447AbiIINHD (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Sep 2022 09:07:03 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC76F1238C4
+        for <linux-block@vger.kernel.org>; Fri,  9 Sep 2022 06:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=CYplu0iWPgVbpdO0qO7w7HmolA1MTwDWjSllYe0AYrY=; b=Qh+oc06ckI+D9E4FF48cxZbIN3
+        8a8FNQPNvrpRXnJAvLUwfSNG6I0pn/M6PWB30b4q/u8nWiXrecxhCMHQNw7zKe8MS/AGT53YtsnKB
+        xk0fZiZe06TYt+no5mYfwMFryXStximconL865s5mj03+wIYHidbsVn7N2z3SM3WAEwTdiPTl8P9N
+        E7VocTVXp/dZO+K9wyuTAZ14ez1HuB92FqvGJHk2q4c8+zmW9puwU2DSmgKfxMNWTKethz9sLmyvY
+        +V7kuwuM4P3QTy0KEJXrFTy165q3+VRq9K9VBOuNvtD8A15aFz4W0JiTmUhKUsj3oiQKswWJTvpIn
+        PzShCiIA==;
+Received: from [2001:4bb8:198:38af:a077:6a38:dc23:be2c] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oWdhJ-00GEKu-QA; Fri, 09 Sep 2022 13:05:30 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH] block: split bio_check_pages_dirty
+Date:   Fri,  9 Sep 2022 15:05:22 +0200
+Message-Id: <20220909130522.3262828-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.18.119]
-X-ClientProxiedBy: T-EXCH-02.corp.yadro.com (172.17.10.102) To
- T-EXCH-09.corp.yadro.com (172.17.11.59)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Check that the size of PI data correspond to device integrity profile
-and data size.
-Add PI data to device BIO.
+Split out bio_should_redirty_pages and bio_queue_for_redirty helpers and
+let the callers use their normal bio release path for the non-redirty
+case.
 
-Signed-off-by: Alexander V. Buev <a.buev@yadro.com>
+Note that this changes the refcounting for the redirty case as
+bio_queue_for_redirty takes a reference now, which allows the caller to
+unconditionally drop its reference instead of special casing this path.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/fops.c | 80 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+ block/bio.c          | 54 ++++++++++++++++++++++++++------------------
+ block/fops.c         | 18 +++++++--------
+ fs/direct-io.c       | 11 ++++-----
+ fs/iomap/direct-io.c |  9 ++++----
+ include/linux/bio.h  |  3 ++-
+ 5 files changed, 51 insertions(+), 44 deletions(-)
 
-diff --git a/block/fops.c b/block/fops.c
-index b90742595317..d89fa7d99635 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -16,6 +16,7 @@
- #include <linux/suspend.h>
- #include <linux/fs.h>
- #include <linux/module.h>
-+#include <linux/blk-integrity.h>
- #include "blk.h"
+diff --git a/block/bio.c b/block/bio.c
+index d3154d8beed72..692e53561e4e0 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1399,7 +1399,7 @@ void bio_free_pages(struct bio *bio)
+ EXPORT_SYMBOL(bio_free_pages);
  
- static inline struct inode *bdev_file_inode(struct file *file)
-@@ -51,6 +52,19 @@ static bool blkdev_dio_unaligned(struct block_device *bdev, loff_t pos,
- 
- #define DIO_INLINE_BIO_VECS 4
- 
-+static int __bio_integrity_add_iovec(struct bio *bio, struct iov_iter *pi_iter)
-+{
-+	struct blk_integrity *bi = bdev_get_integrity(bio->bi_bdev);
-+	unsigned int pi_len = bio_integrity_bytes(bi, bio->bi_iter.bi_size >> SECTOR_SHIFT);
-+	size_t iter_count = pi_iter->count-pi_len;
-+	int ret;
-+
-+	iov_iter_truncate(pi_iter, pi_len);
-+	ret = bio_integrity_add_iovec(bio, pi_iter);
-+	iov_iter_reexpand(pi_iter, iter_count);
-+	return ret;
-+}
-+
- static ssize_t __blkdev_direct_IO_simple(struct kiocb *iocb,
- 		struct iov_iter *iter, unsigned int nr_pages)
- {
-@@ -94,6 +108,15 @@ static ssize_t __blkdev_direct_IO_simple(struct kiocb *iocb,
- 	if (iocb->ki_flags & IOCB_NOWAIT)
- 		bio.bi_opf |= REQ_NOWAIT;
- 
-+	if (iocb->ki_flags & IOCB_USE_PI) {
-+		ret = __bio_integrity_add_iovec(&bio, (struct iov_iter *)iocb->private);
-+		WRITE_ONCE(iocb->private, NULL);
-+		if (ret) {
-+			bio_release_pages(&bio, should_dirty);
-+			goto out;
-+		}
-+	}
-+
- 	submit_bio_wait(&bio);
- 
- 	bio_release_pages(&bio, should_dirty);
-@@ -178,6 +201,7 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 	blk_opf_t opf = is_read ? REQ_OP_READ : dio_bio_write_op(iocb);
- 	loff_t pos = iocb->ki_pos;
- 	int ret = 0;
-+	struct iov_iter *pi_iter = 0;
- 
- 	if (blkdev_dio_unaligned(bdev, pos, iter))
- 		return -EINVAL;
-@@ -235,6 +259,19 @@ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
- 		pos += bio->bi_iter.bi_size;
- 
- 		nr_pages = bio_iov_vecs_to_alloc(iter, BIO_MAX_VECS);
-+
-+		if (iocb->ki_flags & IOCB_USE_PI) {
-+			if (!pi_iter)
-+				pi_iter = (struct iov_iter *)iocb->private;
-+			ret = __bio_integrity_add_iovec(bio, pi_iter);
-+			WRITE_ONCE(iocb->private, NULL);
-+			if (unlikely(ret)) {
-+				bio->bi_status = BLK_STS_IOERR;
-+				bio_endio(bio);
-+				break;
-+			}
-+		}
-+
- 		if (!nr_pages) {
- 			submit_bio(bio);
- 			break;
-@@ -343,6 +380,16 @@ static ssize_t __blkdev_direct_IO_async(struct kiocb *iocb,
- 		task_io_account_write(bio->bi_iter.bi_size);
+ /*
+- * bio_set_pages_dirty() and bio_check_pages_dirty() are support functions
++ * bio_set_pages_dirty() and bio_queue_for_redirty() are support functions
+  * for performing direct-IO in BIOs.
+  *
+  * The problem is that we cannot run set_page_dirty() from interrupt context
+@@ -1438,17 +1438,6 @@ void bio_set_pages_dirty(struct bio *bio)
  	}
- 
-+	if (iocb->ki_flags & IOCB_USE_PI) {
-+		ret = __bio_integrity_add_iovec(bio, (struct iov_iter *)iocb->private);
-+		WRITE_ONCE(iocb->private, NULL);
-+		if (ret) {
-+			bio->bi_status = BLK_STS_IOERR;
-+			bio_endio(bio);
-+			return -EIOCBQUEUED;
-+		}
-+	}
-+
- 	if (iocb->ki_flags & IOCB_HIPRI) {
- 		bio->bi_opf |= REQ_POLLED | REQ_NOWAIT;
- 		submit_bio(bio);
-@@ -355,6 +402,31 @@ static ssize_t __blkdev_direct_IO_async(struct kiocb *iocb,
- 	return -EIOCBQUEUED;
  }
  
-+static inline int
-+blkdev_check_pi(struct block_device *bdev, size_t data_size, size_t pi_size)
-+{
-+	struct blk_integrity *bi = bdev_get_integrity(bdev);
-+	unsigned int intervals;
-+
-+	if (unlikely(!(bi && bi->tuple_size &&
-+			bi->flags & BLK_INTEGRITY_DEVICE_CAPABLE))) {
-+		pr_err("Device %d:%d is not integrity capable",
-+			MAJOR(bdev->bd_dev), MINOR(bdev->bd_dev));
-+		return -EINVAL;
-+	}
-+
-+	intervals = bio_integrity_intervals(bi, data_size >> SECTOR_SHIFT);
-+	if (unlikely(intervals * bi->tuple_size > pi_size)) {
-+		pr_err("Device %d:%d integrity & data size mismatch",
-+			MAJOR(bdev->bd_dev), MINOR(bdev->bd_dev));
-+		pr_err("data=%zu integrity=%zu intervals=%u tuple=%u",
-+			data_size, pi_size,
-+			intervals, bi->tuple_size);
-+		return -EINVAL;
-+	}
-+	return 0;
+-/*
+- * bio_check_pages_dirty() will check that all the BIO's pages are still dirty.
+- * If they are, then fine.  If, however, some pages are clean then they must
+- * have been written out during the direct-IO read.  So we take another ref on
+- * the BIO and re-dirty the pages in process context.
+- *
+- * It is expected that bio_check_pages_dirty() will wholly own the BIO from
+- * here on.  It will run one put_page() against each page and will run one
+- * bio_put() against the BIO.
+- */
+-
+ static void bio_dirty_fn(struct work_struct *work);
+ 
+ static DECLARE_WORK(bio_dirty_work, bio_dirty_fn);
+@@ -1475,25 +1464,46 @@ static void bio_dirty_fn(struct work_struct *work)
+ 	}
+ }
+ 
+-void bio_check_pages_dirty(struct bio *bio)
++/**
++ * bio_should_redirty_pages - check that all the BIO's pages are still dirty
++ * @bio:	BIO to check
++ *
++ * Check if all pages in a direct read are still dirty.  If they aren't the
++ * caller must call bio_queue_for_redirty() to redirty all pages that have been
++ * marked clean.
++ */
++bool bio_should_redirty_pages(struct bio *bio)
+ {
+-	struct bio_vec *bvec;
+-	unsigned long flags;
+ 	struct bvec_iter_all iter_all;
++	struct bio_vec *bvec;
+ 
+-	bio_for_each_segment_all(bvec, bio, iter_all) {
++	bio_for_each_segment_all(bvec, bio, iter_all)
+ 		if (!PageDirty(bvec->bv_page) && !PageCompound(bvec->bv_page))
+-			goto defer;
+-	}
++			return true;
++	return false;
 +}
 +
- static ssize_t blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- {
- 	unsigned int nr_pages;
-@@ -362,6 +434,14 @@ static ssize_t blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 	if (!iov_iter_count(iter))
- 		return 0;
++/**
++ * bio_queue_for_redirty - queue up a bio to ensure all pages are marked dirty
++ * 
++ * If some pages are clean after a direct read has completed, then they must
++ * have been written out during the direct read.  Take another ref on the BIO
++ * and re-dirty the pages in process context.
++ *
++ * It is expected that bio_queue_for_redirty() owns the pages in the BIO from
++ * here on.  It will run one put_page() against each page one finished.
++ */
++void bio_queue_for_redirty(struct bio *bio)
++{
++	unsigned long flags;
++
++	bio_get(bio);
  
-+	if (iocb->ki_flags & IOCB_USE_PI) {
-+		struct block_device *bdev = iocb->ki_filp->private_data;
-+		struct iov_iter *pi_iter = iocb->private;
+-	bio_release_pages(bio, false);
+-	bio_put(bio);
+-	return;
+-defer:
+ 	spin_lock_irqsave(&bio_dirty_lock, flags);
+ 	bio->bi_private = bio_dirty_list;
+ 	bio_dirty_list = bio;
+ 	spin_unlock_irqrestore(&bio_dirty_lock, flags);
 +
-+		if (blkdev_check_pi(bdev, iter->count, pi_iter->count))
-+			return -EINVAL;
-+	}
-+
- 	nr_pages = bio_iov_vecs_to_alloc(iter, BIO_MAX_VECS + 1);
- 	if (likely(nr_pages <= BIO_MAX_VECS)) {
- 		if (is_sync_kiocb(iocb))
+ 	schedule_work(&bio_dirty_work);
+ }
+ 
+diff --git a/block/fops.c b/block/fops.c
+index b90742595317e..164b47f836ae6 100644
+--- a/block/fops.c
++++ b/block/fops.c
+@@ -159,12 +159,11 @@ static void blkdev_bio_end_io(struct bio *bio)
+ 		}
+ 	}
+ 
+-	if (should_dirty) {
+-		bio_check_pages_dirty(bio);
+-	} else {
++	if (should_dirty && bio_should_redirty_pages(bio))
++		bio_queue_for_redirty(bio);
++	else
+ 		bio_release_pages(bio, false);
+-		bio_put(bio);
+-	}
++	bio_put(bio);
+ }
+ 
+ static ssize_t __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter,
+@@ -283,12 +282,11 @@ static void blkdev_bio_end_io_async(struct bio *bio)
+ 
+ 	iocb->ki_complete(iocb, ret);
+ 
+-	if (dio->flags & DIO_SHOULD_DIRTY) {
+-		bio_check_pages_dirty(bio);
+-	} else {
++	if ((dio->flags & DIO_SHOULD_DIRTY) && bio_should_redirty_pages(bio))
++		bio_queue_for_redirty(bio);
++	else
+ 		bio_release_pages(bio, false);
+-		bio_put(bio);
+-	}
++	bio_put(bio);
+ }
+ 
+ static ssize_t __blkdev_direct_IO_async(struct kiocb *iocb,
+diff --git a/fs/direct-io.c b/fs/direct-io.c
+index f669163d5860f..8d7fe8e15509b 100644
+--- a/fs/direct-io.c
++++ b/fs/direct-io.c
+@@ -410,7 +410,7 @@ dio_bio_alloc(struct dio *dio, struct dio_submit *sdio,
+ /*
+  * In the AIO read case we speculatively dirty the pages before starting IO.
+  * During IO completion, any of these pages which happen to have been written
+- * back will be redirtied by bio_check_pages_dirty().
++ * back will be redirtied by bio_queue_for_redirty().
+  *
+  * bios hold a dio reference between submit_bio and ->end_io.
+  */
+@@ -504,12 +504,11 @@ static blk_status_t dio_bio_complete(struct dio *dio, struct bio *bio)
+ 			dio->io_error = -EIO;
+ 	}
+ 
+-	if (dio->is_async && should_dirty) {
+-		bio_check_pages_dirty(bio);	/* transfers ownership */
+-	} else {
++	if (dio->is_async && should_dirty && bio_should_redirty_pages(bio))
++		bio_queue_for_redirty(bio);	/* transfers ownership */
++	else
+ 		bio_release_pages(bio, should_dirty);
+-		bio_put(bio);
+-	}
++	bio_put(bio);
+ 	return err;
+ }
+ 
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 4eb559a16c9ed..1699b3d4895c1 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -179,12 +179,11 @@ void iomap_dio_bio_end_io(struct bio *bio)
+ 		}
+ 	}
+ 
+-	if (should_dirty) {
+-		bio_check_pages_dirty(bio);
+-	} else {
++	if (should_dirty && bio_should_redirty_pages(bio))
++		bio_queue_for_redirty(bio);
++	else
+ 		bio_release_pages(bio, false);
+-		bio_put(bio);
+-	}
++	bio_put(bio);
+ }
+ EXPORT_SYMBOL_GPL(iomap_dio_bio_end_io);
+ 
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index ca22b06700a94..f1e6d13c2c0da 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -473,7 +473,8 @@ int bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter);
+ void bio_iov_bvec_set(struct bio *bio, struct iov_iter *iter);
+ void __bio_release_pages(struct bio *bio, bool mark_dirty);
+ extern void bio_set_pages_dirty(struct bio *bio);
+-extern void bio_check_pages_dirty(struct bio *bio);
++bool bio_should_redirty_pages(struct bio *bio);
++void bio_queue_for_redirty(struct bio *bio);
+ 
+ extern void bio_copy_data_iter(struct bio *dst, struct bvec_iter *dst_iter,
+ 			       struct bio *src, struct bvec_iter *src_iter);
 -- 
 2.30.2
 
