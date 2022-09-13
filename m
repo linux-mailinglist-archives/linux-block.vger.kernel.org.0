@@ -2,150 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E375B6BE3
-	for <lists+linux-block@lfdr.de>; Tue, 13 Sep 2022 12:46:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D77865B6C76
+	for <lists+linux-block@lfdr.de>; Tue, 13 Sep 2022 13:42:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231180AbiIMKq4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Sep 2022 06:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53150 "EHLO
+        id S231378AbiIMLmO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Sep 2022 07:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230243AbiIMKqz (ORCPT
+        with ESMTP id S230345AbiIMLmN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Sep 2022 06:46:55 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755FC5F101;
-        Tue, 13 Sep 2022 03:46:52 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4MRg8V0PgXzKFSY;
-        Tue, 13 Sep 2022 18:44:58 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP2 (Coremail) with SMTP id Syh0CgBH53CYXyBjg5EjAw--.37737S4;
-        Tue, 13 Sep 2022 18:46:50 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com
-Subject: [PATCH -next] blk-wbt: call rq_qos_add() after wb_normal is initialized
-Date:   Tue, 13 Sep 2022 18:57:49 +0800
-Message-Id: <20220913105749.3086243-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
+        Tue, 13 Sep 2022 07:42:13 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CBB558ED
+        for <linux-block@vger.kernel.org>; Tue, 13 Sep 2022 04:42:12 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 88A061F8C6;
+        Tue, 13 Sep 2022 11:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1663069331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s3qrXVftc0ie6oK7GOBNq5dnLY1pkAlF/xu0mQg/Rto=;
+        b=fjU+ioEwhIQ1FKSwILSJ9TzECbChTRTRQbZtsok0Y31BU3rkwDNMoj/YQXDqJ/z6oBFPZ0
+        2JGUobQzLNX2CK271NI88lmZ2T5uOYj2Z+HIuUGq0yVnSIxkEkC5W7eLnvSc8PzPrqnfTh
+        a7R9Fp43P+G+n2EdC6JT6kYYYi2b77A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1663069331;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s3qrXVftc0ie6oK7GOBNq5dnLY1pkAlF/xu0mQg/Rto=;
+        b=VoKAIqaXX+/MbBO3/NYecgOnUCnXzqcye1oadqsrUMxt8eEaSWaMsy5l7dFQJX+TWUTX6k
+        DYjOUckIVaULUCBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 79D5E13AB5;
+        Tue, 13 Sep 2022 11:42:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id LJa8HZNsIGN4awAAMHmgww
+        (envelope-from <dwagner@suse.de>); Tue, 13 Sep 2022 11:42:11 +0000
+Date:   Tue, 13 Sep 2022 13:42:10 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+Subject: Re: [PATCH blktests v3] nvme/046: test queue count changes on
+ reconnect
+Message-ID: <20220913114210.gceoxlpffhaekpk7@carbon.lan>
+References: <20220913065758.134668-1-dwagner@suse.de>
+ <20220913105743.gw2gczryymhy6x5o@shindev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgBH53CYXyBjg5EjAw--.37737S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFy5uF1rCrWkAF4kAF1rXrb_yoW5JryDpa
-        y2kFW3tw42gFs2vFsrtr47ZFW3Gws5Jryxur43Gw4YqF98KryjvanYkF15W34rArWkCF4S
-        qr1FqFsxCFy8Z3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
-        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-        vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-        xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-        67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220913105743.gw2gczryymhy6x5o@shindev>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Tue, Sep 13, 2022 at 10:57:44AM +0000, Shinichiro Kawasaki wrote:
+> >   Possible unsafe locking scenario:
+> > 
+> >         CPU0                    CPU1
+> >         ----                    ----
+> >    lock((work_completion)(&queue->release_work));
+> >                                 lock((wq_completion)nvmet-wq);
+> >                                 lock((work_completion)(&queue->release_work));
+> >    lock(&id_priv->handler_mutex);
+> 
+> I also observe this WARNING on my test machine with nvme_trtype=rdma. It looks a
+> hidden rdma issue for me...
 
-Our test found a problem that wbt inflight counter is negative, which
-will cause io hang(noted that this problem doesn't exist in mainline):
+Yes, that problem is not new, just uncovered by this test.
 
-t1: device create	t2: issue io
-add_disk
- blk_register_queue
-  wbt_enable_default
-   wbt_init
-    rq_qos_add
-    // wb_normal is still 0
-			/*
-			 * in mainline, disk can't be opened before
-			 * bdev_add(), however, in old kernels, disk
-			 * can be opened before blk_register_queue().
-			 */
-			blkdev_issue_flush
-                        // disk size is 0, however, it's not checked
-                         submit_bio_wait
-                          submit_bio
-                           blk_mq_submit_bio
-                            rq_qos_throttle
-                             wbt_wait
-			      bio_to_wbt_flags
-                               rwb_enabled
-			       // wb_normal is 0, inflight is not increased
+> > The grep error is something I can fix in the test but I don't know how
+> > to handle the 'eth0 speed is unknown' kernel message which will make
+> > the test always fail. Is it possible to ignore them when parsing the
+> > kernel log for errors?
+> 
+> FYI, each blktests test case can define DMESG_FILTER not to fail with specific
+> keywords in dmesg. Test cases meta/011 and block/028 are reference use
+> cases.
 
-    wbt_queue_depth_changed(&rwb->rqos);
-     wbt_update_limits
-     // wb_normal is initialized
-                            rq_qos_track
-                             wbt_track
-                              rq->wbt_flags |= bio_to_wbt_flags(rwb, bio);
-			      // wb_normal is not 0，wbt_flags will be set
-t3: io completion
-blk_mq_free_request
- rq_qos_done
-  wbt_done
-   wbt_is_tracked
-   // return true
-   __wbt_done
-    wbt_rqw_done
-     atomic_dec_return(&rqw->inflight);
-     // inflight is decreased
+Ah okay, let me look into it.
 
-commit 8235b5c1e8c1 ("block: call bdev_add later in device_add_disk") can
-avoid this problem, however it's better to fix this problem in wbt:
+> Having said that, I don't think 'eth0 speed is unknown' in dmesg makes the test
+> case fail. See _check_dmesg() in "check" script, which lists keywords that
+> blktests handles as errors. I guess the WARNING above is the failure cause,
+> probably.
 
-1) Lower kernel can't backport this patch due to lots of refactor.
-2) Root cause is that wbt call rq_qos_add() before wb_normal is
-initialized.
+Makes sense. On second thought, the fc transport seems to behave
+differently than tcp and rdma if you look at the grep error. Will look
+into it, it might be another existing bug...
 
-Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-wbt.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index a9982000b667..246467926253 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -843,6 +843,10 @@ int wbt_init(struct request_queue *q)
- 	rwb->enable_state = WBT_STATE_ON_DEFAULT;
- 	rwb->wc = 1;
- 	rwb->rq_depth.default_depth = RWB_DEF_DEPTH;
-+	rwb->min_lat_nsec = wbt_default_latency_nsec(q);
-+
-+	wbt_queue_depth_changed(&rwb->rqos);
-+	wbt_set_write_cache(q, test_bit(QUEUE_FLAG_WC, &q->queue_flags));
- 
- 	/*
- 	 * Assign rwb and add the stats callback.
-@@ -853,11 +857,6 @@ int wbt_init(struct request_queue *q)
- 
- 	blk_stat_add_callback(q, rwb->cb);
- 
--	rwb->min_lat_nsec = wbt_default_latency_nsec(q);
--
--	wbt_queue_depth_changed(&rwb->rqos);
--	wbt_set_write_cache(q, test_bit(QUEUE_FLAG_WC, &q->queue_flags));
--
- 	return 0;
- 
- err_free:
--- 
-2.31.1
-
+Daniel
