@@ -2,151 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 305C55BA3CE
-	for <lists+linux-block@lfdr.de>; Fri, 16 Sep 2022 03:17:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49AA85BA436
+	for <lists+linux-block@lfdr.de>; Fri, 16 Sep 2022 03:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbiIPBRg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Sep 2022 21:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34692 "EHLO
+        id S229510AbiIPB4f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Sep 2022 21:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiIPBRe (ORCPT
+        with ESMTP id S229947AbiIPB4T (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Sep 2022 21:17:34 -0400
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01hn2218.outbound.protection.outlook.com [52.100.223.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15DC77568;
-        Thu, 15 Sep 2022 18:17:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RHySZeo98zLAwkITHSwPOge6SSbyoF/vFDx/cKEARd4nmrRUOmaSPM8pIHbqzmlDLRbjibhyaLAYmI7AkkwSG9iSkOigyn359W/cTnhm0/9h/B0gs2j8NrCLx2MVjuczky6wLrhlG8TkCM/8yOtLUYHq7+z6y/DtXlTyvnlEs/+vaVAHgby880SqEFaDOIIzZ0wqTQBrThySnaxf2F6HFuVoX5phritkOGDLpoc/8aOBL1LI1KR/KB8uKpmNteHoxJducIlkwyVRrLywJS7od5WTS5aFVtVB7X3pc8oIuPIhFDvrKbpVfK8HJJ7MuzXB0STb0ls/LxW3/LFCRMw6kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bs10Md+15nMnyayKLyd22Uv+/ZH79IcFcpzuzGLq1Fg=;
- b=bpmMSIp5G22sxE9TFGf3Y9jM7FoQkhc9QTz2BGdoOa0zPFDGnkdNtAJGBmASV8pc0AagJ6eZsaQyRoP4b7EadpllopNOaT53oonw+ijWMVcHAuSI19VWaJhd1rckafas8cyVlYAe2urgvi6uhoQsrFtAk4oseH0qrzZLvTbiMGFVVGRPkZ0a5z5RUvFavxzXZSA2JZLWvJbVP9LeXZtrxdqtuwl9yY1XiGLkOvQWgYaBCU5mZgoUvN7KX1XdwzfomUmPDz9/9vyjSzG4WavshywAyTog8hGvexdzcNDz5lO1Rvazivo4rXQVCjfLzIEf3QnmQ6S49RK9YA63JXx86A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 45.14.71.5) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=t4.cims.jp;
- dmarc=bestguesspass action=none header.from=t4.cims.jp; dkim=none (message
- not signed); arc=none (0)
-Received: from TYCPR01CA0122.jpnprd01.prod.outlook.com (2603:1096:400:26d::11)
- by SI2PR04MB4137.apcprd04.prod.outlook.com (2603:1096:4:f8::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5612.16; Fri, 16 Sep 2022 01:17:32 +0000
-Received: from TYZAPC01FT053.eop-APC01.prod.protection.outlook.com
- (2603:1096:400:26d:cafe::65) by TYCPR01CA0122.outlook.office365.com
- (2603:1096:400:26d::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.19 via Frontend
- Transport; Fri, 16 Sep 2022 01:17:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 45.14.71.5)
- smtp.mailfrom=t4.cims.jp; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=t4.cims.jp;
-Received-SPF: Pass (protection.outlook.com: domain of t4.cims.jp designates
- 45.14.71.5 as permitted sender) receiver=protection.outlook.com;
- client-ip=45.14.71.5; helo=User; pr=M
-Received: from mail.prasarana.com.my (58.26.8.158) by
- TYZAPC01FT053.mail.protection.outlook.com (10.118.152.149) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5632.12 via Frontend Transport; Fri, 16 Sep 2022 01:17:31 +0000
-Received: from MRL-EXH-02.prasarana.com.my (10.128.66.101) by
- MRL-EXH-01.prasarana.com.my (10.128.66.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Fri, 16 Sep 2022 09:16:51 +0800
-Received: from User (45.14.71.5) by MRL-EXH-02.prasarana.com.my
- (10.128.66.101) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
- Transport; Fri, 16 Sep 2022 09:16:21 +0800
-Reply-To: <rhashimi202222@kakao.com>
-From:   Consultant Swift Capital Loans Ltd <info@t4.cims.jp>
-Subject: I hope you are doing well, and business is great!
-Date:   Fri, 16 Sep 2022 09:17:03 +0800
+        Thu, 15 Sep 2022 21:56:19 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491D34D839;
+        Thu, 15 Sep 2022 18:56:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=J30JNwom7vQid4zWEaAjuOGQKZP7syeMiY8+9KV+FKY=; b=BvcU3km0KfSNim65iuY74essLc
+        dF427a6nHkyNASvBjaXX4algXt7MW275rBnaScvxth/J8ok2SeGkGhDT8AmmgwgQMt1/IZ/78N/r6
+        fEMS9BysLwz1VYsv6S+TPrR0j0Hdy76hwkH0Vbp9y7jzOr9mCH2Czjrqc7wne1zexm4/o1MwsR7NQ
+        gqkH1VWNs/BVMn+r747M6z0ddhJQ6Qm1OleNiUHkCF+F4e5fnpAa06olO11cYPFjpL6evqQAIUuIU
+        D2+yebeP7+T8GBaRugEqqM6tuz/6RE4Iua5uSzzdSI9CvuXC/djbWCTGlylWgX80SDMhKjzmm2Y7T
+        3XXSZ8hg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1oZ0a9-00GsoS-0s;
+        Fri, 16 Sep 2022 01:55:53 +0000
+Date:   Fri, 16 Sep 2022 02:55:53 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <YyPXqfyf37CUbOf0@ZenIV>
+References: <20220831041843.973026-5-jhubbard@nvidia.com>
+ <YxbtF1O8+kXhTNaj@infradead.org>
+ <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
+ <Yxb7YQWgjHkZet4u@infradead.org>
+ <20220906102106.q23ovgyjyrsnbhkp@quack3>
+ <YxhaJktqtHw3QTSG@infradead.org>
+ <YyFPtTtxYozCuXvu@ZenIV>
+ <20220914145233.cyeljaku4egeu4x2@quack3>
+ <YyIEgD8ksSZTsUdJ@ZenIV>
+ <20220915081625.6a72nza6yq4l5etp@quack3>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <0135ac95-8929-4d45-8a5f-93547c102f2e@MRL-EXH-02.prasarana.com.my>
-To:     Undisclosed recipients:;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-SkipListedInternetSender: ip=[45.14.71.5];domain=User
-X-MS-Exchange-ExternalOriginalInternetSender: ip=[45.14.71.5];domain=User
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZAPC01FT053:EE_|SI2PR04MB4137:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ea11b2e-dba3-4db4-6365-08da97813ab5
-X-MS-Exchange-AtpMessageProperties: SA|SL
-X-MS-Exchange-SenderADCheck: 0
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?windows-1251?Q?27C4NJfFKZgDG5cHZywkbuN9AlsZ/R+LT2SDpH3esd6rzewy/uF5Ikd2?=
- =?windows-1251?Q?QHN4fwZjm9vXHH6VXw67j1K6Ejx5yiIsp1K12ZkN4FjFIckxyZX3rLAM?=
- =?windows-1251?Q?EJ8d9siWYXQQQNC2JVEfxo163pwfnju6ybc0PAAgFLuzDAF7272+mcVB?=
- =?windows-1251?Q?paA/8YnGaZ0RHR3NdmRVKuAAncQJ4ibGuuTwzFP82pz4u0qcox3t6eg3?=
- =?windows-1251?Q?uU3qw0L9gcm+mVrcCyLkDhVyTdCw4EE/E4p015Vd0PmyE1tm5gcYq1XY?=
- =?windows-1251?Q?FI81i37wggWd8CryMy5w68/YZ3L/FBlS3vQHxyA6i9yJxiQVlY1mngjb?=
- =?windows-1251?Q?g2xRwI9MEnRG2ei5gOylrviz5ajsUs8X6iYTKEWDGf2c5avE242BIwwZ?=
- =?windows-1251?Q?cTDsd8uXdtyj19Kmc3YinX9bjY7aYGyBydlF1yxbZibj0mtUkxoMFrVl?=
- =?windows-1251?Q?NAdkzB7z/PLD7+u70tjgLQNVWU8+aZwpTSGgO1Pd+dsuNzKELTFZJaG8?=
- =?windows-1251?Q?kDHlCqfd1aRz+Ch/fgi2sVGIJPx0YNZE7wHH7emXnkXtAfyp0VFMiQlV?=
- =?windows-1251?Q?jn9RMokVhMHqWPt1v3EGxDm2szo9gI2S/NZn3ImT0Tw6ogSfRti7TTKR?=
- =?windows-1251?Q?RfbtOoOrjZ/Klo7ylF+OcqPNByQbjzusVZb5x3gYtWJ1JPbBZl35qYgw?=
- =?windows-1251?Q?YnSLzDag3iDgguj2uVS//uU+7R+jKoya2S4Ixlsu717lNB+P6qmEBfee?=
- =?windows-1251?Q?qugQYBsvC9JjdcJhw8lXIPUHuO3AhfSfSnEZcTz2w3G7hC6RQsi21kcY?=
- =?windows-1251?Q?aF7+vOQ5yWEiIlNULc2cGf1ozwrB+IwFA0qRYMWQ4g2Up95rWMm9ZWM8?=
- =?windows-1251?Q?1uXF1QS2EaFBD5/xLWYTjDjW7HZkwaytLDUqs8OmTStcQi6USnsdYy1E?=
- =?windows-1251?Q?RpSRZo6fZ1Cfd3nbYZWHgWWWGlhTNw0Gv9e2IceeZpTxx8ZFqvlPpCO8?=
- =?windows-1251?Q?9+XPTQ3GticBsqpY+ewFLNqRpdPfvdpc3ejOt++uQTR0AUAYHM/LXC+F?=
- =?windows-1251?Q?Cn7iYoZhAA2fskt23RA9Zpc3NjYwFfGe0cgfaha9Vm5m/yEeLUpFM1w3?=
- =?windows-1251?Q?nUrlMn5+tFhwxOH7URRD3oFSgZMumPzXSUc606LkMzWa93WIYXLVLIVp?=
- =?windows-1251?Q?2tIzt0ApJNxGoIV+QZiSP4YPCUzPAJ72WwQaEvuNn9DPqSJf7mLzPpI3?=
- =?windows-1251?Q?PFm8G6B78oAOPemwEoj0/vVH6F9HxM3hTNTYSS0/9Rl2Ayr7W4TBTVwk?=
- =?windows-1251?Q?xa4JChRApsohZw0FNkQa4v7eSHUVYXYCrIlj7G3/69Bh9f02?=
-X-Forefront-Antispam-Report: CIP:58.26.8.158;CTRY:JP;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:User;PTR:45.14.71.5.static.xtom.com;CAT:OSPM;SFS:(13230022)(4636009)(376002)(396003)(136003)(39860400002)(346002)(451199015)(40470700004)(82310400005)(40480700001)(32650700002)(31686004)(86362001)(70586007)(70206006)(8936002)(5660300002)(336012)(956004)(498600001)(8676002)(7416002)(7366002)(31696002)(7406005)(81166007)(4744005)(156005)(316002)(35950700001)(32850700003)(41300700001)(36906005)(2906002)(40460700003)(6666004)(82740400003)(26005)(109986005)(9686003)(66899012)(2700400008);DIR:OUT;SFP:1501;
-X-OriginatorOrg: myprasarana.onmicrosoft.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 01:17:31.6325
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ea11b2e-dba3-4db4-6365-08da97813ab5
-X-MS-Exchange-CrossTenant-Id: 3cbb2ff2-27fb-4993-aecf-bf16995e64c0
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3cbb2ff2-27fb-4993-aecf-bf16995e64c0;Ip=[58.26.8.158];Helo=[mail.prasarana.com.my]
-X-MS-Exchange-CrossTenant-AuthSource: TYZAPC01FT053.eop-APC01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR04MB4137
-X-Spam-Status: Yes, score=6.2 required=5.0 tests=AXB_XMAILER_MIMEOLE_OL_024C2,
-        AXB_X_FF_SEZ_S,BAYES_50,FORGED_MUA_OUTLOOK,FSL_CTYPE_WIN1251,
-        FSL_NEW_HELO_USER,HEADER_FROM_DIFFERENT_DOMAINS,NSL_RCVD_FROM_USER,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220915081625.6a72nza6yq4l5etp@quack3>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [52.100.223.218 listed in list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5181]
-        *  0.0 NSL_RCVD_FROM_USER Received from User
-        *  0.0 FSL_CTYPE_WIN1251 Content-Type only seen in 419 spam
-        *  3.2 AXB_X_FF_SEZ_S Forefront sez this is spam
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-        *  0.2 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level
-        *      mail domains are different
-        *  0.0 AXB_XMAILER_MIMEOLE_OL_024C2 Yet another X header trait
-        *  0.0 FSL_NEW_HELO_USER Spam's using Helo and User
-        *  1.9 FORGED_MUA_OUTLOOK Forged mail pretending to be from MS Outlook
-X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+On Thu, Sep 15, 2022 at 10:16:25AM +0200, Jan Kara wrote:
 
-I hope you are doing well, and business is great!
-However, if you need working capital to further grow and expand your business, we may be a perfect fit for you. I am Ms. Kaori Ichikawa Swift Capital Loans Ltd Consultant, Our loans are NOT based on your personal credit, and NO collateral is required.
+> > How would that work?  What protects the area where you want to avoid running
+> > into pinned pages from previously acceptable page getting pinned?  If "they
+> > must have been successfully unmapped" is a part of what you are planning, we
+> > really do have a problem...
+> 
+> But this is a very good question. So far the idea was that we lock the
+> page, unmap (or writeprotect) the page, and then check pincount == 0 and
+> that is a reliable method for making sure page data is stable (until we
+> unlock the page & release other locks blocking page faults and writes). But
+> once suddently ordinary page references can be used to create pins this
+> does not work anymore. Hrm.
+> 
+> Just brainstorming ideas now: So we'd either need to obtain the pins early
+> when we still have the virtual address (but I guess that is often not
+> practical but should work e.g. for normal direct IO path) or we need some
+> way to "simulate" the page fault when pinning the page, just don't map it
+> into page tables in the end. This simulated page fault could be perhaps
+> avoided if rmap walk shows that the page is already mapped somewhere with
+> suitable permissions.
 
-We are a Direct Lender who can approve your loan today, and fund as Early as Tomorrow.
+OK...  I'd done some digging; results so far
 
-Once your reply I will send you the official website to complete your application
+	* READ vs. WRITE turned out to be an awful way to specify iov_iter
+data direction.  Local iov_iter branch so far:
+	get rid of unlikely() on page_copy_sane() calls
+	csum_and_copy_to_iter(): handle ITER_DISCARD
+	[s390] copy_oldmem_kernel() - WRITE is "data source", not destination
+	[fsi] WRITE is "data source", not destination...
+	[infiniband] READ is "data destination", not source...
+	[s390] zcore: WRITE is "data source", not destination...
+	[target] fix iov_iter_bvec() "direction" argument
+	[vhost] fix 'direction' argument of iov_iter_{init,bvec}()
+	[xen] fix "direction" argument of iov_iter_kvec()
+	[trace] READ means "data destination", not source...
+	iov_iter: saner checks for attempt to copy to/from iterator
+	use less confusing names for iov_iter direction initializers
+those 8 commits in the middle consist of fixes, some of them with more than
+one call site affected.  Folks keep going "oh, we are going to copy data
+into that iterator, must be WRITE".  Wrong - WRITE means "as for write(2)",
+i.e. the data _source_, not data destination.  And the same kind of bugs
+goes in the opposite direction, of course.
+	I think something like ITER_DEST vs. ITER_SOURCE would be less
+confusing.
 
-Waiting for your reply.
+	* anything that goes with ITER_SOURCE doesn't need pin.
+	* ITER_IOVEC/ITER_UBUF need pin for get_pages and for nothing else.
+Need to grab reference on get_pages, obviously.
+	* even more obviously, ITER_DISCARD is irrelevant here.
+	* ITER_PIPE only modifies anonymous pages that had been allocated
+by iov_iter primitives and hadn't been observed by anything outside until
+we are done with said ITER_PIPE.
+	* quite a few instances are similar to e.g. REQ_OP_READ handling in
+/dev/loop - we work with ITER_BVEC there and we do modify the page contents,
+but the damn thing would better be given to us locked and stay locked until
+all involved modifications (be it real IO/decoding/whatever) is complete.
+That ought to be safe, unless I'm missing something.
 
-Regards
-Ms. Kaori Ichikawa
-Consultant Swift Capital Loans Ltd
+That doesn't cover everything; still going through the list...
