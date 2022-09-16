@@ -2,179 +2,151 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F4A35BA31C
-	for <lists+linux-block@lfdr.de>; Fri, 16 Sep 2022 01:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 305C55BA3CE
+	for <lists+linux-block@lfdr.de>; Fri, 16 Sep 2022 03:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbiIOXW7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Sep 2022 19:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36160 "EHLO
+        id S229686AbiIPBRg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Sep 2022 21:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiIOXW6 (ORCPT
+        with ESMTP id S229480AbiIPBRe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Sep 2022 19:22:58 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C527C75A;
-        Thu, 15 Sep 2022 16:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663284177; x=1694820177;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4Aotw1s2HbqfBcOfpO1TwzDGwI8uCbHCjQTddLKguTw=;
-  b=cy3QCpyUKItDG03fuTj/4B2Ri9zu2kUc8NBFkE0H/OyJPJuWLaDuzNjk
-   +xtRyZVyYJckON60X27k4grQywsHYfEgJoAoU7oZI7zqWyUD/EJTPvNYy
-   alYgIYQXL8UY0JACDQPwf7d/p/J594mYgluY97AsbfLSM2KwZ8RcqzQna
-   O1mlgpXQyIA34+vmKpZ16/rlx9+orLRyK1pXi5szPWj/yIiZlzbvO/ci8
-   7K3HyFzzO7jhfIteAZcBSwM/EoF9wc5NNYGkgnRp8j9IaCBTbKxbguSyV
-   omJjAtMCMplqo6gHjysmCTGpBNfqI7BfqX9T23aicNImwon/ShNGzevEx
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10471"; a="281893229"
-X-IronPort-AV: E=Sophos;i="5.93,319,1654585200"; 
-   d="scan'208";a="281893229"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2022 16:22:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,319,1654585200"; 
-   d="scan'208";a="568623143"
-Received: from lkp-server02.sh.intel.com (HELO 41300c7200ea) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 15 Sep 2022 16:22:54 -0700
-Received: from kbuild by 41300c7200ea with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oYyC5-0001Aa-2R;
-        Thu, 15 Sep 2022 23:22:53 +0000
-Date:   Fri, 16 Sep 2022 07:22:06 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Alexander V. Buev" <a.buev@yadro.com>, linux-block@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, io-uring@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Mikhail Malygin <m.malygin@yadro.com>, linux@yadro.com,
-        "Alexander V. Buev" <a.buev@yadro.com>
-Subject: Re: [PATCH v4 2/3] block: io-uring: add READV_PI/WRITEV_PI operations
-Message-ID: <202209160737.29uHLqYq-lkp@intel.com>
-References: <20220909122040.1098696-3-a.buev@yadro.com>
+        Thu, 15 Sep 2022 21:17:34 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01hn2218.outbound.protection.outlook.com [52.100.223.218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15DC77568;
+        Thu, 15 Sep 2022 18:17:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RHySZeo98zLAwkITHSwPOge6SSbyoF/vFDx/cKEARd4nmrRUOmaSPM8pIHbqzmlDLRbjibhyaLAYmI7AkkwSG9iSkOigyn359W/cTnhm0/9h/B0gs2j8NrCLx2MVjuczky6wLrhlG8TkCM/8yOtLUYHq7+z6y/DtXlTyvnlEs/+vaVAHgby880SqEFaDOIIzZ0wqTQBrThySnaxf2F6HFuVoX5phritkOGDLpoc/8aOBL1LI1KR/KB8uKpmNteHoxJducIlkwyVRrLywJS7od5WTS5aFVtVB7X3pc8oIuPIhFDvrKbpVfK8HJJ7MuzXB0STb0ls/LxW3/LFCRMw6kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bs10Md+15nMnyayKLyd22Uv+/ZH79IcFcpzuzGLq1Fg=;
+ b=bpmMSIp5G22sxE9TFGf3Y9jM7FoQkhc9QTz2BGdoOa0zPFDGnkdNtAJGBmASV8pc0AagJ6eZsaQyRoP4b7EadpllopNOaT53oonw+ijWMVcHAuSI19VWaJhd1rckafas8cyVlYAe2urgvi6uhoQsrFtAk4oseH0qrzZLvTbiMGFVVGRPkZ0a5z5RUvFavxzXZSA2JZLWvJbVP9LeXZtrxdqtuwl9yY1XiGLkOvQWgYaBCU5mZgoUvN7KX1XdwzfomUmPDz9/9vyjSzG4WavshywAyTog8hGvexdzcNDz5lO1Rvazivo4rXQVCjfLzIEf3QnmQ6S49RK9YA63JXx86A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 45.14.71.5) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=t4.cims.jp;
+ dmarc=bestguesspass action=none header.from=t4.cims.jp; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYCPR01CA0122.jpnprd01.prod.outlook.com (2603:1096:400:26d::11)
+ by SI2PR04MB4137.apcprd04.prod.outlook.com (2603:1096:4:f8::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5612.16; Fri, 16 Sep 2022 01:17:32 +0000
+Received: from TYZAPC01FT053.eop-APC01.prod.protection.outlook.com
+ (2603:1096:400:26d:cafe::65) by TYCPR01CA0122.outlook.office365.com
+ (2603:1096:400:26d::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.19 via Frontend
+ Transport; Fri, 16 Sep 2022 01:17:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 45.14.71.5)
+ smtp.mailfrom=t4.cims.jp; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=t4.cims.jp;
+Received-SPF: Pass (protection.outlook.com: domain of t4.cims.jp designates
+ 45.14.71.5 as permitted sender) receiver=protection.outlook.com;
+ client-ip=45.14.71.5; helo=User; pr=M
+Received: from mail.prasarana.com.my (58.26.8.158) by
+ TYZAPC01FT053.mail.protection.outlook.com (10.118.152.149) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5632.12 via Frontend Transport; Fri, 16 Sep 2022 01:17:31 +0000
+Received: from MRL-EXH-02.prasarana.com.my (10.128.66.101) by
+ MRL-EXH-01.prasarana.com.my (10.128.66.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Fri, 16 Sep 2022 09:16:51 +0800
+Received: from User (45.14.71.5) by MRL-EXH-02.prasarana.com.my
+ (10.128.66.101) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
+ Transport; Fri, 16 Sep 2022 09:16:21 +0800
+Reply-To: <rhashimi202222@kakao.com>
+From:   Consultant Swift Capital Loans Ltd <info@t4.cims.jp>
+Subject: I hope you are doing well, and business is great!
+Date:   Fri, 16 Sep 2022 09:17:03 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220909122040.1098696-3-a.buev@yadro.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <0135ac95-8929-4d45-8a5f-93547c102f2e@MRL-EXH-02.prasarana.com.my>
+To:     Undisclosed recipients:;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-SkipListedInternetSender: ip=[45.14.71.5];domain=User
+X-MS-Exchange-ExternalOriginalInternetSender: ip=[45.14.71.5];domain=User
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZAPC01FT053:EE_|SI2PR04MB4137:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ea11b2e-dba3-4db4-6365-08da97813ab5
+X-MS-Exchange-AtpMessageProperties: SA|SL
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: =?windows-1251?Q?27C4NJfFKZgDG5cHZywkbuN9AlsZ/R+LT2SDpH3esd6rzewy/uF5Ikd2?=
+ =?windows-1251?Q?QHN4fwZjm9vXHH6VXw67j1K6Ejx5yiIsp1K12ZkN4FjFIckxyZX3rLAM?=
+ =?windows-1251?Q?EJ8d9siWYXQQQNC2JVEfxo163pwfnju6ybc0PAAgFLuzDAF7272+mcVB?=
+ =?windows-1251?Q?paA/8YnGaZ0RHR3NdmRVKuAAncQJ4ibGuuTwzFP82pz4u0qcox3t6eg3?=
+ =?windows-1251?Q?uU3qw0L9gcm+mVrcCyLkDhVyTdCw4EE/E4p015Vd0PmyE1tm5gcYq1XY?=
+ =?windows-1251?Q?FI81i37wggWd8CryMy5w68/YZ3L/FBlS3vQHxyA6i9yJxiQVlY1mngjb?=
+ =?windows-1251?Q?g2xRwI9MEnRG2ei5gOylrviz5ajsUs8X6iYTKEWDGf2c5avE242BIwwZ?=
+ =?windows-1251?Q?cTDsd8uXdtyj19Kmc3YinX9bjY7aYGyBydlF1yxbZibj0mtUkxoMFrVl?=
+ =?windows-1251?Q?NAdkzB7z/PLD7+u70tjgLQNVWU8+aZwpTSGgO1Pd+dsuNzKELTFZJaG8?=
+ =?windows-1251?Q?kDHlCqfd1aRz+Ch/fgi2sVGIJPx0YNZE7wHH7emXnkXtAfyp0VFMiQlV?=
+ =?windows-1251?Q?jn9RMokVhMHqWPt1v3EGxDm2szo9gI2S/NZn3ImT0Tw6ogSfRti7TTKR?=
+ =?windows-1251?Q?RfbtOoOrjZ/Klo7ylF+OcqPNByQbjzusVZb5x3gYtWJ1JPbBZl35qYgw?=
+ =?windows-1251?Q?YnSLzDag3iDgguj2uVS//uU+7R+jKoya2S4Ixlsu717lNB+P6qmEBfee?=
+ =?windows-1251?Q?qugQYBsvC9JjdcJhw8lXIPUHuO3AhfSfSnEZcTz2w3G7hC6RQsi21kcY?=
+ =?windows-1251?Q?aF7+vOQ5yWEiIlNULc2cGf1ozwrB+IwFA0qRYMWQ4g2Up95rWMm9ZWM8?=
+ =?windows-1251?Q?1uXF1QS2EaFBD5/xLWYTjDjW7HZkwaytLDUqs8OmTStcQi6USnsdYy1E?=
+ =?windows-1251?Q?RpSRZo6fZ1Cfd3nbYZWHgWWWGlhTNw0Gv9e2IceeZpTxx8ZFqvlPpCO8?=
+ =?windows-1251?Q?9+XPTQ3GticBsqpY+ewFLNqRpdPfvdpc3ejOt++uQTR0AUAYHM/LXC+F?=
+ =?windows-1251?Q?Cn7iYoZhAA2fskt23RA9Zpc3NjYwFfGe0cgfaha9Vm5m/yEeLUpFM1w3?=
+ =?windows-1251?Q?nUrlMn5+tFhwxOH7URRD3oFSgZMumPzXSUc606LkMzWa93WIYXLVLIVp?=
+ =?windows-1251?Q?2tIzt0ApJNxGoIV+QZiSP4YPCUzPAJ72WwQaEvuNn9DPqSJf7mLzPpI3?=
+ =?windows-1251?Q?PFm8G6B78oAOPemwEoj0/vVH6F9HxM3hTNTYSS0/9Rl2Ayr7W4TBTVwk?=
+ =?windows-1251?Q?xa4JChRApsohZw0FNkQa4v7eSHUVYXYCrIlj7G3/69Bh9f02?=
+X-Forefront-Antispam-Report: CIP:58.26.8.158;CTRY:JP;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:User;PTR:45.14.71.5.static.xtom.com;CAT:OSPM;SFS:(13230022)(4636009)(376002)(396003)(136003)(39860400002)(346002)(451199015)(40470700004)(82310400005)(40480700001)(32650700002)(31686004)(86362001)(70586007)(70206006)(8936002)(5660300002)(336012)(956004)(498600001)(8676002)(7416002)(7366002)(31696002)(7406005)(81166007)(4744005)(156005)(316002)(35950700001)(32850700003)(41300700001)(36906005)(2906002)(40460700003)(6666004)(82740400003)(26005)(109986005)(9686003)(66899012)(2700400008);DIR:OUT;SFP:1501;
+X-OriginatorOrg: myprasarana.onmicrosoft.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 01:17:31.6325
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ea11b2e-dba3-4db4-6365-08da97813ab5
+X-MS-Exchange-CrossTenant-Id: 3cbb2ff2-27fb-4993-aecf-bf16995e64c0
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3cbb2ff2-27fb-4993-aecf-bf16995e64c0;Ip=[58.26.8.158];Helo=[mail.prasarana.com.my]
+X-MS-Exchange-CrossTenant-AuthSource: TYZAPC01FT053.eop-APC01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR04MB4137
+X-Spam-Status: Yes, score=6.2 required=5.0 tests=AXB_XMAILER_MIMEOLE_OL_024C2,
+        AXB_X_FF_SEZ_S,BAYES_50,FORGED_MUA_OUTLOOK,FSL_CTYPE_WIN1251,
+        FSL_NEW_HELO_USER,HEADER_FROM_DIFFERENT_DOMAINS,NSL_RCVD_FROM_USER,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [52.100.223.218 listed in list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5181]
+        *  0.0 NSL_RCVD_FROM_USER Received from User
+        *  0.0 FSL_CTYPE_WIN1251 Content-Type only seen in 419 spam
+        *  3.2 AXB_X_FF_SEZ_S Forefront sez this is spam
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+        *  0.2 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level
+        *      mail domains are different
+        *  0.0 AXB_XMAILER_MIMEOLE_OL_024C2 Yet another X header trait
+        *  0.0 FSL_NEW_HELO_USER Spam's using Helo and User
+        *  1.9 FORGED_MUA_OUTLOOK Forged mail pretending to be from MS Outlook
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Alexander,
+Hello,
 
-Thank you for the patch! Perhaps something to improve:
+I hope you are doing well, and business is great!
+However, if you need working capital to further grow and expand your business, we may be a perfect fit for you. I am Ms. Kaori Ichikawa Swift Capital Loans Ltd Consultant, Our loans are NOT based on your personal credit, and NO collateral is required.
 
-[auto build test WARNING on axboe-block/for-next]
-[also build test WARNING on linus/master v6.0-rc5 next-20220915]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+We are a Direct Lender who can approve your loan today, and fund as Early as Tomorrow.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-V-Buev/implement-direct-IO-with-integrity/20220909-202433
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
-config: parisc-randconfig-s053-20220914 (https://download.01.org/0day-ci/archive/20220916/202209160737.29uHLqYq-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 12.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/81de858455c5cf1e5870106f544fe1fd179fa324
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Alexander-V-Buev/implement-direct-IO-with-integrity/20220909-202433
-        git checkout 81de858455c5cf1e5870106f544fe1fd179fa324
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=parisc SHELL=/bin/bash
+Once your reply I will send you the official website to complete your application
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+Waiting for your reply.
 
-sparse warnings: (new ones prefixed by >>)
-   io_uring/rw_pi.c: note: in included file (through io_uring/io_uring.h):
-   io_uring/slist.h:138:29: sparse: sparse: no newline at end of file
-   io_uring/rw_pi.c:248:27: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *private @@     got void [noderef] __user * @@
-   io_uring/rw_pi.c:248:27: sparse:     expected void *private
-   io_uring/rw_pi.c:248:27: sparse:     got void [noderef] __user *
-   io_uring/rw_pi.c:458:43: sparse: sparse: Using plain integer as NULL pointer
-   io_uring/rw_pi.c:543:43: sparse: sparse: Using plain integer as NULL pointer
->> io_uring/rw_pi.c:266:17: sparse: sparse: cast removes address space '__user' of expression
-   io_uring/rw_pi.c:266:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:266:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:266:14: sparse:     got struct iovec *
-   io_uring/rw_pi.c:275:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:275:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:275:14: sparse:     got struct iovec *
->> io_uring/rw_pi.c:266:17: sparse: sparse: cast removes address space '__user' of expression
-   io_uring/rw_pi.c:266:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:266:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:266:14: sparse:     got struct iovec *
-   io_uring/rw_pi.c:275:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:275:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:275:14: sparse:     got struct iovec *
->> io_uring/rw_pi.c:266:17: sparse: sparse: cast removes address space '__user' of expression
-   io_uring/rw_pi.c:266:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:266:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:266:14: sparse:     got struct iovec *
-   io_uring/rw_pi.c:275:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:275:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:275:14: sparse:     got struct iovec *
->> io_uring/rw_pi.c:266:17: sparse: sparse: cast removes address space '__user' of expression
-   io_uring/rw_pi.c:266:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:266:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:266:14: sparse:     got struct iovec *
-   io_uring/rw_pi.c:275:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct iovec [noderef] __user *uvec @@     got struct iovec * @@
-   io_uring/rw_pi.c:275:14: sparse:     expected struct iovec [noderef] __user *uvec
-   io_uring/rw_pi.c:275:14: sparse:     got struct iovec *
-
-vim +/__user +266 io_uring/rw_pi.c
-
-   255	
-   256	
-   257	static inline int
-   258	io_import_iovecs_pi(int io_dir, struct io_kiocb *req, struct iovec **iovec,
-   259				struct io_rw_state *s_data, struct __io_rw_pi_state *s_pi)
-   260	{
-   261		struct io_rw_pi *rw = io_kiocb_to_cmd(req, struct io_rw_pi);
-   262		struct iovec __user *uvec;
-   263		ssize_t ret;
-   264	
-   265		/* data */
- > 266		uvec = (struct iovec *)u64_to_user_ptr(rw->addr);
-   267		iovec[DATA] = s_data->fast_iov;
-   268		ret = __import_iovec(io_dir, uvec, rw->nr_segs,
-   269					UIO_FASTIOV, iovec + DATA,
-   270					&s_data->iter, req->ctx->compat);
-   271	
-   272		if (unlikely(ret <= 0))
-   273			return (ret) ? ret : -EINVAL;
-   274		/* pi */
-   275		uvec = (struct iovec *)rw->kiocb.private;
-   276		iovec[PI] = s_pi->fast_iov;
-   277		ret = __import_iovec(io_dir, uvec, rw->nr_pi_segs,
-   278					UIO_FASTIOV_PI, iovec + PI,
-   279					&s_pi->iter, req->ctx->compat);
-   280		if (unlikely(ret <= 0)) {
-   281			if (iovec[DATA])
-   282				kfree(iovec[DATA]);
-   283			return (ret) ? ret : -EINVAL;
-   284		}
-   285	
-   286		/* save states */
-   287		io_rw_pi_state_iter_save(s_data, s_pi);
-   288	
-   289		return 0;
-   290	}
-   291	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Regards
+Ms. Kaori Ichikawa
+Consultant Swift Capital Loans Ltd
