@@ -2,82 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45C535BEDA7
-	for <lists+linux-block@lfdr.de>; Tue, 20 Sep 2022 21:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24BB35BEDAE
+	for <lists+linux-block@lfdr.de>; Tue, 20 Sep 2022 21:26:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231372AbiITT0f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Sep 2022 15:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45632 "EHLO
+        id S230525AbiITT0k (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Sep 2022 15:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231440AbiITT0Y (ORCPT
+        with ESMTP id S231441AbiITT0Y (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 20 Sep 2022 15:26:24 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73BD352DD8;
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD763501B3;
         Tue, 20 Sep 2022 12:26:23 -0700 (PDT)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28KJJ09J021736;
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28KJL1Fs008773;
         Tue, 20 Sep 2022 19:26:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=dpfCNnfPbbEC5kErlztzTMbhQyBiJWkwpGI6tZbf/po=;
- b=TrIorz97EQnQP50ZaZvcheLEZ4SaZcqYxBPUqADO+S7Z0OQJkuYzngd8ml8IdMIz+65A
- Wq3T/h/pBhrAgcpb5Ljq67hiQBYeAg3wpGLAECz+4vYlVpuUdbLb0t+VOXV8FnCI9QGd
- Vh4XwF6AyaQhPQc9fzCUxfLE7cJKWCe/lMJnpOf394i36vp717l6PyFOkApMEaxrHh+u
- 8MPaFSaDSf2ZH0IphOWjtWy/HmC0AGjWCUtpOVJZIel/XgaVRLEvKJFDLpNbZ3B4Zaew
- ej3dvsOiHtq+tHRb5F26cuCz6B6Vh9E8w/0usMc30bCriXdBH6Tsm2aropGIynz7ocQV TA== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jqk21904e-1
+ bh=rsRoxDup3r+lIlenNrhssMF59hc/vrzhfLIyUSAVA0A=;
+ b=ti8iTxSjIk7Ors1Tx3MmuIsd1Cvd7cVp1N1cBEpfx+TBGOK8RSdbatEPyTldvlcCN8uC
+ znKZGbhiMMtyQk5devVTaFdPNNbzwYnJav4IX5koFp8q056reFIq6Xjj/RkwIMNK7WJu
+ 1c7mUC+eSOWPZnpWQ6CuC9N7CjaouHILbpgJk5Pzadmj0qPuJuugkMtqBC9Ha3DL3Vo/
+ G6f2bMgE+g2jSnGTWptxyHYnfgWqOGNzu9BWjnhcK+3+EgR4vlT/9V8TM3nBn5PL1Qya
+ r9lPByfy/xbjB8Tqg4D+kQpfX1ZRA8Fp5gaC3EzZyln4KTg+PoagykzHSANpU3Fhhm2Q ng== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jqkkp83hg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 20 Sep 2022 19:26:22 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28KJM7fA023233;
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28KJNH3H006781;
         Tue, 20 Sep 2022 19:26:20 GMT
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06fra.de.ibm.com with ESMTP id 3jn5ghk6g6-1
+        by ppma06ams.nl.ibm.com with ESMTP id 3jn5gj49fm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 20 Sep 2022 19:26:20 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28KJQHgt43319628
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28KJQHmg23658878
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 20 Sep 2022 19:26:17 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04625A4040;
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 34D2A42047;
         Tue, 20 Sep 2022 19:26:17 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6494A4053;
-        Tue, 20 Sep 2022 19:26:16 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23D7E42041;
+        Tue, 20 Sep 2022 19:26:17 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 20 Sep 2022 19:26:16 +0000 (GMT)
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 20 Sep 2022 19:26:17 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id 919CBE0806; Tue, 20 Sep 2022 21:26:16 +0200 (CEST)
+        id 9576DE080B; Tue, 20 Sep 2022 21:26:16 +0200 (CEST)
 From:   Stefan Haberland <sth@linux.ibm.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 4/7] s390/dasd: add copy pair swap capability
-Date:   Tue, 20 Sep 2022 21:26:13 +0200
-Message-Id: <20220920192616.808070-5-sth@linux.ibm.com>
+Subject: [PATCH 5/7] s390/dasd: add ioctl to perform a swap of the drivers copy pair
+Date:   Tue, 20 Sep 2022 21:26:14 +0200
+Message-Id: <20220920192616.808070-6-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220920192616.808070-1-sth@linux.ibm.com>
 References: <20220920192616.808070-1-sth@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 46YnNb0dF4Bdtga48WETwMyVLlP27Z_c
-X-Proofpoint-GUID: 46YnNb0dF4Bdtga48WETwMyVLlP27Z_c
+X-Proofpoint-GUID: gTkJ0hV6juDchq5TxdsUVBoQ--Ly_lxT
+X-Proofpoint-ORIG-GUID: gTkJ0hV6juDchq5TxdsUVBoQ--Ly_lxT
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
  definitions=2022-09-20_09,2022-09-20_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- adultscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209200114
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 clxscore=1015 adultscore=0 suspectscore=0 malwarescore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2209200114
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
@@ -87,223 +87,132 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In case of errors or misbehaviour of the primary device a controlled
-failover to one of the configured secondary devices needs to be
-performed.
+The newly defined ioctl BIODASDCOPYPAIRSWAP takes a structure that
+specifies a copy pair that should be swapped. It will call the device
+discipline function to perform the swap operation.
 
-The swap processing stops I/O on the primary device, all requests are
-re-queued to the blocklayer queue, the entries in the copy relation are
-swapped and finally the link to the blockdevice is moved from primary to
-secondary dasd device.
-After this, the secondary becomes the new primary device and I/O is
-restarted on that device.
+The structure looks as followed:
+
+struct dasd_copypair_swap_data_t {
+       char primary[20];
+       char secondary[20];
+       __u8 reserved[64];
+};
+
+where primary is the old primary device that will be replaced by the
+secondary device. The old primary will become a secondary device
+afterwards.
 
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
 ---
- drivers/s390/block/dasd.c        |  3 +-
- drivers/s390/block/dasd_devmap.c |  1 +
- drivers/s390/block/dasd_eckd.c   | 94 ++++++++++++++++++++++++++++++++
- drivers/s390/block/dasd_int.h    | 20 +++++++
- 4 files changed, 117 insertions(+), 1 deletion(-)
+ arch/s390/include/uapi/asm/dasd.h | 14 ++++++++
+ drivers/s390/block/dasd_ioctl.c   | 53 +++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
 
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index ea82821599f6..c03f26e79f45 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -3927,7 +3927,7 @@ EXPORT_SYMBOL_GPL(dasd_generic_space_avail);
+diff --git a/arch/s390/include/uapi/asm/dasd.h b/arch/s390/include/uapi/asm/dasd.h
+index 9ec86fae9980..93d1ccd3304c 100644
+--- a/arch/s390/include/uapi/asm/dasd.h
++++ b/arch/s390/include/uapi/asm/dasd.h
+@@ -182,6 +182,18 @@ typedef struct format_data_t {
+ 	unsigned int intensity;
+ } format_data_t;
+ 
++/*
++ * struct dasd_copypair_swap_data_t
++ * represents all data necessary to issue a swap of the copy pair relation
++ */
++struct dasd_copypair_swap_data_t {
++	char primary[20]; /* BUSID of primary */
++	char secondary[20]; /* BUSID of secondary */
++
++	/* Reserved for future updates. */
++	__u8 reserved[64];
++};
++
  /*
-  * clear active requests and requeue them to block layer if possible
-  */
--static int dasd_generic_requeue_all_requests(struct dasd_device *device)
-+int dasd_generic_requeue_all_requests(struct dasd_device *device)
- {
- 	struct list_head requeue_queue;
- 	struct dasd_ccw_req *cqr, *n;
-@@ -4001,6 +4001,7 @@ static int dasd_generic_requeue_all_requests(struct dasd_device *device)
- 	dasd_schedule_device_bh(device);
+  * values to be used for format_data_t.intensity
+  * 0/8: normal format
+@@ -326,6 +338,8 @@ struct dasd_snid_ioctl_data {
+ #define BIODASDSATTR   _IOW(DASD_IOCTL_LETTER,2,attrib_data_t)
+ /* Release Allocated Space */
+ #define BIODASDRAS     _IOW(DASD_IOCTL_LETTER, 3, format_data_t)
++/* Swap copy pair relation */
++#define BIODASDCOPYPAIRSWAP _IOW(DASD_IOCTL_LETTER, 4, struct dasd_copypair_swap_data_t)
+ 
+ /* Get Sense Path Group ID (SNID) data */
+ #define BIODASDSNID    _IOWR(DASD_IOCTL_LETTER, 1, struct dasd_snid_ioctl_data)
+diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
+index 95349f95758c..d0ddf2cc9786 100644
+--- a/drivers/s390/block/dasd_ioctl.c
++++ b/drivers/s390/block/dasd_ioctl.c
+@@ -379,6 +379,56 @@ static int dasd_ioctl_release_space(struct block_device *bdev, void __user *argp
  	return rc;
  }
-+EXPORT_SYMBOL_GPL(dasd_generic_requeue_all_requests);
  
- static void do_requeue_requests(struct work_struct *work)
- {
-diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd_devmap.c
-index 28c244aa75cf..ca5c9e963662 100644
---- a/drivers/s390/block/dasd_devmap.c
-+++ b/drivers/s390/block/dasd_devmap.c
-@@ -937,6 +937,7 @@ void dasd_add_link_to_gendisk(struct gendisk *gdp, struct dasd_device *device)
- 	gdp->private_data = devmap;
- 	spin_unlock(&dasd_devmap_lock);
- }
-+EXPORT_SYMBOL(dasd_add_link_to_gendisk);
- 
- struct dasd_device *dasd_device_from_gendisk(struct gendisk *gdp)
- {
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index c8a226f070fa..d4d3bd33553b 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -6119,6 +6119,99 @@ static int dasd_hosts_print(struct dasd_device *device, struct seq_file *m)
- 	return 0;
- }
- 
-+static struct dasd_device
-+*copy_relation_find_device(struct dasd_copy_relation *copy,
-+			   char *busid)
++/*
++ * Swap driver iternal copy relation.
++ */
++static int
++dasd_ioctl_copy_pair_swap(struct block_device *bdev, void __user *argp)
 +{
-+	int i;
++	struct dasd_copypair_swap_data_t data;
++	struct dasd_device *device;
++	int rc;
 +
-+	for (i = 0; i < DASD_CP_ENTRIES; i++) {
-+		if (copy->entry[i].configured &&
-+		    strncmp(copy->entry[i].busid, busid, DASD_BUS_ID_SIZE) == 0)
-+			return copy->entry[i].device;
++	if (!capable(CAP_SYS_ADMIN))
++		return -EACCES;
++
++	device = dasd_device_from_gendisk(bdev->bd_disk);
++	if (!device)
++		return -ENODEV;
++
++	if (copy_from_user(&data, argp, sizeof(struct dasd_copypair_swap_data_t))) {
++		dasd_put_device(device);
++		return -EFAULT;
 +	}
-+	return NULL;
-+}
-+
-+/*
-+ * set the new active/primary device
-+ */
-+static void copy_pair_set_active(struct dasd_copy_relation *copy, char *new_busid,
-+				 char *old_busid)
-+{
-+	int i;
-+
-+	for (i = 0; i < DASD_CP_ENTRIES; i++) {
-+		if (copy->entry[i].configured &&
-+		    strncmp(copy->entry[i].busid, new_busid,
-+			    DASD_BUS_ID_SIZE) == 0) {
-+			copy->active = &copy->entry[i];
-+			copy->entry[i].primary = true;
-+		} else if (copy->entry[i].configured &&
-+			   strncmp(copy->entry[i].busid, old_busid,
-+				   DASD_BUS_ID_SIZE) == 0) {
-+			copy->entry[i].primary = false;
-+		}
++	if (memchr_inv(data.reserved, 0, sizeof(data.reserved))) {
++		pr_warn("%s: Ivalid swap data specified.\n",
++			dev_name(&device->cdev->dev));
++		dasd_put_device(device);
++		return DASD_COPYPAIRSWAP_INVALID;
 +	}
++	if (bdev_is_partition(bdev)) {
++		pr_warn("%s: The specified DASD is a partition and cannot be swapped\n",
++			dev_name(&device->cdev->dev));
++		dasd_put_device(device);
++		return DASD_COPYPAIRSWAP_INVALID;
++	}
++	if (!device->copy) {
++		pr_warn("%s: The specified DASD has no copy pair set up\n",
++			dev_name(&device->cdev->dev));
++		dasd_put_device(device);
++		return -ENODEV;
++	}
++	if (!device->discipline->copy_pair_swap) {
++		dasd_put_device(device);
++		return -EOPNOTSUPP;
++	}
++	rc = device->discipline->copy_pair_swap(device, data.primary,
++						data.secondary);
++	dasd_put_device(device);
++
++	return rc;
 +}
 +
-+/*
-+ * The function will swap the role of a given copy pair.
-+ * During the swap operation the relation of the blockdevice is disconnected
-+ * from the old primary and connected to the new.
-+ *
-+ * IO is paused on the block queue before swap and may be resumed afterwards.
-+ */
-+static int dasd_eckd_copy_pair_swap(struct dasd_device *device, char *prim_busid,
-+				    char *sec_busid)
-+{
-+	struct dasd_device *primary, *secondary;
-+	struct dasd_copy_relation *copy;
-+	struct dasd_block *block;
-+	struct gendisk *gdp;
-+
-+	copy = device->copy;
-+	if (!copy)
-+		return DASD_COPYPAIRSWAP_INVALID;
-+	primary = copy->active->device;
-+	if (!primary)
-+		return DASD_COPYPAIRSWAP_INVALID;
-+	/* double check if swap has correct primary */
-+	if (strncmp(dev_name(&primary->cdev->dev), prim_busid, DASD_BUS_ID_SIZE) != 0)
-+		return DASD_COPYPAIRSWAP_PRIMARY;
-+
-+	secondary = copy_relation_find_device(copy, sec_busid);
-+	if (!secondary)
-+		return DASD_COPYPAIRSWAP_SECONDARY;
-+
-+	/*
-+	 * usually the device should be quiesced for swap
-+	 * for paranoia stop device and requeue requests again
-+	 */
-+	dasd_device_set_stop_bits(primary, DASD_STOPPED_PPRC);
-+	dasd_device_set_stop_bits(secondary, DASD_STOPPED_PPRC);
-+	dasd_generic_requeue_all_requests(primary);
-+
-+	/* swap DASD internal device <> block assignment */
-+	block = primary->block;
-+	primary->block = NULL;
-+	secondary->block = block;
-+	block->base = secondary;
-+	/* set new primary device in COPY relation */
-+	copy_pair_set_active(copy, sec_busid, prim_busid);
-+
-+	/* swap blocklayer device link */
-+	gdp = block->gdp;
-+	dasd_add_link_to_gendisk(gdp, secondary);
-+
-+	/* re-enable device */
-+	dasd_device_remove_stop_bits(primary, DASD_STOPPED_PPRC);
-+	dasd_device_remove_stop_bits(secondary, DASD_STOPPED_PPRC);
-+	dasd_schedule_device_bh(secondary);
-+
-+	return DASD_COPYPAIRSWAP_SUCCESS;
-+}
-+
+ #ifdef CONFIG_DASD_PROFILE
  /*
-  * Perform Subsystem Function - Peer-to-Peer Remote Copy Extended Query
-  */
-@@ -6805,6 +6898,7 @@ static struct dasd_discipline dasd_eckd_discipline = {
- 	.ese_read = dasd_eckd_ese_read,
- 	.pprc_status = dasd_eckd_query_pprc_status,
- 	.pprc_enabled = dasd_eckd_pprc_enabled,
-+	.copy_pair_swap = dasd_eckd_copy_pair_swap,
- };
- 
- static int __init
-diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
-index d9794ec03722..3c55c29155ef 100644
---- a/drivers/s390/block/dasd_int.h
-+++ b/drivers/s390/block/dasd_int.h
-@@ -438,6 +438,7 @@ struct dasd_discipline {
- 	int (*ese_read)(struct dasd_ccw_req *, struct irb *);
- 	int (*pprc_status)(struct dasd_device *, struct	dasd_pprc_data_sc4 *);
- 	bool (*pprc_enabled)(struct dasd_device *);
-+	int (*copy_pair_swap)(struct dasd_device *, char *, char *);
- };
- 
- extern struct dasd_discipline *dasd_diag_discipline_pointer;
-@@ -681,6 +682,7 @@ struct dasd_queue {
- #define DASD_STOPPED_PENDING 4         /* long busy */
- #define DASD_STOPPED_DC_WAIT 8         /* disconnected, wait */
- #define DASD_STOPPED_SU      16        /* summary unit check handling */
-+#define DASD_STOPPED_PPRC    32        /* PPRC swap */
- #define DASD_STOPPED_NOSPC   128       /* no space left */
- 
- /* per device flags */
-@@ -705,6 +707,22 @@ struct dasd_queue {
- 
- void dasd_put_device_wake(struct dasd_device *);
- 
-+/*
-+ * return values to be returned from the copy pair swap function
-+ * 0x00: swap successful
-+ * 0x01: swap data invalid
-+ * 0x02: no active device found
-+ * 0x03: wrong primary specified
-+ * 0x04: secondary device not found
-+ * 0x05: swap already running
-+ */
-+#define DASD_COPYPAIRSWAP_SUCCESS	0
-+#define DASD_COPYPAIRSWAP_INVALID	1
-+#define DASD_COPYPAIRSWAP_NOACTIVE	2
-+#define DASD_COPYPAIRSWAP_PRIMARY	3
-+#define DASD_COPYPAIRSWAP_SECONDARY	4
-+#define DASD_COPYPAIRSWAP_MULTIPLE	5
-+
- /*
-  * Reference count inliners
-  */
-@@ -889,6 +907,8 @@ int dasd_generic_verify_path(struct dasd_device *, __u8);
- void dasd_generic_space_exhaust(struct dasd_device *, struct dasd_ccw_req *);
- void dasd_generic_space_avail(struct dasd_device *);
- 
-+int dasd_generic_requeue_all_requests(struct dasd_device *);
-+
- int dasd_generic_read_dev_chars(struct dasd_device *, int, void *, int);
- char *dasd_get_sense(struct irb *);
- 
+  * Reset device profile information
+@@ -637,6 +687,9 @@ int dasd_ioctl(struct block_device *bdev, fmode_t mode,
+ 	case BIODASDRAS:
+ 		rc = dasd_ioctl_release_space(bdev, argp);
+ 		break;
++	case BIODASDCOPYPAIRSWAP:
++		rc = dasd_ioctl_copy_pair_swap(bdev, argp);
++		break;
+ 	default:
+ 		/* if the discipline has an ioctl method try it. */
+ 		rc = -ENOTTY;
 -- 
 2.34.1
 
