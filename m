@@ -2,165 +2,117 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DB1A5BEC75
-	for <lists+linux-block@lfdr.de>; Tue, 20 Sep 2022 19:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D71B5BEDB2
+	for <lists+linux-block@lfdr.de>; Tue, 20 Sep 2022 21:26:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230315AbiITR7z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Sep 2022 13:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33132 "EHLO
+        id S231428AbiITT0m (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Sep 2022 15:26:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230283AbiITR7x (ORCPT
+        with ESMTP id S231454AbiITT0Z (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 20 Sep 2022 13:59:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7182127B
-        for <linux-block@vger.kernel.org>; Tue, 20 Sep 2022 10:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663696790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OHtdE23Tl8Q7YmGts8+e6vQU5dPp5gTmPaXstWBSt1Q=;
-        b=McxVU7B4hkq91VeO+TrGAVSDlARbxz7dmjRwUOGGg28Xzufb8yWl3oLxfX+j4acuMUxYXi
-        iElo3sDgDOfGTKVRT+7nn/IPvQFSADfJnl2RdIcSpsn9yUh684GjCQDgge1MPxj6fbk6LY
-        vZvTTCALqOAw7jrTyi8cR+wJwq0Y8OY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-663-EE1Nq2b8PFClrSMW4ir5Uw-1; Tue, 20 Sep 2022 13:59:46 -0400
-X-MC-Unique: EE1Nq2b8PFClrSMW4ir5Uw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D5AF811E87;
-        Tue, 20 Sep 2022 17:59:46 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1AA98492CA2;
-        Tue, 20 Sep 2022 17:59:46 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 28KHxk5j026622;
-        Tue, 20 Sep 2022 13:59:46 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 28KHxk9W026618;
-        Tue, 20 Sep 2022 13:59:46 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 20 Sep 2022 13:59:46 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Jens Axboe <axboe@kernel.dk>, Zdenek Kabelac <zkabelac@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>
-cc:     linux-block@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH v2 4/4] brd: implement secure erase and write zeroes
-In-Reply-To: <alpine.LRH.2.02.2209201350470.26058@file01.intranet.prod.int.rdu2.redhat.com>
-Message-ID: <alpine.LRH.2.02.2209201358580.26535@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2209201350470.26058@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Tue, 20 Sep 2022 15:26:25 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57AE27285E;
+        Tue, 20 Sep 2022 12:26:24 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28KJKx1W008639;
+        Tue, 20 Sep 2022 19:26:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=gq0YSU+W8RKwnsNih/gzC+S5GZqXc4rotJzWJTcxPDI=;
+ b=Fqrp1LSSSnbSqYXH11zEFZGdbFgWwgsFgejCpmV2gg04ftzqM0JucseX33vAK3gweKCR
+ cqYm1cGrdxtmsvFEt60ENhxDK1SodfPfcAuYRXQecgrF7hdkZ9n/QRm90SHOX+QKGBse
+ JU0scnCChlPjnTAI0TP/mpB50FjSn2waVR1H675CWXbd5GkNptY01QSMZcJeOnfjlK2R
+ Q2/PJqXeASPZlBOGEErA3tWedvvQ38S+jt0otDNwuduSzzC4Y3l+8tfQY3jVDVrMmBN6
+ D7DSP5T1cP9MfFCcV1CrR0wbPci4lWqpWTbPgkYTgRmEVsmhol8i6ThykijP0T2Jwf/Y hA== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jqkkp83hj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Sep 2022 19:26:22 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28KJN7MW006740;
+        Tue, 20 Sep 2022 19:26:20 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 3jn5gj49fk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Sep 2022 19:26:20 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28KJQGw69044308
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Sep 2022 19:26:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D9F65A4069;
+        Tue, 20 Sep 2022 19:26:16 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D276AA4065;
+        Tue, 20 Sep 2022 19:26:16 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 20 Sep 2022 19:26:16 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 7B4CFE07FD; Tue, 20 Sep 2022 21:26:16 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/7] s390/dasd: add hardware copy relation
+Date:   Tue, 20 Sep 2022 21:26:09 +0200
+Message-Id: <20220920192616.808070-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 4hVSLnqtGkXjEw6mvfzSPwQF_lu82KL7
+X-Proofpoint-ORIG-GUID: 4hVSLnqtGkXjEw6mvfzSPwQF_lu82KL7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-20_09,2022-09-20_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 clxscore=1015 adultscore=0 suspectscore=0 malwarescore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=853
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2209200114
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch implements REQ_OP_SECURE_ERASE and REQ_OP_WRITE_ZEROES on brd.
-Write zeroes will free the pages just like discard, but the difference is
-that it writes zeroes to the preceding and following page if the range is
-not aligned on page boundary. Secure erase is just like write zeroes,
-except that it clears the page content before freeing the page.
+Hi Jens,
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+please apply the following patchset to for-next.
+It adds basic support for a harwdare based copy relation to the DASD
+device driver.
 
----
- drivers/block/brd.c |   30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+regards,
+Stefan
 
-Index: linux-2.6/drivers/block/brd.c
-===================================================================
---- linux-2.6.orig/drivers/block/brd.c
-+++ linux-2.6/drivers/block/brd.c
-@@ -115,7 +115,7 @@ static void brd_free_page_rcu(struct rcu
- 	__free_page(page);
- }
- 
--static void brd_free_page(struct brd_device *brd, sector_t sector)
-+static void brd_free_page(struct brd_device *brd, sector_t sector, bool secure)
- {
- 	struct page *page;
- 	pgoff_t idx;
-@@ -124,8 +124,11 @@ static void brd_free_page(struct brd_dev
- 	idx = sector >> PAGE_SECTORS_SHIFT;
- 	page = radix_tree_delete(&brd->brd_pages, idx);
- 	spin_unlock(&brd->brd_lock);
--	if (page)
-+	if (page) {
-+		if (secure)
-+			clear_highpage(page);
- 		call_rcu(&page->rcu_head, brd_free_page_rcu);
-+	}
- }
- 
- /*
-@@ -300,23 +303,34 @@ out:
- 
- void brd_do_discard(struct brd_device *brd, struct bio *bio)
- {
--	sector_t sector, len, front_pad;
-+	bool zero_padding;
-+	sector_t sector, len, front_pad, end_pad;
- 
- 	if (unlikely(!discard)) {
- 		bio->bi_status = BLK_STS_NOTSUPP;
- 		return;
- 	}
- 
-+	zero_padding = bio_op(bio) == REQ_OP_SECURE_ERASE || bio_op(bio) == REQ_OP_WRITE_ZEROES;
- 	sector = bio->bi_iter.bi_sector;
- 	len = bio_sectors(bio);
- 	front_pad = -sector & (PAGE_SECTORS - 1);
-+
-+	if (zero_padding && unlikely(front_pad != 0))
-+		copy_to_brd(brd, page_address(ZERO_PAGE(0)), sector, min(len, front_pad) << SECTOR_SHIFT);
-+
- 	sector += front_pad;
- 	if (unlikely(len <= front_pad))
- 		return;
- 	len -= front_pad;
--	len = round_down(len, PAGE_SECTORS);
-+
-+	end_pad = len & (PAGE_SECTORS - 1);
-+	if (zero_padding && unlikely(end_pad != 0))
-+		copy_to_brd(brd, page_address(ZERO_PAGE(0)), sector + len - end_pad, end_pad << SECTOR_SHIFT);
-+	len -= end_pad;
-+
- 	while (len) {
--		brd_free_page(brd, sector);
-+		brd_free_page(brd, sector, bio_op(bio) == REQ_OP_SECURE_ERASE);
- 		sector += PAGE_SECTORS;
- 		len -= PAGE_SECTORS;
- 		cond_resched();
-@@ -330,7 +344,9 @@ static void brd_submit_bio(struct bio *b
- 	struct bio_vec bvec;
- 	struct bvec_iter iter;
- 
--	if (bio_op(bio) == REQ_OP_DISCARD) {
-+	if (bio_op(bio) == REQ_OP_DISCARD ||
-+	    bio_op(bio) == REQ_OP_SECURE_ERASE ||
-+	    bio_op(bio) == REQ_OP_WRITE_ZEROES) {
- 		brd_do_discard(brd, bio);
- 		goto endio;
- 	}
-@@ -464,6 +480,8 @@ static int brd_alloc(int i)
- 	if (discard) {
- 		disk->queue->limits.discard_granularity = PAGE_SIZE;
- 		blk_queue_max_discard_sectors(disk->queue, UINT_MAX);
-+		blk_queue_max_write_zeroes_sectors(disk->queue, UINT_MAX);
-+		blk_queue_max_secure_erase_sectors(disk->queue, UINT_MAX);
- 	}
- 
- 	/* Tell the block layer that this is not a rotational device */
+Stefan Haberland (7):
+  s390/dasd: put block allocation in separate function
+  s390/dasd: add query PPRC function
+  s390/dasd: add copy pair setup
+  s390/dasd: add copy pair swap capability
+  s390/dasd: add ioctl to perform a swap of the drivers copy pair
+  s390/dasd: suppress generic error messages for PPRC secondary devices
+  s390/dasd: add device ping attribute
+
+ arch/s390/include/asm/scsw.h       |   5 +
+ arch/s390/include/uapi/asm/dasd.h  |  14 +
+ drivers/s390/block/dasd.c          |   3 +-
+ drivers/s390/block/dasd_3990_erp.c |   5 +
+ drivers/s390/block/dasd_devmap.c   | 602 ++++++++++++++++++++++++++++-
+ drivers/s390/block/dasd_eckd.c     | 292 ++++++++++++--
+ drivers/s390/block/dasd_eckd.h     |   9 +-
+ drivers/s390/block/dasd_int.h      |  73 ++++
+ drivers/s390/block/dasd_ioctl.c    |  53 +++
+ 9 files changed, 1024 insertions(+), 32 deletions(-)
+
+-- 
+2.34.1
 
