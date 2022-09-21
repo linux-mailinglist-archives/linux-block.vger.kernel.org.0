@@ -2,150 +2,238 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8EB35BFB38
-	for <lists+linux-block@lfdr.de>; Wed, 21 Sep 2022 11:42:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B02B5BFBD5
+	for <lists+linux-block@lfdr.de>; Wed, 21 Sep 2022 11:59:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231646AbiIUJm0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Sep 2022 05:42:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42848 "EHLO
+        id S229678AbiIUJ73 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Sep 2022 05:59:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231372AbiIUJmY (ORCPT
+        with ESMTP id S229588AbiIUJ72 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Sep 2022 05:42:24 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D48915E9;
-        Wed, 21 Sep 2022 02:42:23 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4MXYLc47rQzlFXq;
-        Wed, 21 Sep 2022 17:40:40 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP2 (Coremail) with SMTP id Syh0CgA3inN73CpjFoetBA--.3521S6;
-        Wed, 21 Sep 2022 17:42:21 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     tj@kernel.org, axboe@kernel.dk
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com
-Subject: [PATCH 2/2] blk-throttle: improve bypassing bios checkings
-Date:   Wed, 21 Sep 2022 17:53:09 +0800
-Message-Id: <20220921095309.1481289-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220921095309.1481289-1-yukuai1@huaweicloud.com>
-References: <20220921095309.1481289-1-yukuai1@huaweicloud.com>
+        Wed, 21 Sep 2022 05:59:28 -0400
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6035F8A7CB;
+        Wed, 21 Sep 2022 02:59:26 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=ziyangzhang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VQNuD5g_1663754358;
+Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VQNuD5g_1663754358)
+          by smtp.aliyun-inc.com;
+          Wed, 21 Sep 2022 17:59:24 +0800
+From:   ZiyangZhang <ZiyangZhang@linux.alibaba.com>
+To:     ming.lei@redhat.com
+Cc:     axboe@kernel.dk, xiaoguang.wang@linux.alibaba.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joseph.qi@linux.alibaba.com,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>
+Subject: [PATCH V4 0/8] ublk_drv: add USER_RECOVERY support
+Date:   Wed, 21 Sep 2022 17:58:41 +0800
+Message-Id: <20220921095849.84988-1-ZiyangZhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgA3inN73CpjFoetBA--.3521S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw1ktr1rtF4xKw4xWr15Arb_yoW5Xw47pF
-        W7uF45Gr4jvFsxuwnxJF13XFW5Za97WrWSy395Xa1SyF43Kr93XFn5ZryUZaySvFZ3ua18
-        Zr42krWkCF1jgFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9m14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-        A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
-        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-        6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUc6pPUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+ublk_drv is a driver simply passes all blk-mq rqs to userspace
+target(such as ublksrv[1]). For each ublk queue, there is one
+ubq_daemon(pthread). All ubq_daemons share the same process
+which opens /dev/ublkcX. The ubq_daemon code infinitely loops on
+io_uring_enter() to send/receive io_uring cmds which pass
+information of blk-mq rqs.
 
-"tg->has_rules" is extended to "tg->has_rules_iops/bps", thus bios that
-don't need to be throttled can be checked accurately.
+Since the real IO handler(the process/thread opening /dev/ublkcX) is
+in userspace, it could crash if:
+(1) the user kills -9 it because of IO hang on backend, system
+    reboot, etc...
+(2) the process/thread catches a exception(segfault, divisor error,
+oom...) Therefore, the kernel driver has to deal with a dying
+ubq_daemon or the process.
 
-With this patch, bio will be throttled if:
+Now, if one ubq_daemon(pthread) or the process crashes, ublk_drv
+must abort the dying ubq, stop the device and release everything.
+This is not a good choice in practice because users do not expect
+aborted requests, I/O errors and a released device. They may want
+a recovery machenism so that no requests are aborted and no I/O
+error occurs. Anyway, users just want everything works as usual.
 
-1) Bio is read/write, and corresponding read/write iops limit exist.
-2) If corresponding doesn't exist, corresponding bps limit exist and
-bio is not throttled before.
+This patchset implements USER_RECOVERY support. If the process
+or any ubq_daemon(pthread) crashes(exits accidentally), we allow
+user to provide new process and ubq_daemons.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 13 +++++++++----
- block/blk-throttle.h | 22 +++++++++++++++++++---
- 2 files changed, 28 insertions(+), 7 deletions(-)
+Note: The responsibility of recovery belongs to the user who opens
+/dev/ublkcX. After a crash, the kernel driver only switch the
+device's state to be ready for recovery(START_USER_RECOVERY) or
+termination(STOP_DEV). The state is defined as UBLK_S_DEV_QUIESCED.
+This patchset does not provide how to detect such a crash in userspace.
+The user has may ways to do so. For example, user may:
+(1) send GET_DEV_INFO on specific dev_id and check if its state is
+    UBLK_S_DEV_QUIESCED.
+(2) 'ps' on ublksrv_pid.
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index a062539d84d0..78316955e30f 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -421,11 +421,16 @@ static void tg_update_has_rules(struct throtl_grp *tg)
- 	struct throtl_data *td = tg->td;
- 	int rw;
+Recovery feature is quite useful for real products. In detail,
+we support this scenario:
+(1) The /dev/ublkc0 is opened by process 0.
+(2) Fio is running on /dev/ublkb0 exposed by ublk_drv and all
+    rqs are handled by process 0.
+(3) Process 0 suddenly crashes(e.g. segfault);
+(4) Fio is still running and submit IOs(but these IOs cannot
+    be dispatched now)
+(5) User starts process 1 and attach it to /dev/ublkc0
+(6) All rqs are handled by process 1 now and IOs can be
+    completed now.
+
+Note: The backend must tolerate double-write because we re-issue
+a rq sent to the old process 0 before.
+
+We provide a sample script here to simulate the above steps:
+
+***************************script***************************
+LOOPS=10
+
+__ublk_get_pid() {
+	pid=`./ublk list -n 0 | grep "pid" | awk '{print $7}'`
+	echo $pid
+}
+
+ublk_recover_kill()
+{
+	for CNT in `seq $LOOPS`; do
+		dmesg -C
+                pid=`__ublk_get_pid`
+                echo -e "*** kill $pid now ***"
+		kill -9 $pid
+		sleep 6
+                echo -e "*** recover now ***"
+                ./ublk recover -n 0
+		sleep 6
+	done
+}
+
+ublk_test()
+{
+        echo -e "*** add ublk device ***"
+        ./ublk add -t null -d 4 -i 1
+        sleep 2
+        echo -e "*** start fio ***"
+        fio --bs=4k \
+            --filename=/dev/ublkb0 \
+            --runtime=140s \
+            --rw=read &
+        sleep 4
+        ublk_recover_kill
+        wait
+        echo -e "*** delete ublk device ***"
+        ./ublk del -n 0
+}
+
+for CNT in `seq 4`; do
+        modprobe -rv ublk_drv
+        modprobe ublk_drv
+        echo -e "************ round $CNT ************"
+        ublk_test
+        sleep 5
+done
+***************************script***************************
+
+You may run it with our modified ublksrv[2] which supports
+recovery feature. No I/O error occurs and you can verify it
+by typing
+    $ perf-tools/bin/tpoint block:block_rq_error
+
+The basic idea of USER_RECOVERY is quite straightfoward:
+(1) quiesce ublk queues and requeue/abort rqs.
+(2) release/free everything belongs to the dying process.
+    Note: Since ublk_drv does save information about user process,
+    this work is important because we don't expect any resource
+    lekage. Particularly, ioucmds from the dying ubq_daemons
+    need to be completed(freed).
+(3) allow new ubq_daemons issue FETCH_REQ.
+    Note: ublk_ch_uring_cmd() checks some states and flags. We
+    have to set them to a correct value.
+
+Here is steps to reocver:
+(0) requests dispatched after the corresponding ubq_daemon is dying 
+    are requeued.
+(1) monitor_work finds one dying ubq_daemon, and it should
+    schedule quiesce_work and requeue/abort requests issued to
+    userspace before the ubq_daemon is dying.
+(2) quiesce_work must (a)quiesce request queue to ban any incoming
+    ublk_queue_rq(), (b)wait unitl all rqs are IDLE, (c)complete old
+	  ioucmds. Then the ublk device is ready for recovery or stop.
+(3) Since io_uring resources are released, ublk_ch_release() is called
+    and all ublk_ios are reset to be ready for a new process.
+(4) Then, user should start a new process and ubq_daemons(pthreads) and
+    send FETCH_REQ by io_uring_enter() to make all ubqs be ready. The
+    user must correctly setup queues, flags and so on(how to persist
+    user's information is not related to this patchset).
+(6) The user sends RESTART_DEV ctrl-cmd to /dev/ublk-control with a
+    dev_id X.
+(7) After receiving RESTART_DEV, ublk_drv waits for all ubq_daemons
+    getting ready. Then it unquiesces request queue and new rqs are
+    allowed.
+
+You should use ublksrv[2] and tests[3] provided by us. We add 3 additional
+tests to verify that recovery feature works. Our code will be PR-ed to
+Ming's repo soon.
+
+[1] https://github.com/ming1/ubdsrv
+[2] https://github.com/old-memories/ubdsrv/tree/recovery-v1
+[3] https://github.com/old-memories/ubdsrv/tree/recovery-v1/tests/generic
+
+Since V3:
+(1) do not kick requeue list in ublk_queue_rq() or io_uring fallback wq
+    with a dying ubq_daemon but kicking the list once while unquiescing dev
+(2) add comment on requeing rqs in ublk_queue_rq(), or io_uring fallback wq
+    with a dying ubq_daemon
+(3) split support for UBLK_F_USER_RECOVERY_REISSUE into a single patch
+(4) let monitor_work abort/requeue rqs issued to userspace instead of
+    quiesce_work with recovery enabled
+(5) alway wait until no INFLIGHT rq exists in ublk_quiesce_dev()
+(6) move ublk re-init stuff into ublk_ch_release()
+(7) let ublk_quiesce_dev() go on as long as one ubq_daemon is dying
+(8) add only one ctrl-cmd and rename it as RESTART_DEV
+(9) check ub.dev_info->flags instead of iterating on all ubqs
+(10) do not disable recoevry feature, but always qiuesce dev in
+     ublk_stop_dev() and then unquiesce it
+(11) add doc on USER_RECOVERY feature
  
--	for (rw = READ; rw <= WRITE; rw++)
--		tg->has_rules[rw] = (parent_tg && parent_tg->has_rules[rw]) ||
-+	for (rw = READ; rw <= WRITE; rw++) {
-+		tg->has_rules_iops[rw] =
-+			(parent_tg && parent_tg->has_rules_iops[rw]) ||
- 			(td->limit_valid[td->limit_index] &&
--			 (tg_bps_limit(tg, rw) != U64_MAX ||
--			  tg_iops_limit(tg, rw) != UINT_MAX));
-+			  tg_iops_limit(tg, rw) != UINT_MAX);
-+		tg->has_rules_bps[rw] =
-+			(parent_tg && parent_tg->has_rules_bps[rw]) ||
-+			(td->limit_valid[td->limit_index] &&
-+			 (tg_bps_limit(tg, rw) != U64_MAX));
-+	}
- }
- 
- static void throtl_pd_online(struct blkg_policy_data *pd)
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index 3994b89dfa11..69f00012d616 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -98,7 +98,8 @@ struct throtl_grp {
- 	unsigned int flags;
- 
- 	/* are there any throtl rules between this group and td? */
--	bool has_rules[2];
-+	bool has_rules_bps[2];
-+	bool has_rules_iops[2];
- 
- 	/* internally used bytes per second rate limits */
- 	uint64_t bps[2][LIMIT_CNT];
-@@ -178,11 +179,26 @@ void blk_throtl_exit(struct request_queue *q);
- void blk_throtl_register_queue(struct request_queue *q);
- bool __blk_throtl_bio(struct bio *bio);
- void blk_throtl_cancel_bios(struct request_queue *q);
--static inline bool blk_throtl_bio(struct bio *bio)
-+
-+static inline bool blk_should_throtl(struct bio *bio)
- {
- 	struct throtl_grp *tg = blkg_to_tg(bio->bi_blkg);
-+	int rw = bio_data_dir(bio);
-+
-+	/* iops limit is always counted */
-+	if (tg->has_rules_iops[rw])
-+		return true;
-+
-+	if (tg->has_rules_bps[rw] && !bio_flagged(bio, BIO_BPS_THROTTLED))
-+		return true;
-+
-+	return false;
-+}
-+
-+static inline bool blk_throtl_bio(struct bio *bio)
-+{
- 
--	if (!tg->has_rules[bio_data_dir(bio)])
-+	if (!blk_should_throtl(bio))
- 		return false;
- 
- 	return __blk_throtl_bio(bio);
+Since V2:
+(1) run ublk_quiesce_dev() in a standalone work.
+(2) do not run monitor_work after START_USER_RECOVERY is handled.
+(3) refactor recovery feature code so that it does not affect current code.
+
+Since V1:
+(1) refactor cover letter. Add intruduction on "how to detect a crash" and
+    "why we need recovery feature".
+(2) do not refactor task_work and ublk_queue_rq().
+(3) allow users freely stop/recover the device.
+(4) add comment on ublk_cancel_queue().
+(5) refactor monitor_work and aborting machenism since we add recovery
+    machenism in monitor_work.
+
+ZiyangZhang (8):
+  ublk_drv: check 'current' instead of 'ubq_daemon'
+  ublk_drv: refactor ublk_cancel_queue()
+  ublk_drv: define macros for recovery feature and check them
+  ublk_drv: requeue rqs with recovery feature enabled
+  ublk_drv: consider recovery feature in aborting mechanism
+  ublk_drv: support UBLK_F_USER_RECOVERY_REISSUE
+  ublk_drv: allow new process to open ublk chardev with recovery feature
+    enabled
+  Documentation: document ublk user recovery feature
+
+ Documentation/block/ublk.rst  |  25 +++
+ drivers/block/ublk_drv.c      | 345 +++++++++++++++++++++++++++++++---
+ include/uapi/linux/ublk_cmd.h |   6 +
+ 3 files changed, 354 insertions(+), 22 deletions(-)
+
 -- 
-2.31.1
+2.27.0
 
