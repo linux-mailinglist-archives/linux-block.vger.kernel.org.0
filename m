@@ -2,86 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49E985E5630
-	for <lists+linux-block@lfdr.de>; Thu, 22 Sep 2022 00:19:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32A8C5E56B9
+	for <lists+linux-block@lfdr.de>; Thu, 22 Sep 2022 01:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbiIUWTo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Sep 2022 18:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
+        id S229624AbiIUX2h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Sep 2022 19:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbiIUWTm (ORCPT
+        with ESMTP id S229691AbiIUX2g (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Sep 2022 18:19:42 -0400
-Received: from mail.sconnect.com.au (mail.sconnect.com.au [103.101.168.198])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F106DEAB;
-        Wed, 21 Sep 2022 15:19:37 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.sconnect.com.au (Postfix) with ESMTP id 773AB295CB8E;
-        Thu, 22 Sep 2022 07:18:14 +1000 (AEST)
-Received: from mail.sconnect.com.au ([127.0.0.1])
-        by localhost (mail.sconnect.com.au [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id mGamyfgGCqMs; Thu, 22 Sep 2022 07:18:14 +1000 (AEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.sconnect.com.au (Postfix) with ESMTP id 780CA295C737;
-        Thu, 22 Sep 2022 07:18:12 +1000 (AEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.sconnect.com.au 780CA295C737
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mail.sconnect.com.au; s=39ABBFB6-EEE4-11E8-B0D6-3EF6B7190DB6;
-        t=1663795092; bh=W/GvARc04ZPnD4B8eWYWtrSTF+TiaPBWKYHrLaGTP34=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=bMtdFrCgwRvDUVG9hW5rBiPxTHHhifc8D6+YExXx9uZUV2YvETfjRE+m3RbEFD45p
-         jIM+vcqE7/KuYctvQd0uK8z1kbvvJn8vM/6ouHi5/ZRjP3Zi4/Ijxhr5ZuMvy9ySrU
-         3XiMK1IVVlpEouep1GZJ8tqwTILf3OyR9sv74pP1FB8pOREQ8GvG5Nyi3ohbpCEmUn
-         TkoKUoVQCplUlCDoS+67JZX001W3RouCQNgRw3B52rLsRy5srfaSGxEPr1f1qmzng9
-         e8e/9fLy6a6ByIILPFCkbh7IUaZWXUi/rOoAoUJGFtOefolgHm9+8Edom3KSZVV8C6
-         0nZNJfQANr8Fg==
-X-Virus-Scanned: amavisd-new at mail.sconnect.com.au
-Received: from mail.sconnect.com.au ([127.0.0.1])
-        by localhost (mail.sconnect.com.au [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ZcA6EV8NPSr4; Thu, 22 Sep 2022 07:18:12 +1000 (AEST)
-Received: from [46.148.40.140] (unknown [46.148.40.140])
-        by mail.sconnect.com.au (Postfix) with ESMTPA id 3DB0F295CCE7;
-        Thu, 22 Sep 2022 07:18:04 +1000 (AEST)
-Content-Type: text/plain; charset="iso-8859-1"
+        Wed, 21 Sep 2022 19:28:36 -0400
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06B6A2229
+        for <linux-block@vger.kernel.org>; Wed, 21 Sep 2022 16:28:35 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id c198so7495780pfc.13
+        for <linux-block@vger.kernel.org>; Wed, 21 Sep 2022 16:28:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date;
+        bh=CAw+9AuFEWSukEedcTM9/NulYbkJdxAeV/Qc5+U49Iw=;
+        b=2LvBe6Y9B47xejK+H68aYfInBhu6KiOcall3Fbixdt8FA2p+T2v4jBJBk+6SHfzpy9
+         eZLgi52pxvrp/LcPRxn1sZKx77OLeJ2eegZDbnheYf2RCMcd+7eWuR/GMdG5Q7L5W50J
+         xpq1rfw9Xy11jd26tLrKJZZ5pPRNqr9NRmzIPUuqV12CqUKQtWW6KZ11Cwxk8x6iWCIr
+         sQuuNBLdNbXTepGVmse18uzki956C06VjTZ/thSgelFsf3/8CPdZv74hQmhriC9ffJpl
+         GRx/L55A5mu1NaHe40NQdzGekVBKFQmyrIrJzGYJVDUSdr4TnTku3CGXx5POQ//dvgtv
+         ONpA==
+X-Gm-Message-State: ACrzQf3dfdRkXbzoOBUFxijr0gOOx1gVRGqYLVXlZYwdPoXdIYHDQzMG
+        FxwKqJ7aaIruMuJ4oip3k40=
+X-Google-Smtp-Source: AMsMyM6XAhzcvAeXfTUqhZK+ZzGsg6zZnOGrWYHzvLP3fqRRKyHdI8fb/T5TfPiRqCh0Qz9CTn9rBQ==
+X-Received: by 2002:a63:da03:0:b0:439:dcdd:67f4 with SMTP id c3-20020a63da03000000b00439dcdd67f4mr527858pgh.27.1663802915336;
+        Wed, 21 Sep 2022 16:28:35 -0700 (PDT)
+Received: from ?IPV6:2620:15c:211:201:c9bf:64e5:a87:42b9? ([2620:15c:211:201:c9bf:64e5:a87:42b9])
+        by smtp.gmail.com with ESMTPSA id y2-20020a17090322c200b00177fb862a87sm2646946plg.20.2022.09.21.16.28.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Sep 2022 16:28:34 -0700 (PDT)
+Message-ID: <3a32f6fd-af4a-3a81-67ad-7dc542bb6a3c@acm.org>
+Date:   Wed, 21 Sep 2022 16:28:32 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: PFC Loan
-To:     Recipients <Panola@mail.sconnect.com.au>
-From:   Panola@mail.sconnect.com.au, Finance@mail.sconnect.com.au,
-        dean@mail.sconnect.com.au
-Date:   Wed, 21 Sep 2022 14:17:56 -0700
-Reply-To: mbk@panolateam.com
-Message-Id: <20220921211805.3DB0F295CCE7@mail.sconnect.com.au>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_ZBI,
-        SPF_HELO_PASS,SPF_PASS,T_PDS_TO_EQ_FROM_NAME autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Content-Language: en-US
+To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Subject: Supporting segment sizes smaller than the page size
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We offer flexible loans and funding for various projects bypassing the usua=
-l rigorous procedures without any upfront fee. This Funding program allows =
-a client to enjoy low interest payback for as low as 2% per annum for a per=
-iod of 1-30 years and a six months grace period.
- =
+Hi Jens, Christoph and Ming,
 
-We Offer: -
-* Project Financing
-* Business Loan
-* Personal Loan
- =
+As we know the Linux kernel block layer does not support DMA segment 
+sizes that are smaller than the page size. From block/blk-settings.c:
 
-Should you be interested in any of our financial options, please do not hes=
-itate to contact us for more information. Loan processing and financing tak=
-es about 8 working days from the day you submit your loan application. Repl=
-y for more information: mail@panolafinancecompany.com
- =
+void blk_queue_max_segment_size(struct request_queue *q,
+                                 unsigned int max_size)
+{
+	if (max_size < PAGE_SIZE) {
+		max_size = PAGE_SIZE;
+		printk(KERN_INFO "%s: set to minimum %d\n",
+		       __func__, max_size);
+	}
 
-With kind regards,
-Your Sales Team
-Contact Info:
-E-mail: mbk@panolateam.com
+	/* see blk_queue_virt_boundary() for the explanation */
+	WARN_ON_ONCE(q->limits.virt_boundary_mask);
+
+	q->limits.max_segment_size = max_size;
+}
+
+I have been asked to add support for DMA segment sizes that are smaller 
+than the page size to support a UFS controller with a maximum DMA 
+segment size of 4 KiB and a page size > 4 KiB (my understanding of the 
+JEDEC UFS host controller specification is that UFS host controllers 
+should support a maximum DMA segment size of 256 KiB). Does anyone want 
+to comment on this before I start working on a patch series?
+
+Thanks,
+
+Bart.
