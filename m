@@ -1,104 +1,72 @@
 Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D0425D0230
-	for <lists+linux-block@lfdr.de>; Wed, 21 Sep 2022 20:00:31 +0200 (CEST)
+Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id 87EEB5D1C37
+	for <lists+linux-block@lfdr.de>; Wed, 21 Sep 2022 20:05:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbiIUR7x (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Sep 2022 13:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
+        id S229741AbiIUSFK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Sep 2022 14:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbiIUR7t (ORCPT
+        with ESMTP id S229759AbiIUSFJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Sep 2022 13:59:49 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DA8B275DA
-        for <linux-block@vger.kernel.org>; Wed, 21 Sep 2022 10:59:46 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id v128so5664492ioe.12
-        for <linux-block@vger.kernel.org>; Wed, 21 Sep 2022 10:59:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=hf/HnpywcTa/krqK+PEEFk3kz6BZ3SHmt4R3jnHLtp4=;
-        b=hOU6LNdM4ZzAoRL9h5lNddvCMlTeELuhrKtih70gQoaQJ9/TFIrE65hi57qlJj5DEK
-         Jo5mQqDhJ4X5IscIFB0nMlvN6mh/0sLk03hXnfeSLXH+YilaH6jDHpmU1AGpv0QlEL0q
-         SrwD5nYBiGP1Yl0xHN998aCNAtOGPCh692A5MLmN+jlVMF44uPnvy4QvSxeCaRQnMcV2
-         qGtauL2/hBDdkTeYwNRkMUGQgUr+A+2bTxJEOOuOyGExO6Px0JyuT12G1JjMDj1Hh8qL
-         1PtU7mgqYLua9GFmeq7jcB9zy01hkEDDQKdkrQjNrWKPmn7pNdtJp6OFAtIqLkC9W9NX
-         1/RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=hf/HnpywcTa/krqK+PEEFk3kz6BZ3SHmt4R3jnHLtp4=;
-        b=tRDpSgS6gcWA2jhWPwzHNS0yU+6aPrqzAkiqfTUa/F8aOLJC1M8z+Omh/E10PrtH7X
-         K6/d7FMrr/s6HAc6DrZ/T3v/1SBvAUEYo1LLbqID0Z/PGeb7bvSnR9Dwp8EYFGN+oCoy
-         XyJCTc4TGd037l7mojeW5b07U55Z71L1D6395JpvPGlet3i9R0mepI4RJn30GtjkZMVW
-         p33U+nRT+IXicu24deN7M+Q30PLLjOu0jqbtsP/4Ig+fENE0GOIZlEjo94Fv99FvcCTg
-         A7NrJV98jprW/mAKSP+I7bIysGVKVvwcLtJYSzybvpa5jyewc3JSoQwmF5J62JEa3LcZ
-         uGkw==
-X-Gm-Message-State: ACrzQf1GjPCL89c2gGx/H9jxm2c60eFJh+wcjNSGdbXxIpCoUO8rxIxl
-        JnsCHYfXrXptlpIhkjmwKp0neg==
-X-Google-Smtp-Source: AMsMyM4S0Ok07pZar40reKgjPXQHdRE42YcSlpmOdGA5zvN/rPnTHTYQNCS1CzZ3qN8uJp+r6w9JPg==
-X-Received: by 2002:a05:6638:134f:b0:35a:5b6a:9591 with SMTP id u15-20020a056638134f00b0035a5b6a9591mr14632494jad.184.1663783186010;
-        Wed, 21 Sep 2022 10:59:46 -0700 (PDT)
-Received: from [192.168.1.94] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id l40-20020a026668000000b00349dc447fbasm1258582jaf.52.2022.09.21.10.59.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Sep 2022 10:59:45 -0700 (PDT)
-Message-ID: <54666720-609b-c639-430d-1dc61e96a6c6@kernel.dk>
-Date:   Wed, 21 Sep 2022 11:59:44 -0600
+        Wed, 21 Sep 2022 14:05:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54F843E75
+        for <linux-block@vger.kernel.org>; Wed, 21 Sep 2022 11:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=NwCVUcTaAl8jMvQrWUKup9Q8suDo94zeOUoMOzZFE3M=; b=dOoegQxw0kbRIv0oUVWA8PxWcE
+        IBVCNh0kGDbz6upynToYwF5sLMeKnGAuovkC0A1Z4ciVDFJdverpKbwuObLatvyMxzRK4Tw09EG1X
+        iuwTtCHmdDK+XesB5xY7ITqE997K0kn+VKuzq3UQc3TDAdS25vbZGOl1ExuizbVa41DfnIKHL+1Bi
+        C+mb0dWewvluolEBFTWgL9LycBZXHmCdTPOCwQ9F4cY6obvtFxEX7lTXZ2nR4l9DVMbvLg6TD+0aF
+        wtMAM468P3AJwSlxBIoW3HjI/haYvNnvdcNkQo1GfcOi+i1mc+QU3rBddIjE386VcuBqzI+b7Invq
+        ko37Bslg==;
+Received: from ip4d15bec4.dynamic.kabel-deutschland.de ([77.21.190.196] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ob45o-00CGVe-RM; Wed, 21 Sep 2022 18:05:05 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org
+Subject: blk-cgroup cleanups
+Date:   Wed, 21 Sep 2022 20:04:44 +0200
+Message-Id: <20220921180501.1539876-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v5 2/3] block: io-uring: add READV_PI/WRITEV_PI operations
-Content-Language: en-US
-To:     "Alexander V. Buev" <a.buev@yadro.com>, linux-block@vger.kernel.org
-Cc:     io-uring@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Mikhail Malygin <m.malygin@yadro.com>, linux@yadro.com
-References: <20220920144618.1111138-1-a.buev@yadro.com>
- <20220920144618.1111138-3-a.buev@yadro.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220920144618.1111138-3-a.buev@yadro.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/20/22 8:46 AM, Alexander V. Buev wrote:
-> Added new READV_PI/WRITEV_PI operations to io_uring.
-> Added new pi_addr & pi_len fields to SQE struct.
-> Added new IOCB_USE_PI flag to kiocb struct.
-> Use kiocb->private pointer to pass PI data
-> iterator to low layer.
+Hi Tejun and Jens,
 
-Minor nit - please format commit message lines to 72-74 chars.
+this series has a bunch of blk-cgroup cleanups and preparation
+for preparing to make blk-cgroup gendisk based.  Another series
+for the next merge window will follow for the real changes that
+include refcounting updates.
 
-In general, I think this feature is useful. I do echo Keith's response
-that it should probably be named a bit differently, as PI is just one
-use case of this.
-
-But for this patch in particular, not a huge fan of the rote copying of
-rw.c into a new file. Now we have to patch two different spots whenever
-a bug is found in there, that's not very maintainable. I do appreciate
-the fact that this keeps the PI work out of the fast path for
-read/write, but I do think this warrants a bit of refactoring work first
-to ensure that there are helpers that can be shared between rw and
-rw_pi. That definitely needs to be solved before this can be considered
-for inclusion.
-
--- 
-Jens Axboe
+Diffstat:
+ block/blk-cgroup.c         |  186 +++++++++++++++++----------------------------
+ block/blk-cgroup.h         |   68 ++++------------
+ block/blk-iocost.c         |   37 ++++----
+ block/blk-iolatency.c      |    5 -
+ block/blk-ioprio.c         |    8 -
+ block/blk-ioprio.h         |    8 -
+ block/blk-sysfs.c          |    2 
+ block/blk-throttle.c       |   13 ++-
+ block/blk-throttle.h       |   16 +--
+ block/blk.h                |    4 
+ block/genhd.c              |    7 -
+ include/linux/blk-cgroup.h |    5 -
+ mm/swapfile.c              |    2 
+ 13 files changed, 148 insertions(+), 213 deletions(-)
