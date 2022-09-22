@@ -2,232 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3C925E6B02
-	for <lists+linux-block@lfdr.de>; Thu, 22 Sep 2022 20:31:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AF905E6B00
+	for <lists+linux-block@lfdr.de>; Thu, 22 Sep 2022 20:31:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232476AbiIVSbz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Sep 2022 14:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
+        id S232479AbiIVSbu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Sep 2022 14:31:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbiIVSa7 (ORCPT
+        with ESMTP id S232409AbiIVSa6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Sep 2022 14:30:59 -0400
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A8B10CA48
-        for <linux-block@vger.kernel.org>; Thu, 22 Sep 2022 11:28:12 -0700 (PDT)
-Received: by mail-io1-xd35.google.com with SMTP id p202so2165284iod.6
-        for <linux-block@vger.kernel.org>; Thu, 22 Sep 2022 11:28:12 -0700 (PDT)
+        Thu, 22 Sep 2022 14:30:58 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C0B10D666
+        for <linux-block@vger.kernel.org>; Thu, 22 Sep 2022 11:28:13 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id p202so2165329iod.6
+        for <linux-block@vger.kernel.org>; Thu, 22 Sep 2022 11:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=8xAQy7aZ7BYH1DPQ+8tvyApZhb4BnQnHW544FcJ7XiE=;
-        b=aR9k5LYhnfTw7XXQzoO5WAz8DP39KvgUKyrz1rGsakd/XddUjw6vg3NHGqsum9PG+V
-         QoYoKbT2kP5nhO/G7Sy/qccemyc0E3pmzD1crhRZt6HqXTJEmz/xelocvDqKLNuVcNQL
-         Sl0HAFLPpFWkeQlEmS28RX7jV9+hMHFzbx3TOKoTuYtLcwK9Es9RpjUt11hx8enBYeBL
-         f8ky37PViY/csWh7e3o3oS3HydD07wSBCxDqzwz1zuVf+k0iAXXg38nE5IjnxNq1FTab
-         lrWaeH8Gb5fnrrASwQQHIZ/F9tg1KlBE+kuCAi0dR8ZXyjP4xFMf/mRUd8VVQV7PK8FO
-         ew0w==
+        bh=kQJ1C1SjENmgCWeZQvNCbMqCIh5TAvtoZAf25z/EVT4=;
+        b=pDHEDqNu7gIG1tZwKjXkijlAv3FbeAirIAJbQJQAChrlUlJo/pXRxqh4kPVNmZHRN0
+         ho2TBXNKrJRs0X0PuTx/XSnV1N/3gEMyvAD+PKLBJABAtrtukOHMYmJlaoXTrGEBJZYu
+         Wz9Bnx81LWQKMEHsI3dQbaXqmEUiiUrrFm3n9mgBmkwa1hddM0Bnm5cAAjO9D4tR+m7F
+         xGfFlpuxYbyEkJe3z68GYesMmaq9y6k6UwVXEc1/rc68JCnvYnX+blLE1vt0O+IbMk3C
+         63jF4C+tW0MfbGRhjK3il/WqkrNi9L+bhW9W4BEXr3cIS/fKD6C/TMNWY747CKcKVQhe
+         r35g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=8xAQy7aZ7BYH1DPQ+8tvyApZhb4BnQnHW544FcJ7XiE=;
-        b=CJEPjInJR5+wp2UuI8lSepFBduVV1ipwOOVX5qIlMWGSemtLI5tWUikG4GRkLzVcPD
-         AoSrUDSSftD+DQmSLYFcfJcRGnVQGbvJW2LXpWngvo1O1UNgh1DX1C+h40owqZne9v/N
-         MXzXplyircEtp8JneAf15ZJwNEFFLKMdAvBuWNtbxnirw2o7g9OKb/tk5ootsvgh390x
-         SoHXzJrRRhB8yZGZhEipnHBMb8gdPeE7GJ2dfiy6zynezuaBQdRmEUP0Susay2pZ9br3
-         Jxt4UKvAxem+JbNTqGQPbBVK6EZJx/W9GrbgaPxlwCEfKSi4kieuVA1u4kr8Smb8kRmh
-         2UmA==
-X-Gm-Message-State: ACrzQf2UHP919keUzLQ+S21fwKPYXo+/nlrKBsTnsf7yBHW2GMIoYvXM
-        uRl0HwtXfVRP/EhmB2Rh5/uowj8zZhnl9Q==
-X-Google-Smtp-Source: AMsMyM4SGqW5jyi20l7Smo7p+cJHNnri3FkeeL9qvvrk+1n6md6nK0KgGtTcdgUAs/H34Ch0+VvUPg==
-X-Received: by 2002:a6b:ba05:0:b0:68a:8a2f:8fdc with SMTP id k5-20020a6bba05000000b0068a8a2f8fdcmr2255996iof.148.1663871291224;
-        Thu, 22 Sep 2022 11:28:11 -0700 (PDT)
+        bh=kQJ1C1SjENmgCWeZQvNCbMqCIh5TAvtoZAf25z/EVT4=;
+        b=uqCoUQyoSOZbvglPXQ93Zji8DzOtDwNa3CRaPP5xYwJwgUzSajVo3cZdLgYAt1jbR4
+         BbVHRS5FUzSv2VOsqawBzKDvdzODTAAzJcaAUGX+r87iDcEhxCsoN14MyZk0CrzSl7Ka
+         Zuy9aQitszUh2aY954oskFkk+/Yp2fxm8ZbiTLHMsiE4eNIxMG+Dndaiw3XTW7UGzmXd
+         6J0DEq8canUqoqL1V/hWr2J5pSAQ5CadGkheBwo3wuxjZNzfMHt4PaC5TY7OYR9hgcar
+         MYmwomjpYTNSWyXFBoZNWGMaZELeIzz+aXgGQ9M39Nltmmj3PDGLl504HCo0+SeSNK8y
+         22gQ==
+X-Gm-Message-State: ACrzQf21Ir0gtcJhPrRbdAnbHztvEj1VAm7czM3GwjL3CYqbOdHnw00y
+        YNR1hmyQEIbaHg0Ul2I1OWBnZTFiodhMFg==
+X-Google-Smtp-Source: AMsMyM7wM97v1Oqw5RrX8wIN6VT4gEUijfOCbtCcdhJgZwn4LHZr9RZRcQ17ytyb3H0/RwWNoOeDOw==
+X-Received: by 2002:a05:6602:1352:b0:69d:e793:abd with SMTP id i18-20020a056602135200b0069de7930abdmr2341538iov.172.1663871292289;
+        Thu, 22 Sep 2022 11:28:12 -0700 (PDT)
 Received: from m1max.localdomain ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id q20-20020a05663810d400b0035a468b7fbesm2440646jad.71.2022.09.22.11.28.10
+        by smtp.gmail.com with ESMTPSA id q20-20020a05663810d400b0035a468b7fbesm2440646jad.71.2022.09.22.11.28.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 11:28:10 -0700 (PDT)
+        Thu, 22 Sep 2022 11:28:11 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     linux-scsi@vger.kernel.org, linux-nvme@lists.infradead.org,
         Jens Axboe <axboe@kernel.dk>, Stefan Roesch <shr@fb.com>
-Subject: [PATCH 4/5] nvme: split out metadata vs non metadata end_io uring_cmd completions
-Date:   Thu, 22 Sep 2022 12:28:04 -0600
-Message-Id: <20220922182805.96173-5-axboe@kernel.dk>
+Subject: [PATCH 5/5] nvme: enable batched completions of passthrough IO
+Date:   Thu, 22 Sep 2022 12:28:05 -0600
+Message-Id: <20220922182805.96173-6-axboe@kernel.dk>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220922182805.96173-1-axboe@kernel.dk>
 References: <20220922182805.96173-1-axboe@kernel.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-By splitting up the metadata and non-metadata end_io handling, we can
-remove any request dependencies on the normal non-metadata IO path. This
-is in preparation for enabling the normal IO passthrough path to pass
-the ownership of the request back to the block layer.
+Now that the normal passthrough end_io path doesn't need the request
+anymore, we can kill the explicit blk_mq_free_request() and just pass
+back RQ_END_IO_FREE instead. This enables the batched completion from
+freeing batches of requests at the time.
+
+This brings passthrough IO performance at least on par with bdev based
+O_DIRECT with io_uring. With this and batche allocations, peak performance
+goes from 110M IOPS to 122M IOPS. For IRQ based, passthrough is now also
+about 10% faster than previously, going from ~61M to ~67M IOPS.
 
 Co-developed-by: Stefan Roesch <shr@fb.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/nvme/host/ioctl.c | 82 +++++++++++++++++++++++++++++++--------
- 1 file changed, 66 insertions(+), 16 deletions(-)
+ drivers/nvme/host/ioctl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-index c80b3ecca5c8..1ccc9dd6d434 100644
+index 1ccc9dd6d434..25f2f6df1602 100644
 --- a/drivers/nvme/host/ioctl.c
 +++ b/drivers/nvme/host/ioctl.c
-@@ -349,9 +349,18 @@ struct nvme_uring_cmd_pdu {
- 		struct bio *bio;
- 		struct request *req;
- 	};
--	void *meta; /* kernel-resident buffer */
--	void __user *meta_buffer;
- 	u32 meta_len;
-+	union {
-+		struct {
-+			void *meta; /* kernel-resident buffer */
-+			void __user *meta_buffer;
-+		};
-+		struct {
-+			u32 nvme_flags;
-+			u32 nvme_status;
-+			u64 result;
-+		};
-+	};
- };
- 
- static inline struct nvme_uring_cmd_pdu *nvme_uring_cmd_pdu(
-@@ -360,11 +369,10 @@ static inline struct nvme_uring_cmd_pdu *nvme_uring_cmd_pdu(
- 	return (struct nvme_uring_cmd_pdu *)&ioucmd->pdu;
- }
- 
--static void nvme_uring_task_cb(struct io_uring_cmd *ioucmd)
-+static void nvme_uring_task_meta_cb(struct io_uring_cmd *ioucmd)
- {
- 	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
- 	struct request *req = pdu->req;
--	struct bio *bio = req->bio;
- 	int status;
- 	u64 result;
- 
-@@ -375,27 +383,43 @@ static void nvme_uring_task_cb(struct io_uring_cmd *ioucmd)
- 
- 	result = le64_to_cpu(nvme_req(req)->result.u64);
- 
--	if (pdu->meta)
-+	if (pdu->meta_len)
- 		status = nvme_finish_user_metadata(req, pdu->meta_buffer,
- 					pdu->meta, pdu->meta_len, status);
--	if (bio)
--		blk_rq_unmap_user(bio);
-+	if (req->bio)
-+		blk_rq_unmap_user(req->bio);
- 	blk_mq_free_request(req);
- 
- 	io_uring_cmd_done(ioucmd, status, result);
- }
- 
-+static void nvme_uring_task_cb(struct io_uring_cmd *ioucmd)
-+{
-+	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
-+	int status;
-+
-+	if (pdu->nvme_flags & NVME_REQ_CANCELLED)
-+		status = -EINTR;
-+	else
-+		status = pdu->nvme_status;
-+
-+	if (pdu->bio)
-+		blk_rq_unmap_user(pdu->bio);
-+
-+	io_uring_cmd_done(ioucmd, status, pdu->result);
-+}
-+
- static enum rq_end_io_ret nvme_uring_cmd_end_io(struct request *req,
- 						blk_status_t err)
- {
- 	struct io_uring_cmd *ioucmd = req->end_io_data;
- 	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
--	/* extract bio before reusing the same field for request */
--	struct bio *bio = pdu->bio;
- 	void *cookie = READ_ONCE(ioucmd->cookie);
- 
--	pdu->req = req;
--	req->bio = bio;
-+	req->bio = pdu->bio;
-+	pdu->nvme_flags = nvme_req(req)->flags;
-+	pdu->nvme_status = nvme_req(req)->status;
-+	pdu->result = le64_to_cpu(nvme_req(req)->result.u64);
- 
- 	/*
- 	 * For iopoll, complete it directly.
-@@ -406,6 +430,29 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io(struct request *req,
+@@ -430,8 +430,7 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io(struct request *req,
  	else
  		io_uring_cmd_complete_in_task(ioucmd, nvme_uring_task_cb);
  
-+	blk_mq_free_request(req);
-+	return RQ_END_IO_NONE;
-+}
-+
-+static enum rq_end_io_ret nvme_uring_cmd_end_io_meta(struct request *req,
-+						     blk_status_t err)
-+{
-+	struct io_uring_cmd *ioucmd = req->end_io_data;
-+	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
-+	void *cookie = READ_ONCE(ioucmd->cookie);
-+
-+	req->bio = pdu->bio;
-+	pdu->req = req;
-+
-+	/*
-+	 * For iopoll, complete it directly.
-+	 * Otherwise, move the completion to task work.
-+	 */
-+	if (cookie != NULL && blk_rq_is_poll(req))
-+		nvme_uring_task_meta_cb(ioucmd);
-+	else
-+		io_uring_cmd_complete_in_task(ioucmd, nvme_uring_task_meta_cb);
-+
- 	return RQ_END_IO_NONE;
+-	blk_mq_free_request(req);
+-	return RQ_END_IO_NONE;
++	return RQ_END_IO_FREE;
  }
  
-@@ -467,8 +514,6 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 			blk_flags);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
--	req->end_io = nvme_uring_cmd_end_io;
--	req->end_io_data = ioucmd;
- 
- 	if (issue_flags & IO_URING_F_IOPOLL && rq_flags & REQ_POLLED) {
- 		if (unlikely(!req->bio)) {
-@@ -483,10 +528,15 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	}
- 	/* to free bio on completion, as req->bio will be null at that time */
- 	pdu->bio = req->bio;
--	pdu->meta = meta;
--	pdu->meta_buffer = nvme_to_user_ptr(d.metadata);
- 	pdu->meta_len = d.metadata_len;
--
-+	req->end_io_data = ioucmd;
-+	if (pdu->meta_len) {
-+		pdu->meta = meta;
-+		pdu->meta_buffer = nvme_to_user_ptr(d.metadata);
-+		req->end_io = nvme_uring_cmd_end_io_meta;
-+	} else {
-+		req->end_io = nvme_uring_cmd_end_io;
-+	}
- 	blk_execute_rq_nowait(req, false);
- 	return -EIOCBQUEUED;
- }
+ static enum rq_end_io_ret nvme_uring_cmd_end_io_meta(struct request *req,
 -- 
 2.35.1
 
