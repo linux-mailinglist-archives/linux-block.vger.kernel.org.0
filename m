@@ -2,118 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4F1D5E7DA0
-	for <lists+linux-block@lfdr.de>; Fri, 23 Sep 2022 16:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB8D55E7E00
+	for <lists+linux-block@lfdr.de>; Fri, 23 Sep 2022 17:14:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbiIWOw6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 23 Sep 2022 10:52:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49194 "EHLO
+        id S232499AbiIWPN5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 23 Sep 2022 11:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231340AbiIWOwt (ORCPT
+        with ESMTP id S232495AbiIWPNf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 23 Sep 2022 10:52:49 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E02413A380;
-        Fri, 23 Sep 2022 07:52:42 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id a2so668612lfb.6;
-        Fri, 23 Sep 2022 07:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=9en01QcZoVRB/nyuHix8atR26FaNJkFbsXv8c0H0Ewc=;
-        b=PVuPZKBRqWaUP5aS/sM77IUimjHSDr9CQTadF85aA5q4O90CpCTMdaFBCYFy7EUFXz
-         h2GNkjwON4xJaInS2D1O6t9ZUYI3n0jPsgeRluS3TCyfw6hB+baKudhs603HocyP4RWZ
-         uA/S+BxHmq1DEjRf0na3JK9q171ECwNyKC/yRhSCmt2mpExCxJRLc0nqHtgVc7z5p33D
-         dYFbTwIxvEIWV3ALkDpzQV3KNMjl82CdJikqWLsqO2zBZgiH8GBJWzoM0uyU/5LHQsYZ
-         W0MtIBbrUaeQMxhsby/3QPjlPoUirew/kZRvI4Ts1vqlEWn4hAJlVxqKaPj3u2oHq6Pe
-         tZTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=9en01QcZoVRB/nyuHix8atR26FaNJkFbsXv8c0H0Ewc=;
-        b=LWitlc0nkg0QCvj0chdI2l3xMIhYNpRijraq/1kJBMbbK37Jvq1UoABtO5qxWbm6pT
-         y7vwBP9aNyHnogn4Tlama7Nq/7bXE/9jRbogLls8Or2yexKJLyQdZw/nUbR8XBCYYe8O
-         eHRUQko7oaQfOkpspkEc6IeeGpMW3WajBudJcvFG1BHF1x9alC1Sy8J0iQsXGpR50deC
-         j9dM61eiD0k5V4Z/tDbnkhZPgof7YFzG4F5+liouUR/g0EK9M9Ky1pLPxkKBtEjnZUOX
-         rvTAweAV/zgHM9Rjeh7CubnKdq8xN4I+kr2zPnaTw1SSYrgEZgcX3ajB7U9Fl06N8Saj
-         0XqQ==
-X-Gm-Message-State: ACrzQf0KQrV7GzO2++DVYtgBHioAEb59z0HXUNtVR8JREF3wCz3Rn8Jo
-        ujhrv+NIPBwxTIgy4wHeJLbiaCUJ2ZM=
-X-Google-Smtp-Source: AMsMyM6oT3NunHaRFH/pM9NAACYneBSq+ek5ly7lVSal3ZJ0a4JDlTxrbOSd4U+7r34vtj5BJRZzOA==
-X-Received: by 2002:a05:6512:10d6:b0:49a:1fc0:cc62 with SMTP id k22-20020a05651210d600b0049a1fc0cc62mr3653475lfg.138.1663944760226;
-        Fri, 23 Sep 2022 07:52:40 -0700 (PDT)
-Received: from localhost (80-62-116-219-mobile.dk.customer.tdc.net. [80.62.116.219])
-        by smtp.gmail.com with ESMTPSA id i16-20020a2ea230000000b0026aba858fbfsm1032999ljm.137.2022.09.23.07.52.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Sep 2022 07:52:39 -0700 (PDT)
-Date:   Fri, 23 Sep 2022 16:52:36 +0200
-From:   Pankaj Raghav <pankydev8@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Pankaj Raghav <p.raghav@samsung.com>, joshi.k@samsung.com
+        Fri, 23 Sep 2022 11:13:35 -0400
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B1F0133CA6
+        for <linux-block@vger.kernel.org>; Fri, 23 Sep 2022 08:13:26 -0700 (PDT)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20220923151324euoutp01057b61777b73881459be13c49ab9e2a3~XhhMh5Lfm3213632136euoutp01k
+        for <linux-block@vger.kernel.org>; Fri, 23 Sep 2022 15:13:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20220923151324euoutp01057b61777b73881459be13c49ab9e2a3~XhhMh5Lfm3213632136euoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1663946004;
+        bh=PbaKVH+mq65Axg6jk4sDVyJCePjLdPZHFFHJqJEkjcc=;
+        h=Date:Subject:To:CC:From:In-Reply-To:References:From;
+        b=NEfKNNk8NvcLHFjfDfAJZH6kCBQ399MRKhfWaw7oVyWD+TAz6pgdzzR8RcJ+baNNg
+         ByBabXD67M3w70CgiAhl18QpCsQXD6JvL55MU3ug5gKJ/fl+XC1u3BysNpCcsMgY+U
+         ehSx2l657TNyQfg8w7xenGJGZ3a1uXGu2jI4V/nE=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220923151323eucas1p2c3c02010f5d671894c4050c21e665e18~XhhMTRtld1569215692eucas1p2W;
+        Fri, 23 Sep 2022 15:13:23 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 8B.21.29727.31DCD236; Fri, 23
+        Sep 2022 16:13:23 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20220923151323eucas1p2b38577ffa0c445120d086e5eb5c4b306~XhhLpt7Mo2402124021eucas1p26;
+        Fri, 23 Sep 2022 15:13:23 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220923151323eusmtrp22258127ff30a888aafae215e8136c5e6~XhhLo5p_Y2350823508eusmtrp2k;
+        Fri, 23 Sep 2022 15:13:23 +0000 (GMT)
+X-AuditID: cbfec7f2-21dff7000001741f-c3-632dcd13ebde
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 87.DF.07473.21DCD236; Fri, 23
+        Sep 2022 16:13:22 +0100 (BST)
+Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20220923151322eusmtip186acab0d3c79ccf624463b80d53dead2~XhhLbpa6q1469214692eusmtip1g;
+        Fri, 23 Sep 2022 15:13:22 +0000 (GMT)
+Received: from [192.168.8.130] (106.210.248.168) by CAMSVWEXC01.scsc.local
+        (2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+        Fri, 23 Sep 2022 16:13:20 +0100
+Message-ID: <c7b76fa1-f7e3-3ac6-c92d-35baa0d9a40a@samsung.com>
+Date:   Fri, 23 Sep 2022 17:13:20 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+        Thunderbird/91.11.0
 Subject: Re: [PATCH 1/5] block: enable batched allocation for
  blk_mq_alloc_request()
-Message-ID: <20220923145236.pr7ssckko4okklo2@quentin>
+Content-Language: en-US
+To:     Jens Axboe <axboe@kernel.dk>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+CC:     <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>, <joshi.k@samsung.com>,
+        Pankaj Raghav <pankydev8@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>
+From:   Pankaj Raghav <p.raghav@samsung.com>
+In-Reply-To: <20220923145236.pr7ssckko4okklo2@quentin>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [106.210.248.168]
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+        CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIKsWRmVeSWpSXmKPExsWy7djP87rCZ3WTDX526VmsvtvPZjHtw09m
+        i99nzzNb7L2lbTF/2VN2i+7rO9gs1tx8yuLA7nH5irfHzll3gYyzpR6bl9R77Gy9z+rxeZNc
+        AFsUl01Kak5mWWqRvl0CV8aPfetZCqYKVvQs+cXawHiLt4uRk0NCwESiY9lL5i5GLg4hgRWM
+        EttmNLOCJIQEvjBK7FtYBJH4zChxYvISVpiO/Q9Os0MkljNK/Jq5ghGu6tLS+1CzdjNKdHz8
+        wwTSwitgJ3Gj9SoziM0ioCrxZ+8GZoi4oMTJmU9YQGxRgUiJNbvPsoPYwgJhEvvfrwXrZRYQ
+        l7j1ZD6YLSIQKnGn6TkbyAJmgeOMEvfPXQW6iYODTUBLorETrJdTwEziwvWjLBC9mhKt23+z
+        Q9jyEtvfzmGGeEFZYvnpmVB2rcTaY2fA3pEQaOaUaD34gR0i4SJx9d0hqJ+FJV4d3wIVl5H4
+        vxPiIAmBaomnN34zQzS3MEr071zPBnKQhIC1RN+ZHIgaR4n++zOhwnwSN94KQtzDJzFp23Tm
+        CYyqs5CCYhaSl2cheWEWkhcWMLKsYhRPLS3OTU8tNsxLLdcrTswtLs1L10vOz93ECExFp/8d
+        /7SDce6rj3qHGJk4GA8xSnAwK4nwzr6jmSzEm5JYWZValB9fVJqTWnyIUZqDRUmcl22GVrKQ
+        QHpiSWp2ampBahFMlomDU6qBSXe5WJLcJOFVDN6/12YoL+piPvM1mcHzX4Zyb7iu5fSadsnV
+        B/44rJu40yWcWXOVwZ6bXdNjBZp3ZWtv+VI44ZdizlSeleo3nueGaV2cl3uv4WyggdOls5OL
+        Npaz2KYvDntXzfBDd9YCu4jlZTrCneXcMg73uv5MPL075pJ+3grnkO38Qn+bFM3WFL0Jem0u
+        0u9U9Ozz1+fzH1xhnNX48ZlFvbwp56tMBldHnn9dBfd+5ceHObq132ZyOsZ9ee/zjVtq/sgV
+        P23ReVB34diKXr+l9TOYj3DGzroxZen+ua8P3FTtqT3NICPep/K7P3niBpZ5uXVTNJ9K6mUw
+        3zWT2R7xmWPeKqYsjzD5zRr3lFiKMxINtZiLihMBVgfjqrQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xu7pCZ3WTDXY9sbFYfbefzWLah5/M
+        Fr/Pnme22HtL22L+sqfsFt3Xd7BZrLn5lMWB3ePyFW+PnbPuAhlnSz02L6n32Nl6n9Xj8ya5
+        ALYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYwf
+        +9azFEwVrOhZ8ou1gfEWbxcjJ4eEgInE/gen2bsYuTiEBJYySrSd3sICkZCR+HTlIzuELSzx
+        51oXG0TRR0aJz1s3skA4uxklDh78B9bBK2AncaP1KjOIzSKgKvFn7wZmiLigxMmZT8BqRAUi
+        JR4ua2ICsYUFwiT2v18LZjMLiEvcejIfzBYRCJW40/QcbBuzwHFGifvnrrKCJIQE7jNKtO9x
+        6GLk4GAT0JJo7AS7jlPATOLC9aMsEHM0JVq3/2aHsOUltr+dwwzxgbLE8tMzoexaiVf3dzNO
+        YBSdheS8WUjOmIVk1CwkoxYwsqxiFEktLc5Nzy021CtOzC0uzUvXS87P3cQIjOBtx35u3sE4
+        79VHvUOMTByMhxglOJiVRHhn39FMFuJNSaysSi3Kjy8qzUktPsRoCgyjicxSosn5wBSSVxJv
+        aGZgamhiZmlgamlmrCTO61nQkSgkkJ5YkpqdmlqQWgTTx8TBKdXAxPV3d91Oj5MNqWofH+hL
+        5d40YmWZUsretL5ouozOKVW9O2tK2xxWqTme05mw5cwv2Z/SB+0X7+iws5741JdhyWL+C1Gm
+        vVETvjsVVrKduH3mQduvb1t3sbswe/IdDk58OWvj15CkK47sajGR7jsOrPZuS0uYv35b7rH3
+        XFHLly19mrlVbKHB229X0wTNQ63yTA4cnyXT0p9UvSZGYPX2r+cuPUz4KLW96P+kmadCHcoy
+        Lpe6r9lb3Vryq9q9RvPlZe/TVk4uRQJXpCI7XmSu7k7eXRtx/bTXnLt/5aaYKXNIJKrPcXn6
+        4tFJZzmzQr7JS64v6pmsZrgwt7ZYbaXR0X+TdSP3T68JuWR9b6+zlRJLcUaioRZzUXEiACXE
+        TSNpAwAA
+X-CMS-MailID: 20220923151323eucas1p2b38577ffa0c445120d086e5eb5c4b306
+X-Msg-Generator: CA
+X-RootMTR: 20220923145245eucas1p107655755f446bb1e1318539a3f82d301
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20220923145245eucas1p107655755f446bb1e1318539a3f82d301
 References: <20220922182805.96173-1-axboe@kernel.dk>
- <20220922182805.96173-2-axboe@kernel.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220922182805.96173-2-axboe@kernel.dk>
-X-Spam-Status: No, score=1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+        <20220922182805.96173-2-axboe@kernel.dk>
+        <CGME20220923145245eucas1p107655755f446bb1e1318539a3f82d301@eucas1p1.samsung.com>
+        <20220923145236.pr7ssckko4okklo2@quentin>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 12:28:01PM -0600, Jens Axboe wrote:
-> The filesystem IO path can take advantage of allocating batches of
-> requests, if the underlying submitter tells the block layer about it
-> through the blk_plug. For passthrough IO, the exported API is the
-> blk_mq_alloc_request() helper, and that one does not allow for
-> request caching.
+On 2022-09-23 16:52, Pankaj Raghav wrote:
+> On Thu, Sep 22, 2022 at 12:28:01PM -0600, Jens Axboe wrote:
+>> The filesystem IO path can take advantage of allocating batches of
+>> requests, if the underlying submitter tells the block layer about it
+>> through the blk_plug. For passthrough IO, the exported API is the
+>> blk_mq_alloc_request() helper, and that one does not allow for
+>> request caching.
+>>
+>> Wire up request caching for blk_mq_alloc_request(), which is generally
+>> done without having a bio available upfront.
+>>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> ---
+>>  block/blk-mq.c | 80 ++++++++++++++++++++++++++++++++++++++++++++------
+>>  1 file changed, 71 insertions(+), 9 deletions(-)
+>>
+> I think we need this patch to ensure correct behaviour for passthrough:
 > 
-> Wire up request caching for blk_mq_alloc_request(), which is generally
-> done without having a bio available upfront.
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index c11949d66163..840541c1ab40 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1213,7 +1213,7 @@ void blk_execute_rq_nowait(struct request *rq, bool at_head)
+>         WARN_ON(!blk_rq_is_passthrough(rq));
+>  
+>         blk_account_io_start(rq);
+> -       if (current->plug)
+> +       if (blk_mq_plug(rq->bio))
+>                 blk_add_rq_to_plug(current->plug, rq);
+>         else
+>                 blk_mq_sched_insert_request(rq, at_head, true, false);
 > 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> ---
->  block/blk-mq.c | 80 ++++++++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 71 insertions(+), 9 deletions(-)
+> As the passthrough path can now support request caching via blk_mq_alloc_request(),
+> and it uses blk_execute_rq_nowait(), bad things can happen at least for zoned
+> devices:
 > 
-I think we need this patch to ensure correct behaviour for passthrough:
+> static inline struct blk_plug *blk_mq_plug( struct bio *bio)
+> {
+> 	/* Zoned block device write operation case: do not plug the BIO */
+> 	if (bdev_is_zoned(bio->bi_bdev) && op_is_write(bio_op(bio)))
+> 		return NULL;
+> ..
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index c11949d66163..840541c1ab40 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1213,7 +1213,7 @@ void blk_execute_rq_nowait(struct request *rq, bool at_head)
-        WARN_ON(!blk_rq_is_passthrough(rq));
- 
-        blk_account_io_start(rq);
--       if (current->plug)
-+       if (blk_mq_plug(rq->bio))
-                blk_add_rq_to_plug(current->plug, rq);
-        else
-                blk_mq_sched_insert_request(rq, at_head, true, false);
+Thinking more about it, even this will not fix it because op is
+REQ_OP_DRV_OUT if it is a NVMe write for passthrough requests.
 
-As the passthrough path can now support request caching via blk_mq_alloc_request(),
-and it uses blk_execute_rq_nowait(), bad things can happen at least for zoned
-devices:
+@Damien Should the condition in blk_mq_plug() be changed to:
 
 static inline struct blk_plug *blk_mq_plug( struct bio *bio)
 {
 	/* Zoned block device write operation case: do not plug the BIO */
-	if (bdev_is_zoned(bio->bi_bdev) && op_is_write(bio_op(bio)))
+	if (bdev_is_zoned(bio->bi_bdev) && !op_is_read(bio_op(bio)))
 		return NULL;
-..
-
-Am I missing something?
+> 
+> Am I missing something?
