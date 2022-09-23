@@ -2,142 +2,138 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CAAE5E7DFE
-	for <lists+linux-block@lfdr.de>; Fri, 23 Sep 2022 17:14:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 021E55E7E0B
+	for <lists+linux-block@lfdr.de>; Fri, 23 Sep 2022 17:16:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbiIWPN4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 23 Sep 2022 11:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
+        id S230054AbiIWPPc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 23 Sep 2022 11:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232596AbiIWPNr (ORCPT
+        with ESMTP id S232468AbiIWPPT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 23 Sep 2022 11:13:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DDD139416;
-        Fri, 23 Sep 2022 08:13:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 33815B83878;
-        Fri, 23 Sep 2022 15:13:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A284C433D6;
-        Fri, 23 Sep 2022 15:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663946024;
-        bh=2RNZetd/4AvNkNba7S23VtdxTbdmnfkmLDgpHZQ1mlk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fEeiCm6+H4K9yHE6bpGVDvz73LlaBsUZx6yBOUnULi9LhTLTE+iW3Ixa+udXjKurU
-         hOJ8dQkNCGURJmollBx+6FUQcp7Waq52Ud+5eJxPIzWR1PwVZvlm92vRV7pnEZyxvn
-         mLV1kbb0cDnRLCMv6g5jow2qLeR7QdrE4ij5tIHlQ6+Hkx3Yw6w9f5JPExTMcCj3+w
-         AireuUgkBrN0IrhTE2BcfyolhlPtlkkf81dK0mN3AG18jJmN5tFMayayg9Iqhr2NCj
-         j2wmLI7+nDTMoON0MlRgf3fNNdEa96FfBswaY7CCzVmwiAhKnE75gzKOXWPGy9A6Qo
-         jb1FC2n4EegmQ==
-Date:   Fri, 23 Sep 2022 09:13:40 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Hugh Dickins <hughd@google.com>, Jens Axboe <axboe@kernel.dk>,
-        Yu Kuai <yukuai1@huaweicloud.com>,
-        Liu Song <liusong@linux.alibaba.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] sbitmap: fix lockup while swapping
-Message-ID: <Yy3NJFmdxclHTKs3@kbusch-mbp.dhcp.thefacebook.com>
-References: <aef9de29-e9f5-259a-f8be-12d1b734e72@google.com>
- <YyjdiKC0YYUkI+AI@kbusch-mbp>
- <f2d130d2-f3af-d09d-6fd7-10da28d26ba9@google.com>
- <20220921164012.s7lvklp2qk6occcg@quack3>
- <20220923144303.fywkmgnkg6eken4x@quack3>
+        Fri, 23 Sep 2022 11:15:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D4E940E12
+        for <linux-block@vger.kernel.org>; Fri, 23 Sep 2022 08:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663946108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i/7qErjHQwpjdxeuxG56UOY53/Pb3ceXUixswzrpqTk=;
+        b=bFBFyrGJUWMRmMxQa1IWFql0ZOi36fAqmXNFYBD2AqxN0IGNlLlB6ZsBVYjErT8abruYl4
+        hs8yrfeK/BXujeLGn3BX+RPGUGW5sx5lfESinS/GuarSlOoYTJ65+S6z6H3uk1OtnZCeWo
+        onUxdw3ygOUJUFcp0wQi3kjVr5agmE8=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-393-iZbvzTXaNQe2-E0RKUUTvQ-1; Fri, 23 Sep 2022 11:15:07 -0400
+X-MC-Unique: iZbvzTXaNQe2-E0RKUUTvQ-1
+Received: by mail-qt1-f200.google.com with SMTP id fe14-20020a05622a4d4e00b0035cc376b1d5so173732qtb.4
+        for <linux-block@vger.kernel.org>; Fri, 23 Sep 2022 08:15:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=i/7qErjHQwpjdxeuxG56UOY53/Pb3ceXUixswzrpqTk=;
+        b=dPKzJ13D5PapzHwQa/O1pn6tzA2zerzwgdBGUyiZa+pgt1Ff1+c5ZcVqhGxpqr5ziL
+         VE4zPurqIYrsT0eZX01iKZ9j0YMx7/gy738FpuvGxBz5UVt/6IGDTKGWXM2635/Gns4s
+         WMnShXY+TYIoA8smNTQLTo0n+ehm6SIDc4O3ohwjD1wBUBu7Ch2b5DHlkv7TZXLF0DZo
+         GBLPD/DHHLJuixVUrwETNkGPRvalP8iEBprzKBR4w8rF9TzfwKpnfBP8AffQFj0GX8vO
+         JUmyG3y1A8DKo9n1seOUtUkzXegyRus4DnUELEV6oRncow4qe1tEI1DCZwEs3tYh8cUu
+         FBCQ==
+X-Gm-Message-State: ACrzQf33NDJJjItornMNs2gmwXpQ8aeIbUpSnKNsPdxUob/OPhGPuZBG
+        Br/bPePRsTsbBCMR5gI+kdzAvU1k3v0aS37CyUsDP0jsV7E2MzUAlxEQAjnitliKrScIPi87bdo
+        rSb85+Ge5tTGd5yEIzYBDYA==
+X-Received: by 2002:a05:6214:76b:b0:4ac:be62:d2e5 with SMTP id f11-20020a056214076b00b004acbe62d2e5mr7176241qvz.91.1663946106772;
+        Fri, 23 Sep 2022 08:15:06 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5Jg5JqThdy0P5kS2uSLUoQ3+kfdp9Ppg4QGXjxFRDk5XYyybGVmtH43Lh/lTr6N1EDYoCkpg==
+X-Received: by 2002:a05:6214:76b:b0:4ac:be62:d2e5 with SMTP id f11-20020a056214076b00b004acbe62d2e5mr7176213qvz.91.1663946106592;
+        Fri, 23 Sep 2022 08:15:06 -0700 (PDT)
+Received: from localhost (pool-68-160-173-162.bstnma.fios.verizon.net. [68.160.173.162])
+        by smtp.gmail.com with ESMTPSA id g12-20020ac8468c000000b0035cb9531851sm5432876qto.65.2022.09.23.08.15.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Sep 2022 08:15:06 -0700 (PDT)
+Date:   Fri, 23 Sep 2022 11:15:05 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Sarthak Kukreti <sarthakkukreti@chromium.org>
+Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Jens Axboe <axboe@kernel.dk>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Bart Van Assche <bvanassche@google.com>,
+        Daniil Lunev <dlunev@google.com>,
+        Evan Green <evgreen@google.com>,
+        Gwendal Grignou <gwendal@google.com>
+Subject: Re: [PATCH RFC 1/8] block: Introduce provisioning primitives
+Message-ID: <Yy3NeY02zEMLTdsa@redhat.com>
+References: <20220915164826.1396245-1-sarthakkukreti@google.com>
+ <20220915164826.1396245-2-sarthakkukreti@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220923144303.fywkmgnkg6eken4x@quack3>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220915164826.1396245-2-sarthakkukreti@google.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 04:43:03PM +0200, Jan Kara wrote:
-> On Wed 21-09-22 18:40:12, Jan Kara wrote:
-> > On Mon 19-09-22 16:01:39, Hugh Dickins wrote:
-> > > On Mon, 19 Sep 2022, Keith Busch wrote:
-> > > > On Sun, Sep 18, 2022 at 02:10:51PM -0700, Hugh Dickins wrote:
-> > > > > I have almost no grasp of all the possible sbitmap races, and their
-> > > > > consequences: but using the same !waitqueue_active() check as used
-> > > > > elsewhere, fixes the lockup and shows no adverse consequence for me.
-> > > > 
-> > > >  
-> > > > > Fixes: 4acb83417cad ("sbitmap: fix batched wait_cnt accounting")
-> > > > > Signed-off-by: Hugh Dickins <hughd@google.com>
-> > > > > ---
-> > > > > 
-> > > > >  lib/sbitmap.c |    2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > --- a/lib/sbitmap.c
-> > > > > +++ b/lib/sbitmap.c
-> > > > > @@ -620,7 +620,7 @@ static bool __sbq_wake_up(struct sbitmap
-> > > > >  		 * function again to wakeup a new batch on a different 'ws'.
-> > > > >  		 */
-> > > > >  		if (cur == 0)
-> > > > > -			return true;
-> > > > > +			return !waitqueue_active(&ws->wait);
-> > > > 
-> > > > If it's 0, that is supposed to mean another thread is about to make it not zero
-> > > > as well as increment the wakestate index. That should be happening after patch
-> > > > 48c033314f37 was included, at least.
-> > > 
-> > > I believe that the thread about to make wait_cnt not zero (and increment the
-> > > wakestate index) is precisely this interrupted thread: the backtrace shows
-> > > that it had just done its wakeups, so has not yet reached making wait_cnt
-> > > not zero; and I suppose that either its wakeups did not empty the waitqueue
-> > > completely, or another waiter got added as soon as it dropped the spinlock.
-> 
-> I was trying to wrap my head around this but I am failing to see how we
-> could have wait_cnt == 0 for long enough to cause any kind of stall let
-> alone a lockup in sbitmap_queue_wake_up() as you describe. I can understand
-> we have:
-> 
-> CPU1						CPU2
-> sbitmap_queue_wake_up()
->   ws = sbq_wake_ptr(sbq);
->   cur = atomic_read(&ws->wait_cnt);
->   do {
-> 	...
-> 	wait_cnt = cur - sub;	/* this will be 0 */
->   } while (!atomic_try_cmpxchg(&ws->wait_cnt, &cur, wait_cnt));
->   ...
-> 						/* Gets the same waitqueue */
-> 						ws = sbq_wake_ptr(sbq);
-> 						cur = atomic_read(&ws->wait_cnt);
-> 						do {
-> 							if (cur == 0)
-> 								return true; /* loop */
->   wake_up_nr(&ws->wait, wake_batch);
->   smp_mb__before_atomic();
->   sbq_index_atomic_inc(&sbq->wake_index);
->   atomic_set(&ws->wait_cnt, wake_batch); /* This stops looping on CPU2 */
-> 
-> So until CPU1 reaches the atomic_set(), CPU2 can be looping. But how come
-> this takes so long that is causes a hang as you describe? Hum... So either
-> CPU1 takes really long to get to atomic_set():
-> - can CPU1 get preempted? Likely not at least in the context you show in
->   your message
-> - can CPU1 spend so long in wake_up_nr()? Maybe the waitqueue lock is
->   contended but still...
-> 
-> or CPU2 somehow sees cur==0 for longer than it should. The whole sequence
-> executed in a loop on CPU2 does not contain anything that would force CPU2
-> to refresh its cache and get new ws->wait_cnt value so we are at the mercy
-> of CPU cache coherency mechanisms to stage the write on CPU1 and propagate
-> it to other CPUs. But still I would not expect that to take significantly
-> long. Any other ideas?
+On Thu, Sep 15 2022 at 12:48P -0400,
+Sarthak Kukreti <sarthakkukreti@chromium.org> wrote:
 
-Thank you for the analysis. I arrived at the same conclusions.
+> From: Sarthak Kukreti <sarthakkukreti@chromium.org>
+> 
+> Introduce block request REQ_OP_PROVISION. The intent of this request
+> is to request underlying storage to preallocate disk space for the given
+> block range. Block device that support this capability will export
+> a provision limit within their request queues.
+> 
+> Signed-off-by: Sarthak Kukreti <sarthakkukreti@chromium.org>
+> ---
+>  block/blk-core.c          |  5 ++++
+>  block/blk-lib.c           | 55 +++++++++++++++++++++++++++++++++++++++
+>  block/blk-merge.c         | 17 ++++++++++++
+>  block/blk-settings.c      | 19 ++++++++++++++
+>  block/blk-sysfs.c         |  8 ++++++
+>  block/bounce.c            |  1 +
+>  include/linux/bio.h       |  6 +++--
+>  include/linux/blk_types.h |  5 +++-
+>  include/linux/blkdev.h    | 16 ++++++++++++
+>  9 files changed, 129 insertions(+), 3 deletions(-)
+> 
+> diff --git a/block/blk-settings.c b/block/blk-settings.c
+> index 8bb9eef5310e..be79ad68b330 100644
+> --- a/block/blk-settings.c
+> +++ b/block/blk-settings.c
+> @@ -57,6 +57,7 @@ void blk_set_default_limits(struct queue_limits *lim)
+>  	lim->misaligned = 0;
+>  	lim->zoned = BLK_ZONED_NONE;
+>  	lim->zone_write_granularity = 0;
+> +	lim->max_provision_sectors = 0;
+>  }
+>  EXPORT_SYMBOL(blk_set_default_limits);
+>  
+> @@ -81,6 +82,7 @@ void blk_set_stacking_limits(struct queue_limits *lim)
+>  	lim->max_dev_sectors = UINT_MAX;
+>  	lim->max_write_zeroes_sectors = UINT_MAX;
+>  	lim->max_zone_append_sectors = UINT_MAX;
+> +	lim->max_provision_sectors = UINT_MAX;
+>  }
+>  EXPORT_SYMBOL(blk_set_stacking_limits);
+>  
 
-If this is a preempt enabled context, and there's just one CPU, I suppose the
-2nd task could spin in the while(), blocking the 1st task from resetting the
-wait_cnt. I doubt that's happening though, at least for nvme where we call this
-function in irq context.
+Please work through the blk_stack_limits() implementation too (simple
+min_not_zero?).
+
