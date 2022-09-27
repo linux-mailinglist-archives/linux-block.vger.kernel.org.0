@@ -2,116 +2,157 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50A605ECA28
-	for <lists+linux-block@lfdr.de>; Tue, 27 Sep 2022 18:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C445ECA80
+	for <lists+linux-block@lfdr.de>; Tue, 27 Sep 2022 19:08:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231702AbiI0QyY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 27 Sep 2022 12:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51198 "EHLO
+        id S231232AbiI0RII (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 27 Sep 2022 13:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232078AbiI0QyG (ORCPT
+        with ESMTP id S232105AbiI0RHw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 27 Sep 2022 12:54:06 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2AC4B0D2
-        for <linux-block@vger.kernel.org>; Tue, 27 Sep 2022 09:52:43 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id d8so8192781iof.11
-        for <linux-block@vger.kernel.org>; Tue, 27 Sep 2022 09:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Eeyrjvu/e3fFvz7ULrjto8qGu2VqFaHHQOq4egwVqsc=;
-        b=G1U5EamS8uaYcVuz7Y1TAsjVm7OvZyrJ26OPJpqR3vLrn+uuIrNHdP0h958veOBppk
-         EKxExIrhdIupi98RO9lRe3DpO4A6/Q7MzyIjnbHfVLTq5ti0OZ2bv6d9bffVjpQLPhJD
-         VoXGpffNJRG/BFIBA+voRZ+v/e1Sf270SEuGR38Ldh9gfYOgnciq6bR11ieBuHHnzVvG
-         C3f0RhttD7YVIMNCoNgA0s7aJT+6g3mANzfkFIVqe6+FMFHyqZcPYNWsvUb8u4AuTgY5
-         p/UoA/D0tCjUUSm02rZW4ESJ7ukZlhpAQwSKq7XEqZfxZ1zllSddl6JhQ4JHFl3Jev4W
-         DfHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Eeyrjvu/e3fFvz7ULrjto8qGu2VqFaHHQOq4egwVqsc=;
-        b=on7IFs+SHj8BdJMhuSzcAE8YeqlMdqoQ2udWXTe3dlGVDMPwJaV1XvtfRWVPSWmCqZ
-         zYj8WW6Lc4KvnPcCwRA8NqGrce9Y2ku+hnJr9len4vyG38SMwwHknZKAxE9pP9gQIZWe
-         5lD0e3HCL90JvbOAEsxaIbYAjpk1BClNR0UFBY4sds6ECz1Y4N3hkjlJrxn+w7Q/uKul
-         zli9MCj8mAJeTPc89yRuE6/RaT1hfPnrUtGIRzHZ1pF4eSakj07lRFmVJFkDXNFYNi+9
-         cODm+gZV8CkF79/IMrBwg+g28VawUG9Z+S+uXS44ZgziRBxDnlBB1UX7UM3qVCKPwe3Y
-         bh5w==
-X-Gm-Message-State: ACrzQf1kaN9eSsLrqtHOdsebOe/3xDhcjsr/9GKJVqTRFGPHwjhSFKna
-        55PnloDY4ipNzir2fsWNj26Ekw==
-X-Google-Smtp-Source: AMsMyM4MclNVF3w+DWPbeAMXaeNL8CpuTs3BBa4xeD1ApwcxODQ9hd0mKjpDXLhbz7VolHv6kJ3lzA==
-X-Received: by 2002:a05:6638:12c4:b0:35a:4c21:f675 with SMTP id v4-20020a05663812c400b0035a4c21f675mr14626973jas.143.1664297551612;
-        Tue, 27 Sep 2022 09:52:31 -0700 (PDT)
-Received: from [192.168.1.94] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id p185-20020a0229c2000000b0034e9ceed07csm800086jap.88.2022.09.27.09.52.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 09:52:31 -0700 (PDT)
-Message-ID: <3c6002c7-cd69-e020-24b8-650aaf9ad893@kernel.dk>
-Date:   Tue, 27 Sep 2022 10:52:30 -0600
+        Tue, 27 Sep 2022 13:07:52 -0400
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB1885FB0
+        for <linux-block@vger.kernel.org>; Tue, 27 Sep 2022 10:07:46 -0700 (PDT)
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20220927170743epoutp02bfebb0aa0ff448874c60be0f04010b99~YxqKWPoKG0535805358epoutp02I
+        for <linux-block@vger.kernel.org>; Tue, 27 Sep 2022 17:07:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20220927170743epoutp02bfebb0aa0ff448874c60be0f04010b99~YxqKWPoKG0535805358epoutp02I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1664298463;
+        bh=6C1maRmnQShkYnoGnKw8z2XB1hU1X8ZjRGem4o/4QYI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DuWRP5PIfr+vigBfbUdNnVNcrAy5pcXTUyMxYIYD4FYjC7o/pCFTc/Tx9lIl+CKBz
+         Eni4el2wsg6QpHSxzxf/5ohzpAd+sAbyoy5S4incxhmzJvjGyJnCYbJvzFvFxI/IE6
+         e469lrBx9tw0gRMrhScxAsXybmKrTVdDC8fxa4BI=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20220927170743epcas5p31a0a49712e187a477adceb91f8b96746~YxqJ4LAW-1205712057epcas5p3F;
+        Tue, 27 Sep 2022 17:07:43 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.182]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4McQzc6gjVz4x9Pv; Tue, 27 Sep
+        2022 17:07:40 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7E.F5.26992.CDD23336; Wed, 28 Sep 2022 02:07:40 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20220927170740epcas5p42508665faac2d17e4afa5feb200acf16~YxqG1441r0904409044epcas5p4y;
+        Tue, 27 Sep 2022 17:07:40 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20220927170740epsmtrp17d6765ee655c865e08f600650a22f11b~YxqG1AkN02765427654epsmtrp1M;
+        Tue, 27 Sep 2022 17:07:40 +0000 (GMT)
+X-AuditID: b6c32a49-0c7ff70000016970-92-63332ddcc2ea
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        59.95.18644.CDD23336; Wed, 28 Sep 2022 02:07:40 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20220927170739epsmtip19d740ee2050dfefa7658119f34811b0f~YxqFyi-4H2251322513epsmtip1e;
+        Tue, 27 Sep 2022 17:07:38 +0000 (GMT)
+Date:   Tue, 27 Sep 2022 22:27:51 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, kbusch@kernel.org, io-uring@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        gost.dev@samsung.com
+Subject: Re: [PATCH for-next v8 3/5] nvme: refactor nvme_alloc_user_request
+Message-ID: <20220927165751.GB23874@test-zns>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 1/2] block: modify blk_mq_plug() to allow only reads for
- zoned block devices
-Content-Language: en-US
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Pankaj Raghav <p.raghav@samsung.com>, linux-block@vger.kernel.org,
-        damien.lemoal@opensource.wdc.com, gost.dev@samsung.com
-References: <CGME20220925185350eucas1p1fc354429027a88de7e548a3a4529b4ef@eucas1p1.samsung.com>
- <20220925185348.120964-2-p.raghav@samsung.com>
- <YzG5RgmWSsH6rX08@infradead.org>
- <d5975b62-f2e9-dcde-e332-a73cca1f7fbf@kernel.dk>
- <YzG6fZdz6XBDbrVB@infradead.org>
- <2ee6a897-87e7-0592-2482-9928a9a63ff6@kernel.dk>
- <a943acf8-f367-a1ba-0d57-2948a3ade6f4@samsung.com>
- <350366c3-1014-ac32-149f-689134631d73@kernel.dk>
- <6273f2c1-7889-1931-aec6-e567aa4d2d96@samsung.com>
- <fa80eef0-42a4-6ffc-cced-18ecbe5b1f5a@kernel.dk>
- <YzMp+SIsv6Aw4bFW@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <YzMp+SIsv6Aw4bFW@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220926145159.GB20424@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmpu4dXeNkg7NnTC1W3+1ns7h5YCeT
+        xcrVR5ks3rWeY7GYdOgao8XeW9oW85c9ZXdg97h8ttRj06pONo/NS+o9dt9sYPPo27KK0ePz
+        JrkAtqhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zByg
+        Q5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BSYFesWJucWleel6eaklVoYGBkam
+        QIUJ2Rmrrz9nLZjPXTHnyyumBsYFnF2MnBwSAiYS009MYOti5OIQEtjNKLFyTgMLhPOJUeL6
+        /XtMIFVCAp8ZJebPrYHpuL+hmR2iaBejxKS396HanzFKfN7+gxGkikVAVWLKip1ACQ4ONgFN
+        iQuTS0HCIgJKEk9fnWUEqWcWmM4osff1HrANwgLeEnPmbWEHsXkFdCXOTX4DZQtKnJz5hAXE
+        5hTQkVh8ewUriC0qoCxxYNtxJpBBEgKNHBLfzs1mhzjPReLnio9sELawxKvjW6DiUhIv+9ug
+        7GSJSzPPMUHYJRKP9xyEsu0lWk/1M4PYzAIZEltbl7NC2HwSvb+fMIE8IyHAK9HRJgRRrihx
+        b9JTVghbXOLhjCVQtofEvdVvWCGBMpdJYuu8yewTGOVmIflnFpIVELaVROeHJiCbA8iWllj+
+        jwPC1JRYv0t/ASPrKkbJ1ILi3PTUYtMCw7zUcngkJ+fnbmIEp00tzx2Mdx980DvEyMTBeIhR
+        goNZSYT391HDZCHelMTKqtSi/Pii0pzU4kOMpsD4mcgsJZqcD0zceSXxhiaWBiZmZmYmlsZm
+        hkrivItnaCULCaQnlqRmp6YWpBbB9DFxcEo1MK01+OGX2WG9VO7G7pnyLvxxdwRmrXhxy6kg
+        1+O7aP7lzO0aWh/sPSO43RnPNXz/1m8rJfmoKMIh8sD80usGh11b7q9aMO9GaNpehjOa2g2H
+        ciX46qUVLyXKf7iex7TyHIvyU4OS/4tW7ZXTd93r8WPt7V3/uw9N7J9wZPqlLGG/8AqW7+Is
+        rjFsP8V5AsQ+vJi/MCrirPi9rVqS9a18L6w0OItqVQpUtj1uWbfLJ1phUsG1UInM2I6oqAfs
+        l1qeN4fHZqeqhrEvE2QLuvF2stIfc65jXt+trzOvnJJbtGqlfuLZgzNecqzZ8T9sjsGdNXrv
+        f6w6ytL2/cWmaTuTbiy5uvNMyISnu0qn7GZaI6XEUpyRaKjFXFScCAAGi6FqJAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsWy7bCSnO4dXeNkgwXvWSxW3+1ns7h5YCeT
+        xcrVR5ks3rWeY7GYdOgao8XeW9oW85c9ZXdg97h8ttRj06pONo/NS+o9dt9sYPPo27KK0ePz
+        JrkAtigum5TUnMyy1CJ9uwSujEl/nAsuclS8ufGKpYHxDVsXIyeHhICJxP0NzexdjFwcQgI7
+        GCV6ri1gh0iISzRf+wFlC0us/PccqugJo8Tpj/dZQRIsAqoSU1bsBJrEwcEmoClxYXIpSFhE
+        QEni6auzjCD1zALTGSX2vt7DBJIQFvCWmDNvC9hQXgFdiXOT30ANXcgk8aDvCQtEQlDi5EwI
+        m1nATGLe5ofMIAuYBaQllv/jAAlzCuhILL69AuwGUQFliQPbjjNNYBSchaR7FpLuWQjdCxiZ
+        VzFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn525iBMeBltYOxj2rPugdYmTiYDzEKMHBrCTC
+        +/uoYbIQb0piZVVqUX58UWlOavEhRmkOFiVx3gtdJ+OFBNITS1KzU1MLUotgskwcnFINTG1f
+        1jgH2WtMYRc8v/FDtd9KJ5Vvx45e2/HR0Un8rOGL+YXmUlVro/IZr0wrD1Kd5Zluc8Cz7UPm
+        wgceEzsOJy4qvdmx/MuqjaphL3jn5ayyuepzsmTejPWR/sad7g7Ld65ZJ531MEbygVLHTNt9
+        lreP1zNPCcs8fvaK0Qzf/U8ltO2Vg05kbTguFlDIV5nbqb77SZ24jHmYe+D+vtWCzgrTZA9d
+        zrvx2G9m38PJC4WuaKbG3rszYYlBlP2dkwLbTr42PvFfuXdF2Supe1Wzkl7HLj3fONuXhb3Z
+        3ofPuy7zxY1167ZeFrWbYz6r/5bJ+SVNsjIbP887YqQ0e+qV8HLd84s4VGfpPl7p93K9sKcS
+        S3FGoqEWc1FxIgC5wkWv8gIAAA==
+X-CMS-MailID: 20220927170740epcas5p42508665faac2d17e4afa5feb200acf16
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----Bhr1nD2Bk2LUmll8nJ7f302jVE_Mn2nZjP.Hr2fL4.Csl-BK=_17872_"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220923093916epcas5p387fdd905413f6d90babecf5d14da5b67
+References: <20220923092854.5116-1-joshi.k@samsung.com>
+        <CGME20220923093916epcas5p387fdd905413f6d90babecf5d14da5b67@epcas5p3.samsung.com>
+        <20220923092854.5116-4-joshi.k@samsung.com> <20220923153819.GC21275@lst.de>
+        <20220925194354.GA29911@test-zns> <20220926145159.GB20424@lst.de>
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/27/22 10:51 AM, Christoph Hellwig wrote:
-> On Tue, Sep 27, 2022 at 10:04:19AM -0600, Jens Axboe wrote:
->> Ah yes, good point. We used to have this notion of 'fs' request, don't
->> think we do anymore. Because it really should just be:
-> 
-> A fs request is a !passthrough request.
+------Bhr1nD2Bk2LUmll8nJ7f302jVE_Mn2nZjP.Hr2fL4.Csl-BK=_17872_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Right, that's the condition I made below too.
-
->> if (zoned && (op & REQ_OP_WRITE) && fs_request)
->>          return NULL;
+On Mon, Sep 26, 2022 at 04:51:59PM +0200, Christoph Hellwig wrote:
+>On Mon, Sep 26, 2022 at 01:13:54AM +0530, Kanchan Joshi wrote:
+>>>> +	if (ret)
+>>>> +		goto out;
+>>>> +	bio = req->bio;
+>>>
+>>> I think we can also do away with this bio local variable now.
+>>>
+>>>> +	if (bdev)
+>>>> +		bio_set_dev(bio, bdev);
+>>>
+>>> We don't need the bio_set_dev here as mentioned last time, so I think
+>>> we should remove it in a prep patch.
 >>
->> for that condition imho. I guess we could make it:
->>
->> if (zoned && (op & REQ_OP_WRITE) && !(op & REQ_OP_DRV_OUT))
->>          return NULL;
-> 
-> Well, the only opcodes we do zone locking for is REQ_OP_WRITE and
-> REQ_OP_WRITE_ZEROES.  So this should be:
-> 
-> 	if (zoned && (op == REQ_OP_WRITE || op == REQ_OP_WRITE_ZEROES))
-> 		return NULL;
+>> we miss completing polled io with this change.
+>> bdev needs to be put in bio to complete polled passthrough IO.
+>> nvme_ns_chr_uring_cmd_iopoll uses bio_poll and that in turn makes use of
+>> this.
+>
+>Oh, indeed - polling is another and someone unexpected user in
+>addition to the I/O accounting that does not apply to passthrough
+>requests.  That also means we can't poll admin commands at all.
 
-I'd rather just make it explicit and use that. Pankaj, do you want
-to spin a v2 with that?
+Yes. That falls back to IRQ completions.
 
--- 
-Jens Axboe
+I think it should be possible to support if we use request-only
+interface. Most of the information in bio-poll interface comes from
+request.
+But I doubt if polling for admin command is a useful thing.
+
+------Bhr1nD2Bk2LUmll8nJ7f302jVE_Mn2nZjP.Hr2fL4.Csl-BK=_17872_
+Content-Type: text/plain; charset="utf-8"
 
 
+------Bhr1nD2Bk2LUmll8nJ7f302jVE_Mn2nZjP.Hr2fL4.Csl-BK=_17872_--
