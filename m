@@ -2,104 +2,158 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AED85EB713
-	for <lists+linux-block@lfdr.de>; Tue, 27 Sep 2022 03:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5AA65EB72A
+	for <lists+linux-block@lfdr.de>; Tue, 27 Sep 2022 03:49:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbiI0Boe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Sep 2022 21:44:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56882 "EHLO
+        id S230002AbiI0Btf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Sep 2022 21:49:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbiI0Bob (ORCPT
+        with ESMTP id S229724AbiI0Btd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Sep 2022 21:44:31 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2119DA7A83
-        for <linux-block@vger.kernel.org>; Mon, 26 Sep 2022 18:44:29 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id 9so8351158pfz.12
-        for <linux-block@vger.kernel.org>; Mon, 26 Sep 2022 18:44:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=Gw9lyqQe5R+yw+IDPoV4+8Za+H046k5YKHvd8lw2rPY=;
-        b=N0ygZaFhLSOXkV8fuZqHVSFTMa/CFtuXkka+qByZM4y/jLM4N7XGTKIRmXsUIUHrON
-         3xw/74DNSgBGpgoVZi5QLh/wZc1wsmK9f+44t89KaCF9k8cJDA1unvlZlkR+JNBM4Y32
-         JVSVDHu/2ByQpfKZJPkcQK3WPaFQjwh4QKyWOnegEVT/KegEFa6ydXk+zn0Hh71SCb3E
-         AkSNsCF45qlH3oMFjCWFG3IK+mMS2HkWwZgHtEbMES8GCHhmXPAayxJsUrxMP5o3pxN3
-         Wd03JthVfnQhbLCxYibxseOrQ9fhcin8EAGRuttygUZlR4eg0jcZRycz+DOG5IA4VI/p
-         oQCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=Gw9lyqQe5R+yw+IDPoV4+8Za+H046k5YKHvd8lw2rPY=;
-        b=b0vXOwM4LZVw1g/REsddh4YuRdLrFQI1I1DsoC0/4mGP2pdsfWrts1iFaIQJ5Y1fQ1
-         RDaV/kUxKL498DcFz8NZHJ2MF8afsmgSqMsepzvB8yHdG0xpt92BOH1m+ZvJpTCOp1+i
-         MH3vCS8r7igf7IJNHni8yjJSJuM98d0TRGnYuEUj3VvcQFHtYtScO9NYn0ExMZZGtlSa
-         lONq79oOa+RbOuatGjtdFTaULH205l+DtFCMb6MrgSGhzTJFRPtQW913Nyi0hKW4P/Q4
-         nrUs8sCYne0R/8mpaCW11FnCVOXywIp7koS7stVwWQ4HEA74YeX3BXx1EjYRZcu5a18f
-         3y6A==
-X-Gm-Message-State: ACrzQf393h1xIqw016vizXj/Lp66/8u5AdDtFxiNZMzEBEQ0otpukHV3
-        3lcAVcX8moyGhUZzPaRDBQl7ojpbMLMEfA==
-X-Google-Smtp-Source: AMsMyM76dVAl8IUXKH4912uerp2IA/RXyHJpj8bhTIn05ne6zZSO1S91VEgYu/TmSWlfMDVcAlB4Pw==
-X-Received: by 2002:a63:2ac4:0:b0:41d:95d8:45b6 with SMTP id q187-20020a632ac4000000b0041d95d845b6mr23016941pgq.132.1664243067888;
-        Mon, 26 Sep 2022 18:44:27 -0700 (PDT)
-Received: from localhost.localdomain ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id o2-20020aa79782000000b00537d60286c9sm183062pfp.113.2022.09.26.18.44.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 18:44:27 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-block@vger.kernel.org
-Cc:     linux-scsi@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Jens Axboe <axboe@kernel.dk>, Stefan Roesch <shr@fb.com>
-Subject: [PATCH 5/5] nvme: enable batched completions of passthrough IO
-Date:   Mon, 26 Sep 2022 19:44:20 -0600
-Message-Id: <20220927014420.71141-6-axboe@kernel.dk>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220927014420.71141-1-axboe@kernel.dk>
-References: <20220927014420.71141-1-axboe@kernel.dk>
+        Mon, 26 Sep 2022 21:49:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE518E53;
+        Mon, 26 Sep 2022 18:49:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 24544614FF;
+        Tue, 27 Sep 2022 01:49:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 613B0C433C1;
+        Tue, 27 Sep 2022 01:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664243369;
+        bh=Eu518v0ArlfpWppRcP6ZW1XVeJHR+VUkRhfqa+dnkXA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=M8HCKNykvp9YsAQKV1cuG1myxFBLt1rxltjZFONqxpWhIYCUseEAwC9xcrUwtVuds
+         6wgiD78w/Ls3DQNqfW/v/jhaHpXWcJASEZ/7reXHACFjR+ufs2/2G0qamKbXVdNWQX
+         VmOdnTn0qWIzeG1k/AXEAAUbX2sqBebiP8p8he9Wt8LAatB5BLsDItCI3+3U/j3KFp
+         yQ/62esHsdp5KFuodHSFobI2oNRsSCpQzKmSrxUEMOWyWyNzVf51ayKZHIlVwcJFsv
+         I1kPs6IpGGoRr6XlC2g7ayNJxMbu0++tfB9sknZLvYiyPa1vRa1F6/FiysybaLoZxE
+         uIa2XLEEBHVqg==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org, linux-fscrypt@vger.kernel.org
+Cc:     kernel-team@android.com, Israel Rukshin <israelr@nvidia.com>
+Subject: [RFC PATCH v6 0/4] Support for hardware-wrapped inline encryption keys
+Date:   Mon, 26 Sep 2022 18:47:14 -0700
+Message-Id: <20220927014718.125308-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that the normal passthrough end_io path doesn't need the request
-anymore, we can kill the explicit blk_mq_free_request() and just pass
-back RQ_END_IO_FREE instead. This enables the batched completion from
-freeing batches of requests at the time.
+[This patchset is based on the master branch of
+https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git.  It can also be
+retrieved from the tag "wrapped-keys-v6" of the same repo.]
 
-This brings passthrough IO performance at least on par with bdev based
-O_DIRECT with io_uring. With this and batche allocations, peak performance
-goes from 110M IOPS to 122M IOPS. For IRQ based, passthrough is now also
-about 10% faster than previously, going from ~61M to ~67M IOPS.
+This patchset adds the block and fscrypt support for hardware-wrapped
+inline encryption keys, a security feature supported by recent Qualcomm
+and Google SoCs.  Unfortunately, although this feature has already been
+working in Android for several years (with some slight differences in
+the software design), the SoC-specific software support needed to
+actually test and use this feature end-to-end with the upstream kernel
+continues to not be ready, mostly for reasons outside my control.
+Therefore, I've downgraded this patchset back to a RFC.  Nevertheless,
+I'd greatly appreciate feedback on it.
 
-Co-developed-by: Stefan Roesch <shr@fb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/nvme/host/ioctl.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This feature is described in full detail in the included Documentation
+changes.  But to summarize, hardware-wrapped keys are inline encryption
+keys that are wrapped (encrypted) by a key internal to the hardware so
+that they can only be unwrapped (decrypted) by the hardware.  Initially
+keys are wrapped with a permanent hardware key, but during actual use
+they are re-wrapped with a per-boot ephemeral key for improved security.
+The hardware supports importing keys as well as generating keys itself.
 
-diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-index 9e356a6c96c2..d9633f426690 100644
---- a/drivers/nvme/host/ioctl.c
-+++ b/drivers/nvme/host/ioctl.c
-@@ -423,8 +423,7 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io(struct request *req,
- 	else
- 		io_uring_cmd_complete_in_task(ioucmd, nvme_uring_task_cb);
- 
--	blk_mq_free_request(req);
--	return RQ_END_IO_NONE;
-+	return RQ_END_IO_FREE;
- }
- 
- static enum rq_end_io_ret nvme_uring_cmd_end_io_meta(struct request *req,
+This feature protects encryption keys from read-only compromises of
+kernel memory, such as that which can occur during a cold boot attack.
+It does this without limiting the number of keys that can be used, as
+would be the case with solutions that didn't use key wrapping.
+
+This differs from the existing support for hardware-wrapped keys in the
+kernel crypto API (which also goes by names such as "hardware-bound
+keys", depending on the driver) in the same way that the crypto API
+differs from blk-crypto: the crypto API is for general crypto
+operations, whereas blk-crypto is for inline storage encryption.
+
+I've written xfstests which test that this feature encrypts files
+correctly.  I've sent these separately, and the latest version is at
+https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/xfstests-dev.git/log/?h=wip-wrapped-keys.
+
+Changed v5 => v6:
+    - Downgraded the patchset back to RFC status.
+    - Exposed the supported key types in sysfs.
+    - Shortened some field names, e.g. longterm_wrapped_key => lt_key.
+    - Avoided adding a new use of struct request_queue by fs/crypto/.
+    - Moved the blk-crypto ioctls to a new blk-crypto UAPI header file
+      and fixed their numbering.
+    - Other cleanups.
+
+Changed v4 => v5:
+    - Dropped the RFC tag, now that these patches are actually testable.
+    - Split the BLKCRYPTOCREATEKEY ioctl into BLKCRYPTOIMPORTKEY and
+      BLKCRYPTOGENERATEKEY.  (I'm thinking that these operations are
+      distinct enough that two separate ioctls would be best.)
+    - Added some warning messages in fscrypt_derive_sw_secret().
+    - Rebased onto v5.17-rc6.
+
+Changed v3 => v4:
+    - Rebased onto v5.16-rc1 and dropped a few bits that were upstreamed.
+    - Updated cover letter to link to Gaurav's UFS driver patchset.
+
+Changed v2 => v3:
+    - Dropped some fscrypt cleanups that were applied.
+    - Rebased on top of the latest linux-block and fscrypt branches.
+    - Minor cleanups.
+
+Changed v1 => v2:
+    - Added new ioctls for creating and preparing hardware-wrapped keys.
+    - Rebased onto my patchset which renames blk_keyslot_manager to
+      blk_crypto_profile.
+
+Eric Biggers (4):
+  blk-crypto: add basic hardware-wrapped key support
+  blk-crypto: show supported key types in sysfs
+  blk-crypto: add ioctls to create and prepare hardware-wrapped keys
+  fscrypt: add support for hardware-wrapped keys
+
+ Documentation/ABI/stable/sysfs-block          |  18 ++
+ Documentation/block/inline-encryption.rst     | 245 +++++++++++++++++-
+ Documentation/filesystems/fscrypt.rst         | 154 +++++++++--
+ .../userspace-api/ioctl/ioctl-number.rst      |   4 +-
+ block/blk-crypto-fallback.c                   |   5 +-
+ block/blk-crypto-internal.h                   |  10 +
+ block/blk-crypto-profile.c                    | 119 +++++++++
+ block/blk-crypto-sysfs.c                      |  35 +++
+ block/blk-crypto.c                            | 193 +++++++++++++-
+ block/ioctl.c                                 |   5 +
+ drivers/md/dm-table.c                         |   1 +
+ drivers/mmc/host/cqhci-crypto.c               |   2 +
+ drivers/ufs/core/ufshcd-crypto.c              |   1 +
+ fs/crypto/fscrypt_private.h                   |  70 ++++-
+ fs/crypto/hkdf.c                              |   4 +-
+ fs/crypto/inline_crypt.c                      |  64 ++++-
+ fs/crypto/keyring.c                           | 122 ++++++---
+ fs/crypto/keysetup.c                          |  54 +++-
+ fs/crypto/keysetup_v1.c                       |   5 +-
+ fs/crypto/policy.c                            |  11 +-
+ include/linux/blk-crypto-profile.h            |  73 ++++++
+ include/linux/blk-crypto.h                    |  78 +++++-
+ include/uapi/linux/blk-crypto.h               |  44 ++++
+ include/uapi/linux/fs.h                       |   6 +-
+ include/uapi/linux/fscrypt.h                  |   7 +-
+ 25 files changed, 1233 insertions(+), 97 deletions(-)
+ create mode 100644 include/uapi/linux/blk-crypto.h
+
+
+base-commit: 0e91fc1e0f5c70ce575451103ec66c2ec21f1a6e
 -- 
-2.35.1
+2.37.3
 
