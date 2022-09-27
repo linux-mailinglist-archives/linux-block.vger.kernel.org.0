@@ -2,60 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD26C5EB70D
-	for <lists+linux-block@lfdr.de>; Tue, 27 Sep 2022 03:44:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6D45EB711
+	for <lists+linux-block@lfdr.de>; Tue, 27 Sep 2022 03:44:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbiI0Bob (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Sep 2022 21:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56554 "EHLO
+        id S229948AbiI0Boe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Sep 2022 21:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229948AbiI0Bo1 (ORCPT
+        with ESMTP id S229966AbiI0Boa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Sep 2022 21:44:27 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4D5A7230
-        for <linux-block@vger.kernel.org>; Mon, 26 Sep 2022 18:44:26 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id i15-20020a17090a4b8f00b0020073b4ac27so8664747pjh.3
-        for <linux-block@vger.kernel.org>; Mon, 26 Sep 2022 18:44:26 -0700 (PDT)
+        Mon, 26 Sep 2022 21:44:30 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A93A74D6
+        for <linux-block@vger.kernel.org>; Mon, 26 Sep 2022 18:44:28 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id u69so8124612pgd.2
+        for <linux-block@vger.kernel.org>; Mon, 26 Sep 2022 18:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=Nz/B6jdwrrOsf5JLn/R8YVwnmVtMrvsX8isrBntB0gc=;
-        b=YT5XveMQNm31+MTJZ+0kPwthf1yXMJQ1wFLUuRB4zypjMZ05Qqnq+P+1friBnnl77p
-         KK60FLMIHFVWxiWnFKEELBnnjeeaaHf2qbOuV4Qdfa94HJQGydL7bQ/t4I7UNG8HESrS
-         iAkRfMZxl9iupPkubKeTmJd1BkFZajiZTLcUWR8mfMrNJQaLSs7sHmpmHNyj3ZM5FDfO
-         +M7oADYj71hjFcKq22AZjw+9JA7DV3xtA2/NNc6EY0fj+yG6OixAA0LQw+9E/MMmTcCI
-         22ybrhzADauGcmi87SYE8KgOzPoTihQPwmT9QcpNB4uP/SN6h/yUDZtBk9GUkauHG5LD
-         0ylw==
+        bh=OWQyl94A5qNKtPnF/8PyOhg9aeGApg21Zf8bAO/j86s=;
+        b=mP3PeN6PCELyvJQ+DXmQS2FoJwddmxuB7MQ2/UGEabb+Nm+/V452tOJaIqhRCFbWIv
+         IDC2qnSZZmCGdo5dh/q1ZBrd1oigApYXtLJPSyGuJcrx8rVIz3Xa9fMTdc/32SjSGYm7
+         R1IZP4E6Ph619vy2hU2ZZMhbef7T8doLfRUOMdOWG67R4osTEnmvvI4sEeF4Dotkbtmv
+         CrJeo7+GHMCQX9bmnTYIvdrUCh1UfScfimPbsJ1bRgeXH5KLwHYydc/+NxR7gHcVuM7W
+         vDmc3SweNBhuBsmVtob4aqGhkqVJzVipuHgB1xuPXoC3Yk7y4SIW9wNbXnUChX9C0mQN
+         sIpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=Nz/B6jdwrrOsf5JLn/R8YVwnmVtMrvsX8isrBntB0gc=;
-        b=5eCxWkIcgsAmHa2jZBCn7FLjhCxCQOX+sONjTIHaFlb8mJuUbP2u5y65ighU3f8vkf
-         djbKkSEFruJ1POLTq73dEuAsgOemAng+rcrUQTzV7mHSYaiX8mTDUiUZbHqo1ucq2BSs
-         0Qo5fdwPfqtj20B3Ak4gY2O4+N4jeXrAZtOkrTza6BK/auR+DEpd7km8lkgIqEgGqQJz
-         teZvcYgVG4Ln8dgoa2Wc5sx01bUYizl4VfomxWvYh/cbQ7vRahSSUpwIsOextIjxt2IE
-         RT+vg+5u3UOtUyVzf2lkrQLmFZKOLvl/9qx7ceaUyKIw1jaJlZ3yssakh28xbaWjnxsH
-         BhXA==
-X-Gm-Message-State: ACrzQf0Dut7KuPIxiVqtbnFF8van2573wInLj3u1nUECawqVy8DxqUzx
-        uVk/LqZH2GxsFD/lpX4hKEf+0ryH6iuB8w==
-X-Google-Smtp-Source: AMsMyM4ePwz2HRsSpw7tWuMO8WEprrgKRsdcXCPFgXwQUx9CiC45lyoJblyFaY69/biPTWfpxqiSog==
-X-Received: by 2002:a17:902:ce81:b0:178:8e0a:5615 with SMTP id f1-20020a170902ce8100b001788e0a5615mr25192700plg.109.1664243065770;
-        Mon, 26 Sep 2022 18:44:25 -0700 (PDT)
+        bh=OWQyl94A5qNKtPnF/8PyOhg9aeGApg21Zf8bAO/j86s=;
+        b=bMG/S6P7pF04XeYw94gxNp8Kjl2z2tdq1dVGugjkzEgkS7tmFu5la0RqGrTYhHcNuu
+         YR2BMUrHjzU+nd9vBFeC6PmY7OPLSDyC8udbYgfB55cE3ebHRnHdIxVj5bBBp+N6dG/A
+         X9WXqSk8xzfuAVHXIkul4bA1FGwA0PE0SRv0FVN9bm1fIKKxo9OaESPGUc5RJfP4nvPP
+         +TQ9by9I7XLtZ7FfxGUc65KFGgSheCV5OhnTNj52o57TquyyD5j2A+Ua9S9QlIBblzQo
+         m6b2KAeG0u3n/jS3Tt+Smb68Br1cENEXjYsiB4TTasz+ieBVjIg6PTz2MAvPDxZ8F6Hv
+         mJtw==
+X-Gm-Message-State: ACrzQf0p7XuCG/29AgAvAtlZRUfYiReMP0Piqq+CBNXB0GajN672tEbn
+        SpfjMKHjLj69z7hF5tBFa8WtK1YBirMkgg==
+X-Google-Smtp-Source: AMsMyM4b4xjI5VuwTPQxKRtlKpdTkx4cE0vHyJY+Uc0NtDg0sPzbmbmbPkA9/NgxXSIQ4gKYg+MuEw==
+X-Received: by 2002:a62:1bc8:0:b0:546:c62e:e84 with SMTP id b191-20020a621bc8000000b00546c62e0e84mr26532012pfb.45.1664243066985;
+        Mon, 26 Sep 2022 18:44:26 -0700 (PDT)
 Received: from localhost.localdomain ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id o2-20020aa79782000000b00537d60286c9sm183062pfp.113.2022.09.26.18.44.24
+        by smtp.gmail.com with ESMTPSA id o2-20020aa79782000000b00537d60286c9sm183062pfp.113.2022.09.26.18.44.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 18:44:25 -0700 (PDT)
+        Mon, 26 Sep 2022 18:44:26 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     linux-block@vger.kernel.org
 Cc:     linux-scsi@vger.kernel.org, linux-nvme@lists.infradead.org,
         Jens Axboe <axboe@kernel.dk>, Stefan Roesch <shr@fb.com>
-Subject: [PATCH 3/5] block: allow end_io based requests in the completion batch handling
-Date:   Mon, 26 Sep 2022 19:44:18 -0600
-Message-Id: <20220927014420.71141-4-axboe@kernel.dk>
+Subject: [PATCH 4/5] nvme: split out metadata vs non metadata end_io uring_cmd completions
+Date:   Mon, 26 Sep 2022 19:44:19 -0600
+Message-Id: <20220927014420.71141-5-axboe@kernel.dk>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220927014420.71141-1-axboe@kernel.dk>
 References: <20220927014420.71141-1-axboe@kernel.dk>
@@ -70,63 +70,159 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-With end_io handlers now being able to potentially pass ownership of
-the request upon completion, we can allow requests with end_io handlers
-in the batch completion handling.
+By splitting up the metadata and non-metadata end_io handling, we can
+remove any request dependencies on the normal non-metadata IO path. This
+is in preparation for enabling the normal IO passthrough path to pass
+the ownership of the request back to the block layer.
 
 Co-developed-by: Stefan Roesch <shr@fb.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- block/blk-mq.c         | 13 +++++++++++--
- include/linux/blk-mq.h |  3 ++-
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ drivers/nvme/host/ioctl.c | 79 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 61 insertions(+), 18 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index a4e018c82b7c..a7dfe7a898a4 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -823,8 +823,10 @@ static void blk_complete_request(struct request *req)
- 	 * can find how many bytes remain in the request
- 	 * later.
- 	 */
--	req->bio = NULL;
--	req->__data_len = 0;
-+	if (!req->end_io) {
-+		req->bio = NULL;
-+		req->__data_len = 0;
-+	}
+diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
+index c80b3ecca5c8..9e356a6c96c2 100644
+--- a/drivers/nvme/host/ioctl.c
++++ b/drivers/nvme/host/ioctl.c
+@@ -349,9 +349,15 @@ struct nvme_uring_cmd_pdu {
+ 		struct bio *bio;
+ 		struct request *req;
+ 	};
+-	void *meta; /* kernel-resident buffer */
+-	void __user *meta_buffer;
+ 	u32 meta_len;
++	u32 nvme_status;
++	union {
++		struct {
++			void *meta; /* kernel-resident buffer */
++			void __user *meta_buffer;
++		};
++		u64 result;
++	} u;
+ };
+ 
+ static inline struct nvme_uring_cmd_pdu *nvme_uring_cmd_pdu(
+@@ -360,11 +366,10 @@ static inline struct nvme_uring_cmd_pdu *nvme_uring_cmd_pdu(
+ 	return (struct nvme_uring_cmd_pdu *)&ioucmd->pdu;
  }
  
- /**
-@@ -1055,6 +1057,13 @@ void blk_mq_end_request_batch(struct io_comp_batch *iob)
- 
- 		rq_qos_done(rq->q, rq);
- 
-+		/*
-+		 * If end_io handler returns NONE, then it still has
-+		 * ownership of the request.
-+		 */
-+		if (rq->end_io && rq->end_io(rq, 0) == RQ_END_IO_NONE)
-+			continue;
-+
- 		WRITE_ONCE(rq->state, MQ_RQ_IDLE);
- 		if (!req_ref_put_and_test(rq))
- 			continue;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index e6fa49dd6196..50811d0fb143 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -853,8 +853,9 @@ static inline bool blk_mq_add_to_batch(struct request *req,
- 				       struct io_comp_batch *iob, int ioerror,
- 				       void (*complete)(struct io_comp_batch *))
+-static void nvme_uring_task_cb(struct io_uring_cmd *ioucmd)
++static void nvme_uring_task_meta_cb(struct io_uring_cmd *ioucmd)
  {
--	if (!iob || (req->rq_flags & RQF_ELV) || req->end_io || ioerror)
-+	if (!iob || (req->rq_flags & RQF_ELV) || ioerror)
- 		return false;
+ 	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
+ 	struct request *req = pdu->req;
+-	struct bio *bio = req->bio;
+ 	int status;
+ 	u64 result;
+ 
+@@ -375,27 +380,39 @@ static void nvme_uring_task_cb(struct io_uring_cmd *ioucmd)
+ 
+ 	result = le64_to_cpu(nvme_req(req)->result.u64);
+ 
+-	if (pdu->meta)
+-		status = nvme_finish_user_metadata(req, pdu->meta_buffer,
+-					pdu->meta, pdu->meta_len, status);
+-	if (bio)
+-		blk_rq_unmap_user(bio);
++	if (pdu->meta_len)
++		status = nvme_finish_user_metadata(req, pdu->u.meta_buffer,
++					pdu->u.meta, pdu->meta_len, status);
++	if (req->bio)
++		blk_rq_unmap_user(req->bio);
+ 	blk_mq_free_request(req);
+ 
+ 	io_uring_cmd_done(ioucmd, status, result);
+ }
+ 
++static void nvme_uring_task_cb(struct io_uring_cmd *ioucmd)
++{
++	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
 +
- 	if (!iob->complete)
- 		iob->complete = complete;
- 	else if (iob->complete != complete)
++	if (pdu->bio)
++		blk_rq_unmap_user(pdu->bio);
++
++	io_uring_cmd_done(ioucmd, pdu->nvme_status, pdu->u.result);
++}
++
+ static enum rq_end_io_ret nvme_uring_cmd_end_io(struct request *req,
+ 						blk_status_t err)
+ {
+ 	struct io_uring_cmd *ioucmd = req->end_io_data;
+ 	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
+-	/* extract bio before reusing the same field for request */
+-	struct bio *bio = pdu->bio;
+ 	void *cookie = READ_ONCE(ioucmd->cookie);
+ 
+-	pdu->req = req;
+-	req->bio = bio;
++	req->bio = pdu->bio;
++	if (nvme_req(req)->flags & NVME_REQ_CANCELLED)
++		pdu->nvme_status = -EINTR;
++	else
++		pdu->nvme_status = nvme_req(req)->status;
++	pdu->u.result = le64_to_cpu(nvme_req(req)->result.u64);
+ 
+ 	/*
+ 	 * For iopoll, complete it directly.
+@@ -406,6 +423,29 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io(struct request *req,
+ 	else
+ 		io_uring_cmd_complete_in_task(ioucmd, nvme_uring_task_cb);
+ 
++	blk_mq_free_request(req);
++	return RQ_END_IO_NONE;
++}
++
++static enum rq_end_io_ret nvme_uring_cmd_end_io_meta(struct request *req,
++						     blk_status_t err)
++{
++	struct io_uring_cmd *ioucmd = req->end_io_data;
++	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
++	void *cookie = READ_ONCE(ioucmd->cookie);
++
++	req->bio = pdu->bio;
++	pdu->req = req;
++
++	/*
++	 * For iopoll, complete it directly.
++	 * Otherwise, move the completion to task work.
++	 */
++	if (cookie != NULL && blk_rq_is_poll(req))
++		nvme_uring_task_meta_cb(ioucmd);
++	else
++		io_uring_cmd_complete_in_task(ioucmd, nvme_uring_task_meta_cb);
++
+ 	return RQ_END_IO_NONE;
+ }
+ 
+@@ -467,8 +507,6 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 			blk_flags);
+ 	if (IS_ERR(req))
+ 		return PTR_ERR(req);
+-	req->end_io = nvme_uring_cmd_end_io;
+-	req->end_io_data = ioucmd;
+ 
+ 	if (issue_flags & IO_URING_F_IOPOLL && rq_flags & REQ_POLLED) {
+ 		if (unlikely(!req->bio)) {
+@@ -483,10 +521,15 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	}
+ 	/* to free bio on completion, as req->bio will be null at that time */
+ 	pdu->bio = req->bio;
+-	pdu->meta = meta;
+-	pdu->meta_buffer = nvme_to_user_ptr(d.metadata);
+ 	pdu->meta_len = d.metadata_len;
+-
++	req->end_io_data = ioucmd;
++	if (pdu->meta_len) {
++		pdu->u.meta = meta;
++		pdu->u.meta_buffer = nvme_to_user_ptr(d.metadata);
++		req->end_io = nvme_uring_cmd_end_io_meta;
++	} else {
++		req->end_io = nvme_uring_cmd_end_io;
++	}
+ 	blk_execute_rq_nowait(req, false);
+ 	return -EIOCBQUEUED;
+ }
 -- 
 2.35.1
 
