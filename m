@@ -2,48 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 656605EEEC3
-	for <lists+linux-block@lfdr.de>; Thu, 29 Sep 2022 09:20:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 988035EEF62
+	for <lists+linux-block@lfdr.de>; Thu, 29 Sep 2022 09:41:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235140AbiI2HUL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Sep 2022 03:20:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
+        id S235392AbiI2Hlh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Sep 2022 03:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235211AbiI2HUA (ORCPT
+        with ESMTP id S235440AbiI2HlS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Sep 2022 03:20:00 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175D4DF3E
-        for <linux-block@vger.kernel.org>; Thu, 29 Sep 2022 00:19:54 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C0C8168BFE; Thu, 29 Sep 2022 09:19:50 +0200 (CEST)
-Date:   Thu, 29 Sep 2022 09:19:50 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Pankaj Raghav <p.raghav@samsung.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        damien.lemoal@opensource.wdc.com, linux-block@vger.kernel.org,
-        gost.dev@samsung.com
-Subject: Re: [PATCH v2 2/2] block: use blk_mq_plug() wrapper consistently
- in the block layer
-Message-ID: <20220929071950.GA821@lst.de>
-References: <20220929062425.91254-1-p.raghav@samsung.com> <CGME20220929062429eucas1p24790a979fa780e8bff61d9fd5ec05f8e@eucas1p2.samsung.com> <20220929062425.91254-3-p.raghav@samsung.com> <20220929065641.GB31325@lst.de> <72d2f463-a0b1-db96-acb4-28617893407b@samsung.com>
+        Thu, 29 Sep 2022 03:41:18 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E5B139F71;
+        Thu, 29 Sep 2022 00:40:59 -0700 (PDT)
+Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MdQCF3M2xzHtjL;
+        Thu, 29 Sep 2022 15:36:09 +0800 (CST)
+Received: from huawei.com (10.174.178.129) by kwepemi500016.china.huawei.com
+ (7.221.188.220) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 29 Sep
+ 2022 15:40:57 +0800
+From:   Kemeng Shi <shikemeng@huawei.com>
+To:     <tj@kernel.org>, <axboe@kernel.dk>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <shikemeng@huawei.com>
+Subject: [PATCH 0/3] A few cleanup patches for blk-iolatency.c
+Date:   Thu, 29 Sep 2022 15:40:52 +0800
+Message-ID: <20220929074055.30080-1-shikemeng@huawei.com>
+X-Mailer: git-send-email 2.14.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72d2f463-a0b1-db96-acb4-28617893407b@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.174.178.129]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500016.china.huawei.com (7.221.188.220)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 09:15:12AM +0200, Pankaj Raghav wrote:
-> I mentioned it in the commit header: to use this wrapper consistently
-> across block layer because I am not sure if either of the changes would
-> have led to a bug in zoned devices.
+This series contains three cleanup patches to remove redundant check,
+correct comment and simplify struct iolatency_grp in blk-iolatency.c.
 
-The only thing that goes into source control is the commit message,
-so the rationale needs to go into that.
+Kemeng Shi (3):
+  block: Remove redundant parent blkcg_gp check in check_scale_change
+  block: Correct comment for scale_cookie_change
+  block: Replace struct rq_depth with unsigned int in struct
+    iolatency_grp
+
+ block/blk-iolatency.c | 33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
+
+-- 
+2.30.0
+
