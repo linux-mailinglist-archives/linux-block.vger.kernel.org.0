@@ -2,71 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A651D5F14F3
-	for <lists+linux-block@lfdr.de>; Fri, 30 Sep 2022 23:33:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E1605F1699
+	for <lists+linux-block@lfdr.de>; Sat,  1 Oct 2022 01:24:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231473AbiI3Vdl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 30 Sep 2022 17:33:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56512 "EHLO
+        id S232005AbiI3XYV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 30 Sep 2022 19:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232231AbiI3Vdc (ORCPT
+        with ESMTP id S232164AbiI3XYS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 30 Sep 2022 17:33:32 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57A11D84B6
-        for <linux-block@vger.kernel.org>; Fri, 30 Sep 2022 14:33:31 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id bh13so5188471pgb.4
-        for <linux-block@vger.kernel.org>; Fri, 30 Sep 2022 14:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=2/UNXuLHmDdppjatbpU11f2v62iaLDUAve6sxVmqmQM=;
-        b=CFbasNKXN9gWPeyamDPSQrpVUGbuimYwbBxdejWEq0LYkrgRt3HREQOFqgw7aDTTm5
-         moTLuzyLfmpwH3zObAX8YeRypLzSrRZT5iQtgrwo6/1iQk8m5Y96o/s+a95oSxNmWjBw
-         8XAJ50Zsjv2WcTt/b2cHPhf64TrhaRoIFDqiKiy6YT86E9A9cuupajeorWgPG3AqBPf6
-         kLGiJbuNT2bgEqigPWEnTk4crz+VASrNYSPVaCQPwc66ipkM06XNhf8jpuy9pYUKbPn/
-         dhLMekXKIrVjOQvMzvTsaPkBMOwWf68WEt4n8LWvy2E8QMF5DKcVSpd4m7t7Bw3TTov6
-         SrGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=2/UNXuLHmDdppjatbpU11f2v62iaLDUAve6sxVmqmQM=;
-        b=AngenoiLrCDBbYJWD6uZ+U+09PoCV+qFc1yt/20Pv98bpQAzD9NZfSjI4KxLJ7wSvT
-         zG9gnPPkojQCv7eSQFNa7SXxfawnduezMBXVXeb3nSSJv45LvXPMB5P6WQdNI/8pRHzf
-         LVKsnno0RsbSF19mkt2VA+uMHrfsjzm/pjmVSQFkFSwnXAAltVsK9bzCyuQGyACx8mDy
-         OZO7OeZ4V0vsqrpwc9BSSC14hUhu1WNS6qOXcw/u5QkQKa0RrUIsrYlWQ0ntfr2C8FNP
-         inIPMnZIkmks7ayFoukpwXAkZu3TXFpFcVsvlRzC0z1SkiNDu7okRf7p5hF6u2B9IDqW
-         n4mQ==
-X-Gm-Message-State: ACrzQf3h6ieqtiQ+jN1tkdRlC8cKX7pbpqnITWCU+f3Apq/hMqxUHnG+
-        nyCVMYwk0qX8ak3Yzpuq/ZYYi2gEtWj25g==
-X-Google-Smtp-Source: AMsMyM7AXc4acwIHlAyUi7XijUEjywO/vXW2M3sK71mTOl5E1wn7xS6N5eHxa+jfHW/tM4f7dkHKCg==
-X-Received: by 2002:a63:cd55:0:b0:43c:e24b:e45d with SMTP id a21-20020a63cd55000000b0043ce24be45dmr8926265pgj.223.1664573611279;
-        Fri, 30 Sep 2022 14:33:31 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id j30-20020a634a5e000000b0044394a14279sm506270pgl.23.2022.09.30.14.33.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Sep 2022 14:33:30 -0700 (PDT)
-Message-ID: <5b7798a8-c9e1-530d-3926-856294f779d1@kernel.dk>
-Date:   Fri, 30 Sep 2022 15:33:29 -0600
+        Fri, 30 Sep 2022 19:24:18 -0400
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7406C14594C;
+        Fri, 30 Sep 2022 16:24:12 -0700 (PDT)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 8504BE0EB2;
+        Fri, 30 Sep 2022 01:46:54 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:from:from:message-id
+        :mime-version:reply-to:subject:subject:to:to; s=post; bh=0F0pMI2
+        9a3JYWPRwZUHOw05fHrRq2BuL98mhBC2wW+8=; b=hhryUWcjZ17wdbk7YFSJ8Jg
+        jsSzixbGL/YYeGw4TlYj2IqJxyPCW8eHrd+m0za4eFNCjzlpwlc301DwxCiWb4XU
+        uWynJqgYQU+MToyfXTtkSAkU17ZyRwuemdku2j2PppEHjko1u/imOUnTg53sloxd
+        nV5apMT/1XzM6RYuNHS0=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 6A7A4E0E6B;
+        Fri, 30 Sep 2022 01:46:54 +0300 (MSK)
+Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 30 Sep 2022 01:46:55 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        <linux-nvme@lists.infradead.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/3] block/nvme: Fix DMA-noncoherent platforms support
+Date:   Fri, 30 Sep 2022 01:46:45 +0300
+Message-ID: <20220929224648.8997-1-Sergey.Semin@baikalelectronics.ru>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH] block: avoid sign extend problem with default queue flags
- mask
-Content-Language: en-US
-To:     Brian Foster <bfoster@redhat.com>, linux-block@vger.kernel.org
-Cc:     Nico Pache <npache@redhat.com>, Joel Savitz <jsavitz@redhat.com>
-References: <20220930150345.854021-1-bfoster@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220930150345.854021-1-bfoster@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.168.10]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,62 +60,48 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/30/22 9:03 AM, Brian Foster wrote:
-> request_queue->queue_flags is an 8-byte field. Most queue flag
-> modifications occur through bit field helpers, but default flags can
-> be logically OR'd via the QUEUE_FLAG_MQ_DEFAULT mask. If this mask
-> happens to include bit 31, the assignment can sign extend the field
-> and set all upper 32 bits.
-> 
-> This exact problem has been observed on a downstream kernel that
-> happens to use bit 31 for QUEUE_FLAG_NOWAIT. This is not an
-> immediate problem for current upstream because bit 31 is not
-> included in the default flag assignment (and is not used at all,
-> actually). Regardless, fix up the QUEUE_FLAG_MQ_DEFAULT mask
-> definition to avoid the landmine in the future.
-> 
-> Signed-off-by: Brian Foster <bfoster@redhat.com>
-> ---
-> 
-> Just to elaborate, I ran a quick test to change QUEUE_FLAG_NOWAIT to use
-> bit 31. With that change but without this patch, I see the following
-> queue state:
-> 
-> # cat /sys/kernel/debug/block/vda/state
-> SAME_COMP|IO_STAT|INIT_DONE|WC|STATS|REGISTERED|30|NOWAIT|32|33|34|35|36|37|38|39|40|41|42|43|44|45|46|47|48|49|50|51|52|53|54|55|56|57|58|59|60|61|62|63
-> 
-> And then with the patch applied:
-> 
-> # cat /sys/kernel/debug/block/vda/state
-> SAME_COMP|IO_STAT|INIT_DONE|WC|STATS|REGISTERED|30|NOWAIT
-> 
-> Thanks.
-> 
-> Brian
-> 
->  include/linux/blkdev.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 84b13fdd34a7..28c3037cb25c 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -580,9 +580,9 @@ struct request_queue {
->  #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
->  #define QUEUE_FLAG_SQ_SCHED     30	/* single queue style io dispatch */
->  
-> -#define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
-> -				 (1 << QUEUE_FLAG_SAME_COMP) |		\
-> -				 (1 << QUEUE_FLAG_NOWAIT))
-> +#define QUEUE_FLAG_MQ_DEFAULT	((1ULL << QUEUE_FLAG_IO_STAT) |		\
-> +				 (1ULL << QUEUE_FLAG_SAME_COMP) |	\
-> +				 (1ULL << QUEUE_FLAG_NOWAIT))
+Our SoC doesn't have the CPU caches coherent on DMA's. After getting the
+kernel updated to the 6.0-rcX version we've discovered a problem with the
+NVME hwmon probe. It turned out that the root cause of it was connected
+with the cache-line-unaligned buffer passed to the DMA-engine. Due to the
+cache-invalidation performed on the buffer mapping stage a part of the
+structure the buffer was embedded to was lost. Here we suggest to fix the
+problem just by aligning the buffer accordingly as the
+Documentation/core-api/dma-api.rst document requires. (See the
+corresponding patch log for more details.)
 
-Shouldn't this just be 1UL << foo? The queue_flags are not 8-bytes,
-they are unsigned long. That happens to be 8-bytes on 64-bit archs,
-but it's 4-bytes on 32-bit archs.
+A potential root of a similar problem has been detected in the sed-opal
+driver too. Even though we have not got any difficulties connected with
+that part we still suggest to fix that in the same way as it is done for
+the NVME hwmon driver.
+
+Link: https://lore.kernel.org/linux-nvme/20220909191916.16013-1-Sergey.Semin@baikalelectronics.ru
+Changelog v2:
+- Drop Jonathan Derrick and Revanth Rajashekar from Cc-list due to
+  the email messages being bounced back.
+- Add a new preparation patch:
+[PATCH v2 1/3] nvme-hwmon: Return error on kzalloc failure
+- Convert to allocating the nvme_smart_log structure instance instead of
+  cache-aligning it. (@Christoph)
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-nvme@lists.infradead.org
+Cc: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (3):
+  nvme-hwmon: Return error on kzalloc failure
+  nvme-hwmon: Kmalloc the NVME SMART log buffer
+  block: sed-opal: Cache-line-align the cmd/resp buffers
+
+ block/sed-opal.c          |  5 +++--
+ drivers/nvme/host/hwmon.c | 34 ++++++++++++++++++++++++----------
+ 2 files changed, 27 insertions(+), 12 deletions(-)
 
 -- 
-Jens Axboe
+2.37.3
 
 
