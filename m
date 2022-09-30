@@ -2,117 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62C115F0CFD
-	for <lists+linux-block@lfdr.de>; Fri, 30 Sep 2022 16:05:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FB745F0E28
+	for <lists+linux-block@lfdr.de>; Fri, 30 Sep 2022 16:57:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbiI3OFF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 30 Sep 2022 10:05:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        id S229548AbiI3O5K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 30 Sep 2022 10:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbiI3OFD (ORCPT
+        with ESMTP id S230211AbiI3O5I (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 30 Sep 2022 10:05:03 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD026716D
-        for <linux-block@vger.kernel.org>; Fri, 30 Sep 2022 07:05:00 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id p202so3328760iod.6
-        for <linux-block@vger.kernel.org>; Fri, 30 Sep 2022 07:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date;
-        bh=KE/La02ogRQIY/HzxSEopjUhIfT01GVed+k6zu427FM=;
-        b=eTSscY00rOLUJHWuFQyJIl59dQGpUSoWvHHwSfNnFKA4Lw44WSKU49+jZTWN47Jnf5
-         55R/FwWHdwkFedGF7J3APM2KsySrM9JgactJUB3aSET9yPsj9KVjVwyT4ZLrz+OD+KKV
-         AhfLWzDGtUjoMr5OXEttfZYzZDT4hj0bjxzcqlI1syLfAFm+CjXjGbkI72jZhUIib47a
-         TiVeQlPuyIFn+ebZpyH/8DYCExfqdWWWzDillNjOUNcotehAMdGUndCvUHfH4w0GpLJq
-         ughRo26e9JqrBgCkOHoGxXOjnjLv3PQ8AiiKFqEgltASsaQc8z5EH/ExdZCSOWlOJt00
-         kMXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=KE/La02ogRQIY/HzxSEopjUhIfT01GVed+k6zu427FM=;
-        b=y5g0DRuOBPmFezIyfpH+H+S+98maxBjpNM3O9Vst+yWjs0HsnMfQ8fKlEcHWFtliNc
-         zeRT3kZxEb4OJlNsihBndSAlZNubB65MZ1jGL0S9krL/uVWQVhzqBkuqsl9cvVMMevyj
-         E0cuELoCiDBQV9zHkEwrDyt7x2QM/ZDpeA5hz9yTBGA4/wMYPq0HXm60+ekW+YYN+LTq
-         pYI/VtzUJVNDSoye3LTqLzM7pMuL+MoqEbfucg4KtuKYOVOVuPkNhzszdqKmdbyEk+9k
-         OQDDR3CMOWqGZdj3wbjDmTgM9506VdN53ftUVYsEGhBhby3/DkRN9F228ibXPGOklqny
-         iWoQ==
-X-Gm-Message-State: ACrzQf1wy33cWMtiXYap7vLmiqGjJRcKDb27CmeaQX1am2wTMwcyNSXf
-        NUh2QDc1S7wNov89MKnH6E9QhQ==
-X-Google-Smtp-Source: AMsMyM4JtLxVJcRSJ6Gida3IQoin845TBOh5Ewp8EzEnzwL947qn7d3mtbmSE+hpAqBx4RR26Cvc1w==
-X-Received: by 2002:a05:6638:1449:b0:35a:70ce:8a3f with SMTP id l9-20020a056638144900b0035a70ce8a3fmr4631148jad.42.1664546700214;
-        Fri, 30 Sep 2022 07:05:00 -0700 (PDT)
-Received: from [127.0.0.1] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id y4-20020a027304000000b00349d2d52f6asm963095jab.37.2022.09.30.07.04.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 07:04:59 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     kbusch@kernel.org, Anuj Gupta <anuj20.g@samsung.com>, hch@lst.de
-Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-        gost.dev@samsung.com, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-In-Reply-To: <20220930062749.152261-1-anuj20.g@samsung.com>
-References: <CGME20220930063754epcas5p2aff33c952032713a39604388eacda910@epcas5p2.samsung.com>
- <20220930062749.152261-1-anuj20.g@samsung.com>
-Subject: Re: [PATCH for-next v12 00/12] Fixed-buffer for uring-cmd/passthru
-Message-Id: <166454669913.10664.15099234392865928285.b4-ty@kernel.dk>
-Date:   Fri, 30 Sep 2022 08:04:59 -0600
+        Fri, 30 Sep 2022 10:57:08 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CE486708;
+        Fri, 30 Sep 2022 07:57:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CB403B8291B;
+        Fri, 30 Sep 2022 14:57:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1262C433C1;
+        Fri, 30 Sep 2022 14:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664549825;
+        bh=H2o4bIptk3E/SP0ZFh8Y+k2fFYZReWspuAdBMZkKXnE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hdci3QXo3ykxMK7yoVc/vmDwDkp6kfl6iPdVfmfSp0NfC/xHXC+6AVALOPBwe6CO+
+         DyzbFxk2qG5QMuW19IY6IEbIo47pnNsN9YoPDFbBayxgQ900fSc7pEhlDWZ1A8wRAi
+         9ufdV0y4DyotlNESD0G1/jxLwcz7zpyk8B3M/UDYJH0Xwp8zew4BIB5giRyhOwd6r6
+         xz6TssaWSKAO9Bwfw5cu2inhDgMF0odP14LM+8HDS6W4wTLAUWPQyuj27ViT3D78ft
+         qyAhhgl+9eS32AGz4xaeCd/qGOaaAuYkTjUEE/suqugq78dEeTMDekpodwBLXvSEp1
+         1JTU//iO6E1iA==
+Date:   Fri, 30 Sep 2022 08:57:02 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jens Axboe <axboe@kernel.dk>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] nvme-hwmon: Return error on kzalloc failure
+Message-ID: <YzcDvmlslPki8gBj@kbusch-mbp.dhcp.thefacebook.com>
+References: <20220929224648.8997-1-Sergey.Semin@baikalelectronics.ru>
+ <20220929224648.8997-2-Sergey.Semin@baikalelectronics.ru>
+ <YzYwB7lRGW80r4HA@kbusch-mbp.dhcp.thefacebook.com>
+ <20220930095247.vqtdc53rr66uaiwv@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.11.0-dev-d9ed3
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220930095247.vqtdc53rr66uaiwv@mobilestation>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, 30 Sep 2022 11:57:37 +0530, Anuj Gupta wrote:
-> uring-cmd lacks the ability to leverage the pre-registered buffers.
-> This series adds that support in uring-cmd, and plumbs nvme passthrough
-> to work with it.
-> Patches 3 - 5 carve out a block helper and scsi, nvme then use it to
-> avoid duplication of code.
-> Patch 6 and 7 contains a bunch of general nvme cleanups, which got added
-> along the iterations.
+On Fri, Sep 30, 2022 at 12:52:47PM +0300, Serge Semin wrote:
+> On Thu, Sep 29, 2022 at 05:53:43PM -0600, Keith Busch wrote:
+> > On Fri, Sep 30, 2022 at 01:46:46AM +0300, Serge Semin wrote:
+> > > Inability to allocate a buffer is a critical error which shouldn't be
+> > > tolerated since most likely the rest of the driver won't work correctly.
+> > > Thus instead of returning the zero status let's return the -ENOMEM error
+> > > if the nvme_hwmon_data structure instance couldn't be created.
+> > 
 > 
-> [...]
+> > Nak for this one. The hwmon is not necessary for the rest of the driver to
+> > function, so having the driver detach from the device seems a bit harsh.
+> 
+> Even if it is as you say, neither the method semantic nor the way it's
+> called imply that. Any failures except the allocation one are
+> perceived as erroneous.
 
-Applied, thanks!
+This is called by nvme_init_ctrl_finish(), and returns the error to
+nvme_reset_work() only if it's < 0, which indicates we can't go on and the
+driver unbinds.
 
-[01/12] io_uring: add io_uring_cmd_import_fixed
-        commit: a9216fac3ed8819cbbda5d39dd5fcaa43dfd35d8
-[02/12] io_uring: introduce fixed buffer support for io_uring_cmd
-        commit: 9cda70f622cdcf049521a9c2886e5fd8a90a0591
-[03/12] block: add blk_rq_map_user_io
-        commit: 557654025df5706785d395558244890dc4b2c875
-[04/12] scsi: Use blk_rq_map_user_io helper
-        commit: 6732932c836a4313f471b92b4d90761f31d3fa81
-[05/12] nvme: Use blk_rq_map_user_io helper
-        commit: 7f05635764390d5f811971af9f4c89b794032c80
-[06/12] nvme: refactor nvme_add_user_metadata
-        commit: 38c0ddab7b93daa90c046d0b9064a34fb0e586e5
-[07/12] nvme: refactor nvme_alloc_request
-        commit: 470e900c8036ff1aafeb5f06f3cb7a375a081399
-[08/12] block: rename bio_map_put to blk_mq_map_bio_put
-        commit: 32f1c71b15fc9cb8e964c3d0c15ca99a70cfe8a7
-[09/12] block: factor out blk_rq_map_bio_alloc helper
-        commit: ab89e8e7ca526ca04baaad2aa28172d336425d67
-[10/12] block: extend functionality to map bvec iterator
-        commit: 37987547932c89f15f9b76950040131ddb591a8b
-[11/12] nvme: pass ubuffer as an integer
-        commit: 4d174486820e625fa85bac5d4235d4b4cb659866
-[12/12] nvme: wire up fixed buffer support for nvme passthrough
-        commit: 23fd22e55b767be9c31fda57205afb2023cd6aad
+This particular condition for hwmon is not something that prevents us from
+making forward progress.
+ 
+> > The
+> > driver can participate in memory reclaim, so failing on a low memory condition
+> > can make matters worse.
+> 
+> Yes it can, so can many other places in the driver utilizing kmalloc
+> with just GFP_KERNEL flag passed including on the same path as the
+> nvme_hwmon_init() execution. Kmalloc will make sure the reclaim is
+> either finished or executed in background anyway in all cases. 
 
-Best regards,
--- 
-Jens Axboe
+This path is in the first initialization before we've set up a namespace that
+can be used as a reclaim destination.
 
+> Don't
+> really see why memory allocation failure is less worse in this case
+> than in many others in the same driver especially seeing as I said
 
+The other initialization kmalloc's are required to make forward progress toward
+setting up a namespace. This one is not required.
