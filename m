@@ -2,207 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C40625F37E4
-	for <lists+linux-block@lfdr.de>; Mon,  3 Oct 2022 23:36:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA9205F36E2
+	for <lists+linux-block@lfdr.de>; Mon,  3 Oct 2022 22:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230001AbiJCVgI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 3 Oct 2022 17:36:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33998 "EHLO
+        id S229726AbiJCUP3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 3 Oct 2022 16:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbiJCVfp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 3 Oct 2022 17:35:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD657CE32
-        for <linux-block@vger.kernel.org>; Mon,  3 Oct 2022 14:32:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664832731;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WyJJ2FzJrDN4Y29SDxUEPGCuBekc4KziQ+5yZ8f9tJU=;
-        b=CoFW4AbPUdl6aT24jJaDU+oSW1xgDeUPjpcy8fK67C4+IjCfZk7yYwbDkHlJ3olJzrXD6d
-        T8SH07NfQnhU+aeHUYZgQ8QA9qxlOXsFgZHRDv0Sp22sZufdVQn5/azg2aeCBfhZFKqFHQ
-        OFMe3lyyHNAIJhRP/U0zgFriHMe6Hf4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-447-jX31pjvoO_GnSwv5xXLG8A-1; Mon, 03 Oct 2022 17:32:09 -0400
-X-MC-Unique: jX31pjvoO_GnSwv5xXLG8A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E27DD85A59D;
-        Mon,  3 Oct 2022 21:32:08 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA00C2027061;
-        Mon,  3 Oct 2022 21:32:07 +0000 (UTC)
-Date:   Mon, 3 Oct 2022 15:53:41 -0400
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kirill Tkhai <kirill.tkhai@openvz.org>,
-        Manuel Bentele <development@manuel-bentele.de>,
-        qemu-devel@nongnu.org, Kevin Wolf <kwolf@redhat.com>,
-        rjones@redhat.com, Xie Yongji <xieyongji@bytedance.com>,
-        "Denis V. Lunev" <den@openvz.org>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Subject: Re: ublk-qcow2: ublk-qcow2 is available
-Message-ID: <Yzs9xQlVuW41TuNC@fedora>
-References: <Yza1u1KfKa7ycQm0@T590>
+        with ESMTP id S229516AbiJCUP2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 3 Oct 2022 16:15:28 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815E42A268;
+        Mon,  3 Oct 2022 13:15:27 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id c24so10655305plo.3;
+        Mon, 03 Oct 2022 13:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date;
+        bh=C3/N9hbhwupuGmO0AntkXcuTr5FrNGR8ZHngrdZEthU=;
+        b=qRoStCLUpxzw2alYY4nRjwbDniVOp8r0swaVcfpwPdIZNnoFCQ4yfr/+ZSZ1CDeYOs
+         z7pb17R3TjBSqJwf5r/yas2oc5Tg5YIcxLhgMAwL8Az8k0PEcg4mVmeiQR3jyRy/AwhO
+         +YWF/uUicBgF61WQTFHS1YOx12fHVeKIowPbeQbx+MpvPCBiAd7NAmJcvPGKX+vzyvEP
+         lWgbCkExvoG93U49AtvbMOPRVbxtS/ejd3i3tR9o+A3EQBbztZuuvQWE+mjLFEkO272e
+         kMxiNlbpxEbPFy58aiweYJFXjJVHhv1oRFonnxwCQWQ5+4UX9EozgbNg3PmZUJENB6nM
+         TukA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=C3/N9hbhwupuGmO0AntkXcuTr5FrNGR8ZHngrdZEthU=;
+        b=UD/G8Nlhb+PxdnTSTfrXDUQ1pmIfu3QdUQqbmEZ1iwshS+lxvKdm6K1Z6veMvvBjHc
+         i4acfLEcADlHaLvhiLrAC73mDgw5Jz3NPLM7KKxgxLZ77rxh0mKKuskb0KQnwHcVnI4v
+         +s5819KB6uZD6e/tqvtkxvoleJuCowFDTtPVV9VkvgHUKjvIMxF90ztWlZ6Ewd86InQN
+         8FtP+4l+DCwkcjH/oIZgdDWQWH8ugfewCn3DPtci7/pRBbq6FEVYxX6w0vHxtBtUZFJV
+         d+KdFEVN/Nx0TUPmmgFy83AGpKA/WCXr3jU5Hb8wzstcm4ifAunDlE9kFMmyWsktXXZ5
+         8Rmw==
+X-Gm-Message-State: ACrzQf3ADmsHquN3snY+NyFCkPYabuE4RPgMZ6r4C52trapcSBu3gcnE
+        uvqmd9htjx9WyEHS1uuc3mt/qhzFhuOAIw==
+X-Google-Smtp-Source: AMsMyM52XvJpXABGrNU34Tz1SGCYuNUqAG1pM7eFFxSnbt+hDbkTf/b8aWnc/cIS17tC9C+18TN7lw==
+X-Received: by 2002:a17:90b:4d08:b0:20a:6861:352c with SMTP id mw8-20020a17090b4d0800b0020a6861352cmr13840900pjb.225.1664828126740;
+        Mon, 03 Oct 2022 13:15:26 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:cb45])
+        by smtp.gmail.com with ESMTPSA id v1-20020a626101000000b00543a098a6ffsm7708265pfb.212.2022.10.03.13.15.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Oct 2022 13:15:26 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Mon, 3 Oct 2022 10:15:24 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Subject: Re: [PATCH v7 1/3] llist: Add a lock-less list variant terminated by
+ a sentinel node
+Message-ID: <YztC3BVzOiwOKZij@slm.duckdns.org>
+References: <20221003154459.207538-1-longman@redhat.com>
+ <20221003154459.207538-2-longman@redhat.com>
+ <YzsQZPONIJRgtf3o@slm.duckdns.org>
+ <006ebc52-ab37-442a-9ba3-e7b8dff53fab@redhat.com>
+ <YzsUgY4CC0SH8Sl2@slm.duckdns.org>
+ <8008933b-4a28-19e5-02db-ef1d07eaf952@redhat.com>
+ <YzsdsjlMMDFwLOzR@slm.duckdns.org>
+ <87e7cd70-4ab6-f33b-ce26-afe2c7c04faa@redhat.com>
+ <67f5d0af-dbfa-291a-a596-c90860b94455@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bJI59MQn0KJiUKNL"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yza1u1KfKa7ycQm0@T590>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,URI_DOTEDU autolearn=no autolearn_force=no
-        version=3.4.6
+In-Reply-To: <67f5d0af-dbfa-291a-a596-c90860b94455@redhat.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hello,
 
---bJI59MQn0KJiUKNL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Oct 03, 2022 at 03:39:02PM -0400, Waiman Long wrote:
+> There are 123 instances where llist_head is referenced in arch, driver,
+> filesystem and kernel code. Going through all these to make sure that it
+> will all work will be a major effort. I think it will be safer to allow both
+> NULL and the sentinel node as the initializers and gradually convert them to
+> use the proper llist APIs over time to complete the conversion. I am sorry
+> that I can't spend that much time upfront for this conversion effort.
 
-On Fri, Sep 30, 2022 at 05:24:11PM +0800, Ming Lei wrote:
-> ublk-qcow2 is available now.
+I see. Oh well, thanks for taking a look.
 
-Cool, thanks for sharing!
-
->=20
-> So far it provides basic read/write function, and compression and snapshot
-> aren't supported yet. The target/backend implementation is completely
-> based on io_uring, and share the same io_uring with ublk IO command
-> handler, just like what ublk-loop does.
->=20
-> Follows the main motivations of ublk-qcow2:
->=20
-> - building one complicated target from scratch helps libublksrv APIs/func=
-tions
->   become mature/stable more quickly, since qcow2 is complicated and needs=
- more
->   requirement from libublksrv compared with other simple ones(loop, null)
->=20
-> - there are several attempts of implementing qcow2 driver in kernel, such=
- as
->   ``qloop`` [2], ``dm-qcow2`` [3] and ``in kernel qcow2(ro)`` [4], so ubl=
-k-qcow2
->   might useful be for covering requirement in this field
->=20
-> - performance comparison with qemu-nbd, and it was my 1st thought to eval=
-uate
->   performance of ublk/io_uring backend by writing one ublk-qcow2 since ub=
-lksrv
->   is started
->=20
-> - help to abstract common building block or design pattern for writing ne=
-w ublk
->   target/backend
->=20
-> So far it basically passes xfstest(XFS) test by using ublk-qcow2 block
-> device as TEST_DEV, and kernel building workload is verified too. Also
-> soft update approach is applied in meta flushing, and meta data
-> integrity is guaranteed, 'make test T=3Dqcow2/040' covers this kind of
-> test, and only cluster leak is reported during this test.
->=20
-> The performance data looks much better compared with qemu-nbd, see
-> details in commit log[1], README[5] and STATUS[6]. And the test covers bo=
-th
-> empty image and pre-allocated image, for example of pre-allocated qcow2
-> image(8GB):
->=20
-> - qemu-nbd (make test T=3Dqcow2/002)
-
-Single queue?
-
-> 	randwrite(4k): jobs 1, iops 24605
-> 	randread(4k): jobs 1, iops 30938
-> 	randrw(4k): jobs 1, iops read 13981 write 14001
-> 	rw(512k): jobs 1, iops read 724 write 728
-
-Please try qemu-storage-daemon's VDUSE export type as well. The
-command-line should be similar to this:
-
-  # modprobe virtio_vdpa # attaches vDPA devices to host kernel
-  # modprobe vduse
-  # qemu-storage-daemon \
-      --blockdev file,filename=3Dtest.qcow2,cache.direct=3Dof|off,aio=3Dnat=
-ive,node-name=3Dfile \
-      --blockdev qcow2,file=3Dfile,node-name=3Dqcow2 \
-      --object iothread,id=3Diothread0 \
-      --export vduse-blk,id=3Dvduse0,name=3Dvduse0,num-queues=3D$(nproc),no=
-de-name=3Dqcow2,writable=3Don,iothread=3Diothread0
-  # vdpa dev add name vduse0 mgmtdev vduse
-
-A virtio-blk device should appear and xfstests can be run on it
-(typically /dev/vda unless you already have other virtio-blk devices).
-
-Afterwards you can destroy the device using:
-
-  # vdpa dev del vduse0
-
->=20
-> - ublk-qcow2 (make test T=3Dqcow2/022)
-
-There are a lot of other factors not directly related to NBD vs ublk. In
-order to get an apples-to-apples comparison with qemu-* a ublk export
-type is needed in qemu-storage-daemon. That way only the difference is
-the ublk interface and the rest of the code path is identical, making it
-possible to compare NBD, VDUSE, ublk, etc more precisely.
-
-I think that comparison is interesting before comparing different qcow2
-implementations because qcow2 sits on top of too much other code. It's
-hard to know what should be accounted to configuration differences,
-implementation differences, or fundamental differences that cannot be
-overcome (this is the interesting part!).
-
-> 	randwrite(4k): jobs 1, iops 104481
-> 	randread(4k): jobs 1, iops 114937
-> 	randrw(4k): jobs 1, iops read 53630 write 53577
-> 	rw(512k): jobs 1, iops read 1412 write 1423
->=20
-> Also ublk-qcow2 aligns queue's chunk_sectors limit with qcow2's cluster s=
-ize,
-> which is 64KB at default, this way simplifies backend io handling, but
-> it could be increased to 512K or more proper size for improving sequential
-> IO perf, just need one coroutine to handle more than one IOs.
->=20
->=20
-> [1] https://github.com/ming1/ubdsrv/commit/9faabbec3a92ca83ddae92335c66ea=
-bbeff654e7
-> [2] https://upcommons.upc.edu/bitstream/handle/2099.1/9619/65757.pdf?sequ=
-ence=3D1&isAllowed=3Dy
-> [3] https://lwn.net/Articles/889429/
-> [4] https://lab.ks.uni-freiburg.de/projects/kernel-qcow2/repository
-> [5] https://github.com/ming1/ubdsrv/blob/master/qcow2/README.rst
-> [6] https://github.com/ming1/ubdsrv/blob/master/qcow2/STATUS.rst
->=20
-> Thanks,
-> Ming
->=20
-
---bJI59MQn0KJiUKNL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmM7PcUACgkQnKSrs4Gr
-c8i93AgAib2dawkTdAYrOmjuCQb+qNpv+e7Zq8oKjll/V+/Gw8MFTcfmruW0vMex
-zgWcQ4oWWarMgU/YbP0rYTGpTRNG3NWbw4gozRrdT6akOfYD7I6pyZxIcXu9KNTM
-qInj7AqgdQxmwwVCH1s3zDuK0acVUt6cq6lIC+yt4/0FvSuQdqNmYXgwEimFGgaO
-RptJk6qB57zOAeOy8Y3c2N8ZLuqOEcNiOeh74ahVJsaPmBNOOg22ltzkNRJbfTuU
-oyaPqKKjGNZepksZoaSaWPdWbFrF/inEtwyRFWutd5wdyDX3gfkEFCKh3csgku3E
-BciwRjNcVdsrkTiv/Nnd4XRurHCEqA==
-=7gpZ
------END PGP SIGNATURE-----
-
---bJI59MQn0KJiUKNL--
-
+-- 
+tejun
