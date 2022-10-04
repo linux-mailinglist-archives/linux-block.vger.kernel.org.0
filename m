@@ -2,296 +2,495 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E5435F4669
-	for <lists+linux-block@lfdr.de>; Tue,  4 Oct 2022 17:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 477675F46B5
+	for <lists+linux-block@lfdr.de>; Tue,  4 Oct 2022 17:30:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbiJDPSN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Oct 2022 11:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45268 "EHLO
+        id S229574AbiJDPaa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Oct 2022 11:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbiJDPSK (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 11:18:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3AB5E64A
-        for <linux-block@vger.kernel.org>; Tue,  4 Oct 2022 08:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664896686;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0FpnMCqztZfcSkuoNWtTteDfyJFqXA0aSmNRg6udllo=;
-        b=DZ6YKZlrdzY7jZ9BYi2D/CIqQRAacN4vTvIul6Q/M9KwZbBWTgU02+IO2xtIrVQD/BeTzM
-        FoC/OizdJ31XfIafuvUfh7KeMKjBSd4IFwlPo5ioy2h8S+GJxjhBeZEijCOGIVKgOP2I0f
-        f/N7SkrJ+Y7DWCmYL9QQzTRcJUOChgo=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-611-bh6WZBlvPxyRyOeK73kHFQ-1; Tue, 04 Oct 2022 11:18:04 -0400
-X-MC-Unique: bh6WZBlvPxyRyOeK73kHFQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E3C02999B2A;
-        Tue,  4 Oct 2022 15:18:01 +0000 (UTC)
-Received: from llong.com (unknown [10.22.10.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 328042166B29;
-        Tue,  4 Oct 2022 15:18:01 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v8 3/3] blk-cgroup: Optimize blkcg_rstat_flush()
-Date:   Tue,  4 Oct 2022 11:17:48 -0400
-Message-Id: <20221004151748.293388-4-longman@redhat.com>
-In-Reply-To: <20221004151748.293388-1-longman@redhat.com>
-References: <20221004151748.293388-1-longman@redhat.com>
+        with ESMTP id S229889AbiJDPaQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 11:30:16 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E2B1F2F6
+        for <linux-block@vger.kernel.org>; Tue,  4 Oct 2022 08:30:14 -0700 (PDT)
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 294CAiZA027519
+        for <linux-block@vger.kernel.org>; Tue, 4 Oct 2022 08:30:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=s2048-2021-q4;
+ bh=MIlUGZxEmiwr29TXC6rLK1RgFe5Ngz+vdiicSffGJ7E=;
+ b=X2wO0v7XcWF2qegkjQu6/9BfVP73kVgdOrUeX3EZeBmJz0uXbX1/28S8U8TZDKy1rCfN
+ MQUscxt+yPZ+/5YDB90516CxLi494kQ+UCvx1DSOSSRmiulhf9z3GGd+sfcSip+tg0eB
+ 1A/v8hhBhxEeM6RnJE9bKqpKoJlrIjiPTJhwJlcmbOsk7xZOMQ8m2daf/Czejz7i3saY
+ tdElKyfCFKxNCeMAI4Iop4VcgOrfn0lnMVH8sfPUcKmQuxGl+IKKAEFVxEUNEIAcnSUM
+ XEsPfepStoZznkUDZvDi2gyFYOH6SJU5D5k4DP/AKobT5BZWzYLOo958p3sFvciQUzl9 1g== 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3k0b2tbysa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Tue, 04 Oct 2022 08:30:13 -0700
+Received: from twshared34348.07.ash9.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 4 Oct 2022 08:30:11 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id 1C1F2961C978; Tue,  4 Oct 2022 08:30:05 -0700 (PDT)
+From:   Keith Busch <kbusch@meta.com>
+To:     <linux-block@vger.kernel.org>, <axboe@kernel.dk>
+CC:     <linux-nvme@lists.infradead.org>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH] blk-mq: aggregate ktime_get per request batch
+Date:   Tue, 4 Oct 2022 08:30:04 -0700
+Message-ID: <20221004153004.2058994-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: OeIWFwdY-IKF5XnX5QBEpIHxH1bo2WS2
+X-Proofpoint-ORIG-GUID: OeIWFwdY-IKF5XnX5QBEpIHxH1bo2WS2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-10-04_06,2022-09-29_03,2022-06-22_01
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-For a system with many CPUs and block devices, the time to do
-blkcg_rstat_flush() from cgroup_rstat_flush() can be rather long. It
-can be especially problematic as interrupt is disabled during the flush.
-It was reported that it might take seconds to complete in some extreme
-cases leading to hard lockup messages.
+From: Keith Busch <kbusch@kernel.org>
 
-As it is likely that not all the percpu blkg_iostat_set's has been
-updated since the last flush, those stale blkg_iostat_set's don't need
-to be flushed in this case. This patch optimizes blkcg_rstat_flush()
-by keeping a lockless list of recently updated blkg_iostat_set's in a
-newly added percpu blkcg->lhead pointer.
+The request statistics fields' precision doesn't require each get a
+timestamp at their exact location of being set. We can get the time just
+once per batch to reduce the overhead from this repeated call. This is
+only really helpful if requests are batched, but no harm done if sending
+one at a time.
 
-The blkg_iostat_set is added to a sentinel lockless list on the update
-side in blk_cgroup_bio_start(). It is removed from the sentinel lockless
-list when flushed in blkcg_rstat_flush(). Due to racing, it is possible
-that blk_iostat_set's in the lockless list may have no new IO stats to
-be flushed, but that is OK.
+Using fio's t/io_uring benchmark with default settings, time spent in
+ktime_get() reduced from ~6% to <1%, and is good for ~3% IOPs boost when
+stats are enabled.
 
-To protect against destruction of blkg, a percpu reference is gotten
-when putting into the lockless list and put back when removed.
-
-A blkg_iostat_set can determine if it is in a lockless list by checking
-the content of its lnode.next pointer which will be non-NULL when in
-a sentinel lockless list.
-
-When booting up an instrumented test kernel with this patch on a
-2-socket 96-thread system with cgroup v2, out of the 2051 calls to
-cgroup_rstat_flush() after bootup, 1788 of the calls were exited
-immediately because of empty lockless list. After an all-cpu kernel
-build, the ratio became 6295424/6340513. That was more than 99%.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/blk-cgroup.c | 75 ++++++++++++++++++++++++++++++++++++++++++----
- block/blk-cgroup.h |  9 ++++++
- 2 files changed, 78 insertions(+), 6 deletions(-)
+ block/blk-mq.c             | 88 ++++++++++++++++++++++++--------------
+ drivers/block/virtio_blk.c |  3 +-
+ drivers/nvme/host/pci.c    |  3 +-
+ include/linux/blk-mq.h     |  2 +-
+ include/linux/blkdev.h     |  7 +++
+ 5 files changed, 69 insertions(+), 34 deletions(-)
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 946592249795..63569b05db0d 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -59,6 +59,37 @@ static struct workqueue_struct *blkcg_punt_bio_wq;
- 
- #define BLKG_DESTROY_BATCH_SIZE  64
- 
-+/*
-+ * Lockless lists for tracking IO stats update
-+ *
-+ * New IO stats are stored in the percpu iostat_cpu within blkcg_gq (blkg).
-+ * There are multiple blkg's (one for each block device) attached to each
-+ * blkcg. The rstat code keeps track of which cpu has IO stats updated,
-+ * but it doesn't know which blkg has the updated stats. If there are many
-+ * block devices in a system, the cost of iterating all the blkg's to flush
-+ * out the IO stats can be high. To reduce such overhead, a set of percpu
-+ * lockless lists (lhead) per blkcg are used to track the set of recently
-+ * updated iostat_cpu's since the last flush. An iostat_cpu will be put
-+ * onto the lockless list on the update side [blk_cgroup_bio_start()] if
-+ * not there yet and then removed when being flushed [blkcg_rstat_flush()].
-+ * References to blkg are gotten and then put back in the process to
-+ * protect against blkg removal.
-+ *
-+ * Return: 0 if successful or -ENOMEM if allocation fails.
-+ */
-+static int init_blkcg_llists(struct blkcg *blkcg)
-+{
-+	int cpu;
-+
-+	blkcg->lhead = alloc_percpu_gfp(struct llist_head, GFP_KERNEL);
-+	if (!blkcg->lhead)
-+		return -ENOMEM;
-+
-+	for_each_possible_cpu(cpu)
-+		init_sllist_head(per_cpu_ptr(blkcg->lhead, cpu));
-+	return 0;
-+}
-+
- /**
-  * blkcg_css - find the current css
-  *
-@@ -236,8 +267,10 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
- 	blkg->blkcg = blkcg;
- 
- 	u64_stats_init(&blkg->iostat.sync);
--	for_each_possible_cpu(cpu)
-+	for_each_possible_cpu(cpu) {
- 		u64_stats_init(&per_cpu_ptr(blkg->iostat_cpu, cpu)->sync);
-+		per_cpu_ptr(blkg->iostat_cpu, cpu)->blkg = blkg;
-+	}
- 
- 	for (i = 0; i < BLKCG_MAX_POLS; i++) {
- 		struct blkcg_policy *pol = blkcg_policy[i];
-@@ -864,7 +897,9 @@ static void blkcg_iostat_update(struct blkcg_gq *blkg, struct blkg_iostat *cur,
- static void blkcg_rstat_flush(struct cgroup_subsys_state *css, int cpu)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 8070b6c10e8d..c759fb36b684 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -339,7 +339,7 @@ void blk_rq_init(struct request_queue *q, struct requ=
+est *rq)
+ EXPORT_SYMBOL(blk_rq_init);
+=20
+ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data=
+,
+-		struct blk_mq_tags *tags, unsigned int tag, u64 alloc_time_ns)
++		struct blk_mq_tags *tags, unsigned int tag, u64 now)
  {
- 	struct blkcg *blkcg = css_to_blkcg(css);
--	struct blkcg_gq *blkg;
-+	struct llist_head *lhead = per_cpu_ptr(blkcg->lhead, cpu);
-+	struct llist_node *lnode;
-+	struct blkg_iostat_set *bisc, *next_bisc;
- 
- 	/* Root-level stats are sourced from system-wide IO stats */
- 	if (!cgroup_parent(css->cgroup))
-@@ -872,12 +907,21 @@ static void blkcg_rstat_flush(struct cgroup_subsys_state *css, int cpu)
- 
- 	rcu_read_lock();
- 
--	hlist_for_each_entry_rcu(blkg, &blkcg->blkg_list, blkcg_node) {
-+	lnode = sllist_del_all(lhead);
-+	if (!lnode)
-+		goto out;
-+
-+	/*
-+	 * Iterate only the iostat_cpu's queued in the lockless list.
-+	 */
-+	llist_for_each_entry_safe(bisc, next_bisc, lnode, lnode) {
-+		struct blkcg_gq *blkg = bisc->blkg;
- 		struct blkcg_gq *parent = blkg->parent;
--		struct blkg_iostat_set *bisc = per_cpu_ptr(blkg->iostat_cpu, cpu);
- 		struct blkg_iostat cur;
- 		unsigned int seq;
- 
-+		WRITE_ONCE(lnode->next, NULL);
-+
- 		/* fetch the current per-cpu values */
- 		do {
- 			seq = u64_stats_fetch_begin(&bisc->sync);
-@@ -890,8 +934,10 @@ static void blkcg_rstat_flush(struct cgroup_subsys_state *css, int cpu)
- 		if (parent && parent->parent)
- 			blkcg_iostat_update(parent, &blkg->iostat.cur,
- 					    &blkg->iostat.last);
-+		percpu_ref_put(&blkg->refcnt);
+ 	struct blk_mq_ctx *ctx =3D data->ctx;
+ 	struct blk_mq_hw_ctx *hctx =3D data->hctx;
+@@ -366,15 +366,11 @@ static struct request *blk_mq_rq_ctx_init(struct bl=
+k_mq_alloc_data *data,
  	}
- 
-+out:
- 	rcu_read_unlock();
- }
- 
-@@ -1170,6 +1216,7 @@ static void blkcg_css_free(struct cgroup_subsys_state *css)
- 
- 	mutex_unlock(&blkcg_pol_mutex);
- 
-+	free_percpu(blkcg->lhead);
- 	kfree(blkcg);
- }
- 
-@@ -1189,6 +1236,9 @@ blkcg_css_alloc(struct cgroup_subsys_state *parent_css)
- 			goto unlock;
- 	}
- 
-+	if (init_blkcg_llists(blkcg))
-+		goto free_blkcg;
-+
- 	for (i = 0; i < BLKCG_MAX_POLS ; i++) {
- 		struct blkcg_policy *pol = blkcg_policy[i];
- 		struct blkcg_policy_data *cpd;
-@@ -1229,7 +1279,8 @@ blkcg_css_alloc(struct cgroup_subsys_state *parent_css)
- 	for (i--; i >= 0; i--)
- 		if (blkcg->cpd[i])
- 			blkcg_policy[i]->cpd_free_fn(blkcg->cpd[i]);
--
-+	free_percpu(blkcg->lhead);
-+free_blkcg:
- 	if (blkcg != &blkcg_root)
- 		kfree(blkcg);
- unlock:
-@@ -1990,6 +2041,7 @@ static int blk_cgroup_io_type(struct bio *bio)
- 
- void blk_cgroup_bio_start(struct bio *bio)
- {
-+	struct blkcg *blkcg = bio->bi_blkg->blkcg;
- 	int rwd = blk_cgroup_io_type(bio), cpu;
- 	struct blkg_iostat_set *bis;
- 	unsigned long flags;
-@@ -2008,9 +2060,20 @@ void blk_cgroup_bio_start(struct bio *bio)
- 	}
- 	bis->cur.ios[rwd]++;
- 
-+	/*
-+	 * If the iostat_cpu isn't in a lockless list, put it into the
-+	 * list to indicate that a stat update is pending.
-+	 */
-+	if (!READ_ONCE(bis->lnode.next)) {
-+		struct llist_head *lhead = this_cpu_ptr(blkcg->lhead);
-+
-+		llist_add(&bis->lnode, lhead);
-+		percpu_ref_get(&bis->blkg->refcnt);
-+	}
-+
- 	u64_stats_update_end_irqrestore(&bis->sync, flags);
- 	if (cgroup_subsys_on_dfl(io_cgrp_subsys))
--		cgroup_rstat_updated(bio->bi_blkg->blkcg->css.cgroup, cpu);
-+		cgroup_rstat_updated(blkcg->css.cgroup, cpu);
- 	put_cpu();
- }
- 
-diff --git a/block/blk-cgroup.h b/block/blk-cgroup.h
-index d2724d1dd7c9..0968b6c8ea12 100644
---- a/block/blk-cgroup.h
-+++ b/block/blk-cgroup.h
-@@ -18,6 +18,7 @@
- #include <linux/cgroup.h>
- #include <linux/kthread.h>
- #include <linux/blk-mq.h>
-+#include <linux/llist.h>
- 
- struct blkcg_gq;
- struct blkg_policy_data;
-@@ -43,6 +44,8 @@ struct blkg_iostat {
- 
- struct blkg_iostat_set {
- 	struct u64_stats_sync		sync;
-+	struct llist_node		lnode;
-+	struct blkcg_gq		       *blkg;
- 	struct blkg_iostat		cur;
- 	struct blkg_iostat		last;
- };
-@@ -97,6 +100,12 @@ struct blkcg {
- 	struct blkcg_policy_data	*cpd[BLKCG_MAX_POLS];
- 
- 	struct list_head		all_blkcgs_node;
-+
-+	/*
-+	 * List of updated percpu blkg_iostat_set's since the last flush.
-+	 */
-+	struct llist_head __percpu	*lhead;
-+
- #ifdef CONFIG_BLK_CGROUP_FC_APPID
- 	char                            fc_app_id[FC_APPID_LEN];
+ 	rq->timeout =3D 0;
+=20
+-	if (blk_mq_need_time_stamp(rq))
+-		rq->start_time_ns =3D ktime_get_ns();
+-	else
+-		rq->start_time_ns =3D 0;
++	rq->start_time_ns =3D now;
+ 	rq->part =3D NULL;
+ #ifdef CONFIG_BLK_RQ_ALLOC_TIME
+-	rq->alloc_time_ns =3D alloc_time_ns;
++	rq->alloc_time_ns =3D now;
  #endif
--- 
-2.31.1
+-	rq->io_start_time_ns =3D 0;
+ 	rq->stats_sectors =3D 0;
+ 	rq->nr_phys_segments =3D 0;
+ #if defined(CONFIG_BLK_DEV_INTEGRITY)
+@@ -407,7 +403,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_=
+mq_alloc_data *data,
+=20
+ static inline struct request *
+ __blk_mq_alloc_requests_batch(struct blk_mq_alloc_data *data,
+-		u64 alloc_time_ns)
++		u64 now)
+ {
+ 	unsigned int tag, tag_offset;
+ 	struct blk_mq_tags *tags;
+@@ -426,7 +422,7 @@ __blk_mq_alloc_requests_batch(struct blk_mq_alloc_dat=
+a *data,
+ 		tag =3D tag_offset + i;
+ 		prefetch(tags->static_rqs[tag]);
+ 		tag_mask &=3D ~(1UL << i);
+-		rq =3D blk_mq_rq_ctx_init(data, tags, tag, alloc_time_ns);
++		rq =3D blk_mq_rq_ctx_init(data, tags, tag, now);
+ 		rq_list_add(data->cached_rq, rq);
+ 		nr++;
+ 	}
+@@ -440,13 +436,13 @@ __blk_mq_alloc_requests_batch(struct blk_mq_alloc_d=
+ata *data,
+ static struct request *__blk_mq_alloc_requests(struct blk_mq_alloc_data =
+*data)
+ {
+ 	struct request_queue *q =3D data->q;
+-	u64 alloc_time_ns =3D 0;
+ 	struct request *rq;
+ 	unsigned int tag;
++	u64 now =3D 0;
+=20
+ 	/* alloc_time includes depth and tag waits */
+-	if (blk_queue_rq_alloc_time(q))
+-		alloc_time_ns =3D ktime_get_ns();
++	if (blk_queue_need_ts(q))
++		now =3D ktime_get_ns();
+=20
+ 	if (data->cmd_flags & REQ_NOWAIT)
+ 		data->flags |=3D BLK_MQ_REQ_NOWAIT;
+@@ -481,7 +477,7 @@ static struct request *__blk_mq_alloc_requests(struct=
+ blk_mq_alloc_data *data)
+ 	 * Try batched alloc if we want more than 1 tag.
+ 	 */
+ 	if (data->nr_tags > 1) {
+-		rq =3D __blk_mq_alloc_requests_batch(data, alloc_time_ns);
++		rq =3D __blk_mq_alloc_requests_batch(data, now);
+ 		if (rq)
+ 			return rq;
+ 		data->nr_tags =3D 1;
+@@ -507,7 +503,7 @@ static struct request *__blk_mq_alloc_requests(struct=
+ blk_mq_alloc_data *data)
+ 	}
+=20
+ 	return blk_mq_rq_ctx_init(data, blk_mq_tags_from_data(data), tag,
+-					alloc_time_ns);
++					now);
+ }
+=20
+ static struct request *blk_mq_rq_cache_fill(struct request_queue *q,
+@@ -610,14 +606,14 @@ struct request *blk_mq_alloc_request_hctx(struct re=
+quest_queue *q,
+ 		.cmd_flags	=3D opf,
+ 		.nr_tags	=3D 1,
+ 	};
+-	u64 alloc_time_ns =3D 0;
+ 	unsigned int cpu;
+ 	unsigned int tag;
++	u64 now =3D 0;
+ 	int ret;
+=20
+ 	/* alloc_time includes depth and tag waits */
+-	if (blk_queue_rq_alloc_time(q))
+-		alloc_time_ns =3D ktime_get_ns();
++	if (blk_queue_need_ts(q))
++		now =3D ktime_get_ns();
+=20
+ 	/*
+ 	 * If the tag allocator sleeps we could get an allocation for a
+@@ -661,7 +657,7 @@ struct request *blk_mq_alloc_request_hctx(struct requ=
+est_queue *q,
+ 	if (tag =3D=3D BLK_MQ_NO_TAG)
+ 		goto out_queue_exit;
+ 	return blk_mq_rq_ctx_init(&data, blk_mq_tags_from_data(&data), tag,
+-					alloc_time_ns);
++					now);
+=20
+ out_queue_exit:
+ 	blk_queue_exit(q);
+@@ -1214,8 +1210,13 @@ void blk_mq_start_request(struct request *rq)
+=20
+ 	trace_block_rq_issue(rq);
+=20
+-	if (test_bit(QUEUE_FLAG_STATS, &q->queue_flags)) {
+-		rq->io_start_time_ns =3D ktime_get_ns();
++	if (blk_queue_stat(q) ) {
++		/*
++		 * io_start_time_ns may not have been set earlier if the stat
++		 * attribute was being changed.
++		 */
++		if (!rq->io_start_time_ns)
++			rq->io_start_time_ns =3D ktime_get_ns();
+ 		rq->stats_sectors =3D blk_rq_sectors(rq);
+ 		rq->rq_flags |=3D RQF_STATS;
+ 		rq_qos_issue(q, rq);
+@@ -1944,10 +1945,14 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx=
+ *hctx, struct list_head *list,
+ 	blk_status_t ret =3D BLK_STS_OK;
+ 	LIST_HEAD(zone_list);
+ 	bool needs_resource =3D false;
++	u64 now =3D 0;
+=20
+ 	if (list_empty(list))
+ 		return false;
+=20
++	if (blk_queue_stat(q))
++		now =3D ktime_get_ns();
++
+ 	/*
+ 	 * Now process all the entries, sending them to the driver.
+ 	 */
+@@ -1983,6 +1988,8 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *=
+hctx, struct list_head *list,
+ 		 */
+ 		if (nr_budgets)
+ 			nr_budgets--;
++
++		rq->io_start_time_ns =3D now;
+ 		ret =3D q->mq_ops->queue_rq(hctx, &bd);
+ 		switch (ret) {
+ 		case BLK_STS_OK:
+@@ -2507,7 +2514,7 @@ static void blk_mq_bio_to_request(struct request *r=
+q, struct bio *bio,
+ }
+=20
+ static blk_status_t __blk_mq_issue_directly(struct blk_mq_hw_ctx *hctx,
+-					    struct request *rq, bool last)
++					    struct request *rq, bool last, u64 now)
+ {
+ 	struct request_queue *q =3D rq->q;
+ 	struct blk_mq_queue_data bd =3D {
+@@ -2521,6 +2528,7 @@ static blk_status_t __blk_mq_issue_directly(struct =
+blk_mq_hw_ctx *hctx,
+ 	 * Any other error (busy), just add it to our list as we
+ 	 * previously would have done.
+ 	 */
++	rq->io_start_time_ns =3D now;
+ 	ret =3D q->mq_ops->queue_rq(hctx, &bd);
+ 	switch (ret) {
+ 	case BLK_STS_OK:
+@@ -2541,7 +2549,7 @@ static blk_status_t __blk_mq_issue_directly(struct =
+blk_mq_hw_ctx *hctx,
+=20
+ static blk_status_t __blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hc=
+tx,
+ 						struct request *rq,
+-						bool bypass_insert, bool last)
++						bool bypass_insert, bool last, u64 now)
+ {
+ 	struct request_queue *q =3D rq->q;
+ 	bool run_queue =3D true;
+@@ -2574,7 +2582,7 @@ static blk_status_t __blk_mq_try_issue_directly(str=
+uct blk_mq_hw_ctx *hctx,
+ 		goto insert;
+ 	}
+=20
+-	return __blk_mq_issue_directly(hctx, rq, last);
++	return __blk_mq_issue_directly(hctx, rq, last, now);
+ insert:
+ 	if (bypass_insert)
+ 		return BLK_STS_RESOURCE;
+@@ -2597,8 +2605,13 @@ static blk_status_t __blk_mq_try_issue_directly(st=
+ruct blk_mq_hw_ctx *hctx,
+ static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
+ 		struct request *rq)
+ {
+-	blk_status_t ret =3D
+-		__blk_mq_try_issue_directly(hctx, rq, false, true);
++	blk_status_t ret;
++	u64 now =3D 0;
++
++	if (blk_queue_stat(rq->q))
++		now =3D ktime_get_ns();
++
++	ret =3D __blk_mq_try_issue_directly(hctx, rq, false, true, now);
+=20
+ 	if (ret =3D=3D BLK_STS_RESOURCE || ret =3D=3D BLK_STS_DEV_RESOURCE)
+ 		blk_mq_request_bypass_insert(rq, false, true);
+@@ -2606,14 +2619,15 @@ static void blk_mq_try_issue_directly(struct blk_=
+mq_hw_ctx *hctx,
+ 		blk_mq_end_request(rq, ret);
+ }
+=20
+-static blk_status_t blk_mq_request_issue_directly(struct request *rq, bo=
+ol last)
++static blk_status_t blk_mq_request_issue_directly(struct request *rq, bo=
+ol last, u64 now)
+ {
+-	return __blk_mq_try_issue_directly(rq->mq_hctx, rq, true, last);
++	return __blk_mq_try_issue_directly(rq->mq_hctx, rq, true, last, now);
+ }
+=20
+ static void blk_mq_plug_issue_direct(struct blk_plug *plug, bool from_sc=
+hedule)
+ {
+ 	struct blk_mq_hw_ctx *hctx =3D NULL;
++	u64 now =3D ktime_get_ns();
+ 	struct request *rq;
+ 	int queued =3D 0;
+ 	int errors =3D 0;
+@@ -2628,7 +2642,7 @@ static void blk_mq_plug_issue_direct(struct blk_plu=
+g *plug, bool from_schedule)
+ 			hctx =3D rq->mq_hctx;
+ 		}
+=20
+-		ret =3D blk_mq_request_issue_directly(rq, last);
++		ret =3D blk_mq_request_issue_directly(rq, last, now);
+ 		switch (ret) {
+ 		case BLK_STS_OK:
+ 			queued++;
+@@ -2656,9 +2670,14 @@ static void blk_mq_plug_issue_direct(struct blk_pl=
+ug *plug, bool from_schedule)
+ static void __blk_mq_flush_plug_list(struct request_queue *q,
+ 				     struct blk_plug *plug)
+ {
++	u64 now =3D 0;
++
+ 	if (blk_queue_quiesced(q))
+ 		return;
+-	q->mq_ops->queue_rqs(&plug->mq_list);
++	if (blk_queue_stat(q))
++		now =3D ktime_get_ns();
++
++	q->mq_ops->queue_rqs(&plug->mq_list, now);
+ }
+=20
+ static void blk_mq_dispatch_plug_list(struct blk_plug *plug, bool from_s=
+ched)
+@@ -2736,6 +2755,10 @@ void blk_mq_try_issue_list_directly(struct blk_mq_=
+hw_ctx *hctx,
+ {
+ 	int queued =3D 0;
+ 	int errors =3D 0;
++	u64 now =3D 0;
++
++	if (blk_queue_stat(hctx->queue))
++		now =3D ktime_get_ns();
+=20
+ 	while (!list_empty(list)) {
+ 		blk_status_t ret;
+@@ -2743,7 +2766,7 @@ void blk_mq_try_issue_list_directly(struct blk_mq_h=
+w_ctx *hctx,
+ 				queuelist);
+=20
+ 		list_del_init(&rq->queuelist);
+-		ret =3D blk_mq_request_issue_directly(rq, list_empty(list));
++		ret =3D blk_mq_request_issue_directly(rq, list_empty(list), now);
+ 		if (ret !=3D BLK_STS_OK) {
+ 			errors++;
+ 			if (ret =3D=3D BLK_STS_RESOURCE ||
+@@ -2938,6 +2961,7 @@ blk_status_t blk_insert_cloned_request(struct reque=
+st *rq)
+ 	struct request_queue *q =3D rq->q;
+ 	unsigned int max_sectors =3D blk_queue_get_max_sectors(q, req_op(rq));
+ 	blk_status_t ret;
++	u64 now =3D 0;
+=20
+ 	if (blk_rq_sectors(rq) > max_sectors) {
+ 		/*
+@@ -2975,6 +2999,8 @@ blk_status_t blk_insert_cloned_request(struct reque=
+st *rq)
+ 	if (blk_crypto_insert_cloned_request(rq))
+ 		return BLK_STS_IOERR;
+=20
++	if (blk_do_io_stat(rq))
++		now =3D ktime_get_ns();
+ 	blk_account_io_start(rq);
+=20
+ 	/*
+@@ -2983,7 +3009,7 @@ blk_status_t blk_insert_cloned_request(struct reque=
+st *rq)
+ 	 * insert.
+ 	 */
+ 	blk_mq_run_dispatch_ops(q,
+-			ret =3D blk_mq_request_issue_directly(rq, true));
++			ret =3D blk_mq_request_issue_directly(rq, true, now));
+ 	if (ret)
+ 		blk_account_io_done(rq, ktime_get_ns());
+ 	return ret;
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 3f4739d52268..b3b391c56d8b 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -417,7 +417,7 @@ static bool virtblk_add_req_batch(struct virtio_blk_v=
+q *vq,
+ 	return kick;
+ }
+=20
+-static void virtio_queue_rqs(struct request **rqlist)
++static void virtio_queue_rqs(struct request **rqlist, u64 now)
+ {
+ 	struct request *req, *next, *prev =3D NULL;
+ 	struct request *requeue_list =3D NULL;
+@@ -426,6 +426,7 @@ static void virtio_queue_rqs(struct request **rqlist)
+ 		struct virtio_blk_vq *vq =3D get_virtio_blk_vq(req->mq_hctx);
+ 		bool kick;
+=20
++		req->io_start_time_ns =3D now;
+ 		if (!virtblk_prep_rq_batch(req)) {
+ 			rq_list_move(rqlist, &requeue_list, req, prev);
+ 			req =3D prev;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 5b796efa325b..6fc14a3f2980 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -981,7 +981,7 @@ static bool nvme_prep_rq_batch(struct nvme_queue *nvm=
+eq, struct request *req)
+ 	return nvme_prep_rq(nvmeq->dev, req) =3D=3D BLK_STS_OK;
+ }
+=20
+-static void nvme_queue_rqs(struct request **rqlist)
++static void nvme_queue_rqs(struct request **rqlist, u64 now)
+ {
+ 	struct request *req, *next, *prev =3D NULL;
+ 	struct request *requeue_list =3D NULL;
+@@ -989,6 +989,7 @@ static void nvme_queue_rqs(struct request **rqlist)
+ 	rq_list_for_each_safe(rqlist, req, next) {
+ 		struct nvme_queue *nvmeq =3D req->mq_hctx->driver_data;
+=20
++		req->io_start_time_ns =3D now;
+ 		if (!nvme_prep_rq_batch(nvmeq, req)) {
+ 			/* detach 'req' and add to remainder list */
+ 			rq_list_move(rqlist, &requeue_list, req, prev);
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index ba18e9bdb799..071ebd7fd6c9 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -562,7 +562,7 @@ struct blk_mq_ops {
+ 	 * empty the @rqlist completely, then the rest will be queued
+ 	 * individually by the block layer upon return.
+ 	 */
+-	void (*queue_rqs)(struct request **rqlist);
++	void (*queue_rqs)(struct request **rqlist, u64 now);
+=20
+ 	/**
+ 	 * @get_budget: Reserve budget before queue request, once .queue_rq is
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 49373d002631..6bda1414cca0 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -599,6 +599,7 @@ bool blk_queue_flag_test_and_set(unsigned int flag, s=
+truct request_queue *q);
+ #define blk_queue_stable_writes(q) \
+ 	test_bit(QUEUE_FLAG_STABLE_WRITES, &(q)->queue_flags)
+ #define blk_queue_io_stat(q)	test_bit(QUEUE_FLAG_IO_STAT, &(q)->queue_fl=
+ags)
++#define blk_queue_stat(q)	test_bit(QUEUE_FLAG_STATS, &(q)->queue_flags)
+ #define blk_queue_add_random(q)	test_bit(QUEUE_FLAG_ADD_RANDOM, &(q)->qu=
+eue_flags)
+ #define blk_queue_zone_resetall(q)	\
+ 	test_bit(QUEUE_FLAG_ZONE_RESETALL, &(q)->queue_flags)
+@@ -612,6 +613,12 @@ bool blk_queue_flag_test_and_set(unsigned int flag, =
+struct request_queue *q);
+ #define blk_queue_rq_alloc_time(q)	false
+ #endif
+=20
++#define blk_queue_need_ts(q)		\
++	(blk_queue_rq_alloc_time(q) ||	\
++	 blk_queue_stat(q) || 		\
++	 blk_queue_io_stat(q) || 	\
++	 q->elevator)
++
+ #define blk_noretry_request(rq) \
+ 	((rq)->cmd_flags & (REQ_FAILFAST_DEV|REQ_FAILFAST_TRANSPORT| \
+ 			     REQ_FAILFAST_DRIVER))
+--=20
+2.30.2
 
