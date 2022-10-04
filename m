@@ -2,152 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 388845F45E9
-	for <lists+linux-block@lfdr.de>; Tue,  4 Oct 2022 16:50:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 818025F4667
+	for <lists+linux-block@lfdr.de>; Tue,  4 Oct 2022 17:18:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbiJDOu5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Oct 2022 10:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
+        id S229623AbiJDPSN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Oct 2022 11:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229904AbiJDOu4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 10:50:56 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613AA62ABD;
-        Tue,  4 Oct 2022 07:50:53 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id d18so8430616lfb.0;
-        Tue, 04 Oct 2022 07:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=0Hn40CSUd9u1FNS+WIRJQMhD0PfBlmdUq9IyNX5yQ8A=;
-        b=EyZjjX/3GJ3YRLyk8hhn5QEWqzCFf4PlbGe41bHvbGx7TdRABf8tAe/qRNZGRRJArC
-         wO7x/JJLgqjW8NGOJsj6+6eALVIjVP0e6Z3aY7tcRZfR00DaFLkPMO22U+WFh79aeQd/
-         VQ3sBsEWwSVrz5tCizef4R5netdI9nlLvFUi9UGzSnZd647yPqgH+zCYE+GE/yQaMLmf
-         XFGRMiFUniLOKls9aO3+RKatXSBxPMzxdJWLdaBv6xc4IM6WQfkuCS1A/YZ4T0P/IcjA
-         kwZKfnr0ghw3XivtacA4oTuejHvWTBp+555zVAhLcqxPghBijq9pKOj6PZuA0ZDoieDu
-         U9mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=0Hn40CSUd9u1FNS+WIRJQMhD0PfBlmdUq9IyNX5yQ8A=;
-        b=i4ULWCYdMgIjOdBGR1m37CwzIl8vah+mAv6L7+1pAZ5BHzdFuCpkJ6wLM4o3OdZMB0
-         r1Hb0PotR2gFJuznfCQlIb/N33uvcqxlggqzoiVIAIqWciiBAI7havXXz3+fC2JiklnA
-         hCkFH5OMlUiMpzPoIYXBaREE/Esru6Sony9Px2mszTXLVRT/u0o00f5dp57vPTcuzS+8
-         V7OkIdGkgJFw8I69pDRtOLsEap7h1XcooxO0pNoKTsZyP5IP33b43olMdTr3jBnYnT8c
-         afZxoA3XrgP6Y58aP2/zaVGOajCxApB77jl3GuB3SBVW/tQ57O5JyS9EGjdR7u6Yxh45
-         Mpbg==
-X-Gm-Message-State: ACrzQf3ozWPeEe/PgNQJ+UVrmyXwQYt0Nsi2cI7dLx+hWZA5i/gx5bHN
-        pU34fDv801gyjNAvUL3lRpI=
-X-Google-Smtp-Source: AMsMyM5xHx121xWdjc6Jdp/Vv6LqbJIYkiwnlPad3CEaFwaOgZMjZ6vZdghrd8V0TtOKHjNcb3ytrA==
-X-Received: by 2002:a05:6512:12c8:b0:49b:817a:c2fc with SMTP id p8-20020a05651212c800b0049b817ac2fcmr9798920lfg.165.1664895051892;
-        Tue, 04 Oct 2022 07:50:51 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id g14-20020a056512118e00b0048b0099f40fsm1935601lfr.216.2022.10.04.07.50.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 07:50:51 -0700 (PDT)
-Date:   Tue, 4 Oct 2022 17:50:49 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jens Axboe <axboe@kernel.dk>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] nvme-hwmon: Return error on kzalloc failure
-Message-ID: <20221004145049.74ffhcp7wpxw4ufz@mobilestation>
-References: <20220929224648.8997-1-Sergey.Semin@baikalelectronics.ru>
- <20220929224648.8997-2-Sergey.Semin@baikalelectronics.ru>
- <YzYwB7lRGW80r4HA@kbusch-mbp.dhcp.thefacebook.com>
- <20220930095247.vqtdc53rr66uaiwv@mobilestation>
- <YzcDvmlslPki8gBj@kbusch-mbp.dhcp.thefacebook.com>
+        with ESMTP id S229659AbiJDPSG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 11:18:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C3D5F111
+        for <linux-block@vger.kernel.org>; Tue,  4 Oct 2022 08:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1664896684;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qRmJxlNE0tvN7yeNgrdiLgaoqgJkRykVza0oLJZ3xvE=;
+        b=NlqAUBGpRM7HVsBtD9HYBM427JlzKVqXd6ruoGWRvvbyseEpeqT3spFTu/QoqkfpGULBN+
+        O/DnJU+mQqxGWhFIBP232z4Y1IORcHtRLYlxyu4XKo1lPcfghGYDY99i5z0/qBwHyMHMwp
+        /jW84vIvTGH9FPOKIx4h2aIPwcUWfzY=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-541-teJ95E6qPH25HpALp1eNaA-1; Tue, 04 Oct 2022 11:18:00 -0400
+X-MC-Unique: teJ95E6qPH25HpALp1eNaA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 274A02999B37;
+        Tue,  4 Oct 2022 15:18:00 +0000 (UTC)
+Received: from llong.com (unknown [10.22.10.217])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 932992166B26;
+        Tue,  4 Oct 2022 15:17:59 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v8 0/3] blk-cgroup: Optimize blkcg_rstat_flush()
+Date:   Tue,  4 Oct 2022 11:17:45 -0400
+Message-Id: <20221004151748.293388-1-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YzcDvmlslPki8gBj@kbusch-mbp.dhcp.thefacebook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 08:57:02AM -0600, Keith Busch wrote:
-> On Fri, Sep 30, 2022 at 12:52:47PM +0300, Serge Semin wrote:
-> > On Thu, Sep 29, 2022 at 05:53:43PM -0600, Keith Busch wrote:
-> > > On Fri, Sep 30, 2022 at 01:46:46AM +0300, Serge Semin wrote:
-> > > > Inability to allocate a buffer is a critical error which shouldn't be
-> > > > tolerated since most likely the rest of the driver won't work correctly.
-> > > > Thus instead of returning the zero status let's return the -ENOMEM error
-> > > > if the nvme_hwmon_data structure instance couldn't be created.
-> > > 
-> > 
-> > > Nak for this one. The hwmon is not necessary for the rest of the driver to
-> > > function, so having the driver detach from the device seems a bit harsh.
-> > 
-> > Even if it is as you say, neither the method semantic nor the way it's
-> > called imply that. Any failures except the allocation one are
-> > perceived as erroneous.
-> 
+ v8:
+  - Update the llist patch to make existing llist functions and macros
+    work for both NULL and sentinel terminated lockless list as much
+    as possible and leave only the initialization and removal functions
+    to have a sentinel terminated llist variants.
 
-> This is called by nvme_init_ctrl_finish(), and returns the error to
-> nvme_reset_work() only if it's < 0, which indicates we can't go on and the
-> driver unbinds.
+ v7:
+  - Drop patch 1 ("blk-cgroup: Correctly free percpu iostat_cpu in blkg
+    on error exit") as it is found to be unnecessary.
+  - Add a new llist patch to provide a lockless list variant terminated
+    by a sentinel node.
+  - Modified patch 3 to use the new sllist API and move percpu_ref_put()
+    later in the blkcg_rstat_flush() loop to prevent potential
+    use-after-free problem.
 
-That's obvious. One of the my question was that what makes the no
-memory error different from the rest of the errors causing the
-nvme_hwmon_init() method to fail? 
+ v6:
+  - Add a missing free_percpu() into blkcg_css_free() in patch 3.
+  - Integrating the documentation patch 4 back into patch 3.
 
-> 
-> This particular condition for hwmon is not something that prevents us from
-> making forward progress.
+ v5:
+  - Add a new patch 2 to eliminate the use of intermediate "ret"
+    variable in blkcg_css_alloc() to fix compilation warning reported
+    by kernel test robot.
 
-If you consider the hwmon functionality as optional (AFAIU you are),
-then just ignore the return value no matter the reason. If the problem
-caused the hwmon initialization process to fail turns to be critical
-it will be raised in some other place which is required for the NVME
-driver to work properly. Otherwise the hwmon module initialization may
-still cause the probe procedure to halt, which makes it not optional.
-That's what I meant when was saying about "the function and its
-caller semantics not implying that".
+This patch series improves blkcg_rstat_flush() performance by eliminating
+unnecessary blkg enumeration and flush operations for those blkg's and
+blkg_iostat_set's that haven't been updated since the last flush. It
+also enhances the llist API to support a sentinel termianted variant
+of the lockless list.
 
->  
-> > > The
-> > > driver can participate in memory reclaim, so failing on a low memory condition
-> > > can make matters worse.
-> > 
-> > Yes it can, so can many other places in the driver utilizing kmalloc
-> > with just GFP_KERNEL flag passed including on the same path as the
-> > nvme_hwmon_init() execution. Kmalloc will make sure the reclaim is
-> > either finished or executed in background anyway in all cases. 
-> 
-> This path is in the first initialization before we've set up a namespace that
-> can be used as a reclaim destination.
-> 
-> > Don't
-> > really see why memory allocation failure is less worse in this case
-> > than in many others in the same driver especially seeing as I said
-> 
-> The other initialization kmalloc's are required to make forward progress toward
-> setting up a namespace. This one is not required.
+Waiman Long (3):
+  llist: Allow optional sentinel node terminated lockless list
+  blk-cgroup: Return -ENOMEM directly in blkcg_css_alloc() error path
+  blk-cgroup: Optimize blkcg_rstat_flush()
 
-Anyway what you say seems still contradicting. First you said that the
-hwmon functionality was optional, but the only error being ignored was
-the no-memory one which was very rare and turned to be not ignored in
-the most of the other places. Second you got to accept the second
-patch of the series, which introduced a one more kmalloc followed
-right after the first one in the same function nvme_hwmon_init(). That
-kmalloc failure wasn't ignored but caused the nvme_hwmon_init()
-function to return an error. If you suggest to forget about the first
-part (which IMO still counts, but AFAICS is a common pattern in the
-NVME core driver, i.e. nvme_configure_apst() and
-nvme_configure_host_options()), the second part still applies.
+ block/blk-cgroup.c    |  87 ++++++++++++++++++++++++++++++------
+ block/blk-cgroup.h    |   9 ++++
+ include/linux/llist.h | 100 +++++++++++++++++++++++++++++++++---------
+ lib/llist.c           |  20 ++++++---
+ 4 files changed, 177 insertions(+), 39 deletions(-)
 
--Sergey
+-- 
+2.31.1
+
