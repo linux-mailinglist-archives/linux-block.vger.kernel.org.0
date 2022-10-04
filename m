@@ -2,66 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C84E55F3F53
-	for <lists+linux-block@lfdr.de>; Tue,  4 Oct 2022 11:19:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E71F5F4007
+	for <lists+linux-block@lfdr.de>; Tue,  4 Oct 2022 11:43:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbiJDJTH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Oct 2022 05:19:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
+        id S230056AbiJDJnS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Oct 2022 05:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbiJDJTD (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 05:19:03 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8203AE69
-        for <linux-block@vger.kernel.org>; Tue,  4 Oct 2022 02:18:55 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id m15so17959425edb.13
-        for <linux-block@vger.kernel.org>; Tue, 04 Oct 2022 02:18:55 -0700 (PDT)
+        with ESMTP id S229938AbiJDJmz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 05:42:55 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE1A56031
+        for <linux-block@vger.kernel.org>; Tue,  4 Oct 2022 02:40:19 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id nb11so27626739ejc.5
+        for <linux-block@vger.kernel.org>; Tue, 04 Oct 2022 02:40:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=gmxZf6QkPzz+sxP+3JgThS4uu0ir5KC0SdCPLMQLKec=;
-        b=o0Vn75LSs+VDuxa4a29TXta1IDYsGi3D6s7QRsVtwxJeYPjH5T6cOjSj4aH89zgdx9
-         qb1S5383hKtzOD7XbE/1Fr6icM2eGQxv/hRzd3EUCe39bh2qMS0cgh9FrDZujQWebheh
-         O+nJqRB9at1PNA6IApSUUTuGhmKM9QRHtdOypri2FQW3OwacNrUEQNS3MObTCPraZ/Yz
-         +kEKSgWiH5V0+xaY9xNRmoj79qLpyVdocKxASNYhMXFg32N6fhyjhhiXQ62VxbEP7qld
-         6GZeTDnq7TJxn4d+AzGxgHMCRfMMiSib4jnDXryMOnrAf6bShDp09kTTRTtkjaOlvrKV
-         /ADA==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=wxps3Pww2GgPqApls49Rzjsg7b3CV5/N+Xt2jcVujHQ=;
+        b=VflCQ3sGRMJoxCNqSzSlctUU2CDZrp9MSN4eXCpTql3xtlyPvUS4GpSr1h/r81tu8/
+         SOPmZMCrcxtzF22s9MXxnRvLHHRAVrePBNoONvqgGTAMc8td6fcvJSC45jrcWZPj53VF
+         1Cu4RdWtUC+TOCawwY7I5ysXg0542Gl7kySAn6W0KNpt40hJKW97n8T55uWoas8jhEcN
+         ifoMSFo1iWK3QDiAYEPFs5s3Q5DC2o2IzOw3K6UZLmA4rTsKNIKA333HsnD/XtzsePId
+         z/Srd+nhn0Lt0r8zDwyEltG36IXoons6tF0A+OvtL6OAtRwbjmfx5FTJn3wcHfPqyUGD
+         F6DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=gmxZf6QkPzz+sxP+3JgThS4uu0ir5KC0SdCPLMQLKec=;
-        b=ZYe7bDX+bj1JyGceDU3dd5haeTP8C7+WtZQgimdQ/c5RDO6LWVNu9IAo9PMLjnRys2
-         5SK1CeOrq7yoI682fiYneiRmxylSx/AE3KNM/mrrYpdT0vhDgs0I5A2P8KazT5RyKWSb
-         F0PeWIOMeXLarRZMXWYQAhRj6TOuVF8jPzJXnbtYDH4gsGOMo5/MBYF8J5zgUJpON7Ja
-         eNnytpWuvvJyGpkw98vek836sYlTtDRcsjJ0K9+I3Jr+tb6LKVAKzOXIIM9yJZXLVTFw
-         q/UVwSHg+IXVPh1A7CJdbnIgszrAU62sk7obAjPv3e8U1b+G6ulTQpngrQ/sjTThhnet
-         WhWw==
-X-Gm-Message-State: ACrzQf31oE6Vo95JGp3zMwclohpIMeXVjY7FLUTdiQ20z+UCXZvudt2F
-        eGGIJPLnPvGhxUgij28M/lS9TA==
-X-Google-Smtp-Source: AMsMyM6nZXWtodzOZsdMWwIgR+03UqxUEeZhCDjN/DCIjQrb+Y3ZnN/BRZ22KFYb8u20rgcjUIgVvg==
-X-Received: by 2002:a50:ec84:0:b0:459:ae8:8025 with SMTP id e4-20020a50ec84000000b004590ae88025mr7004355edr.321.1664875134075;
-        Tue, 04 Oct 2022 02:18:54 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=wxps3Pww2GgPqApls49Rzjsg7b3CV5/N+Xt2jcVujHQ=;
+        b=RUl4hmmJH8lVKLvrfABVw00pc93CQDxsrJxyI+Mcgrg1cZRDufKgxeN7s6RqT+A0oC
+         vevJvWQ8d6B2RCaIfOzOAtTikR8RGdA8tB11Z4Z1Vmp1+jcF9RTTq7Zfd5DDx9BjeYP7
+         5wNVWHG1o1Ia2BA89HsFKq/eFXdPCXc67jsiDaYwTP8eb0tAfUnQfM28LIZYR6S5LOCn
+         Lj4fcdXhhnuqB8o7XNgntD76gugv16vJgbccRKhSu1CJ2eZjHGFI8LpaRgoVGq4dIQpm
+         Z6laS2ITz8uxNpNJJ+igp1TmtTqB7E06MKuVtzhRcFpdoXWfLLPF3wxFOhdySMITOay5
+         /fmQ==
+X-Gm-Message-State: ACrzQf3NXViTXDgOTr7MhmDbsE11ThkQGqj38NK5cEWwLvKM55Iwxh1x
+        hRE5KIZUIBEIA9OT1BAqjoTLTA==
+X-Google-Smtp-Source: AMsMyM7zUkQWgnqvglH9cF+2TCR9ZZb6ryXF+cV6pymMpFRpw/9Lz2HAvzLCZlkNl9vfUQfF6wLK/Q==
+X-Received: by 2002:a17:907:6d9c:b0:783:a3b4:2cf5 with SMTP id sb28-20020a1709076d9c00b00783a3b42cf5mr18014497ejc.216.1664876416967;
+        Tue, 04 Oct 2022 02:40:16 -0700 (PDT)
 Received: from MBP-di-Paolo.station (net-2-37-207-44.cust.vodafonedsl.it. [2.37.207.44])
-        by smtp.gmail.com with ESMTPSA id c17-20020a17090618b100b007826c0a05ecsm6597926ejf.209.2022.10.04.02.18.53
+        by smtp.gmail.com with ESMTPSA id 9-20020a170906200900b00780f6071b5dsm6774853ejo.188.2022.10.04.02.40.15
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Oct 2022 02:18:53 -0700 (PDT)
+        Tue, 04 Oct 2022 02:40:16 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         jack@suse.cz, andrea.righi@canonical.com, glen.valante@linaro.org,
         arie.vanderhoeven@seagate.com, rory.c.chen@seagate.com,
-        Davide Zini <davidezini2@gmail.com>,
         Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH V2 8/8] block, bfq: balance I/O injection among underutilized actuators
-Date:   Tue,  4 Oct 2022 11:18:16 +0200
-Message-Id: <20221004091816.79799-9-paolo.valente@linaro.org>
+Subject: [PATCH V3 0/8] block, bfq: extend bfq to support multi-actuator drives
+Date:   Tue,  4 Oct 2022 11:40:02 +0200
+Message-Id: <20221004094010.80090-1-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221004091816.79799-1-paolo.valente@linaro.org>
-References: <20221004091816.79799-1-paolo.valente@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -73,71 +70,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Davide Zini <davidezini2@gmail.com>
+[I made a mistake, and the series did not compile, this V3 seems ok;
+repeating below the same cover letter as V2]
 
-Upon the invocation of its dispatch function, BFQ returns the next I/O
-request of the in-service bfq_queue, unless some exception holds. One
-such exception is that there is some underutilized actuator, different
-from the actuator for which the in-service queue contains I/O, and
-that some other bfq_queue happens to contain I/O for such an
-actuator. In this case, the next I/O request of the latter bfq_queue,
-and not of the in-service bfq_queue, is returned (I/O is injected from
-that bfq_queue). To find such an actuator, a linear scan, in
-increasing index order, is performed among actuators.
+Hi,
+this is a new version of a patch series that extends BFQ so as to
+optimize I/O dispatch to multi-actuator drives. The only difference
+from the previous version is a fix in the invocation of bio_end_sector
+in patch "block, bfq: retrieve independent access ranges from request
+queue" (I have appended a -1 after such invocation). See [2] for
+details on this fix.
 
-Performing a linear scan entails a prioritization among actuators: an
-underutilized actuator may be considered for injection only if all
-actuators with a lower index are currently fully utilized, or if there
-is no pending I/O for any lower-index actuator that happens to be
-underutilized.
+Here is the general description of this patch series again.  This
+extension addresses the following issue. Multi-actuator drives appear
+as a single device to the I/O subsystem [1].  Yet they address
+commands to different actuators internally, as a function of Logical
+Block Addressing (LBAs). A given sector is reachable by only one of
+the actuators. For example, Seagate’s Serial Advanced Technology
+Attachment (SATA) version contains two actuators and maps the lower
+half of the SATA LBA space to the lower actuator and the upper half to
+the upper actuator.
 
-This commits breaks this prioritization and tends to distribute
-injection uniformly across actuators. This is obtained by adding the
-following condition to the linear scan: even if an actuator A is
-underutilized, A is however skipped if its load is higher than that of
-the next actuator.
+Evidently, to fully utilize actuators, no actuator must be left idle
+or underutilized while there is pending I/O for it. To reach this
+goal, the block layer must somehow control the load of each actuator
+individually. This series enriches BFQ with such a per-actuator
+control, as a first step. Then it also adds a simple mechanism for
+guaranteeing that actuators with pending I/O are never left idle.
 
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Davide Zini <davidezini2@gmail.com>
----
- block/bfq-iosched.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+See [1] for a more detailed overview of the problem and of the
+solutions implemented in this patch series. There you will also find
+some preliminary performance results.
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index fc4658438ecc..7945aa307cd9 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4800,17 +4800,25 @@ struct bfq_queue *bfq_find_active_bfqq_for_actuator(struct bfq_data *bfqd,
- 
- /*
-  * Perform a linear scan of each actuator, until an actuator is found
-- * for which the following two conditions hold: the load of the
-- * actuator is below the threshold (see comments on actuator_load_threshold
-- * for details), and there is a queue that contains I/O for that
-- * actuator. On success, return that queue.
-+ * for which the following three conditions hold: the load of the
-+ * actuator is below the threshold (see comments on
-+ * actuator_load_threshold for details) and lower than that of the
-+ * next actuator (comments on this extra condition below), and there
-+ * is a queue that contains I/O for that actuator. On success, return
-+ * that queue.
-+ *
-+ * Performing a plain linear scan entails a prioritization among
-+ * actuators. The extra condition above breaks this prioritization and
-+ * tends to distribute injection uniformly across actuators.
-  */
- struct bfq_queue *bfq_find_bfqq_for_underused_actuator(struct bfq_data *bfqd)
- {
- 	int i;
- 
- 	for (i = 0 ; i < bfqd->num_ia_ranges; i++)
--		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold) {
-+		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold &&
-+		    (i == bfqd->num_ia_ranges - 1 ||
-+		     bfqd->rq_in_driver[i] < bfqd->rq_in_driver[i+1])) {
- 			struct bfq_queue *bfqq =
- 				bfq_find_active_bfqq_for_actuator(bfqd, i);
- 
--- 
+Thanks,
+Paolo
+
+Davide Zini (3):
+  block, bfq: split also async bfq_queues on a per-actuator basis
+  block, bfq: inject I/O to underutilized actuators
+  block, bfq: balance I/O injection among underutilized actuators
+
+Federico Gavioli (1):
+  block, bfq: retrieve independent access ranges from request queue
+
+Paolo Valente (4):
+  block, bfq: split sync bfq_queues on a per-actuator basis
+  block, bfq: forbid stable merging of queues associated with different
+    actuators
+  block, bfq: turn scalar fields into arrays in bfq_io_cq
+  block, bfq: turn BFQ_NUM_ACTUATORS into BFQ_MAX_ACTUATORS
+
+ block/bfq-cgroup.c  |  97 +++++----
+ block/bfq-iosched.c | 490 +++++++++++++++++++++++++++++---------------
+ block/bfq-iosched.h | 149 ++++++++++----
+ block/bfq-wf2q.c    |   2 +-
+ 4 files changed, 495 insertions(+), 243 deletions(-)
+
+--
 2.20.1
-
