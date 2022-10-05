@@ -2,198 +2,704 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A7485F4C8D
-	for <lists+linux-block@lfdr.de>; Wed,  5 Oct 2022 01:15:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C5B5F4E0A
+	for <lists+linux-block@lfdr.de>; Wed,  5 Oct 2022 05:17:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbiJDXPh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Oct 2022 19:15:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
+        id S229566AbiJEDRV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Oct 2022 23:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbiJDXPf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 19:15:35 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056F024BCC
-        for <linux-block@vger.kernel.org>; Tue,  4 Oct 2022 16:15:33 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id e20so8949435qts.1
-        for <linux-block@vger.kernel.org>; Tue, 04 Oct 2022 16:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=oPYMuW2aFh6mwkmXP6he0KgJH116Y57j+78bgk51CZk=;
-        b=odDG+jfFHYBS/vrT/qC3LDUhddmDsPjHd03RLNfNypY1jFiUmCwwEl20oBdcRHc/1j
-         6Oni+98KxaQvBnlEi1jqyhSAadEnnlXyJAMK94KaHxj03mkYTnjj6CDwUvCGxPgkiy9d
-         0S7h96PZA5nAuWz788shDqrfON1DeMHZMAUHDCkh8Xjh+K/YW7zchdW2ExvvmbyBvYUf
-         bC+gNSixUR+dAkdYiQG2A7j1vlk3SFWlLVGeF7bORPGf+4BowFaxv+v3Lal+4ZMvFASC
-         Q7c1BALclHKMpGw7OP3pCMqZImNjwB1UXhVPHEBjdaweQt6Qjsv5OI1tqdkaxqZwQtOO
-         ML3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=oPYMuW2aFh6mwkmXP6he0KgJH116Y57j+78bgk51CZk=;
-        b=A0lQb4pfYUsuGfJRnMcZb5RSVOqgaX2ZTnLzBlmFfG9qXT6wrAZLfhHLNLpLu4TBSf
-         vtiWUz0dPYT/YqWXt0cMFR5z/lfBRMHeA3IMxo6IFD2/5p/rtq0rX2wS345sAdRoPoSm
-         gX9jKa7NfjYbrd0qi3H7e3gqxsC64+Ty7hbfll0KE1DzTrZ/2mnbOn+BgGSSb9HIJ3fR
-         TwYwPjhSvwH8KGgpz8SGqh/4XEBm8/Dj938Mdu+XX7lhZISWYkOM2/HjFLScKcruyEeH
-         L556sGh/HmI6ktjhZL8sjLNB5KmEW/+DCUvKI75rxBXiZoEmgZrG5E/+G3k2Ufxa/Caq
-         Pzsw==
-X-Gm-Message-State: ACrzQf0TOM8kQifNyookpZrTAUOLj3EB5MeqDzgoJ4NMZi1TqGcA9cbY
-        75FXWcFbBqBz0oo+LbilnNd8alVqUyGNDLneZSqp0g==
-X-Google-Smtp-Source: AMsMyM5uZp8szIDIOW7vVtvUf41eLzZ3T62MvWVnmhjE5dbRJayK9uGjUpvsW10Q4Ks+0PxQwG9K+FNsRp+c0ZiCoOM=
-X-Received: by 2002:a05:622a:47:b0:35d:4c69:553c with SMTP id
- y7-20020a05622a004700b0035d4c69553cmr21394507qtw.58.1664925332598; Tue, 04
- Oct 2022 16:15:32 -0700 (PDT)
+        with ESMTP id S229518AbiJEDRS (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Oct 2022 23:17:18 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E036FA1B;
+        Tue,  4 Oct 2022 20:17:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FQqRfd9MlSydamn9k6QXKwQ2H26XRa80QasIZhqqS8wXcWSzsYiRrNRHouOOQQ9TaJeuIUawehujxOF8TIP0wD3xfzMhg2HFswoeFS/JLJEJDV/oOV7V6Hzf7lJyercScNazGOEyAUq7xETFEs21oqNTy14f7ZQ9IRFUNgIJEpoVb7n8fIbrHRf354UqvQbTHa6ZutKAS78W+235Ay7jYeViiKEjX9pe/wx+raa/DnxpakoGskJW6TK9//B0AIwf6IdStgwtQoNXJgSiTlralIg9J0xJ8y3FAvLLHjutVvHxDz+xAW9bzyuZj0Af0Obk/uKz1OYNeGbEJiqkF7fmnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Sp5xGb04xZ7qLPo6VKdPz6ePbVATtlA7+P0mzrdIpJU=;
+ b=nMH8uO+a2EVeWXDhCU+xaUFZCxdodkr8HUoaVD9hctroPfeVBh51o1ZloKrJ2UCG+HAB8pGO9gNsPDxpivIgpZuw3ZlI5A0QXNeC5n05YKE6HV5rm+RiY/PqLcpLsXRasIDL99Q2sNY0v1n3ukFjKBOj5XaHcgEL1zrFvUKo0qx6dzIHmCPp+pqqrohYMzPp+LL/uhICX0NBP/sDgjQAWJR8cvnPAhf3xK597KKuEw2YlgMwOxyAQMWcmEPnJUQYjAQ0HbQ0GdVR44I+Dk1dS8J9Zjll+VaFu0st48Mq2rtae0ZT7i4NFj8K5uOdUQqJtjl2fvhhB0qk3WgcUzOGmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sp5xGb04xZ7qLPo6VKdPz6ePbVATtlA7+P0mzrdIpJU=;
+ b=DFo4JPfqRsn8pf01Eim2Mj9kUCD2bxpufB7mxZshIPCLXKep6+5/6A2KpKkd7RcZ69qLQh1sMudMJR2uj5+5/CKNXzH1LNvfIG7E+iPkHPViGAWyw8S3rc4iCADqxNlfl3IRnNkYSaMCRe1Bk+0gVe+F05I2V9v/+VPdlqGZSJ43weCVq5kmzh7Y3v1Gd7TmatCY+OStAuj34by7zw5Eo0XK5S8YvtF/McA8ZA9l0sTX0ni8WIETjs0A5oZgAJFUbHopRmiEzkGRoD7LnbnB92pyUuFLCMzNyNAMCOJ2VVlBffRQl8U6VrVro+WBvcL9Cmr0AUTYRPvl8BdDHT3TYA==
+Received: from MW3PR05CA0011.namprd05.prod.outlook.com (2603:10b6:303:2b::16)
+ by MN2PR12MB4583.namprd12.prod.outlook.com (2603:10b6:208:26e::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.28; Wed, 5 Oct
+ 2022 03:17:14 +0000
+Received: from CO1NAM11FT081.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:2b:cafe::72) by MW3PR05CA0011.outlook.office365.com
+ (2603:10b6:303:2b::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.7 via Frontend
+ Transport; Wed, 5 Oct 2022 03:17:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1NAM11FT081.mail.protection.outlook.com (10.13.174.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5709.10 via Frontend Transport; Wed, 5 Oct 2022 03:17:14 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.26; Tue, 4 Oct 2022
+ 20:17:09 -0700
+Received: from dev.nvidia.com (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Tue, 4 Oct 2022
+ 20:17:08 -0700
+From:   Chaitanya Kulkarni <kch@nvidia.com>
+To:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <axboe@kernel.dk>, <kch@nvidia.com>,
+        <damien.lemoal@opensource.wdc.com>, <johannes.thumshirn@wdc.com>,
+        <bvanassche@acm.org>, <ming.lei@redhat.com>,
+        <shinichiro.kawasaki@wdc.com>, <vincent.fu@samsung.com>,
+        <yukuai3@huawei.com>
+Subject: [PATCH 0/6] null_blk: allow REQ_OP_WRITE_ZEROES and cleanup
+Date:   Tue, 4 Oct 2022 20:16:55 -0700
+Message-ID: <20221005031701.79077-1-kch@nvidia.com>
+X-Mailer: git-send-email 2.29.0
 MIME-Version: 1.0
-References: <20220926220134.2633692-1-khazhy@google.com> <fff022da-72f2-0fdb-e792-8d75069441cc@opensource.wdc.com>
- <CACGdZYKh4TXSaAAzJa13xsMH=tFzb4dYrPzOS3HHLLU8K-362g@mail.gmail.com> <7e3a521e-acf7-c3a8-a29b-c51874862344@opensource.wdc.com>
-In-Reply-To: <7e3a521e-acf7-c3a8-a29b-c51874862344@opensource.wdc.com>
-From:   Khazhy Kumykov <khazhy@google.com>
-Date:   Tue, 4 Oct 2022 16:15:20 -0700
-Message-ID: <CACGdZYKvTLd0g2yBuFX+++XeSa6aapuAwOM7e63zhKgdKFEGEw@mail.gmail.com>
-Subject: Re: [PATCH] block: allow specifying default iosched in config
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000000c6a9005ea3da3f1"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="y"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.126.230.35]
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT081:EE_|MN2PR12MB4583:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04e1e723-0812-4321-d537-08daa6801999
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uHcWwaiFE827ge6AAbmNd/vZG1f0VXH1kGh5THUk8eTmpv0wXNL5wnFvPivggz8IRYLEdahxrhrXHw3QGcpHFQ55l0/yNpjNAAoWa7zpSHBNTaUR6XVA4h0C/IHNNGlCHl819ed9RKzbI3uEXeoep/eY3OaywkSpqdoaMhWw8Ry9vww/i8VaPGMBhT3wXy3WFuJKKKoD/eN+4weSXDcUIReFNCLHATNDdCtF++ryoamGjt7xlLSJmouDEeIBgVD5jD8n2L37zHLLb0gFkGwvPESlzbV9AXkfzP3dKF9xedSum+NV/pW9VKpzfiIQDCf9fUXEy9s3Vj7Yz2uzpbgDvSR5Mhxo7hVEhvi5KCySDYVj7luNo4vvQI/ntceEeCMhM0hF5OdVnG1XkaJjlcw5dteoRmVwO4wwRpnIFpPpTIJ4xhw5k64F6FNjCZTNAnD9zeCvSUeUdADpGem9QtZTdVtE5yeN/sZ2VWXznNw2CmwPyXYJrKumyTa+B9mQUWcmdKJEwy1BkQDNnGNNPrf0kTVTVrRBQO67NczYEBhMSAIl51AWOplDPbACjuIHbN4LUud9rx3htJHYNrxjvvq1ixg8vdvB/hFHZHIyFzFXIElJhqzzee10ZHDiMcRgIWR0rM4HWqXnMu4TUpf5iFuvYHmAuQGUdG5IQ80XtFoYLoJvsDjibpkNl3AE6bLOllidJpmqSKrCv6aLZVkqZu9m9FNMZRX2qH2rj652hw6qSDSB3ejq1cWMuqfNvNieVKIvsNxOEar77Czor62jll1cTg==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(346002)(136003)(39860400002)(451199015)(46966006)(36840700001)(40470700004)(26005)(7696005)(6666004)(478600001)(2616005)(1076003)(70586007)(186003)(54906003)(40480700001)(82310400005)(41300700001)(2906002)(40460700003)(5660300002)(7416002)(7636003)(356005)(316002)(30864003)(4326008)(8936002)(110136005)(36756003)(8676002)(36860700001)(70206006)(16526019)(82740400003)(47076005)(336012)(83380400001)(426003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2022 03:17:14.0945
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04e1e723-0812-4321-d537-08daa6801999
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT081.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4583
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---0000000000000c6a9005ea3da3f1
-Content-Type: text/plain; charset="UTF-8"
+Hi,
 
-On Tue, Oct 4, 2022 at 3:40 PM Damien Le Moal
-<damien.lemoal@opensource.wdc.com> wrote:
->
-> On 10/5/22 03:33, Khazhy Kumykov wrote:
-> > On Mon, Oct 3, 2022 at 11:12 PM Damien Le Moal
-> > <damien.lemoal@opensource.wdc.com> wrote:
-> >>
-> >> This will allow a configuration to specify bfq or kyber for all single queue
-> >> devices
-> > That's the idea
-> >> , which include SMR HDDs. Since these can only use mq-deadline (or none
-> >> if the user like living dangerously), this default config-based solution is not
-> >> OK in my opinion.
-> > I don't think this is true - elevator_init_mq will call
-> > elevator_get_by_features, not elevator_get_default for SMR hdds (and
-> > other zoned devices), as it sets required_elevator_features.
->
-> OK, but my point remains: why not use a udev rule ? Why add a config
-> option to hardcode the default scheduler ? Most average users will have no
-> idea which one to choose...
-The kernel already picks and hardcodes a default scheduler, my
-thinking is: why not let folks choose? This was allowed in the old
-block layer since 2005.
+In order to test the non-trivial I/O path in the block layer for
+REQ_OP_WRITE_ZEROES allow write-zeroes on null_blk so we can write
+testcases with and without non-memory backed mode followed by
+few cleanup patches.
 
-My first thought was it'd be handy to have the kernel just start up
-with the scheduler we wanted, rather than rely on userspace to listen
-to an event to fix it.
-But, some userspaces do not run a udev daemon (e.g. linuxboot, to my
-recollection, others), so would need to stand one up, just for this.
+Below is the test report with ext2/ext4 mkfs and a blktest
+waiting to get upstream for this patch-series.
 
-Khazhy
->
-> >>
-> >> What is wrong with using a udev rule to set the default disk scheduler ? Most
-> >> distros do that already anyway, so this config may not even be that useful in
-> >> practice. What is the use case here ?
-> >>
-> >>
-> >> --
-> >> Damien Le Moal
-> >> Western Digital Research
-> >>
->
-> --
-> Damien Le Moal
-> Western Digital Research
->
+-ck
 
---0000000000000c6a9005ea3da3f1
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Chaitanya Kulkarni (6):
+  null_blk: allow write zeores on non-membacked
+  null_blk: allow write zeores on membacked
+  null_blk: code cleaup
+  null_blk: initialize cmd->bio in __alloc_cmd()
+  null_blk: don't use magic numbers in the code
+  null_blk: remove extra space in switch condition
 
-MIIPmwYJKoZIhvcNAQcCoIIPjDCCD4gCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggz1MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-LmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5n
-bG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEANyYcO+9JZYyqQt41
-TMwvFWAw3vLoLOQIfIn48/yea/ekOcParTb0mbhsvVSZ6sGn+txYAZb33wIb1f4wK4xQ7+RUYBfI
-TuTPL7olF9hDpojC2F6Eu8nuEf1XD9qNI8zFd4kfjg4rb+AME0L81WaCL/WhP2kDCnRU4jm6TryB
-CHhZqtxkIvXGPGHjwJJazJBnX5NayIce4fGuUEJ7HkuCthVZ3Rws0UyHSAXesT/0tXATND4mNr1X
-El6adiSQy619ybVERnRi5aDe1PTwE+qNiotEEaeujz1a/+yYaaTY+k+qJcVxi7tbyQ0hi0UB3myM
-A/z2HmGEwO8hx7hDjKmKbDCCA18wggJHoAMCAQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUA
-MEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWdu
-MRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEg
-MB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzAR
-BgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4
-Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0EXyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuu
-l9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+JJ5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJ
-pij2aTv2y8gokeWdimFXN6x0FNx04Druci8unPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh
-6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTvriBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti
-+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E
-BTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5NUPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEA
-S0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigHM8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9u
-bG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmUY/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaM
-ld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88
-q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcya5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/f
-hO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/XzCCBNQwggO8oAMCAQICEAE31I/NNZSyeJ7AJhcb
-SqgwDQYJKoZIhvcNAQELBQAwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYt
-c2ExKjAoBgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjMgU01JTUUgQ0EgMjAyMDAeFw0yMjA2Mjgw
-MjAxMzFaFw0yMjEyMjUwMjAxMzFaMCIxIDAeBgkqhkiG9w0BCQEWEWtoYXpoeUBnb29nbGUuY29t
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs0udEcpZLBNGpB/3Rj5tZ52t64cC41eW
-n+J0FOlY9qSlF+MgBFHTyXo1opBRJQkjbcO9Xsip3fxTRDfGM/w0C0gwruyf3NFSSEBdWBnOURlU
-Kbmta003lCWRq2xPhXMGljQ3AxeEGGsbsPyQRGh32dJ0OjRID3uz6jFSylmUWuQlKjX71MuHUIoo
-mFhufr/XE1gkZdZCFT4ECt6P0i3uTpThI62j2KGj/px/sX8ePGcuhISXGw3Cx/iHmeq4CCiw5ROw
-HcVE866Gy1vfRJgT4Ur5RLNanaMVXhd9VtR1wPwfOn+xCQ1YE98Ore8Vhzwtnn0rf42O7dzbn4kM
-F4ACzwIDAQABo4IB0jCCAc4wHAYDVR0RBBUwE4ERa2hhemh5QGdvb2dsZS5jb20wDgYDVR0PAQH/
-BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjAdBgNVHQ4EFgQUZQ2tco1XBpnS
-/UbIw5ZqDzSZD+QwTAYDVR0gBEUwQzBBBgkrBgEEAaAyASgwNDAyBggrBgEFBQcCARYmaHR0cHM6
-Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/BAIwADCBmgYIKwYBBQUH
-AQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2NhL2dzYXRs
-YXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29t
-L2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgwFoAUfMwKaNei6x4schvR
-zV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9jYS9n
-c2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEBAB2kM/dnvjLFQgOANm3u
-6O2eeA2ns7z1bKAKieQOHylg6/QUVNni+2SneSjNFOL7zKYDtBMHUKgO3rKBJX/dJfvoR//2kO08
-EJwmyX+bLsQT2TTkPa28tJsYOcW1ikfdH3YyiHExVlUrFFtpiEmAr1eGd2HceTBvTQJkhhkb+ulg
-D5rKnhTMXtEOuP5gUf59gIwubIpqkpQTG/Ez2eBtlicznw3LBOKZ2msT+vdDFjQXrWBxPpdL3ll0
-WdLiqC7rbo0uCQeFdhI4gi0CyUNeGXEjN0/qngDOR5RPl++zdVLTFOV0kf31NijoQZquscGXyUZ1
-/IYjtCWWtKbMqFk6gmMxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9i
-YWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENBIDIwMjAC
-EAE31I/NNZSyeJ7AJhcbSqgwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIDJ+D4BO
-8PKdzWWPJeJDX47lrQdqlIDCgJRrkTZw74dsMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJ
-KoZIhvcNAQkFMQ8XDTIyMTAwNDIzMTUzMlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASow
-CwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZI
-hvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCCOR9aGg/NqKzCjMov4btgCkm3
-Gn/KajhyWWM7EPaDRVfU1+CI3LaVxLoPGwzjg42zm4PvDwrb+Bhbnnlkr2oaiPGmAcTML2sr7eE4
-ay5sI0MilCV5S51aSLSaciuPzeG8FpAzV6/8YFU17ete6uJ/ghN/CHumL2m1jIyaCNSQ/+ssdt18
-Wo45r97wKTFpD2lIpaBrr2KiVq2PMdXmFlrETs6pTJtGs9hFVrj7E1a3goIQ6kbTwG8gIOfSPUHR
-t0mg262y0KDuCekod7WJ22Qtw7KZiGj3guCIFB5q+Ay9dflIxgoXSQEGeRlVniNdqWrvHIPkLjif
-ZdAIJvMkzzt7
---0000000000000c6a9005ea3da3f1--
+ drivers/block/null_blk/main.c     | 131 ++++++++++++++++++++++--------
+ drivers/block/null_blk/null_blk.h |   1 +
+ 2 files changed, 97 insertions(+), 35 deletions(-)
+
+1. Write Zeroes test with ext2/ext3 for memory backed :-
+linux-block (for-next) # mkfs.ext2 /dev/nullb0 
+mke2fs 1.45.6 (20-Mar-2020)
+Creating filesystem with 262144 4k blocks and 65536 inodes
+Filesystem UUID: 76037c2c-9c32-4ac6-b1d6-d1f62e6071ad
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Writing superblocks and filesystem accounting information: done
+
+linux-block (for-next) # mount /dev/nullb0 /mnt/
+backend/ data/    nullb0/  nvme1n1/ test/    
+linux-block (for-next) # mount /dev/nullb0 /mnt/nullb0/
+linux-block (for-next) # dmesg  -c 
+[18833.072830] null_blk: null_handle_write_zeroes 1225 2097024 128
+[18833.072963] null_blk: null_handle_write_zeroes 1225 536 4096
+[18833.073439] null_blk: null_handle_write_zeroes 1225 262680 4096
+[18833.073845] null_blk: null_handle_write_zeroes 1225 524304 4096
+[18833.074202] null_blk: null_handle_write_zeroes 1225 786968 4096
+[18833.074581] null_blk: null_handle_write_zeroes 1225 1048592 4096
+[18833.074951] null_blk: null_handle_write_zeroes 1225 1311256 4096
+[18833.075381] null_blk: null_handle_write_zeroes 1225 1572880 4096
+[18833.075748] null_blk: null_handle_write_zeroes 1225 1835544 4096
+[18833.076164] null_blk: null_handle_write_zeroes 1225 4672 8
+[18844.752019] EXT4-fs (nullb0): mounting ext2 file system using the ext4 subsystem
+[18844.752487] EXT4-fs (nullb0): mounted filesystem without journal. Quota mode: none.
+linux-block (for-next) # 
+
+
+linux-block (for-next) # mkfs.ext4 /dev/nullb0 
+mke2fs 1.45.6 (20-Mar-2020)
+/dev/nullb0 contains a ext2 file system
+	last mounted on Mon Oct  3 18:28:05 2022
+Proceed anyway? (y,N) y
+Creating filesystem with 262144 4k blocks and 65536 inodes
+Filesystem UUID: a4c66d5f-bda9-4f58-aa03-911b87bb5c7d
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (8192 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+linux-block (for-next) # mount /dev/nullb0 /mnt/nullb0/
+linux-block (for-next) # dmesg  -c 
+[18882.721160] EXT4-fs (nullb0): unmounting filesystem.
+[18888.687070] null_blk: null_handle_write_zeroes 1225 2097024 128
+[18888.687159] null_blk: null_handle_write_zeroes 1225 1160 8
+[18888.687309] null_blk: null_handle_write_zeroes 1225 33968 8
+[18888.687839] null_blk: null_handle_write_zeroes 1225 1048576 65536
+[18892.105964] EXT4-fs (nullb0): mounted filesystem with ordered data mode. Quota mode: none.
+linux-block (for-next) # 
+
+2. Test blkdiscard with -z for different block sizes :-
+
+linux-block (for-next) # ./zeroout.sh 
+#################### BLKISZ 512 #####################
+config/nullb/nullb0
+├── badblocks
+├── blocking
+├── blocksize
+├── cache_size
+├── completion_nsec
+├── discard
+├── home_node
+├── hw_queue_depth
+├── index
+├── irqmode
+├── max_sectors
+├── mbps
+├── memory_backed
+├── no_sched
+├── poll_queues
+├── power
+├── queue_mode
+├── shared_tag_bitmap
+├── size
+├── submit_queues
+├── use_per_node_hctx
+├── virt_boundary
+├── write_zeroes
+├── zone_capacity
+├── zoned
+├── zone_max_active
+├── zone_max_open
+├── zone_nr_conv
+└── zone_size
+
+0 directories, 29 files
+ODD:- 
+19+1 records in
+19+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.000521991 s, 19.2 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0000512   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000528
+0001024   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001040
+0001536   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001552
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0002560   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002576
+0003072   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003088
+0003584   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003600
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0004608   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004624
+------------------------------------------------------
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0000512  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0000528
+0001024   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001040
+0001536  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0001552
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0002560  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0002576
+0003072   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003088
+0003584  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0003600
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0004608  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0004624
+------------------------------------------------------
+EVEN:- 
+19+1 records in
+19+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.000376636 s, 26.6 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0000512   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000528
+0001024   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001040
+0001536   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001552
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0002560   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002576
+0003072   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003088
+0003584   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003600
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0004608   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004624
+------------------------------------------------------
+0000000  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0000016
+0000512   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000528
+0001024  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0001040
+0001536   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001552
+0002048  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0002064
+0002560   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002576
+0003072  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0003088
+0003584   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003600
+0004096  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0004112
+0004608   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004624
+------------------------------------------------------
+
+
+
+
+#################### BLKISZ 1024 #####################
+config/nullb/nullb0
+├── badblocks
+├── blocking
+├── blocksize
+├── cache_size
+├── completion_nsec
+├── discard
+├── home_node
+├── hw_queue_depth
+├── index
+├── irqmode
+├── max_sectors
+├── mbps
+├── memory_backed
+├── no_sched
+├── poll_queues
+├── power
+├── queue_mode
+├── shared_tag_bitmap
+├── size
+├── submit_queues
+├── use_per_node_hctx
+├── virt_boundary
+├── write_zeroes
+├── zone_capacity
+├── zoned
+├── zone_max_active
+├── zone_max_open
+├── zone_nr_conv
+└── zone_size
+
+0 directories, 29 files
+ODD:- 
+9+1 records in
+9+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.00040033 s, 25.0 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0001024   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001040
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0003072   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003088
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0005120   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0005136
+0006144   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0006160
+0007168   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0007184
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0009216   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0009232
+------------------------------------------------------
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0001024  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0001040
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0003072  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0003088
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0005120  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0005136
+0006144   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0006160
+0007168  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0007184
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0009216  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0009232
+------------------------------------------------------
+EVEN:- 
+9+1 records in
+9+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.000325488 s, 30.7 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0001024   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001040
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0003072   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003088
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0005120   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0005136
+0006144   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0006160
+0007168   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0007184
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0009216   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0009232
+------------------------------------------------------
+0000000  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0000016
+0001024   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0001040
+0002048  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0002064
+0003072   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0003088
+0004096  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0004112
+0005120   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0005136
+0006144  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0006160
+0007168   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0007184
+0008192  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0008208
+0009216   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0009232
+------------------------------------------------------
+
+
+
+
+#################### BLKISZ 2048 #####################
+config/nullb/nullb0
+├── badblocks
+├── blocking
+├── blocksize
+├── cache_size
+├── completion_nsec
+├── discard
+├── home_node
+├── hw_queue_depth
+├── index
+├── irqmode
+├── max_sectors
+├── mbps
+├── memory_backed
+├── no_sched
+├── poll_queues
+├── power
+├── queue_mode
+├── shared_tag_bitmap
+├── size
+├── submit_queues
+├── use_per_node_hctx
+├── virt_boundary
+├── write_zeroes
+├── zone_capacity
+├── zoned
+├── zone_max_active
+├── zone_max_open
+├── zone_nr_conv
+└── zone_size
+
+0 directories, 29 files
+ODD:- 
+4+1 records in
+4+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.000367949 s, 27.2 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0006144   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0006160
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0010240  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0010256
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0014336  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0014352
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0018432  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0018448
+------------------------------------------------------
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0002048  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0002064
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0006144  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0006160
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0010240  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0010256
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0014336  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0014352
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0018432  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0018448
+------------------------------------------------------
+EVEN:- 
+4+1 records in
+4+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.000310981 s, 32.2 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0006144   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0006160
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0010240  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0010256
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0014336  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0014352
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0018432  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0018448
+------------------------------------------------------
+0000000  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0000016
+0002048   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0002064
+0004096  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0004112
+0006144   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0006160
+0008192  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0008208
+0010240  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0010256
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0014336  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0014352
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0018432  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0018448
+------------------------------------------------------
+
+
+
+
+#################### BLKISZ 4096 #####################
+config/nullb/nullb0
+├── badblocks
+├── blocking
+├── blocksize
+├── cache_size
+├── completion_nsec
+├── discard
+├── home_node
+├── hw_queue_depth
+├── index
+├── irqmode
+├── max_sectors
+├── mbps
+├── memory_backed
+├── no_sched
+├── poll_queues
+├── power
+├── queue_mode
+├── shared_tag_bitmap
+├── size
+├── submit_queues
+├── use_per_node_hctx
+├── virt_boundary
+├── write_zeroes
+├── zone_capacity
+├── zoned
+├── zone_max_active
+├── zone_max_open
+├── zone_nr_conv
+└── zone_size
+
+0 directories, 29 files
+ODD:- 
+2+1 records in
+2+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.00028502 s, 35.1 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0020480  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0020496
+0024576  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0024592
+0028672  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0028688
+0032768  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0032784
+0036864  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0036880
+------------------------------------------------------
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0004096  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0004112
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0020480  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0020496
+0024576  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0024592
+0028672  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0028688
+0032768  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0032784
+0036864  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0036880
+------------------------------------------------------
+EVEN:- 
+2+1 records in
+2+1 records out
+10002 bytes (10 kB, 9.8 KiB) copied, 0.00024765 s, 40.4 MB/s
+0000000   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0000016
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0008192   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0008208
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0020480  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0020496
+0024576  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0024592
+0028672  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0028688
+0032768  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0032784
+0036864  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0036880
+------------------------------------------------------
+0000000  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0000016
+0004096   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a   a
+0004112
+0008192  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0008208
+0012288  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0012304
+0016384  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0016400
+0020480  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0020496
+0024576  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0024592
+0028672  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0028688
+0032768  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0032784
+0036864  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0
+0036880
+------------------------------------------------------
+
+
+
+
