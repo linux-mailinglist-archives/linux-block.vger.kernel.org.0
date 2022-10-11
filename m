@@ -2,96 +2,181 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 277FD5FA9B9
-	for <lists+linux-block@lfdr.de>; Tue, 11 Oct 2022 03:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12B315FA9CD
+	for <lists+linux-block@lfdr.de>; Tue, 11 Oct 2022 03:18:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbiJKBIE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 Oct 2022 21:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50600 "EHLO
+        id S229663AbiJKBSb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 Oct 2022 21:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbiJKBHs (ORCPT
+        with ESMTP id S229486AbiJKBSa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 Oct 2022 21:07:48 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF73C82766;
-        Mon, 10 Oct 2022 18:07:41 -0700 (PDT)
-Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MmcyC6vYgzwPTf;
-        Tue, 11 Oct 2022 09:04:51 +0800 (CST)
-Received: from [10.174.178.129] (10.174.178.129) by
- kwepemi500016.china.huawei.com (7.221.188.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 11 Oct 2022 09:07:21 +0800
-Subject: Re: [PATCH 2/4] blk-cgroup: correct comment for blk_alloc_queue and
- blk_exit_queue
-To:     Tejun Heo <tj@kernel.org>
-CC:     <axboe@kernel.dk>, <cgroups@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20221010023859.11896-1-shikemeng@huawei.com>
- <20221010023859.11896-3-shikemeng@huawei.com>
- <Y0SACpAv4+ETrS6Z@slm.duckdns.org>
-From:   Kemeng Shi <shikemeng@huawei.com>
-Message-ID: <da6d7a9a-49a8-0116-2507-f5c8057eaf42@huawei.com>
-Date:   Tue, 11 Oct 2022 09:07:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 10 Oct 2022 21:18:30 -0400
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10C17695E;
+        Mon, 10 Oct 2022 18:18:28 -0700 (PDT)
+Received: from SHSend.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id 29B1GTj5030348
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NO);
+        Tue, 11 Oct 2022 09:16:29 +0800 (CST)
+        (envelope-from zhaoyang.huang@unisoc.com)
+Received: from bj03382pcu.spreadtrum.com (10.0.74.65) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Tue, 11 Oct 2022 09:16:28 +0800
+From:   "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zhaoyang Huang <huangzhaoyang@gmail.com>, <linux-mm@kvack.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <ke.wang@unisoc.com>, <steve.kang@unisoc.com>
+Subject: [Resend PATCH] mm: use stack_depot for recording kmemleak's backtrace
+Date:   Tue, 11 Oct 2022 09:16:04 +0800
+Message-ID: <1665450964-27487-1-git-send-email-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <Y0SACpAv4+ETrS6Z@slm.duckdns.org>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.129]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500016.china.huawei.com (7.221.188.220)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.0.74.65]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL: SHSQR01.spreadtrum.com 29B1GTj5030348
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
+Using stack_depot to record kmemleak's backtrace which has been implemented
+on slub for reducing redundant information.
 
-on 10/11/2022 4:26 AM, Tejun Heo wrote:
-> On Mon, Oct 10, 2022 at 10:38:57AM +0800, Kemeng Shi wrote:
->> Since commit 1059699f87eb("block: move blkcg initialization/destroy into
->> disk allocation/release handler"), blk_alloc_queue and blk_exit_queue is
->> called directly from gendisk. Update the corresponding comment.
->>
->> Signed-off-by: Kemeng Shi <shikemeng@huawei.com>
->> ---
->>  block/blk-cgroup.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
->> index bc4dec705572..463c568d3e86 100644
->> --- a/block/blk-cgroup.c
->> +++ b/block/blk-cgroup.c
->> @@ -1259,7 +1259,7 @@ static int blkcg_css_online(struct cgroup_subsys_state *css)
->>   * blkcg_init_queue - initialize blkcg part of request queue
->>   * @q: request_queue to initialize
->>   *
->> - * Called from blk_alloc_queue(). Responsible for initializing blkcg
->> + * Called from gendisk. Responsible for initializing blkcg
-> 
-> Maybe be a bit more specific and say blk_alloc_disk()?
-Thanks for review. I will update this in next version.
-> 
->>   * part of new request_queue @q.
->>   *
->>   * RETURNS:
->> @@ -1321,7 +1321,7 @@ int blkcg_init_queue(struct request_queue *q)
->>   * blkcg_exit_queue - exit and release blkcg part of request_queue
->>   * @q: request_queue being released
->>   *
->> - * Called from blk_exit_queue().  Responsible for exiting blkcg part.
->> + * Called from gendisk.  Responsible for exiting blkcg part.
-> 
-> Ditto.
-> 
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+ mm/kmemleak.c | 43 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
 
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 1eddc01..c9cee3a 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -79,6 +79,7 @@
+ #include <linux/mutex.h>
+ #include <linux/rcupdate.h>
+ #include <linux/stacktrace.h>
++#include <linux/stackdepot.h>
+ #include <linux/cache.h>
+ #include <linux/percpu.h>
+ #include <linux/memblock.h>
+@@ -159,8 +160,7 @@ struct kmemleak_object {
+ 	u32 checksum;
+ 	/* memory ranges to be scanned inside an object (empty for all) */
+ 	struct hlist_head area_list;
+-	unsigned long trace[MAX_TRACE];
+-	unsigned int trace_len;
++	depot_stack_handle_t trace_handle;
+ 	unsigned long jiffies;		/* creation timestamp */
+ 	pid_t pid;			/* pid of the current task */
+ 	char comm[TASK_COMM_LEN];	/* executable name */
+@@ -346,8 +346,11 @@ static void print_unreferenced(struct seq_file *seq,
+ 			       struct kmemleak_object *object)
+ {
+ 	int i;
++	unsigned long *entries;
++	unsigned int nr_entries;
+ 	unsigned int msecs_age = jiffies_to_msecs(jiffies - object->jiffies);
+ 
++	nr_entries = stack_depot_fetch(object->trace_handle, &entries);
+ 	warn_or_seq_printf(seq, "unreferenced object 0x%08lx (size %zu):\n",
+ 		   object->pointer, object->size);
+ 	warn_or_seq_printf(seq, "  comm \"%s\", pid %d, jiffies %lu (age %d.%03ds)\n",
+@@ -356,10 +359,10 @@ static void print_unreferenced(struct seq_file *seq,
+ 	hex_dump_object(seq, object);
+ 	warn_or_seq_printf(seq, "  backtrace:\n");
+ 
+-	for (i = 0; i < object->trace_len; i++) {
+-		void *ptr = (void *)object->trace[i];
+-		warn_or_seq_printf(seq, "    [<%p>] %pS\n", ptr, ptr);
+-	}
++       for (i = 0; i < nr_entries; i++) {
++               void *ptr = (void *)entries[i];
++               warn_or_seq_printf(seq, "    [<%p>] %pS\n", ptr, ptr);
++       }
+ }
+ 
+ /*
+@@ -378,7 +381,8 @@ static void dump_object_info(struct kmemleak_object *object)
+ 	pr_notice("  flags = 0x%x\n", object->flags);
+ 	pr_notice("  checksum = %u\n", object->checksum);
+ 	pr_notice("  backtrace:\n");
+-	stack_trace_print(object->trace, object->trace_len, 4);
++	if(object->trace_handle)
++		stack_depot_print(object->trace_handle);
+ }
+ 
+ /*
+@@ -591,6 +595,25 @@ static struct kmemleak_object *find_and_remove_object(unsigned long ptr, int ali
+ 	return object;
+ }
+ 
++#ifdef CONFIG_STACKDEPOT
++static noinline depot_stack_handle_t set_track_prepare(void)
++{
++	depot_stack_handle_t trace_handle;
++	unsigned long entries[MAX_TRACE];
++	unsigned int nr_entries;
++
++	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 3);
++	trace_handle = stack_depot_save(entries, nr_entries, GFP_NOWAIT);
++
++	return trace_handle;
++}
++#else
++static inline depot_stack_handle_t set_track_prepare(void)
++{
++	return 0;
++}
++#endif
++
+ /*
+  * Save stack trace to the given array of MAX_TRACE size.
+  */
+@@ -654,7 +677,7 @@ static struct kmemleak_object *__create_object(unsigned long ptr, size_t size,
+ 	}
+ 
+ 	/* kernel backtrace */
+-	object->trace_len = __save_stack_trace(object->trace);
++	object->trace_handle = set_track_prepare();
+ 
+ 	raw_spin_lock_irqsave(&kmemleak_lock, flags);
+ 
+@@ -694,7 +717,6 @@ static struct kmemleak_object *__create_object(unsigned long ptr, size_t size,
+ 	rb_link_node(&object->rb_node, rb_parent, link);
+ 	rb_insert_color(&object->rb_node, is_phys ? &object_phys_tree_root :
+ 					  &object_tree_root);
+-
+ 	list_add_tail_rcu(&object->object_list, &object_list);
+ out:
+ 	raw_spin_unlock_irqrestore(&kmemleak_lock, flags);
+@@ -1094,7 +1116,7 @@ void __ref kmemleak_update_trace(const void *ptr)
+ 	}
+ 
+ 	raw_spin_lock_irqsave(&object->lock, flags);
+-	object->trace_len = __save_stack_trace(object->trace);
++	object->trace_handle = set_track_prepare();
+ 	raw_spin_unlock_irqrestore(&object->lock, flags);
+ 
+ 	put_object(object);
+@@ -2064,6 +2086,7 @@ void __init kmemleak_init(void)
+ 	if (kmemleak_error)
+ 		return;
+ 
++	stack_depot_init();
+ 	jiffies_min_age = msecs_to_jiffies(MSECS_MIN_AGE);
+ 	jiffies_scan_wait = msecs_to_jiffies(SECS_SCAN_WAIT * 1000);
+ 
 -- 
-Best wishes
-Kemeng Shi
+1.9.1
+
