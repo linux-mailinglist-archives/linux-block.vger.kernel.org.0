@@ -2,75 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A39E85FA9FD
-	for <lists+linux-block@lfdr.de>; Tue, 11 Oct 2022 03:24:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 036D15FA997
+	for <lists+linux-block@lfdr.de>; Tue, 11 Oct 2022 03:05:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbiJKBY3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 Oct 2022 21:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47694 "EHLO
+        id S229543AbiJKBEz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 Oct 2022 21:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230461AbiJKBYN (ORCPT
+        with ESMTP id S229563AbiJKBEw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 Oct 2022 21:24:13 -0400
-Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EF685582
-        for <linux-block@vger.kernel.org>; Mon, 10 Oct 2022 18:23:31 -0700 (PDT)
-Received: by dev1180.prn1.facebook.com (Postfix, from userid 425415)
-        id 3A7F134BDDEA; Mon, 10 Oct 2022 18:01:06 -0700 (PDT)
-From:   Stefan Roesch <shr@devkernel.io>
-To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
-Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com
-Subject: [RFC PATCH v1 14/14] mm: document new /sys/class/bdi/<bdi>/min_bytes knob
-Date:   Mon, 10 Oct 2022 18:00:44 -0700
-Message-Id: <20221011010044.851537-15-shr@devkernel.io>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221011010044.851537-1-shr@devkernel.io>
-References: <20221011010044.851537-1-shr@devkernel.io>
+        Mon, 10 Oct 2022 21:04:52 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D653206B;
+        Mon, 10 Oct 2022 18:04:50 -0700 (PDT)
+Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Mmcs34dN2zVhpb;
+        Tue, 11 Oct 2022 09:00:23 +0800 (CST)
+Received: from [10.174.178.129] (10.174.178.129) by
+ kwepemi500016.china.huawei.com (7.221.188.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 11 Oct 2022 09:04:47 +0800
+Subject: Re: [PATCH 1/4] blk-cgroup: Remove unnecessary blk_ioprio_exit in
+ blkcg_init_queue
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     <tj@kernel.org>, <axboe@kernel.dk>, <cgroups@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20221010023859.11896-1-shikemeng@huawei.com>
+ <20221010023859.11896-2-shikemeng@huawei.com>
+ <Y0PLwj/l/l4QPpTC@infradead.org>
+From:   Kemeng Shi <shikemeng@huawei.com>
+Message-ID: <79030a54-aaeb-4115-03a9-d8f69b63b919@huawei.com>
+Date:   Tue, 11 Oct 2022 09:04:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,RDNS_DYNAMIC,
-        SPF_HELO_PASS,SPF_NEUTRAL,TVD_RCVD_IP autolearn=no autolearn_force=no
-        version=3.4.6
+In-Reply-To: <Y0PLwj/l/l4QPpTC@infradead.org>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.129]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500016.china.huawei.com (7.221.188.220)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This documents the new /sys/class/bdi/<bdi>/min_bytes knob.
 
-Signed-off-by: Stefan Roesch <shr@devkernel.io>
----
- Documentation/ABI/testing/sysfs-class-bdi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-bdi b/Documentation/AB=
-I/testing/sysfs-class-bdi
-index 580f723de049..bec996e29565 100644
---- a/Documentation/ABI/testing/sysfs-class-bdi
-+++ b/Documentation/ABI/testing/sysfs-class-bdi
-@@ -57,6 +57,21 @@ Description:
-=20
- 	(read-write)
-=20
-+What:		/sys/class/bdi/<bdi>/min_bytes
-+Date:		October 2022
-+Contact:	Stefan Roesch <shr@devkernel.io>
-+Description:
-+	Under normal circumstances each device is given a part of the
-+	total write-back cache that relates to its current average
-+	writeout speed in relation to the other devices.
-+
-+	The 'min_bytes' parameter allows assigning a minimum
-+	percentage of the write-back cache to a particular device
-+    expressed in bytes.
-+	For example, this is useful for providing a minimum QoS.
-+
-+	(read-write)
-+
- What:		/sys/class/bdi/<bdi>/max_bytes
- Date:		October 2022
- Contact:	Stefan Roesch <shr@devkernel.io>
---=20
-2.30.2
-
+on 10/10/2022 3:37 PM, Christoph Hellwig wrote:
+> On Mon, Oct 10, 2022 at 10:38:56AM +0800, Kemeng Shi wrote:
+>> Function blk_ioprio_init only alloc blkg_policy_data which will be freed
+>> in blkg_destroy_all, so no blk_ioprio_exit is called when blk_throtl_init
+>> is failed in blkcg_init_queue. Also blk_ioprio_exit is not called in
+>> blkcg_exit_queue for the same reason. Just remove blk_ioprio_exit to
+>> keep behavior consistent.
+> 
+> This code looks very different in current mainline.
+Thanks for review. I will remove this patch and make new patches based on
+mainline code.
+-- 
+Best wishes
+Kemeng Shi
