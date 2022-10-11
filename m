@@ -2,27 +2,27 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 115265FA9FE
-	for <lists+linux-block@lfdr.de>; Tue, 11 Oct 2022 03:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1A1C5FA9CA
+	for <lists+linux-block@lfdr.de>; Tue, 11 Oct 2022 03:17:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230510AbiJKBYs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 Oct 2022 21:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49882 "EHLO
+        id S229697AbiJKBRI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 Oct 2022 21:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbiJKBYX (ORCPT
+        with ESMTP id S229662AbiJKBRI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 Oct 2022 21:24:23 -0400
+        Mon, 10 Oct 2022 21:17:08 -0400
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF7184E77
-        for <linux-block@vger.kernel.org>; Mon, 10 Oct 2022 18:23:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BBF7695E
+        for <linux-block@vger.kernel.org>; Mon, 10 Oct 2022 18:17:07 -0700 (PDT)
 Received: by dev1180.prn1.facebook.com (Postfix, from userid 425415)
-        id 143E934BDDDC; Mon, 10 Oct 2022 18:01:06 -0700 (PDT)
+        id 19A1534BDDDE; Mon, 10 Oct 2022 18:01:06 -0700 (PDT)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
 Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com
-Subject: [RFC PATCH v1 07/14] mm: add bdi_set_max_bytes() function.
-Date:   Mon, 10 Oct 2022 18:00:37 -0700
-Message-Id: <20221011010044.851537-8-shr@devkernel.io>
+Subject: [RFC PATCH v1 08/14] mm: Add new knob /sys/class/bdi/<bdi>/max_bytes
+Date:   Mon, 10 Oct 2022 18:00:38 -0700
+Message-Id: <20221011010044.851537-9-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221011010044.851537-1-shr@devkernel.io>
 References: <20221011010044.851537-1-shr@devkernel.io>
@@ -37,90 +37,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This introduces the bdi_set_max_bytes() function. The max_bytes function
-does not store the max_bytes value. Instead it converts the max_bytes
-value into the corresponding ratio value.
+This adds the new knob max_bytes to specify a dirty memory limit for the
+corresponding bdi. The specified bytes value is converted to a ratio.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- include/linux/backing-dev.h |  1 +
- mm/page-writeback.c         | 37 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ mm/backing-dev.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 94fedf66c915..a10598f90d4d 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -108,6 +108,7 @@ static inline unsigned long wb_stat_error(void)
- unsigned long long bdi_get_max_bytes(struct backing_dev_info *bdi);
- int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
-io);
- int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_rat=
-io);
-+int bdi_set_max_bytes(struct backing_dev_info *bdi, unsigned long long m=
-ax_bytes);
- int bdi_set_strict_limit(struct backing_dev_info *bdi, unsigned int stri=
-ct_limit);
-=20
- /*
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 8b8936603783..a6594ebdcbd8 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -650,6 +650,28 @@ void wb_domain_exit(struct wb_domain *dom)
-  */
- static unsigned int bdi_min_ratio;
-=20
-+static int bdi_check_pages_limit(unsigned long pages)
-+{
-+	unsigned long max_dirty_pages =3D global_dirtyable_memory();
-+
-+	if (pages > max_dirty_pages / 2)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static unsigned long bdi_ratio_from_pages(unsigned long long pages)
-+{
-+	unsigned long background_thresh;
-+	unsigned long dirty_thresh;
-+	unsigned long ratio;
-+
-+	global_dirty_limits(&background_thresh, &dirty_thresh);
-+	ratio =3D (pages * 100 * BDI_RATIO_SCALE) / dirty_thresh;
-+
-+	return ratio;
-+}
-+
- static unsigned long long bdi_get_bytes(unsigned int ratio)
- {
- 	unsigned long background_thresh;
-@@ -723,6 +745,21 @@ unsigned long long bdi_get_max_bytes(struct backing_=
-dev_info *bdi)
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index e64bc49561b1..a3cad145b219 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -199,6 +199,34 @@ static ssize_t max_ratio_store(struct device *dev,
  }
- EXPORT_SYMBOL_GPL(bdi_get_max_bytes);
+ BDI_SHOW(max_ratio, bdi->max_ratio / BDI_RATIO_SCALE)
 =20
-+int bdi_set_max_bytes(struct backing_dev_info *bdi, unsigned long long m=
-ax_bytes)
++static ssize_t max_bytes_show(struct device *dev,
++			      struct device_attribute *attr,
++			      char *buf)
 +{
-+	int ret;
-+	unsigned long pages =3D max_bytes >> PAGE_SHIFT;
-+	unsigned long max_ratio;
++	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
 +
-+	ret =3D bdi_check_pages_limit(pages);
-+	if (ret)
++	return sysfs_emit(buf, "%llu\n", bdi_get_max_bytes(bdi));
++}
++
++static ssize_t max_bytes_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
++	unsigned long long bytes;
++	ssize_t ret;
++
++	ret =3D kstrtoull(buf, 10, &bytes);
++	if (ret < 0)
 +		return ret;
 +
-+	max_ratio =3D bdi_ratio_from_pages(pages);
-+	return __bdi_set_max_ratio(bdi, max_ratio);
-+}
-+EXPORT_SYMBOL_GPL(bdi_set_max_bytes);
++	ret =3D bdi_set_max_bytes(bdi, bytes);
++	if (!ret)
++		ret =3D count;
 +
- int bdi_set_strict_limit(struct backing_dev_info *bdi, unsigned int stri=
-ct_limit)
- {
- 	if (strict_limit > 1)
++	return ret;
++}
++DEVICE_ATTR_RW(max_bytes);
++
+ static ssize_t stable_pages_required_show(struct device *dev,
+ 					  struct device_attribute *attr,
+ 					  char *buf)
+@@ -241,6 +269,7 @@ static struct attribute *bdi_dev_attrs[] =3D {
+ 	&dev_attr_read_ahead_kb.attr,
+ 	&dev_attr_min_ratio.attr,
+ 	&dev_attr_max_ratio.attr,
++	&dev_attr_max_bytes.attr,
+ 	&dev_attr_stable_pages_required.attr,
+ 	&dev_attr_strict_limit.attr,
+ 	NULL,
 --=20
 2.30.2
 
