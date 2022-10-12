@@ -2,214 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 841455FC197
-	for <lists+linux-block@lfdr.de>; Wed, 12 Oct 2022 10:03:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C81B95FC19A
+	for <lists+linux-block@lfdr.de>; Wed, 12 Oct 2022 10:04:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbiJLIDX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Oct 2022 04:03:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
+        id S229469AbiJLIEQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Oct 2022 04:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiJLIDW (ORCPT
+        with ESMTP id S229680AbiJLIEP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Oct 2022 04:03:22 -0400
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747CFB03F3
-        for <linux-block@vger.kernel.org>; Wed, 12 Oct 2022 01:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1665561801; x=1697097801;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lGJNCy53HNUKECV2HHWhqh0zmLk/E4fjQ/BhtIcZCJ8=;
-  b=PdlEBzpS/0uwUuph2yIpgvSknCVHEOwA4TjoC1P6LcCyFhyJTaw4thnT
-   smMh7dnQnwr9iuc8XYt1XwGMHXiyyShxfPpioC9GZasjhC+xgElevB/kQ
-   B1j3fIBEQTEKr/TPYIrmPZ9cgb8zDj5FnJRQzkWB/7d9GikemxuSDISrw
-   zaig1dEBh8xobqiuPygMEefGWcBlThZH/HT6vjzFJY8I/F8sIeOyMat4/
-   5pW4rW0FbRoWAMjvjQc33tUe/y2ruRIrgMLQPLhjzOIz7hpfD+GaL3nqA
-   LTml7AnM9mqy31WbodDMUoEG33olk8i5BywiR+ZxRCMD5yuTjaNoF3Yvi
-   g==;
-X-IronPort-AV: E=Sophos;i="5.95,178,1661788800"; 
-   d="scan'208";a="317874706"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Oct 2022 16:03:20 +0800
-IronPort-SDR: PkLWYarUrIPD3nlEIdVy5KAIs+BrQTDR5xJlXVipLQAqOlyNb61GQ4Bq+SelONC7h3l1qiSAF8
- gws82NuUN7m3ZDGXpBHMmqyAKT6RVZN1/jRgNoczj5uVzwVT2x7jSWK+2qGz5pnKqwB3LetApl
- x0EgEfsBatjP2+MVB2gqa5u4Vdfc02Oyod4u2o5kHKeyqFYgkGqr26J3FVIXU6YkAsJpSC3+kv
- oz9vpS5ZRT2JhxBWvoHcuioR7vHOjUuTXtcHfJeRy2xSQ0nhZBjpRZYUAawW5LiL7FmrCSHXtV
- mt1GZB4474Q6pGvpR9NTIsdg
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Oct 2022 00:23:00 -0700
-IronPort-SDR: SLzD2zaIGCtNp20g+gDcscjn6SBjBn2CcN6yuxXAdlJdpBLSU2CdI4R2H3HJZD0HnAzlX8ow+T
- mpKzgOt1etTNkoAKCsnPRAVwt+zoiN7P97/DkHOMt1AAk2TSpJuRq0ox3wmEKM1PShVP3hyds4
- K+JKlc/eYusZNAQnvDuTQwxuaZwDKJQjXjJ2PHwRWSpz8pf7Oy0Y5FZsGqV0tzP0WMDV/95YFt
- qMWCr4xmFNZsa56tpXzK1UQH5fhu1wpJ9p0O8ElH9eBUnqjh7Igx3nVpBtJtwFEm4DVwrBDETf
- YBE=
-WDCIronportException: Internal
-Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.52.207])
-  by uls-op-cesaip01.wdc.com with ESMTP; 12 Oct 2022 01:03:19 -0700
-From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH] nvme: avoid deadlock warning in sync_io_queues() path
-Date:   Wed, 12 Oct 2022 17:03:18 +0900
-Message-Id: <20221012080318.705449-1-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.37.1
+        Wed, 12 Oct 2022 04:04:15 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06216B2D87;
+        Wed, 12 Oct 2022 01:04:08 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id f140so15834958pfa.1;
+        Wed, 12 Oct 2022 01:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bgBbUs8TofhAMyCRBKzVfzUcwrUVLCp8g4mhXCX29EI=;
+        b=RYdBLO9dY/gqXlXYXxFu9ncK7sNQqO2zp3qjR5bFPMisLHOEPQCfgZyKsP/Qw5EfRf
+         NpgqkFHXwjefsMRE2wqTz+DuEzSOQK9YoOgknK7fc2aPljAd6DFP1XWJh05EAHjFehSC
+         veyjXjO5ZOfUbcQZwtQFrbBqZ6JoHZDVZfgRMp88sVhEg+rljopvmeqHnJ+fDCcRkfM6
+         0lhZjSyrq4jBmWJ4ygaeNhwVXXooPDXftXmB3lsiX8gkuHfhvaD0z9IU4yFOSWogCa5T
+         9ZGPIH61gyXj0aE43sNbWrjLQje0yXVhxpcsutyL/RolAY5yfrclLXOzhBkHIFQCKVux
+         N+Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bgBbUs8TofhAMyCRBKzVfzUcwrUVLCp8g4mhXCX29EI=;
+        b=Uhs6Wl2gfQVEawIkSJYn6TKsZblRtlpIe5Xi9ZyBbdRFZNxpFVO6soicb4/duVaR9h
+         m/xTCDou6knpAJ3dT5N1pMgwhqCPEM51orRnfHQSwUMM99v1+zOu3w8FEyPL5IGsfoAb
+         w1MHjzyIRMOkeZ24sTBzBWcpmZnNUuRzJV39f3c6o0nNLIFUBvR1eFJEAMnagob34KhG
+         WM5Jshmiv/iryk375I2hjyB50SUhJpb7vVTnZkb1+94uNKtZWjQYFKQh1zPiX8tLD4Kf
+         Ok+bQtYvWEt6XyQKy44P+T+Oc4lG9yrwXxtOaQl1AzvzsX/GNb3vDi3zqoxOkmLgWs/Y
+         6XIg==
+X-Gm-Message-State: ACrzQf3dxFqdwQqGFsTDyos6DqAKFFqZla4/nLUl5vC2C60uQ4gnqXiK
+        1bGsQjCBvv+aKfIO5X60FKA=
+X-Google-Smtp-Source: AMsMyM5/gFPR44XKYIVSRUkh9qrb45lwI7Kt3s1rCkjgSgs2yzBwhsXyWvJp1lq+ljSddsECRDH1wg==
+X-Received: by 2002:a05:6a00:22d1:b0:562:5d7d:5588 with SMTP id f17-20020a056a0022d100b005625d7d5588mr30138916pfj.58.1665561847849;
+        Wed, 12 Oct 2022 01:04:07 -0700 (PDT)
+Received: from localhost (2603-800c-1a02-1bae-a7fa-157f-969a-4cde.res6.spectrum.com. [2603:800c:1a02:1bae:a7fa:157f:969a:4cde])
+        by smtp.gmail.com with ESMTPSA id p5-20020a170902e74500b0017f73caf588sm9984934plf.218.2022.10.12.01.04.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Oct 2022 01:04:07 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Tue, 11 Oct 2022 22:04:05 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH -next 4/5] blk-iocost: bypass if only one cgroup issues io
+Message-ID: <Y0Z09aVsg9TUGSRH@slm.duckdns.org>
+References: <20221011083547.1831389-1-yukuai1@huaweicloud.com>
+ <20221011083547.1831389-5-yukuai1@huaweicloud.com>
+ <Y0WhpuqK/8CEZAGc@slm.duckdns.org>
+ <c19008c3-512e-92cc-6be1-3ecc24e74341@huaweicloud.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c19008c3-512e-92cc-6be1-3ecc24e74341@huaweicloud.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The commit c0feea594e05 ("workqueue: don't skip lockdep work dependency
-in cancel_work_sync()") restored a lockdep check and it triggered
-deadlock warning in sync_io_queues() path. This function locks
-namespaces_rwsem to traverse namespace list and calls blk_sync_queue()
-for each namespace. blk_sync_queue() calls cancel_work_sync() to wait
-for nvme_timeout() completion which has paths to lock the
-namespaces_rwsem again. Hence, the deadlock warning was reported.
+On Wed, Oct 12, 2022 at 09:33:46AM +0800, Yu Kuai wrote:
+> Perhaps a suitable configuration can avoid this problem.
 
-This deadlock is not expected to happen in real use cases since the
-queues to call blk_sync_queue() are already quiesced at that point. Left
-issue is confusion by the deadlock warning. It is not ideal to suppress
-the warning with lockdep_off/on() since it will hide unseen deadlock
-scenarios. It is desired to suppress the warning without losing deadlock
-detection ability.
+Yeah, iocost is a throttling controller. The default parameters try to be
+adaptive but it really needs benchmarked parameters to work properly.
 
-Instead of lockdep_off/on(), this patch suppresses the warning by adding
-another lock named 'namespaces_sync_io_queues_mutex'. It works together
-with namespaces_rwsem. Lock only namespaces_rwsem for fast read access
-to the namespaces in hot paths. Lock both the locks to modify the list.
-Lock only namespaces_sync_io_queues_mutex to call blk_sync_queue() so
-that namespaces_rwsem can be locked in nvme_timeout() without the
-deadlock warning.
+Thanks.
 
-Link: https://lore.kernel.org/linux-block/20220930001943.zdbvolc3gkekfmcv@shindev/
-Suggested-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- drivers/nvme/host/core.c | 21 +++++++++++++++++++--
- drivers/nvme/host/nvme.h |  1 +
- 2 files changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 8d5a7ae19844..4c535deaf269 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4234,9 +4234,11 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, struct nvme_ns_info *info)
- 	if (nvme_update_ns_info(ns, info))
- 		goto out_unlink_ns;
- 
-+	mutex_lock(&ctrl->namespaces_sync_io_queues_mutex);
- 	down_write(&ctrl->namespaces_rwsem);
- 	nvme_ns_add_to_ctrl_list(ns);
- 	up_write(&ctrl->namespaces_rwsem);
-+	mutex_unlock(&ctrl->namespaces_sync_io_queues_mutex);
- 	nvme_get_ctrl(ctrl);
- 
- 	if (device_add_disk(ctrl->device, ns->disk, nvme_ns_id_attr_groups))
-@@ -4252,9 +4254,11 @@ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, struct nvme_ns_info *info)
- 
-  out_cleanup_ns_from_list:
- 	nvme_put_ctrl(ctrl);
-+	mutex_lock(&ctrl->namespaces_sync_io_queues_mutex);
- 	down_write(&ctrl->namespaces_rwsem);
- 	list_del_init(&ns->list);
- 	up_write(&ctrl->namespaces_rwsem);
-+	mutex_unlock(&ctrl->namespaces_sync_io_queues_mutex);
-  out_unlink_ns:
- 	mutex_lock(&ctrl->subsys->lock);
- 	list_del_rcu(&ns->siblings);
-@@ -4304,9 +4308,11 @@ static void nvme_ns_remove(struct nvme_ns *ns)
- 		nvme_cdev_del(&ns->cdev, &ns->cdev_device);
- 	del_gendisk(ns->disk);
- 
-+	mutex_lock(&ns->ctrl->namespaces_sync_io_queues_mutex);
- 	down_write(&ns->ctrl->namespaces_rwsem);
- 	list_del_init(&ns->list);
- 	up_write(&ns->ctrl->namespaces_rwsem);
-+	mutex_unlock(&ns->ctrl->namespaces_sync_io_queues_mutex);
- 
- 	if (last_path)
- 		nvme_mpath_shutdown_disk(ns->head);
-@@ -4399,12 +4405,14 @@ static void nvme_remove_invalid_namespaces(struct nvme_ctrl *ctrl,
- 	struct nvme_ns *ns, *next;
- 	LIST_HEAD(rm_list);
- 
-+	mutex_lock(&ctrl->namespaces_sync_io_queues_mutex);
- 	down_write(&ctrl->namespaces_rwsem);
- 	list_for_each_entry_safe(ns, next, &ctrl->namespaces, list) {
- 		if (ns->head->ns_id > nsid || test_bit(NVME_NS_DEAD, &ns->flags))
- 			list_move_tail(&ns->list, &rm_list);
- 	}
- 	up_write(&ctrl->namespaces_rwsem);
-+	mutex_unlock(&ctrl->namespaces_sync_io_queues_mutex);
- 
- 	list_for_each_entry_safe(ns, next, &rm_list, list)
- 		nvme_ns_remove(ns);
-@@ -4565,9 +4573,11 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
- 	/* this is a no-op when called from the controller reset handler */
- 	nvme_change_ctrl_state(ctrl, NVME_CTRL_DELETING_NOIO);
- 
-+	mutex_lock(&ctrl->namespaces_sync_io_queues_mutex);
- 	down_write(&ctrl->namespaces_rwsem);
- 	list_splice_init(&ctrl->namespaces, &ns_list);
- 	up_write(&ctrl->namespaces_rwsem);
-+	mutex_unlock(&ctrl->namespaces_sync_io_queues_mutex);
- 
- 	list_for_each_entry_safe(ns, next, &ns_list, list)
- 		nvme_ns_remove(ns);
-@@ -4901,6 +4911,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- 	INIT_LIST_HEAD(&ctrl->namespaces);
- 	xa_init(&ctrl->cels);
- 	init_rwsem(&ctrl->namespaces_rwsem);
-+	mutex_init(&ctrl->namespaces_sync_io_queues_mutex);
- 	ctrl->dev = dev;
- 	ctrl->ops = ops;
- 	ctrl->quirks = quirks;
-@@ -5121,10 +5132,16 @@ void nvme_sync_io_queues(struct nvme_ctrl *ctrl)
- {
- 	struct nvme_ns *ns;
- 
--	down_read(&ctrl->namespaces_rwsem);
-+	/*
-+	 * Guard ctrl->namespaces with namespaces_sync_io_queues_mutex instead
-+	 * of namespaces_rwsem to avoid deadlock warning. namespace_rwsem lock
-+	 * here for cancel_work_sync() via blk_sync_queue() would conflict with
-+	 * nvme_timeout() which locks namespaces_rwsem.
-+	 */
-+	mutex_lock(&ctrl->namespaces_sync_io_queues_mutex);
- 	list_for_each_entry(ns, &ctrl->namespaces, list)
- 		blk_sync_queue(ns->queue);
--	up_read(&ctrl->namespaces_rwsem);
-+	mutex_unlock(&ctrl->namespaces_sync_io_queues_mutex);
- }
- EXPORT_SYMBOL_GPL(nvme_sync_io_queues);
- 
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 1bdf714dcd9e..3f484b6c21d2 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -250,6 +250,7 @@ struct nvme_ctrl {
- 	struct blk_mq_tag_set *admin_tagset;
- 	struct list_head namespaces;
- 	struct rw_semaphore namespaces_rwsem;
-+	struct mutex namespaces_sync_io_queues_mutex;
- 	struct device ctrl_device;
- 	struct device *device;	/* char device */
- #ifdef CONFIG_NVME_HWMON
 -- 
-2.37.1
-
+tejun
