@@ -2,223 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13A605FD950
-	for <lists+linux-block@lfdr.de>; Thu, 13 Oct 2022 14:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 435F35FD9CC
+	for <lists+linux-block@lfdr.de>; Thu, 13 Oct 2022 15:04:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbiJMMju (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Oct 2022 08:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33070 "EHLO
+        id S229815AbiJMNEy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Oct 2022 09:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbiJMMjt (ORCPT
+        with ESMTP id S229640AbiJMNEx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Oct 2022 08:39:49 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834671A816
-        for <linux-block@vger.kernel.org>; Thu, 13 Oct 2022 05:39:46 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id e18so2431572edj.3
-        for <linux-block@vger.kernel.org>; Thu, 13 Oct 2022 05:39:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GD5Q0fIlYFy9UgmSPGmxuwFTbHUtfpAAgAnjM1dUOhI=;
-        b=OjcVqnLYYMkA8IvE4mzGLx1ggf60Mdr2S81VA3jSR2/YIK+Z4RcpHYKbRazbSKCDna
-         2NjesK0/nrMTJlitm0X4DhPwt8F9DPVoImdHI8zWidu1c2HpteHlY6OCsR69ZFQscD61
-         nCISz4Yn2YXce4ZldUahcvzXXzAO0joUXR35Co+xVyt5ONyrwxVDZP5DvXHQGegOmBlw
-         iRlOCea2WWOEuiPTM4Cas8FTdwKxdjUnfW0ZFsz3mdV80P7Qxe02m+iagp/tvZ2kDtZd
-         HIS6JyK76Ks8WDf/hkjYugkvoCupr5PDSPy3kUGiy5PnYgI18jNxGuKPaAAyvw/Uitmz
-         kpXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GD5Q0fIlYFy9UgmSPGmxuwFTbHUtfpAAgAnjM1dUOhI=;
-        b=rZQDOulIt7Mz5Ienf3Q+lTNPPaKEzVsmLWcH+foGXZGnmXQQUEzk/FFs6l+jQDdJyw
-         LAoLWgjlmRTXNQADgWnGSC82xLoV5vS7zdFaJoCfTG5MUngvBjzOL9tH0bObKovHzehq
-         Qx2jljauiQyq4rW9HjP4PQJUealz+o8vjlwDu+rhjB8vOLsG5aypkE6T5hUWr+8rqZwx
-         PCx0Vin72e8JUD5xvsY+L5lt5yuC/L+E5iQDyR4KvMZZRiNrDJndx/KQNa3row2gc9nG
-         z9v5N5jSs4jnMIgHa0XCI6ZLDvZrxk58lkTj5uq4BhgDCqhQ6A4YlzufKuV1ranSD0bM
-         m3OA==
-X-Gm-Message-State: ACrzQf3F7kZVdHhnPQuhPDV1Il2ieJ9r0+7cC7tRq0MTV8dbXjWRJryk
-        zngq1DrpsjBo+M46UDZ4POIZu471pIccHX1JNKrn4Q==
-X-Google-Smtp-Source: AMsMyM7LqebKv/Vg0TFf9NGRzOp//qKzV5yRcGJR9qiv0wViF6GF9Ih6o2EBzI/MLW2yjpk3ydnmYG0IkSo+IR/eGhU=
-X-Received: by 2002:a05:6402:2989:b0:44e:90d0:b9ff with SMTP id
- eq9-20020a056402298900b0044e90d0b9ffmr31446858edb.110.1665664784554; Thu, 13
- Oct 2022 05:39:44 -0700 (PDT)
+        Thu, 13 Oct 2022 09:04:53 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01acsn20809.outbound.protection.outlook.com [IPv6:2a01:111:f403:7010::809])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33C114015;
+        Thu, 13 Oct 2022 06:04:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lLZvkaR4wSDjltE1FJWzXBdApjpCt7qobooKZmApJ4Yzu0Xggcj1fjPUtxxw5XM/Xezayd7coq3vlbzQey/C54oWviir2SM1A+/GsLQp2hqvkRKN96U28mvG6Ko3au/guhjchYJst6lsTLk4S/39/qQrxApaAr0X8YXVGVxWwdjRmkWY1UFhZMekJWrhD8JLx4KQN4OGU1qXV7TZtqJnSWwdafJ8UOJx7Zfg5W/dC3uRjSXpSa+U+cSId1I8jAohNvvx+CapB8kShk/sReujXoxHnvtioHgjmxFG8NdwQOEjNaD3QO2tmHuR5tF5PIleNuwfzwk8NMEhB8O0FxJUcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0pDXcnSMEAQOB8yEghKCBTDz3amlJTBYEyhbGZbXXGk=;
+ b=R3GGqt2dWnDZOn5sNxoKplENpm8b+jQZkbsyhGdJtM/Ba/F59RSpHpuTReY2yKer+xMCboGZ+IFI3mu23KEOOSjASzT5lHQXZ3rSVUHPCtUPyeinvxLzdTR0YNYRMuUNizYfeQOFKqN1abAAIUk14pELcf6KdMB6bRpoaWoviSXllSQDxeph1292QLV2y17uave9YTiFPPbJmSr1IW1GAZJwbQHp9SiHnSulk1Q6ZU5lMPM6jwSDDpc+fdGEQguNDbmUbdqcP0KRQCQwWyW/SjyU2CQ7+9TNz20PFS6N80w2M+ayEIexmuLRN0OAbUnmVDr6KkRWuP7eNtHAFtOaxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0pDXcnSMEAQOB8yEghKCBTDz3amlJTBYEyhbGZbXXGk=;
+ b=kcLcuSf6MF4Id6Y2w2UEUBoYsBvIbB8TEt0/nDbBVb+caPeMVNp5p/VtJStaCeBMJTrkJ5JcVA4IVNgmbK0Ijy3oHRQ4/BaitwWeDdpQkPjif3RHo4+8lGhrHgxiJf8HMJWbkD7d6k4bBQGa/KCtob0Bw5yo/+MBG3IetcOplclJbfgsZjxTFkhLQl5hiBZeKz4EjULkHa1++1H5cea5dx9o4vrVqorCvdSBOKFyFiM/NH+dz7yPmneJJ7RPwIwzYrwVpqKIFLp6ooKmIGQyy994swyHzgFukaNUzH6rVUv+hM97XgIx2pwjHkWIGtM7CEnI0DIygxMI6DqdO9V1OA==
+Received: from OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:a7::12)
+ by TYCP286MB1827.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:100::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.26; Thu, 13 Oct
+ 2022 13:04:48 +0000
+Received: from OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::e524:f983:290d:369d]) by OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::e524:f983:290d:369d%5]) with mapi id 15.20.5723.025; Thu, 13 Oct 2022
+ 13:04:48 +0000
+From:   Jinlong Chen <chenjinlong2016@outlook.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] blk-mq: put the reference of the io scheduler module after switching back
+Date:   Thu, 13 Oct 2022 21:03:44 +0800
+Message-ID: <OS0P286MB033887ED7C81DD1F782000DBBE259@OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <OS0P286MB0338E8D41770BFDE7B3A4EBBBE229@OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM>
+References: <OS0P286MB0338E8D41770BFDE7B3A4EBBBE229@OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN:  [yYXQFuPacvfD1E0wjvtc0fyzU37Ldycm]
+X-ClientProxiedBy: SI1PR02CA0032.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::12) To OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:604:a7::12)
+X-Microsoft-Original-Message-ID: <20221013130344.12352-1-chenjinlong2016@outlook.com>
 MIME-Version: 1.0
-References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
- <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
-In-Reply-To: <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 13 Oct 2022 18:09:32 +0530
-Message-ID: <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
-Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Niklas Cassel <niklas.cassel@wdc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OS0P286MB0338:EE_|TYCP286MB1827:EE_
+X-MS-Office365-Filtering-Correlation-Id: ddda0adc-d662-48c1-13e2-08daad1b81d6
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: h7LlICBcybR+mSlm0+nSPNoKph6B9QZY7tiuCSYuqmDl0dSMEHWmiU6pVSYlEWZ9zlze9XwPfu7iTf1qs+kQzm1VM55a6NRmZqC8VJC51uZpqP8mK8NN8oCZENvgWmiIKd3WdmPuDR8fHo1WdHCWGOjYD3OvTskLCjw9aTuOXQzodbJP2y1Ip8DkMGALvzY9L4b84kuBSL3ygyluaeU69w70eh/jBauRdl3XtHIDL67Zf3Td6PFkvt2OzsB+evpek5DvfGCuC327rgyIZm7V91FhH7peS7YsvHaJJESFUP8tCKiKgoKxvQEn6IIVMKAdkVcbl1o4jevvJylGv4DkbCLG8zVf57qqd9Ew1Rlbu630jQXl8AEaDZF4c+wSuOh2200c7lkpU1hXGTxE0/IHxqwffty0xhVA0G/ztkTz0Z6nywjTWvv0f9z+A8uz+pEaMwWqZpaIwqkwnWRrCOZ1VdQzOmJpVXAP0UTZk0sOJxRqiq9imTGCnf2aGzeoCcE9AGrWhEIAsD+L3DJWJ1gUL3yx27l+VvkDSXt2W0ESsSv2hXe01ww/xFGYvio3XEorTGgVXOlIJfoBjxyopAPProWIL3xTOpBTLcNZwCSzGscfZ8zZ34daPmS1CEh+4QvircJ4+LadryLvWTv7NWEzCNxdVbDk0sVtavhsyvMIP+E09A2h62n7Qg9BovKAoEkw
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+nhLfWfODHJSlDUCFWLYW9H2iBy7GdKTYYtIk8T1LTtn/nTFWYDS5Tac8dgP?=
+ =?us-ascii?Q?8ADLS36/zZH7P+ihxKWjE/v+mz1ZgOQKhVmUzZ+NPdrsmhN6mBaKIwX6Mp0v?=
+ =?us-ascii?Q?wRNML0GpJ+jlbhITsGrl4MjZfyV78N6n35NiuSfMSjfAsvjSH2+X+OfKEC2E?=
+ =?us-ascii?Q?jZiYtOUqxsGy2UEh9CbktoqliGmDGyFNF+frnz1TXa+Pc372sU3fOQdN0Lz3?=
+ =?us-ascii?Q?ad2WRV3i7j3S241z1fVIdnamHa1ASrvadtMschcyOIaJhsrbpRgspSjf5n1t?=
+ =?us-ascii?Q?du0zDQeSNy52tF4FRxTXorT+35/JrGY/NaSlYvyaAOc3xYhDe1ooZO66miN8?=
+ =?us-ascii?Q?rT6ypmSfj+F8rt0RB/WysrwSmbcNK2IRi2wtWacYaAcXWaWaREnzoa5SrMnZ?=
+ =?us-ascii?Q?KCrOmZPjZp797l5+E2UpfC1H+yWaYUA4gViSKnqHu4pNMLOo8D1MqAI7wX3m?=
+ =?us-ascii?Q?EbEP6e/gnTFhE7P8xcAy67lo3ynOt6KMwEph2vKI39LjSnjOjE+ujzuS1eGa?=
+ =?us-ascii?Q?md1cXX6XeQlV5dUcfXVm3oPYUcp/l7FyQq/yDDxk6djLDwF6CAIQbAkL33bh?=
+ =?us-ascii?Q?Fq4P9LLWJFUata2Co6CXbxlSDpgU9E8sHaGweNiI/VIUbCOOA6zm2u1QVcfS?=
+ =?us-ascii?Q?vIKKht+FghVK3+/Z3su7D98wMMNY4R5UKd0v4ep1JjuiFW6zLNaKFXxtAozt?=
+ =?us-ascii?Q?cFIv93kCp/NlA2nrh/qLpxOYMC/FSw3pysbwpYZ/oRgaU5NxK8oIJ4728/rh?=
+ =?us-ascii?Q?MKhS5VoIfvayUJ3fzz2Vtmqes655j5KaDJU3m6gjVFUx6FiO3/Zqak9zQoff?=
+ =?us-ascii?Q?U/oHdQNLKQ0E8MmvMoPCgLy1PC/rUmBPmJpOQV2XDwCAsCNM9cF725Dy0pqB?=
+ =?us-ascii?Q?aO3Q1kTT1goGxq3FyWOBEf/AZ5IgMpFs0R710PN2EdJDaks7fvzySVYzcflC?=
+ =?us-ascii?Q?ljBt8lNBVyZQrPCo/llKRyS5A8yx7CotorvQJ9uv0Q30K6HsFyUuxLxzNU78?=
+ =?us-ascii?Q?uA3jXUkFC99FivAoONVRcm2tHc7PXfxem3uIvbn8KW19o7DYW+irIrhRAAIH?=
+ =?us-ascii?Q?nI+CDJo2q2T3Un0cXirMiPFgIUi7eQh+1/ZBUjZhQY7lxexdqM68p1JyKhkn?=
+ =?us-ascii?Q?nJC3U6MtB3FW8M7zckCzlAZ9UHXOtBOEYCpl1FCOHky9QCX+ehExpc0W7vH+?=
+ =?us-ascii?Q?aCAFc4kHyLrec0UHgtK6fOH9J2X9l3mpTm77ZsV+6qKRbJn/fPFBkffz+/r+?=
+ =?us-ascii?Q?Y+3BqAomTn7Hbr5EwiMKx3+1qpnskzd07iRH9F/X0LRG/dp1moAkMs/SnUD1?=
+ =?us-ascii?Q?KcY=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddda0adc-d662-48c1-13e2-08daad1b81d6
+X-MS-Exchange-CrossTenant-AuthSource: OS0P286MB0338.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2022 13:04:48.6933
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB1827
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, 13 Oct 2022 at 12:41, Damien Le Moal
-<damien.lemoal@opensource.wdc.com> wrote:
->
-> On 2022/10/12 16:24, Naresh Kamboju wrote:
-> > On TI beagle board x15 the connected SSD is not detected on linux next
-> > 20221006 tag.
-> >
-> > + export STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-> > + STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-> > + test -n /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-> > + echo y
-> > + mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-> > mke2fs 1.46.5 (30-Dec-2021)
-> > The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 does
-> > not exist and no size was specified.
-> > + lava-test-raise 'mkfs.ext4
-> > /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
-> > exit'
+Sorry for the disturbance.
 
-The reported issue is now noticed on the Linux mainline master branch.
+This patch is just wrong. elevator_switch_mq does not increase the reference
+ count of the io scheduler module to which we are switching. Hence, we do not
+ need to put the reference back manually.
 
-1)
-I see following config is missing on latest problematic builds
-  - CONFIG_HAVE_PATA_PLATFORM=y
-
-2)
-Following ahci sata kernel message are missing on problematic boots,
-[    1.408660] ahci 4a140000.sata: forcing port_map 0x0 -> 0x1
-[    1.408691] ahci 4a140000.sata: AHCI 0001.0300 32 slots 1 ports 3
-Gbps 0x1 impl platform mode
-[    1.408721] ahci 4a140000.sata: flags: 64bit ncq sntf pm led clo
-only pmp pio slum part ccc apst
-[    1.409820] scsi host0: ahci
-[    1.410064] ata1: SATA max UDMA/133 mmio [mem
-0x4a140000-0x4a1410ff] port 0x100 irq 98
-
-3)
-GOOD: 9d84bb40bcb30a7fa16f33baa967aeb9953dda78
-BAD:  e08466a7c00733a501d3c5328d29ec974478d717
-
-4)
-Here i am adding links working and not working test jobs and kernel configs,
-problematic test job:
- - https://lkft.validation.linaro.org/scheduler/job/5641407#L2602
-Good test job:
- - https://lkft.validation.linaro.org/scheduler/job/5640672#L2198
-
-5)
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
-  git_sha: e08466a7c00733a501d3c5328d29ec974478d717
-  git_describe: v6.0-7220-ge08466a7c007
-  kernel_version: 6.0.0
-  kernel-config: https://builds.tuxbuild.com/2Fourpiqf1OrlPFFtKwhHV0wAiq/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/661424896
-  artifact-location: https://builds.tuxbuild.com/2Fourpiqf1OrlPFFtKwhHV0wAiq
-  toolchain: gcc-10
-
-
-6)
-For your information,
---
-I see diff on good to bad commits,
-$ git log --oneline 9d84bb40bcb3..e08466a7c007  -- drivers/ata
-4078aa685097 Merge tag 'ata-6.1-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/libata
-71d7b6e51ad3 ata: libata-eh: avoid needless hard reset when revalidating link
-e3b1fff6c051 ata: libata: drop superfluous ata_eh_analyze_tf() parameter
-b46c760e11c8 ata: libata: drop superfluous ata_eh_request_sense() parameter
-cb6e73aaadff ata: libata-eh: Remove the unneeded result variable
-ecf8322f464d ata: ahci_st: Enable compile test
-2d29dd108c78 ata: ahci_st: Fix compilation warning
-9628711aa649 ata: ahci-dwc: Add Baikal-T1 AHCI SATA interface support
-bc7af9100fa8 ata: ahci-dwc: Add platform-specific quirks support
-33629d35090f ata: ahci: Add DWC AHCI SATA controller support
-6ce73f3a6fc0 ata: libahci_platform: Add function returning a clock-handle by id
-18ee7c49f75b ata: ahci: Introduce firmware-specific caps initialization
-7cbbfbe01a72 ata: ahci: Convert __ahci_port_base to accepting hpriv as arguments
-fad64dc06579 ata: libahci: Don't read AHCI version twice in the
-save-config method
-88589772e80c ata: libahci: Discard redundant force_port_map parameter
-eb7cae0b6afd ata: libahci: Extend port-cmd flags set with port capabilities
-f67f12ff57bc ata: libahci_platform: Introduce reset
-assertion/deassertion methods
-3f74cd046fbe ata: libahci_platform: Parse ports-implemented property
-in resources getter
-3c132ea6508b ata: libahci_platform: Sanity check the DT child nodes number
-e28b3abf8020 ata: libahci_platform: Convert to using devm bulk clocks API
-82d437e6dcb1 ata: libahci_platform: Convert to using platform
-devm-ioremap methods
-d3243965f24a ata: make PATA_PLATFORM selectable only for suitable architectures
-3ebe59a54111 ata: clean up how architectures enable PATA_PLATFORM and
-PATA_OF_PLATFORM
-55d5ba550535 ata: libata-core: Check errors in sata_print_link_status()
-03070458d700 ata: libata-sff: Fix double word in comments
-0b2436d3d25f ata: pata_macio: Remove unneeded word in comments
-024811a2da45 ata: libata-core: Simplify ata_dev_set_xfermode()
-066de3b9d93b ata: libata-core: Simplify ata_build_rw_tf()
-e00923c59e68 ata: libata: Rename ATA_DFLAG_NCQ_PRIO_ENABLE
-614065aba704 ata: libata-core: remove redundant err_mask variable
-fee6073051c3 ata: ahci: Do not check ACPI_FADT_LOW_POWER_S0
-99ad3f9f829f ata: libata-core: improve parameter names for ata_dev_set_feature()
-16169fb78182 ata: libata-core: Print timeout value when internal command times
-
-
-
-
-> >
-> > Test log:
-> >  - https://lkft.validation.linaro.org/scheduler/job/5634743#L2580
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > metadata:
-> >   git_ref: master
-> >   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-> >   git_sha: 7da9fed0474b4cd46055dd92d55c42faf32c19ac
-> >   git_describe: next-20221006
-> >   kernel_version: 6.0.0
-> >   kernel-config: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F/config
-> >   build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/659754170
-> >   artifact-location: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F
-> >   toolchain: gcc-10
-
-7)
-> The kernel messages that are shown in the links above do not show any "libata
-> version 3.00 loaded." message nor any ata/ahci message that I can see. So I
-> think the eSATA adapter is not even being detected and libata/ahci driver not used.
->
-> Was this working before ? If yes, can you try with the following patches reverted ?
->
-> d3243965f24a ("ata: make PATA_PLATFORM selectable only for suitable architectures")
-> 3ebe59a54111 ("ata: clean up how architectures enable PATA_PLATFORM and
-> PATA_OF_PLATFORM")
-
-I have reverted above two patches and but the problem has not been solved.
-
-8)
-> If reverting these patches restores the eSATA port on this board, then you need
-> to fix the defconfig for that board.
-
-OTOH,
-Anders, enabled the new config CONFIG_AHCI_DWC=y  and tried but the
-device failed to boot.
-
-- Naresh
+Sincerely
+Jinlong Chen
