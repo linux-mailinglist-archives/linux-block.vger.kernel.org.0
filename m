@@ -1,188 +1,70 @@
 Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3890E5FD742
-	for <lists+linux-block@lfdr.de>; Thu, 13 Oct 2022 11:45:03 +0200 (CEST)
+Received: from out1.vger.email (unknown [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id EBD1F5FD7B3
+	for <lists+linux-block@lfdr.de>; Thu, 13 Oct 2022 12:17:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbiJMJpB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Oct 2022 05:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51704 "EHLO
+        id S229572AbiJMKRE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Oct 2022 06:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbiJMJo6 (ORCPT
+        with ESMTP id S229618AbiJMKRD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Oct 2022 05:44:58 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890391EAE8
-        for <linux-block@vger.kernel.org>; Thu, 13 Oct 2022 02:44:54 -0700 (PDT)
-Received: from canpemm500002.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mp4Kc5ZxjzpVdT;
-        Thu, 13 Oct 2022 17:41:40 +0800 (CST)
-Received: from huawei.com (10.29.88.127) by canpemm500002.china.huawei.com
- (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 13 Oct
- 2022 17:44:52 +0800
-From:   Chao Leng <lengchao@huawei.com>
-To:     <linux-nvme@lists.infradead.org>, <linux-block@vger.kernel.org>
-CC:     <hch@lst.de>, <sagi@grimberg.me>, <kbusch@kernel.org>,
-        <lengchao@huawei.com>, <ming.lei@redhat.com>, <axboe@kernel.dk>
-Subject: [PATCH v2 2/2] nvme: use blk_mq_[un]quiesce_tagset
-Date:   Thu, 13 Oct 2022 17:44:50 +0800
-Message-ID: <20221013094450.5947-3-lengchao@huawei.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20221013094450.5947-1-lengchao@huawei.com>
-References: <20221013094450.5947-1-lengchao@huawei.com>
+        Thu, 13 Oct 2022 06:17:03 -0400
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [IPv6:2a0a:51c0:0:12e:520::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED085F6C22;
+        Thu, 13 Oct 2022 03:17:00 -0700 (PDT)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1oivGV-00028B-QF; Thu, 13 Oct 2022 12:16:35 +0200
+Date:   Thu, 13 Oct 2022 12:16:35 +0200
+From:   Florian Westphal <fw@strlen.de>
+To:     Rolf Eike Beer <eike-kernel@sf-tec.de>
+Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Westphal <fw@strlen.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Graf <tgraf@suug.ch>, kasan-dev@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-janitors@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mm@kvack.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-nvme@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        loongarch@lists.linux.dev, netdev@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v6 5/7] treewide: use get_random_u32() when possible
+Message-ID: <20221013101635.GB11818@breakpoint.cc>
+References: <20221010230613.1076905-1-Jason@zx2c4.com>
+ <20221010230613.1076905-6-Jason@zx2c4.com>
+ <3026360.ZldQQBzMgz@eto.sf-tec.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.29.88.127]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500002.china.huawei.com (7.192.104.244)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3026360.ZldQQBzMgz@eto.sf-tec.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-All controller namespaces share the same tagset, so we can use this
-interface which does the optimal operation for parallel quiesce based on
-the tagset type(e.g. blocking tagsets and non-blocking tagsets).
+Rolf Eike Beer <eike-kernel@sf-tec.de> wrote:
+> Florian, can you comment and maybe fix it?
 
-Now use NVME_NS_STOPPED to ensure pairing quiescing and unquiescing.
-If use blk_mq_[un]quiesce_tagset, NVME_NS_STOPPED will be invalided,
-so introduce NVME_CTRL_STOPPED to replace NVME_NS_STOPPED.
+Can't comment, do not remember -- this was 5 years ago.
 
-nvme connect_q should be never quiesced, so set QUEUE_FLAG_NOQUIESCED
-when init connect_q.
+> Or you wanted to move the variable before the loop and keep the random state
+> between the loops and only reseed when all '1' bits have been consumed.
 
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Chao Leng <lengchao@huawei.com>
----
- drivers/nvme/host/core.c | 42 +++++++++++++-----------------------------
- drivers/nvme/host/nvme.h |  2 +-
- 2 files changed, 14 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 059737c1a2c1..0d07a07e02ff 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4890,6 +4890,7 @@ int nvme_alloc_io_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
- 			ret = PTR_ERR(ctrl->connect_q);
- 			goto out_free_tag_set;
- 		}
-+		blk_queue_flag_set(QUEUE_FLAG_NOQUIESCED, ctrl->connect_q);
- 	}
- 
- 	ctrl->tagset = set;
-@@ -5089,20 +5090,6 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- }
- EXPORT_SYMBOL_GPL(nvme_init_ctrl);
- 
--static void nvme_start_ns_queue(struct nvme_ns *ns)
--{
--	if (test_and_clear_bit(NVME_NS_STOPPED, &ns->flags))
--		blk_mq_unquiesce_queue(ns->queue);
--}
--
--static void nvme_stop_ns_queue(struct nvme_ns *ns)
--{
--	if (!test_and_set_bit(NVME_NS_STOPPED, &ns->flags))
--		blk_mq_quiesce_queue(ns->queue);
--	else
--		blk_mq_wait_quiesce_done(ns->queue);
--}
--
- /*
-  * Prepare a queue for teardown.
-  *
-@@ -5111,13 +5098,14 @@ static void nvme_stop_ns_queue(struct nvme_ns *ns)
-  * holding bd_butex.  This will end buffered writers dirtying pages that can't
-  * be synced.
-  */
--static void nvme_set_queue_dying(struct nvme_ns *ns)
-+static void nvme_set_queue_dying(struct nvme_ns *ns, bool start_queue)
- {
- 	if (test_and_set_bit(NVME_NS_DEAD, &ns->flags))
- 		return;
- 
- 	blk_mark_disk_dead(ns->disk);
--	nvme_start_ns_queue(ns);
-+	if (start_queue)
-+		blk_mq_unquiesce_queue(ns->queue);
- 
- 	set_capacity_and_notify(ns->disk, 0);
- }
-@@ -5132,6 +5120,7 @@ static void nvme_set_queue_dying(struct nvme_ns *ns)
- void nvme_kill_queues(struct nvme_ctrl *ctrl)
- {
- 	struct nvme_ns *ns;
-+	bool start_queue = false;
- 
- 	down_read(&ctrl->namespaces_rwsem);
- 
-@@ -5139,8 +5128,11 @@ void nvme_kill_queues(struct nvme_ctrl *ctrl)
- 	if (ctrl->admin_q && !blk_queue_dying(ctrl->admin_q))
- 		nvme_start_admin_queue(ctrl);
- 
-+	if (test_and_clear_bit(NVME_CTRL_STOPPED, &ctrl->flags))
-+		start_queue = true;
-+
- 	list_for_each_entry(ns, &ctrl->namespaces, list)
--		nvme_set_queue_dying(ns);
-+		nvme_set_queue_dying(ns, start_queue);
- 
- 	up_read(&ctrl->namespaces_rwsem);
- }
-@@ -5196,23 +5188,15 @@ EXPORT_SYMBOL_GPL(nvme_start_freeze);
- 
- void nvme_stop_queues(struct nvme_ctrl *ctrl)
- {
--	struct nvme_ns *ns;
--
--	down_read(&ctrl->namespaces_rwsem);
--	list_for_each_entry(ns, &ctrl->namespaces, list)
--		nvme_stop_ns_queue(ns);
--	up_read(&ctrl->namespaces_rwsem);
-+	if (!test_and_set_bit(NVME_CTRL_STOPPED, &ctrl->flags))
-+		blk_mq_quiesce_tagset(ctrl->tagset);
- }
- EXPORT_SYMBOL_GPL(nvme_stop_queues);
- 
- void nvme_start_queues(struct nvme_ctrl *ctrl)
- {
--	struct nvme_ns *ns;
--
--	down_read(&ctrl->namespaces_rwsem);
--	list_for_each_entry(ns, &ctrl->namespaces, list)
--		nvme_start_ns_queue(ns);
--	up_read(&ctrl->namespaces_rwsem);
-+	if (test_and_clear_bit(NVME_CTRL_STOPPED, &ctrl->flags))
-+		blk_mq_unquiesce_tagset(ctrl->tagset);
- }
- EXPORT_SYMBOL_GPL(nvme_start_queues);
- 
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index a29877217ee6..8e2f13a1e23a 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -237,6 +237,7 @@ enum nvme_ctrl_flags {
- 	NVME_CTRL_FAILFAST_EXPIRED	= 0,
- 	NVME_CTRL_ADMIN_Q_STOPPED	= 1,
- 	NVME_CTRL_STARTED_ONCE		= 2,
-+	NVME_CTRL_STOPPED		= 3,
- };
- 
- struct nvme_ctrl {
-@@ -487,7 +488,6 @@ struct nvme_ns {
- #define NVME_NS_ANA_PENDING	2
- #define NVME_NS_FORCE_RO	3
- #define NVME_NS_READY		4
--#define NVME_NS_STOPPED		5
- 
- 	struct cdev		cdev;
- 	struct device		cdev_device;
--- 
-2.16.4
-
+Probably.  No clue, best to NOT change it to not block Jasons series and
+then just simplify this and remove all the useless shifts.
