@@ -2,36 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DACB5FD130
-	for <lists+linux-block@lfdr.de>; Thu, 13 Oct 2022 02:35:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD175FD0FD
+	for <lists+linux-block@lfdr.de>; Thu, 13 Oct 2022 02:31:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231425AbiJMAfm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Oct 2022 20:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39184 "EHLO
+        id S231779AbiJMAbq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Oct 2022 20:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232479AbiJMAfP (ORCPT
+        with ESMTP id S232036AbiJMA3p (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Oct 2022 20:35:15 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5040CAC499;
-        Wed, 12 Oct 2022 17:30:47 -0700 (PDT)
+        Wed, 12 Oct 2022 20:29:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFD3D4A2F;
+        Wed, 12 Oct 2022 17:27:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4133AB81CEB;
-        Thu, 13 Oct 2022 00:26:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A473C433D6;
-        Thu, 13 Oct 2022 00:26:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AF4C361714;
+        Thu, 13 Oct 2022 00:27:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC0FC433D6;
+        Thu, 13 Oct 2022 00:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665620789;
-        bh=LEl6rAYkaTCrqCjHts82zcSQepTHnV6TX+kZhzawsB0=;
+        s=k20201202; t=1665620842;
+        bh=iQieQ4Y/Cp6gHS2C7Lg2w/a+l9Ieo+k4kqJju/g1xY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hvOXH6lhRt0+itWa7MYzuSzHzeOJ2iD/n+7xIFyqq/BPd3PzPG+RXMFMPsdtPEYks
-         KtP3HUik2YFlxMhZ7NNUHgY7dL3TjhPacpDnXo/78vBMee9u8FVQWJvbPUsys6XIYn
-         ECV2YsFjryChBZhJwtCB67D20JjVGuEZy9E9IRPa/VuaFubzlKHF+8/i9vpMrc15ET
-         9a7EqCpAYvUER52kM9HvbsKbQVR5pHBJyaDkuVlUZJYTvUaL8tnU3E5D6IOw87S+DL
-         AZp1JLJNK4y10bsWyfNnvVP5I2TSSC2/u/mRqWKS3EPUOnv+8QbzUJnsnx93glSkzC
-         Ec64B0oTo8+ug==
+        b=e31H6OVgs/JDJv9mhwGL69fyf6KrL85v0dtcxju/XYjS1faznxzTQJArlHD7cJu5i
+         +5C1JR+KQP6UL9xSB/O7q9zK383FURPf4JM22jM1oy3J6EnZ7md6wTXATQsPrBEhdx
+         zz5ro6EKFs8QWPv+XsACLzcVwhGQ06KUHjkr3XPfnIUiRJk9ugjtUmXeWgnRok1C4S
+         oa8o025LlJzukUaYLzkCI2oPX6JlCtQWn4ECdt9CMNPo5ufS/pjokQy/9BClXSuYYK
+         4wL0tlauF76jucP+4dMnd3uZdWAV/R0zEsJ80dyLNyl2SUwReUa28nIC6WPd4G0DQA
+         b8DiUas2mSCcQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Shigeru Yoshida <syoshida@redhat.com>,
@@ -39,12 +39,12 @@ Cc:     Shigeru Yoshida <syoshida@redhat.com>,
         Josef Bacik <josef@toxicpanda.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 4.19 03/19] nbd: Fix hung when signal interrupts nbd_start_device_ioctl()
-Date:   Wed, 12 Oct 2022 20:26:02 -0400
-Message-Id: <20221013002623.1895576-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 03/13] nbd: Fix hung when signal interrupts nbd_start_device_ioctl()
+Date:   Wed, 12 Oct 2022 20:27:02 -0400
+Message-Id: <20221013002716.1895839-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221013002623.1895576-1-sashal@kernel.org>
-References: <20221013002623.1895576-1-sashal@kernel.org>
+In-Reply-To: <20221013002716.1895839-1-sashal@kernel.org>
+References: <20221013002716.1895839-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -101,10 +101,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 2ef7eec6461c..cc66983e8b6a 100644
+index 338d02a67afb..f01b8860ba14 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -1271,10 +1271,12 @@ static int nbd_start_device_ioctl(struct nbd_device *nbd, struct block_device *b
+@@ -1258,10 +1258,12 @@ static int nbd_start_device_ioctl(struct nbd_device *nbd, struct block_device *b
  	mutex_unlock(&nbd->config_lock);
  	ret = wait_event_interruptible(config->recv_wq,
  					 atomic_read(&config->recv_threads) == 0);
@@ -117,7 +117,7 @@ index 2ef7eec6461c..cc66983e8b6a 100644
  
 +	flush_workqueue(nbd->recv_workq);
  	mutex_lock(&nbd->config_lock);
- 	nbd_bdev_reset(bdev);
+ 	bd_set_size(bdev, 0);
  	/* user requested, ignore socket errors */
 -- 
 2.35.1
