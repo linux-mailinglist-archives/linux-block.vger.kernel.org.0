@@ -2,54 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86380600695
-	for <lists+linux-block@lfdr.de>; Mon, 17 Oct 2022 08:09:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E61D6006BC
+	for <lists+linux-block@lfdr.de>; Mon, 17 Oct 2022 08:31:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbiJQGJ6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 17 Oct 2022 02:09:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
+        id S229865AbiJQGbX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Oct 2022 02:31:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbiJQGJ5 (ORCPT
+        with ESMTP id S230003AbiJQGbV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 17 Oct 2022 02:09:57 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233212A961;
-        Sun, 16 Oct 2022 23:09:54 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 665D168BFE; Mon, 17 Oct 2022 08:09:51 +0200 (CEST)
-Date:   Mon, 17 Oct 2022 08:09:51 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Christoph =?iso-8859-1?Q?B=F6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Joel Colledge <joel.colledge@linbit.com>
-Subject: Re: [PATCH] drbd: only clone bio if we have a backing device
-Message-ID: <20221017060951.GA28409@lst.de>
-References: <20221013135352.933875-1-christoph.boehmwalder@linbit.com>
+        Mon, 17 Oct 2022 02:31:21 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6B15723F;
+        Sun, 16 Oct 2022 23:31:18 -0700 (PDT)
+Received: from canpemm500010.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MrRrJ4kwmzpVqZ;
+        Mon, 17 Oct 2022 14:28:00 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 17 Oct
+ 2022 14:31:16 +0800
+From:   Ye Bin <yebin10@huawei.com>
+To:     <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <linux-block@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Ye Bin <yebin10@huawei.com>
+Subject: [PATCH -next 0/3] fix possible memleak in '__blk_trace_remove'
+Date:   Mon, 17 Oct 2022 14:53:18 +0800
+Message-ID: <20221017065321.2846017-1-yebin10@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221013135352.933875-1-christoph.boehmwalder@linbit.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500010.china.huawei.com (7.192.105.118)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 03:53:52PM +0200, Christoph Böhmwalder wrote:
-> +	if (get_ldev(device)) {
-> +		req->private_bio = bio_alloc_clone(device->ldev->backing_bdev,
-> +						   bio, GFP_NOIO, &drbd_io_bio_set);
+Ye Bin (3):
+  blktrace: introduce 'blk_trace_swicth_state' helper
+  blktrace: fix possible memleak in '__blk_trace_remove'
+  blktrace: remove unnessary stop block trace in 'blk_trace_shutdown'
 
-This adds an overly long line.
+ kernel/trace/blktrace.c | 84 ++++++++++++++++++++---------------------
+ 1 file changed, 41 insertions(+), 43 deletions(-)
 
-Otherwise looks good:
+-- 
+2.31.1
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
