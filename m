@@ -2,62 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2CE2602EC5
-	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 16:49:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6202F602E78
+	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 16:29:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbiJROtf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Oct 2022 10:49:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33894 "EHLO
+        id S231483AbiJRO3s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Oct 2022 10:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiJROte (ORCPT
+        with ESMTP id S231508AbiJRO3m (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Oct 2022 10:49:34 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F413B10FEE;
-        Tue, 18 Oct 2022 07:49:30 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 660A068C4E; Tue, 18 Oct 2022 16:49:25 +0200 (CEST)
-Date:   Tue, 18 Oct 2022 16:49:24 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] nvme-hwmon: Kmalloc the NVME SMART log buffer
-Message-ID: <20221018144924.GB20131@lst.de>
-References: <20220929224648.8997-1-Sergey.Semin@baikalelectronics.ru> <20220929224648.8997-3-Sergey.Semin@baikalelectronics.ru> <20221017071832.GB30661@lst.de> <20221017161656.hzmsgqpuvqpmriqs@mobilestation>
+        Tue, 18 Oct 2022 10:29:42 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7E762C5;
+        Tue, 18 Oct 2022 07:29:39 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4MsGQs59Wtz6PFGM;
+        Tue, 18 Oct 2022 22:27:17 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP4 (Coremail) with SMTP id gCh0CgBHWTBRuE5jkSo6AA--.18765S4;
+        Tue, 18 Oct 2022 22:29:38 +0800 (CST)
+From:   Ye Bin <yebin@huaweicloud.com>
+To:     axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, yebin@huaweicloud.com
+Subject: [PATCH v2 0/3] fix possible memleak in '__blk_trace_remove'
+Date:   Tue, 18 Oct 2022 22:51:32 +0800
+Message-Id: <20221018145135.932240-1-yebin@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221017161656.hzmsgqpuvqpmriqs@mobilestation>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgBHWTBRuE5jkSo6AA--.18765S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5_7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Jr0_Jr4l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72
+        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZa9-UUUUU=
+X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
+X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 07:16:56PM +0300, Serge Semin wrote:
-> Please note the applied patch doesn't comply with the Keith' notes
-> Link: https://lore.kernel.org/linux-nvme/YzxueNRODpry8L0%2F@kbusch-mbp.dhcp.thefacebook.com/
-> Meanwhile without patch #1 (having only the accepted by you patch
-> applied) the NVME hwmon init now seems contradicting: it ignores one
-> kmalloc failure (returns zero) but fails on another one (returns
-> -ENOMEM). I asked you to have a look at the patches #1 and #2 of the
-> series
-> Link: https://lore.kernel.org/linux-nvme/20221007100134.faaekmuqyd5vy34m@mobilestation/
-> and give your opinion whether the re-spin was required: take the
-> Keith' notes or keep the patches as is. Could you please clarify the
-> situation?
+diff v2 VS v1:
+1. Introduce 'blk_trace_{start,stop}' helper instead of 'blk_trace_switch_state'.
+2. Move stop block trace from '__blk_trace_remove' to 'blk_trace_cleanup'.
 
-I'll fix this patch up to follow the recommendation from Keith, I somehow
-thought this was already done.
+Ye Bin (3):
+  blktrace: introduce 'blk_trace_{start,stop}' helper
+  blktrace: fix possible memleak in '__blk_trace_remove'
+  blktrace: remove unnessary stop block trace in 'blk_trace_shutdown'
+
+ kernel/trace/blktrace.c | 90 +++++++++++++++++++++--------------------
+ 1 file changed, 47 insertions(+), 43 deletions(-)
+
+-- 
+2.31.1
+
