@@ -2,88 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 428E7602D9A
-	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 15:58:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2CE2602EC5
+	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 16:49:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231302AbiJRN56 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Oct 2022 09:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44984 "EHLO
+        id S230234AbiJROtf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Oct 2022 10:49:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231301AbiJRN5x (ORCPT
+        with ESMTP id S229572AbiJROte (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Oct 2022 09:57:53 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B9ED0182;
-        Tue, 18 Oct 2022 06:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=f7pjaExyWx0kiXJ6eN4VqPr9sGFWvL2YnRifHeTdaxw=; b=GyTDbR3hjhakV87BqN6621QQiV
-        Ko2Aiu5sCFnQ53MuFGJ3R8F7uQSnLrBf/rUBQtsTCBTW3ICfuvc97bzOFV1bpMLpa9QgMbkN9YcRN
-        +OOmWhhttfVATcH6UAaCGXPf7jy0GepCQt7LYhMqRSr4d82FsqhNB7t2xlM0ksqain5AhpZEcRTcE
-        +GhrFKJGYyGgN7hSgmEqstyAam+Ac09OBghlv0dVmlrY8qhgwMACVwUBisPjGN+UjRuthoAnJrmR9
-        v6D9/baiUiYrIorrQI3JkL4k20d2CwO1bP96M0/kq9bqwz80vTxJHHHSvUwceAa0YeLLlT4kTlfuD
-        Tis3HBsA==;
-Received: from [2001:4bb8:199:ad84:3a05:173d:d0f5:e725] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1okn69-007C9f-9a; Tue, 18 Oct 2022 13:57:37 +0000
+        Tue, 18 Oct 2022 10:49:34 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F413B10FEE;
+        Tue, 18 Oct 2022 07:49:30 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 660A068C4E; Tue, 18 Oct 2022 16:49:25 +0200 (CEST)
+Date:   Tue, 18 Oct 2022 16:49:24 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH 4/4] nvme-apple: remove an extra queue reference
-Date:   Tue, 18 Oct 2022 15:57:20 +0200
-Message-Id: <20221018135720.670094-5-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221018135720.670094-1-hch@lst.de>
-References: <20221018135720.670094-1-hch@lst.de>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] nvme-hwmon: Kmalloc the NVME SMART log buffer
+Message-ID: <20221018144924.GB20131@lst.de>
+References: <20220929224648.8997-1-Sergey.Semin@baikalelectronics.ru> <20220929224648.8997-3-Sergey.Semin@baikalelectronics.ru> <20221017071832.GB30661@lst.de> <20221017161656.hzmsgqpuvqpmriqs@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221017161656.hzmsgqpuvqpmriqs@mobilestation>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now that blk_mq_destroy_queue does not release the queue reference, there
-is no need for a second admin queue reference to be held by the
-apple_nvme structure.
+On Mon, Oct 17, 2022 at 07:16:56PM +0300, Serge Semin wrote:
+> Please note the applied patch doesn't comply with the Keith' notes
+> Link: https://lore.kernel.org/linux-nvme/YzxueNRODpry8L0%2F@kbusch-mbp.dhcp.thefacebook.com/
+> Meanwhile without patch #1 (having only the accepted by you patch
+> applied) the NVME hwmon init now seems contradicting: it ignores one
+> kmalloc failure (returns zero) but fails on another one (returns
+> -ENOMEM). I asked you to have a look at the patches #1 and #2 of the
+> series
+> Link: https://lore.kernel.org/linux-nvme/20221007100134.faaekmuqyd5vy34m@mobilestation/
+> and give your opinion whether the re-spin was required: take the
+> Keith' notes or keep the patches as is. Could you please clarify the
+> situation?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvme/host/apple.c | 9 ---------
- 1 file changed, 9 deletions(-)
-
-diff --git a/drivers/nvme/host/apple.c b/drivers/nvme/host/apple.c
-index 42b17439dfd57..fe7f0444a8e46 100644
---- a/drivers/nvme/host/apple.c
-+++ b/drivers/nvme/host/apple.c
-@@ -1505,15 +1505,6 @@ static int apple_nvme_probe(struct platform_device *pdev)
- 		goto put_dev;
- 	}
- 
--	if (!blk_get_queue(anv->ctrl.admin_q)) {
--		nvme_start_admin_queue(&anv->ctrl);
--		blk_mq_destroy_queue(anv->ctrl.admin_q);
--		blk_put_queue(anv->ctrl.admin_q);
--		anv->ctrl.admin_q = NULL;
--		ret = -ENODEV;
--		goto put_dev;
--	}
--
- 	nvme_reset_ctrl(&anv->ctrl);
- 	async_schedule(apple_nvme_async_probe, anv);
- 
--- 
-2.30.2
-
+I'll fix this patch up to follow the recommendation from Keith, I somehow
+thought this was already done.
