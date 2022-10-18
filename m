@@ -2,70 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D4416032CC
-	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 20:49:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0663E6032B6
+	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 20:48:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230257AbiJRStH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Oct 2022 14:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
+        id S229843AbiJRSsI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Oct 2022 14:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230291AbiJRSs5 (ORCPT
+        with ESMTP id S229720AbiJRSsH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Oct 2022 14:48:57 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4589EA0242;
-        Tue, 18 Oct 2022 11:48:50 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id d26so34480907eje.10;
-        Tue, 18 Oct 2022 11:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OEXvp1IreEp3SXV31DiUhQRIjvrLdojheHeDjSM1+mQ=;
-        b=StZ853wy/e5RtsJT54EGTUKpdC1tUlgOYlrs3sEGGMffoVhFCAcySZ+zNVfaD1MQTp
-         hMR7D7Kq7Xkwj7xChLcHAirblIX5aaAaqxy0G/6wY09rasb4Wyz7bPp1wQmhVBenkfs3
-         XaUUSrpMu+p7lybYOS2F+fq432f0WVK60coyn97CguE3CAs29HGOugjHrvxF/A8W/foA
-         evsF12c3sbuzYKU+33M7yTxBruThoComQQJs1211x2nevgPNAk6CvOnmOw1ecu6qEER1
-         33dhbDf7rIyUZWUKI6TvvvWxR8b8S8I4Ekt328WSeicvjAGCOySDvgplDFdTSIHYEOGB
-         dNUA==
+        Tue, 18 Oct 2022 14:48:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F3F9F75E
+        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666118885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OMz7ZD6XCaUt0ZSMCX9PyjOg8xnpLboIrO4q8tkKQN4=;
+        b=bSh/MrjuVMHS5E75/k2W/3yZVnJwKgzvd2SlbFCoMAmNSb2imUdyzBRjrilnkQXQP+cj4N
+        FS8ZB8qmeD3MCP/h+zDfyshF54LjUk/akacRziK7T1ltLIlEvfUidllh18hZlBWtJpW7O+
+        SweMFg61gvD0x11xqN09y8n32pFI8kA=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-114-Jkd-DdXaM4CVqUpb8sUy7Q-1; Tue, 18 Oct 2022 14:48:04 -0400
+X-MC-Unique: Jkd-DdXaM4CVqUpb8sUy7Q-1
+Received: by mail-qt1-f197.google.com with SMTP id cb19-20020a05622a1f9300b0039cc64d84edso11274653qtb.15
+        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:48:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OEXvp1IreEp3SXV31DiUhQRIjvrLdojheHeDjSM1+mQ=;
-        b=rEd69rZm96JdZRjEzTiuJU0cq2IEvTSYB/FkH6WI4irV8c43pxo5+DKOLhwryrb9S5
-         0TkKESplNyIfm/U4omXALfThSThVt5EQbdhIkjHOgfHsefn9JTX7uWkjjXy/YB7q37SM
-         g47aueFhSKrnHl4zXEk00JgqZjwNJ8Saeq21q9a16xlrd5gb2RMQt6B7RFOD5DPwRcju
-         eTMlNCQ746UTuKhEwzC0ZET3YWlo96bhccNVfzK3ePNFGlTQtvV4EmdNshLPPKjT2/MA
-         jY2Eyh7/HPtKp96rgZDRXMxh/0573Sl0cf+xefMld3+XSi7eAnm/eoq3gFUktb//zZPX
-         HMVQ==
-X-Gm-Message-State: ACrzQf0WXswtPtC8zGQWolWrabbjJwLwiaTivXRENkJPoLC12lft6WaQ
-        fwJpaDaQM2e3r056f3+apB0=
-X-Google-Smtp-Source: AMsMyM5Y5ZS6TDv/2mH05016sSTBXkDL48kYZI7q6Xe+foRLWaJOLgSM1up164i2Bm1RjXBT7PL2RQ==
-X-Received: by 2002:a17:907:7632:b0:78d:b5ba:87db with SMTP id jy18-20020a170907763200b0078db5ba87dbmr3568466ejc.661.1666118928064;
-        Tue, 18 Oct 2022 11:48:48 -0700 (PDT)
-Received: from 127.0.0.1localhost (94.197.72.2.threembb.co.uk. [94.197.72.2])
-        by smtp.gmail.com with ESMTPSA id j18-20020a17090623f200b0078db18d7972sm7855355ejg.117.2022.10.18.11.48.46
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OMz7ZD6XCaUt0ZSMCX9PyjOg8xnpLboIrO4q8tkKQN4=;
+        b=Dpc3w1+8miu8z1FmUbMgzcaiduF4zfzJhI01BWH2caqQAZM6GeHypCL3rLL1RoAIuM
+         FepOOcihy2584K8y933m+BrbYDGfjvAam/s6YDjuv4iHugCGoYesI797ujgzro0ODVTU
+         nDHIurEaiG2cPZzTYyc/HvyV1kbabg7f+W2baqtGS5YF5zV739lwJWLGWH06F5iRmkjs
+         NaO1sf3nmAa8/mBDcCrJjLs6OJlVKVnyEPV7n/VCY46hXFIfHOvV0MX6tv299aEFIifC
+         aN7Y808n2nVQv1NP03FbUzsVyJA3bGGhCcV7gyMSRklzzc1n32/mwP2+xQ7SeciW66qz
+         Mssg==
+X-Gm-Message-State: ACrzQf2T9MDl8gwbk9tFhteMOyXl0PlbNY1CW5Mu6aLaAvQqiCujkVbm
+        RMp42agSwJ0hQUX081tbJzK8tkky9XbUExAo7YcoF4j2NsNO/+mQZzEcDgyHbgJX8sNrDiXeH67
+        Uioi63JEJjKkF2+a3XxKvbA==
+X-Received: by 2002:ac8:5a04:0:b0:39c:da61:d961 with SMTP id n4-20020ac85a04000000b0039cda61d961mr3283877qta.136.1666118883815;
+        Tue, 18 Oct 2022 11:48:03 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4kYiFrkCC2vcc5l1VMqo1SytTgaACjV5OzWvZuMYrZY7zizmGaHRbxL7hmGyNDT7s+jTC5sg==
+X-Received: by 2002:ac8:5a04:0:b0:39c:da61:d961 with SMTP id n4-20020ac85a04000000b0039cda61d961mr3283866qta.136.1666118883616;
+        Tue, 18 Oct 2022 11:48:03 -0700 (PDT)
+Received: from localhost (pool-68-160-173-162.bstnma.fios.verizon.net. [68.160.173.162])
+        by smtp.gmail.com with ESMTPSA id w29-20020a05620a0e9d00b006ee7e223bb8sm2920872qkm.39.2022.10.18.11.48.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 11:48:47 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Pavel Begunkov <asml.silence@gmail.com>
-Subject: [RFC for-next 4/4] io_uring/rw: enable bio caches for IRQ rw
-Date:   Tue, 18 Oct 2022 19:47:16 +0100
-Message-Id: <11cf38513c45083955d4ee2cedbb46df0a9f6081.1666114003.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.38.0
-In-Reply-To: <cover.1666114003.git.asml.silence@gmail.com>
-References: <cover.1666114003.git.asml.silence@gmail.com>
+        Tue, 18 Oct 2022 11:48:02 -0700 (PDT)
+Date:   Tue, 18 Oct 2022 14:48:01 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Mike Snitzer <snitzer@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dm-devel@redhat.com, linux-block@vger.kernel.org,
+        Alasdair G Kergon <agk@redhat.com>,
+        Genjian Zhang <zhanggenjian@kylinos.cn>,
+        Jiangshan Yi <yijiangshan@kylinos.cn>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Milan Broz <gmazyland@gmail.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>,
+        Shaomin Deng <dengshaomin@cdjrlc.com>
+Subject: Re: [git pull] device mapper changes for 6.1
+Message-ID: <Y0704chr07nUgx3X@redhat.com>
+References: <Y07SYs98z5VNxdZq@redhat.com>
+ <Y07twbDIVgEnPsFn@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y07twbDIVgEnPsFn@infradead.org>
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,35 +88,22 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now we can use IOCB_ALLOC_CACHE not only for iopoll'ed reads/write but
-also for normal IRQ driven I/O.
+On Tue, Oct 18 2022 at  2:17P -0400,
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- io_uring/rw.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> On Tue, Oct 18, 2022 at 12:20:50PM -0400, Mike Snitzer wrote:
+> > 
+> > - Enhance DM ioctl interface to allow returning an error string to
+> >   userspace. Depends on exporting is_vmalloc_or_module_addr() to allow
+> >   DM core to conditionally free memory allocated with kasprintf().
+> 
+> That really does not sound like a good idea at all.  And it does not
+> seem to have any MM or core maintainer signoffs.
 
-diff --git a/io_uring/rw.c b/io_uring/rw.c
-index 100de2626e47..ff609b762742 100644
---- a/io_uring/rw.c
-+++ b/io_uring/rw.c
-@@ -667,6 +667,7 @@ static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
- 	ret = kiocb_set_rw_flags(kiocb, rw->flags);
- 	if (unlikely(ret))
- 		return ret;
-+	kiocb->ki_flags |= IOCB_ALLOC_CACHE;
- 
- 	/*
- 	 * If the file is marked O_NONBLOCK, still allow retry for it if it
-@@ -682,7 +683,7 @@ static int io_rw_init_file(struct io_kiocb *req, fmode_t mode)
- 			return -EOPNOTSUPP;
- 
- 		kiocb->private = NULL;
--		kiocb->ki_flags |= IOCB_HIPRI | IOCB_ALLOC_CACHE;
-+		kiocb->ki_flags |= IOCB_HIPRI;
- 		kiocb->ki_complete = io_complete_rw_iopoll;
- 		req->iopoll_completed = 0;
- 	} else {
--- 
-2.38.0
+Sorry, I should've solicited proper review more loudly.
+
+But if you have a specific concern with how DM is looking to use
+is_vmalloc_or_module_addr() please say what that is.
+
+Mike
 
