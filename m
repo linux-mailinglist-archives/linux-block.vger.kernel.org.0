@@ -2,55 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB6076032AC
-	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 20:44:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2C6A6032BB
+	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 20:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229742AbiJRSol (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Oct 2022 14:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
+        id S230226AbiJRSsw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Oct 2022 14:48:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbiJRSoj (ORCPT
+        with ESMTP id S230121AbiJRSsv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Oct 2022 14:44:39 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 387AE286ED
-        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:44:38 -0700 (PDT)
-Received: by mail-qt1-f169.google.com with SMTP id r19so10264759qtx.6
-        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:44:38 -0700 (PDT)
+        Tue, 18 Oct 2022 14:48:51 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B18A2871;
+        Tue, 18 Oct 2022 11:48:43 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id m15so21827015edb.13;
+        Tue, 18 Oct 2022 11:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2EgRk0P81xPzL9qww2eLXeNWcb1EWchmGlnBKdouweE=;
+        b=K/lo4kdx8fLgnv+KP45qob3AoybmziJgIjiw3Jn7PFCi1EUZg9G8YTRNSj6YTZ+lbQ
+         I9eHW7u5Xy+tn3KH/VQZv5iZNP+E3WEC0iW76wU5uie7xTyucvIM5qjHQvogLDNot8l2
+         QfskDVyp5niBpeczzIcTgg/QmVRNX34Wn233XRc2xRceaPohx+E66Wh2SiToJA3fYpGx
+         jjZG3tv69n/j4QZsq7md5U3eV9er2pDWO+Wodl9XcUkBm43//1GDiE1TS+S6ACrfFSCY
+         FneWgW284AH9RScE7ZA6/zcaFZXEsFRpC9FbP5Iew2EWXGsTHMVtd2VjOj/67g2qRmhf
+         55Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=stlH/SoLoTxeHdDl6sjryAM2rO8hfi05PwPVPZbgTnE=;
-        b=2fU1ix/tNH6g6nz0FK6a+P0PV2oOcdXiONMOCPlZdVBPlM8RGRedepkpIiqfG5Er7d
-         QOCo+cfUb3N58ESAWVpsKg/mMelaIoGUKe/AIGQ9fD/uuBU4w2jz+Mr5rZ1QMFkYDM1e
-         LLvfGDr/qBncVBwkomt/QtBfQTftd17CnitQylwJc4kuK22mJJx7YCZyNa1M8ufxy7Fs
-         B3hwljmoqp1OVjj/hN6cWT05hqlW0DWXQEq/IROhGqu2oRYN5wjlIovs7bPdntLle04w
-         OuDvB/SfIcPWiPy8SgovOnp4YZw5RL8J4symNlKejbAznxXxX9aPOw3PAL1CPfsHbjFx
-         xjbA==
-X-Gm-Message-State: ACrzQf0WQvYJGSN3OuDEXrKyc216/YvII4fEPkZ2ePAi93onGwJGUZsB
-        1p/QN08tMldfMzkg6whPWajU
-X-Google-Smtp-Source: AMsMyM6CrAbtDjrjT2e043kwE0xeXRgbI9q5gHVmvpiuLusuhlpMS2D1xi9kn0v7CVVHfKrOwIm2VA==
-X-Received: by 2002:a05:622a:18a0:b0:39b:e6e5:3f6b with SMTP id v32-20020a05622a18a000b0039be6e53f6bmr3250715qtc.613.1666118677335;
-        Tue, 18 Oct 2022 11:44:37 -0700 (PDT)
-Received: from localhost (pool-68-160-173-162.bstnma.fios.verizon.net. [68.160.173.162])
-        by smtp.gmail.com with ESMTPSA id u6-20020a05620a430600b006e16dcf99c8sm3042688qko.71.2022.10.18.11.44.36
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2EgRk0P81xPzL9qww2eLXeNWcb1EWchmGlnBKdouweE=;
+        b=vf5Lg6P1rlwtN3ESBzgmXvh2FGoZROC5xrJ9Dx4l04WtwtflG36GPZfnjoyTJ02d6w
+         AX0bgJNI/9xzoPrM2vQg2HvmQZzpeC2VdJ71HRmYVsazU3IgySBNDlbUn5+v2gwiOXZJ
+         Er+4JO20CLzGbXE0Qp9kr3ijs057X1UM8zc2/5FMW2kHFIvfFyiiAFe9nevZnc6MiUO6
+         HJOK+upY8oF3O8eKNOC+0ml4dpSrRFq4arvP350KkFZG69n+h36n7Bo403Ee/67mJjqI
+         eiSpIHw6ydW4lX02OVuCN5qVem9f2a1G9jAlrcKcU1E5G6R6q0SZofCK66nOtQ4/Uroj
+         lXng==
+X-Gm-Message-State: ACrzQf3sH+MrT2sVoBozqC9cz28QKtNa+t6q8+fI+BnWQVJT5IyJynnT
+        6UmY6A3ksqeUOS4RX62yGpmKuSZQRjo=
+X-Google-Smtp-Source: AMsMyM42VftfztXwTkzBTqeAltrf8oNmfPM0JmYRnJKypdJcCiTBVibgtdK1Gc/ixK2zeEnLMKJfHg==
+X-Received: by 2002:aa7:cb49:0:b0:45c:7613:661b with SMTP id w9-20020aa7cb49000000b0045c7613661bmr3810197edt.273.1666118921952;
+        Tue, 18 Oct 2022 11:48:41 -0700 (PDT)
+Received: from 127.0.0.1localhost (94.197.72.2.threembb.co.uk. [94.197.72.2])
+        by smtp.gmail.com with ESMTPSA id j18-20020a17090623f200b0078db18d7972sm7855355ejg.117.2022.10.18.11.48.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 11:44:36 -0700 (PDT)
-Date:   Tue, 18 Oct 2022 14:44:35 -0400
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
-        Alasdair G Kergon <agk@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>
-Subject: [git pull] device mapper fix for 6.1-rc2
-Message-ID: <Y070ExTjLGLStSQ0@redhat.com>
+        Tue, 18 Oct 2022 11:48:41 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Pavel Begunkov <asml.silence@gmail.com>
+Subject: [RFC for-next 0/4] enable pcpu bio caching for IRQ I/O
+Date:   Tue, 18 Oct 2022 19:47:12 +0100
+Message-Id: <cover.1666114003.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.38.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,30 +70,55 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Linus,
+This series implements bio pcpu caching for normal / IRQ-driven I/O
+extending REQ_ALLOC_CACHE currently limited to iopoll. The allocation side
+still only works from non-irq context, which is the reason it's not enabled
+by default, but turning it on for other users (e.g. filesystems) is
+as a matter of passing a flag.
 
-The following changes since commit bb1a1146467ad812bb65440696df0782e2bc63c8:
+t/io_uring with an Optane SSD setup showed +7% for batches of 32 requests
+and +4.3% for batches of 8.
 
-  Merge tag 'cgroup-for-6.1-rc1-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup (2022-10-17 18:52:43 -0700)
+IRQ, 128/32/32, cache off
+IOPS=59.08M, BW=28.84GiB/s, IOS/call=31/31
+IOPS=59.30M, BW=28.96GiB/s, IOS/call=32/32
+IOPS=59.97M, BW=29.28GiB/s, IOS/call=31/31
+IOPS=59.92M, BW=29.26GiB/s, IOS/call=32/32
+IOPS=59.81M, BW=29.20GiB/s, IOS/call=32/31
 
-are available in the Git repository at:
+IRQ, 128/32/32, cache on
+IOPS=64.05M, BW=31.27GiB/s, IOS/call=32/31
+IOPS=64.22M, BW=31.36GiB/s, IOS/call=32/32
+IOPS=64.04M, BW=31.27GiB/s, IOS/call=31/31
+IOPS=63.16M, BW=30.84GiB/s, IOS/call=32/32
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.1/dm-fix
+IRQ, 32/8/8, cache off
+IOPS=50.60M, BW=24.71GiB/s, IOS/call=7/8
+IOPS=50.22M, BW=24.52GiB/s, IOS/call=8/7
+IOPS=49.54M, BW=24.19GiB/s, IOS/call=8/8
+IOPS=50.07M, BW=24.45GiB/s, IOS/call=7/7
+IOPS=50.46M, BW=24.64GiB/s, IOS/call=8/8
 
-for you to fetch changes up to 141b3523e9be6f15577acf4bbc3bc1f82d81d6d1:
+IRQ, 32/8/8, cache on
+IOPS=51.39M, BW=25.09GiB/s, IOS/call=8/7
+IOPS=52.52M, BW=25.64GiB/s, IOS/call=7/8
+IOPS=52.57M, BW=25.67GiB/s, IOS/call=8/8
+IOPS=52.58M, BW=25.67GiB/s, IOS/call=8/7
+IOPS=52.61M, BW=25.69GiB/s, IOS/call=8/8
 
-  dm bufio: use the acquire memory barrier when testing for B_READING (2022-10-18 12:38:16 -0400)
+The main part is in patch 3. Would be great to take patch 1 separately
+for 6.1 for extra safety.
 
-Please pull, thanks.
-Mike
+Pavel Begunkov (4):
+  bio: safeguard REQ_ALLOC_CACHE bio put
+  bio: split pcpu cache part of bio_put into a helper
+  block/bio: add pcpu caching for non-polling bio_put
+  io_uring/rw: enable bio caches for IRQ rw
 
-----------------------------------------------------------------
-- Fix dm-bufio to use test_bit_acquire to properly test_bit on arches
-  with weaker memory ordering.
+ block/bio.c   | 92 +++++++++++++++++++++++++++++++++++++++------------
+ io_uring/rw.c |  3 +-
+ 2 files changed, 73 insertions(+), 22 deletions(-)
 
-----------------------------------------------------------------
-Mikulas Patocka (1):
-      dm bufio: use the acquire memory barrier when testing for B_READING
+-- 
+2.38.0
 
- drivers/md/dm-bufio.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
