@@ -2,66 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0663E6032B6
-	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 20:48:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B2C6032DD
+	for <lists+linux-block@lfdr.de>; Tue, 18 Oct 2022 20:55:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229843AbiJRSsI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Oct 2022 14:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
+        id S229544AbiJRSzQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Oct 2022 14:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229720AbiJRSsH (ORCPT
+        with ESMTP id S229729AbiJRSzN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Oct 2022 14:48:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F3F9F75E
-        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666118885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OMz7ZD6XCaUt0ZSMCX9PyjOg8xnpLboIrO4q8tkKQN4=;
-        b=bSh/MrjuVMHS5E75/k2W/3yZVnJwKgzvd2SlbFCoMAmNSb2imUdyzBRjrilnkQXQP+cj4N
-        FS8ZB8qmeD3MCP/h+zDfyshF54LjUk/akacRziK7T1ltLIlEvfUidllh18hZlBWtJpW7O+
-        SweMFg61gvD0x11xqN09y8n32pFI8kA=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-114-Jkd-DdXaM4CVqUpb8sUy7Q-1; Tue, 18 Oct 2022 14:48:04 -0400
-X-MC-Unique: Jkd-DdXaM4CVqUpb8sUy7Q-1
-Received: by mail-qt1-f197.google.com with SMTP id cb19-20020a05622a1f9300b0039cc64d84edso11274653qtb.15
-        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:48:04 -0700 (PDT)
+        Tue, 18 Oct 2022 14:55:13 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 517FF816AB
+        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:55:11 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id x13so9266687qkg.11
+        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SJv2e3NDb4hb7fpvgryRdyTK/aBL4JeyRFOO7JpAa3g=;
+        b=I6tAUY4Kc28ucOyXKjvzZw5w6u4QK/U7MjX7wJAQE/VbJgTz1FhiqwqivkZVpOIBer
+         IN9YTqwuUKp5mhC2W5z0wbdU4SylIQ2AT3lL9TEER38pSJf0dubZRoNizQVCK73XSKRQ
+         6ddgb5ITkpiQUxD7EIlMSlMZu7x3dYk67LDpQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OMz7ZD6XCaUt0ZSMCX9PyjOg8xnpLboIrO4q8tkKQN4=;
-        b=Dpc3w1+8miu8z1FmUbMgzcaiduF4zfzJhI01BWH2caqQAZM6GeHypCL3rLL1RoAIuM
-         FepOOcihy2584K8y933m+BrbYDGfjvAam/s6YDjuv4iHugCGoYesI797ujgzro0ODVTU
-         nDHIurEaiG2cPZzTYyc/HvyV1kbabg7f+W2baqtGS5YF5zV739lwJWLGWH06F5iRmkjs
-         NaO1sf3nmAa8/mBDcCrJjLs6OJlVKVnyEPV7n/VCY46hXFIfHOvV0MX6tv299aEFIifC
-         aN7Y808n2nVQv1NP03FbUzsVyJA3bGGhCcV7gyMSRklzzc1n32/mwP2+xQ7SeciW66qz
-         Mssg==
-X-Gm-Message-State: ACrzQf2T9MDl8gwbk9tFhteMOyXl0PlbNY1CW5Mu6aLaAvQqiCujkVbm
-        RMp42agSwJ0hQUX081tbJzK8tkky9XbUExAo7YcoF4j2NsNO/+mQZzEcDgyHbgJX8sNrDiXeH67
-        Uioi63JEJjKkF2+a3XxKvbA==
-X-Received: by 2002:ac8:5a04:0:b0:39c:da61:d961 with SMTP id n4-20020ac85a04000000b0039cda61d961mr3283877qta.136.1666118883815;
-        Tue, 18 Oct 2022 11:48:03 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4kYiFrkCC2vcc5l1VMqo1SytTgaACjV5OzWvZuMYrZY7zizmGaHRbxL7hmGyNDT7s+jTC5sg==
-X-Received: by 2002:ac8:5a04:0:b0:39c:da61:d961 with SMTP id n4-20020ac85a04000000b0039cda61d961mr3283866qta.136.1666118883616;
-        Tue, 18 Oct 2022 11:48:03 -0700 (PDT)
-Received: from localhost (pool-68-160-173-162.bstnma.fios.verizon.net. [68.160.173.162])
-        by smtp.gmail.com with ESMTPSA id w29-20020a05620a0e9d00b006ee7e223bb8sm2920872qkm.39.2022.10.18.11.48.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 11:48:02 -0700 (PDT)
-Date:   Tue, 18 Oct 2022 14:48:01 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SJv2e3NDb4hb7fpvgryRdyTK/aBL4JeyRFOO7JpAa3g=;
+        b=glIlXIuWQhfTndslWptF6hP3rB0byX/Qk1vJEDlN0NQOXDq0E2x0zcXv3Nqnsn+Dfo
+         /GL//nJnbiPmrq3wlgiJJQzqUksZUeWltjWAND23VgLb90R9OCa5rXt9UCkd9H09sR5n
+         X4Eg7LYXqlLlKo28ffmi76Z9D04YVxbyLTD0cIo2xZdSNGd8W5ftZyqizQWtVU084ud1
+         sN0J0Gwr2+zB5KwTxm+FlNLKfCUy8bWxY8XMGD5p8YhhvlwU/yKqZNAKsYGlglGS+/9v
+         zZKRfC//h8VM7OieZ3CH8zdQQQnMJR2vxPSaA7Fw2hFib7zVNz6FO4zhoCSFHlt3zcep
+         VfCQ==
+X-Gm-Message-State: ACrzQf241bezVpv+5ik0QdWZgLdFcPXzyMWJ+2+Bs22RlxWlo9x6otGw
+        OZ/Ify+4BFR/GbokgLBRMOOrygTN9FiLLw==
+X-Google-Smtp-Source: AMsMyM4uI8parPJsqpErV3xE5x+BlnpNNkvcrRv1iCuXOYbybjlIKbftTZUg2pBQp09vyT+cwXYnNw==
+X-Received: by 2002:ae9:e013:0:b0:6ec:9961:4ead with SMTP id m19-20020ae9e013000000b006ec99614eadmr2940444qkk.582.1666119310176;
+        Tue, 18 Oct 2022 11:55:10 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id m11-20020a05620a290b00b006b929a56a2bsm3046000qkp.3.2022.10.18.11.55.06
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Oct 2022 11:55:06 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id i127so7335413ybc.11
+        for <linux-block@vger.kernel.org>; Tue, 18 Oct 2022 11:55:05 -0700 (PDT)
+X-Received: by 2002:a05:6902:124f:b0:66e:e3da:487e with SMTP id
+ t15-20020a056902124f00b0066ee3da487emr3964959ybu.310.1666119305668; Tue, 18
+ Oct 2022 11:55:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <Y07SYs98z5VNxdZq@redhat.com> <Y07twbDIVgEnPsFn@infradead.org>
+In-Reply-To: <Y07twbDIVgEnPsFn@infradead.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 18 Oct 2022 11:54:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg3cpPyoO8u+8Fu1uk86bgTUYanfKhmxMsZzvY_mV=Cxw@mail.gmail.com>
+Message-ID: <CAHk-=wg3cpPyoO8u+8Fu1uk86bgTUYanfKhmxMsZzvY_mV=Cxw@mail.gmail.com>
+Subject: Re: [git pull] device mapper changes for 6.1
 To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Mike Snitzer <snitzer@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        Alasdair G Kergon <agk@redhat.com>,
+Cc:     Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, Alasdair G Kergon <agk@redhat.com>,
         Genjian Zhang <zhanggenjian@kylinos.cn>,
         Jiangshan Yi <yijiangshan@kylinos.cn>,
         Jilin Yuan <yuanjilin@cdjrlc.com>,
@@ -70,17 +71,10 @@ Cc:     Mike Snitzer <snitzer@kernel.org>,
         Nathan Huckleberry <nhuck@google.com>,
         Nikos Tsironis <ntsironis@arrikto.com>,
         Shaomin Deng <dengshaomin@cdjrlc.com>
-Subject: Re: [git pull] device mapper changes for 6.1
-Message-ID: <Y0704chr07nUgx3X@redhat.com>
-References: <Y07SYs98z5VNxdZq@redhat.com>
- <Y07twbDIVgEnPsFn@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y07twbDIVgEnPsFn@infradead.org>
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,22 +82,56 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Oct 18 2022 at  2:17P -0400,
-Christoph Hellwig <hch@infradead.org> wrote:
-
+On Tue, Oct 18, 2022 at 11:17 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
 > On Tue, Oct 18, 2022 at 12:20:50PM -0400, Mike Snitzer wrote:
-> > 
+> >
 > > - Enhance DM ioctl interface to allow returning an error string to
 > >   userspace. Depends on exporting is_vmalloc_or_module_addr() to allow
 > >   DM core to conditionally free memory allocated with kasprintf().
-> 
+>
 > That really does not sound like a good idea at all.  And it does not
 > seem to have any MM or core maintainer signoffs.
 
-Sorry, I should've solicited proper review more loudly.
+I wouldn't worry about maintainer sign-offs just for exporting a
+helper function, but I agree with the whole concept being a complete
+disaster and not a good idea at all.
 
-But if you have a specific concern with how DM is looking to use
-is_vmalloc_or_module_addr() please say what that is.
+Use errno.
 
-Mike
+It really is that simple. Strings have been discussed before, and they
+are simply not a good idea. If your interface is so complicated that
+you think errors need some textual explanation, your interface is
+probably garbage.
 
+Strings also have allocation issues (as you found out), and have
+serious localization issues.
+
+Yes, we do a lot of strings in the kernel in the form of dmesg, and we
+have the rule that we simply don't localize. But that's dmesg. It's
+for special stuff, not some interface.
+
+And equally importantly, some really small detail in the kernel really
+has *NO* business making up new error models of its own. You may think
+that the DM ioctl's are a big and important deal, but realistically,
+it's just an odd corner of the world that very very few people care
+about, and they can use the same error numbers that EVERYBODY ELSE HAS
+BEEN USING FOR SIX DECADES!
+
+Don't reinvent something that works - badly.
+
+I think we have one major interface that is string-based (apart from
+the obvious pathname ones and the strings passed to 'execve()').
+
+It's 'mount()' (and now fsconfig() etc), and it's string-based mainly
+because it has that nasty "arbitrary things that different filesystem
+may need for configuration"). And it has some nasty logging model
+associated with it too for output.
+
+But no, we absolutely do *not* want to emulate that particular horror
+anywhere else.
+
+If you think some errors are really important and hard to understand,
+maybe you can just log them with a ratelimited pr_info() or something.
+
+           Linus
