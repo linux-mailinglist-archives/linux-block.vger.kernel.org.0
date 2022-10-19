@@ -2,50 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 055BF6052F4
-	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 00:23:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B7F66052FA
+	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 00:24:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230244AbiJSWXs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Oct 2022 18:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33442 "EHLO
+        id S231311AbiJSWYF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Oct 2022 18:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbiJSWXq (ORCPT
+        with ESMTP id S230314AbiJSWX7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Oct 2022 18:23:46 -0400
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D4D176B9A
-        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:45 -0700 (PDT)
-Received: by mail-pj1-f51.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so1499501pjq.3
-        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:45 -0700 (PDT)
+        Wed, 19 Oct 2022 18:23:59 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528A3180258
+        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:58 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id x188so20915621oig.5
+        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1jSY95nno9cQBjlFCvz9y79nBwCAPjE+pkBLEhf1tCY=;
-        b=iFHtBF87zx47wd7/nWyfNu5SoOjfIu4lBVWHKRuVrxAgFJfk9fbuA/v0slvRRq0O/p
-         koEsZECi9c4oJZYrUN8LegWlhh6QmkQK1UWlC3ZR6YqKJdrrFW7yr6Dsouv8jzAtLLhi
-         sqZFO5AAsf7end3w7vZkW3huahH89mRAhUFDsqvXfdiMWQzobnM4yF9PmScvnoMAtula
-         BdWYm2A7BfU/q9GOJ81LOfL3cq0qnEylKKYIEnxALUrTnPMgHuwWrQdN+R+LuUL4OqqZ
-         kubN4FuwZAyY8DyyhIjNu45I7unRrvMTiaAInAtONyrHmh6FBLXjyuNcFytrDfB0uVsd
-         EEVg==
-X-Gm-Message-State: ACrzQf0a7CaVYftWHGnGWsQBJ9Dc6KXuHF9N3Bt/C5qIuaDWzCd/Cxdh
-        1hbZi5Lr+gvi7GCk0FDKUR8=
-X-Google-Smtp-Source: AMsMyM4hdcg8+km2UciIySKPCiN5HqPp7nxVY+ZueOrvjxjpoAGLvfBOwK0y4dP65g1u1AN/6FNm3A==
-X-Received: by 2002:a17:902:cf42:b0:184:5b9a:24f1 with SMTP id e2-20020a170902cf4200b001845b9a24f1mr10847607plg.73.1666218225431;
-        Wed, 19 Oct 2022 15:23:45 -0700 (PDT)
+        bh=wtRo0WR/0wJi6D1UbYgM0y9oYqjQT06GSB2djBWG90c=;
+        b=F+7ADRLefDI+65uas3M5QN81sGruM+Wk4r2DcV6Gv0J4tSd+vq8B5ioZv/046iHyuA
+         7F18aloGTXXWxC6aQRdEaLHH5ijKYvpqIJ3p4zC/2vI7Si6FXNLeh0UYStZZeFfb0UFp
+         eCUopt461STO53eZNSZesjcK/ee7zG11W7QX1mYvtwLLbXFrDLE8kdjQ/frbaSv/FRZb
+         1DHicv01PXl1emLsByIJtjw/FITLb/+CV/Ja+oFTAND/TxidHp/gJWdJuCTf4nUqTmQ4
+         RkoPlc3K61rytRFlaPsdpOrnxVLRe0X+LXZHDZ8wCvWwckZ1WOWSDJrc3op92YcTNbGx
+         Ag/A==
+X-Gm-Message-State: ACrzQf10MusPQ6MmOldLuqBkxKIlmP270pA5YYkqWAhhuKXK/RmYOE4z
+        KglJSWKapNB59JosxcpA1qOPGdfCw+4=
+X-Google-Smtp-Source: AMsMyM7oE17QefRK/hwII/lAogVYWHIjem9DgYz03HhsBifHwlhb+mjof3W/H/hNqWxvO/8XhY/Ukw==
+X-Received: by 2002:a17:90b:1808:b0:20c:8409:2007 with SMTP id lw8-20020a17090b180800b0020c84092007mr12398335pjb.226.1666218227132;
+        Wed, 19 Oct 2022 15:23:47 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:8280:2606:af57:d34])
-        by smtp.gmail.com with ESMTPSA id b3-20020a170902d50300b00174d9bbeda4sm11486866plg.197.2022.10.19.15.23.44
+        by smtp.gmail.com with ESMTPSA id b3-20020a170902d50300b00174d9bbeda4sm11486866plg.197.2022.10.19.15.23.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 15:23:44 -0700 (PDT)
+        Wed, 19 Oct 2022 15:23:46 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
         Ming Lei <ming.lei@redhat.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 06/10] block: Fix the number of segment calculations
-Date:   Wed, 19 Oct 2022 15:23:20 -0700
-Message-Id: <20221019222324.362705-7-bvanassche@acm.org>
+Subject: [PATCH 07/10] block: Add support for segments smaller than the page size
+Date:   Wed, 19 Oct 2022 15:23:21 -0700
+Message-Id: <20221019222324.362705-8-bvanassche@acm.org>
 X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
 In-Reply-To: <20221019222324.362705-1-bvanassche@acm.org>
 References: <20221019222324.362705-1-bvanassche@acm.org>
@@ -53,85 +53,68 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since multi-page bvecs are supported there can be multiple segments per
-bvec (see also bvec_split_segs()). Hence this patch that calculates the
-number of segments per bvec instead of assuming that there is only one
-segment per bvec.
+Add the necessary checks in the bio splitting code for splitting bios
+into segments smaller than the page size.
 
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-map.c | 14 +++++++++++++-
- block/blk-mq.c  |  2 ++
- block/blk.h     |  3 +++
- 3 files changed, 18 insertions(+), 1 deletion(-)
+ block/blk-merge.c | 6 ++++--
+ block/blk.h       | 3 ++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/block/blk-map.c b/block/blk-map.c
-index 4505307d758e..2976a8d68992 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -529,6 +529,18 @@ static struct bio *bio_copy_kern(struct request_queue *q, void *data,
- 	return ERR_PTR(-ENOMEM);
- }
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 35a8f75cc45d..7badfbed09fc 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -294,7 +294,8 @@ static struct bio *bio_split_rw(struct bio *bio, const struct queue_limits *lim,
+ 		if (nsegs < lim->max_segments &&
+ 		    bytes + bv.bv_len <= max_bytes &&
+ 		    bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
+-			nsegs++;
++			/* single-page bvec optimization */
++			nsegs += blk_segments(lim, bv.bv_len);
+ 			bytes += bv.bv_len;
+ 		} else {
+ 			if (bvec_split_segs(lim, &bv, &nsegs, &bytes,
+@@ -531,7 +532,8 @@ static int __blk_bios_map_sg(struct request_queue *q, struct bio *bio,
+ 			    __blk_segment_map_sg_merge(q, &bvec, &bvprv, sg))
+ 				goto next_bvec;
  
-+/* Number of DMA segments required to transfer @bytes data. */
-+unsigned int blk_segments(const struct queue_limits *limits, unsigned int bytes)
-+{
-+	const unsigned int mss = limits->max_segment_size;
-+
-+	if (bytes <= mss)
-+		return 1;
-+	if (is_power_of_2(mss))
-+		return round_up(bytes, mss) >> ilog2(mss);
-+	return (bytes + mss - 1) / mss;
-+}
-+
- /*
-  * Append a bio to a passthrough request.  Only works if the bio can be merged
-  * into the request based on the driver constraints.
-@@ -540,7 +552,7 @@ int blk_rq_append_bio(struct request *rq, struct bio *bio)
- 	unsigned int nr_segs = 0;
- 
- 	bio_for_each_bvec(bv, bio, iter)
--		nr_segs++;
-+		nr_segs += blk_segments(&rq->q->limits, bv.bv_len);
- 
- 	if (!rq->bio) {
- 		blk_rq_bio_prep(rq, bio, nr_segs);
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 8070b6c10e8d..82ae8099afdd 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2883,6 +2883,8 @@ void blk_mq_submit_bio(struct bio *bio)
- 	bio = blk_queue_bounce(bio, q);
- 	if (bio_may_exceed_limits(bio, &q->limits))
- 		bio = __bio_split_to_limits(bio, &q->limits, &nr_segs);
-+	else if (bio->bi_vcnt == 1)
-+		nr_segs = blk_segments(&q->limits, bio->bi_io_vec[0].bv_len);
- 
- 	if (!bio_integrity_prep(bio))
- 		return;
+-			if (bvec.bv_offset + bvec.bv_len <= PAGE_SIZE)
++			if (bvec.bv_offset + bvec.bv_len <= PAGE_SIZE &&
++			    bvec.bv_len <= q->limits.max_segment_size)
+ 				nsegs += __blk_bvec_map_sg(bvec, sglist, sg);
+ 			else
+ 				nsegs += blk_bvec_map_sg(q, &bvec, sglist, sg);
 diff --git a/block/blk.h b/block/blk.h
-index 7f9e089ab1f7..342ba7d86e87 100644
+index 342ba7d86e87..04328211ae3b 100644
 --- a/block/blk.h
 +++ b/block/blk.h
-@@ -81,6 +81,9 @@ struct bio_vec *bvec_alloc(mempool_t *pool, unsigned short *nr_vecs,
- 		gfp_t gfp_mask);
- void bvec_free(mempool_t *pool, struct bio_vec *bv, unsigned short nr_vecs);
+@@ -312,7 +312,7 @@ static inline bool bio_may_exceed_limits(struct bio *bio,
+ 	}
  
-+unsigned int blk_segments(const struct queue_limits *limits,
-+			  unsigned int bytes);
-+
- static inline bool biovec_phys_mergeable(struct request_queue *q,
- 		struct bio_vec *vec1, struct bio_vec *vec2)
- {
+ 	/*
+-	 * All drivers must accept single-segments bios that are <= PAGE_SIZE.
++	 * Check whether bio splitting should be performed.
+ 	 * This is a quick and dirty check that relies on the fact that
+ 	 * bi_io_vec[0] is always valid if a bio has data.  The check might
+ 	 * lead to occasional false negatives when bios are cloned, but compared
+@@ -320,6 +320,7 @@ static inline bool bio_may_exceed_limits(struct bio *bio,
+ 	 * doesn't matter anyway.
+ 	 */
+ 	return lim->chunk_sectors || bio->bi_vcnt != 1 ||
++		bio->bi_io_vec->bv_len > lim->max_segment_size ||
+ 		bio->bi_io_vec->bv_len + bio->bi_io_vec->bv_offset > PAGE_SIZE;
+ }
+ 
