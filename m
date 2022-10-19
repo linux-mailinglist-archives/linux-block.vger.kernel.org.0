@@ -2,50 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B7F66052FA
-	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 00:24:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EED966052F6
+	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 00:23:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231311AbiJSWYF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Oct 2022 18:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
+        id S230328AbiJSWXv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Oct 2022 18:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230314AbiJSWX7 (ORCPT
+        with ESMTP id S229657AbiJSWXv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Oct 2022 18:23:59 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528A3180258
-        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:58 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id x188so20915621oig.5
-        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:58 -0700 (PDT)
+        Wed, 19 Oct 2022 18:23:51 -0400
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E588617C547
+        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:49 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id h13so18549252pfr.7
+        for <linux-block@vger.kernel.org>; Wed, 19 Oct 2022 15:23:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wtRo0WR/0wJi6D1UbYgM0y9oYqjQT06GSB2djBWG90c=;
-        b=F+7ADRLefDI+65uas3M5QN81sGruM+Wk4r2DcV6Gv0J4tSd+vq8B5ioZv/046iHyuA
-         7F18aloGTXXWxC6aQRdEaLHH5ijKYvpqIJ3p4zC/2vI7Si6FXNLeh0UYStZZeFfb0UFp
-         eCUopt461STO53eZNSZesjcK/ee7zG11W7QX1mYvtwLLbXFrDLE8kdjQ/frbaSv/FRZb
-         1DHicv01PXl1emLsByIJtjw/FITLb/+CV/Ja+oFTAND/TxidHp/gJWdJuCTf4nUqTmQ4
-         RkoPlc3K61rytRFlaPsdpOrnxVLRe0X+LXZHDZ8wCvWwckZ1WOWSDJrc3op92YcTNbGx
-         Ag/A==
-X-Gm-Message-State: ACrzQf10MusPQ6MmOldLuqBkxKIlmP270pA5YYkqWAhhuKXK/RmYOE4z
-        KglJSWKapNB59JosxcpA1qOPGdfCw+4=
-X-Google-Smtp-Source: AMsMyM7oE17QefRK/hwII/lAogVYWHIjem9DgYz03HhsBifHwlhb+mjof3W/H/hNqWxvO/8XhY/Ukw==
-X-Received: by 2002:a17:90b:1808:b0:20c:8409:2007 with SMTP id lw8-20020a17090b180800b0020c84092007mr12398335pjb.226.1666218227132;
-        Wed, 19 Oct 2022 15:23:47 -0700 (PDT)
+        bh=XA4JvTPoVH6g26z3FX0Uz6+daRehnB5R/bzRqgV/XaI=;
+        b=dbAnre1974qrLx7jSRe3ggcTnsm70Cpn83gsGO1r+iv0cwzBAaKQlpi+2sw6VCPXm/
+         yuw48DXLcZxF8QSFAzF5bQj66v2wxhq0dgVM7C68cmHoE5jtewkTHqO3WFjUAHMVCTws
+         TwVmYImJUGPk+UyXoWpfZZFhOJqHDi4zJsGH/oG/KrYj96+52C/m31ylKp9adsdUY3b0
+         1nFsId2xYqk9uuYxeBKc7ZTXb327y7yywh7GAY4ycXYZMVKC+3pXWHncPPsCx0/GLtos
+         DTGhqa0oupxfmAbFhSGOSQWIwfnA0oCtYs7diWniFphd6ffwuuJmPgk6xjWG3pTjm28T
+         HtWw==
+X-Gm-Message-State: ACrzQf3uS0q+bDphnaAFaCCceCifMXvGYf1gC8rX0SkG27VFh40Iw95G
+        6hseO7bhmDdEaiVbxfxZf9c=
+X-Google-Smtp-Source: AMsMyM5ZFmxRe/+vlRntaQz5s9Y7tkYbM1CQ8HWvpu6xeVp731Q0aLCmoziOBe2uWY1gVPqDxi8rQg==
+X-Received: by 2002:a63:881:0:b0:43a:c80a:bea4 with SMTP id 123-20020a630881000000b0043ac80abea4mr9139899pgi.329.1666218229069;
+        Wed, 19 Oct 2022 15:23:49 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:8280:2606:af57:d34])
-        by smtp.gmail.com with ESMTPSA id b3-20020a170902d50300b00174d9bbeda4sm11486866plg.197.2022.10.19.15.23.45
+        by smtp.gmail.com with ESMTPSA id b3-20020a170902d50300b00174d9bbeda4sm11486866plg.197.2022.10.19.15.23.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 15:23:46 -0700 (PDT)
+        Wed, 19 Oct 2022 15:23:48 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 07/10] block: Add support for segments smaller than the page size
-Date:   Wed, 19 Oct 2022 15:23:21 -0700
-Message-Id: <20221019222324.362705-8-bvanassche@acm.org>
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Subject: [PATCH 08/10] scsi: core: Set the SUB_PAGE_SEGMENTS request queue flag
+Date:   Wed, 19 Oct 2022 15:23:22 -0700
+Message-Id: <20221019222324.362705-9-bvanassche@acm.org>
 X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
 In-Reply-To: <20221019222324.362705-1-bvanassche@acm.org>
 References: <20221019222324.362705-1-bvanassche@acm.org>
@@ -53,68 +54,34 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add the necessary checks in the bio splitting code for splitting bios
-into segments smaller than the page size.
+This patch enables support for segments smaller than the page size.
+No changes other than setting the SUB_PAGE_SEGMENTS flag are required
+since the SCSI code uses blk_rq_map_sg().
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Keith Busch <kbusch@kernel.org>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-merge.c | 6 ++++--
- block/blk.h       | 3 ++-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/scsi/scsi_lib.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 35a8f75cc45d..7badfbed09fc 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -294,7 +294,8 @@ static struct bio *bio_split_rw(struct bio *bio, const struct queue_limits *lim,
- 		if (nsegs < lim->max_segments &&
- 		    bytes + bv.bv_len <= max_bytes &&
- 		    bv.bv_offset + bv.bv_len <= PAGE_SIZE) {
--			nsegs++;
-+			/* single-page bvec optimization */
-+			nsegs += blk_segments(lim, bv.bv_len);
- 			bytes += bv.bv_len;
- 		} else {
- 			if (bvec_split_segs(lim, &bv, &nsegs, &bytes,
-@@ -531,7 +532,8 @@ static int __blk_bios_map_sg(struct request_queue *q, struct bio *bio,
- 			    __blk_segment_map_sg_merge(q, &bvec, &bvprv, sg))
- 				goto next_bvec;
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 8b89fab7c420..821149a57fbf 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1877,6 +1877,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+ {
+ 	struct device *dev = shost->dma_dev;
  
--			if (bvec.bv_offset + bvec.bv_len <= PAGE_SIZE)
-+			if (bvec.bv_offset + bvec.bv_len <= PAGE_SIZE &&
-+			    bvec.bv_len <= q->limits.max_segment_size)
- 				nsegs += __blk_bvec_map_sg(bvec, sglist, sg);
- 			else
- 				nsegs += blk_bvec_map_sg(q, &bvec, sglist, sg);
-diff --git a/block/blk.h b/block/blk.h
-index 342ba7d86e87..04328211ae3b 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -312,7 +312,7 @@ static inline bool bio_may_exceed_limits(struct bio *bio,
- 	}
- 
++	blk_queue_flag_set(QUEUE_FLAG_SUB_PAGE_SEGMENTS, q);
++
  	/*
--	 * All drivers must accept single-segments bios that are <= PAGE_SIZE.
-+	 * Check whether bio splitting should be performed.
- 	 * This is a quick and dirty check that relies on the fact that
- 	 * bi_io_vec[0] is always valid if a bio has data.  The check might
- 	 * lead to occasional false negatives when bios are cloned, but compared
-@@ -320,6 +320,7 @@ static inline bool bio_may_exceed_limits(struct bio *bio,
- 	 * doesn't matter anyway.
+ 	 * this limit is imposed by hardware restrictions
  	 */
- 	return lim->chunk_sectors || bio->bi_vcnt != 1 ||
-+		bio->bi_io_vec->bv_len > lim->max_segment_size ||
- 		bio->bi_io_vec->bv_len + bio->bi_io_vec->bv_offset > PAGE_SIZE;
- }
- 
