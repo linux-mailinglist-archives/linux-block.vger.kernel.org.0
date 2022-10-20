@@ -2,103 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CAA960609F
-	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 14:53:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 727D56060E5
+	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 15:03:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbiJTMxM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Oct 2022 08:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
+        id S230308AbiJTNDk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Oct 2022 09:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230140AbiJTMxL (ORCPT
+        with ESMTP id S230287AbiJTNDf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Oct 2022 08:53:11 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C413E17F296
-        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 05:53:09 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 78so19111694pgb.13
-        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 05:53:09 -0700 (PDT)
+        Thu, 20 Oct 2022 09:03:35 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB721CE3E9
+        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 06:03:33 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id u71so19178282pgd.2
+        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 06:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m1tSUOR0CGd4Km4WU9EABqtl9X4dWfnj8PpCfOdNXBc=;
-        b=3Fin5tR+DxTOnCymWvNQXvC4DP5A9CvW/OpgGKccrmRGVFcE1OuUJQGkrqlo+ckrFh
-         U+MGbaf9A8ztgk82880CFy4vbbjNXjhtqi5eSxxDu3XyziyuvWI7H9MeAMWY9hrAejxi
-         5j3rfjrvbU7Jl3E5wgG3nrBCZsTDZVxaUgfEZrWPMEwVm19q7lbCXQAV/HzVjWBqk9GO
-         L885iNCloh3qLdmRxDaEq+Ev5GUBKwzDFWxEGiVCxKxZsoqeQIyFeiWyyAZSrDkSNbV9
-         FtkzOyVRIr86K6bOzCntYKwU4AnrmZYaZKMBUbcAFaKDCq/xXZjENs8qIFYfy1MYehUi
-         L4Iw==
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1CrWKVZtOI32J1eyiZca0oyo4c9aEVy1KXMgpcMBc2M=;
+        b=7hI7lCivt4hx9vW2nR0DjQJmQ0HXCPZCnu0Pr7TM/bDO8uGWVGOdq69I7X/yhTvozo
+         FZBowiYLhf1p6Ag4rKysrfyJJJvXRT0qCdz0TgTX2D72YmiUqr6eeJckZin7gptZc4CY
+         gZZ5aCoCvQYK57fRrGcMOfoCx2FcrcQOcXaas2xxOcf+4q/A7tvLp2kAJan7XOo8gh84
+         iouCbnEN4WKbm9CS7ygwL81MBZHqJFAfXfWQXI0F45RvWc1rm70obsjv5ZZPFRLU0zWT
+         1KQjh+KjUfL+70epkmMRS9hrsGq0GOPHt2VjG70insx0oG2+RWlApfqgrj2rQ7pEhTVu
+         RfaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m1tSUOR0CGd4Km4WU9EABqtl9X4dWfnj8PpCfOdNXBc=;
-        b=TuImG+jPQ6MOF55um3pHwPPM/Wl35sbMBSfgL/O3H4c4F1stfvx6l9VuMsmqPWmZqa
-         Iu41trjPVv97wjEUPZTuf5go4xodzTqIIlW4oeD/pF8wS7vpjs0FwqJ28t4wA6Nkt45S
-         nvUuwIavg+OGSonzs08rL6h36/kFQ5o4VC858+NDCLL2oKqBrIVBn+b1Jy/Tck9jR4Ho
-         66BZPyCCNnDGzyyiYARlHLraCEChxCq5rBlao3ZDShx49u8eqT7T0wsq1CmyI9nYx+zS
-         IAp8TPm+4Bohn2+D+VjJSHCAbDM3uaQAlVMXg9/Xrk+G6zuTOZ7xaDUEswtkjuAwgYo/
-         W8eQ==
-X-Gm-Message-State: ACrzQf3WJf6wYLg4x1NZrIvP8ADXFc+NFnWZUSbPq/OAQS8//CISWrVN
-        VBZctOzIhUylOgeIn7LWOQ5DnQ==
-X-Google-Smtp-Source: AMsMyM7f5pr+Q4da5tL5VdWH16B7hstNTIj3sdj6G8HPE6MKotRnhdQnl2hrqR7v/as4WRggLhM+mw==
-X-Received: by 2002:a63:1612:0:b0:461:4180:d88b with SMTP id w18-20020a631612000000b004614180d88bmr11920615pgl.434.1666270389223;
-        Thu, 20 Oct 2022 05:53:09 -0700 (PDT)
-Received: from [192.168.4.201] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id 186-20020a6215c3000000b005626ef1a48bsm13162954pfv.197.2022.10.20.05.53.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 05:53:08 -0700 (PDT)
-Message-ID: <80702edc-3e81-441b-efe7-a746c36f1d01@kernel.dk>
-Date:   Thu, 20 Oct 2022 05:53:07 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [RFC for-next v2 0/4] enable pcpu bio caching for IRQ I/O
-Content-Language: en-US
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-block@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <cover.1666122465.git.asml.silence@gmail.com>
- <Y1EHjbhS1wuw3qcr@infradead.org>
- <dd22bf6a-8620-49c1-ec27-195e39cb4c33@gmail.com>
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1CrWKVZtOI32J1eyiZca0oyo4c9aEVy1KXMgpcMBc2M=;
+        b=cFrLKpMGy91zH+p0/sQ1eartk4Raz0SsZP9KLw/bc8rhgr7XUqzeoMFM1tvd01AP4H
+         g7AwM6W3kqKS7mvJdb63udRqkY1Jh1T5/vORK1q4pPfXrQEur//VOGlXieW6Yr2QvEwF
+         4GN+RIf3T4+LTfnytQweBfjYwNuxrIdLWEeKv7ZAVNAagPAaY+3hcaJBFktGNP/q1wgD
+         5aTpgafEFc+C9e6+2F/XlKd0Rma5ldDF30cnfsfV5X9kF9dBlBaZBFPRpfnfmR5Uc8a8
+         7VBs2Tjg2MXJJ6rxY7Ubt05Ed5c0zwZXTLJNZ2F2k5YRaIHB6SMz+ldrNeCskxS8URvk
+         aBwA==
+X-Gm-Message-State: ACrzQf05oEKTEc7yQKA+p98eOBLh15Sbdv4tg6i6vptUhBamDYYfPnjG
+        vdGXR80APDHcuG/Rnda+K1dbxg==
+X-Google-Smtp-Source: AMsMyM5sNnwCGNjwAlRpdcKDHrFE28D3OQt1qPwY32jtVNeAEuKvWNefCzpg7qDZPOnCgE1pbCsNqA==
+X-Received: by 2002:a63:5a41:0:b0:430:673e:1e13 with SMTP id k1-20020a635a41000000b00430673e1e13mr11902186pgm.435.1666271012904;
+        Thu, 20 Oct 2022 06:03:32 -0700 (PDT)
+Received: from [127.0.0.1] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id q5-20020aa79825000000b005695accca74sm2551230pfl.111.2022.10.20.06.03.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Oct 2022 06:03:32 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <dd22bf6a-8620-49c1-ec27-195e39cb4c33@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     linux-block@vger.kernel.org, mhiramat@kernel.org,
+        Ye Bin <yebin@huaweicloud.com>, rostedt@goodmis.org
+Cc:     linux-kernel@vger.kernel.org, Ye Bin <yebin10@huawei.com>
+In-Reply-To: <20221019033602.752383-1-yebin@huaweicloud.com>
+References: <20221019033602.752383-1-yebin@huaweicloud.com>
+Subject: Re: [PATCH v3 0/3] fix possible memleak in '__blk_trace_remove'
+Message-Id: <166627101165.162941.2701658237902573676.b4-ty@kernel.dk>
+Date:   Thu, 20 Oct 2022 06:03:31 -0700
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.11.0-dev-d9ed3
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/20/22 5:40 AM, Pavel Begunkov wrote:
-> On 10/20/22 09:32, Christoph Hellwig wrote:
->> On Tue, Oct 18, 2022 at 08:50:54PM +0100, Pavel Begunkov wrote:
->>> This series implements bio pcpu caching for normal / IRQ-driven I/O
->>> extending REQ_ALLOC_CACHE currently limited to iopoll. The allocation side
->>> still only works from non-irq context, which is the reason it's not enabled
->>> by default, but turning it on for other users (e.g. filesystems) is
->>> as a matter of passing a flag.
->>>
->>> t/io_uring with an Optane SSD setup showed +7% for batches of 32 requests
->>> and +4.3% for batches of 8.
->>
->> This looks much nicer to me than the previous attempt exposing the bio
->> internals to io_uring, thanks.
+On Wed, 19 Oct 2022 11:35:59 +0800, Ye Bin wrote:
+> From: Ye Bin <yebin10@huawei.com>
 > 
-> Yeah, I saw the one Jens posted before but I wanted this one to be more
-> generic, i.e. applicable not only to io_uring. Thanks for taking a look.
+> Diff v3 VS v2
+> 1. Invert the check of 'blk_trace_{start,stop}' and return early from the
+> function for the error case.
+> 
+> Diff v2 VS v1:
+> 1. Introduce 'blk_trace_{start,stop}' helper instead of 'blk_trace_switch_state'.
+> 2. Move stop block trace from '__blk_trace_remove' to 'blk_trace_cleanup'.
+> 
+> [...]
 
-It is indeed better like that, also because we can get rid of the alloc
-cache flag long term and just have it be the way that bio allocations
-work.
+Applied, thanks!
 
+[1/3] blktrace: introduce 'blk_trace_{start,stop}' helper
+      commit: 60a9bb9048f9e95029df10a9bc346f6b066c593c
+[2/3] blktrace: fix possible memleak in '__blk_trace_remove'
+      commit: dcd1a59c62dc49da75539213611156d6db50ab5d
+[3/3] blktrace: remove unnessary stop block trace in 'blk_trace_shutdown'
+      commit: 2db96217e7e515071726ca4ec791742c4202a1b2
+
+Best regards,
 -- 
 Jens Axboe
 
