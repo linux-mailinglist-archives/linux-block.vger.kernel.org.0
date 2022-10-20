@@ -2,50 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B72E3605E52
-	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 12:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CBEE605F23
+	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 13:43:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230121AbiJTK5O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Oct 2022 06:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55470 "EHLO
+        id S231134AbiJTLnl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Oct 2022 07:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231143AbiJTK5M (ORCPT
+        with ESMTP id S229491AbiJTLnk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Oct 2022 06:57:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423241E197C
-        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 03:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=MhvsU4FBT90DVpaof6geuYsL7n+ySOLAIqGcimDcgOQ=; b=UPaSXSi2sbJGTJbOFs9wl1vG77
-        xKe6mwZJIqq2bSGi6LL63UZhn7vTvIJR2du5bsQ8epXGztElvJ++J0jHHo7POhYHmszOrx+6wSLG/
-        5hu4mR0QokBJVhhJJAX9S/lIk7LOruuQptjTHVbtBcWkl+NsoWbKnHJuNYMe6OTfuMTbZZREVIAnH
-        hXylWG4lhQTRwZR9HX3PedhHIWLAx2NuJfKkP+RrtVQX9pKO12wk1DwnJSCNXFz8/iaZaZHMAgkri
-        FeBjAzz0+0ph3TYMSXXl+5bGSQtWqbrBGD3EdPcTRhYGRzkwg4pLPqGFJiKeosHdYjJfAySbBsmiL
-        v3DHUy3A==;
-Received: from [88.128.92.117] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1olTEE-00Dqsh-1T; Thu, 20 Oct 2022 10:56:46 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chao Leng <lengchao@huawei.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH 8/8] nvme: use blk_mq_[un]quiesce_tagset
-Date:   Thu, 20 Oct 2022 12:56:08 +0200
-Message-Id: <20221020105608.1581940-9-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221020105608.1581940-1-hch@lst.de>
-References: <20221020105608.1581940-1-hch@lst.de>
+        Thu, 20 Oct 2022 07:43:40 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4686A52A;
+        Thu, 20 Oct 2022 04:43:39 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id q10-20020a17090a304a00b0020b1d5f6975so2827390pjl.0;
+        Thu, 20 Oct 2022 04:43:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sHyL+iSo35ah0e/V8okK2n5oGkX8sOLEw6ihIICz6Vk=;
+        b=CaxvdnB3D34/mdfSTiomzd6dmlCvR1jIRM2sEYc77uhFp3yfqOsUi/+znPLDKURq+D
+         N8TnBDQ53BfqpOCym+Ed/KoCzh/SJHYXIyM3d+D32y5N+kgMbJ0U11WIRe8147poGaNm
+         ASWFeNQeTXz/O9tZ3ruLsNTXa5tkD6us8+CguOJXzJamJozDp1yUB1NGAosP1D7Hvb5i
+         GcIJ/8ZLrErCJF+PaNDX6bmonXSFL1HQZlkq2AuVh7jki1WRyLhwPWTsx0zwpf8pMtjL
+         f/U0tMgiyCDDdVgDIy1nKmyD93BzzlHVlbgEnDuiNtnRu5YBOEqIzd1FlS8M47CrACvd
+         qEjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=sHyL+iSo35ah0e/V8okK2n5oGkX8sOLEw6ihIICz6Vk=;
+        b=0fYrFYhu1vblpLO5ejLPf1yFtiOOAxT9Ho4O+p3FDn8HTWS+KM1ex88L+vwwEsTO5w
+         7Co9wOJhn1v/Sm03/s9zM4RovO/KST1wnRGkCM3mEN7mk3EHJyETLzjHT/eM/dOJP9KH
+         PyFhw1tFiBxTwR6YbJPa20NDYqyksL+jzi4HKlBMcH1eq/Cycte+Jn/GnsB7W9SoL2e3
+         purIe+WNzFTpQKB78Wh/K9tYOC1nkWx0AcFqZTVksF9zQZhnYnXnpzPJfaOIfjZK5v4N
+         MT88449v3yPDI3FWV3ROHW6epMIv4UQAKas/vJBGYcA/hG5ipBeZRr1NE9IOJ7+/cbjp
+         FU/g==
+X-Gm-Message-State: ACrzQf2G/ENpm7CKI3w6rV7/wKX+T5wCTEnqaxPUF8CJyhCXGZm60SZy
+        eAbEIo5vx/QKQ3CNUC6ZATg=
+X-Google-Smtp-Source: AMsMyM6U0+WqwhwwNRAzULYRnlQT5X0Wjjw8Jf46FlP/uwvT28jGG0i30ZT7HgxIxUtigv77DfWdzQ==
+X-Received: by 2002:a17:90a:1c02:b0:1e0:df7:31f2 with SMTP id s2-20020a17090a1c0200b001e00df731f2mr49904954pjs.222.1666266219347;
+        Thu, 20 Oct 2022 04:43:39 -0700 (PDT)
+Received: from [10.114.96.15] ([129.227.152.6])
+        by smtp.gmail.com with ESMTPSA id h6-20020a170902680600b0016dc6279ab7sm1394637plk.149.2022.10.20.04.43.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Oct 2022 04:43:38 -0700 (PDT)
+Message-ID: <9906b1bf-c938-e918-62bc-0c7118e954a9@gmail.com>
+Date:   Thu, 20 Oct 2022 19:43:35 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [RESEND PATCH] block, bfq: remove unused variable for bfq_queue
+From:   Yuwei Guan <ssawgyw@gmail.com>
+To:     paolo.valente@linaro.org, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuwei.Guan@zeekrlife.com
+References: <20221018030139.159-1-Yuwei.Guan@zeekrlife.com>
+In-Reply-To: <20221018030139.159-1-Yuwei.Guan@zeekrlife.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,125 +74,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Chao Leng <lengchao@huawei.com>
+Hi Jens,
 
-All controller namespaces share the same tagset, so we can use this
-interface which does the optimal operation for parallel quiesce based on
-the tagset type(e.g. blocking tagsets and non-blocking tagsets).
+On 2022/10/18 11:01, Yuwei Guan wrote:
+> it defined in d0edc2473be9d, but there's nowhere to use it,
+> so remove it.
+>
+> Signed-off-by: Yuwei Guan <Yuwei.Guan@zeekrlife.com>
+> Acked-by: Paolo Valente <paolo.valente@linaro.org>
+> ---
+>   block/bfq-iosched.h | 4 ----
+>   1 file changed, 4 deletions(-)
 
-nvme connect_q should not be quiesced when quiesce tagset, so set the
-QUEUE_FLAG_SKIP_TAGSET_QUIESCE to skip it when init connect_q.
+Can you help to check this patch again?
 
-Currently we use NVME_NS_STOPPED to ensure pairing quiescing and
-unquiescing. If use blk_mq_[un]quiesce_tagset, NVME_NS_STOPPED will be
-invalided, so introduce NVME_CTRL_STOPPED to replace NVME_NS_STOPPED.
-In addition, we never really quiesce a single namespace. It is a better
-choice to move the flag from ns to ctrl.
+Thanks
 
-Signed-off-by: Chao Leng <lengchao@huawei.com>
-[hch: rebased on top of prep patches]
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvme/host/core.c | 38 +++++++++-----------------------------
- drivers/nvme/host/nvme.h |  2 +-
- 2 files changed, 10 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 0ab3a18fd9f85..cc71f1001144f 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4891,6 +4891,7 @@ int nvme_alloc_io_tag_set(struct nvme_ctrl *ctrl, struct blk_mq_tag_set *set,
- 			ret = PTR_ERR(ctrl->connect_q);
- 			goto out_free_tag_set;
- 		}
-+		blk_queue_flag_set(QUEUE_FLAG_SKIP_TAGSET_QUIESCE, ctrl->connect_q);
- 	}
- 
- 	ctrl->tagset = set;
-@@ -5090,20 +5091,6 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- }
- EXPORT_SYMBOL_GPL(nvme_init_ctrl);
- 
--static void nvme_start_ns_queue(struct nvme_ns *ns)
--{
--	if (test_and_clear_bit(NVME_NS_STOPPED, &ns->flags))
--		blk_mq_unquiesce_queue(ns->queue);
--}
--
--static void nvme_stop_ns_queue(struct nvme_ns *ns)
--{
--	if (!test_and_set_bit(NVME_NS_STOPPED, &ns->flags))
--		blk_mq_quiesce_queue(ns->queue);
--	else
--		blk_mq_wait_quiesce_done(ns->queue->tag_set);
--}
--
- /**
-  * nvme_kill_queues(): Ends all namespace queues
-  * @ctrl: the dead controller that needs to end
-@@ -5120,10 +5107,9 @@ void nvme_kill_queues(struct nvme_ctrl *ctrl)
- 	if (ctrl->admin_q && !blk_queue_dying(ctrl->admin_q))
- 		nvme_start_admin_queue(ctrl);
- 	if (!test_and_set_bit(NVME_CTRL_NS_DEAD, &ctrl->flags)) {
--		list_for_each_entry(ns, &ctrl->namespaces, list) {
-+		list_for_each_entry(ns, &ctrl->namespaces, list)
- 			blk_mark_disk_dead(ns->disk);
--			nvme_start_ns_queue(ns);
--		}
-+		nvme_start_queues(ctrl);
- 	}
- 	up_read(&ctrl->namespaces_rwsem);
- }
-@@ -5179,23 +5165,17 @@ EXPORT_SYMBOL_GPL(nvme_start_freeze);
- 
- void nvme_stop_queues(struct nvme_ctrl *ctrl)
- {
--	struct nvme_ns *ns;
--
--	down_read(&ctrl->namespaces_rwsem);
--	list_for_each_entry(ns, &ctrl->namespaces, list)
--		nvme_stop_ns_queue(ns);
--	up_read(&ctrl->namespaces_rwsem);
-+	if (!test_and_set_bit(NVME_CTRL_STOPPED, &ctrl->flags))
-+		blk_mq_quiesce_tagset(ctrl->tagset);
-+	else
-+		blk_mq_wait_quiesce_done(ctrl->tagset);
- }
- EXPORT_SYMBOL_GPL(nvme_stop_queues);
- 
- void nvme_start_queues(struct nvme_ctrl *ctrl)
- {
--	struct nvme_ns *ns;
--
--	down_read(&ctrl->namespaces_rwsem);
--	list_for_each_entry(ns, &ctrl->namespaces, list)
--		nvme_start_ns_queue(ns);
--	up_read(&ctrl->namespaces_rwsem);
-+	if (test_and_clear_bit(NVME_CTRL_STOPPED, &ctrl->flags))
-+		blk_mq_unquiesce_tagset(ctrl->tagset);
- }
- EXPORT_SYMBOL_GPL(nvme_start_queues);
- 
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 82989a3322130..54d8127fb6dc5 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -238,6 +238,7 @@ enum nvme_ctrl_flags {
- 	NVME_CTRL_ADMIN_Q_STOPPED	= 1,
- 	NVME_CTRL_STARTED_ONCE		= 2,
- 	NVME_CTRL_NS_DEAD     		= 3,
-+	NVME_CTRL_STOPPED		= 4,
- };
- 
- struct nvme_ctrl {
-@@ -487,7 +488,6 @@ struct nvme_ns {
- #define NVME_NS_ANA_PENDING	2
- #define NVME_NS_FORCE_RO	3
- #define NVME_NS_READY		4
--#define NVME_NS_STOPPED		5
- 
- 	struct cdev		cdev;
- 	struct device		cdev_device;
--- 
-2.30.2
-
+> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+> index 64ee618064ba..71f721670ab6 100644
+> --- a/block/bfq-iosched.h
+> +++ b/block/bfq-iosched.h
+> @@ -369,12 +369,8 @@ struct bfq_queue {
+>   	unsigned long split_time; /* time of last split */
+>   
+>   	unsigned long first_IO_time; /* time of first I/O for this queue */
+> -
+>   	unsigned long creation_time; /* when this queue is created */
+>   
+> -	/* max service rate measured so far */
+> -	u32 max_service_rate;
+> -
+>   	/*
+>   	 * Pointer to the waker queue for this queue, i.e., to the
+>   	 * queue Q such that this queue happens to get new I/O right
