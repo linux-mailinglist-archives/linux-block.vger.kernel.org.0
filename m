@@ -2,68 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F4C606175
-	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 15:22:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D81D26060C2
+	for <lists+linux-block@lfdr.de>; Thu, 20 Oct 2022 14:58:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231223AbiJTNWl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Oct 2022 09:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
+        id S229602AbiJTM6w (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Oct 2022 08:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231264AbiJTNWc (ORCPT
+        with ESMTP id S229679AbiJTM6w (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Oct 2022 09:22:32 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5275196376
-        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 06:22:20 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id bg9-20020a05600c3c8900b003bf249616b0so2145140wmb.3
-        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 06:22:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=AWvMFLF4ecYHHBBkOklrdfPCGPasYwAFJMxh/MX223EOXKtu/yI/oI8X864HSnOcXv
-         X3Z4ZF+TRcbBaG4uWojy0IrpmRX4za22PNikbt1K1bzI2zckt11SvoO/B3xt7c3eAGv5
-         vncIAlrP4WliyUazSnSLSDiClOdsXWik2eGp9NQ2ZmafDNKrs1ygIGFelwdkHASO+ycw
-         cPCLyNu+EbtP0ju7d2ivymHkHLqcPSkE/5ijhKV/aAlBSfAw7ueAs2xe5AUo9/IGfl+Q
-         XGjp43zyC/1TdBscgopxyNFSLDnMQGQh1bgdBrWH+V2bQK6deHdk464rJja/beLVufm/
-         hwQQ==
-X-Gm-Message-State: ACrzQf08jGRdaKYnBPqGfSFnM/egkLYCDMplUtl2FSWGvp/qWlgJPqgk
-        7sr5EnqvcPXAoMGcslBIZsY=
-X-Google-Smtp-Source: AMsMyM4BA/hLXI1lD4bBUcnFM3vOLks+kWhmvPK0kW1kM2Us3kUvwpQxyIIwYoyWd+WvsMXjy9PxXg==
-X-Received: by 2002:a05:600c:4410:b0:3c6:f04b:daa2 with SMTP id u16-20020a05600c441000b003c6f04bdaa2mr9600494wmn.186.1666271820916;
-        Thu, 20 Oct 2022 06:17:00 -0700 (PDT)
-Received: from [192.168.64.53] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id u11-20020adff88b000000b0022e2eaa2bdcsm16207614wrp.98.2022.10.20.06.16.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 06:17:00 -0700 (PDT)
-Message-ID: <048eb761-f423-5b0e-f900-a6b0a4819f64@grimberg.me>
-Date:   Thu, 20 Oct 2022 16:16:58 +0300
+        Thu, 20 Oct 2022 08:58:52 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA1318A00B;
+        Thu, 20 Oct 2022 05:58:51 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MtSGM3QBlzmV9g;
+        Thu, 20 Oct 2022 20:54:03 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (7.193.23.164) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 20 Oct 2022 20:58:48 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 20 Oct
+ 2022 20:58:47 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <axboe@kernel.dk>, <hch@lst.de>, <willy@infradead.org>,
+        <kch@nvidia.com>, <martin.petersen@oracle.com>,
+        <johannes.thumshirn@wdc.com>, <yukuai3@huawei.com>,
+        <ming.lei@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai1@huaweicloud.com>, <yi.zhang@huawei.com>
+Subject: [PATCH -nect RFC v2 0/2] block: fix uaf in bd_link_disk_holder()
+Date:   Thu, 20 Oct 2022 21:20:47 +0800
+Message-ID: <20221020132049.3947415-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 2/8] blk-mq: skip non-mq queues in blk_mq_quiesce_queue
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Keith Busch <kbusch@kernel.org>,
-        Chao Leng <lengchao@huawei.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org
-References: <20221020105608.1581940-1-hch@lst.de>
- <20221020105608.1581940-3-hch@lst.de>
-From:   Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20221020105608.1581940-3-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Changes in v2:
+ - in order to know when bd_holder_dir will be freed, instead of changing
+kobject_put(), add a new field in block_device.
+
+Yu Kuai (2):
+  block: add helpers for bd_holder_dir refcount management
+  block: fix uaf for bd_holder_dir
+
+ block/blk.h               |  3 +++
+ block/genhd.c             | 33 ++++++++++++++++++++++++++++++++-
+ block/holder.c            | 19 +++++++++++++------
+ block/partitions/core.c   |  5 ++++-
+ include/linux/blk_types.h |  1 +
+ 5 files changed, 53 insertions(+), 8 deletions(-)
+
+-- 
+2.31.1
+
