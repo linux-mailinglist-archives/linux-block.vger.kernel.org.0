@@ -2,79 +2,172 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 279C2607A71
-	for <lists+linux-block@lfdr.de>; Fri, 21 Oct 2022 17:26:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD6A0607DBA
+	for <lists+linux-block@lfdr.de>; Fri, 21 Oct 2022 19:41:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229828AbiJUP0o (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Oct 2022 11:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45380 "EHLO
+        id S229958AbiJURlf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Oct 2022 13:41:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiJUP0n (ORCPT
+        with ESMTP id S229918AbiJURla (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Oct 2022 11:26:43 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 859E024BAAC
-        for <linux-block@vger.kernel.org>; Fri, 21 Oct 2022 08:26:41 -0700 (PDT)
-Received: from frapeml500007.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mv7Yv6vwYz688NJ;
-        Fri, 21 Oct 2022 23:24:51 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 17:26:39 +0200
-Received: from [10.126.168.107] (10.126.168.107) by
- lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 16:26:38 +0100
-Message-ID: <9346fa37-bbe6-062b-43be-729a0c362dd3@huawei.com>
-Date:   Fri, 21 Oct 2022 16:26:39 +0100
+        Fri, 21 Oct 2022 13:41:30 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F414324AE3C;
+        Fri, 21 Oct 2022 10:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:MIME-Version:Message-Id:Date:Cc:To:From
+        :references:content-disposition:in-reply-to;
+        bh=nF0SVUXmUm6/1jQhAiGtVkXjqXLugkxBCw1H6lsq9qw=; b=kAAkNydFPlQ84zWbqcIf6HYHWw
+        swriGADMx3GagNeM2QyZOZagVVUqkxGVMUP+thgek92nyZqj/nN+tAEQK++PGuuoctMWY7q1X57ex
+        YZ2My7wYnjj8Zk0+4XR1miPNQHBm/khken5A0/4BCVp3HT02+NvGZbh5Q3SXn1r3GqjvJFNhXrphm
+        28Gro+M5SHbcfCJ4skRzMSah8NQ1cVbBRqLsjR/6Jp3gMKUCuIfTtFnZyWnLBrek+WNqKAZsghIX7
+        NX/kmablgeZJ2HhcxDrHbzJHJsfxJl5MKmQDtTB2kmrQWMJfF4EmYhAKFHZnzohfJy1BnP16QVC/c
+        WXH1a7vA==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1olw1I-00DoHx-T9; Fri, 21 Oct 2022 11:41:22 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1olw1F-0001t4-HC; Fri, 21 Oct 2022 11:41:17 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Fri, 21 Oct 2022 11:41:07 -0600
+Message-Id: <20221021174116.7200-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: Issue in blk_mq_alloc_request_hctx()
-To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>, <linux-block@vger.kernel.org>
-References: <b44c42f8-db20-eff8-fba4-07a64ca47918@huawei.com>
- <65e2a1ec-34b4-cb5b-06f7-410160b8da96@acm.org>
-In-Reply-To: <65e2a1ec-34b4-cb5b-06f7-410160b8da96@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.126.168.107]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, gregkh@linuxfoundation.org, jgg@ziepe.ca, christian.koenig@amd.com, ddutile@redhat.com, willy@infradead.org, daniel.vetter@ffwll.ch, jason@jlekstrand.net, dave.hansen@linux.intel.com, helgaas@kernel.org, dan.j.williams@intel.com, dave.b.minturn@intel.com, jianxin.xiong@intel.com, ira.weiny@intel.com, robin.murphy@arm.com, martin.oliveira@eideticom.com, ckulkarnilinux@gmail.com, jhubbard@nvidia.com, rcampbell@nvidia.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH v11 0/9] Userspace P2PDMA with O_DIRECT NVMe devices
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 21/10/2022 15:54, Bart Van Assche wrote:
-> On 10/21/22 04:16, John Garry wrote:
->> -    return blk_mq_rq_ctx_init(&data, blk_mq_tags_from_data(&data), tag,
->> +    rq = blk_mq_rq_ctx_init(&data, blk_mq_tags_from_data(&data), tag,
->>                       alloc_time_ns);
->> +    if (!rq)
->> +        goto out_queue_exit;
->> +
->> +    rq->__data_len = 0;
->> +    rq->__sector = (sector_t) -1;
->> +    rq->bio = rq->biotail = NULL;
->> +    return rq;
-> 
-> Hi John,
-> 
-> Shouldn't the new struct request member initializations be moved into 
-> blk_mq_rq_ctx_init() such that all blk_mq_rq_ctx_init() callers are fixed?
+Hi,
 
-That would seem reasonable. I just wonder why it was not there in the 
-first place.
+This is the latest P2PDMA userspace patch set. This version includes
+some cleanup from feedback from the last posting[1].
 
-Anyway, I'll look to make that change.
+This patch set enables userspace P2PDMA by allowing userspace to mmap()
+allocated chunks of the CMB. The resulting VMA can be passed only
+to O_DIRECT IO on NVMe backed files or block devices. A flag is added
+to GUP() in Patch 1, then Patches 2 through 6 wire this flag up based
+on whether the block queue indicates P2PDMA support. Patches 7
+creates the sysfs resource that can hand out the VMAs and Patch 8
+adds brief documentation for the new interface.
 
-thanks,
-John
+Feedback welcome.
+
+This series is based on v6.1-rc1. A git branch is available here:
+
+  https://github.com/sbates130272/linux-p2pmem/  p2pdma_user_cmb_v11
+
+Thanks,
+
+Logan
+
+[1] https://lkml.kernel.org/r/20220922163926.7077-1-logang@deltatee.com
+
+--
+
+Changes in v11:
+  - Rebased onto v6.1-rc1, fixed minor conflict in bio_map_user_iov
+  - The GUP test was moved to try_grab_page() and try_grab_folio().
+    This ought to be a bit more future proof. It required adding a new
+    cleanup patch to return a proper error code from try_grab_page().
+    (Per Jason)
+
+Changes in v10:
+  - Rebased onto v6.0-rc6
+  - Reworked iov iter changes to reuse the code better and
+    name them without the _flags() prefix (per Christoph)
+  - Renamed a number of flags variables to gup_flags (per John)
+  - Minor fixups to the last documentation patch (from Greg and John)
+
+Changes in v9:
+  - Rebased onto v6.0-rc2, included reworking the iov_iter patch
+    due to changes there
+  - Drop the char device mmap implementation in favour of a sysfs
+    based interface. (per Christoph)
+
+ (v8 only included the first half of the series and was merged for v6.0)
+
+Changes in v8:
+  - Rebase onto v5.19-rc1
+  - Rework how the pages are stored in the VMA per Jason's suggestion
+
+Changes in v7:
+  - Rebased onto v5.18-rc1 which includes Christophs cleanup to
+    free_zone_device_page() (similar to Ralph's patch).
+  - Fix bug with concurrent first calls to pci_p2pdma_vma_fault()
+    that caused a double allocation and lost p2p memory. Noticed
+    by Andrew Maier.
+  - Collected a Reviewed-by tag from Chaitanya.
+  - Numerous minor fixes to commit messages
+
+--
+
+Logan Gunthorpe (9):
+  mm: allow multiple error returns in try_grab_page()
+  mm: introduce FOLL_PCI_P2PDMA to gate getting PCI P2PDMA pages
+  iov_iter: introduce iov_iter_get_pages_[alloc_]flags()
+  block: add check when merging zone device pages
+  lib/scatterlist: add check when merging zone device pages
+  block: set FOLL_PCI_P2PDMA in __bio_iov_iter_get_pages()
+  block: set FOLL_PCI_P2PDMA in bio_map_user_iov()
+  PCI/P2PDMA: Allow userspace VMA allocations through sysfs
+  ABI: sysfs-bus-pci: add documentation for p2pmem allocate
+
+ Documentation/ABI/testing/sysfs-bus-pci |  10 ++
+ block/bio.c                             |  11 ++-
+ block/blk-map.c                         |  12 ++-
+ drivers/pci/p2pdma.c                    | 124 ++++++++++++++++++++++++
+ include/linux/mm.h                      |   3 +-
+ include/linux/mmzone.h                  |  24 +++++
+ include/linux/uio.h                     |   6 ++
+ lib/iov_iter.c                          |  32 ++++--
+ lib/scatterlist.c                       |  25 +++--
+ mm/gup.c                                |  45 ++++++---
+ mm/huge_memory.c                        |  19 ++--
+ mm/hugetlb.c                            |  23 +++--
+ 12 files changed, 280 insertions(+), 54 deletions(-)
+
+
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+--
+2.30.2
