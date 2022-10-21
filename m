@@ -2,87 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87E80606C87
-	for <lists+linux-block@lfdr.de>; Fri, 21 Oct 2022 02:39:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 697E0606C93
+	for <lists+linux-block@lfdr.de>; Fri, 21 Oct 2022 02:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229742AbiJUAjd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Oct 2022 20:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
+        id S229929AbiJUAlk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Oct 2022 20:41:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiJUAjc (ORCPT
+        with ESMTP id S229973AbiJUAld (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Oct 2022 20:39:32 -0400
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E3513DE8
-        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 17:39:29 -0700 (PDT)
-Received: by mail-pj1-f53.google.com with SMTP id q10-20020a17090a304a00b0020b1d5f6975so1345148pjl.0
-        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 17:39:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4/6Bhj/yQ2MZH/RG7O4IkDiuaWrfnrM6CXvFReO2eOo=;
-        b=nnOo7+uBr+iVY5RT0toRrDKW/I/OUDn/dVUwL/8dGk4x6CODn1DmROc49KZUfASCKm
-         25fM1uLPrlHNb98/VPI2wmMDCsBRg87f0rQO1Cm1ud3bRwriNZCywexnMI084+7/kpj5
-         eG+1Gl4nWF4Wx5UbBbPflK6OAo2b9/CZbdN//1rBUuCrJjx2ll6ffLYrM55v+jOMBuvz
-         PfOBtyW1MlBlg0JoUTTJEBEMQKjazp7B/8KAGZjUT04oVPJeaGZOjQTwZYE6aBUDt1uz
-         SMUBvJbBDytI4m9AzCYYdHb5UUJ0D9J+6VpqoQz+pyJkCCjl7XsnFXIdLcNBmCZzz8sT
-         6iFw==
-X-Gm-Message-State: ACrzQf1rR0mVIkyPnTEw7Qvh6OjMhSEuZBjR6Kbcs5gVPhltXsGESPiR
-        CHHLUfFSpvtKzahfmXSMgxs=
-X-Google-Smtp-Source: AMsMyM7DH81w9afHBTvVb2PBOeSG/tSbixZc7JLgT6r8bLPPIr8sFxRQgXb7KO86L7wiB8qlGHw5pA==
-X-Received: by 2002:a17:902:d48f:b0:180:c712:c664 with SMTP id c15-20020a170902d48f00b00180c712c664mr16763308plg.132.1666312769241;
-        Thu, 20 Oct 2022 17:39:29 -0700 (PDT)
-Received: from [192.168.50.14] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id z189-20020a6365c6000000b00429c5270710sm12080361pgb.1.2022.10.20.17.39.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 17:39:28 -0700 (PDT)
-Message-ID: <74c6e9ae-513c-2fc9-ed85-24d75b8354e7@acm.org>
-Date:   Thu, 20 Oct 2022 17:39:26 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH 10/10] null_blk: Support configuring the maximum segment
- size
-Content-Language: en-US
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Vincent Fu <vincent.fu@samsung.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Yu Kuai <yukuai3@huawei.com>
-References: <20221019222324.362705-1-bvanassche@acm.org>
- <20221019222324.362705-11-bvanassche@acm.org>
- <6a72dd3a-2b84-9345-9782-1ef2fe9caa07@opensource.wdc.com>
- <5856bd90-9a7f-09c1-3749-2c98c42bfcde@acm.org>
- <9dcee00a-90f6-c814-0e4e-51adc025b49f@opensource.wdc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <9dcee00a-90f6-c814-0e4e-51adc025b49f@opensource.wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        Thu, 20 Oct 2022 20:41:33 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A8B196EEF
+        for <linux-block@vger.kernel.org>; Thu, 20 Oct 2022 17:41:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CE905B82A11
+        for <linux-block@vger.kernel.org>; Fri, 21 Oct 2022 00:41:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8AA95C433D6;
+        Fri, 21 Oct 2022 00:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666312876;
+        bh=u6ho9VrMVeJWGaAvTDColdvtuYONIh5JvUWzC4OZePc=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=M2ifSKhFXW3eFEI6O7eRd8roYJqR8BJSJlQgSWrTz2Pzg9S+u3lNM05lDLsREMu2S
+         wfRZQdBqujy75AdKaTh66EHtyEF/CdN7rEmBpOtsdJT0qnP/XHRpn5oPgplFN/KNXk
+         iVaFh0wmjspvh5dEeUrW7MnaSPb9JP8PR0ezmTsVgC4gOK6pOr8QzTc4kn0Ngyng/Z
+         dGzQlimkdc8cTXvVCVQGXhzIpEXnp3keNEK4/IWjnZ3E/QN7+QuxONle7cGg04xgji
+         0AmnhQnno+UB0JIawfP0mexItPQJrQxFJvhidGwKb11bokKkkBeNhvkfp0AygDOrLa
+         wUDmxZCDpGNJQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 642C0C4166D;
+        Fri, 21 Oct 2022 00:41:16 +0000 (UTC)
+Subject: Re: [git pull] device mapper fix for 6.1-rc2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <Y070ExTjLGLStSQ0@redhat.com>
+References: <Y070ExTjLGLStSQ0@redhat.com>
+X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Y070ExTjLGLStSQ0@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.1/dm-fix
+X-PR-Tracked-Commit-Id: 141b3523e9be6f15577acf4bbc3bc1f82d81d6d1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 43e6c111824c75940a586cd7d3fe6a5ff1d5104f
+Message-Id: <166631287640.10394.17455212903841431163.pr-tracker-bot@kernel.org>
+Date:   Fri, 21 Oct 2022 00:41:16 +0000
+To:     Mike Snitzer <snitzer@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dm-devel@redhat.com, linux-block@vger.kernel.org,
+        Alasdair G Kergon <agk@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/20/22 16:39, Damien Le Moal wrote:
-> Please always send full patch series. Hard to review a patch without the
-> context for it :)
+The pull request you sent on Tue, 18 Oct 2022 14:44:35 -0400:
 
-Hi Damien,
+> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.1/dm-fix
 
-Does this link help? 
-https://lore.kernel.org/linux-block/20221019222324.362705-1-bvanassche@acm.org/
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/43e6c111824c75940a586cd7d3fe6a5ff1d5104f
 
-Thanks,
+Thank you!
 
-Bart.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
