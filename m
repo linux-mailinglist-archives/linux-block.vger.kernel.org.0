@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 919F560BB87
-	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:03:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C745960BB8B
+	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:03:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233431AbiJXVC6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Oct 2022 17:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
+        id S230480AbiJXVDG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Oct 2022 17:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233546AbiJXVCd (ORCPT
+        with ESMTP id S230370AbiJXVCt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Oct 2022 17:02:33 -0400
+        Mon, 24 Oct 2022 17:02:49 -0400
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030BC2BC852
-        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:08:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F6F2C4CA8
+        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:08:12 -0700 (PDT)
 Received: by dev1180.prn1.facebook.com (Postfix, from userid 425415)
-        id 5639D3ED590C; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
+        id 5C2CA3ED590E; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
 Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com,
         willy@infradead.org, hch@infradead.org
-Subject: [RFC PATCH v3 03/14] mm: document /sys/class/bdi/<bdi>/strict_limit knob
-Date:   Mon, 24 Oct 2022 12:05:52 -0700
-Message-Id: <20221024190603.3987969-4-shr@devkernel.io>
+Subject: [RFC PATCH v3 04/14] mm: use part per 1000 for bdi ratios.
+Date:   Mon, 24 Oct 2022 12:05:53 -0700
+Message-Id: <20221024190603.3987969-5-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221024190603.3987969-1-shr@devkernel.io>
 References: <20221024190603.3987969-1-shr@devkernel.io>
@@ -38,36 +38,132 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This documents the new /sys/class/bdi/<bdi>/strict_limit knob.
+To get finer granularity for ratio calculations use part per 1000
+instead of percentiles. This is especially important if we want to
+automatically convert byte values to ratios. Otherwise the values that
+are actually used can be quite different. This is also important for
+machines with more main memory (1% of 256GB is already 2.5GB).
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- Documentation/ABI/testing/sysfs-class-bdi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/linux/backing-dev.h |  3 +++
+ mm/backing-dev.c            |  6 +++---
+ mm/page-writeback.c         | 15 +++++++++------
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-bdi b/Documentation/AB=
-I/testing/sysfs-class-bdi
-index 6d2a2fc189dd..68b5d4018c2f 100644
---- a/Documentation/ABI/testing/sysfs-class-bdi
-+++ b/Documentation/ABI/testing/sysfs-class-bdi
-@@ -55,6 +55,17 @@ Description:
- 	mount that is prone to get stuck, or a FUSE mount which cannot
- 	be trusted to play fair.
+diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+index 9c984ffc8a0a..19fe0e605ed8 100644
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -102,6 +102,9 @@ static inline unsigned long wb_stat_error(void)
+ #endif
+ }
 =20
-+	(read-write)
-+What:		/sys/class/bdi/<bdi>/strict_limit
-+Date:		October 2022
-+Contact:	Stefan Roesch <shr@devkernel.io>
-+Description:
-+	Forces per-BDI checks for the share of given device in the write-back
-+	cache even before the global background dirty limit is reached. This
-+	is useful in situations where the global limit is much higher than
-+	affordable for given relatively slow (or untrusted) device. Turning
-+	strictlimit on has no visible effect if max_ratio is equal to 100%.
++/* BDI ratio is expressed as part per 1000 for finer granularity. */
++#define BDI_RATIO_SCALE 10
 +
- 	(read-write)
- What:		/sys/class/bdi/<bdi>/stable_pages_required
- Date:		January 2008
+ int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
+io);
+ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_rat=
+io);
+ int bdi_set_strict_limit(struct backing_dev_info *bdi, unsigned int stri=
+ct_limit);
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index a0899cce72ef..90fa517123dc 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -178,7 +178,7 @@ static ssize_t min_ratio_store(struct device *dev,
+=20
+ 	return ret;
+ }
+-BDI_SHOW(min_ratio, bdi->min_ratio)
++BDI_SHOW(min_ratio, bdi->min_ratio / BDI_RATIO_SCALE)
+=20
+ static ssize_t max_ratio_store(struct device *dev,
+ 		struct device_attribute *attr, const char *buf, size_t count)
+@@ -197,7 +197,7 @@ static ssize_t max_ratio_store(struct device *dev,
+=20
+ 	return ret;
+ }
+-BDI_SHOW(max_ratio, bdi->max_ratio)
++BDI_SHOW(max_ratio, bdi->max_ratio / BDI_RATIO_SCALE)
+=20
+ static ssize_t stable_pages_required_show(struct device *dev,
+ 					  struct device_attribute *attr,
+@@ -809,7 +809,7 @@ int bdi_init(struct backing_dev_info *bdi)
+=20
+ 	kref_init(&bdi->refcnt);
+ 	bdi->min_ratio =3D 0;
+-	bdi->max_ratio =3D 100;
++	bdi->max_ratio =3D 100 * BDI_RATIO_SCALE;
+ 	bdi->max_prop_frac =3D FPROP_FRAC_BASE;
+ 	INIT_LIST_HEAD(&bdi->bdi_list);
+ 	INIT_LIST_HEAD(&bdi->wb_list);
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index e22aae0ecacd..4d5383d4da45 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -197,7 +197,7 @@ static void wb_min_max_ratio(struct bdi_writeback *wb=
+,
+ 			min *=3D this_bw;
+ 			min =3D div64_ul(min, tot_bw);
+ 		}
+-		if (max < 100) {
++		if (max < 100 * BDI_RATIO_SCALE) {
+ 			max *=3D this_bw;
+ 			max =3D div64_ul(max, tot_bw);
+ 		}
+@@ -655,6 +655,8 @@ int bdi_set_min_ratio(struct backing_dev_info *bdi, u=
+nsigned int min_ratio)
+ 	unsigned int delta;
+ 	int ret =3D 0;
+=20
++	min_ratio *=3D BDI_RATIO_SCALE;
++
+ 	spin_lock_bh(&bdi_lock);
+ 	if (min_ratio > bdi->max_ratio) {
+ 		ret =3D -EINVAL;
+@@ -665,7 +667,7 @@ int bdi_set_min_ratio(struct backing_dev_info *bdi, u=
+nsigned int min_ratio)
+ 			bdi->min_ratio =3D min_ratio;
+ 		} else {
+ 			delta =3D min_ratio - bdi->min_ratio;
+-			if (bdi_min_ratio + delta < 100) {
++			if (bdi_min_ratio + delta < 100 * BDI_RATIO_SCALE) {
+ 				bdi_min_ratio +=3D delta;
+ 				bdi->min_ratio =3D min_ratio;
+ 			} else {
+@@ -684,6 +686,7 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, u=
+nsigned max_ratio)
+=20
+ 	if (max_ratio > 100)
+ 		return -EINVAL;
++	max_ratio *=3D BDI_RATIO_SCALE;
+=20
+ 	spin_lock_bh(&bdi_lock);
+ 	if (bdi->min_ratio > max_ratio) {
+@@ -776,15 +779,15 @@ static unsigned long __wb_calc_thresh(struct dirty_=
+throttle_control *dtc)
+ 	fprop_fraction_percpu(&dom->completions, dtc->wb_completions,
+ 			      &numerator, &denominator);
+=20
+-	wb_thresh =3D (thresh * (100 - bdi_min_ratio)) / 100;
++	wb_thresh =3D (thresh * (100 * BDI_RATIO_SCALE - bdi_min_ratio)) / (100=
+ * BDI_RATIO_SCALE);
+ 	wb_thresh *=3D numerator;
+ 	wb_thresh =3D div64_ul(wb_thresh, denominator);
+=20
+ 	wb_min_max_ratio(dtc->wb, &wb_min_ratio, &wb_max_ratio);
+=20
+-	wb_thresh +=3D (thresh * wb_min_ratio) / 100;
+-	if (wb_thresh > (thresh * wb_max_ratio) / 100)
+-		wb_thresh =3D thresh * wb_max_ratio / 100;
++	wb_thresh +=3D (thresh * wb_min_ratio) / (100 * BDI_RATIO_SCALE);
++	if (wb_thresh > (thresh * wb_max_ratio) / (100 * BDI_RATIO_SCALE))
++		wb_thresh =3D thresh * wb_max_ratio / (100 * BDI_RATIO_SCALE);
+=20
+ 	return wb_thresh;
+ }
 --=20
 2.30.2
 
