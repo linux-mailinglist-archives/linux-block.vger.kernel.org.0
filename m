@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB0FB60BB9C
-	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:06:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A00A460BB8A
+	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:03:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbiJXVGo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Oct 2022 17:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48354 "EHLO
+        id S230031AbiJXVDG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Oct 2022 17:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232759AbiJXVGV (ORCPT
+        with ESMTP id S234602AbiJXVCu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Oct 2022 17:06:21 -0400
+        Mon, 24 Oct 2022 17:02:50 -0400
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2C91D443D
-        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:12:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8912C4CB3
+        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:08:13 -0700 (PDT)
 Received: by dev1180.prn1.facebook.com (Postfix, from userid 425415)
-        id 879E23ED591E; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
+        id 8D48A3ED5920; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
 Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com,
         willy@infradead.org, hch@infradead.org
-Subject: [RFC PATCH v3 11/14] mm: split off __bdi_set_min_ratio() function
-Date:   Mon, 24 Oct 2022 12:06:00 -0700
-Message-Id: <20221024190603.3987969-12-shr@devkernel.io>
+Subject: [RFC PATCH v3 12/14] mm: add bdi_set_min_bytes() function
+Date:   Mon, 24 Oct 2022 12:06:01 -0700
+Message-Id: <20221024190603.3987969-13-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221024190603.3987969-1-shr@devkernel.io>
 References: <20221024190603.3987969-1-shr@devkernel.io>
@@ -38,47 +38,62 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This splits off the __bdi_set_min_ratio() function from the
-bdi_set_min_ratio() function. The __bdi_set_min_ratio() function will
-also be called from the bdi_set_min_bytes() function, which will be
-introduced in the next patch.
+This introduces the bdi_set_min_bytes() function. The min_bytes function
+does not store the min_bytes value. Instead it converts the min_bytes
+value into the corresponding ratio value.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- mm/page-writeback.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/backing-dev.h |  1 +
+ mm/page-writeback.c         | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
+diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+index 621329f25bbe..659e9cb8c643 100644
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -109,6 +109,7 @@ unsigned long long bdi_get_min_bytes(struct backing_d=
+ev_info *bdi);
+ unsigned long long bdi_get_max_bytes(struct backing_dev_info *bdi);
+ int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
+io);
+ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_rat=
+io);
++int bdi_set_min_bytes(struct backing_dev_info *bdi, unsigned long long m=
+in_bytes);
+ int bdi_set_max_bytes(struct backing_dev_info *bdi, unsigned long long m=
+ax_bytes);
+ int bdi_set_strict_limit(struct backing_dev_info *bdi, unsigned int stri=
+ct_limit);
+=20
 diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 69fc2866e625..07f59ed60d4a 100644
+index 07f59ed60d4a..ca6cbf8e63bb 100644
 --- a/mm/page-writeback.c
 +++ b/mm/page-writeback.c
-@@ -685,7 +685,7 @@ static unsigned long long bdi_get_bytes(unsigned int =
-ratio)
- 	return bytes;
+@@ -751,6 +751,21 @@ unsigned long long bdi_get_min_bytes(struct backing_=
+dev_info *bdi)
  }
+ EXPORT_SYMBOL_GPL(bdi_get_min_bytes);
 =20
--int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
-io)
-+static int __bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned in=
-t min_ratio)
- {
- 	unsigned int delta;
- 	int ret =3D 0;
-@@ -731,6 +731,11 @@ static int __bdi_set_max_ratio(struct backing_dev_in=
-fo *bdi, unsigned int max_ra
- 	return ret;
- }
-=20
-+int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
-io)
++int bdi_set_min_bytes(struct backing_dev_info *bdi, unsigned long long m=
+in_bytes)
 +{
-+	return __bdi_set_min_ratio(bdi, min_ratio * BDI_RATIO_SCALE);
-+}
++	int ret;
++	unsigned long pages =3D min_bytes >> PAGE_SHIFT;
++	unsigned long min_ratio;
 +
- int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_rat=
-io)
++	ret =3D bdi_check_pages_limit(pages);
++	if (ret)
++		return ret;
++
++	min_ratio =3D bdi_ratio_from_pages(pages);
++	return __bdi_set_min_ratio(bdi, min_ratio);
++}
++EXPORT_SYMBOL_GPL(bdi_set_min_bytes);
++
+ unsigned long long bdi_get_max_bytes(struct backing_dev_info *bdi)
  {
- 	if (max_ratio > 100)
+ 	return bdi_get_bytes(bdi->max_ratio);
 --=20
 2.30.2
 
