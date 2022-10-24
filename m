@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1A8E60BB8D
-	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:03:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 919F560BB87
+	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231743AbiJXVD1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Oct 2022 17:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43472 "EHLO
+        id S233431AbiJXVC6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Oct 2022 17:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234054AbiJXVDJ (ORCPT
+        with ESMTP id S233546AbiJXVCd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Oct 2022 17:03:09 -0400
+        Mon, 24 Oct 2022 17:02:33 -0400
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E8864CC
-        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:08:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030BC2BC852
+        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:08:03 -0700 (PDT)
 Received: by dev1180.prn1.facebook.com (Postfix, from userid 425415)
-        id 504903ED590A; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
+        id 5639D3ED590C; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
 Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com,
         willy@infradead.org, hch@infradead.org
-Subject: [RFC PATCH v3 02/14] mm: add knob /sys/class/bdi/<bdi>/strict_limit
-Date:   Mon, 24 Oct 2022 12:05:51 -0700
-Message-Id: <20221024190603.3987969-3-shr@devkernel.io>
+Subject: [RFC PATCH v3 03/14] mm: document /sys/class/bdi/<bdi>/strict_limit knob
+Date:   Mon, 24 Oct 2022 12:05:52 -0700
+Message-Id: <20221024190603.3987969-4-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221024190603.3987969-1-shr@devkernel.io>
 References: <20221024190603.3987969-1-shr@devkernel.io>
@@ -38,61 +38,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add a new knob to /sys/class/bdi/<bdi>/strict_limit. This new knob
-allows to set/unset the flag BDI_CAP_STRICTLIMIT in the bdi
-capabilities.
+This documents the new /sys/class/bdi/<bdi>/strict_limit knob.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- mm/backing-dev.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ Documentation/ABI/testing/sysfs-class-bdi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index c30419a5e119..a0899cce72ef 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -209,11 +209,40 @@ static ssize_t stable_pages_required_show(struct de=
-vice *dev,
- }
- static DEVICE_ATTR_RO(stable_pages_required);
+diff --git a/Documentation/ABI/testing/sysfs-class-bdi b/Documentation/AB=
+I/testing/sysfs-class-bdi
+index 6d2a2fc189dd..68b5d4018c2f 100644
+--- a/Documentation/ABI/testing/sysfs-class-bdi
++++ b/Documentation/ABI/testing/sysfs-class-bdi
+@@ -55,6 +55,17 @@ Description:
+ 	mount that is prone to get stuck, or a FUSE mount which cannot
+ 	be trusted to play fair.
 =20
-+static ssize_t strict_limit_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
-+	unsigned int strict_limit;
-+	ssize_t ret;
++	(read-write)
++What:		/sys/class/bdi/<bdi>/strict_limit
++Date:		October 2022
++Contact:	Stefan Roesch <shr@devkernel.io>
++Description:
++	Forces per-BDI checks for the share of given device in the write-back
++	cache even before the global background dirty limit is reached. This
++	is useful in situations where the global limit is much higher than
++	affordable for given relatively slow (or untrusted) device. Turning
++	strictlimit on has no visible effect if max_ratio is equal to 100%.
 +
-+	ret =3D kstrtouint(buf, 10, &strict_limit);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D bdi_set_strict_limit(bdi, strict_limit);
-+	if (!ret)
-+		ret =3D count;
-+
-+	return ret;
-+}
-+
-+static ssize_t strict_limit_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n",
-+			!!(bdi->capabilities & BDI_CAP_STRICTLIMIT));
-+}
-+static DEVICE_ATTR_RW(strict_limit);
-+
- static struct attribute *bdi_dev_attrs[] =3D {
- 	&dev_attr_read_ahead_kb.attr,
- 	&dev_attr_min_ratio.attr,
- 	&dev_attr_max_ratio.attr,
- 	&dev_attr_stable_pages_required.attr,
-+	&dev_attr_strict_limit.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(bdi_dev);
+ 	(read-write)
+ What:		/sys/class/bdi/<bdi>/stable_pages_required
+ Date:		January 2008
 --=20
 2.30.2
 
