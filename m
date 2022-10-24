@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0130F60BB85
-	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:02:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C17260BB88
+	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 23:03:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234493AbiJXVC0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Oct 2022 17:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36908 "EHLO
+        id S232128AbiJXVDC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Oct 2022 17:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230336AbiJXVBv (ORCPT
+        with ESMTP id S232374AbiJXVCo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Oct 2022 17:01:51 -0400
+        Mon, 24 Oct 2022 17:02:44 -0400
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BBB1D066B
-        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:07:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE922C2ADC
+        for <linux-block@vger.kernel.org>; Mon, 24 Oct 2022 12:08:07 -0700 (PDT)
 Received: by dev1180.prn1.facebook.com (Postfix, from userid 425415)
-        id 746163ED5918; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
+        id 7A4B63ED591A; Mon, 24 Oct 2022 12:06:12 -0700 (PDT)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
 Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com,
         willy@infradead.org, hch@infradead.org
-Subject: [RFC PATCH v3 08/14] mm: add knob /sys/class/bdi/<bdi>/max_bytes
-Date:   Mon, 24 Oct 2022 12:05:57 -0700
-Message-Id: <20221024190603.3987969-9-shr@devkernel.io>
+Subject: [RFC PATCH v3 09/14] mm: document /sys/class/bdi/<bdi>/max_bytes knob
+Date:   Mon, 24 Oct 2022 12:05:58 -0700
+Message-Id: <20221024190603.3987969-10-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221024190603.3987969-1-shr@devkernel.io>
 References: <20221024190603.3987969-1-shr@devkernel.io>
@@ -38,61 +38,39 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This adds the new knob max_bytes to specify a dirty memory limit for the
-corresponding bdi. The specified bytes value is converted to a ratio.
+This documents the new /sys/class/bdi/<bdi>/max_bytes knob.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- mm/backing-dev.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ Documentation/ABI/testing/sysfs-class-bdi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 90fa517123dc..d5f9a8a45550 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -199,6 +199,34 @@ static ssize_t max_ratio_store(struct device *dev,
- }
- BDI_SHOW(max_ratio, bdi->max_ratio / BDI_RATIO_SCALE)
+diff --git a/Documentation/ABI/testing/sysfs-class-bdi b/Documentation/AB=
+I/testing/sysfs-class-bdi
+index 68b5d4018c2f..580f723de049 100644
+--- a/Documentation/ABI/testing/sysfs-class-bdi
++++ b/Documentation/ABI/testing/sysfs-class-bdi
+@@ -56,6 +56,20 @@ Description:
+ 	be trusted to play fair.
 =20
-+static ssize_t max_bytes_show(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
+ 	(read-write)
 +
-+	return sysfs_emit(buf, "%llu\n", bdi_get_max_bytes(bdi));
-+}
++What:		/sys/class/bdi/<bdi>/max_bytes
++Date:		October 2022
++Contact:	Stefan Roesch <shr@devkernel.io>
++Description:
++	Allows limiting a particular device to use not more than the
++	given 'max_bytes' of the write-back cache.  This is useful in
++	situations where we want to avoid one device taking all or
++	most of the write-back cache.  For example in case of an NFS
++	mount that is prone to get stuck, a FUSE mount which cannot be
++	trusted to play fair, or a nbd device.
 +
-+static ssize_t max_bytes_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
-+	unsigned long long bytes;
-+	ssize_t ret;
++	(read-write)
 +
-+	ret =3D kstrtoull(buf, 10, &bytes);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D bdi_set_max_bytes(bdi, bytes);
-+	if (!ret)
-+		ret =3D count;
-+
-+	return ret;
-+}
-+DEVICE_ATTR_RW(max_bytes);
-+
- static ssize_t stable_pages_required_show(struct device *dev,
- 					  struct device_attribute *attr,
- 					  char *buf)
-@@ -241,6 +269,7 @@ static struct attribute *bdi_dev_attrs[] =3D {
- 	&dev_attr_read_ahead_kb.attr,
- 	&dev_attr_min_ratio.attr,
- 	&dev_attr_max_ratio.attr,
-+	&dev_attr_max_bytes.attr,
- 	&dev_attr_stable_pages_required.attr,
- 	&dev_attr_strict_limit.attr,
- 	NULL,
+ What:		/sys/class/bdi/<bdi>/strict_limit
+ Date:		October 2022
+ Contact:	Stefan Roesch <shr@devkernel.io>
 --=20
 2.30.2
 
