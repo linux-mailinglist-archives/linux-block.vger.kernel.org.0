@@ -2,56 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BB2960B8FE
-	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 22:00:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D17F60B60E
+	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 20:47:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233060AbiJXUAO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Oct 2022 16:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45954 "EHLO
+        id S232693AbiJXSrF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Oct 2022 14:47:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234348AbiJXT7n (ORCPT
+        with ESMTP id S232547AbiJXSqk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Oct 2022 15:59:43 -0400
+        Mon, 24 Oct 2022 14:46:40 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D08173594;
-        Mon, 24 Oct 2022 11:22:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83CD10EE5E;
+        Mon, 24 Oct 2022 10:28:01 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8E5C06732D; Mon, 24 Oct 2022 16:44:11 +0200 (CEST)
-Date:   Mon, 24 Oct 2022 16:44:11 +0200
+        id D66B668BEB; Mon, 24 Oct 2022 17:00:39 +0200 (CEST)
+Date:   Mon, 24 Oct 2022 17:00:39 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>, Qu Wenruo <wqu@suse.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: consolidate btrfs checksumming, repair and bio splitting
-Message-ID: <20221024144411.GA25172@lst.de>
-References: <20220901074216.1849941-1-hch@lst.de> <347dc0b3-0388-54ee-6dcb-0c1d0ca08d05@wdc.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v11 2/9] mm: introduce FOLL_PCI_P2PDMA to gate getting
+ PCI P2PDMA pages
+Message-ID: <20221024150039.GB26338@lst.de>
+References: <20221021174116.7200-1-logang@deltatee.com> <20221021174116.7200-3-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <347dc0b3-0388-54ee-6dcb-0c1d0ca08d05@wdc.com>
+In-Reply-To: <20221021174116.7200-3-logang@deltatee.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-0.3 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 08:12:29AM +0000, Johannes Thumshirn wrote:
-> David, what's your plan to progress with this series?
+Looks good:
 
-FYI, I object to merging any of my code into btrfs without a proper
-copyright notice, and I also need to find some time to remove my
-previous significant changes given that the btrfs maintainer
-refuses to take the proper and legally required copyright notice.
-
-So don't waste any of your time on this.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
