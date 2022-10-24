@@ -2,120 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B37660B61F
-	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 20:48:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FAA860B5FE
+	for <lists+linux-block@lfdr.de>; Mon, 24 Oct 2022 20:45:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232245AbiJXSsO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Oct 2022 14:48:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
+        id S232517AbiJXSpk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Oct 2022 14:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231582AbiJXSrj (ORCPT
+        with ESMTP id S232528AbiJXSpQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Oct 2022 14:47:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481E33C8D6;
-        Mon, 24 Oct 2022 10:29:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 24 Oct 2022 14:45:16 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DA5870AD;
+        Mon, 24 Oct 2022 10:27:01 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 350BB614CA;
-        Mon, 24 Oct 2022 16:43:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495C4C433D7;
-        Mon, 24 Oct 2022 16:43:19 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="R/LWqL0H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1666629797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E14361FD97;
+        Mon, 24 Oct 2022 17:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1666631455;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=jVwnCaFZdOk86y5jBEGAHVTaPFA8qqxydDorS9HQrxk=;
-        b=R/LWqL0HmERHhgI7BdwcGOaB3Q8XsPIH6B/Gdo3HJUMIuT9hwUE+2aIfUs7T5AhOI79Jt6
-        d8ngYNFZKfkYsUwIv2qdXPqC/aoaC88pmme7vJsjJeVfqbHgYDfmh3RufMLuzpN+0qp8US
-        fVJyhkYuwNudc5bRrrZ+Jls0DQkggGI=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 885087f8 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Mon, 24 Oct 2022 16:43:17 +0000 (UTC)
-Date:   Mon, 24 Oct 2022 18:43:09 +0200
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Christoph =?utf-8?Q?B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        SeongJae Park <sj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Helge Deller <deller@gmx.de>, netdev@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mmc@vger.kernel.org, linux-parisc@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] convert tree to
- get_random_u32_{below,above,between}()
-Message-ID: <Y1bAnU4pCczkw5j8@zx2c4.com>
-References: <20221022014403.3881893-1-Jason@zx2c4.com>
- <20221021205522.6b56fd24@kernel.org>
- <Y1NwJJOIB4gI5G11@zx2c4.com>
- <20221021223242.05df0a5b@kernel.org>
- <Y1OD2tdVwQsydSNV@zx2c4.com>
- <20221021230322.00dd045c@kernel.org>
- <Y1WtAZfciG1z2CC7@mit.edu>
+        bh=aC6p+GauHhTwiVaGS9r9HmOfPKbxmm1GNcmgMdevwBk=;
+        b=Acp94ozKle+jv/2WEFMaqZmogz/OyT93zcoivCwqGrUvGLFim4tFv662GdkvpzzMz3Fo/+
+        y8/gfC8mRbmK23qh1CQoiK6fQLjLXLJaS5Ku+R6D/a3OaO6lrk9L7wCzngF7qZCLufG1Vu
+        pxIhSqS9xrROK6J6wMEtpUPec8v41r4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1666631455;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aC6p+GauHhTwiVaGS9r9HmOfPKbxmm1GNcmgMdevwBk=;
+        b=LySjBzc7NzSfLBIctB/+lARoMwBffdkqkTv4nhaiNiy09hX/2LfE63Kalr0pzuef38Ltkg
+        S/uyGtFcDgjme0DQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9416713A79;
+        Mon, 24 Oct 2022 17:10:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id cQkoIx/HVmO4eQAAMHmgww
+        (envelope-from <dsterba@suse.cz>); Mon, 24 Oct 2022 17:10:55 +0000
+Date:   Mon, 24 Oct 2022 19:10:42 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Chris Mason <clm@meta.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>, Qu Wenruo <wqu@suse.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: consolidate btrfs checksumming, repair and bio splitting
+Message-ID: <20221024171042.GF5824@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20220901074216.1849941-1-hch@lst.de>
+ <347dc0b3-0388-54ee-6dcb-0c1d0ca08d05@wdc.com>
+ <20221024144411.GA25172@lst.de>
+ <773539e2-b5f1-8386-aa2a-96086f198bf8@meta.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y1WtAZfciG1z2CC7@mit.edu>
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <773539e2-b5f1-8386-aa2a-96086f198bf8@meta.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Oct 23, 2022 at 05:07:13PM -0400, Theodore Ts'o wrote:
-> On Fri, Oct 21, 2022 at 11:03:22PM -0700, Jakub Kicinski wrote:
-> > On Sat, 22 Oct 2022 07:47:06 +0200 Jason A. Donenfeld wrote:
-> > > On Fri, Oct 21, 2022 at 10:32:42PM -0700, Jakub Kicinski wrote:
-> > > > But whatever. I mean - hopefully there aren't any conflicts in the ~50
-> > > > networking files you touch. I just wish that people didn't pipe up with
-> > > > the tree wide changes right after the merge window. Feels like the
-> > > > worst possible timing.  
-> > > 
-> > > Oh, if the timing is what makes this especially worrisome, I have
-> > > no qualms about rebasing much later, and reposting this series then.
-> > > I'll do that.
+On Mon, Oct 24, 2022 at 11:25:04AM -0400, Chris Mason wrote:
+> On 10/24/22 10:44 AM, Christoph Hellwig wrote:
+> > On Mon, Oct 24, 2022 at 08:12:29AM +0000, Johannes Thumshirn wrote:
+> >> David, what's your plan to progress with this series?
 > > 
-> > Cool, thanks! I promise to not be grumpy if you repost around rc6 :)
+> > FYI, I object to merging any of my code into btrfs without a proper
+> > copyright notice, and I also need to find some time to remove my
+> > previous significant changes given that the btrfs maintainer
+> > refuses to take the proper and legally required copyright notice.
+> > 
+> > So don't waste any of your time on this.
 > 
-> One way of making things less painful for the stable branch and for
-> the upstream branch is to *add* new helpers instead of playing
-> replacement games like s/prandom_u32_max/get_random_u32_below/.  This
-> is what causes the patch conflict problems.
+> Christoph's request is well within the norms for the kernel, given that 
+> he's making substantial changes to these files.  I talked this over with 
+> GregKH, who pointed me at:
 > 
-> One advantage of at least adding the new functions to the stable
-> branches, even if we don't do the wholesale replacement, is that it
+> https://www.linuxfoundation.org/blog/blog/copyright-notices-in-open-source-software-projects
+> 
+> Even if we'd taken up some of the other policies suggested by this doc, 
+> I'd still defer to preferences of developers who have made significant 
+> changes.
 
-That's a good idea. I'll also save the removal commit, anyhow, for a
-separate thing at the end of 6.2 rc1, so that -next doesn't have issues
-either.  That's how things wound up going down for the first tranche of
-these, and that worked well.
+I've asked for recommendations or best practice similar to the SPDX
+process. Something that TAB can acknowledge and that is perhaps also
+consulted with lawyers. And understood within the linux project,
+not just that some dudes have an argument because it's all clear as mud
+and people are used to do things differently.
 
-Jason
+The link from linux foundation blog is nice but unless this is codified
+into the process it's just somebody's blog post. Also there's a paragraph
+about "Why not list every copyright holder?" that covers several points
+why I don't want to do that.
+
+But, if TAB says so I will do, perhaps spending hours of unproductive
+time looking up the whole history of contributors and adding year, name,
+company whatever to files.
