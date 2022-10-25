@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95F2F60CF49
-	for <lists+linux-block@lfdr.de>; Tue, 25 Oct 2022 16:40:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C34E660CF44
+	for <lists+linux-block@lfdr.de>; Tue, 25 Oct 2022 16:40:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232242AbiJYOkq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 Oct 2022 10:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
+        id S231991AbiJYOkm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Oct 2022 10:40:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232282AbiJYOkg (ORCPT
+        with ESMTP id S232151AbiJYOkf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 Oct 2022 10:40:36 -0400
+        Tue, 25 Oct 2022 10:40:35 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E0A62F8
-        for <linux-block@vger.kernel.org>; Tue, 25 Oct 2022 07:40:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1660181133
+        for <linux-block@vger.kernel.org>; Tue, 25 Oct 2022 07:40:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=BO8wr9Tkr8wJb0TsKSc24Yum8rIAp3tswr5IkvSTAYU=; b=my/Bm2Q4qI+VB0ExC017YZum0i
-        tBQvmz7BBADH0kfmPUmjUYblriYW95wjJx/c1i5cqzfAU+eGM6QDG8kCDBsxMb9mo+FSKzxdVLAcI
-        2kNUSCQ/fVHXscBwS754CuHQj9AYU+Im9fqDwA+Pdmy47Yho54qQWVV1w+yPp0tAHlql26irSEnlU
-        IzQCnHFn1BwNEbZrUovsvciQZj+xGNM47ijXz3IIengZX7QV9x2QMSsaih4Dfk1nWs0KxE8RvXqiS
-        zeyWbfXUM02rDWzfibPwX1n4le1EwgO2quaGI2oVySq6OzEiqeGhe/Dg9kvkwzyVZpIUXOAEBd0Il
-        2xxBZzLA==;
+        bh=jvlNc+pwkvsB5RS+QCtMB5i2tb8vqhNpA7QaXMkWAB8=; b=eJan1T32G6Sb7rhD8X0dOgLUvI
+        tWzn29+E1rKNfBRjcm/kMuDrmGd7FQfDbOkNqHcbmV4meiI0xMbCZ1NPYX5nZIM1LbMOHovAitE8M
+        xJc6w3eOoWLOqGbLw7tc7Ox44BlVIXWyu2czaWrWgygEDIUsQEC9w0lhqIAxztafFv5zFk41CX/L1
+        zCsI9Adv3WyMw3chnYqf1q5E5DV5c/Unkv6AelR1l2vLIvqVpTDrzCH9ISM2NeG9UP98SwhKEIIRp
+        5rLH+YLh/RgsdcrO90yV+Km4FnhQtXmGcDWdreiRV8Chfm4QSz8hBgnu9MMR9fDmtnkB2qIKW2JfL
+        ipMf/XMg==;
 Received: from [12.47.128.130] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1onL6P-005poo-EZ; Tue, 25 Oct 2022 14:40:25 +0000
+        id 1onL6P-005pov-Oq; Tue, 25 Oct 2022 14:40:25 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
         Sagi Grimberg <sagi@grimberg.me>,
         Chao Leng <lengchao@huawei.com>
 Cc:     Ming Lei <ming.lei@redhat.com>, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 15/17] blk-mq: pass a tagset to blk_mq_wait_quiesce_done
-Date:   Tue, 25 Oct 2022 07:40:18 -0700
-Message-Id: <20221025144020.260458-16-hch@lst.de>
+Subject: [PATCH 16/17] blk-mq: add tagset quiesce interface
+Date:   Tue, 25 Oct 2022 07:40:19 -0700
+Message-Id: <20221025144020.260458-17-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221025144020.260458-1-hch@lst.de>
 References: <20221025144020.260458-1-hch@lst.de>
@@ -53,106 +53,102 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Nothing in blk_mq_wait_quiesce_done needs the request_queue now, so just
-pass the tagset, and move the non-mq check into the only caller that
-needs it.
+From: Chao Leng <lengchao@huawei.com>
 
+Drivers that have shared tagsets may need to quiesce potentially a lot
+of request queues that all share a single tagset (e.g. nvme). Add an
+interface to quiesce all the queues on a given tagset. This interface is
+useful because it can speedup the quiesce by doing it in parallel.
+
+Because some queues should not need to be quiesced (e.g. the nvme
+connect_q) when quiescing the tagset, introduce a
+QUEUE_FLAG_SKIP_TAGSET_QUIESCE flag to allow this new interface to
+ski quiescing a particular queue.
+
+Signed-off-by: Chao Leng <lengchao@huawei.com>
+[hch: simplify for the per-tag_set srcu_struct]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Keith Busch <kbusch@kernel.org>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 Reviewed-by: Chao Leng <lengchao@huawei.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/blk-mq.c           | 14 ++++++++------
- drivers/nvme/host/core.c |  4 ++--
- drivers/scsi/scsi_lib.c  |  2 +-
- include/linux/blk-mq.h   |  2 +-
- 4 files changed, 12 insertions(+), 10 deletions(-)
+ block/blk-mq.c         | 25 +++++++++++++++++++++++++
+ include/linux/blk-mq.h |  2 ++
+ include/linux/blkdev.h |  3 +++
+ 3 files changed, 30 insertions(+)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 6cbf34921e33f..8f88c24a55c94 100644
+index 8f88c24a55c94..d307e44d24aec 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -254,15 +254,17 @@ EXPORT_SYMBOL_GPL(blk_mq_quiesce_queue_nowait);
+@@ -315,6 +315,31 @@ void blk_mq_unquiesce_queue(struct request_queue *q)
+ }
+ EXPORT_SYMBOL_GPL(blk_mq_unquiesce_queue);
  
- /**
-  * blk_mq_wait_quiesce_done() - wait until in-progress quiesce is done
-- * @q: request queue.
-+ * @set: tag_set to wait on
-  *
-  * Note: it is driver's responsibility for making sure that quiesce has
-- * been started.
-+ * been started on or more of the request_queues of the tag_set.  This
-+ * function only waits for the quiesce on those request_queues that had
-+ * the quiesce flag set using blk_mq_quiesce_queue_nowait.
-  */
--void blk_mq_wait_quiesce_done(struct request_queue *q)
-+void blk_mq_wait_quiesce_done(struct blk_mq_tag_set *set)
++void blk_mq_quiesce_tagset(struct blk_mq_tag_set *set)
++{
++	struct request_queue *q;
++
++	mutex_lock(&set->tag_list_lock);
++	list_for_each_entry(q, &set->tag_list, tag_set_list) {
++		if (!blk_queue_skip_tagset_quiesce(q))
++			blk_mq_quiesce_queue_nowait(q);
++	}
++	blk_mq_wait_quiesce_done(set);
++	mutex_unlock(&set->tag_list_lock);
++}
++EXPORT_SYMBOL_GPL(blk_mq_quiesce_tagset);
++
++void blk_mq_unquiesce_tagset(struct blk_mq_tag_set *set)
++{
++	struct request_queue *q;
++
++	mutex_lock(&set->tag_list_lock);
++	list_for_each_entry(q, &set->tag_list, tag_set_list)
++		blk_mq_unquiesce_queue(q);
++	mutex_unlock(&set->tag_list_lock);
++}
++EXPORT_SYMBOL_GPL(blk_mq_unquiesce_tagset);
++
+ void blk_mq_wake_waiters(struct request_queue *q)
  {
--	if (q->tag_set->flags & BLK_MQ_F_BLOCKING)
--		synchronize_srcu(q->tag_set->srcu);
-+	if (set->flags & BLK_MQ_F_BLOCKING)
-+		synchronize_srcu(set->srcu);
- 	else
- 		synchronize_rcu();
- }
-@@ -282,7 +284,7 @@ void blk_mq_quiesce_queue(struct request_queue *q)
- 	blk_mq_quiesce_queue_nowait(q);
- 	/* nothing to wait for non-mq queues */
- 	if (queue_is_mq(q))
--		blk_mq_wait_quiesce_done(q);
-+		blk_mq_wait_quiesce_done(q->tag_set);
- }
- EXPORT_SYMBOL_GPL(blk_mq_quiesce_queue);
- 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 00612e6857295..012ef0772f5b3 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -5090,7 +5090,7 @@ static void nvme_stop_ns_queue(struct nvme_ns *ns)
- 	if (!test_and_set_bit(NVME_NS_STOPPED, &ns->flags))
- 		blk_mq_quiesce_queue(ns->queue);
- 	else
--		blk_mq_wait_quiesce_done(ns->queue);
-+		blk_mq_wait_quiesce_done(ns->queue->tag_set);
- }
- 
- /* let I/O to all namespaces fail in preparation for surprise removal */
-@@ -5180,7 +5180,7 @@ void nvme_stop_admin_queue(struct nvme_ctrl *ctrl)
- 	if (!test_and_set_bit(NVME_CTRL_ADMIN_Q_STOPPED, &ctrl->flags))
- 		blk_mq_quiesce_queue(ctrl->admin_q);
- 	else
--		blk_mq_wait_quiesce_done(ctrl->admin_q);
-+		blk_mq_wait_quiesce_done(ctrl->admin_q->tag_set);
- }
- EXPORT_SYMBOL_GPL(nvme_stop_admin_queue);
- 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 8b89fab7c4206..249757ddd8fea 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -2735,7 +2735,7 @@ static void scsi_stop_queue(struct scsi_device *sdev, bool nowait)
- 			blk_mq_quiesce_queue(sdev->request_queue);
- 	} else {
- 		if (!nowait)
--			blk_mq_wait_quiesce_done(sdev->request_queue);
-+			blk_mq_wait_quiesce_done(sdev->request_queue->tag_set);
- 	}
- }
- 
+ 	struct blk_mq_hw_ctx *hctx;
 diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index dc189d6b1a367..678ce8a661ec9 100644
+index 678ce8a661ec9..33a62600150d5 100644
 --- a/include/linux/blk-mq.h
 +++ b/include/linux/blk-mq.h
-@@ -881,7 +881,7 @@ void blk_mq_start_hw_queues(struct request_queue *q);
- void blk_mq_start_stopped_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
+@@ -882,6 +882,8 @@ void blk_mq_start_stopped_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
  void blk_mq_start_stopped_hw_queues(struct request_queue *q, bool async);
  void blk_mq_quiesce_queue(struct request_queue *q);
--void blk_mq_wait_quiesce_done(struct request_queue *q);
-+void blk_mq_wait_quiesce_done(struct blk_mq_tag_set *set);
+ void blk_mq_wait_quiesce_done(struct blk_mq_tag_set *set);
++void blk_mq_quiesce_tagset(struct blk_mq_tag_set *set);
++void blk_mq_unquiesce_tagset(struct blk_mq_tag_set *set);
  void blk_mq_unquiesce_queue(struct request_queue *q);
  void blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, unsigned long msecs);
  void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index b15b6a011c028..854b4745cdd1f 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -571,6 +571,7 @@ struct request_queue {
+ #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+ #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
+ #define QUEUE_FLAG_SQ_SCHED     30	/* single queue style io dispatch */
++#define QUEUE_FLAG_SKIP_TAGSET_QUIESCE	31 /* quiesce_tagset skip the queue*/
+ 
+ #define QUEUE_FLAG_MQ_DEFAULT	((1UL << QUEUE_FLAG_IO_STAT) |		\
+ 				 (1UL << QUEUE_FLAG_SAME_COMP) |	\
+@@ -610,6 +611,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ #define blk_queue_pm_only(q)	atomic_read(&(q)->pm_only)
+ #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
+ #define blk_queue_sq_sched(q)	test_bit(QUEUE_FLAG_SQ_SCHED, &(q)->queue_flags)
++#define blk_queue_skip_tagset_quiesce(q) \
++	test_bit(QUEUE_FLAG_SKIP_TAGSET_QUIESCE, &(q)->queue_flags)
+ 
+ extern void blk_set_pm_only(struct request_queue *q);
+ extern void blk_clear_pm_only(struct request_queue *q);
 -- 
 2.30.2
 
