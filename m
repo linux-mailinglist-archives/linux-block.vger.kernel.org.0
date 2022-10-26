@@ -2,158 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 592B260DBF9
-	for <lists+linux-block@lfdr.de>; Wed, 26 Oct 2022 09:18:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B823F60DC29
+	for <lists+linux-block@lfdr.de>; Wed, 26 Oct 2022 09:35:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbiJZHSS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Oct 2022 03:18:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
+        id S233214AbiJZHfH convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Wed, 26 Oct 2022 03:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231751AbiJZHSR (ORCPT
+        with ESMTP id S233156AbiJZHfD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Oct 2022 03:18:17 -0400
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1A8DBD059;
-        Wed, 26 Oct 2022 00:18:16 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id n12so13512420eja.11;
-        Wed, 26 Oct 2022 00:18:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jgrCSgoyKQAcf7Cn8RHYWJzwfMDTCeEL4acz0yVvwcc=;
-        b=kWEfo76nU65gaK4Vio7Gf89NJSOvl6f683/pOlM6otWjqfMyEa/3uhWau9vZDZE37U
-         C9Mjm7AeAE5UPt7kfSfNUswN2SS1xrCvWBHJJ6mInVmfsE+PaeG0kFTG3aSgDhoWlimX
-         VLOAs8pQkINxhGiCB7uibfbCjFlg9MV0zR+Uy+NkSc7DnBHhBeo9ijpr679n9YqsaRAi
-         CYrAaIzjsmJhzxvjjjFtWtDaJp9vjy2wignN3YqwsIW86TvTzeASAVaadjd8pMB1/MlD
-         SckYwLZ40A3A/m4EvYm3fjSdkhaUOiK1t21pfv4QQIikKWDPSDwuPnzr0Aiq167AyRvU
-         Z4aA==
-X-Gm-Message-State: ACrzQf0KEo9K/eaaWZw84iW3BO8xgi8FTz9uP6XUAUdQB2Rwl7mmzx7W
-        F+x8LVCHINPKf4K1nF/WQwpf0GPGIYTHIg==
-X-Google-Smtp-Source: AMsMyM47akiGq5DuCuDFHk2dVM5tb9IybhfihjyBOoI/UghMYjV/ct5kTcFCxew+mCnBf5iYuisMyg==
-X-Received: by 2002:a17:907:1dec:b0:7aa:6262:f23f with SMTP id og44-20020a1709071dec00b007aa6262f23fmr10680718ejc.38.1666768695290;
-        Wed, 26 Oct 2022 00:18:15 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170906d18100b0072af4af2f46sm2528312ejz.74.2022.10.26.00.18.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Oct 2022 00:18:14 -0700 (PDT)
-Message-ID: <bc107c62-25ab-f959-c5bc-d5bacc511f20@kernel.org>
-Date:   Wed, 26 Oct 2022 09:18:13 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH] block: fix Werror=format with GCC 13
+        Wed, 26 Oct 2022 03:35:03 -0400
+Received: from mail5.swissbit.com (mail5.swissbit.com [148.251.244.252])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3AF32A99
+        for <linux-block@vger.kernel.org>; Wed, 26 Oct 2022 00:34:59 -0700 (PDT)
+Received: from mail5.swissbit.com (localhost [127.0.0.1])
+        by DDEI (Postfix) with ESMTP id 9DBD53A1CC6;
+        Wed, 26 Oct 2022 09:30:38 +0200 (CEST)
+Received: from mail5.swissbit.com (localhost [127.0.0.1])
+        by DDEI (Postfix) with ESMTP id 82FBC3A19AE;
+        Wed, 26 Oct 2022 09:30:38 +0200 (CEST)
+X-TM-AS-ERS: 10.149.2.42-127.5.254.253
+X-TM-AS-SMTP: 1.0 ZXguc3dpc3NiaXQuY29t Y2xvZWhsZUBoeXBlcnN0b25lLmNvbQ==
+X-DDEI-TLS-USAGE: Used
+Received: from ex.swissbit.com (sbdeex04.sbitdom.lan [10.149.2.42])
+        by mail5.swissbit.com (Postfix) with ESMTPS;
+        Wed, 26 Oct 2022 09:30:38 +0200 (CEST)
+Received: from sbdeex04.sbitdom.lan (10.149.2.42) by sbdeex04.sbitdom.lan
+ (10.149.2.42) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.9; Wed, 26 Oct
+ 2022 09:30:38 +0200
+Received: from sbdeex04.sbitdom.lan ([fe80::2047:4968:b5a0:1818]) by
+ sbdeex04.sbitdom.lan ([fe80::2047:4968:b5a0:1818%9]) with mapi id
+ 15.02.1118.009; Wed, 26 Oct 2022 09:30:37 +0200
+From:   =?iso-8859-1?Q?Christian_L=F6hle?= <CLoehle@hyperstone.com>
+To:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+CC:     Avri Altman <Avri.Altman@wdc.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "vincent.whitchurch@axis.com" <vincent.whitchurch@axis.com>,
+        =?iso-8859-1?Q?Christian_L=F6hle?= <CLoehle@hyperstone.com>
+Subject: [PATCH 0/3] mmc: Improve block layer requeueing behavior
+Thread-Topic: [PATCH 0/3] mmc: Improve block layer requeueing behavior
+Thread-Index: AdjpC+qWoltr9IdKRm6wj2+qCOUtNQ==
+Date:   Wed, 26 Oct 2022 07:30:37 +0000
+Message-ID: <f30ec7fe7d834c1d8e116508500110cf@hyperstone.com>
+Accept-Language: en-US, de-DE
 Content-Language: en-US
-To:     =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk
-References: <f70c7a11-e81e-f6b9-a403-315117f4aa3a@suse.cz>
-From:   Jiri Slaby <jirislaby@kernel.org>
-In-Reply-To: <f70c7a11-e81e-f6b9-a403-315117f4aa3a@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.153.3.46]
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-TMASE-Version: DDEI-5.1-9.0.1002-27224.006
+X-TMASE-Result: 10--3.793700-10.000000
+X-TMASE-MatchedRID: oCMH03eFz6AT3Cigx7DwIS+6f/7y7+GzFlIP4ZuPPchnyL8x0tKlO4Tw
+        qzKAP6T8Y1mVlKjrUUzx+Rm6PSeis1IQLOwNk2UvngIgpj8eDcCLbopAC1KZxsavT21DsLD/UEh
+        Wy9W70AEgBwKKRHe+r/QKUBFsa3vLup+A4QN6tct8Y/9k3xu3fim3yzlbq0uK2MIkLxRxv00=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+X-TMASE-INERTIA: 0-0;;;;
+X-TMASE-XGENCLOUD: 381ae854-77e1-480e-8e83-5757b9225b54-0-0-200-0
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 24. 10. 22, 21:01, Martin Liška wrote:
-> Starting with GCC 13, since
-> [g3b3083a598ca3f4b] c: C2x enums wider than int [PR36113]
-> 
-> GCC promotes enum values with larger than integer types to a wider type.
-> In case of the anonymous enum type in blk-iocost.c it is:
-> 
-> enum {
-> 	MILLION			= 1000000,
-> ...
-> 
-> 	WEIGHT_ONE		= 1 << 16,
-> ...
-> 	VTIME_PER_SEC_SHIFT	= 37,
-> 	VTIME_PER_SEC		= 1LLU << VTIME_PER_SEC_SHIFT,
-> ...
-> 
-> as seen VTIME_PER_SEC cannot fit into 32-bits (int type), thus one needs
-> to use 'long unsigned int' in the format string.
-> 
-> It fixes then the following 2 warnings:
-> 
-> block/blk-iocost.c: In function ‘ioc_weight_prfill’:
-> block/blk-iocost.c:3035:37: error: format ‘%u’ expects argument of type ‘unsigned int’, but argument 4 has type ‘long unsigned int’ [-Werror=format=]
->   3035 |                 seq_printf(sf, "%s %u\n", dname, iocg->cfg_weight / WEIGHT_ONE);
->        |                                    ~^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->        |                                     |                             |
->        |                                     unsigned int                  long unsigned int
->        |                                    %lu
-> block/blk-iocost.c: In function ‘ioc_weight_show’:
-> block/blk-iocost.c:3045:34: error: format ‘%u’ expects argument of type ‘unsigned int’, but argument 3 has type ‘long unsigned int’ [-Werror=format=]
->   3045 |         seq_printf(sf, "default %u\n", iocc->dfl_weight / WEIGHT_ONE);
->        |                                 ~^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->        |                                  |                      |
->        |                                  unsigned int           long unsigned int
->        |                                 %lu
+Mmcblk relies on block layer requeueing to fulfill some requests under
+certain conditions. Improve the handling to get nicely ordered requests.
 
-But introduces two with gcc-12 ;):
- > block/blk-iocost.c: In function ‘ioc_weight_prfill’:
- > block/blk-iocost.c:3037:38: error: format ‘%lu’ expects argument of 
-type ‘long unsigned int’, but argument 4 has type ‘u32’ {aka ‘unsigned 
-int’} [-Werror=format=]
- >  3037 |                 seq_printf(sf, "%s %lu\n", dname, 
-iocg->cfg_weight / WEIGHT_ONE);
- >       |                                    ~~^ 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- >       |                                      | 
-      |
- >       |                                      long unsigned int 
-      u32 {aka unsigned int}
- >       |                                    %u
+Using the terms a bit loosely to get a point across:
+Current behavior for 512 blksz and max_blk_count = 1 the scenario would
+be as follows:
 
+- request for page 0 lba 0 to 7
+- request for page 1 lba 8 to 15
+- request for page 2 lba 16 to 23
+- request for page 3 lba 24 to 31
 
-Note that:
-1) the specs says enum behaves as int, or uint in some cases
-2) iocc->dfl_weight is u32, i.e. uint
-    WEIGHT_ONE is 1 << 16, i.e. int
-    so the promotion should be to s32/int. Or not?
+mmcblk modifies data->blocks = 1 for each and requeues,
+this leads to:
 
-I think gcc-13 is wrong -- incosistent with gcc-12 at least.
+Access lba 0
+Access lba 8
+Access lba 16
+Access lba 24
+Access lba 1 (1. Requeue for page 0)
+Access lba 9 (1. Requeue for page 1)
+Access lba 17 (1. Requeue for page 2)
+Access lba 25 (1. Requeue for page 3)
+Access lba 2 (2. Requeue for page 0)
+...
 
-> Signed-off-by: Martin Liska <mliska@suse.cz>
-> ---
->   block/blk-iocost.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-> index 495396425bad..f165bac9bffb 100644
-> --- a/block/blk-iocost.c
-> +++ b/block/blk-iocost.c
-> @@ -3032,7 +3032,7 @@ static u64 ioc_weight_prfill(struct seq_file *sf, struct blkg_policy_data *pd,
->   	struct ioc_gq *iocg = pd_to_iocg(pd);
->   
->   	if (dname && iocg->cfg_weight)
-> -		seq_printf(sf, "%s %u\n", dname, iocg->cfg_weight / WEIGHT_ONE);
-> +		seq_printf(sf, "%s %lu\n", dname, iocg->cfg_weight / WEIGHT_ONE);
->   	return 0;
->   }
->   
-> @@ -3042,7 +3042,7 @@ static int ioc_weight_show(struct seq_file *sf, void *v)
->   	struct blkcg *blkcg = css_to_blkcg(seq_css(sf));
->   	struct ioc_cgrp *iocc = blkcg_to_iocc(blkcg);
->   
-> -	seq_printf(sf, "default %u\n", iocc->dfl_weight / WEIGHT_ONE);
-> +	seq_printf(sf, "default %lu\n", iocc->dfl_weight / WEIGHT_ONE);
->   	blkcg_print_blkgs(sf, blkcg, ioc_weight_prfill,
->   			  &blkcg_policy_iocost, seq_cft(sf)->private, false);
->   	return 0;
-
-thanks,
--- 
-js
-suse labs
+Of course we would rather have lbas consecutive.
+Hyperstone GmbH | Reichenaustr. 39a  | 78467 Konstanz
+Managing Director: Dr. Jan Peter Berns.
+Commercial register of local courts: Freiburg HRB381782
 
