@@ -2,96 +2,122 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D9BF60DC27
-	for <lists+linux-block@lfdr.de>; Wed, 26 Oct 2022 09:34:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F79B60DCE4
+	for <lists+linux-block@lfdr.de>; Wed, 26 Oct 2022 10:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbiJZHet (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Oct 2022 03:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46816 "EHLO
+        id S233108AbiJZIRB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Oct 2022 04:17:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232489AbiJZHer (ORCPT
+        with ESMTP id S233142AbiJZIQ7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Oct 2022 03:34:47 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B718DFF3;
-        Wed, 26 Oct 2022 00:34:42 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4My0rF53QRz6T6mt;
-        Wed, 26 Oct 2022 15:32:13 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP4 (Coremail) with SMTP id gCh0CgCntOYO41hjqLzeAA--.4330S4;
-        Wed, 26 Oct 2022 15:34:40 +0800 (CST)
-From:   Ye Bin <yebin@huaweicloud.com>
-To:     axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ye Bin <yebin10@huawei.com>
-Subject: [PATCH] blktrace:use '__blk_trace_remove' helper in 'blk_trace_remove_queue'
-Date:   Wed, 26 Oct 2022 15:56:31 +0800
-Message-Id: <20221026075631.682100-1-yebin@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 26 Oct 2022 04:16:59 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457758E46A
+        for <linux-block@vger.kernel.org>; Wed, 26 Oct 2022 01:16:57 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-52-4DcjjJ0EMoeug2VsJRIvhg-1; Wed, 26 Oct 2022 09:16:55 +0100
+X-MC-Unique: 4DcjjJ0EMoeug2VsJRIvhg-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 26 Oct
+ 2022 09:16:53 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.042; Wed, 26 Oct 2022 09:16:53 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jiri Slaby' <jirislaby@kernel.org>,
+        =?utf-8?B?TWFydGluIExpxaFrYQ==?= <mliska@suse.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+Subject: RE: [PATCH] block: fix Werror=format with GCC 13
+Thread-Topic: [PATCH] block: fix Werror=format with GCC 13
+Thread-Index: AQHY6Qsijfxi7q7dmk23Q8IZX/WJaK4gUbAA
+Date:   Wed, 26 Oct 2022 08:16:53 +0000
+Message-ID: <067786a28a034bbeb8518984ef32ee04@AcuMS.aculab.com>
+References: <f70c7a11-e81e-f6b9-a403-315117f4aa3a@suse.cz>
+ <bc107c62-25ab-f959-c5bc-d5bacc511f20@kernel.org>
+In-Reply-To: <bc107c62-25ab-f959-c5bc-d5bacc511f20@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCntOYO41hjqLzeAA--.4330S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw1ktFykWry3XF45Xr4ruFg_yoWDJFc_ZF
-        yUW3Wxtr43Cr90qr4fAFsIq3Wqq34jvFyFya45tFW5A3ZrXrn8G3ZxZwsIgrZ09r4kWa4U
-        Jry3t34UGF1YyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbr8YFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-        Y4v20xvaj40_JFC_Wr1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-        A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-        67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-        0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-        z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-        AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-        IxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WF
-        yUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-        CTnIWIevJa73UjIFyTuYvjxUOyCJDUUUU
-X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
-
-After '60a9bb9048f9' and 'dcd1a59c62dc' commit 'blk_trace_remove_queue' is do
-the same job with '__blk_trace_remove', so just call '__blk_trace_remove'.
-
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- kernel/trace/blktrace.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
-
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index a995ea1ef849..115ae18e479d 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1609,19 +1609,7 @@ device_initcall(init_blk_tracer);
- 
- static int blk_trace_remove_queue(struct request_queue *q)
- {
--	struct blk_trace *bt;
--
--	bt = rcu_replace_pointer(q->blk_trace, NULL,
--				 lockdep_is_held(&q->debugfs_mutex));
--	if (bt == NULL)
--		return -EINVAL;
--
--	blk_trace_stop(bt);
--
--	put_probe_ref();
--	synchronize_rcu();
--	blk_trace_free(q, bt);
--	return 0;
-+	return __blk_trace_remove(q);
- }
- 
- /*
--- 
-2.31.1
+RnJvbTogSmlyaSBTbGFieQ0KPiBTZW50OiAyNiBPY3RvYmVyIDIwMjIgMDg6MTgNCj4gDQo+IE9u
+IDI0LiAxMC4gMjIsIDIxOjAxLCBNYXJ0aW4gTGnFoWthIHdyb3RlOg0KPiA+IFN0YXJ0aW5nIHdp
+dGggR0NDIDEzLCBzaW5jZQ0KPiA+IFtnM2IzMDgzYTU5OGNhM2Y0Yl0gYzogQzJ4IGVudW1zIHdp
+ZGVyIHRoYW4gaW50IFtQUjM2MTEzXQ0KPiA+DQo+ID4gR0NDIHByb21vdGVzIGVudW0gdmFsdWVz
+IHdpdGggbGFyZ2VyIHRoYW4gaW50ZWdlciB0eXBlcyB0byBhIHdpZGVyIHR5cGUuDQo+ID4gSW4g
+Y2FzZSBvZiB0aGUgYW5vbnltb3VzIGVudW0gdHlwZSBpbiBibGstaW9jb3N0LmMgaXQgaXM6DQo+
+ID4NCj4gPiBlbnVtIHsNCj4gPiAJTUlMTElPTgkJCT0gMTAwMDAwMCwNCj4gPiAuLi4NCj4gPg0K
+PiA+IAlXRUlHSFRfT05FCQk9IDEgPDwgMTYsDQo+ID4gLi4uDQo+ID4gCVZUSU1FX1BFUl9TRUNf
+U0hJRlQJPSAzNywNCj4gPiAJVlRJTUVfUEVSX1NFQwkJPSAxTExVIDw8IFZUSU1FX1BFUl9TRUNf
+U0hJRlQsDQo+ID4gLi4uDQo+ID4NCj4gPiBhcyBzZWVuIFZUSU1FX1BFUl9TRUMgY2Fubm90IGZp
+dCBpbnRvIDMyLWJpdHMgKGludCB0eXBlKSwgdGh1cyBvbmUgbmVlZHMNCj4gPiB0byB1c2UgJ2xv
+bmcgdW5zaWduZWQgaW50JyBpbiB0aGUgZm9ybWF0IHN0cmluZy4NCj4gPg0KPiA+IEl0IGZpeGVz
+IHRoZW4gdGhlIGZvbGxvd2luZyAyIHdhcm5pbmdzOg0KPiA+DQo+ID4gYmxvY2svYmxrLWlvY29z
+dC5jOiBJbiBmdW5jdGlvbiDigJhpb2Nfd2VpZ2h0X3ByZmlsbOKAmToNCj4gPiBibG9jay9ibGst
+aW9jb3N0LmM6MzAzNTozNzogZXJyb3I6IGZvcm1hdCDigJgldeKAmSBleHBlY3RzIGFyZ3VtZW50
+IG9mIHR5cGUg4oCYdW5zaWduZWQgaW504oCZLCBidXQgYXJndW1lbnQNCj4gNCBoYXMgdHlwZSDi
+gJhsb25nIHVuc2lnbmVkIGludOKAmSBbLVdlcnJvcj1mb3JtYXQ9XQ0KPiA+ICAgMzAzNSB8ICAg
+ICAgICAgICAgICAgICBzZXFfcHJpbnRmKHNmLCAiJXMgJXVcbiIsIGRuYW1lLCBpb2NnLT5jZmdf
+d2VpZ2h0IC8gV0VJR0hUX09ORSk7DQo+ID4gICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB+XiAgICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+DQo+ID4gICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiA+ICAgICAgICB8ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgICAgICAgIGxvbmcgdW5z
+aWduZWQgaW50DQo+ID4gICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAlbHUNCj4gPiBibG9jay9ibGstaW9jb3N0LmM6IEluIGZ1bmN0aW9uIOKAmGlvY193ZWlnaHRf
+c2hvd+KAmToNCj4gPiBibG9jay9ibGstaW9jb3N0LmM6MzA0NTozNDogZXJyb3I6IGZvcm1hdCDi
+gJgldeKAmSBleHBlY3RzIGFyZ3VtZW50IG9mIHR5cGUg4oCYdW5zaWduZWQgaW504oCZLCBidXQg
+YXJndW1lbnQNCj4gMyBoYXMgdHlwZSDigJhsb25nIHVuc2lnbmVkIGludOKAmSBbLVdlcnJvcj1m
+b3JtYXQ9XQ0KPiA+ICAgMzA0NSB8ICAgICAgICAgc2VxX3ByaW50ZihzZiwgImRlZmF1bHQgJXVc
+biIsIGlvY2MtPmRmbF93ZWlnaHQgLyBXRUlHSFRfT05FKTsNCj4gPiAgICAgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIH5eICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fg0KPiA+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
+ICAgICAgICAgICAgICAgICAgfA0KPiA+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgbG9uZyB1bnNpZ25lZCBpbnQNCj4gPiAg
+ICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICVsdQ0KPiANCj4gQnV0IGlu
+dHJvZHVjZXMgdHdvIHdpdGggZ2NjLTEyIDspOg0KPiAgPiBibG9jay9ibGstaW9jb3N0LmM6IElu
+IGZ1bmN0aW9uIOKAmGlvY193ZWlnaHRfcHJmaWxs4oCZOg0KPiAgPiBibG9jay9ibGstaW9jb3N0
+LmM6MzAzNzozODogZXJyb3I6IGZvcm1hdCDigJglbHXigJkgZXhwZWN0cyBhcmd1bWVudCBvZg0K
+PiB0eXBlIOKAmGxvbmcgdW5zaWduZWQgaW504oCZLCBidXQgYXJndW1lbnQgNCBoYXMgdHlwZSDi
+gJh1MzLigJkge2FrYSDigJh1bnNpZ25lZA0KPiBpbnTigJl9IFstV2Vycm9yPWZvcm1hdD1dDQo+
+ICA+ICAzMDM3IHwgICAgICAgICAgICAgICAgIHNlcV9wcmludGYoc2YsICIlcyAlbHVcbiIsIGRu
+YW1lLA0KPiBpb2NnLT5jZmdfd2VpZ2h0IC8gV0VJR0hUX09ORSk7DQo+ICA+ICAgICAgIHwgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB+fl4NCj4gfn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn4NCj4gID4gICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfA0KPiAgICAgICB8DQo+ICA+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGxvbmcgdW5zaWduZWQgaW50DQo+ICAgICAgIHUzMiB7YWthIHVuc2lnbmVk
+IGludH0NCj4gID4gICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICV1
+DQo+IA0KPiANCj4gTm90ZSB0aGF0Og0KPiAxKSB0aGUgc3BlY3Mgc2F5cyBlbnVtIGJlaGF2ZXMg
+YXMgaW50LCBvciB1aW50IGluIHNvbWUgY2FzZXMNCj4gMikgaW9jYy0+ZGZsX3dlaWdodCBpcyB1
+MzIsIGkuZS4gdWludA0KPiAgICAgV0VJR0hUX09ORSBpcyAxIDw8IDE2LCBpLmUuIGludA0KPiAg
+ICAgc28gdGhlIHByb21vdGlvbiBzaG91bGQgYmUgdG8gczMyL2ludC4gT3Igbm90Pw0KPiANCj4g
+SSB0aGluayBnY2MtMTMgaXMgd3JvbmcgLS0gaW5jb3Npc3RlbnQgd2l0aCBnY2MtMTIgYXQgbGVh
+c3QuDQoNClRoZSBwcmVzZW5jZSBvZiBWVElNRV9QRVJfU0VDIGluIHRoZSBlbnVtIGZvcmNlcyB0
+aGUgZW51bQ0KdG8gNjRiaXRzICh0aGlzIG11c3QgYmUgYSBnY2MgZXh0ZW5zaW9uKS4NCg0KVGhl
+IGNoYW5nZSBpbiBnY2MgMTMgc2VlbXMgdG8gYmUgdGhhdCB0aGUgdHlwZXMgb2YgYWxsIHRoZQ0K
+ZW51bSB2YWx1ZXMgYXJlIG5vdyAocHJvYmFibHkgY29ycmVjdGx5KSB0aGF0IG9mIHRoZSBlbnVt
+Lg0KDQpTbyBXRUlHSFRfT05FIGNoYW5nZXMgZnJvbSAndW5zaWduZWQgaW50JyB0byAndW5zaWdu
+ZWQgbG9uZycuDQoNClNlZTogaHR0cHM6Ly9nb2Rib2x0Lm9yZy96LzZLNFBvSzlzdg0KDQoJRGF2
+aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50
+IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTcz
+ODYgKFdhbGVzKQ0K
 
