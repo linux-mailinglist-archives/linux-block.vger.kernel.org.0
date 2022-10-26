@@ -2,65 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F8C960EC67
-	for <lists+linux-block@lfdr.de>; Thu, 27 Oct 2022 01:25:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1DC660EC61
+	for <lists+linux-block@lfdr.de>; Thu, 27 Oct 2022 01:25:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233867AbiJZXZK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Oct 2022 19:25:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40942 "EHLO
+        id S233858AbiJZXZG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Oct 2022 19:25:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233923AbiJZXYt (ORCPT
+        with ESMTP id S233867AbiJZXYr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Oct 2022 19:24:49 -0400
+        Wed, 26 Oct 2022 19:24:47 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB84F60EA;
-        Wed, 26 Oct 2022 16:22:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D42A15B791;
+        Wed, 26 Oct 2022 16:22:15 -0700 (PDT)
 Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29QM3G34014699;
-        Wed, 26 Oct 2022 23:20:02 GMT
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29QM6l4Z014666;
+        Wed, 26 Oct 2022 23:20:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=z8TlPreXv6y+PXvq0RVZXvHuvt+G4QzgHfNU01gnvtw=;
- b=2Uwf3OD0SNfA4lphmqx341Lel9R6S1Z20EbmTMTvfgLTRuP9shWkjA07LTP5owlpXfEQ
- P47W0J534qKypPVAqSUl7tGZ8BL7g16sUQT808MNKNg8F9CvTcHcJQTnVulUcsZScL8Q
- PBCaoZxyG1CFYCY36N8pw0E1/8zV5xPMUUQwfKdKfDNUmSWnzLuyCFRuJdZcEjAsAVBf
- LhGOf/UV0vLV815BXZbI6JhNWrVA8vbYJW3MvrNQMj8pzBrGFnaqk6lN6VYw88nj6+RP
- MgW+0sMVUaZkODqk02aVJYymYGYbOXZh/RLMkUiTbJhAS4AdC0cm9zVTFZjKhX9o7VrG hg== 
+ bh=4RVDIsVkIWmbnl+KNosyTGbwNhnc6ocTqs44CGxG+vs=;
+ b=KPAedIG5FhKE+QXGbZ/WMyig5MCMFnyAoLskxxc0t2Doxk7qS+dO1KxTzAkHbGhz6eKU
+ z0SKzCyRnDNISnYfSZhiyHdAGKstnSSSmX1x5737zgt9Rv3ylv8d7W6FN4UZa3T9f44/
+ 3+YdAEqw8B3kbNTOluy8nW2fArN9uM6YbEtWhP+u1GYZJKtBSQ8ERV/EA0rax958cV0j
+ z5BnjnMsz+RHJuz1sxlZMK/nPyoukYiV0NRD0uSAP5jg7Q1CYbtSU86EnlSlZ4ukW6oT
+ RBy4kJNCYuuHuq83u8ETlLO0g0JcIECpQkmEaM+gsAebDA7jjKaxhQ7srBItygt92+Mk hw== 
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kfays0jf4-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kfays0jf6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Oct 2022 23:20:02 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29QMAWis006963;
+        Wed, 26 Oct 2022 23:20:01 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2175.outbound.protection.outlook.com [104.47.73.175])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kfaggdrhk-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Wed, 26 Oct 2022 23:20:01 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29QMAWiq006963;
-        Wed, 26 Oct 2022 23:20:00 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2175.outbound.protection.outlook.com [104.47.73.175])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kfaggdrhk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Oct 2022 23:20:00 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YOCHdk6SDDGKA5fD2wDaFzGRLEBrab5O/xfvgngIIdz5DZn+UL2FWfNt6dNW+dAWIlDuRVTdXmehbpGGRYf8UvEKUpdIXcFqE97aHex94Zytkd9TE6dnVskkMSBitHBrnRreZ9hLUh9QzhpnfQnfoh4NYs2XRoobX5ryeMdPqEzJAjwdhYssU9g6T3CFPm2bg1AaPjzvAd20/k3lyY2wucm/j6l0Y1ASA5sfzKtIcObQPFOY7w1Q5xr1RWEyIUjeHwMhyYQ/px0OuSne4vXe3cKCakO3fLfZvJLsYOroDKoW2MP41VMwmru5mrZqaUx4wYrioSvjXQ+LhEUgitLjIA==
+ b=hdAVEsvMGwvepiDsOK8C/oTlE2X08SzxqFuSQUnqkr04CPkxVQreIfSJMlPk8u0pT74pvEgQpJbv9aayWmkiN2jMku66NMgkoaFmNF1tmLdmW2QIFTY+m3mo3QA6mro+3IDfoqPXidVc4Iozdsr0bIwGfgI0uQYZCRr/erTx+gGmW5RdxqRbcNcE8dY1X/SsqfK0ZnMVCXDv0hX4YL2KesiiAQsqux/Ue6NLwGz8Py9V/4p/zj1yTyBgn+6Ny4ylBsSwcNisHA5BFraYnT5voOSA71pOc2ajXNrisbZOUkxWxTUHx8jmAhubZqtcn7qCA6vL7VGE4pPvtr+WihGWkQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z8TlPreXv6y+PXvq0RVZXvHuvt+G4QzgHfNU01gnvtw=;
- b=kr9ct+Dh31k7pP3RAJexuZmJN/fhPNh05xfWiETzn0agHz6CI5OV6XhoimJiQLIradJt0OgB5e8ZYlDarOKLVD6ZM8oCRsqo5d40O9QnIwpUtqoNQpiWyoin2YAzqYp5Px0E8BQh2Y0ozYW5kKdcU6NCaI6WUUmr6Shc0HR2thRS6z2rdZ24F4fltimKfu5aJfM/efY1dk0Huq/ev+F1HIPJzRHUKxaBeTlPu82DJDj6UVphPTqmLk+nbMXIVk/k1F8XkC8t8gLXe48CWrlsJbkBPdpxIUJPQ+HdPfAGeLe8OYBRaYbjeF//+Y8ZfI0EcD4i7TzWCVOF0O+jjKeQfQ==
+ bh=4RVDIsVkIWmbnl+KNosyTGbwNhnc6ocTqs44CGxG+vs=;
+ b=S+Dk6UuBZEm3EL7m/bHV8ImtoBaOpa53J5yf55aW+WsnUvhmZsBQPY6wXKQrBenmiTNg+yA2FQsAT93Aut2n4RfWEPQZAOfCq7h3NXb4lpi4RoDrcVZOTfLpFdvTncuvTiZ6cxCbNIGM+cF3SDiOksiBrXXE9v0DBILSFucKkXWNN4CJFyIszJs9uS/mkqTxcL+3iAebXzC+NhXzvIWviTUOppOLDi02ORu6kU6VyeyQwiWPaIN9pRkHVG8TpHvZivYDptW4RP/lKNqfksPZaLcSlR787Cg7+m6gFTMKKMmjyt1b2RXlgsD3Czr3EZF5YZhlgdYxtabXVtWhsWBD1g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z8TlPreXv6y+PXvq0RVZXvHuvt+G4QzgHfNU01gnvtw=;
- b=RGj7YKLAq7eYBQrpahSUVB5KZH/1xCRnda8U4PBa8Kznv9NovcjK4jsqpCG02+Y3V/mNHYOPjmNnnM2OZoaSajYebVB/6/c9IZTmp8zSBxiKiOSepo/N9jmj5VM5Yax5HFCqrLso0rcDto54XCF3YkdwLKIos1OvRDQLX3CaND0=
+ bh=4RVDIsVkIWmbnl+KNosyTGbwNhnc6ocTqs44CGxG+vs=;
+ b=F6UeqsngVWhoxmUr7+0FCsPgqHf7FM5SzIimTPX4wb+Y/k1sN45htB21tdL5XQSKpj77NsROXGEciIjU2frxCarlVAr2WvJL0nY/ob5XFcfg8If8K9G7t9gjW6e6aMztRbiYhAch5TdWgB4MB/8NSfq2oZSybxNNiP3TFWVH/zI=
 Received: from DM5PR10MB1466.namprd10.prod.outlook.com (2603:10b6:3:b::7) by
  DS7PR10MB5117.namprd10.prod.outlook.com (2603:10b6:5:3a6::17) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5746.28; Wed, 26 Oct 2022 23:19:58 +0000
+ 15.20.5746.28; Wed, 26 Oct 2022 23:20:00 +0000
 Received: from DM5PR10MB1466.namprd10.prod.outlook.com
  ([fe80::19f7:e081:85b4:c5df]) by DM5PR10MB1466.namprd10.prod.outlook.com
  ([fe80::19f7:e081:85b4:c5df%7]) with mapi id 15.20.5746.028; Wed, 26 Oct 2022
- 23:19:58 +0000
+ 23:20:00 +0000
 From:   Mike Christie <michael.christie@oracle.com>
 To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org, james.bottomley@hansenpartnership.com,
@@ -69,65 +69,65 @@ To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         linux-nvme@lists.infradead.org, chaitanyak@nvidia.com,
         kbusch@kernel.org, target-devel@vger.kernel.org
 Cc:     Mike Christie <michael.christie@oracle.com>
-Subject: [PATCH v3 07/19] nvme: Don't hardcode the data len for pr commands
-Date:   Wed, 26 Oct 2022 18:19:33 -0500
-Message-Id: <20221026231945.6609-8-michael.christie@oracle.com>
+Subject: [PATCH v3 08/19] nvme: Move pr code to it's own file
+Date:   Wed, 26 Oct 2022 18:19:34 -0500
+Message-Id: <20221026231945.6609-9-michael.christie@oracle.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221026231945.6609-1-michael.christie@oracle.com>
 References: <20221026231945.6609-1-michael.christie@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: CH2PR10CA0012.namprd10.prod.outlook.com
- (2603:10b6:610:4c::22) To DM5PR10MB1466.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH2PR10CA0011.namprd10.prod.outlook.com
+ (2603:10b6:610:4c::21) To DM5PR10MB1466.namprd10.prod.outlook.com
  (2603:10b6:3:b::7)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM5PR10MB1466:EE_|DS7PR10MB5117:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac7b48d3-911e-4b2d-e111-08dab7a899b5
+X-MS-Office365-Filtering-Correlation-Id: 7f21984f-71d8-41a3-d4be-08dab7a89a6f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wR/wL35yvET7sImlglaHcYF+xepVsePAfGhMqTLKZkurJmueinr/0jp16ben4FeuTf8xZIeH4ETLtZEE1aU9S6wm4J9eAoJoq/Lk2aad1KUIu6pwvc6Nf9xsdaVZCx8HesN8o1JfOMCjZv0Vcf0ASvuUg4u26ZyuAiWYwpWT1U/RAPiLT0Jx8T4tm8V4DoJWtETsF1SEffJWg0/bLHljCFDEEM375H2CTo9IWrhY6SNbRtk4HxKPELPIkzLsMlxyp5uoA00z8w39gK34Gp8QDNyycErSA0rhOGafS90+i2uUj/nwywwaEUWZSsUp40OkTR7qxh3DIRcBzWOwBxIyZkhz2+hhMA9QVoHBIG1hKoWhqvjyBtNdfd+HO4pPERhvsOE44leeWNRGl2DDx7bZLlWgcGD86XcDRx9xRMHJS3KqpFd1SJvixdvHndlkky/0YyHjHH6NklhfE5f5khiLYrUXRxkAWr5/R8PeSD1BB2h3ieTgeIxVoiTYS8yt1OO/7ojwXpY60MFMOw3z1EB2Pib4eIX1aaujGDdykf3w1giCzJ4bpRwhAhnXHN24yiALbi3Hv6FSPQ1immVG+qI+Q4I3XfmRzzRA8ejDxxD+OWczTf3K+7FT8GNTT3rbxbW5gq329NasD0PzTkhBrA63OfVu/+ylEJjo4l4Wgw9oU9alxcQZa3/u/jRLBvF6vaNlK8/jFhgnYMIaCuO4ImxtRlQqITPlQKWLt9YDvkTLRz+IX2CslKck3Geda+itlpdB
+X-Microsoft-Antispam-Message-Info: vWSnxZiXARMpZF/xX99BcveV4P+u8W1rMfZb7BJB8M7I7x2Q4NC6Gakq7TNw+DgMaCUIJfyLLTMYIIdJRGshQ8bsjeiTuHbezVxneHU9aBFN+gxR0kMjBUiBbi++nXfZwo6B0lLCzlc8lO72dq1GWSv8YFZgk9lxlDz91PxMB/74TtWfCMMxydTnzKLcy5xnC8TlRz/a1Cygo0/ZJGkwTPJn9oNO+TJMvT5NWbNq98R9kE3W1EnWr915h8olTs/kmuESesRhtnS3/mORX1wR3KckNQRRNB7gYCRCdodXCP+v3uCmj1B639ilOi6Nx5QvUirJgnzqMnV13jipSSOyduAQFtafcpelI6t1Qqree3skeWmp9HqxiaIMCkQ0bMSCZBWemHO/7aPoxDEtIr6R/taUr5FuyUYAeBFaQZiosVG1HHrYBLvBqK/ohfCWuhljvM8QIJScJvhRZd3RPZCMi1s/Nbg+GWQWP0mfKB8gxKgqNQ4+lX6FyIP67wBHldUCUA62qIqYoETvjBYJxJ7N09i9mhQDwT3WQD5PEy5AZchaEDWRS9rJHqhTtXU5ClaDAjECw62avSMMuVT2oLLBCwdAI4QL65C1Iz0fo5vWHayjArbNcmTG7N4lBETd76RF5otegmNBs4fd83LHGFFzjSoVFLgn4dGCrQfA1PRc/sKTBw0svdz6dyrFj/QN8/m10vaZXMYwq5Lprafvo3rfoMCwAq6kM4pgQuHxLaLJ5NmX84iGvqI0BKXkqT8cMhuB
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR10MB1466.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(366004)(136003)(346002)(396003)(376002)(451199015)(7416002)(8936002)(2616005)(1076003)(186003)(5660300002)(6512007)(41300700001)(26005)(86362001)(921005)(38100700002)(2906002)(36756003)(83380400001)(316002)(107886003)(6666004)(4326008)(66556008)(66946007)(66476007)(8676002)(6506007)(478600001)(6486002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3hmrusyB1qR1CM8R17et/gmlzxxTursY0sgMexAarS/BvQ8BnFbg9mXRbO2o?=
- =?us-ascii?Q?Fj6ulwZl/GgjAUFtMMNZKkcdESxy0a58zvXRycZmI1lD14obFiFZi3eCliee?=
- =?us-ascii?Q?yR9VuaqB5uQNf01dLDwAodYTgqg0c8rTzjRmA9P9uqGRvS6+UwrKdfBTlSP6?=
- =?us-ascii?Q?u+3MshHjHLH4CRYaSov5lHaL7wsm1eWzigX4y1dhHnDTVtkWpcAz5+QHdJZg?=
- =?us-ascii?Q?qLRxEKtLnoPF3TiIKA/PxJsbyqJyX4T3n5opeB2tMphE0d25kHWHGNnvTfFN?=
- =?us-ascii?Q?986hszVZDvz6jT79jPXurxKyqTXddKkNiWEzKZvjUUqPjXX2ftcmeS87w07T?=
- =?us-ascii?Q?N22J7r0QgzhnVK2FR59PuVZbeqGwHfMRqaVsMt87GyeHUX6ciJdeFwbWbWNT?=
- =?us-ascii?Q?kR4TPhkkpsmkNpZ9QBpwbNL0Ywkh3OOgZsJKivV1wqAUdesdC/tpo69P3Zzr?=
- =?us-ascii?Q?HrcJsSTLHjVMryaDIr1RP80ZVPn0Xq+pKpuAPBgnL0NqzJnycyisFvjkcuRq?=
- =?us-ascii?Q?prOZQGjLgjyCEd9JQ3rBXg5T+No69grBJxBJ8/CHtOab2o2LvEkSPwwdJrOk?=
- =?us-ascii?Q?cqVjRtHerCS15Iv9hv3srOgm1BChJlidE5fJ4c8ex/lm3s8++ttsimt8g9hY?=
- =?us-ascii?Q?Q1wZupmqkG1Dvj03sQjFQ/5VmAb5KYjrsZc0atxrWy6LzSrm3EcSp0Vm4x/5?=
- =?us-ascii?Q?dJK91pLkakpTY24XZASRvYiDJi7weMncAE4e4OqR/UZiPTzNgXKMyzS4mDJ8?=
- =?us-ascii?Q?BD2fUIL9oB806A0m8kx1KkRxTlBKf6ObAGg1J4N8t4vFSZobWIqpGqEqVBu/?=
- =?us-ascii?Q?S41QU6Z8hv7la1SavGbITz45DlF95sGTXf4GpkUREmcdAPXYjR6a4wRyFEsp?=
- =?us-ascii?Q?YIXMwl80F7w/7YvbqmpYYmCp1f/sMBA90cM0RMIr6pO3Um0wQ6f3WLvubEWS?=
- =?us-ascii?Q?XP/VtVNLPY6gaHyL/NDmS9iljRLYofLlr03msdGNlQE9QqNdY3I/4QQTxUSp?=
- =?us-ascii?Q?Dr5eFFqOzXXgmNvbqHKaz5PRQkzSc+ODot7A5GU3kPo9ULP+/2Eq57wU1o2C?=
- =?us-ascii?Q?N7I8dvtw+nxlJnn28bOwYSnJfFffdgTi4Sk5WWUOCwPGKyN3DMW3lmzK4RPr?=
- =?us-ascii?Q?DDMaobR4CzbGW9Zmen3MgfCoe+qKLF+N2wR2zGctMwDc6hA62xLN/M/kDWvh?=
- =?us-ascii?Q?iewVHf/Eq3W5Ibe3/W80cWK+9nD05zwA9zRv2VyjO6kJ42zuq2e0EdD2OThq?=
- =?us-ascii?Q?EYg9ijaQoVa7CgN8+f6JNVPFOMhBgAEH/nHZgpG/0N0cRf1TPuy0pn4IGbph?=
- =?us-ascii?Q?gwKFA6neRp9LLWSsfQ2KdLt9829xZoe4Ym90WeA/HY83PvvHqC2KSfLeQFPf?=
- =?us-ascii?Q?Lp9al3tFeDZyzvYcgiYT5pCLPnxydII+IhnNboCBB7gTFAdX+4yhKMQxy/qz?=
- =?us-ascii?Q?qnsRyNgA68Rb/fqxfz7wjaIHampS5IcJJeJeKYakXu8QqBY8GM8h9BibC9Mw?=
- =?us-ascii?Q?+EFDRPnbTPLAslKF+Ae7w+jEgGngb2AqL/w+KzBkgiHryKil+sH9McDOR2/z?=
- =?us-ascii?Q?aFperdIZ/djcDCpZEKo4JfchcQH48C0bVQj+By7FlqHof+NKbU6loxhCP1iU?=
- =?us-ascii?Q?fg=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UUDGg7vutawteOS33rR/ch0FrloJKrh+g+2c0d/NyGzz70ilLvg9f9INTOwC?=
+ =?us-ascii?Q?AXIiv64WmUIO8Y7gNXnHBo4r16DsPcl/oVPKH99//e+mxr6dI808UjYIe762?=
+ =?us-ascii?Q?fHkF/ZmKlX0uud24Yq92/pW/FIW46DYL1x9X7G0bWNXKpMbKjVi9BBi9wZ+H?=
+ =?us-ascii?Q?91wFTgsi2giIs8FiTc9EcS6DmU/PQxnvmooOk4Nae9Et8NDBk5tJke4ksyX2?=
+ =?us-ascii?Q?H5ee8Bj6mDDCBwVw4+RXIj7JVFR5F1Y5tAHx99uRXdJxp53yd4kDJgtHEF8D?=
+ =?us-ascii?Q?wOCrwKX7X+6MuNclqA47SxK6jMDhEjkD8txxDE9lyPP6+MBgsCImPCDAbtep?=
+ =?us-ascii?Q?Q20/uddvlRLIXgxmywruz+zYHzdjwddN0uXnczTrmrA+qQ2UqGkdS11SvieD?=
+ =?us-ascii?Q?YqU2XhOxwQU1SgTB4xvznRLzQ0wpg6fK5jUeVCjYjZGuUi8B8OgvmOJeZYyD?=
+ =?us-ascii?Q?Sp6QlEE7miKn/BcVWCGSn3+GnvZVMueot/2QkkRJmjh3afB9PLoiPAlmr/T0?=
+ =?us-ascii?Q?ao/pGnVcffiwUF3QJu+3JoLgG6XMcH6dUqx7tvLmr7NpYBM/JsaCrm7bxVkP?=
+ =?us-ascii?Q?0x0Sl0NGwL6dfLs+fDBbR3I3Kk2jSlflbQPbkvWfw1koT04C16jCDkWcBNkc?=
+ =?us-ascii?Q?o9jXrFBel5kMHTe/bHbdIIecAjrFGmz7jvHztwzfPuYA0SQ6MSAL9GFYNYJv?=
+ =?us-ascii?Q?I3XKj2jkKZO81mi6OcGgrJDsJdJ4WWB7JCkqHAq+WZ78HmR+vKptqu3HwWMw?=
+ =?us-ascii?Q?tbnCY9/D8xPWwYLlq1MefKoRSeTqdJ88YSEmM0qw/euzqF7npOTf08jHELK5?=
+ =?us-ascii?Q?1PzqMghyn/llyJZ7gvHUnEnKJB11ZoHvFuOFaACdsFahQMucBx6j0hmoqSxp?=
+ =?us-ascii?Q?FC7mbwOsOA7t/X3C+KEK4Wdwb49VKJWU3gsZTAc+JXe63shX+sPZrpGBY+pK?=
+ =?us-ascii?Q?iGehJ8v+m+rqafbyDXvj9cBqpQcidXAmjvNcESz40ZzP+Qs9gjMGKyQXSpx/?=
+ =?us-ascii?Q?elIr5h2Fj2tOjpg2LN8+O0JeOGnImEwfH+mbxqgR/eqJ5YKXQuQJU0XHy9dG?=
+ =?us-ascii?Q?ELyMR/elaIDXeIRfNFFDswq7oKWI9QcYC9vxKgFDGbITk113J9i0JNGzfKnW?=
+ =?us-ascii?Q?v/ydFxiSpBVBh32g6uIj772XTx/0UoqmzBR6z7IgHWgw6qmQPtx+3EUS5RWj?=
+ =?us-ascii?Q?+vzoKKypwALX7rfya9scMWhJ3LzVFEOrrj/lj8ZQO3dec4IcMQsyA4CDRUht?=
+ =?us-ascii?Q?PFKswUvxow1wCTdMzQVqaad6gthEEdXLRDtYo36qcV0EvtZ6S7mHRfsr+gwo?=
+ =?us-ascii?Q?Nd6BH0p5nHeQXfD/jJtdYwEdfEfu2cn/LA2DYIHUx6ZmvVPYGtdwUw6k0A3W?=
+ =?us-ascii?Q?5lA4MTE2ak3Spejssj9Nk8pfvkzTX2eEZexvBhDEg/aAY2/9lN5Qpg2ktGeb?=
+ =?us-ascii?Q?0nhy6YFVopmD5/eDiwmdfiWtrd9BsYRUl1Lo6lFajgaiDpGHZOB1baUlhkUm?=
+ =?us-ascii?Q?lYh8qzPwuBkfgoFze9k6+z0bDBaqjAfu0xl/ZzE3pqy1RXDjnrkayHIGM1kd?=
+ =?us-ascii?Q?kARzMOWricTX5ko0rfbapDa0g/0G/fpXSs/MXg2t8nHc0YUQvzLyplldfrFH?=
+ =?us-ascii?Q?lQ=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac7b48d3-911e-4b2d-e111-08dab7a899b5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f21984f-71d8-41a3-d4be-08dab7a89a6f
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR10MB1466.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 23:19:58.8975
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 23:20:00.1161
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wV10Kt6pKBl7ioIw+6x0O29bHUnenMWAlUK+JQcxZExMOwMsfWObGx24Qu1+8aoRFZuREzqRkmiSmw0KFZn8GodA8vTuhxoj7pXrk5TXrss=
+X-MS-Exchange-CrossTenant-UserPrincipalName: AQOrGutqRm+nA0aelZ9M6EwurYEYE2FdxA7CpnhBCqtcMTP7yzF5ZFmXIHu0yftJT49Te2QwoQJx7ekblJ6nkwB44jW7327DiB1cKoBC3VU=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5117
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
@@ -136,8 +136,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 sp
  suspectscore=0 phishscore=0 adultscore=0 mlxscore=0 mlxlogscore=999
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2210170000 definitions=main-2210260128
-X-Proofpoint-ORIG-GUID: k-a1PlwRVuJp795pHmAp65pfy9emQpoI
-X-Proofpoint-GUID: k-a1PlwRVuJp795pHmAp65pfy9emQpoI
+X-Proofpoint-ORIG-GUID: N_EpuJu09MpqxCXPMvSXRaJ6MQPqJ-RF
+X-Proofpoint-GUID: N_EpuJu09MpqxCXPMvSXRaJ6MQPqJ-RF
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -148,62 +148,308 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Reservation Report support needs to pass in a variable sized buffer, so
-this patch has the pr command helpers take a data length argument.
+This patch moves the pr code to it's own file because I'm going to be
+adding more functions and core.c is getting bigger.
 
 Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/nvme/host/core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/nvme/host/Makefile |   2 +-
+ drivers/nvme/host/core.c   | 120 -----------------------------------
+ drivers/nvme/host/nvme.h   |   2 +
+ drivers/nvme/host/pr.c     | 127 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 130 insertions(+), 121 deletions(-)
+ create mode 100644 drivers/nvme/host/pr.c
 
+diff --git a/drivers/nvme/host/Makefile b/drivers/nvme/host/Makefile
+index e27202d22c7d..06c18a65da99 100644
+--- a/drivers/nvme/host/Makefile
++++ b/drivers/nvme/host/Makefile
+@@ -10,7 +10,7 @@ obj-$(CONFIG_NVME_FC)			+= nvme-fc.o
+ obj-$(CONFIG_NVME_TCP)			+= nvme-tcp.o
+ obj-$(CONFIG_NVME_APPLE)		+= nvme-apple.o
+ 
+-nvme-core-y				+= core.o ioctl.o
++nvme-core-y				+= core.o ioctl.o pr.o
+ nvme-core-$(CONFIG_NVME_VERBOSE_ERRORS)	+= constants.o
+ nvme-core-$(CONFIG_TRACING)		+= trace.o
+ nvme-core-$(CONFIG_NVME_MULTIPATH)	+= multipath.o
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index dc4220600585..a79fa710d012 100644
+index a79fa710d012..2de9c42094a6 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -2082,7 +2082,7 @@ static char nvme_pr_type(enum pr_type type)
- }
- 
- static int nvme_send_ns_head_pr_command(struct block_device *bdev,
--		struct nvme_command *c, u8 data[16])
-+		struct nvme_command *c, u8 *data, unsigned int data_len)
- {
- 	struct nvme_ns_head *head = bdev->bd_disk->private_data;
- 	int srcu_idx = srcu_read_lock(&head->srcu);
-@@ -2091,17 +2091,17 @@ static int nvme_send_ns_head_pr_command(struct block_device *bdev,
- 
- 	if (ns) {
- 		c->common.nsid = cpu_to_le32(ns->head->ns_id);
--		ret = nvme_submit_sync_cmd(ns->queue, c, data, 16);
-+		ret = nvme_submit_sync_cmd(ns->queue, c, data, data_len);
+@@ -2061,126 +2061,6 @@ static int nvme_update_ns_info(struct nvme_ns *ns, struct nvme_ns_info *info)
  	}
- 	srcu_read_unlock(&head->srcu, srcu_idx);
- 	return ret;
  }
- 	
- static int nvme_send_ns_pr_command(struct nvme_ns *ns, struct nvme_command *c,
--		u8 data[16])
+ 
+-static char nvme_pr_type(enum pr_type type)
+-{
+-	switch (type) {
+-	case PR_WRITE_EXCLUSIVE:
+-		return 1;
+-	case PR_EXCLUSIVE_ACCESS:
+-		return 2;
+-	case PR_WRITE_EXCLUSIVE_REG_ONLY:
+-		return 3;
+-	case PR_EXCLUSIVE_ACCESS_REG_ONLY:
+-		return 4;
+-	case PR_WRITE_EXCLUSIVE_ALL_REGS:
+-		return 5;
+-	case PR_EXCLUSIVE_ACCESS_ALL_REGS:
+-		return 6;
+-	default:
+-		return 0;
+-	}
+-}
+-
+-static int nvme_send_ns_head_pr_command(struct block_device *bdev,
+-		struct nvme_command *c, u8 *data, unsigned int data_len)
+-{
+-	struct nvme_ns_head *head = bdev->bd_disk->private_data;
+-	int srcu_idx = srcu_read_lock(&head->srcu);
+-	struct nvme_ns *ns = nvme_find_path(head);
+-	int ret = -EWOULDBLOCK;
+-
+-	if (ns) {
+-		c->common.nsid = cpu_to_le32(ns->head->ns_id);
+-		ret = nvme_submit_sync_cmd(ns->queue, c, data, data_len);
+-	}
+-	srcu_read_unlock(&head->srcu, srcu_idx);
+-	return ret;
+-}
+-	
+-static int nvme_send_ns_pr_command(struct nvme_ns *ns, struct nvme_command *c,
+-		u8 *data, unsigned int data_len)
+-{
+-	c->common.nsid = cpu_to_le32(ns->head->ns_id);
+-	return nvme_submit_sync_cmd(ns->queue, c, data, data_len);
+-}
+-
+-static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
+-				u64 key, u64 sa_key, u8 op)
+-{
+-	struct nvme_command c = { };
+-	u8 data[16] = { 0, };
+-
+-	put_unaligned_le64(key, &data[0]);
+-	put_unaligned_le64(sa_key, &data[8]);
+-
+-	c.common.opcode = op;
+-	c.common.cdw10 = cpu_to_le32(cdw10);
+-
+-	if (IS_ENABLED(CONFIG_NVME_MULTIPATH) &&
+-	    bdev->bd_disk->fops == &nvme_ns_head_ops)
+-		return nvme_send_ns_head_pr_command(bdev, &c, data,
+-						    sizeof(data));
+-	return nvme_send_ns_pr_command(bdev->bd_disk->private_data, &c, data,
+-				       sizeof(data));
+-}
+-
+-static int nvme_pr_register(struct block_device *bdev, u64 old,
+-		u64 new, unsigned flags)
+-{
+-	u32 cdw10;
+-
+-	if (flags & ~PR_FL_IGNORE_KEY)
+-		return -EOPNOTSUPP;
+-
+-	cdw10 = old ? 2 : 0;
+-	cdw10 |= (flags & PR_FL_IGNORE_KEY) ? 1 << 3 : 0;
+-	cdw10 |= (1 << 30) | (1 << 31); /* PTPL=1 */
+-	return nvme_pr_command(bdev, cdw10, old, new, nvme_cmd_resv_register);
+-}
+-
+-static int nvme_pr_reserve(struct block_device *bdev, u64 key,
+-		enum pr_type type, unsigned flags)
+-{
+-	u32 cdw10;
+-
+-	if (flags & ~PR_FL_IGNORE_KEY)
+-		return -EOPNOTSUPP;
+-
+-	cdw10 = nvme_pr_type(type) << 8;
+-	cdw10 |= ((flags & PR_FL_IGNORE_KEY) ? 1 << 3 : 0);
+-	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_acquire);
+-}
+-
+-static int nvme_pr_preempt(struct block_device *bdev, u64 old, u64 new,
+-		enum pr_type type, bool abort)
+-{
+-	u32 cdw10 = nvme_pr_type(type) << 8 | (abort ? 2 : 1);
+-
+-	return nvme_pr_command(bdev, cdw10, old, new, nvme_cmd_resv_acquire);
+-}
+-
+-static int nvme_pr_clear(struct block_device *bdev, u64 key)
+-{
+-	u32 cdw10 = 1 | (key ? 0 : 1 << 3);
+-
+-	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
+-}
+-
+-static int nvme_pr_release(struct block_device *bdev, u64 key, enum pr_type type)
+-{
+-	u32 cdw10 = nvme_pr_type(type) << 8 | (key ? 0 : 1 << 3);
+-
+-	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
+-}
+-
+-const struct pr_ops nvme_pr_ops = {
+-	.pr_register	= nvme_pr_register,
+-	.pr_reserve	= nvme_pr_reserve,
+-	.pr_release	= nvme_pr_release,
+-	.pr_preempt	= nvme_pr_preempt,
+-	.pr_clear	= nvme_pr_clear,
+-};
+-
+ #ifdef CONFIG_BLK_SED_OPAL
+ int nvme_sec_submit(void *data, u16 spsp, u8 secp, void *buffer, size_t len,
+ 		bool send)
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index a29877217ee6..e82be1f1373d 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -19,6 +19,8 @@
+ 
+ #include <trace/events/block.h>
+ 
++extern const struct pr_ops nvme_pr_ops;
++
+ extern unsigned int nvme_io_timeout;
+ #define NVME_IO_TIMEOUT	(nvme_io_timeout * HZ)
+ 
+diff --git a/drivers/nvme/host/pr.c b/drivers/nvme/host/pr.c
+new file mode 100644
+index 000000000000..aa88c55879b2
+--- /dev/null
++++ b/drivers/nvme/host/pr.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/blkdev.h>
++#include <linux/pr.h>
++#include <asm/unaligned.h>
++
++#include "nvme.h"
++
++static char nvme_pr_type(enum pr_type type)
++{
++	switch (type) {
++	case PR_WRITE_EXCLUSIVE:
++		return 1;
++	case PR_EXCLUSIVE_ACCESS:
++		return 2;
++	case PR_WRITE_EXCLUSIVE_REG_ONLY:
++		return 3;
++	case PR_EXCLUSIVE_ACCESS_REG_ONLY:
++		return 4;
++	case PR_WRITE_EXCLUSIVE_ALL_REGS:
++		return 5;
++	case PR_EXCLUSIVE_ACCESS_ALL_REGS:
++		return 6;
++	default:
++		return 0;
++	}
++}
++
++static int nvme_send_ns_head_pr_command(struct block_device *bdev,
++		struct nvme_command *c, u8 *data, unsigned int data_len)
++{
++	struct nvme_ns_head *head = bdev->bd_disk->private_data;
++	int srcu_idx = srcu_read_lock(&head->srcu);
++	struct nvme_ns *ns = nvme_find_path(head);
++	int ret = -EWOULDBLOCK;
++
++	if (ns) {
++		c->common.nsid = cpu_to_le32(ns->head->ns_id);
++		ret = nvme_submit_sync_cmd(ns->queue, c, data, data_len);
++	}
++	srcu_read_unlock(&head->srcu, srcu_idx);
++	return ret;
++}
++
++static int nvme_send_ns_pr_command(struct nvme_ns *ns, struct nvme_command *c,
 +		u8 *data, unsigned int data_len)
- {
- 	c->common.nsid = cpu_to_le32(ns->head->ns_id);
--	return nvme_submit_sync_cmd(ns->queue, c, data, 16);
++{
++	c->common.nsid = cpu_to_le32(ns->head->ns_id);
 +	return nvme_submit_sync_cmd(ns->queue, c, data, data_len);
- }
- 
- static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
-@@ -2118,8 +2118,10 @@ static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
- 
- 	if (IS_ENABLED(CONFIG_NVME_MULTIPATH) &&
- 	    bdev->bd_disk->fops == &nvme_ns_head_ops)
--		return nvme_send_ns_head_pr_command(bdev, &c, data);
--	return nvme_send_ns_pr_command(bdev->bd_disk->private_data, &c, data);
++}
++
++static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
++				u64 key, u64 sa_key, u8 op)
++{
++	struct nvme_command c = { };
++	u8 data[16] = { 0, };
++
++	put_unaligned_le64(key, &data[0]);
++	put_unaligned_le64(sa_key, &data[8]);
++
++	c.common.opcode = op;
++	c.common.cdw10 = cpu_to_le32(cdw10);
++
++	if (IS_ENABLED(CONFIG_NVME_MULTIPATH) &&
++	    bdev->bd_disk->fops == &nvme_ns_head_ops)
 +		return nvme_send_ns_head_pr_command(bdev, &c, data,
 +						    sizeof(data));
 +	return nvme_send_ns_pr_command(bdev->bd_disk->private_data, &c, data,
 +				       sizeof(data));
- }
- 
- static int nvme_pr_register(struct block_device *bdev, u64 old,
++}
++
++static int nvme_pr_register(struct block_device *bdev, u64 old,
++		u64 new, unsigned flags)
++{
++	u32 cdw10;
++
++	if (flags & ~PR_FL_IGNORE_KEY)
++		return -EOPNOTSUPP;
++
++	cdw10 = old ? 2 : 0;
++	cdw10 |= (flags & PR_FL_IGNORE_KEY) ? 1 << 3 : 0;
++	cdw10 |= (1 << 30) | (1 << 31); /* PTPL=1 */
++	return nvme_pr_command(bdev, cdw10, old, new, nvme_cmd_resv_register);
++}
++
++static int nvme_pr_reserve(struct block_device *bdev, u64 key,
++		enum pr_type type, unsigned flags)
++{
++	u32 cdw10;
++
++	if (flags & ~PR_FL_IGNORE_KEY)
++		return -EOPNOTSUPP;
++
++	cdw10 = nvme_pr_type(type) << 8;
++	cdw10 |= ((flags & PR_FL_IGNORE_KEY) ? 1 << 3 : 0);
++	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_acquire);
++}
++
++static int nvme_pr_preempt(struct block_device *bdev, u64 old, u64 new,
++		enum pr_type type, bool abort)
++{
++	u32 cdw10 = nvme_pr_type(type) << 8 | (abort ? 2 : 1);
++
++	return nvme_pr_command(bdev, cdw10, old, new, nvme_cmd_resv_acquire);
++}
++
++static int nvme_pr_clear(struct block_device *bdev, u64 key)
++{
++	u32 cdw10 = 1 | (key ? 0 : 1 << 3);
++
++	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
++}
++
++static int nvme_pr_release(struct block_device *bdev, u64 key, enum pr_type type)
++{
++	u32 cdw10 = nvme_pr_type(type) << 8 | (key ? 0 : 1 << 3);
++
++	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
++}
++
++const struct pr_ops nvme_pr_ops = {
++	.pr_register	= nvme_pr_register,
++	.pr_reserve	= nvme_pr_reserve,
++	.pr_release	= nvme_pr_release,
++	.pr_preempt	= nvme_pr_preempt,
++	.pr_clear	= nvme_pr_clear,
++};
 -- 
 2.25.1
 
