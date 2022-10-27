@@ -2,108 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0DBC610690
-	for <lists+linux-block@lfdr.de>; Fri, 28 Oct 2022 01:55:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF0DC6106E5
+	for <lists+linux-block@lfdr.de>; Fri, 28 Oct 2022 02:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235236AbiJ0XzX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Oct 2022 19:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33296 "EHLO
+        id S235420AbiJ1Aga (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Oct 2022 20:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235347AbiJ0XzV (ORCPT
+        with ESMTP id S234235AbiJ1Aga (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 Oct 2022 19:55:21 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9610348CA9
-        for <linux-block@vger.kernel.org>; Thu, 27 Oct 2022 16:55:19 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id h2so3301607pgp.4
-        for <linux-block@vger.kernel.org>; Thu, 27 Oct 2022 16:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=57Ulewj9d98RBZz2AYPNwPFe+XAi6bXTa5vtei3dQvo=;
-        b=6RMNxacpVaXW2EDu9wkQ3UwiCmby+a3pXw/7jP+sQ319y15sUcGC0fs01IBk7enkGk
-         YIFFEHr3V73p5MgMLECtJvFm4Soyf4Bsd6Vu5I5UcNLr3Q1vUiYGC1bJ8QDHHfdhnW1t
-         g//NqSteZjVxqud9tUlxc08hDaUXwcs/Qpu46t5fP5lGDlDCU+nNSVw0dhgUtFDAln4g
-         A28tTJHdslfRWDK9my4Bm52DUj9LGnh0ZeLsOlXY8Ykv4WU6WMOyPsYoNocOu9oVnEwY
-         igM1zQtOc53K4wMZlo/whfRLzL7csXFqeO2ak/4tIA4sJaNtCjXFecT+RI+P0Pa1YQxY
-         sGXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=57Ulewj9d98RBZz2AYPNwPFe+XAi6bXTa5vtei3dQvo=;
-        b=JyUYSTi8suhGuZz2Fl1Mm6nCgreV9fDB0A52q2/X/02iCh/+FkUFJY3pTqTvdjfLku
-         Gv6ObZ/8TNKPQ90szf5Dtk41mj1tUX6E1z+wcHUfict0h2JBAJRJRwH341gNuSbkcgNZ
-         Ulym8BghlyCtdPjtD/hgNNEt+2IO9o6Bz66/7RiC5scBmVeewG2GHqq7454fIOnQ6zH1
-         n9qo3u7F0mJWlvwGE5vmOBiBk3SM2Yfs9eP1Vw8tYoaXtFBd8O+cUp07T6NwEOO2pd24
-         59QmEMXoF4b5Jh4a4P2ylR+neebfe6roAgH54rEyhHxPrNl2wvwOyjst9xAwUwaxQ7yn
-         B5Nw==
-X-Gm-Message-State: ACrzQf1sNnEv4SOG4vmpJxmmsSJZtZ/gxjhCT+K5AFPXhmb8eZ7aGXzr
-        NopifwuIP9imNMXA4FCvPW/AOjPTfQab4ABt
-X-Google-Smtp-Source: AMsMyM7MwzXJxLxAhXWfPK4B2sxVr6j3vKoW+mSUKg686GOODgG/qji9Xwu7FaxACAbjFdynO+kg/Q==
-X-Received: by 2002:a05:6a00:218d:b0:569:84e0:19e5 with SMTP id h13-20020a056a00218d00b0056984e019e5mr39877777pfi.11.1666914919053;
-        Thu, 27 Oct 2022 16:55:19 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e5-20020a17090a818500b0020d9ac33fbbsm1513919pjn.17.2022.10.27.16.55.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Oct 2022 16:55:18 -0700 (PDT)
-Message-ID: <13b597a1-b955-ba52-aa1b-174d789a5d7b@kernel.dk>
-Date:   Thu, 27 Oct 2022 17:55:17 -0600
+        Thu, 27 Oct 2022 20:36:30 -0400
+X-Greylist: delayed 16384 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 27 Oct 2022 17:36:27 PDT
+Received: from ktweb-159.blueweb.co.kr (unknown [119.207.79.159])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7CA951DA
+        for <linux-block@vger.kernel.org>; Thu, 27 Oct 2022 17:36:26 -0700 (PDT)
+Received: from ktweb-159.blueweb.co.kr (localhost [127.0.0.1])
+        by ktweb-159.blueweb.co.kr (8.14.4/8.13.8) with ESMTP id 29RK3KJZ016013
+        for <linux-block@vger.kernel.org>; Fri, 28 Oct 2022 05:03:20 +0900
+Received: (from nobody@localhost)
+        by ktweb-159.blueweb.co.kr (8.14.4/8.14.4/Submit) id 29RK3Keh016011;
+        Fri, 28 Oct 2022 05:03:20 +0900
+Date:   Fri, 28 Oct 2022 05:03:20 +0900
+Message-Id: <202210272003.29RK3Keh016011@ktweb-159.blueweb.co.kr>
+To:     linux-block@vger.kernel.org
+Subject: Our company has a whole new commercial offer for you.
+X-PHP-Originating-Script: 99:sql_parse.php
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH for-6.1 0/2] iopoll bio pcpu cache fix
-Content-Language: en-US
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org
-References: <cover.1666886282.git.asml.silence@gmail.com>
- <983a4fda-5e42-3a26-81f6-65e8cd343f8e@kernel.dk>
-In-Reply-To: <983a4fda-5e42-3a26-81f6-65e8cd343f8e@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: multipart/alternative;boundary=eb624b848b07f032d839856aa836a147
+From:   Parker Kennedy <ParkerKennedy@ytepytep.com>
+Reply-To: ParkerKennedy@ytepytep.com
+X-Spam-Status: No, score=3.0 required=5.0 tests=BAYES_80,
+        HEADER_FROM_DIFFERENT_DOMAINS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/27/22 5:27 PM, Jens Axboe wrote:
-> On 10/27/22 4:14 PM, Pavel Begunkov wrote:
->> There are ways to deprive bioset mempool of requests using pcpu caches
->> and never return them back, which breaks forward progress guarantees bioset
->> tried to provide. Fix it.
->>
->> Pavel Begunkov (2):
->>   mempool: introduce mempool_is_saturated
->>   bio: don't rob bios from starving bioset
->>
->>  block/bio.c             | 2 ++
->>  include/linux/mempool.h | 5 +++++
->>  2 files changed, 7 insertions(+)
->>
-> 
-> This isn't really a concern for 6.1 and earlier, because the caching is
-> just for polled IO. Polled IO will not be grabbing any of the reserved
-> inflight units on the mempool side, which is what guarantees the forward
-> progress.
-> 
-> It'll be a concern for the 6.2 irq based general caching, so it would
-> need to be handled there. So perhaps this can be a pre-series for a
-> reposting of that patchset.
-
-Just a followup, since we had some out-of-band discussion. This is
-a potential concern on the bio side, though not on the request side.
-But this approach is racy, we'll figure something else out.
-
--- 
-Jens Axboe
 
 
+--eb624b848b07f032d839856aa836a147
+Content-type: text/plain;charset=utf-8
+Content-Transfer-Encoding: base64
+
+R3JlZXRpbmdzLAoKT3VyIGNvbXBhbnkgaGFzIGEgYnJhbmQgbmV3IHByb2Zlc3Npb25hbCBwaXRj
+aCBmb3IgeW91LiBEbyB5b3UgaGF2ZSBhbGwgdGhlIGdvb2RzIGZyb20gdGhlIGxpc3QgaW4gc3Rv
+Y2s/IENhbiBJIGdldCBhIGRpc2NvdW50IGZvciBhIHdob2xlc2FsZSBvcmRlcj8KCmh0dHBzOi8v
+ZHJpdmUuZ29vZ2xlLmNvbS91Yz9pZD0xRmZEenRXMlBQRFRvYjNQMDFXOFRHMDIxV3djTVh3Y00m
+ZXhwb3J0PWRvd25sb2FkCgpEbyBub3QgaGVzaXRhdGUgdG8gdGVsbCBtZSBpZiB5b3UgaGF2ZSBh
+bnkgc3VnZ2VzdGlvbnMgb3IgbmVlZCBhIHZpZGVvIGRlbW9uc3RyYXRpb24uCgpNYW55IHRoYW5r
+cyE=
+
+
+--eb624b848b07f032d839856aa836a147--
