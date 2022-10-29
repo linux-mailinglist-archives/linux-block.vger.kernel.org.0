@@ -2,52 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5E2D611EDD
-	for <lists+linux-block@lfdr.de>; Sat, 29 Oct 2022 03:05:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9098611EDF
+	for <lists+linux-block@lfdr.de>; Sat, 29 Oct 2022 03:06:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbiJ2BFw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 28 Oct 2022 21:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
+        id S229744AbiJ2BGA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 28 Oct 2022 21:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbiJ2BFw (ORCPT
+        with ESMTP id S229741AbiJ2BF7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 28 Oct 2022 21:05:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F532F38B
-        for <linux-block@vger.kernel.org>; Fri, 28 Oct 2022 18:04:52 -0700 (PDT)
+        Fri, 28 Oct 2022 21:05:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6693D30544
+        for <linux-block@vger.kernel.org>; Fri, 28 Oct 2022 18:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667005491;
+        s=mimecast20190719; t=1667005492;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=YOx+bvl3SaWN21Vdnks6to/uMQsLR3o8fz87rvQKo+w=;
-        b=XYzijBW0JR45Fo9Ni6MVx+1qKc00+dVFhayWcDNpQ+QRbvgJGEexety6z4lvo01QEzRMyK
-        YdEwOPUjdWmivwjxluU5aYbxZBOo4rTd8wCQ1/ElxFEUIY7A7w4e9CJIK/3gBTJKFxrRuM
-        /eL4Yd3iaWZzpqVuDEuJgKwFFe+vmF0=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ooVLtjfNYWBjZWObT+wSmVvHXpGx45zcFYXUHRbmBWY=;
+        b=PtZ5sR+Kv4B7MFgVu2CXx8NvX2Oghjpzs4LjMuAe0Hx647Zs/QJE8reB0wELyBZeBDjpgq
+        wybrvFgiJMAVH/NbbsWxlJCQNqQSmonwV0Rsq7rMHtmQs2pHDfFLnSNsOOFINxXY2JD0+h
+        uJMu6cgPBIoTvrUrndNrLU/w0kijb10=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-118-2P-saDLZNQa2akiYaOPjqg-1; Fri, 28 Oct 2022 21:04:44 -0400
-X-MC-Unique: 2P-saDLZNQa2akiYaOPjqg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-211-vm-aMlvdOje4ZrbG1Rri-g-1; Fri, 28 Oct 2022 21:04:51 -0400
+X-MC-Unique: vm-aMlvdOje4ZrbG1Rri-g-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E7EAD380670E;
-        Sat, 29 Oct 2022 01:04:43 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C1E20380670E;
+        Sat, 29 Oct 2022 01:04:50 +0000 (UTC)
 Received: from localhost (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A8E01121315;
-        Sat, 29 Oct 2022 01:04:41 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D891F483EFB;
+        Sat, 29 Oct 2022 01:04:49 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 0/4] ublk_drv: uring_cmd queueing improvement and cleanup
-Date:   Sat, 29 Oct 2022 09:04:28 +0800
-Message-Id: <20221029010432.598367-1-ming.lei@redhat.com>
+Subject: [PATCH 1/4] ublk: return flag of UBLK_F_URING_CMD_COMP_IN_TASK in case of module
+Date:   Sat, 29 Oct 2022 09:04:29 +0800
+Message-Id: <20221029010432.598367-2-ming.lei@redhat.com>
+In-Reply-To: <20221029010432.598367-1-ming.lei@redhat.com>
+References: <20221029010432.598367-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -58,29 +61,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+UBLK_F_URING_CMD_COMP_IN_TASK needs to be set and returned to userspace
+if ublk driver is built as module, otherwise userspace may get wrong
+flags shown.
 
-The 1st patch returns correct flag of UBLK_F_URING_CMD_COMP_IN_TASK.
+Fixes: 71f28f3136af ("ublk_drv: add io_uring based userspace block driver")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/block/ublk_drv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The 2nd patch add help message for deciding to build ublk_drv as module
-or built-in.
-
-The 3rd patch improves uses of io_uring_cmd_complete_in_task() by only
-touching io_uring cmd when it is necessary, so we can minimize sharing
-of io_uring cmd between blk-mq io and ubq daemon context.
-
-The 4th patch is one cleanup.
-
-Ming Lei (4):
-  ublk: return flag of UBLK_F_URING_CMD_COMP_IN_TASK in case of module
-  ublk_drv: comment on ublk_driver entry of Kconfig
-  ublk_drv: avoid to touch io_uring cmd in blk_mq io path
-  ublk_drv: add ublk_queue_cmd() for cleanup
-
- drivers/block/Kconfig    |   6 ++
- drivers/block/ublk_drv.c | 115 +++++++++++++++++++++++----------------
- 2 files changed, 74 insertions(+), 47 deletions(-)
-
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 5afce6ffaadf..6b2f214f0d5c 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1658,6 +1658,9 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
+ 	 */
+ 	ub->dev_info.flags &= UBLK_F_ALL;
+ 
++	if (!IS_BUILTIN(CONFIG_BLK_DEV_UBLK))
++		ub->dev_info.flags |= UBLK_F_URING_CMD_COMP_IN_TASK;
++
+ 	/* We are not ready to support zero copy */
+ 	ub->dev_info.flags &= ~UBLK_F_SUPPORT_ZERO_COPY;
+ 
 -- 
 2.31.1
 
