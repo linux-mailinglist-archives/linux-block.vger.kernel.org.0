@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37402612B36
-	for <lists+linux-block@lfdr.de>; Sun, 30 Oct 2022 16:31:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16A01612B39
+	for <lists+linux-block@lfdr.de>; Sun, 30 Oct 2022 16:31:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229781AbiJ3Pbv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 30 Oct 2022 11:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42420 "EHLO
+        id S229716AbiJ3Pbx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 30 Oct 2022 11:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbiJ3Pbu (ORCPT
+        with ESMTP id S229743AbiJ3Pbv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 30 Oct 2022 11:31:50 -0400
+        Sun, 30 Oct 2022 11:31:51 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8E9631C
-        for <linux-block@vger.kernel.org>; Sun, 30 Oct 2022 08:31:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9D2B1D4
+        for <linux-block@vger.kernel.org>; Sun, 30 Oct 2022 08:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zTDppyVAqgjt6x8MHfxYB0HakgzAN80FZOa1iFX34qw=; b=WkZHc3aAk6o0aRz5NSfVrylj0J
-        3mVSnH+JbxOEdMseCAUOW5TgOQ7HNxWogsjy0RBneiWt78qc2dP7V9eCrhLD8sL/UEqJuHsXzkOqr
-        nx9phXnCq5UDR3oz7nhpBIgOAosY+dHeCCJKZZRltd4sH3xtdXmgo2X6pxkdbXK3mN3TbRzUXcGan
-        PRzyv8mYGwPerJIeKWtXfSoAk+D2hi28xthlhQaF3No9YskEg1H0IH6GdLZN4MWSzpkkviod8vZWS
-        3X0eumy7ZWLDcuawt2VRnhuY8YRyEwMtHAcYp7PeUU5QdYsvHA5N56Z8JlYdjB7D3Op6EPN93x6lp
-        Wddi5J3w==;
+        bh=5KHn8d9R5f3drCTarOv9/68DXszAsgbvoQJ5QGA/2/k=; b=gaQNXlPpPYZIGxp1Jr9OXSztjS
+        QsELoRRaGI93MVcJMJTC73mImeFoVlDwTajVpF02plfeqRGzV8ytDvDxkr1Wb2wkaFb4HSEFWI3Cr
+        Z5ofn/4gb0e0peOBzyeEgbSco4Kf780m0l8G7AKK+SZf1wOx3xqRsyuEyrVQl5E+IvjV/M4xbMJsm
+        A2YEklnSilMCK5eWdx/GF8n6xIBUuSyndFgeoftDF6DbTiuw3EKtkrl+qCwydiVNAcvR0FVwRMxXc
+        1f3VwdLKy9tSZNWgFjzCj1DbdLkhdLoQ4r+eq8Z+lQ98JQ/wKnecV7h+28rsmyFVrpyQMKQ+YfbhC
+        1RejSPgA==;
 Received: from 213-225-37-80.nat.highway.a1.net ([213.225.37.80] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1opAHk-00HVnk-8O; Sun, 30 Oct 2022 15:31:40 +0000
+        id 1opAHn-00HVrM-58; Sun, 30 Oct 2022 15:31:43 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
         Mike Snitzer <snitzer@kernel.org>
 Cc:     Yu Kuai <yukuai1@huaweicloud.com>, dm-devel@redhat.com,
         linux-block@vger.kernel.org
-Subject: [PATCH 2/7] dm: remove free_table_devices
-Date:   Sun, 30 Oct 2022 16:31:14 +0100
-Message-Id: <20221030153120.1045101-3-hch@lst.de>
+Subject: [PATCH 3/7] dm: cleanup open_table_device
+Date:   Sun, 30 Oct 2022 16:31:15 +0100
+Message-Id: <20221030153120.1045101-4-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221030153120.1045101-1-hch@lst.de>
 References: <20221030153120.1045101-1-hch@lst.de>
@@ -52,50 +52,107 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-free_table_devices just warns and frees all table_device structures when
-the target removal did not remove them.  This should never happen, but
-if it did, just freeing the structure without deleting them from the
-list or cleaning up the resources would not help at all.  So just WARN on
-a non-empty list instead.
+Move all the logic for allocation the table_device and linking it into
+the list into the open_table_device.  This keeps the code tidy and
+ensures that the table_devices only exist in fully initialized state.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/md/dm.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+ drivers/md/dm.c | 56 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 27 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 95a1ee3d314eb..19d25bf997be4 100644
+index 19d25bf997be4..28d7581b6a826 100644
 --- a/drivers/md/dm.c
 +++ b/drivers/md/dm.c
-@@ -833,19 +833,6 @@ void dm_put_table_device(struct mapped_device *md, struct dm_dev *d)
- 	mutex_unlock(&md->table_devices_lock);
+@@ -732,28 +732,41 @@ static char *_dm_claim_ptr = "I belong to device-mapper";
+ /*
+  * Open a table device so we can use it as a map destination.
+  */
+-static int open_table_device(struct table_device *td, dev_t dev,
+-			     struct mapped_device *md)
++static struct table_device *open_table_device(struct mapped_device *md,
++		dev_t dev, fmode_t mode)
+ {
++	struct table_device *td;
+ 	struct block_device *bdev;
+ 	u64 part_off;
+ 	int r;
+ 
+-	BUG_ON(td->dm_dev.bdev);
++	td = kmalloc_node(sizeof(*td), GFP_KERNEL, md->numa_node_id);
++	if (!td)
++		return ERR_PTR(-ENOMEM);
++	refcount_set(&td->count, 1);
+ 
+-	bdev = blkdev_get_by_dev(dev, td->dm_dev.mode | FMODE_EXCL, _dm_claim_ptr);
+-	if (IS_ERR(bdev))
+-		return PTR_ERR(bdev);
++	bdev = blkdev_get_by_dev(dev, mode | FMODE_EXCL, _dm_claim_ptr);
++	if (IS_ERR(bdev)) {
++		r = PTR_ERR(bdev);
++		goto out_free_td;
++	}
+ 
+ 	r = bd_link_disk_holder(bdev, dm_disk(md));
+-	if (r) {
+-		blkdev_put(bdev, td->dm_dev.mode | FMODE_EXCL);
+-		return r;
+-	}
++	if (r)
++		goto out_blkdev_put;
+ 
++	td->dm_dev.mode = mode;
+ 	td->dm_dev.bdev = bdev;
+ 	td->dm_dev.dax_dev = fs_dax_get_by_bdev(bdev, &part_off, NULL, NULL);
+-	return 0;
++	format_dev_t(td->dm_dev.name, dev);
++	list_add(&td->list, &md->table_devices);
++	return td;
++
++out_blkdev_put:
++	blkdev_put(bdev, mode | FMODE_EXCL);
++out_free_td:
++	kfree(td);
++	return ERR_PTR(r);
  }
  
--static void free_table_devices(struct list_head *devices)
--{
--	struct list_head *tmp, *next;
--
--	list_for_each_safe(tmp, next, devices) {
--		struct table_device *td = list_entry(tmp, struct table_device, list);
--
--		DMWARN("dm_destroy: %s still exists with %d references",
--		       td->dm_dev.name, refcount_read(&td->count));
--		kfree(td);
--	}
--}
--
  /*
-  * Get the geometry associated with a dm device
-  */
-@@ -2122,7 +2109,7 @@ static void free_dev(struct mapped_device *md)
+@@ -786,31 +799,16 @@ static struct table_device *find_table_device(struct list_head *l, dev_t dev,
+ int dm_get_table_device(struct mapped_device *md, dev_t dev, fmode_t mode,
+ 			struct dm_dev **result)
+ {
+-	int r;
+ 	struct table_device *td;
  
- 	cleanup_mapped_device(md);
- 
--	free_table_devices(&md->table_devices);
-+	WARN_ON_ONCE(!list_empty(&md->table_devices));
- 	dm_stats_cleanup(&md->stats);
- 	free_minor(minor);
- 
+ 	mutex_lock(&md->table_devices_lock);
+ 	td = find_table_device(&md->table_devices, dev, mode);
+ 	if (!td) {
+-		td = kmalloc_node(sizeof(*td), GFP_KERNEL, md->numa_node_id);
+-		if (!td) {
+-			mutex_unlock(&md->table_devices_lock);
+-			return -ENOMEM;
+-		}
+-
+-		td->dm_dev.mode = mode;
+-		td->dm_dev.bdev = NULL;
+-
+-		if ((r = open_table_device(td, dev, md))) {
++		td = open_table_device(md, dev, mode);
++		if (IS_ERR(td)) {
+ 			mutex_unlock(&md->table_devices_lock);
+-			kfree(td);
+-			return r;
++			return PTR_ERR(td);
+ 		}
+-
+-		format_dev_t(td->dm_dev.name, dev);
+-
+-		refcount_set(&td->count, 1);
+-		list_add(&td->list, &md->table_devices);
+ 	} else {
+ 		refcount_inc(&td->count);
+ 	}
 -- 
 2.30.2
 
