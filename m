@@ -2,62 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3936E61381D
-	for <lists+linux-block@lfdr.de>; Mon, 31 Oct 2022 14:32:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB83461381A
+	for <lists+linux-block@lfdr.de>; Mon, 31 Oct 2022 14:32:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231211AbiJaNcR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Oct 2022 09:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
+        id S230522AbiJaNcP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Oct 2022 09:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbiJaNcQ (ORCPT
+        with ESMTP id S230461AbiJaNcO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Oct 2022 09:32:16 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715A210052
-        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:32:14 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id u6so10729436plq.12
-        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:32:14 -0700 (PDT)
+        Mon, 31 Oct 2022 09:32:14 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7652110058
+        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:32:13 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 78so10685299pgb.13
+        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IRx4c97dxlZARSf0pXzKUxKSmewMkvqFqpXULat30TY=;
-        b=X7vQz0ynmmKHnuxcYEkg27UDLb7o7h65YUenYhNtFTothhirhX9GuYenupHtEu47x4
-         8igUWatnuNoI6Wu9diYqgZW0gDhFw5S6dThL3dZ9I8reXtw4ZHdc361jGren3HXwU21Q
-         jP7Bn9IvTgUT+CTvlnpGg3AHlmlWQbclEldVcbxUXXqmpgMmYEKHOYcuPEO3eXnW1oOj
-         u2qOpt1YLy7cjj4undsoeNJbbs2M5G+nqQ+P338ZYlzlcjF99jAiZHBfsw8dnhkIaADc
-         2NRFHnjv4DVPRuza2frVoR1E4TW3ABjj5dqG9iXbePf6uaYuVKuE+eJQM0E2rnFx1hQX
-         BSMg==
+        bh=ugTm/u2jy4pd2kxS+scWBZjg6LGxe8n/YNYVW38sYhU=;
+        b=u6qinkMCHoNyE0cGeyXTBzgI7tog6amMwjX3vhlMB8WA7uxXy/B/s75yNvyRM0nR93
+         LbFr8TNBCgWDlTJsD4FZAHDOp5NpSOfjdnMaRasj1HarfJjC51EpQEwSpsshcC8M3zxq
+         AanvPftdJZXBB1cSE6HiDeGhEHicM2n2QCaiAIEbfRV9SjSvBL+ZljKnfga770C1Ha9m
+         Qp4BZh1kKlyf//GQfvQoAKCzZYf52bXavCfDnjPjFeGKOKw1tcIexmYr2anAu5rj42uZ
+         idGKGVmv1PVPyTuvAhdFpoVu4HQaPzyxQfKpciah4DKuKVvB9HQ/r2r9aVEIiymA3cAN
+         4kcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IRx4c97dxlZARSf0pXzKUxKSmewMkvqFqpXULat30TY=;
-        b=fcLvA1C5Yf0d+n0nv9CbQU5g0SVRjO8GKcAK7WfWG8ey/twh2xPAVzBqaqT4EwqY7m
-         d2e/U5vCiO89fN3pJwANZ+FrVmRIh9/WuhqTY1d3y4M0scDYpnmoBoJVE1MUy8eGPASk
-         6GZxlBp8BY371WPC33tUwIesCFxBihv3ZILryKdx7i9IFIBqhWowz1nGkKgg156lS9T8
-         fT2q1388/hQ35MnUX73MVXJGLaaG4IlezGjAU40qDj/RjzldwJvcVRaHjHSs6b/SbWhp
-         6GnBiy05rMUu1qr7F6fCPlnRtu6Tj3MEP3dQgfztDPsQB7HEnAUPSwtZ0usWmJmH3WuP
-         V5dg==
-X-Gm-Message-State: ACrzQf2TPqORLOfU5sc6da7fnLyQvpa+VG3X2ImfnZ9O4vG3nAS3nVeV
-        FrxHqTyncYujUV62fhHEqbDnZg==
-X-Google-Smtp-Source: AMsMyM7prUdvNlfH2oRedW1t0cTpDNOHB43CbuNyJjjHLbSEN4IzOwU9QZdX0FKwfJV6AvwUqEE/Hg==
-X-Received: by 2002:a17:903:2402:b0:184:29:8ac0 with SMTP id e2-20020a170903240200b0018400298ac0mr14040001plo.174.1667223133865;
-        Mon, 31 Oct 2022 06:32:13 -0700 (PDT)
+        bh=ugTm/u2jy4pd2kxS+scWBZjg6LGxe8n/YNYVW38sYhU=;
+        b=TZ5JajekIpPtv1sQp8vxjErKtXYGdGugviNnLufflOHRu6aWBMC6YnE0kB0YyWe/dF
+         g3nrqOVtHnz5sz86Cql+SzbF9kHG93OX6J1/uQi3EOA8Z2KPp55rSctlBQODwAEAqTif
+         pObQZl5THWUjbzuCMfW9yokHpEMCF9mZi8Iu5ZIW8gIFZUmjWJyLtu/udKjwTxBsc/Uo
+         rxFbDDJIKKNXO/lVbvUcOcfe+P2AofBkBuurlCBtJ93hT++lzODo2wnATh0We4cyAr0r
+         2hnjIb6FCc0WFMeuQmqpULGxIBa0aWVxnAzpKFzmPtMjOTunPQ4FOvfT++H+YOc4RnK5
+         2UUA==
+X-Gm-Message-State: ACrzQf03wnCnnlgOwoJ1+i6Tx/crgAOcCbCMSFOb8+Bd2bKBnLen0tsN
+        20H+YCQOTpjQanF+AalD1hqgwA==
+X-Google-Smtp-Source: AMsMyM4ZKXTMAaJgpxx0z9iUkgeAJZtz+ff0/1Qqg35SH7vj1POacxOO2f9EMcB85IbXbJJP0kdnYg==
+X-Received: by 2002:a63:f457:0:b0:46f:7e1c:8538 with SMTP id p23-20020a63f457000000b0046f7e1c8538mr12566090pgk.554.1667223132881;
+        Mon, 31 Oct 2022 06:32:12 -0700 (PDT)
 Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id t189-20020a6281c6000000b005668b26ade0sm4565791pfd.136.2022.10.31.06.32.13
+        by smtp.gmail.com with ESMTPSA id t189-20020a6281c6000000b005668b26ade0sm4565791pfd.136.2022.10.31.06.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 06:32:13 -0700 (PDT)
+        Mon, 31 Oct 2022 06:32:12 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
-To:     Jinlong Chen <nickyc975@zju.edu.cn>
-Cc:     linux-kernel@vger.kernel.org, hch@lst.de,
-        linux-block@vger.kernel.org, bvanassche@acm.org
-In-Reply-To: <20221030083212.1251255-1-nickyc975@zju.edu.cn>
-References: <20221030083212.1251255-1-nickyc975@zju.edu.cn>
-Subject: Re: [PATCH] blk-mq: remove redundant call to blk_freeze_queue_start in blk_mq_destroy_queue
-Message-Id: <166722313299.68022.4225942407488507995.b4-ty@kernel.dk>
+To:     linux-kernel@vger.kernel.org,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-block@vger.kernel.org
+Cc:     mcgrof@kernel.org, hare@suse.de
+In-Reply-To: <20221029071355.35462-1-chenzhongjin@huawei.com>
+References: <20221029071355.35462-1-chenzhongjin@huawei.com>
+Subject: Re: [PATCH] block: Fix possible memory leak for rq_wb on add_disk failure
+Message-Id: <166722313202.68022.4514926407660406546.b4-ty@kernel.dk>
 Date:   Mon, 31 Oct 2022 07:32:12 -0600
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -72,25 +73,31 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, 30 Oct 2022 16:32:12 +0800, Jinlong Chen wrote:
-> The calling relationship in blk_mq_destroy_queue() is as follows:
+On Sat, 29 Oct 2022 15:13:55 +0800, Chen Zhongjin wrote:
+> kmemleak reported memory leaks in device_add_disk():
 > 
-> blk_mq_destroy_queue()
->     ...
->     -> blk_queue_start_drain()
->         -> blk_freeze_queue_start()  <- called
->         ...
->     -> blk_freeze_queue()
->         -> blk_freeze_queue_start()  <- called again
->         -> blk_mq_freeze_queue_wait()
+> kmemleak: 3 new suspected memory leaks
+> 
+> unreferenced object 0xffff88800f420800 (size 512):
+>   comm "modprobe", pid 4275, jiffies 4295639067 (age 223.512s)
+>   hex dump (first 32 bytes):
+>     04 00 00 00 08 00 00 00 01 00 00 00 00 00 00 00  ................
+>     00 e1 f5 05 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000d3662699>] kmalloc_trace+0x26/0x60
+>     [<00000000edc7aadc>] wbt_init+0x50/0x6f0
+>     [<0000000069601d16>] wbt_enable_default+0x157/0x1c0
+>     [<0000000028fc393f>] blk_register_queue+0x2a4/0x420
+>     [<000000007345a042>] device_add_disk+0x6fd/0xe40
+>     [<0000000060e6aab0>] nbd_dev_add+0x828/0xbf0 [nbd]
 >     ...
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] blk-mq: remove redundant call to blk_freeze_queue_start in blk_mq_destroy_queue
-      commit: 56c1ee92246a5099a626b955dd7f6636cdce6f93
+[1/1] block: Fix possible memory leak for rq_wb on add_disk failure
+      (no commit info)
 
 Best regards,
 -- 
