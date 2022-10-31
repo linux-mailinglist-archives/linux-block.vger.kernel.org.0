@@ -2,127 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE5F1612F06
-	for <lists+linux-block@lfdr.de>; Mon, 31 Oct 2022 03:33:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6890612F46
+	for <lists+linux-block@lfdr.de>; Mon, 31 Oct 2022 04:15:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbiJaCdI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 30 Oct 2022 22:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40618 "EHLO
+        id S229608AbiJaDPN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 30 Oct 2022 23:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiJaCdG (ORCPT
+        with ESMTP id S229520AbiJaDPM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 30 Oct 2022 22:33:06 -0400
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F71A45D
-        for <linux-block@vger.kernel.org>; Sun, 30 Oct 2022 19:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1667183585; x=1698719585;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nQOC0Pfd3xQkIpsrM2jqz2PO66oztnRmZbo1BOuXWN0=;
-  b=qvEaUubHqaEGWTLB8submH7b5SC7/I7cNunIlAS3TVKjny97rJrt0NLd
-   INSjHyWcK7ATnaxGjL54ZyGUUWOwHYA5GE/OL+SpxDbd/FK57per5I0rV
-   gnsyGVVOwVMoLzrVEsXXeQ6dkcHztN+gm8VIYyZPXICtVirV29rgaCb3l
-   bFS2fcwuDgYWe9FW5fEayUD+G/o9WfFmkj+bnbYkwOxlyVWJc8V8S8NX3
-   yYkyqbSqg6VuAvt2gJ2Xfgm9MxnqBT9GVV1ByyAoJ2EXmdlSoX0NmMiev
-   Jz5qQfTVq426xi5gByypT7N/4Au+m+BKVyFhtRzSjGeIM7mHORriIQ85S
-   A==;
-X-IronPort-AV: E=Sophos;i="5.95,227,1661788800"; 
-   d="scan'208";a="327200813"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Oct 2022 10:33:05 +0800
-IronPort-SDR: ge3ICr+yuMuWSYQJVizDu0Agqg19hLTx20oTbFv2vSYZB2AmNyoyazi1931BzmG6Z+FDVUlzdX
- sV9enh1z1feJgwsK6OYuHiFi17U3ukzDUhL2AXZowPfPE3TTVX0+ZahgtqfTJ0+6aMG6yFGVPl
- Mt+qGMdolLwUeJPbSCfUB7DGt5q9vrqBLiIGdRT6ZwRKwWOJAhoivf/i1d6HFYwhqurM6ARkC+
- xTyjOe815MJFdlT2oklAm7cAIFJI4rXNyYEFTcpHfGEA7cjigJ0XFY++KqTVWfx1gSjvx4EWMD
- QAJI+7YjPj8DWnzIBYcs/IoQ
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Oct 2022 18:52:21 -0700
-IronPort-SDR: o0b1bshAo1ojvcaaY2cXEUQLQW4U3HNrFd0/XiGgMMnY5ebVHVzTYruFeQIkxFk5DIVGUirY6N
- gmrHenU2wc+RIgdEDK+ibYeRwUACmqT1TUdJVoe4/yJEl2zV4Il9gEJMcnsZn4Yn0ROgriwWxO
- 8p32Oo9NpwS/cTv5WIZ9K76lvag4gdMo52hPnqE10fJ1fv35rLgPlwOzinrMzXDWlyk9T+kXb/
- 7PDtXyi7OkYZuYqM5mxNz1MxY0iJgeQ3kP5PKYINIGT4TmbNNCxVTPd8QlU7hDMQCvuFTDApO0
- Rco=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Oct 2022 19:27:05 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4N0xqr3bJ1z1RwtC
-        for <linux-block@vger.kernel.org>; Sun, 30 Oct 2022 19:27:04 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:subject:to
-        :from; s=dkim; t=1667183224; x=1669775225; bh=nQOC0Pfd3xQkIpsrM2
-        jqz2PO66oztnRmZbo1BOuXWN0=; b=lMFRxtgFdhAVjKuRBdggU+49SqLUb10GeD
-        nAFhStOWn6RKqqt1NZAu2Cr4RfwBai04hr4Kbws+W/ObcsgdpCvbc6MwdWfnjppE
-        a/1MP0JZhZVTGRXUJPUO++qbZOTVBAy4Eq52Dg7N2R5z/HVdDhcuAxT5D9E947Dj
-        aP/yVLrzU1BEfderUbf+rMlnr1ISMwUaBY/6JuIMGPinQIlYxs8TVS6O0r5UEBPC
-        HboRTvcR6Hw+7xtdl7RHbmEddZX9J+ZYNhXvduHWt4xrfbNmakJisOD1JROttzUU
-        cNDdVX8F8Fjn70giP6RuHQLoHG5DJL5mdv7UWOFn88tWd7GyjnsQ==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id uZ6_WxJHgO4K for <linux-block@vger.kernel.org>;
-        Sun, 30 Oct 2022 19:27:04 -0700 (PDT)
-Received: from washi.fujisawa.hgst.com (washi.fujisawa.hgst.com [10.149.53.254])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4N0xqq21Gfz1Rwt8;
-        Sun, 30 Oct 2022 19:27:03 -0700 (PDT)
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-To:     linux-ide@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v4 7/7] ata: libata: Enable fua support by default
-Date:   Mon, 31 Oct 2022 11:26:42 +0900
-Message-Id: <20221031022642.352794-8-damien.lemoal@opensource.wdc.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221031022642.352794-1-damien.lemoal@opensource.wdc.com>
-References: <20221031022642.352794-1-damien.lemoal@opensource.wdc.com>
+        Sun, 30 Oct 2022 23:15:12 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1609589;
+        Sun, 30 Oct 2022 20:15:10 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N0ytz71lCzHvV3;
+        Mon, 31 Oct 2022 11:14:51 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 31 Oct 2022 11:15:08 +0800
+Received: from mdc.huawei.com (10.175.112.208) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 31 Oct 2022 11:15:08 +0800
+From:   Chen Jun <chenjun102@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <axboe@kernel.dk>, <will@kernel.org>, <ming.lei@redhat.com>
+CC:     <xuqiang36@huawei.com>
+Subject: [PATCH] blk-mq: Fix kmemleak in blk_mq_init_allocated_queue
+Date:   Mon, 31 Oct 2022 03:12:42 +0000
+Message-ID: <20221031031242.94107-1-chenjun102@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.208]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Change the default value of the fua module parameter to 1 to enable fua
-support by default for all devices supporting it.
+There is a kmemleak caused by modprobe null_blk.ko
 
-FUA support can be disabled for individual drives using the
-force=3D[ID]nofua libata module argument.
+unreferenced object 0xffff8881acb1f000 (size 1024):
+  comm "modprobe", pid 836, jiffies 4294971190 (age 27.068s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff 00 53 99 9e ff ff ff ff  .........S......
+  backtrace:
+    [<000000004a10c249>] kmalloc_node_trace+0x22/0x60
+    [<00000000648f7950>] blk_mq_alloc_and_init_hctx+0x289/0x350
+    [<00000000af06de0e>] blk_mq_realloc_hw_ctxs+0x2fe/0x3d0
+    [<00000000e00c1872>] blk_mq_init_allocated_queue+0x48c/0x1440
+    [<00000000d16b4e68>] __blk_mq_alloc_disk+0xc8/0x1c0
+    [<00000000d10c98c3>] 0xffffffffc450d69d
+    [<00000000b9299f48>] 0xffffffffc4538392
+    [<0000000061c39ed6>] do_one_initcall+0xd0/0x4f0
+    [<00000000b389383b>] do_init_module+0x1a4/0x680
+    [<0000000087cf3542>] load_module+0x6249/0x7110
+    [<00000000beba61b8>] __do_sys_finit_module+0x140/0x200
+    [<00000000fdcfff51>] do_syscall_64+0x35/0x80
+    [<000000003c0f1f71>] entry_SYSCALL_64_after_hwframe+0x46/0xb0
 
-Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+That is because q->ma_ops is set to NULL before blk_release_queue is
+called.
+
+blk_mq_init_queue_data
+  blk_mq_init_allocated_queue
+    blk_mq_realloc_hw_ctxs
+      for (i = 0; i < set->nr_hw_queues; i++) {
+        old_hctx = xa_load(&q->hctx_table, i);
+        if (!blk_mq_alloc_and_init_hctx(.., i, ..))		[1]
+          if (!old_hctx)
+	    break;
+
+      xa_for_each_start(&q->hctx_table, j, hctx, j)
+        blk_mq_exit_hctx(q, set, hctx, j); 			[2]
+
+    if (!q->nr_hw_queues)					[3]
+      goto err_hctxs;
+
+  err_exit:
+      q->mq_ops = NULL;			  			[4]
+
+  blk_put_queue
+    blk_release_queue
+      if (queue_is_mq(q))					[5]
+        blk_mq_release(q);
+
+[1]: blk_mq_alloc_and_init_hctx failed at i != 0.
+[2]: The hctxs allocated by [1] are moved to q->unused_hctx_list and
+will be cleaned up in blk_mq_release.
+[3]: q->nr_hw_queues is 0.
+[4]: Set q->mq_ops to NULL.
+[5]: queue_is_mq returns false due to [4]. And blk_mq_release
+will not be called. The hctxs in q->unused_hctx_list are leaked.
+
+To fix it, call blk_release_queue in exception path.
+
+Fixes: 2f8f1336a48b ("blk-mq: always free hctx after request queue is freed")
+Signed-off-by: Yuan Can <yuancan@huawei.com>
+Signed-off-by: Chen Jun <chenjun102@huawei.com>
 ---
- drivers/ata/libata-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/blk-mq.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 29042665c550..9e9ce1905992 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -127,9 +127,9 @@ int atapi_passthru16 =3D 1;
- module_param(atapi_passthru16, int, 0444);
- MODULE_PARM_DESC(atapi_passthru16, "Enable ATA_16 passthru for ATAPI dev=
-ices (0=3Doff, 1=3Don [default])");
-=20
--int libata_fua =3D 0;
-+int libata_fua =3D 1;
- module_param_named(fua, libata_fua, int, 0444);
--MODULE_PARM_DESC(fua, "FUA support (0=3Doff [default], 1=3Don)");
-+MODULE_PARM_DESC(fua, "FUA support (0=3Doff, 1=3Don [default])");
-=20
- static int ata_ignore_hpa;
- module_param_named(ignore_hpa, ata_ignore_hpa, int, 0644);
---=20
-2.38.1
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 33292c01875d..308b0ba71dba 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -4188,9 +4188,7 @@ int blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+ 	return 0;
+ 
+ err_hctxs:
+-	xa_destroy(&q->hctx_table);
+-	q->nr_hw_queues = 0;
+-	blk_mq_sysfs_deinit(q);
++	blk_mq_release(q);
+ err_poll:
+ 	blk_stat_free_callback(q->poll_cb);
+ 	q->poll_cb = NULL;
+-- 
+2.17.1
 
