@@ -2,105 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB83461381A
-	for <lists+linux-block@lfdr.de>; Mon, 31 Oct 2022 14:32:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11CC3613862
+	for <lists+linux-block@lfdr.de>; Mon, 31 Oct 2022 14:50:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230522AbiJaNcP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Oct 2022 09:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39610 "EHLO
+        id S229826AbiJaNuI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Oct 2022 09:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230461AbiJaNcO (ORCPT
+        with ESMTP id S229849AbiJaNuF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Oct 2022 09:32:14 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7652110058
-        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:32:13 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id 78so10685299pgb.13
-        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:32:13 -0700 (PDT)
+        Mon, 31 Oct 2022 09:50:05 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90DC11007D
+        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:50:04 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id k5so2874531pjo.5
+        for <linux-block@vger.kernel.org>; Mon, 31 Oct 2022 06:50:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ugTm/u2jy4pd2kxS+scWBZjg6LGxe8n/YNYVW38sYhU=;
-        b=u6qinkMCHoNyE0cGeyXTBzgI7tog6amMwjX3vhlMB8WA7uxXy/B/s75yNvyRM0nR93
-         LbFr8TNBCgWDlTJsD4FZAHDOp5NpSOfjdnMaRasj1HarfJjC51EpQEwSpsshcC8M3zxq
-         AanvPftdJZXBB1cSE6HiDeGhEHicM2n2QCaiAIEbfRV9SjSvBL+ZljKnfga770C1Ha9m
-         Qp4BZh1kKlyf//GQfvQoAKCzZYf52bXavCfDnjPjFeGKOKw1tcIexmYr2anAu5rj42uZ
-         idGKGVmv1PVPyTuvAhdFpoVu4HQaPzyxQfKpciah4DKuKVvB9HQ/r2r9aVEIiymA3cAN
-         4kcA==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GzD007SepSnMiB+4oN3wChUsiGs5s/TJZks5gS7AgmU=;
+        b=xQiqG/XcMzoS4vJxz+KJ4ukyr1ei4TWwIhSGdLN2yU2M/wnYLdrvNzgs9mTs8a+D2z
+         7Hpsci/RdKoExg9PsSox3lK4LzyjgKFYNHVNMiua+ASXiEBIQE/6/NkEYmS4fR8DATnr
+         9xaJJFF+60M4yrvRCszhJNwTdqqWrTegccJgQO3EtcIQYvr58Bo6CeQX9VoGkjSwEii5
+         kkU4fdtevjgvroh6Ui02gk8kHtcUjruIq79w4XXTLtXcKbhrSoJJytYTlOee6x0wXAKz
+         Ii/XrG3AqRTHnxRL9d87OWPwM2j1Gog8Wn3K6Gs3Zdk+4VIZINskBPsZX+Ean14VOVkd
+         ymdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ugTm/u2jy4pd2kxS+scWBZjg6LGxe8n/YNYVW38sYhU=;
-        b=TZ5JajekIpPtv1sQp8vxjErKtXYGdGugviNnLufflOHRu6aWBMC6YnE0kB0YyWe/dF
-         g3nrqOVtHnz5sz86Cql+SzbF9kHG93OX6J1/uQi3EOA8Z2KPp55rSctlBQODwAEAqTif
-         pObQZl5THWUjbzuCMfW9yokHpEMCF9mZi8Iu5ZIW8gIFZUmjWJyLtu/udKjwTxBsc/Uo
-         rxFbDDJIKKNXO/lVbvUcOcfe+P2AofBkBuurlCBtJ93hT++lzODo2wnATh0We4cyAr0r
-         2hnjIb6FCc0WFMeuQmqpULGxIBa0aWVxnAzpKFzmPtMjOTunPQ4FOvfT++H+YOc4RnK5
-         2UUA==
-X-Gm-Message-State: ACrzQf03wnCnnlgOwoJ1+i6Tx/crgAOcCbCMSFOb8+Bd2bKBnLen0tsN
-        20H+YCQOTpjQanF+AalD1hqgwA==
-X-Google-Smtp-Source: AMsMyM4ZKXTMAaJgpxx0z9iUkgeAJZtz+ff0/1Qqg35SH7vj1POacxOO2f9EMcB85IbXbJJP0kdnYg==
-X-Received: by 2002:a63:f457:0:b0:46f:7e1c:8538 with SMTP id p23-20020a63f457000000b0046f7e1c8538mr12566090pgk.554.1667223132881;
-        Mon, 31 Oct 2022 06:32:12 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id t189-20020a6281c6000000b005668b26ade0sm4565791pfd.136.2022.10.31.06.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 06:32:12 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-kernel@vger.kernel.org,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        linux-block@vger.kernel.org
-Cc:     mcgrof@kernel.org, hare@suse.de
-In-Reply-To: <20221029071355.35462-1-chenzhongjin@huawei.com>
-References: <20221029071355.35462-1-chenzhongjin@huawei.com>
-Subject: Re: [PATCH] block: Fix possible memory leak for rq_wb on add_disk failure
-Message-Id: <166722313202.68022.4514926407660406546.b4-ty@kernel.dk>
-Date:   Mon, 31 Oct 2022 07:32:12 -0600
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GzD007SepSnMiB+4oN3wChUsiGs5s/TJZks5gS7AgmU=;
+        b=y6zkTPSgBOFnRbaHd3+exj9OwRzG6TlCbfc/oS1Kzm86V4SjC4b1ZsuuyCsnFDscF0
+         ygtMh97lan4MvMWZWfEAxxMjqtF12JbOQausE8aw460xcDOyj+LH+SZjsv/2woaZbt5Z
+         eyM9uwimIc5v/lc/hStRsmuGkQm9MlpVqzGZ8Jiy+nvLnY67RFOqii3thBaX0jmhu78U
+         ZfBl7xLj4RhIof3LqSOa7dTmweSlX2vBHL6Sju+X7JPois9X+SZ2rGPSBiEk2EN5v9Rj
+         uO+qVf4OYpadwd99dvZhfTL0QcNm0so8zoPXwXzfJPOLySkz3r6qajXQANl0rKrwJnr7
+         QBDg==
+X-Gm-Message-State: ACrzQf0jMLRRJrFhlFUe/Xc4PQb0rDOqerAiXjocHhdHSAnAQQG7yGA9
+        aNWeA7S6YBUrNHZ9Lnn6KNGuAK+UBIwtoBTA
+X-Google-Smtp-Source: AMsMyM5zblZ29L2BqvMSd071VtOnhPva/SHomONGw1W4CvHvkPIdB9RgLQPSDpRnmt4IjR2D6I5vvg==
+X-Received: by 2002:a17:902:dad1:b0:183:243c:d0d0 with SMTP id q17-20020a170902dad100b00183243cd0d0mr14468961plx.157.1667224203978;
+        Mon, 31 Oct 2022 06:50:03 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id x13-20020aa79a4d000000b0056bcf0dd175sm4605974pfj.215.2022.10.31.06.50.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Oct 2022 06:50:03 -0700 (PDT)
+Message-ID: <17887101-31f3-fc60-0971-4718c9f6f3b3@kernel.dk>
+Date:   Mon, 31 Oct 2022 07:50:02 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.11.0-dev-d9ed3
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH 1/7] block: drop the duplicate check in elv_register
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-block@vger.kernel.org
+References: <20221030100714.876891-1-hch@lst.de>
+ <20221030100714.876891-2-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20221030100714.876891-2-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, 29 Oct 2022 15:13:55 +0800, Chen Zhongjin wrote:
-> kmemleak reported memory leaks in device_add_disk():
-> 
-> kmemleak: 3 new suspected memory leaks
-> 
-> unreferenced object 0xffff88800f420800 (size 512):
->   comm "modprobe", pid 4275, jiffies 4295639067 (age 223.512s)
->   hex dump (first 32 bytes):
->     04 00 00 00 08 00 00 00 01 00 00 00 00 00 00 00  ................
->     00 e1 f5 05 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000d3662699>] kmalloc_trace+0x26/0x60
->     [<00000000edc7aadc>] wbt_init+0x50/0x6f0
->     [<0000000069601d16>] wbt_enable_default+0x157/0x1c0
->     [<0000000028fc393f>] blk_register_queue+0x2a4/0x420
->     [<000000007345a042>] device_add_disk+0x6fd/0xe40
->     [<0000000060e6aab0>] nbd_dev_add+0x828/0xbf0 [nbd]
->     ...
-> 
-> [...]
+On 10/30/22 4:07 AM, Christoph Hellwig wrote:
+> We have less than a handful of elevators, and if someone adds a duplicate
+> one it simply will never be found but other be harmless.
 
-Applied, thanks!
+That isn't quite parseable...
 
-[1/1] block: Fix possible memory leak for rq_wb on add_disk failure
-      (no commit info)
+> diff --git a/block/elevator.c b/block/elevator.c
+> index d26aa787e29f0..ef9af17293ffb 100644
+> --- a/block/elevator.c
+> +++ b/block/elevator.c
+> @@ -545,13 +545,7 @@ int elv_register(struct elevator_type *e)
+>  			return -ENOMEM;
+>  	}
+>  
+> -	/* register, don't allow duplicate names */
+>  	spin_lock(&elv_list_lock);
+> -	if (elevator_find(e->elevator_name, 0)) {
+> -		spin_unlock(&elv_list_lock);
+> -		kmem_cache_destroy(e->icq_cache);
+> -		return -EBUSY;
+> -	}
+>  	list_add_tail(&e->list, &elv_list);
+>  	spin_unlock(&elv_list_lock);
 
-Best regards,
+What's the idea behind this? Yes it'll be harmless and list ordering
+will dictate which one will be found, leaving the other(s) dead, but why
+not catch this upfront? I agree likelihood of this ever happening to be
+tiny, but seems like a good idea to catch and return BUSY for this case.
+
 -- 
 Jens Axboe
-
-
