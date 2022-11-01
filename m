@@ -2,61 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D13F86148BC
-	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 12:29:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D636614997
+	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 12:40:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230392AbiKAL32 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Nov 2022 07:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35318 "EHLO
+        id S231316AbiKALkD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Nov 2022 07:40:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230074AbiKAL2g (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 07:28:36 -0400
+        with ESMTP id S230428AbiKALjt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 07:39:49 -0400
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79CCE29C
-        for <linux-block@vger.kernel.org>; Tue,  1 Nov 2022 04:28:21 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4N1nkx4vRlzKGTb
-        for <linux-block@vger.kernel.org>; Tue,  1 Nov 2022 19:25:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675E71B7A9;
+        Tue,  1 Nov 2022 04:33:24 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4N1nrW597nzl18M;
+        Tue,  1 Nov 2022 19:30:35 +0800 (CST)
 Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP1 (Coremail) with SMTP id cCh0CgB3UXrRAmFjXyOJBA--.62160S3;
-        Tue, 01 Nov 2022 19:28:19 +0800 (CST)
-Subject: Re: [PATCH 7/7] block: store the holder kobject in bd_holder_disk
-To:     Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <20221030153120.1045101-1-hch@lst.de>
- <20221030153120.1045101-8-hch@lst.de>
- <fd409996-e5e1-d7af-b31d-87db943eaa25@huaweicloud.com>
- <20221101104927.GA13823@lst.de>
- <d3f6ec1d-8141-19d1-ce4c-d42710f4a636@huaweicloud.com>
- <20221101112131.GA14379@lst.de>
+        by APP2 (Coremail) with SMTP id Syh0CgD33NHdA2Fj2YS+BA--.36014S3;
+        Tue, 01 Nov 2022 19:32:46 +0800 (CST)
+Subject: Re: [patch v11 0/6] support concurrent sync io for bfq on a specail
+ occasion
+To:     Yu Kuai <yukuai1@huaweicloud.com>, tj@kernel.org, axboe@kernel.dk,
+        paolo.valente@linaro.org, jack@suse.cz
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <20220916071942.214222-1-yukuai1@huaweicloud.com>
 From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <57465370-99fe-d8a5-e150-a1057640e972@huaweicloud.com>
-Date:   Tue, 1 Nov 2022 19:28:17 +0800
+Message-ID: <b2099166-5386-d60b-0b31-e5cd40ef97da@huaweicloud.com>
+Date:   Tue, 1 Nov 2022 19:32:45 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20221101112131.GA14379@lst.de>
+In-Reply-To: <20220916071942.214222-1-yukuai1@huaweicloud.com>
 Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgB3UXrRAmFjXyOJBA--.62160S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KryfXF15Cw1xAFykCr4kWFg_yoW8trW3pa
-        98WF4rtrykGFWDXa1DKw17WFWj9r1UJ3W8CrySkrs2grZxJr92yr17Ary7XF13Crs2yr4q
-        qF45X3yFvFWvkFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j
-        6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
-        DUUUUU=
+X-CM-TRANSID: Syh0CgD33NHdA2Fj2YS+BA--.36014S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZr1fuw1fXr45Ar4xZryrZwb_yoWfJrbE9F
+        WkKF1fGrZ8Jas0qa4vgw1Fk3yjqF4fXFs7t34vqF17KFyUC3y2kFWqkryayF13C3ySy3Z3
+        W3say34fKr13ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+        c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+        17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1U
+        MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+        VFxhVjvjDU0xZFpf9x0JUZa9-UUUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
@@ -67,67 +64,34 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+Hi, Jens
 
-在 2022/11/01 19:21, Christoph Hellwig 写道:
-> On Tue, Nov 01, 2022 at 07:12:51PM +0800, Yu Kuai wrote:
->>> But how could the reference be 0 here?  The driver that calls
->>> bd_link_disk_holder must have the block device open and thus hold a
->>> reference to it.
->>
->> Like I said before, the caller of bd_link_disk_holder() get bdev by
->> blkdev_get_by_dev(), which do not grab reference of holder_dir, and
->> grab disk reference can only prevent disk_release() to be called, not
->> del_gendisk() while holder_dir reference is dropped in del_gendisk()
->> and can be decreased to 0.
+在 2022/09/16 15:19, Yu Kuai 写道:
+> From: Yu Kuai <yukuai3@huawei.com>
+>
 > 
-> Oh, the bd_holder_dir reference, not the block_device one.  So yes,
-> I agree.
+> Currently, bfq can't handle sync io concurrently as long as they
+> are not issued from root group. This is because
+> 'bfqd->num_groups_with_pending_reqs > 0' is always true in
+> bfq_asymmetric_scenario().
 > 
->> If you agree with above explanation, I tried to fix this:
->>
->> 1) move kobject_put(bd_holder_dir) from del_gendisk to disk_release,
->> there seems to be a lot of other dependencies.
->>
->> 2) protect bd_holder_dir reference by open_mutex.
+> The way that bfqg is counted into 'num_groups_with_pending_reqs':
 > 
-> I think simply switching the kobject_get in bd_link_disk_holder
-> into a kobject_get_unless_zero and unwinding if there is no reference
-> should be enough:
+> Before this patchset:
+>   1) root group will never be counted.
+>   2) Count if bfqg or it's child bfqgs have pending requests.
+>   3) Don't count if bfqg and it's child bfqgs complete all the requests.
 > 
-> diff --git a/block/holder.c b/block/holder.c
-> index a8c355b9d0806..cd18064f6ff80 100644
-> --- a/block/holder.c
-> +++ b/block/holder.c
-> @@ -83,7 +83,11 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   
->   	INIT_LIST_HEAD(&holder->list);
->   	holder->refcnt = 1;
-> -	holder->holder_dir = kobject_get(bdev->bd_holder_dir);
-> +	if (!kobject_get_unless_zero(bdev->bd_holder_dir)) {
-> +		ret = -EBUSY;
-> +		goto out_free_holder;
-> +	}
-> +	holder->holder_dir = bdev->bd_holder_dir;
+> After this patchset:
+>   1) root group is counted.
+>   2) Count if bfqg has pending requests.
+>   3) Don't count if bfqg complete all the requests.
+> 
+> With the above changes, concurrent sync io can be supported if only
+> one group is activated.
 
-What if bd_holder_dir is already freed here, then uaf can be triggered.
-Thus bd_holder_dir need to be resed in del_gendisk() if it's reference
-is dropped to 0, however, kobject apis can't do that...
+Can you apply this patchset?
 
 Thanks,
 Kuai
->   
->   	ret = add_symlink(disk->slave_dir, bdev_kobj(bdev));
->   	if (ret)
-> @@ -100,6 +104,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
->   	del_symlink(disk->slave_dir, bdev_kobj(bdev));
->   out_put_holder_dir:
->   	kobject_put(holder->holder_dir);
-> +out_free_holder:
->   	kfree(holder);
->   out_unlock:
->   	mutex_unlock(&disk->open_mutex);
-> 
-> .
-> 
 
