@@ -2,91 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9B5861507F
-	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 18:22:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A2A7615088
+	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 18:23:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230510AbiKARWa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Nov 2022 13:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
+        id S229756AbiKARXi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Nov 2022 13:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230516AbiKARW2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 13:22:28 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D081C1B1DA;
-        Tue,  1 Nov 2022 10:22:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7BBEEB81E94;
-        Tue,  1 Nov 2022 17:22:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95AF3C43470;
-        Tue,  1 Nov 2022 17:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667323345;
-        bh=R3TRmjuGx+CX5AlLSbI9Rvvjf7XA13+5XQn1/SO/l5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L/kAMOScwPlrSIF+9gRC70XY3fpqGTMzrt3tXL/NorI0wBHDs8oJu+8+siDIvZ3U+
-         X7YFTBLqTcEAs4KyzWnMYYuDQGzwofeTbQt+bIHTpigOxuYtw5ltL0NGTSpVw4o1AZ
-         ZPTCjZImXmCP9ooRI96Y8WH8oOdpiqyR76XO0pTTjYvB/U7hJXwA7poJgI6GqAE7Is
-         LN3BJAIgO0rzZsgRi74wtYxMkBCqSSjRmxMY1gQTsxQ8+2Qmq3zSOrGsL2DGNdtvti
-         cdHoTgR3qen8cl0FZ+zNpyJKzTXj6iUbeTiPmslAtbz/avpihFxLNXA5+1ev48teOo
-         mMajMspEW1keA==
-Date:   Tue, 1 Nov 2022 11:22:21 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Dmitrii Tcvetkov <me@demsh.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [bisected] RAID1 direct IO redirecting sector loop since 6.0
-Message-ID: <Y2FVzdcro8HCfODK@kbusch-mbp>
-References: <20221101001558.648ee024@xps.demsh.org>
+        with ESMTP id S229789AbiKARXg (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 13:23:36 -0400
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53A16390
+        for <linux-block@vger.kernel.org>; Tue,  1 Nov 2022 10:23:35 -0700 (PDT)
+Received: by mail-pf1-f171.google.com with SMTP id b185so14063647pfb.9
+        for <linux-block@vger.kernel.org>; Tue, 01 Nov 2022 10:23:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xlbtiP8HiyybwpV1KJjxxqYeazUDceDJBXJXnZJb2Lg=;
+        b=lm4g1NpiYQn1XC3nvZfdum8NNsyxv60p85BosmqDFKuruNskVI4z+M4Qn4mTygv73R
+         ed68TPB42WmCy46kKaUV1PoxqUFHxOCYXqOTxDd0wtuOornBLl2H6LedgrFNpCw5tZhy
+         jW22w5jBFGpqePKVjmyjIi+42gA/RAX4lPvnMOMF9IdTH6aclzj1GzrCromiWAC4e0ap
+         yeLQ/VIoBTiAT0N1K3JHCFYZ1LrjVzq1Eu4eMDBfVeA9Q2VgBU+fayuRDF8/XgSWqgYW
+         E5o+8vp2SycEjmSNsD8EAEksATj/gp/HXEeCMvEudlC3+n3mom4dhT9wZDecENbux4Ur
+         wpIw==
+X-Gm-Message-State: ACrzQf0/ZsXUwH3CWyjwqSc28i2ODlwtLMTLP6YP3knqRcvpROZ0ySRW
+        Jq/HVbs3YJdbQat/blV7rsQ=
+X-Google-Smtp-Source: AMsMyM4hS1/QYrUBkfmnLy6TIjhxBwutI3ZhSfxB8K2MJfSkM30Vro1D69x4hr1YbDqw8HNOo1a80Q==
+X-Received: by 2002:a65:6bd4:0:b0:443:94a1:429c with SMTP id e20-20020a656bd4000000b0044394a1429cmr18136371pgw.606.1667323415046;
+        Tue, 01 Nov 2022 10:23:35 -0700 (PDT)
+Received: from ?IPV6:2620:15c:211:201:8574:e82f:b860:3ad0? ([2620:15c:211:201:8574:e82f:b860:3ad0])
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b00179e1f08634sm6568418plp.222.2022.11.01.10.23.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Nov 2022 10:23:34 -0700 (PDT)
+Message-ID: <934d8e30-8629-d598-0214-987580c349b8@acm.org>
+Date:   Tue, 1 Nov 2022 10:23:32 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221101001558.648ee024@xps.demsh.org>
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH 06/10] block: Fix the number of segment calculations
+Content-Language: en-US
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>, Keith Busch <kbusch@kernel.org>
+References: <20221019222324.362705-1-bvanassche@acm.org>
+ <20221019222324.362705-7-bvanassche@acm.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20221019222324.362705-7-bvanassche@acm.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 12:15:58AM +0300, Dmitrii Tcvetkov wrote:
-> 
-> # cat /proc/7906/stack
-> [<0>] submit_bio_wait+0xdb/0x140
-> [<0>] blkdev_direct_IO+0x62f/0x770
-> [<0>] blkdev_read_iter+0xc1/0x140
-> [<0>] vfs_read+0x34e/0x3c0
-> [<0>] __x64_sys_pread64+0x74/0xc0
-> [<0>] do_syscall_64+0x6a/0x90
-> [<0>] entry_SYSCALL_64_after_hwframe+0x4b/0xb5
-> 
-> After "mdadm --fail" invocation the last line becomes:
-> [pid  7906] pread64(13, 0x627c34c8d200, 4096, 0) = -1 EIO (Input/output error)
+On 10/19/22 15:23, Bart Van Assche wrote:
+> Since multi-page bvecs are supported there can be multiple segments per
+> bvec (see also bvec_split_segs()). Hence this patch that calculates the
+> number of segments per bvec instead of assuming that there is only one
+> segment per bvec.
 
-It looks like something isn't accounting for the IO size correctly when
-there's an offset. It may be something specific to one of the stacking
-drivers in your block setup. Does this still happen without the
-cryptosetup step?
+(replying to my own email)
 
-For a different experiment, it may be safer to just force all alignment
-for stacking drivers. Could you try the following and see if that gets
-it working again? 
+Hi Ming,
 
----
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 8bb9eef5310e..5c16fdb00c6f 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -646,6 +646,7 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
- 		t->misaligned = 1;
- 		ret = -1;
- 	}
-+	blk_queue_dma_alignment(t, t->logical_block_size - 1);
- 
- 	t->max_sectors = blk_round_down_sectors(t->max_sectors, t->logical_block_size);
- 	t->max_hw_sectors = blk_round_down_sectors(t->max_hw_sectors, t->logical_block_size);
---
+Do you agree that this patch fixes a bug introduced by the multi-page 
+bvec code and also that it is required even if the segment size is 
+larger than the page size?
+
+Thanks,
+
+Bart.
