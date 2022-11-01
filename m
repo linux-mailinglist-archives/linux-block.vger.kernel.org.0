@@ -2,90 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B250614869
-	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 12:21:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76E916148E2
+	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 12:31:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229533AbiKALVh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Nov 2022 07:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
+        id S230462AbiKALbM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Nov 2022 07:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiKALVg (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 07:21:36 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DE1112E
-        for <linux-block@vger.kernel.org>; Tue,  1 Nov 2022 04:21:35 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3AD4D6732D; Tue,  1 Nov 2022 12:21:32 +0100 (CET)
-Date:   Tue, 1 Nov 2022 12:21:31 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH 7/7] block: store the holder kobject in bd_holder_disk
-Message-ID: <20221101112131.GA14379@lst.de>
-References: <20221030153120.1045101-1-hch@lst.de> <20221030153120.1045101-8-hch@lst.de> <fd409996-e5e1-d7af-b31d-87db943eaa25@huaweicloud.com> <20221101104927.GA13823@lst.de> <d3f6ec1d-8141-19d1-ce4c-d42710f4a636@huaweicloud.com>
+        with ESMTP id S229944AbiKALal (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 07:30:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA2E63F9;
+        Tue,  1 Nov 2022 04:29:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D293AB81CC6;
+        Tue,  1 Nov 2022 11:29:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A186DC433C1;
+        Tue,  1 Nov 2022 11:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667302158;
+        bh=e8tBsfk9EYh1neUMVjssmIJU9k1CMFsjsde1Uilgo88=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=To6Gz/mzR5sl1yK8wueU1ymrCjZF7kYU4axgjQLGkNe8Q1aegLdeOXzyFD1FFezud
+         89YYtpiZebaWuFnABLgTcs/y9fQlpvkMuI5ohMECsGNOf7VXhhzXps7NUTYMI826g4
+         QRCanvt0YD7m0zWQrxBUtxYEntMqjyzO2JtBWXZkMeASkDXGlXuji+2871VeSiiN01
+         ZdoT9wp2jJIBsDU2EfV6iidrf/00o86ignd8To7i5XAjkC2v3/exAmex5ilXdwxjWW
+         //VUUoxxft29CrK+aPFQM8DJaY6MBUWwzJe/qljM5yVnbCvcwT0D7J/d88VBstwyc4
+         Xj+CN+jbesLoQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.0 34/34] bio: safeguard REQ_ALLOC_CACHE bio put
+Date:   Tue,  1 Nov 2022 07:27:26 -0400
+Message-Id: <20221101112726.799368-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221101112726.799368-1-sashal@kernel.org>
+References: <20221101112726.799368-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3f6ec1d-8141-19d1-ce4c-d42710f4a636@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 07:12:51PM +0800, Yu Kuai wrote:
->> But how could the reference be 0 here?  The driver that calls
->> bd_link_disk_holder must have the block device open and thus hold a
->> reference to it.
->
-> Like I said before, the caller of bd_link_disk_holder() get bdev by
-> blkdev_get_by_dev(), which do not grab reference of holder_dir, and
-> grab disk reference can only prevent disk_release() to be called, not
-> del_gendisk() while holder_dir reference is dropped in del_gendisk()
-> and can be decreased to 0.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-Oh, the bd_holder_dir reference, not the block_device one.  So yes,
-I agree.
+[ Upstream commit d4347d50407daea6237872281ece64c4bdf1ec99 ]
 
-> If you agree with above explanation, I tried to fix this:
->
-> 1) move kobject_put(bd_holder_dir) from del_gendisk to disk_release,
-> there seems to be a lot of other dependencies.
->
-> 2) protect bd_holder_dir reference by open_mutex.
+bio_put() with REQ_ALLOC_CACHE assumes that it's executed not from
+an irq context. Let's add a warning if the invariant is not respected,
+especially since there is a couple of places removing REQ_POLLED by hand
+without also clearing REQ_ALLOC_CACHE.
 
-I think simply switching the kobject_get in bd_link_disk_holder
-into a kobject_get_unless_zero and unwinding if there is no reference
-should be enough:
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/558d78313476c4e9c233902efa0092644c3d420a.1666122465.git.asml.silence@gmail.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/bio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/holder.c b/block/holder.c
-index a8c355b9d0806..cd18064f6ff80 100644
---- a/block/holder.c
-+++ b/block/holder.c
-@@ -83,7 +83,11 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
+diff --git a/block/bio.c b/block/bio.c
+index 77e3b764a078..fc2364cf1775 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -741,7 +741,7 @@ void bio_put(struct bio *bio)
+ 			return;
+ 	}
  
- 	INIT_LIST_HEAD(&holder->list);
- 	holder->refcnt = 1;
--	holder->holder_dir = kobject_get(bdev->bd_holder_dir);
-+	if (!kobject_get_unless_zero(bdev->bd_holder_dir)) {
-+		ret = -EBUSY;
-+		goto out_free_holder;
-+	}
-+	holder->holder_dir = bdev->bd_holder_dir;
+-	if (bio->bi_opf & REQ_ALLOC_CACHE) {
++	if ((bio->bi_opf & REQ_ALLOC_CACHE) && !WARN_ON_ONCE(in_interrupt())) {
+ 		struct bio_alloc_cache *cache;
  
- 	ret = add_symlink(disk->slave_dir, bdev_kobj(bdev));
- 	if (ret)
-@@ -100,6 +104,7 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
- 	del_symlink(disk->slave_dir, bdev_kobj(bdev));
- out_put_holder_dir:
- 	kobject_put(holder->holder_dir);
-+out_free_holder:
- 	kfree(holder);
- out_unlock:
- 	mutex_unlock(&disk->open_mutex);
+ 		bio_uninit(bio);
+-- 
+2.35.1
+
