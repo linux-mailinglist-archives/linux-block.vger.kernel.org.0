@@ -2,88 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3B486146DA
-	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 10:35:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA756146E9
+	for <lists+linux-block@lfdr.de>; Tue,  1 Nov 2022 10:40:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbiKAJfp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Nov 2022 05:35:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40092 "EHLO
+        id S230404AbiKAJkI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Nov 2022 05:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230233AbiKAJew (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 05:34:52 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8434419283;
-        Tue,  1 Nov 2022 02:34:33 -0700 (PDT)
-Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N1lBX0NsGzpW59;
-        Tue,  1 Nov 2022 17:31:00 +0800 (CST)
-Received: from huawei.com (10.174.178.129) by kwepemi500016.china.huawei.com
- (7.221.188.220) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 1 Nov
- 2022 17:34:31 +0800
+        with ESMTP id S230395AbiKAJjn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 05:39:43 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4FE19C0B;
+        Tue,  1 Nov 2022 02:39:00 -0700 (PDT)
+Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N1lMH5m6MzHvT0;
+        Tue,  1 Nov 2022 17:38:35 +0800 (CST)
+Received: from [10.174.178.129] (10.174.178.129) by
+ kwepemi500016.china.huawei.com (7.221.188.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 1 Nov 2022 17:38:53 +0800
+Subject: Re: [PATCH v2 2/3] block: Correct comment for scale_cookie_change
+To:     <tj@kernel.org>, <josef@toxicpanda.com>, <axboe@kernel.dk>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20221018111240.22612-1-shikemeng@huawei.com>
+ <20221018111240.22612-3-shikemeng@huawei.com>
 From:   Kemeng Shi <shikemeng@huawei.com>
-To:     <paolo.valente@linaro.org>, <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <shikemeng@huawei.com>
-Subject: [PATCH 20/20] block, bfq: remove unncessary process_ref check for merged queue in bfq_setup_merge
-Date:   Tue, 1 Nov 2022 17:34:17 +0800
-Message-ID: <20221101093417.10540-21-shikemeng@huawei.com>
-X-Mailer: git-send-email 2.14.1.windows.1
-In-Reply-To: <20221101093417.10540-1-shikemeng@huawei.com>
-References: <20221101093417.10540-1-shikemeng@huawei.com>
+Message-ID: <d92907aa-2e57-dd68-c6ce-b8065cd25770@huawei.com>
+Date:   Tue, 1 Nov 2022 17:38:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20221018111240.22612-3-shikemeng@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.174.178.129]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemi500016.china.huawei.com (7.221.188.220)
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-As we already check process_refs of original new_bfqq is not zero. The
-later new_bfqq maybe the merged queue of original new_bfqq which inherit
-the process_refs of original new_bfqq which is not zero, so process_refs
-of merged queue will not be zero.
-Remove unncessary check for merged queue and remove new_process_refs
-which will not be used.
+Friendly ping.
 
-Signed-off-by: Kemeng Shi <shikemeng@huawei.com>
----
- block/bfq-iosched.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+on 10/18/2022 7:12 PM, Kemeng Shi wrote:
+> Default queue depth of iolatency_grp is unlimited, so we scale down
+> quickly(once by half) in scale_cookie_change. Remove the "subtract
+> 1/16th" part which is not the truth and add the actual way we
+> scale down.
+> 
+> Signed-off-by: Kemeng Shi <shikemeng@huawei.com>
+> ---
+>  block/blk-iolatency.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+> index b24d7b788ba3..2c574f98c8d1 100644
+> --- a/block/blk-iolatency.c
+> +++ b/block/blk-iolatency.c
+> @@ -364,9 +364,11 @@ static void scale_cookie_change(struct blk_iolatency *blkiolat,
+>  }
+>  
+>  /*
+> - * Change the queue depth of the iolatency_grp.  We add/subtract 1/16th of the
+> + * Change the queue depth of the iolatency_grp.  We add 1/16th of the
+>   * queue depth at a time so we don't get wild swings and hopefully dial in to
+> - * fairer distribution of the overall queue depth.
+> + * fairer distribution of the overall queue depth.  We halve the queue depth
+> + * at a time so we can scale down queue depth quickly from default unlimited
+> + * to target.
+>   */
+>  static void scale_change(struct iolatency_grp *iolat, bool up)
+>  {
+> 
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 589ab59abcf5..0736577bfbfe 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2740,7 +2740,7 @@ static struct bfq_queue *bfq_find_close_cooperator(struct bfq_data *bfqd,
- static struct bfq_queue *
- bfq_setup_merge(struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
- {
--	int process_refs, new_process_refs;
-+	int process_refs;
- 
- 	/*
- 	 * If there are no process references on the new_bfqq, then it is
-@@ -2758,12 +2758,11 @@ bfq_setup_merge(struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
- 	}
- 
- 	process_refs = bfqq_process_refs(bfqq);
--	new_process_refs = bfqq_process_refs(new_bfqq);
- 	/*
- 	 * If the process for the bfqq has gone away, there is no
- 	 * sense in merging the queues.
- 	 */
--	if (process_refs == 0 || new_process_refs == 0)
-+	if (process_refs == 0)
- 		return NULL;
- 
- 	/*
 -- 
-2.30.0
-
+Best wishes
+Kemeng Shi
