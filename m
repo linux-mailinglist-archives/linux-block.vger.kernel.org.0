@@ -2,59 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 276F86165F6
-	for <lists+linux-block@lfdr.de>; Wed,  2 Nov 2022 16:20:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 989856165FA
+	for <lists+linux-block@lfdr.de>; Wed,  2 Nov 2022 16:20:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbiKBPUG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Nov 2022 11:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59580 "EHLO
+        id S230297AbiKBPUQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Nov 2022 11:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbiKBPTj (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Nov 2022 11:19:39 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF5D1704C
-        for <linux-block@vger.kernel.org>; Wed,  2 Nov 2022 08:19:37 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id l16-20020a05600c4f1000b003c6c0d2a445so1500249wmq.4
-        for <linux-block@vger.kernel.org>; Wed, 02 Nov 2022 08:19:37 -0700 (PDT)
+        with ESMTP id S230232AbiKBPTk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Nov 2022 11:19:40 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1793C17E38
+        for <linux-block@vger.kernel.org>; Wed,  2 Nov 2022 08:19:39 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id v7so5099529wmn.0
+        for <linux-block@vger.kernel.org>; Wed, 02 Nov 2022 08:19:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5vaKIUeUGBd2XcHhMkOucioiZX3YOY/Xwk36yuAh4aE=;
-        b=SMPVoEcnmpjpWpOIfBwY/KnyKs3CRx77848wtFgxK+9C4zYohcvhTNGNGFP5XkChR6
-         ED/B9ch8j+BAAqYgUtK25sIBqGDVmuHOfEJvQCdIUBAqNwT+GjXTEaUT7RfIrW/zMQwL
-         h7tVJgYoZ3LQKGI0frdwlzmNN8n2RbnU6/NO3R+8ukknLe34s1IWDiFAQS8jHDYE6Ted
-         o/xJvjRBf1VmOrr3j87h5H70rcop8lpfBkfZQNlFKn6F2xuKAeQ9cZEfkrlT8FBj4qBu
-         Mov/Vd1nSG6D6qD7z75nGmdO4KYkU8tyJK2sL3ZDlk1YFrLLo159bSV3il4Mdx4f9pBz
-         KPrg==
+        bh=Z9Y20rpLVvo5TBJHmlhFfyIhAn0kzicFV4WKChu5otc=;
+        b=filVyL0Cr2NsXxSa7V2aV1vUQN0Kw/mMrkgXtu5BhQpaf1I2TO7CHTslMgukI7Qv55
+         xXpZ4lvwmqSFgeduVh+u0T78+t7uPlPHj+qIPJi/4BejHhynBgNYydk0Ql1xQO2uGJpS
+         wiT/7XkQqO1yffwfuZAmmlWN08gQLul+8EqC5npZnD5sFePzwsipyIpIUZ3Jn2nXfw+/
+         qi5sCoJQhp97LqwRhkYz/RguBr9SbqjyPQTrZzxBG+2XvKMX0NeQKyjKY9kqt17KuCwP
+         8EsFVb4E+0NiLxzk+MkfnnKbs2jMH3B+zVNz0xOIL+jlwW4eWdBxrlAyjX/5d/ZMsDpe
+         /4fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5vaKIUeUGBd2XcHhMkOucioiZX3YOY/Xwk36yuAh4aE=;
-        b=q80T1t4a7UC/FFXF7LnFkcpGCyElIAo1DNc4hxNDqC0nct4plWBW3iuFeCnmuhvpxO
-         7oT8cioDfvzE+Xd1QHz1BbTMkZaS4Ar9dm/OrJy9SXjLwxzkL+RThuu2BmvAX/49ps03
-         w5MmYJ1qU7qPDHwgVxUbPs2EE+GNYCj8lHmIWghjQISe4wd+t4J/sYzRed3wty3d+ido
-         sVrJyW0wSsHCx5eeQlI9Ed8mm+G/MF984DHPHLlAubvj/zWZQtaCqJhePhAU7xQP3fPt
-         +JLtyOfrZRz35nvLey+lJemSVq0+JLl7gBHv5I6Mgaz7xgF1LidgKSTmiIx4szTBUA79
-         1lTQ==
-X-Gm-Message-State: ACrzQf2bGML5Mo1pbvfhzFFZDIp7b7po4yKwRbg3Gu4wHkEdUSyiyORb
-        TiANlyfiJsah+atRF4Vyudg=
-X-Google-Smtp-Source: AMsMyM4B3oR7+dgj8lw6zRqTrgMRYIARqQAIzT7kVhBg9U8a1NcckjVFmZxVIrfrvGyXtYQcMDSMsA==
-X-Received: by 2002:a05:600c:1e2a:b0:3c8:353b:253f with SMTP id ay42-20020a05600c1e2a00b003c8353b253fmr16111973wmb.51.1667402376065;
-        Wed, 02 Nov 2022 08:19:36 -0700 (PDT)
+        bh=Z9Y20rpLVvo5TBJHmlhFfyIhAn0kzicFV4WKChu5otc=;
+        b=j3d9pK+0iaPO/liJ5GA6avqqD4Z3uTy1jG5IvxdfExasJnZ6hxB0kbm8vQ1kPVlp5e
+         aj2Z7pf+2k1We7iA8n8cZmeSgP8bXzEPXH7rU4l1H/cerzTmY6VOjva/3t9nSSvfNM/m
+         Q4M2JQwJ9cpqm4PPQGx2sfS0vjBhJe76l9ScDomJEhcnpNVVStzZS3+iVp1c5AOo5Nnr
+         cM+2my6+BjRxjC3H/g/xaHMPaB8mHLnBO/gqkKXqkPdPszN6YMM0wjlj1yHYJ1R8N4qE
+         k7r8K1VX5VAV+5485ZAmJf9ny5hUE4WTcq/gnSMCDUvyA+mTgjgeT5+aOq4Pue1YHct8
+         YVLA==
+X-Gm-Message-State: ACrzQf0wB24jylltwrjAlmHd8h2YKPtqFIVe3Rp2jFrmodnJRcuvf7qU
+        NfO0AIoHuDD5qjetI4bFK3g12YHGggY=
+X-Google-Smtp-Source: AMsMyM7s+P+ZhTLHW4fnCpyqJDlvHmS83I3SBnor0krwMUjC9K5stQA7oDM0G8t5X7GVlEmShN9w4Q==
+X-Received: by 2002:a05:600c:6023:b0:3cf:7dc1:e08e with SMTP id az35-20020a05600c602300b003cf7dc1e08emr6673920wmb.154.1667402377536;
+        Wed, 02 Nov 2022 08:19:37 -0700 (PDT)
 Received: from 127.0.0.1localhost ([82.132.186.241])
-        by smtp.gmail.com with ESMTPSA id a14-20020adff7ce000000b0022e66749437sm13043232wrq.93.2022.11.02.08.19.34
+        by smtp.gmail.com with ESMTPSA id a14-20020adff7ce000000b0022e66749437sm13043232wrq.93.2022.11.02.08.19.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Nov 2022 08:19:35 -0700 (PDT)
+        Wed, 02 Nov 2022 08:19:36 -0700 (PDT)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
 Cc:     kernel-team@fb.com, Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH for-next v4 1/6] mempool: introduce mempool_is_saturated
-Date:   Wed,  2 Nov 2022 15:18:19 +0000
-Message-Id: <636aed30be8c35d78f45e244998bc6209283cccc.1667384020.git.asml.silence@gmail.com>
+Subject: [PATCH for-next v4 2/6] bio: don't rob starving biosets of bios
+Date:   Wed,  2 Nov 2022 15:18:20 +0000
+Message-Id: <aa150caf9c263fa92269e86d7826cc8fa65f38de.1667384020.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <cover.1667384020.git.asml.silence@gmail.com>
 References: <cover.1667384020.git.asml.silence@gmail.com>
@@ -70,31 +70,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Introduce a helper mempool_is_saturated(), which tells if the mempool is
-under-filled or not. We need it to figure out whether it should be
-freed right into the mempool or could be cached with top level caches.
+Biosets keep a mempool, so as long as requests complete we can always
+can allocate and have forward progress. Percpu bio caches break that
+assumptions as we may complete into the cache of one CPU and after try
+and fail to allocate with another CPU. We also can't grab from another
+CPU's cache without tricky sync.
+
+If we're allocating with a bio while the mempool is undersaturated,
+remove REQ_ALLOC_CACHE flag, so on put it will go straight to mempool.
+It might try to free into mempool more requests than required, but
+assuming than there is no memory starvation in the system it'll
+stabilise and never hit that path.
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- include/linux/mempool.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ block/bio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/mempool.h b/include/linux/mempool.h
-index 0c964ac107c2..4aae6c06c5f2 100644
---- a/include/linux/mempool.h
-+++ b/include/linux/mempool.h
-@@ -30,6 +30,11 @@ static inline bool mempool_initialized(mempool_t *pool)
- 	return pool->elements != NULL;
- }
+diff --git a/block/bio.c b/block/bio.c
+index 57c2f327225b..8afc3e78beff 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -526,6 +526,8 @@ struct bio *bio_alloc_bioset(struct block_device *bdev, unsigned short nr_vecs,
+ 	}
+ 	if (unlikely(!p))
+ 		return NULL;
++	if (!mempool_is_saturated(&bs->bio_pool))
++		opf &= ~REQ_ALLOC_CACHE;
  
-+static inline bool mempool_is_saturated(mempool_t *pool)
-+{
-+	return READ_ONCE(pool->curr_nr) >= pool->min_nr;
-+}
-+
- void mempool_exit(mempool_t *pool);
- int mempool_init_node(mempool_t *pool, int min_nr, mempool_alloc_t *alloc_fn,
- 		      mempool_free_t *free_fn, void *pool_data,
+ 	bio = p + bs->front_pad;
+ 	if (nr_vecs > BIO_INLINE_VECS) {
 -- 
 2.38.0
 
