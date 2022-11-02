@@ -2,102 +2,144 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7955F6160C3
-	for <lists+linux-block@lfdr.de>; Wed,  2 Nov 2022 11:26:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5F5161617C
+	for <lists+linux-block@lfdr.de>; Wed,  2 Nov 2022 12:13:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230315AbiKBK0A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Nov 2022 06:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43054 "EHLO
+        id S230387AbiKBLNI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Nov 2022 07:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbiKBKZ6 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Nov 2022 06:25:58 -0400
-Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4423F24970
-        for <linux-block@vger.kernel.org>; Wed,  2 Nov 2022 03:25:58 -0700 (PDT)
-Received: by mail-vk1-xa34.google.com with SMTP id e2so8708091vkd.13
-        for <linux-block@vger.kernel.org>; Wed, 02 Nov 2022 03:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ddKdS4x8c4ZSI9PbKdla4xMHlbecpUYnHnf7KqPY/v4=;
-        b=PRwQsumImJ1w+A81klK5cl5HbSQMLLj+xdE65DAptFirzwRVucG7L0cAOBTIgYwcGP
-         Ef/MTQ/6PWdAsIAmRwGvGJi6qNadskzRF3hMBun/Hnlc50A6QXrlG34GVTiCPzzkadF/
-         EbyZLZbyPlYfGWSR/20uMIV1XpH2S5Q1A9CcKVQ7r7aAZ2xS0vXfJKUQE6UthBFsVZ2l
-         ptWwhY1Q5n7zCpAF/LI0owO2FT7KAKnH9Uf/JrEVWQ5JQaZUqCIqQWmMKIPFgg3FxedV
-         4Crcj7XkYcuPKV8JyhTCcfxb25rye2GsmoezxZqQA0kZjxmAtXmIgJyHlYAfOHSyzknq
-         Se0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddKdS4x8c4ZSI9PbKdla4xMHlbecpUYnHnf7KqPY/v4=;
-        b=fO3BWCBPhQ5NZJrEXHEAHWqTTTEm41y85Pd5MCx196BnJN4YqRH9IfDM71k44SiMiq
-         kFnti+fltSPk3hX9pEh4/c7aKqKVIYZO0DCIPEoQZYZh8SgDTnpDNqMgP7ES8WELnk/X
-         eGaO+YkXXhLFf5G9bQl6X+62DDCkEy4RHwf15I2KXlDkBDt5Sjxq3whqrbOdSWm05V6p
-         ybFflaOQ6AaptZlo0zuilalUOLwmAZhpEXSdwAsXS0DSGWjjVJ5fwg/LEAnLfo8gy8v3
-         DEsJheitVI9Nan/0pa5P9boMH1NCvd8rBaUL4CPz1HsSKxW4dRe+DKTcsJk3RjONiYoB
-         fDUg==
-X-Gm-Message-State: ACrzQf1Dkfm9+X44NmmfgHGJca8Bi0jkCT5TS+WcGwZRrkWiziQhMmCR
-        qKRlj8FDfDH3Q2zpuOoH0x1fzfXvV05EoLl4iG8=
-X-Google-Smtp-Source: AMsMyM4cDsgn9soSrkV/Cu1RCT5jVdcQzug0ImUZ4Z4LOwyKmBMTyh5ryRigeiyCaKvPkh8CkDAYEhIRZK4c5Z/HEj4=
-X-Received: by 2002:a1f:e9c6:0:b0:3ab:aee7:841f with SMTP id
- g189-20020a1fe9c6000000b003abaee7841fmr11475654vkh.19.1667384757376; Wed, 02
- Nov 2022 03:25:57 -0700 (PDT)
+        with ESMTP id S230295AbiKBLNG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Nov 2022 07:13:06 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78F124969;
+        Wed,  2 Nov 2022 04:12:52 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 4AB1033725;
+        Wed,  2 Nov 2022 11:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1667387560; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IGslLuYGqB44VKqgWWsPNfEWkuclkAOR5dtiKT3iivc=;
+        b=u8ae5WzBrpmlJffHlLWFbpv3efj9JyD7G6wjhBbzZuGnGVN4odZTmkpD0/JhmPwX7LbBBe
+        61yMzwIvO1FCdc66dGM/Q0qbmS+gt+61Aas1rJfYAuPtNq9WuT/VZGe+gXaD73OidK0DI0
+        VwGdZ3wMQ5uHNJTy1tBxa7MLL04Miu8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1667387560;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IGslLuYGqB44VKqgWWsPNfEWkuclkAOR5dtiKT3iivc=;
+        b=TKLyUci5Ez3KeN45FsP6tRI63ZUX/B/grSuh76qt0yhqdxCw7Gi3swvJ5VUXgKyBNsNxJ1
+        3fJ7sK0ZCAO4RjDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 39869139D3;
+        Wed,  2 Nov 2022 11:12:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id DLLaDahQYmMpagAAMHmgww
+        (envelope-from <hare@suse.de>); Wed, 02 Nov 2022 11:12:40 +0000
+Message-ID: <39f9afc5-9aab-6f7c-b67a-e74e694543d4@suse.de>
+Date:   Wed, 2 Nov 2022 12:12:39 +0100
 MIME-Version: 1.0
-Received: by 2002:ac5:c764:0:0:0:0:0 with HTTP; Wed, 2 Nov 2022 03:25:57 -0700 (PDT)
-Reply-To: subik7633@gmail.com
-From:   Susan Bikram <jbi880375@gmail.com>
-Date:   Wed, 2 Nov 2022 03:25:57 -0700
-Message-ID: <CAHiEHe-WJ2p2=fLeHdq+Ga40V-ofpmNkSHCKG5+bvNqMxsnZBQ@mail.gmail.com>
-Subject: Please can i have your attention
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:a34 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4988]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [jbi880375[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [subik7633[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [jbi880375[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  3.0 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH RFC v3 2/7] ata: libata-scsi: Add
+ ata_internal_queuecommand()
+Content-Language: en-US
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        John Garry <john.g.garry@oracle.com>,
+        John Garry <john.garry@huawei.com>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, bvanassche@acm.org, hch@lst.de,
+        ming.lei@redhat.com, niklas.cassel@wdc.com
+Cc:     axboe@kernel.dk, jinpu.wang@cloud.ionos.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linuxarm@huawei.com, john.garry2@mail.dcu.ie
+References: <1666693976-181094-1-git-send-email-john.garry@huawei.com>
+ <1666693976-181094-3-git-send-email-john.garry@huawei.com>
+ <08fdb698-0df3-7bc8-e6af-7d13cc96acfa@opensource.wdc.com>
+ <83d9dc82-ea37-4a3c-7e67-1c097f777767@huawei.com>
+ <9a2f30cc-d0e9-b454-d7cd-1b0bd3cf0bb9@opensource.wdc.com>
+ <0e60fab5-8a76-9b7e-08cf-fb791e01ae08@huawei.com>
+ <71b56949-e4d7-fd94-c44a-867080b7a4fa@opensource.wdc.com>
+ <b03b37a2-35dc-5218-7279-ae68678a47ff@huawei.com>
+ <0e4994f7-f131-39b0-c876-f447b71566cd@opensource.wdc.com>
+ <05cf6d61-987b-025d-b694-a58981226b97@oracle.com>
+ <ff0c2ab7-8e82-40d9-1adf-78ee12846e1f@opensource.wdc.com>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <ff0c2ab7-8e82-40d9-1adf-78ee12846e1f@opensource.wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear ,
+On 11/2/22 11:07, Damien Le Moal wrote:
+> On 11/2/22 18:52, John Garry wrote:
+>> Hi Damien,
+>>
+[ .. ]
+>>>> Or re-use 1 from 32 (and still also have 1 separate internal command)?
+>>>
+>>> I am not yet 100% sure if we can treat that internal NCQ read log like
+>>> any other read/write request... If we can, then the 1-out-of-32
+>>> reservation would not be needed. Need to revisit all the cases we need
+>>> to take care of (because in the middle of this CDL completion handling,
+>>> regular NCQ errors can happen, resulting in a drive reset that could
+>>> wreck everything as we lose the sense data for the completed requests).
+>>>
+>>> In any case, I think that we can deal with that extra reserved command
+>>> on top of you current series. No need to worry about it for now I think.
+>>>
+>>
+>> So are you saying that you are basing current CDL support on libata
+>> internally managing this extra reserved tag (and so do not need this
+>> SCSI midlayer reserved tag support yet)?
+> 
+> Not really. For now, it is using libata EH, that is, when we need the
+> internal command for the read log, we know the device is idle and no
+> command is on-going. So we send a non-NCQ command which does not have a tag.
+> 
+> Ideally, all of this should use a real reserved tag to allow for an NCQ
+> read log outside of EH, avoiding the drive queue drain.
+> 
+But with the current design you'll only get that if you reserve one 
+precious tag.
 
-Please can I have your attention and possibly help me for humanity's
-sake please. I am writing this message with a heavy heart filled with
-sorrows and sadness.
-Please if you can respond, i have an issue that i will be most
-grateful if you could help me deal with it please.
+OTOH, we might not need that tag at all, as _if_ we get an error for a 
+specific command the tag associated with it is necessarily free after 
+completion, right?
 
-Susan
+So we only need to find a way of 're-using' that tag, then we won't have 
+to set aside a reserved tag and everything would be dandy...
+
+Maybe we can stop processing when we receive an error (should be doing 
+that anyway as otherwise the log might be overwritten), then we should 
+be having a pretty good chance of getting that tag.
+Or, precisely, getting _any_ tag as at least one tag is free at that point.
+Hmm?
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+
