@@ -2,61 +2,91 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E967061571D
-	for <lists+linux-block@lfdr.de>; Wed,  2 Nov 2022 02:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ED5A615757
+	for <lists+linux-block@lfdr.de>; Wed,  2 Nov 2022 03:09:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbiKBBog (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Nov 2022 21:44:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
+        id S229889AbiKBCJy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Nov 2022 22:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiKBBof (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 21:44:35 -0400
-Received: from zju.edu.cn (spam.zju.edu.cn [61.164.42.155])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A37B5DED7;
-        Tue,  1 Nov 2022 18:44:33 -0700 (PDT)
-Received: by ajax-webmail-mail-app2 (Coremail) ; Wed, 2 Nov 2022 09:44:30
- +0800 (GMT+08:00)
-X-Originating-IP: [10.14.30.50]
-Date:   Wed, 2 Nov 2022 09:44:30 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   "Jinlong Chen" <nickyc975@zju.edu.cn>
-To:     "Christoph Hellwig" <hch@lst.de>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH 1/4] blk-mq: update comment for
- blk_mq_quiesce_queue_nowait()
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210104(ab8c30b6)
- Copyright (c) 2002-2022 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20221101172720.GA20526@lst.de>
-References: <cover.1667314759.git.nickyc975@zju.edu.cn>
- <489a9322eed1f95f8770752cc715084f1fa961d3.1667314759.git.nickyc975@zju.edu.cn>
- <20221101172720.GA20526@lst.de>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        with ESMTP id S229561AbiKBCJy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Nov 2022 22:09:54 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36E21D32A
+        for <linux-block@vger.kernel.org>; Tue,  1 Nov 2022 19:09:52 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 128so15039807pga.1
+        for <linux-block@vger.kernel.org>; Tue, 01 Nov 2022 19:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B/9nbqKAy6prDAS3oMmtklZfg/ZbEspQaEJ48FmeAmc=;
+        b=TrwwCrLqC7JAM1Uu/+yafOAtWgX5dY7pPM2NvZ69AMrgl3UEFM/DscGiTUUHN3pc+L
+         uS7v2QJimbqhm1WnG9dnmFDRtAK7Yte8g4pmcY2GKK2Ytn0tZg9J9Dfz0LlYaXEDDxsx
+         iiTD4UyqQ9/VzWkjBXBux22f7w4atH83ns9iux6Su51579Sjj45hARf3lqY0yH2OoybV
+         v0M5WTlBw12gNGR7yEzNR+v5pJXL2RhLDZb6KkB4LTw9dVwWz1JNVzxYWwMm3Og/CFZy
+         yEUtvs6A3IVvM93m1EbIcurAyJwCjGIC2c1FgMU708u88XVXA0b3UxJKLzPm463agT6c
+         ZJiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B/9nbqKAy6prDAS3oMmtklZfg/ZbEspQaEJ48FmeAmc=;
+        b=N7T0VntqnKgq1ImMYzJmr4PSEXGS/OalXEYGERy0xOZZmEtFvrwAfxrNqoiQSWR0DM
+         +7lDXP3+uwVk/GcRXdlEN87HNNXtgQ6/XYu1GiCUzysr+ggmbfKORvD6ObdQhY5Ml6Mz
+         OyJdJ10GxIUHRus0GICHI35ZjOevJIVKL+106Nej+jyPw4Y8nI5DBLFlaVqsqpA6ws9s
+         dS3Z/APF3CrfjgWht7IPUh9lFkYFmu6/X5GUfTF3hPKEC5ipT55kenRx1SFClWRSzTDK
+         /WIv12ASMUOwlW7bhMEWK2s4Di8oMHH2vT8yYNR0JVouq2yZu17sBQDdHScyoQZsEqcC
+         Tz3Q==
+X-Gm-Message-State: ACrzQf2Ikm5NheJVFxuXyNtxwMteXuBY/iZaVR19ja9QVWEAAkpqa4Po
+        /NGAlppXiigA9gbmkn97UScWhA==
+X-Google-Smtp-Source: AMsMyM6nfZ1Xf117LD/8Qlkj1bOJKmYdrnP9WwitZHJYBeZMfYqBJCmperWW+vBpF2o56y/62TQwcQ==
+X-Received: by 2002:a63:35c6:0:b0:470:d38:7c63 with SMTP id c189-20020a6335c6000000b004700d387c63mr17783pga.249.1667354992155;
+        Tue, 01 Nov 2022 19:09:52 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id k1-20020a170902c40100b0016c9e5f291bsm7018876plk.111.2022.11.01.19.09.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Nov 2022 19:09:51 -0700 (PDT)
+Message-ID: <7f7e59cb-e0b8-0db5-7c46-11aea963bcfa@kernel.dk>
+Date:   Tue, 1 Nov 2022 20:09:44 -0600
 MIME-Version: 1.0
-Message-ID: <1f33a768.1635a2.1843602e799.Coremail.nickyc975@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: by_KCgAXz1p+y2FjIKdcBw--.53643W
-X-CM-SenderInfo: qssqjiaqqzq6lmxovvfxof0/1tbiAgIAB1ZdtcLuXwATsZ
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWUCw
-        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-        daVFxhVjvjDU=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH -next v4 1/5] block, bfq: remove set but not used variable
+ in __bfq_entity_update_weight_prio
+To:     Yu Kuai <yukuai1@huaweicloud.com>, jack@suse.cz,
+        paolo.valente@linaro.org
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+        yi.zhang@huawei.com
+References: <20221102022542.3621219-1-yukuai1@huaweicloud.com>
+ <20221102022542.3621219-2-yukuai1@huaweicloud.com>
+Content-Language: en-US
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20221102022542.3621219-2-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-PiBPbiBUdWUsIE5vdiAwMSwgMjAyMiBhdCAxMToxMTozNFBNICswODAwLCBKaW5sb25nIENoZW4g
-d3JvdGU6Cj4gPiBibGtfbXFfcXVpZXNjZV9xdWV1ZV9ub3dhaXQoKSBpcyBub3cgcmVhc29uYWJs
-eSB1c2VkIGJ5IHNjc2lfaG9zdF9ibG9jaygpCj4gPiB0byBhdm9pZCBjYWxsaW5nIHN5bmNocm9u
-aXplX3JjdSgpIGZvciBlYWNoIExVTi4gV2Ugc2hvdWxkIG5vdCBjb25zaWRlciB0bwo+ID4gcmVt
-b3ZlIGl0Lgo+IAo+IEkgc3Ryb25nbHkgZGlzYWdyZWUgYWJvdXQgdGhpcyBiZWluZyBhIHJlYXNv
-bmFibGUgdXNlLiAgV2hhdCBTQ1NJIGRpZAo+IHRoZXJlIGlzIGEgaG9ycmlibGUgaGFjayB0aGF0
-IHNob3VsZCBoYXZlIG5ldmVyIGJlZW4gbWVyZ2VkLiAgVGhlCj4gcmlnaHQgdGhpbmcgdG8gZG8g
-aXMgdGhlIHBlci10YWdfc2V0IHF1aWVzY2UgdGhhdCB3ZSd2ZSBiZWVuIHdvcmtpbmcKPiBvbi4K
-Ck9rLCBJIGd1ZXNzIEkgbmVlZCB0byByZWFkIHRoZSBwZXItdGFnX3NldCBxdWllc2NlIHBhdGNo
-IHNlcmllcy4KClRoYW5rcyEKSmlubG9uZyBDaGVuCg==
+On 11/1/22 8:25 PM, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> After the patch "block, bfq: cleanup bfq_weights_tree add/remove apis"),
+> the local variable 'bfqd' is not used anymore, thus remove it.
+
+Please add a Fixes tag.
+
+-- 
+Jens Axboe
+
+
