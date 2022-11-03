@@ -2,69 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACEB2617CCE
-	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 13:40:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3E5B6182AA
+	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 16:26:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbiKCMkl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Nov 2022 08:40:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
+        id S231669AbiKCP0P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Nov 2022 11:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiKCMkk (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 08:40:40 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14C210BE;
-        Thu,  3 Nov 2022 05:40:35 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id F40E868AA6; Thu,  3 Nov 2022 13:40:30 +0100 (CET)
-Date:   Thu, 3 Nov 2022 13:40:30 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thorsten Leemhuis <linux@leemhuis.info>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, linux-block@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-mm@kvack.org,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGESSION] systemd-oomd overreacting due to PSI changes for
- Btrfs (was: Re: [PATCH 3/5] btrfs: add manual PSI accounting for
- compressed reads)
-Message-ID: <20221103124030.GA29839@lst.de>
-References: <20220915094200.139713-1-hch@lst.de> <20220915094200.139713-4-hch@lst.de> <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
+        with ESMTP id S231589AbiKCP0O (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 11:26:14 -0400
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A450D5A
+        for <linux-block@vger.kernel.org>; Thu,  3 Nov 2022 08:26:13 -0700 (PDT)
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A3CAdCF010471
+        for <linux-block@vger.kernel.org>; Thu, 3 Nov 2022 08:26:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=s2048-2021-q4;
+ bh=c1LL6PntKBv/Iz5G0/ylwJgKXQ1mJtEBPZcaAIbotZI=;
+ b=kw1lx7xNXqxZJKF5KC0c55nZo82fgTbqPllD6VrHrJAk36q1uKG2U1ZUaZsXRUs4JG3d
+ Hq8uCP5GOkRpELZUDE82ECSgwF79WqIOcvbBdrrzDzmVRvEDjiZtP2zu8p12KAIh3u8t
+ m2Uh+EbqRnyQtskNJlNQCnfGoDQpFv0mWlOrdz2Fh8gAeDMTepOQ80IisRgLtyuKIv/F
+ IwmMjCThwPOr6gjJOhOYflAHVDyF7B5Kbi+MLOL9TqlFSKoM72u3qjq3iBo4vB80gnpz
+ o31BTc1tAtY7R2ID5SZc+rZ0SmJWkPx0U6ZmF3r8T1F2sNAtCp6XauYttJ2YgGoyoghA dA== 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3kmddh1kqu-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Thu, 03 Nov 2022 08:26:12 -0700
+Received: from twshared21592.39.frc1.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c085:21d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 3 Nov 2022 08:26:10 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id 1652BAA9A072; Thu,  3 Nov 2022 08:26:00 -0700 (PDT)
+From:   Keith Busch <kbusch@meta.com>
+To:     <linux-block@vger.kernel.org>, <dm-devel@redhat.com>,
+        <axboe@kernel.dk>
+CC:     <stefanha@redhat.com>, <ebiggers@kernel.org>, <me@demsh.org>,
+        <mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 0/3] fix direct io errors on dm-crypt
+Date:   Thu, 3 Nov 2022 08:25:56 -0700
+Message-ID: <20221103152559.1909328-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: UDu8OgsPL2zw2lRQVmx4T_jpF0oM4DqC
+X-Proofpoint-GUID: UDu8OgsPL2zw2lRQVmx4T_jpF0oM4DqC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-03_04,2022-11-03_01,2022-06-22_01
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 11:46:52AM +0100, Thorsten Leemhuis wrote:
-> It seems this patch makes systemd-oomd overreact on my day-to-day
-> machine and aggressively kill applications. I'm not the only one that
-> noticed such a behavior with 6.1 pre-releases:
-> https://bugzilla.redhat.com/show_bug.cgi?id=2133829
-> https://bugzilla.redhat.com/show_bug.cgi?id=2134971
-> 
-> I think I have a pretty reliable way to trigger the issue that involves
-> starting the apps that I normally use and a VM that I occasionally use,
-> which up to now never resulted in such a behaviour.
-> 
-> On master as of today (8e5423e991e8) I can trigger the problem within a
-> minute or two. But I fail to trigger it with v6.0.6 or when I revert
-> 4088a47e78f9 ("btrfs: add manual PSI accounting for compressed reads").
-> And yes, I use btrfs with compression for / and /home/.
+From: Keith Busch <kbusch@kernel.org>
 
-So, I did in fact not want to include this patch because it is a little
-iffy and includes PSI accounting for reads where btrfs just does
-aggresive readaround for compression, but Johannes asked for it to be
-added.  I'd be perfectly fine with just reverting it.
+The 6.0 kernel made some changes to the direct io interface to allow
+offsets in user addresses. This based on the hardware's capabilities
+reported in the request_queue's dma_alignment attribute.
+
+dm-crypt requires direct io be aligned to the block size. Since it was
+only ever using the default 511 dma mask, this requirement may fail if
+formatted to something larger, like 4k, which will result in unexpected
+behavior with direct-io.
+
+There are two parts to fixing this:
+
+  First, the attribute needs to be moved to the queue_limit so that it
+  can properly stack with device mappers.
+
+  Second, dm-crypt provides its minimum required limit to match the
+  logical block size.
+
+Keith Busch (3):
+  block: make dma_alignment a stacking queue_limit
+  dm-crypt: provide dma_alignment limit in io_hints
+  block: make blk_set_default_limits() private
+
+ block/blk-core.c       |  1 -
+ block/blk-settings.c   |  9 +++++----
+ block/blk.h            |  1 +
+ drivers/md/dm-crypt.c  |  1 +
+ include/linux/blkdev.h | 16 ++++++++--------
+ 5 files changed, 15 insertions(+), 13 deletions(-)
+
+--=20
+2.30.2
+
