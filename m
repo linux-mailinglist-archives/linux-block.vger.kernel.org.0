@@ -2,75 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD704617B5A
-	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 12:08:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACEB2617CCE
+	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 13:40:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbiKCLIy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Nov 2022 07:08:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39372 "EHLO
+        id S229993AbiKCMkl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Nov 2022 08:40:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbiKCLIx (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 07:08:53 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F6EFAF7;
-        Thu,  3 Nov 2022 04:08:51 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1oqY5Y-0006kG-JP; Thu, 03 Nov 2022 12:08:48 +0100
-Message-ID: <9114cdb0-9d2a-d863-9157-40f182b110a8@leemhuis.info>
-Date:   Thu, 3 Nov 2022 12:08:48 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Content-Language: en-US, de-DE
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-To:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc:     linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-mm@kvack.org
-References: <20220915094200.139713-1-hch@lst.de>
- <20220915094200.139713-4-hch@lst.de>
- <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
+        with ESMTP id S229481AbiKCMkk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 08:40:40 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14C210BE;
+        Thu,  3 Nov 2022 05:40:35 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F40E868AA6; Thu,  3 Nov 2022 13:40:30 +0100 (CET)
+Date:   Thu, 3 Nov 2022 13:40:30 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Thorsten Leemhuis <linux@leemhuis.info>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, linux-block@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-mm@kvack.org,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Subject: Re: [REGESSION] systemd-oomd overreacting due to PSI changes for
- Btrfs #forregzbot
+ Btrfs (was: Re: [PATCH 3/5] btrfs: add manual PSI accounting for
+ compressed reads)
+Message-ID: <20221103124030.GA29839@lst.de>
+References: <20220915094200.139713-1-hch@lst.de> <20220915094200.139713-4-hch@lst.de> <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667473731;3c8542ad;
-X-HE-SMSGID: 1oqY5Y-0006kG-JP
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 03.11.22 11:46, Thorsten Leemhuis wrote:
-> On 15.09.22 11:41, Christoph Hellwig wrote:
->> btrfs compressed reads try to always read the entire compressed chunk,
->> even if only a subset is requested.  Currently this is covered by the
->> magic PSI accounting underneath submit_bio, but that is about to go
->> away. Instead add manual psi_memstall_{enter,leave} annotations.
->>
->> Note that for readahead this really should be using readahead_expand,
->> but the additionals reads are also done for plain ->read_folio where
->> readahead_expand can't work, so this overall logic is left as-is for
->> now.
-> 
+On Thu, Nov 03, 2022 at 11:46:52AM +0100, Thorsten Leemhuis wrote:
 > It seems this patch makes systemd-oomd overreact on my day-to-day
 > machine and aggressively kill applications. I'm not the only one that
 > noticed such a behavior with 6.1 pre-releases:
 > https://bugzilla.redhat.com/show_bug.cgi?id=2133829
 > https://bugzilla.redhat.com/show_bug.cgi?id=2134971
+> 
+> I think I have a pretty reliable way to trigger the issue that involves
+> starting the apps that I normally use and a VM that I occasionally use,
+> which up to now never resulted in such a behaviour.
+> 
+> On master as of today (8e5423e991e8) I can trigger the problem within a
+> minute or two. But I fail to trigger it with v6.0.6 or when I revert
+> 4088a47e78f9 ("btrfs: add manual PSI accounting for compressed reads").
+> And yes, I use btrfs with compression for / and /home/.
 
-Great, the kernel's regression tracker reports a regression and forgets
-to tell his regression tracking bot about it to ensure it's tracked... :-D
-
-#regzbot ^introduced 4088a47e78f9
-#regzbot title mm/btrfs: systemd-oomd overreacting due to PSI changes
-for Btrfs
-#regzbot ignore-activity
-
-Ciao, Thorsten
+So, I did in fact not want to include this patch because it is a little
+iffy and includes PSI accounting for reads where btrfs just does
+aggresive readaround for compression, but Johannes asked for it to be
+added.  I'd be perfectly fine with just reverting it.
