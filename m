@@ -2,48 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 984786182AB
-	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 16:26:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A818F6182A9
+	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 16:26:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231673AbiKCP0P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Nov 2022 11:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35932 "EHLO
+        id S230294AbiKCP0O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Nov 2022 11:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231657AbiKCP0O (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 11:26:14 -0400
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33ED81A213
-        for <linux-block@vger.kernel.org>; Thu,  3 Nov 2022 08:26:14 -0700 (PDT)
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.17.1.5/8.17.1.5) with ESMTP id 2A3Ehd6s026649
-        for <linux-block@vger.kernel.org>; Thu, 3 Nov 2022 08:26:13 -0700
+        with ESMTP id S231404AbiKCP0N (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 11:26:13 -0400
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477EC1A234
+        for <linux-block@vger.kernel.org>; Thu,  3 Nov 2022 08:26:12 -0700 (PDT)
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A3EpUfr014639
+        for <linux-block@vger.kernel.org>; Thu, 3 Nov 2022 08:26:11 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=s2048-2021-q4;
- bh=aqbEu7FwfUoPtiNVDBTBB/4tMMl0CFp26nCKV0L1wz0=;
- b=XcF/B2vl8J6JDXEg6039YQL5N+u2aZfmH8NXFW4GbEKdjbdK+tPkiGwETUpFab7M8cgD
- ngJcQ+j8TZVLG1iDEEcS7dHZG5HT4QqySOqDiMQ/PhY1Dkw5kjaX2Vd3tkjUWU8ptNmg
- UD+a3F/yIXsH78HKmiTjC8tkKNxeJSKDcfN3iwjPrZ6ZtW6v7uYOImKIaVXxKax7BKO+
- 1zMzBq1RvVMPDqc3w7f4I/fDS0uC4JxoWO7aZ/pArlQ+3vqhBwL+nlKW18fzgQbAk0K8
- VNrqbR67zjUJTQs/0dCsj7HtuEMHbEzoa0R7btLIrMlmSapZAwPfm2g3xPdHROCOxMhZ 6w== 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net (PPS) with ESMTPS id 3kkshd3xke-2
+ bh=B4kQCEO7e1uaX4xOqHmVbkBneaeAJi2KeOM4H2ft5PE=;
+ b=OhYPCjP8+88uPuXH4sviHYSfMgTE1FfzVB/AwTzYt1ndtIR7yOK5HqrliXbEPYGSd37z
+ q5+wnIFk/Mbq9mCwT7dPVvzrH4/lD0toEc5E4MhgBf6bf2+mXf28LNXFLcdL1R3R6PEL
+ 5xlt/QvrSI8qu9sTj37gGBIEQJc7lo1Z+oG33cWDGOVuWYkKPOio504baf05vSmudbVi
+ ojXCt+PI5/sj42jQRcLEdMA7pXzqQ1Ju5pS+XWK11I4vCNBgteiwtxP3f/Rr+oeYGQdr
+ 3H/L0c6X2DdwW3DTPaYmjzaJRRS202o0fXKTtqA79OoJhV4G4FKnlCeI6Y/H2iE/AlcM mQ== 
+Received: from maileast.thefacebook.com ([163.114.130.3])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3kkva1a8hy-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Thu, 03 Nov 2022 08:26:13 -0700
-Received: from twshared25017.14.frc2.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
+        for <linux-block@vger.kernel.org>; Thu, 03 Nov 2022 08:26:10 -0700
+Received: from twshared14438.02.ash8.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 3 Nov 2022 08:26:11 -0700
+ 15.1.2375.31; Thu, 3 Nov 2022 08:26:09 -0700
 Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id 6AAF0AA9A07C; Thu,  3 Nov 2022 08:26:00 -0700 (PDT)
+        id BA164AA9A07E; Thu,  3 Nov 2022 08:26:00 -0700 (PDT)
 From:   Keith Busch <kbusch@meta.com>
 To:     <linux-block@vger.kernel.org>, <dm-devel@redhat.com>,
         <axboe@kernel.dk>
 CC:     <stefanha@redhat.com>, <ebiggers@kernel.org>, <me@demsh.org>,
         <mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 2/3] dm-crypt: provide dma_alignment limit in io_hints
-Date:   Thu, 3 Nov 2022 08:25:58 -0700
-Message-ID: <20221103152559.1909328-3-kbusch@meta.com>
+Subject: [PATCH 3/3] block: make blk_set_default_limits() private
+Date:   Thu, 3 Nov 2022 08:25:59 -0700
+Message-ID: <20221103152559.1909328-4-kbusch@meta.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221103152559.1909328-1-kbusch@meta.com>
 References: <20221103152559.1909328-1-kbusch@meta.com>
@@ -51,8 +51,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: uYr3rA_vJ4HnCHBiHZJWWWvuNbu6aYfq
-X-Proofpoint-GUID: uYr3rA_vJ4HnCHBiHZJWWWvuNbu6aYfq
+X-Proofpoint-GUID: Z4luO0HVsW2z_gTgxW_f9tBsSsEmtdqM
+X-Proofpoint-ORIG-GUID: Z4luO0HVsW2z_gTgxW_f9tBsSsEmtdqM
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-11-03_04,2022-11-03_01,2022-06-22_01
@@ -68,31 +68,55 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Keith Busch <kbusch@kernel.org>
 
-This device mapper needs bio vectors to be sized and memory aligned to
-the logical block size. Set the minimum required queue limit
-accordingly.
+There are no external users of this function.
 
-Fixes: b1a000d3b8ec5 ("block: relax direct io memory alignment")
-Reportred-by: Eric Biggers <ebiggers@kernel.org>
-Reported-by: Dmitrii Tcvetkov <me@demsh.org>
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- drivers/md/dm-crypt.c | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-settings.c   | 1 -
+ block/blk.h            | 1 +
+ include/linux/blkdev.h | 1 -
+ 3 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 159c6806c19b..2653516bcdef 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -3630,6 +3630,7 @@ static void crypt_io_hints(struct dm_target *ti, st=
-ruct queue_limits *limits)
- 	limits->physical_block_size =3D
- 		max_t(unsigned, limits->physical_block_size, cc->sector_size);
- 	limits->io_min =3D max_t(unsigned, limits->io_min, cc->sector_size);
-+	limits->dma_alignment =3D limits->logical_block_size - 1;
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 4949ed3ce7c9..8ac1038d0c79 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -59,7 +59,6 @@ void blk_set_default_limits(struct queue_limits *lim)
+ 	lim->zone_write_granularity =3D 0;
+ 	lim->dma_alignment =3D 511;
  }
+-EXPORT_SYMBOL(blk_set_default_limits);
 =20
- static struct target_type crypt_target =3D {
+ /**
+  * blk_set_stacking_limits - set default limits for stacking devices
+diff --git a/block/blk.h b/block/blk.h
+index d259d1da4cb4..4849a2efa4c5 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -330,6 +330,7 @@ void blk_rq_set_mixed_merge(struct request *rq);
+ bool blk_rq_merge_ok(struct request *rq, struct bio *bio);
+ enum elv_merge blk_try_merge(struct request *rq, struct bio *bio);
+=20
++void blk_set_default_limits(struct queue_limits *lim);
+ int blk_dev_init(void);
+=20
+ /*
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 69ee5ea29e2f..704bc175a732 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -939,7 +939,6 @@ extern void blk_queue_io_min(struct request_queue *q,=
+ unsigned int min);
+ extern void blk_limits_io_opt(struct queue_limits *limits, unsigned int =
+opt);
+ extern void blk_queue_io_opt(struct request_queue *q, unsigned int opt);
+ extern void blk_set_queue_depth(struct request_queue *q, unsigned int de=
+pth);
+-extern void blk_set_default_limits(struct queue_limits *lim);
+ extern void blk_set_stacking_limits(struct queue_limits *lim);
+ extern int blk_stack_limits(struct queue_limits *t, struct queue_limits =
+*b,
+ 			    sector_t offset);
 --=20
 2.30.2
 
