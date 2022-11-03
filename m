@@ -2,352 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB62617928
-	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 09:52:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 585566179AA
+	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 10:18:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231388AbiKCIwE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 3 Nov 2022 04:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52478 "EHLO
+        id S230398AbiKCJSh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 3 Nov 2022 05:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231446AbiKCIvw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 04:51:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA04CD2C3
-        for <linux-block@vger.kernel.org>; Thu,  3 Nov 2022 01:50:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667465449;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s24KGcV2Z54EoXUCNfpVmCq/LLHmEm9f0arH5p9T5iM=;
-        b=D2S1A1mUWrZuT1mGnUynCnxGaKMghrfpPy+Dan+FOzY2p1ofkRBl90iMRWbDx59MUlyoNS
-        5legZMYV4TGGDhbJgBQW8L9Uh3rtldUJQa8dq/R3qGumNm2MsuD8oA/gfAzER3xOT/gSfx
-        fKiPuczle+EIkN3kO0x0SYsB/vdtEUQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-623-P1tEpVr6PqigEItNTJ3Wjw-1; Thu, 03 Nov 2022 04:50:48 -0400
-X-MC-Unique: P1tEpVr6PqigEItNTJ3Wjw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C4270858F13;
-        Thu,  3 Nov 2022 08:50:47 +0000 (UTC)
-Received: from localhost (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B901840C2140;
-        Thu,  3 Nov 2022 08:50:46 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [RFC PATCH 4/4] ublk_drv: support splice based read/write zero copy
-Date:   Thu,  3 Nov 2022 16:50:04 +0800
-Message-Id: <20221103085004.1029763-5-ming.lei@redhat.com>
-In-Reply-To: <20221103085004.1029763-1-ming.lei@redhat.com>
-References: <20221103085004.1029763-1-ming.lei@redhat.com>
+        with ESMTP id S229587AbiKCJSA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 3 Nov 2022 05:18:00 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241F8DEE9;
+        Thu,  3 Nov 2022 02:17:04 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4N2ykV6SVvzK9bd;
+        Thu,  3 Nov 2022 17:14:26 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgCntOYMh2NjRuuSAg--.21550S3;
+        Thu, 03 Nov 2022 17:17:02 +0800 (CST)
+Subject: Re: [PATCH 1/2] block: don't allow a disk link holder to itself
+To:     Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <20221103025541.1875809-1-yukuai1@huaweicloud.com>
+ <20221103025541.1875809-2-yukuai1@huaweicloud.com>
+ <20221103080628.GA3346@lst.de>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <faabea7a-b06b-1494-59ce-e06d0a7b2882@huaweicloud.com>
+Date:   Thu, 3 Nov 2022 17:17:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20221103080628.GA3346@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgCntOYMh2NjRuuSAg--.21550S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw1DGw15WFy8uw47urWkXrb_yoWkGrbEga
+        s09r97GwnrJ3Z7tFsIyr13ZrZ09FWkWry8CrWUKF129w15XryUJF48C390qr9xGrs8tr4a
+        9rZ8W343Aw12vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb4kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UU
+        UUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Pass ublk block IO request pages to kernel backend IO handling code via
-pipe, and request page copy can be avoided. So far, the existed
-pipe/splice mechanism works for handling write request only.
+Hi,
 
-The initial idea of using splice for zero copy is from Miklos and Stefan.
+ÔÚ 2022/11/03 16:06, Christoph Hellwig Ð´µÀ:
+> Yes, this is a good one.  Please add a single sentence blurb explaing
+> the issue before the Test prodecure?
+Ok, I'll do that.
+> 
+> With that this looks good:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> On Thu, Nov 03, 2022 at 10:55:40AM +0800, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> Test procedures:
+>>
+>> 1) dmsetup create test --table "xxx sda", assume dm-0 is created
+>> 2) dmsetup suspend test
+>> 3) dmsetup reload test --table "xxx dm-0"
+>> 4) dmsetup resume test
+> 
+> Can you wire this up for blocktests?
 
-Read request's zero copy requires pipe's change to allow one read end to
-produce buffers for another read end to consume. The added SPLICE_F_READ_TO_READ
-flag is for supporting this feature.
+Of course I can, I'm not very familiar with how to add new test in
+blktests, so I might take some time to do that.
+> 
+> I've also been wondering how we could wire your other two test cases
+> up as I think they'be very useful.  Hopefully I can find some time
+> to inject delays with eBPF or something like it.
 
-READ is handled by sending IORING_OP_SPLICE with SPLICE_F_DIRECT |
-SPLICE_F_READ_TO_READ. WRITE is handled by sending IORING_OP_SPLICE with
-SPLICE_F_DIRECT. Kernel internal pipe is used for simplifying userspace,
-meantime potential info leak could be avoided.
+The problem was found without the delay originally, such delay can make
+sure the problem is reproduced 100%, but it's still possible without the
+delay. Perhaps we can add the test without delay for now.
 
-Suggested-by: Miklos Szeredi <mszeredi@redhat.com>
-Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- drivers/block/ublk_drv.c      | 151 +++++++++++++++++++++++++++++++++-
- include/uapi/linux/ublk_cmd.h |  34 +++++++-
- 2 files changed, 182 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index f96cb01e9604..c9d061547877 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -42,6 +42,8 @@
- #include <linux/mm.h>
- #include <asm/page.h>
- #include <linux/task_work.h>
-+#include <linux/pipe_fs_i.h>
-+#include <linux/splice.h>
- #include <uapi/linux/ublk_cmd.h>
- 
- #define UBLK_MINORS		(1U << MINORBITS)
-@@ -51,7 +53,8 @@
- 		| UBLK_F_URING_CMD_COMP_IN_TASK \
- 		| UBLK_F_NEED_GET_DATA \
- 		| UBLK_F_USER_RECOVERY \
--		| UBLK_F_USER_RECOVERY_REISSUE)
-+		| UBLK_F_USER_RECOVERY_REISSUE \
-+		| UBLK_F_SPLICE_ZC)
- 
- /* All UBLK_PARAM_TYPE_* should be included here */
- #define UBLK_PARAM_TYPE_ALL (UBLK_PARAM_TYPE_BASIC | UBLK_PARAM_TYPE_DISCARD)
-@@ -61,6 +64,7 @@ struct ublk_rq_data {
- 		struct callback_head work;
- 		struct llist_node node;
- 	};
-+	atomic_t	handled;
- };
- 
- struct ublk_uring_cmd_pdu {
-@@ -480,6 +484,9 @@ static int ublk_map_io(const struct ublk_queue *ubq, const struct request *req,
- 	if (req_op(req) != REQ_OP_WRITE && req_op(req) != REQ_OP_FLUSH)
- 		return rq_bytes;
- 
-+	if (ubq->flags & UBLK_F_SPLICE_ZC)
-+		return rq_bytes;
-+
- 	if (ublk_rq_has_data(req)) {
- 		struct ublk_map_data data = {
- 			.ubq	=	ubq,
-@@ -501,6 +508,9 @@ static int ublk_unmap_io(const struct ublk_queue *ubq,
- {
- 	const unsigned int rq_bytes = blk_rq_bytes(req);
- 
-+	if (ubq->flags & UBLK_F_SPLICE_ZC)
-+		return rq_bytes;
-+
- 	if (req_op(req) == REQ_OP_READ && ublk_rq_has_data(req)) {
- 		struct ublk_map_data data = {
- 			.ubq	=	ubq,
-@@ -858,6 +868,19 @@ static blk_status_t ublk_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	if (ublk_queue_can_use_recovery(ubq) && unlikely(ubq->force_abort))
- 		return BLK_STS_IOERR;
- 
-+	if (ubq->flags & UBLK_F_SPLICE_ZC) {
-+		struct ublk_rq_data *data = blk_mq_rq_to_pdu(rq);
-+
-+		atomic_set(&data->handled, 0);
-+
-+		/*
-+		 * Order write ->handled and write rq->state in
-+		 * blk_mq_start_request, the pair barrier is the one
-+		 * implied in atomic_inc_return() in ublk_splice_read
-+		 */
-+		smp_wmb();
-+	}
-+
- 	blk_mq_start_request(bd->rq);
- 
- 	if (unlikely(ubq_daemon_is_dying(ubq))) {
-@@ -1299,13 +1322,137 @@ static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
- 	return -EIOCBQUEUED;
- }
- 
-+static void ublk_pipe_buf_release(struct pipe_inode_info *pipe,
-+			      struct pipe_buffer *buf)
-+{
-+}
-+
-+static const struct pipe_buf_operations ublk_pipe_buf_ops = {
-+        .release        = ublk_pipe_buf_release,
-+};
-+
-+/*
-+ * Pass request page reference to kernel backend IO handler via pipe
-+ *
-+ * ublk server has to handle backend IO via splice()
-+ */
-+static ssize_t ublk_splice_read(struct file *in, loff_t *ppos,
-+		struct pipe_inode_info *pipe,
-+		size_t len, unsigned int flags)
-+{
-+	struct ublk_device *ub = in->private_data;
-+	struct req_iterator rq_iter;
-+	struct bio_vec bv;
-+	struct request *req;
-+	struct ublk_queue *ubq;
-+	u16 tag, q_id;
-+	unsigned int done;
-+	int ret, buf_offset;
-+	struct ublk_rq_data *data;
-+
-+	if (!(flags & SPLICE_F_DIRECT))
-+		return -EPERM;
-+
-+	/* No, we have to be the in side */
-+	if (pipe->consumed_by_read)
-+		return -EINVAL;
-+
-+	if (!ub)
-+		return -EPERM;
-+
-+	tag = ublk_pos_to_tag(*ppos);
-+	q_id = ublk_pos_to_hwq(*ppos);
-+	buf_offset = ublk_pos_to_buf_offset(*ppos);
-+
-+	if (q_id >= ub->dev_info.nr_hw_queues)
-+		return -EINVAL;
-+
-+	ubq = ublk_get_queue(ub, q_id);
-+	if (!ubq)
-+		return -EINVAL;
-+
-+	if (!(ubq->flags & UBLK_F_SPLICE_ZC))
-+		return -EINVAL;
-+
-+	if (tag >= ubq->q_depth)
-+		return -EINVAL;
-+
-+	req = blk_mq_tag_to_rq(ub->tag_set.tags[q_id], tag);
-+	if (!req || !blk_mq_request_started(req))
-+		return -EINVAL;
-+
-+	data = blk_mq_rq_to_pdu(req);
-+	if (atomic_add_return(len, &data->handled) > blk_rq_bytes(req) || !len)
-+		return -EACCES;
-+
-+	ret = -EINVAL;
-+	if (!ublk_rq_has_data(req))
-+		goto exit;
-+
-+	pr_devel("%s: qid %d tag %u offset %x, request bytes %u, len %llu\n",
-+			__func__, tag, q_id, buf_offset, blk_rq_bytes(req),
-+			(unsigned long long)len);
-+
-+	if (buf_offset + len > blk_rq_bytes(req))
-+		goto exit;
-+
-+	if ((req_op(req) == REQ_OP_READ) &&
-+			!(flags & SPLICE_F_READ_TO_READ))
-+		goto exit;
-+
-+	if ((req_op(req) != REQ_OP_READ) &&
-+			(flags & SPLICE_F_READ_TO_READ))
-+		goto exit;
-+
-+	done = ret = 0;
-+	/* todo: is iov_iter ready for handling multipage bvec? */
-+	rq_for_each_segment(bv, req, rq_iter) {
-+		struct pipe_buffer buf = {
-+			.ops = &ublk_pipe_buf_ops,
-+			.flags = 0,
-+			.page = bv.bv_page,
-+			.offset = bv.bv_offset,
-+			.len = bv.bv_len,
-+		};
-+
-+		if (buf_offset > 0) {
-+			if (buf_offset >= bv.bv_len) {
-+				buf_offset -= bv.bv_len;
-+				continue;
-+			} else {
-+				buf.offset += buf_offset;
-+				buf.len -= buf_offset;
-+				buf_offset = 0;
-+			}
-+		}
-+
-+		ret = add_to_pipe(pipe, &buf);
-+		if (unlikely(ret < 0))
-+			break;
-+		done += ret;
-+	}
-+
-+	if (flags & SPLICE_F_READ_TO_READ)
-+		pipe->consumed_by_read = true;
-+
-+	WARN_ON_ONCE(done > len);
-+
-+	if (done) {
-+		*ppos += done;
-+		ret = done;
-+	}
-+exit:
-+	return ret;
-+}
-+
- static const struct file_operations ublk_ch_fops = {
- 	.owner = THIS_MODULE,
- 	.open = ublk_ch_open,
- 	.release = ublk_ch_release,
--	.llseek = no_llseek,
-+	.llseek = noop_llseek,
- 	.uring_cmd = ublk_ch_uring_cmd,
- 	.mmap = ublk_ch_mmap,
-+	.splice_read = ublk_splice_read,
- };
- 
- static void ublk_deinit_queue(struct ublk_device *ub, int q_id)
-diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index 8f88e3a29998..93d9ca7650ce 100644
---- a/include/uapi/linux/ublk_cmd.h
-+++ b/include/uapi/linux/ublk_cmd.h
-@@ -52,7 +52,36 @@
- #define UBLKSRV_IO_BUF_OFFSET	0x80000000
- 
- /* tag bit is 12bit, so at most 4096 IOs for each queue */
--#define UBLK_MAX_QUEUE_DEPTH	4096
-+#define UBLK_TAG_BITS		12
-+#define UBLK_MAX_QUEUE_DEPTH	(1U << UBLK_TAG_BITS)
-+
-+/* used in ->splice_read for supporting zero-copy */
-+#define UBLK_BUFS_SIZE_BITS	42
-+#define UBLK_BUFS_SIZE_MASK    ((1ULL << UBLK_BUFS_SIZE_BITS) - 1)
-+#define UBLK_BUF_SIZE_BITS     (UBLK_BUFS_SIZE_BITS - UBLK_TAG_BITS)
-+#define UBLK_BUF_MAX_SIZE      (1ULL << UBLK_BUF_SIZE_BITS)
-+
-+static inline __u16 ublk_pos_to_hwq(__u64 pos)
-+{
-+	return pos >> UBLK_BUFS_SIZE_BITS;
-+}
-+
-+static inline __u32 ublk_pos_to_buf_offset(__u64 pos)
-+{
-+	return (pos & UBLK_BUFS_SIZE_MASK) & (UBLK_BUF_MAX_SIZE - 1);
-+}
-+
-+static inline __u16 ublk_pos_to_tag(__u64 pos)
-+{
-+	return (pos & UBLK_BUFS_SIZE_MASK) >> UBLK_BUF_SIZE_BITS;
-+}
-+
-+/* offset of single buffer, which has to be < UBLK_BUX_MAX_SIZE */
-+static inline __u64 ublk_pos(__u16 q_id, __u16 tag, __u32 offset)
-+{
-+	return (((__u64)q_id) << UBLK_BUFS_SIZE_BITS) |
-+		((((__u64)tag) << UBLK_BUF_SIZE_BITS) + offset);
-+}
- 
- /*
-  * zero copy requires 4k block size, and can remap ublk driver's io
-@@ -79,6 +108,9 @@
- 
- #define UBLK_F_USER_RECOVERY_REISSUE	(1UL << 4)
- 
-+/* slice based write zero copy */
-+#define UBLK_F_SPLICE_ZC	(1UL << 5)
-+
- /* device state */
- #define UBLK_S_DEV_DEAD	0
- #define UBLK_S_DEV_LIVE	1
--- 
-2.31.1
+Thanks,
+Kuai
+> 
+> .
+> 
 
