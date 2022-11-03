@@ -2,143 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1B9A617444
-	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 03:34:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FB3F6174BA
+	for <lists+linux-block@lfdr.de>; Thu,  3 Nov 2022 04:05:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230435AbiKCCeG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Nov 2022 22:34:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
+        id S231285AbiKCDFc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Nov 2022 23:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbiKCCeE (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Nov 2022 22:34:04 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2756013E17;
-        Wed,  2 Nov 2022 19:34:02 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4N2nnw4J2Yzl6CY;
-        Thu,  3 Nov 2022 10:31:48 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP1 (Coremail) with SMTP id cCh0CgCXcXqWKGNjpCjdBA--.38653S6;
-        Thu, 03 Nov 2022 10:34:00 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     hch@lst.de, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com
-Subject: [PATCH 2/2] block: fix use after free for bd_holder_dir
-Date:   Thu,  3 Nov 2022 10:55:41 +0800
-Message-Id: <20221103025541.1875809-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221103025541.1875809-1-yukuai1@huaweicloud.com>
-References: <20221103025541.1875809-1-yukuai1@huaweicloud.com>
+        with ESMTP id S230348AbiKCDFX (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Nov 2022 23:05:23 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01048140AC
+        for <linux-block@vger.kernel.org>; Wed,  2 Nov 2022 20:05:22 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id l2so517506qtq.11
+        for <linux-block@vger.kernel.org>; Wed, 02 Nov 2022 20:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R64KECUzDbqJo0RRKWL4JjLGKACzWeVJPV2fXxBJdHw=;
+        b=ju3Dknz07FXV4Eja1inVQbLV5EziVz/npKT2GwOg4qm60L2iFaIP9e04iZ9gYRFvIy
+         oLMsDFaAW7PVgBNfjby2i8fQZmp6MrvbXW7hJDHFovM3Vh8EV1cy5UAVhJbBGIOvh6T8
+         UcwlOuYb0iPCKfeXAhU54nmrjwFKxudH6BQFw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R64KECUzDbqJo0RRKWL4JjLGKACzWeVJPV2fXxBJdHw=;
+        b=VEb4A4/ZwMtgKzXy9s67ddXaygliXSdkOCzxY0g1t+cUakUd+FMaxIl5bFli3KN9xJ
+         MpXa2Kgafw5DAbRctc5wxn95qj46JssQeWQC/8+GkUVx4g061YrgJlSaBECwbSYPuPS2
+         tMk93yqWNqpULaSVR31+lvB8IbVI1JOtvFFslOC8Ij1CG6x9KijEqtZ8iIvdK2pLYaer
+         ptERCn/GFcY1C/+EkrKM+JvABnyrasBIvvnkkUpfFbnnSQBBzMA6tWk1yHLS0z2v9BM+
+         0664oM7RysT0AWZYIyljX0P1xGLVJSVXfpro2XqWN9snFnHhE16NG+BddBbHbWA0ktZ3
+         X6qA==
+X-Gm-Message-State: ACrzQf1p3nGXVtwijUBuU1ci8IE8ToUAJZI6TUZa9aDRyKAu0bBk4E5E
+        9+yQKzRhOmciZfU97yx7ZlVjNoRR5cJp6g==
+X-Google-Smtp-Source: AMsMyM6GWt1B50i8JQcYfK+Dz7O7DyoGRSyRT+902kGVXII34TcbBKjKpLEeqw0OSKzAJZdTxUUHjw==
+X-Received: by 2002:ac8:48d7:0:b0:3a5:3ec4:7a31 with SMTP id l23-20020ac848d7000000b003a53ec47a31mr9000212qtr.375.1667444720851;
+        Wed, 02 Nov 2022 20:05:20 -0700 (PDT)
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com. [209.85.219.53])
+        by smtp.gmail.com with ESMTPSA id o6-20020a05620a2a0600b006ce3f1af120sm1949497qkp.44.2022.11.02.20.05.20
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Nov 2022 20:05:20 -0700 (PDT)
+Received: by mail-qv1-f53.google.com with SMTP id i12so348286qvs.2
+        for <linux-block@vger.kernel.org>; Wed, 02 Nov 2022 20:05:20 -0700 (PDT)
+X-Received: by 2002:a05:6214:f23:b0:4bb:f5db:39b3 with SMTP id
+ iw3-20020a0562140f2300b004bbf5db39b3mr18157941qvb.117.1667444720007; Wed, 02
+ Nov 2022 20:05:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgCXcXqWKGNjpCjdBA--.38653S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr1rGFyxAFWxAFy3Ar1DKFg_yoW8KFW5pa
-        9IgFyrtry8GFsrZrsrt347XrWjg3W8W3W8CFya9F4IvrsxJr4vvr17AFy7WF1xKrWIvFs0
-        qF1UX3yFvF1vkrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9m14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-        A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
-        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-        6r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUc6pPUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221103013937.603626-1-khazhy@google.com> <3c0df3fa-8731-5863-ccc5-f2e60601dbf9@huaweicloud.com>
+In-Reply-To: <3c0df3fa-8731-5863-ccc5-f2e60601dbf9@huaweicloud.com>
+From:   Khazhy Kumykov <khazhy@chromium.org>
+Date:   Wed, 2 Nov 2022 20:05:08 -0700
+X-Gmail-Original-Message-ID: <CACGdZYJ0WH+Y9sdchXy30UVTQgPCEo=fW+W9atZh1Ki7Ov4_Gw@mail.gmail.com>
+Message-ID: <CACGdZYJ0WH+Y9sdchXy30UVTQgPCEo=fW+W9atZh1Ki7Ov4_Gw@mail.gmail.com>
+Subject: Re: [RFC PATCH] bfq: fix waker_bfqq inconsistency crash
+To:     Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Wed, Nov 2, 2022 at 7:56 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>
+> Hi,
+>
+> =E5=9C=A8 2022/11/03 9:39, Khazhismel Kumykov =E5=86=99=E9=81=93:
+> > This fixes crashes in bfq_add_bfqq_busy due to waker_bfqq being NULL,
+> > but woken_list_node still being hashed. This would happen when
+> > bfq_init_rq() expects a brand new allocated queue to be returned from
+>
+>  From what I see, bfqq->waker_bfqq is updated in bfq_init_rq() only if
+> 'new_queue' is false, but if 'new_queue' is false, the returned 'bfqq'
+> from bfq_get_bfqq_handle_split() will never be oom_bfqq, so I'm confused
+> here...
+There's two calls for bfq_get_bfqq_handle_split in this function - the
+second one is after the check you mentioned, and is the problematic
+one.
+>
+> > bfq_get_bfqq_handle_split() and unconditionally updates waker_bfqq
+> > without resetting woken_list_node. Since we can always return oom_bfqq
+> > when attempting to allocate, we cannot assume waker_bfqq starts as NULL=
+.
+> > We must either reset woken_list_node, or avoid setting woken_list at al=
+l
+> > for oom_bfqq - opt to do the former.
+>
+> Once oom_bfqq is used, I think the io is treated as issued from root
+> group. Hence I don't think it's necessary to set woken_list or
+> waker_bfqq for oom_bfqq.
+Ack, I was wondering what's right here since, evidently, *someone* had
+already set oom_bfqq->waker_bfqq to *something* (although... maybe it
+was an earlier init_rq). But maybe it's better to do nothing if we
+*know* it's oom_bfqq.
 
-Currently, the caller of bd_link_disk_holer() get 'bdev' by
-blkdev_get_by_dev(), which will look up 'bdev' by inode number 'dev'.
-Howerver, it's possible that del_gendisk() can be called currently, and
-'bd_holder_dir' can be freed before bd_link_disk_holer() access it, thus
-use after free is triggered.
+Is it a correct interpretation here that setting waker_bfqq won't
+accomplish anything anyways on oom_bfqq, so better off not?
 
-t1:				t2:
-bdev = blkdev_get_by_dev
-				del_gendisk
-				 kobject_put(bd_holder_dir)
-				  kobject_free()
-bd_link_disk_holder
-
-Fix the problem by checking disk is still live and grabbing a reference
-to 'bd_holder_dir' first in bd_link_disk_holder().
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/holder.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/block/holder.c b/block/holder.c
-index 5fc68238ce3a..1c6c5b132a92 100644
---- a/block/holder.c
-+++ b/block/holder.c
-@@ -78,19 +78,32 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
- 	if (bdev->bd_disk == disk)
- 		return -EINVAL;
- 
--	mutex_lock(&disk->open_mutex);
-+	/*
-+	 * del_gendisk drops the initial reference to bd_holder_dir, so we
-+	 * need to keep our own here to allow for cleanup past that point.
-+	 */
-+	mutex_lock(&bdev->bd_disk->open_mutex);
-+	if (!disk_live(bdev->bd_disk)) {
-+		mutex_unlock(&bdev->bd_disk->open_mutex);
-+		return -ENODEV;
-+	}
- 
--	WARN_ON_ONCE(!bdev->bd_holder);
-+	kobject_get(bdev->bd_holder_dir);
-+	mutex_unlock(&bdev->bd_disk->open_mutex);
- 
-+	mutex_lock(&disk->open_mutex);
-+	WARN_ON_ONCE(!bdev->bd_holder);
- 	holder = bd_find_holder_disk(bdev, disk);
- 	if (holder) {
- 		holder->refcnt++;
-+		kobject_put(bdev->bd_holder_dir);
- 		goto out_unlock;
- 	}
- 
- 	holder = kzalloc(sizeof(*holder), GFP_KERNEL);
- 	if (!holder) {
- 		ret = -ENOMEM;
-+		kobject_put(bdev->bd_holder_dir);
- 		goto out_unlock;
- 	}
- 
-@@ -101,16 +114,12 @@ int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk)
- 		ret = __link_disk_holder(bdev, disk);
- 		if (ret) {
- 			kfree(holder);
-+			kobject_put(bdev->bd_holder_dir);
- 			goto out_unlock;
- 		}
- 	}
- 
- 	list_add(&holder->list, &disk->slave_bdevs);
--	/*
--	 * del_gendisk drops the initial reference to bd_holder_dir, so we need
--	 * to keep our own here to allow for cleanup past that point.
--	 */
--	kobject_get(bdev->bd_holder_dir);
- 
- out_unlock:
- 	mutex_unlock(&disk->open_mutex);
--- 
-2.31.1
-
+>
+> Thanks,
+> Kuai
