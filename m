@@ -2,89 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB6FB61D89E
-	for <lists+linux-block@lfdr.de>; Sat,  5 Nov 2022 09:08:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C1361DA27
+	for <lists+linux-block@lfdr.de>; Sat,  5 Nov 2022 13:39:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbiKEII2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 5 Nov 2022 04:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36956 "EHLO
+        id S229875AbiKEMjZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 5 Nov 2022 08:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbiKEIIZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 5 Nov 2022 04:08:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B74BFB09
-        for <linux-block@vger.kernel.org>; Sat,  5 Nov 2022 01:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=crEwypbPthAf0SoYH9S8dhl48eqaJ23MRKCDlUDUMwg=; b=UlkZMU+BvsP1WnrqaecnVy3H/T
-        681PD4dPBywL+qUgBemRwKaoPaTFRfAmirMN0Rkyi/DneurdnT6WLn4T1NALVS+KciRZePSSb7uwC
-        LyNWUDLSBkNmhocZylmWNecsXyJc2cKBQGFm11RIzlcd2zfV+lnpNQvqJWVTJ5TakPfefT7bKISJ0
-        alxYmckaLYlHuw10wXOpLzjmuhe5l/RoHZ0azxH5T6o3qzQMbEBAbrUckQrpj3X6SZfXRr0exIF8V
-        4xtcmSEm75R4f1zIu0qjdPyv0LXaUyJzd9eZ33WMISYVkPmvJ8BheAmZrPjp4hQVF6cWxFHvEktgN
-        5pAj1m1A==;
-Received: from [2001:4bb8:182:29ca:2575:8443:617d:3eec] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1orEE2-0064K1-Un; Sat, 05 Nov 2022 08:08:23 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 3/3] block: mark blk_put_queue as potentially blocking
-Date:   Sat,  5 Nov 2022 09:08:15 +0100
-Message-Id: <20221105080815.775721-3-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221105080815.775721-1-hch@lst.de>
-References: <20221105080815.775721-1-hch@lst.de>
+        with ESMTP id S229814AbiKEMjN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 5 Nov 2022 08:39:13 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573CB183A7
+        for <linux-block@vger.kernel.org>; Sat,  5 Nov 2022 05:39:09 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id e129so6565222pgc.9
+        for <linux-block@vger.kernel.org>; Sat, 05 Nov 2022 05:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=RIHC9n/dKVExSLG73bd8Y0TEFLCe8HTSL+2d7yE6D2NKhaBTGC77yJTmz2n+UQEoLn
+         jxE36/CP2zWRsxdrbl6Qipo/1wujKwbWTegmQtKA5KaKY5c5k0uls/46uPweryK1Q/70
+         p7KuiiXfJ0vih3FChZlrnOZ0SimajpgL+AXRNjZnSx1jbzFH5llJcPftmYgxT0KBp7aY
+         Nvw2mfIN1dkT84jofHnK9dh7XMfTMquPbJMMLMjB0Dp08MAIB2DxhF8xAtCfYFVwsPDo
+         kuNK/heTlVtwv9hHFhKrR/b4yxRwRja7vVsRsbB9inWGKh1FmpKXNdm91a1Uu/cF0CiR
+         QmBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=idXJWws7Qh1EwO5Fbt1yKyN/J4MEf9WlfT/8yFovvpEwPEPe1TxNRmn98jQy3ffFcF
+         VphOEKxqKxpdznwy25ccWapcERE8GKLybPe9heU+QfpWWSiroQeaYGgSAIReAPkoqV21
+         1elR9Cm0+v980LRozyBDOGrQWhLwy6pP+QRUJla0J3SQ7aLIpUw/sM6WDKEqRvwk4TIm
+         X6KeNoDUYJaXApeT7tok8zJ30HtE9cc9W+C887xqj1Dj5RqunDjdx6MYfjz6jhI0QQPP
+         vmBrKps6WVA5dxghCqi7Og5HbYXEm8bV0QiyfCpFy+izLHoIHgZLHEDlBZKnBeHmDL9A
+         b64A==
+X-Gm-Message-State: ACrzQf37+U5KRDJ5Ydiwkbh1WMh6oknFWPlrX0b2VVDE7Nk9NGKx35Jm
+        IPIAdSnyIo4dz+mAU70DEyAdfR2pEzRb1ylMsvM=
+X-Google-Smtp-Source: AMsMyM7B0KgO1ePqgiznBJPxBFqW0p1QJVzP9XdnRybtCWEEA1+7r7SGcBMaZXE781qwVCHZ0F/UGDKN4buuMG8EUng=
+X-Received: by 2002:a63:8aca:0:b0:461:25fe:e7c5 with SMTP id
+ y193-20020a638aca000000b0046125fee7c5mr34958534pgd.395.1667651947704; Sat, 05
+ Nov 2022 05:39:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:7301:2e91:b0:83:922d:c616 with HTTP; Sat, 5 Nov 2022
+ 05:39:06 -0700 (PDT)
+Reply-To: stefanopessia755@hotmail.com
+From:   Stefano Pessina <wamathaibenard@gmail.com>
+Date:   Sat, 5 Nov 2022 15:39:06 +0300
+Message-ID: <CAN7bvZKFRi6jCy913fp9Nu5T=uorMfPGun5ibm5bYqhSVn2ZFA@mail.gmail.com>
+Subject: Geldspende
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We can't just say that the last reference release may block, as any
-reference dropped could be the last one.  So move the might_sleep() from
-blk_free_queue to blk_put_queue and update the documentation.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-core.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d14317bfdf654..8ab21dd01cd1c 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -260,8 +260,6 @@ static void blk_free_queue_rcu(struct rcu_head *rcu_head)
- 
- static void blk_free_queue(struct request_queue *q)
- {
--	might_sleep();
--
- 	percpu_ref_exit(&q->q_usage_counter);
- 
- 	if (q->poll_stat)
-@@ -285,11 +283,11 @@ static void blk_free_queue(struct request_queue *q)
-  * Decrements the refcount of the request_queue and free it when the refcount
-  * reaches 0.
-  *
-- * Context: Any context, but the last reference must not be dropped from
-- *          atomic context.
-+ * Context: Can sleep.
-  */
- void blk_put_queue(struct request_queue *q)
- {
-+	might_sleep();
- 	if (refcount_dec_and_test(&q->refs))
- 		blk_free_queue(q);
- }
--- 
-2.30.2
-
+--=20
+Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
+t.
+Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
+stefanopessia755@hotmail.com
