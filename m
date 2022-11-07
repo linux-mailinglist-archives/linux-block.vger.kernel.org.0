@@ -2,101 +2,128 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA3D761F054
-	for <lists+linux-block@lfdr.de>; Mon,  7 Nov 2022 11:23:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D0761F058
+	for <lists+linux-block@lfdr.de>; Mon,  7 Nov 2022 11:23:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231249AbiKGKXm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Nov 2022 05:23:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34944 "EHLO
+        id S231349AbiKGKXz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Nov 2022 05:23:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230406AbiKGKXl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Nov 2022 05:23:41 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0241C12762;
-        Mon,  7 Nov 2022 02:23:40 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 891401F383;
-        Mon,  7 Nov 2022 10:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1667816619; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AfBjNBctYzVN9tZP9O8xyLWUf7vriScs1MgfEs65OUc=;
-        b=jPefW1e3ntgr9FVHp175t7pF7FlbHP8Jl29gmN7II/TXEVUF1sjeOz/FycJvaTiBu8VWzx
-        XqY4+3uzzulb3PL8CcG1dJQGqnuglVtVwVFJ6tu34qoAMjHDza1TwcvtVpOeWWxcGoaT2u
-        PRwD0FMO4qw5HJsYXszXfXucvvmB3nY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1667816619;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AfBjNBctYzVN9tZP9O8xyLWUf7vriScs1MgfEs65OUc=;
-        b=8tmRnLU0Rw5EP61Mf4jocyKQkvbvbCjj2Ijo8snTjCI7Bw3Awm72Wu2mSfkVJiSB2BvnHE
-        BiPfSu1YPLEhFqAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 77DF113AC7;
-        Mon,  7 Nov 2022 10:23:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id UpH6HKvcaGO/bQAAMHmgww
-        (envelope-from <hare@suse.de>); Mon, 07 Nov 2022 10:23:39 +0000
-Message-ID: <d4b38972-05db-2705-d39d-d3a0e90b2694@suse.de>
-Date:   Mon, 7 Nov 2022 11:23:39 +0100
+        with ESMTP id S231408AbiKGKXx (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Nov 2022 05:23:53 -0500
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA61167CE
+        for <linux-block@vger.kernel.org>; Mon,  7 Nov 2022 02:23:52 -0800 (PST)
+Received: by mail-pl1-x642.google.com with SMTP id d20so9580082plr.10
+        for <linux-block@vger.kernel.org>; Mon, 07 Nov 2022 02:23:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=Zv++OJ/ncK2pWuUWAQT+z52+cIoHK/WVJU4bVze52hunD5wDL4D5XJdl5mW2VbRjhi
+         PKA0tQ/z42/ONfUnPJoBfdYRGEG2gwiyoDRW7hecaxcg+/0t0u3g44ISFlpe+B9l1fvu
+         TmkNgtKOyak6WThRMAIvY+g5IgPZxvnz63e21BpajeaX9653GP4qpHUHyfV7BL4cSNb4
+         pCU1fNGxZBn7NlKzWZCMHMxM9LSs8sKofgpQ0FSoeb/qTDQ+CPP+tvlBe/vGQ8T8hOyn
+         vdUZr48/zTuwVxtBDF6IrOR7pT19nf73qD9i1Q8QUWEzM8dVJjwmGS+xVbVCXqFaE09J
+         SKzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=8GshevhjVfE9PzX9QkseMqRVRtlYil0T7Ajic8ZLonnh7b8Ibev1sGakX/DvwcJRBL
+         371yh1rXMqTO+jtxLWoy4MBacj8nFKIh8yE7WbFeckdYIOUDpK+ysO1kIjJPqqvKUDaJ
+         /3qiJ1CgfffZyMMF7Mo4ZMWKSPFUouaVXYNCAzUMPSsPVaoXu9J+yq72Fxc6n3mnJ3Il
+         CdD0mwztttfu7DwOa67GgK+Q1MESmRdwujRk0lEvg3sQgFYLpy3kfdUcGv/CzqOY7ko4
+         HDSarWUIlDW1Mz/g3xNaaq4sla7VIvbjH7b718F+JPoPtatld5HHI3/kO94hxChAkHyQ
+         7Vig==
+X-Gm-Message-State: ACrzQf32+9SGxLcYnytULZUrGe+paQy8lDQk19fQnB+I9FJ5px9tOt3F
+        M/BNoboVaWjgnM09zKmZyuZQq9UgFS20e8OT6hM=
+X-Google-Smtp-Source: AMsMyM7DPjaK7bSeUBIcMTkNZUaqK+NSwCEUfp88ZZDLY5TXShnQ2+B86xH3ryBKqTyGQWW3ozA/96x60VupsK8qo34=
+X-Received: by 2002:a17:902:8a90:b0:186:b145:f5ec with SMTP id
+ p16-20020a1709028a9000b00186b145f5ecmr50774476plo.103.1667816632274; Mon, 07
+ Nov 2022 02:23:52 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v5 1/7] block: add a sanity check for non-write flush/fua
- bios
-Content-Language: en-US
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        linux-ide@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
-        Christoph Hellwig <hch@lst.de>
-References: <20221107005021.1327692-1-damien.lemoal@opensource.wdc.com>
- <20221107005021.1327692-2-damien.lemoal@opensource.wdc.com>
-From:   Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20221107005021.1327692-2-damien.lemoal@opensource.wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a06:925:b0:587:19e0:c567 with HTTP; Mon, 7 Nov 2022
+ 02:23:51 -0800 (PST)
+Reply-To: contact@ammico.it
+From:   =?UTF-8?Q?Mrs=2E_Monika_Everenov=C3=A1?= <977638ib@gmail.com>
+Date:   Mon, 7 Nov 2022 11:23:51 +0100
+Message-ID: <CAHAXD+bPNCns8Ez=7iXmPLADMtJgZj3-mFTk3NMhWC-Ca1b9rw@mail.gmail.com>
+Subject: Re:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_2_NEW_MONEY,
+        BAYES_20,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:642 listed in]
+        [list.dnswl.org]
+        * -0.0 BAYES_20 BODY: Bayes spam probability is 5 to 20%
+        *      [score: 0.1528]
+        *  0.7 FROM_STARTS_WITH_NUMS From: starts with several numbers
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [977638ib[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  3.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  2.0 ADVANCE_FEE_2_NEW_MONEY Advance Fee fraud and lots of money
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 11/7/22 01:50, Damien Le Moal wrote:
-> From: Christoph Hellwig <hch@lst.de>
-> 
-> Check that the PREFUSH and FUA flags are only set on write bios,
-> given that the flush state machine expects that.
-> 
-> Reported-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> ---
->   block/blk-core.c | 13 ++++++++-----
->   1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
-
+Hei ja miten voit?
+Nimeni on rouva Evereen, l=C3=A4het=C3=A4n t=C3=A4m=C3=A4n viestin suurella=
+ toivolla
+v=C3=A4lit=C3=B6n vastaus, koska minun on teht=C3=A4v=C3=A4 uusi syd=C3=A4n=
+leikkaus
+t=C3=A4ll=C3=A4 hetkell=C3=A4 huonokuntoinen ja v=C3=A4h=C3=A4iset mahdolli=
+suudet selviyty=C3=A4.
+Mutta ennen kuin min=C3=A4
+Tee toinen vaarallinen operaatio, annan sen sinulle
+Minulla on 6 550 000 dollaria yhdysvaltalaisella pankkitilill=C3=A4
+sijoittamista, hallinnointia ja k=C3=A4ytt=C3=B6=C3=A4 varten
+voittoa hyv=C3=A4ntekev=C3=A4isyysprojektin toteuttamiseen. Tarkoitan saira=
+iden auttamista
+ja k=C3=B6yh=C3=A4t ovat viimeinen haluni maan p=C3=A4=C3=A4ll=C3=A4, sill=
+=C3=A4 minulla ei ole niit=C3=A4
+kenelt=C3=A4 perii rahaa.
+Vastaa minulle nopeasti
+terveisi=C3=A4
+Rouva Monika Evereen
+Florida, Amerikan Yhdysvallat
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+Hi and how are you?
+My name is Mrs. Evereen, I am sending this message with great hope for
+an immediate response, as I have to undergo heart reoperation in my
+current poor health with little chance of survival. But before I
+undertake the second dangerous operation, I will give you the
+$6,550,000 I have in my US bank account to invest well, manage and use
+the profits to run a charity project for me. I count helping the sick
+and the poor as my last wish on earth, because I have no one to
+inherit money from.
+Please give me a quick reply
+regards
+Mrs. Monika Evereen
+Florida, United States of America
