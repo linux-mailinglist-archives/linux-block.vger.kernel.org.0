@@ -2,97 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F5BB6216B1
-	for <lists+linux-block@lfdr.de>; Tue,  8 Nov 2022 15:31:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07B45621ACD
+	for <lists+linux-block@lfdr.de>; Tue,  8 Nov 2022 18:36:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234118AbiKHOb0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Nov 2022 09:31:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
+        id S234426AbiKHRgA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Nov 2022 12:36:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233972AbiKHOay (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Nov 2022 09:30:54 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58FFF58BE1
-        for <linux-block@vger.kernel.org>; Tue,  8 Nov 2022 06:30:45 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id io19so14325132plb.8
-        for <linux-block@vger.kernel.org>; Tue, 08 Nov 2022 06:30:45 -0800 (PST)
+        with ESMTP id S233828AbiKHRgA (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Nov 2022 12:36:00 -0500
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD52613D7B
+        for <linux-block@vger.kernel.org>; Tue,  8 Nov 2022 09:35:59 -0800 (PST)
+Received: by mail-il1-x136.google.com with SMTP id x16so7825387ilm.5
+        for <linux-block@vger.kernel.org>; Tue, 08 Nov 2022 09:35:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=WDX8jESP5o0hYsqTRNV0E33I+UiuXo6QrBUYHK2m8yjd+yVsSQJ670MLuInnJ00AAn
-         lBBWrOntbuVMAue0wE2TrwsZKXEfFDNMqC5R6tCWqKEgGFxQxkRlJNdbKjRsJjGNfBru
-         KH2TG+ATlAWpLsgkVeBpn6IJJwDTPIZ2HiIrsZ0Wc9Fh2CfiYZRH2JVCtla2mAhfrDcv
-         WfczoRhEaDFduiY4E6NZmxTOoipjt0njg7MBnJjMGOYDxF1sJVrs/1Vd3642UyDZ3J2M
-         wtJ+Kd2QePZiVLlJxgLdMXSB8gNW9u9/Dkv2pwXgXMeRUPq+88NYf11ItH6tmWpWacMI
-         UUsw==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ie27LHciP15/G/joM2RTTUyPO3R/G3vri7/Wv2kqzM0=;
+        b=EWVfAUTumk4AQ08iyW9Q5OaA+9vWPO6YXORW8T5vAzOH6R3K7ePQEkc/AHQzv4NKuL
+         axNwPnt9zkKFcnumeuq3Ni1HnW4BX34Gn59FgjBhrGjPTd7VNT02mNylwqxlosNEpljw
+         gLj1g5pPGDGSu6B3Cm6i4ai6v4hnqaafLqm+ZgKjB2oZ3rA8N/es+FSCve4w7CPWpPJ/
+         hQ4h4K2FlUn0ck3GDKUnxoSEdgFcMavTdrYKR5NbpX6LOqJPIkI1BOtWMGSlsYzuBv7p
+         VRAR7d0ny4wxqRYewMATM3IX2ICxnAgla9kFsIz76KsTayT2UWLTnPsofs3xrHEHKeSJ
+         BhNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=j7Ve/POBnoWL8b5rjgqAM8BGJA8WeN0969qkxUXIK0A0n4Te/x5hxU8LDeo+BiJtbV
-         8l/yfLsV6348uNlBReTNYSfxSYV0SYVove+5NXs5Wc4lfOINMAq3DJdSPxLXFE/Lyg6y
-         FM5WWGekgqamcA0GhsyiLQx9wzmqkJ5bhKd8FuJ3FRQE1CSgz/Qrpu8UPsl/Ip1L2b/W
-         M01HHW3gg7GcDMWM8MCeCXMFVA9Gn5Y/e+S28nvU5XDMIff0Hh9AGGxLczL2qnCxOo/m
-         E4Zfn3Uy2CNIRMCwqp27H6XFmX50+/0QW4EE6W71FFBNZOQVNGpf8PseaH3CZ/4bEWR8
-         8hqw==
-X-Gm-Message-State: ACrzQf3pwYKncGBVLKq7ddiEUASIUItLoDQSnL6RolnTrSzSMmlGLQCT
-        9M55RaCIVIDDIrCKGNNxfmcKCBmx7YDocC6MFDg=
-X-Google-Smtp-Source: AMsMyM4L9V3t32r7uko+t8YxF1/SxpO/2u5BqPtEP2fFULrP29Yi88sG/7O0kyMBFpxPmDfBvPymU/6htrkybSwddAw=
-X-Received: by 2002:a17:90a:77c1:b0:214:2921:41c9 with SMTP id
- e1-20020a17090a77c100b00214292141c9mr35377782pjs.104.1667917844700; Tue, 08
- Nov 2022 06:30:44 -0800 (PST)
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ie27LHciP15/G/joM2RTTUyPO3R/G3vri7/Wv2kqzM0=;
+        b=Mf9kG3ZvtHF3vTtw32aGEi/tg4XrbjdXPM/HDG7x71ffmW9I4jCpc1Q1Cw8wmWhCIo
+         lbO/pQGp7yavK5vL5Df4R1/JSTKv5Gy9yVp3Prv3CtyRvNeeAJQnCWAWkZc8tTNFTb+G
+         blLa7PJ+xEq2LLgwrWC4GCBIzTCa7iVZX8IHfQdVxESH6XQ5weKLlbAP+v6MjrWmLDxc
+         t8bWPsNgch93Kx75bVevQY5ecKlNr/2XwQ5o1YpFWBDYeRWOBn1qn+ohbBsGvFF7+3Im
+         ofuEt9blKYVsSf+RQo3Qitr1sdiDfzUX4bftL6hyWoR+unhvSZtPr/6OYiCCym0grE84
+         eXQQ==
+X-Gm-Message-State: ACrzQf07k2XT/M98cNmBG85W/Y0wUPMTlGffI59aB7/kohJVmp2qxQsy
+        0nCqu2bN0BQdPseIGJNEXgptug==
+X-Google-Smtp-Source: AMsMyM45bvy/64lNW4dHL3SZe0PN0KsWFFiszerLfZ0l1x4JN7xNJQy40y5C6TaqXPGbKUXelxVvNA==
+X-Received: by 2002:a05:6e02:be3:b0:300:c33d:4ad7 with SMTP id d3-20020a056e020be300b00300c33d4ad7mr22795761ilu.150.1667928958975;
+        Tue, 08 Nov 2022 09:35:58 -0800 (PST)
+Received: from [127.0.0.1] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id v14-20020a056e020f8e00b002fa9a1fc421sm4018267ilo.45.2022.11.08.09.35.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Nov 2022 09:35:58 -0800 (PST)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Sagi Grimberg <sagi@grimberg.me>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Scott Bauer <scott.bauer@intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Keith Busch <kbusch@kernel.org>,
+        Rafael Antognolli <Rafael.Antognolli@intel.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-block@vger.kernel.org,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        linux-nvme@lists.infradead.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20221107203944.31686-1-Sergey.Semin@baikalelectronics.ru>
+References: <20220929224648.8997-4-Sergey.Semin@baikalelectronics.ru> <20221107203944.31686-1-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v3] block: sed-opal: kmalloc the cmd/resp buffers
+Message-Id: <166792895795.7601.10122514732945288817.b4-ty@kernel.dk>
+Date:   Tue, 08 Nov 2022 10:35:57 -0700
 MIME-Version: 1.0
-Received: by 2002:ac4:c8c2:0:b0:56a:d900:eb11 with HTTP; Tue, 8 Nov 2022
- 06:30:43 -0800 (PST)
-Reply-To: mr.abraham022@gmail.com
-From:   "Mr.Abraham" <davidbraddy01@gmail.com>
-Date:   Tue, 8 Nov 2022 14:30:43 +0000
-Message-ID: <CAHGOU4PbuaQmBHRnRdx0u3UurwX2NABaxQZ3A0KbDYPAmYk7uQ@mail.gmail.com>
-Subject: Greeting
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4988]
-        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:632 listed in]
-        [list.dnswl.org]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mr.abraham022[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [davidbraddy01[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [davidbraddy01[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.11.0-dev-d9ed3
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-My Greeting, Did you receive the letter i sent to you. Please answer me.
-Regard, Mr.Abraham
+On Mon, 7 Nov 2022 23:39:44 +0300, Serge Semin wrote:
+> In accordance with [1] the DMA-able memory buffers must be
+> cacheline-aligned otherwise the cache writing-back and invalidation
+> performed during the mapping may cause the adjacent data being lost. It's
+> specifically required for the DMA-noncoherent platforms [2]. Seeing the
+> opal_dev.{cmd,resp} buffers are implicitly used for DMAs in the NVME and
+> SCSI/SD drivers in framework of the nvme_sec_submit() and sd_sec_submit()
+> methods respectively they must be cacheline-aligned to prevent the denoted
+> problem. One of the option to guarantee that is to kmalloc the buffers
+> [2]. Let's explicitly allocate them then instead of embedding into the
+> opal_dev structure instance.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] block: sed-opal: kmalloc the cmd/resp buffers
+      (no commit info)
+
+Best regards,
+-- 
+Jens Axboe
+
+
