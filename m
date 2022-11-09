@@ -2,97 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E67B622C96
-	for <lists+linux-block@lfdr.de>; Wed,  9 Nov 2022 14:40:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA790622C76
+	for <lists+linux-block@lfdr.de>; Wed,  9 Nov 2022 14:35:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbiKINkZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 9 Nov 2022 08:40:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
+        id S229582AbiKINfI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 9 Nov 2022 08:35:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbiKINkY (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Nov 2022 08:40:24 -0500
-X-Greylist: delayed 435 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Nov 2022 05:40:23 PST
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C82A2E6A3
-        for <linux-block@vger.kernel.org>; Wed,  9 Nov 2022 05:40:23 -0800 (PST)
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4N6mBB1DHHz1Dyc
-        for <linux-block@vger.kernel.org>; Wed,  9 Nov 2022 21:33:06 +0800 (CST)
-Received: from mxus.zte.com.cn (unknown [10.207.168.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxde.zte.com.cn (FangMail) with ESMTPS id 4N6mB63qfwz5TCG0
-        for <linux-block@vger.kernel.org>; Wed,  9 Nov 2022 21:33:02 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxus.zte.com.cn (FangMail) with ESMTPS id 4N6mB34p7PzdmXX7
-        for <linux-block@vger.kernel.org>; Wed,  9 Nov 2022 21:32:59 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4N6m9z25qSz8QrkZ;
-        Wed,  9 Nov 2022 21:32:55 +0800 (CST)
-Received: from szxlzmapp01.zte.com.cn ([10.5.231.85])
-        by mse-fl2.zte.com.cn with SMTP id 2A9DWnZt099946;
-        Wed, 9 Nov 2022 21:32:49 +0800 (+08)
-        (envelope-from yang.yang29@zte.com.cn)
-Received: from mapi (szxlzmapp03[null])
-        by mapi (Zmail) with MAPI id mid14;
-        Wed, 9 Nov 2022 21:32:53 +0800 (CST)
-Date:   Wed, 9 Nov 2022 21:32:53 +0800 (CST)
-X-Zmail-TransId: 2b05636bac05ffffffff8eb2a033
-X-Mailer: Zmail v1.0
-Message-ID: <202211092132530746481@zte.com.cn>
-Mime-Version: 1.0
-From:   <yang.yang29@zte.com.cn>
-To:     <axboe@kernel.dk>
-Cc:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <xu.panda@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIGJsb2NrOiB1c2Ugc3Ryc2NweSgpIGlzIG1vcmUgcm9idXN0IGFuZCBzYWZlcg==?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 2A9DWnZt099946
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.251.14.novalocal with ID 636BAC11.000 by FangMail milter!
-X-FangMail-Envelope: 1668000786/4N6mBB1DHHz1Dyc/636BAC11.000/10.35.20.165/[10.35.20.165]/mxde.zte.com.cn/<yang.yang29@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 636BAC11.000/4N6mBB1DHHz1Dyc
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229541AbiKINfH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 9 Nov 2022 08:35:07 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642582AC6A
+        for <linux-block@vger.kernel.org>; Wed,  9 Nov 2022 05:35:06 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id n12so46582295eja.11
+        for <linux-block@vger.kernel.org>; Wed, 09 Nov 2022 05:35:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linbit-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gtOl1+w9+H/kDpYw0VENqPv5aJ8skI+vP8Y3fHG6JhY=;
+        b=m3xksJLf0b3ZNRrGKim/LnCvOPAM7mztwM9sBrnvlkQ/JNHs0iof1K+DXpqiv6kQqv
+         Cbn/baGxs0r/3h72mEOEwPOmeWnMJHbrynlqVSdkLBwig0vEJLJb9RPjua8pSFhZRAAi
+         ZKQdjhMu4nSSMUcMqZ27zjkSLMBLm2YMM4VyE1E03RDglqtSNluJKUNnWUzwIJ+hBiDr
+         0F3Q7wVaF7GM+ut94pMWKwHGsHjdq7wXls1n+094e9y+E5JGfbIObB90o6FNg1o9t7gm
+         AtqSlSwKrUy6zQAQ4whkQb9nRylPlPMZry5qDr/HGVHwhF9dhMYuTQKLpyCUkWcvqj0u
+         J+6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gtOl1+w9+H/kDpYw0VENqPv5aJ8skI+vP8Y3fHG6JhY=;
+        b=x+vHM+GpNt/ssoP6ZzD7oqKZvNUZW7Bw4aU13CgVOA/A32OTU5koRkhDx7/3kwmyK7
+         1i3zT7KMdVVY/E8GF6U27+Nm8oORprec1QIqmzy7QV/LWz6zRfESKFpByCAWQSQOX9pr
+         ehL5jTDCtFXHCCShISDc2AE6G2tLCGAT/O3Jk9hT7UplwIMUo9Vk0ZXZaIqvSCJC88a5
+         T1z6V+vYRV6w96jnQs6XqyX/It84Qno0rYFRHqJoFdjzw/U1rjUIp7xrPAFZLypcncO3
+         nHqnEmeQG0HvcJRSKWbfOOKy0Al2vxClHFhVwq997+qKI7udZHay+rh08uUk2MFOa7vE
+         Rwvw==
+X-Gm-Message-State: ACrzQf0prKdvx2/Tg4Z9FBD6kXnBEGtikH41AycioE4lo7Lltakdmadi
+        pqZitoPmZ92sPdTpoJhJ/c9+nQ==
+X-Google-Smtp-Source: AMsMyM6wyvAwUO1KLGRtkWxtnHORrvQJPnlfEaGAXuBUObnH2kCMbIz/Dl2mKD6wQHt3o4of/6mkdg==
+X-Received: by 2002:a17:906:474b:b0:78d:cea0:e87a with SMTP id j11-20020a170906474b00b0078dcea0e87amr1144404ejs.178.1668000904938;
+        Wed, 09 Nov 2022 05:35:04 -0800 (PST)
+Received: from localhost.localdomain (h082218028181.host.wavenet.at. [82.218.28.181])
+        by smtp.gmail.com with ESMTPSA id lx8-20020a170906af0800b00782fbb7f5f7sm5867463ejb.113.2022.11.09.05.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Nov 2022 05:35:04 -0800 (PST)
+From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     drbd-dev@lists.linbit.com, linux-kernel@vger.kernel.org,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        linux-block@vger.kernel.org,
+        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>
+Subject: [PATCH 0/3] Miscellaneous DRBD updates for 6.2
+Date:   Wed,  9 Nov 2022 14:34:50 +0100
+Message-Id: <20221109133453.51652-1-christoph.boehmwalder@linbit.com>
+X-Mailer: git-send-email 2.38.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Xu Panda <xu.panda@zte.com.cn>
+Here are some various updates for DRBD.
+The first two are related to the handling of discards in DRBD, and the
+third is a resend of [0].
 
-The implementation of strscpy() is more robust and safer.
-That's now the recommended way to copy NUL terminated strings.
+[0] https://lore.kernel.org/all/20221024142424.25877-1-christoph.boehmwalder@linbit.com/
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
-Signed-off-by: Yang Yang <yang.yang29@zte.com>
----
- block/elevator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Christoph Böhmwalder (2):
+  drbd: use blk_queue_max_discard_sectors helper
+  drbd: Store op in drbd_peer_request
 
-diff --git a/block/elevator.c b/block/elevator.c
-index a5bdc3b1e7e5..0885b66c3868 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -749,7 +749,7 @@ ssize_t elv_iosched_store(struct request_queue *q, const char *buf,
- 	if (!elv_support_iosched(q))
- 		return count;
+Philipp Reisner (1):
+  drbd: disable discard support if granularity > max
 
--	strlcpy(elevator_name, buf, sizeof(elevator_name));
-+	strscpy(elevator_name, buf, sizeof(elevator_name));
- 	ret = elevator_change(q, strstrip(elevator_name));
- 	if (!ret)
- 		return count;
+ drivers/block/drbd/drbd_int.h      |  8 ++-
+ drivers/block/drbd/drbd_nl.c       | 23 +++++++--
+ drivers/block/drbd/drbd_receiver.c | 81 +++++++++++++++++-------------
+ drivers/block/drbd/drbd_worker.c   |  4 +-
+ 4 files changed, 71 insertions(+), 45 deletions(-)
+
 -- 
-2.15.2
+2.38.1
+
