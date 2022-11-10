@@ -2,96 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01AAA6249D9
-	for <lists+linux-block@lfdr.de>; Thu, 10 Nov 2022 19:45:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 446476249D7
+	for <lists+linux-block@lfdr.de>; Thu, 10 Nov 2022 19:45:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbiKJSpf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Nov 2022 13:45:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        id S230235AbiKJSpa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Nov 2022 13:45:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230450AbiKJSpe (ORCPT
+        with ESMTP id S230195AbiKJSpa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Nov 2022 13:45:34 -0500
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD0E64CE
-        for <linux-block@vger.kernel.org>; Thu, 10 Nov 2022 10:45:33 -0800 (PST)
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2AAIf5vH016747
-        for <linux-block@vger.kernel.org>; Thu, 10 Nov 2022 10:45:33 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=s2048-2021-q4;
- bh=Ll0sgKlomAV+roxD3aMEq7jXr8qS91KLuWJSCi6hOAk=;
- b=XT40UE2+dcwVBJyQqp2dMh607UYRnv3AvwVRb1iTA9a7tUXzQwYCCdlHuDp/KESTe2AI
- YcgjvDJiVQO3++LuObHY2A90nzLXPkpNep6tM/D1bRjL09J5SswfCeSz/cjV9NKtt/mt
- AaQ8CUvDxBPvXn2MVqQap1MxYp32VbYbpIk/U/E2TCKpAkmefPUA1FgEwPHavZW0tcOk
- t8edFxZwrp5Yw8GnYyOmOxKuUsJF1eGoM92zdPmGZyMzsviEZAwT+e1mw5T0SnpQzvrv
- CIvDlrLulcN2TfPP3sraZm+jNPcjcTmfJ5W9boO+qTcU4Q2z27JBjJcnyWdqo3Ww2xFr 4Q== 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3kr3jpfdrt-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Thu, 10 Nov 2022 10:45:32 -0800
-Received: from twshared9088.05.ash9.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 10 Nov 2022 10:45:29 -0800
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id 40874B08CDF4; Thu, 10 Nov 2022 10:45:04 -0800 (PST)
-From:   Keith Busch <kbusch@meta.com>
-To:     <linux-block@vger.kernel.org>, <dm-devel@redhat.com>,
-        <axboe@kernel.dk>
-CC:     <stefanha@redhat.com>, <ebiggers@kernel.org>, <me@demsh.org>,
-        <mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 5/5] dm-log-writes: set dma_alignment limit in io_hints
-Date:   Thu, 10 Nov 2022 10:45:01 -0800
-Message-ID: <20221110184501.2451620-6-kbusch@meta.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221110184501.2451620-1-kbusch@meta.com>
-References: <20221110184501.2451620-1-kbusch@meta.com>
+        Thu, 10 Nov 2022 13:45:30 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEC5DFFB
+        for <linux-block@vger.kernel.org>; Thu, 10 Nov 2022 10:45:28 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 0E665CE248B
+        for <linux-block@vger.kernel.org>; Thu, 10 Nov 2022 18:45:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5647BC433D6;
+        Thu, 10 Nov 2022 18:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668105925;
+        bh=BXaVTfNpyEmJmFnjGUi5nwscookyljdl+Cpy58EE1oE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r0I5ZhsTvoRi7IOr3LU+Wj/++R863NJlqGU5yBDJRE5J6rrjtE7dn4vEqwc7Tm+cr
+         KdCRRNgzNBJ6XW3mAOTVVJYyYDDzXeTDjWZePoCUFPUa62/YYLal1hmorKcE3KX9Jj
+         nZ4mK9ENLxjvV6LaX2jHVkzVHF16ZHptlsQhPuSLA0+Sj+W/9dgm1ujPJgo/hMip1p
+         fecLoRq47FPQgCXrevRWatg5W8t9rqqPkwKUPhxGkjdpgkLPFvHzRAzab2uJBj80o7
+         3spNu0RKWbVW+x+AgZAbK6eQW4Cgg+6vbspyTZnC6vgHaCvm4rrd3dziWnN4V7XC3M
+         mcMTgvl2nquMQ==
+Date:   Thu, 10 Nov 2022 11:45:21 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, axboe@kernel.dk, stefanha@redhat.com,
+        me@demsh.org, mpatocka@redhat.com
+Subject: Re: [PATCH 0/3] fix direct io errors on dm-crypt
+Message-ID: <Y21GwRUeJVwN17rR@kbusch-mbp.dhcp.thefacebook.com>
+References: <20221103152559.1909328-1-kbusch@meta.com>
+ <Y21BwxCkeaONcYK5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: JA7bgonllFV0y60UgJKz_raTwVWap2jm
-X-Proofpoint-ORIG-GUID: JA7bgonllFV0y60UgJKz_raTwVWap2jm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-10_12,2022-11-09_01,2022-06-22_01
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y21BwxCkeaONcYK5@gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+On Thu, Nov 10, 2022 at 06:24:03PM +0000, Eric Biggers wrote:
+> On Thu, Nov 03, 2022 at 08:25:56AM -0700, Keith Busch wrote:
+> > From: Keith Busch <kbusch@kernel.org>
+> > 
+> > The 6.0 kernel made some changes to the direct io interface to allow
+> > offsets in user addresses. This based on the hardware's capabilities
+> > reported in the request_queue's dma_alignment attribute.
+> > 
+> > dm-crypt requires direct io be aligned to the block size. Since it was
+> > only ever using the default 511 dma mask, this requirement may fail if
+> > formatted to something larger, like 4k, which will result in unexpected
+> > behavior with direct-io.
+> > 
+> > There are two parts to fixing this:
+> > 
+> >   First, the attribute needs to be moved to the queue_limit so that it
+> >   can properly stack with device mappers.
+> > 
+> >   Second, dm-crypt provides its minimum required limit to match the
+> >   logical block size.
+> > 
+> > Keith Busch (3):
+> >   block: make dma_alignment a stacking queue_limit
+> >   dm-crypt: provide dma_alignment limit in io_hints
+> >   block: make blk_set_default_limits() private
+> 
+> Hi Keith, can you send out an updated version of this patch series that
+> addresses the feedback?
+> 
+> I'd really like for this bug to be fixed before 6.1 is released, so that there
+> isn't a known bug in STATX_DIOALIGN already upon release.
 
-This device mapper needs bio vectors to be sized and memory aligned to
-the logical block size. Set the minimum required queue limit
-accordingly.
-
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/md/dm-log-writes.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/md/dm-log-writes.c b/drivers/md/dm-log-writes.c
-index 20fd688f72e7..178e13a5b059 100644
---- a/drivers/md/dm-log-writes.c
-+++ b/drivers/md/dm-log-writes.c
-@@ -875,6 +875,7 @@ static void log_writes_io_hints(struct dm_target *ti,=
- struct queue_limits *limit
- 	limits->logical_block_size =3D bdev_logical_block_size(lc->dev->bdev);
- 	limits->physical_block_size =3D bdev_physical_block_size(lc->dev->bdev)=
-;
- 	limits->io_min =3D limits->physical_block_size;
-+	limits->dma_alignment =3D limits->logical_block_size - 1;
- }
-=20
- #if IS_ENABLED(CONFIG_FS_DAX)
---=20
-2.30.2
-
+Sorry for the delay, v2 sent.
