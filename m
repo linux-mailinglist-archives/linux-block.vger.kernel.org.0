@@ -2,157 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C3796267EE
-	for <lists+linux-block@lfdr.de>; Sat, 12 Nov 2022 09:07:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBF1F6268EC
+	for <lists+linux-block@lfdr.de>; Sat, 12 Nov 2022 11:44:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234778AbiKLIG6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 12 Nov 2022 03:06:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36770 "EHLO
+        id S231480AbiKLKoo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 12 Nov 2022 05:44:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230170AbiKLIG5 (ORCPT
+        with ESMTP id S230447AbiKLKon (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 12 Nov 2022 03:06:57 -0500
+        Sat, 12 Nov 2022 05:44:43 -0500
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65FA13E20;
-        Sat, 12 Nov 2022 00:06:50 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4N8SpC1zZ6z4f3tq2;
-        Sat, 12 Nov 2022 16:06:43 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP1 (Coremail) with SMTP id cCh0CgD37awUVG9j5vZ7AQ--.43224S4;
-        Sat, 12 Nov 2022 16:06:46 +0800 (CST)
-From:   Ye Bin <yebin@huaweicloud.com>
-To:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ming.lei@redhat.com, Ye Bin <yebin10@huawei.com>
-Subject: [PATCH -next] blk-mq: fix warning when unregister mq sysfs
-Date:   Sat, 12 Nov 2022 16:28:13 +0800
-Message-Id: <20221112082813.704873-1-yebin@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46830140F9;
+        Sat, 12 Nov 2022 02:44:42 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4N8XJN2h3nz4f3jZK;
+        Sat, 12 Nov 2022 18:44:36 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgC329gWeW9j+BWaAQ--.8709S3;
+        Sat, 12 Nov 2022 18:44:39 +0800 (CST)
+Subject: Re: [PATCH] blk-mq: only unregister sysfs when registration succeeded
+To:     Liu Shixin <liushixin2@huawei.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <20221112110754.1109979-1-liushixin2@huawei.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <607beb5b-8d54-b795-8a05-76352d7ed863@huaweicloud.com>
+Date:   Sat, 12 Nov 2022 18:44:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20221112110754.1109979-1-liushixin2@huawei.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgD37awUVG9j5vZ7AQ--.43224S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF17KrW7GF4xurW3Kw1xZrb_yoW5urW8pr
-        43Gw47CrWvgr1UZF4UAan8Xry5Ka1kA3W8ZryfXr1rt3Wjkry5Jr18JFyUJFWkJrZ7Cr4I
-        qF4DXw4rtr15WaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUgKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+X-CM-TRANSID: gCh0CgC329gWeW9j+BWaAQ--.8709S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw1DJrW3AFW3KF43Aw4fKrg_yoWftwc_Wa
+        y0kFy8Kan8GrnIkw12kFy8ZrySkay8XF47GrZrXFZFy3WkXFZ5GwsI9r18Xw43Ga1xuFsx
+        tr1DA34rWr1IqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
+        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+        A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+        67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
         0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
         x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-        z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-        AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-        IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
-        0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-        daVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
+        wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+        80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
+        I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+        1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
+Hi,
 
-There's issue as follows when do fault injection test:
-------------[ cut here ]------------
-kernfs: can not remove 'nr_tags', no directory
-WARNING: CPU: 8 PID: 2308 at fs/kernfs/dir.c:1635 kernfs_remove_by_name_ns+0xdd/0x100
-Modules linked in: null_blk(-)
-CPU: 8 PID: 2308 Comm: rmmod Not tainted 6.1.0-rc4-next-20221111+ #131
-RIP: 0010:kernfs_remove_by_name_ns+0xdd/0x100
-RSP: 0018:ffff88812149fbc8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffffffffb8137508 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: ffffffffb6b49ae0 RDI: ffffed1024293f6b
-RBP: ffffffffb8137600 R08: 0000000000000001 R09: ffffed1024293f3d
-R10: ffff88812149f9e7 R11: ffffed1024293f3c R12: 0000000000000000
-R13: ffffffffb6b2d2a0 R14: ffffffffb6b2d1e0 R15: ffff88822f7f14b8
-FS:  00007f97eacb9740(0000) GS:ffff8883ace00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f97e9b72b81 CR3: 000000022fbda000 CR4: 00000000000006e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- remove_files.isra.0+0x6c/0x170
- sysfs_remove_group+0x9b/0x180
- sysfs_remove_groups+0x4f/0xa0
- __kobject_del+0x7d/0x1d0
- kobject_del+0x32/0x50
- blk_mq_sysfs_unregister.cold+0x8/0xd
- blk_unregister_queue+0xed/0x260
- del_gendisk+0x27e/0x900
- null_del_dev.part.0+0x166/0x510 [null_blk]
- null_destroy_dev+0x37/0x5c [null_blk]
- null_exit+0x4c/0x9d [null_blk]
- __do_sys_delete_module.isra.0+0x2f3/0x520
- do_syscall_64+0x3b/0x90
- entry_SYSCALL_64_after_hwframe+0x72/0xdc
- </TASK>
+ÔÚ 2022/11/12 19:07, Liu Shixin Ð´µÀ:
+> kobject_del() must not be called if kobject_add() has not been called.
+> Hence only unregister sysfs when registration succeeded.
+> 
 
-Fault injection context as follows:
- kobject_add
- blk_mq_register_hctx
- blk_mq_sysfs_register
- blk_register_queue
- device_add_disk
- null_add_dev.part.0 [null_blk]
+ From what I see, the blk_queue_registered() from caller
+blk_unregister_queue() can already prevent that. QUEUE_FLAG_REGISTERED
+will only be set if blk_register_queue() succeed.
 
-As 'blk_mq_sysfs_register' may failed, but when unregister mq sysfs don't
-judge sysfs if registered. 'blk_mq_sysfs_register' also didn't handle
-error correctly.
-To solve above issue, if sysfs is unregstered just exit.
+Thanks,
+Kuai
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- block/blk-mq-sysfs.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
-index 93997d297d42..0cda0a729f3c 100644
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -185,7 +185,7 @@ static int blk_mq_register_hctx(struct blk_mq_hw_ctx *hctx)
- {
- 	struct request_queue *q = hctx->queue;
- 	struct blk_mq_ctx *ctx;
--	int i, ret;
-+	int i, j, ret;
- 
- 	if (!hctx->nr_ctx)
- 		return 0;
-@@ -197,9 +197,16 @@ static int blk_mq_register_hctx(struct blk_mq_hw_ctx *hctx)
- 	hctx_for_each_ctx(hctx, ctx, i) {
- 		ret = kobject_add(&ctx->kobj, &hctx->kobj, "cpu%u", ctx->cpu);
- 		if (ret)
--			break;
-+			goto out;
- 	}
- 
-+	return 0;
-+out:
-+	hctx_for_each_ctx(hctx, ctx, j) {
-+		if (j < i)
-+			kobject_del(&ctx->kobj);
-+	}
-+	kobject_del(&hctx->kobj);
- 	return ret;
- }
- 
-@@ -278,6 +285,8 @@ void blk_mq_sysfs_unregister(struct gendisk *disk)
- 	struct blk_mq_hw_ctx *hctx;
- 	unsigned long i;
- 
-+	if (!q->mq_sysfs_init_done)
-+		return;
- 	lockdep_assert_held(&q->sysfs_dir_lock);
- 
- 	queue_for_each_hw_ctx(q, hctx, i)
--- 
-2.31.1
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+> ---
+>   block/blk-mq-sysfs.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
+> index 93997d297d42..63f2df2500d9 100644
+> --- a/block/blk-mq-sysfs.c
+> +++ b/block/blk-mq-sysfs.c
+> @@ -279,6 +279,8 @@ void blk_mq_sysfs_unregister(struct gendisk *disk)
+>   	unsigned long i;
+>   
+>   	lockdep_assert_held(&q->sysfs_dir_lock);
+> +	if (!q->mq_sysfs_init_done)
+> +		return;
+>   
+>   	queue_for_each_hw_ctx(q, hctx, i)
+>   		blk_mq_unregister_hctx(hctx);
+> 
 
