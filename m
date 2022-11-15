@@ -2,45 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 754A862A47B
-	for <lists+linux-block@lfdr.de>; Tue, 15 Nov 2022 22:49:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15A9462AE81
+	for <lists+linux-block@lfdr.de>; Tue, 15 Nov 2022 23:46:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231465AbiKOVtD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Nov 2022 16:49:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39956 "EHLO
+        id S231409AbiKOWqK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Nov 2022 17:46:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231650AbiKOVtB (ORCPT
+        with ESMTP id S231401AbiKOWqJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Nov 2022 16:49:01 -0500
-Received: from fudo.makrotopia.org (fudo.makrotopia.org [IPv6:2a07:2ec0:3002::71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F412462FA;
-        Tue, 15 Nov 2022 13:48:59 -0800 (PST)
-Received: from local
-        by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-         (Exim 4.94.2)
-        (envelope-from <daniel@makrotopia.org>)
-        id 1ov3nW-0005KN-32; Tue, 15 Nov 2022 22:48:50 +0100
-Date:   Tue, 15 Nov 2022 21:47:25 +0000
-From:   Daniel Golle <daniel@makrotopia.org>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Golle <daniel@makrotopia.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Michal Orzel <michalorzel.eng@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH v5 4/4] mtd: add option to enable scanning for partitions
-Message-ID: <88d7c15691af5d956275b5326303d5aeb3ea1d2f.1668548123.git.daniel@makrotopia.org>
-References: <cover.1668548123.git.daniel@makrotopia.org>
+        Tue, 15 Nov 2022 17:46:09 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729FC1E3E6;
+        Tue, 15 Nov 2022 14:46:04 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 225CB209D5;
+        Tue, 15 Nov 2022 22:46:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1668552363; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=lXHqxpkurBmpumd+Q+NIofh19DXjIJGUvD54QuP9Lv8=;
+        b=MCmboMBl4oZrDliTyU5M4t0N5fuCsD1fnsn8CxoCFMAM3VHfW5HrVi5KJEfCXVhhJI0ED7
+        o13k9Yc49Orls4mO1T7PrzBzmt4dhGDXa+RIHdNVk97XPTMuGK3b5MGmhqnN/ERCfZ6P+7
+        poXULDHRWcrgutZwGjG65WK7DyqJyHA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1668552363;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=lXHqxpkurBmpumd+Q+NIofh19DXjIJGUvD54QuP9Lv8=;
+        b=K+fnSF+3dmB2nDetdto5ZOF/N5DrUo/XkQoUFpGNO7/VprRl32Hr68bQBgaMJm/G8ua1x1
+        QMaogM4zgrmORcAw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7B37A13273;
+        Tue, 15 Nov 2022 22:46:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id KBDXC6oWdGPVSwAAMHmgww
+        (envelope-from <krisman@suse.de>); Tue, 15 Nov 2022 22:46:02 +0000
+From:   Gabriel Krisman Bertazi <krisman@suse.de>
+To:     axboe@kernel.dk
+Cc:     mingo@redhat.com, peterz@infradead.org, jack@suse.cz,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        liusong@linux.alibaba.com, chaitanyak@nvidia.com,
+        Gabriel Krisman Bertazi <krisman@suse.de>
+Subject: [PATCH 0/3] sbitmap: Fix two issues in the per-bitmap wakeup counter code
+Date:   Tue, 15 Nov 2022 17:45:50 -0500
+Message-Id: <20221115224553.23594-1-krisman@suse.de>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1668548123.git.daniel@makrotopia.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,73 +66,46 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add Kconfig boolean CONFIG_MTD_BLOCK_PARTITIONS and enable block
-partition parsers on non-NAND mtdblock as well as ubiblock devices
-in case it is selected.
-Never scan partitions on NAND-backed mtdblock devices, ubiblock
-should be used instead.
+Jan reported two issues in the original thread.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/mtd/Kconfig       | 11 +++++++++++
- drivers/mtd/mtd_blkdevs.c |  4 +++-
- drivers/mtd/ubi/block.c   |  5 ++++-
- 3 files changed, 18 insertions(+), 2 deletions(-)
+The first is that wake_index was not updated after returning from
+sbq_wake_ptr which meant we'd have to empty the wq before moving to the
+next one.  Patch 1/3 in this series reorders the code to avoid this
+condition, increasing fairness of queue selection and preventing
+starvation.  I sent this patch already on the other thread and Jan
+reviewed it, but since it is a small one, and a dependency for the
+other, I'm resending it a along this series.
 
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index 796a2eccbef0..12874dec1569 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -69,6 +69,17 @@ config MTD_BLOCK_RO
- 	  You do not need this option for use with the DiskOnChip devices. For
- 	  those, enable NFTL support (CONFIG_NFTL) instead.
- 
-+config MTD_BLOCK_PARTITIONS
-+	bool "Scan for partitions on MTD block devices"
-+	depends on MTD_BLOCK || MTD_BLOCK_RO
-+	default y if FIT_PARTITION
-+	help
-+	  Scan MTD block devices for partitions (ie. MBR, GPT, uImage.FIT, ...).
-+	  (NAND devices are omitted, ubiblock should be used instead when)
-+
-+	  Unless your MTD partitions contain sub-partitions mapped using a
-+	  partition table, say no.
-+
- comment "Note that in some cases UBI block is preferred. See MTD_UBI_BLOCK."
- 	depends on MTD_BLOCK || MTD_BLOCK_RO
- 
-diff --git a/drivers/mtd/mtd_blkdevs.c b/drivers/mtd/mtd_blkdevs.c
-index 60b222799871..e6f2e0888246 100644
---- a/drivers/mtd/mtd_blkdevs.c
-+++ b/drivers/mtd/mtd_blkdevs.c
-@@ -359,7 +359,9 @@ int add_mtd_blktrans_dev(struct mtd_blktrans_dev *new)
- 	} else {
- 		snprintf(gd->disk_name, sizeof(gd->disk_name),
- 			 "%s%d", tr->name, new->devnum);
--		gd->flags |= GENHD_FL_NO_PART;
-+
-+		if (!IS_ENABLED(CONFIG_MTD_BLOCK_PARTITIONS) || mtd_type_is_nand(new->mtd))
-+			gd->flags |= GENHD_FL_NO_PART;
- 	}
- 
- 	set_capacity(gd, ((u64)new->size * tr->blksize) >> 9);
-diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
-index 75eaecc8639f..e617635ff6e6 100644
---- a/drivers/mtd/ubi/block.c
-+++ b/drivers/mtd/ubi/block.c
-@@ -430,7 +430,10 @@ int ubiblock_create(struct ubi_volume_info *vi)
- 		ret = -ENODEV;
- 		goto out_cleanup_disk;
- 	}
--	gd->flags |= GENHD_FL_NO_PART;
-+
-+	if (!IS_ENABLED(CONFIG_MTD_BLOCK_PARTITIONS))
-+		gd->flags |= GENHD_FL_NO_PART;
-+
- 	gd->private_data = dev;
- 	sprintf(gd->disk_name, "ubiblock%d_%d", dev->ubi_num, dev->vol_id);
- 	set_capacity(gd, disk_capacity);
+The second issue is trickier.  When the selected queue is emptied after
+the waitqueue_active check and before wake_up_nr, there is no waiters to
+be awaken in that queue, even if other queues might have it.  This
+causes us to loose one too many wakeups, and there might not be enough
+requests in flight to wake up every queued request.
+
+The proposed fix, is to walk through every queue after doing the atomic
+update, such that we ensure any waiters already queued are candidates
+for awakening, and that we awake at least 1 waiter in any of the queues.
+The patch is a bit more complex than the suggestion since it avoids
+partial updates to wake_index, which measurably hurt performance
+unnecessarily.
+
+It survived the same tests done on the original patch.
+
+btw, I'm still missing the latency and utilisation reports.  I haven't
+forgotten about it, but I didn't have a chance to collect them
+yet. Sorry.  I will follow up with them for completeness, even if the
+original patch is already queued.
+
+Gabriel Krisman Bertazi (3):
+  sbitmap: Advance the queue index before waking up a queue
+  wait: Return number of exclusive waiters awaken
+  sbitmap: Try each queue to wake up at least one waiter
+
+ include/linux/wait.h |  2 +-
+ kernel/sched/wait.c  | 18 +++++++++++-------
+ lib/sbitmap.c        | 36 +++++++++++++++++++-----------------
+ 3 files changed, 31 insertions(+), 25 deletions(-)
+
 -- 
-2.38.1
+2.35.3
 
