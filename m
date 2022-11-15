@@ -2,140 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C2BF629B7F
-	for <lists+linux-block@lfdr.de>; Tue, 15 Nov 2022 15:06:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49307629B0A
+	for <lists+linux-block@lfdr.de>; Tue, 15 Nov 2022 14:49:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbiKOOGC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Nov 2022 09:06:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
+        id S238222AbiKONth (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Nov 2022 08:49:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238408AbiKOOFu (ORCPT
+        with ESMTP id S230207AbiKONtg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Nov 2022 09:05:50 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 107A62B248
-        for <linux-block@vger.kernel.org>; Tue, 15 Nov 2022 06:05:49 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id i21so22000078edj.10
-        for <linux-block@vger.kernel.org>; Tue, 15 Nov 2022 06:05:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f7WFciVvNJW7kEDkH94rbryN71vzfH3OABZXCo397cs=;
-        b=ROtTyEPYbFH/w4ZblcsCZ+Sxy8nc+iKOmY5mKS0BFp/MGlPuoaBsfFwY2vt7ZRLqAy
-         8bVe6U94REHuHKNmJ9ckXPjlvZfQbaPfeFklKJPJjaR5188C+ZSoRbgFTe7NeP12XHx4
-         X5kkYusxFJpbKrMMKsCbbRjr7C37mNwqlwMtKCxCWj7qPNYEkePyPs7q3A24rqEwXwoC
-         KjAZ6C/L6K/1h5z1LU1EOy3Jy+pTV8xtSLtXFFcC0UvRFOQPzWryDdQNKi3+L3j/KLXm
-         xQEXg6Kp+P99RqNWLFTgEhH3W0KV9/3kq2fhwNmQzhXotFSLKjvhv0g1vGeBFok8z5mc
-         SW9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f7WFciVvNJW7kEDkH94rbryN71vzfH3OABZXCo397cs=;
-        b=qbvcoAygVl+XWaSTuePHqezE2CEUVZecBJeFPVwhEkgtL4/37w2IcjWPcbS6yuGMc6
-         gDMNJprAotqQFhvNTs+sbCNdidQIB5vRQNtmof0ojos1wx1SYmEcW5Zfkk4wu99ys+GU
-         RrQ5UmOFdj6YACPxJxfhkSFcWWmLD202rQ06mdeZN0yrvvYrdJNkoLEWpDBwbKjU/3qq
-         YFGuTffb1m/6VDRHwXF6G1mSC6CGcK8u4hexJouA6VNPNk3TCEWqnFT6wdF0islx3KkI
-         52JmJFKN4GapKwOKyqEx5KqqRySLUzQPfUA8jHmlwf1evlFWlgdVoSgGLzU5q/4kI6mb
-         ljaA==
-X-Gm-Message-State: ANoB5plS4IPtlLy2l/i2Aj1YtdKjOLobC0aG5q6lle6DcWWkztQ4cFaI
-        /jBI/WVXzzvqEoOrj+QWQysK5w==
-X-Google-Smtp-Source: AA0mqf7oxrRdM64h8FAoN9EbCTeSOds03YFY2tUoVdCPVV0reOQy2CW6ku26YqTBbiFTvwmZuBSx1Q==
-X-Received: by 2002:aa7:da13:0:b0:461:ed76:cb42 with SMTP id r19-20020aa7da13000000b00461ed76cb42mr15587691eds.229.1668521147538;
-        Tue, 15 Nov 2022 06:05:47 -0800 (PST)
-Received: from [192.168.178.55] (h082218028181.host.wavenet.at. [82.218.28.181])
-        by smtp.gmail.com with ESMTPSA id cf6-20020a170906b2c600b007ad94fd48dfsm5509478ejb.139.2022.11.15.06.05.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Nov 2022 06:05:47 -0800 (PST)
-Message-ID: <d0ff33bf-d39b-005c-ab62-42cae97e3b8c@linbit.com>
-Date:   Tue, 15 Nov 2022 15:05:46 +0100
+        Tue, 15 Nov 2022 08:49:36 -0500
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F442497F;
+        Tue, 15 Nov 2022 05:49:33 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4NBSGG0jBXz4f41hZ;
+        Tue, 15 Nov 2022 21:49:26 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP4 (Coremail) with SMTP id gCh0CgBni9jnmHNjrPFIAg--.61645S4;
+        Tue, 15 Nov 2022 21:49:29 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     hch@lst.de, axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org,
+        dm-devel@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com
+Subject: [PATCH v3 00/10] fix delayed holder tracking
+Date:   Tue, 15 Nov 2022 22:10:44 +0800
+Message-Id: <20221115141054.1051801-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH] drbd: use after free in drbd_create_device()
-To:     Dan Carpenter <error27@gmail.com>
-Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Andreas Gruenbacher <agruen@linbit.com>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <Y3Jd5iZRbNQ9w6gm@kili>
-Content-Language: en-US
-From:   =?UTF-8?Q?Christoph_B=c3=b6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>
-In-Reply-To: <Y3Jd5iZRbNQ9w6gm@kili>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgBni9jnmHNjrPFIAg--.61645S4
+X-Coremail-Antispam: 1UD129KBjvJXoWruFyUZr1fuw1DAw17Jw1rXrb_yoW8JF48pF
+        ZxWa4fKFyUurWIqa13Aw17XFyrGan7K3WxJry7Kr1Fqry5Cry5ZF1xtF18tFyUGrZ7trnr
+        Xry7t3yfGw4vk3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+        Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+        UdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Am 15.11.22 um 14:16 schrieb Dan Carpenter:
-> The drbd_destroy_connection() frees the "connection" so use the _safe()
-> iterator to prevent a use after free.
-> 
-> Fixes: b6f85ef9538b ("drbd: Iterate over all connections")
-> Signed-off-by: Dan Carpenter <error27@gmail.com>
-> ---
-> Smatch assumes that kref_put() generally calls the free function so it
-> gets very confused by drbd_delete_device() which calls:
-> 
-> 	kref_put(&device->kref, drbd_destroy_device);
-> 
-> Four times in a row.  (Smatch has some checking for incremented
-> reference counts but even there it assumes that people are going to hold
-> one reference and not four).
-> 
-> drivers/block/drbd/drbd_main.c:2831 drbd_delete_device() error: dereferencing freed memory 'device'
-> drivers/block/drbd/drbd_main.c:2833 drbd_delete_device() warn: passing freed memory 'device'
-> drivers/block/drbd/drbd_main.c:2835 drbd_delete_device() error: dereferencing freed memory 'device'
-> 
-> The drbd_adm_get_status_all() function makes me itch as well.  It seems
-> like we drop a reference and then take it again?
-> 
-> drivers/block/drbd/drbd_nl.c:4019 drbd_adm_get_status_all() warn: 'resource' was already freed.
-> drivers/block/drbd/drbd_nl.c:4021 drbd_adm_get_status_all() warn: 'resource' was already freed.
-> 
->  drivers/block/drbd/drbd_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-> index f3e4db16fd07..8532b839a343 100644
-> --- a/drivers/block/drbd/drbd_main.c
-> +++ b/drivers/block/drbd/drbd_main.c
-> @@ -2672,7 +2672,7 @@ static int init_submitter(struct drbd_device *device)
->  enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsigned int minor)
->  {
->  	struct drbd_resource *resource = adm_ctx->resource;
-> -	struct drbd_connection *connection;
-> +	struct drbd_connection *connection, *n;
->  	struct drbd_device *device;
->  	struct drbd_peer_device *peer_device, *tmp_peer_device;
->  	struct gendisk *disk;
-> @@ -2789,7 +2789,7 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
->  	return NO_ERROR;
->  
->  out_idr_remove_from_resource:
-> -	for_each_connection(connection, resource) {
-> +	for_each_connection_safe(connection, n, resource) {
->  		peer_device = idr_remove(&connection->peer_devices, vnr);
->  		if (peer_device)
->  			kref_put(&connection->kref, drbd_destroy_connection);
+From: Yu Kuai <yukuai3@huawei.com>
 
-Thanks!
+Hi all,
 
-Reviewed-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
+this series tries to fix the delayed holder tracking that is only used by
+dm by moving it into dm, where we can track the lifetimes much better.
+v2 is from Christoph, here I send v3 with some additional fixes.
+
+Changes since v2:
+ - add patch 5 8 and 10 to this series.
+ - rewrite last cleanup patch from v2.
+Changes since v1:
+ - don't blow away ->bd_holder_dir in del_gendisk or add_disk failure
+   as the holder unregistration references it
+ - add an extra cleanup patch
+
+Christoph Hellwig (6):
+  block: clear ->slave_dir when dropping the main slave_dir reference
+  dm: remove free_table_devices
+  dm: cleanup open_table_device
+  dm: cleanup close_table_device
+  dm: track per-add_disk holder relations in DM
+  block: remove delayed holder registration
+
+Yu Kuai (4):
+  dm: make sure create and remove dm device won't race with open and
+    close table
+  block: fix use after free for bd_holder_dir
+  block: store the holder kobject in bd_holder_disk
+  block: don't allow a disk link holder to itself
+
+ block/genhd.c          |   6 +-
+ block/holder.c         | 103 +++++++++++++-----------------
+ drivers/md/dm.c        | 138 ++++++++++++++++++++++++-----------------
+ include/linux/blkdev.h |   5 --
+ 4 files changed, 126 insertions(+), 126 deletions(-)
 
 -- 
-Christoph Böhmwalder
-LINBIT | Keeping the Digital World Running
-DRBD HA —  Disaster Recovery — Software defined Storage
+2.31.1
+
