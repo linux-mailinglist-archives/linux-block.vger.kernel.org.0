@@ -2,53 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEDD862B316
-	for <lists+linux-block@lfdr.de>; Wed, 16 Nov 2022 07:09:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8177662B318
+	for <lists+linux-block@lfdr.de>; Wed, 16 Nov 2022 07:10:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231622AbiKPGJu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Nov 2022 01:09:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39054 "EHLO
+        id S230128AbiKPGJ7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Nov 2022 01:09:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230128AbiKPGJt (ORCPT
+        with ESMTP id S232113AbiKPGJ6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Nov 2022 01:09:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D827B2B
-        for <linux-block@vger.kernel.org>; Tue, 15 Nov 2022 22:08:50 -0800 (PST)
+        Wed, 16 Nov 2022 01:09:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B362673
+        for <linux-block@vger.kernel.org>; Tue, 15 Nov 2022 22:08:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668578929;
+        s=mimecast20190719; t=1668578935;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=DknHnSyilClRaaFb2h7NHScQt4Y6GnWgY9PZoRqOvsc=;
-        b=eOw2JWGqA+RCG2bwWhumGdSA9ib/jxv3qb7nHC+KmGNhyMOdk9+mYu1T7/WdAT6/Y2Fapp
-        Q4bxsYxEa1wff71dvvEC0fw9dFnM6RhLtE7NGIMBz6Pw0Ak9dRBohsITevaCI2AHjAIJaY
-        CdL/Mg1b4EL8GHfV1gZwknY+LA4z/wE=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aMFXTtH98yesLJHvhmBYMinkWKcBVUeqAcuzVDSnxdE=;
+        b=brYDXZti+ErMpncoY+oNuelSkkQvDz11RmBf+GMVhh7r+t0IOYTCjNQxqowYhCpRdWXKEk
+        XQWmXN20MpttdHLF34MfKGkBp55WRUebLYRxHjlVqHr3QFu6W8lzOUFaHx9KtDznsbfLRv
+        aJepRNZperO7wBquR3rT/C4WOcxYOPI=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-580-gw6WKL9rMnOCUHAe-0Yplw-1; Wed, 16 Nov 2022 01:08:46 -0500
-X-MC-Unique: gw6WKL9rMnOCUHAe-0Yplw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+ us-mta-601-Zc2m6HSyMO2EVO-9Q8Ybhw-1; Wed, 16 Nov 2022 01:08:50 -0500
+X-MC-Unique: Zc2m6HSyMO2EVO-9Q8Ybhw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7F0993802B80;
-        Wed, 16 Nov 2022 06:08:46 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8FCD729AB3FD;
+        Wed, 16 Nov 2022 06:08:50 +0000 (UTC)
 Received: from localhost (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 760BE40C83AA;
-        Wed, 16 Nov 2022 06:08:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AB5A317595;
+        Wed, 16 Nov 2022 06:08:49 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 0/6] ublk_drv: add mechanism for supporting unprivileged ublk device
-Date:   Wed, 16 Nov 2022 14:08:29 +0800
-Message-Id: <20221116060835.159945-1-ming.lei@redhat.com>
+Subject: [PATCH 1/6] ublk_drv: remove nr_aborted_queues from ublk_device
+Date:   Wed, 16 Nov 2022 14:08:30 +0800
+Message-Id: <20221116060835.159945-2-ming.lei@redhat.com>
+In-Reply-To: <20221116060835.159945-1-ming.lei@redhat.com>
+References: <20221116060835.159945-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -59,46 +62,25 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello,
+No one uses 'nr_aborted_queues' any more, so remove it.
 
-Stefan Hajnoczi suggested un-privileged ublk device[1] for container
-use case.
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/block/ublk_drv.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-So far only administrator can create/control ublk device which is too
-strict and increase system administrator burden, and this patchset
-implements un-privileged ublk device:
-
-- any user can create ublk device, which can only be controlled &
-  accessed by the owner of the device or administrator
-
-For using such mechanism, system administrator needs to deploy two
-simple udev rules[2] after running 'make install' in ublksrv.
-
-Userspace(ublksrv):
-
-	https://github.com/ming1/ubdsrv/tree/unprivileged-ublk
-    
-'ublk add -t $TYPE --un_privileged=1' is for creating one un-privileged
-ublk device if the user is un-privileged.
-
-
-[1] https://lore.kernel.org/linux-block/YoOr6jBfgVm8GvWg@stefanha-x1.localdomain/
-[2] https://github.com/ming1/ubdsrv/blob/unprivileged-ublk/README.rst#un-privileged-mode
-
-Ming Lei (6):
-  ublk_drv: remove nr_aborted_queues from ublk_device
-  ublk_drv: don't probe partitions if the ubq daemon isn't trusted
-  ublk_drv: move ublk_get_device_from_id into ublk_ctrl_uring_cmd
-  ublk_drv: add device parameter UBLK_PARAM_TYPE_DEVT
-  ublk_drv: add module parameter of ublks_max for limiting max allowed
-    ublk dev
-  ublk_drv: add mechanism for supporting unprivileged ublk device
-
- Documentation/block/ublk.rst  |  18 +-
- drivers/block/ublk_drv.c      | 340 ++++++++++++++++++++++++----------
- include/uapi/linux/ublk_cmd.h |  49 ++++-
- 3 files changed, 299 insertions(+), 108 deletions(-)
-
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index f96cb01e9604..fe997848c1ff 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -161,7 +161,6 @@ struct ublk_device {
+ 
+ 	struct completion	completion;
+ 	unsigned int		nr_queues_ready;
+-	atomic_t		nr_aborted_queues;
+ 
+ 	/*
+ 	 * Our ubq->daemon may be killed without any notification, so
 -- 
 2.31.1
 
