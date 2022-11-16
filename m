@@ -2,56 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97E6162B319
-	for <lists+linux-block@lfdr.de>; Wed, 16 Nov 2022 07:10:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D4B162B31B
+	for <lists+linux-block@lfdr.de>; Wed, 16 Nov 2022 07:10:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232237AbiKPGKH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Nov 2022 01:10:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39094 "EHLO
+        id S230175AbiKPGKL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Nov 2022 01:10:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230417AbiKPGKG (ORCPT
+        with ESMTP id S230280AbiKPGKK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Nov 2022 01:10:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE695F4D
-        for <linux-block@vger.kernel.org>; Tue, 15 Nov 2022 22:09:06 -0800 (PST)
+        Wed, 16 Nov 2022 01:10:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE72663CF
+        for <linux-block@vger.kernel.org>; Tue, 15 Nov 2022 22:09:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668578945;
+        s=mimecast20190719; t=1668578950;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GYszUmguYIFu8/fSywhGU0/go/84rdKzZs43sAlqRgw=;
-        b=XTZBtnO2zI4nSpxQxhph2yq624Y+1bTl9/BITzUtTVqnBJLrw8TvAsXgfGs30G0i60+NB2
-        LqIAE2eTMK/wYUfpMYGl9Vr/wEIc2OcDShqrA+e3A4O0mZ7YgMk8tvdDaRwNATgrL5feDk
-        wKe3CQN4HsAlkhaIz94dUcHJ8H0cQ+U=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=nnYrbWxfKx2jYnnBS+89Jj+ZL4W6GaeJPFuqh9IOuOA=;
+        b=ORK6ydX6ryocdruhCw3n83QmWGnt+KnZcP+btLbp0HtF5/GeGBR6tVOu8xii/MgGqnSFrx
+        BQTwQyxoICqaXepI4IL3kgDE1b5U7ogDm+DI1lACqL7Y7sg+iBL5afmibBnHCyiVG/INSC
+        LLf3v0skk7fBDgrI2BafwrJZvymeCac=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-464-G1-pNwYsOtWFEMmvuwY4Sg-1; Wed, 16 Nov 2022 01:09:02 -0500
-X-MC-Unique: G1-pNwYsOtWFEMmvuwY4Sg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-171-lZYN9_hHN9CabzU2FYZP3w-1; Wed, 16 Nov 2022 01:09:06 -0500
+X-MC-Unique: lZYN9_hHN9CabzU2FYZP3w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 577A8833AED;
-        Wed, 16 Nov 2022 06:09:02 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 29C781C0896C;
+        Wed, 16 Nov 2022 06:09:06 +0000 (UTC)
 Received: from localhost (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7AF791415114;
-        Wed, 16 Nov 2022 06:09:01 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 537DE40C6EC3;
+        Wed, 16 Nov 2022 06:09:04 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 4/6] ublk_drv: add device parameter UBLK_PARAM_TYPE_DEVT
-Date:   Wed, 16 Nov 2022 14:08:33 +0800
-Message-Id: <20221116060835.159945-5-ming.lei@redhat.com>
+Subject: [PATCH 5/6] ublk_drv: add module parameter of ublks_max for limiting max allowed ublk dev
+Date:   Wed, 16 Nov 2022 14:08:34 +0800
+Message-Id: <20221116060835.159945-6-ming.lei@redhat.com>
 In-Reply-To: <20221116060835.159945-1-ming.lei@redhat.com>
 References: <20221116060835.159945-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -62,109 +62,72 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Userspace side only knows device ID, but the associated path of ublkc* and
-ublkb* could be changed by udev, and that depends on userspace's policy, so
-add parameter of UBLK_PARAM_TYPE_DEVT for retrieving major/minor of the
-ublkc* and ublkb*, then user may figure out major/minor of the ublk disks
-he/she owns. With major/minor, it is easy to find the device node path.
+Prepare for supporting unprivileged ublk device by limiting max number
+ublk devices added. Otherwise too many ublk devices could be added by
+un-trusted user, which can be thought as one DoS.
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c      | 24 +++++++++++++++++++++++-
- include/uapi/linux/ublk_cmd.h | 13 +++++++++++++
- 2 files changed, 36 insertions(+), 1 deletion(-)
+ drivers/block/ublk_drv.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index d987f76d436f..d047b26c1e93 100644
+index d047b26c1e93..28e9f1a19c9e 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -54,7 +54,8 @@
- 		| UBLK_F_USER_RECOVERY_REISSUE)
+@@ -189,6 +189,15 @@ static wait_queue_head_t ublk_idr_wq;	/* wait until one idr is freed */
  
- /* All UBLK_PARAM_TYPE_* should be included here */
--#define UBLK_PARAM_TYPE_ALL (UBLK_PARAM_TYPE_BASIC | UBLK_PARAM_TYPE_DISCARD)
-+#define UBLK_PARAM_TYPE_ALL (UBLK_PARAM_TYPE_BASIC | \
-+		UBLK_PARAM_TYPE_DISCARD | UBLK_PARAM_TYPE_DEVT)
- 
- struct ublk_rq_data {
- 	union {
-@@ -258,6 +259,10 @@ static int ublk_validate_params(const struct ublk_device *ub)
- 			return -EINVAL;
- 	}
- 
-+	/* dev_t is read-only */
-+	if (ub->params.types & UBLK_PARAM_TYPE_DEVT)
-+		WARN_ON_ONCE(1);
-+
- 	return 0;
- }
- 
-@@ -1787,6 +1792,22 @@ static int ublk_ctrl_get_dev_info(struct ublk_device *ub,
- 	return 0;
- }
- 
-+/* TYPE_DEVT is readonly, so fill it up before returning to userspace */
-+static void ublk_ctrl_fill_params_devt(struct ublk_device *ub)
-+{
-+	ub->params.devt.char_major = MAJOR(ub->cdev_dev.devt);
-+	ub->params.devt.char_minor = MINOR(ub->cdev_dev.devt);
-+
-+	if (ub->ub_disk) {
-+		ub->params.devt.disk_major = MAJOR(disk_devt(ub->ub_disk));
-+		ub->params.devt.disk_minor = MINOR(disk_devt(ub->ub_disk));
-+	} else {
-+		ub->params.devt.disk_major = 0;
-+		ub->params.devt.disk_minor = 0;
-+	}
-+	ub->params.types |= UBLK_PARAM_TYPE_DEVT;
-+}
-+
- static int ublk_ctrl_get_params(struct ublk_device *ub,
- 		struct io_uring_cmd *cmd)
- {
-@@ -1808,6 +1829,7 @@ static int ublk_ctrl_get_params(struct ublk_device *ub,
- 		ph.len = sizeof(struct ublk_params);
- 
- 	mutex_lock(&ub->mutex);
-+	ublk_ctrl_fill_params_devt(ub);
- 	if (copy_to_user(argp, &ub->params, ph.len))
- 		ret = -EFAULT;
- 	else
-diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index 8f88e3a29998..4e38b9aa0293 100644
---- a/include/uapi/linux/ublk_cmd.h
-+++ b/include/uapi/linux/ublk_cmd.h
-@@ -214,6 +214,17 @@ struct ublk_param_discard {
- 	__u16	reserved0;
- };
+ static DEFINE_MUTEX(ublk_ctl_mutex);
  
 +/*
-+ * read-only, can't set via UBLK_CMD_SET_PARAMS, disk_devt is available
-+ * after device is started
++ * Max ublk devices allowed to add
++ *
++ * It can be extended to one per-user limit in future or even controlled
++ * by cgroup.
 + */
-+struct ublk_param_devt {
-+	__u32   char_major;
-+	__u32   char_minor;
-+	__u32   disk_major;
-+	__u32   disk_minor;
-+};
++static unsigned int ublks_max = 64;
++static unsigned int ublks_added;	/* protected by ublk_ctl_mutex */
 +
- struct ublk_params {
- 	/*
- 	 * Total length of parameters, userspace has to set 'len' for both
-@@ -224,10 +235,12 @@ struct ublk_params {
- 	__u32	len;
- #define UBLK_PARAM_TYPE_BASIC           (1 << 0)
- #define UBLK_PARAM_TYPE_DISCARD         (1 << 1)
-+#define UBLK_PARAM_TYPE_DEVT            (1 << 2)
- 	__u32	types;			/* types of parameter included */
+ static struct miscdevice ublk_misc;
  
- 	struct ublk_param_basic		basic;
- 	struct ublk_param_discard	discard;
-+	struct ublk_param_devt		devt;
- };
+ static void ublk_dev_param_basic_apply(struct ublk_device *ub)
+@@ -1451,6 +1460,8 @@ static int ublk_add_chdev(struct ublk_device *ub)
+ 	ret = cdev_device_add(&ub->cdev, dev);
+ 	if (ret)
+ 		goto fail;
++
++	ublks_added++;
+ 	return 0;
+  fail:
+ 	put_device(dev);
+@@ -1493,6 +1504,7 @@ static void ublk_remove(struct ublk_device *ub)
+ 	cancel_work_sync(&ub->quiesce_work);
+ 	cdev_device_del(&ub->cdev, &ub->cdev_dev);
+ 	put_device(&ub->cdev_dev);
++	ublks_added--;
+ }
  
- #endif
+ static struct ublk_device *ublk_get_device_from_id(int idx)
+@@ -1652,6 +1664,10 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = -EACCES;
++	if (ublks_added >= ublks_max)
++		goto out_unlock;
++
+ 	ret = -ENOMEM;
+ 	ub = kzalloc(sizeof(*ub), GFP_KERNEL);
+ 	if (!ub)
+@@ -2102,5 +2118,8 @@ static void __exit ublk_exit(void)
+ module_init(ublk_init);
+ module_exit(ublk_exit);
+ 
++module_param(ublks_max, int, 0444);
++MODULE_PARM_DESC(ublks_max, "max number of ublk devices allowed to add(default: 64)");
++
+ MODULE_AUTHOR("Ming Lei <ming.lei@redhat.com>");
+ MODULE_LICENSE("GPL");
 -- 
 2.31.1
 
