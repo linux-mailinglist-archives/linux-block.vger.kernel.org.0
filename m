@@ -2,60 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADC8962B419
-	for <lists+linux-block@lfdr.de>; Wed, 16 Nov 2022 08:43:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73EBE62B525
+	for <lists+linux-block@lfdr.de>; Wed, 16 Nov 2022 09:27:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232277AbiKPHn3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Nov 2022 02:43:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
+        id S231301AbiKPI1a (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Nov 2022 03:27:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbiKPHn2 (ORCPT
+        with ESMTP id S232762AbiKPIZt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Nov 2022 02:43:28 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E58FE5
-        for <linux-block@vger.kernel.org>; Tue, 15 Nov 2022 23:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0iM/K7mf/amSNC2IoVBnznB/hJH3Een9UGVC6zV6NeY=; b=k9qgv7dCMwgThlEFgDFYl1C7nP
-        xktfsb96FTW+PNu6Js8DvJ6TB4p4sDTzTRReWRyMRWA0/PJYz0S5MmDXuVpzUZu+ZMaV9qWxojoa+
-        PUTQ4Nrtw0jixRrm5HBmxx5ug7t5+JRr81/8Prjw6VxIuuvMAL4J+iFLixxbhHezrGD7lfv5PAM0Z
-        BZTAVpmpBpph0qbY6EC34jJpRJog+UDa8fVrcwTG5+nzGqbEbuLbFhlq4yag00eRdiMbbFDE+WROR
-        6q+zg8dVVCCVhG7mOp9mzLtuaZYcwojlUcuUcXEvQ/QdYH4WRE/TITI3PAhRSVkpyz80DpvXhfL3P
-        +4CqTIkg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ovD4w-000wcU-Kn; Wed, 16 Nov 2022 07:43:26 +0000
-Date:   Tue, 15 Nov 2022 23:43:26 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        "Shin\\'ichiro Kawasaki" <shinichiro.kawasaki@wdc.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Omar Sandoval <osandov@osandov.com>
-Subject: Re: [PATCH] tests/nvme: Add admin-passthru+reset race test
-Message-ID: <Y3SUnt6uuPoMiAVE@infradead.org>
-References: <20221114203412.383-1-jonathan.derrick@linux.dev>
+        Wed, 16 Nov 2022 03:25:49 -0500
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D904D140A5;
+        Wed, 16 Nov 2022 00:24:21 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VUx0rXp_1668587058;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0VUx0rXp_1668587058)
+          by smtp.aliyun-inc.com;
+          Wed, 16 Nov 2022 16:24:19 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     "Theodore Y. Ts o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        linux-fscrypt@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Subject: [PATCH 0/2] Add SM4 XTS symmetric algorithm for blk-crypto and fscrypt
+Date:   Wed, 16 Nov 2022 16:24:14 +0800
+Message-Id: <20221116082416.98977-1-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221114203412.383-1-jonathan.derrick@linux.dev>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 01:34:12PM -0700, Jonathan Derrick wrote:
-> Adds a test which runs many formats and reset_controllers in parallel.
-> The intent is to expose timing holes in the controller state machine
-> which will lead to hung task timing and the controller becoming
-> unavailable.
+SM4 is widely used in China's data encryption software and hardware.
+This serial of patches enables the SM4-XTS algorithm in blk-crypto and
+enables the SM4-XTS/CTS algorithm in fscrypt to encrypt file content
+and filename.
 
-This passes just fine for me both on qemu and a thunderbolt attached
-m.2 SSD.  So it seems to be hardware / timing dependent.
+Tianjia Zhang (2):
+  blk-crypto: Add support for SM4-XTS blk crypto mode
+  fscrypt: Add SM4 XTS/CTS symmetric algorithm support
+
+ Documentation/filesystems/fscrypt.rst |  1 +
+ block/blk-crypto.c                    |  6 ++++++
+ fs/crypto/fscrypt_private.h           |  2 +-
+ fs/crypto/keysetup.c                  | 15 +++++++++++++++
+ fs/crypto/policy.c                    |  4 ++++
+ include/linux/blk-crypto.h            |  1 +
+ include/uapi/linux/fscrypt.h          |  4 +++-
+ 7 files changed, 31 insertions(+), 2 deletions(-)
+
+-- 
+2.24.3 (Apple Git-128)
+
