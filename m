@@ -2,86 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F9762D0F2
-	for <lists+linux-block@lfdr.de>; Thu, 17 Nov 2022 03:05:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C2C762D114
+	for <lists+linux-block@lfdr.de>; Thu, 17 Nov 2022 03:19:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234558AbiKQCFc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Nov 2022 21:05:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
+        id S233903AbiKQCTX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Nov 2022 21:19:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232097AbiKQCF3 (ORCPT
+        with ESMTP id S229703AbiKQCTW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Nov 2022 21:05:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D40E60686;
-        Wed, 16 Nov 2022 18:05:28 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D2AD2B81F87;
-        Thu, 17 Nov 2022 02:05:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B916CC433D6;
-        Thu, 17 Nov 2022 02:05:21 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="oBVYY4GH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1668650720;
+        Wed, 16 Nov 2022 21:19:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9460FBF3
+        for <linux-block@vger.kernel.org>; Wed, 16 Nov 2022 18:18:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668651503;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=dEJat997gDB284IQJDfbqi4/5IXvytYbwgZCPi3gI8M=;
-        b=oBVYY4GH+szvpy7v+MDpWl7rIbq1Ag0+XjaiW9ivB+W/ypTPzWGRKmZ5grHtl0NRu+tdAw
-        OceXtZlFIdzaNyPTBIDx5ZFzB/5YparpWLHfLRzfitegfl7G9s7sam3TuLTYL+fICnJhuN
-        DFCVAmQjhuCf5Jl3bBUK1aEXDFPWY+A=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ca8ad650 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Thu, 17 Nov 2022 02:05:19 +0000 (UTC)
-Date:   Thu, 17 Nov 2022 03:05:14 +0100
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Christoph =?utf-8?Q?B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        SeongJae Park <sj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Helge Deller <deller@gmx.de>, netdev@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mmc@vger.kernel.org, linux-parisc@vger.kernel.org,
-        ydroneaud@opteya.com
-Subject: Re: [PATCH v2 3/3] treewide: use get_random_u32_between() when
- possible
-Message-ID: <Y3WW2lOgoYLKQeve@zx2c4.com>
-References: <20221114164558.1180362-1-Jason@zx2c4.com>
- <20221114164558.1180362-4-Jason@zx2c4.com>
- <202211161436.A45AD719A@keescook>
- <Y3V4g8eorwiU++Y3@zx2c4.com>
+        bh=l2CDI9upD7lk0Oa6dhckgxA+jWR930Sy/CNbCfrkqDk=;
+        b=VPLE/Wfo7BtJWOjfBDMFYPPQO0bejTj1OA52n/9bWZHnrDmRC4gQqkky2wy4p9mqu7Yy9D
+        ZbQnLsfQmLLNwCyt2iKxClOuK4vdMBCN3PNShvYZUSU4T806kqvHUv3sdSO4nRl477obKk
+        B2KvK6HoZct1r/Xft+FbeCZoKF/ywXI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-621-gOkXLVz4NAOQOLqEpf61Nw-1; Wed, 16 Nov 2022 21:18:20 -0500
+X-MC-Unique: gOkXLVz4NAOQOLqEpf61Nw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A65C5811E67;
+        Thu, 17 Nov 2022 02:18:19 +0000 (UTC)
+Received: from T590 (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2DD840C83C5;
+        Thu, 17 Nov 2022 02:18:16 +0000 (UTC)
+Date:   Thu, 17 Nov 2022 10:18:11 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andreas Hindborg <andreas.hindborg@wdc.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        ming.lei@redhat.com
+Subject: Re: Reordering of ublk IO requests
+Message-ID: <Y3WZ41tKFZHkTSHL@T590>
+References: <87sfii99e7.fsf@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y3V4g8eorwiU++Y3@zx2c4.com>
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <87sfii99e7.fsf@wdc.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,29 +60,96 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 12:55:47AM +0100, Jason A. Donenfeld wrote:
-> 1) How/whether to make f(0, UR2_MAX) safe,
->    - without additional 64-bit arithmetic,
->    - minimizing the number of branches.
->    I have a few ideas I'll code golf for a bit.
-> I think I can make progress with (1) alone by fiddling around with
-> godbolt enough, like usual.
+Hi Andreas,
 
-The code gen is definitely worse.
+On Wed, Nov 16, 2022 at 04:00:15PM +0100, Andreas Hindborg wrote:
+> 
+> Hi Ming,
+> 
+> I have a question regarding ublk. For context, I am working on adding
+> zoned storage support to ublk, and you have been very kind to help me on
+> Github [1].
+> 
+> I have a problem with ordering of requests after they are issued to the
+> ublk driver. Basically ublk will reverse the ordering of requests that are
+> batched. The behavior can be observed with the following fio workload:
+> 
+> > fio --name=test --ioengine=io_uring --rw=read --bs=4m --direct=1
+> > --size=4m --filename=/dev/ublkb0
+> 
+> For a loopback ublk target I get the following from blktrace:
+> 
+> > 259,2    0     3469   286.337681303   724  D   R 0 + 1024 [fio]
+> > 259,2    0     3470   286.337691313   724  D   R 1024 + 1024 [fio]
+> > 259,2    0     3471   286.337694423   724  D   R 2048 + 1024 [fio]
+> > 259,2    0     3472   286.337696583   724  D   R 3072 + 1024 [fio]
+> > 259,2    0     3473   286.337698433   724  D   R 4096 + 1024 [fio]
+> > 259,2    0     3474   286.337700213   724  D   R 5120 + 1024 [fio]
+> > 259,2    0     3475   286.337702723   724  D   R 6144 + 1024 [fio]
+> > 259,2    0     3476   286.337704323   724  D   R 7168 + 1024 [fio]
+> > 259,1    0     1794   286.337794934   390  D   R 6144 + 2048 [ublk]
+> > 259,1    0     1795   286.337805504   390  D   R 4096 + 2048 [ublk]
+> > 259,1    0     1796   286.337816274   390  D   R 2048 + 2048 [ublk]
+> > 259,1    0     1797   286.337821744   390  D   R 0 + 2048 [ublk]
+> 
+> And enabling debug prints in ublk shows that the reversal happens when
+> ublk defers work to the io_uring context:
+> 
+> > kernel: ublk_queue_rq: qid 0, tag 180, sect 0
+> > kernel: ublk_queue_rq: qid 0, tag 181, sect 1024
+> > kernel: ublk_queue_rq: qid 0, tag 182, sect 2048
+> > kernel: ublk_queue_rq: qid 0, tag 183, sect 3072
+> > kernel: ublk_queue_rq: qid 0, tag 184, sect 4096
+> > kernel: ublk_queue_rq: qid 0, tag 185, sect 5120
+> > kernel: ublk_queue_rq: qid 0, tag 186, sect 6144
+> > kernel: ublk_queue_rq: qid 0, tag 187, sect 7168
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 187 io_flags 1 addr 7f245d359000, sect 7168
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 186 io_flags 1 addr 7f245fcfd000, sect 6144
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 185 io_flags 1 addr 7f245fd7f000, sect 5120
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 184 io_flags 1 addr 7f245fe01000, sect 4096
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 183 io_flags 1 addr 7f245fe83000, sect 3072
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 182 io_flags 1 addr 7f245ff05000, sect 2048
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 181 io_flags 1 addr 7f245ff87000, sect 1024
+> > kernel: __ublk_rq_task_work: complete: op 33, qid 0 tag 180 io_flags 1 addr 7f2460009000, sect 0
+> 
+> The problem seems to be that the method used to defer work to the
+> io_uring context, task_work_add(), is using a stack to queue the
+> callbacks.
 
-Original half-open interval:
+Is the observation done on zoned ublk or plain ublk-loop?
 
-    return floor + get_random_u32_below(ceil - floor);
+If it is plain ublk-loop, the reverse order can be started from
+blk_add_rq_to_plug(), but it won't happen for zoned write request
+which isn't queued to plug list.
 
-Suggested fully closed interval:
-	
-    ceil = ceil - floor + 1;
-    return likely(ceil) ? floor + get_random_u32_below(ceil) : get_random_u32();
+Otherwise, can you observe zoned write req reorder from ublksrv side?
 
-Is the worse code gen actually worth it? Options:
+> 
+> As you probably are aware, writes to zoned storage must
+> happen at the write pointer, so when order is lost there is a problem.
+> But I would assume that this behavior is also undesirable in other
+> circumstances.
+> 
+> I am not sure what is the best approach to change this behavor. Maybe
+> having a separate queue for the requests and then only scheduling work
+> if a worker is not already processing the queue?
+> 
+> If you like, I can try to implement a fix?
 
- a) Decide worse codegen is worth it.
- b) Declare f(0, U32_MAX) undefined and just not handle it.
- c) Stick with original half-open interval that doesn't have this problem.
+Yeah, I think zoned write requests could be forwarded to ublk server out of order.
 
-Jason
+Is it possible for re-order the writes in ublksrv side? I guess it is
+be doable:
+
+1) zoned write request is sent to ublk_queue_rq() in order always
+
+2) when ublksrv zone target/backend code gets zoned write request in each
+zone, it can wait until the next expected write comes, then handle the
+write and advance write pointer, then repeat the whole process.
+
+3) because of 1), the next expected zoned write req is guaranteed to
+come without much delay, and the per-zone queue won't be long.
+
+Thanks, 
+Ming
+
