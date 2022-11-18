@@ -2,148 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A578962F40A
-	for <lists+linux-block@lfdr.de>; Fri, 18 Nov 2022 12:52:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93A8C62F438
+	for <lists+linux-block@lfdr.de>; Fri, 18 Nov 2022 13:10:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234664AbiKRLw1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Nov 2022 06:52:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47374 "EHLO
+        id S241653AbiKRMKS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Nov 2022 07:10:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbiKRLw0 (ORCPT
+        with ESMTP id S241432AbiKRMKP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Nov 2022 06:52:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB919922F4
-        for <linux-block@vger.kernel.org>; Fri, 18 Nov 2022 03:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668772285;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fPduHJrBCa3JS3Ltxfexz4XZCB17ZsjU+vVnLwMTCgo=;
-        b=XVLnECh37I+5d87qQREUfm53IneI3sbfY0DwePe3jAoteVfX5tbX6q2GgqXTB0XOR94sPn
-        kWiCxP2IMSwlGzxe3QPAinioegt/v3B0fNw1V/PNOWT2c2N+q5AQm9WP/ungt73wvtzWZK
-        N9qC4TwJ2sWpzCvVUSBLYX3ZDE9Iao4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-283-d9cWhQ8sOAqhR3ZYccHdow-1; Fri, 18 Nov 2022 06:51:22 -0500
-X-MC-Unique: d9cWhQ8sOAqhR3ZYccHdow-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 24C0E811E75;
-        Fri, 18 Nov 2022 11:51:22 +0000 (UTC)
-Received: from T590 (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A213140EBF3;
-        Fri, 18 Nov 2022 11:51:16 +0000 (UTC)
-Date:   Fri, 18 Nov 2022 19:51:11 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>, ming.lei@redhat.com
-Subject: Re: [PATCH 2/6] ublk_drv: don't probe partitions if the ubq daemon
- isn't trusted
-Message-ID: <Y3dxrwUM06SqX/tg@T590>
-References: <20221116060835.159945-1-ming.lei@redhat.com>
- <20221116060835.159945-3-ming.lei@redhat.com>
- <9512a7d2-8109-95bd-ba88-f6256b0ea292@linux.alibaba.com>
+        Fri, 18 Nov 2022 07:10:15 -0500
+Received: from zju.edu.cn (spam.zju.edu.cn [61.164.42.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E7518FF93;
+        Fri, 18 Nov 2022 04:10:10 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.14.30.251])
+        by mail-app4 (Coremail) with SMTP id cS_KCgDX2MwUdndjSIwaCA--.39489S2;
+        Fri, 18 Nov 2022 20:10:07 +0800 (CST)
+From:   Jinlong Chen <nickyc975@zju.edu.cn>
+To:     axboe@kernel.dk
+Cc:     hch@lst.de, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nickyc975@zju.edu.cn
+Subject: [RFC PATCH 0/2] elevator: restore old io scheduler on failure in elevator_switch
+Date:   Fri, 18 Nov 2022 20:09:52 +0800
+Message-Id: <cover.1668772991.git.nickyc975@zju.edu.cn>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9512a7d2-8109-95bd-ba88-f6256b0ea292@linux.alibaba.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cS_KCgDX2MwUdndjSIwaCA--.39489S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFWxCw4xJFyktFWxKw4Durg_yoWDKrb_W3
+        yrta4DJw4UXFsrtF93KrZ0vrWxWayxGryDAan7tr1UJ3s5Aa45Gr4UCFy7ur12gw45Aa43
+        Crnxt3W8ZrnFgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6c
+        xK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+        Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+        WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij
+        64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI
+        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+        xVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+        8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280
+        aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyT
+        uYvjfUOlksUUUUU
+X-CM-SenderInfo: qssqjiaqqzq6lmxovvfxof0/1tbiAgAPB1ZdtcbINgAEsI
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Nov 18, 2022 at 06:03:48PM +0800, Ziyang Zhang wrote:
-> On 2022/11/16 14:08, Ming Lei wrote:
-> > If any ubq daemon is unprivileged, the ublk char device is allowed
-> > for unprivileged user, and we can't trust the current user, so not
-> > probe partitions.
-> > 
-> > Fixes: 71f28f3136af ("ublk_drv: add io_uring based userspace block driver")
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> > ---
-> >  drivers/block/ublk_drv.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > index fe997848c1ff..a5f3d8330be5 100644
-> > --- a/drivers/block/ublk_drv.c
-> > +++ b/drivers/block/ublk_drv.c
-> > @@ -149,6 +149,7 @@ struct ublk_device {
-> >  
-> >  #define UB_STATE_OPEN		0
-> >  #define UB_STATE_USED		1
-> > +#define UB_STATE_PRIVILEGED	2
-> >  	unsigned long		state;
-> >  	int			ub_number;
-> >  
-> > @@ -161,6 +162,7 @@ struct ublk_device {
-> >  
-> >  	struct completion	completion;
-> >  	unsigned int		nr_queues_ready;
-> > +	unsigned int		nr_privileged_daemon;
-> >  
-> >  	/*
-> >  	 * Our ubq->daemon may be killed without any notification, so
-> > @@ -1184,9 +1186,15 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
-> >  		ubq->ubq_daemon = current;
-> >  		get_task_struct(ubq->ubq_daemon);
-> >  		ub->nr_queues_ready++;
-> > +
-> > +		if (capable(CAP_SYS_ADMIN))
-> > +			ub->nr_privileged_daemon++;
-> >  	}
-> > -	if (ub->nr_queues_ready == ub->dev_info.nr_hw_queues)
-> > +	if (ub->nr_queues_ready == ub->dev_info.nr_hw_queues) {
-> > +		if (ub->nr_privileged_daemon == ub->nr_queues_ready)
-> 
-> Hi, Ming.
-> 
-> Just like nr_queues_ready, ub->nr_privileged_daemon should be reset
-> to zero in ublk_ctrl_start_recovery(). otherwise new ubq_daemons are
-> always treated as unprivileged.
+Hi!
 
-Good catch!
+These two patches bring back the fallback feature in elevator_switch if
+switching to the new io scheduler failed.
 
-> 
-> > +			set_bit(UB_STATE_PRIVILEGED, &ub->state);
-> >  		complete_all(&ub->completion);
-> > +	}
-> >  	mutex_unlock(&ub->mutex);
-> >  }
-> >  
-> > @@ -1540,6 +1548,10 @@ static int ublk_ctrl_start_dev(struct io_uring_cmd *cmd)
-> >  	if (ret)
-> >  		goto out_put_disk;
-> >  
-> > +	/* don't probe partitions if any one ubq daemon is un-trusted */
-> > +	if (!test_bit(UB_STATE_PRIVILEGED, &ub->state))
-> > +		set_bit(GD_SUPPRESS_PART_SCAN, &disk->state);
-> 
-> Can we simply check if nr_queues_ready == nr_privileged_daemon here
-> instead of adding a new bit UB_STATE_PRIVILEGED?
+elevator_switch contains the fallback logic in sq era, but it was removed
+when moving to mq (commit: a1ce35fa49852db60fc6e268038530be533c5b15),
+leaving the document mismatched with the behavior. As far as I can see,
+restoring the old io scheduler is more reasonable than just leaving the
+scheduler none, hence there is the series.
 
-Good idea!
+However, now it's hard to keep the old io scheduler untouched. We can only
+re-initialize the old scheduler if we want to restore it, and the
+statistics the old scheduler collected would be lost. Besides, the
+restoration itself might fail too. I have no idea whether the two problems
+matter. Any comments are welcomed.
 
-> 
-> BTW, I think exposing whether ub's state is privileged/unprivileged
-> to users(./ublk list) is a good idea.
+Jinlong Chen (2):
+  elevator: add a helper for applying scheduler to request_queue
+  elevator: restore the old io scheduler if failed to switch to the new
+    one
 
-It is actually not a state, but a flag of UBLK_F_UNPRIVILEGED_DEV, which
-won't be changed for one device and is shown in 'ublk list'.
+ block/elevator.c | 49 +++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 40 insertions(+), 9 deletions(-)
 
-For root user, maybe we should clear the flag from UBLK_CMD_ADD_DEV.
-
-Thanks,
-Ming
+-- 
+2.31.1
 
