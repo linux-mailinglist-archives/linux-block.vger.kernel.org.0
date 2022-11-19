@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1B6A630895
-	for <lists+linux-block@lfdr.de>; Sat, 19 Nov 2022 02:43:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15DD8630896
+	for <lists+linux-block@lfdr.de>; Sat, 19 Nov 2022 02:43:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232790AbiKSBn4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Nov 2022 20:43:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43152 "EHLO
+        id S232805AbiKSBn5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Nov 2022 20:43:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232805AbiKSBm6 (ORCPT
+        with ESMTP id S232849AbiKSBm7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Nov 2022 20:42:58 -0500
+        Fri, 18 Nov 2022 20:42:59 -0500
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DA9B9B98
-        for <linux-block@vger.kernel.org>; Fri, 18 Nov 2022 16:52:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA218BAE88
+        for <linux-block@vger.kernel.org>; Fri, 18 Nov 2022 16:52:34 -0800 (PST)
 Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
-        id 4D58F19380C8; Fri, 18 Nov 2022 16:52:18 -0800 (PST)
+        id 5064719380CA; Fri, 18 Nov 2022 16:52:18 -0800 (PST)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
 Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com,
         akpm@linux-foundation.org
-Subject: [RFC PATCH v4 01/20] mm: add bdi_set_strict_limit() function
-Date:   Fri, 18 Nov 2022 16:51:56 -0800
-Message-Id: <20221119005215.3052436-2-shr@devkernel.io>
+Subject: [RFC PATCH v4 02/20] mm: add knob /sys/class/bdi/<bdi>/strict_limit
+Date:   Fri, 18 Nov 2022 16:51:57 -0800
+Message-Id: <20221119005215.3052436-3-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221119005215.3052436-1-shr@devkernel.io>
 References: <20221119005215.3052436-1-shr@devkernel.io>
@@ -38,58 +38,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This adds the bdi_set_strict_limit function to be able to set/unset the
-BDI_CAP_STRICTLIMIT flag.
+Add a new knob to /sys/class/bdi/<bdi>/strict_limit. This new knob
+allows to set/unset the flag BDI_CAP_STRICTLIMIT in the bdi
+capabilities.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- include/linux/backing-dev.h |  1 +
- mm/page-writeback.c         | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+ mm/backing-dev.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 439815cc1ab9..9c984ffc8a0a 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -104,6 +104,7 @@ static inline unsigned long wb_stat_error(void)
-=20
- int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
-io);
- int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_rat=
-io);
-+int bdi_set_strict_limit(struct backing_dev_info *bdi, unsigned int stri=
-ct_limit);
-=20
- /*
-  * Flags in backing_dev_info::capability
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 7e9d8d857ecc..3745b886722f 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -698,6 +698,21 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, =
-unsigned max_ratio)
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index c30419a5e119..a0899cce72ef 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -209,11 +209,40 @@ static ssize_t stable_pages_required_show(struct de=
+vice *dev,
  }
- EXPORT_SYMBOL(bdi_set_max_ratio);
+ static DEVICE_ATTR_RO(stable_pages_required);
 =20
-+int bdi_set_strict_limit(struct backing_dev_info *bdi, unsigned int stri=
-ct_limit)
++static ssize_t strict_limit_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
 +{
-+	if (strict_limit > 1)
-+		return -EINVAL;
++	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
++	unsigned int strict_limit;
++	ssize_t ret;
 +
-+	spin_lock_bh(&bdi_lock);
-+	if (strict_limit)
-+		bdi->capabilities |=3D BDI_CAP_STRICTLIMIT;
-+	else
-+		bdi->capabilities &=3D ~BDI_CAP_STRICTLIMIT;
-+	spin_unlock_bh(&bdi_lock);
++	ret =3D kstrtouint(buf, 10, &strict_limit);
++	if (ret < 0)
++		return ret;
 +
-+	return 0;
++	ret =3D bdi_set_strict_limit(bdi, strict_limit);
++	if (!ret)
++		ret =3D count;
++
++	return ret;
 +}
 +
- static unsigned long dirty_freerun_ceiling(unsigned long thresh,
- 					   unsigned long bg_thresh)
- {
++static ssize_t strict_limit_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n",
++			!!(bdi->capabilities & BDI_CAP_STRICTLIMIT));
++}
++static DEVICE_ATTR_RW(strict_limit);
++
+ static struct attribute *bdi_dev_attrs[] =3D {
+ 	&dev_attr_read_ahead_kb.attr,
+ 	&dev_attr_min_ratio.attr,
+ 	&dev_attr_max_ratio.attr,
+ 	&dev_attr_stable_pages_required.attr,
++	&dev_attr_strict_limit.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(bdi_dev);
 --=20
 2.30.2
 
