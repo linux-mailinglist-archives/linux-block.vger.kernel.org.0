@@ -2,28 +2,28 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60740630A61
-	for <lists+linux-block@lfdr.de>; Sat, 19 Nov 2022 03:26:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED8763091B
+	for <lists+linux-block@lfdr.de>; Sat, 19 Nov 2022 03:09:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233909AbiKSC0R (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Nov 2022 21:26:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39310 "EHLO
+        id S229555AbiKSCJo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Nov 2022 21:09:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235772AbiKSCYo (ORCPT
+        with ESMTP id S229542AbiKSCJn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Nov 2022 21:24:44 -0500
+        Fri, 18 Nov 2022 21:09:43 -0500
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF58C7596
-        for <linux-block@vger.kernel.org>; Fri, 18 Nov 2022 18:15:43 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B406B28E15
+        for <linux-block@vger.kernel.org>; Fri, 18 Nov 2022 18:09:42 -0800 (PST)
 Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
-        id 891E619380E6; Fri, 18 Nov 2022 16:52:18 -0800 (PST)
+        id 8D4A619380E8; Fri, 18 Nov 2022 16:52:18 -0800 (PST)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     kernel-team@fb.com, linux-block@vger.kernel.org, linux-mm@kvack.org
 Cc:     shr@devkernel.io, axboe@kernel.dk, clm@meta.com,
         akpm@linux-foundation.org
-Subject: [RFC PATCH v4 15/20] mm: add bdi_set_max_ratio_no_scale() function
-Date:   Fri, 18 Nov 2022 16:52:10 -0800
-Message-Id: <20221119005215.3052436-16-shr@devkernel.io>
+Subject: [RFC PATCH v4 16/20] mm: add /sys/class/bdi/<bdi>/max_ratio_fine knob
+Date:   Fri, 18 Nov 2022 16:52:11 -0800
+Message-Id: <20221119005215.3052436-17-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221119005215.3052436-1-shr@devkernel.io>
 References: <20221119005215.3052436-1-shr@devkernel.io>
@@ -38,74 +38,52 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This introduces bdi_set_max_ratio_no_scale(). It uses the max
-granularity for the ratio. This function by the new sysfs knob
-max_ratio_fine.
+This adds the max_ratio_fine knob. The knob specifies the values not
+based on 1 of 100, but instead 1 per million.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- include/linux/backing-dev.h |  1 +
- mm/page-writeback.c         | 11 ++++++++---
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ mm/backing-dev.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 572669758c7f..d9acbb22ff25 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -109,6 +109,7 @@ u64 bdi_get_min_bytes(struct backing_dev_info *bdi);
- u64 bdi_get_max_bytes(struct backing_dev_info *bdi);
- int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
-io);
- int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_rat=
-io);
-+int bdi_set_max_ratio_no_scale(struct backing_dev_info *bdi, unsigned in=
-t max_ratio);
- int bdi_set_min_bytes(struct backing_dev_info *bdi, u64 min_bytes);
- int bdi_set_max_bytes(struct backing_dev_info *bdi, u64 max_bytes);
- int bdi_set_strict_limit(struct backing_dev_info *bdi, unsigned int stri=
-ct_limit);
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 3d151e7a9b6c..f44ade72966c 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -719,6 +719,9 @@ static int __bdi_set_max_ratio(struct backing_dev_inf=
-o *bdi, unsigned int max_ra
- {
- 	int ret =3D 0;
-=20
-+	if (max_ratio > 100 * BDI_RATIO_SCALE)
-+		return -EINVAL;
-+
- 	spin_lock_bh(&bdi_lock);
- 	if (bdi->min_ratio > max_ratio) {
- 		ret =3D -EINVAL;
-@@ -731,6 +734,11 @@ static int __bdi_set_max_ratio(struct backing_dev_in=
-fo *bdi, unsigned int max_ra
- 	return ret;
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index 3fab79061ade..94c2382367cf 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -199,6 +199,25 @@ static ssize_t max_ratio_store(struct device *dev,
  }
+ BDI_SHOW(max_ratio, bdi->max_ratio / BDI_RATIO_SCALE)
 =20
-+int bdi_set_max_ratio_no_scale(struct backing_dev_info *bdi, unsigned in=
-t max_ratio)
++static ssize_t max_ratio_fine_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
 +{
-+	return __bdi_set_max_ratio(bdi, max_ratio);
-+}
++	struct backing_dev_info *bdi =3D dev_get_drvdata(dev);
++	unsigned int ratio;
++	ssize_t ret;
 +
- int bdi_set_min_ratio(struct backing_dev_info *bdi, unsigned int min_rat=
-io)
- {
- 	return __bdi_set_min_ratio(bdi, min_ratio * BDI_RATIO_SCALE);
-@@ -738,9 +746,6 @@ int bdi_set_min_ratio(struct backing_dev_info *bdi, u=
-nsigned int min_ratio)
-=20
- int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_rat=
-io)
- {
--	if (max_ratio > 100)
--		return -EINVAL;
--
- 	return __bdi_set_max_ratio(bdi, max_ratio * BDI_RATIO_SCALE);
- }
- EXPORT_SYMBOL(bdi_set_max_ratio);
++	ret =3D kstrtouint(buf, 10, &ratio);
++	if (ret < 0)
++		return ret;
++
++	ret =3D bdi_set_max_ratio_no_scale(bdi, ratio);
++	if (!ret)
++		ret =3D count;
++
++	return ret;
++}
++BDI_SHOW(max_ratio_fine, bdi->max_ratio)
++
+ static ssize_t min_bytes_show(struct device *dev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
+@@ -297,6 +316,7 @@ static struct attribute *bdi_dev_attrs[] =3D {
+ 	&dev_attr_read_ahead_kb.attr,
+ 	&dev_attr_min_ratio.attr,
+ 	&dev_attr_max_ratio.attr,
++	&dev_attr_max_ratio_fine.attr,
+ 	&dev_attr_min_bytes.attr,
+ 	&dev_attr_max_bytes.attr,
+ 	&dev_attr_stable_pages_required.attr,
 --=20
 2.30.2
 
