@@ -2,122 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DCBB632144
-	for <lists+linux-block@lfdr.de>; Mon, 21 Nov 2022 12:51:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D18A0632176
+	for <lists+linux-block@lfdr.de>; Mon, 21 Nov 2022 12:58:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230442AbiKULvl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 21 Nov 2022 06:51:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
+        id S231210AbiKUL6K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 21 Nov 2022 06:58:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbiKULvj (ORCPT
+        with ESMTP id S230438AbiKUL6J (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 21 Nov 2022 06:51:39 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6FB9286DA
-        for <linux-block@vger.kernel.org>; Mon, 21 Nov 2022 03:51:37 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id kt23so27888725ejc.7
-        for <linux-block@vger.kernel.org>; Mon, 21 Nov 2022 03:51:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q+H0cjFSbZ2NYb5IOmqZhEkYfmqZxas//5HpSyQajMM=;
-        b=SHV0eCpZqjwnUaMw04SDLes0LCt6CEx/9ClffLY20Cz0aH+xHM2BjEOrdhS2651Mz/
-         dRGchDq+loJGLlUACmo3bf8c3kKUM41rUBbxhQYbeZl860bwog4aSEZVR6UGssPfvl0v
-         mWdrUtgHOmpj+1gEdj0ngyBPWaaZHwjgQ1xv/FMeds+Y6LxzCA1qZQNjNyoK8QHVLRRW
-         kWwSUSHu1h7ANGCuLrLTAKgHITw4guqVjcLEmyrsAS8gJVWRls8S8sN3j5lkWGytoDcu
-         CjArIFf4ARk9xKC+N2ZOESWk0Ki4R/2RhvpY5vWYvp5LsFxjAJUU9nwIE3J7+iF3LtS2
-         +8yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q+H0cjFSbZ2NYb5IOmqZhEkYfmqZxas//5HpSyQajMM=;
-        b=0HMz6JDWtHOuElSfhVxvJilzCfU04Z/XfAOEALbGeDsl9LqRhgpAbQaI19DCEGSf7g
-         j4Bj5+yuT9M79Vg41oPMWxAfop5RIgIeQyrHaoVjk88IJDzbIvca1evShZK4fU1Nc7nr
-         OgTQNqq9bli2vg6JKi9cvPCtnwWVdRAyNEjUiDWdlTALNdyU0GNsNushNQtoylkKxlDR
-         o91CCn6/FNXb0CdaJ+pDyM+6nm8Z3SdIxJdemlGqFsqTuI/TW42wKEM8pQTZGjD5KlzP
-         FwdkkK0GN8eySfT9TL/rAcXH8nSc9WLEUKaIOlCmmHrI4LFDot9L3ePXZurz8ik06CAy
-         dvqw==
-X-Gm-Message-State: ANoB5pkAsfgEg5KDnKRDeWwbHwEDID0LeSJiPDUcY5E5CC/HLpv1nQRg
-        GCzLNRkB8BJ67he/gSKi9I2i6C86TD7p5A==
-X-Google-Smtp-Source: AA0mqf40LwWPAZsMgJuW1DO7GYQI5qt7733/8RiNE/Z0spkiNSRxXsspRKdks236/YaTyeBjewz2bw==
-X-Received: by 2002:a17:906:3289:b0:78d:4cb3:f65d with SMTP id 9-20020a170906328900b0078d4cb3f65dmr4177725ejw.79.1669031496137;
-        Mon, 21 Nov 2022 03:51:36 -0800 (PST)
-Received: from [192.168.178.55] (h082218028181.host.wavenet.at. [82.218.28.181])
-        by smtp.gmail.com with ESMTPSA id kw10-20020a170907770a00b0078d4ee47c82sm4914081ejc.129.2022.11.21.03.51.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 03:51:35 -0800 (PST)
-Message-ID: <3603e71c-cd9d-fd27-7c52-1eed263e8717@linbit.com>
-Date:   Mon, 21 Nov 2022 12:51:34 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
+        Mon, 21 Nov 2022 06:58:09 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166ABCC5
+        for <linux-block@vger.kernel.org>; Mon, 21 Nov 2022 03:58:01 -0800 (PST)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NG5QQ5c87zqSYr;
+        Mon, 21 Nov 2022 19:54:06 +0800 (CST)
+Received: from dggpemm500015.china.huawei.com (7.185.36.181) by
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 21 Nov 2022 19:58:00 +0800
+Received: from [10.174.177.133] (10.174.177.133) by
+ dggpemm500015.china.huawei.com (7.185.36.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 21 Nov 2022 19:57:59 +0800
 Subject: Re: [PATCH] drbd: destroy workqueue when drbd device was freed
-Content-Language: en-US
-To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
-Cc:     liwei391@huawei.com, linux-block@vger.kernel.org,
-        drbd-dev@lists.linbit.com, axboe@kernel.dk
-References: <20221121111138.3665586-1-bobo.shaobowang@huawei.com>
-From:   =?UTF-8?Q?Christoph_B=c3=b6hmwalder?= 
+To:     =?UTF-8?Q?Christoph_B=c3=b6hmwalder?= 
         <christoph.boehmwalder@linbit.com>
-In-Reply-To: <20221121111138.3665586-1-bobo.shaobowang@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+CC:     <liwei391@huawei.com>, <linux-block@vger.kernel.org>,
+        <drbd-dev@lists.linbit.com>, <axboe@kernel.dk>
+References: <20221121111138.3665586-1-bobo.shaobowang@huawei.com>
+ <3603e71c-cd9d-fd27-7c52-1eed263e8717@linbit.com>
+From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Message-ID: <ff347eb2-d36a-480c-8de7-cb01a2ee35e0@huawei.com>
+Date:   Mon, 21 Nov 2022 19:57:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <3603e71c-cd9d-fd27-7c52-1eed263e8717@linbit.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.174.177.133]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500015.china.huawei.com (7.185.36.181)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Am 21.11.22 um 12:11 schrieb Wang ShaoBo:
-> A submitter workqueue is dynamically allocated by init_submitter()
-> called by drbd_create_device(), we should destroy it when this
-> device was not needed or destroyed.
-> 
-> Fixes: 113fef9e20e0 ("drbd: prepare to queue write requests on a submit worker")
-> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-> ---
->  drivers/block/drbd/drbd_main.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-> index 8532b839a343..467c498e3add 100644
-> --- a/drivers/block/drbd/drbd_main.c
-> +++ b/drivers/block/drbd/drbd_main.c
-> @@ -2218,6 +2218,9 @@ void drbd_destroy_device(struct kref *kref)
->  		kfree(peer_device);
->  	}
->  	memset(device, 0xfd, sizeof(*device));
-> +
-> +	if (device->submit.wq)
-> +		destroy_workqueue(device->submit.wq);
->  	kfree(device);
->  	kref_put(&resource->kref, drbd_destroy_resource);
->  }
-> @@ -2810,6 +2813,8 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
->  	put_disk(disk);
->  out_no_disk:
->  	kref_put(&resource->kref, drbd_destroy_resource);
-> +	if (device->submit.wq)
-> +		destroy_workqueue(device->submit.wq);
->  	kfree(device);
->  	return err;
->  }
 
-Thanks for the patch.
+在 2022/11/21 19:51, Christoph Böhmwalder 写道:
+> Am 21.11.22 um 12:11 schrieb Wang ShaoBo:
+>> A submitter workqueue is dynamically allocated by init_submitter()
+>> called by drbd_create_device(), we should destroy it when this
+>> device was not needed or destroyed.
+>>
+>> Fixes: 113fef9e20e0 ("drbd: prepare to queue write requests on a submit worker")
+>> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+>> ---
+>>   drivers/block/drbd/drbd_main.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+>> index 8532b839a343..467c498e3add 100644
+>> --- a/drivers/block/drbd/drbd_main.c
+>> +++ b/drivers/block/drbd/drbd_main.c
+>> @@ -2218,6 +2218,9 @@ void drbd_destroy_device(struct kref *kref)
+>>   		kfree(peer_device);
+>>   	}
+>>   	memset(device, 0xfd, sizeof(*device));
+>> +
+>> +	if (device->submit.wq)
+>> +		destroy_workqueue(device->submit.wq);
+>>   	kfree(device);
+>>   	kref_put(&resource->kref, drbd_destroy_resource);
+>>   }
+>> @@ -2810,6 +2813,8 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
+>>   	put_disk(disk);
+>>   out_no_disk:
+>>   	kref_put(&resource->kref, drbd_destroy_resource);
+>> +	if (device->submit.wq)
+>> +		destroy_workqueue(device->submit.wq);
+>>   	kfree(device);
+>>   	return err;
+>>   }
+> Thanks for the patch.
+>
+> Unfortunately, (at least) the first hunk is buggy: we memset() the
+> device to all 0xfd, and try to access it immediately afterwards.
+>
+> This obviously leads to invalid memory access.
 
-Unfortunately, (at least) the first hunk is buggy: we memset() the
-device to all 0xfd, and try to access it immediately afterwards.
+Hi Christoph,
 
-This obviously leads to invalid memory access.
+I found that error, so I have sent a RESEND version, i would be appreciated
 
--- 
-Christoph Böhmwalder
-LINBIT | Keeping the Digital World Running
-DRBD HA —  Disaster Recovery — Software defined Storage
+if you could help check my patch.^-^
+
+-- Wang ShaoBo
+
+>
