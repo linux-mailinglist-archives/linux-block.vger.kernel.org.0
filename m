@@ -2,57 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C55634E68
-	for <lists+linux-block@lfdr.de>; Wed, 23 Nov 2022 04:38:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 770DE635023
+	for <lists+linux-block@lfdr.de>; Wed, 23 Nov 2022 07:15:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235536AbiKWDiQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Nov 2022 22:38:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51096 "EHLO
+        id S236055AbiKWGOz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Nov 2022 01:14:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235464AbiKWDiQ (ORCPT
+        with ESMTP id S235927AbiKWGOI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Nov 2022 22:38:16 -0500
-Received: from resqmta-h1p-028591.sys.comcast.net (resqmta-h1p-028591.sys.comcast.net [IPv6:2001:558:fd02:2446::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C82E6ECE
-        for <linux-block@vger.kernel.org>; Tue, 22 Nov 2022 19:38:13 -0800 (PST)
-Received: from resomta-h1p-027914.sys.comcast.net ([96.102.179.199])
-        by resqmta-h1p-028591.sys.comcast.net with ESMTP
-        id xdj7oE63h3B3mxgaTopQsP; Wed, 23 Nov 2022 03:38:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=comcastmailservice.net; s=20211018a; t=1669174693;
-        bh=hQzLNxeVwxXXcietcYnNiJmhzt78/d1Q4sA4HI+a4es=;
-        h=Received:Received:From:To:Subject:Date:Message-Id:MIME-Version:
-         Xfinity-Spam-Result;
-        b=mA4zlSU50g0+Lv/4E95eiHd7mF+rWSru9YhjN8YHbzpjamteoad04z4HztPHPCuCd
-         ZAe3Dw11lODnVbU9SyycFOv7JVCDiE1vj/4QpeQKJu3vZ4kg3BO/ZTUMyrIdhWY/G1
-         lGNVyNR7RjWeurEjfjKTTo65I2YNV893C7HGll/m6z0TxXfzh/MoY0xi7eTCbli+4C
-         tp9Mbli/t2s6XyNPCjR6WLfs3MfORl9KJZlrCb/0Vxn2ua5GXBt18Mpu6fepu+/U61
-         LZAfpf3cZ1jG2gMuUYZZ0E8Gttj5b3yoJ9XwCsSNyczXqApSCHj7fCUMyO6zp0Vi0R
-         a9qcJ/BALeiqw==
-Received: from jderrick-mobl4.amr.corp.intel.com ([71.205.181.50])
-        by resomta-h1p-027914.sys.comcast.net with ESMTPA
-        id xgZxoyAM5eZC2xga2o0O5J; Wed, 23 Nov 2022 03:37:51 +0000
-X-Xfinity-VAAS: gggruggvucftvghtrhhoucdtuddrgedvgedriedtgdeivdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucevohhmtggrshhtqdftvghsihdpqfgfvfdppffquffrtefokffrnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflohhnrghthhgrnhcuffgvrhhrihgtkhcuoehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvheqnecuggftrfgrthhtvghrnhepueegudevvdfffeefvdekjefgueetgffhgfdtueeufeevtdelfedutefftdekueevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepjedurddvtdehrddukedurdehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehjuggvrhhrihgtkhdqmhhosghlgedrrghmrhdrtghorhhprdhinhhtvghlrdgtohhmpdhinhgvthepjedurddvtdehrddukedurdehtddpmhgrihhlfhhrohhmpehjohhnrghthhgrnhdruggvrhhrihgtkheslhhinhhugidruggvvhdpnhgspghrtghpthhtohepledprhgtphhtthhopehlihhnuhigqdhnvhhmvgeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdgslhhotghksehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhihhnihgthhhirhhordhkrgifrghsrghkihesfi
- gutgdrtghomhdprhgtphhtthhopegthhgrihhtrghnhigrkhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepkhgsuhhstghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthhopehsrghgihesghhrihhmsggvrhhgrdhmvgdprhgtphhtthhopehithhssehirhhrvghlvghvrghnthdrughkpdhrtghpthhtohepjhhonhgrthhhrghnrdguvghrrhhitghksehlihhnuhigrdguvghv
-X-Xfinity-VMeta: sc=-100.00;st=legit
-From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-To:     <linux-nvme@lists.infradead.org>
-Cc:     <linux-block@vger.kernel.org>,
-        "Shin\\'ichiro Kawasaki" <shinichiro.kawasaki@wdc.com>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Klaus Jensen <its@irrelevant.dk>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>
-Subject: [PATCH v3] tests/nvme: Add admin-passthru+reset race test
-Date:   Tue, 22 Nov 2022 20:37:39 -0700
-Message-Id: <20221123033739.1122-1-jonathan.derrick@linux.dev>
-X-Mailer: git-send-email 2.30.2
+        Wed, 23 Nov 2022 01:14:08 -0500
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D89EF2C1B
+        for <linux-block@vger.kernel.org>; Tue, 22 Nov 2022 22:13:53 -0800 (PST)
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20221123061352epoutp02eb4e2acb1a969ce9200029e482fdba15~qIgiV-4D-1926619266epoutp02X
+        for <linux-block@vger.kernel.org>; Wed, 23 Nov 2022 06:13:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20221123061352epoutp02eb4e2acb1a969ce9200029e482fdba15~qIgiV-4D-1926619266epoutp02X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1669184032;
+        bh=7nuYnpvMw7veh3TNnapyVxUSrFiOjNfa2fJfOcnjtew=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=IMrT2LnGTW6XV4z8O7DqYif2XI16EjdIezRysPZ9Ok0gUJuGc85jG5365M87lg70I
+         dA1yC/fuNzU2KlGIpRt3qr0nT+yg3ZRHza3bsaUAM+9NS5pcSOfcII5XXNtGuwNfLT
+         HQZBN0natO502JKQZ6UU9Mke7fVlK8lVCCaI3jdM=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20221123061350epcas5p471359445e51afd8cd2387ddbf6faa737~qIggyQ-f61580315803epcas5p4-;
+        Wed, 23 Nov 2022 06:13:50 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4NH9mq4fGdz4x9QH; Wed, 23 Nov
+        2022 06:13:47 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        19.37.56352.B1ABD736; Wed, 23 Nov 2022 15:13:47 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20221123061010epcas5p21cef9d23e4362b01f2b19d1117e1cdf5~qIdUMOmSP0377003770epcas5p2k;
+        Wed, 23 Nov 2022 06:10:10 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20221123061010epsmtrp240c1b1d323a61346f7e8928f9190ee34~qIdULATEz0451404514epsmtrp2a;
+        Wed, 23 Nov 2022 06:10:10 +0000 (GMT)
+X-AuditID: b6c32a4b-383ff7000001dc20-35-637dba1bece3
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D7.FA.14392.249BD736; Wed, 23 Nov 2022 15:10:10 +0900 (KST)
+Received: from test-zns.sa.corp.samsungelectronics.net (unknown
+        [107.110.206.5]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20221123061007epsmtip1e493ba5af1c6e49ea490269a2dcb0bab~qIdRPeIeF1429014290epsmtip1d;
+        Wed, 23 Nov 2022 06:10:07 +0000 (GMT)
+From:   Nitesh Shetty <nj.shetty@samsung.com>
+To:     axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org,
+        dm-devel@redhat.com, kbusch@kernel.org, hch@lst.de,
+        sagi@grimberg.me, james.smart@broadcom.com, kch@nvidia.com,
+        damien.lemoal@opensource.wdc.com, naohiro.aota@wdc.com,
+        jth@kernel.org, viro@zeniv.linux.org.uk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        anuj20.g@samsung.com, joshi.k@samsung.com, p.raghav@samsung.com,
+        nitheshshetty@gmail.com, gost.dev@samsung.com,
+        Nitesh Shetty <nj.shetty@samsung.com>
+Subject: [PATCH v5 00/10] Implement copy offload support
+Date:   Wed, 23 Nov 2022 11:28:17 +0530
+Message-Id: <20221123055827.26996-1-nj.shetty@samsung.com>
+X-Mailer: git-send-email 2.35.1.500.gb896f729e2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,SPF_HELO_PASS,SPF_SOFTFAIL autolearn=no autolearn_force=no
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf1CTdRi/7/tu7wYJvQLJV7iAm2ch3mCLMb94UnaRvaQV1gXi1dEab4Ng
+        P9y7iZodKFKKyY8MsmFAAbs2aOAkmFsrDg4IhPAiMEgiA0z5KeIZhosGL5T/fZ7P83k+z/N8
+        v/fwcR8XEcBPU+lorUqWISA8OY2tW0KFgfb35aLipmBU19WOo+OFLhzVDBcQaLGnF0fOmVIu
+        Gmy+hCFTTRuGHF/MYahtaZpA1+8OcdDHLQMAjfcbMOQc2oq+dXZyUJ/9PIHKjeM8VNRxkYts
+        Y8cAalwsx9F89QkeskzOctAPQ4Go19XB3elPGUZ6COqSYZhH9f52gUP19egpq/kUQV2syqIc
+        g9kEdSZnxi3IHeFSs9/1E1R+gxlQ89Yg6sPm0xhlHZvG4r33p+9IpWUptDaEVsnVKWkqRYxg
+        92vJzyVHSUVioTgabROEqGRKOkYQuydeuCstw72/IOSgLEPvpuJlDCOIeHqHVq3X0SGpakYX
+        I6A1KRkaiSackSkZvUoRrqJ128Ui0VNRbuFb6am35iwczVnpIaO9l8gGN0PzgAcfkhI46yoh
+        8oAn34d0ADhcbMLZ4A6A90bPcdngHoDVp7u4ayXmG3mrCSeAldndgA1yMbhQ1YblAT6fILfC
+        y0v8Zd6PzMfgSUfzii9OlmJw2viAtyzyJRGsdSmXXTnkZth+YwksYy9yOzz1QR++LIFkBCwY
+        Wc/S62HnZ2OcZYyTwTDnm9IVS0h+6gHNJcOr08XCKVMrh8W+cKKjgcfiADg/4yRYnAlNn3xF
+        sMUnADRcNQA28QzM7SpYaYyTW2CdPYKlH4fFXRaMbewNzyyOYSzvBW1la3gTrK2rWPXfCAf+
+        OraKKThVO7syjw/5JnSUjBKFINjw0D6Gh/Yx/N+5AuBmsJHWMEoFzURpIlV05n8/K1crrWDl
+        DsJ228Afv98ObwEYH7QAyMcFfl5ZcUflPl4pssNHaK06WavPoJkWEOV+4yI84DG52n1IKl2y
+        WBItkkilUkl0pFQs8PeqPBcm9yEVMh2dTtMaWrtWh/E9ArKxV4V7F9qVl1/389cnRUuS4vL3
+        JpQ3/bghWvHskUbbe4og735rgmHf17ZYv52HTK+8KDXNz8qEo/G/aPh3qn+1dTTkJ2wmg3vM
+        I/cnB8hr82XJuQk9alhqvh3wZH3mleKy/ePMwsGr3LP1jC1tQsQTHy4M4ybl5j9Sv8/PFf95
+        5d+1B7r7Q6cs9v63/7GYEm/665pqWjrStOeFExeemPy+veJPT+Pg8Qksbh3HaXmesJbl3L/1
+        Uh0avtJZHiQ5WlT/qPnlqsR3D3gGVl0z/9Q+lLhnk71V+ELkR0xXUzHte5LSlV/fcDcrMizI
+        +M62n3uV3caKdeYlpWOwaGju1BsPlr5scwk4TKpMHIZrGdm/XLQGHpAEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02RbUhTYRiGec97dnZcrU4z6NW+aFiWpmZWvFSUSD9OP6KMKMlqjXXSaF9s
+        miVl2mzhpMyEoGlpoUunGU1nuWmIqVPDrLREw+zD+TFRGwVac1lLov7d93VfPH8eGorqyUD6
+        lDKJ0yilcjElIGueiVeExdRekG1wOEPww/YWiC9d90Jc3p9DYU9HJ8T1E/k83NtQS+Cy8mYC
+        2++6Cdw8O07hj9/6SHyj8S3AzjdGAtf3heK6+jYSd9kKKFxocvJxrqOKh58MZgBc4ymE+GtJ
+        Jh9Xjk2SuLVvKe70OnjRS1jjQAfF1hr7+Wzn+0ck29WRzFrMWRRbVXyRtfemU+xV3cRv4fIA
+        j518+oZir1WbAfvVsoK90pBNsJbBcWLfgsOC7Sc4+akznCZix3FB4qi7klTnbTlrsnVS6WBk
+        rQH40YjZhMxDBp4BCGgRYwfIav9Mzg0ByORtgnPZH5X9HObPSToCeRzTwABommJC0fNZ2scX
+        M0UE6nrvgr4CmRIC5Xf3Uz7Jn8GowqvwHSKZ1ahlaBb4spDZirL0XdCnICYC5QwsmsOLUNut
+        QdKHIROMHt4R+TBkViKdNR9eBwuN/1nGf5bxP6sIQDMI4NRaRYJCG6mOVHIp4VqpQpusTAiX
+        qRQW8OfDIeuegMfmL+GNgKBBI0A0FC8WXtx9XiYSnpCeS+U0KokmWc5pG8FSmhQvEb40tElE
+        TII0iTvNcWpO83claL/AdGJ5bJrytTUtKapWlCUqfyVxf785n++/rVLc6rbqEgX0SOQtVWnc
+        7qrqnqwYuKHF5Z7yHCvIHX6aZ9o+I961wG+/9lO2TebQl6iO6+7Pb2/esnPEIN04kOM6eCgq
+        eLCwGIc1pVpwT+l+3iSbuOdzLO1cr1He0JcuBF7VdETsPOu05NLVJJfJaawLSQkSPh//Njam
+        H4qD8jPx/PHRjOw7qa7eo9Hd2bagk9FrH+T3lO8dvtequFzmmnmw90DKu7z7o/MCfygagkMj
+        RupWTRxZJv9Q0JIZo5fctsQXxwv9PK+Uw3Su+lBuja3ixafuqOo17cVhTec32wOmipoyZbrN
+        YlKbKI0MgRqt9BedYdszUAMAAA==
+X-CMS-MailID: 20221123061010epcas5p21cef9d23e4362b01f2b19d1117e1cdf5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20221123061010epcas5p21cef9d23e4362b01f2b19d1117e1cdf5
+References: <CGME20221123061010epcas5p21cef9d23e4362b01f2b19d1117e1cdf5@epcas5p2.samsung.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,181 +124,187 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Adds a test which runs many formats and controller resets in parallel.
-The intent is to expose timing holes in the controller state machine
-which will lead to hung task timeouts and the controller becoming
-unavailable.
+The patch series covers the points discussed in November 2021 virtual
+call [LSF/MM/BFP TOPIC] Storage: Copy Offload [0].
+We have covered the initial agreed requirements in this patchset and
+further additional features suggested by community.
+Patchset borrows Mikulas's token based approach for 2 bdev
+implementation.
 
-Reported by https://bugzilla.kernel.org/show_bug.cgi?id=216354
+This is on top of our previous patchset v4[1].
 
-Signed-off-by: Jonathan Derrick <jonathan.derrick@linux.dev>
----
-v3:
-I noticed I couldn't rely on checking state within the loop because it was
-constantly on 'resetting', so I moved the last_live declaration to update when
-a reset completes.
+Overall series supports:
+========================
+	1. Driver
+		- NVMe Copy command (single NS, TP 4065), including support
+		in nvme-target (for block and file backend).
 
-I updated the kernel in my QEMU instance to origin/nvme-6.2 (it was on a
-previous origin/nvme-6.2), and applied Klaus' format fix to QEMU. This doesn't
-crash my QEMU anymore, but now gets stuck in 'connecting'.
+	2. Block layer
+		- Block-generic copy (REQ_COPY flag), with interface
+		accommodating two block-devs, and multi-source/destination
+		interface
+		- Emulation, when offload is natively absent
+		- dm-linear support (for cases not requiring split)
 
- tests/nvme/047     | 137 +++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/047.out |   2 +
- 2 files changed, 139 insertions(+)
- create mode 100755 tests/nvme/047
- create mode 100644 tests/nvme/047.out
+	3. User-interface
+		- new ioctl
+		- copy_file_range for zonefs
 
-diff --git a/tests/nvme/047 b/tests/nvme/047
-new file mode 100755
-index 0000000..76b7fdf
---- /dev/null
-+++ b/tests/nvme/047
-@@ -0,0 +1,137 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2022 Jonathan Derrick <jonathan.derrick@linux.dev>
-+#
-+# Test nvme reset controller during admin passthru
-+#
-+# Regression for issue reported by
-+# https://bugzilla.kernel.org/show_bug.cgi?id=216354
-+#
-+# Simpler form:
-+# for i in {1..50}; do
-+#	nvme format -f /dev/nvme0n1 &
-+#	echo 1 > /sys/block/nvme0n1/device/reset_controller &
-+# done
-+
-+. tests/nvme/rc
-+
-+#restrict test to nvme-pci only
-+nvme_trtype=pci
-+
-+DESCRIPTION="test nvme reset controller during admin passthru"
-+QUICK=1
-+CAN_BE_ZONED=1
-+
-+RUN_TIME=300
-+RESET_MISSING=true
-+RESET_DEAD=true
-+
-+requires() {
-+	_nvme_requires
-+}
-+
-+device_requires() {
-+	_require_test_dev_is_nvme
-+}
-+
-+test_device() {
-+	echo "Running ${TEST_NAME}"
-+
-+	local pdev
-+	local blkdev
-+	local ctrldev
-+	local sysfs
-+	local max_timeout
-+	local timeout
-+	local timeleft
-+	local start
-+	local i
-+
-+	pdev="$(_get_pci_dev_from_blkdev)"
-+	blkdev="${TEST_DEV_SYSFS##*/}"
-+	ctrldev="$(echo "$blkdev" | grep -Eo 'nvme[0-9]+')"
-+	sysfs="/sys/block/$blkdev/device"
-+	max_timeout=$(cat /proc/sys/kernel/hung_task_timeout_secs)
-+	timeout=$((max_timeout * 3 / 4))
-+
-+	get_state() {
-+		state=$(cat "$sysfs/state" 2> /dev/null)
-+		if [[ -n "$state" ]]; then
-+			echo "$state"
-+		else
-+			echo "unknown"
-+		fi
-+	}
-+
-+	tmp=$(mktemp /tmp/blk_tmp_XXXXXX)
-+	lock=$(mktemp /tmp/blk_lock_XXXXXX)
-+	exec 47>"$lock"
-+	update_live() {
-+		flock -s 047
-+		date "+%s" > "$tmp"
-+		flock -u 47
-+	}
-+
-+	last_live() {
-+		flock -s 47
-+		cat "$tmp"
-+		flock -u 47
-+	}
-+
-+	now() {
-+		date "+%s"
-+	}
-+
-+	sleep 5
-+
-+	update_live
-+	start=$(now)
-+	while [[ $(($(now) - start)) -le $RUN_TIME ]]; do
-+		# Failure case appears to stack up formats while controller is resetting/connecting
-+		if [[ $(pgrep -cf "nvme format") -lt 100 ]]; then
-+			for ((i=0; i<100; i++)); do
-+				nvme format -f "$TEST_DEV" &
-+				( echo 1 > "$sysfs/reset_controller" && update_live; ) &
-+			done &> /dev/null
-+		fi
-+
-+		# Might have failed probe, so reset and continue test
-+		if [[ $(($(now) - $(last_live))) -gt 10 ]]; then
-+			if [[ (! -c "/dev/$ctrldev" && "$RESET_MISSING" == true) ||
-+			      ("$(get_state)" == "dead" && "$RESET_DEAD" == true) ]]; then
-+				{
-+					echo 1 > /sys/bus/pci/devices/"$pdev"/remove
-+					echo 1 > /sys/bus/pci/rescan
-+				} &
-+
-+				timeleft=$((max_timeout - timeout))
-+				sleep $((timeleft < 30 ? timeleft : 30))
-+				if [[ ! -c "/dev/$ctrldev" ]]; then
-+					echo "/dev/$ctrldev missing"
-+					echo "failed to reset $ctrldev's pcie device $pdev"
-+					break
-+				fi
-+				sleep 5
-+				continue
-+			fi
-+		fi
-+
-+		if [[ $(($(now) - $(last_live))) -gt $timeout ]]; then
-+			if [[ ! -c "/dev/$ctrldev" ]]; then
-+				echo "/dev/$ctrldev missing"
-+				break
-+			fi
-+
-+			# Assume the controller is hung and unrecoverable
-+			echo "nvme controller hung ($(get_state))"
-+			break
-+		fi
-+	done
-+
-+	if [[ ! -c "/dev/$ctrldev" || "$(get_state)" != "live" ]]; then
-+		echo "nvme still not live after $(($(now) - $(last_live))) seconds!"
-+	fi
-+	udevadm settle
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/047.out b/tests/nvme/047.out
-new file mode 100644
-index 0000000..915d0a2
---- /dev/null
-+++ b/tests/nvme/047.out
-@@ -0,0 +1,2 @@
-+Running nvme/047
-+Test complete
+	4. In-kernel user
+		- dm-kcopyd
+		- copy_file_range in zonefs
+
+Testing
+=======
+	Copy offload can be tested on:
+	a. QEMU: NVME simple copy (TP 4065). By setting nvme-ns
+		parameters mssrl,mcl, msrc. For more info [2].
+	b. Fabrics loopback.
+	c. zonefs copy_file_range
+
+	Emuation can be tested on any device.
+
+	Sample application to use IOCTL is present in patch desciption.
+	fio[3].
+
+Performance
+===========
+	With the async design of copy-emulation/offload using fio[3],
+	we were  able to see the following improvements as
+	compared to userspace read and write on a NVMeOF TCP setup:
+	Setup1: Network Speed: 1000Mb/s
+		Host PC: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz
+		Target PC: AMD Ryzen 9 5900X 12-Core Processor
+		block size 8k, range 1:
+			635% improvement in IO BW (107 MiB/s to 787 MiB/s).
+			Network utilisation drops from  97% to 14%.
+		block-size 2M, range 16:
+			2555% improvement in IO BW (100 MiB/s to 2655 MiB/s).
+			Network utilisation drops from 89% to 0.62%.
+	Setup2: Network Speed: 100Gb/s
+		Server: Intel(R) Xeon(R) Gold 6240 CPU @ 2.60GHz, 72 cores
+			(host and target have the same configuration)
+		block-size 8k, range 1:
+			6.5% improvement in IO BW (791 MiB/s to 843 MiB/s).
+			Network utilisation drops from  6.75% to 0.14%.
+		block-size 2M, range 16:
+			15% improvement in IO BW (1027 MiB/s to 1183 MiB/s).
+			Network utilisation drops from 8.42% to ~0%.
+		block-size 8k, 8 ranges:
+			18% drop in IO BW (from 798 MiB/s to 647 MiB/s)
+			Network utilisation drops from 6.66% to 0.13%.
+
+		At present we see drop in performance for bs 8k,16k and
+		higher ranges (8, 16), so something more to check there.
+	Overall, in these tests, kernel copy emulation performs better than
+	userspace read+write. 
+
+Zonefs copy_file_range
+======================
+	Sample tests for zonefs-tools[4]. Test 0118 and 0119 will test
+	basic CFR. Will raise a PR, once this series is finalized.
+
+Future Work
+===========
+	- nullblk: copy-offload emulation
+	- generic copy file range (CFR):
+		I did go through this, but couldn't find straight forward
+		way to plug in copy offload for all the cases. We are doing
+		detailed study, will address this future versions.
+	- loopback device copy offload support
+	- upstream fio to use copy offload
+
+	These are to be taken up after we reach consensus on the
+	plumbing of current elements that are part of this series.
+
+
+Additional links:
+=================
+	[0] https://lore.kernel.org/linux-nvme/CA+1E3rJ7BZ7LjQXXTdX+-0Edz=zT14mmPGMiVCzUgB33C60tbQ@mail.gmail.com/
+	[1] https://lore.kernel.org/lkml/20220426101241.30100-1-nj.shetty@samsung.com/
+	[2] https://qemu-project.gitlab.io/qemu/system/devices/nvme.html#simple-copy
+	[3] https://github.com/vincentkfu/fio/tree/copyoffload
+	[4] https://github.com/nitesh-shetty/zonefs-tools/tree/cfr
+
+Changes since v4:
+=================
+	- make the offload and emulation design asynchronous (Hannes
+	  Reinecke)
+	- fabrics loopback support
+	- sysfs naming improvements (Damien Le Moal)
+	- use kfree() instead of kvfree() in cio_await_completion
+	  (Damien Le Moal)
+	- use ranges instead of rlist to represent range_entry (Damien
+	  Le Moal)
+	- change argument ordering in blk_copy_offload suggested (Damien
+	  Le Moal)
+	- removed multiple copy limit and merged into only one limit
+	  (Damien Le Moal)
+	- wrap overly long lines (Damien Le Moal)
+	- other naming improvements and cleanups (Damien Le Moal)
+	- correctly format the code example in description (Damien Le
+	  Moal)
+	- mark blk_copy_offload as static (kernel test robot)
+	
+Changes since v3:
+=================
+	- added copy_file_range support for zonefs
+	- added documentation about new sysfs entries
+	- incorporated review comments on v3
+	- minor fixes
+
+Changes since v2:
+=================
+	- fixed possible race condition reported by Damien Le Moal
+	- new sysfs controls as suggested by Damien Le Moal
+	- fixed possible memory leak reported by Dan Carpenter, lkp
+	- minor fixes
+
+Nitesh Shetty (10):
+  block: Introduce queue limits for copy-offload support
+  block: Add copy offload support infrastructure
+  block: add emulation for copy
+  block: Introduce a new ioctl for copy
+  nvme: add copy offload support
+  nvmet: add copy command support for bdev and file ns
+  dm: Add support for copy offload.
+  dm: Enable copy offload for dm-linear target
+  dm kcopyd: use copy offload support
+  fs: add support for copy file range in zonefs
+
+ Documentation/ABI/stable/sysfs-block |  36 ++
+ block/blk-lib.c                      | 597 +++++++++++++++++++++++++++
+ block/blk-map.c                      |   4 +-
+ block/blk-settings.c                 |  24 ++
+ block/blk-sysfs.c                    |  64 +++
+ block/blk.h                          |   2 +
+ block/ioctl.c                        |  36 ++
+ drivers/md/dm-kcopyd.c               |  56 ++-
+ drivers/md/dm-linear.c               |   1 +
+ drivers/md/dm-table.c                |  42 ++
+ drivers/md/dm.c                      |   7 +
+ drivers/nvme/host/core.c             | 106 ++++-
+ drivers/nvme/host/fc.c               |   5 +
+ drivers/nvme/host/nvme.h             |   7 +
+ drivers/nvme/host/pci.c              |  28 +-
+ drivers/nvme/host/rdma.c             |   7 +
+ drivers/nvme/host/tcp.c              |  16 +
+ drivers/nvme/host/trace.c            |  19 +
+ drivers/nvme/target/admin-cmd.c      |   9 +-
+ drivers/nvme/target/io-cmd-bdev.c    |  79 ++++
+ drivers/nvme/target/io-cmd-file.c    |  51 +++
+ drivers/nvme/target/loop.c           |   6 +
+ drivers/nvme/target/nvmet.h          |   2 +
+ fs/zonefs/super.c                    | 179 ++++++++
+ include/linux/blk_types.h            |  44 ++
+ include/linux/blkdev.h               |  18 +
+ include/linux/device-mapper.h        |   5 +
+ include/linux/nvme.h                 |  43 +-
+ include/uapi/linux/fs.h              |  27 ++
+ 29 files changed, 1502 insertions(+), 18 deletions(-)
+
+
+base-commit: e4cd8d3ff7f9efeb97330e5e9b99eeb2a68f5cf9
 -- 
-2.27.0
+2.35.1.500.gb896f729e2
 
