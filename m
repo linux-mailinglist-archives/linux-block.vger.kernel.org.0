@@ -2,89 +2,119 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37D56638DDD
-	for <lists+linux-block@lfdr.de>; Fri, 25 Nov 2022 16:54:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D14F1638F3B
+	for <lists+linux-block@lfdr.de>; Fri, 25 Nov 2022 18:40:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbiKYPyB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Nov 2022 10:54:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
+        id S229575AbiKYRkG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Nov 2022 12:40:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbiKYPxr (ORCPT
+        with ESMTP id S229493AbiKYRkF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Nov 2022 10:53:47 -0500
-Received: from zju.edu.cn (spam.zju.edu.cn [61.164.42.155])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1D09B49B68;
-        Fri, 25 Nov 2022 07:53:30 -0800 (PST)
-Received: from localhost.localdomain (unknown [10.14.30.50])
-        by mail-app4 (Coremail) with SMTP id cS_KCgCXK97s5IBjv2N5CA--.23174S6;
-        Fri, 25 Nov 2022 23:53:28 +0800 (CST)
-From:   Jinlong Chen <nickyc975@zju.edu.cn>
-To:     axboe@kernel.dk
-Cc:     hch@lst.de, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nickyc975@zju.edu.cn
-Subject: [PATCH 4/4] elevator: use bool instead of int as the return type of elv_iosched_allow_bio_merge
-Date:   Fri, 25 Nov 2022 23:53:14 +0800
-Message-Id: <1a179a01463c7dbbc1b2be09111ea35617f763a9.1669391142.git.nickyc975@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1669391142.git.nickyc975@zju.edu.cn>
-References: <cover.1669391142.git.nickyc975@zju.edu.cn>
+        Fri, 25 Nov 2022 12:40:05 -0500
+X-Greylist: delayed 324 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 25 Nov 2022 09:40:04 PST
+Received: from mp-relay-01.fibernetics.ca (mp-relay-01.fibernetics.ca [208.85.217.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E60528B8
+        for <linux-block@vger.kernel.org>; Fri, 25 Nov 2022 09:40:04 -0800 (PST)
+Received: from mailpool-fe-02.fibernetics.ca (mailpool-fe-02.fibernetics.ca [208.85.217.145])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mp-relay-01.fibernetics.ca (Postfix) with ESMTPS id D5FE3E17C8;
+        Fri, 25 Nov 2022 17:34:38 +0000 (UTC)
+Received: from localhost (mailpool-mx-01.fibernetics.ca [208.85.217.140])
+        by mailpool-fe-02.fibernetics.ca (Postfix) with ESMTP id BCB3560460;
+        Fri, 25 Nov 2022 17:34:38 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at 
+X-Spam-Score: -0.199
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
+Received: from mailpool-fe-02.fibernetics.ca ([208.85.217.145])
+        by localhost (mail-mx-01.fibernetics.ca [208.85.217.140]) (amavisd-new, port 10024)
+        with ESMTP id Rz9xXZ8-6iPh; Fri, 25 Nov 2022 17:34:38 +0000 (UTC)
+Received: from [192.168.48.17] (host-45-78-203-98.dyn.295.ca [45.78.203.98])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dgilbert@interlog.com)
+        by mail.ca.inter.net (Postfix) with ESMTPSA id DD9336005F;
+        Fri, 25 Nov 2022 17:34:36 +0000 (UTC)
+Message-ID: <8a3a5d53-d1e1-0c95-4aea-923c46ac4e32@interlog.com>
+Date:   Fri, 25 Nov 2022 12:34:36 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cS_KCgCXK97s5IBjv2N5CA--.23174S6
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF47uw1ftry8urWUZrW7XFb_yoWfuFc_Cw
-        nYkwn7uFyDCryUAr4qy3W7KFykZan3XFyUCr13Kr97Aayjg3W8Aw1xZrW3JrW8Wr4xW3W3
-        Ga1qvF17KFnxKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAac4AC62xK8xCEY4
-        vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0E
-        wIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-        6r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-        IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
-        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjfUOlksUUUUU
-X-CM-SenderInfo: qssqjiaqqzq6lmxovvfxof0/1tbiAgEFB1ZdtcmJogAAsd
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH v2 7/8] scsi_debug: Support configuring the maximum
+ segment size
+To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <20221123205740.463185-1-bvanassche@acm.org>
+ <20221123205740.463185-8-bvanassche@acm.org>
+Content-Language: en-CA
+From:   Douglas Gilbert <dgilbert@interlog.com>
+In-Reply-To: <20221123205740.463185-8-bvanassche@acm.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We have bool type now, update the old signature.
+On 2022-11-23 15:57, Bart Van Assche wrote:
+> Add a kernel module parameter for configuring the maximum segment size.
+> This patch enables testing SCSI support for segments smaller than the
+> page size.
+> 
+> Cc: Doug Gilbert <dgilbert@interlog.com>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>   drivers/scsi/scsi_debug.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+> index bebda917b138..ea8f762c55c3 100644
+> --- a/drivers/scsi/scsi_debug.c
+> +++ b/drivers/scsi/scsi_debug.c
+> @@ -770,6 +770,7 @@ static int sdebug_sector_size = DEF_SECTOR_SIZE;
+>   static int sdeb_tur_ms_to_ready = DEF_TUR_MS_TO_READY;
+>   static int sdebug_virtual_gb = DEF_VIRTUAL_GB;
+>   static int sdebug_vpd_use_hostno = DEF_VPD_USE_HOSTNO;
+> +static unsigned int sdebug_max_segment_size = -1U >   static unsigned int sdebug_lbpu = DEF_LBPU;
+>   static unsigned int sdebug_lbpws = DEF_LBPWS;
+>   static unsigned int sdebug_lbpws10 = DEF_LBPWS10;
+> @@ -5851,6 +5852,7 @@ module_param_named(ndelay, sdebug_ndelay, int, S_IRUGO | S_IWUSR);
+>   module_param_named(no_lun_0, sdebug_no_lun_0, int, S_IRUGO | S_IWUSR);
+>   module_param_named(no_rwlock, sdebug_no_rwlock, bool, S_IRUGO | S_IWUSR);
+>   module_param_named(no_uld, sdebug_no_uld, int, S_IRUGO);
+> +module_param_named(max_segment_size, sdebug_max_segment_size, uint, S_IRUGO);
 
-Signed-off-by: Jinlong Chen <nickyc975@zju.edu.cn>
----
- block/elevator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Could you place the above line in alphabetical order.
 
-diff --git a/block/elevator.c b/block/elevator.c
-index 93dbaa560b67..cb1c9a69026c 100644
---- a/block/elevator.c
-+++ b/block/elevator.c
-@@ -57,7 +57,7 @@ static LIST_HEAD(elv_list);
-  * Query io scheduler to see if the current process issuing bio may be
-  * merged with rq.
-  */
--static int elv_iosched_allow_bio_merge(struct request *rq, struct bio *bio)
-+static bool elv_iosched_allow_bio_merge(struct request *rq, struct bio *bio)
- {
- 	struct request_queue *q = rq->q;
- 	struct elevator_queue *e = q->elevator;
-@@ -65,7 +65,7 @@ static int elv_iosched_allow_bio_merge(struct request *rq, struct bio *bio)
- 	if (e->type->ops.allow_merge)
- 		return e->type->ops.allow_merge(q, rq, bio);
- 
--	return 1;
-+	return true;
- }
- 
- /*
--- 
-2.34.1
+>   module_param_named(num_parts, sdebug_num_parts, int, S_IRUGO);
+>   module_param_named(num_tgts, sdebug_num_tgts, int, S_IRUGO | S_IWUSR);
+>   module_param_named(opt_blks, sdebug_opt_blks, int, S_IRUGO);
+> @@ -7815,6 +7817,7 @@ static int sdebug_driver_probe(struct device *dev)
+>   
+>   	sdebug_driver_template.can_queue = sdebug_max_queue;
+>   	sdebug_driver_template.cmd_per_lun = sdebug_max_queue;
+> +	sdebug_driver_template.max_segment_size = sdebug_max_segment_size;
+>   	if (!sdebug_clustering)
+>   		sdebug_driver_template.dma_boundary = PAGE_SIZE - 1;
+>   
 
+And could you add a
+MODULE_PARM_DESC(max_segment_size, "<1 line description>");
+
+entry as well (also in alphabetical order).
+
+Other than that:
+   Ack-ed by: Douglas Gilbert <dgilbert@interlog.com>
