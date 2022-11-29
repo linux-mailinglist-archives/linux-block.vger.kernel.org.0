@@ -2,56 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98CB763C102
-	for <lists+linux-block@lfdr.de>; Tue, 29 Nov 2022 14:28:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 172B463C18B
+	for <lists+linux-block@lfdr.de>; Tue, 29 Nov 2022 14:56:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231655AbiK2N2M (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 29 Nov 2022 08:28:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
+        id S232924AbiK2N4K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 29 Nov 2022 08:56:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231907AbiK2N2L (ORCPT
+        with ESMTP id S233293AbiK2N4I (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 29 Nov 2022 08:28:11 -0500
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3E31E720;
-        Tue, 29 Nov 2022 05:28:09 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id AF80A6732D; Tue, 29 Nov 2022 14:28:05 +0100 (CET)
-Date:   Tue, 29 Nov 2022 14:28:05 +0100
-From:   "hch@lst.de" <hch@lst.de>
-To:     Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v3 0/4] block/scsi/nvme: Add error codes for PR ops
-Message-ID: <20221129132805.GA13061@lst.de>
-References: <20221122032603.32766-1-michael.christie@oracle.com> <yq1o7sumo0c.fsf@ca-mkp.ca.oracle.com> <538bcade-c453-e6f8-4530-808a9bf2140a@nvidia.com>
+        Tue, 29 Nov 2022 08:56:08 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A94553EF9
+        for <linux-block@vger.kernel.org>; Tue, 29 Nov 2022 05:56:07 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id w79so13773103pfc.2
+        for <linux-block@vger.kernel.org>; Tue, 29 Nov 2022 05:56:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ScAb/G98utGY/Ri5BRIKKvQo6kiX6XyD6LkBEbj7PMw=;
+        b=glLiVxZ+ODnLngOEu3a8LfcfPb8IcvT3sKH15iWaap7xKRd/1pewlm6GFUrKy0I/BL
+         BSnYsEpq/y9qjrKO9XTsBczR1V+gJ9VAauMUeUzHNM/xxNJRg3YGXUmlGy00SbRVoSg7
+         fgsFFKEuc2uynCF/RuLN6PMzTK8wIPD9X1x2KrcrhLdbrXIi73Y86Vw+fjRiCRzEGsFw
+         km0wQdzGkhEdgkYbZKIvDmZ4aMKELq6ScsIK+F+wywnTn9WDd91TUFSrGwGpbo1FjVD+
+         TmfycIEU9KWSGNLz197UP04lZpqnrVAHEKHsDfPp/3itc+shfH0c/HueYUpVwoqgnaxN
+         FrqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ScAb/G98utGY/Ri5BRIKKvQo6kiX6XyD6LkBEbj7PMw=;
+        b=1b6JQJinQ09qQJbG+UgRGn1Ayn/rQl//eC/0rtiJ5NDh15Qfud7QHRo4tLmm/E6/W2
+         CoxNrJ0DZuEiLZYPPIP8OIo8hPiN+RZ5fvHumQ5H/5y8NrcoMnuszzc7DiYYgYV6osyl
+         N56Az/rOEGe5Xw9qgCzLf+Tb1dFW0EiT1kRZfJJ+WV8ECIDkL/0BPfbqxpmhu29Iolcg
+         v5VaDNQhmTK/ePZOFqfUQNP9mmCXbQaumkPhnmS8dSdrFkZ2P0mxX6WruMjh8cQuzFLR
+         iHaDeraIDUv+ZihmPJJ5Tbj8ypAKyNnfIs4JvegjVwi13my5q0KWRrAPTfMU7qEUzGBp
+         K8kA==
+X-Gm-Message-State: ANoB5pm8Klm4uixEmYAsDHZzeQnsoRjJZMJpd0IuD2KABneDwNusjVGU
+        Xvo/CNVT2nmuNIswzuByMXb5zA==
+X-Google-Smtp-Source: AA0mqf6dwR7YBNnOfHAbN4yoR/g74vSRx8Es33XgfcJh88vjkfCizuYJeROGkh/I/igM5gw3U/wVug==
+X-Received: by 2002:a05:6a00:26c8:b0:574:c159:ce3b with SMTP id p8-20020a056a0026c800b00574c159ce3bmr21160653pfw.74.1669730166584;
+        Tue, 29 Nov 2022 05:56:06 -0800 (PST)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id x129-20020a628687000000b0056baebf23e7sm10302195pfd.141.2022.11.29.05.56.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Nov 2022 05:56:05 -0800 (PST)
+Message-ID: <ae390dde-9041-4f0e-337f-410539727272@kernel.dk>
+Date:   Tue, 29 Nov 2022 06:56:04 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <538bcade-c453-e6f8-4530-808a9bf2140a@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [GIT PULL] nvme updates for Linux 6.2
+Content-Language: en-US
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+References: <Y4XJPNP74KmdI8+7@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Y4XJPNP74KmdI8+7@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 04:18:19AM +0000, Chaitanya Kulkarni wrote:
-> > Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-> > 
+On 11/29/22 1:56 AM, Christoph Hellwig wrote:
+> This is just the first round, there is quite a bit more in the queue.
 > 
-> perhaps a block tree since it has block/scsi/nvme ?
+> The following changes since commit 5626196a5ae0937368b35c3625c428a2125b0f44:
+> 
+>   Merge branch 'md-next' of https://git.kernel.org/pub/scm/linux/kernel/git/song/md into for-6.2/block (2022-11-14 12:57:50 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.infradead.org/nvme.git tags/nvme-6.2-2022-11-29
+> 
+> for you to fetch changes up to 68c5444c317208f5a114f671140373f47f0a2cf6:
+> 
+>   nvmet: expose firmware revision to configfs (2022-11-21 08:35:58 +0100)
+> 
+> ----------------------------------------------------------------
+> nvme updates for Linux 6.2
+> 
+>  - support some passthrough commands without CAP_SYS_ADMIN
+>    (Kanchan Joshi)
+>  - refactor PCIe probing and reset (Christoph Hellwig)
+>  - various fabrics authentication fixes and improvements (Sagi Grimberg)
+>  - avoid fallback to sequential scan due to transient issues
+>    (Uday Shankar)
+>  - implement support for the DEAC bit in Write Zeroes (Christoph Hellwig)
+>  - allow overriding the IEEE OUI and firmware revision in configfs for
+>    nvmet (Aleksandr Miloserdov)
+>  - force reconnect when number of queue changes in nvmet (Daniel Wagner)
+>  - minor fixes and improvements (Uros Bizjak, Joel Granados,
+>    Sagi Grimberg, Christoph Hellwig, Christophe JAILLET)
+> 
+> ----------------------------------------------------------------
 
-I think Mike has SCSI work that builds on top of this, and reservations
-ar originally a SCSI feature.  But either block or scsi is fine with
-me.
+Pulled, thanks.
+
+-- 
+Jens Axboe
+
 
