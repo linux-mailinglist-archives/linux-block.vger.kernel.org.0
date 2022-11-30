@@ -2,149 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D89A163E1DA
-	for <lists+linux-block@lfdr.de>; Wed, 30 Nov 2022 21:24:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 543A663E226
+	for <lists+linux-block@lfdr.de>; Wed, 30 Nov 2022 21:32:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbiK3UYi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Nov 2022 15:24:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35318 "EHLO
+        id S230287AbiK3Uco (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Nov 2022 15:32:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbiK3UYW (ORCPT
+        with ESMTP id S229941AbiK3UcC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Nov 2022 15:24:22 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A67D6B;
-        Wed, 30 Nov 2022 12:24:20 -0800 (PST)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AUJA0tY011539;
-        Wed, 30 Nov 2022 20:24:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=ma7YtxMcE0uXl/P+I8nRuGXL3zYOLww1PQYrhKLyv1A=;
- b=D9HeHXQpMnLLGSDW0ABzLR4FKcVyk90ioa3gESwMOXiF/G4Y+S6q0ZfOgCCnLd8vk7A6
- UBFbfQyihHXWF5OyoL55UvxLbIRNjvRXHJZf2ewrokfnILU87E4SKlai50+zutOjDVqw
- 1VedmqQaT60MpTbZOr3Pe6No6vNW4Jki4yv6PYBgC7licqEiS41kmDzpJg6MkMiwdK5Q
- 6srE612tpjuZ4EBrosVSe4dWQhnfrOdxA1U0FvcLOdf08HAj023hvavKIJGoWWYxJFya
- ozuhhxeaQRp0AEsfyhoRrfwhG3oqb47rGSgdOzcPzVpSu9rSkNyvMpRw4z+YEqhWNAXh 1w== 
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m6bednhyj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 30 Nov 2022 20:24:08 +0000
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AUKL2cR007981;
-        Wed, 30 Nov 2022 20:24:06 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([9.208.129.113])
-        by ppma02wdc.us.ibm.com with ESMTP id 3m3aea68m3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 30 Nov 2022 20:24:06 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-        by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AUKO5mt36503894
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Nov 2022 20:24:05 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56E5158058;
-        Wed, 30 Nov 2022 20:24:05 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 475045805D;
-        Wed, 30 Nov 2022 20:24:04 +0000 (GMT)
-Received: from rhel-laptop.ibm.com.com (unknown [9.160.99.100])
-        by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 30 Nov 2022 20:24:04 +0000 (GMT)
-From:   gjoyce@linux.vnet.ibm.com
-To:     linux-block@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
-        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
-        nayna@linux.ibm.com, axboe@kernel.dk, akpm@linux-foundation.org,
-        gjoyce@linux.vnet.ibm.com, keyrings@vger.kernel.org
-Subject: [PATCH v5 3/3] block: sed-opal: keystore access for SED Opal keys
-Date:   Wed, 30 Nov 2022 14:23:58 -0600
-Message-Id: <20221130202358.18034-4-gjoyce@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221130202358.18034-1-gjoyce@linux.vnet.ibm.com>
-References: <20221130202358.18034-1-gjoyce@linux.vnet.ibm.com>
+        Wed, 30 Nov 2022 15:32:02 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E7F54475;
+        Wed, 30 Nov 2022 12:31:30 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id o5-20020a17090a678500b00218cd5a21c9so3470050pjj.4;
+        Wed, 30 Nov 2022 12:31:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zERogrghEXBrjx46RlEGcBUab/oF8o5TSfDWdWk3204=;
+        b=CbBJH1iSFlP/+nWb9lr6aDG63sPp/lrVxYD5U9xyWoQntUFWySjlkoLu5qHG6HjIGf
+         XG+btjog3tUDwuH4Zx62q9zDDXiniyM0ILQ94Y8hyBEF5bAxpXwloJxWsNMeB2WTH2bW
+         M0SWvKno+eCyw3zJIrlZPSVggxp0wo44y6OFZl1Wbg64Ds+TWOepX6dVmaBCvLPGo2zg
+         VdWK8QSRqkSvOOwa4d3HX1VnjliG25vSJcSSHftki7wTOsmOjNYBaiQL6fC3nJNkKfkI
+         PJA/7D1kOpFCnZaYehRAFxs8Lh3fRmjLMRRTMRSFAqjJG6PyRS6DAC82ODpJbPIMKiKY
+         hH5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zERogrghEXBrjx46RlEGcBUab/oF8o5TSfDWdWk3204=;
+        b=KJOynGteEWKTvwQtX/AlZ60JeDhVeC7KOJDb4yEO0nkeqB8KB9uV+QKYkCTY4MTgn6
+         UIbBDA9/lqnNTbTq+BLYym+VVx8/Yk3fqBsaCP7cGE3CjvYg46JRlb6rpsAxPwOLk0sm
+         7h/bwi3CqgWhERStAEcmMnBUBCHJ8oZE4pNOu87ZHSfGjTGnq7sK+tJIVZZPLKqH98Kr
+         6+5FSSlorwK3eRfn+G2GzSJsrLePV/AqdtBFqy0vh3Iwmfepr2WV2cvMGJTKdrrJHZdd
+         Ef7m+70d4tOf+jMhNT9DlqhyAnu99i0EOTe9p9MrweU6pfw6B2h9WWgWpzgQ/tOufHV0
+         XMrg==
+X-Gm-Message-State: ANoB5pm3EzcRhU7Wyk3M5mKNoUvia/tD7wI+OlfJBS9WolQiM897rJC0
+        RFAx6TwfIM4wT6VX3qJiDUw=
+X-Google-Smtp-Source: AA0mqf4VM80Ds16sfnw7neteYzn/Ov1p8FE5iG3YyqDlZxPhDtrE9KPBjmNgn6cwqx3CRV7oc7Y4Ew==
+X-Received: by 2002:a17:902:bf06:b0:17b:d6ad:94c8 with SMTP id bi6-20020a170902bf0600b0017bd6ad94c8mr57718162plb.110.1669840289398;
+        Wed, 30 Nov 2022 12:31:29 -0800 (PST)
+Received: from localhost (2603-800c-1a02-1bae-a7fa-157f-969a-4cde.res6.spectrum.com. [2603:800c:1a02:1bae:a7fa:157f:969a:4cde])
+        by smtp.gmail.com with ESMTPSA id d13-20020aa797ad000000b00574a82bb877sm1760832pfq.203.2022.11.30.12.31.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Nov 2022 12:31:28 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Wed, 30 Nov 2022 10:31:27 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Li Nan <linan122@huawei.com>
+Cc:     josef@toxicpanda.com, axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yi.zhang@huawei.com
+Subject: Re: [PATCH -next v2 1/9] blk-iocost: cleanup ioc_qos_write() and
+ ioc_cost_model_write()
+Message-ID: <Y4e9n89vJ45+9WD2@slm.duckdns.org>
+References: <20221130132156.2836184-1-linan122@huawei.com>
+ <20221130132156.2836184-2-linan122@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: zsteWFlfHGLW_XgmQ8DF0pkZ1UrcVfFM
-X-Proofpoint-GUID: zsteWFlfHGLW_XgmQ8DF0pkZ1UrcVfFM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-30_04,2022-11-30_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- impostorscore=0 malwarescore=0 adultscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211300141
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221130132156.2836184-2-linan122@huawei.com>
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
+On Wed, Nov 30, 2022 at 09:21:48PM +0800, Li Nan wrote:
+> @@ -3197,6 +3197,7 @@ static ssize_t ioc_qos_write(struct kernfs_open_file *of, char *input,
+>  	enable = ioc->enabled;
+>  	user = ioc->user_qos_params;
+>  
+> +	ret = -EINVAL;
+>  	while ((p = strsep(&input, " \t\n"))) {
+>  		substring_t args[MAX_OPT_ARGS];
+>  		char buf[32];
+> @@ -3218,7 +3219,7 @@ static ssize_t ioc_qos_write(struct kernfs_open_file *of, char *input,
+>  			else if (!strcmp(buf, "user"))
+>  				user = true;
+>  			else
+> -				goto einval;
+> +				goto out_unlock;
 
-Allow for permanent SED authentication keys by
-reading/writing to the SED Opal non-volatile keystore.
+So, I kinda dislike it. That's a lot of code to cover with one "ret =
+-EINVAL" assignment which makes it pretty easy to make a mistake. People use
+variables like i, ret, err without thinking much and it doesn't help that
+you now can't tell whether a given exit condition is error or not by just
+looking at it.
 
-Signed-off-by: Greg Joyce <gjoyce@linux.vnet.ibm.com>
-Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
----
- block/sed-opal.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+I don't know what great extra insight the return value from match_u64()
+would carry (like, what else is it gonna say? and even if it does why does
+that matter when we say -EINVAL to pretty much everything else) so I'm not
+sure this matters but if you really want it just add a separate error return
+label?
 
-diff --git a/block/sed-opal.c b/block/sed-opal.c
-index a8729892178b..e280631b932e 100644
---- a/block/sed-opal.c
-+++ b/block/sed-opal.c
-@@ -18,6 +18,7 @@
- #include <linux/uaccess.h>
- #include <uapi/linux/sed-opal.h>
- #include <linux/sed-opal.h>
-+#include <linux/sed-opal-key.h>
- #include <linux/string.h>
- #include <linux/kdev_t.h>
- #include <linux/key.h>
-@@ -2762,7 +2763,13 @@ static int opal_set_new_pw(struct opal_dev *dev, struct opal_new_pw *opal_pw)
- 	if (ret)
- 		return ret;
- 
--	/* update keyring with new password */
-+	/* update keyring and key store with new password */
-+	ret = sed_write_key(OPAL_AUTH_KEY,
-+			    opal_pw->new_user_pw.opal_key.key,
-+			    opal_pw->new_user_pw.opal_key.key_len);
-+	if (ret != -EOPNOTSUPP)
-+		pr_warn("error updating SED key: %d\n", ret);
-+
- 	ret = update_sed_opal_key(OPAL_AUTH_KEY,
- 				  opal_pw->new_user_pw.opal_key.key,
- 				  opal_pw->new_user_pw.opal_key.key_len);
-@@ -3009,6 +3016,8 @@ EXPORT_SYMBOL_GPL(sed_ioctl);
- static int __init sed_opal_init(void)
- {
- 	struct key *kr;
-+	char init_sed_key[OPAL_KEY_MAX];
-+	int keylen = OPAL_KEY_MAX;
- 
- 	kr = keyring_alloc(".sed_opal",
- 			   GLOBAL_ROOT_UID, GLOBAL_ROOT_GID, current_cred(),
-@@ -3021,6 +3030,11 @@ static int __init sed_opal_init(void)
- 
- 	sed_opal_keyring = kr;
- 
--	return 0;
-+	if (sed_read_key(OPAL_AUTH_KEY, init_sed_key, &keylen) < 0) {
-+		memset(init_sed_key, '\0', sizeof(init_sed_key));
-+		keylen = OPAL_KEY_MAX;
-+	}
-+
-+	return update_sed_opal_key(OPAL_AUTH_KEY, init_sed_key, keylen);
- }
- late_initcall(sed_opal_init);
+Thanks.
+
 -- 
-gjoyce@linux.vnet.ibm.com
-
+tejun
