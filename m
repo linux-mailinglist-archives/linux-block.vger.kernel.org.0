@@ -2,70 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C586463FD8C
-	for <lists+linux-block@lfdr.de>; Fri,  2 Dec 2022 02:17:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AF0363FD9A
+	for <lists+linux-block@lfdr.de>; Fri,  2 Dec 2022 02:22:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbiLBBRW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Dec 2022 20:17:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36736 "EHLO
+        id S231558AbiLBBWn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Dec 2022 20:22:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiLBBRW (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Dec 2022 20:17:22 -0500
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3831FBB00F;
-        Thu,  1 Dec 2022 17:17:18 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VWAIyvC_1669943834;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0VWAIyvC_1669943834)
-          by smtp.aliyun-inc.com;
-          Fri, 02 Dec 2022 09:17:15 +0800
-From:   Yang Li <yang.lee@linux.alibaba.com>
-To:     tj@kernel.org
-Cc:     josef@toxicpanda.com, axboe@kernel.dk, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yang Li <yang.lee@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] blk-cgroup: Fix some kernel-doc comments
-Date:   Fri,  2 Dec 2022 09:17:13 +0800
-Message-Id: <20221202011713.14834-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+        with ESMTP id S230193AbiLBBWm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Dec 2022 20:22:42 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F41618382
+        for <linux-block@vger.kernel.org>; Thu,  1 Dec 2022 17:22:40 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id x66so3549245pfx.3
+        for <linux-block@vger.kernel.org>; Thu, 01 Dec 2022 17:22:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ha7o0eCHmk2nS/stJvaRFac3CxHDSLDcs+LGCRqIPBY=;
+        b=BuUEFSdIuuRDAjVFKVAhHELsh2BTyw5NoWSVDMZq1DGpduTVgVQpO+7R5WrmoIx13M
+         M17M+w1VUbCDiexAf14moFi1WiPv5byymNaQeBzbnNxhv7ZEgDDE4rrQ5yrgFdX+5OQk
+         SMfw+xxJKUuemgj7vBvIg7ae5dRpRRx63khUXhSoX7VuLzyVPS08OClh9OJtTo2WieSs
+         s2eVSCczZxx7r8aGifEn1xk0+06SAwsbh3KN2NuIRxyJmSHmrAsiyOs6B5CdKbo84sx0
+         Q8MkiaW+nBe0rxzoIHJnvyn139jE7veJt1/9E1oQBFtsdQHOysYhnyb90VnNvUPxHr/M
+         FFQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ha7o0eCHmk2nS/stJvaRFac3CxHDSLDcs+LGCRqIPBY=;
+        b=kYucsnNYR9sN7Ba859sMMQ+frtR8xtltkwqaGrOlt+eFKQ9eCpmrnFxQuIz0x3o4Iw
+         pl+731NmEsDD1iRKFgdk2oQxLi2qNgEGTfdwUmT8g3lIWhdIn+Vhoggho7k21tNKV/eG
+         VjFVj+sl7GqdLAMrMHrOG5RVyUjYiH4dRPCWj9NRLYT0WcQKmAMfPRQ6AvLo1YAdJkrc
+         /X5B8IXlS2uG8cqd2Z5Iqwx+BmqP1t/jym35v26GcVwE/CmupfMZ8/2d9jf6f7uQ0Oib
+         gnQu3TPKlI5GrbCITEjSCcbUW/vW+Scdoj/s2iolYhjd8cnb8x6i5LsFDLeSMSOLn4sb
+         Qo+A==
+X-Gm-Message-State: ANoB5pkXtKIXVPDeA7uEkgUCTzVHsUMCcEqBRbcVjUeGA0FR8+0RaeV4
+        Msu6uJirx7np+tCDhYDyoAAAIg==
+X-Google-Smtp-Source: AA0mqf4FCwGn7yMlLHyKAoU/jghlvAvPD8m60OuAPdXHKHaveyDVw1dMsbzIAn55L/JhLaFI6Sd3aQ==
+X-Received: by 2002:a62:9409:0:b0:562:e571:3f0e with SMTP id m9-20020a629409000000b00562e5713f0emr52380182pfe.72.1669944159919;
+        Thu, 01 Dec 2022 17:22:39 -0800 (PST)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id w64-20020a17090a6bc600b00219025945dcsm5504114pjj.19.2022.12.01.17.22.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Dec 2022 17:22:39 -0800 (PST)
+Message-ID: <7aa9e496-747d-46ae-b250-d504d84af6e5@kernel.dk>
+Date:   Thu, 1 Dec 2022 18:22:38 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH -next] blk-cgroup: Fix some kernel-doc comments
+Content-Language: en-US
+To:     Yang Li <yang.lee@linux.alibaba.com>, tj@kernel.org
+Cc:     josef@toxicpanda.com, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abaci Robot <abaci@linux.alibaba.com>
+References: <20221202011713.14834-1-yang.lee@linux.alibaba.com>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20221202011713.14834-1-yang.lee@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make the description of @gendisk to @disk in blkcg_schedule_throttle()
-to clear the below warnings:
+On 12/1/22 6:17 PM, Yang Li wrote:
+> Make the description of @gendisk to @disk in blkcg_schedule_throttle()
+> to clear the below warnings:
+> 
+> block/blk-cgroup.c:1850: warning: Function parameter or member 'disk' not described in 'blkcg_schedule_throttle'
+> block/blk-cgroup.c:1850: warning: Excess function parameter 'gendisk' description in 'blkcg_schedule_throttle'
 
-block/blk-cgroup.c:1850: warning: Function parameter or member 'disk' not described in 'blkcg_schedule_throttle'
-block/blk-cgroup.c:1850: warning: Excess function parameter 'gendisk' description in 'blkcg_schedule_throttle'
+Please always include a fixes line:
 
-Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=3338
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
----
- block/blk-cgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Fixes: de185b56e8a6 ("blk-cgroup: pass a gendisk to blkcg_schedule_throttle")
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 1bb939d3b793..77f44472b41e 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1831,7 +1831,7 @@ void blkcg_maybe_throttle_current(void)
- 
- /**
-  * blkcg_schedule_throttle - this task needs to check for throttling
-- * @gendisk: disk to throttle
-+ * @disk: disk to throttle
-  * @use_memdelay: do we charge this to memory delay for PSI
-  *
-  * This is called by the IO controller when we know there's delay accumulated
 -- 
-2.20.1.7.g153144c
+Jens Axboe
+
 
