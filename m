@@ -2,100 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C367D642D1F
-	for <lists+linux-block@lfdr.de>; Mon,  5 Dec 2022 17:38:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA201642D94
+	for <lists+linux-block@lfdr.de>; Mon,  5 Dec 2022 17:50:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232313AbiLEQiy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 5 Dec 2022 11:38:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
+        id S231855AbiLEQuK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 5 Dec 2022 11:50:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232676AbiLEQi0 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Dec 2022 11:38:26 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D78B20F54;
-        Mon,  5 Dec 2022 08:36:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 9BF54CE0EDA;
-        Mon,  5 Dec 2022 16:36:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89511C433D6;
-        Mon,  5 Dec 2022 16:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1670258206;
-        bh=fbpcwdKaJc7AJTNyA9TDEKsFnJyGmmESF0Wd/ZFzdbI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kh583MNyjgC8duE4cNwoW6/cRGCCa4/0sjHjB9ls5BYonNjN0x1V20qj3usHKybqK
-         O7iHhhkkqNdd5sgIbS06TLzofkIX+yW9e24EjFGdfbAjrQl1+JT0KQb9VXNjlQGG1S
-         mc4pUBDKzu6gSU+rgriGXEwraHrc7CzK+wjxj3rA=
-Date:   Mon, 5 Dec 2022 17:36:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Ming Lei <ming.lei@redhat.com>, stable@vger.kernel.org,
-        linux-block@vger.kernel.org, Shiwei Cui <cuishw@inspur.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 5.10.y stable v2] block: unhash blkdev part inode when
- the part is deleted
-Message-ID: <Y44eHHkdnOoLfHMw@kroah.com>
-References: <20221205132739.844399-1-ming.lei@redhat.com>
- <Y44JWBw9opr2HVyN@kroah.com>
- <50de97fe-43f1-188f-511a-f29611944ce7@kernel.dk>
+        with ESMTP id S232800AbiLEQtm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 5 Dec 2022 11:49:42 -0500
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E73521245
+        for <linux-block@vger.kernel.org>; Mon,  5 Dec 2022 08:48:54 -0800 (PST)
+Received: by mail-ot1-x342.google.com with SMTP id db10-20020a0568306b0a00b0066d43e80118so7618922otb.1
+        for <linux-block@vger.kernel.org>; Mon, 05 Dec 2022 08:48:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
+        b=EvWmzEra/azIE+dhpMGnktmqmSoesb8PSCiM/05QKkVO5anMKEbRHSG7nojCSOyYWk
+         9IDI1UgS5rC+uB5j5uOW4no2X6seMos8u1Uby8q6RKzl1vCALcAn7vpiT6rpclAi8Jt0
+         gPKoEl0xikkT9S+7dg4LTBa5X4VHIsnKU2e6OrEO/j4h9xN1NPllzu29Dg0k3gFH+bOt
+         HMDW+rYw/YqhqvZ6y4oXgIeqTNVodnF9zHtiwgFo2Y0tEc6ReoK23o3+Epe6dWg/8ai1
+         Z4r7fWQ42rAk0Fys+lVH3VBvE+2FTvVvceopyfVxKS8DxJV3KaRTE9M5zTY24mYt1gIO
+         /rEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
+        b=uE5ZXXnluilhtADUFMyTllwjDpbeN9rPQhKbkcm/IVCMH/OG4lAbPDOA1FQfKPz5nC
+         vGIVUFzk/66kWkYCyOom8wCi/9Xv5f8GhXEuoW7yAbyudpVasBU1lZ2M022FwN4L9Yxb
+         NlmNkk0Bqy4LXzJ57aqj/JKdrLPEIyUeRDa436vR2qi5IJeAiY607IuDWRwWb+aG0Luc
+         9hc7cMamgpS32jma/YeQ6U/eRRLBrIw5FTcgiyHmMFOYX+dMhqPahanV2Ow7Els3QzK3
+         TZK2QmuL8lLPTxTGqz0xg7GULlvIP8tTrt+CvWBnENu641pz6ocWNF6SPq6LA0y9dMeH
+         zt2Q==
+X-Gm-Message-State: ANoB5pmRROG8LGhkHm/U8mwRo0Nb4fXZGZSBTu9ZiUk/npOT3b5eDcC2
+        Z0+vNdTAJp4NmfFerTqVjGHql+ckkBVsKv/KFqE=
+X-Google-Smtp-Source: AA0mqf6rJpockmAlPLGWb5IdXxyZXi5oeB/VlA7nQtTh5mH5GBjbP93nFRUHbmrw3A3v2AKvxeLYo6EVgAyGoUC2980=
+X-Received: by 2002:a05:6830:61ce:b0:66b:e4e2:8d25 with SMTP id
+ cc14-20020a05683061ce00b0066be4e28d25mr41635604otb.152.1670258933537; Mon, 05
+ Dec 2022 08:48:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <50de97fe-43f1-188f-511a-f29611944ce7@kernel.dk>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6358:7211:b0:dd:1fa2:ef73 with HTTP; Mon, 5 Dec 2022
+ 08:48:53 -0800 (PST)
+Reply-To: plml47@hotmail.com
+From:   Philip Manul <lometogo1999@gmail.com>
+Date:   Mon, 5 Dec 2022 08:48:53 -0800
+Message-ID: <CAFtqZGFXDNDSmyfAW1goTwuOjaKBWi=RMxR7avPMnWxdOUFKOg@mail.gmail.com>
+Subject: REP:
+To:     in <in@proposal.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=2.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Dec 05, 2022 at 08:19:23AM -0700, Jens Axboe wrote:
-> On 12/5/22 8:08 AM, Greg Kroah-Hartman wrote:
-> > On Mon, Dec 05, 2022 at 09:27:39PM +0800, Ming Lei wrote:
-> >> v5.11 changes the blkdev lookup mechanism completely since commit
-> >> 22ae8ce8b892 ("block: simplify bdev/disk lookup in blkdev_get"),
-> >> and small part of the change is to unhash part bdev inode when
-> >> deleting partition. Turns out this kind of change does fix one
-> >> nasty issue in case of BLOCK_EXT_MAJOR:
-> >>
-> >> 1) when one partition is deleted & closed, disk_put_part() is always
-> >> called before bdput(bdev), see blkdev_put(); so the part's devt can
-> >> be freed & re-used before the inode is dropped
-> >>
-> >> 2) then new partition with same devt can be created just before the
-> >> inode in 1) is dropped, then the old inode/bdev structurein 1) is
-> >> re-used for this new partition, this way causes use-after-free and
-> >> kernel panic.
-> >>
-> >> It isn't possible to backport the whole big patchset of "merge struct
-> >> block_device and struct hd_struct v4" for addressing this issue.
-> >>
-> >> https://lore.kernel.org/linux-block/20201128161510.347752-1-hch@lst.de/
-> >>
-> >> So fixes it by unhashing part bdev in delete_partition(), and this way
-> >> is actually aligned with v5.11+'s behavior.
-> >>
-> >> Reported-by: Shiwei Cui <cuishw@inspur.com>
-> >> Tested-by: Shiwei Cui <cuishw@inspur.com>
-> >> Cc: Christoph Hellwig <hch@lst.de>
-> >> Cc: Jan Kara <jack@suse.cz>
-> >> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> >> ---
-> >> V2:
-> >> 	- fix one typo and Shiwei's email format
-> >>
-> >>  block/partitions/core.c | 7 +++++++
-> > 
-> > I need an ack from the block maintainers/developers to be able to take
-> > this.
-> 
-> Acked-by: Jens Axboe <axboe@kernel.dk>
-
-Thanks, now queued up for 5.10.y
-
-greg k-h
+--=20
+Guten tag,
+Mein Name ist Philip Manul. Ich bin von Beruf Rechtsanwalt. Ich habe
+einen verstorbenen Kunden, der zuf=C3=A4llig denselben Namen mit Ihnen
+teilt. Ich habe alle Papierdokumente in meinem Besitz. Ihr Verwandter,
+mein verstorbener Kunde, hat hier in meinem Land einen nicht
+beanspruchten Fonds zur=C3=BCckgelassen. Ich warte auf Ihre Antwort zum
+Verfahren.
+Philip Manul.
