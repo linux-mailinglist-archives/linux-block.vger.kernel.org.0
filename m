@@ -2,79 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF15E644929
-	for <lists+linux-block@lfdr.de>; Tue,  6 Dec 2022 17:27:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D250F64494C
+	for <lists+linux-block@lfdr.de>; Tue,  6 Dec 2022 17:33:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232571AbiLFQ1H (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Dec 2022 11:27:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42724 "EHLO
+        id S235309AbiLFQdP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Dec 2022 11:33:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235271AbiLFQ1E (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Dec 2022 11:27:04 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CD12A259
-        for <linux-block@vger.kernel.org>; Tue,  6 Dec 2022 08:27:02 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id m19so21003982edj.8
-        for <linux-block@vger.kernel.org>; Tue, 06 Dec 2022 08:27:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1wNGJip1HKswY03rIn0qBN8lLPIUP/zhuY/3XSL3+9g=;
-        b=fD9i3S/OyqKgyk6wKHC5lzP9djQhREEu8RWPUcbxw52GfNQLvBWJQ2exlnhkwuoVnX
-         ODkWJs+9ZWGaBloc8GriItGzcaI9kv3Z/q+2DI/CJMYugkcY1zWshHDkRo0S4P/RZYbW
-         wf5B8rZVQ/HWB8udR2tLK/r+3aLCWsd7vxNQkvMgtI7i9LORQdAYFj9cIBg3e1NGVMk1
-         iaOU3W7MHb4WyYmeLs33v5BVQAtHv3yXz+7Qza0Jv3nJIIuSTckNPxetmLdAxjpqMStb
-         odVj/IxjrwRsJ4/7ouN/+kIuqnSl2MD5eoPuVC15uX55/xRRlu+SGTdO40R7hXK46DKV
-         adyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1wNGJip1HKswY03rIn0qBN8lLPIUP/zhuY/3XSL3+9g=;
-        b=Xypv3VQB7dERh8rd8JUZqC/P03GJJ0UyxtT0zUF5J0aip/MA746m/wPnIlwBnfdNyF
-         YPsM/oIAzYv7whawRw4naqCTVKyPbU01XP5WS6kyKIUcsRBIRb2lrJXVyf9IwicyNslW
-         qHlbCEaa0Q5kjIBbYqR0dsr6TbxnnYzQ9RaIMDDUAP7jlKg/GCKO5Rdy97afpJs8Ijtw
-         rfC/aAGPRBA8F4b6k5o+LQJ6wnz4U+M/VqrBU8DBULw2Twq6/woxoyPQ0vbH43nuIssl
-         WYD4Rb6id2OTet2LF10tgkq8J/BnCVMuaZmFyDSgTFvTTyGU3oj6FgS89iSbtj+xncic
-         MgHw==
-X-Gm-Message-State: ANoB5pn+9JoilXIDJemMlR+kwUs09+JmUuoQQzf2tzftHhyu4NBYQThx
-        9do2sMSUFXHcc1eVEqVMBWtrTA==
-X-Google-Smtp-Source: AA0mqf5O5cZ8jGnB/77uzy3JBRtagKZAZO2TV80r76TGZfG4XbsIH3Cz4RphZQYm70T/1MMOHro6Lw==
-X-Received: by 2002:a50:c314:0:b0:46c:4850:a192 with SMTP id a20-20020a50c314000000b0046c4850a192mr15141650edb.65.1670344021185;
-        Tue, 06 Dec 2022 08:27:01 -0800 (PST)
-Received: from mbp-di-paolo.station (net-2-35-55-161.cust.vodafonedsl.it. [2.35.55.161])
-        by smtp.gmail.com with ESMTPSA id d18-20020a50fb12000000b004588ef795easm1164055edq.34.2022.12.06.08.27.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Dec 2022 08:27:00 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH V7 1/8] block, bfq: split sync bfq_queues on a
- per-actuator basis
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <5f8aa1f6-c0d1-d6b9-f01d-f9a65cdeadb6@opensource.wdc.com>
-Date:   Tue, 6 Dec 2022 17:26:59 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arie van der Hoeven <arie.vanderhoeven@seagate.com>,
-        Rory Chen <rory.c.chen@seagate.com>,
-        Glen Valante <glen.valante@linaro.org>,
-        Gabriele Felici <felicigb@gmail.com>,
-        Carmine Zaccagnino <carmine@carminezacc.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <50017876-ED45-44E7-A2F9-90BB8178D129@linaro.org>
-References: <20221206081551.28257-1-paolo.valente@linaro.org>
- <20221206081551.28257-2-paolo.valente@linaro.org>
- <5f8aa1f6-c0d1-d6b9-f01d-f9a65cdeadb6@opensource.wdc.com>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S235334AbiLFQc6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 6 Dec 2022 11:32:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9862B60F
+        for <linux-block@vger.kernel.org>; Tue,  6 Dec 2022 08:31:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1670344315;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f7tva0QRnvY34jr6F4y3N6frBD9DljEnyo24Q5FToPc=;
+        b=JkjGjA1KJ1OnK/ftGS8EifoMUK+rtHxC5p0kUPsNrpvBd7BfN45Ym1tiA2qz8nXfAcr1Zq
+        x2JlUpktrFn1dFa5MjwsfXAeu3+Gg28yKzjYpvKzA9Jo9HdYmVsDpWepC94fKtWyQ/lDVr
+        pxbY3GueQpovGvrgM6yH97+L0oPruH0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-297-NHrOxJHpO8e_BNKhHHWkEQ-1; Tue, 06 Dec 2022 11:31:49 -0500
+X-MC-Unique: NHrOxJHpO8e_BNKhHHWkEQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B84DD86EB63;
+        Tue,  6 Dec 2022 16:31:48 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 090482028CE4;
+        Tue,  6 Dec 2022 16:31:47 +0000 (UTC)
+Date:   Tue, 6 Dec 2022 11:31:44 -0500
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Alvaro Karsz <alvaro.karsz@solid-run.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v3] virtio_blk: add VIRTIO_BLK_F_LIFETIME feature support
+Message-ID: <Y49ucLGtCOtnbM0K@fedora>
+References: <20221205162035.2261037-1-alvaro.karsz@solid-run.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Kf1ZFtRxkbtTQRVa"
+Content-Disposition: inline
+In-Reply-To: <20221205162035.2261037-1-alvaro.karsz@solid-run.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -82,188 +66,46 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 
+--Kf1ZFtRxkbtTQRVa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Il giorno 6 dic 2022, alle ore 09:53, Damien Le Moal =
-<damien.lemoal@opensource.wdc.com> ha scritto:
->=20
-> [...]
->> 	return bfqg;
->> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->> index 7ea427817f7f..127aeecaf903 100644
->> --- a/block/bfq-iosched.c
->> +++ b/block/bfq-iosched.c
->> @@ -377,14 +377,21 @@ static const unsigned long =
-bfq_late_stable_merging =3D 600;
->> #define RQ_BIC(rq)		((struct bfq_io_cq =
-*)((rq)->elv.priv[0]))
->> #define RQ_BFQQ(rq)		((rq)->elv.priv[1])
->>=20
->> -struct bfq_queue *bic_to_bfqq(struct bfq_io_cq *bic, bool is_sync)
->> +struct bfq_queue *bic_to_bfqq(struct bfq_io_cq *bic, bool is_sync,
->> +			      unsigned int actuator_idx)
->> {
->> -	return bic->bfqq[is_sync];
->=20
-> See below. But here, you could add:
->=20
-> 	if (!bic)
-> 		return NULL;
->=20
->> +	if (is_sync)
->> +		return bic->bfqq[1][actuator_idx];
->> +
->> +	return bic->bfqq[0][actuator_idx];
->> }
->>=20
->> static void bfq_put_stable_ref(struct bfq_queue *bfqq);
->>=20
->> -void bic_set_bfqq(struct bfq_io_cq *bic, struct bfq_queue *bfqq, =
-bool is_sync)
->> +void bic_set_bfqq(struct bfq_io_cq *bic,
->> +		  struct bfq_queue *bfqq,
->> +		  bool is_sync,
->> +		  unsigned int actuator_idx)
->> {
->> 	/*
->> 	 * If bfqq !=3D NULL, then a non-stable queue merge between
->> @@ -399,7 +406,10 @@ void bic_set_bfqq(struct bfq_io_cq *bic, struct =
-bfq_queue *bfqq, bool is_sync)
->> 	 * we cancel the stable merge if
->> 	 * bic->stable_merge_bfqq =3D=3D bfqq.
->> 	 */
->> -	bic->bfqq[is_sync] =3D bfqq;
->> +	if (is_sync)
->> +		bic->bfqq[1][actuator_idx] =3D bfqq;
->> +	else
->> +		bic->bfqq[0][actuator_idx] =3D bfqq;
->>=20
->> 	if (bfqq && bic->stable_merge_bfqq =3D=3D bfqq) {
->> 		/*
->> @@ -672,9 +682,9 @@ static void bfq_limit_depth(blk_opf_t opf, struct =
-blk_mq_alloc_data *data)
->> {
->> 	struct bfq_data *bfqd =3D data->q->elevator->elevator_data;
->> 	struct bfq_io_cq *bic =3D bfq_bic_lookup(data->q);
->> -	struct bfq_queue *bfqq =3D bic ? bic_to_bfqq(bic, =
-op_is_sync(opf)) : NULL;
->> 	int depth;
->> 	unsigned limit =3D data->q->nr_requests;
->> +	unsigned int act_idx;
->>=20
->> 	/* Sync reads have full depth available */
->> 	if (op_is_sync(opf) && !op_is_write(opf)) {
->> @@ -684,14 +694,21 @@ static void bfq_limit_depth(blk_opf_t opf, =
-struct blk_mq_alloc_data *data)
->> 		limit =3D (limit * depth) >> bfqd->full_depth_shift;
->> 	}
->>=20
->> -	/*
->> -	 * Does queue (or any parent entity) exceed number of requests =
-that
->> -	 * should be available to it? Heavily limit depth so that it =
-cannot
->> -	 * consume more available requests and thus starve other =
-entities.
->> -	 */
->> -	if (bfqq && bfqq_request_over_limit(bfqq, limit))
->> -		depth =3D 1;
->> +	for (act_idx =3D 0; act_idx < bfqd->num_actuators; act_idx++) {
->> +		struct bfq_queue *bfqq =3D
->> +			bic ? bic_to_bfqq(bic, op_is_sync(opf), act_idx) =
-: NULL;
->=20
-> You could return NULL in bic_to_bfqq() if bic is NULL. That would =
-avoid
-> this cludge.
+On Mon, Dec 05, 2022 at 06:20:34PM +0200, Alvaro Karsz wrote:
 
-Actually, this would improve code here, but it would entail the above
-(useless) control for all the other invocations :(
+I don't like that the ioctl lifetime struct is passed through
+little-endian from the device to userspace. The point of this new ioctl
+is not to be a passthrough interface. The kernel should define a proper
+UABI struct for the ioctl and handle endianness conversion. But I think
+Michael is happy with this approach, so nevermind.
 
->=20
->>=20
->> +		/*
->> +		 * Does queue (or any parent entity) exceed number of
->> +		 * requests that should be available to it? Heavily
->> +		 * limit depth so that it cannot consume more
->> +		 * available requests and thus starve other entities.
->> +		 */
->> +		if (bfqq && bfqq_request_over_limit(bfqq, limit)) {
->> +			depth =3D 1;
->> +			break;
->> +		}
->> +	}
->> 	bfq_log(bfqd, "[%s] wr_busy %d sync %d depth %u",
->> 		__func__, bfqd->wr_busy_queues, op_is_sync(opf), depth);
->> 	if (depth)
->> @@ -1812,6 +1829,18 @@ static bool =
-bfq_bfqq_higher_class_or_weight(struct bfq_queue *bfqq,
->> 	return bfqq_weight > in_serv_weight;
->> }
->>=20
->> +/*
->> + * Get the index of the actuator that will serve bio.
->> + */
->> +static unsigned int bfq_actuator_index(struct bfq_data *bfqd, struct =
-bio *bio)
->> +{
->> +	/*
->> +	 * Multi-actuator support not complete yet, so always return 0
->> +	 * for the moment (to keep incomplete mechanisms off).
->> +	 */
->> +	return 0;
->> +}
->> +
->> static bool bfq_better_to_idle(struct bfq_queue *bfqq);
->>=20
->> static void bfq_bfqq_handle_idle_busy_switch(struct bfq_data *bfqd,
->> @@ -2142,7 +2171,7 @@ static void bfq_check_waker(struct bfq_data =
-*bfqd, struct bfq_queue *bfqq,
->> 	 * We reset waker detection logic also if too much time has =
-passed
->>  	 * since the first detection. If wakeups are rare, pointless =
-idling
->> 	 * doesn't hurt throughput that much. The condition below makes =
-sure
->> -	 * we do not uselessly idle blocking waker in more than 1/64 =
-cases.=20
->> +	 * we do not uselessly idle blocking waker in more than 1/64 =
-cases.
->> 	 */
->> 	if (bfqd->last_completed_rq_bfqq !=3D
->> 	    bfqq->tentative_waker_bfqq ||
->> @@ -2478,7 +2507,8 @@ static bool bfq_bio_merge(struct request_queue =
-*q, struct bio *bio,
->> 		 */
->> 		bfq_bic_update_cgroup(bic, bio);
->>=20
->> -		bfqd->bio_bfqq =3D bic_to_bfqq(bic, =
-op_is_sync(bio->bi_opf));
->> +		bfqd->bio_bfqq =3D bic_to_bfqq(bic, =
-op_is_sync(bio->bi_opf),
->> +					     bfq_actuator_index(bfqd, =
-bio));
->=20
-> Given that you repeat this pattern a lot, might be worth having a =
-wrapper
-> like:
->=20
-> static inline struct bfq_queue *bio_to_bfqq(struct bfq_io_cq *bic,
-> 					    struct bio *bio)
-> {
-> 	return bic_to_bfqq(bic, op_is_sync(bio->bi_opf),
-> 			   bfq_actuator_index(bfqd, bio));
-> }
->=20
-> The code would be less verbose while still being clear.
+> @@ -219,4 +247,8 @@ struct virtio_scsi_inhdr {
+>  #define VIRTIO_BLK_S_OK		0
+>  #define VIRTIO_BLK_S_IOERR	1
+>  #define VIRTIO_BLK_S_UNSUPP	2
+> +
+> +/* Virtblk ioctl commands */
+> +#define VBLK_GET_LIFETIME	_IOR('r', 0, struct virtio_blk_lifetime)
 
-Actually this (exact) pattern is used only twice.  I'm thinking of
-some more general wrapper, but each different combination seems to
-have its own extra cost.  Any suggestion is more than welcome.
-Meanwhile, I'll send a V8 to keep this going.
+Does something include <linux/ioctl.h> for _IOR()? Failure to include
+the necessary header file could break userspace applications that
+include <linux/virtio_blk.h>.
 
-As usual, in my V8 I'll apply all of your other suggestions.
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Thanks,
-Paolo
+--Kf1ZFtRxkbtTQRVa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[...]=
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmOPbnAACgkQnKSrs4Gr
+c8iLOggAsIIn2qOsdq8S+xOJLEgfRN7/BoDt8YZ8CMsipVZs0G2Y6iVOhZFBNe98
+W/edX+RVO5c7C8wPToA0QPqxO3hw7I/g6ztXeAm4KTx2mduzxQilJRDipEfpFOXV
+OnW7IUGMedQPrwbMNqeT32QpFk/OVicOH/QguVDmQajXMIPUSvfBCnsSm8aHDl9p
+YvADYVTPdoxJt3OTCGKXU7pfUwSC6/w8KVfxk3jnNKkuCDoEEeuCgkhyEc+CpGlo
+i6z4bn23yupNn/d9CPROsEYRSB07OI8iAj7n6r1QMP2TG9+dOHgA4nnd0kcSWwYO
+ZOnWHf2RJzEb34YNO5Bm0pio+X7vYQ==
+=PdE9
+-----END PGP SIGNATURE-----
+
+--Kf1ZFtRxkbtTQRVa--
+
