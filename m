@@ -2,143 +2,256 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A510646D8C
-	for <lists+linux-block@lfdr.de>; Thu,  8 Dec 2022 11:49:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FBCE646DD1
+	for <lists+linux-block@lfdr.de>; Thu,  8 Dec 2022 12:03:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbiLHKtp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Dec 2022 05:49:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53804 "EHLO
+        id S229804AbiLHLCn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Dec 2022 06:02:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230200AbiLHKsu (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Dec 2022 05:48:50 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F3E51C30
-        for <linux-block@vger.kernel.org>; Thu,  8 Dec 2022 02:44:07 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id i15so1536320edf.2
-        for <linux-block@vger.kernel.org>; Thu, 08 Dec 2022 02:44:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TOY4Ejzg/9nAKzPYo9tETGRaOoSPvAWifxplSzBGXYw=;
-        b=cDvtWPvf3S8NQ0fSkfns/Z6fkpvUbHGNiMlgP5rHJmAIJJ3gdhSwr+Ct+fE6bKpMyH
-         Kyowaj7BdY6BUilN+ffaZ4FZr/895aMTTysEHE517g0mCsydJxDpfHxD9/gN9fpwmHHY
-         o+vfejQrND/Vc2WPHgebfl+3y0sLQHLoW+kaR+PRnkEL2cnIpjpneq9jEDLcvYLcl4X9
-         kwiMJAQI1/WsxSUi1sGBOgRdwADaoQQpKB6Lm8f7Lp8iCMrTd24/rsv04FdEM30l/Gba
-         QZCZtWtShZLblG4OfO9JO2qGGQc7en+24D3ol/7+Fme1C+wxJqzYNEDswr2uO/J8WMZz
-         2w+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TOY4Ejzg/9nAKzPYo9tETGRaOoSPvAWifxplSzBGXYw=;
-        b=6MFq1xk8A/sOCD5KkEGckEFgp8y3DJbjfeAQEJDscx/9Z6jpxEE8ibo7tJ7hiX7RHl
-         88mzCBx81rmRffbUjIbh5KdLhQWu4KUi5alM432oL2s/p0E3sf31tEwFFSQi7l/OTX0V
-         /CKWEAYXAMs0aNwzQJ17Ae8XAVQbTe6wK+tITDBil6Z1uK3DfLN0vvE2UgLPJWo2vVbb
-         0QpMue8Roei1MLKgZbJ4fKrh0LVzNKygmAHujPHiWSa/uYvLF7oqbNDSqQ6cgV25s/Jn
-         GjC9093Wg5dmM0+iRkLgovOe92FOcsVc/4k0Ut7i2E7u2H0GjXDomVDduBiYMiF1H5sl
-         uwtQ==
-X-Gm-Message-State: ANoB5pkyAYTJXd974Xt2gXRTeY6mcfO8ZIf4oi7ygDlWTxRROJCeIXlY
-        rCMqPp7s8ympNYYBhJ3UQuPN4w==
-X-Google-Smtp-Source: AA0mqf5DbytpsRHY37Acv77YDMF7k+SRvEDaeQeJULi7KDFF/PCAnkZWmS7C0RPVZkyH2ROxgNsXHg==
-X-Received: by 2002:a05:6402:2946:b0:468:febe:ebab with SMTP id ed6-20020a056402294600b00468febeebabmr37209892edb.337.1670496245540;
-        Thu, 08 Dec 2022 02:44:05 -0800 (PST)
-Received: from MBP-di-Paolo.station (net-2-35-55-161.cust.vodafonedsl.it. [2.35.55.161])
-        by smtp.gmail.com with ESMTPSA id fe17-20020a1709072a5100b0077a8fa8ba55sm9544193ejc.210.2022.12.08.02.44.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Dec 2022 02:44:05 -0800 (PST)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arie.vanderhoeven@seagate.com, rory.c.chen@seagate.com,
-        glen.valante@linaro.org, Davide Zini <davidezini2@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH V9 8/8] block, bfq: balance I/O injection among underutilized actuators
-Date:   Thu,  8 Dec 2022 11:43:51 +0100
-Message-Id: <20221208104351.35038-9-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221208104351.35038-1-paolo.valente@linaro.org>
-References: <20221208104351.35038-1-paolo.valente@linaro.org>
+        with ESMTP id S229843AbiLHLBm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Dec 2022 06:01:42 -0500
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA55C41;
+        Thu,  8 Dec 2022 03:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1670497241; x=1702033241;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kiFPw97oMlOhbq1kwrootHJ7a+SdW1/7qB+ORfg0Kks=;
+  b=LXb8Z+kgJgJ2YPMEomV5y7aJnHTtg/ABp1WGaNEuTnQeWbWHihw6HUPr
+   rC+gtMcoU+2s9LyFHvo/gEONKp3Pl/NC5oDTCJ4jiZKSMRAj6L3lGnlwU
+   oqjmrSkhKGz42K36B+Y+uCqaJlc5MTTEncT4c/GRJ/ADCy5Lti+kSJ6PT
+   I4Bxu+tMv/2tKoQEu58okSaT6Aa/7M5bkIyWZD5S8mHCqLa1ri63Jfy4J
+   FaUHIOPuc9RqpjGhIERrIclOlh/PAqQHgwsRxlhMM6SYHJSAZ7Z2/D5DP
+   nBl4GF/l+Q65MgBR0Ii8zkz8Dvwj2Vj4Ed8uyF3yTdDGXcxtwyWlkCPVW
+   w==;
+X-IronPort-AV: E=Sophos;i="5.96,227,1665417600"; 
+   d="scan'208";a="223333335"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 08 Dec 2022 19:00:40 +0800
+IronPort-SDR: py+XPYL6woTJI/s/hNeFS8UuOScHVGPIyl05LrK/0JqCarP5aoupbRYLppLCh1rcwD3NisiJY2
+ IgEUOANAiJydvPwsaXxvZJ0a69rCB2/tbC8tCuRAMoAwQGU4viANB+1sdKUjWOlvznyKDV6N4w
+ ifbnnlnrlLrZmRBDE8oQ1ytjyg3T8ikjhRC2GnhXgd0E4FlD5O3ZWG4JFBVKfbE7Q4pNx98kkN
+ bW28LI6FKCOxTqaV3w/kRqESvGl30sl0H4P5EMt7oAiCUWokfOpj0I6CIlgx85iEyjeu+OXsTj
+ xqg=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Dec 2022 02:13:25 -0800
+IronPort-SDR: irMqzqPhqy/9UX97tuiWYJwyz7O+TpEVyS4dWfgU6YrjQZdbb98FMnkk+oyubTT4SBJi1/w9tG
+ X9Fn5ba2wjSuPwjMMR8np/OJzZ2CgtslCqgcgdRS9vKvT0dp4j0yCcVmeJosbKRfqEdEmyPwtZ
+ jucIvh3rz4Pm4nmmXCfg4O8PzBrZwHre/zDq3wjejAXzSaYLrM3cCi2rEWjMkcbdRL+0tt2wum
+ yCHQaqyuLqamzlOgDLXkDcZk1n59pUSDa2SQpzU9kZTl/uARAUwwERtq0OmbIRUP8HfBb4qD0c
+ aaY=
+WDCIronportException: Internal
+Received: from dellx5.wdc.com (HELO x1-carbon.cphwdc) ([10.200.210.81])
+  by uls-op-cesaip01.wdc.com with ESMTP; 08 Dec 2022 03:00:38 -0800
+From:   Niklas Cassel <niklas.cassel@wdc.com>
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Mikael Pettersson <mikpelinux@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Brian King <brking@us.ibm.com>
+Cc:     Hannes Reinecke <hare@suse.de>, linux-scsi@vger.kernel.org,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        linux-block@vger.kernel.org, linux-ide@vger.kernel.org
+Subject: [PATCH 00/25] Add Command Duration Limits support
+Date:   Thu,  8 Dec 2022 11:59:16 +0100
+Message-Id: <20221208105947.2399894-1-niklas.cassel@wdc.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Davide Zini <davidezini2@gmail.com>
+Hello,
 
-Upon the invocation of its dispatch function, BFQ returns the next I/O
-request of the in-service bfq_queue, unless some exception holds. One
-such exception is that there is some underutilized actuator, different
-from the actuator for which the in-service queue contains I/O, and
-that some other bfq_queue happens to contain I/O for such an
-actuator. In this case, the next I/O request of the latter bfq_queue,
-and not of the in-service bfq_queue, is returned (I/O is injected from
-that bfq_queue). To find such an actuator, a linear scan, in
-increasing index order, is performed among actuators.
+This series adds support for Command Duration Limits.
+The series is based on linux-next tag: next-20221205
+The series can also be found in git:
+https://github.com/floatious/linux/commits/cdl-v1
 
-Performing a linear scan entails a prioritization among actuators: an
-underutilized actuator may be considered for injection only if all
-actuators with a lower index are currently fully utilized, or if there
-is no pending I/O for any lower-index actuator that happens to be
-underutilized.
 
-This commits breaks this prioritization and tends to distribute
-injection uniformly across actuators. This is obtained by adding the
-following condition to the linear scan: even if an actuator A is
-underutilized, A is however skipped if its load is higher than that of
-the next actuator.
+=================
+CDL in ATA / SCSI
+=================
+Command Duration Limits is defined in:
+T13 ATA Command Set - 5 (ACS-5) and
+T10 SCSI Primary Commands - 6 (SPC-6) respectively
+(a simpler version of CDL is defined in T10 SPC-5).
 
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Davide Zini <davidezini2@gmail.com>
----
- block/bfq-iosched.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+CDL defines Duration Limits Descriptors (DLD).
+7 DLDs for read commands and 7 DLDs for write commands.
+Simply put, a DLD contains a limit and a policy.
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 16230a9cf794..016b1b73aeb2 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4831,10 +4831,16 @@ bfq_find_active_bfqq_for_actuator(struct bfq_data *bfqd, int idx)
- 
- /*
-  * Perform a linear scan of each actuator, until an actuator is found
-- * for which the following two conditions hold: the load of the
-- * actuator is below the threshold (see comments on actuator_load_threshold
-- * for details), and there is a queue that contains I/O for that
-- * actuator. On success, return that queue.
-+ * for which the following three conditions hold: the load of the
-+ * actuator is below the threshold (see comments on
-+ * actuator_load_threshold for details) and lower than that of the
-+ * next actuator (comments on this extra condition below), and there
-+ * is a queue that contains I/O for that actuator. On success, return
-+ * that queue.
-+ *
-+ * Performing a plain linear scan entails a prioritization among
-+ * actuators. The extra condition above breaks this prioritization and
-+ * tends to distribute injection uniformly across actuators.
-  */
- static struct bfq_queue *
- bfq_find_bfqq_for_underused_actuator(struct bfq_data *bfqd)
-@@ -4842,7 +4848,9 @@ bfq_find_bfqq_for_underused_actuator(struct bfq_data *bfqd)
- 	int i;
- 
- 	for (i = 0 ; i < bfqd->num_actuators; i++) {
--		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold) {
-+		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold &&
-+		    (i == bfqd->num_actuators - 1 ||
-+		     bfqd->rq_in_driver[i] < bfqd->rq_in_driver[i+1])) {
- 			struct bfq_queue *bfqq =
- 				bfq_find_active_bfqq_for_actuator(bfqd, i);
- 
+A command can specify that a certain limit should be applied by setting
+the DLD index field (3 bits, so 0-7) in the command itself.
+
+The DLD index points to one of the 7 DLDs.
+DLD index 0 means no descriptor, so no limit.
+DLD index 1-7 means DLD 1-7.
+
+A DLD can have a few different policies, but the two major ones are:
+-Policy 0xF (abort), command will be completed with command aborted error
+(ATA) or status CHECK CONDITION (SCSI), with sense data indicating that
+the command timed out.
+-Policy 0xD (complete-unavailable), command will be completed without
+error (ATA) or status GOOD (SCSI), with sense data indicating that the
+command timed out. Note that the command will not have transferred any
+data to/from the device when the command timed out, even though the
+command returned success.
+
+Regardless of the CDL policy, in case of a CDL timeout, the I/O will
+result in a -ETIME error to user-space.
+
+The DLDs are defined in the CDL log page(s) and are readable and writable.
+For convenience, the kernel provides a sysfs interface for reading the
+descriptors. If a user really wants to change the descriptors, they can do
+so using a user-space application that sends passthrough commands,
+one such application is cdl-tools:
+https://github.com/westerndigitalcorporation/cdl-tools
+DAMIEN: need to change the settings on the repo so that it public
+
+
+==============================
+How to use CDL from user-space
+==============================
+Since CDL is mutually exclusive with NCQ priority
+(see ncq_prio_enable and sas_ncq_prio_enable in
+Documentation/ABI/testing/sysfs-block-device),
+CDL has to be enabled using:
+echo 1 > /sys/block/$bdev/device/duration_limits/enable
+
+In order for user-space to be able to select a specific DLD for an I/O,
+we have decided to reuse the I/O priority API.
+
+This means that we introduce a new priority class (IOPRIO_CLASS_DL).
+When using this class, the existing I/O priority levels (0-7) directly
+indicates the DLD index to use.
+
+By reusing the I/O priority API, the user can both define DLD to use
+per AIO (io_uring sqe->ioprio or libaio iocb->aio_reqprio) or per-thread
+(ioprio_set()).
+
+
+=======
+Testing
+=======
+With the following fio patch that simply adds the new priority class:
+https://github.com/westerndigitalcorporation/cdl-tools/blob/main/patches/fio-3.29-and-newer/0001-os-linux-Add-IORPIO_CLASS_DL-definition.patch
+
+CDL can be tested using fio, e.g.:
+fio --cmdprio_percentage=10 --cmdprio_class=4 --cmdprio=DLD_index
+
+A simple way to test is to use a DLD with a very short duration limit,
+and send large writes. Regardless of the CDL policy, in case of a CDL
+timeout, the I/O will result in a -ETIME error to user-space.
+
+In case of using a SATA drive, you might want to disable the write-cache:
+sudo hdparm -W 0 /dev/$bdev
+
+
+We have tested this patch series using:
+-real hardware
+-the following QEMU implementation:
+https://github.com/floatious/qemu/tree/cdl
+
+
+===================
+Further information
+===================
+For further information about CDL, see Damien's slides:
+
+Presented at SDC 2021:
+https://www.snia.org/sites/default/files/SDC/2021/pdfs/SNIA-SDC21-LeMoal-Be-On-Time-command-duration-limits-Feature-Support-in%20Linux.pdf
+
+Presented at Lund Linux Con 2022:
+https://drive.google.com/file/d/1I6ChFc0h4JY9qZdO1bY5oCAdYCSZVqWw/view?usp=sharing
+
+
+Kind regards,
+Niklas & Damien
+
+Damien Le Moal (14):
+  ata: libata: simplify qc_fill_rtf port operation interface
+  ata: libata-scsi: improve ata_scsiop_maint_in()
+  scsi: support retrieving sub-pages of mode pages
+  scsi: support service action in scsi_report_opcode()
+  block: introduce duration-limits priority class
+  block: introduce BLK_STS_DURATION_LIMIT
+  ata: libata: detect support for command duration limits
+  ata: libata-scsi: handle CDL bits in ata_scsiop_maint_in()
+  ata: libata-scsi: add support for CDL pages mode sense
+  ata: libata: add ATA feature control sub-page translation
+  ata: libata: set read/write commands CDL index
+  scsi: sd: detect support for command duration limits
+  scsi: sd: set read/write commands CDL index
+  Documentation: sysfs-block-device: document command duration limits
+
+Niklas Cassel (11):
+  ata: scsi: rename flag ATA_QCFLAG_FAILED to ATA_QCFLAG_EH
+  ata: libata: move NCQ related ATA_DFLAGs
+  ata: libata: fix broken NCQ command status handling
+  ata: libata: respect successfully completed commands during errors
+  ata: libata: allow ata_scsi_set_sense() to not set CHECK_CONDITION
+  ata: libata: allow ata_eh_request_sense() to not set CHECK_CONDITION
+  ata: libata-scsi: do not overwrite SCSI ML and status bytes
+  scsi: core: allow libata to complete successful commands via EH
+  scsi: move get_scsi_ml_byte() to scsi_priv.h
+  scsi: sd: handle read/write CDL timeout failures
+  ata: libata: handle completion of CDL commands using policy 0xD
+
+ Documentation/ABI/testing/sysfs-block-device | 143 +++
+ block/bfq-iosched.c                          |  10 +
+ block/blk-core.c                             |   3 +
+ block/blk-ioprio.c                           |   3 +
+ block/ioprio.c                               |   3 +-
+ block/mq-deadline.c                          |   1 +
+ drivers/ata/acard-ahci.c                     |   8 +-
+ drivers/ata/libahci.c                        | 171 +++-
+ drivers/ata/libata-core.c                    | 219 ++++-
+ drivers/ata/libata-eh.c                      | 139 ++-
+ drivers/ata/libata-sata.c                    | 111 ++-
+ drivers/ata/libata-scsi.c                    | 414 +++++++--
+ drivers/ata/libata-sff.c                     |  10 +-
+ drivers/ata/libata-trace.c                   |   2 +-
+ drivers/ata/libata.h                         |   6 +-
+ drivers/ata/sata_fsl.c                       |   5 +-
+ drivers/ata/sata_inic162x.c                  |  14 +-
+ drivers/ata/sata_promise.c                   |   2 +-
+ drivers/ata/sata_sil24.c                     |   7 +-
+ drivers/ata/sata_sx4.c                       |   2 +-
+ drivers/scsi/Makefile                        |   2 +-
+ drivers/scsi/ipr.c                           |  11 +-
+ drivers/scsi/libsas/sas_ata.c                |  11 +-
+ drivers/scsi/scsi.c                          |  28 +-
+ drivers/scsi/scsi_error.c                    |  49 +-
+ drivers/scsi/scsi_lib.c                      |  13 +-
+ drivers/scsi/scsi_priv.h                     |   6 +
+ drivers/scsi/scsi_transport_sas.c            |   2 +-
+ drivers/scsi/sd.c                            |  37 +-
+ drivers/scsi/sd.h                            |  71 ++
+ drivers/scsi/sd_cdl.c                        | 894 +++++++++++++++++++
+ drivers/scsi/sr.c                            |   2 +-
+ include/linux/ata.h                          |  11 +-
+ include/linux/blk_types.h                    |   6 +
+ include/linux/ioprio.h                       |   2 +-
+ include/linux/libata.h                       |  44 +-
+ include/scsi/scsi_cmnd.h                     |   5 +
+ include/scsi/scsi_device.h                   |   8 +-
+ include/uapi/linux/ioprio.h                  |   7 +
+ 39 files changed, 2225 insertions(+), 257 deletions(-)
+ create mode 100644 drivers/scsi/sd_cdl.c
+
 -- 
-2.20.1
+2.38.1
 
