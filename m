@@ -2,111 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CB03646D82
-	for <lists+linux-block@lfdr.de>; Thu,  8 Dec 2022 11:49:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68C54646D8B
+	for <lists+linux-block@lfdr.de>; Thu,  8 Dec 2022 11:49:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbiLHKtB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Dec 2022 05:49:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56704 "EHLO
+        id S230001AbiLHKtm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Dec 2022 05:49:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230255AbiLHKsW (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Dec 2022 05:48:22 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E3BB89AFC
-        for <linux-block@vger.kernel.org>; Thu,  8 Dec 2022 02:43:37 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id x22so2832727ejs.11
-        for <linux-block@vger.kernel.org>; Thu, 08 Dec 2022 02:43:37 -0800 (PST)
+        with ESMTP id S230261AbiLHKss (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Dec 2022 05:48:48 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95706578C9
+        for <linux-block@vger.kernel.org>; Thu,  8 Dec 2022 02:43:59 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id qk9so2900255ejc.3
+        for <linux-block@vger.kernel.org>; Thu, 08 Dec 2022 02:43:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iDOEuiDEB7Li4oZAHPN7SJ+nSHTURoPl6KCogSzGlew=;
-        b=fT5kmKTsZ3pKIjr8WMNiUOQESNCk/KrBSYsFmJixtcEZpJwBsYHonx/AvHJcJK0EPX
-         rXgPZQ4Z/HlEWNCloEgV0WxvFQwlxFmbI3IBK39uPW3qPxK3xuRF8CXwGNuEXv8Xv9cO
-         Und1mkah+0nDzmwToyoVU6nsZgfQagWzsZ9BlOmQxJMKxu8J0ry/IfQTa5S0KXE8j7Pz
-         77iO0T3UqWoIx1leuZUUg0lPY8PPd6qawlTAAqp5clE5a+mRiz2VKwifO98eMKXEsq7O
-         NOr5WzL1rdIjZDwogoJiRCk/8zX8elaQ9rGdOtZwPBdVlcSIEk4NjzyeoTbGTQCSznb+
-         olTg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ayq2uzYmxur5KO3TBD7Tr7qziqy3xJrvwA2myfA8G2M=;
+        b=zeWPkoCZb1FlV7oMvzbYNU2TqdCH2PecBvv9BOPMv1x/pbetJ/0zzxlW9aLYpXI+Uj
+         rLpDGjKActCDbELjrkfq5YHMz/duulYHGsoVZe1eGCogKHRZDN0WicmHTwb52JJsDGv7
+         mx+FomyfQPKw7Wi6EvBj6WfFjGpqVGOeQeWnR7x46B3oCKm+skdTsNqIVPbTfGcbhmur
+         zRxWNz8W5DCd/WtodpRe2sna/Mxulse9tkACWGy4TzT8oSoD8SYSzB7K8DOuaZn5rdq5
+         /3msWgsvHEatA0Np63ffbStzLoLqEw9hj4DJVvbJ86HmdRsK0dhaaRIO/bYSn9Nj7MvP
+         EXVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iDOEuiDEB7Li4oZAHPN7SJ+nSHTURoPl6KCogSzGlew=;
-        b=3fG12f6uZYcEFl3PTuJikGQ345YnpGTO+h//+WKfCYUaY9z0ZZfglN6YEGjO8QD61T
-         2rBK/Dpux3KkFo+mt1Tjn2BbJA8Zx+QRi9iiS6WUBz8kCRHtb9XYs4QWbuPdgNVrfPDH
-         mVdWUMYg+JENtXrBgUNpU7isA/o/VuWWWkqCEQdXH1Aokgqcwjwr/dUnLTXrQDH4xF8V
-         LfeFM8r5laoSoqRkOOPfyxz26C5mK+sCTHhfTJHyyK//wAZlYZCNVu/kiicbsDJb5vw+
-         FNruMURyCcyeay881+cwtj3tVAmOul/uk5/IcRb6Bh8FEiInd9+0UG0LQF/VtqxBkVTc
-         lQqg==
-X-Gm-Message-State: ANoB5pnhmF79X5eVjcwVP/aktihxGC5FnkK5DjcBPPM5rw9spVetbBld
-        kL8779LYeelehkfmMa3FUWTdKA==
-X-Google-Smtp-Source: AA0mqf761CdGepVoMb96PmWL/KVR7qh7NCA3gG1AKFlXOaEEW5glEiv4ZpQonX1fH94HkmjFlwrUmQ==
-X-Received: by 2002:a17:907:a710:b0:7ba:fd1f:524 with SMTP id vw16-20020a170907a71000b007bafd1f0524mr18812158ejc.361.1670496216049;
-        Thu, 08 Dec 2022 02:43:36 -0800 (PST)
-Received: from mbp-di-paolo.station (net-2-35-55-161.cust.vodafonedsl.it. [2.35.55.161])
-        by smtp.gmail.com with ESMTPSA id i3-20020a05640200c300b00461cdda400esm3260511edu.4.2022.12.08.02.43.35
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ayq2uzYmxur5KO3TBD7Tr7qziqy3xJrvwA2myfA8G2M=;
+        b=HiVQldMZPqIvNrNdnR1ObqmudBs16thqJC20Y0GryS5hDUKYMcGbFxAsyIHqJmFTAZ
+         EHgNMO9VXyM9UyEVFFWc/9AkbR2s+20P6p3bg7F3BaeHtL/98TJDhn9boFNgqNz6CeE+
+         JdGd44oUCN6Q27OfgwZTyC2lErOQmhue/LJvdnzWHuQcOKwzoIMWv9kzbGLWkQtpBfQ4
+         7kiYBrvTw4+tw4zVdxPhHuZ9aHEEUMEUjZENyvnJbToQfvfKscz+bLbOHOXq8iMCnpa8
+         1E6U4/AuIGgpiRLR/ih8LlpLpp0Pkk6TZYP9yhyELWq1YjmIvsU5CwbxtC8fSu7WomJR
+         i+QA==
+X-Gm-Message-State: ANoB5pnaWO3c1HDYEHI5g7pKsgeufNeUS6MzaE9PIgrAwqkqjtiT/DHs
+        iWLfFAaRRIH9XqEUqeebS9+pUg==
+X-Google-Smtp-Source: AA0mqf4jzaLcHPMM3pVvfOP2Kujd1gMjC+2C370Fvv+vTgvoCQkzYjH+uTtcZZfjEx0gOgDzyKVPZQ==
+X-Received: by 2002:a17:906:4351:b0:78d:513d:f447 with SMTP id z17-20020a170906435100b0078d513df447mr68192785ejm.708.1670496238174;
+        Thu, 08 Dec 2022 02:43:58 -0800 (PST)
+Received: from MBP-di-Paolo.station (net-2-35-55-161.cust.vodafonedsl.it. [2.35.55.161])
+        by smtp.gmail.com with ESMTPSA id fe17-20020a1709072a5100b0077a8fa8ba55sm9544193ejc.210.2022.12.08.02.43.57
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Dec 2022 02:43:35 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH V6 6/8] block, bfq: retrieve independent access ranges
- from request queue
+        Thu, 08 Dec 2022 02:43:57 -0800 (PST)
 From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <9eba7529-8879-fbba-4e17-f174ef401513@opensource.wdc.com>
-Date:   Thu, 8 Dec 2022 11:43:34 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arie van der Hoeven <arie.vanderhoeven@seagate.com>,
-        Rory Chen <rory.c.chen@seagate.com>,
-        Federico Gavioli <f.gavioli97@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <41604669-2D56-4524-8FA1-527FEAD06B29@linaro.org>
-References: <20221103162623.10286-1-paolo.valente@linaro.org>
- <20221103162623.10286-7-paolo.valente@linaro.org>
- <5d062001-2fff-35e5-d951-a61b510727d9@opensource.wdc.com>
- <4C45BCC6-D9AB-4C70-92E2-1B54AB4A2090@linaro.org>
- <d27ca14b-e228-49b7-28a8-00ea67e8ea06@opensource.wdc.com>
- <76ADE275-1862-44F7-B9C4-4A08179A72E3@linaro.org>
- <6983f8b3-a320-ce32-ef0d-273d11dd8648@opensource.wdc.com>
- <518C279B-8896-470A-9D8C-974F3BB886DB@linaro.org>
- <9eba7529-8879-fbba-4e17-f174ef401513@opensource.wdc.com>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arie.vanderhoeven@seagate.com, rory.c.chen@seagate.com,
+        glen.valante@linaro.org, Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH V9 0/8] block, bfq: extend bfq to support multi-actuator drives
+Date:   Thu,  8 Dec 2022 11:43:43 +0100
+Message-Id: <20221208104351.35038-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi,
+here is the V9, it differs from V8 in that it applies the
+recommendation by Damien in [2].
 
+Here is the whole description of this patch series again.  This
+extension addresses the following issue. Single-LUN multi-actuator
+SCSI drives, as well as all multi-actuator SATA drives appear as a
+single device to the I/O subsystem [1].  Yet they address commands to
+different actuators internally, as a function of Logical Block
+Addressing (LBAs). A given sector is reachable by only one of the
+actuators. For example, Seagate’s Serial Advanced Technology
+Attachment (SATA) version contains two actuators and maps the lower
+half of the SATA LBA space to the lower actuator and the upper half to
+the upper actuator.
 
-> Il giorno 7 dic 2022, alle ore 00:34, Damien Le Moal =
-<damien.lemoal@opensource.wdc.com> ha scritto:
->=20
->=20
+Evidently, to fully utilize actuators, no actuator must be left idle
+or underutilized while there is pending I/O for it. To reach this
+goal, the block layer must somehow control the load of each actuator
+individually. This series enriches BFQ with such a per-actuator
+control, as a first step. Then it also adds a simple mechanism for
+guaranteeing that actuators with pending I/O are never left idle.
 
-[...]
-
->> Just, let me avoid setting the fields bfqd->sector and
->> bfqd->nr_sectors for a case where we don't use them.
->=20
-> Sure. But if you do not use them thanks to "if (num_actuators =3D=3D =
-1)"
-> optimizations, it would still not hurt to set these fields. That =
-actually
-> could be helpful for debugging.
->=20
-
-Got it. I'm about to send a V9 that applies this last suggestion of =
-yours.
+See [1] for a more detailed overview of the problem and of the
+solutions implemented in this patch series. There you will also find
+some preliminary performance results.
 
 Thanks,
 Paolo
 
+[1] https://www.linaro.org/blog/budget-fair-queueing-bfq-linux-io-scheduler-optimizations-for-multi-actuator-sata-hard-drives/
+[2] https://lore.kernel.org/lkml/20221103162623.10286-5-paolo.valente@linaro.org/T/#mdb87dc01b2ac165056ee3c7a1386754dea42a006
+
+Davide Zini (3):
+  block, bfq: split also async bfq_queues on a per-actuator basis
+  block, bfq: inject I/O to underutilized actuators
+  block, bfq: balance I/O injection among underutilized actuators
+
+Federico Gavioli (1):
+  block, bfq: retrieve independent access ranges from request queue
+
+Paolo Valente (4):
+  block, bfq: split sync bfq_queues on a per-actuator basis
+  block, bfq: forbid stable merging of queues associated with different
+    actuators
+  block, bfq: move io_cq-persistent bfqq data into a dedicated struct
+  block, bfq: turn bfqq_data into an array in bfq_io_cq
+
+ block/bfq-cgroup.c  |  94 +++----
+ block/bfq-iosched.c | 580 ++++++++++++++++++++++++++++++--------------
+ block/bfq-iosched.h | 142 ++++++++---
+ block/bfq-wf2q.c    |   2 +-
+ 4 files changed, 565 insertions(+), 253 deletions(-)
+
+--
+2.20.1
