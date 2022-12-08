@@ -2,181 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56F01647213
-	for <lists+linux-block@lfdr.de>; Thu,  8 Dec 2022 15:44:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DED7647142
+	for <lists+linux-block@lfdr.de>; Thu,  8 Dec 2022 15:03:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbiLHOnp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Dec 2022 09:43:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
+        id S229949AbiLHOCz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Dec 2022 09:02:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbiLHOnn (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Dec 2022 09:43:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B791DFEA
-        for <linux-block@vger.kernel.org>; Thu,  8 Dec 2022 06:42:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670510562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dC06rHD9795Mcwyf2BZrlXOuy21bGOSa5sAkC9Cuad8=;
-        b=GZgk68YEluHKHfDlp+ThCw2YVCncIymLg7+Mtaizbygg2rv8BEqa9bSXekPhRYml4BCqfX
-        5zGAcuK212yCF/QqAuMXawoG9GGeN8HJTbS9zixQpauUKsEjGG0srb9VbVpVdfUeVsBTi2
-        kMUD0E/tdEEGfIpg1aRX40a82T+s7Hs=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-299-fUuTU7TkNaqp4ocsryWSkQ-1; Thu, 08 Dec 2022 09:42:38 -0500
-X-MC-Unique: fUuTU7TkNaqp4ocsryWSkQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D132D3832781;
-        Thu,  8 Dec 2022 14:42:37 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 504842166B26;
-        Thu,  8 Dec 2022 14:42:37 +0000 (UTC)
-Date:   Wed, 7 Dec 2022 17:05:06 -0500
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Suwan Kim <suwan.kim027@gmail.com>
-Cc:     mst@redhat.com, jasowang@redhat.com, pbonzini@redhat.com,
-        hch@infradead.org, axboe@kernel.dk,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 2/2] virtio-blk: support completion batching for the IRQ
- path
-Message-ID: <Y5EOEh2HYHqo+Sbh@fedora>
-References: <20221206141125.93055-1-suwan.kim027@gmail.com>
- <20221206141125.93055-2-suwan.kim027@gmail.com>
+        with ESMTP id S229940AbiLHOCs (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Dec 2022 09:02:48 -0500
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2331365F5;
+        Thu,  8 Dec 2022 06:02:41 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4NSbSn5zP0z4f3l1j;
+        Thu,  8 Dec 2022 22:02:33 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+        by APP1 (Coremail) with SMTP id cCh0CgBXAbB77pFjF4YRBw--.33249S2;
+        Thu, 08 Dec 2022 22:02:37 +0800 (CST)
+From:   Kemeng Shi <shikemeng@huaweicloud.com>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linfeilong@huawei.com, liuzhiqiang26@huawei.com
+Subject: [PATCH 0/4] A few cleanup patches for sbitmap
+Date:   Fri,  9 Dec 2022 06:01:43 +0800
+Message-Id: <20221208220147.3315388-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hn7qBZnoP/ukmpt3"
-Content-Disposition: inline
-In-Reply-To: <20221206141125.93055-2-suwan.kim027@gmail.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgBXAbB77pFjF4YRBw--.33249S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY87kC6x804xWl14x267AKxVWUJVW8JwAF
+        c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62
+        vIxIIY0VWUZVW8XwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xII
+        jxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjc
+        xK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IY
+        c4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI
+        0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY
+        0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+        miiDUUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi, this series contain a few cleanup patches to remove unnecessary
+check and repeat code in sbitmap. Thanks.
 
---hn7qBZnoP/ukmpt3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Kemeng Shi (4):
+  sbitmap: remove unnecessary calculation of alloc_hint in
+    __sbitmap_get_shallow
+  sbitmap: remove redundant check in __sbitmap_queue_get_batch
+  sbitmap: rewrite sbitmap_find_bit_in_index to reduce repeat code
+  sbitmap: add sbitmap_find_bit to remove repeat code in
+    __sbitmap_get/__sbitmap_get_shallow
 
-On Tue, Dec 06, 2022 at 11:11:25PM +0900, Suwan Kim wrote:
-> This patch adds completion batching to the IRQ path. It reuses batch
-> completion code of virtblk_poll(). It collects requests to io_comp_batch
-> and processes them all at once. It can boost up the performance by 2%.
->=20
-> To validate the performance improvement and stabilty, I did fio test with
-> 4 vCPU VM and 12 vCPU VM respectively. Both VMs have 8GB ram and the same
-> number of HW queues as vCPU.
-> The fio cammad is as follows and I ran the fio 5 times and got IOPS avera=
-ge.
-> (io_uring, randread, direct=3D1, bs=3D512, iodepth=3D64 numjobs=3D2,4)
->=20
-> Test result shows about 2% improvement.
->=20
->            4 vcpu VM       |   numjobs=3D2   |   numjobs=3D4
->       -----------------------------------------------------------
->         fio without patch  |  367.2K IOPS  |   397.6K IOPS
->       -----------------------------------------------------------
->         fio with patch     |  372.8K IOPS  |   407.7K IOPS
->=20
->            12 vcpu VM      |   numjobs=3D2   |   numjobs=3D4
->       -----------------------------------------------------------
->         fio without patch  |  363.6K IOPS  |   374.8K IOPS
->       -----------------------------------------------------------
->         fio with patch     |  373.8K IOPS  |   385.3K IOPS
->=20
-> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> ---
->  drivers/block/virtio_blk.c | 38 +++++++++++++++++++++++---------------
->  1 file changed, 23 insertions(+), 15 deletions(-)
+ lib/sbitmap.c | 98 +++++++++++++++++++++++----------------------------
+ 1 file changed, 45 insertions(+), 53 deletions(-)
 
-Cool, thanks for doing this!
-
-> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> index cf64d256787e..48fcf745f007 100644
-> --- a/drivers/block/virtio_blk.c
-> +++ b/drivers/block/virtio_blk.c
-> @@ -272,6 +272,18 @@ static inline void virtblk_request_done(struct reque=
-st *req)
->  	blk_mq_end_request(req, virtblk_result(vbr));
->  }
-> =20
-> +static void virtblk_complete_batch(struct io_comp_batch *iob)
-> +{
-> +	struct request *req;
-> +
-> +	rq_list_for_each(&iob->req_list, req) {
-> +		virtblk_unmap_data(req, blk_mq_rq_to_pdu(req));
-> +		virtblk_cleanup_cmd(req);
-> +		blk_mq_set_request_complete(req);
-> +	}
-> +	blk_mq_end_request_batch(iob);
-> +}
-> +
->  static void virtblk_done(struct virtqueue *vq)
->  {
->  	struct virtio_blk *vblk =3D vq->vdev->priv;
-> @@ -280,6 +292,7 @@ static void virtblk_done(struct virtqueue *vq)
->  	struct virtblk_req *vbr;
->  	unsigned long flags;
->  	unsigned int len;
-> +	DEFINE_IO_COMP_BATCH(iob);
-> =20
->  	spin_lock_irqsave(&vblk->vqs[qid].lock, flags);
->  	do {
-> @@ -287,7 +300,9 @@ static void virtblk_done(struct virtqueue *vq)
->  		while ((vbr =3D virtqueue_get_buf(vblk->vqs[qid].vq, &len)) !=3D NULL)=
- {
->  			struct request *req =3D blk_mq_rq_from_pdu(vbr);
-> =20
-> -			if (likely(!blk_should_fake_timeout(req->q)))
-> +			if (likely(!blk_should_fake_timeout(req->q)) &&
-> +				!blk_mq_add_to_batch(req, &iob, vbr->status,
-> +							virtblk_complete_batch))
->  				blk_mq_complete_request(req);
->  			req_done =3D true;
->  		}
-> @@ -295,9 +310,14 @@ static void virtblk_done(struct virtqueue *vq)
->  			break;
->  	} while (!virtqueue_enable_cb(vq));
-> =20
-> -	/* In case queue is stopped waiting for more buffers. */
-> -	if (req_done)
-> +	if (req_done) {
-> +		if (!rq_list_empty(iob.req_list))
-> +			virtblk_complete_batch(&iob);
-
-A little optimization to avoid the indirect call: iob.complete(&iob) :).
-Not sure if it's good style to do that but it works in this case because
-we know it can only be virtblk_complete_batch().
-
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---hn7qBZnoP/ukmpt3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmORDhIACgkQnKSrs4Gr
-c8iy+ggAhIXNBcnfGowRN+/CxGfb7+omNJp6krM78eBlHR0VuOX++5xjK5gKV+Mn
-p64DisOw1+U2GXz0YZee34jkFg6TH53Rj7cDvrDnbX92+DbrsSAmShmJLYr5vjNV
-MDL0UyQjRq88MHA+zy5os5UJwWbuLR9roKNYgGHan5IdQ95mJQe5Uzp3899JtfKW
-U7ZutEPl5sQFZCTE6XsfFOunqrsJ5Tq0RzRxU9rQCAjkqeDe409pwThYtyfkzCzy
-C9BEMaFrnqYLlem4+e1qfpnHNmajy7PT3jAPZispvTcWUxm4fwGDrOl6Cbi31Wwh
-kxtfd2gvYMcD+sbl/whExj2nSrb7qA==
-=8GGk
------END PGP SIGNATURE-----
-
---hn7qBZnoP/ukmpt3--
+-- 
+2.30.0
 
