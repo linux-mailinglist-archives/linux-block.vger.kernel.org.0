@@ -2,207 +2,216 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E04D64826F
-	for <lists+linux-block@lfdr.de>; Fri,  9 Dec 2022 13:38:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72FE5648464
+	for <lists+linux-block@lfdr.de>; Fri,  9 Dec 2022 15:59:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbiLIMiM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Dec 2022 07:38:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52548 "EHLO
+        id S229668AbiLIO7L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Dec 2022 09:59:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiLIMiL (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Dec 2022 07:38:11 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39BE66CB1
-        for <linux-block@vger.kernel.org>; Fri,  9 Dec 2022 04:37:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670589435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kKcc7XQPg0UZn1AHNfQ4N2d5zF9JzBW3g3hPGFAB4Kc=;
-        b=ZG3qqAatQhAgpOboJAhhAnXOsAls6GT3djKhXpAx8qhAmpWP+j5Ewoo4/diUxYxZxAhmAx
-        IsB4N7gRUZDNj5yOs+yBwaGHPcGpIAQwcjkCOeZuP6frx+KIOVT+ppWBotynfu9bGbnIWY
-        PFnFWXmmPhUxIB2B9Yq/ZGaPsueGibY=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-336-7qKiZZuNMDeoj8uAn03GxQ-1; Fri, 09 Dec 2022 07:37:14 -0500
-X-MC-Unique: 7qKiZZuNMDeoj8uAn03GxQ-1
-Received: by mail-wm1-f71.google.com with SMTP id x10-20020a05600c420a00b003cfa33f2e7cso2352942wmh.2
-        for <linux-block@vger.kernel.org>; Fri, 09 Dec 2022 04:37:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kKcc7XQPg0UZn1AHNfQ4N2d5zF9JzBW3g3hPGFAB4Kc=;
-        b=5EoJu2diO82bIV0xnLywtnEvx+F0v9szA2O131S4pU6LKnp6sGmsZMOY9xWlAyJJx3
-         IVzHGgNKwJOmF0JH1GWD0VwvfEZ3YeqLWKSQBCNBmGs2b0inKBBS/r8Rl34Mx+497PRw
-         Ix4plWu7toilxsMYhUsydnLtIFMUzwDNmRpq2SNBof7DpWjjjxp2S0XHyDMzh5IE7RyX
-         r1fzx72lsTRNVtV9NZY9z6R2pBLoAiZN2BBai+9utzJkT05aLqeu1AO7qyzAnGwIrq0A
-         w/5soBKwxKrPlfwRhgy0q7M7amh0iAKjCEeBdYVkCyROul692mD9ISKvfLjXZVD7gPrl
-         +Mlg==
-X-Gm-Message-State: ANoB5pl+x0X/FxQU/2ENfPOOM8AUfxGFmwYHyvSQRwekXB27Bd0DSmdX
-        pxscmzssbVid6DcyMQIziG4u8QJk9OAScobylmdP8aKbQzOPwQbK2aVREl+K7fyy7bpgUD/y485
-        nERhdVYCXD0JFBNDZIoaikO8=
-X-Received: by 2002:a05:600c:4fd0:b0:3d1:c0a1:4804 with SMTP id o16-20020a05600c4fd000b003d1c0a14804mr4752771wmq.17.1670589432858;
-        Fri, 09 Dec 2022 04:37:12 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5DyMiYpWNcqaQueb0cVh7tJ5lH4JY75MZjLcmrbwYgfM+x/au0sr5C4m2hvq8cZrZMVyWo5g==
-X-Received: by 2002:a05:600c:4fd0:b0:3d1:c0a1:4804 with SMTP id o16-20020a05600c4fd000b003d1c0a14804mr4752714wmq.17.1670589432518;
-        Fri, 09 Dec 2022 04:37:12 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-106-22.dyn.eolo.it. [146.241.106.22])
-        by smtp.gmail.com with ESMTPSA id j10-20020a05600c1c0a00b003b49bd61b19sm9284355wms.15.2022.12.09.04.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Dec 2022 04:37:11 -0800 (PST)
-Message-ID: <d220402a232e204676d9100d6fe4c2ae08f753ee.camel@redhat.com>
-Subject: Re: [PATCH v1 2/3] Treewide: Stop corrupting socket's task_frag
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Christoph =?ISO-8859-1?Q?B=F6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Steve French <sfrench@samba.org>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-nvme@lists.infradead.org, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, v9fs-developer@lists.sourceforge.net,
-        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Fri, 09 Dec 2022 13:37:08 +0100
-In-Reply-To: <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com>
-References: <cover.1669036433.git.bcodding@redhat.com>
-         <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        with ESMTP id S229482AbiLIO7K (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Dec 2022 09:59:10 -0500
+Received: from mx4.veeam.com (mx4.veeam.com [104.41.138.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6546267;
+        Fri,  9 Dec 2022 06:59:08 -0800 (PST)
+Received: from mail.veeam.com (prgmbx01.amust.local [172.24.128.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx4.veeam.com (Postfix) with ESMTPS id 4067F7D480;
+        Fri,  9 Dec 2022 17:23:51 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com;
+        s=mx4-2022; t=1670595831;
+        bh=sZrGzF8yzlno69zi5D2w0dzytPjwjnHAf1IUHnFwems=;
+        h=From:To:CC:Subject:Date:From;
+        b=n78uzDeACM6EMCDmzDL0o1/NfUH2BYkC1e+Yd60z9UgD+5/YG4R/vAGCe7kDpZW73
+         4TzCnDAyIlcTgAD9hvlYfZnHpoWYstUIBlUhKvxdamIKig6ViFfBwQ995ioaiKStrk
+         ScLP7THZxvXvz2ZfefPA2QcJoSnPPK5IWQgkj8cbMp1tAvIP00gTXA0Duq8PCsE66D
+         rPqanu2/zRgLq1mD05YNqS/yRcymdPfIsR9fG/obRr4y0hLPFOsKG8em/rpV8Qu0bP
+         HfQUyltR+jby6ULIAgbPPZ7Vfpg4RhqPe4i/ygubPOKZGJdcI0jYcUv9gHFvC9HV7C
+         FacJLzM1QNLJw==
+Received: from ssh-deb10-ssd-vb.amust.local (172.24.10.107) by
+ prgmbx01.amust.local (172.24.128.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.20; Fri, 9 Dec 2022 15:23:48 +0100
+From:   Sergei Shtepa <sergei.shtepa@veeam.com>
+To:     <axboe@kernel.dk>, <corbet@lwn.net>
+CC:     <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sergei Shtepa <sergei.shtepa@veeam.com>
+Subject: [PATCH v2 00/21] blksnap - block devices snapshots module
+Date:   Fri, 9 Dec 2022 15:23:10 +0100
+Message-ID: <20221209142331.26395-1-sergei.shtepa@veeam.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.24.10.107]
+X-ClientProxiedBy: prgmbx02.amust.local (172.24.128.103) To
+ prgmbx01.amust.local (172.24.128.102)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2924031556627C62
+X-Veeam-MMEX: True
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, 2022-11-21 at 08:35 -0500, Benjamin Coddington wrote:
-> Since moving to memalloc_nofs_save/restore, SUNRPC has stopped setting the
-> GFP_NOIO flag on sk_allocation which the networking system uses to decide
-> when it is safe to use current->task_frag.  The results of this are
-> unexpected corruption in task_frag when SUNRPC is involved in memory
-> reclaim.
-> 
-> The corruption can be seen in crashes, but the root cause is often
-> difficult to ascertain as a crashing machine's stack trace will have no
-> evidence of being near NFS or SUNRPC code.  I believe this problem to
-> be much more pervasive than reports to the community may indicate.
-> 
-> Fix this by having kernel users of sockets that may corrupt task_frag due
-> to reclaim set sk_use_task_frag = false.  Preemptively correcting this
-> situation for users that still set sk_allocation allows them to convert to
-> memalloc_nofs_save/restore without the same unexpected corruptions that are
-> sure to follow, unlikely to show up in testing, and difficult to bisect.
-> 
-> CC: Philipp Reisner <philipp.reisner@linbit.com>
-> CC: Lars Ellenberg <lars.ellenberg@linbit.com>
-> CC: "Christoph Böhmwalder" <christoph.boehmwalder@linbit.com>
-> CC: Jens Axboe <axboe@kernel.dk>
-> CC: Josef Bacik <josef@toxicpanda.com>
-> CC: Keith Busch <kbusch@kernel.org>
-> CC: Christoph Hellwig <hch@lst.de>
-> CC: Sagi Grimberg <sagi@grimberg.me>
-> CC: Lee Duncan <lduncan@suse.com>
-> CC: Chris Leech <cleech@redhat.com>
-> CC: Mike Christie <michael.christie@oracle.com>
-> CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> CC: "Martin K. Petersen" <martin.petersen@oracle.com>
-> CC: Valentina Manea <valentina.manea.m@gmail.com>
-> CC: Shuah Khan <shuah@kernel.org>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CC: David Howells <dhowells@redhat.com>
-> CC: Marc Dionne <marc.dionne@auristor.com>
-> CC: Steve French <sfrench@samba.org>
-> CC: Christine Caulfield <ccaulfie@redhat.com>
-> CC: David Teigland <teigland@redhat.com>
-> CC: Mark Fasheh <mark@fasheh.com>
-> CC: Joel Becker <jlbec@evilplan.org>
-> CC: Joseph Qi <joseph.qi@linux.alibaba.com>
-> CC: Eric Van Hensbergen <ericvh@gmail.com>
-> CC: Latchesar Ionkov <lucho@ionkov.net>
-> CC: Dominique Martinet <asmadeus@codewreck.org>
-> CC: "David S. Miller" <davem@davemloft.net>
-> CC: Eric Dumazet <edumazet@google.com>
-> CC: Jakub Kicinski <kuba@kernel.org>
-> CC: Paolo Abeni <pabeni@redhat.com>
-> CC: Ilya Dryomov <idryomov@gmail.com>
-> CC: Xiubo Li <xiubli@redhat.com>
-> CC: Chuck Lever <chuck.lever@oracle.com>
-> CC: Jeff Layton <jlayton@kernel.org>
-> CC: Trond Myklebust <trond.myklebust@hammerspace.com>
-> CC: Anna Schumaker <anna@kernel.org>
-> CC: drbd-dev@lists.linbit.com
-> CC: linux-block@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> CC: nbd@other.debian.org
-> CC: linux-nvme@lists.infradead.org
-> CC: open-iscsi@googlegroups.com
-> CC: linux-scsi@vger.kernel.org
-> CC: linux-usb@vger.kernel.org
-> CC: linux-afs@lists.infradead.org
-> CC: linux-cifs@vger.kernel.org
-> CC: samba-technical@lists.samba.org
-> CC: cluster-devel@redhat.com
-> CC: ocfs2-devel@oss.oracle.com
-> CC: v9fs-developer@lists.sourceforge.net
-> CC: netdev@vger.kernel.org
-> CC: ceph-devel@vger.kernel.org
-> CC: linux-nfs@vger.kernel.org
-> 
-> Suggested-by: Guillaume Nault <gnault@redhat.com>
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Hi Jens. Hi Jonathan. Hi all.
 
-I think this is the most feasible way out of the existing issue, and I
-think this patchset should go via the networking tree, targeting the
-Linux 6.2.
+I am happy to offer a modified version of the Block Devices Snapshots
+Module. It allows to create non-persistent snapshots of any block devices.
+The main purpose of such snapshots is to provide backups of block devices.
+See more in Documentation/block/blksnap.rst.
 
-If someone has disagreement with the above, please speak! 
+The Block Device Filtering Mechanism is added to the block layer. This
+allows to attach and detach block device filters to the block layer.
+Filters allow to extend the functionality of the block layer.
+See more in Documentation/block/blkfilter.rst.
 
-Thanks,
+A tool, a library for working with blksnap and tests can be found at
+www.github.com/veeam/blksnap.
 
-Paolo
+The first version was suggested at 13 June 2022. Many thanks to
+Christoph Hellwig and Randy Dunlap for the review of that version.
+
+Changes:
+- Forgotten "static" declarations have been added.
+- The text of the comments has been corrected.
+- It is possible to connect only one filter, since there are no others in
+  upstream.
+- Do not have additional locks for attach/detach filter.
+- blksnap.h moved to include/uapi/.
+- #pragma once and commented code removed.
+- uuid_t removed from user API.
+- Removed default values for module parameters from the configuration file.
+- The debugging code for tracking memory leaks has been removed.
+- Simplified Makefile.
+- Optimized work with large memory buffers, CBT tables are now in virtual
+  memory.
+- The allocation code of minor numbers has been optimized.
+- The implementation of the snapshot image block device has been
+  simplified, now it is a bio-based block device.
+- Removed initialization of global variables with null values.
+- Only one bio is used to copy one chunk.
+- Checked on ppc64le.
+
+The v1 version was suggested at 2 November 2022. Many thanks to Fabio
+Fantoni for his for his participation in the "blksnap" project on github
+and Jonathan Corbet for his article https://lwn.net/Articles/914031/.
+Thanks to the impartial kernel test robot.
+
+Changes:
+- Added documentation for Block Device Filtering Mechanism.
+- Added documentation for Block Devices Snapshots Module (blksnap).
+- The MAINTAINERS file has been updated.
+- Optimized queue code for snapshot images.
+- Fixed comments, log messages and code for better readability.
+
+Sergei Shtepa (21):
+  documentation, blkfilter: Block Device Filtering Mechanism
+  block, blkfilter: Block Device Filtering Mechanism
+  documentation, capability: fix Generic Block Device Capability
+  documentation, blksnap:  Block Devices Snapshots Module
+  block, blksnap: header file of the module interface
+  block, blksnap: module management interface functions
+  block, blksnap: init() and exit() functions
+  block, blksnap: interaction with sysfs
+  block, blksnap: attaching and detaching the filter and handling I/O
+    units
+  block, blksnap: map of change block tracking
+  block, blksnap: minimum data storage unit of the original block device
+  block, blksnap: buffer in memory for the minimum data storage unit
+  block, blksnap: functions and structures for performing block I/O
+    operations
+  block, blksnap: storage for storing difference blocks
+  block, blksnap: event queue from the difference storage
+  block, blksnap: owner of information about overwritten blocks of the
+    original block device
+  block, blksnap: snapshot image block device
+  block, blksnap: snapshot
+  block, blksnap: Kconfig and Makefile
+  block, blksnap: adds a blksnap to the kernel tree
+  block, blksnap: adds a maintainer for new files
+
+ Documentation/block/blkfilter.rst    |  50 ++
+ Documentation/block/blksnap.rst      | 348 ++++++++++++++
+ Documentation/block/capability.rst   |   3 +
+ Documentation/block/index.rst        |   2 +
+ MAINTAINERS                          |  14 +
+ block/bdev.c                         |  70 +++
+ block/blk-core.c                     |  19 +-
+ drivers/block/Kconfig                |   2 +
+ drivers/block/Makefile               |   2 +
+ drivers/block/blksnap/Kconfig        |  12 +
+ drivers/block/blksnap/Makefile       |  18 +
+ drivers/block/blksnap/cbt_map.c      | 268 +++++++++++
+ drivers/block/blksnap/cbt_map.h      | 114 +++++
+ drivers/block/blksnap/chunk.c        | 345 ++++++++++++++
+ drivers/block/blksnap/chunk.h        | 139 ++++++
+ drivers/block/blksnap/ctrl.c         | 410 ++++++++++++++++
+ drivers/block/blksnap/ctrl.h         |   9 +
+ drivers/block/blksnap/diff_area.c    | 655 +++++++++++++++++++++++++
+ drivers/block/blksnap/diff_area.h    | 177 +++++++
+ drivers/block/blksnap/diff_buffer.c  | 133 ++++++
+ drivers/block/blksnap/diff_buffer.h  |  75 +++
+ drivers/block/blksnap/diff_io.c      | 168 +++++++
+ drivers/block/blksnap/diff_io.h      | 118 +++++
+ drivers/block/blksnap/diff_storage.c | 317 +++++++++++++
+ drivers/block/blksnap/diff_storage.h |  93 ++++
+ drivers/block/blksnap/event_queue.c  |  86 ++++
+ drivers/block/blksnap/event_queue.h  |  63 +++
+ drivers/block/blksnap/main.c         | 164 +++++++
+ drivers/block/blksnap/params.h       |  12 +
+ drivers/block/blksnap/snapimage.c    | 275 +++++++++++
+ drivers/block/blksnap/snapimage.h    |  69 +++
+ drivers/block/blksnap/snapshot.c     | 670 ++++++++++++++++++++++++++
+ drivers/block/blksnap/snapshot.h     |  78 +++
+ drivers/block/blksnap/sysfs.c        |  80 ++++
+ drivers/block/blksnap/sysfs.h        |   7 +
+ drivers/block/blksnap/tracker.c      | 683 +++++++++++++++++++++++++++
+ drivers/block/blksnap/tracker.h      |  74 +++
+ drivers/block/blksnap/version.h      |  10 +
+ include/linux/blk_types.h            |   2 +
+ include/linux/blkdev.h               |  71 +++
+ include/uapi/linux/blksnap.h         | 549 +++++++++++++++++++++
+ 41 files changed, 6452 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/block/blkfilter.rst
+ create mode 100644 Documentation/block/blksnap.rst
+ create mode 100644 drivers/block/blksnap/Kconfig
+ create mode 100644 drivers/block/blksnap/Makefile
+ create mode 100644 drivers/block/blksnap/cbt_map.c
+ create mode 100644 drivers/block/blksnap/cbt_map.h
+ create mode 100644 drivers/block/blksnap/chunk.c
+ create mode 100644 drivers/block/blksnap/chunk.h
+ create mode 100644 drivers/block/blksnap/ctrl.c
+ create mode 100644 drivers/block/blksnap/ctrl.h
+ create mode 100644 drivers/block/blksnap/diff_area.c
+ create mode 100644 drivers/block/blksnap/diff_area.h
+ create mode 100644 drivers/block/blksnap/diff_buffer.c
+ create mode 100644 drivers/block/blksnap/diff_buffer.h
+ create mode 100644 drivers/block/blksnap/diff_io.c
+ create mode 100644 drivers/block/blksnap/diff_io.h
+ create mode 100644 drivers/block/blksnap/diff_storage.c
+ create mode 100644 drivers/block/blksnap/diff_storage.h
+ create mode 100644 drivers/block/blksnap/event_queue.c
+ create mode 100644 drivers/block/blksnap/event_queue.h
+ create mode 100644 drivers/block/blksnap/main.c
+ create mode 100644 drivers/block/blksnap/params.h
+ create mode 100644 drivers/block/blksnap/snapimage.c
+ create mode 100644 drivers/block/blksnap/snapimage.h
+ create mode 100644 drivers/block/blksnap/snapshot.c
+ create mode 100644 drivers/block/blksnap/snapshot.h
+ create mode 100644 drivers/block/blksnap/sysfs.c
+ create mode 100644 drivers/block/blksnap/sysfs.h
+ create mode 100644 drivers/block/blksnap/tracker.c
+ create mode 100644 drivers/block/blksnap/tracker.h
+ create mode 100644 drivers/block/blksnap/version.h
+ create mode 100644 include/uapi/linux/blksnap.h
+
+-- 
+2.20.1
 
