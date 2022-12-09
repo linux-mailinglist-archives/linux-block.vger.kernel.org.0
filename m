@@ -2,93 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97C14648412
-	for <lists+linux-block@lfdr.de>; Fri,  9 Dec 2022 15:49:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E1264842D
+	for <lists+linux-block@lfdr.de>; Fri,  9 Dec 2022 15:53:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbiLIOtD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Dec 2022 09:49:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
+        id S229814AbiLIOxf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Dec 2022 09:53:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiLIOtC (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Dec 2022 09:49:02 -0500
-Received: from mx2.veeam.com (mx2.veeam.com [64.129.123.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 477D54733D
-        for <linux-block@vger.kernel.org>; Fri,  9 Dec 2022 06:49:00 -0800 (PST)
-Received: from mail.veeam.com (prgmbx01.amust.local [172.24.128.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx2.veeam.com (Postfix) with ESMTPS id 3B5494095A;
-        Fri,  9 Dec 2022 09:24:31 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com;
-        s=mx2-2022; t=1670595871;
-        bh=w6TzfCo0+zlgk8mkWBLvozZ61mHMj8fuDSVT5ClGaRY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=CSSe0ezo7TJn+Kt8H6vqSaTjYy0rM3ukfblLos9QrnSlWsPqZ1o1iCDgW8MHD4g7U
-         w/rG8C/BY75N8eIAdRswbRgEN9fRsyi8pnuFSwjG7gi93u7Aw16WG1ABPz2gbzNuYV
-         Rk+VlCJ9YJwbE/IWBWdp0lvtYlvjZ3Y+JCx735Ay36GUxMzAPDYRimsBYRiirNJ+rS
-         SOXPgao+HTEm9f67ZnhF9D5weBKGSujRvO5vkAApFYlmYk5xq6pCskUksMyflhThrS
-         HxzpWWSeacJrWImaAiQ2CCok7XBcILvZnPTJcNTta7ww8S9Bx5uAc04KnPsghbgFnx
-         ygQbaY2GWnM0Q==
-Received: from ssh-deb10-ssd-vb.amust.local (172.24.10.107) by
- prgmbx01.amust.local (172.24.128.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.20; Fri, 9 Dec 2022 15:24:25 +0100
-From:   Sergei Shtepa <sergei.shtepa@veeam.com>
-To:     <axboe@kernel.dk>, <corbet@lwn.net>
-CC:     <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Sergei Shtepa <sergei.shtepa@veeam.com>
-Subject: [PATCH v2 20/21] block, blksnap: adds a blksnap to the kernel tree
-Date:   Fri, 9 Dec 2022 15:23:30 +0100
-Message-ID: <20221209142331.26395-21-sergei.shtepa@veeam.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221209142331.26395-1-sergei.shtepa@veeam.com>
-References: <20221209142331.26395-1-sergei.shtepa@veeam.com>
+        with ESMTP id S229680AbiLIOxe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Dec 2022 09:53:34 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF8E5C0FB
+        for <linux-block@vger.kernel.org>; Fri,  9 Dec 2022 06:53:33 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id l11so3404571edb.4
+        for <linux-block@vger.kernel.org>; Fri, 09 Dec 2022 06:53:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linbit-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CtCs8GxpjiNUlKe9jLRTDXiumifJAjD1jl0L4CeLiMA=;
+        b=MHoLj/reYCEaCu2BZl791sUFMu9EsJFTpuGoSGhqpzPg1G2i0+rLOnXbsB74P9BAN9
+         nIpY0Gnji9Fvtm+3k4SGTzoM0pjpKrp58glH6ITl3OGiRQ4wKlxsE9B9MO3Ta6kSCCT2
+         FRjDRDKxtEPLDb/k49mnKJLE4k/GiOCWaPQdx5p1AmTeufBD40E2oASTNMZES01XTvDU
+         ob7QGOqAnUyVU485JtXEMbvjpSShmh7tyXcQ/pABd4lut+BrUnbtpdiECjQQjcELOV9s
+         ZKCVJhpPA+iSjzC1lop/aOkPvTKR9c3ijh4XvJeNOj9EW0nnSFcsgUUAmmnPFcmuOJa5
+         hZUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CtCs8GxpjiNUlKe9jLRTDXiumifJAjD1jl0L4CeLiMA=;
+        b=YoGONoEIpkF+vJmBFKHefXtAgS3MK7jc9VGx7WhHDA9LCkmbe76UtYCDBXl4asSb+p
+         5J3ync1HynEOIXn44ZVX304BYXGpGF3P99VjQyFiwRZaugk0VseJONgaM7PGS+/ab49x
+         9bB9J/JUQ08bIVIQH+bUrvRi0Ov3FvWXEN488lT/A8QEYUXOteLSvwpH3ZdvxGrEbeky
+         v+93l0ZP0SB+qOKhWlCJRrOd+AxPNnzB5wcCjZlmo5S5B6kofqibn0HGl5T+5OvQ79DC
+         0R3BFFb1m9MqSN3aAd8qIib3OHsvqhHZDjmiVWiFXLdRQR3J/hTHJI1GVT1cgZ2SyTzE
+         ElDg==
+X-Gm-Message-State: ANoB5pmamF0VKPScZJiQpNSr2XJcciFC4sHIT+/LVtZKCRQSdbsBkYEA
+        BH98W2wBPAEw64hOOJHorxV1XQ==
+X-Google-Smtp-Source: AA0mqf48psVfOczEhg6GzyTLj3NBiKg2BMDsqH01qlhK1pulUi4SHigJ39yDwhJazBez6TTHcD8srg==
+X-Received: by 2002:aa7:cac2:0:b0:461:608f:f3e0 with SMTP id l2-20020aa7cac2000000b00461608ff3e0mr5102001edt.28.1670597612099;
+        Fri, 09 Dec 2022 06:53:32 -0800 (PST)
+Received: from localhost.localdomain (h082218028181.host.wavenet.at. [82.218.28.181])
+        by smtp.gmail.com with ESMTPSA id bd21-20020a056402207500b0046bb7503d9asm728424edb.24.2022.12.09.06.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Dec 2022 06:53:31 -0800 (PST)
+From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     drbd-dev@lists.linbit.com, linux-kernel@vger.kernel.org,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        linux-block@vger.kernel.org,
+        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>
+Subject: [PATCH 0/8] Miscellaneous DRBD reorganization
+Date:   Fri,  9 Dec 2022 15:53:19 +0100
+Message-Id: <20221209145327.2272271-1-christoph.boehmwalder@linbit.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.24.10.107]
-X-ClientProxiedBy: prgmbx02.amust.local (172.24.128.103) To
- prgmbx01.amust.local (172.24.128.102)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2924031556627C62
-X-Veeam-MMEX: True
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Signed-off-by: Sergei Shtepa <sergei.shtepa@veeam.com>
----
- drivers/block/Kconfig  | 2 ++
- drivers/block/Makefile | 2 ++
- 2 files changed, 4 insertions(+)
+Some more mostly trivial "alignment patches" to (slowly but surely)
+move further in the direction of re-upstreaming DRBD.
 
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index a41145d52de9..81304bfdc30c 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -416,4 +416,6 @@ config BLK_DEV_UBLK
- 
- source "drivers/block/rnbd/Kconfig"
- 
-+source "drivers/block/blksnap/Kconfig"
-+
- endif # BLK_DEV
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index 101612cba303..8414c47960c2 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -40,3 +40,5 @@ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
- obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
- 
- swim_mod-y	:= swim.o swim_asm.o
-+
-+obj-$(CONFIG_BLK_SNAP) += blksnap/
+These should be fairly uncontroversial.
+
+Andreas Gruenbacher (1):
+  drbd: drbd_insert_interval(): Clarify comment
+
+Christoph Böhmwalder (5):
+  drbd: adjust drbd_limits license header
+  drbd: make limits unsigned
+  drbd: remove unnecessary assignment in vli_encode_bits
+  drbd: remove macros using require_context
+  MAINTAINERS: add drbd headers
+
+Lars Ellenberg (1):
+  drbd: interval tree: make removing an "empty" interval a no-op
+
+Robert Altnoeder (1):
+  drbd: fix DRBD_VOLUME_MAX 65535 -> 65534
+
+ MAINTAINERS                        |   1 +
+ drivers/block/drbd/drbd_int.h      |  12 +-
+ drivers/block/drbd/drbd_interval.c |   6 +-
+ drivers/block/drbd/drbd_vli.h      |   2 +-
+ include/linux/drbd_limits.h        | 204 ++++++++++++++---------------
+ 5 files changed, 110 insertions(+), 115 deletions(-)
+
+
+base-commit: f596da3efaf4130ff61cd029558845808df9bf99
 -- 
-2.20.1
+2.38.1
 
