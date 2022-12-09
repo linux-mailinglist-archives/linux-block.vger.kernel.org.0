@@ -2,45 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C80EC6484C9
-	for <lists+linux-block@lfdr.de>; Fri,  9 Dec 2022 16:14:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 334926484C4
+	for <lists+linux-block@lfdr.de>; Fri,  9 Dec 2022 16:14:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbiLIPOI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Dec 2022 10:14:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
+        id S230167AbiLIPOG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Dec 2022 10:14:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbiLIPOF (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Dec 2022 10:14:05 -0500
+        with ESMTP id S229851AbiLIPOE (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Dec 2022 10:14:04 -0500
 Received: from mx2.veeam.com (mx2.veeam.com [64.129.123.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC48B23;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB983BB;
         Fri,  9 Dec 2022 07:14:00 -0800 (PST)
 Received: from mail.veeam.com (prgmbx01.amust.local [172.24.128.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx2.veeam.com (Postfix) with ESMTPS id 94E2E40C50;
-        Fri,  9 Dec 2022 09:24:28 -0500 (EST)
+        by mx2.veeam.com (Postfix) with ESMTPS id D19DB4097A;
+        Fri,  9 Dec 2022 09:24:33 -0500 (EST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com;
-        s=mx2-2022; t=1670595868;
-        bh=AkujCOqlCBh/Wqo+C89qWbHonovtZeEVLzoTUTs+GFg=;
+        s=mx2-2022; t=1670595874;
+        bh=pjXke3bOr3zQd2fyFl/pl0TKfXeXQJBCPsIZ5BYPIW4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=V5H844dlyLdvpaePF5wQp/OAbvZ+/Mm5Shj6thMOrlWZU/J8fV1Dqmn+tiFVeANEr
-         Pqv3gorB1VrVmDmkyx9nLI9o8iWAHA6KwUJeA9YsrwGJK1WXDpVTf2muU38h6qfB9p
-         KDWkZPE4q2MDxn+PPtxxPAYEV+4GK3q6cfXqCH7z0zHsz9LFX3rK77/SX4gNnhixoe
-         /Q7Jfn8KP4u6XrUSzCjZe4r0+dcIq+QOk52mfnTODm2VOyS5JgIKhHMOdjzq9qfRP7
-         ShPqsBO7tyP2Q/0mbfaraKK8w5Y//7ka4ZSJcfcTWcv6hgMDgfm9oRLCCJi5Vlu1QX
-         HcJ05nhEYPwRQ==
+        b=SFfHjit58Of28x3Y/+h5TAET/mmhMIvqsPvpWDeUcHvgQhFUSbN0DdpMaG7u98a/E
+         8/8Yh5Vefw38IQolOLoZHgVNtbhfUbgPJWyTTVhhO2LhilYTmSs4fsE0Nl8i/mdb7x
+         dpR8JGW3A7CmZYBv4UQD0IV0jNZE7isWBPHj5LgLaBS8CxEJbShEyXE7A/lpuY3vSQ
+         AkFEjMNmfzL4iaF9DHDR9eVD5iUNtU9D/231qXqMnr9YzCcYZRB0+6KAQ+PKD8G6NR
+         kcPUk7SK3pIJ6h8jQKgx6Z7v+CbxQzcjcMchCEsT7P1swZ8hZakrRWx0j1013DYMXK
+         FzQ8kimysxVMQ==
 Received: from ssh-deb10-ssd-vb.amust.local (172.24.10.107) by
  prgmbx01.amust.local (172.24.128.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.20; Fri, 9 Dec 2022 15:24:23 +0100
+ 15.2.1118.20; Fri, 9 Dec 2022 15:24:27 +0100
 From:   Sergei Shtepa <sergei.shtepa@veeam.com>
 To:     <axboe@kernel.dk>, <corbet@lwn.net>
 CC:     <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Sergei Shtepa <sergei.shtepa@veeam.com>
-Subject: [PATCH v2 19/21] block, blksnap: Kconfig and Makefile
-Date:   Fri, 9 Dec 2022 15:23:29 +0100
-Message-ID: <20221209142331.26395-20-sergei.shtepa@veeam.com>
+Subject: [PATCH v2 21/21] block, blksnap: adds a maintainer for new files
+Date:   Fri, 9 Dec 2022 15:23:31 +0100
+Message-ID: <20221209142331.26395-22-sergei.shtepa@veeam.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20221209142331.26395-1-sergei.shtepa@veeam.com>
 References: <20221209142331.26395-1-sergei.shtepa@veeam.com>
@@ -62,58 +62,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allows to build a module.
-
 Signed-off-by: Sergei Shtepa <sergei.shtepa@veeam.com>
 ---
- drivers/block/blksnap/Kconfig  | 12 ++++++++++++
- drivers/block/blksnap/Makefile | 18 ++++++++++++++++++
- 2 files changed, 30 insertions(+)
- create mode 100644 drivers/block/blksnap/Kconfig
- create mode 100644 drivers/block/blksnap/Makefile
+ MAINTAINERS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/block/blksnap/Kconfig b/drivers/block/blksnap/Kconfig
-new file mode 100644
-index 000000000000..2f726fd3295a
---- /dev/null
-+++ b/drivers/block/blksnap/Kconfig
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Block device snapshot module configuration
-+#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1daadaa4d48b..d54c6e59a965 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3655,6 +3655,20 @@ M:	Jan-Simon Moeller <jansimon.moeller@gmx.de>
+ S:	Maintained
+ F:	drivers/leds/leds-blinkm.c
+ 
++BLOCK DEVICE FILTERING MECHANISM
++M:	sergei.shtepa@veeam.com
++L:	linux-block@vger.kernel.org
++S:	Supported
++F:	Documentation/block/blkfilter.rst
 +
-+config BLK_SNAP
-+	tristate "Block Devices Snapshots Module (blksnap)"
-+	help
-+	  Allow to create snapshots and track block changes for block devices.
-+	  Designed for creating backups for simple block devices. Snapshots are
-+	  temporary and are released then backup is completed. Change block
-+	  tracking allows to create incremental or differential backups.
-diff --git a/drivers/block/blksnap/Makefile b/drivers/block/blksnap/Makefile
-new file mode 100644
-index 000000000000..b196b17f9d9d
---- /dev/null
-+++ b/drivers/block/blksnap/Makefile
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
++BLOCK DEVICE SNAPSHOTS MODULE
++M:	sergei.shtepa@veeam.com
++L:	linux-block@vger.kernel.org
++S:	Supported
++F:	Documentation/block/blksnap.rst
++F:	drivers/block/blksnap/*
++F:	include/uapi/linux/blksnap.h
 +
-+blksnap-y := 		\
-+	cbt_map.o	\
-+	chunk.o		\
-+	ctrl.o		\
-+	diff_io.o	\
-+	diff_area.o	\
-+	diff_buffer.o	\
-+	diff_storage.o	\
-+	event_queue.o	\
-+	main.o		\
-+	snapimage.o	\
-+	snapshot.o	\
-+	sysfs.o		\
-+	tracker.o
-+
-+obj-$(CONFIG_BLK_SNAP)	 += blksnap.o
+ BLOCK LAYER
+ M:	Jens Axboe <axboe@kernel.dk>
+ L:	linux-block@vger.kernel.org
 -- 
 2.20.1
 
