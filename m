@@ -2,203 +2,173 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E91964C26A
-	for <lists+linux-block@lfdr.de>; Wed, 14 Dec 2022 03:53:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E09D664C259
+	for <lists+linux-block@lfdr.de>; Wed, 14 Dec 2022 03:43:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237224AbiLNCxH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Dec 2022 21:53:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46284 "EHLO
+        id S236626AbiLNCnx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Dec 2022 21:43:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237116AbiLNCws (ORCPT
+        with ESMTP id S237133AbiLNCnv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Dec 2022 21:52:48 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A392714C
-        for <linux-block@vger.kernel.org>; Tue, 13 Dec 2022 18:51:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670986297;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QJTsGV35CYOraEoRISqpKpr/2uwkfrZs9x/0odiJU0M=;
-        b=Qhf6XmZ6+DOvOD+cHMC2wmKE7w0yk3FUSdRsIs9t0UQaR8kB5qngi0cUgL2fi3Zg+XS7ME
-        VEefOyxhvfPXZgVWB12b9pQIdoR70JKetB6z5VonOAvtDm2z1KPURM2KS7sAfPdSXymsmP
-        P9ZwIm96/sdBPW9pLgS0PnBE4JhYr0g=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-279-J8NTIGfpNlG_jTgAlDFv2Q-1; Tue, 13 Dec 2022 21:51:31 -0500
-X-MC-Unique: J8NTIGfpNlG_jTgAlDFv2Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C42023832786;
-        Wed, 14 Dec 2022 02:51:30 +0000 (UTC)
-Received: from localhost (ovpn-8-24.pek2.redhat.com [10.72.8.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ECD2540ED784;
-        Wed, 14 Dec 2022 02:51:29 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>
+        Tue, 13 Dec 2022 21:43:51 -0500
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70220559E;
+        Tue, 13 Dec 2022 18:43:48 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4NX06k3Cthz4f3tpj;
+        Wed, 14 Dec 2022 10:43:42 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP1 (Coremail) with SMTP id cCh0CgAnGqlfOJljIQ9HCA--.54156S4;
+        Wed, 14 Dec 2022 10:43:45 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     paolo.valente@linaro.org, axboe@kernel.dk, jack@suse.cz
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhong Jinghua <zhongjinghua@huawei.com>,
-        Yu Kuai <yukuai3@huawei.com>, Dennis Zhou <dennis@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 3/3] lib/percpu-refcount: drain ->release() in perpcu_ref_exit()
-Date:   Wed, 14 Dec 2022 10:51:01 +0800
-Message-Id: <20221214025101.1268437-4-ming.lei@redhat.com>
-In-Reply-To: <20221214025101.1268437-1-ming.lei@redhat.com>
-References: <20221214025101.1268437-1-ming.lei@redhat.com>
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com
+Subject: [PATCH v2] block, bfq: fix possible uaf for 'bfqq->bic'
+Date:   Wed, 14 Dec 2022 11:04:30 +0800
+Message-Id: <20221214030430.3304151-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: cCh0CgAnGqlfOJljIQ9HCA--.54156S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxWF4rtw4fuF1kGryDGw4fGrg_yoW5trWkpr
+        sxtayfZr48JryYgw47Zr10gF18Xws3Wry7Jr1Sqwn3Xry5Zr1qqFyqyF18ZFW0grZ5u39r
+        Wr1DGrZ7Xr1IvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+        AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+        xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pattern of wait_event(percpu_ref_is_zero()) has been used in several
-kernel components, and this way actually has the following risk:
+From: Yu Kuai <yukuai3@huawei.com>
 
-- percpu_ref_is_zero() can be returned just between
-  atomic_long_sub_and_test() and ref->data->release(ref)
+Our test report a uaf for 'bfqq->bic' in 5.10:
 
-- given the refcount is found as zero, percpu_ref_exit() could
-  be called, and the host data structure is freed
+==================================================================
+BUG: KASAN: use-after-free in bfq_select_queue+0x378/0xa30
 
-- then use-after-free is triggered in ->release() when the user host
-  data structure is freed after percpu_ref_exit() returns
+CPU: 6 PID: 2318352 Comm: fsstress Kdump: loaded Not tainted 5.10.0-60.18.0.50.h602.kasan.eulerosv2r11.x86_64 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-20220320_160524-szxrtosci10000 04/01/2014
+Call Trace:
+ bfq_select_queue+0x378/0xa30
+ bfq_dispatch_request+0xe8/0x130
+ blk_mq_do_dispatch_sched+0x62/0xb0
+ __blk_mq_sched_dispatch_requests+0x215/0x2a0
+ blk_mq_sched_dispatch_requests+0x8f/0xd0
+ __blk_mq_run_hw_queue+0x98/0x180
+ __blk_mq_delay_run_hw_queue+0x22b/0x240
+ blk_mq_run_hw_queue+0xe3/0x190
+ blk_mq_sched_insert_requests+0x107/0x200
+ blk_mq_flush_plug_list+0x26e/0x3c0
+ blk_finish_plug+0x63/0x90
+ __iomap_dio_rw+0x7b5/0x910
+ iomap_dio_rw+0x36/0x80
+ ext4_dio_read_iter+0x146/0x190 [ext4]
+ ext4_file_read_iter+0x1e2/0x230 [ext4]
+ new_sync_read+0x29f/0x400
+ vfs_read+0x24e/0x2d0
+ ksys_read+0xd5/0x1b0
+ do_syscall_64+0x33/0x40
+ entry_SYSCALL_64_after_hwframe+0x61/0xc6
 
-Reported-by: Zhong Jinghua <zhongjinghua@huawei.com>
-Fixes: 2b0d3d3e4fcf ("percpu_ref: reduce memory footprint of percpu_ref in fast path")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Commit 3bc5e683c67d ("bfq: Split shared queues on move between cgroups")
+changes that move process to a new cgroup will allocate a new bfqq to
+use, however, the old bfqq and new bfqq can point to the same bic:
+
+1) Initial state, two process with io in the same cgroup.
+
+Process 1       Process 2
+ (BIC1)          (BIC2)
+  |  Λ            |  Λ
+  |  |            |  |
+  V  |            V  |
+  bfqq1           bfqq2
+
+2) bfqq1 is merged to bfqq2.
+
+Process 1       Process 2
+ (BIC1)          (BIC2)
+  |               |
+   \-------------\|
+                  V
+  bfqq1           bfqq2(coop)
+
+3) Process 1 exit, then issue new io(denoce IOA) from Process 2.
+
+ (BIC2)
+  |  Λ
+  |  |
+  V  |
+  bfqq2(coop)
+
+4) Before IOA is completed, move Process 2 to another cgroup and issue io.
+
+Process 2
+ (BIC2)
+   Λ
+   |\--------------\
+   |                V
+  bfqq2           bfqq3
+
+Now that BIC2 points to bfqq3, while bfqq2 and bfqq3 both point to BIC2.
+If all the requests are completed, and Process 2 exit, BIC2 will be
+freed while there is no guarantee that bfqq2 will be freed before BIC2.
+
+Fix the problem by clearing bfqq->bic while bfqq is detached from bic.
+
+Fixes: 3bc5e683c67d ("bfq: Split shared queues on move between cgroups")
+Suggested-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- include/linux/percpu-refcount.h | 41 ++++++++++++++++++++++-----------
- lib/percpu-refcount.c           | 22 ++++++++++++++++++
- 2 files changed, 50 insertions(+), 13 deletions(-)
+Changes in v2:
+ - Use a new solution as suggested by Jan.
 
-diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
-index 006c6aae261e..6ef29ebffd58 100644
---- a/include/linux/percpu-refcount.h
-+++ b/include/linux/percpu-refcount.h
-@@ -55,6 +55,7 @@
- #include <linux/rcupdate.h>
- #include <linux/types.h>
- #include <linux/gfp.h>
-+#include <linux/sched.h>
+ block/bfq-iosched.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index a72304c728fc..b111a7b8dca6 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -386,6 +386,12 @@ static void bfq_put_stable_ref(struct bfq_queue *bfqq);
  
- struct percpu_ref;
- typedef void (percpu_ref_func_t)(struct percpu_ref *);
-@@ -104,6 +105,7 @@ struct percpu_ref_data {
- 	bool			force_atomic:1;
- 	bool			allow_reinit:1;
- 	bool			auto_exit:1;
-+	bool			being_release:1;
- 	struct rcu_head		rcu;
- 	struct percpu_ref	*ref;
- };
-@@ -137,6 +139,7 @@ void percpu_ref_kill_and_confirm(struct percpu_ref *ref,
- void percpu_ref_resurrect(struct percpu_ref *ref);
- void percpu_ref_reinit(struct percpu_ref *ref);
- bool percpu_ref_is_zero(struct percpu_ref *ref);
-+wait_queue_head_t *percpu_ref_get_switch_waitq(void);
- 
- /**
-  * percpu_ref_kill - drop the initial ref
-@@ -319,6 +322,29 @@ static inline bool percpu_ref_tryget_live(struct percpu_ref *ref)
- 	return ret;
- }
- 
-+/* Internal helper, please do not call it outside */
-+static inline void __percpu_ref_put_many(struct percpu_ref *ref,
-+		unsigned long nr)
-+{
-+	struct percpu_ref_data *data = ref->data;
-+	struct percpu_ref copy = *ref;
-+	bool release = false;
+ void bic_set_bfqq(struct bfq_io_cq *bic, struct bfq_queue *bfqq, bool is_sync)
+ {
++	struct bfq_queue *old_bfqq = bic->bfqq[is_sync];
 +
-+	data->being_release = 1;
-+	if (unlikely(atomic_long_sub_and_test(nr, &data->count))) {
-+		data->release(ref);
-+		release = true;
-+	}
-+	data->being_release = 0;
++	/* Clear bic pointer if bfqq is detached from this bic */
++	if (old_bfqq && old_bfqq->bic == bic)
++		old_bfqq->bic = NULL;
 +
-+	if (release) {
-+		if (data->auto_exit)
-+			percpu_ref_exit(&copy);
-+		/* re-use switch waitq for ack the release done */
-+		wake_up_all(percpu_ref_get_switch_waitq());
-+	}
-+}
-+
- /**
-  * percpu_ref_put_many - decrement a percpu refcount
-  * @ref: percpu_ref to put
-@@ -337,19 +363,8 @@ static inline void percpu_ref_put_many(struct percpu_ref *ref, unsigned long nr)
+ 	/*
+ 	 * If bfqq != NULL, then a non-stable queue merge between
+ 	 * bic->bfqq and bfqq is happening here. This causes troubles
+@@ -5311,7 +5317,6 @@ static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
+ 		unsigned long flags;
  
- 	if (__ref_is_percpu(ref, &percpu_count))
- 		this_cpu_sub(*percpu_count, nr);
--	else {
--		struct percpu_ref_data *data = ref->data;
--		struct percpu_ref copy = *ref;
--		bool release = false;
--
--		if (unlikely(atomic_long_sub_and_test(nr, &data->count))) {
--			data->release(ref);
--			release = true;
--		}
--
--		if (release && data->auto_exit)
--			percpu_ref_exit(&copy);
--	}
-+	else
-+		__percpu_ref_put_many(ref, nr);
- 
- 	rcu_read_unlock();
- }
-diff --git a/lib/percpu-refcount.c b/lib/percpu-refcount.c
-index c0cadf92948f..fd50eda233ed 100644
---- a/lib/percpu-refcount.c
-+++ b/lib/percpu-refcount.c
-@@ -140,6 +140,22 @@ void percpu_ref_exit(struct percpu_ref *ref)
- 	if (!data)
- 		return;
- 
-+	/*
-+	 * We may reach here because wait_event(percpu_ref_is_zero())
-+	 * returns, and ->release() may not be completed or even started
-+	 * ye, then use-after-free is caused, so drain ->release() here
-+	 */
-+	if (!data->auto_exit) {
-+		/*
-+		 * Order reading the atomic count in percpu_ref_is_zero
-+		 * and reading data->being_release. The counter pair is
-+		 * the one implied in atomic_long_sub_and_test() called
-+		 * from __percpu_ref_put_many().
-+		 */
-+		smp_rmb();
-+		wait_event(percpu_ref_switch_waitq, !data->being_release);
-+	}
-+
- 	spin_lock_irqsave(&percpu_ref_switch_lock, flags);
- 	ref->percpu_count_ptr |= atomic_long_read(&ref->data->count) <<
- 		__PERCPU_REF_FLAG_BITS;
-@@ -480,3 +496,9 @@ void percpu_ref_resurrect(struct percpu_ref *ref)
- 	spin_unlock_irqrestore(&percpu_ref_switch_lock, flags);
- }
- EXPORT_SYMBOL_GPL(percpu_ref_resurrect);
-+
-+wait_queue_head_t *percpu_ref_get_switch_waitq()
-+{
-+	return &percpu_ref_switch_waitq;
-+}
-+EXPORT_SYMBOL_GPL(percpu_ref_get_switch_waitq);
+ 		spin_lock_irqsave(&bfqd->lock, flags);
+-		bfqq->bic = NULL;
+ 		bfq_exit_bfqq(bfqd, bfqq);
+ 		bic_set_bfqq(bic, NULL, is_sync);
+ 		spin_unlock_irqrestore(&bfqd->lock, flags);
 -- 
-2.38.1
+2.31.1
 
