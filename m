@@ -2,57 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 380C464DB3F
-	for <lists+linux-block@lfdr.de>; Thu, 15 Dec 2022 13:37:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34B0564DD3B
+	for <lists+linux-block@lfdr.de>; Thu, 15 Dec 2022 16:04:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbiLOMhX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 15 Dec 2022 07:37:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52510 "EHLO
+        id S229549AbiLOPEW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 15 Dec 2022 10:04:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbiLOMhW (ORCPT
+        with ESMTP id S229543AbiLOPEV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 15 Dec 2022 07:37:22 -0500
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0073192B4;
-        Thu, 15 Dec 2022 04:37:21 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4NXsF80xx5z4f3vfN;
-        Thu, 15 Dec 2022 20:37:16 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-        by APP4 (Coremail) with SMTP id gCh0CgDHONb9FJtjOv0bCQ--.50238S9;
-        Thu, 15 Dec 2022 20:37:19 +0800 (CST)
-From:   Kemeng Shi <shikemeng@huaweicloud.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linfeilong@huawei.com, liuzhiqiang26@huawei.com
-Subject: [PATCH v2 5/5] sbitmap: correct wake_batch recalculation to avoid potential IO hung
-Date:   Fri, 16 Dec 2022 04:36:21 +0800
-Message-Id: <20221215203621.3572458-6-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20221215203621.3572458-1-shikemeng@huaweicloud.com>
-References: <20221215203621.3572458-1-shikemeng@huaweicloud.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgDHONb9FJtjOv0bCQ--.50238S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF4fAF4rAw4xWr47KFy8Krg_yoW8trWrp3
-        y8tFnrGr4vyrWSkrZrJr48AF1avayktwnxGF4Sv3yFyw15GFsa9r4FgFZxXw1IvF4rGF45
-        A343GrZ8GayUZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-        8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-        FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
-        A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-        3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-        67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-        vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-        42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-        kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIVyIUUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        Thu, 15 Dec 2022 10:04:21 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0259D2ED43
+        for <linux-block@vger.kernel.org>; Thu, 15 Dec 2022 07:04:20 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id x22so52862757ejs.11
+        for <linux-block@vger.kernel.org>; Thu, 15 Dec 2022 07:04:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RBdbSsBCIDSXtIT4Ck/YwIc9LJVDW1+QXULCh55/Xjs=;
+        b=CmSNoPdukj2TPTk41/jidByPlJsyDesn2COgdAbNIsb59Dy5zt7uUbNdkRJ29Q0aZ1
+         /3veEx/m9x3HsaequAxQYbsrr0mCLn+klQrPIgGHHhqfb8o8+8aHy5Y4rUc7GuH4iQOY
+         tjscC0DYqu14Vs7BRI90jKad0MZ11Dlzj2tNIGO/P3WHb1GL0k3XXjQTGKX487H0dXDB
+         iny5ljGdtPV/2opY+g641d9EMsxQzRgRjlMuTbqFkUe5yWFbOwR0ZGDFLaSva27XrS2b
+         Ifv/RTYox3RBAbN+Zm8r9k1e/HmGZ+JlSgJOe9Q403d0KHHWvYC31m/pu/6IChavZC+d
+         9osA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RBdbSsBCIDSXtIT4Ck/YwIc9LJVDW1+QXULCh55/Xjs=;
+        b=f2rY785WtMglpBg+VDgrS5i81UkZGVnhdQZCh5fbJamrTw1fbtWr1tiHr/yjniIPmg
+         FWdfKEPHbarnTRJIKaKfjzkh64ruWcxbxF9BS1MnGCFOj9vqONS/OpJlZSRWYb3DrGFx
+         6gG/YwcEsaC12sPqZx1ZJunoMPi6US/0/ZaqQddaoxGDnil4pRFxqYIinoe167HfergJ
+         UvWJhavO7pKp/8eVI+Xid80zH7lWYZfR9KjFm1FMPcBVD3aXhwTere+xWHoVCXq3Un0v
+         0Ulm8vo/zSKBMbj/icwFsdZ0NbgFoJWfb+xKDIx7hblSaGwVYgLqoGGF33EiwMKPUqIF
+         Mbbg==
+X-Gm-Message-State: ANoB5pl7q8fV6xCYyDHXWiqFII19bZuH/0R6nkRvL3B1K2M45r0DbkEn
+        zzuHsM+iDvcc9NhcjGGyWZHzJg==
+X-Google-Smtp-Source: AA0mqf5s5MfLEyckD+E8WOI+15ldRwGc4goDBOInO9jYsUvKNOJoQEO4/gzsdZqJUEoz9NjlXcRkCA==
+X-Received: by 2002:a17:906:8d08:b0:7c1:3a0:c0a9 with SMTP id rv8-20020a1709068d0800b007c103a0c0a9mr22290672ejc.12.1671116658584;
+        Thu, 15 Dec 2022 07:04:18 -0800 (PST)
+Received: from mbp-di-paolo.station (net-2-37-165-98.cust.vodafonedsl.it. [2.37.165.98])
+        by smtp.gmail.com with ESMTPSA id wf9-20020a170907d68900b007c4f500c8ccsm1866022ejc.6.2022.12.15.07.04.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 15 Dec 2022 07:04:17 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH V10 0/8] block, bfq: extend bfq to support multi-actuator
+ drives
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <7125ff61-bf11-6f8c-8496-f2603371c214@kernel.dk>
+Date:   Thu, 15 Dec 2022 16:04:16 +0100
+Cc:     Arie van der Hoeven <arie.vanderhoeven@seagate.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rory Chen <rory.c.chen@seagate.com>,
+        Glen Valante <glen.valante@linaro.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3479E7A6-8CAD-4A32-A0BB-00A851883EA7@linaro.org>
+References: <20221209094442.36896-1-paolo.valente@linaro.org>
+ <A0328388-7C6B-46A4-A05E-DCD6D91334AE@linaro.org>
+ <0bcf7776-59d7-53ef-bfd0-449940a05161@kernel.dk>
+ <PH7PR20MB50589A941F3F5A50C872E264F1E39@PH7PR20MB5058.namprd20.prod.outlook.com>
+ <7125ff61-bf11-6f8c-8496-f2603371c214@kernel.dk>
+To:     Jens Axboe <axboe@kernel.dk>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,53 +82,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Commit 180dccb0dba4f ("blk-mq: fix tag_get wait task can't be awakened")
-mentioned that in case of shared tags, there could be just one real
-active hctx(queue) because of lazy detection of tag idle. Then driver tag
-allocation may wait forever on this real active hctx(queue) if wake_batch
-is > hctx_max_depth where hctx_max_depth is available tags depth for the
-actve hctx(queue). However, the condition wake_batch > hctx_max_depth is
-not strong enough to avoid IO hung as the sbitmap_queue_wake_up will only
-wake up one wait queue for each wake_batch even though there is only one
-waiter in the woken wait queue. After this, there is only one tag to free
-and wake_batch may not be reached anymore. Commit 180dccb0dba4f ("blk-mq:
-fix tag_get wait task can't be awakened") methioned that driver tag
-allocation may wait forever. Actually, the inactive hctx(queue) will be
-truely idle after at most 30 seconds and will call blk_mq_tag_wakeup_all
-to wake one waiter per wait queue to break the hung. But IO hung for 30
-seconds is also not acceptable. Set batch size to small enough that depth
-of the shared hctx(queue) is enough to wake up all of the queues like
-sbq_calc_wake_batch do to fix this potential IO hung.
 
-Although hctx_max_depth will be clamped to at least 4 while wake_batch
-recalculation does not do the clamp, the wake_batch will be always
-recalculated to 1 when hctx_max_depth <= 4.
 
-Fixes: 180dccb0dba4 ("blk-mq: fix tag_get wait task can't be awakened")
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- lib/sbitmap.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> Il giorno 13 dic 2022, alle ore 18:17, Jens Axboe <axboe@kernel.dk> ha =
+scritto:
+>=20
+> Please don't top post...
+>=20
+> On 12/13/22 10:10?AM, Arie van der Hoeven wrote:
+>> We understand being conservative but the code paths only impact on a
+>> product that is not yet in market.  This is version 10 spanning =
+months
+>> with many gaps waiting on review.  It's an interesting case study.
+>=20
+> That's a nice theory, but that's not how code works. As mentioned, the
+> last version was posted 1-2 weeks later than would've been appropriate
+> for inclusion.
+>=20
 
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index b6d3bb1c3675..804fe99783e4 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -458,13 +458,10 @@ void sbitmap_queue_recalculate_wake_batch(struct sbitmap_queue *sbq,
- 					    unsigned int users)
- {
- 	unsigned int wake_batch;
--	unsigned int min_batch;
- 	unsigned int depth = (sbq->sb.depth + users - 1) / users;
- 
--	min_batch = sbq->sb.depth >= (4 * SBQ_WAIT_QUEUES) ? 4 : 1;
--
- 	wake_batch = clamp_val(depth / SBQ_WAIT_QUEUES,
--			min_batch, SBQ_WAKE_BATCH);
-+			1, SBQ_WAKE_BATCH);
- 
- 	WRITE_ONCE(sbq->wake_batch, wake_batch);
- }
--- 
-2.30.0
+So, what's the plan?
+
+Thanks,
+Paolo
+
+> --=20
+> Jens Axboe
+>=20
 
