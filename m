@@ -2,72 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2793A652F93
-	for <lists+linux-block@lfdr.de>; Wed, 21 Dec 2022 11:35:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C7EF652F9B
+	for <lists+linux-block@lfdr.de>; Wed, 21 Dec 2022 11:35:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229623AbiLUKfV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Dec 2022 05:35:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50740 "EHLO
+        id S230238AbiLUKf3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Dec 2022 05:35:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234609AbiLUKep (ORCPT
+        with ESMTP id S234448AbiLUKe5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Dec 2022 05:34:45 -0500
+        Wed, 21 Dec 2022 05:34:57 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840056592;
-        Wed, 21 Dec 2022 02:34:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C967CB84E
+        for <linux-block@vger.kernel.org>; Wed, 21 Dec 2022 02:34:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qo0/7oh20JB4vOMTtkVk74rFMV3lr/eFERwPDckaJ84=; b=CvfudaDgduzGkGO/tL8HCoG0cx
-        Vc/Ed3d8vSiE7XbGKRh+aPrjOZK9rolmp/I9Vno85q9Wpgb9tIcV+ooTCk+Xt2ZwvR7x9tN3fepaG
-        gtzJIt4P+lDSpucNMSjQtI4yAY0UKUMweQd09/TuwkZmfTzkVEA4P2vJIHz2vrjXm59VmfO/Bfj34
-        ypTGRrN68fpcqATg/QgkQw3pIstO2GHIgsKOc/EAK+00mzVQ+SMX/1Tybvg5gv3sW/xMzfxsEBaus
-        Lguks2sBH0yrSLIvW+onUv8D1bH/W4BjFIr39DPBJXCxQm4lKvdWg2xCmSM/i781J3eoDJgTEY1dr
-        ifUFXrfQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1p7wQ3-00DUKS-3S; Wed, 21 Dec 2022 10:33:51 +0000
-Date:   Wed, 21 Dec 2022 02:33:51 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     tj@kernel.org, hch@infradead.org, josef@toxicpanda.com,
-        axboe@kernel.dk, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yi.zhang@huawei.com
-Subject: Re: [PATCH -next 1/4] blk-iocost: track whether iocg is still online
-Message-ID: <Y6LhD8CEkcgLUJoQ@infradead.org>
-References: <20221217030527.1250083-1-yukuai1@huaweicloud.com>
- <20221217030527.1250083-2-yukuai1@huaweicloud.com>
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=omzie7vp0LFSNldSUbnfuc20Zcg9BbtMYQIpWUZ/Brc=; b=KFp4ZyTEhRj6+ePH2kVqxiw6CS
+        L/jdp3EjvJdJGU4JnTFLPWx2IZU6KTxuV4SzNHX/MbF4ZTLjFise1u13/GgbQE1q77lwXkuN+Tfq4
+        LrBJgPsZxywWH5e1XIeSegSYeY9uS/2LonI0uKjNEiCp+3cqr+jMKrLRoA9VLIoKzIU0xAzCOUphD
+        nqKfw9z2JXOxDs/8/9kFRk6Jyzxit3jAXjQTwALSxgoA5SOFfX0l6C2wzMgGQwvDCMyawTPKZvlNS
+        efx293UW6ueFKmHXZ/SfpGnmZKDEUU0Dp5Q6yXKlij9wZotPAM1m6972mWuYlBVmTfKNF5n63cHYF
+        W7d9w3KQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1p7wQw-00DUqK-OG; Wed, 21 Dec 2022 10:34:46 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     osandov@fb.com, mcgrof@kernel.org
+Cc:     joshi.k@samsung.com, j.granados@samsung.com, anuj20.g@samsung.com,
+        ankit.kumar@samsung.com, vincent.fu@samsung.com,
+        ming.lei@redhat.com, linux-block@vger.kernel.org
+Subject: [PATCH 0/6] blktests: char device tests with iouring-cmd fio
+Date:   Wed, 21 Dec 2022 02:34:35 -0800
+Message-Id: <20221221103441.3216600-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221217030527.1250083-2-yukuai1@huaweicloud.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Dec 17, 2022 at 11:05:24AM +0800, Yu Kuai wrote:
-> @@ -459,6 +459,8 @@ struct ioc_gq {
->  	struct blkg_policy_data		pd;
->  	struct ioc			*ioc;
->  
-> +	bool online;
+As io-uring cmd grows there's a desire to do a bit more funky things
+with it. Add basic support with fio and add a few simple tests to
+tests the NVMe conventional drives character device as well as the
+ZNS character device.
 
-Nit: maybe tab align this field like the fields above it.
+These tests are perhaps a bit *too* basic to merge, not sure, let
+me know. But I figured that this would provide example to let us
+grow this with more complex things later as folks add support for
+more features.
 
-> +static void ioc_pd_offline(struct blkg_policy_data *pd)
-> +{
-> +	struct ioc_gq *iocg = pd_to_iocg(pd);
-> +	struct ioc *ioc = iocg->ioc;
-> +	unsigned long flags;
-> +
-> +	if (ioc) {
+Luis Chamberlain (6):
+  common/fio: add helpers using io-uring cmd engine
+  tests/nvme: add new test for rand-read on the nvme character device
+  tests/nvme: add new test for rand-write on the nvme character device
+  tests/nvme: add new test for optimal write on the nvme character
+    device
+  tests/zbd: add new basic test for reading zone character device
+  tests/zbd: add new basic test for reading zone character device
 
-How could ioc be NULL here?
+ common/fio         | 47 +++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/046     | 42 +++++++++++++++++++++++++++++++++++++
+ tests/nvme/046.out |  2 ++
+ tests/nvme/047     | 41 ++++++++++++++++++++++++++++++++++++
+ tests/nvme/047.out |  2 ++
+ tests/nvme/048     | 41 ++++++++++++++++++++++++++++++++++++
+ tests/nvme/048.out |  2 ++
+ tests/zbd/011      | 52 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/zbd/011.out  |  2 ++
+ tests/zbd/012      | 50 ++++++++++++++++++++++++++++++++++++++++++++
+ tests/zbd/012.out  |  2 ++
+ 11 files changed, 283 insertions(+)
+ create mode 100755 tests/nvme/046
+ create mode 100644 tests/nvme/046.out
+ create mode 100755 tests/nvme/047
+ create mode 100644 tests/nvme/047.out
+ create mode 100755 tests/nvme/048
+ create mode 100644 tests/nvme/048.out
+ create mode 100755 tests/zbd/011
+ create mode 100644 tests/zbd/011.out
+ create mode 100755 tests/zbd/012
+ create mode 100644 tests/zbd/012.out
+
+-- 
+2.35.1
 
