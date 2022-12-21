@@ -2,130 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE7C8652F9D
-	for <lists+linux-block@lfdr.de>; Wed, 21 Dec 2022 11:35:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E6CD652FA7
+	for <lists+linux-block@lfdr.de>; Wed, 21 Dec 2022 11:38:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234448AbiLUKfb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Dec 2022 05:35:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49304 "EHLO
+        id S234501AbiLUKiF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Dec 2022 05:38:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232647AbiLUKe4 (ORCPT
+        with ESMTP id S234493AbiLUKh6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Dec 2022 05:34:56 -0500
+        Wed, 21 Dec 2022 05:37:58 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81A9B7EE
-        for <linux-block@vger.kernel.org>; Wed, 21 Dec 2022 02:34:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62CF9B19;
+        Wed, 21 Dec 2022 02:37:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=nzxBFknUyv63x0KL3VxpLH2ImrgIgZnruN6+7qv0hh8=; b=J7WrXHJ0Pq5bSPSXm0vtaUVsfw
-        aKVP0/4mh6HWqh+27nXl+/NCO3x5zdAvT71Pympkzbqf+GJK9xGuYpG7Wk6+GEs4+tzWFAiBrpInC
-        6XKjZ919gaiHZWU4xfxAjTbRcd5b0og9z1k9wrEdqfprigT75pg7wzCSvAXCWmn/WzmPhyVqURVr3
-        av5HCGq7g8ibuC1JMrQDQy7uN55Mp3yftt//CkQ6n422+rpQW4FB3RuJhuR0c61kBC+3lB9ej7C++
-        lbyG+yNjqEM0pXDuBwzdNfZvw2G9johFnnWd1MrDkWrm5wplrhO3ltN3noHX1mLVdEbM4MsiYrp1n
-        ytoRqGdg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1p7wQx-00DUqf-MB; Wed, 21 Dec 2022 10:34:47 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     osandov@fb.com, mcgrof@kernel.org
-Cc:     joshi.k@samsung.com, j.granados@samsung.com, anuj20.g@samsung.com,
-        ankit.kumar@samsung.com, vincent.fu@samsung.com,
-        ming.lei@redhat.com, linux-block@vger.kernel.org
-Subject: [PATCH 6/6] tests/zbd: add new basic test for reading zone character device
-Date:   Wed, 21 Dec 2022 02:34:41 -0800
-Message-Id: <20221221103441.3216600-7-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20221221103441.3216600-1-mcgrof@kernel.org>
-References: <20221221103441.3216600-1-mcgrof@kernel.org>
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=480wSk2F3WgREEBIZRNwD5lYM7sivLG3o11mUqwzDvI=; b=m0SBhYvd9cTYyXMTpMPxu7KP/Q
+        ybgCtTxPldeWTL0jTbF3Qy4gm38p6ljJZfRF9u7ER31xc+oUAd4cVku/1xncKwzBrhJJuXOddjoxk
+        DUvVpzRB/CviI/GVmB/G4EDURIo86jFr1zUNWWl34LW5Ob1nauduPx9+/NzO/wzhJ9W/YPccyZ2N0
+        /HUN0PUpNvHnGGPVFBdRRtM93orhlPQDy88yl8+0Ry6P7z2Dml97qv5JZjSoo8iueG+tm3j+A5YpQ
+        5yh94gARx920+ReZLH6j6Y05S7vDtu43Yz/GfY48rjC+n3Gfe52hTZXFs/fob5+P4H5/fH7Y32WDw
+        Y3TY/bRw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1p7wTy-00DX19-Nz; Wed, 21 Dec 2022 10:37:54 +0000
+Date:   Wed, 21 Dec 2022 02:37:54 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     Tejun Heo <tj@kernel.org>, hch@infradead.org, josef@toxicpanda.com,
+        axboe@kernel.dk, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH -next 0/4] blk-cgroup: synchronize del_gendisk() with
+ configuring cgroup policy
+Message-ID: <Y6LiAg4u/jkrosVe@infradead.org>
+References: <20221217030908.1261787-1-yukuai1@huaweicloud.com>
+ <Y6DP3aOSad8+D1yY@slm.duckdns.org>
+ <e01daffe-a3e3-8bf2-40ee-192a9e70d911@huaweicloud.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e01daffe-a3e3-8bf2-40ee-192a9e70d911@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This adds a basic optimal write test using fio against a ZNS character
-device.
+On Tue, Dec 20, 2022 at 05:19:12PM +0800, Yu Kuai wrote:
+> If we are using a mutex to protect rq_qos ops, it seems the right thing
+> to do do also using the mutex to protect blkcg_policy ops, and this
+> problem can be fixed because mutex can be held to alloc memroy with
+> GFP_KERNEL. What do you think?
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- tests/zbd/012     | 50 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/zbd/012.out |  2 ++
- 2 files changed, 52 insertions(+)
- create mode 100755 tests/zbd/012
- create mode 100644 tests/zbd/012.out
+Getting rid of the atomic allocations would be awesome.
 
-diff --git a/tests/zbd/012 b/tests/zbd/012
-new file mode 100755
-index 000000000000..474bcb07a27b
---- /dev/null
-+++ b/tests/zbd/012
-@@ -0,0 +1,50 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2022 Luis Chamberlain <mcgrof@kernel.org>
-+#
-+# This does basic optimal write test for the zone nvme character device.
-+
-+. tests/zbd/rc
-+
-+DESCRIPTION="basic optimal write using io_uring_cmd engine for zone nvme-ns character device"
-+QUICK=1
-+CAN_BE_ZONED=1
-+
-+requires() {
-+	_have_fio
-+}
-+
-+fallback_device() {
-+	_fallback_null_blk_zoned
-+}
-+
-+cleanup_fallback_device() {
-+	_exit_null_blk
-+}
-+
-+test_device() {
-+	echo "Running ${TEST_NAME}"
-+	local -i bs
-+	declare -a fio_args
-+	local ngdev=${TEST_DEV/nvme/ng}
-+
-+	_get_sysfs_variable "${TEST_DEV}" || return $?
-+	bs=${SYSFS_VARS[$SV_PHYS_BLK_SIZE]}
-+	_put_sysfs_variable
-+
-+	fio_args=(
-+		--bs="$bs"
-+		--size=1024M
-+		--cmd_type=nvme
-+		--filename="$ngdev"
-+	) &&
-+	_run_fio_verify_iouring_cmd_write_opts_zone "${fio_args[@]}" >>"${FULL}" 2>&1 ||
-+	fail=true
-+
-+	if [ -z "$fail" ]; then
-+		echo "Test complete"
-+	else
-+		echo "Test failed"
-+		return 1
-+	fi
-+}
-diff --git a/tests/zbd/012.out b/tests/zbd/012.out
-new file mode 100644
-index 000000000000..8ff654950c5f
---- /dev/null
-+++ b/tests/zbd/012.out
-@@ -0,0 +1,2 @@
-+Running zbd/012
-+Test complete
--- 
-2.35.1
-
+FYI, I'm also in favor of everything that moves things out of
+queue_lock into more dedicated locks.  queue_lock is such an undocument
+mess of untargeted things that don't realted to each other right now
+that splitting and removing it is becoming more and more important.
