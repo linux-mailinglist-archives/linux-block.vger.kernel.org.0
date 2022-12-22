@@ -2,73 +2,46 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86059653ADF
-	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 04:07:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8E2B653D12
+	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 09:40:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235078AbiLVDHe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Dec 2022 22:07:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58658 "EHLO
+        id S229682AbiLVIkR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Dec 2022 03:40:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235026AbiLVDHd (ORCPT
+        with ESMTP id S229620AbiLVIkQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Dec 2022 22:07:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EEEA1181E
-        for <linux-block@vger.kernel.org>; Wed, 21 Dec 2022 19:07:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F139619C6
-        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 03:07:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 13FE6C433D2;
-        Thu, 22 Dec 2022 03:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671678452;
-        bh=dthrsJy1CDx6XemMvwwzAW1QzJjaEHsOjKN6xNcRaUc=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Kn3gfbixW9mLinABHTdWp4FDZZtXihws06gFme1wtXouXSrq/brzYdW9c8+Igi55L
-         XmWEE0by5Xqyr1lYFCPsbrzV2KNSVxnR5JAo4MWxHFwyQWbIZXRrm0AySwGonta0q4
-         FsayRkUmxv/FID14ISFQpT39sDJHORSbU6EGfQkcrjYiulqup1sK5eHyso+st47HGx
-         5yH0sYUIMyAAevPHonMEjrM17Gat1/OYqyRZ6HCzeZ10BNI4AglgQvTGJdeMPzCEfi
-         pI5qw3ytvHRTQ9Ms9FT6aaiuVHnHLer6i2ot/8xiV32im03IlGFUxBTKTH2HGZ8GkV
-         4tupoKHQtZuwg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 02BEDC43141;
-        Thu, 22 Dec 2022 03:07:32 +0000 (UTC)
-Subject: Re: [GIT PULL] Followup block fixes for 6.2-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <b4f6146f-6bbf-c58a-21fd-a03acb28c4a0@kernel.dk>
-References: <b4f6146f-6bbf-c58a-21fd-a03acb28c4a0@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <b4f6146f-6bbf-c58a-21fd-a03acb28c4a0@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux.git tags/block-6.2-2022-12-19
-X-PR-Tracked-Commit-Id: 53eab8e76667b124615a943a033cdf97c80c242a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 569c3a283c96a9efbf7ee32dda10905b8684de07
-Message-Id: <167167845200.12654.6861677566544805638.pr-tracker-bot@kernel.org>
-Date:   Thu, 22 Dec 2022 03:07:32 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Thu, 22 Dec 2022 03:40:16 -0500
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C0A721277
+        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 00:40:15 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 55C9867373; Thu, 22 Dec 2022 09:40:11 +0100 (CET)
+Date:   Thu, 22 Dec 2022 09:40:11 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
+        axboe@kernel.dk, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev, hch@lst.de,
+        martin.petersen@oracle.com, Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH] block: save user max_sectors limit
+Message-ID: <20221222084011.GA12920@lst.de>
+References: <20221221162758.407742-1-kbusch@meta.com> <202212221657.yQawgPsu-lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202212221657.yQawgPsu-lkp@intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Tue, 20 Dec 2022 08:17:32 -0700:
+On Thu, Dec 22, 2022 at 04:32:10PM +0800, kernel test robot wrote:
+> >> block/blk-settings.c:138:49: warning: comparison of distinct pointer types ('typeof (limits->max_sectors) *' (aka 'unsigned int *') and 'typeof (BLK_DEF_MAX_SECTORS) *' (aka 'int *')) [-Wcompare-distinct-pointer-types]
 
-> git://git.kernel.dk/linux.git tags/block-6.2-2022-12-19
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/569c3a283c96a9efbf7ee32dda10905b8684de07
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Yeah, that's not going to work.  BLK_DEF_MAX_SECTORS should probably
+become an unsigned constant to fix this.
