@@ -2,149 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B4136545C2
-	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 18:52:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 125C1653EE5
+	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 12:18:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbiLVRwN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Dec 2022 12:52:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42822 "EHLO
+        id S235415AbiLVLRx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Dec 2022 06:17:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbiLVRwM (ORCPT
+        with ESMTP id S235065AbiLVLRu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Dec 2022 12:52:12 -0500
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55484B7CC
-        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 09:52:11 -0800 (PST)
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BMHiaUR011753
-        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 09:52:10 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=s2048-2021-q4;
- bh=F65TMfIBR/GCVPxYnrLZEA/djWWUoUGXVl6copPTWZQ=;
- b=NurrL9d6r12JPMsnysxw3iOWWTi5aYIAYRzsuLLgMHJT0QlfUhTjO+PzD+9KDxnP8/l0
- czXxHYJZvC7q0Ypm9fsWGu26mdT51l/c+Av/UJcbmp0mO+LUEPDY3jAxi2Oatpm+GP4y
- pRjlltXOOYyzBkVDQVzm6Gbdzew8dycujZ/qde+ZURh393BoumTBkMfswQXQEQyBUDKD
- TgNgTahhK3V10IA48TJUha9uh5p+NOfqdbfzxtL2cwnW5mNB5HbzXScjsFBbxAqpuL4i
- P9UvKgocFXlYOUrL5vSQf6JLYmRl0JrHLHWAc/M/kcML4vxuG3Etb4CyqTRRTxfg7zHW jg== 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3mkx85jpb1-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 09:52:10 -0800
-Received: from twshared41876.03.ash8.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 22 Dec 2022 09:52:09 -0800
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id 5E14DD60CAC5; Thu, 22 Dec 2022 09:52:04 -0800 (PST)
-From:   Keith Busch <kbusch@meta.com>
-To:     <linux-block@vger.kernel.org>, <axboe@kernel.dk>
-CC:     <hch@lst.de>, <martin.petersen@oracle.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH] block: save user max_sectors limit
-Date:   Thu, 22 Dec 2022 09:52:04 -0800
-Message-ID: <20221222175204.1782061-1-kbusch@meta.com>
-X-Mailer: git-send-email 2.30.2
+        Thu, 22 Dec 2022 06:17:50 -0500
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F821FCFE;
+        Thu, 22 Dec 2022 03:17:49 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Nd7863Xzmz4f3kKx;
+        Thu, 22 Dec 2022 19:17:42 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+        by APP2 (Coremail) with SMTP id Syh0CgB3a+nXPKRjMew+AQ--.3596S2;
+        Thu, 22 Dec 2022 19:17:45 +0800 (CST)
+From:   Kemeng Shi <shikemeng@huaweicloud.com>
+To:     paolo.valente@linaro.org, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jack@suse.cz, hch@lst.de, damien.lemoal@wdc.com
+Subject: [PATCH RESEND v2 00/10] A few bugfix and cleancode patch for bfq
+Date:   Fri, 23 Dec 2022 03:16:31 +0800
+Message-Id: <20221222191641.1643117-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: ZbJQED3_k8JO5nAwzg_djK8XacN75tlt
-X-Proofpoint-GUID: ZbJQED3_k8JO5nAwzg_djK8XacN75tlt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-22_09,2022-12-22_03,2022-06-22_01
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: Syh0CgB3a+nXPKRjMew+AQ--.3596S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw4ftFyfXFWkur4kur4Uurg_yoWDCFX_GF
+        WrWF93JrW8XFy5AFy2kr13Ja90qrZFq3WUKF9Yqr45Xr13t3ZxZwnFgrs7ZF4DZa1xAa95
+        ZrsYv34rJrWkujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+        AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7
+        JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oV
+        Cq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG
+        8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2js
+        IE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY
+        0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
+        0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAI
+        cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+        CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
+        aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0VnQUUUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+Hi, this series contain two patches to fix bug in request injection
+mechanism and some random cleancode patches.
+Thanks!
 
-The user can set the max_sectors limit to any valid value via sysfs
-/sys/block/<dev>/queue/max_sectors_kb attribute. If the device limits
-are ever rescanned, though, the limit reverts back to the kernel defined
-BLK_DEF_MAX_SECTORS limit.
-
-Preserve the user's setting for the max_sectors limit as long as it's
-valid. The user can reset back to defaults by writing 0 to the sysfs
-file.
-
-Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/blk-settings.c   |  9 +++++++--
- block/blk-sysfs.c      | 10 +++++++++-
- include/linux/blkdev.h |  1 +
- 3 files changed, 17 insertions(+), 3 deletions(-)
+v2:
+ -improve git log.
+---
 
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 0477c4d527fee..e75304f853bd5 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -40,7 +40,7 @@ void blk_set_default_limits(struct queue_limits *lim)
- 	lim->virt_boundary_mask =3D 0;
- 	lim->max_segment_size =3D BLK_MAX_SEGMENT_SIZE;
- 	lim->max_sectors =3D lim->max_hw_sectors =3D BLK_SAFE_MAX_SECTORS;
--	lim->max_dev_sectors =3D 0;
-+	lim->max_user_sectors =3D lim->max_dev_sectors =3D 0;
- 	lim->chunk_sectors =3D 0;
- 	lim->max_write_zeroes_sectors =3D 0;
- 	lim->max_zone_append_sectors =3D 0;
-@@ -135,7 +135,12 @@ void blk_queue_max_hw_sectors(struct request_queue *=
-q, unsigned int max_hw_secto
- 	limits->max_hw_sectors =3D max_hw_sectors;
-=20
- 	max_sectors =3D min_not_zero(max_hw_sectors, limits->max_dev_sectors);
--	max_sectors =3D min_t(unsigned int, max_sectors, BLK_DEF_MAX_SECTORS);
-+
-+	if (limits->max_user_sectors)
-+		max_sectors =3D min_not_zero(max_sectors, limits->max_user_sectors);
-+	else
-+		max_sectors =3D min_t(unsigned int, max_sectors, BLK_DEF_MAX_SECTORS);
-+
- 	max_sectors =3D round_down(max_sectors,
- 				 limits->logical_block_size >> SECTOR_SHIFT);
- 	limits->max_sectors =3D max_sectors;
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 93d9e9c9a6ea8..db5d1d908f5d9 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -250,8 +250,16 @@ queue_max_sectors_store(struct request_queue *q, con=
-st char *page, size_t count)
- 	max_hw_sectors_kb =3D min_not_zero(max_hw_sectors_kb, (unsigned long)
- 					 q->limits.max_dev_sectors >> 1);
-=20
--	if (max_sectors_kb > max_hw_sectors_kb || max_sectors_kb < page_kb)
-+	if (max_sectors_kb =3D=3D 0) {
-+		q->limits.max_user_sectors =3D 0;
-+		max_sectors_kb =3D min_t(unsigned int, max_hw_sectors_kb,
-+				       BLK_DEF_MAX_SECTORS >> 1);
-+	} else if (max_sectors_kb > max_hw_sectors_kb ||
-+		   max_sectors_kb < page_kb)  {
- 		return -EINVAL;
-+	} else {
-+		q->limits.max_user_sectors =3D max_sectors_kb << 1;
-+	}
-=20
- 	spin_lock_irq(&q->queue_lock);
- 	q->limits.max_sectors =3D max_sectors_kb << 1;
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 301cf1cf4f2fa..71e97f0a87264 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -288,6 +288,7 @@ struct queue_limits {
- 	unsigned int		max_dev_sectors;
- 	unsigned int		chunk_sectors;
- 	unsigned int		max_sectors;
-+	unsigned int		max_user_sectors;
- 	unsigned int		max_segment_size;
- 	unsigned int		physical_block_size;
- 	unsigned int		logical_block_size;
---=20
-2.30.2
+Kemeng Shi (10):
+  block, bfq: correctly raise inject limit in
+    bfq_choose_bfqq_for_injection
+  block, bfq: remove unsed parameter reason in bfq_bfqq_is_slow
+  block, bfq: initialize bfqq->decrease_time_jif correctly
+  block, bfq: use helper macro RQ_BFQQ to get bfqq of request
+  block, bfq: remove unnecessary dereference to get async_bfqq
+  block, bfq: remove redundant bfqd->rq_in_driver > 0 check in
+    bfq_add_request
+  block, bfq: remove redundant check in bfq_put_cooperator
+  block, bfq: remove unnecessary goto tag in bfq_dispatch_rq_from_bfqq
+  block, bfq: remove unused bfq_wr_max_time in struct bfq_data
+  block, bfq: remove check of bfq_wr_max_softrt_rate which is always
+    greater than 0
+
+ block/bfq-iosched.c | 49 +++++++++++++++++----------------------------
+ block/bfq-iosched.h |  2 --
+ 2 files changed, 18 insertions(+), 33 deletions(-)
+
+-- 
+2.30.0
 
