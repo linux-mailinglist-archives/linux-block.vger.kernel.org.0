@@ -2,147 +2,156 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49AF6654439
-	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 16:23:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8480D654467
+	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 16:39:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235795AbiLVPWw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Dec 2022 10:22:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37616 "EHLO
+        id S230004AbiLVPjD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Dec 2022 10:39:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235520AbiLVPWR (ORCPT
+        with ESMTP id S229793AbiLVPjC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Dec 2022 10:22:17 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11462B617
-        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 07:22:12 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id tz12so5637587ejc.9
-        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 07:22:12 -0800 (PST)
+        Thu, 22 Dec 2022 10:39:02 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC08B29368
+        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 07:38:40 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id b2so2345903pld.7
+        for <linux-block@vger.kernel.org>; Thu, 22 Dec 2022 07:38:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9prY/JmhXfW74Kc/vxfSBhm8Ub6K/Is1u+4OJkmvt/8=;
-        b=hn93Pgz0XGh9MuNVPN+nzpVDPXpHL5yvrKu+5qfdESeOWYAgFtg2OyzNkpMs94WgiC
-         WMcuI8NUgowcSYw8age6bQ0bWNXmSyGTV+eZ6HiVpQL+pml4aNDIHk2YaF2BF5F1iOy7
-         Fu7u19coZWI858vbn7ivpXUZJ3RJ5+GxBBmGH9rdQySqE7HjqDAellNQA23zT0HBwS0V
-         zBgTSwHwe8Ze2//HnKD0YdvLE8jdG6zz/xaG4sMRMe2QC6k0QMvGwdOWVowZK+/HLZFf
-         v3HBQ7xGpNNxiOlTWsLbFkN78Cjm6XzForEUYxd8jFmRxWLTrqoafNBLhFqQ7Fkqb64j
-         L2tg==
+        bh=+pOD6qK21JMmHtZu4DKvodAq25Aw2OJGG1BCa4STcTM=;
+        b=S8hUijCrZmz9w4BtoqIFcausqra1NaLhcNe6XM0w/SlphSKuE4EJO5T/eUeE49HZv1
+         SeEj0wpgcKkvbM0XZrs348Utuun9If7AP0hrXdRM2HoyUoz+Htu5KoNvHGDbBbGqIq6G
+         98dlnuF+RVoRzmx7lY70fKWKyZMKcpxQvw1N68m+H0ipwVJS3G9brjZroZqpck0oCT5P
+         EnDIIs+rEBFZ/P15LXtHOzB9scSEXEnvBwIhhAnaqlwGR9oBAXKOY0qTBtYuGSXL0Xlz
+         5+4+6hIIF1v4EnFCeJxSnT9USAbP0KEDC5TyTqmy+8NqQdTUPhE84lgGv+oCaSugCQxo
+         12Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9prY/JmhXfW74Kc/vxfSBhm8Ub6K/Is1u+4OJkmvt/8=;
-        b=6bv4hVY56jGrsth3vQM69+0BQ6+mCZXRt14BATEgms6WYYYfCz3JxMgnAM3yIZyX3U
-         roJ2sGaruoQRMU3gblNSPReQQrwYQsNIy+HA2+odKwTllfFhJyfcDh6nr3ajaWHwkkDZ
-         voVhY/UV7QWukw62MG8SCDUOxK/OCti/lBOmlOb1cvCuXdU79TUU/YCdVd2OASO6VDMh
-         +y3bWlnvyrijk8Nfa27eHWgVNPWT6DjHYauUWqwFb8YNZCOquUAygVunNO28TRg37GQg
-         AuAYc3sNRxnzOOG9unZ11dipf03vQUqxjxZzhjvZufk/yGsR1qMDEQwyTGYtHdTR9d30
-         u6Lw==
-X-Gm-Message-State: AFqh2krBUoJ/57zXEDI3rjJgyy7L7tkC4THhziRuvDM4zjAwvWPSD77+
-        YKG7RYR/jSj5gJ7QdfBce/RN/w==
-X-Google-Smtp-Source: AMrXdXtiCefgdm83WdC0rb7pqHzl4oPGMfPQ11wwOpD/6NtJMaG4smOj62xiA0Bxqekt7g5Zpu9J1Q==
-X-Received: by 2002:a17:906:8384:b0:838:9aba:6a06 with SMTP id p4-20020a170906838400b008389aba6a06mr4955351ejx.39.1671722532278;
-        Thu, 22 Dec 2022 07:22:12 -0800 (PST)
-Received: from MBP-di-Paolo.station (net-93-70-85-0.cust.vodafonedsl.it. [93.70.85.0])
-        by smtp.gmail.com with ESMTPSA id 17-20020a170906201100b007c08439161dsm355670ejo.50.2022.12.22.07.22.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Dec 2022 07:22:11 -0800 (PST)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arie.vanderhoeven@seagate.com, rory.c.chen@seagate.com,
-        glen.valante@linaro.org, damien.lemoal@opensource.wdc.com,
-        Davide Zini <davidezini2@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH V12 8/8] block, bfq: balance I/O injection among underutilized actuators
-Date:   Thu, 22 Dec 2022 16:21:57 +0100
-Message-Id: <20221222152157.61789-9-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221222152157.61789-1-paolo.valente@linaro.org>
-References: <20221222152157.61789-1-paolo.valente@linaro.org>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+pOD6qK21JMmHtZu4DKvodAq25Aw2OJGG1BCa4STcTM=;
+        b=PlHVme3ffPJUYSmdI2fTOAycI+VeR2JnPWWHZJ7OLTruNVZoakEjl8FBinE4l1JGfs
+         rIY7OukDlU9ea+I8ak4OAKCkzXhlJvJ/NS8I1fgbHFMrEjTT4nm2GfNjbeSx8ZmZM0x0
+         E8mpFk0Uv6PJMmmo3tFI4GX2norUBJAS3Q7Wczg2HCdCgSbLZZ/3t2HQbGuA58Z1tvSP
+         MBWLf5fx4q4I7f6hW0VnHISxn/4nyqASyKW0uC0NvgqZZJ6ajCpL2EpJhh1mcNC8WFU2
+         iI0nLHuozSsyidwxvHqf8KF9l/UynRIYYa0BtHAJ4psqncLAPoOpUXXz2h1obqz020yx
+         liyQ==
+X-Gm-Message-State: AFqh2kpvQEVO6bQXnBNr78XGhIeoSSwWC+YstIgA0+TgWrg/79frD4kq
+        E8aDKEC2pmssq6n+WNSlowfmgQ==
+X-Google-Smtp-Source: AMrXdXsY3aG2CDjoYFn0g5dZ8Cckt4U22dyIJHZQwhtekv0YmqxlayHLsCIlOjp87IVfr5LoDARskg==
+X-Received: by 2002:a17:902:b402:b0:188:d434:9c67 with SMTP id x2-20020a170902b40200b00188d4349c67mr6046512plr.32.1671723520207;
+        Thu, 22 Dec 2022 07:38:40 -0800 (PST)
+Received: from [10.254.61.32] ([139.177.225.249])
+        by smtp.gmail.com with ESMTPSA id u6-20020a170902e5c600b00172fad607b3sm669185plf.207.2022.12.22.07.38.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Dec 2022 07:38:39 -0800 (PST)
+Message-ID: <8c25e591-34d6-7c42-b3a8-dcde86643fe7@bytedance.com>
+Date:   Thu, 22 Dec 2022 23:38:35 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.2.2
+Subject: Re: [External] Re: [PATCH v2] blk-throtl: Introduce sync and async
+ queues for blk-throtl
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc:     tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
+References: <20221218111314.55525-1-hanjinke.666@bytedance.com>
+ <20221221104246.37714-1-hanjinke.666@bytedance.com>
+ <20221222133912.GA20830@blackbody.suse.cz>
+From:   hanjinke <hanjinke.666@bytedance.com>
+In-Reply-To: <20221222133912.GA20830@blackbody.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Davide Zini <davidezini2@gmail.com>
 
-Upon the invocation of its dispatch function, BFQ returns the next I/O
-request of the in-service bfq_queue, unless some exception holds. One
-such exception is that there is some underutilized actuator, different
-from the actuator for which the in-service queue contains I/O, and
-that some other bfq_queue happens to contain I/O for such an
-actuator. In this case, the next I/O request of the latter bfq_queue,
-and not of the in-service bfq_queue, is returned (I/O is injected from
-that bfq_queue). To find such an actuator, a linear scan, in
-increasing index order, is performed among actuators.
 
-Performing a linear scan entails a prioritization among actuators: an
-underutilized actuator may be considered for injection only if all
-actuators with a lower index are currently fully utilized, or if there
-is no pending I/O for any lower-index actuator that happens to be
-underutilized.
+在 2022/12/22 下午9:39, Michal Koutný 写道:
+> Hello Jinke.
+> 
+> On Wed, Dec 21, 2022 at 06:42:46PM +0800, Jinke Han <hanjinke.666@bytedance.com> wrote:
+>> In our test, fio writes a 100g file in sequential 4k blocksize in
+>> a container with low bps limit configured (wbps=10M). More than 1200
+>> ios were throttled in blk-throtl queue and the avarage throtle time
+>> of each io is 140s. At the same time, the operation of saving a small
+>> file by vim will be blocked amolst 140s. As a fsync will be send by vim,
+>> the sync ios of fsync will be blocked by a huge amount of buffer write
+>> ios ahead. This is also a priority inversion problem within one cgroup.
+>> In the database scene, things got really bad with blk-throtle enabled
+>> as fsync is called very often.
+> 
+> I'm trying to make sense of the numbers:
+> - at 10 MB/s, it's 0.4 ms per 4k block
+> - there are 1.2k throttled bios that gives waiting time of roughly 0.5s
+>    ~ 0.4ms * 1200
+> - you say that you observe 280 times longer throttling time,
+> - that'd mean there should be 340k queued bios
+>    - or cummulative dispatch of ~1400 MB of data
+> 
+Hi
+Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s 
+%rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
+sdb              0.00   11.00      0.00      8.01     0.00     0.00 
+0.00   0.00    0.00    7.18   0.08     0.00   745.45   3.27   3.60
 
-This commits breaks this prioritization and tends to distribute
-injection uniformly across actuators. This is obtained by adding the
-following condition to the linear scan: even if an actuator A is
-underutilized, A is however skipped if its load is higher than that of
-the next actuator.
+Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s 
+%rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
+sdb              0.00    8.00      0.00      9.14     0.00     0.00 
+0.00   0.00    0.00    7.38   0.06     0.00  1170.00   2.62   2.10
 
-Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Davide Zini <davidezini2@gmail.com>
----
- block/bfq-iosched.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s 
+%rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
+sdb              0.00   16.00      0.00     12.02     0.00    12.00 
+0.00  42.86    0.00    7.25   0.12     0.00   769.25   2.06   3.30
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 132c5874eefc..f69dfa659e34 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4771,10 +4771,16 @@ bfq_find_active_bfqq_for_actuator(struct bfq_data *bfqd, int idx)
- 
- /*
-  * Perform a linear scan of each actuator, until an actuator is found
-- * for which the following two conditions hold: the load of the
-- * actuator is below the threshold (see comments on actuator_load_threshold
-- * for details), and there is a queue that contains I/O for that
-- * actuator. On success, return that queue.
-+ * for which the following three conditions hold: the load of the
-+ * actuator is below the threshold (see comments on
-+ * actuator_load_threshold for details) and lower than that of the
-+ * next actuator (comments on this extra condition below), and there
-+ * is a queue that contains I/O for that actuator. On success, return
-+ * that queue.
-+ *
-+ * Performing a plain linear scan entails a prioritization among
-+ * actuators. The extra condition above breaks this prioritization and
-+ * tends to distribute injection uniformly across actuators.
-  */
- static struct bfq_queue *
- bfq_find_bfqq_for_underused_actuator(struct bfq_data *bfqd)
-@@ -4782,7 +4788,9 @@ bfq_find_bfqq_for_underused_actuator(struct bfq_data *bfqd)
- 	int i;
- 
- 	for (i = 0 ; i < bfqd->num_actuators; i++) {
--		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold) {
-+		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold &&
-+		    (i == bfqd->num_actuators - 1 ||
-+		     bfqd->rq_in_driver[i] < bfqd->rq_in_driver[i+1])) {
- 			struct bfq_queue *bfqq =
- 				bfq_find_active_bfqq_for_actuator(bfqd, i);
- 
--- 
-2.20.1
+Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s 
+%rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
+sdb              0.00   11.00      0.00     10.91     0.00     1.00 
+0.00   8.33    0.00    6.82   0.07     0.00  1015.64   2.36   2.60
 
+Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s 
+%rrqm  %wrqm r_await w_await aqu-sz rareq-sz wareq-sz  svctm  %util
+sdb              0.00   11.00      0.00      9.14     0.00     1.00 
+0.00   8.33    0.00    6.27   0.07     0.00   850.91   2.55   2.80
+
+I used bcc to trace the time of bio form submit_bio to blk_mq_submit_bio
+and found the avarage time was nearly 140s(use bcc trace fsync duration 
+also get the same result).
+The iostat above seem the avaerage of each io nearly 1M, so I have rough 
+estimate the num of the bio queued is 140s * 10 m / 1m.
+
+
+> So what are the queued quantities? Are there more than 1200 bios or are
+> they bigger than the 4k you mention?
+> 
+"fio writes a 100g file in sequential 4k blocksize"
+Bios may be more than 1M as ext4 will merged continuously logic blocks 
+when physical block also continuously.
+> Thanks for clarification.
+> 
+> (I acknowledge the possible problem with a large population of async
+> writes delaying scarce sync writes.)
+> 
+> Michal
+
+If the 0.4ms oberved by iostat, the way to estimate the throtle time of 
+the bio by 0.4ms * 1200 may not work as the 0.4 is duration of the 
+request from alloc to done.
+
+If the average size of bio is 1m, dispatch one bio should cost 1m/ 10M = 
+100ms. The queue is fifo, so the average throtle time 100ms * 1400.
+
+Thanks.
