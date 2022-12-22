@@ -2,96 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E358565423C
-	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 14:59:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C8A2653C27
+	for <lists+linux-block@lfdr.de>; Thu, 22 Dec 2022 07:35:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230347AbiLVN7B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 22 Dec 2022 08:59:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40180 "EHLO
+        id S235125AbiLVGfC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Dec 2022 01:35:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229985AbiLVN7A (ORCPT
+        with ESMTP id S235052AbiLVGfB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 22 Dec 2022 08:59:00 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48EC1C413;
-        Thu, 22 Dec 2022 05:58:59 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D683E7679C;
-        Thu, 22 Dec 2022 13:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1671717537; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fKATc+B04yPGuwVoMjN+880psfHG481KAwJvLG9IAuY=;
-        b=WBq6ASIWKvgNfUiotGOXishHrXz1OaT2uQNWZx8kpWVUeCyV4sC+9XgZFcx3hg0MIFTKEE
-        FNnScyG76pkyCA01ofhDM+9a43A/HvwDIbpjwQDoV5rxUo9JtKhJwoEky3vMyPimd2ZCzg
-        a1pscpFiO+riwT3DwA6cEVpiLPIz1/g=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A84B8138FD;
-        Thu, 22 Dec 2022 13:58:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id XPInKKFipGMtPgAAMHmgww
-        (envelope-from <mkoutny@suse.com>); Thu, 22 Dec 2022 13:58:57 +0000
-Date:   Thu, 22 Dec 2022 14:58:55 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Yann Droneaud <ydroneaud@opteya.com>
-Cc:     Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-iocost: don't make all constants unsigned long long
-Message-ID: <20221222135855.GC20830@blackbody.suse.cz>
-References: <20221220201819.1497577-1-ydroneaud@opteya.com>
+        Thu, 22 Dec 2022 01:35:01 -0500
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3FA1E3C7;
+        Wed, 21 Dec 2022 22:34:59 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Nd0sn5d5Hz4f3jJ0;
+        Thu, 22 Dec 2022 14:34:53 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+        by APP1 (Coremail) with SMTP id cCh0CgDH5jCP+qNjzwckAQ--.30442S2;
+        Thu, 22 Dec 2022 14:34:56 +0800 (CST)
+From:   Kemeng Shi <shikemeng@huaweicloud.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     jack@suse.cz, kbusch@kernel.org, shikemeng@huaweicloud.com
+Subject: [PATCH RESEND v2 0/5] A few bugfix and cleanup patches for sbitmap
+Date:   Thu, 22 Dec 2022 22:33:48 +0800
+Message-Id: <20221222143353.598042-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
-Content-Disposition: inline
-In-Reply-To: <20221220201819.1497577-1-ydroneaud@opteya.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgDH5jCP+qNjzwckAQ--.30442S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFW8JF4DZFy5Jry8uw1xZrb_yoW3Kwb_tF
+        WkAFW8tFykJF15JFy7XFy7AFyDKw4kJa4UtanayrWxJr1xZas7Xw4kuFW2qr15ZFyDuF15
+        Jry5Jrs5AwnI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M28lY4IEw2IIxx
+        k0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK
+        6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
+        xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
+        x2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjTRCA
+        pnUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi, this series contain a bugfix patch to correct wake_batch
+recalculation to avoid potential IO hung and a few cleanup patches to
+remove unnecessary check and repeat code in sbitmap. Thanks.
 
---kVXhAStRUZ/+rrGn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+---
+v2:
+ -add patch "sbitmap: correct wake_batch recalculation to avoid potential
+IO hung"
+---
 
-On Tue, Dec 20, 2022 at 09:18:19PM +0100, Yann Droneaud <ydroneaud@opteya.com> wrote:
-> +enum {
->  	/* switch iff the conditions are met for longer than this */
->  	AUTOP_CYCLE_NSEC	= 10LLU * NSEC_PER_SEC,
-> +};
+Kemeng Shi (5):
+  sbitmap: remove unnecessary calculation of alloc_hint in
+    __sbitmap_get_shallow
+  sbitmap: remove redundant check in __sbitmap_queue_get_batch
+  sbitmap: rewrite sbitmap_find_bit_in_index to reduce repeat code
+  sbitmap: add sbitmap_find_bit to remove repeat code in
+    __sbitmap_get/__sbitmap_get_shallow
+  sbitmap: correct wake_batch recalculation to avoid potential IO hung
 
-This looks gratuitous.
+ lib/sbitmap.c | 103 ++++++++++++++++++++++----------------------------
+ 1 file changed, 46 insertions(+), 57 deletions(-)
 
-What about indivudial #defines with typed literals instead of the "lazy
-splitting"?
+-- 
+2.30.0
 
-Regards,
-Michal
-
---kVXhAStRUZ/+rrGn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYIAB0WIQTrXXag4J0QvXXBmkMkDQmsBEOquQUCY6RingAKCRAkDQmsBEOq
-uVPgAP4y2ImrULaeHe+Vpcp/aQaKYMrV7D3Q1d9z39OiU0CmwQD+PBJ70cOphLPH
-5zWBwTr/hS3qRiIJ7Feh9YL4sjTrig8=
-=ZT8m
------END PGP SIGNATURE-----
-
---kVXhAStRUZ/+rrGn--
