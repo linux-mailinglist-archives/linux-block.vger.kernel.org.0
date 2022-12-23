@@ -2,66 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 485EE654FD0
-	for <lists+linux-block@lfdr.de>; Fri, 23 Dec 2022 12:51:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2462654C07
+	for <lists+linux-block@lfdr.de>; Fri, 23 Dec 2022 05:53:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235818AbiLWLvM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 23 Dec 2022 06:51:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52976 "EHLO
+        id S229627AbiLWExi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 22 Dec 2022 23:53:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230413AbiLWLvL (ORCPT
+        with ESMTP id S229667AbiLWExd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 23 Dec 2022 06:51:11 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC3E5FCD
-        for <linux-block@vger.kernel.org>; Fri, 23 Dec 2022 03:51:10 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id f3so3192949pgc.2
-        for <linux-block@vger.kernel.org>; Fri, 23 Dec 2022 03:51:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sjv/rRvXeISjMwkyg4jOWEP5q4M57HHzk7yPJaOOhtY=;
-        b=ZpIa3DS09D5ozTUeEZeNzSvBicRKYBlwZZu7/O2+K5u9TUnLAPK+jYdhX//qFzYKQ1
-         lp1K1u18zcUB2k5Wdo5kqOopWseXOCBpZBlMFA+DUQnqx2rwC1rEAiHQGcDYjn0+sFaa
-         Lhck/cvE9uuTmcBqo4rW2NyEKmTGYCAM39JOE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sjv/rRvXeISjMwkyg4jOWEP5q4M57HHzk7yPJaOOhtY=;
-        b=FJ8OeZkaGBJZYi+DZrJd6B8KPPtdx7jff1mmSZmzqJBSx7Sj1eLzZexy1BJbHlb6fE
-         l9RrrkoaF1f8z8dk/tUojiqFX1eiUQ8N5B4wNGap6s2ueEjmp2DDSkv7wKjFxN8Q9o+r
-         EVeaZpQzxEPW5PSxlo8Dm2sghw5K317GuUx4hXHOictaWXlNrbmyWHOy6yBALGKgmziB
-         cnAON8gzxr6bMZpDZkwSerBDjHk8Jki31ElcMrdjEmIQxaim4dwSR10HCKLB3cUZgQ0r
-         icGZs0PbhGI9CMHDTEJpSjf+iqamcyyaISDeDnkKKZjhHkn8VQ7D85dVh9UhoxQerITO
-         EKuQ==
-X-Gm-Message-State: AFqh2krC/Gt504+WGPIfyGIxPPnMuHnaVx+mSGWIqMPz07HmGhf+USZS
-        yipEwnKnd90lCROlpDxXc9fX7ZfMZ4M9fuBE
-X-Google-Smtp-Source: AMrXdXsPk67PjFUI8adM5H88BkzcWWRaJBvouYJe9gvxHtQcPi5cLcb9STmHwmKGx7YUo2uB609Uog==
-X-Received: by 2002:a05:6a00:1ca7:b0:56d:1bb6:af75 with SMTP id y39-20020a056a001ca700b0056d1bb6af75mr23752646pfw.4.1671796270329;
-        Fri, 23 Dec 2022 03:51:10 -0800 (PST)
-Received: from google.com (KD124209188001.ppp-bb.dion.ne.jp. [124.209.188.1])
-        by smtp.gmail.com with ESMTPSA id a3-20020a624d03000000b0056ee49d6e95sm2369161pfb.86.2022.12.23.03.51.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Dec 2022 03:51:09 -0800 (PST)
-Date:   Fri, 23 Dec 2022 20:51:05 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     JeongHyeon Lee <jhs2.lee@samsung.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        senozhatsky@chromium.org, minchan@kernel.org, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH] zram: fix typos in comments
-Message-ID: <Y6WWKXUEDcq26XEF@google.com>
-References: <CGME20221223040335epcas1p45bda0013a3a42f176fa137e0597fd7c9@epcas1p4.samsung.com>
- <20221223040331.4194-1-jhs2.lee@samsung.com>
+        Thu, 22 Dec 2022 23:53:33 -0500
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B98BC19;
+        Thu, 22 Dec 2022 20:53:31 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4NdZZF6Hlbz4f3p1W;
+        Fri, 23 Dec 2022 12:53:25 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+        by APP4 (Coremail) with SMTP id gCh0CgDXjbFHNKVjpOduAQ--.93S2;
+        Fri, 23 Dec 2022 12:53:28 +0800 (CST)
+From:   Kemeng Shi <shikemeng@huaweicloud.com>
+To:     axboe@kernel.dk, dwagner@suse.de, hare@suse.de,
+        ming.lei@redhat.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     hch@lst.de, john.garry@huawei.com, shikemeng@huaweicloud.com
+Subject: [PATCH 00/13] A few bugfix and cleanup patches for blk-mq
+Date:   Fri, 23 Dec 2022 20:52:10 +0800
+Message-Id: <20221223125223.1687670-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221223040331.4194-1-jhs2.lee@samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgDXjbFHNKVjpOduAQ--.93S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF1xXF4fKry7XFWDAF1DZFb_yoW8Jw4kpF
+        43GFnxGa1fJry2qr1fAw47AF9avF4kGrW7JwnxC34rJr4DCryUJrWkWa1fZry0yFZxCanr
+        WF18Xw1YkF1Iqa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+        wVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
+        xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
+        x2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjTRNg
+        AwUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,12 +59,35 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Cc-ing Andrew
+Hi, this series contain several bugfix patches to fix potential io
+hung and a few cleanup patches to remove stale codes and unnecessary
+check. Most changes are in request issue and dispatch path. Thanks.
 
-On (22/12/23 13:03), JeongHyeon Lee wrote:
-> - The double `range` is duplicated in comment, remove one.
->  - change `syfs` to `sysfs`
-> 
-> Signed-off-by: JeongHyeon Lee <jhs2.lee@samsung.com>
+Kemeng Shi (13):
+  blk-mq: avoid sleep in blk_mq_alloc_request_hctx
+  blk-mq: remove stale comment for blk_mq_sched_mark_restart_hctx
+  blk-mq: wait on correct sbitmap_queue in blk_mq_mark_tag_wait
+  blk-mq: Fix potential io hung for shared sbitmap per tagset
+  blk-mq: remove unnecessary list_empty check in
+    blk_mq_try_issue_list_directly
+  blk-mq: remove unncessary error count and flush in
+    blk_mq_plug_issue_direct
+  blk-mq: remove error count and unncessary flush in
+    blk_mq_try_issue_list_directly
+  blk-mq: simplify flush check in blk_mq_dispatch_rq_list
+  blk-mq: remove unnecessary error count and check in
+    blk_mq_dispatch_rq_list
+  blk-mq: remove set bd->last when get driver tag for next request fails
+  blk-mq: remove unncessary from_schedule parameter in
+    blk_mq_plug_issue_direct
+  blk-mq: use switch/case to improve readability in
+    blk_mq_try_issue_list_directly
+  blk-mq: correct stale comment of .get_budget
 
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+ block/blk-mq-sched.c |   7 ++-
+ block/blk-mq.c       | 103 ++++++++++++++++++-------------------------
+ 2 files changed, 46 insertions(+), 64 deletions(-)
+
+-- 
+2.30.0
+
