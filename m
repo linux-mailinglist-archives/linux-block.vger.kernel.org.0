@@ -2,92 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03E65656127
-	for <lists+linux-block@lfdr.de>; Mon, 26 Dec 2022 09:38:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD823656535
+	for <lists+linux-block@lfdr.de>; Mon, 26 Dec 2022 22:58:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbiLZIiv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Dec 2022 03:38:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
+        id S232315AbiLZV6v (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Dec 2022 16:58:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231583AbiLZIiq (ORCPT
+        with ESMTP id S229614AbiLZV6v (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Dec 2022 03:38:46 -0500
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2B126D6;
-        Mon, 26 Dec 2022 00:38:44 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4NgWQl2ZNvz4f3mSB;
-        Mon, 26 Dec 2022 16:38:39 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP2 (Coremail) with SMTP id Syh0CgBH7eqEXaljOrUjAg--.30907S9;
-        Mon, 26 Dec 2022 16:38:42 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com
-Subject: [PATCH v3 5/5] blk-iocost: change div64_u64 to DIV64_U64_ROUND_UP in ioc_refresh_params()
-Date:   Mon, 26 Dec 2022 16:58:59 +0800
-Message-Id: <20221226085859.2701195-6-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221226085859.2701195-1-yukuai1@huaweicloud.com>
-References: <20221226085859.2701195-1-yukuai1@huaweicloud.com>
+        Mon, 26 Dec 2022 16:58:51 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED87D21BF;
+        Mon, 26 Dec 2022 13:58:49 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 5089E2086A;
+        Mon, 26 Dec 2022 21:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1672091928; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YhWabLpDTnB6UAKrZK6Tl8sha0fVHHbdbYiBlIIK1Gw=;
+        b=a2EH1N3/k5SUHfA5iOFWkrfswcbGtIUi74pCD8ZD5vyLDQMM5oRWnCtEeCR9yls0ieXCrf
+        sycybsVxiodF6JV8RILj3Zi0OxzABSOv6Ws1od+VeFzNRb9DgDB5pdcAmnaQD/prPs0e7d
+        ZbO8PRXiYjNsfK10mrM8zx8U485LbGM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1672091928;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YhWabLpDTnB6UAKrZK6Tl8sha0fVHHbdbYiBlIIK1Gw=;
+        b=GIk2YrUc5+FF2R+STO1MGJBTsXHiE546B7216vGBxvDQjXxqM9KA1fQRHj+GeL8fKBtL6X
+        4bMuUKS0oJYP9WDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3811313456;
+        Mon, 26 Dec 2022 21:58:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 4QM2DRgZqmMxOAAAMHmgww
+        (envelope-from <jack@suse.cz>); Mon, 26 Dec 2022 21:58:48 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id E3B74A0733; Mon, 26 Dec 2022 12:18:48 +0100 (CET)
+Date:   Mon, 26 Dec 2022 12:18:48 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     paolo.valente@linaro.org, axboe@kernel.dk, jack@suse.cz,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yi.zhang@huawei.com
+Subject: Re: [PATCH] block, bfq: fix uaf for bfqq in bfq_exit_icq_bfqq
+Message-ID: <20221226111848.oorzy2mecnrignzc@quack3>
+References: <20221226030605.1437081-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgBH7eqEXaljOrUjAg--.30907S9
-X-Coremail-Antispam: 1UD129KBjvdXoWruw1DtF4DCw47Aw15WFyxAFb_yoWDGFg_AF
-        yFqw10v348AF17uFsY9Fs0vrW29an8JF4ku3sxt3y5A3W7JFWkAws7K3s7ZrsxAFW5W3y5
-        tF1DWrs2vrs2qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbTkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-        F7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-        1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-        M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-        v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48JMx
-        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-        wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-        vE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxK
-        x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-        0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQSdkUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221226030605.1437081-1-yukuai1@huaweicloud.com>
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Li Nan <linan122@huawei.com>
+On Mon 26-12-22 11:06:05, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> Commit 64dc8c732f5c ("block, bfq: fix possible uaf for 'bfqq->bic'")
+> will access 'bic->bfqq' in bic_set_bfqq(), however, bfq_exit_icq_bfqq()
+> can free bfqq first, and then call bic_set_bfqq(), which will cause uaf.
+> 
+> Fix the problem by moving bfq_exit_bfqq() behind bic_set_bfqq().
+> 
+> Fixes: 64dc8c732f5c ("block, bfq: fix possible uaf for 'bfqq->bic'")
+> Reported-by: Yi Zhang <yi.zhang@redhat.com>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 
-vrate_min is calculated by DIV64_U64_ROUND_UP, but vrate_max is calculated
-by div64_u64. Vrate_min may be 1 greater than vrate_max if the input
-values min and max of cost.qos are equal.
+Thanks for the patch! Feel free to add:
 
-Signed-off-by: Li Nan <linan122@huawei.com>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-iocost.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index c6b39024117b..7a0d754b9eb2 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -930,8 +930,8 @@ static bool ioc_refresh_params(struct ioc *ioc, bool force)
- 
- 	ioc->vrate_min = DIV64_U64_ROUND_UP((u64)ioc->params.qos[QOS_MIN] *
- 					    VTIME_PER_USEC, MILLION);
--	ioc->vrate_max = div64_u64((u64)ioc->params.qos[QOS_MAX] *
--				   VTIME_PER_USEC, MILLION);
-+	ioc->vrate_max = DIV64_U64_ROUND_UP((u64)ioc->params.qos[QOS_MAX] *
-+					    VTIME_PER_USEC, MILLION);
- 
- 	return true;
- }
+								Honza
+
+> ---
+>  block/bfq-iosched.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> index 16f43bbc575a..ccf2204477a5 100644
+> --- a/block/bfq-iosched.c
+> +++ b/block/bfq-iosched.c
+> @@ -5317,8 +5317,8 @@ static void bfq_exit_icq_bfqq(struct bfq_io_cq *bic, bool is_sync)
+>  		unsigned long flags;
+>  
+>  		spin_lock_irqsave(&bfqd->lock, flags);
+> -		bfq_exit_bfqq(bfqd, bfqq);
+>  		bic_set_bfqq(bic, NULL, is_sync);
+> +		bfq_exit_bfqq(bfqd, bfqq);
+>  		spin_unlock_irqrestore(&bfqd->lock, flags);
+>  	}
+>  }
+> -- 
+> 2.31.1
+> 
 -- 
-2.31.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
