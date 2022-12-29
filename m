@@ -2,145 +2,164 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA22965919A
-	for <lists+linux-block@lfdr.de>; Thu, 29 Dec 2022 21:38:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8AF3659345
+	for <lists+linux-block@lfdr.de>; Fri, 30 Dec 2022 00:36:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233706AbiL2UiL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Dec 2022 15:38:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
+        id S233908AbiL2Xgl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Dec 2022 18:36:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234058AbiL2Uhw (ORCPT
+        with ESMTP id S234027AbiL2Xgi (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Dec 2022 15:37:52 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2021A167F7
-        for <linux-block@vger.kernel.org>; Thu, 29 Dec 2022 12:37:51 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id kw15so47328026ejc.10
-        for <linux-block@vger.kernel.org>; Thu, 29 Dec 2022 12:37:51 -0800 (PST)
+        Thu, 29 Dec 2022 18:36:38 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B97238F
+        for <linux-block@vger.kernel.org>; Thu, 29 Dec 2022 15:36:32 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id k137so8748034pfd.8
+        for <linux-block@vger.kernel.org>; Thu, 29 Dec 2022 15:36:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9zlPY0Un+v49wAp4Agod/FVz6SE5LhUB8HuWcFquXnc=;
-        b=sdpJY2+NyUmLkfu+69Bgwa7d+tcwQGa4x1nj/LQ5dFbmRDTboBYdKioPr/sVUeIltu
-         BnYk3KOvv6XfK9pMHkcsWdKAFwrS16GabcsrkUj++Os0adepdMfqThdiWJq+5j2G6p4p
-         r7lEaCONi81KIIQAYX6QfVrMQp2NUQuKjpON+wA7Gco1Xj2/wSwzpE2IGm1zndSlI54U
-         QAMofPprAxaBIE5Ei0ccCoinDXYE/w9FbQXsVrYNXUsr9mt6mfEctD5x9sb1XWAH1sbd
-         ij1ROss27WN+HRInA3raMHsx/RqQd/QPgh6XLSFb8mqnVNjmxXK15/NVh9yFyDN1MZHX
-         uEwg==
+        bh=TOlXib8R+5UZepmDaXZJBSg9Vhd8JVlNmHFSQlvmQzk=;
+        b=ayoq66+sJauDY6UGa1fPDamJ4gIDuipQOUx8r5jmdK1jUhzbMBLhSpSPbr3RcHEoPx
+         Shb6rIbWFE8CZ1RpbEVMv4l1RZPHM1xS6j33p1x9FUKxhAEYk+KqRjKis4DAi5d1i4ed
+         0T3hsR/VGiN3z0NE4xdkk/1uNsiJ6zOXdV99ClgmYTdRBA1KEVNz5jTKJshxgbbaE+Hz
+         raJ3qByPlG1VMGD6mkgYjv8bagoLOvDwiViequ0avsZgLDGseVwvBEwXNtEhOKyNlrWx
+         U0SzHplRYm6xibSH0DUsmGky5PWos21C9bf+jOXU+1FA4ttJj5Wb9/7MOWGMF0ejQGj0
+         NkiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9zlPY0Un+v49wAp4Agod/FVz6SE5LhUB8HuWcFquXnc=;
-        b=HLL6pwOOmJQ87AWljDi3dQkDgJrzkgIWKfdkf9Ho9ivS8xvujdBZC9mDp5pSCawowH
-         5DI6mOjo8pPKJg1G/DYGbAN0YGjT4AAhoKAio0Gh1EkbvX6/z+rSqg8/E2ZdD6kZTNF1
-         8uFUvkmqV/mlmCfF5fAsFfhkqJWFgviIwma1wN/T9velNicJUqIy/jFy8cVvP09JwN/2
-         +VrcxkVrU9ZXuZJPwINIJL+8vHUEASNJMJmLbc1OPM5q6yA1RlTd2rxyuzooL1+NIhF/
-         nRPXfdXu8wkcxdO4rv7jyEwoukIkH0oFoWObqRfKw2V7xlW0YSfuAKQcunH0GPISuMBO
-         36Pw==
-X-Gm-Message-State: AFqh2kp+2hKIyaJo/mXoVI7KBb749R3OCTdk7tP1Y0OReRQWotwajlOH
-        KgJVIiy39SK1aismpdndIC+kOg==
-X-Google-Smtp-Source: AMrXdXsrSlcKanVbB0wXQJjNGwoTxQZqpP3fPlRUhqCa6ENu3JN5drvPNz4/WeEsVzzsEnI35rlNiw==
-X-Received: by 2002:a17:906:8517:b0:7c0:a48b:2dff with SMTP id i23-20020a170906851700b007c0a48b2dffmr30315702ejx.43.1672346269647;
-        Thu, 29 Dec 2022 12:37:49 -0800 (PST)
-Received: from localhost.localdomain (mob-109-118-160-216.net.vodafone.it. [109.118.160.216])
-        by smtp.gmail.com with ESMTPSA id d16-20020a170906371000b0073d7b876621sm8872814ejc.205.2022.12.29.12.37.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Dec 2022 12:37:49 -0800 (PST)
-From:   Paolo Valente <paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arie.vanderhoeven@seagate.com, rory.c.chen@seagate.com,
-        glen.valante@linaro.org, damien.lemoal@opensource.wdc.com,
-        Davide Zini <davidezini2@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH V13 8/8] block, bfq: balance I/O injection among underutilized actuators
-Date:   Thu, 29 Dec 2022 21:37:07 +0100
-Message-Id: <20221229203707.68458-9-paolo.valente@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221229203707.68458-1-paolo.valente@linaro.org>
-References: <20221229203707.68458-1-paolo.valente@linaro.org>
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TOlXib8R+5UZepmDaXZJBSg9Vhd8JVlNmHFSQlvmQzk=;
+        b=xUYl+UM8iNBY0vgPMBt1aArng6bbbG1KYI+QonzTB+noMp+KHDuW+dl3gX2fzIyI3x
+         sJhyP2+0pIv8B5QGWhcsn1m5JRPYnLbQm64BNhq4x0TCD5FzM7clebDzik4NxZxxVYX0
+         waL87My4kThT3P3W2nmAJs8UrC360r0fcEPldMx6fTZdhFelpsZMsu2U+lHGLNMkiE6y
+         EIQ6z7eMzrpEdADedybKsrSojycYA2wGjGkBV6y4PIbovNjo/hLgIRm6pbeCNSXM+p52
+         gXWImyeMei0B49DeedEKfdp6fA87Fm4ezA85KLtYQlC0T+ymr/ZulxqZWnNI4n+ngQPG
+         js5w==
+X-Gm-Message-State: AFqh2krZEsec/rafmx+bzE5hN6KDplhEJFtPaDF2b7GPfid9sNPDfcvn
+        bA/TiNDIKmSXZKCdWjCHXB827Ob/dqawdOaT
+X-Google-Smtp-Source: AMrXdXsBUHBP694D4/t1jptilZ54mMj6tdSNAzJ/o0RVMEe/LzTZj7aNF9/9cW06uK9TlegsVTvXeg==
+X-Received: by 2002:a62:58c7:0:b0:577:3e5c:85e5 with SMTP id m190-20020a6258c7000000b005773e5c85e5mr7158585pfb.0.1672356991971;
+        Thu, 29 Dec 2022 15:36:31 -0800 (PST)
+Received: from [192.168.4.201] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id b10-20020aa78eca000000b0056b9df2a15esm7086063pfr.62.2022.12.29.15.36.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Dec 2022 15:36:31 -0800 (PST)
+Message-ID: <66ad5fb6-f9de-e47f-336c-7ab14424732f@kernel.dk>
+Date:   Thu, 29 Dec 2022 16:36:29 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 6.2-rc2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Davide Zini <davidezini2@gmail.com>
+Hi Linus,
 
-Upon the invocation of its dispatch function, BFQ returns the next I/O
-request of the in-service bfq_queue, unless some exception holds. One
-such exception is that there is some underutilized actuator, different
-from the actuator for which the in-service queue contains I/O, and
-that some other bfq_queue happens to contain I/O for such an
-actuator. In this case, the next I/O request of the latter bfq_queue,
-and not of the in-service bfq_queue, is returned (I/O is injected from
-that bfq_queue). To find such an actuator, a linear scan, in
-increasing index order, is performed among actuators.
+Block related fixes that should go into the 6.2 release. Mostly just
+NVMe, but also a single fixup for BFQ for a regression that happened
+during the merge window. In detail:
 
-Performing a linear scan entails a prioritization among actuators: an
-underutilized actuator may be considered for injection only if all
-actuators with a lower index are currently fully utilized, or if there
-is no pending I/O for any lower-index actuator that happens to be
-underutilized.
+- NVMe pull requests via Christoph:
+	- Fix doorbell buffer value endianness (Klaus Jensen)
+	- Fix Linux vs NVMe page size mismatch (Keith Busch)
+	- Fix a potential use memory access beyong the allocation limit
+	  (Keith Busch)
+	- Fix a multipath vs blktrace NULL pointer dereference
+	  (Yanjun Zhang)
+	- Fix various problems in handling the Command Supported and
+	  Effects log (Christoph Hellwig)
+	- Don't allow unprivileged passthrough of commands that don't
+	  transfer data but modify logical block content
+	  (Christoph Hellwig)
+	- Add a features and quirks policy document (Christoph Hellwig)
+	- Fix some really nasty code that was correct but made smatch
+	  complain (Sagi Grimberg)
 
-This commits breaks this prioritization and tends to distribute
-injection uniformly across actuators. This is obtained by adding the
-following condition to the linear scan: even if an actuator A is
-underutilized, A is however skipped if its load is higher than that of
-the next actuator.
+- Use-after-free regression in BFQ from this merge window (Yu)
 
-Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Davide Zini <davidezini2@gmail.com>
----
- block/bfq-iosched.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Please pull!
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 6ebcd94bf3b3..f729f51fd383 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -4767,10 +4767,16 @@ bfq_find_active_bfqq_for_actuator(struct bfq_data *bfqd, int idx)
- 
- /*
-  * Perform a linear scan of each actuator, until an actuator is found
-- * for which the following two conditions hold: the load of the
-- * actuator is below the threshold (see comments on actuator_load_threshold
-- * for details), and there is a queue that contains I/O for that
-- * actuator. On success, return that queue.
-+ * for which the following three conditions hold: the load of the
-+ * actuator is below the threshold (see comments on
-+ * actuator_load_threshold for details) and lower than that of the
-+ * next actuator (comments on this extra condition below), and there
-+ * is a queue that contains I/O for that actuator. On success, return
-+ * that queue.
-+ *
-+ * Performing a plain linear scan entails a prioritization among
-+ * actuators. The extra condition above breaks this prioritization and
-+ * tends to distribute injection uniformly across actuators.
-  */
- static struct bfq_queue *
- bfq_find_bfqq_for_underused_actuator(struct bfq_data *bfqd)
-@@ -4778,7 +4784,9 @@ bfq_find_bfqq_for_underused_actuator(struct bfq_data *bfqd)
- 	int i;
- 
- 	for (i = 0 ; i < bfqd->num_actuators; i++) {
--		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold) {
-+		if (bfqd->rq_in_driver[i] < bfqd->actuator_load_threshold &&
-+		    (i == bfqd->num_actuators - 1 ||
-+		     bfqd->rq_in_driver[i] < bfqd->rq_in_driver[i+1])) {
- 			struct bfq_queue *bfqq =
- 				bfq_find_active_bfqq_for_actuator(bfqd, i);
- 
+
+The following changes since commit 53eab8e76667b124615a943a033cdf97c80c242a:
+
+  block: don't clear REQ_ALLOC_CACHE for non-polled requests (2022-12-16 09:18:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux.git tags/block-6.2-2022-12-29
+
+for you to fetch changes up to 1551ed5a178ca030adc92b1eb29157b5e92bf134:
+
+  Merge tag 'nvme-6.2-2022-12-29' of git://git.infradead.org/nvme into block-6.2 (2022-12-29 11:31:45 -0700)
+
+----------------------------------------------------------------
+block-6.2-2022-12-29
+
+----------------------------------------------------------------
+Christoph Hellwig (9):
+      nvme: fix setting the queue depth in nvme_alloc_io_tag_set
+      nvme-pci: update sqsize when adjusting the queue depth
+      docs, nvme: add a feature and quirk policy document
+      nvme: fix the NVME_CMD_EFFECTS_CSE_MASK definition
+      nvmet: use NVME_CMD_EFFECTS_CSUPP instead of open coding it
+      nvmet: set the LBCC bit for commands that modify data
+      nvmet: don't defer passthrough commands with trivial effects to the workqueue
+      nvme: also return I/O command effects from nvme_command_effects
+      nvme: consult the CSE log page for unprivileged passthrough
+
+Jens Axboe (2):
+      Merge tag 'nvme-6.2-2022-12-22' of git://git.infradead.org/nvme into block-6.2
+      Merge tag 'nvme-6.2-2022-12-29' of git://git.infradead.org/nvme into block-6.2
+
+Keith Busch (2):
+      nvme-pci: fix mempool alloc size
+      nvme-pci: fix page size checks
+
+Klaus Jensen (1):
+      nvme-pci: fix doorbell buffer value endianness
+
+Sagi Grimberg (1):
+      nvme-auth: fix smatch warning complaints
+
+Yanjun Zhang (1):
+      nvme: fix multipath crash caused by flush request when blktrace is enabled
+
+Yu Kuai (1):
+      block, bfq: fix uaf for bfqq in bfq_exit_icq_bfqq
+
+ .../maintainer/maintainer-entry-profile.rst        |  1 +
+ Documentation/nvme/feature-and-quirk-policy.rst    | 77 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ block/bfq-iosched.c                                |  2 +-
+ drivers/nvme/host/auth.c                           |  2 +-
+ drivers/nvme/host/core.c                           | 34 ++++++++--
+ drivers/nvme/host/ioctl.c                          | 28 ++++++--
+ drivers/nvme/host/nvme.h                           |  2 +-
+ drivers/nvme/host/pci.c                            | 46 ++++++-------
+ drivers/nvme/target/admin-cmd.c                    | 37 ++++++-----
+ drivers/nvme/target/passthru.c                     | 11 ++--
+ include/linux/nvme.h                               |  4 +-
+ 12 files changed, 186 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/nvme/feature-and-quirk-policy.rst
+
 -- 
-2.20.1
+Jens Axboe
 
