@@ -2,71 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D69C659030
-	for <lists+linux-block@lfdr.de>; Thu, 29 Dec 2022 19:13:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97F6065906C
+	for <lists+linux-block@lfdr.de>; Thu, 29 Dec 2022 19:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231378AbiL2SNl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Dec 2022 13:13:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
+        id S233125AbiL2ScT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Dec 2022 13:32:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbiL2SNk (ORCPT
+        with ESMTP id S233335AbiL2ScR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Dec 2022 13:13:40 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB05813CD3;
-        Thu, 29 Dec 2022 10:13:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 99AA4B81A26;
-        Thu, 29 Dec 2022 18:13:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304B2C433D2;
-        Thu, 29 Dec 2022 18:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672337616;
-        bh=usORqHciyFUalESiER55B7VFdgT4QAkx64KL27S0Gjs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oOle2ajE2r1i8AIwwtR4Xcv8pq8zt1WzFElaAb9R+2zB2NMsYC3M2vMAT6LU19EvA
-         8GOb1NnBQEyGmafBrxNaPr5hQx8U0xGqwX5F3EwZEZnNkJpdetmeZ3ZVhf6LGJIY4r
-         PlrrngObTMT2ad4b2jxY5Jmh6WQKdiCWECga8eP6JukGyuG/ap+YTaOJtua0iMMdBk
-         z1oi6asC60n5CC4U+CfwSZF40Abl2Jpbl6uGYv3hNekZrZSb9FNIxQNqLuR1VGNOla
-         IYTuW/xMIXCmrF21qEijQODtXr9gGCGQrAavV9cbF3TD8Wt1IYtp7P32CNFEiG4uQ8
-         yyAb74VeWQudA==
-Date:   Thu, 29 Dec 2022 12:13:34 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Yi Zhang <yi.zhang@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "mstowe@redhat.com" <mstowe@redhat.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Xiao Yang <yangx.jy@fujitsu.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: Re: blktests failures with v5.19-rc1
-Message-ID: <20221229181334.GA616694@bhelgaas>
+        Thu, 29 Dec 2022 13:32:17 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC859E00
+        for <linux-block@vger.kernel.org>; Thu, 29 Dec 2022 10:32:15 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id fy4so20044387pjb.0
+        for <linux-block@vger.kernel.org>; Thu, 29 Dec 2022 10:32:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dOtZo3cRckA5ert9S3WU3eYhNXvQg14EN+002Snt29k=;
+        b=mM/aGzUK2kNINF/aB272yG+USJf/zMKQmlzlkFNiBXa88iHjxQu30PR90FTIG+CAuC
+         tJ4WOe/MsoraoJeNAa7NZPFFL8ZTEyJzT+6+eGMdQMtl9YndKaffp6hdg4kXfU82JMLX
+         5JRQx+xOJMMTCIoHQSuNr4KB0uSQTgEF5muBvh+kTdF+cxYUb0P1BSC44Hw4i0gOFYze
+         xZ/e6Q4vBE+fSLa0p45SJQnLBjuMTk+MZ2YQaYs//SWqFrG/rjXHNwW3RtUvuVMYk7Gn
+         EZRp799GIVuTBdIUtkzRVWDra81ywcXBLfYz5GeGzZ+mfZRTkliW/Ynr/qohG9wvnfCj
+         Te6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dOtZo3cRckA5ert9S3WU3eYhNXvQg14EN+002Snt29k=;
+        b=eCwdXkmdHKdgqsSmPjAMxrqUyKxiggCG/x/Q3vAWx8cno4Ie/SrAdXjlzORpoOJWEK
+         mJQscPE3BFOzg13NFUoT6LuO+x0t7zRut5j6M7atvvh8i/UKqhdn5CHQdf7E1nY7yprY
+         eAcOpDHQsFcBaZIt1dIiMmjMKANiqsSxWjY/mt6dh9cbW24j3icleQIhoirEjoEC/tIj
+         qDeOewdC2ip/f5F/w7cHZmXdSdMfWVmXAvoGD5bo80XeKvDsxmcGvnxm2yr1cyF43YJ1
+         EJ7/dLVSaBTpfe90+lPrmoWjUJgn6p8ltWsASY0UNJyFAgVaP+i69+Rc7RAwTTOkHMon
+         WecQ==
+X-Gm-Message-State: AFqh2kpfoN7T1jbN2oKkSUCySyHLzhgYbVO+wS4NlKLJvCFwzyLVjyuA
+        H9UZIEuEMvl2a6jEEFsI+c2tRt6AN5csHbQm
+X-Google-Smtp-Source: AMrXdXsoHhmT0sjvBoNt7ieYjwYjsnxvgOpg1USM8tNdxy1z0QVtj2tCka45C/h0B8NxmV5lKokvLQ==
+X-Received: by 2002:a05:6a20:a587:b0:a7:c027:f84a with SMTP id bc7-20020a056a20a58700b000a7c027f84amr9599886pzb.1.1672338735083;
+        Thu, 29 Dec 2022 10:32:15 -0800 (PST)
+Received: from [192.168.4.201] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
+        by smtp.gmail.com with ESMTPSA id e21-20020a63ee15000000b00478c48cf73csm11136937pgi.82.2022.12.29.10.32.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Dec 2022 10:32:14 -0800 (PST)
+Message-ID: <e6f210dd-3a67-698c-6f56-b127ca1ea0ec@kernel.dk>
+Date:   Thu, 29 Dec 2022 11:32:12 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221219112703.rlqdo33ncgmuowfm@shindev>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [GIT PULL] nvme fixes for Linux 6.2
+Content-Language: en-US
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+References: <Y63DQSUSW4aQlVJ+@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Y63DQSUSW4aQlVJ+@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Dec 19, 2022 at 11:27:03AM +0000, Shinichiro Kawasaki wrote:
-> Bjorn, FYI. This lockdep warning disappeared with kernel version
-> v6.1. I bisected and found the commit 2d7f9f8c1815 ("kernfs: Improve
-> kernfs_drain() and always call on removal.") avoided the issue. This
-> commit touches kernfs_drain() and __kernfs_remove(), and modifies
-> the condition to lock kernfs_rwsem. I think it explains why the
-> lockdep disappeared. No longer need to work on this issue :)
+On 12/29/22 9:41 AM, Christoph Hellwig wrote:
+> The following changes since commit 88d356ca41ba1c3effc2d4208dfbd4392f58cd6d:
+> 
+>   nvme-pci: update sqsize when adjusting the queue depth (2022-12-26 12:10:51 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.infradead.org/nvme.git tags/nvme-6.2-2022-12-29
+> 
+> for you to fetch changes up to 76807fcd73b818eb9f245ef1035aed34ecdd9813:
+> 
+>   nvme-auth: fix smatch warning complaints (2022-12-28 06:26:35 -1000)
+> 
+> ----------------------------------------------------------------
+> nvme fixes for Linux 6.2
+> 
+>  - fix various problems in handling the Command Supported and Effects log
+>    (Christoph Hellwig)
+>  - don't allow unprivileged passthrough of commands that don't transfer
+>    data but modify logical block content (Christoph Hellwig)
+>  - add a features and quirks policy document (Christoph Hellwig)
+>  - fix some really nasty code that was correct but made smatch complain
+>    (Sagi Grimberg)
 
-Thanks for following up on this!
+Pulled, thanks.
 
-Bjorn
+-- 
+Jens Axboe
+
+
