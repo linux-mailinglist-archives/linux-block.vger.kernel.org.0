@@ -2,112 +2,118 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63DE265B172
-	for <lists+linux-block@lfdr.de>; Mon,  2 Jan 2023 12:47:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA7BA65B19D
+	for <lists+linux-block@lfdr.de>; Mon,  2 Jan 2023 12:57:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231289AbjABLqk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 2 Jan 2023 06:46:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58834 "EHLO
+        id S232672AbjABL5C (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 2 Jan 2023 06:57:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232596AbjABLqa (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Jan 2023 06:46:30 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96625274
-        for <linux-block@vger.kernel.org>; Mon,  2 Jan 2023 03:46:29 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id bt23so24605520lfb.5
-        for <linux-block@vger.kernel.org>; Mon, 02 Jan 2023 03:46:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2Y98ewzD474EukyeaTfOcqfK8VaXxEFGI17GCteSXqE=;
-        b=LLfFOTp836RMUM64bBH7hDXpq0oYNS6Pk6xlDaDhA565yJyZ6NsyLawBiiNWrTKVht
-         sI7OvSerZLB5XdjOoK7hxdnZ+M9K2nlY+crRtuBQIhLNpvQVVWLBc+SLLW7IK7XJUTDf
-         6qp2OwP0ai30ia8VABb9UIOwselbUDXx/9mbHXamxt5SacgMk9QuI03/5hV6mQDCAtZK
-         HQq5VJHEVJRZUCWQO4mMaUpUj8uLrv2U3KWRyj4M9KNrtr+oZUd2nfsb4AmXK3rcFgLx
-         imQhEvo7DPyCZbII3t+Q6hUlw+XEXNBjMXaAney6iOtPEA8y7vDsjXwLQlaARRoTH/DM
-         YvQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2Y98ewzD474EukyeaTfOcqfK8VaXxEFGI17GCteSXqE=;
-        b=NJvHmB3QcKVPCQ7G9ALn6ecnmiZE4ysByR5ZHAxHt+strnWqmsnLD6kR7hYevAo2mj
-         9698lM7Pn3BnQDLSEoi4rLQSs82DIxqVqKIY+Zp8CI6vl1BPBcP5cCHw39Dbg/rTHVTJ
-         YSxZr4/nQj4GJEzJv2lbgw5yY6GI9onzKPwoMmcaNB3jRxogzxVwhzbl2PlDZy5RIQLj
-         vFT5iul/xISgRy9vXPi+5N3I30KaZKSCU0r4sHQgOzSLAcJVk9ImTeWZrbUktzREwbKj
-         GFAsfDiGZre1orOlhVoUhwkErtrslu+rzLAN0Fut3tHFXImjAOfeCxWHnzJfLW4w+RAQ
-         y/sQ==
-X-Gm-Message-State: AFqh2ko2zsVxxAyrFd6CYY/vsDyvmNnaOH0/pxoRFyUr2ZM57KrFkx8u
-        tEBrapntDnsDZtjtAQmcLCXK+CzOWZnlzx6bwrekvz3lj4To0w==
-X-Google-Smtp-Source: AMrXdXu2fT0/LtGExSEYcqO5+gfLI1dRvI5NjmSZe5SwqdSRF2/qFKKktgG2RXhiLFZ3stXqHNSskVG+1vQo7BteuQE=
-X-Received: by 2002:a05:6512:12c9:b0:4b6:ef9b:c51a with SMTP id
- p9-20020a05651212c900b004b6ef9bc51amr4092607lfg.471.1672659987845; Mon, 02
- Jan 2023 03:46:27 -0800 (PST)
+        with ESMTP id S232662AbjABL45 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Jan 2023 06:56:57 -0500
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [IPv6:2001:19f0:6c00:8846:5400:ff:fe0c:dfa0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC65C2DF0;
+        Mon,  2 Jan 2023 03:56:56 -0800 (PST)
+Received: from spock.localnet (unknown [83.148.33.151])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id 50919119FCEB;
+        Mon,  2 Jan 2023 12:49:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1672660161;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ajhGT9QUg+fbKi5W35a5UF/UZ/AD4ae8TaelrcZEChk=;
+        b=psmkqCbUvHaHLoK0A2BOLekypB7LQEEptw3268Tf7MqJgJOg/mJaft8W9y8+V5+yVA0jVZ
+        gqqxciVgmCjK1wl8L45I5ln8pPAp/J8k400EluhE0OTmu3lgTkLRyHJsHZJi3FkU1OjU8i
+        y6fA4CPl/VXyq8WXpd4WsqklpQwv45U=
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     linux-kernel@vger.kernel.org
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: BUG: KFENCE: use-after-free read in bfq_exit_icq_bfqq+0x132/0x270
+Date:   Mon, 02 Jan 2023 12:49:19 +0100
+Message-ID: <1842801.CQOukoFCf9@natalenko.name>
+In-Reply-To: <8202004.NyiUUSuA9g@natalenko.name>
+References: <8202004.NyiUUSuA9g@natalenko.name>
 MIME-Version: 1.0
-References: <20221230010926.32243-1-guoqing.jiang@linux.dev>
-In-Reply-To: <20221230010926.32243-1-guoqing.jiang@linux.dev>
-From:   Jinpu Wang <jinpu.wang@ionos.com>
-Date:   Mon, 2 Jan 2023 12:46:16 +0100
-Message-ID: <CAMGffE=AM_gXf3mK+mD3EeMFvDmTGk_5eqCk0_KXsbRs=6b6Hw@mail.gmail.com>
-Subject: Re: [PATCH V2] block/rnbd-clt: fix wrong max ID in ida_alloc_max
-To:     Guoqing Jiang <guoqing.jiang@linux.dev>
-Cc:     haris.iqbal@ionos.com, axboe@kernel.dk,
-        christophe.jaillet@wanadoo.fr, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Dec 30, 2022 at 2:09 AM Guoqing Jiang <guoqing.jiang@linux.dev> wro=
-te:
->
-> We need to pass 'end - 1' to ida_alloc_max after switch from
-> ida_simple_get to ida_alloc_max.
->
-> Otherwise smatch warns.
->
-> drivers/block/rnbd/rnbd-clt.c:1460 init_dev() error: Calling ida_alloc_ma=
-x() with a 'max' argument which is a power of 2. -1 missing?
->
-> Fixes: 24afc15dbe21 ("block/rnbd: Remove a useless mutex")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <error27@gmail.com>
-> Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
-Acked-by: Jack Wang <jinpu.wang@ionos.com>
-> ---
-> V2 changes:
-> 1. add parentheses around =E2=80=98-=E2=80=99 per lkp
->
->  drivers/block/rnbd/rnbd-clt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/block/rnbd/rnbd-clt.c b/drivers/block/rnbd/rnbd-clt.=
-c
-> index 78334da74d8b..5eb8c7855970 100644
-> --- a/drivers/block/rnbd/rnbd-clt.c
-> +++ b/drivers/block/rnbd/rnbd-clt.c
-> @@ -1440,7 +1440,7 @@ static struct rnbd_clt_dev *init_dev(struct rnbd_cl=
-t_session *sess,
->                 goto out_alloc;
->         }
->
-> -       ret =3D ida_alloc_max(&index_ida, 1 << (MINORBITS - RNBD_PART_BIT=
-S),
-> +       ret =3D ida_alloc_max(&index_ida, (1 << (MINORBITS - RNBD_PART_BI=
-TS)) - 1,
->                             GFP_KERNEL);
->         if (ret < 0) {
->                 pr_err("Failed to initialize device '%s' from session %s,=
- allocating idr failed, err: %d\n",
-> --
-> 2.35.3
->
+On pond=C4=9Bl=C3=AD 2. ledna 2023 12:45:30 CET Oleksandr Natalenko wrote:
+> This is a sudden splash I've got while just using my workstation:
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> BUG: KFENCE: use-after-free read in bfq_exit_icq_bfqq+0x132/0x270
+> Use-after-free read at 0x00000000e57c579c (in kfence-#173):
+>  bfq_exit_icq_bfqq+0x132/0x270
+>  bfq_exit_icq+0x5e/0x80
+>  exit_io_context+0x88/0xb0
+>  do_exit+0x66c/0xb80
+>  kthread_exit+0x29/0x30
+>  kthread+0xbd/0x110
+>  ret_from_fork+0x22/0x30
+>=20
+> kfence-#173: 0x000000005d7be631-0x000000006ad0b684, size=3D568, cache=3Db=
+fq_queue
+> allocated by task 40147 on cpu 16 at 13975.114285s:
+>  bfq_get_queue+0xdf/0x4e0
+>  bfq_get_bfqq_handle_split+0x75/0x170
+>  bfq_insert_requests+0x832/0x2580
+>  blk_mq_sched_insert_requests+0x63/0x150
+>  blk_mq_flush_plug_list+0x122/0x360
+>  __blk_flush_plug+0x106/0x160
+>  blk_finish_plug+0x29/0x40
+>  dm_bufio_prefetch+0x108/0x4d0 [dm_bufio]
+>  dm_tm_issue_prefetches+0x44/0x70 [dm_persistent_data]
+>  dm_pool_issue_prefetches+0x39/0x43 [dm_thin_pool]
+>  do_worker+0x4c/0xd60 [dm_thin_pool]
+>  process_one_work+0x258/0x410
+>  worker_thread+0x55/0x4c0
+>  kthread+0xde/0x110
+>  ret_from_fork+0x22/0x30
+>=20
+> freed by task 40147 on cpu 20 at 14500.096700s:
+>  bfq_put_queue+0x185/0x2d0
+>  bfq_exit_icq_bfqq+0x129/0x270
+>  bfq_exit_icq+0x5e/0x80
+>  exit_io_context+0x88/0xb0
+>  do_exit+0x66c/0xb80
+>  kthread_exit+0x29/0x30
+>  kthread+0xbd/0x110
+>  ret_from_fork+0x22/0x30
+>=20
+> CPU: 20 PID: 40147 Comm: kworker/dying Tainted: G        W          6.1.0=
+=2Dpf2 #1 ff5dbde5ea280110a73397797e059b8558cda111
+> Hardware name: ASUS System Product Name/Pro WS X570-ACE, BIOS 4304 12/12/=
+2022
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> I'm using v6.1.2, never experienced this before and cannot reproduce it a=
+t will. This kernel does not have any extra patches for the block layer on =
+top of v6.1.2.
+>=20
+> In case you know what's going on, please let me know.
+
+I assume 246cf66e30 ("block, bfq: fix uaf for bfqq in bfq_exit_icq_bfqq") m=
+ay have fixed the issue. This commit is pending for upcoming v6.1.3.
+
+=2D-=20
+Oleksandr Natalenko (post-factum)
+
+
