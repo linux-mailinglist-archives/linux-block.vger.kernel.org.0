@@ -2,71 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D013665B07A
-	for <lists+linux-block@lfdr.de>; Mon,  2 Jan 2023 12:23:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFC0765B181
+	for <lists+linux-block@lfdr.de>; Mon,  2 Jan 2023 12:52:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232676AbjABLXi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 2 Jan 2023 06:23:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44406 "EHLO
+        id S232554AbjABLwM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 2 Jan 2023 06:52:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232752AbjABLXE (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Jan 2023 06:23:04 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4C35FAB;
-        Mon,  2 Jan 2023 03:23:00 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        with ESMTP id S232782AbjABLv7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 2 Jan 2023 06:51:59 -0500
+X-Greylist: delayed 154 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 02 Jan 2023 03:51:57 PST
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [IPv6:2001:19f0:6c00:8846:5400:ff:fe0c:dfa0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5FA26E6;
+        Mon,  2 Jan 2023 03:51:56 -0800 (PST)
+Received: from spock.localnet (unknown [83.148.33.151])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id ECDDF3407E;
-        Mon,  2 Jan 2023 11:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1672658578; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VqwR+u//1iVHsLjS8ecEfHM3m/I8nXvJ9KjV1eh5WXs=;
-        b=QhMvVVMsVf6x5AViodhwkQFpoKLW/PYRa0Ijf7o3mskGYh6S4+61ZECF9G3TYScuIp7trv
-        mK8+RjALUdvmq5ZNuTg5/Tz5jodjLfufzWzjON0Kq+iFv13oOJ9np0a2VmyjWDhzfGRKVI
-        EWhorYbh0tj61v8YqB35xiUgkTRvk6A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1672658578;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VqwR+u//1iVHsLjS8ecEfHM3m/I8nXvJ9KjV1eh5WXs=;
-        b=K0tV4Q/xIo8tj99PVm3YZoJHBPvz4Lgq/VAnMDEUg/pj96U16eNquZmpyyQjnPO+/riu1/
-        l4ZdCXpQqX/S11Cw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D9C1913427;
-        Mon,  2 Jan 2023 11:22:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id jt8kNZK+smOqbgAAMHmgww
-        (envelope-from <jack@suse.cz>); Mon, 02 Jan 2023 11:22:58 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 4ACF3A073E; Mon,  2 Jan 2023 12:22:58 +0100 (CET)
-Date:   Mon, 2 Jan 2023 12:22:58 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     jack@suse.cz, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
-        paolo.valente@linaro.org, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH RFC] block, bfq: switch 'bfqg->ref' to use atomic
- refcount apis
-Message-ID: <20230102112258.3fixhuialamu6pkd@quack3>
-References: <20221227031541.2595647-1-yukuai1@huaweicloud.com>
- <ba5e74a6-b3de-844d-16b8-84eb429c7058@huaweicloud.com>
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id A023C119FCC3;
+        Mon,  2 Jan 2023 12:45:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1672659931;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=F0S4U7+fTNn/PPM2LEUUIETOtpqfY5ngMCVLsBSOEE0=;
+        b=uPiO7YSknuvcCgL1H6yNmgOF5bOChiPH/002jUE1asG+IosqDHn1E8zQN8f59FRQclKqj2
+        QbSUA0X7K5qc0QaEG0QS4cbgMtCGLMzb88FegIolWhsQeifH+Cl3n2vZhTa1el7M1Hc0M+
+        RkW80XTKXe2ZNjhWO7synZ1judcMu7k=
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     linux-kernel@vger.kernel.org
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: BUG: KFENCE: use-after-free read in bfq_exit_icq_bfqq+0x132/0x270
+Date:   Mon, 02 Jan 2023 12:45:30 +0100
+Message-ID: <8202004.NyiUUSuA9g@natalenko.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ba5e74a6-b3de-844d-16b8-84eb429c7058@huaweicloud.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -76,53 +49,60 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue 27-12-22 14:09:40, Yu Kuai wrote:
-> Hi, Jan!
-> 
-> 在 2022/12/27 11:15, Yu Kuai 写道:
-> > From: Yu Kuai <yukuai3@huawei.com>
-> > 
-> > The updating of 'bfqg->ref' should be protected by 'bfqd->lock', however,
-> > during code review, we found that bfq_pd_free() update 'bfqg->ref'
-> > without holding the lock, which is problematic:
-> > 
-> > 1) bfq_pd_free() triggered by removing cgroup is called asynchronously;
-> > 2) bfqq will grab bfqg reference, and exit bfqq will drop the reference,
-> > which can concurrenty with 1).
-> > 
-> > Unfortunately, 'bfqd->lock' can't be held here because 'bfqd' might already
-> > be freed in bfq_pd_free(). Fix the problem by using atomic refcount apis.
-> > 
-> > Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> > ---
-> >   block/bfq-cgroup.c  | 8 +++-----
-> >   block/bfq-iosched.h | 2 +-
-> >   2 files changed, 4 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-> > index 1b2829e99dad..aa9c4f02e3a3 100644
-> > --- a/block/bfq-cgroup.c
-> > +++ b/block/bfq-cgroup.c
-> > @@ -316,14 +316,12 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq)
-> >   static void bfqg_get(struct bfq_group *bfqg)
-> >   {
-> > -	bfqg->ref++;
-> > +	refcount_inc(&bfqg->ref);
-> >   }
-> >   static void bfqg_put(struct bfq_group *bfqg)
-> >   {
-> > -	bfqg->ref--;
-> > -
-> > -	if (bfqg->ref == 0)
-> > +	if (refcount_dec_and_test(bfqg->ref))
-> Sorry that here should be '&bfqg->ref'.
-> 
-> Anyway, I'll wait for you, and send a new version if you think this
-> patch make sense.
+Hello.
 
-Yes, the patch makes sense to me so feel free to send fixed version.
+This is a sudden splash I've got while just using my workstation:
 
-								Honza
+==================================================================
+BUG: KFENCE: use-after-free read in bfq_exit_icq_bfqq+0x132/0x270
+Use-after-free read at 0x00000000e57c579c (in kfence-#173):
+ bfq_exit_icq_bfqq+0x132/0x270
+ bfq_exit_icq+0x5e/0x80
+ exit_io_context+0x88/0xb0
+ do_exit+0x66c/0xb80
+ kthread_exit+0x29/0x30
+ kthread+0xbd/0x110
+ ret_from_fork+0x22/0x30
+
+kfence-#173: 0x000000005d7be631-0x000000006ad0b684, size=568, cache=bfq_queue
+allocated by task 40147 on cpu 16 at 13975.114285s:
+ bfq_get_queue+0xdf/0x4e0
+ bfq_get_bfqq_handle_split+0x75/0x170
+ bfq_insert_requests+0x832/0x2580
+ blk_mq_sched_insert_requests+0x63/0x150
+ blk_mq_flush_plug_list+0x122/0x360
+ __blk_flush_plug+0x106/0x160
+ blk_finish_plug+0x29/0x40
+ dm_bufio_prefetch+0x108/0x4d0 [dm_bufio]
+ dm_tm_issue_prefetches+0x44/0x70 [dm_persistent_data]
+ dm_pool_issue_prefetches+0x39/0x43 [dm_thin_pool]
+ do_worker+0x4c/0xd60 [dm_thin_pool]
+ process_one_work+0x258/0x410
+ worker_thread+0x55/0x4c0
+ kthread+0xde/0x110
+ ret_from_fork+0x22/0x30
+
+freed by task 40147 on cpu 20 at 14500.096700s:
+ bfq_put_queue+0x185/0x2d0
+ bfq_exit_icq_bfqq+0x129/0x270
+ bfq_exit_icq+0x5e/0x80
+ exit_io_context+0x88/0xb0
+ do_exit+0x66c/0xb80
+ kthread_exit+0x29/0x30
+ kthread+0xbd/0x110
+ ret_from_fork+0x22/0x30
+
+CPU: 20 PID: 40147 Comm: kworker/dying Tainted: G        W          6.1.0-pf2 #1 ff5dbde5ea280110a73397797e059b8558cda111
+Hardware name: ASUS System Product Name/Pro WS X570-ACE, BIOS 4304 12/12/2022
+==================================================================
+
+I'm using v6.1.2, never experienced this before and cannot reproduce it at will. This kernel does not have any extra patches for the block layer on top of v6.1.2.
+
+In case you know what's going on, please let me know.
+
+Thanks!
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Oleksandr Natalenko (post-factum)
+
+
