@@ -2,102 +2,83 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5175C65CE2C
-	for <lists+linux-block@lfdr.de>; Wed,  4 Jan 2023 09:20:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB92465CE47
+	for <lists+linux-block@lfdr.de>; Wed,  4 Jan 2023 09:29:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233126AbjADIUi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Jan 2023 03:20:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55748 "EHLO
+        id S233930AbjADI33 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Jan 2023 03:29:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbjADIUh (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Jan 2023 03:20:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12D319C07
-        for <linux-block@vger.kernel.org>; Wed,  4 Jan 2023 00:19:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1672820392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TaIt1E713BausU+dyJgM5xXKuUZPPOufGW2XT61ZWTU=;
-        b=CgX3E16gjIKm5dZNrhW+OsDYlLK26kLWGmGO7OvLm1Jd1JcjH7/HCWzL/XnVfslA2bdYGD
-        nGaaLUSfKwXiHrYSTs4DDU5XBG06bFx60CDdvpGumt16v29tmof1pXjt95I75UxIWMMjV+
-        J1X0ddVCcsVaw3df58reEin2BRGY2/c=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-286-yIMW1LRAP-i-eJdx8a-ttQ-1; Wed, 04 Jan 2023 03:19:49 -0500
-X-MC-Unique: yIMW1LRAP-i-eJdx8a-ttQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4A58B3811F37;
-        Wed,  4 Jan 2023 08:19:49 +0000 (UTC)
-Received: from T590 (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9CB592166B30;
-        Wed,  4 Jan 2023 08:19:43 +0000 (UTC)
-Date:   Wed, 4 Jan 2023 16:19:38 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, ming.lei@redhat.com
-Subject: Re: [PATCH V3 6/6] ublk_drv: add mechanism for supporting
- unprivileged ublk device
-Message-ID: <Y7U2mshx9s9rx++C@T590>
-References: <20221207123305.937678-1-ming.lei@redhat.com>
- <20221207123305.937678-7-ming.lei@redhat.com>
- <87a62ze4ql.fsf@meer.lwn.net>
+        with ESMTP id S234037AbjADI3Y (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Jan 2023 03:29:24 -0500
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16BE186CF;
+        Wed,  4 Jan 2023 00:29:23 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Nn2nn3qCcz4f3mSy;
+        Wed,  4 Jan 2023 16:29:17 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP2 (Coremail) with SMTP id Syh0CgBnW+ndOLVjwys+BA--.58806S4;
+        Wed, 04 Jan 2023 16:29:19 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     tj@kernel.org, hch@infradead.org, josef@toxicpanda.com,
+        axboe@kernel.dk
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+        yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: [PATCH -next 0/4] block/rq_qos: protect rq_qos apis with global mutex
+Date:   Wed,  4 Jan 2023 16:53:50 +0800
+Message-Id: <20230104085354.2343590-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a62ze4ql.fsf@meer.lwn.net>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: Syh0CgBnW+ndOLVjwys+BA--.58806S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr1Utw13Kw4DZrykKFy5XFb_yoW3JFbEyF
+        WkCa43Wr1kJ3WY9FWxKF4UGFyIkrW5Gr4Iya4UtFWfXr1fJrnxJwsxAr4vvw43XFWUGws8
+        Jw1DXrn5Jws2qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+        XdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jonathan,
+From: Yu Kuai <yukuai3@huawei.com>
 
-On Tue, Jan 03, 2023 at 01:35:14PM -0700, Jonathan Corbet wrote:
-> I have one quick question...
-> 
-> Ming Lei <ming.lei@redhat.com> writes:
-> 
-> > In case of UBLK_F_UNPRIVILEGED_DEV:
-> >
-> > 1) for command UBLK_CMD_ADD_DEV, it is always allowed, and user needs
-> > to provide owner's uid/gid in this command, so that udev can set correct
-> > ownership for the created ublk device, since the device owner uid/gid
-> > can be queried via command of UBLK_CMD_GET_DEV_INFO.
-> 
-> Why do you have the user provide the uid/gid rather than just using the
-> user's credentials directly?  It seems a bit strange to me to let
-> unprivileged users create devices with arbitrary ownership.  What am I
-> missing here?
+This patchset is a new version, use a different solution suggested by
+Tejun in [1].
 
-It is one good question.
+[1] https://lore.kernel.org/all/Y6DP3aOSad8+D1yY@slm.duckdns.org/
 
-The original idea is to allow user A to create device for another user
-B, and it still depends on user A's capability, such as, if the created
-daemon can open the created device which is owned by user B actually.
+Yu Kuai (4):
+  block/rq_qos: move implementions of init/exit rq-qos apis to
+    blk-rq-qos.c
+  block/rq_qos: factor out a helper to add rq_qos and activate policy
+  block/rq_qos: use a global mutex to protect rq_qos apis
+  block/rq_qos: fail rq_qos_add() after rq_qos_exit()
 
-The above behavior may be extended in future if there is such
-requirement. I will switch to just allow to create device for the
-current user in V4, then we can start with this easy/simple model.
+ block/blk-iocost.c    |  14 +----
+ block/blk-iolatency.c |   7 +--
+ block/blk-rq-qos.c    | 118 ++++++++++++++++++++++++++++++++++++++++--
+ block/blk-rq-qos.h    |  69 +++---------------------
+ 4 files changed, 125 insertions(+), 83 deletions(-)
 
-BTW, that is exactly the current userspace implementation, only the
-current uid/gid is passed.
-
-	https://github.com/ming1/ubdsrv/tree/unprivileged-ublk
-
-
-Thanks,
-Ming
+-- 
+2.31.1
 
