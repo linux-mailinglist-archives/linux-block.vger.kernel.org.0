@@ -2,70 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A65F65D32F
-	for <lists+linux-block@lfdr.de>; Wed,  4 Jan 2023 13:54:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7087465D458
+	for <lists+linux-block@lfdr.de>; Wed,  4 Jan 2023 14:35:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233076AbjADMyn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 4 Jan 2023 07:54:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35460 "EHLO
+        id S231787AbjADNfF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 4 Jan 2023 08:35:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233816AbjADMyd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Jan 2023 07:54:33 -0500
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C9A1CFD4
-        for <linux-block@vger.kernel.org>; Wed,  4 Jan 2023 04:54:32 -0800 (PST)
-Received: by mail-qk1-x72f.google.com with SMTP id pe2so16230320qkn.1
-        for <linux-block@vger.kernel.org>; Wed, 04 Jan 2023 04:54:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=WgtPiGBL7pKpeGAONT7jyOZBlPA87PF+BcZ0At3DRbjh8r4a90VkFTuegmf7v5I05U
-         8O8yRsMlEC8d3azBuhTVnh5a19IMri1yaM5CNo7nGSQjhbPmAzApkJwS9Ixgc01L8XVA
-         9+oXPryfLJjc92HnUP6sxIyah9VARXZTMfFxXMcqBFJ6snOmablGghR0F2+Y0sgoHgie
-         QmoiaDCXomaXijXUVGiYmzsfSWGfWMMdh1Ev9V0gp78bfPbYO2S9uBzuU4GRDkm7vJO6
-         RsJ5hkLkj5KAchsYozNwRuUxQUGpmscZ9Mbjv/HN5G//qfUumyrbxcj+0dSg+lcPq80U
-         5Wuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=5W3tc+UNq+SIRraPbp/tIkHCpEwrBPterJUivivs6BBx8PHS9pbXyCIV63xpjsbr+z
-         JQhSCdZZM/0EpHc5I8+9cYLOFPfyjHboJVBmbOwHvyJVdq1UHilRPxAeKtU1Ax4ofY+q
-         NNFtsy0DU50kPqS0jl3b3NBOG9SdCa8c34YfBHclB2Iusqf8Tw0TR8+tT/XkL5i654Px
-         FBslsWpt/BDEiRxeIZLwiLbeIWSlqEI2wf5lcaa1uhfBIm1T3v4tGDfGt+Q0HTygyhyM
-         3KaBZTS42hEups+VovzPD7Xz3YvLUyfePtVKns77EVcbvMWf8GHl8mXsIemGKJ0uwufh
-         Qpyg==
-X-Gm-Message-State: AFqh2krj5GxSycF1lJAIxRlquOnj91TU+JIcuZzMxGtxAsa8RDg3oq3M
-        b6iTlzzxi5r4MdDRBq5Io0C+Rv93vWCp49Kph0Q=
-X-Google-Smtp-Source: AMrXdXulKMdRBV/p4kXNikXMHFtLk5IOIYLDRJA7lpoRUfUF8+2cEqH8pHXLi4qSeE4J34Id+Th3n/mMQjaZgJWZFyc=
-X-Received: by 2002:a05:620a:8502:b0:704:ad9e:ad7 with SMTP id
- pe2-20020a05620a850200b00704ad9e0ad7mr1970941qkn.574.1672836871311; Wed, 04
- Jan 2023 04:54:31 -0800 (PST)
+        with ESMTP id S239551AbjADNeu (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 4 Jan 2023 08:34:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F6F3AA9A
+        for <linux-block@vger.kernel.org>; Wed,  4 Jan 2023 05:32:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1672839163;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UXhtq2BfoMv4ks6wMn18wccB8SuyC2oyyx5uojYC2t8=;
+        b=d/3vudDAeOQYTSV0/lfqdwN5ttP2kIm1cfGZPyOUJayNdIwJnA4DhIfe5jrdlMEg71K2gF
+        WTNY384aDD07JVYh+AtHatMA8kEe5MQHig7IcFoU1sk6FwnG8wAa6UUbBGINR+s8swrw++
+        QvQwh7S76BUP6RVwjjLGOfktm8xaZ4c=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-26-aVP_sM_BPju_OEyEAUjYmw-1; Wed, 04 Jan 2023 08:32:42 -0500
+X-MC-Unique: aVP_sM_BPju_OEyEAUjYmw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDB0F18E0922;
+        Wed,  4 Jan 2023 13:32:41 +0000 (UTC)
+Received: from localhost (ovpn-8-26.pek2.redhat.com [10.72.8.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBDB82166B30;
+        Wed,  4 Jan 2023 13:32:40 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH] ublk: honor IO_URING_F_NONBLOCK for handling control command
+Date:   Wed,  4 Jan 2023 21:32:35 +0800
+Message-Id: <20230104133235.836536-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6200:5d91:b0:4a5:78e9:2012 with HTTP; Wed, 4 Jan 2023
- 04:54:30 -0800 (PST)
-Reply-To: Gregdenzell9@gmail.com
-From:   Greg Denzell <mzsophie@gmail.com>
-Date:   Wed, 4 Jan 2023 12:54:30 +0000
-Message-ID: <CAEoj5=a-iCsZoe4s4S8=o2P=8nfbDVvG8sm_YZ9wpP37ZOqYKA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Seasons Greetings!
+Most of control command handlers may sleep, so return -EAGAIN in case
+of IO_URING_F_NONBLOCK to defer the handling into io wq context.
 
-This will remind you again that I have not yet received your reply to
-my last message to you.
+Fixes: 71f28f3136af ("ublk_drv: add io_uring based userspace block driver")
+Reported-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/block/ublk_drv.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index e9de9d846b73..17b677b5d3b2 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1992,6 +1992,9 @@ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
+ 	struct ublksrv_ctrl_cmd *header = (struct ublksrv_ctrl_cmd *)cmd->cmd;
+ 	int ret = -EINVAL;
+ 
++	if (issue_flags & IO_URING_F_NONBLOCK)
++		return -EAGAIN;
++
+ 	ublk_ctrl_cmd_dump(cmd);
+ 
+ 	if (!(issue_flags & IO_URING_F_SQE128))
+-- 
+2.38.1
+
