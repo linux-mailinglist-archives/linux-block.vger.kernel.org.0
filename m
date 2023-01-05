@@ -2,185 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4224F65F56B
-	for <lists+linux-block@lfdr.de>; Thu,  5 Jan 2023 21:51:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D42665F594
+	for <lists+linux-block@lfdr.de>; Thu,  5 Jan 2023 22:19:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235512AbjAEUv4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Jan 2023 15:51:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38172 "EHLO
+        id S235592AbjAEVTc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Jan 2023 16:19:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229944AbjAEUvz (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Jan 2023 15:51:55 -0500
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA594FCE7
-        for <linux-block@vger.kernel.org>; Thu,  5 Jan 2023 12:51:54 -0800 (PST)
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 305Fn25l000920
-        for <linux-block@vger.kernel.org>; Thu, 5 Jan 2023 12:51:54 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=s2048-2021-q4;
- bh=FEpjTYucHDuh1QyR744Eg07p4aVB9+zGkL+1xjoKI/c=;
- b=npTqzWoTTdgBvadd0/gUD6jTYo5Ncn5FWWF3q6aI7/99dqr0Tz5ZG1cpEEJryT7bJRc6
- J3WKjlZpQsQH1xqI45lGkuRI7WdvC+b+NwzfcAdCKO2dPINohHfV1Tkj19t3QfJP8MfU
- BsVZHQETXfYQhekOFa9EQQLA7K+yOixCNGDxqexvWM2+hnyn6lLFbretoeMAP3hyILdA
- LxRmaKG8Y+TlmsbkSqRi3pJ260NWnR5bozeVAcmxPO6ZnmHVtyRvqPdH339k0fWYJ4+w
- ddAjb2ChLZK0MYT0lKrLy9N8zSYOlMrv0SsccYGhv7JR4xL3jcIKN7K9PB3zlJr5cvK0 BQ== 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3mwkfdpsmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Thu, 05 Jan 2023 12:51:53 -0800
-Received: from twshared0337.04.ash8.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 5 Jan 2023 12:51:53 -0800
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id 4DB51E45DCBF; Thu,  5 Jan 2023 12:51:47 -0800 (PST)
-From:   Keith Busch <kbusch@meta.com>
-To:     <linux-block@vger.kernel.org>, <axboe@kernel.dk>
-CC:     <hch@lst.de>, <martin.petersen@oracle.com>,
+        with ESMTP id S235598AbjAEVT3 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Jan 2023 16:19:29 -0500
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3175D435
+        for <linux-block@vger.kernel.org>; Thu,  5 Jan 2023 13:19:27 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id c2so13103777plc.5
+        for <linux-block@vger.kernel.org>; Thu, 05 Jan 2023 13:19:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xOQ2HLCxzL2beoBReil+5Eiz0t4yNOfu4jZCHGn2sog=;
+        b=YMmf+gL8Ng9OxLoPRG1pwohc+XNjUSMOp21NlXpPIic3Ra9clyxVhhlULI0gcjQiRo
+         yGY7GfgvguGfAD8KzaRpZfYjGdJ2NMdpHzBuO+Tn8larF982+4XWG7Mk13+LHzE20p4z
+         kAh4LOX9aFWPql8Bk8YMWNYwH1yFxeoPWcPGoT85u/6gpqr8F/W3bwPy9dkSf3DpJ/6u
+         wrSqmegQ0uYgjpeW7AG0z294M9RSKkELVy3p7ePt3JeqXx03gLbDIODUhESpSa+oIVwy
+         2jwBQ2TS0kou6iHcOQDw6YkW1F+kcTAwNS9DyVvrH/hPICcAxpYdvVRslNQx2ZUqEX3j
+         jUMw==
+X-Gm-Message-State: AFqh2kpoBPJiaT/x80RukIrHLx0a3X2lmxQ/4zY5/dUfR4w7WlzgURrT
+        IAQ2umPETMCYk32UvHTgiSQ=
+X-Google-Smtp-Source: AMrXdXtUaU2GV59+/0wk0//bz+FYRIqSruFpNod3uwd0e2ESMoLI9C6HSiterbhUYj1simh8r7MX4g==
+X-Received: by 2002:a17:902:e84d:b0:192:8824:e516 with SMTP id t13-20020a170902e84d00b001928824e516mr47776514plg.51.1672953567218;
+        Thu, 05 Jan 2023 13:19:27 -0800 (PST)
+Received: from ?IPV6:2620:15c:211:201:f9eb:49b6:75b:111e? ([2620:15c:211:201:f9eb:49b6:75b:111e])
+        by smtp.gmail.com with ESMTPSA id b8-20020a1709027e0800b00189a7fbfd44sm26390367plm.211.2023.01.05.13.19.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jan 2023 13:19:26 -0800 (PST)
+Message-ID: <619f3afc-1121-1a80-7cd1-e8cefce93498@acm.org>
+Date:   Thu, 5 Jan 2023 13:19:23 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCHv4 1/2] block: make BLK_DEF_MAX_SECTORS unsigned
+Content-Language: en-US
+To:     Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
+        axboe@kernel.dk
+Cc:     hch@lst.de, martin.petersen@oracle.com,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv4 2/2] block: save user max_sectors limit
-Date:   Thu, 5 Jan 2023 12:51:46 -0800
-Message-ID: <20230105205146.3610282-3-kbusch@meta.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230105205146.3610282-1-kbusch@meta.com>
 References: <20230105205146.3610282-1-kbusch@meta.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: 7nD9Y_hNEIyJRbd2Vmrzf7vmSokVPWde
-X-Proofpoint-ORIG-GUID: 7nD9Y_hNEIyJRbd2Vmrzf7vmSokVPWde
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-05_12,2023-01-05_01,2022-06-22_01
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+ <20230105205146.3610282-2-kbusch@meta.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20230105205146.3610282-2-kbusch@meta.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+On 1/5/23 12:51, Keith Busch wrote:
+> This is used as an unsigned value, so define it that way to avoid
+> having to cast it.
 
-The user can set the max_sectors limit to any valid value via sysfs
-/sys/block/<dev>/queue/max_sectors_kb attribute. If the device limits
-are ever rescanned, though, the limit reverts back to the potentially
-artificially low BLK_DEF_MAX_SECTORS value.
-
-Preserve the user's setting as the max_sectors limit as long as it's
-valid. The user can reset back to defaults by writing 0 to the sysfs
-file.
-
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- Documentation/ABI/stable/sysfs-block |  3 ++-
- block/blk-settings.c                 |  9 +++++++--
- block/blk-sysfs.c                    | 21 +++++++++++++++------
- include/linux/blkdev.h               |  1 +
- 4 files changed, 25 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/ABI/stable/sysfs-block b/Documentation/ABI/sta=
-ble/sysfs-block
-index cd14ecb3c9a5a..ac1e519272aa2 100644
---- a/Documentation/ABI/stable/sysfs-block
-+++ b/Documentation/ABI/stable/sysfs-block
-@@ -432,7 +432,8 @@ Contact:	linux-block@vger.kernel.org
- Description:
- 		[RW] This is the maximum number of kilobytes that the block
- 		layer will allow for a filesystem request. Must be smaller than
--		or equal to the maximum size allowed by the hardware.
-+		or equal to the maximum size allowed by the hardware. Write 0
-+		to use default kernel settings.
-=20
-=20
- What:		/sys/block/<disk>/queue/max_segment_size
-diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 9875ca131eb0c..9c9713c9269cc 100644
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -40,7 +40,7 @@ void blk_set_default_limits(struct queue_limits *lim)
- 	lim->virt_boundary_mask =3D 0;
- 	lim->max_segment_size =3D BLK_MAX_SEGMENT_SIZE;
- 	lim->max_sectors =3D lim->max_hw_sectors =3D BLK_SAFE_MAX_SECTORS;
--	lim->max_dev_sectors =3D 0;
-+	lim->max_user_sectors =3D lim->max_dev_sectors =3D 0;
- 	lim->chunk_sectors =3D 0;
- 	lim->max_write_zeroes_sectors =3D 0;
- 	lim->max_zone_append_sectors =3D 0;
-@@ -135,7 +135,12 @@ void blk_queue_max_hw_sectors(struct request_queue *=
-q, unsigned int max_hw_secto
- 	limits->max_hw_sectors =3D max_hw_sectors;
-=20
- 	max_sectors =3D min_not_zero(max_hw_sectors, limits->max_dev_sectors);
--	max_sectors =3D min(max_sectors, BLK_DEF_MAX_SECTORS);
-+
-+	if (limits->max_user_sectors)
-+		max_sectors =3D min(max_sectors, limits->max_user_sectors);
-+	else
-+		max_sectors =3D min(max_sectors, BLK_DEF_MAX_SECTORS);
-+
- 	max_sectors =3D round_down(max_sectors,
- 				 limits->logical_block_size >> SECTOR_SHIFT);
- 	limits->max_sectors =3D max_sectors;
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 93d9e9c9a6ea8..5486b6c57f6b8 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -239,19 +239,28 @@ static ssize_t queue_zone_append_max_show(struct re=
-quest_queue *q, char *page)
- static ssize_t
- queue_max_sectors_store(struct request_queue *q, const char *page, size_=
-t count)
- {
--	unsigned long max_sectors_kb,
-+	unsigned long var;
-+	unsigned int max_sectors_kb,
- 		max_hw_sectors_kb =3D queue_max_hw_sectors(q) >> 1,
- 			page_kb =3D 1 << (PAGE_SHIFT - 10);
--	ssize_t ret =3D queue_var_store(&max_sectors_kb, page, count);
-+	ssize_t ret =3D queue_var_store(&var, page, count);
-=20
- 	if (ret < 0)
- 		return ret;
-=20
--	max_hw_sectors_kb =3D min_not_zero(max_hw_sectors_kb, (unsigned long)
-+	max_sectors_kb =3D (unsigned int)var;
-+	max_hw_sectors_kb =3D min_not_zero(max_hw_sectors_kb,
- 					 q->limits.max_dev_sectors >> 1);
--
--	if (max_sectors_kb > max_hw_sectors_kb || max_sectors_kb < page_kb)
--		return -EINVAL;
-+	if (max_sectors_kb =3D=3D 0) {
-+		q->limits.max_user_sectors =3D 0;
-+		max_sectors_kb =3D min(max_hw_sectors_kb,
-+				     BLK_DEF_MAX_SECTORS >> 1);
-+	} else {
-+		if (max_sectors_kb > max_hw_sectors_kb ||
-+		    max_sectors_kb < page_kb)
-+			return -EINVAL;
-+		q->limits.max_user_sectors =3D max_sectors_kb << 1;
-+	}
-=20
- 	spin_lock_irq(&q->queue_lock);
- 	q->limits.max_sectors =3D max_sectors_kb << 1;
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 2b85161e22561..b87ed829ab941 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -288,6 +288,7 @@ struct queue_limits {
- 	unsigned int		max_dev_sectors;
- 	unsigned int		chunk_sectors;
- 	unsigned int		max_sectors;
-+	unsigned int		max_user_sectors;
- 	unsigned int		max_segment_size;
- 	unsigned int		physical_block_size;
- 	unsigned int		logical_block_size;
---=20
-2.30.2
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
