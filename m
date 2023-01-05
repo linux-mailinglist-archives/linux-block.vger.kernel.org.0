@@ -2,21 +2,21 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A79D65F56E
-	for <lists+linux-block@lfdr.de>; Thu,  5 Jan 2023 21:57:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED8A265F56C
+	for <lists+linux-block@lfdr.de>; Thu,  5 Jan 2023 21:52:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231888AbjAEU5T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Jan 2023 15:57:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38574 "EHLO
+        id S235532AbjAEUwI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Jan 2023 15:52:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229944AbjAEU5T (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Jan 2023 15:57:19 -0500
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3023E35933
-        for <linux-block@vger.kernel.org>; Thu,  5 Jan 2023 12:57:18 -0800 (PST)
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 305KM4Uf010193
-        for <linux-block@vger.kernel.org>; Thu, 5 Jan 2023 12:57:18 -0800
+        with ESMTP id S235541AbjAEUwG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Jan 2023 15:52:06 -0500
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE2263D24
+        for <linux-block@vger.kernel.org>; Thu,  5 Jan 2023 12:52:04 -0800 (PST)
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 305BDjUx028971
+        for <linux-block@vger.kernel.org>; Thu, 5 Jan 2023 12:52:04 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=s2048-2021-q4;
@@ -27,13 +27,13 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : 
  f8OimDFGmAjwN7lGLvEJ1ePO3V1O1Ubwio+UZ0TNU8HRU0kteGrzuZd3paL3b3c29+je
  NdbD9rdYDm13ThzhPLYvq6LPn4zQo9a/qa61IMyIchSahGn2iw5OCTGhtc539tOsyQbD hA== 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3mx5h2r4va-1
+        by m0089730.ppops.net (PPS) with ESMTPS id 3mw2bpp28k-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Thu, 05 Jan 2023 12:57:17 -0800
-Received: from twshared16996.15.frc2.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c085:11d::4) with Microsoft SMTP Server
+        for <linux-block@vger.kernel.org>; Thu, 05 Jan 2023 12:52:04 -0800
+Received: from twshared16996.15.frc2.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:21d::6) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 5 Jan 2023 12:57:17 -0800
+ 15.1.2375.34; Thu, 5 Jan 2023 12:52:02 -0800
 Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
         id 45937E45DCBD; Thu,  5 Jan 2023 12:51:47 -0800 (PST)
 From:   Keith Busch <kbusch@meta.com>
@@ -51,15 +51,15 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-GUID: kMeF6F8IX3Tfy9ZFLThHonwlyZUXDy6A
-X-Proofpoint-ORIG-GUID: kMeF6F8IX3Tfy9ZFLThHonwlyZUXDy6A
+X-Proofpoint-GUID: plh0k7oKXwbQsx2kaCI1X7B-I8pYCQ2d
+X-Proofpoint-ORIG-GUID: plh0k7oKXwbQsx2kaCI1X7B-I8pYCQ2d
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2023-01-05_12,2023-01-05_01,2022-06-22_01
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
