@@ -2,488 +2,268 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E68265FAAB
-	for <lists+linux-block@lfdr.de>; Fri,  6 Jan 2023 05:19:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B271B65FB9F
+	for <lists+linux-block@lfdr.de>; Fri,  6 Jan 2023 07:51:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbjAFETL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Jan 2023 23:19:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54704 "EHLO
+        id S231561AbjAFGvz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 6 Jan 2023 01:51:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230391AbjAFESc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Jan 2023 23:18:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC81918393
-        for <linux-block@vger.kernel.org>; Thu,  5 Jan 2023 20:17:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1672978666;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I3D5U0CLcOV84s7r1R8hKlqth6LgR+sTNa9vWYhEUYs=;
-        b=cT9HyAdI+yBIv2zk7VJvAmW3uB2KhmgRlmYtBSu+jJ63Gz1KDCYNZaygD0v0N46wJm2rpd
-        NLbOxx/PTe+Zw/4xWriK5EhqcRYcJpdU/zxYFZq6bIWktYfLkFKHAr4mTPxOUTdKE4ItHp
-        TeIhsGVqlr0xjBNbRR6g6EStOWFQLoc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-670-0xBScYi5OCSa5FQRMagzxA-1; Thu, 05 Jan 2023 23:17:44 -0500
-X-MC-Unique: 0xBScYi5OCSa5FQRMagzxA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07FF03C00089;
-        Fri,  6 Jan 2023 04:17:44 +0000 (UTC)
-Received: from localhost (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A722640C2064;
-        Fri,  6 Jan 2023 04:17:42 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V4 6/6] ublk_drv: add mechanism for supporting unprivileged ublk device
-Date:   Fri,  6 Jan 2023 12:17:11 +0800
-Message-Id: <20230106041711.914434-7-ming.lei@redhat.com>
-In-Reply-To: <20230106041711.914434-1-ming.lei@redhat.com>
-References: <20230106041711.914434-1-ming.lei@redhat.com>
+        with ESMTP id S230344AbjAFGvy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Jan 2023 01:51:54 -0500
+Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2ABC1A806
+        for <linux-block@vger.kernel.org>; Thu,  5 Jan 2023 22:51:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1672987912; x=1704523912;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+194s3REqJq98XWX2HOu1IzSr6E0qcXR6yy/oNtqljc=;
+  b=bQ7XZT24RBIzD9xwFkLcGJWpW1HxJ4B5TjtqUEJfdr96hx7tQf0e/zgi
+   Itg/rsKE1CZeOUuZy0kSs42V/WOzWjMEqCrKi5UwJwxTyiCSfdvYOY4pA
+   6jYN2fm7YNqLoRUspEqc595cUoxGseaM9bf0+5zJ99br/WAe4+cuYz4Hd
+   +9S3pLEkDnPYMIRSy51jKIMv/iD1Aio8cx0NT9dDCiv810Psrc5bEGQvF
+   4sIDIjOryEijcMEnNf7SUhPWT+qh6ZvGPbnauTvTqGTUkWMbxzo1vpZZV
+   phZ1zjpinaxiYqwI6Tq4JLBKz8axW3hNhhUqdzUFbnRW6YydvCgFNR8TK
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.96,304,1665417600"; 
+   d="scan'208";a="218418794"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Jan 2023 14:51:52 +0800
+IronPort-SDR: 7BIECNkgscSzQG8v4+G7l5PUCIrCj5RvbKdrgHQcZD7hTX1eBReOzNwJpplq+i7N0VMIO5Kte/
+ +NZY6FlTSkoEXALw02J2sLqm8zXSb2e82VVJGyLH14t3VMgA/bdtpWPoSbklMLQVpWZUzdecII
+ 9IyMfp4v23joF9ZFlzbbvXlN9qFj3BmSCdqZWmLLDX7772GDLv9kuY4LZ2n5TT5ykOvJ0zNCDf
+ bQk/rcTJBH9X6VzMHHF5vv/UbfQnw8/Voc/AqZRXuJkkg5lXH4SWv+PhND6C9oq6eQ9VLWPXtX
+ /VQ=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jan 2023 22:04:02 -0800
+IronPort-SDR: csY3jg13Vg3cE0PhTZC9SfX7M6M4HvO182KiEZ2gEsiBFBgLmsu0Pw2olpygAYLKvCIiNxq7SM
+ N8A6pjm5lEZ0TmqH8rBTBekjy5eoCQci5i71Ie58WSbF5VdQdVjeY7ZpoNzrdWuvzWbb85HIgK
+ LweAV8kQAXVfZ5tWz6T/t5NxtGqB9DBsoNDsmNM/ZlLFuSrxBQuLG1mZ/W2TKydDxWXczrZebN
+ 1Hh9aM5NKDuwa3cF11juymdrRKnoBoxg5lqksF08dg15GRNUFMgr6BKCmVlBWgKXW5oWBpPVy5
+ 4YA=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jan 2023 22:51:52 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4NpDXS1kcMz1RvTr
+        for <linux-block@vger.kernel.org>; Thu,  5 Jan 2023 22:51:52 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1672987910; x=1675579911; bh=+194s3REqJq98XWX2HOu1IzSr6E0qcXR6yy
+        /oNtqljc=; b=Fe5+7PEEcpoT0BbQPZkrutKaylGAMWWISieHPNInAWv18wREilq
+        w3FniOtce8H9NVvR6teNPDZ1eByyHdG4E2Hgts0/OIASavh4Ttbs98GFyRk23/7D
+        XUgoeX6IgtFvTkpS3CLNKlJI97/r02Ay+wsg+CmyGMZgIvqb75l2mhF1QDevfcbB
+        cUuo7eJ04UvYyk8jPk4+zgjQWLxLx7fEiqouF/6yzIfRF34MyZtDj8ubAhYkEbAy
+        d0eI9jxbtir1dV7waiyj5Dbtq0ZnG4Wx64LN1mZohFZjhzQvJFdl/h2dyhBEN6cF
+        ytVBZnoARzZxGUUTm1RfU++Lp5TEKupGByw==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id JM1Y894Ydr3Z for <linux-block@vger.kernel.org>;
+        Thu,  5 Jan 2023 22:51:50 -0800 (PST)
+Received: from [10.149.53.254] (washi.fujisawa.hgst.com [10.149.53.254])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4NpDXP4M8lz1RvLy;
+        Thu,  5 Jan 2023 22:51:49 -0800 (PST)
+Message-ID: <b5c57ca5-49b0-b9c6-4a65-a8867a74e950@opensource.wdc.com>
+Date:   Fri, 6 Jan 2023 15:51:48 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v7 0/7] Improve libata support for FUA
+Content-Language: en-US
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-ide@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        "Maciej S . Szmigiero" <mail@maciej.szmigiero.name>,
+        Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Niklas Cassel <niklas.cassel@wdc.com>
+References: <20230103051924.233796-1-damien.lemoal@opensource.wdc.com>
+ <Y7WuEqMgySOCCTqy@slm.duckdns.org>
+ <79260c74-92dd-2cdf-ad71-e70d9fa0f8a9@opensource.wdc.com>
+ <Y7cT3SSssHzBYqU4@slm.duckdns.org>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <Y7cT3SSssHzBYqU4@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-unprivileged ublk device is helpful for container use case, such
-as: ublk device created in one unprivileged container can be controlled
-and accessed by this container only.
+On 1/6/23 03:15, Tejun Heo wrote:
+> Hello,
+> 
+> On Thu, Jan 05, 2023 at 12:43:06PM +0900, Damien Le Moal wrote:
+>>> These optional features tend to be broken in various and subtle ways,
+>>
+>> FUA is not optional for any drive that supports NCQ. The FUA bit is a
+>> mandatory part of the FPDMA READ/WRITE commands. The optional part is
+>> support for the non-ncq WRITE FUA EXT command.
+> 
+> Optional in the sense that it isn't essential in achieving the main function
+> of the device, which means that most don't end up using it.
 
-Implement this feature by adding flag of UBLK_F_UNPRIVILEGED_DEV, and if
-this flag isn't set, any control command has been run from privileged
-user. Otherwise, any control command can be sent from any unprivileged
-user, but the user has to be permitted to access the ublk char device
-to be controlled.
+OK. Granted. But for this particular case, scsi & nvme subsystem do not
+treat FUA as "optional". If it is supported, it will be used even though
+you are correct that we can work without it. I do not think we should
+treat ATA devices any differently.
 
-In case of UBLK_F_UNPRIVILEGED_DEV:
+>>> especially the ones which don't show clear and notable advantages and thus
+>>> don't get used by everybody. I'm not necessarily against enabling it by
+>>> default but we should have better justifications as we might unnecessarily
+>>> cause a bunch of painful and subtle failures which can take a while to sort
+>>> out.
+>>
+>> Avoiding regressions is always my highest priority. I know that there
+>> are a lot of cheap ATA devices out there that have questionable ACS spec
+>> compliance.
+> 
+> A lot of historical devices too which don't get much scrutiny or testing but
+> can still cause significant griefs for the users.
 
-1) for command UBLK_CMD_ADD_DEV, it is always allowed, and user needs
-to provide owner's uid/gid in this command, so that udev can set correct
-ownership for the created ublk device, since the device owner uid/gid
-can be queried via command of UBLK_CMD_GET_DEV_INFO.
+Yes. There are a lot of s****y old devices that do not correctly handle
+synchronize cache, and likely fua too. Hence my propsal to limit
+enabling FUA support to newer devices based on the standards version
+supported. Note that this patch set excludes all ide/pata devices. These
+will still operate with fua off by default since they do not support NCQ.
 
-2) for other control commands, they can only be run successfully if the
-current user is allowed to access the specified ublk char device, for
-running the permission check, path of the ublk char device has to be
-provided by these commands.
+>>> * Can the advantages of using FUA be demonstrated in a realistic way? IOW,
+>>>   are there workloads which clearly benefit from FUA? My memory is hazy but
+>>>   we only really use FUA from flush sequence to turn flush, write, flush
+>>>   sequence into flush, FUA-write. As all the heavy lifting is done in the
+>>>   first flush anyway, I couldn't find a case where that optimization made a
+>>>   meaningful difference but I didn't look very hard.
+>>
+>> The main users in kernel are file systems, when committing
+>> transactions/metadata journaling. Given that this is generally not
+>> generating a lot of traffic, I do not think we can measure any
+>> difference for HDDs. The devices are too slow to start with, so saving
+>> one command will not matter much, unless the application is fsync()
+>> crazy (and even then, not sure we'll see any difference). Even for SATA
+>> SSDs it likely will be hard to see a difference I think.
+> 
+> On a quick glance, there are some uses of REQ_FUA w/o REQ_PREFLUSH which
+> indicates that there can be actual gains to be had. However, ext4 AFAICS
+> always pairs PREFLUSH w/ FUA, so a lot of use cases won't see any gain while
+> taking on the possible risk of being exposed to FUA commands.
 
-Also add one control of command UBLK_CMD_GET_DEV_INFO2 which always
-include the char dev path in payload since userspace may not have
-knowledge if this device is created in unprivileged mode.
+Yes. Most FSes will do PREFLUSH | FUA. For the risk, see above.
 
-For applying this mechanism, system administrator needs to take
-the following policies:
+>> Then we have applications using the drive block device file directly.
+>> For these, it is hard to tell how much it matters. Enabling it by
+>> default with a drive correctly supporting it will very much likely not
+>> hurt though.
+>>
+>> Maciej,
+>>
+>> May be you did some experiments before asking for enabling FUA by
+>> default ? Any interesting performance data you can share ?
+>>
+>>> * Do we know how widely FUA is used now? IOW, is windows using FUA by
+>>>   default now? If so, do we know whether they have a blocklist?
+>>
+>> You mean "blacklist" ? I do not have any information about Windows, but
+> 
+> The PC thing to say now seems to be allowlist / blocklist instead of
+> whiltelist / blacklist, not that I mind either way.
 
-1) chmod 0666 /dev/ublk-control
+I was thinking "block == sector" :) yes, could patch the code to rename
+blacklist to something like badlist. I find "block" confusing here given
+that we are talking about block devices :)
 
-2) change ownership of ublkcN & ublkbN
-- chown owner_uid:owner_gid /dev/ublkcN
-- chown owner_uid:owner_gid /dev/ublkbN
+>> I can try to find out, at least for my employer's devices. But that will
+>> not be very useful as I know these drives behave correctly.
+> 
+> So, AFAIK, windows doesn't issue FUA for SATA devices, only SAS, but I could
+> be wrong. It'd be really useful to find out.
 
-Both can be done via one simple udev rule.
+Need to ping some people to see if I can find out.
 
-Userspace:
+>> More than Windows or the kernel, I think that looking at SAS HBAs is
+>> more important here. SATA HDDs are the most widely used type of devices
+>> with these, by far. These may have a SAT translating FUA scsi writes to
+>> FUA NCQ FPDMA writes, resulting in FUA being extensively used. Modulo a
+>> blacklist that results in the same as the kernel with a
+>> flush/write/flush sequence. Hard to know as HBA's FW are not open. A bus
+>> analyzer could tell us that though, but again I can look at that only
+>> with the drives I have, which I know are working well with FUA.
+>>
+>> I am OK with attempting enabling FUA by default for the following reasons:
+>> 1) The vast majority of drives in libata blacklist (all features) are
+>> old models that are not sold anymore.
+> 
+> The context here is that we promptly found all of these devices struggle
+> with FUA (like locking up and dropping off the bus) shortly after we enabled
+> FUA by default, so the list is by no means exhaustive and is more an
+> indication that there at least were a whole lot of devices which choke on
+> FUA. On top, devices not sold anymore are even harder to debug and pay
+> attention to while being able to cause a lot of pain to configurations which
+> have been stable and happy for a long time.
 
-	https://github.com/ming1/ubdsrv/tree/unprivileged-ublk
+Yes. Hence, again, the idea to limit this to recent drives. E.g ACS-4
+(or 5) and above.
 
-'ublk add -t $TYPE --un_privileged=1' is for creating one un-privileged
-ublk device if the user is un-privileged.
+>> 2) We are restricting FUA support to drives that also support NCQ, that
+>> is, modern-ish ones that are supposed to process the FUA NCQ read/write
+>> commands correctly, per specs.
+> 
+> NCQ is really old now and our previous attempt at FUA was after NCQ was
+> widely available, so I'm not sure this holds.
+> 
+>> 3) For HDDs, which is the vast majority of ATA devices out there these
+>> days, all recent drives I have tested are OK. Even older ones with NCQ
+>> support that I have access to are fine.
+>> 4) We are at rc2, which gives us time to revert patch 7 if we see too
+>> many bug reports.
+> 
+> This sort of problems especially if affecting mostly old devices can be very
+> difficult to suss out and will definitely take way longer than a single
+> release cycle.
+> 
+>> One thing we could add to the patch series is an additional restriction
+>> to enabling FUA by default to drives that support a recent standard. Say
+>> ACS-4 and above. That will restrict this to recent devices, thus
+>> reducing the risk of hitting bad apples. Thoughts ?
+> 
+> Yeah, that'd help and also if SAS HBA SAT's have been issuing FUA's which
+> would be a meaningful verification of the feature, at least for rotating
+> hard disks.
+> 
+> I feel rather uneasy about enabling FUA by default given history. We can
+> improve its chances by restricting it to newer devices and maybe even just
+> hard disks, but it kinda comes back to the root question of why. Why would
+> we want to do this? What are the benefits? Right now, there are a bunch of
+> really tricky cons and not whole lot on the pro column.
 
-Link: https://lore.kernel.org/linux-block/YoOr6jBfgVm8GvWg@stefanha-x1.localdomain/
-Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- Documentation/block/ublk.rst  |  49 +++++++++--
- drivers/block/ublk_drv.c      | 152 ++++++++++++++++++++++++++++++++--
- include/uapi/linux/ublk_cmd.h |  36 +++++++-
- 3 files changed, 220 insertions(+), 17 deletions(-)
+OK. But again, why treat ATA devices differently from scsi/nvme/ufs ?
+These have FUA used by default if it is supported.
 
-diff --git a/Documentation/block/ublk.rst b/Documentation/block/ublk.rst
-index ba45c46cc0da..2916fcf3ab44 100644
---- a/Documentation/block/ublk.rst
-+++ b/Documentation/block/ublk.rst
-@@ -144,6 +144,37 @@ managing and controlling ublk devices with help of several control commands:
-   For retrieving device info via ``ublksrv_ctrl_dev_info``. It is the server's
-   responsibility to save IO target specific info in userspace.
- 
-+- ``UBLK_CMD_GET_DEV_INFO2``
-+  Same purpose with ``UBLK_CMD_GET_DEV_INFO``, but ublk server has to
-+  provide path of the char device of ``/dev/ublkc*`` for kernel to run
-+  permission check, and this command is added for supporting unprivileged
-+  ublk device, and introduced with ``UBLK_F_UNPRIVILEGED_DEV`` together.
-+  Only the user owning the requested device can retrieve the device info.
-+
-+  How to deal with userspace/kernel compatibility:
-+
-+  1) if kernel is capable of handling ``UBLK_F_UNPRIVILEGED_DEV``
-+    If ublk server supports ``UBLK_F_UNPRIVILEGED_DEV``:
-+    ublk server should send ``UBLK_CMD_GET_DEV_INFO2``, given anytime
-+    unprivileged application needs to query devices the current user owns,
-+    when the application has no idea if ``UBLK_F_UNPRIVILEGED_DEV`` is set
-+    given the capability info is stateless, and application should always
-+    retrieve it via ``UBLK_CMD_GET_DEV_INFO2``
-+
-+    If ublk server doesn't support ``UBLK_F_UNPRIVILEGED_DEV``:
-+    ``UBLK_CMD_GET_DEV_INFO`` is always sent to kernel, and the feature of
-+    UBLK_F_UNPRIVILEGED_DEV isn't available for user
-+
-+  2) if kernel isn't capable of handling ``UBLK_F_UNPRIVILEGED_DEV``
-+    If ublk server supports ``UBLK_F_UNPRIVILEGED_DEV``:
-+    ``UBLK_CMD_GET_DEV_INFO2`` is tried first, and will be failed, then
-+    ``UBLK_CMD_GET_DEV_INFO`` needs to be retried given
-+    ``UBLK_F_UNPRIVILEGED_DEV`` can't be set
-+
-+    If ublk server doesn't support ``UBLK_F_UNPRIVILEGED_DEV``:
-+    ``UBLK_CMD_GET_DEV_INFO`` is always sent to kernel, and the feature of
-+    ``UBLK_F_UNPRIVILEGED_DEV`` isn't available for user
-+
- - ``UBLK_CMD_START_USER_RECOVERY``
- 
-   This command is valid if ``UBLK_F_USER_RECOVERY`` feature is enabled. This
-@@ -180,6 +211,15 @@ managing and controlling ublk devices with help of several control commands:
-   double-write since the driver may issue the same I/O request twice. It
-   might be useful to a read-only FS or a VM backend.
- 
-+Unprivileged ublk device is supported by passing ``UBLK_F_UNPRIVILEGED_DEV``.
-+Once the flag is set, all control commands can be sent by unprivileged
-+user. Except for command of ``UBLK_CMD_ADD_DEV``, permission check on
-+the specified char device(``/dev/ublkc*``) is done for all other control
-+commands by ublk driver, for doing that, path of the char device has to
-+be provided in these commands' payload from ublk server. With this way,
-+ublk device becomes container-ware, and device created in one container
-+can be controlled/accessed just inside this container.
-+
- Data plane
- ----------
- 
-@@ -254,15 +294,6 @@ with specified IO tag in the command data:
- Future development
- ==================
- 
--Container-aware ublk deivice
------------------------------
--
--ublk driver doesn't handle any IO logic. Its function is well defined
--for now and very limited userspace interfaces are needed, which is also
--well defined too. It is possible to make ublk devices container-aware block
--devices in future as Stefan Hajnoczi suggested [#stefan]_, by removing
--ADMIN privilege.
--
- Zero copy
- ---------
- 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 399137008e25..9f32553cb938 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -42,6 +42,7 @@
- #include <linux/mm.h>
- #include <asm/page.h>
- #include <linux/task_work.h>
-+#include <linux/namei.h>
- #include <uapi/linux/ublk_cmd.h>
- 
- #define UBLK_MINORS		(1U << MINORBITS)
-@@ -51,7 +52,8 @@
- 		| UBLK_F_URING_CMD_COMP_IN_TASK \
- 		| UBLK_F_NEED_GET_DATA \
- 		| UBLK_F_USER_RECOVERY \
--		| UBLK_F_USER_RECOVERY_REISSUE)
-+		| UBLK_F_USER_RECOVERY_REISSUE \
-+		| UBLK_F_UNPRIVILEGED_DEV)
- 
- /* All UBLK_PARAM_TYPE_* should be included here */
- #define UBLK_PARAM_TYPE_ALL (UBLK_PARAM_TYPE_BASIC | \
-@@ -1618,6 +1620,17 @@ static int ublk_ctrl_get_queue_affinity(struct ublk_device *ub,
- 	return ret;
- }
- 
-+static void ublk_store_owner_uid_gid(struct ublksrv_ctrl_dev_info *info)
-+{
-+	kuid_t uid;
-+	kgid_t gid;
-+
-+	current_uid_gid(&uid, &gid);
-+
-+	info->owner_uid = from_kuid(&init_user_ns, uid);
-+	info->owner_gid = from_kgid(&init_user_ns, gid);
-+}
-+
- static inline void ublk_dump_dev_info(struct ublksrv_ctrl_dev_info *info)
- {
- 	pr_devel("%s: dev id %d flags %llx\n", __func__,
-@@ -1641,15 +1654,26 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
- 			__func__, header->queue_id);
- 		return -EINVAL;
- 	}
-+
- 	if (copy_from_user(&info, argp, sizeof(info)))
- 		return -EFAULT;
--	ublk_dump_dev_info(&info);
-+
-+	if (capable(CAP_SYS_ADMIN))
-+		info.flags &= ~UBLK_F_UNPRIVILEGED_DEV;
-+	else if (!(info.flags & UBLK_F_UNPRIVILEGED_DEV))
-+		return -EPERM;
-+
-+	/* the created device is always owned by current user */
-+	ublk_store_owner_uid_gid(&info);
-+
- 	if (header->dev_id != info.dev_id) {
- 		pr_warn("%s: dev id not match %u %u\n",
- 			__func__, header->dev_id, info.dev_id);
- 		return -EINVAL;
- 	}
- 
-+	ublk_dump_dev_info(&info);
-+
- 	ret = mutex_lock_killable(&ublk_ctl_mutex);
- 	if (ret)
- 		return ret;
-@@ -1982,6 +2006,115 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
- 	return ret;
- }
- 
-+/*
-+ * All control commands are sent via /dev/ublk-control, so we have to check
-+ * the destination device's permission
-+ */
-+static int ublk_char_dev_permission(struct ublk_device *ub,
-+		const char *dev_path, int mask)
-+{
-+	int err;
-+	struct path path;
-+	struct kstat stat;
-+
-+	err = kern_path(dev_path, LOOKUP_FOLLOW, &path);
-+	if (err)
-+		return err;
-+
-+	err = vfs_getattr(&path, &stat, STATX_TYPE, AT_STATX_SYNC_AS_STAT);
-+	if (err)
-+		goto exit;
-+
-+	err = -EPERM;
-+	if (stat.rdev != ub->cdev_dev.devt || !S_ISCHR(stat.mode))
-+		goto exit;
-+
-+	err = inode_permission(&init_user_ns,
-+			d_backing_inode(path.dentry), mask);
-+exit:
-+	path_put(&path);
-+	return err;
-+}
-+
-+static int ublk_ctrl_uring_cmd_permission(struct ublk_device *ub,
-+		struct io_uring_cmd *cmd)
-+{
-+	struct ublksrv_ctrl_cmd *header = (struct ublksrv_ctrl_cmd *)cmd->cmd;
-+	bool unprivileged = ub->dev_info.flags & UBLK_F_UNPRIVILEGED_DEV;
-+	void __user *argp = (void __user *)(unsigned long)header->addr;
-+	char *dev_path = NULL;
-+	int ret = 0;
-+	int mask;
-+
-+	if (!unprivileged) {
-+		if (!capable(CAP_SYS_ADMIN))
-+			return -EPERM;
-+		/*
-+		 * The new added command of UBLK_CMD_GET_DEV_INFO2 includes
-+		 * char_dev_path in payload too, since userspace may not
-+		 * know if the specified device is created as unprivileged
-+		 * mode.
-+		 */
-+		if (cmd->cmd_op != UBLK_CMD_GET_DEV_INFO2)
-+			return 0;
-+	}
-+
-+	/*
-+	 * User has to provide the char device path for unprivileged ublk
-+	 *
-+	 * header->addr always points to the dev path buffer, and
-+	 * header->dev_path_len records length of dev path buffer.
-+	 */
-+	if (!header->dev_path_len || header->dev_path_len > PATH_MAX)
-+		return -EINVAL;
-+
-+	if (header->len < header->dev_path_len)
-+		return -EINVAL;
-+
-+	dev_path = kmalloc(header->dev_path_len + 1, GFP_KERNEL);
-+	if (!dev_path)
-+		return -ENOMEM;
-+
-+	ret = -EFAULT;
-+	if (copy_from_user(dev_path, argp, header->dev_path_len))
-+		goto exit;
-+	dev_path[header->dev_path_len] = 0;
-+
-+	ret = -EINVAL;
-+	switch (cmd->cmd_op) {
-+	case UBLK_CMD_GET_DEV_INFO:
-+	case UBLK_CMD_GET_DEV_INFO2:
-+	case UBLK_CMD_GET_QUEUE_AFFINITY:
-+	case UBLK_CMD_GET_PARAMS:
-+		mask = MAY_READ;
-+		break;
-+	case UBLK_CMD_START_DEV:
-+	case UBLK_CMD_STOP_DEV:
-+	case UBLK_CMD_ADD_DEV:
-+	case UBLK_CMD_DEL_DEV:
-+	case UBLK_CMD_SET_PARAMS:
-+	case UBLK_CMD_START_USER_RECOVERY:
-+	case UBLK_CMD_END_USER_RECOVERY:
-+		mask = MAY_READ | MAY_WRITE;
-+		break;
-+	default:
-+		goto exit;
-+	}
-+
-+	ret = ublk_char_dev_permission(ub, dev_path, mask);
-+	if (!ret) {
-+		header->len -= header->dev_path_len;
-+		header->addr += header->dev_path_len;
-+	}
-+	pr_devel("%s: dev id %d cmd_op %x uid %d gid %d path %s ret %d\n",
-+			__func__, ub->ub_number, cmd->cmd_op,
-+			ub->dev_info.owner_uid, ub->dev_info.owner_gid,
-+			dev_path, ret);
-+exit:
-+	kfree(dev_path);
-+	return ret;
-+}
-+
- static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
- 		unsigned int issue_flags)
- {
-@@ -1997,17 +2130,21 @@ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
- 	if (!(issue_flags & IO_URING_F_SQE128))
- 		goto out;
- 
--	ret = -EPERM;
--	if (!capable(CAP_SYS_ADMIN))
--		goto out;
--
- 	if (cmd->cmd_op != UBLK_CMD_ADD_DEV) {
- 		ret = -ENODEV;
- 		ub = ublk_get_device_from_id(header->dev_id);
- 		if (!ub)
- 			goto out;
-+
-+		ret = ublk_ctrl_uring_cmd_permission(ub, cmd);
-+	} else {
-+		/* ADD_DEV permission check is done in command handler */
-+		ret = 0;
- 	}
- 
-+	if (ret)
-+		goto put_dev;
-+
- 	switch (cmd->cmd_op) {
- 	case UBLK_CMD_START_DEV:
- 		ret = ublk_ctrl_start_dev(ub, cmd);
-@@ -2016,6 +2153,7 @@ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
- 		ret = ublk_ctrl_stop_dev(ub);
- 		break;
- 	case UBLK_CMD_GET_DEV_INFO:
-+	case UBLK_CMD_GET_DEV_INFO2:
- 		ret = ublk_ctrl_get_dev_info(ub, cmd);
- 		break;
- 	case UBLK_CMD_ADD_DEV:
-@@ -2043,6 +2181,8 @@ static int ublk_ctrl_uring_cmd(struct io_uring_cmd *cmd,
- 		ret = -ENOTSUPP;
- 		break;
- 	}
-+
-+ put_dev:
- 	if (ub)
- 		ublk_put_device(ub);
-  out:
-diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index 4e38b9aa0293..f6238ccc7800 100644
---- a/include/uapi/linux/ublk_cmd.h
-+++ b/include/uapi/linux/ublk_cmd.h
-@@ -19,6 +19,8 @@
- #define	UBLK_CMD_GET_PARAMS	0x09
- #define	UBLK_CMD_START_USER_RECOVERY	0x10
- #define	UBLK_CMD_END_USER_RECOVERY	0x11
-+#define	UBLK_CMD_GET_DEV_INFO2		0x12
-+
- /*
-  * IO commands, issued by ublk server, and handled by ublk driver.
-  *
-@@ -79,6 +81,27 @@
- 
- #define UBLK_F_USER_RECOVERY_REISSUE	(1UL << 4)
- 
-+/*
-+ * Unprivileged user can create /dev/ublkcN and /dev/ublkbN.
-+ *
-+ * /dev/ublk-control needs to be available for unprivileged user, and it
-+ * can be done via udev rule to make all control commands available to
-+ * unprivileged user. Except for the command of UBLK_CMD_ADD_DEV, all
-+ * other commands are only allowed for the owner of the specified device.
-+ *
-+ * When userspace sends UBLK_CMD_ADD_DEV, the device pair's owner_uid and
-+ * owner_gid are stored to ublksrv_ctrl_dev_info by kernel, so far only
-+ * the current user's uid/gid is stored, that said owner of the created
-+ * device is always the current user.
-+ *
-+ * We still need udev rule to apply OWNER/GROUP with the stored owner_uid
-+ * and owner_gid.
-+ *
-+ * Then ublk server can be run as unprivileged user, and /dev/ublkbN can
-+ * be accessed and managed by its owner represented by owner_uid/owner_gid.
-+ */
-+#define UBLK_F_UNPRIVILEGED_DEV	(1UL << 5)
-+
- /* device state */
- #define UBLK_S_DEV_DEAD	0
- #define UBLK_S_DEV_LIVE	1
-@@ -98,7 +121,15 @@ struct ublksrv_ctrl_cmd {
- 	__u64	addr;
- 
- 	/* inline data */
--	__u64	data[2];
-+	__u64	data[1];
-+
-+	/*
-+	 * Used for UBLK_F_UNPRIVILEGED_DEV and UBLK_CMD_GET_DEV_INFO2
-+	 * only, include null char
-+	 */
-+	__u16	dev_path_len;
-+	__u16	pad;
-+	__u32	reserved;
- };
- 
- struct ublksrv_ctrl_dev_info {
-@@ -118,7 +149,8 @@ struct ublksrv_ctrl_dev_info {
- 	/* For ublksrv internal use, invisible to ublk driver */
- 	__u64	ublksrv_flags;
- 
--	__u64	reserved0;
-+	__u32	owner_uid;	/* store by kernel */
-+	__u32	owner_gid;	/* store by kernel */
- 	__u64	reserved1;
- 	__u64   reserved2;
- };
+We can take a big hammer here and start with enabling only ACS-5 and
+above for now. That will represent the set of devices that are in
+development right now, and only a few already released (I have some in
+my test boxes and they are not even a few months old...).
+
+Or simply remove patch 7 and let user choose to enable FUA themselves if
+they are confident their devices are OK. That is the safest, but I am
+not keen on keeping ATA subsystem in the 20th century...
+
+> 
+> Thanks.
+> 
+
 -- 
-2.31.1
+Damien Le Moal
+Western Digital Research
 
