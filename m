@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A0F666353B
-	for <lists+linux-block@lfdr.de>; Tue, 10 Jan 2023 00:28:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6695B66353C
+	for <lists+linux-block@lfdr.de>; Tue, 10 Jan 2023 00:28:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237888AbjAIX2J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Jan 2023 18:28:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55424 "EHLO
+        id S237867AbjAIX2L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Jan 2023 18:28:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237930AbjAIX2A (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Jan 2023 18:28:00 -0500
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91439B49B
-        for <linux-block@vger.kernel.org>; Mon,  9 Jan 2023 15:27:59 -0800 (PST)
-Received: by mail-pl1-f181.google.com with SMTP id c6so11319595pls.4
-        for <linux-block@vger.kernel.org>; Mon, 09 Jan 2023 15:27:59 -0800 (PST)
+        with ESMTP id S237945AbjAIX2C (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Jan 2023 18:28:02 -0500
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3497CB49B
+        for <linux-block@vger.kernel.org>; Mon,  9 Jan 2023 15:28:01 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id g20so7428173pfb.3
+        for <linux-block@vger.kernel.org>; Mon, 09 Jan 2023 15:28:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lChsis0Vn/H82l7R/PRp89geNpa9iV9NWjl6ZB1IdXU=;
-        b=NgE1PDgjhouIArIm2OxUI94htfFmgvQT2qSzU+nCMuzYrp6RRj4eNdX56BW+TXYrcI
-         N3hb4+lspb8uyJ+KSCMrLz+SpyH4Zo3Tkyhf96VCpZhBIeSXLC39bK9fc+54CrjiZj3L
-         f5VU0guuvroZyxei8DOB/MBianDBVMem98Lnq+6qz8HC6mKGiD+ReOFY19Zk2udXtROB
-         wREQNDzVYBCW5RlUOqnoHWdOu1xObmfGg0meWivsGFmP5O4eqlIVcJqQfKqcmTnzju2Y
-         QjY7invZfH5pqikFYCI8gGsR9OF2XB0RhmtHnd1ASbBSyUG/UmBDv5bKAFv4qtWU9Wqd
-         QpEQ==
-X-Gm-Message-State: AFqh2krInZ2GneIHHCihHUU/+iRD6xuvlNtSTLlV6X8SJq4342VJ4Xee
-        knLLSjt/DgcePhzt9UJuo2g=
-X-Google-Smtp-Source: AMrXdXuv63l6RxGaiOeSyBDN9RNxr4Le+OezyhJ1yKbMtUKA8nC4WWYlm90NbAhnkNWtgYN2aY+9wA==
-X-Received: by 2002:a05:6a20:1e56:b0:af:98cd:9d82 with SMTP id cy22-20020a056a201e5600b000af98cd9d82mr64456446pzb.26.1673306879000;
-        Mon, 09 Jan 2023 15:27:59 -0800 (PST)
+        bh=FWjzdVi+aWCeBtDSYSYYVmiFG7iSPPW9f3buG776fN4=;
+        b=QFKcjRYZASp+O+/2yx24VaWTKvxjwMc73XLcU7QQE9szzflEAnkOXEOKs5AxH0gOTk
+         uJFHWzoAar6k+tl8S+YytlGtJS1PNfPre6P7OAVwLmvPyjtjiWFCYKFNrdfg7dokpsqv
+         KjhLHAcm5UKDlS1NL0waSrzKEK9JFWFeeUN+/1NpNunJN5ziQS82dvGcR6qcHkKGnbUD
+         ewHgwU8BlhuDvyuCPDolb2n1/pn7G9PW06vkIUBNTUDdaW2pwunfzbphyzsKTaYXtbun
+         wITTZwqtXCzR2Krqh1Z+cb6+MLQ7ymcgnGSiglFZ+ppq1OZlrz4LAZQ3IKSEgcAFQiaV
+         q14g==
+X-Gm-Message-State: AFqh2kq3AMvQ5dR8086bTd2w8QFEpnLBO0quEVHRJ975jCClhuS1yHZw
+        mr/+DvXqH1ZbS16zUut501k=
+X-Google-Smtp-Source: AMrXdXtbrhAvSS4fg34fXFxwLfYAT7R8ti1/P5zSwM65EmGYclDYBq0GedKs7uAMmDr7p7ZaXe6PQQ==
+X-Received: by 2002:a62:1d0e:0:b0:57f:ef11:acf8 with SMTP id d14-20020a621d0e000000b0057fef11acf8mr64630016pfd.2.1673306880671;
+        Mon, 09 Jan 2023 15:28:00 -0800 (PST)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:9f06:14dd:484f:e55c])
-        by smtp.gmail.com with ESMTPSA id s2-20020a625e02000000b0057ef155103asm5032244pfb.155.2023.01.09.15.27.57
+        by smtp.gmail.com with ESMTPSA id s2-20020a625e02000000b0057ef155103asm5032244pfb.155.2023.01.09.15.27.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 15:27:58 -0800 (PST)
+        Mon, 09 Jan 2023 15:27:59 -0800 (PST)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -44,9 +44,9 @@ Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Subject: [PATCH 7/8] scsi: Retry unaligned zoned writes
-Date:   Mon,  9 Jan 2023 15:27:37 -0800
-Message-Id: <20230109232738.169886-8-bvanassche@acm.org>
+Subject: [PATCH 8/8] scsi: ufs: Enable zoned write pipelining
+Date:   Mon,  9 Jan 2023 15:27:38 -0800
+Message-Id: <20230109232738.169886-9-bvanassche@acm.org>
 X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
 In-Reply-To: <20230109232738.169886-1-bvanassche@acm.org>
 References: <20230109232738.169886-1-bvanassche@acm.org>
@@ -54,67 +54,56 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From ZBC-2: "The device server terminates with CHECK CONDITION status, with
-the sense key set to ILLEGAL REQUEST, and the additional sense code set to
-UNALIGNED WRITE COMMAND a write command, other than an entire medium write
-same command, that specifies: a) the starting LBA in a sequential write
-required zone set to a value that is not equal to the write pointer for that
-sequential write required zone; or b) an ending LBA that is not equal to the
-last logical block within a physical block (see SBC-5)."
+From the UFSHCI 4.0 specification, about the legacy (single queue) mode:
+"The host controller always process transfer requests in-order according
+to the order submitted to the list. In case of multiple commands with
+single doorbell register ringing (batch mode), The dispatch order for
+these transfer requests by host controller will base on their index in
+the List. A transfer request with lower index value will be executed
+before a transfer request with higher index value."
 
-I am not aware of any other conditions that may trigger the UNALIGNED
-WRITE COMMAND response.
+From the UFSHCI 4.0 specification, about the MCQ mode:
+"Command Submission
+1. Host SW writes an Entry to SQ
+2. Host SW updates SQ doorbell tail pointer
 
-Retry unaligned writes in preparation of removing zone locking.
+Command Processing
+3. After fetching the Entry, Host Controller updates SQ doorbell head
+   pointer
+4. Host controller sends COMMAND UPIU to UFS device"
 
-Increase the number of retries for write commands sent to a sequential
-zone to the maximum number of outstanding commands.
+In other words, for both legacy and MCQ mode, UFS controllers are
+required to forward commands to the UFS device in the order these
+commands have been received from the host.
+
+Note: for legacy mode this is only correct if the host submits one
+command at a time. The UFS driver does this.
 
 Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc: Avri Altman <avri.altman@wdc.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/scsi/scsi_error.c | 7 +++++++
- drivers/scsi/sd.c         | 3 +++
- 2 files changed, 10 insertions(+)
+ drivers/ufs/core/ufshcd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index a7960ad2d386..e17f36b0b18a 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -676,6 +676,13 @@ enum scsi_disposition scsi_check_sense(struct scsi_cmnd *scmd)
- 		fallthrough;
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index e18c9f4463ec..9198505e953b 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -5031,6 +5031,7 @@ static int ufshcd_slave_configure(struct scsi_device *sdev)
  
- 	case ILLEGAL_REQUEST:
-+		/*
-+		 * Unaligned write command. Retry immediately if pipelining
-+		 * zoned writes has been enabled.
-+		 */
-+		if (sshdr.asc == 0x21 && sshdr.ascq == 0x04 &&
-+		    blk_queue_pipeline_zoned_writes(sdev->request_queue))
-+			return NEEDS_RETRY;
- 		if (sshdr.asc == 0x20 || /* Invalid command operation code */
- 		    sshdr.asc == 0x21 || /* Logical block address out of range */
- 		    sshdr.asc == 0x22 || /* Invalid function */
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 47dafe6b8a66..cd90b54a6597 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1207,6 +1207,9 @@ static blk_status_t sd_setup_read_write_cmnd(struct scsi_cmnd *cmd)
- 	cmd->transfersize = sdp->sector_size;
- 	cmd->underflow = nr_blocks << 9;
- 	cmd->allowed = sdkp->max_retries;
-+	if (blk_queue_pipeline_zoned_writes(rq->q) &&
-+	    blk_rq_is_seq_zone_write(rq))
-+		cmd->allowed += rq->q->nr_requests;
- 	cmd->sdb.length = nr_blocks * sdp->sector_size;
+ 	ufshcd_hpb_configure(hba, sdev);
  
- 	SCSI_LOG_HLQUEUE(1,
++	blk_queue_flag_set(QUEUE_FLAG_PIPELINE_ZONED_WRITES, q);
+ 	blk_queue_update_dma_pad(q, PRDT_DATA_BYTE_COUNT_PAD - 1);
+ 	if (hba->quirks & UFSHCD_QUIRK_ALIGN_SG_WITH_PAGE_SIZE)
+ 		blk_queue_update_dma_alignment(q, PAGE_SIZE - 1);
