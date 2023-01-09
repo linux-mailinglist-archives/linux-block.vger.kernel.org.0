@@ -2,109 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DA18661D18
-	for <lists+linux-block@lfdr.de>; Mon,  9 Jan 2023 04:56:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F6AF661EBA
+	for <lists+linux-block@lfdr.de>; Mon,  9 Jan 2023 07:37:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234253AbjAIDz6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 8 Jan 2023 22:55:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46126 "EHLO
+        id S233208AbjAIGh4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Jan 2023 01:37:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236643AbjAIDzT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 8 Jan 2023 22:55:19 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A22211C28
-        for <linux-block@vger.kernel.org>; Sun,  8 Jan 2023 19:54:14 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id jl4so8181437plb.8
-        for <linux-block@vger.kernel.org>; Sun, 08 Jan 2023 19:54:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TpgfqkNhPqEV+WEtXe6exPW4ehifsekBo6yCYNhed1Q=;
-        b=2+Y/8pxMywf4CuY6rlA26Z8wlez6yJKwtYUVrUxQUWc4Jfip0sOQU4a6bJ379AYtE5
-         +Kb5CYmTtVwHP/5MDDCmurkG9wu8slKevWOvWTfcvRd7Ixny78Tuo+6N7diZ8GuLy/e9
-         onreXGi5DCuTn/6kdNwIHNEFbeQXZv1P+zT3hcEZvpYkMOxtqAxe1F2FumunVb2Z67Rr
-         dDiR17uCH+iunJiXUfKY6JU59DVx8qZZV1s7jU1znvDXo0u1sFsleVJsV3CK3u5uLf/g
-         sIJx+pqtlO3sFqNcA7UGUzhv29M/sLZIz6pFaC5XIsBU4bBfVDI1McQyVo7Bp6jiv+Gd
-         ACEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TpgfqkNhPqEV+WEtXe6exPW4ehifsekBo6yCYNhed1Q=;
-        b=Zy6n2KbZuaTNIqOg5G+ZPC72bgeuye7Rttl9VFrLkfrCAY2IdVS92nRNNkCCNWU+xY
-         lj4JHBZJ5Mohb63MmQSXRZUPw4U5kNMu4jWrYkB8+j5nBYiVSRKEOfa3usoIF6T9sbbo
-         aUT7J7xWdBKiL8ujfFIn07t1azjm//XoKwVOhKCTG9LYNugmO64B0x+vmRlur9K8lTX3
-         KDg3usbt2a9bHp/cEMwSqgt7R6fGKgaxUjt/eZNt8g7zZBSjL7nLO08AEtUGEeNmryPt
-         EuMLEajlQ1nkOqKAFhd0I09nwbSCb80nQqsyh0AnUiF/rGYvToJ0dNtwp4cYc5F3kKft
-         j2dA==
-X-Gm-Message-State: AFqh2krW4ebn4+jdjkS+5S2oOBcXsJugstakEy6BIimJjqEVEI+AtRM2
-        OyLD/ayFFXGXJW60TRGcnvJ4YA==
-X-Google-Smtp-Source: AMrXdXtbWiVAhvv6GGx94sLoPaPE9wd7oOx9Z+AqkblebDe83VF4n/+AvJWc6ANJaIpfj5Qq/2w6cQ==
-X-Received: by 2002:a17:902:cf91:b0:193:2d46:abe0 with SMTP id l17-20020a170902cf9100b001932d46abe0mr733811ply.6.1673236453985;
-        Sun, 08 Jan 2023 19:54:13 -0800 (PST)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id y2-20020a17090264c200b00192a3e13b39sm3546210pli.264.2023.01.08.19.54.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Jan 2023 19:54:13 -0800 (PST)
-Message-ID: <d86e6340-534c-c34c-ab1d-6ebacb213bb9@kernel.dk>
-Date:   Sun, 8 Jan 2023 20:54:12 -0700
+        with ESMTP id S233780AbjAIGhz (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Jan 2023 01:37:55 -0500
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF92FAC8;
+        Sun,  8 Jan 2023 22:37:52 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Nr44n2dKWz4f41pg;
+        Mon,  9 Jan 2023 14:37:45 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgCnD7M6trtjzDiGBQ--.21789S3;
+        Mon, 09 Jan 2023 14:37:48 +0800 (CST)
+Subject: Re: [PATCH -next 3/4] block/rq_qos: use a global mutex to protect
+ rq_qos apis
+To:     Yu Kuai <yukuai1@huaweicloud.com>, Tejun Heo <tj@kernel.org>
+Cc:     hch@infradead.org, josef@toxicpanda.com, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20230104085354.2343590-1-yukuai1@huaweicloud.com>
+ <20230104085354.2343590-4-yukuai1@huaweicloud.com>
+ <Y7XyIzGptuqO8EAt@slm.duckdns.org> <Y7YZnM/nqb0gxOei@slm.duckdns.org>
+ <df2f7a60-467f-08ce-2a3e-1dc7853424aa@huaweicloud.com>
+ <Y7cYKdOwSlfHtj7t@slm.duckdns.org>
+ <ef55a0f1-d3c2-3979-963e-2fa10ba3c2ff@huaweicloud.com>
+ <Y7hnH9GT6D469Vuu@slm.duckdns.org>
+ <31e57528-39a5-84ed-8ea0-5c61bab00541@huaweicloud.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <5633d865-8a8a-ef34-82e6-a2eacf943253@huaweicloud.com>
+Date:   Mon, 9 Jan 2023 14:37:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v4 7/7] iov_iter, block: Make bio structs pin pages rather
- than ref'ing if appropriate
-Content-Language: en-US
-To:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <167305160937.1521586.133299343565358971.stgit@warthog.procyon.org.uk>
- <167305166150.1521586.10220949115402059720.stgit@warthog.procyon.org.uk>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <167305166150.1521586.10220949115402059720.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <31e57528-39a5-84ed-8ea0-5c61bab00541@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgCnD7M6trtjzDiGBQ--.21789S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr43WFWxurWUGw1UKF1DAwb_yoW8Gry3pr
+        W3Ww1rAr4kAr10k34DAFy8Wryrtws3Jay5GF1UWrn2vr43Ar18Xr40gr4FvFy8A395Kw4j
+        vr1xKw1ruw4UCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/6/23 5:34â€¯PM, David Howells wrote:
-> Convert the block layer's bio code to use iov_iter_extract_pages() instead
-> of iov_iter_get_pages().  This will pin pages or leave them unaltered
-> rather than getting a ref on them as appropriate to the source iterator.
+Hi,
+
+ÔÚ 2023/01/09 9:38, Yu Kuai Ð´µÀ:
+>> So, it's not sysfs_lock but sysfs file deletion. When a kernfs, which 
+>> backs
+>> sysfs, file is removed, it disables future operations and drains all
+>> inflight ones before returning, so you remove the interface files before
+>> cleaning up the object that it interacts with, you don't have to worry 
+>> about
+>> racing against file operations as none can be in flight at that point.
 > 
-> A field, bi_cleanup_mode, is added to the bio struct that gets set by
-> iov_iter_extract_pages() with FOLL_* flags indicating what cleanup is
-> necessary.  FOLL_GET -> put_page(), FOLL_PIN -> unpin_user_page().  Other
-> flags could also be used in future.
+
+I understand this know, kernfs_fop_write_iter() will grab
+kernfs_node->active, and kobject_del() will wait for active to be
+dropped in kernfs_drain().
+
+>> Sorry that I've been asking you to go round and round but block device
+>> add/remove paths have always been really tricky and we wanna avoid adding
+>> more complications if at all possible. Can you see why the device is 
+>> being
+>> destroyed before the queue attr is removed?
 > 
-> Newly allocated bio structs have bi_cleanup_mode set to FOLL_GET to
-> indicate that attached pages are ref'd by default.  Cloning sets it to 0.
-> __bio_iov_iter_get_pages() overrides it to what iov_iter_extract_pages()
-> indicates.
 
-What's the motivation for this change? It's growing struct bio, which we
-can have a lot of in the system. I read the cover letter too and I can
-tell what the change does, but there's no justification really for the
-change.
+Sorry that I actually tested with patch 4 applied, and this is a bug
+introduced by patch 4, my apologies. It set rqos to ERR_PTR() in
+rq_qos_exit, and follow up rq_qos_issue() just check if rqos is NULL.
 
-So unless there's a good reason to do this, then that's a NAK in terms
-of just the addition to struct bio alone.
+I'll wait for your patchset to be apllied, and then send a new version.
+Just one thing to confirm, do you think it's better to use a global
+mutex rather than a disk level mutex? I'm not sure because this will
+cause different cgroup configurations from different disk can't
+concurrent.
 
--- 
-Jens Axboe
-
+Thanks,
+Kuai
 
