@@ -2,144 +2,141 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6417D664282
-	for <lists+linux-block@lfdr.de>; Tue, 10 Jan 2023 14:56:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0D8664366
+	for <lists+linux-block@lfdr.de>; Tue, 10 Jan 2023 15:36:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231767AbjAJN4B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Jan 2023 08:56:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
+        id S232301AbjAJOgq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Jan 2023 09:36:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238610AbjAJNzk (ORCPT
+        with ESMTP id S238476AbjAJOgp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Jan 2023 08:55:40 -0500
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2058.outbound.protection.outlook.com [40.107.96.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30ABC921CC;
-        Tue, 10 Jan 2023 05:53:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f/909idTsQbLckDWKKsok/5PomHtzsmBjE84zJFlrZ9u4QlaGFKVzrauISBtezjQh5057Ev+U21mQIu2X/mW0hOn4ermHHC47hMhq6J1pAyAdvuq14+veFNRkfoToMQ6dWFNhC2fZ3NerOQn2LCY7s1Cahj29eXfbdFoKTYUERTEQFBB+39PxwTOpTKCroQ4t3iCtg+/NZWASR6h1zfqP6EAA3t4Ds8iqyaRKXxEO+sf6cgo6Q1l5Lm9ZpPNSJzkS2JQE4Lc/FEbudBX+lE9L0VLbiS9UTIYTm5pEDQ0vm3m/G8KAIGT1m2o2u4IgjTWn1u+7w+L4oX2ozR8E611Bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L8EM953M/zgLAt1OaeSXbwzWc4O+1o0A8sKM26V4row=;
- b=nS/nlAH/90fNPhYkmHxVurftxlXffjuCwT61uRIbp2+Nz6hGr0J0xYhSuT24CLBxSPHsOdrJs+Z8Y4nswbOPchUCf97WNyjHeHhctwVjO2pxyB46L8wTT9AusGcII1QO5Q0jIzJSGq0xWSu+s43kw1pFAMlJlc7YkaKxtM2Q6gjT5/uZ/X38C+ZgsU5Iv5YgTM6GgvWF0QrRU0VgcoGf+FwsebKkIDz04Yfc+tmq83Y3Cfe9en9RSbc9A/9BsxpdLUFJ4ybtlPYDMOg1WS/7JWWseprFnQk8xzrKGoQ5DzdcPLD8YsQeFEgmrw6zAUCnnEPYxIsGLy5mYOpwcMEoDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L8EM953M/zgLAt1OaeSXbwzWc4O+1o0A8sKM26V4row=;
- b=Sn4tqINNKnIPXsjFmpmCqlnytmZ1Vh6HIwgVoWlQkhxrLjAOESlOeHs8FF+5I3bMRms9Ms7qnfxTQ7nU+7Hybhc9/GK+9UPBsS4Xv4rOt8L82sS8qgytN8K0dTbMQYV3bKxZZMUjRpO04OLl4KoQNbsnMoNLnKPBMC0L5/HwzF1uzKCM6XE1FsDYlGLCqUWrBLXLVRe7s+flBgwsr6Ps5+bkuyDDQrbr1egs8CrWePKD7iM2Tx9OTCybiISrdpWVyeuOzTI/7EqKyH4wMQyzyztFmVc40L+Gr1MLNHgB3QJGEwB+LwebVmWWOPLPM6d7DPp8qk/wLpACsvFDoVmLjw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by IA0PR12MB7752.namprd12.prod.outlook.com (2603:10b6:208:431::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18; Tue, 10 Jan
- 2023 13:53:36 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f8b0:df13:5f8d:12a]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f8b0:df13:5f8d:12a%8]) with mapi id 15.20.5986.018; Tue, 10 Jan 2023
- 13:53:36 +0000
-Date:   Tue, 10 Jan 2023 09:53:35 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Yishai Hadas <yishaih@nvidia.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org, axboe@kernel.dk,
-        logang@deltatee.com, hch@lst.de, alex.williamson@redhat.com,
-        leonro@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH] lib/scatterlist: Fix to calculate the last_pg properly
-Message-ID: <Y71t3yyFvdLXM+qd@nvidia.com>
-References: <20230109144701.83021-1-yishaih@nvidia.com>
- <Y7zyyTxdoJulq7OD@casper.infradead.org>
- <a1f3b6ad-7173-70c7-4361-d01f9af1b7d6@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a1f3b6ad-7173-70c7-4361-d01f9af1b7d6@nvidia.com>
-X-ClientProxiedBy: MN2PR07CA0029.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::39) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        Tue, 10 Jan 2023 09:36:45 -0500
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774F243A02
+        for <linux-block@vger.kernel.org>; Tue, 10 Jan 2023 06:36:42 -0800 (PST)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230110143638euoutp0128f1580ee964284609d768bd35b8fd5f~4_VODHzbu3100431004euoutp01P
+        for <linux-block@vger.kernel.org>; Tue, 10 Jan 2023 14:36:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230110143638euoutp0128f1580ee964284609d768bd35b8fd5f~4_VODHzbu3100431004euoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1673361398;
+        bh=R4b4EPkdRWUUjgqA7T04PUXUczW2+piir3kCLNH8c6w=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=vj9fHhNZyJGNuQw+SlxiTejcDpA3plVlo/tCNMZSEHuJtq21sIEoCpn3Wi1kJ/RQh
+         9oZn17SaUWZO9rtKBg0ohxPvslJaSqlIe0oXxGwnrOgeSfNoW3/Z5E+LEzPGEgEE74
+         B6lrPhl/OukQ8bOHzq3vLkf4UnP+rIHunu7k68bs=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230110143637eucas1p28f0c3737e9bc89cacc4efde5292e2a39~4_VNLQdE00230702307eucas1p2h;
+        Tue, 10 Jan 2023 14:36:37 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 06.A6.56180.5F77DB36; Tue, 10
+        Jan 2023 14:36:37 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20230110143637eucas1p1d82528b632ccda1de4fb2795ff691fe2~4_VMxKnHZ1940819408eucas1p1L;
+        Tue, 10 Jan 2023 14:36:37 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230110143637eusmtrp1254629674830a830237a3444e6bec537~4_VMwfUdt2765827658eusmtrp1M;
+        Tue, 10 Jan 2023 14:36:37 +0000 (GMT)
+X-AuditID: cbfec7f2-ab5ff7000000db74-05-63bd77f55590
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 14.D0.52424.5F77DB36; Tue, 10
+        Jan 2023 14:36:37 +0000 (GMT)
+Received: from localhost (unknown [106.210.248.241]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20230110143637eusmtip2e7b0ee7656712050d83a71862abedfa6~4_VMirkDu0980009800eusmtip2J;
+        Tue, 10 Jan 2023 14:36:36 +0000 (GMT)
+From:   Pankaj Raghav <p.raghav@samsung.com>
+To:     axboe@kernel.dk
+Cc:     linux-nvme@lists.infradead.org, hch@lst.de, bvanassche@acm.org,
+        linux-block@vger.kernel.org, damien.lemoal@opensource.wdc.com,
+        gost.dev@samsung.com, snitzer@kernel.org,
+        Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v2 0/3] block zoned cleanups
+Date:   Tue, 10 Jan 2023 15:36:32 +0100
+Message-Id: <20230110143635.77300-1-p.raghav@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|IA0PR12MB7752:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1a4e4fa-34be-48b1-80b3-08daf31211ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RgWz9+xfz9Abo9Dp0ub6X10ytJWKf5SS6XP4tIIjzPUHPcJ/GOeouQTbZmGGAqTLWhNgDovP/9GWJTSEdTRGvi83LgQ9djxK3dXwlAVrrjVXS2DMHWdY03EjDqnUdY9JkD5gxGbSJ0B16zjIaUVG3DxVtoc0XP4X1C6DoW0xLxW7bcs/QrxrMpAz7H5G+rNUKQ6JxcSAdlVdri6z8/8cpgclQtgkqlr/JeU+olUq5PzhgCi9KnfoNXAFR9OGli+UdawcHCnCxrLlgtM24zKlftprhO9eLouBWLg6dU6iI6b0/lELZAs65oa7FUcsl5Wq2KKs2+SzQVOi1XXoHqJbJGNL944nv/8h5edqr8gND63r2R5OfD6V20R9Px+EdMfj3O8graYIzWR82lohjYeveMOdQMeBjlr65dc37GhtqYatWtw3j9BrnDmfMzxfQBUHOyvubIuXgdrG6bfewhBWibXNIU9LocHs1HKHDjeRtDUPu2DPwXijXdgoV42/iQHtQr37E2XJmwlowT4JrMKNf2RH6gHPc8c2obvZkyj4weDLXU0/TIViDtRm4Akph4mMZzo9a11X3piImEjYEkT24Vwe8vF2ctaj4uVgTW6OcmOZwYhRrtfUWA3e4+RDpxJz5WQwQArrS7PrrCLNJXFul5WJInv7mF2x8/ZauPqRiYbxjx0DbOEFG3OHg08OLJCQ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(451199015)(4744005)(316002)(5660300002)(26005)(6512007)(186003)(478600001)(6486002)(2616005)(41300700001)(66946007)(6636002)(4326008)(66556008)(66476007)(8676002)(6862004)(8936002)(86362001)(37006003)(36756003)(107886003)(53546011)(6506007)(38100700002)(2906002)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?g910uR3fUeLqeOUgKfr9YNuz24o4DyivjBhP9COWGrGCOZQI9RxYWkY/Cy/2?=
- =?us-ascii?Q?AH8moHYdzToXcOqPb22nBBuVqIVLHpUs++v6MliXuDXltnCr2E8MhUhIUMRA?=
- =?us-ascii?Q?LvnXsc8ANAAl2WwXpa0JwKaapzVI74TXDNkx2a71lYIpw7mOJz0fNNlkPZyO?=
- =?us-ascii?Q?BmbszyKJ/+sn1LhmULqNesBdzSZ0mAI6H0mJHy4ahhFa3TqVCeJfsA+dRM6m?=
- =?us-ascii?Q?59BXfDu4UDA05IJf6gnqV9L4k2Gm2QOQqcbsuo667i6qq5ejLsV+nGk8pz1f?=
- =?us-ascii?Q?UNV+JGtES310cqKNT/2nRFcGbyT6JbcowY/ttNus7WB1gQvsk/9pVvONsJmh?=
- =?us-ascii?Q?LW318tzEc2mIxHn8lDcg+VkeeE7lGeH4mVv8ksp6PDI9Y/VnD3q02XFlQIgq?=
- =?us-ascii?Q?hl9UILuChNIe54Hb4/Li5oHoQxORMUGYwfyQVnRdvW68D8uEavVlrnVKuTHn?=
- =?us-ascii?Q?F/WJjdUneEEhCmvC2VzQmdwEws+H/zAN3isGae1pyyLQljWuy0W5zI9HqgpU?=
- =?us-ascii?Q?7xHH/WnHE2cTQpwveS0eP6XmAagxWoFQ/uLvAAvdooebB9TzosCPcF7hHAiI?=
- =?us-ascii?Q?SQn86K6NMQsEFRREvNK8LrBeF5c8jwsoAh1xq2X54RxDrBM/qCXV/HCfkD9s?=
- =?us-ascii?Q?lkpI7gmR/Mjyzjx3L0hxJE3j9o0h3X7KuWBAXHtwG4Rnlx8zE5NDYQ2YLMx3?=
- =?us-ascii?Q?k7NOD1pkUoycsBPrcAtLVqfBTEmXL+gTX1rlg6aCVVdTf8kPc4/B1ULcBEQQ?=
- =?us-ascii?Q?1EEATZbkm4DTH4KDdZaoa9zzrFtmcEO5nD7MWrAugnwfHZgjMJjk29pL39ZK?=
- =?us-ascii?Q?hYFqKDxPj0BXiwZaSDqHSa6g+TJ0UdaTvC0WTp0CyVdUZ6hc7e6vIxkHv5KX?=
- =?us-ascii?Q?zRgYIVlK8xMBWravYTnp/9BMx0kq8TSMyNkjb6yk2WU9pOZH8idgSDG7cR5l?=
- =?us-ascii?Q?sb1GYA17eypz3Bwm/FO1n/D14ouE4Jg7yJiMVwx7J6lQN+rNkJowk2HCIOxn?=
- =?us-ascii?Q?3DX35ipBxnpRud+5A5gDx60Ws70iJ8GKJk50iS3K7etKmgPiW6U0YRkYMvmd?=
- =?us-ascii?Q?3n9e/+3B0GxR9K/isfYxP1BDsj9Mzn/rTQDxgXOZp18sMQqCqIoSSDVKWIn6?=
- =?us-ascii?Q?0UFKAvYMZ3ShS1jUfJ4ePllhTAZqgemFOOg6sjJGrRXhCBxIDOjLR1zBevRn?=
- =?us-ascii?Q?dSa6oI/Qkr4/IQcA64xN3F6tonl7EydzmpBxlnCTZfM4YDyd5TJAiwsEdSrh?=
- =?us-ascii?Q?nOLVKrPtzkWpyYghzL6WeeufFEaYFVJTHd3lHtEHTtmpfPgE30a8sILpkufg?=
- =?us-ascii?Q?EIwc5kgyf7Vwf6vAfy43P4N82MfA08aJyORXEorU3FX2xfyJ++YJeDXf7s7Z?=
- =?us-ascii?Q?vMazM482/j40zDUgwVEiXktH/S+N350rIWfe5J8ajVtV5+m4yclkCveYdEhU?=
- =?us-ascii?Q?DI7X0ecC3OVz+AnS4EdQQLwzjhrMBh0+FjHC4PacVx9slTt+1bQbn1WOaFWw?=
- =?us-ascii?Q?lZypiDWpG1osE0CDF6Gm7ANkyUOwbnxhpPoMl+qorxxAAT1xGlym4NYqqB38?=
- =?us-ascii?Q?5NfAhjpexUCSU2aBbRM7l3qWzC3W9f/7w38kPjb4?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1a4e4fa-34be-48b1-80b3-08daf31211ef
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2023 13:53:36.4559
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SiUgJ3V2ua0y6vGLQo+i1AyiI17w/7ihzny5OTNBBrb0uyinUd2WqzRammqgO+MB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7752
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsWy7djP87pfy/cmGxxeomKx+m4/m8W0Dz+Z
+        LX6fPc9scfPATiaLlauPMlnsvaVtMX/ZU3aLz0tb2C1O3JJ24PS4fMXb4/LZUo9NqzrZPDYv
+        qffYfbOBzWNn631Wj74tqxg9Pm+SC+CI4rJJSc3JLEst0rdL4Mq4u+grS8F/jopz0xcwNzDO
+        Ye9i5OSQEDCRaHmyCcjm4hASWMEo8fJJOxuE84VRYkX7dhYI5zOjxL0Vl9lgWm739DNDJJYz
+        Sly/d5ARwnnJKPH0QjeQw8HBJqAl0dgJtkNEQFhif0cr2CRmgeuMEtOnXWYBSQgL6Ej86dgL
+        NpVFQFXiQtt3RhCbV8BS4vaWXqht8hIzL31nh4gLSpyc+QSslxko3rx1NtgVEgJnOCT2Pupi
+        hGhwkZj1sxHKFpZ4dXwL1KcyEqcn97BA2NUST2/8hmpuYZTo37meDeRqCQFrib4zOSAms4Cm
+        xPpd+hBRR4n+u4oQJp/EjbeCEBfwSUzaNp0ZIswr0dEmBDFbSWLnzydQOyUkLjfNgdrpIbHz
+        4ESwp4QEYiVmP1jAOoFRYRaSv2Yh+WsWwgkLGJlXMYqnlhbnpqcWG+allusVJ+YWl+al6yXn
+        525iBCak0/+Of9rBOPfVR71DjEwcjIcYJTiYlUR4V3LuSRbiTUmsrEotyo8vKs1JLT7EKM3B
+        oiTOO2Pr/GQhgfTEktTs1NSC1CKYLBMHp1QDk4DH0e7gu5eMZVr4zc5H7HNIituWUr9LUoq9
+        wSAsq13cySf7/tQ9B9cHcgaYP8zVdnsSOHPvwv9sX5xrrs9hEPA9msZfOv3EUg2p2InlPzeL
+        TdS1nJScFKT8Q3KVw/GprMf+bN4dM8+2RWPbw71GVxp7bjmEbVHh5InZkvVdeX1kqPpjljWf
+        Cgy+7q08HR+sk/m3xDF2RnWb/tno0ikhU3V4zfkM1H89NBcVj2TZsotVYmm+QPPe89vftoeU
+        dE5xlg5SXxNyc0KMytXSmb83MRfMm3pt0kF3t+OCqywCihXuvrzK/93238ndMb6/d20vLrmV
+        6e3k2FCwZ5WzwF3D0AsrUk6pf/l1gunSvDofJZbijERDLeai4kQAoMoTXbcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsVy+t/xe7pfy/cmG1xczmmx+m4/m8W0Dz+Z
+        LX6fPc9scfPATiaLlauPMlnsvaVtMX/ZU3aLz0tb2C1O3JJ24PS4fMXb4/LZUo9NqzrZPDYv
+        qffYfbOBzWNn631Wj74tqxg9Pm+SC+CI0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2
+        j7UyMlXSt7NJSc3JLEst0rdL0Mu4u+grS8F/jopz0xcwNzDOYe9i5OSQEDCRuN3Tz9zFyMUh
+        JLCUUWLZpZuMEAkJidsLm6BsYYk/17rYIIqeM0osf3sEqJuDg01AS6KxE2yQCFDN/o5WFpAa
+        ZoH7jBJ/Nr1iAkkIC+hI/OnYywZiswioSlxo+w42lFfAUuL2ll42iAXyEjMvfQebySygKbF+
+        lz5EiaDEyZlPWEBsZqCS5q2zmScw8s9CqJqFpGoWkqoFjMyrGEVSS4tz03OLjfSKE3OLS/PS
+        9ZLzczcxAiNn27GfW3Ywrnz1Ue8QIxMH4yFGCQ5mJRHelZx7koV4UxIrq1KL8uOLSnNSiw8x
+        mgJdPZFZSjQ5Hxi7eSXxhmYGpoYmZpYGppZmxkrivJ4FHYlCAumJJanZqakFqUUwfUwcnFIN
+        TOrq8r6r10bkb7jha19yOKRUp/DoNIUAmctMovNOrj3zaJHTslM587ce/xat3Hv0UOK3F8I3
+        p56f7DHfuc0w+HAmx8a9J6ZOZknkUA2Unt9nlKNxb7fgynt7Tc6XO63aM93oTIj4f9XGHq5H
+        /LeqZVdsfbNH6MmWGL7With5Gzbwz+70n6Y3eUN3TomcX87CzRks77TuvmdoTTKJL5k0X7Vo
+        ZshfdZnHUkuU1+4p33XweJOO8GeZwE9ZO1nfRmhUzp8mEhkXcm13z7OXP/k0WWqjjm5r/JbZ
+        UVvqxPdZ36E5PH9iUXflZ+Y5uVYOk0O0i7xO31S3s9nwS1bydsPyr/faDGuu2NwyPhKjvTpm
+        gRJLcUaioRZzUXEiAA5hEkYlAwAA
+X-CMS-MailID: 20230110143637eucas1p1d82528b632ccda1de4fb2795ff691fe2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20230110143637eucas1p1d82528b632ccda1de4fb2795ff691fe2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20230110143637eucas1p1d82528b632ccda1de4fb2795ff691fe2
+References: <CGME20230110143637eucas1p1d82528b632ccda1de4fb2795ff691fe2@eucas1p1.samsung.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 10:01:53AM +0200, Yishai Hadas wrote:
-> On 10/01/2023 7:08, Matthew Wilcox wrote:
-> > On Mon, Jan 09, 2023 at 04:47:01PM +0200, Yishai Hadas wrote:
-> > >   	if (sgt_append->prv) {
-> > > +		unsigned long paddr =
-> > > +			(page_to_pfn(sg_page(sgt_append->prv)) * PAGE_SIZE +
-> > 1. page_to_pfn() * PAGE_SIZE is spelled page_to_phys()
-> > 
-> > 2. physical addresses have type phys_addr_t.  Oh, wait, paddr isn't a
-> > physical address, it's a pfn because you divide by PAGE_SIZE at the end.
-> > But you will get truncation on 32-bit, because page_to_pfn() has type
-> > unsigned long.  Anyway, this shouldn't be called paddr.  Maybe last_pfn
-> > or something?
-> > 
-> > > +			 sgt_append->prv->offset + sgt_append->prv->length) /
-> > > +			PAGE_SIZE;
-> 
-> In this area of the patch I just reverted to what we had in 6.1 [1] where we
-> were good.
-> 
-> I can send V1 and replace the 'paddr' to be called 'last_pfn' if it's really
-> needed.
+Hi Jens,
+  It is still unclear whether the support for non-po2 zone size devices
+  will be added anytime soon [1]. I have extracted out the cleanup
+  patches that doesn't do any functional change but improves the
+  readability by adding helpers. This also helps a bit to
+  maintain off-tree support as there is an interest to have this feature
+  in some companies.
 
-Please change it as Matthew describes so it is clearer
+[1] https://lore.kernel.org/lkml/20220923173618.6899-1-p.raghav@samsung.com/
 
-Jason
+Changes since v1:
+- Remove blk_is_zoned() check in bdev_{is_zone_start, offset_from_zone_start} (Damien)
+- Minor spelling and variable name changes (Bart and Johannes)
+- Remove zonefs patch for now (Damien)
+- Send dm patches separately(Christoph)
+
+Pankaj Raghav (3):
+  block: remove superfluous check for request queue in bdev_is_zoned()
+  block: add a new helper bdev_{is_zone_start, offset_from_zone_start}
+  block: introduce bdev_zone_no helper
+
+ block/blk-core.c          |  2 +-
+ block/blk-zoned.c         |  4 ++--
+ drivers/nvme/target/zns.c |  3 +--
+ include/linux/blkdev.h    | 22 +++++++++++++++++-----
+ 4 files changed, 21 insertions(+), 10 deletions(-)
+
+-- 
+2.25.1
+
