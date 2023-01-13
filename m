@@ -2,69 +2,117 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10D3F668C53
-	for <lists+linux-block@lfdr.de>; Fri, 13 Jan 2023 07:17:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E116D668F8B
+	for <lists+linux-block@lfdr.de>; Fri, 13 Jan 2023 08:50:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239906AbjAMGRQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 Jan 2023 01:17:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
+        id S229462AbjAMHuG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Jan 2023 02:50:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238936AbjAMGQc (ORCPT
+        with ESMTP id S234718AbjAMHuC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 Jan 2023 01:16:32 -0500
-X-Greylist: delayed 895 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 12 Jan 2023 22:10:46 PST
-Received: from mp-relay-01.fibernetics.ca (mp-relay-01.fibernetics.ca [208.85.217.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE591BCB6;
-        Thu, 12 Jan 2023 22:10:42 -0800 (PST)
-Received: from mailpool-fe-01.fibernetics.ca (mailpool-fe-01.fibernetics.ca [208.85.217.144])
+        Fri, 13 Jan 2023 02:50:02 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30F763185;
+        Thu, 12 Jan 2023 23:49:50 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mp-relay-01.fibernetics.ca (Postfix) with ESMTPS id D016EE0D73;
-        Fri, 13 Jan 2023 05:45:50 +0000 (UTC)
-Received: from localhost (mailpool-mx-02.fibernetics.ca [208.85.217.141])
-        by mailpool-fe-01.fibernetics.ca (Postfix) with ESMTP id 9144B26892;
-        Fri, 13 Jan 2023 05:45:50 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at 
-X-Spam-Score: 3.651
-X-Spam-Level: ****
-X-Spam-Status: No, score=4.3 required=5.0 tests=BAYES_60,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,SPF_HELO_NONE,
-        SPF_PASS,SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.6
-Received: from mailpool-fe-01.fibernetics.ca ([208.85.217.144])
-        by localhost (mail-mx-02.fibernetics.ca [208.85.217.141]) (amavisd-new, port 10024)
-        with ESMTP id kVGLbP-el9qG; Fri, 13 Jan 2023 05:45:50 +0000 (UTC)
-Received: from localhost (unknown [208.85.220.72])
-        by mail.ca.inter.net (Postfix) with ESMTP id 9E6262688E;
-        Fri, 13 Jan 2023 05:45:47 +0000 (UTC)
-Received: from reverse.rain.network (reverse.rain.network [197.184.176.8])
- by webmail.ca.inter.net (Horde Framework) with HTTP; Fri, 13 Jan 2023
- 00:45:47 -0500
-Message-ID: <20230113004547.66912vqb15xco557@webmail.ca.inter.net>
-Date:   Fri, 13 Jan 2023 00:45:47 -0500
-From:   INFO <boothg@istar.ca>
-Reply-to: s.g0392440821@gmail.com
-To:     undisclosed-recipients:;
-Subject: IST DIESE E-MAIL AKTIV?
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 2B0FF5FBDC;
+        Fri, 13 Jan 2023 07:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1673596189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qr45SYM5k3TQ5Ca9ilptJQCk+nFtroXeKFE0zYAlz5M=;
+        b=e2gk5fK+Fg8VsLy4gVxkeBjQhAKVcJg55uMbswGMHSJ38f+CWGNtnBMC350UmKUKLlIMyH
+        EJzhteMm9Vm3jnCmqjl/hpn1P4FpRDN8vRkwD5r8oAmd7AO9cXEYo/vgXBkW7F4ucC1kc+
+        ee1UCHBfYayFZSvLJ/u76dk9yLkpDlA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1673596189;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qr45SYM5k3TQ5Ca9ilptJQCk+nFtroXeKFE0zYAlz5M=;
+        b=R9MnoZYGulzb3qoGcxYMbGvLANJ6mtnQt9z2lUwPttk4iTDaC5biUBqoIu4dz9UPd+gk68
+        9iYXdAYw9/+n33CA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A296613913;
+        Fri, 13 Jan 2023 07:49:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id TuStJBwNwWN3QgAAMHmgww
+        (envelope-from <hare@suse.de>); Fri, 13 Jan 2023 07:49:48 +0000
+Message-ID: <88a6a525-9922-b07e-75c3-a54a00c18950@suse.de>
+Date:   Fri, 13 Jan 2023 08:49:47 +0100
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=ISO-8859-1;
- DelSp="Yes";
- format="flowed"
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v2 01/18] ata: libata: allow ata_scsi_set_sense() to not
+ set CHECK_CONDITION
+Content-Language: en-US
+To:     Niklas Cassel <niklas.cassel@wdc.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-block@vger.kernel.org
+References: <20230112140412.667308-1-niklas.cassel@wdc.com>
+ <20230112140412.667308-2-niklas.cassel@wdc.com>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20230112140412.667308-2-niklas.cassel@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-User-Agent: Internet Messaging Program (IMP) H3 (4.3.7)
-X-Originating-User-Info: boothg@istar.ca 208.85.219.96
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 1/12/23 15:03, Niklas Cassel wrote:
+> Current ata_scsi_set_sense() calls scsi_build_sense(), which,
+> in addition to setting the sense data, unconditionally sets the
+> scsicmd->result to SAM_STAT_CHECK_CONDITION.
+> 
+> For Command Duration Limits policy 0xD:
+> The device shall complete the command without error (SAM_STAT_GOOD)
+> with the additional sense code set to DATA CURRENTLY UNAVAILABLE.
+> 
+> It is perfectly fine to have sense data for a command that returned
+> completion without error.
+> 
+> In order to support for CDL policy 0xD, we have to remove this
+> assumption that having sense data means that the command failed
+> (SAM_STAT_CHECK_CONDITION).
+> 
+> Add a new parameter to ata_scsi_set_sense() to allow us to set
+> sense data without unconditionally setting SAM_STAT_CHECK_CONDITION.
+> This new parameter will be used in a follow-up patch.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+> ---
+>   drivers/ata/libata-eh.c   |  3 ++-
+>   drivers/ata/libata-sata.c |  4 ++--
+>   drivers/ata/libata-scsi.c | 38 ++++++++++++++++++++------------------
+>   drivers/ata/libata.h      |  4 ++--
+>   4 files changed, 26 insertions(+), 23 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
+Cheers,
 
-Sehr geehrter E-Mail-Begünstigter, Sie wurden für eine Spende in Höhe  
-von 3.500.000,00 ? ausgewählt. Wenden Sie sich an diese  
-E-Mail-Adresse: s.g0392440821@gmail.com, um weitere Informationen zum  
-Erhalt Ihrer Spende zu erhalten. Vielen Dank
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 NÃ¼rnberg
+HRB 36809 (AG NÃ¼rnberg), GeschÃ¤ftsfÃ¼hrer: Ivo Totev, Andrew
+Myers, Andrew McDonald, Martje Boudien Moerman
 
