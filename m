@@ -2,54 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0948E6697A2
-	for <lists+linux-block@lfdr.de>; Fri, 13 Jan 2023 13:45:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43CE86697A0
+	for <lists+linux-block@lfdr.de>; Fri, 13 Jan 2023 13:45:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241511AbjAMMpM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 13 Jan 2023 07:45:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
+        id S241198AbjAMMpR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 13 Jan 2023 07:45:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241712AbjAMMnJ (ORCPT
+        with ESMTP id S241834AbjAMMnp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 13 Jan 2023 07:43:09 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F59D87F25
-        for <linux-block@vger.kernel.org>; Fri, 13 Jan 2023 04:35:51 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id v6so8989385ejg.6
-        for <linux-block@vger.kernel.org>; Fri, 13 Jan 2023 04:35:51 -0800 (PST)
+        Fri, 13 Jan 2023 07:43:45 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E26912A8A
+        for <linux-block@vger.kernel.org>; Fri, 13 Jan 2023 04:36:18 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id l22so22290164eja.12
+        for <linux-block@vger.kernel.org>; Fri, 13 Jan 2023 04:36:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linbit-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nr0DjBH1YEnasxrYesj7cvRVZfRH4rPEDs0TxXAHiSg=;
-        b=kE3RfzlxtjPHuvjfFEhPWJMp54HpFpp1Vnho1/xXHfQgsziEBG2QO7MlogQAjNMV6k
-         xJ+4oX/N3D5Y8RJztAPXEw+2kW+MOz2hCSCzzaxdYommNiVXrq3II4WsgJ+eoa+sbrWY
-         zAv+tdure6XvQ6edN3+fg+QR3xaWJ7OkfBOK2xMCclcTpwFGHgdr+2l1ZyXOC05ZRbHL
-         SSruhU9xk84XGBTJ9QrwziONSZ2puhBmY3SeolCq9KrNeDVnmMAaUnsjArptv7QfH05F
-         HjUDn1+r5B30e9+xtqAOsU/zJh0hjlpmLgky0g0X2xSxcbIKwaoVTY3rFzf8LDLJXfDV
-         qB6w==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CtCs8GxpjiNUlKe9jLRTDXiumifJAjD1jl0L4CeLiMA=;
+        b=iVjJ3nWfodyyNsQdbwae7vcZ9yAMAWRUHvPDFFsqJ+ZbRLWA7X3Od2Dcrc1o5ASha/
+         ijoKbtCtcrhtq3o7HgrmHZIKXgnavTg78URe7orHzD3doZEH0cWgnHM1va4F+kT1vPdv
+         QEiei1roTDFPApr4rbDokzLo0mbijR0PndJUPtQR/hBXy0Gc941NCaH7uNlwPLH/M304
+         zqE/jQ+ve8/3I1qHy7dmQT098fctIvjnarLt2h7S1sFUPdo0ak8YGHwWz7YC57yrrxX2
+         HW5ZmbPMyGQiOq3GGIimgOYzoeUnFrxQrRs7RpFEsh9hNXTjq4QtKHaRxp8fhgEL7zKa
+         ViaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nr0DjBH1YEnasxrYesj7cvRVZfRH4rPEDs0TxXAHiSg=;
-        b=3FjDrwt/sCulIqzghnwRnKi4KUQxpnvASJog6UlnsSH6o4ok1CFW5Gy6mKjstBwxYn
-         wOB1qFS+r/BqrcKn9fCO5woyeMhTmZ0Y+FThSjWQ3l7XLKZRLrM/NLN7GrB5MTWJSQX7
-         /IKxQmlwvamzygCWq7gdZXYXh2hl5K+hh6w/bklduxZ2xXNqoyxIFlFifbAYOT1PYYxV
-         YEn4tM+fxs//hUEgBsu54BKADCjvXgR+qpXmv+RYONTYBXx9ZKIRsSs/IpmusTDHasKE
-         AT8u2ICWeb4bvQ1m+WKFVEsko/N6isIb8+mDOyDPHubl+AivuQuK717/Il1ahmJeRG7E
-         geqw==
-X-Gm-Message-State: AFqh2koWri58PwDtJ/K6NTdDeqtv7CuCB/StVqggx69lUgo7UOCmavsy
-        ivCGSpwFS254aP4lrqHpxSrxdg==
-X-Google-Smtp-Source: AMrXdXub5p+iGrNvx+NKgAL3VLKRz04ZYGHLuJRXqTeqrTZWvsOy/QeBj08JRCfb/ECCwDK4pMCFkg==
-X-Received: by 2002:a17:906:494b:b0:862:e612:effe with SMTP id f11-20020a170906494b00b00862e612effemr8182025ejt.14.1673613321216;
-        Fri, 13 Jan 2023 04:35:21 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CtCs8GxpjiNUlKe9jLRTDXiumifJAjD1jl0L4CeLiMA=;
+        b=ilFBxgxeaqMmzZZ0IEGZsN5IwEtytyccS+erJZUwLveoyRVwpJTcz04Iga8Kr1anNB
+         8BmziViNoubR/bX1SziDoOC4sION37qyy/k4h6pQJl4HpBV63xTslTsG6uXy2N7en5l1
+         pYlu3tvNE5pQqroxEQUX74UMqOE9Ctwl99u5J8CM9vHn/l4T3Jekdnhc7oMSylW+DH8a
+         9+inrfNIQckHnrs96ykB6P3lKapvLn6e29x8znaYH5tvEgvCJcWj+ppl/EZgkBofA3rq
+         WP+W/q+AHFj8Wzotl3Zq2Bqc2BRKa3EXXZovJnExT4/XQn/GwjQWGH7wOEzWk27wsKt4
+         E1lg==
+X-Gm-Message-State: AFqh2kpga8ry3zKfieqwupg2604hP2ii8QbCYgCONLw4PDOye/nO9qMG
+        NUg2FLDzdwcZpweZ+4t+JzDrTg==
+X-Google-Smtp-Source: AMrXdXscUQGyihFd72/UBQHujIY3PI028gGBGoZyl+Ii+Ozg85WvOyE0kQeJO4cYA4H80HINGbZLnw==
+X-Received: by 2002:a17:906:2d4a:b0:84c:cf42:e16 with SMTP id e10-20020a1709062d4a00b0084ccf420e16mr33260592eji.1.1673613342548;
+        Fri, 13 Jan 2023 04:35:42 -0800 (PST)
 Received: from localhost.localdomain (h082218028181.host.wavenet.at. [82.218.28.181])
-        by smtp.gmail.com with ESMTPSA id 18-20020a170906201200b00846734faa9asm8386323ejo.164.2023.01.13.04.35.20
+        by smtp.gmail.com with ESMTPSA id 17-20020a170906329100b007c0bb571da5sm8402496ejw.41.2023.01.13.04.35.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 04:35:20 -0800 (PST)
+        Fri, 13 Jan 2023 04:35:42 -0800 (PST)
 From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
         <christoph.boehmwalder@linbit.com>
 To:     Jens Axboe <axboe@kernel.dk>
@@ -58,14 +57,11 @@ Cc:     drbd-dev@lists.linbit.com, linux-kernel@vger.kernel.org,
         Philipp Reisner <philipp.reisner@linbit.com>,
         linux-block@vger.kernel.org,
         =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>,
-        Joel Colledge <joel.colledge@linbit.com>
-Subject: [PATCH 3/3] drbd: split off drbd_config into separate file
-Date:   Fri, 13 Jan 2023 13:35:06 +0100
-Message-Id: <20230113123506.144082-4-christoph.boehmwalder@linbit.com>
+        <christoph.boehmwalder@linbit.com>
+Subject: [RESEND PATCH 0/8] Miscellaneous DRBD reorganization
+Date:   Fri, 13 Jan 2023 13:35:30 +0100
+Message-Id: <20230113123538.144276-1-christoph.boehmwalder@linbit.com>
 X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20230113123506.144082-1-christoph.boehmwalder@linbit.com>
-References: <20230113123506.144082-1-christoph.boehmwalder@linbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -78,81 +74,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-To be more similar to what we do in the out-of-tree module and ease the
-upstreaming process.
+Some more mostly trivial "alignment patches" to (slowly but surely)
+move further in the direction of re-upstreaming DRBD.
 
-Signed-off-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
-Reviewed-by: Joel Colledge <joel.colledge@linbit.com>
----
- drivers/block/drbd/drbd_buildtag.c |  2 +-
- drivers/block/drbd/drbd_int.h      |  1 +
- include/linux/drbd.h               |  6 ------
- include/linux/drbd_config.h        | 16 ++++++++++++++++
- 4 files changed, 18 insertions(+), 7 deletions(-)
- create mode 100644 include/linux/drbd_config.h
+These should be fairly uncontroversial.
 
-diff --git a/drivers/block/drbd/drbd_buildtag.c b/drivers/block/drbd/drbd_buildtag.c
-index 956a4d5c339b..cb1aa66d7d5d 100644
---- a/drivers/block/drbd/drbd_buildtag.c
-+++ b/drivers/block/drbd/drbd_buildtag.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
--#include <linux/drbd.h>
-+#include <linux/drbd_config.h>
- #include <linux/module.h>
- 
- const char *drbd_buildtag(void)
-diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
-index edce1f7ac2da..d89b7d03d4c8 100644
---- a/drivers/block/drbd/drbd_int.h
-+++ b/drivers/block/drbd/drbd_int.h
-@@ -34,6 +34,7 @@
- #include <linux/prefetch.h>
- #include <linux/drbd_genl_api.h>
- #include <linux/drbd.h>
-+#include <linux/drbd_config.h>
- #include "drbd_strings.h"
- #include "drbd_state.h"
- #include "drbd_protocol.h"
-diff --git a/include/linux/drbd.h b/include/linux/drbd.h
-index df65a8f5228a..5468a2399d48 100644
---- a/include/linux/drbd.h
-+++ b/include/linux/drbd.h
-@@ -38,12 +38,6 @@
- 
- #endif
- 
--extern const char *drbd_buildtag(void);
--#define REL_VERSION "8.4.11"
--#define PRO_VERSION_MIN 86
--#define PRO_VERSION_MAX 101
--
--
- enum drbd_io_error_p {
- 	EP_PASS_ON, /* FIXME should the better be named "Ignore"? */
- 	EP_CALL_HELPER,
-diff --git a/include/linux/drbd_config.h b/include/linux/drbd_config.h
-new file mode 100644
-index 000000000000..d215365c6bb1
---- /dev/null
-+++ b/include/linux/drbd_config.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * drbd_config.h
-+ * DRBD's compile time configuration.
-+ */
-+
-+#ifndef DRBD_CONFIG_H
-+#define DRBD_CONFIG_H
-+
-+extern const char *drbd_buildtag(void);
-+
-+#define REL_VERSION "8.4.11"
-+#define PRO_VERSION_MIN 86
-+#define PRO_VERSION_MAX 101
-+
-+#endif
+Andreas Gruenbacher (1):
+  drbd: drbd_insert_interval(): Clarify comment
+
+Christoph Böhmwalder (5):
+  drbd: adjust drbd_limits license header
+  drbd: make limits unsigned
+  drbd: remove unnecessary assignment in vli_encode_bits
+  drbd: remove macros using require_context
+  MAINTAINERS: add drbd headers
+
+Lars Ellenberg (1):
+  drbd: interval tree: make removing an "empty" interval a no-op
+
+Robert Altnoeder (1):
+  drbd: fix DRBD_VOLUME_MAX 65535 -> 65534
+
+ MAINTAINERS                        |   1 +
+ drivers/block/drbd/drbd_int.h      |  12 +-
+ drivers/block/drbd/drbd_interval.c |   6 +-
+ drivers/block/drbd/drbd_vli.h      |   2 +-
+ include/linux/drbd_limits.h        | 204 ++++++++++++++---------------
+ 5 files changed, 110 insertions(+), 115 deletions(-)
+
+
+base-commit: f596da3efaf4130ff61cd029558845808df9bf99
 -- 
 2.38.1
 
