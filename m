@@ -2,105 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C9DE66CE9E
-	for <lists+linux-block@lfdr.de>; Mon, 16 Jan 2023 19:17:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A61866CEB1
+	for <lists+linux-block@lfdr.de>; Mon, 16 Jan 2023 19:22:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232738AbjAPSRF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Jan 2023 13:17:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
+        id S232415AbjAPSWr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Jan 2023 13:22:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232719AbjAPSQH (ORCPT
+        with ESMTP id S233349AbjAPSW0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Jan 2023 13:16:07 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D101E28B
-        for <linux-block@vger.kernel.org>; Mon, 16 Jan 2023 10:03:20 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id m7-20020a17090a730700b00225ebb9cd01so34602871pjk.3
-        for <linux-block@vger.kernel.org>; Mon, 16 Jan 2023 10:03:20 -0800 (PST)
+        Mon, 16 Jan 2023 13:22:26 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5683A59C
+        for <linux-block@vger.kernel.org>; Mon, 16 Jan 2023 10:09:26 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id vw16so6784370ejc.12
+        for <linux-block@vger.kernel.org>; Mon, 16 Jan 2023 10:09:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oFRcO8WJe+2hhVpbSOzkxfGUtn5hg+4hKIQrsXrKsug=;
-        b=UIesaXwW97VQRg1lRmbhb5q5e0BjJ98o0Wg3Wp7GpLqJ/7Ag2CwbgxePqIBX55H95I
-         xn902UV29eXG0qeLFm9+vgpEdWVjIyx+d79P5zxU3Qm24JBLs6vT4N/163C17edMsMCu
-         c7zlk8d6QiHXgj6rAIvEa2CDn1L819WRS22Cs+jbloJfUVpdYSHAubZrsd4jQ3YKsMVX
-         R3v/NMfTTlaiQ2AWcR2jsaPgmFO0eoGIqXs8pDda1XEsf6fMuij08CaQYKVlnajdEgcj
-         H5y/6d9SR3csFcNLwG2izHD44txhOmw8UuidSFA0lDTX6c2k0tMB72BiOq+CwkE5GC6x
-         ha3w==
+        d=linaro.org; s=google;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SMh+ag8vr1xnoV0VXFDBTyfjJzh0NwEeniwxIxd/A40=;
+        b=R2Sm3nuFTkPJut01DoV2RheH9x3+eGtgZbLkhTbP9rKrq7UTNNK+pmh26R+NZ9Soq4
+         6MuYLCjPvFOx/eg2M4Gv5hDgUATKdZT55J/aTFGPkNVQo8buVIw/z7jApHS/dPvNnSht
+         mLrP2fsQDvZT/mGcvpotcOybR68VwxbIUxu3JymdNt2xKt7KpFTpX7nm5sjLmsphu5q3
+         1lemg3DpTGw/NUCUDdLmjO+mVurQJXCzzmtGlGNjq1M7mVkBMopTK+GHsqMwmOBu/guO
+         BLapKsEatLAdqu/hgDFeeziIbEZV5pcGh96gYvlMPTZ/F6Jkqan7ZUKZ4Kk8G1mwqSK0
+         YImA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oFRcO8WJe+2hhVpbSOzkxfGUtn5hg+4hKIQrsXrKsug=;
-        b=ZNlXM5VEe0ePIfAEQX21QcfdOTu58tNIdPQg2s5cbK9/6k8zTFr7kIRHdVo1pLQpc7
-         M5vU+OBnsZIP4XHL7dn1AI25bROTnlzYCe2dNVX5xAgPRmKG4rC8Pr+Guy0jz+ZsJaUf
-         At3hqahMbe0KzyZCtP6NhEok0NMNWxEestsdgKCWrnPK+AaU/wJsdKK3qmKWCZTo37v2
-         NEx88ck09ytXw+AFQwV6Q6LN+qnttNiPma7ukzDt/O528ssPAzVCm0BPmRzy5XA8Q2PW
-         vGWQFNkw7/9AoWQf/HujIsRC93DoZ+qBfY3hkHCeFUuAkvJXYkWoPOyroieo0sER/lTk
-         KWzg==
-X-Gm-Message-State: AFqh2krtHFLJig9Hri+m0QuD+xBEC7RXiNLC+uZXiZm7op3E5JX50fsX
-        ny7KpCUyKRyrlqiqJsQ4L0Xpuj7IHNhcUBDk
-X-Google-Smtp-Source: AMrXdXtPcJ4Ouc3/lNN6nOU2wvkFU/6sRzEqQ3HTqcFaoTGwQDYk9jrr3LJtSDPZXqiZnVY3/+I+6w==
-X-Received: by 2002:a17:902:9695:b0:194:9f80:8bed with SMTP id n21-20020a170902969500b001949f808bedmr149174plp.6.1673892199493;
-        Mon, 16 Jan 2023 10:03:19 -0800 (PST)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ix15-20020a170902f80f00b00192b23b8451sm19708710plb.108.2023.01.16.10.03.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jan 2023 10:03:19 -0800 (PST)
-Message-ID: <ec218e9e-5433-c6b5-a6a6-85a64fd2ea7f@kernel.dk>
-Date:   Mon, 16 Jan 2023 11:03:18 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] block: don't allow multiple bios for IOCB_NOWAIT issue
-Content-Language: en-US
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-References: <c5631d66-3627-5d04-c810-c060c9fd7077@kernel.dk>
- <Y8WOuHQ21PP/W6Rv@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Y8WOuHQ21PP/W6Rv@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SMh+ag8vr1xnoV0VXFDBTyfjJzh0NwEeniwxIxd/A40=;
+        b=JpEB5Vd4svbU2QDe4tofMz+tsej2MC2vuxOgzt5SXwG4CM4pAqGHx4/YWtHOBE5VBA
+         D6P5Od74vp6EsI++wYftC7dmHjzTQX7NIZibF6nQqo5sKN/RfUZgZGJ0XOUf21f101gd
+         cqSMD3wjY/eAsaBl1TUISFVtRMVMBtS0CxpOb7XFDGEMnm1STls+QeAkrCVFmjOYnsNf
+         L9YlxuGjkNqfoZ81vhMta8EPMFopAvpo/SK6CWxigvo+zuxMFpqf4ZuQADyOMK9PhL+O
+         +pTQxzNQQPS8cQC9BYUWmVcdmcAZH2xPe6NiRAGCKZG9dtPKEMxn3E91aeRnFdoqC1IZ
+         cjiQ==
+X-Gm-Message-State: AFqh2kqpCpwy+JqJYXXfTn5p2YzF3u9ElcxFHpBIOqIHeIHSSkCq3feD
+        cmZZ2veRksWNcYov592siHnA/w==
+X-Google-Smtp-Source: AMrXdXtbmoQvHe7gKOBIxs8Lw0/nzZxF1CwnNnLTCO+8jOU582ZIrY8sWvohCz4BEniyDw94GQS3vA==
+X-Received: by 2002:a17:906:264f:b0:86f:b99c:ac8d with SMTP id i15-20020a170906264f00b0086fb99cac8dmr6110224ejc.44.1673892564713;
+        Mon, 16 Jan 2023 10:09:24 -0800 (PST)
+Received: from mbp-di-paolo.station (net-93-70-85-0.cust.vodafonedsl.it. [93.70.85.0])
+        by smtp.gmail.com with ESMTPSA id ky6-20020a170907778600b0086b0d53cde2sm4028360ejc.201.2023.01.16.10.09.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Jan 2023 10:09:24 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH V13 REBASED 0/8] block, bfq: extend bfq to support
+ multi-actuator drives
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20230116130341.lci7hixndnxvjuhz@quack3>
+Date:   Mon, 16 Jan 2023 19:09:23 +0100
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arie van der Hoeven <arie.vanderhoeven@seagate.com>,
+        Rory Chen <rory.c.chen@seagate.com>, glen.valante@linaro.org,
+        damien.lemoal@opensource.wdc.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2D3BE66C-8E36-4D32-BEF3-B500133CA66B@linaro.org>
+References: <20230103145503.71712-1-paolo.valente@linaro.org>
+ <20230116130341.lci7hixndnxvjuhz@quack3>
+To:     Jan Kara <jack@suse.cz>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/16/23 10:51 AM, Christoph Hellwig wrote:
-> On Mon, Jan 16, 2023 at 09:01:37AM -0700, Jens Axboe wrote:
->> This depends on: 613b14884b85 ("block: handle bio_split_to_limits() NULL return")
-> 
-> Can we sort the NUL vs ERR_PTR thing there first?
 
-Which thing?
 
->> +	/*
->> +	 * We're doing more than a bio worth of IO (> 256 pages), and we
->> +	 * cannot guarantee that one of the sub bios will not fail getting
->> +	 * issued FOR NOWAIT as error results are coalesced across all of
->> +	 * them. Be safe and ask for a retry of this from blocking context.
->> +	 */
->> +	if (iocb->ki_flags & IOCB_NOWAIT)
->> +		return -EAGAIN;
->>  	return __blkdev_direct_IO(iocb, iter, bio_max_segs(nr_pages));
-> 
-> If the I/O is too a huge page we could easily end up with a single
-> bio here.
+> Il giorno 16 gen 2023, alle ore 14:03, Jan Kara <jack@suse.cz> ha =
+scritto:
+>=20
+> Hi Paolo!
+>=20
+> On Tue 03-01-23 15:54:55, Paolo Valente wrote:
+>> Here is the whole description of this patch series again.  This
+>> extension addresses the following issue. Single-LUN multi-actuator
+>> SCSI drives, as well as all multi-actuator SATA drives appear as a
+>> single device to the I/O subsystem [1].  Yet they address commands to
+>> different actuators internally, as a function of Logical Block
+>> Addressing (LBAs). A given sector is reachable by only one of the
+>> actuators. For example, Seagate=E2=80=99s Serial Advanced Technology
+>> Attachment (SATA) version contains two actuators and maps the lower
+>> half of the SATA LBA space to the lower actuator and the upper half =
+to
+>> the upper actuator.
+>>=20
+>> Evidently, to fully utilize actuators, no actuator must be left idle
+>> or underutilized while there is pending I/O for it. To reach this
+>> goal, the block layer must somehow control the load of each actuator
+>> individually. This series enriches BFQ with such a per-actuator
+>> control, as a first step. Then it also adds a simple mechanism for
+>> guaranteeing that actuators with pending I/O are never left idle.
+>>=20
+>> See [1] for a more detailed overview of the problem and of the
+>> solutions implemented in this patch series. There you will also find
+>> some preliminary performance results.
+>=20
+> Sorry, I didn't find time to look into this earlier. I've just had a
+> high-level look into the patches and I have one question: Did you =
+consider
+> a solution where you'd basically duplicate all of the scheduling for =
+each
+> actuator (thus making them effectively independent devices from the =
+point
+> of view of BFQ)?
 
-True - we can push the decision making further down potentially, but
-honestly not sure it's worth the effort.
+Yep, I did.
 
--- 
-Jens Axboe
+> =46rom the first look it would look like somewhat simpler
+> solution than splitting all the BFQ queues and implementing special
+> injection mechanism for other actuators and perhaps lead to better
+> utilization of the actuators. OTOH the latecy and QoS for tasks using
+> multiple actuators would be probably worse because it would be =
+basically
+> determined by the busiest of the actuators.
 
+Exactly, that's why I had to keep all queues in the same bucket.
+
+Thanks for both asking and answering! :)
+
+Jokes apart, thank you a lot for having a look at this contribution,
+Paolo
+
+> So I'm asking mostly out of
+> curiosity :)
+>=20
+> 								Honza
+>=20
+> --=20
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 
