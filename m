@@ -2,58 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C592F66B55A
-	for <lists+linux-block@lfdr.de>; Mon, 16 Jan 2023 02:53:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1AA766B5DB
+	for <lists+linux-block@lfdr.de>; Mon, 16 Jan 2023 04:09:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231761AbjAPBxl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 15 Jan 2023 20:53:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34910 "EHLO
+        id S231185AbjAPDJz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 15 Jan 2023 22:09:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231749AbjAPBxb (ORCPT
+        with ESMTP id S231673AbjAPDJy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 15 Jan 2023 20:53:31 -0500
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C2044A8;
-        Sun, 15 Jan 2023 17:53:28 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4NwFRR2fk0z4f42hw;
-        Mon, 16 Jan 2023 09:53:23 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-        by APP4 (Coremail) with SMTP id gCh0CgD3rbERrsRj9iw3Bw--.37368S10;
-        Mon, 16 Jan 2023 09:53:25 +0800 (CST)
-From:   Kemeng Shi <shikemeng@huaweicloud.com>
-To:     jack@suse.com, damien.lemoal@opensource.wdc.com,
-        paolo.valente@linaro.org, axboe@kernel.dk
-Cc:     hch@lst.de, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 8/8] block, bfq: remove unused bfq_wr_max_time in struct bfq_data
-Date:   Mon, 16 Jan 2023 17:51:53 +0800
-Message-Id: <20230116095153.3810101-9-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20230116095153.3810101-1-shikemeng@huaweicloud.com>
-References: <20230116095153.3810101-1-shikemeng@huaweicloud.com>
+        Sun, 15 Jan 2023 22:09:54 -0500
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6464D4485
+        for <linux-block@vger.kernel.org>; Sun, 15 Jan 2023 19:09:52 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4NwH7Z6J34z4f3wv0
+        for <linux-block@vger.kernel.org>; Mon, 16 Jan 2023 11:09:46 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP3 (Coremail) with SMTP id _Ch0CgCHgR_7v8RjsnKXBg--.28376S3;
+        Mon, 16 Jan 2023 11:09:49 +0800 (CST)
+Subject: Re: [PATCH] block, bfq: fix uaf for bfqq in bic_set_bfqq()
+To:     =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>,
+        Jan Kara <jack@suse.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <20230113094410.2907223-1-yukuai3@huawei.com>
+ <bab60ee7-b0b7-4e45-40b4-29d77de67372@applied-asynchrony.com>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <963eaa70-79bc-796a-9c88-9e92929729a6@huaweicloud.com>
+Date:   Mon, 16 Jan 2023 11:09:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <bab60ee7-b0b7-4e45-40b4-29d77de67372@applied-asynchrony.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3rbERrsRj9iw3Bw--.37368S10
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFyUJw1kCr15GFyUtry3twb_yoW8WFWxpa
-        1DK347WF17tr4FgF1DAa4rXF13ta1fCF9rKa1a9w4YyFW8XF1a93ZYyw1fX3Z2vFZ3Cr4f
-        Zw1Fqa4Dtw18K3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-        8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-        FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
-        A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-        3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-        67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-        vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY
-        6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
-        CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0TqcUUUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CM-TRANSID: _Ch0CgCHgR_7v8RjsnKXBg--.28376S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF4DZF1xGw18ZF18Xr1UZFb_yoW5WryrpF
+        1ktF4UWryUGr1ktr47Jw1DXFyrXF4rJ34DKryjqa42vry3Jr12qF4j9r40gF10gr4rGw47
+        XryUW3yDZr17XFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+        c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,52 +65,79 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bfqd->bfq_wr_max_time is set to 0 in bfq_init_queue and is never changed.
-It is only used in bfq_wr_duration when bfq_wr_max_time > 0 which never
-meets, so bfqd->bfq_wr_max_time is not used actually. Just remove it.
+Hi,
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- block/bfq-iosched.c | 4 ----
- block/bfq-iosched.h | 2 --
- 2 files changed, 6 deletions(-)
+在 2023/01/13 21:38, Holger Hoffstätte 写道:
+> On 2023-01-13 10:44, Yu Kuai wrote:
+>> After commit 64dc8c732f5c ("block, bfq: fix possible uaf for 
+>> 'bfqq->bic'"),
+>> bic->bfqq will be accessed in bic_set_bfqq(), however, in some context
+>> bic->bfqq will be freed first, and bic_set_bfqq() is called with the 
+>> freed
+>> bic->bfqq.
+>>
+>> Fix the problem by always freeing bfqq after bic_set_bfqq().
+>>
+>> Fixes: 64dc8c732f5c ("block, bfq: fix possible uaf for 'bfqq->bic'")
+>> Reported-and-tested-by: Shinichiro Kawasaki 
+>> <shinichiro.kawasaki-Sjgp3cTcYWE@public.gmane.org>
+>> Signed-off-by: Yu Kuai <yukuai3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   block/bfq-cgroup.c  | 2 +-
+>>   block/bfq-iosched.c | 4 +++-
+>>   2 files changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+>> index a6e8da5f5cfd..feb13ac25557 100644
+>> --- a/block/bfq-cgroup.c
+>> +++ b/block/bfq-cgroup.c
+>> @@ -749,8 +749,8 @@ static void bfq_sync_bfqq_move(struct bfq_data *bfqd,
+>>            * old cgroup.
+>>            */
+>>           bfq_put_cooperator(sync_bfqq);
+>> -        bfq_release_process_ref(bfqd, sync_bfqq);
+>>           bic_set_bfqq(bic, NULL, true, act_idx);
+>> +        bfq_release_process_ref(bfqd, sync_bfqq);
+>>       }
+>>   }
+>> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+>> index 815b884d6c5a..2ddf831221c4 100644
+>> --- a/block/bfq-iosched.c
+>> +++ b/block/bfq-iosched.c
+>> @@ -5581,9 +5581,11 @@ static void bfq_check_ioprio_change(struct 
+>> bfq_io_cq *bic, struct bio *bio)
+>>       bfqq = bic_to_bfqq(bic, false, bfq_actuator_index(bfqd, bio));
+>>       if (bfqq) {
+>> -        bfq_release_process_ref(bfqd, bfqq);
+>> +        struct bfq_queue *old_bfqq = bfqq;
+>> +
+>>           bfqq = bfq_get_queue(bfqd, bio, false, bic, true);
+>>           bic_set_bfqq(bic, bfqq, false, bfq_actuator_index(bfqd, bio));
+>> +        bfq_release_process_ref(bfqd, old_bfqq);
+>>       }
+>>       bfqq = bic_to_bfqq(bic, true, bfq_actuator_index(bfqd, bio));
+>>
+> 
+> Hello,
+> 
+> does this condition also affect the current code? I ask since the patch 
+> does not apply
+> as bfq_sync_bfqq_move() is only part of the multi-actuator work, which 
+> is only in
+> Jens' for-next. Comparing the code sections it seems it should also be 
+> necessary for
+> current 6.1/6.2, but I wanted to check.
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 0416dfe05983..4705c4be90e7 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -1093,9 +1093,6 @@ static unsigned int bfq_wr_duration(struct bfq_data *bfqd)
- {
- 	u64 dur;
- 
--	if (bfqd->bfq_wr_max_time > 0)
--		return bfqd->bfq_wr_max_time;
--
- 	dur = bfqd->rate_dur_prod;
- 	do_div(dur, bfqd->peak_rate);
- 
-@@ -7299,7 +7296,6 @@ static int bfq_init_queue(struct request_queue *q, struct elevator_type *e)
- 	 */
- 	bfqd->bfq_wr_coeff = 30;
- 	bfqd->bfq_wr_rt_max_time = msecs_to_jiffies(300);
--	bfqd->bfq_wr_max_time = 0;
- 	bfqd->bfq_wr_min_idle_time = msecs_to_jiffies(2000);
- 	bfqd->bfq_wr_min_inter_arr_async = msecs_to_jiffies(500);
- 	bfqd->bfq_wr_max_softrt_rate = 7000; /*
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 058af701bbbe..ed2be7d32151 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -769,8 +769,6 @@ struct bfq_data {
- 	 * is multiplied.
- 	 */
- 	unsigned int bfq_wr_coeff;
--	/* maximum duration of a weight-raising period (jiffies) */
--	unsigned int bfq_wr_max_time;
- 
- 	/* Maximum weight-raising duration for soft real-time processes */
- 	unsigned int bfq_wr_rt_max_time;
--- 
-2.30.0
+bfq_sync_bfqq_move() already make sure bfq_release_process_ref() is
+called after bic_set_bfqq(), so the problem this patch tries to fix
+should not exist here.
+
+Thanks,
+Kuai
+> 
+> thanks
+> Holger
+> 
+> .
+> 
 
