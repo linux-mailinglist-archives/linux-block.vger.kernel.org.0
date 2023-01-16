@@ -2,68 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3A6266B583
-	for <lists+linux-block@lfdr.de>; Mon, 16 Jan 2023 03:15:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B266866B555
+	for <lists+linux-block@lfdr.de>; Mon, 16 Jan 2023 02:53:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230358AbjAPCPP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 15 Jan 2023 21:15:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42920 "EHLO
+        id S231751AbjAPBxb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 15 Jan 2023 20:53:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231607AbjAPCPP (ORCPT
+        with ESMTP id S231735AbjAPBx3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 15 Jan 2023 21:15:15 -0500
+        Sun, 15 Jan 2023 20:53:29 -0500
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7DB527A;
-        Sun, 15 Jan 2023 18:15:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3217D44B4;
+        Sun, 15 Jan 2023 17:53:27 -0800 (PST)
 Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4NwFwW61xZz4f3v5b;
-        Mon, 16 Jan 2023 10:15:07 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-        by APP1 (Coremail) with SMTP id cCh0CgBXxS8ss8RjAsTDBg--.33134S2;
-        Mon, 16 Jan 2023 10:15:10 +0800 (CST)
-Subject: Re: [PATCH RESEND v2 5/5] sbitmap: correct wake_batch recalculation
- to avoid potential IO hung
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4NwFRN4hyZz4f3nTH;
+        Mon, 16 Jan 2023 09:53:20 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+        by APP4 (Coremail) with SMTP id gCh0CgD3rbERrsRj9iw3Bw--.37368S2;
+        Mon, 16 Jan 2023 09:53:23 +0800 (CST)
 From:   Kemeng Shi <shikemeng@huaweicloud.com>
-To:     Yu Kuai <yukuai1@huaweicloud.com>, Jan Kara <jack@suse.cz>,
-        Ming Lei <ming.lei@redhat.com>,
-        "yukuai (C)" <yukuai3@huawei.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbusch@kernel.org,
-        Laibin Qiu <qiulaibin@huawei.com>
-References: <20221222143353.598042-1-shikemeng@huaweicloud.com>
- <20221222143353.598042-6-shikemeng@huaweicloud.com>
- <20221222134146.khucy5afnxwl75px@quack3>
- <d00297d7-a77a-770a-1cd7-1632f8ae77e0@huaweicloud.com>
- <3662b1aa-546b-e4e0-3705-0bc5626067f6@huaweicloud.com>
- <f8df9153-eeff-f3ca-c4c2-2be0cf876298@huaweicloud.com>
-Message-ID: <16d02f7b-8e0e-097c-63bc-ef83eb9cb05b@huaweicloud.com>
-Date:   Mon, 16 Jan 2023 10:15:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+To:     jack@suse.com, damien.lemoal@opensource.wdc.com,
+        paolo.valente@linaro.org, axboe@kernel.dk
+Cc:     hch@lst.de, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/8] A few bugfix and cleancode patch for bfq
+Date:   Mon, 16 Jan 2023 17:51:45 +0800
+Message-Id: <20230116095153.3810101-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-In-Reply-To: <f8df9153-eeff-f3ca-c4c2-2be0cf876298@huaweicloud.com>
-Content-Type: text/plain; charset=gbk
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgBXxS8ss8RjAsTDBg--.33134S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JF13ZFWfGF48ur18JF4Utwb_yoW3twb_Xr
-        4v93Z7C39xGa1xKw1kKr4YqFZIga4DWFy8ArZ5Xr1Fq395t3yfAr4DtrZ5XayDtw4rJFnI
-        qry3uasrXw4UujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb4AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_
-        Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
-        UUUUU==
+X-CM-TRANSID: gCh0CgD3rbERrsRj9iw3Bw--.37368S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF1fXF45GFyfGFWkXF4Dtwb_yoW8WF17pr
+        4fur4a9F4rJry3XFy3A3W8Zrn3t34ftasrXw1ag3s5XryDZwnFqFyqk3yFkFyftF93CFs3
+        Xa40q3s5Wr1rAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+        8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_
+        tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+        0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+        80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28I
+        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
+        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+        IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0VnQUUUUUU==
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,36 +58,48 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi, this series contain two patches to fix bug in request injection
+mechanism and some random cleancode patches.
+Thanks!
 
+---
+V4:
+ -Thanks Jan and Damien for review. Collect Reviewed-by from Jan and
+Damien. Now all patches get Reviewed-by tag.
+ -Make patches based on latest code and fix conflicts of patch 1/8
+"block, bfq: correctly raise inject limit in bfq_choose_bfqq_for_injection"
+and 5/8 "block, bfq: remove unnecessary dereference to get async_bfqq"
 
-on 1/3/2023 10:12 AM, Kemeng Shi wrote:
-> Friendly ping...
-> 
-> on 12/26/2022 4:57 PM, Yu Kuai wrote:
->> ÔÚ 2022/12/26 15:50, Yu Kuai Ð´µÀ:
->>
->>>> why using
->>>> wake batch of 4 is safe for cards with say 32 tags in case active_users is
->>>> currently 32. Because I don't see why that is correct either.
->>>>
->>
->> I see, you guys are worried that during the period that some hctx
->> complete all it's not idle yet. It's right waiter might wait for
->> other hctx to become idle to be awaken in this case. However, I'm
->> not sure which way is better.
->>
->> Ming, do you have any idea?
->>
->> Thanks,
->> Kuai
->>
-> 
-Hi Jan. The magic batch 4 seems just for performance initially while
-lacks of full consideration. And there is no better solution provided
-in futher. Do you have any suggestion that I can do to make more
-progress.
+---
+V3:
+ -Thanks Jan for review. Remove unnecessary brace in patch "block, bfq:
+remove unnecessary goto tag in bfq_dispatch_rq_from_bfqq" according to
+recommend from Jan and collect Reviewed-by tag from Jan for rest
+patches.
+ -Drop patch "block, bfq: remove redundant bfqd->rq_in_driver > 0 check
+in bfq_add_request" and "block, bfq: remove check of
+bfq_wr_max_softrt_rate which is always greater than 0".
+
+---
+v2:
+ -improve git log.
+---
+
+Kemeng Shi (8):
+  block, bfq: correctly raise inject limit in
+    bfq_choose_bfqq_for_injection
+  block, bfq: remove unsed parameter reason in bfq_bfqq_is_slow
+  block, bfq: initialize bfqq->decrease_time_jif correctly
+  block, bfq: use helper macro RQ_BFQQ to get bfqq of request
+  block, bfq: remove unnecessary dereference to get async_bfqq
+  block, bfq: remove redundant check in bfq_put_cooperator
+  block, bfq: remove unnecessary goto tag in bfq_dispatch_rq_from_bfqq
+  block, bfq: remove unused bfq_wr_max_time in struct bfq_data
+
+ block/bfq-iosched.c | 40 +++++++++++++++-------------------------
+ block/bfq-iosched.h |  2 --
+ 2 files changed, 15 insertions(+), 27 deletions(-)
 
 -- 
-Best wishes
-Kemeng Shi
+2.30.0
 
