@@ -2,95 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DF166D672
-	for <lists+linux-block@lfdr.de>; Tue, 17 Jan 2023 07:44:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B85FD66D6AD
+	for <lists+linux-block@lfdr.de>; Tue, 17 Jan 2023 08:10:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235615AbjAQGoB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 17 Jan 2023 01:44:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        id S235607AbjAQHKY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 17 Jan 2023 02:10:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235679AbjAQGn5 (ORCPT
+        with ESMTP id S235755AbjAQHKV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 17 Jan 2023 01:43:57 -0500
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A229B1EFD5;
-        Mon, 16 Jan 2023 22:43:55 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Nwzr504ypz4f3nT6;
-        Tue, 17 Jan 2023 14:43:49 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP3 (Coremail) with SMTP id _Ch0CgDX0R+jQ8ZjDSvYBg--.16287S9;
-        Tue, 17 Jan 2023 14:43:51 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: [PATCH v4 5/5] blk-iocost: change div64_u64 to DIV64_U64_ROUND_UP in ioc_refresh_params()
-Date:   Tue, 17 Jan 2023 15:08:06 +0800
-Message-Id: <20230117070806.3857142-6-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230117070806.3857142-1-yukuai1@huaweicloud.com>
-References: <20230117070806.3857142-1-yukuai1@huaweicloud.com>
+        Tue, 17 Jan 2023 02:10:21 -0500
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B54323330
+        for <linux-block@vger.kernel.org>; Mon, 16 Jan 2023 23:10:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1673939419; x=1705475419;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=q2V3NWgG/L/DSDCbEmm1VVQTHZwJxPmbKdUQ/aAJDqU=;
+  b=Zz3RQDwSGHIe+90Pz9R6DzusF+wYS/q8qVAFHQexuQHizeMv92cVcjdN
+   e9aFkrM6VjkqGkZZBNS9IXa8Jdiw4ChQk6N1nDy7Z+LrsvBL0frIxXAFI
+   8hfuah8nLEN9chHn2c1VoKKWqHzptySAX3F5GrqMM3Y9QWOyfmv39X3T7
+   mTXtFHWuKnMw5xb5k02/F/q/nTun7KDrOiNxOceei0qlXmKULgVC6usBt
+   ZQrSaXTLzJynlGM7Ui4am9FodxjzNRM/RtC+USi1IZelIAAKId1OJJw5W
+   ZEvbf2Evt1Xcf/+pVP3Oq085d24iYFPKiwVRFN2AsB1QrAspevAFepAjA
+   A==;
+X-IronPort-AV: E=Sophos;i="5.97,222,1669046400"; 
+   d="scan'208";a="221066032"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 17 Jan 2023 15:10:18 +0800
+IronPort-SDR: CyD6mH8b2Qhyk0R2XTb5pgs+/nIu3p6btKQpiFQbvplfkkABUFEnS/wtH4lHnh6mgCQaQmC2TQ
+ M7EqA41Ig10Pf3/uPFgJ8L6UIlQBkqpx8oH1vLftoT0WamPAON/Zi7uRocfCruNn5uKSZ33gKR
+ pywfdGtTb/1qBxc0FxQbnABu1IjTOrN7+C+6JMwMrx4Hpsti6oGtOTXLzddfi4WaVHHL78MfJv
+ R+d4pDSKXBQkyE6ov8Sflj6udrFAl2qxcgz6598AG9dk6Q7d8jwpys2b2MMsS0YIsK7JtFAOKI
+ TqI=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jan 2023 22:28:00 -0800
+IronPort-SDR: Hh4d6bDr1bMK09NZCC5odEPWITUEI1visK7Xww3u7XGeFxo4TruNL0ua/oB4Zq6DU5mJ292Ws4
+ r//jIpV/cQ5dDsuSMecLxR6vHEMYtf7WHa233OeRgKR/K94XkDj9H7mVWRrQEUebnjeOsZJQ14
+ s0Z9Mj67OMU560ZHlM32Uv1snto4n2YUIOWwD4XiYNnhRSTdaO6hrlFCVm6cYS6BKZYSVlzbz4
+ dkIA60ww8HHhR+M5KWVr+EAjcOLNqnv9bAu/sYjbNyBeWR7q8eqKjBMiUu04CNmdzNH2Ioksff
+ /gE=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Jan 2023 23:10:18 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4Nx0Qf0gM4z1RvTr
+        for <linux-block@vger.kernel.org>; Mon, 16 Jan 2023 23:10:18 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1673939417; x=1676531418; bh=q2V3NWgG/L/DSDCbEmm1VVQTHZwJxPmbKdU
+        Q/aAJDqU=; b=W4w/NhrRr35fGiw++8g0VuA85AvFEl8y56V1TXQuFhJKoOgFt+v
+        uAG7jb0/jULdOZE8fm+vCJjlIcccVxfvuChA1kYk6H3iDoZu9SeMaiwkS3Uw0xZ+
+        wt+GDLCWWbvLuSxLDE2zP96MMAQCl2X7znS2/FdyQqMYwyO5/yQOh1DvQ22UyAcY
+        I75VPwFvXx0jN4aDwxS5DRzifkH1KAW3STgMQ9mzMay1+5J0ByoSFDuM6VyI9QSL
+        XAg11N0m2G4GjGobKICLRG/ggudsCMRP8rgF5b1kbZ7Mw5UvrKTlWRsHAybTgws+
+        +JNBR8wfuWBf2Nx3mPaWANWusFDHo0gwbsA==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id nqJZsZ9Sk6SR for <linux-block@vger.kernel.org>;
+        Mon, 16 Jan 2023 23:10:17 -0800 (PST)
+Received: from [10.225.163.30] (unknown [10.225.163.30])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4Nx0Qc58DWz1RvLy;
+        Mon, 16 Jan 2023 23:10:16 -0800 (PST)
+Message-ID: <04ab7f5a-9ba2-09f3-7aff-61cde2696d25@opensource.wdc.com>
+Date:   Tue, 17 Jan 2023 16:10:15 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgDX0R+jQ8ZjDSvYBg--.16287S9
-X-Coremail-Antispam: 1UD129KBjvdXoWruw1DtF4DCw47Aw15WFyxAFb_yoWDAwb_ZF
-        yftw1Iqr18AF17uFsYgFsIvrW29an8JFWDu3sxt3y5AFnxJFWkAan7K397ZrsxAFW5u3y5
-        tF1DWrs7Ars2qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbDAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-        IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-        F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-        1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-        M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-        v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-        F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-        IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-        wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-        0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AK
-        xVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-        4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQSdkU
-        UUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2 01/18] ata: libata: allow ata_scsi_set_sense() to not
+ set CHECK_CONDITION
+Content-Language: en-US
+To:     Christoph Hellwig <hch@infradead.org>,
+        Niklas Cassel <niklas.cassel@wdc.com>
+Cc:     Hannes Reinecke <hare@suse.de>, linux-scsi@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-block@vger.kernel.org
+References: <20230112140412.667308-1-niklas.cassel@wdc.com>
+ <20230112140412.667308-2-niklas.cassel@wdc.com>
+ <Y8Y6/xa3thf4/UNy@infradead.org>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <Y8Y6/xa3thf4/UNy@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Li Nan <linan122@huawei.com>
+On 1/17/23 15:06, Christoph Hellwig wrote:
+>>  void ata_scsi_set_sense(struct ata_device *dev, struct scsi_cmnd *cmd,
+>> -			u8 sk, u8 asc, u8 ascq)
+>> +			bool check_condition, u8 sk, u8 asc, u8 ascq)
+>>  {
+>>  	bool d_sense = (dev->flags & ATA_DFLAG_D_SENSE);
+>>  
+>>  	if (!cmd)
+>>  		return;
+>>  
+>> -	scsi_build_sense(cmd, d_sense, sk, asc, ascq);
+>> +	scsi_build_sense_buffer(d_sense, cmd->sense_buffer, sk, asc, ascq);
+>> +	if (check_condition)
+>> +		set_status_byte(cmd, SAM_STAT_CHECK_CONDITION);
+>>  }
+> 
+> Adding a bool parameter do do something conditional at the end
+> of a function is always a bad idea.  Just split out a
+> __ata_scsi_set_sense helper that doesn't set the flag.
 
-vrate_min is calculated by DIV64_U64_ROUND_UP, but vrate_max is calculated
-by div64_u64. Vrate_min may be 1 greater than vrate_max if the input
-values min and max of cost.qos are equal.
+What about passing the SAM_STAT_XXX status to set as an argument ?
+Most current call site will be modified to pass SAM_STAT_CHECK_CONDITION,
+and we could add a wrapper ata_scsi_set_check_condition_sense() to
+simplify this most common case.
 
-Signed-off-by: Li Nan <linan122@huawei.com>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Acked-by: Tejun Heo <tj@kernel.org>
----
- block/blk-iocost.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 4cac0e7bb7cc..1f23480a7a01 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -931,8 +931,8 @@ static bool ioc_refresh_params(struct ioc *ioc, bool force)
- 
- 	ioc->vrate_min = DIV64_U64_ROUND_UP((u64)ioc->params.qos[QOS_MIN] *
- 					    VTIME_PER_USEC, MILLION);
--	ioc->vrate_max = div64_u64((u64)ioc->params.qos[QOS_MAX] *
--				   VTIME_PER_USEC, MILLION);
-+	ioc->vrate_max = DIV64_U64_ROUND_UP((u64)ioc->params.qos[QOS_MAX] *
-+					    VTIME_PER_USEC, MILLION);
- 
- 	return true;
- }
 -- 
-2.31.1
+Damien Le Moal
+Western Digital Research
 
