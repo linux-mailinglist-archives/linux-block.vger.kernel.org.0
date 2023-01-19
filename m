@@ -2,125 +2,112 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCE8E6745DA
-	for <lists+linux-block@lfdr.de>; Thu, 19 Jan 2023 23:23:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3A8D674679
+	for <lists+linux-block@lfdr.de>; Thu, 19 Jan 2023 23:57:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbjASWXx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 Jan 2023 17:23:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54856 "EHLO
+        id S230325AbjASW50 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Thu, 19 Jan 2023 17:57:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230073AbjASWWK (ORCPT
+        with ESMTP id S230012AbjASW5A (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 Jan 2023 17:22:10 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 831D6A1007;
-        Thu, 19 Jan 2023 14:07:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674166067; x=1705702067;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SB0OeZdWiLkarVjZZSXMF9jf/8tzMUUbELrTM8zHlBE=;
-  b=aoVupjRtE+cAdnZBqhETH0KQOmUNWJtM+s8DK0POD5vL0QOxlRfpu2cI
-   mrWQ5P4lX12dltLI95PrjXP4dqtBtAUl6ILVAzHz/Vezh1e1a8aumf1GQ
-   EHLwCeEZHmGy8WctThgUJ5RZxP2guwl6U6tf+bxYp0kNeXToJfXCd9wZG
-   YlTFtXqYhglh0fZwG4BOPVG+8MOWsmjOV5MzSGHgUzlsrEEv4lQeBtWy+
-   RM1aFabXysz/aHDPs2bXjFRJjFNno7bmRD5CZnqyDXFhEbF3JX5wWYn11
-   8CR0hnM3fWGJPH8CLwRQzndWny0wh3tIxorEIrPveCJX4fKwipc0jM2Zu
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="323130660"
-X-IronPort-AV: E=Sophos;i="5.97,230,1669104000"; 
-   d="scan'208";a="323130660"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 14:07:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="784226649"
-X-IronPort-AV: E=Sophos;i="5.97,230,1669104000"; 
-   d="scan'208";a="784226649"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 19 Jan 2023 14:07:43 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8B38C57E; Fri, 20 Jan 2023 00:08:15 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jens Axboe <axboe@kernel.dk>,
+        Thu, 19 Jan 2023 17:57:00 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F914EF6
+        for <linux-block@vger.kernel.org>; Thu, 19 Jan 2023 14:40:18 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-287-3P_nEL3mOAutjlywxieM1A-1; Thu, 19 Jan 2023 22:40:13 +0000
+X-MC-Unique: 3P_nEL3mOAutjlywxieM1A-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 19 Jan
+ 2023 22:40:12 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.044; Thu, 19 Jan 2023 22:40:12 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Andy Shevchenko' <andriy.shevchenko@linux.intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 9/9] pktcdvd: Sort headers
-Date:   Fri, 20 Jan 2023 00:08:09 +0200
-Message-Id: <20230119220809.5518-9-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230119220809.5518-1-andriy.shevchenko@linux.intel.com>
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 2/9] pktcdvd: replace sscanf() by kstrtoul()
+Thread-Topic: [PATCH v1 2/9] pktcdvd: replace sscanf() by kstrtoul()
+Thread-Index: AQHZLFSz0l2dbTPDaEqI/WBYs5oAkq6mVGBQ
+Date:   Thu, 19 Jan 2023 22:40:12 +0000
+Message-ID: <4f4c89f2c0924f05a894a1457c63ee4c@AcuMS.aculab.com>
 References: <20230119220809.5518-1-andriy.shevchenko@linux.intel.com>
+ <20230119220809.5518-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230119220809.5518-2-andriy.shevchenko@linux.intel.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Sort the headers in alphabetic order in order to ease
-the maintenance for this part.
+From: Andy Shevchenko
+> Sent: 19 January 2023 22:08
+> 
+> The checkpatch.pl warns: "Prefer kstrto<type> to single variable sscanf".
+> Fix the code accordingly.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/block/pktcdvd.c | 34 ++++++++++++++++++----------------
+>  1 file changed, 18 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+> index 0ec8dc8ee5ed..ad4336ae9927 100644
+> --- a/drivers/block/pktcdvd.c
+> +++ b/drivers/block/pktcdvd.c
+> @@ -236,15 +236,16 @@ static ssize_t congestion_off_store(struct device *dev,
+>  				    const char *buf, size_t len)
+>  {
+>  	struct pktcdvd_device *pd = dev_get_drvdata(dev);
+> -	int val;
+> +	int val, ret;
+> 
+> -	if (sscanf(buf, "%d", &val) == 1) {
+> -		spin_lock(&pd->lock);
+> -		pd->write_congestion_off = val;
+> -		init_write_congestion_marks(&pd->write_congestion_off,
+> -					&pd->write_congestion_on);
+> -		spin_unlock(&pd->lock);
+> -	}
+> +	ret = kstrtoint(buf, 10, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spin_lock(&pd->lock);
+> +	pd->write_congestion_off = val;
+> +	init_write_congestion_marks(&pd->write_congestion_off, &pd->write_congestion_on);
+> +	spin_unlock(&pd->lock);
+>  	return len;
+>  }
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/block/pktcdvd.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+These don't look directly equivalent.
+The sscanf() version silently ignores trailing characters.
+I think kstrtoint() will generate an error.
+Have you actually checked that the caller allows for
+an error return.
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 22048739a245..93597bde9c33 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -46,29 +46,30 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/pktcdvd.h>
--#include <linux/module.h>
--#include <linux/types.h>
--#include <linux/kernel.h>
-+#include <linux/backing-dev.h>
- #include <linux/compat.h>
--#include <linux/kthread.h>
-+#include <linux/debugfs.h>
-+#include <linux/device.h>
- #include <linux/errno.h>
--#include <linux/spinlock.h>
- #include <linux/file.h>
--#include <linux/proc_fs.h>
--#include <linux/seq_file.h>
--#include <linux/miscdevice.h>
- #include <linux/freezer.h>
-+#include <linux/kernel.h>
-+#include <linux/kthread.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/nospec.h>
-+#include <linux/pktcdvd.h>
-+#include <linux/proc_fs.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
--#include <linux/backing-dev.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+
-+#include <scsi/scsi.h>
- #include <scsi/scsi_cmnd.h>
- #include <scsi/scsi_ioctl.h>
--#include <scsi/scsi.h>
--#include <linux/debugfs.h>
--#include <linux/device.h>
--#include <linux/nospec.h>
--#include <linux/uaccess.h>
- 
- #include <asm/unaligned.h>
- 
--- 
-2.39.0
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
