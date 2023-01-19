@@ -2,68 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A4406740C6
-	for <lists+linux-block@lfdr.de>; Thu, 19 Jan 2023 19:21:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 329A0674136
+	for <lists+linux-block@lfdr.de>; Thu, 19 Jan 2023 19:48:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbjASSVr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 Jan 2023 13:21:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
+        id S229592AbjASSsE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 19 Jan 2023 13:48:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229943AbjASSVn (ORCPT
+        with ESMTP id S229784AbjASSsC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 Jan 2023 13:21:43 -0500
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844059373F;
-        Thu, 19 Jan 2023 10:21:41 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BD4F468D0D; Thu, 19 Jan 2023 19:21:37 +0100 (CET)
-Date:   Thu, 19 Jan 2023 19:21:37 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Christoph Hellwig <hch@lst.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Qu Wenruo <wqu@suse.com>, Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 02/19] btrfs: handle checksum validation and repair at
- the storage layer
-Message-ID: <20230119182137.GA9388@lst.de>
-References: <20230112090532.1212225-1-hch@lst.de> <20230112090532.1212225-3-hch@lst.de> <20230117191222.GC11562@twin.jikos.cz>
+        Thu, 19 Jan 2023 13:48:02 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D3B4DE12
+        for <linux-block@vger.kernel.org>; Thu, 19 Jan 2023 10:48:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id A2076CE2597
+        for <linux-block@vger.kernel.org>; Thu, 19 Jan 2023 18:47:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20228C433EF;
+        Thu, 19 Jan 2023 18:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674154076;
+        bh=wgshnKR0AqwF8kQes6szRtL7Sefx/jJD0auYcw7aCyY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AvfETIhZsQfBj3rJJaGgdS42GlRCKWRrAKcnF6zwUCmE2hI82V3XoiQNSF3WetJsB
+         q1xLfZtvad3QWR++gOltXUjo6bw/rNxJKQoQ4Zz8eUlNcmAld9w1LIz+I/03EN3nEY
+         ASExaxoAEOZFssJdSczpvxOxzE6M0VXQ/AotgpwFOtH8fonEQZREQTmCj5UN5aRy+k
+         4iRcdfRrMZ9sbjVXgSicojDurk3s0FKAoDWopOsuZq/0qRUYrcNO92C8VcSB9W0lTw
+         M/EIDM+vekQ6mu49ixwGXbBqYDVwG6CaTHa7SZTKOjLvmO7D3iIqEQtHXZyxWdWM57
+         DQEUjJhSZT5uA==
+Date:   Thu, 19 Jan 2023 11:47:53 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Ed Tsai <ed.tsai@mediatek.com>
+Subject: Re: [PATCH v2] block: Improve shared tag set performance
+Message-ID: <Y8mQWTRze+SXD7Oz@kbusch-mbp>
+References: <20230103195337.158625-1-bvanassche@acm.org>
+ <Y8hvNmyR3U1ge3H3@kbusch-mbp>
+ <4be69fc0-af32-b552-6a36-f75eb798ca95@acm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230117191222.GC11562@twin.jikos.cz>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <4be69fc0-af32-b552-6a36-f75eb798ca95@acm.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 08:12:22PM +0100, David Sterba wrote:
-> The changelog sounds like a good cover letter for a series, overall
-> description but lacks more details.
+On Wed, Jan 18, 2023 at 02:46:38PM -0800, Bart Van Assche wrote:
+> - The code removed by this patch negatively impacts performance of all
+>   SCSI hosts with two or more data LUNs and also of all NVMe controllers
+>   that export two or more namespaces if there are significant
+>   differences in the number of I/O operations per second for different
+>   LUNs/namespaces. This is why I think that this should be solved in the
+>   block layer instead of modifying each block driver individually.
 
-So, I've done a massive split, but I need guidance on what you
-want for a changelog.  There is one bit here which I've incorporated:
-
-> - use of mempool must be mentioned in the changelog with explanation
->   that it's the safe usage pattern and why it cannot lead to lockups
-
-but otherwise I'm at at loss.  Do you want descriptions of what the
-low-level changes are counter to the normal normal Linux way of
-explain why the changes are done an what the high level design
-decisions are?  Or is there something else that is not obvious
-from the patch and needs more elaboration?  I can't really think
-of much that's missing, but maybe it's easy to overlook important
-points when you've been staring at the code for half a year.
-
-Here is the current commit text:
-
-http://git.infradead.org/users/hch/misc.git/commitdiff/c88b5ef41a8e0b5daf645eea415ade683e2d8b72
+I think the potential performance sacrifice was done on purpose in order
+to guarantee all tagset subscribers can have at least one unblocked
+access to the pool, otherwise one LUN could starve all the others by
+tying up all the tags in long-running operations. Is anyone actually
+benefiting from the current sharing, though? I really do not know, so
+I'm having trouble weighing in on removing it.
