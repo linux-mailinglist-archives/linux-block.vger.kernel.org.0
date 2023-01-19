@@ -2,76 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27AB26740DA
-	for <lists+linux-block@lfdr.de>; Thu, 19 Jan 2023 19:25:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C229673F77
+	for <lists+linux-block@lfdr.de>; Thu, 19 Jan 2023 18:03:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229950AbjASSZf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 19 Jan 2023 13:25:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49394 "EHLO
+        id S230455AbjASRDo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 19 Jan 2023 12:03:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbjASSZa (ORCPT
+        with ESMTP id S230456AbjASRDl (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 19 Jan 2023 13:25:30 -0500
-X-Greylist: delayed 1799 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 Jan 2023 10:25:16 PST
-Received: from hr2.samba.org (hr2.samba.org [IPv6:2a01:4f8:192:486::2:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E015394323;
-        Thu, 19 Jan 2023 10:25:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-        s=42; h=From:Cc:To:Date:Message-ID;
-        bh=Gc4QRic3oOW9jZaNZmu54QNDymxEhCF0UTpzB08co6Q=; b=H9EbDT6g8xJehZrjzjvPj+Rpdl
-        3shbnqV44QWZV+w7vBunk5zdZ7YXF3sI6hxb6JV3OVBooar0NU3XBfM2tKiNuwf9UoQL+jD2V4WwV
-        zDNk3V2sCPp5HpPUMFtw+KbAehs8opS6wHqVgmhAbjgYFNoG/7iG2Q8UperkhaXb/QX+vLgwCNgco
-        oojp2E6wKCr397zSM1qC4/a8iRCJoE4AUGxAEVq8tNRp7oT/HbcbCPcS/5KpvFqSVjir5Ur+j1/xT
-        NSSnlHjie1IIVn7M13BQKihQ1qIE75CbEZyPG7DJm64CelF0gWPM/i/VktaCgp2Y9en+8mOb0rYet
-        kCRny1lG6BjlEOSL58IrUKexITfdQzYVpb2j+/8YtU/5Rfa9bd9lsM2qbDp4D+gIJP9DiiOLVvwT6
-        qh8gVjGxc1cdfqhzr45zp4adk6oICkANGJDXh9QOhr8tuDzf+vRkbWM7366YhDGO1KB3YaS7DAm0n
-        JSm6H6/Kuvj4uXNUi6OeVuUh;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-        by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-        (Exim)
-        id 1pIXjP-009NuW-1f; Thu, 19 Jan 2023 16:25:39 +0000
-Message-ID: <8a6b6192-0413-a0cf-218e-4b86c5de3f8a@samba.org>
-Date:   Thu, 19 Jan 2023 17:25:38 +0100
+        Thu, 19 Jan 2023 12:03:41 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D408455B;
+        Thu, 19 Jan 2023 09:03:34 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id bj3so3058871pjb.0;
+        Thu, 19 Jan 2023 09:03:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CQoTJcoI0zudP9kqEp3QP7XD1mX3VxGZCw8MlkN3oyA=;
+        b=hYG6+PIItfIJ8RaYvrETkb1iEq22Peoj6RQaavU/zimVQAD1HERJ+3gkMl1FEPriVS
+         Bb80iDejEzIY050s7ahNT6VLftXVfGWSX/VBKCmhcCzZsUndo44FmyJgpBTIaWCIyI27
+         h25sq8scf7twn/fjK2cqZdOj33D4EttK+Oq/QCGwktPToLV/YpuBR3ckpQZHQnjKdUFS
+         sc3Hw5fxdfg3akD1Ew8I65aIaVOhEhO8jNRaugq9ihIEIdgeZtYpAef5dO7g+pAb4fUb
+         MlCeresDFfHSBlKCBLHAlkim1el8jHIlNSFjPn3ji3UXy+Mz4rI7uW6y/7oC/fGcK1cB
+         WEmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CQoTJcoI0zudP9kqEp3QP7XD1mX3VxGZCw8MlkN3oyA=;
+        b=66oqS3fMdy9LLuUdKSzUjY2fnamOs1NmQl+mDKO0Xsj9T5tLMDFxvxxSRZHKmTNBS3
+         6nUerlXNwyApI4/SXU1sHXONfwkQMDhiD1gj+pkzza+kGYMSNJrVsYP9zGS37zyLSFk4
+         Tdf7yMVhpFL99dxOo+apY52dkuEnh3r7meCGzr5p6Wzm2JZ5jIYi58jeQUu1F3DMtJLT
+         x7Pd8m5TgaFOyNPoYzzGcZCQd7iOIXH+U7z6HfzHZ/b5QUzbGavpGu3giSS1psUS/mKk
+         sdHbkb+Oo7/1KEK2Cu++/pJes+sP0tuVtYjoxKsB8uRxcMlaT1j5SvzC6yoQk+Bgk+o5
+         qm+A==
+X-Gm-Message-State: AFqh2kqfJs5edkg113N6/ZcDpfQjL4iHlbBDMxA44NIaBQ4Gz+RRT91K
+        SRr0bgRKAGCCR4oGsr85oKI=
+X-Google-Smtp-Source: AMrXdXs0yhVs81RqjlAAAvmXVpjhwSEp9wPJlVq3Ilbp8sNjZu5jtrw4jhcnOsjU3DuY9okNuvFBJw==
+X-Received: by 2002:a17:902:b788:b0:193:3678:dc3e with SMTP id e8-20020a170902b78800b001933678dc3emr10418524pls.21.1674147813323;
+        Thu, 19 Jan 2023 09:03:33 -0800 (PST)
+Received: from localhost (2603-800c-1a02-1bae-a7fa-157f-969a-4cde.res6.spectrum.com. [2603:800c:1a02:1bae:a7fa:157f:969a:4cde])
+        by smtp.gmail.com with ESMTPSA id e18-20020a170902ef5200b00187033cac81sm25349929plx.145.2023.01.19.09.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jan 2023 09:03:32 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Thu, 19 Jan 2023 07:03:31 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org
+Subject: Re: switch blk-cgroup to work on gendisk
+Message-ID: <Y8l34/qeHPLV4rKJ@slm.duckdns.org>
+References: <20230117081257.3089859-1-hch@lst.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v6 31/34] cifs: Fix problem with encrypted RDMA data read
-Content-Language: en-US, de-DE
-To:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Steve French <smfrench@gmail.com>, Tom Talpey <tom@talpey.com>,
-        Long Li <longli@microsoft.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        linux-cifs@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <167391047703.2311931.8115712773222260073.stgit@warthog.procyon.org.uk>
- <167391070712.2311931.8909671251130425914.stgit@warthog.procyon.org.uk>
-From:   Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <167391070712.2311931.8909671251130425914.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230117081257.3089859-1-hch@lst.de>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Am 17.01.23 um 00:11 schrieb David Howells:
-> When the cifs client is talking to the ksmbd server by RDMA and the ksmbd
-> server has "smb3 encryption = yes" in its config file, the normal PDU
-> stream is encrypted, but the directly-delivered data isn't in the stream
-> (and isn't encrypted), but is rather delivered by DDP/RDMA packets (at
-> least with IWarp).
+On Tue, Jan 17, 2023 at 09:12:42AM +0100, Christoph Hellwig wrote:
+> blk-cgroup works on only on live disks and "file system" I/O from bios.
+> This all the information should be in the gendisk, and not the
+> request_queue that also exists for pure passthrough request based
+> devices.
 
-In that case the client must not use DDP/RDMA offload!
-This needs to be fixed in the request code for both read and write!
+Can't blk-throttle be used w/ bio based ones tho? I always thought that was
+the reason why we didn't move it into rq-qos framework.
 
-metze
+Thanks.
+
+-- 
+tejun
