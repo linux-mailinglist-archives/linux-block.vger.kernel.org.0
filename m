@@ -2,92 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D24CB679A4F
-	for <lists+linux-block@lfdr.de>; Tue, 24 Jan 2023 14:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E84F679AF7
+	for <lists+linux-block@lfdr.de>; Tue, 24 Jan 2023 15:02:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234575AbjAXNqC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 Jan 2023 08:46:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34576 "EHLO
+        id S233390AbjAXOCg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 24 Jan 2023 09:02:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234571AbjAXNpU (ORCPT
+        with ESMTP id S233727AbjAXOCg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 Jan 2023 08:45:20 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A35247433;
-        Tue, 24 Jan 2023 05:43:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 24 Jan 2023 09:02:36 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E84474F6
+        for <linux-block@vger.kernel.org>; Tue, 24 Jan 2023 06:01:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674568867;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eo2GrUnkx8jKUa516q4eKoqkbm41JbPUJ1rKGdvQbMk=;
+        b=LFGd2BlDaPFvVGFCkctlRjZnzdXL5x5sygtYrR0Xc/gcqqNrymPW2JDSZ+HmeBIKNrrajv
+        CoGdWiD+2r+08hDc65UgGcoBaVuY32VJoJT5dKYuTVzNoZ8S0iJmhp4UkC2UKMZy+t95SK
+        KkXeB6JHs/aH5VGk5uDmuPQ3hOZ1u0I=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-556-a7Q6G-m3MkiaJjWzkfrdVQ-1; Tue, 24 Jan 2023 08:44:58 -0500
+X-MC-Unique: a7Q6G-m3MkiaJjWzkfrdVQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A8B7611E6;
-        Tue, 24 Jan 2023 13:43:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3216C433A0;
-        Tue, 24 Jan 2023 13:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674567833;
-        bh=6IPvLjmhgSXxnwws/KoW+dUYQVKEQRL1CCrrjuWAOiE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TF2wAcBisTklAE76e1L7YiQZsgEQFu48EsoIjvv0kL90NUsdltP1DMEILGhcJ0WHf
-         0pACkEIqV6Vp8mHTf1HOcFKnuXoO4b2PEHSuTkN3tVPngWTLP33bISnn/xra1M6OOs
-         +9yaqwPgKAwF4LcKUlGZKiw/76+XXb1vrMwoyYmR8w6R1m3qqyzwXqM2emvIm70d3n
-         WevnK7GCGtPBpY1BEyq3IPRtgF2Z544r7w7Nqf5MAht5s+Up740EKN97ph2AIeLx21
-         fxMp5JlPAuDglZn4av/TqfyUn5Soibpeo8xAUrtBKuYmzmz9ZpxaafltLjCyB6e/bM
-         +hIKKWjqmk0pw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu Kuai <yukuai3@huawei.com>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        josef@toxicpanda.com, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 4/6] blk-cgroup: fix missing pd_online_fn() while activating policy
-Date:   Tue, 24 Jan 2023 08:43:42 -0500
-Message-Id: <20230124134344.637846-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230124134344.637846-1-sashal@kernel.org>
-References: <20230124134344.637846-1-sashal@kernel.org>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6E2A83C025C7;
+        Tue, 24 Jan 2023 13:44:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 244C640444C3;
+        Tue, 24 Jan 2023 13:44:56 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <02063032-61e7-e1e5-cd51-a50337405159@redhat.com>
+References: <02063032-61e7-e1e5-cd51-a50337405159@redhat.com> <20230123173007.325544-1-dhowells@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Jeff Layton <jlayton@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/10] iov_iter: Improve page extraction (pin or just list)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <852028.1674567895.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 24 Jan 2023 13:44:55 +0000
+Message-ID: <852029.1674567895@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+If you look here:
 
-[ Upstream commit e3ff8887e7db757360f97634e0d6f4b8e27a8c46 ]
+	https://lore.kernel.org/r/167391047703.2311931.8115712773222260073.stgit@=
+warthog.procyon.org.uk/
 
-If the policy defines pd_online_fn(), it should be called after
-pd_init_fn(), like blkg_create().
+you can see additional patches fixing other users.  Christoph asked if I c=
+ould
+pare down the patchset to the minimum to fix the bio case for the moment.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Link: https://lore.kernel.org/r/20230103112833.2013432-1-yukuai1@huaweicloud.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-cgroup.c | 4 ++++
- 1 file changed, 4 insertions(+)
+It will be easier to do the others once iov_iter_extract_pages() is upstre=
+am
+as the individual bits can go via their respective maintainers.
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index dde8d0acfb34..cd085a0e5e4a 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1445,6 +1445,10 @@ int blkcg_activate_policy(struct request_queue *q,
- 		list_for_each_entry_reverse(blkg, &q->blkg_list, q_node)
- 			pol->pd_init_fn(blkg->pd[pol->plid]);
- 
-+	if (pol->pd_online_fn)
-+		list_for_each_entry_reverse(blkg, &q->blkg_list, q_node)
-+			pol->pd_online_fn(blkg->pd[pol->plid]);
-+
- 	__set_bit(pol->plid, q->blkcg_pols);
- 	ret = 0;
- 
--- 
-2.39.0
+However, I do want to see about adding cifs iteratorisation in this merge
+window also, which also depends on the iov_iter_extract_pages() function b=
+eing
+added.
+
+David
 
