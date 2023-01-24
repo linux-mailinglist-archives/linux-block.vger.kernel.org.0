@@ -2,48 +2,86 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A86CD679B2E
-	for <lists+linux-block@lfdr.de>; Tue, 24 Jan 2023 15:11:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C57E5679AAA
+	for <lists+linux-block@lfdr.de>; Tue, 24 Jan 2023 14:54:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234288AbjAXOLB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 Jan 2023 09:11:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        id S234778AbjAXNyU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 24 Jan 2023 08:54:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233652AbjAXOLB (ORCPT
+        with ESMTP id S234601AbjAXNyC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 Jan 2023 09:11:01 -0500
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8961042BDB;
-        Tue, 24 Jan 2023 06:11:00 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3427068D09; Tue, 24 Jan 2023 14:45:18 +0100 (CET)
-Date:   Tue, 24 Jan 2023 14:45:17 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, hca@linux.ibm.com,
-        gor@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH] s390/dcssblk:: don't call bio_split_to_limits
-Message-ID: <20230124134517.GA26408@lst.de>
-References: <20230123075356.60847-1-hch@lst.de> <Y8/gDgQfQA7++8tw@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+        Tue, 24 Jan 2023 08:54:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A03947EDF
+        for <linux-block@vger.kernel.org>; Tue, 24 Jan 2023 05:51:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674568200;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ETrfxyrVdU7X1rX1QL9lvr6n2bGLp1QRnmU9FMajeiU=;
+        b=B1PDOh9HCzImLPffXWtmONJJ3pTTcKvRkKqEswHWPNyhJJ/1D6cYue2jiC/yho7okCRJAF
+        wFcrreEyU710Pd0MZDD0cs/p1u/mkW04H7j7p8FVQ3KUNw1mHbPn6zdwGX69n+wNmrsA32
+        ByMNUkHnGSd0Ry98sIVi2UPgMN7BRMs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-618-YMTlk8RlN1GqCVMCLPBtqg-1; Tue, 24 Jan 2023 08:46:26 -0500
+X-MC-Unique: YMTlk8RlN1GqCVMCLPBtqg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D36318030CC;
+        Tue, 24 Jan 2023 13:46:25 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E5D71121330;
+        Tue, 24 Jan 2023 13:46:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <Y8/ZekMEAfi8VeFl@nvidia.com>
+References: <Y8/ZekMEAfi8VeFl@nvidia.com> <20230123173007.325544-1-dhowells@redhat.com> <20230123173007.325544-11-dhowells@redhat.com> <31f7d71d-0eb9-2250-78c0-2e8f31023c66@nvidia.com> <84721e8d-d40e-617c-b75e-ead51c3e1edf@nvidia.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     dhowells@redhat.com, John Hubbard <jhubbard@nvidia.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Jeff Layton <jlayton@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v8 10/10] mm: Renumber FOLL_PIN and FOLL_GET down
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8/gDgQfQA7++8tw@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <852116.1674567983.1@warthog.procyon.org.uk>
+Date:   Tue, 24 Jan 2023 13:46:23 +0000
+Message-ID: <852117.1674567983@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 02:41:34PM +0100, Alexander Gordeev wrote:
-> If my understanding is correct that this change was as good as
-> early as commit 54efd50bfd87 ("block: make generic_make_request
-> handle arbitrarily sized bios") took place and simply fell into
-> the second category?
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Yes.
+> Yeah, I already wrote a similar patch, using the 1<< notation, 
+> splitting the internal/external, and rebasing on the move to
+> mm_types.. I can certainly drop that patch if we'd rather do this.
+
+Note that I've already given Andrew a patch to move FOLL_* to mm_types.h.
+
+I'm happy to go with your patch on top of that if you can just renumber
+FOLL_PIN to 0 and FOLL_GET to 1.
+
+David
+
