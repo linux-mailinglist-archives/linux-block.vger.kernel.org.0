@@ -2,36 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC84F679AFB
-	for <lists+linux-block@lfdr.de>; Tue, 24 Jan 2023 15:03:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF63B679B3A
+	for <lists+linux-block@lfdr.de>; Tue, 24 Jan 2023 15:12:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232320AbjAXODV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 24 Jan 2023 09:03:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
+        id S234524AbjAXOMu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 24 Jan 2023 09:12:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233694AbjAXODV (ORCPT
+        with ESMTP id S233896AbjAXOMt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 24 Jan 2023 09:03:21 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82747EF85;
-        Tue, 24 Jan 2023 06:03:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DYKGL6jdW48jjLGtQGlo55UCRBRwJlq9pwc27T0p/Fw=; b=uzqa9ZQSlszDjcu6uDXWUFQU6g
-        7BWFS8WeyYycIR8/yV1oPiCkXkIbUdIrFRugUUl6frhM3lLNixOqXnylZ9u0sK4Jb25zT+Z/iun8/
-        z9G2P3jznLcBVcHpZWp0P2N8AqYz2bcdCYsS7hviWclG71eCIP8z7xO100DANWwiOaMw8FsYVwdB8
-        CKtr0IabzAMwXEoBbeQ/Y44NO5jEjlF80/mn5IEptD8E1VCmfQ1Q8txYzgeyde7UtmkYPfPA+aWOt
-        dCyb+zeQmorRLkRRIjmcZa/BDqT0SKJwlW3z5AGl0OQXTn/+7CQGTGLGy+jqqtW9kjlPUujPJtOnD
-        pNrvrT7A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pKJt3-004AUs-72; Tue, 24 Jan 2023 14:02:57 +0000
-Date:   Tue, 24 Jan 2023 06:02:57 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
+        Tue, 24 Jan 2023 09:12:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD68142BDB
+        for <linux-block@vger.kernel.org>; Tue, 24 Jan 2023 06:12:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674569524;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QqZGwflqtmW5gx1YYpxSf8Ian1OgFOTlCjwpTEMfDZc=;
+        b=g2Gx2CA4adf7vqGhIwNOv1bIVvTLCudzc8O81yuDQoCThRN77XouBRA9+Z7IsVorJLuYTm
+        fV8CBjJtx/zL9E2/pT5W6URvBwyQUGCoYi82TsZiGAkmAixsjUf2ebLtg5FL7yD3eEeYq7
+        AR3nqKEJAUqWcfebWczgmcgx3za5G8g=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-590-bbXy74RkPMmszM7E1OBB2g-1; Tue, 24 Jan 2023 09:11:53 -0500
+X-MC-Unique: bbXy74RkPMmszM7E1OBB2g-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A62B42804822;
+        Tue, 24 Jan 2023 14:11:52 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 113AA492C3E;
+        Tue, 24 Jan 2023 14:11:50 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <Y8/kfPEp1GkZKklc@nvidia.com>
+References: <Y8/kfPEp1GkZKklc@nvidia.com> <Y8/hhvfDtVcsgQd6@nvidia.com> <Y8/ZekMEAfi8VeFl@nvidia.com> <20230123173007.325544-1-dhowells@redhat.com> <20230123173007.325544-11-dhowells@redhat.com> <31f7d71d-0eb9-2250-78c0-2e8f31023c66@nvidia.com> <84721e8d-d40e-617c-b75e-ead51c3e1edf@nvidia.com> <852117.1674567983@warthog.procyon.org.uk> <852914.1674568628@warthog.procyon.org.uk>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     dhowells@redhat.com, John Hubbard <jhubbard@nvidia.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@infradead.org>,
         Matthew Wilcox <willy@infradead.org>,
@@ -42,32 +56,48 @@ Cc:     Jason Gunthorpe <jgg@nvidia.com>,
         linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         linux-mm@kvack.org
 Subject: Re: [PATCH v8 10/10] mm: Renumber FOLL_PIN and FOLL_GET down
-Message-ID: <Y8/lEVirzumLn4OG@infradead.org>
-References: <Y8/hhvfDtVcsgQd6@nvidia.com>
- <Y8/ZekMEAfi8VeFl@nvidia.com>
- <20230123173007.325544-1-dhowells@redhat.com>
- <20230123173007.325544-11-dhowells@redhat.com>
- <31f7d71d-0eb9-2250-78c0-2e8f31023c66@nvidia.com>
- <84721e8d-d40e-617c-b75e-ead51c3e1edf@nvidia.com>
- <852117.1674567983@warthog.procyon.org.uk>
- <852914.1674568628@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <852914.1674568628@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <859141.1674569510.1@warthog.procyon.org.uk>
+Date:   Tue, 24 Jan 2023 14:11:50 +0000
+Message-ID: <859142.1674569510@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 01:57:08PM +0000, David Howells wrote:
-> 	[include/linux/mm_types.h]
-> 	#define PAGE_CLEANUP_UNPIN	(1U << 0)
-> 	#define PAGE_CLEANUP_PUT	(1U << 0)
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-With the latest series we don't need PAGE_CLEANUP_PUT at all.
+> if (cleanup_flags & PAGE_CLEANUP_UNPIN)
+>    gup_put_folio(folio, 1, true);
+> else if (cleanup_flags & PAGE_CLEANUP_PUT)
+>    gup_put_folio(folio, 1, false);
+
+gup_put_folio() doesn't take a bool - it takes FOLL_PIN and FOLL_GET:
+
+static void gup_put_folio(struct folio *folio, int refs, unsigned int flags)
+
+though I could do:
+
+	if (cleanup_flags & PAGE_CLEANUP_UNPIN)
+		gup_put_folio(folio, 1, FOLL_PIN);
+	else if (cleanup_flags & PAGE_CLEANUP_PUT)
+		gup_put_folio(folio, 1, FOLL_GET);
+
+But the reason I wrote it like this:
+
+ 		gup_flags |= cleanup_flags & PAGE_CLEANUP_UNPIN ? FOLL_PIN : 0;
+ 		gup_flags |= cleanup_flags & PAGE_CLEANUP_PUT ? FOLL_GET : 0;
+
+is that if PAGE_CLEANUP_UNPIN == FOLL_PIN and PAGE_CLEANUP_PUT == FOLL_GET,
+the C compiler optimiser should be able to turn all of that into a single AND
+instruction.
+
+David
+
