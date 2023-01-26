@@ -2,93 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E28E867D6EA
-	for <lists+linux-block@lfdr.de>; Thu, 26 Jan 2023 21:57:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C89C67D7FC
+	for <lists+linux-block@lfdr.de>; Thu, 26 Jan 2023 22:54:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232360AbjAZU53 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Jan 2023 15:57:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
+        id S233053AbjAZVym (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 26 Jan 2023 16:54:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229730AbjAZU52 (ORCPT
+        with ESMTP id S233051AbjAZVyf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Jan 2023 15:57:28 -0500
-X-Greylist: delayed 756 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 Jan 2023 12:57:26 PST
-Received: from sp14.canonet.ne.jp (sp14.canonet.ne.jp [210.134.168.91])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD43E34330;
-        Thu, 26 Jan 2023 12:57:26 -0800 (PST)
-Received: from csp14.canonet.ne.jp (unknown [172.21.160.134])
-        by sp14.canonet.ne.jp (Postfix) with ESMTP id DBBD31E071E;
-        Fri, 27 Jan 2023 05:44:48 +0900 (JST)
-Received: from echeck14.canonet.ne.jp ([172.21.160.124])
-        by csp4 with ESMTP
-        id L972pIaIqVjWJL972p2hxg; Fri, 27 Jan 2023 05:44:48 +0900
-X-CNT-CMCheck-Reason: "undefined", "v=2.4 cv=WsmVjfTv c=1 sm=1 tr=0
- ts=63d2e640 cx=g_jp:t_eml p=jICtXCb1Bd4A:10 p=QA8zHFxAwLBQ4A9MkZgA:9
- p=WKcvGfCz9DfGexK3dBCb:22 a=puqJfqqrwnhV2n3dwg+kWg==:117
- a=yr9NA9NbXb0B05yJHQEWeQ==:17 a=PlGk70OYzacA:10 a=kj9zAlcOel0A:10
- a=RvmDmJFTN0MA:10 a=x7bEGLp0ZPQA:10 a=CjuIK1q_8ugA:10 a=0iaRBTTaEecA:10
- a=xo5jKAKm-U-Zyk2_beg_:22"
-X-CNT-CMCheck-Score: 100.00
-Received: from echeck14.canonet.ne.jp (localhost [127.0.0.1])
-        by esets.canonet.ne.jp (Postfix) with ESMTP id 88A871C0246;
-        Fri, 27 Jan 2023 05:44:48 +0900 (JST)
-X-Virus-Scanner: This message was checked by ESET Mail Security
-        for Linux/BSD. For more information on ESET Mail Security,
-        please, visit our website: http://www.eset.com/.
-Received: from smtp14.canonet.ne.jp (unknown [172.21.160.104])
-        by echeck14.canonet.ne.jp (Postfix) with ESMTP id 4C9121C0257;
-        Fri, 27 Jan 2023 05:44:48 +0900 (JST)
-Received: from daime.co.jp (webmail.canonet.ne.jp [210.134.169.250])
-        by smtp14.canonet.ne.jp (Postfix) with ESMTPA id 6600215F967;
-        Fri, 27 Jan 2023 05:44:47 +0900 (JST)
+        Thu, 26 Jan 2023 16:54:35 -0500
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A5A611DD;
+        Thu, 26 Jan 2023 13:54:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JJwCfXL4BYUpCEb2XPDFHx9R/zNmK1q+22jJU+x9B7c=; b=ktqSuYI3IdQfkyDAWZIMLp5SLn
+        eOY0i9SJtPz38FegUd7y7e9/3KGwB+S6nF5cNWJlqKc6FOzTCHBMqczRirZC5wwSc9UF8JytYWfJO
+        tSSScv4TV3KgvVYaybT2eIv6p/Vk+yqT4YGi3ZobBApeDhQCaHIDjIvaDeevF5PNxlupjfcN1dQ1l
+        75GPZdXUaA/aw0NkPLXu/N/xsvjixuWSde/ZEOMlRa3yZmhABUvM0N0eIpXghdfXNeJ+3uSxOVyeN
+        F4z2/2t325lgo84QNfxo1vs/g8vTSr3ojEOENqvWpFuXEg0Ore49vRihkyNMm3SULCvp41EDv9j84
+        bOW4Mr7g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1pLACG-004K1b-2x;
+        Thu, 26 Jan 2023 21:54:17 +0000
+Date:   Thu, 26 Jan 2023 21:54:16 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Jeff Layton <jlayton@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v11 1/8] iov_iter: Define flags to qualify page
+ extraction.
+Message-ID: <Y9L2iFZlC4CFwN4t@ZenIV>
+References: <20230126141626.2809643-1-dhowells@redhat.com>
+ <20230126141626.2809643-2-dhowells@redhat.com>
 MIME-Version: 1.0
-Message-ID: <20230126204447.00005E45.0195@daime.co.jp>
-Date:   Fri, 27 Jan 2023 05:44:47 +0900
-From:   "Mrs Alice Walton" <daime@daime.co.jp>
-To:     <INQUIRY@daime.co.jp>
-Reply-To: <alicewaltton1@gmail.com>
-Subject: INQUIRY
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-ORGANIZATION: Mrs Alice Walton
-X-MAILER: Active! mail
-X-EsetResult: clean, %VIRUSNAME%
-X-ESET-AS: R=SPAM;S=100;OP=CALC;TIME=1674765888;VERSION=7944;MC=3655060679;TRN=17;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
-X-I-ESET-AS: RN=285,624:0;RNP=alicewaltton1@gmail.com
-X-ESET-Antispam: SPAM
-X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        LOCALPART_IN_SUBJECT,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_MR_MRS,
-        UNRESOLVED_TEMPLATE,XPRIO_SHORT_SUBJ autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5021]
-        *  1.1 LOCALPART_IN_SUBJECT Local part of To: address appears in
-        *      Subject
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [alicewaltton1[at]gmail.com]
-        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 T_HK_NAME_MR_MRS No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-        *  1.0 XPRIO_SHORT_SUBJ Has X Priority header + short subject
-X-Spam-Level: ******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230126141626.2809643-2-dhowells@redhat.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On Thu, Jan 26, 2023 at 02:16:19PM +0000, David Howells wrote:
 
-Greetings,
+> +typedef unsigned int iov_iter_extraction_t;
 
-I trust you are well. I sent you an email yesterday, I just want to confirm if you received it.
-Please let me know as soon as possible,
+> +/* Flags for iov_iter_get/extract_pages*() */
+> +/* Allow P2PDMA on the extracted pages */
+> +#define ITER_ALLOW_P2PDMA	((__force iov_iter_extraction_t)0x01)
 
-Regard
-Mrs Alice Walton
+That __force makes sense only if you make it a bitwise type -
+otherwise it's meaningless.  IOW, either turn the typedef into
 
+typedef unsigned int __bitwise iov_iter_extraction_t;
 
+or lose __force in the cast...
