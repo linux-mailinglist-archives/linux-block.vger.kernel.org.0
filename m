@@ -2,146 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09FBF67D577
-	for <lists+linux-block@lfdr.de>; Thu, 26 Jan 2023 20:39:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E28E867D6EA
+	for <lists+linux-block@lfdr.de>; Thu, 26 Jan 2023 21:57:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232664AbjAZTjN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Jan 2023 14:39:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41012 "EHLO
+        id S232360AbjAZU53 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 26 Jan 2023 15:57:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232513AbjAZTio (ORCPT
+        with ESMTP id S229730AbjAZU52 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Jan 2023 14:38:44 -0500
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36EA6DFEA
-        for <linux-block@vger.kernel.org>; Thu, 26 Jan 2023 11:38:18 -0800 (PST)
-Received: by mail-qt1-x829.google.com with SMTP id o5so2181941qtr.11
-        for <linux-block@vger.kernel.org>; Thu, 26 Jan 2023 11:38:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=548u3Fp4tscAsRqm8ZTE2VWhUoxZOCMAGUWVcX6Go58=;
-        b=epV5VW3hrViYljNLAdWJDqX3fAl4wYMv55qfvqUl+cZybWCeeDvqryFJs7Zk1z1ge0
-         +YfWxsTDgetquN/yOeHPal429etypXOBpel4tIAV8vd4EP8H055kKatEvKe6oZxMs3PT
-         LcO0xq4K0msdWtCUNqYN4NK0vLHs5L0h44+WlAHrYWvJgXcgjDmqAFXJlLbfBB/UTvvN
-         9vIhPdjjmCe8giVOUtXcRKZC0HKhopCXDpNQUBIZSpW7Qbo2/7o+/aS/ZPpfQVm1O7vS
-         K1a26f+LNFd2YzHSgykx3DHZbq9/58TJ23dpXqRpwr3NjRuHpKkuas3uu7YQGuqzHxWI
-         HpSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=548u3Fp4tscAsRqm8ZTE2VWhUoxZOCMAGUWVcX6Go58=;
-        b=eG49Oz8tybpwZ1G+RGzcVu05Ddgtq7iSyeUSqHvHBBsOHCIzlcOXIvOjRete/tbnnI
-         GSjI7iW8Ag+u213Yp0SmZWNNOSQPFMzJPj0df4vQhu3hmIj5lHKCWEokCbjeXP3LFpHS
-         n3Hi2LNUE9X6oXC9wEggH6cut+pPRiDbvU6ggrcr40uyuQW6ldgkxXhHKE1447hWDZbJ
-         zTBklaDFLLBQNAHvr3YMXwKQCBVwRRvky+owGcPAC4Ws2oYbRVYn0z+czwA8M3xY75Ok
-         qF/kbQyhy+BA0NqrQbe0I/e+xaU+usR3eocbV2tBwaxgtCAW2Z1C8AKyttvEopT+NHeo
-         ESfg==
-X-Gm-Message-State: AFqh2krX+LCbqeTzWj3cYN4a8UcDSIeH3wtkogy/vwduDSonV+4zgdeS
-        MPWWNgaaExKT7tE6YBCvDF7UP1rYUXQlkjuK
-X-Google-Smtp-Source: AMrXdXv+huCHA7ip/FVnskiv66KzYaO0gWPYCPL7QS4WBmaP67lWrrmrdvcrLuRJ9ZU3cV/x/SyhoQ==
-X-Received: by 2002:ac8:70a:0:b0:3b1:c477:eb65 with SMTP id g10-20020ac8070a000000b003b1c477eb65mr52142649qth.60.1674761897975;
-        Thu, 26 Jan 2023 11:38:17 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-167-59-176.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.59.176])
-        by smtp.gmail.com with ESMTPSA id v3-20020ac87283000000b003b62e9c82ebsm1276806qto.48.2023.01.26.11.38.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 11:38:16 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1pL84e-00HP8B-92;
-        Thu, 26 Jan 2023 15:38:16 -0400
-Date:   Thu, 26 Jan 2023 15:38:16 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, nvdimm@lists.linux.dev,
-        lsf-pc@lists.linuxfoundation.org, linux-rdma@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        dri-devel@lists.freedesktop.org, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux.dev, netdev@vger.kernel.org,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Jason Gunthorpe via Lsf-pc 
-        <lsf-pc@lists.linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [Lsf-pc] [LSF/MM/BPF proposal]: Physr discussion
-Message-ID: <Y9LWqEtmkmsMrHne@ziepe.ca>
-References: <Y8v+qVZ8OmodOCQ9@nvidia.com>
- <63cee1d3eaaef_3a36e529488@dwillia2-xfh.jf.intel.com.notmuch>
- <Y87p9i0vCZo/3Qa0@casper.infradead.org>
- <63cef32cbafc3_3a36e529465@dwillia2-xfh.jf.intel.com.notmuch>
+        Thu, 26 Jan 2023 15:57:28 -0500
+X-Greylist: delayed 756 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 Jan 2023 12:57:26 PST
+Received: from sp14.canonet.ne.jp (sp14.canonet.ne.jp [210.134.168.91])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD43E34330;
+        Thu, 26 Jan 2023 12:57:26 -0800 (PST)
+Received: from csp14.canonet.ne.jp (unknown [172.21.160.134])
+        by sp14.canonet.ne.jp (Postfix) with ESMTP id DBBD31E071E;
+        Fri, 27 Jan 2023 05:44:48 +0900 (JST)
+Received: from echeck14.canonet.ne.jp ([172.21.160.124])
+        by csp4 with ESMTP
+        id L972pIaIqVjWJL972p2hxg; Fri, 27 Jan 2023 05:44:48 +0900
+X-CNT-CMCheck-Reason: "undefined", "v=2.4 cv=WsmVjfTv c=1 sm=1 tr=0
+ ts=63d2e640 cx=g_jp:t_eml p=jICtXCb1Bd4A:10 p=QA8zHFxAwLBQ4A9MkZgA:9
+ p=WKcvGfCz9DfGexK3dBCb:22 a=puqJfqqrwnhV2n3dwg+kWg==:117
+ a=yr9NA9NbXb0B05yJHQEWeQ==:17 a=PlGk70OYzacA:10 a=kj9zAlcOel0A:10
+ a=RvmDmJFTN0MA:10 a=x7bEGLp0ZPQA:10 a=CjuIK1q_8ugA:10 a=0iaRBTTaEecA:10
+ a=xo5jKAKm-U-Zyk2_beg_:22"
+X-CNT-CMCheck-Score: 100.00
+Received: from echeck14.canonet.ne.jp (localhost [127.0.0.1])
+        by esets.canonet.ne.jp (Postfix) with ESMTP id 88A871C0246;
+        Fri, 27 Jan 2023 05:44:48 +0900 (JST)
+X-Virus-Scanner: This message was checked by ESET Mail Security
+        for Linux/BSD. For more information on ESET Mail Security,
+        please, visit our website: http://www.eset.com/.
+Received: from smtp14.canonet.ne.jp (unknown [172.21.160.104])
+        by echeck14.canonet.ne.jp (Postfix) with ESMTP id 4C9121C0257;
+        Fri, 27 Jan 2023 05:44:48 +0900 (JST)
+Received: from daime.co.jp (webmail.canonet.ne.jp [210.134.169.250])
+        by smtp14.canonet.ne.jp (Postfix) with ESMTPA id 6600215F967;
+        Fri, 27 Jan 2023 05:44:47 +0900 (JST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63cef32cbafc3_3a36e529465@dwillia2-xfh.jf.intel.com.notmuch>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+Message-ID: <20230126204447.00005E45.0195@daime.co.jp>
+Date:   Fri, 27 Jan 2023 05:44:47 +0900
+From:   "Mrs Alice Walton" <daime@daime.co.jp>
+To:     <INQUIRY@daime.co.jp>
+Reply-To: <alicewaltton1@gmail.com>
+Subject: INQUIRY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+ORGANIZATION: Mrs Alice Walton
+X-MAILER: Active! mail
+X-EsetResult: clean, %VIRUSNAME%
+X-ESET-AS: R=SPAM;S=100;OP=CALC;TIME=1674765888;VERSION=7944;MC=3655060679;TRN=17;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
+X-I-ESET-AS: RN=285,624:0;RNP=alicewaltton1@gmail.com
+X-ESET-Antispam: SPAM
+X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        LOCALPART_IN_SUBJECT,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_MR_MRS,
+        UNRESOLVED_TEMPLATE,XPRIO_SHORT_SUBJ autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5021]
+        *  1.1 LOCALPART_IN_SUBJECT Local part of To: address appears in
+        *      Subject
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [alicewaltton1[at]gmail.com]
+        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 T_HK_NAME_MR_MRS No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+        *  1.0 XPRIO_SHORT_SUBJ Has X Priority header + short subject
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 12:50:52PM -0800, Dan Williams wrote:
-> Matthew Wilcox wrote:
-> > On Mon, Jan 23, 2023 at 11:36:51AM -0800, Dan Williams wrote:
-> > > Jason Gunthorpe via Lsf-pc wrote:
-> > > > I would like to have a session at LSF to talk about Matthew's
-> > > > physr discussion starter:
-> > > > 
-> > > >  https://lore.kernel.org/linux-mm/YdyKWeU0HTv8m7wD@casper.infradead.org/
-> > > > 
-> > > > I have become interested in this with some immediacy because of
-> > > > IOMMUFD and this other discussion with Christoph:
-> > > > 
-> > > >  https://lore.kernel.org/kvm/4-v2-472615b3877e+28f7-vfio_dma_buf_jgg@nvidia.com/
-> > > 
-> > > I think this is a worthwhile discussion. My main hangup with 'struct
-> > > page' elimination in general is that if anything needs to be allocated
-> > 
-> > You're the first one to bring up struct page elimination.  Neither Jason
-> > nor I have that as our motivation.
-> 
-> Oh, ok, then maybe I misread the concern in the vfio discussion. I
-> thought the summary there is debating the ongoing requirement for
-> 'struct page' for P2PDMA?
 
-The VFIO problem is we need a unique pgmap at 4k granuals (or maybe
-smaller, technically), tightly packed, because VFIO exposes PCI BAR
-space that can be sized in such small amounts.
+Greetings,
 
-So, using struct page means some kind of adventure in the memory
-hotplug code to allow tightly packed 4k pgmaps.
+I trust you are well. I sent you an email yesterday, I just want to confirm if you received it.
+Please let me know as soon as possible,
 
-And that is assuming that every architecture that wants to support
-VFIO supports pgmap and memory hot plug. I was just told that s390
-doesn't, that is kind of important..
+Regard
+Mrs Alice Walton
 
-If there is a straightforward way to get a pgmap into VFIO then I'd do
-that and give up this quest :)
 
-I've never been looking at this from the angle of eliminating struct
-page, but from the perspective of allowing the DMA API to correctly do
-scatter/gather IO to non-struct page P2P memory because I *can't* get
-a struct page for it. Ie make dma_map_resource() better. Make P2P
-DMABUF work properly.
-
-This has to come along with a different way to store address ranges
-because the basic datum that needs to cross all the functional
-boundaries we have is an address range list.
-
-My general current sketch is we'd allocate some 'DMA P2P provider'
-structure analogous to the MEMORY_DEVICE_PCI_P2PDMA pgmap and a single
-provider would cover the entire MMIO aperture - eg the providing
-device's MMIO BAR. This is enough information for the DMA API to do
-its job.
-
-We get this back either by searching an interval treey thing on the
-physical address or by storing it directly in the address range list.
-
-Jason
