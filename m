@@ -2,97 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 073B067E9C5
-	for <lists+linux-block@lfdr.de>; Fri, 27 Jan 2023 16:43:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F181567E9F7
+	for <lists+linux-block@lfdr.de>; Fri, 27 Jan 2023 16:48:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234452AbjA0Pnu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Jan 2023 10:43:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38984 "EHLO
+        id S229456AbjA0Psq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Jan 2023 10:48:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233878AbjA0Pnt (ORCPT
+        with ESMTP id S233103AbjA0Psn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Jan 2023 10:43:49 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AA083270;
-        Fri, 27 Jan 2023 07:43:48 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E17E01F461;
-        Fri, 27 Jan 2023 15:43:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1674834226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qnn4QIM3Ma+1QyLluFkYDiWSQQLF3wzqKMv+UV/tw4Y=;
-        b=AL6P1L4X/hr3QN4qYo3KJ1aZ5eL0z9NoMqZFIcHoghOMkpsXMHVf5uq3C+SE6oxwPYeBQM
-        ooUXejB8nbo9uHaE5u4ir2DHuWUAJNeFn9tfthIQaKzUAY7BUm/BSuFMdK5zrICRuE8JqH
-        PCuRlILj5JnXVUe2b9yDKXFkpL7jBiI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1674834226;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qnn4QIM3Ma+1QyLluFkYDiWSQQLF3wzqKMv+UV/tw4Y=;
-        b=rxtTFpfjFz7hbEHWxJupQCv8JG5OUooFFXT0Y/dtKT0VRrpeR8eZPlfxRKl6gphdMnFUvV
-        GfeaNkzkzdzXyRAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CEEB7138E3;
-        Fri, 27 Jan 2023 15:43:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id LNaLMTLx02P3bgAAMHmgww
-        (envelope-from <hare@suse.de>); Fri, 27 Jan 2023 15:43:46 +0000
-Message-ID: <f8a4b796-4b60-d2b9-6e61-7249d2fe63a9@suse.de>
-Date:   Fri, 27 Jan 2023 16:43:46 +0100
+        Fri, 27 Jan 2023 10:48:43 -0500
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874B5CDCC
+        for <linux-block@vger.kernel.org>; Fri, 27 Jan 2023 07:48:41 -0800 (PST)
+Received: by mail-il1-x130.google.com with SMTP id u8so2423762ilq.13
+        for <linux-block@vger.kernel.org>; Fri, 27 Jan 2023 07:48:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IjuVPcGEJ54g0Xkgb8ZpMrWHDKfvpP3sUxNeuowuKvw=;
+        b=10utZi3a/2Q4Mv5BFJ5kHZb4VOpjNlP9ZmCCC2L3/6+EYJyzuOKjIYnF6r+D8HikKG
+         pGvNPEbM+ABzDtQi/ssxOtQt+GWl2PygmwSWwvK29wDcSJSS7+Zhvk8rKU9S2fC9TSPs
+         3g499ibd3prLgiF1uvtM34Fnkc0/XWpwijxQSDlJvBM8kmrQ8fGRBY3yn8y+6rywvaQq
+         jSPHEkAzfuncwqHrkHG2fs7MgJlqS/HLF7ZWpO0L1XuiT6MSyCaUdRtTgdIysODcGF7B
+         KjTgE2EBWfK8HZtWLD2d/nLa4NmCK3ISov2ObjnzzvOAPVeVI+wQAg+fhR5nAidmd2Bb
+         2/XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IjuVPcGEJ54g0Xkgb8ZpMrWHDKfvpP3sUxNeuowuKvw=;
+        b=KND/c/Xy29pZDb59KvmvxJVP5SOfsoJ9nz8Tdg9kieCNK6xcvB0lozO72uRnNUyspw
+         gaJzsFRcVC/LSpL+BTTUHvPI0Lby9zipX045glBmqVDlKLTsuF7cdkoZOQrFZAbxtxbh
+         5mrxu+T6r0gsLfOnfo5NVGyUDR78h3W/Y8Fzvco0LstMtHaF5wfS7p3Cqx/+chnISLLi
+         6+kAWDYGvT4nqptmZWftkSB7EFZZYdgcqZ1pmgQ6bxMPtVB1OAySkYzd257pfn/zjs9j
+         RXVo1vVgG9MnvIWeMa4jAZLEIYd+D6kiLTbEX8KhKucQKxYdWwVsNCw0e0LktJEJFc6U
+         2lMQ==
+X-Gm-Message-State: AFqh2kpM9ujEIihabFDqyjYjgOKTux68fUVSxb6Oqpt5Aesid+y0T3I0
+        YEKTDlYYK0cUBRFaJLyeXbYL5w==
+X-Google-Smtp-Source: AMrXdXvGGz/gvpVF+m1gKFSnWM4m60GCSV6B3WXGIs8qfw953ZwrZtjUJm58wE7kDSSs71qYGLyXtA==
+X-Received: by 2002:a92:9501:0:b0:30e:f03e:a76e with SMTP id y1-20020a929501000000b0030ef03ea76emr4842488ilh.2.1674834520779;
+        Fri, 27 Jan 2023 07:48:40 -0800 (PST)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id n2-20020a027142000000b0037477c3d04asm1561167jaf.130.2023.01.27.07.48.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jan 2023 07:48:40 -0800 (PST)
+Message-ID: <5743fb1b-eb4b-d169-a467-ee618bcd75f5@kernel.dk>
+Date:   Fri, 27 Jan 2023 08:48:39 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v3 18/18] Documentation: sysfs-block-device: document
- command duration limits
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] block: Default to build the BFQ I/O scheduler
+To:     Ulf Hansson <ulf.hansson@linaro.org>, linux-block@vger.kernel.org
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org
+References: <20230127154339.157460-1-ulf.hansson@linaro.org>
 Content-Language: en-US
-To:     Niklas Cassel <niklas.cassel@wdc.com>, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-block@vger.kernel.org
-References: <20230124190308.127318-1-niklas.cassel@wdc.com>
- <20230124190308.127318-19-niklas.cassel@wdc.com>
-From:   Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20230124190308.127318-19-niklas.cassel@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20230127154339.157460-1-ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/24/23 20:03, Niklas Cassel wrote:
-> From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+On 1/27/23 8:43 AM, Ulf Hansson wrote:
+> Today BFQ is widely used and it's also the default choice for some of the
+> single-queue-based storage devices. Therefore, let's make it more
+> convenient to build it as default, along with the other I/O schedulers.
 > 
-> Document ABI/testing/sysfs-block-device the sysfs attributes present
-> under /sys/block/*/device/duration_limits for ATA and SCSI devices
-> supporting the command duration limits feature.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-> ---
->   Documentation/ABI/testing/sysfs-block-device | 150 +++++++++++++++++++
->   1 file changed, 150 insertions(+)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Let's also build the cgroup support for BFQ as default, as it's likely that
+> it's wanted too, assuming CONFIG_BLK_CGROUP is also set, of course.
 
-Cheers,
+This won't make much of a difference, when the symbols are already in
+the .config. So let's please not. It may be a 'y' for you by default,
+but for lots of others it is not. Don't impose it on folks.
 
-Hannes
+-- 
+Jens Axboe
+
 
