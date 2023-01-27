@@ -2,47 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8130167DCAE
-	for <lists+linux-block@lfdr.de>; Fri, 27 Jan 2023 04:30:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04CF767DDA5
+	for <lists+linux-block@lfdr.de>; Fri, 27 Jan 2023 07:41:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229930AbjA0DaR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 26 Jan 2023 22:30:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
+        id S232087AbjA0Gkc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Jan 2023 01:40:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjA0DaQ (ORCPT
+        with ESMTP id S231904AbjA0GkX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 26 Jan 2023 22:30:16 -0500
-X-Greylist: delayed 1201 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 Jan 2023 19:30:15 PST
-Received: from mx.ewheeler.net (mx.ewheeler.net [173.205.220.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 382B03B65C;
-        Thu, 26 Jan 2023 19:30:15 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by mx.ewheeler.net (Postfix) with ESMTP id 4964984;
-        Thu, 26 Jan 2023 18:54:03 -0800 (PST)
-X-Virus-Scanned: amavisd-new at ewheeler.net
-Received: from mx.ewheeler.net ([127.0.0.1])
-        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id kuwCjWUZ_17q; Thu, 26 Jan 2023 18:53:59 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.ewheeler.net (Postfix) with ESMTPSA id EFFEC49;
-        Thu, 26 Jan 2023 18:53:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx.ewheeler.net EFFEC49
-Date:   Thu, 26 Jan 2023 18:53:41 -0800 (PST)
-From:   Eric Wheeler <bcache@lists.ewheeler.net>
-To:     Andrea Tomassetti <andrea.tomassetti-opensource@devo.com>
-cc:     Coly Li <colyli@suse.de>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [RFC] Live resize of bcache backing device
-In-Reply-To: <CAHykVA7_e1r9x2PfiDe8czH2WRaWtNxTJWcNmdyxJTSVGCxDHA@mail.gmail.com>
-Message-ID: <9e68cc3-b13f-68e0-61c-59d5d044064@ewheeler.net>
-References: <CAHykVA5sgGooeRjM1EepCCpZqkvtQJ_=cY8hmjqe0oQ3FLDFnQ@mail.gmail.com> <9474c19e-56f0-cb4d-68c-405c55aef281@ewheeler.net> <CAHykVA4zGN=WA4A3njQ3VdX4age2-AXq3EcW1qRTFbf=o1=yDw@mail.gmail.com> <4ddb082f-cefc-644e-2ccf-56d41207ecd3@devo.com>
- <107e8ceb-748e-b296-ae60-c2155d68352d@suse.de> <CAHykVA4WfYysOcKnQETkUyUjx_tFypFCWYG1RidRMVNqObGmRg@mail.gmail.com> <B7718488-B00D-4F72-86CA-0FF335AD633F@suse.de> <CAHykVA7_e1r9x2PfiDe8czH2WRaWtNxTJWcNmdyxJTSVGCxDHA@mail.gmail.com>
+        Fri, 27 Jan 2023 01:40:23 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC6069B26;
+        Thu, 26 Jan 2023 22:40:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=u92ZIG8NeiReqULUpJ3dTyWf+uSNhJCKYYthA6vycZI=; b=BHL2yK0mIJr+KABpOGeA+u3Rl4
+        B7i2Rbbg1zsJ5XUcinksH8hUB+n5okYbng9loY48Tjyofjk8OiUG4xkeaXAWl27DOJNOXqOxncMab
+        MYR6RasB+6kB7NBxI5Ptdqc1xJnRvtvJMJgoTVl3e6o9pKE2P3FDcHqx+Z9F/gvv9fPUr/g6wVmk2
+        9Dc/EI24A/yOAoVs8mO3i8ly6BVPoqaTkISl0X1f71XCb1dbLyrGH9wWZnJIw2IzLOYM27mAEX1GD
+        Se8srjkBYH4HkNZB0oYO6bGYGUHrSz2Oe6l41n4L6/KLtiiYAz/bal9B0+Qc6rEeLWb2YaS+NqC6y
+        f2ChDZSQ==;
+Received: from [2601:1c2:d80:3110::9307] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pLIPB-00DM0u-Dt; Fri, 27 Jan 2023 06:40:09 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Len Brown <len.brown@intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, alsa-devel@alsa-project.org,
+        coresight@lists.linaro.org, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
+        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
+Subject: [PATCH 00/35] Documentation: correct lots of spelling errors (series 1)
+Date:   Thu, 26 Jan 2023 22:39:30 -0800
+Message-Id: <20230127064005.1558-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1208808310-1674787980=:32313"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,230 +129,240 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Correct many spelling errors in Documentation/ as reported by codespell.
 
---8323328-1208808310-1674787980=:32313
-Content-Type: text/plain; CHARSET=ISO-2022-JP
+Maintainers of specific kernel subsystems are only Cc-ed on their
+respective patches, not the entire series. [if all goes well]
 
-On Wed, 25 Jan 2023, Andrea Tomassetti wrote:
-> On Tue, Jan 17, 2023 at 5:18 PM Coly Li <colyli@suse.de> wrote:
-> > > 2023$BG/(J1$B7n(J12$BF|(J 00:01$B!$(JAndrea Tomassetti <andrea.tomassetti-opensource@devo.com> $B<LF;!'(J
-> > > On Fri, Dec 30, 2022 at 11:41 AM Coly Li <colyli@suse.de> wrote:
-> > >> On 9/8/22 4:32 PM, Andrea Tomassetti wrote:
-> > >>> From 59787372cf21af0b79e895578ae05b6586dfeb09 Mon Sep 17 00:00:00 2001
-> > >>> From: Andrea Tomassetti <andrea.tomassetti-opensource@devo.com>
-> > >>> Date: Thu, 8 Sep 2022 09:47:55 +0200
-> > >>> Subject: [PATCH] bcache: Add support for live resize of backing devices
-> > >>>
-> > >>> Here is the first version of the patch. There are some points I noted
-> > >>> down
-> > >>> that I would like to discuss with you:
-> > >>> - I found it pretty convenient to hook the call of the new added
-> > >>> function
-> > >>>   inside the `register_bcache`. In fact, every time (at least from my
-> > >>>   understandings) a disk changes size, it will trigger a new probe and,
-> > >>>   thus, `register_bcache` will be triggered. The only inconvenient
-> > >>>   is that, in case of success, the function will output
-> > >>
-> > >> The resize should be triggered manually, and not to do it automatically.
-> > >>
-> > >> You may create a sysfs file under the cached device's directory, name it
-> > >> as "extend_size" or something else you think better.
+These patches are based on linux-next-20230125.
 
-This is the way it works for other blockdevs:
 
-	echo 1 > /sys/class/block/sdX/device/rescan
+ [PATCH 01/35] Documentation: arm64: correct spelling
+ [PATCH 02/35] Documentation: arm: correct spelling
+ [PATCH 03/35] Documentation: block: correct spelling
+ [PATCH 04/35] Documentation: bpf: correct spelling
+ [PATCH 05/35] Documentation: core-api: correct spelling
+ [PATCH 06/35] Documentation: fault-injection: correct spelling
+ [PATCH 07/35] Documentation: fb: correct spelling
+ [PATCH 08/35] Documentation: features: correct spelling
+ [PATCH 09/35] Documentation: firmware-guide/acpi: correct spelling
+ [PATCH 10/35] Documentation: hid: correct spelling
+ [PATCH 11/35] Documentation: i2c: correct spelling
+ [PATCH 12/35] Documentation: input: correct spelling
+ [PATCH 13/35] Documentation: isdn: correct spelling
+ [PATCH 14/35] Documentation: leds: correct spelling
+ [PATCH 15/35] Documentation: litmus-tests: correct spelling
+ [PATCH 16/35] Documentation: livepatch: correct spelling
+ [PATCH 17/35] Documentation: locking: correct spelling
+ [PATCH 18/35] Documentation: mm: correct spelling
+ [PATCH 19/35] Documentation: openrisc: correct spelling
+ [PATCH 20/35] Documentation: PCI: correct spelling
+ [PATCH 21/35] Documentation: powerpc: correct spelling
+ [PATCH 22/35] Documentation: power: correct spelling
+ [PATCH 23/35] Documentation: s390: correct spelling
+ [PATCH 24/35] Documentation: scheduler: correct spelling
+ [PATCH 25/35] Documentation: security: correct spelling
+ [PATCH 26/35] Documentation: sound: correct spelling
+ [PATCH 27/35] Documentation: spi: correct spelling
+ [PATCH 28/35] Documentation: target: correct spelling
+ [PATCH 29/35] Documentation: timers: correct spelling
+ [PATCH 30/35] Documentation: tools/rtla: correct spelling
+ [PATCH 31/35] Documentation: trace: correct spelling
+ [PATCH 32/35] Documentation: usb: correct spelling
+ [PATCH 33/35] Documentation: w1: correct spelling
+ [PATCH 34/35] Documentation: x86: correct spelling
+ [PATCH 35/35] Documentation: xtensa: correct spelling
 
-... but of course bcache doesn't have a "device" folder.  Maybe a sysfs 
-flag named "rescan" or "resize" would be appropriate:
 
-	echo 1 > /sys/block/bcache0/bcache/resize
+ Documentation/PCI/endpoint/pci-vntb-howto.rst                    |    2 -
+ Documentation/PCI/msi-howto.rst                                  |    2 -
+ Documentation/arm/arm.rst                                        |    2 -
+ Documentation/arm/ixp4xx.rst                                     |    4 +-
+ Documentation/arm/keystone/knav-qmss.rst                         |    2 -
+ Documentation/arm/stm32/stm32-dma-mdma-chaining.rst              |    6 +--
+ Documentation/arm/sunxi/clocks.rst                               |    2 -
+ Documentation/arm/swp_emulation.rst                              |    2 -
+ Documentation/arm/tcm.rst                                        |    2 -
+ Documentation/arm/vlocks.rst                                     |    2 -
+ Documentation/arm64/booting.rst                                  |    2 -
+ Documentation/arm64/elf_hwcaps.rst                               |    2 -
+ Documentation/arm64/sve.rst                                      |    4 +-
+ Documentation/block/data-integrity.rst                           |    2 -
+ Documentation/bpf/libbpf/libbpf_naming_convention.rst            |    6 +--
+ Documentation/bpf/map_xskmap.rst                                 |    2 -
+ Documentation/bpf/ringbuf.rst                                    |    4 +-
+ Documentation/bpf/verifier.rst                                   |    2 -
+ Documentation/core-api/packing.rst                               |    2 -
+ Documentation/core-api/padata.rst                                |    2 -
+ Documentation/fault-injection/fault-injection.rst                |    2 -
+ Documentation/fb/sm712fb.rst                                     |    2 -
+ Documentation/fb/sstfb.rst                                       |    2 -
+ Documentation/features/core/thread-info-in-task/arch-support.txt |    2 -
+ Documentation/firmware-guide/acpi/acpi-lid.rst                   |    2 -
+ Documentation/firmware-guide/acpi/namespace.rst                  |    2 -
+ Documentation/hid/hid-alps.rst                                   |    2 -
+ Documentation/hid/hid-bpf.rst                                    |    2 -
+ Documentation/hid/hiddev.rst                                     |    2 -
+ Documentation/hid/hidraw.rst                                     |    2 -
+ Documentation/hid/intel-ish-hid.rst                              |    2 -
+ Documentation/i2c/gpio-fault-injection.rst                       |    2 -
+ Documentation/i2c/smbus-protocol.rst                             |    2 -
+ Documentation/input/devices/iforce-protocol.rst                  |    2 -
+ Documentation/input/multi-touch-protocol.rst                     |    2 -
+ Documentation/isdn/interface_capi.rst                            |    2 -
+ Documentation/isdn/m_isdn.rst                                    |    2 -
+ Documentation/leds/leds-qcom-lpg.rst                             |    4 +-
+ Documentation/litmus-tests/README                                |    2 -
+ Documentation/livepatch/reliable-stacktrace.rst                  |    2 -
+ Documentation/locking/lockdep-design.rst                         |    4 +-
+ Documentation/locking/locktorture.rst                            |    2 -
+ Documentation/locking/locktypes.rst                              |    2 -
+ Documentation/locking/preempt-locking.rst                        |    2 -
+ Documentation/mm/hmm.rst                                         |    4 +-
+ Documentation/mm/hwpoison.rst                                    |    2 -
+ Documentation/openrisc/openrisc_port.rst                         |    4 +-
+ Documentation/power/suspend-and-interrupts.rst                   |    2 -
+ Documentation/powerpc/kasan.txt                                  |    2 -
+ Documentation/powerpc/papr_hcalls.rst                            |    2 -
+ Documentation/powerpc/qe_firmware.rst                            |    4 +-
+ Documentation/powerpc/vas-api.rst                                |    4 +-
+ Documentation/s390/pci.rst                                       |    4 +-
+ Documentation/s390/vfio-ccw.rst                                  |    2 -
+ Documentation/scheduler/sched-bwc.rst                            |    2 -
+ Documentation/scheduler/sched-energy.rst                         |    4 +-
+ Documentation/security/digsig.rst                                |    4 +-
+ Documentation/security/keys/core.rst                             |    2 -
+ Documentation/security/secrets/coco.rst                          |    2 -
+ Documentation/sound/alsa-configuration.rst                       |    8 ++--
+ Documentation/sound/cards/audigy-mixer.rst                       |    2 -
+ Documentation/sound/cards/maya44.rst                             |    2 -
+ Documentation/sound/cards/sb-live-mixer.rst                      |    2 -
+ Documentation/sound/designs/jack-controls.rst                    |    2 -
+ Documentation/sound/designs/seq-oss.rst                          |    2 -
+ Documentation/sound/hd-audio/notes.rst                           |    2 -
+ Documentation/spi/pxa2xx.rst                                     |   12 +++---
+ Documentation/spi/spi-lm70llp.rst                                |    2 -
+ Documentation/spi/spi-summary.rst                                |    2 -
+ Documentation/target/tcmu-design.rst                             |    2 -
+ Documentation/timers/hrtimers.rst                                |    2 -
+ Documentation/tools/rtla/rtla-timerlat-top.rst                   |    2 -
+ Documentation/trace/coresight/coresight-etm4x-reference.rst      |    2 -
+ Documentation/trace/events.rst                                   |    6 +--
+ Documentation/trace/fprobe.rst                                   |    2 -
+ Documentation/trace/ftrace-uses.rst                              |    2 -
+ Documentation/trace/hwlat_detector.rst                           |    2 -
+ Documentation/trace/rv/runtime-verification.rst                  |    2 -
+ Documentation/trace/uprobetracer.rst                             |    2 -
+ Documentation/usb/chipidea.rst                                   |   19 +++++-----
+ Documentation/usb/gadget-testing.rst                             |    2 -
+ Documentation/usb/mass-storage.rst                               |    2 -
+ Documentation/w1/w1-netlink.rst                                  |    2 -
+ Documentation/x86/boot.rst                                       |    2 -
+ Documentation/x86/buslock.rst                                    |    2 -
+ Documentation/x86/mds.rst                                        |    2 -
+ Documentation/x86/resctrl.rst                                    |    2 -
+ Documentation/x86/sgx.rst                                        |    2 -
+ Documentation/xtensa/atomctl.rst                                 |    2 -
+ 89 files changed, 124 insertions(+), 123 deletions(-)
 
-> > >> Then the sysadmin may extend the cached device size explicitly on a
-> > >> predictable time.
-> > >>>
-> > >>> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> > >>> index ba3909bb6bea..9a77caf2a18f 100644
-> > >>> --- a/drivers/md/bcache/super.c
-> > >>> +++ b/drivers/md/bcache/super.c
-> > >>> @@ -2443,6 +2443,76 @@ static bool bch_is_open(dev_t dev)
-> > >>>     return bch_is_open_cache(dev) || bch_is_open_backing(dev);
-> > >>> }
-> > >>>
-> > >>> +static bool bch_update_capacity(dev_t dev)
-> > >>> +{
-> > >>> +    const size_t max_stripes = min_t(size_t, INT_MAX,
-> > >>> +                     SIZE_MAX / sizeof(atomic_t));
-> > >>> +
-> > >>> +    uint64_t n, n_old;
-> > >>> +    int nr_stripes_old;
-> > >>> +    bool res = false;
-> > >>> +
-> > >>> +    struct bcache_device *d;
-> > >>> +    struct cache_set *c, *tc;
-> > >>> +    struct cached_dev *dcp, *t, *dc = NULL;
-> > >>> +
-> > >>> +    uint64_t parent_nr_sectors;
-> > >>> +
-> > >>> +    list_for_each_entry_safe(c, tc, &bch_cache_sets, list)
-> > >>> +        list_for_each_entry_safe(dcp, t, &c->cached_devs, list)
-> > >>> +            if (dcp->bdev->bd_dev == dev) {
-> > >>> +                dc = dcp;
-> > >>> +                goto dc_found;
-> > >>> +            }
-> > >>> +
-> > >>> +dc_found:
-> > >>> +    if (!dc)
-> > >>> +        return false;
-> > >>> +
-> > >>> +    parent_nr_sectors = bdev_nr_sectors(dc->bdev) - dc->sb.data_offset;
-> > >>> +
-> > >>> +    if (parent_nr_sectors == bdev_nr_sectors(dc->disk.disk->part0))
-> > >>> +        return false;
-> > >>> +
-> > >>
-> > >> The above code only handles whole disk using as cached device. If a
-> > >> partition of a hard drive is used as cache device, and there are other
-> > >> data after this partition, such condition should be handled as well. So
-> > >> far I am fine to only extend size when using the whole hard drive as
-> > >> cached device, but more code is necessary to check and only permits
-> > >> size-extend for such condition.
 
-Is it even possible to hot-resize a partition that is in use?  I usually 
-get an error if a filesystem from sdb is mounted (or, presumably, if a 
-partition is in use as a backing device by bcache):
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Vladimir Oltean <olteanv@gmail.com>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Wolfram Sang <wsa@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Henrik Rydberg <rydberg@bitmath.org>
+Cc: Karsten Keil <isdn@linux-pingi.de>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Naoya Horiguchi <naoya.horiguchi@nec.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Evgeniy Polyakov <zbr@ioremap.net>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
 
-	# blockdev --rereadpt /dev/sdb
-	blockdev: ioctl error on BLKRRPART: Device or resource busy
-
-(I've always wanted a feature in Linux's partition code to support
-hot-grow for non-overlapping partition changes that keep the original
-starting sector, like when you grow the last partition, but I
-digress...)
-
-> > > I don't understand if there's a misalignment here so let me be more
-> > > clear: this patch is intended to support the live resize of *backing
-> > > devices*, is this what you mean with "cached device"?
-> >
-> > Yes, backing device is cached device.
-> >
-> >
-> > > When I was working on the patch I didn't consider the possibility of
-> > > live resizing the cache devices, but it should be trivial.
-> > > So, as far as I understand, a partition cannot be used as a backing
-> > > device, correct? The whole disk should be used as a backing device,
-> > > that's why I'm checking and that's why this check should be correct.
-> > > Am I wrong?
-> >
-> > Yes a partition can be used as a backing (cached) device. That is to 
-> > say, if a file system is format on top of the cached device, this file 
-> > system cannot be directly accessed via the partition. It has to be 
-> > accessed via the bcache device e.g. /dev/bcache0.
-
-> > >> As I said, it should be a separated write-only sysfile under the cache
-> > >> device's directory.
->
-> > > Can I ask why you don't like the automatic resize way? Why should the
-> > > resize be manual?
-> >
-> > Most of system administrators don$B!G(Jt like such silently automatic 
-> > things. They want to extend the size explicitly, especially when there 
-> > is other dependences in their configurations.
-
-+1, I'm one of those administrators...
-
-> What I was trying to say is that, in order to resize a block device, a
-> manual command should be executed. So, this is already a "non-silent"
-> automatic thing.
-
-In some cases the "manual command" to which you refer may take weeks:
-
-Lets say you have a big hardware RAID5 and add a disk.  After the resize 
-completes the RAID controller reports a new disk size to the OS:
-
-	kernel: sd 2:0:0:1: [sdb] 503296888 512-byte logical blocks: (257 GB/239 GiB)
-	kernel: sdb: detected capacity change from 150317101056 to 257688006656
-
-Are you suggesting that if `sdb` is the backing device to `bcache0` that 
-`bcache0` should be resized immediately when `sdb` detects a capacity 
-change?
-
-I would recommend against it:  while I can't control when the RAID
-reconstruction finishes (since it takes 2 weeks for us to grow our
-arrays), I would like to control when `bcache0` grows in case there is a
-bug that triggers an IO hang (or worse).  At least then we can grow
-`bcache0` in a maintenance window in case there is a "surprise".
-
-IMHO, this should be controlable by the admin and should be a _manual_ 
-procedure (ie, echo 1 > resize)
-
-> Moreover, if the block device has a FS on it, the FS needs to be
-> manually grown with some special utilities, e.g. xfs_growfs.
-
-I've never seen a block dev resize call userspace commands from the kernel 
-(like xfs_growfs or resize2fs).  Does that exist?  Again, to avoid
-surprises, IMHO this should be a udev thing if someone wants it.
-
-> So, again, another non-silent automatic step. Don't you agree? For 
-> example, to resize a qcow device attached to a VM I'm manually doing a 
-> `virsh blockresize`. As soon as I issue that command, the virtio_blk 
-> driver inside the VM detects the disk size change and calls the 
-> `set_capacity_and_notify` function.
-
-Yes, that is expected and desired:
-
-> Why then should bcache behave differently?
-
-Because a VM presents itself as hardware.  When you `virsh blockresize` 
-from _outside_ of the VM, then the result is effectively the same as a 
-RAID reconstruction completing and notifying the OS as in my example 
-above.
-
-However, bcache _should_ call `set_capacity_and_notify` when
-  echo 1 > /sys/fs/bcache0/bcache/resize
-happens, but I'm not convinced that it is a good idea to auto-resize 
-`bcache0` when the backing device `sdb` grows.
-
-> If you're concerned that this can somehow break the 
-> behaviour-compatibility with older versions of the driver, can we 
-> protect this automatic discovery with an optional parameter? Will this 
-> be an option you will take into account?
-
-I like the idea of supporting it as a feature for those who might want it, 
-but please default it off for the sanity of admins who like more control.  
-
-Maybe /sys/fs/bcache0/bcache/resize can be tri-state sysfs attribute:
-
-	echo 0 > /sys/fs/bcache0/bcache/resize # default
-	echo 1 > /sys/fs/bcache0/bcache/resize # one-shot, resets to 0
-	echo 2 > /sys/fs/bcache0/bcache/resize # auto-resize on bdev change
-
--Eric
-
-> 
-> Thank you very much,
-> Andrea
-> >
-> > > Someone needs to trigger the block device resize, so shouldn't that be enough?
-> >
-> > Yes, an explicit write operation on a sysfs file to trigger the resize. Then we can permit people to do the size extend explicit and avoid to change current behavior.
-> >
-> > Thanks.
-> >
-> > Coly Li
-> >
-> > >
-> > > Andrea
-> > >>
-> > >>
-> > >>> else
-> > >>>                 err = "device busy";
-> > >>>             mutex_unlock(&bch_register_lock);
-> > >>> --
-> > >>> 2.37.3
-> > >>>
-> > >>
-> >
-> 
---8323328-1208808310-1674787980=:32313--
+Cc: alsa-devel@alsa-project.org
+Cc: coresight@lists.linaro.org
+Cc: bpf@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: isdn4linux@listserv.isdn4linux.de
+Cc: keyrings@vger.kernel.org
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-block@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-fbdev@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+Cc: linux-input@vger.kernel.org
+Cc: linux-leds@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Cc: linux-sgx@vger.kernel.org
+Cc: linux-spi@vger.kernel.org
+Cc: linux-trace-devel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: live-patching@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: target-devel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: openrisc@lists.librecores.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-xtensa@linux-xtensa.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: x86@kernel.org
