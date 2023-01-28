@@ -2,104 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AF0367F3E7
-	for <lists+linux-block@lfdr.de>; Sat, 28 Jan 2023 03:03:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92C0667F41D
+	for <lists+linux-block@lfdr.de>; Sat, 28 Jan 2023 03:49:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229681AbjA1CDv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Jan 2023 21:03:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
+        id S232492AbjA1CtC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Jan 2023 21:49:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjA1CDu (ORCPT
+        with ESMTP id S229681AbjA1CtB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Jan 2023 21:03:50 -0500
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332251B543;
-        Fri, 27 Jan 2023 18:03:48 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4P3d5p31Tgz4f3wRB;
-        Sat, 28 Jan 2023 10:03:42 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-        by APP4 (Coremail) with SMTP id gCh0CgBnF6uAgtRjI5wnCg--.29566S2;
-        Sat, 28 Jan 2023 10:03:44 +0800 (CST)
-Subject: Re: [PATCH v4 12/14] blk-mq: remove set of bd->last when get driver
- tag for next request fails
-From:   Kemeng Shi <shikemeng@huaweicloud.com>
-To:     ming.lei@redhat.com
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk, dwagner@suse.de,
-        hare@suse.de, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, john.garry@huawei.com, jack@suse.cz
-References: <20230118093726.3939160-1-shikemeng@huaweicloud.com>
- <20230118093726.3939160-12-shikemeng@huaweicloud.com>
- <20230118174208.GH12399@lst.de>
- <1f116b9b-8194-54c8-eedb-7f2c9cd493c6@huaweicloud.com>
-Message-ID: <0526b518-0894-10f6-e428-c03644d39c02@huaweicloud.com>
-Date:   Sat, 28 Jan 2023 10:03:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 27 Jan 2023 21:49:01 -0500
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B06C14EA0
+        for <linux-block@vger.kernel.org>; Fri, 27 Jan 2023 18:49:00 -0800 (PST)
+Received: by mail-pf1-f171.google.com with SMTP id 144so4472588pfv.11
+        for <linux-block@vger.kernel.org>; Fri, 27 Jan 2023 18:49:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ALv3IajnYqBwEbZwMHxRLgVmK0t3Zs8Bgo9cdHJGQtw=;
+        b=pxXif0V7D3NN3mpsvV1oh8SZjgPvYAzvp+qCSWe3+bDTl0wPof3rz8JriG4Jkz8asz
+         e+pTr6YSLUEWQwHwkjKt1wSfa+R2bxgI1Aq8FRYCYNkxeCZaghy/G5XM0j+bKUc8RrmY
+         ONqgRxlGjB+UzLKImpOBuwz9eMz3FDaA9R9Q1Blhsuu43q0ivJAUDRJKRNsw5oEBsAaK
+         5Dvsm/iNfRshxXq0dm2gkisCvOeEKVPpXFB7e6ChXt+16BVADY9VW0b9SiaZ3M3gPfRe
+         UVLw0gDwTlrY7hcKxU1xpAite4ovtaTEnVIQOecabqaXiWn7ONYSAVmaAoBui/O71Fhk
+         wz1A==
+X-Gm-Message-State: AO0yUKXwawWp3oACr7vFGGHpH9Pv97HHjRxeHwTDmHEyL2rX2N9Wy4i6
+        2E+28FRi47hojO+jIOqFnNE=
+X-Google-Smtp-Source: AK7set+px1sIqkTJasasSDzGyMZZ/ikvww7waBMsy24x3kr17Qz4dMslX4rvxNUFcAMCxILHwnjndQ==
+X-Received: by 2002:a62:64cb:0:b0:590:1bfe:cf63 with SMTP id y194-20020a6264cb000000b005901bfecf63mr11809492pfb.24.1674874138928;
+        Fri, 27 Jan 2023 18:48:58 -0800 (PST)
+Received: from [192.168.51.14] ([98.51.102.78])
+        by smtp.gmail.com with ESMTPSA id b3-20020aa78103000000b00582388bd80csm308418pfi.83.2023.01.27.18.48.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jan 2023 18:48:57 -0800 (PST)
+Message-ID: <beafab98-df34-8f1c-1108-7e61080a7e21@acm.org>
+Date:   Fri, 27 Jan 2023 18:48:57 -0800
 MIME-Version: 1.0
-In-Reply-To: <1f116b9b-8194-54c8-eedb-7f2c9cd493c6@huaweicloud.com>
-Content-Type: text/plain; charset=gbk
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH] null_blk: Support configuring the maximum segment size
+Content-Language: en-US
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>
+References: <20230128005926.79336-1-bvanassche@acm.org>
+ <ff478889-7a02-135f-57b6-f56d386d7065@opensource.wdc.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <ff478889-7a02-135f-57b6-f56d386d7065@opensource.wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: gCh0CgBnF6uAgtRjI5wnCg--.29566S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF47Xr15GFW3ZF17Kw18uFg_yoW8GrWDpF
-        W8Jayjkrs8tFsFvrn2ywsFgFyvqw43XrWaqry5uryrXws8ur13KrykKr42v3W7Cr4xGan0
-        9w4jgas0q3W8Za7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-        xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-        6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOyCJDUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-
-on 1/19/2023 9:45 AM, Kemeng Shi wrote:
+On 1/27/23 17:18, Damien Le Moal wrote:
+> On 1/28/23 09:59, Bart Van Assche wrote:
+>> +	WARN_ONCE(len > dev->max_segment_size, "%u > %u\n", len,
+>> +		  dev->max_segment_size);
 > 
-> 
-> on 1/19/2023 1:42 AM, Christoph Hellwig wrote:
->> On Wed, Jan 18, 2023 at 05:37:24PM +0800, Kemeng Shi wrote:
->>> Commit 113285b473824 ("blk-mq: ensure that bd->last is always set
->>> correctly") will set last if we failed to get driver tag for next
->>> request to avoid flush miss as we break the list walk and will not
->>> send the last request in the list which will be sent with last set
->>> normally.
->>> This code seems stale now becase the flush introduced is always
->>> redundant as:
->>> For case tag is really out, we will send a extra flush if we find
->>> list is not empty after list walk.
->>> For case some tag is freed before retry in blk_mq_prep_dispatch_rq for
->>> next, then we can get a tag for next request in retry and flush notified
->>> already is not necessary.
->>
->> I think Ming will know this code better than me, but aren't we
->> losing the blk_mq_get_driver_tag call entirely here now.  Where
->> is getting the driver tag covered now?
->>
-> We will get driver tag in blk_mq_prep_dispatch_rq at beginning of dispatch
-> loop, so it's fine to remove blk_mq_get_driver_tag here. Thanks.
-> 
+> Shouldn't this be an EIO return as this is not supposed to happen ?
 
-Hi Ming and everyone familiar with code invovled, could you help with
-reviewing this patch and patch "[PATCH v4 04/14] blk-mq: Fix potential
-io hung for shared sbitmap per tagset" in the same patchset.
-Thanks.
+Hmm ... the above WARN_ONCE() statement is intended as a precondition 
+check. This statement is intended as a help for developers to check that 
+the code below works fine. I'm not sure how returning EIO here would help?
 
--- 
-Best wishes
-Kemeng Shi
+Thanks
 
+Bart.
