@@ -2,117 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1E1B67F414
-	for <lists+linux-block@lfdr.de>; Sat, 28 Jan 2023 03:40:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B06E67F474
+	for <lists+linux-block@lfdr.de>; Sat, 28 Jan 2023 04:56:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231527AbjA1CkT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Jan 2023 21:40:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43114 "EHLO
+        id S230225AbjA1D4h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Jan 2023 22:56:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjA1CkT (ORCPT
+        with ESMTP id S229792AbjA1D4g (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Jan 2023 21:40:19 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E3025291;
-        Fri, 27 Jan 2023 18:40:17 -0800 (PST)
-Received: from kwepemm600002.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4P3dpv1wMFzJqGQ;
-        Sat, 28 Jan 2023 10:35:51 +0800 (CST)
-Received: from localhost.localdomain (10.175.127.227) by
- kwepemm600002.china.huawei.com (7.193.23.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Sat, 28 Jan 2023 10:40:15 +0800
-From:   Zhong Jinghua <zhongjinghua@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhongjinghua@huawei.com>, <yi.zhang@huawei.com>,
-        <yukuai3@huawei.com>
-Subject: [PATCH-next v3] blk-mq: cleanup unused methods: blk_mq_hw_sysfs_store
-Date:   Sat, 28 Jan 2023 11:04:19 +0800
-Message-ID: <20230128030419.2780298-1-zhongjinghua@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Fri, 27 Jan 2023 22:56:36 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA17F38EA6
+        for <linux-block@vger.kernel.org>; Fri, 27 Jan 2023 19:55:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674878150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uBQfiaGfehrbZhD+dmNA0LfHN/DYYGRL/4Xes3KYST0=;
+        b=QjLlOpCoPZCZ4H342ZIAp9bO4bewO/qX2HudGCb5f1SDRX2cK4hIM++L/t+RifoLpkM2UA
+        3GCySl+OMi2Cq7qOfOY9dV+mVhhCySRYFUsRN0GGe/pEHl1rbkyvmW/Tbgs6OmwvxCXTIU
+        /A/VK18MGuHjfOjdIbAJs3Bzn4JMpLo=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-116-VXaTXZFeM_W_iwyZDUsZ3Q-1; Fri, 27 Jan 2023 22:55:45 -0500
+X-MC-Unique: VXaTXZFeM_W_iwyZDUsZ3Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E2AB929ABA16;
+        Sat, 28 Jan 2023 03:55:44 +0000 (UTC)
+Received: from T590 (ovpn-8-23.pek2.redhat.com [10.72.8.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0CE8114171BE;
+        Sat, 28 Jan 2023 03:55:36 +0000 (UTC)
+Date:   Sat, 28 Jan 2023 11:55:31 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Kiwoong Kim <kwmad.kim@samsung.com>, ming.lei@redhat.com
+Subject: Re: [PATCH v3 9/9] scsi: ufs: exynos: Select
+ CONFIG_BLK_SUB_PAGE_SEGMENTS for lage page sizes
+Message-ID: <Y9Scs+S9vOwe0q53@T590>
+References: <20230118225447.2809787-1-bvanassche@acm.org>
+ <20230118225447.2809787-10-bvanassche@acm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600002.china.huawei.com (7.193.23.29)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230118225447.2809787-10-bvanassche@acm.org>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We found that the blk_mq_hw_sysfs_store interface has no place to use.
-The object default_hw_ctx_attrs using blk_mq_hw_sysfs_ops only uses
-the show method and does not use the store method.
+Hi Bart,
 
-Since this patch:
-4a46f05ebf99 ("blk-mq: move hctx and ctx counters from sysfs to debugfs")
-moved the store method to debugfs, the store method is not used anymore.
+On Wed, Jan 18, 2023 at 02:54:47PM -0800, Bart Van Assche wrote:
+> Since the maximum segment size supported by the Exynos controller is 4
+> KiB, this controller needs CONFIG_BLK_SUB_PAGE_SEGMENTS if the page size
+> exceeds 4 KiB.
+> 
+> Cc: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: Kiwoong Kim <kwmad.kim@samsung.com>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>  drivers/ufs/host/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/ufs/host/Kconfig b/drivers/ufs/host/Kconfig
+> index 4cc2dbd79ed0..376a4039912d 100644
+> --- a/drivers/ufs/host/Kconfig
+> +++ b/drivers/ufs/host/Kconfig
+> @@ -117,6 +117,7 @@ config SCSI_UFS_TI_J721E
+>  config SCSI_UFS_EXYNOS
+>  	tristate "Exynos specific hooks to UFS controller platform driver"
+>  	depends on SCSI_UFSHCD_PLATFORM && (ARCH_EXYNOS || COMPILE_TEST)
+> +	select BLK_SUB_PAGE_SEGMENTS if PAGE_SIZE > 4096
 
-So let me do some tiny work to clean up unused code.
+I remember that PAGE_SIZE is still 4K on Android kernel, so
+UFS_EXYNOS should work just fine, or Android kernel is going
+to change PAGE_SIZE?
 
-Signed-off-by: Zhong Jinghua <zhongjinghua@huawei.com>
----
- v1->v2: changed debuffs to debugfs in commit message
- v2->v3: as suggested by Christoph Hellwig, remove now unused store method
- from struct blk_mq_hw_ctx_sysfs_entry
- block/blk-mq-sysfs.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
 
-diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
-index 93997d297d42..847c0151070f 100644
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -46,7 +46,6 @@ static void blk_mq_hw_sysfs_release(struct kobject *kobj)
- struct blk_mq_hw_ctx_sysfs_entry {
- 	struct attribute attr;
- 	ssize_t (*show)(struct blk_mq_hw_ctx *, char *);
--	ssize_t (*store)(struct blk_mq_hw_ctx *, const char *, size_t);
- };
- 
- static ssize_t blk_mq_hw_sysfs_show(struct kobject *kobj,
-@@ -70,28 +69,6 @@ static ssize_t blk_mq_hw_sysfs_show(struct kobject *kobj,
- 	return res;
- }
- 
--static ssize_t blk_mq_hw_sysfs_store(struct kobject *kobj,
--				     struct attribute *attr, const char *page,
--				     size_t length)
--{
--	struct blk_mq_hw_ctx_sysfs_entry *entry;
--	struct blk_mq_hw_ctx *hctx;
--	struct request_queue *q;
--	ssize_t res;
--
--	entry = container_of(attr, struct blk_mq_hw_ctx_sysfs_entry, attr);
--	hctx = container_of(kobj, struct blk_mq_hw_ctx, kobj);
--	q = hctx->queue;
--
--	if (!entry->store)
--		return -EIO;
--
--	mutex_lock(&q->sysfs_lock);
--	res = entry->store(hctx, page, length);
--	mutex_unlock(&q->sysfs_lock);
--	return res;
--}
--
- static ssize_t blk_mq_hw_sysfs_nr_tags_show(struct blk_mq_hw_ctx *hctx,
- 					    char *page)
- {
-@@ -150,7 +127,6 @@ ATTRIBUTE_GROUPS(default_hw_ctx);
- 
- static const struct sysfs_ops blk_mq_hw_sysfs_ops = {
- 	.show	= blk_mq_hw_sysfs_show,
--	.store	= blk_mq_hw_sysfs_store,
- };
- 
- static struct kobj_type blk_mq_ktype = {
--- 
-2.31.1
+Thanks,
+Ming
 
