@@ -2,68 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FEEB67F420
-	for <lists+linux-block@lfdr.de>; Sat, 28 Jan 2023 03:52:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1E1B67F414
+	for <lists+linux-block@lfdr.de>; Sat, 28 Jan 2023 03:40:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232574AbjA1Cwv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 27 Jan 2023 21:52:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46260 "EHLO
+        id S231527AbjA1CkT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 27 Jan 2023 21:40:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbjA1Cwu (ORCPT
+        with ESMTP id S229498AbjA1CkT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 27 Jan 2023 21:52:50 -0500
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39834D539;
-        Fri, 27 Jan 2023 18:52:49 -0800 (PST)
-Received: by mail-pj1-f44.google.com with SMTP id n20-20020a17090aab9400b00229ca6a4636so10476172pjq.0;
-        Fri, 27 Jan 2023 18:52:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHQOQ6R8ASWCKHlGKTyH8naBVtDUcQjGA8igjjG1pmI=;
-        b=SJG7IYD1ZSOKG43IH84QfkjI9PDOHCC8DmjbG886zrpeDHMggxslX1Uwr1POjKxSEU
-         o7tWvg9L65FYjyZcBRez4sLzqalwlw1paojmRniCfLgWu+Hu1T77r5pDQ+hnVyXTKAYj
-         TMdxTwgRTd5UBNW26k5mLNOWZT0GcJk/7q17mI6tBGZraCAzLhLOUVvyvENKGWffym+y
-         GZoMYHVFjJU7WeUbIGOFzjpB34hSGBJ1g5GDHHiwrmtDPmm0qNzhRkYXgwGhUNqpsnqV
-         aLb7k9G03A5xHBZSj7epRhIsBdg2rDOnWcbksOz1USrSVo1nUPOEBNTMUby0juA2f755
-         cWPg==
-X-Gm-Message-State: AO0yUKU1+J8y/nbp8r1lp9Glb9wkvCmGH7ewprCXqasXYTRQhOv25SOW
-        cvDX/dVuu4C4Lf88G2S/gYV8RUWcUGc=
-X-Google-Smtp-Source: AK7set8uhka1/iDnT3MlG5hhBNQGAuJK3o7FYML0Pb9x14xRMs0QpyX+1wJvzOWVIsuDle1j8MwtQw==
-X-Received: by 2002:a17:903:22c2:b0:196:2bdb:b600 with SMTP id y2-20020a17090322c200b001962bdbb600mr14318050plg.32.1674874368588;
-        Fri, 27 Jan 2023 18:52:48 -0800 (PST)
-Received: from [192.168.51.14] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id l16-20020a170903121000b0019602dd94f1sm3536422plh.13.2023.01.27.18.52.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jan 2023 18:52:47 -0800 (PST)
-Message-ID: <f9fe4e54-563a-c8fa-23ae-88780c4edc54@acm.org>
-Date:   Fri, 27 Jan 2023 18:52:46 -0800
+        Fri, 27 Jan 2023 21:40:19 -0500
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E3025291;
+        Fri, 27 Jan 2023 18:40:17 -0800 (PST)
+Received: from kwepemm600002.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4P3dpv1wMFzJqGQ;
+        Sat, 28 Jan 2023 10:35:51 +0800 (CST)
+Received: from localhost.localdomain (10.175.127.227) by
+ kwepemm600002.china.huawei.com (7.193.23.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Sat, 28 Jan 2023 10:40:15 +0800
+From:   Zhong Jinghua <zhongjinghua@huawei.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhongjinghua@huawei.com>, <yi.zhang@huawei.com>,
+        <yukuai3@huawei.com>
+Subject: [PATCH-next v3] blk-mq: cleanup unused methods: blk_mq_hw_sysfs_store
+Date:   Sat, 28 Jan 2023 11:04:19 +0800
+Message-ID: <20230128030419.2780298-1-zhongjinghua@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v3 07/18] scsi: sd: detect support for command duration
- limits
-Content-Language: en-US
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Niklas Cassel <niklas.cassel@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-scsi@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-block@vger.kernel.org
-References: <20230124190308.127318-1-niklas.cassel@wdc.com>
- <20230124190308.127318-8-niklas.cassel@wdc.com>
- <f0793325-3022-e7b8-672d-00f2f9ee0cd9@suse.de>
- <99e6b267-6e2e-2233-19c2-1acf7c9135b2@opensource.wdc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <99e6b267-6e2e-2233-19c2-1acf7c9135b2@opensource.wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600002.china.huawei.com (7.193.23.29)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,36 +46,73 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 1/27/23 16:51, Damien Le Moal wrote:
-> On 1/27/23 22:00, Hannes Reinecke wrote:
->> Hmm. Calling this during revalidate() makes sense, but how can we ensure
->> that we call revalidate() when the user issues a MODE_SELECT command?
-> 
-> Given that CDLs can be changed with a passthrough command, I do not think we can
-> do anything about that, unfortunately. But I think the same is true of many
-> things like that. E.g. "let's turn onf/off the write cache without the kernel
-> noticing"... But given that on a normal system only privileged applications can
-> do passthrough, if that happens, then the system has been hacked or the user is
-> shooting himself in the foot.
-> 
-> cdl-tools project (cdladm utility) uses passtrhough but triggers a revalidate
-> after changing CDLs to make sure sysfs stays in sync.
-> 
-> As Christoph suggested, we could change all this to an ioctl(GET_CDL) for
-> applications... But sysfs is so much simpler in my opinion, not to mention that
-> it allows access to the information for any application written in a language
-> that does not have ioctl() or an equivalent.
-> 
-> cdl-tools has a test suite all written in bash scripts thanks to the sysfs
-> interface :)
+We found that the blk_mq_hw_sysfs_store interface has no place to use.
+The object default_hw_ctx_attrs using blk_mq_hw_sysfs_ops only uses
+the show method and does not use the store method.
 
-My understanding is that combining the sd driver with SCSI pass-through 
-is not supported and also that there are no plans to support this 
-combination.
+Since this patch:
+4a46f05ebf99 ("blk-mq: move hctx and ctx counters from sysfs to debugfs")
+moved the store method to debugfs, the store method is not used anymore.
 
-Martin, please correct me if I got this wrong.
+So let me do some tiny work to clean up unused code.
 
-Thanks,
+Signed-off-by: Zhong Jinghua <zhongjinghua@huawei.com>
+---
+ v1->v2: changed debuffs to debugfs in commit message
+ v2->v3: as suggested by Christoph Hellwig, remove now unused store method
+ from struct blk_mq_hw_ctx_sysfs_entry
+ block/blk-mq-sysfs.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-Bart.
+diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
+index 93997d297d42..847c0151070f 100644
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -46,7 +46,6 @@ static void blk_mq_hw_sysfs_release(struct kobject *kobj)
+ struct blk_mq_hw_ctx_sysfs_entry {
+ 	struct attribute attr;
+ 	ssize_t (*show)(struct blk_mq_hw_ctx *, char *);
+-	ssize_t (*store)(struct blk_mq_hw_ctx *, const char *, size_t);
+ };
+ 
+ static ssize_t blk_mq_hw_sysfs_show(struct kobject *kobj,
+@@ -70,28 +69,6 @@ static ssize_t blk_mq_hw_sysfs_show(struct kobject *kobj,
+ 	return res;
+ }
+ 
+-static ssize_t blk_mq_hw_sysfs_store(struct kobject *kobj,
+-				     struct attribute *attr, const char *page,
+-				     size_t length)
+-{
+-	struct blk_mq_hw_ctx_sysfs_entry *entry;
+-	struct blk_mq_hw_ctx *hctx;
+-	struct request_queue *q;
+-	ssize_t res;
+-
+-	entry = container_of(attr, struct blk_mq_hw_ctx_sysfs_entry, attr);
+-	hctx = container_of(kobj, struct blk_mq_hw_ctx, kobj);
+-	q = hctx->queue;
+-
+-	if (!entry->store)
+-		return -EIO;
+-
+-	mutex_lock(&q->sysfs_lock);
+-	res = entry->store(hctx, page, length);
+-	mutex_unlock(&q->sysfs_lock);
+-	return res;
+-}
+-
+ static ssize_t blk_mq_hw_sysfs_nr_tags_show(struct blk_mq_hw_ctx *hctx,
+ 					    char *page)
+ {
+@@ -150,7 +127,6 @@ ATTRIBUTE_GROUPS(default_hw_ctx);
+ 
+ static const struct sysfs_ops blk_mq_hw_sysfs_ops = {
+ 	.show	= blk_mq_hw_sysfs_show,
+-	.store	= blk_mq_hw_sysfs_store,
+ };
+ 
+ static struct kobj_type blk_mq_ktype = {
+-- 
+2.31.1
 
