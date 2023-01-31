@@ -2,25 +2,25 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7E7768270D
-	for <lists+linux-block@lfdr.de>; Tue, 31 Jan 2023 09:43:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E6DE68271F
+	for <lists+linux-block@lfdr.de>; Tue, 31 Jan 2023 09:44:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231502AbjAaInV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 31 Jan 2023 03:43:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53226 "EHLO
+        id S231836AbjAaInq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 31 Jan 2023 03:43:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231675AbjAaIlv (ORCPT
+        with ESMTP id S231516AbjAaImR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 31 Jan 2023 03:41:51 -0500
+        Tue, 31 Jan 2023 03:42:17 -0500
 Received: from lgeamrelo11.lge.com (lgeamrelo11.lge.com [156.147.23.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A6117474E5
-        for <linux-block@vger.kernel.org>; Tue, 31 Jan 2023 00:40:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 516224859E
+        for <linux-block@vger.kernel.org>; Tue, 31 Jan 2023 00:40:11 -0800 (PST)
 Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
-        by 156.147.23.51 with ESMTP; 31 Jan 2023 17:40:01 +0900
+        by 156.147.23.51 with ESMTP; 31 Jan 2023 17:40:02 +0900
 X-Original-SENDERIP: 156.147.1.127
 X-Original-MAILFROM: max.byungchul.park@gmail.com
 Received: from unknown (HELO localhost.localdomain) (10.177.244.38)
-        by 156.147.1.127 with ESMTP; 31 Jan 2023 17:40:01 +0900
+        by 156.147.1.127 with ESMTP; 31 Jan 2023 17:40:02 +0900
 X-Original-SENDERIP: 10.177.244.38
 X-Original-MAILFROM: max.byungchul.park@gmail.com
 From:   Byungchul Park <max.byungchul.park@gmail.com>
@@ -47,9 +47,9 @@ Cc:     torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
         42.hyeyoo@gmail.com, chris.p.wilson@intel.com,
         gwan-gyeong.mun@intel.com, max.byungchul.park@gmail.com,
         boqun.feng@gmail.com, longman@redhat.com, hdanton@sina.com
-Subject: [PATCH v9 20/25] dept: Apply timeout consideration to waitqueue wait
-Date:   Tue, 31 Jan 2023 17:39:49 +0900
-Message-Id: <1675154394-25598-21-git-send-email-max.byungchul.park@gmail.com>
+Subject: [PATCH v9 21/25] dept: Apply timeout consideration to hashed-waitqueue wait
+Date:   Tue, 31 Jan 2023 17:39:50 +0900
+Message-Id: <1675154394-25598-22-git-send-email-max.byungchul.park@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1675154394-25598-1-git-send-email-max.byungchul.park@gmail.com>
 References: <1675154394-25598-1-git-send-email-max.byungchul.park@gmail.com>
@@ -64,27 +64,27 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 Now that CONFIG_DEPT_AGGRESSIVE_TIMEOUT_WAIT was introduced, apply the
-consideration to waitqueue wait, assuming an input 'ret' in
-___wait_event() macro is used as a timeout value.
+consideration to hashed-waitqueue wait, assuming an input 'ret' in
+___wait_var_event() macro is used as a timeout value.
 
 Signed-off-by: Byungchul Park <max.byungchul.park@gmail.com>
 ---
- include/linux/wait.h | 2 +-
+ include/linux/wait_bit.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index ff349e6..aa1bd96 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -304,7 +304,7 @@ static inline void wake_up_pollfree(struct wait_queue_head *wq_head)
- 	struct wait_queue_entry __wq_entry;					\
- 	long __ret = ret;	/* explicit shadow */				\
- 										\
--	sdt_might_sleep_start(NULL);						\
-+	sdt_might_sleep_start_timeout(NULL, __ret);				\
- 	init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);	\
- 	for (;;) {								\
- 		long __int = prepare_to_wait_event(&wq_head, &__wq_entry, state);\
+diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
+index fe89282..3ef450d 100644
+--- a/include/linux/wait_bit.h
++++ b/include/linux/wait_bit.h
+@@ -247,7 +247,7 @@ struct wait_bit_queue_entry {
+ 	struct wait_bit_queue_entry __wbq_entry;			\
+ 	long __ret = ret; /* explicit shadow */				\
+ 									\
+-	sdt_might_sleep_start(NULL);					\
++	sdt_might_sleep_start_timeout(NULL, __ret);			\
+ 	init_wait_var_entry(&__wbq_entry, var,				\
+ 			    exclusive ? WQ_FLAG_EXCLUSIVE : 0);		\
+ 	for (;;) {							\
 -- 
 1.9.1
 
