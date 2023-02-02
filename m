@@ -2,118 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 252C4687BAE
-	for <lists+linux-block@lfdr.de>; Thu,  2 Feb 2023 12:10:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9948A687CC3
+	for <lists+linux-block@lfdr.de>; Thu,  2 Feb 2023 12:57:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231755AbjBBLKO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Feb 2023 06:10:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39960 "EHLO
+        id S229595AbjBBL5B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Feb 2023 06:57:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232396AbjBBLKA (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Feb 2023 06:10:00 -0500
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 494591631D;
-        Thu,  2 Feb 2023 03:09:32 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4P6wzB22gGz4f3kp4;
-        Thu,  2 Feb 2023 19:09:26 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-        by APP4 (Coremail) with SMTP id gCh0CgDHd6vkmdtjMDR2Cw--.56257S2;
-        Thu, 02 Feb 2023 19:09:28 +0800 (CST)
-Subject: Re: [PATCH] blk-ioprio: Introduce promote-to-rt policy
-To:     Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        cgroups@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, houtao1@huawei.com
-References: <20230201045227.2203123-1-houtao@huaweicloud.com>
- <8c068af3-7199-11cf-5c69-a523c7c22d9a@acm.org>
-From:   Hou Tao <houtao@huaweicloud.com>
-Message-ID: <4f7dcb3e-2d5a-cae3-0e1c-a82bcc3d2217@huaweicloud.com>
-Date:   Thu, 2 Feb 2023 19:09:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        with ESMTP id S229441AbjBBL5A (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Feb 2023 06:57:00 -0500
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A01BBB86
+        for <linux-block@vger.kernel.org>; Thu,  2 Feb 2023 03:56:58 -0800 (PST)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20230202115656euoutp02b863d01618633eaa3eed8d80f7ca1fff~---WHAe9r2770927709euoutp02X
+        for <linux-block@vger.kernel.org>; Thu,  2 Feb 2023 11:56:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20230202115656euoutp02b863d01618633eaa3eed8d80f7ca1fff~---WHAe9r2770927709euoutp02X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1675339016;
+        bh=uZd+VUE41+PDYbgmL6AnfmRpQyAZtSSYsvWLe5oSEp4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=By+GQfK4yWmMK2gffQVCsc+T1hcckSjB9NCn2Hou51pz03/oyjA1j8sAWnQfGztwd
+         yNWQnqb6ctatVByx49Pq+wljW18aYdd8c0q/NV1+kppG4KU6N7VbNtsu6F109h92na
+         /q5FdRYg9IIDpIj5UaLL6PuBv8HyQtOX5Yq7AKa4=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230202115656eucas1p17bae0db6f8fa53a7d1aa19f9dcf8f085~---V9xDPv2943629436eucas1p1b;
+        Thu,  2 Feb 2023 11:56:56 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id A1.82.01471.805ABD36; Thu,  2
+        Feb 2023 11:56:56 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20230202115655eucas1p173ffc747caa69a038e1e86357caf0cb5~---VUQEv_2942129421eucas1p11;
+        Thu,  2 Feb 2023 11:56:55 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230202115655eusmtrp2fcf3f59e5ff7065cee840aa2aff3fb31~---VToNvb0993109931eusmtrp2c;
+        Thu,  2 Feb 2023 11:56:55 +0000 (GMT)
+X-AuditID: cbfec7f2-2b1ff700000105bf-15-63dba5085c0e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 4C.FF.02722.705ABD36; Thu,  2
+        Feb 2023 11:56:55 +0000 (GMT)
+Received: from localhost (unknown [106.210.248.10]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20230202115655eusmtip14547d8bfd5bc14c68e8806c5e64a04df~---U7N-GG2082220822eusmtip1K;
+        Thu,  2 Feb 2023 11:56:55 +0000 (GMT)
+Date:   Thu, 2 Feb 2023 17:26:52 +0530
+From:   Pankaj Raghav <p.raghav@samsung.com>
+To:     Juhyung Park <qkrwngud825@gmail.com>
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH] block: remove more NULL checks after bdev_get_queue()
+Message-ID: <20230202115652.nh464rwc6jxw25e6@quentin>
 MIME-Version: 1.0
-In-Reply-To: <8c068af3-7199-11cf-5c69-a523c7c22d9a@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID: gCh0CgDHd6vkmdtjMDR2Cw--.56257S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr47Kr4DAFWrKFW8AFy8Grg_yoW8uFy3pF
-        48CFykJrZYqFy8Jr1kXa18GrWUA3y3J3WUJF1FqF98uw48Kw10gw4FqFn2gFyfGa1kXrn8
-        Jw4DJrWUua45Aw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-        e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjxUrR6zUUUUU
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230202091151.855784-1-qkrwngud825@gmail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42LZduznOV2OpbeTDRr3c1usvtvPZrH3lrbF
+        56Ut7BZHHy9kc2Dx2DnrLrvH5bOlHn1bVjF6fN4kF8ASxWWTkpqTWZZapG+XwJVxafF7loIT
+        bBXH71xja2C8w9rFyMkhIWAi8WzaI7YuRi4OIYEVjBI3z51ggXC+MEp0Tmpmh3A+M0p8b9zB
+        AtNy+clNZojEckaJCytXQPW/YJRYO/8EM0gVi4CKxLppjYxdjBwcbAJaEo2d7CBhEQENidYL
+        51lAwswCERKPD6uBmMICXhK3bsuCVPAKmEqsOPSVHcIWlDg58wlYNaeAjUT7Aw+IC+ZySPzs
+        SYOwXSRWrNsL9YywxKvjW9ghbBmJ/zvnM0HY1RJPb/wGu1hCoIVRon/nejaQmRIC1hJ9Z3JA
+        apgFMiTOL54A9aGjxPETN1ggSvgkbrwVhCjhk5i0bTozRJhXoqNNCKJaSWLnzydQWyUkLjfN
+        gZriIfH8yWNo0PQzSsw9OZFpAqP8LCSPzUKyGcLWkViw+xPbLHDwSEss/8cBYWpKrN+lv4CR
+        dRWjeGppcW56arFhXmq5XnFibnFpXrpecn7uJkZgOjn97/inHYxzX33UO8TIxMF4iFGCg1lJ
+        hPfKvNvJQrwpiZVVqUX58UWlOanFhxilOViUxHm1bU8mCwmkJ5akZqemFqQWwWSZODilGpgW
+        /CgskTJzvd/39fUr2foDe04+2tmvq3dL1mri/YzV/u5xD6L695kv2Jfz8lK7yoO/xbOE38pm
+        eAdKik4xdSsSPid0wTLs56xZQguPSz78JbZNs3rv9gncltaHF2mY6erkfdAXu1nac+BCV5N+
+        6ieBqSEqe871bX9Zu8VvwfOlH+rMHheJJ03+wyu85Zy9zPLObXv8mP7FKDG4+kazBKrcDp93
+        s/vmBL2r7xbxMPeHXeh9vV7r5q0ZLx+efVm91kOk3Y3NqV5n54MP0xorU5lvHG97NGth5/fr
+        13X/KE52PyYkfHl9b/Le+XftXHvmhbnNK/GPDK1mmyrTK8hqxxHQxbwpwLbIXoRvbY3plhtK
+        LMUZiYZazEXFiQCSmkB6lgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsVy+t/xu7rsS28nG7z7J2ex+m4/m8XeW9oW
+        n5e2sFscfbyQzYHFY+esu+wel8+WevRtWcXo8XmTXABLlJ5NUX5pSapCRn5xia1StKGFkZ6h
+        pYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G3yMP2As6WCrOvW5lbmDcytzFyMkhIWAi
+        cfnJTSCbi0NIYCmjxMYNX1ghEhIStxc2MULYwhJ/rnWxQRQ9Y5T4/eASC0iCRUBFYt20RqAi
+        Dg42AS2Jxk52kLCIgIZE64XzYCXMAhESs65eZwYpERbwkrh1WxYkzCtgKrHi0FewciEBa4lZ
+        O94zQ8QFJU7OfALVqiVx499LJpBWZgFpieX/OEBMTgEbifYHHhMYBWYhaZiFpGEWQsMCRuZV
+        jCKppcW56bnFhnrFibnFpXnpesn5uZsYgWG/7djPzTsY5736qHeIkYmD8RCjBAezkgjvlXm3
+        k4V4UxIrq1KL8uOLSnNSiw8xmgK9O5FZSjQ5Hxh5eSXxhmYGpoYmZpYGppZmxkrivJ4FHYlC
+        AumJJanZqakFqUUwfUwcnFINTIXrl7g45BSHTl7abenxbdIm/jMO/JN+nPW7c2GZ5pIrCk3r
+        K3ceNmgJ9bg3c73hzncKUYst1s990JHx+lEqd9dZw3l9z53dZpk1vvP4mXpk+8xLqV5Li6Mz
+        bx+bwtQjsymi74TH2w3r/ILlGTY2Tr6W7ngzL8XXdsk3bVHVs0osU16pcH6PFnL7erHj/r9w
+        7mNx/xvsg/ZpRAv9t/snfiTDe+d5/vmsB7ZEakoyHjua7PexxHwe51HtravDA2bP/cRzPMun
+        O3tlZpfQjlfaTP9iIrtafjt5BQor7rt73GzhIuZ5vxx/TFkYmvfmzWbnkn9r1Hc03mAUu1ty
+        +I7E2pCF8n4FL7svcs5fkaj84pgSS3FGoqEWc1FxIgDlFpIeBAMAAA==
+X-CMS-MailID: 20230202115655eucas1p173ffc747caa69a038e1e86357caf0cb5
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----ne2T92axF1zxmICHxTGG9HmPt4_QlnxLDzDMENhgOSO8xpR3=_8e964_"
+X-RootMTR: 20230202115655eucas1p173ffc747caa69a038e1e86357caf0cb5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20230202115655eucas1p173ffc747caa69a038e1e86357caf0cb5
+References: <20230202091151.855784-1-qkrwngud825@gmail.com>
+        <CGME20230202115655eucas1p173ffc747caa69a038e1e86357caf0cb5@eucas1p1.samsung.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+------ne2T92axF1zxmICHxTGG9HmPt4_QlnxLDzDMENhgOSO8xpR3=_8e964_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-On 2/2/2023 1:33 AM, Bart Van Assche wrote:
-> On 1/31/23 20:52, Hou Tao wrote:
->>   /**
->>    * enum prio_policy - I/O priority class policy.
->>    * @POLICY_NO_CHANGE: (default) do not modify the I/O priority class.
->> @@ -27,21 +34,30 @@
->>    * @POLICY_RESTRICT_TO_BE: modify IOPRIO_CLASS_NONE and IOPRIO_CLASS_RT into
->>    *        IOPRIO_CLASS_BE.
->>    * @POLICY_ALL_TO_IDLE: change the I/O priority class into IOPRIO_CLASS_IDLE.
->> - *
->> + * @POLICY_PROMOTE_TO_RT: modify IOPRIO_CLASS_NONE and IOPRIO_CLASS_BE into
->> + *         IOPRIO_CLASS_RT.
->>    * See also <linux/ioprio.h>.
->>    */
->>   enum prio_policy {
->> -    POLICY_NO_CHANGE    = 0,
->> -    POLICY_NONE_TO_RT    = 1,
->> -    POLICY_RESTRICT_TO_BE    = 2,
->> -    POLICY_ALL_TO_IDLE    = 3,
->> +    POLICY_NO_CHANGE    = IOPRIO_CLASS_NONE,
->> +    POLICY_NONE_TO_RT    = IOPRIO_CLASS_RT,
->> +    POLICY_RESTRICT_TO_BE    = IOPRIO_CLASS_BE,
->> +    POLICY_ALL_TO_IDLE    = IOPRIO_CLASS_IDLE,
->> +    POLICY_PROMOTE_TO_RT    = IOPRIO_CLASS_RT | IOPRIO_POL_PROMOTION,
->> +};
->
-> The above change complicates the ioprio code. Additionally, I'm concerned that
-> it makes the ioprio code slower. Has it been considered to keep the numerical
-> values for the existing policies, to assign the number 4 to
-> POLICY_PROMOTE_TO_RT and to use a lookup-array in blkcg_set_ioprio() to
-> convert the policy number into an IOPRIO_CLASS value?
-For the slowness, do you meaning the extra dereference of blkcg->ioprio->policy
-when policy is no-change or the handle of IOPRIO_POL_PROMOTION in
-blkcg_set_ioprio()? It seems other functions (e.g., ioprio_show_prio_policy()
-and ioprio_set_prio_policy()) are not on the hot path. Using a lookup array in
-blkcg_set_ioprio() to do the conversion will also be OK, although it will
-introduce an extra lookup each time when policy is not no-change. I don't have
-strong preference. If you are OK with lookup array in blkcg_set_ioprio(), will
-do it in v2.
->
-> Thanks,
->
-> Bart.
->
->
-> .
+On Thu, Feb 02, 2023 at 06:11:51PM +0900, Juhyung Park wrote:
+> bdev_get_queue() never returns NULL. Several commits [1][2] have been made
+> before to remove such superfluous checks, but some still remained.
+> 
+> [1] commit ec9fd2a13d74 ("blk-lib: don't check bdev_get_queue() NULL check")
+> [2] commit fea127b36c93 ("block: remove superfluous check for request queue in bdev_is_zoned()")
+> 
+> Signed-off-by: Juhyung Park <qkrwngud825@gmail.com>
 
+Looks good,
+Reviewed-by: Pankaj Raghav <p.raghav@samsung.com>
+
+------ne2T92axF1zxmICHxTGG9HmPt4_QlnxLDzDMENhgOSO8xpR3=_8e964_
+Content-Type: text/plain; charset="utf-8"
+
+
+------ne2T92axF1zxmICHxTGG9HmPt4_QlnxLDzDMENhgOSO8xpR3=_8e964_--
