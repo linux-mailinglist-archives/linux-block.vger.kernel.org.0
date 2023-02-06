@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A66B68B3E2
-	for <lists+linux-block@lfdr.de>; Mon,  6 Feb 2023 02:35:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FA1A68B3EF
+	for <lists+linux-block@lfdr.de>; Mon,  6 Feb 2023 02:43:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbjBFBeF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 5 Feb 2023 20:34:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38760 "EHLO
+        id S229452AbjBFBn2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 5 Feb 2023 20:43:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbjBFBeB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 5 Feb 2023 20:34:01 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A92D1B55E;
-        Sun,  5 Feb 2023 17:33:50 -0800 (PST)
-Received: from kwepemm600002.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4P97vt1FpDzkXqk;
-        Mon,  6 Feb 2023 09:29:14 +0800 (CST)
+        with ESMTP id S229448AbjBFBn2 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 5 Feb 2023 20:43:28 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E1D19F28;
+        Sun,  5 Feb 2023 17:43:26 -0800 (PST)
+Received: from kwepemm600002.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4P989m3Vwnz16MG4;
+        Mon,  6 Feb 2023 09:41:16 +0800 (CST)
 Received: from localhost.localdomain (10.175.127.227) by
  kwepemm600002.china.huawei.com (7.193.23.29) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Mon, 6 Feb 2023 09:33:47 +0800
+ 15.1.2375.34; Mon, 6 Feb 2023 09:43:24 +0800
 From:   Zhong Jinghua <zhongjinghua@huawei.com>
 To:     <axboe@kernel.dk>
 CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <zhongjinghua@huawei.com>, <yi.zhang@huawei.com>,
         <yukuai3@huawei.com>, <houtao1@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH-next] loop: loop_set_status_from_info() check before assignment
-Date:   Mon, 6 Feb 2023 09:57:39 +0800
-Message-ID: <20230206015739.4171377-1-zhongjinghua@huawei.com>
+Subject: [PATCH-next v2] loop: loop_set_status_from_info() check before assignment
+Date:   Mon, 6 Feb 2023 10:07:16 +0800
+Message-ID: <20230206020716.2036-1-zhongjinghua@huawei.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemm600002.china.huawei.com (7.193.23.29)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -55,18 +55,19 @@ optimize this.
 
 Signed-off-by: Zhong Jinghua <zhongjinghua@huawei.com>
 ---
+ v1->v2: Modify note: overflowing -> overflow 
  drivers/block/loop.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 1518a6423279..5eb5915d1a97 100644
+index 1518a6423279..1b35cbd029c7 100644
 --- a/drivers/block/loop.c
 +++ b/drivers/block/loop.c
 @@ -977,13 +977,13 @@ loop_set_status_from_info(struct loop_device *lo,
  		return -EINVAL;
  	}
  
-+	/* Avoid assigning overflowing values */
++	/* Avoid assigning overflow values */
 +	if (info->lo_offset > LLONG_MAX || info->lo_sizelimit > LLONG_MAX)
 +		return -EOVERFLOW;
 +
