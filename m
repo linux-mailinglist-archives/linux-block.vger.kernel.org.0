@@ -2,168 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65085690956
-	for <lists+linux-block@lfdr.de>; Thu,  9 Feb 2023 13:56:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91694690844
+	for <lists+linux-block@lfdr.de>; Thu,  9 Feb 2023 13:11:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjBIM40 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 9 Feb 2023 07:56:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58372 "EHLO
+        id S229545AbjBIMLY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 9 Feb 2023 07:11:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbjBIM4Z (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Feb 2023 07:56:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E1BE387
-        for <linux-block@vger.kernel.org>; Thu,  9 Feb 2023 04:55:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675947337;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=CM/sfV6oyjxgc/nsENOBqYgNwXyA5JtEoGtl95uTz0w=;
-        b=KMN+B2+syOGD5CVwgzhIkPFU7TotvLjLe7TbEqwNLgi7f84s71CG4MnmgOUmETAdUKm0yz
-        qKZL7Wpe7fM6QhDijWgBJUY8So0HP0+otMJnINo377mOLJFi5hTNJ64Jem+ivUj6+6RY13
-        ACMdzyCWkfuZAbRwL8ya8i9NxtneeyQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-587-eCKB3U0BNMWtCGj7Bs6KzQ-1; Thu, 09 Feb 2023 07:55:36 -0500
-X-MC-Unique: eCKB3U0BNMWtCGj7Bs6KzQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0E3B4802314;
-        Thu,  9 Feb 2023 12:55:36 +0000 (UTC)
-Received: from localhost (ovpn-8-17.pek2.redhat.com [10.72.8.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 397462026D4B;
-        Thu,  9 Feb 2023 12:55:34 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH] block: sync mixed merged request's failfast with 1st bio's
-Date:   Thu,  9 Feb 2023 20:55:27 +0800
-Message-Id: <20230209125527.667004-1-ming.lei@redhat.com>
+        with ESMTP id S229615AbjBIMLM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 9 Feb 2023 07:11:12 -0500
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 046122685;
+        Thu,  9 Feb 2023 04:09:20 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PCFyz1VWTz4f3jZH;
+        Thu,  9 Feb 2023 20:09:15 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+        by APP4 (Coremail) with SMTP id gCh0CgAHvrFr4uRj4rAuDQ--.53349S2;
+        Thu, 09 Feb 2023 20:09:17 +0800 (CST)
+From:   Kemeng Shi <shikemeng@huaweicloud.com>
+To:     axboe@kernel.dk, hch@lst.de, jack@suse.cz
+Cc:     andriy.shevchenko@linux.intel.com, qiulaibin@huawei.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] A few bugfix and cleanup patches to blk-mq
+Date:   Fri, 10 Feb 2023 04:11:09 +0800
+Message-Id: <20230209201116.579809-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgAHvrFr4uRj4rAuDQ--.53349S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF15ur18ur1xWw4Dtw1rtFb_yoWfGFb_WF
+        y8CFySkrWUGFn8CFyUKF1UXFZrKw4UCr1UtF1vqrZxJw1xJrs5Jws5CrW3Xrn8Wa17CF1r
+        Ar1UGr4kArnI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2kYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+        AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7
+        JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
+        r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
+        Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IY
+        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
+        vE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E
+        87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU0VnQUUUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We support mixed merge for requests/bios with different fastfail
-settings. When request fails, each time we only handle the portion
-with same failfast setting, then bios with failfast can be failed
-immediately, and bios without failfast can be retried.
+Hi, this patchset contains a few bugfix patches to avoid recalculation
+race, mark active before allocating tag in blk_mq_get_tag and some a
+few random cleanup patches.
 
-The idea is pretty good, but the current implementation has several
-defects:
+Kemeng Shi (7):
+  blk-mq: sync wake_batch update and users number change
+  blk-mq: count changed hctx as active in blk_mq_get_tag
+  blk-mq: remove wake_batch recalculation for reserved tags
+  blk-mq: remove unnecessary bit clear in __blk_mq_alloc_requests_batch
+  blk-mq: remove unnecessary "set->queue_depth == 0" check in
+    blk_mq_alloc_set_map_and_rqs
+  blk-mq: Remove unnecessary hctx check in function
+    blk_mq_alloc_and_init_hctx
+  blk-mq: remove stale comment of function called for iterated request
 
-1) initially RA bio doesn't set failfast, however bio merge code
-doesn't consider this point, and just check its failfast setting for
-deciding if mixed merge is required. Fix this issue by adding helper
-of bio_failfast().
+ block/blk-mq-tag.c | 49 +++++++++++++++++++++++++---------------------
+ block/blk-mq.c     |  8 +++-----
+ 2 files changed, 30 insertions(+), 27 deletions(-)
 
-2) when merging bio to request front, if this request is mixed
-merged, we have to sync request's faifast setting with 1st bio's
-failfast. Fix it by calling blk_update_mixed_merge().
-
-3) when merging bio to request back, if this request is mixed
-merged, we have to mark the bio as failfast, because blk_update_request
-simply updates request failfast with 1st bio's failfast. Fix
-it by calling blk_update_mixed_merge().
-
-Fixes one normal EXT4 READ IO failure issue, because it is observed
-that the normal READ IO is merged with RA IO, and the mixed merged
-request has different failfast setting with 1st bio's, so finally
-the normal READ IO doesn't get retried.
-
-Cc: Tejun Heo <tj@kernel.org>
-Fixes: 80a761fd33cf ("block: implement mixed merge of different failfast requests")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-merge.c | 35 +++++++++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index b7c193d67185..30e4a99c2276 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -757,6 +757,33 @@ void blk_rq_set_mixed_merge(struct request *rq)
- 	rq->rq_flags |= RQF_MIXED_MERGE;
- }
- 
-+static inline unsigned int bio_failfast(const struct bio *bio)
-+{
-+	if (bio->bi_opf & REQ_RAHEAD)
-+		return REQ_FAILFAST_MASK;
-+
-+	return bio->bi_opf & REQ_FAILFAST_MASK;
-+}
-+
-+/*
-+ * After we are marked as MIXED_MERGE, any new RA bio has to be updated
-+ * as failfast, and request's failfast has to be updated in case of
-+ * front merge.
-+ */
-+static inline void blk_update_mixed_merge(struct request *req,
-+		struct bio *bio, bool front_merge)
-+{
-+	if (req->rq_flags & RQF_MIXED_MERGE) {
-+		if (bio->bi_opf & REQ_RAHEAD)
-+			bio->bi_opf |= REQ_FAILFAST_MASK;
-+
-+		if (front_merge) {
-+			req->cmd_flags &= ~REQ_FAILFAST_MASK;
-+			req->cmd_flags |= bio->bi_opf & REQ_FAILFAST_MASK;
-+		}
-+	}
-+}
-+
- static void blk_account_io_merge_request(struct request *req)
- {
- 	if (blk_do_io_stat(req)) {
-@@ -954,7 +981,7 @@ enum bio_merge_status {
- static enum bio_merge_status bio_attempt_back_merge(struct request *req,
- 		struct bio *bio, unsigned int nr_segs)
- {
--	const blk_opf_t ff = bio->bi_opf & REQ_FAILFAST_MASK;
-+	const blk_opf_t ff = bio_failfast(bio);
- 
- 	if (!ll_back_merge_fn(req, bio, nr_segs))
- 		return BIO_MERGE_FAILED;
-@@ -965,6 +992,8 @@ static enum bio_merge_status bio_attempt_back_merge(struct request *req,
- 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
- 		blk_rq_set_mixed_merge(req);
- 
-+	blk_update_mixed_merge(req, bio, false);
-+
- 	req->biotail->bi_next = bio;
- 	req->biotail = bio;
- 	req->__data_len += bio->bi_iter.bi_size;
-@@ -978,7 +1007,7 @@ static enum bio_merge_status bio_attempt_back_merge(struct request *req,
- static enum bio_merge_status bio_attempt_front_merge(struct request *req,
- 		struct bio *bio, unsigned int nr_segs)
- {
--	const blk_opf_t ff = bio->bi_opf & REQ_FAILFAST_MASK;
-+	const blk_opf_t ff = bio_failfast(bio);
- 
- 	if (!ll_front_merge_fn(req, bio, nr_segs))
- 		return BIO_MERGE_FAILED;
-@@ -989,6 +1018,8 @@ static enum bio_merge_status bio_attempt_front_merge(struct request *req,
- 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
- 		blk_rq_set_mixed_merge(req);
- 
-+	blk_update_mixed_merge(req, bio, true);
-+
- 	bio->bi_next = req->bio;
- 	req->bio = bio;
- 
 -- 
-2.31.1
+2.30.0
 
