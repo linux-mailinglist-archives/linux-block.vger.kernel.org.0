@@ -2,143 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB94C6935E9
-	for <lists+linux-block@lfdr.de>; Sun, 12 Feb 2023 04:55:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4A3C6936A1
+	for <lists+linux-block@lfdr.de>; Sun, 12 Feb 2023 10:03:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjBLDzb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 11 Feb 2023 22:55:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
+        id S229579AbjBLJDH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 12 Feb 2023 04:03:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjBLDza (ORCPT
+        with ESMTP id S229518AbjBLJDG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 11 Feb 2023 22:55:30 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F0011E99
-        for <linux-block@vger.kernel.org>; Sat, 11 Feb 2023 19:55:26 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id w20-20020a17090a8a1400b00233d7314c1cso1310586pjn.5
-        for <linux-block@vger.kernel.org>; Sat, 11 Feb 2023 19:55:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EhWxFB4ODTurP+Bbh4zJn7gAxthxpyL6UKX+g4y+ZjQ=;
-        b=4oXWD6WwwvKtE7IE7ek3e8RvqRagQZ8C8ZrVALBgqtBxdRjm/aG7oxpBqUnFwwM4DJ
-         ek/S+kJ9IUeThE7HJuw7gpf7HnWARkN688eLl24wK0jaNeXhgDkFMWm0NfKMMJn1y6SE
-         h4EA/zeco7f8KQFXqBOXxVOPDf13kk+VjrfQQ7bZyHvYFEvs9qdQjwn1PPKGX+s5ShQ5
-         tKUPaXqT5Cu/VF3Afq8HKMWuhPcNDkMsOmtEgIMUaSFUcO5ihZ/plT4S3Rx6zU8mFNOH
-         g5Zee/a2NpptVNbnAIkNNH6nT3tQKF4AxjMi81qPNsjzLk52oa+VmL15tBMLA11JguiU
-         zNKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EhWxFB4ODTurP+Bbh4zJn7gAxthxpyL6UKX+g4y+ZjQ=;
-        b=BNclecLNp1lnt2K10Lq57O1YzwLM0uyI1eRaTlB1eFJvJsodfq6DnVsdwgcPYtv4Gw
-         J7GfD3e9jOeX1jzK/fyi2WYzEYip3U70lqVilS3Toc7DcojXY/fRPObOfRmqfCKMjeyF
-         aekaDhAJaPlkOJu6BPRPKwLcFM9U1dxOV3std6Z3Icgw+ws41IgPyS2YKstQXZjaKaCv
-         lB6cDPQtX/amh7N2Wr3TtqlVY5U7lvvGDR2I0EJn2CBcSPDsEw+jhDMOJK4wn8kYpnP9
-         bc5x53IGE7Zr68DHU5l5Z5ZBl3/IwUQ/iVFC3wiwzbzlqAPx/bGiRzhxnP1R86bA4dTH
-         qlwQ==
-X-Gm-Message-State: AO0yUKWlBAbzAZpuJyXHBxrSV8TkJrE7QEwbyybbAcbTv+/d5hYZndfC
-        OkZ/m324VDeDUoj1X0Jn/yYmlg==
-X-Google-Smtp-Source: AK7set9jwghXObjJgAAtgV3PvPOahGO37nT0OGYuWJMwgbbwncNytT3Wwxr2VE0SCOTnwxETr7ru1w==
-X-Received: by 2002:a17:903:182:b0:198:a5d9:f2fd with SMTP id z2-20020a170903018200b00198a5d9f2fdmr21711336plg.6.1676174125887;
-        Sat, 11 Feb 2023 19:55:25 -0800 (PST)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id a10-20020a170902ee8a00b001992e74d058sm975727pld.7.2023.02.11.19.55.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Feb 2023 19:55:25 -0800 (PST)
-Message-ID: <44355d28-776a-0134-b087-c11cf4e82f34@kernel.dk>
-Date:   Sat, 11 Feb 2023 20:55:23 -0700
+        Sun, 12 Feb 2023 04:03:06 -0500
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DE112861;
+        Sun, 12 Feb 2023 01:03:02 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4PF1hc4d0Pz4f3jJB;
+        Sun, 12 Feb 2023 17:02:56 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP3 (Coremail) with SMTP id _Ch0CgCHgR9Bq+hjpfqtDA--.47546S4;
+        Sun, 12 Feb 2023 17:02:58 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     hch@infradead.org, jack@suse.cz, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH -next RFC 0/3] block: fix scan partition for exclusively open device again
+Date:   Sun, 12 Feb 2023 17:26:38 +0800
+Message-Id: <20230212092641.2394146-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH 3/4] io_uring: add IORING_OP_READ[WRITE]_SPLICE_BUF
-Content-Language: en-US
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Bernd Schubert <bschubert@ddn.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
-References: <20230210153212.733006-1-ming.lei@redhat.com>
- <20230210153212.733006-4-ming.lei@redhat.com>
- <a487261c-cc0e-134b-cd8e-26460fe7cf59@kernel.dk> <Y+e+i5BXQHcqdDGo@T590>
- <22772531-bf55-f610-be93-3d53c9ce1c6d@kernel.dk> <Y+hbggDCm9wViPAv@T590>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Y+hbggDCm9wViPAv@T590>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _Ch0CgCHgR9Bq+hjpfqtDA--.47546S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5N7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aV
+        CY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAq
+        x4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6x
+        CaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2/11/23 8:22?PM, Ming Lei wrote:
->>>> Also seems like this should be separately testable. We can't add new
->>>> opcodes that don't have a feature test at least, and should also have
->>>> various corner case tests. A bit of commenting outside of this below.
->>>
->>> OK, I will write/add one very simple ublk userspace to liburing for
->>> test purpose.
->>
->> Thanks!
-> 
-> Thinking of further, if we use ublk for liburing test purpose, root is
-> often needed, even though we support un-privileged mode, which needs
-> administrator to grant access, so is it still good to do so?
+From: Yu Kuai <yukuai3@huawei.com>
 
-That's fine, some tests already depend on root for certain things, like
-passthrough. When I run the tests, I do a pass as both a regular user
-and as root. The important bit is just that the tests skip when they are
-not root rather than fail.
+Yu Kuai (3):
+  block: Revert "block: Do not reread partition table on exclusively
+    open device"
+  block: factor out the setting of GD_NEED_PART_SCAN
+  block: fix scan partition for exclusively open device again
 
-> It could be easier to add ->splice_read() on /dev/zero for test
-> purpose, just allocate zeroed pages in ->splice_read(), and add
-> them to pipe like ublk->splice_read(), and sink side can read
-> from or write to these pages, but zero's read_iter_zero() won't
-> be affected. And normal splice/tee won't connect to zero too
-> because we only allow it from kernel use.
-
-Arguably /dev/zero should still support splice_read() as a regression
-fix as I argued to Linus, so I'd just add that as a prep patch.
-
->>>> Seems like this should check for SPLICE_F_FD_IN_FIXED, and also use
->>>> io_file_get_normal() for the non-fixed case in case someone passed in an
->>>> io_uring fd.
->>>
->>> SPLICE_F_FD_IN_FIXED needs one extra word for holding splice flags, if
->>> we can use sqe->addr3, I think it is doable.
->>
->> I haven't checked the rest, but you can't just use ->splice_flags for
->> this?
-> 
-> ->splice_flags shares memory with rwflags, so can't be used.
-> 
-> I think it is fine to use ->addr3, given io_getxattr()/io_setxattr()/
-> io_msg_ring() has used that.
-
-This is part of the confusion, as you treat it basically like a
-read/write internally, but the opcode names indicate differently. Why
-not just have a separate prep helper for these and then use a layout
-that makes more sense, surely rwflags aren't applicable for these
-anyway? I think that'd make it a lot cleaner.
-
-Yeah, addr3 could easily be used, but it's makes for a really confusing
-command structure when the command is kinda-read but also kinda-splice.
-And it arguable makes more sense to treat it as the latter, as it takes
-the two fds like splice.
+ block/blk.h   |  2 +-
+ block/genhd.c | 36 ++++++++++++++++++++++++++----------
+ block/ioctl.c | 14 +++++++-------
+ 3 files changed, 34 insertions(+), 18 deletions(-)
 
 -- 
-Jens Axboe
+2.31.1
 
