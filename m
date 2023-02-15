@@ -2,117 +2,160 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF7DD698519
-	for <lists+linux-block@lfdr.de>; Wed, 15 Feb 2023 21:00:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37CA8698561
+	for <lists+linux-block@lfdr.de>; Wed, 15 Feb 2023 21:16:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbjBOUAY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Feb 2023 15:00:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
+        id S229483AbjBOUQp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Feb 2023 15:16:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjBOUAX (ORCPT
+        with ESMTP id S229574AbjBOUQo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Feb 2023 15:00:23 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A4C86B9;
-        Wed, 15 Feb 2023 12:00:21 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id i18so12956689pli.3;
-        Wed, 15 Feb 2023 12:00:21 -0800 (PST)
+        Wed, 15 Feb 2023 15:16:44 -0500
+Received: from mail-vk1-xa63.google.com (mail-vk1-xa63.google.com [IPv6:2607:f8b0:4864:20::a63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E96893D926
+        for <linux-block@vger.kernel.org>; Wed, 15 Feb 2023 12:16:34 -0800 (PST)
+Received: by mail-vk1-xa63.google.com with SMTP id t74so47111vkc.7
+        for <linux-block@vger.kernel.org>; Wed, 15 Feb 2023 12:16:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dFrWO0f7yzYN0JfWwtvFw3Ysd86ppP1HxQirWGWfkGU=;
-        b=p55ohjy+62umt3tJQxO+jZD1wSAGGC1zVE4GCTWFu2joi/QjhhkDv0s3/fCrg5VFN5
-         QcxAg7oipjf+NRNLaE0ob2xPdq7t/4ipZRNYr95kx6JjeiwHOuSYEaN66tJ8OZ0I7klY
-         S9qoBUcQdsFD/5/xuXph/R3/A5uKfqPT2bcztxpFvXK75E2jaIiwKhPpliPm7eHaZDVh
-         XfvZ9jD6/9Y9RhnhdQM6HrnYkuVU76OGSjg7fJGuICBujK70clz6WPPmDgSaTefGwhI3
-         jB8R5jGN5+hfmvFgpzL+M0BDt1UxQkavMgXP5PWx0d45nwMjKRrOYPML9EHc7NlLj5Bm
-         0srw==
+        d=purestorage.com; s=google2022;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M98UXpjVEYt3NGAko84ajoRVrAGXqIjcE9iQT0L9hMg=;
+        b=V0Qaxn0TzzHK/pTv1oFvQoJynS7unfSO1JMXWvjsLbrJztE7IzNhEEbvXlmZ6aqMp/
+         wgLdN8+QJ0nkOFDm2I1uDJ7szohjUrl55Q/fP/Nyuxq04D8Gbo9M4AAQz8Wlx/OsKDpJ
+         pY+ngf2JnFnkuCng5ULti31Y/s6XX0xjjrbqhdzmWjxWc1UgqKt/FffmBfT4jaxbZMQh
+         DPdgcPc2jUlm69pe8egxA3CNTpuwEvksGMHYpb9DP5lqdXt1rKXTuikQbS5uRDwrfksI
+         uYkROvTwDgQmVVlmgtzpYtzlQuH2H9YV4Q1I4bBpbeN2ArQier3XISsbeN0VvEbOFoyh
+         W0eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dFrWO0f7yzYN0JfWwtvFw3Ysd86ppP1HxQirWGWfkGU=;
-        b=dyK2t1rjpJydq+A2vv6QeAi/g48VwpvbYN81Ts9bnQJr39C+FT9eeV9KYMJjvdU6VY
-         SYSQiBGeBnPfMqJdD0NBMAKoGW/gBPSEGRelg/TWVmhZnkilFigC2Uo5Vr9A8kZfbbyM
-         Mp5okP54XUq/dUiRGDpTDy7M6RvQKdxzTSdEH5THxVBx+Hu3ekEREDBrxNQxdvjeabkp
-         EsptNQnysD5f419tm1snA7CQAyh6STWVGd3M2jiOgs+IzV8Q8OMMiRyEYsYhTGanxU3z
-         b0vPQ5v9Ck2QL5f2vBLPU6+IizNmri3LXxANFWdsoKRkZHDe7+4p5P9IwzsemOH/PXiY
-         9OYw==
-X-Gm-Message-State: AO0yUKVpFxc7D67ojXq+XnWoYuOjZYb6GI8dpQ1I+bC3bWIonQWc5sxO
-        u9HoWwfsnntouDUAi8Xbu1n0SUy6oqjlEdW9SN8=
-X-Google-Smtp-Source: AK7set9bs5Zg8Yirc4qUbLHYhiamHtAx2jf0H+f1/8yBTmxsP26MbB8uiOOGpaGbls5Iz91VFs683r7GA3VbOXJNbLQ=
-X-Received: by 2002:a17:90b:1e4c:b0:230:b973:a726 with SMTP id
- pi12-20020a17090b1e4c00b00230b973a726mr138046pjb.23.1676491221040; Wed, 15
- Feb 2023 12:00:21 -0800 (PST)
+        bh=M98UXpjVEYt3NGAko84ajoRVrAGXqIjcE9iQT0L9hMg=;
+        b=M/YkZk3oyR864Y7Qytf7AyyUx95HBAYUo66x8CpCmXzJwufSjlwb64RxewxBSew+hw
+         MQ5bj/Eg+fS+9Mi+C3qXLu+CYbxlIMRMS5H6pD39A+Z8AVVHnJfGZq9Qr24SZrdsznNa
+         LGGlkvsEfeaI3gP3NkX1y8IjH7eD4VahTUNw0BSZ66icaq+DP5Q583gA1awHYApHoiYg
+         korgDvKLowwKuxSclyUSWaAoaGTjxYe56Rh5sc9kPHM9oErvUqAZ8Aa2XQMvoX7FTsLm
+         bhI2zy7gdgLJ2ZP5HiklxtWCEA31t5bes+icejqqNKLv8Sl/Ry4wf4FADizbFQLQRgyv
+         xQuA==
+X-Gm-Message-State: AO0yUKVEVhP2gMeIMI9Yvmwsh3N0UuTiQuoHyfacI3kbdSyOkXyXRaFc
+        QYgPuhUTBems8Fv9x2oSQiv05DtOqW2lkA7kG9i58xNB28P0FSTYailZgdBc2dvO9w==
+X-Google-Smtp-Source: AK7set+L2VaJ+F9yYULVy/1uMoVkccBGgHj5CvDuYddgZqqFytg8xjmZz8Ekq53o6SMFFkOa//ziVXXyNRL+
+X-Received: by 2002:a1f:1689:0:b0:401:41ff:4052 with SMTP id 131-20020a1f1689000000b0040141ff4052mr2767209vkw.16.1676492193979;
+        Wed, 15 Feb 2023 12:16:33 -0800 (PST)
+Received: from c7-smtp.dev.purestorage.com ([2620:125:9007:320:7:32:106:0])
+        by smtp-relay.gmail.com with ESMTPS id v15-20020ab07c8f000000b006863f81db24sm1296969uaw.17.2023.02.15.12.16.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Feb 2023 12:16:33 -0800 (PST)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev5.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+        by c7-smtp.dev.purestorage.com (Postfix) with ESMTP id 493C020951;
+        Wed, 15 Feb 2023 13:16:33 -0700 (MST)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+        id 44FA4E406AB; Wed, 15 Feb 2023 13:16:33 -0700 (MST)
+From:   Uday Shankar <ushankar@purestorage.com>
+To:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@kernel.org>
+Cc:     linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Uday Shankar <ushankar@purestorage.com>
+Subject: [PATCH] blk-mq: enforce op-specific segment limits in blk_insert_cloned_request
+Date:   Wed, 15 Feb 2023 13:15:08 -0700
+Message-Id: <20230215201507.494152-1-ushankar@purestorage.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230214190221.1156876-1-shy828301@gmail.com> <alpine.LRH.2.21.2302150716120.5940@file01.intranet.prod.int.rdu2.redhat.com>
-In-Reply-To: <alpine.LRH.2.21.2302150716120.5940@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Wed, 15 Feb 2023 12:00:09 -0800
-Message-ID: <CAHbLzkr4RrKpR1pGZxs7JdB=R539SiNgO2+Fr7X-rVKcBh5tQQ@mail.gmail.com>
-Subject: Re: [dm-devel] [v2 PATCH 0/5] Introduce mempool pages bulk allocator
- and use it in dm-crypt
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     mgorman@techsingularity.net, agk@redhat.com, snitzer@kernel.org,
-        dm-devel@redhat.com, akpm@linux-foundation.org,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,T_SPF_PERMERROR autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 4:23 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
->
->
->
-> On Tue, 14 Feb 2023, Yang Shi wrote:
->
-> >
-> > Changelog:
-> > RFC -> v2:
-> >   * Added callback variant for page bulk allocator and mempool bulk allocator
-> >     per Mel Gorman.
-> >   * Used the callback version in dm-crypt driver.
-> >   * Some code cleanup and refactor to reduce duplicate code.
-> >
-> > rfc: https://lore.kernel.org/linux-mm/20221005180341.1738796-1-shy828301@gmail.com/
->
-> Hi
->
-> This seems like unneeded complication to me. We have alloc_pages(), it can
-> allocate multiple pages efficiently, so why not use it?
+The block layer might merge together discard requests up until the
+max_discard_segments limit is hit, but blk_insert_cloned_request checks
+the segment count against max_segments regardless of the req op. This
+can result in errors like the following when discards are issued through
+a DM device and max_discard_segments exceeds max_segments for the queue
+of the chosen underlying device.
 
-The alloc_pages() allocates *contiguous* pages, but dm-crypt doesn't
-need contiguous pages at all. This may incur unnecessary compaction
-overhead to the dm-crypt layer when memory is fragmented. The bulk
-allocator is a good fit to this usecase, which allocates multiple
-order-0 pages.
+blk_insert_cloned_request: over max segments limit. (256 > 129)
 
-In addition, filesystem writeback doesn't guarantee power-of-2 pages
-every time IIUC. But alloc_pages() just can allocate power-of-2 pages.
+Fix this by looking at the req_op and enforcing the appropriate segment
+limit - max_discard_segments for REQ_OP_DISCARDs and max_segments for
+everything else.
 
->
-> I suggest to modify crypt_alloc_buffer() to use alloc_pages() and if
-> alloc_pages() fails (either because the system is low on memory or because
-> memory is too fragmented), fall back to the existing code that does
-> mempool_alloc().
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+ block/blk-merge.c | 4 +---
+ block/blk-mq.c    | 5 +++--
+ block/blk.h       | 8 ++++++++
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
-My PoC patches just did this way, but called bulk allocator. There may
-be other potential mepool users as I listed in this cover letter,
-which may get benefits from bulk allocator. So introducing a new bulk
-mempool API seems better for long run although we just have one user
-for now. And it makes other uses easier to gain the benefit by just
-calling the new API.
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index b7c193d67..7f663c2d3 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -588,9 +588,7 @@ EXPORT_SYMBOL(__blk_rq_map_sg);
+ 
+ static inline unsigned int blk_rq_get_max_segments(struct request *rq)
+ {
+-	if (req_op(rq) == REQ_OP_DISCARD)
+-		return queue_max_discard_segments(rq->q);
+-	return queue_max_segments(rq->q);
++	return blk_queue_get_max_segments(rq->q, req_op(rq));
+ }
+ 
+ static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index d3494a796..121b20230 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3000,6 +3000,7 @@ blk_status_t blk_insert_cloned_request(struct request *rq)
+ {
+ 	struct request_queue *q = rq->q;
+ 	unsigned int max_sectors = blk_queue_get_max_sectors(q, req_op(rq));
++	unsigned int max_segments = blk_queue_get_max_segments(q, req_op(rq));
+ 	blk_status_t ret;
+ 
+ 	if (blk_rq_sectors(rq) > max_sectors) {
+@@ -3026,9 +3027,9 @@ blk_status_t blk_insert_cloned_request(struct request *rq)
+ 	 * original queue.
+ 	 */
+ 	rq->nr_phys_segments = blk_recalc_rq_segments(rq);
+-	if (rq->nr_phys_segments > queue_max_segments(q)) {
++	if (rq->nr_phys_segments > max_segments) {
+ 		printk(KERN_ERR "%s: over max segments limit. (%hu > %hu)\n",
+-			__func__, rq->nr_phys_segments, queue_max_segments(q));
++			__func__, rq->nr_phys_segments, max_segments);
+ 		return BLK_STS_IOERR;
+ 	}
+ 
+diff --git a/block/blk.h b/block/blk.h
+index f02381405..8d705c13a 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -169,6 +169,14 @@ static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
+ 	return q->limits.max_sectors;
+ }
+ 
++static inline unsigned int blk_queue_get_max_segments(struct request_queue *q,
++						      enum req_op op)
++{
++	if (op == REQ_OP_DISCARD)
++		return queue_max_discard_segments(q);
++	return queue_max_segments(q);
++}
++
+ #ifdef CONFIG_BLK_DEV_INTEGRITY
+ void blk_flush_integrity(void);
+ bool __bio_integrity_endio(struct bio *);
 
->
-> Mikulas
->
+base-commit: 6bea9ac7c6481c09eb2b61d7cd844fc64a526e3e
+-- 
+2.25.1
+
