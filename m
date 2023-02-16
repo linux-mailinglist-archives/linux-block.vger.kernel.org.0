@@ -2,56 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B0AA698AE6
-	for <lists+linux-block@lfdr.de>; Thu, 16 Feb 2023 04:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9439B698B22
+	for <lists+linux-block@lfdr.de>; Thu, 16 Feb 2023 04:23:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbjBPDD1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 15 Feb 2023 22:03:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
+        id S229608AbjBPDXJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 15 Feb 2023 22:23:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjBPDD0 (ORCPT
+        with ESMTP id S229595AbjBPDXI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 15 Feb 2023 22:03:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF4C20579
-        for <linux-block@vger.kernel.org>; Wed, 15 Feb 2023 19:02:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676516562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hIIafezHqG+K6ikbA6ySdAbmJ2LIHTXmhLpu1Knob0A=;
-        b=c+HFs9Qw8aOdKhbXENkX7ShrGOgkQoD5chrkJZ4TJc0iDWdvu6nUv9da5uukc9qoYwppR+
-        pgwsO1P64fPjkQ1BHOw3uA3E0EtHkNuoRvPTpr7j6f5dpyJBwJ0vhNTRqSQ7JJ7pA23aSK
-        1OUbTo2pBbXjUCwUCEdx6PzM9bBXdYE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-627-LstdQxwROcqVELX1SbDzmg-1; Wed, 15 Feb 2023 22:02:40 -0500
-X-MC-Unique: LstdQxwROcqVELX1SbDzmg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E61E9858F09;
-        Thu, 16 Feb 2023 03:02:39 +0000 (UTC)
-Received: from localhost (ovpn-8-17.pek2.redhat.com [10.72.8.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22894C15BA0;
-        Thu, 16 Feb 2023 03:02:38 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 2/2] blktests/033: add test to cover gendisk leak
-Date:   Thu, 16 Feb 2023 11:01:34 +0800
-Message-Id: <20230216030134.1368607-3-ming.lei@redhat.com>
-In-Reply-To: <20230216030134.1368607-1-ming.lei@redhat.com>
-References: <20230216030134.1368607-1-ming.lei@redhat.com>
+        Wed, 15 Feb 2023 22:23:08 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4123C3583
+        for <linux-block@vger.kernel.org>; Wed, 15 Feb 2023 19:23:01 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id k24so616650pji.2
+        for <linux-block@vger.kernel.org>; Wed, 15 Feb 2023 19:23:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wSAq29/mCiPpKWHkZynEgD7uMUv36BUxMUrUtzUBeEU=;
+        b=wppkv/odYVwj0FnhjFJohR0ecllKQVhktGGqxY5UjCmC1Vrn9USsrLoIDeUPs6qOWM
+         d1EgMMgXYYmhWVBXaU7H3ZgBlW60EZiqJRvBhhsaqp4eGUeDNTiE8upY7WJmUFkrU8og
+         gCY7DDfLcRpSivtqZEplFB2ZNcJWI0NeQDZ3MtLLuMYtPamVB27a9tfddkwj8EbHs/6P
+         nrsUSEbNEX6Zv1Z4Qg8zK/3hsygxW7Be6zqvuhVPNPHpQcfn5eisc7bRH979/YXgAae+
+         Fmj2k5jJRP9YRb0kgt/h5KA9qgDb5ya1rwfYamq5lzrTTkpySK+9pSqMaFjNzHY3UGYN
+         Af1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wSAq29/mCiPpKWHkZynEgD7uMUv36BUxMUrUtzUBeEU=;
+        b=Mf1C8uMHX0dYCu+ogF1nY8tTlzP0sWXmLYAetS9lA8cbRD0pC3KDCfv/oGSUgUqlZW
+         OLKbSthZFNuWYMnoA97xERI8q6SpjGn89ic2ngwVBv0ISiRkqpBJ5qeL2URJtDHheB5R
+         +jrV9xR3P6pco/+l2UUooPD+SV7thnnrKSKkYLRdhe8HbDn9hso0zQiSQeVTa/W8Lats
+         Y3rSiZz6l8l5GFJD2SQQZ8cvxEbgnwnnGzjMen+JCf8X1z3JtmHoIh5MW8nKGql0t54r
+         tSIIzNnDVRJBYseYqlQ/HqXtypztosxMaOF37Pc0PEWM8lKMMDoDTzcfvAdps0oHYgGY
+         WmGg==
+X-Gm-Message-State: AO0yUKUluVNIasyKDXq0gD4X68KHCm3ZX++N02JKkk826bVotroM2ysy
+        4PkIO9ek87SWKsVgs5xKMpe4GA==
+X-Google-Smtp-Source: AK7set/y4uOnGOjN61uhNUj3p7NepqLJY1qEmi0+cAKryf4NPqQfCWi53c/3ygr+6Unpw+bIJoAPJw==
+X-Received: by 2002:a05:6a20:938e:b0:bf:1662:b2f4 with SMTP id x14-20020a056a20938e00b000bf1662b2f4mr5054907pzh.49.1676517780651;
+        Wed, 15 Feb 2023 19:23:00 -0800 (PST)
+Received: from localhost.localdomain ([139.177.225.240])
+        by smtp.gmail.com with ESMTPSA id c21-20020aa781d5000000b005a84ef49c63sm68930pfn.214.2023.02.15.19.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Feb 2023 19:23:00 -0800 (PST)
+From:   Jinke Han <hanjinke.666@bytedance.com>
+X-Google-Original-From: Jinke Han <hnajinke.666@bytedance>
+To:     axboe@kernel.dk, ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        muchun.song@linux.dev, Jinke Han <hanjinke.666@bytedance.com>
+Subject: [PATCH] block: Fix io statistics for cgroup in throttle path
+Date:   Thu, 16 Feb 2023 11:22:50 +0800
+Message-Id: <20230216032250.74230-1-hanjinke.666@bytedance.com>
+X-Mailer: git-send-email 2.32.0 (Apple Git-132)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,105 +69,59 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-So far only sync ublk removal is supported, and the device's
-last reference is dropped in gendisk's ->free_disk(), so it
-can be used to test gendisk leak issue.
+From: Jinke Han <hanjinke.666@bytedance.com>
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+In the current code, io statistics are missing for cgroup when bio
+was throttled by blk-throttle. Fix it by moving the unreaching code
+to submit_bio_noacct_nocheck.
+
+Fixes: 3f98c753717c ("block: don't check bio in blk_throtl_dispatch_work_fn")
+Signed-off-by: Jinke Han <hanjinke.666@bytedance.com>
 ---
- common/ublk         | 32 ++++++++++++++++++++++++++++++++
- tests/block/033     | 33 +++++++++++++++++++++++++++++++++
- tests/block/033.out |  2 ++
- 3 files changed, 67 insertions(+)
- create mode 100644 common/ublk
- create mode 100755 tests/block/033
- create mode 100644 tests/block/033.out
+ block/blk-core.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/common/ublk b/common/ublk
-new file mode 100644
-index 0000000..66b3a58
---- /dev/null
-+++ b/common/ublk
-@@ -0,0 +1,32 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2023 Ming Lei
-+#
-+# null_blk helper functions.
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 46d12b3344c9..82b5b2c53f1e 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -684,6 +684,18 @@ static void __submit_bio_noacct_mq(struct bio *bio)
+ 
+ void submit_bio_noacct_nocheck(struct bio *bio)
+ {
++	blk_cgroup_bio_start(bio);
++	blkcg_bio_issue_init(bio);
 +
-+. common/shellcheck
++	if (!bio_flagged(bio, BIO_TRACE_COMPLETION)) {
++		trace_block_bio_queue(bio);
++		/*
++		 * Now that enqueuing has been traced, we need to trace
++		 * completion as well.
++		 */
++		bio_set_flag(bio, BIO_TRACE_COMPLETION);
++	}
 +
-+_have_ublk() {
-+	_have_driver ublk_drv
-+	_have_src_program ublk/miniublk
-+}
-+
-+_remove_ublk_devices() {
-+	src/ublk/miniublk del -a
-+}
-+
-+_init_ublk() {
-+	if ! modprobe -r ublk_drv || ! modprobe ublk_drv "${args[@]}" ; then
-+		SKIP_REASONS+=("requires modular ublk_drv")
-+		return 1
-+	fi
-+
-+	udevadm settle
-+	return 0
-+}
-+
-+_exit_ublk() {
-+	_remove_ublk_devices
-+	udevadm settle
-+	modprobe -r -q ublk_drv
-+}
-diff --git a/tests/block/033 b/tests/block/033
-new file mode 100755
-index 0000000..342ccf3
---- /dev/null
-+++ b/tests/block/033
-@@ -0,0 +1,33 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2023 Ming Lei
-+#
-+# Test if gendisk is leaked, and regression in the following commit
-+# c43332fe028c ("blk-cgroup: delay calling blkcg_exit_disk until disk_release")
-+# can be covered
-+
-+. tests/block/rc
-+. common/ublk
-+
-+DESCRIPTION="add & delete ublk device and test if gendisk is leaked"
-+QUICK=1
-+
-+requires() {
-+	_have_ublk
-+}
-+
-+test() {
-+	local ublk_prog="src/ublk/miniublk"
-+	echo "Running ${TEST_NAME}"
-+
-+	if ! _init_ublk; then
-+		return 1
-+	fi
-+
-+	local ublk_dev=`$ublk_prog add -t null --quiet`
-+	$ublk_prog del --disk=$ublk_dev > /dev/null 2>&1
-+
-+	_exit_ublk
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/block/033.out b/tests/block/033.out
-new file mode 100644
-index 0000000..067846a
---- /dev/null
-+++ b/tests/block/033.out
-@@ -0,0 +1,2 @@
-+Running block/033
-+Test complete
+ 	/*
+ 	 * We only want one ->submit_bio to be active at a time, else stack
+ 	 * usage with stacked devices could be a problem.  Use current->bio_list
+@@ -792,17 +804,6 @@ void submit_bio_noacct(struct bio *bio)
+ 
+ 	if (blk_throtl_bio(bio))
+ 		return;
+-
+-	blk_cgroup_bio_start(bio);
+-	blkcg_bio_issue_init(bio);
+-
+-	if (!bio_flagged(bio, BIO_TRACE_COMPLETION)) {
+-		trace_block_bio_queue(bio);
+-		/* Now that enqueuing has been traced, we need to trace
+-		 * completion as well.
+-		 */
+-		bio_set_flag(bio, BIO_TRACE_COMPLETION);
+-	}
+ 	submit_bio_noacct_nocheck(bio);
+ 	return;
+ 
 -- 
-2.31.1
+2.20.1
 
