@@ -2,81 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E0C7699344
-	for <lists+linux-block@lfdr.de>; Thu, 16 Feb 2023 12:37:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EED9869939F
+	for <lists+linux-block@lfdr.de>; Thu, 16 Feb 2023 12:50:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbjBPLhj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Feb 2023 06:37:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54378 "EHLO
+        id S230173AbjBPLuH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Feb 2023 06:50:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230403AbjBPLhf (ORCPT
+        with ESMTP id S229512AbjBPLuG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Feb 2023 06:37:35 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A32564B3
-        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 03:37:26 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id qw12so4480929ejc.2
-        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 03:37:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hrgUxFedjti7TQosgzsXJfPwpACpM3jDB7nfCX1lUc4=;
-        b=aARTtKPe5KHldT0kv+Isi1eI6LJaG3A0g5rXFpnrafOULv+j0Zfx58vODCQ+AqNAB2
-         dMYEkOd3cMODrJQmXw0BsGBhG7ULprYGNXOccIiCAlHDMzBuR681BzazhwFcyfhlpEVx
-         oSHrcj+8ImUfUNZrpQVu4EEQ/MqxW4iS8eTgp9Rp5WRFh7hYssAleVCPFSvWF8I81lpm
-         sEs6MyR3CNDUtMg7UkzwD87mk8gAlGDs6hg70P2jwrtObjfU1N8/QVmEBTMArftS+lKM
-         jmdUSarMY+e6kV+Nu8jbZktPcBie3Mg8T83iqJiaEX7DLftCi2K5W4K2nfSIcX+SRraE
-         xqSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hrgUxFedjti7TQosgzsXJfPwpACpM3jDB7nfCX1lUc4=;
-        b=MlAWxr/UZU4nqP6jr9rHcjSFZ/FQJdUHhzF68BDuZSk6SE1Ld74E6aOCjhGZ7xVY3Z
-         rI7BGPOfDyDhGsd9LA5/JdWYAcxa9GEbQtylanz9piZcvb5nC7iirD7rnfk4e569nK/n
-         ChPRssYy0mcdMbvwutYMzJ3YyBkREIcm6fiP4dCkFe3ua1m3Z0al/Ess6V4UxhBlRs4q
-         v23bnuThnFIjREJUwSWn1xGJUf6xbMXZHKTj08PITruEDndZauEaVGLBgXJ4c4L8QzZv
-         3YT+Qjn12qE7AyY5YhcQXpv3itlDzcoFV22SBhKAErBMS64gzjnfK+iz63JGYGMhFKD/
-         I2cQ==
-X-Gm-Message-State: AO0yUKUYd6FSTXGqc2Xc2JXa2P7Qf7LZZ61d7VGRjPT7l7Z2BuLyBhAd
-        ZmzTD4C0KBN4EZBrLVwmx+Fzb/fCSXUWZPldctU=
-X-Google-Smtp-Source: AK7set9ediryr9V+3ZbUc8y29occOXaa1fTdJI0wmvsk0uTfzWdrWb2fhUWEoEFEqeD8YhTaTi3IRk0aUUDiE3MJjYc=
-X-Received: by 2002:a17:907:76f0:b0:8b1:30eb:9dba with SMTP id
- kg16-20020a17090776f000b008b130eb9dbamr2714771ejc.6.1676547444851; Thu, 16
- Feb 2023 03:37:24 -0800 (PST)
+        Thu, 16 Feb 2023 06:50:06 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA1E521F6;
+        Thu, 16 Feb 2023 03:50:05 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E40661FDBA;
+        Thu, 16 Feb 2023 11:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1676548203; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cIuZZv8iM/NkFizmH1+gWXDdUrKjD8edb98BH6cUsto=;
+        b=woNFO/+rcBvTR11vdvqG449Px0/xWkE5PDY58oLgVf6jeB0wZFBGnLmKCZd+fH4FVZnAGM
+        0yx7TzuzAVc5gbdVBI8Z0o/RDlgCsRdYNPvz6PPwTRyjKNEbjZHym5y3bZKbIm/33HLBkb
+        AF74NYIIp5htv12etzk35UWNc6sZbm8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1676548203;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cIuZZv8iM/NkFizmH1+gWXDdUrKjD8edb98BH6cUsto=;
+        b=tvPBo68FsV0hAnte+WNjluTNImszSxAwHBq74Ai8MQ4UdtJXKjov8PbfxB6T0zzNJVQ0Kf
+        CN6QijNdMEw2F6CA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D7586131FD;
+        Thu, 16 Feb 2023 11:50:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id lVNUNGsY7mPhLwAAMHmgww
+        (envelope-from <hare@suse.de>); Thu, 16 Feb 2023 11:50:03 +0000
+Message-ID: <3d3369f1-7ebe-b3b8-804c-ff2b97ec679d@suse.de>
+Date:   Thu, 16 Feb 2023 12:50:03 +0100
 MIME-Version: 1.0
-Received: by 2002:a05:7208:5482:b0:62:8a9d:63db with HTTP; Thu, 16 Feb 2023
- 03:37:24 -0800 (PST)
-From:   SFG Finance <simab.projet@gmail.com>
-Date:   Thu, 16 Feb 2023 12:37:24 +0100
-Message-ID: <CAJQMEn6sd=Q-BHAq8U8X6npOEGhbniy4n5-KGH31X6qpLa7cbw@mail.gmail.com>
-Subject: =?UTF-8?B?SsOTIFJFR0dFTFQgS8ONVsOBTk9L?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=2.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLY,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: **
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Content-Language: en-US
+To:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        lsf-pc@lists.linuxfoundation.org
+From:   Hannes Reinecke <hare@suse.de>
+Subject: [LSF/MM/BPF BOF] Userspace command abouts
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
---=20
-Az SFG Finance strukt=C3=BAra p=C3=A9nz=C3=BCgyi seg=C3=ADts=C3=A9get ny=C3=
-=BAjt a vil=C3=A1g b=C3=A1rmely pontj=C3=A1n
-lak=C3=B3hellyel rendelkez=C5=91 term=C3=A9szetes vagy jogi szem=C3=A9lynek=
-.
-Seg=C3=ADts=C3=A9gre van sz=C3=BCks=C3=A9ge a napi finansz=C3=ADroz=C3=A1si=
- probl=C3=A9m=C3=A1k megold=C3=A1s=C3=A1hoz?
-Mennyire van sz=C3=BCks=C3=A9ged ?
-Most vagy soha.
-L=C3=A9pjen kapcsolatba finansz=C3=ADroz=C3=A1si csoportunkkal a Facebook M=
-essengeren:
-https://www.facebook.com/sfg.finances
-VAGY E-mailben: sg.finance@gmail.com
+Hi all,
+
+it has come up in other threads, so it might be worthwhile to have its 
+own topic:
+
+Userspace command aborts
+
+As it stands we cannot abort I/O commands from userspace.
+This is hitting us when running in a virtual machine:
+The VM sets a timeout when submitting a command, but that
+information can't be transmitted to the VM host. The VM host
+then issues a different command (with another timeout), and
+again that timeout can't be transmitted to the attached devices.
+So when the VM detects a timeout, it will try to issue an abort,
+but that goes nowhere as the VM host has no way to abort commands
+from userspace.
+So in the end the VM has to wait for the command to complete, causing
+stalls in the VM if the host had to undergo error recovery or something.
+
+With io_uring or CDL we now have some mechanism which look as if they
+would allow us to implement command aborts.
+So this BoF will be around discussions on how aborts from userspace 
+could be implemented, whether any of the above methods are suitable, or 
+whether there are other ideas on how that could be done.
+
+Cheers,
+
+Hannes
+-- 
+Still without a .sig on this computer
