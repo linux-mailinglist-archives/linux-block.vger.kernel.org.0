@@ -2,93 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 176C3699544
-	for <lists+linux-block@lfdr.de>; Thu, 16 Feb 2023 14:11:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91ED769958A
+	for <lists+linux-block@lfdr.de>; Thu, 16 Feb 2023 14:18:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbjBPNLs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Feb 2023 08:11:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53864 "EHLO
+        id S229721AbjBPNSQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Feb 2023 08:18:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbjBPNLr (ORCPT
+        with ESMTP id S229813AbjBPNSO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Feb 2023 08:11:47 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA19B521FF
-        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 05:11:43 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id pg6-20020a17090b1e0600b002349579949aso1682754pjb.5
-        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 05:11:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1676553103;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8xyQD6xgd7ClyN3ylHBH+Ep3cYfAStHeMwkeGyKzlsM=;
-        b=gqD21wre8NdQ765n9PLzOUFhfZYhQvcdvxqXjXjWm5R22VGytV9l2ozkKKFKIB2O83
-         XCVdj8MULWKU//EneAHO18Cm09gBsDj15JSew+1jcc/PXP+nhDfMz2qcZhs+5SSo59fB
-         5smms2OoyEsGTIagl2yGYKeZrAic9UOGmsmdFAq1zPgpb4ThO9vDhtSfPg0DshhUZcgE
-         Kq+iR74p4+IFl3OPgf7RIJXg8xhpFekE+Okz9Oa2wdJfiXYmRAEuYrN4JR8aZ4vTyF+o
-         e0BPYou1Vi5a0AgeqkCgXq6jcpWaCQdnCcmi5Ax0VRXNnwdmn4bRs1d517kAcjgfkwn+
-         n54A==
+        Thu, 16 Feb 2023 08:18:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4791985F4E
+        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 05:17:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676553424;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MdGJFHZv/2Zv+Ysvuyq4SlJgM+0STJ7hRrwb8iOEyeY=;
+        b=BlU874d0bQMvCAQUosBeUKDOSaIWINO1uUxkN1vNpXIGFIwizELP9xPMtFF6AtbKpCpaAx
+        9k6ZGAi8ocGA/XQCC2OXfH+2KAvNHLCGSdL9RTzeV+mkOpJhS/aqWC/ViCKFDRfOnKegbM
+        dRzeI3hlx32B+2M8n6/MxB+5eJYAhP8=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-253-S3QnbgsxOoeeBaD94lxjzg-1; Thu, 16 Feb 2023 08:17:02 -0500
+X-MC-Unique: S3QnbgsxOoeeBaD94lxjzg-1
+Received: by mail-pl1-f199.google.com with SMTP id jb7-20020a170903258700b0019af23e69dcso796538plb.19
+        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 05:17:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1676553103;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8xyQD6xgd7ClyN3ylHBH+Ep3cYfAStHeMwkeGyKzlsM=;
-        b=00KgNWTmUrA6mrVMukfUlIuKt0k1Un02pr74S+88/kxftf17ax0u9CmFFLuhpGL1+w
-         aDz232EYwiOqNBl1SYz0Iz21QaNfPutvX/UDsZXc4GORGbz8zQheufh7NYeCs81bflTM
-         3cXqrul6jjvfjx7QciNpmRC9d5j6whLeq9Zw7iaro6IUcz55O9M+azVlwYfaA5gLlIlM
-         eWR3r52LPmwWGAfV6oBzguAXy0lkOISlqlbJ8lwBJhlWjaxJhTaAyoDMW45s3fT0/9KA
-         vyg3PKEW/9DmfB6yhXtpSD9Tkclcoey06fOb3RSMfUD3BL5BtDkp7fMs64+611t29m3B
-         ofhQ==
-X-Gm-Message-State: AO0yUKWAP/arrL5QtMi0/+sIOqAYj+TxAthN5uhSgFos3aJkV4VAGhNR
-        9HRQE9qNgqdJg0DpHo3TtfNMGWuZd4xOKwvK
-X-Google-Smtp-Source: AK7set+sCLp2er0uKliZZPKNKhuH3kE4O0Ijzpb1Z8h9EpkO40jtjD4COIcw/QiNXiwxvpA/Agnkww==
-X-Received: by 2002:a05:6a20:42a2:b0:be:f5f3:a195 with SMTP id o34-20020a056a2042a200b000bef5f3a195mr6338222pzj.3.1676553102985;
-        Thu, 16 Feb 2023 05:11:42 -0800 (PST)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e22-20020aa78c56000000b005a8f337426esm1272683pfd.67.2023.02.16.05.11.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 05:11:42 -0800 (PST)
-Message-ID: <9a9adcce-81db-580f-843f-ebff7177464c@kernel.dk>
-Date:   Thu, 16 Feb 2023 06:11:41 -0700
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MdGJFHZv/2Zv+Ysvuyq4SlJgM+0STJ7hRrwb8iOEyeY=;
+        b=ebeKd0eCpfaQwdVIWC7P0TlOFkZsBm2cyscsPHq9nGCq0CKk9znlL7LXiTbpc4xwXK
+         ZTvljKj+eof2eGnnpY3NQXv679zqQ6Rb4jUR7Eyl8S3lh2e1GpL/SNXbOQps9pxQZZvK
+         GXkZxUY7aN6mFpmVXSLITezHxUXKO8hIgbXOWUUNsr8i0v3LFqLz1EPvbcV2UCCbZqQQ
+         vtDWEiMmaGfsIv/P35LQ93eL/AjNwJOC744we36n7FYAp6gYu3H1ny/Fppn4Cty3TsU2
+         MorlGWoNYo0egdkZCQ+MdYbUE7/N1VthPtVKYr/S7GJJkFeHHznCipd3kkHQDH+3dkal
+         P3JA==
+X-Gm-Message-State: AO0yUKUENyjN0ktS4nra6VaQD7qTTDQq4vZrD3P3vIUvvvQslxHogprO
+        5TfFyMG+K7XMmA30O8I6a5WkIip2UaIbe0thY8rdqMMYkfaXdnaiYtA8vPg2hY03q/9pW7OQQet
+        8J0ftH7oo4bMzVQPEHjBlNoq51Mva1OQXu8To5WMsrLUX59Vfjw==
+X-Received: by 2002:a17:90b:17d2:b0:231:1364:4103 with SMTP id me18-20020a17090b17d200b0023113644103mr526607pjb.145.1676553421450;
+        Thu, 16 Feb 2023 05:17:01 -0800 (PST)
+X-Google-Smtp-Source: AK7set8OW6dHAP0HJaL/mr5kVLmWOT0BI1KzJZKOvZNe90BHNqSv+r18CcHwXHwbOm0nzZ0urvOJTWjxQt6N+tVCw/4=
+X-Received: by 2002:a17:90b:17d2:b0:231:1364:4103 with SMTP id
+ me18-20020a17090b17d200b0023113644103mr526602pjb.145.1676553421197; Thu, 16
+ Feb 2023 05:17:01 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH] brd: mark as nowait compatible
-Content-Language: en-US
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-References: <776a5fa2-818c-de42-2ac3-a4588df218ca@kernel.dk>
- <Y+3IUcJLNK8WAkov@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Y+3IUcJLNK8WAkov@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <CAHj4cs-jef8f4zxJQxjKirAWyZkTREycFdNPvQaGbgS-1r_Lcg@mail.gmail.com>
+ <f4079ecb-f483-34f9-0074-b77a9bd36cb6@acm.org>
+In-Reply-To: <f4079ecb-f483-34f9-0074-b77a9bd36cb6@acm.org>
+From:   Yi Zhang <yi.zhang@redhat.com>
+Date:   Thu, 16 Feb 2023 21:16:49 +0800
+Message-ID: <CAHj4cs8WpKQbL-Yb3pRJk_n2B-QaTMmaCtBTcQGQYNnCWkan8g@mail.gmail.com>
+Subject: Re: [bug report] WARNING at fs/proc/generic.c:376 proc_register+0x131/0x1c0
+ observed with blktests scsi
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2/15/23 11:08 PM, Christoph Hellwig wrote:
-> On Wed, Feb 15, 2023 at 04:43:47PM -0700, Jens Axboe wrote:
->> By default, non-mq drivers do not support nowait. This causes io_uring
->> to use a slower path as the driver cannot be trust not to block. brd
->> can safely set the nowait flag, as worst case all it does is a NOIO
->> allocation.
-> 
-> But a NOIO allocation can block.  I think we need to do a
-> GFP_NOWAIT allocation in brd_insert_page if the NOWAIT flag is set.
+Hi Bart
+The original reproduced commit doesn't exists now, seems it was
+changed due to the linux-block/for-next rebase.
+I also tried the blktests scsi/ with the latest linux-block/for-next,
+6.2.0-rc6 and 6.2.0-rc7 today, but with no luck to reproduce the issue
+now
 
-I did consider that, but we do allocations almost everywhere and
-as long as we're not waiting on IO, it's mostly considered acceptable.
-But I can make that change, no reason not to.
+Thanks
+Yi
+On Wed, Feb 15, 2023 at 2:43 AM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 2/5/23 23:30, Yi Zhang wrote:
+> > blktests scsi/ failed on the latest linux-block/for-next, pls help
+> > check it, thanks.
+>
+> Please help with testing and/or reviewing the candidate fix that I
+> posted
+> (https://lore.kernel.org/linux-scsi/20230210205200.36973-1-bvanassche@acm.org/).
+>
+> Thanks,
+>
+> Bart.
+>
+
 
 -- 
-Jens Axboe
-
+Best Regards,
+  Yi Zhang
 
