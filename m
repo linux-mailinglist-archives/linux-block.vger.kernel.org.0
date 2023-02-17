@@ -2,155 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B6D269A3AD
-	for <lists+linux-block@lfdr.de>; Fri, 17 Feb 2023 02:58:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AD1069A40C
+	for <lists+linux-block@lfdr.de>; Fri, 17 Feb 2023 03:54:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230227AbjBQB6b (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Feb 2023 20:58:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34498 "EHLO
+        id S230014AbjBQCyO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Feb 2023 21:54:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229797AbjBQB6a (ORCPT
+        with ESMTP id S229489AbjBQCyN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Feb 2023 20:58:30 -0500
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1452F54D3B;
-        Thu, 16 Feb 2023 17:58:28 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PHw2R3vpPz4f3p0t;
-        Fri, 17 Feb 2023 09:58:23 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP3 (Coremail) with SMTP id _Ch0CgBnFCI+3+5jIQ_CDQ--.53230S6;
-        Fri, 17 Feb 2023 09:58:25 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     jack@suse.cz, hare@suse.de, hch@infradead.org, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH -next 2/2] block: fix scan partition for exclusively open device again
-Date:   Fri, 17 Feb 2023 10:22:00 +0800
-Message-Id: <20230217022200.3092987-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230217022200.3092987-1-yukuai1@huaweicloud.com>
-References: <20230217022200.3092987-1-yukuai1@huaweicloud.com>
+        Thu, 16 Feb 2023 21:54:13 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C4E53832
+        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 18:54:12 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id bt4-20020a17090af00400b002341621377cso7983553pjb.2
+        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 18:54:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uBcdwEX6FT21aGltCWNGTHy4YpVdXGqa74J3HNN+qvU=;
+        b=gNH7rvfTjPO+9k6L/YbXU7YNiCz6oKQTlE25wcwFWgf6ITvNYXoA7TgNtqfRS1QOks
+         d2yExmrD/f0WlVPGGZTG3gnV4h4U9UZodpBjevDobFQxMdrhvLljwfr12vLjinYrN/mQ
+         zqUkLv99JLx9ajgQaZiQ2KAy41KmJHrRIMouN5HnH+NQxKeEN3Rq+Ju4tAvy3uRK0nu7
+         vGIH7wGBy08nwKExZww040DseWXKZPAdFeIPKlgNr71vyzaGxq6uzwj8PBHCGHcWZS6d
+         TAh/hqhkpfWgsn6zm80dl6b1I1BL4hYQwgTKA+HB4KAyrJuZWAC0MmBgmN5dcdEBkY9x
+         phQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uBcdwEX6FT21aGltCWNGTHy4YpVdXGqa74J3HNN+qvU=;
+        b=aPeCjx7tveW9E5mgRpyw02/W6J7K+gY12QEG4UByCxMDQ4ANZpEN+4mWsgaHG3D5Gd
+         cfqUiPvH3Ce4nM+Q3l/qPQ7auN3HAbHpjvKkZ85rTL7HYZcM+3j7d/GF/3J0PhaDYMFg
+         7mXi0E6vzM3y7o/EDd2XzciIe/wZjKDWo+42tX6ehBHP6xZUNLer7Jc3zamIqT9J85aA
+         swBqGXgmQma2nwxiS/9FESXTjz/tA616n9Sig+J14id39Uic4GY0U999+47kUwN8X55a
+         80gHhpO7OAVWZrkpxKHJVFgo9iLSINE2XYIK8nZDsndDqu1BxekbCKnaVC5mwlM9Mi4M
+         8umQ==
+X-Gm-Message-State: AO0yUKUGDry2+5DwKDbfiKk714lDCg2FudoaYUfwoQfc8ZnjZ2Zn/VCM
+        D9HPkMFxbmxs//E6zx59LmBZRQKBVpXCQ6CY
+X-Google-Smtp-Source: AK7set+xE/5g9g0P5EfNekFnPwk8H7gUJcIS42o9jqT2HEf34uVDC44sJ3IzM30pDFY9y8ukMJ3s1w==
+X-Received: by 2002:a17:902:ea0a:b0:19a:7060:948 with SMTP id s10-20020a170902ea0a00b0019a70600948mr152816plg.1.1676602452095;
+        Thu, 16 Feb 2023 18:54:12 -0800 (PST)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id r6-20020a170902be0600b00198b0fd363bsm1988322pls.45.2023.02.16.18.54.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Feb 2023 18:54:11 -0800 (PST)
+Message-ID: <754b3cc0-c420-3257-9569-833c42f93808@kernel.dk>
+Date:   Thu, 16 Feb 2023 19:54:10 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgBnFCI+3+5jIQ_CDQ--.53230S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr18uFy7ArWfuF1DAF18Zrb_yoW5Cw1rpF
-        W5XFW5tFWqgr93uFW0vFsrJa15Kan7JryxGryxK34Iv343Aws8KF9Yk3yDXryrtrZ7GrWU
-        Zr4jqry09F1ruFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-        A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-        xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-        6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
-        Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-        Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
-        IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUc6pPUUUUU
-        =
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL for-6.3] Make building the legacy dio code conditional
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hi Linus,
 
-As explained in commit 36369f46e917 ("block: Do not reread partition table
-on exclusively open device"), reread partition on the device that is
-exclusively opened by someone else is problematic.
+We only have a few file systems that use the old dio code, make them
+select it rather than build it unconditionally.
 
-This patch will make sure partition scan will only be proceed if current
-thread open the device exclusively, or the device is not opened
-exclusively, and in the later case, other scanners and exclusive openers
-will be blocked temporarily until partition scan is done.
+Please pull!
 
-Fixes: 10c70d95c0f2 ("block: remove the bd_openers checks in blk_drop_partitions")
-Cc: <stable@vger.kernel.org>
-Suggested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/genhd.c | 30 ++++++++++++++++++++++++++----
- block/ioctl.c |  2 +-
- 2 files changed, 27 insertions(+), 5 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index b30d5538710c..3ee5577e1586 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -359,6 +359,7 @@ EXPORT_SYMBOL_GPL(disk_uevent);
- int disk_scan_partitions(struct gendisk *disk, fmode_t mode)
- {
- 	struct block_device *bdev;
-+	int ret = 0;
- 
- 	if (disk->flags & (GENHD_FL_NO_PART | GENHD_FL_HIDDEN))
- 		return -EINVAL;
-@@ -368,11 +369,27 @@ int disk_scan_partitions(struct gendisk *disk, fmode_t mode)
- 		return -EBUSY;
- 
- 	set_bit(GD_NEED_PART_SCAN, &disk->state);
--	bdev = blkdev_get_by_dev(disk_devt(disk), mode, NULL);
-+	/*
-+	 * If the device is opened exclusively by current thread already, it's
-+	 * safe to scan partitons, otherwise, use bd_prepare_to_claim() to
-+	 * synchronize with other exclusive openers and other partition
-+	 * scanners.
-+	 */
-+	if (!(mode & FMODE_EXCL)) {
-+		ret = bd_prepare_to_claim(disk->part0, disk_scan_partitions);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	bdev = blkdev_get_by_dev(disk_devt(disk), mode & ~FMODE_EXCL, NULL);
- 	if (IS_ERR(bdev))
--		return PTR_ERR(bdev);
--	blkdev_put(bdev, mode);
--	return 0;
-+		ret =  PTR_ERR(bdev);
-+	else
-+		blkdev_put(bdev, mode);
-+
-+	if (!(mode & FMODE_EXCL))
-+		bd_abort_claiming(disk->part0, disk_scan_partitions);
-+	return ret;
- }
- 
- /**
-@@ -494,6 +511,11 @@ int __must_check device_add_disk(struct device *parent, struct gendisk *disk,
- 		if (ret)
- 			goto out_unregister_bdi;
- 
-+		/* Make sure the first partition scan will be proceed */
-+		if (get_capacity(disk) && !(disk->flags & GENHD_FL_NO_PART) &&
-+		    !test_bit(GD_SUPPRESS_PART_SCAN, &disk->state))
-+			set_bit(GD_NEED_PART_SCAN, &disk->state);
-+
- 		bdev_add(disk->part0, ddev->devt);
- 		if (get_capacity(disk))
- 			disk_scan_partitions(disk, FMODE_READ);
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 6dd49d877584..9c5f637ff153 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -528,7 +528,7 @@ static int blkdev_common_ioctl(struct block_device *bdev, fmode_t mode,
- 			return -EACCES;
- 		if (bdev_is_partition(bdev))
- 			return -EINVAL;
--		return disk_scan_partitions(bdev->bd_disk, mode & ~FMODE_EXCL);
-+		return disk_scan_partitions(bdev->bd_disk, mode);
- 	case BLKTRACESTART:
- 	case BLKTRACESTOP:
- 	case BLKTRACETEARDOWN:
+The following changes since commit 2241ab53cbb5cdb08a6b2d4688feb13971058f65:
+
+  Linux 6.2-rc5 (2023-01-21 16:27:01 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux.git tags/for-6.3/dio-2023-02-16
+
+for you to fetch changes up to 9636e650e16f6b01f0044f7662074958c23e4707:
+
+  fs: build the legacy direct I/O code conditionally (2023-01-26 10:30:56 -0700)
+
+----------------------------------------------------------------
+for-6.3/dio-2023-02-16
+
+----------------------------------------------------------------
+Christoph Hellwig (2):
+      fs: move sb_init_dio_done_wq out of direct-io.c
+      fs: build the legacy direct I/O code conditionally
+
+ fs/Kconfig          |  4 ++++
+ fs/Makefile         |  3 ++-
+ fs/affs/Kconfig     |  1 +
+ fs/direct-io.c      | 24 ------------------------
+ fs/exfat/Kconfig    |  1 +
+ fs/ext2/Kconfig     |  1 +
+ fs/fat/Kconfig      |  1 +
+ fs/hfs/Kconfig      |  1 +
+ fs/hfsplus/Kconfig  |  1 +
+ fs/internal.h       |  4 +---
+ fs/jfs/Kconfig      |  1 +
+ fs/nilfs2/Kconfig   |  1 +
+ fs/ntfs3/Kconfig    |  1 +
+ fs/ocfs2/Kconfig    |  1 +
+ fs/reiserfs/Kconfig |  1 +
+ fs/super.c          | 24 ++++++++++++++++++++++++
+ fs/udf/Kconfig      |  1 +
+ 17 files changed, 43 insertions(+), 28 deletions(-)
+
 -- 
-2.31.1
+Jens Axboe
 
