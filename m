@@ -2,226 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95E3F69A3D3
-	for <lists+linux-block@lfdr.de>; Fri, 17 Feb 2023 03:21:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE2F069A3AB
+	for <lists+linux-block@lfdr.de>; Fri, 17 Feb 2023 02:58:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjBQCVy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Feb 2023 21:21:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
+        id S229863AbjBQB6b (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Feb 2023 20:58:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjBQCVy (ORCPT
+        with ESMTP id S229738AbjBQB6a (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Feb 2023 21:21:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 505842E0C6
-        for <linux-block@vger.kernel.org>; Thu, 16 Feb 2023 18:21:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676600464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ngJH0anKmLZdgZFLmDQQFRZsbSCAidnB8FvWvEA1RVM=;
-        b=Y50uswzMri/aHtmTSJANI4H0lXKIz8DRWOI/D+fqW6wzLXOabLk4KcnfWCqWiw4I6n3URF
-        IWE5RSB8I9hEpaqmDuLf6W7JhNNz7UuShoELZ1spMGPGGjlF9bhIluTu7SjeV62nXhbQwE
-        VngOPDUZwL/V07cRqwDzK0CcTGHNskU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-479-upTQarN1M3ePNt1KhOxDMA-1; Thu, 16 Feb 2023 21:20:58 -0500
-X-MC-Unique: upTQarN1M3ePNt1KhOxDMA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4F2CA800B24;
-        Fri, 17 Feb 2023 02:20:58 +0000 (UTC)
-Received: from T590 (ovpn-8-19.pek2.redhat.com [10.72.8.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C30A40B40C9;
-        Fri, 17 Feb 2023 02:20:50 +0000 (UTC)
-Date:   Fri, 17 Feb 2023 10:20:45 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Andreas Hindborg <nmi@metaspace.dk>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>, linux-block@vger.kernel.org,
-        lsf-pc@lists.linux-foundation.org,
-        Liu Xiaodong <xiaodong.liu@intel.com>,
-        Jim Harris <james.r.harris@intel.com>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <Matias.Bjorling@wdc.com>,
-        "hch@lst.de" <hch@lst.de>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>, ming.lei@redhat.com
-Subject: Re: [LSF/MM/BPF BoF]: extend UBLK to cover real storage hardware
-Message-ID: <Y+7kfZnWsmnA0V84@T590>
-References: <Y+EWCwqSisu3l0Sz@T590>
- <Y+Finej8521IDwzV@fedora>
- <Y+MFAzt0Cx9aetf2@T590>
- <Y+OSxh2K0/Lf0SAk@fedora>
- <Y+my03K5MbSSRvQq@T590>
- <Y+qL9z7rtApszoBf@fedora>
- <Y+wsj2QqX+HMUJTI@T590>
- <87bkltrj9x.fsf@metaspace.dk>
- <Y+4JVgd338R0x1m4@T590>
- <877cwhrgul.fsf@metaspace.dk>
+        Thu, 16 Feb 2023 20:58:30 -0500
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D7454D02;
+        Thu, 16 Feb 2023 17:58:27 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PHw2Q54Bgz4f3p0q;
+        Fri, 17 Feb 2023 09:58:22 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP3 (Coremail) with SMTP id _Ch0CgBnFCI+3+5jIQ_CDQ--.53230S4;
+        Fri, 17 Feb 2023 09:58:24 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     jack@suse.cz, hare@suse.de, hch@infradead.org, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH -next 0/2] block: fix scan partition for exclusively open device again
+Date:   Fri, 17 Feb 2023 10:21:58 +0800
+Message-Id: <20230217022200.3092987-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877cwhrgul.fsf@metaspace.dk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _Ch0CgBnFCI+3+5jIQ_CDQ--.53230S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY47AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+        M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1l
+        IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+        C2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Feb 16, 2023 at 12:21:32PM +0100, Andreas Hindborg wrote:
-> 
-> Ming Lei <ming.lei@redhat.com> writes:
-> 
-> > On Thu, Feb 16, 2023 at 10:44:02AM +0100, Andreas Hindborg wrote:
-> >> 
-> >> Hi Ming,
-> >> 
-> >> Ming Lei <ming.lei@redhat.com> writes:
-> >> 
-> >> > On Mon, Feb 13, 2023 at 02:13:59PM -0500, Stefan Hajnoczi wrote:
-> >> >> On Mon, Feb 13, 2023 at 11:47:31AM +0800, Ming Lei wrote:
-> >> >> > On Wed, Feb 08, 2023 at 07:17:10AM -0500, Stefan Hajnoczi wrote:
-> >> >> > > On Wed, Feb 08, 2023 at 10:12:19AM +0800, Ming Lei wrote:
-> >> >> > > > On Mon, Feb 06, 2023 at 03:27:09PM -0500, Stefan Hajnoczi wrote:
-> >> >> > > > > On Mon, Feb 06, 2023 at 11:00:27PM +0800, Ming Lei wrote:
-> >> >> > > > > > Hello,
-> >> >> > > > > > 
-> >> >> > > > > > So far UBLK is only used for implementing virtual block device from
-> >> >> > > > > > userspace, such as loop, nbd, qcow2, ...[1].
-> >> >> > > > > 
-> >> >> > > > > I won't be at LSF/MM so here are my thoughts:
-> >> >> > > > 
-> >> >> > > > Thanks for the thoughts, :-)
-> >> >> > > > 
-> >> >> > > > > 
-> >> >> > > > > > 
-> >> >> > > > > > It could be useful for UBLK to cover real storage hardware too:
-> >> >> > > > > > 
-> >> >> > > > > > - for fast prototype or performance evaluation
-> >> >> > > > > > 
-> >> >> > > > > > - some network storages are attached to host, such as iscsi and nvme-tcp,
-> >> >> > > > > > the current UBLK interface doesn't support such devices, since it needs
-> >> >> > > > > > all LUNs/Namespaces to share host resources(such as tag)
-> >> >> > > > > 
-> >> >> > > > > Can you explain this in more detail? It seems like an iSCSI or
-> >> >> > > > > NVMe-over-TCP initiator could be implemented as a ublk server today.
-> >> >> > > > > What am I missing?
-> >> >> > > > 
-> >> >> > > > The current ublk can't do that yet, because the interface doesn't
-> >> >> > > > support multiple ublk disks sharing single host, which is exactly
-> >> >> > > > the case of scsi and nvme.
-> >> >> > > 
-> >> >> > > Can you give an example that shows exactly where a problem is hit?
-> >> >> > > 
-> >> >> > > I took a quick look at the ublk source code and didn't spot a place
-> >> >> > > where it prevents a single ublk server process from handling multiple
-> >> >> > > devices.
-> >> >> > > 
-> >> >> > > Regarding "host resources(such as tag)", can the ublk server deal with
-> >> >> > > that in userspace? The Linux block layer doesn't have the concept of a
-> >> >> > > "host", that would come in at the SCSI/NVMe level that's implemented in
-> >> >> > > userspace.
-> >> >> > > 
-> >> >> > > I don't understand yet...
-> >> >> > 
-> >> >> > blk_mq_tag_set is embedded into driver host structure, and referred by queue
-> >> >> > via q->tag_set, both scsi and nvme allocates tag in host/queue wide,
-> >> >> > that said all LUNs/NSs share host/queue tags, current every ublk
-> >> >> > device is independent, and can't shard tags.
-> >> >> 
-> >> >> Does this actually prevent ublk servers with multiple ublk devices or is
-> >> >> it just sub-optimal?
-> >> >
-> >> > It is former, ublk can't support multiple devices which share single host
-> >> > because duplicated tag can be seen in host side, then io is failed.
-> >> >
-> >> 
-> >> I have trouble following this discussion. Why can we not handle multiple
-> >> block devices in a single ublk user space process?
-> >> 
-> >> From this conversation it seems that the limiting factor is allocation
-> >> of the tag set of the virtual device in the kernel? But as far as I can
-> >> tell, the tag sets are allocated per virtual block device in
-> >> `ublk_ctrl_add_dev()`?
-> >> 
-> >> It seems to me that a single ublk user space process shuld be able to
-> >> connect to multiple storage devices (for instance nvme-of) and then
-> >> create a ublk device for each namespace, all from a single ublk process.
-> >> 
-> >> Could you elaborate on why this is not possible?
-> >
-> > If the multiple storages devices are independent, the current ublk can
-> > handle them just fine.
-> >
-> > But if these storage devices(such as luns in iscsi, or NSs in nvme-tcp)
-> > share single host, and use host-wide tagset, the current interface can't
-> > work as expected, because tags is shared among all these devices. The
-> > current ublk interface needs to be extended for covering this case.
-> 
-> Thanks for clarifying, that is very helpful.
-> 
-> Follow up question: What would the implications be if one tried to
-> expose (through ublk) each nvme namespace of an nvme-of controller with
-> an independent tag set?
+From: Yu Kuai <yukuai3@huawei.com>
 
-https://lore.kernel.org/linux-block/877cwhrgul.fsf@metaspace.dk/T/#m57158db9f0108e529d8d62d1d56652c52e9e3e67
+Changes from RFC:
+ - remove the patch to factor out GD_NEED_PART_SCAN
 
-> What are the benefits of sharing a tagset across
-> all namespaces of a controller?
+Yu Kuai (2):
+  block: Revert "block: Do not reread partition table on exclusively
+    open device"
+  block: fix scan partition for exclusively open device again
 
-The userspace implementation can be simplified a lot since generic
-shared tag allocation isn't needed, meantime with good performance
-(shared tags allocation in SMP is one hard problem)
+ block/blk.h   |  2 +-
+ block/genhd.c | 37 ++++++++++++++++++++++++++++---------
+ block/ioctl.c | 13 ++++++-------
+ 3 files changed, 35 insertions(+), 17 deletions(-)
 
-The extension shouldn't be very hard, follows some raw ideas:
-
-1) interface change
-
-- add new feature flag of UBLK_F_SHARED_HOST, multiple ublk
-  devices(ublkcXnY) are attached to the ublk host(ublkhX)
-
-- dev_info.dev_id: in case of UBLK_F_SHARED_HOST, the top 16bit stores
-  host id(X), and the bottom 16bit stores device id(Y)
-
-- add two control commands: UBLK_CMD_ADD_HOST, UBLK_CMD_DEL_HOST
-
-  Still sent to /dev/ublk-control
-
-  ADD_HOST command will allocate one host device(char) with specified host
-  id or allocated host id, tag_set is allocated as host resource. The
-  host device(ublkhX) will become parent of all ublkcXn*
-
-  Before sending DEL_HOST, all devices attached to this host have to
-  be stopped & removed first, otherwise DEL_HOST won't succeed.
-
-- keep other interfaces not changed
-  in case of UBLK_F_SHARED_HOST, userspace has to set correct
-  dev_info.dev_id.host_id, so ublk driver can associate device with
-  specified host
-
-2) implementation
-- host device(ublkhX) becomes parent of all ublk char devices of
-  ublkcXn*
-
-- except for tagset, other per-host resource abstraction? Looks not
-  necessary, anything is available in userspace
-
-- host-wide error handling, maybe all devices attached to this host
-  need to be recovered, so it should be done in userspace 
-
-- per-host admin queue, looks not necessary, given host related
-  management/control tasks are done in userspace directly
-
-- others?
-
-
-Thanks,
-Ming
+-- 
+2.31.1
 
