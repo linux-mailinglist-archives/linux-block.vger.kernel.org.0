@@ -2,98 +2,96 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB7E769BE38
-	for <lists+linux-block@lfdr.de>; Sun, 19 Feb 2023 03:41:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4553D69BF3E
+	for <lists+linux-block@lfdr.de>; Sun, 19 Feb 2023 10:00:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbjBSClh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 18 Feb 2023 21:41:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
+        id S229591AbjBSI77 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 19 Feb 2023 03:59:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjBSCla (ORCPT
+        with ESMTP id S229523AbjBSI76 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 18 Feb 2023 21:41:30 -0500
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A2611EB2;
-        Sat, 18 Feb 2023 18:41:30 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4PK8v92Pnxz4f3jHn;
-        Sun, 19 Feb 2023 10:41:25 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-        by APP2 (Coremail) with SMTP id Syh0CgBH7utQjPFjPmleDw--.7604S19;
-        Sun, 19 Feb 2023 10:41:27 +0800 (CST)
-From:   Kemeng Shi <shikemeng@huaweicloud.com>
-To:     paolo.valente@linaro.org, axboe@kernel.dk, jack@suse.cz
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shikemeng@huaweicloud.com
-Subject: [PATCH 17/17] block, bfq: remove unnecessary local variable __bfqq in bfq_setup_merge
-Date:   Sun, 19 Feb 2023 18:43:09 +0800
-Message-Id: <20230219104309.1511562-18-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20230219104309.1511562-1-shikemeng@huaweicloud.com>
-References: <20230219104309.1511562-1-shikemeng@huaweicloud.com>
+        Sun, 19 Feb 2023 03:59:58 -0500
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E24911160;
+        Sun, 19 Feb 2023 00:59:56 -0800 (PST)
+Received: from [192.168.1.103] (31.173.84.108) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.14; Sun, 19 Feb
+ 2023 11:59:46 +0300
+Subject: Re: [PATCH 12/18] pata_parport: use print_hex_*
+To:     Ondrej Zary <linux@zary.sk>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+CC:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Tim Waugh <tim@cyberelk.net>, <linux-block@vger.kernel.org>,
+        <linux-parport@lists.infradead.org>, <linux-ide@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230218220138.5692-1-linux@zary.sk>
+ <20230218220138.5692-13-linux@zary.sk>
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <c75593a9-cb3f-4960-fad8-295e5ee4b84f@omp.ru>
+Date:   Sun, 19 Feb 2023 11:59:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgBH7utQjPFjPmleDw--.7604S19
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFykWr4fKFyruF1xXF47Arb_yoWkGrb_tF
-        ykKa4xtr4UGry5Xw1Yyr4xJ3ZxJFW8XF18ZF4qg34DJF17XFn5CasFgrs0yFZ8Ga1IkFy3
-        G397Wwn8GF1kWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbqxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M28IrcIa0xkI8V
-        A2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJ
-        M28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2I
-        x0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK
-        6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
-        xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8
-        JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
-        AGYxC7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-        wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-        0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AK
-        xVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
-        WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sRiVb
-        yDUUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230218220138.5692-13-linux@zary.sk>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [31.173.84.108]
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 5.9.59, Database issued on: 02/19/2023 08:36:50
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 175607 [Feb 19 2023]
+X-KSE-AntiSpam-Info: Version: 5.9.59.0
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 504 504 dc137e1f9c062eb6c0671e7d509ab442ae395562
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.84.108 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.84.108 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info: 31.173.84.108:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.84.108
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 02/19/2023 08:39:00
+X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 2/19/2023 6:00:00 AM
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-We could traversal bfqq->new_bfqq list without a local variable easily and
-intuitively. So remove unnecessary local variable __bfqq.
+On 2/19/23 1:01 AM, Ondrej Zary wrote:
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- block/bfq-iosched.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> Use print_hex_* for debug dumps.
+> 
+> Signed-off-by: Ondrej Zary <linux@zary.sk>
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 2705a24ab146..037f73a25567 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2752,7 +2752,6 @@ static struct bfq_queue *
- bfq_setup_merge(struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
- {
- 	int process_refs, new_process_refs;
--	struct bfq_queue *__bfqq;
- 
- 	/*
- 	 * If there are no process references on the new_bfqq, then it is
-@@ -2764,10 +2763,9 @@ bfq_setup_merge(struct bfq_queue *bfqq, struct bfq_queue *new_bfqq)
- 		return NULL;
- 
- 	/* Avoid a circular list and skip interim queue merges. */
--	while ((__bfqq = new_bfqq->new_bfqq)) {
--		if (__bfqq == bfqq)
-+	while ((new_bfqq = new_bfqq->new_bfqq)) {
-+		if (new_bfqq == bfqq)
- 			return NULL;
--		new_bfqq = __bfqq;
- 	}
- 
- 	process_refs = bfqq_process_refs(bfqq);
--- 
-2.30.0
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
+[...]
+
+MBR, Sergey
