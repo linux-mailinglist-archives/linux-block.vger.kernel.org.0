@@ -2,101 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E65A69D67C
-	for <lists+linux-block@lfdr.de>; Mon, 20 Feb 2023 23:52:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B3FF69D6D3
+	for <lists+linux-block@lfdr.de>; Tue, 21 Feb 2023 00:00:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232345AbjBTWwh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Feb 2023 17:52:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56352 "EHLO
+        id S232851AbjBTXAQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Feb 2023 18:00:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232747AbjBTWwg (ORCPT
+        with ESMTP id S232817AbjBTXAP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Feb 2023 17:52:36 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B889222D3
-        for <linux-block@vger.kernel.org>; Mon, 20 Feb 2023 14:52:31 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id ec43so9629921edb.8
-        for <linux-block@vger.kernel.org>; Mon, 20 Feb 2023 14:52:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pSE7wovrJ+19+kaPmt+dDnKGunQwppXMgjPl6shrdyA=;
-        b=Ungmk6R4CKTKX8tUx0vh1FtsymRIy8ovuaAmUX4SPe5ucxvs4SyjXPCi3iyGDLGAER
-         6cPzEWUngH836lmdR2EwTp5OQUb2Q7BCBfLnt6cKtrvIs38epGLHp3kDH79hDYSTG8R7
-         ttYuzfeloL3Vr1BZrR6cSO3JR9nYeAWGgIrQw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pSE7wovrJ+19+kaPmt+dDnKGunQwppXMgjPl6shrdyA=;
-        b=uI0vn59u6XIeyKNpoaO7bakW3lZ5c1HYcj/nC51uaszMv3WzmkMUPiPlFa0VyV5lyx
-         JS3K9zCiS7kI0YLe1JzOJ9Nm+pV5R9M7v90ql75PBYhP8wdGm8MArKJB0AjbC1IF4U7e
-         0rpoKCejf5KI43Iu9lrgeNGxD6msjRTXOV9ViKUxrj53N/qlCQvnLnoq0WRwJxoRZU3m
-         3ZbMlQLqMxhChpRTR1fgK0gBFmXa0iIC8t2HwZdrWHpzHBKTNsTonq5AREj0Bn57o+S8
-         iv4rz69bkEKOeEGqEdyM1ZmtH2qVE4pcnoKQKSkNH2HkDnR8v83/uedJe0w/tdZMLtGH
-         Vs5A==
-X-Gm-Message-State: AO0yUKUUBRsel0dXGBSwaOM/2eyDyswfg1rDVOHRQMf6ZXXBwo89oHsS
-        +JJoYy2LCb0h7H+CuP1BUE2qr9v80TUiyl8Voi4=
-X-Google-Smtp-Source: AK7set+ed3jBnOiHpawCcEbgU+Lx5BTDBVQjbxQGJiwjFqjIVZF4JdOGgUwsSI1Sd9udtPwY5ZnZng==
-X-Received: by 2002:aa7:d88f:0:b0:4ac:cb71:42c with SMTP id u15-20020aa7d88f000000b004accb71042cmr3730921edq.37.1676933549313;
-        Mon, 20 Feb 2023 14:52:29 -0800 (PST)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id c14-20020a50d64e000000b004a249a97d84sm1580934edj.23.2023.02.20.14.52.28
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 14:52:28 -0800 (PST)
-Received: by mail-ed1-f43.google.com with SMTP id da10so11364510edb.3
-        for <linux-block@vger.kernel.org>; Mon, 20 Feb 2023 14:52:28 -0800 (PST)
-X-Received: by 2002:a17:906:9499:b0:8b1:79ef:6923 with SMTP id
- t25-20020a170906949900b008b179ef6923mr5925873ejx.15.1676933548452; Mon, 20
- Feb 2023 14:52:28 -0800 (PST)
-MIME-Version: 1.0
-References: <5afa0795-775d-f710-7989-4c8e1cd7b56f@kernel.dk>
-In-Reply-To: <5afa0795-775d-f710-7989-4c8e1cd7b56f@kernel.dk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 20 Feb 2023 14:52:11 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiLu7VRyPUpthiV6qMJp1eN3n_wD+vAroDsnDZq05QsLA@mail.gmail.com>
-Message-ID: <CAHk-=wiLu7VRyPUpthiV6qMJp1eN3n_wD+vAroDsnDZq05QsLA@mail.gmail.com>
-Subject: Re: [GIT PULL for-6.3] Block updates for 6.3
+        Mon, 20 Feb 2023 18:00:15 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC2116AF0;
+        Mon, 20 Feb 2023 15:00:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 23FED60F46;
+        Mon, 20 Feb 2023 23:00:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E862EC433A0;
+        Mon, 20 Feb 2023 23:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676934012;
+        bh=ApC9GkLHt2d3esaK1JjAo40h95mTl+DwLwqIJ47uMuE=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=SSFWdkaCKqIy6ObeBQkozJnyV0IdvCBWjUNYAA+PA9ngRZOeQczAuimS8di05NdmG
+         C9JO0DpQlfTcvhXSXj3J4lVoCz5GTfrzaMOSfEiievaGX1DKmJeC6eKHtWdFJwaiO+
+         wnPyfKokRcA6nwS+0ycwCV5dt1DO34IfPpKhSvhukrQH4ZonXS21f6h3CtTletJ+wi
+         hTWwNogyksj62jVoLDRAzNHPoAMTLd/TBh8sGMOCfXq3Zho//qoi4nlult/xRm7ndV
+         1nxm8MqHVQj6JJ+DbGebbaFkZ+PUBo423HTNPoLxsJS4KuAT9qBlF9N9emyIOBBKTV
+         rTeQiLdrypWDw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D17C6C59A4C;
+        Mon, 20 Feb 2023 23:00:12 +0000 (UTC)
+Subject: Re: [GIT PULL for-6.3] Make building the legacy dio code conditional
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <754b3cc0-c420-3257-9569-833c42f93808@kernel.dk>
+References: <754b3cc0-c420-3257-9569-833c42f93808@kernel.dk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <754b3cc0-c420-3257-9569-833c42f93808@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux.git tags/for-6.3/dio-2023-02-16
+X-PR-Tracked-Commit-Id: 9636e650e16f6b01f0044f7662074958c23e4707
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 553637f73c314c742243b8dc5ef072e9dadbe581
+Message-Id: <167693401283.6080.4911455757745526963.pr-tracker-bot@kernel.org>
+Date:   Mon, 20 Feb 2023 23:00:12 +0000
 To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Feb 16, 2023 at 6:54 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> I've pushed a merged branch here:
->
-> https://git.kernel.dk/cgit/linux-block/log/?h=for-6.3/block-merged
+The pull request you sent on Thu, 16 Feb 2023 19:54:10 -0700:
 
-Hmm. I do verify against suggested merges after doing my own (even
-when your suggested merge was then made stale by another later
-addition), and I think your merge was wrong wrt bfq_sync_bfqq_move(),
-which in your version does the bfq_release_process_ref() before doing
-the bic_set_bfqq().
+> git://git.kernel.dk/linux.git tags/for-6.3/dio-2023-02-16
 
-IOW, I think your merge essentially dropped one of the fixes in commit
-b600de2d7d3a ("block, bfq: fix uaf for bfqq in bic_set_bfqq()").
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/553637f73c314c742243b8dc5ef072e9dadbe581
 
-Maybe there were reasons why that ordering wasn't required any more,
-but it looks funky (and you appear to have correctly merged the other
-case in bfq_check_ioprio_change()).
+Thank you!
 
-Anyway, this is just a nit-picky email saying that I'm pretty sure
-I've done the merge right, but since it doesn't match what you did, I
-thought I'd mention it.
-
-Worth double-checking this, in other words. I realize you're mostly
-afk this week, so whenever you're back.
-
-                Linus
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
