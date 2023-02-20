@@ -2,53 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D730C69C490
-	for <lists+linux-block@lfdr.de>; Mon, 20 Feb 2023 04:48:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8DCC69C4B3
+	for <lists+linux-block@lfdr.de>; Mon, 20 Feb 2023 05:15:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229605AbjBTDr7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 19 Feb 2023 22:47:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41266 "EHLO
+        id S229704AbjBTEPP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 19 Feb 2023 23:15:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230049AbjBTDr6 (ORCPT
+        with ESMTP id S229572AbjBTEPO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 19 Feb 2023 22:47:58 -0500
+        Sun, 19 Feb 2023 23:15:14 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4154E3A5
-        for <linux-block@vger.kernel.org>; Sun, 19 Feb 2023 19:47:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFF6E07F
+        for <linux-block@vger.kernel.org>; Sun, 19 Feb 2023 20:14:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676864832;
+        s=mimecast20190719; t=1676866466;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fjr0MS73c4erVd8gjrCyTQhwvZoechcgPW7YCFyx8LQ=;
-        b=jGr865uAm21RYQWruAh2rBZCXxPHBLSaOVk/DqKKu5mj4/3btZKia+eIG/w4r9rFTZXULA
-        1/IlR49VN4s4Qri4kmLr8dbBis/nPxpRjdjyh7omv1d2+nOyqIdz3AWEoA9jpdhgJ7qMx8
-        mpP45KfjKhFcXv1sqLzu6K5gvsLe1Ro=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ic8sikZywsnuPNBKW0DObN9Ojsq5BIgAI8jNU5naWUQ=;
+        b=gkU9eTOXJFj7DueUw2VzIQ85rWl7e3CQ9928CNFsCgdNOHtNHJsvWnLofjhlUAP3JQoFg7
+        /yGNrCj2wITjEiYJHQKUUVrTO+PgSvm1f7y3rB8CB022Wrm+M+UkCsJhhPB2OFxb2qOhIH
+        LLn6F6w45OZYw81+b+fOlg6WmPGgo8g=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-554-xbcIRWPUO7u64PTORnqoEg-1; Sun, 19 Feb 2023 22:47:09 -0500
-X-MC-Unique: xbcIRWPUO7u64PTORnqoEg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+ us-mta-478-RIKeU0hoOtGq8O3ys6493Q-1; Sun, 19 Feb 2023 23:14:25 -0500
+X-MC-Unique: RIKeU0hoOtGq8O3ys6493Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4674E833948;
-        Mon, 20 Feb 2023 03:47:09 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D032B29AA2C5;
+        Mon, 20 Feb 2023 04:14:24 +0000 (UTC)
 Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 640BB492B01;
-        Mon, 20 Feb 2023 03:47:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7A0F2166B30;
+        Mon, 20 Feb 2023 04:14:23 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
-To:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH blktests v3 2/2] block/033: add test to cover gendisk leak
-Date:   Mon, 20 Feb 2023 11:46:49 +0800
-Message-Id: <20230220034649.1522978-3-ming.lei@redhat.com>
-In-Reply-To: <20230220034649.1522978-1-ming.lei@redhat.com>
-References: <20230220034649.1522978-1-ming.lei@redhat.com>
+Subject: [PATCH] ublk: remove check IO_URING_F_SQE128 in ublk_ch_uring_cmd
+Date:   Mon, 20 Feb 2023 12:14:13 +0800
+Message-Id: <20230220041413.1524335-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -59,116 +56,31 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-So far only sync ublk removal is supported, and the device's
-last reference is dropped in gendisk's ->free_disk(), so it
-can be used to test gendisk leak issue.
+sizeof(struct ublksrv_io_cmd) is 16bytes, which can be held in 64byte SQE,
+so not necessary to check IO_URING_F_SQE128.
 
+With this change, we get chance to save half SQ ring memory.
+
+Fixed: 71f28f3136af ("ublk_drv: add io_uring based userspace block driver")
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- common/ublk         | 35 +++++++++++++++++++++++++++++++++++
- tests/block/033     | 41 +++++++++++++++++++++++++++++++++++++++++
- tests/block/033.out |  2 ++
- 3 files changed, 78 insertions(+)
- create mode 100644 common/ublk
- create mode 100755 tests/block/033
- create mode 100644 tests/block/033.out
+ drivers/block/ublk_drv.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/common/ublk b/common/ublk
-new file mode 100644
-index 0000000..932c534
---- /dev/null
-+++ b/common/ublk
-@@ -0,0 +1,35 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2023 Ming Lei
-+#
-+# ublk_drv helper functions.
-+
-+. common/shellcheck
-+
-+_have_ublk() {
-+	_have_driver ublk_drv
-+	_have_src_program miniublk
-+}
-+
-+_remove_ublk_devices() {
-+	src/miniublk del -a
-+}
-+
-+_init_ublk() {
-+	_remove_ublk_devices
-+
-+	modprobe -rq ublk_drv
-+	if ! modprobe ublk_drv; then
-+		SKIP_REASONS+=("requires ublk_drv")
-+		return 1
-+	fi
-+
-+	udevadm settle
-+	return 0
-+}
-+
-+_exit_ublk() {
-+	_remove_ublk_devices
-+	udevadm settle
-+	modprobe -r -q ublk_drv
-+}
-diff --git a/tests/block/033 b/tests/block/033
-new file mode 100755
-index 0000000..762f606
---- /dev/null
-+++ b/tests/block/033
-@@ -0,0 +1,41 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2023 Ming Lei
-+#
-+# Test if gendisk is leaked, and regression in the following commit
-+# c43332fe028c ("blk-cgroup: delay calling blkcg_exit_disk until disk_release")
-+# can be covered
-+
-+. tests/block/rc
-+. common/ublk
-+
-+DESCRIPTION="add & delete ublk device and test if gendisk is leaked"
-+QUICK=1
-+
-+requires() {
-+	_have_ublk
-+}
-+
-+test() {
-+	local ublk_prog="src/miniublk"
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	if ! _init_ublk; then
-+		return 1
-+	fi
-+
-+	${ublk_prog} add -t null -n 0 > "$FULL"
-+	udevadm settle
-+	if ! ${ublk_prog} list -n 0 >> "$FULL"; then
-+		echo "fail to list dev"
-+	fi
-+	if ! dd if=/dev/ublkb0 iflag=direct of=/dev/null bs=1M count=512 >> "$FULL" 2>&1; then
-+		echo "fail io"
-+	fi
-+	${ublk_prog} del -n 0 >> "$FULL"
-+
-+	_exit_ublk
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/block/033.out b/tests/block/033.out
-new file mode 100644
-index 0000000..067846a
---- /dev/null
-+++ b/tests/block/033.out
-@@ -0,0 +1,2 @@
-+Running block/033
-+Test complete
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index f48d213fb65e..09d29fa53939 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1271,9 +1271,6 @@ static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
+ 			__func__, cmd->cmd_op, ub_cmd->q_id, tag,
+ 			ub_cmd->result);
+ 
+-	if (!(issue_flags & IO_URING_F_SQE128))
+-		goto out;
+-
+ 	if (ub_cmd->q_id >= ub->dev_info.nr_hw_queues)
+ 		goto out;
+ 
 -- 
-2.31.1
+2.38.1
 
