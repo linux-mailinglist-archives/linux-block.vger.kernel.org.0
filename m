@@ -2,154 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6CF669CB64
-	for <lists+linux-block@lfdr.de>; Mon, 20 Feb 2023 13:50:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4BBE69C9BF
+	for <lists+linux-block@lfdr.de>; Mon, 20 Feb 2023 12:24:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232143AbjBTMuA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Feb 2023 07:50:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40706 "EHLO
+        id S231389AbjBTLYg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Feb 2023 06:24:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232151AbjBTMte (ORCPT
+        with ESMTP id S231486AbjBTLYe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Feb 2023 07:49:34 -0500
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E102C1BD8
-        for <linux-block@vger.kernel.org>; Mon, 20 Feb 2023 04:48:57 -0800 (PST)
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230220124856epoutp0429581fa43b1d0ef7a483246592b9a34b~FiT4yUIIr2212822128epoutp04l
-        for <linux-block@vger.kernel.org>; Mon, 20 Feb 2023 12:48:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230220124856epoutp0429581fa43b1d0ef7a483246592b9a34b~FiT4yUIIr2212822128epoutp04l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1676897336;
-        bh=5O5uDT9HWnn4Ccadtd7fTCupkIwM/OnWfdBNErBUieg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNHLaOh3lTOgYIzmSQl5ZbwHB/rdw00sfDhX2UqH1bs8saMaLXcYlSB9vyxKdNgYX
-         hK2JKmqZ1mbqm1PFrJuGOGJ4DiS15lYjbXESLf/x+iUV9ceiDTWhCs4I3P4s7tokuv
-         OQ1T1Wnaqh/NkBGT7oYD89PMyZFsH6DVfaMqraAw=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20230220124855epcas5p11f6e306337a2a81f22a3588e359c4fb6~FiT4DRVI62749127491epcas5p1C;
-        Mon, 20 Feb 2023 12:48:55 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.178]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4PL2Kf0Mrnz4x9Px; Mon, 20 Feb
-        2023 12:48:54 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AB.26.10528.53C63F36; Mon, 20 Feb 2023 21:48:53 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230220105537epcas5p386dd5c28197f055a8c548cca109d913c~Fgw8_Lpoe2700227002epcas5p3E;
-        Mon, 20 Feb 2023 10:55:37 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230220105537epsmtrp1985e2196bc7179a54716b408366f4246~Fgw88qAW12386223862epsmtrp1M;
-        Mon, 20 Feb 2023 10:55:37 +0000 (GMT)
-X-AuditID: b6c32a49-e75fa70000012920-b6-63f36c35ca5a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F2.9C.05839.9A153F36; Mon, 20 Feb 2023 19:55:37 +0900 (KST)
-Received: from green5.sa.corp.samsungelectronics.net (unknown
-        [107.110.206.5]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230220105534epsmtip21c8292d59ac36a9accd9a5a1b5b20633~Fgw58o2620727007270epsmtip20;
-        Mon, 20 Feb 2023 10:55:34 +0000 (GMT)
-From:   Nitesh Shetty <nj.shetty@samsung.com>
-To:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        James Smart <james.smart@broadcom.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     bvanassche@acm.org, hare@suse.de, ming.lei@redhat.com,
-        damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
-        joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v7 8/8] dm: Enable copy offload for dm-linear target
-Date:   Mon, 20 Feb 2023 16:23:31 +0530
-Message-Id: <20230220105336.3810-9-nj.shetty@samsung.com>
-X-Mailer: git-send-email 2.35.1.500.gb896f729e2
-In-Reply-To: <20230220105336.3810-1-nj.shetty@samsung.com>
+        Mon, 20 Feb 2023 06:24:34 -0500
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A681ABFB;
+        Mon, 20 Feb 2023 03:24:26 -0800 (PST)
+Received: by mail-wm1-f42.google.com with SMTP id bg25-20020a05600c3c9900b003e21af96703so134766wmb.2;
+        Mon, 20 Feb 2023 03:24:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1676892265;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=orZM8Nvs7jWh84k6Sgfl/Z5A9qbthR5Jz7WN21ZXfmA=;
+        b=YBQxTncI0VukmEdlZl7vM/GrxYR/dwNizF2yYY6BPEvN6ZZT2hSQR0GjcJNeIka8DV
+         Vfq4VxdiSyA6zngPKxcppRihDljTs2b15f6cTA6Ks6KYDi4eQm35EnZnaa9AQ1ZJekXQ
+         Mry9FAJ4D+wz6ROQZt8mSflrx7/6N8knDiGMOcvbf+vwE3+YIF+prkw+sq2hEOyBGBW/
+         mlrg4aFOFxJIhnpe6islgWIiXSvB4Jd8126sT2CPVfklWQ4/0N0CAL49mFbkoqm6QpxM
+         6+LZTkgVY8R693bto85B25snxrwj6yzwAONZiPfQuum3W7JOSldbeK5hb26a1WtBmDBI
+         R7Gw==
+X-Gm-Message-State: AO0yUKWp23VXExMOyAsX8IZrfVqGJ/yA7H1dq6jJUnV5//WRU8NPINUr
+        ZTzD1oPOqbtt/3h4tWcMrxWkQQ5fiPQ=
+X-Google-Smtp-Source: AK7set8pQ+BZnrr2+JhbY4ZPMILoc8gV4un+K1D4JYAGBAK2LUsn8tPAHo4akjUu2CZgieU/9HeLLA==
+X-Received: by 2002:a7b:c842:0:b0:3db:2063:425e with SMTP id c2-20020a7bc842000000b003db2063425emr883467wml.1.1676892264834;
+        Mon, 20 Feb 2023 03:24:24 -0800 (PST)
+Received: from [192.168.64.80] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
+        by smtp.gmail.com with ESMTPSA id f17-20020a7bc8d1000000b003e2066a6339sm13863450wml.5.2023.02.20.03.24.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Feb 2023 03:24:24 -0800 (PST)
+Message-ID: <ad837a26-948a-c690-cd9e-4dfffb5f990d@grimberg.me>
+Date:   Mon, 20 Feb 2023 13:24:22 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te1BUZRTvu3df4GxeF4IPnGxbkuSxsGvs+q0jZkF6jYZhZKYBpYFtuQGx
-        r9ldAjSV5SFi8dJkYIHwgQZYIIjEwy1nGSRgGTBUUEOowUZRHkYDEtG2y4Xyv9855/f7zjm/
-        bw4H533J9uQkqQ2UTi1XCljOjJZOny1CiXJOIRqdlaGG3hs4yixaxtGl0UIWKpldxNFS/wCO
-        zNPlTHT3ehuGrp07iaHaS10Y6jj7DENdtikWOmm5A9DD2yYMme/5oWvmHgYaaq9goaqLD9nI
-        cioLQ60TRoBalqpwVP9khoF+urcRDSx3M3e5k0O3wkjTWD+LbDONssmBB40Mcqg/hWyqy2OR
-        V6qPkh13M1hkfta0nZAzxiRnfrjNIgua6wB5pe8QOde0iWyamMIi1u9P3pFIyeMpHZ9SKzTx
-        SeqEYEFYZGxIrEQqEgvFMrRNwFfLVVSwIPSDCOHuJKXdAgH/M7kyxZ6KkOv1gsCdO3SaFAPF
-        T9ToDcECShuv1AZpA/RylT5FnRCgpgzbxSLRVomdGJecaCy9AbRGZtr31kpmBihlnABOHEgE
-        QVtzM/MEcObwiA4Arb89wejgDwCbTRcAHcwDeDm7krUm+evyjwy6YAZwOO80TgdZGDxeMmXX
-        czgswg/22TgOgSvxCwbb+rwcHJwYx2BVZjVwFFyIUPjzqRbMgRnEZmj8xriCuYQMZjwqWHkH
-        EoGwcGyDAzoR2+FCdjrN2AB7yiZWVsCJ12DW1fKVESBx3gkutpSx6UFD4dh8G5PGLnCyu3k1
-        7wkfFx5bxamw9qsaFi3OBtA0bAJ04W2Y01uIOxrjhA9saA+k06/C0731GN34ZZi/NIHReS5s
-        /XoNe8FvG86smuUB7ywYVzEJq5+2smiv8gHMnq5jFwG+6YWFTC8sZPq/9RmA1wEPSqtXJVB6
-        iVasplL/+2WFRtUEVs7Cd28rGB2fDbAAjAMsAHJwgSvXxp1T8Ljx8vSDlE4Tq0tRUnoLkNj9
-        LsY9X1Fo7HelNsSKg2SiIKlUGiR7SyoWuHPfDO5R8IgEuYFKpigtpVvTYRwnzwys3O33alFy
-        PePg53M9f+4Z+YQXLLE9nQ/8h9FOGEMKRsaP3Bfe4ruQUFkZHu5bse1Q9J7a6nWTX8x7uj36
-        O+m5ZNNWs/dCacXHNetyFh5EWT8UnGXGXVca3reWukVfzG4cfK9IHcjJS4/pn/Z9HDFcax7c
-        7y2s2v3RvsyZzJhBcUdxRV07OOzvfKDvJf/UxrK0q87+pG5frp/l+bm01+M+jdlydH4yzb3+
-        u3iPqKiR+wMH0r3FLr/uZat5775zZLj42YWh8+sLpOxOxs3NzeqQkJHU7jB2ZFincHHjzvBd
-        A/3RuXxr082uZZXwmKvVxwuNRIZ01xw/LKueLC2xUbo3llStuQKGPlEu9sV1evm//v2hr58E
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSvO7KwM/JBg2P1C3WnzrGbNE04S+z
-        xeq7/WwW0z78ZLb4ffY8s8Xed7NZLW4e2MlksWfRJCaLlauPMlnsXviRyeLo/7dsFpMOXWO0
-        eHp1FpPF3lvaFnv2nmSxuLxrDpvF/GVP2S0OTW5mstjxpJHRYtvv+cwW616/Z7E4cUva4vzf
-        46wO4h6Xr3h7zLp/ls1j56y77B7n721k8bh8ttRj06pONo/NS+o9dt9sYPPobX4HVNB6n9Xj
-        /b6rbB59W1Yxemw+Xe3xeZOcx6Ynb5kC+KO4bFJSczLLUov07RK4MhpnHGMsaGSt2H5mLmsD
-        4wyWLkZODgkBE4lfG/YD2VwcQgK7GSUeP33DDpGQlFj29wgzhC0ssfLfc3aIokYmiR93PrB1
-        MXJwsAloS5z+zwESFxF4xiRx9t4jZhCHWeAdk8Sqh8tYQbqFBVwkLk3exgRiswioSjQubwSz
-        eQUsJRpe9DGBDJIQ0Jfovy8IYnIKWEl8b6kEqRACqjgxaTMjRLWgxMmZT8COZhaQl2jeOpt5
-        AqPALCSpWUhSCxiZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525iBEezluYOxu2rPugd
-        YmTiYDzEKMHBrCTC+5/3c7IQb0piZVVqUX58UWlOavEhRmkOFiVx3gtdJ+OFBNITS1KzU1ML
-        UotgskwcnFINTJ6BjLwR/TdntN5RW8RTruO+lTHrdaVca+yt5xvDrVZYHdtxgd/fg7OH6dRa
-        l4vF5sJHt6roLYhVOPhTyjHljffq63LrE0WbhVZeefDDIaQs8WZ6zYY412teF1n5PyVbXP92
-        fqmHssHada/Zkvb08hw88IfjVohM5iG2jX4rz/w6PaOqjL0wIkOzYrHnM3XH2GtynKaSGWtE
-        70dFvF4tNNONLXfK/+MO/amxEZzhejbNn6RzYndyHrzs8s7h+Vz3PwVa8vbHmr22Re1Uvh8s
-        yXHnmfRb2WaJugNPa3VSlKefNJfqS07PXJW9Zqv5gXdBEtrfJgos9DnHvPEHY+jUy+df2wTu
-        fLAkR2avmpaQEktxRqKhFnNRcSIADQTqTVUDAAA=
-X-CMS-MailID: 20230220105537epcas5p386dd5c28197f055a8c548cca109d913c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230220105537epcas5p386dd5c28197f055a8c548cca109d913c
-References: <20230220105336.3810-1-nj.shetty@samsung.com>
-        <CGME20230220105537epcas5p386dd5c28197f055a8c548cca109d913c@epcas5p3.samsung.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [LSF/MM/BPF BOF] Userspace command abouts
+To:     Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>
+Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        lsf-pc@lists.linuxfoundation.org
+References: <3d3369f1-7ebe-b3b8-804c-ff2b97ec679d@suse.de>
+ <Y+5cjPBE6h/IW9VH@kbusch-mbp>
+Content-Language: en-US
+From:   Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <Y+5cjPBE6h/IW9VH@kbusch-mbp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Setting copy_offload_supported flag to enable offload.
 
-Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
----
- drivers/md/dm-linear.c | 1 +
- 1 file changed, 1 insertion(+)
+>> Hi all,
+>>
+>> it has come up in other threads, so it might be worthwhile to have its own
+>> topic:
+>>
+>> Userspace command aborts
+>>
+>> As it stands we cannot abort I/O commands from userspace.
+>> This is hitting us when running in a virtual machine:
+>> The VM sets a timeout when submitting a command, but that
+>> information can't be transmitted to the VM host. The VM host
+>> then issues a different command (with another timeout), and
+>> again that timeout can't be transmitted to the attached devices.
+>> So when the VM detects a timeout, it will try to issue an abort,
+>> but that goes nowhere as the VM host has no way to abort commands
+>> from userspace.
+>> So in the end the VM has to wait for the command to complete, causing
+>> stalls in the VM if the host had to undergo error recovery or something.
+> 
+> Aborts are racy. A lot of hardware implements these as a no-op, too.
 
-diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
-index 3212ef6aa81b..b4b57bead495 100644
---- a/drivers/md/dm-linear.c
-+++ b/drivers/md/dm-linear.c
-@@ -61,6 +61,7 @@ static int linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	ti->num_discard_bios = 1;
- 	ti->num_secure_erase_bios = 1;
- 	ti->num_write_zeroes_bios = 1;
-+	ti->copy_offload_supported = 1;
- 	ti->private = lc;
- 	return 0;
- 
--- 
-2.35.1.500.gb896f729e2
+Indeed.
 
+>> With io_uring or CDL we now have some mechanism which look as if they
+>> would allow us to implement command aborts.
+> 
+> CDL on the other hand sounds more promising.
+> 
+>> So this BoF will be around discussions on how aborts from userspace could be
+>> implemented, whether any of the above methods are suitable, or whether there
+>> are other ideas on how that could be done.
+
+I did not understand what is the relationship between aborts and CDL.
+Sounds to me that this would tie in to something like Time Limited Error
+Recovery (TLER) and LR bit set based on ioprio?
+
+I am unclear where do aborts come into play here.
