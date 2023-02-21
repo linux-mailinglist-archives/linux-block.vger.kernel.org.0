@@ -2,82 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16CFE69E2DA
-	for <lists+linux-block@lfdr.de>; Tue, 21 Feb 2023 16:00:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9BAF69E4FB
+	for <lists+linux-block@lfdr.de>; Tue, 21 Feb 2023 17:42:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233863AbjBUPAI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 21 Feb 2023 10:00:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51260 "EHLO
+        id S234408AbjBUQm2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 21 Feb 2023 11:42:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233777AbjBUPAG (ORCPT
+        with ESMTP id S234868AbjBUQmV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 21 Feb 2023 10:00:06 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD4D2B603
-        for <linux-block@vger.kernel.org>; Tue, 21 Feb 2023 06:59:52 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id l1so4477149wry.10
-        for <linux-block@vger.kernel.org>; Tue, 21 Feb 2023 06:59:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:subject:to:from:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZYgal4JxSeqClDjOaTIWuG632pDj7jRjSVKH768J0cA=;
-        b=PDqFr7rK7Vsizp2SoUOAuwuQDMnOpklEDFWI62I9nYYSPDrpQa9ctbnm/jfxP8mXBq
-         a1gdys5zn4lYWlrUJrczRrMm/vTHTTTmt3FJnDb/c0NxXI6ogZNSXryLk/6QqNHL+GuI
-         jqnWWAF8Nk4N7trprqi5/nlrgpAMFc97H4u0G3KsqvDjg9jOQwPzCx5AxW4R/tV7eue/
-         ZxTeas/snD63Wu1jsPKPIxFoeC2K/P11Dhfoboo6p2/8amrIAeI0NuBpufz7nPnPAgxY
-         MzpLyrnSXXsZohr+sWnpAuodwZAK9+pRqk1fsTBRKRwHEfuAAlbUo5pAoam6db/Ct2Tn
-         1RNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:subject:to:from:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZYgal4JxSeqClDjOaTIWuG632pDj7jRjSVKH768J0cA=;
-        b=u9HP3lq8mh5AF32j8aWYqY0aizek/2IsmdrfRpFzv3r1odyePL1sf0srUsy37FvBsS
-         XeTCVOa4SQnKJxGoq/w+RsVVCMOQBSjgZBbosZMWOlUVd8rv+ToCk4X2F2D9WtWs9IKs
-         ppeIp5K+Ffd/AghaXqQIjttnzf/21z/koNr5TbxYPNtA9j1pYEYhqi2VGbn5xaHZkk3D
-         1mNWmY3tfQhHCO++D/2sZuR3WbmRCZVw5Lfl4tij8pd0IKP5Jbyg4RsiXhcqzcTtY+rP
-         3DqSDoo9PA5xPmpcHYih7GsYq/eRoZWwEmZn/YIE3wKCcg/2pIjluhSv7vBXp8PrmPQJ
-         Z6hg==
-X-Gm-Message-State: AO0yUKVNfHGNfMU9LF/c3743u7xTi+IZx/wfjpUwZZ8nSePD7D21YSEd
-        cPgPOWMSxFvPBraC2XOi+rhMWzGRHA==
-X-Google-Smtp-Source: AK7set9hwTFESFknaE4VxvM4+v6baf3xj9i3QS2s1+5ZJDuY71sp3PvxESPhmeDwThxxF0/o+ew/Sg==
-X-Received: by 2002:a5d:69cd:0:b0:2c5:9ef9:9bab with SMTP id s13-20020a5d69cd000000b002c59ef99babmr4020127wrw.43.1676991590363;
-        Tue, 21 Feb 2023 06:59:50 -0800 (PST)
-Received: from DESKTOP-L1U6HLH ([39.42.138.70])
-        by smtp.gmail.com with ESMTPSA id x15-20020adff64f000000b002c406b357cfsm5829940wrp.86.2023.02.21.06.59.49
-        for <linux-block@vger.kernel.org>
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Tue, 21 Feb 2023 06:59:50 -0800 (PST)
-Message-ID: <63f4dc66.df0a0220.e2bdc.0c7f@mx.google.com>
-Date:   Tue, 21 Feb 2023 06:59:50 -0800 (PST)
-X-Google-Original-Date: 21 Feb 2023 09:59:51 -0500
+        Tue, 21 Feb 2023 11:42:21 -0500
+X-Greylist: delayed 642 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 21 Feb 2023 08:41:55 PST
+Received: from mp-relay-01.fibernetics.ca (mp-relay-01.fibernetics.ca [208.85.217.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B591A2CC47;
+        Tue, 21 Feb 2023 08:41:55 -0800 (PST)
+Received: from mailpool-fe-02.fibernetics.ca (mailpool-fe-02.fibernetics.ca [208.85.217.145])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mp-relay-01.fibernetics.ca (Postfix) with ESMTPS id ED8F4E197D;
+        Tue, 21 Feb 2023 16:25:54 +0000 (UTC)
+Received: from localhost (mailpool-mx-02.fibernetics.ca [208.85.217.141])
+        by mailpool-fe-02.fibernetics.ca (Postfix) with ESMTP id C392F60529;
+        Tue, 21 Feb 2023 16:25:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at 
+X-Spam-Score: -0.2
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: from mailpool-fe-02.fibernetics.ca ([208.85.217.145])
+        by localhost (mail-mx-02.fibernetics.ca [208.85.217.141]) (amavisd-new, port 10024)
+        with ESMTP id TOGJfD7ZUQb8; Tue, 21 Feb 2023 16:25:54 +0000 (UTC)
+Received: from [192.168.48.17] (host-45-78-197-119.dyn.295.ca [45.78.197.119])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dgilbert@interlog.com)
+        by mail.ca.inter.net (Postfix) with ESMTPSA id 884E660375;
+        Tue, 21 Feb 2023 16:25:53 +0000 (UTC)
+Message-ID: <57d8dff9-2fdb-8198-6cdc-7265797a704a@interlog.com>
+Date:   Tue, 21 Feb 2023 11:25:53 -0500
 MIME-Version: 1.0
-From:   butler.dreamlandestimation@gmail.com
-To:     linux-block@vger.kernel.org
-Subject: Building Estimates
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Reply-To: dgilbert@interlog.com
+Subject: Re: [LSF/MM/BPF BOF] Userspace command abouts
+Content-Language: en-CA
+To:     Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+        Hannes Reinecke <hare@suse.de>
+Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        lsf-pc@lists.linuxfoundation.org
+References: <3d3369f1-7ebe-b3b8-804c-ff2b97ec679d@suse.de>
+ <Y+5cjPBE6h/IW9VH@kbusch-mbp>
+ <ad837a26-948a-c690-cd9e-4dfffb5f990d@grimberg.me>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+In-Reply-To: <ad837a26-948a-c690-cd9e-4dfffb5f990d@grimberg.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,=0D=0A=0D=0AIn case you really want take-offs for a developmen=
-t project, we ought to be your consultancy of decision. Reach out=
- to us assuming that you have any undertakings for departure whic=
-h could utilize our administrations.=0D=0A=0D=0ASend over the pla=
-ns and notice the exact extent of work you need us to assess.=0D=0A=
-We will hit you up with a statement on our administration charges=
- and turnaround time.=0D=0AIn case you endorse that individual st=
-atement then we will continue further with the gauge.=0D=0A=0D=0A=
-For a superior comprehension of our work, go ahead and ask us que=
-stions .=0D=0A=0D=0AKind Regards=0D=0AButler Alexis	=0D=0ADreamla=
-nd Estimation, LLC
+On 2023-02-20 06:24, Sagi Grimberg wrote:
+> 
+>>> Hi all,
+>>>
+>>> it has come up in other threads, so it might be worthwhile to have its own
+>>> topic:
+>>>
+>>> Userspace command aborts
+>>>
+>>> As it stands we cannot abort I/O commands from userspace.
+>>> This is hitting us when running in a virtual machine:
+>>> The VM sets a timeout when submitting a command, but that
+>>> information can't be transmitted to the VM host. The VM host
+>>> then issues a different command (with another timeout), and
+>>> again that timeout can't be transmitted to the attached devices.
+>>> So when the VM detects a timeout, it will try to issue an abort,
+>>> but that goes nowhere as the VM host has no way to abort commands
+>>> from userspace.
+>>> So in the end the VM has to wait for the command to complete, causing
+>>> stalls in the VM if the host had to undergo error recovery or something.
+>>
+>> Aborts are racy. A lot of hardware implements these as a no-op, too.
+> 
+> Indeed.
+> 
+>>> With io_uring or CDL we now have some mechanism which look as if they
+>>> would allow us to implement command aborts.
+>>
+>> CDL on the other hand sounds more promising.
+>>
+>>> So this BoF will be around discussions on how aborts from userspace could be
+>>> implemented, whether any of the above methods are suitable, or whether there
+>>> are other ideas on how that could be done.
+> 
+> I did not understand what is the relationship between aborts and CDL.
+> Sounds to me that this would tie in to something like Time Limited Error
+> Recovery (TLER) and LR bit set based on ioprio?
+> 
+> I am unclear where do aborts come into play here.
 
+CDL: Command Duration Limits
+
+One use case is reading from storage for audio visual output.
+An application only wants to wait so long (e.g. one or two frames
+on the video output) before it wants to forget about the current
+read (i.e. "abort" it) and move onto the next read. An alert viewer
+might notice a momentary freeze frame.
+
+The SCSI CDL mechanism uses the DL0, DL1 and DL2 bits in the READ(16,32)
+commands. CDL also depends on the CDLP and RWCDLP fields in the
+REPORT SUPPORTED OPERATION CODES command and one of the CDL
+mode pages. So there may be some additional "wiring" needed in the
+SCSI subsystem.
