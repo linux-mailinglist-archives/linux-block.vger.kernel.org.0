@@ -2,88 +2,139 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DABC76A7C07
-	for <lists+linux-block@lfdr.de>; Thu,  2 Mar 2023 08:49:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4121E6A7C66
+	for <lists+linux-block@lfdr.de>; Thu,  2 Mar 2023 09:19:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbjCBHtf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Mar 2023 02:49:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59692 "EHLO
+        id S229651AbjCBITf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Mar 2023 03:19:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbjCBHte (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Mar 2023 02:49:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948E8149A6
-        for <linux-block@vger.kernel.org>; Wed,  1 Mar 2023 23:49:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677743341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cQ4sHF5KJ3cktE2RXo4MAmwO8cN1mxryLaTqRFOyl/s=;
-        b=XzT9/VjLLd5gEZVS9hMurzHM23uy5229tIvoUD1bBgmM3acKkZW+13Qx5gBqaThcUDb+6u
-        BH74Wu6Ca/QTEGuKrS+33JFLMaAo7O3rwsI2K8CZAHFgae6rokvV474xJ2bbC8Ky1kyvcm
-        BJgG9Sz87TYSGAIeMeE3Og7URRUdNCE=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-241-w8MRV87GP_CvKTJr2Kt-wg-1; Thu, 02 Mar 2023 02:48:58 -0500
-X-MC-Unique: w8MRV87GP_CvKTJr2Kt-wg-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 015571C08973;
-        Thu,  2 Mar 2023 07:48:58 +0000 (UTC)
-Received: from T590 (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EDF27492C14;
-        Thu,  2 Mar 2023 07:48:54 +0000 (UTC)
-Date:   Thu, 2 Mar 2023 15:48:49 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
-Subject: Re: [PATCH blktests v4 0/2] blktests: add mini ublk source and
- blktests/033
-Message-ID: <ZABU4bQ16MHwkNyZ@T590>
-References: <20230224124502.1720278-1-ming.lei@redhat.com>
- <fafd397d-0590-b6ce-121a-365877596ee1@nvidia.com>
- <20230302074446.73egqk5bseexvqg3@shindev>
+        with ESMTP id S229596AbjCBITe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Mar 2023 03:19:34 -0500
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE6E61A974
+        for <linux-block@vger.kernel.org>; Thu,  2 Mar 2023 00:19:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1677745164; x=1709281164;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KKyEdtNDOhebKEQjj/Qmh1erCfjwM0PsZRUXNGv/4xM=;
+  b=VfVqnOx53pQPqaYBxrN95V/ZKIg3vLbgrKeQGP5fSTdn6T3fVi2sZ0ev
+   3ylwFqSHVoZAf781lsAX3GRqp1KEglzpsSWCpL3vbzuF132xrZixJTxkk
+   FFgzRRiiwbbdAQ2dao+C8uqzZ8Fh8uEM5eToBzbfRhrf3Y22030vZlXVZ
+   STr6v9c69wCnCSyu+Jc07tzY7o29231Qn0HBd//JVmzb2PzWL2LwkDDSe
+   uwADSbEGG6argqwnB+sJjOrARXRpl3gMAnFcF2ft5MkJ8tOGaA7rjSIm0
+   GmV4RXVI19wOoFgmOebaoXneYAQaY3iVodTm/JkrFhVEDulsObRKOQCz3
+   A==;
+X-IronPort-AV: E=Sophos;i="5.98,227,1673884800"; 
+   d="scan'208";a="224390336"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Mar 2023 16:19:23 +0800
+IronPort-SDR: +LjzONhhW0a412O24bX5u7GgR1TFhADaCNzHxm3tsFfQWtPXb+q+Ina4bsWRQNYl88HQzHvNK3
+ 7K/kccYZkfZXf04aybvWuZMp3vFMvu4Lh4FVv8x9kKiZ3dl5KnSQdGnqbuL7raytX0EDl6+SBs
+ DokGGVMQ0ltk/k5zSSnUM5HC6KslYIbhlpgsWdCdVQHfUIqbGshqsStkNX0OXIJIeNUECp4SZ4
+ HizbavvMy7STgqJy6tRbkmzMS/ybXkmm1KFEOAlgoiOvKPFRDR5a5G/rMU0OktZPUQ+dtTnCGk
+ wvo=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Mar 2023 23:30:28 -0800
+IronPort-SDR: iVDBEeNwqdhw/S3n8bMTSLNBPbojQbjY9qLn3Ny0ZmK7Do6hVixEtIeriNQZF0wYZFeK04duPs
+ gWKU9qrs+u6Ui8FCnyKgAZf+fFvsdYcekwc1NdzAZ5pjkL10uZFxUnCrQOrk01T7HQPwrLlSH7
+ ubNZpdaIml/97QeaymWsnsQC8KEhrvFuP//ST5a28lQCSe2tpvTHAVZEOHnyC8Pkx+5TuGJAg5
+ up4CzY4BGLJ5Am8+7nLJxBUIuVfn6uac8HndmMBquqVB6AM4DVFOFEzq+owyCYkHqP36Ni9hQ2
+ 1rk=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Mar 2023 00:19:24 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PS3t34hZLz1RvTr
+        for <linux-block@vger.kernel.org>; Thu,  2 Mar 2023 00:19:23 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1677745163; x=1680337164; bh=KKyEdtNDOhebKEQjj/Qmh1erCfjwM0PsZRU
+        XNGv/4xM=; b=mB50Sf+llKHkJMt2P6iQ54lvHazfPTk3E14GwdXQZ76Dt5TeIfy
+        Xhgf3q8XToFWxnX+uuq3NQWieTZy3ayXjXTbVhmOVaq9VDdMJINmFuWJwxMKscu4
+        380mtcNlv8B/6LQe/gdlkN8NVNCjkpjs7Q4h6gbfWnR+JXAAD97ngo8r95Os8LsF
+        rWLti251f9BjnClZqh4N6I2MzGKE5FnDnpUPetdNgwkrCUfjeOvmXfcbSl/uEmID
+        IpVFZP/A2mdwwOjH5xH5lwqLYrbGMeNBQFQqF2gDnQGVOxU5OXakJ/ijVq81bo7Y
+        Hs6bPxEgMOOuyA8XcAMvl+SyrJHyOWMfqVQ==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id k_LHVnt8siwR for <linux-block@vger.kernel.org>;
+        Thu,  2 Mar 2023 00:19:23 -0800 (PST)
+Received: from [10.225.163.47] (unknown [10.225.163.47])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PS3t15fGpz1RvLy;
+        Thu,  2 Mar 2023 00:19:21 -0800 (PST)
+Message-ID: <0d0e5c63-a155-d2ad-1829-c016c61acad6@opensource.wdc.com>
+Date:   Thu, 2 Mar 2023 17:19:20 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230302074446.73egqk5bseexvqg3@shindev>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2] block: ublk: enable zoned storage support
+Content-Language: en-US
+To:     Andreas Hindborg <nmi@metaspace.dk>, Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>,
+        kernel test robot <lkp@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20230224200502.391570-1-nmi@metaspace.dk> <ZAAPBFfqP671N4ue@T590>
+ <87o7pblhi1.fsf@metaspace.dk>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <87o7pblhi1.fsf@metaspace.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 02, 2023 at 07:44:46AM +0000, Shinichiro Kawasaki wrote:
-> On Mar 02, 2023 / 05:00, Chaitanya Kulkarni wrote:
-> > On 2/24/2023 4:45 AM, Ming Lei wrote:
-> > > Hello,
-> > > 
-> > > The 1st patch adds one mini ublk program, which only supports null &
-> > > loop targets.
-> > > 
-> > > The 2nd patch add blktests/033 for covering gendisk leak issue.
-> > >
-> > 
-> > Looks good to me, feel free to merge it.
-> > 
-> > Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+On 3/2/23 16:31, Andreas Hindborg wrote:
+>>> +struct ublk_param_zoned {
+>>> +	__u64	max_open_zones;
+>>> +	__u64	max_active_zones;
+>>> +	__u64	max_append_size;
+>>> +};
+>>
+>> Is the above zoned parameter enough for future extension?
+>> Does ZNS need extra parameter? Or some zoned new(important) features?
 > 
-> Thanks Chaitanya.
-> 
-> Ming, I've merged the patches. Thanks!
+> @Damien, @Hans, @Matias, what do you think?
 
-Great! Thanks all of you!
+Yes, add some reserved fields. The struct is 24 B for now, you can make it 32 B.
+But it is a little odd: why 64 bits for max open/active zones and max append ?
+bio len is 32 bits and number of zones also 32 bits. You do not need 64 bits for
+all these fields. Also, no zone model reported with this ? What about write
+granularity (for SMR HDDs) too ?
 
-Thanks,
-Ming
+So something like:
+
+struct ublk_param_zoned {
+	__u32	model;
+	__u32	write_granularity;
+	__u32	max_open_zones;
+	__u32	max_active_zones;
+	__u32	max_append_size;
+	__u8	reserved[12];
+};
+
+looks better to me. Note sure about the need for model and write_granularity
+here though. I did not follow zoned ublk patches.
+
+
+-- 
+Damien Le Moal
+Western Digital Research
 
