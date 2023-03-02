@@ -2,238 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C5066A79FB
-	for <lists+linux-block@lfdr.de>; Thu,  2 Mar 2023 04:24:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B4E6A7A2D
+	for <lists+linux-block@lfdr.de>; Thu,  2 Mar 2023 04:51:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbjCBDYC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Mar 2023 22:24:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38744 "EHLO
+        id S229739AbjCBDvJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Mar 2023 22:51:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjCBDYB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Mar 2023 22:24:01 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CB714201
-        for <linux-block@vger.kernel.org>; Wed,  1 Mar 2023 19:23:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677727393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f6HrLKOkMNYp+2QM4cY+LWRiYCrWfZRAhw1LdN3wQN8=;
-        b=TIP4qQFX7NJakMaRMBr9iJOFS3I5sbWqszLDkIw/2w+z6BVtkxxbPtlNlTZdX/iybGxTBj
-        5CGQFUbxE1vdr5u9iken6Xs0p7sUWC3y6c2qC4izjrmy9QdbIgjVCYQuBaFm1gGbiIP6VU
-        4dsarJsHVnyd3cO9DvAwmDRWR5fTI5c=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-29-B9hPIZ9POaWFXXnGWDWD5g-1; Wed, 01 Mar 2023 22:23:08 -0500
-X-MC-Unique: B9hPIZ9POaWFXXnGWDWD5g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 207183C02526;
-        Thu,  2 Mar 2023 03:23:08 +0000 (UTC)
-Received: from T590 (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 79B592026D4B;
-        Thu,  2 Mar 2023 03:23:01 +0000 (UTC)
-Date:   Thu, 2 Mar 2023 11:22:55 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     Andreas Hindborg <nmi@metaspace.dk>, linux-block@vger.kernel.org,
-        lsf-pc@lists.linux-foundation.org,
-        Liu Xiaodong <xiaodong.liu@intel.com>,
-        Jim Harris <james.r.harris@intel.com>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Matias =?iso-8859-1?Q?Bj=F8rling?= <Matias.Bjorling@wdc.com>,
-        "hch@lst.de" <hch@lst.de>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>, ming.lei@redhat.com
-Subject: Re: [LSF/MM/BPF BoF]: extend UBLK to cover real storage hardware
-Message-ID: <ZAAWj8Bs8JujXsbX@T590>
-References: <Y+wsj2QqX+HMUJTI@T590>
- <87bkltrj9x.fsf@metaspace.dk>
- <Y+4JVgd338R0x1m4@T590>
- <877cwhrgul.fsf@metaspace.dk>
- <Y+7kfZnWsmnA0V84@T590>
- <Y++t3kYTSNo9Sbb5@fedora>
- <Y/C1CVFceZ+X0ECa@T590>
- <Y/EbEGV2Ege51RQZ@fedora>
- <Y/aijeTJ2HuITMc1@T590>
- <Y/fKC7/cTM2mpz3H@fedora>
+        with ESMTP id S229714AbjCBDvI (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Mar 2023 22:51:08 -0500
+Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D3932532
+        for <linux-block@vger.kernel.org>; Wed,  1 Mar 2023 19:51:01 -0800 (PST)
+Received: by mail-qv1-xf36.google.com with SMTP id m4so10854263qvq.3
+        for <linux-block@vger.kernel.org>; Wed, 01 Mar 2023 19:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fzTjgY6pmauoRhbcUsPGjrkNqmIUEBSmPmq+35HbjTg=;
+        b=Rkuxl05ESC6Da+YLV7H66DkVfB1H8MyYtOQTFidtgWYvhbtoHJdCqcJomw/klp4f4p
+         XqBDwFnJdEAl0ucWx7CcTrs33pFqclCljuCmVnqweMj8LBzRRcsivrU/C4lkocoI9+yC
+         C2mwzEPg/paf33J2Ji903B8EXrlrjNb+QaRv++UOOM2kcOMT0AMqQT7WBx3o8xEdIIht
+         Nvihj11tox4hI7iUb3GIKpWeU1TLzUpq0QTI5SuYWe6pIduvYtTpTr3k6O5ufrXdsG9Y
+         ok6hT9dX2S36ws37fXeesUMc/TS/FsilHh/kLZ8I7qRn6IZeYRPSJfWQ1VmEwgvv8ykT
+         DsSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fzTjgY6pmauoRhbcUsPGjrkNqmIUEBSmPmq+35HbjTg=;
+        b=nztOtPYPwUf/nYtH6P/ugOVfvrBBz6lzah2ZpySvogBvBDdhsPYv3HXqTak8LfVq7/
+         MBnNpHcaRwE0NFEkzVL5NHeNn+3Gg25HYQLBA7rXLB9gv4u3FLfbAPwB7klrVJYuV01t
+         vMwnd4inDU/IU46hhvvLpau+0jegoI7/AfwzUausAr+ZR5Efpq+xAk0xymeCmmIxxEgh
+         LKFeC7f9luDFfm+RnDCwCKFi1XLABmEc4S82V1zkbeUAeoFnI7KN0MTTZnfzkBRIN3Bx
+         zrVRzDKwaNYTk4ND46hvlEA1jTmdvt3h3s/Sr1t61X+jUCnXl2/JOkx/MzDO65j48ukn
+         xvIQ==
+X-Gm-Message-State: AO0yUKU+KabWFNuxxfRCa3M8Os1KJeHlj5LqZLuI8pux3urbQ8vjXamW
+        G2pn9gIrsnENTmm2njzRkMnhbEe8mmwOXsSuad5dxA==
+X-Google-Smtp-Source: AK7set8ZL6X672cfoaD5RsaDZWMHx5fDeqg32Dh9XQt6wt53fQihsEF2Gfjbea6c1Hmrrha2XrzWXFkxe3TZdU+vdG4=
+X-Received: by 2002:a05:6214:4a43:b0:56e:9089:a447 with SMTP id
+ ph3-20020a0562144a4300b0056e9089a447mr2200388qvb.0.1677729061071; Wed, 01 Mar
+ 2023 19:51:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/fKC7/cTM2mpz3H@fedora>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <Y9KtCc+4n5uANB2f@casper.infradead.org> <8448beac-a119-330d-a2af-fc3531bdb930@linux.alibaba.com>
+ <Y/UiY/08MuA/tBku@casper.infradead.org>
+In-Reply-To: <Y/UiY/08MuA/tBku@casper.infradead.org>
+From:   Pasha Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 1 Mar 2023 22:50:24 -0500
+Message-ID: <CA+CK2bBYX-N8T_ZdzsHC7oJnHsmqHufdTUJj5OrdFk17uQ=fzw@mail.gmail.com>
+Subject: Re: [LSF/MM/BPF TOPIC] State Of The Page
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Gao Xiang <hsiangkao@linux.alibaba.com>,
+        lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-nvme@lists.infradead.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Feb 23, 2023 at 03:18:19PM -0500, Stefan Hajnoczi wrote:
-> On Thu, Feb 23, 2023 at 07:17:33AM +0800, Ming Lei wrote:
-> > On Sat, Feb 18, 2023 at 01:38:08PM -0500, Stefan Hajnoczi wrote:
-> > > On Sat, Feb 18, 2023 at 07:22:49PM +0800, Ming Lei wrote:
-> > > > On Fri, Feb 17, 2023 at 11:39:58AM -0500, Stefan Hajnoczi wrote:
-> > > > > On Fri, Feb 17, 2023 at 10:20:45AM +0800, Ming Lei wrote:
-> > > > > > On Thu, Feb 16, 2023 at 12:21:32PM +0100, Andreas Hindborg wrote:
-> > > > > > > 
-> > > > > > > Ming Lei <ming.lei@redhat.com> writes:
-> > > > > > > 
-> > > > > > > > On Thu, Feb 16, 2023 at 10:44:02AM +0100, Andreas Hindborg wrote:
-> > > > > > > >> 
-> > > > > > > >> Hi Ming,
-> > > > > > > >> 
-> > > > > > > >> Ming Lei <ming.lei@redhat.com> writes:
-> > > > > > > >> 
-> > > > > > > >> > On Mon, Feb 13, 2023 at 02:13:59PM -0500, Stefan Hajnoczi wrote:
-> > > > > > > >> >> On Mon, Feb 13, 2023 at 11:47:31AM +0800, Ming Lei wrote:
-> > > > > > > >> >> > On Wed, Feb 08, 2023 at 07:17:10AM -0500, Stefan Hajnoczi wrote:
-> > > > > > > >> >> > > On Wed, Feb 08, 2023 at 10:12:19AM +0800, Ming Lei wrote:
-> > > > > > > >> >> > > > On Mon, Feb 06, 2023 at 03:27:09PM -0500, Stefan Hajnoczi wrote:
-> > > > > > > >> >> > > > > On Mon, Feb 06, 2023 at 11:00:27PM +0800, Ming Lei wrote:
-> > > > > > > >> >> > > > > > Hello,
-> > > > > > > >> >> > > > > > 
-> > > > > > > >> >> > > > > > So far UBLK is only used for implementing virtual block device from
-> > > > > > > >> >> > > > > > userspace, such as loop, nbd, qcow2, ...[1].
-> > > > > > > >> >> > > > > 
-> > > > > > > >> >> > > > > I won't be at LSF/MM so here are my thoughts:
-> > > > > > > >> >> > > > 
-> > > > > > > >> >> > > > Thanks for the thoughts, :-)
-> > > > > > > >> >> > > > 
-> > > > > > > >> >> > > > > 
-> > > > > > > >> >> > > > > > 
-> > > > > > > >> >> > > > > > It could be useful for UBLK to cover real storage hardware too:
-> > > > > > > >> >> > > > > > 
-> > > > > > > >> >> > > > > > - for fast prototype or performance evaluation
-> > > > > > > >> >> > > > > > 
-> > > > > > > >> >> > > > > > - some network storages are attached to host, such as iscsi and nvme-tcp,
-> > > > > > > >> >> > > > > > the current UBLK interface doesn't support such devices, since it needs
-> > > > > > > >> >> > > > > > all LUNs/Namespaces to share host resources(such as tag)
-> > > > > > > >> >> > > > > 
-> > > > > > > >> >> > > > > Can you explain this in more detail? It seems like an iSCSI or
-> > > > > > > >> >> > > > > NVMe-over-TCP initiator could be implemented as a ublk server today.
-> > > > > > > >> >> > > > > What am I missing?
-> > > > > > > >> >> > > > 
-> > > > > > > >> >> > > > The current ublk can't do that yet, because the interface doesn't
-> > > > > > > >> >> > > > support multiple ublk disks sharing single host, which is exactly
-> > > > > > > >> >> > > > the case of scsi and nvme.
-> > > > > > > >> >> > > 
-> > > > > > > >> >> > > Can you give an example that shows exactly where a problem is hit?
-> > > > > > > >> >> > > 
-> > > > > > > >> >> > > I took a quick look at the ublk source code and didn't spot a place
-> > > > > > > >> >> > > where it prevents a single ublk server process from handling multiple
-> > > > > > > >> >> > > devices.
-> > > > > > > >> >> > > 
-> > > > > > > >> >> > > Regarding "host resources(such as tag)", can the ublk server deal with
-> > > > > > > >> >> > > that in userspace? The Linux block layer doesn't have the concept of a
-> > > > > > > >> >> > > "host", that would come in at the SCSI/NVMe level that's implemented in
-> > > > > > > >> >> > > userspace.
-> > > > > > > >> >> > > 
-> > > > > > > >> >> > > I don't understand yet...
-> > > > > > > >> >> > 
-> > > > > > > >> >> > blk_mq_tag_set is embedded into driver host structure, and referred by queue
-> > > > > > > >> >> > via q->tag_set, both scsi and nvme allocates tag in host/queue wide,
-> > > > > > > >> >> > that said all LUNs/NSs share host/queue tags, current every ublk
-> > > > > > > >> >> > device is independent, and can't shard tags.
-> > > > > > > >> >> 
-> > > > > > > >> >> Does this actually prevent ublk servers with multiple ublk devices or is
-> > > > > > > >> >> it just sub-optimal?
-> > > > > > > >> >
-> > > > > > > >> > It is former, ublk can't support multiple devices which share single host
-> > > > > > > >> > because duplicated tag can be seen in host side, then io is failed.
-> > > > > > > >> >
-> > > > > > > >> 
-> > > > > > > >> I have trouble following this discussion. Why can we not handle multiple
-> > > > > > > >> block devices in a single ublk user space process?
-> > > > > > > >> 
-> > > > > > > >> From this conversation it seems that the limiting factor is allocation
-> > > > > > > >> of the tag set of the virtual device in the kernel? But as far as I can
-> > > > > > > >> tell, the tag sets are allocated per virtual block device in
-> > > > > > > >> `ublk_ctrl_add_dev()`?
-> > > > > > > >> 
-> > > > > > > >> It seems to me that a single ublk user space process shuld be able to
-> > > > > > > >> connect to multiple storage devices (for instance nvme-of) and then
-> > > > > > > >> create a ublk device for each namespace, all from a single ublk process.
-> > > > > > > >> 
-> > > > > > > >> Could you elaborate on why this is not possible?
-> > > > > > > >
-> > > > > > > > If the multiple storages devices are independent, the current ublk can
-> > > > > > > > handle them just fine.
-> > > > > > > >
-> > > > > > > > But if these storage devices(such as luns in iscsi, or NSs in nvme-tcp)
-> > > > > > > > share single host, and use host-wide tagset, the current interface can't
-> > > > > > > > work as expected, because tags is shared among all these devices. The
-> > > > > > > > current ublk interface needs to be extended for covering this case.
-> > > > > > > 
-> > > > > > > Thanks for clarifying, that is very helpful.
-> > > > > > > 
-> > > > > > > Follow up question: What would the implications be if one tried to
-> > > > > > > expose (through ublk) each nvme namespace of an nvme-of controller with
-> > > > > > > an independent tag set?
-> > > > > > 
-> > > > > > https://lore.kernel.org/linux-block/877cwhrgul.fsf@metaspace.dk/T/#m57158db9f0108e529d8d62d1d56652c52e9e3e67
-> > > > > > 
-> > > > > > > What are the benefits of sharing a tagset across
-> > > > > > > all namespaces of a controller?
-> > > > > > 
-> > > > > > The userspace implementation can be simplified a lot since generic
-> > > > > > shared tag allocation isn't needed, meantime with good performance
-> > > > > > (shared tags allocation in SMP is one hard problem)
-> > > > > 
-> > > > > In NVMe, tags are per Submission Queue. AFAIK there's no such thing as
-> > > > > shared tags across multiple SQs in NVMe. So userspace doesn't need an
-> > > > 
-> > > > In reality the max supported nr_queues of nvme is often much less than
-> > > > nr_cpu_ids, for example, lots of nvme-pci devices just support at most
-> > > > 32 queues, I remembered that Azure nvme supports less(just 8 queues).
-> > > > That is because queue isn't free in both software and hardware, which
-> > > > implementation is often tradeoff between performance and cost.
-> > > 
-> > > I didn't say that the ublk server should have nr_cpu_ids threads. I
-> > > thought the idea was the ublk server creates as many threads as it needs
-> > > (e.g. max 8 if the Azure NVMe device only has 8 queues).
-> > > 
-> > > Do you expect ublk servers to have nr_cpu_ids threads in all/most cases?
-> > 
-> > No.
-> > 
-> > In ublksrv project, each pthread maps to one unique hardware queue, so total
-> > number of pthread is equal to nr_hw_queues.
-> 
-> Good, I think we agree on that part.
-> 
-> Here is a summary of the ublk server model I've been describing:
-> 1. Each pthread has a separate io_uring context.
-> 2. Each pthread has its own hardware submission queue (NVMe SQ, SCSI
->    command queue, etc).
-> 3. Each pthread has a distinct subrange of the tag space if the tag
->    space is shared across hardware submission queues.
-> 4. Each pthread allocates tags from its subrange without coordinating
->    with other threads. This is cheap and simple.
+On Tue, Feb 21, 2023 at 2:58=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Wed, Feb 22, 2023 at 02:08:28AM +0800, Gao Xiang wrote:
+> > On 2023/1/27 00:40, Matthew Wilcox wrote:
+> > > I'd like to do another session on how the struct page dismemberment
+> > > is going and what remains to be done.  Given how widely struct page i=
+s
+> > > used, I think there will be interest from more than just MM, so I'd
+> > > suggest a plenary session.
+> >
+> > I'm interested in this topic too, also I'd like to get some idea of the
+> > future of the page dismemberment timeline so that I can have time to ke=
+ep
+> > the pace with it since some embedded use cases like Android are
+> > memory-sensitive all the time.
+>
+> As you all know, I'm absolutely amazing at project management & planning
+> and can tell you to the day when a feature will be ready ;-)
+>
+> My goal for 2023 is to get to a point where we (a) have struct page
+> reduced to:
+>
+> struct page {
+>         unsigned long flags;
+>         struct list_head lru;
+>         struct address_space *mapping;
+>         pgoff_t index;
+>         unsigned long private;
+>         atomic_t _mapcount;
+>         atomic_t _refcount;
+>         unsigned long memcg_data;
+> #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
+>         int _last_cpupid;
+> #endif
+> };
 
-That is also not doable.
+This looks clean, but it is still 64-bytes. I wonder if we could
+potentially reduce it down to 56 bytes by removing memcg_data.
+Something like this might work:
 
-The tag space can be pretty small, such as, usb-storage queue depth
-is just 1, and usb card reader can support multi lun too.
+1. On a 64-bit system flags field contains 19 unused bits, we could
+potentially use the free bits in this field.
+2. There are up-to 64K memcg ids. So in case this field contains memcg
+pointer 16-bit id would be enough to convert to memcg pointer
+3. In case memcg_data contains a pointer to a list of memcgs, there
+could be a separate hash table data structure that contains pointers
+to memcgs for slabs, or other users.
 
-That is just one extreme example, but there can be more low queue depth
-scsi devices(sata : 32, ...), typical nvme/pci queue depth is 1023, but
-there could be some implementation with less.
+However, I am not sure how that would affect the performance, but it
+would be very nice to reduce "struct page" by  8-bytes.
 
-More importantly subrange could waste lots of tags for idle LUNs/NSs, and
-active LUNs/NSs will have to suffer from the small subrange tags. And available
-tags depth represents the max allowed in-flight block IOs, so performance
-is affected a lot by subrange.
-
-If you look at block layer tag allocation change history, we never take
-such way.
-
-
-Thanks, 
-Ming
-
+Pasha
