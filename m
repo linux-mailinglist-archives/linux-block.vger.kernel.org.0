@@ -2,121 +2,180 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3649C6A91AA
-	for <lists+linux-block@lfdr.de>; Fri,  3 Mar 2023 08:23:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D11196A9283
+	for <lists+linux-block@lfdr.de>; Fri,  3 Mar 2023 09:34:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbjCCHXg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 Mar 2023 02:23:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55078 "EHLO
+        id S229890AbjCCIeK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 Mar 2023 03:34:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjCCHXd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Mar 2023 02:23:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0945015C86;
-        Thu,  2 Mar 2023 23:23:32 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AE12EB816A1;
-        Fri,  3 Mar 2023 07:23:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3756FC4339C;
-        Fri,  3 Mar 2023 07:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677828209;
-        bh=S96iUPLNp4rT3Ve3r72wqD24rjqGWLopbjKW6pRn4zU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=McQVsF3pfbbSMz/bG0gkWr+ikJD06/SPczhUfwC9RM/sYz8cVjp9caqrRE8/yKsPA
-         bYJqU4aJ/oLzEkLkHiDz6q9dpuI9PQvH2aI0DUa7HyzGmTlddjwBwk1T8Yu3mWt8qd
-         8xmVreTDatA4LOzATgUK23G7DKYb05sC2+rQ5q+9ja5PXzN8W2NC/MGoFLIK+7PqRf
-         ET3BdGc9JeYbJHKi9GoH1Wdwhi1hPyVpfxhogsQhVwMkLXvDGv7u/DeSq8Q13iF53M
-         Kju8By7EaS9mJ6b7N9YVKo9348bMOGqiX1hRzhhk+j9eAFavRzKSxKHyfEwrxZvBmS
-         NdI276eODSPTA==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fscrypt@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>
-Subject: [PATCH 3/3] blk-crypto: remove blk_crypto_insert_cloned_request()
-Date:   Thu,  2 Mar 2023 23:19:59 -0800
-Message-Id: <20230303071959.144604-4-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230303071959.144604-1-ebiggers@kernel.org>
-References: <20230303071959.144604-1-ebiggers@kernel.org>
+        with ESMTP id S229888AbjCCIeK (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Mar 2023 03:34:10 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372B31352D
+        for <linux-block@vger.kernel.org>; Fri,  3 Mar 2023 00:34:08 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id o12so7181156edb.9
+        for <linux-block@vger.kernel.org>; Fri, 03 Mar 2023 00:34:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20210112.gappssmtp.com; s=20210112; t=1677832446;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QX/s24fyXps09GmRUXN6+YF0kQsZjEttAdLoVe9JJU8=;
+        b=KE8kJDfmZXlNopgtYY4tozghvbSzrDPir+aOJyvz4M9lULysiFooq0W9opwHCbAgXM
+         sUokj7MEEiZj0N0IlDYeNWxFcRvLwDeZp+KeuEQfjunuJ/CuLAdXO4JuCss+Ed1ook8C
+         LEPdrpsr4+ThxrdGwOtVsjvc1a/3K3g/X+3CNDsUW9HjKj8CRnLfNgwzTX5pIKoz+ixT
+         2JQ2VPzFZyTvtD3NYd8WQKJmU51lkNbPS1GVRLFoUA7o4GLnIp2OwY02RlSH9kyrltR7
+         oMy1TccoGb2eZ6n1NLq6ehvPWnGMaGiwyyifIcSwIoCBrof6ABWlJwUvBDIJ46zfuxIN
+         iORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677832446;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QX/s24fyXps09GmRUXN6+YF0kQsZjEttAdLoVe9JJU8=;
+        b=53LR6KVmaxKBUhyfJJjbzthQaJFbaMryyELJEyINdcgvduH0tX0l2H2fRb/1i7k9FX
+         IYrEAEbrzKInSPyyriaSRI72jwQ5M6R36oFMiJW9olXvA1zC9hpjlsW1efifHohf7uEg
+         WpnhnlS7+H5rPpEQPYFm+Z8fRIW6FH4ygFfQht+AP2mmNuUWLkNBG5acuTppVLRWM4eh
+         7tY5j09wvEnawiVOeFtUjjfrF1JTE4saZvtneg4xvJnG0oJ7Cxz4D/neTuM8Mjgj1MtG
+         gY/qJn+MOV6t+bWqGmRfLg87BvkK4lpT8nZcqet9LJ/HQxSw+ypRXNp+uoZEpMh9LEKO
+         LBYQ==
+X-Gm-Message-State: AO0yUKU4Tft+WiLj3/GcrSVNqPVfldAgkPRVK/VMY84A5C+6kT/pFbY7
+        4fTaw2qZKyKpU1mRwDVUDipd6V6x3GVP7eOb
+X-Google-Smtp-Source: AK7set+gReERjem/pLhjTAwaodgJwetDff7PtxIZhYQEiDj2UkwqZN3tOQ/Ey6fVvCjcGCGStfPDZA==
+X-Received: by 2002:aa7:cfcb:0:b0:4af:6c25:ed9a with SMTP id r11-20020aa7cfcb000000b004af6c25ed9amr1235797edy.29.1677832446739;
+        Fri, 03 Mar 2023 00:34:06 -0800 (PST)
+Received: from localhost ([194.62.217.3])
+        by smtp.gmail.com with ESMTPSA id t30-20020a50ab5e000000b004ad601533a3sm872101edc.55.2023.03.03.00.34.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Mar 2023 00:34:06 -0800 (PST)
+References: <20230224200502.391570-1-nmi@metaspace.dk>
+ <ZAAPBFfqP671N4ue@T590> <87o7pblhi1.fsf@metaspace.dk>
+ <ZABfFW+28Jlxq+Ew@T590> <ZABmAR6Du1tUVEa7@T590>
+ <CAFj5m9+o4yNA5rNDA+EXWZthMtB+dOLOW0O788i77=Qn1eJ0qQ@mail.gmail.com>
+ <87h6v3l9up.fsf@metaspace.dk> <ZAChttVoCHsnXmvF@T590>
+ <875ybjl1r0.fsf@metaspace.dk> <ZAFieW9PZ2LNQYHa@T590>
+User-agent: mu4e 1.9.18; emacs 28.2.50
+From:   Andreas Hindborg <nmi@metaspace.dk>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>,
+        kernel test robot <lkp@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        open list <linux-kernel@vger.kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Subject: Re: [PATCH v2] block: ublk: enable zoned storage support
+Date:   Fri, 03 Mar 2023 09:27:58 +0100
+In-reply-to: <ZAFieW9PZ2LNQYHa@T590>
+Message-ID: <87wn3yfd36.fsf@metaspace.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
 
-blk_crypto_insert_cloned_request() is the same as
-blk_crypto_rq_get_keyslot(), so just use that directly.
+Ming Lei <ming.lei@redhat.com> writes:
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- Documentation/block/inline-encryption.rst |  3 +--
- block/blk-crypto-internal.h               | 15 ---------------
- block/blk-mq.c                            |  2 +-
- 3 files changed, 2 insertions(+), 18 deletions(-)
+> On Thu, Mar 02, 2023 at 02:28:33PM +0100, Andreas Hindborg wrote:
+>>=20
+>> Ming Lei <ming.lei@redhat.com> writes:
+>>=20
+>> > On Thu, Mar 02, 2023 at 11:07:15AM +0100, Andreas Hindborg wrote:
+>> >>=20
+>> >> Ming Lei <ming.lei@redhat.com> writes:
+>> >>=20
+>> >> > On Thu, Mar 2, 2023 at 5:02=E2=80=AFPM Ming Lei <ming.lei@redhat.co=
+m> wrote:
+>> >> >>
+>> >> >> On Thu, Mar 02, 2023 at 04:32:21PM +0800, Ming Lei wrote:
+>> >> >> > On Thu, Mar 02, 2023 at 08:31:07AM +0100, Andreas Hindborg wrote:
+>> >> >> > >
+>> >> >>
+>> >> >> ...
+>> >> >>
+>> >> >> > >
+>> >> >> > > I agree about fetching more zones. However, it is no good to f=
+etch up to
+>> >> >> > > a max, since the requested zone report may less than max. I was
+>> >> >> >
+>> >> >> > Short read should always be supported, so the interface may need=
+ to
+>> >> >> > return how many zones in single command, please refer to nvme_ns=
+_report_zones().
+>> >> >>
+>> >> >> blk_zone is part of uapi, maybe the short read can be figured out =
+by
+>> >> >> one all-zeroed 'blk_zone'?  then no extra uapi data is needed for
+>> >> >> reporting zones.
+>> >> >
+>> >> > oops, we have blk_zone_report data for reporting zones to userspace=
+ already,
+>> >> > see blkdev_report_zones_ioctl(), then this way can be re-used for g=
+etting zone
+>> >> > report from ublk server too, right?
+>> >>=20
+>> >> Yes that would be nice. But I did the report_zone command like a read
+>> >> operation, so we are not currently copying any buffers to user space
+>> >> when issuing the command, we just rely on the iod.
+>> >
+>> > What I meant is to reuse the format of blk_zone_report for returning
+>> > multiple 'blk_zone' info in single command.
+>> >
+>> > The only change is that you need to allocate one bigger kernel buffer
+>> > to hold more 'blk_zone' in single report zone request.
+>> >
+>> >> I think it would be
+>> >> better to use the start_sectors and nr_sectors of the iod instead. Th=
+en
+>> >> we don't have to copy the blk_zone_report. What do you think?
+>> >
+>> > For IN parameter of report zone command, you still can reuse
+>> > blk_zone_report:
+>> >
+>> > struct blk_zone_report {
+>> >         __u64           sector;
+>> >         __u32           nr_zones;
+>> >         __u32           flags;
+>> > };
+>> >
+>> > Just by using the 1st two 64b words of iod for holding 'blk_zone_repor=
+t', and
+>> > keep the iod->addr field not touched.
+>>=20
+>> I see. Would you make the first part of `struct ublksrv_io_desc` a union
+>> for this, or would you just cast it at the use site?
+>
+> oops, you still need iod->op_flags for recognizing the io op, so just
+> start_sector and nr_sectors can be used.
 
-diff --git a/Documentation/block/inline-encryption.rst b/Documentation/block/inline-encryption.rst
-index f9bf18ea65093..90b733422ed46 100644
---- a/Documentation/block/inline-encryption.rst
-+++ b/Documentation/block/inline-encryption.rst
-@@ -270,8 +270,7 @@ Request queue based layered devices like dm-rq that wish to support inline
- encryption need to create their own blk_crypto_profile for their request_queue,
- and expose whatever functionality they choose. When a layered device wants to
- pass a clone of that request to another request_queue, blk-crypto will
--initialize and prepare the clone as necessary; see
--``blk_crypto_insert_cloned_request()``.
-+initialize and prepare the clone as necessary.
- 
- Interaction between inline encryption and blk integrity
- =======================================================
-diff --git a/block/blk-crypto-internal.h b/block/blk-crypto-internal.h
-index 73609902349b6..0f55e5b4bbbf2 100644
---- a/block/blk-crypto-internal.h
-+++ b/block/blk-crypto-internal.h
-@@ -195,21 +195,6 @@ static inline int blk_crypto_rq_bio_prep(struct request *rq, struct bio *bio,
- 	return 0;
- }
- 
--/**
-- * blk_crypto_insert_cloned_request - Prepare a cloned request to be inserted
-- *				      into a request queue.
-- * @rq: the request being queued
-- *
-- * Return: BLK_STS_OK on success, nonzero on error.
-- */
--static inline blk_status_t blk_crypto_insert_cloned_request(struct request *rq)
--{
--
--	if (blk_crypto_rq_is_encrypted(rq))
--		return blk_crypto_rq_get_keyslot(rq);
--	return BLK_STS_OK;
--}
--
- #ifdef CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK
- 
- int blk_crypto_fallback_start_using_mode(enum blk_crypto_mode_num mode_num);
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 738e81f518227..61ed699e89d53 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3048,7 +3048,7 @@ blk_status_t blk_insert_cloned_request(struct request *rq)
- 	if (q->disk && should_fail_request(q->disk->part0, blk_rq_bytes(rq)))
- 		return BLK_STS_IOERR;
- 
--	if (blk_crypto_insert_cloned_request(rq))
-+	if (blk_crypto_rq_get_keyslot(rq))
- 		return BLK_STS_IOERR;
- 
- 	blk_account_io_start(rq);
--- 
-2.39.2
+We do not actually need to pass the flags to user space, or back from
+user space to kernel for ublk zone report. They are currently used to
+tell user space if the zone report contains capacity field. We could
+exclude them from the ublk kabi since the zone report will always
+contain capacity? But it might be good to have a flags field or future
+things.
+
+> However, this way isn't good too, cause UBLK_IO_OP_DRV_IN is just mapped
+> to 'report zone' command in your implementation, what if new pt request
+> is required in future?
+
+We are currently mapping REQ_OP_* 1:1 to  UBLK_OP_OP_*. If we relax
+this, we can have a UBLK_IO_OP_REPORT_ZONES.
+
+>
+> We need to think about how to support ublk pt request in generic way.
+
+Another option is to allow REQ_OP_DRV_IN to pass a buffer to user space.
+Instead of being similar to a read operation, it could be a combination of
+a read and a write operation.
+
+BR Andreas
 
