@@ -2,57 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15BEA6AA565
-	for <lists+linux-block@lfdr.de>; Sat,  4 Mar 2023 00:09:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41FC06AA572
+	for <lists+linux-block@lfdr.de>; Sat,  4 Mar 2023 00:14:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232290AbjCCXJT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 3 Mar 2023 18:09:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43526 "EHLO
+        id S232049AbjCCXOw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 3 Mar 2023 18:14:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231528AbjCCXJR (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Mar 2023 18:09:17 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB72DF74D;
-        Fri,  3 Mar 2023 15:09:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=idhjeImW2x4WSmgXwGQh1eQ5mm6+wa13qu5LRlgfpnQ=; b=Xup5Yqvv5hPoglL9giPHFQRJ+X
-        opxPYoziOD5gF3xKtZO2z60fGVLexvq/35K4GUmVl1zjLnl1VJNcyQCOAnEMCw2SPYRU8ztYQ1xBN
-        Wd09yO9i0JBSsdkzoyFUhWFM7e8psQiZTrFVD0qQ2Szw8THXF2kbhYTbowyR7R0JwEbRK4JuURgXA
-        U+a5rmLB3bxAc653/ez1Io2N/QTHnYLNDd54wz3ygwsscZxh3ACHarLbWwkmy+8IgMU7crmq6JFZa
-        85Pi0ElDLwWYO/vnPVOkX+ckXlnltF1DDLdFuSmms3ADh+cT9dfT5KTy75DXOSapcMP94va4EkM9w
-        Qetat49Q==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pYEWV-007mVT-Hd; Fri, 03 Mar 2023 23:09:11 +0000
-Date:   Fri, 3 Mar 2023 15:09:11 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Daniel Gomez <da.gomez@samsung.com>,
-        Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier.gonz@samsung.com>,
-        lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] Cloud storage optimizations
-Message-ID: <ZAJ+Fy2wgcrI4tC6@bombadil.infradead.org>
-References: <Y/7L74P6jSWwOvWt@mit.edu>
- <ZAFUYqAcPmRPLjET@kbusch-mbp.dhcp.thefacebook.com>
- <ZAFuSSZ5vZN7/UAa@casper.infradead.org>
- <ZAJqjM6qLrraFrrn@bombadil.infradead.org>
- <ZAJvu2hZrHu816gj@kbusch-mbp.dhcp.thefacebook.com>
- <ZAJxX2u4CbgVpNNN@bombadil.infradead.org>
- <ZAJ1aLWsir73bA1p@kbusch-mbp.dhcp.thefacebook.com>
+        with ESMTP id S232155AbjCCXOp (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 3 Mar 2023 18:14:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77D84B801
+        for <linux-block@vger.kernel.org>; Fri,  3 Mar 2023 15:13:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1677885236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=z5vCHFhYPeAkT+c1PkPwMKEFL4FjgQ8idohZ/LdWkTU=;
+        b=BwTJ7Nh737Vr9IPMDNa9NRq+umpijPoQXN+f3jHAF+qCMChIuVYYGrkAQQnGAqfjfxbNqv
+        QHrgMsbRGFdLeyi2ZG4m1ucT79WNuy24DWA4+EYbiq44OPocHC29TB6OgFIJihv36TNpQY
+        Txx0ovdvxZtg7Q3ivZ3oZURDZ8dW7E4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-530-Y2rkx_arNcaQBf8pxk-ikw-1; Fri, 03 Mar 2023 18:13:54 -0500
+X-MC-Unique: Y2rkx_arNcaQBf8pxk-ikw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2E3CE80D0F0;
+        Fri,  3 Mar 2023 23:13:54 +0000 (UTC)
+Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 602C32166B26;
+        Fri,  3 Mar 2023 23:13:52 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH] nvme: fix handling single range discard request
+Date:   Sat,  4 Mar 2023 07:13:45 +0800
+Message-Id: <20230303231345.119652-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZAJ1aLWsir73bA1p@kbusch-mbp.dhcp.thefacebook.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,60 +56,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Mar 03, 2023 at 03:32:08PM -0700, Keith Busch wrote:
-> On Fri, Mar 03, 2023 at 02:14:55PM -0800, Luis Chamberlain wrote:
-> > On Fri, Mar 03, 2023 at 03:07:55PM -0700, Keith Busch wrote:
-> > > On Fri, Mar 03, 2023 at 01:45:48PM -0800, Luis Chamberlain wrote:
-> > > > 
-> > > > You'd hope most of it is left to FS + MM, but I'm not yet sure that's
-> > > > quite it yet. Initial experimentation shows just enabling > PAGE_SIZE
-> > > > physical & logical block NVMe devices gets brought down to 512 bytes.
-> > > > That seems odd to say the least. Would changing this be an issue now?
-> > > 
-> > > I think you're talking about removing this part:
-> > > 
-> > > ---
-> > > diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> > > index c2730b116dc68..2c528f56c2973 100644
-> > > --- a/drivers/nvme/host/core.c
-> > > +++ b/drivers/nvme/host/core.c
-> > > @@ -1828,17 +1828,7 @@ static void nvme_update_disk_info(struct gendisk *disk,
-> > >  	unsigned short bs = 1 << ns->lba_shift;
-> > >  	u32 atomic_bs, phys_bs, io_opt = 0;
-> > >  
-> > > -	/*
-> > > -	 * The block layer can't support LBA sizes larger than the page size
-> > > -	 * yet, so catch this early and don't allow block I/O.
-> > > -	 */
-> > > -	if (ns->lba_shift > PAGE_SHIFT) {
-> > > -		capacity = 0;
-> > > -		bs = (1 << 9);
-> > > -	}
-> > > -
-> > >  	blk_integrity_unregister(disk);
-> > > -
-> > >  	atomic_bs = phys_bs = bs;
-> > 
-> > Yes, clearly it says *yet* so that begs the question what would be
-> > required?
-> 
-> Oh, gotcha. I'll work on a list of places it currently crashes.
+When investigating one customer report on warning in nvme_setup_discard,
+we observed the controller(nvme/tcp) actually exposes
+queue_max_discard_segments(req->q) == 1.
 
-Awesome that then is part of our dirty laundry TODO for NVMe for larger IO.
+Obviously the current code can't handle this situation, since contiguity
+merge like normal RW request is taken.
 
-> > Also, going down to 512 seems a bit dramatic, so why not just match the
-> > PAGE_SIZE so 4k? Would such a comprmise for now break some stuff?
-> 
-> The capacity set to zero ensures it can't be used through the block stack, so
-> the logical block size limit is unused.
+Fix the issue by building range from request sector/nr_sectors directly.
 
-Oh OK so in effect we won't have compat issues if we decide later to
-change this. So block devices just won't be cabable of working? That
-save me tons of tests.
+Fixes: b35ba01ea697 ("nvme: support ranged discard requests")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/nvme/host/core.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-> 512 is just a default value. We only
-> bring up the handle so you can administrate it with passthrough commands.
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index c2730b116dc6..d4be525f8100 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -781,16 +781,26 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
+ 		range = page_address(ns->ctrl->discard_page);
+ 	}
+ 
+-	__rq_for_each_bio(bio, req) {
+-		u64 slba = nvme_sect_to_lba(ns, bio->bi_iter.bi_sector);
+-		u32 nlb = bio->bi_iter.bi_size >> ns->lba_shift;
+-
+-		if (n < segments) {
+-			range[n].cattr = cpu_to_le32(0);
+-			range[n].nlb = cpu_to_le32(nlb);
+-			range[n].slba = cpu_to_le64(slba);
++	if (queue_max_discard_segments(req->q) == 1) {
++		u64 slba = nvme_sect_to_lba(ns, blk_rq_pos(req));
++		u32 nlb = blk_rq_sectors(req) >> (ns->lba_shift - 9);
++
++		range[0].cattr = cpu_to_le32(0);
++		range[0].nlb = cpu_to_le32(nlb);
++		range[0].slba = cpu_to_le64(slba);
++		n = 1;
++	} else {
++		__rq_for_each_bio(bio, req) {
++			u64 slba = nvme_sect_to_lba(ns, bio->bi_iter.bi_sector);
++			u32 nlb = bio->bi_iter.bi_size >> ns->lba_shift;
++
++			if (n < segments) {
++				range[n].cattr = cpu_to_le32(0);
++				range[n].nlb = cpu_to_le32(nlb);
++				range[n].slba = cpu_to_le64(slba);
++			}
++			n++;
+ 		}
+-		n++;
+ 	}
+ 
+ 	if (WARN_ON_ONCE(n != segments)) {
+-- 
+2.39.2
 
-So we'd use 512 for passthrough, but otherwise it won't work ?
-
-  Luis
