@@ -2,148 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFB596AA8A0
-	for <lists+linux-block@lfdr.de>; Sat,  4 Mar 2023 09:00:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6F5C6AA8AA
+	for <lists+linux-block@lfdr.de>; Sat,  4 Mar 2023 09:17:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbjCDIAe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 4 Mar 2023 03:00:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58372 "EHLO
+        id S229607AbjCDIRo (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 4 Mar 2023 03:17:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjCDIAd (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 4 Mar 2023 03:00:33 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6834F10AB0
-        for <linux-block@vger.kernel.org>; Sat,  4 Mar 2023 00:00:32 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id F173B21FF0;
-        Sat,  4 Mar 2023 08:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1677916830; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7y6sL+0koV15HCEsLXsyTvxPxnQPCO+SWdqKpKczNZY=;
-        b=GI8WRT5xK1by6ci2E2LlZkfedzk488NHl8RJLM+cQ8iOyrWdPS4tG/fLILYxXUx4YgUtzI
-        UpNA9vt+0GTX+FQurQOcq9IQgr61Rf1jnpn/2/LlCzKPDB5ZfZ0/hl3E9Oi9crYE1VsA2Q
-        1RJ3fec9bIOIBSBS02j1DTCPIy8sHJg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1677916830;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7y6sL+0koV15HCEsLXsyTvxPxnQPCO+SWdqKpKczNZY=;
-        b=fUSHaDJfVOfVbeq5EAuWPRMWYMPOSjCWx12f/TOBjjD5sa7D9TtuKBoVnFylKP0DWQpXhK
-        YkummfEZogyYmvDA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6C08A13901;
-        Sat,  4 Mar 2023 08:00:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id EJ2KFp76AmTdFgAAMHmgww
-        (envelope-from <hare@suse.de>); Sat, 04 Mar 2023 08:00:30 +0000
-Message-ID: <80db29ee-70c7-5dad-cd5e-d2348d6d789d@suse.de>
-Date:   Sat, 4 Mar 2023 09:00:28 +0100
+        with ESMTP id S229512AbjCDIRn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 4 Mar 2023 03:17:43 -0500
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415EB4B803;
+        Sat,  4 Mar 2023 00:17:42 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4PTHl44tDsz4f3jM7;
+        Sat,  4 Mar 2023 16:17:36 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.127.227])
+        by APP3 (Coremail) with SMTP id _Ch0CgDHcyGg_gJkXTNDEQ--.38480S4;
+        Sat, 04 Mar 2023 16:17:38 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     hch@lst.de, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH -next 0/3] blk-wbt: cleanup patches
+Date:   Sat,  4 Mar 2023 16:40:50 +0800
+Message-Id: <20230304084053.2822411-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] nvme: fix handling single range discard request
-Content-Language: en-US
-To:     Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-Cc:     linux-block@vger.kernel.org
-References: <20230303231345.119652-1-ming.lei@redhat.com>
-From:   Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20230303231345.119652-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: _Ch0CgDHcyGg_gJkXTNDEQ--.38480S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5_7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
+        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+        CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/4/23 00:13, Ming Lei wrote:
-> When investigating one customer report on warning in nvme_setup_discard,
-> we observed the controller(nvme/tcp) actually exposes
-> queue_max_discard_segments(req->q) == 1.
-> 
-> Obviously the current code can't handle this situation, since contiguity
-> merge like normal RW request is taken.
-> 
-> Fix the issue by building range from request sector/nr_sectors directly.
-> 
-> Fixes: b35ba01ea697 ("nvme: support ranged discard requests")
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->   drivers/nvme/host/core.c | 28 +++++++++++++++++++---------
->   1 file changed, 19 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index c2730b116dc6..d4be525f8100 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -781,16 +781,26 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
->   		range = page_address(ns->ctrl->discard_page);
->   	}
->   
-> -	__rq_for_each_bio(bio, req) {
-> -		u64 slba = nvme_sect_to_lba(ns, bio->bi_iter.bi_sector);
-> -		u32 nlb = bio->bi_iter.bi_size >> ns->lba_shift;
-> -
-> -		if (n < segments) {
-> -			range[n].cattr = cpu_to_le32(0);
-> -			range[n].nlb = cpu_to_le32(nlb);
-> -			range[n].slba = cpu_to_le64(slba);
-> +	if (queue_max_discard_segments(req->q) == 1) {
-> +		u64 slba = nvme_sect_to_lba(ns, blk_rq_pos(req));
-> +		u32 nlb = blk_rq_sectors(req) >> (ns->lba_shift - 9);
-> +
-> +		range[0].cattr = cpu_to_le32(0);
-> +		range[0].nlb = cpu_to_le32(nlb);
-> +		range[0].slba = cpu_to_le64(slba);
-> +		n = 1;
-> +	} else { > +		__rq_for_each_bio(bio, req) {
-> +			u64 slba = nvme_sect_to_lba(ns, bio->bi_iter.bi_sector);
-> +			u32 nlb = bio->bi_iter.bi_size >> ns->lba_shift;
-> +
-> +			if (n < segments) {
-> +				range[n].cattr = cpu_to_le32(0);
-> +				range[n].nlb = cpu_to_le32(nlb);
-> +				range[n].slba = cpu_to_le64(slba);
-> +			}
-> +			n++;
->   		}
-> -		n++;
->   	}
->   
->   	if (WARN_ON_ONCE(n != segments)) {
-Now _that_ is odd.
-Looks like 'req' is not formatted according to the 'max_discard_sectors' 
-setting.
-But if that's the case, then this 'fix' would fail whenever 
-'max_discard_sectors' < 'max_hw_sectors', right?
-Shouldn't we rather modify the merge algorithm to check for 
-max_discard_sectors for DISCARD requests, such that we never _have_
-mis-matched requests and this patch would be pointless?
+From: Yu Kuai <yukuai3@huawei.com>
 
-Cheers,
+Yu Kuai (3):
+  blk-wbt: cleanup rwb_enabled() and wbt_disabled()
+  blk-wbt: freeze queue in wbt_enable/disable_default
+  blk-wbt: remove deadcode
 
-Hannes
+ block/blk-wbt.c | 43 ++++++++++++++++++++-----------------------
+ 1 file changed, 20 insertions(+), 23 deletions(-)
+
 -- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
-Myers, Andrew McDonald, Martje Boudien Moerman
+2.31.1
 
