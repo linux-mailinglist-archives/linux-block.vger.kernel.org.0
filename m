@@ -2,75 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D90E6ABC3D
-	for <lists+linux-block@lfdr.de>; Mon,  6 Mar 2023 11:26:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CC566ABEF2
+	for <lists+linux-block@lfdr.de>; Mon,  6 Mar 2023 13:01:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231151AbjCFK0W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Mar 2023 05:26:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
+        id S229665AbjCFMBq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 6 Mar 2023 07:01:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231128AbjCFKZ7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Mar 2023 05:25:59 -0500
-Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E811525E16
-        for <linux-block@vger.kernel.org>; Mon,  6 Mar 2023 02:25:31 -0800 (PST)
-Received: by mail-vs1-xe36.google.com with SMTP id o6so8596090vsq.10
-        for <linux-block@vger.kernel.org>; Mon, 06 Mar 2023 02:25:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678098330;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
-        b=FXYH3Khb7TkHebhMUbM1Yu51tZ26ORw6PyaaQMrcCbhZfocTv/iiJJu7orekMprgZ5
-         GbPhkYyx0iHwA+UdNkhvP7cfrft0oAnvgn1BhUGKNupLoYtvIgYo/mwaF14UGiW1AkeL
-         NXYQTiXUDre0qbbgSFVIQOJ0FfRUi6ZKhk5nKd3Ql+i75kOy8yx72KhCkpox9AS0XIZq
-         6HWdJF/DrVNMafM0HI1HkNKD2SdFYwhaG3+lwX6e9cX/3sfs50wTnyeu4iKXz011MKhG
-         nYiLFhB99jCZuJb3IuA+SUqU4mh6cL75rrQNmMW7LqTkegWbkNoGu3wTMgb0BPPX0vv/
-         +3Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678098330;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
-        b=PCAPuQlcu38Q4ueR/Z3cNcVdlwsjtxdiLYp1g0tFD3mbG8Gkdce3bmcVQU7w237kWO
-         xNBTIJHS2Oh1fXDzHWkFk6AYGKfxhxA6eHOahpe4TkEdAvqd4jG0MAepId6QKVivL6MP
-         kh5ChHCmwqbRNI4OHB1AtdHxf6I9QRPmfXOtJS+e7ccoJEVmMHFi12DMOv9kNwZDhDPj
-         dPHe/XlrBvvVB7PCpdE6nZ1aG3hFXYGoZTybV5KXe7CcoAhJplRTCQ+23zyUFued7vAa
-         oKDUHawgfOPHkW6tmLCXuVKf1yMEz6N5GETzNAfDUhilRpTxRPjSpQkFYorTkre4tqfE
-         5hZg==
-X-Gm-Message-State: AO0yUKVFOxva/0YJJH/ssH0MRlvv0eRhEjIzmEXNH+ShQfxAFO128ck/
-        2wxkXM9JNCXzxzYLICdCnqg+Scwl/edg+M451Io=
-X-Google-Smtp-Source: AK7set9YqazPiOkBuGm+YrFZOLe51O90+qKBrIr6WBjXtnVrmZ9RIOYyWRLBWcHI+/rsVoNhMQhwnCpcR6G8n2Z6mzE=
-X-Received: by 2002:a05:6102:e44:b0:402:999f:44d3 with SMTP id
- p4-20020a0561020e4400b00402999f44d3mr6975472vst.1.1678098330725; Mon, 06 Mar
- 2023 02:25:30 -0800 (PST)
+        with ESMTP id S230107AbjCFMBn (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Mar 2023 07:01:43 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA09127D43
+        for <linux-block@vger.kernel.org>; Mon,  6 Mar 2023 04:01:40 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 587BE21F28;
+        Mon,  6 Mar 2023 12:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1678104099; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=b+WDDC0GPt/fYktKxXWLJixr1Un3fBCnrFe06J6Iy0Y=;
+        b=bmuiLBNJQ2mOl4klcvaTt5veZ7A+ajUC7jhmQeYtKKvAoCVrRn/zIp+BbrpjVd7YKnEU/s
+        bRcbsMBbWkcTMs/EXMO7J46nq3gzick7+ZXjRmqsdxOG39QMVZPK2UPdZuapz8Mp2iMGj7
+        aGYJ7JUlUXpX631b8LKGggb52Aojwh4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1678104099;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=b+WDDC0GPt/fYktKxXWLJixr1Un3fBCnrFe06J6Iy0Y=;
+        b=uVKqUUT4FEQxIk5q8A6ftvMDItnby12pWvGxE4H1UZJ8BgLCGxogiepYgq8nIGUdVqgshj
+        3BqaLHZNaKo6sQBg==
+Received: from adalid.arch.suse.de (adalid.arch.suse.de [10.161.8.13])
+        by relay2.suse.de (Postfix) with ESMTP id 418162C145;
+        Mon,  6 Mar 2023 12:01:39 +0000 (UTC)
+Received: by adalid.arch.suse.de (Postfix, from userid 16045)
+        id 304F051BE387; Mon,  6 Mar 2023 13:01:39 +0100 (CET)
+From:   Hannes Reinecke <hare@suse.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 0/5] brd: Allow to change block sizes
+Date:   Mon,  6 Mar 2023 13:01:22 +0100
+Message-Id: <20230306120127.21375-1-hare@suse.de>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Received: by 2002:a59:ce6f:0:b0:3ae:930b:3e70 with HTTP; Mon, 6 Mar 2023
- 02:25:30 -0800 (PST)
-Reply-To: madis.scarl@terlera.it
-From:   "Ms Eve from U.N" <denisagotou@gmail.com>
-Date:   Mon, 6 Mar 2023 11:25:30 +0100
-Message-ID: <CAD6bNBi6bPCYboaF4-xBgmeUTFn6JMXqU6TNepQig=NRMqhdUg@mail.gmail.com>
-Subject: Re: Claim of Fund:
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_SCAM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello Good Morning,
-This is to bring to your notice that all our efforts to contact you
-through this your email ID failed Please Kindly contact Barrister.
-Steven Mike { mbarrsteven@gmail.com } on his private email for the
-claim of your compensation entitlement
+Hi all,
 
-Note: You have to pay for the delivery fee.
-Yours Sincerely
-Mrs EVE LEWIS
+meat to the bone: with this patchset one can change the physical and
+logical block size of the 'brd' ramdisk driver.
+Default is 512 (for both); one can easily increase the physical block
+size to 16k and the logical block size to 4k.
+Increasing the logcial block size beyond 4k gives some 'interesting'
+crashes.
+It should also be possible to use the resulting ram disk as a backend
+for nvme target, thereby exercising the NVMe stack for larger block
+sizes, too.
+
+Happy hacking!
+
+Hannes Reinecke (5):
+  brd: convert to folios
+  brd: abstract page_size conventions
+  brd: make sector size configurable
+  brd: limit maximal block size to 32M
+  brd: make logical sector size configurable
+
+ drivers/block/brd.c | 244 ++++++++++++++++++++++++--------------------
+ 1 file changed, 136 insertions(+), 108 deletions(-)
+
+-- 
+2.35.3
+
