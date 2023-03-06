@@ -2,106 +2,143 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 504756ACBD3
-	for <lists+linux-block@lfdr.de>; Mon,  6 Mar 2023 19:02:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 724DB6AD0CC
+	for <lists+linux-block@lfdr.de>; Mon,  6 Mar 2023 22:50:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbjCFSCb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Mar 2023 13:02:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33774 "EHLO
+        id S229659AbjCFVt7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 6 Mar 2023 16:49:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbjCFSC2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Mar 2023 13:02:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674856C8A4
-        for <linux-block@vger.kernel.org>; Mon,  6 Mar 2023 10:02:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229619AbjCFVt7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Mar 2023 16:49:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 705FE521C0
+        for <linux-block@vger.kernel.org>; Mon,  6 Mar 2023 13:49:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678139354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KaYxCqFqTvU0Kk9LsLVgeP5Z4ZTK2X2NkTc3eghdxIU=;
+        b=AfGOUEnXOk7Ug9BxMZyV7DTdqRJ38K9fJLGcCkfvAbJ14vEdn8DlhkE0SH/M03aeou4eot
+        Z+zd2urP+9s/tmMgE2B5MQy6/YuvTClcM274jKGTvRhpS5qNauwY3ICqfK7P5NZKjOF/h2
+        do2tNl4qVJh/JaVZ7kZnYAtMDARTJfw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-277-nG2M55F1M9WyW0AfQR08Vw-1; Mon, 06 Mar 2023 16:49:11 -0500
+X-MC-Unique: nG2M55F1M9WyW0AfQR08Vw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E8EABB81061
-        for <linux-block@vger.kernel.org>; Mon,  6 Mar 2023 18:01:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255ADC433D2;
-        Mon,  6 Mar 2023 18:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678125680;
-        bh=8+fX0DQF7AxWUzkAE7WOfShZIM9RFn5tL/qhNPkcHOs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fIwlz33RQfCI3MpSLUONo434fr2B/bgKX+x8s2H24pDXYTXGlwTQzbqTEaMDrCam3
-         gaX1hxFWn6DzvE83Aui9k2b975FVUplwi9/RbAixgoqWMSce1ljaSUbO4VaWUN1UuY
-         yVjGiGUNQux8WlvdjPGJ28szrKV2Un+CC+Hja5GE/WmVZu5hRG/5EusuQc9pHbTKRo
-         iM5cg3ZcSSIbPAklXa1KqmsRLTmRYoErshqDfWPWncmlmGG04L++thYqS/l8lBzWBF
-         cWOWE1qzEgJVL4Yk/yGC/IAprqiObsdnN1OX/z7rX2G4JAt8toBQDhlcgTadSU9YNO
-         6QCxEbx/DHd9A==
-Date:   Mon, 6 Mar 2023 11:01:17 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH 4/5] brd: limit maximal block size to 32M
-Message-ID: <ZAYqbUEdGAD6rsp4@kbusch-mbp.dhcp.thefacebook.com>
-References: <20230306120127.21375-1-hare@suse.de>
- <20230306120127.21375-5-hare@suse.de>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A05B8101A5BA;
+        Mon,  6 Mar 2023 21:49:10 +0000 (UTC)
+Received: from ovpn-8-26.pek2.redhat.com (ovpn-8-26.pek2.redhat.com [10.72.8.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B9F4B492B00;
+        Mon,  6 Mar 2023 21:49:06 +0000 (UTC)
+Date:   Tue, 7 Mar 2023 05:49:01 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, ming.lei@redhat.com
+Subject: Re: [PATCH] nvme: fix handling single range discard request
+Message-ID: <ZAZfzT02hNQ6bb8P@ovpn-8-26.pek2.redhat.com>
+References: <20230303231345.119652-1-ming.lei@redhat.com>
+ <125e291a-5225-6565-e800-e6bdb6be35f3@grimberg.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230306120127.21375-5-hare@suse.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <125e291a-5225-6565-e800-e6bdb6be35f3@grimberg.me>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 01:01:26PM +0100, Hannes Reinecke wrote:
-> Use an arbitrary limit of 32M for the maximal blocksize so as not
-> to overflow the page cache.
+On Mon, Mar 06, 2023 at 04:21:08PM +0200, Sagi Grimberg wrote:
 > 
-> Signed-off-by: Hannes Reinecke <hare@suse.de>
-> ---
->  drivers/block/brd.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-> index 11bac3c3f1b6..1ed114cd5cb0 100644
-> --- a/drivers/block/brd.c
-> +++ b/drivers/block/brd.c
-> @@ -348,6 +348,7 @@ static int max_part = 1;
->  module_param(max_part, int, 0444);
->  MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices");
->  
-> +#define RD_MAX_SECTOR_SIZE 65536
->  static unsigned int rd_blksize = PAGE_SIZE;
->  module_param(rd_blksize, uint, 0444);
->  MODULE_PARM_DESC(rd_blksize, "Blocksize of each RAM disk in bytes.");
-> @@ -410,15 +411,14 @@ static int brd_alloc(int i)
->  	disk->private_data	= brd;
->  	strscpy(disk->disk_name, buf, DISK_NAME_LEN);
->  	set_capacity(disk, rd_size * 2);
-> -	
-> -	/*
-> -	 * This is so fdisk will align partitions on 4k, because of
-> -	 * direct_access API needing 4k alignment, returning a PFN
-> -	 * (This is only a problem on very small devices <= 4M,
-> -	 *  otherwise fdisk will align on 1M. Regardless this call
-> -	 *  is harmless)
-> -	 */
-> +
-> +	if (rd_blksize > RD_MAX_SECTOR_SIZE) {
+> On 3/4/23 01:13, Ming Lei wrote:
+> > When investigating one customer report on warning in nvme_setup_discard,
+> > we observed the controller(nvme/tcp) actually exposes
+> > queue_max_discard_segments(req->q) == 1.
+> > 
+> > Obviously the current code can't handle this situation, since contiguity
+> > merge like normal RW request is taken.
+> > 
+> > Fix the issue by building range from request sector/nr_sectors directly.
+> > 
+> > Fixes: b35ba01ea697 ("nvme: support ranged discard requests")
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> > ---
+> >   drivers/nvme/host/core.c | 28 +++++++++++++++++++---------
+> >   1 file changed, 19 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> > index c2730b116dc6..d4be525f8100 100644
+> > --- a/drivers/nvme/host/core.c
+> > +++ b/drivers/nvme/host/core.c
+> > @@ -781,16 +781,26 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
+> >   		range = page_address(ns->ctrl->discard_page);
+> >   	}
+> > -	__rq_for_each_bio(bio, req) {
+> > -		u64 slba = nvme_sect_to_lba(ns, bio->bi_iter.bi_sector);
+> > -		u32 nlb = bio->bi_iter.bi_size >> ns->lba_shift;
+> > -
+> > -		if (n < segments) {
+> > -			range[n].cattr = cpu_to_le32(0);
+> > -			range[n].nlb = cpu_to_le32(nlb);
+> > -			range[n].slba = cpu_to_le64(slba);
+> > +	if (queue_max_discard_segments(req->q) == 1) {
+> > +		u64 slba = nvme_sect_to_lba(ns, blk_rq_pos(req));
+> > +		u32 nlb = blk_rq_sectors(req) >> (ns->lba_shift - 9);
+> > +
+> > +		range[0].cattr = cpu_to_le32(0);
+> > +		range[0].nlb = cpu_to_le32(nlb);
+> > +		range[0].slba = cpu_to_le64(slba);
+> > +		n = 1;
+> > +	} else {
+> > +		__rq_for_each_bio(bio, req) {
+> > +			u64 slba = nvme_sect_to_lba(ns, bio->bi_iter.bi_sector);
+> > +			u32 nlb = bio->bi_iter.bi_size >> ns->lba_shift;
+> > +
+> > +			if (n < segments) {
+> > +				range[n].cattr = cpu_to_le32(0);
+> > +				range[n].nlb = cpu_to_le32(nlb);
+> > +				range[n].slba = cpu_to_le64(slba);
+> > +			}
+> > +			n++;
+> >   		}
+> > -		n++;
+> >   	}
+> >   	if (WARN_ON_ONCE(n != segments)) {
+> 
+> 
+> Maybe just set segments to min(blk_rq_nr_discard_segments(req),
+> queue_max_discard_segments(req->q)) and let the existing code do
+> its thing?
 
-rd_blkside is in bytes, but the above is ccomapring it to something in units of
-SECTOR_SIZE.
+What is the existing code for applying min()?
 
-> +		/* Arbitrary limit maximum block size to 32M */
-> +		err = -EINVAL;
-> +		goto out_cleanup_disk;
-> +	}
+For block layer merge code, it has to cover two kinds of discard merge:
 
-rd_blksize also needs to be >= 512, and a power of 2.
+- the traditional single range discard for most of devices
+- multi range discard merge for nvme and virtio-blk which takes same
+fix
 
->  	blk_queue_physical_block_size(disk->queue, rd_blksize);
-> +	blk_queue_max_hw_sectors(disk->queue, RD_MAX_SECTOR_SIZE);
->  
->  	/* Tell the block layer that this is not a rotational device */
->  	blk_queue_flag_set(QUEUE_FLAG_NONROT, disk->queue);
+For driver side, it has to do similar handling if both single-range and
+multi-range discard are supported:
+
+- each bio is one discard range for multi-range discard
+- the whole request(may include more than 1 bios) is the single discard
+range for single-range discard
+
+
+Thanks, 
+Ming
+
