@@ -2,115 +2,103 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2C206AC781
-	for <lists+linux-block@lfdr.de>; Mon,  6 Mar 2023 17:17:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDF326AC94E
+	for <lists+linux-block@lfdr.de>; Mon,  6 Mar 2023 18:08:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230271AbjCFQRw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 6 Mar 2023 11:17:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
+        id S230448AbjCFRIC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 6 Mar 2023 12:08:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbjCFQRf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Mar 2023 11:17:35 -0500
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DBE85F50B
-        for <linux-block@vger.kernel.org>; Mon,  6 Mar 2023 08:14:13 -0800 (PST)
-Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 326GCEQa019871
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 6 Mar 2023 11:12:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-        t=1678119138; bh=xNCYCjbNcx4GryX+Nljoml3TBmyYXYge/KdLA85oJbw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=BT3xMq1wn8LiY2rpGYSEmAn7d5Mym1ZiyMWPanTegjuE2fVi0AAUvwPIB9SEl18N5
-         9U795pn6zor9z/uGM4+uLahEXJXrNYgmDPKFh7ciOodnhNlPH75Gfafe+IwQjFH3sL
-         jX6ODjLybKgwuXonsqQqZJylsmLv4E0ApI4wncgk9ReFFqAMeEW0xVjQHxHSZYUY5k
-         nCbjCKjpEFmp9AJc7Z1h5sLNjojsYNTlDhjnfJHn9pNBDeCu8bTqdC8toB+WSCMSJT
-         Lw32wb+kA02nUc/y/xhb2vXeszGwcL7VCsauWTl+o++ji+DuCxG5pABUX5FrcSHe8J
-         j2CN6SWFRWMKw==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-        id 3A83015C33A8; Mon,  6 Mar 2023 11:12:14 -0500 (EST)
-Date:   Mon, 6 Mar 2023 11:12:14 -0500
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Hannes Reinecke <hare@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Daniel Gomez <da.gomez@samsung.com>,
-        Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier.gonz@samsung.com>,
-        lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] Cloud storage optimizations
-Message-ID: <20230306161214.GB959362@mit.edu>
-References: <Y/7L74P6jSWwOvWt@mit.edu>
- <ZAFUYqAcPmRPLjET@kbusch-mbp.dhcp.thefacebook.com>
- <ZAFuSSZ5vZN7/UAa@casper.infradead.org>
- <ZAJqjM6qLrraFrrn@bombadil.infradead.org>
- <c9f6544d-1731-4a73-a926-0e85ae9da9df@suse.de>
- <ZAN2HYXDI+hIsf6W@casper.infradead.org>
- <edac909b-98e5-cb6d-bb80-2f6a20a15029@suse.de>
- <ZAOF3p+vqA6pd7px@casper.infradead.org>
- <0b70deae-9fc7-ca33-5737-85d7532b3d33@suse.de>
- <ZAWi5KwrsYL+0Uru@casper.infradead.org>
+        with ESMTP id S229886AbjCFRHf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 6 Mar 2023 12:07:35 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02FDA5D76A;
+        Mon,  6 Mar 2023 09:07:07 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 9A89D22114;
+        Mon,  6 Mar 2023 17:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1678122395; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SqhwY2lPFDKqTCuisG7qrwOwTn3FoFZkWgoREgP29v8=;
+        b=hm2foqGrZ06Y6i1j0SnSjC4wlKPfurlYM008VAotDgueUi0QN4jlgObNfSS23IJKqFjKqG
+        +a/FEvqy82lLP3iSMTqS9Punj69DQjt3JeOuGZCQTY7XqfzcjVuSvEplB1PwdhbR5evufB
+        F3HHYNujVu4YQkYJexnd6mVfsAPF2KA=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6EBE113A66;
+        Mon,  6 Mar 2023 17:06:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id iSMxGpsdBmTSZQAAMHmgww
+        (envelope-from <mkoutny@suse.com>); Mon, 06 Mar 2023 17:06:35 +0000
+Date:   Mon, 6 Mar 2023 18:06:34 +0100
+From:   Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To:     Jinke Han <hanjinke.666@bytedance.com>
+Cc:     tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yinxin.x@bytedance.com
+Subject: Re: [RESEND PATCH v6] blk-throtl: Introduce sync and async queues
+ for blk-throtl
+Message-ID: <20230306170634.os744umla72yoryw@blackpad>
+References: <20230228085935.71465-1-hanjinke.666@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jhuwt4jvay5ya4x6"
 Content-Disposition: inline
-In-Reply-To: <ZAWi5KwrsYL+0Uru@casper.infradead.org>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230228085935.71465-1-hanjinke.666@bytedance.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 08:23:00AM +0000, Matthew Wilcox wrote:
-> 
-> All current filesystems that I'm aware of require their fs block size
-> to be >= LBA size.  That is, you can't take a 512-byte blocksize ext2
-> filesystem and put it on a 4kB LBA storage device.
-> 
-> That means that files can only grow/shrink in 256MB increments.  I
-> don't think that amount of wasted space is going to be acceptable.
-> So if we're serious about going down this path, we need to tell
-> filesystem people to start working out how to support fs block
-> size < LBA size.
-> 
-> That's a big ask, so let's be sure storage vendors actually want
-> this.  Both supporting zoned devices & suporting 16k/64k block
-> sizes are easier asks.
 
-What HDD vendors want is to be able to have 32k or even 64k *physical*
-sector sizes.  This allows for much more efficient erasure codes, so
-it will increase their byte capacity now that it's no longer easier to
-get capacity boosts by squeezing the tracks closer and closer, and
-their have been various engineering tradeoffs with SMR, HAMR, and
-MAMR.  HDD vendors have been asking for this at LSF/MM, and in other
-venues for ***years***.
+--jhuwt4jvay5ya4x6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This doesn't necessarily mean that the *logical* sector size needs to
-be larger.  What I could imagine that HDD vendors could do is to
-create HDD disks with, say, a 4k logical block size and a 32k physical
-sector size.  This means that 4k random writes will require
-read/modify/write cycles, which isn't great from a performance
-performance.  However, for those customers who are using raw block
-devices for their cluster file system, and for those customers who are
-willing to, say, use ext4 with a 4k block size and a 32k cluster size
-(using the bigalloc feature), all of the data blocks would be 32k
-aligned, and this would work without any modifications.
+Hello Jinke.
 
-I suspect that if these drives were made available, this would allow
-for a gradual transition to support larger block sizes.  The file
-system level changes aren't *that* hard.  There is a chicken and egg
-situation here; until these drives are generally available, the
-incentive to do the work is minimal.  But with a 4k logical, 32k or
-64k physical sector size, we can gradually improve our support for
-these file systems with block size > page size, with cluster size >
-page size being an intermediate step that would work today.
+On Tue, Feb 28, 2023 at 04:59:35PM +0800, Jinke Han <hanjinke.666@bytedance.com> wrote:
+> and gives a huge priority to sync write ios. Sync queue only make sense
+> for write ios as we treat all read io as sync io.
+[...]
+> +/* For write ios, dispatch 4 sync ios and 1 normal io in one loop */
+> +#define THROTL_SYNC_FACTOR 4
 
-Cheers,
+This looks like an unexplained number wired in.
+E.g. I'd expect that 1st iteration would have this factor==1, i.e. RR
+between sync and async queue.
 
-					- Ted
+What is the reason for this value? E.g. I assume it'd depend on number
+of synchronous writers and flusher threads and their activity, i.e.
+could you describe why this value caters the best for wide range of
+various sync and async situations? Or add a comment what is the
+particular value based on (so that it can be reassessed should those
+dependencies change in the future).
+
+Thanks,
+Michal
+
+--jhuwt4jvay5ya4x6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTrXXag4J0QvXXBmkMkDQmsBEOquQUCZAYdmAAKCRAkDQmsBEOq
+ub2YAQDaCWaGj/Xvs8G4Pm/2qCiJtHgjoH42bz+/IlGbTg3DywD/U7l4W1eG5LvM
+oPCsWs+kfse5/fw4pnz49VDjkNLexgk=
+=D9q5
+-----END PGP SIGNATURE-----
+
+--jhuwt4jvay5ya4x6--
