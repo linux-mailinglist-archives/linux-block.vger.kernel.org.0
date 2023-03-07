@@ -2,95 +2,143 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BECAB6ADC04
-	for <lists+linux-block@lfdr.de>; Tue,  7 Mar 2023 11:33:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77B626ADCE1
+	for <lists+linux-block@lfdr.de>; Tue,  7 Mar 2023 12:10:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230188AbjCGKde (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 7 Mar 2023 05:33:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44064 "EHLO
+        id S230013AbjCGLKt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 7 Mar 2023 06:10:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230132AbjCGKdD (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Mar 2023 05:33:03 -0500
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FF872737;
-        Tue,  7 Mar 2023 02:32:47 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4PWBbY1QDGz4f3l22;
-        Tue,  7 Mar 2023 18:32:41 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.127.227])
-        by APP3 (Coremail) with SMTP id _Ch0CgCnUyHHEgdkLkH6EQ--.28053S4;
-        Tue, 07 Mar 2023 18:32:41 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     hch@lst.de, jack@suse.cz, julianr@linux.ibm.com, axboe@kernel.dk,
-        yukuai3@huawei.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: [PATCH] block: fix wrong mode for blkdev_put() from disk_scan_partitions()
-Date:   Tue,  7 Mar 2023 18:55:52 +0800
-Message-Id: <20230307105552.1560439-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <a3a4351375d51aa5e93e06bba212ba3637665885.camel@linux.ibm.com>
-References: <a3a4351375d51aa5e93e06bba212ba3637665885.camel@linux.ibm.com>
+        with ESMTP id S230432AbjCGLKT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 7 Mar 2023 06:10:19 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9FD023671
+        for <linux-block@vger.kernel.org>; Tue,  7 Mar 2023 03:06:49 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 604811FE18;
+        Tue,  7 Mar 2023 11:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1678187208; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9YbUtisnxxUYD+kIO60HlRHhgexicd7fyRCIkBL6Ifw=;
+        b=kiDnFnMGC9M8kCXT69Kl85+8UhvSlBE/oQMlGtN2I2g9AVYIngyVEDNAJ1sjuLfyrTCWPS
+        9zBAjqLRMn6pcnCaho5W5tuUTmqqTbI5fniLdifRWl9ikUUkFXa6E69j9AAqJo+N3nc/Hv
+        yJ0FDd6BCPhv+PlCJqvgRr1IdStvS3c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1678187208;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9YbUtisnxxUYD+kIO60HlRHhgexicd7fyRCIkBL6Ifw=;
+        b=/vgMr5NwuXtiqEs4l1Wy1uU1X5Gbrc93Jtq93nVSwHba8p9p7PllaYVjKYeCMRBpnAAtXp
+        mpWsj6XGEGVSK0CA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 47F8713440;
+        Tue,  7 Mar 2023 11:06:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id IeglEcgaB2RUegAAMHmgww
+        (envelope-from <hare@suse.de>); Tue, 07 Mar 2023 11:06:48 +0000
+Message-ID: <be09233d-022b-61f0-200c-a5c72a22352b@suse.de>
+Date:   Tue, 7 Mar 2023 12:06:47 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH 5/5] brd: make logical sector size configurable
+To:     Pankaj Raghav <p.raghav@samsung.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Keith Busch <kbusch@kernel.org>
+References: <20230306120127.21375-1-hare@suse.de>
+ <20230306120127.21375-6-hare@suse.de>
+ <CGME20230307090934eucas1p28d92f3fd8c13edcba8e5d3fa7de6bcab@eucas1p2.samsung.com>
+ <20230307090056.x3hpaxdwtlpytnf2@blixen>
+Content-Language: en-US
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20230307090056.x3hpaxdwtlpytnf2@blixen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgCnUyHHEgdkLkH6EQ--.28053S4
-X-Coremail-Antispam: 1UD129KBjvJXoWrKry8Xw1ftF18Kr1rKw45Wrg_yoW8Jr47pr
-        9rKa1YyFy0gryIk3WUX3WxJayUWanrGryfGFWIgr1SyFnrXw4vkF92kr4UWry0yFZag3y5
-        XFnF9FyFqa4rurDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUv014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_
-        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
-        XdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+On 3/7/23 10:01, Pankaj Raghav wrote:
+>> @@ -57,7 +59,7 @@ static struct folio *brd_lookup_folio(struct brd_device *brd, sector_t sector)
+>>   {
+>>   	pgoff_t idx;
+>>   	struct folio *folio;
+>> -	unsigned int rd_sector_shift = brd->brd_sector_shift - SECTOR_SHIFT;
+>> +	unsigned int rd_sector_shift = brd->brd_sector_shift - brd->brd_logical_sector_shift;
+> 
+> Could we create a simple macro instead of repeating this everywhere?
+> #define RD_SECTOR_SHIFT(brd) (brd->brd_sector_shift - brd->brd_logical_sector_shift)
+> 
+Yeah, I'm not utterly happy with that one, too; this patchset is 
+primarily a mechanical conversion to avoid errors.
+Will be changing it.
 
-If disk_scan_partitions() is called with 'FMODE_EXCL',
-blkdev_get_by_dev() will be called without 'FMODE_EXCL', however, follow
-blkdev_put() is still called with 'FMODE_EXCL', which will cause
-'bd_holders' counter to leak.
+>>   
+>>   	/*
+>>   	 * The folio lifetime is protected by the fact that we have opened the
+>>   			bio_io_error(bio);
+>>   			return;
+>>   		}
+>> -		sector += len >> SECTOR_SHIFT;
+>> +		sector += len >> brd->brd_logical_sector_shift;
+>>   	}
+>>   
+>>   	bio_endio(bio);
+>> @@ -353,6 +355,10 @@ static unsigned int rd_blksize = PAGE_SIZE;
+>>   module_param(rd_blksize, uint, 0444);
+>>   MODULE_PARM_DESC(rd_blksize, "Blocksize of each RAM disk in bytes.");
+>>   
+>> +static unsigned int rd_logical_blksize = SECTOR_SIZE;
+>> +module_param(rd_logical_blksize, uint, 0444);
+>> +MODULE_PARM_DESC(rd_logical_blksize, "Logical blocksize of each RAM disk in bytes.");
+>> +
+>>   MODULE_LICENSE("GPL");
+>>   MODULE_ALIAS_BLOCKDEV_MAJOR(RAMDISK_MAJOR);
+>>   MODULE_ALIAS("rd");
+>> @@ -391,6 +397,8 @@ static int brd_alloc(int i)
+>>   	list_add_tail(&brd->brd_list, &brd_devices);
+>>   	brd->brd_sector_shift = ilog2(rd_blksize);
+>>   	brd->brd_sector_size = rd_blksize;
+>> +	brd->brd_logical_sector_shift = ilog2(rd_logical_blksize);
+>> +	brd->brd_logical_sector_size = rd_logical_blksize;
+> 
+> We should a check here to see if logical block > rd_blksize similar
+> to what is done in blk_queue_logical_block_size()?
+>  > // physical block size should not be less than the logical block size
+> if (rd_blksize < rd_logical_blksize) {
+> 	brd->brd_logical_sector_shift = ilog2(rd_blksize);
+> 	brd->brd_logical_sector_size = rd_blksize;
+>   }
+> 
+Sure. Keith already complained about it.
 
-Fix the problem by using the right mode for blkdev_put().
+Cheers,
 
-Reported-by: syzbot+2bcc0d79e548c4f62a59@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/lkml/f9649d501bc8c3444769418f6c26263555d9d3be.camel@linux.ibm.com/T/
-Tested-by: Julian Ruess <julianr@linux.ibm.com>
-Fixes: e5cfefa97bcc ("block: fix scan partition for exclusively open device again")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/genhd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/block/genhd.c b/block/genhd.c
-index 3ee5577e1586..02d9cfb9e077 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -385,7 +385,7 @@ int disk_scan_partitions(struct gendisk *disk, fmode_t mode)
- 	if (IS_ERR(bdev))
- 		ret =  PTR_ERR(bdev);
- 	else
--		blkdev_put(bdev, mode);
-+		blkdev_put(bdev, mode & ~FMODE_EXCL);
- 
- 	if (!(mode & FMODE_EXCL))
- 		bd_abort_claiming(disk->part0, disk_scan_partitions);
+Hannes
 -- 
-2.31.1
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Frankenstr. 146, 90461 Nürnberg
+Managing Directors: I. Totev, A. Myers, A. McDonald, M. B. Moerman
+(HRB 36809, AG Nürnberg)
 
