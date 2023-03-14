@@ -2,146 +2,179 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 590E96B93C0
-	for <lists+linux-block@lfdr.de>; Tue, 14 Mar 2023 13:28:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 751306B9536
+	for <lists+linux-block@lfdr.de>; Tue, 14 Mar 2023 14:04:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbjCNM2D (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 14 Mar 2023 08:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50902 "EHLO
+        id S230409AbjCNNEE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 14 Mar 2023 09:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbjCNM1k (ORCPT
+        with ESMTP id S231232AbjCNNDq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 14 Mar 2023 08:27:40 -0400
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A10D7685
-        for <linux-block@vger.kernel.org>; Tue, 14 Mar 2023 05:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1678796716; x=1710332716;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eXqhOA59lR2OsemLai44IJ7M3W9geVIWrz3XdU1LItk=;
-  b=Bswd0xPd+kbo+eKzFrATv26JESkTmH/y7GD2e6LzovCNC0jL0+D/yaCM
-   HEsOcfGDvnp63OA1WbwPcjbzciuNcCrWLLGhwZ2FGh/AtHiR3OiASGlGE
-   gsEZpWEsGH9AQrE7RBT/kPIsOKuj5iCRNfcdSRLgta5IvIVikbYfnxhFw
-   VzTA+AAHCfoHKR9+VstPKhBTwVT6N5yTvYih7v9dy59VXfGaSEVOtKV77
-   k2ia8oFj/aTc5vI5PkZ3odpGB7d2F0HDRco8FnLsTSj+egbxG2MffrpV5
-   RLXW7PRK8WUuGTfAfjMSVBnVAbJD7uJ4ztDOlapaDRyDE4UzvBjYtfpEJ
-   A==;
-X-IronPort-AV: E=Sophos;i="5.98,259,1673884800"; 
-   d="scan'208";a="337613283"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Mar 2023 20:22:09 +0800
-IronPort-SDR: +pAhj4wU7oOxVsZsYlrOEh3dwQxp+zBVM4DLp9B2xqWD85Yv8ZMd1g5O/mACYqDWzJhwKt8XQ/
- iq0x1dbNaAD1xszbPMIwXyN2QkWqs1rWwABxtHt3wbFxKmBMQHAYJmCrXyjtoAEmQGHTYklOyL
- qoAVcGWof3iSbahrfnzWMHpUTmVGBA9lFJ8u9IrZjfVYpku0FCaWrRxTWYw72dmtIsjuxJjBel
- bgYQl0o96mXJmySfqcycABoixhMnjt7QCcWybQQdybru175IsUFEOqijDWFQ7Piy16BfmL3GVq
- PLU=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Mar 2023 04:32:58 -0700
-IronPort-SDR: 48L+Vjz0ErgHp+UAUH248OuzHjIn5M4YQa1TPwxpdVqfhxyQfl3Vgg9mtPHcw8G2NYuw5OYo3t
- qAscVKFpi7LWUeghCodcyjoDnPIVtZP1E4j1bahyJHLLhb938jfoDoIYFlytDqHFl/5qp5++GI
- YHHoSmxeFWDJNxaegC3XHFN0VnMHxAEJD5UQhIUA4+Nr6nY6UCtrhr7FhHN/4MdwwZbTLQ2i8b
- KTPPHnwyFZwkxnInS4tWbQlhQM5jdQphoEDP2tAA7OaotLeIBFIPPVroNgnk+9ehRb5E8yN1HW
- JLo=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Mar 2023 05:22:11 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PbXhf6Z98z1RtVt
-        for <linux-block@vger.kernel.org>; Tue, 14 Mar 2023 05:22:10 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1678796530; x=1681388531; bh=eXqhOA59lR2OsemLai44IJ7M3W9geVIWrz3
-        XdU1LItk=; b=SS2wEdvy0eYrn/X/kFi1p337PKmpGRxSIJdp5mc00u4jm1lIyru
-        TC9Y4dwO7bwg1//wMY0iUmWQLOpzC26fn8FHgJMtogRkgPA5i+a01JeSpB4qm5TI
-        nHSueYA+5zTNDdX1ru9YkucoP2pTxVvjBQzarrk5qZFp9NVZ9cFk233l/L/HAJrd
-        0Xumv4eEB9IStkxichCzME39OzhLMVV+hw5RFFy0LJJFzMlVlxBfxuz4lhsiek6t
-        fLoyNZJIK3upGPEA8dRiQR9+x6ZOwy2eX7KxQgZHiPCiSPHofKv0Org4eGOVLV+A
-        2sz1YIxQwErSRuEgDIjEnSzTD77hZFdM7zw==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 41UQwcZDebsQ for <linux-block@vger.kernel.org>;
-        Tue, 14 Mar 2023 05:22:10 -0700 (PDT)
-Received: from [10.225.163.84] (unknown [10.225.163.84])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PbXhd5Gmrz1RtVm;
-        Tue, 14 Mar 2023 05:22:09 -0700 (PDT)
-Message-ID: <24e54d52-e7d8-312f-8872-388d8e4c70b4@opensource.wdc.com>
-Date:   Tue, 14 Mar 2023 21:22:08 +0900
+        Tue, 14 Mar 2023 09:03:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C348FA9086
+        for <linux-block@vger.kernel.org>; Tue, 14 Mar 2023 05:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678798659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=S7zYS/3fLfJ34skp3O5HFtZkcNEo/GMnLVlZtrB5M8Y=;
+        b=aHbaAUIGicMr6GWph4A6STDx3oxk+SHBlg6NCeu8vTdSda9pNUJA5f25xc2zF5M2UODnTg
+        9Yy9Yo3Z/KvCXU6zykN0rXteziOklQHl5+ACc/cUnqkHyojeZgPa5WMfXdsvsrT/fWwusB
+        TLp6XVa4NLH70OBWG+ClPrXcedlVkvE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-515-EPGujy8aPLmIDI4WaaPM9g-1; Tue, 14 Mar 2023 08:57:36 -0400
+X-MC-Unique: EPGujy8aPLmIDI4WaaPM9g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B869180D0EE;
+        Tue, 14 Mar 2023 12:57:35 +0000 (UTC)
+Received: from localhost (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCE7BC164E8;
+        Tue, 14 Mar 2023 12:57:34 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
+        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
+        Bernd Schubert <bschubert@ddn.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH V3 00/16] io_uring/ublk: add IORING_OP_FUSED_CMD
+Date:   Tue, 14 Mar 2023 20:57:11 +0800
+Message-Id: <20230314125727.1731233-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] block: do not reverse request order when flushing plug
- list
-Content-Language: en-US
-To:     Jan Kara <jack@suse.cz>, Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-References: <20230313093002.11756-1-jack@suse.cz>
- <ZBBJ7CLOurvOO3OQ@ovpn-8-18.pek2.redhat.com>
- <20230314120900.u67czr5v4kd3my3r@quack3>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <20230314120900.u67czr5v4kd3my3r@quack3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 3/14/23 21:09, Jan Kara wrote:
-> On Tue 14-03-23 18:18:20, Ming Lei wrote:
->> On Mon, Mar 13, 2023 at 10:30:02AM +0100, Jan Kara wrote:
->>> Commit 26fed4ac4eab ("block: flush plug based on hardware and software
->>> queue order") changed flushing of plug list to submit requests one
->>> device at a time. However while doing that it also started using
->>> list_add_tail() instead of list_add() used previously thus effectively
->>> submitting requests in reverse order. Also when forming a rq_list with
->>> remaining requests (in case two or more devices are used), we
->>> effectively reverse the ordering of the plug list for each device we
->>> process. Submitting requests in reverse order has negative impact on
->>> performance for rotational disks (when BFQ is not in use). We observe
->>> 10-25% regression in random 4k write throughput, as well as ~20%
->>> regression in MariaDB OLTP benchmark on rotational storage on btrfs
->>> filesystem.
->>>
->>> Fix the problem by preserving ordering of the plug list when inserting
->>> requests into the queuelist as well as by appending to requeue_list
->>> instead of prepending to it.
->>
->> Also in case of !plug->multiple_queues && !plug->has_elevator, requests
->> are still sent to device in reverse order, do we need to cover that case?
-> 
-> That's an interesting question. I suppose reversing the order in this case
-> could be suprising e.g. for shingled storage. I don't think it matters that
+Hello,
 
-We do not allow plugging writes to sequential zones on zoned block devices. The
-reason is that write commands in the plug may end up being reordered with write
-commands issued later but without plugging. We hit that issue while doing btrfs
-work and the only easy solution we could think of was to not plug any write
-command so that the write ordering is preserved down to the scheduler insertion.
-For the dispatching order, it is the scheduler (mq-deadline) responsibility.
+Add IORING_OP_FUSED_CMD, it is one special URING_CMD, which has to
+be SQE128. The 1st SQE(master) is one 64byte URING_CMD, and the 2nd
+64byte SQE(slave) is another normal 64byte OP. For any OP which needs
+to support slave OP, io_issue_defs[op].fused_slave needs to be set as 1,
+and its ->issue() can retrieve/import buffer from master request's
+fused_cmd_kbuf. The slave OP is actually submitted from kernel, part of
+this idea is from Xiaoguang's ublk ebpf patchset, but this patchset
+submits slave OP just like normal OP issued from userspace, that said,
+SQE order is kept, and batching handling is done too.
 
-> much for normal rotational storage as there you presumably run with at
-> least some IO scheduler (we were using mq-deadline in our testing).>
-> Avoiding the reversal will require small changes to plug handling (so that
-> we append the plug list) but it shouldn't be too bad. Still I'd do it in a
-> separate patch.
-> 
-> 								Honza
+Please see detailed design in commit log of the 2th patch, and one big
+point is how to handle buffer ownership.
+
+With this way, it is easy to support zero copy for ublk/fuse device.
+
+Basically userspace can specify any sub-buffer of the ublk block request
+buffer from the fused command just by setting 'offset/len'
+in the slave SQE for running slave OP. This way is flexible to implement
+io mapping: mirror, stripped, ...
+
+The 3th & 4th patches enable fused slave support for the following OPs:
+
+	OP_READ/OP_WRITE
+	OP_SEND/OP_RECV/OP_SEND_ZC
+
+The other ublk patches cleans ublk driver and implement fused command
+for supporting zero copy.
+
+Follows userspace code:
+
+https://github.com/ming1/ubdsrv/tree/fused-cmd-zc-v2
+
+All three(loop, nbd and qcow2) ublk targets have supported zero copy by passing:
+
+	ublk add -t [loop|nbd|qcow2] -z .... 
+
+Basic fs mount/kernel building and builtin test are done, and also not
+observe regression on xfstest test over ublk-loop with zero copy.
+
+Also add liburing test case for covering fused command based on miniublk
+of blktest:
+
+https://github.com/ming1/liburing/commits/fused_cmd_miniublk
+
+Performance improvement is obvious on memory bandwidth
+related workloads, such as, 1~2X improvement on 64K/512K BS
+IO test on loop with ramfs backing file.
+
+Any comments are welcome!
+
+V3:
+	- fix build warning reported by kernel test robot
+	- drop patch for checking fused flags on existed drivers with
+	  ->uring_command(), which isn't necessary, since we do not do that
+      when adding new ioctl or uring command
+    - inline io_init_rq() for core code, so just export io_init_slave_req
+	- return result of failed slave request unconditionally since REQ_F_CQE_SKIP
+	will be cleared
+	- pass xfstest over ublk-loop
+
+V2:
+	- don't resue io_mapped_ubuf (io_uring)
+	- remove REQ_F_FUSED_MASTER_BIT (io_uring)
+	- fix compile warning (io_uring)
+	- rebase on v6.3-rc1 (io_uring)
+	- grabbing io request reference when handling fused command 
+	- simplify ublk_copy_user_pages() by iov iterator
+	- add read()/write() for userspace to read/write ublk io buffer, so
+	that some corner cases(read zero, passthrough request(report zones)) can
+	be handled easily in case of zero copy; this way also helps to switch to
+	zero copy completely
+	- misc cleanup
+
+
+Ming Lei (16):
+  io_uring: increase io_kiocb->flags into 64bit
+  io_uring: add IORING_OP_FUSED_CMD
+  io_uring: support OP_READ/OP_WRITE for fused slave request
+  io_uring: support OP_SEND_ZC/OP_RECV for fused slave request
+  block: ublk_drv: mark device as LIVE before adding disk
+  block: ublk_drv: add common exit handling
+  block: ublk_drv: don't consider flush request in map/unmap io
+  block: ublk_drv: add two helpers to clean up map/unmap request
+  block: ublk_drv: clean up several helpers
+  block: ublk_drv: cleanup 'struct ublk_map_data'
+  block: ublk_drv: cleanup ublk_copy_user_pages
+  block: ublk_drv: grab request reference when the request is handled by
+    userspace
+  block: ublk_drv: support to copy any part of request pages
+  block: ublk_drv: add read()/write() support for ublk char device
+  block: ublk_drv: don't check buffer in case of zero copy
+  block: ublk_drv: apply io_uring FUSED_CMD for supporting zero copy
+
+ drivers/block/ublk_drv.c       | 602 ++++++++++++++++++++++++++-------
+ include/linux/io_uring.h       |  49 ++-
+ include/linux/io_uring_types.h |  80 +++--
+ include/uapi/linux/io_uring.h  |   1 +
+ include/uapi/linux/ublk_cmd.h  |  37 +-
+ io_uring/Makefile              |   2 +-
+ io_uring/fused_cmd.c           | 245 ++++++++++++++
+ io_uring/fused_cmd.h           |  11 +
+ io_uring/io_uring.c            |  28 +-
+ io_uring/io_uring.h            |   3 +
+ io_uring/net.c                 |  30 +-
+ io_uring/opdef.c               |  17 +
+ io_uring/opdef.h               |   2 +
+ io_uring/rw.c                  |  20 ++
+ 14 files changed, 967 insertions(+), 160 deletions(-)
+ create mode 100644 io_uring/fused_cmd.c
+ create mode 100644 io_uring/fused_cmd.h
 
 -- 
-Damien Le Moal
-Western Digital Research
+2.39.2
 
