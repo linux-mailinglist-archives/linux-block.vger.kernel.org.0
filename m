@@ -2,108 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C3B66BF567
-	for <lists+linux-block@lfdr.de>; Fri, 17 Mar 2023 23:56:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 349AF6BF630
+	for <lists+linux-block@lfdr.de>; Sat, 18 Mar 2023 00:23:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbjCQW4a (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 17 Mar 2023 18:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
+        id S229516AbjCQXXh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Mar 2023 19:23:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbjCQW43 (ORCPT
+        with ESMTP id S229502AbjCQXXh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 17 Mar 2023 18:56:29 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C5DD514
-        for <linux-block@vger.kernel.org>; Fri, 17 Mar 2023 15:56:28 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so6815839pjz.1
-        for <linux-block@vger.kernel.org>; Fri, 17 Mar 2023 15:56:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679093788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rgl6/Ew3LdfVeuq3EG0BPByS9IqpLUKC1pNwODZSZMU=;
-        b=e6R9EwymyM8VB3T/Qk9Bv7+QepHZSKJljv0Tk0WcqnlmSGmI/JU/r9KMRinX1eUh3Y
-         +2zTFGLlEhiGkYfExeZ0TLIqg4/MZG8WTJ1/bK4fTPeSFCS2KlnbRRscLIoJw/EiZvy3
-         wOjxustqLkj0IMLmd0C7JiYUaCLuTV3rJAnwmmblpoUX/eI5O02Ac2urVs3k6Sq3OddO
-         ukQ9C+M5H4d1KShMTho2fwl2AOx7i/LJljqCBPIb06zvUWJKpbUxefq9DUiXheNRTrCW
-         QsEYIYgTgsvg1dCdT+IwAGgGVI+1GztUQJscTfQvk5daK0y+1dfdmUH9ckBCUbrKy2o9
-         RmRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679093788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rgl6/Ew3LdfVeuq3EG0BPByS9IqpLUKC1pNwODZSZMU=;
-        b=4t8NxOZtwyA3GvxZ9be1L76ejpQXB9UWVjPIXkX8PdBqyPgLrpnrUXnmOUFj5YnRTa
-         Uoa2b4kVrqz4ljknwAwmu5k0+G2baljQg+FmhaUKVJHPvz8hgKwFADaeQ0PQBkmDB6eh
-         l7DwrwWvZL6aXE6gGfE86DWOeJY7n6o4jQsRJEzBd3FjTmYQCSFet8swK55sFlPcgo6A
-         8u3Oc/vSkVoEgEYFHJzRHXzu3SIKxPj9lRA87NCnCSnWUA4owuvom77h3a1yp2vtCg6J
-         UTOLF1Hod5yWZqLmY/vz2RbMOQNbxQVDGTwUj2r8ujX/L0pDtJuFbn4CIA9DJ9lEVFn7
-         Behw==
-X-Gm-Message-State: AO0yUKVJKiVS3B7Avzw3/Oe/n03WIyE515ZCYhhI3YDxIxlTQuHD8yQw
-        Sz2dkI0M4RyfZMM0o47XEFrO6PHocHvPnxDVTUK7iA==
-X-Google-Smtp-Source: AK7set+VZ1C/vdje0Qf+DN5K6lCsci8LicRW622ZINtSJOlwFek/UOb9dFwUqU2dwUFenMc0n7bU0LcAGLAMvZzPf6E=
-X-Received: by 2002:a17:902:e749:b0:1a0:4aa3:3a9a with SMTP id
- p9-20020a170902e74900b001a04aa33a9amr3500662plf.2.1679093787879; Fri, 17 Mar
- 2023 15:56:27 -0700 (PDT)
+        Fri, 17 Mar 2023 19:23:37 -0400
+Received: from sragenkab.go.id (mail.sragenkab.go.id [103.172.109.4])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id BCA68399D3
+        for <linux-block@vger.kernel.org>; Fri, 17 Mar 2023 16:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sragenkab.go.id;
+         h=mime-version:content-type:content-transfer-encoding:date:from
+        :to:subject:reply-to:message-id; q=dns/txt; s=dkim1; bh=QGcIAmD5
+        O/Y9qXzDV8MxyimbsW3+rMaQ/kz75GzBHbk=; b=AkRhk5tIOR1K+IV3JKZZNaEU
+        NhA7Q97zcwox9MqSntk/oegFNn7jH3/04uWjv9W/D8JPoWNFQDtN6vtqHw/bu8by
+        zQtn3d3lbQShodvb53LaOkR4LnHX6/1ysg/NGw4SrCDoPZHdmPBCM6qum04N66mM
+        6kTa+McuXHhu78opmc+vfT5F1lgn8AAobipEwtX4VkS5T4xdDd5Bz/FzM4tIqEWN
+        O9um9LVONbtbHM0Wfw56cThzlTyCyGgB4/oqabL0SgTu/zioViGXmDEuSfmVzU1R
+        VCsYMzHjdMc2piPpCGhBxHXZ6cG/Pfj7YUUA3nnt4tF01Cu0ve6Aqxz4Qk0Pow==
+Received: (qmail 62021 invoked from network); 15 Mar 2023 02:03:06 -0000
+Received: from localhost (HELO mail2.sragenkab.go.id) (127.0.0.1)
+  by localhost with SMTP; 15 Mar 2023 02:03:06 -0000
 MIME-Version: 1.0
-References: <9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk>
- <CAHk-=wgcYvgJ5YWJPy6PA-B_yRtPfpw01fmCqtvqGN9jouc_8w@mail.gmail.com>
- <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com>
- <6414c470.a70a0220.6b62f.3f02@mx.google.com> <CAHk-=wi5yk0+NeqB34fRC-Zvt+8QZVPTiny9MvCxxjg+ZqDhKg@mail.gmail.com>
- <CANiq72m46OzQPtZbS_VaQGgGknFV-hKvhBw8sVZx9ef=AzupTQ@mail.gmail.com>
- <CAHk-=wgTSdKYbmB1JYM5vmHMcD9J9UZr0mn7BOYM_LudrP+Xvw@mail.gmail.com> <CAHk-=wgLBjQZ1Xic9SDvtPOu3MNwRznZygZ35mqq4CpKmWdBtA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgLBjQZ1Xic9SDvtPOu3MNwRznZygZ35mqq4CpKmWdBtA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 17 Mar 2023 15:56:16 -0700
-Message-ID: <CAKwvOdkSBASKK9LZowSdNyN+OR7Kx+j5sMdiJ1nSwbvoQPzNVQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Block fixes for 6.3-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        clang-built-linux <llvm@lists.linux.dev>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Mar 2023 19:03:05 -0700
+From:   Ibrahim Tafa <jurnalsukowati@sragenkab.go.id>
+To:     undisclosed-recipients:;
+Subject: LOAN FUNDING OPPORTUNITY
+Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
+Mail-Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
+Message-ID: <15cf96b0ca153d2339b875cda387efee@sragenkab.go.id>
+X-Sender: jurnalsukowati@sragenkab.go.id
+User-Agent: Roundcube Webmail/0.8.1
+X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_PASS,SUBJ_ALL_CAPS,UNDISC_MONEY,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 2:00=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Mar 17, 2023 at 1:51=E2=80=AFPM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > but I would *really* like clang to be fixed to not silently generate
-> > code that does insane things and would be basically impossible to
-> > debug if it ever triggers.
->
-> Side note: the key word here is "silently".
->
-> If clang notices that it generates crazy code, a warning at build-time
-> would be preferable to the "oh, we noticed the crazy code generation
-> because we do sanity checking that just happened to catch it".
 
-That's fair.  I have something hacked up locally that can spot the
-fallthough from m5mols_set_fmt() as objtool did. With some polish, we
-can likely ship that as a compiler warning.  Then we can have these
-checks regardless of objtool arch support.
 
-First I need to teach LLVM that __stack_chk_fail is noreturn, though
-I've only verified that thus far in glibc, musl, and bionic; I still
-need to check that's the case for the BSDs' libcs.
---=20
-Thanks,
-~Nick Desaulniers
+-- 
+Greetings,
+   I am contacting you based on the Investment/Loan opportunity for 
+companies in need of financing a project/business, We have developed a 
+new method of financing that doesn't take long to receive financing from 
+our clients.
+    If you are looking for funds to finance your project/Business or if 
+you are willing to work as our agent in your country to find clients in 
+need of financing and earn commissions, then get back to me for more 
+details.
+
+Regards,
+Ibrahim Tafa
+ABIENCE INVESTMENT GROUP FZE, United Arab Emirates
