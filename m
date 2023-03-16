@@ -2,201 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A69296BD44D
-	for <lists+linux-block@lfdr.de>; Thu, 16 Mar 2023 16:48:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B6D86BD404
+	for <lists+linux-block@lfdr.de>; Thu, 16 Mar 2023 16:39:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230199AbjCPPsV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 16 Mar 2023 11:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44646 "EHLO
+        id S231671AbjCPPi6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 16 Mar 2023 11:38:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230193AbjCPPsU (ORCPT
+        with ESMTP id S231683AbjCPPik (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 16 Mar 2023 11:48:20 -0400
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2152193F6
-        for <linux-block@vger.kernel.org>; Thu, 16 Mar 2023 08:47:55 -0700 (PDT)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230316153017euoutp014844a4adfc9e1a8024dee36773fe1214~M7-nAmUGq1532915329euoutp01j
-        for <linux-block@vger.kernel.org>; Thu, 16 Mar 2023 15:30:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230316153017euoutp014844a4adfc9e1a8024dee36773fe1214~M7-nAmUGq1532915329euoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1678980617;
-        bh=dw6ZM8dVL/gkZJVPvpAuxqdfmjR01x+CAelnHMcCROY=;
-        h=Date:Subject:To:CC:From:In-Reply-To:References:From;
-        b=VMat0wlgvbVPtM46pax/06d6MC/I6P0R9qAbbaCazV/cUWpT8go7K1hVGE98p/b0p
-         FJjZHM3LqZZPv+l6qTMkIcgCcVloY/S/1IGYNcd+QGxTmuEM2TSofoFuo1dPmT5dfk
-         WGn8a76STu1JimcU5w98ho5k1b21H4qKrebfphcA=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230316153016eucas1p1061bfe038e8dfcb4a43ab5bd7e65ef3d~M7-mt0_oK2016020160eucas1p1Y;
-        Thu, 16 Mar 2023 15:30:16 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 4F.D2.09503.80633146; Thu, 16
-        Mar 2023 15:30:16 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230316153016eucas1p14c300fe22d12c46881b889a7a4786cad~M7-mMfLhD1723017230eucas1p1W;
-        Thu, 16 Mar 2023 15:30:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230316153016eusmtrp262884fa26715c616db40201755be7daf~M7-mL4aBv1290912909eusmtrp2q;
-        Thu, 16 Mar 2023 15:30:16 +0000 (GMT)
-X-AuditID: cbfec7f2-ea5ff7000000251f-95-641336088113
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B1.BD.08862.80633146; Thu, 16
-        Mar 2023 15:30:16 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230316153015eusmtip19802e01efff92dc1fbb3b14a98748063~M7-mBRrTc0360603606eusmtip1h;
-        Thu, 16 Mar 2023 15:30:15 +0000 (GMT)
-Received: from [192.168.8.107] (106.210.248.172) by CAMSVWEXC02.scsc.local
-        (2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-        Thu, 16 Mar 2023 15:29:57 +0000
-Message-ID: <367c04f8-f5f6-a628-c4a9-7534fa83eb88@samsung.com>
-Date:   Thu, 16 Mar 2023 16:29:56 +0100
+        Thu, 16 Mar 2023 11:38:40 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163781A642
+        for <linux-block@vger.kernel.org>; Thu, 16 Mar 2023 08:36:56 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id s4so959564ioj.11
+        for <linux-block@vger.kernel.org>; Thu, 16 Mar 2023 08:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1678980956;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vbqCSyzQ2Vc+jOdl+z6pC6351AAeMd3EjtD4NdIeOsM=;
+        b=ZKJm1OkRdU7+ulP5R+L16WoW86AjyshwdfPWmzyY369cvbGOBr0ljZdSOwgZgq8jUJ
+         XC2epD2SQpjZkNhcFLPUdG6qxXVaLPJjoo+rLG0yhrczb+FH3fw8gAfeccoB7T2HM3IG
+         ROygfCN6aoeRo1y7yUGtveEL+rSteP6RXWCVyhQD6BdwSykI/0VG5lYsK8088ayhxyym
+         0kQAuWnV+B03/rF1eENiy+sJ0JAlrr2Nbpa1/wWkN+k9Zd+WHz9rW6FC3WnUzP2Lvx11
+         I55HoZk54TpCJXbCjA1iQl4kVT6oU0nwyUSrCddo9w5G9ipBFxQP9q+Qq8tmeLrLXUCq
+         vI3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678980956;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vbqCSyzQ2Vc+jOdl+z6pC6351AAeMd3EjtD4NdIeOsM=;
+        b=Kq5rcRiD5fveQ5zpxcKJhmhHWKFwCaXW9z7d66dMnivOYB9u7A30uE8oQJs6WsOhOo
+         /GWRHpH7ifBuRGS0/3Ug8xMVh9xlvuc2WFlnMJkQAPMXg0q2XrzRRxd+h3xO+CL+uMoU
+         IpfMrP0hDmkUE16f45bbf4o440x7OUvqTqPt2WsMaCkg9/9RwfPVY3EJ7gCKoknQ+ddT
+         WzBjBdVNBxfTb+vQGY8Xr9bWumjoDtbPfVIy+44aDO2x7KUwdHF4sygtNF7h3+TU6gEG
+         BB8yGQmorDBReVFhmbzFO4WQBcy7pH4mpPVJF2lRrd9O1fr3lk9U4fbvqyUY2PGyB9eV
+         8kbg==
+X-Gm-Message-State: AO0yUKXx99pMmj752zlgwhkk8A3NwVVhdTiaYxDLlnt6oERyzd9jdTPq
+        Ly87dLIMSBbxxP0wHjESGClcsaI/DOzKP//k4eZGAw==
+X-Google-Smtp-Source: AK7set8GnW5ByrPgZRuHB6Q6wFJgPvrgcHqe5wCLkLBo57phwL0hWWCrMSfD9fe1rIR99Gq23Bl1mg==
+X-Received: by 2002:a05:6602:2c07:b0:74e:5fba:d5df with SMTP id w7-20020a0566022c0700b0074e5fbad5dfmr2370748iov.0.1678980955955;
+        Thu, 16 Mar 2023 08:35:55 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id t8-20020a056638204800b004050d92f6d4sm726970jaj.50.2023.03.16.08.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Mar 2023 08:35:55 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     linux-block@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-fscrypt@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>
+In-Reply-To: <20230315183907.53675-1-ebiggers@kernel.org>
+References: <20230315183907.53675-1-ebiggers@kernel.org>
+Subject: Re: [PATCH v3 0/6] Fix blk-crypto keyslot race condition
+Message-Id: <167898095529.31557.16126359951385476698.b4-ty@kernel.dk>
+Date:   Thu, 16 Mar 2023 09:35:55 -0600
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-        Thunderbird/102.8.0
-Subject: Re: [LSF/MM/BPF TOPIC] Cloud storage optimizations
-Content-Language: en-US
-To:     Keith Busch <kbusch@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Daniel Gomez <da.gomez@samsung.com>,
-        =?UTF-8?Q?Javier_Gonz=c3=a1lez?= <javier.gonz@samsung.com>,
-        <lsf-pc@lists.linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-block@vger.kernel.org>, Dave Chinner <david@fromorbit.com>,
-        "Christoph Hellwig" <hch@lst.de>
-From:   Pankaj Raghav <p.raghav@samsung.com>
-In-Reply-To: <ZAJ1aLWsir73bA1p@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [106.210.248.172]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-        CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRj1d+92d11oN7X2pZKlaTVpaQ+70cOkkCUWZVRkQa28mKhTdp3a
-        C7QXuULnLMqb+ax8VdaSstSK1ZSZaQXpkrKnmK0Hapmy0rxeA/873znn+3HOx4/EXWrE7mSM
-        OonRqFVx3oRUdLthqHU+GeQaFVDV5EtXN3QiurzSjNEGUxui6zv86bp6i4juvDoipu/b6nHa
-        qu9C9PHTQxLaPphHrJYqm4pBeatMrjRWZBBKY59BosyxliJl7as0Qnmk2Ywr+40zNpKR0hVR
-        TFxMMqNZsGq3dJ+l/Yok0TopNXO4jUhDH0gdciSBWgwnDZcxHZKSLlQZgmzD8PjwE0FWWh0u
-        DP0ICm6cl/xfaW/uEQtCKYKBjmyMF8ZcbypSBaEWgfXIMTEvOFGr4ELtTZzHIsoX9LoaXOCn
-        gCX3k0iHSHIqFQmfbck87UotByNXh3iMUzLo+FSA8RY3ah2MNPryz+NUPwbfOfMYT1BySM+Q
-        8NCRCobuHJmwOQ+O37FLBOwFd77l4UJ8H8iz1Yzjw9BU3TFWGKhSR8h+MEAIwlqoPPseE7Ar
-        fGmsHu/uCSN3C8b5g9BltePC8rHRa92tIvgQMJo/szlO8ITA/fZMTKCdwfptipDHGQy3z+F6
-        5MtNuAM3oTA3oQI3oUIhElUgGaNl46MZNlDNpChYVTyrVUcr9ibEG9Ho53oy3NhXgy5+6VWY
-        EEYiEwIS93Zz2iaiolycolT7DzCahF0abRzDmpAHKfKWOfmvtOx1oaJVSUwswyQymv8qRjq6
-        p2Ezg9dw2pJQbUpL77XFR12XQO5WImvHC5vuj59kzqlQhQeXv0D6zuf6xpYe+6liu4MhaPKi
-        wl2pD/4+fHxmFm0yz2EnbfhTvkhfMjtzelKJoii9Z4anXyz9dbk+dunQmpSXHq+fwll/qXxa
-        GNWZTwQ8kngdOrGFzSrEZANv65xbxW4Lz9GDQT93dn+PSIjxDIxM100OCP4Y5hcy6yBxozfP
-        nDQ3N6K1T128aXubLXzZ1fVdtoxL63+0zGazxU/OR6zeEe7s8EybNdjd4J68sGxmYaPtoT9j
-        eUeGYIe3RH/9de9WaEb4oXmfV1YFJD5/Jd+sOaoq4nbHeHi19qh+OzCpe0hvEbtPFSjHNazq
-        H+mAVbXLAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsVy+t/xu7ocZsIpBhc+sFlsOXaP0WLl6qNM
-        FpMOXWO02HtL22LP3pMsFvfW/Ge12Pd6L7PFjQlPGS1ae36yW/z+MYfNgcvj1CIJj80rtDw2
-        repk89j0aRK7x+Qbyxk9dt9sYPNoOnOU2ePzJrkAjig9m6L80pJUhYz84hJbpWhDCyM9Q0sL
-        PSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jJPXl7EX3OCu6Pt3ja2B8RFHFyMnh4SAicT1
-        My9Zuxi5OIQEljJK7Nn5hRkiISPx6cpHdghbWOLPtS42iKKPjBK3ms8xQTi7GSU2POhnBKni
-        FbCTmL17I1g3i4CqxISuHcwQcUGJkzOfsIDYogJREk/vHAKLCwtYS2yatQesl1lAXOLWk/lA
-        Qzk4RAQ8Jf4fVwWZzyzwmUmib+9UZohls5kl7l06yQJSxCagJdHYyQ5icgrYSzyfLA4xRlOi
-        dftvdghbXmL72zlQzyhLzHm9A8qulfj89xnjBEbRWUium4XkillIRs1CMmoBI8sqRpHU0uLc
-        9NxiQ73ixNzi0rx0veT83E2MwJjfduzn5h2M81591DvEyMTBeIhRgoNZSYQ3nEUgRYg3JbGy
-        KrUoP76oNCe1+BCjKTCIJjJLiSbnA5NOXkm8oZmBqaGJmaWBqaWZsZI4r2dBR6KQQHpiSWp2
-        ampBahFMHxMHp1QDE0sqB+/R5sCWnwGfgu20Mi+6XbbjtV7mti+/prHzLGOo2pQfb1dunfrM
-        XMt0nnRi66Y7opn/yhfuNUlcV1FcaP719M4lc35k2j64+eHYxuzNmo6F6be7vE5FR4Sqp6+o
-        5FiauINbXsCOc3L6srsuLX+Fom1mnd9xxH3DcyXeT5O1tXNmC2x+Wn1+8+Oj55j2n/i+m+/C
-        1mWn2jyyrmXpO2imL4t9L8j5u/EFC5fYKt+53rZ/713669EgZbqwjOfNz7TmbU4RTIk2szZG
-        zm63e8oTmHM3iC164kKT8nOrRQwzLOIP7fSfO19v7pbUluY9wQ1msaHPkqfUquob5Ntc31Le
-        sdVgktmpRad2T44RUGIpzkg01GIuKk4EAAl4REqCAwAA
-X-CMS-MailID: 20230316153016eucas1p14c300fe22d12c46881b889a7a4786cad
-X-Msg-Generator: CA
-X-RootMTR: 20230303223216eucas1p2517850ab1c4f98dc4e09d83673525983
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230303223216eucas1p2517850ab1c4f98dc4e09d83673525983
-References: <Y/7L74P6jSWwOvWt@mit.edu>
-        <ZAFUYqAcPmRPLjET@kbusch-mbp.dhcp.thefacebook.com>
-        <ZAFuSSZ5vZN7/UAa@casper.infradead.org>
-        <ZAJqjM6qLrraFrrn@bombadil.infradead.org>
-        <ZAJvu2hZrHu816gj@kbusch-mbp.dhcp.thefacebook.com>
-        <ZAJxX2u4CbgVpNNN@bombadil.infradead.org>
-        <CGME20230303223216eucas1p2517850ab1c4f98dc4e09d83673525983@eucas1p2.samsung.com>
-        <ZAJ1aLWsir73bA1p@kbusch-mbp.dhcp.thefacebook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+X-Mailer: b4 0.13-dev-2eb1a
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Keith,
 
-On 2023-03-03 23:32, Keith Busch wrote:
->> Yes, clearly it says *yet* so that begs the question what would be
->> required?
+On Wed, 15 Mar 2023 11:39:01 -0700, Eric Biggers wrote:
+> This series fixes a race condition in blk-crypto keyslot management and
+> makes some related cleanups.  It replaces
+> "[PATCH] blk-crypto: make blk_crypto_evict_key() always try to evict"
+> (https://lore.kernel.org/r/20230226203816.207449-1-ebiggers@kernel.org),
+> which was a simpler fix but didn't fix the keyslot reference counting to
+> work as expected.
 > 
-> Oh, gotcha. I'll work on a list of places it currently crashes.
->  
-I started looking into this to see why it crashes when we increase the LBA
-size of a block device greater than the page size. These are my primary
-findings:
+> [...]
 
-- Block device aops (address_space_operations) are all based on buffer
-head, which limits us to work on only PAGE_SIZE chunks.
+Applied, thanks!
 
-For a 8k LBA size, the stack trace you posted ultimately fails inside
-alloc_page_buffers as the size will be > PAGE_SIZE.
+[1/6] blk-mq: release crypto keyslot before reporting I/O complete
+      (no commit info)
+[2/6] blk-crypto: make blk_crypto_evict_key() return void
+      (no commit info)
+[3/6] blk-crypto: make blk_crypto_evict_key() more robust
+      (no commit info)
+[4/6] blk-crypto: remove blk_crypto_insert_cloned_request()
+      (no commit info)
+[5/6] blk-mq: return actual keyslot error in blk_insert_cloned_request()
+      (no commit info)
+[6/6] blk-crypto: drop the NULL check from blk_crypto_put_keyslot()
+      (no commit info)
 
-struct buffer_head *alloc_page_buffers(struct page *page, unsigned long
-size, bool retry)
-
-
-
-{
-
-
-
-        struct buffer_head *bh, *head;
+Best regards,
+-- 
+Jens Axboe
 
 
 
-....
-
-
-
-
-
-
-
-        head = NULL;
-
-
-
-        offset = PAGE_SIZE;
-
-
-
-        while ((offset -= size) >= 0) {
-	// we will not go into this loop as offset will be negative
-...
-...
-	}
-	return head;
-}
-
-- As Dave chinner pointed out later in the thread, we allocate pages in the
-page cache with order 0, instead of BS of the device or the filesystem.
-Letting filemap_get_folio(FGP_CREAT) allocate folios in LBA size for a
-block device should solve that problem, I guess.
-
-Is it a crazy idea to convert block device aops (block/fops.c) to use iomap
-which supports higher order folios instead of mpage and other functions
-that use buffer head?
-
-Let me know your thoughts.
---
-Pankaj
