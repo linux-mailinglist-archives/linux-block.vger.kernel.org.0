@@ -2,68 +2,137 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE80D6BE1B6
-	for <lists+linux-block@lfdr.de>; Fri, 17 Mar 2023 08:01:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F02096BE2DC
+	for <lists+linux-block@lfdr.de>; Fri, 17 Mar 2023 09:16:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjCQHBH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 17 Mar 2023 03:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
+        id S229886AbjCQIQu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 17 Mar 2023 04:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbjCQHBG (ORCPT
+        with ESMTP id S229617AbjCQIQp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 17 Mar 2023 03:01:06 -0400
-Received: from sragenkab.go.id (mail.sragenkab.go.id [103.172.109.4])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id ACD788A44
-        for <linux-block@vger.kernel.org>; Fri, 17 Mar 2023 00:01:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sragenkab.go.id;
-         h=mime-version:content-type:content-transfer-encoding:date:from
-        :to:subject:reply-to:message-id; q=dns/txt; s=dkim1; bh=QGcIAmD5
-        O/Y9qXzDV8MxyimbsW3+rMaQ/kz75GzBHbk=; b=R+hFsjKtrWVY/hq0dfolhfqO
-        tFzc9Gjej+O3wYbQ90/qJYTYZpJSAn6n4naHjMLiFxlurmlMv9CuCeAd+fHHNppx
-        p1Paw8jdGCP4zmtCCm/RMH3WG1uBfwDTToBwODGkQiCwMBpqUF7A38Ge4tNTWdeF
-        nJmB+RDThuUjGXCGxcLPcrsDfgXXaSprhg1fIvPk4OEsOcJEi9UgQk1oEu5+QQFm
-        IgOlSZup9PSkdnqZH3PL4ckDde66VqbAuDNL5FI6urzWTgmZ16wgul5T9yNFHbW+
-        cBtiLiA7qkNPJ/OmX/i9R83/mQ0yELjS/TrsXJ55sAJDLjTd2mGFK13mcgnZsA==
-Received: (qmail 64525 invoked from network); 14 Mar 2023 19:53:01 -0000
-Received: from localhost (HELO mail2.sragenkab.go.id) (127.0.0.1)
-  by localhost with SMTP; 14 Mar 2023 19:53:01 -0000
+        Fri, 17 Mar 2023 04:16:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813E0CB04B
+        for <linux-block@vger.kernel.org>; Fri, 17 Mar 2023 01:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1679040858;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1cmIrOKszNs0jnWEfQ0Vr7pU28RoEwOK9ywsBoDJefQ=;
+        b=gez9qO5ILsYz0q25wU0ycgfJj2SVNcDIPp7fX5+1cvd4TaQnrogFljv+rOKox4pkl+KShI
+        b7/bIkMfKVLhBz3XUPYW2nw6AwvS+2/V+3tihLWuRcJidkgv+Z8YrUddq1qVxf3ZCLp+Qy
+        z1YwofmZ92EQKUzoXnWt3YXdtZWZIMc=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-510-EI68wD6hPFONH5Zuc1nEyg-1; Fri, 17 Mar 2023 04:14:15 -0400
+X-MC-Unique: EI68wD6hPFONH5Zuc1nEyg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D6C9299E760;
+        Fri, 17 Mar 2023 08:14:14 +0000 (UTC)
+Received: from ovpn-8-18.pek2.redhat.com (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 838C62027047;
+        Fri, 17 Mar 2023 08:14:09 +0000 (UTC)
+Date:   Fri, 17 Mar 2023 16:14:03 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
+        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
+        Bernd Schubert <bschubert@ddn.com>,
+        Pavel Begunkov <asml.silence@gmail.com>, ming.lei@redhat.com
+Subject: Re: [PATCH V3 00/16] io_uring/ublk: add IORING_OP_FUSED_CMD
+Message-ID: <ZBQhSzIhvZL+83nM@ovpn-8-18.pek2.redhat.com>
+References: <20230314125727.1731233-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Mar 2023 12:53:00 -0700
-From:   Ibrahim Tafa <jurnalsukowati@sragenkab.go.id>
-To:     undisclosed-recipients:;
-Subject: <LOAN OPPORTUNITY AT LOW-INTEREST RATE>
-Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
-Mail-Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
-Message-ID: <dcb31a50ce0521d6b08aef276a60414e@sragenkab.go.id>
-X-Sender: jurnalsukowati@sragenkab.go.id
-User-Agent: Roundcube Webmail/0.8.1
-X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,SUBJ_ALL_CAPS,UNDISC_MONEY,URIBL_BLOCKED autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230314125727.1731233-1-ming.lei@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On Tue, Mar 14, 2023 at 08:57:11PM +0800, Ming Lei wrote:
+> Hello,
+> 
+> Add IORING_OP_FUSED_CMD, it is one special URING_CMD, which has to
+> be SQE128. The 1st SQE(master) is one 64byte URING_CMD, and the 2nd
+> 64byte SQE(slave) is another normal 64byte OP. For any OP which needs
+> to support slave OP, io_issue_defs[op].fused_slave needs to be set as 1,
+> and its ->issue() can retrieve/import buffer from master request's
+> fused_cmd_kbuf. The slave OP is actually submitted from kernel, part of
+> this idea is from Xiaoguang's ublk ebpf patchset, but this patchset
+> submits slave OP just like normal OP issued from userspace, that said,
+> SQE order is kept, and batching handling is done too.
+> 
+> Please see detailed design in commit log of the 2th patch, and one big
+> point is how to handle buffer ownership.
+> 
+> With this way, it is easy to support zero copy for ublk/fuse device.
+> 
+> Basically userspace can specify any sub-buffer of the ublk block request
+> buffer from the fused command just by setting 'offset/len'
+> in the slave SQE for running slave OP. This way is flexible to implement
+> io mapping: mirror, stripped, ...
+> 
+> The 3th & 4th patches enable fused slave support for the following OPs:
+> 
+> 	OP_READ/OP_WRITE
+> 	OP_SEND/OP_RECV/OP_SEND_ZC
+> 
+> The other ublk patches cleans ublk driver and implement fused command
+> for supporting zero copy.
+> 
+> Follows userspace code:
+> 
+> https://github.com/ming1/ubdsrv/tree/fused-cmd-zc-v2
+> 
+> All three(loop, nbd and qcow2) ublk targets have supported zero copy by passing:
+> 
+> 	ublk add -t [loop|nbd|qcow2] -z .... 
+> 
+> Basic fs mount/kernel building and builtin test are done, and also not
+> observe regression on xfstest test over ublk-loop with zero copy.
+> 
+> Also add liburing test case for covering fused command based on miniublk
+> of blktest:
+> 
+> https://github.com/ming1/liburing/commits/fused_cmd_miniublk
+> 
+> Performance improvement is obvious on memory bandwidth
+> related workloads, such as, 1~2X improvement on 64K/512K BS
+> IO test on loop with ramfs backing file.
+> 
+> Any comments are welcome!
+> 
+> V3:
+> 	- fix build warning reported by kernel test robot
+> 	- drop patch for checking fused flags on existed drivers with
+> 	  ->uring_command(), which isn't necessary, since we do not do that
+>       when adding new ioctl or uring command
+>     - inline io_init_rq() for core code, so just export io_init_slave_req
+> 	- return result of failed slave request unconditionally since REQ_F_CQE_SKIP
+> 	will be cleared
+> 	- pass xfstest over ublk-loop
+
+Hello Jens and Guys,
+
+I have been working on io_uring zero copy support for ublk/fuse for a while, and
+I appreciate you may share any thoughts on this patchset or approach?
 
 
--- 
-Greetings,
-   I am contacting you based on the Investment/Loan opportunity for 
-companies in need of financing a project/business, We have developed a 
-new method of financing that doesn't take long to receive financing from 
-our clients.
-    If you are looking for funds to finance your project/Business or if 
-you are willing to work as our agent in your country to find clients in 
-need of financing and earn commissions, then get back to me for more 
-details.
+Thanks,
+Ming
 
-Regards,
-Ibrahim Tafa
-ABIENCE INVESTMENT GROUP FZE, United Arab Emirates
