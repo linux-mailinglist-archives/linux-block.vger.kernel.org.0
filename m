@@ -2,123 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 547C16BFBB7
-	for <lists+linux-block@lfdr.de>; Sat, 18 Mar 2023 18:03:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6151F6BFBE4
+	for <lists+linux-block@lfdr.de>; Sat, 18 Mar 2023 18:36:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbjCRRCQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 18 Mar 2023 13:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58758 "EHLO
+        id S229943AbjCRRgk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 18 Mar 2023 13:36:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229713AbjCRRCP (ORCPT
+        with ESMTP id S229887AbjCRRgk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 18 Mar 2023 13:02:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38134234FC
-        for <linux-block@vger.kernel.org>; Sat, 18 Mar 2023 10:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679158889;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Rg1yIqjO+fto+uya0q5Q73Zkr3fJVlR6YmEjgynQcZI=;
-        b=g0LiZT/BQr5qVhDw7q5ORs1yMNqROU17samyNPS8/mirjFDFU25NujlkhoapRCLa4rcWVc
-        89YxvWnZ06elRq9JuAzLQgsZqo35+LXQYsYRcF3a2qUgSUS7lHvJNePC4NXzBKYMJZPXKf
-        0GVqlfs0bHp6Gq/KZ77xv3KdJV8gO6g=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-303-seccua7EObiP9nNYJZMU5Q-1; Sat, 18 Mar 2023 13:01:26 -0400
-X-MC-Unique: seccua7EObiP9nNYJZMU5Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D5FA858F09;
-        Sat, 18 Mar 2023 17:01:25 +0000 (UTC)
-Received: from ovpn-8-18.pek2.redhat.com (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5E66D43FBE;
-        Sat, 18 Mar 2023 17:01:19 +0000 (UTC)
-Date:   Sun, 19 Mar 2023 01:01:15 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        Bernd Schubert <bschubert@ddn.com>,
-        Pavel Begunkov <asml.silence@gmail.com>, ming.lei@redhat.com
-Subject: Re: [PATCH V3 00/16] io_uring/ublk: add IORING_OP_FUSED_CMD
-Message-ID: <ZBXuW+hhVUVW/X0Q@ovpn-8-18.pek2.redhat.com>
-References: <20230314125727.1731233-1-ming.lei@redhat.com>
- <b3fc9991-4c53-9218-a8cc-5b4dd3952108@kernel.dk>
+        Sat, 18 Mar 2023 13:36:40 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C636E32524;
+        Sat, 18 Mar 2023 10:36:33 -0700 (PDT)
+From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+        s=mail; t=1679160991;
+        bh=NdErJEpQNL3oycZkOJ45TpzNFulirMJTRP9tuheh7kc=;
+        h=From:Subject:Date:To:Cc:From;
+        b=tfKGUd52G2iuMgTbG3OHEOkFgA0v1F4sRNyGakt5lycUiOOHZzlvPZpjK8V++ehWc
+         ALJKUrhseKnfKBnVlOgqGMdqZqB68XReAEiUYIaO782Hp/IY/5SvIvXv1fYnBzfE60
+         OZzbv/djD4DGkLq1spu3tBWpq6Zeev5eIwXT3ckM=
+Subject: [PATCH v3 0/3] blk-integrity: drop integrity_kobj from gendisk
+Date:   Sat, 18 Mar 2023 17:36:22 +0000
+Message-Id: <20230309-kobj_release-gendisk_integrity-v3-0-ceccb4493c46@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3fc9991-4c53-9218-a8cc-5b4dd3952108@kernel.dk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJb2FWQC/5WOwQ6CMBBEf8X0bM22aAme/A9jSFtWukqK6QJqD
+ P9u8epFj28yeTMvwZgIWexXL5FwIqY+ZijWK+GDjS1KajILDbqAAip57d2lTtihZZQtxob4WlM
+ csE00PCVq48F5pY21IkvcUnPJRh+yJo5dl8NbwjM9PqvHU+ZAPPTp+TkxqSX9eW9SUkmrt3Deb
+ dF6A4c7EjP7MIZNxEEs/kn/59QSZGmU3UFTqgq+nfM8vwGTo6iLOgEAAA==
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1679160989; l=1424;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=NdErJEpQNL3oycZkOJ45TpzNFulirMJTRP9tuheh7kc=;
+ b=gDOBEJPklTGWPIyiWeB6n43pOuWn4vosCnTZ5xwJkid796aor6ghJWA6VXJ9NXMC1kVUFHyc4
+ pJF6zhEGSTWAaW9XNZlK/smLvNE2PY8fORFu8YoOX+cM3JSY9uQXosz
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sat, Mar 18, 2023 at 10:09:52AM -0600, Jens Axboe wrote:
-> On 3/14/23 6:57?AM, Ming Lei wrote:
-> > Basically userspace can specify any sub-buffer of the ublk block request
-> > buffer from the fused command just by setting 'offset/len'
-> > in the slave SQE for running slave OP. This way is flexible to implement
-> > io mapping: mirror, stripped, ...
-> > 
-> > The 3th & 4th patches enable fused slave support for the following OPs:
-> > 
-> > 	OP_READ/OP_WRITE
-> > 	OP_SEND/OP_RECV/OP_SEND_ZC
-> > 
-> > The other ublk patches cleans ublk driver and implement fused command
-> > for supporting zero copy.
-> > 
-> > Follows userspace code:
-> > 
-> > https://github.com/ming1/ubdsrv/tree/fused-cmd-zc-v2
-> 
-> Ran some quick testing here with qcow2. This is just done on my laptop
-> in kvm, so take them with a grain of salt, results may be better
-> elsewhere.
-> 
-> Basline:
-> 
-> 64k reads       98-100K IOPS    6-6.1GB/sec     (ublk 100%, io_uring 9%)
-> 4k reads        670-680K IOPS   2.6GB/sec       (ublk 65%, io_uring 44%)
-> 
-> and with zerocopy enabled:
-> 
-> 64k reads       184K IOPS       11.5GB/sec      (ublk 91%, io_uring 12%)
-> 4k reads        730K IOPS       2.8GB/sec       (ublk 73%, io_uring 48%)
+The embedded member integrity_kobj member of struct gendisk violates
+the assumption of the driver core that only one struct kobject should be
+embedded into another object and then manages its lifetime.
 
-There are other ways to observe the boost:
+As the integrity_kobj is only used to hold a few sysfs attributes it can
+be replaced by direct device_attributes and removed.
 
-1) loop over file in tmpfs
-- 1~2X in my test
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+Changes in v3:
+- Style cleanups
+- Register attributes directly via disk_attr_groups
+- Link to v2: https://lore.kernel.org/r/20230309-kobj_release-gendisk_integrity-v2-0-761a50d71900@weissschuh.net
 
-2) nbd with local nbd server(nbdkit memory )
-- less than 1X in my test
+Changes in v2:
+- Get rid of integrity_kobj completely
+- Migrate to sysfs_emit helper
+- Link to v1: https://lore.kernel.org/r/20230309-kobj_release-gendisk_integrity-v1-1-a240f54eac60@weissschuh.net
 
-3) null
-- which won't call into fused command, but can evaluate page copy cost
-- 5+X in my test
+---
+Thomas Weißschuh (3):
+      blk-integrity: use sysfs_emit
+      blk-integrity: convert to struct device_attribute
+      blk-integrity: register sysfs attributes on struct device
 
-> 
-> and with zerocopy and using SINGLE_ISSUER|COOP_TASKRUN for the ring:
-> 
-> 64k reads       205K IOPS       12.8GB/sec      (ublk 91%, io_uring 12%)
-> 4k reads        730K IOPS       2.8GB/sec       (ublk 66%, io_uring 42%)
+ block/blk-integrity.c  | 175 +++++++++++++++++--------------------------------
+ block/blk.h            |  10 +--
+ block/genhd.c          |  12 ++--
+ include/linux/blkdev.h |   3 -
+ 4 files changed, 66 insertions(+), 134 deletions(-)
+---
+base-commit: 478a351ce0d69cef2d2bf2a686a09b356b63a66c
+change-id: 20230309-kobj_release-gendisk_integrity-e26c0bc126aa
 
-Looks SINGLE_ISSUER|COOP_TASKRUN can get ~10% improvement, will look it.
-
-
-Thanks,
-Ming
+Best regards,
+-- 
+Thomas Weißschuh <linux@weissschuh.net>
 
