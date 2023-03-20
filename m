@@ -2,149 +2,138 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0BCC6C1406
-	for <lists+linux-block@lfdr.de>; Mon, 20 Mar 2023 14:53:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8C8E6C1958
+	for <lists+linux-block@lfdr.de>; Mon, 20 Mar 2023 16:32:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbjCTNw6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 20 Mar 2023 09:52:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
+        id S233126AbjCTPcq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 20 Mar 2023 11:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbjCTNw5 (ORCPT
+        with ESMTP id S233055AbjCTPc1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 20 Mar 2023 09:52:57 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 738F3768B;
-        Mon, 20 Mar 2023 06:52:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9FD5FEC;
-        Mon, 20 Mar 2023 06:53:38 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED1F43F71E;
-        Mon, 20 Mar 2023 06:52:52 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 13:52:47 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Alexey Klimov <alexey.klimov@linaro.org>
-Cc:     peterz@infradead.org, draszik@google.com, peter.griffin@linaro.org,
-        willmcvicker@google.com, mingo@kernel.org, ulf.hansson@linaro.org,
-        tony@atomide.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk,
-        alim.akhtar@samsung.com, regressions@lists.linux.dev,
-        avri.altman@wdc.com, bvanassche@acm.org, klimova@google.com
-Subject: Re: [REGRESSION] CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait()
- and slow-stuck reboots
-Message-ID: <ZBhlL4tqSUi/c3qk@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230314230004.961993-1-alexey.klimov@linaro.org>
+        Mon, 20 Mar 2023 11:32:27 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20C119F09
+        for <linux-block@vger.kernel.org>; Mon, 20 Mar 2023 08:25:16 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id ja10so12811676plb.5
+        for <linux-block@vger.kernel.org>; Mon, 20 Mar 2023 08:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679325913;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=v4ZPHfMn9ZrHO7nzt0vTCldpfJhClttgBh55waccA2k=;
+        b=DVo5f2DZTepL6uwwNvLriz+dqhUYAKmC1TKsmL/eJXOJEXscRqEz+oTeqdG0PZgWBY
+         nYVfOV4f8QX5UOjjTCGWddf+HovepAmqsGU3++OjLh1afgLd7EfjzA+mjmRyXh7lypiN
+         kK+L5N2Hphl+9aEfa/dwKwn8iGIcHFYZrKGozto8Se4+YfDGzEnbA9GG5lTE0keY8Yu0
+         A8O+QyNzBMU9DOLr3OXUtLjajENURRfN1GTy/b7Kl+XtKNAslIJkMOnU2UrK8JJ8Aiw8
+         /Y75oVyFPc4QOUN/8LnN2EFsKM0FvK7T2sLAKsThnTeiXWuSu+ClnSQG8xgKr1ZgWoRG
+         J3Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679325913;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v4ZPHfMn9ZrHO7nzt0vTCldpfJhClttgBh55waccA2k=;
+        b=H0n/GTSrnuu322z+tf9xEaWTLjyDiGRP8G20FsgPMYcvgzAiNZoKyaU2aGKmbzwInY
+         TVvCdsWG1yMiOo/9DmHGDeoJyGFV+pZrQTFNFPPBR6KXVNzN72puCaqZ7CXfT5+AW8Qr
+         rtws8FPJ8ZgMeexEy5pyA39/3lK6UAy/AnDbpKEaCLQp9AcBzQ+R4qfm7VM+wfqlts1l
+         Hy2abJIYw+0MBeUE2aTp4sHG5Ldl0D+YWsyFgPFozlS1fXXFOhGad7tVwnqTW3dsV+w+
+         gcAgUl4KenaAtZkhV3Zz4HuTobnnIfAagpzI3MCXbesNzrQR7RRTQlqKc5Kqmsj2fVgJ
+         pT4w==
+X-Gm-Message-State: AO0yUKX0GxKnVPWicOdh8e3E6xC2JkPLXPg/IzKTv/kGqxQA25IPvNMF
+        zPUXKzDjdu1MpIBX0VpWjchEXxFjyDh1JAYL0KiWQg==
+X-Google-Smtp-Source: AK7set/tUkf1EmnvActHjEBsR9UHWqB2VVh4wJlOm6K5unVvW13dpF6gbyZ1Y1vdBoiiAf5iFUF7uimp/rwdBfqy6xE=
+X-Received: by 2002:a17:902:d484:b0:1a1:adc5:c4d with SMTP id
+ c4-20020a170902d48400b001a1adc50c4dmr3947292plg.13.1679325913008; Mon, 20 Mar
+ 2023 08:25:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230314230004.961993-1-alexey.klimov@linaro.org>
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230316164514.1615169-1-ulf.hansson@linaro.org>
+ <ZBNIg8+rOdFKcsS8@infradead.org> <522a5d01-e939-278a-3354-1bbfb1bd6557@intel.com>
+ <ZBf8dZm1FZIusMls@infradead.org>
+In-Reply-To: <ZBf8dZm1FZIusMls@infradead.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 20 Mar 2023 16:24:36 +0100
+Message-ID: <CAPDyKFogTyf30X+3JGeqf+yER_OLQ8JwXy6oEF3Rn78KzLSDxw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: core: Allow to avoid REQ_FUA if the eMMC supports an
+ internal cache
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org,
+        Wenchao Chen <wenchao.chen666@gmail.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Christian Lohle <cloehle@hyperstone.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bean Huo <beanhuo@micron.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 11:00:04PM +0000, Alexey Klimov wrote:
-> #regzbot introduced: 0c5ffc3d7b15
-> #regzbot title: CPUIDLE_FLAG_RCU_IDLE, blk_mq_freeze_queue_wait() and slow-stuck reboots
-> 
-> The upstream changes are being merged into android-mainline repo and at some
-> point we started to observe kernel panics on reboot or long reboot times.
+On Mon, 20 Mar 2023 at 07:25, Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Mar 16, 2023 at 09:12:35PM +0200, Adrian Hunter wrote:
+> > Historically file systems have assumed that sectors are updated
+> > atomically i.e. there is never a sector with a mixture of
+> > old and new data.
+>
+> Yes.  Not just file systems, but also all kinds of applications.
+>
+> > The eMMC spec does not guarantee that,
+> > except for the eMMC "reliable write" operation.
+>
+> Neither to ATA or SCSI, but applications and file systems always very
+> much expected it, so withou it storage devices would be considered
+> fault.  Only NVMe actually finally made it part of the standard.
 
-Where can I find the android-mainline repo, and which specific branch/commit
-from that repo is being merged in?
+Even if the standard doesn't say, it's perfectly possible that the
+storage device implements it.
 
-> The merge commit is 1f2d9ffc7a5f Merge tag 'sched-core-2023-02-20' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.
-> Before, the reboot usually took significantly less than 15 seconds and after merge the reboot time fall in the range of 60-100 seconds.
-> At some point watchdog-like functionality or softdog start to worry about the system stuck somewhere nd panic the system.
-> 
-> The delay is found to be in device's ->shutdown() methods called from kernel_restart():
-> void kernel_restart_prepare(char *cmd)
-> {
-> 	blocking_notifier_call_chain(&reboot_notifier_list, SYS_RESTART, cmd);
-> 	system_state = SYSTEM_RESTART;
-> 	usermodehelper_disable();
-> 	device_shutdown();	<---- here
-> }
-> 
-> The driver in question is ufshcd and its ufshcd_wl_shutdown() shutdown method. It often blocks on scsi_device_quiesce() and upon manual checking it seems that it sleeps on blk_mq_freeze_queue_wait()/wait_event() in blk_freeze_queue():
-> 
-> scsi_device_quiesce(struct scsi_device *sdev)
-> {
-> 	...
-> 	blk_mq_freeze_queue(q);
-> 	...
-> }
-> 	||
-> 	V
-> void blk_freeze_queue(struct request_queue *q)
-> {
-> 	/*
-> 	 * In the !blk_mq case we are only calling this to kill the
-> 	 * q_usage_counter, otherwise this increases the freeze depth
-> 	 * and waits for it to return to zero.  For this reason there is
-> 	 * no blk_unfreeze_queue(), and blk_freeze_queue() is not
-> 	 * exported to drivers as the only user for unfreeze is blk_mq.
-> 	 */
-> 	blk_freeze_queue_start(q);
-> 	blk_mq_freeze_queue_wait(q);	<--- sleeps on wait_event() here
-> }
-> 
-> Or in other words:
-> 
-> [   34.785050][    C4] sysrq: Show Blocked State
-> [   34.785132][    C4] task:init            state:D stack:9680  pid:1     ppid:0      flags:0x04000008
-> [   34.785301][    C4] Call trace:
-> [   34.785360][    C4]  __switch_to+0x180/0x308
-> [   34.785452][    C4]  __schedule+0x61c/0x9f0
-> [   34.785530][    C4]  schedule+0x84/0xf4
-> [   34.785602][    C4]  blk_mq_freeze_queue_wait+0x78/0xbc
-> [   34.785707][    C4]  blk_freeze_queue+0x74/0x8c
-> [   34.785850][    C4]  blk_mq_freeze_queue+0x18/0x2c
-> [   34.786033][    C4]  scsi_device_quiesce+0x54/0xec
-> [   34.786216][    C4]  ufshcd_wl_shutdown+0x98/0xc0
-> [   34.786396][    C4]  device_shutdown+0x1a8/0x264
-> [   34.786572][    C4]  kernel_restart+0x48/0x11c
-> [   34.786742][    C4]  __arm64_sys_reboot+0x1a8/0x27c
-> [   34.786927][    C4]  invoke_syscall+0x60/0x130
-> [   34.787096][    C4]  el0_svc_common+0xbc/0x100
-> [   34.787266][    C4]  do_el0_svc+0x38/0xc4
-> [   34.787420][    C4]  el0_svc+0x34/0xc4
-> [   34.787563][    C4]  el0t_64_sync_handler+0x8c/0xfc
-> [   34.787749][    C4]  el0t_64_sync+0x1a4/0x1a8
-> 
-> 
-> However, bisect pointed to 0c5ffc3d7b15 cpuidle, dt: Push RCU-idle into driver
-> 
-> ->BAD 924aed1646bf cpuidle, cpu_pm: Remove RCU fiddling from cpu_pm_{enter,exit}()
-> ->BAD a01353cf1896 cpuidle: Fix ct_idle_*() usage
-> ->BAD (doesn't compile, needs one missing header file) 0c5ffc3d7b15 cpuidle, dt: Push RCU-idle into driver
-> ->good c3d42418dca5 cpuidle, OMAP4: Push RCU-idle into driver
-> 
-> Looks like adding CPUIDLE_FLAG_RCU_IDLE flag to idle driver caused this behaviour.
-> The minimal change that is required for this system to avoid the regression
-> would be one liner that removes the flag (below).
-> 
-> But if it is a real regression, then other idle drivers if used will likely
-> cause this regression too withe same ufshcd driver. There is also a suspicion
-> that CPUIDLE_FLAG_RCU_IDLE just revealed or uncovered some other problem.
-> 
-> Any thoughts on this? Some missing __cpuidle or noinstr annotations?
+Hence, $subject patch isn't changing anything in regards to REQ_FUA,
+unless the eMMC device/vendor has agreed to this (via the MMC card
+quirks).
 
-As Peter has suggested in another reply, this might not be an *upstream*
-regression, but rather an interaction with those out-of-tree patches. If you
-can provide a pointer to the branch above that, it'll make it much easier to
-figure out what's going on.
+>
+> > So the paragraph
+> > above is informing the potential benefit of reliable write instead
+> > of cache flush.
+>
+> But these are completely separate issue.  Torn writes are completely
+> unrelated to cache flushes.  You can indeed work around torn writes
+> by checksums, but not the lack of cache flushes or vice versa.
 
-The code in mainline is unfortunately convoluted, but it doesn't look to be
-obviously wrong.
+It's not a separate issue for eMMC. Please read the complete commit
+message for further clarifications in this regard.
 
-FWIW, I've just tried v6.3-rc3 on Juno R2 in a few configurations (ACPI, DT,
-with PROVE_LOCKING=y and DEBUG_LOCKDEP=y, with PSCI_CHECKER=y) and I'm not
-seeing similar issues. So either I'm not tickling the same code path, or
-something else is involved.
+>
+>
+> > Note, it is not that eMMC cannot avoid torn sectors, it is that
+> > the specification does not mandate that they do.
+>
+> If devices tear writes it will break not only various file systems,
+> but more importantly applications, at least on file systems without
+> data checksum (aka all except for btrfs, and even that has a nodatacsum
+> option).
 
-Thanks,
-Mark.
+Yes, you are correct. Again, the card quirk (as suggested in $subject
+patch) helps us to manage eMMC cards in different ways. We should not
+avoid REQ_FUA (reliable writes) for an eMMC that actually needs it.
+
+>
+> > However, the issue has been raised that reliable write is not
+> > needed to provide sufficient assurance of data integrity, and that
+> > in fact, cache flush can be used instead and perform better.
+>
+> It does not.
+
+Can you please elaborate on this?
+
+The tests we have done so far indicate that performance differs based
+upon what eMMC we are using, for example.
+
+Kind regards
+Uffe
