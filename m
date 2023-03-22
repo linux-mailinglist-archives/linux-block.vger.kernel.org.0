@@ -2,62 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DEA66C4755
-	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 11:16:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E0DA6C4758
+	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 11:17:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbjCVKQ4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Mar 2023 06:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46584 "EHLO
+        id S229645AbjCVKRA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Mar 2023 06:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230012AbjCVKQz (ORCPT
+        with ESMTP id S230038AbjCVKQ4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Mar 2023 06:16:55 -0400
+        Wed, 22 Mar 2023 06:16:56 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43DF5B437
-        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 03:16:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720315BD96
+        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 03:16:55 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 94BC8339B3;
-        Wed, 22 Mar 2023 10:16:53 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 2872B339B1;
+        Wed, 22 Mar 2023 10:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1679480213; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1679480214; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VUkysKhNingyeMfZ0KjMwZybzXM1TI6WNetcJwrtqg4=;
-        b=fBJPRHBolQ8VfgVkmsUWiKZeIRPUAq83u8n0964lD9ldMxe62SX7h6mAurmamoGtWwmPA4
-        ido+ykiGwxrmdn9ukwUdO21dmdW25cdQDqE+oNdDyC7UHfx+KV1JR3aDHbmIrx7II78WrZ
-        yydvPD3nw5jQB+xHIv75P/a9HtTzw7I=
+        bh=oXUrtujg2ff8LWOHRdRnBuszIDKHUpNyoCvyQ2YNsPo=;
+        b=SrmS7TbyhiyPs9MKJz35cJDfgGQuqOEgKbB47+C2p7tre68eaPQYkUAbOnrKEeEH3pF3ik
+        wJ5K81wGHEdfCM74TP7dFZHErHGhXKXn7vU4g2JDXNX2iaQ8gL++iWxpb39U5Wi0qrnRV5
+        4K9hcU8vY/1yThEFjGvHcCJL4dgJ9Tg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1679480213;
+        s=susede2_ed25519; t=1679480214;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VUkysKhNingyeMfZ0KjMwZybzXM1TI6WNetcJwrtqg4=;
-        b=tQFMT4gD/EKigeXRrckkubzJDTx0T93HWSyNgG/LoYgpfeOtDaIfWoD4xNMwiR1T7nTVHQ
-        QXu7p7uNQYzj+nCg==
+        bh=oXUrtujg2ff8LWOHRdRnBuszIDKHUpNyoCvyQ2YNsPo=;
+        b=kcY4/Vi8yRREzW0svOvNPOIgBhhEGsC2c+F6qEwBsAIJ4k5eAqQ2oXzrCupn5M+bNqcIcq
+        ftAPwsCTmPCKhbAw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 883E9138E9;
-        Wed, 22 Mar 2023 10:16:53 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1A10C138E9;
+        Wed, 22 Mar 2023 10:16:54 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id COLjIJXVGmSCDAAAMHmgww
-        (envelope-from <dwagner@suse.de>); Wed, 22 Mar 2023 10:16:53 +0000
+        id otIEBpbVGmSGDAAAMHmgww
+        (envelope-from <dwagner@suse.de>); Wed, 22 Mar 2023 10:16:54 +0000
 From:   Daniel Wagner <dwagner@suse.de>
 To:     linux-block@vger.kernel.org
 Cc:     linux-nvme@lists.infradead.org,
         Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
         Chaitanya Kulkarni <chaitanyak@nvidia.com>,
         Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH blktests v2 2/3] nvme/rc: Add nr queue parser arguments
-Date:   Wed, 22 Mar 2023 11:16:47 +0100
-Message-Id: <20230322101648.31514-3-dwagner@suse.de>
+Subject: [PATCH blktests v2 3/3] nvme/047: Test different queue counts
+Date:   Wed, 22 Mar 2023 11:16:48 +0100
+Message-Id: <20230322101648.31514-4-dwagner@suse.de>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230322101648.31514-1-dwagner@suse.de>
 References: <20230322101648.31514-1-dwagner@suse.de>
@@ -72,64 +72,99 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Test if the transport are handling the different queues correctly.
+
+We also issue some I/O to make sure that not just the plain connect
+works. For this we have to use a file system which supports direct I/O
+and hence we use a device backend.
+
 Signed-off-by: Daniel Wagner <dwagner@suse.de>
 ---
- tests/nvme/rc | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ tests/nvme/047     | 65 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/047.out |  2 ++
+ 2 files changed, 67 insertions(+)
+ create mode 100755 tests/nvme/047
+ create mode 100644 tests/nvme/047.out
 
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 1145fed2d14c..ca3d995f7b0b 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -326,6 +326,9 @@ _nvme_connect_subsys() {
- 	local hostid="$def_hostid"
- 	local hostkey=""
- 	local ctrlkey=""
-+	local nr_io_queues=""
-+	local nr_write_queues=""
-+	local nr_poll_queues=""
- 
- 	while [[ $# -gt 0 ]]; do
- 		case $1 in
-@@ -364,6 +367,21 @@ _nvme_connect_subsys() {
- 				shift
- 				shift
- 				;;
-+			-i|--nr-io-queues)
-+				nr_io_queues="$2"
-+				shift
-+				shift
-+				;;
-+			-W|--nr-write-queues)
-+				nr_write_queues="$2"
-+				shift
-+				shift
-+				;;
-+			-P|--nr-poll-queues)
-+				nr_poll_queues="$2"
-+				shift
-+				shift
-+				;;
- 			*)
- 				positional_args+=("$1")
- 				shift
-@@ -394,6 +412,16 @@ _nvme_connect_subsys() {
- 	if [[ -n "${ctrlkey}" ]]; then
- 		ARGS+=(--dhchap-ctrl-secret="${ctrlkey}")
- 	fi
-+	if [[ -n "${nr_io_queues}" ]]; then
-+		ARGS+=(--nr-io-queues="${nr_io_queues}")
-+	fi
-+	if [[ -n "${nr_write_queues}" ]]; then
-+		ARGS+=(--nr-write-queues="${nr_write_queues}")
-+	fi
-+	if [[ -n "${nr_poll_queues}" ]]; then
-+		ARGS+=(--nr-poll-queues="${nr_poll_queues}")
-+	fi
+diff --git a/tests/nvme/047 b/tests/nvme/047
+new file mode 100755
+index 000000000000..6a37f7a569b7
+--- /dev/null
++++ b/tests/nvme/047
+@@ -0,0 +1,65 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
++# Copyright (C) 2023 SUSE LLC
++#
++# Test NVMe queue counts.
 +
- 	nvme connect "${ARGS[@]}" 2> /dev/null
- }
- 
++. tests/nvme/rc
++. common/xfs
++
++DESCRIPTION="test NVMe queue counts"
++
++requires() {
++	_nvme_requires
++	_have_xfs
++	_have_fio
++	_require_nvme_trtype_is_fabrics
++}
++
++test() {
++	echo "Running ${TEST_NAME}"
++
++	_setup_nvmet
++
++	local port
++	local nvmedev
++	local loop_dev
++	local file_path="$TMPDIR/img"
++	local subsys_name="blktests-subsystem-1"
++
++	truncate -s 512M "${file_path}"
++
++	loop_dev="$(losetup -f --show "${file_path}")"
++
++	_create_nvmet_subsystem "${subsys_name}" "${loop_dev}" \
++		"91fdba0d-f87b-4c25-b80f-db7be1418b9e"
++	port="$(_create_nvmet_port "${nvme_trtype}")"
++	_add_nvmet_subsys_to_port "${port}" "${subsys_name}"
++
++	_nvme_connect_subsys "${nvme_trtype}" "${subsys_name}" \
++		--nr-write-queues 1
++
++	nvmedev=$(_find_nvme_dev "${subsys_name}")
++
++	_xfs_run_fio_verify_io /dev/"${nvmedev}n1" "1m"
++
++	_nvme_disconnect_subsys "${subsys_name}" >> "$FULL" 2>&1
++
++	_nvme_connect_subsys "${nvme_trtype}" "${subsys_name}" \
++		--nr-write-queues 1 \
++		--nr-poll-queues 1
++
++	_xfs_run_fio_verify_io /dev/"${nvmedev}n1" "1m"
++
++	_nvme_disconnect_subsys "${subsys_name}" >> "$FULL" 2>&1
++
++	_remove_nvmet_subsystem_from_port "${port}" "${subsys_name}"
++	_remove_nvmet_subsystem "${subsys_name}"
++	_remove_nvmet_port "${port}"
++
++	losetup -d "${loop_dev}"
++
++	rm "${file_path}"
++
++	echo "Test complete"
++}
+diff --git a/tests/nvme/047.out b/tests/nvme/047.out
+new file mode 100644
+index 000000000000..915d0a2389ca
+--- /dev/null
++++ b/tests/nvme/047.out
+@@ -0,0 +1,2 @@
++Running nvme/047
++Test complete
 -- 
 2.40.0
 
