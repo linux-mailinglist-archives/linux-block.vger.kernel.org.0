@@ -2,50 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A2326C4F3E
-	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 16:17:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 450536C4F34
+	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 16:17:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbjCVPR4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Mar 2023 11:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50036 "EHLO
+        id S231343AbjCVPRO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Mar 2023 11:17:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231509AbjCVPRx (ORCPT
+        with ESMTP id S231305AbjCVPRN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Mar 2023 11:17:53 -0400
+        Wed, 22 Mar 2023 11:17:13 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E27362FF4
-        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 08:17:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD78637E0
+        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 08:16:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679498219;
+        s=mimecast20190719; t=1679498189;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GWgn/7iiSuiFiGie8vcrKEH1Y0KQ7ME6mcmkWZsyzDc=;
-        b=LQjId4hiMT9jNbOs5pkTsOIuf64FQzM0a7NagAVvarwRcIsQm8iPotpjUJcnlZA3h9NGgc
-        ulUNCjznqerttQ0a56Gm4L+uHHOiDrpUeMqTuHKOsKQrVjf1JFthvYQ0GiZm548YkahUIR
-        JcsqUG0uvrr9ibx9OjLtLhQGDXy1WZw=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=fIxxnzjFRY0uSu981Hr0uPm3P79oK13XuBYjyWTm3jc=;
+        b=PIupVdaoqXSJWvUah6DpYKooe2ufFKfRzoLd/PgGn/6MHMuv8OYOMoFjule0L+9a/wV5JB
+        JD6ohLEeuVjWJHr/EPb77ieceHySiFAlgji/BkLynNV7LFXVrvEc189sz29jWrdmjBTxPr
+        juYLvhYWRPcsvfJrYRMYClgcV3q/tvQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-610-Xg_moGaiPduelp9fLIgRqg-1; Wed, 22 Mar 2023 11:16:38 -0400
-X-MC-Unique: Xg_moGaiPduelp9fLIgRqg-1
+ us-mta-112-nvti2NTQPtK_PDRS3P4kJg-1; Wed, 22 Mar 2023 11:16:24 -0400
+X-MC-Unique: nvti2NTQPtK_PDRS3P4kJg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D93393813F41;
-        Wed, 22 Mar 2023 15:16:22 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 435B0884348;
+        Wed, 22 Mar 2023 15:16:24 +0000 (UTC)
 Received: from mrjust8.localdomain (unknown [10.43.17.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B117F44002;
-        Wed, 22 Mar 2023 15:16:21 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B4D151FF;
+        Wed, 22 Mar 2023 15:16:22 +0000 (UTC)
 From:   Ondrej Kozina <okozina@redhat.com>
 To:     linux-block@vger.kernel.org
 Cc:     bluca@debian.org, gmazyland@gmail.com, axboe@kernel.dk,
         hch@infradead.org, brauner@kernel.org, rafael.antognolli@intel.com,
         Ondrej Kozina <okozina@redhat.com>
-Subject: [PATCH 2/5] sed-opal: add helper for adding user authorities in ACE.
-Date:   Wed, 22 Mar 2023 16:16:01 +0100
-Message-Id: <20230322151604.401680-3-okozina@redhat.com>
+Subject: [PATCH 3/5] sed-opal: allow user authority to get locking range attributes.
+Date:   Wed, 22 Mar 2023 16:16:02 +0100
+Message-Id: <20230322151604.401680-4-okozina@redhat.com>
 In-Reply-To: <20230322151604.401680-1-okozina@redhat.com>
 References: <20230322151604.401680-1-okozina@redhat.com>
 MIME-Version: 1.0
@@ -61,110 +61,93 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Moves ACE construction away from add_user_to_lr routine
-to be used later in added code.
+Extend ACE set of locking range attributes accessible to user
+authority. This patch allows user authority to get following
+locking range attribues when user get added to locking range via
+IOC_OPAL_ADD_USR_TO_LR:
+
+locking range start
+locking range end
+read lock enabled
+write lock enabled
+read locked
+write locked
+lock on reset
+active key
+
+Note: Admin1 authority always remains in the ACE. Otherwise
+it breaks current userspace expecting Admin1 in the ACE (sedutils).
+
+See TCG OPAL2 s.4.3.1.7 "ACE_Locking_RangeNNNN_Get_RangeStartToActiveKey".
 
 Signed-off-by: Ondrej Kozina <okozina@redhat.com>
 Tested-by: Luca Boccassi <bluca@debian.org>
 Tested-by: Milan Broz <gmazyland@gmail.com>
 ---
- block/sed-opal.c | 64 +++++++++++++++++++++++++++++++++---------------
- 1 file changed, 44 insertions(+), 20 deletions(-)
+ block/opal_proto.h |  1 +
+ block/sed-opal.c   | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
+diff --git a/block/opal_proto.h b/block/opal_proto.h
+index 7152aa1f1a49..6dfaea272db2 100644
+--- a/block/opal_proto.h
++++ b/block/opal_proto.h
+@@ -105,6 +105,7 @@ enum opal_uid {
+ 	/* tables */
+ 	OPAL_TABLE_TABLE,
+ 	OPAL_LOCKINGRANGE_GLOBAL,
++	OPAL_LOCKINGRANGE_ACE_START_TO_KEY,
+ 	OPAL_LOCKINGRANGE_ACE_RDLOCKED,
+ 	OPAL_LOCKINGRANGE_ACE_WRLOCKED,
+ 	OPAL_MBRCONTROL,
 diff --git a/block/sed-opal.c b/block/sed-opal.c
-index d86d3e5f5a44..2c3e38df9c65 100644
+index 2c3e38df9c65..1ce61adc732c 100644
 --- a/block/sed-opal.c
 +++ b/block/sed-opal.c
-@@ -1759,25 +1759,16 @@ static int set_sid_cpin_pin(struct opal_dev *dev, void *data)
+@@ -132,6 +132,8 @@ static const u8 opaluid[][OPAL_UID_LENGTH] = {
+ 		{ 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01 },
+ 	[OPAL_LOCKINGRANGE_GLOBAL] =
+ 		{ 0x00, 0x00, 0x08, 0x02, 0x00, 0x00, 0x00, 0x01 },
++	[OPAL_LOCKINGRANGE_ACE_START_TO_KEY] =
++		{ 0x00, 0x00, 0x00, 0x08, 0x00, 0x03, 0xD0, 0x01 },
+ 	[OPAL_LOCKINGRANGE_ACE_RDLOCKED] =
+ 		{ 0x00, 0x00, 0x00, 0x08, 0x00, 0x03, 0xE0, 0x01 },
+ 	[OPAL_LOCKINGRANGE_ACE_WRLOCKED] =
+@@ -1835,6 +1837,26 @@ static int add_user_to_lr(struct opal_dev *dev, void *data)
  	return finalize_and_send(dev, parse_and_check_status);
  }
  
--static int add_user_to_lr(struct opal_dev *dev, void *data)
-+static int set_lr_boolean_ace(struct opal_dev *dev, unsigned int opal_uid, u8 lr,
-+			      const u8 *users, size_t users_len)
- {
- 	u8 lr_buffer[OPAL_UID_LENGTH];
- 	u8 user_uid[OPAL_UID_LENGTH];
--	struct opal_lock_unlock *lkul = data;
-+	u8 u;
- 	int err;
- 
--	memcpy(lr_buffer, opaluid[OPAL_LOCKINGRANGE_ACE_RDLOCKED],
--	       OPAL_UID_LENGTH);
--
--	if (lkul->l_state == OPAL_RW)
--		memcpy(lr_buffer, opaluid[OPAL_LOCKINGRANGE_ACE_WRLOCKED],
--		       OPAL_UID_LENGTH);
--
--	lr_buffer[7] = lkul->session.opal_key.lr;
--
--	memcpy(user_uid, opaluid[OPAL_USER1_UID], OPAL_UID_LENGTH);
--
--	user_uid[7] = lkul->session.who;
-+	memcpy(lr_buffer, opaluid[opal_uid], OPAL_UID_LENGTH);
-+	lr_buffer[7] = lr;
- 
- 	err = cmd_start(dev, lr_buffer, opalmethod[OPAL_SET]);
- 
-@@ -1790,19 +1781,52 @@ static int add_user_to_lr(struct opal_dev *dev, void *data)
- 
- 	add_token_u8(&err, dev, OPAL_STARTLIST);
- 
-+	for (u = 0; u < users_len; u++) {
-+		if (users[u] == OPAL_ADMIN1)
-+			memcpy(user_uid, opaluid[OPAL_ADMIN1_UID], OPAL_UID_LENGTH);
-+		else {
-+			memcpy(user_uid, opaluid[OPAL_USER1_UID], OPAL_UID_LENGTH);
-+			user_uid[7] = users[u];
-+		}
- 
--	add_token_u8(&err, dev, OPAL_STARTNAME);
--	add_token_bytestring(&err, dev,
--			     opaluid[OPAL_HALF_UID_AUTHORITY_OBJ_REF],
--			     OPAL_UID_LENGTH/2);
--	add_token_bytestring(&err, dev, user_uid, OPAL_UID_LENGTH);
--	add_token_u8(&err, dev, OPAL_ENDNAME);
-+		add_token_u8(&err, dev, OPAL_STARTNAME);
-+		add_token_bytestring(&err, dev,
-+				     opaluid[OPAL_HALF_UID_AUTHORITY_OBJ_REF],
-+				     OPAL_UID_LENGTH/2);
-+		add_token_bytestring(&err, dev, user_uid, OPAL_UID_LENGTH);
-+		add_token_u8(&err, dev, OPAL_ENDNAME);
-+
-+		if (u > 0) {
-+			add_token_u8(&err, dev, OPAL_STARTNAME);
-+			add_token_bytestring(&err, dev, opaluid[OPAL_HALF_UID_BOOLEAN_ACE],
-+					     OPAL_UID_LENGTH/2);
-+			add_token_u8(&err, dev, 1);
-+			add_token_u8(&err, dev, OPAL_ENDNAME);
-+		}
-+	}
- 
- 	add_token_u8(&err, dev, OPAL_ENDLIST);
- 	add_token_u8(&err, dev, OPAL_ENDNAME);
- 	add_token_u8(&err, dev, OPAL_ENDLIST);
- 	add_token_u8(&err, dev, OPAL_ENDNAME);
- 
-+	return err;
-+}
-+
-+static int add_user_to_lr(struct opal_dev *dev, void *data)
++static int add_user_to_lr_ace(struct opal_dev *dev, void *data)
 +{
 +	int err;
 +	struct opal_lock_unlock *lkul = data;
 +	const u8 users[] = {
++		OPAL_ADMIN1,
 +		lkul->session.who
 +	};
 +
-+	err = set_lr_boolean_ace(dev,
-+				 lkul->l_state == OPAL_RW ?
-+					OPAL_LOCKINGRANGE_ACE_WRLOCKED :
-+					OPAL_LOCKINGRANGE_ACE_RDLOCKED,
-+				 lkul->session.opal_key.lr, users,
-+				 ARRAY_SIZE(users));
- 	if (err) {
- 		pr_debug("Error building add user to locking range command.\n");
- 		return err;
++	err = set_lr_boolean_ace(dev, OPAL_LOCKINGRANGE_ACE_START_TO_KEY,
++				 lkul->session.opal_key.lr, users, ARRAY_SIZE(users));
++
++	if (err) {
++		pr_debug("Error building add user to locking ranges ACEs.\n");
++		return err;
++	}
++
++	return finalize_and_send(dev, parse_and_check_status);
++}
++
+ static int lock_unlock_locking_range(struct opal_dev *dev, void *data)
+ {
+ 	u8 lr_buffer[OPAL_UID_LENGTH];
+@@ -2372,6 +2394,7 @@ static int opal_add_user_to_lr(struct opal_dev *dev,
+ 	const struct opal_step steps[] = {
+ 		{ start_admin1LSP_opal_session, &lk_unlk->session.opal_key },
+ 		{ add_user_to_lr, lk_unlk },
++		{ add_user_to_lr_ace, lk_unlk },
+ 		{ end_opal_session, }
+ 	};
+ 	int ret;
 -- 
 2.31.1
 
