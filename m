@@ -2,50 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 450536C4F34
-	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 16:17:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 782F96C4F3A
+	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 16:17:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231343AbjCVPRO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Mar 2023 11:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49218 "EHLO
+        id S231483AbjCVPR0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Mar 2023 11:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231305AbjCVPRN (ORCPT
+        with ESMTP id S231494AbjCVPRZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Mar 2023 11:17:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD78637E0
-        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 08:16:30 -0700 (PDT)
+        Wed, 22 Mar 2023 11:17:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FF0637E9
+        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 08:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679498189;
+        s=mimecast20190719; t=1679498193;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fIxxnzjFRY0uSu981Hr0uPm3P79oK13XuBYjyWTm3jc=;
-        b=PIupVdaoqXSJWvUah6DpYKooe2ufFKfRzoLd/PgGn/6MHMuv8OYOMoFjule0L+9a/wV5JB
-        JD6ohLEeuVjWJHr/EPb77ieceHySiFAlgji/BkLynNV7LFXVrvEc189sz29jWrdmjBTxPr
-        juYLvhYWRPcsvfJrYRMYClgcV3q/tvQ=
+        bh=Wfgq/UrOQ+FXB6uVDoOSSkC9I0H95kCaru/cGDylRrs=;
+        b=g7MF4HGrpln4LKpZgFz1GkEoHMCuKOEftEhjCMzTZLDVAcS0C3JpyLQFORtU2Ygl1lpkDJ
+        teUnY/W3fgDJCL4ljLxuZaOXcm9P3du+7T7swMMG7zNwaRiRDa57l80eL6Kuts1u1zDY8Y
+        9QtIftcaF7nRNUygo52hy1fv9SC3lAM=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-112-nvti2NTQPtK_PDRS3P4kJg-1; Wed, 22 Mar 2023 11:16:24 -0400
-X-MC-Unique: nvti2NTQPtK_PDRS3P4kJg-1
+ us-mta-507-bQRWq8rKOP62uUUuK_QyWQ-1; Wed, 22 Mar 2023 11:16:26 -0400
+X-MC-Unique: bQRWq8rKOP62uUUuK_QyWQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 435B0884348;
-        Wed, 22 Mar 2023 15:16:24 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A063388B7A2;
+        Wed, 22 Mar 2023 15:16:25 +0000 (UTC)
 Received: from mrjust8.localdomain (unknown [10.43.17.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B4D151FF;
-        Wed, 22 Mar 2023 15:16:22 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78C5551FF;
+        Wed, 22 Mar 2023 15:16:24 +0000 (UTC)
 From:   Ondrej Kozina <okozina@redhat.com>
 To:     linux-block@vger.kernel.org
 Cc:     bluca@debian.org, gmazyland@gmail.com, axboe@kernel.dk,
         hch@infradead.org, brauner@kernel.org, rafael.antognolli@intel.com,
         Ondrej Kozina <okozina@redhat.com>
-Subject: [PATCH 3/5] sed-opal: allow user authority to get locking range attributes.
-Date:   Wed, 22 Mar 2023 16:16:02 +0100
-Message-Id: <20230322151604.401680-4-okozina@redhat.com>
+Subject: [PATCH 4/5] sed-opal: add helper to get multiple columns at once.
+Date:   Wed, 22 Mar 2023 16:16:03 +0100
+Message-Id: <20230322151604.401680-5-okozina@redhat.com>
 In-Reply-To: <20230322151604.401680-1-okozina@redhat.com>
 References: <20230322151604.401680-1-okozina@redhat.com>
 MIME-Version: 1.0
@@ -61,93 +61,67 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Extend ACE set of locking range attributes accessible to user
-authority. This patch allows user authority to get following
-locking range attribues when user get added to locking range via
-IOC_OPAL_ADD_USR_TO_LR:
-
-locking range start
-locking range end
-read lock enabled
-write lock enabled
-read locked
-write locked
-lock on reset
-active key
-
-Note: Admin1 authority always remains in the ACE. Otherwise
-it breaks current userspace expecting Admin1 in the ACE (sedutils).
-
-See TCG OPAL2 s.4.3.1.7 "ACE_Locking_RangeNNNN_Get_RangeStartToActiveKey".
+Refactors current code querying single column to use the
+new helper. Real multi column usage will be added later.
 
 Signed-off-by: Ondrej Kozina <okozina@redhat.com>
 Tested-by: Luca Boccassi <bluca@debian.org>
 Tested-by: Milan Broz <gmazyland@gmail.com>
 ---
- block/opal_proto.h |  1 +
- block/sed-opal.c   | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ block/sed-opal.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/block/opal_proto.h b/block/opal_proto.h
-index 7152aa1f1a49..6dfaea272db2 100644
---- a/block/opal_proto.h
-+++ b/block/opal_proto.h
-@@ -105,6 +105,7 @@ enum opal_uid {
- 	/* tables */
- 	OPAL_TABLE_TABLE,
- 	OPAL_LOCKINGRANGE_GLOBAL,
-+	OPAL_LOCKINGRANGE_ACE_START_TO_KEY,
- 	OPAL_LOCKINGRANGE_ACE_RDLOCKED,
- 	OPAL_LOCKINGRANGE_ACE_WRLOCKED,
- 	OPAL_MBRCONTROL,
 diff --git a/block/sed-opal.c b/block/sed-opal.c
-index 2c3e38df9c65..1ce61adc732c 100644
+index 1ce61adc732c..27abed4d60ef 100644
 --- a/block/sed-opal.c
 +++ b/block/sed-opal.c
-@@ -132,6 +132,8 @@ static const u8 opaluid[][OPAL_UID_LENGTH] = {
- 		{ 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01 },
- 	[OPAL_LOCKINGRANGE_GLOBAL] =
- 		{ 0x00, 0x00, 0x08, 0x02, 0x00, 0x00, 0x00, 0x01 },
-+	[OPAL_LOCKINGRANGE_ACE_START_TO_KEY] =
-+		{ 0x00, 0x00, 0x00, 0x08, 0x00, 0x03, 0xD0, 0x01 },
- 	[OPAL_LOCKINGRANGE_ACE_RDLOCKED] =
- 		{ 0x00, 0x00, 0x00, 0x08, 0x00, 0x03, 0xE0, 0x01 },
- 	[OPAL_LOCKINGRANGE_ACE_WRLOCKED] =
-@@ -1835,6 +1837,26 @@ static int add_user_to_lr(struct opal_dev *dev, void *data)
+@@ -1149,12 +1149,8 @@ static int finalize_and_send(struct opal_dev *dev, cont_fn cont)
+ 	return opal_send_recv(dev, cont);
+ }
+ 
+-/*
+- * request @column from table @table on device @dev. On success, the column
+- * data will be available in dev->resp->tok[4]
+- */
+-static int generic_get_column(struct opal_dev *dev, const u8 *table,
+-			      u64 column)
++static int generic_get_columns(struct opal_dev *dev, const u8 *table,
++			       u64 start_column, u64 end_column)
+ {
+ 	int err;
+ 
+@@ -1164,12 +1160,12 @@ static int generic_get_column(struct opal_dev *dev, const u8 *table,
+ 
+ 	add_token_u8(&err, dev, OPAL_STARTNAME);
+ 	add_token_u8(&err, dev, OPAL_STARTCOLUMN);
+-	add_token_u64(&err, dev, column);
++	add_token_u64(&err, dev, start_column);
+ 	add_token_u8(&err, dev, OPAL_ENDNAME);
+ 
+ 	add_token_u8(&err, dev, OPAL_STARTNAME);
+ 	add_token_u8(&err, dev, OPAL_ENDCOLUMN);
+-	add_token_u64(&err, dev, column);
++	add_token_u64(&err, dev, end_column);
+ 	add_token_u8(&err, dev, OPAL_ENDNAME);
+ 
+ 	add_token_u8(&err, dev, OPAL_ENDLIST);
+@@ -1180,6 +1176,16 @@ static int generic_get_column(struct opal_dev *dev, const u8 *table,
  	return finalize_and_send(dev, parse_and_check_status);
  }
  
-+static int add_user_to_lr_ace(struct opal_dev *dev, void *data)
++/*
++ * request @column from table @table on device @dev. On success, the column
++ * data will be available in dev->resp->tok[4]
++ */
++static int generic_get_column(struct opal_dev *dev, const u8 *table,
++			      u64 column)
 +{
-+	int err;
-+	struct opal_lock_unlock *lkul = data;
-+	const u8 users[] = {
-+		OPAL_ADMIN1,
-+		lkul->session.who
-+	};
-+
-+	err = set_lr_boolean_ace(dev, OPAL_LOCKINGRANGE_ACE_START_TO_KEY,
-+				 lkul->session.opal_key.lr, users, ARRAY_SIZE(users));
-+
-+	if (err) {
-+		pr_debug("Error building add user to locking ranges ACEs.\n");
-+		return err;
-+	}
-+
-+	return finalize_and_send(dev, parse_and_check_status);
++	return generic_get_columns(dev, table, column, column);
 +}
 +
- static int lock_unlock_locking_range(struct opal_dev *dev, void *data)
- {
- 	u8 lr_buffer[OPAL_UID_LENGTH];
-@@ -2372,6 +2394,7 @@ static int opal_add_user_to_lr(struct opal_dev *dev,
- 	const struct opal_step steps[] = {
- 		{ start_admin1LSP_opal_session, &lk_unlk->session.opal_key },
- 		{ add_user_to_lr, lk_unlk },
-+		{ add_user_to_lr_ace, lk_unlk },
- 		{ end_opal_session, }
- 	};
- 	int ret;
+ /*
+  * see TCG SAS 5.3.2.3 for a description of the available columns
+  *
 -- 
 2.31.1
 
