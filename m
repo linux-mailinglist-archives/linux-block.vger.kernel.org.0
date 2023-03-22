@@ -2,284 +2,161 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9FD96C4BA0
-	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 14:24:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 878A46C4BB5
+	for <lists+linux-block@lfdr.de>; Wed, 22 Mar 2023 14:30:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229984AbjCVNY1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 22 Mar 2023 09:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35686 "EHLO
+        id S230452AbjCVNas (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 22 Mar 2023 09:30:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbjCVNY0 (ORCPT
+        with ESMTP id S229487AbjCVNar (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 22 Mar 2023 09:24:26 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C069B136C5
-        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 06:24:24 -0700 (PDT)
-Received: by mail-wm1-f46.google.com with SMTP id fm20-20020a05600c0c1400b003ead37e6588so13014523wmb.5
-        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 06:24:24 -0700 (PDT)
+        Wed, 22 Mar 2023 09:30:47 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A049D10D1
+        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 06:30:45 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id p203so20937147ybb.13
+        for <linux-block@vger.kernel.org>; Wed, 22 Mar 2023 06:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679491845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fj1ZEndN827h6H99ZndY6ISgjudYJ+QA+1NK7dJ1MKY=;
+        b=dAp2Sm7P7M3MQaKNyWk6eEx7+O4qGXWX0+DMyeBe3i97co13uziImImpyMJGF4jLLb
+         xA77N70wHknYdtIkxdMcbPBi2dV8fgnGDSaeaFCa1mFqNyi2hAATsozRzSBv/TnqPMkF
+         p09JSU9UaWA35VbyplGqVFuvokTma7h74NFHl8ZLBKedG+qa8hQwxqEo3Q/saaytLRUt
+         ofrdVXGmJBE5HUYGnmLV2DdhSwXE4W2Ugc8LdfDSnlBxpyp7jCxvYpN09mVgXGfV4ziy
+         GFKhfQ4GzQyhKr+1Ky1+Ok7ncgb4g4cPb8nGHR4kSsvg1DAbYXUUWTkSj/BZF9mwKCf5
+         lJ3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679491463;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fmnrNNIihsL2m7bJ09oCMNw0+jKVUUERpsFM6QsRyz8=;
-        b=oSxdHhB0Oyw1rVDiH+yxpjaI02yNjofCk6zoH1jEWXLJs7EITk2FL9PFhyfM0h/tJ3
-         WbdJTzzINyF4R1MW0oB4JLZByyj7B5cD4ICJxMHkYSEjZ7X/MJuNBSLgypK8ROjz3mrV
-         uK/occ0eyRK6Lp130N+dmmxP+DKokwUwHWsLawCjgcdajLjpiyaJxEfBVdtEHJxLc8Wd
-         vmmbcl0LMHv/ogGWroSSUxITV8p1r5sNn8JWKNhGDTRfWj8kZZGeGn750nsdNS6V3VsB
-         wpu/tsdOmATmF3gpUwR9FM8+8rkKgi+lpb1i6+6AL05up6vRRGi2DpTpvBbnk593PlBO
-         uuAA==
-X-Gm-Message-State: AO0yUKUo1SVy6n23WPcCgdm49pA0Ci2BipUCcC4LZFHUkoE+7pHCrRm5
-        cxydkJqNScf0a+ege9G0xWo=
-X-Google-Smtp-Source: AK7set/KqmgrooUP+AxwhcG1nHCnmIjZjzY1SJG+2jkjfok7J8DmpBrKW/n/3WnjQAbejAgnfG8mrA==
-X-Received: by 2002:a05:600c:4ec7:b0:3ed:d119:df36 with SMTP id g7-20020a05600c4ec700b003edd119df36mr6553475wmq.0.1679491463123;
-        Wed, 22 Mar 2023 06:24:23 -0700 (PDT)
-Received: from [192.168.64.192] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id s20-20020a7bc394000000b003ee3e075d1csm4485742wmj.22.2023.03.22.06.24.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 06:24:22 -0700 (PDT)
-Message-ID: <d6e49031-5f61-c96d-ad26-5c591a21ac54@grimberg.me>
-Date:   Wed, 22 Mar 2023 15:24:20 +0200
+        d=1e100.net; s=20210112; t=1679491845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fj1ZEndN827h6H99ZndY6ISgjudYJ+QA+1NK7dJ1MKY=;
+        b=kw406/sneLCgyMWSo1IyNmeopErhHpGzSiXmM6hwISPg+qDdEg6koEqk/SS4lxmNyC
+         ZTzxaWR5957kQAtvpD096QROURKQH0tYoOVUgiDe2rE/llggka03ILAtR2FsL6M2PYcb
+         tiNqe/myGykNZn3eDhIbsl/fAsD/siO6OxUONSSgNl9w/tkc3c9JIEUcFrRWLK1TxPez
+         fbDzHVcgFeYEGSyhsmJegcI2XKS+JF5ChcBiZu+5JXNI0Fn7hr0qSMDtT/JBlVszgcOr
+         G5lX91JdMjl7Xda1Lp+jStrvxbebn8X+7bRy8PSP9PG+gaj0fpRETMO4c3GgNuOmmcjt
+         V64g==
+X-Gm-Message-State: AAQBX9f0AD17EwU3yFB4RIhYK3uNb5JqEcTs0P5sn7shLLfNIbuHRozT
+        wY8tMtlmwa3aMcoM40YFd1WEh/DIdOgNHcSJ1avdVg==
+X-Google-Smtp-Source: AKy350bWFZJIkHw1dTAPTwr1WPguwRn3chvLp7222Dwm6xMXDK8TwrXNFJdroXPfKjAnjFCm6fSEeVSjJIIxXsUW6gM=
+X-Received: by 2002:a25:5456:0:b0:b69:eb08:8f3b with SMTP id
+ i83-20020a255456000000b00b69eb088f3bmr5910216ybb.4.1679491844680; Wed, 22 Mar
+ 2023 06:30:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 0/3] nvme fabrics polling fixes
-Content-Language: en-US
-To:     Daniel Wagner <dwagner@suse.de>, Keith Busch <kbusch@meta.com>
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        linux-nvme@lists.infradead.org, hch@lst.de,
-        Keith Busch <kbusch@kernel.org>
-References: <20230322002350.4038048-1-kbusch@meta.com>
- <20230322084831.qwdarhmrs3uv5y43@carbon.lan>
-From:   Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20230322084831.qwdarhmrs3uv5y43@carbon.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=0.5 required=5.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-        FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+References: <4b9fc9c6-b48c-198f-5f80-811a44737e5f@suse.cz> <CAANmLtzajny8ZK_QKVYOxLc8L9gyWG6Uu7YyL-CR-qfwphVTzg@mail.gmail.com>
+ <ZBr8Gf53CbJc0b5E@hyeyoo>
+In-Reply-To: <ZBr8Gf53CbJc0b5E@hyeyoo>
+From:   Binder Makin <merimus@google.com>
+Date:   Wed, 22 Mar 2023 09:30:32 -0400
+Message-ID: <CAANmLtzQRsRHVRdMGccNK_+Ov1H_30ntWdhBJaHDBpYLzmVR6w@mail.gmail.com>
+Subject: Re: [LSF/MM/BPF TOPIC] SLOB+SLAB allocators removal and future SLUB improvements
+To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        bpf@vger.kernel.org, linux-xfs@vger.kernel.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
->> From: Keith Busch <kbusch@kernel.org>
->>
->> I couldn't test the existing tcp or rdma options, so I had to make a
->> loop poll option. The last patch fixes the polling queues when used with
->> fabrics.
->>
->> Note, this depends on patch I sent earlier today that I should have just
->> included in this series:
->>
->>    https://lore.kernel.org/linux-block/20230321215001.2655451-1-kbusch@meta.com/T/#u
-> 
-> I've tested this series with
-> 
->    https://github.com/igaw/blktests/tree/queue-counts
-> 
-> and while for rdma all is good I got a lockdep warning for tcp:
-> 
-> 
->   ======================================================
->   WARNING: possible circular locking dependency detected
->   6.3.0-rc1+ #15 Tainted: G        W
->   ------------------------------------------------------
->   kworker/6:0/54 is trying to acquire lock:
->   ffff888121d88030 ((work_completion)(&queue->io_work)){+.+.}-{0:0}, at: __flush_work+0xb9/0x170
-> 
->   but task is already holding lock:
->   ffff888100b0fd20 ((work_completion)(&queue->release_work)){+.+.}-{0:0}, at: process_one_work+0x707/0xbc0
-> 
->   which lock already depends on the new lock.
-> 
-> 
->   the existing dependency chain (in reverse order) is:
-> 
->   -> #2 ((work_completion)(&queue->release_work)){+.+.}-{0:0}:
->          lock_acquire+0x13a/0x310
->          process_one_work+0x728/0xbc0
->          worker_thread+0x97a/0x1480
->          kthread+0x228/0x2b0
->          ret_from_fork+0x1f/0x30
-> 
->   -> #1 ((wq_completion)nvmet-wq){+.+.}-{0:0}:
->          lock_acquire+0x13a/0x310
->          __flush_workqueue+0x185/0x14e0
->          nvmet_tcp_install_queue+0x63/0x270 [nvmet_tcp]
->          nvmet_install_queue+0x2b1/0x6a0 [nvmet]
->          nvmet_execute_admin_connect+0x381/0x880 [nvmet]
->          nvmet_tcp_io_work+0x15e8/0x8f60 [nvmet_tcp]
->          process_one_work+0x756/0xbc0
->          worker_thread+0x97a/0x1480
->          kthread+0x228/0x2b0
->          ret_from_fork+0x1f/0x30
-> 
->   -> #0 ((work_completion)(&queue->io_work)){+.+.}-{0:0}:
->          validate_chain+0x19f1/0x6d50
->          __lock_acquire+0x122d/0x1e90
->          lock_acquire+0x13a/0x310
->          __flush_work+0xd5/0x170
->          __cancel_work_timer+0x36b/0x470
->          nvmet_tcp_release_queue_work+0x25c/0x1000 [nvmet_tcp]
->          process_one_work+0x756/0xbc0
->          worker_thread+0x97a/0x1480
->          kthread+0x228/0x2b0
->          ret_from_fork+0x1f/0x30
-> 
->   other info that might help us debug this:
-> 
->   Chain exists of:
->     (work_completion)(&queue->io_work) --> (wq_completion)nvmet-wq --> (work_completion)(&queue->release_work)
+Blah, sorry, lets try this.
+https://docs.google.com/spreadsheets/d/e/2PACX-1vS1uiw85AIpzgcVlvNlDCD9PuCI=
+ubiaJvBrKIC5OyAQURZHogOuCtpFNsC-zGHZ4-XNKJVcGgkpL-KH/pubhtml
 
-This came up before.
-
-Its because in nvmet_tcp_install_queue we flush the nvmet_wq, to let
-queue releases flush before accepting new queues. Without it, there is
-no back-pressure and a host can simply reconnect in a loop and exhaust
-nvmet system memory...
-
-I don't think its a deadlock, because the queue that flushes the
-nvmet_wq cannot be in release, this is only possible that other queues
-would be releasing. So I can't see how it would deadlock. But I don't
-know how to teach lockdep.
-
-I'll try to see if there is a different way to do this, without annoying
-lockdep.
-
-> 
->    Possible unsafe locking scenario:
-> 
->          CPU0                    CPU1
->          ----                    ----
->     lock((work_completion)(&queue->release_work));
->                                  lock((wq_completion)nvmet-wq);
->                                  lock((work_completion)(&queue->release_work));
->     lock((work_completion)(&queue->io_work));
-> 
->    *** DEADLOCK ***
-> 
->   2 locks held by kworker/6:0/54:
->    #0: ffff888109ff6d48 ((wq_completion)nvmet-wq){+.+.}-{0:0}, at: process_one_work+0x6c8/0xbc0
->    #1: ffff888100b0fd20 ((work_completion)(&queue->release_work)){+.+.}-{0:0}, at: process_one_work+0x707/0xbc0
-> 
->   stack backtrace:
->   CPU: 6 PID: 54 Comm: kworker/6:0 Tainted: G        W          6.3.0-rc1+ #15 f4d05de834b07d62567d33b70ec70fb0fa06f103
->   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
->   Workqueue: nvmet-wq nvmet_tcp_release_queue_work [nvmet_tcp]
->   Call Trace:
->    <TASK>
->    dump_stack_lvl+0x5a/0x80
->    check_noncircular+0x2c8/0x390
->    ? add_chain_block+0x5e0/0x5e0
->    ? ret_from_fork+0x1f/0x30
->    ? lockdep_lock+0xd3/0x260
->    ? stack_trace_save+0x10a/0x1e0
->    ? stack_trace_snprint+0x100/0x100
->    ? check_noncircular+0x1a6/0x390
->    validate_chain+0x19f1/0x6d50
->    ? lockdep_unlock+0x9e/0x1f0
->    ? validate_chain+0x15b2/0x6d50
->    ? reacquire_held_locks+0x510/0x510
->    ? reacquire_held_locks+0x510/0x510
->    ? reacquire_held_locks+0x510/0x510
->    ? add_lock_to_list+0xbf/0x2c0
->    ? lockdep_unlock+0x9e/0x1f0
->    ? validate_chain+0x15b2/0x6d50
->    ? reacquire_held_locks+0x510/0x510
->    ? reacquire_held_locks+0x510/0x510
->    ? xfs_buf_find_lock+0xb0/0x430 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? reacquire_held_locks+0x510/0x510
->    ? validate_chain+0x176/0x6d50
->    ? trace_lock_acquired+0x7b/0x180
->    ? lock_is_held_type+0x8b/0x110
->    ? lock_is_held_type+0x8b/0x110
->    ? rcu_read_lock_sched_held+0x34/0x70
->    ? reacquire_held_locks+0x510/0x510
->    ? xfs_buf_get_map+0xd72/0x11a0 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? lock_is_held_type+0x8b/0x110
->    ? rcu_read_lock_sched_held+0x34/0x70
->    ? trace_xfs_buf_read+0x7c/0x180 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_buf_read_map+0x111/0x700 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? lock_is_held_type+0x8b/0x110
->    ? lock_is_held_type+0x8b/0x110
->    ? xfs_btree_read_buf_block+0x205/0x300 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? rcu_read_lock_sched_held+0x34/0x70
->    ? trace_xfs_trans_read_buf+0x79/0x170 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_btree_read_buf_block+0x205/0x300 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_trans_read_buf_map+0x303/0x4f0 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? trace_xfs_trans_getsb+0x170/0x170 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_verify_fsbno+0x74/0x130 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_btree_ptr_to_daddr+0x19b/0x660 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_buf_set_ref+0x1d/0x50 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_btree_read_buf_block+0x233/0x300 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? mark_lock+0x8f/0x320
->    ? xfs_btree_readahead+0x250/0x250 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_verify_fsbno+0x74/0x130 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_btree_ptr_to_daddr+0x19b/0x660 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_dio_write_end_io+0x32f/0x3f0 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_dio_write_end_io+0x32f/0x3f0 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_dio_write_end_io+0x32f/0x3f0 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_dio_write_end_io+0x32f/0x3f0 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? __module_address+0x86/0x1e0
->    ? ret_from_fork+0x1f/0x30
->    ? deref_stack_reg+0x17f/0x210
->    ? ret_from_fork+0x1f/0x30
->    ? unwind_next_frame+0x16b/0x2240
->    ? ret_from_fork+0x1f/0x30
->    ? stack_trace_save+0x1e0/0x1e0
->    ? arch_stack_walk+0xb7/0xf0
->    ? lock_is_held_type+0x8b/0x110
->    ? find_busiest_group+0x104e/0x2480
->    ? load_balance+0x2540/0x2540
->    ? stack_trace_save+0x10a/0x1e0
->    ? mark_lock+0x8f/0x320
->    ? __lock_acquire+0x122d/0x1e90
->    ? lock_is_held_type+0x8b/0x110
->    ? rcu_lock_acquire+0x30/0x30
->    ? xfs_buf_ioend+0x248/0x450 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? xfs_buf_ioend+0x248/0x450 [xfs e56ce85f3b18232dbd061be3c73dc29bed4ad37b]
->    ? __module_address+0x86/0x1e0
->    ? ret_from_fork+0x1f/0x30
->    ? deref_stack_reg+0x17f/0x210
->    ? ret_from_fork+0x1f/0x30
->    ? unwind_next_frame+0x16b/0x2240
->    ? stack_trace_save+0x10a/0x1e0
->    ? deref_stack_reg+0x17f/0x210
->    ? look_up_lock_class+0x65/0x130
->    ? register_lock_class+0x5d/0x860
->    ? mark_lock+0x8f/0x320
->    __lock_acquire+0x122d/0x1e90
->    lock_acquire+0x13a/0x310
->    ? __flush_work+0xb9/0x170
->    ? read_lock_is_recursive+0x10/0x10
->    ? lock_is_held_type+0x8b/0x110
->    ? rcu_lock_acquire+0x30/0x30
->    __flush_work+0xd5/0x170
->    ? __flush_work+0xb9/0x170
->    ? flush_work+0x10/0x10
->    ? lock_is_held_type+0x8b/0x110
->    ? __lock_acquire+0x1e90/0x1e90
->    ? do_raw_spin_unlock+0x112/0x890
->    ? mark_lock+0x8f/0x320
->    ? lockdep_hardirqs_on_prepare+0x2d5/0x610
->    __cancel_work_timer+0x36b/0x470
->    ? cancel_work_sync+0x10/0x10
->    ? mark_lock+0x8f/0x320
->    ? lockdep_hardirqs_on_prepare+0x2d5/0x610
->    ? nvmet_tcp_release_queue_work+0x24d/0x1000 [nvmet_tcp f61749ac066e0812c28869697bc2623872f02bd4]
->    ? datagram_poll+0x380/0x380
->    nvmet_tcp_release_queue_work+0x25c/0x1000 [nvmet_tcp f61749ac066e0812c28869697bc2623872f02bd4]
->    process_one_work+0x756/0xbc0
->    ? rescuer_thread+0x13f0/0x13f0
->    ? lock_acquired+0x2f2/0x930
->    ? worker_thread+0xf55/0x1480
->    worker_thread+0x97a/0x1480
->    ? rcu_lock_release+0x20/0x20
->    kthread+0x228/0x2b0
->    ? rcu_lock_release+0x20/0x20
->    ? kthread_blkcg+0xa0/0xa0
->    ret_from_fork+0x1f/0x30
->    </TASK>
+On Wed, Mar 22, 2023 at 9:02=E2=80=AFAM Hyeonggon Yoo <42.hyeyoo@gmail.com>=
+ wrote:
+>
+> On Wed, Mar 22, 2023 at 08:15:28AM -0400, Binder Makin wrote:
+> > Was looking at SLAB removal and started by running A/B tests of SLAB vs
+> > SLUB.  Please note these are only preliminary results.
+> >
+> > These were run using 6.1.13 configured for SLAB/SLUB.
+> > Machines were standard datacenter servers.
+> >
+> > Hackbench shows completion time, so smaller is better.
+> > On all others larger is better.
+> > https://docs.google.com/spreadsheets/d/e/2PACX-1vQ47Mekl8BOp3ekCefwL6wL=
+8SQiv6Qvp5avkU2ssQSh41gntjivE-aKM4PkwzkC4N_s_MxUdcsokhhz/pubhtml
+> >
+> > Some notes:
+> > SUnreclaim and SReclaimable shows unreclaimable and reclaimable memory.
+> > Substantially higher with SLUB, but I believe that is to be expected.
+> >
+> > Various results showing a 5-10% degradation with SLUB.  That feels
+> > concerning to me, but I'm not sure what others' tolerance would be.
+>
+> Hello Binder,
+>
+> Thank you for sharing the data on which workloads
+> SLUB performs worse than SLAB. This information is critical for
+> improving SLUB and deprecating SLAB.
+>
+> By the way, it appears that the spreadsheet is currently set to private.
+> Could you make it public for me to access?
+>
+> I am really interested in performing similar experiments on my machines
+> to obtain comparable data that can be utilized to enhance SLUB.
+>
+> Thanks,
+> Hyeonggon
+>
+> > redis results on AMD show some pretty bad degredations.  10-20% range
+> > netpipe on Intel also has issues.. 10-17%
+> >
+> > On Tue, Mar 14, 2023 at 4:05=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz=
+> wrote:
+> >
+> > > As you're probably aware, my plan is to get rid of SLOB and SLAB, lea=
+ving
+> > > only SLUB going forward. The removal of SLOB seems to be going well, =
+there
+> > > were no objections to the deprecation and I've posted v1 of the remov=
+al
+> > > itself [1] so it could be in -next soon.
+> > >
+> > > The immediate benefit of that is that we can allow kfree() (and
+> > > kfree_rcu())
+> > > to free objects from kmem_cache_alloc() - something that IIRC at leas=
+t xfs
+> > > people wanted in the past, and SLOB was incompatible with that.
+> > >
+> > > For SLAB removal I haven't yet heard any objections (but also didn't
+> > > deprecate it yet) but if there are any users due to particular worklo=
+ads
+> > > doing better with SLAB than SLUB, we can discuss why those would regr=
+ess
+> > > and
+> > > what can be done about that in SLUB.
+> > >
+> > > Once we have just one slab allocator in the kernel, we can take a clo=
+ser
+> > > look at what the users are missing from it that forces them to create=
+ own
+> > > allocators (e.g. BPF), and could be considered to be added as a gener=
+ic
+> > > implementation to SLUB.
+> > >
+> > > Thanks,
+> > > Vlastimil
+> > >
+> > > [1] https://lore.kernel.org/all/20230310103210.22372-1-vbabka@suse.cz=
+/
