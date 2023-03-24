@@ -2,79 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D03966C876C
-	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 22:23:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9EEE6C8779
+	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 22:28:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230192AbjCXVXn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Mar 2023 17:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
+        id S231794AbjCXV2T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Mar 2023 17:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbjCXVXn (ORCPT
+        with ESMTP id S231841AbjCXV2R (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Mar 2023 17:23:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B7FAD39
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 14:23:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 065B2B82619
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 21:23:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 963BFC433D2;
-        Fri, 24 Mar 2023 21:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679693019;
-        bh=vxRM5nu+lL2YrBLwN+2df3sXIk54wm0wGAr64Y/hmEE=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=ILyRgsTaoQfqVsU3KUlpyHiGEdRnJnPU2u51aZdbqVSq0uVFhuPiUJkkuRbdUKn8R
-         /XHPwx495Izq8Ml1k7v5MLjqfE+Xq2E8a8n3pLcQr0yBU2soMJ1lN1CiUr531Vspov
-         bS836VEPzxgNuyYhZ8OfIhhDG84TUUEeouw7jU+4YBnz0ZHaYHuU8h5FWg9IgAxO7o
-         zEQ2HYDkjInoxBe5U1156z5aAnof14q8xxQ1c+hsqMImKC+IovLNrCZ7MZD4IIJWut
-         Vu2TdnBx2I9E22zw6NmUCjBwLDkVsWSUWw+NmWFt2wG+VHyxQEbZ+SooZIl4PliCpO
-         0cBArKK+NLQvg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 812DFE2A039;
-        Fri, 24 Mar 2023 21:23:39 +0000 (UTC)
-Subject: Re: [git pull] device mapper fixes for 6.3-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <ZB3cJuV78aKnnWrO@redhat.com>
-References: <ZB3cJuV78aKnnWrO@redhat.com>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZB3cJuV78aKnnWrO@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.3/dm-fixes
-X-PR-Tracked-Commit-Id: d3aa3e060c4a80827eb801fc448debc9daa7c46b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5ad4fe9613cb8c202150f5cce5347fc8926c6c01
-Message-Id: <167969301949.25746.12928284570782952004.pr-tracker-bot@kernel.org>
-Date:   Fri, 24 Mar 2023 21:23:39 +0000
-To:     Mike Snitzer <snitzer@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org,
-        Alasdair G Kergon <agk@redhat.com>,
-        Benjamin Marzinski <bmarzins@redhat.com>,
-        Coly Li <colyli@suse.de>,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Mikulas Patocka <mpatocka@redhat.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        Fri, 24 Mar 2023 17:28:17 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799DD19C52
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 14:28:16 -0700 (PDT)
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OGXCrX000538
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 14:28:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=s2048-2021-q4;
+ bh=2umER3Yy5QQjdTn23cuNP0N+AWlhdN1P40sj7bMbuKM=;
+ b=bFWV+bjxAj5EIPYMUdyM1kPmJQtwm0DgaqDj33k2/1UgKqtOLZat4pma2qJ8R0NQeaWI
+ O4P2h5Rs9Go4f3+vV+r0JbfHNty0WgDWdNOLUNQEDS7giDKMrEdNQWtcs5SC5eqmQ2CO
+ HQgMpUoGtL/AzRsZrjG9Zyh5c3cdD/oK9tvPLsbXb7pW5I4HnPdtYGID5+FARJ/WIw62
+ HUrLqGDLKm+8H/+0UKPw9Y4zd319XYjw+bGIhu0GmikO4JgQXOsDV/1J8VhkQ+H6aaWQ
+ P6ZRAPCbiZf7V4LOvj5H0g3yOufwvzNUPCvt6NELGmusSn4YMKwBvVdBBB7FQwry5k07 Gg== 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3pgxmqxp31-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 14:28:16 -0700
+Received: from twshared52565.14.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Fri, 24 Mar 2023 14:28:14 -0700
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+        id C5CA31456476F; Fri, 24 Mar 2023 14:28:04 -0700 (PDT)
+From:   Keith Busch <kbusch@meta.com>
+To:     <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <axboe@kernel.dk>, <hch@lst.de>
+CC:     Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 1/2] blk-mq: export request polling helpers
+Date:   Fri, 24 Mar 2023 14:28:02 -0700
+Message-ID: <20230324212803.1837554-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: FF-IjiPyCh3OVGk5KM7IMuXgjM5Ovodj
+X-Proofpoint-ORIG-GUID: FF-IjiPyCh3OVGk5KM7IMuXgjM5Ovodj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-24_11,2023-03-24_01,2023-02-09_01
+X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Fri, 24 Mar 2023 13:21:42 -0400:
+From: Keith Busch <kbusch@kernel.org>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.3/dm-fixes
+These will be used by drivers later.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5ad4fe9613cb8c202150f5cce5347fc8926c6c01
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ block/blk-mq.c         | 6 +-----
+ block/blk-mq.h         | 2 --
+ include/linux/blk-mq.h | 7 +++++++
+ 3 files changed, 8 insertions(+), 7 deletions(-)
 
-Thank you!
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 37d8a2f4d5da8..34ac95fc43a66 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -52,11 +52,6 @@ static inline struct blk_mq_hw_ctx *blk_qc_to_hctx(str=
+uct request_queue *q,
+ 	return xa_load(&q->hctx_table, qc);
+ }
+=20
+-static inline blk_qc_t blk_rq_to_qc(struct request *rq)
+-{
+-	return rq->mq_hctx->queue_num;
+-}
+-
+ /*
+  * Check if any of the ctx, dispatch list or elevator
+  * have pending work in this hardware queue.
+@@ -4744,6 +4739,7 @@ int blk_mq_poll(struct request_queue *q, blk_qc_t c=
+ookie, struct io_comp_batch *
+ 	__set_current_state(TASK_RUNNING);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(blk_mq_poll);
+=20
+ unsigned int blk_mq_rq_cpu(struct request *rq)
+ {
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index ef59fee62780d..92bc058fba3e5 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -31,8 +31,6 @@ struct blk_mq_ctx {
+ } ____cacheline_aligned_in_smp;
+=20
+ void blk_mq_submit_bio(struct bio *bio);
+-int blk_mq_poll(struct request_queue *q, blk_qc_t cookie, struct io_comp=
+_batch *iob,
+-		unsigned int flags);
+ void blk_mq_exit_queue(struct request_queue *q);
+ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr);
+ void blk_mq_wake_waiters(struct request_queue *q);
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 1dacb2c81fdda..ed10b5e380103 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -438,6 +438,11 @@ struct blk_mq_hw_ctx {
+ 	struct list_head	hctx_list;
+ };
+=20
++static inline blk_qc_t blk_rq_to_qc(struct request *rq)
++{
++	return rq->mq_hctx->queue_num;
++}
++
+ /**
+  * struct blk_mq_queue_map - Map software queues to hardware queues
+  * @mq_map:       CPU ID to hardware queue index map. This is an array
+@@ -716,6 +721,8 @@ int blk_mq_alloc_sq_tag_set(struct blk_mq_tag_set *se=
+t,
+ void blk_mq_free_tag_set(struct blk_mq_tag_set *set);
+=20
+ void blk_mq_free_request(struct request *rq);
++int blk_mq_poll(struct request_queue *q, blk_qc_t cookie, struct io_comp=
+_batch *iob,
++		unsigned int flags);
+=20
+ bool blk_mq_queue_inflight(struct request_queue *q);
+=20
+--=20
+2.34.1
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
