@@ -2,58 +2,72 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EB376C8475
-	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:05:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD5526C84A8
+	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:18:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231934AbjCXSFC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Mar 2023 14:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50042 "EHLO
+        id S231806AbjCXSSR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Mar 2023 14:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231826AbjCXSEJ (ORCPT
+        with ESMTP id S230350AbjCXSSO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Mar 2023 14:04:09 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC2B1D91F
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 11:02:18 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id ga7so2219645qtb.2
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 11:02:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679680634;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Odv7AxC3HRZXWm+J0LYvmR5fqL4QLl4x0VH2IAYLdbo=;
-        b=T4bnaY8XekW+fKFNO5kFxAcNyS78yzlkpVi/urOKJkNMdj2UkGMBdy05wrCic9ZbLX
-         hK6pZ9CvvcQNR6tEVCs78Dcl7mQDA0DOTfuzmbQ7qbv9/4Vvo5+DnmxXau0/M6jfs1DA
-         zSd7aDxafQ70etDSU7Pxfz/81PEfYva23hsVs9Yw1TW7tByDZqu+cdkoWwwask1FF1PY
-         0/Pu3dMCgE51yXflgqxAllIZZSsBI0FQEQA1T1ZzSvLb9NMFrW/Wu35M4+yiOtuqQ9Xz
-         87MhS/RWF7/cVfXaEmG7aVs7ExLZxCZlE7zBHpEjNDNUK0RlkqVMQZSKOXSvq/R7FtF9
-         WQNQ==
-X-Gm-Message-State: AO0yUKW4PTMRCxn3a2aTuS1sEq1z98kxvEo6Ok4EBEq/qvICSTeyHeiQ
-        h07jbcB5ewKuQ6+nLdQghtjx
-X-Google-Smtp-Source: AK7set+fQBojZUgmuHDlH+OB0KbjCCij3sFa+MoTKOMo/eVjeZYYE5ThEHLU+nbJQDdAyiZp4XisIQ==
-X-Received: by 2002:a05:622a:11d5:b0:3dd:9050:9c4b with SMTP id n21-20020a05622a11d500b003dd90509c4bmr6640431qtk.62.1679680633775;
-        Fri, 24 Mar 2023 10:57:13 -0700 (PDT)
-Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
-        by smtp.gmail.com with ESMTPSA id 6-20020ac85646000000b003e3897d8505sm4232267qtt.54.2023.03.24.10.57.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 10:57:13 -0700 (PDT)
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     dm-devel@redhat.com
-Cc:     linux-block@vger.kernel.org, ejt@redhat.com, mpatocka@redhat.com,
-        heinzm@redhat.com, nhuck@google.com, ebiggers@kernel.org,
-        keescook@chromium.org, luomeng12@huawei.com,
-        Mike Snitzer <snitzer@kernel.org>
-Subject: [dm-6.4 PATCH v2 9/9] dm bio prison v1: improve concurrent IO performance
-Date:   Fri, 24 Mar 2023 13:56:56 -0400
-Message-Id: <20230324175656.85082-10-snitzer@kernel.org>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230324175656.85082-1-snitzer@kernel.org>
-References: <20230324175656.85082-1-snitzer@kernel.org>
+        Fri, 24 Mar 2023 14:18:14 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3AECC10;
+        Fri, 24 Mar 2023 11:18:11 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OI0SD2022105;
+        Fri, 24 Mar 2023 18:17:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2022-7-12; bh=1v7ZLeL97hWYChdBpR/rAN0z9r+BoNViKNQTonIgoCs=;
+ b=dklQLpv5Kih9JVdYi1iO2ImypuDTYkW4F+sme8XZYHtjXMI0JGJwkdeW4lDW2IeRBmfH
+ 3I2ntPpGeIzk11tOaMcV1bNoGPAbQ0hTjXtjXXclvUGOKdyOxoRjcG7LD65Rvpp5xwrd
+ yaHgfOOpDxdRe3+ncYvEX4jdkqh4RvqDfJNWKMFaUwqxzOhfDkduEHS7+/ZtYlugQZsi
+ E+xMsDiXR7w7ek9bDVLPOyEFuc1jfmuafwBkXAjxBCfYxpU7/3Ad01Gq+rExVNAJz5Lf
+ cCgB+txoCNtMcPWNsFOVrACgPIJRV31gci7NttV3wqYP5XYkTkPoRXqrhHm3Nvujdvkn OA== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3phgrg81bc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Mar 2023 18:17:46 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32OIAArs001370;
+        Fri, 24 Mar 2023 18:17:45 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3pgxk4bx2j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Mar 2023 18:17:45 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32OIHiEJ021017;
+        Fri, 24 Mar 2023 18:17:45 GMT
+Received: from mnchrist-mac.us.oracle.com (dhcp-10-154-153-54.vpn.oracle.com [10.154.153.54])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3pgxk4bx19-1;
+        Fri, 24 Mar 2023 18:17:44 +0000
+From:   Mike Christie <michael.christie@oracle.com>
+To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, james.bottomley@hansenpartnership.com,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        snitzer@kernel.org, axboe@kernel.dk,
+        linux-nvme@lists.infradead.org, chaitanyak@nvidia.com,
+        kbusch@kernel.org, target-devel@vger.kernel.org
+Subject: [PATCH v5 00/18] Use block pr_ops in LIO
+Date:   Fri, 24 Mar 2023 13:17:23 -0500
+Message-Id: <20230324181741.13908-1-michael.christie@oracle.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.3 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-24_11,2023-03-24_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2303240143
+X-Proofpoint-ORIG-GUID: 42_53J3ULHbeAIb4lt_dUZZeDskoyq4B
+X-Proofpoint-GUID: 42_53J3ULHbeAIb4lt_dUZZeDskoyq4B
+X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,413 +75,87 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Joe Thornber <ejt@redhat.com>
+The patches in this thread allow us to use the block pr_ops with LIO's
+target_core_iblock module to support cluster applications in VMs. They
+were built over Linus's tree. They also apply over linux-next and
+Martin's tree and Jens's trees. 
+ 
+Currently, to use windows clustering or linux clustering (pacemaker +
+cluster labs scsi fence agents) in VMs with LIO and vhost-scsi, you have
+to use tcmu or pscsi or use a cluster aware FS/framework for the LIO pr
+file. Setting up a cluster FS/framework is pain and waste when your real
+backend device is already a distributed device, and pscsi and tcmu are
+nice for specific use cases, but iblock gives you the best performance and
+allows you to use stacked devices like dm-multipath. So these patches
+allow iblock to work like pscsi/tcmu where they can pass a PR command to
+the backend module. And then iblock will use the pr_ops to pass the PR
+command to the real devices similar to what we do for unmap today.
 
-Split the bio prison into multiple regions, with a separate rbtree and
-associated lock for each region.
+The patches are separated in the following groups:
+Patch 1 - 2:
+- Add block layer callouts for reading reservations and rename reservation
+  error code.
+Patch 3 - 5:
+- SCSI support for new callouts.
+Patch 6:
+- DM support for new callouts.
+Patch 7 - 13:
+- NVMe support for new callouts.
+Patch 14 - 18:
+- LIO support for new callouts.
 
-To get fast bio prison locking and not damage the performance of
-discards too much the bio-prison now stipulates that discards should
-not cross a BIO_PRISON_MAX_RANGE boundary.
+This patchset has been tested with the libiscsi PGR ops and with window's
+failover cluster verification test. Note that for scsi backend devices we
+need this patchset:
 
-Because the range of a key (block_end - block_begin) must not exceed
-BIO_PRISON_MAX_RANGE: break_up_discard_bio() now ensures the data
-range reflected in PHYSICAL key doesn't exceed BIO_PRISON_MAX_RANGE.
-And splitting the thin target's discards (handled with VIRTUAL key) is
-achieved by updating dm-thin.c to set limits->max_discard_sectors in
-terms of BIO_PRISON_MAX_RANGE _and_ setting the thin and thin-pool
-targets' max_discard_granularity to true.
+https://lore.kernel.org/linux-scsi/20230123221046.125483-1-michael.christie@oracle.com/T/#m4834a643ffb5bac2529d65d40906d3cfbdd9b1b7
 
-Signed-off-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- drivers/md/dm-bio-prison-v1.c | 87 ++++++++++++++++++++-----------
- drivers/md/dm-bio-prison-v1.h | 10 ++++
- drivers/md/dm-thin.c          | 96 ++++++++++++++++++++---------------
- 3 files changed, 123 insertions(+), 70 deletions(-)
+to handle UAs. To reduce the size of this patchset that's being done
+separately to make reviewing easier. And to make merging easier this
+patchset and the one above do not have any conflicts so can be merged
+in different trees.
 
-diff --git a/drivers/md/dm-bio-prison-v1.c b/drivers/md/dm-bio-prison-v1.c
-index c4c05d5d8909..e35ed236e0dc 100644
---- a/drivers/md/dm-bio-prison-v1.c
-+++ b/drivers/md/dm-bio-prison-v1.c
-@@ -16,11 +16,17 @@
- 
- /*----------------------------------------------------------------*/
- 
-+#define NR_LOCKS 64
-+#define LOCK_MASK (NR_LOCKS - 1)
- #define MIN_CELLS 1024
- 
-+struct lock {
-+	spinlock_t lock;
-+} ____cacheline_aligned_in_smp;
-+
- struct dm_bio_prison {
--	spinlock_t lock;
--	struct rb_root cells;
-+	struct lock lock[NR_LOCKS];
-+	struct rb_root cells[NR_LOCKS];
- 	mempool_t cell_pool;
- };
- 
-@@ -34,13 +40,17 @@ static struct kmem_cache *_cell_cache;
-  */
- struct dm_bio_prison *dm_bio_prison_create(void)
- {
--	struct dm_bio_prison *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
- 	int ret;
-+	unsigned i;
-+	struct dm_bio_prison *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
- 
- 	if (!prison)
- 		return NULL;
- 
--	spin_lock_init(&prison->lock);
-+	for (i = 0; i < NR_LOCKS; i++) {
-+		spin_lock_init(&prison->lock[i].lock);
-+		prison->cells[i] = RB_ROOT;
-+	}
- 
- 	ret = mempool_init_slab_pool(&prison->cell_pool, MIN_CELLS, _cell_cache);
- 	if (ret) {
-@@ -48,8 +58,6 @@ struct dm_bio_prison *dm_bio_prison_create(void)
- 		return NULL;
- 	}
- 
--	prison->cells = RB_ROOT;
--
- 	return prison;
- }
- EXPORT_SYMBOL_GPL(dm_bio_prison_create);
-@@ -107,14 +115,26 @@ static int cmp_keys(struct dm_cell_key *lhs,
- 	return 0;
- }
- 
--static int __bio_detain(struct dm_bio_prison *prison,
-+static unsigned lock_nr(struct dm_cell_key *key)
-+{
-+	return (key->block_begin >> BIO_PRISON_MAX_RANGE_SHIFT) & LOCK_MASK;
-+}
-+
-+static void check_range(struct dm_cell_key *key)
-+{
-+	BUG_ON(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE);
-+	BUG_ON((key->block_begin >> BIO_PRISON_MAX_RANGE_SHIFT) !=
-+	       ((key->block_end - 1) >> BIO_PRISON_MAX_RANGE_SHIFT));
-+}
-+
-+static int __bio_detain(struct rb_root *root,
- 			struct dm_cell_key *key,
- 			struct bio *inmate,
- 			struct dm_bio_prison_cell *cell_prealloc,
- 			struct dm_bio_prison_cell **cell_result)
- {
- 	int r;
--	struct rb_node **new = &prison->cells.rb_node, *parent = NULL;
-+	struct rb_node **new = &root->rb_node, *parent = NULL;
- 
- 	while (*new) {
- 		struct dm_bio_prison_cell *cell =
-@@ -139,7 +159,7 @@ static int __bio_detain(struct dm_bio_prison *prison,
- 	*cell_result = cell_prealloc;
- 
- 	rb_link_node(&cell_prealloc->node, parent, new);
--	rb_insert_color(&cell_prealloc->node, &prison->cells);
-+	rb_insert_color(&cell_prealloc->node, root);
- 
- 	return 0;
- }
-@@ -151,10 +171,12 @@ static int bio_detain(struct dm_bio_prison *prison,
- 		      struct dm_bio_prison_cell **cell_result)
- {
- 	int r;
-+	unsigned l = lock_nr(key);
-+	check_range(key);
- 
--	spin_lock_irq(&prison->lock);
--	r = __bio_detain(prison, key, inmate, cell_prealloc, cell_result);
--	spin_unlock_irq(&prison->lock);
-+	spin_lock_irq(&prison->lock[l].lock);
-+	r = __bio_detain(&prison->cells[l], key, inmate, cell_prealloc, cell_result);
-+	spin_unlock_irq(&prison->lock[l].lock);
- 
- 	return r;
- }
-@@ -181,11 +203,11 @@ EXPORT_SYMBOL_GPL(dm_get_cell);
- /*
-  * @inmates must have been initialised prior to this call
-  */
--static void __cell_release(struct dm_bio_prison *prison,
-+static void __cell_release(struct rb_root *root,
- 			   struct dm_bio_prison_cell *cell,
- 			   struct bio_list *inmates)
- {
--	rb_erase(&cell->node, &prison->cells);
-+	rb_erase(&cell->node, root);
- 
- 	if (inmates) {
- 		if (cell->holder)
-@@ -198,20 +220,22 @@ void dm_cell_release(struct dm_bio_prison *prison,
- 		     struct dm_bio_prison_cell *cell,
- 		     struct bio_list *bios)
- {
--	spin_lock_irq(&prison->lock);
--	__cell_release(prison, cell, bios);
--	spin_unlock_irq(&prison->lock);
-+	unsigned l = lock_nr(&cell->key);
-+
-+	spin_lock_irq(&prison->lock[l].lock);
-+	__cell_release(&prison->cells[l], cell, bios);
-+	spin_unlock_irq(&prison->lock[l].lock);
- }
- EXPORT_SYMBOL_GPL(dm_cell_release);
- 
- /*
-  * Sometimes we don't want the holder, just the additional bios.
-  */
--static void __cell_release_no_holder(struct dm_bio_prison *prison,
-+static void __cell_release_no_holder(struct rb_root *root,
- 				     struct dm_bio_prison_cell *cell,
- 				     struct bio_list *inmates)
- {
--	rb_erase(&cell->node, &prison->cells);
-+	rb_erase(&cell->node, root);
- 	bio_list_merge(inmates, &cell->bios);
- }
- 
-@@ -219,11 +243,12 @@ void dm_cell_release_no_holder(struct dm_bio_prison *prison,
- 			       struct dm_bio_prison_cell *cell,
- 			       struct bio_list *inmates)
- {
-+	unsigned l = lock_nr(&cell->key);
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&prison->lock, flags);
--	__cell_release_no_holder(prison, cell, inmates);
--	spin_unlock_irqrestore(&prison->lock, flags);
-+	spin_lock_irqsave(&prison->lock[l].lock, flags);
-+	__cell_release_no_holder(&prison->cells[l], cell, inmates);
-+	spin_unlock_irqrestore(&prison->lock[l].lock, flags);
- }
- EXPORT_SYMBOL_GPL(dm_cell_release_no_holder);
- 
-@@ -248,18 +273,19 @@ void dm_cell_visit_release(struct dm_bio_prison *prison,
- 			   void *context,
- 			   struct dm_bio_prison_cell *cell)
- {
--	spin_lock_irq(&prison->lock);
-+	unsigned l = lock_nr(&cell->key);
-+	spin_lock_irq(&prison->lock[l].lock);
- 	visit_fn(context, cell);
--	rb_erase(&cell->node, &prison->cells);
--	spin_unlock_irq(&prison->lock);
-+	rb_erase(&cell->node, &prison->cells[l]);
-+	spin_unlock_irq(&prison->lock[l].lock);
- }
- EXPORT_SYMBOL_GPL(dm_cell_visit_release);
- 
--static int __promote_or_release(struct dm_bio_prison *prison,
-+static int __promote_or_release(struct rb_root *root,
- 				struct dm_bio_prison_cell *cell)
- {
- 	if (bio_list_empty(&cell->bios)) {
--		rb_erase(&cell->node, &prison->cells);
-+		rb_erase(&cell->node, root);
- 		return 1;
- 	}
- 
-@@ -271,10 +297,11 @@ int dm_cell_promote_or_release(struct dm_bio_prison *prison,
- 			       struct dm_bio_prison_cell *cell)
- {
- 	int r;
-+	unsigned l = lock_nr(&cell->key);
- 
--	spin_lock_irq(&prison->lock);
--	r = __promote_or_release(prison, cell);
--	spin_unlock_irq(&prison->lock);
-+	spin_lock_irq(&prison->lock[l].lock);
-+	r = __promote_or_release(&prison->cells[l], cell);
-+	spin_unlock_irq(&prison->lock[l].lock);
- 
- 	return r;
- }
-diff --git a/drivers/md/dm-bio-prison-v1.h b/drivers/md/dm-bio-prison-v1.h
-index dfbf1e94cb75..0b8acd6708fb 100644
---- a/drivers/md/dm-bio-prison-v1.h
-+++ b/drivers/md/dm-bio-prison-v1.h
-@@ -34,6 +34,16 @@ struct dm_cell_key {
- 	dm_block_t block_begin, block_end;
- };
- 
-+/*
-+ * The range of a key (block_end - block_begin) must not
-+ * exceed BIO_PRISON_MAX_RANGE.  Also the range must not
-+ * cross a similarly sized boundary.
-+ *
-+ * Must be a power of 2.
-+ */
-+#define BIO_PRISON_MAX_RANGE 1024
-+#define BIO_PRISON_MAX_RANGE_SHIFT 10
-+
- /*
-  * Treat this as opaque, only in header so callers can manage allocation
-  * themselves.
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index 00323428919e..18f18f9d66cc 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -1674,14 +1674,10 @@ static void break_up_discard_bio(struct thin_c *tc, dm_block_t begin, dm_block_t
- 	struct dm_cell_key data_key;
- 	struct dm_bio_prison_cell *data_cell;
- 	struct dm_thin_new_mapping *m;
--	dm_block_t virt_begin, virt_end, data_begin;
-+	dm_block_t virt_begin, virt_end, data_begin, data_end;
-+	dm_block_t len, next_boundary;
- 
- 	while (begin != end) {
--		r = ensure_next_mapping(pool);
--		if (r)
--			/* we did our best */
--			return;
--
- 		r = dm_thin_find_mapped_range(tc->td, begin, end, &virt_begin, &virt_end,
- 					      &data_begin, &maybe_shared);
- 		if (r)
-@@ -1691,38 +1687,57 @@ static void break_up_discard_bio(struct thin_c *tc, dm_block_t begin, dm_block_t
- 			 */
- 			break;
- 
--		build_key(tc->td, PHYSICAL, data_begin, data_begin + (virt_end - virt_begin), &data_key);
--		if (bio_detain(tc->pool, &data_key, NULL, &data_cell)) {
--			/* contention, we'll give up with this range */
--			begin = virt_end;
--			continue;
-+		data_end = data_begin + (virt_end - virt_begin);
-+
-+		/*
-+		 * Make sure the data region obeys the bio prison restrictions.
-+		 */
-+		while (data_begin < data_end) {
-+			r = ensure_next_mapping(pool);
-+			if (r)
-+				/* we did our best */
-+				return;
-+
-+			next_boundary = ((data_begin >> BIO_PRISON_MAX_RANGE_SHIFT) + 1)
-+				 << BIO_PRISON_MAX_RANGE_SHIFT;
-+			len = min_t(sector_t, data_end - data_begin, next_boundary - data_begin);
-+
-+			build_key(tc->td, PHYSICAL, data_begin, data_begin + len, &data_key);
-+			if (bio_detain(tc->pool, &data_key, NULL, &data_cell)) {
-+				/* contention, we'll give up with this range */
-+				data_begin += len;
-+				continue;
-+			}
-+
-+			/*
-+			 * IO may still be going to the destination block.  We must
-+			 * quiesce before we can do the removal.
-+			 */
-+			m = get_next_mapping(pool);
-+			m->tc = tc;
-+			m->maybe_shared = maybe_shared;
-+			m->virt_begin = virt_begin;
-+			m->virt_end = virt_begin + len;
-+			m->data_block = data_begin;
-+			m->cell = data_cell;
-+			m->bio = bio;
-+
-+			/*
-+			 * The parent bio must not complete before sub discard bios are
-+			 * chained to it (see end_discard's bio_chain)!
-+			 *
-+			 * This per-mapping bi_remaining increment is paired with
-+			 * the implicit decrement that occurs via bio_endio() in
-+			 * end_discard().
-+			 */
-+			bio_inc_remaining(bio);
-+			if (!dm_deferred_set_add_work(pool->all_io_ds, &m->list))
-+				pool->process_prepared_discard(m);
-+
-+			virt_begin += len;
-+			data_begin += len;
- 		}
- 
--		/*
--		 * IO may still be going to the destination block.  We must
--		 * quiesce before we can do the removal.
--		 */
--		m = get_next_mapping(pool);
--		m->tc = tc;
--		m->maybe_shared = maybe_shared;
--		m->virt_begin = virt_begin;
--		m->virt_end = virt_end;
--		m->data_block = data_begin;
--		m->cell = data_cell;
--		m->bio = bio;
--
--		/*
--		 * The parent bio must not complete before sub discard bios are
--		 * chained to it (see end_discard's bio_chain)!
--		 *
--		 * This per-mapping bi_remaining increment is paired with
--		 * the implicit decrement that occurs via bio_endio() in
--		 * end_discard().
--		 */
--		bio_inc_remaining(bio);
--		if (!dm_deferred_set_add_work(pool->all_io_ds, &m->list))
--			pool->process_prepared_discard(m);
--
- 		begin = virt_end;
- 	}
- }
-@@ -3380,13 +3395,13 @@ static int pool_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	 */
- 	if (pf.discard_enabled && pf.discard_passdown) {
- 		ti->num_discard_bios = 1;
--
- 		/*
- 		 * Setting 'discards_supported' circumvents the normal
- 		 * stacking of discard limits (this keeps the pool and
- 		 * thin devices' discard limits consistent).
- 		 */
- 		ti->discards_supported = true;
-+		ti->max_discard_granularity = true;
- 	}
- 	ti->private = pt;
- 
-@@ -4096,7 +4111,7 @@ static struct target_type pool_target = {
- 	.name = "thin-pool",
- 	.features = DM_TARGET_SINGLETON | DM_TARGET_ALWAYS_WRITEABLE |
- 		    DM_TARGET_IMMUTABLE,
--	.version = {1, 22, 0},
-+	.version = {1, 23, 0},
- 	.module = THIS_MODULE,
- 	.ctr = pool_ctr,
- 	.dtr = pool_dtr,
-@@ -4261,6 +4276,7 @@ static int thin_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	if (tc->pool->pf.discard_enabled) {
- 		ti->discards_supported = true;
- 		ti->num_discard_bios = 1;
-+		ti->max_discard_granularity = true;
- 	}
- 
- 	mutex_unlock(&dm_thin_pool_table.mutex);
-@@ -4476,12 +4492,12 @@ static void thin_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 		return;
- 
- 	limits->discard_granularity = pool->sectors_per_block << SECTOR_SHIFT;
--	limits->max_discard_sectors = 2048 * 1024 * 16; /* 16G */
-+	limits->max_discard_sectors = pool->sectors_per_block * BIO_PRISON_MAX_RANGE;
- }
- 
- static struct target_type thin_target = {
- 	.name = "thin",
--	.version = {1, 22, 0},
-+	.version = {1, 23, 0},
- 	.module	= THIS_MODULE,
- 	.ctr = thin_ctr,
- 	.dtr = thin_dtr,
--- 
-2.40.0
+v5:
+- Use []/struct_size with nvme reservation structs
+- Add Keith's copywrite to pr.c
+- Drop else in nvme_send_pr_command
+- Fix PR_EXCLUSIVE_ACCESS_ALL_REGS use in block_pr_type_from_nvme
+
+v4:
+- Pass read_keys number of keys instead of array len
+- Keep the switch use when converting between block and scsi/nvme PR
+types. Drop default case so compiler spits out warning if in the future
+a new value is added.
+- Add helper for handling
+nvme_send_ns_head_pr_command/nvme_send_ns_pr_command
+- Use void * instead of u8* for passing data buffer.
+- Rename status variable to rs.
+- Have caller init buffer/structs instead of nvme/scsi callouts.
+- Drop blk_status to err code.
+
+v3:
+- Fix patch subject formatting.
+- Fix coding style.
+- Rearrange patches so helpers are added with users to avoid compilation
+errors.
+- Move pr type conversion to array and add nvme_pr_type.
+- Add Extended Data Structure control flag enum and use in code for checks.
+- Move nvme pr code to new file.
+- Add more info to patch subjects about why we need to add blk_status
+to pr_ops.
+- Use generic SCSI passthrough error handling interface.
+- Fix checkpatch --strict errors. Note that I kept the existing coding
+style that it complained about because it looked like it was the preferred
+style for the code and I didn't want a mix and match.
+
+v2:
+- Drop BLK_STS_NEXUS rename changes. Will do separately.
+- Add NVMe support.
+- Fixed bug in target_core_iblock where a variable was not initialized
+mentioned by Christoph.
+- Fixed sd pr_ops UA handling issue found when running libiscsi PGR tests.
+- Added patches to allow pr_ops to pass up a BLK_STS so we could return
+a RESERVATION_CONFLICT status when a pr_ops callout fails.
+
+
 
