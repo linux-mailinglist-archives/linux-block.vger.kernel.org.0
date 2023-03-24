@@ -2,48 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96C1C6C84A5
-	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:18:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59B646C84BC
+	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:20:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbjCXSSQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Mar 2023 14:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45168 "EHLO
+        id S231878AbjCXSUT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Mar 2023 14:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231308AbjCXSSO (ORCPT
+        with ESMTP id S231839AbjCXSUO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Mar 2023 14:18:14 -0400
+        Fri, 24 Mar 2023 14:20:14 -0400
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5A7CDF7;
-        Fri, 24 Mar 2023 11:18:12 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OI4MBv024431;
-        Fri, 24 Mar 2023 18:17:58 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF4C1F935;
+        Fri, 24 Mar 2023 11:20:13 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OI4tI3002258;
+        Fri, 24 Mar 2023 18:18:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2022-7-12;
- bh=FHVNAFJjFz31N8OiquPj4V0BwvhfKYdN9XKQ+yajJ6E=;
- b=1SkRlxYKCzSoA8cVD2brKVl8dYna9/sNAs4Zs7Ax6dtu3Hg6U5WtRCceOsgsD4JH7KxJ
- 4U11VqLH/bfZFyqLRSGrQJKUd4PGaNMuHY6Uo86zyzbN58D5BK94tQ/5K4UnMfF+jFaz
- roTXnhO4EZFNL6Or+6om/FDlilKfAhTZvMunLQYYUaXeaDLkkXQXJJVL9IavMHA/GUr0
- Luz0YAEKzM7v7w4Dx8e2QPH7DASAPqsDe/rIY43fv/vaQMJO7jH6PCnjtqwbyMWgTrBa
- wVRTYGdMY+gqI2DI7Dn2puasUaU36QU9HW2uzC2hbxR9OLCOQGJlGKz0KlY6m1u4/0YE IA== 
+ bh=dHmmYvbYKfRvWLLY2b49fpKD4kMlliQIKpBAmzsZNWw=;
+ b=i2E7mnyJeyhn4QzT1w2U2+tJJojgOvQ57a8YVjlQdy9Y7J8OEwN6dzn3UGW3NuQsGnf8
+ UDt7hzh1AjGT4fa1unyLwJNdhQq31DlVNU+bHKJDE/Z/Pt8pF1ZmVhI/E0ERorTi8v4D
+ 9MtBAue6za6nLnTQoXwOjHH4+SpDGzDcN0z5gkBNgb2y6E2cRWEvxsHldtxhGOg8uET/
+ XGHYosTCpoi/w07dKPDrFy0YFBhUBcVqJo1lGT3J8SMl3RtkjicJDYfZSnIcxFKDJIIL
+ fs9deSDnv95PiJhbCATvAPMqklTFcMcF6sMVqPU1aptPnpwwA5bDwMh8RlFkNMupx/43 HQ== 
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3phgtmg0yy-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3phgtr80wq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Mar 2023 18:17:58 +0000
+        Fri, 24 Mar 2023 18:18:00 +0000
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32OGeKKB001597;
-        Fri, 24 Mar 2023 18:17:57 GMT
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32OGThGe001264;
+        Fri, 24 Mar 2023 18:17:59 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3pgxk4bx87-1
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3pgxk4bx9n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Mar 2023 18:17:57 +0000
+        Fri, 24 Mar 2023 18:17:59 +0000
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32OIHiET021017;
-        Fri, 24 Mar 2023 18:17:57 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32OIHiEV021017;
+        Fri, 24 Mar 2023 18:17:59 GMT
 Received: from mnchrist-mac.us.oracle.com (dhcp-10-154-153-54.vpn.oracle.com [10.154.153.54])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3pgxk4bx19-6;
-        Fri, 24 Mar 2023 18:17:56 +0000
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3pgxk4bx19-7;
+        Fri, 24 Mar 2023 18:17:59 +0000
 From:   Mike Christie <michael.christie@oracle.com>
 To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org, james.bottomley@hansenpartnership.com,
@@ -51,11 +51,10 @@ To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         snitzer@kernel.org, axboe@kernel.dk,
         linux-nvme@lists.infradead.org, chaitanyak@nvidia.com,
         kbusch@kernel.org, target-devel@vger.kernel.org
-Cc:     Mike Christie <michael.christie@oracle.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>
-Subject: [PATCH v5 05/18] scsi: Add support for block PR read keys/reservation
-Date:   Fri, 24 Mar 2023 13:17:28 -0500
-Message-Id: <20230324181741.13908-6-michael.christie@oracle.com>
+Cc:     Mike Christie <michael.christie@oracle.com>
+Subject: [PATCH v5 06/18] dm: Add support for block PR read keys/reservation
+Date:   Fri, 24 Mar 2023 13:17:29 -0500
+Message-Id: <20230324181741.13908-7-michael.christie@oracle.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230324181741.13908-1-michael.christie@oracle.com>
 References: <20230324181741.13908-1-michael.christie@oracle.com>
@@ -68,8 +67,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ma
  mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 mlxscore=0
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2303200000 definitions=main-2303240143
-X-Proofpoint-GUID: uz4EuaAdJc88bEjW0jUqXyhwjBrAUhBi
-X-Proofpoint-ORIG-GUID: uz4EuaAdJc88bEjW0jUqXyhwjBrAUhBi
+X-Proofpoint-ORIG-GUID: lo8nCVWV4v9FXP0Ceb4i4HzqvTPLG3bs
+X-Proofpoint-GUID: lo8nCVWV4v9FXP0Ceb4i4HzqvTPLG3bs
 X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
@@ -80,173 +79,107 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This adds support in sd.c for the block PR read keys and read reservation
-callouts, so upper layers like LIO can get the PR info that's been setup
-using the existing pr callouts and return it to initiators.
+This adds support in dm for the block PR read keys and read reservation
+callouts.
 
 Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/sd.c            | 91 ++++++++++++++++++++++++++++++++++++
- include/scsi/scsi_block_pr.h | 20 ++++++++
- include/scsi/scsi_proto.h    |  5 ++
- 3 files changed, 116 insertions(+)
+ drivers/md/dm.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 7ebf59114da1..2895a8f1bbfa 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1723,6 +1723,95 @@ static int sd_scsi_to_pr_err(struct scsi_sense_hdr *sshdr, int result)
- 	}
- }
- 
-+static int sd_pr_in_command(struct block_device *bdev, u8 sa,
-+			    unsigned char *data, int data_len)
-+{
-+	struct scsi_disk *sdkp = scsi_disk(bdev->bd_disk);
-+	struct scsi_device *sdev = sdkp->device;
-+	struct scsi_sense_hdr sshdr;
-+	u8 cmd[10] = { PERSISTENT_RESERVE_IN, sa };
-+	const struct scsi_exec_args exec_args = {
-+		.sshdr = &sshdr,
-+	};
-+	int result;
-+
-+	put_unaligned_be16(data_len, &cmd[7]);
-+
-+	result = scsi_execute_cmd(sdev, cmd, REQ_OP_DRV_IN, data, data_len,
-+				   SD_TIMEOUT, sdkp->max_retries, &exec_args);
-+	if (scsi_status_is_check_condition(result) &&
-+	    scsi_sense_valid(&sshdr)) {
-+		sdev_printk(KERN_INFO, sdev, "PR command failed: %d\n", result);
-+		scsi_print_sense_hdr(sdev, NULL, &sshdr);
-+	}
-+
-+	if (result <= 0)
-+		return result;
-+
-+	return sd_scsi_to_pr_err(&sshdr, result);
-+}
-+
-+static int sd_pr_read_keys(struct block_device *bdev, struct pr_keys *keys_info)
-+{
-+	int result, i, data_offset, num_copy_keys;
-+	u32 num_keys = keys_info->num_keys;
-+	int data_len = num_keys * 8 + 8;
-+	u8 *data;
-+
-+	data = kzalloc(data_len, GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	result = sd_pr_in_command(bdev, READ_KEYS, data, data_len);
-+	if (result)
-+		goto free_data;
-+
-+	keys_info->generation = get_unaligned_be32(&data[0]);
-+	keys_info->num_keys = get_unaligned_be32(&data[4]) / 8;
-+
-+	data_offset = 8;
-+	num_copy_keys = min(num_keys, keys_info->num_keys);
-+
-+	for (i = 0; i < num_copy_keys; i++) {
-+		keys_info->keys[i] = get_unaligned_be64(&data[data_offset]);
-+		data_offset += 8;
-+	}
-+
-+free_data:
-+	kfree(data);
-+	return result;
-+}
-+
-+static int sd_pr_read_reservation(struct block_device *bdev,
-+				  struct pr_held_reservation *rsv)
-+{
-+	struct scsi_disk *sdkp = scsi_disk(bdev->bd_disk);
-+	struct scsi_device *sdev = sdkp->device;
-+	u8 data[24] = { };
-+	int result, len;
-+
-+	result = sd_pr_in_command(bdev, READ_RESERVATION, data, sizeof(data));
-+	if (result)
-+		return result;
-+
-+	len = get_unaligned_be32(&data[4]);
-+	if (!len)
-+		return 0;
-+
-+	/* Make sure we have at least the key and type */
-+	if (len < 14) {
-+		sdev_printk(KERN_INFO, sdev,
-+			    "READ RESERVATION failed due to short return buffer of %d bytes\n",
-+			    len);
-+		return -EINVAL;
-+	}
-+
-+	rsv->generation = get_unaligned_be32(&data[0]);
-+	rsv->key = get_unaligned_be64(&data[8]);
-+	rsv->type = scsi_pr_type_to_block(data[21] & 0x0f);
-+	return 0;
-+}
-+
- static int sd_pr_out_command(struct block_device *bdev, u8 sa, u64 key,
- 			     u64 sa_key, enum scsi_pr_type type, u8 flags)
- {
-@@ -1804,6 +1893,8 @@ static const struct pr_ops sd_pr_ops = {
- 	.pr_release	= sd_pr_release,
- 	.pr_preempt	= sd_pr_preempt,
- 	.pr_clear	= sd_pr_clear,
-+	.pr_read_keys	= sd_pr_read_keys,
-+	.pr_read_reservation = sd_pr_read_reservation,
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index f5cc330bb549..51e34e1a16bb 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -3114,6 +3114,8 @@ struct dm_pr {
+ 	bool	fail_early;
+ 	int	ret;
+ 	enum pr_type type;
++	struct pr_keys *read_keys;
++	struct pr_held_reservation *rsv;
  };
  
- static void scsi_disk_free_disk(struct gendisk *disk)
-diff --git a/include/scsi/scsi_block_pr.h b/include/scsi/scsi_block_pr.h
-index 44766d7a81d8..9695cda4e9ce 100644
---- a/include/scsi/scsi_block_pr.h
-+++ b/include/scsi/scsi_block_pr.h
-@@ -33,4 +33,24 @@ static inline enum scsi_pr_type block_pr_type_to_scsi(enum pr_type type)
- 	return 0;
+ static int dm_call_pr(struct block_device *bdev, iterate_devices_callout_fn fn,
+@@ -3346,12 +3348,79 @@ static int dm_pr_clear(struct block_device *bdev, u64 key)
+ 	return r;
  }
  
-+static inline enum pr_type scsi_pr_type_to_block(enum scsi_pr_type type)
++static int __dm_pr_read_keys(struct dm_target *ti, struct dm_dev *dev,
++			     sector_t start, sector_t len, void *data)
 +{
-+	switch (type) {
-+	case SCSI_PR_WRITE_EXCLUSIVE:
-+		return PR_WRITE_EXCLUSIVE;
-+	case SCSI_PR_EXCLUSIVE_ACCESS:
-+		return PR_EXCLUSIVE_ACCESS;
-+	case SCSI_PR_WRITE_EXCLUSIVE_REG_ONLY:
-+		return PR_WRITE_EXCLUSIVE_REG_ONLY;
-+	case SCSI_PR_EXCLUSIVE_ACCESS_REG_ONLY:
-+		return PR_EXCLUSIVE_ACCESS_REG_ONLY;
-+	case SCSI_PR_WRITE_EXCLUSIVE_ALL_REGS:
-+		return PR_WRITE_EXCLUSIVE_ALL_REGS;
-+	case SCSI_PR_EXCLUSIVE_ACCESS_ALL_REGS:
-+		return PR_EXCLUSIVE_ACCESS_ALL_REGS;
++	struct dm_pr *pr = data;
++	const struct pr_ops *ops = dev->bdev->bd_disk->fops->pr_ops;
++
++	if (!ops || !ops->pr_read_keys) {
++		pr->ret = -EOPNOTSUPP;
++		return -1;
 +	}
++
++	pr->ret = ops->pr_read_keys(dev->bdev, pr->read_keys);
++	if (!pr->ret)
++		return -1;
 +
 +	return 0;
 +}
 +
- #endif
-diff --git a/include/scsi/scsi_proto.h b/include/scsi/scsi_proto.h
-index fbe5bdfe4d6e..07d65c1f59db 100644
---- a/include/scsi/scsi_proto.h
-+++ b/include/scsi/scsi_proto.h
-@@ -151,6 +151,11 @@
- #define ZO_FINISH_ZONE	      0x02
- #define ZO_OPEN_ZONE	      0x03
- #define ZO_RESET_WRITE_POINTER 0x04
-+/* values for PR in service action */
-+#define READ_KEYS             0x00
-+#define READ_RESERVATION      0x01
-+#define REPORT_CAPABILITES    0x02
-+#define READ_FULL_STATUS      0x03
- /* values for variable length command */
- #define XDREAD_32	      0x03
- #define XDWRITE_32	      0x04
++static int dm_pr_read_keys(struct block_device *bdev, struct pr_keys *keys)
++{
++	struct dm_pr pr = {
++		.read_keys = keys,
++	};
++	int ret;
++
++	ret = dm_call_pr(bdev, __dm_pr_read_keys, &pr);
++	if (ret)
++		return ret;
++
++	return pr.ret;
++}
++
++static int __dm_pr_read_reservation(struct dm_target *ti, struct dm_dev *dev,
++				    sector_t start, sector_t len, void *data)
++{
++	struct dm_pr *pr = data;
++	const struct pr_ops *ops = dev->bdev->bd_disk->fops->pr_ops;
++
++	if (!ops || !ops->pr_read_reservation) {
++		pr->ret = -EOPNOTSUPP;
++		return -1;
++	}
++
++	pr->ret = ops->pr_read_reservation(dev->bdev, pr->rsv);
++	if (!pr->ret)
++		return -1;
++
++	return 0;
++}
++
++static int dm_pr_read_reservation(struct block_device *bdev,
++				  struct pr_held_reservation *rsv)
++{
++	struct dm_pr pr = {
++		.rsv = rsv,
++	};
++	int ret;
++
++	ret = dm_call_pr(bdev, __dm_pr_read_reservation, &pr);
++	if (ret)
++		return ret;
++
++	return pr.ret;
++}
++
+ static const struct pr_ops dm_pr_ops = {
+ 	.pr_register	= dm_pr_register,
+ 	.pr_reserve	= dm_pr_reserve,
+ 	.pr_release	= dm_pr_release,
+ 	.pr_preempt	= dm_pr_preempt,
+ 	.pr_clear	= dm_pr_clear,
++	.pr_read_keys	= dm_pr_read_keys,
++	.pr_read_reservation = dm_pr_read_reservation,
+ };
+ 
+ static const struct block_device_operations dm_blk_dops = {
 -- 
 2.25.1
 
