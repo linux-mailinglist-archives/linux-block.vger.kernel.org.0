@@ -2,273 +2,219 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ECC06C8778
-	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 22:28:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E44A6C8898
+	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 23:50:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231707AbjCXV2S (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Mar 2023 17:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36648 "EHLO
+        id S232196AbjCXWuv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Mar 2023 18:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231794AbjCXV2P (ORCPT
+        with ESMTP id S231889AbjCXWuu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Mar 2023 17:28:15 -0400
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31988199D7
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 14:28:14 -0700 (PDT)
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OJeV23015470
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 14:28:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=s2048-2021-q4;
- bh=ew2/7YOABj/xxRnE82Pgnxl3dvtRKrOlEQpS4eeLiwo=;
- b=GFR19Ig6D/XBTX3XdOkWWAjJRbEkoy4zbYByMV4ijkEGCdjjvX26yKHtQHuvevk+lFrr
- MK2yU7OS+q2fOL9KxIoYusTkMd8Y2iUI+zPIBdT/WgCSNUgsseu/r+14fzTwHzr3ENI0
- HWbL3n1Vs+vC9OnoU/VrEM762C/z/Ho+ecfKTVd/eTvvDMjnVQxGfIQ1bWxkJXZj9RpN
- pbMAIS/mcvTIo8znOIPWVthn9WzMazb56CNY81PizFPMhwz5MIz2RPAliuRqVdzbcAAx
- 676j5FzIyjQknDqPLQ/W8vFGah7L3oMQJZ8boGX8zl3lly2rE3QueBz8qbXnHu6fLhSD Yw== 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3phj7drhwy-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 14:28:13 -0700
-Received: from twshared1938.08.ash9.facebook.com (2620:10d:c085:108::8) by
- mail.thefacebook.com (2620:10d:c085:21d::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Fri, 24 Mar 2023 14:28:11 -0700
-Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-        id CC59414564771; Fri, 24 Mar 2023 14:28:04 -0700 (PDT)
-From:   Keith Busch <kbusch@meta.com>
-To:     <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-        <axboe@kernel.dk>, <hch@lst.de>
-CC:     Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 2/2] nvme: use blk-mq polling for uring commands
-Date:   Fri, 24 Mar 2023 14:28:03 -0700
-Message-ID: <20230324212803.1837554-2-kbusch@meta.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230324212803.1837554-1-kbusch@meta.com>
-References: <20230324212803.1837554-1-kbusch@meta.com>
+        Fri, 24 Mar 2023 18:50:50 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D68A10279
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 15:50:48 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id t10so13441093edd.12
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 15:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679698247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k4C4+ig9qii8cFMiMH7UB83VKoFh5dhcH5qAN4vMsyQ=;
+        b=PNZilH1Gjf6oog3t5h9HCkdzcH1etVK5NHRvqEGz0tzMA6UkvV8oibBMlnELMdCsTx
+         ESv3g4RuIOXbzQrTC6JLpovuuTr2leIRJnt5pu6Ur8taswzMfoVb3b76ogYPK9rIUKoz
+         ZroJcsC87UZfJJ2+P4nODPSm6IGXHRapFkl2XStb5f6xPFrqB4NCxRgBRY328FFsfaDb
+         t6M4EYsSyH+txGLv4+tb4mRYPL29/PWW8y0ndgEQEPnNflpkS9g0D0g6ILZ3+M7P/deo
+         ZMVQpgzWN70olFlt/oeGeYGAsjRYrdlraZNnRwlFQ+LQ65cNhoGA3o8yS9sSslR5pm/L
+         5tjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679698247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k4C4+ig9qii8cFMiMH7UB83VKoFh5dhcH5qAN4vMsyQ=;
+        b=NWnl6guzojEHfPDFs/M8IiEuvdODN9j4lrxF+5H7b6Z62Qq/5/vk11YkJqcd1tSA3/
+         K1fgIyO9YYeDLXCyPhlpEnAZJ166GDHODH46jI3W4sVX1CJME7aPkiOH8880LSzKymUJ
+         55Nm+mNotgC+iDqa7kUCEDL/ViuZ1DxlzcgY1TDBFeQKTmrADkNG/rwGuQQz0kiTb5Ih
+         YQQ3nZL5hPAjAyCzYslWsah5YLxvrsNqBcS0G4+/t5j6Ey+YJFuATwuSI+4b7xnaksco
+         5+r01QVjtC8GU7RB/Im1Cm0scxe71+OwngbjeUcS5cC5yTTTHxqyX4XB7Av140iAnkWs
+         x5sw==
+X-Gm-Message-State: AAQBX9fqAqRX9Hi3YT4P+C7b9A9cgrfRlI8wq6j69w9+ZM8wGw78U3ke
+        zmpYny6QFz/i3xNJWLzhC6lPPnaxzc/Dp5tkTOBkDg==
+X-Google-Smtp-Source: AKy350as1fjLqRzEXcj4LkTEmL/GZJV50WUfZRkDVfUJxjhMe3gHdgiiXSgPCONXQe0PAnrHWJ2DjRG+gGSUM+zjV0U=
+X-Received: by 2002:a50:a6d7:0:b0:4fa:71a2:982b with SMTP id
+ f23-20020a50a6d7000000b004fa71a2982bmr2076902edc.0.1679698246555; Fri, 24 Mar
+ 2023 15:50:46 -0700 (PDT)
 MIME-Version: 1.0
+References: <20230323040037.2389095-1-yosryahmed@google.com>
+ <20230323040037.2389095-2-yosryahmed@google.com> <ZBz/V5a7/6PZeM7S@slm.duckdns.org>
+ <CAJD7tkYNZeEytm_Px9_73Y-AYJfHAxaoTmmnO71HW5hd1B5tPg@mail.gmail.com> <53582a07-81c6-35eb-10bf-7920b27483be@redhat.com>
+In-Reply-To: <53582a07-81c6-35eb-10bf-7920b27483be@redhat.com>
+From:   Yosry Ahmed <yosryahmed@google.com>
+Date:   Fri, 24 Mar 2023 15:50:10 -0700
+Message-ID: <CAJD7tkZA-LxAVA5SWRzMeQ17T26qGBApPqErqT_SpCbrtCJQkA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/7] cgroup: rstat: only disable interrupts for the
+ percpu lock
+To:     Waiman Long <longman@redhat.com>
+Cc:     Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Shakeel Butt <shakeelb@google.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vasily Averin <vasily.averin@linux.dev>,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: Zyc7N1RpV0tK6bHxKfpBwD0z8ykDZ8S2
-X-Proofpoint-ORIG-GUID: Zyc7N1RpV0tK6bHxKfpBwD0z8ykDZ8S2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-24_11,2023-03-24_01,2023-02-09_01
-X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+On Fri, Mar 24, 2023 at 7:12=E2=80=AFAM Waiman Long <longman@redhat.com> wr=
+ote:
+>
+> On 3/24/23 03:22, Yosry Ahmed wrote:
+> > On Thu, Mar 23, 2023 at 6:39=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote=
+:
+> >> Hello,
+> >>
+> >> On Thu, Mar 23, 2023 at 04:00:31AM +0000, Yosry Ahmed wrote:
+> >>> Currently, when sleeping is not allowed during rstat flushing, we hol=
+d
+> >>> the global rstat lock with interrupts disabled throughout the entire
+> >>> flush operation. Flushing in an O(# cgroups * # cpus) operation, and
+> >>> having interrupts disabled throughout is dangerous.
+> >>>
+> >>> For some contexts, we may not want to sleep, but can be interrupted
+> >>> (e.g. while holding a spinlock or RCU read lock). As such, do not
+> >>> disable interrupts throughout rstat flushing, only when holding the
+> >>> percpu lock. This breaks down the O(# cgroups * # cpus) duration with
+> >>> interrupts disabled to a series of O(# cgroups) durations.
+> >>>
+> >>> Furthermore, if a cpu spinning waiting for the global rstat lock, it
+> >>> doesn't need to spin with interrupts disabled anymore.
+> >> I'm generally not a fan of big spin locks w/o irq protection. They too=
+ often
+> >> become a source of unpredictable latency spikes. As you said, the glob=
+al
+> >> rstat lock can be held for quite a while. Removing _irq makes irq late=
+ncy
+> >> better on the CPU but on the other hand it makes a lot more likely tha=
+t the
+> >> lock is gonna be held even longer, possibly significantly so depending=
+ on
+> >> the configuration and workload which will in turn stall other CPUs wai=
+ting
+> >> for the lock. Sure, irqs are being serviced quicker but if the cost is=
+ more
+> >> and longer !irq context multi-cpu stalls, what's the point?
+> >>
+> >> I don't think there's anything which requires the global lock to be he=
+ld
+> >> throughout the entire flushing sequence and irq needs to be disabled w=
+hen
+> >> grabbing the percpu lock anyway, so why not just release the global lo=
+ck on
+> >> CPU boundaries instead? We don't really lose anything significant that=
+ way.
+> >> The durations of irq disabled sections are still about the same as in =
+the
+> >> currently proposed solution at O(# cgroups) and we avoid the risk of h=
+olding
+> >> the global lock for too long unexpectedly from getting hit repeatedly =
+by
+> >> irqs while holding the global lock.
+> > Thanks for taking a look!
+> >
+> > I think a problem with this approach is that we risk having to contend
+> > for the global lock at every CPU boundary in atomic contexts. Right
+> Isn't it the plan to just do a trylock in atomic contexts so that it
+> won't get stuck spinning for the lock for an indeterminate amount of time=
+?
 
-The first advantage is that unshared and multipath namespaces can use
-the same polling callback.
+Not exactly. On the memory controller side, we currently only allow
+one flusher at a time and force all flushers to flush the full
+hierarchy, such that concurrent flushers can skip. This is done for
+both atomic and non-atomic contexts.
 
-The other advantage is that we don't need a bio payload in order to
-poll, allowing commands like 'flush' and 'write zeroes' to be submitted
-on the same high priority queue as read and write commands.
+For flushers outside the memory controller, they can still contend the
+lock among themselves or with flushers in the memory controller. In
+this case, instead of contending the lock once, they contend it at
+each CPU boundary.
 
-This can also allow for a future optimization for the driver since we no
-longer need to create special hidden block devices to back nvme-generic
-char dev's with unsupported command sets.
+> > now we contend for the global lock once, and once we have it we go
+> > through all CPUs to flush, only having to contend with updates taking
+> > the percpu locks at this point. If we unconditionally release &
+> > reacquire the global lock at every CPU boundary then we may contend
+> > for it much more frequently with concurrent flushers.
+>
+> Note that with the use of qspinlock in all the major arches, the impact
+> of thundering herds of lockers are much less serious than before. There
+> are certainly some overhead in doing multiple lock acquires and
+> releases, but that shouldn't been too excessive.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/nvme/host/ioctl.c     | 79 ++++++++++++-----------------------
- drivers/nvme/host/multipath.c |  2 +-
- drivers/nvme/host/nvme.h      |  2 -
- 3 files changed, 28 insertions(+), 55 deletions(-)
+I ran some tests to measure this. Since I am using a cgroup v1
+hierarchy, I cannot reproduce contention between memory controller
+flushers and non-memory controller flushers, so I removed the "one
+memory flusher only" restriction to have concurrent memory flushers
+compete for the global rstat lock to measure the impact:
 
-diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-index 723e7d5b778f2..369e8519b87a2 100644
---- a/drivers/nvme/host/ioctl.c
-+++ b/drivers/nvme/host/ioctl.c
-@@ -503,7 +503,6 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io(struc=
-t request *req,
- {
- 	struct io_uring_cmd *ioucmd =3D req->end_io_data;
- 	struct nvme_uring_cmd_pdu *pdu =3D nvme_uring_cmd_pdu(ioucmd);
--	void *cookie =3D READ_ONCE(ioucmd->cookie);
-=20
- 	req->bio =3D pdu->bio;
- 	if (nvme_req(req)->flags & NVME_REQ_CANCELLED)
-@@ -516,9 +515,10 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io(stru=
-ct request *req,
- 	 * For iopoll, complete it directly.
- 	 * Otherwise, move the completion to task work.
- 	 */
--	if (cookie !=3D NULL && blk_rq_is_poll(req))
-+	if (blk_rq_is_poll(req)) {
-+		WRITE_ONCE(ioucmd->cookie, NULL);
- 		nvme_uring_task_cb(ioucmd);
--	else
-+	} else
- 		io_uring_cmd_complete_in_task(ioucmd, nvme_uring_task_cb);
-=20
- 	return RQ_END_IO_FREE;
-@@ -529,7 +529,6 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io_meta(=
-struct request *req,
- {
- 	struct io_uring_cmd *ioucmd =3D req->end_io_data;
- 	struct nvme_uring_cmd_pdu *pdu =3D nvme_uring_cmd_pdu(ioucmd);
--	void *cookie =3D READ_ONCE(ioucmd->cookie);
-=20
- 	req->bio =3D pdu->bio;
- 	pdu->req =3D req;
-@@ -538,9 +537,10 @@ static enum rq_end_io_ret nvme_uring_cmd_end_io_meta=
-(struct request *req,
- 	 * For iopoll, complete it directly.
- 	 * Otherwise, move the completion to task work.
- 	 */
--	if (cookie !=3D NULL && blk_rq_is_poll(req))
-+	if (blk_rq_is_poll(req)) {
-+		WRITE_ONCE(ioucmd->cookie, NULL);
- 		nvme_uring_task_meta_cb(ioucmd);
--	else
-+	} else
- 		io_uring_cmd_complete_in_task(ioucmd, nvme_uring_task_meta_cb);
-=20
- 	return RQ_END_IO_NONE;
-@@ -597,7 +597,6 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, =
-struct nvme_ns *ns,
- 	if (issue_flags & IO_URING_F_IOPOLL)
- 		rq_flags |=3D REQ_POLLED;
-=20
--retry:
- 	req =3D nvme_alloc_user_request(q, &c, rq_flags, blk_flags);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
-@@ -611,17 +610,9 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl,=
- struct nvme_ns *ns,
- 			return ret;
- 	}
-=20
--	if (issue_flags & IO_URING_F_IOPOLL && rq_flags & REQ_POLLED) {
--		if (unlikely(!req->bio)) {
--			/* we can't poll this, so alloc regular req instead */
--			blk_mq_free_request(req);
--			rq_flags &=3D ~REQ_POLLED;
--			goto retry;
--		} else {
--			WRITE_ONCE(ioucmd->cookie, req->bio);
--			req->bio->bi_opf |=3D REQ_POLLED;
--		}
--	}
-+	if (blk_rq_is_poll(req))
-+		WRITE_ONCE(ioucmd->cookie, req);
-+
- 	/* to free bio on completion, as req->bio will be null at that time */
- 	pdu->bio =3D req->bio;
- 	pdu->meta_len =3D d.metadata_len;
-@@ -780,18 +771,27 @@ int nvme_ns_chr_uring_cmd_iopoll(struct io_uring_cm=
-d *ioucmd,
- 				 struct io_comp_batch *iob,
- 				 unsigned int poll_flags)
- {
--	struct bio *bio;
-+	struct request *req;
- 	int ret =3D 0;
--	struct nvme_ns *ns;
--	struct request_queue *q;
-=20
-+	/*
-+	 * The rcu lock ensures the 'req' in the command cookie will not be
-+	 * freed until after the unlock. The queue must be frozen to free the
-+	 * request, and the freeze requires an rcu grace period. The cookie is
-+	 * cleared before the request is completed, so we're fine even if a
-+	 * competing polling thread completes this thread's request.
-+	 */
- 	rcu_read_lock();
--	bio =3D READ_ONCE(ioucmd->cookie);
--	ns =3D container_of(file_inode(ioucmd->file)->i_cdev,
--			struct nvme_ns, cdev);
--	q =3D ns->queue;
--	if (test_bit(QUEUE_FLAG_POLL, &q->queue_flags) && bio && bio->bi_bdev)
--		ret =3D bio_poll(bio, iob, poll_flags);
-+	req =3D READ_ONCE(ioucmd->cookie);
-+	if (req) {
-+		struct request_queue *q =3D req->q;
-+
-+		if (percpu_ref_tryget(&q->q_usage_counter)) {
-+			ret =3D blk_mq_poll(q, blk_rq_to_qc(req), iob,
-+					  poll_flags);
-+			blk_queue_exit(q);
-+		}
-+	}
- 	rcu_read_unlock();
- 	return ret;
- }
-@@ -883,31 +883,6 @@ int nvme_ns_head_chr_uring_cmd(struct io_uring_cmd *=
-ioucmd,
- 	srcu_read_unlock(&head->srcu, srcu_idx);
- 	return ret;
- }
--
--int nvme_ns_head_chr_uring_cmd_iopoll(struct io_uring_cmd *ioucmd,
--				      struct io_comp_batch *iob,
--				      unsigned int poll_flags)
--{
--	struct cdev *cdev =3D file_inode(ioucmd->file)->i_cdev;
--	struct nvme_ns_head *head =3D container_of(cdev, struct nvme_ns_head, c=
-dev);
--	int srcu_idx =3D srcu_read_lock(&head->srcu);
--	struct nvme_ns *ns =3D nvme_find_path(head);
--	struct bio *bio;
--	int ret =3D 0;
--	struct request_queue *q;
--
--	if (ns) {
--		rcu_read_lock();
--		bio =3D READ_ONCE(ioucmd->cookie);
--		q =3D ns->queue;
--		if (test_bit(QUEUE_FLAG_POLL, &q->queue_flags) && bio
--				&& bio->bi_bdev)
--			ret =3D bio_poll(bio, iob, poll_flags);
--		rcu_read_unlock();
--	}
--	srcu_read_unlock(&head->srcu, srcu_idx);
--	return ret;
--}
- #endif /* CONFIG_NVME_MULTIPATH */
-=20
- int nvme_dev_uring_cmd(struct io_uring_cmd *ioucmd, unsigned int issue_f=
-lags)
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.=
-c
-index fc39d01e7b63b..fcecb731c8bd9 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -470,7 +470,7 @@ static const struct file_operations nvme_ns_head_chr_=
-fops =3D {
- 	.unlocked_ioctl	=3D nvme_ns_head_chr_ioctl,
- 	.compat_ioctl	=3D compat_ptr_ioctl,
- 	.uring_cmd	=3D nvme_ns_head_chr_uring_cmd,
--	.uring_cmd_iopoll =3D nvme_ns_head_chr_uring_cmd_iopoll,
-+	.uring_cmd_iopoll =3D nvme_ns_chr_uring_cmd_iopoll,
- };
-=20
- static int nvme_add_ns_head_cdev(struct nvme_ns_head *head)
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index bf46f122e9e1e..ca4ea89333660 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -847,8 +847,6 @@ long nvme_dev_ioctl(struct file *file, unsigned int c=
-md,
- 		unsigned long arg);
- int nvme_ns_chr_uring_cmd_iopoll(struct io_uring_cmd *ioucmd,
- 		struct io_comp_batch *iob, unsigned int poll_flags);
--int nvme_ns_head_chr_uring_cmd_iopoll(struct io_uring_cmd *ioucmd,
--		struct io_comp_batch *iob, unsigned int poll_flags);
- int nvme_ns_chr_uring_cmd(struct io_uring_cmd *ioucmd,
- 		unsigned int issue_flags);
- int nvme_ns_head_chr_uring_cmd(struct io_uring_cmd *ioucmd,
---=20
-2.34.1
+Before (only one flusher allowed to compete for the global rstat lock):
+            ---cgroup_rstat_flush
+               |
+                --1.27%--cgroup_rstat_flush_locked
+                          |
+                           --0.94%--mem_cgroup_css_rstat_flush
 
+After (concurrent flushers allowed to compete for the global rstat lock):
+            ---cgroup_rstat_flush
+               |
+               |--4.94%--_raw_spin_lock
+               |          |
+               |           --4.94%--queued_spin_lock_slowpath
+               |
+                --0.92%--cgroup_rstat_flush_locked
+                          |
+                           --0.56%--mem_cgroup_css_rstat_flush
+
+This was run with 20 processes trying to flush concurrently, so it may
+be excessive, but it seems like in this case lock contention makes a
+significant difference.
+
+Again, this is not a regression for non-atomic flushers, as they
+already compete for the lock at every CPU boundary, but for atomic
+flushers that don't give up the lock at all today, it would be a
+regression to start competing for the lock at every CPU boundary. This
+patch series aims to minimize the number of atomic flushers (brings
+them down to two, one of which is not common), so this may be fine.
+
+My main concern is that for some flushers that this series converts
+from atomic to non-atomic, we may notice a regression later and revert
+it (e.g. refault path), which is why I have them in separate patches.
+If we regress the atomic flushing path, it would be a larger surgery
+to restore the performance for these paths -- which is why I would
+rather keep the atomic path without excessive lock contention.
+
+Thoughts?
+
+>
+> I am all in for reducing lock hold time as much as possible as it will
+> improve the response time.
+>
+> Cheers,
+> Longman
+>
