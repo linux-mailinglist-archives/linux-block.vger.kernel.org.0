@@ -2,48 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 487DF6C84C8
-	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:20:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACA1F6C84CD
+	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:20:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232009AbjCXSUY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Mar 2023 14:20:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
+        id S232147AbjCXSUn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Mar 2023 14:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231966AbjCXSUX (ORCPT
+        with ESMTP id S230157AbjCXSUg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Mar 2023 14:20:23 -0400
+        Fri, 24 Mar 2023 14:20:36 -0400
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB10920069;
-        Fri, 24 Mar 2023 11:20:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58532206BD;
+        Fri, 24 Mar 2023 11:20:28 -0700 (PDT)
 Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OIEGrs012194;
-        Fri, 24 Mar 2023 18:18:10 GMT
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OIE9b7012167;
+        Fri, 24 Mar 2023 18:18:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2022-7-12;
- bh=9pmVPD6b3P7+1yxXPt0GWm3eG9nQG6vdgffOi8t1hbk=;
- b=gw9MjM+pXIM5acUdNxkp+I/bwO0V6hPsFYTzZerLBGxTA0sSA0TpZWI4ozl8sgoyykOd
- T6JyHvTvCoHLA1aiZd9mnCW0hwiS3h1T8/BrR7TZ2HKmf5dGuP42GDb74L+XU0Czxzcs
- OHooluVPJxyxSYi4dgF6FE+oxiMVcP4cgucgZvSa4YwQVALp8EkxPxI2hdlUvDsGLyNL
- u/EvxBY+G9FCXyj8DglAAIAtLlof9i3Pc/xt+y97C5RcVApyBJa+cFSHMiI1NeU1LnQe
- 3Xl3149mXfADz2vtj7uuPLUBqLjnGbb/7Ugj0vz0Zrw9bUqTNTBVrIR1KZgaMmFIEUIp GA== 
+ bh=RC2Q2K+DcL3OKVj2tSewPSDAMwmiLHJjK1Hph1DIUDI=;
+ b=cNRyW3doswqe4QA8MMJWWcQKEWNAMY6w5bok86RJZVv7reFoedQHXI6ScO/Jov79gvVN
+ ip2DR498Lf7RpfsSqOAP1+xrhgcI8bAztrUAJa2MFrdHnw12SqBfA8rj3K9cMCOBu1LS
+ 4r6Yi1B6g6q0vjtl/cAO/H8m0XTn3KlLxgY5ZOJ8quKVVTNdiYm74pTtFKq/VGcLK5/h
+ A0NxeCxgbatb2CJ40X+T7oyIyq9FGtVex4bYj8in7XTD5uFRIVGL4aYskWMYe+0KV/7j
+ xcEcftjz10iklVt58ZlVa11Dt0J1S2tLVg3IowUWWQLQKQusU3eV9Zt1lN7imQ1HXDlt WQ== 
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3phgy9g0a3-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3phgy9g0a6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Mar 2023 18:18:10 +0000
+        Fri, 24 Mar 2023 18:18:12 +0000
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32OGh1xt001257;
-        Fri, 24 Mar 2023 18:18:09 GMT
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32OHkCmA001276;
+        Fri, 24 Mar 2023 18:18:12 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3pgxk4bxg0-1
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3pgxk4bxh8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Mar 2023 18:18:09 +0000
+        Fri, 24 Mar 2023 18:18:11 +0000
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32OIHiEd021017;
-        Fri, 24 Mar 2023 18:18:08 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32OIHiEf021017;
+        Fri, 24 Mar 2023 18:18:11 GMT
 Received: from mnchrist-mac.us.oracle.com (dhcp-10-154-153-54.vpn.oracle.com [10.154.153.54])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3pgxk4bx19-11;
-        Fri, 24 Mar 2023 18:18:08 +0000
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3pgxk4bx19-12;
+        Fri, 24 Mar 2023 18:18:11 +0000
 From:   Mike Christie <michael.christie@oracle.com>
 To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org, james.bottomley@hansenpartnership.com,
@@ -52,9 +52,9 @@ To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         linux-nvme@lists.infradead.org, chaitanyak@nvidia.com,
         kbusch@kernel.org, target-devel@vger.kernel.org
 Cc:     Mike Christie <michael.christie@oracle.com>
-Subject: [PATCH v5 10/18] nvme: Add helper to send pr command
-Date:   Fri, 24 Mar 2023 13:17:33 -0500
-Message-Id: <20230324181741.13908-11-michael.christie@oracle.com>
+Subject: [PATCH v5 11/18] nvme: Add pr_ops read_keys support
+Date:   Fri, 24 Mar 2023 13:17:34 -0500
+Message-Id: <20230324181741.13908-12-michael.christie@oracle.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230324181741.13908-1-michael.christie@oracle.com>
 References: <20230324181741.13908-1-michael.christie@oracle.com>
@@ -67,8 +67,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ma
  mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 mlxscore=0
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2303200000 definitions=main-2303240143
-X-Proofpoint-GUID: knmk8Hjc7rjesXkDju96R5-bETFecegX
-X-Proofpoint-ORIG-GUID: knmk8Hjc7rjesXkDju96R5-bETFecegX
+X-Proofpoint-GUID: Unq8BHoCIuN03LkRd0O--aElRipvrgbo
+X-Proofpoint-ORIG-GUID: Unq8BHoCIuN03LkRd0O--aElRipvrgbo
 X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
@@ -79,71 +79,118 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move the code that checks for multipath support and sends the pr command
-to a new helper so it can be used by the reservation report support added
-in the next patches.
+This patch adds support for the pr_ops read_keys callout by calling the
+NVMe Reservation Report helper, then parsing that info to get the
+controller's registered keys. Because the callout is only used in the
+kernel where the callers, like LIO, do not know about controller/host IDs,
+the callout just returns the registered keys which is required by the SCSI
+PR in READ KEYS command.
 
 Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/nvme/host/pr.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/nvme/host/pr.c | 69 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/nvme.h   |  4 +++
+ 2 files changed, 73 insertions(+)
 
 diff --git a/drivers/nvme/host/pr.c b/drivers/nvme/host/pr.c
-index ca7a8d531a23..cd93d2e5b340 100644
+index cd93d2e5b340..6aadcc25f3e2 100644
 --- a/drivers/nvme/host/pr.c
 +++ b/drivers/nvme/host/pr.c
-@@ -30,7 +30,7 @@ static char nvme_pr_type(enum pr_type type)
+@@ -154,10 +154,79 @@ static int nvme_pr_release(struct block_device *bdev, u64 key, enum pr_type type
+ 	return nvme_pr_command(bdev, cdw10, key, 0, nvme_cmd_resv_release);
  }
  
- static int nvme_send_ns_head_pr_command(struct block_device *bdev,
--		struct nvme_command *c, u8 *data, unsigned int data_len)
-+		struct nvme_command *c, void *data, unsigned int data_len)
- {
- 	struct nvme_ns_head *head = bdev->bd_disk->private_data;
- 	int srcu_idx = srcu_read_lock(&head->srcu);
-@@ -46,7 +46,7 @@ static int nvme_send_ns_head_pr_command(struct block_device *bdev,
- }
- 
- static int nvme_send_ns_pr_command(struct nvme_ns *ns, struct nvme_command *c,
--		u8 *data, unsigned int data_len)
-+		void *data, unsigned int data_len)
- {
- 	c->common.nsid = cpu_to_le32(ns->head->ns_id);
- 	return nvme_submit_sync_cmd(ns->queue, c, data, data_len);
-@@ -74,6 +74,17 @@ static int nvme_sc_to_pr_err(int nvme_sc)
- 	}
- }
- 
-+static int nvme_send_pr_command(struct block_device *bdev,
-+		struct nvme_command *c, void *data, unsigned int data_len)
++static int nvme_pr_resv_report(struct block_device *bdev, void *data,
++		u32 data_len, bool *eds)
 +{
-+	if (IS_ENABLED(CONFIG_NVME_MULTIPATH) &&
-+	    bdev->bd_disk->fops == &nvme_ns_head_ops)
-+		return nvme_send_ns_head_pr_command(bdev, c, data, data_len);
++	struct nvme_command c = { };
++	int ret;
 +
-+	return nvme_send_ns_pr_command(bdev->bd_disk->private_data, c, data,
-+				       data_len);
++	c.common.opcode = nvme_cmd_resv_report;
++	c.common.cdw10 = cpu_to_le32(nvme_bytes_to_numd(data_len));
++	c.common.cdw11 = NVME_EXTENDED_DATA_STRUCT;
++	*eds = true;
++
++retry:
++	ret = nvme_send_pr_command(bdev, &c, data, data_len);
++	if (ret == NVME_SC_HOST_ID_INCONSIST &&
++	    c.common.cdw11 == NVME_EXTENDED_DATA_STRUCT) {
++		c.common.cdw11 = 0;
++		*eds = false;
++		goto retry;
++	}
++
++	if (ret < 0)
++		return ret;
++
++	return nvme_sc_to_pr_err(ret);
 +}
 +
- static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
- 				u64 key, u64 sa_key, u8 op)
- {
-@@ -87,13 +98,7 @@ static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
- 	c.common.opcode = op;
- 	c.common.cdw10 = cpu_to_le32(cdw10);
++static int nvme_pr_read_keys(struct block_device *bdev,
++		struct pr_keys *keys_info)
++{
++	u32 rse_len, num_keys = keys_info->num_keys;
++	struct nvme_reservation_status_ext *rse;
++	int ret, i;
++	bool eds;
++
++	/*
++	 * Assume we are using 128-bit host IDs and allocate a buffer large
++	 * enough to get enough keys to fill the return keys buffer.
++	 */
++	rse_len = struct_size(rse, regctl_eds, num_keys);
++	rse = kzalloc(rse_len, GFP_KERNEL);
++	if (!rse)
++		return -ENOMEM;
++
++	ret = nvme_pr_resv_report(bdev, rse, rse_len, &eds);
++	if (ret)
++		goto free_rse;
++
++	keys_info->generation = le32_to_cpu(rse->gen);
++	keys_info->num_keys = get_unaligned_le16(&rse->regctl);
++
++	num_keys = min(num_keys, keys_info->num_keys);
++	for (i = 0; i < num_keys; i++) {
++		if (eds) {
++			keys_info->keys[i] =
++					le64_to_cpu(rse->regctl_eds[i].rkey);
++		} else {
++			struct nvme_reservation_status *rs;
++
++			rs = (struct nvme_reservation_status *)rse;
++			keys_info->keys[i] = le64_to_cpu(rs->regctl_ds[i].rkey);
++		}
++	}
++
++free_rse:
++	kfree(rse);
++	return ret;
++}
++
+ const struct pr_ops nvme_pr_ops = {
+ 	.pr_register	= nvme_pr_register,
+ 	.pr_reserve	= nvme_pr_reserve,
+ 	.pr_release	= nvme_pr_release,
+ 	.pr_preempt	= nvme_pr_preempt,
+ 	.pr_clear	= nvme_pr_clear,
++	.pr_read_keys	= nvme_pr_read_keys,
+ };
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 83704fc04a94..c18bd55a4ead 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -759,6 +759,10 @@ enum {
+ 	NVME_LBART_ATTRIB_HIDE	= 1 << 1,
+ };
  
--	if (IS_ENABLED(CONFIG_NVME_MULTIPATH) &&
--	    bdev->bd_disk->fops == &nvme_ns_head_ops)
--		ret = nvme_send_ns_head_pr_command(bdev, &c, data,
--						   sizeof(data));
--	else
--		ret = nvme_send_ns_pr_command(bdev->bd_disk->private_data, &c,
--					      data, sizeof(data));
-+	ret = nvme_send_pr_command(bdev, &c, data, sizeof(data));
- 	if (ret < 0)
- 		return ret;
- 
++enum nvme_eds {
++	NVME_EXTENDED_DATA_STRUCT	= 0x1,
++};
++
+ struct nvme_registered_ctrl {
+ 	__le16	cntlid;
+ 	__u8	rcsts;
 -- 
 2.25.1
 
