@@ -2,123 +2,103 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 518CF6C841E
-	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:00:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B459D6C8421
+	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:00:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231470AbjCXR7o (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Mar 2023 13:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60074 "EHLO
+        id S231473AbjCXSAF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Mar 2023 14:00:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232263AbjCXR7a (ORCPT
+        with ESMTP id S232254AbjCXR7o (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Mar 2023 13:59:30 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7228C6A69
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:58:00 -0700 (PDT)
-Received: by mail-qt1-f180.google.com with SMTP id bz27so2216625qtb.1
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:58:00 -0700 (PDT)
+        Fri, 24 Mar 2023 13:59:44 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11A5C2311D
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:58:14 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id cu4so2177339qvb.3
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:58:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679680629;
+        d=1e100.net; s=20210112; t=1679680630;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Uz4MQKqyyyXmrhMudVOv+R32y8m1MjTz5D9yPmV0boc=;
-        b=ZQ/cVUGNlmmV95zmls7YPU25UeKuzUz/W7oHBD2/M8XJ4oWw3H54/UE4M2hW28Xus8
-         ejHHdbpPjH2ymETwG9I8yb7SOlxdnSASIG1kpm0PZBnAEk1VSNnL8OrnjCNXlXjUHJry
-         OpjkmFvnYkvnriHod9RvhI8t63GeUjtprc3PGzychLkXSyJnFhmUSXr94NDNBDu2NT73
-         ZzNxtfhS/yKI9y2UEUkHK33zNS46moIfPYcjnP2WXlqwAriPFq+gaecJOSE9My129iYi
-         sOUi0IWbZh0wvglX6FCnJ2as4NefC83jR9mM1tNKsVBv1ULs89L29N6sBFEqpIou1ms7
-         Mf/w==
-X-Gm-Message-State: AO0yUKU7t+YrQbyXYqfkk66b/uskTemTNdYTb5usRfmLES+mgn5hAuew
-        itWWwK2aYAKjTMWgkXPz7EQ/
-X-Google-Smtp-Source: AK7set9fHWCfv+WpbP227HebgcPFG2XPeSL9RTRyiG2kVwcMqW1edMInAthmNNTgnRLcW2xLweTTjA==
-X-Received: by 2002:a05:622a:387:b0:3d4:17dc:3fcf with SMTP id j7-20020a05622a038700b003d417dc3fcfmr6176455qtx.5.1679680629263;
-        Fri, 24 Mar 2023 10:57:09 -0700 (PDT)
+        bh=7GATmDpp2LqxaO3YBsTr83VB1ZcPRtnkKD4xtYp0nm8=;
+        b=fmIwU49eY7Ejn+bWSYdBz3oGlZoPnxPs37J8yYlYyE8AkcGHnvNZIXNS6n8aa7cW07
+         pybKsQuMQVU0QQlH+2yXYGGhK54noWC1qEYTTv5es5VokZ5rFPay+tz/0mD1PXY5MjdE
+         1wJ/bB7SgGDT1noKeUyq+TUFTiOYJoMMa3548wYQwDBV89lMGUQbJFRFHsrIu17iosvK
+         i/REL0bzQcyTf3ztiN293MBNgnqswNtGnAl90XzRhGZqaNIaWjbIJgYNM0/b2PPgW28a
+         STB1IOE6xE8k9wKvZExhgCEkB9cU/2uFTp2r0T9yiCl7gJMD90bnLmAn3pldUIsoEAcR
+         z7Qw==
+X-Gm-Message-State: AAQBX9eV7nPAkH8f0b1x98RSVyhRNMlkv73Oe38sfu3nWSPs0WN1nq6k
+        oaf5wL3XzO7zzzjhpsLkiR9yUe0Z2PUw7In8DvvJ
+X-Google-Smtp-Source: AKy350ZtoK3QhI7V4jQoKyRj8RRPy+HsVSg5fhN94i68TW8ZYwcPzF6HgFN8Nykpq82YzgyFXcllwg==
+X-Received: by 2002:a05:6214:2303:b0:5c6:cd00:aaa1 with SMTP id gc3-20020a056214230300b005c6cd00aaa1mr6249028qvb.39.1679680630706;
+        Fri, 24 Mar 2023 10:57:10 -0700 (PDT)
 Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
-        by smtp.gmail.com with ESMTPSA id i22-20020ac860d6000000b003dd8ad765dcsm8040082qtm.76.2023.03.24.10.57.08
+        by smtp.gmail.com with ESMTPSA id 6-20020a05620a040600b006f9f3c0c63csm3541115qkp.32.2023.03.24.10.57.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 10:57:08 -0700 (PDT)
+        Fri, 24 Mar 2023 10:57:10 -0700 (PDT)
 From:   Mike Snitzer <snitzer@kernel.org>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org, ejt@redhat.com, mpatocka@redhat.com,
         heinzm@redhat.com, nhuck@google.com, ebiggers@kernel.org,
         keescook@chromium.org, luomeng12@huawei.com,
         Mike Snitzer <snitzer@kernel.org>
-Subject: [dm-6.4 PATCH v2 6/9] dm bufio: use multi-page bio vector
-Date:   Fri, 24 Mar 2023 13:56:53 -0400
-Message-Id: <20230324175656.85082-7-snitzer@kernel.org>
+Subject: [dm-6.4 PATCH v2 7/9] dm thin: speed up cell_defer_no_holder()
+Date:   Fri, 24 Mar 2023 13:56:54 -0400
+Message-Id: <20230324175656.85082-8-snitzer@kernel.org>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230324175656.85082-1-snitzer@kernel.org>
 References: <20230324175656.85082-1-snitzer@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.2 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=0.3 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Joe Thornber <ejt@redhat.com>
 
-The kernel supports multi page bio vector entries, so we can use them
-in dm-bufio as an optimization.
+Reduce the time that a spinlock is held in cell_defer_no_holder().
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Joe Thornber <ejt@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- drivers/md/dm-bufio.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+ drivers/md/dm-thin.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index b638ddd161b4..927969b31e2f 100644
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1326,19 +1326,14 @@ static void use_bio(struct dm_buffer *b, enum req_op op, sector_t sector,
+diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
+index 13d4677baafd..00323428919e 100644
+--- a/drivers/md/dm-thin.c
++++ b/drivers/md/dm-thin.c
+@@ -883,15 +883,17 @@ static void cell_defer_no_holder(struct thin_c *tc, struct dm_bio_prison_cell *c
  {
- 	struct bio *bio;
- 	char *ptr;
--	unsigned int vec_size, len;
-+	unsigned int len;
+ 	struct pool *pool = tc->pool;
+ 	unsigned long flags;
+-	int has_work;
++	struct bio_list bios;
  
--	vec_size = b->c->block_size >> PAGE_SHIFT;
--	if (unlikely(b->c->sectors_per_block_bits < PAGE_SHIFT - SECTOR_SHIFT))
--		vec_size += 2;
--
--	bio = bio_kmalloc(vec_size, GFP_NOWAIT | __GFP_NORETRY | __GFP_NOWARN);
-+	bio = bio_kmalloc(1, GFP_NOWAIT | __GFP_NORETRY | __GFP_NOWARN);
- 	if (!bio) {
--dmio:
- 		use_dmio(b, op, sector, n_sectors, offset);
- 		return;
- 	}
--	bio_init(bio, b->c->bdev, bio->bi_inline_vecs, vec_size, op);
-+	bio_init(bio, b->c->bdev, bio->bi_inline_vecs, 1, op);
- 	bio->bi_iter.bi_sector = sector;
- 	bio->bi_end_io = bio_complete;
- 	bio->bi_private = b;
-@@ -1346,18 +1341,7 @@ static void use_bio(struct dm_buffer *b, enum req_op op, sector_t sector,
- 	ptr = (char *)b->data + offset;
- 	len = n_sectors << SECTOR_SHIFT;
+-	spin_lock_irqsave(&tc->lock, flags);
+-	cell_release_no_holder(pool, cell, &tc->deferred_bio_list);
+-	has_work = !bio_list_empty(&tc->deferred_bio_list);
+-	spin_unlock_irqrestore(&tc->lock, flags);
++	bio_list_init(&bios);
++	cell_release_no_holder(pool, cell, &bios);
  
--	do {
--		unsigned int this_step = min((unsigned int)(PAGE_SIZE - offset_in_page(ptr)), len);
--
--		if (!bio_add_page(bio, virt_to_page(ptr), this_step,
--				  offset_in_page(ptr))) {
--			bio_put(bio);
--			goto dmio;
--		}
--
--		len -= this_step;
--		ptr += this_step;
--	} while (len > 0);
-+	__bio_add_page(bio, virt_to_page(ptr), len, offset_in_page(ptr));
- 
- 	submit_bio(bio);
+-	if (has_work)
++	if (!bio_list_empty(&bios)) {
++		spin_lock_irqsave(&tc->lock, flags);
++		bio_list_merge(&tc->deferred_bio_list, &bios);
++		spin_unlock_irqrestore(&tc->lock, flags);
+ 		wake_worker(pool);
++	}
  }
+ 
+ static void thin_defer_bio(struct thin_c *tc, struct bio *bio);
 -- 
 2.40.0
 
