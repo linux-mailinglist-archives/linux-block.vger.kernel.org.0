@@ -2,52 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 640E96C841B
-	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 18:59:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7BF16C8423
+	for <lists+linux-block@lfdr.de>; Fri, 24 Mar 2023 19:00:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232271AbjCXR7h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 24 Mar 2023 13:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        id S232071AbjCXSAN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 24 Mar 2023 14:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232002AbjCXR7V (ORCPT
+        with ESMTP id S232427AbjCXR7x (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 24 Mar 2023 13:59:21 -0400
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA2B231D8
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:57:53 -0700 (PDT)
-Received: by mail-qv1-f47.google.com with SMTP id l7so2151283qvh.5
-        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:57:53 -0700 (PDT)
+        Fri, 24 Mar 2023 13:59:53 -0400
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD7223301
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:58:18 -0700 (PDT)
+Received: by mail-qv1-f51.google.com with SMTP id x8so2102700qvr.9
+        for <linux-block@vger.kernel.org>; Fri, 24 Mar 2023 10:58:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679680620;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0pgbVxku/SERnvHwqjL/zSj3oN14cdGjOWYCaoljOO4=;
-        b=ch+WI0rwZht0Gakl5OHUbcU3pkB5EegDPfbHiXj2KXQ10RwFliuJ4ijqo7kjuJdU6C
-         C1mBLsSFg34Da+dVOA116dPVKn6XhTfmqrixO1i4NzD3aCdrevr4i7w0iWliVKJVdbGW
-         HR3pAI8hV9wLnBgO2V+CMkj5S+ziOhV+0o0Y3Ovy24hJuZIwJyQVGb+lu9rHwr6aIdRG
-         MFXBe4nVa35jznnG9Z3vRaMBJJFnlX8lTvLuTAc4ErqopqjcKwpKnf+V87YPu0lnFLxh
-         yOHLTBaihwrS4172Po9f/zf6jz5WvzO0ULSphde8ZiKWpmq2bMjhePHUwu8HTQyyo6eK
-         zajQ==
-X-Gm-Message-State: AAQBX9er0+5v4U9xtvIly/I2aqAMS+p4Q5SUzDxce3mGtkhlUukHYIFr
-        cLAyLZYOo7RSnUCGWNTLhkCzElIuM8IAvyMakBTJ
-X-Google-Smtp-Source: AKy350YIMdLtee9pqwLUGDnz2HJDv9utRDKSI0McKyJpOJ5/JI3+moTTSTAHfS8GD6Ef0QjCYYY8Ug==
-X-Received: by 2002:a05:6214:d05:b0:56e:9c11:651e with SMTP id 5-20020a0562140d0500b0056e9c11651emr6039810qvh.27.1679680620491;
-        Fri, 24 Mar 2023 10:57:00 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679680622;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pNKDXzqz05HkFrPteMNUMY0uT7UJYCgf272zyuZUZl4=;
+        b=EDViqI/ERuR/bpBcTzv4RG2IbqAcItiSEH9H7CQv41uc2Xl/yEZA+flVSWolnFUhA1
+         +nm2PDa+bHe+ZW+Wz48DCp+RDGOUwk32sfUDt8eqh0L7V6t52YxCFDaalzkcyMruwSfK
+         VN3ACc5M9k/csK4scjlo1Lk2SQg6dXf2+xL4Kk6hNAfs7VDaTbmlTRMxQJZLdUh6STq+
+         7zwAmuWOkmTjsuKssPWjbbM5UVVE/j484FD8R5mPZdpVKMA4Lw3ILMTfCkvR22LdAYMK
+         gVtkLRBF/0VN4ZB2fleMWQgTqALotlSvoevBtDUh3TZ8qk04SlaJR1u8lsFcIiN3Gejn
+         +vLg==
+X-Gm-Message-State: AAQBX9chukU9IS6WEKFzJ/6IoZ4pinNP1ObPLfLaYKUN/HYic6/TjT1q
+        EoRKf2AiVWmQGAX44WqtOiUv
+X-Google-Smtp-Source: AKy350bGhp7W2newRVTBbmoZx2qXXA2gpmXP36PQU0b4o9rStz5h1Py2BEuc4rkgXhilOeRw/2nEUg==
+X-Received: by 2002:a05:6214:1d2f:b0:5c2:3e10:53e4 with SMTP id f15-20020a0562141d2f00b005c23e1053e4mr6117499qvd.15.1679680621865;
+        Fri, 24 Mar 2023 10:57:01 -0700 (PDT)
 Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
-        by smtp.gmail.com with ESMTPSA id u18-20020a0cea52000000b005dd8b9345c5sm857446qvp.93.2023.03.24.10.56.59
+        by smtp.gmail.com with ESMTPSA id w16-20020a0cef90000000b005dd8b9345cfsm843233qvr.103.2023.03.24.10.57.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 10:57:00 -0700 (PDT)
+        Fri, 24 Mar 2023 10:57:01 -0700 (PDT)
 From:   Mike Snitzer <snitzer@kernel.org>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org, ejt@redhat.com, mpatocka@redhat.com,
         heinzm@redhat.com, nhuck@google.com, ebiggers@kernel.org,
         keescook@chromium.org, luomeng12@huawei.com,
         Mike Snitzer <snitzer@kernel.org>
-Subject: [dm-6.4 PATCH v2 0/9] dm bufio, thin: improve concurrent IO performance
-Date:   Fri, 24 Mar 2023 13:56:47 -0400
-Message-Id: <20230324175656.85082-1-snitzer@kernel.org>
+Subject: [dm-6.4 PATCH v2 1/9] dm bufio: remove unused dm_bufio_release_move interface
+Date:   Fri, 24 Mar 2023 13:56:48 -0400
+Message-Id: <20230324175656.85082-2-snitzer@kernel.org>
 X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230324175656.85082-1-snitzer@kernel.org>
+References: <20230324175656.85082-1-snitzer@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=0.3 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
@@ -59,71 +61,123 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+From: Joe Thornber <ejt@redhat.com>
 
-This patchset has been staged in linux-next for the 6.4 merge
-window. The relevant linux-dm.git branch is here:
-https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-6.4
+Was used by multi-snapshot DM target that never went upstream.
 
-The initial patchset I posted earlier in the week for this line of
-work didn't properly split DM thin's discards. To be clear: both Joe
-and I missed this, and the issue impacted the patchset I posted _and_
-code Joe had developed and tested to that point.
+Signed-off-by: Joe Thornber <ejt@redhat.com>
+Acked-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+---
+ drivers/md/dm-bufio.c    | 77 ----------------------------------------
+ include/linux/dm-bufio.h |  6 ----
+ 2 files changed, 83 deletions(-)
 
-device-mapper-test-suite's "discard_with_fstrim_passdown_true_ext4"
-test reliably reproduced the incorrect splitting.  The issue was the
-DM thin target wasn't respecting the new restrictions imposed by
-dm bio-prison-v1 (which the DM thin target uses). Joe fixed this and
-the code reflects that in patch 9.
-
-All said, and as detailed in the "Testing" section of the header for
-patch 3: these changes have _now_ been extensively tested in terms of
-dm-thin (and dm-cache as much as device-mapper-test-suite
-provides). The cryptsetup testsuite also passes (DM integrity uses
-dm-bufio).
-
-PLEASE HELP with further testing of other more exotic DM bufio
-consumers and elaborate usecases (be it via Android, Chrome OS, etc).
-
-Please use whatever tests you have to put pressure on bufio.
-In particular: focused testing of bufio's shrinker, verify
-DM_BUFIO_CLIENT_NO_SLEEP (via dm-verity's tasklets), etc.
-
-There is still time to add fixes for 6.4 should any issues turn
-up.
-
-All review is welcome (I'll rebase to include Reviewed-by or Acked-by
-tags). Also, positive reports in the form of Tested-by replies are
-welcome!
-
-Thanks,
-Mike
-
-Joe Thornber (4):
-  dm bufio: remove unused dm_bufio_release_move interface
-  dm bufio: improve concurrent IO performance
-  dm thin: speed up cell_defer_no_holder()
-  dm bio prison v1: improve concurrent IO performance
-
-Mike Snitzer (3):
-  dm bufio: move dm_buffer struct
-  dm bufio: move dm_bufio_client members to avoid spanning cachelines
-  dm: split discards further if target sets max_discard_granularity
-
-Mikulas Patocka (2):
-  dm bufio: use waitqueue_active in __free_buffer_wake
-  dm bufio: use multi-page bio vector
-
- drivers/md/dm-bio-prison-v1.c |   87 +-
- drivers/md/dm-bio-prison-v1.h |   10 +
- drivers/md/dm-bufio.c         | 1970 ++++++++++++++++++++++-----------
- drivers/md/dm-thin.c          |  110 +-
- drivers/md/dm.c               |   25 +-
- include/linux/device-mapper.h |    6 +
- include/linux/dm-bufio.h      |    6 -
- include/uapi/linux/dm-ioctl.h |    4 +-
- 8 files changed, 1509 insertions(+), 709 deletions(-)
-
+diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
+index cf077f9b30c3..79434b38f368 100644
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -1415,83 +1415,6 @@ int dm_bufio_issue_discard(struct dm_bufio_client *c, sector_t block, sector_t c
+ }
+ EXPORT_SYMBOL_GPL(dm_bufio_issue_discard);
+ 
+-/*
+- * We first delete any other buffer that may be at that new location.
+- *
+- * Then, we write the buffer to the original location if it was dirty.
+- *
+- * Then, if we are the only one who is holding the buffer, relink the buffer
+- * in the buffer tree for the new location.
+- *
+- * If there was someone else holding the buffer, we write it to the new
+- * location but not relink it, because that other user needs to have the buffer
+- * at the same place.
+- */
+-void dm_bufio_release_move(struct dm_buffer *b, sector_t new_block)
+-{
+-	struct dm_bufio_client *c = b->c;
+-	struct dm_buffer *new;
+-
+-	BUG_ON(dm_bufio_in_request());
+-
+-	dm_bufio_lock(c);
+-
+-retry:
+-	new = __find(c, new_block);
+-	if (new) {
+-		if (new->hold_count) {
+-			__wait_for_free_buffer(c);
+-			goto retry;
+-		}
+-
+-		/*
+-		 * FIXME: Is there any point waiting for a write that's going
+-		 * to be overwritten in a bit?
+-		 */
+-		__make_buffer_clean(new);
+-		__unlink_buffer(new);
+-		__free_buffer_wake(new);
+-	}
+-
+-	BUG_ON(!b->hold_count);
+-	BUG_ON(test_bit(B_READING, &b->state));
+-
+-	__write_dirty_buffer(b, NULL);
+-	if (b->hold_count == 1) {
+-		wait_on_bit_io(&b->state, B_WRITING,
+-			       TASK_UNINTERRUPTIBLE);
+-		set_bit(B_DIRTY, &b->state);
+-		b->dirty_start = 0;
+-		b->dirty_end = c->block_size;
+-		__unlink_buffer(b);
+-		__link_buffer(b, new_block, LIST_DIRTY);
+-	} else {
+-		sector_t old_block;
+-
+-		wait_on_bit_lock_io(&b->state, B_WRITING,
+-				    TASK_UNINTERRUPTIBLE);
+-		/*
+-		 * Relink buffer to "new_block" so that write_callback
+-		 * sees "new_block" as a block number.
+-		 * After the write, link the buffer back to old_block.
+-		 * All this must be done in bufio lock, so that block number
+-		 * change isn't visible to other threads.
+-		 */
+-		old_block = b->block;
+-		__unlink_buffer(b);
+-		__link_buffer(b, new_block, b->list_mode);
+-		submit_io(b, REQ_OP_WRITE, write_endio);
+-		wait_on_bit_io(&b->state, B_WRITING,
+-			       TASK_UNINTERRUPTIBLE);
+-		__unlink_buffer(b);
+-		__link_buffer(b, old_block, b->list_mode);
+-	}
+-
+-	dm_bufio_unlock(c);
+-	dm_bufio_release(b);
+-}
+-EXPORT_SYMBOL_GPL(dm_bufio_release_move);
+-
+ static void forget_buffer_locked(struct dm_buffer *b)
+ {
+ 	if (likely(!b->hold_count) && likely(!smp_load_acquire(&b->state))) {
+diff --git a/include/linux/dm-bufio.h b/include/linux/dm-bufio.h
+index 2056743aaaaa..681656a1c03d 100644
+--- a/include/linux/dm-bufio.h
++++ b/include/linux/dm-bufio.h
+@@ -130,12 +130,6 @@ int dm_bufio_issue_flush(struct dm_bufio_client *c);
+  */
+ int dm_bufio_issue_discard(struct dm_bufio_client *c, sector_t block, sector_t count);
+ 
+-/*
+- * Like dm_bufio_release but also move the buffer to the new
+- * block. dm_bufio_write_dirty_buffers is needed to commit the new block.
+- */
+-void dm_bufio_release_move(struct dm_buffer *b, sector_t new_block);
+-
+ /*
+  * Free the given buffer.
+  * This is just a hint, if the buffer is in use or dirty, this function
 -- 
 2.40.0
 
