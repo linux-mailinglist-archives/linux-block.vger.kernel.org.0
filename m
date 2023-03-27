@@ -2,128 +2,94 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ABBC6CAF95
-	for <lists+linux-block@lfdr.de>; Mon, 27 Mar 2023 22:14:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 544346CAF9B
+	for <lists+linux-block@lfdr.de>; Mon, 27 Mar 2023 22:14:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232140AbjC0UOH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Mar 2023 16:14:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39004 "EHLO
+        id S232225AbjC0UOO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Mar 2023 16:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231929AbjC0UOG (ORCPT
+        with ESMTP id S232183AbjC0UOK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Mar 2023 16:14:06 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 060C81BFD
-        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:22 -0700 (PDT)
-Received: by mail-qt1-f181.google.com with SMTP id cr18so5981723qtb.0
-        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:21 -0700 (PDT)
+        Mon, 27 Mar 2023 16:14:10 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4F61BFB
+        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:23 -0700 (PDT)
+Received: by mail-qt1-f175.google.com with SMTP id s12so6188935qtx.11
+        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679948001;
+        d=1e100.net; s=20210112; t=1679948003;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H9SedxOrdczzTjA4k7blz5Fc7tZ0dfZriRfxA3Ti63I=;
-        b=o6M0OlzKJOuribECt8iVPIfFtmtO4Tc7V0v/FXjM/gzCbtTc/LYxdQSZLh+2mcvHfU
-         90Do/GtYfocPQ6UvY7JFWRn1/OD9IxDDw6wyMfx1YCE+ncufDUlLVPZAsNoyTXUrk0qc
-         md/gsBr0KCTi3CLTk4UYWpi4VkTJ+MGvJ+uuFtnQfkym/PtGGF7Cx94HFfYhmhtW43wS
-         1qeyNYyxuhFt0vMEXGlk+qRaaoc1qcDWlcYcA02BgdAGiE3+vhM5qTODgqZ1P8fDmarU
-         SgAgHW+nNMM2Vekeie55QxHhc8sczgjCCQzySJlSV+Wrjs0mHwqisARRqteLnoEoCl//
-         8b+w==
-X-Gm-Message-State: AO0yUKV8IcwQovcs9Xn4J8Y3KbxK0Hi5rdx/kcUTUoaYskH9MQAUf/ye
-        3SXl9B34EQCqX/h6fwozA0Cr
-X-Google-Smtp-Source: AK7set98Y7dLUBXYMxUAgPYJRwSwe5G/4pJt7wTHoABVMGSpSmarcdzS7b1UEdwaYPt5vQLyrZsh/w==
-X-Received: by 2002:a05:622a:170b:b0:3e3:7e24:a35a with SMTP id h11-20020a05622a170b00b003e37e24a35amr21832421qtk.9.1679948001588;
-        Mon, 27 Mar 2023 13:13:21 -0700 (PDT)
+        bh=W8N6ipnCV5hoHhg/CORvER6nf9MSwcb0kouKMhOxJx4=;
+        b=nAU6YSBQ7rhroO43s5qQXgewW+numV/72F5Clec5PdwRG5bMYR1nnyCvKKsaa/NQQb
+         zMdVv55mwsm8cGV+s0PNRMjq05tB8oi9oIdIKg08t7G03h/SRgH1pbH4nlzpKdTGIVUE
+         g7oBCI/f+z4xFPkgUyxOV430XpfoMFnLNfn6DaLcArIuN47NTjxdPdIBtCwaHrCU8eHn
+         2v7PUKjYWWlw3x8EoSZ+tAyz8qMvPv1dsVVvGDNH4n05S0STYYKPueuZgQb2hykbXCNq
+         2A6t8SjD1TP0ZhbwJNknCp3IFJAxJwv9z9Hbt0ci9/ffpzzIQLIoQwKcUWOEWlTG14s5
+         nAUQ==
+X-Gm-Message-State: AO0yUKV1VzXuzfOcgxZ/pQFHVJ88URXQEgZtSBmr18n+4UcrMusTucks
+        vTiGkx2uWgSGUex1pEcENo6P
+X-Google-Smtp-Source: AK7set9+sfwAJb0hRAS53hihYhDVSWnGpR49MCgCFLmIkZazfZgDsImOqvtZXurStI3emQaDQ0Dvkw==
+X-Received: by 2002:a05:622a:1315:b0:3d5:500a:4819 with SMTP id v21-20020a05622a131500b003d5500a4819mr22550964qtk.23.1679948003245;
+        Mon, 27 Mar 2023 13:13:23 -0700 (PDT)
 Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
-        by smtp.gmail.com with ESMTPSA id 201-20020a3708d2000000b007456efa7f73sm12278213qki.85.2023.03.27.13.13.20
+        by smtp.gmail.com with ESMTPSA id y126-20020a376484000000b007468765b411sm11876942qkb.45.2023.03.27.13.13.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Mar 2023 13:13:21 -0700 (PDT)
+        Mon, 27 Mar 2023 13:13:22 -0700 (PDT)
 From:   Mike Snitzer <snitzer@kernel.org>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org, axboe@kernel.dk, ejt@redhat.com,
         mpatocka@redhat.com, heinzm@redhat.com, nhuck@google.com,
         ebiggers@kernel.org, keescook@chromium.org, luomeng12@huawei.com,
         Mike Snitzer <snitzer@kernel.org>
-Subject: [dm-6.4 PATCH v3 09/20] dm bufio: move dm_bufio_client members to avoid spanning cachelines
-Date:   Mon, 27 Mar 2023 16:11:32 -0400
-Message-Id: <20230327201143.51026-10-snitzer@kernel.org>
+Subject: [dm-6.4 PATCH v3 10/20] dm bufio: use waitqueue_active in __free_buffer_wake
+Date:   Mon, 27 Mar 2023 16:11:33 -0400
+Message-Id: <20230327201143.51026-11-snitzer@kernel.org>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230327201143.51026-1-snitzer@kernel.org>
 References: <20230327201143.51026-1-snitzer@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.2 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=0.3 required=5.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Movement also consolidates holes in dm_bufio_client struct. But the
-overall size of the struct isn't changed.
+From: Mikulas Patocka <mpatocka@redhat.com>
 
+Save one spinlock by using waitqueue_active. We hold the bufio lock at
+this place, so no one can add entries to the waitqueue at this point.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- drivers/md/dm-bufio.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/md/dm-bufio.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/dm-bufio.c b/drivers/md/dm-bufio.c
-index 9ac50024006d..e5459741335d 100644
+index e5459741335d..cca43ed13fd1 100644
 --- a/drivers/md/dm-bufio.c
 +++ b/drivers/md/dm-bufio.c
-@@ -936,13 +936,16 @@ static void cache_remove_range(struct dm_buffer_cache *bc,
-  *	context.
-  */
- struct dm_bufio_client {
--	struct mutex lock;
--	spinlock_t spinlock;
--	bool no_sleep;
--
- 	struct block_device *bdev;
- 	unsigned int block_size;
- 	s8 sectors_per_block_bits;
-+
-+	bool no_sleep;
-+	struct mutex lock;
-+	spinlock_t spinlock;
-+
-+	int async_write_error;
-+
- 	void (*alloc_callback)(struct dm_buffer *buf);
- 	void (*write_callback)(struct dm_buffer *buf);
- 	struct kmem_cache *slab_buffer;
-@@ -954,23 +957,22 @@ struct dm_bufio_client {
+@@ -1665,7 +1665,12 @@ static void __free_buffer_wake(struct dm_buffer *b)
+ 		c->need_reserved_buffers--;
+ 	}
  
- 	unsigned int minimum_buffers;
+-	wake_up(&c->free_buffer_wait);
++	/*
++	 * We hold the bufio lock here, so no one can add entries to the
++	 * wait queue anyway.
++	 */
++	if (unlikely(waitqueue_active(&c->free_buffer_wait)))
++		wake_up(&c->free_buffer_wait);
+ }
  
--	struct dm_buffer_cache cache;
--	wait_queue_head_t free_buffer_wait;
--
- 	sector_t start;
- 
--	int async_write_error;
--
--	struct list_head client_list;
--
- 	struct shrinker shrinker;
- 	struct work_struct shrink_work;
- 	atomic_long_t need_shrink;
- 
-+	wait_queue_head_t free_buffer_wait;
-+
-+	struct list_head client_list;
-+
- 	/*
- 	 * Used by global_cleanup to sort the clients list.
- 	 */
- 	unsigned long oldest_buffer;
-+
-+	struct dm_buffer_cache cache;
- };
- 
- static DEFINE_STATIC_KEY_FALSE(no_sleep_enabled);
+ static enum evict_result cleaned(struct dm_buffer *b, void *context)
 -- 
 2.40.0
 
