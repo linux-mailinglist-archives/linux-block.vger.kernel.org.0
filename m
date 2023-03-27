@@ -2,119 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D704D6CABC7
-	for <lists+linux-block@lfdr.de>; Mon, 27 Mar 2023 19:21:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 786906CAC49
+	for <lists+linux-block@lfdr.de>; Mon, 27 Mar 2023 19:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbjC0RVY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Mar 2023 13:21:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54538 "EHLO
+        id S229610AbjC0Rw7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Mar 2023 13:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230289AbjC0RVX (ORCPT
+        with ESMTP id S231934AbjC0Rw6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Mar 2023 13:21:23 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2FC735A9
-        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 10:21:12 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id l12so9560470wrm.10
-        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 10:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679937671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kW0nhN+MJjduSbj2eCKtTmFxk2OT8HS0PznhYbGtPTM=;
-        b=jMycVUhHVftLtI83DVEutydlCn4Rnjy9Zw94fQ3pLh9v4gAJGWCoGi4SGiGmIwFKXk
-         AILHsKgI4wZpR6OhN0kyNPL0nOGjZbIDSNFS8OIeHC/aB7fX4HelVmX9mhMnQOUr1ZoH
-         3fgKsevg5QltWFRp2UeUU/YJpQxPVoNigZM66A4gNYoAMkspuiM+txRy/CqBOxe/MXVl
-         BqbQ04AFVWwnKWnlqAbGme2wjb5oJbZyH6BgJgCqgVosWWM/G+/xEY32T4NUfeYW6eSC
-         NRUcwrq+s1euMyOcgH4sdLjptVFLZxrhIWJEd9o/UvHTuVO+cAjN5qsK/1il92lFeHLl
-         gmJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679937671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kW0nhN+MJjduSbj2eCKtTmFxk2OT8HS0PznhYbGtPTM=;
-        b=sf6t8dBV8+/JmaQ04ePIItyyI2A8VmTS2lF7IfiiXAPwVtv2zZKJOscI+S0/ZJCpc9
-         whhm+tp/XHJFe7U2+jgGUZGKDCugRoOtnSRlDKcbpr7DlVSezFUyRr5t4gto88rEOuGQ
-         MCOPDgWrbYPhFZ6vEcD4/jWE1Br++s13wNLYyOiJ+o1U14W+dk5Ww/RFbZ1P+6TlyDaS
-         ///eOWs1cMZ2DQL7tu2V5ovdGPhSdaJU8JsN3aGRl2vm0vEbiuWRIdAzAocMc4NJKmP3
-         3wsgClntHluZtQR6ouOHuMsfWHTXhaJEfCP5IKOAGsgTloB0l9ExN5NNJSSdZW0IKjHY
-         tQgw==
-X-Gm-Message-State: AAQBX9chZZ9Nf0elMv8S3zBbiQo1EZxktEl8JoSGg3bJn3ZlxKxW48On
-        GTEvmP7KcW0NbxA5hf4TU1Da1sfgvFct6YrpkWQ=
-X-Google-Smtp-Source: AKy350a4utJV1mHAd+//ciS/7jPRA+GMjsq8cxwf+CqIVJ08XiMWLibsFdiv8E24YJJYOsY0uLVUfAu06bJvj7678E4=
-X-Received: by 2002:a5d:5691:0:b0:2cf:efad:9c23 with SMTP id
- f17-20020a5d5691000000b002cfefad9c23mr2029558wrv.14.1679937671209; Mon, 27
- Mar 2023 10:21:11 -0700 (PDT)
+        Mon, 27 Mar 2023 13:52:58 -0400
+X-Greylist: delayed 515 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 27 Mar 2023 10:52:50 PDT
+Received: from out-48.mta1.migadu.com (out-48.mta1.migadu.com [IPv6:2001:41d0:203:375::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C35DD1FEF
+        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 10:52:50 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1679939052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+8CD43ZGiWjT6MHE5SkeNeX0EuJT+mw8tc66Q7ZwIjA=;
+        b=m3il4bn4F2lRCFAqMikjepInaxpldm8c3RgfIJ0SZOeOTlhuu+cS6+SY8RJiQ+/nArOD6g
+        uUHrvbGInK7Hb//MjsjXY6R4btQbtcwM35JI9ZkG3R37B/n7LW4ssqowm+x9rTZLX/jpSS
+        JwM4zudDXp3INfol17Hp6CqQ4GWNWDk=
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Kent Overstreet <kent.overstreet@linux.dev>, willy@infradead.org,
+        axboe@kernel.dk
+Subject: [PATCH 0/2] bio iter improvements
+Date:   Mon, 27 Mar 2023 13:44:00 -0400
+Message-Id: <20230327174402.1655365-1-kent.overstreet@linux.dev>
 MIME-Version: 1.0
-References: <20230324212803.1837554-1-kbusch@meta.com> <CGME20230324213124epcas5p331ea3c2e2a05ec6a6825e719e47d2427@epcas5p3.samsung.com>
- <20230324212803.1837554-2-kbusch@meta.com> <20230327135810.GA8405@green5> <ZCG0O6RdlA/sUd7C@kbusch-mbp.dhcp.thefacebook.com>
-In-Reply-To: <ZCG0O6RdlA/sUd7C@kbusch-mbp.dhcp.thefacebook.com>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Mon, 27 Mar 2023 22:50:47 +0530
-Message-ID: <CA+1E3rK2h9gyy26v1NmwTFtUsCwMkc1DgkDsCFME+HjZJPn5Hg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] nvme: use blk-mq polling for uring commands
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, Keith Busch <kbusch@meta.com>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        axboe@kernel.dk, hch@lst.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 8:59=E2=80=AFPM Keith Busch <kbusch@kernel.org> wro=
-te:
->
-> On Mon, Mar 27, 2023 at 07:28:10PM +0530, Kanchan Joshi wrote:
-> > > -   }
-> > > +   if (blk_rq_is_poll(req))
-> > > +           WRITE_ONCE(ioucmd->cookie, req);
-> >
-> > blk_rq_is_poll(req) warns for null "req->bio" and returns false if that
-> > is the case. That defeats one of the purpose of the series i.e. poll on
-> > no-payload commands such as flush/write-zeroes.
->
-> Sorry, I'm sending out various patches piecemeal. This patch here depends=
- on
-> this one sent out earlier:
->
->   https://lore.kernel.org/linux-block/3f670ca7-908d-db55-3da1-4090f116005=
-d@nvidia.com/T/#mbc6174ce3f9dbae38ae2ca646518be4bf105f6e4
+Small patch series cleaning up/standardizing bio_for_each_segment_all(),
+which means we can use the same guts for bio_for_each_folio_all(),
+considerably simplifying that code.
 
-That clears it up, thanks.
+The squashfs maintainer will want to look at and test those changes,
+that code was doing some slightly tricky things. The rest was a pretty
+mechanical conversion.
 
-> > >     rcu_read_lock();
-> > > -   bio =3D READ_ONCE(ioucmd->cookie);
-> > > -   ns =3D container_of(file_inode(ioucmd->file)->i_cdev,
-> > > -                   struct nvme_ns, cdev);
-> > > -   q =3D ns->queue;
-> > > -   if (test_bit(QUEUE_FLAG_POLL, &q->queue_flags) && bio && bio->bi_=
-bdev)
-> > > -           ret =3D bio_poll(bio, iob, poll_flags);
-> > > +   req =3D READ_ONCE(ioucmd->cookie);
-> > > +   if (req) {
-> >
-> > This is risky. We are not sure if the cookie is actually "req" at this
-> > moment.
->
-> What else could it be? It's either a real request from a polled hctx tag,=
- or
-> NULL at this point.
+Kent Overstreet (2):
+  block: Rework bio_for_each_segment_all()
+  block: Rework bio_for_each_folio_all()
 
-It can also be a function pointer that gets assigned on irq-driven completi=
-on.
-See the "struct io_uring_cmd" - we are tight on cacheline, so cookie
-and task_work_cb share the storage.
+ block/bio.c               |  38 ++++++------
+ block/blk-map.c           |  38 ++++++------
+ block/bounce.c            |  12 ++--
+ drivers/md/bcache/btree.c |   8 +--
+ drivers/md/dm-crypt.c     |  10 ++--
+ drivers/md/raid1.c        |   4 +-
+ fs/btrfs/disk-io.c        |  10 ++--
+ fs/btrfs/extent_io.c      |  52 ++++++++--------
+ fs/btrfs/inode.c          |   8 +--
+ fs/btrfs/raid56.c         |  18 +++---
+ fs/crypto/bio.c           |   8 +--
+ fs/erofs/zdata.c          |   4 +-
+ fs/ext4/page-io.c         |   8 +--
+ fs/ext4/readpage.c        |   4 +-
+ fs/f2fs/data.c            |  20 +++----
+ fs/gfs2/lops.c            |  10 ++--
+ fs/gfs2/meta_io.c         |   8 +--
+ fs/iomap/buffered-io.c    |  14 +++--
+ fs/mpage.c                |   4 +-
+ fs/squashfs/block.c       |  48 ++++++++-------
+ fs/squashfs/lz4_wrapper.c |  17 +++---
+ fs/squashfs/lzo_wrapper.c |  17 +++---
+ fs/verity/verify.c        |   4 +-
+ include/linux/bio.h       | 123 +++++++++++++++++++++-----------------
+ include/linux/bvec.h      |  70 ++++++++++++++--------
+ 25 files changed, 302 insertions(+), 255 deletions(-)
 
-> It's safe to check the cookie like this and rely on its contents.
-Hence not safe. Please try running this without poll-queues (at nvme
-level), you'll see failures.
+-- 
+2.39.2
+
