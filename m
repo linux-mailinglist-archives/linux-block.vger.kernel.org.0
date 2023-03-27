@@ -2,51 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1F5F6CAFA7
-	for <lists+linux-block@lfdr.de>; Mon, 27 Mar 2023 22:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 017F16CAFA5
+	for <lists+linux-block@lfdr.de>; Mon, 27 Mar 2023 22:14:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232349AbjC0UOX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Mar 2023 16:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39058 "EHLO
+        id S232443AbjC0UOV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Mar 2023 16:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232300AbjC0UOW (ORCPT
+        with ESMTP id S232200AbjC0UOU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Mar 2023 16:14:22 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D7F1FF7
-        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:31 -0700 (PDT)
-Received: by mail-qt1-f172.google.com with SMTP id hf2so9811807qtb.3
-        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:31 -0700 (PDT)
+        Mon, 27 Mar 2023 16:14:20 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B021FDC
+        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:32 -0700 (PDT)
+Received: by mail-qt1-f175.google.com with SMTP id h16so3007841qtn.7
+        for <linux-block@vger.kernel.org>; Mon, 27 Mar 2023 13:13:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679948010;
+        d=1e100.net; s=20210112; t=1679948012;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VKZdoNXFigBuaARZaAptCA6/0fq1wlNkMtf1bLoETbM=;
-        b=p/QNZslkrX4o/4mjthzpEq1SoUKkuVf8stN+Zn7w2BU0DsFkfyR8Hv9B48KDbQaqRg
-         Ip3Mxw6Xv/XTsAjl3ieQVTgPMHSMv+aKEkUFARaphBeQsCCFwasLSpDZOMWWiZZoVqIk
-         ihImU6qGUa8FVLfNQ3AosfTKqgVwc1VctkAnrnqt5XRji/g7n9QEGVQeaoNRK3qqJWzW
-         B9CPlslUsbK/duUqq/kZRJPbOQDg3xd/jYjl9eZKFsbyRFOiPlRJB+YS2LpzKjmCExMA
-         XF9ufVSNZ2eKdx0jLVD2JLnbawwzKq7b2WI3jLlpFQGhjwfODmVUaXiyl38tF/zeEpjh
-         taEw==
-X-Gm-Message-State: AO0yUKWEk405oKLfDVmEZ5eon6wMyGD4psMBtm2XDuGlJFaqv09QkNBc
-        4E6NcssaoRYjxyykGh6wPTa9
-X-Google-Smtp-Source: AK7set9KXUMs1rqs7kAqxN9Yk6OnkJzXX9Ry0bTCMOPwZUEbPgMi3QtSYmMLZ60y5R3fllURrlRHWA==
-X-Received: by 2002:a05:622a:647:b0:3bf:d9ee:882d with SMTP id a7-20020a05622a064700b003bfd9ee882dmr22445529qtb.40.1679948010612;
-        Mon, 27 Mar 2023 13:13:30 -0700 (PDT)
+        bh=SBN3e8d5Qq0hFXuPFkD52ybusL049Itzx+LBtkZ2VOM=;
+        b=V+2bhA9WBWWqxWYYjWNHW0UGNRybuMKby2/pkKPBfjyOm8e9DpFdYbkYGpwGU3747j
+         z8Nv9ZQlHq6pPjq3TvO8lzN6tUmQaYlMC47KTYmYAf1hRkwkfBTtRRWG+hxySN333NAA
+         4c2mHq6ptS88rxXxzCO912c5gDan573ELCOK3HK3qhCOo2ZFSMn0/4onqdXlDg78lwd0
+         8UV1f1x9BEw4AwM+G4/dDo5gS3mC+CBuJTmTuKn2wD82YvBNs233MRKPt+Dheh7+8ezP
+         6wHYgMewTvQeo8PH5HXtvXzi25LIEwnBxplEMGbLRKTlrEikbYQvSgtLA7BzpV7m0Qld
+         pflA==
+X-Gm-Message-State: AO0yUKUUFbkG6Yu4TlFWJwu9XW7ZjO/jaWWrNIEKyuBuPmrv5Ny0cZuh
+        m5ZT09w0hh2Hs76u1gY+Klzn
+X-Google-Smtp-Source: AK7set/KcR8zPzvyZmCoD66iZdu4uOgZL06cjihbV5XKhpEFExLT5A/6x5Rr5XaBiwEgxAgiHfTc4g==
+X-Received: by 2002:ac8:58c6:0:b0:3e3:9199:d27 with SMTP id u6-20020ac858c6000000b003e391990d27mr22314214qta.53.1679948012077;
+        Mon, 27 Mar 2023 13:13:32 -0700 (PDT)
 Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
-        by smtp.gmail.com with ESMTPSA id j9-20020a05620a288900b0070648cf78bdsm16879656qkp.54.2023.03.27.13.13.29
+        by smtp.gmail.com with ESMTPSA id b126-20020ae9eb84000000b007468b183a65sm11345416qkg.30.2023.03.27.13.13.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Mar 2023 13:13:30 -0700 (PDT)
+        Mon, 27 Mar 2023 13:13:31 -0700 (PDT)
 From:   Mike Snitzer <snitzer@kernel.org>
 To:     dm-devel@redhat.com
 Cc:     linux-block@vger.kernel.org, axboe@kernel.dk, ejt@redhat.com,
         mpatocka@redhat.com, heinzm@redhat.com, nhuck@google.com,
         ebiggers@kernel.org, keescook@chromium.org, luomeng12@huawei.com,
         Mike Snitzer <snitzer@kernel.org>
-Subject: [dm-6.4 PATCH v3 14/20] dm bio prison v1: improve concurrent IO performance
-Date:   Mon, 27 Mar 2023 16:11:37 -0400
-Message-Id: <20230327201143.51026-15-snitzer@kernel.org>
+Subject: [dm-6.4 PATCH v3 15/20] dm bio prison v1: add dm_cell_key_has_valid_range
+Date:   Mon, 27 Mar 2023 16:11:38 -0400
+Message-Id: <20230327201143.51026-16-snitzer@kernel.org>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230327201143.51026-1-snitzer@kernel.org>
 References: <20230327201143.51026-1-snitzer@kernel.org>
@@ -61,412 +61,144 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Joe Thornber <ejt@redhat.com>
+Don't have bio_detain() BUG_ON if a dm_cell_key is beyond
+BIO_PRISON_MAX_RANGE or spans a boundary.
 
-Split the bio prison into multiple regions, with a separate rbtree and
-associated lock for each region.
+Update dm-thin.c:build_key() to use dm_cell_key_has_valid_range() which
+will do this checking without using BUG_ON. Also update
+process_discard_bio() to check the discard bio that DM core passes in
+(having first imposed max_discard_granularity based splitting).
 
-To get fast bio prison locking and not damage the performance of
-discards too much the bio-prison now stipulates that discards should
-not cross a BIO_PRISON_MAX_RANGE boundary.
+dm_cell_key_has_valid_range() will merely WARN_ON_ONCE if it returns
+false because if it does: it is programmer error that should be caught
+with proper testing. So relax the BUG_ONs to be WARN_ON_ONCE.
 
-Because the range of a key (block_end - block_begin) must not exceed
-BIO_PRISON_MAX_RANGE: break_up_discard_bio() now ensures the data
-range reflected in PHYSICAL key doesn't exceed BIO_PRISON_MAX_RANGE.
-And splitting the thin target's discards (handled with VIRTUAL key) is
-achieved by updating dm-thin.c to set limits->max_discard_sectors in
-terms of BIO_PRISON_MAX_RANGE _and_ setting the thin and thin-pool
-targets' max_discard_granularity to true.
-
-Signed-off-by: Joe Thornber <ejt@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 ---
- drivers/md/dm-bio-prison-v1.c | 87 +++++++++++++++++++++------------
- drivers/md/dm-bio-prison-v1.h | 10 ++++
- drivers/md/dm-thin.c          | 92 ++++++++++++++++++++---------------
- 3 files changed, 121 insertions(+), 68 deletions(-)
+ drivers/md/dm-bio-prison-v1.c | 14 +++++++++-----
+ drivers/md/dm-bio-prison-v1.h |  5 +++++
+ drivers/md/dm-thin.c          | 21 +++++++++++++++------
+ 3 files changed, 29 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/md/dm-bio-prison-v1.c b/drivers/md/dm-bio-prison-v1.c
-index c4c05d5d8909..2b8af861e5f6 100644
+index 2b8af861e5f6..78bb559b521c 100644
 --- a/drivers/md/dm-bio-prison-v1.c
 +++ b/drivers/md/dm-bio-prison-v1.c
-@@ -16,11 +16,17 @@
+@@ -120,12 +120,17 @@ static unsigned lock_nr(struct dm_cell_key *key)
+ 	return (key->block_begin >> BIO_PRISON_MAX_RANGE_SHIFT) & LOCK_MASK;
+ }
  
- /*----------------------------------------------------------------*/
- 
-+#define NR_LOCKS 64
-+#define LOCK_MASK (NR_LOCKS - 1)
- #define MIN_CELLS 1024
- 
-+struct prison_region {
-+	spinlock_t lock;
-+	struct rb_root cell;
-+} ____cacheline_aligned_in_smp;
-+
- struct dm_bio_prison {
--	spinlock_t lock;
--	struct rb_root cells;
-+	struct prison_region regions[NR_LOCKS];
- 	mempool_t cell_pool;
- };
- 
-@@ -34,13 +40,17 @@ static struct kmem_cache *_cell_cache;
-  */
- struct dm_bio_prison *dm_bio_prison_create(void)
+-static void check_range(struct dm_cell_key *key)
++bool dm_cell_key_has_valid_range(struct dm_cell_key *key)
  {
--	struct dm_bio_prison *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
- 	int ret;
-+	unsigned i;
-+	struct dm_bio_prison *prison = kzalloc(sizeof(*prison), GFP_KERNEL);
- 
- 	if (!prison)
- 		return NULL;
- 
--	spin_lock_init(&prison->lock);
-+	for (i = 0; i < NR_LOCKS; i++) {
-+		spin_lock_init(&prison->regions[i].lock);
-+		prison->regions[i].cell = RB_ROOT;
-+	}
- 
- 	ret = mempool_init_slab_pool(&prison->cell_pool, MIN_CELLS, _cell_cache);
- 	if (ret) {
-@@ -48,8 +58,6 @@ struct dm_bio_prison *dm_bio_prison_create(void)
- 		return NULL;
- 	}
- 
--	prison->cells = RB_ROOT;
--
- 	return prison;
- }
- EXPORT_SYMBOL_GPL(dm_bio_prison_create);
-@@ -107,14 +115,26 @@ static int cmp_keys(struct dm_cell_key *lhs,
- 	return 0;
- }
- 
--static int __bio_detain(struct dm_bio_prison *prison,
-+static unsigned lock_nr(struct dm_cell_key *key)
-+{
-+	return (key->block_begin >> BIO_PRISON_MAX_RANGE_SHIFT) & LOCK_MASK;
-+}
+-	BUG_ON(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE);
+-	BUG_ON((key->block_begin >> BIO_PRISON_MAX_RANGE_SHIFT) !=
+-	       ((key->block_end - 1) >> BIO_PRISON_MAX_RANGE_SHIFT));
++	if (WARN_ON_ONCE(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE))
++		return false;
++	if (WARN_ON_ONCE((key->block_begin >> BIO_PRISON_MAX_RANGE_SHIFT) !=
++			 (key->block_end - 1) >> BIO_PRISON_MAX_RANGE_SHIFT))
++		return false;
 +
-+static void check_range(struct dm_cell_key *key)
-+{
-+	BUG_ON(key->block_end - key->block_begin > BIO_PRISON_MAX_RANGE);
-+	BUG_ON((key->block_begin >> BIO_PRISON_MAX_RANGE_SHIFT) !=
-+	       ((key->block_end - 1) >> BIO_PRISON_MAX_RANGE_SHIFT));
-+}
-+
-+static int __bio_detain(struct rb_root *root,
++	return true;
+ }
++EXPORT_SYMBOL(dm_cell_key_has_valid_range);
+ 
+ static int __bio_detain(struct rb_root *root,
  			struct dm_cell_key *key,
- 			struct bio *inmate,
- 			struct dm_bio_prison_cell *cell_prealloc,
- 			struct dm_bio_prison_cell **cell_result)
+@@ -172,7 +177,6 @@ static int bio_detain(struct dm_bio_prison *prison,
  {
  	int r;
--	struct rb_node **new = &prison->cells.rb_node, *parent = NULL;
-+	struct rb_node **new = &root->rb_node, *parent = NULL;
+ 	unsigned l = lock_nr(key);
+-	check_range(key);
  
- 	while (*new) {
- 		struct dm_bio_prison_cell *cell =
-@@ -139,7 +159,7 @@ static int __bio_detain(struct dm_bio_prison *prison,
- 	*cell_result = cell_prealloc;
- 
- 	rb_link_node(&cell_prealloc->node, parent, new);
--	rb_insert_color(&cell_prealloc->node, &prison->cells);
-+	rb_insert_color(&cell_prealloc->node, root);
- 
- 	return 0;
- }
-@@ -151,10 +171,12 @@ static int bio_detain(struct dm_bio_prison *prison,
- 		      struct dm_bio_prison_cell **cell_result)
- {
- 	int r;
-+	unsigned l = lock_nr(key);
-+	check_range(key);
- 
--	spin_lock_irq(&prison->lock);
--	r = __bio_detain(prison, key, inmate, cell_prealloc, cell_result);
--	spin_unlock_irq(&prison->lock);
-+	spin_lock_irq(&prison->regions[l].lock);
-+	r = __bio_detain(&prison->regions[l].cell, key, inmate, cell_prealloc, cell_result);
-+	spin_unlock_irq(&prison->regions[l].lock);
- 
- 	return r;
- }
-@@ -181,11 +203,11 @@ EXPORT_SYMBOL_GPL(dm_get_cell);
- /*
-  * @inmates must have been initialised prior to this call
-  */
--static void __cell_release(struct dm_bio_prison *prison,
-+static void __cell_release(struct rb_root *root,
- 			   struct dm_bio_prison_cell *cell,
- 			   struct bio_list *inmates)
- {
--	rb_erase(&cell->node, &prison->cells);
-+	rb_erase(&cell->node, root);
- 
- 	if (inmates) {
- 		if (cell->holder)
-@@ -198,20 +220,22 @@ void dm_cell_release(struct dm_bio_prison *prison,
- 		     struct dm_bio_prison_cell *cell,
- 		     struct bio_list *bios)
- {
--	spin_lock_irq(&prison->lock);
--	__cell_release(prison, cell, bios);
--	spin_unlock_irq(&prison->lock);
-+	unsigned l = lock_nr(&cell->key);
-+
-+	spin_lock_irq(&prison->regions[l].lock);
-+	__cell_release(&prison->regions[l].cell, cell, bios);
-+	spin_unlock_irq(&prison->regions[l].lock);
- }
- EXPORT_SYMBOL_GPL(dm_cell_release);
- 
- /*
-  * Sometimes we don't want the holder, just the additional bios.
-  */
--static void __cell_release_no_holder(struct dm_bio_prison *prison,
-+static void __cell_release_no_holder(struct rb_root *root,
- 				     struct dm_bio_prison_cell *cell,
- 				     struct bio_list *inmates)
- {
--	rb_erase(&cell->node, &prison->cells);
-+	rb_erase(&cell->node, root);
- 	bio_list_merge(inmates, &cell->bios);
- }
- 
-@@ -219,11 +243,12 @@ void dm_cell_release_no_holder(struct dm_bio_prison *prison,
- 			       struct dm_bio_prison_cell *cell,
- 			       struct bio_list *inmates)
- {
-+	unsigned l = lock_nr(&cell->key);
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&prison->lock, flags);
--	__cell_release_no_holder(prison, cell, inmates);
--	spin_unlock_irqrestore(&prison->lock, flags);
-+	spin_lock_irqsave(&prison->regions[l].lock, flags);
-+	__cell_release_no_holder(&prison->regions[l].cell, cell, inmates);
-+	spin_unlock_irqrestore(&prison->regions[l].lock, flags);
- }
- EXPORT_SYMBOL_GPL(dm_cell_release_no_holder);
- 
-@@ -248,18 +273,19 @@ void dm_cell_visit_release(struct dm_bio_prison *prison,
- 			   void *context,
- 			   struct dm_bio_prison_cell *cell)
- {
--	spin_lock_irq(&prison->lock);
-+	unsigned l = lock_nr(&cell->key);
-+	spin_lock_irq(&prison->regions[l].lock);
- 	visit_fn(context, cell);
--	rb_erase(&cell->node, &prison->cells);
--	spin_unlock_irq(&prison->lock);
-+	rb_erase(&cell->node, &prison->regions[l].cell);
-+	spin_unlock_irq(&prison->regions[l].lock);
- }
- EXPORT_SYMBOL_GPL(dm_cell_visit_release);
- 
--static int __promote_or_release(struct dm_bio_prison *prison,
-+static int __promote_or_release(struct rb_root *root,
- 				struct dm_bio_prison_cell *cell)
- {
- 	if (bio_list_empty(&cell->bios)) {
--		rb_erase(&cell->node, &prison->cells);
-+		rb_erase(&cell->node, root);
- 		return 1;
- 	}
- 
-@@ -271,10 +297,11 @@ int dm_cell_promote_or_release(struct dm_bio_prison *prison,
- 			       struct dm_bio_prison_cell *cell)
- {
- 	int r;
-+	unsigned l = lock_nr(&cell->key);
- 
--	spin_lock_irq(&prison->lock);
--	r = __promote_or_release(prison, cell);
--	spin_unlock_irq(&prison->lock);
-+	spin_lock_irq(&prison->regions[l].lock);
-+	r = __promote_or_release(&prison->regions[l].cell, cell);
-+	spin_unlock_irq(&prison->regions[l].lock);
- 
- 	return r;
- }
+ 	spin_lock_irq(&prison->regions[l].lock);
+ 	r = __bio_detain(&prison->regions[l].cell, key, inmate, cell_prealloc, cell_result);
 diff --git a/drivers/md/dm-bio-prison-v1.h b/drivers/md/dm-bio-prison-v1.h
-index dfbf1e94cb75..0b8acd6708fb 100644
+index 0b8acd6708fb..2a097ed0d85e 100644
 --- a/drivers/md/dm-bio-prison-v1.h
 +++ b/drivers/md/dm-bio-prison-v1.h
-@@ -34,6 +34,16 @@ struct dm_cell_key {
- 	dm_block_t block_begin, block_end;
- };
+@@ -83,6 +83,11 @@ int dm_get_cell(struct dm_bio_prison *prison,
+ 		struct dm_bio_prison_cell *cell_prealloc,
+ 		struct dm_bio_prison_cell **cell_result);
  
 +/*
-+ * The range of a key (block_end - block_begin) must not
-+ * exceed BIO_PRISON_MAX_RANGE.  Also the range must not
-+ * cross a similarly sized boundary.
-+ *
-+ * Must be a power of 2.
++ * Returns false if key is beyond BIO_PRISON_MAX_RANGE or spans a boundary.
 + */
-+#define BIO_PRISON_MAX_RANGE 1024
-+#define BIO_PRISON_MAX_RANGE_SHIFT 10
++bool dm_cell_key_has_valid_range(struct dm_cell_key *key);
 +
  /*
-  * Treat this as opaque, only in header so callers can manage allocation
-  * themselves.
+  * An atomic op that combines retrieving or creating a cell, and adding a
+  * bio to it.
 diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index 00323428919e..33ad5695f959 100644
+index 33ad5695f959..2b13c949bd72 100644
 --- a/drivers/md/dm-thin.c
 +++ b/drivers/md/dm-thin.c
-@@ -1674,54 +1674,69 @@ static void break_up_discard_bio(struct thin_c *tc, dm_block_t begin, dm_block_t
- 	struct dm_cell_key data_key;
- 	struct dm_bio_prison_cell *data_cell;
- 	struct dm_thin_new_mapping *m;
--	dm_block_t virt_begin, virt_end, data_begin;
-+	dm_block_t virt_begin, virt_end, data_begin, data_end;
-+	dm_block_t len, next_boundary;
+@@ -118,25 +118,27 @@ enum lock_space {
+ 	PHYSICAL
+ };
  
- 	while (begin != end) {
--		r = ensure_next_mapping(pool);
--		if (r)
--			/* we did our best */
--			return;
--
- 		r = dm_thin_find_mapped_range(tc->td, begin, end, &virt_begin, &virt_end,
- 					      &data_begin, &maybe_shared);
--		if (r)
-+		if (r) {
- 			/*
- 			 * Silently fail, letting any mappings we've
- 			 * created complete.
- 			 */
- 			break;
--
--		build_key(tc->td, PHYSICAL, data_begin, data_begin + (virt_end - virt_begin), &data_key);
--		if (bio_detain(tc->pool, &data_key, NULL, &data_cell)) {
--			/* contention, we'll give up with this range */
--			begin = virt_end;
--			continue;
- 		}
- 
--		/*
--		 * IO may still be going to the destination block.  We must
--		 * quiesce before we can do the removal.
--		 */
--		m = get_next_mapping(pool);
--		m->tc = tc;
--		m->maybe_shared = maybe_shared;
--		m->virt_begin = virt_begin;
--		m->virt_end = virt_end;
--		m->data_block = data_begin;
--		m->cell = data_cell;
--		m->bio = bio;
-+		data_end = data_begin + (virt_end - virt_begin);
- 
- 		/*
--		 * The parent bio must not complete before sub discard bios are
--		 * chained to it (see end_discard's bio_chain)!
--		 *
--		 * This per-mapping bi_remaining increment is paired with
--		 * the implicit decrement that occurs via bio_endio() in
--		 * end_discard().
-+		 * Make sure the data region obeys the bio prison restrictions.
- 		 */
--		bio_inc_remaining(bio);
--		if (!dm_deferred_set_add_work(pool->all_io_ds, &m->list))
--			pool->process_prepared_discard(m);
-+		while (data_begin < data_end) {
-+			r = ensure_next_mapping(pool);
-+			if (r)
-+				return; /* we did our best */
+-static void build_key(struct dm_thin_device *td, enum lock_space ls,
++static bool build_key(struct dm_thin_device *td, enum lock_space ls,
+ 		      dm_block_t b, dm_block_t e, struct dm_cell_key *key)
+ {
+ 	key->virtual = (ls == VIRTUAL);
+ 	key->dev = dm_thin_dev_id(td);
+ 	key->block_begin = b;
+ 	key->block_end = e;
 +
-+			next_boundary = ((data_begin >> BIO_PRISON_MAX_RANGE_SHIFT) + 1)
-+				<< BIO_PRISON_MAX_RANGE_SHIFT;
-+			len = min_t(sector_t, data_end - data_begin, next_boundary - data_begin);
-+
-+			build_key(tc->td, PHYSICAL, data_begin, data_begin + len, &data_key);
-+			if (bio_detain(tc->pool, &data_key, NULL, &data_cell)) {
-+				/* contention, we'll give up with this range */
-+				data_begin += len;
-+				continue;
-+			}
-+
-+			/*
-+			 * IO may still be going to the destination block.  We must
-+			 * quiesce before we can do the removal.
-+			 */
-+			m = get_next_mapping(pool);
-+			m->tc = tc;
-+			m->maybe_shared = maybe_shared;
-+			m->virt_begin = virt_begin;
-+			m->virt_end = virt_begin + len;
-+			m->data_block = data_begin;
-+			m->cell = data_cell;
-+			m->bio = bio;
-+
-+			/*
-+			 * The parent bio must not complete before sub discard bios are
-+			 * chained to it (see end_discard's bio_chain)!
-+			 *
-+			 * This per-mapping bi_remaining increment is paired with
-+			 * the implicit decrement that occurs via bio_endio() in
-+			 * end_discard().
-+			 */
-+			bio_inc_remaining(bio);
-+			if (!dm_deferred_set_add_work(pool->all_io_ds, &m->list))
-+				pool->process_prepared_discard(m);
-+
-+			virt_begin += len;
-+			data_begin += len;
-+		}
- 
- 		begin = virt_end;
- 	}
-@@ -3380,13 +3395,13 @@ static int pool_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	 */
- 	if (pf.discard_enabled && pf.discard_passdown) {
- 		ti->num_discard_bios = 1;
--
- 		/*
- 		 * Setting 'discards_supported' circumvents the normal
- 		 * stacking of discard limits (this keeps the pool and
- 		 * thin devices' discard limits consistent).
- 		 */
- 		ti->discards_supported = true;
-+		ti->max_discard_granularity = true;
- 	}
- 	ti->private = pt;
- 
-@@ -4096,7 +4111,7 @@ static struct target_type pool_target = {
- 	.name = "thin-pool",
- 	.features = DM_TARGET_SINGLETON | DM_TARGET_ALWAYS_WRITEABLE |
- 		    DM_TARGET_IMMUTABLE,
--	.version = {1, 22, 0},
-+	.version = {1, 23, 0},
- 	.module = THIS_MODULE,
- 	.ctr = pool_ctr,
- 	.dtr = pool_dtr,
-@@ -4261,6 +4276,7 @@ static int thin_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	if (tc->pool->pf.discard_enabled) {
- 		ti->discards_supported = true;
- 		ti->num_discard_bios = 1;
-+		ti->max_discard_granularity = true;
- 	}
- 
- 	mutex_unlock(&dm_thin_pool_table.mutex);
-@@ -4476,12 +4492,12 @@ static void thin_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 		return;
- 
- 	limits->discard_granularity = pool->sectors_per_block << SECTOR_SHIFT;
--	limits->max_discard_sectors = 2048 * 1024 * 16; /* 16G */
-+	limits->max_discard_sectors = pool->sectors_per_block * BIO_PRISON_MAX_RANGE;
++	return dm_cell_key_has_valid_range(key);
  }
  
- static struct target_type thin_target = {
- 	.name = "thin",
--	.version = {1, 22, 0},
-+	.version = {1, 23, 0},
- 	.module	= THIS_MODULE,
- 	.ctr = thin_ctr,
- 	.dtr = thin_dtr,
+ static void build_data_key(struct dm_thin_device *td, dm_block_t b,
+ 			   struct dm_cell_key *key)
+ {
+-	build_key(td, PHYSICAL, b, b + 1llu, key);
++	(void) build_key(td, PHYSICAL, b, b + 1llu, key);
+ }
+ 
+ static void build_virtual_key(struct dm_thin_device *td, dm_block_t b,
+ 			      struct dm_cell_key *key)
+ {
+-	build_key(td, VIRTUAL, b, b + 1llu, key);
++	(void) build_key(td, VIRTUAL, b, b + 1llu, key);
+ }
+ 
+ /*----------------------------------------------------------------*/
+@@ -1702,7 +1704,8 @@ static void break_up_discard_bio(struct thin_c *tc, dm_block_t begin, dm_block_t
+ 				<< BIO_PRISON_MAX_RANGE_SHIFT;
+ 			len = min_t(sector_t, data_end - data_begin, next_boundary - data_begin);
+ 
+-			build_key(tc->td, PHYSICAL, data_begin, data_begin + len, &data_key);
++			/* This key is certainly within range given the above splitting */
++			(void) build_key(tc->td, PHYSICAL, data_begin, data_begin + len, &data_key);
+ 			if (bio_detain(tc->pool, &data_key, NULL, &data_cell)) {
+ 				/* contention, we'll give up with this range */
+ 				data_begin += len;
+@@ -1778,8 +1781,13 @@ static void process_discard_bio(struct thin_c *tc, struct bio *bio)
+ 		return;
+ 	}
+ 
+-	build_key(tc->td, VIRTUAL, begin, end, &virt_key);
+-	if (bio_detain(tc->pool, &virt_key, bio, &virt_cell))
++	if (unlikely(!build_key(tc->td, VIRTUAL, begin, end, &virt_key))) {
++		DMERR_LIMIT("Discard doesn't respect bio prison limits");
++		bio_endio(bio);
++		return;
++	}
++
++	if (bio_detain(tc->pool, &virt_key, bio, &virt_cell)) {
+ 		/*
+ 		 * Potential starvation issue: We're relying on the
+ 		 * fs/application being well behaved, and not trying to
+@@ -1788,6 +1796,7 @@ static void process_discard_bio(struct thin_c *tc, struct bio *bio)
+ 		 * cell will never be granted.
+ 		 */
+ 		return;
++	}
+ 
+ 	tc->pool->process_discard_cell(tc, virt_cell);
+ }
 -- 
 2.40.0
 
