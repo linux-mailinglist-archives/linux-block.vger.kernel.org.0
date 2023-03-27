@@ -2,70 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E93656CB246
-	for <lists+linux-block@lfdr.de>; Tue, 28 Mar 2023 01:24:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D1F6CB23C
+	for <lists+linux-block@lfdr.de>; Tue, 28 Mar 2023 01:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbjC0XYy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 27 Mar 2023 19:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36002 "EHLO
+        id S229456AbjC0XU2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 27 Mar 2023 19:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbjC0XYy (ORCPT
+        with ESMTP id S229512AbjC0XU1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 27 Mar 2023 19:24:54 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 251AFB3;
-        Mon, 27 Mar 2023 16:24:53 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id B26B51FD7B;
-        Mon, 27 Mar 2023 23:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1679959491;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WdlRcu20z+c7BKlEbocvqiEmoAKTJAqHgdWdlNpOixc=;
-        b=zqEYwHVYk/1fekJ/HfRUW6geAiD0HQfgg52m7TfK+G+8OrzgnjABDvWweuIvPB3HIwq5sY
-        cGO343iBWZAsAFJMItu8X286rPBFSoMJcSW/BfYxJi7AZJTGtoKE3B19g2Mmz6hjxaVoMo
-        IZNCfEwjbZWTLPIy9HPuRi7zufKKpoE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1679959491;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WdlRcu20z+c7BKlEbocvqiEmoAKTJAqHgdWdlNpOixc=;
-        b=K4g5C3QIXiicnrji11RJBHdEEg9C0358ty8j0k5lOA3D2CSdbOmpn+TgIo78Uwb6+4+1xr
-        DQ9aFhIMvev9AgBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7476C13482;
-        Mon, 27 Mar 2023 23:24:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id VaNrG8MlImTTZgAAMHmgww
-        (envelope-from <dsterba@suse.cz>); Mon, 27 Mar 2023 23:24:51 +0000
-Date:   Tue, 28 Mar 2023 01:18:37 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: move bio cgroup punting into btrfs
-Message-ID: <20230327231837.GK10580@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20230327004954.728797-1-hch@lst.de>
+        Mon, 27 Mar 2023 19:20:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449EAE8;
+        Mon, 27 Mar 2023 16:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=N+OyLrU+4A8jmyCdWo96SNdqUn8faLNMQEozoY+O+Rs=; b=tyGjobv4NzlVSK/Tg7qsKh4Ksx
+        siOpe2LW9dC6L/XowooMNSyqmPckCAW/9AoyV17Jhh1uVweMEb7HHxqau6/OCPwPAZ4WDb32DlnX0
+        9ZVR9Cs8zzJDO2QcaGxl6rqbwKWNpySy8rPPxVN780E/LA8kN6zo+jTC4Yu/ykWZbdMQD08/DCBfQ
+        LOp+tRH3LjPGrFtNpJ5mXXUIFBlLfqU2lxGcdE8cL55cPn8x+h+HRaNqc/jcLu2kKdkhaIisb93wS
+        ilLl72VLqZ8E4NZTCt8JjdXBUxoiUlfNUmRpM2sqUhZeJhceigOwBacX98sa4hPhVD57JOeM6QIwk
+        ZwT+UteA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1pgw8V-00CeAk-38;
+        Mon, 27 Mar 2023 23:20:23 +0000
+Date:   Mon, 27 Mar 2023 16:20:23 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        sth@linux.ibm.com, hoeppner@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: annotate bdev_disk_changed() deprecation with a
+ symbol namespace
+Message-ID: <ZCIkt3AnNSfvJH/G@infradead.org>
+References: <20230327184410.2881786-1-mcgrof@kernel.org>
+ <ZCIVx2UNN8VAWYAH@infradead.org>
+ <ZCIgavqUnw0Z3A3t@bombadil.infradead.org>
+ <ZCIiBHyrzDoTJPXT@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230327004954.728797-1-hch@lst.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <ZCIiBHyrzDoTJPXT@bombadil.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,17 +57,8 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 09:49:46AM +0900, Christoph Hellwig wrote:
-> Hi all,
-> 
-> the current code to offload bio submission into a cgroup-specific helper
-> thread when sent from the btrfs internal helper threads is a bit ugly.
-> 
-> This series moves it into btrfs with minimal interference in the core
-> code.
+On Mon, Mar 27, 2023 at 04:08:52PM -0700, Luis Chamberlain wrote:
+> BTW is anyone aware of similar exports which are stuck in this way?
 
-I can't speak for the cgroup side, but as btrfs is the only user of the
-REQ_CGROUP_PUNT flag pushing it down to the IO submission path makes
-sense. Code looks ok, it's a direct conversion.
-
-When the mm/block changes get an Ack I can put it to btrfs for-next.
+We have a few in fs code.   And there's thing like all kinds of very
+low-level code exported that absolutely should only be used by kvm.
