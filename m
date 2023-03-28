@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C5A36CC574
-	for <lists+linux-block@lfdr.de>; Tue, 28 Mar 2023 17:14:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 557E56CC5BF
+	for <lists+linux-block@lfdr.de>; Tue, 28 Mar 2023 17:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233952AbjC1PO1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 28 Mar 2023 11:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
+        id S233514AbjC1PRx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 28 Mar 2023 11:17:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232711AbjC1PN4 (ORCPT
+        with ESMTP id S233910AbjC1PR1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 28 Mar 2023 11:13:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB5710A9E
-        for <linux-block@vger.kernel.org>; Tue, 28 Mar 2023 08:12:44 -0700 (PDT)
+        Tue, 28 Mar 2023 11:17:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE247113D8
+        for <linux-block@vger.kernel.org>; Tue, 28 Mar 2023 08:15:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680016288;
+        s=mimecast20190719; t=1680016491;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2HaaAMVXBOU9npIKRCm63G2Jnf2K0Y8PRLMtIL+XBWM=;
-        b=Yq+2tCkTadSc6dbbFqixz5Yp6uEgYNuij72QAWUc4b9cHYzwQ38/59AeXyk/s18HF06g2s
-        lJlUHJzHqQoAUNN3b4a6WZ7s0JcxcmBk7MpGxS+LYmM/+iBwjopXkpS/1Qr9GBj/zwnhLC
-        6w5XbS1ChlRkrnkMANNRbyiL1tWMo1g=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-380-EKSnFKTlNW2-26zE5_Z4xw-1; Tue, 28 Mar 2023 11:11:23 -0400
-X-MC-Unique: EKSnFKTlNW2-26zE5_Z4xw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        bh=s89n5MVHIm/yrA8YFK9Xcfzas4VQ/6rU7DsLdSVa7Sk=;
+        b=Ds6iwItC+SYbDZE7jS0dA5hQ0PpLavdz0peV7NA963rnzl2bvASMB0XIVcQ4aiKbV6lKFd
+        2ygv8kowE83rcvNv0C1dMnrC3DMX/rW8EtQ57CLG1xjocp5FMUGEXCMZ3id5xfkgW9sRPU
+        SyeKeOTXuexLxO/65ZqHH8BbOqUHh8U=
+Received: from mimecast-mx02.redhat.com (66.187.233.88 [66.187.233.88]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-637-iqk6bV3lOzq66C24ZkXuIg-1; Tue, 28 Mar 2023 11:11:31 -0400
+X-MC-Unique: iqk6bV3lOzq66C24ZkXuIg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D375E38149CC;
-        Tue, 28 Mar 2023 15:11:21 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0D2D100DEAD;
+        Tue, 28 Mar 2023 15:11:25 +0000 (UTC)
 Received: from localhost (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E684D4020C83;
-        Tue, 28 Mar 2023 15:11:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D553C140EBF4;
+        Tue, 28 Mar 2023 15:11:24 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-block@vger.kernel.org
@@ -49,14 +49,14 @@ Cc:     linux-kernel@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V5 06/16] block: ublk_drv: add common exit handling
-Date:   Tue, 28 Mar 2023 23:09:48 +0800
-Message-Id: <20230328150958.1253547-7-ming.lei@redhat.com>
+Subject: [PATCH V5 07/16] block: ublk_drv: don't consider flush request in map/unmap io
+Date:   Tue, 28 Mar 2023 23:09:49 +0800
+Message-Id: <20230328150958.1253547-8-ming.lei@redhat.com>
 In-Reply-To: <20230328150958.1253547-1-ming.lei@redhat.com>
 References: <20230328150958.1253547-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
@@ -67,60 +67,48 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Simplify exit handling a bit, and prepare for supporting fused command.
+There isn't data in request of REQ_OP_FLUSH always, so don't consider
+it in both ublk_map_io() and ublk_unmap_io().
 
 Reviewed-by: Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/block/ublk_drv.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index c73cc57ec547..bc46616710d4 100644
+index bc46616710d4..c73b2dba25ce 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -655,14 +655,15 @@ static void ublk_complete_rq(struct request *req)
- 	struct ublk_queue *ubq = req->mq_hctx->driver_data;
- 	struct ublk_io *io = &ubq->ios[req->tag];
- 	unsigned int unmapped_bytes;
-+	blk_status_t res = BLK_STS_OK;
- 
- 	/* failed read IO if nothing is read */
- 	if (!io->res && req_op(req) == REQ_OP_READ)
- 		io->res = -EIO;
- 
- 	if (io->res < 0) {
--		blk_mq_end_request(req, errno_to_blk_status(io->res));
--		return;
-+		res = errno_to_blk_status(io->res);
-+		goto exit;
+@@ -529,15 +529,13 @@ static int ublk_map_io(const struct ublk_queue *ubq, const struct request *req,
+ 		struct ublk_io *io)
+ {
+ 	const unsigned int rq_bytes = blk_rq_bytes(req);
++
+ 	/*
+ 	 * no zero copy, we delay copy WRITE request data into ublksrv
+ 	 * context and the big benefit is that pinning pages in current
+ 	 * context is pretty fast, see ublk_pin_user_pages
+ 	 */
+-	if (req_op(req) != REQ_OP_WRITE && req_op(req) != REQ_OP_FLUSH)
+-		return rq_bytes;
+-
+-	if (ublk_rq_has_data(req)) {
++	if (ublk_rq_has_data(req) && req_op(req) == REQ_OP_WRITE) {
+ 		struct ublk_map_data data = {
+ 			.ubq	=	ubq,
+ 			.rq	=	req,
+@@ -774,9 +772,7 @@ static inline void __ublk_rq_task_work(struct request *req,
+ 		return;
  	}
  
- 	/*
-@@ -671,10 +672,8 @@ static void ublk_complete_rq(struct request *req)
- 	 *
- 	 * Both the two needn't unmap.
- 	 */
--	if (req_op(req) != REQ_OP_READ && req_op(req) != REQ_OP_WRITE) {
--		blk_mq_end_request(req, BLK_STS_OK);
--		return;
--	}
-+	if (req_op(req) != REQ_OP_READ && req_op(req) != REQ_OP_WRITE)
-+		goto exit;
- 
- 	/* for READ request, writing data in iod->addr to rq buffers */
- 	unmapped_bytes = ublk_unmap_io(ubq, req, io);
-@@ -691,6 +690,10 @@ static void ublk_complete_rq(struct request *req)
- 		blk_mq_requeue_request(req, true);
- 	else
- 		__blk_mq_end_request(req, BLK_STS_OK);
-+
-+	return;
-+exit:
-+	blk_mq_end_request(req, res);
- }
- 
- /*
+-	if (ublk_need_get_data(ubq) &&
+-			(req_op(req) == REQ_OP_WRITE ||
+-			req_op(req) == REQ_OP_FLUSH)) {
++	if (ublk_need_get_data(ubq) && (req_op(req) == REQ_OP_WRITE)) {
+ 		/*
+ 		 * We have not handled UBLK_IO_NEED_GET_DATA command yet,
+ 		 * so immepdately pass UBLK_IO_RES_NEED_GET_DATA to ublksrv
 -- 
 2.39.2
 
