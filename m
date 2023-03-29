@@ -2,243 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 602566CECF1
-	for <lists+linux-block@lfdr.de>; Wed, 29 Mar 2023 17:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F0806CECAE
+	for <lists+linux-block@lfdr.de>; Wed, 29 Mar 2023 17:21:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjC2PcI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 Mar 2023 11:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39772 "EHLO
+        id S229694AbjC2PV2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 Mar 2023 11:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230372AbjC2Pby (ORCPT
+        with ESMTP id S229501AbjC2PV1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 Mar 2023 11:31:54 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF0D40CA
-        for <linux-block@vger.kernel.org>; Wed, 29 Mar 2023 08:31:52 -0700 (PDT)
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230329153149epoutp021909e465b653ff1c43e8d0d73855e276~Q7ZrAJEH_2847128471epoutp02v
-        for <linux-block@vger.kernel.org>; Wed, 29 Mar 2023 15:31:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230329153149epoutp021909e465b653ff1c43e8d0d73855e276~Q7ZrAJEH_2847128471epoutp02v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1680103909;
-        bh=0CtoX3v/W4RKFaDOc3LBzA7OjTHP1VSVjXB8jFz9GoE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EtoLdu5vwxx2HZ8aBliIx2FLkrTfNki6mKPYVnQVtcWPVKJe69h2Sq17wcz57sOmf
-         B7UfkErwSLNGi6kuJSeGvOqfDYKpPvloVM3XGHNWicPQ3USwamEQoS2NzFi4vAtp1P
-         ShJhTTQYtl5oYqW2azD5BkXotv4iRslzJCXnVKDM=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20230329153149epcas5p437b54757fee362a3440d07c08a7ae3b7~Q7ZqaDJ5R2635826358epcas5p4H;
-        Wed, 29 Mar 2023 15:31:49 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4PmrBW2pdLz4x9Pt; Wed, 29 Mar
-        2023 15:31:47 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E6.DD.10528.3E954246; Thu, 30 Mar 2023 00:31:47 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230329124320epcas5p10454736bde745b4de754fd513bca7b30~Q5GjozHU20813008130epcas5p1E;
-        Wed, 29 Mar 2023 12:43:20 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230329124320epsmtrp2200bdf3aadaa5cb7c5c9dc4ecf4954ab~Q5GjnsrBH2573425734epsmtrp2U;
-        Wed, 29 Mar 2023 12:43:20 +0000 (GMT)
-X-AuditID: b6c32a49-e75fa70000012920-d0-642459e3764d
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D0.58.18071.86234246; Wed, 29 Mar 2023 21:43:20 +0900 (KST)
-Received: from green5 (unknown [107.110.206.5]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20230329124316epsmtip2a58f2078f77962c21ecbb6192f187e71~Q5GgnZnR_1265312653epsmtip2e;
-        Wed, 29 Mar 2023 12:43:16 +0000 (GMT)
-Date:   Wed, 29 Mar 2023 18:12:36 +0530
-From:   Nitesh Shetty <nj.shetty@samsung.com>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Anuj Gupta <anuj20.g@samsung.com>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        James Smart <james.smart@broadcom.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, bvanassche@acm.org,
-        hare@suse.de, ming.lei@redhat.com,
-        damien.lemoal@opensource.wdc.com, joshi.k@samsung.com,
-        nitheshshetty@gmail.com, gost.dev@samsung.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v8 4/9] fs, block: copy_file_range for def_blk_ops for
- direct block device.
-Message-ID: <20230329124236.GB3895@green5>
+        Wed, 29 Mar 2023 11:21:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837119E
+        for <linux-block@vger.kernel.org>; Wed, 29 Mar 2023 08:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680103241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8QfBEWZaETqXKkNIZWe2Rgfoz5A0Mz2yy7ZiCrKeUrk=;
+        b=cYk8FeP5rFo2BuKC0+lN4n356AJyMydQTwE/1xE8VcJR00QcS1/FErsz2o9Oczd/yJMofZ
+        3lkzTKtJ8y+ZzXak5mNV6QiFwJHJJSuGC6kXSs+Bis3uPH3E2Bl2vDVU4IojARvCOD4iKY
+        fKjdxNbdusVsNuDv3NPMDtcyH4Dru3M=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-xtRa4GCUNUyO3ghhxR7IJA-1; Wed, 29 Mar 2023 11:20:32 -0400
+X-MC-Unique: xtRa4GCUNUyO3ghhxR7IJA-1
+Received: by mail-ed1-f71.google.com with SMTP id i42-20020a0564020f2a00b004fd23c238beso22847268eda.0
+        for <linux-block@vger.kernel.org>; Wed, 29 Mar 2023 08:20:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680103231;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8QfBEWZaETqXKkNIZWe2Rgfoz5A0Mz2yy7ZiCrKeUrk=;
+        b=UnnqqXMc1Fp9oIADb4tVK8pexvZxi7iYvUoHZOf/VqmK04YAxc7EwMgzWwTL9GZKXX
+         hrWhKa7cELeFuIf4oQK8EZm1WWIkptm3EwYpNmUT6SkqXFAM2ELHcG4Chdo6No/KNirR
+         nyfIWLKv4EJTgt8LqG7l3Rvc2ceWxf5lvhgIR3A4RLL5NBua11/rd2szBxmhFoQhAcVQ
+         3gJdPrBJH/dOrYndEBlWpEMFXlek3UXBRU+FrF2GgZgJ26oh76U1nklfJ3RUSwB/ZrcF
+         /DmZhFWnUl2DcH//qCjFTLUD9J9A0vt/bp794tMkzihWRE9EYmR7PGZX8z7Q4spg7IHv
+         XJWw==
+X-Gm-Message-State: AAQBX9fvfgiJZopTofgvGdXiHs4xC0RSIgvROWbbCtJInl3OYxNt7Sj7
+        yS/Hqx9ky0PeYeesVk6oXt9vwMp9OHtFdLz6O10VUZa3OtvSKICnmsTiC7VlKEEvBuc7fi68Xr/
+        1BstE88W9IjGhj7y0WwbLYQ==
+X-Received: by 2002:a05:6402:70a:b0:4fb:9b54:ccb8 with SMTP id w10-20020a056402070a00b004fb9b54ccb8mr19963098edx.21.1680103231325;
+        Wed, 29 Mar 2023 08:20:31 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZIDq5cbD4oxWGT+bxHeC8eCeDrmTmHS2bporzQleFYwRv0FroOOgbBgNfZL6B5UYLBTBOzQQ==
+X-Received: by 2002:a05:6402:70a:b0:4fb:9b54:ccb8 with SMTP id w10-20020a056402070a00b004fb9b54ccb8mr19963077edx.21.1680103231077;
+        Wed, 29 Mar 2023 08:20:31 -0700 (PDT)
+Received: from [10.43.17.42] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id y94-20020a50bb67000000b004be11e97ca2sm17165261ede.90.2023.03.29.08.20.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Mar 2023 08:20:30 -0700 (PDT)
+Message-ID: <a2ce079f-f3de-9bf1-5cd0-ec3045a25168@redhat.com>
+Date:   Wed, 29 Mar 2023 17:20:29 +0200
 MIME-Version: 1.0
-In-Reply-To: <20230329-glitter-drainpipe-bdf9d3876ac4@brauner>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTZxjG853Tnh5cuh0B40c7pVSQCXKpK91hA2HTsEMkGY4EM5asNvQI
-        ld7Wy3RAMlBgwQSvk8SKsxLDEAQmt3GrSInjFmCTW0A7tlmGg1BuBjTcVjhl8b/f+7zP873f
-        JR+Oups4PFyhNtA6tUwpxHaw6tsP+Ac9/8JXHloySZBV3b+i5LnLayhZbruEkdPtC4AsnHuN
-        kiu9/Shpcdxkk6OPGhGypfgqQt4rf4yQzXfmEfLxxgxGXrUOA3JiyISQlrFAssXSxSIHmoow
-        8nbJBIe0XjuPkA32bEBWTs+yyM4xPtm/1sGO3k0NDB6jTOO9GNVosnGo/j8esKiBXiNVXZaP
-        UTV3v6OaR7MwquC8w2nIHWdTsw+HMOpibRmganoyqMXqvVS1fQaJfycpLSKVlslpnYBWJ2vk
-        CnVKpPBYgvSINEwSKgoShZMfCAVqmYqOFB6Niw+KUSidVyAUfCNTGp1SvEyvF4YcjtBpjAZa
-        kKrRGyKFtFau1Iq1wXqZSm9UpwSracOHotDQQ2FO48m01HVbBUf7u/fZxVtTrCxQ73UBuOGQ
-        EMPpATtyAezA3YlmANf7yjGmWADwSUUdyhRLAI5NjbK2IwV1eYBpWABsHxlhMYUdwMqlfvam
-        i0X4wYmOV844jmNEIOzZwDdlTyIAniue35qHEmY2vJE7iWw2PAgZbLlZBjaZ6zStTXayGN4J
-        u27Yt9iNOAxvvRjibPIuYh98VN+xtRAkqtzgz3n1HGZ7R2FbaxHGsAec6qh16Ty46LC49DPw
-        3g+lGBPOAdA0YgJMIwrmdl9CNxklFPBZ/oYrsAde765EGP1tWLBiRxidCxt+3OZ98H6V2eX3
-        gsPL2S6mYH+T2XWr8wDeKcpDLgNv0xunM70xj+GD0Ny84GTcyXz40zrO4AFY1RRiBuwy4EVr
-        9aoUWh+mFanpM/+/ebJGVQ22PklAbAOw/TkXbAUIDqwA4qjQk7syLJS7c+Wyb9NpnUaqMypp
-        vRWEOV/rCsrblaxx/jK1QSoSh4eKJRKJOPx9iUi4m+sf2ZXsTqTIDHQaTWtp3XYOwd14WYhP
-        XE7S8bLAj5fzTT4tmePecRECztDXrf57BCWRqrwHF/2CQPpHE4nRrHILnzvelNCVo08/cuK5
-        zTCofZoeE1sxXp2InKr1ezfkVN+0Fp0r+GyyRb6Y0VwYk+lfeppfTredtbu/EvT4SCuxyr5r
-        tz3jX6ocQbJVji9fMnM8yVD4z/6VxNmZzIN5nZ8MmmrqUw5F+eGtyxlDf/v+1RZf1WJ99q+i
-        7ulq/JLDh90kiS4uNb7cW5b9RK90eHyqMssffh7l/VXiTmnA9USt6dJ92xyP79/N9kzAzd83
-        wuLRL3+br3k9yFt578VJyVyWWLyasN8t9hfpibdOF91dLVnw98AUQpY+VSYKQHV62X/1GOH8
-        rQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Re0hTYRiH+845OzuuRseV7SvLahWYkjrL+LpHN490JcJqXXS2g2abypbZ
-        hWi5LLS8pBA4k3KItQladtvSWUxzmukKm5VQgmhmm25W0EVmuY2o/358z/N73xc+Chf0ELOo
-        o2nHWWWaVC4iecTDJtHcJSnRC2VRBSMEqn3egqPsIg+Oqt8XksjR9AWga+6fOBrrsOHIPFLG
-        Qe+emjDUoCvGkL76GYbqK0Yx9Oz3MImKLd0ADdi1GDL3hKMGcxuBuh5fJ9GNqgEuspRoMGTs
-        Pw9QjcNFoNaeYGTzWDnrhUzX662MtreDZEza91zG9uEuwXR1ZDJ1hlySuVd5jql/pyaZfM3I
-        hJDTy2FcjXaSKbhvAMy99jPM17oQpq5/GNs1VcJbLWPlR0+wysi1ibyUGmsfkVEw56S5twFT
-        gyvCPBBAQXoZzH9wEeQBHiWg6wE0OdoJP5gJqzzNuD9Pg/rxQa5f6gOw0/TBBwh6ERyw/pjI
-        FEXS4bD9N+V9nk6HwWzdKOb1cVrHgervRVwvmEZLYUOZAXgzf0LyDLYS/qGjAJZV5uB+EAjb
-        Svt9V+AT0tvxIcy7AKeD4a1x34IAei0s/2T3zQyiF8CnD61YEQjU/tfW/tfW/mvfBLgBzGQz
-        VIpkhUqcIU5jsyJUUoUqMy054ki6og74vj9ssRE8MrgjLACjgAVAChdN5491i2QCvkx66jSr
-        TE9QZspZlQUEU4RIyH+Z15YgoJOlx9ljLJvBKv9SjAqYpcZOeeIyw2HzjgMzeGGTpkpsFyI/
-        1airS+QbUby4LcjddJtOYKNNWvdVW+IC6fqLP2zOocrFHcXqXOOj9E3CEuHopU2S2Hxe1Mop
-        FTk6zTdnpFPu7MuxXioPjVq+4nKUImb73kT78OvJs1sC95V9rzQ5s2Rxuj2SQ7UpSbuNEpi9
-        Des8sI6OjovRWyvGu0I3l3LKm2nxYPeL9qRVGit9NqRYQRmZ/KQQR+r+nV9p7hTqYOodQUHs
-        JHt8/fzqz8KPJ1zRM+w/K95sYzqVrkK9dn+rw2GPeeJK5b5a9mukT1PaEnt6du7nyfeHNpht
-        S9cEKTby5z3POrxi5dgWQDU2ighVilQchitV0j8NAO+/bQMAAA==
-X-CMS-MailID: 20230329124320epcas5p10454736bde745b4de754fd513bca7b30
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----KU2CxbTk4.ftA7vvsvzLW4bt.-m_7jRTbTuK1k18jgDVn8pS=_11875f_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230327084244epcas5p1b0ede867e558ff6faf258de3656a8aa4
-References: <20230327084103.21601-1-anuj20.g@samsung.com>
-        <CGME20230327084244epcas5p1b0ede867e558ff6faf258de3656a8aa4@epcas5p1.samsung.com>
-        <20230327084103.21601-5-anuj20.g@samsung.com>
-        <20230329-glitter-drainpipe-bdf9d3876ac4@brauner>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Content-Language: en-US
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     linux-block@vger.kernel.org, bluca@debian.org, gmazyland@gmail.com,
+        axboe@kernel.dk, hch@infradead.org, jonathan.derrick@linux.dev
+References: <20230322151604.401680-1-okozina@redhat.com>
+ <20230322151604.401680-2-okozina@redhat.com>
+ <20230329-amendment-trodden-75a619120b5e@brauner>
+From:   Ondrej Kozina <okozina@redhat.com>
+Subject: Re: [PATCH 1/5] sed-opal: do not add user authority twice in boolean
+ ace.
+In-Reply-To: <20230329-amendment-trodden-75a619120b5e@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------KU2CxbTk4.ftA7vvsvzLW4bt.-m_7jRTbTuK1k18jgDVn8pS=_11875f_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-
-On Wed, Mar 29, 2023 at 02:14:40PM +0200, Christian Brauner wrote:
-> On Mon, Mar 27, 2023 at 02:10:52PM +0530, Anuj Gupta wrote:
-> > From: Nitesh Shetty <nj.shetty@samsung.com>
-> > 
-> > For direct block device opened with O_DIRECT, use copy_file_range to
-> > issue device copy offload, and fallback to generic_copy_file_range incase
-> > device copy offload capability is absent.
-> > Modify checks to allow bdevs to use copy_file_range.
-> > 
-> > Suggested-by: Ming Lei <ming.lei@redhat.com>
-> > Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-> > Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> > ---
-> >  block/blk-lib.c        | 22 ++++++++++++++++++++++
-> >  block/fops.c           | 20 ++++++++++++++++++++
-> >  fs/read_write.c        | 11 +++++++++--
-> >  include/linux/blkdev.h |  3 +++
-> >  4 files changed, 54 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/block/blk-lib.c b/block/blk-lib.c
-> > index a21819e59b29..c288573c7e77 100644
-> > --- a/block/blk-lib.c
-> > +++ b/block/blk-lib.c
-> > @@ -475,6 +475,28 @@ static inline bool blk_check_copy_offload(struct request_queue *q_in,
-> >  	return blk_queue_copy(q_in) && blk_queue_copy(q_out);
-> >  }
-> >  
-> > +int blkdev_copy_offload(struct block_device *bdev_in, loff_t pos_in,
-> > +		      struct block_device *bdev_out, loff_t pos_out, size_t len,
-> > +		      cio_iodone_t end_io, void *private, gfp_t gfp_mask)
-> > +{
-> > +	struct request_queue *in_q = bdev_get_queue(bdev_in);
-> > +	struct request_queue *out_q = bdev_get_queue(bdev_out);
-> > +	int ret = -EINVAL;
+On 29. 03. 23 16:15, Christian Brauner wrote:
+> On Wed, Mar 22, 2023 at 04:16:00PM +0100, Ondrej Kozina wrote:
 > 
-> Why initialize to -EINVAL if blk_copy_sanity_check() initializes it
-> right away anyway?
+> This index only appears one time in the code. IOW, you're completely
+> removing OPAL_HALF_UID_BOOLEAN_ACE leavig only
+> OPAL_HALF_UID_AUTHORITY_OBJ_REF. Is that intended and if so why is
+> OPAL_HALF_UID_BOOLEAN_ACE not needed anymore?
 > 
 
-acked.
+It seemed redundant when only single authority is added in the set 
+method aka { authority1, authority1, OR }:
 
-> > +	bool offload = false;
-> 
-> Same thing with initializing offload.
-> 
-acked
+TCG Storage Architecture Core Specification, 5.1.3.3 ACE_expression
 
-> > +
-> > +	ret = blk_copy_sanity_check(bdev_in, pos_in, bdev_out, pos_out, len);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	offload = blk_check_copy_offload(in_q, out_q);
-> > +	if (offload)
-> > +		ret = __blk_copy_offload(bdev_in, pos_in, bdev_out, pos_out,
-> > +				len, end_io, private, gfp_mask);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(blkdev_copy_offload);
-> > +
-> >  /*
-> >   * @bdev_in:	source block device
-> >   * @pos_in:	source offset
-> > diff --git a/block/fops.c b/block/fops.c
-> > index d2e6be4e3d1c..3b7c05831d5c 100644
-> > --- a/block/fops.c
-> > +++ b/block/fops.c
-> > @@ -611,6 +611,25 @@ static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> >  	return ret;
-> >  }
-> >  
-> > +static ssize_t blkdev_copy_file_range(struct file *file_in, loff_t pos_in,
-> > +				struct file *file_out, loff_t pos_out,
-> > +				size_t len, unsigned int flags)
-> > +{
-> > +	struct block_device *in_bdev = I_BDEV(bdev_file_inode(file_in));
-> > +	struct block_device *out_bdev = I_BDEV(bdev_file_inode(file_out));
-> > +	int comp_len = 0;
-> > +
-> > +	if ((file_in->f_iocb_flags & IOCB_DIRECT) &&
-> > +		(file_out->f_iocb_flags & IOCB_DIRECT))
-> > +		comp_len = blkdev_copy_offload(in_bdev, pos_in, out_bdev,
-> > +				 pos_out, len, NULL, NULL, GFP_KERNEL);
-> > +	if (comp_len != len)
-> > +		comp_len = generic_copy_file_range(file_in, pos_in + comp_len,
-> > +			file_out, pos_out + comp_len, len - comp_len, flags);
-> 
-> I'm not deeply familiar with this code but this looks odd. It at least
-> seems possible that comp_len could be -EINVAL and len 20 at which point
-> you'd be doing len - comp_len aka 20 - 22 = -2 in generic_copy_file_range().
+"This is an alternative type where the options are either a uidref to an 
+Authority object or one of the boolean_ACE (AND = 0 and OR = 1) options. 
+This type is used within the AC_element list to form a postfix Boolean 
+expression of Authorities."
 
-comp_len should be 0 incase of error. We do agree, some function
-description needs to be updated. We will recheck this completion path to
-make sure not to return negative value, incase of failure.
+I add OPAL_HALF_UID_BOOLEAN_ACE when there's more than single authority 
+added in any ACE_expression in later code.
 
-Thank You,
-Nitesh Shetty
-
-------KU2CxbTk4.ftA7vvsvzLW4bt.-m_7jRTbTuK1k18jgDVn8pS=_11875f_
-Content-Type: text/plain; charset="utf-8"
-
-
-------KU2CxbTk4.ftA7vvsvzLW4bt.-m_7jRTbTuK1k18jgDVn8pS=_11875f_--
