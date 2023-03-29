@@ -2,115 +2,113 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A258C6CD5C2
-	for <lists+linux-block@lfdr.de>; Wed, 29 Mar 2023 11:02:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22C3F6CD5CF
+	for <lists+linux-block@lfdr.de>; Wed, 29 Mar 2023 11:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbjC2JCO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 29 Mar 2023 05:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59998 "EHLO
+        id S230385AbjC2JC6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 29 Mar 2023 05:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229795AbjC2JCM (ORCPT
+        with ESMTP id S230391AbjC2JCx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 29 Mar 2023 05:02:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE0FA4C16
-        for <linux-block@vger.kernel.org>; Wed, 29 Mar 2023 02:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680080448;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XUlNULMH9WDHyEuNy5Y9np3GCzRd3b+Uq3KsaeRBTfA=;
-        b=LZZIEUMgNpQdh63ezetUpR2MNPXCtrCjdoBPqPRbiY1+yzf5G1PCT5/PqLTuOsXzWPKdJF
-        zPjr6WuSsUmfhkMXWGUSCocaqVYlEX1YBOtJpeGDacNF3cxCUL6FBtrSaRcINq4fsPJSzK
-        vVXGxGu3TNaItKs4Yjk6wuOo3SBBvnw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-190-qcHCf6lbPsqMnhLn9hmC6Q-1; Wed, 29 Mar 2023 05:00:44 -0400
-X-MC-Unique: qcHCf6lbPsqMnhLn9hmC6Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 29 Mar 2023 05:02:53 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918FE4694
+        for <linux-block@vger.kernel.org>; Wed, 29 Mar 2023 02:02:27 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 38BF88028B3;
-        Wed, 29 Mar 2023 09:00:44 +0000 (UTC)
-Received: from ovpn-8-26.pek2.redhat.com (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 20A9EC15BA0;
-        Wed, 29 Mar 2023 09:00:36 +0000 (UTC)
-Date:   Wed, 29 Mar 2023 17:00:31 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
-        Bernd Schubert <bschubert@ddn.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        io-uring@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Dan Williams <dan.j.williams@intel.com>, ming.lei@redhat.com
-Subject: Re: [PATCH V5 16/16] block: ublk_drv: apply io_uring FUSED_CMD for
- supporting zero copy
-Message-ID: <ZCP+L0ADCxHo5vSg@ovpn-8-26.pek2.redhat.com>
-References: <20230328150958.1253547-1-ming.lei@redhat.com>
- <20230328150958.1253547-17-ming.lei@redhat.com>
- <2e3c20e0-a0be-eaf3-b288-c3c8fa31d1fa@linux.alibaba.com>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 69643219CD;
+        Wed, 29 Mar 2023 09:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1680080524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=hstRHPtrpOcBlDp6LFA5+2lp7rWbV1Gd9Ha/HQ48ZkE=;
+        b=gqvQ8h3hheao6ZnLNIfd3R/CEtQWEajlUXrKx/d+uo5WacjhxYTA8zTgYWNBqe1pVtT1lD
+        GyiHh/YCcyF78Y2uymbYpIRDStTIf5ACHD/6LL6nHtx4osYQEzTnJggh7Ic8AYjvEmiVUe
+        7wUzoymV9oPWHTi5x4VOsXVz1dRLzS0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1680080524;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=hstRHPtrpOcBlDp6LFA5+2lp7rWbV1Gd9Ha/HQ48ZkE=;
+        b=VuB1TsVIb0+xkHqgyxuBrY7uOB39g3nC3jfFW16iIuzUTrtEw6Sr2vU3eRb8q+780xCls8
+        dufmKkqDnVPGC8Cw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5CAD1138FF;
+        Wed, 29 Mar 2023 09:02:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id xqmWFoz+I2RRdgAAMHmgww
+        (envelope-from <dwagner@suse.de>); Wed, 29 Mar 2023 09:02:04 +0000
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-block@vger.kernel.org
+Cc:     linux-nvme@lists.infradead.org,
+        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH blktests v3 0/4] Test different queue types
+Date:   Wed, 29 Mar 2023 11:01:58 +0200
+Message-Id: <20230329090202.8351-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e3c20e0-a0be-eaf3-b288-c3c8fa31d1fa@linux.alibaba.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 10:57:53AM +0800, Ziyang Zhang wrote:
-> On 2023/3/28 23:09, Ming Lei wrote:
-> > Apply io_uring fused command for supporting zero copy:
-> > 
-> 
-> [...]
-> 
-> >  
-> > @@ -1374,7 +1533,12 @@ static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
-> >  	if (!ubq || ub_cmd->q_id != ubq->q_id)
-> >  		goto out;
-> >  
-> > -	if (ubq->ubq_daemon && ubq->ubq_daemon != current)
-> > +	/*
-> > +	 * The fused command reads the io buffer data structure only, so it
-> > +	 * is fine to be issued from other context.
-> > +	 */
-> > +	if ((ubq->ubq_daemon && ubq->ubq_daemon != current) &&
-> > +			(cmd_op != UBLK_IO_FUSED_SUBMIT_IO))
-> >  		goto out;
-> >  
-> 
-> Hi Ming,
-> 
-> What is your use case that fused io_uring cmd is issued from another thread?
-> I think it is good practice to operate one io_uring instance in one thread
-> only.
+Setup different queues, e.g. read and poll queues.
 
-So far we limit io command has to be issued from the queue context,
-which is still not friendly from userspace viewpoint, the reason is
-that we can't get io_uring exit notification and ublk's use case is
-very special since the queued io command may not be completed forever,
-see:
+As discussed I introduced a _require_nvme_trtype() function to limit the test to
+tcp and rdma. I've upated the existing _require_nvme_type_is_*() checks to
+explicit transport checks.
 
-https://lore.kernel.org/linux-fsdevel/ZBxTdCj60+s1aZqA@ovpn-8-16.pek2.redhat.com/
+Test run against current nvme-6.4 but it still needs patch #3 from [1] to
+survive.
 
-I remember that people raised concern about this implementation.
+[1] https://lore.kernel.org/linux-nvme/20230322002350.4038048-1-kbusch@meta.com/
 
-But for normal IO, it could be issued from io wq simply because of
-link(dependency) or whatever, and userspace is still allowed to submit
-io from another pthread via same io_uring ctx.
+changes:
+ v3:
+   - added _require_nvme_trtype() 
+   - updated test requirement checks
+   - replaced double shift instructions with 'shift 2'
+   - updated license type
+   - added FAIL checks
+ v2:
+   - make most arguements optional for _nvme_connect_subsys
+   - move variable decleration at the beging of _nvme_connect_subsy
+ v1:
+   - initial version
 
+Daniel Wagner (4):
+  nvme/rc: Parse optional arguments in _nvme_connect_subsys()
+  nvme/rc: Add nr queue parser arguments to _nvme_connect_subsys()
+  nvme/rc: Add parametric transport required check
+  nvme/047: Test different queue types for fabrics transports
 
-thanks,
-Ming
+ tests/nvme/041     |   7 ++-
+ tests/nvme/042     |  10 +++--
+ tests/nvme/043     |  10 +++--
+ tests/nvme/044     |  23 ++++++----
+ tests/nvme/045     |   6 ++-
+ tests/nvme/047     |  66 +++++++++++++++++++++++++++++
+ tests/nvme/047.out |   2 +
+ tests/nvme/rc      | 103 +++++++++++++++++++++++++++++++++++++++------
+ 8 files changed, 194 insertions(+), 33 deletions(-)
+ create mode 100755 tests/nvme/047
+ create mode 100644 tests/nvme/047.out
+
+-- 
+2.40.0
 
