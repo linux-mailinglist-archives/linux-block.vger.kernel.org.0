@@ -2,176 +2,139 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A09D66D110E
-	for <lists+linux-block@lfdr.de>; Thu, 30 Mar 2023 23:50:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE6A56D1223
+	for <lists+linux-block@lfdr.de>; Fri, 31 Mar 2023 00:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbjC3VuB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 30 Mar 2023 17:50:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35894 "EHLO
+        id S229733AbjC3WaA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 30 Mar 2023 18:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbjC3VuA (ORCPT
+        with ESMTP id S230339AbjC3W37 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 30 Mar 2023 17:50:00 -0400
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD731C173
-        for <linux-block@vger.kernel.org>; Thu, 30 Mar 2023 14:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1680212999; x=1711748999;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xYblPRkRhwhAWF1bO7/SwUc4kG1uyGLgsuO6Org0QAw=;
-  b=UhcsIC1lCnNxbIitYuZyUP8qRxQ6fzSfCGSIz6GkB0YAxVzRDXnVESRS
-   8RKAUnnljLiqNGElxCJ2Id/nfWvrWk+ZmtZKwJ7hITw44ANkag11wh9O3
-   0oNpMnaLlNiBuIxv2D10upIEIzBHIXTFfWEFkFkM5mjS7ez86rdB7YVUs
-   WHGZh0UeAkp1xvSmm4cqCGwzYpE6erwAnRxHSh3U7n5pVsRijf3lB8ZMS
-   ATOKELcgPFsIhtyWZ9Gor4vzx6NAh6kGhN2/vnxgktNcKKecvB6CZchtm
-   Hl2eyQyO0+nM80H3dRIb9G5LQQm7sW8g3B0+FDlDend/SCyE31CGncKdk
-   A==;
-X-IronPort-AV: E=Sophos;i="5.98,306,1673884800"; 
-   d="scan'208";a="331371075"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Mar 2023 05:49:59 +0800
-IronPort-SDR: aSqANSephZG8QL0t/uWwXbd7vrTcO7IKoUZNUK/JxzdofHbUR4aamGL7jVejaTExaIBw/3hr6L
- NODkZSAnVS5Pd0PAtCw8em0Ui0CNu06I1OENXP+Uj4RZgR97YZ98jxB7EnJq6CDNJBTpMY7BPp
- M5+rZqo8w0C/E1JcRj+XuUKqfAcrYoepTpD4QYOU/Wr5UKVwsH4zgZxbTnOK3ckq1wwC6pBHVH
- eT3pFv4LZyFeUxLYo1dfATJRl3YzMNmiV6ZRud2Lykyg96YRXV0vla2dIaX0rgh3+NPsIPcFbx
- TCo=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Mar 2023 14:06:07 -0700
-IronPort-SDR: DNvGBiq89+ZAQJlWk3BqyqkYzKCO/2v/F1gd7R/I6LgvpyUPRbBjFHdso6rFzxziCulUKYkrh/
- tENgRzamSf6jpHM+NOCreBYdFJVcBX9QsnKAIBa988xqK400Usuq+hoVuuOFzQGfaDGN2UX0OO
- PurFpJYjJx5dwVrMdWsLK8umP2+eGv3udnZQiBNFLT2Q84pdA2BkzNOSNue6gULJE16W7trw1w
- 9x3lT0PX6oIsH1MrrPeArXLbV2JW56fvpK4FEUx32X/usacniiyGW1H4x+GyiDWqDyasKPvSHJ
- 0Hg=
-WDCIronportException: Internal
-Received: from unknown (HELO oryx.wdc.com) ([10.225.167.80])
-  by uls-op-cesaip02.wdc.com with ESMTP; 30 Mar 2023 14:49:58 -0700
-From:   Dmitry Fomichev <dmitry.fomichev@wdc.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Stefan Hajnoczi <stefanha@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Sam Li <faithilikerun@gmail.com>
-Cc:     virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        Dmitry Fomichev <dmitry.fomichev@wdc.com>
-Subject: [PATCH v2 2/2] virtio-blk: fix ZBD probe in kernels without ZBD support
-Date:   Thu, 30 Mar 2023 17:49:53 -0400
-Message-Id: <20230330214953.1088216-3-dmitry.fomichev@wdc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230330214953.1088216-1-dmitry.fomichev@wdc.com>
-References: <20230330214953.1088216-1-dmitry.fomichev@wdc.com>
+        Thu, 30 Mar 2023 18:29:59 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8468E1BE1;
+        Thu, 30 Mar 2023 15:29:58 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id j13so18658666pjd.1;
+        Thu, 30 Mar 2023 15:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680215398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x7V03//xrMoj2maIfgC2qsiNLnzTtZRlKFOvF+x+bJg=;
+        b=mlMMJ39hyYXqt+JHj1LUKtCdNF3jPgcvR5YIbnZgjG2qBiSoA+kwmOTqtkW+KgUjT+
+         f3e/T8MSaieLqfYE0dDEdexsiqrRYKBvODsqM2N1upFbF1vKGKnEQRNu6sm836+CwA5C
+         ck0fVumW1XKGVaDTiJc1oZcOOCIV226dBsy+ORXRDdb3DqX9xOqXNxevXkMcMjtEUDFn
+         3DS5IHtGgjR5BAJQeAORmm+Co3dYw4PAzJtKWdjXOIijVMdHsC+Mv7hna+osVcIUucg/
+         sMDusNSOtuWu7xAgNPPArSDS5AjN3qPzyekWsD7Mi/qHO9lJ1NdSDNgcsKtE2ONpmI68
+         vTqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680215398;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x7V03//xrMoj2maIfgC2qsiNLnzTtZRlKFOvF+x+bJg=;
+        b=6o7qy2ghE+jk/5ofPwYNeI4QpWdVyjYfDNSM0TQHZNE7sscvLiiPuD2c+UMvxkhkuh
+         SmkJEdBWFmp2OWCIZjHJNgZscC4O+I5OQRswSS0rS1B3zscTxhSWSONNDTtsyyUpvSge
+         PS8JqHSRRKX8AG1AUSdgDhOHcQ87lHS9kRRRPCcZjSKgJwKp7syX9Fr/1qvo3Xia6iCo
+         hCnibPPIySq1TGdvhrIaz8WPVIjuCpmIdqpO3cHi6VEKue5t2CncB00p5BwgzHeN8r5T
+         ErqeoaYXPlbH6Ygmw5NKp/OnqRuG+yLPzx4P+34hrX1MRyvNr4voKq7Au2VJ4Z4rTYvt
+         8spg==
+X-Gm-Message-State: AAQBX9e/4dn5WZ7tKJuxFTCb0GlGltJtdYyPCN6VZ/qUjfFSxUBc/9PY
+        crpfzNTVJ37SwhiHZdhiwclp1V22H2mStOwqYWw=
+X-Google-Smtp-Source: AKy350ZrPyR1hRVTBuZnQUpMEn54ihWHCa7XbNjYLmiSy4XxnRAJ80dimqjvvbOmN9ocOuC+cire+hzLe0DMBMrzkWw=
+X-Received: by 2002:a17:90a:fb57:b0:23d:30c2:c5b7 with SMTP id
+ iq23-20020a17090afb5700b0023d30c2c5b7mr2603971pjb.3.1680215397861; Thu, 30
+ Mar 2023 15:29:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <cover.1680108414.git.johannes.thumshirn@wdc.com>
+ <beea645603eccbb045ad9bb777e05a085b91808a.1680108414.git.johannes.thumshirn@wdc.com>
+ <3a0f0c92-63cb-3624-c2fe-049a76d1a64a@opensource.wdc.com> <CAHbLzkoRdTTbnfz3RyLQAeNJBOEVNGL2WLgRSE2eQ4nR8sRe2g@mail.gmail.com>
+ <b19696d3-54bb-d997-5e56-aa5fd58b469f@opensource.wdc.com>
+In-Reply-To: <b19696d3-54bb-d997-5e56-aa5fd58b469f@opensource.wdc.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Thu, 30 Mar 2023 15:29:46 -0700
+Message-ID: <CAHbLzkrEXVDf4TYLw_MPrFNybWQHWXKX=zP5GhxHQFdpVPWhEg@mail.gmail.com>
+Subject: Re: [PATCH 18/19] dm-crypt: check if adding pages to clone bio fails
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.de>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        dm-devel@redhat.com, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        jfs-discussion@lists.sourceforge.net, cluster-devel@redhat.com,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When the kernel is built without support for zoned block devices,
-virtio-blk probe needs to error out any host-managed device scans
-to prevent such devices from appearing in the system as non-zoned.
-The current virtio-blk code simply bypasses all ZBD checks if
-CONFIG_BLK_DEV_ZONED is not defined and this leads to host-managed
-block devices being presented as non-zoned in the OS. This is one of
-the main problems this patch series is aimed to fix.
+On Wed, Mar 29, 2023 at 5:24=E2=80=AFPM Damien Le Moal
+<damien.lemoal@opensource.wdc.com> wrote:
+>
+> On 3/30/23 09:17, Yang Shi wrote:
+> > On Wed, Mar 29, 2023 at 4:49=E2=80=AFPM Damien Le Moal
+> > <damien.lemoal@opensource.wdc.com> wrote:
+> >>
+> >> On 3/30/23 02:06, Johannes Thumshirn wrote:
+> >>> Check if adding pages to clone bio fails and if bail out.
+> >>
+> >> Nope. The code retries with direct reclaim until it succeeds. Which is=
+ very
+> >> suspicious...
+> >
+> > It is not related to bio_add_page() failure. It is used to avoid a
+> > race condition when two processes are depleting the mempool
+> > simultaneously.
+> >
+> > IIUC I don't think page merge may happen for dm-crypt, so is
+> > __bio_add_page() good enough? I'm working on this code too, using
+> > __bio_add_page() would make my patch easier.
+>
+> If the BIO was allocated with enough bvecs, we could use that function. B=
+ut page
+> merging reduces overhead, so if it can happen, let's use it.
 
-In this patch, make VIRTIO_BLK_F_ZONED feature defined even when
-CONFIG_BLK_DEV_ZONED is not. This change makes the code compliant with
-the voted revision of virtio-blk ZBD spec. Modify the probe code to
-look at the situation when VIRTIO_BLK_F_ZONED is negotiated in a kernel
-that is built without ZBD support. In this case, the code checks
-the zoned model of the device and fails the probe is the device
-is host-managed.
+It does allocate BIO with enough bvecs. IIUC it will merge the
+adjacent pages? If so page merging may happen. Since dm-crypt does
+allocate BIO with enough bvces, so it can't fail if I read the code
+correctly. I'm wondering whether we could have a never fail variant.
 
-The patch also adds the comment to clarify that the call to perform
-the zoned device probe is correctly placed after virtio_device ready().
-
-Fixes: 95bfec41bd3d ("virtio-blk: add support for zoned block devices")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
----
- drivers/block/virtio_blk.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 4f0dbbb3d4a5..2b918e28acaa 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -866,16 +866,12 @@ static int virtblk_probe_zoned_device(struct virtio_device *vdev,
- 	return ret;
- }
- 
--static inline bool virtblk_has_zoned_feature(struct virtio_device *vdev)
--{
--	return virtio_has_feature(vdev, VIRTIO_BLK_F_ZONED);
--}
--
- #else
- 
- /*
-  * Zoned block device support is not configured in this kernel.
-- * We only need to define a few symbols to avoid compilation errors.
-+ * Host-managed zoned devices can't be supported, but others are
-+ * good to go as regular block devices.
-  */
- #define virtblk_report_zones       NULL
- 
-@@ -886,12 +882,16 @@ static inline void virtblk_revalidate_zones(struct virtio_blk *vblk)
- static inline int virtblk_probe_zoned_device(struct virtio_device *vdev,
- 			struct virtio_blk *vblk, struct request_queue *q)
- {
--	return -EOPNOTSUPP;
--}
-+	u8 model;
- 
--static inline bool virtblk_has_zoned_feature(struct virtio_device *vdev)
--{
--	return false;
-+	virtio_cread(vdev, struct virtio_blk_config, zoned.model, &model);
-+	if (model == VIRTIO_BLK_Z_HM) {
-+		dev_err(&vdev->dev,
-+			"virtio_blk: zoned devices are not supported");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
- }
- #endif /* CONFIG_BLK_DEV_ZONED */
- 
-@@ -1577,7 +1577,11 @@ static int virtblk_probe(struct virtio_device *vdev)
- 	virtblk_update_capacity(vblk, false);
- 	virtio_device_ready(vdev);
- 
--	if (virtblk_has_zoned_feature(vdev)) {
-+	/*
-+	 * All steps that follow use the VQs therefore they need to be
-+	 * placed after the virtio_device_ready() call above.
-+	 */
-+	if (virtio_has_feature(vdev, VIRTIO_BLK_F_ZONED)) {
- 		err = virtblk_probe_zoned_device(vdev, vblk, q);
- 		if (err)
- 			goto out_cleanup_disk;
-@@ -1683,10 +1687,7 @@ static unsigned int features[] = {
- 	VIRTIO_BLK_F_RO, VIRTIO_BLK_F_BLK_SIZE,
- 	VIRTIO_BLK_F_FLUSH, VIRTIO_BLK_F_TOPOLOGY, VIRTIO_BLK_F_CONFIG_WCE,
- 	VIRTIO_BLK_F_MQ, VIRTIO_BLK_F_DISCARD, VIRTIO_BLK_F_WRITE_ZEROES,
--	VIRTIO_BLK_F_SECURE_ERASE,
--#ifdef CONFIG_BLK_DEV_ZONED
--	VIRTIO_BLK_F_ZONED,
--#endif /* CONFIG_BLK_DEV_ZONED */
-+	VIRTIO_BLK_F_SECURE_ERASE, VIRTIO_BLK_F_ZONED,
- };
- 
- static struct virtio_driver virtio_blk = {
--- 
-2.34.1
-
+>
+> >
+> >>
+> >>>
+> >>> This way we can mark bio_add_pages as __must_check.
+> >>>
+> >>> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> >>
+> >> With the commit message fixed,
+> >>
+> >> Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+> >>
+> >>
+> >> --
+> >> Damien Le Moal
+> >> Western Digital Research
+> >>
+> >>
+>
+> --
+> Damien Le Moal
+> Western Digital Research
+>
