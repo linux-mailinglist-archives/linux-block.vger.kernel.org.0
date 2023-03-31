@@ -2,115 +2,156 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02E6A6D2466
-	for <lists+linux-block@lfdr.de>; Fri, 31 Mar 2023 17:49:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B37136D25A6
+	for <lists+linux-block@lfdr.de>; Fri, 31 Mar 2023 18:34:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232047AbjCaPtU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 Mar 2023 11:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
+        id S232840AbjCaQed (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 31 Mar 2023 12:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231940AbjCaPtT (ORCPT
+        with ESMTP id S230505AbjCaQeD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 Mar 2023 11:49:19 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059437AB0
-        for <linux-block@vger.kernel.org>; Fri, 31 Mar 2023 08:49:07 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3e392e10cc4so722831cf.0
-        for <linux-block@vger.kernel.org>; Fri, 31 Mar 2023 08:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680277746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iUOEBkfqFyDCBC8ECDHsPP9QVPu8ZlPnlnebW3bc4Wk=;
-        b=FY953/CnzlwXU3r1VaUDCjpKU3/FnptXqMVBTcFFdpOiaNBzMrpEDeIuFcWlKor7Kn
-         lFFhCvjaBgKh7SxjnFBNv6uNosDKUfuW+LTfhRPMIGnHdUBybMPH5KDYKg6w3JBVeZ/n
-         F5uogEgSeVOqBktcX9OhMBmv+FrZZfr/IjS0BXLmTTrF7l5ZBRroUkUuNIbCYyR4B/W6
-         t28pBBawCuMqIJJz4+Wh+CgPl/+vVNMjWsydcdfM+IL3qpUZOFD1MdF8zDa1BH5QXuze
-         rYmP4lyHFFYJIlB7R5kOYJfyGsOPqtYBIFlBha4fzASc93k/j1FT75YboKPSc8W3T0V1
-         fsfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680277746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iUOEBkfqFyDCBC8ECDHsPP9QVPu8ZlPnlnebW3bc4Wk=;
-        b=5VsDdCfz4I1RmysobEv7BWzdNdViApLwUrH58/zV6ox16L5FXkU3C4AoDpEyx5BKxR
-         yWPTKeK+uohQURT5wbI5HvUPujRnNZ6+xcMTrf9KPtmkf6lZ0Esj/1lISUJkkw9FDuWV
-         IKk3bF1ppzGxf97d40e3b4VdbBbbBSsskEKoplI0VfMjPqkR2J1fYD+OilI3miF14tx6
-         tErpNfuYNeW+iHfiCETr1bDaQGhLS8yfd+3rUGsG1NSP5ps89oPIBX9vNyAciSeELqap
-         IUmEEhSgri+5Yut8Eb3e2AFiKSqAJPUX5VF0JAB+8F4iG2whIzXFq3+8E+lDpYaRXDat
-         GRQw==
-X-Gm-Message-State: AAQBX9fsnPDc77uwKr253/XybDBL7PAXqnIBJa30vM8BeDtGNurCTpkl
-        Qfe5UwgU/77PPtJXWOnRNJ/c/Z+fGfthBudz4S8jWQ==
-X-Google-Smtp-Source: AKy350ag99cJ/JEGuKnsMSmBASTRl+ZXG21PE7l3bKosWkqKptj6CG0C5aWUVPT4lPH4wD1HF4kzYv2oTCBy7ERfqKQ=
-X-Received: by 2002:ac8:5bca:0:b0:3e2:3de:3732 with SMTP id
- b10-20020ac85bca000000b003e203de3732mr346582qtb.7.1680277746464; Fri, 31 Mar
- 2023 08:49:06 -0700 (PDT)
+        Fri, 31 Mar 2023 12:34:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67372781E
+        for <linux-block@vger.kernel.org>; Fri, 31 Mar 2023 09:29:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680280164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZJvfcCj7beM2l3aL2q8ZqMjrzC72DifYH9bqCAjpsUU=;
+        b=fegldro39pxtT1HowtaiwpIAliRiC9p5ffxioJTFfaNjvEPWQe2Ki/k5Ts3UhCC4babDRt
+        8oLET3ZcHb2rZoqiNIc+J4LRHzz4K+v30gID0iEk66DhBcILnX+I0pZ1tCNImJGcSl/s83
+        hcKJX2gVUxfYzO5kqfBiytRGyiQUXig=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-207-st4ET5OBOuuljcmLdN9DFg-1; Fri, 31 Mar 2023 12:11:56 -0400
+X-MC-Unique: st4ET5OBOuuljcmLdN9DFg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 39B1529AA2DF;
+        Fri, 31 Mar 2023 16:11:49 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE1C52027040;
+        Fri, 31 Mar 2023 16:11:46 +0000 (UTC)
+From:   David Howells <dhowells@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org
+Subject: [PATCH v3 53/55] drbd: Use sendmsg(MSG_SPLICE_PAGES) rather than sendmsg()
+Date:   Fri, 31 Mar 2023 17:09:12 +0100
+Message-Id: <20230331160914.1608208-54-dhowells@redhat.com>
+In-Reply-To: <20230331160914.1608208-1-dhowells@redhat.com>
+References: <20230331160914.1608208-1-dhowells@redhat.com>
 MIME-Version: 1.0
-References: <000000000000a5c9be05ed85b31b@google.com> <00000000000020d46805f8340e6b@google.com>
-In-Reply-To: <00000000000020d46805f8340e6b@google.com>
-From:   Aleksandr Nogikh <nogikh@google.com>
-Date:   Fri, 31 Mar 2023 17:48:54 +0200
-Message-ID: <CANp29Y4gA0D=O5CL3bxhYjT3mYtifXU-J-SXBiOTxfpYsfvTdw@mail.gmail.com>
-Subject: Re: [syzbot] [block?] KASAN: use-after-free Read in netdev_core_pick_tx
-To:     syzbot <syzbot+10a7a8ca6e94600110ec@syzkaller.appspotmail.com>
-Cc:     axboe@kernel.dk, gakula@marvell.com, hdanton@sina.com,
-        jiasheng@iscas.ac.cn, justin@coraid.com, kuba@kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        michal.swiatkowski@linux.intel.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-13.2 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
-        RCVD_IN_DNSWL_NONE,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 5:42=E2=80=AFPM syzbot
-<syzbot+10a7a8ca6e94600110ec@syzkaller.appspotmail.com> wrote:
->
-> syzbot suspects this issue was fixed by commit:
->
-> commit f038f3917baf04835ba2b7bcf2a04ac93fbf8a9c
-> Author: Jiasheng Jiang <jiasheng@iscas.ac.cn>
-> Date:   Fri Mar 17 06:43:37 2023 +0000
->
->     octeontx2-vf: Add missing free for alloc_percpu
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D133a3d2ec8=
-0000
-> start commit:   42226c989789 Linux 5.18-rc7
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd84df8e1a4c4d=
-5a4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D10a7a8ca6e94600=
-110ec
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D11ed1369f00=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D166b22cef0000=
-0
->
-> If the result looks correct, please mark the issue as fixed by replying w=
-ith:
+Use sendmsg() conditionally with MSG_SPLICE_PAGES in _drbd_send_page()
+rather than calling sendpage() or _drbd_no_send_page().
 
-No, the commit is unfortunately unrelated.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Philipp Reisner <philipp.reisner@linbit.com>
+cc: Lars Ellenberg <lars.ellenberg@linbit.com>
+cc: "Christoph Böhmwalder" <christoph.boehmwalder@linbit.com>
+cc: Jens Axboe <axboe@kernel.dk>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: drbd-dev@lists.linbit.com
+cc: linux-block@vger.kernel.org
+cc: netdev@vger.kernel.org
+---
+ drivers/block/drbd/drbd_main.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
->
-> #syz fix: octeontx2-vf: Add missing free for alloc_percpu
->
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisect=
-ion
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/syzkaller-bugs/00000000000020d46805f8340e6b%40google.com.
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 2c764f7ee4a7..e5f90abd29b6 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -1532,7 +1532,8 @@ static int _drbd_send_page(struct drbd_peer_device *peer_device, struct page *pa
+ 		    int offset, size_t size, unsigned msg_flags)
+ {
+ 	struct socket *socket = peer_device->connection->data.socket;
+-	int len = size;
++	struct bio_vec bvec;
++	struct msghdr msg = { .msg_flags = msg_flags, };
+ 	int err = -EIO;
+ 
+ 	/* e.g. XFS meta- & log-data is in slab pages, which have a
+@@ -1541,33 +1542,33 @@ static int _drbd_send_page(struct drbd_peer_device *peer_device, struct page *pa
+ 	 * put_page(); and would cause either a VM_BUG directly, or
+ 	 * __page_cache_release a page that would actually still be referenced
+ 	 * by someone, leading to some obscure delayed Oops somewhere else. */
+-	if (drbd_disable_sendpage || !sendpage_ok(page))
+-		return _drbd_no_send_page(peer_device, page, offset, size, msg_flags);
++	if (!drbd_disable_sendpage && sendpage_ok(page))
++		msg.msg_flags |= MSG_NOSIGNAL | MSG_SPLICE_PAGES;
++
++	bvec_set_page(&bvec, page, offset, size);
++	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1, size);
+ 
+-	msg_flags |= MSG_NOSIGNAL;
+ 	drbd_update_congested(peer_device->connection);
+ 	do {
+ 		int sent;
+ 
+-		sent = socket->ops->sendpage(socket, page, offset, len, msg_flags);
++		sent = sock_sendmsg(socket, &msg);
+ 		if (sent <= 0) {
+ 			if (sent == -EAGAIN) {
+ 				if (we_should_drop_the_connection(peer_device->connection, socket))
+ 					break;
+ 				continue;
+ 			}
+-			drbd_warn(peer_device->device, "%s: size=%d len=%d sent=%d\n",
+-			     __func__, (int)size, len, sent);
++			drbd_warn(peer_device->device, "%s: size=%d len=%zu sent=%d\n",
++				  __func__, (int)size, msg_data_left(&msg), sent);
+ 			if (sent < 0)
+ 				err = sent;
+ 			break;
+ 		}
+-		len    -= sent;
+-		offset += sent;
+-	} while (len > 0 /* THINK && device->cstate >= C_CONNECTED*/);
++	} while (msg_data_left(&msg) /* THINK && device->cstate >= C_CONNECTED*/);
+ 	clear_bit(NET_CONGESTED, &peer_device->connection->flags);
+ 
+-	if (len == 0) {
++	if (!msg_data_left(&msg)) {
+ 		err = 0;
+ 		peer_device->device->send_cnt += size >> 9;
+ 	}
+
