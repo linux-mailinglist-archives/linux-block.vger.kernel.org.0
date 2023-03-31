@@ -2,342 +2,202 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE1956D203E
-	for <lists+linux-block@lfdr.de>; Fri, 31 Mar 2023 14:27:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B6626D2405
+	for <lists+linux-block@lfdr.de>; Fri, 31 Mar 2023 17:31:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232365AbjCaM1T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 31 Mar 2023 08:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
+        id S232693AbjCaPbP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 31 Mar 2023 11:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232426AbjCaM1O (ORCPT
+        with ESMTP id S232103AbjCaPbP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 31 Mar 2023 08:27:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB9B21EFE7
-        for <linux-block@vger.kernel.org>; Fri, 31 Mar 2023 05:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680265583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DH2TEGtbu6b5LqxnMSb70uBmRZl7fmkRGu9vSpf9xqk=;
-        b=GDffS8CiegSSX1zCNFMEFGaJQdgfQWlg9I8ZkcdY9JtqaG5I5NigMR29o30YrIz9rUVJzL
-        llIg2TPYfcNkubXR39CHFpWjQl8q6tk5WEPkrNMIAkV1i0gWit+wOqP0tKuIj7pZApZowt
-        N2ZXKLTBLyIqvDQjdRuXoU4ReJjOHUQ=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-355-91UnFF8NOFGBu6w3cjbCVQ-1; Fri, 31 Mar 2023 08:26:19 -0400
-X-MC-Unique: 91UnFF8NOFGBu6w3cjbCVQ-1
-Received: by mail-qk1-f198.google.com with SMTP id 195-20020a3705cc000000b00746a3ab9426so10340655qkf.20
-        for <linux-block@vger.kernel.org>; Fri, 31 Mar 2023 05:26:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680265579;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DH2TEGtbu6b5LqxnMSb70uBmRZl7fmkRGu9vSpf9xqk=;
-        b=nA7M8XdrO7J63T6oerwgoz8zp6oKgARa+46R2GWwavJDEPV66X314GizSw7OGhbGEp
-         wZ8DnQTPFREkWYJejcdnD8viqvJm2K9QhkYd5IC7voZc5d4jP7EspmxpHbHL9Ty49g6f
-         D6KoCSREvbl7k1q5L4muHQLYleUXXLeZlBGqd/I9gkZivojWut9rxsK2GyTb/obDil+q
-         ZgzkesO9zwwdyiCuItSW6DgzlReTRU7TnmGYviTFtZMvxHupE6wOD0dRVpyGAVXocKyp
-         gFCSoWb1ah5IAVKZR8Bd6KkU7lUNobl0V6cAGKzEPLxIAd8o24t9Cc3hGd8md7jfjzJI
-         DNUQ==
-X-Gm-Message-State: AAQBX9cC8GLoj6y6foF2ZXPuLAU9268PcbBsS2PV9/z6mPn8AgPpAKo1
-        +2griFv/QgxzNermRd4lUoR+O28YgHQC9XUNgrBwq8FT8RSZK5wlvjLBN7LKQdggDfz9A+J5m/3
-        ZHjwNFCVAajK5P99mWiQatTI=
-X-Received: by 2002:ad4:5dc9:0:b0:5ac:fb9a:677f with SMTP id m9-20020ad45dc9000000b005acfb9a677fmr34608106qvh.34.1680265578982;
-        Fri, 31 Mar 2023 05:26:18 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Z6rYxqMC+gfIXFXxm8RLwpDPGgPB876v8cq7C6XuwWCma4+tnHWKvrv1GKg+lUyow88OEGQA==
-X-Received: by 2002:ad4:5dc9:0:b0:5ac:fb9a:677f with SMTP id m9-20020ad45dc9000000b005acfb9a677fmr34608064qvh.34.1680265578627;
-        Fri, 31 Mar 2023 05:26:18 -0700 (PDT)
-Received: from bfoster (c-24-61-119-116.hsd1.ma.comcast.net. [24.61.119.116])
-        by smtp.gmail.com with ESMTPSA id s11-20020a05621412cb00b005dd8b9345efsm536061qvv.135.2023.03.31.05.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Mar 2023 05:26:18 -0700 (PDT)
-Date:   Fri, 31 Mar 2023 08:28:17 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Sarthak Kukreti <sarthakkukreti@chromium.org>
-Cc:     sarthakkukreti@google.com, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Bart Van Assche <bvanassche@google.com>,
-        Daniil Lunev <dlunev@google.com>,
-        "Darrick J. Wong" <djwong@kernel.org>
-Subject: Re: [PATCH v2 2/7] dm: Add support for block provisioning
-Message-ID: <ZCbR4euMpUauJ0iI@bfoster>
-References: <20221229081252.452240-1-sarthakkukreti@chromium.org>
- <20221229081252.452240-3-sarthakkukreti@chromium.org>
- <Y7biAQyLKJDjsAlz@bfoster>
- <CAG9=OMNLAL8M2AqzSWzecXJzR7jfC_3Ckc_L24MzNBgz_+u-wQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 31 Mar 2023 11:31:15 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF4E1BF54
+        for <linux-block@vger.kernel.org>; Fri, 31 Mar 2023 08:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680276672; x=1711812672;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=ye/j50bf7//X+64352yoHG7fzpN8AxSYlOt5j9k9DjU=;
+  b=EBH7TPmU/F9QgkSyPWxHndDqXhc8k2v38XXN4g7JyhtMG/4zbJzKs1QF
+   JFaqeSdcC9e4Ldcr9dtXoC7jaXdpeGzb/MCYWJMOx9m5xlwu+9Nzhuzpl
+   tXMdqqvwH5/FNlmjSvkBOjx+XuKQl9u4hc4BZfV9xM105NvICgHaFjGD2
+   yxSWDU+5Q26vKAlKK7lkvLSLObuZGtrKDx4Cg01ySlw0WS0V0aMjb43Kn
+   7JCuYOvkdywno0xUOH+Gs35LHPcNsGqSYLqhJ+1OyWm6KjY04Y6eDr9aw
+   OVXBxgi4tAekJcMOlVi4oeyxlNyC/mRk/ItkxmSnwB8+7B4PPddEZwq0c
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="341491055"
+X-IronPort-AV: E=Sophos;i="5.98,307,1673942400"; 
+   d="scan'208";a="341491055"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2023 08:29:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="715491084"
+X-IronPort-AV: E=Sophos;i="5.98,307,1673942400"; 
+   d="scan'208";a="715491084"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga008.jf.intel.com with ESMTP; 31 Mar 2023 08:29:11 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 31 Mar 2023 08:29:11 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 31 Mar 2023 08:29:11 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Fri, 31 Mar 2023 08:29:11 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Fri, 31 Mar 2023 08:29:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WxGPlHM5YDhZymt+YXwYvj5UtmL2fqy8oXdgtptg15cMr4fXdbwgt4aCIylkHEjjsaSzpN3Ydmxwbn70+Us3Ppv9MXUx6Jg3TYd1JTEBImenwYrbM5zjV6LccryIp/O77bHi4F2EfhPcCdhgYwtSdeBPS1zIFduv4mK7Zag//WA0Z3oG782CIBao5EaVpHM0f9+MxLlXX/cnM2RKvkajAWiCyPsXYtWUUlu3AydAm/yqqoCfPTu4HfzvPebTbR5x6ARO2aX1+77kA+BfXhQ1sQJpS54wePzoYE9HU55glH8wLwR3+PRvvW2kwdI2YEciWCX3CzDPJJh334E1jH6rmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IAVBeOq2blD+J8oYVr+5NztgiyXniXS5HwQbMir7ynI=;
+ b=dPmGuDUbj0k4UZBzRkOgwfWJaRzDRHZF1R1N81HAkyjliTiyS8tOByCHMi3EKOEQ925iJkikxwi3CbMzu73KV9bGuIwQq3R6Xo/WP4kFENVUa4ZNWfc9XAfzjQetwJz8L2mhgWEiP0gYNI2IiXD+1M+oGox0kT5eStlC1JCR64cPtHzoupaZw4/5OV5Iytnkjme7Y3XDiCezoa71jppSm80bPb238AA9GWetPPXXnA32pFQrm2EVqhMrgeRI0BUj/i3oE3DoSmZfv1W460YxVZFx8u+ipwsWGzQYBXXN/yYLd8ZsjH000JRPwHsGqxDYLLv4wlUgMF410IWUaPJBXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
+ by CH3PR11MB7299.namprd11.prod.outlook.com (2603:10b6:610:14b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.23; Fri, 31 Mar
+ 2023 15:29:06 +0000
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::5ac7:aae0:92aa:74f0]) by CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::5ac7:aae0:92aa:74f0%8]) with mapi id 15.20.6254.022; Fri, 31 Mar 2023
+ 15:29:06 +0000
+Date:   Fri, 31 Mar 2023 23:26:29 +0800
+From:   Yujie Liu <yujie.liu@intel.com>
+To:     Alyssa Ross <hi@alyssa.is>
+CC:     kernel test robot <lkp@intel.com>, <chaitanyak@nvidia.com>,
+        "Shin'ichiro Kawasaki" <shinichiro.kawasaki@wdc.com>,
+        <oe-kbuild-all@lists.linux.dev>, <axboe@kernel.dk>, <hch@lst.de>,
+        <linux-block@vger.kernel.org>
+Subject: Re: LKP kernel test robot and blktests patches
+Message-ID: <ZCb7pRxflkMHPLEz@yujie-X299>
+References: <20230330160247.16030-1-hi@alyssa.is>
+ <202303310316.QS2vADHM-lkp@intel.com>
+ <20230330195053.hpb4upyezb7uy2dw@x220>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG9=OMNLAL8M2AqzSWzecXJzR7jfC_3Ckc_L24MzNBgz_+u-wQ@mail.gmail.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230330195053.hpb4upyezb7uy2dw@x220>
+X-ClientProxiedBy: SG2P153CA0022.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::9)
+ To CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|CH3PR11MB7299:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6064ca06-2e17-4de1-433f-08db31fcaa23
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CL/f9WpgXGIivY9sFAwPYzBXxEWUjas2ieaS+iYO4AMo8atxWMtRHzt0DTkM5x0BtkxkTMXIPef+uXYypoSMCLHBjBsWzWcWnSZUfd6kmpKTUr7/B/4ugp6hJyvmjz4UeK9SiDijIjzlTvdMEpjh2X0KH38eAA/2s8yKOV8+I12rAkJiSx2owVZWMRgzME1sawTv6eHogImtSe4GDgnxpQnfKMZvZvBVAtSPoZf3zC7HD/IYKZT090AdXI1Or2GsGtvagQCR0WWos6ie28Ocp8crYPkmDxlGi88qRodJ+0Wo2ToFsIQTGkDd+w7MdGfqeWXJG8bYssiqNFQe/NtjoQaRBnQQWgKnSl2XZj+L1qI2BQ0EGLS5HW9kvXVa+kYOVO8d3n2KQ573Jz65+ieNTOJDThGUpEIf9lO3s4gTLcto49a3re/URt5+fE+POdl/ySocqI1zY8HSceameJZ1MrqBiBZOITx2p9WMPALwh32y8K+9UPdxmdGFiScD060xDenmXqTyt0OJ1oh5s8KcctqKf7OxRt4jDVEdMe1QVz9YgAn5SvboxBgvIt9Hg6AbP66iR6livSMF8WA+r4j76g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(136003)(376002)(346002)(39860400002)(396003)(366004)(451199021)(33716001)(186003)(6666004)(9686003)(6512007)(26005)(83380400001)(66476007)(478600001)(54906003)(316002)(41300700001)(66946007)(38100700002)(966005)(4326008)(8676002)(6916009)(82960400001)(2906002)(6486002)(86362001)(5660300002)(6506007)(8936002)(66556008)(44832011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?f08UoBqfaFfgxUPfYwkLyRbX1tAr2wZ7TQBxi0cBqmi6ERqTFlBdZiOdlhLT?=
+ =?us-ascii?Q?VL5mSrMmz27lLQ0iqY8Pf4vSiXS8xPr44KRqe0ieBdCs6JwELCxWLsG04U09?=
+ =?us-ascii?Q?afXz3BzG8fbRgo60aB4eThCbSQfR7FFBKypeb31CMvr3NcpEF4w9TXRXSkIM?=
+ =?us-ascii?Q?Jw6Big86kyP8SeYk253FzCaHGqsHIoh9Ab/YDYT73b0QIxBcigrBhVAUVDLo?=
+ =?us-ascii?Q?1HC9b7ZO3hD1RFlv2uOEqu5kXMak16Mr6el0Fu2uYS/+NARWMURaMDE+Xg4S?=
+ =?us-ascii?Q?JjoujqXK1DW1ItgeL/txNIe7tWYS3MwdMlJYS63a+VVqO8T0r8So4A11YPWD?=
+ =?us-ascii?Q?jwc4iS08+nCFnSOQhY6ngE6jQbGy8BRFcmmaz+LR10Ft5csbmdDL+9gxDuf7?=
+ =?us-ascii?Q?5lrtg/0yrgAsyxfd/ot/4QYnOTsDJeamZLHWucj+XQwWk0TPZ0PpMaW+xVd4?=
+ =?us-ascii?Q?026teGF3mlcYbz9c0YUW3Cb0pnFnJASXPoMaQLi7t/3hizqgZtAD1ACbuyHl?=
+ =?us-ascii?Q?Y3rlimlZf7/JW/HeIJoauR5bpL+eLJCep6v/gkst+okKvSGBGSMzVNiAL2eN?=
+ =?us-ascii?Q?Wct+guh3UXXFNH5XQ09dZhkboXxgXXCkZwTOpZ3NXpQ1iP/gnq+cBBktKBzv?=
+ =?us-ascii?Q?n85vaNTqbC90aYJnmZpphiiUGMKpJeNcEQAwt29pRUWdjs/JmwwD4EjVZ+Wp?=
+ =?us-ascii?Q?iA8b1TC52Aalm54KANXCOLYuErbrFAlr4yO1KcF4cNXcRzDz4sl5faveYguQ?=
+ =?us-ascii?Q?0VSGxUDR2auaH5cyswb0fSW9j4l6a2hYpMI1rgDXQZZxYN2hsGstOqtUUlYE?=
+ =?us-ascii?Q?wR8c9gAv6dIqsmU2Le0WF5KftCe+UPrfItKWPlYyjauAGMyK/RtXG+3eRZnk?=
+ =?us-ascii?Q?BQzna7X5zLhoBRmbqXRVL9ez5fa2ca54XCKtcB+TBZHXaWsTI8eWRw+COFl/?=
+ =?us-ascii?Q?Tw9WigEu7SQDvp2TkbdpL8cl5+Q0bIK/Y08tqPMAIB1I1VXnYx4ecMN/1DRc?=
+ =?us-ascii?Q?k3kI/nJL7H58E0FziRH467KoqO0GBvhHWMAz09SmMTg+5DhM+INc82sr9jF2?=
+ =?us-ascii?Q?RVXz/oumIeQECD/B7PQWMtiW3w24MhN6Eyl/EWr0zRddhBnPkXNY8vZjfJ2r?=
+ =?us-ascii?Q?pjdfdOyJ58cD3tfxKljtg6eG4z0VZVx+8WOlOuJR+AEkvQqeyjPDOQH6tYoG?=
+ =?us-ascii?Q?9VgtQqzSWDN07fCvxHldnvsjoZQ97H/MdCtmCmR6mYZU7M66r/IJq5YiMv6y?=
+ =?us-ascii?Q?Wlxpr1Z35yJETh18D5mpj6KHau/FPrOI2+74HfwjBeqwfO51zudg6npqkNWi?=
+ =?us-ascii?Q?q9u29HBZ8j5Prv8Wo82A0xBiqan6MdZU8k3wP6KViJ2No8rs5Z5GBByFuqhJ?=
+ =?us-ascii?Q?w8tyQZw1p031S2IYT3omzSkuD6fXhOuO7D/K/nkS2F3vHeyb0YsEmmDLiXpd?=
+ =?us-ascii?Q?1fvaFox3VBda0uE2DqTS4mgJj3WlmS/tcDu6vBzszxQ02Ldt/4UTG5ZWcrG2?=
+ =?us-ascii?Q?XvZyeZf8cQdcJOysIWsFdUrrGJrI8rhmOXcntoj3Mu4tzAvEgafx5boowdw4?=
+ =?us-ascii?Q?QLf8YFXC+lHtVJx5s/8Am/wg5PK7flhJq3NbCs+L?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6064ca06-2e17-4de1-433f-08db31fcaa23
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2023 15:29:06.0755
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b8QoSlfwapR3rknI+2anzyZaQht2x/vRxttnHbpIsFmuo9E+WbhVkCR1f8I0OsfeutiVudHKiLkF+0vPU1Bcpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7299
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 05:30:22PM -0700, Sarthak Kukreti wrote:
-> On Thu, Jan 5, 2023 at 6:42 AM Brian Foster <bfoster@redhat.com> wrote:
-> >
-> > On Thu, Dec 29, 2022 at 12:12:47AM -0800, Sarthak Kukreti wrote:
-> > > Add support to dm devices for REQ_OP_PROVISION. The default mode
-> > > is to pass through the request and dm-thin will utilize it to provision
-> > > blocks.
-> > >
-> > > Signed-off-by: Sarthak Kukreti <sarthakkukreti@chromium.org>
-> > > ---
-> > >  drivers/md/dm-crypt.c         |  4 +-
-> > >  drivers/md/dm-linear.c        |  1 +
-> > >  drivers/md/dm-snap.c          |  7 +++
-> > >  drivers/md/dm-table.c         | 25 ++++++++++
-> > >  drivers/md/dm-thin.c          | 90 ++++++++++++++++++++++++++++++++++-
-> > >  drivers/md/dm.c               |  4 ++
-> > >  include/linux/device-mapper.h | 11 +++++
-> > >  7 files changed, 139 insertions(+), 3 deletions(-)
-> > >
-> > ...
-> > > diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-> > > index 64cfcf46881d..ab3f1abfabaf 100644
-> > > --- a/drivers/md/dm-thin.c
-> > > +++ b/drivers/md/dm-thin.c
-> > ...
-> > > @@ -1980,6 +1992,70 @@ static void process_cell(struct thin_c *tc, struct dm_bio_prison_cell *cell)
-> > >       }
-> > >  }
-> > >
-> > > +static void process_provision_cell(struct thin_c *tc, struct dm_bio_prison_cell *cell)
-> > > +{
-> > > +     int r;
-> > > +     struct pool *pool = tc->pool;
-> > > +     struct bio *bio = cell->holder;
-> > > +     dm_block_t begin, end;
-> > > +     struct dm_thin_lookup_result lookup_result;
-> > > +
-> > > +     if (tc->requeue_mode) {
-> > > +             cell_requeue(pool, cell);
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     get_bio_block_range(tc, bio, &begin, &end);
-> > > +
-> > > +     while (begin != end) {
-> > > +             r = ensure_next_mapping(pool);
-> > > +             if (r)
-> > > +                     /* we did our best */
-> > > +                     return;
-> > > +
-> > > +             r = dm_thin_find_block(tc->td, begin, 1, &lookup_result);
-> >
-> > Hi Sarthak,
-> >
-> > I think we discussed this before.. but remind me if/how we wanted to
-> > handle the case if the thin blocks are shared..? Would a provision op
-> > carry enough information to distinguish an FALLOC_FL_UNSHARE_RANGE
-> > request from upper layers to conditionally provision in that case?
-> >
-> I think that should depend on how the filesystem implements unsharing:
-> assuming that we use provision on first allocation, unsharing on xfs
-> should result in xfs calling REQ_OP_PROVISION on the newly allocated
-> blocks first. But for ext4, we'd fail UNSHARE_RANGE unless provision
-> (instead of noprovision, provision_on_alloc), in which case, we'd send
-> REQ_OP_PROVISION.
-> 
+Hi Alyssa,
 
-I think my question was unclear... It doesn't necessarily have much to
-do with the filesystem or associated provision policy. Since dm-thin can
-share blocks internally via snapshots, do you intend to support
-FL_UNSHARE_RANGE via blkdev_fallocate() and REQ_OP_PROVISION?
-
-If so, then presumably this wants an UNSHARE request flag to pair with
-REQ_OP_PROVISION. Also, the dm-thin code above needs to check whether an
-existing block it finds is shared and basically do whatever COW breaking
-is necessary during the PROVISION request.
-
-If not, why? And what is expected behavior if blkdev_fallocate() is
-called with FL_UNSHARE_RANGE?
-
-Brian 
-
-> Best
-> Sarthak
+On Thu, Mar 30, 2023 at 07:50:53PM +0000, Alyssa Ross wrote:
+> Hi LKP team,
 > 
+> blktests's CONTRIBUTING.md says that blktests patches should be
+> sent either on GitHub, or to linux-block with the "PATCH blktests"
+> subject prefix.  I just sent such a patch, and because it was just
+> adding a file, the kernel test robot happily applied and tested it as if
+> it was a kernel patch, which naturally resulted in it finding problems.
 > 
-> Sarthak
-> 
-> > Brian
+> Maybe the kernel test robot should skip patches starting with
+> "[PATCH blktests]"?
+
+Sorry for wrongly applying this as a kernel patch. We've configured the
+robot to skip blktests patches.
+
+--
+Best Regards,
+Yujie
+
+> n Fri, Mar 31, 2023 at 03:22:28AM +0800, kernel test robot wrote:
+> > Hi Alyssa,
 > >
-> > > +             switch (r) {
-> > > +             case 0:
-> > > +                     begin++;
-> > > +                     break;
-> > > +             case -ENODATA:
-> > > +                     bio_inc_remaining(bio);
-> > > +                     provision_block(tc, bio, begin, cell);
-> > > +                     begin++;
-> > > +                     break;
-> > > +             default:
-> > > +                     DMERR_LIMIT(
-> > > +                             "%s: dm_thin_find_block() failed: error = %d",
-> > > +                             __func__, r);
-> > > +                     cell_defer_no_holder(tc, cell);
-> > > +                     bio_io_error(bio);
-> > > +                     begin++;
-> > > +                     break;
-> > > +             }
-> > > +     }
-> > > +     bio_endio(bio);
-> > > +     cell_defer_no_holder(tc, cell);
-> > > +}
-> > > +
-> > > +static void process_provision_bio(struct thin_c *tc, struct bio *bio)
-> > > +{
-> > > +     dm_block_t begin, end;
-> > > +     struct dm_cell_key virt_key;
-> > > +     struct dm_bio_prison_cell *virt_cell;
-> > > +
-> > > +     get_bio_block_range(tc, bio, &begin, &end);
-> > > +     if (begin == end) {
-> > > +             bio_endio(bio);
-> > > +             return;
-> > > +     }
-> > > +
-> > > +     build_key(tc->td, VIRTUAL, begin, end, &virt_key);
-> > > +     if (bio_detain(tc->pool, &virt_key, bio, &virt_cell))
-> > > +             return;
-> > > +
-> > > +     process_provision_cell(tc, virt_cell);
-> > > +}
-> > > +
-> > >  static void process_bio(struct thin_c *tc, struct bio *bio)
-> > >  {
-> > >       struct pool *pool = tc->pool;
-> > > @@ -2200,6 +2276,8 @@ static void process_thin_deferred_bios(struct thin_c *tc)
-> > >
-> > >               if (bio_op(bio) == REQ_OP_DISCARD)
-> > >                       pool->process_discard(tc, bio);
-> > > +             else if (bio_op(bio) == REQ_OP_PROVISION)
-> > > +                     process_provision_bio(tc, bio);
-> > >               else
-> > >                       pool->process_bio(tc, bio);
-> > >
-> > > @@ -2716,7 +2794,8 @@ static int thin_bio_map(struct dm_target *ti, struct bio *bio)
-> > >               return DM_MAPIO_SUBMITTED;
-> > >       }
-> > >
-> > > -     if (op_is_flush(bio->bi_opf) || bio_op(bio) == REQ_OP_DISCARD) {
-> > > +     if (op_is_flush(bio->bi_opf) || bio_op(bio) == REQ_OP_DISCARD ||
-> > > +         bio_op(bio) == REQ_OP_PROVISION) {
-> > >               thin_defer_bio_with_throttle(tc, bio);
-> > >               return DM_MAPIO_SUBMITTED;
-> > >       }
-> > > @@ -3355,6 +3434,8 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
-> > >       pt->low_water_blocks = low_water_blocks;
-> > >       pt->adjusted_pf = pt->requested_pf = pf;
-> > >       ti->num_flush_bios = 1;
-> > > +     ti->num_provision_bios = 1;
-> > > +     ti->provision_supported = true;
-> > >
-> > >       /*
-> > >        * Only need to enable discards if the pool should pass
-> > > @@ -4053,6 +4134,7 @@ static void pool_io_hints(struct dm_target *ti, struct queue_limits *limits)
-> > >               blk_limits_io_opt(limits, pool->sectors_per_block << SECTOR_SHIFT);
-> > >       }
-> > >
-> > > +
-> > >       /*
-> > >        * pt->adjusted_pf is a staging area for the actual features to use.
-> > >        * They get transferred to the live pool in bind_control_target()
-> > > @@ -4243,6 +4325,9 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
-> > >               ti->num_discard_bios = 1;
-> > >       }
-> > >
-> > > +     ti->num_provision_bios = 1;
-> > > +     ti->provision_supported = true;
-> > > +
-> > >       mutex_unlock(&dm_thin_pool_table.mutex);
-> > >
-> > >       spin_lock_irq(&tc->pool->lock);
-> > > @@ -4457,6 +4542,7 @@ static void thin_io_hints(struct dm_target *ti, struct queue_limits *limits)
-> > >
-> > >       limits->discard_granularity = pool->sectors_per_block << SECTOR_SHIFT;
-> > >       limits->max_discard_sectors = 2048 * 1024 * 16; /* 16G */
-> > > +     limits->max_provision_sectors = 2048 * 1024 * 16; /* 16G */
-> > >  }
-> > >
-> > >  static struct target_type thin_target = {
-> > > diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-> > > index e1ea3a7bd9d9..4d19bae9da4a 100644
-> > > --- a/drivers/md/dm.c
-> > > +++ b/drivers/md/dm.c
-> > > @@ -1587,6 +1587,7 @@ static bool is_abnormal_io(struct bio *bio)
-> > >               case REQ_OP_DISCARD:
-> > >               case REQ_OP_SECURE_ERASE:
-> > >               case REQ_OP_WRITE_ZEROES:
-> > > +             case REQ_OP_PROVISION:
-> > >                       return true;
-> > >               default:
-> > >                       break;
-> > > @@ -1611,6 +1612,9 @@ static blk_status_t __process_abnormal_io(struct clone_info *ci,
-> > >       case REQ_OP_WRITE_ZEROES:
-> > >               num_bios = ti->num_write_zeroes_bios;
-> > >               break;
-> > > +     case REQ_OP_PROVISION:
-> > > +             num_bios = ti->num_provision_bios;
-> > > +             break;
-> > >       default:
-> > >               break;
-> > >       }
-> > > diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-> > > index 04c6acf7faaa..b4d97d5d75b8 100644
-> > > --- a/include/linux/device-mapper.h
-> > > +++ b/include/linux/device-mapper.h
-> > > @@ -333,6 +333,12 @@ struct dm_target {
-> > >        */
-> > >       unsigned num_write_zeroes_bios;
-> > >
-> > > +     /*
-> > > +      * The number of PROVISION bios that will be submitted to the target.
-> > > +      * The bio number can be accessed with dm_bio_get_target_bio_nr.
-> > > +      */
-> > > +     unsigned num_provision_bios;
-> > > +
-> > >       /*
-> > >        * The minimum number of extra bytes allocated in each io for the
-> > >        * target to use.
-> > > @@ -357,6 +363,11 @@ struct dm_target {
-> > >        */
-> > >       bool discards_supported:1;
-> > >
-> > > +     /* Set if this target needs to receive provision requests regardless of
-> > > +      * whether or not its underlying devices have support.
-> > > +      */
-> > > +     bool provision_supported:1;
-> > > +
-> > >       /*
-> > >        * Set if we need to limit the number of in-flight bios when swapping.
-> > >        */
-> > > --
-> > > 2.37.3
-> > >
+> > Thank you for the patch! Perhaps something to improve:
 > >
-> 
+> > [auto build test WARNING on linus/master]
+> > [also build test WARNING on v6.3-rc4 next-20230330]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> >
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Alyssa-Ross/loop-009-add-test-for-loop-partition-uvents/20230331-001157
+> > patch link:    https://lore.kernel.org/r/20230330160247.16030-1-hi%40alyssa.is
+> > patch subject: [PATCH blktests] loop/009: add test for loop partition uvents
+> > reproduce:
+> >         scripts/spdxcheck.py
+> >
+> > If you fix the issue, kindly add following tag where applicable
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Link: https://lore.kernel.org/oe-kbuild-all/202303310316.QS2vADHM-lkp@intel.com/
+> >
+> > spdxcheck warnings: (new ones prefixed by >>)
+> > >> tests/loop/009: 2:27 Invalid License ID: GPL-3.0+
+> >
+> > --
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests
+
 
