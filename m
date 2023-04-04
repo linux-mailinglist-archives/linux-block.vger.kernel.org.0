@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 056B76D6C3E
-	for <lists+linux-block@lfdr.de>; Tue,  4 Apr 2023 20:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80E596D6C46
+	for <lists+linux-block@lfdr.de>; Tue,  4 Apr 2023 20:36:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235594AbjDDSfF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Apr 2023 14:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
+        id S236397AbjDDSgA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Apr 2023 14:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236487AbjDDSeq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Apr 2023 14:34:46 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3FF55FF7;
-        Tue,  4 Apr 2023 11:32:32 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id h25so43518956lfv.6;
-        Tue, 04 Apr 2023 11:32:32 -0700 (PDT)
+        with ESMTP id S236402AbjDDSfl (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Apr 2023 14:35:41 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1D36582;
+        Tue,  4 Apr 2023 11:33:14 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id br6so43490147lfb.11;
+        Tue, 04 Apr 2023 11:33:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680633151;
+        d=1e100.net; s=20210112; t=1680633193;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:dkim-signature:dkim-signature
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w7uewdVPDtWlBmd0txwJX02g5PYGjBmA/8tf1xq7PQc=;
-        b=qdn+l6SMWdKq3D8JEKfGnZy46u3/ov6F91Qg5pTKyCdjW1OpQXVfJe8RqJO+dYbii+
-         5yx9CTNbo7DbS0Z5J+0dG3bbwCWcdNilO4anr9GsgW6UKGbo0lcL2eHoe9jY7E9ZTYpT
-         cJXD2T+YwQj7IIuqepFJJBInaQT6LHIKK/dKsINqH7m8YK8h5NHMmnzy0cU1NikKvs4C
-         GHQGi/D3F+hhJAbuzUmu76OV9jntlpoxkJRdlD05H1UgCh9KmgTCPICtFBoQuP2LWLDK
-         Vt3jWUJjH/E4xkx3pf1velZtycvQQ8fJk3XRMOuVnTjuOAOqfWOxK1r3er6R+I8v9e3z
-         isUA==
-X-Gm-Message-State: AAQBX9d9NSuKqEf08sEWH9pJ2Zgfe5MVzStpfVl1pUsFIyNZLRZCnzCt
-        SggZkE5pz+2+PhqDsDzdnT87XAbnPgZKSg==
-X-Google-Smtp-Source: AKy350a/q6j+7ThkLuTFZuBTOSVG5cY4mVJyjQ0w0cl+0NfiEIAn3w/peHFABBmFLbyApZAMl3zwVg==
-X-Received: by 2002:a05:6512:244:b0:4db:3928:d66d with SMTP id b4-20020a056512024400b004db3928d66dmr789969lfo.42.1680633151138;
-        Tue, 04 Apr 2023 11:32:31 -0700 (PDT)
+        bh=s8H2qIMz3Gty35NiNYKZYVBmBlGMd1so+hGxNCASCEY=;
+        b=IjxsZrGaUE0aYYVN3MWZaPwiFL+gtqk72QzhuVC+m02cpmK/W2kv6ESPaLF1eQaN7L
+         +BvDkVZxCOAv4SZ6YfwtwRs0len2kJ7c2YaRyG+0ISTSnUVZCkXGNwvyLkjX4v+9BJCc
+         6rxVLIME6lCH+bv4ZFPyKnmzmUXf1HInecLxadnBSHJjWKvRbOGisddJoDbmJhaHG24L
+         bEIevyiEj/80hKQYZrS9Ehe8P6bS2bm3CPPiDV1azgQEQonptiusrFC5caVr6OMOujH1
+         zB5Uw8OSctJTqHoTxFMVpfCmbdC8dcbtmjwAft6tOjU1++yJFkPipzUa4DDpkUAC9art
+         XSig==
+X-Gm-Message-State: AAQBX9cn/jSrkdXrcpJyJTeGFMoWNl4WrsZt/LzvN2QkDtGhTy36bM0R
+        9CEGP1jvg8H6bNClfKOtqNBdbem21brCGQ==
+X-Google-Smtp-Source: AKy350ZFt7lV1WRE8AnWhFZdWE3oAIje0MW5aj6+5d6FnhFD51oPReJH3kug7iGhTmXDx54sVjkkIA==
+X-Received: by 2002:a05:6512:147:b0:4eb:18d:91df with SMTP id m7-20020a056512014700b004eb018d91dfmr739642lfo.27.1680633193019;
+        Tue, 04 Apr 2023 11:33:13 -0700 (PDT)
 Received: from flawful.org (c-a3f5e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.245.163])
-        by smtp.gmail.com with ESMTPSA id q28-20020ac25a1c000000b004db1a7e6decsm2436206lfn.205.2023.04.04.11.32.30
+        by smtp.gmail.com with ESMTPSA id l25-20020a19c219000000b004eb258f73a9sm2426229lfc.163.2023.04.04.11.33.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 11:32:30 -0700 (PDT)
+        Tue, 04 Apr 2023 11:33:12 -0700 (PDT)
 Received: by flawful.org (Postfix, from userid 112)
-        id 1DEE82C0; Tue,  4 Apr 2023 20:32:29 +0200 (CEST)
+        id EEE2E2C0; Tue,  4 Apr 2023 20:33:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1680633150; bh=OuulYDiO5r4YnHxGZH5etX0gMKwwO40hqAMiklCCvpQ=;
+        t=1680633192; bh=EW5tWLpRWwKlaovMDrPHJz7vr86vu6Zk+592YnNpO6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tn3TB8ZBVAHi+2X3GT643OVNgPiVhOKq4HcoyaVY3I5tQUZrfK/7Gdm+XCwu32lTD
-         0kFYJ8bS7a4d6OllMMjxtgOe+zKX9a8Z3ozly2dskCJpPKGZcecvq0V54W9VrwsYtE
-         BOvLPiBgtUcwao7dtGvPimX8tAYr4bKyiOjKX7a8=
+        b=jUVxpf2UJZgXs0fQ2Rq7X3Ef77i/cUcFvsfNRoldU1Zvo7yl6AbsEKk0doh4e+w8K
+         ZxroN+RBWWiWxZjx8JQRArWwbflkLWgYnfON+dNUwV57pqCOazDZ9avyu2L6YQBrUj
+         DQ14dEY6nrcOZ1Zt/Ojy677fyjjp+w/1bERGeR/8=
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 X-Spam-Level: 
@@ -56,14 +56,14 @@ Received: from x1-carbon.lan (OpenWrt.lan [192.168.1.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by flawful.org (Postfix) with ESMTPSA id B4A191112;
-        Tue,  4 Apr 2023 20:25:50 +0200 (CEST)
+        by flawful.org (Postfix) with ESMTPSA id A19121110;
+        Tue,  4 Apr 2023 20:25:51 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1680632751; bh=OuulYDiO5r4YnHxGZH5etX0gMKwwO40hqAMiklCCvpQ=;
+        t=1680632751; bh=EW5tWLpRWwKlaovMDrPHJz7vr86vu6Zk+592YnNpO6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rja1UesVO/e3UwGidur3122sukAkFvkvYeY0RqiAzvV2HLQRA81UlURq80douhzUa
-         QdUy5a+uLtHrvLBHULRTFqvzJwRSyd8lIF7rJAlBxRleJ+oNf1vYaj/URw8Fxes3DD
-         eJP1LVJQGJBECn/O2gvOhXVhSHEPonuHlxGqAmPg=
+        b=UlQrLNLQVCD3GCKSKahHKH3U8uY5W3cSRBs2mrlY3+kdwvWmx9Gt1qlIibv5V6AO8
+         ub7Xc46v4PiQGYZ9NoiPlyH2XbYCGdY9rezoJPSovDO1LcXAdt/5LgBp1plDhFVALF
+         QWV88IoPAOLjmZMzFB2KCv3vWiOKmMFW7QR6U+mI=
 From:   Niklas Cassel <nks@flawful.org>
 To:     Jens Axboe <axboe@kernel.dk>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
@@ -72,9 +72,9 @@ Cc:     Bart Van Assche <bvanassche@acm.org>,
         Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
         linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
         linux-block@vger.kernel.org, Niklas Cassel <niklas.cassel@wdc.com>
-Subject: [PATCH v5 12/19] ata: libata-scsi: remove unnecessary !cmd checks
-Date:   Tue,  4 Apr 2023 20:24:17 +0200
-Message-Id: <20230404182428.715140-13-nks@flawful.org>
+Subject: [PATCH v5 13/19] ata: libata: change ata_eh_request_sense() to not set CHECK_CONDITION
+Date:   Tue,  4 Apr 2023 20:24:18 +0200
+Message-Id: <20230404182428.715140-14-nks@flawful.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230404182428.715140-1-nks@flawful.org>
 References: <20230404182428.715140-1-nks@flawful.org>
@@ -86,58 +86,110 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Niklas Cassel <niklas.cassel@wdc.com>
 
-There is no need to check if !cmd as this can only happen for
-ATA internal commands which uses the ATA internal tag (32).
+Currently, ata_eh_request_sense() unconditionally sets the scsicmd->result
+to SAM_STAT_CHECK_CONDITION.
 
-Most users of ata_scsi_set_sense() are from _xlat functions that
-translate a scsicmd to an ATA command. These obviously have a qc->scsicmd.
+For Command Duration Limits policy 0xD:
+The device shall complete the command without error (SAM_STAT_GOOD)
+with the additional sense code set to DATA CURRENTLY UNAVAILABLE.
 
-ata_scsi_qc_complete() can also call ata_scsi_set_sense() via
-ata_gen_passthru_sense() / ata_gen_ata_sense(), called via
-ata_scsi_qc_complete(). This callback is only called for translated
-commands, so it also has a qc->scsicmd.
+It is perfectly fine to have sense data for a command that returned
+completion without error.
 
-ata_eh_analyze_ncq_error(): the NCQ error log can only contain a 0-31
-value, so it will never be able to get the ATA internal tag (32).
+In order to support for CDL policy 0xD, we have to remove this
+assumption that having sense data means that the command failed
+(SAM_STAT_CHECK_CONDITION).
 
-ata_eh_request_sense(): only called by ata_eh_analyze_tf(), which
-is only called when iteratating the QCs using ata_qc_for_each_raw(),
-which does not include the internal tag.
+Change ata_eh_request_sense() to not set SAM_STAT_CHECK_CONDITION,
+and instead move the setting of SAM_STAT_CHECK_CONDITION to the single
+caller that wants SAM_STAT_CHECK_CONDITION set, that way
+ata_eh_request_sense() can be reused in a follow-up patch that adds
+support for CDL policy 0xD.
 
-Since there is no existing call site where cmd can be NULL, remove the
-!cmd check from ata_scsi_set_sense() and ata_scsi_set_sense_information().
+The only caller of ata_eh_request_sense() is protected by:
+if (!(qc->flags & ATA_QCFLAG_SENSE_VALID)), so we can remove this
+duplicated check from ata_eh_request_sense() itself.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
+Additionally, ata_eh_request_sense() is only called from
+ata_eh_analyze_tf(), which is only called when iteratating the QCs using
+ata_qc_for_each_raw(), which does not include the internal tag,
+so cmd can never be NULL (all non-internal commands have qc->scsicmd set),
+so remove the !cmd check as well.
+
 Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- drivers/ata/libata-scsi.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/ata/libata-eh.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index e093c7a7deeb..26746609bf76 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -209,9 +209,6 @@ void ata_scsi_set_sense(struct ata_device *dev, struct scsi_cmnd *cmd,
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index a6c901811802..598ae07195b6 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -1401,8 +1401,11 @@ unsigned int atapi_eh_tur(struct ata_device *dev, u8 *r_sense_key)
+  *
+  *	LOCKING:
+  *	Kernel thread context (may sleep).
++ *
++ *	RETURNS:
++ *	true if sense data could be fetched, false otherwise.
+  */
+-static void ata_eh_request_sense(struct ata_queued_cmd *qc)
++static bool ata_eh_request_sense(struct ata_queued_cmd *qc)
  {
- 	bool d_sense = (dev->flags & ATA_DFLAG_D_SENSE);
+ 	struct scsi_cmnd *cmd = qc->scsicmd;
+ 	struct ata_device *dev = qc->dev;
+@@ -1411,15 +1414,12 @@ static void ata_eh_request_sense(struct ata_queued_cmd *qc)
  
--	if (!cmd)
+ 	if (ata_port_is_frozen(qc->ap)) {
+ 		ata_dev_warn(dev, "sense data available but port frozen\n");
+-		return;
++		return false;
+ 	}
+ 
+-	if (!cmd || qc->flags & ATA_QCFLAG_SENSE_VALID)
 -		return;
 -
- 	scsi_build_sense(cmd, d_sense, sk, asc, ascq);
+ 	if (!ata_id_sense_reporting_enabled(dev->id)) {
+ 		ata_dev_warn(qc->dev, "sense data reporting disabled\n");
+-		return;
++		return false;
+ 	}
+ 
+ 	ata_tf_init(dev, &tf);
+@@ -1432,13 +1432,19 @@ static void ata_eh_request_sense(struct ata_queued_cmd *qc)
+ 	/* Ignore err_mask; ATA_ERR might be set */
+ 	if (tf.status & ATA_SENSE) {
+ 		if (ata_scsi_sense_is_valid(tf.lbah, tf.lbam, tf.lbal)) {
+-			ata_scsi_set_sense(dev, cmd, tf.lbah, tf.lbam, tf.lbal);
++			/* Set sense without also setting scsicmd->result */
++			scsi_build_sense_buffer(dev->flags & ATA_DFLAG_D_SENSE,
++						cmd->sense_buffer, tf.lbah,
++						tf.lbam, tf.lbal);
+ 			qc->flags |= ATA_QCFLAG_SENSE_VALID;
++			return true;
+ 		}
+ 	} else {
+ 		ata_dev_warn(dev, "request sense failed stat %02x emask %x\n",
+ 			     tf.status, err_mask);
+ 	}
++
++	return false;
  }
  
-@@ -221,9 +218,6 @@ void ata_scsi_set_sense_information(struct ata_device *dev,
- {
- 	u64 information;
- 
--	if (!cmd)
--		return;
--
- 	information = ata_tf_read_block(tf, dev);
- 	if (information == U64_MAX)
- 		return;
+ /**
+@@ -1588,8 +1594,9 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc)
+ 		 *  was not included in the NCQ command error log
+ 		 *  (i.e. NCQ autosense is not supported by the device).
+ 		 */
+-		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID) && (stat & ATA_SENSE))
+-			ata_eh_request_sense(qc);
++		if (!(qc->flags & ATA_QCFLAG_SENSE_VALID) &&
++		    (stat & ATA_SENSE) && ata_eh_request_sense(qc))
++			set_status_byte(qc->scsicmd, SAM_STAT_CHECK_CONDITION);
+ 		if (err & ATA_ICRC)
+ 			qc->err_mask |= AC_ERR_ATA_BUS;
+ 		if (err & (ATA_UNC | ATA_AMNF))
 -- 
 2.39.2
 
