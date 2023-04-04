@@ -2,269 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F8736D7053
-	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 00:57:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A1206D70B3
+	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 01:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231460AbjDDW5Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Apr 2023 18:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37228 "EHLO
+        id S236431AbjDDXav (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Apr 2023 19:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbjDDW5Y (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Apr 2023 18:57:24 -0400
-Received: from out-45.mta1.migadu.com (out-45.mta1.migadu.com [IPv6:2001:41d0:203:375::2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F98F196
-        for <linux-block@vger.kernel.org>; Tue,  4 Apr 2023 15:57:22 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1680649040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ITU1uGqOtQcVh452ELvaud6IOsfX9T3Hjv11PY0ioW4=;
-        b=xCErnriUUq+XZ9rIv8R9hwaUynWf1BZGh1Gkd6zGyL6Yt4jyxk6GM4eV9+6vok6O11wqOX
-        6bxJzlO6eGpT3/PuXnuuWxlvyFypotTv6QVDeYJSav7JKl1j8W97Yj+QkOQBAJFc7QwhVB
-        HJrofe8sjbASAihnLc+RZ445v2aDIz8=
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        axboe@kernel.dk
-Cc:     Kent Overstreet <kent.overstreet@linux.dev>, willy@infradead.org,
-        phillip@squashfs.org.uk, ming.lei@redhat.com, hch@infradead.org
-Subject: [PATCH v2 2/2] block: Rework bio_for_each_folio_all()
-Date:   Tue,  4 Apr 2023 18:57:09 -0400
-Message-Id: <20230404225709.862208-3-kent.overstreet@linux.dev>
-In-Reply-To: <20230404225709.862208-1-kent.overstreet@linux.dev>
-References: <20230404225709.862208-1-kent.overstreet@linux.dev>
+        with ESMTP id S229973AbjDDXau (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Apr 2023 19:30:50 -0400
+X-Greylist: delayed 169 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 04 Apr 2023 16:30:50 PDT
+Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B60171A;
+        Tue,  4 Apr 2023 16:30:49 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailnew.west.internal (Postfix) with ESMTP id 31FC02B06716;
+        Tue,  4 Apr 2023 19:18:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 04 Apr 2023 19:18:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1680650320; x=1680653920; bh=Dh/jNwxjYyR3YpziKbhDIW+cpNCUKNq7RU5
+        ux1R/gic=; b=q5V2S59rH5jkx5zlsSCfiUImJuQixSIsU7cedybja9ADMiLFtFV
+        ToS5U+4F2TygnB3tXBEmHcazEmsV6viFXUK/QmSWQG8U4AAXJwdaGgfVL9654u2m
+        WBA2iSxif7a3ztZXcy4diSv2ufdH9QXmuv0zY5LnsveYJx+LB8LwGfdJU4QerS8U
+        ozSWsfJr9Wu6eSUXq7IKP7VcKRvQcq9xlW3+NvHfzQKiu1SkUEZg24ma1eBG5sHR
+        zAWW8v/XZmaHkMpPYbVr2Tg9naW0TEDIY5PgRANbhchdJ+2L8NbRDvxzRIuLjzeG
+        JDBErgfQA5rCzWKrvBeY5Pt+XgmKlRe4sdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=i3db14652.fm2;
+         t=1680650320; x=1680653920; bh=Dh/jNwxjYyR3YpziKbhDIW+cpNCUKNq7
+        RU5ux1R/gic=; b=DnpaVgehezZt6XRUm7fxSj+Yi74DH9MGh2041S2cXS/6dx2Y
+        qi5YyySk5SkiqnMEJKF3QxOUYZVlTGTSUIJzoqex04jyKw0WVxwWtzIqDAxqdHj4
+        WOWSRL/HQC3bnqYybZnhNXmMgswdlELbtaYwqo+W6EQL63NF1s2vwqeZYle8SewV
+        ce/joO5ME77vcSLbgW/vR7t6E/17RzTBZFVhXdjK5GIHdZJSvfRFnuQu6pcvU/OK
+        4+GVxqe6p4GazPlpaG8hQSuijghTeQunkrA6YsdBBeDepJje2IqbpDiRxqY++kSn
+        o1IXRvG2FtotAmmZNi3USo/4d0pBBHFU3seLHA==
+X-ME-Sender: <xms:T7AsZOhGqhftAi9KnSZ_t0aeV05JPij0hZwJRYlSlrtTekJ_e8Flpg>
+    <xme:T7AsZPC8CuXQ_8IHeEsVlq5niGmL2T5CUg47OaIcyCpenfdfFtPcbcVXOjVsQeatL
+    wh_pI7F1gx1RV8Dpv0>
+X-ME-Received: <xmr:T7AsZGFq8m-iWriWNrLUQbe6wnpo51z_S12pPSC-S-6DbMFkW9bcIfjtNvvTdn9SdTeuxhNQiGZ77V7Xc1uU9kp5LvU7JvCL>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdejtddgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpeffrghm
+    ihgvnhcunfgvucfoohgrlhcuoegulhgvmhhorghlsehfrghsthhmrghilhdrtghomheqne
+    cuggftrfgrthhtvghrnhepteefiefhieetgfevhfegfeehffetteduieetudfgleetvdff
+    udelveejfefhfeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepughlvghmohgrlhesfhgrshhtmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:T7AsZHTdGep7XbMvF9ciWoRW17Z_vfRc44HeTVo9iB1W6MQXf_qUqA>
+    <xmx:T7AsZLxGLeV35LWE9NoOB0nI0-YxRatB87c2yQAz4UIaOS02pe-_vQ>
+    <xmx:T7AsZF6iCgD2ziqnSVNG9nqM5gKWRNxgOKCb4PQyvm_jbJIvkZGUgg>
+    <xmx:ULAsZJ4IJiknPsjBzOd-7aJN2WYRsciV0liGW9fsVhyENRfK-T_OdiG8TgE>
+Feedback-ID: i3db14652:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Apr 2023 19:18:36 -0400 (EDT)
+Message-ID: <83f26d2a-6577-50d9-9a76-0f95dfb05bca@fastmail.com>
+Date:   Wed, 5 Apr 2023 08:18:34 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v5 09/19] scsi: allow enabling and disabling command
+ duration limits
+To:     Igor Pylypiv <ipylypiv@google.com>, Niklas Cassel <nks@flawful.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-block@vger.kernel.org, Niklas Cassel <niklas.cassel@wdc.com>
+References: <20230404182428.715140-1-nks@flawful.org>
+ <20230404182428.715140-10-nks@flawful.org> <ZCx6dzyEfWYNaF6r@google.com>
+Content-Language: en-US
+From:   Damien Le Moal <dlemoal@fastmail.com>
+In-Reply-To: <ZCx6dzyEfWYNaF6r@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This reimplements bio_for_each_folio_all() on top of the newly-reworked
-bvec_iter_all, and since it's now trivial we also provide
-bio_for_each_folio.
+On 4/5/23 04:28, Igor Pylypiv wrote:
+>> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+>> index 4994148e685b..9a54b2c0fee7 100644
+>> --- a/drivers/scsi/scsi_sysfs.c
+>> +++ b/drivers/scsi/scsi_sysfs.c
+>> @@ -1222,6 +1222,36 @@ static DEVICE_ATTR(queue_ramp_up_period, S_IRUGO | S_IWUSR,
+>>  		   sdev_show_queue_ramp_up_period,
+>>  		   sdev_store_queue_ramp_up_period);
+>>  
+>> +static ssize_t sdev_show_cdl_enable(struct device *dev,
+>> +				    struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct scsi_device *sdev = to_scsi_device(dev);
+>> +
+>> +	return sysfs_emit(buf, "%d\n", (int)sdev->cdl_enable);
+>> +}
+>> +
+>> +static ssize_t sdev_store_cdl_enable(struct device *dev,
+>> +				     struct device_attribute *attr,
+>> +				     const char *buf, size_t count)
+>> +{
+>> +	int ret;
+>> +	bool v;
+>> +
+>> +	if (!capable(CAP_SYS_ADMIN))
+>> +		return -EACCES;
+> CAP_SYS_ADMIN seems be too restrictive. NCQ PRIO (ncq_prio_enable) does not 
+> require CAP_SYS_ADMIN. Since NCQ PRIO and CDL are mutually exclusive a user
+> should be able to toggle both features.
 
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: linux-block@vger.kernel.org
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
----
- fs/iomap/buffered-io.c |  14 +++---
- include/linux/bio.h    | 105 +++++++++++++++++++++++------------------
- include/linux/bvec.h   |  15 ++++--
- 3 files changed, 78 insertions(+), 56 deletions(-)
+Indeed, we can have CDL be the same as NCQ prio. We can remove this
+SYS_CAP_ADMIN check.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 356193e44c..b1787795ce 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -187,10 +187,11 @@ static void iomap_finish_folio_read(struct folio *folio, size_t offset,
- static void iomap_read_end_io(struct bio *bio)
- {
- 	int error = blk_status_to_errno(bio->bi_status);
--	struct folio_iter fi;
-+	struct bvec_iter_all iter;
-+	struct folio_seg fv;
- 
--	bio_for_each_folio_all(fi, bio)
--		iomap_finish_folio_read(fi.folio, fi.offset, fi.length, error);
-+	bio_for_each_folio_all(fv, bio, iter)
-+		iomap_finish_folio_read(fv.fv_folio, fv.fv_offset, fv.fv_len, error);
- 	bio_put(bio);
- }
- 
-@@ -1299,7 +1300,8 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
- 	u32 folio_count = 0;
- 
- 	for (bio = &ioend->io_inline_bio; bio; bio = next) {
--		struct folio_iter fi;
-+		struct bvec_iter_all iter;
-+		struct folio_seg fv;
- 
- 		/*
- 		 * For the last bio, bi_private points to the ioend, so we
-@@ -1311,8 +1313,8 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
- 			next = bio->bi_private;
- 
- 		/* walk all folios in bio, ending page IO on them */
--		bio_for_each_folio_all(fi, bio) {
--			iomap_finish_folio_write(inode, fi.folio, fi.length,
-+		bio_for_each_folio_all(fv, bio, iter) {
-+			iomap_finish_folio_write(inode, fv.fv_folio, fv.fv_len,
- 					error);
- 			folio_count++;
- 		}
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 97180f052b..3294a35736 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -170,6 +170,49 @@ static inline void bio_advance(struct bio *bio, unsigned int nbytes)
- #define bio_for_each_segment(bvl, bio, iter)				\
- 	__bio_for_each_segment(bvl, bio, iter, (bio)->bi_iter)
- 
-+struct folio_seg {
-+	struct folio	*fv_folio;
-+	size_t		fv_offset;
-+	size_t		fv_len;
-+};
-+
-+static inline struct folio_seg biovec_to_folioseg(struct bio_vec bv)
-+{
-+
-+	struct folio *folio	= page_folio(bv.bv_page);
-+	size_t offset		= (folio_page_idx(folio, bv.bv_page) << PAGE_SHIFT) +
-+		bv.bv_offset;
-+	size_t len = min_t(size_t, folio_size(folio) - offset, bv.bv_len);
-+
-+	return (struct folio_seg) {
-+		.fv_folio	= folio,
-+		.fv_offset	= offset,
-+		.fv_len		= len,
-+	};
-+}
-+
-+static inline struct folio_seg bio_iter_iovec_folio(struct bio *bio,
-+						    struct bvec_iter iter)
-+{
-+	return biovec_to_folioseg(bio_iter_iovec(bio, iter));
-+}
-+
-+#define __bio_for_each_folio(bvl, bio, iter, start)			\
-+	for (iter = (start);						\
-+	     (iter).bi_size &&						\
-+		((bvl = bio_iter_iovec_folio((bio), (iter))), 1);	\
-+	     bio_advance_iter_single((bio), &(iter), (bvl).fv_len))
-+
-+/**
-+ * bio_for_each_folio - Iterate over each folio in a bio.
-+ *
-+ * @fv: struct folio_seg which is returned at each loop iteration
-+ * @bio: struct bio to iterate over.
-+ * @iter: struct bvec_iter: internal iterator state
-+ */
-+#define bio_for_each_folio(bvl, bio, iter)				\
-+	__bio_for_each_folio(bvl, bio, iter, (bio)->bi_iter)
-+
- #define __bio_for_each_bvec(bvl, bio, iter, start)		\
- 	for (iter = (start);						\
- 	     (iter).bi_size &&						\
-@@ -278,59 +321,27 @@ static inline struct bio_vec *bio_last_bvec_all(struct bio *bio)
- 	return &bio->bi_io_vec[bio->bi_vcnt - 1];
- }
- 
--/**
-- * struct folio_iter - State for iterating all folios in a bio.
-- * @folio: The current folio we're iterating.  NULL after the last folio.
-- * @offset: The byte offset within the current folio.
-- * @length: The number of bytes in this iteration (will not cross folio
-- *	boundary).
-- */
--struct folio_iter {
--	struct folio *folio;
--	size_t offset;
--	size_t length;
--	/* private: for use by the iterator */
--	struct folio *_next;
--	size_t _seg_count;
--	int _i;
--};
--
--static inline void bio_first_folio(struct folio_iter *fi, struct bio *bio,
--				   int i)
-+static inline struct folio_seg bio_folio_iter_all_peek(const struct bio *bio,
-+						       const struct bvec_iter_all *iter)
- {
--	struct bio_vec *bvec = bio_first_bvec_all(bio) + i;
--
--	fi->folio = page_folio(bvec->bv_page);
--	fi->offset = bvec->bv_offset +
--			PAGE_SIZE * (bvec->bv_page - &fi->folio->page);
--	fi->_seg_count = bvec->bv_len;
--	fi->length = min(folio_size(fi->folio) - fi->offset, fi->_seg_count);
--	fi->_next = folio_next(fi->folio);
--	fi->_i = i;
--}
--
--static inline void bio_next_folio(struct folio_iter *fi, struct bio *bio)
--{
--	fi->_seg_count -= fi->length;
--	if (fi->_seg_count) {
--		fi->folio = fi->_next;
--		fi->offset = 0;
--		fi->length = min(folio_size(fi->folio), fi->_seg_count);
--		fi->_next = folio_next(fi->folio);
--	} else if (fi->_i + 1 < bio->bi_vcnt) {
--		bio_first_folio(fi, bio, fi->_i + 1);
--	} else {
--		fi->folio = NULL;
--	}
-+	return biovec_to_folioseg(__bvec_iter_all_peek(bio->bi_io_vec, iter));
- }
- 
- /**
-- * bio_for_each_folio_all - Iterate over each folio in a bio.
-- * @fi: struct folio_iter which is updated for each folio.
-+ * bio_for_each_folio_all - Iterate over each folio in a bio
-+ *
-+ * As with other _all variants, safe to use after submission and completion,
-+ * iterates over all folios in original bio as constructed by filesystem
-+ *
-+ * @fv: struct folio_seg which is returned at each loop iteration
-  * @bio: struct bio to iterate over.
-+ * @iter: struct bvec_iter_all: internal iterator state
-  */
--#define bio_for_each_folio_all(fi, bio)				\
--	for (bio_first_folio(&fi, bio, 0); fi.folio; bio_next_folio(&fi, bio))
-+#define bio_for_each_folio_all(fv, bio, iter)				\
-+	for (bvec_iter_all_init(&iter);					\
-+	     iter.idx < bio->bi_vcnt &&					\
-+		((fv = bio_folio_iter_all_peek(bio, &iter)), true);	\
-+	     bio_iter_all_advance((bio), &iter, fv.fv_len))
- 
- enum bip_flags {
- 	BIP_BLOCK_INTEGRITY	= 1 << 0, /* block layer owns integrity data */
-diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-index 12f0e073c0..c21a26445e 100644
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@ -166,18 +166,27 @@ static inline void bvec_iter_all_init(struct bvec_iter_all *iter_all)
- 	iter_all->idx = 0;
- }
- 
--static inline struct bio_vec bvec_iter_all_peek(const struct bio_vec *bvec,
--						struct bvec_iter_all *iter)
-+static inline struct bio_vec __bvec_iter_all_peek(const struct bio_vec *bvec,
-+						  const struct bvec_iter_all *iter)
- {
- 	struct bio_vec bv = bvec[iter->idx];
- 
-+	BUG_ON(iter->done >= bv.bv_len);
-+
- 	bv.bv_offset	+= iter->done;
- 	bv.bv_len	-= iter->done;
- 
- 	bv.bv_page	+= bv.bv_offset >> PAGE_SHIFT;
- 	bv.bv_offset	&= ~PAGE_MASK;
--	bv.bv_len	= min_t(unsigned, PAGE_SIZE - bv.bv_offset, bv.bv_len);
-+	return bv;
-+}
-+
-+static inline struct bio_vec bvec_iter_all_peek(const struct bio_vec *bvec,
-+						const struct bvec_iter_all *iter)
-+{
-+	struct bio_vec bv = __bvec_iter_all_peek(bvec, iter);
- 
-+	bv.bv_len = min_t(unsigned, PAGE_SIZE - bv.bv_offset, bv.bv_len);
- 	return bv;
- }
- 
--- 
-2.40.0
 
