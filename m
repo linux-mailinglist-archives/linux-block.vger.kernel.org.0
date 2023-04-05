@@ -2,230 +2,158 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 458196D7FE8
-	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 16:45:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C389E6D7F33
+	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 16:21:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238528AbjDEOpk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Apr 2023 10:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58300 "EHLO
+        id S238071AbjDEOVr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Apr 2023 10:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237141AbjDEOpf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 10:45:35 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7437555A2;
-        Wed,  5 Apr 2023 07:45:18 -0700 (PDT)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 335Dv5kH027527;
-        Wed, 5 Apr 2023 14:20:24 GMT
+        with ESMTP id S238159AbjDEOVe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 10:21:34 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE9365B4;
+        Wed,  5 Apr 2023 07:21:02 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 335E5Xjr012614;
+        Wed, 5 Apr 2023 14:20:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=K9U7CngF092J/Ij/0GiMkCJMBS955G6gSplf3tnSakM=;
- b=PuVzx4bogD+94c32OirHFT1s4IzjF07JZgykKqJhg9IouuO89V5A+O/LIYyu7V+qgrTA
- 08kHHTTrz63ABzGQLK39LYyQ5j4yEp9/34hroSMkluFYq1FUamC1ObaAah/WTadaEPCU
- 3u9XBrpu7KTLIiB9mtojVthvO/6ou8jh4M8cxTTBV/0pUL0d75FqsTIi3rSeuU3hpFRB
- REXc7emRebtVFwZp6E6YPuIoju0U7Q2jC7XyjWEWO4UU7HxFCON3fDcRAZp5qibHnzjD
- BwDgVKxMAzw7tvNOg0t/iHV5Yb7xkzHZ/QOFEGdCrhUNk9y1DCcQTREyD6skRBvG9Zrf sg== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3psaamrrg9-1
+ bh=NvhqejzlhmjRM7wQ/qoA6+OzhVw6T62MZI5vJX2MCDY=;
+ b=f9HfXBHAM/EeXcFIJ+2I/tNYyuap8VKwVQnyUVhlJKhVSJ4yFVXXmoZIDiK3dqwclCzy
+ nkAMp8iHC4nPVNMQYqdfaM6r2zhiopZUIRLRcybPRMcErtJd9F5huNAM2icYI4+YgPl7
+ YhIwWao35xVgcRFAw1HyoMNyJvcn7UklOwH/HeYevMxubFTELG0Yl4fAFrRNrIzy6vJk
+ X5Big887LM9vAiaLWONp6za8X20YJ+aiu4UlIkzBOrT8z1YV7tzUqzr/eEuCLL3lw6BW
+ FONw5oDVrVC9/k5Xncic0lm4w9jW+lZxc62Si5WiGwRIlRn2OQZEhb11FlHpaIn6Btg7 HA== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ps7n3dh0r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Apr 2023 14:20:24 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3352efn4008120;
-        Wed, 5 Apr 2023 14:20:22 GMT
+        Wed, 05 Apr 2023 14:20:23 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3355SQ5d015821;
+        Wed, 5 Apr 2023 14:20:21 GMT
 Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3ppc86tjnt-1
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3ppc873cnm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Wed, 05 Apr 2023 14:20:21 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 335EKHed7799420
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 335EKHMg60031302
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Apr 2023 14:20:18 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1BC220043;
+        Wed, 5 Apr 2023 14:20:17 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFE3B20043;
         Wed,  5 Apr 2023 14:20:17 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C079920040;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B11E82004D;
         Wed,  5 Apr 2023 14:20:17 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
         Wed,  5 Apr 2023 14:20:17 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id 83292E128D; Wed,  5 Apr 2023 16:20:17 +0200 (CEST)
+        id 85F03E13C2; Wed,  5 Apr 2023 16:20:17 +0200 (CEST)
 From:   Stefan Haberland <sth@linux.ibm.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 3/7] s390/dasd: add aq_mask sysfs attribute
-Date:   Wed,  5 Apr 2023 16:20:13 +0200
-Message-Id: <20230405142017.2446986-4-sth@linux.ibm.com>
+Subject: [PATCH 4/7] s390/dasd: add aq_requeue sysfs attribute
+Date:   Wed,  5 Apr 2023 16:20:14 +0200
+Message-Id: <20230405142017.2446986-5-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230405142017.2446986-1-sth@linux.ibm.com>
 References: <20230405142017.2446986-1-sth@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 7nFuNBAq6WH_vdwbN89-loZk3hcKavwP
-X-Proofpoint-ORIG-GUID: 7nFuNBAq6WH_vdwbN89-loZk3hcKavwP
+X-Proofpoint-GUID: Yah03fj-0NoguClZuY0zRJbFtgDip_nL
+X-Proofpoint-ORIG-GUID: Yah03fj-0NoguClZuY0zRJbFtgDip_nL
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-04-05_09,2023-04-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1015
- spamscore=0 suspectscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2303200000
  definitions=main-2304050127
 X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add sysfs attribute that controls the DASD autoquiesce feature.
-The autoquiesce is disabled when 0 is echoed to the attribute.
+Add a sysfs attribute to control if all IO requests will be requeued to
+the blocklayer in case of an autoquiesce event or not.
 
-A value greater than 0 will enable the feature.
-The aq_mask attribute will accept an unsigned integer and the value
-will be interpreted as bitmask defining the trigger events that will
-lead to an automatic quiesce.
+A value of 1 means that in case of an autoquiesce event all IO requests
+will be requeued to the blocklayer.
 
-The following autoquiesce triggers will currently be available:
-
-DASD_EER_FATALERROR  1 - any final I/O error
-DASD_EER_NOPATH      2 - no remaining paths for the device
-DASD_EER_STATECHANGE 3 - a state change interrupt occurred
-DASD_EER_PPRCSUSPEND 4 - the device is PPRC suspended
-DASD_EER_NOSPC       5 - there is no space remaining on an ESE device
-DASD_EER_TIMEOUT     6 - a certain amount of timeouts occurred
-DASD_EER_STARTIO     7 - the IO start function encountered an error
-
-The currently supported maximum value is 255.
-
-Bit 31 is reserved for internal usage.
-Bit 0 is not used.
-
-Example:
-
- - deactivate autoquiesce
-   $ echo 0 > /sys/bus/ccw/0.0.1234/aq_mask
-
- - enable autoquiesce for FATALERROR, NOPATH and TIMEOUT
-   (0000 0000 0000 0000  0000 0000 0100 0110 => 70)
-   $ echo 70 > /sys/bus/ccw/0.0.1234/aq_mask
+A value of 0 means that the device will only be stopped.
 
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
 ---
- drivers/s390/block/dasd_devmap.c | 43 ++++++++++++++++++++++++++++++++
- drivers/s390/block/dasd_int.h    | 23 +++++++++++------
- 2 files changed, 59 insertions(+), 7 deletions(-)
+ drivers/s390/block/dasd_devmap.c | 36 ++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd_devmap.c
-index df17f0f9cb0f..c7c948c55761 100644
+index c7c948c55761..95c7959c7949 100644
 --- a/drivers/s390/block/dasd_devmap.c
 +++ b/drivers/s390/block/dasd_devmap.c
-@@ -50,6 +50,7 @@ struct dasd_devmap {
-         unsigned short features;
- 	struct dasd_device *device;
- 	struct dasd_copy_relation *copy;
-+	unsigned int aq_mask;
- };
+@@ -1517,6 +1517,41 @@ static ssize_t dasd_aq_mask_store(struct device *dev, struct device_attribute *a
  
- /*
-@@ -1475,6 +1476,47 @@ dasd_eer_store(struct device *dev, struct device_attribute *attr,
- 
- static DEVICE_ATTR(eer_enabled, 0644, dasd_eer_show, dasd_eer_store);
+ static DEVICE_ATTR(aq_mask, 0644, dasd_aq_mask_show, dasd_aq_mask_store);
  
 +/*
-+ * aq_mask controls if the DASD should be quiesced on certain triggers
-+ * The aq_mask attribute is interpreted as bitmap of the DASD_EER_* triggers.
++ * aq_requeue controls if requests are returned to the blocklayer on quiesce
++ * or if requests are only not started
 + */
-+static ssize_t dasd_aq_mask_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
++static ssize_t dasd_aqr_show(struct device *dev, struct device_attribute *attr,
++			     char *buf)
 +{
 +	struct dasd_devmap *devmap;
-+	unsigned int aq_mask = 0;
++	int flag;
 +
 +	devmap = dasd_find_busid(dev_name(dev));
 +	if (!IS_ERR(devmap))
-+		aq_mask = devmap->aq_mask;
-+
-+	return sysfs_emit(buf, "%d\n", aq_mask);
++		flag = (devmap->features & DASD_FEATURE_REQUEUEQUIESCE) != 0;
++	else
++		flag = (DASD_FEATURE_DEFAULT &
++			DASD_FEATURE_REQUEUEQUIESCE) != 0;
++	return sysfs_emit(buf, "%d\n", flag);
 +}
 +
-+static ssize_t dasd_aq_mask_store(struct device *dev, struct device_attribute *attr,
-+				  const char *buf, size_t count)
++static ssize_t dasd_aqr_store(struct device *dev, struct device_attribute *attr,
++			      const char *buf, size_t count)
 +{
-+	struct dasd_devmap *devmap;
-+	unsigned int val;
++	bool val;
++	int rc;
 +
-+	if (kstrtouint(buf, 0, &val) || val > DASD_EER_VALID)
++	if (kstrtobool(buf, &val))
 +		return -EINVAL;
 +
-+	devmap = dasd_devmap_from_cdev(to_ccwdev(dev));
-+	if (IS_ERR(devmap))
-+		return PTR_ERR(devmap);
++	rc = dasd_set_feature(to_ccwdev(dev), DASD_FEATURE_REQUEUEQUIESCE, val);
 +
-+	spin_lock(&dasd_devmap_lock);
-+	devmap->aq_mask = val;
-+	if (devmap->device)
-+		devmap->device->aq_mask = devmap->aq_mask;
-+	spin_unlock(&dasd_devmap_lock);
-+
-+	return count;
++	return rc ? : count;
 +}
 +
-+static DEVICE_ATTR(aq_mask, 0644, dasd_aq_mask_show, dasd_aq_mask_store);
++static DEVICE_ATTR(aq_requeue, 0644, dasd_aqr_show, dasd_aqr_store);
 +
  /*
   * expiration time for default requests
   */
-@@ -2324,6 +2366,7 @@ static struct attribute * dasd_attrs[] = {
- 	&dev_attr_copy_pair.attr,
+@@ -2367,6 +2402,7 @@ static struct attribute * dasd_attrs[] = {
  	&dev_attr_copy_role.attr,
  	&dev_attr_ping.attr,
-+	&dev_attr_aq_mask.attr,
+ 	&dev_attr_aq_mask.attr,
++	&dev_attr_aq_requeue.attr,
  	NULL,
  };
- 
-diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
-index d0ff4528d489..c4633a4aeeb1 100644
---- a/drivers/s390/block/dasd_int.h
-+++ b/drivers/s390/block/dasd_int.h
-@@ -444,13 +444,22 @@ struct dasd_discipline {
- 
- extern struct dasd_discipline *dasd_diag_discipline_pointer;
- 
--/* Trigger IDs for extended error reporting */
--#define DASD_EER_FATALERROR  1
--#define DASD_EER_NOPATH      2
--#define DASD_EER_STATECHANGE 3
--#define DASD_EER_PPRCSUSPEND 4
--#define DASD_EER_NOSPC	     5
--#define DASD_EER_AUTOQUIESCE 31
-+/* Trigger IDs for extended error reporting DASD EER and autoquiesce */
-+enum eer_trigger {
-+	DASD_EER_FATALERROR = 1,
-+	DASD_EER_NOPATH,
-+	DASD_EER_STATECHANGE,
-+	DASD_EER_PPRCSUSPEND,
-+	DASD_EER_NOSPC,
-+	DASD_EER_TIMEOUTS,
-+	DASD_EER_STARTIO,
-+
-+	/* enum end marker, only add new trigger above */
-+	DASD_EER_MAX,
-+	DASD_EER_AUTOQUIESCE = 31, /* internal only */
-+};
-+
-+#define DASD_EER_VALID ((1U << DASD_EER_MAX) - 1)
- 
- /* DASD path handling */
  
 -- 
 2.37.2
