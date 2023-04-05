@@ -2,64 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 869FC6D7A69
-	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 12:53:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9CB06D7ADE
+	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 13:13:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237575AbjDEKxd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Apr 2023 06:53:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34876 "EHLO
+        id S237210AbjDELNv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Apr 2023 07:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237597AbjDEKx2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 06:53:28 -0400
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B073E559F
-        for <linux-block@vger.kernel.org>; Wed,  5 Apr 2023 03:53:25 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-54601d90118so513627067b3.12
-        for <linux-block@vger.kernel.org>; Wed, 05 Apr 2023 03:53:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680692004; x=1683284004;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BF8S57zklCF7SEsUQ/f/6fRKqS2VWXlKEiFk3IkRkRs=;
-        b=YN1D6LOtOFRSeouKb6cK3VN6jjVIlEMke0wFGzXTwKgvRRcLB5OfG8b0/gV4obNhpo
-         9+S+aZrMGtdNH6hj10BKAj+XRr5GU4W/Y9a9BrgZERiquN+MIgRoQ/TV/q5cYuYFn4OA
-         ODsCGShNoizOXXKgKSk7JIXAxaba6pguNHBo1jg6uX+M412FAnCF3RYcMMaMum7k3JyV
-         iS+QPhm6UPhiGss0C6Z2n6Q9yYLmXkM2b1FT+cuoNFcjAj/aykM7u0ami4XIsmFGslQV
-         uNkCltgQHeaDsNeOHP149IFzk51+dlDDSgRqJ3V7Ky71u1PQea8BlKvdV/DZvjQZpppR
-         sqGg==
-X-Gm-Message-State: AAQBX9fta4Qd7omwwvfxVU9G+3rS1tvFc3kKAsJGnQ2vgn+QOFE6TdW7
-        NlK0GYqI6DaYsFpmzJvfFnJh/ZpVyAavlA==
-X-Google-Smtp-Source: AKy350Zk7+yjHpjdCGvhfHuEJ5RNwN95bnjdVP7WQkhK5lDxglSvnm4fUZoE2xHB6ohAiMImd4fFqA==
-X-Received: by 2002:a81:490b:0:b0:541:66d8:ef7 with SMTP id w11-20020a81490b000000b0054166d80ef7mr5361326ywa.4.1680692004453;
-        Wed, 05 Apr 2023 03:53:24 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id bz2-20020a05690c084200b00545a08184b3sm3787604ywb.67.2023.04.05.03.53.23
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Apr 2023 03:53:23 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id j7so41987501ybg.4
-        for <linux-block@vger.kernel.org>; Wed, 05 Apr 2023 03:53:23 -0700 (PDT)
-X-Received: by 2002:a25:8487:0:b0:b26:884:c35e with SMTP id
- v7-20020a258487000000b00b260884c35emr1625689ybk.4.1680692003275; Wed, 05 Apr
- 2023 03:53:23 -0700 (PDT)
+        with ESMTP id S237260AbjDELNu (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 07:13:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36681131
+        for <linux-block@vger.kernel.org>; Wed,  5 Apr 2023 04:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680693182;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=N2WEGFg+V4u6XnztR8qf+aGaXUcX43OBgKgkW4HEXss=;
+        b=JtRLKinxdxa/QOen9mdarZGBs5/83HlLZYuk5Sa4kVgvli215dvzVf9ud5bdOdgKruPbpM
+        QVdm2bItnaDNdCBBdbmkyqL7eKDe4saFmkzi3ryuPwOTopJyxm8B80vsYbHrTu0RnoiGjI
+        GJUAEwRVJ3OtfE/SKMPWaH8AjXHK298=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-240-NjK3AVpnPzaKvNItKZVo0w-1; Wed, 05 Apr 2023 07:12:59 -0400
+X-MC-Unique: NjK3AVpnPzaKvNItKZVo0w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E45238123AA;
+        Wed,  5 Apr 2023 11:12:58 +0000 (UTC)
+Received: from mrjust8.localdomain (unknown [10.43.17.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CF0A40C6EC4;
+        Wed,  5 Apr 2023 11:12:57 +0000 (UTC)
+From:   Ondrej Kozina <okozina@redhat.com>
+To:     linux-block@vger.kernel.org
+Cc:     bluca@debian.org, gmazyland@gmail.com, axboe@kernel.dk,
+        hch@infradead.org, brauner@kernel.org, jonathan.derrick@linux.dev,
+        Ondrej Kozina <okozina@redhat.com>
+Subject: [PATCH v2 0/5] sed-opal: add command to read locking range attributes
+Date:   Wed,  5 Apr 2023 13:12:18 +0200
+Message-Id: <20230405111223.272816-1-okozina@redhat.com>
+In-Reply-To: <20230322151604.401680-1-okozina@redhat.com>
+References: <20230322151604.401680-1-okozina@redhat.com>
 MIME-Version: 1.0
-References: <20230322151604.401680-1-okozina@redhat.com> <20230322151604.401680-6-okozina@redhat.com>
- <20230405-komitee-treten-36f2c0a823b6@brauner> <36d11bf6-a0c9-b02f-020c-df25d06c7aee@redhat.com>
-In-Reply-To: <36d11bf6-a0c9-b02f-020c-df25d06c7aee@redhat.com>
-From:   Luca Boccassi <bluca@debian.org>
-Date:   Wed, 5 Apr 2023 11:53:12 +0100
-X-Gmail-Original-Message-ID: <CAMw=ZnSw5xhEr_vEcOgk0WVhvQ1jFd3W5TJPx5erXpHkzzxpLQ@mail.gmail.com>
-Message-ID: <CAMw=ZnSw5xhEr_vEcOgk0WVhvQ1jFd3W5TJPx5erXpHkzzxpLQ@mail.gmail.com>
-Subject: Re: [PATCH 5/5] sed-opal: Add command to read locking range parameters.
-To:     Ondrej Kozina <okozina@redhat.com>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        linux-block@vger.kernel.org, gmazyland@gmail.com, axboe@kernel.dk,
-        hch@infradead.org, jonathan.derrick@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.5 required=5.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-        FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,43 +60,43 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 5 Apr 2023 at 10:39, Ondrej Kozina <okozina@redhat.com> wrote:
->
-> On 05. 04. 23 10:27, Christian Brauner wrote:
-> > On Wed, Mar 22, 2023 at 04:16:04PM +0100, Ondrej Kozina wrote:
-> >> diff --git a/include/uapi/linux/sed-opal.h b/include/uapi/linux/sed-opal.h
-> >> index d7a1524023db..3905c8ffedbf 100644
-> >> --- a/include/uapi/linux/sed-opal.h
-> >> +++ b/include/uapi/linux/sed-opal.h
-> >> @@ -78,6 +78,16 @@ struct opal_user_lr_setup {
-> >>      struct opal_session_info session;
-> >>   };
-> >>
-> >> +struct opal_lr_status {
-> >> +    struct opal_session_info session;
-> >> +    __u64 range_start;
-> >> +    __u64 range_length;
-> >> +    __u32 RLE; /* Read Lock enabled */
-> >> +    __u32 WLE; /* Write Lock Enabled */
-> >
-> > Why is that in capital letters if I may ask? That seems strange uapi for
-> > Linux. And why not just "read_lock_enabled" and "write_lock_enabled"
-> > given that we also have "range_start" and "range_length". Let's not
-> > CREAT one of those weird uapis if we don't have to.
->
-> See 'opal_user_lr_setup' struct above. Since the new command is supposed
-> to return those parameters I did not want to add confusion by naming it
-> differently.
->
-> >
-> >> +    __u32 l_state;
-> >
-> > "locking_state"?
->
-> Same as above, see 'opal_lock_unlock' struct. It's even spicier
-> considering it's impossible to set WRITE_ONLY state (lock only read I/O)
-> with sed-opal iface.
+This patch set aims to add ability to user authorities to read locking
+range attributes.
 
-Yeah we really want to keep the parameters names the same across the
-various ioctl, otherwise it's going to get very confusing very
-quickly.
+It's achieved in two steps (except SUM enabled drives):
+
+1) Patch IOC_OPAL_ADD_USR_TO_LR command so that user authority (together with
+OPAL_ADMIN1) is added in ACE that allows getting locking range attributes.
+
+2) Add new ioctl command IOC_OPAL_GET_LR_STATUS to get locking range
+attributes to user authority assigned to specific locking range.
+
+libcryptsetup plans to support OPAL2 drives and needs to verify locking
+range parameters before device activation (LR unlock) takes place since
+it's considered undesirable to have (for example) partition mapped beyond
+locking range boundaries.
+
+Changes since previous version:
+
+v2:
+  - Mostly code style fixes (overly long lines)
+  - Refactored helper for adding user authorities in ACE (added boolean
+    operators defines, explained addition of boolean ace operator
+    when adding more than one user authority in ACE)
+
+Ondrej Kozina (5):
+  sed-opal: do not add same authority twice in boolean ace.
+  sed-opal: add helper for adding user authorities in ACE.
+  sed-opal: allow user authority to get locking range attributes.
+  sed-opal: add helper to get multiple columns at once.
+  sed-opal: Add command to read locking range parameters.
+
+ block/opal_proto.h            |  10 ++
+ block/sed-opal.c              | 301 +++++++++++++++++++++++++++++-----
+ include/linux/sed-opal.h      |   1 +
+ include/uapi/linux/sed-opal.h |  11 ++
+ 4 files changed, 280 insertions(+), 43 deletions(-)
+
+-- 
+2.31.1
+
