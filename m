@@ -2,70 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9CC16D8275
-	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 17:47:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFE736D83FE
+	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 18:46:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239048AbjDEPrs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Apr 2023 11:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59048 "EHLO
+        id S233232AbjDEQqh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Apr 2023 12:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239043AbjDEPrr (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 11:47:47 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A075FF7
-        for <linux-block@vger.kernel.org>; Wed,  5 Apr 2023 08:47:24 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 9360D1FF78;
-        Wed,  5 Apr 2023 15:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1680709597; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c+d7byf7E4FRcokSibsW01g7yp7GQa9FjQJ/goiUPdo=;
-        b=LSFqOcdUH056XR42CkVStfw4c+i3SlNDrCm/rAlXu1f8id1sypSp20H7GumDFzSGdr3CZo
-        yyW+6BR129+MK0CBahbhpB3tyQ80ksEGpoYFO4T2BVM3rbedoB8gHyBWXot9tfpBJ0pSlQ
-        ij1n3kLzZvtCnGENhDXkVQq15lZjun4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1680709597;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c+d7byf7E4FRcokSibsW01g7yp7GQa9FjQJ/goiUPdo=;
-        b=QF4vJNU10apIu56OMr4YvvfOIUfq0gnR/zgMj3CqVxw4ZLq2ELJhGAi74kwP0CiIGT931X
-        5354H7ik3t3LDhBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 867DA13A10;
-        Wed,  5 Apr 2023 15:46:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id qmLTIN2XLWTgNgAAMHmgww
-        (envelope-from <dwagner@suse.de>); Wed, 05 Apr 2023 15:46:37 +0000
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-block@vger.kernel.org
-Cc:     linux-nvme@lists.infradead.org,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Hannes Reinecke <hare@suse.de>,
-        James Smart <jsmart2021@gmail.com>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH blktests v5 4/4] nvme/048: test queue count changes on reconnect
-Date:   Wed,  5 Apr 2023 17:46:30 +0200
-Message-Id: <20230405154630.16298-5-dwagner@suse.de>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230405154630.16298-1-dwagner@suse.de>
-References: <20230405154630.16298-1-dwagner@suse.de>
+        with ESMTP id S232000AbjDEQqg (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 12:46:36 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B34440C9
+        for <linux-block@vger.kernel.org>; Wed,  5 Apr 2023 09:46:33 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id ca18e2360f4ac-75d1e0ff8ecso1103939f.0
+        for <linux-block@vger.kernel.org>; Wed, 05 Apr 2023 09:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1680713193; x=1683305193;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XzDRh3J+8SvEaXn0A+6OwXdLsL1cECKaJ2d44EZkMv8=;
+        b=cvI9QcotuV/WktpPWLiG9q4P4hb+fv6+L6fSPKWafHE+/Rha1cywCFPBTcxcs7VOfF
+         N2ouY2O52fIxorXrYcHLYhkSGr5sQ1qOJw8wE+22T7X5px1V2h0oDQtykbM00fv+er7Y
+         ciNCEt6vEUY3Ost7gBNPDhWIpDUWZrJ2f7UQ7gmXcxcDWUzSvUWcTaAn4zEZf7xmmHQ5
+         JuyZih1ualPwJ4GOudcl4LRQ/+nICcjsA1Ne1W9BLHY1ePAq4HJQMeWlv1hV5wlFfj9j
+         9HONukPaW9BEyzUlrOr7RjHnP0crt4tssSxH+GSgSZEv3keTR95daTnBl1Zq72l143Gf
+         cA+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680713193; x=1683305193;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XzDRh3J+8SvEaXn0A+6OwXdLsL1cECKaJ2d44EZkMv8=;
+        b=KZ7e+3BO7TAlSK7b33F6VMuWhIHHro/L3GUXoGj0GlTaKtMU0NIMdYnPqXHMS8xxW0
+         ppBettiSSgbq6Gt42XWHC234vPL3ZdtXbqkXb6XXiPN+Bfk1YYOBF1r6LzdwJ25WGkOM
+         lRJ+t+BZohY5vq48UsgaBN1fP7h2Pa2Qz6+096IDeKUlmB4lxScvep/kKZdynD7I7ZTk
+         pS4UwEvc3g7ilookh6uDc/GAfcD60anjy0V1GbkLfc/0V1e28bCOBQKaV+Ef9ijxLLXY
+         PNgJv5qBPA2kH7zLBlHUVsWKsbwvRVNeJuZDpSqm/NogT+BLQZ41RExMFeZmBmlIY6CK
+         rjaQ==
+X-Gm-Message-State: AAQBX9eaI9hYLHCIfHi+OZuZAWvyIavvnd6ErPb03XEDdWJ25N/4DbaC
+        SYj3FFFqey/7EpOYLMx6sTosdw==
+X-Google-Smtp-Source: AKy350Zpwf9mFVQTQK0zdVakkitvp5e+RlJjveBB+ifhwqXu+VbfbTE1RvfDJdPOPfDc5Uo0oYEAHQ==
+X-Received: by 2002:a92:7d04:0:b0:313:fb1b:2f86 with SMTP id y4-20020a927d04000000b00313fb1b2f86mr1403917ilc.0.1680713192956;
+        Wed, 05 Apr 2023 09:46:32 -0700 (PDT)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 19-20020a921813000000b00326ca02f30dsm800189ily.65.2023.04.05.09.46.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Apr 2023 09:46:32 -0700 (PDT)
+Message-ID: <aae10acf-7567-48e9-37b5-12db6a69719e@kernel.dk>
+Date:   Wed, 5 Apr 2023 10:46:31 -0600
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: kernel BUG in find_lock_entries
+Content-Language: en-US
+To:     "Dae R. Jeong" <threeearcat@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <ZC1S_f9nworAQpm_@dragonet>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ZC1S_f9nworAQpm_@dragonet>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,113 +72,27 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The target is allowed to change the number of I/O queues. Test if the
-host is able to reconnect in this scenario.
+On 4/5/23 4:52 AM, Dae R. Jeong wrote:
+> Hi,
+> 
+> We observed an issue "kernel BUG in find_lock_entries". This was
+> observed a few months ago.
+> 
+> Unfortunately, we have not found a reproducer for the crash yet. We
+> will inform you if we have any update on this crash.
+> 
+> Detailed crash information is attached below.
+> 
+> Best regards,
+> Dae R. Jeong
+> 
+> -----
+> - Kernel version:
+> 6.0-rc7
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- tests/nvme/048     | 81 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/048.out |  3 ++
- 2 files changed, 84 insertions(+)
- create mode 100755 tests/nvme/048
- create mode 100644 tests/nvme/048.out
+This is pretty old. Does it trigger on a current kernel?
 
-diff --git a/tests/nvme/048 b/tests/nvme/048
-new file mode 100755
-index 000000000000..bc4766e82159
---- /dev/null
-+++ b/tests/nvme/048
-@@ -0,0 +1,81 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2023 Daniel Wagner, SUSE Labs
-+#
-+# Test queue count changes on reconnect
-+
-+. tests/nvme/rc
-+
-+DESCRIPTION="Test queue count changes on reconnect"
-+QUICK=1
-+
-+requires() {
-+	_nvme_requires
-+	_have_loop
-+	_require_nvme_trtype tcp rdma fc
-+	_require_min_cpus 2
-+}
-+
-+set_max_qid() {
-+	local port="$1"
-+	local subsys_name="$2"
-+	local max_qid="$3"
-+
-+	_set_nvmet_attr_qid_max "${subsys_name}" "${max_qid}"
-+
-+	# Setting qid_max forces a disconnect and the reconntect attempt starts
-+	# 10s after connection lost, thus we will see the connecting state.
-+	_nvmf_wait_for_state "${subsys_name}" "connecting"
-+	_nvmf_wait_for_state "${subsys_name}" "live"
-+}
-+
-+test() {
-+	local port
-+	local subsys_name="blktests-subsystem-1"
-+	local hostid
-+	local hostnqn="nqn.2014-08.org.nvmexpress:uuid:${hostid}"
-+	local file_path="${TMPDIR}/img"
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	hostid="$(uuidgen)"
-+	if [ -z "$hostid" ] ; then
-+		echo "uuidgen failed"
-+		return 1
-+	fi
-+
-+	if ! _detect_nvmet_subsys_attr "attr_qid_max"; then
-+		SKIP_REASONS+=("missing attr_qid_max feature")
-+		return 1
-+	fi
-+
-+	truncate -s 512M "${file_path}"
-+
-+	_create_nvmet_subsystem "${subsys_name}" "${file_path}" \
-+		"b92842df-a394-44b1-84a4-92ae7d112861"
-+	port="$(_create_nvmet_port "${nvme_trtype}")"
-+	_add_nvmet_subsys_to_port "${port}" "${subsys_name}"
-+	_create_nvmet_host "${subsys_name}" "${hostnqn}"
-+
-+	_nvme_connect_subsys "${nvme_trtype}" "${subsys_name}" \
-+			     --hostnqn "${hostnqn}" \
-+			     --hostid "${hostid}"
-+
-+	_nvmf_wait_for_state "${subsys_name}" "live"
-+
-+	set_max_qid "${port}" "${subsys_name}" 1
-+	set_max_qid "${port}" "${subsys_name}" 128
-+
-+	_nvme_disconnect_subsys "${subsys_name}"
-+
-+	_remove_nvmet_subsystem_from_port "${port}" "${subsys_name}"
-+	_remove_nvmet_subsystem "${subsys_name}"
-+
-+	_remove_nvmet_port "${port}"
-+
-+	_remove_nvmet_host "${hostnqn}"
-+
-+	rm "${file_path}"
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/048.out b/tests/nvme/048.out
-new file mode 100644
-index 000000000000..7f986ef9637d
---- /dev/null
-+++ b/tests/nvme/048.out
-@@ -0,0 +1,3 @@
-+Running nvme/048
-+NQN:blktests-subsystem-1 disconnected 1 controller(s)
-+Test complete
 -- 
-2.40.0
+Jens Axboe
+
 
