@@ -2,70 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66F566D7E02
-	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 15:46:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1216D801A
+	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 16:53:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237898AbjDENqr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Apr 2023 09:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57336 "EHLO
+        id S238031AbjDEOxu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Apr 2023 10:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237909AbjDENqr (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 09:46:47 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F254EE8
-        for <linux-block@vger.kernel.org>; Wed,  5 Apr 2023 06:46:46 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-325f7b5cbacso56545ab.0
-        for <linux-block@vger.kernel.org>; Wed, 05 Apr 2023 06:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1680702405; x=1683294405;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Nj7IgmSBUiC0hYx7nk2RNMr/mkttF5HRcLAPZJytTk=;
-        b=Msm6oyQrkP0OLXxXLuybVTtYYzPmTdaYOlkey5ZfCB8MoLi1eEzz5FgJTHGSWLsaiI
-         tnEeijvHFJB70pOL5Ng9MoJF3iT6nH9YwSj3YK4ZAzWWxyezzaU2YU1Dl9PAu8NEm2nr
-         2OxE8vAwlPbsV8bbrvCla7RNXHisLK8kfw5FTZngOdgHbQA8aJiTQOrOm9/G0hUjjRiG
-         8NExLXL1b3HC+G+i/LCJ4gBUzZClbAn2xUoh6dBX/OAlDgLIsyo0bF0Rz6lgZzk5Cwle
-         WEMFjynPuUxpQwfbkfuH7jZFXZ18GI/o9O8xKmPBzWKv7QT80ZGLDZtJc/xBts2ZQDir
-         KEuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680702405; x=1683294405;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Nj7IgmSBUiC0hYx7nk2RNMr/mkttF5HRcLAPZJytTk=;
-        b=nvV7AglYXqESWM207POaNLp1wn8jWjeo4zIrHWgSV3BkBGQAfbZdSTVnzPjyzUL4qh
-         5uq1FBOk16nqn34dHDWlvlxetg8lT79Or3Fcehb/5dL4/A0+d8pJnJYvmXtwjcHzEU8C
-         cUHbVp8alYRKj2gAujbiMURfk5gBtfLyukbCphRFvhwnmprw5gMqUJA1AOArevj3Ic/g
-         6VUSamVrqf7Qvafe2HojybGunA59R60Ok01nZVc3tTSxW31G3h/nx5XzZKtLg3R4TQLa
-         0yjwEqDs2T3A6tJkxxqo+3KIGzgeBpu4FMwvAuNqB/i6yZfheiwOkKBQ9j3KPHSZWH0x
-         CRDw==
-X-Gm-Message-State: AAQBX9e3opxY63prqWvs3XDwQAWdKbc0ptvhDgR8BpYXK/3Aor+oSbA8
-        gpiUlNCH6fxL6EKwO596+ayMFA==
-X-Google-Smtp-Source: AKy350ZRKXD2E/DtsMklZljmzReTdEVce/oANE+LoU0x207xto8e1Ap1hOGXOMCodP0MxydFQyXhdg==
-X-Received: by 2002:a05:6e02:492:b0:325:e46f:a028 with SMTP id b18-20020a056e02049200b00325e46fa028mr992433ils.3.1680702405540;
-        Wed, 05 Apr 2023 06:46:45 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id x13-20020a927c0d000000b00327392e5504sm385881ilc.68.2023.04.05.06.46.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 06:46:45 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     linux-block@vger.kernel.org, Ondrej Kozina <okozina@redhat.com>
-Cc:     bluca@debian.org, gmazyland@gmail.com, hch@infradead.org,
-        brauner@kernel.org, jonathan.derrick@linux.dev
-In-Reply-To: <20230405111223.272816-1-okozina@redhat.com>
-References: <20230322151604.401680-1-okozina@redhat.com>
- <20230405111223.272816-1-okozina@redhat.com>
-Subject: Re: [PATCH v2 0/5] sed-opal: add command to read locking range
- attributes
-Message-Id: <168070240482.180333.16490902438199779587.b4-ty@kernel.dk>
-Date:   Wed, 05 Apr 2023 07:46:44 -0600
+        with ESMTP id S238364AbjDEOxt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 10:53:49 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C889B;
+        Wed,  5 Apr 2023 07:53:48 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 335CpReU002315;
+        Wed, 5 Apr 2023 14:20:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=mwaPhB9eOX8bu4kezQoKJ9cVVamlbfJDrJ0nRiIlDRU=;
+ b=gEtUx1uA84qOSr0MTHyub6yLU0JfS1blRy7cMzLOdNYsn+07GisKiUuCKs5EvraxjTT4
+ 1K1ebutia9W1PfmaGPlZmJqpXQGQ0nrsiDlMOzSlkSuTpybvLCUOkviGqYKgc8pv0FHy
+ Ibby4DO86ofYnqxMNJHvSbSuVxi6EcZAqqxz+ZyihHxI8BixlN5RCh09I/CLBw/6NeTF
+ QZhdMuk85haLzXXZn4TOAmjFusr3CFI2C6rqSqpKhj/F1EgeRhanIbtvLIALoBVbarrh
+ 9xZUXd627cozZaAYnzVm6iYdRXtw6hhnsLLPGRSPv3lNy2vpwt/muSvUctn1qU2MS472 Pw== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ps9bu2nfp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Apr 2023 14:20:23 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3351GEvl021397;
+        Wed, 5 Apr 2023 14:20:21 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3ppbvg3cqf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Apr 2023 14:20:21 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 335EKHFH7799418
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Apr 2023 14:20:17 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6E042004E;
+        Wed,  5 Apr 2023 14:20:17 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A76A72004B;
+        Wed,  5 Apr 2023 14:20:17 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Wed,  5 Apr 2023 14:20:17 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 7A32DE07A1; Wed,  5 Apr 2023 16:20:17 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/7] s390/dasd: add dasd autoquiesce feature
+Date:   Wed,  5 Apr 2023 16:20:10 +0200
+Message-Id: <20230405142017.2446986-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-00303
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: rQxuqj0TpzsALNU7RXkTWgAad0rK_rJ7
+X-Proofpoint-ORIG-GUID: rQxuqj0TpzsALNU7RXkTWgAad0rK_rJ7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-05_09,2023-04-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 priorityscore=1501 phishscore=0 spamscore=0
+ mlxlogscore=702 bulkscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304050127
+X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,34 +83,42 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi Jens,
 
-On Wed, 05 Apr 2023 13:12:18 +0200, Ondrej Kozina wrote:
-> This patch set aims to add ability to user authorities to read locking
-> range attributes.
-> 
-> It's achieved in two steps (except SUM enabled drives):
-> 
-> 1) Patch IOC_OPAL_ADD_USR_TO_LR command so that user authority (together with
-> OPAL_ADMIN1) is added in ACE that allows getting locking range attributes.
-> 
-> [...]
+please apply the following patchset that introduces an
+autoquiesce feature for DASD devices.
 
-Applied, thanks!
+Quiesce and resume are functions that tell Linux to stop/resume
+issuing I/Os to a specific DASD.
+The DASD driver allows a manual quiesce/resume via ioctl.
 
-[1/5] sed-opal: do not add same authority twice in boolean ace.
-      commit: 2fce95b196d34a17ac3f531933d156a8550d5b82
-[2/5] sed-opal: add helper for adding user authorities in ACE.
-      commit: 175b654402a11b01870e823f4eaa913b27ed8a63
-[3/5] sed-opal: allow user authority to get locking range attributes.
-      commit: 8be19a02f1e373d406b3d9e0c17a90c786c51c1f
-[4/5] sed-opal: add helper to get multiple columns at once.
-      commit: baf82b679cb2c76eb6f4b2881a60380e328ccc79
-[5/5] sed-opal: Add command to read locking range parameters.
-      commit: 4c4dd04e75e8177311d17387326253674cb0558b
+Autoquiesce will define an amount of triggers that will lead to
+an automatic quiesce if a certain event occurs.
+There is no automatic resume.
 
-Best regards,
+The autoquiesce feature is useful for devices in a copy relation
+where different events should lead to an automatic quiesce of a
+device. This prevents IO errors, unnecessary load and gives the
+controlling agent time to sort out the situation and trigger a swap
+of copy pairs if needed before it will resume device operation.
+
+Stefan Haberland (7):
+  s390/dasd: remove unused DASD EER defines
+  s390/dasd: add autoquiesce feature
+  s390/dasd: add aq_mask sysfs attribute
+  s390/dasd: add aq_requeue sysfs attribute
+  s390/dasd: add aq_timeouts autoquiesce trigger
+  s390/dasd: add autoquiesce event for start IO error
+  s390/dasd: fix hanging blockdevice after request requeue
+
+ arch/s390/include/uapi/asm/dasd.h |   2 +
+ drivers/s390/block/dasd.c         |  75 +++++++++++++-----
+ drivers/s390/block/dasd_devmap.c  | 126 ++++++++++++++++++++++++++++++
+ drivers/s390/block/dasd_eckd.c    |   1 +
+ drivers/s390/block/dasd_eer.c     |   1 +
+ drivers/s390/block/dasd_int.h     |  32 ++++----
+ 6 files changed, 204 insertions(+), 33 deletions(-)
+
 -- 
-Jens Axboe
-
-
+2.37.2
 
