@@ -2,83 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF2AB6D7F92
-	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 16:32:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C4376D8270
+	for <lists+linux-block@lfdr.de>; Wed,  5 Apr 2023 17:47:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238081AbjDEOcb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Apr 2023 10:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40734 "EHLO
+        id S239047AbjDEPrd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Apr 2023 11:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238037AbjDEOca (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 10:32:30 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E4E191;
-        Wed,  5 Apr 2023 07:32:28 -0700 (PDT)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 335DabYu007273;
-        Wed, 5 Apr 2023 14:20:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=PL95GFW70O4A6VWayShxGGwx+t5bkIT5ESSYEJrUf5s=;
- b=S/JC5CBva2WKDl4t1bNXFpo0FVol36EmLdN5H8gdXtMcxCMhnynXu6SPyW4QGPu6Ebbn
- m6v/tYxIsv2Umc0MQYj6R8RdYd3eeLqs1RQwx61d1gqTnbc1ktpb27fV/fszzqFTC6OC
- 2dicRXi3Npjlxu78r5OwIMdM0K8vbmatdam1LyDcAEPNkZUJsvk37AxlQDcC9HaTE8g+
- K0UYL7+XZaW395ME6SitoNE5NBcTgHNFLJlzGfe0ZyBUYq307TXfrr4yne7CaMZhSBME
- gMlQKhmQ0cynRjd94b83OSYUi5IRTG2VTH538PCAGyHEr40iFD6HA8Xn+k4MzhP7yMT2 CA== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ps992ju6m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Apr 2023 14:20:23 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 334Nw0lC021486;
-        Wed, 5 Apr 2023 14:20:21 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3ppbvg3cqg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Apr 2023 14:20:21 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 335EKIHX48497326
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Apr 2023 14:20:18 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B22B20043;
-        Wed,  5 Apr 2023 14:20:18 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09E4D20040;
-        Wed,  5 Apr 2023 14:20:18 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Wed,  5 Apr 2023 14:20:17 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id 8F171E13E9; Wed,  5 Apr 2023 16:20:17 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 7/7] s390/dasd: fix hanging blockdevice after request requeue
-Date:   Wed,  5 Apr 2023 16:20:17 +0200
-Message-Id: <20230405142017.2446986-8-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230405142017.2446986-1-sth@linux.ibm.com>
-References: <20230405142017.2446986-1-sth@linux.ibm.com>
+        with ESMTP id S239059AbjDEPrb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Apr 2023 11:47:31 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE2B5FFC
+        for <linux-block@vger.kernel.org>; Wed,  5 Apr 2023 08:47:07 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 0E89A22314;
+        Wed,  5 Apr 2023 15:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1680709595; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=icT/mqr4pMZQJFZc1I7CnseD2mZL4uOS9LIN9x1wVVg=;
+        b=WYiSiLOelii2EKxYp+E8jBPI6OOFrs8/pWG0zAHMpo+mD4K1mCOhYaG4x5EybJ556xz5cL
+        M6NEpY3IrWtdS7re65XCu6gAVDzOLh9Co3K+rgsoaMt7vZd1JanjTZrgHcKc1ifOMJMrb6
+        TER+3p/h8J5QUIHFa6RR4Ko1BDnooQc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1680709595;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=icT/mqr4pMZQJFZc1I7CnseD2mZL4uOS9LIN9x1wVVg=;
+        b=ZUaaFqCYUULstj9anNQ9j7381Jqao9SCxDRznlYfKCjJHoyTauCr5BfyPw5vEI9lDA4KJ5
+        Mecgv6rwQ2QtEKCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F3CBC13A10;
+        Wed,  5 Apr 2023 15:46:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id O7aAO9qXLWTTNgAAMHmgww
+        (envelope-from <dwagner@suse.de>); Wed, 05 Apr 2023 15:46:34 +0000
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-block@vger.kernel.org
+Cc:     linux-nvme@lists.infradead.org,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Hannes Reinecke <hare@suse.de>,
+        James Smart <jsmart2021@gmail.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH blktests v5 0/4] test queue count changes on reconnect
+Date:   Wed,  5 Apr 2023 17:46:26 +0200
+Message-Id: <20230405154630.16298-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: kV4BLxkuTTSVNcgfPsdyo6cig_QegF-Y
-X-Proofpoint-ORIG-GUID: kV4BLxkuTTSVNcgfPsdyo6cig_QegF-Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-05_09,2023-04-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- spamscore=0 priorityscore=1501 impostorscore=0 clxscore=1011 phishscore=0
- suspectscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2304050127
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,34 +67,51 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The DASD driver does not kick the requeue list when requeuing IO requests
-to the blocklayer. This might lead to hanging blockdevice when there is
-no other trigger for this.
+The target is allowed to change the number of i/o queues. test if the
+host is able to reconnect in this scenario.
 
-Fix by automatically kick the requeue list when requeuing DASD requests
-to the blocklayer.
+I was able to test this successfully with tcp and rdma. fc still fails due to
+the race condition in the target code.
 
-Fixes: e443343e509a ("s390/dasd: blk-mq conversion")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
----
- drivers/s390/block/dasd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Next attempt to get this series upstream :)
 
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index 3696931f8015..9fbfce735d56 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -2953,7 +2953,7 @@ static int _dasd_requeue_request(struct dasd_ccw_req *cqr)
- 		return 0;
- 	spin_lock_irq(&cqr->dq->lock);
- 	req = (struct request *) cqr->callback_data;
--	blk_mq_requeue_request(req, false);
-+	blk_mq_requeue_request(req, true);
- 	spin_unlock_irq(&cqr->dq->lock);
- 
- 	return 0;
+This version is based on my previous posted nvme/047 patches [1]
+
+[1] https://lore.kernel.org/linux-nvme/20230329090202.8351-1-dwagner@suse.de/
+
+v5:
+ - moved generic parts to nvme/rc
+ - renamed test to 048
+ - rebased ontop of nvme/047
+v4:
+ - do not remove ports instead depend on host removing
+   controllers, see
+   https://lore.kernel.org/linux-nvme/20220927143157.3659-1-dwagner@suse.de/
+ - https://lore.kernel.org/linux-nvme/20220927143719.4214-1-dwagner@suse.de/
+v3:
+ - Added comment why at least 2 CPUs are needed for the test
+ - Fixed shell quoting in _set_nvmet_attr_qid_max
+ - https://lore.kernel.org/linux-nvme/20220913065758.134668-1-dwagner@suse.de/
+v2:
+ - detect if attr_qid_max is available
+ - https://lore.kernel.org/linux-block/20220831153506.28234-1-dwagner@suse.de/
+v1:
+ - https://lore.kernel.org/linux-block/20220831120900.13129-1-dwagner@suse.de/
+
+
+Daniel Wagner (4):
+  nvme/rc: Add setter for attr_qid_max
+  nvme/rc: Add nvmet attribute feature detection function
+  nvme/rc: Add helper to wait for nvme ctrl state
+  nvme/048: test queue count changes on reconnect
+
+ tests/nvme/048     | 81 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nvme/048.out |  3 ++
+ tests/nvme/rc      | 58 +++++++++++++++++++++++++++++++++
+ 3 files changed, 142 insertions(+)
+ create mode 100755 tests/nvme/048
+ create mode 100644 tests/nvme/048.out
+
 -- 
-2.37.2
+2.40.0
 
