@@ -2,105 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E1016D9AD7
-	for <lists+linux-block@lfdr.de>; Thu,  6 Apr 2023 16:43:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F36CC6D9B38
+	for <lists+linux-block@lfdr.de>; Thu,  6 Apr 2023 16:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239292AbjDFOnU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Apr 2023 10:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
+        id S239377AbjDFOwg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Apr 2023 10:52:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239246AbjDFOm4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 10:42:56 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB8AB759
-        for <linux-block@vger.kernel.org>; Thu,  6 Apr 2023 07:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=5EZfOmE2b1W/ywhljFNHHDwu0HAanieDjaM3Yj6Ay5M=; b=4uSsDdUM+Mbzb/4m93Ckpjmfvr
-        g35X7lbOHgHWM1ymqNsj6OSRUn5e8m6y/gRlZBvZQ9SY5YN4OSPIMVSOYxA19njcsoRR8GyB4gTKd
-        W9Di+0U/urwEhUppCgCBO2UorxsF1kHUFKq02wWUCv9OXG+6OuDfgxIzNW2lFWFSuXaEjTWAUisJh
-        dTZv7KeCs0Y/xBbEltjHPWMxs/o+F73gOraZsGQ9a6FK9yVmuQA4KdCDlY7Oo2ejuolXk+r+lhadX
-        zac6XZz1aL7S7inZze91EPN7j/CIE27KA0Y1HZBRPIl2iD6UAZybDvUXLKWioPmA0wbjrR9ySLMB1
-        vsMuiTtg==;
-Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pkQo3-007fp9-0K;
-        Thu, 06 Apr 2023 14:41:43 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Minchan Kim <minchan@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH 16/16] zram: return errors from read_from_bdev_sync
-Date:   Thu,  6 Apr 2023 16:41:02 +0200
-Message-Id: <20230406144102.149231-17-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230406144102.149231-1-hch@lst.de>
-References: <20230406144102.149231-1-hch@lst.de>
+        with ESMTP id S238925AbjDFOwT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 10:52:19 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEE5B769
+        for <linux-block@vger.kernel.org>; Thu,  6 Apr 2023 07:51:03 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id o11so37733970ple.1
+        for <linux-block@vger.kernel.org>; Thu, 06 Apr 2023 07:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1680792663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jsN7tdxypihrla/GoL2oV2FbQRrK9CjsAVFPGAuvGMk=;
+        b=hNPXzmSIy/mxvyggQ3ydVzZKSJmXyokWxnfuXMrXOwox3waYSO9HkrwG/OUveIPAvb
+         0K5NAGLjHQD+lM5P1nRRJVprnOaQL4Yhfr7DAOL0LM57bac3qiLBE+nZ9nlINlUQfvAl
+         nd+qBy402VJeQOrbVrqxNZsJkIAV84N4iRmTdQI9H5+1HvIx8HAxnCon4Ba7mIVD947S
+         Echo6XtpjPCS2sx+NwqR0Mr5flBYxeMj9uAbB2Jig4vvOEz2N6OUEuHaEZxxtThXRWG5
+         WYNKwgpvc4oRkks7blCcpPDF6gXXQes14x/fCEhLVsH8qMuEejRxJuVeDKB+LyGPZMj0
+         x1Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680792663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jsN7tdxypihrla/GoL2oV2FbQRrK9CjsAVFPGAuvGMk=;
+        b=yQQrCTpNgjLfD4afHhm4qmvciiW1HWD2EuRLFbJXnsBud458uR4cXJlUSf9G1SXQ1V
+         LNFDZAukK0qda6Xe7fdeGYb95AnB5JddVskWn2rgHqbJij0Vf15aocxoJF+ymuHhX4sF
+         bbxEy8tLeVEaN5WlXL8FLGeOWn6KrvhvW31pc16ylzVL9DxQr8gFi17OgAlXjdwB2UYJ
+         3fy11bmiOai4p11b7HSvnekS5mU0Q8vHB4938q8hZJCGAm5bDwMK6KvMsP1JOpwMfp7y
+         XEC3+NHEWeP0exqv0YmYOQnnJiU6oYWo4AGoArtQf05JS6N+rdjV6riHNG8wCS/4n6bt
+         1rxQ==
+X-Gm-Message-State: AAQBX9c+tWOXsbM9KHvacqB3lZOEkBIB/kh8h/T+b6q+FYTXXEI+uquc
+        BEw3CEdvSTKo1d9PwWY3s8hNSQ==
+X-Google-Smtp-Source: AKy350bG80qA6UgZFZIQWG7FVa/XWqHC70y/fiV8BLBfS2SIDCo6c3bZAJd6N7wRrR8QcqITiwzauQ==
+X-Received: by 2002:a17:902:ced0:b0:19e:7a2c:78a7 with SMTP id d16-20020a170902ced000b0019e7a2c78a7mr12747837plg.57.1680792662798;
+        Thu, 06 Apr 2023 07:51:02 -0700 (PDT)
+Received: from localhost.localdomain ([2409:8a28:e63:f500:18d3:10f7:2e64:a1a7])
+        by smtp.gmail.com with ESMTPSA id i4-20020a170902eb4400b0019ca68ef7c3sm1487398pli.74.2023.04.06.07.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Apr 2023 07:51:02 -0700 (PDT)
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+To:     axboe@kernel.dk, tj@kernel.org
+Cc:     paolo.valente@linaro.org, josef@toxicpanda.com,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [PATCH v2 0/3] blk-cgroup: some cleanup
+Date:   Thu,  6 Apr 2023 22:50:47 +0800
+Message-Id: <20230406145050.49914-1-zhouchengming@bytedance.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Propagate read errors to the caller instead of dropping them on
-the floor, and stop returning the somewhat dangerous 1 on success
-from read_from_bdev*.
+These are some cleanup patches of blk-cgroup. Thanks for review.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zram_drv.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+v2:
+ - Add Acked tags from Tejun.
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 5259b647010afe..3af04684c11ebb 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -770,6 +770,7 @@ struct zram_work {
- 	struct zram *zram;
- 	unsigned long entry;
- 	struct page *page;
-+	int error;
- };
- 
- static void zram_sync_read(struct work_struct *work)
-@@ -781,7 +782,7 @@ static void zram_sync_read(struct work_struct *work)
- 	bio_init(&bio, zw->zram->bdev, &bv, 1, REQ_OP_READ);
- 	bio.bi_iter.bi_sector = zw->entry * (PAGE_SIZE >> 9);
- 	__bio_add_page(&bio, zw->page, PAGE_SIZE, 0);
--	submit_bio_wait(&bio);
-+	zw->error = submit_bio_wait(&bio);
- }
- 
- /*
-@@ -803,7 +804,7 @@ static int read_from_bdev_sync(struct zram *zram, struct page *page,
- 	flush_work(&work.work);
- 	destroy_work_on_stack(&work.work);
- 
--	return 1;
-+	return work.error;
- }
- #else
- static int read_from_bdev_sync(struct zram *zram, struct page *page,
-@@ -821,7 +822,7 @@ static int read_from_bdev(struct zram *zram, struct page *page,
- 	if (!parent)
- 		return read_from_bdev_sync(zram, page, entry);
- 	read_from_bdev_async(zram, page, entry, parent);
--	return 1;
-+	return 0;
- }
- #else
- static inline void reset_bdev(struct zram *zram) {};
+Chengming Zhou (3):
+  block, bfq: remove BFQ_WEIGHT_LEGACY_DFL
+  blk-cgroup: delete cpd_bind_fn of blkcg_policy
+  blk-cgroup: delete cpd_init_fn of blkcg_policy
+
+ block/bfq-cgroup.c  | 12 ++----------
+ block/bfq-iosched.h |  1 -
+ block/blk-cgroup.c  | 25 -------------------------
+ block/blk-cgroup.h  |  2 --
+ 4 files changed, 2 insertions(+), 38 deletions(-)
+
 -- 
 2.39.2
 
