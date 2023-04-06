@@ -2,49 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6F546D9621
-	for <lists+linux-block@lfdr.de>; Thu,  6 Apr 2023 13:43:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C77876D9656
+	for <lists+linux-block@lfdr.de>; Thu,  6 Apr 2023 13:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238720AbjDFLnd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Apr 2023 07:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        id S238099AbjDFLwU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Apr 2023 07:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238661AbjDFLnQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 07:43:16 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94557BDEB;
-        Thu,  6 Apr 2023 04:38:58 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id t14so40405042ljd.5;
-        Thu, 06 Apr 2023 04:38:58 -0700 (PDT)
+        with ESMTP id S238130AbjDFLv5 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 07:51:57 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63ECCC156;
+        Thu,  6 Apr 2023 04:48:12 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id br6so50416418lfb.11;
+        Thu, 06 Apr 2023 04:48:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680781064;
+        d=1e100.net; s=20210112; t=1680781647;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:dkim-signature:dkim-signature
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JFCch4ACvmYufrbxJsh01vJ15Xj4AhHZaLEgl+aiNvg=;
-        b=P9PpSenmEdL5snjU1YqS2z7F5snwolLJEyLLkzfLeupEKJvXVm4JDq/pDcQ8ijNX8a
-         AFFl1iRDcYHLJ/YJF/gCGx0aWs9frHyHVdxpqwTo0UmbCd7jWcdDmnhHSpMKR18dCctr
-         IDw0qhZSqEiwlO1hwfZsJj9I5fBB/B8oNrQneFQGa5At8Gdr5Eo2/8xN1vLQm09C+s2S
-         RQZDPOvlB6US7cmltqDVvvaGiRBruF7sfnpdQ971P7ya9wJM22bEJXZ6HdbJPF4b7o+3
-         771S2Ql/d5PaQwICdRjap7L+yvlExw/3Tl8XHFpvS7uycNtGqfg/bkWGKIGY8+4vCGej
-         hESw==
-X-Gm-Message-State: AAQBX9cPH4HQLwlrbkGOe4iPECI65oyoYONZPRzdwyM8cjsLsr8afzE2
-        xP4oh+0K77fCTV7+b4Xvn7Njgc4yQkttPA==
-X-Google-Smtp-Source: AKy350aalDteLKmn/Iv+83alinZbhWA6sVOdYjaPwNBdVU8uvJxBYnHXOeHuwiOj4ZMKyZPhWZH7pA==
-X-Received: by 2002:a2e:8016:0:b0:2a6:15c7:1926 with SMTP id j22-20020a2e8016000000b002a615c71926mr2876729ljg.3.1680781063986;
-        Thu, 06 Apr 2023 04:37:43 -0700 (PDT)
+        bh=hL6vKKlAcCQuDQvOTLeI2NShllETqWRBpGOfrTugoHE=;
+        b=KNYEPkWJY88K7C6LsCAFeMU/Bvlhh10t+lHq9ZtVvBOMcy1KJOs87tJ79pyIiRsRby
+         07IoYafV/iUZhXyGxBANbBXJKz6Q0mZpRY/7MXiooX6hKHrMGJvdBmLAzYtNMUmoWJTw
+         ITyEwRZIJjOtTILyr0YLa6laWz69wdKWqwNBweLDRUuXqEIaXG/e7C6rv2+9zldAnaqs
+         0Ce5mtwuP8loi678lvjqWcpagIXc3oquRVT+wDleCLWW3CadceVP1Z3nh0NIN2JepeiX
+         GjjxHIVoOyC+tEoYHxUAicpjXr7gFjWDHkC028dUGOmxHYcQTH2ozWxLPV0Jg9Yf6ZLy
+         U6gA==
+X-Gm-Message-State: AAQBX9dm6YuDUYhtVwIX38seMPvc7wEj4pPkjzIXBc7ZpqyqUeV3vdhG
+        1CaKID1KRV/rONmCnsiT0w2RMVXPY3mgKQ==
+X-Google-Smtp-Source: AKy350aO3QDzj7naWzpDU/C4AYwwRSM1GS2zx2Ehppvte+cCRefYzyj5Qxy/przlCuGs6IJcDKWvsg==
+X-Received: by 2002:a2e:86da:0:b0:2a6:16b5:c65b with SMTP id n26-20020a2e86da000000b002a616b5c65bmr3059869ljj.46.1680781125393;
+        Thu, 06 Apr 2023 04:38:45 -0700 (PDT)
 Received: from flawful.org (c-fcf6e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.246.252])
-        by smtp.gmail.com with ESMTPSA id l10-20020a2e868a000000b00295a33eda65sm250120lji.137.2023.04.06.04.37.43
+        by smtp.gmail.com with ESMTPSA id q6-20020a2e9146000000b002a5f554d263sm252962ljg.46.2023.04.06.04.38.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 04:37:43 -0700 (PDT)
+        Thu, 06 Apr 2023 04:38:45 -0700 (PDT)
 Received: by flawful.org (Postfix, from userid 112)
-        id DB85167E; Thu,  6 Apr 2023 13:37:42 +0200 (CEST)
+        id 46DAC666; Thu,  6 Apr 2023 13:38:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1680781063; bh=W4z5eI6b9aTx+DVYBLNhhpezti3ssBlCzK7GNiWkMHU=;
+        t=1680781124; bh=VQc2yCNjhXN6NvsuvJhWU3KLSSjWiq7Re2qaCSxBEjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZTu4likdDhO7MPUREMsXkUombUYI7swr01tj7qrOr3jGInwruM6K/yJuO2SWmkT/
-         FBjvRHMZoBievTAMIe6EhGhSTfiJL+hfmGLI2MRBFYnBRg/s3R4Er8A8/kX+VJ/6uQ
-         cvrcj4xZmN+v9fJFY5Z0Ul6P5ViOJCB4rLQxgm8Y=
+        b=AhZFJL3YjrH2snsmGuD/VxR7GfEdHxQd5B7L0VOFHSxfQ+sc3tOHNcyhcJjzjlixn
+         2Vy+ncIknGTmSnWYeocHZdDEQNbW8s4LQd5Nje1Br8wBGWz6LSdBObb6lX4L3N+hPk
+         WVLzqsucjHdEMtg93VVV7kVi/GGCpkQuvP1U43es=
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 X-Spam-Level: 
@@ -56,14 +56,14 @@ Received: from x1-carbon.lan (OpenWrt.lan [192.168.1.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by flawful.org (Postfix) with ESMTPSA id 487D289C;
-        Thu,  6 Apr 2023 13:33:10 +0200 (CEST)
+        by flawful.org (Postfix) with ESMTPSA id 23F00944;
+        Thu,  6 Apr 2023 13:33:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-        t=1680780790; bh=W4z5eI6b9aTx+DVYBLNhhpezti3ssBlCzK7GNiWkMHU=;
+        t=1680780791; bh=VQc2yCNjhXN6NvsuvJhWU3KLSSjWiq7Re2qaCSxBEjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zj6aJCbxGw5vvCrRmd/HWvHLra2dnGTDpMwCVCQ9fAcTtLWOVMASB/zVRZ3Ag6b9M
-         ptrj7KFEeVyLkJfnl3m4jCGz9cL2lNmuC9j0aSYNVOb5J80LmM1967CsgXwf2ozoFc
-         LxtiNIUPBMdeB3ROyabekWkrktQSHIEaaBVwm91s=
+        b=DpCN8eyX7mKzzcL7neTN23vY0lxAwhEsUfPRXbJILRrIEvlbg2wyChXn4ezMLjZKG
+         9p8WxrHAcA846ZFo2mU8UHM+aFmZSI/VV03XKyYLHU7Up9S1odi6qdRdTMi6SIekud
+         uk0Oex1kohmRjZIyP0fjlkNTWdj31bkAAsto9h8s=
 From:   Niklas Cassel <nks@flawful.org>
 To:     Jens Axboe <axboe@kernel.dk>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
@@ -74,9 +74,9 @@ Cc:     Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <dlemoal@fastmail.com>,
         linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
         linux-block@vger.kernel.org, Niklas Cassel <niklas.cassel@wdc.com>
-Subject: [PATCH v6 06/19] scsi: support retrieving sub-pages of mode pages
-Date:   Thu,  6 Apr 2023 13:32:35 +0200
-Message-Id: <20230406113252.41211-7-nks@flawful.org>
+Subject: [PATCH v6 07/19] scsi: support service action in scsi_report_opcode()
+Date:   Thu,  6 Apr 2023 13:32:36 +0200
+Message-Id: <20230406113252.41211-8-nks@flawful.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230406113252.41211-1-nks@flawful.org>
 References: <20230406113252.41211-1-nks@flawful.org>
@@ -88,9 +88,17 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 
-Allow scsi_mode_sense() to retrieve sub-pages of mode pages by adding
-the subpage argument. Change all the current caller sites to specify
-the subpage 0.
+The REPORT_SUPPORTED_OPERATION_CODES command allows checking for support
+of commands that have the same opcode but different service actions,
+such as READ 32 and WRITE 32. However, the current implementation of
+scsi_report_opcode() only allows checking an operation code without a
+service action differentiation.
+
+Add the "sa" argument to scsi_report_opcode() to allow passing a service
+action. If a non-zero service action is specified, the reporting
+options field value is set to 3 to have the service action field taken
+into account by the device. If no service action field is specified
+(zero), the reporting options field is set to 1 as before.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
@@ -98,121 +106,116 @@ Reviewed-by: Hannes Reinecke <hare@suse.de>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/scsi/scsi_lib.c           | 4 +++-
- drivers/scsi/scsi_transport_sas.c | 2 +-
- drivers/scsi/sd.c                 | 9 ++++-----
- drivers/scsi/sr.c                 | 2 +-
- include/scsi/scsi_device.h        | 8 ++++----
- 5 files changed, 13 insertions(+), 12 deletions(-)
+ drivers/scsi/scsi.c        | 28 +++++++++++++++++++---------
+ drivers/scsi/sd.c          | 10 +++++-----
+ include/scsi/scsi_device.h |  5 +++--
+ 3 files changed, 27 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index fac9c31161d2..633c4e8af830 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -2144,6 +2144,7 @@ EXPORT_SYMBOL_GPL(scsi_mode_select);
-  *	@sdev:	SCSI device to be queried
-  *	@dbd:	set to prevent mode sense from returning block descriptors
-  *	@modepage: mode page being requested
-+ *	@subpage: sub-page of the mode page being requested
-  *	@buffer: request buffer (may not be smaller than eight bytes)
-  *	@len:	length of request buffer.
-  *	@timeout: command timeout
-@@ -2155,7 +2156,7 @@ EXPORT_SYMBOL_GPL(scsi_mode_select);
-  *	Returns zero if successful, or a negative error number on failure
-  */
- int
--scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage,
-+scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage, int subpage,
- 		  unsigned char *buffer, int len, int timeout, int retries,
- 		  struct scsi_mode_data *data, struct scsi_sense_hdr *sshdr)
- {
-@@ -2175,6 +2176,7 @@ scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage,
- 	dbd = sdev->set_dbd_for_ms ? 8 : dbd;
- 	cmd[1] = dbd & 0x18;	/* allows DBD and LLBA bits */
- 	cmd[2] = modepage;
-+	cmd[3] = subpage;
- 
- 	sshdr = exec_args.sshdr;
- 
-diff --git a/drivers/scsi/scsi_transport_sas.c b/drivers/scsi/scsi_transport_sas.c
-index 74b99f2b0b74..d704c484a251 100644
---- a/drivers/scsi/scsi_transport_sas.c
-+++ b/drivers/scsi/scsi_transport_sas.c
-@@ -1245,7 +1245,7 @@ int sas_read_port_mode_page(struct scsi_device *sdev)
- 	if (!buffer)
- 		return -ENOMEM;
- 
--	error = scsi_mode_sense(sdev, 1, 0x19, buffer, BUF_SIZE, 30*HZ, 3,
-+	error = scsi_mode_sense(sdev, 1, 0x19, 0, buffer, BUF_SIZE, 30*HZ, 3,
- 				&mode_data, NULL);
- 
- 	if (error)
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 4bb87043e6db..2de4b27cedc5 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -183,7 +183,7 @@ cache_type_store(struct device *dev, struct device_attribute *attr,
- 		return count;
- 	}
- 
--	if (scsi_mode_sense(sdp, 0x08, 8, buffer, sizeof(buffer), SD_TIMEOUT,
-+	if (scsi_mode_sense(sdp, 0x08, 8, 0, buffer, sizeof(buffer), SD_TIMEOUT,
- 			    sdkp->max_retries, &data, NULL))
- 		return -EINVAL;
- 	len = min_t(size_t, sizeof(buffer), data.length - data.header_length -
-@@ -2610,9 +2610,8 @@ sd_do_mode_sense(struct scsi_disk *sdkp, int dbd, int modepage,
- 	if (sdkp->device->use_10_for_ms && len < 8)
- 		len = 8;
- 
--	return scsi_mode_sense(sdkp->device, dbd, modepage, buffer, len,
--			       SD_TIMEOUT, sdkp->max_retries, data,
--			       sshdr);
-+	return scsi_mode_sense(sdkp->device, dbd, modepage, 0, buffer, len,
-+			       SD_TIMEOUT, sdkp->max_retries, data, sshdr);
+diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
+index 09ef0b31dfc0..62d9472e08e9 100644
+--- a/drivers/scsi/scsi.c
++++ b/drivers/scsi/scsi.c
+@@ -504,18 +504,22 @@ void scsi_attach_vpd(struct scsi_device *sdev)
  }
  
- /*
-@@ -2869,7 +2868,7 @@ static void sd_read_app_tag_own(struct scsi_disk *sdkp, unsigned char *buffer)
- 	if (sdkp->protection_type == 0)
+ /**
+- * scsi_report_opcode - Find out if a given command opcode is supported
++ * scsi_report_opcode - Find out if a given command is supported
+  * @sdev:	scsi device to query
+  * @buffer:	scratch buffer (must be at least 20 bytes long)
+  * @len:	length of buffer
+- * @opcode:	opcode for command to look up
+- *
+- * Uses the REPORT SUPPORTED OPERATION CODES to look up the given
+- * opcode. Returns -EINVAL if RSOC fails, 0 if the command opcode is
+- * unsupported and 1 if the device claims to support the command.
++ * @opcode:	opcode for the command to look up
++ * @sa:		service action for the command to look up
++ *
++ * Uses the REPORT SUPPORTED OPERATION CODES to check support for the
++ * command identified with @opcode and @sa. If the command does not
++ * have a service action, @sa must be 0. Returns -EINVAL if RSOC fails,
++ * 0 if the command is not supported and 1 if the device claims to
++ * support the command.
+  */
+ int scsi_report_opcode(struct scsi_device *sdev, unsigned char *buffer,
+-		       unsigned int len, unsigned char opcode)
++		       unsigned int len, unsigned char opcode,
++		       unsigned short sa)
+ {
+ 	unsigned char cmd[16];
+ 	struct scsi_sense_hdr sshdr;
+@@ -539,8 +543,14 @@ int scsi_report_opcode(struct scsi_device *sdev, unsigned char *buffer,
+ 	memset(cmd, 0, 16);
+ 	cmd[0] = MAINTENANCE_IN;
+ 	cmd[1] = MI_REPORT_SUPPORTED_OPERATION_CODES;
+-	cmd[2] = 1;		/* One command format */
+-	cmd[3] = opcode;
++	if (!sa) {
++		cmd[2] = 1;	/* One command format */
++		cmd[3] = opcode;
++	} else {
++		cmd[2] = 3;	/* One command format with service action */
++		cmd[3] = opcode;
++		put_unaligned_be16(sa, &cmd[4]);
++	}
+ 	put_unaligned_be32(request_len, &cmd[6]);
+ 	memset(buffer, 0, len);
+ 
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 2de4b27cedc5..2dc4223a4c97 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3057,7 +3057,7 @@ static void sd_read_write_same(struct scsi_disk *sdkp, unsigned char *buffer)
+ 		return;
+ 	}
+ 
+-	if (scsi_report_opcode(sdev, buffer, SD_BUF_SIZE, INQUIRY) < 0) {
++	if (scsi_report_opcode(sdev, buffer, SD_BUF_SIZE, INQUIRY, 0) < 0) {
+ 		struct scsi_vpd *vpd;
+ 
+ 		sdev->no_report_opcodes = 1;
+@@ -3073,10 +3073,10 @@ static void sd_read_write_same(struct scsi_disk *sdkp, unsigned char *buffer)
+ 		rcu_read_unlock();
+ 	}
+ 
+-	if (scsi_report_opcode(sdev, buffer, SD_BUF_SIZE, WRITE_SAME_16) == 1)
++	if (scsi_report_opcode(sdev, buffer, SD_BUF_SIZE, WRITE_SAME_16, 0) == 1)
+ 		sdkp->ws16 = 1;
+ 
+-	if (scsi_report_opcode(sdev, buffer, SD_BUF_SIZE, WRITE_SAME) == 1)
++	if (scsi_report_opcode(sdev, buffer, SD_BUF_SIZE, WRITE_SAME, 0) == 1)
+ 		sdkp->ws10 = 1;
+ }
+ 
+@@ -3088,9 +3088,9 @@ static void sd_read_security(struct scsi_disk *sdkp, unsigned char *buffer)
  		return;
  
--	res = scsi_mode_sense(sdp, 1, 0x0a, buffer, 36, SD_TIMEOUT,
-+	res = scsi_mode_sense(sdp, 1, 0x0a, 0, buffer, 36, SD_TIMEOUT,
- 			      sdkp->max_retries, &data, &sshdr);
+ 	if (scsi_report_opcode(sdev, buffer, SD_BUF_SIZE,
+-			SECURITY_PROTOCOL_IN) == 1 &&
++			SECURITY_PROTOCOL_IN, 0) == 1 &&
+ 	    scsi_report_opcode(sdev, buffer, SD_BUF_SIZE,
+-			SECURITY_PROTOCOL_OUT) == 1)
++			SECURITY_PROTOCOL_OUT, 0) == 1)
+ 		sdkp->security = 1;
+ }
  
- 	if (res < 0 || !data.header_length ||
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 9e51dcd30bfd..09fdb0e269d9 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -830,7 +830,7 @@ static int get_capabilities(struct scsi_cd *cd)
- 	scsi_test_unit_ready(cd->device, SR_TIMEOUT, MAX_RETRIES, &sshdr);
- 
- 	/* ask for mode page 0x2a */
--	rc = scsi_mode_sense(cd->device, 0, 0x2a, buffer, ms_len,
-+	rc = scsi_mode_sense(cd->device, 0, 0x2a, 0, buffer, ms_len,
- 			     SR_TIMEOUT, 3, &data, NULL);
- 
- 	if (rc < 0 || data.length > ms_len ||
 diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index f10a008e5bfa..c146cc807d44 100644
+index c146cc807d44..c93c5aaf637e 100644
 --- a/include/scsi/scsi_device.h
 +++ b/include/scsi/scsi_device.h
-@@ -421,10 +421,10 @@ extern int scsi_track_queue_full(struct scsi_device *, int);
- 
- extern int scsi_set_medium_removal(struct scsi_device *, char);
- 
--extern int scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage,
--			   unsigned char *buffer, int len, int timeout,
--			   int retries, struct scsi_mode_data *data,
--			   struct scsi_sense_hdr *);
-+int scsi_mode_sense(struct scsi_device *sdev, int dbd, int modepage,
-+		    int subpage, unsigned char *buffer, int len, int timeout,
-+		    int retries, struct scsi_mode_data *data,
-+		    struct scsi_sense_hdr *);
- extern int scsi_mode_select(struct scsi_device *sdev, int pf, int sp,
- 			    unsigned char *buffer, int len, int timeout,
- 			    int retries, struct scsi_mode_data *data,
+@@ -433,8 +433,9 @@ extern int scsi_test_unit_ready(struct scsi_device *sdev, int timeout,
+ 				int retries, struct scsi_sense_hdr *sshdr);
+ extern int scsi_get_vpd_page(struct scsi_device *, u8 page, unsigned char *buf,
+ 			     int buf_len);
+-extern int scsi_report_opcode(struct scsi_device *sdev, unsigned char *buffer,
+-			      unsigned int len, unsigned char opcode);
++int scsi_report_opcode(struct scsi_device *sdev, unsigned char *buffer,
++		       unsigned int len, unsigned char opcode,
++		       unsigned short sa);
+ extern int scsi_device_set_state(struct scsi_device *sdev,
+ 				 enum scsi_device_state state);
+ extern struct scsi_event *sdev_evt_alloc(enum scsi_device_event evt_type,
 -- 
 2.39.2
 
