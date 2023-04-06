@@ -2,73 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C28306D9A88
-	for <lists+linux-block@lfdr.de>; Thu,  6 Apr 2023 16:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F9AF6D9ACA
+	for <lists+linux-block@lfdr.de>; Thu,  6 Apr 2023 16:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236270AbjDFOhi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Apr 2023 10:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33796 "EHLO
+        id S239084AbjDFOnK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Apr 2023 10:43:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238625AbjDFOhV (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 10:37:21 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5144B778
-        for <linux-block@vger.kernel.org>; Thu,  6 Apr 2023 07:35:04 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 184so9222402pga.12
-        for <linux-block@vger.kernel.org>; Thu, 06 Apr 2023 07:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1680791657;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u6B8WILcVPZkFHn7fuQhYBzfHKFx9fU8cwkns1fF9d0=;
-        b=AIbzpnMbfgEcISAfvM0ZqDPjxCflIy7Bjr+w8Hoa9c4tyfutVUcOuhVy1uPqDCLN8o
-         l2hXaWvIar5w34wTkmMTh916W5QufMl6gYWrBx84ksfKr5V0t1J46nv8NyAAgiMxooYH
-         WWKwUSngOqDNX7gSnTmn1D3C9FpkFUV2eC6w69VAeEVKFX9YvDNYhB5ORZs+gPdAkeKR
-         NA7oG+YnIn0VJIgaxex2cbj/BzhIlpmNbjOwjJL8NdWMD5QzdXUPiBJePwezcKHZbwgu
-         BIZaG0rdrX3djh3P4C2XAfMXCQsU3jWticdWb0wXVg4WbhYgQGwpdeEfeYze+HJb4qNR
-         uEPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680791657;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u6B8WILcVPZkFHn7fuQhYBzfHKFx9fU8cwkns1fF9d0=;
-        b=rzeczeUmdEn4UDhVEefXxx8PObzDYTEspmkZ7f80S33nWR574oUuSLUbXJBqMw+/zK
-         8/yfDEfYlauhcW2cNBvggrIOHh9SXC7WjBN6n1AYg+kUObINM7CrpLbQJjPuF9FoGvVf
-         9F8y3vXAj2wgBKVzHaiDFIHgP6T2IbL4MIurL8aSsU2JYz7X3jmNzID8U8PQbac2qiyY
-         hIV5xS/jsZV810DXHc1HAK2Qhj+d2bNbKral8W5CStNamMQLZSow8hcSnw9hTTE8HzUd
-         dw5yg9J2P6GXbYaorBl9RXqieAKT67HbrZFbF8F/mupQBYiSuLGo1S2JqToGM1pV6cWt
-         nmxg==
-X-Gm-Message-State: AAQBX9fbkc06zYFWukM2BwzD8BTQry2LlORlrWeRSJYOgbL4pow8FSY6
-        tmAfBKu6KLTachLu3/zNBBaBQA==
-X-Google-Smtp-Source: AKy350ZAIzvvXjHG1dKqxuD65cj01SveLdRnp/W1/U8iPKSXPOQPdJcAL2U2qXfVTnlM+7Su3FMuCQ==
-X-Received: by 2002:aa7:9ec8:0:b0:62e:407:fc69 with SMTP id r8-20020aa79ec8000000b0062e0407fc69mr10084557pfq.21.1680791656870;
-        Thu, 06 Apr 2023 07:34:16 -0700 (PDT)
-Received: from ?IPV6:2409:8a28:e63:f500:18d3:10f7:2e64:a1a7? ([2409:8a28:e63:f500:18d3:10f7:2e64:a1a7])
-        by smtp.gmail.com with ESMTPSA id m14-20020aa7900e000000b0062d848b7a9esm1440545pfo.153.2023.04.06.07.34.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 07:34:16 -0700 (PDT)
-Message-ID: <4cb0dfbc-d546-ed1e-b951-e37104a3f691@bytedance.com>
-Date:   Thu, 6 Apr 2023 22:34:09 +0800
+        with ESMTP id S239386AbjDFOmf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 10:42:35 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BBA6AF0D
+        for <linux-block@vger.kernel.org>; Thu,  6 Apr 2023 07:41:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=hQanMhh8zwbKAF2OwSHuBoBEWxA4OX9V6+kl+QBB/zo=; b=UsAVwqT6emqgOj//VZVXrBC+Sv
+        aMmrYsqdsAJ9G8qaSFMRh8tyn9ovrv/tW9Dm09tHHA6BsbappAItSY1vxn2fUlJUqwD3fBF35fsMf
+        JUZHWvfHwQa3TWOqbq39ZroJzj2NPttsb6I4ggeozWNo/4u+eynAWOPGl1H7g17Cc4m2utTMBopvP
+        YqKmi1F4Ws4FQkZoIKHP4N4QDO1R3RJrCubnjPCbnxbb3J2UCyGAJLDyH4nhvW2KBfoN/vTACBVYC
+        j30Ql7WbvhnrXF1DCLGyvPgFn5iT4SOTHjnYyTNmsULE6jOPocLKoTagsAKgthmOTnJeDLAirihfY
+        My+OqBGA==;
+Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pkQnS-007fei-2z;
+        Thu, 06 Apr 2023 14:41:07 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: zram I/O path cleanups and fixups v2
+Date:   Thu,  6 Apr 2023 16:40:46 +0200
+Message-Id: <20230406144102.149231-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.1
-Subject: Re: [PATCH 1/4] block, bfq: remove BFQ_WEIGHT_LEGACY_DFL
-To:     Tejun Heo <tj@kernel.org>
-Cc:     paolo.valente@linaro.org, axboe@kernel.dk, josef@toxicpanda.com,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230328145701.33699-1-zhouchengming@bytedance.com>
- <ZCSKirFH8f1JdQS2@slm.duckdns.org>
-Content-Language: en-US
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <ZCSKirFH8f1JdQS2@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,22 +50,25 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2023/3/30 02:59, Tejun Heo wrote:
-> On Tue, Mar 28, 2023 at 10:56:58PM +0800, Chengming Zhou wrote:
->> BFQ_WEIGHT_LEGACY_DFL is the same as CGROUP_WEIGHT_DFL, which means
->> we don't need cpd_bind_fn() callback to update default weight when
->> attached to a hierarchy.
->>
->> This patch remove BFQ_WEIGHT_LEGACY_DFL and cpd_bind_fn().
->>
->> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> 
-> For 1-3,
-> 
-> Acked-by: Tejun Heo <tj@kernel.org>
-> 
-> Thanks.
-> 
+Hi all,
 
-Thanks, I will drop the last patch and send v2 with the tag.
+this series cleans up the zram I/O path, and fixes the handling of
+synchronous I/O to the underlying device in the writeback_store
+function or for > 4K PAGE_SIZE systems.
 
+The fixes are at the end, as I could not fully reason about them being
+safe before untangling the callchain.
+
+This survives xfstests on two zram devices on x86, but I don't actually
+have a large PAGE_SIZE system to test that path on.
+
+Changes since v1:
+ - fix failed read vs write accounting
+ - minor commit log and comment improvements
+ - cosmetic change to use a break instead of a return in the main switch
+   in zram_submit_bio
+
+Diffstat:
+ zram_drv.c |  377 ++++++++++++++++++++++---------------------------------------
+ zram_drv.h |    1 
+ 2 files changed, 137 insertions(+), 241 deletions(-)
