@@ -2,76 +2,145 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DD736DB4C8
-	for <lists+linux-block@lfdr.de>; Fri,  7 Apr 2023 22:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EFE26DB685
+	for <lists+linux-block@lfdr.de>; Sat,  8 Apr 2023 00:37:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229882AbjDGUIn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 7 Apr 2023 16:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
+        id S229454AbjDGWht (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 7 Apr 2023 18:37:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230242AbjDGUIf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Apr 2023 16:08:35 -0400
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79D67BBA1;
-        Fri,  7 Apr 2023 13:08:34 -0700 (PDT)
-Received: by mail-pj1-f49.google.com with SMTP id nh20-20020a17090b365400b0024496d637e1so5091429pjb.5;
-        Fri, 07 Apr 2023 13:08:34 -0700 (PDT)
+        with ESMTP id S229436AbjDGWhs (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Apr 2023 18:37:48 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C15B77C
+        for <linux-block@vger.kernel.org>; Fri,  7 Apr 2023 15:37:47 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id d22-20020a17090a111600b0023d1b009f52so2474286pja.2
+        for <linux-block@vger.kernel.org>; Fri, 07 Apr 2023 15:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680907067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yG7rHhvzn+QO90+jExkI05GJilJzxR/FCmLHTtYfAQk=;
+        b=UWUo1p3i11yE6marIskHMAZr/+2FtCO4m8LXKUgiu+PNAXck7nQ6u31FbGIGF+fOUk
+         k25bhe6/vNFpAa2Wsn0uNNqUXFVIzGzW3CEXoudp+jEraSfq6giSWBU7nGtV0p36yqgH
+         aAcphi2EjTDx4lSVxZAhn2V3npA6kRB2VVQcsRmZMlxD5xQTvdClHl8spuJr5BppRGHP
+         m8DY2Ugr04eBiY+dOuHBfImqsvxM+hNDPzjFAHekg3WAYNmxqmAR2znCVFawtunX33Xz
+         mRWnzeoYgc/VVXLkCBvRZs4UjPuKtQJh98V3NDq/bPz50rwSKMWtWxthCen8EG+gCkky
+         t5Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680898114; x=1683490114;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CkZ9epVN8TkdRsJcbdQlduPOctGu1N9KX0JTrq0nz1g=;
-        b=OgRf+qISMweawhphd8MFRNmo5JOJPw44VchvqAxLmBe2CLvB8o8FT1vImOEYv6697R
-         Vab9MDpN6hhWE3q9baD8cmxAJmcPz1ldrQDeJluyATZOW7LoCDS/Bp1i9Y28OWiHRLsp
-         b1TZUoKHPDtaiXfEoM+l0UbJe2cP2ojfzewxmC043mrzONzj8wxZgsbEhVsrn7UFcGsb
-         jvfeJaCjLiD4NDOmq/KnyKUEwxo1k0nIejDyO6x4emtwmc0a7c/E3o0bp+r6Gg7RKoFn
-         ZqSkPD+Ho/YMjFxdh4MzK8OOo24hqyGwS2Vmtvj70PSkwqCBidCdxxwg6Hf1yyLhmBRD
-         Hz6A==
-X-Gm-Message-State: AAQBX9cjD3li3rR7frGhmbKUVsUwoDzMT9FWdlAeZJYC4+xoDqQza/D+
-        OkAzWgKl6rz5RmDKLWG7F3o=
-X-Google-Smtp-Source: AKy350bkZ/dbg++B75vxCCybX1JJjWE1bjDcXVcXGtkaYO/su68D56optz/DjfTQFNhiuhs1ZBvehA==
-X-Received: by 2002:a17:903:2309:b0:1a2:55c9:1808 with SMTP id d9-20020a170903230900b001a255c91808mr4182456plh.17.1680898113889;
-        Fri, 07 Apr 2023 13:08:33 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:f2c:4ac2:6000:5900? ([2620:15c:211:201:f2c:4ac2:6000:5900])
-        by smtp.gmail.com with ESMTPSA id ju20-20020a170903429400b0019aafc422fcsm3272871plb.240.2023.04.07.13.08.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Apr 2023 13:08:33 -0700 (PDT)
-Message-ID: <0d7d40a3-bd58-03f2-5bf2-706ed2e6155f@acm.org>
-Date:   Fri, 7 Apr 2023 13:08:31 -0700
+        d=1e100.net; s=20210112; t=1680907067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yG7rHhvzn+QO90+jExkI05GJilJzxR/FCmLHTtYfAQk=;
+        b=HrqV9p6FPs3/mNSUz1IwmAI2veb0z0eawUr5HFC5QR3G3GDHTWvbKQbzOpZyhIs/9n
+         X6UzzhKOkrXpJw8JQEDxm3FoWI4Up2tPxZNCFUxLGl9ApVTfTnCFsbPazMgIlJJP/Jjw
+         t91AhMffCSedpQWDPXO/H9K313ILCxhdIUEbVnNceePboXT69JZxRMmr5cltKFHWzvrW
+         gt1ju+WciLTMXPEwRNobJF0Y0gPPf9fIiQ7Wt3Gbzm+wgE3NeK8Gi19Md1J2eDLS+zCS
+         hE6y1zyxTb0EtwLgz4spwWiPf1x/v7qEjA/8psZMkLL0Nnp17sngROKkn+bk7wmj6ChW
+         UktA==
+X-Gm-Message-State: AAQBX9dEc/aW/+LjzsmCfyuBt5nQnNdTqh5S7UMG+Udur4mdsmAbT4we
+        8HMJtdqBH45N2ioR2fR6l3Ih0VE1PfM=
+X-Google-Smtp-Source: AKy350Ypa5IKY+5r2iGPDjZHbGM7kiGz7TMHJw22vo9EUMXMefd2sCFvWzGwvFXAs7B+UpB9sPDaQA==
+X-Received: by 2002:a17:90b:3842:b0:237:9a13:5841 with SMTP id nl2-20020a17090b384200b002379a135841mr4156900pjb.3.1680907067306;
+        Fri, 07 Apr 2023 15:37:47 -0700 (PDT)
+Received: from google.com ([2620:15c:211:201:8c04:2c9c:8af7:8bc2])
+        by smtp.gmail.com with ESMTPSA id x11-20020a1709028ecb00b001a1cd6c5a88sm3399270plo.73.2023.04.07.15.37.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Apr 2023 15:37:46 -0700 (PDT)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date:   Fri, 7 Apr 2023 15:37:44 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 15/16] zram: fix synchronous reads
+Message-ID: <ZDCbOCza3bK5JSOB@google.com>
+References: <20230406144102.149231-1-hch@lst.de>
+ <20230406144102.149231-16-hch@lst.de>
+ <ZC9CIsMcwCjYvbXX@google.com>
+ <20230406155810.abc9a2b5c72f43f03a5d5800@linux-foundation.org>
+ <ZC9il6lWSKEZxDUr@google.com>
+ <20230407043743.GB5674@lst.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v6 04/18] scsi: Move sd_pr_type to scsi_common
-Content-Language: en-US
-To:     Mike Christie <michael.christie@oracle.com>, hch@lst.de,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        james.bottomley@hansenpartnership.com, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, snitzer@kernel.org, axboe@kernel.dk,
-        linux-nvme@lists.infradead.org, chaitanyak@nvidia.com,
-        kbusch@kernel.org, target-devel@vger.kernel.org
-Cc:     Chaitanya Kulkarni <kch@nvidia.com>
-References: <20230407200551.12660-1-michael.christie@oracle.com>
- <20230407200551.12660-5-michael.christie@oracle.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20230407200551.12660-5-michael.christie@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-        FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230407043743.GB5674@lst.de>
+X-Spam-Status: No, score=0.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 4/7/23 13:05, Mike Christie wrote:
-> LIO is going to want to do the same block to/from SCSI pr types as sd.c
-> so this moves the sd_pr_type helper to scsi_common and renames it. The
-> next patch will then also add a helper to go from the SCSI value to the
-> block one for use with PERSISTENT_RESERVE_IN commands.
+On Fri, Apr 07, 2023 at 06:37:43AM +0200, Christoph Hellwig wrote:
+> On Thu, Apr 06, 2023 at 05:23:51PM -0700, Minchan Kim wrote:
+> > rw_page path so that bio comes next to serve the rw_page failure.
+> > In the case, zram will always do chained bio so we are fine with
+> > asynchronous IO.
+> > 
+> > diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+> > index b8549c61ff2c..23fa0e03cdc1 100644
+> > --- a/drivers/block/zram/zram_drv.c
+> > +++ b/drivers/block/zram/zram_drv.c
+> > @@ -1264,6 +1264,8 @@ static int __zram_bvec_read(struct zram *zram, struct page *page, u32 index,
+> >                 struct bio_vec bvec;
+> > 
+> >                 zram_slot_unlock(zram, index);
+> > +               if (partial_io)
+> > +                       return -EAGAIN;
+> > 
+> >                 bvec.bv_page = page;
+> >                 bvec.bv_len = PAGE_SIZE;
+> 
+> What tree is this supposed to apply to?  6.2 already has the
+> zram_bvec_read_from_bdev helper.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+It was for prior to 6.1 where doesn't have (94541bc3fbde4, zram: always
+expose rw_page). Since 6.1, with returning -EOPNOTSUPP on the rw_page,
+it will defer the request to be handled via submit_bio so every IO to
+read data from backing device will have parent bio and chained.
+
+> 
+> 
+> But either way partial_io can be true when called from zram_bvec_write,
+> where we can't just -EAGAIN as ->submit_bio is not allowed to return
+> that except for REQ_NOWAIT bios, and even then it needs to be handle
+> them when submitted without REQ_NOWAIT.
+
+The case returning -EAGAIN is only rw_page path not the submit_bio path
+so the request will be deferred to submit_bio path. However, yeah,
+I see it's still broken since read_from_bdev_sync never wait the read
+complettion again.
+
+Then, as you suggested, just disable the feature for non-4K would be
+the simple option.
+
+I see only this way to achieve it and not sure it will cover all the
+cases. If you have better idea, let me know.
+
+Thank you!
+
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index 0386b7da02aa..ae7662430789 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -58,6 +58,12 @@ config ZRAM_DEF_COMP
+ config ZRAM_WRITEBACK
+        bool "Write back incompressible or idle page to backing device"
+        depends on ZRAM
++       depends on !PAGE_SIZE_8KB
++       depends on !PAGE_SIZE_16KB
++       depends on !PAGE_SIZE_32KB
++       depends on !PAGE_SIZE_64KB
++       depends on !PAGE_SIZE_256KB
++       depends on !PAGE_SIZE_1MB
+        help
+         With incompressible page, there is no memory saving to keep it
+         in memory. Instead, write it out to backing device.
 
