@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB03A6DB4BC
-	for <lists+linux-block@lfdr.de>; Fri,  7 Apr 2023 22:06:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2BF6DB4C3
+	for <lists+linux-block@lfdr.de>; Fri,  7 Apr 2023 22:08:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230464AbjDGUGi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 7 Apr 2023 16:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57936 "EHLO
+        id S229523AbjDGUIm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 7 Apr 2023 16:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230394AbjDGUG2 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Apr 2023 16:06:28 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25CA4BDCD;
-        Fri,  7 Apr 2023 13:06:26 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 337FxBZY030887;
-        Fri, 7 Apr 2023 20:06:16 GMT
+        with ESMTP id S229706AbjDGUIc (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 7 Apr 2023 16:08:32 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EFF57ABF;
+        Fri,  7 Apr 2023 13:08:31 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 337Fx1H6018319;
+        Fri, 7 Apr 2023 20:06:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2022-7-12;
- bh=f2XML3lrICLhPJ8M0Q/zRbO3jNZeGELX1yUU1fJ6M+c=;
- b=PcCICaRoOh+6ol1HQIRpkxI5F5kusZAXVyp5r+rEXff/xvkMYXWfcmOHMx97h4JXlioU
- S5s7OMm5itoh+eaNE6iKdqd66W+7EWRMKAxfCl8KJJMoiKwva8YUB4n4Syo42K4Cjo09
- VmDs1ZSXizemogSQd1phetTY9auqZ3455zkmx1W+JeceaWlusy9mG1C/O9mIWzztS2JE
- R3Ed37cIinSaUw26Kav0EpjPXZ44sBY6z9cdMHx3fMzV4bX67g32+7q8wa0arN1ZvlyV
- YTaz6lv9xuJIjTvrDYT47ViLMaLeEXkQ/f9oXA51UXr26z/olaQyo40RC8g3c9E0bept qA== 
+ bh=C14zFcwsxu3x/LMCgGQF1R8t0x8zmbEpfoJFxVJOAJo=;
+ b=1B4OLdcEth5+ePY+PXb19XmNbKutZubul6efli3D2W27+eSpMftCxvPgkNttcr++BWPU
+ HXgt8bkEkogYO6WLU5zvlpPCGmafpShwTROKVaKDcLv4qntAc264uYJAIDRrCCHdyCAC
+ fbENIccJwrrSTpDux/DINdJa1v0aMc7UyQSWjqSCgJVsmjBqRM4GNLGsFeaURrclsrVM
+ R8Fs3srhEE5vb5fKAbnn7IvJEmoGm/S4R199U4WPvtjF03d5yandV4YLJ3A2fsZWq4o1
+ VW9HKZeYYcE/KVSKmukPQkb3feoWNyYN4frNOkvJ+J8pZVsQbiiMO1cfT2TuHDbuZMqM zQ== 
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ppd5up0mn-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ppb1dws04-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Apr 2023 20:06:16 +0000
+        Fri, 07 Apr 2023 20:06:17 +0000
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 337IdXYw034243;
-        Fri, 7 Apr 2023 20:06:14 GMT
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 337IdXYx034243;
+        Fri, 7 Apr 2023 20:06:17 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3pptjxees6-1
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3pptjxeets-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Apr 2023 20:06:14 +0000
+        Fri, 07 Apr 2023 20:06:17 +0000
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 337K5tr6010228;
-        Fri, 7 Apr 2023 20:06:14 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 337K5tr8010228;
+        Fri, 7 Apr 2023 20:06:16 GMT
 Received: from mnchrist-mac.us.oracle.com (dhcp-10-154-128-1.vpn.oracle.com [10.154.128.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3pptjxeeam-8;
-        Fri, 07 Apr 2023 20:06:13 +0000
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3pptjxeeam-9;
+        Fri, 07 Apr 2023 20:06:16 +0000
 From:   Mike Christie <michael.christie@oracle.com>
 To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         linux-scsi@vger.kernel.org, james.bottomley@hansenpartnership.com,
@@ -50,10 +50,11 @@ To:     bvanassche@acm.org, hch@lst.de, martin.petersen@oracle.com,
         snitzer@kernel.org, axboe@kernel.dk,
         linux-nvme@lists.infradead.org, chaitanyak@nvidia.com,
         kbusch@kernel.org, target-devel@vger.kernel.org
-Cc:     Mike Christie <michael.christie@oracle.com>
-Subject: [PATCH v6 07/18] nvme: Fix reservation status related structs
-Date:   Fri,  7 Apr 2023 15:05:40 -0500
-Message-Id: <20230407200551.12660-8-michael.christie@oracle.com>
+Cc:     Mike Christie <michael.christie@oracle.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>
+Subject: [PATCH v6 08/18] nvme: Don't hardcode the data len for pr commands
+Date:   Fri,  7 Apr 2023 15:05:41 -0500
+Message-Id: <20230407200551.12660-9-michael.christie@oracle.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230407200551.12660-1-michael.christie@oracle.com>
 References: <20230407200551.12660-1-michael.christie@oracle.com>
@@ -66,8 +67,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 ad
  phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0 spamscore=0
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2303200000 definitions=main-2304070180
-X-Proofpoint-ORIG-GUID: DiIkmaQhx6edPIHhSKRpV7Xpr8SezuVE
-X-Proofpoint-GUID: DiIkmaQhx6edPIHhSKRpV7Xpr8SezuVE
+X-Proofpoint-GUID: YQAlA42PEOJzYd6iOv01tHwInl0fDVuz
+X-Proofpoint-ORIG-GUID: YQAlA42PEOJzYd6iOv01tHwInl0fDVuz
 X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
@@ -78,74 +79,65 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This fixes the following issues with the reservation status structs:
-
-1. resv10 is bytes 23:10 so it should be 14 bytes.
-2. regctl_ds only supports 64 bit host IDs.
-
-These are not currently used, but will be in this patchset which adds
-support for the reservation report command.
+Reservation Report support needs to pass in a variable sized buffer, so
+this patch has the pr command helpers take a data length argument.
 
 Signed-off-by: Mike Christie <michael.christie@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
 ---
- include/linux/nvme.h | 38 ++++++++++++++++++++++++++++++--------
- 1 file changed, 30 insertions(+), 8 deletions(-)
+ drivers/nvme/host/core.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-index 779507ac750b..83704fc04a94 100644
---- a/include/linux/nvme.h
-+++ b/include/linux/nvme.h
-@@ -759,20 +759,42 @@ enum {
- 	NVME_LBART_ATTRIB_HIDE	= 1 << 1,
- };
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 1c9129028bb5..02b39f0126af 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2082,7 +2082,7 @@ static char nvme_pr_type(enum pr_type type)
+ }
  
-+struct nvme_registered_ctrl {
-+	__le16	cntlid;
-+	__u8	rcsts;
-+	__u8	rsvd3[5];
-+	__le64	hostid;
-+	__le64	rkey;
-+};
-+
- struct nvme_reservation_status {
- 	__le32	gen;
- 	__u8	rtype;
- 	__u8	regctl[2];
- 	__u8	resv5[2];
- 	__u8	ptpls;
--	__u8	resv10[13];
--	struct {
--		__le16	cntlid;
--		__u8	rcsts;
--		__u8	resv3[5];
--		__le64	hostid;
--		__le64	rkey;
--	} regctl_ds[];
-+	__u8	resv10[14];
-+	struct nvme_registered_ctrl regctl_ds[];
-+};
-+
-+struct nvme_registered_ctrl_ext {
-+	__le16	cntlid;
-+	__u8	rcsts;
-+	__u8	rsvd3[5];
-+	__le64	rkey;
-+	__u8	hostid[16];
-+	__u8	rsvd32[32];
-+};
-+
-+struct nvme_reservation_status_ext {
-+	__le32	gen;
-+	__u8	rtype;
-+	__u8	regctl[2];
-+	__u8	resv5[2];
-+	__u8	ptpls;
-+	__u8	resv10[14];
-+	__u8	rsvd24[40];
-+	struct nvme_registered_ctrl_ext regctl_eds[];
- };
+ static int nvme_send_ns_head_pr_command(struct block_device *bdev,
+-		struct nvme_command *c, u8 data[16])
++		struct nvme_command *c, u8 *data, unsigned int data_len)
+ {
+ 	struct nvme_ns_head *head = bdev->bd_disk->private_data;
+ 	int srcu_idx = srcu_read_lock(&head->srcu);
+@@ -2091,17 +2091,17 @@ static int nvme_send_ns_head_pr_command(struct block_device *bdev,
  
- enum nvme_async_event_type {
+ 	if (ns) {
+ 		c->common.nsid = cpu_to_le32(ns->head->ns_id);
+-		ret = nvme_submit_sync_cmd(ns->queue, c, data, 16);
++		ret = nvme_submit_sync_cmd(ns->queue, c, data, data_len);
+ 	}
+ 	srcu_read_unlock(&head->srcu, srcu_idx);
+ 	return ret;
+ }
+ 	
+ static int nvme_send_ns_pr_command(struct nvme_ns *ns, struct nvme_command *c,
+-		u8 data[16])
++		u8 *data, unsigned int data_len)
+ {
+ 	c->common.nsid = cpu_to_le32(ns->head->ns_id);
+-	return nvme_submit_sync_cmd(ns->queue, c, data, 16);
++	return nvme_submit_sync_cmd(ns->queue, c, data, data_len);
+ }
+ 
+ static int nvme_sc_to_pr_err(int nvme_sc)
+@@ -2141,10 +2141,11 @@ static int nvme_pr_command(struct block_device *bdev, u32 cdw10,
+ 
+ 	if (IS_ENABLED(CONFIG_NVME_MULTIPATH) &&
+ 	    bdev->bd_disk->fops == &nvme_ns_head_ops)
+-		ret = nvme_send_ns_head_pr_command(bdev, &c, data);
++		ret = nvme_send_ns_head_pr_command(bdev, &c, data,
++						   sizeof(data));
+ 	else
+ 		ret = nvme_send_ns_pr_command(bdev->bd_disk->private_data, &c,
+-					      data);
++					      data, sizeof(data));
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.25.1
 
