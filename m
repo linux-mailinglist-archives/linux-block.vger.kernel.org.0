@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E7406DA682
-	for <lists+linux-block@lfdr.de>; Fri,  7 Apr 2023 02:17:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3BA66DA683
+	for <lists+linux-block@lfdr.de>; Fri,  7 Apr 2023 02:17:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231171AbjDGARV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 6 Apr 2023 20:17:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36950 "EHLO
+        id S230098AbjDGARW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 6 Apr 2023 20:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230098AbjDGARU (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 20:17:20 -0400
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B97138A6E
-        for <linux-block@vger.kernel.org>; Thu,  6 Apr 2023 17:17:19 -0700 (PDT)
-Received: by mail-pl1-f178.google.com with SMTP id ix20so38890028plb.3
-        for <linux-block@vger.kernel.org>; Thu, 06 Apr 2023 17:17:19 -0700 (PDT)
+        with ESMTP id S230409AbjDGARV (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 6 Apr 2023 20:17:21 -0400
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBAA89029
+        for <linux-block@vger.kernel.org>; Thu,  6 Apr 2023 17:17:20 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id n14so23009432plc.8
+        for <linux-block@vger.kernel.org>; Thu, 06 Apr 2023 17:17:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680826639; x=1683418639;
+        d=1e100.net; s=20210112; t=1680826640; x=1683418640;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XMqZoVLH7diA5Sdp1MnvjtadI8hHVn6QGoRCcrnE5Pg=;
-        b=cslK2ouNSRqBMh8rXgVaon8P6fL53F76ml1qYGIKBXA8/D19PQ229jLroB3SykguYz
-         51IXD+geQo8aX+wxLFMH7uFXqQvCI7XLdKA1lDJVGSFjo3ED0wMCMrk2r3Hyx0CUE6gs
-         C4BvYfzcBCOOQAZ53lT/O8GUoYjmWIcPEKSn7yLE9umaS2zGY8qgg8Kht8TWIjHtzTmY
-         tWgKLfmDUl5QrzmgTenMNMfwYDFA5D+MNyLDYTw5OHFQIzCrIA6dgudYTr0pa//yhife
-         PJz4QcG+w1KAXiC+B08iW/qot6Ok4ez1q77ouTmbyV7pvJ/hbaek5cM77+M2M3dFesrg
-         m/LA==
-X-Gm-Message-State: AAQBX9dqhYpYNgCFSHDRLcSBOcllhmvt6wEp49j70+KsYHH5sVAGSZmq
-        PovShVmrjS321zfJv71zgKyp/VcGflE=
-X-Google-Smtp-Source: AKy350YCeKZvjmze6EHftvlPUww03iQTSCleXC/Hhn6iPVXinzvNGCU6HSS6Q9I/DrFzbCOscCp+XA==
-X-Received: by 2002:a17:902:c94d:b0:1a0:53b3:ee87 with SMTP id i13-20020a170902c94d00b001a053b3ee87mr1029512pla.62.1680826639181;
-        Thu, 06 Apr 2023 17:17:19 -0700 (PDT)
+        bh=SUUWniA4uPgIfsv1JT2KAKD8sP6eQdC/K73aOS/Pwsg=;
+        b=lKX1Al8EVMnulH7f8BfpUVwDJRRili9hRtSnw73JDoM9ctSjxYKblRNkuWpBsGNGgC
+         KlcdISabZ+dHEIDDDlNjJoxtSsDzZoYxEKQyQ5sGhjkVBMpyEh60ZQRWdTSLa9n1rpfc
+         S28ufh+ehznEEcZRNtw0mwG8Fx2lGLVrrl2CbalnWlnvDw/omA6F4im5jfeGeDNE7ahq
+         qA3X6yEdLbl3+RLe3Ufkdl+0+tx6qy8oAG4l01mZIOhhnSqnS9aVx1j+nCgE4co1NBtT
+         cftLteYMZzwxPa2z5EF5sT5mQjWgMQiwQdsKD5moqA38Of5of/gZEBg+uBmAlONiQhZH
+         ezKQ==
+X-Gm-Message-State: AAQBX9dR/lk8qAEORdWvva4CVzvQM7Q9TdxNOulYVvE9wy8JerSKZbPr
+        qVpiJ/wqmqhz6ZFK8DAkUXw=
+X-Google-Smtp-Source: AKy350b6ZvPR1mIH+NY2fWKKWmVbP8suS78IoYvOXmKGxX2FRk9OWiPhOYnATEnjz1JNWgdiiq33ZA==
+X-Received: by 2002:a17:903:138b:b0:1a5:dfd:d16e with SMTP id jx11-20020a170903138b00b001a50dfdd16emr564991plb.42.1680826640248;
+        Thu, 06 Apr 2023 17:17:20 -0700 (PDT)
 Received: from bvanassche-glaptop2.roam.corp.google.com ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id x9-20020a1709028ec900b0019a773419a6sm1873676plo.170.2023.04.06.17.17.18
+        by smtp.gmail.com with ESMTPSA id x9-20020a1709028ec900b0019a773419a6sm1873676plo.170.2023.04.06.17.17.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 17:17:18 -0700 (PDT)
+        Thu, 06 Apr 2023 17:17:19 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -45,9 +45,9 @@ Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Mike Snitzer <snitzer@kernel.org>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH 03/12] block: Send requeued requests to the I/O scheduler
-Date:   Thu,  6 Apr 2023 17:17:01 -0700
-Message-Id: <20230407001710.104169-4-bvanassche@acm.org>
+Subject: [PATCH 04/12] block: Requeue requests if a CPU is unplugged
+Date:   Thu,  6 Apr 2023 17:17:02 -0700
+Message-Id: <20230407001710.104169-5-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
 In-Reply-To: <20230407001710.104169-1-bvanassche@acm.org>
 References: <20230407001710.104169-1-bvanassche@acm.org>
@@ -63,7 +63,8 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Let the I/O scheduler control which requests are dispatched.
+Requeue requests instead of sending these to the dispatch list if a CPU
+is unplugged to prevent reordering of zoned writes.
 
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
@@ -71,63 +72,31 @@ Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Mike Snitzer <snitzer@kernel.org>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-mq.c         | 22 ++++++++++------------
- include/linux/blk-mq.h |  5 +++--
- 2 files changed, 13 insertions(+), 14 deletions(-)
+ block/blk-mq.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 250556546bbf..f6ffa76bc159 100644
+index f6ffa76bc159..8bb35deff5ec 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -1426,15 +1426,7 @@ static void blk_mq_requeue_work(struct work_struct *work)
+@@ -3496,9 +3496,17 @@ static int blk_mq_hctx_notify_dead(unsigned int cpu, struct hlist_node *node)
+ 	if (list_empty(&tmp))
+ 		return 0;
  
- 		rq->rq_flags &= ~RQF_SOFTBARRIER;
- 		list_del_init(&rq->queuelist);
--		/*
--		 * If RQF_DONTPREP, rq has contained some driver specific
--		 * data, so insert it to hctx dispatch list to avoid any
--		 * merge.
--		 */
--		if (rq->rq_flags & RQF_DONTPREP)
--			blk_mq_request_bypass_insert(rq, false, false);
--		else
--			blk_mq_sched_insert_request(rq, true, false, false);
-+		blk_mq_sched_insert_request(rq, /*at_head=*/true, false, false);
- 	}
+-	spin_lock(&hctx->lock);
+-	list_splice_tail_init(&tmp, &hctx->dispatch);
+-	spin_unlock(&hctx->lock);
++	if (hctx->queue->elevator) {
++		struct request *rq, *next;
++
++		list_for_each_entry_safe(rq, next, &tmp, queuelist)
++			blk_mq_requeue_request(rq, false);
++		blk_mq_kick_requeue_list(hctx->queue);
++	} else {
++		spin_lock(&hctx->lock);
++		list_splice_tail_init(&tmp, &hctx->dispatch);
++		spin_unlock(&hctx->lock);
++	}
  
- 	while (!list_empty(&rq_list)) {
-@@ -2065,9 +2057,15 @@ bool blk_mq_dispatch_rq_list(struct blk_mq_hw_ctx *hctx, struct list_head *list,
- 		if (nr_budgets)
- 			blk_mq_release_budgets(q, list);
- 
--		spin_lock(&hctx->lock);
--		list_splice_tail_init(list, &hctx->dispatch);
--		spin_unlock(&hctx->lock);
-+		if (!q->elevator) {
-+			spin_lock(&hctx->lock);
-+			list_splice_tail_init(list, &hctx->dispatch);
-+			spin_unlock(&hctx->lock);
-+		} else {
-+			q->elevator->type->ops.insert_requests(
-+				hctx, list,
-+				/*at_head=*/true);
-+		}
- 
- 		/*
- 		 * Order adding requests to hctx->dispatch and checking
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 5e6c79ad83d2..3a3bee9085e3 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -64,8 +64,9 @@ typedef __u32 __bitwise req_flags_t;
- #define RQF_RESV			((__force req_flags_t)(1 << 23))
- 
- /* flags that prevent us from merging requests: */
--#define RQF_NOMERGE_FLAGS \
--	(RQF_STARTED | RQF_SOFTBARRIER | RQF_FLUSH_SEQ | RQF_SPECIAL_PAYLOAD)
-+#define RQF_NOMERGE_FLAGS                                               \
-+	(RQF_STARTED | RQF_SOFTBARRIER | RQF_FLUSH_SEQ | RQF_DONTPREP | \
-+	 RQF_SPECIAL_PAYLOAD)
- 
- enum mq_rq_state {
- 	MQ_RQ_IDLE		= 0,
+ 	blk_mq_run_hw_queue(hctx, true);
+ 	return 0;
