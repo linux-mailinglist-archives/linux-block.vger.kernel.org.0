@@ -2,62 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B8A66DE38F
-	for <lists+linux-block@lfdr.de>; Tue, 11 Apr 2023 20:12:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 981A06DE38D
+	for <lists+linux-block@lfdr.de>; Tue, 11 Apr 2023 20:10:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbjDKSMY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 11 Apr 2023 14:12:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
+        id S230356AbjDKSKK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 11 Apr 2023 14:10:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjDKSMY (ORCPT
+        with ESMTP id S230345AbjDKSKG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 11 Apr 2023 14:12:24 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5DDE51
-        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 11:12:23 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id nh20-20020a17090b365400b0024496d637e1so14164429pjb.5
-        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 11:12:23 -0700 (PDT)
+        Tue, 11 Apr 2023 14:10:06 -0400
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A930524D
+        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 11:10:01 -0700 (PDT)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1a526890eeeso5178355ad.1
+        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 11:10:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681236442; x=1683828442;
+        d=1e100.net; s=20210112; t=1681236601; x=1683828601;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TD5CwNguqZ2K1/dZ8k4oHWH0VcyzAjtJBoVS/NZYT7s=;
-        b=Xmay0W+tA8Z0Ff+YDWZSIRxVUdEv5EBflQa5cBQkyRpmXVi4k06DkEMMn1AvRFkEYW
-         D48+IzHvwUm2KqdBLhO6UOLnF/gCwwhoEB5BUOfrToNb+rgofHsRSPkE85tS6nC0x50A
-         laXcPNhwA+/H7O9vqjj7bO2eOHAq5xh8kn5O6CS9Odbmh4kTI8VaPQuhxAgCDLyLsxwv
-         xBfBJUkHTpPhohFg6gvHCFe0lJKFifH3EgHYre1/+bc469BrQyoW9kGtYJiWxzgTr8bm
-         a3T9FTt0zP2KAaRQlUsFoe+tPPWyRmWY4cV43u/3+dcHOOhcBHz4Kl9LzQxz/yV6nqHJ
-         f/yw==
-X-Gm-Message-State: AAQBX9fVEv8Q9f3MNzyWNjvVquzV3SrkZBsUYWaKkeLUkwiT3jAgeTL7
-        y556lzXJnqSO5++1J2AEqhI=
-X-Google-Smtp-Source: AKy350bFDGBakvFZWSeR1HucVAAHwSnTBghkvoMl/h8ML4RtjCePZ51EmDW1kb0lA4pqS+t15+0F6g==
-X-Received: by 2002:a17:903:2302:b0:1a1:d774:a3d7 with SMTP id d2-20020a170903230200b001a1d774a3d7mr25184179plh.25.1681236441991;
-        Tue, 11 Apr 2023 11:07:21 -0700 (PDT)
+        bh=TzGbtVW/6SHmm4BoWTYkvjSHxE3QO0d8V5cEa6xWAm8=;
+        b=wpFD9F7TJuGSvrCDMNWUVZRrXj/gpSUJ82jMQGnxjYrqnBB+Z9ubdf3QJ2Pl7hMD+G
+         PDR877hdYvOQJn8wRA3YXDn48kvvqyyvKP+cT+jtpSO/buLtXMb671TADS9VKoF+3CmK
+         HsJIK+U+jSU71CEa+V5VT7KLznbwhkvgLifyPmttfPuuOkMsSvWyi759Fu3aaEXBpON4
+         ohz9gPmtnxz6PC9MuYCumJwpT2k+R6LyOSJBZbYddSIbwAb47x+RzNhcOaV9YvynmkDw
+         NaKSKhndnO7wcr44Ni7UsRwtOjYGgFHl5SsDTPceNHVLIAhMNt0reIH0vhiPdFaL6CsI
+         njHQ==
+X-Gm-Message-State: AAQBX9cClTm+/eGP0q6mbcdw38odg7mTziNvE67zCAtoJuWC1mrEeCmR
+        zBv3UF2CClGh/FkGPaHGQnD0iThVP5Y=
+X-Google-Smtp-Source: AKy350bPKhKWTnCVsqckV4Ur395k01b/Nn44K2m8lERTYMbvwUTdDWhYGVJfyzHiJuC577NndKWqCQ==
+X-Received: by 2002:a62:1d8c:0:b0:62a:63e6:3282 with SMTP id d134-20020a621d8c000000b0062a63e63282mr14598566pfd.11.1681236600618;
+        Tue, 11 Apr 2023 11:10:00 -0700 (PDT)
 Received: from ?IPV6:2620:15c:211:201:646f:c9f7:828a:8b03? ([2620:15c:211:201:646f:c9f7:828a:8b03])
-        by smtp.gmail.com with ESMTPSA id f15-20020a170902ab8f00b0019a97a4324dsm10037164plr.5.2023.04.11.11.07.21
+        by smtp.gmail.com with ESMTPSA id y10-20020aa7854a000000b005ded4825201sm10123877pfn.112.2023.04.11.11.09.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Apr 2023 11:07:21 -0700 (PDT)
-Message-ID: <30c30fea-4cd2-78f7-cd94-dcc35fd5d2ec@acm.org>
-Date:   Tue, 11 Apr 2023 11:07:19 -0700
+        Tue, 11 Apr 2023 11:10:00 -0700 (PDT)
+Message-ID: <28e48eeb-caf4-fe83-baec-6ed1cd154daf@acm.org>
+Date:   Tue, 11 Apr 2023 11:09:58 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 12/16] blk-mq: don't run the hw_queue from
- blk_mq_insert_request
+Subject: Re: [PATCH 13/16] blk-mq: don't run the hw_queue from
+ blk_mq_request_bypass_insert
 Content-Language: en-US
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org
 References: <20230411133329.554624-1-hch@lst.de>
- <20230411133329.554624-13-hch@lst.de>
+ <20230411133329.554624-14-hch@lst.de>
 From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20230411133329.554624-13-hch@lst.de>
+In-Reply-To: <20230411133329.554624-14-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.7 required=5.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
         FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -65,10 +65,16 @@ List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
 On 4/11/23 06:33, Christoph Hellwig wrote:
-> blk_mq_insert_request takes two bool parameters to control how to run
-> the queue at the end of the function.  Move the blk_mq_run_hw_queue call
-> to the callers that want it instead.
+>   	if ((policy & REQ_FSEQ_DATA) &&
+>   	    !(policy & (REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH))) {
+> -		blk_mq_request_bypass_insert(rq, false, true);
+> +		blk_mq_request_bypass_insert(rq, false);
+>   		return;
+>   	}
 
-I like this patch!
+Did you perhaps want to add a blk_mq_run_hw_queue() call in this 
+blk_insert_flush() code path?
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Thanks,
+
+Bart.
