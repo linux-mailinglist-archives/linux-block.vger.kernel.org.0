@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49EEE6DE228
-	for <lists+linux-block@lfdr.de>; Tue, 11 Apr 2023 19:15:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82F206DE229
+	for <lists+linux-block@lfdr.de>; Tue, 11 Apr 2023 19:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbjDKRPU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 11 Apr 2023 13:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37294 "EHLO
+        id S229732AbjDKRPV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 11 Apr 2023 13:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbjDKRPR (ORCPT
+        with ESMTP id S230030AbjDKRPS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 11 Apr 2023 13:15:17 -0400
+        Tue, 11 Apr 2023 13:15:18 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB5359DF
-        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 10:15:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74F025591
+        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 10:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Od06VxnWXU32hE89elXuKU9B9zMKaeX580dzPcJg1nY=; b=P4wHQASlTghE74y8AVE7vI/R4S
-        h65HWK1knMNDSxEhsFd73HCr1x5KymVx/GjkAoWj0byNDodTmqfCX9iskKvMPL9A4nTVeZS9ei61Z
-        r15MmMgNNN3CX8wVA5RES4SJHDFLvEEpclbRUfkoa088HZrb1uWIIRUfJsPYg9hrUBrhGAtLqe4xU
-        7FaIYdF9dAhA9iqTvsboR6KOJ1MPZoHsXJAsrJaued0WLHWYlaTFNsChQJpSBQFdIG+m6IX135CKH
-        MnFDrRIVKCrLFCT3sNRBL3wK5FOGthXJl8KMOJB2cvSMWj6uxTBrgfB7xhlwce9FpdA/n032JDXHU
-        NmOt4Ucw==;
+        bh=FHhp2jAnJ5iL5Zk6LnxZBm5T4ITZfThiEdPynD/rrpQ=; b=xTkkZA4YlfxBbjfDIrLiuVfD7o
+        JCNggC1mp8IA6ztFBVvOv42cuRxWZPbEL5JeCjzWt18Dm8ImGQR0lADVkgbigx1+gXFiJz3IvV3qb
+        Efzo6VNRUz7Xlxp4JjTs3zVq90qhJHyHZQL3FnAPs4y4di6qsxBgGX/eNfi2MV9h7R2tCaR1vQ7AK
+        zyFC0u4brHDYOTqTNJGqdnIGxSaz5HjZCd3qm96ojaDjBsa+l4U34i44sg4HgtB3FMcJMbaSCtxdR
+        vw2qx1ba3mOtunRY4lilhJxft4FhpEiZrUcZdJKCBMCFXiPRsuPIfvqfrG9q+QYV/VdrRyby3K1JG
+        EW+KqGcA==;
 Received: from [2001:4bb8:192:2d6c:e384:cbad:b189:57c6] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pmHaG-000gkw-2k;
-        Tue, 11 Apr 2023 17:15:09 +0000
+        id 1pmHaJ-000glD-1I;
+        Tue, 11 Apr 2023 17:15:11 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Minchan Kim <minchan@kernel.org>,
         Sergey Senozhatsky <senozhatsky@chromium.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH 03/17] zram: make zram_bio_discard more self-contained
-Date:   Tue, 11 Apr 2023 19:14:45 +0200
-Message-Id: <20230411171459.567614-4-hch@lst.de>
+Subject: [PATCH 04/17] zram: simplify bvec iteration in __zram_make_request
+Date:   Tue, 11 Apr 2023 19:14:46 +0200
+Message-Id: <20230411171459.567614-5-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230411171459.567614-1-hch@lst.de>
 References: <20230411171459.567614-1-hch@lst.de>
@@ -53,59 +53,86 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Derive the index and offset variables inside the function, and complete
-the bio directly in preparation for cleaning up the I/O path.
+bio_for_each_segment synthetize bvecs that never cross page boundaries,
+so don't duplicate that work in an inner loop.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 Acked-by: Minchan Kim <minchan@kernel.org>
 ---
- drivers/block/zram/zram_drv.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/block/zram/zram_drv.c | 42 +++++++++--------------------------
+ 1 file changed, 11 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index f4466ad1fd4aef..e9b31c19902779 100644
+index e9b31c19902779..e13c7d8e283b74 100644
 --- a/drivers/block/zram/zram_drv.c
 +++ b/drivers/block/zram/zram_drv.c
-@@ -1890,15 +1890,12 @@ static ssize_t recompress_store(struct device *dev,
+@@ -175,12 +175,6 @@ static inline u32 zram_get_priority(struct zram *zram, u32 index)
+ 	return prio & ZRAM_COMP_PRIORITY_MASK;
  }
- #endif
  
--/*
-- * zram_bio_discard - handler on discard request
-- * @index: physical block index in PAGE_SIZE units
-- * @offset: byte offset within physical block
-- */
--static void zram_bio_discard(struct zram *zram, u32 index,
--			     int offset, struct bio *bio)
-+static void zram_bio_discard(struct zram *zram, struct bio *bio)
+-static void update_position(u32 *index, int *offset, struct bio_vec *bvec)
+-{
+-	*index  += (*offset + bvec->bv_len) / PAGE_SIZE;
+-	*offset = (*offset + bvec->bv_len) % PAGE_SIZE;
+-}
+-
+ static inline void update_used_max(struct zram *zram,
+ 					const unsigned long pages)
  {
- 	size_t n = bio->bi_iter.bi_size;
-+	u32 index = bio->bi_iter.bi_sector >> SECTORS_PER_PAGE_SHIFT;
-+	u32 offset = (bio->bi_iter.bi_sector & (SECTORS_PER_PAGE - 1)) <<
-+			SECTOR_SHIFT;
+@@ -1960,16 +1954,10 @@ static int zram_bvec_rw(struct zram *zram, struct bio_vec *bvec, u32 index,
  
- 	/*
- 	 * zram manages data in physical block size units. Because logical block
-@@ -1926,6 +1923,8 @@ static void zram_bio_discard(struct zram *zram, u32 index,
- 		index++;
- 		n -= PAGE_SIZE;
- 	}
-+
-+	bio_endio(bio);
- }
+ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ {
+-	int offset;
+-	u32 index;
+-	struct bio_vec bvec;
+ 	struct bvec_iter iter;
++	struct bio_vec bv;
+ 	unsigned long start_time;
  
- /*
-@@ -1974,8 +1973,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+-	index = bio->bi_iter.bi_sector >> SECTORS_PER_PAGE_SHIFT;
+-	offset = (bio->bi_iter.bi_sector &
+-		  (SECTORS_PER_PAGE - 1)) << SECTOR_SHIFT;
+-
  	switch (bio_op(bio)) {
  	case REQ_OP_DISCARD:
  	case REQ_OP_WRITE_ZEROES:
--		zram_bio_discard(zram, index, offset, bio);
--		bio_endio(bio);
-+		zram_bio_discard(zram, bio);
- 		return;
- 	default:
- 		break;
+@@ -1980,24 +1968,16 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ 	}
+ 
+ 	start_time = bio_start_io_acct(bio);
+-	bio_for_each_segment(bvec, bio, iter) {
+-		struct bio_vec bv = bvec;
+-		unsigned int unwritten = bvec.bv_len;
+-
+-		do {
+-			bv.bv_len = min_t(unsigned int, PAGE_SIZE - offset,
+-							unwritten);
+-			if (zram_bvec_rw(zram, &bv, index, offset,
+-					 bio_op(bio), bio) < 0) {
+-				bio->bi_status = BLK_STS_IOERR;
+-				break;
+-			}
+-
+-			bv.bv_offset += bv.bv_len;
+-			unwritten -= bv.bv_len;
+-
+-			update_position(&index, &offset, &bv);
+-		} while (unwritten);
++	bio_for_each_segment(bv, bio, iter) {
++		u32 index = iter.bi_sector >> SECTORS_PER_PAGE_SHIFT;
++		u32 offset = (iter.bi_sector & (SECTORS_PER_PAGE - 1)) <<
++				SECTOR_SHIFT;
++
++		if (zram_bvec_rw(zram, &bv, index, offset, bio_op(bio),
++				bio) < 0) {
++			bio->bi_status = BLK_STS_IOERR;
++			break;
++		}
+ 	}
+ 	bio_end_io_acct(bio, start_time);
+ 	bio_endio(bio);
 -- 
 2.39.2
 
