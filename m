@@ -2,136 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBF9D6DDC0F
-	for <lists+linux-block@lfdr.de>; Tue, 11 Apr 2023 15:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53C5C6DDC25
+	for <lists+linux-block@lfdr.de>; Tue, 11 Apr 2023 15:33:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjDKN3H (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 11 Apr 2023 09:29:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38068 "EHLO
+        id S229798AbjDKNdl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 11 Apr 2023 09:33:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjDKN3H (ORCPT
+        with ESMTP id S230083AbjDKNdj (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 11 Apr 2023 09:29:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F4CB135
-        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 06:29:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CFF2761D89
-        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 13:29:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA88C433EF;
-        Tue, 11 Apr 2023 13:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681219745;
-        bh=IVEX+2HCTdmiFSli9ScoF6Hm8RUjBJuATvyntYVo3bk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pwj6DLjbSaW1r9/bn6fwMrGPs0Rh2hfiG0UgoF0Y9AtIJ6bw0ueh4xrG++BYq66gd
-         S+MSMG7PQwl9PpOG7bXdbJNgwViK5HlEowjUWbXCGv+gcoapGnD1RphcGcZCiP9k/Z
-         5SSXK+Te3TOb+kLavpif26toQN3cjZvX9piNQHLMXvjp7XIti3uVG+4mH0Z0zkOvm/
-         QltGtk+hO2Knlf0mkRa5lO0onujDFdX+sMUM89t6EhLOJNgNRtLcOLSi0MpwdvqQsF
-         NuxoaLj1q0II4DUdYnRafCDv7rH/suawhNL7bYtz0f7b5B2QnW/D4k5N1wfoyvDgrz
-         0iTATqxMlr/vQ==
-Date:   Tue, 11 Apr 2023 15:28:59 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Ondrej Kozina <okozina@redhat.com>
-Cc:     linux-block@vger.kernel.org, bluca@debian.org, gmazyland@gmail.com,
-        axboe@kernel.dk, hch@infradead.org, jonathan.derrick@linux.dev
-Subject: Re: [PATCH v2 1/1] sed-opal: geometry feature reporting command
-Message-ID: <20230411-fernsteuern-lauwarm-b17322cd58e2@brauner>
-References: <20230406131934.340155-1-okozina@redhat.com>
- <20230411090931.9193-1-okozina@redhat.com>
- <20230411090931.9193-2-okozina@redhat.com>
+        Tue, 11 Apr 2023 09:33:39 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3013448B
+        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 06:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=RfUdgJvzGQT5nsVFZkY4qwOAE2QlwC9gr1cW8+Mu1v8=; b=vCuLmPDXGgJo49X8MmEdTzY4OQ
+        32W2tvj6t/fy4zeIRSz0fvMeA/vfqFfmUGZypcaA9BzzAoHq9LoqWordQj95r/Il6yOg/cIEbNvae
+        FEgQ6YaHoLZDyuQKFdmh+PThaJU1rM+u1kRF805fuQ8ntxV0WRPaOgx0lTSVabGhhWvH2CfQoEMXB
+        dc2cxviTw0mbBPrYd0jzTLM+DO6MhRfm+8UUSaPY2154DHq13Xod4kl8OD1Mq4l8iM8E2SlL+tFjL
+        AtYZNGG7fPBMVJYLtrA8aS7ugW7Chpa5bPQ4BJ/is3GK5p/CbjZ0aRhEDkUrEQYECWezrThYm+NpE
+        dFqSB0xg==;
+Received: from [2001:4bb8:192:2d6c:a9b7:88a0:9fdd:81ca] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pmE7p-0007qI-1z;
+        Tue, 11 Apr 2023 13:33:34 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org
+Subject: cleanup request insertation parameters
+Date:   Tue, 11 Apr 2023 15:33:13 +0200
+Message-Id: <20230411133329.554624-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230411090931.9193-2-okozina@redhat.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 11:09:31AM +0200, Ondrej Kozina wrote:
-> Locking range start and locking range length
-> attributes may be require to satisfy restrictions
-> exposed by OPAL2 geometry feature reporting.
-> 
-> Geometry reporting feature is described in TCG OPAL SSC,
-> section 3.1.1.4 (ALIGN, LogicalBlockSize, AlignmentGranularity
-> and LowestAlignedLBA).
-> 
-> 4.3.5.2.1.1 RangeStart Behavior:
-> 
-> [ StartAlignment = (RangeStart modulo AlignmentGranularity) - LowestAlignedLBA ]
-> 
-> When processing a Set method or CreateRow method on the Locking
-> table for a non-Global Range row, if:
-> 
-> a) the AlignmentRequired (ALIGN above) column in the LockingInfo
->    table is TRUE;
-> b) RangeStart is non-zero; and
-> c) StartAlignment is non-zero, then the method SHALL fail and
->    return an error status code INVALID_PARAMETER.
-> 
-> 4.3.5.2.1.2 RangeLength Behavior:
-> 
-> If RangeStart is zero, then
-> 	[ LengthAlignment = (RangeLength modulo AlignmentGranularity) - LowestAlignedLBA ]
-> 
-> If RangeStart is non-zero, then
-> 	[ LengthAlignment = (RangeLength modulo AlignmentGranularity) ]
-> 
-> When processing a Set method or CreateRow method on the Locking
-> table for a non-Global Range row, if:
-> 
-> a) the AlignmentRequired (ALIGN above) column in the LockingInfo
->    table is TRUE;
-> b) RangeLength is non-zero; and
-> c) LengthAlignment is non-zero, then the method SHALL fail and
->    return an error status code INVALID_PARAMETER
-> 
-> In userspace we stuck to logical block size reported by general
-> block device (via sysfs or ioctl), but we can not read
-> 'AlignmentGranularity' or 'LowestAlignedLBA' anywhere else and
-> we need to get those values from sed-opal interface otherwise
-> we will not be able to report or avoid locking range setup
-> INVALID_PARAMETER errors above.
-> 
-> Signed-off-by: Ondrej Kozina <okozina@redhat.com>
-> ---
->  block/sed-opal.c              | 29 ++++++++++++++++++++++++++++-
->  include/linux/sed-opal.h      |  1 +
->  include/uapi/linux/sed-opal.h | 13 +++++++++++++
->  3 files changed, 42 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/sed-opal.c b/block/sed-opal.c
-> index 3fc4e65db111..c18339446ef3 100644
-> --- a/block/sed-opal.c
-> +++ b/block/sed-opal.c
-> @@ -83,8 +83,10 @@ struct opal_dev {
->  	u16 comid;
->  	u32 hsn;
->  	u32 tsn;
-> -	u64 align;
-> +	u64 align; /* alignment granularity */
->  	u64 lowest_lba;
-> +	u32 logical_block_size;
-> +	u8  align_required; /* ALIGN: 0 or 1 */
->  
->  	size_t pos;
->  	u8 *cmd;
-> @@ -409,6 +411,8 @@ static void check_geometry(struct opal_dev *dev, const void *data)
->  
->  	dev->align = be64_to_cpu(geo->alignment_granularity);
->  	dev->lowest_lba = be64_to_cpu(geo->lowest_aligned_lba);
-> +	dev->logical_block_size = be32_to_cpu(geo->logical_block_size);
-> +	dev->align_required = geo->reserved01 & 1;
+Hi Jens,
 
-This is really ugly. Both the naming of the variable and testing against
-an unnamed constant. I'd prefer if that could be fixed but otherwise,
+in context of his latest series Bart commented that it's too hard
+to find all spots that do a head insertation into the blk-mq dispatch
+queues.  This series collapses various far too deep callchains, drop
+two of the three bools and then replaced the final once with a greppable
+constant.
 
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+This will create some rebased work for Bart of top of the other comments
+he got, but I think this will allow us to sort out some of the request
+order issues much better while also making the code a lot more readable.
+
+
+Diffstat:
+ bfq-iosched.c   |   16 +--
+ blk-flush.c     |   11 --
+ blk-mq-sched.c  |  110 ---------------------
+ blk-mq-sched.h  |    6 -
+ blk-mq.c        |  283 ++++++++++++++++++++++++++++++++++----------------------
+ blk-mq.h        |   11 --
+ elevator.h      |    3 
+ kyber-iosched.c |    5 
+ mq-deadline.c   |   11 +-
+ 9 files changed, 200 insertions(+), 256 deletions(-)
