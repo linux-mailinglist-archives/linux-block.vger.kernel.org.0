@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 931E46DEB2A
-	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 07:33:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DDDF6DEB2B
+	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 07:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbjDLFds (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Apr 2023 01:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48300 "EHLO
+        id S229663AbjDLFdu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Apr 2023 01:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjDLFdr (ORCPT
+        with ESMTP id S229612AbjDLFdu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Apr 2023 01:33:47 -0400
+        Wed, 12 Apr 2023 01:33:50 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C5215584
-        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 22:33:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F261526C
+        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 22:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=VCBwvnKb/0vjY4TPYqqSpEsrtFGwmwLsDW+7iDaqK0I=; b=yrDNh/JShCXQVGzEf+9f0qcS5y
-        c+AwAJ8zs3YD28sw2yYCpuAWhe7yIfag8xvqb/PaRiisHBmUIkDOtw4AohiDgymA+PskJbBh2pWFH
-        sVAP4i9fXEInJIRl2w/6PnF8E4SIkhumspRE5+ZEhIh/yZhnmzIPermsFEdnv6DAvZ3FXKaHOsM9q
-        V3nwDO7DBNZEbj9zXCxxxEm5Tjeo8PbnTokWK+0PMEbeS2FbjQmjtOsCxccMINkBfNAXJrrWpBVoP
-        K0CMrAPpuJUWcKIzJGiMRana5x80DquvO4GOV59vV6C9msTO3ywR86NLFfRJn6QdOMarxBCbH8jvT
-        m9boFTqA==;
+        bh=27UPT6Ehh1n4IwJRJVAUVEZ7rnxKZ8LWHWzWDVUyVBA=; b=BxiIlcFjC+oZriAB3YnqCWbMDn
+        gmwabftgqISLWL9kNijLX4bM547HTgqBW4WlVdDC1cTZsJbJ+qcTthOM1lTwNg9WqznvBLtNLeihO
+        Y9UIvFZm3IHLuNFs4wQhW6YX/saW1NQskHDhhjLBtQ5dutTT8vCqDEdypAV1+a98tTAe+YsSphA0x
+        zVefoJ5bvpiGBSdXPbwWwTfgwF/Ua/XyjCJCcQZK4l7nwKLC+gMoexNt61Bh1/aX31obz3hvdwHtF
+        +ijTwVddKXsGo4QoIvGo0zPyAFdpb/YG6Z1+XHkxPFTqg07ACCn4Il4zajnFymYpF3hUoHCwuJV05
+        ELPpbrHg==;
 Received: from [2001:4bb8:192:2d6c:58da:8aa2:ef59:390f] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pmT6t-001rMD-0u;
-        Wed, 12 Apr 2023 05:33:35 +0000
+        id 1pmT6v-001rMe-2y;
+        Wed, 12 Apr 2023 05:33:38 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org
-Subject: [PATCH 17/18] blk-mq: pass a flags argument to blk_mq_request_bypass_insert
-Date:   Wed, 12 Apr 2023 07:32:47 +0200
-Message-Id: <20230412053248.601961-18-hch@lst.de>
+Subject: [PATCH 18/18] blk-mq: pass the flags argument to elevator_type->insert_requests
+Date:   Wed, 12 Apr 2023 07:32:48 +0200
+Message-Id: <20230412053248.601961-19-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230412053248.601961-1-hch@lst.de>
 References: <20230412053248.601961-1-hch@lst.de>
@@ -51,122 +51,175 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Replace the boolean at_head argument with the same flags that are already
-passed to blk_mq_insert_request.
+Instead of passing a bool at_head, pass down the full flags from the
+blk_mq_insert_request interface.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-flush.c |  2 +-
- block/blk-mq.c    | 18 +++++++++---------
- block/blk-mq.h    |  2 +-
- 3 files changed, 11 insertions(+), 11 deletions(-)
+ block/bfq-iosched.c   | 16 ++++++++--------
+ block/blk-mq.c        |  5 ++---
+ block/elevator.h      |  4 +++-
+ block/kyber-iosched.c |  5 +++--
+ block/mq-deadline.c   |  9 +++++----
+ 5 files changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/block/blk-flush.c b/block/blk-flush.c
-index 3561aba8cc23f8..fa9607160c84a2 100644
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -426,7 +426,7 @@ void blk_insert_flush(struct request *rq)
- 	 */
- 	if ((policy & REQ_FSEQ_DATA) &&
- 	    !(policy & (REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH))) {
--		blk_mq_request_bypass_insert(rq, false);
-+		blk_mq_request_bypass_insert(rq, 0);
- 		blk_mq_run_hw_queue(hctx, false);
- 		return;
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 37f68c907ac08c..b4c4b4808c6c4c 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -6231,7 +6231,7 @@ static inline void bfq_update_insert_stats(struct request_queue *q,
+ static struct bfq_queue *bfq_init_rq(struct request *rq);
+ 
+ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+-			       bool at_head)
++			       blk_insert_t flags)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct bfq_data *bfqd = q->elevator->elevator_data;
+@@ -6254,11 +6254,10 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 
+ 	trace_block_rq_insert(rq);
+ 
+-	if (!bfqq || at_head) {
+-		if (at_head)
+-			list_add(&rq->queuelist, &bfqd->dispatch);
+-		else
+-			list_add_tail(&rq->queuelist, &bfqd->dispatch);
++	if (flags & BLK_MQ_INSERT_AT_HEAD) {
++		list_add(&rq->queuelist, &bfqd->dispatch);
++	} else if (!bfqq) {
++		list_add_tail(&rq->queuelist, &bfqd->dispatch);
+ 	} else {
+ 		idle_timer_disabled = __bfq_insert_request(bfqd, rq);
+ 		/*
+@@ -6288,14 +6287,15 @@ static void bfq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ }
+ 
+ static void bfq_insert_requests(struct blk_mq_hw_ctx *hctx,
+-				struct list_head *list, bool at_head)
++				struct list_head *list,
++				blk_insert_t flags)
+ {
+ 	while (!list_empty(list)) {
+ 		struct request *rq;
+ 
+ 		rq = list_first_entry(list, struct request, queuelist);
+ 		list_del_init(&rq->queuelist);
+-		bfq_insert_request(hctx, rq, at_head);
++		bfq_insert_request(hctx, rq, flags);
  	}
+ }
+ 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index c23c32f429a0e9..3f1b30e59e115f 100644
+index 3f1b30e59e115f..03c6fa4afcdb91 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -1441,7 +1441,7 @@ static void blk_mq_requeue_work(struct work_struct *work)
- 		if (rq->rq_flags & RQF_DONTPREP) {
- 			rq->rq_flags &= ~RQF_SOFTBARRIER;
- 			list_del_init(&rq->queuelist);
--			blk_mq_request_bypass_insert(rq, false);
-+			blk_mq_request_bypass_insert(rq, 0);
- 		} else if (rq->rq_flags & RQF_SOFTBARRIER) {
- 			rq->rq_flags &= ~RQF_SOFTBARRIER;
- 			list_del_init(&rq->queuelist);
-@@ -2455,17 +2455,17 @@ static void blk_mq_run_work_fn(struct work_struct *work)
- /**
-  * blk_mq_request_bypass_insert - Insert a request at dispatch list.
-  * @rq: Pointer to request to be inserted.
-- * @at_head: true if the request should be inserted at the head of the list.
-+ * @flags: BLK_MQ_INSERT_*
-  *
-  * Should only be used carefully, when the caller knows we want to
-  * bypass a potential IO scheduler on the target device.
-  */
--void blk_mq_request_bypass_insert(struct request *rq, bool at_head)
-+void blk_mq_request_bypass_insert(struct request *rq, blk_insert_t flags)
+@@ -2554,8 +2554,7 @@ static void blk_mq_insert_request(struct request *rq, blk_insert_t flags)
+ 		WARN_ON_ONCE(rq->tag != BLK_MQ_NO_TAG);
+ 
+ 		list_add(&rq->queuelist, &list);
+-		q->elevator->type->ops.insert_requests(hctx, &list,
+-				flags & BLK_MQ_INSERT_AT_HEAD);
++		q->elevator->type->ops.insert_requests(hctx, &list, flags);
+ 	} else {
+ 		trace_block_rq_insert(rq);
+ 
+@@ -2766,7 +2765,7 @@ static void blk_mq_dispatch_plug_list(struct blk_plug *plug, bool from_sched)
+ 	percpu_ref_get(&this_hctx->queue->q_usage_counter);
+ 	if (this_hctx->queue->elevator) {
+ 		this_hctx->queue->elevator->type->ops.insert_requests(this_hctx,
+-				&list, false);
++				&list, 0);
+ 		blk_mq_run_hw_queue(this_hctx, from_sched);
+ 	} else {
+ 		blk_mq_insert_requests(this_hctx, this_ctx, &list, from_sched);
+diff --git a/block/elevator.h b/block/elevator.h
+index 774a8f6b99e69e..7ca3d7b6ed8289 100644
+--- a/block/elevator.h
++++ b/block/elevator.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/percpu.h>
+ #include <linux/hashtable.h>
++#include "blk-mq.h"
+ 
+ struct io_cq;
+ struct elevator_type;
+@@ -37,7 +38,8 @@ struct elevator_mq_ops {
+ 	void (*limit_depth)(blk_opf_t, struct blk_mq_alloc_data *);
+ 	void (*prepare_request)(struct request *);
+ 	void (*finish_request)(struct request *);
+-	void (*insert_requests)(struct blk_mq_hw_ctx *, struct list_head *, bool);
++	void (*insert_requests)(struct blk_mq_hw_ctx *hctx, struct list_head *list,
++			blk_insert_t flags);
+ 	struct request *(*dispatch_request)(struct blk_mq_hw_ctx *);
+ 	bool (*has_work)(struct blk_mq_hw_ctx *);
+ 	void (*completed_request)(struct request *, u64);
+diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+index 3f9fb2090c9158..4155594aefc657 100644
+--- a/block/kyber-iosched.c
++++ b/block/kyber-iosched.c
+@@ -588,7 +588,8 @@ static void kyber_prepare_request(struct request *rq)
+ }
+ 
+ static void kyber_insert_requests(struct blk_mq_hw_ctx *hctx,
+-				  struct list_head *rq_list, bool at_head)
++				  struct list_head *rq_list,
++				  blk_insert_t flags)
  {
- 	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
+ 	struct kyber_hctx_data *khd = hctx->sched_data;
+ 	struct request *rq, *next;
+@@ -600,7 +601,7 @@ static void kyber_insert_requests(struct blk_mq_hw_ctx *hctx,
  
- 	spin_lock(&hctx->lock);
--	if (at_head)
-+	if (flags & BLK_MQ_INSERT_AT_HEAD)
- 		list_add(&rq->queuelist, &hctx->dispatch);
- 	else
- 		list_add_tail(&rq->queuelist, &hctx->dispatch);
-@@ -2524,7 +2524,7 @@ static void blk_mq_insert_request(struct request *rq, blk_insert_t flags)
- 		 * and it is added to the scheduler queue, there is no chance to
- 		 * dispatch it given we prioritize requests in hctx->dispatch.
- 		 */
--		blk_mq_request_bypass_insert(rq, flags & BLK_MQ_INSERT_AT_HEAD);
-+		blk_mq_request_bypass_insert(rq, flags);
- 	} else if (rq->rq_flags & RQF_FLUSH_SEQ) {
- 		/*
- 		 * Firstly normal IO request is inserted to scheduler queue or
-@@ -2547,7 +2547,7 @@ static void blk_mq_insert_request(struct request *rq, blk_insert_t flags)
- 		 * Simply queue flush rq to the front of hctx->dispatch so that
- 		 * intensive flush workloads can benefit in case of NCQ HW.
- 		 */
--		blk_mq_request_bypass_insert(rq, true);
-+		blk_mq_request_bypass_insert(rq, BLK_MQ_INSERT_AT_HEAD);
- 	} else if (q->elevator) {
- 		LIST_HEAD(list);
- 
-@@ -2668,7 +2668,7 @@ static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
- 		break;
- 	case BLK_STS_RESOURCE:
- 	case BLK_STS_DEV_RESOURCE:
--		blk_mq_request_bypass_insert(rq, false);
-+		blk_mq_request_bypass_insert(rq, 0);
- 		blk_mq_run_hw_queue(hctx, false);
- 		break;
- 	default:
-@@ -2716,7 +2716,7 @@ static void blk_mq_plug_issue_direct(struct blk_plug *plug)
- 			break;
- 		case BLK_STS_RESOURCE:
- 		case BLK_STS_DEV_RESOURCE:
--			blk_mq_request_bypass_insert(rq, false);
-+			blk_mq_request_bypass_insert(rq, 0);
- 			blk_mq_run_hw_queue(hctx, false);
- 			goto out;
- 		default:
-@@ -2835,7 +2835,7 @@ static void blk_mq_try_issue_list_directly(struct blk_mq_hw_ctx *hctx,
- 			break;
- 		case BLK_STS_RESOURCE:
- 		case BLK_STS_DEV_RESOURCE:
--			blk_mq_request_bypass_insert(rq, false);
-+			blk_mq_request_bypass_insert(rq, 0);
- 			if (list_empty(list))
- 				blk_mq_run_hw_queue(hctx, false);
- 			goto out;
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index 2c165de2f3f1fe..849b53396f78b6 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -68,7 +68,7 @@ void blk_mq_free_map_and_rqs(struct blk_mq_tag_set *set,
- /*
-  * Internal helpers for request insertion into sw queues
+ 		spin_lock(&kcq->lock);
+ 		trace_block_rq_insert(rq);
+-		if (at_head)
++		if (flags & BLK_MQ_INSERT_AT_HEAD)
+ 			list_move(&rq->queuelist, head);
+ 		else
+ 			list_move_tail(&rq->queuelist, head);
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index ceae477c3571a3..5839a027e0f051 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -766,7 +766,7 @@ static bool dd_bio_merge(struct request_queue *q, struct bio *bio,
+  * add rq to rbtree and fifo
   */
--void blk_mq_request_bypass_insert(struct request *rq, bool at_head);
-+void blk_mq_request_bypass_insert(struct request *rq, blk_insert_t flags);
+ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+-			      bool at_head)
++			      blk_insert_t flags)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+@@ -799,7 +799,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
  
- /*
-  * CPU -> queue mappings
+ 	trace_block_rq_insert(rq);
+ 
+-	if (at_head) {
++	if (flags & BLK_MQ_INSERT_AT_HEAD) {
+ 		list_add(&rq->queuelist, &per_prio->dispatch);
+ 		rq->fifo_time = jiffies;
+ 	} else {
+@@ -823,7 +823,8 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+  * Called from blk_mq_insert_request() or blk_mq_dispatch_plug_list().
+  */
+ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
+-			       struct list_head *list, bool at_head)
++			       struct list_head *list,
++			       blk_insert_t flags)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+@@ -834,7 +835,7 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 
+ 		rq = list_first_entry(list, struct request, queuelist);
+ 		list_del_init(&rq->queuelist);
+-		dd_insert_request(hctx, rq, at_head);
++		dd_insert_request(hctx, rq, flags);
+ 	}
+ 	spin_unlock(&dd->lock);
+ }
 -- 
 2.39.2
 
