@@ -2,116 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 680B76DF7A2
-	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 15:48:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7428B6DFB02
+	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 18:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231220AbjDLNsm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Apr 2023 09:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50580 "EHLO
+        id S230115AbjDLQPX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Apr 2023 12:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230495AbjDLNsm (ORCPT
+        with ESMTP id S230125AbjDLQPU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Apr 2023 09:48:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8112283D3
-        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 06:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681307278;
+        Wed, 12 Apr 2023 12:15:20 -0400
+X-Greylist: delayed 393 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 12 Apr 2023 09:15:10 PDT
+Received: from out-27.mta0.migadu.com (out-27.mta0.migadu.com [91.218.175.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AB461A8
+        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 09:15:09 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1681315714;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N4hGK+twx2J0sna8Dlsk/TzzUeTzC124CUsz24QOgC8=;
-        b=CrRyEUYaQ+tYBxMg9hGrB+6vWXAyQewaDpEVr0Ye2eFIb7RJrGvR4n9l5z9sYBjpiwfeWr
-        zM5IVXHuLYGMqDQIH4IJjpQoBke+Dp1pfhBhqinrgnlDkWPsnUVws8hXl41Pkp+QmbUlu/
-        NqR753b3PjWyoImyWs6je5J9nUyc6ag=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-339-jdPnAKeROzWMiaJSZ40rKg-1; Wed, 12 Apr 2023 09:47:54 -0400
-X-MC-Unique: jdPnAKeROzWMiaJSZ40rKg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15E688996E0;
-        Wed, 12 Apr 2023 13:47:54 +0000 (UTC)
-Received: from ovpn-8-18.pek2.redhat.com (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ADEDC2027043;
-        Wed, 12 Apr 2023 13:47:46 +0000 (UTC)
-Date:   Wed, 12 Apr 2023 21:47:41 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Kanchan Joshi <joshi.k@samsung.com>
-Cc:     Kanchan Joshi <joshiiitr@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        lsf-pc@lists.linux-foundation.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, io-uring@vger.kernel.org,
-        hch@lst.de, kbusch@kernel.org, ming.lei@redhat.com
-Subject: Re: [LSF/MM/BPF ATTEND][LSF/MM/BPF Topic] Non-block IO
-Message-ID: <ZDa2fUENbykgvyk8@ovpn-8-18.pek2.redhat.com>
-References: <CGME20230210180226epcas5p1bd2e1150de067f8af61de2bbf571594d@epcas5p1.samsung.com>
- <20230210180033.321377-1-joshi.k@samsung.com>
- <39a543d7-658c-0309-7a68-f07ffe850d0e@kernel.dk>
- <CA+1E3rLLu2ZzBHp30gwXBWzkCvOA4KD7PS70mLuGE8tYFpNEmA@mail.gmail.com>
- <ZDYYhE1h1qvCvVmt@ovpn-8-26.pek2.redhat.com>
- <20230412132615.GA5049@green5>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=YI/qDpTMRdMgkTJuLjq2rEZXaIXEU3z1owrkp+3opps=;
+        b=ou71pWVf5VT9CbBBk9if3KGgvw/QwtAA4Qyb6AjKM61VVmqQPp3TudZiYdL6I9cZ0krY9u
+        Vbv1Oz0VBiydJUZ5MpaYEe5+l3EnwB5Dh6R19Q96tBfvtqQBsT75c2SsTW9cmZsJ5x64VR
+        2OYkq5pZE6L72eC6MABobv5TuFFSoaE=
+From:   chengming.zhou@linux.dev
+To:     axboe@kernel.dk, tj@kernel.org
+Cc:     josef@toxicpanda.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [PATCH 1/2] blk-stat: fix QUEUE_FLAG_STATS clear
+Date:   Thu, 13 Apr 2023 00:07:53 +0800
+Message-Id: <20230412160754.1981705-1-chengming.zhou@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230412132615.GA5049@green5>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 06:56:15PM +0530, Kanchan Joshi wrote:
-> On Wed, Apr 12, 2023 at 10:33:40AM +0800, Ming Lei wrote:
-> > On Wed, Apr 12, 2023 at 04:18:16AM +0530, Kanchan Joshi wrote:
-> > > > > 4. Direct NVMe queues - will there be interest in having io_uring
-> > > > > managed NVMe queues?  Sort of a new ring, for which I/O is destaged from
-> > > > > io_uring SQE to NVMe SQE without having to go through intermediate
-> > > > > constructs (i.e., bio/request). Hopefully,that can further amp up the
-> > > > > efficiency of IO.
-> > > >
-> > > > This is interesting, and I've pondered something like that before too. I
-> > > > think it's worth investigating and hacking up a prototype. I recently
-> > > > had one user of IOPOLL assume that setting up a ring with IOPOLL would
-> > > > automatically create a polled queue on the driver side and that is what
-> > > > would be used for IO. And while that's not how it currently works, it
-> > > > definitely does make sense and we could make some things faster like
-> > > > that. It would also potentially easier enable cancelation referenced in
-> > > > #1 above, if it's restricted to the queue(s) that the ring "owns".
-> > > 
-> > > So I am looking at prototyping it, exclusively for the polled-io case.
-> > > And for that, is there already a way to ensure that there are no
-> > > concurrent submissions to this ring (set with IORING_SETUP_IOPOLL
-> > > flag)?
-> > > That will be the case generally (and submissions happen under
-> > > uring_lock mutex), but submission may still get punted to io-wq
-> > > worker(s) which do not take that mutex.
-> > > So the original task and worker may get into doing concurrent submissions.
-> > 
-> > It seems one defect for uring command support, since io_ring_ctx and
-> > io_ring_submit_lock() can't be exported for driver.
-> 
-> Sorry, did not follow the defect part.
-> io-wq not acquring uring_lock in case of uring-cmd - is a defect? The same
-> happens for direct block-io too.
-> Or do you mean anything else here?
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-Maybe defect isn't one accurate word here.
+We need to set QUEUE_FLAG_STATS for two cases:
+1. blk_stat_enable_accounting()
+2. blk_stat_add_callback()
 
-I meant ->uring_cmd() is the only driver/fs callback in which
-issue_flags is exposed, so IO_URING_F_UNLOCKED is visible to
-driver, but io_ring_submit_lock() can't be done inside driver.
+So we should clear it only when ((q->stats->accounting == 0) &&
+list_empty(&q->stats->callbacks)).
 
-No such problem for direct io since the above io_uring details
-isn't exposed to direct io code.
+blk_stat_disable_accounting() only check if q->stats->accounting
+is 0 before clear the flag, this patch fix it.
 
+Also add list_empty(&q->stats->callbacks)) check when enable, or
+the flag is already set.
 
-Thanks, 
-Ming
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+---
+ block/blk-stat.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-stat.c b/block/blk-stat.c
+index 74a1a8c32d86..bc7e0ed81642 100644
+--- a/block/blk-stat.c
++++ b/block/blk-stat.c
+@@ -190,7 +190,7 @@ void blk_stat_disable_accounting(struct request_queue *q)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&q->stats->lock, flags);
+-	if (!--q->stats->accounting)
++	if (!--q->stats->accounting && list_empty(&q->stats->callbacks))
+ 		blk_queue_flag_clear(QUEUE_FLAG_STATS, q);
+ 	spin_unlock_irqrestore(&q->stats->lock, flags);
+ }
+@@ -201,7 +201,7 @@ void blk_stat_enable_accounting(struct request_queue *q)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&q->stats->lock, flags);
+-	if (!q->stats->accounting++)
++	if (!q->stats->accounting++ && list_empty(&q->stats->callbacks))
+ 		blk_queue_flag_set(QUEUE_FLAG_STATS, q);
+ 	spin_unlock_irqrestore(&q->stats->lock, flags);
+ }
+-- 
+2.39.2
 
