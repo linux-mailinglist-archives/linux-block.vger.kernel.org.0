@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAD156DEB20
-	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 07:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D2576DEB21
+	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 07:33:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbjDLFdM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Apr 2023 01:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
+        id S229671AbjDLFdQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Apr 2023 01:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbjDLFdM (ORCPT
+        with ESMTP id S229643AbjDLFdQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Apr 2023 01:33:12 -0400
+        Wed, 12 Apr 2023 01:33:16 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA91F268A
-        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 22:33:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9934C2D
+        for <linux-block@vger.kernel.org>; Tue, 11 Apr 2023 22:33:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=EXAxMbBp1CYMTeT+FBKpJnWmaTCMRlnQtgKWlw9PmNo=; b=Dn87i0Rnkt4kX4WF4YFi9phG9B
-        bVwks3Ol4U/bfwF3Vko/vU9CKKTV1UHaFkZVW2rvMeW4RxZl7wOHiF98PHt/Sm7zix0mII7MYZVZ0
-        ixnWtNQMjzfgexgnldiyOwyR+SbH9gxX7zaxQXRD4zjgWrbVs7lZ0sVpu30tlEM5YK8SUY6qKVoIm
-        P1QRL5FOwIehYTMaBVpjof1YF9klk3yW5QWpLjHEUt7q3JQ1/85u116sqI1xldO3yen9rVuDkXyXD
-        qNsPXSjJbq7ksQkGRqfTR20TwLP2NDpllYl2/7VIOzamdquFDvAhECAZp6ZLS73P2weC/tsgmiwDr
-        8rf9pcSg==;
+        bh=rro+ZI+u2rPQ/tpmdkMzKFPLbkneC7kptEnVxugEQ5E=; b=KvDKVT5Sy4bW8LFDxmWQqQb8bU
+        2VM0pATnzaJ6soORWeJi0hsHE2154TBgeeypWR9VaR2WO+OR1UkBF62STajUllOG2mp9az0tvgD8Q
+        xJ7QQ5HtSt85BmvRiMDpsr4ZVXZ4Siu7WQ/R5fdgJNMDlMA6WLp8DHhh6W7sskqoY0gRLnCo3lA/P
+        clFjVlfpoB0+EzFMxnhaXIEz9TBk3VwKcBMwT8EdoWAQFkKaBV1LfiGDJ/oLYvC0sDKhvP8GOg0Wp
+        AY+WXezX1CAcKpfUER9/GGSuMHgF6V1H8aTrOA0LT3w3WB0CZDrBokzjQAfM2wyo2b+v0JXOBE3lY
+        l+IU+pEw==;
 Received: from [2001:4bb8:192:2d6c:58da:8aa2:ef59:390f] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pmT6T-001rGb-2a;
-        Wed, 12 Apr 2023 05:33:10 +0000
+        id 1pmT6W-001rIM-1G;
+        Wed, 12 Apr 2023 05:33:12 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Bart Van Assche <bvanassche@acm.org>, linux-block@vger.kernel.org
-Subject: [PATCH 07/18] blk-mq: fold __blk_mq_insert_request into blk_mq_insert_request
-Date:   Wed, 12 Apr 2023 07:32:37 +0200
-Message-Id: <20230412053248.601961-8-hch@lst.de>
+Subject: [PATCH 08/18] blk-mq: fold __blk_mq_insert_req_list into blk_mq_insert_request
+Date:   Wed, 12 Apr 2023 07:32:38 +0200
+Message-Id: <20230412053248.601961-9-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230412053248.601961-1-hch@lst.de>
 References: <20230412053248.601961-1-hch@lst.de>
@@ -51,61 +51,58 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is no good point in keeping the __blk_mq_insert_request around
-for two function calls and a singler caller.
+Remove this very small helper and fold it into the only caller.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-mq.c | 14 ++------------
- block/blk-mq.h |  2 --
- 2 files changed, 2 insertions(+), 14 deletions(-)
+ block/blk-mq.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
 diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 78e54a64fe920b..103caf1bae2769 100644
+index 103caf1bae2769..7e9f7d00452f11 100644
 --- a/block/blk-mq.c
 +++ b/block/blk-mq.c
-@@ -2463,17 +2463,6 @@ static inline void __blk_mq_insert_req_list(struct blk_mq_hw_ctx *hctx,
- 		list_add_tail(&rq->queuelist, &ctx->rq_lists[type]);
+@@ -2446,23 +2446,6 @@ static void blk_mq_run_work_fn(struct work_struct *work)
+ 	__blk_mq_run_hw_queue(hctx);
  }
  
--void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
--			     bool at_head)
+-static inline void __blk_mq_insert_req_list(struct blk_mq_hw_ctx *hctx,
+-					    struct request *rq,
+-					    bool at_head)
 -{
 -	struct blk_mq_ctx *ctx = rq->mq_ctx;
+-	enum hctx_type type = hctx->type;
 -
 -	lockdep_assert_held(&ctx->lock);
 -
--	__blk_mq_insert_req_list(hctx, rq, at_head);
--	blk_mq_hctx_mark_pending(hctx, ctx);
+-	trace_block_rq_insert(rq);
+-
+-	if (at_head)
+-		list_add(&rq->queuelist, &ctx->rq_lists[type]);
+-	else
+-		list_add_tail(&rq->queuelist, &ctx->rq_lists[type]);
 -}
 -
  /**
   * blk_mq_request_bypass_insert - Insert a request at dispatch list.
   * @rq: Pointer to request to be inserted.
-@@ -2598,7 +2587,8 @@ static void blk_mq_insert_request(struct request *rq, bool at_head,
+@@ -2586,8 +2569,14 @@ static void blk_mq_insert_request(struct request *rq, bool at_head,
+ 		list_add(&rq->queuelist, &list);
  		e->type->ops.insert_requests(hctx, &list, at_head);
  	} else {
++		trace_block_rq_insert(rq);
++
  		spin_lock(&ctx->lock);
--		__blk_mq_insert_request(hctx, rq, at_head);
-+		__blk_mq_insert_req_list(hctx, rq, at_head);
-+		blk_mq_hctx_mark_pending(hctx, ctx);
+-		__blk_mq_insert_req_list(hctx, rq, at_head);
++		if (at_head)
++			list_add(&rq->queuelist, &ctx->rq_lists[hctx->type]);
++		else
++			list_add_tail(&rq->queuelist,
++				      &ctx->rq_lists[hctx->type]);
+ 		blk_mq_hctx_mark_pending(hctx, ctx);
  		spin_unlock(&ctx->lock);
  	}
- 
-diff --git a/block/blk-mq.h b/block/blk-mq.h
-index bd7ae5e67a526b..e2d59e33046e30 100644
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -65,8 +65,6 @@ void blk_mq_free_map_and_rqs(struct blk_mq_tag_set *set,
- /*
-  * Internal helpers for request insertion into sw queues
-  */
--void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
--				bool at_head);
- void blk_mq_request_bypass_insert(struct request *rq, bool at_head,
- 				  bool run_queue);
- 
 -- 
 2.39.2
 
