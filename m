@@ -2,68 +2,74 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E8876DECF6
-	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 09:51:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2FA6DED03
+	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 09:53:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbjDLHvl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Apr 2023 03:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
+        id S229527AbjDLHxF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Apr 2023 03:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbjDLHvk (ORCPT
+        with ESMTP id S229541AbjDLHxD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Apr 2023 03:51:40 -0400
-Received: from mail.feshiecree.pl (mail.feshiecree.pl [89.40.114.103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A0C3A98
-        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 00:51:38 -0700 (PDT)
-Received: by mail.feshiecree.pl (Postfix, from userid 1001)
-        id 2C4048504A; Wed, 12 Apr 2023 08:50:55 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=feshiecree.pl;
-        s=mail; t=1681285866;
-        bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
-        h=Date:From:To:Subject:From;
-        b=myJnZEehI3FSvVKtZCT4h0sWvRQVr9BD2dX/GjDGjZmImdSbxJhV0l4XWfQWjpRYu
-         xni+AG6pp04zk95MUqgmhgZA0Ek1Ic7TyBETqXzv5zuRh3aLLNIoKdddVMu0CO0wsp
-         7Msvn4G4Ker++JjbgcCull6PsOSai6diykLDCjo9HsWzoav+197yFweIFUgMVMp/vH
-         VQbj8XVSChEXwJixE3hogNwggiDWc1YftkTgoCLin9rmUN3bzXPV6jqv/sIjB1dM8H
-         g8DGROOFxHmbUg4e2XH1UtdAVsT5qlX5X6mV8Y8X3g0GJkUEvjVETbVH0OJ83V7qUc
-         jxnQsbaajEFhw==
-Received: by mail.feshiecree.pl for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 07:50:38 GMT
-Message-ID: <20230412074502-0.1.1y.8ulc.0.r22d6e77bn@feshiecree.pl>
-Date:   Wed, 12 Apr 2023 07:50:38 GMT
-From:   "Krystian Wieczorek" <krystian.wieczorek@feshiecree.pl>
-To:     <linux-block@vger.kernel.org>
-Subject: W sprawie samochodu
-X-Mailer: mail.feshiecree.pl
+        Wed, 12 Apr 2023 03:53:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95468212F
+        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 00:53:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 30C9B616C2
+        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 07:53:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D1AC433D2;
+        Wed, 12 Apr 2023 07:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681285981;
+        bh=+9vC5DNmsCn7hQQ/XLbVh6gJYPfozXUkHeZmnEen6vo=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=Ve0K4lBCVXshml+AIzyjF2riLhrkFmmrVzdz41Y//N//HUFh9Tx+BsjnLtstk1t6L
+         bhWrPxLckhQbVqsXhm4AC/B/JIrB0oINhN8GjBvgP5D28vNZm9XkwsVntrtyYJp4JG
+         6FPQAJwjXN47Aug+KxuunnTpdSmcg1it9qTA803Jbw9rGfOqR20Z4JjMZbRCo3UlN+
+         QaJgh8cBV0kKq3g8fBR4WVMSJ7uSII0lh/nmSRB7u/PjWkpxPYsfODHjTv+P3yPSRu
+         iN7ow+y+L9oDPxYKPqsrnQ0xmVR73GfCCO2DqfQIcpxt3LyvR/DW4Vc1K8p+YcXho1
+         GxtsUxhbIdEVg==
+Message-ID: <3bf05197-f758-4fe3-508c-da8bcca993a7@kernel.org>
+Date:   Wed, 12 Apr 2023 16:52:59 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SORBS_DUL,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH 2/2] blk-mq: move the !async handling out of
+ __blk_mq_delay_run_hw_queue
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+References: <20230412063743.618957-1-hch@lst.de>
+ <20230412063743.618957-2-hch@lst.de>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20230412063743.618957-2-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On 4/12/23 15:37, Christoph Hellwig wrote:
+> Only blk_mq_run_hw_queue can call __blk_mq_delay_run_hw_queue with
+> async=false, so move the handling there.
+> 
+> With this __blk_mq_delay_run_hw_queue can be merged into
+> blk_mq_delay_run_hw_queue.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
-, je=C5=9Bli chodzi o system monitoringu GPS.
+Looks OK to me.
 
-Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
-e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
-a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
-
-Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
-dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
-szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
-mne znaczenie.
-
-Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
-b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
 
-Pozdrawiam
-Krystian Wieczorek
