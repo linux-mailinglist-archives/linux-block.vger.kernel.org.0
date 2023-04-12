@@ -2,151 +2,449 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C64C6DED3E
-	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 10:09:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 788E86DEFD7
+	for <lists+linux-block@lfdr.de>; Wed, 12 Apr 2023 10:54:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbjDLIJd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Apr 2023 04:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51210 "EHLO
+        id S231472AbjDLIyO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Apr 2023 04:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229972AbjDLIJ3 (ORCPT
+        with ESMTP id S231480AbjDLIyL (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Apr 2023 04:09:29 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2055.outbound.protection.outlook.com [40.107.243.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B1561B5
-        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 01:09:26 -0700 (PDT)
+        Wed, 12 Apr 2023 04:54:11 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on20621.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe59::621])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9606E8A
+        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 01:53:55 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lR7Su6O+33Nd1WHvGnPGyGWOb3qjsScBQetDOMkAdVlQ1iN77cTBR5dDrlZPvS0DKiYMPAGsp0+mXL4YLhWE5K0qsh+HhJW16PX0hfYVDKZ2MbX832Ew/MAFy5wshpilZIuT8trrVygpSk/QCW13RnLYKLxElHxrgrF7b8MfOGxQ2vMFIUsLewyjqlXqfaY9FFx1CPdjQTCpicA0iVOkd5NGal0sKTEHd8AekljQggUnU1obQ/wN7X5yGIpxhw2oHt5rogmIe9ast3M4jtOpFGcnI7aqeDLWkd5jxR2wIKVqabJwLQtRQHCfuMjFbMGt9QUk/F/WH9wOexVweYVXog==
+ b=b+ssddzcSW/KBM6hWpWQq3AspcAriG1tFr2PX6DgOyVX0+hMAhiP6wNNMi5T2iPL0mXf+RTAfVoGZPujaavoTnJJ1rC9VRraGiHBDJ3zJcaBGN5djThPtLPFoIFVWeHuVdbl7vgiz+Z9AAPvfQjTV6HLMXlVcF5MAa04uU02u8hjcp6gNNrPm9TuzKV7BWxgLDKenLMOLB3ySrMoh09rnvFRqQQwWE5dp8A90/bvjhOve7jQywpFn/tVfLE3CZCMSpYQkc3tVH0nuNTKgX4LCl8wYJ291Rts2PF63BUDuFWiN+zOArqdd46aikuTE3sm9Vpy5brSDu0CMoquXxKVyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mzoVXian8pjNPlzp0vhCM+OB48YQTTayBT8YhHMYZ8k=;
- b=jAvrXk6aqr1PALS1QQ3j4Dl42UjJDwItKH3UuEtQc8Zmh1Sl5bUHwe1VmhgvnMZqRcE/zUd8vxLebEBMVtllwhQW8XG+oPnbXirzlQDFbON7MQD6n4n+u2OeA7HA2TzglWvtLiw9rj61oOq9vpQNDkuAtQb9fT27TCzVtA+M3HAfycyIYK1v7Pg+ieuEnrH8kbscemu8k/hSQ2RQB7W/0ekynalBaEKUSWtWHi2aL4GjHI1ennwuo5kpukypVMUAJcs89saPnbyXv85qucL38u+od4s9wcU8i+vCLIF5PShBurjZ96brdFHXYUB5ByAhuscoRAyvZh0lfmruqB2Hhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
+ bh=HKl+e/rslSDUERNgHTchvKvTYGi5NH31pNQyopNtU2w=;
+ b=KJP9TQGafFdEi89HoWUhY0/rRrh+p8bA6/99CeZ/lcX5cKZSXolf6CnBZRGhJ3eau3LOfkoe+1Ox452u2CXpii1V4HUuEYdOqzfmQjeq+97lC/ewXRBX3uMpHV8LM2ccrgKyRK2hS67dJG1NN24jAGlNZNMVb/eRmD6rm3HCzzRfx6V1lWokaohyAP1ECPG6C/TSL2+C4QBOSczXdWfcSR+sxcKoiC41USXX6RDDcWYLAhgUnOWtFG2Vyy5Jp7wsNTe8AsoA6St3R1e2KqKjTl5Qf2NuYZwlsriMy9JUvCvV0MYGA/GMNcVaW2/swiLSkYlfB4btjy5CYFa7KNU8ZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mzoVXian8pjNPlzp0vhCM+OB48YQTTayBT8YhHMYZ8k=;
- b=k9bIHIadt5iCz0tgLMuO+r/j09vZxzCoZI9jHXZ4nvjrnqT7B5ytwmpUKstiZ3Sy2wPNPHderSb22JsgIXy9zxsXEDOClduKS2yuytSe879IFOGzmUM28qFIOmJcy2pA1uWLDu03cc+0uFl0jROSGi+ENemGPNQkqyGCos73dAWDPNeLfqtnOqh7hUKELWrN6ZhdE97/cnsoyPuWCxG93YYDuc2pC8NojrWadYwundIU6iQwSogM4iD/PcLuY02ZpAGs2Ms5TPo24zJrPSKuoGhftYR9GsD+V/hcwrj5BM3gfEE5D47JJSyjazC4oFfHdbOWPmROL1px62ZidMFOSQ==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by DS7PR12MB5885.namprd12.prod.outlook.com (2603:10b6:8:78::22) with
+ bh=HKl+e/rslSDUERNgHTchvKvTYGi5NH31pNQyopNtU2w=;
+ b=DNYge29mtXdMSmoP0VAMKDwulw1i5XrZPAvwerJXNZs3oB9n4/t9mxCAVZ9v7u+aczkxOxQq6UvgdcDSYlrjqLKI3dlX9Grl3xjCQLjRpOoXr/juwv8U2XiZMzeHGKWJPx5KIRZeqXB9ottnt55Niw9jiWRID46bYNehxJMBariciG9+w+uR2FIZsbbnmobF1K/xEqhFLY6PUf0mCjVUeC3f6vlfkxCqm0QlArx9ayWvOjuAUnxsKCBNNYXMKRR0/unpvvbDxuriztev/Q0zjXFwvK7ipBhJlMq3pmdM/2vN7aJ2eK1LLQgwaQ8uLtkT2ZQqA9r1cTZSN07tBOX7GA==
+Received: from DM6PR14CA0067.namprd14.prod.outlook.com (2603:10b6:5:18f::44)
+ by IA0PR12MB7776.namprd12.prod.outlook.com (2603:10b6:208:430::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.38; Wed, 12 Apr
- 2023 08:09:24 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::6b01:9498:e881:8fb3]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::6b01:9498:e881:8fb3%4]) with mapi id 15.20.6298.030; Wed, 12 Apr 2023
- 08:09:24 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Damien Le Moal <dlemoal@kernel.org>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "vincent.fu@samsung.com" <vincent.fu@samsung.com>,
-        "shinichiro.kawasaki@wdc.com" <shinichiro.kawasaki@wdc.com>,
-        "error27@gmail.com" <error27@gmail.com>
-Subject: Re: [PATCH] null_blk: fix queue mode Oops for membacked
-Thread-Topic: [PATCH] null_blk: fix queue mode Oops for membacked
-Thread-Index: AQHZbPR8kNoMvVp34Ey+RDJEhoKaG68nTuaAgAADX4A=
-Date:   Wed, 12 Apr 2023 08:09:23 +0000
-Message-ID: <2c816171-c9ac-7608-56dc-60e4b711841a@nvidia.com>
-References: <20230412040827.8082-1-kch@nvidia.com>
- <824e2454-14d8-35b8-bfdb-ae26df255003@kernel.org>
-In-Reply-To: <824e2454-14d8-35b8-bfdb-ae26df255003@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|DS7PR12MB5885:EE_
-x-ms-office365-filtering-correlation-id: 7a689353-314b-4b51-83b4-08db3b2d3a49
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Dz5ALKKwVtyXjQGNchTSlfENCacW8NZl6wrT2dfZmR+1ueq+CLXxVEJyJinJ899BjaU7DuHKpflv7bWQOla0wlBHFEtPUVOpcseezMYixia/KVt83onDGWISJHqqaNN7nfTmt+596TxFM2HNMtp8CxifE7aFybz0q45vRooxcqwDbNazc6ebo2auy8pnlON7T52Eln+MkmU/YMiNuxi2AxYp0gZuyYGdvEOSZWsobD76463iAP52yp27QJeeYzZ7CdAL071XoBAE4P8LnS+oEvIAL4tCDk9iTYhe1rdOb+m6FgEib4FO1csLSbZFHDeaSSjJOO2wBfCIT/5GdtPiiCZtllO6Uz0I7vLnm/vb38IkRE1D96pO1rJOpdV7oR1kXhxgs43XR4KtSifdB/HxsEDu1yTM5w9kxrKaG881F5xoTe3Ze+Itzzelp2kG0SnzDNMiS4W3AjnKhM7bUu2RCPkmtQALdxJ6bxSXY7bYm5Ot5EHR0c0GuQ97G20TTsGMBBGJG33VThtDJTeb38VUKiMZ3PIeeUWKx/yNW/3fZOb9ltLbNPc+xwBfrKlV/OFYYSFtUctaRCPYcNFajocKlwMmc3b8/cXCqKSn5atcizng3w2At4Odkd6G3ENAl5VlgBZEy3T0hnZA57C0JWisVWe+JS5i+nUO/rbi6cXQEBtGGEyjx1NdlGklWLOa8DGF
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(136003)(346002)(396003)(39860400002)(451199021)(36756003)(38070700005)(2906002)(4744005)(38100700002)(5660300002)(8936002)(8676002)(86362001)(31696002)(6512007)(71200400001)(6486002)(6506007)(83380400001)(110136005)(54906003)(478600001)(122000001)(2616005)(53546011)(186003)(31686004)(66946007)(91956017)(76116006)(41300700001)(66476007)(4326008)(66446008)(316002)(66556008)(64756008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ckdBWmNOcWlmT0tmTENCTlNhQXR0c3JqNjNCNWQrYXovZXpSdEJUMktjOVpI?=
- =?utf-8?B?M0pPUmJJdVhwdDJYcTlwZFc3TzlFRkxEcVJrUFJzd1VXYUUwR3F5ZUZxbGZE?=
- =?utf-8?B?eGFPUy9vS1FrK0JlNWVGYUQxMmhEb1YrL2VFR0RidnlUbzhSQUxxNCt3b3l3?=
- =?utf-8?B?UDZLZUxCOE9HVTNZeWhRMHh5aGtyWFJicDZjQmYxMUhFdndFbmNKS3pBdWwv?=
- =?utf-8?B?a2dVWitYbWNKRDg5YUs2bG5MTThBUFNmT1VaYkN1OTYzU25UVEJhdVNLYkdQ?=
- =?utf-8?B?KzR5b2xid21hYVF4VS9NOUpmaDNlbWYxSGVUTE9qdlBCQ0p6SHZvcGxIaHB4?=
- =?utf-8?B?Z1BGcHRPczUzYkpWSm85YUliUFdxcmpOMmxUYVpZd3hmQmRqYXMzOFRPMnhj?=
- =?utf-8?B?SS9nUEFvU0VQTkVLemtyanM0RmdoYWdJbGs4c3ZYY1hvMVBOQ0J2UVkrZ2lx?=
- =?utf-8?B?ZFBsMTMzUUh6eXQ0Y3kzZlFDVlFXN0ZCakhzY0NTSndaK3lPN1VaUGpXY0dT?=
- =?utf-8?B?Tlg3Q1VnYUs1eksyUUZGc2RncmRJU2dNNVBIS1plbVp2TVV0a2RJMWhjRmh4?=
- =?utf-8?B?TGRXaHpTZWY3N1FCcEhpUXB6TjVpUnFIQnBtYWV3NVk1SlEwTjVITVBGUHEr?=
- =?utf-8?B?d1V1eGd2TXBRdkhmeThwblNoNVdhV240UExiTllJcGtFbHR4bDl3TFFKc2dZ?=
- =?utf-8?B?c0tvSU9jcFc0N1ZmNmpFdmc1Nmpoek9heWFzakhROVN6NWNnY3V3Q3U2L253?=
- =?utf-8?B?SDZXNVJ3bWw1VmxEOTFwQlR2cEpmaXBwcmhkZE5YYUdjcExvVGV4UllyUzlJ?=
- =?utf-8?B?WUpHaUN1NSt6QVMwWHl0MDJsNlg2d2hZbUVJU0NiMEJ4V0IwMURvMjlCUURX?=
- =?utf-8?B?RUZGRXJ3eVVqMEYxYmhGb1IrNXNGYU5NWS9zVlZCRXA3NlhuaWNDSVJsNG1W?=
- =?utf-8?B?eGlVNGUrMFlSTnFOZ1hKZGJXYXZ1Y2FSQmE2ZHJkSnRrMFp2aUZQOUZFWTJ0?=
- =?utf-8?B?MXczblNRMlBEOVZ1THl5QnpJOGJNVGluNGtzL3RGUStLWGhCb1JJZ09KNUxu?=
- =?utf-8?B?bXRONDB5dGgwY0FZV2p5Zkt2citlZXlwY2labUhMVys3bzVUZ2hGZkU2VSts?=
- =?utf-8?B?aE9KR0l2dU04dHpwWXViVVN1UVp3TFp1TC9wUGxZbnhWRS9aMXU1NU1RajNj?=
- =?utf-8?B?eFg3Z0R6Z25zUFFKRDdUOXBSTFY3ZU0vUDFPUTg1aDROZGgwYkJxcDliYVlz?=
- =?utf-8?B?cno4ZmNrYnRSaUhFeVRhRFcwc1RuMFRoUk8rVUl2MXgrb3dnQXoxU2Z6eFdP?=
- =?utf-8?B?N09wNGhzVC9xT2FsUEkrb2ZTQmZlN3BrUk5XYno5a2pUYTF6TklibkZ4R0Ja?=
- =?utf-8?B?V0UyRFFTTFFVbXQycGU2RTFnbnVaNjhKd0l3RGRvdnZHNXZoQmNOYm1qZHB5?=
- =?utf-8?B?ejM5UFI0U1U1dzJjYW9Pc0NFWnRqMUdjNTZzUVd5WWlLYmVHUWo5emhrZ002?=
- =?utf-8?B?b0ZTSEppRExhc1pTbUlWYVpHRzViTkEvTG80OUdnNFRQaGhMSXR6MjFvUkRq?=
- =?utf-8?B?b3U5V1RzT3dtcDFpUHE3b2hQdVdWUGw5TE9NTjlWVDE1QmVIN1dRWnhIWHJD?=
- =?utf-8?B?UmVMS1BtbE84WG9CNDdleVFrejNGaitoOTl0UllLU1Y2MXpZS21kOTE3ZUR3?=
- =?utf-8?B?dDIvaUxYYk1MdnF6WVRKUVJ4ZjJiMU9Ud3ZHWU4vaXdPOFVWdDlnTWRCWHFW?=
- =?utf-8?B?RXdSZ3NDKy9lcFNUOGFReVlGbk55OEU0QklmMjZRSWxSbGVPZ1l1bVRaa3FH?=
- =?utf-8?B?UXlHNEZvMUJGenhRdWxJWVo0RFlIRlM1dEpHK1V3cXRLc3c0L1MrWnFiS3o0?=
- =?utf-8?B?a2JrczJFM2hXOEFvMmQrd0ZoSGVuMTIzL1lVNHAyY0FTMkx1cEIvblJyNC93?=
- =?utf-8?B?UDRWcFk2eGlkdEJaR2ZCQ2VzbVJkL291MHJTUFIxYlhyUVhZWkhtSFVEa0Mx?=
- =?utf-8?B?KysyNFhrbWk4MytkelNCWkhYK1lEVU10WWUwTHp2R0ZOakZVRXZwSFRmQWVh?=
- =?utf-8?B?Q0NnbExOTjVVZC9mOGdTcmFRdFY3VW5ZKzJnMGZsdTVGM05ITVNPbWd1Uzlx?=
- =?utf-8?B?QzRaajV3QTR0QkkxY0E1amhWbGZ1K25wVlRTU0g1dTV1dUNGYWZVY0tyTkdW?=
- =?utf-8?Q?fbQTF0RAJi6/7ZnppJT2TcqO4LOyT3Kzk2rTpKLeqwKz?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AABE983CBA740D43A73FFE63BC8DC771@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ 2023 08:47:51 +0000
+Received: from DM6NAM11FT061.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:18f:cafe::a2) by DM6PR14CA0067.outlook.office365.com
+ (2603:10b6:5:18f::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30 via Frontend
+ Transport; Wed, 12 Apr 2023 08:47:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DM6NAM11FT061.mail.protection.outlook.com (10.13.173.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6298.30 via Frontend Transport; Wed, 12 Apr 2023 08:47:50 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 12 Apr 2023
+ 01:47:42 -0700
+Received: from dev.nvidia.com (10.126.231.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Wed, 12 Apr
+ 2023 01:47:41 -0700
+From:   Chaitanya Kulkarni <kch@nvidia.com>
+To:     <linux-block@vger.kernel.org>
+CC:     <axboe@kernel.dk>, <damien.lemoal@opensource.wdc.com>,
+        <kch@nvidia.com>, <johannes.thumshirn@wdc.com>,
+        <bvanassche@acm.org>, <vincent.fu@samsung.com>,
+        <shinichiro.kawasaki@wdc.com>, <yukuai3@huawei.com>
+Subject: [PATCH 0/1] null_blk: allow user to set QUEUE_FLAG_NOWAIT
+Date:   Wed, 12 Apr 2023 01:47:29 -0700
+Message-ID: <20230412084730.51694-1-kch@nvidia.com>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.126.231.37]
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT061:EE_|IA0PR12MB7776:EE_
+X-MS-Office365-Filtering-Correlation-Id: 64950331-73e3-4f72-58a6-08db3b329944
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3saQBPGEX+PUUfiWRpU9X8/Ap8mSDM+d87K5v43JP4JIdH5ZYat0PaNe5xU/NfeoJ7ddSdkjk27CVLEs1zVzDvhnJHnMXcOgO6dajS4F3kXAV2XMTGoZlwpZZQcbz61H6UwxZ9ec+qpj7rhyvDKCHI/Thv8hCaVEER3U9MwcfRhneNgJsW9Pa7eWi+NG/HQtRH2M6WNQow5nh9gX3SC0Xt4SHaVK2YMPeYxxLjrWZU7vndUvuAuaw8TMiyntukD/eqTPKfaYBQyZNE2Asz3fuuNYVuxRN6pAo4aIirbzenv1EiWLTusGv0S5MGNM25cs19Tjyu7d93OJBmvFIte2X3uVENkUjEg9AIfsihJJZmKEUt0UZiDbwYxOeiLdJLBXbMKn7O/sVAwBkHkRNOkZQq3T5IcirrSO2NYiOVaZgCl9Blj7/a3jKpBfmkJRnVAHyjFQbhEGiO1IjUVfdbwqzW4r10HnA8PFzk1x3HJwaDliUDd+jGBBIB9tvqnSvjRwlG3y/NmFRN4OWdne7ijo/cE4krjQd3V/4VcjYQza9MAHTBPgzhY1XIgnxyuqX6KnFAKF1kkT/IJJGpOxmF3be2LZzAo0xfDcJeaubgTxuggj2BBjWKfcC56spqZNnEeHGChaxLkFQNxj/cMjieTN+lzbtU/QvfCEOlJGOseNNWfE1Mml83DWxRlHGbGoOZf/LaAYEtX4IkozimTcj5N5aqYsN25Jtwi7FUz24XUc/YTGLXo4boQHnimSALgZ34hTa1VN300Sp80hP1Ttn3LyQuezUV48E7ObwR6oKN4QwzE=
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(136003)(396003)(376002)(451199021)(46966006)(36840700001)(40470700004)(40460700003)(5660300002)(30864003)(8936002)(47076005)(2616005)(83380400001)(336012)(426003)(2906002)(16526019)(36756003)(186003)(356005)(7636003)(82740400003)(34070700002)(36860700001)(82310400005)(1076003)(26005)(40480700001)(6666004)(41300700001)(478600001)(54906003)(70586007)(8676002)(6916009)(4326008)(70206006)(7696005)(316002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a689353-314b-4b51-83b4-08db3b2d3a49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2023 08:09:24.0036
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 08:47:50.7291
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iAOO4fDgH/JGe7c2y/7YnwSnSlfv2V1KmONfTMcmCfUPqmcOKZ1ZrUBEMpEvRkdqejpU9i80LPNDxcq3VVy9JQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5885
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64950331-73e3-4f72-58a6-08db3b329944
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT061.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7776
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-T24gNC8xMi8yMyAwMDo1NywgRGFtaWVuIExlIE1vYWwgd3JvdGU6DQo+IE9uIDQvMTIvMjMgMTM6
-MDgsIENoYWl0YW55YSBLdWxrYXJuaSB3cm90ZToNCj4+IE1ha2Ugc3VyZSB0byBjaGVjayBkZXZp
-Y2UgcXVldWUgbW9kZSBpbiB0aGUgbnVsbF92YWxpZGF0ZV9jb25mKCkNCj4+IGFuZCByZXR1cm4g
-ZXJyb3IgZm9yIE5VTExfUV9SUSBhcyB3ZSBkb24ndCBhbGxvdyBsZWdhY3kgSS9PIHBhdGgsDQo+
-PiB3aXRob3V0IHRoaXMgcGF0Y2ggd2UgZ2V0IE9PUHMgd2hlbiBxdWV1ZSBtb2RlIGlzIHNldCB0
-byAxIGZyb20NCj4+IGNvbmZpZ2ZzLCBmb2xsb3dpbmcgYXJlIHJlcHJvIHN0ZXBzIDotDQo+IExv
-b2tzIE9LIGJ1dCB0aGUgcGF0Y2ggdGl0bGUgaXMgYSBsaXR0bGUgb2RkIGFzIEkgZG8gbm90IHNl
-ZSB3aGF0IG1lbW9yeSBiYWNraW5nDQo+IGhhcyB0byBkbyB3aXRoIGNoZWNraW5nIHRoZSBjb3Jy
-ZWN0bmVzcyBvZiBxdWV1ZV9tb2RlLiBTbyB3aGF0IGFib3V0IHNvbWV0aGluZyBsaWtlOg0KPg0K
-PiBudWxsX2JsazogQWx3YXlzIGNoZWNrIHF1ZXVlIG1vZGUgc2V0dGluZyBmcm9tIGNvbmZpZ2Zz
-DQoNCmFncmVlLi4NCg0KPiBmb3IgdGhlIHBhdGNoIHRpdGxlID8NCj4NCj4gV2l0aCB0aGF0IGZp
-eGVkLA0KPg0KPiBSZXZpZXdlZC1ieTogRGFtaWVuIExlIE1vYWwgPGRsZW1vYWxAa2VybmVsLm9y
-Zz4NCj4NCj4NCj4NCg0Kd2lsbCBzZW5kIGEgdjIgd2l0aCB0aGF0IGZpeCB3aXRoIHlvdXIgcmV2
-aWV3IHRhZywgdGhhbmtzIGZvciB0aGUNCnJldmlldy4NCg0KLWNrDQoNCg0K
+Hi,
+
+QUEUE_FLAG_NOWAIT is set by default to mq drivers such as null_blk as
+a part of QUEUE_FLAG_MQ_DEFAULT that gets assigned in following code
+path see blk_mq_init_allocated_queue():-
+
+null_add_dev()
+if (dev->queue_mode == NULL_Q_MQ) {
+        blk_mq_alloc_disk()
+          __blk_mq_alloc_disk()
+	    blk_mq_init_queue_data()
+              blk_mq_init_allocated_queue()
+                q->queue_flags |= QUEUE_FLAG_MQ_DEFAULT;
+}
+
+But it not set when null_blk is loaded with NULL_Q_BIO mode in following
+code path :-
+
+if (dev->queue_mode == NULL_Q_BIO) {
+        nullb->disk = blk_alloc_disk(nullb->dev->home_node);
+        	blk_alloc_disk()
+        	  blk_alloc_queue()
+        	  __alloc_disk_nodw()
+}
+
+Add a new module parameter nowait and respective configfs attr
+that will set and clear the QUEUE_FLAG_NOWAIT based on a value set by
+user in null_add_dev() irrespective of the queue mode, by default keep
+it enabled to retain the original behaviour for the NULL_Q_MQ mode.
+
+* Configfs Membacked mode:-
+
+NULL_Q_BIO mode QUEUE_FLAG_NOWAIT disabled:-
+---------------------------------------------
+configfs-qmode-0-nowait-0-fio-1.log:  read: IOPS=1295k, BW=5058MiB/s
+configfs-qmode-0-nowait-0-fio-2.log:  read: IOPS=1362k, BW=5318MiB/s
+configfs-qmode-0-nowait-0-fio-3.log:  read: IOPS=1332k, BW=5201MiB/s
+
+NULL_Q_BIO mode QUEUE_FLAG_NOWAIT enabled :-
+---------------------------------------------
+configfs-qmode-0-nowait-1-fio-1.log:  read: IOPS=2095k, BW=8183MiB/s
+configfs-qmode-0-nowait-1-fio-2.log:  read: IOPS=2085k, BW=8145MiB/s
+configfs-qmode-0-nowait-1-fio-3.log:  read: IOPS=2036k, BW=7955MiB/s
+
+NULL_Q_MQ mode QUEUE_FLAG_NOWAIT disabled :-
+---------------------------------------------
+configfs-qmode-2-nowait-0-fio-1.log:  read: IOPS=1288k, BW=5031MiB/s
+configfs-qmode-2-nowait-0-fio-2.log:  read: IOPS=1239k, BW=4839MiB/s
+configfs-qmode-2-nowait-0-fio-3.log:  read: IOPS=1252k, BW=4889MiB/s
+
+NULL_Q_MQ mode QUEUE_FLAG_NOWAIT enabled :-
+---------------------------------------------
+configfs-qmode-2-nowait-1-fio-1.log:  read: IOPS=2101k, BW=8208MiB/s
+configfs-qmode-2-nowait-1-fio-2.log:  read: IOPS=2091k, BW=8169MiB/s
+configfs-qmode-2-nowait-1-fio-3.log:  read: IOPS=2088k, BW=8155MiB/s
+
+* Non Configfs non-membacked mode:-
+
+NULL_Q_BIO mode QUEUE_FLAG_NOWAIT disabled:-
+---------------------------------------------
+qmode-0-nowait-0-fio-1.log:  read: IOPS=1362k, BW=5321MiB/s
+qmode-0-nowait-0-fio-2.log:  read: IOPS=1334k, BW=5210MiB/s
+qmode-0-nowait-0-fio-3.log:  read: IOPS=1386k, BW=5416MiB/s
+
+NULL_Q_BIO mode QUEUE_FLAG_NOWAIT enabled :-
+---------------------------------------------
+qmode-0-nowait-1-fio-1.log:  read: IOPS=5405k, BW=20.6GiB/s
+qmode-0-nowait-1-fio-2.log:  read: IOPS=5502k, BW=21.0GiB/s
+qmode-0-nowait-1-fio-3.log:  read: IOPS=5518k, BW=21.0GiB/s
+
+NULL_Q_MQ mode QUEUE_FLAG_NOWAIT disabled :-
+---------------------------------------------
+qmode-2-nowait-0-fio-1.log:  read: IOPS=1356k, BW=5296MiB/s
+qmode-2-nowait-0-fio-2.log:  read: IOPS=1318k, BW=5148MiB/s
+qmode-2-nowait-0-fio-3.log:  read: IOPS=1252k, BW=4891MiB/s
+
+NULL_Q_MQ mode QUEUE_FLAG_NOWAIT enabled :-
+---------------------------------------------
+qmode-2-nowait-1-fio-1.log:  read: IOPS=5466k, BW=20.9GiB/s
+qmode-2-nowait-1-fio-2.log:  read: IOPS=5446k, BW=20.8GiB/s
+qmode-2-nowait-1-fio-3.log:  read: IOPS=5482k, BW=20.9GiB/s
+
+Below is a performance test log for with and without configfs mambeacked
+mode.
+
+-ck
+
+Chaitanya Kulkarni (1):
+  null_blk: allow user to set QUEUE_FLAG_NOWAIT
+
+ drivers/block/null_blk/main.c     | 22 +++++++++++++++++-----
+ drivers/block/null_blk/null_blk.h |  1 +
+ 2 files changed, 18 insertions(+), 5 deletions(-)
+
+Performance test log for null_blk configfs and non-configfs:-
+
+linux-block (for-next) # sh test-null-blk-no-wait.sh 
++ modprobe -r null_blk
++ ./compile_nullb.sh
++ umount /mnt/nullb0
+umount: /mnt/nullb0: not mounted.
++ rmdir 'config/nullb/nullb*'
+rmdir: failed to remove 'config/nullb/nullb*': No such file or directory
++ dmesg -c
++ modprobe -r null_blk
++ lsmod
++ grep null_blk
+++ nproc
++ make -j 48 M=drivers/block/ clean
+  CLEAN   drivers/block/Module.symvers
+++ nproc
++ make -j 48 M=drivers/block modules
+  CC [M]  drivers/block/floppy.o
+  CC [M]  drivers/block/brd.o
+  CC [M]  drivers/block/loop.o
+  CC [M]  drivers/block/nbd.o
+  CC [M]  drivers/block/virtio_blk.o
+  CC [M]  drivers/block/xen-blkfront.o
+  CC [M]  drivers/block/rbd.o
+  CC [M]  drivers/block/drbd/drbd_buildtag.o
+  CC [M]  drivers/block/xen-blkback/blkback.o
+  CC [M]  drivers/block/mtip32xx/mtip32xx.o
+  CC [M]  drivers/block/zram/zcomp.o
+  CC [M]  drivers/block/drbd/drbd_bitmap.o
+  CC [M]  drivers/block/drbd/drbd_proc.o
+  CC [M]  drivers/block/xen-blkback/xenbus.o
+  CC [M]  drivers/block/zram/zram_drv.o
+  CC [M]  drivers/block/drbd/drbd_worker.o
+  CC [M]  drivers/block/null_blk/main.o
+  CC [M]  drivers/block/drbd/drbd_receiver.o
+  CC [M]  drivers/block/null_blk/trace.o
+  CC [M]  drivers/block/null_blk/zoned.o
+  CC [M]  drivers/block/drbd/drbd_req.o
+  CC [M]  drivers/block/drbd/drbd_actlog.o
+  CC [M]  drivers/block/drbd/drbd_main.o
+  CC [M]  drivers/block/drbd/drbd_strings.o
+  CC [M]  drivers/block/drbd/drbd_nl.o
+  CC [M]  drivers/block/drbd/drbd_interval.o
+  CC [M]  drivers/block/drbd/drbd_state.o
+  CC [M]  drivers/block/drbd/drbd_nla.o
+  CC [M]  drivers/block/drbd/drbd_debugfs.o
+  LD [M]  drivers/block/zram/zram.o
+  LD [M]  drivers/block/null_blk/null_blk.o
+  LD [M]  drivers/block/xen-blkback/xen-blkback.o
+  LD [M]  drivers/block/drbd/drbd.o
+  MODPOST drivers/block/Module.symvers
+  CC [M]  drivers/block/floppy.mod.o
+  CC [M]  drivers/block/brd.mod.o
+  CC [M]  drivers/block/loop.mod.o
+  CC [M]  drivers/block/nbd.mod.o
+  CC [M]  drivers/block/virtio_blk.mod.o
+  CC [M]  drivers/block/xen-blkfront.mod.o
+  CC [M]  drivers/block/xen-blkback/xen-blkback.mod.o
+  CC [M]  drivers/block/drbd/drbd.mod.o
+  CC [M]  drivers/block/rbd.mod.o
+  CC [M]  drivers/block/mtip32xx/mtip32xx.mod.o
+  CC [M]  drivers/block/zram/zram.mod.o
+  CC [M]  drivers/block/null_blk/null_blk.mod.o
+  LD [M]  drivers/block/xen-blkfront.ko
+  LD [M]  drivers/block/brd.ko
+  LD [M]  drivers/block/xen-blkback/xen-blkback.ko
+  LD [M]  drivers/block/loop.ko
+  LD [M]  drivers/block/virtio_blk.ko
+  LD [M]  drivers/block/mtip32xx/mtip32xx.ko
+  LD [M]  drivers/block/rbd.ko
+  LD [M]  drivers/block/zram/zram.ko
+  LD [M]  drivers/block/nbd.ko
+  LD [M]  drivers/block/drbd/drbd.ko
+  LD [M]  drivers/block/floppy.ko
+  LD [M]  drivers/block/null_blk/null_blk.ko
++ HOST=drivers/block/null_blk/
+++ uname -r
++ HOST_DEST=/lib/modules/6.3.0-rc5lblk+/kernel/drivers/block/null_blk/
++ cp drivers/block/null_blk//null_blk.ko /lib/modules/6.3.0-rc5lblk+/kernel/drivers/block/null_blk//
++ ls -lrth /lib/modules/6.3.0-rc5lblk+/kernel/drivers/block/null_blk//null_blk.ko
+-rw-r--r--. 1 root root 1.2M Apr 12 01:01 /lib/modules/6.3.0-rc5lblk+/kernel/drivers/block/null_blk//null_blk.ko
++ sleep 1
++ dmesg -c
++ test_non_configfs
++ modprobe null_blk nowait=0 queue_mode=0
++ dmesg -c
+[ 9509.969343] null_blk: disk nullb0 created
+[ 9509.969347] null_blk: module loaded
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-0-nowait-0-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=5415MiB/s][r=1386k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-0-nowait-0-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=5184MiB/s][r=1327k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-0-nowait-0-fio-3.log
++ modprobe -r null_blk)][100.0%][r=5525MiB/s][r=1414k IOPS][eta 00m:00s]
++ modprobe null_blk nowait=1 queue_mode=0
++ dmesg -c
+[ 9570.634724] null_blk: disk nullb0 created
+[ 9570.634729] null_blk: module loaded
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-0-nowait-1-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=20.8GiB/s][r=5452k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-0-nowait-1-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=21.3GiB/s][r=5577k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-0-nowait-1-fio-3.log
++ modprobe -r null_blk)][100.0%][r=21.1GiB/s][r=5536k IOPS][eta 00m:00s]
++ modprobe null_blk nowait=0 queue_mode=2
++ dmesg -c
+[ 9631.320182] null_blk: disk nullb0 created
+[ 9631.320186] null_blk: module loaded
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-2-nowait-0-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=6132MiB/s][r=1570k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-2-nowait-0-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=5554MiB/s][r=1422k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-2-nowait-0-fio-3.log
++ modprobe -r null_blk)][100.0%][r=5218MiB/s][r=1336k IOPS][eta 00m:00s]
++ modprobe null_blk nowait=1 queue_mode=2
++ dmesg -c
+[ 9691.986330] null_blk: disk nullb0 created
+[ 9691.986333] null_blk: module loaded
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-2-nowait-1-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=21.2GiB/s][r=5547k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-2-nowait-1-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=20.3GiB/s][r=5313k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=qmode-2-nowait-1-fio-3.log
++ modprobe -r null_blk)][100.0%][r=21.2GiB/s][r=5547k IOPS][eta 00m:00s]
++ test_configfs 0 0
++ qmode=0
++ nowait=0
++ modprobe null_blk nr_devices=0
++ NULLB_DIR=config/nullb/nullb0
++ mkdir config/nullb/nullb0
++ echo 1
++ echo 4096
++ echo 20480
++ echo 0
++ echo 0
++ echo 1
++ '[' 0 -ne 0 ']'
++ sleep .50
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-0-nowait-0-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=5174MiB/s][r=1325k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-0-nowait-0-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=5904MiB/s][r=1512k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-0-nowait-0-fio-3.log
++ rmdir config/nullb/nullb00.0%][r=5493MiB/s][r=1406k IOPS][eta 00m:00s]
++ modprobe -r null_blk
++ test_configfs 0 1
++ qmode=0
++ nowait=1
++ modprobe null_blk nr_devices=0
++ NULLB_DIR=config/nullb/nullb0
++ mkdir config/nullb/nullb0
++ echo 1
++ echo 4096
++ echo 20480
++ echo 0
++ echo 1
++ echo 1
++ '[' 0 -ne 0 ']'
++ sleep .50
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-0-nowait-1-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=8265MiB/s][r=2116k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-0-nowait-1-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=8090MiB/s][r=2071k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-0-nowait-1-fio-3.log
++ rmdir config/nullb/nullb00.0%][r=7971MiB/s][r=2041k IOPS][eta 00m:00s]
++ modprobe -r null_blk
++ test_configfs 2 0
++ qmode=2
++ nowait=0
++ modprobe null_blk nr_devices=0
++ NULLB_DIR=config/nullb/nullb0
++ mkdir config/nullb/nullb0
++ echo 1
++ echo 4096
++ echo 20480
++ echo 2
++ echo 0
++ echo 1
++ '[' 0 -ne 0 ']'
++ sleep .50
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-2-nowait-0-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=5247MiB/s][r=1343k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-2-nowait-0-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=5132MiB/s][r=1314k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-2-nowait-0-fio-3.log
++ rmdir config/nullb/nullb00.0%][r=4960MiB/s][r=1270k IOPS][eta 00m:00s]
++ modprobe -r null_blk
++ test_configfs 2 1
++ qmode=2
++ nowait=1
++ modprobe null_blk nr_devices=0
++ NULLB_DIR=config/nullb/nullb0
++ mkdir config/nullb/nullb0
++ echo 1
++ echo 4096
++ echo 20480
++ echo 2
++ echo 1
++ echo 1
++ '[' 0 -ne 0 ']'
++ sleep .50
++ for i in 1 2 3
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-2-nowait-1-fio-1.log
++ for i in 1 2 3 [r(24)][100.0%][r=8220MiB/s][r=2104k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-2-nowait-1-fio-2.log
++ for i in 1 2 3 [r(24)][100.0%][r=8257MiB/s][r=2114k IOPS][eta 00m:00s]
++ fio fio/randread.fio --filename=/dev/nullb0 --output=configfs-qmode-2-nowait-1-fio-3.log
++ rmdir config/nullb/nullb00.0%][r=8163MiB/s][r=2090k IOPS][eta 00m:00s]
++ modprobe -r null_blk
+linux-block (for-next) # 
+linux-block (for-next) # 
+linux-block (for-next) # 
+linux-block (for-next) # 
+linux-block (for-next) # grep IOPS *fio*log 
+configfs-qmode-0-nowait-0-fio-1.log:  read: IOPS=1295k, BW=5058MiB/s (5303MB/s)(98.8GiB/20002msec)
+configfs-qmode-0-nowait-0-fio-2.log:  read: IOPS=1362k, BW=5318MiB/s (5577MB/s)(104GiB/20002msec)
+configfs-qmode-0-nowait-0-fio-3.log:  read: IOPS=1332k, BW=5201MiB/s (5454MB/s)(102GiB/20001msec)
+configfs-qmode-0-nowait-1-fio-1.log:  read: IOPS=2095k, BW=8183MiB/s (8581MB/s)(160GiB/20001msec)
+configfs-qmode-0-nowait-1-fio-2.log:  read: IOPS=2085k, BW=8145MiB/s (8541MB/s)(159GiB/20002msec)
+configfs-qmode-0-nowait-1-fio-3.log:  read: IOPS=2036k, BW=7955MiB/s (8341MB/s)(155GiB/20001msec)
+configfs-qmode-2-nowait-0-fio-1.log:  read: IOPS=1288k, BW=5031MiB/s (5275MB/s)(98.3GiB/20002msec)
+configfs-qmode-2-nowait-0-fio-2.log:  read: IOPS=1239k, BW=4839MiB/s (5074MB/s)(94.5GiB/20001msec)
+configfs-qmode-2-nowait-0-fio-3.log:  read: IOPS=1252k, BW=4889MiB/s (5127MB/s)(95.5GiB/20001msec)
+configfs-qmode-2-nowait-1-fio-1.log:  read: IOPS=2101k, BW=8208MiB/s (8607MB/s)(160GiB/20001msec)
+configfs-qmode-2-nowait-1-fio-2.log:  read: IOPS=2091k, BW=8169MiB/s (8565MB/s)(160GiB/20001msec)
+configfs-qmode-2-nowait-1-fio-3.log:  read: IOPS=2088k, BW=8155MiB/s (8551MB/s)(159GiB/20001msec)
+qmode-0-nowait-0-fio-1.log:  read: IOPS=1362k, BW=5321MiB/s (5579MB/s)(104GiB/20001msec)
+qmode-0-nowait-0-fio-2.log:  read: IOPS=1334k, BW=5210MiB/s (5463MB/s)(102GiB/20001msec)
+qmode-0-nowait-0-fio-3.log:  read: IOPS=1386k, BW=5416MiB/s (5679MB/s)(106GiB/20001msec)
+qmode-0-nowait-1-fio-1.log:  read: IOPS=5405k, BW=20.6GiB/s (22.1GB/s)(412GiB/20002msec)
+qmode-0-nowait-1-fio-2.log:  read: IOPS=5502k, BW=21.0GiB/s (22.5GB/s)(420GiB/20001msec)
+qmode-0-nowait-1-fio-3.log:  read: IOPS=5518k, BW=21.0GiB/s (22.6GB/s)(421GiB/20002msec)
+qmode-2-nowait-0-fio-1.log:  read: IOPS=1356k, BW=5296MiB/s (5554MB/s)(103GiB/20001msec)
+qmode-2-nowait-0-fio-2.log:  read: IOPS=1318k, BW=5148MiB/s (5398MB/s)(101GiB/20001msec)
+qmode-2-nowait-0-fio-3.log:  read: IOPS=1252k, BW=4891MiB/s (5128MB/s)(95.5GiB/20001msec)
+qmode-2-nowait-1-fio-1.log:  read: IOPS=5466k, BW=20.9GiB/s (22.4GB/s)(417GiB/20001msec)
+qmode-2-nowait-1-fio-2.log:  read: IOPS=5446k, BW=20.8GiB/s (22.3GB/s)(416GiB/20002msec)
+qmode-2-nowait-1-fio-3.log:  read: IOPS=5482k, BW=20.9GiB/s (22.5GB/s)(418GiB/20002msec)
+
+-- 
+2.29.0
+
