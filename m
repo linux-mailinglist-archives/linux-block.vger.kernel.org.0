@@ -2,39 +2,39 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AF096E06AD
-	for <lists+linux-block@lfdr.de>; Thu, 13 Apr 2023 08:07:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0483A6E06AF
+	for <lists+linux-block@lfdr.de>; Thu, 13 Apr 2023 08:07:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbjDMGHB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Apr 2023 02:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60178 "EHLO
+        id S229683AbjDMGHD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Apr 2023 02:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjDMGHA (ORCPT
+        with ESMTP id S229492AbjDMGHC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Apr 2023 02:07:00 -0400
+        Thu, 13 Apr 2023 02:07:02 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7A94EDE
-        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 23:06:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C564ED8
+        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 23:07:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=cc23uwDorSZ++2byttC1mhaCtRgIgF0SWFi4mTeCvQ4=; b=fJENeOrqn0F+otnC+MHrCLXpSO
-        S29m9pfRNdv88Pr0yRn/8+BfUxPPt5dA8JAH3acvZBKkxZ/FNAM0cBKncjOEYSGGZK16I6pOstVjp
-        OmkE9qaqwrJYHOm0WwWC3piRAds8ifg3zOBYDNP1Iot/vwROKwn2KwDRAVI62vpuIyQd1+r5xYrRX
-        YbuwDof9wVAmNYw05RkgRwS/J2pYKB6XmpGvJR5huvP7RULGsFvuLbr4nHa+1vgnYydiGXdfxaLKb
-        9tdNf3icUP+0WfKrX0Wkxwz6ah3EW3bKTQYB9Ft0XO6yNeiJP+oWLvenJrL/J9YZDYqjpafxk5y/S
-        8XE3ji+A==;
+        bh=mhkuFHS/1KLpoG0nLLYmEFco6ZIM8dO1/TxmIPTQWJo=; b=J9ab4AchZkIYK1Pluv/aB219PO
+        OLoFFgFyRqsj85KeX4NsLxNZsQn5DnqSFm8hvlDKdPzo278EvVTmtJVElgmp5WcK3jH/EesKYtmYN
+        kn6hIMW/pOPil1AF/wodPLQs+XjJKazn650govcfdZ2/5sITZxQ4ZvBCxMQqPGPsND4JqxilFURiH
+        TLmx2JAiK7PzqHKa483AXZVm2N60fRm2Hc7a7vI0LmAo5UaeZBiufYfudowmudx7y4KIZkNQKu99D
+        b2tjHcdHVBaAdTNbEa95mJokPWGpX64QpzVQKL7xl6XHOFKn8raeHxs95p60/PlJCxwMtLMMjo/QR
+        VDhEuzCg==;
 Received: from [2001:4bb8:192:2d6c:85e:8df8:d35f:4448] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pmq6k-0057ie-26;
-        Thu, 13 Apr 2023 06:06:59 +0000
+        id 1pmq6n-0057it-0i;
+        Thu, 13 Apr 2023 06:07:01 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
-Subject: [PATCH 1/5] blk-mq: cleanup __blk_mq_sched_dispatch_requests
-Date:   Thu, 13 Apr 2023 08:06:47 +0200
-Message-Id: <20230413060651.694656-2-hch@lst.de>
+Subject: [PATCH 2/5] blk-mq: remove the blk_mq_hctx_stopped check in blk_mq_run_work_fn
+Date:   Thu, 13 Apr 2023 08:06:48 +0200
+Message-Id: <20230413060651.694656-3-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230413060651.694656-1-hch@lst.de>
 References: <20230413060651.694656-1-hch@lst.de>
@@ -51,68 +51,36 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-__blk_mq_sched_dispatch_requests currently has duplicated logic
-for the cases where requests are on the hctx dispatch list or not.
-Merge the two with a new need_dispatch variable and remove a few
-pointless local variables.
+blk_mq_hctx_stopped is alredy checked in blk_mq_sched_dispatch_requests
+under blk_mq_run_dispatch_ops() protetion, so remove the duplicate check.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/blk-mq-sched.c | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
+ block/blk-mq.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 06b312c691143f..f3257e1607a00c 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -271,9 +271,7 @@ static int blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 52f8e0099c7f4b..5289a34e68b937 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2430,15 +2430,8 @@ EXPORT_SYMBOL(blk_mq_start_stopped_hw_queues);
  
- static int __blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ static void blk_mq_run_work_fn(struct work_struct *work)
  {
--	struct request_queue *q = hctx->queue;
--	const bool has_sched = q->elevator;
--	int ret = 0;
-+	bool need_dispatch = false;
- 	LIST_HEAD(rq_list);
+-	struct blk_mq_hw_ctx *hctx;
+-
+-	hctx = container_of(work, struct blk_mq_hw_ctx, run_work.work);
+-
+-	/*
+-	 * If we are stopped, don't run the queue.
+-	 */
+-	if (blk_mq_hctx_stopped(hctx))
+-		return;
++	struct blk_mq_hw_ctx *hctx =
++		container_of(work, struct blk_mq_hw_ctx, run_work.work);
  
- 	/*
-@@ -302,23 +300,22 @@ static int __blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
- 	 */
- 	if (!list_empty(&rq_list)) {
- 		blk_mq_sched_mark_restart_hctx(hctx);
--		if (blk_mq_dispatch_rq_list(hctx, &rq_list, 0)) {
--			if (has_sched)
--				ret = blk_mq_do_dispatch_sched(hctx);
--			else
--				ret = blk_mq_do_dispatch_ctx(hctx);
--		}
--	} else if (has_sched) {
--		ret = blk_mq_do_dispatch_sched(hctx);
--	} else if (hctx->dispatch_busy) {
--		/* dequeue request one by one from sw queue if queue is busy */
--		ret = blk_mq_do_dispatch_ctx(hctx);
-+		if (!blk_mq_dispatch_rq_list(hctx, &rq_list, 0)) 
-+			return 0;
-+		need_dispatch = true;
- 	} else {
--		blk_mq_flush_busy_ctxs(hctx, &rq_list);
--		blk_mq_dispatch_rq_list(hctx, &rq_list, 0);
-+		need_dispatch = hctx->dispatch_busy;
- 	}
- 
--	return ret;
-+	if (hctx->queue->elevator)
-+		return blk_mq_do_dispatch_sched(hctx);
-+
-+	/* dequeue request one by one from sw queue if queue is busy */
-+	if (need_dispatch)
-+		return blk_mq_do_dispatch_ctx(hctx);
-+	blk_mq_flush_busy_ctxs(hctx, &rq_list);
-+	blk_mq_dispatch_rq_list(hctx, &rq_list, 0);
-+	return 0;
+ 	__blk_mq_run_hw_queue(hctx);
  }
- 
- void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
 -- 
 2.39.2
 
