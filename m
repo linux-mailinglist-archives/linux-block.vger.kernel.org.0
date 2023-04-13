@@ -2,68 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C0966E0E2C
-	for <lists+linux-block@lfdr.de>; Thu, 13 Apr 2023 15:12:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E1B26E0EA5
+	for <lists+linux-block@lfdr.de>; Thu, 13 Apr 2023 15:30:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbjDMNML (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Apr 2023 09:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42742 "EHLO
+        id S229864AbjDMNax (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Apr 2023 09:30:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229707AbjDMNMK (ORCPT
+        with ESMTP id S231454AbjDMNai (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Apr 2023 09:12:10 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700A0AF10
-        for <linux-block@vger.kernel.org>; Thu, 13 Apr 2023 06:11:34 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-63b5312bd34so65797b3a.0
-        for <linux-block@vger.kernel.org>; Thu, 13 Apr 2023 06:11:34 -0700 (PDT)
+        Thu, 13 Apr 2023 09:30:38 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E2639755;
+        Thu, 13 Apr 2023 06:30:13 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id l18so14198099wrb.9;
+        Thu, 13 Apr 2023 06:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1681391488; x=1683983488;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fOZYbrXhG6vMi0K9b9D3jfmidZWcUQ/LYCnf+UuPDiw=;
-        b=TzOjrKklGC46OAu0C9VeLbWm2xIbC52A8yNPKf0k61rHCZ7WepeOf7M2d6g7GGwvXe
-         xQ0/kLEOU3+VwRAqvTKlQdM3PxkHCpsYQxtQb9LWxLMiRAPpNks8aq+8pZHkjM3fL2Ic
-         6OGZUsaO7d7l2XZR1BxvDA9p6R4t8vFvI1DwcxaxZdCid7/kuv5dwYpeDmJ1usora1mi
-         mPjcpdS4SrXMZG/uA3Ta7Phx0yvUpCvai1VkhEy4H0R06v5CrE7NpUkEDEMfMLH8pvri
-         fFqruOYEsJ7ih2kjjN27SP6/i7UXNzU9NaBYJX4qDwJYtw0z+2bAVkUeo7HK8INYQryN
-         SFPQ==
+        d=gmail.com; s=20221208; t=1681392611; x=1683984611;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7vuUepV4dAJ+nkaSvL/ErL7Y/nu4CyeJdvToecRq5Q8=;
+        b=GO3KIgO1Au7XBl//B835y3fVl6xQs3EDJoDX72iO1VBi+gafdvC8Jrj47R96KSpGTR
+         GEoA49VUWHWXW1k2k9/KzCWjymdqVctxdUGMl/3VyAbjiDSKzo5oJ59GtF4P+B0VTRF0
+         +wrXtMVM1/gZGRKcgpZk0qdi6FiCwIlWFMqIQaMJIOAzq/MuBq0i+3pD6+t/gJ5VR/sE
+         8Wf+o2wlWcDHTH7BwaJ9uyhpW713f+Bv7+4Pb5Nj4RcSIp57S3f6lt+eoGfR0+Jyh07/
+         v7zR4U5vFg6burt5kbGfG6LUGMW6Jx0UIp7Mw033DPT6BAA1kuzuxQidFGdQZYHLWexj
+         APtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681391488; x=1683983488;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fOZYbrXhG6vMi0K9b9D3jfmidZWcUQ/LYCnf+UuPDiw=;
-        b=C0Je6sc2CzwHtioiz/KtjVaQx9hTvHTYvaI+Td9FGLUUXvGrLfjgWd0ax0npMnw1Gq
-         YWkfHvCr/8jnrCpOV+zZcgwWwTBTiV1h/zJPrQAmDgmmzv/3U/8cxseIdnuvakEmHjd7
-         TCRMxGNnA3p20W0wAk7mcK1vb5o22TfdC59w2K2/a07oC4ZyLcQBxenfIlIsYRGcA8kB
-         wZ+QxbL9FL8C/jddPuTMpGK4CK4v+ujp2Bd6s/aAFrZcRZLhAsTFekt2FVKnLFZoXsxY
-         HV/s3vnJQ8uuK/euMRoZ3IIIx8m3stphPVW9Y6wJ+yZg1JOkNeyKlN8MKimQASehItB8
-         Y4JA==
-X-Gm-Message-State: AAQBX9dxS2i+FLGsCtCVPRy5j4MN/gw0UZ/cWKPdhSRZZ8Siq571p/Dp
-        mAe1VZGFTj3mMS4Sslo1kT2hswl9GfhaC5NbpQo=
-X-Google-Smtp-Source: AKy350Z6GpPZ9IFi3BB54V5iLyNnNbm4b85cWpEMlDDI2emOwDG3UcwY7GniImUw7SjcBdphaF4iPQ==
-X-Received: by 2002:a05:6a21:32a2:b0:e9:843:18f3 with SMTP id yt34-20020a056a2132a200b000e9084318f3mr2483089pzb.5.1681391488545;
-        Thu, 13 Apr 2023 06:11:28 -0700 (PDT)
-Received: from [127.0.0.1] (cpe-72-132-29-68.dc.res.rr.com. [72.132.29.68])
-        by smtp.gmail.com with ESMTPSA id s18-20020a62e712000000b0062dee0221b2sm1387575pfh.21.2023.04.13.06.11.27
+        d=1e100.net; s=20221208; t=1681392611; x=1683984611;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7vuUepV4dAJ+nkaSvL/ErL7Y/nu4CyeJdvToecRq5Q8=;
+        b=bkN0Z4clxWELo9CEsLYoXeHlKhaDyNXRC4nIi7/NuEC6AH73Y/SxLIl2eWW2nJ37OX
+         OS5lkGU9QbMXr2QKAVSTCi9Ctz9ER1AD9PytDSlJeEKzUWFdvcn3yQpwQ3gVBIgbPA1A
+         Xi1tavayNFuTBpCvx7zN0LMncfNXmbeTHEDyiEv6NrshHiWxtjOZ4sJRfHCchcYeBur+
+         LS0zh8oJJqBVKrNDCgt8dMxclMFyrxc8n9MxkWgBB2R17aiBsCT1fvfzkdfB+4UJayYG
+         DtO5BlmNwpbd0OVDv7YN1xZdLEjMe4dtF0OkJLHdGZMKLEN0cslyjcg1C9w6/sawJFwU
+         +9/Q==
+X-Gm-Message-State: AAQBX9dW5Hij/YZUSx8ghoPI6Ij9VuXYwHc6S1hoZwVgwwphHb80FwbY
+        Ojl3RpLGHq0QWVMdp5fNuZk=
+X-Google-Smtp-Source: AKy350bLYbMF89ZC+MJVjwk3fnMTGMycUXZjXTHbi9DZpOpVl1PLukpxYkHqByWwrepviu7nhYpAnQ==
+X-Received: by 2002:a05:6000:1365:b0:2c7:1e16:57cf with SMTP id q5-20020a056000136500b002c71e1657cfmr1500704wrz.67.1681392610996;
+        Thu, 13 Apr 2023 06:30:10 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id b11-20020a5d4d8b000000b002c7066a6f77sm1315780wru.31.2023.04.13.06.30.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Apr 2023 06:11:28 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-block@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
-In-Reply-To: <20230413060651.694656-1-hch@lst.de>
-References: <20230413060651.694656-1-hch@lst.de>
-Subject: Re: cleanup blk_mq_run_hw_queue v2
-Message-Id: <168139148760.18684.10898164083476475110.b4-ty@kernel.dk>
-Date:   Thu, 13 Apr 2023 07:11:27 -0600
+        Thu, 13 Apr 2023 06:30:10 -0700 (PDT)
+From:   Colin Ian King <colin.i.king@gmail.com>
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block, bfq: Fix division by zero error on zero wsum
+Date:   Thu, 13 Apr 2023 14:30:09 +0100
+Message-Id: <20230413133009.1605335-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-00303
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,37 +70,73 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+When the weighted sum is zero the calculation of limit causes
+a division by zero error. Fix this by continuing to the next level.
 
-On Thu, 13 Apr 2023 08:06:46 +0200, Christoph Hellwig wrote:
-> this series cleans up blk_mq_run_hw_queue and related functions.
-> 
-> Changes since v1:
->  - drop pointless blk_mq_hctx_stopped calls
->  - additional cleanups
-> 
-> Diffstat:
->  blk-mq-sched.c |   31 ++++++++++------------
->  blk-mq.c       |   79 ++++++++++++++++-----------------------------------------
->  2 files changed, 37 insertions(+), 73 deletions(-)
-> 
-> [...]
+This was discovered by running as root:
 
-Applied, thanks!
+stress-ng --ioprio 0
 
-[1/5] blk-mq: cleanup __blk_mq_sched_dispatch_requests
-      commit: 89ea5ceb53d14f52ecbad8393be47f382c47c37d
-[2/5] blk-mq: remove the blk_mq_hctx_stopped check in blk_mq_run_work_fn
-      commit: c20a1a2c1a9f5b1081121cd18be444e7610b0c6f
-[3/5] blk-mq: move the blk_mq_hctx_stopped check in __blk_mq_delay_run_hw_queue
-      commit: cd735e11130d4c84a073e1056aa019ca0f3305f9
-[4/5] blk-mq: move the !async handling out of __blk_mq_delay_run_hw_queue
-      commit: 1aa8d875b523d61347a6887e4a4ab65a6d799d40
-[5/5] blk-mq: remove __blk_mq_run_hw_queue
-      commit: 4d5bba5bee0aa002523125e51789e95d47794a06
+Fixes divison by error oops:
 
-Best regards,
+[  521.450556] divide error: 0000 [#1] SMP NOPTI
+[  521.450766] CPU: 2 PID: 2684464 Comm: stress-ng-iopri Not tainted 6.2.1-1280.native #1
+[  521.451117] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.1-0-g3208b098f51a-prebuilt.qemu.org 04/01/2014
+[  521.451627] RIP: 0010:bfqq_request_over_limit+0x207/0x400
+[  521.451875] Code: 01 48 8d 0c c8 74 0b 48 8b 82 98 00 00 00 48 8d 0c c8 8b 85 34 ff ff ff 48 89 ca 41 0f af 41 50 48 d1 ea 48 98 48 01 d0 31 d2 <48> f7 f1 41 39 41 48 89 85 34 ff ff ff 0f 8c 7b 01 00 00 49 8b 44
+[  521.452699] RSP: 0018:ffffb1af84eb3948 EFLAGS: 00010046
+[  521.452938] RAX: 000000000000003c RBX: 0000000000000000 RCX: 0000000000000000
+[  521.453262] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb1af84eb3978
+[  521.453584] RBP: ffffb1af84eb3a30 R08: 0000000000000001 R09: ffff8f88ab8a4ba0
+[  521.453905] R10: 0000000000000000 R11: 0000000000000001 R12: ffff8f88ab8a4b18
+[  521.454224] R13: ffff8f8699093000 R14: 0000000000000001 R15: ffffb1af84eb3970
+[  521.454549] FS:  00005640b6b0b580(0000) GS:ffff8f88b3880000(0000) knlGS:0000000000000000
+[  521.454912] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  521.455170] CR2: 00007ffcbcae4e38 CR3: 00000002e46de001 CR4: 0000000000770ee0
+[  521.455491] PKRU: 55555554
+[  521.455619] Call Trace:
+[  521.455736]  <TASK>
+[  521.455837]  ? bfq_request_merge+0x3a/0xc0
+[  521.456027]  ? elv_merge+0x115/0x140
+[  521.456191]  bfq_limit_depth+0xc8/0x240
+[  521.456366]  __blk_mq_alloc_requests+0x21a/0x2c0
+[  521.456577]  blk_mq_submit_bio+0x23c/0x6c0
+[  521.456766]  __submit_bio+0xb8/0x140
+[  521.457236]  submit_bio_noacct_nocheck+0x212/0x300
+[  521.457748]  submit_bio_noacct+0x1a6/0x580
+[  521.458220]  submit_bio+0x43/0x80
+[  521.458660]  ext4_io_submit+0x23/0x80
+[  521.459116]  ext4_do_writepages+0x40a/0xd00
+[  521.459596]  ext4_writepages+0x65/0x100
+[  521.460050]  do_writepages+0xb7/0x1c0
+[  521.460492]  __filemap_fdatawrite_range+0xa6/0x100
+[  521.460979]  file_write_and_wait_range+0xbf/0x140
+[  521.461452]  ext4_sync_file+0x105/0x340
+[  521.461882]  __x64_sys_fsync+0x67/0x100
+[  521.462305]  ? syscall_exit_to_user_mode+0x2c/0x1c0
+[  521.462768]  do_syscall_64+0x3b/0xc0
+[  521.463165]  entry_SYSCALL_64_after_hwframe+0x5a/0xc4
+[  521.463621] RIP: 0033:0x5640b6c56590
+[  521.464006] Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 80 3d 71 70 0e 00 00 74 17 b8 4a 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 48 c3 0f 1f 80 00 00 00 00 48 83 ec 18 89 7c
+
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ block/bfq-iosched.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index d9ed3108c17a..bac977da4eb5 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -649,6 +649,8 @@ static bool bfqq_request_over_limit(struct bfq_queue *bfqq, int limit)
+ 					sched_data->service_tree[i].wsum;
+ 			}
+ 		}
++		if (!wsum)
++			continue;
+ 		limit = DIV_ROUND_CLOSEST(limit * entity->weight, wsum);
+ 		if (entity->allocated >= limit) {
+ 			bfq_log_bfqq(bfqq->bfqd, bfqq,
 -- 
-Jens Axboe
-
-
+2.30.2
 
