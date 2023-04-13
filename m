@@ -2,76 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 284226E06F0
-	for <lists+linux-block@lfdr.de>; Thu, 13 Apr 2023 08:28:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 818D96E06F6
+	for <lists+linux-block@lfdr.de>; Thu, 13 Apr 2023 08:28:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229541AbjDMG2E (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Apr 2023 02:28:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43112 "EHLO
+        id S229640AbjDMG2p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Apr 2023 02:28:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjDMG2D (ORCPT
+        with ESMTP id S229632AbjDMG2o (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Apr 2023 02:28:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9E717DAA
-        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 23:28:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 845BD611B9
-        for <linux-block@vger.kernel.org>; Thu, 13 Apr 2023 06:28:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A103C433D2;
-        Thu, 13 Apr 2023 06:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681367280;
-        bh=XaIkh9S5y2aXMBLv+giiqilwgW+dkw6UDRp8nYKFKeo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=PDnjKkgDAFlpmSBLw8xDOm6BGJFiWrbgkDvH5VLukW3wHc/pU3ti65OdpkDDNLJN0
-         gnVZHBSyebXMofy0n3K5G7SgU8TA1SObs9Kws+aWXsIXCta8YvKIr2Ehy1sD5xtLl6
-         D/WsN0kXw/m3uhEIXLP0CNkv9vVnL+L1UYHWlrayznWDh4kEM9JaZraxMdj+5kNVGG
-         hzXAERYJgXrk6VZc5Wz/PGZTJMdOP8VnD5d41yuukaWHeaiV7SmRjxiwJZ05iPfA9E
-         tH8ZOMTMbyPB510lUykEo9btzZHMY7Umw0iU+0++O8OrVx857KWMMfjrpVW0sZguk/
-         HlyoNL0+BGkJw==
-Message-ID: <d8f608bf-8b05-4e10-09cb-01f50a275b1c@kernel.org>
-Date:   Thu, 13 Apr 2023 15:27:59 +0900
+        Thu, 13 Apr 2023 02:28:44 -0400
+Received: from out-31.mta1.migadu.com (out-31.mta1.migadu.com [IPv6:2001:41d0:203:375::1f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A242683FF
+        for <linux-block@vger.kernel.org>; Wed, 12 Apr 2023 23:28:39 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1681367316;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=egK6cQcoNaTUC/dkRvlJHjCoro533vXXKI06JsMHHhk=;
+        b=OLgzKgqo5RxBuxyyghem3Zr+nBfFIoz4x9MKZJJi9MVi/e3ETG7sXqdslYi9DYw1I1X1nH
+        vIKa37IM3boWd8Vmt0udwAuuErkdq+EvP+gwE3dG//cSdwtDfTWQEFrVepocn8VC0wAGXk
+        OdeaTC1QfLAE/f+X4ExEbHVfkF7qUsc=
+From:   chengming.zhou@linux.dev
+To:     axboe@kernel.dk, tj@kernel.org
+Cc:     josef@toxicpanda.com, osandov@fb.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2 1/2] blk-stat: fix QUEUE_FLAG_STATS clear
+Date:   Thu, 13 Apr 2023 14:28:04 +0800
+Message-Id: <20230413062805.2081970-1-chengming.zhou@linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH 5/5] blk-mq: remove __blk_mq_run_hw_queue
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org
-References: <20230413060651.694656-1-hch@lst.de>
- <20230413060651.694656-6-hch@lst.de>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20230413060651.694656-6-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 4/13/23 15:06, Christoph Hellwig wrote:
-> __blk_mq_run_hw_queue just contains a WARN_ON_ONCE for calls from
-> interrupt context and a blk_mq_run_dispatch_ops-protected call to
-> blk_mq_sched_dispatch_requests.  Open code the call to
-> blk_mq_sched_dispatch_requests in both callers, and move the WARN_ON_ONCE
-> to blk_mq_run_hw_queue where it can be extented to all !async calls,
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-s/extented/extended
+We need to set QUEUE_FLAG_STATS for two cases:
+1. blk_stat_enable_accounting()
+2. blk_stat_add_callback()
 
-> while the other call is from workqueue context and thus obviously does
-> not need the assert.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+So we should clear it only when ((q->stats->accounting == 0) &&
+list_empty(&q->stats->callbacks)).
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+blk_stat_disable_accounting() only check if q->stats->accounting
+is 0 before clear the flag, this patch fix it.
 
+Also add list_empty(&q->stats->callbacks)) check when enable, or
+the flag is already set.
+
+The bug can be reproduced on kernel without BLK_DEV_THROTTLING
+(since it unconditionally enable accounting, see the next patch).
+
+  # cat /sys/block/sr0/queue/scheduler
+  none mq-deadline [bfq]
+
+  # cat /sys/kernel/debug/block/sr0/state
+  SAME_COMP|IO_STAT|INIT_DONE|STATS|REGISTERED|NOWAIT|30
+
+  # echo none > /sys/block/sr0/queue/scheduler
+
+  # cat /sys/kernel/debug/block/sr0/state
+  SAME_COMP|IO_STAT|INIT_DONE|REGISTERED|NOWAIT
+
+  # cat /sys/block/sr0/queue/wbt_lat_usec
+  75000
+
+We can see that after changing elevator from "bfq" to "none",
+"STATS" flag is lost even though WBT callback still need it.
+
+Fixes: 68497092bde9 ("block: make queue stat accounting a reference")
+Cc: <stable@vger.kernel.org> # v5.17+
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+ block/blk-stat.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-stat.c b/block/blk-stat.c
+index 74a1a8c32d86..bc7e0ed81642 100644
+--- a/block/blk-stat.c
++++ b/block/blk-stat.c
+@@ -190,7 +190,7 @@ void blk_stat_disable_accounting(struct request_queue *q)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&q->stats->lock, flags);
+-	if (!--q->stats->accounting)
++	if (!--q->stats->accounting && list_empty(&q->stats->callbacks))
+ 		blk_queue_flag_clear(QUEUE_FLAG_STATS, q);
+ 	spin_unlock_irqrestore(&q->stats->lock, flags);
+ }
+@@ -201,7 +201,7 @@ void blk_stat_enable_accounting(struct request_queue *q)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&q->stats->lock, flags);
+-	if (!q->stats->accounting++)
++	if (!q->stats->accounting++ && list_empty(&q->stats->callbacks))
+ 		blk_queue_flag_set(QUEUE_FLAG_STATS, q);
+ 	spin_unlock_irqrestore(&q->stats->lock, flags);
+ }
+-- 
+2.39.2
 
