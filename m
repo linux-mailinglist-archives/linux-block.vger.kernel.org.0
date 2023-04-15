@@ -2,74 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 005E16E330E
-	for <lists+linux-block@lfdr.de>; Sat, 15 Apr 2023 20:11:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB9D6E3354
+	for <lists+linux-block@lfdr.de>; Sat, 15 Apr 2023 21:38:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbjDOSLg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 15 Apr 2023 14:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57868 "EHLO
+        id S229760AbjDOTiG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 15 Apr 2023 15:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbjDOSLe (ORCPT
+        with ESMTP id S229622AbjDOTiF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 15 Apr 2023 14:11:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80654232
-        for <linux-block@vger.kernel.org>; Sat, 15 Apr 2023 11:11:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C8DC612FB
-        for <linux-block@vger.kernel.org>; Sat, 15 Apr 2023 18:11:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B184AC4339B;
-        Sat, 15 Apr 2023 18:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681582292;
-        bh=ht8zQClR1hXMzh3KD5d8Tw8QvL9RzPi4mMgpxlwFLdA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=l0y8ZSHfzMPSysy8czj2byC8t7hf4XJHZd5gQIE30X2KnibVCYxjOdYDm3Bsyj88w
-         RJYoldR6uUXvu8SpyHFJkF8yTHm1YxGqx/j3d3rDLMhprbOeraZERnJAOx9vBURDDM
-         zSHG1+x8y7rRTpy49LDcZzI2x3r7DL8OXeoLmGU/2ybB/p4fI02Hls2HNbCO8sXMCE
-         erL3PCv/pMy6LCcxdvHT8hIQITrbM/Ov87Z6KlM7ecFk8Acm+BBZiFZ4gONn6gAH2G
-         NstH0xp/BUuhZUeNg1KkpsCYSslaJBEFIcQm0RSObrGMPfeXej70FcF8XnaJK0GJfN
-         SbENSdF01AVUw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9FBB9E52446;
-        Sat, 15 Apr 2023 18:11:32 +0000 (UTC)
-Subject: Re: [GIT PULL] Block fix for 6.3-rc7
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <9d88e759-5201-82c4-792f-dcb6e29c808a@kernel.dk>
-References: <9d88e759-5201-82c4-792f-dcb6e29c808a@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <9d88e759-5201-82c4-792f-dcb6e29c808a@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux.git tags/block-6.3-2023-04-14
-X-PR-Tracked-Commit-Id: f7ca1ae32bd89ab035568c63b4443eb55420b423
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cdcc6696d22dbb8fa2982d523d17f6ad2777d0f2
-Message-Id: <168158229265.18559.17663123145925182633.pr-tracker-bot@kernel.org>
-Date:   Sat, 15 Apr 2023 18:11:32 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        Sat, 15 Apr 2023 15:38:05 -0400
+X-Greylist: delayed 977 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 15 Apr 2023 12:38:02 PDT
+Received: from mx03-02.glattnet.ch (mx03-02.glattnet.ch [IPv6:2a00:a680:120::17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD5661BD4
+        for <linux-block@vger.kernel.org>; Sat, 15 Apr 2023 12:38:02 -0700 (PDT)
+Received: from mx1.glatthosting.ch (whpn1.glattnet.ch [80.242.193.183])
+        by mx03-02.glattnet.ch (Postfix) with ESMTP id AE37E14FA82;
+        Sat, 15 Apr 2023 21:21:42 +0200 (CEST)
+Received: by mx1.glatthosting.ch (Postfix, from userid 0)
+        id 91D2972E53F; Sat, 15 Apr 2023 21:21:40 +0200 (CEST)
+From:   engesellschaft@engesellschaft.de
+Subject: Re;
+To:     moore.gorge@hotmail.com
+Message-Id: <1681586500.1738060@engesellschaft.de>
+X-Originating-IP: 179.43.182.186
+X-Mailer: Webmin 1.973
+Date:   Sat, 15 Apr 2023 21:21:40 +0200 (CEST)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="bound1681586500"
+X-Greylist: Default is to whitelist mail, not delayed by milter-greylist-4.6.2 (mx1.glatthosting.ch [0.0.0.0]); Sat, 15 Apr 2023 21:21:40 +0200 (CEST)
+X-Spam-Status: No, score=-0.7 required=5.0 tests=ADVANCE_FEE_4_NEW,BAYES_00,
+        DKIM_ADSP_NXDOMAIN,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Fri, 14 Apr 2023 21:43:48 -0600:
+This is a multi-part message in MIME format.
 
-> git://git.kernel.dk/linux.git tags/block-6.3-2023-04-14
+--bound1681586500
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cdcc6696d22dbb8fa2982d523d17f6ad2777d0f2
+Hello,
 
-Thank you!
+My name is Mr.Cosme Amossou, I apologize for contacting you in this
+manner but the situation at hand demands urgent attention from all
+presumed beneficiary. I have an important subject to share with you,
+regarding my late client Mr.Peter fund's domicile in his bank. Write
+back to me for more detailed information.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Best regards
+Mr.Cosme
+
+--bound1681586500--
+
