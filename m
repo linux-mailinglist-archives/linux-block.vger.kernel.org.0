@@ -2,119 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D686E494A
-	for <lists+linux-block@lfdr.de>; Mon, 17 Apr 2023 15:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D9DA6E4A4F
+	for <lists+linux-block@lfdr.de>; Mon, 17 Apr 2023 15:48:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbjDQNFW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 17 Apr 2023 09:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55434 "EHLO
+        id S230037AbjDQNsk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Apr 2023 09:48:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231183AbjDQNEh (ORCPT
+        with ESMTP id S229547AbjDQNsk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 17 Apr 2023 09:04:37 -0400
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682CC1258B;
-        Mon, 17 Apr 2023 06:01:35 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailnew.west.internal (Postfix) with ESMTP id 7BC6E2B06780;
-        Mon, 17 Apr 2023 08:59:30 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 17 Apr 2023 08:59:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1681736370; x=
-        1681736970; bh=HzfCDp89CrHADm8uM7DAlH9ew8Q9RFNHbSn77EFsrrs=; b=D
-        8UgMpeWU7PyWGFFGtFvKdDr1GKnPYSg/y0uTVCHzyeBPRo4QGm+7qfeNCJtDUmyz
-        4pjjpVcToS23VBFGlTPq7p8k+leVETUhwYHchFTsSR36YIWsmi3xq0HaXZq4pHO/
-        wwpVXzeoYYgF1kz1e7yPQcDJSjRdYJ92kjLU2/AuiTKAx1eU2viVdqryoiIYaVWE
-        NJhkaI8Vvi4DrX3b6dXQWr4Wv1H0VdNkKaqMt19mXhtthZ9LP5HJsGlEEwf8Vjnh
-        JtP0Hxq0Lx6SNgv41fjdgWrvSXJvj3xKA8AZjD5tlAyctIWGoCs8QGe+FVulx09K
-        VaC4YBrmcBbUj1flDtvgg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=ie1e949a3.fm3; t=
-        1681736370; x=1681736970; bh=HzfCDp89CrHADm8uM7DAlH9ew8Q9RFNHbSn
-        77EFsrrs=; b=WzCifZArPgtaQRkd9zNLlrmpObUhMH1oZRs8Hxlx4UQktSnrQty
-        Gyn8zEu9QGnpDh1gv3fyh5a5rGCE+alMfQeF22a/sCs1f75t4aJED40OUYYEhJkL
-        pVa0FAUbFfmqHH4yWneHEwrSj4T9gs6r+RsdsfsBVBnaOrFvSiK3r7bcNcrG5CyF
-        YR2jOQvMUdRbyscyxfQTo5opoEefpVWbJ2z1q9mMrL3EzxBgZ467jvbl1orryj8q
-        uwBvxi6kOTLfohvhDDOTh56ylhi4fX5JnT/bFbzqbU7LAgyv6FOxHFG1JHAQhRlI
-        Rix2J4S1ln/Tj6WNuFuEgXfpTdT/nCg8BAw==
-X-ME-Sender: <xms:sUI9ZD4o68wtgtQ2xMq_l-SLH7bX_WBa2pxcPak01Vc5HgiSDbEruA>
-    <xme:sUI9ZI7yZascfyYQSnaHCXMzhHZwlEqmvYWQMDaoA4UR5k2TVo4Wq2ydF1zHDCSgH
-    uVwrTyFfBmKhQkpw04>
-X-ME-Received: <xmr:sUI9ZKcynEiFnMiknAlKUUm9ss4Kdspvg0yXkM6eH4qSU7-2_PeAiE_Dx_FtyRtuBIGStDzj6wYW8qsDgxkz6IJiCzZkHZIdNKN-nkLU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeliedgheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpefuhhhinhdkihgthhhirhhoucfmrgifrghsrghkihcuoehs
-    hhhinhhitghhihhrohesfhgrshhtmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpe
-    fggfegffejgeefueetgeeukedvhfeludfhhefftdeitdfhteelieefiefhueekgeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehshhhinhhitg
-    hhihhrohesfhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:sUI9ZEIH2wi1r-y8NPysLYa8g4B80rci5CMVG9oaL6BCRmTQqvKtNw>
-    <xmx:sUI9ZHIn47bJtVrZi5x2gVsjMp75inS602vkY98SVrg_139XNF5fUA>
-    <xmx:sUI9ZNzTJq6MQHsfHdA0bYYSGoBnLlQyirZcCdWHZIGe2TJ5zHBzWA>
-    <xmx:sUI9ZOXwDOeqRT5LWNiVA1Fm9TKZe8OuAspuptcrIKg8HxMguAxLpqHWCKK4xchY>
-Feedback-ID: ie1e949a3:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 17 Apr 2023 08:59:28 -0400 (EDT)
-From:   Shin'ichiro Kawasaki <shinichiro@fastmail.com>
-To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc:     Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 9/9] block/027: allow to run with built-in scsi_debug
-Date:   Mon, 17 Apr 2023 21:59:13 +0900
-Message-Id: <20230417125913.458726-5-shinichiro@fastmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230417125913.458726-1-shinichiro@fastmail.com>
-References: <20230417125913.458726-1-shinichiro@fastmail.com>
+        Mon, 17 Apr 2023 09:48:40 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345121BEB
+        for <linux-block@vger.kernel.org>; Mon, 17 Apr 2023 06:48:39 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-2465835cf6fso764754a91.1
+        for <linux-block@vger.kernel.org>; Mon, 17 Apr 2023 06:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1681739318; x=1684331318;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UHg8YyCx2xNTrsopj4h1edhvH1uexqsIIEbf1PiCdJU=;
+        b=cTT1QFY3N3vCQgxN3UdgC4oWj8Nv/WABDvSZ4XliH7WQy6NObF7JURr0Nn0w5n8F5y
+         5vdR1p22xGRuKM1sO0lDiWRMCVkjPppZ5oz3ymUBOGjkPU9Yl6L0z8ksSkCMhWl/PdMD
+         Vd/uaIHE5/sMukmGe+x06ggs0hhu1NTB2GfprrTFDHytML+DHk1xGYNuXTrSTBbvmYU8
+         rAerxB2i9QooHWWqN9y//KklB2mhh0zW+rk3lKYYjgM/y6xt+DR8aJq+lfrfejX1FvmC
+         hphFA6Zjrs2RaZa7OqmLJo01jrneng6BjbhuShcHe7+BZas5pUaQRLqeRTULkZOekHY1
+         5oWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681739318; x=1684331318;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UHg8YyCx2xNTrsopj4h1edhvH1uexqsIIEbf1PiCdJU=;
+        b=I9KoJAub7dyazxPcN5riUXfBMJ6xt6Tnvf/dFTNuOYM8z/NMl3gQmHvmcqSxpKoyCV
+         td4ZteSK7WgvvBy6T0YPeRdTXUoHdmcsJwJ+L0MuZ0ALSBLWuWItMn9FhQoIFI5/9fLu
+         O8TLcEM3S1xrupBAlSZ7APXO/GulkWbwJ3DM2i2WmG1cAe4Wcqm7Z+Assk/Fw62lXSIq
+         DOnfSDRNtsZSzrF8KySwblph6tcGlVShnEybaxfBotyjK6BryYYuy37C4tn0F2DNJpE0
+         XsGsf8mdu9wcgsvyVu65cGZ6e16E9IwSAN7fA9YhWl9fNUylPcYmngga8SjpNAwXNZ9B
+         PQGQ==
+X-Gm-Message-State: AAQBX9ck05FBkZk7BUng68f/upwRT0xLuM79zbR7vhCQ8XQHKypJAnY8
+        m/qYLUvGfsGRLeXFZf57nO1V7w==
+X-Google-Smtp-Source: AKy350ZsvqcPhW6H6wNx86fi0atUBZQkuxHTaZ57q1x/i9eRxrLUDxUCPD/Jiw09W1ZiGmH0vxoyxw==
+X-Received: by 2002:a17:90a:19d1:b0:240:c067:6f50 with SMTP id 17-20020a17090a19d100b00240c0676f50mr10207702pjj.0.1681739318596;
+        Mon, 17 Apr 2023 06:48:38 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id v14-20020a17090a088e00b0023cfdbb6496sm8927319pjc.1.2023.04.17.06.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Apr 2023 06:48:38 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     David Howells <dhowells@redhat.com>,
+        Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        David Hildenbrand <david@redhat.com>,
+        Yang Shi <shy828301@gmail.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+In-Reply-To: <2d5fa5e3-dac5-6973-74e5-eeedf36a42b@google.com>
+References: <2d5fa5e3-dac5-6973-74e5-eeedf36a42b@google.com>
+Subject: Re: [PATCH next] shmem: minor fixes to splice-read implementation
+Message-Id: <168173931746.319007.17265276905089710599.b4-ty@kernel.dk>
+Date:   Mon, 17 Apr 2023 07:48:37 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-00303
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 
-To allow the test case run with build-in scsi_debug, replace
-'_have_module scsi_debug' with _have_scsi_debug, and replace
-_init_scsi_debug with _configure_scsi_debug.
+On Sun, 16 Apr 2023 21:46:16 -0700, Hugh Dickins wrote:
+> generic_file_splice_read() makes a couple of preliminary checks (for
+> s_maxbytes and zero len), but shmem_file_splice_read() is called without
+> those: so check them inside it.  (But shmem does not support O_DIRECT,
+> so no need for that one here - and even if O_DIRECT support were stubbed
+> in, it would still just be using the page cache.)
+> 
+> HWPoison: my reading of folio_test_hwpoison() is that it only tests the
+> head page of a large folio, whereas splice_folio_into_pipe() will splice
+> as much of the folio as it can: so for safety we should also check the
+> has_hwpoisoned flag, set if any of the folio's pages are hwpoisoned.
+> (Perhaps that ugliness can be improved at the mm end later.)
+> 
+> [...]
 
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- tests/block/027 | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Applied, thanks!
 
-diff --git a/tests/block/027 b/tests/block/027
-index ab6369b..a79a115 100755
---- a/tests/block/027
-+++ b/tests/block/027
-@@ -20,12 +20,12 @@ CAN_BE_ZONED=1
- 
- requires() {
- 	_have_cgroup2_controller io
--	_have_module scsi_debug
-+	_have_scsi_debug
- 	_have_fio
- }
- 
- scsi_debug_stress_remove() {
--	if ! _init_scsi_debug "$@"; then
-+	if ! _configure_scsi_debug "$@"; then
- 		return
- 	fi
- 
+[1/1] shmem: minor fixes to splice-read implementation
+      commit: 72887c976a7c9ee7527f4a2e3d109576efea98ab
+
+Best regards,
 -- 
-2.39.2
+Jens Axboe
+
+
 
