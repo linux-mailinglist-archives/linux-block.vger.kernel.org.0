@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DD8C6E6F7D
+	by mail.lfdr.de (Postfix) with ESMTP id CCD036E6F7E
 	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 00:40:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232396AbjDRWk2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 18:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60790 "EHLO
+        id S230053AbjDRWk3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 18:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230053AbjDRWkY (ORCPT
+        with ESMTP id S231520AbjDRWkY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 18 Apr 2023 18:40:24 -0400
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C009BA246
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:14 -0700 (PDT)
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-51b603bb360so881221a12.2
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:14 -0700 (PDT)
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06DF0A24E
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:16 -0700 (PDT)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1a6bc48aec8so11591165ad.2
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681857614; x=1684449614;
+        d=1e100.net; s=20221208; t=1681857615; x=1684449615;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QRIPRnJXdxDwvmScWEwNZSi3W/9tBQ9eOiqmVDtzpks=;
-        b=LW2ZFSYr6QnOZNoAElrFigNM8AN8SuISufo5g2zZ8NVl4pEGUqVscPLAwll3Gaime0
-         Y1kASuxqZr/c6VSnkPQwaenOMUmFn569HcthG2XZ93h9Ok46m+dKHDmtYsk2j4I6YHww
-         7mPNQaW0SslqIYuaejAkwcs6brSQ2D5tmHBf/M230mpg/E4BKwAaWGCREzFY31+zZS22
-         MTxanf7CeTEZewnIkNYyKu4akuWf5LBoaOxTjqH5RKziGnRO4urpenF/X+b8WriQ0Ugf
-         tkDo0xJ9fEuNFTGLSB9nZSWXIegAvFx7iqoNwryt/+AXRzQpX/G0+0+iMGBNVCCS9CdF
-         Y+VA==
-X-Gm-Message-State: AAQBX9euYqFIokncZORKrf2gEKV3OghjJQXDTf7lgtsqzGLMCaThoKL9
-        ryNj73NZ8oOxVbLpdPDyioQ=
-X-Google-Smtp-Source: AKy350ZJbJhQRzbkZID4vbFwG6gtx6pf+Jn6kU5eaZjmbwWEBPJrAiSeJ1BOzkF7xC5HF3TjuZq3lQ==
-X-Received: by 2002:a17:902:e881:b0:19a:9890:eac6 with SMTP id w1-20020a170902e88100b0019a9890eac6mr4157047plg.24.1681857614268;
-        Tue, 18 Apr 2023 15:40:14 -0700 (PDT)
+        bh=tvVUDhfzxvDto383Bl91m7mAMsd3sic7UnlWPq1gf8o=;
+        b=D/575cQV+xc753lnn44tC12QlikcQ8oCpXxXAlI+x+m74LrFx2rLzPsMBo6OvYEvoM
+         lLHRnxj/+SOHNYJIDuhTZWq7hPU6HA8foxRxCx+sXCjV62EihLlyGCESM0ZOy9rbInFu
+         bDZzJKghnTLz6xkXGbq63UZ0KQQ+F3zAdO5pi3/A595jU0H+fpWn+GU99Hz7Y7u6pvSr
+         ikvjcQVBO/OK80DxmEpZQFxNSLm5uRwdWnyYg5DfmmOPdKMXx6B/i3Kov/McEe1L+XaE
+         hkIb6v4mYR1CVQwqUQhu1Nk8VVYCrRwdwBlr5mqA86ZelhBC6WuxAbo2oQcrkQesiVz2
+         Efhg==
+X-Gm-Message-State: AAQBX9doBudfgr06Cdgbo0H27PGRQ1fkgzd49qfcEbVaAKwBhxu8bo0L
+        0TfiDv+mUvFtKp4txYmEK7s=
+X-Google-Smtp-Source: AKy350YrIowWxWabW8nlyBPt7JLvo/reJWOa7py2IU54Ze2EjqpeuIGXYeHmTUOUTW3jB+evxrL2Eg==
+X-Received: by 2002:a17:902:c613:b0:1a2:8c7e:f310 with SMTP id r19-20020a170902c61300b001a28c7ef310mr2939758plr.35.1681857615478;
+        Tue, 18 Apr 2023 15:40:15 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5d9b:263d:206c:895a])
-        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.13
+        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 15:40:13 -0700 (PDT)
+        Tue, 18 Apr 2023 15:40:15 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -45,9 +45,9 @@ Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v2 05/11] block: mq-deadline: Improve deadline_skip_seq_writes()
-Date:   Tue, 18 Apr 2023 15:39:56 -0700
-Message-ID: <20230418224002.1195163-6-bvanassche@acm.org>
+Subject: [PATCH v2 06/11] block: mq-deadline: Disable head insertion for zoned writes
+Date:   Tue, 18 Apr 2023 15:39:57 -0700
+Message-ID: <20230418224002.1195163-7-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 In-Reply-To: <20230418224002.1195163-1-bvanassche@acm.org>
 References: <20230418224002.1195163-1-bvanassche@acm.org>
@@ -64,8 +64,9 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make deadline_skip_seq_writes() do what its name suggests, namely to
-skip sequential writes.
+Make sure that zoned writes (REQ_OP_WRITE and REQ_OP_WRITE_ZEROES) are
+submitted in LBA order. This patch does not affect REQ_OP_WRITE_APPEND
+requests.
 
 Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc: Christoph Hellwig <hch@lst.de>
@@ -76,15 +77,15 @@ Signed-off-by: Bart Van Assche <bvanassche@acm.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 3dde720e2f59..4a0a269db382 100644
+index 4a0a269db382..a73e16d3f8ac 100644
 --- a/block/mq-deadline.c
 +++ b/block/mq-deadline.c
-@@ -311,7 +311,7 @@ static struct request *deadline_skip_seq_writes(struct deadline_data *dd,
- {
- 	sector_t pos = blk_rq_pos(rq);
+@@ -796,7 +796,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
  
--	while (rq && blk_rq_pos(rq) == pos) {
-+	while (rq && blk_rq_pos(rq) == pos && blk_rq_is_seq_zoned_write(rq)) {
- 		pos += blk_rq_sectors(rq);
- 		rq = deadline_latter_request(rq);
- 	}
+ 	trace_block_rq_insert(rq);
+ 
+-	if (flags & BLK_MQ_INSERT_AT_HEAD) {
++	if ((flags & BLK_MQ_INSERT_AT_HEAD) && !blk_rq_is_seq_zoned_write(rq)) {
+ 		list_add(&rq->queuelist, &per_prio->dispatch);
+ 		rq->fifo_time = jiffies;
+ 	} else {
