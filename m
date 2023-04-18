@@ -2,86 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE0F66E67F3
-	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 17:21:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D6A66E686B
+	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 17:41:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231338AbjDRPVX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 11:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
+        id S229972AbjDRPlC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 11:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230070AbjDRPVW (ORCPT
+        with ESMTP id S231488AbjDRPlB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Apr 2023 11:21:22 -0400
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CCA10272
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 08:20:35 -0700 (PDT)
-Received: by mail-qv1-f48.google.com with SMTP id js7so9638292qvb.5
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 08:20:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681831235; x=1684423235;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7CLdgn7FEJW50mDtv/lWeNBJ9hKg2Ov/8WlFbqJpJIs=;
-        b=L6EwMgYzNtr3jExYhuXBZm8k3WtHbUHPjwDXD1CRDLmzT2JO54BEfFSHg0Gctn7hI4
-         kuiPwtqxdGOJdHEEBNCN6qoAp8V1Y/3LCqo/kXtw2Qs2D6cmIihIVlqqF0tI5alpTHo9
-         4MLN9gN0wFV6/qPaDDg9nUVP+ZoFS9GxZKtIkr9Ye5lB5Kef3RsLIhRhfTc36hd/F3oK
-         PsgFtomzS3ujD9K2e+hF/CXWzyO6QHBgq0TVz/HudRLbZ2F4djRCVt9636UuYZVTkYnL
-         f6XgaTObRGhbFZEa7XqMdRFXpi5I+fpW2lW3FPCvCH37RwyFeMFXFLok5OKlatxMkJei
-         1VsQ==
-X-Gm-Message-State: AAQBX9d8ar7sZief+Xr20DmVgro5kVdcd1QtOkwbLgHN9/N/gRQHNNlG
-        i0QbhPvnWmbtLpoUS3FHIZ0m
-X-Google-Smtp-Source: AKy350Y4cXxw9vWWlQiQfrff6ZcA7eR3+1dB65GdR9xdlfjhUTfjBpewtj4Qo98QVfFPqX6aFoZqOg==
-X-Received: by 2002:ad4:5c43:0:b0:5be:cb17:90ab with SMTP id a3-20020ad45c43000000b005becb1790abmr27221625qva.40.1681831234997;
-        Tue, 18 Apr 2023 08:20:34 -0700 (PDT)
-Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
-        by smtp.gmail.com with ESMTPSA id y16-20020ad457d0000000b005ef40ffd97asm3799930qvx.0.2023.04.18.08.20.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 08:20:34 -0700 (PDT)
-Date:   Tue, 18 Apr 2023 11:20:33 -0400
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>, Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <djwong@kernel.org>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org
-Subject: Re: block: fix a crash when bio_for_each_folio_all iterates over an
- empty bio
-Message-ID: <ZD61QWC6TW59anIM@redhat.com>
-References: <alpine.LRH.2.21.2304171433370.17217@file01.intranet.prod.int.rdu2.redhat.com>
+        Tue, 18 Apr 2023 11:41:01 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D880B9EC7
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 08:40:58 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C96176732D; Tue, 18 Apr 2023 17:34:56 +0200 (CEST)
+Date:   Tue, 18 Apr 2023 17:34:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     David Howells <dhowells@redhat.com>
+Cc:     hch@lst.de, linux-block@vger.kernel.org
+Subject: Re: How best to get the size of a blockdev from a file?
+Message-ID: <20230418153456.GA10282@lst.de>
+References: <1609851.1681812012@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.2304171433370.17217@file01.intranet.prod.int.rdu2.redhat.com>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <1609851.1681812012@warthog.procyon.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Apr 17 2023 at  3:11P -0400,
-Mikulas Patocka <mpatocka@redhat.com> wrote:
-
-> If we use bio_for_each_folio_all on an empty bio, it will access the first
-> bio vector unconditionally (it is uninitialized) and it may crash
-> depending on the uninitialized data.
+On Tue, Apr 18, 2023 at 11:00:12AM +0100, David Howells wrote:
+> Hi Christoph,
 > 
-> This patch fixes it by checking the parameter "i" against "bio->bi_vcnt"
-> and returning NULL fi->folio if it is out of range.
-> 
-> The patch also drops the test "if (fi->_i + 1 < bio->bi_vcnt)" from
-> bio_next_folio because the same condition is already being checked in
-> bio_first_folio.
+> It seems that my use of i_size_read(file_inode(in)) in filemap_splice_read()
+> to get the size of the file to be spliced from doesn't work in the case of
+> blockdevs and it always returns 0.
 >
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> What would be the best way to get the blockdev size?  Look at
+> file->f_mapping->i_size maybe?
 
-This fix is a prereq for this dm-crypt patch to use folios:
-https://patchwork.kernel.org/project/dm-devel/patch/alpine.LRH.2.21.2302161619430.5436@file01.intranet.prod.int.rdu2.redhat.com/
-Mikulas explained why an empty bio is possible here:
-https://listman.redhat.com/archives/dm-devel/2023-April/053916.html
-
-Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+Yes.  Everything using an inode in generic read/write helpers always
+needs to use file->f_mapping->host to get at the inode.  Not just for
+the size.
