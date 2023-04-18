@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCD036E6F7E
-	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 00:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43A8F6E6F7F
+	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 00:40:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230053AbjDRWk3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 18:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60746 "EHLO
+        id S232756AbjDRWka (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 18:40:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbjDRWkY (ORCPT
+        with ESMTP id S232420AbjDRWkZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Apr 2023 18:40:24 -0400
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06DF0A24E
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:16 -0700 (PDT)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1a6bc48aec8so11591165ad.2
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:16 -0700 (PDT)
+        Tue, 18 Apr 2023 18:40:25 -0400
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1A89ED8
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:17 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1a66b9bd7dfso23630455ad.2
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681857615; x=1684449615;
+        d=1e100.net; s=20221208; t=1681857616; x=1684449616;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tvVUDhfzxvDto383Bl91m7mAMsd3sic7UnlWPq1gf8o=;
-        b=D/575cQV+xc753lnn44tC12QlikcQ8oCpXxXAlI+x+m74LrFx2rLzPsMBo6OvYEvoM
-         lLHRnxj/+SOHNYJIDuhTZWq7hPU6HA8foxRxCx+sXCjV62EihLlyGCESM0ZOy9rbInFu
-         bDZzJKghnTLz6xkXGbq63UZ0KQQ+F3zAdO5pi3/A595jU0H+fpWn+GU99Hz7Y7u6pvSr
-         ikvjcQVBO/OK80DxmEpZQFxNSLm5uRwdWnyYg5DfmmOPdKMXx6B/i3Kov/McEe1L+XaE
-         hkIb6v4mYR1CVQwqUQhu1Nk8VVYCrRwdwBlr5mqA86ZelhBC6WuxAbo2oQcrkQesiVz2
-         Efhg==
-X-Gm-Message-State: AAQBX9doBudfgr06Cdgbo0H27PGRQ1fkgzd49qfcEbVaAKwBhxu8bo0L
-        0TfiDv+mUvFtKp4txYmEK7s=
-X-Google-Smtp-Source: AKy350YrIowWxWabW8nlyBPt7JLvo/reJWOa7py2IU54Ze2EjqpeuIGXYeHmTUOUTW3jB+evxrL2Eg==
-X-Received: by 2002:a17:902:c613:b0:1a2:8c7e:f310 with SMTP id r19-20020a170902c61300b001a28c7ef310mr2939758plr.35.1681857615478;
-        Tue, 18 Apr 2023 15:40:15 -0700 (PDT)
+        bh=OkyzbelvOYZFYWXCk1JGM0JOOJuFYKPpEP8FtOY0LsI=;
+        b=NCGgtJbmB0XPzRT+n6NUHPYAYMJTK2yz5BY3RduTDqfnXI0Ev808BMr2fwqRXHltAB
+         8bJtiRPUU+2tm7/WZ0Y7TMvOG47cYLzFM0h4YhEB5n9XWKwP6xkoA62h502C8dVFWpIA
+         wrOf4Nv7lFCy/kVrBCrJ4DAohZ+M4LxyRtc3wD1I7oOdaE1Ugx+h7tKX2h+H6DtC6vk5
+         R10X2tWOnioTxohxBAoIWIQALszp6BKJbgBk24GJc1VBMtd7GuzHd45w5NrxyuxR7/2c
+         gcf/Lqn9zlAeFWjcls1Cy25G8J7WUA+zAaXQHhtd8UxnCnX5gH9RnfYrM7kIEe/3qlfQ
+         9DKQ==
+X-Gm-Message-State: AAQBX9fMBn/C0lF15egNlZW7cgEITmhmGq9SdMKbk5cqIrSuZPxdl4Bd
+        IyLbfkidKh/CK8tiXcrx1Rk=
+X-Google-Smtp-Source: AKy350YXi6QPOZgD7m/mt6gl58sT0bffCR+lHn0/zp4QvZvjrdpGRwmD1McI3RQWCb2BwSl7DSRolg==
+X-Received: by 2002:a17:903:110e:b0:1a6:6b5d:8381 with SMTP id n14-20020a170903110e00b001a66b5d8381mr3834086plh.21.1681857616682;
+        Tue, 18 Apr 2023 15:40:16 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5d9b:263d:206c:895a])
-        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.14
+        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 15:40:15 -0700 (PDT)
+        Tue, 18 Apr 2023 15:40:16 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -45,9 +45,9 @@ Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v2 06/11] block: mq-deadline: Disable head insertion for zoned writes
-Date:   Tue, 18 Apr 2023 15:39:57 -0700
-Message-ID: <20230418224002.1195163-7-bvanassche@acm.org>
+Subject: [PATCH v2 07/11] block: mq-deadline: Preserve write streams for all device types
+Date:   Tue, 18 Apr 2023 15:39:58 -0700
+Message-ID: <20230418224002.1195163-8-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 In-Reply-To: <20230418224002.1195163-1-bvanassche@acm.org>
 References: <20230418224002.1195163-1-bvanassche@acm.org>
@@ -64,28 +64,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make sure that zoned writes (REQ_OP_WRITE and REQ_OP_WRITE_ZEROES) are
-submitted in LBA order. This patch does not affect REQ_OP_WRITE_APPEND
-requests.
+For SSDs, preserving a write stream reduces the number of active zones.
+This is important for devices that restrict the number of active zones.
 
 Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/mq-deadline.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 4a0a269db382..a73e16d3f8ac 100644
+index a73e16d3f8ac..3122c471f473 100644
 --- a/block/mq-deadline.c
 +++ b/block/mq-deadline.c
-@@ -796,7 +796,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+@@ -381,16 +381,14 @@ deadline_next_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
+ 	 * an unlocked target zone. For some HDDs, breaking a sequential
+ 	 * write stream can lead to lower throughput, so make sure to preserve
+ 	 * sequential write streams, even if that stream crosses into the next
+-	 * zones and these zones are unlocked.
++	 * zones and these zones are unlocked. For SSDs, do not break write
++	 * streams to minimize the number of active zones.
+ 	 */
+ 	spin_lock_irqsave(&dd->zone_lock, flags);
+ 	while (rq) {
+ 		if (blk_req_can_dispatch_to_zone(rq))
+ 			break;
+-		if (blk_queue_nonrot(rq->q))
+-			rq = deadline_latter_request(rq);
+-		else
+-			rq = deadline_skip_seq_writes(dd, rq);
++		rq = deadline_skip_seq_writes(dd, rq);
+ 	}
+ 	spin_unlock_irqrestore(&dd->zone_lock, flags);
  
- 	trace_block_rq_insert(rq);
- 
--	if (flags & BLK_MQ_INSERT_AT_HEAD) {
-+	if ((flags & BLK_MQ_INSERT_AT_HEAD) && !blk_rq_is_seq_zoned_write(rq)) {
- 		list_add(&rq->queuelist, &per_prio->dispatch);
- 		rq->fifo_time = jiffies;
- 	} else {
