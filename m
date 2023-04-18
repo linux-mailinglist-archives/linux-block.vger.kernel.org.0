@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6618F6E6F81
-	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 00:40:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9B866E6F80
+	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 00:40:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232654AbjDRWkc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 18:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
+        id S231520AbjDRWkb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 18:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231769AbjDRWkZ (ORCPT
+        with ESMTP id S232654AbjDRWkZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Tue, 18 Apr 2023 18:40:25 -0400
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFEE7A251
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:18 -0700 (PDT)
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1a667067275so21583045ad.1
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:18 -0700 (PDT)
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CC3A5C6
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:19 -0700 (PDT)
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-63b620188aeso2858534b3a.0
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681857618; x=1684449618;
+        d=1e100.net; s=20221208; t=1681857619; x=1684449619;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z/M3kPY105uxj/j0StHX/h+c4QrQKm3SykbAKuiTRN4=;
-        b=Zy0ZZqGNsxvwBa30k6O3j+i7rXbJVo/Uh4mXLbmdSaX1MoNaAt5HCy7CZxyjcRPaxK
-         uzRoImRxFDMZE0/CCrCkF08sQeRHYH128geUDnTsqkYoFw9tYaJp7POw9m29oqoLvv2b
-         UiZnaf6kISnHg9NqM5ZxVN2mC4HajWrBpuLB/YxJ0+IpnPb6EZxwUaWffgtAnOGoQSZ1
-         4Lvt3qGfx7rUHfzS8/ECr8cx4iZypV8kwn9YcdQdj5z9MJv7aafbzgVuY854LSFtaNrw
-         KTB1kRJdoaCIeVkNb3I36dwZawG0aPJyhRaurlj27JX1jbMdT9wguS5ggMr8kQOmphk9
-         TDbQ==
-X-Gm-Message-State: AAQBX9dprDx+Bp59QONv6BvFVmlUmbiSETgTQI9nJcSob+Qduf0HWCYe
-        mYJCwNciSrI/UVkEf1PszKg=
-X-Google-Smtp-Source: AKy350ZM5JgJLZpbNShiS1m9wBb3HvzDmtcWXUXbBpD22Hf2jEoH++DdE/M9fLGS0mlcYLsCMp8a7g==
-X-Received: by 2002:a17:902:e802:b0:19f:8ad5:4331 with SMTP id u2-20020a170902e80200b0019f8ad54331mr3959933plg.38.1681857618044;
-        Tue, 18 Apr 2023 15:40:18 -0700 (PDT)
+        bh=fRAofSqTGr8thWv6K8/33dM7IjWJELRCM5q93U6DUBs=;
+        b=D168mPNc4D/wRa9NjTjdLmtsk3TZSAIlikUvOSa0g/Ao27IGG3lLyXzf+a1ft0mrws
+         UGWDmxpaz8aGoDIbLiwyDAbOyKgl7T8VrZN6KPiX0bnRVPBzs5GzwTrJuk8NszADoA8O
+         El/KbfChq4QIMglKpBGlToutQzI4rmKrON04Aj7m0/e6GgE8nJwy59qEv4v1e0n30yMz
+         dxfuqU+4qJBxc/YhJ91IC/5f/ZWDu2DJaTdGm1dN46SGOlMHHMRCxXffd1MGdMCbDjG6
+         lSU24yAMfQFJ6Rf/b4oSg3Rao58/YR91ByABv+DW2V66saRrchFgq2oVduOv8DndYVCP
+         AS3w==
+X-Gm-Message-State: AAQBX9eOP0uav+r20JzvqHaIewGGCrF7aLns+uuk31L2nRgkfx1n3uPe
+        861VYFU+oDiMP0QD75TOeeU=
+X-Google-Smtp-Source: AKy350ZwgJJBwnWTYF0VWIESg1d0fVRtLKJP+IdDOvJUtEfjnk2DlRfAkN76KkP3PY5zrxqjGPSSag==
+X-Received: by 2002:a17:903:7d0:b0:1a6:7510:170a with SMTP id ko16-20020a17090307d000b001a67510170amr2850744plb.11.1681857619293;
+        Tue, 18 Apr 2023 15:40:19 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5d9b:263d:206c:895a])
-        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.17
+        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 15:40:17 -0700 (PDT)
+        Tue, 18 Apr 2023 15:40:18 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -45,9 +45,9 @@ Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v2 08/11] block: mq-deadline: Fix a race condition related to zoned writes
-Date:   Tue, 18 Apr 2023 15:39:59 -0700
-Message-ID: <20230418224002.1195163-9-bvanassche@acm.org>
+Subject: [PATCH v2 09/11] block: mq-deadline: Handle requeued requests correctly
+Date:   Tue, 18 Apr 2023 15:40:00 -0700
+Message-ID: <20230418224002.1195163-10-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 In-Reply-To: <20230418224002.1195163-1-bvanassche@acm.org>
 References: <20230418224002.1195163-1-bvanassche@acm.org>
@@ -64,61 +64,68 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Let deadline_next_request() only consider the first zoned write per
-zone. This patch fixes a race condition between deadline_next_request()
-and completion of zoned writes.
+If a zoned write is requeued with an LBA that is lower than already
+inserted zoned writes, make sure that it is submitted first.
 
 Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ block/mq-deadline.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 3122c471f473..32a2cc013ed3 100644
+index 32a2cc013ed3..4d2bfb3898b0 100644
 --- a/block/mq-deadline.c
 +++ b/block/mq-deadline.c
-@@ -302,6 +302,7 @@ static bool deadline_is_seq_write(struct deadline_data *dd, struct request *rq)
- 	return blk_rq_pos(prev) + blk_rq_sectors(prev) == blk_rq_pos(rq);
+@@ -160,8 +160,22 @@ static void
+ deadline_add_rq_rb(struct dd_per_prio *per_prio, struct request *rq)
+ {
+ 	struct rb_root *root = deadline_rb_root(per_prio, rq);
++	struct request **next_rq __maybe_unused;
+ 
+ 	elv_rb_add(root, rq);
++#ifdef CONFIG_BLK_DEV_ZONED
++	next_rq = &per_prio->next_rq[rq_data_dir(rq)];
++	if (*next_rq == NULL || !blk_queue_is_zoned(rq->q))
++		return;
++	/*
++	 * If a request got requeued or requests have been submitted out of
++	 * order, make sure that per zone the request with the lowest LBA is
++	 * submitted first.
++	 */
++	if (blk_rq_pos(rq) < blk_rq_pos(*next_rq) &&
++	    blk_rq_zone_no(rq) == blk_rq_zone_no(*next_rq))
++		*next_rq = rq;
++#endif
  }
  
-+#ifdef CONFIG_BLK_DEV_ZONED
- /*
-  * Skip all write requests that are sequential from @rq, even if we cross
-  * a zone boundary.
-@@ -318,6 +319,7 @@ static struct request *deadline_skip_seq_writes(struct deadline_data *dd,
+ static inline void
+@@ -816,6 +830,8 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 		list_add(&rq->queuelist, &per_prio->dispatch);
+ 		rq->fifo_time = jiffies;
+ 	} else {
++		struct list_head *insert_before;
++
+ 		deadline_add_rq_rb(per_prio, rq);
  
- 	return rq;
- }
-+#endif
- 
- /*
-  * For the specified data direction, return the next request to
-@@ -386,9 +388,25 @@ deadline_next_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
- 	 */
- 	spin_lock_irqsave(&dd->zone_lock, flags);
- 	while (rq) {
-+		unsigned int zno __maybe_unused;
-+
- 		if (blk_req_can_dispatch_to_zone(rq))
- 			break;
-+
+ 		if (rq_mergeable(rq)) {
+@@ -828,7 +844,16 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 		 * set expire time and add to fifo list
+ 		 */
+ 		rq->fifo_time = jiffies + dd->fifo_expire[data_dir];
+-		list_add_tail(&rq->queuelist, &per_prio->fifo_list[data_dir]);
++		insert_before = &per_prio->fifo_list[data_dir];
 +#ifdef CONFIG_BLK_DEV_ZONED
-+		zno = blk_rq_zone_no(rq);
++		if (blk_rq_is_seq_zoned_write(rq)) {
++			struct request *rq2 = deadline_latter_request(rq);
 +
- 		rq = deadline_skip_seq_writes(dd, rq);
-+
-+		/*
-+		 * Skip all other write requests for the zone with zone number
-+		 * 'zno'. This prevents that this function selects a zoned write
-+		 * that is not the first write for a given zone.
-+		 */
-+		while (rq && blk_rq_zone_no(rq) == zno &&
-+		       blk_rq_is_seq_zoned_write(rq))
-+			rq = deadline_latter_request(rq);
++			if (rq2 && blk_rq_zone_no(rq2) == blk_rq_zone_no(rq))
++				insert_before = &rq2->queuelist;
++		}
 +#endif
++		list_add_tail(&rq->queuelist, insert_before);
  	}
- 	spin_unlock_irqrestore(&dd->zone_lock, flags);
+ }
  
