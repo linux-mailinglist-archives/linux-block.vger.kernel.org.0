@@ -2,137 +2,135 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E66C26E6089
-	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 14:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6086D6E6387
+	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 14:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbjDRL7u (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 07:59:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38860 "EHLO
+        id S231847AbjDRMlT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 08:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbjDRL5r (ORCPT
+        with ESMTP id S231854AbjDRMlT (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Apr 2023 07:57:47 -0400
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C616A25A
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 04:54:27 -0700 (PDT)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20230418115423euoutp029b384b27cfa120d007adad405166b2f3~XBViOd-5o0631506315euoutp02c
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 11:54:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20230418115423euoutp029b384b27cfa120d007adad405166b2f3~XBViOd-5o0631506315euoutp02c
+        Tue, 18 Apr 2023 08:41:19 -0400
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0486E146C1
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 05:41:11 -0700 (PDT)
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230418123148epoutp02ce8bab3b32afc735257a1edebc72c9c5~XB2MflvMl0870908709epoutp02q
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 12:31:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230418123148epoutp02ce8bab3b32afc735257a1edebc72c9c5~XB2MflvMl0870908709epoutp02q
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1681818863;
-        bh=uZTIN15FUrCZt6ZT7djzR3poFqTWXDeaDaq4u2/bwr8=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=jLrIhoOgCV3BfU9+2fxgubBjGuAV2oX/n2wg2fXhrRlZfWjEzGHC3y5ZlWuVSHtvv
-         DD7axuGKaSBqp/dUCFK0LbPGXaH3ru89nD+1fZW8sbDAUflztxH5coE/04jO62VzfI
-         bVV25ZtU31C7gI1LgARnucsCpmeCI6U4W1lklz88=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230418115423eucas1p28845e879ed78d4d0b40be6d5a55861db~XBVh0lcOi0687806878eucas1p2Y;
-        Tue, 18 Apr 2023 11:54:23 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E4.01.09966.FE48E346; Tue, 18
-        Apr 2023 12:54:23 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230418115422eucas1p1cf843ce2362ef4b5937b0aad6f90e573~XBVhfvmhp3174231742eucas1p1Z;
-        Tue, 18 Apr 2023 11:54:22 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230418115422eusmtrp1985d4c96fe9e1088f164dca654c50349~XBVhfCM183217932179eusmtrp1S;
-        Tue, 18 Apr 2023 11:54:22 +0000 (GMT)
-X-AuditID: cbfec7f4-55954a80000026ee-d3-643e84efdf52
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id BC.63.22108.EE48E346; Tue, 18
-        Apr 2023 12:54:22 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230418115422eusmtip1e5eaf4e13a68070fa6995eeef4fe5d4a~XBVhWjSAt1118811188eusmtip1x;
-        Tue, 18 Apr 2023 11:54:22 +0000 (GMT)
-Received: from localhost (106.110.32.140) by CAMSVWEXC02.scsc.local
-        (2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-        Tue, 18 Apr 2023 12:54:22 +0100
-Date:   Tue, 18 Apr 2023 13:45:52 +0200
-From:   Pankaj Raghav <p.raghav@samsung.com>
-To:     Chaitanya Kulkarni <kch@nvidia.com>
-CC:     <linux-block@vger.kernel.org>, <axboe@kernel.dk>,
-        <dlemoal@kernel.org>, <johannes.thumshirn@wdc.com>,
-        <bvanassche@acm.org>, <vincent.fu@samsung.com>,
-        <shinichiro.kawasaki@wdc.com>, <yukuai3@huawei.com>,
-        <p.raghav@samsung.com>
-Subject: Re: [PATCH V2 1/1] null_blk: allow user to set QUEUE_FLAG_NOWAIT
-Message-ID: <20230418114552.4kx5huy2qo64dzjl@blixen>
+        s=mail20170921; t=1681821108;
+        bh=1WRd5iEcmaNEFf0Z9O+4Q40zENmc+eV+2VGKGjrgUBI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OXZT50kFmh+745VlsiYpm6nFrif11zTT6RxWGVeUJF1I5e6fnEGoXw1yjei3L0meT
+         hJlT5oqLBjLrdq6YLKcK1ZoEDqBTDx9KtrpZ0TSP9Z8R7G+gq87eWqr7l1c+W2drSN
+         SqrrBGtjbf2YcHYcIiRxaOFJ0IHROYokxNkCrn7s=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20230418123147epcas5p2d7ad8d98b29d88095db90a0871892d69~XB2MRX-Wg1589215892epcas5p2g;
+        Tue, 18 Apr 2023 12:31:47 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.180]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4Q13FZ59f8z4x9Px; Tue, 18 Apr
+        2023 12:31:46 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EA.79.09987.2BD8E346; Tue, 18 Apr 2023 21:31:46 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230418123146epcas5p38b605ff4561743cae7025a744043c941~XB2K5Tvrq0836608366epcas5p3j;
+        Tue, 18 Apr 2023 12:31:46 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230418123146epsmtrp189f4bcbad33c0dc79a0b047e2ef16d56~XB2K4pDEl2680126801epsmtrp1c;
+        Tue, 18 Apr 2023 12:31:46 +0000 (GMT)
+X-AuditID: b6c32a4b-a67fd70000002703-4e-643e8db28988
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2B.0B.08279.2BD8E346; Tue, 18 Apr 2023 21:31:46 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20230418123145epsmtip281a72049f2eb50bed77fcf10eac688b0~XB2KPQRZM0356303563epsmtip2K;
+        Tue, 18 Apr 2023 12:31:45 +0000 (GMT)
+Date:   Tue, 18 Apr 2023 17:58:51 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     hch@lst.de, linux-block@vger.kernel.org
+Subject: Re: How best to get the size of a blockdev from a file?
+Message-ID: <20230418122833.GA14457@green245>
 MIME-Version: 1.0
-In-Reply-To: <20230418042420.93629-2-kch@nvidia.com>
-X-Originating-IP: [106.110.32.140]
-X-ClientProxiedBy: CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) To
-        CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djP87rvW+xSDFpnClqsvtvPZjHtw09m
-        iwf77S3+dt1jsnh6dRaTxd5b2hb7ZnlazFnI5sDhcfmKt0fLkbesHpfPlnpsWtXJ5tHb/I7N
-        4/MmOY/2A91MAexRXDYpqTmZZalF+nYJXBkXN89jLtjIXLG40bCB8S9TFyMHh4SAicSeie5d
-        jJwcQgIrGCW2b6vqYuQCsr8wSrxvP8gM4XxmlPi1oYsdpAqk4fui/awQieWMEh9P/WaFq2r7
-        fZgRwtkCNGvOGlaQFhYBVYnZr+Yzg+xjE9CSaOwEmyQioC4x9UAPWDOzwGtGiZ+/zrCC1AgL
-        eEps6dMBqeEF2vZn1x4WCFtQ4uTMJ2A2J1D8664tUBcpSTRsPsMCYddK7G0+wA4yU0LgA4fE
-        1IXXmSASLhI3Dk1khbCFJV4dh2mWkTg9uQequVri6Y3fzBDNLYwS/TvXs0ECyVqi70wOSA2z
-        QIbEki97oOY4Sux4P4kdooRP4sZbQYgSPolJ26YzQ4R5JTrahCCq1SRW33vDAhGWkTj3iW8C
-        o9IsJI/NQjIfwtaRWLD7E9ssoA5mAWmJ5f84IExNifW79Bcwsq5iFE8tLc5NTy02ykst1ytO
-        zC0uzUvXS87P3cQITFKn/x3/soNx+auPeocYmTgYDzFKcDArifCecbVKEeJNSaysSi3Kjy8q
-        zUktPsQozcGiJM6rbXsyWUggPbEkNTs1tSC1CCbLxMEp1cA0a9GC2ucLihdmJpfmTV/9QGZr
-        3Jm7c5jP35hz5YvaelWvdGWmh7I7Zz/MsWOpfBc7JWuh9xQrgQsu5rMFm1bH3Ju0X82h5u1e
-        r/DzHz4ZT55kyt35OOeg/NqpGc/+vp+cd6BCROG4U6dI9wkX10NVp/ua395cE/no81yp6Y96
-        M7JbrR7HmSY6c0Tevz9zYZu+ofi7JpPVP5OdQ1RPs9x8fnuV9MRI3UeyrBMsG0xfmfwwmpbd
-        vVD0hPFrxX0+h7d8fLxPpZj5C1+W7KZnNnP5pO+UNGgHK/G3CNqsfR/37azqvInx4QW7fxi1
-        3l69zWWni9ge8bU79yZaiMle0BL+suSSGcP9y4Lv2ux73gUrKLEUZyQaajEXFScCAMTl1JLB
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsVy+t/xu7rvWuxSDD5MtLBYfbefzWLah5/M
-        Fg/221v87brHZPH06iwmi723tC32zfK0mLOQzYHD4/IVb4+WI29ZPS6fLfXYtKqTzaO3+R2b
-        x+dNch7tB7qZAtij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMy
-        y1KL9O0S9DIeLJzKXlBY8fn3XuYGxrAuRk4OCQETie+L9rN2MXJxCAksZZT41b2DESIhI7Hx
-        y1VWCFtY4s+1LjaIoo+MEq+eTmcBSQgJbGGUmPkoDcRmEVCVmP1qPnMXIwcHm4CWRGMnO0hY
-        REBdYuqBHrAFzAIvGSWWHPgFViMs4CmxpU8HpIYX6Ig/u/awgISFBGIlHl7whAgLSpyc+QRs
-        E7OAjsSC3Z/YQEqYBaQllv/jAAlzAnV+3bWFHeJKJYmGzWdYIOxaic5Xp9kmMArPQjJpFpJJ
-        sxAmLWBkXsUoklpanJueW2yoV5yYW1yal66XnJ+7iREYe9uO/dy8g3Heq496hxiZOBgPMUpw
-        MCuJ8J5xtUoR4k1JrKxKLcqPLyrNSS0+xGgKDIeJzFKiyfnA6M8riTc0MzA1NDGzNDC1NDNW
-        Euf1LOhIFBJITyxJzU5NLUgtgulj4uCUamASYxXo5pmpkX/F/Ev2FeMyLakodp+ij+fmqTDp
-        cMs2bHoRxvLzokbBpRPMiTXtgVWXdMqmnHp9Sr3cydea8YRAvnlwtXva84vOq9mCha87PRaZ
-        dX12ucuEI6rLxW3e3ZzrPy2mcu7U55283IvfJvAcMcu9Wn/tbbS/WK6yjdq56dfX3hV47iew
-        NXnyrecdX965JD3MkvttzSnz+Wpw0OU1dmd2NM1pNSjf2TpLQ+9S9OQfWxXuLnl5xuBv04nS
-        R65LU4pDHA8Zxu/dkzkpVqNS3OdkuNUR0XKl0zsrur9FsH+JCO3umfXkitLqqDI9/w03usSv
-        5OhejXmwuuLlR7a3Z69aSJYGvbiubGSSXq3EUpyRaKjFXFScCABQ9T6cRgMAAA==
-X-CMS-MailID: 20230418115422eucas1p1cf843ce2362ef4b5937b0aad6f90e573
+In-Reply-To: <1609851.1681812012@warthog.procyon.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPKsWRmVeSWpSXmKPExsWy7bCmuu6mXrsUg98P1SzeNf1msVi5+iiT
+        xd5b2g7MHrtvNrB5vN93lc3j8ya5AOaobJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11D
+        SwtzJYW8xNxUWyUXnwBdt8wcoD1KCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAKT
+        Ar3ixNzi0rx0vbzUEitDAwMjU6DChOyM1sZG5oI+toq+608ZGxgXs3YxcnJICJhIrPt8nq2L
+        kYtDSGA3o8SftQuYIZxPjBKzu84wQTjfGCVmXD7JDtPy/v1hZhBbSGAvo8TBpXUQRc8YJS5/
+        f8oEkmARUJW437KEsYuRg4NNQFPiwuRSkLCIgLrEo2UbwXqZBbQlZt7ZxwZiCws4SMw/9wCs
+        lVdAV2LXzw5WCFtQ4uTMJywgNqeAhcTEr3fBekUFlCUObDsOdpyEwDl2iesvNjFDHOcisWjr
+        DxYIW1ji1fEtUEdLSbzsb4OykyUuzTzHBGGXSDzecxDKtpdoPdUPdVyGxOfrG9ggbD6J3t9P
+        mEB+kRDglehoE4IoV5S4N+kpNBjFJR7OWAJle0hcvvqCHRIm3YwSt/5uZZ/AKDcLyT+zkKyA
+        sK0kOj80sc4CWsEsIC2x/B8HhKkpsX6X/gJG1lWMkqkFxbnpqcWmBcZ5qeXwOE7Oz93ECE55
+        Wt47GB89+KB3iJGJg/EQowQHs5II7xlXqxQh3pTEyqrUovz4otKc1OJDjKbA6JnILCWanA9M
+        unkl8YYmlgYmZmZmJpbGZoZK4rzqtieThQTSE0tSs1NTC1KLYPqYODilGpjYAi6+V1id9Gdm
+        iVC7eJJfjuh6KfmD699o/+PaYrBJsnl2QPxWazFXsXfJ007zfHE3uGPxJ23Lv9e2PJv5MlaU
+        aWYolHd+sFiw+PnXT3VTFdILWuqPvAxg/Jp86IH+jHXLDijM+nZx86n/N39O9cnxvZyq16qw
+        tfW65H5+v9B7/7586srkYJxobv1TvG5vTK7L0SX/9/fHV356Un3ARPP906sLGm6pmLkcMA6+
+        ff5z7MlLC6Jf7zPbOYO9+M3y0zWzz0g5n13m9eakyOzidcyxIqo51/Z7XEs1rgpV5Mq6aXNt
+        8SR/K0bPJX8n2k7XOt/A/vp7vXur68x3LEae+qa3F9Rcq4+WEd9+zZxPxGCSEktxRqKhFnNR
+        cSIAmJyyEwIEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHLMWRmVeSWpSXmKPExsWy7bCSvO6mXrsUgxXPhCzeNf1msVi5+iiT
+        xd5b2g7MHrtvNrB5vN93lc3j8ya5AOYoLpuU1JzMstQifbsEroyF53czFhxgrtjS+oG9gfE9
+        UxcjJ4eEgInE+/eHmbsYuTiEBHYzSmy5/54dIiEu0XztB5QtLLHy33N2iKInjBJdvRcZQRIs
+        AqoS91uWANkcHGwCmhIXJpeChEUE1CUeLdvIDGIzC2hLzLyzjw3EFhZwkJh/7gHYYl4BXYld
+        PztYIWZ2M0o0nzjBDpEQlDg58wkLRLOZxLzND5lB5jMLSEss/8cBEuYUsJCY+PUu2HxRAWWJ
+        A9uOM01gFJyFpHsWku5ZCN0LGJlXMUqmFhTnpucWGxYY5qWW6xUn5haX5qXrJefnbmIEB7GW
+        5g7G7as+6B1iZOJgPMQowcGsJMJ7xtUqRYg3JbGyKrUoP76oNCe1+BCjNAeLkjjvha6T8UIC
+        6YklqdmpqQWpRTBZJg5OqQYmVrNXU5oWMzWXplgvmxH/dynHQtsX7K8cC67EONQs3FpYvM9J
+        xS58S9nXfYrtC7gWLOhqXb44J+Zgy77bc8QmXJskfVSEbfF1u6U/3v3irTZokYiuZ9taN2e7
+        tc/PEJYvITt9w0+flmrbwfioMDch7eqt6hPzHW6oVoeLTOGRUy1ebhAz+8QPzrIM590f2w89
+        vODjeLt/SqBSf3/t/+1Bs3p9EhM41FSEtkxOez29c/GV9a9sU1a2Z/yYPW2iVa+19dG0KauK
+        zZQ+VVw78GGV3enF351vhxgzuxrpPDCcdGXBj3+rvXiyfuz/tahY1qzc/ef0iEdu0k3CjyTC
+        VRzf7zQ0ttK51LVSvUiY98YBJZbijERDLeai4kQAiwHoi9ECAAA=
+X-CMS-MailID: 20230418123146epcas5p38b605ff4561743cae7025a744043c941
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-        boundary="----FpY3PJutWHT.FUJYa--SeN9KPCWgRG3v2_zRI2jDLaEn3nif=_a5aea_"
-X-RootMTR: 20230418115422eucas1p1cf843ce2362ef4b5937b0aad6f90e573
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230418115422eucas1p1cf843ce2362ef4b5937b0aad6f90e573
-References: <20230418042420.93629-1-kch@nvidia.com>
-        <20230418042420.93629-2-kch@nvidia.com>
-        <CGME20230418115422eucas1p1cf843ce2362ef4b5937b0aad6f90e573@eucas1p1.samsung.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        boundary="----M1XhpxpcEzXMl-TZDJz3dv6uQhpc8LNXMKbaeBmU9jEugurT=_27504_"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230418100108epcas5p2d0f2a7a274e78731373986b3d4fced9b
+References: <CGME20230418100108epcas5p2d0f2a7a274e78731373986b3d4fced9b@epcas5p2.samsung.com>
+        <1609851.1681812012@warthog.procyon.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------FpY3PJutWHT.FUJYa--SeN9KPCWgRG3v2_zRI2jDLaEn3nif=_a5aea_
-Content-Type: text/plain; charset="us-ascii"
+------M1XhpxpcEzXMl-TZDJz3dv6uQhpc8LNXMKbaeBmU9jEugurT=_27504_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
-Ah, I think I replied to your v1 patches but the same comments are also
-applicable here.
+On Tue, Apr 18, 2023 at 11:00:12AM +0100, David Howells wrote:
+>Hi Christoph,
+>
+>It seems that my use of i_size_read(file_inode(in)) in filemap_splice_read()
+>to get the size of the file to be spliced from doesn't work in the case of
+>blockdevs and it always returns 0.
+>
+>What would be the best way to get the blockdev size?  Look at
+>file->f_mapping->i_size maybe?
 
--- 
-Pankaj Raghav
+bdev_nr_bytes(I_BDEV(file->f_mapping->host))
+should work I suppose.
 
-------FpY3PJutWHT.FUJYa--SeN9KPCWgRG3v2_zRI2jDLaEn3nif=_a5aea_
+------M1XhpxpcEzXMl-TZDJz3dv6uQhpc8LNXMKbaeBmU9jEugurT=_27504_
 Content-Type: text/plain; charset="utf-8"
 
 
-------FpY3PJutWHT.FUJYa--SeN9KPCWgRG3v2_zRI2jDLaEn3nif=_a5aea_--
+------M1XhpxpcEzXMl-TZDJz3dv6uQhpc8LNXMKbaeBmU9jEugurT=_27504_--
