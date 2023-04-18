@@ -2,109 +2,273 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FBA46E631F
-	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 14:38:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B62A6E6537
+	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 15:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230053AbjDRMiH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 08:38:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53732 "EHLO
+        id S230033AbjDRNCU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 09:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231773AbjDRMiD (ORCPT
+        with ESMTP id S232284AbjDRNCS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Apr 2023 08:38:03 -0400
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 492C113842
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 05:37:58 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id B186A2B0671E;
-        Tue, 18 Apr 2023 08:37:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 18 Apr 2023 08:37:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-        cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1681821477; x=1681822077; bh=J3
-        VbPEwN3rqi4dOinK9dIl9bhyZN19WIqCTWpea9RiI=; b=JaXRK675OvwH+jkYNp
-        fnthYDXNx7cdKJ8+M9qU8Z3vljw96JyuChvkVuorvGiWgAAwILOXOUYWUmDJUYI7
-        gA+5D1529ENEDzcvktG8sQ1i79E30g8iM/hL2OQBh5Mdu8NFmASvXxn+7qJY1gdp
-        qTY54URKjRzESh+A33UuPuTD7zldRab61zxGuFAqVrdguQncQ/9VnBtcmLeVmXRt
-        N7Zz59mZ5X/Ru7OKV5jaIenDxA47aJCz+XsW/qCMAv/VcgfOO3X7Xd406uEDh4Zo
-        6wcpQPANOH2+hJY7QntPFksh7eM+fDCoQ/kE5gXvMyj8Rc7uQQxhWUqqCmHqxVw9
-        bnpg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=ie1e949a3.fm3; t=1681821477; x=1681822077; bh=J3V
-        bPEwN3rqi4dOinK9dIl9bhyZN19WIqCTWpea9RiI=; b=KTmhh+UR1xNgqTl6NOO
-        yu1CI6P5YnNvkKfKd3mJ1ApeXIXZKsZMeiOcmDqjgLwVJMuBWGZjzv7095y/iiqb
-        QBFMbgjoKiiyP2C3EtzDzyergtou+B6JykBsyHVLsTWQaarXDxh68YdfgCQPexRx
-        4y63deEFIghK9XM9/Y8GeJxvCmT+EkOHuR7XWCzx16C27f5sOT0uILvGpswqFPts
-        +szOdfuuDuTX+BcrTjUS+hTpWFBCF1n4yoBGMQoX+pvhO4qdl/+73m394fzO81PH
-        UjA1l7OHKJ3X6jdyXLWlJJtzSow034NrmiSwY2Mpm+wmJ+62r+wEFm2D6NRW+I33
-        9Tg==
-X-ME-Sender: <xms:JI8-ZPsJAn0gNtlHT6xj9SiF_7XXPAm5MR53VrXXLdMHUHkbTPOVww>
-    <xme:JI8-ZAfeLzRmlkZTjr8A6dQ8FEw4evwCCJCXywkOkQJzHTr_rki59ZnWxQ6lc-w6u
-    h-gXMl2fDJlnTavsJo>
-X-ME-Received: <xmr:JI8-ZCwrsPHuzLHIL4sq8cJjs6QkGwwkLNFrWJDLCRQ2ze8ryiR1xXRijmcpX1t7N3gnjIpgR9DqtA_9TsCEdw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdelkedgheegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvdenucfhrhhomhepufhhihhn
-    kdhitghhihhrohcumfgrfigrshgrkhhiuceoshhhihhnihgthhhirhhosehfrghsthhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvdegtdfgvdfhgfekvdektdfgfeeljeel
-    gefgkedujeeiteehgefhgeethffgheehnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepshhhihhnihgthhhirhhosehfrghsthhmrghilhdrtgho
-    mh
-X-ME-Proxy: <xmx:JI8-ZONVP2goSPI30CRIeJNtb67fPlnhT-P4BEnsVc_kXXxhoAjmfw>
-    <xmx:JI8-ZP9HqY2PfwO9wVw-Uo_aTniTyzYzs6ZqokbbG7FJ3F2NjWDXfA>
-    <xmx:JI8-ZOVdvWn3_mCtAyV0eqanR4BUsy3N33rW3UymRXmMvCwDgn6z4A>
-    <xmx:JY8-ZLZybk9OFS0dALkqzRauOFkG0AnJhgCxaKheDfr0nZ4WVsrEHfHVRgn87V66>
-Feedback-ID: ie1e949a3:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 18 Apr 2023 08:37:55 -0400 (EDT)
-Date:   Tue, 18 Apr 2023 21:37:52 +0900
-From:   Shin'ichiro Kawasaki <shinichiro@fastmail.com>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        shinichiro.kawasaki@wdc.com, chaitanyak@nvidia.com,
-        hch@infradead.org
-Subject: Re: [PATCH v2 blktests] don't require modular null_blk for
- fault-injection
-Message-ID: <55byiexrqbbhiftyiwi6xg7t2av5va6jj5zyntejqniq4l2g7z@ofej27qygtqg>
-References: <20230416043744.25646-1-akinobu.mita@gmail.com>
+        Tue, 18 Apr 2023 09:02:18 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3542126AE;
+        Tue, 18 Apr 2023 06:02:11 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id B54D31F8D7;
+        Tue, 18 Apr 2023 13:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1681822929; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=YmGp27V7vgaUQ2zzNolY+Ow/6qOXdLQK1cMzzRDMuOk=;
+        b=TaqJz3lZ9k/JoSEsopHdTwbbvy1xzajMsauU/asXld2VdNGbINE1d4vJMk7EexpwQr3WM5
+        EE+Uv6CWnJ3w7KgaA8652FNurshiZximbz0QuB8aVheYUcupwancHXaJP3/Ffb1tqzYgD8
+        yXjDglvaOQM8PL3by9STJV2q1axcWxg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1681822929;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=YmGp27V7vgaUQ2zzNolY+Ow/6qOXdLQK1cMzzRDMuOk=;
+        b=7ldHwj8B7xsHusrsjiTm5Y5kIGlLISsrljbhlm3lZl3QTHFXgwrslVLYfoS+pr1wAoZvfV
+        cP60mqwTym1YS3AA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A3D3E139EC;
+        Tue, 18 Apr 2023 13:02:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id hED5J9GUPmR8JwAAMHmgww
+        (envelope-from <dwagner@suse.de>); Tue, 18 Apr 2023 13:02:09 +0000
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        James Smart <james.smart@broadcom.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Martin Belanger <Martin.Belanger@dell.com>,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v3 0/4] nvmet-fcloop: unblock module removal
+Date:   Tue, 18 Apr 2023 15:01:55 +0200
+Message-Id: <20230418130159.11075-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230416043744.25646-1-akinobu.mita@gmail.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Apr 16, 2023 / 13:37, Akinobu Mita wrote:
-> This blktests change changes null_blk fault-injection settings to be
-> configured via configfs instead of module parameters.
-> This allows null_blk fault-injection tests to run even if the null_blk is
-> built-in the kernel and not built as a module.
-> 
-> If the null_blk does not yet support configuring fault-injection via
-> configfs, fall back to set up with module parameter.
-> 
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
-> * v2
-> - don't skip the tests on older kernels without fault-injection via configfs
+I got it somewhat working with this version here and the blktest fcloop cleanup
+fix[1].
 
-Thanks for this v2 patch. It looks good to me. I'll wait a few more days before
-I apply it in case anyone has some more comments.
+There is a BIG if though. I have to disable manually the auto connect udev rules
+from the host system. I've played a bit around how to disable them during
+runtime. There is a way to inject a runtime global variable into udev rules via
+'udevadm control -p BLKTESTS=1'. The udev rule file can then be extended with a
+rule like 'ENV{BLKTESTS}="1", GOTO=...' but I was not able to get this working
+reliable. It looks like the update is not getting promotted to all udev daemon
+threads. Even a 'sleep 5' or 'udevadm settle' didn't help.
 
-One nit in the commit title: it's the better to have the prefix
-"block/{014,015,030}: " to clarify the test cases this commit touches. I'll do
-the edit when I apply this patch.
+The only way I found so far is to do
+
+  ln -s /dev/null /etc/udev/rules.d/70-nvmf-autoconnect.rules
+
+which obviously sucks. IIRC, Martin B has the same issue with nvme-stats and
+nvme-cli...
+
+Anyway, it doesn't creash anymore and there are not warning from lockdep or
+KASAN. The first few tests cases are passing. So the failing ones could actually
+be 'real' bugs, who knows :)
+
+# nvme_trtype=fc ./check nvme
+nvme/002 (create many subsystems and test discovery)         [not run]
+    nvme_trtype=fc is not supported in this test
+nvme/003 (test if we're sending keep-alives to a discovery controller)
+nvme/003 (test if we're sending keep-alives to a discovery controller) [passed]
+    runtime  10.277s  ...  10.479srt: No such file or directory
+nvme/004 (test nvme and nvmet UUID NS descriptors)           [passed]
+    runtime  1.976s  ...  1.723s
+nvme/005 (reset local loopback target)                       [passed]
+    runtime  2.203s  ...  1.829s
+nvme/006 (create an NVMeOF target with a block device-backed ns) [passed]
+    runtime  0.248s  ...  0.221s
+nvme/007 (create an NVMeOF target with a file-backed ns)     [passed]
+    runtime  0.156s  ...  0.127s
+nvme/008 (create an NVMeOF host with a block device-backed ns) [passed]
+    runtime  1.945s  ...  1.658s
+nvme/009 (create an NVMeOF host with a file-backed ns)       [passed]
+    runtime  1.854s  ...  1.711s
+nvme/010 (run data verification fio job on NVMeOF block device-backed ns) [passed]
+    runtime  44.555s  ...  41.625s
+nvme/011 (run data verification fio job on NVMeOF file-backed ns) [passed]
+    runtime  89.795s  ...  71.931s
+nvme/012 (run mkfs and data verification fio job on NVMeOF block device-backed ns) [passed]
+    runtime  61.607s  ...  49.917s
+nvme/013 (run mkfs and data verification fio job on NVMeOF file-backed ns) [passed]
+    runtime  109.725s  ...  79.189s
+nvme/014 (flush a NVMeOF block device-backed ns)             [passed]
+    runtime  7.902s  ...  5.977s
+nvme/015 (unit test for NVMe flush for file backed ns)       [passed]
+    runtime  7.229s  ...  5.734s
+nvme/016 (create/delete many NVMeOF block device-backed ns and test discovery) [not run]
+    runtime  44.446s  ...  
+    nvme_trtype=fc is not supported in this test
+nvme/017 (create/delete many file-ns and test discovery)     [not run]
+    runtime  45.306s  ...  
+    nvme_trtype=fc is not supported in this test
+nvme/018 (unit test NVMe-oF out of range access on a file backend) [passed]
+    runtime  1.834s  ...  1.721s
+nvme/019 (test NVMe DSM Discard command on NVMeOF block-device ns) [passed]
+    runtime  1.832s  ...  1.804s
+nvme/020 (test NVMe DSM Discard command on NVMeOF file-backed ns) [passed]
+    runtime  1.811s  ...  1.717s
+nvme/021 (test NVMe list command on NVMeOF file-backed ns)   [passed]
+    runtime  1.807s  ...  1.703s
+nvme/022 (test NVMe reset command on NVMeOF file-backed ns)  [passed]
+    runtime  1.914s  ...  1.784s
+nvme/023 (test NVMe smart-log command on NVMeOF block-device ns) [passed]
+    runtime  1.852s  ...  1.730s
+nvme/024 (test NVMe smart-log command on NVMeOF file-backed ns) [passed]
+    runtime  1.730s  ...  1.754s
+nvme/025 (test NVMe effects-log command on NVMeOF file-backed ns) [passed]
+    runtime  1.759s  ...  1.719s
+nvme/026 (test NVMe ns-descs command on NVMeOF file-backed ns) [passed]
+    runtime  1.764s  ...  1.675s
+nvme/027 (test NVMe ns-rescan command on NVMeOF file-backed ns) [passed]
+    runtime  1.734s  ...  1.703s
+nvme/028 (test NVMe list-subsys command on NVMeOF file-backed ns) [passed]
+    runtime  1.831s  ...  1.732s
+nvme/029 (test userspace IO via nvme-cli read/write interface) [passed]
+    runtime  2.388s  ...  2.065s
+nvme/030 (ensure the discovery generation counter is updated appropriately) [passed]
+    runtime  0.756s  ...  0.631s
+nvme/031 (test deletion of NVMeOF controllers immediately after setup) [passed]
+    runtime  4.566s  ...  3.441s
+nvme/038 (test deletion of NVMeOF subsystem without enabling) [passed]
+    runtime  0.054s  ...  0.055s
+nvme/040 (test nvme fabrics controller reset/disconnect operation during I/O)
+nvme/040 (test nvme fabrics controller reset/disconnect operation during I/O) [passed]
+    runtime  7.948s  ...  7.866srk/blktests/results/tmpdir.nvme.040.4lT': Directory not empty
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+modprobe: FATAL: Module loop is in use.
+nvme/041 (Create authenticated connections)                 
+    runtime  0.964s  ...
+WARNING: Test did not clean up fc device: nvme0
+nvme/041 (Create authenticated connections)                  [failed]
+    runtime  0.964s  ...  0.311s
+    --- tests/nvme/041.out      2023-02-20 10:31:10.953935278 +0100
+    +++ /home/wagi/work/blktests/results/nodev/nvme/041.out.bad 2023-04-18 14:31:05.122062907 +0200
+    @@ -1,6 +1,8 @@
+     Running nvme/041
+     Test unauthenticated connection (should fail)
+    +failed to lookup subsystem for controller nvme0
+     NQN:blktests-subsystem-1 disconnected 0 controller(s)
+     Test authenticated connection
+    -NQN:blktests-subsystem-1 disconnected 1 controller(s)
+    +failed to lookup subsystem for controller nvme0
+    ...
+    (Run 'diff -u tests/nvme/041.out /home/wagi/work/blktests/results/nodev/nvme/041.out.bad' to see the entire diff)
+WARNING: Test did not clean up fc device: nvme0
+failed to lookup subsystem for controller nvme0
+Did not find device nvme0
+nvme/042 (Test dhchap key types for authenticated connections) [failed]
+    runtime  4.495s  ...  4.226s
+    --- tests/nvme/042.out      2022-08-30 10:20:14.174819528 +0200
+    +++ /home/wagi/work/blktests/results/nodev/nvme/042.out.bad 2023-04-18 14:31:09.654086133 +0200
+    @@ -1,7 +1,9 @@
+     Running nvme/042
+     Testing hmac 0
+    +failed to lookup subsystem for controller nvme0
+     NQN:blktests-subsystem-1 disconnected 1 controller(s)
+     Testing hmac 1
+    +failed to lookup subsystem for controller nvme0
+     NQN:blktests-subsystem-1 disconnected 1 controller(s)
+    ...
+    (Run 'diff -u tests/nvme/042.out /home/wagi/work/blktests/results/nodev/nvme/042.out.bad' to see the entire diff)
+nvme/043 (Test hash and DH group variations for authenticated connections) [passed]
+    runtime  3.592s  ...  8.750s
+nvme/044 (Test bi-directional authentication)               
+    runtime  1.099s  ...
+WARNING: Test did not clean up fc device: nvme0
+nvme/044 (Test bi-directional authentication)                [failed]
+    runtime  1.099s  ...  1.064s
+    --- tests/nvme/044.out      2023-02-20 10:31:10.953935278 +0100
+    +++ /home/wagi/work/blktests/results/nodev/nvme/044.out.bad 2023-04-18 14:31:20.042139370 +0200
+    @@ -2,9 +2,12 @@
+     Test host authentication
+     NQN:blktests-subsystem-1 disconnected 1 controller(s)
+     Test invalid ctrl authentication (should fail)
+    +failed to lookup subsystem for controller nvme0
+     NQN:blktests-subsystem-1 disconnected 0 controller(s)
+     Test valid ctrl authentication
+    -NQN:blktests-subsystem-1 disconnected 1 controller(s)
+    ...
+    (Run 'diff -u tests/nvme/044.out /home/wagi/work/blktests/results/nodev/nvme/044.out.bad' to see the entire diff)
+WARNING: Test did not clean up fc device: nvme0
+failed to lookup subsystem for controller nvme0
+Did not find device nvme0
+nvme/045 (Test re-authentication)                            [passed]
+    runtime  5.582s  ...  6.262s
+nvme/047 (test different queue types for fabric transports)  [not run]
+    nvme_trtype=fc is not supported in this test
+nvme/048 (Test queue count changes on reconnect)             [failed]
+    runtime  15.586s  ...  16.545s
+    --- tests/nvme/048.out      2023-04-06 10:12:58.333064747 +0200
+    +++ /home/wagi/work/blktests/results/nodev/nvme/048.out.bad 2023-04-18 14:31:43.614260172 +0200
+    @@ -1,3 +1,7 @@
+     Running nvme/048
+    +expected state "connecting" not  reached within 5 seconds
+    +FAIL
+    +expected state "connecting" not  reached within 5 seconds
+    +FAIL
+     NQN:blktests-subsystem-1 disconnected 1 controller(s)
+     Test complete
+
+[1] https://lore.kernel.org/linux-nvme/20230418123252.3725-1-dwagner@suse.de/
+
+changes:
+v3:
+  - do not unlink rport twice
+
+v2:
+  - added additional fixes
+  - https://lore.kernel.org/linux-nvme/20230411120718.14477-1-dwagner@suse.de/
+
+v1:
+  - initial version
+  - https://lore.kernel.org/linux-nvme/20230411092209.12719-1-dwagner@suse.de/
+
+Daniel Wagner (4):
+  nvmet-fcloop: Remove remote port from list when unlinking
+  nvmet-fcloop: Do not wait on completion when unregister fails
+  nvmet-fc: Do not wait in vain when unloading module
+  nvmet-fc: Release reference on target port
+
+ drivers/nvme/host/fc.c       | 20 +++++++++++++-------
+ drivers/nvme/target/fc.c     |  1 +
+ drivers/nvme/target/fcloop.c | 10 ++++------
+ 3 files changed, 18 insertions(+), 13 deletions(-)
+
+-- 
+2.40.0
+
