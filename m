@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9B866E6F80
-	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 00:40:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37D516E6F82
+	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 00:40:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbjDRWkb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 18:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
+        id S232759AbjDRWkd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 18:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232654AbjDRWkZ (ORCPT
+        with ESMTP id S231268AbjDRWk0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Apr 2023 18:40:25 -0400
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CC3A5C6
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:19 -0700 (PDT)
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-63b620188aeso2858534b3a.0
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:19 -0700 (PDT)
+        Tue, 18 Apr 2023 18:40:26 -0400
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A7608A41
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:21 -0700 (PDT)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-63b733fd00bso1772535b3a.0
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 15:40:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681857619; x=1684449619;
+        d=1e100.net; s=20221208; t=1681857620; x=1684449620;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fRAofSqTGr8thWv6K8/33dM7IjWJELRCM5q93U6DUBs=;
-        b=D168mPNc4D/wRa9NjTjdLmtsk3TZSAIlikUvOSa0g/Ao27IGG3lLyXzf+a1ft0mrws
-         UGWDmxpaz8aGoDIbLiwyDAbOyKgl7T8VrZN6KPiX0bnRVPBzs5GzwTrJuk8NszADoA8O
-         El/KbfChq4QIMglKpBGlToutQzI4rmKrON04Aj7m0/e6GgE8nJwy59qEv4v1e0n30yMz
-         dxfuqU+4qJBxc/YhJ91IC/5f/ZWDu2DJaTdGm1dN46SGOlMHHMRCxXffd1MGdMCbDjG6
-         lSU24yAMfQFJ6Rf/b4oSg3Rao58/YR91ByABv+DW2V66saRrchFgq2oVduOv8DndYVCP
-         AS3w==
-X-Gm-Message-State: AAQBX9eOP0uav+r20JzvqHaIewGGCrF7aLns+uuk31L2nRgkfx1n3uPe
-        861VYFU+oDiMP0QD75TOeeU=
-X-Google-Smtp-Source: AKy350ZwgJJBwnWTYF0VWIESg1d0fVRtLKJP+IdDOvJUtEfjnk2DlRfAkN76KkP3PY5zrxqjGPSSag==
-X-Received: by 2002:a17:903:7d0:b0:1a6:7510:170a with SMTP id ko16-20020a17090307d000b001a67510170amr2850744plb.11.1681857619293;
-        Tue, 18 Apr 2023 15:40:19 -0700 (PDT)
+        bh=2WrYXntLkahaukdzYD3lJoBk6nGpoWNjG6dpCzkLcto=;
+        b=ff7e8iCqPTIvVCscRtoapTA7mfel53Gjwjp2pDSARzv/Xe9PcZJGypUvM0JOVR1l7x
+         WBLYhm4G2pxlmzszd63K7cbg74fr6c5pEgx5dIMhqdmDL2k6DMANAvJdCTS+UeXKP1e1
+         3VJQ8BxwjN6KzhO1swFrwh+VSHhOkzdvxlGiP8EpJAQhZxoR/NmsWVj1WX8l+bQgBi4Q
+         yEwc/+EIpT3L/oMoyWVEG01muQXdkR+6F8wrdt1G09TR4VzNnexYzfdKBm7Lj7dUcQ2z
+         WHbwblV+3F21yD6fW91UD7SJlisiRk6fUyDxSrChEYf2Z46H9pY1tKL92DcocyjTPk1o
+         e/Fw==
+X-Gm-Message-State: AAQBX9chUDwEwm/Ef+CcUwaN1C3/I1hnCveCgtivU4id56yHlzH16FHV
+        OZ69TT4Imy+XaEuLFrGKNoQ=
+X-Google-Smtp-Source: AKy350anaoydd7KRlZSUAzOWRCmqOXfOxv67kP6DsGmO1J0b7L3lPXn6pojSdtO+o+Tterb8ybzekg==
+X-Received: by 2002:a17:902:d492:b0:1a6:68fe:2ea2 with SMTP id c18-20020a170902d49200b001a668fe2ea2mr3980025plg.2.1681857620714;
+        Tue, 18 Apr 2023 15:40:20 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5d9b:263d:206c:895a])
-        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.18
+        by smtp.gmail.com with ESMTPSA id bb6-20020a170902bc8600b001a4ee93efa2sm8285646plb.137.2023.04.18.15.40.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 15:40:18 -0700 (PDT)
+        Tue, 18 Apr 2023 15:40:20 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -45,9 +45,9 @@ Cc:     linux-block@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v2 09/11] block: mq-deadline: Handle requeued requests correctly
-Date:   Tue, 18 Apr 2023 15:40:00 -0700
-Message-ID: <20230418224002.1195163-10-bvanassche@acm.org>
+Subject: [PATCH v2 10/11] block: Add support for the zone capacity concept
+Date:   Tue, 18 Apr 2023 15:40:01 -0700
+Message-ID: <20230418224002.1195163-11-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 In-Reply-To: <20230418224002.1195163-1-bvanassche@acm.org>
 References: <20230418224002.1195163-1-bvanassche@acm.org>
@@ -55,77 +55,161 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-If a zoned write is requeued with an LBA that is lower than already
-inserted zoned writes, make sure that it is submitted first.
+Make the zone capacity available in struct queue_limits for those
+drivers that need it.
 
 Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ Documentation/ABI/stable/sysfs-block |  8 ++++++++
+ block/blk-settings.c                 |  1 +
+ block/blk-sysfs.c                    |  7 +++++++
+ block/blk-zoned.c                    | 15 +++++++++++++++
+ include/linux/blkdev.h               |  1 +
+ 5 files changed, 32 insertions(+)
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 32a2cc013ed3..4d2bfb3898b0 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -160,8 +160,22 @@ static void
- deadline_add_rq_rb(struct dd_per_prio *per_prio, struct request *rq)
+diff --git a/Documentation/ABI/stable/sysfs-block b/Documentation/ABI/stable/sysfs-block
+index c57e5b7cb532..4527d0514fdb 100644
+--- a/Documentation/ABI/stable/sysfs-block
++++ b/Documentation/ABI/stable/sysfs-block
+@@ -671,6 +671,14 @@ Description:
+ 		regular block devices.
+ 
+ 
++What:		/sys/block/<disk>/queue/zone_capacity
++Date:		March 2023
++Contact:	linux-block@vger.kernel.org
++Description:
++		[RO] The number of 512-byte sectors in a zone that can be read
++		or written. This number is less than or equal to the zone size.
++
++
+ What:		/sys/block/<disk>/queue/zone_write_granularity
+ Date:		January 2021
+ Contact:	linux-block@vger.kernel.org
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 896b4654ab00..96f5dc63a815 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -685,6 +685,7 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+ 						   b->max_secure_erase_sectors);
+ 	t->zone_write_granularity = max(t->zone_write_granularity,
+ 					b->zone_write_granularity);
++	t->zone_capacity = max(t->zone_capacity, b->zone_capacity);
+ 	t->zoned = max(t->zoned, b->zoned);
+ 	return ret;
+ }
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index a64208583853..0443b8f536f4 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -337,6 +337,11 @@ static ssize_t queue_nr_zones_show(struct request_queue *q, char *page)
+ 	return queue_var_show(disk_nr_zones(q->disk), page);
+ }
+ 
++static ssize_t queue_zone_capacity_show(struct request_queue *q, char *page)
++{
++	return queue_var_show(q->limits.zone_capacity, page);
++}
++
+ static ssize_t queue_max_open_zones_show(struct request_queue *q, char *page)
  {
- 	struct rb_root *root = deadline_rb_root(per_prio, rq);
-+	struct request **next_rq __maybe_unused;
+ 	return queue_var_show(bdev_max_open_zones(q->disk->part0), page);
+@@ -587,6 +592,7 @@ QUEUE_RO_ENTRY(queue_zone_write_granularity, "zone_write_granularity");
  
- 	elv_rb_add(root, rq);
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	next_rq = &per_prio->next_rq[rq_data_dir(rq)];
-+	if (*next_rq == NULL || !blk_queue_is_zoned(rq->q))
-+		return;
-+	/*
-+	 * If a request got requeued or requests have been submitted out of
-+	 * order, make sure that per zone the request with the lowest LBA is
-+	 * submitted first.
-+	 */
-+	if (blk_rq_pos(rq) < blk_rq_pos(*next_rq) &&
-+	    blk_rq_zone_no(rq) == blk_rq_zone_no(*next_rq))
-+		*next_rq = rq;
-+#endif
- }
+ QUEUE_RO_ENTRY(queue_zoned, "zoned");
+ QUEUE_RO_ENTRY(queue_nr_zones, "nr_zones");
++QUEUE_RO_ENTRY(queue_zone_capacity, "zone_capacity");
+ QUEUE_RO_ENTRY(queue_max_open_zones, "max_open_zones");
+ QUEUE_RO_ENTRY(queue_max_active_zones, "max_active_zones");
  
- static inline void
-@@ -816,6 +830,8 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 		list_add(&rq->queuelist, &per_prio->dispatch);
- 		rq->fifo_time = jiffies;
- 	} else {
-+		struct list_head *insert_before;
-+
- 		deadline_add_rq_rb(per_prio, rq);
+@@ -644,6 +650,7 @@ static struct attribute *queue_attrs[] = {
+ 	&queue_nonrot_entry.attr,
+ 	&queue_zoned_entry.attr,
+ 	&queue_nr_zones_entry.attr,
++	&queue_zone_capacity_entry.attr,
+ 	&queue_max_open_zones_entry.attr,
+ 	&queue_max_active_zones_entry.attr,
+ 	&queue_nomerges_entry.attr,
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 9b9cd6adfd1b..a319acbe377b 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -463,6 +463,7 @@ struct blk_revalidate_zone_args {
+ 	unsigned long	*seq_zones_wlock;
+ 	unsigned int	nr_zones;
+ 	sector_t	zone_sectors;
++	sector_t	zone_capacity;
+ 	sector_t	sector;
+ };
  
- 		if (rq_mergeable(rq)) {
-@@ -828,7 +844,16 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 		 * set expire time and add to fifo list
- 		 */
- 		rq->fifo_time = jiffies + dd->fifo_expire[data_dir];
--		list_add_tail(&rq->queuelist, &per_prio->fifo_list[data_dir]);
-+		insert_before = &per_prio->fifo_list[data_dir];
-+#ifdef CONFIG_BLK_DEV_ZONED
-+		if (blk_rq_is_seq_zoned_write(rq)) {
-+			struct request *rq2 = deadline_latter_request(rq);
-+
-+			if (rq2 && blk_rq_zone_no(rq2) == blk_rq_zone_no(rq))
-+				insert_before = &rq2->queuelist;
+@@ -489,6 +490,7 @@ static int blk_revalidate_zone_cb(struct blk_zone *zone, unsigned int idx,
+ 		}
+ 
+ 		args->zone_sectors = zone->len;
++		args->zone_capacity = zone->capacity;
+ 		args->nr_zones = (capacity + zone->len - 1) >> ilog2(zone->len);
+ 	} else if (zone->start + args->zone_sectors < capacity) {
+ 		if (zone->len != args->zone_sectors) {
+@@ -496,12 +498,23 @@ static int blk_revalidate_zone_cb(struct blk_zone *zone, unsigned int idx,
+ 				disk->disk_name);
+ 			return -ENODEV;
+ 		}
++		if (zone->capacity != args->zone_capacity) {
++			pr_warn("%s: Invalid zoned device with non constant zone capacity\n",
++				disk->disk_name);
++			return -ENODEV;
 +		}
-+#endif
-+		list_add_tail(&rq->queuelist, insert_before);
+ 	} else {
+ 		if (zone->len > args->zone_sectors) {
+ 			pr_warn("%s: Invalid zoned device with larger last zone size\n",
+ 				disk->disk_name);
+ 			return -ENODEV;
+ 		}
++		if (zone->capacity >
++		    min(args->zone_sectors, args->zone_capacity)) {
++			pr_warn("%s: Invalid zoned device with too large last zone capacity\n",
++				disk->disk_name);
++			return -ENODEV;
++		}
  	}
- }
  
+ 	/* Check for holes in the zone report */
+@@ -604,6 +617,7 @@ int blk_revalidate_disk_zones(struct gendisk *disk,
+ 	blk_mq_freeze_queue(q);
+ 	if (ret > 0) {
+ 		blk_queue_chunk_sectors(q, args.zone_sectors);
++		q->limits.zone_capacity = args.zone_capacity;
+ 		disk->nr_zones = args.nr_zones;
+ 		swap(disk->seq_zones_wlock, args.seq_zones_wlock);
+ 		swap(disk->conv_zones_bitmap, args.conv_zones_bitmap);
+@@ -635,6 +649,7 @@ void disk_clear_zone_settings(struct gendisk *disk)
+ 	disk->max_open_zones = 0;
+ 	disk->max_active_zones = 0;
+ 	q->limits.chunk_sectors = 0;
++	q->limits.zone_capacity = 0;
+ 	q->limits.zone_write_granularity = 0;
+ 	q->limits.max_zone_append_sectors = 0;
+ 
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 261538319bbf..4fb0e6d7fdc8 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -297,6 +297,7 @@ struct queue_limits {
+ 	unsigned int		discard_granularity;
+ 	unsigned int		discard_alignment;
+ 	unsigned int		zone_write_granularity;
++	unsigned int		zone_capacity;
+ 
+ 	unsigned short		max_segments;
+ 	unsigned short		max_integrity_segments;
