@@ -2,49 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 070E06E685E
-	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 17:36:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A1A36E6934
+	for <lists+linux-block@lfdr.de>; Tue, 18 Apr 2023 18:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231153AbjDRPg0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Apr 2023 11:36:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52790 "EHLO
+        id S232300AbjDRQRx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 18 Apr 2023 12:17:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230435AbjDRPgZ (ORCPT
+        with ESMTP id S231995AbjDRQRt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Apr 2023 11:36:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247A113C20
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 08:36:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=Vdq/bqbZ+gdU0P0Ie8/OyHDCyj
-        YdUqxF2gG6NRrarcsVH39n99R/VHDdVgqDnawCXelQBIhhnbsubWW5Gy0jEcgFDhqAoSNxsMV5T4V
-        dRy+tPuLhfl2Fn6y4nichNT7Oxq8JDNEu75H5CIerqd+4mCR5yQ7AJJerIZC0zYhNbYU9hErW+ba5
-        F5M+Ry7gFhKxujr0m4u22BvutU3HHLy2F1lCTBpVIWgRhuWWjPBV8Feu1GzT3sZeqcu+eSXztohJY
-        svB/CHkeYLcsZ8wVVWWOjePZjKPXtUAxEASxQMaJS7qh6O0uSqLKyuG3hfgHFnU6+MyP9rcjb5pWo
-        94YxB9YA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1ponMx-002dz4-2w;
-        Tue, 18 Apr 2023 15:35:47 +0000
-Date:   Tue, 18 Apr 2023 08:35:47 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Ken Kurematsu <k.kurematsu@nskint.co.jp>
-Subject: Re: [PATCH V3] block: ublk: switch to ioctl command encoding
-Message-ID: <ZD6402ib4J7tz7f/@infradead.org>
-References: <20230418131810.855959-1-ming.lei@redhat.com>
+        Tue, 18 Apr 2023 12:17:49 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D83B3C38;
+        Tue, 18 Apr 2023 09:17:43 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 50E3821A73;
+        Tue, 18 Apr 2023 16:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1681834662; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=b2qUHxbFNWuVEA2GFkOYquFZaX+TXj0U5db+f7oebUc=;
+        b=YprVtvHJtRcqjlb3CsUw2yq2ICBKIMjhBhRuz0tFbup2qCvM5Ywz1qUmcgSSLHy4ffJKti
+        QPVjiXbxBgVO02PXo3Rc0Yke5FyuchVzvW9vF14UdYg4Vem2xful+Ro260ioOiYODQuGLE
+        FjSaZcciQgN60rDLszBPTMWiEMyQwLk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1681834662;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=b2qUHxbFNWuVEA2GFkOYquFZaX+TXj0U5db+f7oebUc=;
+        b=H/2rgK6FudddyhQ9P22occLyWHJ43icsOXCK30w75uiWE++dPUKrrlBZDKldFoK37CqXz3
+        cZ4ZlCGz/2W6w8CQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 410D613581;
+        Tue, 18 Apr 2023 16:17:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id owDcD6bCPmSMHwAAMHmgww
+        (envelope-from <dwagner@suse.de>); Tue, 18 Apr 2023 16:17:42 +0000
+Date:   Tue, 18 Apr 2023 18:17:41 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Shin'ichiro Kawasaki <shinichiro@fastmail.com>
+Subject: Re: [PATCH blktests] nvme-rc: Cleanup fcloop resources in reverse
+ order
+Message-ID: <wdecxjd73uaser6l2274rvgz6q4xr7ytcljor3zyggbebjf3w6@kt4mfriults3>
+References: <20230418123252.3725-1-dwagner@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230418131810.855959-1-ming.lei@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20230418123252.3725-1-dwagner@suse.de>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,6 +71,9 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good:
+On Tue, Apr 18, 2023 at 02:32:52PM +0200, Daniel Wagner wrote:
+> We need to free the resources in the opposite order as we allocate them.
+> The deleting the rport first will also free the other resources. When
+> we try to release lport and tport they are already gone.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+I found some more ordering issues with fcloop resources.
