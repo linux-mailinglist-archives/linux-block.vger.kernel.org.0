@@ -2,122 +2,124 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 780B76E7972
-	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 14:13:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1617B6E79DB
+	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 14:39:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233172AbjDSMN5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Apr 2023 08:13:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
+        id S231215AbjDSMjA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Apr 2023 08:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233074AbjDSMNz (ORCPT
+        with ESMTP id S231592AbjDSMi6 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Apr 2023 08:13:55 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98DFB5FDF
-        for <linux-block@vger.kernel.org>; Wed, 19 Apr 2023 05:13:54 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d2e1a72fcca58-63b5465fc13so2465090b3a.3
-        for <linux-block@vger.kernel.org>; Wed, 19 Apr 2023 05:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681906434; x=1684498434;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eq/+hxv6rbp5uii7WLq/eUzzzvxSNpILeR22fC9c7Bo=;
-        b=JL7gE0VNj7uriZDpfyjD7izaGr8+X5bjd+cWWcUXD8rHGsnBotCBYmQD7XpJzwHmLx
-         FO0y67iJm3lQ+HQvg7JM4669WCOe5G4YI/7NPxI7nyGW/Uzpma9uYquo5Lr5C7sbLNrI
-         J4M8oMT37l68PmxW8QEy0T9muDEWel5vZDUddwSo4aKQpsrTw2ENe+W5bix/1XLLPi7E
-         CBwpyC/6ubhLgFiKf5PKKpfIckzPnioScRPQzv6AXPpcwl9prVgZ9Zmp/F7/hTLjqt3v
-         DuidxHMshD8WCpG4RTIxzhyGqO6nx3ElP4gKYNrczXuq9Y2TBmmO6pRxdz++ptKiHX/q
-         n/FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681906434; x=1684498434;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Eq/+hxv6rbp5uii7WLq/eUzzzvxSNpILeR22fC9c7Bo=;
-        b=A+zTEre5gJU+CA+CH5U+f/4qo456Fsr7LVjBSqfJhPdsbl/x1q/7f5HgMyPxlaEmhb
-         Lp9oHBC/Qei6HE+mGIr9+r+9fe9scZB+tLXaNMxNoMFuIFFPoNWj4VHAiYBg0B6sP4u7
-         TKJNxo/Pb7IgznBJ8o4mGAqWSBiSpE8WHks8YF8VQf0dALwAtSH9V5ctUtGRelvB6/uk
-         zvFJ4N2WTxAoDXXu1li5Or5FBMsK5l7imzUVWYsYghLVUMXluN6/D3jkJ0eHVpYneoK6
-         4RCLMupCcmdu9A5ez4UX04nIzJonD0qk/oJhp+aniuqwgYqliXqRMLRM2jv4aFeh26Ab
-         Vp6g==
-X-Gm-Message-State: AAQBX9emQqqYrG1xdMy4gPmwumlNupPqqGquaw0FnnUwo+rseh/4urTy
-        stoc/xELNmfyl0iULkqmxOgAJDKWkXacAHjTLbI=
-X-Google-Smtp-Source: AKy350Z8193hSTj2Lk5/tNKd8Hngk4wkQLbbh+fhGOYHjwjNaNp8kbj8GzCZ8aSIB4cSdJOFhbgMep14P+fmSwLH57U=
-X-Received: by 2002:a17:903:d1:b0:1a6:9430:5ac2 with SMTP id
- x17-20020a17090300d100b001a694305ac2mr1901272plc.12.1681906433836; Wed, 19
- Apr 2023 05:13:53 -0700 (PDT)
+        Wed, 19 Apr 2023 08:38:58 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294EA1BD2
+        for <linux-block@vger.kernel.org>; Wed, 19 Apr 2023 05:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681907933; x=1713443933;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U0OhEmkyN374yvgpmdDmLbFBPlNFpp5IE/9XwHhYyqM=;
+  b=FmNIVK5eTMy3nKPxE24OtHTlO6Dmk86wkuocoftXqytkIwK3YnedpjcR
+   n0UGWxJRTigP7lKA08OlhsQ0Pm2hndLjtSvoObd4KwrEMehiTX103QTt8
+   H20D/iR41VH416+KAwLzkg1JMfI/1lXrubim5JMTkDgWdDsvosrcl16zV
+   /qPaCExF5Ns3KigRd25rfnZ4+rRDT5O+LCy+zKmR0eQX1ZqQ52e8xUZgI
+   FWgs3Wvy7xeBY6Po3cfLr/aIcyIhTQ+nsE92JYP5PrbaPVsMG/rqTWd5I
+   qJavwaJDngX9vefah7sno68k2rb9j/1cO5z4rRc0XbEu2fty7SzKWaxr8
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="431711218"
+X-IronPort-AV: E=Sophos;i="5.99,208,1677571200"; 
+   d="scan'208";a="431711218"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 05:38:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="865821365"
+X-IronPort-AV: E=Sophos;i="5.99,208,1677571200"; 
+   d="scan'208";a="865821365"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 19 Apr 2023 05:38:50 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pp75G-000esf-0m;
+        Wed, 19 Apr 2023 12:38:50 +0000
+Date:   Wed, 19 Apr 2023 20:37:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH 7/7] blk-mq: don't use the requeue list to queue flush
+ commands
+Message-ID: <202304192001.KzxpDQmK-lkp@intel.com>
+References: <20230416200930.29542-8-hch@lst.de>
 MIME-Version: 1.0
-Received: by 2002:a17:902:ecc6:b0:1a1:b667:3f87 with HTTP; Wed, 19 Apr 2023
- 05:13:53 -0700 (PDT)
-From:   Mavis Wanczyk <infoorgv3@gmail.com>
-Date:   Wed, 19 Apr 2023 13:13:53 +0100
-Message-ID: <CACrHrORC=93HmdrrgON80QYCp80s50vD3WDpYyZnSOCcsowksw@mail.gmail.com>
-Subject: From Mavis L. Wanczyk Lucky Winner
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=7.9 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
-        BAYES_00,DEAR_FRIEND,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-        DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLY,
-        LOTS_OF_MONEY,MONEY_FORM_SHORT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_FILL_THIS_FORM_SHORT,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY,
-        XFER_LOTSA_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:442 listed in]
-        [list.dnswl.org]
-        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [infoorgv3[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [infoorgv3[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  1.0 FREEMAIL_REPLY From and body contain different freemails
-        *  0.0 XFER_LOTSA_MONEY Transfer a lot of money
-        *  0.0 T_FILL_THIS_FORM_SHORT Fill in a short form with personal
-        *      information
-        *  0.0 MONEY_FORM_SHORT Lots of money if you fill out a short form
-        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
-        *  3.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230416200930.29542-8-hch@lst.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear friend,
+Hi Christoph,
 
-I=E2=80=99m Mavis Wanczyk the $758,700,000M Massachusetts power ball lotter=
-y
-winner! I=E2=80=99m giving away some money to my lucky followers, less
-privileges, natural deserter affected ones, innocent scammed victims
-and sick ones.
+kernel test robot noticed the following build warnings:
 
-https://www.instagram.com/mswanczyk6/
+[auto build test WARNING on axboe-block/for-next]
+[also build test WARNING on next-20230418]
+[cannot apply to linus/master v6.3-rc7]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I donate to you the sum of $300000.00 three hundred thousand United
-States dollars by courier. Contact the delivery officer with your
-names, home address and phone number for collection.
+url:    https://github.com/intel-lab-lkp/linux/commits/Christoph-Hellwig/blk-mq-reflow-blk_insert_flush/20230417-051014
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+patch link:    https://lore.kernel.org/r/20230416200930.29542-8-hch%40lst.de
+patch subject: [PATCH 7/7] blk-mq: don't use the requeue list to queue flush commands
+config: i386-randconfig-a003 (https://download.01.org/0day-ci/archive/20230419/202304192001.KzxpDQmK-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/c1197e1a4ff5b38b73d3ec923987ca857f5e2695
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Christoph-Hellwig/blk-mq-reflow-blk_insert_flush/20230417-051014
+        git checkout c1197e1a4ff5b38b73d3ec923987ca857f5e2695
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 olddefconfig
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
 
-Contact person: Mark Robinson
-Email: odalysastro@yahoo.com
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304192001.KzxpDQmK-lkp@intel.com/
 
-stay blessed as you celebrate and thank God with me...
+All warnings (new ones prefixed by >>):
 
-Mavis L. Wanczyk lucky winner
-https://www.instagram.com/mswanczyk6/
+>> block/blk-mq.c:1461:6: warning: no previous prototype for 'blk_flush_queue_insert' [-Wmissing-prototypes]
+    1461 | void blk_flush_queue_insert(struct request *rq)
+         |      ^~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/blk_flush_queue_insert +1461 block/blk-mq.c
+
+  1460	
+> 1461	void blk_flush_queue_insert(struct request *rq)
+  1462	{
+  1463		struct request_queue *q = rq->q;
+  1464		unsigned long flags;
+  1465	
+  1466		spin_lock_irqsave(&q->requeue_lock, flags);
+  1467		list_add_tail(&rq->queuelist, &q->flush_list);
+  1468		spin_unlock_irqrestore(&q->requeue_lock, flags);
+  1469	}
+  1470	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
