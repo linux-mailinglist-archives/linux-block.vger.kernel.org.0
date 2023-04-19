@@ -2,22 +2,22 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37FE36E721C
-	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 06:10:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85E076E721D
+	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 06:11:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231477AbjDSEKE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Apr 2023 00:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47802 "EHLO
+        id S231265AbjDSELL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Apr 2023 00:11:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229879AbjDSEKD (ORCPT
+        with ESMTP id S229879AbjDSELK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Apr 2023 00:10:03 -0400
+        Wed, 19 Apr 2023 00:11:10 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C89CD4C1E
-        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 21:10:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5414C1E
+        for <linux-block@vger.kernel.org>; Tue, 18 Apr 2023 21:11:09 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2117B6732D; Wed, 19 Apr 2023 06:09:58 +0200 (CEST)
-Date:   Wed, 19 Apr 2023 06:09:57 +0200
+        id 45D006732D; Wed, 19 Apr 2023 06:11:07 +0200 (CEST)
+Date:   Wed, 19 Apr 2023 06:11:06 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Bart Van Assche <bvanassche@acm.org>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
@@ -25,14 +25,14 @@ Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         Christoph Hellwig <hch@lst.de>,
         Damien Le Moal <damien.lemoal@opensource.wdc.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH v2 01/11] block: Simplify
+Subject: Re: [PATCH v2 02/11] block: Micro-optimize
  blk_req_needs_zone_write_lock()
-Message-ID: <20230419040957.GA25329@lst.de>
-References: <20230418224002.1195163-1-bvanassche@acm.org> <20230418224002.1195163-2-bvanassche@acm.org>
+Message-ID: <20230419041106.GB25329@lst.de>
+References: <20230418224002.1195163-1-bvanassche@acm.org> <20230418224002.1195163-3-bvanassche@acm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230418224002.1195163-2-bvanassche@acm.org>
+In-Reply-To: <20230418224002.1195163-3-bvanassche@acm.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -43,6 +43,10 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good:
+On Tue, Apr 18, 2023 at 03:39:53PM -0700, Bart Van Assche wrote:
+> Instead of using the following expression to translate a request pointer
+> into a request queue pointer: rq->q->disk->part0->bd_queue, use the
+> following expression: rq->q.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This looks correct, but I also kinda hate adding queue back in more
+places.
