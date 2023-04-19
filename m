@@ -2,76 +2,85 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B88976E7459
-	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 09:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E46BA6E759F
+	for <lists+linux-block@lfdr.de>; Wed, 19 Apr 2023 10:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232601AbjDSHuz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Apr 2023 03:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38710 "EHLO
+        id S232261AbjDSIsE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Apr 2023 04:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232473AbjDSHuh (ORCPT
+        with ESMTP id S232334AbjDSIsE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 19 Apr 2023 03:50:37 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39793CC3C;
-        Wed, 19 Apr 2023 00:50:09 -0700 (PDT)
-From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-        s=mail; t=1681890606;
-        bh=30iMUBbhKpHPLuoBNwmZAzJbN0IHFShaDIG5piBY4Cs=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=nn0r6mzAaqoEhS1It3ZDwNC6g7FSCjF4ccKeZ3RmCUEo51z5AaiFxTsC+u9XTYjp7
-         0XW3dazWJD4KDekWdHlKj1UkaeiTmqYe0SA44fMRABXngrzHnz6RJjo8IvYEmuTs4Q
-         n0bYXh4cRg9bDizZT4iLDEdraieeNgmc9pLZigeg=
-Date:   Wed, 19 Apr 2023 09:50:04 +0200
-Subject: [PATCH 4/4] block: constify the whole_disk device_attribute
+        Wed, 19 Apr 2023 04:48:04 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443481A4;
+        Wed, 19 Apr 2023 01:48:03 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E6E752193C;
+        Wed, 19 Apr 2023 08:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1681894081; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=p1s5jMDrUBxZBZWTGeFE0HAki3ixSROArH88l+ErhWQ=;
+        b=lZzuFhPiUoGy/vSbK76tTDOCZMiJnkr7I0qcrjCNKrXyhkiibQ1QLTw98PNuD00YABQuqs
+        ZFPYTdmmzDHttjckDGbqHWDgbmyuuSSGGAmnuG5oIPTezou1zWb5/x8ojZCOysTxvQMjLZ
+        fsiYzRbXhUF/EEruw2UeMukvxk1fj4c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1681894081;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=p1s5jMDrUBxZBZWTGeFE0HAki3ixSROArH88l+ErhWQ=;
+        b=utW/gvW2BNoWXYLubrP/Yy7rWTOR5SkGkMjk3RtjlAsI2frWzssb8EjbRaLmCpmFG0VaDv
+        QphJLNKY8zuO3rAQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D89FA1390E;
+        Wed, 19 Apr 2023 08:48:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id tjrTNMGqP2SydQAAMHmgww
+        (envelope-from <dwagner@suse.de>); Wed, 19 Apr 2023 08:48:01 +0000
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH blktests v2 0/2] nvme_trtype=fc fixes
+Date:   Wed, 19 Apr 2023 10:47:55 +0200
+Message-Id: <20230419084757.24846-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20230419-const-partition-v1-4-2d66f2d83873@weissschuh.net>
-References: <20230419-const-partition-v1-0-2d66f2d83873@weissschuh.net>
-In-Reply-To: <20230419-const-partition-v1-0-2d66f2d83873@weissschuh.net>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1681890605; l=692;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=30iMUBbhKpHPLuoBNwmZAzJbN0IHFShaDIG5piBY4Cs=;
- b=hJFtQ8W2Kh0rQjAo0WwaHkKqDSvau9GymVQLfCCajbra4SOHaHwn2zHmFK3Jbzdf4zc+XQ4QO
- c/wCqiTrp1XA3gwuAv8Urx33x+/WMk/DYURZKsmlLmU8ePigUJp/oQq
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The struct is never modified so it can be const.
+With the attempt to get the fc transport running for blktest I found a couple of
+issues in the current cleanup code path for fc. With these fixes and the kernel
+patches and configuration from
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- block/partitions/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  https://lore.kernel.org/linux-nvme/20230418130159.11075-1-dwagner@suse.de/
 
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index 032e415618cb..8efadc694e41 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -296,7 +296,7 @@ static ssize_t whole_disk_show(struct device *dev,
- {
- 	return 0;
- }
--static DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
-+static const DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
- 
- /*
-  * Must be called either with open_mutex held, before a disk can be opened or
+it starts to work nicely, incl finding some bugs in fc I think.
+
+Daniel Wagner (2):
+  nvme-rc: Cleanup fc ports in reverse order
+  nvme-rc: Cleanup fc resource before module unloading
+
+ tests/nvme/rc | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 -- 
 2.40.0
