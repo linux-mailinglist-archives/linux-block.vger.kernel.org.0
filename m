@@ -2,138 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 306B66E948F
-	for <lists+linux-block@lfdr.de>; Thu, 20 Apr 2023 14:36:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60B386E943E
+	for <lists+linux-block@lfdr.de>; Thu, 20 Apr 2023 14:29:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231766AbjDTMgF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Apr 2023 08:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57270 "EHLO
+        id S229884AbjDTM3Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 20 Apr 2023 08:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231785AbjDTMgA (ORCPT
+        with ESMTP id S232026AbjDTM3Y (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 20 Apr 2023 08:36:00 -0400
-X-Greylist: delayed 541 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 20 Apr 2023 05:35:53 PDT
-Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D12E65B2;
-        Thu, 20 Apr 2023 05:35:53 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id A2BE02B06749;
-        Thu, 20 Apr 2023 08:26:49 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 20 Apr 2023 08:26:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-        cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1681993608; x=1681994208; bh=3k
-        qM7vX2DJRzHASlFHsZJyyE3jOWWWXPGfOIoDUnoG0=; b=fT9TchauBy11NjStx+
-        quzttsF6w437Bya2IEHwY703MFIH370JBxCZ8y7L/J/9//+O3OMdCZFRXOCuZDOo
-        ZGdGSzs41FtOT350hCAMnMb//PDdY2aPFdHbLCrhjZDAAYcyrM8wCtwLNGkUhmDP
-        izk/enrakBKP1MLtmnjeBb4nb8WeBz8wme2yTkwq/CmiEXcqMQ5JJTjjREbb9e0Z
-        gkmUJ2Kwk238v7XTtsGJeLxf4hi2OfEOZ5Dx6SDIrByjhjza/hZJknK0SR7MszWO
-        WwVWjgp7xwR4lq6Y+YnJsU55OBe4iAKbtlc+edEE0nkigQ2CbV7gBJiU+XuyRV+R
-        V3iQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=ie1e949a3.fm3; t=1681993608; x=1681994208; bh=3kq
-        M7vX2DJRzHASlFHsZJyyE3jOWWWXPGfOIoDUnoG0=; b=EKTBeYbvL6nLO5VaAmE
-        SXtMLFvnE37S0DUTQ8b5Gl2xWa8XkMEKBr4nKZXawlu3KIItFU1WT+U0f5jDscjd
-        gF2rVtsSJLmGixPqCEwlHM8lsGin5TDVDtOUESSiMEfGVWhaFB5yDTIBuGxx9q7v
-        3H49gRdLXSy+fMNYRNrJpof23r/GySnpfbvyla69w8tHXTDsmBHAK5E4YPpAt7kh
-        +CjYJbxqgxIgr1MCPLPeQAnAIEimngh0O6gAX9NaI+kGp58XgdRidIToHGjKLEYE
-        f3U+9fZNs+SkIffz2XMq9FMclQKcvh/9ikxAaZ/uN0KFeScOjs5ajSYjRx3X1exv
-        /Jg==
-X-ME-Sender: <xms:iC9BZJBngizTYhmtcVpqGgIbRRQXo9JCvJsI93ouDJhi4BekItYteQ>
-    <xme:iC9BZHiUR73gc9m1xqQ0YpWEpNw6dD_daabvwQlj1Zb4C47e1lC2s1PNpfGS7_Up5
-    EmcsgtUa5lvKw8kXDU>
-X-ME-Received: <xmr:iC9BZElf3swDdMS_J7-KOCo7tCWvBc493072a8kL-LtJK72R3tzEcd1RdsaX8nSsb22cbpThVfIkWg56j0rJhA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedtvddgheduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvdenucfhrhhomhepufhhihhn
-    kdhitghhihhrohcumfgrfigrshgrkhhiuceoshhhihhnihgthhhirhhosehfrghsthhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepffehffetgfdugeffffelvdfgjefgkedv
-    hfehgeefveffgfffvedtueekgeevvefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehshhhi
-    nhhitghhihhrohesfhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:iC9BZDyUeW7-kQzWP-pR6XoCJq3VmXltYlCMj3q6_Z554X7vFHr8nw>
-    <xmx:iC9BZOTJhTCNyuiaAxVjlrCMbato0LqdicRFt-zpH-wPJ6N8CMSI4w>
-    <xmx:iC9BZGZqcDOSH9H3W0i5P1bP3eXDA4aZBb8q7dilwQhuNeqSH6dLvw>
-    <xmx:iC9BZJevYuCKfzpYmazJ_pC4fxGBF3d98f6LOZ2_7xAhcO2f7-VLau62vqRIeLjR>
-Feedback-ID: ie1e949a3:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 20 Apr 2023 08:26:47 -0400 (EDT)
-Date:   Thu, 20 Apr 2023 21:26:43 +0900
-From:   Shin'ichiro Kawasaki <shinichiro@fastmail.com>
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: Re: blktests scsi/007 failure
-Message-ID: <yqe6sjp6ukfoafaoetwacddkpo2y5mk4hsnxgw377iwholxo52@psw2zzelcmig>
-References: <725nkvuvvbf4qwiylarw5r56tjt3r6nrvy5sijk6affzqv2s3e@6xapeviellsp>
- <5ebd61e0-0835-94cd-b55b-942a9c72b5b5@oracle.com>
- <3xwglpdpmit2obtf5p475gojdoqe42rmteki5hvoavzwle6kqr@bl7xginwaeli>
+        Thu, 20 Apr 2023 08:29:24 -0400
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 333625BAD;
+        Thu, 20 Apr 2023 05:29:22 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id bi21-20020a05600c3d9500b003f17a8eaedbso2993246wmb.1;
+        Thu, 20 Apr 2023 05:29:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681993760; x=1684585760;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RTcuP2C+AJHG/nFwJnZGd+3L+CfBLV6Vu/A/V4+9EqA=;
+        b=Bzs4hIlK+NWIiwvwAKXTNutwQZjfCcoTpmRSYsfZRvzigTUCmy/jgjXmxz7yCocTag
+         DjpOh0ByVhML3Vgz3PAHIM7akKRY1wQ8LoPBks65Pu0+jbF2z9YiwQgfzPSgxYLFjLvB
+         rr//rAgOqhvht4gWh6PAtbhcUrx7onWaVqoWwmdHJuUDKk2nZ+Eo8ujcJ1LHRuam3PZf
+         u2idENlQgn+02e0AHLRy1LJ0MvbZt4seatLEDzDXRamEXDMOzHeuWlM/QIvmvoUc3BUu
+         8OijfS4FsOu2SqinzwQjb0vHJjPBrLTKRoyYIFER2+xn5qV68GT3xIBSKjZrXdNXYX2f
+         HaCA==
+X-Gm-Message-State: AAQBX9duh8PxvrgHh7LC+cfEEF7S+sE9BOJUoqt/I8UesiHbGYtPaYcU
+        Z82Xi5WH5tZJGIUgyKOq4IE=
+X-Google-Smtp-Source: AKy350aaCNOtF1Dp5FVmsyixW1o7a582KZIzbTA6bAcNcvBvAfmJ9yC1qp5VWWLw8itQjbmItpc17w==
+X-Received: by 2002:a1c:6a02:0:b0:3ee:3e07:5d26 with SMTP id f2-20020a1c6a02000000b003ee3e075d26mr1076568wmc.24.1681993760341;
+        Thu, 20 Apr 2023 05:29:20 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-015.fbsv.net. [2a03:2880:31ff:f::face:b00c])
+        by smtp.gmail.com with ESMTPSA id o2-20020a05600c4fc200b003f1738e64c0sm5317875wmq.20.2023.04.20.05.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Apr 2023 05:29:19 -0700 (PDT)
+Date:   Thu, 20 Apr 2023 05:29:18 -0700
+From:   Breno Leitao <leitao@debian.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
+        asml.silence@gmail.com, axboe@kernel.dk, leit@fb.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        sagi@grimberg.me, kbusch@kernel.org, ming.lei@redhat.com
+Subject: Re: [PATCH 1/2] io_uring: Pass whole sqe to commands
+Message-ID: <ZEEwHk32Y8IcT20n@gmail.com>
+References: <20230419102930.2979231-1-leitao@debian.org>
+ <20230419102930.2979231-2-leitao@debian.org>
+ <20230420045712.GA4239@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3xwglpdpmit2obtf5p475gojdoqe42rmteki5hvoavzwle6kqr@bl7xginwaeli>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230420045712.GA4239@lst.de>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Apr 14, 2023 / 17:58, Shin'ichiro Kawasaki wrote:
-> On Apr 14, 2023 / 09:33, John Garry wrote:
+Hello Christoph,
 
-[...]
-
-> > The failure may be due to one of my changes. Please see
-> > https://lore.kernel.org/lkml/5bdbfbbc-bac1-84a1-5f50-33a443e3292a@oracle.com/
+On Thu, Apr 20, 2023 at 06:57:12AM +0200, Christoph Hellwig wrote:
+> On Wed, Apr 19, 2023 at 03:29:29AM -0700, Breno Leitao wrote:
+> >  	struct nvme_uring_cmd_pdu *pdu = nvme_uring_cmd_pdu(ioucmd);
+> > -	const struct nvme_uring_cmd *cmd = ioucmd->cmd;
+> > +	const struct nvme_uring_cmd *cmd = (struct nvme_uring_cmd *)ioucmd->sqe->cmd;
 > 
-> Thanks for the notice. I think your changes were applied to 6.4/scsi-queue,
-> which I've not yet tried. Then it should not be related to your changes.
+> Please don't add the pointless cast.  And in general avoid the overly
+> long lines.
 
-I took a closer look in your changes for kernel v6.4, and noticed that it might
-affect the scsi/007 failure I observed with kernel v6.3-rcX. I did some trials
-and found these:
+Ack!
 
-- On kernel v6.3-rc7 without your changes, the test case scsi/007 fails with
-  unexpected read command success (The failure I found and reported).
-- On kernel v6.3-rc7 with your changes until "scsi: scsi_debug: Dynamically
-  allocate sdebug_queued_cmd" [1], scsi/007 fails and causes system hang.
-  Kernel reported "BUG sdebug_queued_cmd". When I reverte [1] from the kernel,
-  the failure symptom is same as v6.3-rc7 (no hang, no BUG).
-- On kernel v6.3-rc7 with your changes including [1] and "scsi: scsi_debug:
-  Abort commands from scsi_debug_device_reset()" [2], scsi/007 passes.
+> 
+> I suspect most other users should just also defined their structures
+> const instead of adding all theses casts thare are a sign of problems,
+> but that's a pre-existing issue.
+> >  	struct io_uring_cmd *ioucmd = io_kiocb_to_cmd(req, struct io_uring_cmd);
+> > -	size_t cmd_size;
+> > +	size_t size = sizeof(struct io_uring_sqe);
+> >  
+> >  	BUILD_BUG_ON(uring_cmd_pdu_size(0) != 16);
+> >  	BUILD_BUG_ON(uring_cmd_pdu_size(1) != 80);
+> >  
+> > -	cmd_size = uring_cmd_pdu_size(req->ctx->flags & IORING_SETUP_SQE128);
+> > +	if (req->ctx->flags & IORING_SETUP_SQE128)
+> > +		size <<= 1;
+> 
+> 
+> Why does this stop using uring_cmd_pdu_size()?
 
-[1] https://lore.kernel.org/lkml/20230327074310.1862889-7-john.g.garry@oracle.com/
-[2] https://lore.kernel.org/linux-scsi/20230416175654.159163-1-john.g.garry@oracle.com/
+Before, only the cmd payload (sqe->cmd) was being copied to the async
+structure. We are copying over the whole sqe now, since we can use SQE
+fields inside the ioctl callbacks (instead of only cmd fields). So, the
+copy now is 64 bytes for single SQE or 128 for double SQEs.
 
-Your fix [2] intended to fix the BUG that [1] caused, but it also fixed the
-scsi/007 failure I found :)
+This has two major advantages:
+ * It is not necessary to create a cmd structure for every command
+   operations (which will be mapped in sqe->cmd) to pass arguments. The
+   arguments could be passed as fields in SQE.
 
+ * sqe->cmd is 16 bytes on single SQEs. Passing the whole SQE to cmd
+   will reduce the necessity to use double SQE for operations that
+   require large fields, such as {g,s}etsockopt().
 
-To understand the failure deeper, I added debug prints in scsi_debug, using
-kernel v6.3-rc7 with your changes just before [1]. This kernel does not have the
-fix [2], then it does not abort commands at device reset. When scsi error
-handler does BDR, bus device reset, scsi_debug does not cancel the hrtimer for
-the commands issued to the scsi_debug. This hrtimer is alive across the reset.
-When that hrtimer expires, scsi_debug completes the command that issued _after_
-BDR. The hrtimer for the command before BDR completes the command after BDR
-since those two commands use the same scsi_cmnd and rq objects reused. Then the
-command issued after BDR completes earlier than expected, and results in the
-unexpected read command success and scsi/007 failure.
+There are some discussions about it also at
+https://lkml.org/lkml/2023/4/6/786
 
-After applying the fix [2], scsi_debug cancels hrtimers at reset. Then, the
-hrtimers started before reset do not affect the commands issued after reset.
-
-These findings mean that the scsi/007 failure I found with kernel v6.3-rc7
-indicated the bug in scsi_debug, and the commit [2] fixed it. Now I don't think
-blktests side fix for scsi/007 is required. Good :)
+Thanks for the review!
