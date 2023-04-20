@@ -2,50 +2,50 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E5586E989A
-	for <lists+linux-block@lfdr.de>; Thu, 20 Apr 2023 17:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C55A6E9898
+	for <lists+linux-block@lfdr.de>; Thu, 20 Apr 2023 17:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231302AbjDTPmf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 20 Apr 2023 11:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232222AbjDTPmb (ORCPT
-        <rfc822;linux-block@vger.kernel.org>);
+        id S231986AbjDTPmb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 20 Apr 2023 11:42:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 892004C37
-        for <linux-block@vger.kernel.org>; Thu, 20 Apr 2023 08:41:39 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231954AbjDTPm0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>);
+        Thu, 20 Apr 2023 11:42:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E339D59EF
+        for <linux-block@vger.kernel.org>; Thu, 20 Apr 2023 08:41:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682005298;
+        s=mimecast20190719; t=1682005301;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=N/Cgwu57JF97/LTaZdPvxnDm2iXnBsaYC73PgWZo1ek=;
-        b=VLpmuqBb5IodiMLy+T7jRrfl0Nx7CLXRjMedvGHrlgb8O2XtGW111oC4TRj/1j3WFiI0LW
-        kNff6lumrJLlL0gCnF2ebUjDQtHWCT6KbKORVIn1OX8EzPzZ2ai9p5IUCTkzzDt76ykwzl
-        pwle5S2MYLbLtZL0gU90n49T56xd58I=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Cyv0rkqAnubP8CaYG9uu7syt07beg8O/BYodx2dXYkM=;
+        b=fGxJmugxpKfKvbaqsTdxu2DHaqLa4AEcBbuun9zgFwOWGOy07U3heH31XtSsaCRjFJg9WD
+        70GljEGR6NR3dIiZP+GN2jwGljHWjKFg+jfIEeRzAbAX1Z914cHySlciI4UBM4/BHAaoOj
+        vzQmtrxwjo4yHen7fyRPpqoPW47Etcg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-483-vPy_447PNEW3jyQDi0_xUQ-1; Thu, 20 Apr 2023 11:41:34 -0400
-X-MC-Unique: vPy_447PNEW3jyQDi0_xUQ-1
+ us-mta-372-ORV2_0JVMzm8sfo2cZScfA-1; Thu, 20 Apr 2023 11:41:38 -0400
+X-MC-Unique: ORV2_0JVMzm8sfo2cZScfA-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 087F01C09064;
-        Thu, 20 Apr 2023 15:41:34 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B98D0101A531;
+        Thu, 20 Apr 2023 15:41:37 +0000 (UTC)
 Received: from localhost (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B2C640C2064;
-        Thu, 20 Apr 2023 15:41:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E3DBE40C2064;
+        Thu, 20 Apr 2023 15:41:36 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         ZiyangZhang <ZiyangZhang@linux.alibaba.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 6/7] ublk: add read()/write() support for ublk char device
-Date:   Thu, 20 Apr 2023 23:40:31 +0800
-Message-Id: <20230420154032.1272836-7-ming.lei@redhat.com>
+Subject: [PATCH 7/7] ublk: support user copy
+Date:   Thu, 20 Apr 2023 23:40:32 +0800
+Message-Id: <20230420154032.1272836-8-ming.lei@redhat.com>
 In-Reply-To: <20230420154032.1272836-1-ming.lei@redhat.com>
 References: <20230420154032.1272836-1-ming.lei@redhat.com>
 MIME-Version: 1.0
@@ -61,244 +61,169 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Support pread()/pwrite() on ublk char device for reading/writing request
-io buffer, so data copy between io request buffer and userspace buffer
-can be moved to ublk server from ublk driver. Then UBLK_F_NEED_GET_DATA
-becomes not necessary, so ublk server can allocate buffer without one
-extra round uring command communication for userspace to provide buffer.
+Currently copy between io request buffer(pages) and userspace buffer is
+done inside ublk_map_io() or ublk_unmap_io(). This way performs very
+well in case of pre-allocated userspace io buffer.
 
-todo: implement .mmap() for mapping io request pages into userspace, so
-that big chunk IO zero copy can be supported
+For dynamically allocated or external userspace backend io buffer,
+UBLK_F_NEED_GET_DATA is added for ublk server to provide buffer by one
+extra command communication for WRITE request. For READ, userspace simply
+provides buffer, but can't know when the buffer is done[1].
+
+Add UBLK_F_USER_COPY by moving io data copy out of kernel by providing
+read()/write() on /dev/ublkcN, and simply let ublk server do the io data
+copy. This way makes both side cleaner, the cost is that one extra syscall
+for copy io data between request and backend buffer.
+
+With UBLK_F_USER_COPY, it actually becomes possible to run per-io zero
+copy now, such as, only do zero copy for big size IO, so it can be
+thought as one prep patch for supporting zero copy. Meantime zero copy
+still needs to expose read()/write() buffer for some corner case, such
+as passthrough IO.
+
+[1] READ buffer in UBLK_F_NEED_GET_DATA
+https://lore.kernel.org/linux-block/116d8a56-0881-56d3-9bcc-78ff3e1dc4e5@linux.alibaba.com/T/#m23bd4b8634c0a054e6797063167b469949a247bb
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c      | 151 ++++++++++++++++++++++++++++++++++
- include/uapi/linux/ublk_cmd.h |  22 ++++-
- 2 files changed, 172 insertions(+), 1 deletion(-)
+ drivers/block/ublk_drv.c      | 57 ++++++++++++++++++++++++++++-------
+ include/uapi/linux/ublk_cmd.h |  3 ++
+ 2 files changed, 49 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 7d21ee22e503..979b460464bc 100644
+index 979b460464bc..c68938b3853b 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -206,6 +206,23 @@ static unsigned int ublks_added;	/* protected by ublk_ctl_mutex */
+@@ -55,7 +55,8 @@
+ 		| UBLK_F_USER_RECOVERY \
+ 		| UBLK_F_USER_RECOVERY_REISSUE \
+ 		| UBLK_F_UNPRIVILEGED_DEV \
+-		| UBLK_F_CMD_IOCTL_ENCODE)
++		| UBLK_F_CMD_IOCTL_ENCODE \
++		| UBLK_F_USER_COPY)
  
- static struct miscdevice ublk_misc;
- 
-+static inline unsigned ublk_pos_to_hwq(loff_t pos)
-+{
-+	return ((pos - UBLKSRV_IO_BUF_OFFSET) >> UBLK_QID_OFF) &
-+		UBLK_QID_BITS_MASK;
-+}
-+
-+static inline unsigned ublk_pos_to_buf_off(loff_t pos)
-+{
-+	return (pos - UBLKSRV_IO_BUF_OFFSET) & UBLK_IO_BUF_BITS_MASK;
-+}
-+
-+static inline unsigned ublk_pos_to_tag(loff_t pos)
-+{
-+	return ((pos - UBLKSRV_IO_BUF_OFFSET) >> UBLK_TAG_OFF) &
-+		UBLK_TAG_BITS_MASK;
-+}
-+
- static void ublk_dev_param_basic_apply(struct ublk_device *ub)
- {
- 	struct request_queue *q = ub->ub_disk->queue;
-@@ -1306,6 +1323,36 @@ static inline void ublk_fill_io(struct ublk_io *io, struct io_uring_cmd *cmd,
- 	io->addr = buf_addr;
+ /* All UBLK_PARAM_TYPE_* should be included here */
+ #define UBLK_PARAM_TYPE_ALL (UBLK_PARAM_TYPE_BASIC | \
+@@ -311,9 +312,18 @@ static int ublk_apply_params(struct ublk_device *ub)
+ 	return 0;
  }
  
-+static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
-+		struct ublk_queue *ubq, int tag, size_t offset)
++static inline bool ublk_support_user_copy(const struct ublk_queue *ubq)
 +{
-+	struct request *req;
-+
-+	if (!ublk_need_req_ref(ubq))
-+		return NULL;
-+
-+	req = blk_mq_tag_to_rq(ub->tag_set.tags[ubq->q_id], tag);
-+	if (!req)
-+		return NULL;
-+
-+	if (!ublk_get_req_ref(ubq, req))
-+		return NULL;
-+
-+	if (unlikely(!blk_mq_request_started(req) || req->tag != tag))
-+		goto fail_put;
-+
-+	if (!ublk_rq_has_data(req))
-+		goto fail_put;
-+
-+	if (offset > blk_rq_bytes(req))
-+		goto fail_put;
-+
-+	return req;
-+fail_put:
-+	ublk_put_req_ref(ubq, req);
-+	return NULL;
++	return ubq->flags & UBLK_F_USER_COPY;
 +}
 +
- static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
+ static inline bool ublk_need_req_ref(const struct ublk_queue *ubq)
  {
- 	struct ublksrv_io_cmd *ub_cmd = (struct ublksrv_io_cmd *)cmd->cmd;
-@@ -1406,11 +1453,112 @@ static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
- 	return -EIOCBQUEUED;
+-	return false;
++	/*
++	 * read()/write() is involved in user copy, so request reference
++	 * has to be grabbed
++	 */
++	return ublk_support_user_copy(ubq);
  }
  
-+static inline bool ublk_check_ubuf_dir(const struct request *req,
-+		int ubuf_dir)
-+{
-+	/* copy ubuf to request pages */
-+	if (req_op(req) == REQ_OP_READ && ubuf_dir == ITER_SOURCE)
-+		return true;
-+
-+	/* copy request pages to ubuf */
-+	if (req_op(req) == REQ_OP_WRITE && ubuf_dir == ITER_DEST)
-+		return true;
-+
-+	return false;
-+}
-+
-+static struct request *ublk_check_and_get_req(struct kiocb *iocb,
-+		struct iov_iter *iter, size_t *off, int dir)
-+{
-+	struct ublk_device *ub = iocb->ki_filp->private_data;
-+	struct ublk_queue *ubq;
-+	struct request *req;
-+	size_t buf_off;
-+	u16 tag, q_id;
-+
-+	if (!ub)
-+		return ERR_PTR(-EACCES);
-+
-+	if (!user_backed_iter(iter))
-+		return ERR_PTR(-EACCES);
-+
-+	if (ub->dev_info.state == UBLK_S_DEV_DEAD)
-+		return ERR_PTR(-EACCES);
-+
-+	tag = ublk_pos_to_tag(iocb->ki_pos);
-+	q_id = ublk_pos_to_hwq(iocb->ki_pos);
-+	buf_off = ublk_pos_to_buf_off(iocb->ki_pos);
-+
-+	if (q_id >= ub->dev_info.nr_hw_queues)
-+		return ERR_PTR(-EINVAL);
-+
-+	ubq = ublk_get_queue(ub, q_id);
-+	if (!ubq)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (tag >= ubq->q_depth)
-+		return ERR_PTR(-EINVAL);
-+
-+	req = __ublk_check_and_get_req(ub, ubq, tag, buf_off);
-+	if (!req)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (!req->mq_hctx || !req->mq_hctx->driver_data)
-+		goto fail;
-+
-+	if (!ublk_check_ubuf_dir(req, dir))
-+		goto fail;
-+
-+	*off = buf_off;
-+	return req;
-+fail:
-+	ublk_put_req_ref(ubq, req);
-+	return ERR_PTR(-EACCES);
-+}
-+
-+static ssize_t ublk_ch_read_iter(struct kiocb *iocb, struct iov_iter *to)
-+{
-+	struct ublk_queue *ubq;
-+	struct request *req;
-+	size_t buf_off;
-+	size_t ret;
-+
-+	req = ublk_check_and_get_req(iocb, to, &buf_off, ITER_DEST);
-+	if (IS_ERR(req))
-+		return PTR_ERR(req);
-+
-+	ret = ublk_copy_user_pages(req, buf_off, to, ITER_DEST);
-+	ubq = req->mq_hctx->driver_data;
-+	ublk_put_req_ref(ubq, req);
-+
-+	return ret;
-+}
-+
-+static ssize_t ublk_ch_write_iter(struct kiocb *iocb, struct iov_iter *from)
-+{
-+	struct ublk_queue *ubq;
-+	struct request *req;
-+	size_t buf_off;
-+	size_t ret;
-+
-+	req = ublk_check_and_get_req(iocb, from, &buf_off, ITER_SOURCE);
-+	if (IS_ERR(req))
-+		return PTR_ERR(req);
-+
-+	ret = ublk_copy_user_pages(req, buf_off, from, ITER_SOURCE);
-+	ubq = req->mq_hctx->driver_data;
-+	ublk_put_req_ref(ubq, req);
-+
-+	return ret;
-+}
-+
- static const struct file_operations ublk_ch_fops = {
- 	.owner = THIS_MODULE,
- 	.open = ublk_ch_open,
- 	.release = ublk_ch_release,
- 	.llseek = no_llseek,
-+	.read_iter = ublk_ch_read_iter,
-+	.write_iter = ublk_ch_write_iter,
- 	.uring_cmd = ublk_ch_uring_cmd,
- 	.mmap = ublk_ch_mmap,
- };
-@@ -2307,6 +2455,9 @@ static int __init ublk_init(void)
+ static inline void ublk_init_req_ref(const struct ublk_queue *ubq,
+@@ -590,6 +600,9 @@ static int ublk_map_io(const struct ublk_queue *ubq, const struct request *req,
  {
- 	int ret;
+ 	const unsigned int rq_bytes = blk_rq_bytes(req);
  
-+	BUILD_BUG_ON((unsigned long long)UBLKSRV_IO_BUF_OFFSET +
-+			UBLKSRV_IO_BUF_BITS_SIZE < UBLKSRV_IO_BUF_OFFSET);
++	if (ublk_support_user_copy(ubq))
++		return rq_bytes;
 +
- 	init_waitqueue_head(&ublk_idr_wq);
+ 	/*
+ 	 * no zero copy, we delay copy WRITE request data into ublksrv
+ 	 * context and the big benefit is that pinning pages in current
+@@ -614,6 +627,9 @@ static int ublk_unmap_io(const struct ublk_queue *ubq,
+ {
+ 	const unsigned int rq_bytes = blk_rq_bytes(req);
  
- 	ret = misc_register(&ublk_misc);
++	if (ublk_support_user_copy(ubq))
++		return rq_bytes;
++
+ 	if (ublk_need_unmap_req(req)) {
+ 		struct iov_iter iter;
+ 		struct iovec iov;
+@@ -1397,6 +1413,11 @@ static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
+ 			^ (_IOC_NR(cmd_op) == UBLK_IO_NEED_GET_DATA))
+ 		goto out;
+ 
++	if (ublk_support_user_copy(ubq) && ub_cmd->addr) {
++		ret = -EINVAL;
++		goto out;
++	}
++
+ 	ret = ublk_check_cmd_op(cmd_op);
+ 	if (ret)
+ 		goto out;
+@@ -1415,23 +1436,34 @@ static int ublk_ch_uring_cmd(struct io_uring_cmd *cmd, unsigned int issue_flags)
+ 		 */
+ 		if (io->flags & UBLK_IO_FLAG_OWNED_BY_SRV)
+ 			goto out;
+-		/* FETCH_RQ has to provide IO buffer if NEED GET DATA is not enabled */
+-		if (!ub_cmd->addr && !ublk_need_get_data(ubq))
+-			goto out;
++
++		if (!ublk_support_user_copy(ubq)) {
++			/*
++			 * FETCH_RQ has to provide IO buffer if NEED GET
++			 * DATA is not enabled
++			 */
++			if (!ub_cmd->addr && !ublk_need_get_data(ubq))
++				goto out;
++		}
+ 
+ 		ublk_fill_io(io, cmd, ub_cmd->addr);
+ 		ublk_mark_io_ready(ub, ubq);
+ 		break;
+ 	case UBLK_IO_COMMIT_AND_FETCH_REQ:
+ 		req = blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag);
+-		/*
+-		 * COMMIT_AND_FETCH_REQ has to provide IO buffer if NEED GET DATA is
+-		 * not enabled or it is Read IO.
+-		 */
+-		if (!ub_cmd->addr && (!ublk_need_get_data(ubq) || req_op(req) == REQ_OP_READ))
+-			goto out;
++
+ 		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
+ 			goto out;
++
++		if (!ublk_support_user_copy(ubq)) {
++			/*
++			 * COMMIT_AND_FETCH_REQ has to provide IO buffer if
++			 * NEED GET DATA is not enabled or it is Read IO.
++			 */
++			if (!ub_cmd->addr && (!ublk_need_get_data(ubq) ||
++						req_op(req) == REQ_OP_READ))
++				goto out;
++		}
+ 		ublk_fill_io(io, cmd, ub_cmd->addr);
+ 		ublk_commit_completion(ub, ub_cmd);
+ 		break;
+@@ -1944,6 +1976,9 @@ static int ublk_ctrl_add_dev(struct io_uring_cmd *cmd)
+ 	ub->dev_info.flags |= UBLK_F_CMD_IOCTL_ENCODE |
+ 		UBLK_F_URING_CMD_COMP_IN_TASK;
+ 
++	if (ub->dev_info.flags & UBLK_F_USER_COPY)
++		ub->dev_info.flags &= ~UBLK_F_NEED_GET_DATA;
++
+ 	/* We are not ready to support zero copy */
+ 	ub->dev_info.flags &= ~UBLK_F_SUPPORT_ZERO_COPY;
+ 
 diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index 640bf687b94a..a20ea079ca9b 100644
+index a20ea079ca9b..e26ca0bdd7c5 100644
 --- a/include/uapi/linux/ublk_cmd.h
 +++ b/include/uapi/linux/ublk_cmd.h
-@@ -93,9 +93,29 @@
- #define UBLKSRV_CMD_BUF_OFFSET	0
- #define UBLKSRV_IO_BUF_OFFSET	0x80000000
+@@ -165,6 +165,9 @@
+ /* use ioctl encoding for uring command */
+ #define UBLK_F_CMD_IOCTL_ENCODE	(1UL << 6)
  
--/* tag bit is 12bit, so at most 4096 IOs for each queue */
-+/* tag bit is 15bit, so far limit at most 4096 IOs for each queue */
- #define UBLK_MAX_QUEUE_DEPTH	4096
- 
-+/* single IO buffer max size is 32MB */
-+#define UBLK_IO_BUF_OFF		0
-+#define UBLK_IO_BUF_BITS	25
-+#define UBLK_IO_BUF_BITS_MASK	((1ULL << UBLK_IO_BUF_BITS) - 1)
++/* Copy between request and user buffer by pread()/pwrite() */
++#define UBLK_F_USER_COPY	(1UL << 7)
 +
-+/* so at most 32K IOs for each queue */
-+#define UBLK_TAG_OFF		UBLK_IO_BUF_BITS
-+#define UBLK_TAG_BITS		15
-+#define UBLK_TAG_BITS_MASK	((1ULL << UBLK_TAG_BITS) - 1)
-+
-+/* max 4096 queues */
-+#define UBLK_QID_OFF		(UBLK_TAG_OFF + UBLK_TAG_BITS)
-+#define UBLK_QID_BITS		12
-+#define UBLK_QID_BITS_MASK	((1ULL << UBLK_QID_BITS) - 1)
-+
-+#define UBLK_MAX_NR_QUEUES	(1U << UBLK_QID_BITS)
-+
-+#define UBLKSRV_IO_BUF_BITS		(UBLK_QID_OFF + UBLK_QID_BITS)
-+#define UBLKSRV_IO_BUF_BITS_SIZE	(1ULL << UBLKSRV_IO_BUF_BITS)
-+
- /*
-  * zero copy requires 4k block size, and can remap ublk driver's io
-  * request into ublksrv's vm space
+ /* device state */
+ #define UBLK_S_DEV_DEAD	0
+ #define UBLK_S_DEV_LIVE	1
 -- 
 2.39.2
 
