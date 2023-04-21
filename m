@@ -1,141 +1,100 @@
 Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A8BC6EA386
-	for <lists+linux-block@lfdr.de>; Fri, 21 Apr 2023 08:07:47 +0200 (CEST)
+Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id A495C6EA3C9
+	for <lists+linux-block@lfdr.de>; Fri, 21 Apr 2023 08:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233095AbjDUGGN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Apr 2023 02:06:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
+        id S229479AbjDUGXV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Apr 2023 02:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233769AbjDUGGG (ORCPT
+        with ESMTP id S229441AbjDUGXU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Apr 2023 02:06:06 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5040F768E;
-        Thu, 20 Apr 2023 23:05:56 -0700 (PDT)
+        Fri, 21 Apr 2023 02:23:20 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E56B10E6;
+        Thu, 20 Apr 2023 23:23:19 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 9EEA81FDE2;
-        Fri, 21 Apr 2023 06:05:21 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E85FA1FDDC;
+        Fri, 21 Apr 2023 06:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1682057121; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+        t=1682058195; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=64UivdY+JtKHHGrkt+vaul9Etj91J7nvEO+ZQNudNu8=;
-        b=EoDlVx7FPNaOzfpIOSof4jUY/6TuLVkrAyfprfZJfhy51GvMUM+n3ATkasGkLnJs+C5dIO
-        Fyq7gr10RKobM0kDmJs+7SnK1o4KX/w6yFyaD46VkRmYMlY7DT3oYzbLPb0sCTY5l72lbK
-        6SUu6B8aGNy+riILvgXic0sEaMv6Rpk=
+        bh=hhJBJVo6lSGdi5/O4sOXrQaykbKK9fdhVU7edHHlylE=;
+        b=DSJECFvToHXrTvcCalcTp6/qlzl5C6A0KWrIKo+tgS9UF5JHiPpRo94ZoUkmCGVnYN+9ak
+        LT7reZvrfkHdAZMxIzO9QgUyF50kkN5/px+sUSGVsWZqTSOVP8WJUw7F57G6XLz3wVFDmg
+        3KHh0tVEJPybx0WpLh2n7V5Uqsn2NPU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1682057121;
+        s=susede2_ed25519; t=1682058195;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=64UivdY+JtKHHGrkt+vaul9Etj91J7nvEO+ZQNudNu8=;
-        b=ZoTN2WdrMBxSwpS2IqkFOu5Yqa1VIXEp6PiWZwtMiPNUAwRRCg+aBF/tgnYjlop0XjvaQb
-        GQcRmDXfFpwu00Cg==
+        bh=hhJBJVo6lSGdi5/O4sOXrQaykbKK9fdhVU7edHHlylE=;
+        b=A2TpywmWtZvEltYCF/tznTJdkKBug3ZRkn2p05V1TBn+5U3Cy/WJexf9rxzip3kp+2WJns
+        y314nDhp4NtJHyBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 914831390E;
-        Fri, 21 Apr 2023 06:05:21 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C69C41390E;
+        Fri, 21 Apr 2023 06:23:15 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 46mJI6EnQmSAZgAAMHmgww
-        (envelope-from <dwagner@suse.de>); Fri, 21 Apr 2023 06:05:21 +0000
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-nvme@lists.infradead.org
+        id KA2kL9MrQmSjbgAAMHmgww
+        (envelope-from <hare@suse.de>); Fri, 21 Apr 2023 06:23:15 +0000
+Message-ID: <43e70fe1-dafe-6f15-a41a-a879c2e06b27@suse.de>
+Date:   Fri, 21 Apr 2023 08:23:14 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH REPOST blktests v2 2/9] nvme: Do not hard code device size
+ for dd test
+Content-Language: en-US
+To:     Daniel Wagner <dwagner@suse.de>, linux-nvme@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
         Chaitanya Kulkarni <kch@nvidia.com>,
-        Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH REPOST blktests v2 9/9] nvme: Make the number iterations configurable
-Date:   Fri, 21 Apr 2023 08:05:05 +0200
-Message-Id: <20230421060505.10132-10-dwagner@suse.de>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230421060505.10132-1-dwagner@suse.de>
+        Shin'ichiro Kawasaki <shinichiro@fastmail.com>
 References: <20230421060505.10132-1-dwagner@suse.de>
-MIME-Version: 1.0
+ <20230421060505.10132-3-dwagner@suse.de>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20230421060505.10132-3-dwagner@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Some tests hard code high values of iterations. This makes them run
-relatively long compared to the other tests. Introduce a new environment
-variable nvme_num_iter to allow tune the runtime.
+On 4/21/23 08:04, Daniel Wagner wrote:
+> Read the block device sizes instead hard coding them.
+> 
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>   tests/nvme/014 | 10 +++++++++-
+>   tests/nvme/015 | 10 +++++++++-
+>   2 files changed, 18 insertions(+), 2 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- tests/nvme/002 | 2 +-
- tests/nvme/016 | 2 +-
- tests/nvme/017 | 2 +-
- tests/nvme/rc  | 1 +
- 4 files changed, 4 insertions(+), 3 deletions(-)
+Cheers,
 
-diff --git a/tests/nvme/002 b/tests/nvme/002
-index 6b8484844b4d..c28035483514 100755
---- a/tests/nvme/002
-+++ b/tests/nvme/002
-@@ -20,7 +20,7 @@ test() {
- 
- 	_setup_nvmet
- 
--	local iterations=1000
-+	local iterations="${nvme_num_iter}"
- 	local port
- 	port="$(_create_nvmet_port "${nvme_trtype}")"
- 
-diff --git a/tests/nvme/016 b/tests/nvme/016
-index 4eba30223a08..c0c31a55b190 100755
---- a/tests/nvme/016
-+++ b/tests/nvme/016
-@@ -17,7 +17,7 @@ test() {
- 	echo "Running ${TEST_NAME}"
- 
- 	local port
--	local iterations=1000
-+	local iterations="${nvme_num_iter}"
- 	local loop_dev
- 	local subsys_nqn="blktests-subsystem-1"
- 
-diff --git a/tests/nvme/017 b/tests/nvme/017
-index 0248aee9bc41..e1674508f654 100755
---- a/tests/nvme/017
-+++ b/tests/nvme/017
-@@ -18,7 +18,7 @@ test() {
- 
- 	local port
- 	local file_path
--	local iterations=1000
-+	local iterations="${nvme_num_iter}"
- 	local subsys_name="blktests-subsystem-1"
- 
- 	_setup_nvmet
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 2aa34fb0c9b8..bb135502220a 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -18,6 +18,7 @@ def_hostnqn="$(cat /etc/nvme/hostnqn 2> /dev/null)"
- def_hostid="$(cat /etc/nvme/hostid 2> /dev/null)"
- nvme_trtype=${nvme_trtype:-"loop"}
- nvme_img_size=${nvme_img_size:-"350M"}
-+nvme_num_iter=${nvme_num_iter:-"100"}
- 
- _nvme_requires() {
- 	_have_program nvme
+Hannes
 -- 
-2.40.0
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
+Myers, Andrew McDonald, Martje Boudien Moerman
 
