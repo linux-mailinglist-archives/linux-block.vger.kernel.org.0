@@ -2,150 +2,115 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43E3D6ED831
-	for <lists+linux-block@lfdr.de>; Tue, 25 Apr 2023 00:55:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D39DB6ED84C
+	for <lists+linux-block@lfdr.de>; Tue, 25 Apr 2023 01:05:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232896AbjDXWy7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Apr 2023 18:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58268 "EHLO
+        id S232853AbjDXXFq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Apr 2023 19:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231438AbjDXWy6 (ORCPT
+        with ESMTP id S232021AbjDXXFp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Apr 2023 18:54:58 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD987694
-        for <linux-block@vger.kernel.org>; Mon, 24 Apr 2023 15:54:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ENYf10j1MqRNk0l+Yj4IREgBdmy8vc04oN5gGrb7ugIrsBPKmJ5u11gn/fZDXaLYe3BhREVB4lE256HfsGd+zLqdP72glJXx+OPNETKTPqnatc0Nr5LRXpZ4ltvlQDscMCjCZJmovf8aKKzGRas1Kvf56MEi4xGX88wCwN48LPRcvUBPcI7nXAY5trT4t+PSLNAZhci9SobXXPjw9mrSbPPm0TdbwoWR7P+L4utO0NiKUVfF24lGBdy78DX978BccY6N38ts3IZ6GTIWAGhZC9Je5TFJGi49vr1Wm1/k1Kxi0dP5uQV/8E8ju51Osm5xizxg5dFPyu/7YPPNayIinA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TBzr2wsHFDY5MRNjiXZr517dh+qC2IlhgyJeFWBYqtw=;
- b=ZzebjdXZTYSl1nJFgBelKzBapp57iH5cvnIaPl35gFULabAQ1lNWfJc7BR83X/O5MS8tH5BxXsz38GgK/lnyBP8yLyixTCMFrQFrHUd0CnpgVgOZAo+5uD79TAhc/dYJIahEOISmd3B9J4VMtBZ0/L1RZnFXIwHMYfywGdtRIXsyM/cHKUwHVOren61d8WdA7Ncx0ErEw2lOfewZco43lJYozQSxDPqGi60PYAeE0/eETES9oFL7sc12gKR1tdqSCBMpS8dO2U8skaJSJOxKVRVdK4h8zJItalBm+GN5UE/szwGwxiUaeulA76Udv8HS/QFY54Z51eMFNiOVT+3eTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=oracle.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TBzr2wsHFDY5MRNjiXZr517dh+qC2IlhgyJeFWBYqtw=;
- b=HAHaFmoCvcob6v/+haxt0Qy6O3mBdjEwe+zaZ6Rihvv0cAVMot1IVM/jpRt6vqBmv3CDY336fZtidjl3G0aovfdnOAa7SrNsG7k5JtB2YB9PpIO/LNBoU2MROvMNoAIgPwZCSwsf5JpwzTVi+lgwULfDsGbXANjY9g6UTedwxDrBJngbeElBYUomRpg86294GNuk1Qs1qN5G90MHsO87LSyv8UGn0M6pdOglLwf+9NtxN8VNdpCgPyPX3fQVA7zZiq/1sXjPyl8XX+t9d4Hh1MCStll38H++Ew1tLDc6804JCSA2s4GEyrgTRpzxOheYmk6B5INGLW0P75oj7TCCGg==
-Received: from DM6PR02CA0107.namprd02.prod.outlook.com (2603:10b6:5:1f4::48)
- by IA1PR12MB7758.namprd12.prod.outlook.com (2603:10b6:208:421::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.33; Mon, 24 Apr
- 2023 22:54:54 +0000
-Received: from DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1f4:cafe::69) by DM6PR02CA0107.outlook.office365.com
- (2603:10b6:5:1f4::48) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.33 via Frontend
- Transport; Mon, 24 Apr 2023 22:54:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- DM6NAM11FT089.mail.protection.outlook.com (10.13.173.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6340.19 via Frontend Transport; Mon, 24 Apr 2023 22:54:54 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 24 Apr 2023
- 15:54:53 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Mon, 24 Apr 2023 15:54:53 -0700
-Received: from r-arch-stor03.mtr.labs.mlnx (10.127.8.14) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Mon, 24 Apr 2023 15:54:50 -0700
-From:   Max Gurtovoy <mgurtovoy@nvidia.com>
-To:     <martin.petersen@oracle.com>, <hch@lst.de>, <sagi@grimberg.me>,
-        <linux-nvme@lists.infradead.org>
-CC:     <hare@suse.de>, <kbusch@kernel.org>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <oren@nvidia.com>,
-        <oevron@nvidia.com>, <israelr@nvidia.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>
-Subject: [PATCH v2 2/2] nvme-multipath: fix path failover for integrity ns
-Date:   Tue, 25 Apr 2023 01:54:42 +0300
-Message-ID: <20230424225442.18916-3-mgurtovoy@nvidia.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20230424225442.18916-1-mgurtovoy@nvidia.com>
-References: <20230424225442.18916-1-mgurtovoy@nvidia.com>
+        Mon, 24 Apr 2023 19:05:45 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE24393E6;
+        Mon, 24 Apr 2023 16:05:44 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-2478485fd76so3539788a91.2;
+        Mon, 24 Apr 2023 16:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682377544; x=1684969544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VQ8sFzZ9vlAXommM0w2/PXvGSOKBNi6JzIA9K33bVAU=;
+        b=WD+ceziX6bq4nghbfbXLNklOmtmN9i6mL4/A14bPp9VINUyoFGGw8A0p3dQ34YR+WV
+         V9UR0Cc1hxLra/AnBrIM2gSUcmRFtrM5vgBmxBXyH5v7k/iTTDcarBsO+NVHuUmNRLqk
+         dSPFhIKxc3ozN6inFnMIifOSp0RHJ/2bfCVGkAJqyAaWeKXijbsqYI4AwyageV940smm
+         vD8mw7+iTiazzzJQjSbKJtwtb48sO7QbkT+1hYFzC/8SxrZf/CzoX0kZPwM3nS41A+6/
+         q+e/CJ8lPeZJCI19Jmmuvmazx2ljqsBXJIf6qkom4c4wGxwyamVIDb5oE81/KJI0NGbi
+         vljw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682377544; x=1684969544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VQ8sFzZ9vlAXommM0w2/PXvGSOKBNi6JzIA9K33bVAU=;
+        b=L/9LOQi4DBAyEho/2CVm3H+08wddazlRfGzRcaqU84uswt9BXSdtKk1i4wHcrSmGbD
+         w1j5pS+z3mQxflev2ipqPE+jCDq/AQ+wR/tJiK4nyuxveiHCsHcgGImSoP9r/KfPDiw3
+         U3Mtdb9d0OwgqUUEZ0tq7B+AhmHS4uN1JwLvmyM3rve1eyCBnslZiKCRfEUDqXFxQOGi
+         3whQDwq2u0oSkjQplvxNGIAnSNi7MJdTAhdlCqtmAEjkG02wxwbuS22Vujj8hBHSFZRt
+         su7mgX7jEWPnK6d3I0SRdW4P1dpsHRLGcTJjfFcZCwTHW7TT7T38kMJwWURBaByrlySP
+         Wuyg==
+X-Gm-Message-State: AAQBX9c47wHNYsVAaTSSqnLLcAEMDjQlRq5dfsw6Yt6vQrmgPvcnIRxQ
+        oyRxyYnXmBfVzU6rCLhuHAxL2yYiIliF/ZaCIKs=
+X-Google-Smtp-Source: AKy350YiJuL4duFP78n+ItNB+lUpN4w+zRdMWcrBiJgXD2Qk753AS4CLImpFJFw1UHLIr+HVloJCI3jyLWK4zIDEzVY=
+X-Received: by 2002:a17:90a:fd17:b0:247:1de8:8263 with SMTP id
+ cv23-20020a17090afd1700b002471de88263mr16233416pjb.4.1682377544182; Mon, 24
+ Apr 2023 16:05:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT089:EE_|IA1PR12MB7758:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32bda7f1-dd47-4573-3f27-08db4516eb73
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fEve8+nqRui59Pt8RgvgNmFyriWxUnLDxZs/m/8bn4YW+fU2iTDR0mpJocsx43Ua99cHPgL/sGqaAB2fohB6OmblIj0JXf+OsSZ4Asfb8nNFxYa+J5OZXq6juAMn3P6bswA3RP7z17vUAaDTWgaGaBV4g6RR70HZ2rwgWltoFBLBGvG2Dlmq27Uijjd337coBM4Nc2zY7bA0nCtB4diMBmZWhbZlQIRxQEAWVdkoY7+txfrZnHOcudcj0hFVlLCtN034pvRl3SfLDQFysi62W39bty1cYnTvKAK65JLasp9j6RfrK8rF0f6UI0YaSqxyoo1Y8gXb4/pKhapr85A9zYW4xVxE0O2QXKhlQHAAaajQQt3Atf2RPwDELHAu2+jLROL22CqzYdpkPQl+xjvZ8/MotnQ3t/41zWGTx/LKT4uHEwAzK/B3e+YSnrFp4/rhqeb5Ibv5UHjUQtlh4A86uew8TPcZ1GK1Ww7tUV9dY8JUw1kZzzCLLw6biGHlOQvVtZqYJBETOpz7MURs7YaQedF67ZXba6W5d8zBtbkpz+ki1Y5KNj7Upfq7TvgClez8rA1b+B5c+ZDMIpQ4SdrR+bW0Ci1a6HuysxckAUiPp8aW4A1l2ADy3xIz2iEYj+ObTjNRazjdJdtEYsPUoO4cxWmoiKSyzbCfh3joyGAW5TNTbXIwn6x4/pIUwVbV21T3A+4r3jaA+oMyX/d4ZBxT1PvwCrnTuY1yMqESU2BjED8=
-X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(136003)(376002)(346002)(451199021)(40470700004)(36840700001)(46966006)(107886003)(1076003)(26005)(40480700001)(336012)(426003)(2616005)(36756003)(34020700004)(83380400001)(36860700001)(47076005)(186003)(40460700003)(356005)(7636003)(82740400003)(70206006)(478600001)(86362001)(70586007)(8676002)(8936002)(54906003)(110136005)(5660300002)(41300700001)(2906002)(82310400005)(4326008)(6666004)(316002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2023 22:54:54.3446
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32bda7f1-dd47-4573-3f27-08db4516eb73
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7758
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+References: <20230421214400.2836131-1-mcgrof@kernel.org> <20230421214400.2836131-3-mcgrof@kernel.org>
+ <ZEMRbcHSQqyek8Ov@casper.infradead.org> <ZENO4vZzmN8lJocK@bombadil.infradead.org>
+ <CAHbLzkoEAJhz8GG91MSM9+wCYVqseSFzBQdVAP78W5WPq26GHQ@mail.gmail.com> <ZEb2eYX5btfLrUtQ@casper.infradead.org>
+In-Reply-To: <ZEb2eYX5btfLrUtQ@casper.infradead.org>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 24 Apr 2023 16:05:32 -0700
+Message-ID: <CAHbLzkqk2+woBTHEdkYcae6No40S6QXFPQk6hE+_C=7UHbe+Zg@mail.gmail.com>
+Subject: Re: [RFC 2/8] shmem: convert to use folio_test_hwpoison()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, hughd@google.com,
+        akpm@linux-foundation.org, brauner@kernel.org, djwong@kernel.org,
+        p.raghav@samsung.com, da.gomez@samsung.com,
+        a.manzanares@samsung.com, dave@stgolabs.net, yosryahmed@google.com,
+        keescook@chromium.org, hare@suse.de, kbusch@kernel.org,
+        patches@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In case the integrity capabilities of the failed path and the failover
-path don't match, we may run into NULL dereference. Free the integrity
-context during the path failover and let the block layer prepare it
-again if needed during bio_submit.
+On Mon, Apr 24, 2023 at 2:37=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Mon, Apr 24, 2023 at 02:17:12PM -0700, Yang Shi wrote:
+> > On Fri, Apr 21, 2023 at 8:05=E2=80=AFPM Luis Chamberlain <mcgrof@kernel=
+.org> wrote:
+> > >
+> > > On Fri, Apr 21, 2023 at 11:42:53PM +0100, Matthew Wilcox wrote:
+> > > > On Fri, Apr 21, 2023 at 02:43:54PM -0700, Luis Chamberlain wrote:
+> > > > > The PageHWPoison() call can be converted over to the respective f=
+olio call
+> > > > > folio_test_hwpoison(). This introduces no functional changes.
+> > > >
+> > > > Um, no.  Nobody should use folio_test_hwpoison(), it's a nonsense.
+> > > >
+> > > > Individual pages are hwpoisoned.  You're only testing the head page
+> > > > if you use folio_test_hwpoison().  There's folio_has_hwpoisoned() t=
+o
+> > > > test if _any_ page in the folio is poisoned.  But blindly convertin=
+g
+> > > > PageHWPoison to folio_test_hwpoison() is wrong.
+> > >
+> > > Thanks! I don't see folio_has_hwpoisoned() though.
+> >
+> > We do have PageHasHWPoisoned(), which indicates at least one subpage
+> > is hwpoisoned in the huge page.
+> >
+> > You may need to add a folio variant.
+>
+> PAGEFLAG(HasHWPoisoned, has_hwpoisoned, PF_SECOND)
+>         TESTSCFLAG(HasHWPoisoned, has_hwpoisoned, PF_SECOND)
+>
+> That generates folio_has_hwpoisoned() along with
+> folio_set_has_hwpoisoned(), folio_clear_has_hwpoisoned(),
+> folio_test_set_has_hwpoisoned() and folio_test_clear_has_hwpoisoned().
 
-Reviewed-by: Israel Rukshin <israelr@nvidia.com>
-Tested-by: Ori Evron <oevron@nvidia.com>
-Signed-off-by: Ori Evron <oevron@nvidia.com>
-Signed-off-by: Max Gurtovoy <mgurtovoy@nvidia.com>
----
- drivers/nvme/host/multipath.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 9171452e2f6d..f439916f4447 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -6,6 +6,7 @@
- #include <linux/backing-dev.h>
- #include <linux/moduleparam.h>
- #include <linux/vmalloc.h>
-+#include <linux/blk-integrity.h>
- #include <trace/events/block.h>
- #include "nvme.h"
- 
-@@ -106,6 +107,14 @@ void nvme_failover_req(struct request *req)
- 			bio->bi_opf &= ~REQ_POLLED;
- 			bio->bi_cookie = BLK_QC_T_NONE;
- 		}
-+		/*
-+		 * If the failover path will not be integrity capable the bio
-+		 * should not have integrity context.
-+		 * If the failover path will be integrity capable the bio will
-+		 * be prepared for integrity again.
-+		 */
-+		if (bio_integrity(bio))
-+			bio_integrity_free(bio);
- 	}
- 	blk_steal_bios(&ns->head->requeue_list, req);
- 	spin_unlock_irqrestore(&ns->head->requeue_lock, flags);
--- 
-2.18.1
-
+Oh, yeah, I missed that part. Thanks.
