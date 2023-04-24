@@ -2,75 +2,88 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 661AA6ECAAC
-	for <lists+linux-block@lfdr.de>; Mon, 24 Apr 2023 12:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3D6A6ECC09
+	for <lists+linux-block@lfdr.de>; Mon, 24 Apr 2023 14:31:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231611AbjDXKv6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Apr 2023 06:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
+        id S231665AbjDXMbK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Apr 2023 08:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231398AbjDXKv4 (ORCPT
+        with ESMTP id S231635AbjDXMbJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Apr 2023 06:51:56 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F423C0F
-        for <linux-block@vger.kernel.org>; Mon, 24 Apr 2023 03:51:52 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-552d64d1d2eso50860587b3.1
-        for <linux-block@vger.kernel.org>; Mon, 24 Apr 2023 03:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682333511; x=1684925511;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dQlu0Oc2Q0nPMBCNq5iTPUZpwrRZlsMdPt2zjra8+VI=;
-        b=BDOU7+6CjKGfGxohfwPSUG5dvZEz+JIUkSiwN2TDnXREO1m7tnshm1ywQFqtwjCtuy
-         sdc62qMh2n/GKkLEd6inRVKNj3gr719YRClRe48cHw3AS8uelP+ymyFB0srKimerVisT
-         13Xtkz0SBiM8bJqS0byCbOX7vMjZt1uP8WbY7Dvmdpvz4bea0qvNLSFK3Fpq3xaNdk1A
-         qM5VVSk6ocRnmhVuQME3HxgmrkTm+A9wuvOqJRe5jylGoGOAUFMgmutSHMerkJpOSlvK
-         vk/P+3RIGhTNsyHCwljHvfrhHmReD3nCq/AILJxglY3kVglksym9zePn5jHaXsmq1bcD
-         nsfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682333511; x=1684925511;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dQlu0Oc2Q0nPMBCNq5iTPUZpwrRZlsMdPt2zjra8+VI=;
-        b=Y5wQklNbjFAkk0BwJQOD2qliSZUr1N2bTvjjXMIZFPDnk4Zatc1ShRoUujB4aeZ0DB
-         lZp+7TWT+3w5jVhHr2Lrk9QrBwjlyIUQKb40QL9z/i2i89KBag4tUR1SWmr0uIr/sdXu
-         ze4O2ljyA8b3TH8TTCylDdFYAVgi/WJXUb7ANf7kTb0Y8OIU7YVqGkIznYYPQyDG3e2M
-         kOMdDdiUdJUxyZKXy40MrKsr6gru2BHthIE9nP7IXe1iPzJFM2idUzCEUQgwVnXATHg/
-         IgbxM2nqlSV3aZr5vQ/o9rtBecx0VWjBKoSG/wZrUp3KAkTru0hJh9ZA3aLl2SBrZFHz
-         Y+Sg==
-X-Gm-Message-State: AAQBX9ctU3+0ZItwlniageXA/BHIqDDTGjNa0wxRGtm0tZGA4b0fCIrJ
-        YUrsvBNcVCBiLguCvheEb1SVSon+uJUzU/cVYsM=
-X-Google-Smtp-Source: AKy350YG4FdHU8gQxPU2msbtN2QdEjv9b6BhW9wIbc0BoX66FKTBxxpsjwaRJQwRDUNbtvTNf1tLcLROs6TnCelMCbI=
-X-Received: by 2002:a81:4809:0:b0:533:9fa7:bbe9 with SMTP id
- v9-20020a814809000000b005339fa7bbe9mr7936227ywa.8.1682333511052; Mon, 24 Apr
- 2023 03:51:51 -0700 (PDT)
+        Mon, 24 Apr 2023 08:31:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331B8120;
+        Mon, 24 Apr 2023 05:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l7hQoBJfzkfgPB29S154KGrGt0ixs3oVFi/jSX9Pzms=; b=sjx8klUbwyW5poG4vtt9GHne3M
+        IuyC7Pa8loDQwweiLoc92ELtPUZyx8Y42tUlRWkmi+KS7dfAwluiV36VnGBR2M/SrIGpjbF22vMJA
+        fCM1/e9rmvocI23ApG30mhO1wQBkljHUh+CKbIyl5bQDqXNwpBmyu8qZgNeWIQrzDN6H755jlAs0Y
+        Toyra5f2h2BCeN8TevH1pz8ysOh3rTJ7JqmgtPqbuOBunT5NfKQYVe6DXf3nr/uzVcn3ul4X5UhcH
+        HhvUG30dtGsHbTs4kvAre8IQDSsrz8oZGgbcBdRNHAlnoc53J7ERcVSRH1P61KtUHQOB4hTGaITiV
+        nwQQzrzQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pqvLM-000RHP-Lv; Mon, 24 Apr 2023 12:30:56 +0000
+Date:   Mon, 24 Apr 2023 13:30:56 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/17] fs: rename and move block_page_mkwrite_return
+Message-ID: <ZEZ2gCYFlurJfeDE@casper.infradead.org>
+References: <20230424054926.26927-1-hch@lst.de>
+ <20230424054926.26927-4-hch@lst.de>
 MIME-Version: 1.0
-Received: by 2002:a05:7010:7499:b0:32d:e51f:dee8 with HTTP; Mon, 24 Apr 2023
- 03:51:50 -0700 (PDT)
-Reply-To: mariamkouame.info@myself.com
-From:   Mariam Kouame <mariamkouame1990@gmail.com>
-Date:   Mon, 24 Apr 2023 03:51:50 -0700
-Message-ID: <CAKXL+w08stRVVXkGQO0pBQ1x_ozGpGTcLNjscr9ZhQ3xnJgTTA@mail.gmail.com>
-Subject: from mariam kouame
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230424054926.26927-4-hch@lst.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear,
+On Mon, Apr 24, 2023 at 07:49:12AM +0200, Christoph Hellwig wrote:
+> block_page_mkwrite_return is neither block nor mkwrite specific, and
+> should not be under CONFIG_BLOCK.  Move it to mm.h and rename it to
+> errno_to_vmfault.
 
-Please grant me permission to share a very crucial discussion with
-you. I am looking forward to hearing from you at your earliest
-convenience.
+Could you move it about 300 lines down and put it near vmf_error()
+so we think about how to unify the two at some point?
 
-Mrs. Mariam Kouame
+Perhaps it should better be called vmf_fs_error() for now since the
+errnos it handles are the kind generated by filesystems.
+
+> +++ b/include/linux/mm.h
+> @@ -3061,6 +3061,19 @@ extern vm_fault_t filemap_map_pages(struct vm_fault *vmf,
+>  		pgoff_t start_pgoff, pgoff_t end_pgoff);
+>  extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
+>  
+> +/* Convert errno to return value from ->page_mkwrite() call */
+> +static inline vm_fault_t errno_to_vmfault(int err)
+> +{
+> +	if (err == 0)
+> +		return VM_FAULT_LOCKED;
+> +	if (err == -EFAULT || err == -EAGAIN)
+> +		return VM_FAULT_NOPAGE;
+> +	if (err == -ENOMEM)
+> +		return VM_FAULT_OOM;
+> +	/* -ENOSPC, -EDQUOT, -EIO ... */
+> +	return VM_FAULT_SIGBUS;
+> +}
+> +
+>  extern unsigned long stack_guard_gap;
