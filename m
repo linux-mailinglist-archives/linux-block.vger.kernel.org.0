@@ -2,122 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 396426EC11F
-	for <lists+linux-block@lfdr.de>; Sun, 23 Apr 2023 18:35:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2116EC3A0
+	for <lists+linux-block@lfdr.de>; Mon, 24 Apr 2023 04:36:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbjDWQfS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 23 Apr 2023 12:35:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52754 "EHLO
+        id S229476AbjDXCgd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 23 Apr 2023 22:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjDWQfS (ORCPT
+        with ESMTP id S230018AbjDXCgc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 23 Apr 2023 12:35:18 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39CBE76
-        for <linux-block@vger.kernel.org>; Sun, 23 Apr 2023 09:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682267716; x=1713803716;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OWz9rtPgJTTHL93sX+efb11H9SigKy4vznwwIU2qdhc=;
-  b=fNLpMrNLwR25VfmELWyx4eikQi1s2ddkFrewYGvPUSluDpEvsGRnFNIL
-   SBjAh5NA9mgSu/Vil/hZhwer/lH9FsLJRm0UuKTTCtROPSEkEE1uEJV4v
-   4JcLtJ+81QRxknV/642Is01Io62VzM7qYoT0KOC+lG0Dril5E278DWe/b
-   a3OORnrAnasxE2a1Xj8PNSov+roFGSbVDKs563lvTxwKmK013eUYJQkzG
-   9LXbvhcZK+VTijes+xHYhVA5OFuh3M32kEgdoy0f4JYxAF3DjN+SBq0eL
-   2ZihPddymTJ7S6xeH8PkkOxlJnG5cqQ/92fGLLXW4RZyy33cWpbALwLq/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10689"; a="349095261"
-X-IronPort-AV: E=Sophos;i="5.99,220,1677571200"; 
-   d="scan'208";a="349095261"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2023 09:35:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10689"; a="686471140"
-X-IronPort-AV: E=Sophos;i="5.99,220,1677571200"; 
-   d="scan'208";a="686471140"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 23 Apr 2023 09:35:12 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pqcgC-000hyO-0H;
-        Sun, 23 Apr 2023 16:35:12 +0000
-Date:   Mon, 24 Apr 2023 00:34:29 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>, martin.petersen@oracle.com,
-        hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org
-Cc:     oe-kbuild-all@lists.linux.dev, kbusch@kernel.org, axboe@kernel.dk,
-        linux-block@vger.kernel.org, oren@nvidia.com, oevron@nvidia.com,
-        israelr@nvidia.com, Max Gurtovoy <mgurtovoy@nvidia.com>
-Subject: Re: [PATCH v1 1/2] block: bio-integrity: export bio_integrity_free
- func
-Message-ID: <202304240037.LakzPMU9-lkp@intel.com>
-References: <20230423141330.40437-2-mgurtovoy@nvidia.com>
+        Sun, 23 Apr 2023 22:36:32 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C9D22117
+        for <linux-block@vger.kernel.org>; Sun, 23 Apr 2023 19:36:31 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-63b4e5fdb1eso4965572b3a.1
+        for <linux-block@vger.kernel.org>; Sun, 23 Apr 2023 19:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1682303790; x=1684895790;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Er9IodKAhu5Xy/24MmuM3ISnj8SFsqKhcDcV85YYtd4=;
+        b=Myis4J2Z9lmx+G/UGHQV666UFM6OJ8EKtdAre2rvRUUjU2E+rQLKwJ+D0eYgmT72Z9
+         5SaX6H/C77vylvdgFXO4tn7m7ArVvZvZSOxiW6NiLDX5h8w4cEfp1YoxEuHlyRXPz09e
+         5JgUmEmUJwM1H8XEmuezqPmJ+lzP8zXU2UJcc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682303790; x=1684895790;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Er9IodKAhu5Xy/24MmuM3ISnj8SFsqKhcDcV85YYtd4=;
+        b=Is4K/4dO/Z2+/u9U15rQq+/zsDqx62r+FWGLnA3HE8Ip65ZY2SJuG3LRRh507/VGWb
+         wnc8lTmNTjuXd2zVacyOZSihOZH2od5TRkqavkkfwvy5DKCQ/0ixcfuKn1OFi+EbtHOY
+         /GS8bigoxBfkG3Cy1NcJ+FbczDiD2FH5IyacKjQxrFu7aNqt3+zUdmnpaYBc9fqfGQRN
+         fW6rwJR2nse4sHrdeLAw5nZw6nWWDywhi+pPsKXoO8bTpTzcr4+m+yrExKc6Rel3JxP0
+         ourfjoinhPVOacZq3RiqFVjLEtsOKWXQq77+h1UNWRiAgtQwNpkDRu+mpS33b3UArHK5
+         cxYg==
+X-Gm-Message-State: AAQBX9dbUagSWkbuZkEzmMzjd69jWEh/8H7xGHzQELBJNt8cza2cIPe7
+        00RUle1E6rUB+EiUl/IFCw0dgA==
+X-Google-Smtp-Source: AKy350a438RODTsIQbvbOZb4mhoGqhZ1pvzPivBPJ5Ra5hjJQnsR6/IRQqkIVQmM+kaUu2d3rd1IMA==
+X-Received: by 2002:a05:6a00:2406:b0:63d:38aa:5617 with SMTP id z6-20020a056a00240600b0063d38aa5617mr12656579pfh.6.1682303790512;
+        Sun, 23 Apr 2023 19:36:30 -0700 (PDT)
+Received: from google.com (KD124209188001.ppp-bb.dion.ne.jp. [124.209.188.1])
+        by smtp.gmail.com with ESMTPSA id h8-20020aa786c8000000b0063b8279d3aasm6183422pfo.159.2023.04.23.19.36.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Apr 2023 19:36:29 -0700 (PDT)
+Date:   Mon, 24 Apr 2023 11:36:23 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org,
+        philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
+        christoph.boehmwalder@linbit.com, hch@infradead.org,
+        djwong@kernel.org, minchan@kernel.org, senozhatsky@chromium.org,
+        patches@lists.linux.dev, linux-block@vger.kernel.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, hare@suse.de, p.raghav@samsung.com,
+        da.gomez@samsung.com, kbusch@kernel.org
+Subject: Re: [PATCH 5/5] zram: use generic PAGE_SECTORS and PAGE_SECTORS_SHIFT
+Message-ID: <20230424023623.GC1496740@google.com>
+References: <20230421195807.2804512-1-mcgrof@kernel.org>
+ <20230421195807.2804512-6-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230423141330.40437-2-mgurtovoy@nvidia.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230421195807.2804512-6-mcgrof@kernel.org>
+X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FSL_HELO_FAKE,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Max,
+On (23/04/21 12:58), Luis Chamberlain wrote:
+> 
+> Instead of re-defining the already existing constants use the provided ones:
+> 
+> So replace:
+> 
+>  o SECTORS_PER_PAGE_SHIFT with PAGE_SECTORS_SHIFT
+>  o SECTORS_PER_PAGE       with PAGE_SECTORS
+> 
+> This produces no functional changes.
+> 
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on axboe-block/for-next]
-[also build test ERROR on hch-configfs/for-next linus/master v6.3-rc7 next-20230421]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Max-Gurtovoy/block-bio-integrity-export-bio_integrity_free-func/20230423-222054
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
-patch link:    https://lore.kernel.org/r/20230423141330.40437-2-mgurtovoy%40nvidia.com
-patch subject: [PATCH v1 1/2] block: bio-integrity: export bio_integrity_free func
-config: powerpc-allnoconfig (https://download.01.org/0day-ci/archive/20230424/202304240037.LakzPMU9-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/1459ddb310ef47b008de7669cc2c57e02edf4edb
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Max-Gurtovoy/block-bio-integrity-export-bio_integrity_free-func/20230423-222054
-        git checkout 1459ddb310ef47b008de7669cc2c57e02edf4edb
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash arch/powerpc/lib/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304240037.LakzPMU9-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/libnvdimm.h:14,
-                    from arch/powerpc/lib/pmem.c:9:
->> include/linux/bio.h:768:6: error: no previous prototype for 'bio_integrity_free' [-Werror=missing-prototypes]
-     768 | void bio_integrity_free(struct bio *bio)
-         |      ^~~~~~~~~~~~~~~~~~
-   cc1: all warnings being treated as errors
-
-
-vim +/bio_integrity_free +768 include/linux/bio.h
-
-   767	
- > 768	void bio_integrity_free(struct bio *bio)
-   769	{
-   770	}
-   771	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
