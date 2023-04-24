@@ -2,54 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B3706EC4B1
-	for <lists+linux-block@lfdr.de>; Mon, 24 Apr 2023 07:11:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E52D86EC540
+	for <lists+linux-block@lfdr.de>; Mon, 24 Apr 2023 07:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230495AbjDXFLu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Apr 2023 01:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
+        id S230486AbjDXFt7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Apr 2023 01:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjDXFLt (ORCPT
+        with ESMTP id S230430AbjDXFtn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Apr 2023 01:11:49 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E8C30EC
-        for <linux-block@vger.kernel.org>; Sun, 23 Apr 2023 22:11:48 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9B40B67373; Mon, 24 Apr 2023 07:11:44 +0200 (CEST)
-Date:   Mon, 24 Apr 2023 07:11:44 +0200
+        Mon, 24 Apr 2023 01:49:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D5119B3;
+        Sun, 23 Apr 2023 22:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=rxuwauPRwLemTJXwY3VrKMRJhs+GgwhnyBD4s7nm7AY=; b=3MpQEmnJ4id5J1jZ4YFohK5H8q
+        bs7ciFKUIE9sA5F//wk8TThxaPzhLwI6FsUH1vKzNkmpHyq88uhXgF7wTEHMLlqIzGShUjm1tpoQ/
+        V9Tji0dQSyZQM/K5ekDNoH5faw93KpoQQtAuWkTbvGbcl7apn0KwIYdsbsU9S2n8QH5hFEZJO4yZ5
+        yp8GdzGRgc1AHk7t7DD60UmLFSqOCfsXJza1GpGtauNVHkVJvJiQUeDviaHbb72Zouz31uRXC/4XE
+        B+bfmZC/bCU0vqPNw8dnGTB4G0skWpel5LUkS6Ua52Z/N1nKMNRb49n9vt5etsldL20AA2wC69Vmq
+        TVA2auLw==;
+Received: from [2001:4bb8:189:a74f:e8a5:5f73:6d2:23b8] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pqp4s-00FOtV-2G;
+        Mon, 24 Apr 2023 05:49:31 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc:     martin.petersen@oracle.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, kbusch@kernel.org, axboe@kernel.dk,
-        linux-block@vger.kernel.org, oren@nvidia.com, oevron@nvidia.com,
-        israelr@nvidia.com
-Subject: Re: [PATCH v1 0/2] Fix failover to non integrity NVMe path
-Message-ID: <20230424051144.GA9288@lst.de>
-References: <20230423141330.40437-1-mgurtovoy@nvidia.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: RFC: allow building a kernel without buffer_heads
+Date:   Mon, 24 Apr 2023 07:49:09 +0200
+Message-Id: <20230424054926.26927-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230423141330.40437-1-mgurtovoy@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 05:13:28PM +0300, Max Gurtovoy wrote:
-> Hi Christoph/Sagi/Martin,
-> 
-> We're encountered a crash while testing failover between NVMeF/RDMA
-> paths to a target that expose a namespace with metadata. The scenario is
-> the following:
-> Configure one initiator/host path on PI offload capable port (e.g ConnectX-5
-> device) and configure second initiator/host path on non PI offload capable
-> port (e.g ConnectX-3).
+Hi all,
 
-Hmm.  I suspect the right thing to do here is to just fail the second
-connect.
+after all the talk about removing buffer_heads, here is a series that
+shows how to build a kernel without buffer_heads.  And how unrealistic
+it is to remove the entirely.
+
+Most of the series refactors some common code to make implementing direct
+I/O easier without use of the ->direct_IO method and the helpers based
+around it.  It then switches buffered writes (but not writeback) for
+block devices to use iomap unconditionally, but still using buffer_heads.
+
+The final patch then adds a CONFIG_BUFFER_HEAD selected by all file
+systems that need it (which is most block based file systems), makes the
+buffer_head support in iomap optional, and adds an alternative
+implementation of the block device address_operations using iomap.
+
+With this you can build a kernel with block device support, but without
+buffer_heads.  This kernel supports xfs and btrfs as full blown block
+based filesystems, and a bunch of read-only ones like cramfs, erofs and
+squashfs.  Note that the md software raid drivers is also disabled as it
+has some (rather questionable) buffer_head usage in the unconditionally
+built bitmap code.
+
+The series is based on Linux 6.3 and will need some rebasing before it
+can be fed to the maintainers incrementally.  All but the last patch
+definitively seem useful for me.  The last one I think is just to avoid
+introducing new buffer_head dependencies, even if I suspect the real
+life usefulness of a !CONFIG_BUFFER_HEAD kernel might be rather limited.
