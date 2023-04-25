@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26DBB6EE140
-	for <lists+linux-block@lfdr.de>; Tue, 25 Apr 2023 13:48:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CB596EE145
+	for <lists+linux-block@lfdr.de>; Tue, 25 Apr 2023 13:48:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233424AbjDYLsT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 Apr 2023 07:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
+        id S233977AbjDYLs0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Apr 2023 07:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233539AbjDYLsS (ORCPT
+        with ESMTP id S233908AbjDYLsY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 Apr 2023 07:48:18 -0400
+        Tue, 25 Apr 2023 07:48:24 -0400
 Received: from wnew1-smtp.messagingengine.com (wnew1-smtp.messagingengine.com [64.147.123.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC28413C2C;
-        Tue, 25 Apr 2023 04:48:03 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 2C8F52B066F9;
-        Tue, 25 Apr 2023 07:48:03 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5EE083F0;
+        Tue, 25 Apr 2023 04:48:06 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 27F9D2B066FA;
+        Tue, 25 Apr 2023 07:48:06 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 25 Apr 2023 07:48:03 -0400
+  by compute4.internal (MEProxy); Tue, 25 Apr 2023 07:48:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
         cc:cc:content-transfer-encoding:content-type:date:date:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1682423282; x=
-        1682423882; bh=8g6EvhdGCq2wC/q3XFsQYHoYVIEBXGvDsLbPrkyIUkQ=; b=k
-        XBn7XL/In3YgAEuibI+1IYbwkaJULRx+diZaeSf4vVNwkGl8ZJB5fE0B9jaU52fV
-        f7eIDWnClKRcvCqOQsxOn0UUTN8AY4qurqKHUVXbYece0xjpZydf+e/rm6Aq9TaQ
-        ov1/MmzbhlwSJG7ez906KC3GrtdwcwLMakwqzJgnEiWH+pAF+9g55iC/ZjpRpBwx
-        2NqanMLYcecsfs0MHDOubUgSzEvV9lhWFNgMqme/ab+okOVuzKpQmxfkd9cLIi12
-        +qy0cpln7yCTYN15FHu9kAOJ5X2aaJsv8L61IWTcZ/BIjrFVqw397KPzQQUAm27l
-        ymMHn9faqZumvRXuj7RtQ==
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1682423285; x=
+        1682423885; bh=g8baYDk7aVrvyjffaFc8A3P2vBztf7fqyBAqrD5H8oY=; b=t
+        ukT+SMbV3yIq0hsnyiJn/EEYy5Nv+ygK/TWooG58Oj/me/O0E8GaQZenX8ajqrT5
+        H7XPqGP446V0KAhueQvu0sRdpMFoLQiGgWqFEP4fCO/G2lCVOVFDBIuRWgrt+BiP
+        P18k1k35/rfrj38sI53bPSmHspCTqBd9VXGSownuaAZ91atZY9NeJdRpVr+uxQB9
+        Yv6fCH5RGvgZwo19aG8CUltJOhAYoJWgk2E6zQf5372tUshiXw1sJja3EhajcycU
+        YciJ/68lCGggzhVkJxB5w8G+6JLx3gXczylEuA3qrHC/Md4lE1FyfDtK6swEfe5p
+        0MVzkSWTCXxjZ+RNgu2uw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
         :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
         :x-me-sender:x-me-sender:x-sasl-enc; s=ie1e949a3.fm3; t=
-        1682423282; x=1682423882; bh=8g6EvhdGCq2wC/q3XFsQYHoYVIEBXGvDsLb
-        PrkyIUkQ=; b=a4siOPpH/tpxgIo5/8DUQ2XEznd2FpbRksvChb9Uz15o7SC9sRq
-        QzBR/Clv/amqutN96drOrloiRhAa7Au9LIdUR4utsRcpeHlRxq0O2spCNsrO1Z9m
-        i+jz+CvhU4wkr5qQFIwIzVuBwleio6avHJ1Qgr4DuKS00k9jSJU5w8j6NjnPEEot
-        aNyPhQzsM4xmdgClpsRXcmYlgffS6HJSedpPv0E2Ul9fIzsOI7pDRR6LvF6nlWBp
-        rrIE5lDzGjboDGdiZpfEQBtfr7NAZgO+5wy7cwXaHYdzfWNlxCPIw3A3M2zDFV89
-        XulN92g1Rw5NHb9ZbHtx/GL/bPIliY49y2A==
-X-ME-Sender: <xms:8r1HZHZZhVV14PqxwKp8A1a1wrvm2W0sl-j1fIzOJILAWqxzVgu22Q>
-    <xme:8r1HZGY35Uyx4mhR48qFX2MHyk4ENNcdJwG5uSdCREu2-H17D0B_tEN0Shfsv_M3T
-    LNDHr0pz1NeHXFPZqk>
-X-ME-Received: <xmr:8r1HZJ-Sxir3xv_S6ZlRCJKFu55bZKMyhKXQuf9QzaEXVCwfZC3kSYUD13fYSTIs2kZ2QXK21BxASVJhqBwk2sgv5dZxq-3mzjynTJHV>
+        1682423285; x=1682423885; bh=g8baYDk7aVrvyjffaFc8A3P2vBztf7fqyBA
+        qrD5H8oY=; b=Ny72jVuM+5luDrvKCoMwPI9V+5AtsJKbeYtaTHR9Ivimn3PHRX7
+        KXpLBGnvtRKBGuVhz4hlvhRk69DZBbJwcHwAORtHF13P28nB6r5t8/uQAiqEhWYe
+        md4Q9APQwMYf6DUUHiryHqFC9o+7UpiXDGqcqIBIfiX92V51CD9QvT1A09t6bMsb
+        m+xw2RJ/yW39Rein3haR1YIplFcsrRNKNfbgdTbi9DQ0zB8WJjvJEmn6ZHsFdEBj
+        YpMvAsf0ymOL1aRdfbJAtAle2vpCoKDWAjg7gzT0EU8p2hqsvmOhl2adiPMtZjxy
+        hbroKQldEyGna8s3PnUVoYgaiWq7KHs2SMg==
+X-ME-Sender: <xms:9b1HZOAQiatxuRxuXYW3kkaknP9BBCfgR7ZncvRTdymaiuPI04HCPQ>
+    <xme:9b1HZIiL-0TpzHVmCkKrvDHp0FGZVG9vfKa2SzhUmWifU4uor_b8pkNrxciaEQRyA
+    AhdPxS1UAOFGnnLiwU>
+X-ME-Received: <xmr:9b1HZBnxNudTmI6_noCHi9y2196cgY6kaDN00zjrNhvUdaLIUhmgon2oG4FcV6JsBA_FQGQRVmYXVBkMD-m5_MyZkgtchMCl7Htf8I6S>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeduvddggeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -57,21 +57,21 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeduvddggeegucetufdoteggod
     hfehffdtiedthfetleeifeeihfeukeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
     hrrghmpehmrghilhhfrhhomhepshhhihhnihgthhhirhhosehfrghsthhmrghilhdrtgho
     mh
-X-ME-Proxy: <xmx:8r1HZNqzvu-agKDZKjQXvkhEBpZFWTcE5s-rEsSUyOZHkwYoaQ6FQA>
-    <xmx:8r1HZCo0BH_V1KxXiRvT26MBAQLZv_9qUsm5PpwBfbGZmOi3HS7J4Q>
-    <xmx:8r1HZDSORt_WOqbtGNB9iMhEsdnwn3tpHQDGJrQXSiSDkfKnDitagQ>
-    <xmx:8r1HZFUGl1lp4maia1rY8U1OVUQ-QUd6Bs3xqXK-XeHb7vSZB_xEH5DfJ-Tbji2s>
+X-ME-Proxy: <xmx:9b1HZMyJ8AQuVoEKYQBAoWMwWyLg5iumrM9qoxIX7F3AsxHPJl4jmw>
+    <xmx:9b1HZDS4i2I7x7T9HNSFuhNgA64opcGgZBUiLtXGmpjjaeN4APRTWQ>
+    <xmx:9b1HZHbC0uUa_ZMyDS6Xz3ILAkm2tfdLWwfuHgvHYZ7Yh5ULhMWkzQ>
+    <xmx:9b1HZNfAqNHZ06DdSXOqv9Uek-zZrVBnE_QBEoDYMO_GdgMeba1b_qejC2yjO3td>
 Feedback-ID: ie1e949a3:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Apr 2023 07:48:00 -0400 (EDT)
+ 25 Apr 2023 07:48:03 -0400 (EDT)
 From:   Shin'ichiro Kawasaki <shinichiro@fastmail.com>
 To:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org
 Cc:     Chaitanya Kulkarni <kch@nvidia.com>,
         Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
         Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests v2 1/6] common/rc: skip module file check if modules path does not exist
-Date:   Tue, 25 Apr 2023 20:47:40 +0900
-Message-Id: <20230425114745.376322-2-shinichiro@fastmail.com>
+Subject: [PATCH blktests v2 2/6] common/scsi_debug, tests/*: re-define _have_scsi_debug
+Date:   Tue, 25 Apr 2023 20:47:41 +0900
+Message-Id: <20230425114745.376322-3-shinichiro@fastmail.com>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230425114745.376322-1-shinichiro@fastmail.com>
 References: <20230425114745.376322-1-shinichiro@fastmail.com>
@@ -89,28 +89,244 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 
-When all of the kernel modules are built-in, /lib/modules/*/kernel path
-may not exist. In this case, check for the path results in failure. Skip
-the check when the path does not exist.
+As a preparation to adapt test cases to built-in scsi_debug module, re-
+define the _have_scsi_debug function. It checks that the scsi_debug
+module is built as a loadable module. Modify it to check that the
+scsi_debug module is available as built-in module or loadable module.
+
+Also replace all _have_scsi_debug calls in test cases with
+"_have_module scsi_debug" so that the change of _have_scsi_debug do not
+affect the test cases. Following commits will modify them to call
+_have_scsi_debug, only for test cases ready to run with built-in
+scsi_debug.
 
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
 ---
- common/rc | 1 +
- 1 file changed, 1 insertion(+)
+ common/scsi_debug | 2 +-
+ tests/block/001   | 2 +-
+ tests/block/002   | 3 ++-
+ tests/block/009   | 3 ++-
+ tests/block/025   | 2 +-
+ tests/block/027   | 4 +++-
+ tests/block/028   | 2 +-
+ tests/block/032   | 3 ++-
+ tests/loop/004    | 5 ++++-
+ tests/scsi/004    | 2 +-
+ tests/scsi/005    | 3 ++-
+ tests/scsi/007    | 2 +-
+ tests/zbd/008     | 5 +++--
+ tests/zbd/009     | 2 +-
+ tests/zbd/010     | 2 +-
+ 15 files changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/common/rc b/common/rc
-index af4c0b1..f67b434 100644
---- a/common/rc
-+++ b/common/rc
-@@ -36,6 +36,7 @@ _module_file_exists()
- 	local -i count
+diff --git a/common/scsi_debug b/common/scsi_debug
+index ae13bb6..5f73354 100644
+--- a/common/scsi_debug
++++ b/common/scsi_debug
+@@ -5,7 +5,7 @@
+ # scsi_debug helper functions.
  
- 	libpath="/lib/modules/$(uname -r)/kernel"
-+	[[ ! -d $libpath ]] && return 1
- 	count=$(find "$libpath" -name "$ko_underscore*" -o \
- 		     -name "$ko_hyphen*" | wc -l)
- 	((count)) && return 0
+ _have_scsi_debug() {
+-	_have_module scsi_debug
++	_have_driver scsi_debug
+ }
+ 
+ _init_scsi_debug() {
+diff --git a/tests/block/001 b/tests/block/001
+index fb93932..2ea3754 100755
+--- a/tests/block/001
++++ b/tests/block/001
+@@ -13,7 +13,7 @@ DESCRIPTION="stress device hotplugging"
+ TIMED=1
+ 
+ requires() {
+-	_have_scsi_debug
++	_have_module scsi_debug
+ 	_have_driver sd_mod
+ 	_have_driver sr_mod
+ }
+diff --git a/tests/block/002 b/tests/block/002
+index 05d00d2..a5f3ee5 100755
+--- a/tests/block/002
++++ b/tests/block/002
+@@ -12,7 +12,8 @@ DESCRIPTION="remove a device while running blktrace"
+ QUICK=1
+ 
+ requires() {
+-	_have_blktrace && _have_scsi_debug
++	_have_blktrace
++	_have_module scsi_debug
+ }
+ 
+ test() {
+diff --git a/tests/block/009 b/tests/block/009
+index df36edb..d3ea42a 100755
+--- a/tests/block/009
++++ b/tests/block/009
+@@ -12,7 +12,8 @@
+ DESCRIPTION="check page-cache coherency after BLKDISCARD"
+ 
+ requires() {
+-	_have_scsi_debug && _have_program xfs_io
++	_have_module scsi_debug
++	_have_program xfs_io
+ }
+ 
+ test() {
+diff --git a/tests/block/025 b/tests/block/025
+index f746c1c..4c48e9f 100755
+--- a/tests/block/025
++++ b/tests/block/025
+@@ -12,7 +12,7 @@
+ DESCRIPTION="do a huge discard with 4k sector size"
+ 
+ requires() {
+-	_have_scsi_debug
++	_have_module scsi_debug
+ }
+ 
+ test() {
+diff --git a/tests/block/027 b/tests/block/027
+index b60f62c..ab6369b 100755
+--- a/tests/block/027
++++ b/tests/block/027
+@@ -19,7 +19,9 @@ QUICK=1
+ CAN_BE_ZONED=1
+ 
+ requires() {
+-	_have_cgroup2_controller io && _have_scsi_debug && _have_fio
++	_have_cgroup2_controller io
++	_have_module scsi_debug
++	_have_fio
+ }
+ 
+ scsi_debug_stress_remove() {
+diff --git a/tests/block/028 b/tests/block/028
+index 5140d94..13b3278 100755
+--- a/tests/block/028
++++ b/tests/block/028
+@@ -12,7 +12,7 @@ DESCRIPTION="do I/O on scsi_debug with DIF/DIX enabled"
+ DMESG_FILTER="sed -r 's/(guard tag error at sector|ref tag error at location)/blktests failure: \\1/'"
+ 
+ requires() {
+-	_have_scsi_debug
++	_have_module scsi_debug
+ }
+ 
+ test_pi() {
+diff --git a/tests/block/032 b/tests/block/032
+index b07b7ab..8975879 100755
+--- a/tests/block/032
++++ b/tests/block/032
+@@ -13,7 +13,8 @@ DESCRIPTION="remove one mounted device"
+ QUICK=1
+ 
+ requires() {
+-	_have_xfs && _have_scsi_debug
++	_have_xfs
++	_have_module scsi_debug
+ }
+ 
+ test() {
+diff --git a/tests/loop/004 b/tests/loop/004
+index fab34e8..ca52d80 100755
+--- a/tests/loop/004
++++ b/tests/loop/004
+@@ -11,7 +11,10 @@ DESCRIPTION="combine loop direct I/O mode and a custom block size"
+ QUICK=1
+ 
+ requires() {
+-	_have_program xfs_io && _have_scsi_debug && _have_src_program loblksize && _have_loop_set_block_size
++	_have_program xfs_io
++	_have_module scsi_debug
++	_have_src_program loblksize
++	_have_loop_set_block_size
+ }
+ 
+ test() {
+diff --git a/tests/scsi/004 b/tests/scsi/004
+index b5ef2dd..f0845c1 100755
+--- a/tests/scsi/004
++++ b/tests/scsi/004
+@@ -18,7 +18,7 @@ DESCRIPTION="ensure repeated TASK SET FULL results in EIO on timing out command"
+ CAN_BE_ZONED=1
+ 
+ requires() {
+-	_have_scsi_debug
++	_have_module scsi_debug
+ }
+ 
+ test() {
+diff --git a/tests/scsi/005 b/tests/scsi/005
+index 22fb495..efd3d82 100755
+--- a/tests/scsi/005
++++ b/tests/scsi/005
+@@ -11,7 +11,8 @@ DESCRIPTION="test SCSI device blacklisting"
+ QUICK=1
+ 
+ requires() {
+-	_have_scsi_debug && _have_module_param scsi_debug inq_vendor
++	_have_module scsi_debug
++	_have_module_param scsi_debug inq_vendor
+ }
+ 
+ test() {
+diff --git a/tests/scsi/007 b/tests/scsi/007
+index e7088a1..547a735 100755
+--- a/tests/scsi/007
++++ b/tests/scsi/007
+@@ -12,7 +12,7 @@ DESCRIPTION="Trigger the SCSI error handler"
+ QUICK=1
+ 
+ requires() {
+-	_have_scsi_debug
++	_have_module scsi_debug
+ }
+ 
+ config_hz() {
+diff --git a/tests/zbd/008 b/tests/zbd/008
+index c625bad..55b5b6c 100755
+--- a/tests/zbd/008
++++ b/tests/zbd/008
+@@ -13,8 +13,9 @@ DESCRIPTION="check no stale page cache after BLKZONERESET and data read race"
+ TIMED=1
+ 
+ requires() {
+-	_have_scsi_debug && _have_module_param scsi_debug zbc &&
+-		_have_program xfs_io
++	_have_module scsi_debug
++	_have_module_param scsi_debug zbc
++	_have_program xfs_io
+ }
+ 
+ test() {
+diff --git a/tests/zbd/009 b/tests/zbd/009
+index 483cbf6..c0ce1f2 100755
+--- a/tests/zbd/009
++++ b/tests/zbd/009
+@@ -36,7 +36,7 @@ requires() {
+ 	_have_driver btrfs
+ 	_have_module_param scsi_debug zone_cap_mb
+ 	_have_program mkfs.btrfs
+-	_have_scsi_debug
++	_have_module scsi_debug
+ 	have_good_mkfs_btrfs
+ }
+ 
+diff --git a/tests/zbd/010 b/tests/zbd/010
+index 35143b8..c5cb76a 100755
+--- a/tests/zbd/010
++++ b/tests/zbd/010
+@@ -15,7 +15,7 @@ requires() {
+ 	_have_module null_blk
+ 	_have_module_param scsi_debug zone_cap_mb
+ 	_have_program mkfs.f2fs
+-	_have_scsi_debug
++	_have_module scsi_debug
+ }
+ 
+ test() {
 -- 
 2.40.0
 
