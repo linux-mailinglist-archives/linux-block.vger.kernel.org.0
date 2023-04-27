@@ -2,167 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77E6D6F03E7
-	for <lists+linux-block@lfdr.de>; Thu, 27 Apr 2023 12:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68D706F043A
+	for <lists+linux-block@lfdr.de>; Thu, 27 Apr 2023 12:33:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243406AbjD0KCl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 27 Apr 2023 06:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45430 "EHLO
+        id S243559AbjD0Kdr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 27 Apr 2023 06:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243405AbjD0KCi (ORCPT
+        with ESMTP id S243051AbjD0Kdr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 27 Apr 2023 06:02:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E021244A9
-        for <linux-block@vger.kernel.org>; Thu, 27 Apr 2023 03:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682589709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cWUBtLVRFF9DJeWOTiQZdIEEXbV5A04d5aYZUT6wczQ=;
-        b=Dfqaz1P1wMzZ1Ud2N6tMCLSvsJuLOkTIXOeCFPWva8rmzceZqs9mJJecfi2eeSuiqfYm9y
-        +DykdApA083TDThnusnBPcLmbIwPwc8+Na3zuMatSdL+PZFN8eOHWWmRZMgEVpYAGgBBpn
-        GOePHWhabokTocrrstjYlXHNSxix6dY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-258-yvdQFQxbPu2rUTEKvJHsPw-1; Thu, 27 Apr 2023 06:01:44 -0400
-X-MC-Unique: yvdQFQxbPu2rUTEKvJHsPw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 36CAC886462;
-        Thu, 27 Apr 2023 10:01:43 +0000 (UTC)
-Received: from ovpn-8-26.pek2.redhat.com (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A62B1121314;
-        Thu, 27 Apr 2023 10:01:33 +0000 (UTC)
-Date:   Thu, 27 Apr 2023 18:01:28 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Baokun Li <libaokun1@huawei.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-block@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Zhang Yi <yi.zhang@redhat.com>,
-        yangerkun <yangerkun@huawei.com>, ming.lei@redhat.com
-Subject: Re: [ext4 io hang] buffered write io hang in balance_dirty_pages
-Message-ID: <ZEpH+GEj33aUGoAD@ovpn-8-26.pek2.redhat.com>
-References: <ZEnb7KuOWmu5P+V9@ovpn-8-24.pek2.redhat.com>
- <ZEny7Izr8iOc/23B@casper.infradead.org>
- <ZEn/KB0fZj8S1NTK@ovpn-8-24.pek2.redhat.com>
- <dbb8d8a7-3a80-34cc-5033-18d25e545ed1@huawei.com>
+        Thu, 27 Apr 2023 06:33:47 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BFEB4EC9
+        for <linux-block@vger.kernel.org>; Thu, 27 Apr 2023 03:33:44 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=ziyangzhang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Vh7PZu-_1682591616;
+Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0Vh7PZu-_1682591616)
+          by smtp.aliyun-inc.com;
+          Thu, 27 Apr 2023 18:33:42 +0800
+From:   Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
+To:     shinichiro.kawasaki@wdc.com, ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org,
+        Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
+Subject: [PATCH blktests 0/2] blktests: Add ublk testcases
+Date:   Thu, 27 Apr 2023 18:32:40 +0800
+Message-Id: <20230427103242.31361-1-ZiyangZhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <dbb8d8a7-3a80-34cc-5033-18d25e545ed1@huawei.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 02:36:51PM +0800, Baokun Li wrote:
-> On 2023/4/27 12:50, Ming Lei wrote:
-> > Hello Matthew,
-> > 
-> > On Thu, Apr 27, 2023 at 04:58:36AM +0100, Matthew Wilcox wrote:
-> > > On Thu, Apr 27, 2023 at 10:20:28AM +0800, Ming Lei wrote:
-> > > > Hello Guys,
-> > > > 
-> > > > I got one report in which buffered write IO hangs in balance_dirty_pages,
-> > > > after one nvme block device is unplugged physically, then umount can't
-> > > > succeed.
-> > > That's a feature, not a bug ... the dd should continue indefinitely?
-> > Can you explain what the feature is? And not see such 'issue' or 'feature'
-> > on xfs.
-> > 
-> > The device has been gone, so IMO it is reasonable to see FS buffered write IO
-> > failed. Actually dmesg has shown that 'EXT4-fs (nvme0n1): Remounting
-> > filesystem read-only'. Seems these things may confuse user.
-> 
-> 
-> The reason for this difference is that ext4 and xfs handle errors
-> differently.
-> 
-> ext4 remounts the filesystem as read-only or even just continues, vfs_write
-> does not check for these.
+Hi,
 
-vfs_write may not find anything wrong, but ext4 remount could see that
-disk is gone, which might happen during or after remount, however.
+ublk can passthrough I/O requests to userspce daemons. It is very important
+to test ublk crash handling since the userspace part is not reliable.
+Especially we should test removing device, killing ublk daemons and user
+recovery feature.
 
-> 
-> xfs shuts down the filesystem, so it returns a failure at
-> xfs_file_write_iter when it finds an error.
-> 
-> 
-> ``` ext4
-> ksys_write
->  vfs_write
->   ext4_file_write_iter
->    ext4_buffered_write_iter
->     ext4_write_checks
->      file_modified
->       file_modified_flags
->        __file_update_time
->         inode_update_time
->          generic_update_time
->           __mark_inode_dirty
->            ext4_dirty_inode ---> 2. void func, No propagating errors out
->             __ext4_journal_start_sb
->              ext4_journal_check_start ---> 1. Error found, remount-ro
->     generic_perform_write ---> 3. No error sensed, continue
->      balance_dirty_pages_ratelimited
->       balance_dirty_pages_ratelimited_flags
->        balance_dirty_pages
->         // 4. Sleeping waiting for dirty pages to be freed
->         __set_current_state(TASK_KILLABLE)
->         io_schedule_timeout(pause);
-> ```
-> 
-> ``` xfs
-> ksys_write
->  vfs_write
->   xfs_file_write_iter
->    if (xfs_is_shutdown(ip->i_mount))
->      return -EIO;    ---> dd fail
-> ```
+The first patch add user recovery support in miniublk.
 
-Thanks for the info which is really helpful for me to understand the
-problem.
+The second patch add five new tests for ublk to cover above cases.
 
-> > > balance_dirty_pages() is sleeping in KILLABLE state, so kill -9 of
-> > > the dd process should succeed.
-> > Yeah, dd can be killed, however it may be any application(s), :-)
-> > 
-> > Fortunately it won't cause trouble during reboot/power off, given
-> > userspace will be killed at that time.
-> > 
-> > 
-> > 
-> > Thanks,
-> > Ming
-> > 
-> Don't worry about that, we always set the current thread to TASK_KILLABLE
-> 
-> while waiting in balance_dirty_pages().
+Ziyang Zhang (2):
+  src/miniublk: add user recovery
+  tests: Add ublk tests
 
-I have another concern, if 'dd' isn't killed, dirty pages won't be cleaned, and
-these (big amount)memory becomes not usable, and typical scenario could be USB HDD
-unplugged.
+ src/miniublk.c     | 207 +++++++++++++++++++++++++++++++++++++++++++--
+ tests/ublk/001     |  39 +++++++++
+ tests/ublk/001.out |   2 +
+ tests/ublk/002     |  53 ++++++++++++
+ tests/ublk/002.out |   2 +
+ tests/ublk/003     |  43 ++++++++++
+ tests/ublk/003.out |   2 +
+ tests/ublk/004     |  63 ++++++++++++++
+ tests/ublk/004.out |   2 +
+ tests/ublk/005     |  66 +++++++++++++++
+ tests/ublk/005.out |   2 +
+ 11 files changed, 472 insertions(+), 9 deletions(-)
+ create mode 100644 tests/ublk/001
+ create mode 100644 tests/ublk/001.out
+ create mode 100644 tests/ublk/002
+ create mode 100644 tests/ublk/002.out
+ create mode 100644 tests/ublk/003
+ create mode 100644 tests/ublk/003.out
+ create mode 100644 tests/ublk/004
+ create mode 100644 tests/ublk/004.out
+ create mode 100644 tests/ublk/005
+ create mode 100644 tests/ublk/005.out
 
-
-thanks,
-Ming
+-- 
+2.31.1
 
