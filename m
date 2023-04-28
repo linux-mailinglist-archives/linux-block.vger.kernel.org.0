@@ -2,126 +2,160 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 864F16F11F9
-	for <lists+linux-block@lfdr.de>; Fri, 28 Apr 2023 08:51:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B12A26F1272
+	for <lists+linux-block@lfdr.de>; Fri, 28 Apr 2023 09:36:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230071AbjD1Gvi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 28 Apr 2023 02:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
+        id S1345449AbjD1HgW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 28 Apr 2023 03:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345285AbjD1Gvh (ORCPT
+        with ESMTP id S1345179AbjD1HgV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 28 Apr 2023 02:51:37 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA2D30E8;
-        Thu, 27 Apr 2023 23:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682664693; x=1714200693;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aB2YsP1K3RdhXZS8cylTDflNzVA0nU4HK1q9q5xhY3s=;
-  b=KoQKVBPpfgizayAK6YpfB0D9GZGS5gBSbkpXj6PtvEE7O/GDKTvXbRd9
-   dKmdQuiPS5FCtcjmhZ/yqwpmj+5iiw04twk65XdJfEf03jkmXf1S/YsZt
-   Sza5kEWPGIYbd66QaVPsX/2rO221V2pW0FySdIe/CRIbaWFoT2K4Bf2rZ
-   Ip0cR6tUT1GNyUrs98hU0MrkVHexexQ0u8YlRFqCeKdwNCQJPJxvJrwIK
-   eayNzUyq7NC/ymYfY9b83CVAXCtrq36cupeiZzlT8gPPEC+DHdvCR4r2O
-   YwmrFCmMb3z7LAo+qzr2OmKP4GwCoZXOYV7WJDTKOD7730y+KsR2GDtfs
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="347694937"
-X-IronPort-AV: E=Sophos;i="5.99,233,1677571200"; 
-   d="scan'208";a="347694937"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 23:51:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="644999650"
-X-IronPort-AV: E=Sophos;i="5.99,233,1677571200"; 
-   d="scan'208";a="644999650"
-Received: from linux.bj.intel.com ([10.238.156.127])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 23:51:30 -0700
-Date:   Fri, 28 Apr 2023 14:49:53 +0800
-From:   Tao Su <tao1.su@linux.intel.com>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
-        "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH v2] block: Skip destroyed blkg when restart in
- blkg_destroy_all()
-Message-ID: <ZEtskeNOTKeqW2rS@linux.bj.intel.com>
-References: <20230428045149.1310073-1-tao1.su@linux.intel.com>
- <c007f189-8573-8390-4338-ae4c281ffbee@huaweicloud.com>
+        Fri, 28 Apr 2023 03:36:21 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5822701;
+        Fri, 28 Apr 2023 00:36:19 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1a677dffb37so77547445ad.2;
+        Fri, 28 Apr 2023 00:36:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682667379; x=1685259379;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r4T9X6ORTgiJIhVcjeFoQF4kfGQPAh+aPhJ9TCOLtx4=;
+        b=gTkMq43ck648y6RXcRGmriNhxjIOInPfKt5o9jPe9LMJ3iz00MefD9rJqTbBvvgyoE
+         n+YGdtHh9a37pUY7eFw4CB/nD1D3437E2uZD/SRcEaKHSghT3u7OufYEJmPsnIlmBVHb
+         p6VDeiJIpWJ6f37+X2fopxRBcna17GK/b+ymsPcLVyv7yZ2cAfOmnC6VHLvfZ/6XebZY
+         hQ0zkF8NMjv+pmrpO6wx+qAS/A0tvdSo8SrZMcOiZxZaF6FGxDBXxzSUfBBxfN4MvuHC
+         D5KmyFkVJHu07yYZwCnG36VzBr4mK+BQogBKOP8A4lm3amFn6dwayw9KhWFDrGn5SUh5
+         x3QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682667379; x=1685259379;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r4T9X6ORTgiJIhVcjeFoQF4kfGQPAh+aPhJ9TCOLtx4=;
+        b=jY1iSrUKJOStacwZZfQG8yCTYCIdV06QOJhWbJpdlqNi2S5fEfe0/azZ8qVfdDBAE6
+         Z2+VyZXFYpzbXNx9TWZD3oP7wXKL3CMdG4iu7t3df1hZ9G5rdxCf2AKbXd5dzg0lzEIn
+         sJwxIw7VIMF1WG8vxFIeW/9hqKvuLfUR1E3y1n7E9J+iw0C3P7u8M1kqCPP45z/1FNIN
+         69HCbP5PqgvJ3pyRKoQUmTCzStklv1do/nw/meaq2j9mzICMFg72ICDO45W7v4BXs+dX
+         fSDlfREdGJvpMlna25NhyWZ2QxWIWlor6mtGvgHTRxqV9ziRtAD2zhY94i1wgKXuKqcs
+         QwEw==
+X-Gm-Message-State: AC+VfDwgdr/TgJobfe3ZR+y7jdFX/SEDqKy+1cXSVsOkdjKmojRWrkgv
+        ZzkKKsvTDmMs82uMxQ4jUO0=
+X-Google-Smtp-Source: ACHHUZ60fKWLEIqyAWAnKeWdOP4G0oY86AfBkmNu1uZtkYt7SeEF7oCuxi56kt2NKqeyahklw8TmVw==
+X-Received: by 2002:a17:902:e849:b0:1a9:5674:282e with SMTP id t9-20020a170902e84900b001a95674282emr4744876plg.14.1682667379021;
+        Fri, 28 Apr 2023 00:36:19 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-82.three.co.id. [180.214.232.82])
+        by smtp.gmail.com with ESMTPSA id t5-20020a170902a5c500b001a4fecf79e4sm12713524plq.49.2023.04.28.00.36.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Apr 2023 00:36:18 -0700 (PDT)
+Message-ID: <ab90dcf6-5861-48dc-f261-d6851e150863@gmail.com>
+Date:   Fri, 28 Apr 2023 14:36:13 +0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c007f189-8573-8390-4338-ae4c281ffbee@huaweicloud.com>
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4] blk-ioprio: Introduce promote-to-rt policy
+To:     Hou Tao <houtao@huaweicloud.com>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>,
+        Chaitanya Kulkarni <kch@nvidia.com>, cgroups@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, houtao1@huawei.com
+References: <20230428074404.280532-1-houtao@huaweicloud.com>
+Content-Language: en-US
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <20230428074404.280532-1-houtao@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Apr 28, 2023 at 02:12:06PM +0800, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2023/04/28 12:51, Tao Su 写道:
-> > Kernel hang in blkg_destroy_all() when total blkg greater than
-> > BLKG_DESTROY_BATCH_SIZE, because of not removing destroyed blkg in
-> > blkg_list. So the size of blkg_list is same after destroying a
-> > batch of blkg, and the infinite 'restart' occurs.
-> > 
-> > Since blkg should stay on the queue list until blkg_free_workfn(),
-> > skip destroyed blkg when restart a new round, which will solve this
-> > kernel hang issue and satisfy the previous will to restart.
-> 
-> Please add a fix tag:
-> 
-> Fixes: f1c006f1c685 ("blk-cgroup: synchronize pd_free_fn() from
-> blkg_free_workfn() and blkcg_deactivate_policy()")
-> > 
-> > Reported-by: Xiangfei Ma <xiangfeix.ma@intel.com>
-> > Tested-by: Xiangfei Ma <xiangfeix.ma@intel.com>
-> > Tested-by: Farrah Chen <farrah.chen@intel.com>
-> > Signed-off-by: Yu Kuai <yukuai1@huaweicloud.com>
-> 
-> You can remove this tag, and feel free to add:
-> 
-> Suggested-and-reviewed-by: Yu Kuai <yukuai3@huawei.com>
+On 4/28/23 14:44, Hou Tao wrote:
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index f67c0829350b..7544ce00e0cb 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -2024,31 +2024,33 @@ that attribute:
+>    no-change
+>  	Do not modify the I/O priority class.
+>  
+> -  none-to-rt
+> -	For requests that do not have an I/O priority class (NONE),
+> -	change the I/O priority class into RT. Do not modify
+> -	the I/O priority class of other requests.
+> +  promote-to-rt
+> +	For requests that have a non-RT I/O priority class, change it into RT.
+> +	Also change the priority level of these requests to 4. Do not modify
+> +	the I/O priority of requests that have priority class RT.
+>  
+>    restrict-to-be
+>  	For requests that do not have an I/O priority class or that have I/O
+> -	priority class RT, change it into BE. Do not modify the I/O priority
+> -	class of requests that have priority class IDLE.
+> +	priority class RT, change it into BE. Also change the priority level
+> +	of these requests to 0. Do not modify the I/O priority class of
+> +	requests that have priority class IDLE.
+>  
+>    idle
+>  	Change the I/O priority class of all requests into IDLE, the lowest
+>  	I/O priority class.
+>  
+> +  none-to-rt
+> +	Deprecated. Just an alias for promote-to-rt.
+> +
+>  The following numerical values are associated with the I/O priority policies:
+>  
+> -+-------------+---+
+> -| no-change   | 0 |
+> -+-------------+---+
+> -| none-to-rt  | 1 |
+> -+-------------+---+
+> -| rt-to-be    | 2 |
+> -+-------------+---+
+> -| all-to-idle | 3 |
+> -+-------------+---+
+> ++----------------+---+
+> +| no-change      | 0 |
+> ++----------------+---+
+> +| rt-to-be       | 2 |
+> ++----------------+---+
+> +| all-to-idle    | 3 |
+> ++----------------+---+
+>  
+>  The numerical value that corresponds to each I/O priority class is as follows:
+>  
+> @@ -2064,9 +2066,13 @@ The numerical value that corresponds to each I/O priority class is as follows:
+>  
+>  The algorithm to set the I/O priority class for a request is as follows:
+>  
+> -- Translate the I/O priority class policy into a number.
+> -- Change the request I/O priority class into the maximum of the I/O priority
+> -  class policy number and the numerical I/O priority class.
+> +- If I/O priority class policy is promote-to-rt, change the request I/O
+> +  priority class to IOPRIO_CLASS_RT and change the request I/O priority
+> +  level to 4.
+> +- If I/O priorityt class is not promote-to-rt, translate the I/O priority
+> +  class policy into a number, then change the request I/O priority class
+> +  into the maximum of the I/O priority class policy number and the numerical
+> +  I/O priority class.
+>  
+>  PID
+>  ---
 
-Got it, thanks!
+The doc LGTM, thanks!
 
-Tao
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-> 
-> Thanks,
-> Kuai
-> > Signed-off-by: Tao Su <tao1.su@linux.intel.com>
-> > ---
-> > v2:
-> > - change 'directly remove destroyed blkg' to 'skip destroyed blkg'
-> > 
-> > v1:
-> > - https://lore.kernel.org/all/20230425075911.839539-1-tao1.su@linux.intel.com/
-> > 
-> >   block/blk-cgroup.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-> > index bd50b55bdb61..75bad5d60c9f 100644
-> > --- a/block/blk-cgroup.c
-> > +++ b/block/blk-cgroup.c
-> > @@ -528,6 +528,9 @@ static void blkg_destroy_all(struct gendisk *disk)
-> >   	list_for_each_entry_safe(blkg, n, &q->blkg_list, q_node) {
-> >   		struct blkcg *blkcg = blkg->blkcg;
-> > +		if (hlist_unhashed(&blkg->blkcg_node))
-> > +			continue;
-> > +
-> >   		spin_lock(&blkcg->lock);
-> >   		blkg_destroy(blkg);
-> >   		spin_unlock(&blkcg->lock);
-> > 
-> 
+-- 
+An old man doll... just what I always wanted! - Clara
+
