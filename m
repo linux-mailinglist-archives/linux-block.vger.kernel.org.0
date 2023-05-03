@@ -2,140 +2,121 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FDC66F5295
-	for <lists+linux-block@lfdr.de>; Wed,  3 May 2023 10:03:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 964AF6F52C6
+	for <lists+linux-block@lfdr.de>; Wed,  3 May 2023 10:10:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbjECID1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 May 2023 04:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
+        id S229764AbjECIKI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 May 2023 04:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjECIDV (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 04:03:21 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05DB34237;
-        Wed,  3 May 2023 01:03:18 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 556AA200AD;
-        Wed,  3 May 2023 08:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1683100997; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+        with ESMTP id S229756AbjECIKH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 04:10:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E643A49FD
+        for <linux-block@vger.kernel.org>; Wed,  3 May 2023 01:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683101261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UkWJx05E9MLusXpaMoAUDzDV3FpDulw27zMIYbaE6Bk=;
-        b=KU2DPa6TI7pReNFUqNP0wRVepwFCjfFKul70wQS1VRH+6q/hewinLQlxjr2PsZC2u3QjPO
-        PEGqhR4hMzzbp0mSwv37J7RZ+2TmhTHTE+FSBSF2qLSlCJqww/k9dS9aClssmmyO+qQ7yp
-        OQyE4W/dKCspm6r2e3QKn6vf1nuLBjg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1683100997;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UkWJx05E9MLusXpaMoAUDzDV3FpDulw27zMIYbaE6Bk=;
-        b=WkFTJhIjxJcjgTR697sFSUMl2oF6CroR72eIue0A1r96lDhzJ/YT0pswtHorapXyoWaFPV
-        58dLGyC09jtK+qBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3C4E81331F;
-        Wed,  3 May 2023 08:03:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id xt1dDkUVUmRLYgAAMHmgww
-        (envelope-from <dwagner@suse.de>); Wed, 03 May 2023 08:03:17 +0000
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-nvme@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
-        Hannes Reinecke <hare@suse.de>, Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH blktests v3 12/12] nvme: Make the number iterations configurable
-Date:   Wed,  3 May 2023 10:02:58 +0200
-Message-Id: <20230503080258.14525-13-dwagner@suse.de>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230503080258.14525-1-dwagner@suse.de>
-References: <20230503080258.14525-1-dwagner@suse.de>
+        bh=gAItFTPlViLA5pqMw1tfLrN9/2fArVuO7Mw/NYUVWFo=;
+        b=AM58T2GW1NkzejK+xOAnv+cAQIh6MBOmu+vfc2eNg0Rq1oOtWsHV2KjQp/SOYrF/lEJAAa
+        yXphOm01JoLUM+6j6AdL8yYHttbhr+wl1ZFlhNr3l0zfLD4StA6Nv9QIfw7ShjWMAjIMMU
+        dJYTrwqH9xFQ0M2U8yS6b6g8jP1ZHaw=
+Received: from mail-vs1-f69.google.com (mail-vs1-f69.google.com
+ [209.85.217.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-348-fmtg0777NKCQuY5ewj1Oeg-1; Wed, 03 May 2023 04:07:40 -0400
+X-MC-Unique: fmtg0777NKCQuY5ewj1Oeg-1
+Received: by mail-vs1-f69.google.com with SMTP id ada2fe7eead31-42ff94e30acso50562137.0
+        for <linux-block@vger.kernel.org>; Wed, 03 May 2023 01:07:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683101259; x=1685693259;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gAItFTPlViLA5pqMw1tfLrN9/2fArVuO7Mw/NYUVWFo=;
+        b=JibwY1YPqOpU3YH+UgUwiutzz8lgkIVpc+KZmNtUr/Lcj5cvjuyv9XARfWNwhc4tpo
+         MZv6aiZEiZ1LAXMcal9Vmw23I2LTvDhuAKkL2jBbCh+G+FXrNd6jinpgaDs/RM/3l/C1
+         R8ecyIpv8mHFVc3bqPy7czg5Ikpxwomg+t4EQyr6JrtLuQXDyaeevKyS7wEy1Bng6dQv
+         Yd7bMHFfn6yIZV/IXmOU33P8bmh2QZkLEi157mfSY5QXQ5QuQh1hPJsOV/ZmytEmqgQK
+         oZqtuCpBkoG9o17zI08Og+DxTCOaVliad0RPvEv5tLmm9pTmh/vw9gj6/EloOfQyXVGx
+         5nEQ==
+X-Gm-Message-State: AC+VfDwwnLp8NxJhdAo7tXtf7Y/YMXZEXeaA+KbStR4oSDz80Gcs/Ko5
+        0K0DuWTAX/qlKfEdTzAAOZuCFiZ3QHyplxxPJgSpkiXw50snPg1Rwa/uBkdf2fSVcj99zL8PSr1
+        lkF0m8HH6rgSavAb5c8E+qMHMdAo6ME/DAMsV/oU=
+X-Received: by 2002:a05:6102:4423:b0:425:cf4e:f58 with SMTP id df35-20020a056102442300b00425cf4e0f58mr5826611vsb.2.1683101259595;
+        Wed, 03 May 2023 01:07:39 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4gxwahabBGCrNHNF6s+lz4ioJ9i0off0x3X7IY8Rl43m4GKL65v9RDPFIN5Ni52UaiJ5vDPD2ER12791dZuv8=
+X-Received: by 2002:a05:6102:4423:b0:425:cf4e:f58 with SMTP id
+ df35-20020a056102442300b00425cf4e0f58mr5826607vsb.2.1683101259381; Wed, 03
+ May 2023 01:07:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230503060450.GC3223426@dread.disaster.area>
+In-Reply-To: <20230503060450.GC3223426@dread.disaster.area>
+From:   Ming Lei <ming.lei@redhat.com>
+Date:   Wed, 3 May 2023 16:07:28 +0800
+Message-ID: <CAFj5m9+xC7ojwz-gA5T+PEiN9NEyUi+bp4D3XuEPD7hoPrZe-g@mail.gmail.com>
+Subject: Re: [6.4-current oops] null ptr deref in blk_mq_sched_bio_merge()
+ from blkdev readahead
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, axboe@kernel.dk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Some tests hard code high values of iterations. This makes them run
-relatively long compared to the other tests. Introduce a new environment
-variable nvme_num_iter to allow tune the runtime.
+On Wed, May 3, 2023 at 2:06=E2=80=AFPM Dave Chinner <david@fromorbit.com> w=
+rote:
+>
+> Hi folks,
+>
+> fstests running shared/032 on XFS with a default mkfs and mount
+> config causes a panic in the block layer when userspace is operating
+> directly on the block device like this:
+>
+> SECTION       -- xfs
+> FSTYP         -- xfs (debug)
+> PLATFORM      -- Linux/x86_64 test3 6.3.0-dgc+ #1792 SMP PREEMPT_DYNAMIC =
+Wed May  3 15:20:20 AEST 2023
+> MKFS_OPTIONS  -- -f -m rmapbt=3D1 /dev/pmem1
+> MOUNT_OPTIONS -- -o dax=3Dnever -o context=3Dsystem_u:object_r:root_t:s0 =
+/dev/pmem1 /mnt/scratch
+>
+> ....
+>
+> [   56.070695] run fstests shared/032 at 2023-05-03 15:21:55
+> [   56.768890] BTRFS: device fsid 355df15c-7bc5-49b0-9b5d-dc25ce855a9d de=
+vid 1 transid 6 /dev/pmem1 scanned by mkfs.btrfs (5836)
+> [   57.285879]  pmem1: p1
+> [   57.301845] BUG: kernel NULL pointer dereference, address: 00000000000=
+000a8
+> [   57.304562] #PF: supervisor read access in kernel mode
+> [   57.306499] #PF: error_code(0x0000) - not-present page
+> [   57.308414] PGD 0 P4D 0
+> [   57.309401] Oops: 0000 [#1] PREEMPT SMP
+> [   57.310876] CPU: 3 PID: 4478 Comm: (udev-worker) Not tainted 6.3.0-dgc=
++ #1792
+> [   57.313517] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
+S 1.16.2-debian-1.16.2-1 04/01/2014
+> [   57.317089] RIP: 0010:blk_mq_sched_bio_merge+0x7b/0x100
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- Documentation/running-tests.md | 2 ++
- tests/nvme/016                 | 2 +-
- tests/nvme/017                 | 2 +-
- tests/nvme/rc                  | 1 +
- 4 files changed, 5 insertions(+), 2 deletions(-)
+Hi Dave,
 
-diff --git a/Documentation/running-tests.md b/Documentation/running-tests.md
-index 6b34a253fd97..243975e43583 100644
---- a/Documentation/running-tests.md
-+++ b/Documentation/running-tests.md
-@@ -107,6 +107,8 @@ The NVMe tests can be additionally parameterized via environment variables.
- - nvme_img_size: '1G' (default)
-   Run the tests with given image size in bytes. 'm' and 'g' postfix
- 	are supported.
-+- nvme_num_iter: 1000 (default)
-+  The number of iterations a test should do.
- 
- ### Running nvme-rdma nvmeof-mp srp tests
- 
-diff --git a/tests/nvme/016 b/tests/nvme/016
-index 4eba30223a08..c0c31a55b190 100755
---- a/tests/nvme/016
-+++ b/tests/nvme/016
-@@ -17,7 +17,7 @@ test() {
- 	echo "Running ${TEST_NAME}"
- 
- 	local port
--	local iterations=1000
-+	local iterations="${nvme_num_iter}"
- 	local loop_dev
- 	local subsys_nqn="blktests-subsystem-1"
- 
-diff --git a/tests/nvme/017 b/tests/nvme/017
-index 0248aee9bc41..e1674508f654 100755
---- a/tests/nvme/017
-+++ b/tests/nvme/017
-@@ -18,7 +18,7 @@ test() {
- 
- 	local port
- 	local file_path
--	local iterations=1000
-+	local iterations="${nvme_num_iter}"
- 	local subsys_name="blktests-subsystem-1"
- 
- 	_setup_nvmet
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index a14458d5b80f..76ca683a40b4 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -18,6 +18,7 @@ def_hostnqn="$(cat /etc/nvme/hostnqn 2> /dev/null)"
- def_hostid="$(cat /etc/nvme/hostid 2> /dev/null)"
- nvme_trtype=${nvme_trtype:-"loop"}
- nvme_img_size=${nvme_img_size:-"1G"}
-+nvme_num_iter=${nvme_num_iter:-"1000"}
- 
- _nvme_requires() {
- 	_have_program nvme
--- 
-2.40.0
+It is fixed by:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commi=
+t/?h=3Dfor-6.4/block&id=3D38c8e3dfb2a1be863b7f5aad7755d5e9727da8a5
+
+Thanks,
+Ming
 
