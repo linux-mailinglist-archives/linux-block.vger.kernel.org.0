@@ -2,89 +2,99 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAC716F5EF4
-	for <lists+linux-block@lfdr.de>; Wed,  3 May 2023 21:11:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E17856F5F93
+	for <lists+linux-block@lfdr.de>; Wed,  3 May 2023 22:02:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbjECTLs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 May 2023 15:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
+        id S229506AbjECUCb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 May 2023 16:02:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbjECTLr (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 15:11:47 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51F2B7AA3;
-        Wed,  3 May 2023 12:11:44 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-306281edf15so4858551f8f.1;
-        Wed, 03 May 2023 12:11:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683141103; x=1685733103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=54FcX7m56ayBWjcvud1Kf/5sZaGwEHaWh+uspYclntQ=;
-        b=Mpz4hTf3Xp44JTzlnxjhUNRd8Hwn0unWpsdfKLEYhvCSgYWfYX7rC89PVZ/TRcErr4
-         76uZQy14HkwfLJZfP+LhDE9qbBDc4tF5TQncPkhYaxEhzl3qqntjSu7N1948sPbB0p7A
-         kbOmsrPEwIdKhbZVesPMGDoP2GPBQueDREcQimlsKbFFwxBHCqgpSrQ2b9T2pT0+KVss
-         lopUUIVea47bJCipnzRnFuEqinp9TNcuTeF/clMZyAoXNSDflvd4/JvBJ/otPttdkfO+
-         AD2m2r7X4UwEbusT9ochfmZ76pGwGT/D/azz3cFYqHpYzptlVjz9CkHnOXZW3pJCi0yZ
-         Hbmw==
-X-Gm-Message-State: AC+VfDw1g2VTld7hDdDtDqUiAvLT+ZAUD9OnCsRhBBNLV0orOG/FhpiO
-        pnkWPQOfex4czW9wTuPMcqY=
-X-Google-Smtp-Source: ACHHUZ6HDa6PpE0QZkVce9/fw7pukp37W1XiFxrwL1kOk7bquMTIwotFwziRSBw5lTeJ/dgM0pLGRQ==
-X-Received: by 2002:a5d:6b09:0:b0:306:2eab:fb8c with SMTP id v9-20020a5d6b09000000b003062eabfb8cmr771025wrw.42.1683141102639;
-        Wed, 03 May 2023 12:11:42 -0700 (PDT)
-Received: from gmail.com (fwdproxy-cln-029.fbsv.net. [2a03:2880:31ff:1d::face:b00c])
-        by smtp.gmail.com with ESMTPSA id k5-20020adff5c5000000b002f103ca90cdsm34480997wrp.101.2023.05.03.12.11.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 May 2023 12:11:42 -0700 (PDT)
-Date:   Wed, 3 May 2023 12:11:40 -0700
-From:   Breno Leitao <leitao@debian.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     io-uring@vger.kernel.org, linux-nvme@lists.infradead.org,
-        asml.silence@gmail.com, axboe@kernel.dk, ming.lei@redhat.com,
-        leit@fb.com, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, sagi@grimberg.me, joshi.k@samsung.com,
-        kbusch@kernel.org
-Subject: Re: [PATCH v3 4/4] block: ublk_drv: Add a helper instead of casting
-Message-ID: <ZFKx7Kn2Q3qiKfze@gmail.com>
-References: <20230430143532.605367-1-leitao@debian.org>
- <20230430143532.605367-5-leitao@debian.org>
- <20230501043122.GC19673@lst.de>
+        with ESMTP id S229514AbjECUCa (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 16:02:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5934583D5;
+        Wed,  3 May 2023 13:02:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E7BB362FD7;
+        Wed,  3 May 2023 20:02:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77841C433D2;
+        Wed,  3 May 2023 20:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683144148;
+        bh=/lNAoQxWtfPR7luO8Cwj40gwEJXj4ZYIz5wP+3/mfxU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=IAeAeOrFqZWwAD0qKh4PYrjpYioHsgNV59Ed6sFLFZQroD1YvFgsW3IWfQWHs0ieo
+         PZGHTOQBrLQYPDT87YwDSNDR6SNtI+Pvg31HAHlw/wFgOSwgmLsQM6I/sz0TdC550n
+         l7s7rnZ9CqcS9+zqOvj7uu4inUuCPq75sPPHyEz2z0lwH6zu89YZQbeEcQRNLPMQE7
+         C1P4jjLFtMNkumyYi5+0YW1Ot9qKUhid+UsC4OwO1r/N8+dO19nAHaBvakPolYYyQG
+         KiEJulqpruObthESNSPuYDBuXZjonYSiLUg0p0vDU8SrAfEcP8dBuSUrl+Utsou0n4
+         EKDWHl5BDeTFQ==
+Message-ID: <e44bb405be06fe97dbb0af3e47b4e8dd1c065f29.camel@kernel.org>
+Subject: Re: LSF/MM/BPF BoF: pains / goods with automation with kdevops
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        lsf-pc@lists.linux-foundation.org
+Cc:     amir73il@gmail.com, a.manzanares@samsung.com,
+        chandan.babu@oracle.com, josef@toxicpanda.com,
+        Pankaj Raghav <p.raghav@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+Date:   Wed, 03 May 2023 16:02:26 -0400
+In-Reply-To: <Y9YFgDXnB9dTZIXA@bombadil.infradead.org>
+References: <Y9YFgDXnB9dTZIXA@bombadil.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230501043122.GC19673@lst.de>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, May 01, 2023 at 06:31:22AM +0200, Christoph Hellwig wrote:
-> On Sun, Apr 30, 2023 at 07:35:32AM -0700, Breno Leitao wrote:
-> > ublk driver is using casts to get private data from uring cmd struct.
-> > Let's use a proper helper, as an interface that requires casts in all
-> > callers is one asking for bugs.
-> > 
-> > Suggested-by: Christoph Hellwig <hch@lst.de>
-> 
-> No, I've not suggested this.
-> 
-> > +static inline struct ublksrv_ctrl_cmd *ublk_uring_ctrl_cmd(
-> > +		struct io_uring_cmd *cmd)
-> > +{
-> > +	return (struct ublksrv_ctrl_cmd *)cmd->sqe->cmd;
-> > +}
-> 
-> I've two times explained we need a core io_uring helper to remove this
-> casting in the drivers, and I've explained how to do that and provided
-> the actual code for it.
+On Sat, 2023-01-28 at 21:34 -0800, Luis Chamberlain wrote:
+> More suitable towards a BoF as I don't *think* a larger audience would be
+> interested. At the last LSF during our talks about automation it was sugg=
+ested
+> we could share a repo and go to town as we're all adults. That's been don=
+e:
+>=20
+> https://github.com/linux-kdevops/kdevops
+>=20
+> At ALPSS folks suggested maybe non-github, best we can do for now is
+> gitlab:
+>=20
+> https://gitlab.com/linux-kdevops/kdevops
+>=20
+> There's been quite a bit of development from folks on the To list. But
+> there's also bugs even on the upstream kernel now that can sometimes erk =
+us.
+> One example is 9p is now used to be able to compile Linux on the host
+> instead of the guests. Well if you edit a file after boot on the host
+> for Linux, the guest won't see the update, so I guess 9p doesn't update
+> the guest's copy yet. Guests just have to reboot now. So we have to fix t=
+hat
+> and I guess add 9p to fstests. Or now that we have NFS support thanks to
+> Jeff, maybe use that as an option? What's the overhead for automation Vs =
+9p?
+>=20
+> We dicussed sharing more archive of results for fstests/blktests. Done.
+> What are the other developer's pain points? What would folks like? If
+> folks want demos for complex setups let me know and we can just do that
+> through zoom and record them / publish online to help as documentation
+> (please reply to this thread in private to me and I can set up a
+> session). Let's use the time at LSF more for figuring out what is needed
+> for the next year.
+>=20
+>   Luis
 
-Sorry for it, somehow I misunderstood what you meant. I re-read the
-thread and got what you said.
-
-I am preparing a V4 with the new approach, and I will send it tomorrow.
+Luis mentioned that no one had replied to this expressing interest. I'm
+definitely interested in discussing kdevops if the schedule's not
+already full.
+--=20
+Jeff Layton <jlayton@kernel.org>
