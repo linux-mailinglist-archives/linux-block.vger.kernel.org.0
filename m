@@ -2,68 +2,112 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C0F06F4FE5
-	for <lists+linux-block@lfdr.de>; Wed,  3 May 2023 08:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3E336F5199
+	for <lists+linux-block@lfdr.de>; Wed,  3 May 2023 09:32:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbjECGE6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 May 2023 02:04:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
+        id S229930AbjECHcC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 May 2023 03:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjECGE5 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 02:04:57 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD942D6B
-        for <linux-block@vger.kernel.org>; Tue,  2 May 2023 23:04:55 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1aaf7067647so23137555ad.0
-        for <linux-block@vger.kernel.org>; Tue, 02 May 2023 23:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1683093894; x=1685685894;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MDRQRdyZS/T+X4lsFUSgluI/WlYxzE7pQwx3ic8Xr44=;
-        b=Jw8drwQZaAeoy/SUvR7g1veEr8dlHJF0AquJjUmxq0Si5IxwdiCtCxs43pzwsVMfnY
-         mSSq2kSUWgflIpPWxkzKUSJVlc3GC01Gk4vtQUq9X/pkzhDbAaLSVGpir2PYgMvA0jS9
-         6Al50raFsk5Dmxl6pGTiHkH7Uo3GbSfjEtp8472SXZfjMmgtQgAxltx4yHe2hiZX/8My
-         k/tX9AFQ9dhGJoyP6R04swAT7R2OeU0KlRmKOqS4Ho9DmN5Pg5BKLMHn/f8en4q4db+q
-         WoFL6EK10SdISmIfATHk2Vxf6sJiDiBTAW3WVteeRmHX8PA6X/IeoCKfj37QKDMQGNvO
-         fQNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683093894; x=1685685894;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MDRQRdyZS/T+X4lsFUSgluI/WlYxzE7pQwx3ic8Xr44=;
-        b=lyHHYZj+LFDYhX7xep0wfOutr8EkSZBUfsb6mfNMRgUqbFpYlzpA/r9Y5O3xWanbYm
-         /uCdxCefy7E2YBFxzHUjIiBe+PwgH/0+glg70+2K9EaEtGYoLsvISm1y02qTgEUEbqRN
-         hyJwnBYhzCYUe1xE2Pw2vVBQzjJTSXMseyM/FTLPADHUUKQ/+KpotbS9ogLQsVM6ferf
-         JwzhTOW8Pfa2oulFOx6S2gn4FEQABp3JYF1U/gVRU6lLM/nLTt06i+shaR1Dn3Sikve5
-         0zhV5re5DGEPu4+/k73RstXKCdxRreNueLDJtD67doohcm23mlinaHDIzOXZUnDiEB3i
-         u3cw==
-X-Gm-Message-State: AC+VfDyPxJpU/AUB2en0KAAALnDJGLSJvGT/EcpvqDoVMzZd3gvqwCNf
-        5llIRX9Ru1+IVCKp9KytRrx/coniFhHRl6bHpiBBFQ==
-X-Google-Smtp-Source: ACHHUZ5/3UAdX7u+gtieAw2vbSrkfqv2xakKrS9XytzsyomFuwRTWECbxaFwcB6WJkO0oCTABgrwWg==
-X-Received: by 2002:a17:903:18c:b0:1a6:87e3:db50 with SMTP id z12-20020a170903018c00b001a687e3db50mr1233951plg.1.1683093894576;
-        Tue, 02 May 2023 23:04:54 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-88-204.pa.nsw.optusnet.com.au. [49.181.88.204])
-        by smtp.gmail.com with ESMTPSA id c9-20020a170902b68900b001ab016ea3f9sm3717752pls.21.2023.05.02.23.04.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 May 2023 23:04:53 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1pu5be-00AkKn-Ob; Wed, 03 May 2023 16:04:50 +1000
-Date:   Wed, 3 May 2023 16:04:50 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-block@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        axboe@kernel.dk
-Subject: [6.4-current oops] null ptr deref in blk_mq_sched_bio_merge() from
- blkdev readahead
-Message-ID: <20230503060450.GC3223426@dread.disaster.area>
+        with ESMTP id S229676AbjECHbT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 03:31:19 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F514224
+        for <linux-block@vger.kernel.org>; Wed,  3 May 2023 00:30:20 -0700 (PDT)
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230503073016epoutp0343f8187e093e9f6538502ef5e6233b0e~bkaNnOo320374303743epoutp03T
+        for <linux-block@vger.kernel.org>; Wed,  3 May 2023 07:30:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230503073016epoutp0343f8187e093e9f6538502ef5e6233b0e~bkaNnOo320374303743epoutp03T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1683099016;
+        bh=PX80pXyrz5Pk/LGoddm1Q+DUvFTMdVIqX7qjN4s8Mf0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qnQXb0fMU2siOFFr44T5ce/NvMHKEon3DZIS6f17dlA9MxncKBRW8wko1rdjmDCec
+         FVvZp8AhIlRdDe87yP8VKDmdqH0lNydREWqQMaNPR6MWfPMuIsif3WTYC//kyhaAnx
+         6U8rfb25blGskA6C/HMUDPhfC8xvUJlysCjVTVyM=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20230503073016epcas5p2527fa05cf2c458dba83430f14f265a5c~bkaNL_GQ42217122171epcas5p28;
+        Wed,  3 May 2023 07:30:16 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.183]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4QB7rl0brCz4x9Q1; Wed,  3 May
+        2023 07:30:15 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        54.A7.55646.68D02546; Wed,  3 May 2023 16:30:15 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20230503073014epcas5p4bffb8eff90ccaac5dcf94b1048b512a0~bkaLkk_Yk3190531905epcas5p41;
+        Wed,  3 May 2023 07:30:14 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230503073014epsmtrp15154f407959302115b23b73f53a8d35d~bkaLjwarb0383503835epsmtrp12;
+        Wed,  3 May 2023 07:30:14 +0000 (GMT)
+X-AuditID: b6c32a4b-913ff7000001d95e-57-64520d869afc
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3D.71.28392.68D02546; Wed,  3 May 2023 16:30:14 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20230503073013epsmtip2a41d5816231594b84091f170eef47d86~bkaKZvW_r1202912029epsmtip2a;
+        Wed,  3 May 2023 07:30:13 +0000 (GMT)
+Date:   Wed, 3 May 2023 12:57:17 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Keith Busch <kbusch@meta.com>
+Cc:     linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        axboe@kernel.dk, hch@lst.de, xiaoguang.wang@linux.alibaba.com,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: [RFC 0/3] nvme uring passthrough diet
+Message-ID: <20230503072625.GA18487@green245>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+In-Reply-To: <20230501153306.537124-1-kbusch@meta.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRmVeSWpSXmKPExsWy7bCmpm47b1CKwZ8uRovVd/vZLFauPspk
+        MenQNUaLM1cXsljsvaVtMX/ZU3aLTX9PMjmwe1w+W+qxaVUnm8fOh5Yem5fUe+y+2cDmce5i
+        hcfnTXIB7FHZNhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+Abpu
+        mTlAtygplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCkwK9IoTc4tL89L18lJLrAwN
+        DIxMgQoTsjM2/F7AXPBXtOLizR2MDYwdQl2MnBwSAiYSzYfvM3cxcnEICexmlJh4eB4ThPOJ
+        UWLujKWsEM5nRok53buZYVq23/rECJHYxShxe9U6qP5njBKb171iAqliEVCR+Hl0BVA7Bweb
+        gKbEhcmlIGERAUWJ88BQAKlnFljMKNHxbi4rSEJYwEjiZMMesA28AroSm148ZoKwBSVOznzC
+        AmJzCphJdPX/B6sRFVCWOLDtONitEgKtHBJd83azQZznIrH/3kkmCFtY4tXxLewQtpTEy/42
+        KDtZ4tLMc1A1JRKP9xyEsu0lWk/1gy1gFsiQuD/tIjuEzSfR+/sJE8gzEgK8Eh1t0MBTlLg3
+        6SkrhC0u8XDGEijbQ2Lfjc3skEDpZJQ49ug32wRGuVlI/pmFZAWEbSXR+aGJdRbQCmYBaYnl
+        /zggTE2J9bv0FzCyrmKUTC0ozk1PLTYtMM5LLYfHcnJ+7iZGcPrU8t7B+OjBB71DjEwcjIcY
+        JTiYlUR4PxT6pQjxpiRWVqUW5ccXleakFh9iNAXGz0RmKdHkfGACzyuJNzSxNDAxMzMzsTQ2
+        M1QS51W3PZksJJCeWJKanZpakFoE08fEwSnVwOSyZjXvD+b7ncsT5zaaHy3fESvRdOauYsNM
+        7bbVM+a7PFv8vzf/Ouu2MKNYfwGrqh8TvcJNg659enOD/fRXNim7eP/CljuFZww/6/FKKM9R
+        4NXwYL3naDPloPzN2KfHDvAHcTZqLo43bzLaZfZRaOmvAFmm24dWpjJbSMdday8KlU4N7XS7
+        uuG5zrtV6stT5O8znkmt3sd2XNn3s+OepnaJvYalFwparOwm6eivyHywe3mkoZV3RtmNztuz
+        JhVz9h9ke7lpToqPUum8loPX8uav/SWzI4kpSc93Ig/DqcDrHT6JU5J2Xb2fqyeeH/vt/puW
+        TNtK2WNqh1b5JZie4/ovrHyN8UJyivHL7sRLSizFGYmGWsxFxYkAD778NygEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSvG4bb1CKwedLUhar7/azWaxcfZTJ
+        YtKha4wWZ64uZLHYe0vbYv6yp+wWm/6eZHJg97h8ttRj06pONo+dDy09Ni+p99h9s4HN49zF
+        Co/Pm+QC2KO4bFJSczLLUov07RK4Mm7Ne8desF644nXvY+YGxiv8XYycHBICJhLbb31i7GLk
+        4hAS2MEosX/xA3aIhLhE87UfULawxMp/z9khip4AFR1YzgSSYBFQkfh5dAVrFyMHB5uApsSF
+        yaUgYREBRYnzQJeA1DMLLGaU2Nj5lxEkISxgJHGyYQ8ziM0roCux6cVjJoihnYwSN7etZYFI
+        CEqcnPkEzGYWMJOYt/khM8gCZgFpieX/OEDCnEDhrv7/YHNEBZQlDmw7zjSBUXAWku5ZSLpn
+        IXQvYGRexSiZWlCcm55bbFhglJdarlecmFtcmpeul5yfu4kRHA9aWjsY96z6oHeIkYmD8RCj
+        BAezkgjvh0K/FCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8F7pOxgsJpCeWpGanphakFsFkmTg4
+        pRqYFn0/4SEtaOkhwvqWqf/A0j98hgpBuhoNyQGrSmrezLpUtKhdyigi7PTzey4zqgU+sc9V
+        Px+sq518K6V7RftW77mMB9a4aXs3BraX/TL+X/SpZdYT5Rgb8e06XCJ1M2K2a8ycdzpce4pr
+        VcuteMkFPerblUK6drV9W5moYCDzw7eC2fLjpnoJT5GeSe31+5OL/Puq/E97K1tO/y/K6Zub
+        Z/r/73PuytXrZ7ls3OXxSniJfA7PtQVLQoKmbLkutb1aQzRk5/XnfVktfWd2799ygnVH8Ybi
+        Az0nndYlFxxfXBDQ39XlxlbuPCORd02DOI/p7MW9otsmPG22N9zH1rryvPGjlXu8HL9c/qVl
+        UKrEUpyRaKjFXFScCAA3qU5H9gIAAA==
+X-CMS-MailID: 20230503073014epcas5p4bffb8eff90ccaac5dcf94b1048b512a0
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----fzg6GfPKCulTz7v5vTU-rVtg6j3uQrp2-IaGXZnwsLp_SU4m=_62827_"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230501154403epcas5p388c607114ad6f9d20dfd3ec958d88947
+References: <CGME20230501154403epcas5p388c607114ad6f9d20dfd3ec958d88947@epcas5p3.samsung.com>
+        <20230501153306.537124-1-kbusch@meta.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,95 +115,62 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi folks,
+------fzg6GfPKCulTz7v5vTU-rVtg6j3uQrp2-IaGXZnwsLp_SU4m=_62827_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-fstests running shared/032 on XFS with a default mkfs and mount
-config causes a panic in the block layer when userspace is operating
-directly on the block device like this:
+On Mon, May 01, 2023 at 08:33:03AM -0700, Keith Busch wrote:
+>From: Keith Busch <kbusch@kernel.org>
+>
+>When you disable all the optional features in your kernel config and
+>request queue, it looks like the normal request dispatching is just as
+>fast as any attempts to bypass it. So let's do that instead of
+>reinventing everything.
+>
+>This doesn't require additional queues or user setup. It continues to
+>work with multiple threads and processes, and relies on the well tested
+>queueing mechanisms that track timeouts, handle tag exhuastion, and sync
+>with controller state needed for reset control, hotplug events, and
+>other error handling.
 
-SECTION       -- xfs
-FSTYP         -- xfs (debug)
-PLATFORM      -- Linux/x86_64 test3 6.3.0-dgc+ #1792 SMP PREEMPT_DYNAMIC Wed May  3 15:20:20 AEST 2023
-MKFS_OPTIONS  -- -f -m rmapbt=1 /dev/pmem1
-MOUNT_OPTIONS -- -o dax=never -o context=system_u:object_r:root_t:s0 /dev/pmem1 /mnt/scratch
+I agree with your point that there are some functional holes in
+the complete-bypass approach. Yet the work was needed to be done
+to figure out the gain (of approach) and see whether the effort to fill
+these holes is worth.
 
-....
+On your specific points
+- requiring additional queues: not a showstopper IMO.
+  If queues are lying unused with HW, we can reap more performance by
+  giving those to application. If not, we fall back to the existing path.
+  No disruption as such.
+- tag exhaustion: that is not missing, a retry will be made. I actually
+  wanted to do single command-id management at the io_uring level itself,
+  and that would have cleaned things up. But it did not fit in
+  because of submission/completion lifetime differences.
+- timeout and other bits you mentioned: yes, those need more work.
 
-[   56.070695] run fstests shared/032 at 2023-05-03 15:21:55
-[   56.768890] BTRFS: device fsid 355df15c-7bc5-49b0-9b5d-dc25ce855a9d devid 1 transid 6 /dev/pmem1 scanned by mkfs.btrfs (5836)
-[   57.285879]  pmem1: p1
-[   57.301845] BUG: kernel NULL pointer dereference, address: 00000000000000a8
-[   57.304562] #PF: supervisor read access in kernel mode
-[   57.306499] #PF: error_code(0x0000) - not-present page
-[   57.308414] PGD 0 P4D 0 
-[   57.309401] Oops: 0000 [#1] PREEMPT SMP
-[   57.310876] CPU: 3 PID: 4478 Comm: (udev-worker) Not tainted 6.3.0-dgc+ #1792
-[   57.313517] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[   57.317089] RIP: 0010:blk_mq_sched_bio_merge+0x7b/0x100
-[   57.319059] Code: c0 49 8b 5c 24 38 48 03 1c c5 c0 69 71 82 b8 02 00 00 00 f7 c2 00 00 40 00 75 07 31 c0 84 d2 0f 94 c0 48 8b 94 c3 90 00 00 00 <f6> 82 a8 0d
-[   57.325898] RSP: 0018:ffffc900042ab880 EFLAGS: 00010246
-[   57.327835] RAX: 0000000000000001 RBX: ffff888237d80000 RCX: 0000000000000000
-[   57.330492] RDX: 0000000000000000 RSI: ffff88810135e000 RDI: ffff8885c1928000
-[   57.333118] RBP: ffffc900042ab8b0 R08: 0000000000001000 R09: 0000000000000001
-[   57.335791] R10: ffff8885c1928000 R11: 0000000000000008 R12: ffff8885c1928000
-[   57.338298] R13: ffff88810135e000 R14: 0000000000000001 R15: ffff88810135e000
-[   57.340092] FS:  00007f4adf5438c0(0000) GS:ffff888237d80000(0000) knlGS:0000000000000000
-[   57.342132] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   57.343536] CR2: 00000000000000a8 CR3: 0000000102e4a005 CR4: 0000000000060ee0
-[   57.345150] Call Trace:
-[   57.345732]  <TASK>
-[   57.346265]  ? mempool_alloc_slab+0x15/0x20
-[   57.347242]  blk_mq_attempt_bio_merge+0x4e/0x50
-[   57.348288]  blk_mq_submit_bio+0x232/0x580
-[   57.349230]  __submit_bio+0x1e/0x110
-[   57.350066]  submit_bio_noacct_nocheck+0x24a/0x330
-[   57.351161]  submit_bio_noacct+0x196/0x490
-[   57.352104]  submit_bio+0x43/0x60
-[   57.352879]  mpage_readahead+0xf4/0x130
-[   57.353762]  ? blkdev_write_begin+0x30/0x30
-[   57.354741]  blkdev_readahead+0x15/0x20
-[   57.355719]  read_pages+0x5c/0x230
-[   57.356625]  page_cache_ra_unbounded+0x148/0x190
-[   57.357764]  force_page_cache_ra+0x9a/0xc0
-[   57.358845]  page_cache_sync_ra+0x2e/0x50
-[   57.359839]  filemap_get_pages+0x10f/0x670
-[   57.360870]  ? walk_component+0xc7/0x170
-[   57.361859]  filemap_read+0xed/0x380
-[   57.362819]  ? __ia32_compat_sys_lookup_dcookie+0x410/0xe80
-[   57.364086]  ? __might_fault+0x22/0x30
-[   57.364953]  blkdev_read_iter+0xe3/0x1e0
-[   57.365871]  vfs_read+0x213/0x2e0
-[   57.366646]  ksys_read+0x71/0xf0
-[   57.367396]  __x64_sys_read+0x19/0x20
-[   57.368244]  do_syscall_64+0x34/0x80
-[   57.369064]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-[   57.370225] RIP: 0033:0x7f4adf7c503d
-[   57.371054] Code: 31 c0 e9 c6 fe ff ff 50 48 8d 3d a6 55 0a 00 e8 39 fe 01 00 66 0f 1f 84 00 00 00 00 00 80 3d a1 25 0e 00 00 74 17 31 c0 0f 05 <48> 3d 00 fc
-[   57.375229] RSP: 002b:00007ffd91350748 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[   57.376933] RAX: ffffffffffffffda RBX: 000055c11070df70 RCX: 00007f4adf7c503d
-[   57.378565] RDX: 0000000000000040 RSI: 000055c1105c48f8 RDI: 000000000000000f
-[   57.380177] RBP: 00000001fffe0000 R08: 000055c1106f41c0 R09: 00007f4adf8a02e0
-[   57.381790] R10: 0000000000000000 R11: 0000000000000246 R12: 000055c1105c48d0
-[   57.383406] R13: 0000000000000040 R14: 000055c11070dfc8 R15: 000055c1105c48e8
-[   57.385026]  </TASK>
+Now with the alternate proposed in this series, I doubt whether similar
+gains are possible. Happy to be wrong if that happens.
+Please note that for some non-block command sets, passthrough is the only
+usable interface. So these users would want some of the functionality
+bits too (e.g. cgroups). Cgroups is broken for the passthrough at the
+moment, and I wanted to do something about that too.
 
-shared/032 is entirely a mkfs test - it is checking that mkfs for
-the filesystem under test recognises other filesystem signatures on
-the block device and does not overwrite them by accident. This test
-does not involve kernel filesystem code at all.
+Overall, the usage model that I imagine with multiple paths is this -
 
-Somewhere in amongst the running of various mkfs operations during
-the test, a udev-worker is triggered and is doing something with
-the block device (probing it?) and that results in the above oops
-occurring.
+1. existing block IO path: for block-friendly command-sets
+2. existing passthrough IO path: for non-block command sets
+3. new pure-bypass variant: for both; and this one deliberately trims all
+the fat at the expense of some features/functionality.
 
-This is only happening on the machine I have configured with (fake)
-PMEM devices - virtio, sd and nvme devices do not appear to
-be triggering this. That kinda implies a timing issue - pmem
-completes IO synchronously, all the the others use async
-completion...
+#2 will not have all the features of #1, but good to have all that are
+necessary and do not have semantic troubles to fit in. And these may
+grow over time, leading to a kernel that has improved parity between block
+and non-block io.
+Do you think this makes sense?
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+------fzg6GfPKCulTz7v5vTU-rVtg6j3uQrp2-IaGXZnwsLp_SU4m=_62827_
+Content-Type: text/plain; charset="utf-8"
+
+
+------fzg6GfPKCulTz7v5vTU-rVtg6j3uQrp2-IaGXZnwsLp_SU4m=_62827_--
