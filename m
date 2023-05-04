@@ -2,142 +2,146 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE1F16F7656
-	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 22:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D32566F7760
+	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 22:49:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232620AbjEDUGI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 May 2023 16:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34456 "EHLO
+        id S230364AbjEDUtD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 May 2023 16:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233009AbjEDUFl (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 May 2023 16:05:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48F519925;
-        Thu,  4 May 2023 12:53:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6BEDA63899;
-        Thu,  4 May 2023 19:52:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF67C433EF;
-        Thu,  4 May 2023 19:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683229953;
-        bh=HIskSI5/26AxnyRWmrGkaPUF4mHYJscsMvsbDYG59lw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kpkvu4MU0SX+bM89RG9ZuW96ojSxl0BXxRjSY7Ncl65IcvnNiTusLScXnXqrEZZZY
-         OjN720EileXwja65831f88ItBifaqFfI1MdAiQijG+ZT0RhMz9tZloLFvjnbiA62hZ
-         WR0231eNYfMOl0TTKkgq9r9aBBE2Z8Nwnzkf1+0YMWAz2vGYZwES0X9pbta9bw7lxw
-         cF8s+Hkh/3vPsHMe3NTkOzU09MSSGjmhrWrVUSKlUpFmmq35vCUTF70fhqRIMLF3zy
-         TiwvvylKhsIF0jFgVzgPU0lgTVYk4Z2EnDsKihFho0df+OUjSM4hR1Q4JVB51VKhOm
-         qo+WASSiATzqQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaitanya Kulkarni <kch@nvidia.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/13] null_blk: Always check queue mode setting from configfs
-Date:   Thu,  4 May 2023 15:52:03 -0400
-Message-Id: <20230504195207.3809116-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230504195207.3809116-1-sashal@kernel.org>
-References: <20230504195207.3809116-1-sashal@kernel.org>
+        with ESMTP id S229758AbjEDUsb (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 May 2023 16:48:31 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3DBE1A5
+        for <linux-block@vger.kernel.org>; Thu,  4 May 2023 13:48:03 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4efe8991bafso1171343e87.0
+        for <linux-block@vger.kernel.org>; Thu, 04 May 2023 13:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20221208.gappssmtp.com; s=20221208; t=1683233220; x=1685825220;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y4BDNA8x26D+gc/g54BXpX2Nts8JzomtqMRTsoUmvOM=;
+        b=dK+cb6qFoS8f8aSmVvVAt5PvFkbfebo96ikBzM42EXW4mpWiwa1Xzr6hqInDJkJllV
+         LkzodpaC5RmaLoC/KSCVi2iREl/0gnHLU2KW/W/yKQ9Z4htTtjFr3tc9cObZvMR5xs0Q
+         erUQOsXHbfsAo+ceTs5y1EaycVxues5onIkZQxrkCA+8s6UaZMg+zpP791U/faRXPMQC
+         ekCzoKEM7TuJ32S6FsoJLM0rYSkoPuu5Moy3mE+SqK+2eaj99mO+JaOLDX8I7hEDYhO8
+         UTcNBlirIIA3+GZNyjh+PNdvgfAOE/dtbwpdITnsG4ToDBwfzRXRyKXum7S3mxC1X3Zr
+         wbcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683233220; x=1685825220;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y4BDNA8x26D+gc/g54BXpX2Nts8JzomtqMRTsoUmvOM=;
+        b=bwZbC70qivdRmvuF20fveHvcB46d7mz0Msm8tymumZ85koCJcqLq2asmzA2X1fDn3S
+         wOPomVBMcKtsq1Lo1sgOMkXRIP6x0vAtIa+DaD+oSTh9Kx0WSre1gtNjXGeP3pLpc1NF
+         +0+A0sEYt7TK0BkORvPbkvqUGDh9KsbxEKQiCWuG4fppyu0IJ4/H3nvm5CXUIfpQkL1Q
+         vNtgSGRTw5V24jgjOvTpBmJ830mtdKZA74/LXwOUPT9mDF+nzMXyVw3z2RN6FxEwlXEA
+         /TW5aM2ibdp2T10VUw9k4B3+F2oqOD94i1fvYTDpNqrpchKQ+pLI4VGc9bGHc4OQensT
+         2fQg==
+X-Gm-Message-State: AC+VfDwOYdtrp2m0t39o9xVTxrmt3V+Vn5PUSWMQTv5koWEqfnfKgsIy
+        zf/nN/lQryMiDSsrb3meh167g8l9HHeXovxsmLo=
+X-Google-Smtp-Source: ACHHUZ7LMxRdUgv7ihKLYjHLVFijm/GoKWSZk2d5fk7YgzP3ozFOa7A5lw2KFJwtJFmO5XoiGrGuqw==
+X-Received: by 2002:a17:906:4794:b0:94a:937a:58f1 with SMTP id cw20-20020a170906479400b0094a937a58f1mr235860ejc.1.1683232645162;
+        Thu, 04 May 2023 13:37:25 -0700 (PDT)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id rl12-20020a170907216c00b009599c3a019fsm7809ejb.60.2023.05.04.13.37.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 May 2023 13:37:24 -0700 (PDT)
+References: <20230503090708.2524310-1-nmi@metaspace.dk>
+ <da7b815d-3da8-38e5-9b25-b9cfb6878293@acm.org>
+ <87jzxot0jk.fsf@metaspace.dk>
+ <b9a1c1b2-3baa-2cad-31ae-8b14e4ee5709@acm.org>
+ <ZFP+8apHunCCMmOZ@kbusch-mbp.dhcp.thefacebook.com>
+ <e7bc2155-613b-8904-9942-2e9615b0dc63@kernel.dk>
+User-agent: mu4e 1.10.3; emacs 28.2.50
+From:   Andreas Hindborg <nmi@metaspace.dk>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Hannes Reinecke <hare@suse.de>,
+        lsf-pc@lists.linux-foundation.org, rust-for-linux@vger.kernel.org,
+        linux-block@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?utf-8?Q?Bj?= =?utf-8?Q?=C3=B6rn?= Roy Baron 
+        <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+        open list <linux-kernel@vger.kernel.org>, gost.dev@samsung.com
+Subject: Re: [RFC PATCH 00/11] Rust null block driver
+Date:   Thu, 04 May 2023 21:59:53 +0200
+In-reply-to: <e7bc2155-613b-8904-9942-2e9615b0dc63@kernel.dk>
+Message-ID: <875y97u92z.fsf@metaspace.dk>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Chaitanya Kulkarni <kch@nvidia.com>
 
-[ Upstream commit 63f8793ee60513a09f110ea460a6ff2c33811cdb ]
+Jens Axboe <axboe@kernel.dk> writes:
 
-Make sure to check device queue mode in the null_validate_conf() and
-return error for NULL_Q_RQ as we don't allow legacy I/O path, without
-this patch we get OOPs when queue mode is set to 1 from configfs,
-following are repro steps :-
+> On 5/4/23 12:52?PM, Keith Busch wrote:
+>> On Thu, May 04, 2023 at 11:36:01AM -0700, Bart Van Assche wrote:
+>>> On 5/4/23 11:15, Andreas Hindborg wrote:
+>>>> If it is still unclear to you why this effort was started, please do let
+>>>> me know and I shall try to clarify further :)
+>>>
+>>> It seems like I was too polite in my previous email. What I meant is that
+>>> rewriting code is useful if it provides a clear advantage to the users of
+>>> a driver. For null_blk, the users are kernel developers. The code that has
+>>> been posted is the start of a rewrite of the null_blk driver. The benefits
+>>> of this rewrite (making low-level memory errors less likely) do not outweigh
+>>> the risks that this effort will introduce functional or performance regressions.
+>> 
+>> Instead of replacing, would co-existing be okay? Of course as long as
+>> there's no requirement to maintain feature parity between the two.
+>> Actually, just call it "rust_blk" and declare it has no relationship to
+>> null_blk, despite their functional similarities: it's a developer
+>> reference implementation for a rust block driver.
+>
+> To me, the big discussion point isn't really whether we're doing
+> null_blk or not, it's more if we want to go down this path of
+> maintaining rust bindings for the block code in general. If the answer
+> to that is yes, then doing null_blk seems like a great choice as it's
+> not a critical piece of infrastructure. It might even be a good idea to
+> be able to run both, for performance purposes, as the bindings or core
+> changes.
+>
+> But back to the real question... This is obviously extra burden on
+> maintainers, and that needs to be sorted out first. Block drivers in
+> general are not super security sensitive, as it's mostly privileged code
+> and there's not a whole lot of user visibile API. And the stuff we do
+> have is reasonably basic. So what's the long term win of having rust
+> bindings? This is a legitimate question. I can see a lot of other more
+> user exposed subsystems being of higher interest here.
 
-modprobe null_blk nr_devices=0
-mkdir config/nullb/nullb0
-echo 1 > config/nullb/nullb0/memory_backed
-echo 4096 > config/nullb/nullb0/blocksize
-echo 20480 > config/nullb/nullb0/size
-echo 1 > config/nullb/nullb0/queue_mode
-echo 1 > config/nullb/nullb0/power
+Even though the block layer is not usually exposed in the same way that
+something like the USB stack is, absence of memory safety bugs is a very
+useful property. If this is attainable without sacrificing performance,
+it seems like a nice option to offer future block device driver
+developers. Some would argue that it is worth offering even in the face
+of performance regression.
 
-Entering kdb (current=0xffff88810acdd080, pid 2372) on processor 42 Oops: (null)
-due to oops @ 0xffffffffc041c329
-CPU: 42 PID: 2372 Comm: sh Tainted: G           O     N 6.3.0-rc5lblk+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-RIP: 0010:null_add_dev.part.0+0xd9/0x720 [null_blk]
-Code: 01 00 00 85 d2 0f 85 a1 03 00 00 48 83 bb 08 01 00 00 00 0f 85 f7 03 00 00 80 bb 62 01 00 00 00 48 8b 75 20 0f 85 6d 02 00 00 <48> 89 6e 60 48 8b 75 20 bf 06 00 00 00 e8 f5 37 2c c1 48 8b 75 20
-RSP: 0018:ffffc900052cbde0 EFLAGS: 00010246
-RAX: 0000000000000001 RBX: ffff88811084d800 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888100042e00
-RBP: ffff8881053d8200 R08: ffffc900052cbd68 R09: ffff888105db2000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000002
-R13: ffff888104765200 R14: ffff88810eec1748 R15: ffff88810eec1740
-FS:  00007fd445fd1740(0000) GS:ffff8897dfc80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000060 CR3: 0000000166a00000 CR4: 0000000000350ee0
-DR0: ffffffff8437a488 DR1: ffffffff8437a489 DR2: ffffffff8437a48a
-DR3: ffffffff8437a48b DR6: 00000000ffff0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- nullb_device_power_store+0xd1/0x120 [null_blk]
- configfs_write_iter+0xb4/0x120
- vfs_write+0x2ba/0x3c0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x3b/0x90
- entry_SYSCALL_64_after_hwframe+0x72/0xdc
-RIP: 0033:0x7fd4460c57a7
-Code: 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
-RSP: 002b:00007ffd3792a4a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fd4460c57a7
-RDX: 0000000000000002 RSI: 000055b43c02e4c0 RDI: 0000000000000001
-RBP: 000055b43c02e4c0 R08: 000000000000000a R09: 00007fd44615b4e0
-R10: 00007fd44615b3e0 R11: 0000000000000246 R12: 0000000000000002
-R13: 00007fd446198520 R14: 0000000000000002 R15: 00007fd446198700
- </TASK>
+While memory safety is the primary feature that Rust brings to the
+table, it does come with other nice features as well. The type system,
+language support stackless coroutines and error handling language
+support are all very useful.
 
-Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
-Link: https://lore.kernel.org/r/20230416220339.43845-1-kch@nvidia.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/block/null_blk.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Regarding maintenance of the bindings, it _is_ an amount extra work. But
+there is more than one way to structure that work. If Rust is accepted
+into the block layer at some point, maintenance could be structured in
+such a way that it does not get in the way of existing C maintenance
+work. A "rust keeps up or it breaks" model. That could work for a while.
 
-diff --git a/drivers/block/null_blk.c b/drivers/block/null_blk.c
-index b499e72b2847e..38660b5cfb73c 100644
---- a/drivers/block/null_blk.c
-+++ b/drivers/block/null_blk.c
-@@ -1780,6 +1780,11 @@ static int null_init_tag_set(struct nullb *nullb, struct blk_mq_tag_set *set)
- 
- static void null_validate_conf(struct nullb_device *dev)
- {
-+	if (dev->queue_mode == NULL_Q_RQ) {
-+		pr_err("legacy IO path is no longer available\n");
-+		return -EINVAL;
-+	}
-+
- 	dev->blocksize = round_down(dev->blocksize, 512);
- 	dev->blocksize = clamp_t(unsigned int, dev->blocksize, 512, 4096);
- 	if (dev->use_lightnvm && dev->blocksize != 4096)
--- 
-2.39.2
-
+Best regards
+Andreas
