@@ -2,64 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92CF26F772D
-	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 22:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 133856F7792
+	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 22:56:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230311AbjEDUiR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 May 2023 16:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53978 "EHLO
+        id S229678AbjEDU4O (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 May 2023 16:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230379AbjEDUiB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 May 2023 16:38:01 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4860E191D6
-        for <linux-block@vger.kernel.org>; Thu,  4 May 2023 13:31:32 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1ab26a274d6so1425545ad.0
-        for <linux-block@vger.kernel.org>; Thu, 04 May 2023 13:31:32 -0700 (PDT)
+        with ESMTP id S231239AbjEDU4L (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 May 2023 16:56:11 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 678984209
+        for <linux-block@vger.kernel.org>; Thu,  4 May 2023 13:55:47 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-769a4e76f30so6098239f.1
+        for <linux-block@vger.kernel.org>; Thu, 04 May 2023 13:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1683232236; x=1685824236;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1683233703; x=1685825703;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/gHEhMKT9GBaN9OxubZFLqV6RzaUkfxxEP2gzqQjTJo=;
-        b=LNZN/U448JRJlscsDbGuN9sNKHfqBTNuBhboKDn9GjpONGfVjxsHQn9v7QtyfwSJ/L
-         hPQM/uyisqSgmYPn71ju7jxoI/FIxjCeluRakiCjkIL3kegvAZmbImqCTaMPIyjRxduZ
-         +/NdN/XmGnb1myXRodYcgYIqIHs95osqrE0YGMnLUlT2P4e2dXJkxGhkOGAU1y0yzo17
-         +2IsAfLIYL3cZj/eq5jHD17X/HnIdZveLDnbw7N1aQW6cJWraiq6j7uGqNd7StTR6M1Z
-         dPmN/nMLZ0YWjNTUJNDUsXJDC9iVlM5Joo/duylJ5wlDbymdsoibthkZ6gYtb1TR0s0V
-         sK4w==
+        bh=bThyd74S2N2oDbSREWHnOPdDMJwRG45ERj16N72kBRg=;
+        b=l2MTxWxNlVB/WH2xrF+MJxUilczB+f0fvA8IBB+e0MLl8sHDt+x4/HFy0JufcYeNUx
+         +BMWjNk0rbbSE4J/vY8xZM0pMwGgIPawCARddCAvotHyy0zv3ybrLKNy9MjZ0vYq6jlJ
+         16SC8312n4xRHBq6G17UdTuhXNKLW/SMaJ786ff4tzsWybuEH669rsf2hfoF2gZoDtQH
+         JCfEjt28J93UJByu4Gmt1Hr6sdW98GSR068ASK4qxZZ4axoW5ahi7wf9jqIYTbvevt92
+         UX0oyVeBIMqz5OyKynfZqxPT29aa4yzDM8Z0lm0ASD6WhylXP+/UunRN8nVByLIimbcV
+         notA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683232236; x=1685824236;
+        d=1e100.net; s=20221208; t=1683233703; x=1685825703;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/gHEhMKT9GBaN9OxubZFLqV6RzaUkfxxEP2gzqQjTJo=;
-        b=Iaa8GEhMlFILAUR5aXunDNcOrlgWZViSkdNo2hQTAJuxhZuuoB5lS5SIXT33AXfghs
-         ClzQ6eD1Jz7dcQIagmVWAReHHN9yuDSIOYdiyO0SwhhfSbFyQnzjMfA1hPZVVpt3cB1c
-         iOXRJ712bEAKbXkcyCVxtWlkPZOhc+FG07oeT+Sa7UxkrcdvspL/sPey0TLgMpFSNwJs
-         1wHYulrBTToC5R7FTlNH+pUuDSLfATOikzFqX2cXoXahUuEPN8Sm0uA5VBv0cZdjDCYz
-         Al2aGvmXQtRDwMWPkKBhYdgnJcc90C8CsaoAx+VdJwnqlKZRj1Sy8+AHxn6nHrBIajBR
-         TmsA==
-X-Gm-Message-State: AC+VfDy7LoEwjf8hISi5l9QdGdPkxb9LM2XHWC06EL16qVSnBCeJ6GsX
-        88k2Ct0wTr4sSuOFmlwY5LJme9fFFy6ULZpvaiE=
-X-Google-Smtp-Source: ACHHUZ7cSRKGSnvkFB0S4zZLqTu1C+ROgHFBUfU+QKoNjODu/ChiksCC/9eWmF7IDIxRWC1tOOWE+g==
-X-Received: by 2002:a05:6602:493:b0:763:86b1:6111 with SMTP id y19-20020a056602049300b0076386b16111mr8372024iov.2.1683231778063;
-        Thu, 04 May 2023 13:22:58 -0700 (PDT)
+        bh=bThyd74S2N2oDbSREWHnOPdDMJwRG45ERj16N72kBRg=;
+        b=giSVzUUn+/tWYYYRdNwNgMzOERCoshfEuoNdptOZ0Oanb+GD5CkV1FStmqeWcXx++3
+         kqQhxL8NwXyY0a2U49SpC0PIS5G8gih1rRK4yQvKen9Snt7DpPY6Uyru4v3B5wUFDDXw
+         798iqQVttWSTkPirmo6JZmw+QJhNhYFCHM8+LvT7tfxGqyq4O1C4JZMwGqZgv6x529er
+         LFDwk+/jqQMdA6VJN51zRUp8V7cGL5oXq4iWVydTO6OoxFZRfBFSiQ7uFqA1SrcN00wi
+         Mk5lqQg0d/taTb0IWVe43zORK/RGPl0UzqzKzjQ8VtgKw4Wl93J6JSiZOUc9Xxbf/hDz
+         JCQw==
+X-Gm-Message-State: AC+VfDzVu5bqviCPVC9w6giZY/9LF+UbbLDCJxGrL8TyaaqpcMuP7P1W
+        l71SoA8i28LUcvWYUY8a2f1L/w==
+X-Google-Smtp-Source: ACHHUZ7u7Z7zBx8+bpJiQvwVPo4kxTVGqAu7lbDiXlxkNkLQGAk8ObS2SwEGUuw9qE6EXFWmlyZu1g==
+X-Received: by 2002:a92:c246:0:b0:32f:1232:f5d5 with SMTP id k6-20020a92c246000000b0032f1232f5d5mr13163499ilo.2.1683233703530;
+        Thu, 04 May 2023 13:55:03 -0700 (PDT)
 Received: from [192.168.1.94] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id c4-20020a5d9a84000000b00763601c4bfesm9164423iom.55.2023.05.04.13.22.56
+        by smtp.gmail.com with ESMTPSA id t11-20020a92c90b000000b0032aef6b60adsm13757ilp.34.2023.05.04.13.55.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 13:22:57 -0700 (PDT)
-Message-ID: <80ed2c0e-54db-777a-175b-1aa3ff776724@kernel.dk>
-Date:   Thu, 4 May 2023 14:22:55 -0600
+        Thu, 04 May 2023 13:55:02 -0700 (PDT)
+Message-ID: <0adf4086-c624-1587-d490-9e6bb517afe0@kernel.dk>
+Date:   Thu, 4 May 2023 14:55:01 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
 Subject: Re: [RFC PATCH 00/11] Rust null block driver
 Content-Language: en-US
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     Andreas Hindborg <nmi@metaspace.dk>
 Cc:     Keith Busch <kbusch@kernel.org>,
         Bart Van Assche <bvanassche@acm.org>,
-        Andreas Hindborg <nmi@metaspace.dk>,
         Christoph Hellwig <hch@lst.de>,
         Damien Le Moal <Damien.LeMoal@wdc.com>,
         Hannes Reinecke <hare@suse.de>,
@@ -71,75 +70,117 @@ Cc:     Keith Busch <kbusch@kernel.org>,
         Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
         =?UTF-8?Q?Bj=c3=b6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
         Benno Lossin <benno.lossin@proton.me>,
-        open list <linux-kernel@vger.kernel.org>, gost.dev@samsung.com,
-        Daniel Vetter <daniel@ffwll.ch>
+        open list <linux-kernel@vger.kernel.org>, gost.dev@samsung.com
 References: <20230503090708.2524310-1-nmi@metaspace.dk>
  <da7b815d-3da8-38e5-9b25-b9cfb6878293@acm.org> <87jzxot0jk.fsf@metaspace.dk>
  <b9a1c1b2-3baa-2cad-31ae-8b14e4ee5709@acm.org>
  <ZFP+8apHunCCMmOZ@kbusch-mbp.dhcp.thefacebook.com>
  <e7bc2155-613b-8904-9942-2e9615b0dc63@kernel.dk>
- <CANiq72nAMH1SfGmPTEjGHfevbb9tMLN4W7gJ3nBpJcvkCEsZ4g@mail.gmail.com>
+ <875y97u92z.fsf@metaspace.dk>
 From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CANiq72nAMH1SfGmPTEjGHfevbb9tMLN4W7gJ3nBpJcvkCEsZ4g@mail.gmail.com>
+In-Reply-To: <875y97u92z.fsf@metaspace.dk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/4/23 2:11?PM, Miguel Ojeda wrote:
-> On Thu, May 4, 2023 at 9:02?PM Jens Axboe <axboe@kernel.dk> wrote:
+On 5/4/23 1:59?PM, Andreas Hindborg wrote:
+> 
+> Jens Axboe <axboe@kernel.dk> writes:
+> 
+>> On 5/4/23 12:52?PM, Keith Busch wrote:
+>>> On Thu, May 04, 2023 at 11:36:01AM -0700, Bart Van Assche wrote:
+>>>> On 5/4/23 11:15, Andreas Hindborg wrote:
+>>>>> If it is still unclear to you why this effort was started, please do let
+>>>>> me know and I shall try to clarify further :)
+>>>>
+>>>> It seems like I was too polite in my previous email. What I meant is that
+>>>> rewriting code is useful if it provides a clear advantage to the users of
+>>>> a driver. For null_blk, the users are kernel developers. The code that has
+>>>> been posted is the start of a rewrite of the null_blk driver. The benefits
+>>>> of this rewrite (making low-level memory errors less likely) do not outweigh
+>>>> the risks that this effort will introduce functional or performance regressions.
+>>>
+>>> Instead of replacing, would co-existing be okay? Of course as long as
+>>> there's no requirement to maintain feature parity between the two.
+>>> Actually, just call it "rust_blk" and declare it has no relationship to
+>>> null_blk, despite their functional similarities: it's a developer
+>>> reference implementation for a rust block driver.
+>>
+>> To me, the big discussion point isn't really whether we're doing
+>> null_blk or not, it's more if we want to go down this path of
+>> maintaining rust bindings for the block code in general. If the answer
+>> to that is yes, then doing null_blk seems like a great choice as it's
+>> not a critical piece of infrastructure. It might even be a good idea to
+>> be able to run both, for performance purposes, as the bindings or core
+>> changes.
 >>
 >> But back to the real question... This is obviously extra burden on
 >> maintainers, and that needs to be sorted out first. Block drivers in
-> 
-> Regarding maintenance, something we have suggested in similar cases to
-> other subsystems is that the author gets involved as a maintainer of,
-> at least, the Rust abstractions/driver (possibly with a different
-> `MAINTAINERS` entry).
-
-Right, but that doesn't really solve the problem when the rust bindings
-get in the way of changes that you are currently making. Or if you break
-them inadvertently. I do see benefits to that approach, but it's no
-panacea.
-
-> Of course, that is still work for the existing maintainer(s), i.e.
-> you, since coordination takes time. However, it can also be a nice way
-> to learn Rust on the side, meanwhile things are getting upstreamed and
-> discussed (I think Daniel, in Cc, is taking that approach).
-
-This seems to assume that time is plentiful and we can just add more to
-our plate, which isn't always true. While I'd love to do more rust and
-get more familiar with it, the time still has to be there for that. I'm
-actually typing this on a laptop with a rust gpu driver :-)
-
-And this isn't just on me, there are other regular contributors and
-reviewers that would need to be onboard with this.
-
-> And it may also be a way for you to get an extra
-> maintainer/reviewer/... later on for the C parts, too, even if Rust
-> does not succeed.
-
-That is certainly a win!
-
 >> general are not super security sensitive, as it's mostly privileged code
 >> and there's not a whole lot of user visibile API. And the stuff we do
 >> have is reasonably basic. So what's the long term win of having rust
 >> bindings? This is a legitimate question. I can see a lot of other more
 >> user exposed subsystems being of higher interest here.
 > 
-> From the experience of other kernel maintainers/developers that are
-> making the move, the advantages seem to be well worth it, even
-> disregarding the security aspect, i.e. on the language side alone.
+> Even though the block layer is not usually exposed in the same way
+> that something like the USB stack is, absence of memory safety bugs is
+> a very useful property. If this is attainable without sacrificing
+> performance, it seems like a nice option to offer future block device
+> driver developers. Some would argue that it is worth offering even in
+> the face of performance regression.
+> 
+> While memory safety is the primary feature that Rust brings to the
+> table, it does come with other nice features as well. The type system,
+> language support stackless coroutines and error handling language
+> support are all very useful.
 
-Each case is different though, different people and different schedules
-and priorities. So while the above is promising, it's also just
-annecdotal and doesn't necessarily apply to our case.
+We're in violent agreement on this part, I don't think anyone sane would
+argue that memory safety with the same performance [1] isn't something
+you'd want. And the error handling with rust is so much better than the
+C stuff drivers do now that I can't see anyone disagreeing on that being
+a great thing as well.
+
+The discussion point here is the price being paid in terms of people
+time.
+
+> Regarding maintenance of the bindings, it _is_ an amount extra work. But
+> there is more than one way to structure that work. If Rust is accepted
+> into the block layer at some point, maintenance could be structured in
+> such a way that it does not get in the way of existing C maintenance
+> work. A "rust keeps up or it breaks" model. That could work for a while.
+
+That potentially works for null_blk, but it would not work for anything
+that people actually depend on. In other words, anything that isn't
+null_blk. And I don't believe we'd be actively discussing these bindings
+if just doing null_blk is the end goal, because that isn't useful by
+itself, and at that point we'd all just be wasting our time. In the real
+world, once we have just one actual driver using it, then we'd be
+looking at "this driver regressed because of change X/Y/Z and that needs
+to get sorted before the next release". And THAT is the real issue for
+me. So a "rust keeps up or it breaks" model is a bit naive in my
+opinion, it's just not a viable approach. In fact, even for null_blk,
+this doesn't really fly as we rely on blktests to continually vet the
+sanity of the IO stack, and null_blk is an integral part of that.
+
+So I really don't think there's much to debate between "rust people vs
+jens" here, as we agree on the benefits, but my end of the table has to
+stomach the cons. And like I mentioned in an earlier email, that's not
+just on me, there are other regular contributors and reviewers that are
+relevant to this discussion. This is something we need to discuss.
+
+[1] We obviously need to do real numbers here, the ones posted I don't
+consider stable enough to be useful in saying "yeah it's fully on part".
+If you have an updated rust nvme driver that uses these bindings I'd
+be happy to run some testing that will definitively tell us if there's a
+performance win, loss, or parity, and how much.
 
 -- 
 Jens Axboe
