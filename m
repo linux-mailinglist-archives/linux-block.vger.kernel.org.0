@@ -2,59 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E62F86F62DC
-	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 04:17:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 249436F62DF
+	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 04:17:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjEDCQz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 3 May 2023 22:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50180 "EHLO
+        id S229536AbjEDCRw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 3 May 2023 22:17:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjEDCQy (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 22:16:54 -0400
+        with ESMTP id S229505AbjEDCRv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 3 May 2023 22:17:51 -0400
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8285E46;
-        Wed,  3 May 2023 19:16:51 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QBcrZ6qljz4f3kkT;
-        Thu,  4 May 2023 10:16:46 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80A1185;
+        Wed,  3 May 2023 19:17:47 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QBcsg6Y8hz4f3mWJ;
+        Thu,  4 May 2023 10:17:43 +0800 (CST)
 Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP3 (Coremail) with SMTP id _Ch0CgDn4R+PFVNkbfYOIA--.38432S3;
-        Thu, 04 May 2023 10:16:48 +0800 (CST)
-Subject: Re: [PATCH for-6.4/block] block/rq_qos: protect rq_qos apis with a
- new lock
-To:     Yu Kuai <yukuai1@huaweicloud.com>, tj@kernel.org, hch@lst.de,
-        josef@toxicpanda.com, axboe@kernel.dk
-Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20230414084008.2085155-1-yukuai1@huaweicloud.com>
- <dde18143-b3bf-e493-c10a-5ffd2d8b772a@huaweicloud.com>
+        by APP2 (Coremail) with SMTP id Syh0CgAHruvIFVNkuzZ0Ig--.19119S3;
+        Thu, 04 May 2023 10:17:45 +0800 (CST)
+Subject: Re: [PATCH RFC -next] block: support enable/disable blk-mq debugfs
+ dynamically
+To:     Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yi.zhang@huawei.com, yangerkun@huawei.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <20230415082042.2120295-1-yukuai1@huaweicloud.com>
 From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <20340af6-a59f-6efd-eaa2-472276487203@huaweicloud.com>
-Date:   Thu, 4 May 2023 10:16:47 +0800
+Message-ID: <eabac8f5-108c-40dc-bd75-b5a04075a4d4@huaweicloud.com>
+Date:   Thu, 4 May 2023 10:17:44 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <dde18143-b3bf-e493-c10a-5ffd2d8b772a@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20230415082042.2120295-1-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgDn4R+PFVNkbfYOIA--.38432S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3GFW3JFy8Kr1UWFW8GF1rZwb_yoW3Kr4xpa
-        1kKrW3ArWF9r1kW3WUGw4UXry7Jr4UK3WDJr48XFyayr47Ar1jqF18Zr1qgr48Ar4kJr48
-        Jr4UXrnrZr1UGrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID: Syh0CgAHruvIFVNkuzZ0Ig--.19119S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xr15WFWUKFWDWry5trWrKrg_yoW3Cw4xpa
+        yDGa15tw1vyr47XFyfCa17Ar93K3yvgr17ZryS9ryFvw1kKr1SqF18JrWUJrWkWrWkCw42
+        vr15J3yq9ryDtFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
         rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
         1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
         JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
         CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
-        Zr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-        BIdaVFxhVjvjDU0xZFpf9x0JUZa9-UUUUU=
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMIIF0xvEx4A2jsIE14v26r1j6r4U
+        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUp6wZUUU
+        UU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
@@ -66,206 +64,242 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hi,
 
-
-在 2023/04/23 16:15, Yu Kuai 写道:
-> Hi,
+�� 2023/04/15 16:20, Yu Kuai д��:
+> From: Yu Kuai <yukuai3@huawei.com>
 > 
-> 在 2023/04/14 16:40, Yu Kuai 写道:
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> commit 50e34d78815e ("block: disable the elevator int del_gendisk")
->> move rq_qos_exit() from disk_release() to del_gendisk(), this will
->> introduce some problems:
->>
->> 1) If rq_qos_add() is triggered by enabling iocost/iolatency through
->>     cgroupfs, then it can concurrent with del_gendisk(), it's not safe to
->>     write 'q->rq_qos' concurrently.
->>
->> 2) Activate cgroup policy that is relied on rq_qos will call
->>     rq_qos_add() and blkcg_activate_policy(), and if rq_qos_exit() is
->>     called in the middle, null-ptr-dereference will be triggered in
->>     blkcg_activate_policy().
->>
->> 3) blkg_conf_open_bdev() can call blkdev_get_no_open() first to find the
->>     disk, then if rq_qos_exit() from del_gendisk() is done before
->>     rq_qos_add(), then memory will be leaked.
->>
->> This patch add a new disk level mutex 'rq_qos_mutex':
->>
->> 1) The lock will protect rq_qos_exit() directly.
->>
->> 2) For wbt that doesn't relied on blk-cgroup, rq_qos_add() can only be
->>     called from disk initialization for now because wbt can't be
->>     destructed until rq_qos_exit(), so it's safe not to protect wbt for
->>     now. Hoever, in case that rq_qos dynamically destruction is supported
->>     in the furture, this patch also protect rq_qos_add() from wbt_init()
->>     directly, this is enough because blk-sysfs already synchronize
->>     writers with disk removal.
->>
->> 3) For iocost and iolatency, in order to synchronize disk removal and
->>     cgroup configuration, the lock is held after blkdev_get_no_open()
->>     from blkg_conf_open_bdev(), and is released in blkg_conf_exit().
->>     In order to fix the above memory leak, disk_live() is checked after
->>     holding the new lock.
->>
+> After a disk is created, debugfs inode and dentry will be created
+> together, and the memory used for debugfs can't be freed until disk
+> removal.
 > 
-> Friendly ping ...
+> The number of debugfs inode and dentry is based on how many cpus and
+> hctxs. For example, testing on a 128-core environemt, with default
+> module parameters, each loop device will cost 1679KB memory, and debugfs
+> will cost 336KB(20%).
+> 
+> The memory cost for debugfs for a disk seems little, but if a big machine
+> contains thousands of disks, the cost will be xxGB. This memory overhead
+> can be avoided by disabling CONFIG_BLK_DEBUG_FS.
+> 
+> This patch add a disk level switch that can enable/disable debugfs
+> dynamically, so that user can disable debugfs if they care about the
+> memory overhead, in the meantime, debugfs can be enabled again in demand.
+> 
 
 Friendly ping ...
+
+Thanks,
+Kuai
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   block/blk-mq-debugfs.c | 58 ++++++++++++++++++++++++++++++++++++++----
+>   block/blk-mq-debugfs.h |  1 +
+>   block/blk-sysfs.c      | 41 +++++++++++++++++++++++++++++
+>   include/linux/blkdev.h |  2 ++
+>   4 files changed, 97 insertions(+), 5 deletions(-)
 > 
-> Thanks,
-> Kuai
->> Fixes: 50e34d78815e ("block: disable the elevator int del_gendisk")
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->> ---
->>   block/blk-cgroup.c     |  9 +++++++++
->>   block/blk-core.c       |  1 +
->>   block/blk-rq-qos.c     | 20 ++++++--------------
->>   block/blk-wbt.c        |  2 ++
->>   include/linux/blkdev.h |  1 +
->>   5 files changed, 19 insertions(+), 14 deletions(-)
->>
->> diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
->> index 1c1ebeb51003..0d79d864ecb1 100644
->> --- a/block/blk-cgroup.c
->> +++ b/block/blk-cgroup.c
->> @@ -705,6 +705,13 @@ int blkg_conf_open_bdev(struct blkg_conf_ctx *ctx)
->>           return -ENODEV;
->>       }
->> +    mutex_lock(&bdev->bd_queue->rq_qos_mutex);
->> +    if (!disk_live(bdev->bd_disk)) {
->> +        blkdev_put_no_open(bdev);
->> +        mutex_unlock(&bdev->bd_queue->rq_qos_mutex);
->> +        return -ENODEV;
->> +    }
->> +
->>       ctx->body = input;
->>       ctx->bdev = bdev;
->>       return 0;
->> @@ -849,6 +856,7 @@ EXPORT_SYMBOL_GPL(blkg_conf_prep);
->>    */
->>   void blkg_conf_exit(struct blkg_conf_ctx *ctx)
->>       __releases(&ctx->bdev->bd_queue->queue_lock)
->> +    __releases(&ctx->bdev->bd_queue->rq_qos_mutex)
->>   {
->>       if (ctx->blkg) {
->>           spin_unlock_irq(&bdev_get_queue(ctx->bdev)->queue_lock);
->> @@ -856,6 +864,7 @@ void blkg_conf_exit(struct blkg_conf_ctx *ctx)
->>       }
->>       if (ctx->bdev) {
->> +        mutex_unlock(&ctx->bdev->bd_queue->rq_qos_mutex);
->>           blkdev_put_no_open(ctx->bdev);
->>           ctx->body = NULL;
->>           ctx->bdev = NULL;
->> diff --git a/block/blk-core.c b/block/blk-core.c
->> index 269765d16cfd..fc7f902bdf5b 100644
->> --- a/block/blk-core.c
->> +++ b/block/blk-core.c
->> @@ -420,6 +420,7 @@ struct request_queue *blk_alloc_queue(int node_id)
->>       mutex_init(&q->debugfs_mutex);
->>       mutex_init(&q->sysfs_lock);
->>       mutex_init(&q->sysfs_dir_lock);
->> +    mutex_init(&q->rq_qos_mutex);
->>       spin_lock_init(&q->queue_lock);
->>       init_waitqueue_head(&q->mq_freeze_wq);
->> diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
->> index d8cc820a365e..167be74df4ee 100644
->> --- a/block/blk-rq-qos.c
->> +++ b/block/blk-rq-qos.c
->> @@ -288,11 +288,13 @@ void rq_qos_wait(struct rq_wait *rqw, void 
->> *private_data,
->>   void rq_qos_exit(struct request_queue *q)
->>   {
->> +    mutex_lock(&q->rq_qos_mutex);
->>       while (q->rq_qos) {
->>           struct rq_qos *rqos = q->rq_qos;
->>           q->rq_qos = rqos->next;
->>           rqos->ops->exit(rqos);
->>       }
->> +    mutex_unlock(&q->rq_qos_mutex);
->>   }
->>   int rq_qos_add(struct rq_qos *rqos, struct gendisk *disk, enum 
->> rq_qos_id id,
->> @@ -300,6 +302,8 @@ int rq_qos_add(struct rq_qos *rqos, struct gendisk 
->> *disk, enum rq_qos_id id,
->>   {
->>       struct request_queue *q = disk->queue;
->> +    lockdep_assert_held(&q->rq_qos_mutex);
->> +
->>       rqos->disk = disk;
->>       rqos->id = id;
->>       rqos->ops = ops;
->> @@ -307,18 +311,13 @@ int rq_qos_add(struct rq_qos *rqos, struct 
->> gendisk *disk, enum rq_qos_id id,
->>       /*
->>        * No IO can be in-flight when adding rqos, so freeze queue, which
->>        * is fine since we only support rq_qos for blk-mq queue.
->> -     *
->> -     * Reuse ->queue_lock for protecting against other concurrent
->> -     * rq_qos adding/deleting
->>        */
->>       blk_mq_freeze_queue(q);
->> -    spin_lock_irq(&q->queue_lock);
->>       if (rq_qos_id(q, rqos->id))
->>           goto ebusy;
->>       rqos->next = q->rq_qos;
->>       q->rq_qos = rqos;
->> -    spin_unlock_irq(&q->queue_lock);
->>       blk_mq_unfreeze_queue(q);
->> @@ -330,7 +329,6 @@ int rq_qos_add(struct rq_qos *rqos, struct gendisk 
->> *disk, enum rq_qos_id id,
->>       return 0;
->>   ebusy:
->> -    spin_unlock_irq(&q->queue_lock);
->>       blk_mq_unfreeze_queue(q);
->>       return -EBUSY;
->>   }
->> @@ -340,21 +338,15 @@ void rq_qos_del(struct rq_qos *rqos)
->>       struct request_queue *q = rqos->disk->queue;
->>       struct rq_qos **cur;
->> -    /*
->> -     * See comment in rq_qos_add() about freezing queue & using
->> -     * ->queue_lock.
->> -     */
->> -    blk_mq_freeze_queue(q);
->> +    lockdep_assert_held(&q->rq_qos_mutex);
->> -    spin_lock_irq(&q->queue_lock);
->> +    blk_mq_freeze_queue(q);
->>       for (cur = &q->rq_qos; *cur; cur = &(*cur)->next) {
->>           if (*cur == rqos) {
->>               *cur = rqos->next;
->>               break;
->>           }
->>       }
->> -    spin_unlock_irq(&q->queue_lock);
->> -
->>       blk_mq_unfreeze_queue(q);
->>       mutex_lock(&q->debugfs_mutex);
->> diff --git a/block/blk-wbt.c b/block/blk-wbt.c
->> index e49a48684532..53bf5aa6f9ad 100644
->> --- a/block/blk-wbt.c
->> +++ b/block/blk-wbt.c
->> @@ -942,7 +942,9 @@ int wbt_init(struct gendisk *disk)
->>       /*
->>        * Assign rwb and add the stats callback.
->>        */
->> +    mutex_lock(&q->rq_qos_mutex);
->>       ret = rq_qos_add(&rwb->rqos, disk, RQ_QOS_WBT, &wbt_rqos_ops);
->> +    mutex_unlock(&q->rq_qos_mutex);
->>       if (ret)
->>           goto err_free;
->> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
->> index 6ede578dfbc6..17774f55743e 100644
->> --- a/include/linux/blkdev.h
->> +++ b/include/linux/blkdev.h
->> @@ -395,6 +395,7 @@ struct request_queue {
->>       struct blk_queue_stats    *stats;
->>       struct rq_qos        *rq_qos;
->> +    struct mutex        rq_qos_mutex;
->>       const struct blk_mq_ops    *mq_ops;
->>
-> 
-> .
+> diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+> index 212a7f301e73..3ffc27fd4d07 100644
+> --- a/block/blk-mq-debugfs.c
+> +++ b/block/blk-mq-debugfs.c
+> @@ -657,6 +657,9 @@ void blk_mq_debugfs_register(struct request_queue *q)
+>   	struct blk_mq_hw_ctx *hctx;
+>   	unsigned long i;
+>   
+> +	if (!test_bit(QUEUE_FLAG_DEBUGFS, &q->queue_flags))
+> +		return;
+> +
+>   	debugfs_create_files(q->debugfs_dir, q, blk_mq_debugfs_queue_attrs);
+>   
+>   	/*
+> @@ -685,6 +688,47 @@ void blk_mq_debugfs_register(struct request_queue *q)
+>   	}
+>   }
+>   
+> +static void debugfs_remove_files(struct dentry *parent,
+> +				 const struct blk_mq_debugfs_attr *attr)
+> +{
+> +	if (IS_ERR_OR_NULL(parent))
+> +		return;
+> +
+> +	for (; attr->name; attr++)
+> +		debugfs_lookup_and_remove(attr->name, parent);
+> +}
+> +
+> +void blk_mq_debugfs_unregister(struct request_queue *q)
+> +{
+> +	struct blk_mq_hw_ctx *hctx;
+> +	unsigned long i;
+> +
+> +	if (q->rq_qos) {
+> +		struct rq_qos *rqos = q->rq_qos;
+> +
+> +		while (rqos) {
+> +			if (rqos->debugfs_dir)
+> +				blk_mq_debugfs_unregister_rqos(rqos);
+> +			rqos = rqos->next;
+> +		}
+> +	}
+> +
+> +	debugfs_remove_recursive(q->rqos_debugfs_dir);
+> +	q->rqos_debugfs_dir = NULL;
+> +
+> +	queue_for_each_hw_ctx(q, hctx, i) {
+> +		if (hctx->debugfs_dir)
+> +			blk_mq_debugfs_unregister_hctx(hctx);
+> +		if (hctx->sched_debugfs_dir)
+> +			blk_mq_debugfs_unregister_sched_hctx(hctx);
+> +	}
+> +
+> +	if (q->sched_debugfs_dir)
+> +		blk_mq_debugfs_unregister_sched(q);
+> +
+> +	debugfs_remove_files(q->debugfs_dir, blk_mq_debugfs_queue_attrs);
+> +}
+> +
+>   static void blk_mq_debugfs_register_ctx(struct blk_mq_hw_ctx *hctx,
+>   					struct blk_mq_ctx *ctx)
+>   {
+> @@ -704,7 +748,7 @@ void blk_mq_debugfs_register_hctx(struct request_queue *q,
+>   	char name[20];
+>   	int i;
+>   
+> -	if (!q->debugfs_dir)
+> +	if (!q->debugfs_dir || !test_bit(QUEUE_FLAG_DEBUGFS, &q->queue_flags))
+>   		return;
+>   
+>   	snprintf(name, sizeof(name), "hctx%u", hctx->queue_num);
+> @@ -718,7 +762,8 @@ void blk_mq_debugfs_register_hctx(struct request_queue *q,
+>   
+>   void blk_mq_debugfs_unregister_hctx(struct blk_mq_hw_ctx *hctx)
+>   {
+> -	if (!hctx->queue->debugfs_dir)
+> +	if (!hctx->queue->debugfs_dir ||
+> +	    !test_bit(QUEUE_FLAG_DEBUGFS, &hctx->queue->queue_flags))
+>   		return;
+>   	debugfs_remove_recursive(hctx->debugfs_dir);
+>   	hctx->sched_debugfs_dir = NULL;
+> @@ -756,7 +801,8 @@ void blk_mq_debugfs_register_sched(struct request_queue *q)
+>   	if (!q->debugfs_dir)
+>   		return;
+>   
+> -	if (!e->queue_debugfs_attrs)
+> +	if (!e->queue_debugfs_attrs ||
+> +	    !test_bit(QUEUE_FLAG_DEBUGFS, &q->queue_flags))
+>   		return;
+>   
+>   	q->sched_debugfs_dir = debugfs_create_dir("sched", q->debugfs_dir);
+> @@ -802,7 +848,8 @@ void blk_mq_debugfs_register_rqos(struct rq_qos *rqos)
+>   
+>   	lockdep_assert_held(&q->debugfs_mutex);
+>   
+> -	if (rqos->debugfs_dir || !rqos->ops->debugfs_attrs)
+> +	if (rqos->debugfs_dir || !rqos->ops->debugfs_attrs ||
+> +	    !test_bit(QUEUE_FLAG_DEBUGFS, &q->queue_flags))
+>   		return;
+>   
+>   	if (!q->rqos_debugfs_dir)
+> @@ -828,7 +875,8 @@ void blk_mq_debugfs_register_sched_hctx(struct request_queue *q,
+>   	if (!hctx->debugfs_dir)
+>   		return;
+>   
+> -	if (!e->hctx_debugfs_attrs)
+> +	if (!e->hctx_debugfs_attrs ||
+> +	    !test_bit(QUEUE_FLAG_DEBUGFS, &q->queue_flags))
+>   		return;
+>   
+>   	hctx->sched_debugfs_dir = debugfs_create_dir("sched",
+> diff --git a/block/blk-mq-debugfs.h b/block/blk-mq-debugfs.h
+> index 9c7d4b6117d4..c8dd03f73d8c 100644
+> --- a/block/blk-mq-debugfs.h
+> +++ b/block/blk-mq-debugfs.h
+> @@ -21,6 +21,7 @@ int __blk_mq_debugfs_rq_show(struct seq_file *m, struct request *rq);
+>   int blk_mq_debugfs_rq_show(struct seq_file *m, void *v);
+>   
+>   void blk_mq_debugfs_register(struct request_queue *q);
+> +void blk_mq_debugfs_unregister(struct request_queue *q);
+>   void blk_mq_debugfs_register_hctx(struct request_queue *q,
+>   				  struct blk_mq_hw_ctx *hctx);
+>   void blk_mq_debugfs_unregister_hctx(struct blk_mq_hw_ctx *hctx);
+> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> index 1a743b4f2958..450acea23f21 100644
+> --- a/block/blk-sysfs.c
+> +++ b/block/blk-sysfs.c
+> @@ -618,6 +618,44 @@ QUEUE_RW_ENTRY(queue_iostats, "iostats");
+>   QUEUE_RW_ENTRY(queue_random, "add_random");
+>   QUEUE_RW_ENTRY(queue_stable_writes, "stable_writes");
+>   
+> +#ifdef CONFIG_BLK_DEBUG_FS
+> +static ssize_t queue_debugfs_show(struct request_queue *q, char *page)
+> +{
+> +	return queue_var_show(test_bit(QUEUE_FLAG_DEBUGFS, &q->queue_flags),
+> +			      page);
+> +}
+> +
+> +static ssize_t queue_debugfs_store(struct request_queue *q, const char *page,
+> +				   size_t count)
+> +{
+> +	unsigned long val;
+> +	bool enabled;
+> +	ssize_t ret = queue_var_store(&val, page, count);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	mutex_lock(&q->debugfs_mutex);
+> +	enabled = test_bit(QUEUE_FLAG_DEBUGFS, &q->queue_flags);
+> +	if (val) {
+> +		if (!enabled && queue_is_mq(q)) {
+> +			blk_queue_flag_set(QUEUE_FLAG_DEBUGFS, q);
+> +			blk_mq_debugfs_register(q);
+> +		}
+> +	} else {
+> +		if (enabled) {
+> +			blk_mq_debugfs_unregister(q);
+> +			blk_queue_flag_clear(QUEUE_FLAG_DEBUGFS, q);
+> +		}
+> +	}
+> +	mutex_unlock(&q->debugfs_mutex);
+> +
+> +	return ret;
+> +}
+> +
+> +QUEUE_RW_ENTRY(queue_debugfs, "debugfs");
+> +#endif
+> +
+>   static struct attribute *queue_attrs[] = {
+>   	&queue_requests_entry.attr,
+>   	&queue_ra_entry.attr,
+> @@ -664,6 +702,9 @@ static struct attribute *queue_attrs[] = {
+>   #endif
+>   	&queue_virt_boundary_mask_entry.attr,
+>   	&queue_dma_alignment_entry.attr,
+> +#ifdef CONFIG_BLK_DEBUG_FS
+> +	&queue_debugfs_entry.attr,
+> +#endif
+>   	NULL,
+>   };
+>   
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index e3242e67a8e3..be51592751b2 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -544,6 +544,7 @@ struct request_queue {
+>   #define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
+>   #define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
+>   #define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
+> +#define QUEUE_FLAG_DEBUGFS	8	/* supports debugfs */
+>   #define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
+>   #define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
+>   #define QUEUE_FLAG_SYNCHRONOUS	11	/* always completes in submit context */
+> @@ -566,6 +567,7 @@ struct request_queue {
+>   #define QUEUE_FLAG_SKIP_TAGSET_QUIESCE	31 /* quiesce_tagset skip the queue*/
+>   
+>   #define QUEUE_FLAG_MQ_DEFAULT	((1UL << QUEUE_FLAG_IO_STAT) |		\
+> +				 (1UL << QUEUE_FLAG_DEBUGFS) |	\
+>   				 (1UL << QUEUE_FLAG_SAME_COMP) |	\
+>   				 (1UL << QUEUE_FLAG_NOWAIT))
+>   
 > 
 
