@@ -2,43 +2,49 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABAA56F751E
-	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 21:56:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39D306F76D5
+	for <lists+linux-block@lfdr.de>; Thu,  4 May 2023 22:19:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231651AbjEDT4g (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 4 May 2023 15:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41128 "EHLO
+        id S230117AbjEDUTG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 4 May 2023 16:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232331AbjEDTzr (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 4 May 2023 15:55:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF84C1CFE2;
-        Thu,  4 May 2023 12:49:04 -0700 (PDT)
+        with ESMTP id S230084AbjEDUSf (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 4 May 2023 16:18:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6152380A;
+        Thu,  4 May 2023 13:04:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A8D7637CB;
-        Thu,  4 May 2023 19:47:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10D2AC433D2;
-        Thu,  4 May 2023 19:47:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EDACF615B8;
+        Thu,  4 May 2023 19:47:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A36C433EF;
+        Thu,  4 May 2023 19:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683229667;
-        bh=4y7pOBGCYDjIbIf9y/Y4h8+y9QfTW9ujHRZ0qgN4S/k=;
+        s=k20201202; t=1683229677;
+        bh=YkokPFE5KvOTpPGF2duWfbScuTIsrd/YG+iKLSu/mRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iK3Up/gnNn/pCHA0NkimwnR7kr1pdrWO7jB2JHXpvJOiasaOfTd3E6OPQ3LdN9lrK
-         BP0kGBbLpO0sfW5OqIIXeAkuEL39Fhtf/gLUnFzFC/wyO4BT7v3fWks53Fq1ofy4L5
-         PD2UMStNGGmBHEZsujbsSSMx1r+/0CQkD+JykGez4iYfWtlVcsxriITw6jVz523Aez
-         rVeqUeSS1NAO7j3MIHiKjikPmQcg7fmwZ12MXmVCVVkIxVrDEa2cusvo2AeqLQdmFX
-         0X656v6+MGvobeWq1tdhQDkE/h/dTwVkyE0bqEYAUbm1EIL84Iox10mjWILDbXK/+N
-         C6LlWGox84Awg==
+        b=DNo1i68YKDbWuA9vLf19OxijifdUtwJ2yNAwRnket4uqGvBLgeAPeHniVjYVlJ/d8
+         fxItOkG5rcSLLmfS3DpCR++cNivx9f22AvKC2V+xxCfw6+Z+TR8T/nvl854d/ujZFi
+         mItiwgayt3Wnay2CEgYRpCyMpnjI7sHJ28eHpCFj9l/afCl/smmp7ZtZRhsme0MxPC
+         15TySAXYNaCxYhX0SHUK5Y06Y34X+sFbpELJI3HemQi9ncv0ty816sikf+0wW+cVvE
+         yV6+EiWK51VBUZSrYGpkQFlLHAu3Q0x5A1iMpJPLRiTfcv5lfSsJTKzUqc+DB/oaEL
+         fcuyLnK9GySCQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.i.king@gmail.com>,
+Cc:     Chaitanya Kulkarni <kch@nvidia.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        paolo.valente@linaro.org, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 32/49] block, bfq: Fix division by zero error on zero wsum
-Date:   Thu,  4 May 2023 15:46:09 -0400
-Message-Id: <20230504194626.3807438-32-sashal@kernel.org>
+        bvanassche@acm.org, damien.lemoal@opensource.wdc.com,
+        johannes.thumshirn@wdc.com, vincent.fu@samsung.com,
+        akinobu.mita@gmail.com, shinichiro.kawasaki@wdc.com,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 35/49] null_blk: Always check queue mode setting from configfs
+Date:   Thu,  4 May 2023 15:46:12 -0400
+Message-Id: <20230504194626.3807438-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230504194626.3807438-1-sashal@kernel.org>
 References: <20230504194626.3807438-1-sashal@kernel.org>
@@ -46,8 +52,8 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,80 +62,85 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Colin Ian King <colin.i.king@gmail.com>
+From: Chaitanya Kulkarni <kch@nvidia.com>
 
-[ Upstream commit e53413f8deedf738a6782cc14cc00bd5852ccf18 ]
+[ Upstream commit 63f8793ee60513a09f110ea460a6ff2c33811cdb ]
 
-When the weighted sum is zero the calculation of limit causes
-a division by zero error. Fix this by continuing to the next level.
+Make sure to check device queue mode in the null_validate_conf() and
+return error for NULL_Q_RQ as we don't allow legacy I/O path, without
+this patch we get OOPs when queue mode is set to 1 from configfs,
+following are repro steps :-
 
-This was discovered by running as root:
+modprobe null_blk nr_devices=0
+mkdir config/nullb/nullb0
+echo 1 > config/nullb/nullb0/memory_backed
+echo 4096 > config/nullb/nullb0/blocksize
+echo 20480 > config/nullb/nullb0/size
+echo 1 > config/nullb/nullb0/queue_mode
+echo 1 > config/nullb/nullb0/power
 
-stress-ng --ioprio 0
+Entering kdb (current=0xffff88810acdd080, pid 2372) on processor 42 Oops: (null)
+due to oops @ 0xffffffffc041c329
+CPU: 42 PID: 2372 Comm: sh Tainted: G           O     N 6.3.0-rc5lblk+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+RIP: 0010:null_add_dev.part.0+0xd9/0x720 [null_blk]
+Code: 01 00 00 85 d2 0f 85 a1 03 00 00 48 83 bb 08 01 00 00 00 0f 85 f7 03 00 00 80 bb 62 01 00 00 00 48 8b 75 20 0f 85 6d 02 00 00 <48> 89 6e 60 48 8b 75 20 bf 06 00 00 00 e8 f5 37 2c c1 48 8b 75 20
+RSP: 0018:ffffc900052cbde0 EFLAGS: 00010246
+RAX: 0000000000000001 RBX: ffff88811084d800 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff888100042e00
+RBP: ffff8881053d8200 R08: ffffc900052cbd68 R09: ffff888105db2000
+R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000002
+R13: ffff888104765200 R14: ffff88810eec1748 R15: ffff88810eec1740
+FS:  00007fd445fd1740(0000) GS:ffff8897dfc80000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000060 CR3: 0000000166a00000 CR4: 0000000000350ee0
+DR0: ffffffff8437a488 DR1: ffffffff8437a489 DR2: ffffffff8437a48a
+DR3: ffffffff8437a48b DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ nullb_device_power_store+0xd1/0x120 [null_blk]
+ configfs_write_iter+0xb4/0x120
+ vfs_write+0x2ba/0x3c0
+ ksys_write+0x5f/0xe0
+ do_syscall_64+0x3b/0x90
+ entry_SYSCALL_64_after_hwframe+0x72/0xdc
+RIP: 0033:0x7fd4460c57a7
+Code: 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007ffd3792a4a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fd4460c57a7
+RDX: 0000000000000002 RSI: 000055b43c02e4c0 RDI: 0000000000000001
+RBP: 000055b43c02e4c0 R08: 000000000000000a R09: 00007fd44615b4e0
+R10: 00007fd44615b3e0 R11: 0000000000000246 R12: 0000000000000002
+R13: 00007fd446198520 R14: 0000000000000002 R15: 00007fd446198700
+ </TASK>
 
-Fixes divison by error oops:
-
-[  521.450556] divide error: 0000 [#1] SMP NOPTI
-[  521.450766] CPU: 2 PID: 2684464 Comm: stress-ng-iopri Not tainted 6.2.1-1280.native #1
-[  521.451117] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.1-0-g3208b098f51a-prebuilt.qemu.org 04/01/2014
-[  521.451627] RIP: 0010:bfqq_request_over_limit+0x207/0x400
-[  521.451875] Code: 01 48 8d 0c c8 74 0b 48 8b 82 98 00 00 00 48 8d 0c c8 8b 85 34 ff ff ff 48 89 ca 41 0f af 41 50 48 d1 ea 48 98 48 01 d0 31 d2 <48> f7 f1 41 39 41 48 89 85 34 ff ff ff 0f 8c 7b 01 00 00 49 8b 44
-[  521.452699] RSP: 0018:ffffb1af84eb3948 EFLAGS: 00010046
-[  521.452938] RAX: 000000000000003c RBX: 0000000000000000 RCX: 0000000000000000
-[  521.453262] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb1af84eb3978
-[  521.453584] RBP: ffffb1af84eb3a30 R08: 0000000000000001 R09: ffff8f88ab8a4ba0
-[  521.453905] R10: 0000000000000000 R11: 0000000000000001 R12: ffff8f88ab8a4b18
-[  521.454224] R13: ffff8f8699093000 R14: 0000000000000001 R15: ffffb1af84eb3970
-[  521.454549] FS:  00005640b6b0b580(0000) GS:ffff8f88b3880000(0000) knlGS:0000000000000000
-[  521.454912] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  521.455170] CR2: 00007ffcbcae4e38 CR3: 00000002e46de001 CR4: 0000000000770ee0
-[  521.455491] PKRU: 55555554
-[  521.455619] Call Trace:
-[  521.455736]  <TASK>
-[  521.455837]  ? bfq_request_merge+0x3a/0xc0
-[  521.456027]  ? elv_merge+0x115/0x140
-[  521.456191]  bfq_limit_depth+0xc8/0x240
-[  521.456366]  __blk_mq_alloc_requests+0x21a/0x2c0
-[  521.456577]  blk_mq_submit_bio+0x23c/0x6c0
-[  521.456766]  __submit_bio+0xb8/0x140
-[  521.457236]  submit_bio_noacct_nocheck+0x212/0x300
-[  521.457748]  submit_bio_noacct+0x1a6/0x580
-[  521.458220]  submit_bio+0x43/0x80
-[  521.458660]  ext4_io_submit+0x23/0x80
-[  521.459116]  ext4_do_writepages+0x40a/0xd00
-[  521.459596]  ext4_writepages+0x65/0x100
-[  521.460050]  do_writepages+0xb7/0x1c0
-[  521.460492]  __filemap_fdatawrite_range+0xa6/0x100
-[  521.460979]  file_write_and_wait_range+0xbf/0x140
-[  521.461452]  ext4_sync_file+0x105/0x340
-[  521.461882]  __x64_sys_fsync+0x67/0x100
-[  521.462305]  ? syscall_exit_to_user_mode+0x2c/0x1c0
-[  521.462768]  do_syscall_64+0x3b/0xc0
-[  521.463165]  entry_SYSCALL_64_after_hwframe+0x5a/0xc4
-[  521.463621] RIP: 0033:0x5640b6c56590
-[  521.464006] Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 80 3d 71 70 0e 00 00 74 17 b8 4a 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 48 c3 0f 1f 80 00 00 00 00 48 83 ec 18 89 7c
-
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-Link: https://lore.kernel.org/r/20230413133009.1605335-1-colin.i.king@gmail.com
+Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
+Link: https://lore.kernel.org/r/20230416220339.43845-1-kch@nvidia.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/block/null_blk/main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index ff9d238894157..52eb79d60a3f3 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -637,6 +637,8 @@ static bool bfqq_request_over_limit(struct bfq_queue *bfqq, int limit)
- 					sched_data->service_tree[i].wsum;
- 			}
- 		}
-+		if (!wsum)
-+			continue;
- 		limit = DIV_ROUND_CLOSEST(limit * entity->weight, wsum);
- 		if (entity->allocated >= limit) {
- 			bfq_log_bfqq(bfqq->bfqd, bfqq,
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index af419af9a0f4a..c45d09a9a9421 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -1945,6 +1945,11 @@ static int null_init_tag_set(struct nullb *nullb, struct blk_mq_tag_set *set)
+ 
+ static int null_validate_conf(struct nullb_device *dev)
+ {
++	if (dev->queue_mode == NULL_Q_RQ) {
++		pr_err("legacy IO path is no longer available\n");
++		return -EINVAL;
++	}
++
+ 	dev->blocksize = round_down(dev->blocksize, 512);
+ 	dev->blocksize = clamp_t(unsigned int, dev->blocksize, 512, 4096);
+ 
 -- 
 2.39.2
 
