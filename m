@@ -2,106 +2,138 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A51D16F898F
-	for <lists+linux-block@lfdr.de>; Fri,  5 May 2023 21:39:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD9346F899F
+	for <lists+linux-block@lfdr.de>; Fri,  5 May 2023 21:42:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232708AbjEETjA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 May 2023 15:39:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60008 "EHLO
+        id S233311AbjEETmS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 May 2023 15:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230483AbjEETi7 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 May 2023 15:38:59 -0400
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB072127;
-        Fri,  5 May 2023 12:38:58 -0700 (PDT)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1aaf7067647so15059565ad.0;
-        Fri, 05 May 2023 12:38:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683315538; x=1685907538;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XnLgUpvg01C7PYBgC6vlYHIqP9eMrmASTJDXxCb+5To=;
-        b=juJzTBCl1uNp/6qy6YEzOPHFIc4a1it8Aupu2q7bPf2TeVsbq/6ro9kJ1DAspDhSPb
-         KsUpKujLXIzqCQlnt8ucJpYCU+jXgBbzxUo4CmcUct4/PKpKT6HVLinglH59DA5u/4lE
-         Z3OYRt2VQDQr5+ww9bdxGY83CXP4JHwkay7oxgTl3L8Uf8grPE2WiYLTleXDKNcqA5y4
-         S2d6YWg/JDC3nqYwUx3LVu1nXH6P6qUg/AYhRfgVMsKC9SBCyIAwKYK4VfswywnBOkFl
-         NK4RJZX2L97gJjmYPnzFceLBHWn68S7o2a/eNfoi2L3xht4FdMldqLaGxR/fs0VrD3A2
-         rylg==
-X-Gm-Message-State: AC+VfDyg4JSQZW6QfVC4q4N1b/bwvUPUT5lx5elR88clKFx8D8z3Aavv
-        CWpsh6mLEPjzQ1XSJ5ZER80=
-X-Google-Smtp-Source: ACHHUZ6DdlL8h1oDpxSXo045aPjWXyPGk2fZG3YwLg7cT6FJGxM1GZt3aKM9n1ymI0sDPcTo+ZtP+w==
-X-Received: by 2002:a17:902:d902:b0:1a9:86ca:38cd with SMTP id c2-20020a170902d90200b001a986ca38cdmr2453191plz.2.1683315538062;
-        Fri, 05 May 2023 12:38:58 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:127d:5561:7469:3abc? ([2620:15c:211:201:127d:5561:7469:3abc])
-        by smtp.gmail.com with ESMTPSA id x13-20020a170902ec8d00b00194d14d8e54sm2188942plg.96.2023.05.05.12.38.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 May 2023 12:38:57 -0700 (PDT)
-Message-ID: <0931c4ba-a217-1422-7e6a-bb396ce45251@acm.org>
-Date:   Fri, 5 May 2023 12:38:55 -0700
+        with ESMTP id S232989AbjEETmQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 May 2023 15:42:16 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9281B1BE1;
+        Fri,  5 May 2023 12:42:14 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 345J0Pt8024841;
+        Fri, 5 May 2023 19:41:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=GUM4DcUsz5eY5ZD2aKM+Vc4iNM+U1Q/kdOhLweccORM=;
+ b=d5CRCy1o/bjErZ62Ak2Uv4mK+o8Jc0c3gmmcDRw44URpvX7gOpxPy90HOSRFWOj6X93p
+ k1HV4HyQbppNVCRHlplvt3Uyzm134TpZzaoQIDoPoIdhWGGapRYWFVB+RG+rfZ+NKWQK
+ XG1uIKq346YsSlOVbd0Hb0zNilltAhzkvDC+2NOCVQM7qNcU/VIqvHFhNt3U/xogCZmx
+ +s16fnpAuFlKbbsM/RWAJfF7f00x3xKn0KNo4lG1CXVOjNh5LgJPeJsUJHrGveWMaa/t
+ BeuWzLMbxgrlrGkokzY3BJz/hgtdAvRUQhkSTOsLkOp7FxDr0RCCzz15pMr8bvVzt883 gg== 
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qd658ugdu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 May 2023 19:41:56 +0000
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 345GvsFr002611;
+        Fri, 5 May 2023 19:41:56 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([9.208.130.99])
+        by ppma02wdc.us.ibm.com (PPS) with ESMTPS id 3q8tv8r9rv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 May 2023 19:41:56 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+        by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 345Jft1138404576
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 May 2023 19:41:55 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3733D5805E;
+        Fri,  5 May 2023 19:41:55 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D55D558051;
+        Fri,  5 May 2023 19:41:53 +0000 (GMT)
+Received: from rhel-laptop.ibm.com.com (unknown [9.160.1.159])
+        by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Fri,  5 May 2023 19:41:53 +0000 (GMT)
+From:   gjoyce@linux.vnet.ibm.com
+To:     linux-block@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
+        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
+        axboe@kernel.dk, akpm@linux-foundation.org,
+        gjoyce@linux.vnet.ibm.com, linux-efi@vger.kernel.org,
+        keyrings@vger.kernel.org, me@benboeckel.net, elliott@hpe.com
+Subject: [PATCH v4 0/3] sed-opal: keyrings, discovery, revert, key store
+Date:   Fri,  5 May 2023 14:41:48 -0500
+Message-Id: <20230505194151.2078678-1-gjoyce@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [RFC PATCH 00/11] Rust null block driver
-Content-Language: en-US
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Andreas Hindborg <nmi@metaspace.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Hannes Reinecke <hare@suse.de>,
-        lsf-pc@lists.linux-foundation.org, rust-for-linux@vger.kernel.org,
-        linux-block@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        =?UTF-8?Q?Bj=c3=b6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-        Benno Lossin <benno.lossin@proton.me>,
-        open list <linux-kernel@vger.kernel.org>, gost.dev@samsung.com,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20230503090708.2524310-1-nmi@metaspace.dk>
- <da7b815d-3da8-38e5-9b25-b9cfb6878293@acm.org> <87jzxot0jk.fsf@metaspace.dk>
- <b9a1c1b2-3baa-2cad-31ae-8b14e4ee5709@acm.org>
- <ZFP+8apHunCCMmOZ@kbusch-mbp.dhcp.thefacebook.com>
- <e7bc2155-613b-8904-9942-2e9615b0dc63@kernel.dk>
- <CANiq72nAMH1SfGmPTEjGHfevbb9tMLN4W7gJ3nBpJcvkCEsZ4g@mail.gmail.com>
- <80ed2c0e-54db-777a-175b-1aa3ff776724@kernel.dk>
- <CANiq72=3kGRy-3Lq5oxUEhu5d-377QrhuzhvoKRL+_QvbnJE7A@mail.gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <CANiq72=3kGRy-3Lq5oxUEhu5d-377QrhuzhvoKRL+_QvbnJE7A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Oz-m1uNz32E0zDYw4vXWfM-oJsxXpXhq
+X-Proofpoint-ORIG-GUID: Oz-m1uNz32E0zDYw4vXWfM-oJsxXpXhq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-05_25,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305050156
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/5/23 03:53, Miguel Ojeda wrote:
-> Definitely, in the end subsystems know best if there is enough time
-> available (from everybody) to pull it off. I only meant to say that
-> the security angle is not the only benefit.
-> 
-> For instance, like you said, the error handling, plus a bunch more
-> that people usually enjoy: stricter typing, more information on
-> signatures, sum types, pattern matching, privacy, closures, generics,
-> etc.
+From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
 
-These are all great advantages of Rust.
+TCG SED Opal is a specification from The Trusted Computing Group
+that allows self encrypting storage devices (SED) to be locked at
+power on and require an authentication key to unlock the drive.
 
-One potential cause of memory corruption caused by block drivers is
-misprogramming the DMA engine of the storage controller. This is something
-no borrow checker can protect against. Only an IOMMU can protect against
-the storage controller accessing memory that it shouldn't access. This is
-not a criticism of Rust - I'm bringing this up because I think this is
-something that is important to realize.
+The current SED Opal implementation in the block driver
+requires that authentication keys be provided in an ioctl
+so that they can be presented to the underlying SED
+capable drive. Currently, the key is typically entered by
+a user with an application like sedutil or sedcli. While
+this process works, it does not lend itself to automation
+like unlock by a udev rule.
 
-Bart.
+The SED block driver has been extended so it can alternatively
+obtain a key from a sed-opal kernel keyring. The SED ioctls
+will indicate the source of the key, either directly in the
+ioctl data or from the keyring.
+
+Two new SED ioctls have also been added. These are:
+  1) IOC_OPAL_REVERT_LSP to revert LSP state
+  2) IOC_OPAL_DISCOVERY to discover drive capabilities/state
+
+change log v4:
+        - rebase to 6.3-rc7
+	- replaced "255" magic number with U8_MAX
+
+change log:
+        - rebase to 6.x
+        - added latest reviews
+        - removed platform functions for persistent key storage
+        - replaced key update logic with key_create_or_update()
+        - minor bracing and padding changes
+        - add error returns
+        - opal_key structure is application provided but kernel
+          verified
+        - added brief description of TCG SED Opal
+
+Greg Joyce (3):
+  block: sed-opal: Implement IOC_OPAL_DISCOVERY
+  block: sed-opal: Implement IOC_OPAL_REVERT_LSP
+  block: sed-opal: keyring support for SED keys
+
+ block/Kconfig                 |   2 +
+ block/opal_proto.h            |   4 +
+ block/sed-opal.c              | 252 +++++++++++++++++++++++++++++++++-
+ include/linux/sed-opal.h      |   5 +
+ include/uapi/linux/sed-opal.h |  25 +++-
+ 5 files changed, 282 insertions(+), 6 deletions(-)
+
+Signed-off-by: Greg Joyce <gjoyce@linux.vnet.ibm.com>
+base-commit: 6a8f57ae2eb07ab39a6f0ccad60c760743051026
+-- 
+gjoyce@linux.vnet.ibm.com
 
