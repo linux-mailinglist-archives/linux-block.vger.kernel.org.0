@@ -2,153 +2,248 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B61B6F89AF
-	for <lists+linux-block@lfdr.de>; Fri,  5 May 2023 21:44:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 369366F89BE
+	for <lists+linux-block@lfdr.de>; Fri,  5 May 2023 21:45:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233456AbjEEToP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 5 May 2023 15:44:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36312 "EHLO
+        id S233301AbjEETpI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 5 May 2023 15:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232168AbjEEToN (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 5 May 2023 15:44:13 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB5DE68
-        for <linux-block@vger.kernel.org>; Fri,  5 May 2023 12:44:12 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-ba1911d60f5so3320629276.2
-        for <linux-block@vger.kernel.org>; Fri, 05 May 2023 12:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683315851; x=1685907851;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RvDT8zkuC4gVi0fnTc8i/Bkqd4YLxVEG0sioBwkCD+U=;
-        b=CIPVHcOLQdhTXogN62Mw/fCOLjlOwNM45thZp55/G0Y+4E4NexnUvB3vOtM2suLjdz
-         T1rh3EKQF9Q7DLBvkrQA96HMuJKK6ljz6sUoadVwmvME6+Lo2jBkjnaE4Kk2rVIFv44B
-         GTEHr7cll/pqo289odi2h8zMjdKiN7hEFK7aVA5CoC+HI1oO5ICufh8JDIXrvRDAevnP
-         hUDV1hbROSBKB8pVoWmLqfwYKVjSxXq1DDuUre5iez9QOh1dhd88hO/po3v9f9cizadN
-         32jf30WJaDhnMzH+nura2GGWCByQoFHbfZBMyldKQhm6BHH1vM5Us1DoF2dmrL50knMa
-         moaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683315851; x=1685907851;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RvDT8zkuC4gVi0fnTc8i/Bkqd4YLxVEG0sioBwkCD+U=;
-        b=dJWrXZlsx7q5j/K4tpYuSSbzt9+T0nsHU9OECYdjeBBNlvVInpLMdgdFSxmEDhVyqF
-         6JYPvXQAElfpWE39pw3rrx+992I2eCDvnTeZBIIjpqFt8ltgqURrT7uBhfxMeHMZBl9q
-         Fx0r8CHp9MTmnV47SFoyPq3FuTNVS565Dg8Ez9rLEePStJZ3GnALWKu4t2aDuD3ZWAoW
-         WgR0mq/0/hyVvy5b7b388Eqze5xTFPH7zK8LZct1VYL2/qyEUfPyMA/J2GVlQJ2gVrym
-         eR8PPzc8ykqY3JOEWb/XNJu6j5nT3U3sJC+AIx86t8Gh7GUDHJUUi/RJpXvKPqFmNdjQ
-         Z35g==
-X-Gm-Message-State: AC+VfDw8EGtJVJM9g/2nmbUf5SE4toTbAGX3zr4cx+T7DG2lRYz8kbi8
-        boBVO2tmt8kXyi7CtHUjHiVQSNz6ikfAWyLf+jJl5A==
-X-Google-Smtp-Source: ACHHUZ47iup2wUFCWjaUVQFxudnhr3YZeYNUuAbCUUGTy47k/MsRgf5289v6Uo7/8hYFN/Owo0us95zjRkpUK8gmZes=
-X-Received: by 2002:a05:6902:100e:b0:b9e:5008:1773 with SMTP id
- w14-20020a056902100e00b00b9e50081773mr3418662ybt.15.1683315851287; Fri, 05
- May 2023 12:44:11 -0700 (PDT)
+        with ESMTP id S233232AbjEETpH (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 5 May 2023 15:45:07 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC35E4A;
+        Fri,  5 May 2023 12:45:05 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 345JgwOo003497;
+        Fri, 5 May 2023 19:44:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=rvN03YZ7rSocVoRSnHhsR4/yEXvY1KusYZCCiUe4D8I=;
+ b=KzKJyWCefCrY6J8bIp3G5BDs3fmnJfX6L8XQxGjWEM/p7+2YA7QQAs79556KXQ7Z2qE8
+ XjDIWVKyoO8zSCFtaIruKI1+2McOMYiRS2KH6ROMNbPJy3+2CuJQFQLnqMN41JcuZVoo
+ ZUIjP2dCRu1YmX+/otDqms/hl43aDAeiwzq4Nsc1t1OXYOR2v/soZWfYqjjEc5aP2dOh
+ Mr+E2XVPW1qbrVx65pdCxRGQIUbEo9HjWS7VTjJ8Zlw9DcW99VSMAXGN7m02bE18PBLf
+ Nhy/GFnsfjiSQ/je7Oc3aJLMeXCmOz+vBLjQ3GXvKt/2tRIirLxCq4r83QpDYGl0sdUs 6Q== 
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qd86qr0wp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 May 2023 19:44:10 +0000
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 345JViQB006789;
+        Fri, 5 May 2023 19:44:09 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([9.208.130.101])
+        by ppma04dal.us.ibm.com (PPS) with ESMTPS id 3q8tv8r7et-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 May 2023 19:44:09 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+        by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 345Ji8mw8127168
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 May 2023 19:44:08 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31FA458059;
+        Fri,  5 May 2023 19:44:08 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E24285805D;
+        Fri,  5 May 2023 19:44:06 +0000 (GMT)
+Received: from rhel-laptop.ibm.com.com (unknown [9.160.1.159])
+        by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Fri,  5 May 2023 19:44:06 +0000 (GMT)
+From:   gjoyce@linux.vnet.ibm.com
+To:     linux-block@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
+        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
+        axboe@kernel.dk, akpm@linux-foundation.org,
+        gjoyce@linux.vnet.ibm.com, linux-efi@vger.kernel.org,
+        keyrings@vger.kernel.org, me@benboeckel.net, elliott@hpe.com,
+        andonnel@au1.ibm.com
+Subject: [PATCH 2/4] powerpc/pseries: PLPKS SED Opal keystore support
+Date:   Fri,  5 May 2023 14:44:00 -0500
+Message-Id: <20230505194402.2079010-3-gjoyce@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230505194402.2079010-1-gjoyce@linux.vnet.ibm.com>
+References: <20230505194402.2079010-1-gjoyce@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <4b9fc9c6-b48c-198f-5f80-811a44737e5f@suse.cz> <CAANmLtwGS75WJ9AXfmqZv73pNdHJn6zfrrCCWjKK_6jPk9pWRg@mail.gmail.com>
- <951d364a-05c0-b290-8abe-7cbfcaeb2df7@suse.cz> <CAANmLtzQmVN_EWLv1UxXwZu5X=TwpcMQMYArKNUxAJL3PnfO2Q@mail.gmail.com>
- <19acbdbb-fc2f-e198-3d31-850ef53f544e@suse.cz>
-In-Reply-To: <19acbdbb-fc2f-e198-3d31-850ef53f544e@suse.cz>
-From:   Binder Makin <merimus@google.com>
-Date:   Fri, 5 May 2023 15:44:00 -0400
-Message-ID: <CAANmLty+yVqN74p_w8VX6=LBTioVKS+b6SHMwoJonoUXgqeXng@mail.gmail.com>
-Subject: Re: [LSF/MM/BPF TOPIC] SLOB+SLAB allocators removal and future SLUB improvements
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        bpf@vger.kernel.org, linux-xfs@vger.kernel.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: JKHsxi15qsHbOO7gGpFRGS7tWIFBgm7Z
+X-Proofpoint-ORIG-GUID: JKHsxi15qsHbOO7gGpFRGS7tWIFBgm7Z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-05_26,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 spamscore=0 adultscore=0
+ clxscore=1015 mlxlogscore=999 mlxscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305050160
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Here are the results of my research.
-One doc is an overview fo the data and the other is a pdf of the raw data.
+From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
 
-https://drive.google.com/file/d/1DE8QMri1Rsr7L27fORHFCmwgrMtdfPfu/view?usp=
-=3Dshare_link
+Define operations for SED Opal to read/write keys
+from POWER LPAR Platform KeyStore(PLPKS). This allows
+non-volatile storage of SED Opal keys.
 
-https://drive.google.com/file/d/1UwnTeqsKB0jgpnZodJ0_cM2bOHx5aR_v/view?usp=
-=3Dshare_link
+Signed-off-by: Greg Joyce <gjoyce@linux.vnet.ibm.com>
+Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
+---
+ arch/powerpc/platforms/pseries/Makefile       |   1 +
+ .../powerpc/platforms/pseries/plpks_sed_ops.c | 126 ++++++++++++++++++
+ 2 files changed, 127 insertions(+)
+ create mode 100644 arch/powerpc/platforms/pseries/plpks_sed_ops.c
 
-On Thu, Apr 27, 2023 at 4:29=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 4/5/23 21:54, Binder Makin wrote:
-> > I'm still running tests to explore some of these questions.
-> > The machines I am using are roughly as follows.
-> >
-> > Intel dual socket 56 total cores
-> > 192-384GB ram
-> > LEVEL1_ICACHE_SIZE                 32768
-> > LEVEL1_DCACHE_SIZE                 32768
-> > LEVEL2_CACHE_SIZE                  1048576
-> > LEVEL3_CACHE_SIZE                  40370176
-> >
-> > Amd dual socket 128 total cores
-> > 1TB ram
-> > LEVEL1_ICACHE_SIZE                 32768
-> > LEVEL1_DCACHE_SIZE                 32768
-> > LEVEL2_CACHE_SIZE                  524288
-> > LEVEL3_CACHE_SIZE                  268435456
-> >
-> > Arm single socket 64 total cores
-> > 256GB rma
-> > LEVEL1_ICACHE_SIZE                 65536
-> > LEVEL1_DCACHE_SIZE                 65536
-> > LEVEL2_CACHE_SIZE                  1048576
-> > LEVEL3_CACHE_SIZE                  33554432
->
-> So with "some artifact of different cache layout" I didn't mean the
-> different cache sizes of the processors, but possible differences how
-> objects end up placed in memory by SLAB vs SLUB causing them to collide i=
-n
-> the cache of cause false sharing less or more. This kind of interference =
-can
-> make interpreting (micro)benchmark results hard.
->
-> Anyway, how I'd hope to approach this topic would be that SLAB removal is
-> proposed, and anyone who opposes that because they can't switch from SLAB=
- to
-> SLUB would describe why they can't. I'd hope the "why" to be based on
-> testing with actual workloads, not just benchmarks. Benchmarks are then o=
-f
-> course useful if they can indeed distill the reason why the actual worklo=
-ad
-> regresses, as then anyone can reproduce that locally and develop/test fix=
-es
-> etc. My hope is that if some kind of regression is found (e.g. due to lac=
-k
-> of percpu array in SLUB), it can be dealt with by improving SLUB.
->
-> Historically I recall that we (SUSE) objected somwhat to SLAB removal as =
-our
-> distro kernels were using it, but we have switched since. Then networking
-> had concerns (possibly related to the lack percpu array) but seems bulk
-> allocations helped and they use SLUB these days [1]. And IIRC Google was
-> also sticking to SLAB, which led to some attempts to augment SLUB for tho=
-se
-> workloads years ago, but those were never finished. So I'd be curious if =
-we
-> should restart those effors or can just remove SLAB now.
->
-> [1] https://lore.kernel.org/all/93665604-5420-be5d-2104-17850288b955@redh=
-at.com/
->
->
+diff --git a/arch/powerpc/platforms/pseries/Makefile b/arch/powerpc/platforms/pseries/Makefile
+index 53c3b91af2f7..4242aed0d5d3 100644
+--- a/arch/powerpc/platforms/pseries/Makefile
++++ b/arch/powerpc/platforms/pseries/Makefile
+@@ -29,6 +29,7 @@ obj-$(CONFIG_PPC_SVM)		+= svm.o
+ obj-$(CONFIG_FA_DUMP)		+= rtas-fadump.o
+ obj-$(CONFIG_PSERIES_PLPKS)	+= plpks.o
+ obj-$(CONFIG_PPC_SECURE_BOOT)	+= plpks-secvar.o
++obj-$(CONFIG_PSERIES_PLPKS_SED)	+= plpks-sed.o
+ obj-$(CONFIG_SUSPEND)		+= suspend.o
+ obj-$(CONFIG_PPC_VAS)		+= vas.o vas-sysfs.o
+ 
+diff --git a/arch/powerpc/platforms/pseries/plpks_sed_ops.c b/arch/powerpc/platforms/pseries/plpks_sed_ops.c
+new file mode 100644
+index 000000000000..086934b319a9
+--- /dev/null
++++ b/arch/powerpc/platforms/pseries/plpks_sed_ops.c
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * POWER Platform specific code for non-volatile SED key access
++ * Copyright (C) 2022 IBM Corporation
++ *
++ * Define operations for SED Opal to read/write keys
++ * from POWER LPAR Platform KeyStore(PLPKS).
++ *
++ * Self Encrypting Drives(SED) key storage using PLPKS
++ */
++
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/ioctl.h>
++#include <linux/sed-opal-key.h>
++#include "plpks.h"
++
++/*
++ * structure that contains all SED data
++ */
++struct plpks_sed_object_data {
++	u_char version;
++	u_char pad1[7];
++	u_long authority;
++	u_long range;
++	u_int  key_len;
++	u_char key[32];
++};
++
++#define PLPKS_PLATVAR_POLICY            WORLDREADABLE
++#define PLPKS_PLATVAR_OS_COMMON         4
++
++#define PLPKS_SED_OBJECT_DATA_V0        0
++#define PLPKS_SED_MANGLED_LABEL         "/default/pri"
++#define PLPKS_SED_COMPONENT             "sed-opal"
++#define PLPKS_SED_KEY                   "opal-boot-pin"
++
++/*
++ * authority is admin1 and range is global
++ */
++#define PLPKS_SED_AUTHORITY  0x0000000900010001
++#define PLPKS_SED_RANGE      0x0000080200000001
++
++void plpks_init_var(struct plpks_var *var, char *keyname)
++{
++	var->name = keyname;
++	var->namelen = strlen(keyname);
++	if (strcmp(PLPKS_SED_KEY, keyname) == 0) {
++		var->name = PLPKS_SED_MANGLED_LABEL;
++		var->namelen = strlen(keyname);
++	}
++	var->policy = PLPKS_PLATVAR_POLICY;
++	var->os = PLPKS_PLATVAR_OS_COMMON;
++	var->data = NULL;
++	var->datalen = 0;
++	var->component = PLPKS_SED_COMPONENT;
++}
++
++/*
++ * Read the SED Opal key from PLPKS given the label
++ */
++int sed_read_key(char *keyname, char *key, u_int *keylen)
++{
++	struct plpks_var var;
++	struct plpks_sed_object_data data;
++	u_int offset;
++	int ret;
++	u_int len;
++
++	plpks_init_var(&var, keyname);
++	var.data = &data;
++	var.datalen = sizeof(data);
++
++	ret = plpks_read_os_var(&var);
++	if (ret != 0)
++		return ret;
++
++	offset = offsetof(struct plpks_sed_object_data, key);
++	if (offset > var.datalen) {
++		return -EINVAL;
++	}
++
++	len = min(be32_to_cpu(data.key_len), *keylen);
++
++	memcpy(key, data.key, len);
++	kfree(var.data);
++
++	key[len] = '\0';
++	*keylen = len;
++
++	return 0;
++}
++
++/*
++ * Write the SED Opal key to PLPKS given the label
++ */
++int sed_write_key(char *keyname, char *key, u_int keylen)
++{
++	struct plpks_var var;
++	struct plpks_sed_object_data data;
++	struct plpks_var_name vname;
++
++	plpks_init_var(&var, keyname);
++
++	var.datalen = sizeof(struct plpks_sed_object_data);
++	var.data = (u8 *)&data;
++
++	/* initialize SED object */
++	data.version = PLPKS_SED_OBJECT_DATA_V0;
++	data.authority = cpu_to_be64(PLPKS_SED_AUTHORITY);
++	data.range = cpu_to_be64(PLPKS_SED_RANGE);
++	memset(&data.pad1, '\0', sizeof(data.pad1));
++	data.key_len = cpu_to_be32(keylen);
++	memcpy(data.key, (char *)key, keylen);
++
++	/*
++	 * Key update requires remove first. The return value
++	 * is ignored since it's okay if the key doesn't exist.
++	 */
++	vname.namelen = var.namelen;
++	vname.name = var.name;
++	plpks_remove_var(var.component, var.os, vname);
++
++	return plpks_write_var(var);
++}
+-- 
+gjoyce@linux.vnet.ibm.com
+
