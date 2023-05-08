@@ -2,70 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A71DB6FB0C8
-	for <lists+linux-block@lfdr.de>; Mon,  8 May 2023 15:01:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B786FAFA6
+	for <lists+linux-block@lfdr.de>; Mon,  8 May 2023 14:08:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234690AbjEHNBj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 8 May 2023 09:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56022 "EHLO
+        id S232911AbjEHMI2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 8 May 2023 08:08:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234300AbjEHNBf (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 8 May 2023 09:01:35 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FD139B83;
-        Mon,  8 May 2023 06:01:32 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 4715821FBB;
-        Mon,  8 May 2023 13:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1683550891; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OzoUvL9aj4orkqwyXqIQaZaU3/l176K6F3PuwHlLL6Y=;
-        b=ELdn+jd+3/dtgSrcrL6u1jo0dQrJtA0//tU8Z/zhUIIesfMARy1JYYwXtKZyVt/XzlGLV0
-        JBkS8/0/F+zyQNhheRiHIWzM5IDt7M1g0lsbfqzHa9Gso60/uwVtjmV3urG1GOzLoEu86c
-        z2E6Z6NbWwBu8FmivoCxBmr0XMpH2MY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1683550891;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OzoUvL9aj4orkqwyXqIQaZaU3/l176K6F3PuwHlLL6Y=;
-        b=vCK6TAG4k4/MK2pTzxkjqMy+EThHuJwxTXptnYhjm90o+eapYRjs0hKAmD+z3tXszzwli9
-        IzvF+/Jua5PcwkCg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 06C2C13A5F;
-        Mon,  8 May 2023 13:01:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Jag8AKvyWGSqXQAAMHmgww
-        (envelope-from <jack@suse.cz>); Mon, 08 May 2023 13:01:31 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id B0054A0764; Sun,  7 May 2023 21:20:50 +0200 (CEST)
-Date:   Sun, 7 May 2023 21:20:50 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 7/9] fs: add a method to shut down the file system
-Message-ID: <20230507192050.h7amddtghearusxi@quack3>
-References: <20230505175132.2236632-1-hch@lst.de>
- <20230505175132.2236632-8-hch@lst.de>
+        with ESMTP id S232166AbjEHMI1 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 8 May 2023 08:08:27 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED41E24A86;
+        Mon,  8 May 2023 05:08:23 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QFKnF1Ds6z4f3mLD;
+        Mon,  8 May 2023 20:08:17 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+        by APP1 (Coremail) with SMTP id cCh0CgBntxEv5lhkWnPtIQ--.27951S2;
+        Mon, 08 May 2023 20:08:16 +0800 (CST)
+Subject: Re: [PATCH v4] blk-ioprio: Introduce promote-to-rt policy
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     Bart Van Assche <bvanassche@acm.org>, Jan Kara <jack@suse.cz>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>, cgroups@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "houtao1@huawei.com" <houtao1@huawei.com>
+References: <20230428074404.280532-1-houtao@huaweicloud.com>
+From:   Hou Tao <houtao@huaweicloud.com>
+Message-ID: <1db53a95-46d3-c906-31a1-0be4992a4b8d@huaweicloud.com>
+Date:   Mon, 8 May 2023 20:08:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230505175132.2236632-8-hch@lst.de>
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20230428074404.280532-1-houtao@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: cCh0CgBntxEv5lhkWnPtIQ--.27951S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jw17GFW8XFy7GryDGr45ZFb_yoWxtr4xpF
+        4fAFZxur9YqF1xtFnrJa1kXrW8tas2yw47WFsxKFyF934jyw1Dur40y3WkWFWxArWDXrZx
+        J3s8JrW0kF98Zw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+        0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+        07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+        7IU1zuWJUUUUU==
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,90 +69,182 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri 05-05-23 13:51:30, Christoph Hellwig wrote:
-> Add a new ->shutdown super operation that can be used to tell the file
-> system to shut down, and call it from newly created holder ops when the
-> block device under a file system shuts down.
-> 
-> This only covers the main block device for "simple" file systems using
-> get_tree_bdev / mount_bdev.  File systems their own get_tree method
-> or opening additional devices will need to set up their own
-> blk_holder_ops.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+ping ?
 
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
+On 4/28/2023 3:44 PM, Hou Tao wrote:
+> From: Hou Tao <houtao1@huawei.com>
+>
+> Since commit a78418e6a04c ("block: Always initialize bio IO priority on
+> submit"), bio->bi_ioprio will never be IOPRIO_CLASS_NONE when calling
+> blkcg_set_ioprio(), so there will be no way to promote the io-priority
+> of one cgroup to IOPRIO_CLASS_RT, because bi_ioprio will always be
+> greater than or equals to IOPRIO_CLASS_RT.
+>
+> It seems possible to call blkcg_set_ioprio() first then try to
+> initialize bi_ioprio later in bio_set_ioprio(), but this doesn't work
+> for bio in which bi_ioprio is already initialized (e.g., direct-io), so
+> introduce a new promote-to-rt policy to promote the iopriority of bio to
+> IOPRIO_CLASS_RT if the ioprio is not already RT.
+>
+> For none-to-rt policy, although it doesn't work now, but considering
+> that its purpose was also to override the io-priority to RT and allowing
+> for a smoother transition, just keep it and treat it as an alias of
+> the promote-to-rt policy.
+>
+> Acked-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Hou Tao <houtao1@huawei.com>
 > ---
->  fs/super.c         | 21 +++++++++++++++++++--
->  include/linux/fs.h |  1 +
->  2 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/super.c b/fs/super.c
-> index 012ce140080375..f127589700ab25 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -1206,6 +1206,22 @@ int get_tree_keyed(struct fs_context *fc,
->  EXPORT_SYMBOL(get_tree_keyed);
+> v4:
+>  * rebased on 33afd4b76393
+>  * Add Reviewed-by from Jan Kara
+>
+> v3: https://lore.kernel.org/linux-block/20230223135154.3749088-1-houtao@huaweicloud.com
+>  * Use 'non-RT' instead of 'no-RT' in document (from Bagas)
+>  * Remove repeated sentence in commit message
+>  * Add Reviewed-by and Acked-by tags
 >  
->  #ifdef CONFIG_BLOCK
-> +static void fs_mark_dead(struct block_device *bdev)
-> +{
-> +	struct super_block *sb;
+> v2: https://lore.kernel.org/linux-block/20230220135428.2632906-1-houtao@huaweicloud.com
+>
+>  * Simplify the implementation of promote-to-rt (from Bart)
+>  * Make none-to-rt to work again by treating it as an alias of
+>    the promote-to-rt policy (from Bart & Jan)
+>  * fix the style of new content in cgroup-v2.rst (from Bagas)
+>  * set the default priority level to 4 instead of 0 for promote-to-rt
+>
+> v1: https://lore.kernel.org/linux-block/20230201045227.2203123-1-houtao@huaweicloud.com
+>
+>  Documentation/admin-guide/cgroup-v2.rst | 42 ++++++++++++++-----------
+>  block/blk-ioprio.c                      | 23 ++++++++++++--
+>  2 files changed, 44 insertions(+), 21 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index f67c0829350b..7544ce00e0cb 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -2024,31 +2024,33 @@ that attribute:
+>    no-change
+>  	Do not modify the I/O priority class.
+>  
+> -  none-to-rt
+> -	For requests that do not have an I/O priority class (NONE),
+> -	change the I/O priority class into RT. Do not modify
+> -	the I/O priority class of other requests.
+> +  promote-to-rt
+> +	For requests that have a non-RT I/O priority class, change it into RT.
+> +	Also change the priority level of these requests to 4. Do not modify
+> +	the I/O priority of requests that have priority class RT.
+>  
+>    restrict-to-be
+>  	For requests that do not have an I/O priority class or that have I/O
+> -	priority class RT, change it into BE. Do not modify the I/O priority
+> -	class of requests that have priority class IDLE.
+> +	priority class RT, change it into BE. Also change the priority level
+> +	of these requests to 0. Do not modify the I/O priority class of
+> +	requests that have priority class IDLE.
+>  
+>    idle
+>  	Change the I/O priority class of all requests into IDLE, the lowest
+>  	I/O priority class.
+>  
+> +  none-to-rt
+> +	Deprecated. Just an alias for promote-to-rt.
 > +
-> +	sb = get_super(bdev);
-> +	if (!sb)
-> +		return;
-> +
-> +	if (sb->s_op->shutdown)
-> +		sb->s_op->shutdown(sb);
-> +	drop_super(sb);
-> +}
-> +
-> +static const struct blk_holder_ops fs_holder_ops = {
-> +	.mark_dead		= fs_mark_dead,
-> +};
+>  The following numerical values are associated with the I/O priority policies:
 >  
->  static int set_bdev_super(struct super_block *s, void *data)
->  {
-> @@ -1248,7 +1264,8 @@ int get_tree_bdev(struct fs_context *fc,
->  	if (!fc->source)
->  		return invalf(fc, "No source specified");
+> -+-------------+---+
+> -| no-change   | 0 |
+> -+-------------+---+
+> -| none-to-rt  | 1 |
+> -+-------------+---+
+> -| rt-to-be    | 2 |
+> -+-------------+---+
+> -| all-to-idle | 3 |
+> -+-------------+---+
+> ++----------------+---+
+> +| no-change      | 0 |
+> ++----------------+---+
+> +| rt-to-be       | 2 |
+> ++----------------+---+
+> +| all-to-idle    | 3 |
+> ++----------------+---+
 >  
-> -	bdev = blkdev_get_by_path(fc->source, mode, fc->fs_type, NULL);
-> +	bdev = blkdev_get_by_path(fc->source, mode, fc->fs_type,
-> +				  &fs_holder_ops);
->  	if (IS_ERR(bdev)) {
->  		errorf(fc, "%s: Can't open blockdev", fc->source);
->  		return PTR_ERR(bdev);
-> @@ -1333,7 +1350,7 @@ struct dentry *mount_bdev(struct file_system_type *fs_type,
->  	if (!(flags & SB_RDONLY))
->  		mode |= FMODE_WRITE;
+>  The numerical value that corresponds to each I/O priority class is as follows:
 >  
-> -	bdev = blkdev_get_by_path(dev_name, mode, fs_type, NULL);
-> +	bdev = blkdev_get_by_path(dev_name, mode, fs_type, &fs_holder_ops);
->  	if (IS_ERR(bdev))
->  		return ERR_CAST(bdev);
+> @@ -2064,9 +2066,13 @@ The numerical value that corresponds to each I/O priority class is as follows:
 >  
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 21a98168085641..cf3042641b9b30 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1932,6 +1932,7 @@ struct super_operations {
->  				  struct shrink_control *);
->  	long (*free_cached_objects)(struct super_block *,
->  				    struct shrink_control *);
-> +	void (*shutdown)(struct super_block *sb);
+>  The algorithm to set the I/O priority class for a request is as follows:
+>  
+> -- Translate the I/O priority class policy into a number.
+> -- Change the request I/O priority class into the maximum of the I/O priority
+> -  class policy number and the numerical I/O priority class.
+> +- If I/O priority class policy is promote-to-rt, change the request I/O
+> +  priority class to IOPRIO_CLASS_RT and change the request I/O priority
+> +  level to 4.
+> +- If I/O priorityt class is not promote-to-rt, translate the I/O priority
+> +  class policy into a number, then change the request I/O priority class
+> +  into the maximum of the I/O priority class policy number and the numerical
+> +  I/O priority class.
+>  
+>  PID
+>  ---
+> diff --git a/block/blk-ioprio.c b/block/blk-ioprio.c
+> index 055529b9b92b..4051fada01f1 100644
+> --- a/block/blk-ioprio.c
+> +++ b/block/blk-ioprio.c
+> @@ -23,25 +23,28 @@
+>  /**
+>   * enum prio_policy - I/O priority class policy.
+>   * @POLICY_NO_CHANGE: (default) do not modify the I/O priority class.
+> - * @POLICY_NONE_TO_RT: modify IOPRIO_CLASS_NONE into IOPRIO_CLASS_RT.
+> + * @POLICY_PROMOTE_TO_RT: modify no-IOPRIO_CLASS_RT to IOPRIO_CLASS_RT.
+>   * @POLICY_RESTRICT_TO_BE: modify IOPRIO_CLASS_NONE and IOPRIO_CLASS_RT into
+>   *		IOPRIO_CLASS_BE.
+>   * @POLICY_ALL_TO_IDLE: change the I/O priority class into IOPRIO_CLASS_IDLE.
+> + * @POLICY_NONE_TO_RT: an alias for POLICY_PROMOTE_TO_RT.
+>   *
+>   * See also <linux/ioprio.h>.
+>   */
+>  enum prio_policy {
+>  	POLICY_NO_CHANGE	= 0,
+> -	POLICY_NONE_TO_RT	= 1,
+> +	POLICY_PROMOTE_TO_RT	= 1,
+>  	POLICY_RESTRICT_TO_BE	= 2,
+>  	POLICY_ALL_TO_IDLE	= 3,
+> +	POLICY_NONE_TO_RT	= 4,
 >  };
 >  
->  /*
-> -- 
-> 2.39.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>  static const char *policy_name[] = {
+>  	[POLICY_NO_CHANGE]	= "no-change",
+> -	[POLICY_NONE_TO_RT]	= "none-to-rt",
+> +	[POLICY_PROMOTE_TO_RT]	= "promote-to-rt",
+>  	[POLICY_RESTRICT_TO_BE]	= "restrict-to-be",
+>  	[POLICY_ALL_TO_IDLE]	= "idle",
+> +	[POLICY_NONE_TO_RT]	= "none-to-rt",
+>  };
+>  
+>  static struct blkcg_policy ioprio_policy;
+> @@ -189,6 +192,20 @@ void blkcg_set_ioprio(struct bio *bio)
+>  	if (!blkcg || blkcg->prio_policy == POLICY_NO_CHANGE)
+>  		return;
+>  
+> +	if (blkcg->prio_policy == POLICY_PROMOTE_TO_RT ||
+> +	    blkcg->prio_policy == POLICY_NONE_TO_RT) {
+> +		/*
+> +		 * For RT threads, the default priority level is 4 because
+> +		 * task_nice is 0. By promoting non-RT io-priority to RT-class
+> +		 * and default level 4, those requests that are already
+> +		 * RT-class but need a higher io-priority can use ioprio_set()
+> +		 * to achieve this.
+> +		 */
+> +		if (IOPRIO_PRIO_CLASS(bio->bi_ioprio) != IOPRIO_CLASS_RT)
+> +			bio->bi_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_RT, 4);
+> +		return;
+> +	}
+> +
+>  	/*
+>  	 * Except for IOPRIO_CLASS_NONE, higher I/O priority numbers
+>  	 * correspond to a lower priority. Hence, the max_t() below selects
+
