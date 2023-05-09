@@ -2,307 +2,263 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A71EA6FCC03
-	for <lists+linux-block@lfdr.de>; Tue,  9 May 2023 18:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8702A6FCC3F
+	for <lists+linux-block@lfdr.de>; Tue,  9 May 2023 19:03:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235050AbjEIQ6g (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 9 May 2023 12:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41458 "EHLO
+        id S235346AbjEIRDb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 9 May 2023 13:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234851AbjEIQ6D (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 9 May 2023 12:58:03 -0400
-Received: from out-22.mta1.migadu.com (out-22.mta1.migadu.com [IPv6:2001:41d0:203:375::16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DBCE49C7
-        for <linux-block@vger.kernel.org>; Tue,  9 May 2023 09:57:24 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1683651443;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vmriaVgD/FyMiWTB+roCgu5nb9HM588jx+szztY1PGY=;
-        b=Y8cJ4uv28KMitwKkI+rMDqec7BQ2sqWlk0uW6vvAlG9jpKl1sie9uI9aDFHiFVb13u6wND
-        clc46Jy46U5eEEXSGiLDH/Y7ZmJRRCvaF1kF5jdMQUo8DDKWHlDC3UIxIbGMs6goGBumcG
-        BFSx62tvZjG0iuHHX2esbeVWEw0JrYU=
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-bcachefs@vger.kernel.org
-Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH 13/32] block: Rework bio_for_each_folio_all()
-Date:   Tue,  9 May 2023 12:56:38 -0400
-Message-Id: <20230509165657.1735798-14-kent.overstreet@linux.dev>
-In-Reply-To: <20230509165657.1735798-1-kent.overstreet@linux.dev>
-References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
+        with ESMTP id S235284AbjEIRDQ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 9 May 2023 13:03:16 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6C42D6A
+        for <linux-block@vger.kernel.org>; Tue,  9 May 2023 09:59:44 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7575ff76964so180379485a.2
+        for <linux-block@vger.kernel.org>; Tue, 09 May 2023 09:59:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683651532; x=1686243532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZNfiDYylpHckBsTJBtckQjf+FcPfo0wjhkF9b1/i4T8=;
+        b=GR+zySE9lJWAIPWWCDwPrv5bN20FnB89dDfkQvN4SAjvLHuKBs7gPZJMW2ri7T83aN
+         oyDFVGK9yD+/dSxA7NNOAnmmPi4airVXaCt1G9O1P1fWxPGrPOsvuN1Pz4Quu7qhryLQ
+         ZVDp81c1bHvdsCjH7fKvnMITcPuIUfGpDQCRApc1OREfUf73QW0L9iGjAmmlEpodjnnW
+         QXz0H7c/8fNNqLe/TT4k8MeykEhS7vtoosbKEZ5nc7rfqGSXNHyoTTr67tGRvLFhHtNa
+         EGyYPeCKmqLZr+MXrj5Hfwyoq+Do8D13Rq/msra6X27PK+LZCDVKD+/vLiY103msndJY
+         h4lQ==
+X-Gm-Message-State: AC+VfDwT2sCajchc4bp3AxK4+tvzfOL6qmsdoNw/GTOEubMc1YMfVX3W
+        wscc3CaUi9ZVHNFDDO7B+0Dm
+X-Google-Smtp-Source: ACHHUZ6uxzUunep6oGxrhGEI8fJWpdH9biEaIAPK8tnW9no4oBDOuhDxrDrorqXw1bgEv5VB07afuQ==
+X-Received: by 2002:a05:6214:528b:b0:621:44ee:7065 with SMTP id kj11-20020a056214528b00b0062144ee7065mr1016696qvb.9.1683651532284;
+        Tue, 09 May 2023 09:58:52 -0700 (PDT)
+Received: from localhost ([217.138.208.150])
+        by smtp.gmail.com with ESMTPSA id pp16-20020a056214139000b006168277998csm896786qvb.58.2023.05.09.09.58.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 May 2023 09:58:51 -0700 (PDT)
+Date:   Tue, 9 May 2023 12:58:50 -0400
+From:   Mike Snitzer <snitzer@kernel.org>
+To:     Sarthak Kukreti <sarthakkukreti@chromium.org>
+Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Bart Van Assche <bvanassche@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>
+Subject: Re: [PATCH v6 4/5] dm-thin: Add REQ_OP_PROVISION support
+Message-ID: <ZFp7ykxGFUbPG1ON@redhat.com>
+References: <20230420004850.297045-1-sarthakkukreti@chromium.org>
+ <20230506062909.74601-1-sarthakkukreti@chromium.org>
+ <20230506062909.74601-5-sarthakkukreti@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230506062909.74601-5-sarthakkukreti@chromium.org>
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This reimplements bio_for_each_folio_all() on top of the newly-reworked
-bvec_iter_all, and since it's now trivial we also provide
-bio_for_each_folio.
+On Sat, May 06 2023 at  2:29P -0400,
+Sarthak Kukreti <sarthakkukreti@chromium.org> wrote:
 
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: linux-block@vger.kernel.org
----
- fs/crypto/bio.c        |  9 +++--
- fs/iomap/buffered-io.c | 14 ++++---
- fs/verity/verify.c     |  9 +++--
- include/linux/bio.h    | 91 +++++++++++++++++++++---------------------
- include/linux/bvec.h   | 15 +++++--
- 5 files changed, 75 insertions(+), 63 deletions(-)
+> dm-thinpool uses the provision request to provision
+> blocks for a dm-thin device. dm-thinpool currently does not
+> pass through REQ_OP_PROVISION to underlying devices.
+> 
+> For shared blocks, provision requests will break sharing and copy the
+> contents of the entire block. Additionally, if 'skip_block_zeroing'
+> is not set, dm-thin will opt to zero out the entire range as a part
+> of provisioning.
+> 
+> Signed-off-by: Sarthak Kukreti <sarthakkukreti@chromium.org>
+> ---
+>  drivers/md/dm-thin.c | 70 +++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 66 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
+> index 2b13c949bd72..3f94f53ac956 100644
+> --- a/drivers/md/dm-thin.c
+> +++ b/drivers/md/dm-thin.c
+> @@ -274,6 +274,7 @@ struct pool {
+>  
+>  	process_bio_fn process_bio;
+>  	process_bio_fn process_discard;
+> +	process_bio_fn process_provision;
+>  
+>  	process_cell_fn process_cell;
+>  	process_cell_fn process_discard_cell;
+> @@ -913,7 +914,8 @@ static void __inc_remap_and_issue_cell(void *context,
+>  	struct bio *bio;
+>  
+>  	while ((bio = bio_list_pop(&cell->bios))) {
+> -		if (op_is_flush(bio->bi_opf) || bio_op(bio) == REQ_OP_DISCARD)
+> +		if (op_is_flush(bio->bi_opf) || bio_op(bio) == REQ_OP_DISCARD ||
+> +		    bio_op(bio) == REQ_OP_PROVISION)
+>  			bio_list_add(&info->defer_bios, bio);
+>  		else {
+>  			inc_all_io_entry(info->tc->pool, bio);
+> @@ -1245,8 +1247,8 @@ static int io_overlaps_block(struct pool *pool, struct bio *bio)
+>  
+>  static int io_overwrites_block(struct pool *pool, struct bio *bio)
+>  {
+> -	return (bio_data_dir(bio) == WRITE) &&
+> -		io_overlaps_block(pool, bio);
+> +	return (bio_data_dir(bio) == WRITE) && io_overlaps_block(pool, bio) &&
+> +	       bio_op(bio) != REQ_OP_PROVISION;
+>  }
+>  
+>  static void save_and_set_endio(struct bio *bio, bio_end_io_t **save,
+> @@ -1953,6 +1955,51 @@ static void provision_block(struct thin_c *tc, struct bio *bio, dm_block_t block
+>  	}
+>  }
+>  
+> +static void process_provision_bio(struct thin_c *tc, struct bio *bio)
+> +{
+> +	int r;
+> +	struct pool *pool = tc->pool;
+> +	dm_block_t block = get_bio_block(tc, bio);
+> +	struct dm_bio_prison_cell *cell;
+> +	struct dm_cell_key key;
+> +	struct dm_thin_lookup_result lookup_result;
+> +
+> +	/*
+> +	 * If cell is already occupied, then the block is already
+> +	 * being provisioned so we have nothing further to do here.
+> +	 */
+> +	build_virtual_key(tc->td, block, &key);
+> +	if (bio_detain(pool, &key, bio, &cell))
+> +		return;
+> +
+> +	if (tc->requeue_mode) {
+> +		cell_requeue(pool, cell);
+> +		return;
+> +	}
+> +
+> +	r = dm_thin_find_block(tc->td, block, 1, &lookup_result);
+> +	switch (r) {
+> +	case 0:
+> +		if (lookup_result.shared) {
+> +			process_shared_bio(tc, bio, block, &lookup_result, cell);
+> +		} else {
+> +			bio_endio(bio);
+> +			cell_defer_no_holder(tc, cell);
+> +		}
+> +		break;
+> +	case -ENODATA:
+> +		provision_block(tc, bio, block, cell);
+> +		break;
+> +
+> +	default:
+> +		DMERR_LIMIT("%s: dm_thin_find_block() failed: error = %d",
+> +			    __func__, r);
+> +		cell_defer_no_holder(tc, cell);
+> +		bio_io_error(bio);
+> +		break;
+> +	}
+> +}
+> +
+>  static void process_cell(struct thin_c *tc, struct dm_bio_prison_cell *cell)
+>  {
+>  	int r;
+> @@ -2228,6 +2275,8 @@ static void process_thin_deferred_bios(struct thin_c *tc)
+>  
+>  		if (bio_op(bio) == REQ_OP_DISCARD)
+>  			pool->process_discard(tc, bio);
+> +		else if (bio_op(bio) == REQ_OP_PROVISION)
+> +			pool->process_provision(tc, bio);
+>  		else
+>  			pool->process_bio(tc, bio);
+>  
+> @@ -2579,6 +2628,7 @@ static void set_pool_mode(struct pool *pool, enum pool_mode new_mode)
+>  		dm_pool_metadata_read_only(pool->pmd);
+>  		pool->process_bio = process_bio_fail;
+>  		pool->process_discard = process_bio_fail;
+> +		pool->process_provision = process_bio_fail;
+>  		pool->process_cell = process_cell_fail;
+>  		pool->process_discard_cell = process_cell_fail;
+>  		pool->process_prepared_mapping = process_prepared_mapping_fail;
+> @@ -2592,6 +2642,7 @@ static void set_pool_mode(struct pool *pool, enum pool_mode new_mode)
+>  		dm_pool_metadata_read_only(pool->pmd);
+>  		pool->process_bio = process_bio_read_only;
+>  		pool->process_discard = process_bio_success;
+> +		pool->process_provision = process_bio_fail;
+>  		pool->process_cell = process_cell_read_only;
+>  		pool->process_discard_cell = process_cell_success;
+>  		pool->process_prepared_mapping = process_prepared_mapping_fail;
+> @@ -2612,6 +2663,7 @@ static void set_pool_mode(struct pool *pool, enum pool_mode new_mode)
+>  		pool->out_of_data_space = true;
+>  		pool->process_bio = process_bio_read_only;
+>  		pool->process_discard = process_discard_bio;
+> +		pool->process_provision = process_bio_fail;
+>  		pool->process_cell = process_cell_read_only;
+>  		pool->process_prepared_mapping = process_prepared_mapping;
+>  		set_discard_callbacks(pool);
+> @@ -2628,6 +2680,7 @@ static void set_pool_mode(struct pool *pool, enum pool_mode new_mode)
+>  		dm_pool_metadata_read_write(pool->pmd);
+>  		pool->process_bio = process_bio;
+>  		pool->process_discard = process_discard_bio;
+> +		pool->process_provision = process_provision_bio;
+>  		pool->process_cell = process_cell;
+>  		pool->process_prepared_mapping = process_prepared_mapping;
+>  		set_discard_callbacks(pool);
+> @@ -2749,7 +2802,8 @@ static int thin_bio_map(struct dm_target *ti, struct bio *bio)
+>  		return DM_MAPIO_SUBMITTED;
+>  	}
+>  
+> -	if (op_is_flush(bio->bi_opf) || bio_op(bio) == REQ_OP_DISCARD) {
+> +	if (op_is_flush(bio->bi_opf) || bio_op(bio) == REQ_OP_DISCARD ||
+> +	    bio_op(bio) == REQ_OP_PROVISION) {
+>  		thin_defer_bio_with_throttle(tc, bio);
+>  		return DM_MAPIO_SUBMITTED;
+>  	}
+> @@ -3396,6 +3450,9 @@ static int pool_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  	pt->adjusted_pf = pt->requested_pf = pf;
+>  	ti->num_flush_bios = 1;
+>  	ti->limit_swap_bios = true;
+> +	ti->num_provision_bios = 1;
+> +	ti->provision_supported = true;
+> +	ti->max_provision_granularity = true;
+>  
+>  	/*
+>  	 * Only need to enable discards if the pool should pass
+> @@ -4114,6 +4171,8 @@ static void pool_io_hints(struct dm_target *ti, struct queue_limits *limits)
+>  	 * The pool uses the same discard limits as the underlying data
+>  	 * device.  DM core has already set this up.
+>  	 */
+> +
+> +	limits->max_provision_sectors = pool->sectors_per_block;
+>  }
+>  
+>  static struct target_type pool_target = {
+> @@ -4288,6 +4347,9 @@ static int thin_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>  		ti->max_discard_granularity = true;
+>  	}
+>  
+> +	ti->num_provision_bios = 1;
+> +	ti->provision_supported = true;
+> +
 
-diff --git a/fs/crypto/bio.c b/fs/crypto/bio.c
-index d57d0a020f..6469861add 100644
---- a/fs/crypto/bio.c
-+++ b/fs/crypto/bio.c
-@@ -30,11 +30,12 @@
-  */
- bool fscrypt_decrypt_bio(struct bio *bio)
- {
--	struct folio_iter fi;
-+	struct bvec_iter_all iter;
-+	struct folio_vec fv;
- 
--	bio_for_each_folio_all(fi, bio) {
--		int err = fscrypt_decrypt_pagecache_blocks(fi.folio, fi.length,
--							   fi.offset);
-+	bio_for_each_folio_all(fv, bio, iter) {
-+		int err = fscrypt_decrypt_pagecache_blocks(fv.fv_folio, fv.fv_len,
-+							   fv.fv_offset);
- 
- 		if (err) {
- 			bio->bi_status = errno_to_blk_status(err);
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 6f4c97a6d7..60661c87d5 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -187,10 +187,11 @@ static void iomap_finish_folio_read(struct folio *folio, size_t offset,
- static void iomap_read_end_io(struct bio *bio)
- {
- 	int error = blk_status_to_errno(bio->bi_status);
--	struct folio_iter fi;
-+	struct bvec_iter_all iter;
-+	struct folio_vec fv;
- 
--	bio_for_each_folio_all(fi, bio)
--		iomap_finish_folio_read(fi.folio, fi.offset, fi.length, error);
-+	bio_for_each_folio_all(fv, bio, iter)
-+		iomap_finish_folio_read(fv.fv_folio, fv.fv_offset, fv.fv_len, error);
- 	bio_put(bio);
- }
- 
-@@ -1328,7 +1329,8 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
- 	u32 folio_count = 0;
- 
- 	for (bio = &ioend->io_inline_bio; bio; bio = next) {
--		struct folio_iter fi;
-+		struct bvec_iter_all iter;
-+		struct folio_vec fv;
- 
- 		/*
- 		 * For the last bio, bi_private points to the ioend, so we
-@@ -1340,8 +1342,8 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
- 			next = bio->bi_private;
- 
- 		/* walk all folios in bio, ending page IO on them */
--		bio_for_each_folio_all(fi, bio) {
--			iomap_finish_folio_write(inode, fi.folio, fi.length,
-+		bio_for_each_folio_all(fv, bio, iter) {
-+			iomap_finish_folio_write(inode, fv.fv_folio, fv.fv_len,
- 					error);
- 			folio_count++;
- 		}
-diff --git a/fs/verity/verify.c b/fs/verity/verify.c
-index e250822275..b111ab0102 100644
---- a/fs/verity/verify.c
-+++ b/fs/verity/verify.c
-@@ -340,7 +340,8 @@ void fsverity_verify_bio(struct bio *bio)
- 	struct inode *inode = bio_first_page_all(bio)->mapping->host;
- 	struct fsverity_info *vi = inode->i_verity_info;
- 	struct ahash_request *req;
--	struct folio_iter fi;
-+	struct bvec_iter_all iter;
-+	struct folio_vec fv;
- 	unsigned long max_ra_pages = 0;
- 
- 	/* This allocation never fails, since it's mempool-backed. */
-@@ -359,9 +360,9 @@ void fsverity_verify_bio(struct bio *bio)
- 		max_ra_pages = bio->bi_iter.bi_size >> (PAGE_SHIFT + 2);
- 	}
- 
--	bio_for_each_folio_all(fi, bio) {
--		if (!verify_data_blocks(inode, vi, req, fi.folio, fi.length,
--					fi.offset, max_ra_pages)) {
-+	bio_for_each_folio_all(fv, bio, iter) {
-+		if (!verify_data_blocks(inode, vi, req, fv.fv_folio, fv.fv_len,
-+					fv.fv_offset, max_ra_pages)) {
- 			bio->bi_status = BLK_STS_IOERR;
- 			break;
- 		}
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index f86c7190c3..7ced281734 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -169,6 +169,42 @@ static inline void bio_advance(struct bio *bio, unsigned int nbytes)
- #define bio_for_each_segment(bvl, bio, iter)				\
- 	__bio_for_each_segment(bvl, bio, iter, (bio)->bi_iter)
- 
-+struct folio_vec {
-+	struct folio	*fv_folio;
-+	size_t		fv_offset;
-+	size_t		fv_len;
-+};
-+
-+static inline struct folio_vec biovec_to_foliovec(struct bio_vec bv)
-+{
-+
-+	struct folio *folio	= page_folio(bv.bv_page);
-+	size_t offset		= (folio_page_idx(folio, bv.bv_page) << PAGE_SHIFT) +
-+		bv.bv_offset;
-+	size_t len = min_t(size_t, folio_size(folio) - offset, bv.bv_len);
-+
-+	return (struct folio_vec) {
-+		.fv_folio	= folio,
-+		.fv_offset	= offset,
-+		.fv_len		= len,
-+	};
-+}
-+
-+static inline struct folio_vec bio_iter_iovec_folio(struct bio *bio,
-+						    struct bvec_iter iter)
-+{
-+	return biovec_to_foliovec(bio_iter_iovec(bio, iter));
-+}
-+
-+#define __bio_for_each_folio(bvl, bio, iter, start)			\
-+	for (iter = (start);						\
-+	     (iter).bi_size &&						\
-+		((bvl = bio_iter_iovec_folio((bio), (iter))), 1);	\
-+	     bio_advance_iter_single((bio), &(iter), (bvl).fv_len))
-+
-+#define bio_for_each_folio(bvl, bio, iter)				\
-+	__bio_for_each_folio(bvl, bio, iter, (bio)->bi_iter)
-+
- #define __bio_for_each_bvec(bvl, bio, iter, start)		\
- 	for (iter = (start);						\
- 	     (iter).bi_size &&						\
-@@ -277,59 +313,22 @@ static inline struct bio_vec *bio_last_bvec_all(struct bio *bio)
- 	return &bio->bi_io_vec[bio->bi_vcnt - 1];
- }
- 
--/**
-- * struct folio_iter - State for iterating all folios in a bio.
-- * @folio: The current folio we're iterating.  NULL after the last folio.
-- * @offset: The byte offset within the current folio.
-- * @length: The number of bytes in this iteration (will not cross folio
-- *	boundary).
-- */
--struct folio_iter {
--	struct folio *folio;
--	size_t offset;
--	size_t length;
--	/* private: for use by the iterator */
--	struct folio *_next;
--	size_t _seg_count;
--	int _i;
--};
--
--static inline void bio_first_folio(struct folio_iter *fi, struct bio *bio,
--				   int i)
--{
--	struct bio_vec *bvec = bio_first_bvec_all(bio) + i;
--
--	fi->folio = page_folio(bvec->bv_page);
--	fi->offset = bvec->bv_offset +
--			PAGE_SIZE * (bvec->bv_page - &fi->folio->page);
--	fi->_seg_count = bvec->bv_len;
--	fi->length = min(folio_size(fi->folio) - fi->offset, fi->_seg_count);
--	fi->_next = folio_next(fi->folio);
--	fi->_i = i;
--}
--
--static inline void bio_next_folio(struct folio_iter *fi, struct bio *bio)
-+static inline struct folio_vec bio_folio_iter_all_peek(const struct bio *bio,
-+						       const struct bvec_iter_all *iter)
- {
--	fi->_seg_count -= fi->length;
--	if (fi->_seg_count) {
--		fi->folio = fi->_next;
--		fi->offset = 0;
--		fi->length = min(folio_size(fi->folio), fi->_seg_count);
--		fi->_next = folio_next(fi->folio);
--	} else if (fi->_i + 1 < bio->bi_vcnt) {
--		bio_first_folio(fi, bio, fi->_i + 1);
--	} else {
--		fi->folio = NULL;
--	}
-+	return biovec_to_foliovec(__bvec_iter_all_peek(bio->bi_io_vec, iter));
- }
- 
- /**
-  * bio_for_each_folio_all - Iterate over each folio in a bio.
-- * @fi: struct folio_iter which is updated for each folio.
-+ * @fi: struct bio_folio_iter_all which is updated for each folio.
-  * @bio: struct bio to iterate over.
-  */
--#define bio_for_each_folio_all(fi, bio)				\
--	for (bio_first_folio(&fi, bio, 0); fi.folio; bio_next_folio(&fi, bio))
-+#define bio_for_each_folio_all(fv, bio, iter)				\
-+	for (bvec_iter_all_init(&iter);					\
-+	     iter.idx < bio->bi_vcnt &&					\
-+		((fv = bio_folio_iter_all_peek(bio, &iter)), true);	\
-+	     bio_iter_all_advance((bio), &iter, fv.fv_len))
- 
- enum bip_flags {
- 	BIP_BLOCK_INTEGRITY	= 1 << 0, /* block layer owns integrity data */
-diff --git a/include/linux/bvec.h b/include/linux/bvec.h
-index 635fb54143..d238f959e3 100644
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@ -205,18 +205,27 @@ static inline void bvec_iter_all_init(struct bvec_iter_all *iter_all)
- 	iter_all->idx = 0;
- }
- 
--static inline struct bio_vec bvec_iter_all_peek(const struct bio_vec *bvec,
--						struct bvec_iter_all *iter)
-+static inline struct bio_vec __bvec_iter_all_peek(const struct bio_vec *bvec,
-+						  const struct bvec_iter_all *iter)
- {
- 	struct bio_vec bv = bvec[iter->idx];
- 
-+	BUG_ON(iter->done >= bv.bv_len);
-+
- 	bv.bv_offset	+= iter->done;
- 	bv.bv_len	-= iter->done;
- 
- 	bv.bv_page	+= bv.bv_offset >> PAGE_SHIFT;
- 	bv.bv_offset	&= ~PAGE_MASK;
--	bv.bv_len	= min_t(unsigned, PAGE_SIZE - bv.bv_offset, bv.bv_len);
-+	return bv;
-+}
-+
-+static inline struct bio_vec bvec_iter_all_peek(const struct bio_vec *bvec,
-+						const struct bvec_iter_all *iter)
-+{
-+	struct bio_vec bv = __bvec_iter_all_peek(bvec, iter);
- 
-+	bv.bv_len = min_t(unsigned, PAGE_SIZE - bv.bv_offset, bv.bv_len);
- 	return bv;
- }
- 
--- 
-2.40.1
+We need this in thin_ctr: ti->max_provision_granularity = true;
 
+More needed in the thin target than thin-pool; otherwise provision bio
+issued to thin devices won't be split appropriately.  But I do think
+its fine to set in both thin_ctr and pool_ctr.
+
+Otherwise, looks good.
+
+Thanks,
+Mike
