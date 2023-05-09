@@ -2,77 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39C886FBF46
-	for <lists+linux-block@lfdr.de>; Tue,  9 May 2023 08:33:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E02FD6FBF9B
+	for <lists+linux-block@lfdr.de>; Tue,  9 May 2023 08:53:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234797AbjEIGdx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 9 May 2023 02:33:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
+        id S235063AbjEIGxH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 9 May 2023 02:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229672AbjEIGdw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 9 May 2023 02:33:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2D593C1
-        for <linux-block@vger.kernel.org>; Mon,  8 May 2023 23:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683613993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/p29a3jU9JdsGK+jRm1PlnpUc4nPIekff1IWLWwyo7I=;
-        b=DDhR6lcyIonY0KOVKhbedrFpX9EzTeXbrlkXeCLIPGF+BcF9yWVo08DeX+gxNqNKeMWvpz
-        uTVct+Ebhwbp3Dej6/YEEsHpJ/aHzOFD+lFuo3SBn04Xklug6o84QaztJDMqtoRftKOun0
-        ESPnFcVdWfvLNNDr2oGiLJijbMBiau8=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-49-0ULCbEkuN6eBUGShYn9eKg-1; Tue, 09 May 2023 02:33:11 -0400
-X-MC-Unique: 0ULCbEkuN6eBUGShYn9eKg-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-61b59e13fbeso62667506d6.0
-        for <linux-block@vger.kernel.org>; Mon, 08 May 2023 23:33:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683613991; x=1686205991;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/p29a3jU9JdsGK+jRm1PlnpUc4nPIekff1IWLWwyo7I=;
-        b=P33+1dV2ASZ9i/QwTP5tYN5HWxVXNQmFredqQwPxpKMWHpLuxBbw7++JfdMKEWU6Wd
-         5CW88mRN2PUsj8V2GCEtRGxAywWfIKIVFmuwdrbPvH07CEUYsYYabiiff3kT0TZ9RVmc
-         m6cDP/Kk6QiZkqLwbFFKoYqR69TWqMgrSaSm4lxnhu75/E3k1DlSRfDo0elwggnqeeoJ
-         nkUDA06Moy2+dPt0Y4ublbSAsxg0ZmA8ZhkMkn4HQvRBxFI73iSDOhispRofHShpCdF4
-         mHybY9z0jnA/AqJm8LScc5mBCeg6+awCPgQvlG4dcSA3eskFx521KYfGDWcjNAOnfLcl
-         aqqA==
-X-Gm-Message-State: AC+VfDxfWKtlJmtXVmuOhvXpK8aLe+wsTjpNX4gjv3aau4GwwAvZpD6p
-        vNxeM03VVAp7AbUMrTMP6KNOMIhlJsMo70mDbi4xuzMI4LgQp+l4w+J41bBTh+oCwf6emqQ1yNx
-        JmUabPBBS0/FCETMgGGgGSzm74IQvyxtHqg==
-X-Received: by 2002:ad4:5cae:0:b0:61b:5dd6:1f26 with SMTP id q14-20020ad45cae000000b0061b5dd61f26mr18526771qvh.28.1683613991099;
-        Mon, 08 May 2023 23:33:11 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6XTJDHYYoXNMwBQKCiFZQoIaDirG8uP4BdmF62WfXy4/6qETYvr6Rz9yzJR49oV0rV3PZ+CQ==
-X-Received: by 2002:ad4:5cae:0:b0:61b:5dd6:1f26 with SMTP id q14-20020ad45cae000000b0061b5dd61f26mr18526762qvh.28.1683613990858;
-        Mon, 08 May 2023 23:33:10 -0700 (PDT)
-Received: from [172.16.2.39] (173-166-2-198-newengland.hfc.comcastbusiness.net. [173.166.2.198])
-        by smtp.gmail.com with ESMTPSA id nd2-20020a056214420200b0061b5b399d1csm533820qvb.104.2023.05.08.23.33.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 May 2023 23:33:10 -0700 (PDT)
-Message-ID: <e6deef8f-4e0e-3b62-b7c7-1a85dc10f0d5@redhat.com>
-Date:   Tue, 9 May 2023 02:33:09 -0400
+        with ESMTP id S235070AbjEIGwt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 9 May 2023 02:52:49 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92ABD4C03;
+        Mon,  8 May 2023 23:52:46 -0700 (PDT)
+X-UUID: 16d5a80cee3611edb20a276fd37b9834-20230509
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6zZhM6OjKFAMCL2ZrfNektKJnwU1fC+GI7+J+76jWEQ=;
+        b=OpBD8AFMxgDrrGSbOtvGpkBbtNN5CJhhFF/3XoLmTdVlvPluHo325p7gDTf02c29zabb1Y6WfZZXghZ0LemBsJSSm3miBvmM35vZQPsy5THS1LhJqeQpO46vvLfZ/mwdw9K4w0s6DItiqnaHI4RGqNWMtBngiMMV7AzN9TpsqAY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.23,REQID:03fbfabb-c0eb-4eb5-900f-e5b5ae64c48d,IP:0,U
+        RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:-5
+X-CID-META: VersionHash:697ab71,CLOUDID:59153dc0-e32c-4c97-918d-fbb3fc224d4e,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-UUID: 16d5a80cee3611edb20a276fd37b9834-20230509
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
+        (envelope-from <ed.tsai@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 988925971; Tue, 09 May 2023 14:52:39 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 9 May 2023 14:52:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 9 May 2023 14:52:39 +0800
+From:   Ed Tsai <ed.tsai@mediatek.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>, <stanley.chu@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <alice.chao@mediatek.com>, <powen.kao@mediatek.com>,
+        <naomi.chu@mediatek.com>, <wsd_upstream@mediatek.com>,
+        Ed Tsai <ed.tsai@mediatek.com>
+Subject: [PATCH 0/2] block: improve the share tag set performance
+Date:   Tue, 9 May 2023 14:52:28 +0800
+Message-ID: <20230509065230.32552-1-ed.tsai@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH 0/5] Add the dm-vdo deduplication and compression device
- mapper target.
-Content-Language: en-US
-To:     dm-devel@redhat.com, linux-block@vger.kernel.org
-References: <20230509010545.72448-1-corwin@redhat.com>
-Cc:     "vdo-devel@redhat.com" <vdo-devel@redhat.com>
-From:   corwin <corwin@redhat.com>
-In-Reply-To: <20230509010545.72448-1-corwin@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,10 +65,27 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It seems that two of the patches in this set are too large as they 
-stand. We will divide them up and resubmit a new version,
+The tag allocation is limited by the number of active queues and a
+queue is marked as inactive by the queue timeout worker after up to 30Hz
+by default.
 
-Thank you for your understanding and forbearance,
+UFS devices have multiple logical units, and they can limit the depth of
+data LUNs by the fair tag sharing algorithm. Make the fair tag sharing
+configurable and improve the performance for UFS devices.
 
-corwin
+See also https://lore.kernel.org/all/20230103195337.158625-1-bvanassche@acm.org
+
+Ed Tsai (2):
+  block: make the fair sharing of tag configurable
+  ufs: don't use the fair tag sharings
+
+ block/blk-mq-debugfs.c    | 1 +
+ block/blk-mq-tag.c        | 1 +
+ block/blk-mq.c            | 3 ++-
+ drivers/ufs/core/ufshcd.c | 3 +++
+ include/linux/blkdev.h    | 6 +++++-
+ 5 files changed, 12 insertions(+), 2 deletions(-)
+
+-- 
+2.18.0
 
