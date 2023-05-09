@@ -2,119 +2,166 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B556FBC51
-	for <lists+linux-block@lfdr.de>; Tue,  9 May 2023 03:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 794866FBC7D
+	for <lists+linux-block@lfdr.de>; Tue,  9 May 2023 03:28:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229793AbjEIBHf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 8 May 2023 21:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53962 "EHLO
+        id S229577AbjEIB2W (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 8 May 2023 21:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233173AbjEIBHc (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 8 May 2023 21:07:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14FD44AF
-        for <linux-block@vger.kernel.org>; Mon,  8 May 2023 18:06:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683594409;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h+Po/YGLPsWcIlkgYz6PdAWjTef+2U9MEWrAq6EdiQM=;
-        b=KX3VSH4ZNhxym2JxiwLMCJjMuV5ItDftsxa82Zp+ssfwhzBE2kbHZ0uvSG+Mk1S8KRdmjH
-        wice3o6wclRMm7nSP95xZp8PJsa34z+0oFUWXuwTxcXfpjSMuglIDYzhjm9r6QbICCpIZy
-        +jVuAVt9zlBpv1Y9GGe3bjvqOJ/jKYk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-290-njWj6tefMYi0gjzN2S98dQ-1; Mon, 08 May 2023 21:06:48 -0400
-X-MC-Unique: njWj6tefMYi0gjzN2S98dQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51AD3101A55C
-        for <linux-block@vger.kernel.org>; Tue,  9 May 2023 01:06:48 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.22.11.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EA7C492C13;
-        Tue,  9 May 2023 01:06:48 +0000 (UTC)
-From:   "J. corwin Coburn" <corwin@redhat.com>
-To:     dm-devel@redhat.com, linux-block@vger.kernel.org
-Cc:     corwin <corwin@redhat.com>
-Subject: [PATCH 5/5] Enable configuration and building of dm-vdo.
-Date:   Mon,  8 May 2023 21:05:45 -0400
-Message-Id: <20230509010545.72448-6-corwin@redhat.com>
-In-Reply-To: <20230509010545.72448-1-corwin@redhat.com>
-References: <20230509010545.72448-1-corwin@redhat.com>
+        with ESMTP id S229460AbjEIB2V (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 8 May 2023 21:28:21 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC31DB0;
+        Mon,  8 May 2023 18:28:15 -0700 (PDT)
+X-UUID: c0e57fd0ee0811edb20a276fd37b9834-20230509
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=F5Pj2TK8/Z8QaDkpd7ueT1SLGrmZrcavDg9rwqfVaD0=;
+        b=b6IJUOLjCs7M6DI7iILfKSABxcsQVKXdGiGl3Mys2b1d1o1b40mb1mDD7w5fhwu73d2EcYoQigUQawaXxRQMVJf9yLGikqdAxmwWe7dxOb5rFYUWtGxiXPjfnyOIeKYw9xH0cq1Yl7qD2qGrqp1AaDNuYxnoPON+3ksvQZ2aZKY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.23,REQID:75014003-84fe-44cb-a790-496a64a1718d,IP:0,U
+        RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+        N:release,TS:-25
+X-CID-META: VersionHash:697ab71,CLOUDID:af592531-6935-4eab-a959-f84f8da15543,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-UUID: c0e57fd0ee0811edb20a276fd37b9834-20230509
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+        (envelope-from <ed.tsai@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 544316469; Tue, 09 May 2023 09:28:08 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 9 May 2023 09:28:06 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 9 May 2023 09:28:06 +0800
+From:   Ed Tsai <ed.tsai@mediatek.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>, <stanley.chu@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <alice.chao@mediatek.com>, <powen.kao@mediatek.com>,
+        <naomi.chu@mediatek.com>, <wsd_upstream@mediatek.com>,
+        Ed Tsai <ed.tsai@mediatek.com>
+Subject: [PATCH v1] block: make the fair sharing of tag configurable
+Date:   Tue, 9 May 2023 09:27:58 +0800
+Message-ID: <20230509012758.27094-1-ed.tsai@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,RDNS_NONE,
+        SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: corwin <corwin@redhat.com>
+The tags allocation is limited by the fair sharing algorithm. It hurts
+the performance for UFS devices, because the queue depth of general I/O
+is reduced by half once the UFS send a control command.
 
-This adds dm-vdo to the drivers/md Kconfig and Makefile.
+Add a new queue flag QUEUE_FLAG_FAIR_TAG_SHARING to make the fair tag
+sharing configurable.
 
-Signed-off-by: corwin <corwin@redhat.com>
+See also https://lore.kernel.org/all/20230103195337.158625-1-bvanassche@acm.org
+
+Signed-off-by: Ed Tsai <ed.tsai@mediatek.com>
 ---
- drivers/md/Kconfig  | 16 ++++++++++++++++
- drivers/md/Makefile |  2 ++
- 2 files changed, 18 insertions(+)
+ block/blk-mq-debugfs.c    | 1 +
+ block/blk-mq-tag.c        | 1 +
+ block/blk-mq.c            | 3 ++-
+ drivers/ufs/core/ufshcd.c | 3 +++
+ include/linux/blkdev.h    | 6 +++++-
+ 5 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
-index b0a22e99bad..9fa9dec1029 100644
---- a/drivers/md/Kconfig
-+++ b/drivers/md/Kconfig
-@@ -521,6 +521,22 @@ config DM_FLAKEY
- 	help
- 	 A target that intermittently fails I/O for debugging purposes.
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index d23a8554ec4a..f03b8bfe63be 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -103,6 +103,7 @@ static const char *const blk_queue_flag_name[] = {
+ 	QUEUE_FLAG_NAME(RQ_ALLOC_TIME),
+ 	QUEUE_FLAG_NAME(HCTX_ACTIVE),
+ 	QUEUE_FLAG_NAME(NOWAIT),
++	QUEUE_FLAG_NAME(FAIR_TAG_SHARING),
+ };
+ #undef QUEUE_FLAG_NAME
  
-+config DM_VDO
-+	tristate "VDO: deduplication and compression target"
-+	depends on 64BIT
-+	depends on BLK_DEV_DM
-+	select DM_BUFIO
-+	select LZ4_COMPRESS
-+	select LZ4_DECOMPRESS
-+	help
-+	  This device mapper target presents a block device with
-+	  deduplication, compression and thin-provisioning.
-+
-+	  To compile this code as a module, choose M here: the module will
-+	  be called dm-vdo.
-+
-+	  If unsure, say N.
-+
- config DM_VERITY
- 	tristate "Verity target support"
- 	depends on BLK_DEV_DM
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 84291e38dca..47444b393ab 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -25,6 +25,7 @@ dm-ebs-y	+= dm-ebs-target.o
- dm-era-y	+= dm-era-target.o
- dm-clone-y	+= dm-clone-target.o dm-clone-metadata.o
- dm-verity-y	+= dm-verity-target.o
-+dm-vdo-y	+= dm-vdo-target.o $(patsubst drivers/md/dm-vdo/%.c,dm-vdo/%.o,$(wildcard $(src)/dm-vdo/*.c))
- dm-zoned-y	+= dm-zoned-target.o dm-zoned-metadata.o dm-zoned-reclaim.o
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index d6af9d431dc6..b8b36823f5f5 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -97,6 +97,7 @@ static int __blk_mq_get_tag(struct blk_mq_alloc_data *data,
+ 			    struct sbitmap_queue *bt)
+ {
+ 	if (!data->q->elevator && !(data->flags & BLK_MQ_REQ_RESERVED) &&
++			blk_queue_fair_tag_sharing(data->q) &&
+ 			!hctx_may_queue(data->hctx, bt))
+ 		return BLK_MQ_NO_TAG;
  
- md-mod-y	+= md.o md-bitmap.o
-@@ -74,6 +75,7 @@ obj-$(CONFIG_DM_ZERO)		+= dm-zero.o
- obj-$(CONFIG_DM_RAID)		+= dm-raid.o
- obj-$(CONFIG_DM_THIN_PROVISIONING) += dm-thin-pool.o
- obj-$(CONFIG_DM_VERITY)		+= dm-verity.o
-+obj-$(CONFIG_DM_VDO)            += dm-vdo.o
- obj-$(CONFIG_DM_CACHE)		+= dm-cache.o
- obj-$(CONFIG_DM_CACHE_SMQ)	+= dm-cache-smq.o
- obj-$(CONFIG_DM_EBS)		+= dm-ebs.o
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index f6dad0886a2f..41f7e2b500bd 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1746,7 +1746,8 @@ static bool __blk_mq_alloc_driver_tag(struct request *rq)
+ 		bt = &rq->mq_hctx->tags->breserved_tags;
+ 		tag_offset = 0;
+ 	} else {
+-		if (!hctx_may_queue(rq->mq_hctx, bt))
++		if (blk_queue_fair_tag_sharing(rq->q) &&
++		    !hctx_may_queue(rq->mq_hctx, bt))
+ 			return false;
+ 	}
+ 
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 17d7bb875fee..e96a50265285 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -5149,6 +5149,9 @@ static int ufshcd_slave_configure(struct scsi_device *sdev)
+ 	blk_queue_update_dma_pad(q, PRDT_DATA_BYTE_COUNT_PAD - 1);
+ 	if (hba->quirks & UFSHCD_QUIRK_4KB_DMA_ALIGNMENT)
+ 		blk_queue_update_dma_alignment(q, 4096 - 1);
++
++	blk_queue_flag_clear(QUEUE_FLAG_FAIR_TAG_SHARING, q);
++
+ 	/*
+ 	 * Block runtime-pm until all consumers are added.
+ 	 * Refer ufshcd_setup_links().
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index b441e633f4dd..7fcb2356860d 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -561,10 +561,12 @@ struct request_queue {
+ #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
+ #define QUEUE_FLAG_SQ_SCHED     30	/* single queue style io dispatch */
+ #define QUEUE_FLAG_SKIP_TAGSET_QUIESCE	31 /* quiesce_tagset skip the queue*/
++#define QUEUE_FLAG_FAIR_TAG_SHARING	32 /* fair allocation of shared tags */
+ 
+ #define QUEUE_FLAG_MQ_DEFAULT	((1UL << QUEUE_FLAG_IO_STAT) |		\
+ 				 (1UL << QUEUE_FLAG_SAME_COMP) |	\
+-				 (1UL << QUEUE_FLAG_NOWAIT))
++				 (1UL << QUEUE_FLAG_NOWAIT) |		\
++				 (1UL << QUEUE_FLAG_FAIR_TAG_SHARING))
+ 
+ void blk_queue_flag_set(unsigned int flag, struct request_queue *q);
+ void blk_queue_flag_clear(unsigned int flag, struct request_queue *q);
+@@ -602,6 +604,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ #define blk_queue_sq_sched(q)	test_bit(QUEUE_FLAG_SQ_SCHED, &(q)->queue_flags)
+ #define blk_queue_skip_tagset_quiesce(q) \
+ 	test_bit(QUEUE_FLAG_SKIP_TAGSET_QUIESCE, &(q)->queue_flags)
++#define blk_queue_fair_tag_sharing(q) \
++	test_bit(QUEUE_FLAG_FAIR_TAG_SHARING, &(q)->queue_flags)
+ 
+ extern void blk_set_pm_only(struct request_queue *q);
+ extern void blk_clear_pm_only(struct request_queue *q);
 -- 
-2.40.0
+2.18.0
 
