@@ -2,142 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC3B6FF3AD
-	for <lists+linux-block@lfdr.de>; Thu, 11 May 2023 16:11:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC0776FF428
+	for <lists+linux-block@lfdr.de>; Thu, 11 May 2023 16:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238435AbjEKOLI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 11 May 2023 10:11:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
+        id S238458AbjEKO1B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 11 May 2023 10:27:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238412AbjEKOKw (ORCPT
+        with ESMTP id S238045AbjEKO0r (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 11 May 2023 10:10:52 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418C2E729;
-        Thu, 11 May 2023 07:10:27 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 75E5021D11;
-        Thu, 11 May 2023 14:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1683814224; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jBBNJFzPgSeRiv4JN3mjqd7wSLy3Fu+TgA+AgZ0WBjU=;
-        b=b7hIN+CGfSesgk7ANYYMMoV34Zqgdlrht2Q5N8Mkh2dPgsuuN59ZrZZcxx+/IKShjiimI2
-        ORvfcTRsvbzdyCZa+KRAC8doFtIGGUoPBrPZwGyceFSCAI4qqr9qDg1r0Kg8po5XSBxmgF
-        VBJAqF0WbKJpI/eZRW+/Rq66xNA4HfI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1683814224;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jBBNJFzPgSeRiv4JN3mjqd7wSLy3Fu+TgA+AgZ0WBjU=;
-        b=hkwG1AqZvoTCwLoOT2+WQG1DhA3JUNoRmY8aPF0cl0PGvgBsomI1ieKWFfBcfeBKsUB/BY
-        2rKfmFcbD3P50vCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1AA48134B2;
-        Thu, 11 May 2023 14:10:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id XjqHOU/3XGSgPwAAMHmgww
-        (envelope-from <dwagner@suse.de>); Thu, 11 May 2023 14:10:23 +0000
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-nvme@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
-        Hannes Reinecke <hare@suse.de>, Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH blktests v4 11/11] nvme{016,017}: Make the number iterations configurable
-Date:   Thu, 11 May 2023 16:09:53 +0200
-Message-Id: <20230511140953.17609-12-dwagner@suse.de>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230511140953.17609-1-dwagner@suse.de>
-References: <20230511140953.17609-1-dwagner@suse.de>
+        Thu, 11 May 2023 10:26:47 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E4AC1161A;
+        Thu, 11 May 2023 07:26:35 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-50bc1612940so15770603a12.2;
+        Thu, 11 May 2023 07:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20221208; t=1683815194; x=1686407194;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4MLvCJECEpiR/gI61O4GG27R/3uA2bLpDgI5SluFLTA=;
+        b=N68pkqzbvbgbZoltAtubUv7rw9JDXyqdkHGdeKmUKjGpn+E5r4zpUDvVnJnAQ8q/TY
+         nswT/PA0t6FiilhbAjs2ZA920mxwXyD7SPZTe7HZNbzTny4MzUzAmNvhHHV66wy8snLx
+         133de9nuoDoyUqThzedi9BsiMhYhtTdzwgVSciKF5qTuT6oJJsuGF27/VMHe0X56VIIk
+         TwicLhuN0EsOIppLFg+9pJM4liuIKAxwv8n5eVI+mkQNQ2mlq7LvRyBDbf8JRgmqTfO7
+         lcYKKtolCRyYdFmOIAklkRShS3Ku0tT6icHA08d77cjRjtZaOJjtu2NwGCVMoJJKg9E7
+         ZhHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683815194; x=1686407194;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4MLvCJECEpiR/gI61O4GG27R/3uA2bLpDgI5SluFLTA=;
+        b=bQeLQbs/hGeQuIf7/9PVgM2IAje2zH8TKSITp0UdE3zE2DwvMRneblejwZCsnzu28w
+         MHBhYxbaIcwl2Lgs88dHu9i62qmVlYznHhEi3Wf+02h13ragHeNq8zl0Z4weEpyzpLn5
+         5kg+kOpv64Gh1srARmIXiQKmrfcZksGpgnHxuaPsOMhx4bSRmilFx320OcacfrTWxST4
+         ap8IZ80kxHl6Wr0XmZXd02p6Hd5Y1niYMj/XSu/gyxJx9NjRUqI4d3BXYUzi1QGd31fa
+         f8eXJuJUamhquCnPwmHxvoNpTCFfBGwtw/Xd1XQwhvQih97HwUJTbtrbIqT91ssWJhwK
+         bn+A==
+X-Gm-Message-State: AC+VfDyGMDGgV5k9ee9OajuoUKh/xQTtC3PNDLcfuGr3pgx5N/VTuGkO
+        tYuaJDnDg4GMjEHFcnYtw3d9ZY2VqnXmhw==
+X-Google-Smtp-Source: ACHHUZ46hOkfDQhmJnGL2G54E94Gis8MlvJwgbU2cj9cJ39h0TTPpvN63Du9gpl7pzhrlXMK+ihZEg==
+X-Received: by 2002:a17:907:868b:b0:961:57fb:10c1 with SMTP id qa11-20020a170907868b00b0096157fb10c1mr19859592ejc.63.1683815193736;
+        Thu, 11 May 2023 07:26:33 -0700 (PDT)
+Received: from debianHome.localdomain (dynamic-077-008-180-228.77.8.pool.telefonica.de. [77.8.180.228])
+        by smtp.gmail.com with ESMTPSA id hf15-20020a1709072c4f00b0094f58a85bc5sm4056647ejc.180.2023.05.11.07.26.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 May 2023 07:26:33 -0700 (PDT)
+From:   =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
+To:     selinux@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Alistair Delva <adelva@google.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Serge Hallyn <serge@hallyn.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH v4 4/9] block: use new capable_any functionality
+Date:   Thu, 11 May 2023 16:25:27 +0200
+Message-Id: <20230511142535.732324-4-cgzones@googlemail.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230511142535.732324-1-cgzones@googlemail.com>
+References: <20230511142535.732324-1-cgzones@googlemail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Some tests hard code high values of iterations. This makes them run
-relatively long compared to the other tests. Introduce a new environment
-variable nvme_num_iter to allow tune the runtime.
+Use the new added capable_any function in appropriate cases, where a
+task is required to have any of two capabilities.
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Reorder CAP_SYS_ADMIN last.
+
+Fixes: 94c4b4fd25e6 ("block: Check ADMIN before NICE for IOPRIO_CLASS_RT")
+
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
 ---
- Documentation/running-tests.md | 2 ++
- tests/nvme/016                 | 2 +-
- tests/nvme/017                 | 2 +-
- tests/nvme/rc                  | 1 +
- 4 files changed, 5 insertions(+), 2 deletions(-)
+v3:
+   rename to capable_any()
+---
+ block/ioprio.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/Documentation/running-tests.md b/Documentation/running-tests.md
-index 4d8393f2002d..b35ae10316e4 100644
---- a/Documentation/running-tests.md
-+++ b/Documentation/running-tests.md
-@@ -107,6 +107,8 @@ The NVMe tests can be additionally parameterized via environment variables.
- - nvme_img_size: '1G' (default)
-   Run the tests with given image size in bytes. 'm', 'M', 'g'
- 	and 'G' postfix are supported.
-+- nvme_num_iter: 1000 (default)
-+  The number of iterations a test should do.
+diff --git a/block/ioprio.c b/block/ioprio.c
+index 32a456b45804..0a7df88bf6d9 100644
+--- a/block/ioprio.c
++++ b/block/ioprio.c
+@@ -37,14 +37,7 @@ int ioprio_check_cap(int ioprio)
  
- ### Running nvme-rdma nvmeof-mp srp tests
- 
-diff --git a/tests/nvme/016 b/tests/nvme/016
-index 4eba30223a08..c0c31a55b190 100755
---- a/tests/nvme/016
-+++ b/tests/nvme/016
-@@ -17,7 +17,7 @@ test() {
- 	echo "Running ${TEST_NAME}"
- 
- 	local port
--	local iterations=1000
-+	local iterations="${nvme_num_iter}"
- 	local loop_dev
- 	local subsys_nqn="blktests-subsystem-1"
- 
-diff --git a/tests/nvme/017 b/tests/nvme/017
-index 0248aee9bc41..e1674508f654 100755
---- a/tests/nvme/017
-+++ b/tests/nvme/017
-@@ -18,7 +18,7 @@ test() {
- 
- 	local port
- 	local file_path
--	local iterations=1000
-+	local iterations="${nvme_num_iter}"
- 	local subsys_name="blktests-subsystem-1"
- 
- 	_setup_nvmet
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 11357cbf7816..933b585643ac 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -18,6 +18,7 @@ def_hostnqn="$(cat /etc/nvme/hostnqn 2> /dev/null)"
- def_hostid="$(cat /etc/nvme/hostid 2> /dev/null)"
- nvme_trtype=${nvme_trtype:-"loop"}
- nvme_img_size=${nvme_img_size:-"1G"}
-+nvme_num_iter=${nvme_num_iter:-"1000"}
- 
- _nvme_requires() {
- 	_have_program nvme
+ 	switch (class) {
+ 		case IOPRIO_CLASS_RT:
+-			/*
+-			 * Originally this only checked for CAP_SYS_ADMIN,
+-			 * which was implicitly allowed for pid 0 by security
+-			 * modules such as SELinux. Make sure we check
+-			 * CAP_SYS_ADMIN first to avoid a denial/avc for
+-			 * possibly missing CAP_SYS_NICE permission.
+-			 */
+-			if (!capable(CAP_SYS_ADMIN) && !capable(CAP_SYS_NICE))
++			if (!capable_any(CAP_SYS_NICE, CAP_SYS_ADMIN))
+ 				return -EPERM;
+ 			fallthrough;
+ 			/* rt has prio field too */
 -- 
-2.40.0
+2.40.1
 
