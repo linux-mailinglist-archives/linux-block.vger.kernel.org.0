@@ -2,56 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1861D6FEC1C
-	for <lists+linux-block@lfdr.de>; Thu, 11 May 2023 09:01:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20426FEC18
+	for <lists+linux-block@lfdr.de>; Thu, 11 May 2023 09:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjEKHAq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 11 May 2023 03:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
+        id S230007AbjEKHAO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 11 May 2023 03:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237161AbjEKHAV (ORCPT
+        with ESMTP id S237235AbjEKG7w (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 11 May 2023 03:00:21 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38277AA1;
-        Wed, 10 May 2023 23:59:39 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QH2n84qzqz4f3vdV;
-        Thu, 11 May 2023 14:59:08 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgD3rLA7klxkxW3WJA--.19279S4;
-        Thu, 11 May 2023 14:59:09 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     hch@lst.de, ming.lei@redhat.com, axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH -next] block: fix blktrace debugfs entries leak
-Date:   Thu, 11 May 2023 14:56:33 +0800
-Message-Id: <20230511065633.710045-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+        Thu, 11 May 2023 02:59:52 -0400
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DDA6181
+        for <linux-block@vger.kernel.org>; Wed, 10 May 2023 23:59:10 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-76c6048ca2cso182851439f.0
+        for <linux-block@vger.kernel.org>; Wed, 10 May 2023 23:59:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683788319; x=1686380319;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WN5PFATTZHA54ISSQ7zes2bFpUInfaZ2kfXXd5367QU=;
+        b=QMUDs1/gA6kGYPRFMFTl8JFmJ3L1vuizLZp1t1gcugnHlgmQyp7KQd2ZJcXSV2B8aj
+         M3e8dxDh1ppOnhTMLmTxWfr+Kjg/slxdbWXJxZeBI2o11Cplf+LAQtPzLNyqrb9GyHWa
+         L3oYYx7uGhjilE7tmPiU2gXyCyQQKaWz3Dc3XJGt2xUP4hokUVootZISV+vENXWdKHQq
+         6SWA+/HxyITAIfqfQfGAykAVsT09NIBaYy4FaLBc21AgbjLhOPVVJgB1A1gKTfT05Vnm
+         V6SJXDGDIP3/Xd/o5WQRFit9ilAaiSMsY7dzm0Tl5NymlderlP4cM0ejXUI5sEDtrDyx
+         jHdg==
+X-Gm-Message-State: AC+VfDwnLabSMPkY85iVjXaF5skUTavf8npmUBgRAnNZxYIfi3pTz3ua
+        IIMKVh0pH15G9KOLTcDjuHRk65Aa+xVQ6NudeC5eC0sCIzLM
+X-Google-Smtp-Source: ACHHUZ6lzdostnls62kWkjlkXdEHUHVPKvj6frxV8VTQ60D23Kq79Oi5JtFBHXeZQtn/EodnGiFzM8l+WxHke0QP8a+8Mk+3MGS/
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3rLA7klxkxW3WJA--.19279S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw4fWFyxGF1fury7Cr1rJFb_yoW8Cr4xpa
-        9Iqr4Ykr1jvr4qqa4UCw17XayxKayrCFyrGFZakrySqF13GryavFZ2va9FqrWrGrsa9rZ0
-        qr15KrZ7XrW8X3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
-        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-        xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-        67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Received: by 2002:a02:94cd:0:b0:40f:80e3:6585 with SMTP id
+ x71-20020a0294cd000000b0040f80e36585mr4250372jah.1.1683788319068; Wed, 10 May
+ 2023 23:58:39 -0700 (PDT)
+Date:   Wed, 10 May 2023 23:58:39 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a294db05fb6584a4@google.com>
+Subject: [syzbot] upstream boot error: KMSAN: uninit-value in unregister_blkdev
+From:   syzbot <syzbot+a66467b3864e82f8559f@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,54 +54,78 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+Hello,
 
-Commit 99d055b4fd4b ("block: remove per-disk debugfs files in
-blk_unregister_queue") moves blk_trace_shutdown() from
-blk_release_queue() to blk_unregister_queue(), this is safe if blktrace
-is created through sysfs, however, there are some regression in corner
-cases:
+syzbot found the following issue on:
 
-1) for scsi, passthrough io can still be issued after del_gendisk, and
-   blktrace debugfs entries will be removed immediately after
-   del_gendisk(), therefor passthrough io can't be tracked and blktrace
-   will complain:
+HEAD commit:    16a8829130ca nfs: fix another case of NULL/IS_ERR confusio..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17c0674c280000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a7a1059074b7bdce
+dashboard link: https://syzkaller.appspot.com/bug?extid=a66467b3864e82f8559f
+compiler:       Debian clang version 15.0.7, GNU ld (GNU Binutils for Debian) 2.35.2
 
-   failed read of /sys/kernel/debug/block/sdb/trace0: 5/Input/output error
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d4c6da24829a/disk-16a88291.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7b2a0fc666c9/vmlinux-16a88291.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/710105c78106/bzImage-16a88291.xz
 
-2) blktrace can still be enabled after del_gendisk() through ioctl if the
-   disk is opened before del_gendisk(), and if blktrace is not shutdown
-   through ioctl before closing the disk, debugfs entries will be
-   leaked.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a66467b3864e82f8559f@syzkaller.appspotmail.com
 
-It seems 1) is not important, while 2) needs to be fixed apparently.
+floppy0: no floppy controllers found
+work still pending
+=====================================================
+BUG: KMSAN: uninit-value in strcmp+0xcf/0x120 lib/string.c:283
+ strcmp+0xcf/0x120 lib/string.c:283
+ unregister_blkdev+0x142/0x270 block/genhd.c:293
+ do_floppy_init+0x4d3/0x15f0 drivers/block/floppy.c:4751
+ floppy_async_init+0x17/0x20 drivers/block/floppy.c:4767
+ async_run_entry_fn+0x97/0x420 kernel/async.c:127
+ process_one_work+0xb0d/0x1410 kernel/workqueue.c:2405
+ worker_thread+0x107e/0x1d60 kernel/workqueue.c:2552
+ kthread+0x3e8/0x540 kernel/kthread.c:379
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:308
 
-Fix this problem by shutdown blktrace in blk_free_queue(),
-disk_release() is not used because scsi sg support blktrace without
-gendisk, and this is safe because queue is not freed yet, and
-blk_trace_shutdown() is reentrant.
+Uninit was created at:
+ slab_post_alloc_hook+0x12d/0xb60 mm/slab.h:716
+ slab_alloc_node mm/slub.c:3451 [inline]
+ __kmem_cache_alloc_node+0x4ff/0x8b0 mm/slub.c:3490
+ kmalloc_trace+0x51/0x200 mm/slab_common.c:1057
+ kmalloc include/linux/slab.h:559 [inline]
+ __register_blkdev+0x1a9/0x650 block/genhd.c:246
+ do_floppy_init+0x420/0x15f0 drivers/block/floppy.c:4604
+ floppy_async_init+0x17/0x20 drivers/block/floppy.c:4767
+ async_run_entry_fn+0x97/0x420 kernel/async.c:127
+ process_one_work+0xb0d/0x1410 kernel/workqueue.c:2405
+ worker_thread+0x107e/0x1d60 kernel/workqueue.c:2552
+ kthread+0x3e8/0x540 kernel/kthread.c:379
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:308
 
-Fixes: 99d055b4fd4b ("block: remove per-disk debugfs files in blk_unregister_queue")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+CPU: 1 PID: 39 Comm: kworker/u4:3 Not tainted 6.4.0-rc1-syzkaller-00012-g16a8829130ca #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/14/2023
+Workqueue: events_unbound async_run_entry_fn
+
+=====================================================
+
+
 ---
- block/blk-core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 00c74330fa92..a0c949533a5d 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -263,6 +263,10 @@ static void blk_free_queue_rcu(struct rcu_head *rcu_head)
- 
- static void blk_free_queue(struct request_queue *q)
- {
-+	mutex_lock(&q->debugfs_mutex);
-+	blk_trace_shutdown(q);
-+	mutex_unlock(&q->debugfs_mutex);
-+
- 	blk_free_queue_stats(q->stats);
- 	if (queue_is_mq(q))
- 		blk_mq_release(q);
--- 
-2.39.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the bug is already fixed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to change bug's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the bug is a duplicate of another bug, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
