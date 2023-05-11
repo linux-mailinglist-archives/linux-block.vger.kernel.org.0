@@ -2,36 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 272AC6FF5C5
-	for <lists+linux-block@lfdr.de>; Thu, 11 May 2023 17:22:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C86A96FF5CF
+	for <lists+linux-block@lfdr.de>; Thu, 11 May 2023 17:23:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238652AbjEKPWB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 11 May 2023 11:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45888 "EHLO
+        id S238664AbjEKPXc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 11 May 2023 11:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238623AbjEKPV7 (ORCPT
+        with ESMTP id S238611AbjEKPXb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 11 May 2023 11:21:59 -0400
+        Thu, 11 May 2023 11:23:31 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3B619BA;
-        Thu, 11 May 2023 08:21:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FA8126;
+        Thu, 11 May 2023 08:23:30 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id A39F268D0D; Thu, 11 May 2023 17:21:52 +0200 (CEST)
-Date:   Thu, 11 May 2023 17:21:51 +0200
+        id CA36968D0A; Thu, 11 May 2023 17:23:27 +0200 (CEST)
+Date:   Thu, 11 May 2023 17:23:27 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Yu Kuai <yukuai1@huaweicloud.com>
 Cc:     hch@lst.de, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
         yukuai3@huawei.com, cgroups@vger.kernel.org,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH -next 4/6] blk-wbt: remove deadcode to handle wbt
- enable/disable with io inflight
-Message-ID: <20230511152151.GD7880@lst.de>
-References: <20230511014509.679482-1-yukuai1@huaweicloud.com> <20230511014509.679482-5-yukuai1@huaweicloud.com>
+Subject: Re: [PATCH -next 5/6] blk-wbt: cleanup rwb_enabled() and
+ wbt_disabled()
+Message-ID: <20230511152327.GE7880@lst.de>
+References: <20230511014509.679482-1-yukuai1@huaweicloud.com> <20230511014509.679482-6-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230511014509.679482-5-yukuai1@huaweicloud.com>
+In-Reply-To: <20230511014509.679482-6-yukuai1@huaweicloud.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -42,9 +42,9 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-s/deadcode/dead code/
+On Thu, May 11, 2023 at 09:45:08AM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> The code is redundant, reuse rwb_enabled() for wbt_disabled().
 
-Otherwise looks good:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-
+This also changes how rwb_enabled is implemented.
