@@ -2,115 +2,168 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28464700950
-	for <lists+linux-block@lfdr.de>; Fri, 12 May 2023 15:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8EAB70095F
+	for <lists+linux-block@lfdr.de>; Fri, 12 May 2023 15:43:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241309AbjELNjX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 May 2023 09:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
+        id S241116AbjELNn3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 May 2023 09:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241299AbjELNjS (ORCPT
+        with ESMTP id S240443AbjELNn2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 May 2023 09:39:18 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F9A124B8
-        for <linux-block@vger.kernel.org>; Fri, 12 May 2023 06:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=NypuyImQg9oREjLzD6jqxIwGbXT3DZrzWS9cwrXtmQk=; b=p69MSwq1dAj6oMkU9rcZcqsEW+
-        IgZcLXSYy3XKGEduSq/PXBKtVrnMV6jjbmKtvi6MLcl0vNlmV4Eg/v0bZqHafEXfeOWZFPy7vQ/SP
-        DlOEDv9O7JyrFesMFUTv/Gx5utg6L+e/qddo1aiGixddUQ5DPbHiOxUaWDoo/yxul5pFj9lEBSN7N
-        YOG3adJvwG+fy3Y+NwFP9Izag9D9+fHrw/XJexXZGGS62vN1qEe07AgJjrL/Gzs08qKBGdtePwFcx
-        KXYyqZbw5M/ZuL97+RpHLCwpbAK6jv/FpJ7hLqaVtujeonM35rOsH9NW2FMcTbfvrEYU+tEasS+Jz
-        3PdylS8Q==;
-Received: from [204.239.251.3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pxSzM-00C2ij-0D;
-        Fri, 12 May 2023 13:39:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Jinyoung Choi <j-young.choi@samsung.com>,
-        linux-block@vger.kernel.org
-Subject: [PATCH 8/8] block: don't pass a bio to bio_try_merge_hw_seg
-Date:   Fri, 12 May 2023 06:39:01 -0700
-Message-Id: <20230512133901.1053543-9-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230512133901.1053543-1-hch@lst.de>
-References: <20230512133901.1053543-1-hch@lst.de>
+        Fri, 12 May 2023 09:43:28 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F784132B2;
+        Fri, 12 May 2023 06:43:27 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6171D68AA6; Fri, 12 May 2023 15:43:23 +0200 (CEST)
+Date:   Fri, 12 May 2023 15:43:23 +0200
+From:   "hch@lst.de" <hch@lst.de>
+To:     Jinyoung CHOI <j-young.choi@samsung.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "kbusch@kernel.org" <kbusch@kernel.org>, "hch@lst.de" <hch@lst.de>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
+        "kch@nvidia.com" <kch@nvidia.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 02/14] block: bio-integrity: modify
+ bio_integrity_add_page()
+Message-ID: <20230512134323.GA32242@lst.de>
+References: <20230510084407epcms2p123f17696d3c30c749897eeaf2c4de684@epcms2p1> <CGME20230510084407epcms2p123f17696d3c30c749897eeaf2c4de684@epcms2p7> <20230510084854epcms2p756a3e1055399ead6bf539d3419c74c3e@epcms2p7>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230510084854epcms2p756a3e1055399ead6bf539d3419c74c3e@epcms2p7>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-There is no good reason to pass the bio to bio_try_merge_hw_seg.  Just
-pass the current bvec and rename the function to bvec_try_merge_hw_page.
-This will allow reusing this function for supporting multi-page integrity
-payload bvecs.
+Hi Jinyoung,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/bio.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+can you work a bit on the commit log and especially the subject line?
 
+I'd word this as something like:
+
+"Subject: bio-integrity: create multi-page bvecs in bio_integrity_add_page()
+
+Allow bio_integrity_add_page to create multi-page bvecs, just like
+the bio payloads.  This simplifies adding larger payloads, and fixes
+support for non-tiny workloads with nvme, which stopped using scatterlist
+for metadata a while ago"
+
+It should probably also mentioned somewhere that you did an audit to
+ensure all drivers and the core code is fine with these multi-page
+segments.  If it's not, this patch should only be added after that
+has been made the case.
+
+I think the extra arguments struct is a bit overcompliated, and mostly
+due to me making the existing code to weird things in the low-level
+helpers.  With the "rationalize the flow in bio_add_page and friends"
+series I just sent out, I think we can drop the previous patch and
+simplify this one down to:
+
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 4533eb49166109..85d70dc723f0ed 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -118,26 +118,44 @@ void bio_integrity_free(struct bio *bio)
+  * @len:	number of bytes of integrity metadata in page
+  * @offset:	start offset within page
+  *
+- * Description: Attach a page containing integrity metadata to bio.
++ * Add a page containing integrity metadata to a bio while respecting
++ * the hardware max_sectors, max_segment and gap limitations.
+  */
+ int bio_integrity_add_page(struct bio *bio, struct page *page,
+ 			   unsigned int len, unsigned int offset)
+ {
++	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
+ 	struct bio_integrity_payload *bip = bio_integrity(bio);
+ 
+-	if (bip->bip_vcnt >= bip->bip_max_vcnt) {
+-		printk(KERN_ERR "%s: bip_vec full\n", __func__);
++	if (((bip->bip_iter.bi_size + len) >> SECTOR_SHIFT) >
++	    queue_max_hw_sectors(q))
+ 		return 0;
+-	}
+ 
+-	if (bip->bip_vcnt &&
+-	    bvec_gap_to_prev(&bdev_get_queue(bio->bi_bdev)->limits,
+-			     &bip->bip_vec[bip->bip_vcnt - 1], offset))
+-		return 0;
++	if (bip->bip_vcnt > 0) {
++		struct bio_vec *bv = &bip->bip_vec[bip->bip_vcnt - 1];
++		bool same_page = false;
++
++		if (bvec_try_merge_hw_page(q, bv, page, len, offset,
++				&same_page)) {
++			bip->bip_iter.bi_size += len;
++			return len;
++		}
++
++		if (bip->bip_vcnt >=
++		    min(bip->bip_max_vcnt, queue_max_integrity_segments(q)))
++			return 0;
++
++		/*
++		 * If the queue doesn't support SG gaps and adding this segment
++		 * would create a gap, disallow it.
++		 */
++		if (bvec_gap_to_prev(&q->limits, bv, offset))
++			return 0;
++	}
+ 
+ 	bvec_set_page(&bip->bip_vec[bip->bip_vcnt], page, len, offset);
+ 	bip->bip_vcnt++;
+-
++	bip->bip_iter.bi_size += len;
+ 	return len;
+ }
+ EXPORT_SYMBOL(bio_integrity_add_page);
+@@ -249,7 +267,6 @@ bool bio_integrity_prep(struct bio *bio)
+ 	}
+ 
+ 	bip->bip_flags |= BIP_BLOCK_INTEGRITY;
+-	bip->bip_iter.bi_size = len;
+ 	bip_set_seed(bip, bio->bi_iter.bi_sector);
+ 
+ 	if (bi->flags & BLK_INTEGRITY_IP_CHECKSUM)
 diff --git a/block/bio.c b/block/bio.c
-index 106009707ca1c5..79e8aa600ddbe2 100644
+index 79e8aa600ddbe2..050b57e09ac362 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -934,11 +934,10 @@ static bool bvec_try_merge_page(struct bio_vec *bv, struct page *page,
+@@ -934,7 +934,7 @@ static bool bvec_try_merge_page(struct bio_vec *bv, struct page *page,
   * size limit.  This is not for normal read/write bios, but for passthrough
   * or Zone Append operations that we can't split.
   */
--static bool bio_try_merge_hw_seg(struct request_queue *q, struct bio *bio,
--				 struct page *page, unsigned len,
--				 unsigned offset, bool *same_page)
-+static bool bvec_try_merge_hw_page(struct request_queue *q, struct bio_vec *bv,
+-static bool bvec_try_merge_hw_page(struct request_queue *q, struct bio_vec *bv,
++bool bvec_try_merge_hw_page(struct request_queue *q, struct bio_vec *bv,
+ 		struct page *page, unsigned len, unsigned offset,
+ 		bool *same_page)
+ {
+diff --git a/block/blk.h b/block/blk.h
+index 45547bcf111938..1e67f738b52191 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -486,4 +486,8 @@ static inline int req_ref_read(struct request *req)
+ 	return atomic_read(&req->ref);
+ }
+ 
++bool bvec_try_merge_hw_page(struct request_queue *q, struct bio_vec *bv,
 +		struct page *page, unsigned len, unsigned offset,
-+		bool *same_page)
- {
--	struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
- 	unsigned long mask = queue_segment_boundary(q);
- 	phys_addr_t addr1 = page_to_phys(bv->bv_page) + bv->bv_offset;
- 	phys_addr_t addr2 = page_to_phys(page) + offset + len - 1;
-@@ -967,8 +966,6 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
- 		struct page *page, unsigned int len, unsigned int offset,
- 		unsigned int max_sectors, bool *same_page)
- {
--	struct bio_vec *bvec;
--
- 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
- 		return 0;
- 
-@@ -976,7 +973,9 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
- 		return 0;
- 
- 	if (bio->bi_vcnt > 0) {
--		if (bio_try_merge_hw_seg(q, bio, page, len, offset,
-+		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
++		bool *same_page);
 +
-+		if (bvec_try_merge_hw_page(q, bv, page, len, offset,
- 				same_page)) {
- 			bio->bi_iter.bi_size += len;
- 			return len;
-@@ -990,8 +989,7 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
- 		 * If the queue doesn't support SG gaps and adding this segment
- 		 * would create a gap, disallow it.
- 		 */
--		bvec = &bio->bi_io_vec[bio->bi_vcnt - 1];
--		if (bvec_gap_to_prev(&q->limits, bvec, offset))
-+		if (bvec_gap_to_prev(&q->limits, bv, offset))
- 			return 0;
- 	}
- 
+ #endif /* BLK_INTERNAL_H */
 -- 
 2.39.2
 
