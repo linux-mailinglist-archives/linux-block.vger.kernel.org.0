@@ -2,22 +2,22 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C85AA70097A
-	for <lists+linux-block@lfdr.de>; Fri, 12 May 2023 15:51:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F6CD70097F
+	for <lists+linux-block@lfdr.de>; Fri, 12 May 2023 15:52:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241330AbjELNvn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 May 2023 09:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        id S241217AbjELNw3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 May 2023 09:52:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241325AbjELNvn (ORCPT
+        with ESMTP id S241310AbjELNw2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 May 2023 09:51:43 -0400
+        Fri, 12 May 2023 09:52:28 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9882B132B4;
-        Fri, 12 May 2023 06:51:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25E835A9;
+        Fri, 12 May 2023 06:52:27 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1B0D568AA6; Fri, 12 May 2023 15:51:37 +0200 (CEST)
-Date:   Fri, 12 May 2023 15:51:36 +0200
+        id 307E268AFE; Fri, 12 May 2023 15:52:25 +0200 (CEST)
+Date:   Fri, 12 May 2023 15:52:24 +0200
 From:   "hch@lst.de" <hch@lst.de>
 To:     Jinyoung CHOI <j-young.choi@samsung.com>
 Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
@@ -30,15 +30,14 @@ Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
         "willy@infradead.org" <willy@infradead.org>,
         "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 05/14] block: blk-merge: fix to add the number of
- integrity segments to the request twice
-Message-ID: <20230512135136.GD32242@lst.de>
-References: <20230510084407epcms2p123f17696d3c30c749897eeaf2c4de684@epcms2p1> <CGME20230510084407epcms2p123f17696d3c30c749897eeaf2c4de684@epcms2p5> <20230510085208epcms2p52a6dec8da80152ec2101f11ce2ea5321@epcms2p5>
+Subject: Re: [PATCH v2 08/14] scsi: add scsi_alloc_integrity_sgtables() for
+ integrity process
+Message-ID: <20230512135224.GE32242@lst.de>
+References: <20230510084407epcms2p123f17696d3c30c749897eeaf2c4de684@epcms2p1> <CGME20230510084407epcms2p123f17696d3c30c749897eeaf2c4de684@epcms2p3> <20230510085607epcms2p3d2b2dfc5db42f77c41f570c361a41c6a@epcms2p3>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230510085208epcms2p52a6dec8da80152ec2101f11ce2ea5321@epcms2p5>
+In-Reply-To: <20230510085607epcms2p3d2b2dfc5db42f77c41f570c361a41c6a@epcms2p3>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -49,69 +48,14 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The subject looks a bit odd, I think you're trying to say:
+On Wed, May 10, 2023 at 05:56:07PM +0900, Jinyoung CHOI wrote:
+> +	if (WARN_ON_ONCE(!prot_sdb)) {
+> +		/*
+> +		 * This can happen if someone (e.g. multipath)
+> +		 * queues a command to a device on an adapter
+> +		 * that does not support DIX.
+> +		 */
+> +		return BLK_STS_IOERR;
 
-"do not add the number of integrity segments to the request twice"
-
-based on the actual patch, is this correct?
-
-> blk_integrity_merge_bio() not only performs conditional tests, but also
-> updates the integrity segment information of request.
-> It can be called twice when merging the bio into an existing request.
-> 
-> bio_attempt_bio_merge() or blk_mq_sched_try_merge()
->   blk_rq_merge_ok()
->     blk_integrity_merge_bio()  -  1
->   bio_attemp_{back|front}_merge()
->     ll_{back|front}_merge_fn()
->       ll_new_hw_segments()
->         blk_integrity_merge_bio()  -  2
-> 
-> The part of checking the conditions and the code to update the
-> information of the actual request were separated. At this time, the
-> ll_back_merge_fn was called by passth-path, so the condition check was
-> called by all the separated functions.
-> 
-> And after success in blk_integrity_merge_bio(), the information of the
-> request may be wrong if it is impossible to merge due to other
-> conditional tests. Thus, it was changed to be called immediately before
-> merging the bio's segments.
-
-
-> +static inline bool blk_integrity_bypass_check(struct request *req,
-> +					      struct bio *bio)
-> +{
-> +	return blk_integrity_rq(req) == 0 && bio_integrity(bio) == NULL;
-> +}
-
-No need for the explicit comparisms, this could just be:
-
-	return !blk_integrity_rq(req) && !bio_integrity(bio);
-
-and given that it just has two callers I'm not sure the helper is
-all that useful to start with.
-
-> +static bool __blk_integrity_mergeable(struct request_queue *q,
-> +				      struct request *req, struct bio *bio)
-> +{
-> +	if (blk_integrity_rq(req) == 0 || bio_integrity(bio) == NULL)
-> +		return false;
-> +
-> +	if (bio_integrity(req->bio)->bip_flags != bio_integrity(bio)->bip_flags)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +bool blk_integrity_mergeable(struct request_queue *q, struct request *req,
-> +			     struct bio *bio)
-> +{
-> +	if (blk_integrity_bypass_check(req, bio))
-> +		return true;
-> +
-> +	return __blk_integrity_mergeable(q, req, bio);
-> +}
-
-Similarly here, I'm not even sure we need all these helpers.  I supect
-the code would become more readable by dropping these helpers and just
-making the checks explicitlẏ
+Nit: expand the comment to take up all 80 characters now that you've
+unindented it.
