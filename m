@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73331700951
+	by mail.lfdr.de (Postfix) with ESMTP id C8A33700952
 	for <lists+linux-block@lfdr.de>; Fri, 12 May 2023 15:39:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241305AbjELNjW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S240767AbjELNjW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Fri, 12 May 2023 09:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52740 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241309AbjELNjQ (ORCPT
+        with ESMTP id S241310AbjELNjQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Fri, 12 May 2023 09:39:16 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8495112EA6
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A609D1387B
         for <linux-block@vger.kernel.org>; Fri, 12 May 2023 06:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=DuU6R+NkB6GkIUUeDxZk9rv59QqmGVvtU8pZ7WSTfAo=; b=hIdYJMB9zkv4pc/fvWJMHs4ph3
-        HtFlfDO5o1aXuxnw23X2Lv48dxiPlhM1qI1NdDYRTTuteKLh7/+GKYEDtRD3B15xiBjQxSGG+HJb1
-        /2OBbUojWEJ7FL84nuvBtuL7fRLx+HnwHYaip5oKlChdWEO3IpGyJu1uuNb7RaqratqLmh60h46Ig
-        5/IUgnCEjrICbgCMK0uQopXAyATlTdeseCtQ7P/M8mQM0E6159fdw+Sv6o6eJ2eKWQUYOa4l0DBBF
-        Vr4AS/6N1n83AGI6R1NwHB6kTDyyqwLMB+4mFD4vIfKrIvO13jh38yLlaJS5EBO4cq8p9eXgtloYx
-        szv6M/dg==;
+        bh=PZg1TbIPC8qE49UMW1O5Ydy4Q/LUob5wE4DForL/9zU=; b=EnAW8fTvz1kovOeHjhsTC5ZZct
+        +KoiEUkxJvWgckGqMzOS+FNeumdclLv7SGgxNfdxgae9WkZ2F59gIilljNjatQcZu2yHW6R+wDAom
+        FUX+komwfvxl2uzF7fGH2U2Kke2wkAj9Kt2BQGcr25d5mWOTQMSP0kkEVurvAwGgWI8rBUClVDbXj
+        eE0BSeaAMN+HBbQ9JWlusapM8anv4I6/M4fYLSw+aYnVumM1EdkpgRkaHCHsNTHjoMV6uMfg1R/U1
+        a43xZmtgz3fh7yAdIZR5dHiQXLGgpV944b9YDLYOh3i5m5g3aMI6ccTRaYFsolFM15UPXoNr9XmQn
+        I3WYuzUw==;
 Received: from [204.239.251.3] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pxSzK-00C2iD-1N;
+        id 1pxSzK-00C2iJ-2h;
         Fri, 12 May 2023 13:39:14 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Jinyoung Choi <j-young.choi@samsung.com>,
         linux-block@vger.kernel.org
-Subject: [PATCH 4/8] block: move the bi_vcnt check out of __bio_try_merge_page
-Date:   Fri, 12 May 2023 06:38:57 -0700
-Message-Id: <20230512133901.1053543-5-hch@lst.de>
+Subject: [PATCH 5/8] block: move the bi_size overflow check in __bio_try_merge_page
+Date:   Fri, 12 May 2023 06:38:58 -0700
+Message-Id: <20230512133901.1053543-6-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230512133901.1053543-1-hch@lst.de>
 References: <20230512133901.1053543-1-hch@lst.de>
@@ -52,88 +52,54 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move the bi_vcnt out of __bio_try_merge_page and into the two callers
-that don't already have it in preparation for additional changes to
-__bio_try_merge_page.
+Checking for availability in bi_size in a function that attempts to
+merge into an existing segment is a bit odd, as the limit also applies
+when adding a new segment.  This code works fine as we always call
+__bio_try_merge_page, but contributes to sub-optimal calling conventions
+and doesn't lead to clear code.
+
+Move it to two of the callers instead, the third one already has a more
+strict check that includes max_hw_segments anyway.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/bio.c | 44 ++++++++++++++++++++++----------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ block/bio.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/block/bio.c b/block/bio.c
-index c7bf20a779ebed..5d2c95e05b1a52 100644
+index 5d2c95e05b1a52..93e6bca3c2239f 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -945,20 +945,17 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
- static bool __bio_try_merge_page(struct bio *bio, struct page *page,
- 		unsigned int len, unsigned int off, bool *same_page)
- {
--	if (bio->bi_vcnt > 0) {
--		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
--
--		if (page_is_mergeable(bv, page, len, off, same_page)) {
--			if (bio->bi_iter.bi_size > UINT_MAX - len) {
--				*same_page = false;
--				return false;
--			}
--			bv->bv_len += len;
--			bio->bi_iter.bi_size += len;
--			return true;
--		}
-+	struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
-+
-+	if (!page_is_mergeable(bv, page, len, off, same_page))
-+		return false;
-+	if (bio->bi_iter.bi_size > UINT_MAX - len) {
-+		*same_page = false;
-+		return false;
- 	}
--	return false;
-+	bv->bv_len += len;
-+	bio->bi_iter.bi_size += len;
-+	return true;
- }
+@@ -949,10 +949,6 @@ static bool __bio_try_merge_page(struct bio *bio, struct page *page,
  
- /*
-@@ -1127,11 +1124,13 @@ int bio_add_page(struct bio *bio, struct page *page,
+ 	if (!page_is_mergeable(bv, page, len, off, same_page))
+ 		return false;
+-	if (bio->bi_iter.bi_size > UINT_MAX - len) {
+-		*same_page = false;
+-		return false;
+-	}
+ 	bv->bv_len += len;
+ 	bio->bi_iter.bi_size += len;
+ 	return true;
+@@ -1123,6 +1119,8 @@ int bio_add_page(struct bio *bio, struct page *page,
+ 
  	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
  		return 0;
- 
--	if (!__bio_try_merge_page(bio, page, len, offset, &same_page)) {
--		if (bio_full(bio, len))
--			return 0;
--		__bio_add_page(bio, page, len, offset);
--	}
-+	if (bio->bi_vcnt > 0 &&
-+	    __bio_try_merge_page(bio, page, len, offset, &same_page))
-+		return len;
-+
-+	if (bio_full(bio, len))
++	if (bio->bi_iter.bi_size > UINT_MAX - len)
 +		return 0;
-+	__bio_add_page(bio, page, len, offset);
- 	return len;
- }
- EXPORT_SYMBOL(bio_add_page);
-@@ -1198,13 +1197,14 @@ static int bio_iov_add_page(struct bio *bio, struct page *page,
+ 
+ 	if (bio->bi_vcnt > 0 &&
+ 	    __bio_try_merge_page(bio, page, len, offset, &same_page))
+@@ -1197,6 +1195,9 @@ static int bio_iov_add_page(struct bio *bio, struct page *page,
  {
  	bool same_page = false;
  
--	if (!__bio_try_merge_page(bio, page, len, offset, &same_page)) {
--		__bio_add_page(bio, page, len, offset);
-+	if (bio->bi_vcnt > 0 &&
-+	    __bio_try_merge_page(bio, page, len, offset, &same_page)) {
-+		if (same_page)
-+			put_page(page);
- 		return 0;
- 	}
- 
--	if (same_page)
--		put_page(page);
-+	__bio_add_page(bio, page, len, offset);
- 	return 0;
- }
- 
++	if (WARN_ON_ONCE(bio->bi_iter.bi_size > UINT_MAX - len))
++		return -EIO;
++
+ 	if (bio->bi_vcnt > 0 &&
+ 	    __bio_try_merge_page(bio, page, len, offset, &same_page)) {
+ 		if (same_page)
 -- 
 2.39.2
 
