@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D99CD70094F
-	for <lists+linux-block@lfdr.de>; Fri, 12 May 2023 15:39:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F336700953
+	for <lists+linux-block@lfdr.de>; Fri, 12 May 2023 15:39:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241306AbjELNjT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 12 May 2023 09:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52764 "EHLO
+        id S241299AbjELNjX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 12 May 2023 09:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241314AbjELNjR (ORCPT
+        with ESMTP id S241304AbjELNjS (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 12 May 2023 09:39:17 -0400
+        Fri, 12 May 2023 09:39:18 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E81C132B7
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BAD12087
         for <linux-block@vger.kernel.org>; Fri, 12 May 2023 06:39:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=cGTFEY4mheIEWuSf3+z+ZLW4wLppeiojvczv9Dlr4r0=; b=PTc+N91sC2jj375fD3HeaOEgWT
-        nI6lrDEoVzTP5jndocUWVzNEDidxH16b57fKYXQr8BnkEm78mwbt41K/sofLFBiVHtbRhEzgFn4eH
-        epcTX8vWYmAv0+bP/01ILZjiIwtXEMjkOK3MdMdtAUpRLnE3zzSiP/7v464V453qgYtFxy0u6tX3h
-        sjtPER/u9bhpmDWrT7DA3KnvBchSlFc7sdYGLXDYXTC4M5lz2z14Vz5Y/47+PByjbQqTULj0iPbtG
-        cEXZIkaG+WVHCJ2H1A+2aRS+hr12/tJ5tMPBrjK9MCgDALU4+N7uCMxt0N6k1IQuJeT+gK+lBgiZQ
-        sUHHJgfg==;
+        bh=ptNyRjDsDOWi2id8Bfmz/XxKVOPHn5T4DqKTnkNcIdY=; b=xH7+9YipqXh3MrTjs+w8pl6zG1
+        kPgdfQGI/Bdwy9BJ/nWo7N8GsqEIDQvBjn9+Ig1PYMaCtYmYYhUZmt27uUQGD2r7vphYJ0W2xPn6W
+        Qwxy4j9/hgxeyadhqURMCg/m76yFJhDido1tt4HeRDcBN7igvYh7E4BjIDzUV+YsYpFyR1CHn779J
+        xtkkqlTsiPCWcvsFm+Uke2majQrkb/p7ZPmS5sNXWVJNvIYIwvTGuzHeSlLvklaip0UtEMzxrmNQX
+        A6WOJmsiv7aJhVwdnWQyquaGIC0lR4g8c+BA51x+rNNrXToqo5vV+zzHZnUmyMAnCa/HyJTJsLdTA
+        0jeGY3/w==;
 Received: from [204.239.251.3] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pxSzL-00C2iS-0m;
+        id 1pxSzL-00C2iY-26;
         Fri, 12 May 2023 13:39:15 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Jinyoung Choi <j-young.choi@samsung.com>,
         linux-block@vger.kernel.org
-Subject: [PATCH 6/8] block: downgrade a bio_full call in bio_add_page
-Date:   Fri, 12 May 2023 06:38:59 -0700
-Message-Id: <20230512133901.1053543-7-hch@lst.de>
+Subject: [PATCH 7/8] block: move the bi_size update out of __bio_try_merge_page
+Date:   Fri, 12 May 2023 06:39:00 -0700
+Message-Id: <20230512133901.1053543-8-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230512133901.1053543-1-hch@lst.de>
 References: <20230512133901.1053543-1-hch@lst.de>
@@ -52,29 +52,124 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bio_add_page already checks that there is space in bi_size a little
-earlier.  So after we failed to add to an existing segment, just check
-that there is another one available instead of duplicating the bi_size
-check.
+The update of bi_size is the only thing in __bio_try_merge_page that
+needs a bio.  Move it to the callers, and merge __bio_try_merge_page
+and page_is_mergeable into a single bvec_try_merge_page that only takes
+the current bvec instead of a full bio.  This will allow reusing this
+function for supporting multi-page integrity payload bvecs.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/bio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bio.c | 57 +++++++++++++++++++----------------------------------
+ 1 file changed, 20 insertions(+), 37 deletions(-)
 
 diff --git a/block/bio.c b/block/bio.c
-index 93e6bca3c2239f..89b1475de0c370 100644
+index 89b1475de0c370..106009707ca1c5 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -1126,7 +1126,7 @@ int bio_add_page(struct bio *bio, struct page *page,
- 	    __bio_try_merge_page(bio, page, len, offset, &same_page))
- 		return len;
+@@ -903,9 +903,8 @@ static inline bool bio_full(struct bio *bio, unsigned len)
+ 	return false;
+ }
  
--	if (bio_full(bio, len))
-+	if (bio->bi_vcnt >= bio->bi_max_vecs)
+-static inline bool page_is_mergeable(const struct bio_vec *bv,
+-		struct page *page, unsigned int len, unsigned int off,
+-		bool *same_page)
++static bool bvec_try_merge_page(struct bio_vec *bv, struct page *page,
++		unsigned int len, unsigned int off, bool *same_page)
+ {
+ 	size_t bv_end = bv->bv_offset + bv->bv_len;
+ 	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) + bv_end - 1;
+@@ -919,38 +918,14 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
+ 		return false;
+ 
+ 	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
+-	if (*same_page)
+-		return true;
+-	else if (IS_ENABLED(CONFIG_KMSAN))
+-		return false;
+-	return (bv->bv_page + bv_end / PAGE_SIZE) == (page + off / PAGE_SIZE);
+-}
+-
+-/**
+- * __bio_try_merge_page - try appending data to an existing bvec.
+- * @bio: destination bio
+- * @page: start page to add
+- * @len: length of the data to add
+- * @off: offset of the data relative to @page
+- * @same_page: return if the segment has been merged inside the same page
+- *
+- * Try to add the data at @page + @off to the last bvec of @bio.  This is a
+- * useful optimisation for file systems with a block size smaller than the
+- * page size.
+- *
+- * Warn if (@len, @off) crosses pages in case that @same_page is true.
+- *
+- * Return %true on success or %false on failure.
+- */
+-static bool __bio_try_merge_page(struct bio *bio, struct page *page,
+-		unsigned int len, unsigned int off, bool *same_page)
+-{
+-	struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
++	if (!*same_page) {
++		if (IS_ENABLED(CONFIG_KMSAN))
++			return false;
++		if (bv->bv_page + bv_end / PAGE_SIZE != page + off / PAGE_SIZE)
++			return false;
++	}
+ 
+-	if (!page_is_mergeable(bv, page, len, off, same_page))
+-		return false;
+ 	bv->bv_len += len;
+-	bio->bi_iter.bi_size += len;
+ 	return true;
+ }
+ 
+@@ -972,7 +947,7 @@ static bool bio_try_merge_hw_seg(struct request_queue *q, struct bio *bio,
+ 		return false;
+ 	if (bv->bv_len + len > queue_max_segment_size(q))
+ 		return false;
+-	return __bio_try_merge_page(bio, page, len, offset, same_page);
++	return bvec_try_merge_page(bv, page, len, offset, same_page);
+ }
+ 
+ /**
+@@ -1001,8 +976,11 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
  		return 0;
- 	__bio_add_page(bio, page, len, offset);
- 	return len;
+ 
+ 	if (bio->bi_vcnt > 0) {
+-		if (bio_try_merge_hw_seg(q, bio, page, len, offset, same_page))
++		if (bio_try_merge_hw_seg(q, bio, page, len, offset,
++				same_page)) {
++			bio->bi_iter.bi_size += len;
+ 			return len;
++		}
+ 
+ 		if (bio->bi_vcnt >=
+ 		    min(bio->bi_max_vecs, queue_max_segments(q)))
+@@ -1123,8 +1101,11 @@ int bio_add_page(struct bio *bio, struct page *page,
+ 		return 0;
+ 
+ 	if (bio->bi_vcnt > 0 &&
+-	    __bio_try_merge_page(bio, page, len, offset, &same_page))
++	    bvec_try_merge_page(&bio->bi_io_vec[bio->bi_vcnt - 1],
++	    		page, len, offset, &same_page)) {
++		bio->bi_iter.bi_size += len;
+ 		return len;
++	}
+ 
+ 	if (bio->bi_vcnt >= bio->bi_max_vecs)
+ 		return 0;
+@@ -1199,7 +1180,9 @@ static int bio_iov_add_page(struct bio *bio, struct page *page,
+ 		return -EIO;
+ 
+ 	if (bio->bi_vcnt > 0 &&
+-	    __bio_try_merge_page(bio, page, len, offset, &same_page)) {
++	    bvec_try_merge_page(&bio->bi_io_vec[bio->bi_vcnt - 1],
++	    		page, len, offset, &same_page)) {
++		bio->bi_iter.bi_size += len;
+ 		if (same_page)
+ 			put_page(page);
+ 		return 0;
 -- 
 2.39.2
 
