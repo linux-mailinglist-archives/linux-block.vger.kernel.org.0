@@ -2,57 +2,55 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69AD6703085
-	for <lists+linux-block@lfdr.de>; Mon, 15 May 2023 16:49:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE337031CA
+	for <lists+linux-block@lfdr.de>; Mon, 15 May 2023 17:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbjEOOtK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 15 May 2023 10:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39142 "EHLO
+        id S238175AbjEOPrS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 15 May 2023 11:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235256AbjEOOtF (ORCPT
+        with ESMTP id S229447AbjEOPrR (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 15 May 2023 10:49:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC191706
-        for <linux-block@vger.kernel.org>; Mon, 15 May 2023 07:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684162094;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LKzOxUXNRXYGHNpkXcN+NrGDq0YHckYytoFpQi9yf/s=;
-        b=I/KEPJz0iByh8P3Kzmi8SSvXNvmz/MtP9b3InmvZI3+tOZU6lnSCfCjBqnTth67GX3uX+T
-        ZYbhoEz7bFBZ0JGm0zLKHN+5y6CHcQaYjvH9wSopCyoOGgMtLwIyS5WlpuaEa4y/3UsROj
-        kEGg+oPjaMt2uYriAzFcIl23L5+y9o4=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-303-HsyYXzKrMUOMHNjc8jQ60A-1; Mon, 15 May 2023 10:48:10 -0400
-X-MC-Unique: HsyYXzKrMUOMHNjc8jQ60A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 15 May 2023 11:47:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C331FDF
+        for <linux-block@vger.kernel.org>; Mon, 15 May 2023 08:47:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 04DCD3847088;
-        Mon, 15 May 2023 14:48:10 +0000 (UTC)
-Received: from localhost (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E1FE2166B26;
-        Mon, 15 May 2023 14:48:08 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V2 2/2] blk-mq: make sure elevator callbacks aren't called for passthrough request
-Date:   Mon, 15 May 2023 22:46:01 +0800
-Message-Id: <20230515144601.52811-3-ming.lei@redhat.com>
-In-Reply-To: <20230515144601.52811-1-ming.lei@redhat.com>
-References: <20230515144601.52811-1-ming.lei@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D60B61FBB
+        for <linux-block@vger.kernel.org>; Mon, 15 May 2023 15:47:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE2FC433EF;
+        Mon, 15 May 2023 15:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684165635;
+        bh=W4NQWF7lda7qu8vNpd5FlZvTG+e654oz8MJ2TScQyzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=us7fP7ymd5R5YpdWXlafSi10vkSaePrpgJtaigLDxdOoxeDzp0mpXrIMbk6gxa8Yl
+         MaNFKWJeA5fj1o4u3cGCTjeCeMdryNJ1EuLOsBQhGql47fBpGU59B1cjTLENqv3KUz
+         TrXRvKpHGomAOc9BYu8gQtm/Lxedc3ySkpM0SdY9PB91FUKY+qs/L4Y/oCwUxzgipy
+         YzGSC/3W8h1TNW9+1nLl17PnYJzreTvjRgReFiiz3dgXeOCIG1nMipjNral4ciXOXC
+         x2XZVgsLlOVcxGCGLuGj76+sP5Y+kj06SdNmK2tewowFzti3AP6dQTYN8hpwE0XGj3
+         7+6Z6JlK1JwTg==
+Date:   Mon, 15 May 2023 09:47:12 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Keith Busch <kbusch@meta.com>, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, joshi.k@samsung.com, axboe@kernel.dk,
+        xiaoguang.wang@linux.alibaba.com
+Subject: Re: [RFC 1/3] nvme: skip block cgroups for passthrough commands
+Message-ID: <ZGJUAMcpxQSC+m29@kbusch-mbp>
+References: <20230501153306.537124-1-kbusch@meta.com>
+ <20230501153306.537124-2-kbusch@meta.com>
+ <20230503050414.GA19301@lst.de>
+ <ZFJ84dD1FRNXJIcm@kbusch-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZFJ84dD1FRNXJIcm@kbusch-mbp.dhcp.thefacebook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,76 +58,23 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In case of q->elevator, passthrought request can still be marked as RQF_ELV,
-so some elevator callbacks will be called for passthrough request.
+On Wed, May 03, 2023 at 09:25:21AM -0600, Keith Busch wrote:
+> On Wed, May 03, 2023 at 07:04:14AM +0200, Christoph Hellwig wrote:
+> > On Mon, May 01, 2023 at 08:33:04AM -0700, Keith Busch wrote:
+> > > From: Keith Busch <kbusch@kernel.org>
+> > > 
+> > > Passthrough requests don't go through the submit_bio() path, so all the
+> > > overhead of setting up the bio's cgroup is wasted cycles. Provide a path
+> > > to skip this setup.
+> > 
+> > These days we should not need to set bi_bdev at all for passthrough,
+> > so I think we can just drop the assingment.
+> 
+> We can't really skip it for polling since that needs a bio with a
+> bdev. I'll take another shot at detandling that requirement.
 
-Add helper of blk_mq_bypass_sched(), so that we can bypass elevator
-callbacks for both flush and passthrough request.
-
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- block/blk-mq-sched.h | 9 +++++++--
- block/blk-mq.c       | 5 ++---
- 2 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index 7c3cbad17f30..4aa879749843 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -22,6 +22,11 @@ int blk_mq_init_sched(struct request_queue *q, struct elevator_type *e);
- void blk_mq_exit_sched(struct request_queue *q, struct elevator_queue *e);
- void blk_mq_sched_free_rqs(struct request_queue *q);
- 
-+static inline bool blk_mq_bypass_sched(blk_opf_t cmd_flags)
-+{
-+	return op_is_flush(cmd_flags) || blk_op_is_passthrough(cmd_flags);
-+}
-+
- static inline void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
- {
- 	if (test_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state))
-@@ -48,7 +53,7 @@ blk_mq_sched_allow_merge(struct request_queue *q, struct request *rq,
- 
- static inline void blk_mq_sched_completed_request(struct request *rq, u64 now)
- {
--	if (rq->rq_flags & RQF_ELV) {
-+	if ((rq->rq_flags & RQF_ELV) && !blk_mq_bypass_sched(rq->cmd_flags)) {
- 		struct elevator_queue *e = rq->q->elevator;
- 
- 		if (e->type->ops.completed_request)
-@@ -58,7 +63,7 @@ static inline void blk_mq_sched_completed_request(struct request *rq, u64 now)
- 
- static inline void blk_mq_sched_requeue_request(struct request *rq)
- {
--	if (rq->rq_flags & RQF_ELV) {
-+	if ((rq->rq_flags & RQF_ELV) && !blk_mq_bypass_sched(rq->cmd_flags)) {
- 		struct request_queue *q = rq->q;
- 		struct elevator_queue *e = q->elevator;
- 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index b4aaf42f1125..bd80fe3aa0c3 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -392,7 +392,7 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 		INIT_HLIST_NODE(&rq->hash);
- 		RB_CLEAR_NODE(&rq->rb_node);
- 
--		if (!op_is_flush(data->cmd_flags) &&
-+		if (!blk_mq_bypass_sched(data->cmd_flags) &&
- 		    e->type->ops.prepare_request) {
- 			e->type->ops.prepare_request(rq);
- 			rq->rq_flags |= RQF_ELVPRIV;
-@@ -458,8 +458,7 @@ static struct request *__blk_mq_alloc_requests(struct blk_mq_alloc_data *data)
- 		 * dispatch list. Don't include reserved tags in the
- 		 * limiting, as it isn't useful.
- 		 */
--		if (!op_is_flush(data->cmd_flags) &&
--		    !blk_op_is_passthrough(data->cmd_flags) &&
-+		if (!blk_mq_bypass_sched(data->cmd_flags) &&
- 		    e->type->ops.limit_depth &&
- 		    !(data->flags & BLK_MQ_REQ_RESERVED))
- 			e->type->ops.limit_depth(data->cmd_flags, data);
--- 
-2.40.1
-
+I've got a new version ready to go that removes the bio and bi_dev
+requirement for polling uring commands, but passthrough still needs to
+set bi_bdev for metadata since it's used in bio_integrity_add_page(). I
+suppose we could have that just take the queue limits directly instead
+of extracting them from an assumed bi_dev.
