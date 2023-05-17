@@ -2,51 +2,51 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79650706FC6
-	for <lists+linux-block@lfdr.de>; Wed, 17 May 2023 19:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE642706FCE
+	for <lists+linux-block@lfdr.de>; Wed, 17 May 2023 19:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbjEQRpg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 May 2023 13:45:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53962 "EHLO
+        id S229883AbjEQRpm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 May 2023 13:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbjEQRpd (ORCPT
+        with ESMTP id S229551AbjEQRph (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 May 2023 13:45:33 -0400
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68251D069
-        for <linux-block@vger.kernel.org>; Wed, 17 May 2023 10:45:01 -0700 (PDT)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-643557840e4so1118723b3a.2
-        for <linux-block@vger.kernel.org>; Wed, 17 May 2023 10:45:01 -0700 (PDT)
+        Wed, 17 May 2023 13:45:37 -0400
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27133D2D9
+        for <linux-block@vger.kernel.org>; Wed, 17 May 2023 10:45:08 -0700 (PDT)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-643a1fed360so763052b3a.3
+        for <linux-block@vger.kernel.org>; Wed, 17 May 2023 10:45:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684345480; x=1686937480;
+        d=1e100.net; s=20221208; t=1684345482; x=1686937482;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aDnGikLOYG1t6apzhUnxcr96a3tR4AhATdhtBeyLLBM=;
-        b=cRVPa2Uv1ICZsHSL1nw3pU08r4aSrtsZVxOC6N4OjDpsUf0LqwrdxF436l8az5b/mV
-         Rglqj43yWtoUSVi+vs6uZMJvq86ecRlXN69p6kaV6pMKGBK4pSngjO8hQds+6RiKnJu2
-         fPhpcPnZyH3lTkvNIGLDesnZYzeE72n5b4SIm9Fqdfn8T1hwYkVWSypwQ6PpPoY7DMLt
-         ve6M2Qqbm8vz5txyfz+Jo1obUFGUPrSlQmY+7Q/yRTOGl+78x2miLeeR9DIfbWfkixK6
-         +MOsfd/X1yqtRl7S0QbIzS9KuUDDXCrCfR2WV0aRf6MOCONF8QVnUElbLphzrPJsaAxe
-         PqdQ==
-X-Gm-Message-State: AC+VfDz1evNwpz97g6K0gnn+X4WaM7auloOcaE2e9Q2OclitfS6WJre0
-        9+tUkPsmBf0cyfa34xHWg3c=
-X-Google-Smtp-Source: ACHHUZ71Yh2gf5KlY7qdUaaDvSPaWfp7f6W1Nl4kXB8zp5P1K+fqUs37Ow0Mybx6UcgVZxu6YEiogw==
-X-Received: by 2002:a05:6a00:1a89:b0:62d:d045:392 with SMTP id e9-20020a056a001a8900b0062dd0450392mr498191pfv.32.1684345480348;
-        Wed, 17 May 2023 10:44:40 -0700 (PDT)
+        bh=EtawUDGVkAQQgu3j8B80kzwNBVCXAkTme75c4XUrVi8=;
+        b=CzEEUi5Bs+g1cDFaCgUPnOCxOPRwLu8BFuNj2GyduMAd9z2+Sjx3m9t83XPSydG1+3
+         1C+FcTtj6Weu891cKnJaEoEm4pEnFWzU5xJfKFbe67YUyZ3FiGi/rtV2VeOemRH+dE7Q
+         IEl0TpBjyYqEoq3ec/EXCi6JAdnl3tZv8V5KkU5QsroJYUOu2+fJAWI/lB4yt1gKlWVT
+         yxDJQdw0OCzJvnwD8YX2lExyTqnKOoh6nTdVbaXyDBy59xBqeeN1okRLyYKUOPm1HznD
+         AD1QyXrXe4WaF4xsCaVhPK6kT09dqzW1lgH/qC+QEA9kMA1dS65ePGBa7yBc2ri4GYjO
+         Zt8Q==
+X-Gm-Message-State: AC+VfDyJ7VIeu7y+71IHZ7QsdjnumQMplu+/fiav0DTtcfwqzLR+3G2P
+        Kt0aSe+yfw3EyQc7l+ZaLrE=
+X-Google-Smtp-Source: ACHHUZ6qPwa2ddHDgtreNJt0ieufZE3y3ID1L+uVL8azLa28s6s4BUWUGB9IwtRaXHZn3wTRwjpF+g==
+X-Received: by 2002:a05:6a00:1a15:b0:64c:c842:5864 with SMTP id g21-20020a056a001a1500b0064cc8425864mr661984pfv.14.1684345481712;
+        Wed, 17 May 2023 10:44:41 -0700 (PDT)
 Received: from bvanassche-glaptop2.roam.corp.google.com ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id d22-20020aa78e56000000b00646e7d2b5a7sm15334410pfr.112.2023.05.17.10.44.38
+        by smtp.gmail.com with ESMTPSA id d22-20020aa78e56000000b00646e7d2b5a7sm15334410pfr.112.2023.05.17.10.44.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 10:44:39 -0700 (PDT)
+        Wed, 17 May 2023 10:44:41 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <dlemoal@kernel.org>,
         Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v6 07/11] block: mq-deadline: Simplify deadline_skip_seq_writes()
-Date:   Wed, 17 May 2023 10:42:25 -0700
-Message-ID: <20230517174230.897144-8-bvanassche@acm.org>
+Subject: [PATCH v6 08/11] block: mq-deadline: Reduce lock contention
+Date:   Wed, 17 May 2023 10:42:26 -0700
+Message-ID: <20230517174230.897144-9-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 In-Reply-To: <20230517174230.897144-1-bvanassche@acm.org>
 References: <20230517174230.897144-1-bvanassche@acm.org>
@@ -63,8 +63,9 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make the deadline_skip_seq_writes() code shorter without changing its
-functionality.
+blk_mq_free_requests() calls dd_finish_request() indirectly. Prevent
+nested locking of dd->lock and dd->zone_lock by moving the code for
+freeing requests.
 
 Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
@@ -72,28 +73,60 @@ Reviewed-by: Hannes Reinecke <hare@suse.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ block/mq-deadline.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index cea91ba4a6ea..56782ee93522 100644
+index 56782ee93522..44222d18f6d4 100644
 --- a/block/mq-deadline.c
 +++ b/block/mq-deadline.c
-@@ -304,14 +304,11 @@ static struct request *deadline_skip_seq_writes(struct deadline_data *dd,
- 						struct request *rq)
+@@ -757,7 +757,7 @@ static bool dd_bio_merge(struct request_queue *q, struct bio *bio,
+  * add rq to rbtree and fifo
+  */
+ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+-			      blk_insert_t flags)
++			      blk_insert_t flags, struct list_head *free)
  {
- 	sector_t pos = blk_rq_pos(rq);
--	sector_t skipped_sectors = 0;
+ 	struct request_queue *q = hctx->queue;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
+@@ -766,7 +766,6 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 	u8 ioprio_class = IOPRIO_PRIO_CLASS(ioprio);
+ 	struct dd_per_prio *per_prio;
+ 	enum dd_prio prio;
+-	LIST_HEAD(free);
  
--	while (rq) {
--		if (blk_rq_pos(rq) != pos + skipped_sectors)
--			break;
--		skipped_sectors += blk_rq_sectors(rq);
-+	do {
-+		pos += blk_rq_sectors(rq);
- 		rq = deadline_latter_request(rq);
+ 	lockdep_assert_held(&dd->lock);
+ 
+@@ -783,10 +782,8 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 		rq->elv.priv[0] = (void *)(uintptr_t)1;
+ 	}
+ 
+-	if (blk_mq_sched_try_insert_merge(q, rq, &free)) {
+-		blk_mq_free_requests(&free);
++	if (blk_mq_sched_try_insert_merge(q, rq, free))
+ 		return;
 -	}
-+	} while (rq && blk_rq_pos(rq) == pos);
  
- 	return rq;
+ 	trace_block_rq_insert(rq);
+ 
+@@ -819,6 +816,7 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct deadline_data *dd = q->elevator->elevator_data;
++	LIST_HEAD(free);
+ 
+ 	spin_lock(&dd->lock);
+ 	while (!list_empty(list)) {
+@@ -826,9 +824,11 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 
+ 		rq = list_first_entry(list, struct request, queuelist);
+ 		list_del_init(&rq->queuelist);
+-		dd_insert_request(hctx, rq, flags);
++		dd_insert_request(hctx, rq, flags, &free);
+ 	}
+ 	spin_unlock(&dd->lock);
++
++	blk_mq_free_requests(&free);
  }
+ 
+ /* Callback from inside blk_mq_rq_ctx_init(). */
