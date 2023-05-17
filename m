@@ -2,68 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0F4970678B
-	for <lists+linux-block@lfdr.de>; Wed, 17 May 2023 14:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19FDA7067E7
+	for <lists+linux-block@lfdr.de>; Wed, 17 May 2023 14:20:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231234AbjEQMGl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 17 May 2023 08:06:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
+        id S231582AbjEQMUc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 17 May 2023 08:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjEQMGN (ORCPT
+        with ESMTP id S229815AbjEQMUb (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 17 May 2023 08:06:13 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C27883D2;
-        Wed, 17 May 2023 05:03:29 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 963E168C4E; Wed, 17 May 2023 14:02:59 +0200 (CEST)
-Date:   Wed, 17 May 2023 14:02:59 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/9] block: introduce holder ops
-Message-ID: <20230517120259.GA16915@lst.de>
-References: <20230505175132.2236632-1-hch@lst.de> <20230505175132.2236632-6-hch@lst.de> <20230516-kommode-weizen-4c410968c1f6@brauner> <20230517073031.GF27026@lst.de> <20230517-einreden-dermatologisch-9c6a3327a689@brauner> <20230517080613.GA31383@lst.de> <20230517-erhoffen-degradieren-d0aa039f0e1d@brauner>
+        Wed, 17 May 2023 08:20:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81065198E;
+        Wed, 17 May 2023 05:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NrmV1RlXNUksQObxSTnk5T7ZKt0dHdVGx6FKtxXOMuE=; b=lz5gMl8DB28Tk7MctDq2tS5GlA
+        6jrqXdvhj1jiLFhVKu9DBa7R/C1q/NIQQzW+3uK7M1QZbsB+VkHpUo+2SfY1FTkpked+w8haV+oZB
+        VJSl3NByTzlAgkfrlAEkODeNDuHWkNQyA4r6mm9EckjjrPNUCcjd5qjkBNy89TZbWuqR6KcOYko9c
+        KEVSjvVE/iWEJYSQC4qIao/hxYfWZxBNHfY5dfhuCdx1nXs2GHVQjN6AdC1n64DkHzEUk5cfetqBc
+        NkQhEuQxcWD0XuJIJelG8PGF+FmDmdrKyt/Y3R8S9ffXUS38IT0aoAKtMtjXOqgwZNYtI6dmURcT1
+        M/1FPFzA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pzG8m-0054gz-A1; Wed, 17 May 2023 12:20:24 +0000
+Date:   Wed, 17 May 2023 13:20:24 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     yang lan <lanyang0908@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        josef@toxicpanda.com, linux-block@vger.kernel.org,
+        nbd@other.debian.org, syzkaller-bugs@googlegroups.com,
+        linux-fsdevel@vger.kernel.org, axboe@kernel.dk,
+        haris.iqbal@ionos.com, jinpu.wang@ionos.com, brauner@kernel.org
+Subject: Re: INFO: task hung in blkdev_open bug
+Message-ID: <ZGTGiNItObrI2Z34@casper.infradead.org>
+References: <CAAehj2=HQDk-AMYpVR7i91hbQC4G5ULKd9iYoP05u_9tay8VMw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230517-erhoffen-degradieren-d0aa039f0e1d@brauner>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <CAAehj2=HQDk-AMYpVR7i91hbQC4G5ULKd9iYoP05u_9tay8VMw@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, May 17, 2023 at 10:42:01AM +0200, Christian Brauner wrote:
-> So with an O_PATH fd the device wouldn't really be opened at all we'd
-> just hold a reference to a struct file with f->f_op set to empty_fops.
-> (See the FMODE_PATH code in fs/open.c:do_dentry_open().)
->
-> So blkdev_open() is never called for O_PATH fds. Consequently an O_PATH
-> fd to a block device would only be useful if the intention is to later
-> lookup the block device based on inode->i_rdev.
+On Wed, May 17, 2023 at 07:12:23PM +0800, yang lan wrote:
+> root@syzkaller:~# uname -a
+> Linux syzkaller 5.10.179 #1 SMP PREEMPT Thu Apr 27 16:22:48 CST 2023
 
-Yes.  That's pretty much the definition of O_PATH..
+Does this reproduce on current kernels, eg 6.4-rc2?
 
-> So my earlier question should have been why there's no method to lookup
-> a block device purely by non-O_PATH fd since that way you do actually
-> pin the block device which is probably what you almost always want to do.
+> root@syzkaller:~# gcc poc_blkdev.c -o poc_blkdev
 
-Why would we want to pin it?  That just means the device is open and
-you're have a non-O_PATH mount.
+You need to include poc_blkdev.c as part of your report.
 
-> I'm asking because it would be nice if we could allow callers to specify
-> the source of a filesystem mount as an fd and not just as a string as
-> the mount api currently does. That's probably not super straightforward
-> but might be really worth it.
+> Please let me know if I can provide any more information, and I hope I
+> didn't mess up this bug report.
 
-What you seem to want is a way to convert an O_PATH fs into a non-O_PATH
-one.  Which seems generally useful, but isn't really anything block
-device specific.
+I suspect you've done something that is known to not work (as root,
+so we won't necessarily care).  But I can't really say without seeing
+what you've done.  Running syzkaller is an art, and most people aren't
+good at it.  It takes a lot of work to submit good quality bug reports,
+see this article:
+
+https://blog.regehr.org/archives/2037
