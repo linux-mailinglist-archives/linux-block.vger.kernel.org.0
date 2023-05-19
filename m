@@ -2,75 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66E4770961E
-	for <lists+linux-block@lfdr.de>; Fri, 19 May 2023 13:17:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD4D8709765
+	for <lists+linux-block@lfdr.de>; Fri, 19 May 2023 14:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231513AbjESLRu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 19 May 2023 07:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
+        id S230270AbjESMli (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 19 May 2023 08:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231624AbjESLRq (ORCPT
+        with ESMTP id S229675AbjESMlh (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 19 May 2023 07:17:46 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CCAE42
-        for <linux-block@vger.kernel.org>; Fri, 19 May 2023 04:17:44 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-965d2749e2eso481763066b.1
-        for <linux-block@vger.kernel.org>; Fri, 19 May 2023 04:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684495062; x=1687087062;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
-        b=JSg3rdU6W2mjqmEc+mB2A7cFmRegMCR83SHfOjxmRVbwY2A7mgymSN+oh42ISHBfwO
-         GhYoUeZQdTAgrrktfs4VHXg5wvlxv+psdIxXqG71lRhZUTeGY0gkCC1W0WGnQ2KuhHot
-         +NPDFYfn4R+L8OP+VhWdlcDsDSc9o5ruZin0Jy7jEd2WIJigUk3W15VR/5RcuFsK0DW/
-         FpfL86ckeVx6y5Gc/4Q2cQwsXt6HqauHnQBLsDdwzZSaOMbN/NAWKn10V/OC4oS8nobW
-         BkYyI389vonSGsu8g2o2QiZVmSCS1RCYF7e1+Ah3/AvqFMUnq3kHlvS8oKVbVQM9I4Wp
-         NQBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684495062; x=1687087062;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
-        b=NQKU/ZrK9bjpZTzqAUTqZB4F1mDBgLW3YMJj/wgl1Kde0iGkN/LD+hTMzaH3Gx6L9E
-         nr7kL4WaAJB8m7ts3ADbwGzkrgARtZnWSinQ7ylABXb1EZ7Q5tmLn7UxM+64Rqi6apwU
-         +ISUQQIoKbQWecPKaQzsbdkbWh/yuVgs1Pq4Ki3qyP/0ma+hDoAjw/mK30JVCRUkraLe
-         c53G7DthkqjC3/qoXbqkZpgN30veFV6n58fEdae2+aPvzpD6xkV1y3h8BnoGhl+C505r
-         vtmU7qbZl3OfG4nFB+plXcjL1/Xmon19C8US3V1TKFmlDjJ54B1Vl7tzHSyMPamjz/JR
-         dYjg==
-X-Gm-Message-State: AC+VfDzGwfmgxtPTsL14JPySIlvWgEe1f1y1s/3AYLRp7k3yyooyRdjW
-        iTwu1ufS59M3JXlkBSk0qbaLGEu9dVQSwleC//M=
-X-Google-Smtp-Source: ACHHUZ4GcdKjctEWmkMJD/Q5ZDCusH7zrjV+w4c4EgP8GDbM+BMa7NNuPpP4cOMUW2oAUk/kOHHzW6hqw5zKR98kQX0=
-X-Received: by 2002:a17:907:1b12:b0:8b8:c06e:52d8 with SMTP id
- mp18-20020a1709071b1200b008b8c06e52d8mr1298232ejc.36.1684495062361; Fri, 19
- May 2023 04:17:42 -0700 (PDT)
+        Fri, 19 May 2023 08:41:37 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2973A1A8;
+        Fri, 19 May 2023 05:41:14 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id DA9A57C0;
+        Fri, 19 May 2023 12:41:06 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DA9A57C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1684500067; bh=Mn4aex3r3tcIexmUxRNT5U8Atc2UG4Nc4lQH6evssMM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=gZf7ANIZaa/7Q1rgunvrPwGwZDiRrPQJh/r7c+04LjcKROD6SaQA32cv+SfHF31sn
+         1Wzq7+aPFp6z0FAhq083CUKfk3SfcVpzAE5TdWCGjz2GDzWdPU8ZAS474OAB7Kh8Sj
+         EhjRG1hILuCbGyNju46jjgjQf4amw6zocsFbL3f83Nb+NE+UpF1KvjhErswaiNfpNi
+         VGFQmHb4BUF4c9e6k6+nEab9l6PFf3YZIaSVEHVS6vdszIN+c9Od3Ff+kvqlllo3qe
+         vPdiMiNROHj/JEUpNHZJ7og7Ayy6wtlJfa8/uYMWA6ASUwxz2btxw4d0G4wH25bzVl
+         sDSS6ZHkOa7ZA==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Dave Chinner <david@fromorbit.com>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Cc:     jake@lwn.net, hch@infradead.org, djwong@kernel.org,
+        dchinner@redhat.com, ritesh.list@gmail.com, rgoldwyn@suse.com,
+        jack@suse.cz, linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        p.raghav@samsung.com, da.gomez@samsung.com, rohan.puri@samsung.com
+Subject: Re: [PATCH v2] Documentation: add initial iomap kdoc
+In-Reply-To: <ZGbVaewzcCysclPt@dread.disaster.area>
+References: <20230518150105.3160445-1-mcgrof@kernel.org>
+ <ZGbVaewzcCysclPt@dread.disaster.area>
+Date:   Fri, 19 May 2023 06:41:06 -0600
+Message-ID: <87r0rcpk7x.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Received: by 2002:a17:907:7dab:b0:94f:7d03:8e8b with HTTP; Fri, 19 May 2023
- 04:17:41 -0700 (PDT)
-Reply-To: ninacoulibaly03@myself.com
-From:   nina coulibaly <ninacoulibaly199@gmail.com>
-Date:   Fri, 19 May 2023 04:17:41 -0700
-Message-ID: <CAM7Z2JAd00KW6b=O8M27vwRnsJ1w3AmDO5tP+gSmzkaHvk6=CA@mail.gmail.com>
-Subject: from nina coulibaly
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dear,
+Dave Chinner <david@fromorbit.com> writes:
 
-Please grant me permission to share a very crucial discussion with
-you. I am looking forward to hearing from you at your earliest
-convenience.
+One little point among all the more substantial stuff:
 
-Mrs. Nina Coulibal
+>> -/*
+>> - * Types of block ranges for iomap mappings:
+>> +/**
+>> + * DOC: iomap block ranges types
+>
+> I seriously dislike this "DOC:" keyword appearing everywhere.
+> We've already got a "this is a comment for documentation" annotation
+> in the "/**" comment prefix, having to add "DOC:" is entirely
+> redudant and unnecessary noise.
+
+DOC: actually isn't redundant, it causes the kernel-doc directive to
+pull that text into the rendered documentation.
+
+This document shows both the advantages and disadvantages of that
+mechanism, IMO.  It allows the documentation to be kept with the code,
+where optimistic people think it is more likely to be updated.  But it
+also scatters the material to the detriment of readers of the plain-text
+documentation.  The rendered version of iomap.rst is rather more
+complete and comprehensible than the RST file itself.
+
+Thanks,
+
+jon
