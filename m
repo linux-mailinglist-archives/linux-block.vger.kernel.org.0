@@ -2,127 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D48A7093C5
-	for <lists+linux-block@lfdr.de>; Fri, 19 May 2023 11:38:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FFD17094B9
+	for <lists+linux-block@lfdr.de>; Fri, 19 May 2023 12:23:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231835AbjESJil (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 19 May 2023 05:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43610 "EHLO
+        id S230396AbjESKXy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 19 May 2023 06:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230358AbjESJhz (ORCPT
+        with ESMTP id S230470AbjESKXx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 19 May 2023 05:37:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E98910C9;
-        Fri, 19 May 2023 02:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=lKV8h274a8dJZYXDnZBnFaYep44iQbnn3gg/wqWXLcU=; b=cWIcWF+NCJsR16lt+GN3SyqYi8
-        20m98Sg1zXHAv7DP2DoTSsINVBJLT/jPU8582VtWjlVAlPAxQNKVTFaC0YOnpEd5FvRMnBLi4ey94
-        K4WsXk4K1iXMjE0WTmxaYPPuCk8QMzpH/S5exdIPqIWUyCVLjzR3cBZl2UWcus5acmbfLvwlunIjm
-        4ycE2BJo+CC540gWRfo2M+hpyeOMIoCToQspTNQ3U/ipx7csq77R4XMThx+m4QCcDyjZBfA7VJFoS
-        hKoo+WYpC8HvPYhP5WamSeG2WcUggfS4/afnmf7Abg1NQrcteg0tvokFZlTlL+/0VmwC02dijjfgF
-        XYj4OTgA==;
-Received: from [2001:4bb8:188:3dd5:e8d0:68bb:e5be:210a] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pzwWm-00Fjl7-2x;
-        Fri, 19 May 2023 09:36:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE SYSTEM),
-        cluster-devel@redhat.com, linux-xfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH 13/13] fuse: use direct_write_fallback
-Date:   Fri, 19 May 2023 11:35:21 +0200
-Message-Id: <20230519093521.133226-14-hch@lst.de>
+        Fri, 19 May 2023 06:23:53 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C719E6E;
+        Fri, 19 May 2023 03:23:51 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34JA55uQ026480;
+        Fri, 19 May 2023 10:23:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=h98+9DFGBoUIDUw6Pxnf2w+K9pL1W1lgtKqJhRHRC+c=;
+ b=HtJ8mbWMShNYaY/tai9NU9c8Pyr1bwPRc+bczncSBRyyVX3CfBDwJVZSZjvmOEQa5nTB
+ xpteT9MNEQEWihB29WuHYPn/IdfX+Oa0xgPAPTDM0TIGYHdR5Tc3/n88CMKlW+dELkkB
+ JHxQVCUEoqMJ3h2E+3J4XTiqGN74H7bixBM00dNtd24ls6KZnJb6PAfhVk2KDHyVILx/
+ mccCi9YR+4cE1LwCRFBg9JcwDVe/0icqoyX1CJ2FO5BGfzbe/JTiY+wDZtSLPUZQxKh3
+ NmLuttOdr97GozcQdsNn+CBQhXhHebFiq1h9XbYVsius9+Qf9pzewGMnDW/x0BTmKdzy yg== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qp4xxbrht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 10:23:49 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34J4mert012709;
+        Fri, 19 May 2023 10:23:47 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3qj264u47y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 10:23:47 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34JANfjk38404444
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 May 2023 10:23:41 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C8EA2004D;
+        Fri, 19 May 2023 10:23:41 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B90520040;
+        Fri, 19 May 2023 10:23:41 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Fri, 19 May 2023 10:23:41 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 05E5EE02F9; Fri, 19 May 2023 12:23:41 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/1] s390/dasd: fix command reject error on ESE devices
+Date:   Fri, 19 May 2023 12:23:39 +0200
+Message-Id: <20230519102340.3854819-1-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230519093521.133226-1-hch@lst.de>
-References: <20230519093521.133226-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: U0uZ_t6HlH_C8VgHlyCTYSFFTIKN7xwM
+X-Proofpoint-GUID: U0uZ_t6HlH_C8VgHlyCTYSFFTIKN7xwM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-19_06,2023-05-17_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ suspectscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305190085
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use the generic direct_write_fallback helper instead of duplicating the
-logic.
+Hi Jens,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/fuse/file.c | 27 +++------------------------
- 1 file changed, 3 insertions(+), 24 deletions(-)
+please apply the following patch that fixes formatting a thin provisioned
+device in a copy relation.
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 5f7b58798f99fc..02ab446ab57f1f 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1340,11 +1340,9 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	struct file *file = iocb->ki_filp;
- 	struct address_space *mapping = file->f_mapping;
- 	ssize_t written = 0;
--	ssize_t written_buffered = 0;
- 	struct inode *inode = mapping->host;
- 	ssize_t err;
- 	struct fuse_conn *fc = get_fuse_conn(inode);
--	loff_t endbyte = 0;
- 
- 	if (fc->writeback_cache) {
- 		/* Update size (EOF optimization) and mode (SUID clearing) */
-@@ -1382,28 +1380,9 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 	if (iocb->ki_flags & IOCB_DIRECT) {
- 		written = generic_file_direct_write(iocb, from);
--		if (written < 0 || !iov_iter_count(from))
--			goto out;
--
--		written_buffered = fuse_perform_write(iocb, from);
--		if (written_buffered < 0) {
--			err = written_buffered;
--			goto out;
--		}
--		endbyte = iocb->ki_pos + written_buffered - 1;
--
--		err = filemap_write_and_wait_range(file->f_mapping,
--						   iocb->ki_pos,
--						   endbyte);
--		if (err)
--			goto out;
--
--		invalidate_mapping_pages(file->f_mapping,
--					 iocb->ki_pos >> PAGE_SHIFT,
--					 endbyte >> PAGE_SHIFT);
--
--		written += written_buffered;
--		iocb->ki_pos += written_buffered;
-+		if (written >= 0 && iov_iter_count(from))
-+			written = direct_write_fallback(iocb, from, written,
-+					fuse_perform_write(iocb, from));
- 	} else {
- 		written = fuse_perform_write(iocb, from);
- 	}
+Thanks.
+
+Stefan Haberland (1):
+  s390/dasd: fix command reject error on ESE devices
+
+ drivers/s390/block/dasd_eckd.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
 -- 
 2.39.2
 
