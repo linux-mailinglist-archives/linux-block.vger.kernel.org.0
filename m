@@ -2,60 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86ABA70A5AC
-	for <lists+linux-block@lfdr.de>; Sat, 20 May 2023 07:31:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3A270A5AF
+	for <lists+linux-block@lfdr.de>; Sat, 20 May 2023 07:31:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbjETFbB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 20 May 2023 01:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37256 "EHLO
+        id S229960AbjETFbG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 20 May 2023 01:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjETFbB (ORCPT
+        with ESMTP id S229718AbjETFbE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 20 May 2023 01:31:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC67E97
-        for <linux-block@vger.kernel.org>; Fri, 19 May 2023 22:30:19 -0700 (PDT)
+        Sat, 20 May 2023 01:31:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5ABE40
+        for <linux-block@vger.kernel.org>; Fri, 19 May 2023 22:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684560619;
+        s=mimecast20190719; t=1684560622;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=maQ1H/KHFCmtzJvbtPQ78ynksUc2EpyBApXxB8/KGoU=;
-        b=ZlNxtSAsW5hgX7CCo3DQYflI8C+wEmmUKtgN1/nK/4eyJGjgMrRg5j2ilYUqfkdGZe52QW
-        rKy6n+cWUUwmEsIbnq6kROT3XL3T3c0Py6i6szR/3NvFyijyEECrLQlNNyrkj2mhkfpHr8
-        m6fCSMj3fT3rKVpv/Wr0hZ5zAARwXec=
+        bh=4TsQ6Uoi0PuqANQq9Dc5Rtf0K/7M0kh0l6yP5OO5e04=;
+        b=Tm8DGurV2nj3COff+TEd8K1xbiAKxiVPLVseTN8iwjQH+iOpkRGjwKA9I718Jgqfe9qiub
+        NjnfHXetYFLZwXhbQwyRGaRjvf5IoEtQZ9xqOOJr0dIkQ4zk+zEe9RNNmyZclDp1YzZLd/
+        cW3mkde1jFmJ7gj+Z+iQmiSSwbdHCtU=
 Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
  [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-TNw0fqoFP263oKE0OXto8A-1; Sat, 20 May 2023 01:30:17 -0400
-X-MC-Unique: TNw0fqoFP263oKE0OXto8A-1
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-54f5cbdfbf5so2445820eaf.3
-        for <linux-block@vger.kernel.org>; Fri, 19 May 2023 22:30:17 -0700 (PDT)
+ us-mta-288-p4ZiTDkbM1ic5tZhkoweUQ-1; Sat, 20 May 2023 01:30:21 -0400
+X-MC-Unique: p4ZiTDkbM1ic5tZhkoweUQ-1
+Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-54fb26bc1dbso2671509eaf.3
+        for <linux-block@vger.kernel.org>; Fri, 19 May 2023 22:30:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684560617; x=1687152617;
+        d=1e100.net; s=20221208; t=1684560620; x=1687152620;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=maQ1H/KHFCmtzJvbtPQ78ynksUc2EpyBApXxB8/KGoU=;
-        b=AHd4UW3HIGdxz5fyYvk0ruKxyma6fPM3077Pyo87pxz2Oy9BA9DzEujY2BUj/iLHou
-         h+LE5YLXsdSE+bzmvLxYBCDVABb1AGBTFGH7OKr0+k4bbBMJcV/mPBnrPLLoTjMr+8eX
-         YCCym4866STSTU7h7BRN6zm9p9MvJytIwoot36UI4O4iAUA0h5+yFCjkT3OYbvmxTjiL
-         FjdyLXUIfFMTy7HqI77rZClVyTzgOtDdw5shmhHx+oWEo1WuaLzkFBLFrxHLrWwsSQsu
-         3tccQN3kgOyV5d66RO2/ANfPpiSqmcT63+KDOz6MxfNriuRRjRnOSYhAl/VhNKbOao5M
-         Eidg==
-X-Gm-Message-State: AC+VfDxRP8ATMJzBHvRkadvRRYnY9AiuP9zydWrLyM5fh8NRHTtEVOYG
-        0XUU6Q08KqL9YnUZOx0Q9UfUg0KXbdkxqLLPvWRNKX0UzmHYtbM6btG/LBnGw0AlKg1UoQ0JAdz
-        il3TXt1yTFmgp1JLGF8fB3Zs=
-X-Received: by 2002:a4a:3c1b:0:b0:54c:49d:3b37 with SMTP id d27-20020a4a3c1b000000b0054c049d3b37mr2416507ooa.1.1684560616872;
-        Fri, 19 May 2023 22:30:16 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6h4l2Ghsh00+OOUGIhOUeHxbExMk18l4zb1GAHKo2+Ge6KGX+J7ML7dWZZoT5ZnowMXnhDvA==
-X-Received: by 2002:a4a:3c1b:0:b0:54c:49d:3b37 with SMTP id d27-20020a4a3c1b000000b0054c049d3b37mr2416497ooa.1.1684560616676;
-        Fri, 19 May 2023 22:30:16 -0700 (PDT)
+        bh=4TsQ6Uoi0PuqANQq9Dc5Rtf0K/7M0kh0l6yP5OO5e04=;
+        b=f2qleUZ6nWaAJtn5vUL9gCGO15Co1rmGu4CiGW/OOA8z2w21aDvrEse1wbwyDI1MVB
+         2RsPa8qAyDIya99RC2A5eMZtCAxlc7ryFp3kkYV78NhyZzsbKJm05KYDCFO/VXXTiBCu
+         TxX3PP6EIwFomTFD2TI8IJD06Q+m41CdqkPxAr1s86nCUbLPIEGA//O27xoOEiNbAA0k
+         hwBiD6lWflWCExmGijfbrzNUYDciDLzoe4x3Chj/LlwakeC2bPWslEnL4wyXAifbwlJx
+         CaTnqYzBYJZmKpSU74cETTKgj+Dl803QuUu6+G5QRdtocVLhUPOGEDv1WPPKyo5Ncuoi
+         IOgg==
+X-Gm-Message-State: AC+VfDzhM2q4Ty26R3vs+/W/Ryw4Jo9wUWU586p3CSBeUjttPrrYjIOs
+        GVvkhXlAfe1hABrG1NefzcXZp5GD0kDnCKtNOhtp1XNHDSDi58tTvTcrbktu0S8qUKpyNUWq/96
+        92oFeGVIKfwN6GbctH5rinKw=
+X-Received: by 2002:aca:1010:0:b0:394:a7b:5974 with SMTP id 16-20020aca1010000000b003940a7b5974mr2092074oiq.10.1684560620339;
+        Fri, 19 May 2023 22:30:20 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7r8o3wAXxkFwKzZRhhNq/6TMpxr0tH2OIEhgZjpDqAjFAlCZk0yeWNiLsVzZld4cbpTh+kow==
+X-Received: by 2002:aca:1010:0:b0:394:a7b:5974 with SMTP id 16-20020aca1010000000b003940a7b5974mr2092068oiq.10.1684560620161;
+        Fri, 19 May 2023 22:30:20 -0700 (PDT)
 Received: from localhost.localdomain ([2804:1b3:a803:7f0c:32e1:e970:713a:f05b])
-        by smtp.gmail.com with ESMTPSA id j14-20020a4ad6ce000000b005524555de56sm365494oot.36.2023.05.19.22.30.13
+        by smtp.gmail.com with ESMTPSA id j14-20020a4ad6ce000000b005524555de56sm365494oot.36.2023.05.19.22.30.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 22:30:16 -0700 (PDT)
+        Fri, 19 May 2023 22:30:19 -0700 (PDT)
 From:   Leonardo Bras <leobras@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -69,9 +69,9 @@ To:     Jens Axboe <axboe@kernel.dk>,
         Yury Norov <yury.norov@gmail.com>,
         Marcelo Tosatti <mtosatti@redhat.com>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 1/3] blk-mq: Move csd inside struct request so it's 32-byte aligned
-Date:   Sat, 20 May 2023 02:29:56 -0300
-Message-Id: <20230520052957.798486-2-leobras@redhat.com>
+Subject: [RFC PATCH v2 2/3] blk-mq: Change request->csd type to call_single_data_t
+Date:   Sat, 20 May 2023 02:29:57 -0300
+Message-Id: <20230520052957.798486-3-leobras@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230520052957.798486-1-leobras@redhat.com>
 References: <20230520052957.798486-1-leobras@redhat.com>
@@ -79,8 +79,8 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -93,93 +93,48 @@ call_single_data_t is defined in include/linux/smp.h :
 
 /* Use __aligned() to avoid to use 2 cache lines for 1 csd */
 typedef struct __call_single_data call_single_data_t
-	__aligned(sizeof(struct __call_single_data));
+        __aligned(sizeof(struct __call_single_data));
 
-As the comment above the typedef suggests, having struct __call_single_data
-split between 2 cachelines causes the need to fetch / invalidate / bounce 2
-cachelines instead of 1 when the cpu receiving the request gets to run the
-requested function. This is usually bad for performance, due to one extra
-memory access and 1 extra cacheline usage.
+This is proposed this way so it avoids doing 2 cacheline bounce when
+running a csd request.
 
-As an example with a 64-bit machine with
-CONFIG_BLK_RQ_ALLOC_TIME=y
-CONFIG_BLK_WBT=y
-CONFIG_BLK_DEV_INTEGRITY=y
-CONFIG_BLK_INLINE_ENCRYPTION=y
+Changing request->csd to the aligned typedef was previously attempted in
+commit 966a967116e6 ("smp: Avoid using two cache lines for struct call_single_data")
+but at the time the union that contains csd was positioned near the top of
+struct request, only below a struct list_head, and this caused the issue of
+holes summing up 24 extra bytes in struct request.
 
-Will output pahole with:
-struct request {
-[...]
-	union {
-		struct __call_single_data csd;           /*   240    32 */
-		u64                fifo_time;            /*   240     8 */
-	};                                               /*   240    32 */
-[...]
-}
+The struct size was restored back to normal by
+commit 4ccafe032005 ("block: unalign call_single_data in struct request")
+but it caused the csd to be possibly split in 2 cachelines again.
 
-At this config, and any cacheline size between 32 and 256, will cause csd
-to be split between 2 cachelines: csd->node (16 bytes) in the first
-cacheline, and csd->func (8 bytes) & csd->info (8 bytes) in the second.
+Since request->csd was moved to be always 32-byte aligned inside
+'struct request', changing it to the aligned typedef should not cause
+any increased size or hole in the struct.
 
-During blk_mq_complete_send_ipi(), csd->func and csd->info are getting
-changed, and when it calls __smp_call_single_queue() csd->node will get
-changed.
-
-On the cpu which got the request, csd->func and csd->info get read by
-__flush_smp_call_function_queue() and csd->node gets changed by
-csd_unlock(), meaning the two cachelines containing csd will get accessed.
-
-To avoid this, it would be necessary to make sure request->csd is placed
-somewhere else in the struct, so it is always in a single cacheline,
-while avoiding the introduction of any hole in the struct. In order to
-achieve this, move request->csd to after 'struct block_device *part'.
-
-The rationale of this change is that:
-- There will be no CONFIG_*-dependent field before csd, so there is no
-  chance of having unexpected holes on given configs.
-- On 64-bit machines, csd will be at byte 96, and
-- On 32-bit machines, csd will be at byte 64.
-
-This means after this change, request->csd will always be cacheline aligned
-for cachelines >= 32-bytes (64-bit) and cachelines >= 16-bytes (32-bits),
-as long as struct request is cacheline aligned.
-
-In above change, the struct request size is not supposed to change in any
-configuration.
+Since this is the last use of the unaligned struct outside smp code, having
+this changed will allow us to change smp_call_function_single_async() to
+only accept the aligned typedef, and avoid undesired extra cacheline
+bounce in future code.
 
 Signed-off-by: Leonardo Bras <leobras@redhat.com>
 ---
- include/linux/blk-mq.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/blk-mq.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 06caacd77ed6..44201e18681f 100644
+index 44201e18681f..6033ef8eb4eb 100644
 --- a/include/linux/blk-mq.h
 +++ b/include/linux/blk-mq.h
-@@ -105,6 +105,11 @@ struct request {
- 	};
- 
+@@ -107,7 +107,7 @@ struct request {
  	struct block_device *part;
-+
-+	union {
-+		struct __call_single_data csd;
-+		u64 fifo_time;
-+	};
- #ifdef CONFIG_BLK_RQ_ALLOC_TIME
- 	/* Time that the first bio started allocating this request. */
- 	u64 alloc_time_ns;
-@@ -189,11 +194,6 @@ struct request {
- 		} flush;
- 	};
  
--	union {
+ 	union {
 -		struct __call_single_data csd;
--		u64 fifo_time;
--	};
--
- 	/*
- 	 * completion callback.
- 	 */
++		call_single_data_t csd;
+ 		u64 fifo_time;
+ 	};
+ #ifdef CONFIG_BLK_RQ_ALLOC_TIME
 -- 
 2.40.1
 
