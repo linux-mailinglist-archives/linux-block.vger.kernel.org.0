@@ -2,45 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30D6970DB8B
-	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 13:35:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C36270EA82
+	for <lists+linux-block@lfdr.de>; Wed, 24 May 2023 03:04:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234057AbjEWLfg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 May 2023 07:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
+        id S233010AbjEXBD7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Tue, 23 May 2023 21:03:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232785AbjEWLfg (ORCPT
+        with ESMTP id S229632AbjEXBD5 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 May 2023 07:35:36 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E11EFA;
-        Tue, 23 May 2023 04:35:35 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C508B6732D; Tue, 23 May 2023 13:35:31 +0200 (CEST)
-Date:   Tue, 23 May 2023 13:35:31 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Anuj Gupta <anuj20.g@samsung.com>
-Cc:     axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
-        gost.dev@samsung.com, anuj1072538@gmail.com, joshiiitr@gmail.com,
-        stable@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>
-Subject: Re: [PATCH] block: fix bio-cache for passthru IO
-Message-ID: <20230523113531.GA28790@lst.de>
-References: <CGME20230523112014epcas5p267f30562f3f2e3c6d58fbb76c0084e5b@epcas5p2.samsung.com> <20230523111709.145676-1-anuj20.g@samsung.com>
+        Tue, 23 May 2023 21:03:57 -0400
+X-Greylist: delayed 168309 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 18:03:55 PDT
+Received: from freesmtp-001.cafe24.com (freesmtp-001.cafe24.com [116.126.142.92])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6EE090
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 18:03:55 -0700 (PDT)
+Received: from [10.5.0.2] (unknown [185.225.234.172])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: angel12345@cafe24.com)
+        by freesmtp-001.cafe24.com (Postfix) with ESMTP id 93399C18C9;
+        Sun, 21 May 2023 21:21:31 +0900 (KST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230523111709.145676-1-anuj20.g@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Did you know??
+To:     Recipients <angel12345@cafe24.com>
+From:   angel12345@cafe24.com
+Date:   Sun, 21 May 2023 07:21:12 -0500
+Reply-To: francesandpatrickconnolly@aol.com
+Message-Id: <20230521122132.93399C18C9@freesmtp-001.cafe24.com>
+X-Spam-Status: Yes, score=5.9 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,NIXSPAM_IXHASH,SPF_HELO_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  3.0 NIXSPAM_IXHASH http://www.nixspam.org/
+        *  0.0 T_SPF_PERMERROR SPF: test of record failed (permerror)
+        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, May 23, 2023 at 04:47:09PM +0530, Anuj Gupta wrote:
-> +	if (rq->cmd_flags & REQ_ALLOC_CACHE && (nr_vecs <= BIO_INLINE_VECS)) {
-
-The inner braces are superflous.
+Hurry, you have been selected as one of the 10 lucky winners to receive €400,000 each through the Frances and Patrick Connolly Support Life charity project. For more information, please contact Ms. Nadine at francesandpatrickconnolly@aol.com
