@@ -2,51 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87C0070CDD8
+	by mail.lfdr.de (Postfix) with ESMTP id 2CCFE70CDD7
 	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 00:26:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234725AbjEVW0L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 May 2023 18:26:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        id S234739AbjEVW0K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 May 2023 18:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234621AbjEVW0H (ORCPT
+        with ESMTP id S234725AbjEVW0H (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Mon, 22 May 2023 18:26:07 -0400
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9315211F
-        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:26:00 -0700 (PDT)
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-25374c9be49so4095983a91.3
-        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:26:00 -0700 (PDT)
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA38109
+        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:26:02 -0700 (PDT)
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-53469299319so3939102a12.3
+        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:26:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684794360; x=1687386360;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DT/NKoStDLzfFNa7S+rTJHi0NRS3M4LeLCggKGvssl8=;
-        b=Ff8z9kpLnFRamMyhKyQ6RJs8P3nL5gAYMz2Jt37kotjN6DX+8eXil721eDLgk69ggZ
-         ARTcpU9se/r+GSczfMHdSTnnk1d0OFM2/nsQ/GffI+BiSUCzWvLTxtBeXG7I/5k8EwV9
-         iw181nN0DwowEifGe5jXRte6pJC5ZlHmr0gYU9LY6e0iklmqmK7jLZwbugoiQHnn4MQN
-         D1fZ9x7Xf3XwxsOoUEfyqnGcOKH/x15SKhKno16Q61VtPLQq3TX+QDfQIeXuU2vsQT/L
-         wxs+yp56acrjH3zNRrZ0PSsJYBexVckg/aLtIgKU/+nVL0qNTAGpIyzAWUFyiakbrpo7
-         S5Bg==
-X-Gm-Message-State: AC+VfDxLxrDRQ3PghdD/0y5XzDHREisUtMTuOPmJAvIPnOqkJeQlIRWc
-        P0CRi8O+KSGfifB6N7j337M=
-X-Google-Smtp-Source: ACHHUZ5w+qbHnnJ387Y11YQfXgSIC2wl7nc5QhMvZWoe6LJUYniPFOGFB91YgxI/msjvFBhhKC8RnA==
-X-Received: by 2002:a17:90a:a611:b0:253:2dc5:4e12 with SMTP id c17-20020a17090aa61100b002532dc54e12mr11088890pjq.46.1684794359862;
-        Mon, 22 May 2023 15:25:59 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684794361; x=1687386361;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5qae/V+JAOQd+3eACKtAvOPY5UNzsheKRP7tCBDSFUQ=;
+        b=QLk11XnGw4p+NUHmc4tdXY04CYLr5m9KfpHWEkmfGaiI/uRHMhUMYFEY851vy8USwZ
+         g14dsDwm77Uq4ApE/xzMIrE3omySxdKJIaf5WmwFkdz4x/YeDO/Pk89aLxBZIvs63xdE
+         U/wU1Nb5VM46gJp+KUII5pcpSjPi7uHi79/byDx78ypZVeuV9vWiiLzNZpzikcxZp4Cy
+         76p3gdyWsgklsfO+ILcNJp5D7U/zcXRAiNNt44SgMrWz5J28f4s8y4CoKF1AojA+orJJ
+         1qHJSUQPJ9IWmVVD8e/XXNfKgppIsG75zC6nlpJS2IVElrcMRfVuYQNAucwkC8tLZbIm
+         H2EQ==
+X-Gm-Message-State: AC+VfDxbXvNYrfzIAge53x7DTY3l7bkxAVAcLm/gexPQC3mWbGvedylu
+        l6mrHmBbBxomvK69dn+P+vg=
+X-Google-Smtp-Source: ACHHUZ5j0u5TKPR9eWz53QTyN1zfPTXFujvdyGWB1U/qTRsF9TampeTGXHGQvmPvs8gn5+bmuMEqow==
+X-Received: by 2002:a05:6a20:8f02:b0:105:dafa:feb3 with SMTP id b2-20020a056a208f0200b00105dafafeb3mr14077127pzk.61.1684794361177;
+        Mon, 22 May 2023 15:26:01 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:642f:e57f:85fb:3794])
-        by smtp.gmail.com with ESMTPSA id y8-20020a634b08000000b00520f4ecd71esm4725364pga.93.2023.05.22.15.25.58
+        by smtp.gmail.com with ESMTPSA id y8-20020a634b08000000b00520f4ecd71esm4725364pga.93.2023.05.22.15.26.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 15:25:59 -0700 (PDT)
+        Mon, 22 May 2023 15:26:00 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         jyescas@google.com, mcgrof@kernel.org,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v5 0/9] Support limits below the page size
-Date:   Mon, 22 May 2023 15:25:32 -0700
-Message-ID: <20230522222554.525229-1-bvanassche@acm.org>
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH v5 1/9] block: Use pr_info() instead of printk(KERN_INFO ...)
+Date:   Mon, 22 May 2023 15:25:33 -0700
+Message-ID: <20230522222554.525229-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
+In-Reply-To: <20230522222554.525229-1-bvanassche@acm.org>
+References: <20230522222554.525229-1-bvanassche@acm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -60,67 +63,59 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+Switch to the modern style of printing kernel messages. Use %u instead
+of %d to print unsigned integers.
 
-We want to improve Android performance by increasing the page size from 4 KiB
-to 16 KiB. However, some of the storage controllers we care about do not support
-DMA segments larger than 4 KiB. Hence the need support for DMA segments that are
-smaller than the size of one virtual memory page. This patch series implements
-that support. Please consider this patch series for the next merge window.
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ block/blk-settings.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-Thanks,
-
-Bart.
-
-Changes compared to v4:
-- Fixed the debugfs patch such that the behavior for creating the block
-  debugfs directory is retained.
-- Made the description of patch "Support configuring limits below the page
-  size" more detailed. Split that patch into two patches.
-- Added patch "Use pr_info() instead of printk(KERN_INFO ...)".
-
-Changes compared to v3:
-- Removed CONFIG_BLK_SUB_PAGE_SEGMENTS and QUEUE_FLAG_SUB_PAGE_SEGMENTS.
-  Replaced these by a new member in struct queue_limits and a static branch.
-- The static branch that controls whether or not sub-page limits are enabled
-  is set by the block layer core instead of by block drivers.
-- Dropped the patches that are no longer needed (SCSI core and UFS Exynos
-  driver).
-
-Changes compared to v2:
-- For SCSI drivers, only set flag QUEUE_FLAG_SUB_PAGE_SEGMENTS if necessary.
-- In the scsi_debug patch, sorted kernel module parameters alphabetically.
-  Only set flag QUEUE_FLAG_SUB_PAGE_SEGMENTS if necessary.
-- Added a patch for the UFS Exynos driver that enables
-  CONFIG_BLK_SUB_PAGE_SEGMENTS if the page size exceeds 4 KiB.
-
-Changes compared to v1:
-- Added a CONFIG variable that controls whether or not small segment support
-  is enabled.
-- Improved patch descriptions.
-
-Bart Van Assche (9):
-  block: Use pr_info() instead of printk(KERN_INFO ...)
-  block: Prepare for supporting sub-page limits
-  block: Support configuring limits below the page size
-  block: Make sub_page_limit_queues available in debugfs
-  block: Support submitting passthrough requests with small segments
-  block: Add support for filesystem requests and small segments
-  block: Add support for small segments in blk_rq_map_user_iov()
-  scsi_debug: Support configuring the maximum segment size
-  null_blk: Support configuring the maximum segment size
-
- block/blk-core.c                  |  4 ++
- block/blk-map.c                   | 29 +++++++---
- block/blk-merge.c                 |  8 ++-
- block/blk-mq-debugfs.c            |  9 ++++
- block/blk-mq-debugfs.h            |  6 +++
- block/blk-mq.c                    |  2 +
- block/blk-settings.c              | 88 ++++++++++++++++++++++++++-----
- block/blk.h                       | 39 +++++++++++---
- drivers/block/null_blk/main.c     | 19 +++++--
- drivers/block/null_blk/null_blk.h |  1 +
- drivers/scsi/scsi_debug.c         |  4 ++
- include/linux/blkdev.h            |  2 +
- 12 files changed, 182 insertions(+), 29 deletions(-)
-
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 896b4654ab00..1d8d2ae7bdf4 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -127,8 +127,7 @@ void blk_queue_max_hw_sectors(struct request_queue *q, unsigned int max_hw_secto
+ 
+ 	if ((max_hw_sectors << 9) < PAGE_SIZE) {
+ 		max_hw_sectors = 1 << (PAGE_SHIFT - 9);
+-		printk(KERN_INFO "%s: set to minimum %d\n",
+-		       __func__, max_hw_sectors);
++		pr_info("%s: set to minimum %u\n", __func__, max_hw_sectors);
+ 	}
+ 
+ 	max_hw_sectors = round_down(max_hw_sectors,
+@@ -248,8 +247,7 @@ void blk_queue_max_segments(struct request_queue *q, unsigned short max_segments
+ {
+ 	if (!max_segments) {
+ 		max_segments = 1;
+-		printk(KERN_INFO "%s: set to minimum %d\n",
+-		       __func__, max_segments);
++		pr_info("%s: set to minimum %u\n", __func__, max_segments);
+ 	}
+ 
+ 	q->limits.max_segments = max_segments;
+@@ -285,8 +283,7 @@ void blk_queue_max_segment_size(struct request_queue *q, unsigned int max_size)
+ {
+ 	if (max_size < PAGE_SIZE) {
+ 		max_size = PAGE_SIZE;
+-		printk(KERN_INFO "%s: set to minimum %d\n",
+-		       __func__, max_size);
++		pr_info("%s: set to minimum %u\n", __func__, max_size);
+ 	}
+ 
+ 	/* see blk_queue_virt_boundary() for the explanation */
+@@ -740,8 +737,7 @@ void blk_queue_segment_boundary(struct request_queue *q, unsigned long mask)
+ {
+ 	if (mask < PAGE_SIZE - 1) {
+ 		mask = PAGE_SIZE - 1;
+-		printk(KERN_INFO "%s: set to minimum %lx\n",
+-		       __func__, mask);
++		pr_info("%s: set to minimum %lx\n", __func__, mask);
+ 	}
+ 
+ 	q->limits.seg_boundary_mask = mask;
