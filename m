@@ -2,167 +2,125 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B3DE70CBCA
-	for <lists+linux-block@lfdr.de>; Mon, 22 May 2023 22:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64C9C70CBD4
+	for <lists+linux-block@lfdr.de>; Mon, 22 May 2023 23:00:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234633AbjEVU73 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 May 2023 16:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57738 "EHLO
+        id S235434AbjEVVAM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 May 2023 17:00:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235260AbjEVU7U (ORCPT
+        with ESMTP id S235565AbjEVU7t (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 May 2023 16:59:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4979C133
-        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 13:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684789093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0UdxcT7QYPFwRvPO4h85pE794/0OGizygn6UovNdu60=;
-        b=dnr4qcNhFOIH7dIjS8LCct4WBfDaj1VZu/avm/fVxLVDiO7VHCYLuT1Apm0VgyWaDLDWvo
-        WSBkFZ4cij4WJkhpGGJE9LQFvxGjh63z96WfWzcYYlCnD5uEgs3J2+D/SUB2wKcJvN2Baa
-        I1QWt0JrkkcETHnw+OnEzgLoBKRXrmw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-36-QHGrTEFvMROVinDkIKBxuA-1; Mon, 22 May 2023 16:58:10 -0400
-X-MC-Unique: QHGrTEFvMROVinDkIKBxuA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 706D1800141;
-        Mon, 22 May 2023 20:58:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.39.192.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E042D140E95D;
-        Mon, 22 May 2023 20:58:06 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v21 6/6] block: convert bio_map_user_iov to use iov_iter_extract_pages
-Date:   Mon, 22 May 2023 21:57:44 +0100
-Message-Id: <20230522205744.2825689-7-dhowells@redhat.com>
-In-Reply-To: <20230522205744.2825689-1-dhowells@redhat.com>
-References: <20230522205744.2825689-1-dhowells@redhat.com>
+        Mon, 22 May 2023 16:59:49 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6565120;
+        Mon, 22 May 2023 13:59:34 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-64d1e96c082so3535234b3a.1;
+        Mon, 22 May 2023 13:59:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684789174; x=1687381174;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=REd5LAfz4pnrlWJeTXd7TNxPZb5If45Ls7fcUl4wW74=;
+        b=lRz3eawJzzyIYWWtoGkyPPVw4Nh3+OLy6jFJMU+raeIShsezJRKl644EXFjT8VXibp
+         HtJYoF9JEJBg1ClhPIoL6RiIcabDVfxMQPhGwQIHtkl7W0bHy7yjiwWYtoFH9LBHhYOU
+         JEiONdLbci65yJjPkYqVHntuJUL81Tsa0epXl5zHQ1Oe8SuyaMT1EvhdvIUB2HjHhQHl
+         Vs28CO3mP8kL3yjk9PfS8QV4l6+YVEYuPDyAMycXEGEcuUDzt+xC/uWjuHpt/UNCHrz/
+         BYyWPHtO5gNxmtmuteRhpakBhlwavqOtp7CZh4twewBcTdi8yL/m+ozPxlptx9Fyn0o1
+         tmQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684789174; x=1687381174;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=REd5LAfz4pnrlWJeTXd7TNxPZb5If45Ls7fcUl4wW74=;
+        b=aS7Si1t31RxhxwtgA+ydLkgARGOQay8G3lZB4i3Mpx37mOk5sf8YZLOONiGoAoyumA
+         RliBDB5+Wuk1jocXc3Vl2UuRyzvMblR5O+XtXCUIeOjTnoCshkuTZlWlp1Im1/5IcPDG
+         T9SkUEUBWVD+ExL0ix+IzsUO69hv/LFpA5WHwHTNjNHLcB2Zp8UumvhW4iWVP8vlc1Ya
+         iXJqJuZ47T1NjHvu6SZPH3aawUGVLejB4IT1xXI/nXd+sDS8/TGDqTN2OfZ8AY8co+OE
+         fPzpbuuEDlnkXNMk8gRwlvY+Sy8/+aFKEjOEawHnBUMlk6qyImC+rXPsKMXOLEJhoo/V
+         +URA==
+X-Gm-Message-State: AC+VfDyGvWZWEDsCJcAx3SU/BQg3Fx728VNVpgK2UKGEI/TZ4pZWKTXT
+        ixyXFbQ85Zp3IChYiT/zcfzU8bYtT7c=
+X-Google-Smtp-Source: ACHHUZ62p+fet8YNvDAvQD8XHEQO/LJcmHtalvyR/EUUpdMx3CiCSyB2OzQAqQTfXGXwV3TSV2WBRg==
+X-Received: by 2002:a05:6a21:100e:b0:ec:d7cf:bcf7 with SMTP id nk14-20020a056a21100e00b000ecd7cfbcf7mr12191695pzb.17.1684789174047;
+        Mon, 22 May 2023 13:59:34 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:39c])
+        by smtp.gmail.com with ESMTPSA id i14-20020a63cd0e000000b005287a0560c9sm4835896pgg.1.2023.05.22.13.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 13:59:33 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Mon, 22 May 2023 10:59:31 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     hch@lst.de, josef@toxicpanda.com, axboe@kernel.dk,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+        yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH for-6.4/block] block/rq_qos: protect rq_qos apis with a
+ new lock
+Message-ID: <ZGvXs8zmXcxsxL9D@slm.duckdns.org>
+References: <20230414084008.2085155-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230414084008.2085155-1-yukuai1@huaweicloud.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This will pin pages or leave them unaltered rather than getting a ref on
-them as appropriate to the iterator.
+On Fri, Apr 14, 2023 at 04:40:08PM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> commit 50e34d78815e ("block: disable the elevator int del_gendisk")
+> move rq_qos_exit() from disk_release() to del_gendisk(), this will
+> introduce some problems:
+> 
+> 1) If rq_qos_add() is triggered by enabling iocost/iolatency through
+>    cgroupfs, then it can concurrent with del_gendisk(), it's not safe to
+>    write 'q->rq_qos' concurrently.
+> 
+> 2) Activate cgroup policy that is relied on rq_qos will call
+>    rq_qos_add() and blkcg_activate_policy(), and if rq_qos_exit() is
+>    called in the middle, null-ptr-dereference will be triggered in
+>    blkcg_activate_policy().
+> 
+> 3) blkg_conf_open_bdev() can call blkdev_get_no_open() first to find the
+>    disk, then if rq_qos_exit() from del_gendisk() is done before
+>    rq_qos_add(), then memory will be leaked.
+> 
+> This patch add a new disk level mutex 'rq_qos_mutex':
+> 
+> 1) The lock will protect rq_qos_exit() directly.
+> 
+> 2) For wbt that doesn't relied on blk-cgroup, rq_qos_add() can only be
+>    called from disk initialization for now because wbt can't be
+>    destructed until rq_qos_exit(), so it's safe not to protect wbt for
+>    now. Hoever, in case that rq_qos dynamically destruction is supported
+>    in the furture, this patch also protect rq_qos_add() from wbt_init()
+>    directly, this is enough because blk-sysfs already synchronize
+>    writers with disk removal.
+> 
+> 3) For iocost and iolatency, in order to synchronize disk removal and
+>    cgroup configuration, the lock is held after blkdev_get_no_open()
+>    from blkg_conf_open_bdev(), and is released in blkg_conf_exit().
+>    In order to fix the above memory leak, disk_live() is checked after
+>    holding the new lock.
+> 
+> Fixes: 50e34d78815e ("block: disable the elevator int del_gendisk")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 
-The pages need to be pinned for DIO rather than having refs taken on them
-to prevent VM copy-on-write from malfunctioning during a concurrent fork()
-(the result of the I/O could otherwise end up being visible to/affected by
-the child process).
+Acked-by: Tejun Heo <tj@kernel.org>
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-cc: Al Viro <viro@zeniv.linux.org.uk>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Jan Kara <jack@suse.cz>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Logan Gunthorpe <logang@deltatee.com>
-cc: linux-block@vger.kernel.org
----
+Thanks.
 
-Notes:
-    ver #10)
-     - Drop bio_set_cleanup_mode(), open coding it instead.
-    
-    ver #8)
-     - Split the patch up a bit [hch].
-     - We should only be using pinned/non-pinned pages and not ref'd pages,
-       so adjust the comments appropriately.
-    
-    ver #7)
-     - Don't treat BIO_PAGE_REFFED/PINNED as being the same as FOLL_GET/PIN.
-    
-    ver #5)
-     - Transcribe the FOLL_* flags returned by iov_iter_extract_pages() to
-       BIO_* flags and got rid of bi_cleanup_mode.
-     - Replaced BIO_NO_PAGE_REF to BIO_PAGE_REFFED in the preceding patch.
-
- block/blk-map.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
-
-diff --git a/block/blk-map.c b/block/blk-map.c
-index 33d9f6e89ba6..3551c3ff17cf 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -281,22 +281,21 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
- 
- 	if (blk_queue_pci_p2pdma(rq->q))
- 		extraction_flags |= ITER_ALLOW_P2PDMA;
-+	if (iov_iter_extract_will_pin(iter))
-+		bio_set_flag(bio, BIO_PAGE_PINNED);
- 
--	bio_set_flag(bio, BIO_PAGE_REFFED);
- 	while (iov_iter_count(iter)) {
--		struct page **pages, *stack_pages[UIO_FASTIOV];
-+		struct page *stack_pages[UIO_FASTIOV];
-+		struct page **pages = stack_pages;
- 		ssize_t bytes;
- 		size_t offs;
- 		int npages;
- 
--		if (nr_vecs <= ARRAY_SIZE(stack_pages)) {
--			pages = stack_pages;
--			bytes = iov_iter_get_pages(iter, pages, LONG_MAX,
--						   nr_vecs, &offs, extraction_flags);
--		} else {
--			bytes = iov_iter_get_pages_alloc(iter, &pages,
--						LONG_MAX, &offs, extraction_flags);
--		}
-+		if (nr_vecs > ARRAY_SIZE(stack_pages))
-+			pages = NULL;
-+
-+		bytes = iov_iter_extract_pages(iter, &pages, LONG_MAX,
-+					       nr_vecs, extraction_flags, &offs);
- 		if (unlikely(bytes <= 0)) {
- 			ret = bytes ? bytes : -EFAULT;
- 			goto out_unmap;
-@@ -318,7 +317,7 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
- 				if (!bio_add_hw_page(rq->q, bio, page, n, offs,
- 						     max_sectors, &same_page)) {
- 					if (same_page)
--						put_page(page);
-+						bio_release_page(bio, page);
- 					break;
- 				}
- 
-@@ -330,7 +329,7 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
- 		 * release the pages we didn't map into the bio, if any
- 		 */
- 		while (j < npages)
--			put_page(pages[j++]);
-+			bio_release_page(bio, pages[j++]);
- 		if (pages != stack_pages)
- 			kvfree(pages);
- 		/* couldn't stuff something into bio? */
-
+-- 
+tejun
