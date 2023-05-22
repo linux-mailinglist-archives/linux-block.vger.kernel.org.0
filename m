@@ -2,264 +2,125 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B180C70CD85
-	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 00:10:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C0070CDD8
+	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 00:26:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233450AbjEVWKH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 22 May 2023 18:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60226 "EHLO
+        id S234725AbjEVW0L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 22 May 2023 18:26:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232351AbjEVWKG (ORCPT
+        with ESMTP id S234621AbjEVW0H (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 22 May 2023 18:10:06 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9221BDB
-        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:10:04 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1ae4c5e1388so63595825ad.1
-        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684793404; x=1687385404;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zhk/FFw49fszGKvEVhYvbvMP+dTpGvDn5zl+3/9L1Dc=;
-        b=fblWw9UzbFxiy0IdFHcyiEwVDIdKvIAKrQRPskBGENxPURLIOwwaK7n1zvySgU7WzL
-         VU8Vfr1s05BDJeWnx6GvlwtigLtu+eqhdhxMauzwVoEmiW/RcmEFcKMqrypOtXnRwUeV
-         Vx8ZBImfDyJb1VIqxhV1vDoDsK4UvJ1KJ+MUQ=
+        Mon, 22 May 2023 18:26:07 -0400
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9315211F
+        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:26:00 -0700 (PDT)
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-25374c9be49so4095983a91.3
+        for <linux-block@vger.kernel.org>; Mon, 22 May 2023 15:26:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684793404; x=1687385404;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zhk/FFw49fszGKvEVhYvbvMP+dTpGvDn5zl+3/9L1Dc=;
-        b=IlP4FN0D2HarxtnuseRB/XvR3tCkym0wvwJXLxtJwrGcUV61kPRFT6EVH+K2aR6qnW
-         qwNUOTcMKGyUnY74IiYtCL4da4oymYXv5uoIzNrCRy+mElynj0HaVAkXdl4QixlxM7od
-         Kz/4hbGyXnXzpNDb3n8lLLDjAY4gks3IeZEUUIou2f8jE2chO6mYOMXUm7cNYJ49CdV9
-         NTf0GH7JsQvlCWWpEK76BsHUjDfsW7JCAZvSWi5FYMBpu2I5DPD9isjK2whDubqHO2cN
-         mv4YNbCVG+bVhHv7ZZDIRU3cZmpON+pvXFQ3T2odR1YkVVH2gTdxq8rxi6KwtFe5r1+W
-         M7fw==
-X-Gm-Message-State: AC+VfDy1DCvGJujx3c9Cubg7rVBt6FQmv4yp5ZUu0Y8xW8Wps51RX6uL
-        MgnelaNlcSQbT7z06VywFtsM6EP/kP0NcJIJAIU=
-X-Google-Smtp-Source: ACHHUZ5WRtvEBtYahpKG6aPeTI5eHL+V7B6L6O9jAUq/08MWwaaWRvizWzszQGPZBbFKrv/0tLK8Kg==
-X-Received: by 2002:a17:902:ea0f:b0:1ad:c736:2090 with SMTP id s15-20020a170902ea0f00b001adc7362090mr14394226plg.3.1684793403998;
-        Mon, 22 May 2023 15:10:03 -0700 (PDT)
-Received: from localhost ([2620:15c:9d:2:7ecd:bb34:d662:f45a])
-        by smtp.gmail.com with UTF8SMTPSA id v4-20020a170902b7c400b001ab2b4105ddsm5308998plz.60.2023.05.22.15.10.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 May 2023 15:10:03 -0700 (PDT)
-From:   Sarthak Kukreti <sarthakkukreti@chromium.org>
-To:     dm-devel@redhat.com, linux-block@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Bart Van Assche <bvanassche@google.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Sarthak Kukreti <sarthakkukreti@chromium.org>
-Subject: [PATCH v7 5/5] loop: Add support for provision requests
-Date:   Mon, 22 May 2023 15:09:55 -0700
-Message-ID: <20230522221000.603769-1-sarthakkukreti@chromium.org>
+        d=1e100.net; s=20221208; t=1684794360; x=1687386360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DT/NKoStDLzfFNa7S+rTJHi0NRS3M4LeLCggKGvssl8=;
+        b=Ff8z9kpLnFRamMyhKyQ6RJs8P3nL5gAYMz2Jt37kotjN6DX+8eXil721eDLgk69ggZ
+         ARTcpU9se/r+GSczfMHdSTnnk1d0OFM2/nsQ/GffI+BiSUCzWvLTxtBeXG7I/5k8EwV9
+         iw181nN0DwowEifGe5jXRte6pJC5ZlHmr0gYU9LY6e0iklmqmK7jLZwbugoiQHnn4MQN
+         D1fZ9x7Xf3XwxsOoUEfyqnGcOKH/x15SKhKno16Q61VtPLQq3TX+QDfQIeXuU2vsQT/L
+         wxs+yp56acrjH3zNRrZ0PSsJYBexVckg/aLtIgKU/+nVL0qNTAGpIyzAWUFyiakbrpo7
+         S5Bg==
+X-Gm-Message-State: AC+VfDxLxrDRQ3PghdD/0y5XzDHREisUtMTuOPmJAvIPnOqkJeQlIRWc
+        P0CRi8O+KSGfifB6N7j337M=
+X-Google-Smtp-Source: ACHHUZ5w+qbHnnJ387Y11YQfXgSIC2wl7nc5QhMvZWoe6LJUYniPFOGFB91YgxI/msjvFBhhKC8RnA==
+X-Received: by 2002:a17:90a:a611:b0:253:2dc5:4e12 with SMTP id c17-20020a17090aa61100b002532dc54e12mr11088890pjq.46.1684794359862;
+        Mon, 22 May 2023 15:25:59 -0700 (PDT)
+Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:642f:e57f:85fb:3794])
+        by smtp.gmail.com with ESMTPSA id y8-20020a634b08000000b00520f4ecd71esm4725364pga.93.2023.05.22.15.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 15:25:59 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        jyescas@google.com, mcgrof@kernel.org,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH v5 0/9] Support limits below the page size
+Date:   Mon, 22 May 2023 15:25:32 -0700
+Message-ID: <20230522222554.525229-1-bvanassche@acm.org>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-In-Reply-To: <20230522163710.GA11607@frogsfrogsfrogs>
-References: <20230522163710.GA11607@frogsfrogsfrogs>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, May 22, 2023 at 9:37 AM Darrick J. Wong <djwong@kernel.org> wrote:
->
-> If someone calls fallocate(UNSHARE_RANGE) on a loop bdev, shouldn't
-> there be a way to pass that through to the fallocate call to the backing
-> file?
->
-> --D
->
+Hi Jens,
 
-Yeah, I think we could add a REQ_UNSHARE bit (similar to REQ_NOUNMAP) to pass down the intent to the backing file (and possibly beyond...).
+We want to improve Android performance by increasing the page size from 4 KiB
+to 16 KiB. However, some of the storage controllers we care about do not support
+DMA segments larger than 4 KiB. Hence the need support for DMA segments that are
+smaller than the size of one virtual memory page. This patch series implements
+that support. Please consider this patch series for the next merge window.
 
-I took a stab at implementing it as a follow up patch so that there's less review churn on the current series. If it looks good, I can add it to the end of the series (or incorporate this into the existing block and loop patches):
+Thanks,
 
-From: Sarthak Kukreti <sarthakkukreti@chromium.org>
-Date: Mon, 22 May 2023 14:18:15 -0700
-Subject: [PATCH] block: Pass unshare intent via REQ_OP_PROVISION
+Bart.
 
-Allow REQ_OP_PROVISION to pass in an extra REQ_UNSHARE bit to
-annotate unshare requests to underlying layers. Layers that support
-FALLOC_FL_UNSHARE will be able to use this as an indicator of which
-fallocate() mode to use.
+Changes compared to v4:
+- Fixed the debugfs patch such that the behavior for creating the block
+  debugfs directory is retained.
+- Made the description of patch "Support configuring limits below the page
+  size" more detailed. Split that patch into two patches.
+- Added patch "Use pr_info() instead of printk(KERN_INFO ...)".
 
-Signed-off-by: Sarthak Kukreti <sarthakkukreti@chromium.org>
----
- block/blk-lib.c           |  6 +++++-
- block/fops.c              |  6 +++++-
- drivers/block/loop.c      | 35 +++++++++++++++++++++++++++++------
- include/linux/blk_types.h |  3 +++
- include/linux/blkdev.h    |  3 ++-
- 5 files changed, 44 insertions(+), 9 deletions(-)
+Changes compared to v3:
+- Removed CONFIG_BLK_SUB_PAGE_SEGMENTS and QUEUE_FLAG_SUB_PAGE_SEGMENTS.
+  Replaced these by a new member in struct queue_limits and a static branch.
+- The static branch that controls whether or not sub-page limits are enabled
+  is set by the block layer core instead of by block drivers.
+- Dropped the patches that are no longer needed (SCSI core and UFS Exynos
+  driver).
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 3cff5fb654f5..bea6f5a700b3 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -350,6 +350,7 @@ EXPORT_SYMBOL(blkdev_issue_secure_erase);
-  * @sector:	start sector
-  * @nr_sects:	number of sectors to provision
-  * @gfp_mask:	memory allocation flags (for bio_alloc)
-+ * @flags:	controls detailed behavior
-  *
-  * Description:
-  *  Issues a provision request to the block device for the range of sectors.
-@@ -357,7 +358,7 @@ EXPORT_SYMBOL(blkdev_issue_secure_erase);
-  *  underlying storage pool to allocate space for this block range.
-  */
- int blkdev_issue_provision(struct block_device *bdev, sector_t sector,
--		sector_t nr_sects, gfp_t gfp)
-+		sector_t nr_sects, gfp_t gfp, unsigned flags)
- {
- 	sector_t bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
- 	unsigned int max_sectors = bdev_max_provision_sectors(bdev);
-@@ -380,6 +381,9 @@ int blkdev_issue_provision(struct block_device *bdev, sector_t sector,
- 		bio->bi_iter.bi_sector = sector;
- 		bio->bi_iter.bi_size = req_sects << SECTOR_SHIFT;
- 
-+		if (flags & BLKDEV_UNSHARE_RANGE)
-+			bio->bi_opf |= REQ_UNSHARE;
-+
- 		sector += req_sects;
- 		nr_sects -= req_sects;
- 		if (!nr_sects) {
-diff --git a/block/fops.c b/block/fops.c
-index be2e41f160bf..6848756f0557 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -659,7 +659,11 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
- 	case FALLOC_FL_KEEP_SIZE:
- 	case FALLOC_FL_UNSHARE_RANGE | FALLOC_FL_KEEP_SIZE:
- 		error = blkdev_issue_provision(bdev, start >> SECTOR_SHIFT,
--					       len >> SECTOR_SHIFT, GFP_KERNEL);
-+					       len >> SECTOR_SHIFT, GFP_KERNEL,
-+					       (mode &
-+						FALLOC_FL_UNSHARE_RANGE) ?
-+						       BLKDEV_UNSHARE_RANGE :
-+						       0);
- 		break;
- 	case FALLOC_FL_ZERO_RANGE:
- 	case FALLOC_FL_ZERO_RANGE | FALLOC_FL_KEEP_SIZE:
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 7fe1a6629754..c844b145d666 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -306,6 +306,30 @@ static int lo_read_simple(struct loop_device *lo, struct request *rq,
- 	return 0;
- }
- 
-+static bool validate_fallocate_mode(struct loop_device *lo, int mode)
-+{
-+	bool ret = true;
-+
-+	switch (mode) {
-+	case FALLOC_FL_PUNCH_HOLE:
-+	case FALLOC_FL_ZERO_RANGE:
-+		if (!bdev_max_discard_sectors(lo->lo_device))
-+			ret = false;
-+		break;
-+	case 0:
-+	case FALLOC_FL_UNSHARE_RANGE:
-+		if (!bdev_max_provision_sectors(lo->lo_device))
-+			ret = false;
-+		break;
-+
-+	default:
-+		ret = false;
-+	}
-+
-+	return ret;
-+}
-+
-+
- static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
- 			int mode)
- {
-@@ -316,11 +340,7 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
- 	struct file *file = lo->lo_backing_file;
- 	int ret;
- 
--	if (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE) &&
--	    !bdev_max_discard_sectors(lo->lo_device))
--		return -EOPNOTSUPP;
--
--	if (mode == 0 && !bdev_max_provision_sectors(lo->lo_device))
-+	if (!validate_fallocate_mode(lo, mode))
- 		return -EOPNOTSUPP;
- 
- 	mode |= FALLOC_FL_KEEP_SIZE;
-@@ -493,7 +513,10 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 	case REQ_OP_DISCARD:
- 		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
- 	case REQ_OP_PROVISION:
--		return lo_fallocate(lo, rq, pos, 0);
-+		return lo_fallocate(lo, rq, pos,
-+				    (rq->cmd_flags & REQ_UNSHARE) ?
-+					    FALLOC_FL_UNSHARE_RANGE :
-+					    0);
- 	case REQ_OP_WRITE:
- 		if (cmd->use_aio)
- 			return lo_rw_aio(lo, cmd, pos, ITER_SOURCE);
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index b7bb0226fdee..1a536fd897cb 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -423,6 +423,8 @@ enum req_flag_bits {
- 	 */
- 	/* for REQ_OP_WRITE_ZEROES: */
- 	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
-+	/* for REQ_OP_PROVISION: */
-+	__REQ_UNSHARE,		/* unshare blocks */
- 
- 	__REQ_NR_BITS,		/* stops here */
- };
-@@ -451,6 +453,7 @@ enum req_flag_bits {
- #define REQ_FS_PRIVATE	(__force blk_opf_t)(1ULL << __REQ_FS_PRIVATE)
- 
- #define REQ_NOUNMAP	(__force blk_opf_t)(1ULL << __REQ_NOUNMAP)
-+#define REQ_UNSHARE	(__force blk_opf_t)(1ULL << __REQ_UNSHARE)
- 
- #define REQ_FAILFAST_MASK \
- 	(REQ_FAILFAST_DEV | REQ_FAILFAST_TRANSPORT | REQ_FAILFAST_DRIVER)
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 462ce586d46f..60c09b0d3fc9 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1049,10 +1049,11 @@ int blkdev_issue_secure_erase(struct block_device *bdev, sector_t sector,
- 		sector_t nr_sects, gfp_t gfp);
- 
- extern int blkdev_issue_provision(struct block_device *bdev, sector_t sector,
--		sector_t nr_sects, gfp_t gfp_mask);
-+		sector_t nr_sects, gfp_t gfp_mask, unsigned int flags);
- 
- #define BLKDEV_ZERO_NOUNMAP	(1 << 0)  /* do not free blocks */
- #define BLKDEV_ZERO_NOFALLBACK	(1 << 1)  /* don't write explicit zeroes */
-+#define BLKDEV_UNSHARE_RANGE	(1 << 2)  /* unshare range on provision */
- 
- extern int __blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
- 		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop,
--- 
-2.39.2
+Changes compared to v2:
+- For SCSI drivers, only set flag QUEUE_FLAG_SUB_PAGE_SEGMENTS if necessary.
+- In the scsi_debug patch, sorted kernel module parameters alphabetically.
+  Only set flag QUEUE_FLAG_SUB_PAGE_SEGMENTS if necessary.
+- Added a patch for the UFS Exynos driver that enables
+  CONFIG_BLK_SUB_PAGE_SEGMENTS if the page size exceeds 4 KiB.
+
+Changes compared to v1:
+- Added a CONFIG variable that controls whether or not small segment support
+  is enabled.
+- Improved patch descriptions.
+
+Bart Van Assche (9):
+  block: Use pr_info() instead of printk(KERN_INFO ...)
+  block: Prepare for supporting sub-page limits
+  block: Support configuring limits below the page size
+  block: Make sub_page_limit_queues available in debugfs
+  block: Support submitting passthrough requests with small segments
+  block: Add support for filesystem requests and small segments
+  block: Add support for small segments in blk_rq_map_user_iov()
+  scsi_debug: Support configuring the maximum segment size
+  null_blk: Support configuring the maximum segment size
+
+ block/blk-core.c                  |  4 ++
+ block/blk-map.c                   | 29 +++++++---
+ block/blk-merge.c                 |  8 ++-
+ block/blk-mq-debugfs.c            |  9 ++++
+ block/blk-mq-debugfs.h            |  6 +++
+ block/blk-mq.c                    |  2 +
+ block/blk-settings.c              | 88 ++++++++++++++++++++++++++-----
+ block/blk.h                       | 39 +++++++++++---
+ drivers/block/null_blk/main.c     | 19 +++++--
+ drivers/block/null_blk/null_blk.h |  1 +
+ drivers/scsi/scsi_debug.c         |  4 ++
+ include/linux/blkdev.h            |  2 +
+ 12 files changed, 182 insertions(+), 29 deletions(-)
 
