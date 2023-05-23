@@ -2,36 +2,36 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F54B70D61F
-	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 09:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8394E70D61B
+	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 09:55:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232906AbjEWHzj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 May 2023 03:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50116 "EHLO
+        id S234889AbjEWHzh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 May 2023 03:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235910AbjEWHyv (ORCPT
+        with ESMTP id S235913AbjEWHyw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 May 2023 03:54:51 -0400
+        Tue, 23 May 2023 03:54:52 -0400
 Received: from out-62.mta0.migadu.com (out-62.mta0.migadu.com [IPv6:2001:41d0:1004:224b::3e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF6DE6D
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 00:54:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C773810DB
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 00:54:28 -0700 (PDT)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1684828430;
+        t=1684828431;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sZCzhUfPJMUZpZoDesXczamnG+MJY3EOP1raeI+8xVQ=;
-        b=DVp8Tw4jJrvsbrWedJLDSvj6w4xUkGghcA68A/XYrk33Jr+CTJAbQXv8+PpYX6sLOiz+8O
-        ZcB5any/O1dWtRU0ZzanaID8AY3uSt9quEjtVWmrA3RGZui4n2C4p62jC/AcKI6CoITzkB
-        sVtvqjsZQ73FJ7g35iNxfeLMPVxEYWc=
+        bh=vCnegidkaXx+3j2cMu26zMM6pOUuxp3glwwDx2lCE0w=;
+        b=OdhDmdSTYi1pT+F3MdPei5S7CBFuLHYFzJRMsfbFBDe7PFfuWr4SZT4a+tONCZp8ElYOex
+        7Kb055IROOi/fNM1Db9KVioppEchRuy7knv3IT0+S5PFxGBLtoxD/lyKqlv1zio5b+gEUB
+        NzEWLYDWvgNt4JBjptog7ITh2oUrdLk=
 From:   Guoqing Jiang <guoqing.jiang@linux.dev>
 To:     haris.iqbal@ionos.com, jinpu.wang@ionos.com, axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org
-Subject: [PATCH 09/10] block/rnbd-srv: make process_msg_sess_info returns void
-Date:   Tue, 23 May 2023 15:53:30 +0800
-Message-Id: <20230523075331.32250-10-guoqing.jiang@linux.dev>
+Subject: [PATCH 10/10] block/rnbd: change device's name
+Date:   Tue, 23 May 2023 15:53:31 +0800
+Message-Id: <20230523075331.32250-11-guoqing.jiang@linux.dev>
 In-Reply-To: <20230523075331.32250-1-guoqing.jiang@linux.dev>
 References: <20230523075331.32250-1-guoqing.jiang@linux.dev>
 MIME-Version: 1.0
@@ -47,54 +47,41 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Change the return type to void given it always returns 0.
+Both rnbd-srv and rnbd-clt set it with 'clt', which is not
+clear, let's change them to 'clt' and 'srv' accordingly.
 
 Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
 ---
- drivers/block/rnbd/rnbd-srv.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/block/rnbd/rnbd-clt-sysfs.c | 2 +-
+ drivers/block/rnbd/rnbd-srv-sysfs.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 1fdf3366135a..d678ffa50c5c 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -352,7 +352,7 @@ static int process_msg_open(struct rnbd_srv_session *srv_sess,
- 			    const void *msg, size_t len,
- 			    void *data, size_t datalen);
+diff --git a/drivers/block/rnbd/rnbd-clt-sysfs.c b/drivers/block/rnbd/rnbd-clt-sysfs.c
+index a0b49a0c0bdd..f6e2b075d2d5 100644
+--- a/drivers/block/rnbd/rnbd-clt-sysfs.c
++++ b/drivers/block/rnbd/rnbd-clt-sysfs.c
+@@ -652,7 +652,7 @@ int rnbd_clt_create_sysfs_files(void)
  
--static int process_msg_sess_info(struct rnbd_srv_session *srv_sess,
-+static void process_msg_sess_info(struct rnbd_srv_session *srv_sess,
- 				 const void *msg, size_t len,
- 				 void *data, size_t datalen);
+ 	rnbd_dev = device_create_with_groups(rnbd_dev_class, NULL,
+ 					      MKDEV(0, 0), NULL,
+-					      default_attr_groups, "ctl");
++					      default_attr_groups, "clt");
+ 	if (IS_ERR(rnbd_dev)) {
+ 		err = PTR_ERR(rnbd_dev);
+ 		goto cls_destroy;
+diff --git a/drivers/block/rnbd/rnbd-srv-sysfs.c b/drivers/block/rnbd/rnbd-srv-sysfs.c
+index 4962826e9639..f17a4085dfbb 100644
+--- a/drivers/block/rnbd/rnbd-srv-sysfs.c
++++ b/drivers/block/rnbd/rnbd-srv-sysfs.c
+@@ -219,7 +219,7 @@ int rnbd_srv_create_sysfs_files(void)
+ 		return PTR_ERR(rnbd_dev_class);
  
-@@ -380,8 +380,7 @@ static int rnbd_srv_rdma_ev(void *priv, struct rtrs_srv_op *id,
- 		ret = process_msg_open(srv_sess, usr, usrlen, data, datalen);
- 		break;
- 	case RNBD_MSG_SESS_INFO:
--		ret = process_msg_sess_info(srv_sess, usr, usrlen, data,
--					    datalen);
-+		process_msg_sess_info(srv_sess, usr, usrlen, data, datalen);
- 		break;
- 	default:
- 		pr_warn("Received unexpected message type %d from session %s\n",
-@@ -626,7 +625,7 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
- 	return full_path;
- }
- 
--static int process_msg_sess_info(struct rnbd_srv_session *srv_sess,
-+static void process_msg_sess_info(struct rnbd_srv_session *srv_sess,
- 				 const void *msg, size_t len,
- 				 void *data, size_t datalen)
- {
-@@ -639,8 +638,6 @@ static int process_msg_sess_info(struct rnbd_srv_session *srv_sess,
- 
- 	rsp->hdr.type = cpu_to_le16(RNBD_MSG_SESS_INFO_RSP);
- 	rsp->ver = srv_sess->ver;
--
--	return 0;
- }
- 
- /**
+ 	rnbd_dev = device_create(rnbd_dev_class, NULL,
+-				  MKDEV(0, 0), NULL, "ctl");
++				  MKDEV(0, 0), NULL, "srv");
+ 	if (IS_ERR(rnbd_dev)) {
+ 		err = PTR_ERR(rnbd_dev);
+ 		goto cls_destroy;
 -- 
 2.35.3
 
