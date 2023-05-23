@@ -2,66 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D56CB70E7E6
-	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 23:47:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9870670E7EA
+	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 23:48:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238704AbjEWVry (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 May 2023 17:47:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40490 "EHLO
+        id S238713AbjEWVsC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 May 2023 17:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238706AbjEWVrx (ORCPT
+        with ESMTP id S238706AbjEWVsB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 May 2023 17:47:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECDAE4B
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:46:54 -0700 (PDT)
+        Tue, 23 May 2023 17:48:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66FFE56
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:46:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684878413;
+        s=mimecast20190719; t=1684878415;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MN1Mj6eBpYY8Z8esJYe/eZzcU0IgBQTjilHWnZvZdps=;
-        b=hp82CrPbD++aUrsf3id2J3Vtky9voinkLR4YTvMOCYTFI6MIR7CrLxYrb7AgzypHme7ADC
-        vEPx8oxAjlwlYTVM66Lzw2jfk9gMiiO5Aqx08LPWTo1jWgo1kYv0FYZbTq045tw7wWWq64
-        g7hGXFLlWdt4NBcP9Qavc0xV/r+GZX0=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=4PoQn5CJ6lTYrqlWR1RDj23KwauZzAEoi/icFb7ebvU=;
+        b=Maso/cGmCXnMGb+QwXjL0X4FfsM6DgpCMoiarL5k+A5ry3MY3QTP54YTTrvxkL0hzpd7Qg
+        BfMUCOTOvQnIM8i0wKvq6oQqGe/LEi1a+pSR/C3+zZ/pPeEBTmPOg1dvg1UbbJch91+7df
+        oVUv5TSOGGq8FvgARHjbG6XHyK+VjDI=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-269-mAXStK-HMDOyrtKWpgMUVg-1; Tue, 23 May 2023 17:46:52 -0400
-X-MC-Unique: mAXStK-HMDOyrtKWpgMUVg-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-75b2864e571so31992785a.1
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:46:51 -0700 (PDT)
+ us-mta-308-MGH0PbeVPXy6XqWwRmkN9g-1; Tue, 23 May 2023 17:46:53 -0400
+X-MC-Unique: MGH0PbeVPXy6XqWwRmkN9g-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-75b02da6949so31500585a.2
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:46:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684878411; x=1687470411;
+        d=1e100.net; s=20221208; t=1684878413; x=1687470413;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MN1Mj6eBpYY8Z8esJYe/eZzcU0IgBQTjilHWnZvZdps=;
-        b=Kt9hEwxDKZn+WxmhQdWA38/mxbr6SWeppArlVVTPo/UH0qOz70jrUVubGAkI1P+y1N
-         w7+Bf3SlN9VeiQ4tXUYhraUOjSOEBh3XEbAeockBhhhQfp3x8n4MKh88w/A+M7Fnf6wd
-         PyOXtUyGecjnvIp0Fr2I/3US1L3kEgs1cLMeUdD+xffPcjhkZqRTEGk5F70RAqZ0EeGK
-         tEU46QCIn7PRmeX146yHLJmMLZ/YMqjcPezrUr2op3bgXx6rCiTVmI5JB2JMo7ZyyDax
-         QZ1Yn7L8ijkPTJp8cJu92UqLMVjbWKI3CG5XhILn2AJ06MGRmJQ9tYgx1auGQBQkEdNL
-         /Ocw==
-X-Gm-Message-State: AC+VfDwcgKLgrMXhNTNrPKjpkVVZTDotQZ/soKmudRuTqAYwfc9O5Qku
-        YQ1nmSQCovo775JCizANKINkEyNv0gOGf/jR1lVBrcFTn8eiroQjroeprh362njFZqHCClmyWOL
-        M3auhrFEKYxFeuII0FpHIySU=
-X-Received: by 2002:a05:620a:278a:b0:75b:23a1:831d with SMTP id g10-20020a05620a278a00b0075b23a1831dmr6411952qkp.24.1684878410926;
-        Tue, 23 May 2023 14:46:50 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5KbSvGKdBpfi/kQfSDeN1A7HcuLSeQJpxNdwiYTcOknlGRHhEXUjdhShhuIhCIuX2sGE0R8g==
-X-Received: by 2002:a05:620a:278a:b0:75b:23a1:831d with SMTP id g10-20020a05620a278a00b0075b23a1831dmr6411926qkp.24.1684878410315;
-        Tue, 23 May 2023 14:46:50 -0700 (PDT)
+        bh=4PoQn5CJ6lTYrqlWR1RDj23KwauZzAEoi/icFb7ebvU=;
+        b=AUK9LhbY+ege3w/XN05lMcCRetG0Z83nZt7yhhRN47QTwuCF3Pam9AMUp3OxPyNHlt
+         LPZLsMCTklptgThvMd5ndvQdttlcRmZsPktNoaMf3c/YCArCXpm4BM6OoW3NtwO9Doc2
+         n/98pzwgyiTkosrcP70h/dtrDnugPvLQBt4BIIcW8tQ69OZDs26MnDHsgIaRr3iUBTUr
+         QzwCTlrJRt+QSkJKRrRXjti65kZoFDEozALkT8/+dY/ovU25gjUWym4cq6ptEGVzP2qe
+         wZlJf43STKk499nO1i3PaMkExM9i/nmTgVdPwBLOW2AVuWfRysoOxhxzSIuEpq9DFcBP
+         jNpw==
+X-Gm-Message-State: AC+VfDzxgyolYhnEQDD8GJiuJ9kOhzKrRhnQ8FqjxX8yVvtB89B+IYKV
+        Wjq65azQs5t3rqfe7GuOCZoo+2vfonJa2JoiDe06iKNd3Gi2IXiEw11TNWPko2pGMEmy0vgvIZj
+        VJ6mKtNmxGYO2QspL9ciEWQ0=
+X-Received: by 2002:a05:620a:8894:b0:75b:23a1:429 with SMTP id qk20-20020a05620a889400b0075b23a10429mr4348464qkn.63.1684878412012;
+        Tue, 23 May 2023 14:46:52 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5Tk/4jY6rwvlVXVMAKfdsKgfNhIR9OB10RbjXX01rzPNE/Nk2C3edHQtsEfv9/e01lseHn5g==
+X-Received: by 2002:a05:620a:8894:b0:75b:23a1:429 with SMTP id qk20-20020a05620a889400b0075b23a10429mr4348439qkn.63.1684878411192;
+        Tue, 23 May 2023 14:46:51 -0700 (PDT)
 Received: from bf36-1.. (173-166-2-198-newengland.hfc.comcastbusiness.net. [173.166.2.198])
-        by smtp.gmail.com with ESMTPSA id f25-20020a05620a15b900b0075b196ae392sm1489722qkk.104.2023.05.23.14.46.49
+        by smtp.gmail.com with ESMTPSA id f25-20020a05620a15b900b0075b196ae392sm1489722qkk.104.2023.05.23.14.46.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 14:46:49 -0700 (PDT)
+        Tue, 23 May 2023 14:46:50 -0700 (PDT)
 From:   "J. corwin Coburn" <corwin@redhat.com>
 To:     dm-devel@redhat.com, linux-block@vger.kernel.org
 Cc:     vdo-devel@redhat.com, "J. corwin Coburn" <corwin@redhat.com>
-Subject: [PATCH v2 35/39] Add statistics tracking.
-Date:   Tue, 23 May 2023 17:45:35 -0400
-Message-Id: <20230523214539.226387-36-corwin@redhat.com>
+Subject: [PATCH v2 36/39] Add sysfs support for setting vdo parameters and fetching statistics.
+Date:   Tue, 23 May 2023 17:45:36 -0400
+Message-Id: <20230523214539.226387-37-corwin@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230523214539.226387-1-corwin@redhat.com>
 References: <20230523214539.226387-1-corwin@redhat.com>
@@ -79,1546 +79,2399 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 Signed-off-by: J. corwin Coburn <corwin@redhat.com>
 ---
- drivers/md/dm-vdo/message-stats.c | 1222 +++++++++++++++++++++++++++++
- drivers/md/dm-vdo/message-stats.h |   13 +
- drivers/md/dm-vdo/statistics.h    |  279 +++++++
- 3 files changed, 1514 insertions(+)
- create mode 100644 drivers/md/dm-vdo/message-stats.c
- create mode 100644 drivers/md/dm-vdo/message-stats.h
- create mode 100644 drivers/md/dm-vdo/statistics.h
+ drivers/md/dm-vdo/pool-sysfs-stats.c | 2063 ++++++++++++++++++++++++++
+ drivers/md/dm-vdo/pool-sysfs.c       |  193 +++
+ drivers/md/dm-vdo/pool-sysfs.h       |   19 +
+ drivers/md/dm-vdo/sysfs.c            |   84 ++
+ 4 files changed, 2359 insertions(+)
+ create mode 100644 drivers/md/dm-vdo/pool-sysfs-stats.c
+ create mode 100644 drivers/md/dm-vdo/pool-sysfs.c
+ create mode 100644 drivers/md/dm-vdo/pool-sysfs.h
+ create mode 100644 drivers/md/dm-vdo/sysfs.c
 
-diff --git a/drivers/md/dm-vdo/message-stats.c b/drivers/md/dm-vdo/message-stats.c
+diff --git a/drivers/md/dm-vdo/pool-sysfs-stats.c b/drivers/md/dm-vdo/pool-sysfs-stats.c
 new file mode 100644
-index 00000000000..43a37623b90
+index 00000000000..411ea5c143a
 --- /dev/null
-+++ b/drivers/md/dm-vdo/message-stats.c
-@@ -0,0 +1,1222 @@
++++ b/drivers/md/dm-vdo/pool-sysfs-stats.c
+@@ -0,0 +1,2063 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright Red Hat
 + */
 +
-+#include "dedupe.h"
++#include <linux/mutex.h>
++
 +#include "logger.h"
-+#include "memory-alloc.h"
-+#include "message-stats.h"
++#include "string-utils.h"
++
++#include "dedupe.h"
++#include "pool-sysfs.h"
 +#include "statistics.h"
-+#include "thread-device.h"
 +#include "vdo.h"
 +
-+static int write_u64(char *prefix,
-+		     u64 value,
-+		     char *suffix,
-+		     char **buf,
-+		     unsigned int *maxlen)
++struct pool_stats_attribute {
++	struct attribute attr;
++	ssize_t (*print)(struct vdo_statistics *stats, char *buf);
++};
++
++static ssize_t pool_stats_attr_show(struct kobject *directory,
++				    struct attribute *attr,
++				    char *buf)
 +{
-+	int count = scnprintf(*buf, *maxlen, "%s%llu%s",
-+			      prefix == NULL ? "" : prefix,
-+			      value,
-+			      suffix == NULL ? "" : suffix);
-+	*buf += count;
-+	*maxlen -= count;
-+	if (count >= *maxlen)
-+		return VDO_UNEXPECTED_EOF;
-+	return VDO_SUCCESS;
++	ssize_t size;
++	struct pool_stats_attribute *pool_stats_attr =
++		container_of(attr, struct pool_stats_attribute, attr);
++	struct vdo *vdo = container_of(directory, struct vdo, stats_directory);
++
++	if (pool_stats_attr->print == NULL)
++		return -EINVAL;
++
++	mutex_lock(&vdo->stats_mutex);
++	vdo_fetch_statistics(vdo, &vdo->stats_buffer);
++	size = pool_stats_attr->print(&vdo->stats_buffer, buf);
++	mutex_unlock(&vdo->stats_mutex);
++
++	return size;
 +}
 +
-+static int write_u32(char *prefix,
-+		     u32 value,
-+		     char *suffix,
-+		     char **buf,
-+		     unsigned int *maxlen)
++const struct sysfs_ops vdo_pool_stats_sysfs_ops = {
++	.show = pool_stats_attr_show,
++	.store = NULL,
++};
++
++/* Number of blocks used for data */
++static ssize_t
++pool_stats_print_data_blocks_used(struct vdo_statistics *stats, char *buf)
 +{
-+	int count = scnprintf(*buf, *maxlen, "%s%u%s",
-+			      prefix == NULL ? "" : prefix,
-+			      value,
-+			      suffix == NULL ? "" : suffix);
-+	*buf += count;
-+	*maxlen -= count;
-+	if (count >= *maxlen)
-+		return VDO_UNEXPECTED_EOF;
-+	return VDO_SUCCESS;
++	return sprintf(buf, "%llu\n", stats->data_blocks_used);
 +}
 +
-+static int write_block_count_t(char *prefix,
-+			       block_count_t value,
-+			       char *suffix,
-+			       char **buf,
-+			       unsigned int *maxlen)
++static struct pool_stats_attribute pool_stats_attr_data_blocks_used = {
++	.attr = { .name = "data_blocks_used", .mode = 0444, },
++	.print = pool_stats_print_data_blocks_used,
++};
++
++/* Number of blocks used for VDO metadata */
++static ssize_t
++pool_stats_print_overhead_blocks_used(struct vdo_statistics *stats, char *buf)
 +{
-+	int count = scnprintf(*buf, *maxlen, "%s%llu%s",
-+			      prefix == NULL ? "" : prefix,
-+			      value,
-+			      suffix == NULL ? "" : suffix);
-+	*buf += count;
-+	*maxlen -= count;
-+	if (count >= *maxlen)
-+		return VDO_UNEXPECTED_EOF;
-+	return VDO_SUCCESS;
++	return sprintf(buf, "%llu\n", stats->overhead_blocks_used);
 +}
 +
-+static int write_string(char *prefix,
-+			char *value,
-+			char *suffix,
-+			char **buf,
-+			unsigned int *maxlen)
++static struct pool_stats_attribute pool_stats_attr_overhead_blocks_used = {
++	.attr = { .name = "overhead_blocks_used", .mode = 0444, },
++	.print = pool_stats_print_overhead_blocks_used,
++};
++
++/* Number of logical blocks that are currently mapped to physical blocks */
++static ssize_t
++pool_stats_print_logical_blocks_used(struct vdo_statistics *stats, char *buf)
 +{
-+	int count = scnprintf(*buf, *maxlen, "%s%s%s",
-+			      prefix == NULL ? "" : prefix,
-+			      value,
-+			      suffix == NULL ? "" : suffix);
-+	*buf += count;
-+	*maxlen -= count;
-+	if (count >= *maxlen)
-+		return VDO_UNEXPECTED_EOF;
-+	return VDO_SUCCESS;
++	return sprintf(buf, "%llu\n", stats->logical_blocks_used);
 +}
 +
-+static int write_bool(char *prefix,
-+		      bool value,
-+		      char *suffix,
-+		      char **buf,
-+		      unsigned int *maxlen)
++static struct pool_stats_attribute pool_stats_attr_logical_blocks_used = {
++	.attr = { .name = "logical_blocks_used", .mode = 0444, },
++	.print = pool_stats_print_logical_blocks_used,
++};
++
++/* number of physical blocks */
++static ssize_t
++pool_stats_print_physical_blocks(struct vdo_statistics *stats, char *buf)
 +{
-+	int count = scnprintf(*buf, *maxlen, "%s%d%s",
-+			      prefix == NULL ? "" : prefix,
-+			      value,
-+			      suffix == NULL ? "" : suffix);
-+	*buf += count;
-+	*maxlen -= count;
-+	if (count >= *maxlen)
-+		return VDO_UNEXPECTED_EOF;
-+	return VDO_SUCCESS;
++	return sprintf(buf, "%llu\n", stats->physical_blocks);
 +}
 +
-+static int write_u8(char *prefix,
-+		    u8 value,
-+		    char *suffix,
-+		    char **buf,
-+		    unsigned int *maxlen)
++static struct pool_stats_attribute pool_stats_attr_physical_blocks = {
++	.attr = { .name = "physical_blocks", .mode = 0444, },
++	.print = pool_stats_print_physical_blocks,
++};
++
++/* number of logical blocks */
++static ssize_t
++pool_stats_print_logical_blocks(struct vdo_statistics *stats, char *buf)
 +{
-+	int count = scnprintf(*buf, *maxlen, "%s%u%s",
-+			      prefix == NULL ? "" : prefix,
-+			      value,
-+			      suffix == NULL ? "" : suffix);
-+	*buf += count;
-+	*maxlen -= count;
-+	if (count >= *maxlen)
-+		return VDO_UNEXPECTED_EOF;
-+	return VDO_SUCCESS;
++	return sprintf(buf, "%llu\n", stats->logical_blocks);
 +}
 +
-+static int write_block_allocator_statistics(char *prefix,
-+					    struct block_allocator_statistics *stats,
-+					    char *suffix,
-+					    char **buf,
-+					    unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_logical_blocks = {
++	.attr = { .name = "logical_blocks", .mode = 0444, },
++	.print = pool_stats_print_logical_blocks,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The total number of slabs from which blocks may be allocated */
-+	result = write_u64("slabCount : ",
-+			   stats->slab_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The total number of slabs from which blocks have ever been allocated */
-+	result = write_u64("slabsOpened : ",
-+			   stats->slabs_opened,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The number of times since loading that a slab has been re-opened */
-+	result = write_u64("slabsReopened : ",
-+			   stats->slabs_reopened,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Size of the block map page cache, in bytes */
++static ssize_t
++pool_stats_print_block_map_cache_size(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map_cache_size);
 +}
 +
-+static int write_commit_statistics(char *prefix,
-+				   struct commit_statistics *stats,
-+				   char *suffix,
-+				   char **buf,
-+				   unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_block_map_cache_size = {
++	.attr = { .name = "block_map_cache_size", .mode = 0444, },
++	.print = pool_stats_print_block_map_cache_size,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The total number of items on which processing has started */
-+	result = write_u64("started : ",
-+			   stats->started,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The total number of items for which a write operation has been issued */
-+	result = write_u64("written : ",
-+			   stats->written,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The total number of items for which a write operation has completed */
-+	result = write_u64("committed : ",
-+			   stats->committed,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* The physical block size */
++static ssize_t
++pool_stats_print_block_size(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_size);
 +}
 +
-+static int write_recovery_journal_statistics(char *prefix,
-+					     struct recovery_journal_statistics *stats,
-+					     char *suffix,
-+					     char **buf,
-+					     unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_block_size = {
++	.attr = { .name = "block_size", .mode = 0444, },
++	.print = pool_stats_print_block_size,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the on-disk journal was full */
-+	result = write_u64("diskFull : ",
-+			   stats->disk_full,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the recovery journal requested slab journal commits. */
-+	result = write_u64("slabJournalCommitsRequested : ",
-+			   stats->slab_journal_commits_requested,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Write/Commit totals for individual journal entries */
-+	result = write_commit_statistics("entries : ",
-+					 &stats->entries,
-+					 ", ",
-+					 buf,
-+					 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Write/Commit totals for journal blocks */
-+	result = write_commit_statistics("blocks : ",
-+					 &stats->blocks,
-+					 ", ",
-+					 buf,
-+					 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Number of times the VDO has successfully recovered */
++static ssize_t
++pool_stats_print_complete_recoveries(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->complete_recoveries);
 +}
 +
-+static int write_packer_statistics(char *prefix,
-+				   struct packer_statistics *stats,
-+				   char *suffix,
-+				   char **buf,
-+				   unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_complete_recoveries = {
++	.attr = { .name = "complete_recoveries", .mode = 0444, },
++	.print = pool_stats_print_complete_recoveries,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of compressed data items written since startup */
-+	result = write_u64("compressedFragmentsWritten : ",
-+			   stats->compressed_fragments_written,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of blocks containing compressed items written since startup */
-+	result = write_u64("compressedBlocksWritten : ",
-+			   stats->compressed_blocks_written,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of VIOs that are pending in the packer */
-+	result = write_u64("compressedFragmentsInPacker : ",
-+			   stats->compressed_fragments_in_packer,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Number of times the VDO has recovered from read-only mode */
++static ssize_t
++pool_stats_print_read_only_recoveries(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->read_only_recoveries);
 +}
 +
-+static int write_slab_journal_statistics(char *prefix,
-+					 struct slab_journal_statistics *stats,
-+					 char *suffix,
-+					 char **buf,
-+					 unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_read_only_recoveries = {
++	.attr = { .name = "read_only_recoveries", .mode = 0444, },
++	.print = pool_stats_print_read_only_recoveries,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the on-disk journal was full */
-+	result = write_u64("diskFullCount : ",
-+			   stats->disk_full_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times an entry was added over the flush threshold */
-+	result = write_u64("flushCount : ",
-+			   stats->flush_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times an entry was added over the block threshold */
-+	result = write_u64("blockedCount : ",
-+			   stats->blocked_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times a tail block was written */
-+	result = write_u64("blocksWritten : ",
-+			   stats->blocks_written,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times we had to wait for the tail to write */
-+	result = write_u64("tailBusyCount : ",
-+			   stats->tail_busy_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* String describing the operating mode of the VDO */
++static ssize_t
++pool_stats_print_mode(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%s\n", stats->mode);
 +}
 +
-+static int write_slab_summary_statistics(char *prefix,
-+					 struct slab_summary_statistics *stats,
-+					 char *suffix,
-+					 char **buf,
-+					 unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_mode = {
++	.attr = { .name = "mode", .mode = 0444, },
++	.print = pool_stats_print_mode,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of blocks written */
-+	result = write_u64("blocksWritten : ",
-+			   stats->blocks_written,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Whether the VDO is in recovery mode */
++static ssize_t
++pool_stats_print_in_recovery_mode(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%d\n", stats->in_recovery_mode);
 +}
 +
-+static int write_ref_counts_statistics(char *prefix,
-+				       struct ref_counts_statistics *stats,
-+				       char *suffix,
-+				       char **buf,
-+				       unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_in_recovery_mode = {
++	.attr = { .name = "in_recovery_mode", .mode = 0444, },
++	.print = pool_stats_print_in_recovery_mode,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of reference blocks written */
-+	result = write_u64("blocksWritten : ",
-+			   stats->blocks_written,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* What percentage of recovery mode work has been completed */
++static ssize_t
++pool_stats_print_recovery_percentage(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->recovery_percentage);
 +}
 +
-+static int write_block_map_statistics(char *prefix,
-+				      struct block_map_statistics *stats,
-+				      char *suffix,
-+				      char **buf,
-+				      unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_recovery_percentage = {
++	.attr = { .name = "recovery_percentage", .mode = 0444, },
++	.print = pool_stats_print_recovery_percentage,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of dirty (resident) pages */
-+	result = write_u32("dirtyPages : ",
-+			   stats->dirty_pages,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of clean (resident) pages */
-+	result = write_u32("cleanPages : ",
-+			   stats->clean_pages,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of free pages */
-+	result = write_u32("freePages : ",
-+			   stats->free_pages,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of pages in failed state */
-+	result = write_u32("failedPages : ",
-+			   stats->failed_pages,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of pages incoming */
-+	result = write_u32("incomingPages : ",
-+			   stats->incoming_pages,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of pages outgoing */
-+	result = write_u32("outgoingPages : ",
-+			   stats->outgoing_pages,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* how many times free page not avail */
-+	result = write_u32("cachePressure : ",
-+			   stats->cache_pressure,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of get_vdo_page() calls for read */
-+	result = write_u64("readCount : ",
-+			   stats->read_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of get_vdo_page() calls for write */
-+	result = write_u64("writeCount : ",
-+			   stats->write_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of times pages failed to read */
-+	result = write_u64("failedReads : ",
-+			   stats->failed_reads,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of times pages failed to write */
-+	result = write_u64("failedWrites : ",
-+			   stats->failed_writes,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of gets that are reclaimed */
-+	result = write_u64("reclaimed : ",
-+			   stats->reclaimed,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of gets for outgoing pages */
-+	result = write_u64("readOutgoing : ",
-+			   stats->read_outgoing,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of gets that were already there */
-+	result = write_u64("foundInCache : ",
-+			   stats->found_in_cache,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of gets requiring discard */
-+	result = write_u64("discardRequired : ",
-+			   stats->discard_required,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of gets enqueued for their page */
-+	result = write_u64("waitForPage : ",
-+			   stats->wait_for_page,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of gets that have to fetch */
-+	result = write_u64("fetchRequired : ",
-+			   stats->fetch_required,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of page fetches */
-+	result = write_u64("pagesLoaded : ",
-+			   stats->pages_loaded,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of page saves */
-+	result = write_u64("pagesSaved : ",
-+			   stats->pages_saved,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* the number of flushes issued */
-+	result = write_u64("flushCount : ",
-+			   stats->flush_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Number of compressed data items written since startup */
++static ssize_t
++pool_stats_print_packer_compressed_fragments_written(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->packer.compressed_fragments_written);
 +}
 +
-+static int write_hash_lock_statistics(char *prefix,
-+				      struct hash_lock_statistics *stats,
-+				      char *suffix,
-+				      char **buf,
-+				      unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_packer_compressed_fragments_written = {
++	.attr = { .name = "packer_compressed_fragments_written", .mode = 0444, },
++	.print = pool_stats_print_packer_compressed_fragments_written,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the UDS advice proved correct */
-+	result = write_u64("dedupeAdviceValid : ",
-+			   stats->dedupe_advice_valid,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the UDS advice proved incorrect */
-+	result = write_u64("dedupeAdviceStale : ",
-+			   stats->dedupe_advice_stale,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of writes with the same data as another in-flight write */
-+	result = write_u64("concurrentDataMatches : ",
-+			   stats->concurrent_data_matches,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of writes whose hash collided with an in-flight write */
-+	result = write_u64("concurrentHashCollisions : ",
-+			   stats->concurrent_hash_collisions,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Current number of dedupe queries that are in flight */
-+	result = write_u32("currDedupeQueries : ",
-+			   stats->curr_dedupe_queries,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Number of blocks containing compressed items written since startup */
++static ssize_t
++pool_stats_print_packer_compressed_blocks_written(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->packer.compressed_blocks_written);
 +}
 +
-+static int write_error_statistics(char *prefix,
-+				  struct error_statistics *stats,
-+				  char *suffix,
-+				  char **buf,
-+				  unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_packer_compressed_blocks_written = {
++	.attr = { .name = "packer_compressed_blocks_written", .mode = 0444, },
++	.print = pool_stats_print_packer_compressed_blocks_written,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of times VDO got an invalid dedupe advice PBN from UDS */
-+	result = write_u64("invalidAdvicePBNCount : ",
-+			   stats->invalid_advice_pbn_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of times a VIO completed with a VDO_NO_SPACE error */
-+	result = write_u64("noSpaceErrorCount : ",
-+			   stats->no_space_error_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of times a VIO completed with a VDO_READ_ONLY error */
-+	result = write_u64("readOnlyErrorCount : ",
-+			   stats->read_only_error_count,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Number of VIOs that are pending in the packer */
++static ssize_t
++pool_stats_print_packer_compressed_fragments_in_packer(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->packer.compressed_fragments_in_packer);
 +}
 +
-+static int write_bio_stats(char *prefix,
-+			   struct bio_stats *stats,
-+			   char *suffix,
-+			   char **buf,
-+			   unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_packer_compressed_fragments_in_packer = {
++	.attr = { .name = "packer_compressed_fragments_in_packer", .mode = 0444, },
++	.print = pool_stats_print_packer_compressed_fragments_in_packer,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of REQ_OP_READ bios */
-+	result = write_u64("read : ",
-+			   stats->read,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of REQ_OP_WRITE bios with data */
-+	result = write_u64("write : ",
-+			   stats->write,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of bios tagged with REQ_PREFLUSH and containing no data */
-+	result = write_u64("emptyFlush : ",
-+			   stats->empty_flush,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of REQ_OP_DISCARD bios */
-+	result = write_u64("discard : ",
-+			   stats->discard,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of bios tagged with REQ_PREFLUSH */
-+	result = write_u64("flush : ",
-+			   stats->flush,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of bios tagged with REQ_FUA */
-+	result = write_u64("fua : ",
-+			   stats->fua,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* The total number of slabs from which blocks may be allocated */
++static ssize_t
++pool_stats_print_allocator_slab_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->allocator.slab_count);
 +}
 +
-+static int write_memory_usage(char *prefix,
-+			      struct memory_usage *stats,
-+			      char *suffix,
-+			      char **buf,
-+			      unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_allocator_slab_count = {
++	.attr = { .name = "allocator_slab_count", .mode = 0444, },
++	.print = pool_stats_print_allocator_slab_count,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Tracked bytes currently allocated. */
-+	result = write_u64("bytesUsed : ",
-+			   stats->bytes_used,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Maximum tracked bytes allocated. */
-+	result = write_u64("peakBytesUsed : ",
-+			   stats->peak_bytes_used,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* The total number of slabs from which blocks have ever been allocated */
++static ssize_t
++pool_stats_print_allocator_slabs_opened(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->allocator.slabs_opened);
 +}
 +
-+static int write_index_statistics(char *prefix,
-+				  struct index_statistics *stats,
-+				  char *suffix,
-+				  char **buf,
-+				  unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_allocator_slabs_opened = {
++	.attr = { .name = "allocator_slabs_opened", .mode = 0444, },
++	.print = pool_stats_print_allocator_slabs_opened,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of records stored in the index */
-+	result = write_u64("entriesIndexed : ",
-+			   stats->entries_indexed,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of post calls that found an existing entry */
-+	result = write_u64("postsFound : ",
-+			   stats->posts_found,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of post calls that added a new entry */
-+	result = write_u64("postsNotFound : ",
-+			   stats->posts_not_found,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of query calls that found an existing entry */
-+	result = write_u64("queriesFound : ",
-+			   stats->queries_found,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of query calls that added a new entry */
-+	result = write_u64("queriesNotFound : ",
-+			   stats->queries_not_found,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of update calls that found an existing entry */
-+	result = write_u64("updatesFound : ",
-+			   stats->updates_found,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of update calls that added a new entry */
-+	result = write_u64("updatesNotFound : ",
-+			   stats->updates_not_found,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of entries discarded */
-+	result = write_u64("entriesDiscarded : ",
-+			   stats->entries_discarded,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* The number of times since loading that a slab has been re-opened */
++static ssize_t
++pool_stats_print_allocator_slabs_reopened(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->allocator.slabs_reopened);
 +}
 +
-+static int write_vdo_statistics(char *prefix,
-+				struct vdo_statistics *stats,
-+				char *suffix,
-+				char **buf,
-+				unsigned int *maxlen)
-+{
-+	int result;
++static struct pool_stats_attribute pool_stats_attr_allocator_slabs_reopened = {
++	.attr = { .name = "allocator_slabs_reopened", .mode = 0444, },
++	.print = pool_stats_print_allocator_slabs_reopened,
++};
 +
-+	result = write_string(prefix, "{ ", NULL, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_u32("version : ",
-+			   stats->version,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_u32("releaseVersion : ",
-+			   stats->release_version,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of blocks used for data */
-+	result = write_u64("dataBlocksUsed : ",
-+			   stats->data_blocks_used,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of blocks used for VDO metadata */
-+	result = write_u64("overheadBlocksUsed : ",
-+			   stats->overhead_blocks_used,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of logical blocks that are currently mapped to physical blocks */
-+	result = write_u64("logicalBlocksUsed : ",
-+			   stats->logical_blocks_used,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of physical blocks */
-+	result = write_block_count_t("physicalBlocks : ",
-+				     stats->physical_blocks,
-+				     ", ",
-+				     buf,
-+				     maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* number of logical blocks */
-+	result = write_block_count_t("logicalBlocks : ",
-+				     stats->logical_blocks,
-+				     ", ",
-+				     buf,
-+				     maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Size of the block map page cache, in bytes */
-+	result = write_u64("blockMapCacheSize : ",
-+			   stats->block_map_cache_size,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The physical block size */
-+	result = write_u64("blockSize : ",
-+			   stats->block_size,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the VDO has successfully recovered */
-+	result = write_u64("completeRecoveries : ",
-+			   stats->complete_recoveries,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the VDO has recovered from read-only mode */
-+	result = write_u64("readOnlyRecoveries : ",
-+			   stats->read_only_recoveries,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* String describing the operating mode of the VDO */
-+	result = write_string("mode : ",
-+			      stats->mode,
-+			      ", ",
-+			      buf,
-+			      maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Whether the VDO is in recovery mode */
-+	result = write_bool("inRecoveryMode : ",
-+			    stats->in_recovery_mode,
-+			    ", ",
-+			    buf,
-+			    maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* What percentage of recovery mode work has been completed */
-+	result = write_u8("recoveryPercentage : ",
-+			  stats->recovery_percentage,
-+			  ", ",
-+			  buf,
-+			  maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The statistics for the compressed block packer */
-+	result = write_packer_statistics("packer : ",
-+					 &stats->packer,
-+					 ", ",
-+					 buf,
-+					 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Counters for events in the block allocator */
-+	result = write_block_allocator_statistics("allocator : ",
-+						  &stats->allocator,
-+						  ", ",
-+						  buf,
-+						  maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Counters for events in the recovery journal */
-+	result = write_recovery_journal_statistics("journal : ",
-+						   &stats->journal,
-+						   ", ",
-+						   buf,
-+						   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The statistics for the slab journals */
-+	result = write_slab_journal_statistics("slabJournal : ",
-+					       &stats->slab_journal,
-+					       ", ",
-+					       buf,
-+					       maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The statistics for the slab summary */
-+	result = write_slab_summary_statistics("slabSummary : ",
-+					       &stats->slab_summary,
-+					       ", ",
-+					       buf,
-+					       maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The statistics for the reference counts */
-+	result = write_ref_counts_statistics("refCounts : ",
-+					     &stats->ref_counts,
-+					     ", ",
-+					     buf,
-+					     maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The statistics for the block map */
-+	result = write_block_map_statistics("blockMap : ",
-+					    &stats->block_map,
-+					    ", ",
-+					    buf,
-+					    maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The dedupe statistics from hash locks */
-+	result = write_hash_lock_statistics("hashLock : ",
-+					    &stats->hash_lock,
-+					    ", ",
-+					    buf,
-+					    maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Counts of error conditions */
-+	result = write_error_statistics("errors : ",
-+					&stats->errors,
-+					", ",
-+					buf,
-+					maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The VDO instance */
-+	result = write_u32("instance : ",
-+			   stats->instance,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Current number of active VIOs */
-+	result = write_u32("currentVIOsInProgress : ",
-+			   stats->current_vios_in_progress,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Maximum number of active VIOs */
-+	result = write_u32("maxVIOs : ",
-+			   stats->max_vios,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of times the UDS index was too slow in responding */
-+	result = write_u64("dedupeAdviceTimeouts : ",
-+			   stats->dedupe_advice_timeouts,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Number of flush requests submitted to the storage device */
-+	result = write_u64("flushOut : ",
-+			   stats->flush_out,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Logical block size */
-+	result = write_u64("logicalBlockSize : ",
-+			   stats->logical_block_size,
-+			   ", ",
-+			   buf,
-+			   maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Bios submitted into VDO from above */
-+	result = write_bio_stats("biosIn : ",
-+				 &stats->bios_in,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosInPartial : ",
-+				 &stats->bios_in_partial,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Bios submitted onward for user data */
-+	result = write_bio_stats("biosOut : ",
-+				 &stats->bios_out,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Bios submitted onward for metadata */
-+	result = write_bio_stats("biosMeta : ",
-+				 &stats->bios_meta,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosJournal : ",
-+				 &stats->bios_journal,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosPageCache : ",
-+				 &stats->bios_page_cache,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosOutCompleted : ",
-+				 &stats->bios_out_completed,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosMetaCompleted : ",
-+				 &stats->bios_meta_completed,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosJournalCompleted : ",
-+				 &stats->bios_journal_completed,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosPageCacheCompleted : ",
-+				 &stats->bios_page_cache_completed,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosAcknowledged : ",
-+				 &stats->bios_acknowledged,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_bio_stats("biosAcknowledgedPartial : ",
-+				 &stats->bios_acknowledged_partial,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Current number of bios in progress */
-+	result = write_bio_stats("biosInProgress : ",
-+				 &stats->bios_in_progress,
-+				 ", ",
-+				 buf,
-+				 maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* Memory usage stats. */
-+	result = write_memory_usage("memoryUsage : ",
-+				    &stats->memory_usage,
-+				    ", ",
-+				    buf,
-+				    maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	/* The statistics for the UDS index */
-+	result = write_index_statistics("index : ",
-+					&stats->index,
-+					", ",
-+					buf,
-+					maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	result = write_string(NULL, "}", suffix, buf, maxlen);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+	return VDO_SUCCESS;
++/* Number of times the on-disk journal was full */
++static ssize_t
++pool_stats_print_journal_disk_full(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->journal.disk_full);
 +}
 +
-+int vdo_write_stats(struct vdo *vdo,
-+		    char *buf,
-+		    unsigned int maxlen)
++static struct pool_stats_attribute pool_stats_attr_journal_disk_full = {
++	.attr = { .name = "journal_disk_full", .mode = 0444, },
++	.print = pool_stats_print_journal_disk_full,
++};
++
++/* Number of times the recovery journal requested slab journal commits. */
++static ssize_t
++pool_stats_print_journal_slab_journal_commits_requested(struct vdo_statistics *stats, char *buf)
 +{
-+	struct vdo_statistics *stats;
-+	int result;
-+
-+	result = UDS_ALLOCATE(1, struct vdo_statistics, __func__, &stats);
-+	if (result != VDO_SUCCESS)
-+		return result;
-+
-+	vdo_fetch_statistics(vdo, stats);
-+	result = write_vdo_statistics(NULL, stats, NULL, &buf, &maxlen);
-+	UDS_FREE(stats);
-+	return result;
++	return sprintf(buf, "%llu\n", stats->journal.slab_journal_commits_requested);
 +}
-diff --git a/drivers/md/dm-vdo/message-stats.h b/drivers/md/dm-vdo/message-stats.h
++
++static struct pool_stats_attribute pool_stats_attr_journal_slab_journal_commits_requested = {
++	.attr = { .name = "journal_slab_journal_commits_requested", .mode = 0444, },
++	.print = pool_stats_print_journal_slab_journal_commits_requested,
++};
++
++/* The total number of items on which processing has started */
++static ssize_t
++pool_stats_print_journal_entries_started(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->journal.entries.started);
++}
++
++static struct pool_stats_attribute pool_stats_attr_journal_entries_started = {
++	.attr = { .name = "journal_entries_started", .mode = 0444, },
++	.print = pool_stats_print_journal_entries_started,
++};
++
++/* The total number of items for which a write operation has been issued */
++static ssize_t
++pool_stats_print_journal_entries_written(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->journal.entries.written);
++}
++
++static struct pool_stats_attribute pool_stats_attr_journal_entries_written = {
++	.attr = { .name = "journal_entries_written", .mode = 0444, },
++	.print = pool_stats_print_journal_entries_written,
++};
++
++/* The total number of items for which a write operation has completed */
++static ssize_t
++pool_stats_print_journal_entries_committed(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->journal.entries.committed);
++}
++
++static struct pool_stats_attribute pool_stats_attr_journal_entries_committed = {
++	.attr = { .name = "journal_entries_committed", .mode = 0444, },
++	.print = pool_stats_print_journal_entries_committed,
++};
++
++/* The total number of items on which processing has started */
++static ssize_t
++pool_stats_print_journal_blocks_started(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->journal.blocks.started);
++}
++
++static struct pool_stats_attribute pool_stats_attr_journal_blocks_started = {
++	.attr = { .name = "journal_blocks_started", .mode = 0444, },
++	.print = pool_stats_print_journal_blocks_started,
++};
++
++/* The total number of items for which a write operation has been issued */
++static ssize_t
++pool_stats_print_journal_blocks_written(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->journal.blocks.written);
++}
++
++static struct pool_stats_attribute pool_stats_attr_journal_blocks_written = {
++	.attr = { .name = "journal_blocks_written", .mode = 0444, },
++	.print = pool_stats_print_journal_blocks_written,
++};
++
++/* The total number of items for which a write operation has completed */
++static ssize_t
++pool_stats_print_journal_blocks_committed(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->journal.blocks.committed);
++}
++
++static struct pool_stats_attribute pool_stats_attr_journal_blocks_committed = {
++	.attr = { .name = "journal_blocks_committed", .mode = 0444, },
++	.print = pool_stats_print_journal_blocks_committed,
++};
++
++/* Number of times the on-disk journal was full */
++static ssize_t
++pool_stats_print_slab_journal_disk_full_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->slab_journal.disk_full_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_slab_journal_disk_full_count = {
++	.attr = { .name = "slab_journal_disk_full_count", .mode = 0444, },
++	.print = pool_stats_print_slab_journal_disk_full_count,
++};
++
++/* Number of times an entry was added over the flush threshold */
++static ssize_t
++pool_stats_print_slab_journal_flush_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->slab_journal.flush_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_slab_journal_flush_count = {
++	.attr = { .name = "slab_journal_flush_count", .mode = 0444, },
++	.print = pool_stats_print_slab_journal_flush_count,
++};
++
++/* Number of times an entry was added over the block threshold */
++static ssize_t
++pool_stats_print_slab_journal_blocked_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->slab_journal.blocked_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_slab_journal_blocked_count = {
++	.attr = { .name = "slab_journal_blocked_count", .mode = 0444, },
++	.print = pool_stats_print_slab_journal_blocked_count,
++};
++
++/* Number of times a tail block was written */
++static ssize_t
++pool_stats_print_slab_journal_blocks_written(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->slab_journal.blocks_written);
++}
++
++static struct pool_stats_attribute pool_stats_attr_slab_journal_blocks_written = {
++	.attr = { .name = "slab_journal_blocks_written", .mode = 0444, },
++	.print = pool_stats_print_slab_journal_blocks_written,
++};
++
++/* Number of times we had to wait for the tail to write */
++static ssize_t
++pool_stats_print_slab_journal_tail_busy_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->slab_journal.tail_busy_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_slab_journal_tail_busy_count = {
++	.attr = { .name = "slab_journal_tail_busy_count", .mode = 0444, },
++	.print = pool_stats_print_slab_journal_tail_busy_count,
++};
++
++/* Number of blocks written */
++static ssize_t
++pool_stats_print_slab_summary_blocks_written(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->slab_summary.blocks_written);
++}
++
++static struct pool_stats_attribute pool_stats_attr_slab_summary_blocks_written = {
++	.attr = { .name = "slab_summary_blocks_written", .mode = 0444, },
++	.print = pool_stats_print_slab_summary_blocks_written,
++};
++
++/* Number of reference blocks written */
++static ssize_t
++pool_stats_print_ref_counts_blocks_written(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->ref_counts.blocks_written);
++}
++
++static struct pool_stats_attribute pool_stats_attr_ref_counts_blocks_written = {
++	.attr = { .name = "ref_counts_blocks_written", .mode = 0444, },
++	.print = pool_stats_print_ref_counts_blocks_written,
++};
++
++/* number of dirty (resident) pages */
++static ssize_t
++pool_stats_print_block_map_dirty_pages(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->block_map.dirty_pages);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_dirty_pages = {
++	.attr = { .name = "block_map_dirty_pages", .mode = 0444, },
++	.print = pool_stats_print_block_map_dirty_pages,
++};
++
++/* number of clean (resident) pages */
++static ssize_t
++pool_stats_print_block_map_clean_pages(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->block_map.clean_pages);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_clean_pages = {
++	.attr = { .name = "block_map_clean_pages", .mode = 0444, },
++	.print = pool_stats_print_block_map_clean_pages,
++};
++
++/* number of free pages */
++static ssize_t
++pool_stats_print_block_map_free_pages(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->block_map.free_pages);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_free_pages = {
++	.attr = { .name = "block_map_free_pages", .mode = 0444, },
++	.print = pool_stats_print_block_map_free_pages,
++};
++
++/* number of pages in failed state */
++static ssize_t
++pool_stats_print_block_map_failed_pages(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->block_map.failed_pages);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_failed_pages = {
++	.attr = { .name = "block_map_failed_pages", .mode = 0444, },
++	.print = pool_stats_print_block_map_failed_pages,
++};
++
++/* number of pages incoming */
++static ssize_t
++pool_stats_print_block_map_incoming_pages(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->block_map.incoming_pages);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_incoming_pages = {
++	.attr = { .name = "block_map_incoming_pages", .mode = 0444, },
++	.print = pool_stats_print_block_map_incoming_pages,
++};
++
++/* number of pages outgoing */
++static ssize_t
++pool_stats_print_block_map_outgoing_pages(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->block_map.outgoing_pages);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_outgoing_pages = {
++	.attr = { .name = "block_map_outgoing_pages", .mode = 0444, },
++	.print = pool_stats_print_block_map_outgoing_pages,
++};
++
++/* how many times free page not avail */
++static ssize_t
++pool_stats_print_block_map_cache_pressure(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->block_map.cache_pressure);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_cache_pressure = {
++	.attr = { .name = "block_map_cache_pressure", .mode = 0444, },
++	.print = pool_stats_print_block_map_cache_pressure,
++};
++
++/* number of get_vdo_page() calls for read */
++static ssize_t
++pool_stats_print_block_map_read_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.read_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_read_count = {
++	.attr = { .name = "block_map_read_count", .mode = 0444, },
++	.print = pool_stats_print_block_map_read_count,
++};
++
++/* number of get_vdo_page() calls for write */
++static ssize_t
++pool_stats_print_block_map_write_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.write_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_write_count = {
++	.attr = { .name = "block_map_write_count", .mode = 0444, },
++	.print = pool_stats_print_block_map_write_count,
++};
++
++/* number of times pages failed to read */
++static ssize_t
++pool_stats_print_block_map_failed_reads(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.failed_reads);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_failed_reads = {
++	.attr = { .name = "block_map_failed_reads", .mode = 0444, },
++	.print = pool_stats_print_block_map_failed_reads,
++};
++
++/* number of times pages failed to write */
++static ssize_t
++pool_stats_print_block_map_failed_writes(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.failed_writes);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_failed_writes = {
++	.attr = { .name = "block_map_failed_writes", .mode = 0444, },
++	.print = pool_stats_print_block_map_failed_writes,
++};
++
++/* number of gets that are reclaimed */
++static ssize_t
++pool_stats_print_block_map_reclaimed(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.reclaimed);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_reclaimed = {
++	.attr = { .name = "block_map_reclaimed", .mode = 0444, },
++	.print = pool_stats_print_block_map_reclaimed,
++};
++
++/* number of gets for outgoing pages */
++static ssize_t
++pool_stats_print_block_map_read_outgoing(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.read_outgoing);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_read_outgoing = {
++	.attr = { .name = "block_map_read_outgoing", .mode = 0444, },
++	.print = pool_stats_print_block_map_read_outgoing,
++};
++
++/* number of gets that were already there */
++static ssize_t
++pool_stats_print_block_map_found_in_cache(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.found_in_cache);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_found_in_cache = {
++	.attr = { .name = "block_map_found_in_cache", .mode = 0444, },
++	.print = pool_stats_print_block_map_found_in_cache,
++};
++
++/* number of gets requiring discard */
++static ssize_t
++pool_stats_print_block_map_discard_required(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.discard_required);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_discard_required = {
++	.attr = { .name = "block_map_discard_required", .mode = 0444, },
++	.print = pool_stats_print_block_map_discard_required,
++};
++
++/* number of gets enqueued for their page */
++static ssize_t
++pool_stats_print_block_map_wait_for_page(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.wait_for_page);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_wait_for_page = {
++	.attr = { .name = "block_map_wait_for_page", .mode = 0444, },
++	.print = pool_stats_print_block_map_wait_for_page,
++};
++
++/* number of gets that have to fetch */
++static ssize_t
++pool_stats_print_block_map_fetch_required(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.fetch_required);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_fetch_required = {
++	.attr = { .name = "block_map_fetch_required", .mode = 0444, },
++	.print = pool_stats_print_block_map_fetch_required,
++};
++
++/* number of page fetches */
++static ssize_t
++pool_stats_print_block_map_pages_loaded(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.pages_loaded);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_pages_loaded = {
++	.attr = { .name = "block_map_pages_loaded", .mode = 0444, },
++	.print = pool_stats_print_block_map_pages_loaded,
++};
++
++/* number of page saves */
++static ssize_t
++pool_stats_print_block_map_pages_saved(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.pages_saved);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_pages_saved = {
++	.attr = { .name = "block_map_pages_saved", .mode = 0444, },
++	.print = pool_stats_print_block_map_pages_saved,
++};
++
++/* the number of flushes issued */
++static ssize_t
++pool_stats_print_block_map_flush_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->block_map.flush_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_block_map_flush_count = {
++	.attr = { .name = "block_map_flush_count", .mode = 0444, },
++	.print = pool_stats_print_block_map_flush_count,
++};
++
++/* Number of times the UDS advice proved correct */
++static ssize_t
++pool_stats_print_hash_lock_dedupe_advice_valid(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->hash_lock.dedupe_advice_valid);
++}
++
++static struct pool_stats_attribute pool_stats_attr_hash_lock_dedupe_advice_valid = {
++	.attr = { .name = "hash_lock_dedupe_advice_valid", .mode = 0444, },
++	.print = pool_stats_print_hash_lock_dedupe_advice_valid,
++};
++
++/* Number of times the UDS advice proved incorrect */
++static ssize_t
++pool_stats_print_hash_lock_dedupe_advice_stale(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->hash_lock.dedupe_advice_stale);
++}
++
++static struct pool_stats_attribute pool_stats_attr_hash_lock_dedupe_advice_stale = {
++	.attr = { .name = "hash_lock_dedupe_advice_stale", .mode = 0444, },
++	.print = pool_stats_print_hash_lock_dedupe_advice_stale,
++};
++
++/* Number of writes with the same data as another in-flight write */
++static ssize_t
++pool_stats_print_hash_lock_concurrent_data_matches(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->hash_lock.concurrent_data_matches);
++}
++
++static struct pool_stats_attribute pool_stats_attr_hash_lock_concurrent_data_matches = {
++	.attr = { .name = "hash_lock_concurrent_data_matches", .mode = 0444, },
++	.print = pool_stats_print_hash_lock_concurrent_data_matches,
++};
++
++/* Number of writes whose hash collided with an in-flight write */
++static ssize_t
++pool_stats_print_hash_lock_concurrent_hash_collisions(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->hash_lock.concurrent_hash_collisions);
++}
++
++static struct pool_stats_attribute pool_stats_attr_hash_lock_concurrent_hash_collisions = {
++	.attr = { .name = "hash_lock_concurrent_hash_collisions", .mode = 0444, },
++	.print = pool_stats_print_hash_lock_concurrent_hash_collisions,
++};
++
++/* Current number of dedupe queries that are in flight */
++static ssize_t
++pool_stats_print_hash_lock_curr_dedupe_queries(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->hash_lock.curr_dedupe_queries);
++}
++
++static struct pool_stats_attribute pool_stats_attr_hash_lock_curr_dedupe_queries = {
++	.attr = { .name = "hash_lock_curr_dedupe_queries", .mode = 0444, },
++	.print = pool_stats_print_hash_lock_curr_dedupe_queries,
++};
++
++/* number of times VDO got an invalid dedupe advice PBN from UDS */
++static ssize_t
++pool_stats_print_errors_invalid_advice_pbn_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->errors.invalid_advice_pbn_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_errors_invalid_advice_pbn_count = {
++	.attr = { .name = "errors_invalid_advice_pbn_count", .mode = 0444, },
++	.print = pool_stats_print_errors_invalid_advice_pbn_count,
++};
++
++/* number of times a VIO completed with a VDO_NO_SPACE error */
++static ssize_t
++pool_stats_print_errors_no_space_error_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->errors.no_space_error_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_errors_no_space_error_count = {
++	.attr = { .name = "errors_no_space_error_count", .mode = 0444, },
++	.print = pool_stats_print_errors_no_space_error_count,
++};
++
++/* number of times a VIO completed with a VDO_READ_ONLY error */
++static ssize_t
++pool_stats_print_errors_read_only_error_count(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->errors.read_only_error_count);
++}
++
++static struct pool_stats_attribute pool_stats_attr_errors_read_only_error_count = {
++	.attr = { .name = "errors_read_only_error_count", .mode = 0444, },
++	.print = pool_stats_print_errors_read_only_error_count,
++};
++
++/* The VDO instance */
++static ssize_t
++pool_stats_print_instance(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->instance);
++}
++
++static struct pool_stats_attribute pool_stats_attr_instance = {
++	.attr = { .name = "instance", .mode = 0444, },
++	.print = pool_stats_print_instance,
++};
++
++/* Current number of active VIOs */
++static ssize_t
++pool_stats_print_current_vios_in_progress(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->current_vios_in_progress);
++}
++
++static struct pool_stats_attribute pool_stats_attr_current_vios_in_progress = {
++	.attr = { .name = "current_vios_in_progress", .mode = 0444, },
++	.print = pool_stats_print_current_vios_in_progress,
++};
++
++/* Maximum number of active VIOs */
++static ssize_t
++pool_stats_print_max_vios(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%u\n", stats->max_vios);
++}
++
++static struct pool_stats_attribute pool_stats_attr_max_vios = {
++	.attr = { .name = "max_vios", .mode = 0444, },
++	.print = pool_stats_print_max_vios,
++};
++
++/* Number of times the UDS index was too slow in responding */
++static ssize_t
++pool_stats_print_dedupe_advice_timeouts(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->dedupe_advice_timeouts);
++}
++
++static struct pool_stats_attribute pool_stats_attr_dedupe_advice_timeouts = {
++	.attr = { .name = "dedupe_advice_timeouts", .mode = 0444, },
++	.print = pool_stats_print_dedupe_advice_timeouts,
++};
++
++/* Number of flush requests submitted to the storage device */
++static ssize_t
++pool_stats_print_flush_out(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->flush_out);
++}
++
++static struct pool_stats_attribute pool_stats_attr_flush_out = {
++	.attr = { .name = "flush_out", .mode = 0444, },
++	.print = pool_stats_print_flush_out,
++};
++
++/* Logical block size */
++static ssize_t
++pool_stats_print_logical_block_size(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->logical_block_size);
++}
++
++static struct pool_stats_attribute pool_stats_attr_logical_block_size = {
++	.attr = { .name = "logical_block_size", .mode = 0444, },
++	.print = pool_stats_print_logical_block_size,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_in_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_read = {
++	.attr = { .name = "bios_in_read", .mode = 0444, },
++	.print = pool_stats_print_bios_in_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_in_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_write = {
++	.attr = { .name = "bios_in_write", .mode = 0444, },
++	.print = pool_stats_print_bios_in_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_in_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_empty_flush = {
++	.attr = { .name = "bios_in_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_in_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_in_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_discard = {
++	.attr = { .name = "bios_in_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_in_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_in_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_flush = {
++	.attr = { .name = "bios_in_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_in_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_in_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_fua = {
++	.attr = { .name = "bios_in_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_in_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_in_partial_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_partial.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_partial_read = {
++	.attr = { .name = "bios_in_partial_read", .mode = 0444, },
++	.print = pool_stats_print_bios_in_partial_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_in_partial_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_partial.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_partial_write = {
++	.attr = { .name = "bios_in_partial_write", .mode = 0444, },
++	.print = pool_stats_print_bios_in_partial_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_in_partial_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_partial.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_partial_empty_flush = {
++	.attr = { .name = "bios_in_partial_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_in_partial_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_in_partial_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_partial.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_partial_discard = {
++	.attr = { .name = "bios_in_partial_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_in_partial_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_in_partial_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_partial.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_partial_flush = {
++	.attr = { .name = "bios_in_partial_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_in_partial_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_in_partial_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_partial.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_partial_fua = {
++	.attr = { .name = "bios_in_partial_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_in_partial_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_out_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_read = {
++	.attr = { .name = "bios_out_read", .mode = 0444, },
++	.print = pool_stats_print_bios_out_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_out_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_write = {
++	.attr = { .name = "bios_out_write", .mode = 0444, },
++	.print = pool_stats_print_bios_out_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_out_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_empty_flush = {
++	.attr = { .name = "bios_out_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_out_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_out_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_discard = {
++	.attr = { .name = "bios_out_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_out_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_out_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_flush = {
++	.attr = { .name = "bios_out_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_out_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_out_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_fua = {
++	.attr = { .name = "bios_out_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_out_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_meta_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_read = {
++	.attr = { .name = "bios_meta_read", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_meta_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_write = {
++	.attr = { .name = "bios_meta_write", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_meta_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_empty_flush = {
++	.attr = { .name = "bios_meta_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_meta_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_discard = {
++	.attr = { .name = "bios_meta_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_meta_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_flush = {
++	.attr = { .name = "bios_meta_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_meta_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_fua = {
++	.attr = { .name = "bios_meta_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_journal_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_read = {
++	.attr = { .name = "bios_journal_read", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_journal_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_write = {
++	.attr = { .name = "bios_journal_write", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_journal_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_empty_flush = {
++	.attr = { .name = "bios_journal_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_journal_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_discard = {
++	.attr = { .name = "bios_journal_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_journal_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_flush = {
++	.attr = { .name = "bios_journal_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_journal_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_fua = {
++	.attr = { .name = "bios_journal_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_page_cache_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_read = {
++	.attr = { .name = "bios_page_cache_read", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_page_cache_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_write = {
++	.attr = { .name = "bios_page_cache_write", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_page_cache_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_empty_flush = {
++	.attr = { .name = "bios_page_cache_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_page_cache_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_discard = {
++	.attr = { .name = "bios_page_cache_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_page_cache_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_flush = {
++	.attr = { .name = "bios_page_cache_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_page_cache_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_fua = {
++	.attr = { .name = "bios_page_cache_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_out_completed_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out_completed.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_completed_read = {
++	.attr = { .name = "bios_out_completed_read", .mode = 0444, },
++	.print = pool_stats_print_bios_out_completed_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_out_completed_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out_completed.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_completed_write = {
++	.attr = { .name = "bios_out_completed_write", .mode = 0444, },
++	.print = pool_stats_print_bios_out_completed_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_out_completed_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out_completed.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_completed_empty_flush = {
++	.attr = { .name = "bios_out_completed_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_out_completed_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_out_completed_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out_completed.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_completed_discard = {
++	.attr = { .name = "bios_out_completed_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_out_completed_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_out_completed_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out_completed.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_completed_flush = {
++	.attr = { .name = "bios_out_completed_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_out_completed_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_out_completed_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_out_completed.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_out_completed_fua = {
++	.attr = { .name = "bios_out_completed_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_out_completed_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_meta_completed_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta_completed.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_completed_read = {
++	.attr = { .name = "bios_meta_completed_read", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_completed_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_meta_completed_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta_completed.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_completed_write = {
++	.attr = { .name = "bios_meta_completed_write", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_completed_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_meta_completed_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta_completed.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_completed_empty_flush = {
++	.attr = { .name = "bios_meta_completed_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_completed_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_meta_completed_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta_completed.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_completed_discard = {
++	.attr = { .name = "bios_meta_completed_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_completed_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_meta_completed_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta_completed.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_completed_flush = {
++	.attr = { .name = "bios_meta_completed_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_completed_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_meta_completed_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_meta_completed.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_meta_completed_fua = {
++	.attr = { .name = "bios_meta_completed_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_meta_completed_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_journal_completed_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal_completed.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_completed_read = {
++	.attr = { .name = "bios_journal_completed_read", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_completed_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_journal_completed_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal_completed.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_completed_write = {
++	.attr = { .name = "bios_journal_completed_write", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_completed_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_journal_completed_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal_completed.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_completed_empty_flush = {
++	.attr = { .name = "bios_journal_completed_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_completed_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_journal_completed_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal_completed.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_completed_discard = {
++	.attr = { .name = "bios_journal_completed_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_completed_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_journal_completed_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal_completed.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_completed_flush = {
++	.attr = { .name = "bios_journal_completed_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_completed_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_journal_completed_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_journal_completed.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_journal_completed_fua = {
++	.attr = { .name = "bios_journal_completed_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_journal_completed_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_page_cache_completed_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache_completed.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_completed_read = {
++	.attr = { .name = "bios_page_cache_completed_read", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_completed_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_page_cache_completed_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache_completed.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_completed_write = {
++	.attr = { .name = "bios_page_cache_completed_write", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_completed_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_page_cache_completed_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache_completed.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_completed_empty_flush = {
++	.attr = { .name = "bios_page_cache_completed_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_completed_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_page_cache_completed_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache_completed.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_completed_discard = {
++	.attr = { .name = "bios_page_cache_completed_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_completed_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_page_cache_completed_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache_completed.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_completed_flush = {
++	.attr = { .name = "bios_page_cache_completed_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_completed_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_page_cache_completed_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_page_cache_completed.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_page_cache_completed_fua = {
++	.attr = { .name = "bios_page_cache_completed_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_page_cache_completed_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_acknowledged_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_read = {
++	.attr = { .name = "bios_acknowledged_read", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_acknowledged_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_write = {
++	.attr = { .name = "bios_acknowledged_write", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_acknowledged_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_empty_flush = {
++	.attr = { .name = "bios_acknowledged_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_acknowledged_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_discard = {
++	.attr = { .name = "bios_acknowledged_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_acknowledged_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_flush = {
++	.attr = { .name = "bios_acknowledged_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_acknowledged_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_fua = {
++	.attr = { .name = "bios_acknowledged_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_acknowledged_partial_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged_partial.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_partial_read = {
++	.attr = { .name = "bios_acknowledged_partial_read", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_partial_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_acknowledged_partial_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged_partial.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_partial_write = {
++	.attr = { .name = "bios_acknowledged_partial_write", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_partial_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_acknowledged_partial_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged_partial.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_partial_empty_flush = {
++	.attr = { .name = "bios_acknowledged_partial_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_partial_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_acknowledged_partial_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged_partial.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_partial_discard = {
++	.attr = { .name = "bios_acknowledged_partial_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_partial_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_acknowledged_partial_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged_partial.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_partial_flush = {
++	.attr = { .name = "bios_acknowledged_partial_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_partial_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_acknowledged_partial_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_acknowledged_partial.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_acknowledged_partial_fua = {
++	.attr = { .name = "bios_acknowledged_partial_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_acknowledged_partial_fua,
++};
++
++/* Number of REQ_OP_READ bios */
++static ssize_t
++pool_stats_print_bios_in_progress_read(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_progress.read);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_progress_read = {
++	.attr = { .name = "bios_in_progress_read", .mode = 0444, },
++	.print = pool_stats_print_bios_in_progress_read,
++};
++
++/* Number of REQ_OP_WRITE bios with data */
++static ssize_t
++pool_stats_print_bios_in_progress_write(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_progress.write);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_progress_write = {
++	.attr = { .name = "bios_in_progress_write", .mode = 0444, },
++	.print = pool_stats_print_bios_in_progress_write,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH and containing no data */
++static ssize_t
++pool_stats_print_bios_in_progress_empty_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_progress.empty_flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_progress_empty_flush = {
++	.attr = { .name = "bios_in_progress_empty_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_in_progress_empty_flush,
++};
++
++/* Number of REQ_OP_DISCARD bios */
++static ssize_t
++pool_stats_print_bios_in_progress_discard(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_progress.discard);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_progress_discard = {
++	.attr = { .name = "bios_in_progress_discard", .mode = 0444, },
++	.print = pool_stats_print_bios_in_progress_discard,
++};
++
++/* Number of bios tagged with REQ_PREFLUSH */
++static ssize_t
++pool_stats_print_bios_in_progress_flush(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_progress.flush);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_progress_flush = {
++	.attr = { .name = "bios_in_progress_flush", .mode = 0444, },
++	.print = pool_stats_print_bios_in_progress_flush,
++};
++
++/* Number of bios tagged with REQ_FUA */
++static ssize_t
++pool_stats_print_bios_in_progress_fua(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->bios_in_progress.fua);
++}
++
++static struct pool_stats_attribute pool_stats_attr_bios_in_progress_fua = {
++	.attr = { .name = "bios_in_progress_fua", .mode = 0444, },
++	.print = pool_stats_print_bios_in_progress_fua,
++};
++
++/* Tracked bytes currently allocated. */
++static ssize_t
++pool_stats_print_memory_usage_bytes_used(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->memory_usage.bytes_used);
++}
++
++static struct pool_stats_attribute pool_stats_attr_memory_usage_bytes_used = {
++	.attr = { .name = "memory_usage_bytes_used", .mode = 0444, },
++	.print = pool_stats_print_memory_usage_bytes_used,
++};
++
++/* Maximum tracked bytes allocated. */
++static ssize_t
++pool_stats_print_memory_usage_peak_bytes_used(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->memory_usage.peak_bytes_used);
++}
++
++static struct pool_stats_attribute pool_stats_attr_memory_usage_peak_bytes_used = {
++	.attr = { .name = "memory_usage_peak_bytes_used", .mode = 0444, },
++	.print = pool_stats_print_memory_usage_peak_bytes_used,
++};
++
++/* Number of records stored in the index */
++static ssize_t
++pool_stats_print_index_entries_indexed(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.entries_indexed);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_entries_indexed = {
++	.attr = { .name = "index_entries_indexed", .mode = 0444, },
++	.print = pool_stats_print_index_entries_indexed,
++};
++
++/* Number of post calls that found an existing entry */
++static ssize_t
++pool_stats_print_index_posts_found(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.posts_found);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_posts_found = {
++	.attr = { .name = "index_posts_found", .mode = 0444, },
++	.print = pool_stats_print_index_posts_found,
++};
++
++/* Number of post calls that added a new entry */
++static ssize_t
++pool_stats_print_index_posts_not_found(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.posts_not_found);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_posts_not_found = {
++	.attr = { .name = "index_posts_not_found", .mode = 0444, },
++	.print = pool_stats_print_index_posts_not_found,
++};
++
++/* Number of query calls that found an existing entry */
++static ssize_t
++pool_stats_print_index_queries_found(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.queries_found);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_queries_found = {
++	.attr = { .name = "index_queries_found", .mode = 0444, },
++	.print = pool_stats_print_index_queries_found,
++};
++
++/* Number of query calls that added a new entry */
++static ssize_t
++pool_stats_print_index_queries_not_found(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.queries_not_found);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_queries_not_found = {
++	.attr = { .name = "index_queries_not_found", .mode = 0444, },
++	.print = pool_stats_print_index_queries_not_found,
++};
++
++/* Number of update calls that found an existing entry */
++static ssize_t
++pool_stats_print_index_updates_found(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.updates_found);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_updates_found = {
++	.attr = { .name = "index_updates_found", .mode = 0444, },
++	.print = pool_stats_print_index_updates_found,
++};
++
++/* Number of update calls that added a new entry */
++static ssize_t
++pool_stats_print_index_updates_not_found(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.updates_not_found);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_updates_not_found = {
++	.attr = { .name = "index_updates_not_found", .mode = 0444, },
++	.print = pool_stats_print_index_updates_not_found,
++};
++
++/* Number of entries discarded */
++static ssize_t
++pool_stats_print_index_entries_discarded(struct vdo_statistics *stats, char *buf)
++{
++	return sprintf(buf, "%llu\n", stats->index.entries_discarded);
++}
++
++static struct pool_stats_attribute pool_stats_attr_index_entries_discarded = {
++	.attr = { .name = "index_entries_discarded", .mode = 0444, },
++	.print = pool_stats_print_index_entries_discarded,
++};
++
++struct attribute *vdo_pool_stats_attrs[] = {
++	&pool_stats_attr_data_blocks_used.attr,
++	&pool_stats_attr_overhead_blocks_used.attr,
++	&pool_stats_attr_logical_blocks_used.attr,
++	&pool_stats_attr_physical_blocks.attr,
++	&pool_stats_attr_logical_blocks.attr,
++	&pool_stats_attr_block_map_cache_size.attr,
++	&pool_stats_attr_block_size.attr,
++	&pool_stats_attr_complete_recoveries.attr,
++	&pool_stats_attr_read_only_recoveries.attr,
++	&pool_stats_attr_mode.attr,
++	&pool_stats_attr_in_recovery_mode.attr,
++	&pool_stats_attr_recovery_percentage.attr,
++	&pool_stats_attr_packer_compressed_fragments_written.attr,
++	&pool_stats_attr_packer_compressed_blocks_written.attr,
++	&pool_stats_attr_packer_compressed_fragments_in_packer.attr,
++	&pool_stats_attr_allocator_slab_count.attr,
++	&pool_stats_attr_allocator_slabs_opened.attr,
++	&pool_stats_attr_allocator_slabs_reopened.attr,
++	&pool_stats_attr_journal_disk_full.attr,
++	&pool_stats_attr_journal_slab_journal_commits_requested.attr,
++	&pool_stats_attr_journal_entries_started.attr,
++	&pool_stats_attr_journal_entries_written.attr,
++	&pool_stats_attr_journal_entries_committed.attr,
++	&pool_stats_attr_journal_blocks_started.attr,
++	&pool_stats_attr_journal_blocks_written.attr,
++	&pool_stats_attr_journal_blocks_committed.attr,
++	&pool_stats_attr_slab_journal_disk_full_count.attr,
++	&pool_stats_attr_slab_journal_flush_count.attr,
++	&pool_stats_attr_slab_journal_blocked_count.attr,
++	&pool_stats_attr_slab_journal_blocks_written.attr,
++	&pool_stats_attr_slab_journal_tail_busy_count.attr,
++	&pool_stats_attr_slab_summary_blocks_written.attr,
++	&pool_stats_attr_ref_counts_blocks_written.attr,
++	&pool_stats_attr_block_map_dirty_pages.attr,
++	&pool_stats_attr_block_map_clean_pages.attr,
++	&pool_stats_attr_block_map_free_pages.attr,
++	&pool_stats_attr_block_map_failed_pages.attr,
++	&pool_stats_attr_block_map_incoming_pages.attr,
++	&pool_stats_attr_block_map_outgoing_pages.attr,
++	&pool_stats_attr_block_map_cache_pressure.attr,
++	&pool_stats_attr_block_map_read_count.attr,
++	&pool_stats_attr_block_map_write_count.attr,
++	&pool_stats_attr_block_map_failed_reads.attr,
++	&pool_stats_attr_block_map_failed_writes.attr,
++	&pool_stats_attr_block_map_reclaimed.attr,
++	&pool_stats_attr_block_map_read_outgoing.attr,
++	&pool_stats_attr_block_map_found_in_cache.attr,
++	&pool_stats_attr_block_map_discard_required.attr,
++	&pool_stats_attr_block_map_wait_for_page.attr,
++	&pool_stats_attr_block_map_fetch_required.attr,
++	&pool_stats_attr_block_map_pages_loaded.attr,
++	&pool_stats_attr_block_map_pages_saved.attr,
++	&pool_stats_attr_block_map_flush_count.attr,
++	&pool_stats_attr_hash_lock_dedupe_advice_valid.attr,
++	&pool_stats_attr_hash_lock_dedupe_advice_stale.attr,
++	&pool_stats_attr_hash_lock_concurrent_data_matches.attr,
++	&pool_stats_attr_hash_lock_concurrent_hash_collisions.attr,
++	&pool_stats_attr_hash_lock_curr_dedupe_queries.attr,
++	&pool_stats_attr_errors_invalid_advice_pbn_count.attr,
++	&pool_stats_attr_errors_no_space_error_count.attr,
++	&pool_stats_attr_errors_read_only_error_count.attr,
++	&pool_stats_attr_instance.attr,
++	&pool_stats_attr_current_vios_in_progress.attr,
++	&pool_stats_attr_max_vios.attr,
++	&pool_stats_attr_dedupe_advice_timeouts.attr,
++	&pool_stats_attr_flush_out.attr,
++	&pool_stats_attr_logical_block_size.attr,
++	&pool_stats_attr_bios_in_read.attr,
++	&pool_stats_attr_bios_in_write.attr,
++	&pool_stats_attr_bios_in_empty_flush.attr,
++	&pool_stats_attr_bios_in_discard.attr,
++	&pool_stats_attr_bios_in_flush.attr,
++	&pool_stats_attr_bios_in_fua.attr,
++	&pool_stats_attr_bios_in_partial_read.attr,
++	&pool_stats_attr_bios_in_partial_write.attr,
++	&pool_stats_attr_bios_in_partial_empty_flush.attr,
++	&pool_stats_attr_bios_in_partial_discard.attr,
++	&pool_stats_attr_bios_in_partial_flush.attr,
++	&pool_stats_attr_bios_in_partial_fua.attr,
++	&pool_stats_attr_bios_out_read.attr,
++	&pool_stats_attr_bios_out_write.attr,
++	&pool_stats_attr_bios_out_empty_flush.attr,
++	&pool_stats_attr_bios_out_discard.attr,
++	&pool_stats_attr_bios_out_flush.attr,
++	&pool_stats_attr_bios_out_fua.attr,
++	&pool_stats_attr_bios_meta_read.attr,
++	&pool_stats_attr_bios_meta_write.attr,
++	&pool_stats_attr_bios_meta_empty_flush.attr,
++	&pool_stats_attr_bios_meta_discard.attr,
++	&pool_stats_attr_bios_meta_flush.attr,
++	&pool_stats_attr_bios_meta_fua.attr,
++	&pool_stats_attr_bios_journal_read.attr,
++	&pool_stats_attr_bios_journal_write.attr,
++	&pool_stats_attr_bios_journal_empty_flush.attr,
++	&pool_stats_attr_bios_journal_discard.attr,
++	&pool_stats_attr_bios_journal_flush.attr,
++	&pool_stats_attr_bios_journal_fua.attr,
++	&pool_stats_attr_bios_page_cache_read.attr,
++	&pool_stats_attr_bios_page_cache_write.attr,
++	&pool_stats_attr_bios_page_cache_empty_flush.attr,
++	&pool_stats_attr_bios_page_cache_discard.attr,
++	&pool_stats_attr_bios_page_cache_flush.attr,
++	&pool_stats_attr_bios_page_cache_fua.attr,
++	&pool_stats_attr_bios_out_completed_read.attr,
++	&pool_stats_attr_bios_out_completed_write.attr,
++	&pool_stats_attr_bios_out_completed_empty_flush.attr,
++	&pool_stats_attr_bios_out_completed_discard.attr,
++	&pool_stats_attr_bios_out_completed_flush.attr,
++	&pool_stats_attr_bios_out_completed_fua.attr,
++	&pool_stats_attr_bios_meta_completed_read.attr,
++	&pool_stats_attr_bios_meta_completed_write.attr,
++	&pool_stats_attr_bios_meta_completed_empty_flush.attr,
++	&pool_stats_attr_bios_meta_completed_discard.attr,
++	&pool_stats_attr_bios_meta_completed_flush.attr,
++	&pool_stats_attr_bios_meta_completed_fua.attr,
++	&pool_stats_attr_bios_journal_completed_read.attr,
++	&pool_stats_attr_bios_journal_completed_write.attr,
++	&pool_stats_attr_bios_journal_completed_empty_flush.attr,
++	&pool_stats_attr_bios_journal_completed_discard.attr,
++	&pool_stats_attr_bios_journal_completed_flush.attr,
++	&pool_stats_attr_bios_journal_completed_fua.attr,
++	&pool_stats_attr_bios_page_cache_completed_read.attr,
++	&pool_stats_attr_bios_page_cache_completed_write.attr,
++	&pool_stats_attr_bios_page_cache_completed_empty_flush.attr,
++	&pool_stats_attr_bios_page_cache_completed_discard.attr,
++	&pool_stats_attr_bios_page_cache_completed_flush.attr,
++	&pool_stats_attr_bios_page_cache_completed_fua.attr,
++	&pool_stats_attr_bios_acknowledged_read.attr,
++	&pool_stats_attr_bios_acknowledged_write.attr,
++	&pool_stats_attr_bios_acknowledged_empty_flush.attr,
++	&pool_stats_attr_bios_acknowledged_discard.attr,
++	&pool_stats_attr_bios_acknowledged_flush.attr,
++	&pool_stats_attr_bios_acknowledged_fua.attr,
++	&pool_stats_attr_bios_acknowledged_partial_read.attr,
++	&pool_stats_attr_bios_acknowledged_partial_write.attr,
++	&pool_stats_attr_bios_acknowledged_partial_empty_flush.attr,
++	&pool_stats_attr_bios_acknowledged_partial_discard.attr,
++	&pool_stats_attr_bios_acknowledged_partial_flush.attr,
++	&pool_stats_attr_bios_acknowledged_partial_fua.attr,
++	&pool_stats_attr_bios_in_progress_read.attr,
++	&pool_stats_attr_bios_in_progress_write.attr,
++	&pool_stats_attr_bios_in_progress_empty_flush.attr,
++	&pool_stats_attr_bios_in_progress_discard.attr,
++	&pool_stats_attr_bios_in_progress_flush.attr,
++	&pool_stats_attr_bios_in_progress_fua.attr,
++	&pool_stats_attr_memory_usage_bytes_used.attr,
++	&pool_stats_attr_memory_usage_peak_bytes_used.attr,
++	&pool_stats_attr_index_entries_indexed.attr,
++	&pool_stats_attr_index_posts_found.attr,
++	&pool_stats_attr_index_posts_not_found.attr,
++	&pool_stats_attr_index_queries_found.attr,
++	&pool_stats_attr_index_queries_not_found.attr,
++	&pool_stats_attr_index_updates_found.attr,
++	&pool_stats_attr_index_updates_not_found.attr,
++	&pool_stats_attr_index_entries_discarded.attr,
++	NULL,
++};
+diff --git a/drivers/md/dm-vdo/pool-sysfs.c b/drivers/md/dm-vdo/pool-sysfs.c
 new file mode 100644
-index 00000000000..fdcc819ce11
+index 00000000000..73006e5859d
 --- /dev/null
-+++ b/drivers/md/dm-vdo/message-stats.h
-@@ -0,0 +1,13 @@
++++ b/drivers/md/dm-vdo/pool-sysfs.c
+@@ -0,0 +1,193 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright Red Hat
++ */
++
++#include "pool-sysfs.h"
++
++#include <linux/kstrtox.h>
++
++#include "memory-alloc.h"
++#include "string-utils.h"
++
++#include "data-vio.h"
++#include "dedupe.h"
++#include "vdo.h"
++
++struct pool_attribute {
++	struct attribute attr;
++	ssize_t (*show)(struct vdo *vdo, char *buf);
++	ssize_t (*store)(struct vdo *vdo, const char *value, size_t count);
++};
++
++static ssize_t vdo_pool_attr_show(struct kobject *directory, struct attribute *attr, char *buf)
++{
++	struct pool_attribute *pool_attr = container_of(attr, struct pool_attribute, attr);
++	struct vdo *vdo = container_of(directory, struct vdo, vdo_directory);
++
++	if (pool_attr->show == NULL)
++		return -EINVAL;
++	return pool_attr->show(vdo, buf);
++}
++
++static ssize_t vdo_pool_attr_store(struct kobject *directory,
++				   struct attribute *attr,
++				   const char *buf,
++				   size_t length)
++{
++	struct pool_attribute *pool_attr = container_of(attr, struct pool_attribute, attr);
++	struct vdo *vdo = container_of(directory, struct vdo, vdo_directory);
++
++	if (pool_attr->store == NULL)
++		return -EINVAL;
++	return pool_attr->store(vdo, buf, length);
++}
++
++static const struct sysfs_ops vdo_pool_sysfs_ops = {
++	.show = vdo_pool_attr_show,
++	.store = vdo_pool_attr_store,
++};
++
++static ssize_t pool_compressing_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%s\n", (vdo_get_compressing(vdo) ? "1" : "0"));
++}
++
++static ssize_t pool_discards_active_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%u\n", get_data_vio_pool_active_discards(vdo->data_vio_pool));
++}
++
++static ssize_t pool_discards_limit_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%u\n", get_data_vio_pool_discard_limit(vdo->data_vio_pool));
++}
++
++static ssize_t pool_discards_limit_store(struct vdo *vdo, const char *buf, size_t length)
++{
++	unsigned int value;
++	int result;
++
++	if ((length > 12) || (kstrtouint(buf, 10, &value) < 0) || (value < 1))
++		return -EINVAL;
++
++	result = set_data_vio_pool_discard_limit(vdo->data_vio_pool, value);
++	if (result != VDO_SUCCESS)
++		return -EINVAL;
++
++	return length;
++}
++
++static ssize_t pool_discards_maximum_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%u\n", get_data_vio_pool_maximum_discards(vdo->data_vio_pool));
++}
++
++static ssize_t pool_instance_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%u\n", vdo->instance);
++}
++
++static ssize_t pool_requests_active_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%u\n", get_data_vio_pool_active_requests(vdo->data_vio_pool));
++}
++
++static ssize_t pool_requests_limit_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%u\n", get_data_vio_pool_request_limit(vdo->data_vio_pool));
++}
++
++static ssize_t pool_requests_maximum_show(struct vdo *vdo, char *buf)
++{
++	return sprintf(buf, "%u\n", get_data_vio_pool_maximum_requests(vdo->data_vio_pool));
++}
++
++static void vdo_pool_release(struct kobject *directory)
++{
++	UDS_FREE(container_of(directory, struct vdo, vdo_directory));
++}
++
++static struct pool_attribute vdo_pool_compressing_attr = {
++	.attr = {
++			.name = "compressing",
++			.mode = 0444,
++		},
++	.show = pool_compressing_show,
++};
++
++static struct pool_attribute vdo_pool_discards_active_attr = {
++	.attr = {
++			.name = "discards_active",
++			.mode = 0444,
++		},
++	.show = pool_discards_active_show,
++};
++
++static struct pool_attribute vdo_pool_discards_limit_attr = {
++	.attr = {
++			.name = "discards_limit",
++			.mode = 0644,
++		},
++	.show = pool_discards_limit_show,
++	.store = pool_discards_limit_store,
++};
++
++static struct pool_attribute vdo_pool_discards_maximum_attr = {
++	.attr = {
++			.name = "discards_maximum",
++			.mode = 0444,
++		},
++	.show = pool_discards_maximum_show,
++};
++
++static struct pool_attribute vdo_pool_instance_attr = {
++	.attr = {
++			.name = "instance",
++			.mode = 0444,
++		},
++	.show = pool_instance_show,
++};
++
++static struct pool_attribute vdo_pool_requests_active_attr = {
++	.attr = {
++			.name = "requests_active",
++			.mode = 0444,
++		},
++	.show = pool_requests_active_show,
++};
++
++static struct pool_attribute vdo_pool_requests_limit_attr = {
++	.attr = {
++			.name = "requests_limit",
++			.mode = 0444,
++		},
++	.show = pool_requests_limit_show,
++};
++
++static struct pool_attribute vdo_pool_requests_maximum_attr = {
++	.attr = {
++			.name = "requests_maximum",
++			.mode = 0444,
++		},
++	.show = pool_requests_maximum_show,
++};
++
++static struct attribute *pool_attrs[] = {
++	&vdo_pool_compressing_attr.attr,
++	&vdo_pool_discards_active_attr.attr,
++	&vdo_pool_discards_limit_attr.attr,
++	&vdo_pool_discards_maximum_attr.attr,
++	&vdo_pool_instance_attr.attr,
++	&vdo_pool_requests_active_attr.attr,
++	&vdo_pool_requests_limit_attr.attr,
++	&vdo_pool_requests_maximum_attr.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(pool);
++
++struct kobj_type vdo_directory_type = {
++	.release = vdo_pool_release,
++	.sysfs_ops = &vdo_pool_sysfs_ops,
++	.default_groups = pool_groups,
++};
+diff --git a/drivers/md/dm-vdo/pool-sysfs.h b/drivers/md/dm-vdo/pool-sysfs.h
+new file mode 100644
+index 00000000000..1e8a172c367
+--- /dev/null
++++ b/drivers/md/dm-vdo/pool-sysfs.h
+@@ -0,0 +1,19 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright Red Hat
 + */
 +
-+#ifndef VDO_MESSAGE_STATS_H
-+#define VDO_MESSAGE_STATS_H
++#ifndef VDO_POOL_SYSFS_H
++#define VDO_POOL_SYSFS_H
 +
-+#include "types.h"
++#include <linux/kobject.h>
 +
-+int vdo_write_stats(struct vdo *vdo, char *buf, unsigned int maxlen);
++/* The kobj_type used for setting up the kernel layer kobject. */
++extern struct kobj_type vdo_directory_type;
 +
-+#endif /* VDO_MESSAGE_STATS_H */
-diff --git a/drivers/md/dm-vdo/statistics.h b/drivers/md/dm-vdo/statistics.h
++/* The sysfs_ops used for the "statistics" subdirectory. */
++extern const struct sysfs_ops vdo_pool_stats_sysfs_ops;
++/* The attribute used for the "statistics" subdirectory. */
++extern struct attribute *vdo_pool_stats_attrs[];
++
++#endif /* VDO_POOL_SYSFS_H */
+diff --git a/drivers/md/dm-vdo/sysfs.c b/drivers/md/dm-vdo/sysfs.c
 new file mode 100644
-index 00000000000..28f69ea0c8b
+index 00000000000..a091933a0a5
 --- /dev/null
-+++ b/drivers/md/dm-vdo/statistics.h
-@@ -0,0 +1,279 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/drivers/md/dm-vdo/sysfs.c
+@@ -0,0 +1,84 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright Red Hat
 + */
 +
-+#ifndef STATISTICS_H
-+#define STATISTICS_H
++#include <linux/module.h>
 +
-+#include "types.h"
++#include "logger.h"
 +
-+enum {
-+	STATISTICS_VERSION = 36,
++#include "constants.h"
++#include "dedupe.h"
++#include "vdo.h"
++
++static int vdo_log_level_show(char *buf, const struct kernel_param *kp)
++{
++	return sprintf(buf, "%s\n", uds_log_priority_to_string(uds_get_log_level()));
++}
++
++static int vdo_log_level_store(const char *buf, const struct kernel_param *kp)
++{
++	static char internal_buf[11];
++
++	int n = strlen(buf);
++
++	if (n > 10)
++		return -EINVAL;
++
++	memset(internal_buf, '\000', sizeof(internal_buf));
++	memcpy(internal_buf, buf, n);
++	if (internal_buf[n - 1] == '\n')
++		internal_buf[n - 1] = '\000';
++	uds_set_log_level(uds_log_string_to_priority(internal_buf));
++	return 0;
++}
++
++
++static int vdo_dedupe_timeout_interval_store(const char *buf, const struct kernel_param *kp)
++{
++	int result = param_set_uint(buf, kp);
++
++	if (result != 0)
++		return result;
++	vdo_set_dedupe_index_timeout_interval(*(uint *)kp->arg);
++	return 0;
++}
++
++static int vdo_min_dedupe_timer_interval_store(const char *buf, const struct kernel_param *kp)
++{
++	int result = param_set_uint(buf, kp);
++
++	if (result != 0)
++		return result;
++	vdo_set_dedupe_index_min_timer_interval(*(uint *)kp->arg);
++	return 0;
++}
++
++static const struct kernel_param_ops log_level_ops = {
++	.set = vdo_log_level_store,
++	.get = vdo_log_level_show,
 +};
 +
-+struct block_allocator_statistics {
-+	/** The total number of slabs from which blocks may be allocated */
-+	u64 slab_count;
-+	/** The total number of slabs from which blocks have ever been allocated */
-+	u64 slabs_opened;
-+	/** The number of times since loading that a slab has been re-opened */
-+	u64 slabs_reopened;
++
++static const struct kernel_param_ops dedupe_timeout_ops = {
++	.set = vdo_dedupe_timeout_interval_store,
++	.get = param_get_uint,
 +};
 +
-+/**
-+ * Counters for tracking the number of items written (blocks, requests, etc.)
-+ * that keep track of totals at steps in the write pipeline. Three counters
-+ * allow the number of buffered, in-memory items and the number of in-flight,
-+ * unacknowledged writes to be derived, while still tracking totals for
-+ * reporting purposes
-+ */
-+struct commit_statistics {
-+	/** The total number of items on which processing has started */
-+	u64 started;
-+	/** The total number of items for which a write operation has been issued */
-+	u64 written;
-+	/** The total number of items for which a write operation has completed */
-+	u64 committed;
++static const struct kernel_param_ops dedupe_timer_ops = {
++	.set = vdo_min_dedupe_timer_interval_store,
++	.get = param_get_uint,
 +};
 +
-+/** Counters for events in the recovery journal */
-+struct recovery_journal_statistics {
-+	/** Number of times the on-disk journal was full */
-+	u64 disk_full;
-+	/** Number of times the recovery journal requested slab journal commits. */
-+	u64 slab_journal_commits_requested;
-+	/** Write/Commit totals for individual journal entries */
-+	struct commit_statistics entries;
-+	/** Write/Commit totals for journal blocks */
-+	struct commit_statistics blocks;
-+};
++module_param_cb(log_level, &log_level_ops, NULL, 0644);
 +
-+/** The statistics for the compressed block packer. */
-+struct packer_statistics {
-+	/** Number of compressed data items written since startup */
-+	u64 compressed_fragments_written;
-+	/** Number of blocks containing compressed items written since startup */
-+	u64 compressed_blocks_written;
-+	/** Number of VIOs that are pending in the packer */
-+	u64 compressed_fragments_in_packer;
-+};
 +
-+/** The statistics for the slab journals. */
-+struct slab_journal_statistics {
-+	/** Number of times the on-disk journal was full */
-+	u64 disk_full_count;
-+	/** Number of times an entry was added over the flush threshold */
-+	u64 flush_count;
-+	/** Number of times an entry was added over the block threshold */
-+	u64 blocked_count;
-+	/** Number of times a tail block was written */
-+	u64 blocks_written;
-+	/** Number of times we had to wait for the tail to write */
-+	u64 tail_busy_count;
-+};
++module_param_cb(deduplication_timeout_interval,
++		&dedupe_timeout_ops,
++		&vdo_dedupe_index_timeout_interval,
++		0644);
 +
-+/** The statistics for the slab summary. */
-+struct slab_summary_statistics {
-+	/** Number of blocks written */
-+	u64 blocks_written;
-+};
-+
-+/** The statistics for the reference counts. */
-+struct ref_counts_statistics {
-+	/** Number of reference blocks written */
-+	u64 blocks_written;
-+};
-+
-+/** The statistics for the block map. */
-+struct block_map_statistics {
-+	/** number of dirty (resident) pages */
-+	u32 dirty_pages;
-+	/** number of clean (resident) pages */
-+	u32 clean_pages;
-+	/** number of free pages */
-+	u32 free_pages;
-+	/** number of pages in failed state */
-+	u32 failed_pages;
-+	/** number of pages incoming */
-+	u32 incoming_pages;
-+	/** number of pages outgoing */
-+	u32 outgoing_pages;
-+	/** how many times free page not avail */
-+	u32 cache_pressure;
-+	/** number of get_vdo_page() calls for read */
-+	u64 read_count;
-+	/** number of get_vdo_page() calls for write */
-+	u64 write_count;
-+	/** number of times pages failed to read */
-+	u64 failed_reads;
-+	/** number of times pages failed to write */
-+	u64 failed_writes;
-+	/** number of gets that are reclaimed */
-+	u64 reclaimed;
-+	/** number of gets for outgoing pages */
-+	u64 read_outgoing;
-+	/** number of gets that were already there */
-+	u64 found_in_cache;
-+	/** number of gets requiring discard */
-+	u64 discard_required;
-+	/** number of gets enqueued for their page */
-+	u64 wait_for_page;
-+	/** number of gets that have to fetch */
-+	u64 fetch_required;
-+	/** number of page fetches */
-+	u64 pages_loaded;
-+	/** number of page saves */
-+	u64 pages_saved;
-+	/** the number of flushes issued */
-+	u64 flush_count;
-+};
-+
-+/** The dedupe statistics from hash locks */
-+struct hash_lock_statistics {
-+	/** Number of times the UDS advice proved correct */
-+	u64 dedupe_advice_valid;
-+	/** Number of times the UDS advice proved incorrect */
-+	u64 dedupe_advice_stale;
-+	/** Number of writes with the same data as another in-flight write */
-+	u64 concurrent_data_matches;
-+	/** Number of writes whose hash collided with an in-flight write */
-+	u64 concurrent_hash_collisions;
-+	/** Current number of dedupe queries that are in flight */
-+	u32 curr_dedupe_queries;
-+};
-+
-+/** Counts of error conditions in VDO. */
-+struct error_statistics {
-+	/** number of times VDO got an invalid dedupe advice PBN from UDS */
-+	u64 invalid_advice_pbn_count;
-+	/** number of times a VIO completed with a VDO_NO_SPACE error */
-+	u64 no_space_error_count;
-+	/** number of times a VIO completed with a VDO_READ_ONLY error */
-+	u64 read_only_error_count;
-+};
-+
-+struct bio_stats {
-+	/** Number of REQ_OP_READ bios */
-+	u64 read;
-+	/** Number of REQ_OP_WRITE bios with data */
-+	u64 write;
-+	/** Number of bios tagged with REQ_PREFLUSH and containing no data */
-+	u64 empty_flush;
-+	/** Number of REQ_OP_DISCARD bios */
-+	u64 discard;
-+	/** Number of bios tagged with REQ_PREFLUSH */
-+	u64 flush;
-+	/** Number of bios tagged with REQ_FUA */
-+	u64 fua;
-+};
-+
-+struct memory_usage {
-+	/** Tracked bytes currently allocated. */
-+	u64 bytes_used;
-+	/** Maximum tracked bytes allocated. */
-+	u64 peak_bytes_used;
-+};
-+
-+/** UDS index statistics */
-+struct index_statistics {
-+	/** Number of records stored in the index */
-+	u64 entries_indexed;
-+	/** Number of post calls that found an existing entry */
-+	u64 posts_found;
-+	/** Number of post calls that added a new entry */
-+	u64 posts_not_found;
-+	/** Number of query calls that found an existing entry */
-+	u64 queries_found;
-+	/** Number of query calls that added a new entry */
-+	u64 queries_not_found;
-+	/** Number of update calls that found an existing entry */
-+	u64 updates_found;
-+	/** Number of update calls that added a new entry */
-+	u64 updates_not_found;
-+	/** Number of entries discarded */
-+	u64 entries_discarded;
-+};
-+
-+/** The statistics of the vdo service. */
-+struct vdo_statistics {
-+	u32 version;
-+	u32 release_version;
-+	/** Number of blocks used for data */
-+	u64 data_blocks_used;
-+	/** Number of blocks used for VDO metadata */
-+	u64 overhead_blocks_used;
-+	/** Number of logical blocks that are currently mapped to physical blocks */
-+	u64 logical_blocks_used;
-+	/** number of physical blocks */
-+	block_count_t physical_blocks;
-+	/** number of logical blocks */
-+	block_count_t logical_blocks;
-+	/** Size of the block map page cache, in bytes */
-+	u64 block_map_cache_size;
-+	/** The physical block size */
-+	u64 block_size;
-+	/** Number of times the VDO has successfully recovered */
-+	u64 complete_recoveries;
-+	/** Number of times the VDO has recovered from read-only mode */
-+	u64 read_only_recoveries;
-+	/** String describing the operating mode of the VDO */
-+	char mode[15];
-+	/** Whether the VDO is in recovery mode */
-+	bool in_recovery_mode;
-+	/** What percentage of recovery mode work has been completed */
-+	u8 recovery_percentage;
-+	/** The statistics for the compressed block packer */
-+	struct packer_statistics packer;
-+	/** Counters for events in the block allocator */
-+	struct block_allocator_statistics allocator;
-+	/** Counters for events in the recovery journal */
-+	struct recovery_journal_statistics journal;
-+	/** The statistics for the slab journals */
-+	struct slab_journal_statistics slab_journal;
-+	/** The statistics for the slab summary */
-+	struct slab_summary_statistics slab_summary;
-+	/** The statistics for the reference counts */
-+	struct ref_counts_statistics ref_counts;
-+	/** The statistics for the block map */
-+	struct block_map_statistics block_map;
-+	/** The dedupe statistics from hash locks */
-+	struct hash_lock_statistics hash_lock;
-+	/** Counts of error conditions */
-+	struct error_statistics errors;
-+	/** The VDO instance */
-+	u32 instance;
-+	/** Current number of active VIOs */
-+	u32 current_vios_in_progress;
-+	/** Maximum number of active VIOs */
-+	u32 max_vios;
-+	/** Number of times the UDS index was too slow in responding */
-+	u64 dedupe_advice_timeouts;
-+	/** Number of flush requests submitted to the storage device */
-+	u64 flush_out;
-+	/** Logical block size */
-+	u64 logical_block_size;
-+	/** Bios submitted into VDO from above */
-+	struct bio_stats bios_in;
-+	struct bio_stats bios_in_partial;
-+	/** Bios submitted onward for user data */
-+	struct bio_stats bios_out;
-+	/** Bios submitted onward for metadata */
-+	struct bio_stats bios_meta;
-+	struct bio_stats bios_journal;
-+	struct bio_stats bios_page_cache;
-+	struct bio_stats bios_out_completed;
-+	struct bio_stats bios_meta_completed;
-+	struct bio_stats bios_journal_completed;
-+	struct bio_stats bios_page_cache_completed;
-+	struct bio_stats bios_acknowledged;
-+	struct bio_stats bios_acknowledged_partial;
-+	/** Current number of bios in progress */
-+	struct bio_stats bios_in_progress;
-+	/** Memory usage stats. */
-+	struct memory_usage memory_usage;
-+	/** The statistics for the UDS index */
-+	struct index_statistics index;
-+};
-+
-+#endif /* not STATISTICS_H */
++module_param_cb(min_deduplication_timer_interval,
++		&dedupe_timer_ops,
++		&vdo_dedupe_index_min_timer_interval,
++		0644);
 -- 
 2.40.1
 
