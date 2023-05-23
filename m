@@ -2,66 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29DB870E7B7
-	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 23:46:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36FAE70E7BD
+	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 23:46:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238617AbjEWVqi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 May 2023 17:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
+        id S238676AbjEWVqp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 May 2023 17:46:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238648AbjEWVqh (ORCPT
+        with ESMTP id S238672AbjEWVqn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 May 2023 17:46:37 -0400
+        Tue, 23 May 2023 17:46:43 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB63E6
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF91C2
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1684878352;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=urKOvi6UOfSDXUeVkbCVDUoA/uyj8/kt3m1bl3zK/BQ=;
-        b=Ks1Si2zYSvJ6RXxUvRASPPL1J1q92cWg5ypGV89fTzWIq2ruwIjQBM8w3GlWaa3fJBJmFT
-        v0xH5tOL9YHkBYYg4j50Rv8g6Xm9X27dTtri46ffDWbnz5G6CPM2ATFhY8oWUaprdWh5/C
-        q4EByrVa3VmTbZ9YHs8DDowMqmsWFS8=
+        bh=BXVHYJI4o65v3yWmtJqqd5Md+0xUsboI9mynlQtwVCQ=;
+        b=RtwaUxgpG6TX2HAl3bBeaDT6JWDAUvpSu9LlRJHEFjHBJEyrKFAu2gWGG6yMjpft/m6D5N
+        uioPiVkbJlJQ0S2JQHgGxHCwT8lSGL5kNoL06Ow1XLQjTG0QibyibZvmDVduxJOUcnZb2I
+        BZda66NNkPuWo3BVJlQio45rsN0cA9g=
 Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
  [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-508-V9XzHXcZMCiUD-506DT70Q-1; Tue, 23 May 2023 17:45:50 -0400
-X-MC-Unique: V9XzHXcZMCiUD-506DT70Q-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-75b11909381so66600585a.0
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:50 -0700 (PDT)
+ us-mta-18-Sg6beJ0sOVayYwFVcD91zg-1; Tue, 23 May 2023 17:45:51 -0400
+X-MC-Unique: Sg6beJ0sOVayYwFVcD91zg-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-75b012668d3so60958585a.0
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684878350; x=1687470350;
+        d=1e100.net; s=20221208; t=1684878351; x=1687470351;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=urKOvi6UOfSDXUeVkbCVDUoA/uyj8/kt3m1bl3zK/BQ=;
-        b=Be/Xkivi+tdBbt0BF5P0A2peN4zFmNgDXEP+UEaKyuX5N38s8JttgBPBVPgo1Nn//i
-         ponHcB65H+AiQWXumSRM9fx2dsOoeA1B6jY0H8jjsSpNGbIZtYqeNIzIdw3m2W0UZ5b+
-         Lw3EWVE0n9MTI74DQYedjv8BdM1kNJCvm/mrBkjw6F574nCuAHsXpOZDWeksXvccK2rG
-         HfEtzP10W1l5hwDPejSdzq49gtqT3ix6CKUFym1gqha2ERx/DihWASiSGiIjRzEbTruX
-         jFkjl7YkH61hFE5CQGDKdf0XEMe570ViG/bG1htOxg9w9CVcdjqYgcAcj/mDwwGEUwTv
-         FSMQ==
-X-Gm-Message-State: AC+VfDwwSRYHLoFFGvYTsR7WctlGT8Qr66vz3200wTv/1vkfYGJSvpzS
-        iAWkK/CDmruKtoRvy9dWCUmqc+g7KPBWBaLNKvTGqtUghrsbBDjw5vRyQxWrQ+UZ2aw/2GOpaGH
-        9PuNMuceTXDYQh/amSCIYbXrW/MQKHzA=
-X-Received: by 2002:a37:58f:0:b0:75b:23a1:3615 with SMTP id 137-20020a37058f000000b0075b23a13615mr5015351qkf.38.1684878349376;
+        bh=BXVHYJI4o65v3yWmtJqqd5Md+0xUsboI9mynlQtwVCQ=;
+        b=HQJBacYfM/yVU7lQRaPB2kWjFfFpaQYglNZlEVyIOmTzSnceCCvNYPiiTgmmNGZfms
+         7U7PHOprrcCdONZF+HaD/Ut7sHaR0TDPEi21w4EMho9ZtbHQCkQBFzEJ8RKYBvZ0QeUb
+         PFxIKAmNSEUDH7Vly9xPtSLnLuV8PxkIlYVQiKGEjTZU1QVHU20Odb0aJ599LSfo9of3
+         LNjAVIu87S+wl7NSQm05qAp8FoS4EYAJ2S+4IexzS9UpiQmMShYY/spgzgokUeCxI9om
+         VhteNA0ML5Hz2mY4ArwrGetskgcZZZNiuI1It4vLXdA5JrBLU+XvPzipY6c5GZBIL4jB
+         liSA==
+X-Gm-Message-State: AC+VfDzsK6r7qtKa+0zkxXiyEvgSr9/40ETCfsiiI7p6mD9UejIlMT+O
+        OdZI78ZuBK5xL+r/8vaFoNYUAOagki435xg9iY0v1tW19KOIRBokkNpKFLl2leF8eHVdfTkraPB
+        aooJA0V9+vPep+Zrxe9TVlYFP0TSTkus=
+X-Received: by 2002:a05:620a:1a1f:b0:75b:23a1:45f with SMTP id bk31-20020a05620a1a1f00b0075b23a1045fmr6833566qkb.37.1684878350323;
+        Tue, 23 May 2023 14:45:50 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7HXk9kHw0f/SefZKzFY77LK9R6InSBb50RjDoveKLrWQ9VfLxogn8LEHfLNX3eMxMg8Zam4g==
+X-Received: by 2002:a05:620a:1a1f:b0:75b:23a1:45f with SMTP id bk31-20020a05620a1a1f00b0075b23a1045fmr6833526qkb.37.1684878349843;
         Tue, 23 May 2023 14:45:49 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7Ak4lDBwVfxSsnceXjWH7ezsY/9t88N9uUiPDE4p8w/1IDS20Jlw2kT0KVYJ7E4GMv2ZzmLQ==
-X-Received: by 2002:a37:58f:0:b0:75b:23a1:3615 with SMTP id 137-20020a37058f000000b0075b23a13615mr5015325qkf.38.1684878348939;
-        Tue, 23 May 2023 14:45:48 -0700 (PDT)
 Received: from bf36-1.. (173-166-2-198-newengland.hfc.comcastbusiness.net. [173.166.2.198])
-        by smtp.gmail.com with ESMTPSA id s24-20020ae9f718000000b0074fafbea974sm2821592qkg.2.2023.05.23.14.45.48
+        by smtp.gmail.com with ESMTPSA id s24-20020ae9f718000000b0074fafbea974sm2821592qkg.2.2023.05.23.14.45.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 14:45:48 -0700 (PDT)
+        Tue, 23 May 2023 14:45:49 -0700 (PDT)
 From:   "J. corwin Coburn" <corwin@redhat.com>
 To:     dm-devel@redhat.com, linux-block@vger.kernel.org
 Cc:     vdo-devel@redhat.com, "J. corwin Coburn" <corwin@redhat.com>
-Subject: [PATCH v2 03/39] Add memory allocation utilities.
-Date:   Tue, 23 May 2023 17:45:03 -0400
-Message-Id: <20230523214539.226387-4-corwin@redhat.com>
+Subject: [PATCH v2 04/39] Add basic logging and support utilities.
+Date:   Tue, 23 May 2023 17:45:04 -0400
+Message-Id: <20230523214539.226387-5-corwin@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230523214539.226387-1-corwin@redhat.com>
 References: <20230523214539.226387-1-corwin@redhat.com>
@@ -69,670 +69,1088 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch adds standardized allocation macros and memory tracking tools to
-track and report any allocated memory that is not freed. This makes it
-easier to ensure that the vdo target does not leak memory.
-
-This patch also adds utilities for controlling whether certain threads are
-allowed to allocate memory, since memory allocation during certain critical
-code sections can cause the vdo target to deadlock.
+Add various support utilities for the vdo target and deduplication index,
+including logging utilities, string and time management, and index-specific
+error codes.
 
 Signed-off-by: J. corwin Coburn <corwin@redhat.com>
 ---
- drivers/md/dm-vdo/memory-alloc.c | 447 +++++++++++++++++++++++++++++++
- drivers/md/dm-vdo/memory-alloc.h | 181 +++++++++++++
- 2 files changed, 628 insertions(+)
- create mode 100644 drivers/md/dm-vdo/memory-alloc.c
- create mode 100644 drivers/md/dm-vdo/memory-alloc.h
+ drivers/md/dm-vdo/errors.c       | 316 +++++++++++++++++++++++++++++++
+ drivers/md/dm-vdo/errors.h       |  83 ++++++++
+ drivers/md/dm-vdo/logger.c       | 304 +++++++++++++++++++++++++++++
+ drivers/md/dm-vdo/logger.h       | 112 +++++++++++
+ drivers/md/dm-vdo/permassert.c   |  35 ++++
+ drivers/md/dm-vdo/permassert.h   |  65 +++++++
+ drivers/md/dm-vdo/string-utils.c |  28 +++
+ drivers/md/dm-vdo/string-utils.h |  23 +++
+ drivers/md/dm-vdo/time-utils.h   |  28 +++
+ 9 files changed, 994 insertions(+)
+ create mode 100644 drivers/md/dm-vdo/errors.c
+ create mode 100644 drivers/md/dm-vdo/errors.h
+ create mode 100644 drivers/md/dm-vdo/logger.c
+ create mode 100644 drivers/md/dm-vdo/logger.h
+ create mode 100644 drivers/md/dm-vdo/permassert.c
+ create mode 100644 drivers/md/dm-vdo/permassert.h
+ create mode 100644 drivers/md/dm-vdo/string-utils.c
+ create mode 100644 drivers/md/dm-vdo/string-utils.h
+ create mode 100644 drivers/md/dm-vdo/time-utils.h
 
-diff --git a/drivers/md/dm-vdo/memory-alloc.c b/drivers/md/dm-vdo/memory-alloc.c
+diff --git a/drivers/md/dm-vdo/errors.c b/drivers/md/dm-vdo/errors.c
 new file mode 100644
-index 00000000000..00b992e96bd
+index 00000000000..7654a1f9f97
 --- /dev/null
-+++ b/drivers/md/dm-vdo/memory-alloc.c
-@@ -0,0 +1,447 @@
++++ b/drivers/md/dm-vdo/errors.c
+@@ -0,0 +1,316 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright Red Hat
 + */
 +
-+#include <linux/delay.h>
-+#include <linux/mm.h>
-+#include <linux/sched/mm.h>
-+#include <linux/slab.h>
-+#include <linux/vmalloc.h>
++#include "errors.h"
++
++#include <linux/compiler.h>
++#include <linux/errno.h>
 +
 +#include "logger.h"
-+#include "memory-alloc.h"
 +#include "permassert.h"
++#include "string-utils.h"
 +
-+/*
-+ * UDS and VDO keep track of which threads are allowed to allocate memory freely, and which threads
-+ * must be careful to not do a memory allocation that does an I/O request. The allocating_threads
-+ * threads_registry and its associated methods implement this tracking.
-+ */
-+static struct thread_registry allocating_threads;
++static const struct error_info successful = { "UDS_SUCCESS", "Success" };
 +
-+static bool allocations_allowed(void)
-+{
-+	const bool *pointer = uds_lookup_thread(&allocating_threads);
++static const char *const message_table[] = {
++	[EPERM] = "Operation not permitted",
++	[ENOENT] = "No such file or directory",
++	[ESRCH] = "No such process",
++	[EINTR] = "Interrupted system call",
++	[EIO] = "Input/output error",
++	[ENXIO] = "No such device or address",
++	[E2BIG] = "Argument list too long",
++	[ENOEXEC] = "Exec format error",
++	[EBADF] = "Bad file descriptor",
++	[ECHILD] = "No child processes",
++	[EAGAIN] = "Resource temporarily unavailable",
++	[ENOMEM] = "Cannot allocate memory",
++	[EACCES] = "Permission denied",
++	[EFAULT] = "Bad address",
++	[ENOTBLK] = "Block device required",
++	[EBUSY] = "Device or resource busy",
++	[EEXIST] = "File exists",
++	[EXDEV] = "Invalid cross-device link",
++	[ENODEV] = "No such device",
++	[ENOTDIR] = "Not a directory",
++	[EISDIR] = "Is a directory",
++	[EINVAL] = "Invalid argument",
++	[ENFILE] = "Too many open files in system",
++	[EMFILE] = "Too many open files",
++	[ENOTTY] = "Inappropriate ioctl for device",
++	[ETXTBSY] = "Text file busy",
++	[EFBIG] = "File too large",
++	[ENOSPC] = "No space left on device",
++	[ESPIPE] = "Illegal seek",
++	[EROFS] = "Read-only file system",
++	[EMLINK] = "Too many links",
++	[EPIPE] = "Broken pipe",
++	[EDOM] = "Numerical argument out of domain",
++	[ERANGE] = "Numerical result out of range"
++};
 +
-+	return (pointer != NULL) ? *pointer : false;
-+}
++static const struct error_info error_list[] = {
++	{ "UDS_OVERFLOW", "Index overflow" },
++	{ "UDS_INVALID_ARGUMENT", "Invalid argument passed to internal routine" },
++	{ "UDS_BAD_STATE", "UDS data structures are in an invalid state" },
++	{ "UDS_DUPLICATE_NAME", "Attempt to enter the same name into a delta index twice" },
++	{ "UDS_ASSERTION_FAILED", "Assertion failed" },
++	{ "UDS_QUEUED", "Request queued" },
++	{ "UDS_BUFFER_ERROR", "Buffer error" },
++	{ "UDS_NO_DIRECTORY", "Expected directory is missing" },
++	{ "UDS_ALREADY_REGISTERED", "Error range already registered" },
++	{ "UDS_OUT_OF_RANGE", "Cannot access data outside specified limits" },
++	{ "UDS_EMODULE_LOAD", "Could not load modules" },
++	{ "UDS_DISABLED", "UDS library context is disabled" },
++	{ "UDS_UNKNOWN_ERROR", "Unknown error" },
++	{ "UDS_UNSUPPORTED_VERSION", "Unsupported version" },
++	{ "UDS_CORRUPT_DATA", "Some index structure is corrupt" },
++	{ "UDS_NO_INDEX", "No index found" },
++	{ "UDS_INDEX_NOT_SAVED_CLEANLY", "Index not saved cleanly" },
++};
 +
-+/*
-+ * Register the current thread as an allocating thread.
-+ *
-+ * An optional flag location can be supplied indicating whether, at any given point in time, the
-+ * threads associated with that flag should be allocating storage. If the flag is false, a message
-+ * will be logged.
-+ *
-+ * If no flag is supplied, the thread is always allowed to allocate storage without complaint.
-+ *
-+ * @new_thread: registered_thread structure to use for the current thread
-+ * @flag_ptr: Location of the allocation-allowed flag
-+ */
-+void uds_register_allocating_thread(struct registered_thread *new_thread, const bool *flag_ptr)
-+{
-+	if (flag_ptr == NULL) {
-+		static const bool allocation_always_allowed = true;
++struct error_block {
++	const char *name;
++	int base;
++	int last;
++	int max;
++	const struct error_info *infos;
++};
 +
-+		flag_ptr = &allocation_always_allowed;
-+	}
-+
-+	uds_register_thread(&allocating_threads, new_thread, flag_ptr);
-+}
-+
-+/* Unregister the current thread as an allocating thread. */
-+void uds_unregister_allocating_thread(void)
-+{
-+	uds_unregister_thread(&allocating_threads);
-+}
-+
-+/*
-+ * We track how much memory has been allocated and freed. When we unload the module, we log an
-+ * error if we have not freed all the memory that we allocated. Nearly all memory allocation and
-+ * freeing is done using this module.
-+ *
-+ * We do not use kernel functions like the kvasprintf() method, which allocate memory indirectly
-+ * using kmalloc.
-+ *
-+ * These data structures and methods are used to track the amount of memory used.
-+ */
-+
-+/*
-+ * We allocate very few large objects, and allocation/deallocation isn't done in a
-+ * performance-critical stage for us, so a linked list should be fine.
-+ */
-+struct vmalloc_block_info {
-+	void *ptr;
-+	size_t size;
-+	struct vmalloc_block_info *next;
++enum {
++	MAX_ERROR_BLOCKS = 6,
 +};
 +
 +static struct {
-+	spinlock_t lock;
-+	size_t kmalloc_blocks;
-+	size_t kmalloc_bytes;
-+	size_t vmalloc_blocks;
-+	size_t vmalloc_bytes;
-+	size_t peak_bytes;
-+	struct vmalloc_block_info *vmalloc_list;
-+} memory_stats __cacheline_aligned;
++	int allocated;
++	int count;
++	struct error_block blocks[MAX_ERROR_BLOCKS];
++} registered_errors = {
++	.allocated = MAX_ERROR_BLOCKS,
++	.count = 1,
++	.blocks = { {
++			.name = "UDS Error",
++			.base = UDS_ERROR_CODE_BASE,
++			.last = UDS_ERROR_CODE_LAST,
++			.max = UDS_ERROR_CODE_BLOCK_END,
++			.infos = error_list,
++		  } },
++};
 +
-+static void update_peak_usage(void)
++/* Get the error info for an error number. Also returns the name of the error block, if known. */
++static const char *get_error_info(int errnum, const struct error_info **info_ptr)
 +{
-+	size_t total_bytes = memory_stats.kmalloc_bytes + memory_stats.vmalloc_bytes;
++	struct error_block *block;
 +
-+	if (total_bytes > memory_stats.peak_bytes)
-+		memory_stats.peak_bytes = total_bytes;
-+}
++	if (errnum == UDS_SUCCESS) {
++		*info_ptr = &successful;
++		return NULL;
++	}
 +
-+static void add_kmalloc_block(size_t size)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&memory_stats.lock, flags);
-+	memory_stats.kmalloc_blocks++;
-+	memory_stats.kmalloc_bytes += size;
-+	update_peak_usage();
-+	spin_unlock_irqrestore(&memory_stats.lock, flags);
-+}
-+
-+static void remove_kmalloc_block(size_t size)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&memory_stats.lock, flags);
-+	memory_stats.kmalloc_blocks--;
-+	memory_stats.kmalloc_bytes -= size;
-+	spin_unlock_irqrestore(&memory_stats.lock, flags);
-+}
-+
-+static void add_vmalloc_block(struct vmalloc_block_info *block)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&memory_stats.lock, flags);
-+	block->next = memory_stats.vmalloc_list;
-+	memory_stats.vmalloc_list = block;
-+	memory_stats.vmalloc_blocks++;
-+	memory_stats.vmalloc_bytes += block->size;
-+	update_peak_usage();
-+	spin_unlock_irqrestore(&memory_stats.lock, flags);
-+}
-+
-+static void remove_vmalloc_block(void *ptr)
-+{
-+	struct vmalloc_block_info *block;
-+	struct vmalloc_block_info **block_ptr;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&memory_stats.lock, flags);
-+	for (block_ptr = &memory_stats.vmalloc_list;
-+	     (block = *block_ptr) != NULL;
-+	     block_ptr = &block->next) {
-+		if (block->ptr == ptr) {
-+			*block_ptr = block->next;
-+			memory_stats.vmalloc_blocks--;
-+			memory_stats.vmalloc_bytes -= block->size;
-+			break;
++	for (block = registered_errors.blocks;
++	     block < registered_errors.blocks + registered_errors.count;
++	     ++block) {
++		if ((errnum >= block->base) && (errnum < block->last)) {
++			*info_ptr = block->infos + (errnum - block->base);
++			return block->name;
++		} else if ((errnum >= block->last) && (errnum < block->max)) {
++			*info_ptr = NULL;
++			return block->name;
 +		}
 +	}
 +
-+	spin_unlock_irqrestore(&memory_stats.lock, flags);
-+	if (block != NULL)
-+		UDS_FREE(block);
-+	else
-+		uds_log_info("attempting to remove ptr %px not found in vmalloc list", ptr);
++	return NULL;
 +}
 +
-+/*
-+ * Determine whether allocating a memory block should use kmalloc or __vmalloc.
-+ *
-+ * vmalloc can allocate any integral number of pages.
-+ *
-+ * kmalloc can allocate any number of bytes up to a configured limit, which defaults to 8 megabytes
-+ * on some systems. kmalloc is especially good when memory is being both allocated and freed, and
-+ * it does this efficiently in a multi CPU environment.
-+ *
-+ * kmalloc usually rounds the size of the block up to the next power of two, so when the requested
-+ * block is bigger than PAGE_SIZE / 2 bytes, kmalloc will never give you less space than the
-+ * corresponding vmalloc allocation. Sometimes vmalloc will use less overhead than kmalloc.
-+ *
-+ * The advantages of kmalloc do not help out UDS or VDO, because we allocate all our memory up
-+ * front and do not free and reallocate it. Sometimes we have problems using kmalloc, because the
-+ * Linux memory page map can become so fragmented that kmalloc will not give us a 32KB chunk. We
-+ * have used vmalloc as a backup to kmalloc in the past, and a follow-up vmalloc of 32KB will work.
-+ * But there is no strong case to be made for using kmalloc over vmalloc for these size chunks.
-+ *
-+ * The kmalloc/vmalloc boundary is set at 4KB, and kmalloc gets the 4KB requests. There is no
-+ * strong reason for favoring either kmalloc or vmalloc for 4KB requests, except that tracking
-+ * vmalloc statistics uses a linked list implementation. Using a simple test, this choice of
-+ * boundary results in 132 vmalloc calls. Using vmalloc for requests of exactly 4KB results in an
-+ * additional 6374 vmalloc calls, which is much less efficient for tracking.
-+ *
-+ * @size: How many bytes to allocate
-+ */
-+static inline bool use_kmalloc(size_t size)
++/* Return a string describing a system error message. */
++static const char *system_string_error(int errnum, char *buf, size_t buflen)
 +{
-+	return size <= PAGE_SIZE;
++	size_t len;
++	const char *error_string = NULL;
++
++	if ((errnum > 0) && (errnum < ARRAY_SIZE(message_table)))
++		error_string = message_table[errnum];
++
++	len = ((error_string == NULL) ?
++		 snprintf(buf, buflen, "Unknown error %d", errnum) :
++		 snprintf(buf, buflen, "%s", error_string));
++	if (len < buflen)
++		return buf;
++
++	buf[0] = '\0';
++	return "System error";
 +}
 +
-+/*
-+ * Allocate storage based on memory size and alignment, logging an error if the allocation fails.
-+ * The memory will be zeroed.
-+ *
-+ * @size: The size of an object
-+ * @align: The required alignment
-+ * @what: What is being allocated (for error logging)
-+ * @ptr: A pointer to hold the allocated memory
-+ *
-+ * Return: UDS_SUCCESS or an error code
-+ */
-+int uds_allocate_memory(size_t size, size_t align, const char *what, void *ptr)
++/* Convert an error code to a descriptive string. */
++const char *uds_string_error(int errnum, char *buf, size_t buflen)
 +{
-+	/*
-+	 * The __GFP_RETRY_MAYFAIL flag means the VM implementation will retry memory reclaim
-+	 * procedures that have previously failed if there is some indication that progress has
-+	 * been made elsewhere. It can wait for other tasks to attempt high level approaches to
-+	 * freeing memory such as compaction (which removes fragmentation) and page-out. There is
-+	 * still a definite limit to the number of retries, but it is a larger limit than with
-+	 * __GFP_NORETRY. Allocations with this flag may fail, but only when there is genuinely
-+	 * little unused memory. While these allocations do not directly trigger the OOM killer,
-+	 * their failure indicates that the system is likely to need to use the OOM killer soon.
-+	 * The caller must handle failure, but can reasonably do so by failing a higher-level
-+	 * request, or completing it only in a much less efficient manner.
-+	 */
-+	const gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO | __GFP_RETRY_MAYFAIL;
-+	unsigned int noio_flags;
-+	bool allocations_restricted = !allocations_allowed();
-+	unsigned long start_time;
-+	void *p = NULL;
++	char *buffer = buf;
++	char *buf_end = buf + buflen;
++	const struct error_info *info = NULL;
++	const char *block_name;
 +
-+	if (ptr == NULL)
-+		return UDS_INVALID_ARGUMENT;
++	if (buf == NULL)
++		return NULL;
 +
-+	if (size == 0) {
-+		*((void **) ptr) = NULL;
-+		return UDS_SUCCESS;
-+	}
++	if (errnum < 0)
++		errnum = -errnum;
 +
-+	if (allocations_restricted)
-+		noio_flags = memalloc_noio_save();
-+
-+	start_time = jiffies;
-+	if (use_kmalloc(size) && (align < PAGE_SIZE)) {
-+		p = kmalloc(size, gfp_flags | __GFP_NOWARN);
-+		if (p == NULL) {
-+			/*
-+			 * It is possible for kmalloc to fail to allocate memory because there is
-+			 * no page available (see VDO-3688). A short sleep may allow the page
-+			 * reclaimer to free a page.
-+			 */
-+			fsleep(1000);
-+			p = kmalloc(size, gfp_flags);
-+		}
-+
-+		if (p != NULL)
-+			add_kmalloc_block(ksize(p));
++	block_name = get_error_info(errnum, &info);
++	if (block_name != NULL) {
++		if (info != NULL)
++			buffer = uds_append_to_buffer(buffer,
++						      buf_end,
++						      "%s: %s",
++						      block_name,
++						      info->message);
++		else
++			buffer = uds_append_to_buffer(buffer,
++						      buf_end,
++						      "Unknown %s %d",
++						      block_name,
++						      errnum);
++	} else if (info != NULL) {
++		buffer = uds_append_to_buffer(buffer, buf_end, "%s", info->message);
 +	} else {
-+		struct vmalloc_block_info *block;
++		const char *tmp = system_string_error(errnum, buffer, buf_end - buffer);
 +
-+		if (UDS_ALLOCATE(1, struct vmalloc_block_info, __func__, &block) ==
-+		    UDS_SUCCESS) {
-+			/*
-+			 * It is possible for __vmalloc to fail to allocate memory because there
-+			 * are no pages available (see VDO-3661). A short sleep may allow the page
-+			 * reclaimer to free enough pages for a small allocation.
-+			 *
-+			 * For larger allocations, the page_alloc code is racing against the page
-+			 * reclaimer. If the page reclaimer can stay ahead of page_alloc, the
-+			 * __vmalloc will succeed. But if page_alloc overtakes the page reclaimer,
-+			 * the allocation fails. It is possible that more retries will succeed.
-+			 */
-+			for (;;) {
-+				p = __vmalloc(size, gfp_flags | __GFP_NOWARN);
-+
-+				if (p != NULL)
-+					break;
-+
-+				if (jiffies_to_msecs(jiffies - start_time) > 1000) {
-+					/* Try one more time, logging a failure for this call. */
-+					p = __vmalloc(size, gfp_flags);
-+					break;
-+				}
-+
-+				fsleep(1000);
-+			}
-+
-+			if (p == NULL) {
-+				UDS_FREE(block);
-+			} else {
-+				block->ptr = p;
-+				block->size = PAGE_ALIGN(size);
-+				add_vmalloc_block(block);
-+			}
-+		}
++		if (tmp != buffer)
++			buffer = uds_append_to_buffer(buffer, buf_end, "%s", tmp);
++		else
++			buffer += strlen(tmp);
 +	}
++	return buf;
++}
 +
-+	if (allocations_restricted)
-+		memalloc_noio_restore(noio_flags);
++/* Convert an error code to its name. */
++const char *uds_string_error_name(int errnum, char *buf, size_t buflen)
++{
++	char *buffer = buf;
++	char *buf_end = buf + buflen;
++	const struct error_info *info = NULL;
++	const char *block_name;
 +
-+	if (p == NULL) {
-+		unsigned int duration = jiffies_to_msecs(jiffies - start_time);
++	if (errnum < 0)
++		errnum = -errnum;
 +
-+		uds_log_error("Could not allocate %zu bytes for %s in %u msecs",
-+			      size,
-+			      what,
-+			      duration);
-+		return -ENOMEM;
++	block_name = get_error_info(errnum, &info);
++	if (block_name != NULL) {
++		if (info != NULL)
++			buffer = uds_append_to_buffer(buffer, buf_end, "%s", info->name);
++		else
++			buffer = uds_append_to_buffer(buffer,
++						      buf_end,
++						      "%s %d",
++						      block_name,
++						      errnum);
++	} else if (info != NULL) {
++		buffer = uds_append_to_buffer(buffer, buf_end, "%s", info->name);
++	} else {
++		const char *tmp;
++
++		tmp = system_string_error(errnum, buffer, buf_end - buffer);
++		if (tmp != buffer)
++			buffer = uds_append_to_buffer(buffer, buf_end, "%s", tmp);
++		else
++			buffer += strlen(tmp);
 +	}
-+
-+	*((void **) ptr) = p;
-+	return UDS_SUCCESS;
++	return buf;
 +}
 +
 +/*
-+ * Allocate storage based on memory size, failing immediately if the required memory is not
-+ * available. The memory will be zeroed.
-+ *
-+ * @size: The size of an object.
-+ * @what: What is being allocated (for error logging)
-+ *
-+ * Return: pointer to the allocated memory, or NULL if the required space is not available.
++ * Translate an error code into a value acceptable to the kernel. The input error code may be a
++ * system-generated value (such as -EIO), or an internal UDS status code. The result will be a
++ * negative errno value.
 + */
-+void *uds_allocate_memory_nowait(size_t size, const char *what __maybe_unused)
++int uds_map_to_system_error(int error)
 +{
-+	void *p = kmalloc(size, GFP_NOWAIT | __GFP_ZERO);
++	char error_name[UDS_MAX_ERROR_NAME_SIZE];
++	char error_message[UDS_MAX_ERROR_MESSAGE_SIZE];
 +
-+	if (p != NULL)
-+		add_kmalloc_block(ksize(p));
++	/* 0 is success, and negative values are already system error codes. */
++	if (likely(error <= 0))
++		return error;
 +
-+	return p;
-+}
++	if (error < 1024)
++		/* This is probably an errno from userspace. */
++		return -error;
 +
-+void uds_free_memory(void *ptr)
-+{
-+	if (ptr != NULL) {
-+		if (is_vmalloc_addr(ptr)) {
-+			remove_vmalloc_block(ptr);
-+			vfree(ptr);
-+		} else {
-+			remove_kmalloc_block(ksize(ptr));
-+			kfree(ptr);
-+		}
++	/* Internal UDS errors */
++	switch (error) {
++	case UDS_NO_INDEX:
++	case UDS_CORRUPT_DATA:
++		/* The index doesn't exist or can't be recovered. */
++		return -ENOENT;
++
++	case UDS_INDEX_NOT_SAVED_CLEANLY:
++	case UDS_UNSUPPORTED_VERSION:
++		/*
++		 * The index exists, but can't be loaded. Tell the client it exists so they don't
++		 * destroy it inadvertently.
++		 */
++		return -EEXIST;
++
++	case UDS_DISABLED:
++		/* The session is unusable; only returned by requests. */
++		return -EIO;
++
++	default:
++		/* Translate an unexpected error into something generic. */
++		uds_log_info("%s: mapping status code %d (%s: %s) to -EIO",
++			     __func__,
++			     error,
++			     uds_string_error_name(error, error_name, sizeof(error_name)),
++			     uds_string_error(error, error_message, sizeof(error_message)));
++		return -EIO;
 +	}
 +}
 +
 +/*
-+ * Reallocate dynamically allocated memory. There are no alignment guarantees for the reallocated
-+ * memory. If the new memory is larger than the old memory, the new space will be zeroed.
++ * Register a block of error codes.
 + *
-+ * @ptr: The memory to reallocate.
-+ * @old_size: The old size of the memory
-+ * @size: The new size to allocate
-+ * @what: What is being allocated (for error logging)
-+ * @new_ptr: A pointer to hold the reallocated pointer
-+ *
-+ * Return: UDS_SUCCESS or an error code
++ * @block_name: the name of the block of error codes
++ * @first_error: the first error code in the block
++ * @next_free_error: one past the highest possible error in the block
++ * @infos: a pointer to the error info array for the block
++ * @info_size: the size of the error info array
 + */
-+int uds_reallocate_memory(void *ptr, size_t old_size, size_t size, const char *what, void *new_ptr)
++int uds_register_error_block(const char *block_name,
++			     int first_error,
++			     int next_free_error,
++			     const struct error_info *infos,
++			     size_t info_size)
 +{
 +	int result;
++	struct error_block *block;
++	struct error_block new_block = {
++		.name = block_name,
++		.base = first_error,
++		.last = first_error + (info_size / sizeof(struct error_info)),
++		.max = next_free_error,
++		.infos = infos,
++	};
 +
-+	if (size == 0) {
-+		UDS_FREE(ptr);
-+		*(void **) new_ptr = NULL;
-+		return UDS_SUCCESS;
-+	}
-+
-+	result = UDS_ALLOCATE(size, char, what, new_ptr);
++	result = ASSERT(first_error < next_free_error, "well-defined error block range");
 +	if (result != UDS_SUCCESS)
 +		return result;
 +
-+	if (ptr != NULL) {
-+		if (old_size < size)
-+			size = old_size;
++	if (registered_errors.count == registered_errors.allocated)
++		/* This should never happen. */
++		return UDS_OVERFLOW;
 +
-+		memcpy(*((void **) new_ptr), ptr, size);
-+		UDS_FREE(ptr);
++	for (block = registered_errors.blocks;
++	     block < registered_errors.blocks + registered_errors.count;
++	     ++block) {
++		if (strcmp(block_name, block->name) == 0)
++			return UDS_DUPLICATE_NAME;
++
++		/* Ensure error ranges do not overlap. */
++		if ((first_error < block->max) && (next_free_error > block->base))
++			return UDS_ALREADY_REGISTERED;
 +	}
 +
++	registered_errors.blocks[registered_errors.count++] = new_block;
 +	return UDS_SUCCESS;
 +}
-+
-+int uds_duplicate_string(const char *string, const char *what, char **new_string)
-+{
-+	int result;
-+	u8 *dup;
-+
-+	result = UDS_ALLOCATE(strlen(string) + 1, u8, what, &dup);
-+	if (result != UDS_SUCCESS)
-+		return result;
-+
-+	memcpy(dup, string, strlen(string) + 1);
-+	*new_string = dup;
-+	return UDS_SUCCESS;
-+}
-+
-+void uds_memory_init(void)
-+{
-+	spin_lock_init(&memory_stats.lock);
-+	uds_initialize_thread_registry(&allocating_threads);
-+}
-+
-+void uds_memory_exit(void)
-+{
-+	ASSERT_LOG_ONLY(memory_stats.kmalloc_bytes == 0,
-+			"kmalloc memory used (%zd bytes in %zd blocks) is returned to the kernel",
-+			memory_stats.kmalloc_bytes,
-+			memory_stats.kmalloc_blocks);
-+	ASSERT_LOG_ONLY(memory_stats.vmalloc_bytes == 0,
-+			"vmalloc memory used (%zd bytes in %zd blocks) is returned to the kernel",
-+			memory_stats.vmalloc_bytes,
-+			memory_stats.vmalloc_blocks);
-+	uds_log_debug("peak usage %zd bytes", memory_stats.peak_bytes);
-+}
-+
-+void uds_get_memory_stats(u64 *bytes_used, u64 *peak_bytes_used)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&memory_stats.lock, flags);
-+	*bytes_used = memory_stats.kmalloc_bytes + memory_stats.vmalloc_bytes;
-+	*peak_bytes_used = memory_stats.peak_bytes;
-+	spin_unlock_irqrestore(&memory_stats.lock, flags);
-+}
-+
-+/*
-+ * Report stats on any allocated memory that we're tracking. Not all allocation types are
-+ * guaranteed to be tracked in bytes (e.g., bios).
-+ */
-+void uds_report_memory_usage(void)
-+{
-+	unsigned long flags;
-+	u64 kmalloc_blocks;
-+	u64 kmalloc_bytes;
-+	u64 vmalloc_blocks;
-+	u64 vmalloc_bytes;
-+	u64 peak_usage;
-+	u64 total_bytes;
-+
-+	spin_lock_irqsave(&memory_stats.lock, flags);
-+	kmalloc_blocks = memory_stats.kmalloc_blocks;
-+	kmalloc_bytes = memory_stats.kmalloc_bytes;
-+	vmalloc_blocks = memory_stats.vmalloc_blocks;
-+	vmalloc_bytes = memory_stats.vmalloc_bytes;
-+	peak_usage = memory_stats.peak_bytes;
-+	spin_unlock_irqrestore(&memory_stats.lock, flags);
-+	total_bytes = kmalloc_bytes + vmalloc_bytes;
-+	uds_log_info("current module memory tracking (actual allocation sizes, not requested):");
-+	uds_log_info("  %llu bytes in %llu kmalloc blocks",
-+		     (unsigned long long) kmalloc_bytes,
-+		     (unsigned long long) kmalloc_blocks);
-+	uds_log_info("  %llu bytes in %llu vmalloc blocks",
-+		     (unsigned long long) vmalloc_bytes,
-+		     (unsigned long long) vmalloc_blocks);
-+	uds_log_info("  total %llu bytes, peak usage %llu bytes",
-+		     (unsigned long long) total_bytes,
-+		     (unsigned long long) peak_usage);
-+}
-diff --git a/drivers/md/dm-vdo/memory-alloc.h b/drivers/md/dm-vdo/memory-alloc.h
+diff --git a/drivers/md/dm-vdo/errors.h b/drivers/md/dm-vdo/errors.h
 new file mode 100644
-index 00000000000..2ea2464326d
+index 00000000000..1740bac8936
 --- /dev/null
-+++ b/drivers/md/dm-vdo/memory-alloc.h
-@@ -0,0 +1,181 @@
++++ b/drivers/md/dm-vdo/errors.h
+@@ -0,0 +1,83 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright Red Hat
 + */
 +
-+#ifndef UDS_MEMORY_ALLOC_H
-+#define UDS_MEMORY_ALLOC_H
++#ifndef UDS_ERRORS_H
++#define UDS_ERRORS_H
 +
-+#include <linux/cache.h>
-+#include <linux/io.h> /* for PAGE_SIZE */
++#include <linux/compiler.h>
++#include <linux/types.h>
++
++/* Custom error codes and error-related utilities for UDS */
++
++/* Valid status codes for internal UDS functions. */
++enum uds_status_codes {
++	/* Successful return */
++	UDS_SUCCESS = 0,
++
++	/* Used as a base value for reporting internal errors */
++	UDS_ERROR_CODE_BASE = 1024,
++	/* Index overflow */
++	UDS_OVERFLOW = UDS_ERROR_CODE_BASE + 0,
++	/* Invalid argument passed to internal routine */
++	UDS_INVALID_ARGUMENT = UDS_ERROR_CODE_BASE + 1,
++	/* UDS data structures are in an invalid state */
++	UDS_BAD_STATE = UDS_ERROR_CODE_BASE + 2,
++	/* Attempt to enter the same name into an internal structure twice */
++	UDS_DUPLICATE_NAME = UDS_ERROR_CODE_BASE + 3,
++	/* An assertion failed */
++	UDS_ASSERTION_FAILED = UDS_ERROR_CODE_BASE + 4,
++	/* A request has been queued for later processing (not an error) */
++	UDS_QUEUED = UDS_ERROR_CODE_BASE + 5,
++	/* A problem has occurred with a buffer */
++	UDS_BUFFER_ERROR = UDS_ERROR_CODE_BASE + 6,
++	/* No directory was found where one was expected */
++	UDS_NO_DIRECTORY = UDS_ERROR_CODE_BASE + 7,
++	/* This error range has already been registered */
++	UDS_ALREADY_REGISTERED = UDS_ERROR_CODE_BASE + 8,
++	/* Attempt to read or write data outside the valid range */
++	UDS_OUT_OF_RANGE = UDS_ERROR_CODE_BASE + 9,
++	/* Could not load modules */
++	UDS_EMODULE_LOAD = UDS_ERROR_CODE_BASE + 10,
++	/* The index session is disabled */
++	UDS_DISABLED = UDS_ERROR_CODE_BASE + 11,
++	/* Unknown error */
++	UDS_UNKNOWN_ERROR = UDS_ERROR_CODE_BASE + 12,
++	/* The index configuration or volume format is no longer supported */
++	UDS_UNSUPPORTED_VERSION = UDS_ERROR_CODE_BASE + 13,
++	/* Some index structure is corrupt */
++	UDS_CORRUPT_DATA = UDS_ERROR_CODE_BASE + 14,
++	/* No index state found */
++	UDS_NO_INDEX = UDS_ERROR_CODE_BASE + 15,
++	/* Attempt to access incomplete index save data */
++	UDS_INDEX_NOT_SAVED_CLEANLY = UDS_ERROR_CODE_BASE + 16,
++	/* One more than the last UDS_INTERNAL error code */
++	UDS_ERROR_CODE_LAST,
++	/* One more than the last error this block will ever use */
++	UDS_ERROR_CODE_BLOCK_END = UDS_ERROR_CODE_BASE + 440,
++};
++
++enum {
++	UDS_MAX_ERROR_NAME_SIZE = 80,
++	UDS_MAX_ERROR_MESSAGE_SIZE = 128,
++};
++
++struct error_info {
++	const char *name;
++	const char *message;
++};
++
++const char * __must_check uds_string_error(int errnum, char *buf, size_t buflen);
++
++const char *uds_string_error_name(int errnum, char *buf, size_t buflen);
++
++int uds_map_to_system_error(int error);
++
++int uds_register_error_block(const char *block_name,
++			     int first_error,
++			     int last_reserved_error,
++			     const struct error_info *infos,
++			     size_t info_size);
++
++#endif /* UDS_ERRORS_H */
+diff --git a/drivers/md/dm-vdo/logger.c b/drivers/md/dm-vdo/logger.c
+new file mode 100644
+index 00000000000..45a9d8b3936
+--- /dev/null
++++ b/drivers/md/dm-vdo/logger.c
+@@ -0,0 +1,304 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright Red Hat
++ */
++
++#include "logger.h"
++
++#include <linux/delay.h>
++#include <linux/hardirq.h>
++#include <linux/module.h>
++#include <linux/printk.h>
++#include <linux/sched.h>
++
++#include "thread-device.h"
++#include "uds-threads.h"
++
++struct priority_name {
++	const char *name;
++	const int priority;
++};
++
++static const struct priority_name PRIORITIES[] = {
++	{ "ALERT", UDS_LOG_ALERT },
++	{ "CRITICAL", UDS_LOG_CRIT },
++	{ "CRIT", UDS_LOG_CRIT },
++	{ "DEBUG", UDS_LOG_DEBUG },
++	{ "EMERGENCY", UDS_LOG_EMERG },
++	{ "EMERG", UDS_LOG_EMERG },
++	{ "ERROR", UDS_LOG_ERR },
++	{ "ERR", UDS_LOG_ERR },
++	{ "INFO", UDS_LOG_INFO },
++	{ "NOTICE", UDS_LOG_NOTICE },
++	{ "PANIC", UDS_LOG_EMERG },
++	{ "WARN", UDS_LOG_WARNING },
++	{ "WARNING", UDS_LOG_WARNING },
++	{ NULL, -1 },
++};
++
++static const char *const PRIORITY_STRINGS[] = {
++	"EMERGENCY",
++	"ALERT",
++	"CRITICAL",
++	"ERROR",
++	"WARN",
++	"NOTICE",
++	"INFO",
++	"DEBUG",
++};
++
++static int log_level = UDS_LOG_INFO;
++
++int uds_get_log_level(void)
++{
++	return log_level;
++}
++
++void uds_set_log_level(int new_log_level)
++{
++	log_level = new_log_level;
++}
++
++int uds_log_string_to_priority(const char *string)
++{
++	int i;
++
++	for (i = 0; PRIORITIES[i].name != NULL; i++)
++		if (strcasecmp(string, PRIORITIES[i].name) == 0)
++			return PRIORITIES[i].priority;
++	return UDS_LOG_INFO;
++}
++
++const char *uds_log_priority_to_string(int priority)
++{
++	if ((priority < 0) || (priority >= (int) ARRAY_SIZE(PRIORITY_STRINGS)))
++		return "unknown";
++	return PRIORITY_STRINGS[priority];
++}
++
++static const char *get_current_interrupt_type(void)
++{
++	if (in_nmi())
++		return "NMI";
++	if (in_irq())
++		return "HI";
++	if (in_softirq())
++		return "SI";
++	return "INTR";
++}
++
++/**
++ * emit_log_message_to_kernel() - Emit a log message to the kernel at the specified priority.
++ *
++ * @priority: The priority at which to log the message
++ * @fmt: The format string of the message
++ */
++static void emit_log_message_to_kernel(int priority, const char *fmt, ...)
++{
++	va_list args;
++	struct va_format vaf;
++
++	if (priority > uds_get_log_level())
++		return;
++
++	va_start(args, fmt);
++	vaf.fmt = fmt;
++	vaf.va = &args;
++
++	switch (priority) {
++	case UDS_LOG_EMERG:
++	case UDS_LOG_ALERT:
++	case UDS_LOG_CRIT:
++		printk(KERN_CRIT "%pV", &vaf);
++		break;
++	case UDS_LOG_ERR:
++		printk(KERN_ERR "%pV", &vaf);
++		break;
++	case UDS_LOG_WARNING:
++		printk(KERN_WARNING "%pV", &vaf);
++		break;
++	case UDS_LOG_NOTICE:
++		printk(KERN_NOTICE "%pV", &vaf);
++		break;
++	case UDS_LOG_INFO:
++		printk(KERN_INFO "%pV", &vaf);
++		break;
++	case UDS_LOG_DEBUG:
++		printk(KERN_DEBUG "%pV", &vaf);
++		break;
++	default:
++		printk(KERN_DEFAULT "%pV", &vaf);
++		break;
++	}
++
++	va_end(args);
++}
++
++/**
++ * emit_log_message() - Emit a log message to the kernel log in a format suited to the current
++ *                      thread context.
++ *
++ * Context info formats:
++ *
++ * interrupt:           uds[NMI]: blah
++ * kvdo thread:         kvdo12:foobarQ: blah
++ * thread w/device id:  kvdo12:myprog: blah
++ * other thread:        uds: myprog: blah
++ *
++ * Fields: module name, interrupt level, process name, device ID.
++ *
++ * @priority: the priority at which to log the message
++ * @module: The name of the module doing the logging
++ * @prefix: The prefix of the log message
++ * @vaf1: The first message format descriptor
++ * @vaf2: The second message format descriptor
++ */
++static void emit_log_message(int priority,
++			     const char *module,
++			     const char *prefix,
++			     const struct va_format *vaf1,
++			     const struct va_format *vaf2)
++{
++	int device_instance;
++
++	/*
++	 * In interrupt context, identify the interrupt type and module. Ignore the process/thread
++	 * since it could be anything.
++	 */
++	if (in_interrupt()) {
++		const char *type = get_current_interrupt_type();
++
++		emit_log_message_to_kernel(priority,
++					   "%s[%s]: %s%pV%pV\n",
++					   module, type, prefix, vaf1, vaf2);
++		return;
++	}
++
++	/* Not at interrupt level; we have a process we can look at, and might have a device ID. */
++	device_instance = uds_get_thread_device_id();
++	if (device_instance >= 0) {
++		emit_log_message_to_kernel(priority,
++					   "%s%u:%s: %s%pV%pV\n",
++					   module, device_instance,
++					   current->comm, prefix, vaf1, vaf2);
++		return;
++	}
++
++	/*
++	 * If it's a kernel thread and the module name is a prefix of its name, assume it is ours
++	 * and only identify the thread.
++	 */
++	if (((current->flags & PF_KTHREAD) != 0) &&
++	    (strncmp(module, current->comm, strlen(module)) == 0)) {
++		emit_log_message_to_kernel(priority,
++					   "%s: %s%pV%pV\n",
++					   current->comm, prefix, vaf1, vaf2);
++		return;
++	}
++
++	/* Identify the module and the process. */
++	emit_log_message_to_kernel(priority,
++				   "%s: %s: %s%pV%pV\n",
++				   module, current->comm, prefix, vaf1, vaf2);
++}
++
++/*
++ * uds_log_embedded_message() - Log a message embedded within another message.
++ * @priority: the priority at which to log the message
++ * @module: the name of the module doing the logging
++ * @prefix: optional string prefix to message, may be NULL
++ * @fmt1: format of message first part (required)
++ * @args1: arguments for message first part (required)
++ * @fmt2: format of message second part
++ */
++void uds_log_embedded_message(int priority,
++			      const char *module,
++			      const char *prefix,
++			      const char *fmt1,
++			      va_list args1,
++			      const char *fmt2,
++			      ...)
++{
++	va_list args1_copy;
++	va_list args2;
++	struct va_format vaf1, vaf2;
++
++	va_start(args2, fmt2);
++
++	if (module == NULL)
++		module = UDS_LOGGING_MODULE_NAME;
++	if (prefix == NULL)
++		prefix = "";
++
++	/*
++	 * It is implementation dependent whether va_list is defined as an array type that decays
++	 * to a pointer when passed as an argument. Copy args1 and args2 with va_copy so that vaf1
++	 * and vaf2 get proper va_list pointers irrespective of how va_list is defined.
++	 */
++	va_copy(args1_copy, args1);
++	vaf1.fmt = fmt1;
++	vaf1.va = &args1_copy;
++
++	vaf2.fmt = fmt2;
++	vaf2.va = &args2;
++
++	emit_log_message(priority, module, prefix, &vaf1, &vaf2);
++
++	va_end(args1_copy);
++	va_end(args2);
++}
++
++int uds_vlog_strerror(int priority,
++		      int errnum,
++		      const char *module,
++		      const char *format,
++		      va_list args)
++{
++	char errbuf[UDS_MAX_ERROR_MESSAGE_SIZE];
++	const char *message = uds_string_error(errnum, errbuf, sizeof(errbuf));
++
++	uds_log_embedded_message(priority,
++				 module,
++				 NULL,
++				 format,
++				 args,
++				 ": %s (%d)",
++				 message,
++				 errnum);
++	return errnum;
++}
++
++int __uds_log_strerror(int priority, int errnum, const char *module, const char *format, ...)
++{
++	va_list args;
++
++	va_start(args, format);
++	uds_vlog_strerror(priority, errnum, module, format, args);
++	va_end(args);
++	return errnum;
++}
++
++void uds_log_backtrace(int priority)
++{
++	if (priority > uds_get_log_level())
++		return;
++	dump_stack();
++}
++
++void __uds_log_message(int priority, const char *module, const char *format, ...)
++{
++	va_list args;
++
++	va_start(args, format);
++	uds_log_embedded_message(priority, module, NULL, format, args, "%s", "");
++	va_end(args);
++}
++
++/*
++ * Sleep or delay a few milliseconds in an attempt to allow the log buffers to be flushed lest they
++ * be overrun.
++ */
++void uds_pause_for_logger(void)
++{
++	fsleep(4000);
++}
+diff --git a/drivers/md/dm-vdo/logger.h b/drivers/md/dm-vdo/logger.h
+new file mode 100644
+index 00000000000..4e3ea3f0263
+--- /dev/null
++++ b/drivers/md/dm-vdo/logger.h
+@@ -0,0 +1,112 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright Red Hat
++ */
++
++#ifndef UDS_LOGGER_H
++#define UDS_LOGGER_H
++
++#include <linux/module.h>
++#include <linux/ratelimit.h>
++
++/* Custom logging utilities for UDS */
++
++#define UDS_LOG_EMERG 0
++#define UDS_LOG_ALERT 1
++#define UDS_LOG_CRIT 2
++#define UDS_LOG_ERR 3
++#define UDS_LOG_WARNING 4
++#define UDS_LOG_NOTICE 5
++#define UDS_LOG_INFO 6
++#define UDS_LOG_DEBUG 7
++
++#if defined(MODULE)
++#define UDS_LOGGING_MODULE_NAME THIS_MODULE->name
++#else /* compiled into the kernel */
++#define UDS_LOGGING_MODULE_NAME "vdo"
++#endif
++
++/* Apply a rate limiter to a log method call. */
++#define uds_log_ratelimit(log_fn, ...)                                    \
++	do {                                                              \
++		static DEFINE_RATELIMIT_STATE(_rs,                        \
++					      DEFAULT_RATELIMIT_INTERVAL, \
++					      DEFAULT_RATELIMIT_BURST);   \
++		if (__ratelimit(&_rs)) {                                  \
++			log_fn(__VA_ARGS__);                              \
++		}                                                         \
++	} while (0)
++
++int uds_get_log_level(void);
++
++void uds_set_log_level(int new_log_level);
++
++int uds_log_string_to_priority(const char *string);
++
++const char *uds_log_priority_to_string(int priority);
++
++void uds_log_embedded_message(int priority,
++			      const char *module,
++			      const char *prefix,
++			      const char *fmt1,
++			      va_list args1,
++			      const char *fmt2,
++			      ...)
++	__printf(4, 0) __printf(6, 7);
++
++void uds_log_backtrace(int priority);
++
++/* All log functions will preserve the caller's value of errno. */
++
++#define uds_log_strerror(priority, errnum, ...) \
++	__uds_log_strerror(priority, errnum, UDS_LOGGING_MODULE_NAME, __VA_ARGS__)
++
++int __uds_log_strerror(int priority, int errnum, const char *module, const char *format, ...)
++	__printf(4, 5);
++
++int uds_vlog_strerror(int priority,
++		      int errnum,
++		      const char *module,
++		      const char *format,
++		      va_list args)
++	__printf(4, 0);
++
++/* Log an error prefixed with the string associated with the errnum. */
++#define uds_log_error_strerror(errnum, ...) \
++	uds_log_strerror(UDS_LOG_ERR, errnum, __VA_ARGS__)
++
++#define uds_log_debug_strerror(errnum, ...) \
++	uds_log_strerror(UDS_LOG_DEBUG, errnum, __VA_ARGS__)
++
++#define uds_log_info_strerror(errnum, ...) \
++	uds_log_strerror(UDS_LOG_INFO, errnum, __VA_ARGS__)
++
++#define uds_log_notice_strerror(errnum, ...) \
++	uds_log_strerror(UDS_LOG_NOTICE, errnum, __VA_ARGS__)
++
++#define uds_log_warning_strerror(errnum, ...) \
++	uds_log_strerror(UDS_LOG_WARNING, errnum, __VA_ARGS__)
++
++#define uds_log_fatal_strerror(errnum, ...) \
++	uds_log_strerror(UDS_LOG_CRIT, errnum, __VA_ARGS__)
++
++#define uds_log_message(priority, ...) \
++	__uds_log_message(priority, UDS_LOGGING_MODULE_NAME, __VA_ARGS__)
++
++void __uds_log_message(int priority, const char *module, const char *format, ...)
++	__printf(3, 4);
++
++#define uds_log_debug(...) uds_log_message(UDS_LOG_DEBUG, __VA_ARGS__)
++
++#define uds_log_info(...) uds_log_message(UDS_LOG_INFO, __VA_ARGS__)
++
++#define uds_log_notice(...) uds_log_message(UDS_LOG_NOTICE, __VA_ARGS__)
++
++#define uds_log_warning(...) uds_log_message(UDS_LOG_WARNING, __VA_ARGS__)
++
++#define uds_log_error(...) uds_log_message(UDS_LOG_ERR, __VA_ARGS__)
++
++#define uds_log_fatal(...) uds_log_message(UDS_LOG_CRIT, __VA_ARGS__)
++
++void uds_pause_for_logger(void);
++#endif /* UDS_LOGGER_H */
+diff --git a/drivers/md/dm-vdo/permassert.c b/drivers/md/dm-vdo/permassert.c
+new file mode 100644
+index 00000000000..6c20372eb3a
+--- /dev/null
++++ b/drivers/md/dm-vdo/permassert.c
+@@ -0,0 +1,35 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright Red Hat
++ */
 +
 +#include "permassert.h"
-+#include "thread-registry.h"
 +
-+/* Custom memory allocation functions for UDS that track memory usage */
++#include "errors.h"
++#include "logger.h"
 +
-+int __must_check uds_allocate_memory(size_t size, size_t align, const char *what, void *ptr);
-+
-+void uds_free_memory(void *ptr);
-+
-+/* Free memory allocated with UDS_ALLOCATE(). */
-+#define UDS_FREE(PTR) uds_free_memory(PTR)
-+
-+static inline void *uds_forget(void **ptr_ptr)
++int uds_assertion_failed(const char *expression_string,
++			 const char *file_name,
++			 int line_number,
++			 const char *format,
++			 ...)
 +{
-+	void *ptr = *ptr_ptr;
++	va_list args;
 +
-+	*ptr_ptr = NULL;
-+	return ptr;
++	va_start(args, format);
++
++	uds_log_embedded_message(UDS_LOG_ERR,
++				 UDS_LOGGING_MODULE_NAME,
++				 "assertion \"",
++				 format,
++				 args,
++				 "\" (%s) failed at %s:%d",
++				 expression_string,
++				 file_name,
++				 line_number);
++	uds_log_backtrace(UDS_LOG_ERR);
++
++	va_end(args);
++
++	return UDS_ASSERTION_FAILED;
++}
+diff --git a/drivers/md/dm-vdo/permassert.h b/drivers/md/dm-vdo/permassert.h
+new file mode 100644
+index 00000000000..224652c88de
+--- /dev/null
++++ b/drivers/md/dm-vdo/permassert.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright Red Hat
++ */
++
++#ifndef PERMASSERT_H
++#define PERMASSERT_H
++
++#include <linux/compiler.h>
++
++#include "errors.h"
++
++/* Utilities for asserting that certain conditions are met */
++
++#define STRINGIFY(X) #X
++#define STRINGIFY_VALUE(X) STRINGIFY(X)
++
++/*
++ * A hack to apply the "warn if unused" attribute to an integral expression.
++ *
++ * Since GCC doesn't propagate the warn_unused_result attribute to conditional expressions
++ * incorporating calls to functions with that attribute, this function can be used to wrap such an
++ * expression. With optimization enabled, this function contributes no additional instructions, but
++ * the warn_unused_result attribute still applies to the code calling it.
++ */
++static inline int __must_check uds_must_use(int value)
++{
++	return value;
 +}
 +
-+/*
-+ * Null out a pointer and return a copy to it. This macro should be used when passing a pointer to
-+ * a function for which it is not safe to access the pointer once the function returns.
-+ */
-+#define UDS_FORGET(ptr) uds_forget((void **) &(ptr))
++/* Assert that an expression is true and return an error if it is not. */
++#define ASSERT(expr, ...) uds_must_use(__UDS_ASSERT(expr, __VA_ARGS__))
 +
++/* Log a message if the expression is not true. */
++#define ASSERT_LOG_ONLY(expr, ...) __UDS_ASSERT(expr, __VA_ARGS__)
++
++#define __UDS_ASSERT(expr, ...)				      \
++	(likely(expr) ? UDS_SUCCESS			      \
++		      : uds_assertion_failed(STRINGIFY(expr), __FILE__, __LINE__, __VA_ARGS__))
++
++/* Log an assertion failure message. */
++int uds_assertion_failed(const char *expression_string,
++			 const char *file_name,
++			 int line_number,
++			 const char *format,
++			 ...)
++	__printf(4, 5);
++
++#define STATIC_ASSERT(expr)	     \
++	do {			     \
++		switch (0) {	     \
++		case 0:		     \
++			;	     \
++			fallthrough; \
++		case expr:	     \
++			;	     \
++			fallthrough; \
++		default:	     \
++			break;	     \
++		}		     \
++	} while (0)
++
++#define STATIC_ASSERT_SIZEOF(type, expected_size) STATIC_ASSERT(sizeof(type) == (expected_size))
++
++#endif /* PERMASSERT_H */
+diff --git a/drivers/md/dm-vdo/string-utils.c b/drivers/md/dm-vdo/string-utils.c
+new file mode 100644
+index 00000000000..ac8cd76a8ff
+--- /dev/null
++++ b/drivers/md/dm-vdo/string-utils.c
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Allocate storage based on element counts, sizes, and alignment.
-+ *
-+ * This is a generalized form of our allocation use case: It allocates an array of objects,
-+ * optionally preceded by one object of another type (i.e., a struct with trailing variable-length
-+ * array), with the alignment indicated.
-+ *
-+ * Why is this inline? The sizes and alignment will always be constant, when invoked through the
-+ * macros below, and often the count will be a compile-time constant 1 or the number of extra bytes
-+ * will be a compile-time constant 0. So at least some of the arithmetic can usually be optimized
-+ * away, and the run-time selection between allocation functions always can. In many cases, it'll
-+ * boil down to just a function call with a constant size.
-+ *
-+ * @count: The number of objects to allocate
-+ * @size: The size of an object
-+ * @extra: The number of additional bytes to allocate
-+ * @align: The required alignment
-+ * @what: What is being allocated (for error logging)
-+ * @ptr: A pointer to hold the allocated memory
-+ *
-+ * Return: UDS_SUCCESS or an error code
++ * Copyright Red Hat
 + */
-+static inline int uds_do_allocation(size_t count,
-+				    size_t size,
-+				    size_t extra,
-+				    size_t align,
-+				    const char *what,
-+				    void *ptr)
++
++#include "string-utils.h"
++
++#include "errors.h"
++#include "logger.h"
++#include "memory-alloc.h"
++#include "permassert.h"
++#include "uds.h"
++
++char *uds_append_to_buffer(char *buffer, char *buf_end, const char *fmt, ...)
 +{
-+	size_t total_size = count * size + extra;
++	va_list args;
++	size_t n;
 +
-+	/* Overflow check: */
-+	if ((size > 0) && (count > ((SIZE_MAX - extra) / size)))
-+		/*
-+		 * This is kind of a hack: We rely on the fact that SIZE_MAX would cover the entire
-+		 * address space (minus one byte) and thus the system can never allocate that much
-+		 * and the call will always fail. So we can report an overflow as "out of memory"
-+		 * by asking for "merely" SIZE_MAX bytes.
-+		 */
-+		total_size = SIZE_MAX;
++	va_start(args, fmt);
++	n = vsnprintf(buffer, buf_end - buffer, fmt, args);
++	if (n >= (size_t) (buf_end - buffer))
++		buffer = buf_end;
++	else
++		buffer += n;
++	va_end(args);
 +
-+	return uds_allocate_memory(total_size, align, what, ptr);
++	return buffer;
++}
+diff --git a/drivers/md/dm-vdo/string-utils.h b/drivers/md/dm-vdo/string-utils.h
+new file mode 100644
+index 00000000000..a27cf84a953
+--- /dev/null
++++ b/drivers/md/dm-vdo/string-utils.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright Red Hat
++ */
++
++#ifndef UDS_STRING_UTILS_H
++#define UDS_STRING_UTILS_H
++
++#include <linux/kernel.h>
++#include <linux/string.h>
++
++/* Utilities related to string manipulation */
++
++static inline const char *uds_bool_to_string(bool value)
++{
++	return value ? "true" : "false";
 +}
 +
-+int __must_check uds_reallocate_memory(void *ptr,
-+				       size_t old_size,
-+				       size_t size,
-+				       const char *what,
-+				       void *new_ptr);
++/* Append a formatted string to the end of a buffer. */
++char *uds_append_to_buffer(char *buffer, char *buf_end, const char *fmt, ...)
++	__printf(3, 4);
 +
++#endif /* UDS_STRING_UTILS_H */
+diff --git a/drivers/md/dm-vdo/time-utils.h b/drivers/md/dm-vdo/time-utils.h
+new file mode 100644
+index 00000000000..82d89108a85
+--- /dev/null
++++ b/drivers/md/dm-vdo/time-utils.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
-+ * Allocate one or more elements of the indicated type, logging an error if the allocation fails.
-+ * The memory will be zeroed.
-+ *
-+ * @COUNT: The number of objects to allocate
-+ * @TYPE: The type of objects to allocate. This type determines the alignment of the allocation.
-+ * @WHAT: What is being allocated (for error logging)
-+ * @PTR: A pointer to hold the allocated memory
-+ *
-+ * Return: UDS_SUCCESS or an error code
++ * Copyright Red Hat
 + */
-+#define UDS_ALLOCATE(COUNT, TYPE, WHAT, PTR) \
-+	uds_do_allocation(COUNT, sizeof(TYPE), 0, __alignof__(TYPE), WHAT, PTR)
 +
-+/*
-+ * Allocate one object of an indicated type, followed by one or more elements of a second type,
-+ * logging an error if the allocation fails. The memory will be zeroed.
-+ *
-+ * @TYPE1: The type of the primary object to allocate. This type determines the alignment of the
-+ *         allocated memory.
-+ * @COUNT: The number of objects to allocate
-+ * @TYPE2: The type of array objects to allocate
-+ * @WHAT: What is being allocated (for error logging)
-+ * @PTR: A pointer to hold the allocated memory
-+ *
-+ * Return: UDS_SUCCESS or an error code
-+ */
-+#define UDS_ALLOCATE_EXTENDED(TYPE1, COUNT, TYPE2, WHAT, PTR)            \
-+	__extension__({                                                  \
-+		int _result;						 \
-+		TYPE1 **_ptr = (PTR);                                    \
-+		STATIC_ASSERT(__alignof__(TYPE1) >= __alignof__(TYPE2)); \
-+		_result = uds_do_allocation(COUNT,                       \
-+					    sizeof(TYPE2),               \
-+					    sizeof(TYPE1),               \
-+					    __alignof__(TYPE1),          \
-+					    WHAT,                        \
-+					    _ptr);                       \
-+		_result;                                                 \
-+	})
++#ifndef UDS_TIME_UTILS_H
++#define UDS_TIME_UTILS_H
 +
-+/*
-+ * Allocate memory starting on a cache line boundary, logging an error if the allocation fails. The
-+ * memory will be zeroed.
-+ *
-+ * @size: The number of bytes to allocate
-+ * @what: What is being allocated (for error logging)
-+ * @ptr: A pointer to hold the allocated memory
-+ *
-+ * Return: UDS_SUCCESS or an error code
-+ */
-+static inline int __must_check uds_allocate_cache_aligned(size_t size, const char *what, void *ptr)
++#include <linux/ktime.h>
++#include <linux/time.h>
++#include <linux/types.h>
++
++static inline s64 ktime_to_seconds(ktime_t reltime)
 +{
-+	return uds_allocate_memory(size, L1_CACHE_BYTES, what, ptr);
++	return reltime / NSEC_PER_SEC;
 +}
 +
-+void *__must_check uds_allocate_memory_nowait(size_t size, const char *what);
-+
-+/*
-+ * Allocate one element of the indicated type immediately, failing if the required memory is not
-+ * immediately available.
-+ *
-+ * @TYPE: The type of objects to allocate
-+ * @WHAT: What is being allocated (for error logging)
-+ *
-+ * Return: pointer to the memory, or NULL if the memory is not available.
-+ */
-+#define UDS_ALLOCATE_NOWAIT(TYPE, WHAT) uds_allocate_memory_nowait(sizeof(TYPE), WHAT)
-+
-+int __must_check uds_duplicate_string(const char *string, const char *what, char **new_string);
-+
-+/* Wrapper which permits freeing a const pointer. */
-+static inline void uds_free_const(const void *pointer)
++static inline ktime_t current_time_ns(clockid_t clock)
 +{
-+	union {
-+		const void *const_p;
-+		void *not_const;
-+	} u = { .const_p = pointer };
-+	UDS_FREE(u.not_const);
++	return clock == CLOCK_MONOTONIC ? ktime_get_ns() : ktime_get_real_ns();
 +}
 +
-+void uds_memory_exit(void);
++static inline ktime_t current_time_us(void)
++{
++	return current_time_ns(CLOCK_REALTIME) / NSEC_PER_USEC;
++}
 +
-+void uds_memory_init(void);
-+
-+void uds_register_allocating_thread(struct registered_thread *new_thread, const bool *flag_ptr);
-+
-+void uds_unregister_allocating_thread(void);
-+
-+void uds_get_memory_stats(u64 *bytes_used, u64 *peak_bytes_used);
-+
-+void uds_report_memory_usage(void);
-+
-+#endif /* UDS_MEMORY_ALLOC_H */
++#endif /* UDS_TIME_UTILS_H */
 -- 
 2.40.1
 
