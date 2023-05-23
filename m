@@ -2,66 +2,66 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B2CB70E7BF
-	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 23:46:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C51970E7C8
+	for <lists+linux-block@lfdr.de>; Tue, 23 May 2023 23:47:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238648AbjEWVqq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 23 May 2023 17:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39596 "EHLO
+        id S238694AbjEWVq7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 23 May 2023 17:46:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238672AbjEWVqp (ORCPT
+        with ESMTP id S238699AbjEWVqw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 23 May 2023 17:46:45 -0400
+        Tue, 23 May 2023 17:46:52 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A0883
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7689130
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684878354;
+        s=mimecast20190719; t=1684878357;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oNpJxhRu/BYR95GzYX7kST7xxmN/d7fCcivhyBaDiCw=;
-        b=V/y62g+bDT2XW8+qbEAJJk8xQkhnibBE0WxVdIoP0fN+q6kIDqb9MfW1RAsLa2s5bDvATK
-        b0EBSSZ1j+KJ9bN7bWbIntWggtMcEMAYTjX4nx0BVSavrqPkPOnlGB4m8n+2ZbNRf2sh9H
-        eT5GIhlOKFCqLhvFFw37AcwZ1c4CouM=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=CzbR298CfdSKUVwKeQL0xNe8nvopcbSbimpumNPumDU=;
+        b=QA9Y8CKm2eIitjAggUyv8BAFcOY2gG444ebiPZVYtejM0aYLiX4q9BpH7aNPvRI3Sysgoy
+        ksIIzf09d1tSmk9LbMtrGjegSP3WT+Kn7xIML4LXkoeUluwpuTymG3xGLmebNNS4QKMCoS
+        MJHppL87md+WrRZsJo4l3rXuRx+1hDM=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-195-wKZzNxFlO9GgfqI0Ytoe6g-1; Tue, 23 May 2023 17:45:53 -0400
-X-MC-Unique: wKZzNxFlO9GgfqI0Ytoe6g-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-624b4176bf7so912676d6.1
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:53 -0700 (PDT)
+ us-mta-37-a8lSmIyVObSydOref8YUoA-1; Tue, 23 May 2023 17:45:56 -0400
+X-MC-Unique: a8lSmIyVObSydOref8YUoA-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-75b131362e3so33448885a.0
+        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 14:45:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684878352; x=1687470352;
+        d=1e100.net; s=20221208; t=1684878356; x=1687470356;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oNpJxhRu/BYR95GzYX7kST7xxmN/d7fCcivhyBaDiCw=;
-        b=Cb4YGWtjkbPIr8o7c3Da7IWkXMMOodXyHopeCBygwr/rv/fKpASLzEAfhuov9IheT0
-         /7zs7jLT13WRnFsLRAtJUDYA/PQVVrkAd2EDMFl5eBV4deeaYtCMClh+GloVKZPch1Lm
-         s5VVMB79bsSyjtJvv1nj79dzKrwZfLX+U3aaoxoOUmKXxznIHo0xeoe7crAI2N6NxjUc
-         GOoS/h1ys2imQRB+4y400pcSNi1NaGIWHPU1b3XCGw8qkohVn6maAF5pyQei21drDj0t
-         Jjifbvv3l3hY054E+bSglshUhRuV9eld5NFeAZs2lqa+XuavQSftuQ1WJ0gUOk/BlSGh
-         YWpw==
-X-Gm-Message-State: AC+VfDzwzr5fvpD8l5+qk2eydwu6UG4NYKs4cNQGCnToYdr1f0WNoPSk
-        S0Cq0cPMi5p8sGWSGprzNqIP2TMI6hXslaofPojKuKexVBC7sj8ECetUI3Yqwjtfz8fchKPvsA7
-        rnUV2sWcg/2oz6NLjRHwS1bg=
-X-Received: by 2002:ae9:e80b:0:b0:75b:23a0:d9d3 with SMTP id a11-20020ae9e80b000000b0075b23a0d9d3mr5235745qkg.41.1684878352246;
-        Tue, 23 May 2023 14:45:52 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7ojvbKlGoQVYVDoeiIsNNJgyowS6OFaR2eaZrq9KsLhBmm7K56Js9msMYH/E8KmGSy74yjYQ==
-X-Received: by 2002:ae9:e80b:0:b0:75b:23a0:d9d3 with SMTP id a11-20020ae9e80b000000b0075b23a0d9d3mr5235731qkg.41.1684878351865;
-        Tue, 23 May 2023 14:45:51 -0700 (PDT)
+        bh=CzbR298CfdSKUVwKeQL0xNe8nvopcbSbimpumNPumDU=;
+        b=DFl+a1vFRvCPnNnVqIt7f5gmnwl2KZ1YJVhS+89Au8EN6rgKYDNr3MnmrzBQSspTp9
+         3a8mRKtfNWBrGHv8l86EkfZI0U/ZZBZ7ub7ak+SgjLlK43o2vajTP2uaTcbwWb/PWDoY
+         HR4yzvlphb9Bbm7nKgd83LjXvCDgRNCJ1X5xAcWrtdxa/6TtC9H3Ur5tywTNOcZvpZ1E
+         bkr8RpXWZFtek64lIwebwsi+yIYippCpnjfTlH+q/AkfdjR+5mrviESJqp3VQahcZ8Ud
+         nk6fiHkYdhEdF3WABJu1IwPiudykwxLtwYi/Ag220j6g8Of4ZKswNWsQg4+iGVsRXdoz
+         RvJA==
+X-Gm-Message-State: AC+VfDxiPTgQkav6gXBBHy8HzqXdfUHtDxdC7Chs8X+Ym7M61uE86Nnk
+        /6Pu/KVZ+B8kvEf+0Rowslk62logCfRl9x8D8ikVHbUg7ZQNyJHYZVVMJ6+q3+O9r5RwOoaEiYy
+        Y+E+8+GjuxjET6mOXm5OOcF8=
+X-Received: by 2002:a37:e117:0:b0:75b:23a1:3f7 with SMTP id c23-20020a37e117000000b0075b23a103f7mr5455994qkm.13.1684878354856;
+        Tue, 23 May 2023 14:45:54 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7QPY8xr/38+lg4SOoWNoNxzaC0xUqOLeMkXxzZMK9mM5dqfd4OOP56ZbrxN6T6fDI2dOjQ/A==
+X-Received: by 2002:a37:e117:0:b0:75b:23a1:3f7 with SMTP id c23-20020a37e117000000b0075b23a103f7mr5455952qkm.13.1684878353547;
+        Tue, 23 May 2023 14:45:53 -0700 (PDT)
 Received: from bf36-1.. (173-166-2-198-newengland.hfc.comcastbusiness.net. [173.166.2.198])
-        by smtp.gmail.com with ESMTPSA id s24-20020ae9f718000000b0074fafbea974sm2821592qkg.2.2023.05.23.14.45.51
+        by smtp.gmail.com with ESMTPSA id s24-20020ae9f718000000b0074fafbea974sm2821592qkg.2.2023.05.23.14.45.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 14:45:51 -0700 (PDT)
+        Tue, 23 May 2023 14:45:52 -0700 (PDT)
 From:   "J. corwin Coburn" <corwin@redhat.com>
 To:     dm-devel@redhat.com, linux-block@vger.kernel.org
 Cc:     vdo-devel@redhat.com, "J. corwin Coburn" <corwin@redhat.com>
-Subject: [PATCH v2 06/39] Add thread and synchronization utilities.
-Date:   Tue, 23 May 2023 17:45:06 -0400
-Message-Id: <20230523214539.226387-7-corwin@redhat.com>
+Subject: [PATCH v2 07/39] Add specialized request queueing functionality.
+Date:   Tue, 23 May 2023 17:45:07 -0400
+Message-Id: <20230523214539.226387-8-corwin@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230523214539.226387-1-corwin@redhat.com>
 References: <20230523214539.226387-1-corwin@redhat.com>
@@ -69,619 +69,1757 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-This patch adds utilities for managing and using named threads, as well as
-several locking and sychronization utilities. These utilities help dm-vdo
-minimize thread transitions nad manage cross-thread interations.
+This patch adds funnel_queue, a mostly lock-free multi-producer,
+single-consumer queue. It also adds the request queue used by the dm-vdo
+deduplication index, and the work_queue used by the dm-vdo data store. Both
+of these are built on top of funnel queue and are intended to support the
+dispatching of many short-running tasks. The work_queue also supports
+priorities. Finally, this patch adds vdo_completion, the structure which is
+enqueued on work_queues.
 
 Signed-off-by: J. corwin Coburn <corwin@redhat.com>
 ---
- drivers/md/dm-vdo/thread-cond-var.c |  46 +++++++
- drivers/md/dm-vdo/thread-device.c   |  35 ++++++
- drivers/md/dm-vdo/thread-device.h   |  19 +++
- drivers/md/dm-vdo/thread-registry.c |  93 ++++++++++++++
- drivers/md/dm-vdo/thread-registry.h |  33 +++++
- drivers/md/dm-vdo/uds-threads.c     | 189 ++++++++++++++++++++++++++++
- drivers/md/dm-vdo/uds-threads.h     | 126 +++++++++++++++++++
- 7 files changed, 541 insertions(+)
- create mode 100644 drivers/md/dm-vdo/thread-cond-var.c
- create mode 100644 drivers/md/dm-vdo/thread-device.c
- create mode 100644 drivers/md/dm-vdo/thread-device.h
- create mode 100644 drivers/md/dm-vdo/thread-registry.c
- create mode 100644 drivers/md/dm-vdo/thread-registry.h
- create mode 100644 drivers/md/dm-vdo/uds-threads.c
- create mode 100644 drivers/md/dm-vdo/uds-threads.h
+ drivers/md/dm-vdo/completion.c    | 141 +++++++
+ drivers/md/dm-vdo/completion.h    | 155 +++++++
+ drivers/md/dm-vdo/cpu.h           |  58 +++
+ drivers/md/dm-vdo/funnel-queue.c  | 169 ++++++++
+ drivers/md/dm-vdo/funnel-queue.h  | 110 +++++
+ drivers/md/dm-vdo/request-queue.c | 284 +++++++++++++
+ drivers/md/dm-vdo/request-queue.h |  30 ++
+ drivers/md/dm-vdo/work-queue.c    | 659 ++++++++++++++++++++++++++++++
+ drivers/md/dm-vdo/work-queue.h    |  53 +++
+ 9 files changed, 1659 insertions(+)
+ create mode 100644 drivers/md/dm-vdo/completion.c
+ create mode 100644 drivers/md/dm-vdo/completion.h
+ create mode 100644 drivers/md/dm-vdo/cpu.h
+ create mode 100644 drivers/md/dm-vdo/funnel-queue.c
+ create mode 100644 drivers/md/dm-vdo/funnel-queue.h
+ create mode 100644 drivers/md/dm-vdo/request-queue.c
+ create mode 100644 drivers/md/dm-vdo/request-queue.h
+ create mode 100644 drivers/md/dm-vdo/work-queue.c
+ create mode 100644 drivers/md/dm-vdo/work-queue.h
 
-diff --git a/drivers/md/dm-vdo/thread-cond-var.c b/drivers/md/dm-vdo/thread-cond-var.c
+diff --git a/drivers/md/dm-vdo/completion.c b/drivers/md/dm-vdo/completion.c
 new file mode 100644
-index 00000000000..4a3af5d0618
+index 00000000000..8feb9c05c19
 --- /dev/null
-+++ b/drivers/md/dm-vdo/thread-cond-var.c
-@@ -0,0 +1,46 @@
++++ b/drivers/md/dm-vdo/completion.c
+@@ -0,0 +1,141 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright Red Hat
 + */
 +
-+#include <linux/jiffies.h>
-+#include <linux/minmax.h>
++#include "completion.h"
 +
-+#include "errors.h"
-+#include "time-utils.h"
-+#include "uds-threads.h"
++#include <linux/kernel.h>
 +
-+int uds_init_cond(struct cond_var *cv)
++#include "logger.h"
++#include "permassert.h"
++
++#include "status-codes.h"
++#include "types.h"
++#include "vio.h"
++#include "vdo.h"
++
++/**
++ * DOC: vdo completions.
++ *
++ * Most of vdo's data structures are lock free, each either belonging to a single "zone," or
++ * divided into a number of zones whose accesses to the structure do not overlap. During normal
++ * operation, at most one thread will be operating in any given zone. Each zone has a
++ * vdo_work_queue which holds vdo_completions that are to be run in that zone. A completion may
++ * only be enqueued on one queue or operating in a single zone at a time.
++ *
++ * At each step of a multi-threaded operation, the completion performing the operation is given a
++ * callback, error handler, and thread id for the next step. A completion is "run" when it is
++ * operating on the correct thread (as specified by its callback_thread_id). If the value of its
++ * "result" field is an error (i.e. not VDO_SUCCESS), the function in its "error_handler" will be
++ * invoked. If the error_handler is NULL, or there is no error, the function set as its "callback"
++ * will be invoked. Generally, a completion will not be run directly, but rather will be
++ * "launched." In this case, it will check whether it is operating on the correct thread. If it is,
++ * it will run immediately. Otherwise, it will be enqueue on the vdo_work_queue associated with the
++ * completion's "callback_thread_id". When it is dequeued, it will be on the correct thread, and
++ * will get run. In some cases, the completion should get queued instead of running immediately,
++ * even if it is being launched from the correct thread. This is usually in cases where there is a
++ * long chain of callbacks, all on the same thread, which could overflow the stack. In such cases,
++ * the completion's "requeue" field should be set to true. Doing so will skip the current thread
++ * check and simply enqueue the completion.
++ *
++ * A completion may be "finished," in which case its "complete" field will be set to true before it
++ * is next run. It is a bug to attempt to set the result or re-finish a finished completion.
++ * Because a completion's fields are not safe to examine from any thread other than the one on
++ * which the completion is currently operating, this field is used only to aid in detecting
++ * programming errors. It can not be used for cross-thread checking on the status of an operation.
++ * A completion must be "reset" before it can be reused after it has been finished. Resetting will
++ * also clear any error from the result field.
++ **/
++
++void vdo_initialize_completion(struct vdo_completion *completion,
++			       struct vdo *vdo,
++			       enum vdo_completion_type type)
 +{
-+	init_waitqueue_head(&cv->wait_queue);
-+	return UDS_SUCCESS;
++	memset(completion, 0, sizeof(*completion));
++	completion->vdo = vdo;
++	completion->type = type;
++	vdo_reset_completion(completion);
 +}
 +
-+int uds_signal_cond(struct cond_var *cv)
++static inline void assert_incomplete(struct vdo_completion *completion)
 +{
-+	wake_up(&cv->wait_queue);
-+	return UDS_SUCCESS;
++	ASSERT_LOG_ONLY(!completion->complete, "completion is not complete");
 +}
 +
-+int uds_broadcast_cond(struct cond_var *cv)
-+{
-+	wake_up_all(&cv->wait_queue);
-+	return UDS_SUCCESS;
-+}
-+
-+int uds_wait_cond(struct cond_var *cv, struct mutex *mutex)
-+{
-+	DEFINE_WAIT(__wait);
-+
-+	prepare_to_wait(&cv->wait_queue, &__wait, TASK_IDLE);
-+	uds_unlock_mutex(mutex);
-+	schedule();
-+	finish_wait(&cv->wait_queue, &__wait);
-+	uds_lock_mutex(mutex);
-+	return UDS_SUCCESS;
-+}
-+
-+int uds_destroy_cond(struct cond_var *cv)
-+{
-+	return UDS_SUCCESS;
-+}
-diff --git a/drivers/md/dm-vdo/thread-device.c b/drivers/md/dm-vdo/thread-device.c
-new file mode 100644
-index 00000000000..906dfd4f617
---- /dev/null
-+++ b/drivers/md/dm-vdo/thread-device.c
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright Red Hat
++/**
++ * vdo_set_completion_result() - Set the result of a completion.
++ *
++ * Older errors will not be masked.
 + */
-+
-+#include "thread-device.h"
-+
-+#include "thread-registry.h"
-+
-+/* A registry of threads associated with device id numbers. */
-+static struct thread_registry device_id_thread_registry;
-+
-+/* Any registered thread must be unregistered. */
-+void uds_register_thread_device_id(struct registered_thread *new_thread, unsigned int *id_ptr)
++void vdo_set_completion_result(struct vdo_completion *completion, int result)
 +{
-+	uds_register_thread(&device_id_thread_registry, new_thread, id_ptr);
++	assert_incomplete(completion);
++	if (completion->result == VDO_SUCCESS)
++		completion->result = result;
 +}
 +
-+void uds_unregister_thread_device_id(void)
++/**
++ * vdo_launch_completion_with_priority() - Run or enqueue a completion.
++ * @priority: The priority at which to enqueue the completion.
++ *
++ * If called on the correct thread (i.e. the one specified in the completion's callback_thread_id
++ * field) and not marked for requeue, the completion will be run immediately. Otherwise, the
++ * completion will be enqueued on the specified thread.
++ */
++void vdo_launch_completion_with_priority(struct vdo_completion *completion,
++					 enum vdo_completion_priority priority)
 +{
-+	uds_unregister_thread(&device_id_thread_registry);
++	thread_id_t callback_thread = completion->callback_thread_id;
++
++	if (completion->requeue || (callback_thread != vdo_get_callback_thread_id())) {
++		vdo_enqueue_completion(completion, priority);
++		return;
++	}
++
++	vdo_run_completion(completion);
 +}
 +
-+int uds_get_thread_device_id(void)
++/** vdo_finish_completion() - Mark a completion as complete and then launch it. */
++void vdo_finish_completion(struct vdo_completion *completion)
 +{
-+	const unsigned int *pointer;
-+
-+	pointer = uds_lookup_thread(&device_id_thread_registry);
-+	return (pointer != NULL) ? *pointer : -1;
++	assert_incomplete(completion);
++	completion->complete = true;
++	if (completion->callback != NULL)
++		vdo_launch_completion(completion);
 +}
 +
-+void uds_initialize_thread_device_registry(void)
++void vdo_enqueue_completion(struct vdo_completion *completion,
++			    enum vdo_completion_priority priority)
 +{
-+	uds_initialize_thread_registry(&device_id_thread_registry);
++	struct vdo *vdo = completion->vdo;
++	thread_id_t thread_id = completion->callback_thread_id;
++
++	if (ASSERT(thread_id < vdo->thread_config.thread_count,
++		   "thread_id %u (completion type %d) is less than thread count %u",
++		   thread_id,
++		   completion->type,
++		   vdo->thread_config.thread_count) != UDS_SUCCESS)
++		BUG();
++
++	completion->requeue = false;
++	completion->priority = priority;
++	completion->my_queue = NULL;
++	vdo_enqueue_work_queue(vdo->threads[thread_id].queue, completion);
 +}
-diff --git a/drivers/md/dm-vdo/thread-device.h b/drivers/md/dm-vdo/thread-device.h
++
++/**
++ * vdo_requeue_completion_if_needed() - Requeue a completion if not called on the specified thread.
++ *
++ * Return: True if the completion was requeued; callers may not access the completion in this case.
++ */
++bool vdo_requeue_completion_if_needed(struct vdo_completion *completion,
++				      thread_id_t callback_thread_id)
++{
++	if (vdo_get_callback_thread_id() == callback_thread_id)
++		return false;
++
++	completion->callback_thread_id = callback_thread_id;
++	vdo_enqueue_completion(completion, VDO_WORK_Q_DEFAULT_PRIORITY);
++	return true;
++}
+diff --git a/drivers/md/dm-vdo/completion.h b/drivers/md/dm-vdo/completion.h
 new file mode 100644
-index 00000000000..c33a16faa38
+index 00000000000..03b2daa6546
 --- /dev/null
-+++ b/drivers/md/dm-vdo/thread-device.h
-@@ -0,0 +1,19 @@
++++ b/drivers/md/dm-vdo/completion.h
+@@ -0,0 +1,155 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright Red Hat
 + */
 +
-+#ifndef UDS_THREAD_DEVICE_H
-+#define UDS_THREAD_DEVICE_H
-+
-+#include "thread-registry.h"
-+
-+void uds_register_thread_device_id(struct registered_thread *new_thread, unsigned int *id_ptr);
-+
-+void uds_unregister_thread_device_id(void);
-+
-+int uds_get_thread_device_id(void);
-+
-+void uds_initialize_thread_device_registry(void);
-+
-+#endif /* UDS_THREAD_DEVICE_H */
-diff --git a/drivers/md/dm-vdo/thread-registry.c b/drivers/md/dm-vdo/thread-registry.c
-new file mode 100644
-index 00000000000..bdfaf9c2112
---- /dev/null
-+++ b/drivers/md/dm-vdo/thread-registry.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright Red Hat
-+ */
-+
-+#include "thread-registry.h"
-+
-+#include <linux/rculist.h>
++#ifndef VDO_COMPLETION_H
++#define VDO_COMPLETION_H
 +
 +#include "permassert.h"
 +
-+/*
-+ * We need to be careful when using other facilities that may use thread registry functions in
-+ * their normal operation. For example, we do not want to invoke the logger while holding a lock.
++#include "status-codes.h"
++#include "types.h"
++
++/**
++ * vdo_run_completion() - Run a completion's callback or error handler on the current thread.
++ *
++ * Context: This function must be called from the correct callback thread.
 + */
-+
-+void uds_initialize_thread_registry(struct thread_registry *registry)
++static inline void vdo_run_completion(struct vdo_completion *completion)
 +{
-+	INIT_LIST_HEAD(&registry->links);
-+	spin_lock_init(&registry->lock);
++	if ((completion->result != VDO_SUCCESS) && (completion->error_handler != NULL)) {
++		completion->error_handler(completion);
++		return;
++	}
++
++	completion->callback(completion);
 +}
 +
-+/* Register the current thread and associate it with a data pointer. */
-+void uds_register_thread(struct thread_registry *registry,
-+			 struct registered_thread *new_thread,
-+			 const void *pointer)
++void vdo_set_completion_result(struct vdo_completion *completion, int result);
++
++void vdo_initialize_completion(struct vdo_completion *completion,
++			       struct vdo *vdo,
++			       enum vdo_completion_type type);
++
++/**
++ * vdo_reset_completion() - Reset a completion to a clean state, while keeping the type, vdo and
++ *                          parent information.
++ */
++static inline void vdo_reset_completion(struct vdo_completion *completion)
 +{
-+	struct registered_thread *thread;
-+	bool found_it = false;
-+
-+	INIT_LIST_HEAD(&new_thread->links);
-+	new_thread->pointer = pointer;
-+	new_thread->task = current;
-+
-+	spin_lock(&registry->lock);
-+	list_for_each_entry(thread, &registry->links, links) {
-+		if (thread->task == current) {
-+			/* There should be no existing entry. */
-+			list_del_rcu(&thread->links);
-+			found_it = true;
-+			break;
-+		}
-+	}
-+	list_add_tail_rcu(&new_thread->links, &registry->links);
-+	spin_unlock(&registry->lock);
-+
-+	ASSERT_LOG_ONLY(!found_it, "new thread not already in registry");
-+	if (found_it) {
-+		/* Ensure no RCU iterators see it before re-initializing. */
-+		synchronize_rcu();
-+		INIT_LIST_HEAD(&thread->links);
-+	}
++	completion->result = VDO_SUCCESS;
++	completion->complete = false;
 +}
 +
-+void uds_unregister_thread(struct thread_registry *registry)
++void vdo_launch_completion_with_priority(struct vdo_completion *completion,
++					 enum vdo_completion_priority priority);
++
++/**
++ * vdo_launch_completion() - Launch a completion with default priority.
++ */
++static inline void vdo_launch_completion(struct vdo_completion *completion)
 +{
-+	struct registered_thread *thread;
-+	bool found_it = false;
-+
-+	spin_lock(&registry->lock);
-+	list_for_each_entry(thread, &registry->links, links) {
-+		if (thread->task == current) {
-+			list_del_rcu(&thread->links);
-+			found_it = true;
-+			break;
-+		}
-+	}
-+	spin_unlock(&registry->lock);
-+
-+	ASSERT_LOG_ONLY(found_it, "thread found in registry");
-+	if (found_it) {
-+		/* Ensure no RCU iterators see it before re-initializing. */
-+		synchronize_rcu();
-+		INIT_LIST_HEAD(&thread->links);
-+	}
++	vdo_launch_completion_with_priority(completion, VDO_WORK_Q_DEFAULT_PRIORITY);
 +}
 +
-+const void *uds_lookup_thread(struct thread_registry *registry)
++/**
++ * vdo_continue_completion() - Continue processing a completion.
++ * @result: The current result (will not mask older errors).
++ *
++ * Continue processing a completion by setting the current result and calling
++ * vdo_launch_completion().
++ */
++static inline void vdo_continue_completion(struct vdo_completion *completion, int result)
 +{
-+	struct registered_thread *thread;
-+	const void *result = NULL;
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(thread, &registry->links, links) {
-+		if (thread->task == current) {
-+			result = thread->pointer;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return result;
++	vdo_set_completion_result(completion, result);
++	vdo_launch_completion(completion);
 +}
-diff --git a/drivers/md/dm-vdo/thread-registry.h b/drivers/md/dm-vdo/thread-registry.h
++
++void vdo_finish_completion(struct vdo_completion *completion);
++
++/**
++ * vdo_fail_completion() - Set the result of a completion if it does not already have an error,
++ *                         then finish it.
++ */
++static inline void vdo_fail_completion(struct vdo_completion *completion, int result)
++{
++	vdo_set_completion_result(completion, result);
++	vdo_finish_completion(completion);
++}
++
++/**
++ * vdo_assert_completion_type() - Assert that a completion is of the correct type.
++ *
++ * Return: VDO_SUCCESS or an error
++ */
++static inline int
++vdo_assert_completion_type(struct vdo_completion *completion, enum vdo_completion_type expected)
++{
++	return ASSERT(expected == completion->type,
++		      "completion type should be %u, not %u",
++		      expected,
++		      completion->type);
++}
++
++static inline void vdo_set_completion_callback(struct vdo_completion *completion,
++					       vdo_action *callback,
++					       thread_id_t callback_thread_id)
++{
++	completion->callback = callback;
++	completion->callback_thread_id = callback_thread_id;
++}
++
++/**
++ * vdo_launch_completion_callback() - Set the callback for a completion and launch it immediately.
++ */
++static inline void vdo_launch_completion_callback(struct vdo_completion *completion,
++						  vdo_action *callback,
++						  thread_id_t callback_thread_id)
++{
++	vdo_set_completion_callback(completion, callback, callback_thread_id);
++	vdo_launch_completion(completion);
++}
++
++/**
++ * vdo_prepare_completion() - Prepare a completion for launch.
++ *
++ * Resets the completion, and then sets its callback, error handler, callback thread, and parent.
++ */
++static inline void vdo_prepare_completion(struct vdo_completion *completion,
++					  vdo_action *callback,
++					  vdo_action *error_handler,
++					  thread_id_t callback_thread_id,
++					  void *parent)
++{
++	vdo_reset_completion(completion);
++	vdo_set_completion_callback(completion, callback, callback_thread_id);
++	completion->error_handler = error_handler;
++	completion->parent = parent;
++}
++
++/**
++ * vdo_prepare_completion_for_requeue() - Prepare a completion for launch ensuring that it will
++ *                                        always be requeued.
++ *
++ * Resets the completion, and then sets its callback, error handler, callback thread, and parent.
++ */
++static inline void
++vdo_prepare_completion_for_requeue(struct vdo_completion *completion,
++				   vdo_action *callback,
++				   vdo_action *error_handler,
++				   thread_id_t callback_thread_id,
++				   void *parent)
++{
++	vdo_prepare_completion(completion, callback, error_handler, callback_thread_id, parent);
++	completion->requeue = true;
++}
++
++void vdo_enqueue_completion(struct vdo_completion *completion,
++			    enum vdo_completion_priority priority);
++
++
++bool vdo_requeue_completion_if_needed(struct vdo_completion *completion,
++				      thread_id_t callback_thread_id);
++
++#endif /* VDO_COMPLETION_H */
+diff --git a/drivers/md/dm-vdo/cpu.h b/drivers/md/dm-vdo/cpu.h
 new file mode 100644
-index 00000000000..b5ba1b86558
+index 00000000000..d2da22d9d60
 --- /dev/null
-+++ b/drivers/md/dm-vdo/thread-registry.h
-@@ -0,0 +1,33 @@
++++ b/drivers/md/dm-vdo/cpu.h
+@@ -0,0 +1,58 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright Red Hat
 + */
 +
-+#ifndef UDS_THREAD_REGISTRY_H
-+#define UDS_THREAD_REGISTRY_H
++#ifndef UDS_CPU_H
++#define UDS_CPU_H
 +
-+#include <linux/list.h>
-+#include <linux/spinlock.h>
++#include <linux/cache.h>
 +
-+struct thread_registry {
-+	struct list_head links;
-+	spinlock_t lock;
-+};
++/**
++ * uds_prefetch_address() - Minimize cache-miss latency by attempting to move data into a CPU cache
++ *                          before it is accessed.
++ *
++ * @address: the address to fetch (may be invalid)
++ * @for_write: must be constant at compile time--false if for reading, true if for writing
++ */
++static inline void uds_prefetch_address(const void *address, bool for_write)
++{
++	/*
++	 * for_write won't be a constant if we are compiled with optimization turned off, in which
++	 * case prefetching really doesn't matter. clang can't figure out that if for_write is a
++	 * constant, it can be passed as the second, mandatorily constant argument to prefetch(),
++	 * at least currently on llvm 12.
++	 */
++	if (__builtin_constant_p(for_write)) {
++		if (for_write)
++			__builtin_prefetch(address, true);
++		else
++			__builtin_prefetch(address, false);
++	}
++}
 +
-+struct registered_thread {
-+	struct list_head links;
-+	const void *pointer;
-+	struct task_struct *task;
-+};
++/**
++ * uds_prefetch_range() - Minimize cache-miss latency by attempting to move a range of addresses
++ *                        into a CPU cache before they are accessed.
++ *
++ * @start: the starting address to fetch (may be invalid)
++ * @size: the number of bytes in the address range
++ * @for_write: must be constant at compile time--false if for reading, true if for writing
++ */
++static inline void uds_prefetch_range(const void *start, unsigned int size, bool for_write)
++{
++	/*
++	 * Count the number of cache lines to fetch, allowing for the address range to span an
++	 * extra cache line boundary due to address alignment.
++	 */
++	const char *address = (const char *) start;
++	unsigned int offset = ((uintptr_t) address % L1_CACHE_BYTES);
++	unsigned int cache_lines = (1 + ((size + offset) / L1_CACHE_BYTES));
 +
-+void uds_initialize_thread_registry(struct thread_registry *registry);
++	while (cache_lines-- > 0) {
++		uds_prefetch_address(address, for_write);
++		address += L1_CACHE_BYTES;
++	}
++}
 +
-+void uds_register_thread(struct thread_registry *registry,
-+			 struct registered_thread *new_thread,
-+			 const void *pointer);
-+
-+void uds_unregister_thread(struct thread_registry *registry);
-+
-+const void *uds_lookup_thread(struct thread_registry *registry);
-+
-+#endif /* UDS_THREAD_REGISTRY_H */
-diff --git a/drivers/md/dm-vdo/uds-threads.c b/drivers/md/dm-vdo/uds-threads.c
++#endif /* UDS_CPU_H */
+diff --git a/drivers/md/dm-vdo/funnel-queue.c b/drivers/md/dm-vdo/funnel-queue.c
 new file mode 100644
-index 00000000000..55603886064
+index 00000000000..7e36153ec0a
 --- /dev/null
-+++ b/drivers/md/dm-vdo/uds-threads.c
-@@ -0,0 +1,189 @@
++++ b/drivers/md/dm-vdo/funnel-queue.c
+@@ -0,0 +1,169 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright Red Hat
 + */
 +
-+#include "uds-threads.h"
++#include "funnel-queue.h"
 +
-+#include <linux/completion.h>
-+#include <linux/err.h>
-+#include <linux/kthread.h>
-+#include <linux/sched.h>
-+#ifndef VDO_UPSTREAM
-+#include <linux/version.h>
-+#endif /* VDO_UPSTREAM */
-+
-+#include "errors.h"
-+#include "logger.h"
++#include "cpu.h"
 +#include "memory-alloc.h"
++#include "permassert.h"
++#include "uds.h"
 +
-+static struct hlist_head thread_list;
-+static struct mutex thread_mutex;
-+static atomic_t thread_once = ATOMIC_INIT(0);
-+
-+struct thread {
-+	void (*thread_function)(void *thread_data);
-+	void *thread_data;
-+	struct hlist_node thread_links;
-+	struct task_struct *thread_task;
-+	struct completion thread_done;
-+};
-+
-+enum {
-+	ONCE_NOT_DONE = 0,
-+	ONCE_IN_PROGRESS = 1,
-+	ONCE_COMPLETE = 2,
-+};
-+
-+/* Run a function once only, and record that fact in the atomic value. */
-+void uds_perform_once(atomic_t *once, void (*function)(void))
++int uds_make_funnel_queue(struct funnel_queue **queue_ptr)
 +{
-+	for (;;) {
-+		switch (atomic_cmpxchg(once, ONCE_NOT_DONE, ONCE_IN_PROGRESS)) {
-+		case ONCE_NOT_DONE:
-+			function();
-+			atomic_set_release(once, ONCE_COMPLETE);
-+			return;
-+		case ONCE_IN_PROGRESS:
-+			cond_resched();
-+			break;
-+		case ONCE_COMPLETE:
-+			return;
-+		default:
-+			return;
-+		}
-+	}
-+}
-+
-+static void thread_init(void)
-+{
-+	mutex_init(&thread_mutex);
-+}
-+
-+static int thread_starter(void *arg)
-+{
-+	struct registered_thread allocating_thread;
-+	struct thread *thread = arg;
-+
-+	thread->thread_task = current;
-+	uds_perform_once(&thread_once, thread_init);
-+	mutex_lock(&thread_mutex);
-+	hlist_add_head(&thread->thread_links, &thread_list);
-+	mutex_unlock(&thread_mutex);
-+	uds_register_allocating_thread(&allocating_thread, NULL);
-+	thread->thread_function(thread->thread_data);
-+	uds_unregister_allocating_thread();
-+	complete(&thread->thread_done);
-+	return 0;
-+}
-+
-+int uds_create_thread(void (*thread_function)(void *),
-+		      void *thread_data,
-+		      const char *name,
-+		      struct thread **new_thread)
-+{
-+	char *name_colon = strchr(name, ':');
-+	char *my_name_colon = strchr(current->comm, ':');
-+	struct task_struct *task;
-+	struct thread *thread;
 +	int result;
++	struct funnel_queue *queue;
 +
-+	result = UDS_ALLOCATE(1, struct thread, __func__, &thread);
-+	if (result != UDS_SUCCESS) {
-+		uds_log_warning("Error allocating memory for %s", name);
++	result = UDS_ALLOCATE(1, struct funnel_queue, "funnel queue", &queue);
++	if (result != UDS_SUCCESS)
 +		return result;
-+	}
 +
-+	thread->thread_function = thread_function;
-+	thread->thread_data = thread_data;
-+	init_completion(&thread->thread_done);
 +	/*
-+	 * Start the thread, with an appropriate thread name.
-+	 *
-+	 * If the name supplied contains a colon character, use that name. This causes uds module
-+	 * threads to have names like "uds:callbackW" and the main test runner thread to be named
-+	 * "zub:runtest".
-+	 *
-+	 * Otherwise if the current thread has a name containing a colon character, prefix the name
-+	 * supplied with the name of the current thread up to (and including) the colon character.
-+	 * Thus when the "kvdo0:dedupeQ" thread opens an index session, all the threads associated
-+	 * with that index will have names like "kvdo0:foo".
-+	 *
-+	 * Otherwise just use the name supplied. This should be a rare occurrence.
++	 * Initialize the stub entry and put it in the queue, establishing the invariant that
++	 * queue->newest and queue->oldest are never null.
 +	 */
-+	if ((name_colon == NULL) && (my_name_colon != NULL))
-+		task = kthread_run(thread_starter,
-+				   thread,
-+				   "%.*s:%s",
-+				   (int) (my_name_colon - current->comm),
-+				   current->comm,
-+				   name);
-+	else
-+		task = kthread_run(thread_starter, thread, "%s", name);
++	queue->stub.next = NULL;
++	queue->newest = &queue->stub;
++	queue->oldest = &queue->stub;
 +
-+	if (IS_ERR(task)) {
-+		UDS_FREE(thread);
-+		return PTR_ERR(task);
++	*queue_ptr = queue;
++	return UDS_SUCCESS;
++}
++
++void uds_free_funnel_queue(struct funnel_queue *queue)
++{
++	UDS_FREE(queue);
++}
++
++static struct funnel_queue_entry *get_oldest(struct funnel_queue *queue)
++{
++	/*
++	 * Barrier requirements: We need a read barrier between reading a "next" field pointer
++	 * value and reading anything it points to. There's an accompanying barrier in
++	 * uds_funnel_queue_put() between its caller setting up the entry and making it visible.
++	 */
++	struct funnel_queue_entry *oldest = queue->oldest;
++	struct funnel_queue_entry *next = READ_ONCE(oldest->next);
++
++	if (oldest == &queue->stub) {
++		/*
++		 * When the oldest entry is the stub and it has no successor, the queue is
++		 * logically empty.
++		 */
++		if (next == NULL)
++			return NULL;
++		/*
++		 * The stub entry has a successor, so the stub can be dequeued and ignored without
++		 * breaking the queue invariants.
++		 */
++		oldest = next;
++		queue->oldest = oldest;
++		next = READ_ONCE(oldest->next);
 +	}
 +
-+	*new_thread = thread;
-+	return UDS_SUCCESS;
-+}
++	/*
++	 * We have a non-stub candidate to dequeue. If it lacks a successor, we'll need to put the
++	 * stub entry back on the queue first.
++	 */
++	if (next == NULL) {
++		struct funnel_queue_entry *newest = READ_ONCE(queue->newest);
 +
-+int uds_join_threads(struct thread *thread)
-+{
-+	while (wait_for_completion_interruptible(&thread->thread_done) != 0)
-+		/* empty loop */
-+		;
++		if (oldest != newest)
++			/*
++			 * Another thread has already swung queue->newest atomically, but not yet
++			 * assigned previous->next. The queue is really still empty.
++			 */
++			return NULL;
 +
-+	mutex_lock(&thread_mutex);
-+	hlist_del(&thread->thread_links);
-+	mutex_unlock(&thread_mutex);
-+	UDS_FREE(thread);
-+	return UDS_SUCCESS;
-+}
++		/*
++		 * Put the stub entry back on the queue, ensuring a successor will eventually be
++		 * seen.
++		 */
++		uds_funnel_queue_put(queue, &queue->stub);
 +
-+int uds_initialize_barrier(struct barrier *barrier, unsigned int thread_count)
-+{
-+	int result;
-+
-+	result = uds_initialize_semaphore(&barrier->mutex, 1);
-+	if (result != UDS_SUCCESS)
-+		return result;
-+
-+	barrier->arrived = 0;
-+	barrier->thread_count = thread_count;
-+	return uds_initialize_semaphore(&barrier->wait, 0);
-+}
-+
-+int uds_destroy_barrier(struct barrier *barrier)
-+{
-+	int result;
-+
-+	result = uds_destroy_semaphore(&barrier->mutex);
-+	if (result != UDS_SUCCESS)
-+		return result;
-+	return uds_destroy_semaphore(&barrier->wait);
-+}
-+
-+int uds_enter_barrier(struct barrier *barrier)
-+{
-+	bool last_thread;
-+
-+	uds_acquire_semaphore(&barrier->mutex);
-+	last_thread = (++barrier->arrived == barrier->thread_count);
-+	if (last_thread) {
-+		int i;
-+
-+		for (i = 1; i < barrier->thread_count; i++)
-+			uds_release_semaphore(&barrier->wait);
-+
-+		barrier->arrived = 0;
-+		uds_release_semaphore(&barrier->mutex);
-+	} else {
-+		uds_release_semaphore(&barrier->mutex);
-+		uds_acquire_semaphore(&barrier->wait);
++		/* Check again for a successor. */
++		next = READ_ONCE(oldest->next);
++		if (next == NULL)
++			/*
++			 * We lost a race with a producer who swapped queue->newest before we did,
++			 * but who hasn't yet updated previous->next. Try again later.
++			 */
++			return NULL;
 +	}
 +
-+	return UDS_SUCCESS;
++	return oldest;
 +}
-diff --git a/drivers/md/dm-vdo/uds-threads.h b/drivers/md/dm-vdo/uds-threads.h
++
++/*
++ * Poll a queue, removing the oldest entry if the queue is not empty. This function must only be
++ * called from a single consumer thread.
++ */
++struct funnel_queue_entry *uds_funnel_queue_poll(struct funnel_queue *queue)
++{
++	struct funnel_queue_entry *oldest = get_oldest(queue);
++
++	if (oldest == NULL)
++		return oldest;
++
++	/*
++	 * Dequeue the oldest entry and return it. Only one consumer thread may call this function,
++	 * so no locking, atomic operations, or fences are needed; queue->oldest is owned by the
++	 * consumer and oldest->next is never used by a producer thread after it is swung from NULL
++	 * to non-NULL.
++	 */
++	queue->oldest = READ_ONCE(oldest->next);
++	/*
++	 * Make sure the caller sees the proper stored data for this entry. Since we've already
++	 * fetched the entry pointer we stored in "queue->oldest", this also ensures that on entry
++	 * to the next call we'll properly see the dependent data.
++	 */
++	smp_rmb();
++	/*
++	 * If "oldest" is a very light-weight work item, we'll be looking for the next one very
++	 * soon, so prefetch it now.
++	 */
++	uds_prefetch_address(queue->oldest, true);
++	WRITE_ONCE(oldest->next, NULL);
++	return oldest;
++}
++
++/*
++ * Check whether the funnel queue is empty or not. If the queue is in a transition state with one
++ * or more entries being added such that the list view is incomplete, this function will report the
++ * queue as empty.
++ */
++bool uds_is_funnel_queue_empty(struct funnel_queue *queue)
++{
++	return get_oldest(queue) == NULL;
++}
++
++/*
++ * Check whether the funnel queue is idle or not. If the queue has entries available to be
++ * retrieved, it is not idle. If the queue is in a transition state with one or more entries being
++ * added such that the list view is incomplete, it may not be possible to retrieve an entry with
++ * the uds_funnel_queue_poll() function, but the queue will not be considered idle.
++ */
++bool uds_is_funnel_queue_idle(struct funnel_queue *queue)
++{
++	/*
++	 * Oldest is not the stub, so there's another entry, though if next is NULL we can't
++	 * retrieve it yet.
++	 */
++	if (queue->oldest != &queue->stub)
++		return false;
++
++	/*
++	 * Oldest is the stub, but newest has been updated by _put(); either there's another,
++	 * retrievable entry in the list, or the list is officially empty but in the intermediate
++	 * state of having an entry added.
++	 *
++	 * Whether anything is retrievable depends on whether stub.next has been updated and become
++	 * visible to us, but for idleness we don't care. And due to memory ordering in _put(), the
++	 * update to newest would be visible to us at the same time or sooner.
++	 */
++	if (READ_ONCE(queue->newest) != &queue->stub)
++		return false;
++
++	return true;
++}
+diff --git a/drivers/md/dm-vdo/funnel-queue.h b/drivers/md/dm-vdo/funnel-queue.h
 new file mode 100644
-index 00000000000..e4c968e2930
+index 00000000000..332acc579b6
 --- /dev/null
-+++ b/drivers/md/dm-vdo/uds-threads.h
-@@ -0,0 +1,126 @@
++++ b/drivers/md/dm-vdo/funnel-queue.h
+@@ -0,0 +1,110 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright Red Hat
 + */
 +
-+#ifndef UDS_THREADS_H
-+#define UDS_THREADS_H
++#ifndef UDS_FUNNEL_QUEUE_H
++#define UDS_FUNNEL_QUEUE_H
 +
 +#include <linux/atomic.h>
-+#include <linux/delay.h>
-+#include <linux/jiffies.h>
-+#include <linux/mutex.h>
-+#include <linux/semaphore.h>
++#include <linux/cache.h>
++
++/*
++ * A funnel queue is a simple (almost) lock-free queue that accepts entries from multiple threads
++ * (multi-producer) and delivers them to a single thread (single-consumer). "Funnel" is an attempt
++ * to evoke the image of requests from more than one producer being "funneled down" to a single
++ * consumer.
++ *
++ * This is an unsynchronized but thread-safe data structure when used as intended. There is no
++ * mechanism to ensure that only one thread is consuming from the queue. If more than one thread
++ * attempts to consume from the queue, the resulting behavior is undefined. Clients must not
++ * directly access or manipulate the internals of the queue, which are only exposed for the purpose
++ * of allowing the very simple enqueue operation to be inlined.
++ *
++ * The implementation requires that a funnel_queue_entry structure (a link pointer) is embedded in
++ * the queue entries, and pointers to those structures are used exclusively by the queue. No macros
++ * are defined to template the queue, so the offset of the funnel_queue_entry in the records placed
++ * in the queue must all be the same so the client can derive their structure pointer from the
++ * entry pointer returned by uds_funnel_queue_poll().
++ *
++ * Callers are wholly responsible for allocating and freeing the entries. Entries may be freed as
++ * soon as they are returned since this queue is not susceptible to the "ABA problem" present in
++ * many lock-free data structures. The queue is dynamically allocated to ensure cache-line
++ * alignment, but no other dynamic allocation is used.
++ *
++ * The algorithm is not actually 100% lock-free. There is a single point in uds_funnel_queue_put()
++ * at which a preempted producer will prevent the consumers from seeing items added to the queue by
++ * later producers, and only if the queue is short enough or the consumer fast enough for it to
++ * reach what was the end of the queue at the time of the preemption.
++ *
++ * The consumer function, uds_funnel_queue_poll(), will return NULL when the queue is empty. To
++ * wait for data to consume, spin (if safe) or combine the queue with a struct event_count to
++ * signal the presence of new entries.
++ */
++
++/* This queue link structure must be embedded in client entries. */
++struct funnel_queue_entry {
++	/* The next (newer) entry in the queue. */
++	struct funnel_queue_entry *next;
++};
++
++/*
++ * The dynamically allocated queue structure, which is allocated on a cache line boundary so the
++ * producer and consumer fields in the structure will land on separate cache lines. This should be
++ * consider opaque but it is exposed here so uds_funnel_queue_put() can be inlined.
++ */
++struct __aligned(L1_CACHE_BYTES) funnel_queue {
++	/*
++	 * The producers' end of the queue, an atomically exchanged pointer that will never be
++	 * NULL.
++	 */
++	struct funnel_queue_entry *newest;
++
++	/* The consumer's end of the queue, which is owned by the consumer and never NULL. */
++	struct funnel_queue_entry *oldest __aligned(L1_CACHE_BYTES);
++
++	/* A dummy entry used to provide the non-NULL invariants above. */
++	struct funnel_queue_entry stub;
++};
++
++int __must_check uds_make_funnel_queue(struct funnel_queue **queue_ptr);
++
++void uds_free_funnel_queue(struct funnel_queue *queue);
++
++/*
++ * Put an entry on the end of the queue.
++ *
++ * The entry pointer must be to the struct funnel_queue_entry embedded in the caller's data
++ * structure. The caller must be able to derive the address of the start of their data structure
++ * from the pointer that passed in here, so every entry in the queue must have the struct
++ * funnel_queue_entry at the same offset within the client's structure.
++ */
++static inline void
++uds_funnel_queue_put(struct funnel_queue *queue, struct funnel_queue_entry *entry)
++{
++	struct funnel_queue_entry *previous;
++
++	/*
++	 * Barrier requirements: All stores relating to the entry ("next" pointer, containing data
++	 * structure fields) must happen before the previous->next store making it visible to the
++	 * consumer. Also, the entry's "next" field initialization to NULL must happen before any
++	 * other producer threads can see the entry (the xchg) and try to update the "next" field.
++	 *
++	 * xchg implements a full barrier.
++	 */
++	WRITE_ONCE(entry->next, NULL);
++	previous = xchg(&queue->newest, entry);
++	/*
++	 * Preemptions between these two statements hide the rest of the queue from the consumer,
++	 * preventing consumption until the following assignment runs.
++	 */
++	WRITE_ONCE(previous->next, entry);
++}
++
++struct funnel_queue_entry *__must_check uds_funnel_queue_poll(struct funnel_queue *queue);
++
++bool __must_check uds_is_funnel_queue_empty(struct funnel_queue *queue);
++
++bool __must_check uds_is_funnel_queue_idle(struct funnel_queue *queue);
++
++#endif /* UDS_FUNNEL_QUEUE_H */
+diff --git a/drivers/md/dm-vdo/request-queue.c b/drivers/md/dm-vdo/request-queue.c
+new file mode 100644
+index 00000000000..058422f44d9
+--- /dev/null
++++ b/drivers/md/dm-vdo/request-queue.c
+@@ -0,0 +1,284 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright Red Hat
++ */
++
++#include "request-queue.h"
++
++#include <linux/atomic.h>
++#include <linux/compiler.h>
 +#include <linux/wait.h>
 +
-+#include "errors.h"
-+#include "time-utils.h"
++#include "funnel-queue.h"
++#include "logger.h"
++#include "memory-alloc.h"
++#include "uds-threads.h"
 +
-+/* Thread and synchronization utilities for UDS */
++/*
++ * This queue will attempt to handle requests in reasonably sized batches instead of reacting
++ * immediately to each new request. The wait time between batches is dynamically adjusted up or
++ * down to try to balance responsiveness against wasted thread run time.
++ *
++ * If the wait time becomes long enough, the queue will become dormant and must be explicitly
++ * awoken when a new request is enqueued. The enqueue operation updates "newest" in the funnel
++ * queue via xchg (which is a memory barrier), and later checks "dormant" to decide whether to do a
++ * wakeup of the worker thread.
++ *
++ * When deciding to go to sleep, the worker thread sets "dormant" and then examines "newest" to
++ * decide if the funnel queue is idle. In dormant mode, the last examination of "newest" before
++ * going to sleep is done inside the wait_event_interruptible() macro, after a point where one or
++ * more memory barriers have been issued. (Preparing to sleep uses spin locks.) Even if the funnel
++ * queue's "next" field update isn't visible yet to make the entry accessible, its existence will
++ * kick the worker thread out of dormant mode and back into timer-based mode.
++ *
++ * Unbatched requests are used to communicate between different zone threads and will also cause
++ * the queue to awaken immediately.
++ */
 +
-+struct cond_var {
-+	wait_queue_head_t wait_queue;
++enum {
++	NANOSECOND = 1,
++	MICROSECOND = 1000 * NANOSECOND,
++	MILLISECOND = 1000 * MICROSECOND,
++	DEFAULT_WAIT_TIME = 20 * MICROSECOND,
++	MINIMUM_WAIT_TIME = DEFAULT_WAIT_TIME / 2,
++	MAXIMUM_WAIT_TIME = MILLISECOND,
++	MINIMUM_BATCH = 32,
++	MAXIMUM_BATCH = 64,
 +};
 +
-+struct thread;
-+
-+struct barrier {
-+	/* Mutex for this barrier object */
-+	struct semaphore mutex;
-+	/* Semaphore for threads waiting at the barrier */
-+	struct semaphore wait;
-+	/* Number of threads which have arrived */
-+	int arrived;
-+	/* Total number of threads using this barrier */
-+	int thread_count;
++struct uds_request_queue {
++	/* Wait queue for synchronizing producers and consumer */
++	struct wait_queue_head wait_head;
++	/* Function to process a request */
++	uds_request_queue_processor_t *processor;
++	/* Queue of new incoming requests */
++	struct funnel_queue *main_queue;
++	/* Queue of old requests to retry */
++	struct funnel_queue *retry_queue;
++	/* The thread id of the worker thread */
++	struct thread *thread;
++	/* True if the worker was started */
++	bool started;
++	/* When true, requests can be enqueued */
++	bool running;
++	/* A flag set when the worker is waiting without a timeout */
++	atomic_t dormant;
 +};
 +
-+int __must_check uds_create_thread(void (*thread_function)(void *),
-+				   void *thread_data,
-+				   const char *name,
-+				   struct thread **new_thread);
-+
-+void uds_perform_once(atomic_t *once_state, void (*function) (void));
-+
-+int uds_join_threads(struct thread *thread);
-+
-+int __must_check uds_initialize_barrier(struct barrier *barrier, unsigned int thread_count);
-+int uds_destroy_barrier(struct barrier *barrier);
-+int uds_enter_barrier(struct barrier *barrier);
-+
-+int __must_check uds_init_cond(struct cond_var *cond);
-+int uds_signal_cond(struct cond_var *cond);
-+int uds_broadcast_cond(struct cond_var *cond);
-+int uds_wait_cond(struct cond_var *cond, struct mutex *mutex);
-+int uds_destroy_cond(struct cond_var *cond);
-+
-+static inline int __must_check uds_init_mutex(struct mutex *mutex)
++static inline struct uds_request *poll_queues(struct uds_request_queue *queue)
 +{
-+	mutex_init(mutex);
++	struct funnel_queue_entry *entry;
++
++	entry = uds_funnel_queue_poll(queue->retry_queue);
++	if (entry != NULL)
++		return container_of(entry, struct uds_request, queue_link);
++
++	entry = uds_funnel_queue_poll(queue->main_queue);
++	if (entry != NULL)
++		return container_of(entry, struct uds_request, queue_link);
++
++	return NULL;
++}
++
++static inline bool are_queues_idle(struct uds_request_queue *queue)
++{
++	return uds_is_funnel_queue_idle(queue->retry_queue) &&
++	       uds_is_funnel_queue_idle(queue->main_queue);
++}
++
++/*
++ * Determine if there is a next request to process, and return it if there is. Also return flags
++ * indicating whether the worker thread can sleep (for the use of wait_event() macros) and whether
++ * the thread did sleep before returning a new request.
++ */
++static inline bool dequeue_request(struct uds_request_queue *queue,
++				   struct uds_request **request_ptr,
++				   bool *waited_ptr)
++{
++	struct uds_request *request = poll_queues(queue);
++
++	if (request != NULL) {
++		*request_ptr = request;
++		return true;
++	}
++
++	if (!READ_ONCE(queue->running)) {
++		/* Wake the worker thread so it can exit. */
++		*request_ptr = NULL;
++		return true;
++	}
++
++	*request_ptr = NULL;
++	*waited_ptr = true;
++	return false;
++}
++
++static void wait_for_request(struct uds_request_queue *queue,
++			     bool dormant,
++			     unsigned long timeout,
++			     struct uds_request **request,
++			     bool *waited)
++{
++	if (dormant) {
++		wait_event_interruptible(queue->wait_head,
++					 (dequeue_request(queue, request, waited) ||
++					  !are_queues_idle(queue)));
++		return;
++	}
++
++	wait_event_interruptible_hrtimeout(queue->wait_head,
++					   dequeue_request(queue, request, waited),
++					   ns_to_ktime(timeout));
++}
++
++static void request_queue_worker(void *arg)
++{
++	struct uds_request_queue *queue = (struct uds_request_queue *) arg;
++	struct uds_request *request = NULL;
++	unsigned long time_batch = DEFAULT_WAIT_TIME;
++	bool dormant = atomic_read(&queue->dormant);
++	bool waited = false;
++	long current_batch = 0;
++
++	for (;;) {
++		wait_for_request(queue, dormant, time_batch, &request, &waited);
++		if (likely(request != NULL)) {
++			current_batch++;
++			queue->processor(request);
++		} else if (!READ_ONCE(queue->running)) {
++			break;
++		}
++
++		if (dormant) {
++			/*
++			 * The queue has been roused from dormancy. Clear the flag so enqueuers can
++			 * stop broadcasting. No fence is needed for this transition.
++			 */
++			atomic_set(&queue->dormant, false);
++			dormant = false;
++			time_batch = DEFAULT_WAIT_TIME;
++		} else if (waited) {
++			/*
++			 * We waited for this request to show up. Adjust the wait time to smooth
++			 * out the batch size.
++			 */
++			if (current_batch < MINIMUM_BATCH) {
++				/*
++				 * If the last batch of requests was too small, increase the wait
++				 * time.
++				 */
++				time_batch += time_batch / 4;
++				if (time_batch >= MAXIMUM_WAIT_TIME) {
++					atomic_set(&queue->dormant, true);
++					dormant = true;
++				}
++			} else if (current_batch > MAXIMUM_BATCH) {
++				/*
++				 * If the last batch of requests was too large, decrease the wait
++				 * time.
++				 */
++				time_batch -= time_batch / 4;
++				if (time_batch < MINIMUM_WAIT_TIME)
++					time_batch = MINIMUM_WAIT_TIME;
++			}
++			current_batch = 0;
++		}
++	}
++
++	/*
++	 * Ensure that we process any remaining requests that were enqueued before trying to shut
++	 * down. The corresponding write barrier is in uds_request_queue_finish().
++	 */
++	smp_rmb();
++	while ((request = poll_queues(queue)) != NULL)
++		queue->processor(request);
++}
++
++int uds_make_request_queue(const char *queue_name,
++			   uds_request_queue_processor_t *processor,
++			   struct uds_request_queue **queue_ptr)
++{
++	int result;
++	struct uds_request_queue *queue;
++
++	result = UDS_ALLOCATE(1, struct uds_request_queue, __func__, &queue);
++	if (result != UDS_SUCCESS)
++		return result;
++
++	queue->processor = processor;
++	queue->running = true;
++	atomic_set(&queue->dormant, false);
++	init_waitqueue_head(&queue->wait_head);
++
++	result = uds_make_funnel_queue(&queue->main_queue);
++	if (result != UDS_SUCCESS) {
++		uds_request_queue_finish(queue);
++		return result;
++	}
++
++	result = uds_make_funnel_queue(&queue->retry_queue);
++	if (result != UDS_SUCCESS) {
++		uds_request_queue_finish(queue);
++		return result;
++	}
++
++	result = uds_create_thread(request_queue_worker, queue, queue_name, &queue->thread);
++	if (result != UDS_SUCCESS) {
++		uds_request_queue_finish(queue);
++		return result;
++	}
++
++	queue->started = true;
++	*queue_ptr = queue;
 +	return UDS_SUCCESS;
 +}
 +
-+static inline int uds_destroy_mutex(struct mutex *mutex)
++static inline void wake_up_worker(struct uds_request_queue *queue)
 +{
++	if (wq_has_sleeper(&queue->wait_head))
++		wake_up(&queue->wait_head);
++}
++
++void uds_request_queue_enqueue(struct uds_request_queue *queue, struct uds_request *request)
++{
++	struct funnel_queue *sub_queue;
++	bool unbatched = request->unbatched;
++
++	sub_queue = request->requeued ? queue->retry_queue : queue->main_queue;
++	uds_funnel_queue_put(sub_queue, &request->queue_link);
++
++	/*
++	 * We must wake the worker thread when it is dormant. A read fence isn't needed here since
++	 * we know the queue operation acts as one.
++	 */
++	if (atomic_read(&queue->dormant) || unbatched)
++		wake_up_worker(queue);
++}
++
++void uds_request_queue_finish(struct uds_request_queue *queue)
++{
++	int result;
++
++	if (queue == NULL)
++		return;
++
++	/*
++	 * This memory barrier ensures that any requests we queued will be seen. The point is that
++	 * when dequeue_request() sees the following update to the running flag, it will also be
++	 * able to see any change we made to a next field in the funnel queue entry. The
++	 * corresponding read barrier is in request_queue_worker().
++	 */
++	smp_wmb();
++	WRITE_ONCE(queue->running, false);
++
++	if (queue->started) {
++		wake_up_worker(queue);
++		result = uds_join_threads(queue->thread);
++		if (result != UDS_SUCCESS)
++			uds_log_warning_strerror(result, "Failed to join worker thread");
++	}
++
++	uds_free_funnel_queue(queue->main_queue);
++	uds_free_funnel_queue(queue->retry_queue);
++	UDS_FREE(queue);
++}
+diff --git a/drivers/md/dm-vdo/request-queue.h b/drivers/md/dm-vdo/request-queue.h
+new file mode 100644
+index 00000000000..e736072b35a
+--- /dev/null
++++ b/drivers/md/dm-vdo/request-queue.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright Red Hat
++ */
++
++#ifndef UDS_REQUEST_QUEUE_H
++#define UDS_REQUEST_QUEUE_H
++
++#include "uds.h"
++
++/*
++ * A simple request queue which will handle new requests in the order in which they are received,
++ * and will attempt to handle requeued requests before new ones. However, the nature of the
++ * implementation means that it cannot guarantee this ordering; the prioritization is merely a
++ * hint.
++ */
++
++struct uds_request_queue;
++
++typedef void uds_request_queue_processor_t(struct uds_request *);
++
++int __must_check uds_make_request_queue(const char *queue_name,
++					uds_request_queue_processor_t *processor,
++					struct uds_request_queue **queue_ptr);
++
++void uds_request_queue_enqueue(struct uds_request_queue *queue, struct uds_request *request);
++
++void uds_request_queue_finish(struct uds_request_queue *queue);
++
++#endif /* UDS_REQUEST_QUEUE_H */
+diff --git a/drivers/md/dm-vdo/work-queue.c b/drivers/md/dm-vdo/work-queue.c
+new file mode 100644
+index 00000000000..ecb0c345d4f
+--- /dev/null
++++ b/drivers/md/dm-vdo/work-queue.c
+@@ -0,0 +1,659 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright Red Hat
++ */
++
++#include "work-queue.h"
++
++#include <linux/atomic.h>
++#include <linux/cache.h>
++#include <linux/completion.h>
++#include <linux/err.h>
++#include <linux/kthread.h>
++#include <linux/percpu.h>
++
++#include "funnel-queue.h"
++#include "logger.h"
++#include "memory-alloc.h"
++#include "numeric.h"
++#include "permassert.h"
++#include "string-utils.h"
++
++#include "completion.h"
++#include "status-codes.h"
++
++static DEFINE_PER_CPU(unsigned int, service_queue_rotor);
++
++/**
++ * DOC: Work queue definition.
++ *
++ * There are two types of work queues: simple, with one worker thread, and round-robin, which uses
++ * a group of the former to do the work, and assigns work to them in round-robin fashion (roughly).
++ * Externally, both are represented via the same common sub-structure, though there's actually not
++ * a great deal of overlap between the two types internally.
++ */
++struct vdo_work_queue {
++	/* Name of just the work queue (e.g., "cpuQ12") */
++	char *name;
++	bool round_robin_mode;
++	struct vdo_thread *owner;
++	/* Life cycle functions, etc */
++	const struct vdo_work_queue_type *type;
++};
++
++struct simple_work_queue {
++	struct vdo_work_queue common;
++	struct funnel_queue *priority_lists[VDO_WORK_Q_MAX_PRIORITY + 1];
++	void *private;
++
++	/*
++	 * The fields above are unchanged after setup but often read, and are good candidates for
++	 * caching -- and if the max priority is 2, just fit in one x86-64 cache line if aligned.
++	 * The fields below are often modified as we sleep and wake, so we want a separate cache
++	 * line for performance.
++	 */
++
++	/* Any (0 or 1) worker threads waiting for new work to do */
++	wait_queue_head_t waiting_worker_threads ____cacheline_aligned;
++	/* Hack to reduce wakeup calls if the worker thread is running */
++	atomic_t idle;
++
++	/* These are infrequently used so in terms of performance we don't care where they land. */
++	struct task_struct *thread;
++	/* Notify creator once worker has initialized */
++	struct completion *started;
++};
++
++struct round_robin_work_queue {
++	struct vdo_work_queue common;
++	struct simple_work_queue **service_queues;
++	unsigned int num_service_queues;
++};
++
++static inline struct simple_work_queue *as_simple_work_queue(struct vdo_work_queue *queue)
++{
++	return ((queue == NULL) ? NULL : container_of(queue, struct simple_work_queue, common));
++}
++
++static inline struct round_robin_work_queue *
++as_round_robin_work_queue(struct vdo_work_queue *queue)
++{
++	return ((queue == NULL) ?
++		 NULL :
++		 container_of(queue, struct round_robin_work_queue, common));
++}
++
++/* Processing normal completions. */
++
++/*
++ * Dequeue and return the next waiting completion, if any.
++ *
++ * We scan the funnel queues from highest priority to lowest, once; there is therefore a race
++ * condition where a high-priority completion can be enqueued followed by a lower-priority one, and
++ * we'll grab the latter (but we'll catch the high-priority item on the next call). If strict
++ * enforcement of priorities becomes necessary, this function will need fixing.
++ */
++static struct vdo_completion *poll_for_completion(struct simple_work_queue *queue)
++{
++	int i;
++
++	for (i = queue->common.type->max_priority; i >= 0; i--) {
++		struct funnel_queue_entry *link = uds_funnel_queue_poll(queue->priority_lists[i]);
++
++		if (link != NULL)
++			return container_of(link, struct vdo_completion, work_queue_entry_link);
++	}
++
++	return NULL;
++}
++
++static void
++enqueue_work_queue_completion(struct simple_work_queue *queue, struct vdo_completion *completion)
++{
++	ASSERT_LOG_ONLY(completion->my_queue == NULL,
++			"completion %px (fn %px) to enqueue (%px) is not already queued (%px)",
++			completion,
++			completion->callback,
++			queue,
++			completion->my_queue);
++	if (completion->priority == VDO_WORK_Q_DEFAULT_PRIORITY)
++		completion->priority = queue->common.type->default_priority;
++
++	if (ASSERT(completion->priority <= queue->common.type->max_priority,
++		   "priority is in range for queue") != VDO_SUCCESS)
++		completion->priority = 0;
++
++	completion->my_queue = &queue->common;
++
++	/* Funnel queue handles the synchronization for the put. */
++	uds_funnel_queue_put(queue->priority_lists[completion->priority],
++			     &completion->work_queue_entry_link);
++
++	/*
++	 * Due to how funnel queue synchronization is handled (just atomic operations), the
++	 * simplest safe implementation here would be to wake-up any waiting threads after
++	 * enqueueing each item. Even if the funnel queue is not empty at the time of adding an
++	 * item to the queue, the consumer thread may not see this since it is not guaranteed to
++	 * have the same view of the queue as a producer thread.
++	 *
++	 * However, the above is wasteful so instead we attempt to minimize the number of thread
++	 * wakeups. Using an idle flag, and careful ordering using memory barriers, we should be
++	 * able to determine when the worker thread might be asleep or going to sleep. We use
++	 * cmpxchg to try to take ownership (vs other producer threads) of the responsibility for
++	 * waking the worker thread, so multiple wakeups aren't tried at once.
++	 *
++	 * This was tuned for some x86 boxes that were handy; it's untested whether doing the read
++	 * first is any better or worse for other platforms, even other x86 configurations.
++	 */
++	smp_mb();
++	if ((atomic_read(&queue->idle) != 1) || (atomic_cmpxchg(&queue->idle, 1, 0) != 1))
++		return;
++
++	/* There's a maximum of one thread in this list. */
++	wake_up(&queue->waiting_worker_threads);
++}
++
++static void run_start_hook(struct simple_work_queue *queue)
++{
++	if (queue->common.type->start != NULL)
++		queue->common.type->start(queue->private);
++}
++
++static void run_finish_hook(struct simple_work_queue *queue)
++{
++	if (queue->common.type->finish != NULL)
++		queue->common.type->finish(queue->private);
++}
++
++/*
++ * Wait for the next completion to process, or until kthread_should_stop indicates that it's time
++ * for us to shut down.
++ *
++ * If kthread_should_stop says it's time to stop but we have pending completions return a
++ * completion.
++ *
++ * Also update statistics relating to scheduler interactions.
++ */
++static struct vdo_completion *wait_for_next_completion(struct simple_work_queue *queue)
++{
++	struct vdo_completion *completion;
++	DEFINE_WAIT(wait);
++
++	while (true) {
++		prepare_to_wait(&queue->waiting_worker_threads, &wait, TASK_INTERRUPTIBLE);
++		/*
++		 * Don't set the idle flag until a wakeup will not be lost.
++		 *
++		 * Force synchronization between setting the idle flag and checking the funnel
++		 * queue; the producer side will do them in the reverse order. (There's still a
++		 * race condition we've chosen to allow, because we've got a timeout below that
++		 * unwedges us if we hit it, but this may narrow the window a little.)
++		 */
++		atomic_set(&queue->idle, 1);
++		smp_mb(); /* store-load barrier between "idle" and funnel queue */
++
++		completion = poll_for_completion(queue);
++		if (completion != NULL)
++			break;
++
++		/*
++		 * We need to check for thread-stop after setting TASK_INTERRUPTIBLE state up
++		 * above. Otherwise, schedule() will put the thread to sleep and might miss a
++		 * wakeup from kthread_stop() call in vdo_finish_work_queue().
++		 */
++		if (kthread_should_stop())
++			break;
++
++		schedule();
++
++		/*
++		 * Most of the time when we wake, it should be because there's work to do. If it
++		 * was a spurious wakeup, continue looping.
++		 */
++		completion = poll_for_completion(queue);
++		if (completion != NULL)
++			break;
++	}
++
++	finish_wait(&queue->waiting_worker_threads, &wait);
++	atomic_set(&queue->idle, 0);
++
++	return completion;
++}
++
++static void process_completion(struct simple_work_queue *queue, struct vdo_completion *completion)
++{
++	if (ASSERT(completion->my_queue == &queue->common,
++		   "completion %px from queue %px marked as being in this queue (%px)",
++		   completion,
++		   queue,
++		   completion->my_queue) == UDS_SUCCESS)
++		completion->my_queue = NULL;
++
++	vdo_run_completion(completion);
++}
++
++static void service_work_queue(struct simple_work_queue *queue)
++{
++	run_start_hook(queue);
++
++	while (true) {
++		struct vdo_completion *completion = poll_for_completion(queue);
++
++		if (completion == NULL)
++			completion = wait_for_next_completion(queue);
++
++		if (completion == NULL)
++			/* No completions but kthread_should_stop() was triggered. */
++			break;
++
++		process_completion(queue, completion);
++
++		/*
++		 * Be friendly to a CPU that has other work to do, if the kernel has told us to.
++		 * This speeds up some performance tests; that "other work" might include other VDO
++		 * threads.
++		 */
++		if (need_resched())
++			cond_resched();
++	}
++
++	run_finish_hook(queue);
++}
++
++static int work_queue_runner(void *ptr)
++{
++	struct simple_work_queue *queue = ptr;
++
++	complete(queue->started);
++	service_work_queue(queue);
++	return 0;
++}
++
++/* Creation & teardown */
++
++static void free_simple_work_queue(struct simple_work_queue *queue)
++{
++	unsigned int i;
++
++	for (i = 0; i <= VDO_WORK_Q_MAX_PRIORITY; i++)
++		uds_free_funnel_queue(queue->priority_lists[i]);
++	UDS_FREE(queue->common.name);
++	UDS_FREE(queue);
++}
++
++static void free_round_robin_work_queue(struct round_robin_work_queue *queue)
++{
++	struct simple_work_queue **queue_table = queue->service_queues;
++	unsigned int count = queue->num_service_queues;
++	unsigned int i;
++
++	queue->service_queues = NULL;
++
++	for (i = 0; i < count; i++)
++		free_simple_work_queue(queue_table[i]);
++	UDS_FREE(queue_table);
++	UDS_FREE(queue->common.name);
++	UDS_FREE(queue);
++}
++
++void vdo_free_work_queue(struct vdo_work_queue *queue)
++{
++	if (queue == NULL)
++		return;
++
++	vdo_finish_work_queue(queue);
++
++	if (queue->round_robin_mode)
++		free_round_robin_work_queue(as_round_robin_work_queue(queue));
++	else
++		free_simple_work_queue(as_simple_work_queue(queue));
++}
++
++static int make_simple_work_queue(const char *thread_name_prefix,
++				  const char *name,
++				  struct vdo_thread *owner,
++				  void *private,
++				  const struct vdo_work_queue_type *type,
++				  struct simple_work_queue **queue_ptr)
++{
++	DECLARE_COMPLETION_ONSTACK(started);
++	struct simple_work_queue *queue;
++	int i;
++	struct task_struct *thread = NULL;
++	int result;
++
++	ASSERT_LOG_ONLY((type->max_priority <= VDO_WORK_Q_MAX_PRIORITY),
++			"queue priority count %u within limit %u",
++			type->max_priority,
++			VDO_WORK_Q_MAX_PRIORITY);
++
++	result = UDS_ALLOCATE(1, struct simple_work_queue, "simple work queue", &queue);
++	if (result != UDS_SUCCESS)
++		return result;
++
++	queue->private = private;
++	queue->started = &started;
++	queue->common.type = type;
++	queue->common.owner = owner;
++	init_waitqueue_head(&queue->waiting_worker_threads);
++
++	result = uds_duplicate_string(name, "queue name", &queue->common.name);
++	if (result != VDO_SUCCESS) {
++		UDS_FREE(queue);
++		return -ENOMEM;
++	}
++
++	for (i = 0; i <= type->max_priority; i++) {
++		result = uds_make_funnel_queue(&queue->priority_lists[i]);
++		if (result != UDS_SUCCESS) {
++			free_simple_work_queue(queue);
++			return result;
++		}
++	}
++
++	thread = kthread_run(work_queue_runner,
++			     queue,
++			     "%s:%s",
++			     thread_name_prefix,
++			     queue->common.name);
++	if (IS_ERR(thread)) {
++		free_simple_work_queue(queue);
++		return (int) PTR_ERR(thread);
++	}
++
++	queue->thread = thread;
++
++	/*
++	 * If we don't wait to ensure the thread is running VDO code, a quick kthread_stop (due to
++	 * errors elsewhere) could cause it to never get as far as running VDO, skipping the
++	 * cleanup code.
++	 *
++	 * Eventually we should just make that path safe too, and then we won't need this
++	 * synchronization.
++	 */
++	wait_for_completion(&started);
++
++	*queue_ptr = queue;
 +	return UDS_SUCCESS;
 +}
 +
-+static inline void uds_lock_mutex(struct mutex *mutex)
++/**
++ * vdo_make_work_queue() - Create a work queue; if multiple threads are requested, completions will
++ *                         be distributed to them in round-robin fashion.
++ *
++ * Each queue is associated with a struct vdo_thread which has a single vdo thread id. Regardless
++ * of the actual number of queues and threads allocated here, code outside of the queue
++ * implementation will treat this as a single zone.
++ */
++int vdo_make_work_queue(const char *thread_name_prefix,
++			const char *name,
++			struct vdo_thread *owner,
++			const struct vdo_work_queue_type *type,
++			unsigned int thread_count,
++			void *thread_privates[],
++			struct vdo_work_queue **queue_ptr)
 +{
-+	mutex_lock(mutex);
++	struct round_robin_work_queue *queue;
++	int result;
++	char thread_name[TASK_COMM_LEN];
++	unsigned int i;
++
++	if (thread_count == 1) {
++		struct simple_work_queue *simple_queue;
++		void *context = ((thread_privates != NULL) ? thread_privates[0] : NULL);
++
++		result = make_simple_work_queue(thread_name_prefix,
++						name,
++						owner,
++						context,
++						type,
++						&simple_queue);
++		if (result == VDO_SUCCESS)
++			*queue_ptr = &simple_queue->common;
++		return result;
++	}
++
++	result = UDS_ALLOCATE(1, struct round_robin_work_queue, "round-robin work queue", &queue);
++	if (result != UDS_SUCCESS)
++		return result;
++
++	result = UDS_ALLOCATE(thread_count,
++			      struct simple_work_queue *,
++			      "subordinate work queues",
++			      &queue->service_queues);
++	if (result != UDS_SUCCESS) {
++		UDS_FREE(queue);
++		return result;
++	}
++
++	queue->num_service_queues = thread_count;
++	queue->common.round_robin_mode = true;
++	queue->common.owner = owner;
++
++	result = uds_duplicate_string(name, "queue name", &queue->common.name);
++	if (result != VDO_SUCCESS) {
++		UDS_FREE(queue->service_queues);
++		UDS_FREE(queue);
++		return -ENOMEM;
++	}
++
++	*queue_ptr = &queue->common;
++
++	for (i = 0; i < thread_count; i++) {
++		void *context = ((thread_privates != NULL) ? thread_privates[i] : NULL);
++
++		snprintf(thread_name, sizeof(thread_name), "%s%u", name, i);
++		result = make_simple_work_queue(thread_name_prefix,
++						thread_name,
++						owner,
++						context,
++						type,
++						&queue->service_queues[i]);
++		if (result != VDO_SUCCESS) {
++			queue->num_service_queues = i;
++			/* Destroy previously created subordinates. */
++			vdo_free_work_queue(UDS_FORGET(*queue_ptr));
++			return result;
++		}
++	}
++
++	return VDO_SUCCESS;
 +}
 +
-+static inline void uds_unlock_mutex(struct mutex *mutex)
++static void finish_simple_work_queue(struct simple_work_queue *queue)
 +{
-+	mutex_unlock(mutex);
++	if (queue->thread == NULL)
++		return;
++
++	/* Tells the worker thread to shut down and waits for it to exit. */
++	kthread_stop(queue->thread);
++	queue->thread = NULL;
 +}
 +
-+static inline int __must_check
-+uds_initialize_semaphore(struct semaphore *semaphore, unsigned int value)
++static void finish_round_robin_work_queue(struct round_robin_work_queue *queue)
 +{
-+	sema_init(semaphore, value);
-+	return UDS_SUCCESS;
++	struct simple_work_queue **queue_table = queue->service_queues;
++	unsigned int count = queue->num_service_queues;
++	unsigned int i;
++
++	for (i = 0; i < count; i++)
++		finish_simple_work_queue(queue_table[i]);
 +}
 +
-+static inline int uds_destroy_semaphore(struct semaphore *semaphore)
++/* No enqueueing of completions should be done once this function is called. */
++void vdo_finish_work_queue(struct vdo_work_queue *queue)
 +{
-+	return UDS_SUCCESS;
++	if (queue == NULL)
++		return;
++
++	if (queue->round_robin_mode)
++		finish_round_robin_work_queue(as_round_robin_work_queue(queue));
++	else
++		finish_simple_work_queue(as_simple_work_queue(queue));
 +}
 +
-+static inline void uds_acquire_semaphore(struct semaphore *semaphore)
++/* Debugging dumps */
++
++static void dump_simple_work_queue(struct simple_work_queue *queue)
++{
++	const char *thread_status = "no threads";
++	char task_state_report = '-';
++
++	if (queue->thread != NULL) {
++		task_state_report = task_state_to_char(queue->thread);
++		thread_status = atomic_read(&queue->idle) ? "idle" : "running";
++	}
++
++	uds_log_info("workQ %px (%s) %s (%c)",
++		     &queue->common,
++		     queue->common.name,
++		     thread_status,
++		     task_state_report);
++
++	/* ->waiting_worker_threads wait queue status? anyone waiting? */
++}
++
++/*
++ * Write to the buffer some info about the completion, for logging. Since the common use case is
++ * dumping info about a lot of completions to syslog all at once, the format favors brevity over
++ * readability.
++ */
++void vdo_dump_work_queue(struct vdo_work_queue *queue)
++{
++	if (queue->round_robin_mode) {
++		struct round_robin_work_queue *round_robin = as_round_robin_work_queue(queue);
++		unsigned int i;
++
++		for (i = 0; i < round_robin->num_service_queues; i++)
++			dump_simple_work_queue(round_robin->service_queues[i]);
++	} else {
++		dump_simple_work_queue(as_simple_work_queue(queue));
++	}
++}
++
++static void get_function_name(void *pointer, char *buffer, size_t buffer_length)
++{
++	if (pointer == NULL) {
++		/*
++		 * Format "%ps" logs a null pointer as "(null)" with a bunch of leading spaces. We
++		 * sometimes use this when logging lots of data; don't be so verbose.
++		 */
++		strncpy(buffer, "-", buffer_length);
++	} else {
++		/*
++		 * Use a pragma to defeat gcc's format checking, which doesn't understand that
++		 * "%ps" actually does support a precision spec in Linux kernel code.
++		 */
++		char *space;
++
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wformat"
++		snprintf(buffer, buffer_length, "%.*ps", buffer_length - 1, pointer);
++#pragma GCC diagnostic pop
++
++		space = strchr(buffer, ' ');
++		if (space != NULL)
++			*space = '\0';
++	}
++}
++
++void vdo_dump_completion_to_buffer(struct vdo_completion *completion, char *buffer, size_t length)
++{
++	size_t current_length =
++		scnprintf(buffer,
++			  length,
++			  "%.*s/",
++			  TASK_COMM_LEN,
++			  (completion->my_queue == NULL ? "-" : completion->my_queue->name));
++
++	if (current_length < length)
++		get_function_name((void *) completion->callback,
++				  buffer + current_length,
++				  length - current_length);
++}
++
++/* Completion submission */
++/*
++ * If the completion has a timeout that has already passed, the timeout handler function may be
++ * invoked by this function.
++ */
++void vdo_enqueue_work_queue(struct vdo_work_queue *queue, struct vdo_completion *completion)
 +{
 +	/*
-+	 * Do not use down(semaphore). Instead use down_interruptible so that
-+	 * we do not get 120 second stall messages in kern.log.
++	 * Convert the provided generic vdo_work_queue to the simple_work_queue to actually queue
++	 * on.
 +	 */
-+	while (down_interruptible(semaphore) != 0)
++	struct simple_work_queue *simple_queue = NULL;
++
++	if (!queue->round_robin_mode) {
++		simple_queue = as_simple_work_queue(queue);
++	} else {
++		struct round_robin_work_queue *round_robin = as_round_robin_work_queue(queue);
++
 +		/*
-+		 * If we're called from a user-mode process (e.g., "dmsetup
-+		 * remove") while waiting for an operation that may take a
-+		 * while (e.g., UDS index save), and a signal is sent (SIGINT,
-+		 * SIGUSR2), then down_interruptible will not block. If that
-+		 * happens, sleep briefly to avoid keeping the CPU locked up in
-+		 * this loop. We could just call cond_resched, but then we'd
-+		 * still keep consuming CPU time slices and swamp other threads
-+		 * trying to do computational work. [VDO-4980]
++		 * It shouldn't be a big deal if the same rotor gets used for multiple work queues.
++		 * Any patterns that might develop are likely to be disrupted by random ordering of
++		 * multiple completions and migration between cores, unless the load is so light as
++		 * to be regular in ordering of tasks and the threads are confined to individual
++		 * cores; with a load that light we won't care.
 +		 */
-+		fsleep(1000);
++		unsigned int rotor = this_cpu_inc_return(service_queue_rotor);
++		unsigned int index = rotor % round_robin->num_service_queues;
++
++		simple_queue = round_robin->service_queues[index];
++	}
++
++	enqueue_work_queue_completion(simple_queue, completion);
 +}
 +
-+static inline bool __must_check uds_attempt_semaphore(struct semaphore *semaphore, ktime_t timeout)
++/* Misc */
++
++/*
++ * Return the work queue pointer recorded at initialization time in the work-queue stack handle
++ * initialized on the stack of the current thread, if any.
++ */
++static struct simple_work_queue *get_current_thread_work_queue(void)
 +{
-+	unsigned int jiffies;
-+
-+	if (timeout <= 0)
-+		return down_trylock(semaphore) == 0;
-+
-+	jiffies = nsecs_to_jiffies(timeout);
-+	return down_timeout(semaphore, jiffies) == 0;
++	/*
++	 * In interrupt context, if a vdo thread is what got interrupted, the calls below will find
++	 * the queue for the thread which was interrupted. However, the interrupted thread may have
++	 * been processing a completion, in which case starting to process another would violate
++	 * our concurrency assumptions.
++	 */
++	if (in_interrupt())
++		return NULL;
++	if (kthread_func(current) != work_queue_runner)
++		/* Not a VDO work queue thread. */
++		return NULL;
++	return kthread_data(current);
 +}
 +
-+static inline void uds_release_semaphore(struct semaphore *semaphore)
++struct vdo_work_queue *vdo_get_current_work_queue(void)
 +{
-+	up(semaphore);
++	struct simple_work_queue *queue = get_current_thread_work_queue();
++
++	return (queue == NULL) ? NULL : &queue->common;
 +}
 +
-+#endif /* UDS_THREADS_H */
++struct vdo_thread *vdo_get_work_queue_owner(struct vdo_work_queue *queue)
++{
++	return queue->owner;
++}
++
++/**
++ * vdo_get_work_queue_private_data() - Returns the private data for the current thread's work
++ *                                     queue, or NULL if none or if the current thread is not a
++ *                                     work queue thread.
++ */
++void *vdo_get_work_queue_private_data(void)
++{
++	struct simple_work_queue *queue = get_current_thread_work_queue();
++
++	return (queue != NULL) ? queue->private : NULL;
++}
++
++bool vdo_work_queue_type_is(struct vdo_work_queue *queue, const struct vdo_work_queue_type *type)
++{
++	return (queue->type == type);
++}
+diff --git a/drivers/md/dm-vdo/work-queue.h b/drivers/md/dm-vdo/work-queue.h
+new file mode 100644
+index 00000000000..d1e05f8901d
+--- /dev/null
++++ b/drivers/md/dm-vdo/work-queue.h
+@@ -0,0 +1,53 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright Red Hat
++ */
++
++#ifndef VDO_WORK_QUEUE_H
++#define VDO_WORK_QUEUE_H
++
++#include <linux/sched.h> /* for TASK_COMM_LEN */
++
++#include "types.h"
++
++enum {
++	MAX_VDO_WORK_QUEUE_NAME_LEN = TASK_COMM_LEN,
++};
++
++struct vdo_work_queue_type {
++	void (*start)(void *context);
++	void (*finish)(void *context);
++	enum vdo_completion_priority max_priority;
++	enum vdo_completion_priority default_priority;
++};
++
++struct vdo_completion;
++struct vdo_thread;
++struct vdo_work_queue;
++
++int vdo_make_work_queue(const char *thread_name_prefix,
++			const char *name,
++			struct vdo_thread *owner,
++			const struct vdo_work_queue_type *type,
++			unsigned int thread_count,
++			void *thread_privates[],
++			struct vdo_work_queue **queue_ptr);
++
++void vdo_enqueue_work_queue(struct vdo_work_queue *queue, struct vdo_completion *completion);
++
++void vdo_finish_work_queue(struct vdo_work_queue *queue);
++
++void vdo_free_work_queue(struct vdo_work_queue *queue);
++
++void vdo_dump_work_queue(struct vdo_work_queue *queue);
++
++void vdo_dump_completion_to_buffer(struct vdo_completion *completion, char *buffer, size_t length);
++
++void *vdo_get_work_queue_private_data(void);
++struct vdo_work_queue *vdo_get_current_work_queue(void);
++struct vdo_thread *vdo_get_work_queue_owner(struct vdo_work_queue *queue);
++
++bool __must_check
++vdo_work_queue_type_is(struct vdo_work_queue *queue, const struct vdo_work_queue_type *type);
++
++#endif /* VDO_WORK_QUEUE_H */
 -- 
 2.40.1
 
