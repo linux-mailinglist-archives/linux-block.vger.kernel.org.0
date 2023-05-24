@@ -2,84 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05AE570ED94
-	for <lists+linux-block@lfdr.de>; Wed, 24 May 2023 08:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D10A970ED97
+	for <lists+linux-block@lfdr.de>; Wed, 24 May 2023 08:07:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239615AbjEXGGM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 24 May 2023 02:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45766 "EHLO
+        id S239584AbjEXGHF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 24 May 2023 02:07:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239525AbjEXGGJ (ORCPT
+        with ESMTP id S231232AbjEXGHF (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 24 May 2023 02:06:09 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65E51B5
-        for <linux-block@vger.kernel.org>; Tue, 23 May 2023 23:05:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=/W2PorTvI4Tifm9yRZuhFGvQ0vIXYf/OFZzMOK9si0o=; b=tx3yF9x12O3wJklnYVUJMQluVT
-        Va+T9xne0v9AkmGw211NOPzjuiVSsK6IXg8OeB1HPpt8uDOVd7sr5Qth7pE2evykmj2C4fz53Nk8Z
-        p06Gz8Mcq+23J3SO1edaongZHRcTy6GOiXHPk1KZHJdZLOCGG97vMsOqMVrs3Upgc7j2eq3zEpvuG
-        aq2gH3nLtMPonbQffDxRLbSarEz25uoNzwrO/imjuu42c6aFRM0O1zFYMFHln28B+Rf+nGmt6zeIB
-        EF3efi0k8qXFAfsYI9a+eQBCQ2q92Xdi2019itSKLzYX2y3CE8sJXm5VkXyHW2wnWmtX09q0R+tEh
-        d3m7v7MA==;
-Received: from [2001:4bb8:188:23b2:cbb8:fcea:a637:5089] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q1hcz-00CSjc-2a;
-        Wed, 24 May 2023 06:05:42 +0000
+        Wed, 24 May 2023 02:07:05 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3083A132;
+        Tue, 23 May 2023 23:07:04 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BB12668CFE; Wed, 24 May 2023 08:06:59 +0200 (CEST)
+Date:   Wed, 24 May 2023 08:06:59 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     axboe@kernel.dk
-Cc:     minchan@kernel.org, senozhatsky@chromium.org,
-        linux-block@vger.kernel.org,
-        syzbot+b8d61a58b7c7ebd2c8e0@syzkaller.appspotmail.com
-Subject: [PATCH] block: make bio_check_eod work for zero sized devices
-Date:   Wed, 24 May 2023 08:05:38 +0200
-Message-Id: <20230524060538.1593686-1-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
+To:     Mike Snitzer <snitzer@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joern Engel <joern@lazybastard.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Pavel Machek <pavel@ucw.cz>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 19/24] dm: remove dm_get_dev_t
+Message-ID: <20230524060659.GB19611@lst.de>
+References: <20230523074535.249802-1-hch@lst.de> <20230523074535.249802-20-hch@lst.de> <ZGzujNVLaQD2npwH@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZGzujNVLaQD2npwH@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since the dawn of time bio_check_eod has a check for a non-zero size of
-the device.  This doesn't really make any sense as we never want to send
-I/O to a device that's been set to zero size, or never moved out of that.
+On Tue, May 23, 2023 at 12:49:16PM -0400, Mike Snitzer wrote:
+> > -		dev = dm_get_dev_t(path);
+> > -		if (!dev)
+> > +		r = lookup_bdev(path, &dev);
+> > +		if (r)
+> > +			r = early_lookup_bdev(path, &dev);
+> > +		if (r)
+> >  			return -ENODEV;
+> >  	}
+> >  	if (dev == disk_devt(t->md->disk))
+> 
+> OK, but you aren't actually propagating the exact error code.  Did
+> you intend to change the return from -ENODEV to r?
 
-I am a bit surprised we haven't caught this for a long time, but the
-removal of the extra validation inside of zram caused syzbot to trip
-over this issue recently.  I've added a Fixes tag for that commit, but
-the issue really goes back way before git history.
-
-Fixes: 9fe95babc742 ("zram: remove valid_io_request")
-Reported-by: syzbot+b8d61a58b7c7ebd2c8e0@syzkaller.appspotmail.com
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 00c74330fa92c2..1da77e7d628946 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -520,7 +520,7 @@ static inline int bio_check_eod(struct bio *bio)
- 	sector_t maxsector = bdev_nr_sectors(bio->bi_bdev);
- 	unsigned int nr_sectors = bio_sectors(bio);
- 
--	if (nr_sectors && maxsector &&
-+	if (nr_sectors &&
- 	    (nr_sectors > maxsector ||
- 	     bio->bi_iter.bi_sector > maxsector - nr_sectors)) {
- 		pr_info_ratelimited("%s: attempt to access beyond end of device\n"
--- 
-2.39.2
-
+Yes, thanks.
