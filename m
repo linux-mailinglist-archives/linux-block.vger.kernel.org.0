@@ -2,110 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A97637111F4
-	for <lists+linux-block@lfdr.de>; Thu, 25 May 2023 19:21:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5686E7111CE
+	for <lists+linux-block@lfdr.de>; Thu, 25 May 2023 19:16:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230129AbjEYRV4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 25 May 2023 13:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
+        id S240810AbjEYRQH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 25 May 2023 13:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233470AbjEYRVv (ORCPT
+        with ESMTP id S234155AbjEYRQG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 25 May 2023 13:21:51 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA1F19C
-        for <linux-block@vger.kernel.org>; Thu, 25 May 2023 10:21:50 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4f4d80bac38so962439e87.2
-        for <linux-block@vger.kernel.org>; Thu, 25 May 2023 10:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1685035308; x=1687627308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0zMzRygPKkdKlo23QW/uYg+LGfB6C3Hjzj0Tw04tNig=;
-        b=XjezFziPW+pxwjS3AWttrsHiJeNM3jO++5s42fJP1YdqkK0dTYWLjNTu4R9LzBcrJy
-         KVSsK54UC/s46QZIL1adWVdJOk1hVc/mUH/3BYXVQ6xV2nsFZrp1jYRaD320XiRxqIIP
-         jIkye5PCNE7P9WhAZxO5RONfIYsqILW4b8CVk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685035308; x=1687627308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0zMzRygPKkdKlo23QW/uYg+LGfB6C3Hjzj0Tw04tNig=;
-        b=SwMVhP5UKZNNP5XLk+/CsXda9U6ru0hZAA42coJtWwrE2MM5a2N3G8pJ0fpa3n1bnU
-         mRz/63SzSVimfO5ikEdw4Hw4snK31F1vg/uygdzReJq4GAfVlKHS/MLZn7I6dkrICtsm
-         62VEHH+ojMM7AwAPsp0o0CqC/juelfYE7luRDK+ZcJkTh7QVe5XVjDIwHT37YPtMrI31
-         j6D7/ZjqtVvlVBfIpVl4QPZM38DM+S6RHC5iLZfBUUkHvPZxVEBLJrhC7khSsL5Z0S74
-         rc4JVzYSWJQSXENf0LA3+RwFUcVa1UvcX8p6Bq60MFXRJF31D7bTPu3EtM05TlMTE97i
-         hZyw==
-X-Gm-Message-State: AC+VfDzaOcimcJfFtvlq9ZynXbiol0Qme8Z83vO4FZkueQlumh/8p7ut
-        fcrbw8CVk1bP6SvZ/wOq4G5pUIt/iWH3+znaCDbXFQ3K
-X-Google-Smtp-Source: ACHHUZ63Fe2TSQ8czNJbgurgXlTK7WHhmW+aJshRcPM8xgM86Gc/h9bWQKGC+tGsTUh7HwzYQ+OW8Q==
-X-Received: by 2002:ac2:5602:0:b0:4f4:d0ab:97d5 with SMTP id v2-20020ac25602000000b004f4d0ab97d5mr1158996lfd.14.1685035308385;
-        Thu, 25 May 2023 10:21:48 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id q20-20020a19a414000000b004f271790d6csm276455lfc.136.2023.05.25.10.21.47
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 May 2023 10:21:48 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f4bdcde899so2716219e87.0
-        for <linux-block@vger.kernel.org>; Thu, 25 May 2023 10:21:47 -0700 (PDT)
-X-Received: by 2002:a17:907:a49:b0:96a:498a:bd4b with SMTP id
- be9-20020a1709070a4900b0096a498abd4bmr2248713ejc.64.1685034836175; Thu, 25
- May 2023 10:13:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <ZGxfrOLZ4aN9/MvE@infradead.org> <20230522205744.2825689-1-dhowells@redhat.com>
- <3068545.1684872971@warthog.procyon.org.uk> <ZG2m0PGztI2BZEn9@infradead.org>
- <3215177.1684918030@warthog.procyon.org.uk> <CAHk-=wjaqHgd4u63XdZoTPs1YCJnDZ7-GQHKKdFrT32y2-__tw@mail.gmail.com>
- <88983.1685034059@warthog.procyon.org.uk>
-In-Reply-To: <88983.1685034059@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 25 May 2023 10:13:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wguy6bcoUznDCU3mr-wbi-8NigkTw5GvwiF8R76J=vGUQ@mail.gmail.com>
-Message-ID: <CAHk-=wguy6bcoUznDCU3mr-wbi-8NigkTw5GvwiF8R76J=vGUQ@mail.gmail.com>
-Subject: Re: Extending page pinning into fs/direct-io.c
-To:     David Howells <dhowells@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
+        Thu, 25 May 2023 13:16:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3C7B6
+        for <linux-block@vger.kernel.org>; Thu, 25 May 2023 10:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685034922;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=L96rFIYpIHHwiFX7796wWwBgjlxyxPuCZajU63kNJnw=;
+        b=UPPXk+1OyMnDrITsGM2cfXfJpKLkhHQyJFvGd8Pqpn4U4tFAG12bkzvycMXyAtzfl/9gSe
+        VRGXTY1mpE7IT1Jfyy4H87Npo6ixVcsbWALsaEBXIO3HkYrppP++26454RMtLSvb31Oykr
+        Aj5sb+Vp+jnsHJZ5t6wFADlPvPpPXic=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-119-ucjSGAbKP2aGgyvrpvU2oQ-1; Thu, 25 May 2023 13:15:19 -0400
+X-MC-Unique: ucjSGAbKP2aGgyvrpvU2oQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 16E508030D8;
+        Thu, 25 May 2023 17:15:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.39.192.68])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0A8D492B0A;
+        Thu, 25 May 2023 17:15:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wgPWUCyhiM+=S3nmh4JK8qtBQteYvtiXpoYpDjfKHnEhQ@mail.gmail.com>
+References: <CAHk-=wgPWUCyhiM+=S3nmh4JK8qtBQteYvtiXpoYpDjfKHnEhQ@mail.gmail.com> <ZGxfrOLZ4aN9/MvE@infradead.org> <20230522205744.2825689-1-dhowells@redhat.com> <3068545.1684872971@warthog.procyon.org.uk> <ZG2m0PGztI2BZEn9@infradead.org> <3215177.1684918030@warthog.procyon.org.uk> <CAHk-=wjaqHgd4u63XdZoTPs1YCJnDZ7-GQHKKdFrT32y2-__tw@mail.gmail.com> <e00ee9f5-0f02-6463-bc84-b94c17f488bc@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, David Hildenbrand <david@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Jens Axboe <axboe@kernel.dk>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
         Jeff Layton <jlayton@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Hillf Danton <hdanton@sina.com>,
         Christian Brauner <brauner@kernel.org>,
         linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Subject: Re: Extending page pinning into fs/direct-io.c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <144596.1685034915.1@warthog.procyon.org.uk>
+Date:   Thu, 25 May 2023 18:15:15 +0100
+Message-ID: <144598.1685034915@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, May 25, 2023 at 10:01=E2=80=AFAM David Howells <dhowells@redhat.com=
-> wrote:
->
-> What do we gain from it?  Presumably since nothing is supposed to write t=
-o
-> that page, it can be shared in all the caches.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I don't remember the details, but they went something like "broken
-purely virtually indexed cache avoids physical aliases by cacheline
-exclusion at fill time".
+> So I suspect we should add that
+> 
+>     is_zero_pfn(page_to_pfn(page))
+> 
+> as a helper inline function rather than write it out even more times
+> (that "is this 'struct page' a zero page" pattern already exists in
+> /proc and a few other places.
+> 
+> is_longterm_pinnable_page() already has it, so adding it as a helper
+> there in <linux/mm.h> is probably a good idea.
 
-Which then meant that if you walk a zero mapping, you'll invalidate
-the caches of the previous page when you walk the next one.  Causing
-horrendously bad performance.
+I just added:
 
-Unless it's colored.
 
-Something like that. I probably got all the details wrong.
+static inline bool IS_ZERO_PAGE(const struct page *page)
+{
+	return is_zero_pfn(page_to_pfn(page));
+}
 
-                Linus
+static inline bool IS_ZERO_FOLIO(const struct folio *folio)
+{
+	return is_zero_pfn(page_to_pfn((const struct page *)folio));
+}
+
+to include/linux/pgtable.h.  It doesn't seem I can add it to mm.h as an inline
+function.
+
+David
+
