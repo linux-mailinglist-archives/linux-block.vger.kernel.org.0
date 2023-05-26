@@ -2,93 +2,120 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8930B71214F
-	for <lists+linux-block@lfdr.de>; Fri, 26 May 2023 09:42:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E872712196
+	for <lists+linux-block@lfdr.de>; Fri, 26 May 2023 09:56:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242344AbjEZHmI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 26 May 2023 03:42:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38978 "EHLO
+        id S242600AbjEZH4K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 26 May 2023 03:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236934AbjEZHmG (ORCPT
+        with ESMTP id S242574AbjEZH4J (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 26 May 2023 03:42:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C546B6;
-        Fri, 26 May 2023 00:42:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1DB7763F38;
-        Fri, 26 May 2023 07:42:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B414C433EF;
-        Fri, 26 May 2023 07:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685086924;
-        bh=CGmOzSnToxEh6t7Vd3qUTrp6JrJzLGRbWucQIhkrDL8=;
-        h=Date:Subject:To:References:From:In-Reply-To:From;
-        b=ZhdEgCsQ+tY/Sauzqi/d9RfxFM0MM60I/mzfPYrhlMTCG1E9gdn2dz673uQ7yrBzm
-         BdZRNjd7RtpjBERFAVLi7NCEPEL3IcL1Br2tCXmsk5R2PPM10wCJ0NZxi8JJTo3n/o
-         SDtVJ2prsrbE75UtWNF04q0WfO9zvRV4S5UAHl/wPtlH+CdGlkCsv8yxQCnkAjSyqm
-         c1fP4OcYewPYdc47Bfmi5xqY0k4ON8pugMkWrldJjYAbQz9JnPyDZl3Y38wB6SQ8wX
-         WE+79MqdkyvLVGPJpj2YJ7bEnFM+WvqovN0NH06M4C8vWJeB2DCa19Z+dpyAoa3DEc
-         AOMvTYRiBKUVg==
-Message-ID: <97ffe91e-bb31-cceb-fb7e-8f7a2252734f@kernel.org>
-Date:   Fri, 26 May 2023 16:42:02 +0900
+        Fri, 26 May 2023 03:56:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7BE5134;
+        Fri, 26 May 2023 00:56:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=5sDzoLLiNk6KHdYH8uCoV/dBsj9Jyf+/G1i59BLdhsE=; b=aNld4o2VvRGiQ7vUI5arJSgX/L
+        6HnGHoys0fJ0NyQtFF23FYlkQQzjBbOG2VhMIvldNEf22GLVMNLTPM709hyKOlQD0gLZxwuctNBgy
+        5xB+UXzv2lZoitwyBzx9gtzjlhfkbRrUBPE63O6bJwBIPoLlAiT5sqXh83wJrFBVWWsyd0+6vzmLw
+        Zg+CCpzYhsYjajho25CSz1p1EJHOT1tTxSqrc5eVEUGlE72Ih/0P9mhN8JBy4HyPPn6fJ2fJsrvnB
+        8F5DFRPYRHJ48DzQkK2rZN5deuJkdDWpeanaIbyclKM98/ZFBFaHcLpjk6EO/3caforvAU1V5EiBJ
+        7SdjKf2Q==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1q2SIj-001WZa-2E;
+        Fri, 26 May 2023 07:55:53 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     hughd@google.com, akpm@linux-foundation.org, willy@infradead.org,
+        brauner@kernel.org, djwong@kernel.org
+Cc:     p.raghav@samsung.com, da.gomez@samsung.com, rohan.puri@samsung.com,
+        rpuri.linux@gmail.com, a.manzanares@samsung.com, dave@stgolabs.net,
+        yosryahmed@google.com, keescook@chromium.org, hare@suse.de,
+        kbusch@kernel.org, mcgrof@kernel.org, patches@lists.linux.dev,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [RFC v2 0/8] add support for blocksize > PAGE_SIZE
+Date:   Fri, 26 May 2023 00:55:44 -0700
+Message-Id: <20230526075552.363524-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: ioprio_set can take 8 as the PROCESS CLASS_BE ioprio value
-Content-Language: en-US
-To:     Murphy Zhou <jencce.kernel@gmail.com>, linux-block@vger.kernel.org,
-        Linux-Next <linux-next@vger.kernel.org>
-References: <CADJHv_sedgbfxvZkKHjC6quKvxR+E54noFCVF93MvhyK6bwRoA@mail.gmail.com>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <CADJHv_sedgbfxvZkKHjC6quKvxR+E54noFCVF93MvhyK6bwRoA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 5/26/23 16:27, Murphy Zhou wrote:
-> Hi Damien,
-> 
-> Since these commits:
-> 
->   scsi: block: Introduce ioprio hints
->   scsi: block: ioprio: Clean up interface definition
-> 
-> go into linux-next tree, ioprio_set can take the value of 8
-> as the PROCESS CLASS_BE ioprio parameter, returning
-> success but actually it is setting to 0 due to the mask roundup.
-> 
-> The LTP test case ioprio_set03[1] covers this boundary value
-> testing, which starts to fail since then.
-> 
-> This does not look as expected. Could you help to take a look?
+This is an initial attempt to add support for block size > PAGE_SIZE for tmpfs.
+Why would you want this? It helps us experiment with higher order folio uses
+with fs APIS and helps us test out corner cases which would likely need
+to be accounted for sooner or later if and when filesystems enable support
+for this. Better review early and burn early than continue on in the wrong
+direction so looking for early feedback.
 
-Before the patches, the ioprio level of 8 could indeed be set, but that was
-actually totally meaningless since the kernel components that use the priority
-level all are limited to the range [0..7]. And why the level value 8 could be
-seen, the effective level would have been 0. So at least, with the changes, we
-are not lying to the user...
+I have other patches to convert shmem_file_read_iter() to folios too but that
+is not yet working. In the swap world the next thing to look at would be to
+convert swap_cluster_readahead() to folios.
 
-I am not sure what this ioprio_set03 test is trying to check.
+As mentioned at LSFMM, if folks want to experiment with anything related to
+Large Block Sizes (LBS) I've been trying to stash related patches in
+a tree which tries to carry as many nuggets we have and can collect into
+a dedicated lage-block tree. Many of this is obviously work in progress
+so don't try it unless you want to your systems to blow up. But in case you
+do, you can use my large-block-20230525 branch [0]. Similarly you can also
+use kdevops with CONFIG_QEMU_ENABLE_EXTRA_DRIVE_LARGEIO support to get
+everything with just as that branch is used for that:
+                                                                                                                                                                                              
+  make
+  make bringup
+  make linux
 
-> 
-> Thanks,
-> Murphy
-> 
-> [1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/ioprio/ioprio_set03.c
+Changes on this v2:
+
+  o the block size has been modified to block order after Matthew Wilcox's
+    suggestion. This truly makes a huge difference in making this code
+    much more easier to read and maintain.
+  o At Pankaj Raghav's suggestion I've put together a helper for
+    poison flags and so this now introduces that as is_folio_hwpoison().
+  o cleaned up the nits / debug code as pointed out by Matthew Wilcox
+  o clarified the max block size we support is computed by the MAX_ORDER,
+    and for x86_64 this is 8 MiB.
+  o Tested up to 4 MiB block size with a basic test nothing blew up
+
+Future work:
+
+  o shmem_file_read_iter()
+  o extend struct address_space with order and use that instead
+    of our own block order. We may still need to have our own block order,
+    we'll need to see.
+  o swap_cluster_readahead() and friends coverted over to folios
+  o test this well
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=large-block-20230525
+[1] https://github.com/linux-kdevops/kdevops
+
+Luis Chamberlain (8):
+  page_flags: add is_folio_hwpoison()
+  shmem: convert to use is_folio_hwpoison()
+  shmem: account for high order folios
+  shmem: add helpers to get block size
+  shmem: account for larger blocks sizes for shmem_default_max_blocks()
+  shmem: consider block size in shmem_default_max_inodes()
+  shmem: add high order page support
+  shmem: add support to customize block size order
+
+ include/linux/page-flags.h |   7 ++
+ include/linux/shmem_fs.h   |   3 +
+ mm/shmem.c                 | 139 +++++++++++++++++++++++++++++--------
+ 3 files changed, 119 insertions(+), 30 deletions(-)
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+2.39.2
