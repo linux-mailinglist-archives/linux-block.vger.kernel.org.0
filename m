@@ -2,349 +2,234 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49977712F0C
-	for <lists+linux-block@lfdr.de>; Fri, 26 May 2023 23:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96186712FE6
+	for <lists+linux-block@lfdr.de>; Sat, 27 May 2023 00:21:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242143AbjEZVnN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 26 May 2023 17:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43186 "EHLO
+        id S230025AbjEZWU6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 26 May 2023 18:20:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237834AbjEZVnM (ORCPT
+        with ESMTP id S229901AbjEZWU4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 26 May 2023 17:43:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE1A19C
-        for <linux-block@vger.kernel.org>; Fri, 26 May 2023 14:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685137320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4Cmt7wVWF/53m28oT2gNRjy02BoBlgv0E5157juSdEU=;
-        b=RmIOcaaoWF1spfKLHF0afVEL3QEGCYfcYd13gkPZ5PJAHfAHi6E+DmPIA/baOVAn35VS7m
-        HaAkFH88y5Qe3jA8BHOUSniVRlf9aTfSZnnkE5pFzitqaL+457G35Xpd0kt+oyJgGZ8xWo
-        ZCoCiwCncHsjlAXmLCdZ+riS3SuvP0I=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-548-EQeH2I93OGuY2_IlSki5ZQ-1; Fri, 26 May 2023 17:41:57 -0400
-X-MC-Unique: EQeH2I93OGuY2_IlSki5ZQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BDE0E1C068D1;
-        Fri, 26 May 2023 21:41:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.39.192.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 43B0940CFD45;
-        Fri, 26 May 2023 21:41:54 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v4 3/3] block: Use iov_iter_extract_pages() and page pinning in direct-io.c
-Date:   Fri, 26 May 2023 22:41:42 +0100
-Message-Id: <20230526214142.958751-4-dhowells@redhat.com>
-In-Reply-To: <20230526214142.958751-1-dhowells@redhat.com>
-References: <20230526214142.958751-1-dhowells@redhat.com>
-MIME-Version: 1.0
+        Fri, 26 May 2023 18:20:56 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D7B51BB;
+        Fri, 26 May 2023 15:20:29 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34QLUcw5020895;
+        Fri, 26 May 2023 22:20:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=nIJV36erl/r1cayY6TacgBGJXWhSE1j0NP5yFwXIWKo=;
+ b=JCn5FG+hwUQGduIhVvTPvtVIOlwW97Wa1PSsUclDhR1KZsxA73aIBJRTjaabLpcJxk6c
+ ryy0TB+qKRbVl4u54X1N3bznRbq0UieyhyWOnCSSVjlySVBYJIGKUeHjlmUJxDJyLPBd
+ ZoJbL57OqIZFbOx4QUMb8vbgYj/KdsZQuFeRQt53L5aNRb5jj1HQUyv9XKAsiLc3rctw
+ 15Av0oDvNIkKykTjIBdqZAtViFGyDUeCYKilVHActtah15mJSddzEIx2G7atshnu7d85
+ Knrqsl0enxzSXH1ETffadmK17+rIiKctEhsguwvTUmQ1RgQSj63GxtFpWKbyPk56axbp Ew== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qu4qqr1ue-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 May 2023 22:20:20 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34QKC31H028615;
+        Fri, 26 May 2023 22:20:19 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2vqb1j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 May 2023 22:20:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ok+E8shoQc4Y4Uhz5+tU/JEFnaKGC/G1KpQ+k1FJeneyFugNHgFh7tftmIKOYztBgRl2V2nYlG8evMTJhXYWec2lx9VmlgyWsb7uvLGmU2GiVlxEoUxhGuzZw5sELvRbx9sdoCMThhkm65yS950QV5dEP7yC9pLrHe12cWzt4E+KnIoIIBnhL/eZrdZhY407OxlCxnxVJmgvj70q9UNegQhrgxImdSJU669Fx34LajdUQmMxTFUre+kGxJ8Wh9ZipfshC83yZgD6/GaOdQTjaSNI5WmknlwMZ2k3zwDzPtKRV97PBd65c0wxIRFF7YH07EREAoHl+M8tKFIGUz57ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nIJV36erl/r1cayY6TacgBGJXWhSE1j0NP5yFwXIWKo=;
+ b=gsq/2bVfIksIX+Ld5e1E2pHhDxfgNsUBhQ3FRHnYZC5el90lUODB36t4l/Ya2wBP4IxUHcRO1UxQT9BduFDVSMAmhwHN0vjzlEv7K45YtgT2w2bz45QaRiVmjj2RqUkOLq9gJ/k8AhRM+7JzPY4GdMCmkAplg9i3xmRwHuD2eJct9vDtFVtZayDbDe+hYyLd/ubML1sXV0X+3RQONiYCRRCIbKLSz0kConVtH/f2u9/djKvl6jGh2Jjv3DF5hgRSpEZ0yPKapYRg4TSw1oJzdymh9UeZVW2SmPiDq3Vc2zuOO8UuFB8qgqXXiPfHJ8Ek3CtgY/iHa2vKAk/hI6BY+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nIJV36erl/r1cayY6TacgBGJXWhSE1j0NP5yFwXIWKo=;
+ b=0OWOvPsufYbQ2/NqKmCgoMxZrkJKuZxm0DVc3+TXhKaQqovbNFs3BHj6qffNGnQTWzX28UdB+cPEqcMFDPo4YLkhe/9lWxtxAqc9Qk1tKFs44U9ZD9ubYPaePnxrveotRneUebz97Hlm0LZoqY/DjyTt2GURLOjcyBMd78/7M1E=
+Received: from SJ0PR10MB4752.namprd10.prod.outlook.com (2603:10b6:a03:2d7::19)
+ by DM4PR10MB6207.namprd10.prod.outlook.com (2603:10b6:8:8c::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6433.17; Fri, 26 May 2023 22:20:15 +0000
+Received: from SJ0PR10MB4752.namprd10.prod.outlook.com
+ ([fe80::4a9d:b42c:57c7:b53c]) by SJ0PR10MB4752.namprd10.prod.outlook.com
+ ([fe80::4a9d:b42c:57c7:b53c%5]) with mapi id 15.20.6433.018; Fri, 26 May 2023
+ 22:20:15 +0000
+Message-ID: <84fb9021-8d36-4768-405f-8128987eb75e@oracle.com>
+Date:   Fri, 26 May 2023 15:20:12 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.1
+Subject: Re: [PATCH V4 2/2] blktrace: allow access trace file in lockdown mode
+Content-Language: en-US
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-block@vger.kernel.org,
+        nathanl@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
+        konrad.wilk@oracle.com, joe.jin@oracle.com
+References: <20230420215331.88326-1-junxiao.bi@oracle.com>
+ <20230420215331.88326-2-junxiao.bi@oracle.com>
+ <05b3eebd-7a3f-13d5-1fe9-8f4ab3080521@oracle.com>
+ <30ab7555-8f36-cfb7-9101-0ebb92af3c2f@kernel.dk>
+ <6300a33a-9d3d-42a2-d332-81e02d52d310@oracle.com>
+ <CAHC9VhT2uCc5ePi+ung+rLaDiLCCCF=fjq8G+D3FJf0i4E8_hQ@mail.gmail.com>
+ <f016d747-c01a-c46e-59a7-13d0d6306827@oracle.com>
+ <CAHC9VhSCjuJZ122EqdDxzJTU1tGq5nU_3+11WGKZ-WHjzU2FBw@mail.gmail.com>
+ <afeb0ced-e4e9-6039-893e-b50268c1c148@oracle.com>
+ <58172674-2e0e-1bbd-aff1-881c2096c5bb@oracle.com>
+ <CAHC9VhQu5h6zfn8E5HKG3Krs-HfCXx5TJxTw_oRwr5HrNH1kiA@mail.gmail.com>
+From:   Junxiao Bi <junxiao.bi@oracle.com>
+In-Reply-To: <CAHC9VhQu5h6zfn8E5HKG3Krs-HfCXx5TJxTw_oRwr5HrNH1kiA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-ClientProxiedBy: BYAPR07CA0036.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::49) To SJ0PR10MB4752.namprd10.prod.outlook.com
+ (2603:10b6:a03:2d7::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB4752:EE_|DM4PR10MB6207:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c923e2d-bcbf-4c19-9038-08db5e376167
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UlrzDLi58vC4U7UuWyzQigqvRTOF8BzQ50qB8AFGQ3wH2EmEbzX2bIzo2m7XMVTPKkgA9TMVh6Ec9txIcw0fH3BYspkMAY4o09jPp3xYaDx9Cq5Fll0t4HgtqUTPCHMYaiaXPngBBT0wQlAp0LOTTfpXw+JEq1Iv0pLPJrGCux/+5LZV2YfxoXpXQYtlukWWAroBI4MLZ6xj1vT2fMj6jmm1UNKQnZHffLtRsuUOGMS/6FqtfIo3EpOR2broKctaz7K7reB2LfPRF5I3HMHfH9VpAwU80QHRBecjkD9YrWgt5+cr6YJvUm/nrbYs2OuOJBZ93NzQnucdvxXX1cm4YPEJK4cytC7cTv2Tb2o4CZkaZZG202YkBoDaTn9H+QE6TMztUg7Jiw8YkujIf48ONv1auKuDkB99dTng9Iz1HOOVD7G7fPGLynyjM2bwe27/753E3wnwcvaRCIQPCWRJq4FAKir0inz4J4xNjoHRp2Rd8A9qDQAcO+IrK7qmnsMP4sEpXo6nwFjlIxGQ+6fWEi2qVjZu/OJL8TCyeuyE78j2UHHMSuNd4lRX1sceha9pukw9j6aj3A/mwQIKDFkkJffS/21tuCn95NM0xy3tMjb60rz7MSTgAyw9Z2hULpCtkVG7r9nol60OXZF186xSHg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4752.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(376002)(39860400002)(366004)(136003)(346002)(84040400005)(451199021)(36756003)(31696002)(86362001)(316002)(4326008)(6916009)(66946007)(66476007)(66556008)(478600001)(6666004)(8936002)(2906002)(6486002)(8676002)(44832011)(38100700002)(5660300002)(186003)(53546011)(107886003)(6512007)(26005)(6506007)(2616005)(83380400001)(41300700001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bzVnM0VkbTRsa2NCMXkxWlZrOVVjbG1tUTFwME9hQ3dzSE12Q1B4WnMrNERI?=
+ =?utf-8?B?OE41UTQzcUhjQnZRSk42SnhEbmszWlBmaDl6djgwNzhFWTJFNmd3SlhmUWV3?=
+ =?utf-8?B?Yjc4TmFmMjRCZjVtQStrNVZDT3l2VkRTTmRzTnBkWVdDOGF0MFZGOUpwTGhT?=
+ =?utf-8?B?TEZ6cEcwRDU3ZlpBVGMydytKcTljVE43Um1mZzlGcFFTbDQ3WUJjYnE2Z1Bi?=
+ =?utf-8?B?a3lRcUlTdUJFaGtYM1FacFR5UUo1NHdtQTBHcFNCakphejhrNU56Wit0VjJZ?=
+ =?utf-8?B?L2NydXp4Q1RiWlJ6OFRVaGVBazRPSGhxYTNrU0dwK3FlYUpaaitHdEhheHNI?=
+ =?utf-8?B?SFdKSkFGVW5UQlVSc3BJaFRXRElwNXc3V1k1K1RNYzJUa0Erc295OU1oN2lM?=
+ =?utf-8?B?U2UzVGJEV2xQVlBDRXJ1cTFGSkF1ZmRhMDAwNGQxWExPRzh3bi9GUmdseUVi?=
+ =?utf-8?B?elFRSDcxTkFYVEhlYW5CYXZVeDd1enE0M3pIelhxOVgxTDY2MC9qbHR6NEQ5?=
+ =?utf-8?B?Rk9rTGJGTDNuQ015MUVpM3V2U3M0NVN0aHpZenZ6eUo5bjFjY1ZxelBqSnlD?=
+ =?utf-8?B?N3dzaVRpZGZrNVFZZlNtc25vVGFtRFlJZXJNaE41MFhuSGlCdUoyM2JRSVZn?=
+ =?utf-8?B?VXdPcVQ2QnBHUUNPbUtVRDVScTZHK2JFR3k2R2RPQnI2NVc4SDVzczBXMWdX?=
+ =?utf-8?B?THlhYUkrQXlDdllrVW9nYVlRbFU3dHEzc1FmZG41YXdEcmFDS2xXYkg5T25q?=
+ =?utf-8?B?bGRCM0kyZUV2N2kxbHhnQkxvalZpSlM0c2FlS1d6UFkzbnlFQWJCSDl6dU50?=
+ =?utf-8?B?ck91Z1hUL3dXcWRaNXQvVmpzc3lQWU9aTFNCTXlrVk5YUGw3Y3hsenJST1Q2?=
+ =?utf-8?B?STYyMkthbmppRGFkUG9BbzlIaFJ5cHJ3NFdPZWhmWjhCQkRla2JBMldodnJ1?=
+ =?utf-8?B?YnRnNDZ0UWYxMzVZa09JL3JveW5mYjQxZllkN1NrbmRQcGtKTUpneXdLR2NF?=
+ =?utf-8?B?a1U1TUJCK0RnaGlrYXVMNDdmU045NWRBRUhwbmtENVA2N0JkRHdabzlTSDRM?=
+ =?utf-8?B?WEdOQ1owQlhkZjRRNnd2cU5FM1pySC9QNkxJSUFKRCt0ZFQ5TXpIVm1BSlFD?=
+ =?utf-8?B?bExWbW5WSm1xLzNvTkVpREVhTENTTWVKZ3dOUldWVURMRVVHYnN5RW9jWjR4?=
+ =?utf-8?B?Q2UzZ24xNVFkR0xvYytYNUl6UUFMTEsrRnpzdWRRR3g2V0hOazlYK3pUdUFi?=
+ =?utf-8?B?ZTV4UHRDSEtyNVB6Zk1XM1ZxZ3Q0RWpiZ2xRTTdncUF3TDNNM0JFR2dZL2hH?=
+ =?utf-8?B?dTBCZ2FsRkJyRVJUTTFMQlhOOFZ0RkRiZ1Z5R1dCNFNCM3dLTThoVDg1Z0Q3?=
+ =?utf-8?B?TTRoZm4wRjNSNTlwRWczVGV2RmphWFVzcjRmdi9SMDhZMmVLMkNrY2VWbndE?=
+ =?utf-8?B?emlid1ozUklqRm5jTFFTandlcHoyZ1N4V0d5cDVVcDA0b1JLYlFsZjU2UnVR?=
+ =?utf-8?B?YVQ4bmlwMG83eVhqdEFYektNR2d2Z0xESlJ3K1hsVGk2RzQwa0I2NjI3bnRi?=
+ =?utf-8?B?aHhiNW9lL0UxQmpndUlocDdmUWpZZ0NjZDhZNXpsRUVTcEdreDBtdHo5eXl2?=
+ =?utf-8?B?VFVNVy9aQnAvcmlyYllqMnJaRHhTVk92bHFXYi93R0lQUkI5TGlVTk81VDFW?=
+ =?utf-8?B?SWdzMnJwUlhXMjlXeVdrM25BNXRBZzR1NElLcHpPenZzZy9SSlBEWFJST0tj?=
+ =?utf-8?B?cnZkekNEU3d2VXYxZjVFUU5MQjRYdllpMXZKNjkrbXhBQzQza0ZMc21MK0dC?=
+ =?utf-8?B?OStQcE1iYldGZkZQSUdQRGlHb2dFMjNtak0xUWIzL2J3TGlVcVdLT2VnZTNu?=
+ =?utf-8?B?Q0dXMm1XVlB3SkxWczFhVVZ4MXRha2NGZ043T2FLWXhidGF1Nm5KeGhWQkJi?=
+ =?utf-8?B?ckNiVGpaWStMekRJNkdSTERKRlZiUEN1WWFlMktoR2ZKaGhkeTlyWXc5a1kw?=
+ =?utf-8?B?cVhsa0tVTitsSFRPL1gwQU1UTGs2emsyUVdnc0s5ZjdRdDhXM1FWb0lWUVZj?=
+ =?utf-8?B?eGlOZXcrRk5weFRtT2lVSVVGSUtaR0JpaURVTVY3M3JvVnB2T3ZxOWRUekY5?=
+ =?utf-8?Q?w1qrkfqS6WZScZW2TMpRnJQ3l?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: +gOGxmOAH2Bv+Md4vQoSNc2HxUGc/UhOrx57Y12fpjkk8HR5HxindBpKHlxGoBu6t/ckPQQ14D8zueD+QP5sMf5y4BWLYr9gxDLx2rBP+efZXHEj3TEnZAa9h72dnw2TZyT2eG/4099EgyVilKvH8Njq9BfgyN07tf6iubQVWofENi+32gUKW87VxUZRBY0G9TDS5i921xCGmDzfr3fjHn8+B2BLoJPMk5Ts3gT1Io5/zK6IVJxmvdETfankj16CFW7AavCanBiB/XW8TTB+iWeO82NibWUy46uLX6l59jPVriZxmSkTdE2TpeAKXV056Adz8dOXVPsu39FD8354FEeFIv/hxSkXAayn4M9ihf0K0VFtz0MR4HSkseMkWYiMSMKAGQF2mKYGF4mcK92ZOgZTM9AYC5QXPhjEIHlYlyVMUT/HZAXNJvtChT4R4fpKSgX2RF1FTVmg8wCyV+KBOIoPSGuNzWV9Cr1QkHkiOn1reRKClD+OSDiqzgducX+iRkO9k5fzHeDyvyG4o8eLLFsdobMlsFmY52XEIuaT24xwFNM0OTYkkpt1fQxkC+QYla81bRRbr+entxN+5YNKVUAK9/NaogwNQBiP23A5OBrvneyltt1rOTB5c8PTXW9OqIwXdnfPJz359w35GKPv+VPzkipp+Jxwkl9IMUYUG+VzGY1wBmwT/M+aGzHb0WQ/Hl5NM3dCBYODIWsbjsSf1d8M2s01kZ1hYkD0LDclprZIRyFHH7WebXdeCUGeYWi27xelFsF9UM1mQLvZ6Bcz+VRSUfgG8mxoRL0wyku8hv9eEa5EbwXxqAUMkrpUtPqDyYsZQNqDC/0TILuqYAGUoHbjfKS5Khf5ZRzgtvKUaJvjdu7LK0JG/b1QoCjd9Lv2upmXDzp6rO2qayhF362/GBTeJR2RxKVW7lcfvJtk9hA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c923e2d-bcbf-4c19-9038-08db5e376167
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4752.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2023 22:20:15.5154
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QtiYF0WGquRWLSpjhVSeG9fxsMq8n0VVVHuaKMmsQGhDyNb5q82SE6puW+ikDGtZJKhmVF3U0lbIJbhUkBs35w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6207
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-26_12,2023-05-25_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305260192
+X-Proofpoint-GUID: l2YTiVx0i-M4o-fBBg35mJr6Vp3-ab0d
+X-Proofpoint-ORIG-GUID: l2YTiVx0i-M4o-fBBg35mJr6Vp3-ab0d
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Change the old block-based direct-I/O code to use iov_iter_extract_pages()
-to pin user pages or leave kernel pages unpinned rather than taking refs
-when submitting bios.
+On 5/26/23 2:37 PM, Paul Moore wrote:
 
-This makes use of the preceding patches to not take pins on the zero page
-(thereby allowing insertion of zero pages in with pinned pages) and to get
-additional pins on pages, allowing an extracted page to be used in multiple
-bios without having to re-extract it.
+> On Fri, May 26, 2023 at 12:56 PM Junxiao Bi <junxiao.bi@oracle.com> wrote:
+>> Hi Paul,
+>>
+>> The patches have not been merged yet, i would like to resend them, just
+>> want to confirm i can add your Reviewed-by in the patches, right?
+> Hi Junxiao,
+>
+> I haven't personally had the time to verify the blktrace claims that
+> it doesn't violate the Lockdown principles so I'm not comfortable
+> adding my reviewed-by tag at this point in time, I'm sorry.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Christoph Hellwig <hch@infradead.org>
-cc: David Hildenbrand <david@redhat.com>
-cc: Lorenzo Stoakes <lstoakes@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Al Viro <viro@zeniv.linux.org.uk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Jan Kara <jack@suse.cz>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: Jason Gunthorpe <jgg@nvidia.com>
-cc: Logan Gunthorpe <logang@deltatee.com>
-cc: Hillf Danton <hdanton@sina.com>
-cc: Christian Brauner <brauner@kernel.org>
-cc: Linus Torvalds <torvalds@linux-foundation.org>
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-block@vger.kernel.org
-cc: linux-kernel@vger.kernel.org
-cc: linux-mm@kvack.org
----
+No problem. With Jens confirmed blktrace only exposed IO metadata to 
+userspace, if any more query regarding blktrace, please let me know. 
+Thank you.
 
-Notes:
-    ver #3)
-     - Rename need_unpin to is_pinned in struct dio.
-     - page_get_additional_pin() was renamed to folio_add_pin().
-    
-    ver #2)
-     - Need to set BIO_PAGE_PINNED conditionally, not BIO_PAGE_REFFED.
+Thanks,
 
- fs/direct-io.c | 72 ++++++++++++++++++++++++++++++--------------------
- 1 file changed, 43 insertions(+), 29 deletions(-)
+Junxiao.
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index ad20f3428bab..0643f1bb4b59 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -42,8 +42,8 @@
- #include "internal.h"
- 
- /*
-- * How many user pages to map in one call to get_user_pages().  This determines
-- * the size of a structure in the slab cache
-+ * How many user pages to map in one call to iov_iter_extract_pages().  This
-+ * determines the size of a structure in the slab cache
-  */
- #define DIO_PAGES	64
- 
-@@ -121,12 +121,13 @@ struct dio {
- 	struct inode *inode;
- 	loff_t i_size;			/* i_size when submitted */
- 	dio_iodone_t *end_io;		/* IO completion function */
-+	bool is_pinned;			/* T if we have pins on the pages */
- 
- 	void *private;			/* copy from map_bh.b_private */
- 
- 	/* BIO completion state */
- 	spinlock_t bio_lock;		/* protects BIO fields below */
--	int page_errors;		/* errno from get_user_pages() */
-+	int page_errors;		/* err from iov_iter_extract_pages() */
- 	int is_async;			/* is IO async ? */
- 	bool defer_completion;		/* defer AIO completion to workqueue? */
- 	bool should_dirty;		/* if pages should be dirtied */
-@@ -165,14 +166,14 @@ static inline unsigned dio_pages_present(struct dio_submit *sdio)
-  */
- static inline int dio_refill_pages(struct dio *dio, struct dio_submit *sdio)
- {
-+	struct page **pages = dio->pages;
- 	const enum req_op dio_op = dio->opf & REQ_OP_MASK;
- 	ssize_t ret;
- 
--	ret = iov_iter_get_pages2(sdio->iter, dio->pages, LONG_MAX, DIO_PAGES,
--				&sdio->from);
-+	ret = iov_iter_extract_pages(sdio->iter, &pages, LONG_MAX,
-+				     DIO_PAGES, 0, &sdio->from);
- 
- 	if (ret < 0 && sdio->blocks_available && dio_op == REQ_OP_WRITE) {
--		struct page *page = ZERO_PAGE(0);
- 		/*
- 		 * A memory fault, but the filesystem has some outstanding
- 		 * mapped blocks.  We need to use those blocks up to avoid
-@@ -180,8 +181,7 @@ static inline int dio_refill_pages(struct dio *dio, struct dio_submit *sdio)
- 		 */
- 		if (dio->page_errors == 0)
- 			dio->page_errors = ret;
--		get_page(page);
--		dio->pages[0] = page;
-+		dio->pages[0] = ZERO_PAGE(0);
- 		sdio->head = 0;
- 		sdio->tail = 1;
- 		sdio->from = 0;
-@@ -201,9 +201,9 @@ static inline int dio_refill_pages(struct dio *dio, struct dio_submit *sdio)
- 
- /*
-  * Get another userspace page.  Returns an ERR_PTR on error.  Pages are
-- * buffered inside the dio so that we can call get_user_pages() against a
-- * decent number of pages, less frequently.  To provide nicer use of the
-- * L1 cache.
-+ * buffered inside the dio so that we can call iov_iter_extract_pages()
-+ * against a decent number of pages, less frequently.  To provide nicer use of
-+ * the L1 cache.
-  */
- static inline struct page *dio_get_page(struct dio *dio,
- 					struct dio_submit *sdio)
-@@ -219,6 +219,18 @@ static inline struct page *dio_get_page(struct dio *dio,
- 	return dio->pages[sdio->head];
- }
- 
-+static void dio_pin_page(struct dio *dio, struct page *page)
-+{
-+	if (dio->is_pinned)
-+		folio_add_pin(page_folio(page));
-+}
-+
-+static void dio_unpin_page(struct dio *dio, struct page *page)
-+{
-+	if (dio->is_pinned)
-+		unpin_user_page(page);
-+}
-+
- /*
-  * dio_complete() - called when all DIO BIO I/O has been completed
-  *
-@@ -402,8 +414,8 @@ dio_bio_alloc(struct dio *dio, struct dio_submit *sdio,
- 		bio->bi_end_io = dio_bio_end_aio;
- 	else
- 		bio->bi_end_io = dio_bio_end_io;
--	/* for now require references for all pages */
--	bio_set_flag(bio, BIO_PAGE_REFFED);
-+	if (dio->is_pinned)
-+		bio_set_flag(bio, BIO_PAGE_PINNED);
- 	sdio->bio = bio;
- 	sdio->logical_offset_in_bio = sdio->cur_page_fs_offset;
- }
-@@ -444,8 +456,9 @@ static inline void dio_bio_submit(struct dio *dio, struct dio_submit *sdio)
-  */
- static inline void dio_cleanup(struct dio *dio, struct dio_submit *sdio)
- {
--	while (sdio->head < sdio->tail)
--		put_page(dio->pages[sdio->head++]);
-+	if (dio->is_pinned)
-+		unpin_user_pages(dio->pages + sdio->head,
-+				 sdio->tail - sdio->head);
- }
- 
- /*
-@@ -676,7 +689,7 @@ static inline int dio_new_bio(struct dio *dio, struct dio_submit *sdio,
-  *
-  * Return zero on success.  Non-zero means the caller needs to start a new BIO.
-  */
--static inline int dio_bio_add_page(struct dio_submit *sdio)
-+static inline int dio_bio_add_page(struct dio *dio, struct dio_submit *sdio)
- {
- 	int ret;
- 
-@@ -688,7 +701,7 @@ static inline int dio_bio_add_page(struct dio_submit *sdio)
- 		 */
- 		if ((sdio->cur_page_len + sdio->cur_page_offset) == PAGE_SIZE)
- 			sdio->pages_in_io--;
--		get_page(sdio->cur_page);
-+		dio_pin_page(dio, sdio->cur_page);
- 		sdio->final_block_in_bio = sdio->cur_page_block +
- 			(sdio->cur_page_len >> sdio->blkbits);
- 		ret = 0;
-@@ -743,11 +756,11 @@ static inline int dio_send_cur_page(struct dio *dio, struct dio_submit *sdio,
- 			goto out;
- 	}
- 
--	if (dio_bio_add_page(sdio) != 0) {
-+	if (dio_bio_add_page(dio, sdio) != 0) {
- 		dio_bio_submit(dio, sdio);
- 		ret = dio_new_bio(dio, sdio, sdio->cur_page_block, map_bh);
- 		if (ret == 0) {
--			ret = dio_bio_add_page(sdio);
-+			ret = dio_bio_add_page(dio, sdio);
- 			BUG_ON(ret != 0);
- 		}
- 	}
-@@ -804,13 +817,13 @@ submit_page_section(struct dio *dio, struct dio_submit *sdio, struct page *page,
- 	 */
- 	if (sdio->cur_page) {
- 		ret = dio_send_cur_page(dio, sdio, map_bh);
--		put_page(sdio->cur_page);
-+		dio_unpin_page(dio, sdio->cur_page);
- 		sdio->cur_page = NULL;
- 		if (ret)
- 			return ret;
- 	}
- 
--	get_page(page);		/* It is in dio */
-+	dio_pin_page(dio, page);		/* It is in dio */
- 	sdio->cur_page = page;
- 	sdio->cur_page_offset = offset;
- 	sdio->cur_page_len = len;
-@@ -825,7 +838,7 @@ submit_page_section(struct dio *dio, struct dio_submit *sdio, struct page *page,
- 		ret = dio_send_cur_page(dio, sdio, map_bh);
- 		if (sdio->bio)
- 			dio_bio_submit(dio, sdio);
--		put_page(sdio->cur_page);
-+		dio_unpin_page(dio, sdio->cur_page);
- 		sdio->cur_page = NULL;
- 	}
- 	return ret;
-@@ -926,7 +939,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 
- 				ret = get_more_blocks(dio, sdio, map_bh);
- 				if (ret) {
--					put_page(page);
-+					dio_unpin_page(dio, page);
- 					goto out;
- 				}
- 				if (!buffer_mapped(map_bh))
-@@ -971,7 +984,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 
- 				/* AKPM: eargh, -ENOTBLK is a hack */
- 				if (dio_op == REQ_OP_WRITE) {
--					put_page(page);
-+					dio_unpin_page(dio, page);
- 					return -ENOTBLK;
- 				}
- 
-@@ -984,7 +997,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 				if (sdio->block_in_file >=
- 						i_size_aligned >> blkbits) {
- 					/* We hit eof */
--					put_page(page);
-+					dio_unpin_page(dio, page);
- 					goto out;
- 				}
- 				zero_user(page, from, 1 << blkbits);
-@@ -1024,7 +1037,7 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 						  sdio->next_block_for_io,
- 						  map_bh);
- 			if (ret) {
--				put_page(page);
-+				dio_unpin_page(dio, page);
- 				goto out;
- 			}
- 			sdio->next_block_for_io += this_chunk_blocks;
-@@ -1039,8 +1052,8 @@ static int do_direct_IO(struct dio *dio, struct dio_submit *sdio,
- 				break;
- 		}
- 
--		/* Drop the ref which was taken in get_user_pages() */
--		put_page(page);
-+		/* Drop the pin which was taken in get_user_pages() */
-+		dio_unpin_page(dio, page);
- 	}
- out:
- 	return ret;
-@@ -1135,6 +1148,7 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
- 		/* will be released by direct_io_worker */
- 		inode_lock(inode);
- 	}
-+	dio->is_pinned = iov_iter_extract_will_pin(iter);
- 
- 	/* Once we sampled i_size check for reads beyond EOF */
- 	dio->i_size = i_size_read(inode);
-@@ -1259,7 +1273,7 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
- 		ret2 = dio_send_cur_page(dio, &sdio, &map_bh);
- 		if (retval == 0)
- 			retval = ret2;
--		put_page(sdio.cur_page);
-+		dio_unpin_page(dio, sdio.cur_page);
- 		sdio.cur_page = NULL;
- 	}
- 	if (sdio.bio)
-
+>
+>> On 5/9/23 9:13 AM, Junxiao Bi wrote:
+>>> On 4/30/23 2:46 PM, Paul Moore wrote:
+>>>
+>>>> On Fri, Apr 28, 2023 at 6:41 PM Junxiao Bi <junxiao.bi@oracle.com>
+>>>> wrote:
+>>>>> On 4/28/23 2:26 PM, Paul Moore wrote:
+>>>>>> On Wed, Apr 26, 2023 at 12:33 PM Junxiao Bi <junxiao.bi@oracle.com>
+>>>>>> wrote:
+>>>>>>> Paul,  do you have any other concerns regarding blktrace? As Jens
+>>>>>>> mentioned, blktrace just exported IO metadata to Userspace, those
+>>>>>>> were
+>>>>>>> not security sensitive information.
+>>>>>> I think this version of the patchset is much better, thanks for your
+>>>>>> patience.  I don't have any further concerns, and since the lockdown
+>>>>>> LSM doesn't have a dedicated maintainer I think you should be all set
+>>>>>> from my perspective.
+>>>>> Thanks a lot for the review.
+>>>>>
+>>>>>> Since there are no changes under security/, I'm assuming this will go
+>>>>>> in via the tracing tree?
+>>>>> Should I notify some specific maintainer or mail list for merging?
+>>>> When in doubt, the scripts/get_maintainer.pl tool in the kernel
+>>>> sources can be helpful.
+>>>>
+>>>> The results for the debugfs and relay files are fairly generic, but if
+>>>> you look at the results for the blktrace.c file you get a more
+>>>> reasonable list of maintainers and mailing lists.  I believe Jens has
+>>>> already commented on your patches at least once, I don't recall if the
+>>>> others have or not.  I see you've already CC'd the block mailing list,
+>>>> so that might be enough.
+>>>>
+>>>> Keep in mind that we are in the middle of a merge window so it is very
+>>>> possible this patch might not be merged in a working/next/etc. branch
+>>>> until after the merge window closes (every maintainer is a little bit
+>>>> different in this regard).
+>>> I didn't see the patches in the trace tree yet, maybe better to merge
+>>> it through block tree since it's a blktrace fix.
+>>>
+>>> Jens, can you help merge these two patches to your tree?
+>>>
+>>> Thanks,
+>>>
+>>> Junxiao.
