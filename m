@@ -2,117 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B34587134DD
-	for <lists+linux-block@lfdr.de>; Sat, 27 May 2023 15:03:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FFF0713596
+	for <lists+linux-block@lfdr.de>; Sat, 27 May 2023 18:09:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjE0NDQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 27 May 2023 09:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
+        id S230419AbjE0QJ5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 27 May 2023 12:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbjE0NDP (ORCPT
+        with ESMTP id S231637AbjE0QJx (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 27 May 2023 09:03:15 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03396F3
-        for <linux-block@vger.kernel.org>; Sat, 27 May 2023 06:03:14 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id 5614622812f47-3942c6584f0so563660b6e.3
-        for <linux-block@vger.kernel.org>; Sat, 27 May 2023 06:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685192593; x=1687784593;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XZcNYarXVGxdOBKUVVQQ2FZGbj+A4znodz1TEj5svgI=;
-        b=AIJ3L2GmYkD/HSA3aaCxnxyVjHZ38i5kA3qef3fw4OTl5SIuW3KSTX7W2IvwjS+w4M
-         NHGSCuB+NWRJwJ/gDSYktRJIRn17O/tfwBLjvbKpIZntru7mzYkupa9uhnAgRUe+p4j1
-         S32al+gKWmA24ewle9e+ul0ZSPFsOj3/HvvYhVUI04M+E/jiLlsazwP0MjXzUFNTTNpj
-         iJHX+APMWKB12DZlJ9/dzggdwK193JUko15XT2n9G3Fp+HHq/9AOzfcL95IPhg6r4eRI
-         1qF3vfdrUFUnlWY6jLZUjqJknDHDcj1lNA/WHj4+OXczoZc07v8Jpbhm/Mkx+DrBdkh6
-         inYQ==
+        Sat, 27 May 2023 12:09:53 -0400
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52219C3
+        for <linux-block@vger.kernel.org>; Sat, 27 May 2023 09:09:52 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ae3fe67980so16843505ad.3
+        for <linux-block@vger.kernel.org>; Sat, 27 May 2023 09:09:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685192593; x=1687784593;
-        h=to:subject:message-id:date:from:reply-to:mime-version
+        d=1e100.net; s=20221208; t=1685203791; x=1687795791;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZcNYarXVGxdOBKUVVQQ2FZGbj+A4znodz1TEj5svgI=;
-        b=D3+0RKN/ESSrWuNpgqvsEt3PAhVxuUTJaYoyT3ogaWZt5S1DXCBCdI/Dmj9K1yz373
-         wAR7h4ezmRkPa1NcaLHF/kiVKmiNaM2TwWKOeApHLk+H5sy0L4yrTMKKKuxOocrR0k94
-         NtseofiuX6k4Xlf/Lkotkl0w8AhkkEd0SDuHiZu9mEVK/+og07Lg6Ykux3x4A/KoDMdk
-         ZVAAn1jtQDrfTEdn7Htk8optG3HmHB09URcTeN2MD+ASZWnoQs++XRvbUTU5pYZqyZEr
-         qNAA+EdBeAg2kGiSrQDdCx7JHyXp3pmPWWG0Cwplq1MOHnF9BQ1Nvp74h3mw0o0LMJyG
-         3lhQ==
-X-Gm-Message-State: AC+VfDwZKsiqe9np854OayTNVCURk4PPcqCmcHycx6+SedRdTpHcvqU2
-        zK7JEBzs+G99bu+pm9qRb9tjfbNhpnO/E+stRE0=
-X-Google-Smtp-Source: ACHHUZ4pxkuZP8CBTqYah5dCG2wFwrexasq0vxyBK6fq2VYm+vXabgahlUyGqtCw9A30Stzukl/Kps8IqVZsBJQ/Aeo=
-X-Received: by 2002:a05:6808:340d:b0:398:132b:7462 with SMTP id
- by13-20020a056808340d00b00398132b7462mr2194709oib.54.1685192593006; Sat, 27
- May 2023 06:03:13 -0700 (PDT)
+        bh=PiQhmIqcu7JM0y3Q8ClGIplJIZSVGBBQywtY0HCYB4s=;
+        b=D2GDINJRK+8osyCKhYv1yRC4kpQ60tojl+wy6FvBj5wNuhPKSkyooDqItIqZf8XVI2
+         SYB2Z9h805au50HXihsEVZkQIuF3Fy4VXxb+Yuv6tKAWEFWwDuG9fieSDln4bvlU4jNX
+         SlaqCIK5mhnUpvlmnMTTCwnswg4YEpOzMHntk6ZJbMqnlWCumhU4uz9epcnwNHlouZ7Z
+         xFf/zPSJpedITlewpYjVPcik+w4X+kEOkSu1msKKVajsdLjybk9FZMXq050D9r2CFO0J
+         D6c3MphEVXxY4u1a4uY81JL7UQcH+/mEFm1f2tntC2K6104mqXfdyfoIMXzQAwgflUxd
+         813Q==
+X-Gm-Message-State: AC+VfDwhYg9oXKamSRl9Np+7BJr0NtB3H+BBEVFHR7HY3B0yZV3BoeCa
+        txtUQTweXZsI7s2dmbAu2U4=
+X-Google-Smtp-Source: ACHHUZ6dY8CPkV1nhNirJn4QiguKDgrOznAOt6vUdERSziinsZ0xkvqGBT+oqbJ8UkZAj6B1tEqiXg==
+X-Received: by 2002:a17:903:249:b0:1ab:d6f:51b0 with SMTP id j9-20020a170903024900b001ab0d6f51b0mr7023897plh.18.1685203791442;
+        Sat, 27 May 2023 09:09:51 -0700 (PDT)
+Received: from [192.168.51.14] ([98.51.102.78])
+        by smtp.gmail.com with ESMTPSA id b4-20020a170902bd4400b001ab0669d84csm5101857plx.26.2023.05.27.09.09.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 27 May 2023 09:09:50 -0700 (PDT)
+Message-ID: <eb97f471-723f-5c2e-92f6-190986cd51da@acm.org>
+Date:   Sat, 27 May 2023 09:09:49 -0700
 MIME-Version: 1.0
-Received: by 2002:a05:6359:4293:b0:121:4db0:43d with HTTP; Sat, 27 May 2023
- 06:03:12 -0700 (PDT)
-Reply-To: laurabeckwith002@gmail.com
-From:   laura beckwith <pcole2019@gmail.com>
-Date:   Sat, 27 May 2023 14:03:12 +0100
-Message-ID: <CAMq-ndMcEqn7yrxcjk9jNLbbwa+w5cdEiJ6f=T00eKzxwSB-Tw@mail.gmail.com>
-Subject: hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM,UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:22e listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [pcole2019[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [laurabeckwith002[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [pcole2019[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.8 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.7 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v5 1/9] block: Use pr_info() instead of printk(KERN_INFO
+ ...)
+Content-Language: en-US
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, jyescas@google.com,
+        Ming Lei <ming.lei@redhat.com>, Keith Busch <kbusch@kernel.org>
+References: <20230522222554.525229-1-bvanassche@acm.org>
+ <20230522222554.525229-2-bvanassche@acm.org>
+ <ZGv2TP1HZE1kgKlA@bombadil.infradead.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <ZGv2TP1HZE1kgKlA@bombadil.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
--- 
-My warmest greetings,
+On 5/22/23 16:10, Luis Chamberlain wrote:
+> On Mon, May 22, 2023 at 03:25:33PM -0700, Bart Van Assche wrote:
+>> Switch to the modern style of printing kernel messages. Use %u instead
+>> of %d to print unsigned integers.
+>>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Ming Lei <ming.lei@redhat.com>
+>> Cc: Keith Busch <kbusch@kernel.org>
+>> Cc: Luis Chamberlain <mcgrof@kernel.org>
+>> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+>> ---
+>>   block/blk-settings.c | 12 ++++--------
+>>   1 file changed, 4 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/block/blk-settings.c b/block/blk-settings.c
+>> index 896b4654ab00..1d8d2ae7bdf4 100644
+>> --- a/block/blk-settings.c
+>> +++ b/block/blk-settings.c
+>> @@ -127,8 +127,7 @@ void blk_queue_max_hw_sectors(struct request_queue *q, unsigned int max_hw_secto
+>>   
+>>   	if ((max_hw_sectors << 9) < PAGE_SIZE) {
+>>   		max_hw_sectors = 1 << (PAGE_SHIFT - 9);
+>> -		printk(KERN_INFO "%s: set to minimum %d\n",
+>> -		       __func__, max_hw_sectors);
+>> +		pr_info("%s: set to minimum %u\n", __func__, max_hw_sectors);
+> 
+> You may want to then also add at the very top of the file before any
+> includes something like:
+> 
+> #define pr_fmt(fmt) "blk-settings: " fmt
+> 
+> You can see the other defines of pr_fmt on block/*.c
 
-May the Good Lord bless you as you read this message. I am Mrs. Laura
-Beckwith, I have decided to donate what I have to you motherless
-babies, Less privileged and widows, because I am dying and diagnosed
-with cancer about 2 years ago. I have been touched by God Almighty to
-donate all I have to you for the good work of God almighty. I have
-asked almighty God to forgive me and I believe he has because he is a
-merciful God. May the good God bless you abundantly, and please use
-the funds judiciously for charitable projects, motherless babies, Less
-privileged and widows. I came to this decision to reach out to you
-because I have limited time on this earth. I don't know you but I have
-been directed to do this by God almighty. If you are interested in
-carrying out this task, get back to me.
+My goal with this patch is *not* to modify the output so I prefer not to 
+define the pr_fmt() macro in this file.
 
-Reply at: laurabeckwith002@gmail.com
+Thanks,
 
-Yours Faithfully,
-Mrs. Laura Beckwith
+Bart.
+
