@@ -2,210 +2,214 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63064716924
-	for <lists+linux-block@lfdr.de>; Tue, 30 May 2023 18:23:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4F427160BC
+	for <lists+linux-block@lfdr.de>; Tue, 30 May 2023 14:57:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231891AbjE3QXD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 May 2023 12:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39268 "EHLO
+        id S232508AbjE3M5B (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 May 2023 08:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231823AbjE3QXB (ORCPT
+        with ESMTP id S232435AbjE3M4q (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 May 2023 12:23:01 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7093C9
-        for <linux-block@vger.kernel.org>; Tue, 30 May 2023 09:22:50 -0700 (PDT)
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230530162247epoutp048c1925ad9bc3363bcc3379d293511eb1~j_F3T2KtM0380603806epoutp048
-        for <linux-block@vger.kernel.org>; Tue, 30 May 2023 16:22:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230530162247epoutp048c1925ad9bc3363bcc3379d293511eb1~j_F3T2KtM0380603806epoutp048
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1685463767;
-        bh=iQHQHNsByexlloqhkgYnt5iCj3YMH2bRf9GJ2+IFCqo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mj9Kp246tFJsvk49BzWLL8WrQrzlQlRGeWp84cPM2FN+4hmYdEjPTDdftj1sdpK4N
-         kPbt3ynZUNGge8cf2RttYaaqgWdPbnyjQH9nFQOfCYHSzbBqhJoKc+SrE6EWA5YFeP
-         9dsjRqvLAPoEyOfoEZY4Ouo2kinX1FtgaUMIzXe4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20230530162245epcas5p13dd525f833dbe394e5e0edaa652cdb0c~j_F1911Nb0345803458epcas5p1-;
-        Tue, 30 May 2023 16:22:45 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.175]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4QVyNh1y9wz4x9Pp; Tue, 30 May
-        2023 16:22:44 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        77.3F.04567.4D226746; Wed, 31 May 2023 01:22:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20230530121351epcas5p2b18d46d6be650a7b830690b845ec22c8~j6sgq_Mda2862728627epcas5p2h;
-        Tue, 30 May 2023 12:13:51 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230530121350epsmtrp2a219b3672da915ce319a0c25d4204123~j6sgpTLJG0347103471epsmtrp2-;
-        Tue, 30 May 2023 12:13:50 +0000 (GMT)
-X-AuditID: b6c32a49-943ff700000011d7-4a-647622d46e21
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        51.D5.28392.E78E5746; Tue, 30 May 2023 21:13:50 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20230530121346epsmtip2a090cc3928ef845f7729023ca25e9244~j6sc4LK2o1829318293epsmtip2a;
-        Tue, 30 May 2023 12:13:46 +0000 (GMT)
-Date:   Tue, 30 May 2023 17:40:43 +0530
-From:   Nitesh Shetty <nj.shetty@samsung.com>
-To:     Maurizio Lombardi <mlombard@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        James Smart <james.smart@broadcom.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Tue, 30 May 2023 08:56:46 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23EDE74;
+        Tue, 30 May 2023 05:56:02 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 4F3E321AA0;
+        Tue, 30 May 2023 12:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1685451340; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qz6VxSG6Me8cMILTxPNvLBOuIKtS1BXIYbnFAOzFU88=;
+        b=RNM/5v9I0cJcxe2sgHVWKvoJ27BJ/3BbwFUlVHziTd7W/RqzpgPEKRvFcNBwwBMvYv+gDS
+        lqz36elGppGr6JcTnA6KRI7+KEvgmr46pD8DmL2tigbtQ8YArVKOKHdZzD1cxJONnJlzPH
+        yOx+bng3UCPGQr7a2XRluMW9OmAUfX4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1685451340;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qz6VxSG6Me8cMILTxPNvLBOuIKtS1BXIYbnFAOzFU88=;
+        b=E0j6eqL4WpPaYkWdFKYUucEWYhdWrYqciFAO8En1dOpC19SmzyWLmu2enr5ip67P2d1fWA
+        SN0mmS3X+MiEm1Bg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 405A713478;
+        Tue, 30 May 2023 12:55:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id I5esD0zydWTlLQAAMHmgww
+        (envelope-from <jack@suse.cz>); Tue, 30 May 2023 12:55:40 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id CAEB4A0754; Tue, 30 May 2023 14:55:39 +0200 (CEST)
+Date:   Tue, 30 May 2023 14:55:39 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
         Christian Brauner <brauner@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        James.Bottomley@hansenpartnership.com, bvanassche@acm.org,
-        hare@suse.de, ming.lei@redhat.com, dlemoal@kernel.org,
-        anuj20.g@samsung.com, joshi.k@samsung.com, nitheshshetty@gmail.com,
-        gost.dev@samsung.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v11 2/9] block: Add copy offload support infrastructure
-Message-ID: <20230530121043.psdxyk7z3rk7sjtm@green245>
+        "Darrick J. Wong" <djwong@kernel.org>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 07/13] block: delete partitions later in del_gendisk
+Message-ID: <20230530125539.fmby32cz3grnueu6@quack3>
+References: <20230518042323.663189-1-hch@lst.de>
+ <20230518042323.663189-8-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <CAFL455nMtKbDt1HeN6D2WPB2JjOYq2z1=RagmmuhmQ33eL2Bfw@mail.gmail.com>
-User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xbdRTHc+9tby+QYsdj/oBNoLoQmDy6lfpjAbfoipfgA0I0c8qwg2sh
-        lLbpg83FOFYYOibykCErhIGylZc8t/EoMMJDXjIkPIfCGCmYQGQ8s2mF2nKL+t/nfM85v3N+
-        5+QQmMMgy5VIkKoohVQk4eK2jPvd3l6+49zkuIC0vwlYO/gTBotqq3Goyd7BYNVsFg5XujcQ
-        mL/2JwbnH5yE7auFTPioswWFbd/norCiqheF9VkE1Jeuo7DX9AcOc7smEbg4oUVh+8xR2NY+
-        wIBjrUU4nKs2MeGtO4sseH2qGYe6vl0Udn2bisKh/EYMNhuuILBm5SkD9s+4wZGdPiY0Pi/C
-        T71Ejo2Hk9rHwzjZop1lkSNz9QwyP3cQJxvLfcixYTXZUHkNJxs2cllkf4GRQTaWXSb1j1Jw
-        MjN1FSfXF2cY5NOOCZz85m4lEuF4NjE4nhLFUQoPShori0uQikO44VExb8YECgJ4vrwg+BrX
-        QypKokK4p9+O8A1NkJgnxfVIFknUZilCpFRy/V8PVsjUKsojXqZUhXApeZxEzpf7KUVJSrVU
-        7CelVCd4AQHHAs2BnyTG/1A/i8oNDhcXbg6jKcg0OwOxIQCHD7Y1W0gGYks4cPQIuFo0YTU2
-        EDD1y3cM2thEwEhBJ3M/ZTFn2OpoRUDHzxtM2lhCQF1NNWaJYnCOgL6tNfNbBIFzjoIhE2GR
-        ncy4nlbGsDDGSWOBjQx7CztywoHhYR1qYTZHAMaH5q18AAzcNOzF23AiQX1T2Z7uzDkECm5v
-        Y5a6gKOxBabSTYzu7jTQ/XoDp9kRLPfdZdHsCjZX2636BVCRV47TyWkI0E5pEdpxElwdzMIs
-        TWOceFDVq6blw+DGYA1KN20PMo0GlNbZoLl4n18G1bUl1vddwOSzK1YmwVZ6G4seUBoKlgzr
-        eDbirv3f57T/ldPulTgBrq1pmDS7g9R7hRgd4gZ0uwSN3qC21b8EwSsRF0quTBJTykA5T0pd
-        +Hf5sbKkBmTvqHzCmpHZ+TW/LgQlkC4EEBjXiR0iUsY5sONEn12iFLIYhVpCKbuQQPPacjBX
-        51iZ+SqlqhgePyiALxAI+EHHBTzui2yvkIFYB45YpKISKUpOKfbzUMLGNQXN9HkyJn7f7uF5
-        k4tAevYDmHf/UiTOsMtV5f2O8/Idfc586fup5qMt/U66hrwcZWg6/mGXp8dbXxxiSZK1hg79
-        6jusNx7f8fxK1iocp1ZqqstSEyblbZ/XhW8/UBl54gNzoV6FMcLxsKgefc+p4sbF5KFg/XtL
-        57AfvXZ3FuQfCycSBzwuionb765HZ77yF+a1YM+OzM7v5mY3j/LugfqFEP/D10uHmMrypuU5
-        d/clItlOfMzpt2jhmeet3s78Ql1SQYmb0HnxySgalnPwhVFdusvwrazpmSFjTyqrk1iaNp0L
-        ZIUe+TrofOZytL9DcX+MseVV1x7dQf4zz3Gn0xVyIZehjBfxfDCFUvQPC7mUe90EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsWy7bCSvG7di9IUgzm7jC3WnzrGbDFn/Ro2
-        i6YJf5ktVt/tZ7N4ffgTo8W0Dz+ZLR7st7fY+242q8XNAzuZLPYsmsRksXL1USaLjf0cFrsX
-        fmSyOPr/LZvFpEPXGC2eXp3FZLH3lrbFnr0nWSwu75rDZnFvzX9Wi/nLnrJbdF/fwWax/Pg/
-        JotDk5uZLE5P28xsseNJI6PFutfvWSxO3JK2OP/3OKvF7x9z2BzkPC5f8faYdf8sm8fOWXfZ
-        Pc7f28jiMW3SKTaPzSu0PC6fLfXYtKqTzWPTp0nsHidm/Gbx2Lyk3mP3zQY2j97md2weH5/e
-        YvF4v+8qm0ffllWMAcJRXDYpqTmZZalF+nYJXBkHXvawF3zlr+g7v5i1gbGNu4uRk0NCwETi
-        6cSzLCC2kMAORokF11Ug4pISy/4eYYawhSVW/nvO3sXIBVTzhFHi1bJl7CAJFgFVieNfPjB2
-        MXJwsAloS5z+zwESFgEyP7YsYQGpZxboYpeY9X4hG0hCWMBb4sm5DUwgNq+AmcSV0w+YIIa2
-        MElMmPOEFSIhKHFy5hOwi5iBiuZtfsgMsoBZQFpi+T8OiLC8RPPW2WDHcQoESmzcvgRspqiA
-        jMSMpV+ZJzAKzUIyaRaSSbMQJs1CMmkBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95Pzc
-        TYzgxKOltYNxz6oPeocYmTgYDzFKcDArifDaJhanCPGmJFZWpRblxxeV5qQWH2KU5mBREue9
-        0HUyXkggPbEkNTs1tSC1CCbLxMEp1cB00eRwQ+60icv0dNaHB2b/mqtT6ZofcXTB86ivtc0q
-        +33nB/beCQ0xWOpTrB6oFy3xmXu2832rDfHXyj5fuTzRU45nYtyTAw2G++VOBbBN5vLcNGvp
-        366/JX63a9pD3ybwZgh/V3m+uezBn3il+L/b+C7f81JVEtxyU6yWbeeiyISD72cna1R9TZE0
-        nbvGXP7m3+T9hoqRBhyzZpQvUpmy3G6Wx5/FP/YcNPUqdfseq3Bp27TYMJnU3361dSkvNNdI
-        sR++UqG782aTeLrWxEP57jvmnJ4oHJZ2ICPg04fpzhH3P0d3vTw8yf2kywoDnav5c457LrKe
-        dOHe+22RH+o3ezW8rwlx/bFi7WMeVbWXSizFGYmGWsxFxYkAu5aSqKsDAAA=
-X-CMS-MailID: 20230530121351epcas5p2b18d46d6be650a7b830690b845ec22c8
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----dpMjS_Krfo.HeTa1.nqRY6lfIY-msh.FGO-xMH_14-IlSSmS=_319e1_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230522104536epcas5p23dd8108dd267ec588e5c36e8f9eb9fe8
-References: <CGME20230522104536epcas5p23dd8108dd267ec588e5c36e8f9eb9fe8@epcas5p2.samsung.com>
-        <20230522104146.2856-1-nj.shetty@samsung.com>
-        <20230522104146.2856-3-nj.shetty@samsung.com>
-        <CAFL455nMtKbDt1HeN6D2WPB2JjOYq2z1=RagmmuhmQ33eL2Bfw@mail.gmail.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230518042323.663189-8-hch@lst.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------dpMjS_Krfo.HeTa1.nqRY6lfIY-msh.FGO-xMH_14-IlSSmS=_319e1_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
+On Thu 18-05-23 06:23:16, Christoph Hellwig wrote:
+> Delay dropping the block_devices for partitions in del_gendisk until
+> after the call to blk_mark_disk_dead, so that we can implementat
+> notification of removed devices in blk_mark_disk_dead.
+> 
+> This requires splitting a lower-level drop_partition helper out of
+> delete_partition and using that from del_gendisk, while having a
+> common loop for the whole device and partitions that calls
+> remove_inode_hash, fsync_bdev and __invalidate_device before the
+> call to blk_mark_disk_dead.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-On 23/05/30 01:29PM, Maurizio Lombardi wrote:
->po 22. 5. 2023 v 13:17 odesílatel Nitesh Shetty <nj.shetty@samsung.com> napsal:
->>
->> +static int __blkdev_copy_offload(struct block_device *bdev_in, loff_t pos_in,
->> +               struct block_device *bdev_out, loff_t pos_out, size_t len,
->> +               cio_iodone_t endio, void *private, gfp_t gfp_mask)
->> +{
->> +       struct cio *cio;
->> +       struct copy_ctx *ctx;
->> +       struct bio *read_bio, *write_bio;
->> +       struct page *token;
->> +       sector_t copy_len;
->> +       sector_t rem, max_copy_len;
->> +
->> +       cio = kzalloc(sizeof(struct cio), GFP_KERNEL);
->> +       if (!cio)
->> +               return -ENOMEM;
->> +       atomic_set(&cio->refcount, 0);
->> +       cio->waiter = current;
->> +       cio->endio = endio;
->> +       cio->private = private;
->> +
->> +       max_copy_len = min(bdev_max_copy_sectors(bdev_in),
->> +                       bdev_max_copy_sectors(bdev_out)) << SECTOR_SHIFT;
->> +
->> +       cio->pos_in = pos_in;
->> +       cio->pos_out = pos_out;
->> +       /* If there is a error, comp_len will be set to least successfully
->> +        * completed copied length
->> +        */
->> +       cio->comp_len = len;
->> +       for (rem = len; rem > 0; rem -= copy_len) {
->> +               copy_len = min(rem, max_copy_len);
->> +
->> +               token = alloc_page(gfp_mask);
->> +               if (unlikely(!token))
->> +                       goto err_token;
->
->[...]
->
->> +err_token:
->> +       cio->comp_len = min_t(sector_t, cio->comp_len, (len - rem));
->> +       if (!atomic_read(&cio->refcount))
->> +               return -ENOMEM;
->> +       /* Wait for submitted IOs to complete */
->> +       return blkdev_copy_wait_completion(cio);
->> +}
->
->Suppose the first call to "token = alloc_page()" fails (and
->cio->refcount == 0), isn't "cio" going to be leaked here?
->
->Maurizio
->
+Looks good. Feel free to add:
 
-Agreed, will free it in "err_token", and will update next version.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Thank you,
-Nitesh Shetty
+								Honza
 
-------dpMjS_Krfo.HeTa1.nqRY6lfIY-msh.FGO-xMH_14-IlSSmS=_319e1_
-Content-Type: text/plain; charset="utf-8"
-
-
-------dpMjS_Krfo.HeTa1.nqRY6lfIY-msh.FGO-xMH_14-IlSSmS=_319e1_--
+> ---
+>  block/blk.h             |  2 +-
+>  block/genhd.c           | 24 +++++++++++++++++++-----
+>  block/partitions/core.c | 19 ++++++++++++-------
+>  3 files changed, 32 insertions(+), 13 deletions(-)
+> 
+> diff --git a/block/blk.h b/block/blk.h
+> index 45547bcf111938..4363052f90416a 100644
+> --- a/block/blk.h
+> +++ b/block/blk.h
+> @@ -409,7 +409,7 @@ int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
+>  int bdev_del_partition(struct gendisk *disk, int partno);
+>  int bdev_resize_partition(struct gendisk *disk, int partno, sector_t start,
+>  		sector_t length);
+> -void blk_drop_partitions(struct gendisk *disk);
+> +void drop_partition(struct block_device *part);
+>  
+>  void bdev_set_nr_sectors(struct block_device *bdev, sector_t sectors);
+>  
+> diff --git a/block/genhd.c b/block/genhd.c
+> index a744daeed55318..bd4c4eca31363e 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -615,6 +615,8 @@ EXPORT_SYMBOL_GPL(blk_mark_disk_dead);
+>  void del_gendisk(struct gendisk *disk)
+>  {
+>  	struct request_queue *q = disk->queue;
+> +	struct block_device *part;
+> +	unsigned long idx;
+>  
+>  	might_sleep();
+>  
+> @@ -623,16 +625,28 @@ void del_gendisk(struct gendisk *disk)
+>  
+>  	disk_del_events(disk);
+>  
+> +	/*
+> +	 * Prevent new openers by unlinked the bdev inode, and write out
+> +	 * dirty data before marking the disk dead and stopping all I/O.
+> +	 */
+>  	mutex_lock(&disk->open_mutex);
+> -	remove_inode_hash(disk->part0->bd_inode);
+> -	blk_drop_partitions(disk);
+> +	xa_for_each(&disk->part_tbl, idx, part) {
+> +		remove_inode_hash(part->bd_inode);
+> +		fsync_bdev(part);
+> +		__invalidate_device(part, true);
+> +	}
+>  	mutex_unlock(&disk->open_mutex);
+>  
+> -	fsync_bdev(disk->part0);
+> -	__invalidate_device(disk->part0, true);
+> -
+>  	blk_mark_disk_dead(disk);
+>  
+> +	/*
+> +	 * Drop all partitions now that the disk is marked dead.
+> +	 */
+> +	mutex_lock(&disk->open_mutex);
+> +	xa_for_each_start(&disk->part_tbl, idx, part, 1)
+> +		drop_partition(part);
+> +	mutex_unlock(&disk->open_mutex);
+> +
+>  	if (!(disk->flags & GENHD_FL_HIDDEN)) {
+>  		sysfs_remove_link(&disk_to_dev(disk)->kobj, "bdi");
+>  
+> diff --git a/block/partitions/core.c b/block/partitions/core.c
+> index fa5c707fe0ad2f..31ac815d77a83c 100644
+> --- a/block/partitions/core.c
+> +++ b/block/partitions/core.c
+> @@ -263,10 +263,19 @@ struct device_type part_type = {
+>  	.uevent		= part_uevent,
+>  };
+>  
+> -static void delete_partition(struct block_device *part)
+> +void drop_partition(struct block_device *part)
+>  {
+>  	lockdep_assert_held(&part->bd_disk->open_mutex);
+>  
+> +	xa_erase(&part->bd_disk->part_tbl, part->bd_partno);
+> +	kobject_put(part->bd_holder_dir);
+> +
+> +	device_del(&part->bd_device);
+> +	put_device(&part->bd_device);
+> +}
+> +
+> +static void delete_partition(struct block_device *part)
+> +{
+>  	/*
+>  	 * Remove the block device from the inode hash, so that it cannot be
+>  	 * looked up any more even when openers still hold references.
+> @@ -276,11 +285,7 @@ static void delete_partition(struct block_device *part)
+>  	fsync_bdev(part);
+>  	__invalidate_device(part, true);
+>  
+> -	xa_erase(&part->bd_disk->part_tbl, part->bd_partno);
+> -	kobject_put(part->bd_holder_dir);
+> -	device_del(&part->bd_device);
+> -
+> -	put_device(&part->bd_device);
+> +	drop_partition(part);
+>  }
+>  
+>  static ssize_t whole_disk_show(struct device *dev,
+> @@ -519,7 +524,7 @@ static bool disk_unlock_native_capacity(struct gendisk *disk)
+>  	return true;
+>  }
+>  
+> -void blk_drop_partitions(struct gendisk *disk)
+> +static void blk_drop_partitions(struct gendisk *disk)
+>  {
+>  	struct block_device *part;
+>  	unsigned long idx;
+> -- 
+> 2.39.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
