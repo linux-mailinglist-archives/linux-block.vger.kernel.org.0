@@ -2,138 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBB547167E5
-	for <lists+linux-block@lfdr.de>; Tue, 30 May 2023 17:51:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1127171682E
+	for <lists+linux-block@lfdr.de>; Tue, 30 May 2023 17:56:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232773AbjE3Pvk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 May 2023 11:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39294 "EHLO
+        id S232931AbjE3P4q (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 May 2023 11:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230283AbjE3Puj (ORCPT
+        with ESMTP id S229922AbjE3P4l (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 May 2023 11:50:39 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C72E8
-        for <linux-block@vger.kernel.org>; Tue, 30 May 2023 08:49:56 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-75affb4d0f9so262026585a.2
-        for <linux-block@vger.kernel.org>; Tue, 30 May 2023 08:49:56 -0700 (PDT)
+        Tue, 30 May 2023 11:56:41 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4BDFC;
+        Tue, 30 May 2023 08:56:13 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id ca18e2360f4ac-77483f80522so330931239f.3;
+        Tue, 30 May 2023 08:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685462173; x=1688054173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EHPDY3TJU7UcVZdSMbyBJ0h6GxojmriPacPRkWmpcMs=;
+        b=aCTRD+Uau0895BPuxHI20+5Al53gsqSglyzrbXD4iMbup6B0viGsJdYsPTLdR5aEXu
+         GV/86BMGQrvcC8BRsYQhTShhJMk7Pj/EUdCyj+JGeIXds2h1CKBZ63w0IO8/h7bQO2sd
+         8nbnZi7Su5+RVdHRBNCaVmdIDFwe9NDYJots8URgjwTjUcC3x7hmeVzEVBAb/tNWuaIF
+         wdYzu7pKxAVXef6KKVspL3R/RB+qxguw86i7wI/VtI3Pu0woUz9ZHCNUeUQwdGm1GHan
+         2PbvLtUxSzIRfRRZr9EqhpjJoapS3S8wYsqwCj46TrtxdoviXqNkMUDh4PDI2tC0CkCG
+         RPew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685461795; x=1688053795;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ef9UXKlo6HOEzGKOWoRQOx3X1Mv/S3dqqbfR/aqcj1E=;
-        b=W7SyzOLMBM0R32OlE7rdvQIUm0xtvOLkJ3eauEvi3aRaVOLKDG8Th8Q7b5cqRAJGb5
-         dWt/MsIOUUAQrvnh68phXVQ9Ovuc90/aPUtziwCo2Y2ln4vgWeyOAgNeXO8OGZEAVzfF
-         Yx8N2q6VCRnf6wRwBAX7zTJ+qKYuadT/TpxZcE6ek4GeDxlyR8yKhSbixjnrvDy4cfR4
-         BsPasdwQTsVLLNp1f2rsyFoxX1M4uK9GOJx/vOvqk4cm1nvjMixVJ6+GTUvLxviEpeef
-         pEaoY687JU3BAXCs12G9tsndqPbiMgunDdFunHDY4JyTzr5LsBT9UqzgK3IeEtqOA8F4
-         kSdA==
-X-Gm-Message-State: AC+VfDxAGFwWsDEQF6HntjE3TAGV8J2dAA3KmkN8BARLaS/tiScMnM1e
-        FGDvqC1liK8UAaRpibUoAwep
-X-Google-Smtp-Source: ACHHUZ7pliMoFycu95ZOXiwcTabY+u351+caH9+LwJwAEUbICb4vYuE61O+IVefjdSw8mai/KPkDog==
-X-Received: by 2002:a05:620a:8084:b0:75c:c99d:e416 with SMTP id ef4-20020a05620a808400b0075cc99de416mr2289656qkb.49.1685461794842;
-        Tue, 30 May 2023 08:49:54 -0700 (PDT)
-Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
-        by smtp.gmail.com with ESMTPSA id a23-20020a05620a16d700b0075b053ab66bsm4135656qkn.50.2023.05.30.08.49.54
+        d=1e100.net; s=20221208; t=1685462173; x=1688054173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EHPDY3TJU7UcVZdSMbyBJ0h6GxojmriPacPRkWmpcMs=;
+        b=GYdvTKGWRJfmCJrYyKHuSEIh66OPPsdAYBJu8nGgRxUHp2ZnwlgFfZd3tichW6dNnp
+         Jh2DjnaPPBe8eSXgr4KTVmpLnsKmvUVeOZyznbsmGfPogNATkltgFe+dow2iu2mEQQQt
+         XsQIw8IS4dmqJ1Q99XjxQ6h5ZhIpZWDWWQq5Wll6NlF+gxziaRlwckLYBs6gsocHHtxT
+         lbRXr7Vjf3PF44+jouV2dcuJP7zrG5F52k+2moOIcnDqOh+daYZw1um3OXJkILQGUjnc
+         5Bwax1RYavBI30TiTY8JS41op6JIs5vpwEm6+y7ltNwbwOrVSDL/JgLpP7ixesSkeDk0
+         NLTg==
+X-Gm-Message-State: AC+VfDz7IPPPUnp/uhbKnwhl3TJ0aJshrVr2WVn61Kf+X43hdnrDqvIa
+        Sa4v4Ry1v6iKJ9cIjv5IKtyNen4Cync=
+X-Google-Smtp-Source: ACHHUZ4DmqAqJcMsDyI9rOyHLkeO+p79vjuuMBXgNJiX1XgjsMxobl4x7hion01uhoM8kf1bdQjq8g==
+X-Received: by 2002:a5e:c101:0:b0:76c:595a:6b5f with SMTP id v1-20020a5ec101000000b0076c595a6b5fmr1927961iol.20.1685462172880;
+        Tue, 30 May 2023 08:56:12 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id ct11-20020a056638488b00b00408b3bc8061sm805571jab.43.2023.05.30.08.56.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 08:49:54 -0700 (PDT)
-Date:   Tue, 30 May 2023 11:49:53 -0400
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        "axboe @ kernel . dk" <axboe@kernel.dk>, shaggy@kernel.org,
-        damien.lemoal@wdc.com, cluster-devel@redhat.com, kch@nvidia.com,
-        agruenba@redhat.com, linux-mm@kvack.org,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        jfs-discussion@lists.sourceforge.net, willy@infradead.org,
-        ming.lei@redhat.com, linux-block@vger.kernel.org, song@kernel.org,
-        dm-devel@redhat.com, rpeterso@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
-        hch@lst.de
-Subject: Re: [PATCH v5 16/20] dm-crypt: check if adding pages to clone bio
- fails
-Message-ID: <ZHYbIYxGbcXbpvIK@redhat.com>
-References: <20230502101934.24901-1-johannes.thumshirn@wdc.com>
- <20230502101934.24901-17-johannes.thumshirn@wdc.com>
- <alpine.LRH.2.21.2305301045220.3943@file01.intranet.prod.int.rdu2.redhat.com>
+        Tue, 30 May 2023 08:56:12 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 30 May 2023 15:56:08 +0000
+Message-ID: <20230530155608.272266-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.2305301045220.3943@file01.intranet.prod.int.rdu2.redhat.com>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, May 30 2023 at 11:13P -0400,
-Mikulas Patocka <mpatocka@redhat.com> wrote:
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
-> 
-> 
-> On Tue, 2 May 2023, Johannes Thumshirn wrote:
-> 
-> > Check if adding pages to clone bio fails and if it does retry with
-> > reclaim. This mirrors the behaviour of page allocation in
-> > crypt_alloc_buffer().
-> > 
-> > This way we can mark bio_add_pages as __must_check.
-> > 
-> > Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> > Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> > ---
-> >  drivers/md/dm-crypt.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-> > index 8b47b913ee83..b234dc089cee 100644
-> > --- a/drivers/md/dm-crypt.c
-> > +++ b/drivers/md/dm-crypt.c
-> > @@ -1693,7 +1693,14 @@ static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned int size)
-> >  
-> >  		len = (remaining_size > PAGE_SIZE) ? PAGE_SIZE : remaining_size;
-> >  
-> > -		bio_add_page(clone, page, len, 0);
-> > +		if (!bio_add_page(clone, page, len, 0)) {
-> > +			mempool_free(page, &cc->page_pool);
-> > +			crypt_free_buffer_pages(cc, clone);
-> > +			bio_put(clone);
-> > +			gfp_mask |= __GFP_DIRECT_RECLAIM;
-> > +			goto retry;
-> > +
-> > +		}
-> >  
-> >  		remaining_size -= len;
-> >  	}
-> 
-> Hi
-> 
-> I nack this. This just adds code that can't ever be executed.
-> 
-> dm-crypt already allocates enough entries in the vector (see "unsigned int 
-> nr_iovecs = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;"), so bio_add_page can't 
-> fail.
-> 
-> If you want to add __must_check to bio_add_page, you should change the 
-> dm-crypt code to:
-> if (!bio_add_page(clone, page, len, 0)) {
-> 	WARN(1, "this can't happen");
-> 	return NULL;
-> }
-> and not write recovery code for a can't-happen case.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-Thanks for the review Mikulas. But the proper way forward, in the
-context of this patchset, is to simply change bio_add_page() to
-__bio_add_page()
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ block/blk-cgroup-fc-appid.c |    2 +-
+ block/elevator.c            |    2 +-
+ block/genhd.c               |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Subject becomes: "dm crypt: use __bio_add_page to add single page to clone bio"
+diff --git a/block/blk-cgroup-fc-appid.c b/block/blk-cgroup-fc-appid.c
+index 842e5e1c0f3c..3ec21333f393 100644
+--- a/block/blk-cgroup-fc-appid.c
++++ b/block/blk-cgroup-fc-appid.c
+@@ -34,7 +34,7 @@ int blkcg_set_fc_appid(char *app_id, u64 cgrp_id, size_t app_id_len)
+ 	 * the vmid from the fabric.
+ 	 * Adding the overhead of a lock is not necessary.
+ 	 */
+-	strlcpy(blkcg->fc_app_id, app_id, app_id_len);
++	strscpy(blkcg->fc_app_id, app_id, app_id_len);
+ 	css_put(css);
+ out_cgrp_put:
+ 	cgroup_put(cgrp);
+diff --git a/block/elevator.c b/block/elevator.c
+index 24909069f872..8400e303fbcb 100644
+--- a/block/elevator.c
++++ b/block/elevator.c
+@@ -751,7 +751,7 @@ ssize_t elv_iosched_store(struct request_queue *q, const char *buf,
+ 	if (!elv_support_iosched(q))
+ 		return count;
+ 
+-	strlcpy(elevator_name, buf, sizeof(elevator_name));
++	strscpy(elevator_name, buf, sizeof(elevator_name));
+ 	ret = elevator_change(q, strstrip(elevator_name));
+ 	if (!ret)
+ 		return count;
+diff --git a/block/genhd.c b/block/genhd.c
+index 1cb489b927d5..3537b7d7c484 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -253,7 +253,7 @@ int __register_blkdev(unsigned int major, const char *name,
+ #ifdef CONFIG_BLOCK_LEGACY_AUTOLOAD
+ 	p->probe = probe;
+ #endif
+-	strlcpy(p->name, name, sizeof(p->name));
++	strscpy(p->name, name, sizeof(p->name));
+ 	p->next = NULL;
+ 	index = major_to_index(major);
+ 
 
-And header can explain that "crypt_alloc_buffer() already allocates
-enough entries in the clone bio's vector, so bio_add_page can't fail".
-
-Mike
