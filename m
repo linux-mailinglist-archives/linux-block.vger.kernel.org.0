@@ -2,174 +2,133 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3A68715562
-	for <lists+linux-block@lfdr.de>; Tue, 30 May 2023 08:13:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EF5E71556D
+	for <lists+linux-block@lfdr.de>; Tue, 30 May 2023 08:16:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbjE3GNM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 30 May 2023 02:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53988 "EHLO
+        id S229803AbjE3GQB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 30 May 2023 02:16:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbjE3GNL (ORCPT
+        with ESMTP id S229491AbjE3GQB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 30 May 2023 02:13:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E586BEC;
-        Mon, 29 May 2023 23:13:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 30 May 2023 02:16:01 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5680B0
+        for <linux-block@vger.kernel.org>; Mon, 29 May 2023 23:15:59 -0700 (PDT)
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8021162A32;
-        Tue, 30 May 2023 06:13:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6328AC433D2;
-        Tue, 30 May 2023 06:13:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685427188;
-        bh=orvAfFB1al0I5E+N/dd1jRm8DcYqs+dBcPiT7570GoU=;
-        h=From:To:Subject:Date:From;
-        b=QQbYKyy5q6xxFFpacZ8k4ySj1uQTgCwOxQNXDfmXymFDKxReknTz+B3zZA135hh9H
-         qOAMtCtVhbXu5lelm/ha6uEQl1JXlwsnXfSy9okbgOKbPklJ3M9jBxOE1ByEvXntLs
-         XAM21wCS8hUkstYFU/TRkKzJ1V63yxSM/eOcgFemzqX3wozdXLY2H1dNh5BXE95Whm
-         JomLYM6XUWDsXlFpUV0Z5Ghz9W+B386LRtn5dLHDwpkhz98RsCKyjuL/0CiTR4TI08
-         Qgu4koHS27zmFXK/yiTCXNcZq5kItFjcH8R1xTXe9TNjR96hVsh+l6Zf0EO7KETk8b
-         lj6RsqmFe+pag==
-From:   Damien Le Moal <dlemoal@kernel.org>
-To:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org
-Subject: [PATCH] block: improve ioprio value validity checks
-Date:   Tue, 30 May 2023 15:13:07 +0900
-Message-Id: <20230530061307.525644-1-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.40.1
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 77E001F889;
+        Tue, 30 May 2023 06:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1685427358; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Trpzp5YNsnPBrD2WUadSL3WQehtnvEgj8Z2n4SMYbtk=;
+        b=kLQ6FjXu9/AypTb4ufFKVjcLEBG5/R1Gf71ocusSlE9uSldMFiWsgsW6FTV02uBC2NUcKX
+        wjMIgZgsxqEZ+8SxtXPcy0SomEHW2NecEJ+/8xPA7PUprIZ/cIyJO1ZKFWmULitiVkDN3S
+        7BHWlvUFiMoyVDjVpQSCwSKgz2knbZM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1685427358;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Trpzp5YNsnPBrD2WUadSL3WQehtnvEgj8Z2n4SMYbtk=;
+        b=ruoIb8KtGnexCcP22ii1FlvekZ5Bhk9atC93hZ81N2hkinIbVTUKErnWMPSZW8VgQjqEQt
+        R0XDS1SIixrdInDg==
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id 557E91342F;
+        Tue, 30 May 2023 06:15:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap1.suse-dmz.suse.de with ESMTPSA
+        id gbxRE56UdWT0ZQAAGKfGzw
+        (envelope-from <hare@suse.de>); Tue, 30 May 2023 06:15:58 +0000
+Message-ID: <0ad655ee-d658-0a98-846c-62fe581335a2@suse.de>
+Date:   Tue, 30 May 2023 08:15:57 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] block: fix revalidate performance regression
+Content-Language: en-US
+To:     Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org
+Cc:     Brian Bunker <brian@purestorage.com>
+References: <20230529023836.1209558-1-dlemoal@kernel.org>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20230529023836.1209558-1-dlemoal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The introduction of the macro IOPRIO_PRIO_LEVEL() in commit
-eca2040972b4 ("scsi: block: ioprio: Clean up interface definition")
-results in an iopriority level to always be masked using the macro
-IOPRIO_LEVEL_MASK, and thus to the kernel always seeing an acceptable
-value for an I/O priority level when checked in ioprio_check_cap().
-Before this patch, this function would return an error for some (but not
-all) invalid values for a level valid range of [0..7].
+On 5/29/23 04:38, Damien Le Moal wrote:
+> The scsi driver function sd_read_block_characteristics() always calls
+> disk_set_zoned() to a disk zoned model correctly, in case the device
+> model changed. This is done even for regular disks to set the zoned
+> model to BLK_ZONED_NONE and free any zone related resources if the drive
+> previously was zoned.
+> 
+> This behavior significantly impact the time it takes to revalidate disks
+> on a large system as the call to disk_clear_zone_settings() done from
+> disk_set_zoned() for the BLK_ZONED_NONE case results in the device
+> request queued to be quiesced, even if there is no zone resource to
+> free.
+> 
+> Avoid this overhead for non zoned devices by not calling
+> disk_clear_zone_settings() in disk_set_zoned() if the device model
+> already was set to BLK_ZONED_NONE.
+> 
+> Reported by: Brian Bunker <brian@purestorage.com>
+> Fixes: 508aebb80527 ("block: introduce blk_queue_clear_zone_settings()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>   block/blk-settings.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-settings.c b/block/blk-settings.c
+> index 896b4654ab00..4dd59059b788 100644
+> --- a/block/blk-settings.c
+> +++ b/block/blk-settings.c
+> @@ -915,6 +915,7 @@ static bool disk_has_partitions(struct gendisk *disk)
+>   void disk_set_zoned(struct gendisk *disk, enum blk_zoned_model model)
+>   {
+>   	struct request_queue *q = disk->queue;
+> +	unsigned int old_model = q->limits.zoned;
+>   
+>   	switch (model) {
+>   	case BLK_ZONED_HM:
+> @@ -952,7 +953,7 @@ void disk_set_zoned(struct gendisk *disk, enum blk_zoned_model model)
+>   		 */
+>   		blk_queue_zone_write_granularity(q,
+>   						queue_logical_block_size(q));
+> -	} else {
+> +	} else if (old_model != BLK_ZONED_NONE) {
+>   		disk_clear_zone_settings(disk);
+>   	}
+>   }
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Restore and improve the detection of invalid priority levels by
-introducing the inline function ioprio_value() to check an ioprio class,
-level and hint value before combining these fields into a single value
-to be used with ioprio_set() or AIOs. If an invalid value for the class,
-level or hint of an ioprio is detected, ioprio_value() returns an ioprio
-using the class IOPRIO_CLASS_INVALID, indicating an invalid value and
-causing ioprio_check_cap() to return -EINVAL.
+Cheers,
 
-Fixes: 6c913257226a ("scsi: block: Introduce ioprio hints")
-Fixes: eca2040972b4 ("scsi: block: ioprio: Clean up interface definition")
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- block/ioprio.c              |  1 +
- include/uapi/linux/ioprio.h | 47 +++++++++++++++++++++++--------------
- 2 files changed, 31 insertions(+), 17 deletions(-)
-
-diff --git a/block/ioprio.c b/block/ioprio.c
-index f0d9e818abc5..b5a942519a79 100644
---- a/block/ioprio.c
-+++ b/block/ioprio.c
-@@ -58,6 +58,7 @@ int ioprio_check_cap(int ioprio)
- 			if (level)
- 				return -EINVAL;
- 			break;
-+		case IOPRIO_CLASS_INVALID:
- 		default:
- 			return -EINVAL;
- 	}
-diff --git a/include/uapi/linux/ioprio.h b/include/uapi/linux/ioprio.h
-index 607c7617b9d2..7310449c0178 100644
---- a/include/uapi/linux/ioprio.h
-+++ b/include/uapi/linux/ioprio.h
-@@ -6,15 +6,13 @@
-  * Gives us 8 prio classes with 13-bits of data for each class
-  */
- #define IOPRIO_CLASS_SHIFT	13
--#define IOPRIO_CLASS_MASK	0x07
-+#define IOPRIO_NR_CLASSES	8
-+#define IOPRIO_CLASS_MASK	(IOPRIO_NR_CLASSES - 1)
- #define IOPRIO_PRIO_MASK	((1UL << IOPRIO_CLASS_SHIFT) - 1)
- 
- #define IOPRIO_PRIO_CLASS(ioprio)	\
- 	(((ioprio) >> IOPRIO_CLASS_SHIFT) & IOPRIO_CLASS_MASK)
- #define IOPRIO_PRIO_DATA(ioprio)	((ioprio) & IOPRIO_PRIO_MASK)
--#define IOPRIO_PRIO_VALUE(class, data)	\
--	((((class) & IOPRIO_CLASS_MASK) << IOPRIO_CLASS_SHIFT) | \
--	 ((data) & IOPRIO_PRIO_MASK))
- 
- /*
-  * These are the io priority classes as implemented by the BFQ and mq-deadline
-@@ -25,10 +23,13 @@
-  * served when no one else is using the disk.
-  */
- enum {
--	IOPRIO_CLASS_NONE,
--	IOPRIO_CLASS_RT,
--	IOPRIO_CLASS_BE,
--	IOPRIO_CLASS_IDLE,
-+	IOPRIO_CLASS_NONE	= 0,
-+	IOPRIO_CLASS_RT		= 1,
-+	IOPRIO_CLASS_BE		= 2,
-+	IOPRIO_CLASS_IDLE	= 3,
-+
-+	/* Special class to indicate an invalid ioprio value */
-+	IOPRIO_CLASS_INVALID	= 7,
- };
- 
- /*
-@@ -73,15 +74,6 @@ enum {
- #define IOPRIO_PRIO_HINT(ioprio)	\
- 	(((ioprio) >> IOPRIO_HINT_SHIFT) & IOPRIO_HINT_MASK)
- 
--/*
-- * Alternate macro for IOPRIO_PRIO_VALUE() to define an IO priority with
-- * a class, level and hint.
-- */
--#define IOPRIO_PRIO_VALUE_HINT(class, level, hint)		 \
--	((((class) & IOPRIO_CLASS_MASK) << IOPRIO_CLASS_SHIFT) | \
--	 (((hint) & IOPRIO_HINT_MASK) << IOPRIO_HINT_SHIFT) |	 \
--	 ((level) & IOPRIO_LEVEL_MASK))
--
- /*
-  * IO hints.
-  */
-@@ -107,4 +99,25 @@ enum {
- 	IOPRIO_HINT_DEV_DURATION_LIMIT_7 = 7,
- };
- 
-+#define IOPRIO_BAD_VALUE(val, max) ((val) < 0 || (val) >= (max))
-+
-+/*
-+ * Return an I/O priority value based on a class, a level and a hint.
-+ */
-+static __always_inline __u16 ioprio_value(int class, int level, int hint)
-+{
-+	if (IOPRIO_BAD_VALUE(class, IOPRIO_NR_CLASSES) ||
-+	    IOPRIO_BAD_VALUE(level, IOPRIO_NR_LEVELS) ||
-+	    IOPRIO_BAD_VALUE(hint, IOPRIO_NR_HINTS))
-+		return IOPRIO_CLASS_INVALID << IOPRIO_CLASS_SHIFT;
-+
-+	return (class << IOPRIO_CLASS_SHIFT) |
-+		(hint << IOPRIO_HINT_SHIFT) | level;
-+}
-+
-+#define IOPRIO_PRIO_VALUE(class, level)			\
-+	ioprio_value(class, level, IOPRIO_HINT_NONE)
-+#define IOPRIO_PRIO_VALUE_HINT(class, level, hint)	\
-+	ioprio_value(class, level, hint)
-+
- #endif /* _UAPI_LINUX_IOPRIO_H */
+Hannes
 -- 
-2.40.1
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
+Myers, Andrew McDonald, Martje Boudien Moerman
 
