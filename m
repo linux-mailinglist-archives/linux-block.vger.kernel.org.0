@@ -2,52 +2,58 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6997671841B
-	for <lists+linux-block@lfdr.de>; Wed, 31 May 2023 16:04:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 137FA718489
+	for <lists+linux-block@lfdr.de>; Wed, 31 May 2023 16:16:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237498AbjEaOED (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 31 May 2023 10:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
+        id S237587AbjEaOQf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 31 May 2023 10:16:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237244AbjEaODj (ORCPT
+        with ESMTP id S237599AbjEaOQX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 31 May 2023 10:03:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D590170F
-        for <linux-block@vger.kernel.org>; Wed, 31 May 2023 06:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685541344;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ziEVWybyK4gf6HAMK2OABfQt5DxF+29cSopVoad9/Oc=;
-        b=gd3mg0Wx1oI3UEzONLv7MJtivVgbDWzQJIUXlUBU2WnwJr64PXAJOM42IPaRsMMs6+MeW6
-        TqasaKLjfb7DTV9NjRGQ4yy7EAl5CHJWK6JovWinbCsqpX/QyR3Y3owd9+5mDIzX6N48l9
-        UsV8ui2ZRBruWMSFRcT7LEa8nQRXBHE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-205-8xAnoC19Ms-okkMyrsc2Qw-1; Wed, 31 May 2023 09:55:41 -0400
-X-MC-Unique: 8xAnoC19Ms-okkMyrsc2Qw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D5F228032E4;
-        Wed, 31 May 2023 13:55:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E03D6C154D7;
-        Wed, 31 May 2023 13:55:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <492558dc-1377-fc4b-126f-c358bb000ff7@redhat.com>
-References: <492558dc-1377-fc4b-126f-c358bb000ff7@redhat.com> <cbd39f94-407a-03b6-9c43-8144d0efc8bb@redhat.com> <20230526214142.958751-1-dhowells@redhat.com> <20230526214142.958751-2-dhowells@redhat.com> <510965.1685522152@warthog.procyon.org.uk>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     dhowells@redhat.com, Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Wed, 31 May 2023 10:16:23 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD2910EB;
+        Wed, 31 May 2023 07:14:02 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f60b3f32b4so43223525e9.1;
+        Wed, 31 May 2023 07:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685542385; x=1688134385;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NXtfwCo398mNssja20yM7iI6aJ4z57XXGeGmgzDUvNw=;
+        b=n83+i8eMwzD3kMQ/bOt8MUs50SBqqTJsdCejDBgqUeHkdZGxkr9lzs1RzZvqfh4VOg
+         41IbkrcZobs2SmPtO/ik1OGA1Bbf9m9omBPizRY1kqn+yP7GGOAVwlzGP73ep1WpzL9f
+         9FnRiwY6dRMBx3uLp0TGTtyQA4GGn6tc/6nOa/N4mO3aS0Sx70Hr9nD2dxXTd16Q19nw
+         qPEmd7A7mdZglKoQWfh6NcJXfSt0wK2oIsvyoly9xhJd9pigGJq4KdQHBsmeU7mrYbln
+         OPXrHY/tptYvQKh0ARk95ILnsfslZ7pT97oVhFibaFa2v3DqoItnNt80zLqgaqyDZdUj
+         wRmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685542385; x=1688134385;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NXtfwCo398mNssja20yM7iI6aJ4z57XXGeGmgzDUvNw=;
+        b=c8nngrsfZRsgIuS+qxKspumk5XACzPEyIGU+XmsElXJAurShuP5nG1Tmzj7HbtJBF1
+         DV8+qnQNHoYUjjLFFd9xEhqmvVNXpx9l2t3lCDFJd6NMOSM/6JmRbYjXxGBDEIKv0IFR
+         lt+Vi+zYc6McO3IlF5Aoc4dXd3/kKcY2m/BR7YhgYVCmCbuiEz9srOw2/auM0vssfHNs
+         oQEjRRZlliDOki9vQtHMzNhRrCjsPYVVYc6Ydp9TmFAMb0RQLoKyBIa2tnQXlO+UML9X
+         fneQeaV93GfKa+/Pkm87ocvu2Utw+nsT5z1etjCRC0hrZm5QSFtvjB13jTZMxaJkWnB8
+         tL0A==
+X-Gm-Message-State: AC+VfDz6GZK7bK1qSNrMt356iEoqS4CayumB5T20wdMHX6GbogwWloBI
+        dmvrhUw2yUoYzr/IC7nhdPU=
+X-Google-Smtp-Source: ACHHUZ5/jVczCOvTj0ujwU2RCL/cBkmLhK9+lxiAtMwXxjwFb/GUIB70AgI7OmEAsM0Ry99cY2cWUA==
+X-Received: by 2002:a05:600c:22d6:b0:3eb:42fc:fb30 with SMTP id 22-20020a05600c22d600b003eb42fcfb30mr4400956wmg.32.1685542384560;
+        Wed, 31 May 2023 07:13:04 -0700 (PDT)
+Received: from localhost (host81-154-179-160.range81-154.btcentralplus.com. [81.154.179.160])
+        by smtp.gmail.com with ESMTPSA id x11-20020a1c7c0b000000b003f50876905dsm20954539wmc.6.2023.05.31.07.13.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 07:13:03 -0700 (PDT)
+Date:   Wed, 31 May 2023 15:10:53 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Jens Axboe <axboe@kernel.dk>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
@@ -61,69 +67,66 @@ Cc:     dhowells@redhat.com, Christoph Hellwig <hch@infradead.org>,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: [PATCH v4 1/3] mm: Don't pin ZERO_PAGE in pin_user_pages()
+Message-ID: <0e307b3f-d367-4bb2-9506-93a3d70b3e97@lucifer.local>
+References: <492558dc-1377-fc4b-126f-c358bb000ff7@redhat.com>
+ <cbd39f94-407a-03b6-9c43-8144d0efc8bb@redhat.com>
+ <20230526214142.958751-1-dhowells@redhat.com>
+ <20230526214142.958751-2-dhowells@redhat.com>
+ <510965.1685522152@warthog.procyon.org.uk>
+ <703628.1685541335@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <703627.1685541335.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 31 May 2023 14:55:35 +0100
-Message-ID: <703628.1685541335@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <703628.1685541335@warthog.procyon.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> wrote:
+On Wed, May 31, 2023 at 02:55:35PM +0100, David Howells wrote:
+> David Hildenbrand <david@redhat.com> wrote:
+>
+> > Yes, it would be clearer if we would be using "pinned" now only for FOLL_PIN
+>
+> You're not likely to get that.  "To pin" is too useful a verb that gets used
+> in other contexts too.  For that reason, I think FOLL_PIN was a poor choice of
+> name:-/.  I guess the English language has got somewhat overloaded.  Maybe
+> FOLL_PEG? ;-)
+>
 
-> Yes, it would be clearer if we would be using "pinned" now only for FOLL=
-_PIN
+Might I suggest FOLL_FOLL? As we are essentially 'following' the page once
+'pinned'. We could differentiate between what is currently FOLL_GET and
+FOLL_PIN by using FOLL_FOLL and FOLL_FOLL_FOLL.
 
-You're not likely to get that.  "To pin" is too useful a verb that gets us=
-ed
-in other contexts too.  For that reason, I think FOLL_PIN was a poor choic=
-e of
-name:-/.  I guess the English language has got somewhat overloaded.  Maybe
-FOLL_PEG? ;-)
+Patch series coming soon...
 
-> and everything else is simply "taking a temporary reference on the page"=
-.
-
-Excluding refs taken with pins, many refs are more permanent than pins as,=
- so
-far as I'm aware, pins only last for the duration of an I/O operation.
-
-> >> "Note that the refcount of any zero_pages returned among the pinned p=
-ages will
-> >> not be incremented, and unpin_user_page() will similarly not decremen=
-t it."
-> > That's not really right (although it happens to be true), because we'r=
-e
-> > talking primarily about the pin counter, not the refcount - and they m=
-ay be
-> > separate.
-> =
-
-> In any case (FOLL_PIN/FOLL_GET) you increment/decrement the refcount. If=
- we
-> have a separate pincount, we increment/decrement the refcount by 1 when
-> (un)pinning.
-
-FOLL_GET isn't relevant here - only FOLL_PIN.  Yes, as it happens, we coun=
-t a
-ref if we count a pin, but that's kind of irrelevant; what matters is that=
- the
-effect must be undone with un-PUP.
-
-It would be nice not to get a ref on the zero page in FOLL_GET, but I don'=
-t
-think we can do that yet.  Too many places assume that GUP will give them =
-a
-ref they can release later via ordinary methods.
-
-David
-
+> > and everything else is simply "taking a temporary reference on the page".
+>
+> Excluding refs taken with pins, many refs are more permanent than pins as, so
+> far as I'm aware, pins only last for the duration of an I/O operation.
+>
+> > >> "Note that the refcount of any zero_pages returned among the pinned pages will
+> > >> not be incremented, and unpin_user_page() will similarly not decrement it."
+> > > That's not really right (although it happens to be true), because we're
+> > > talking primarily about the pin counter, not the refcount - and they may be
+> > > separate.
+> >
+> > In any case (FOLL_PIN/FOLL_GET) you increment/decrement the refcount. If we
+> > have a separate pincount, we increment/decrement the refcount by 1 when
+> > (un)pinning.
+>
+> FOLL_GET isn't relevant here - only FOLL_PIN.  Yes, as it happens, we count a
+> ref if we count a pin, but that's kind of irrelevant; what matters is that the
+> effect must be undone with un-PUP.
+>
+> It would be nice not to get a ref on the zero page in FOLL_GET, but I don't
+> think we can do that yet.  Too many places assume that GUP will give them a
+> ref they can release later via ordinary methods.
+>
+> David
+>
