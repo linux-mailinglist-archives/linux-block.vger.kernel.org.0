@@ -2,45 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C66C71804C
-	for <lists+linux-block@lfdr.de>; Wed, 31 May 2023 14:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37B56718080
+	for <lists+linux-block@lfdr.de>; Wed, 31 May 2023 14:56:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235982AbjEaMtg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 31 May 2023 08:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
+        id S236076AbjEaM4b (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 31 May 2023 08:56:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236045AbjEaMtQ (ORCPT
+        with ESMTP id S236061AbjEaM4a (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 31 May 2023 08:49:16 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAE3E6C;
-        Wed, 31 May 2023 05:48:41 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 995C768B05; Wed, 31 May 2023 14:47:52 +0200 (CEST)
-Date:   Wed, 31 May 2023 14:47:52 +0200
+        Wed, 31 May 2023 08:56:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED841BD;
+        Wed, 31 May 2023 05:56:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=vvrMwE8BjC38RZj2WyqFyAbLSvr7o9QLGri8y3hsVWs=; b=LsMvMjodlrdIcQmqStvcRmEg6a
+        p73uxa7uiSXgEqFhriiibCgnB2FhMDBVH4F2qp9/qRc6mLk+JyM9MYIWiIlxZ2DHT6qWm5atTLfMa
+        OpHvyzf9lvD6g/hEdnuHMYAEmiyKQv+bsfJgYbLtvSXhFxarfCZfT1PX2QA+FFcehUhxw0W+GeQVN
+        NffZr8VRBrS0QaOyFJ5XBR/nAoMFXL4+YlFyQJFt994UVHC1i9Y0g0P9eAmgLbTpU3RmOQq2Ym4T7
+        wdFYC75VgJy0nGYxtTNHpqZ8CPmOZWDdNL1ZsMTtTGI7eHwh40D1mxHOHRxxzeUxn8pqODLBK0yHT
+        1GqWLJxw==;
+Received: from [2001:4bb8:182:6d06:2e49:a56:513a:92ee] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q4LMZ-00HQu7-1g;
+        Wed, 31 May 2023 12:55:40 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     hch@lst.de, dlemoal@kernel.org, quic_pragalla@quicinc.com,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-        yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH] blk-ioc: protect ioc_destroy_icq() by 'queue_lock'
-Message-ID: <20230531124752.GA27468@lst.de>
-References: <20230531073435.2923422-1-yukuai1@huaweicloud.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Joern Engel <joern@lazybastard.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Loic Poulain <loic.poulain@linaro.org>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: fix the name_to_dev_t mess v2
+Date:   Wed, 31 May 2023 14:55:11 +0200
+Message-Id: <20230531125535.676098-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230531073435.2923422-1-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Looks good:
+Hi all,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+this series tries to sort out accumulated mess around the name_to_dev_t
+function.  This function is intended to allow looking up the dev_t of a
+block device based on a name string before the root file systems is
+mounted and thus the normal path based lookup is available.
+
+Unfortunately a few years ago it managed to get exported and used in
+non-init contexts, leading to the something looking like a path name
+also beeing lookuped up by a different and potential dangerous
+algorithm.
+
+This series does a fair amount of refactoring and finally ends up with
+the renamed and improved name_to_dev_t only beeing available for the
+early init code again.
+
+The series is against Jens' for-6.5/block tree but probably applies
+against current mainline just fine as well.
+
+A git tree is also available here:
+
+    git://git.infradead.org/users/hch/block.git blk-init-cleanup
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/block.git/shortlog/refs/heads/blk-init-cleanup
+
+Changes since v1:
+ - really propagate the actual error in dm_get_device
+ - improve the documentation in kernel-parameters.txt
+ - spelling fixes
+
+Diffstat:
