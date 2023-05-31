@@ -2,180 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79FF17180E7
-	for <lists+linux-block@lfdr.de>; Wed, 31 May 2023 15:00:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59F67718108
+	for <lists+linux-block@lfdr.de>; Wed, 31 May 2023 15:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236261AbjEaNAf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 31 May 2023 09:00:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53038 "EHLO
+        id S236293AbjEaNHs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 31 May 2023 09:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236283AbjEaNAI (ORCPT
+        with ESMTP id S236311AbjEaNHm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 31 May 2023 09:00:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 916CDE73;
-        Wed, 31 May 2023 05:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=9vvI1AUorLQX7yuH8SxiM1nPFtzNxSoz91Bb7WO0EOA=; b=v46e4CgcdUsuY4CDwDmGm5EKg6
-        3bGlULuSfKZKIBYkIgIzxLRHtiYCtTzVfTBMmhf+TyhbwwYbiqbKd0tMfSc1soLSBfLKGiPJZyDIM
-        1VSHGnLv8rwHfUzF3+go/i1m4W7T37ihfXNILXRjjy0m9SVCIVW/WCrDxkCqrqwSyzkHw2lkzfdJ1
-        pyVNvrXRGVIwewOVBbfOYrWrhjclD7+jVGCUCulRURX4eCKcfhlA1ZAbXRpHsLILAGMnEfU2+YCaW
-        Nkwg8kJdJgzuVCEPzDqt/uoqIF35X0DIsOnylhabB/yJQtpImjZeeCc+z8C9VIJ6or8zbwnWYt424
-        QAz8yI9A==;
-Received: from [2001:4bb8:182:6d06:2e49:a56:513a:92ee] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q4LOV-00HSJ1-14;
-        Wed, 31 May 2023 12:57:40 +0000
+        Wed, 31 May 2023 09:07:42 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7249138;
+        Wed, 31 May 2023 06:07:16 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A1FB968B05; Wed, 31 May 2023 15:01:14 +0200 (CEST)
+Date:   Wed, 31 May 2023 15:01:14 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Joern Engel <joern@lazybastard.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Loic Poulain <loic.poulain@linaro.org>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH 24/24] block: mark early_lookup_bdev as __init
-Date:   Wed, 31 May 2023 14:55:35 +0200
-Message-Id: <20230531125535.676098-25-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230531125535.676098-1-hch@lst.de>
-References: <20230531125535.676098-1-hch@lst.de>
+To:     Keith Busch <kbusch@meta.com>
+Cc:     linux-block@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-nvme@lists.infradead.org, hch@lst.de, axboe@kernel.dk,
+        sagi@grimberg.me, joshi.k@samsung.com,
+        Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH 1/2] block: add request polling helper
+Message-ID: <20230531130114.GC27468@lst.de>
+References: <20230530172343.3250958-1-kbusch@meta.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230530172343.3250958-1-kbusch@meta.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-early_lookup_bdev is now only used during the early boot code as it
-should, so mark it __init to not waste run time memory on it.
+> +int blk_mq_poll(struct request_queue *q, blk_qc_t cookie, struct io_comp_batch *iob,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/early-lookup.c   | 19 +++++++++----------
- include/linux/blkdev.h |  2 +-
- 2 files changed, 10 insertions(+), 11 deletions(-)
+It would be nice to fix the overly long line while you're at it.
 
-diff --git a/block/early-lookup.c b/block/early-lookup.c
-index 6016e781b6a0e2..3ff0d2e4dcbfb8 100644
---- a/block/early-lookup.c
-+++ b/block/early-lookup.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Code for looking up block devices in the early boot code before mounting the
-- * root file system.  Unfortunately currently also abused in a few other places.
-+ * root file system.
-  */
- #include <linux/blkdev.h>
- #include <linux/ctype.h>
-@@ -18,7 +18,7 @@ struct uuidcmp {
-  *
-  * Returns 1 if the device matches, and 0 otherwise.
-  */
--static int match_dev_by_uuid(struct device *dev, const void *data)
-+static int __init match_dev_by_uuid(struct device *dev, const void *data)
- {
- 	struct block_device *bdev = dev_to_bdev(dev);
- 	const struct uuidcmp *cmp = data;
-@@ -42,7 +42,7 @@ static int match_dev_by_uuid(struct device *dev, const void *data)
-  *
-  * Returns the matching dev_t on success or 0 on failure.
-  */
--static int devt_from_partuuid(const char *uuid_str, dev_t *devt)
-+static int __init devt_from_partuuid(const char *uuid_str, dev_t *devt)
- {
- 	struct uuidcmp cmp;
- 	struct device *dev = NULL;
-@@ -98,7 +98,7 @@ static int devt_from_partuuid(const char *uuid_str, dev_t *devt)
-  *
-  * Returns 1 if the device matches, and 0 otherwise.
-  */
--static int match_dev_by_label(struct device *dev, const void *data)
-+static int __init match_dev_by_label(struct device *dev, const void *data)
- {
- 	struct block_device *bdev = dev_to_bdev(dev);
- 	const char *label = data;
-@@ -108,7 +108,7 @@ static int match_dev_by_label(struct device *dev, const void *data)
- 	return 1;
- }
- 
--static int devt_from_partlabel(const char *label, dev_t *devt)
-+static int __init devt_from_partlabel(const char *label, dev_t *devt)
- {
- 	struct device *dev;
- 
-@@ -120,7 +120,7 @@ static int devt_from_partlabel(const char *label, dev_t *devt)
- 	return 0;
- }
- 
--static dev_t blk_lookup_devt(const char *name, int partno)
-+static dev_t __init blk_lookup_devt(const char *name, int partno)
- {
- 	dev_t devt = MKDEV(0, 0);
- 	struct class_dev_iter iter;
-@@ -149,7 +149,7 @@ static dev_t blk_lookup_devt(const char *name, int partno)
- 	return devt;
- }
- 
--static int devt_from_devname(const char *name, dev_t *devt)
-+static int __init devt_from_devname(const char *name, dev_t *devt)
- {
- 	int part;
- 	char s[32];
-@@ -193,7 +193,7 @@ static int devt_from_devname(const char *name, dev_t *devt)
- 	return -EINVAL;
- }
- 
--static int devt_from_devnum(const char *name, dev_t *devt)
-+static int __init devt_from_devnum(const char *name, dev_t *devt)
- {
- 	unsigned maj, min, offset;
- 	char *p, dummy;
-@@ -240,7 +240,7 @@ static int devt_from_devnum(const char *name, dev_t *devt)
-  *	name contains slashes, the device name has them replaced with
-  *	bangs.
-  */
--int early_lookup_bdev(const char *name, dev_t *devt)
-+int __init early_lookup_bdev(const char *name, dev_t *devt)
- {
- 	if (strncmp(name, "PARTUUID=", 9) == 0)
- 		return devt_from_partuuid(name + 9, devt);
-@@ -250,7 +250,6 @@ int early_lookup_bdev(const char *name, dev_t *devt)
- 		return devt_from_devname(name + 5, devt);
- 	return devt_from_devnum(name, devt);
- }
--EXPORT_SYMBOL_GPL(early_lookup_bdev);
- 
- static char __init *bdevt_str(dev_t devt, char *buf)
- {
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 0ce09ecfa3a7af..ca84a135ddc80f 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1494,7 +1494,7 @@ int sync_blockdev_nowait(struct block_device *bdev);
- void sync_bdevs(bool wait);
- void bdev_statx_dioalign(struct inode *inode, struct kstat *stat);
- void printk_all_partitions(void);
--int early_lookup_bdev(const char *pathname, dev_t *dev);
-+int __init early_lookup_bdev(const char *pathname, dev_t *dev);
- #else
- static inline void invalidate_bdev(struct block_device *bdev)
- {
--- 
-2.39.2
+> +		unsigned int flags)
+> +{
+> +	return blk_hctx_poll(q, blk_qc_to_hctx(q, cookie), iob, flags);
+> +}
 
+But looking at the two callers of blk_mq_poll, shouldn't one use
+rq->mq_hctx to get the hctx anyway instead of doing repeated
+blk_qc_to_hctx in the polling loop?  We could then just open code
+blk_qc_to_hctx in the remaining one.
+
+The rest looks good to me.
