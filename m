@@ -2,57 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19E0B71A1B1
-	for <lists+linux-block@lfdr.de>; Thu,  1 Jun 2023 17:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF2C871A23F
+	for <lists+linux-block@lfdr.de>; Thu,  1 Jun 2023 17:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234509AbjFAPAa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Jun 2023 11:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42206 "EHLO
+        id S234789AbjFAPRW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Jun 2023 11:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234824AbjFAPAT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jun 2023 11:00:19 -0400
+        with ESMTP id S234971AbjFAPRE (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jun 2023 11:17:04 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9C910C3;
-        Thu,  1 Jun 2023 07:59:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2187A19D
+        for <linux-block@vger.kernel.org>; Thu,  1 Jun 2023 08:16:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Igh3/Q4p5iJFFlbdpwuEDO2R7sQwVarGnlYwXa7G6ao=; b=bX2jHFDKHOW4DhTCLwBCGe1mxk
-        +AiYKSPmIFT+YAYTY9l+t7ALHUSxiYYhMiFJ3fcFNMEnScgGmgdQdcc64nqMWdHzwAeK/OEVq8CQM
-        6/la1ULT2u/5N5wYcg+2XqzCr9x7VKh2kYbXOSE+U152RSNgGA2ZUKhcbKMTl31BCEnuVgVbe5uVG
-        KQtbSMq7Evw+u61WWovWbH7SgJK5m8CSsDzK4/Ri7urli6dK74r24dSyPLXTHhjnu4WWqYx4gZ4Vd
-        YBJLb+4aBmw45gsn7B8Y0St0loJ369izOY/Y1eHsyKCrf/zBDS25zyGflxhBA51boDLHRsjnEl4gn
-        i5PejoLg==;
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=lbZQIxtGvltk6tGm6fkQPEmgkJpyIOCCgi68KnMoOH4=; b=2y6yZeRsKHU3GjW/XNCM8RaEeg
+        hLgsqrOyHGCTEVNhLxz0wtBy7ghWlgU+YJiIOeSU1wvlz8uVlVdlj9afP8V1VEmnN06vaCg3c6CWb
+        N0k8yP5mnRKAfQOEv/D4zS0cYxJ0t8e8deTaYuUAgCYyIfgNgQTMsqtOVxFbAgdxObGR3JhTLFHNI
+        rTmBcHne2w6jmbBgj42l9FrDhe9GUDSZdp/k08FnyF+jIV3gjBS1TPQYKfsAVNsDWLE5H7hIBr1Np
+        /RqOLpPb672mg0kz6VsHEwq8dOXfID9Gxcy55f1PViwkAJStNGIRDcvhrJjNpoN+fjBGP2/JE2PoG
+        7pyjgd1g==;
 Received: from [2001:4bb8:182:6d06:eacb:c751:971:73eb] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q4jm5-003wAJ-1d;
-        Thu, 01 Jun 2023 14:59:37 +0000
+        id 1q4k2i-003zin-1n;
+        Thu, 01 Jun 2023 15:16:48 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 12/12] fuse: use direct_write_fallback
-Date:   Thu,  1 Jun 2023 16:59:04 +0200
-Message-Id: <20230601145904.1385409-13-hch@lst.de>
+To:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
+        christoph.boehmwalder@linbit.com
+Cc:     drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        axboe@kernel.dk
+Subject: [PATCH] drbd: stop defining __KERNEL_SYSCALLS__
+Date:   Thu,  1 Jun 2023 17:16:46 +0200
+Message-Id: <20230601151646.1386867-1-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230601145904.1385409-1-hch@lst.de>
-References: <20230601145904.1385409-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -66,60 +50,39 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use the generic direct_write_fallback helper instead of duplicating the
-logic.
+__KERNEL_SYSCALLS__ hasn't been needed since Linux 2.6.19 so stop
+defining it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- fs/fuse/file.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ drivers/block/drbd/drbd_main.c     | 1 -
+ drivers/block/drbd/drbd_receiver.c | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index b4e272a65fdd25..3a7c7d7181ccb9 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1340,7 +1340,6 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	struct file *file = iocb->ki_filp;
- 	struct address_space *mapping = file->f_mapping;
- 	ssize_t written = 0;
--	ssize_t written_buffered = 0;
- 	struct inode *inode = mapping->host;
- 	ssize_t err;
- 	struct fuse_conn *fc = get_fuse_conn(inode);
-@@ -1377,30 +1376,11 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 		goto out;
- 
- 	if (iocb->ki_flags & IOCB_DIRECT) {
--		loff_t pos, endbyte;
--
- 		written = generic_file_direct_write(iocb, from);
- 		if (written < 0 || !iov_iter_count(from))
- 			goto out;
--
--		written_buffered = fuse_perform_write(iocb, from);
--		if (written_buffered < 0) {
--			err = written_buffered;
--			goto out;
--		}
--		pos = iocb->ki_pos - written_buffered;
--		endbyte = iocb->ki_pos - 1;
--
--		err = filemap_write_and_wait_range(file->f_mapping, pos,
--						   endbyte);
--		if (err)
--			goto out;
--
--		invalidate_mapping_pages(file->f_mapping,
--					 pos >> PAGE_SHIFT,
--					 endbyte >> PAGE_SHIFT);
--
--		written += written_buffered;
-+		written = direct_write_fallback(iocb, from, written,
-+				fuse_perform_write(iocb, from));
- 	} else {
- 		written = fuse_perform_write(iocb, from);
- 	}
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 83987e7a5ef275..54223f64610a05 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -37,7 +37,6 @@
+ #include <linux/notifier.h>
+ #include <linux/kthread.h>
+ #include <linux/workqueue.h>
+-#define __KERNEL_SYSCALLS__
+ #include <linux/unistd.h>
+ #include <linux/vmalloc.h>
+ #include <linux/sched/signal.h>
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 8c2bc47de4735e..0c9f54197768d6 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -27,7 +27,6 @@
+ #include <uapi/linux/sched/types.h>
+ #include <linux/sched/signal.h>
+ #include <linux/pkt_sched.h>
+-#define __KERNEL_SYSCALLS__
+ #include <linux/unistd.h>
+ #include <linux/vmalloc.h>
+ #include <linux/random.h>
 -- 
 2.39.2
 
