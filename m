@@ -2,144 +2,156 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3843E71F5EA
-	for <lists+linux-block@lfdr.de>; Fri,  2 Jun 2023 00:27:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E7A371F612
+	for <lists+linux-block@lfdr.de>; Fri,  2 Jun 2023 00:37:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbjFAW1D (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Jun 2023 18:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46296 "EHLO
+        id S232523AbjFAWhG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 1 Jun 2023 18:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233059AbjFAW1C (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jun 2023 18:27:02 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D40133;
-        Thu,  1 Jun 2023 15:27:01 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 917AE5C00E9;
-        Thu,  1 Jun 2023 18:27:00 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 01 Jun 2023 18:27:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        invisiblethingslab.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:from:from:in-reply-to:message-id
-        :mime-version:reply-to:sender:subject:subject:to:to; s=fm1; t=
-        1685658420; x=1685744820; bh=iy/GUaaPPTaS6rwFy0PBDtNgCO5kwW/eHTt
-        pnmc0zuM=; b=Z4CU56AmPFLmSjNIWicm+SUnvn06uYZdblO+4TbIMCkPjvv3Ln1
-        PUGtE16bSWofN22Vt+X2zZGIJGkuyouG/D5XPX8FvyTvcTrnvhzAuXCfY6ReCRCg
-        DiP6PNnaBxDU3OKY+F4z5pvJd1q5JvD5Kro6Nm/M3m6hYgGN7smjJSFilEt8t4zB
-        COaptwSpXohvxx2Gtb4UQ9U3UD7gU6gielaRyN58klN5CzFW+a4rUrI76DvkM/tR
-        wZV1J7+zVS+99LLzT780Rgd8aVgzRUqggLcsEDZyEIBXZ/5V9Vfr0VueVc3fKVGe
-        Rr1JnCq40cUvesA+lXIWJiE4XaxF4hbYslQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1685658420; x=1685744820; bh=iy/GUaaPPTaS6
-        rwFy0PBDtNgCO5kwW/eHTtpnmc0zuM=; b=Scu4bR1SCTs286aPBJ/DD1KjDzD/I
-        8RxwId/3DCAKrMCzel/o2GuBy11qjd0/saTJzkxC9YQ7W5i1HQkQgsZYDNDkhKCc
-        1ktSFIQWP/HgA3TwfskAKrmbngIVbgpj58M3qeHRQw/8A+6Fuszl+N0TNADd2cOS
-        DmYiSHJgB/XGiYuIRG7aUyOQWrU5IQ6B0gutiBrATt9WODw73zImss9wLnbj43ow
-        Hxb7d9FRjkaeHWMu4VA+TXX273Q2GbSvRIEuOMqeNbRbRW+FXLCND3HiDlQdGQSJ
-        fPyGd0o/NyhaV82tXsUsGqbTlPt20GIaDtNlTHL5YZlq9YMXvOtJmdiAg==
-X-ME-Sender: <xms:NBt5ZOa1I9p2HrXSxmQ3PBPozIP2-Cing6xVgtVvXLwfBtpDazriSg>
-    <xme:NBt5ZBYzn2JCOnrKyXy0zUnn4QQyZC8xHzl7HcUQu0-5UYkHk8wf-ybaZX44NjKXk
-    cihMOnejmeWDWA>
-X-ME-Received: <xmr:NBt5ZI_cVimzQC8DvwhLNzjI5VxDhKfONe3kogA74XzI3DZgRkDUzmLe8ybYu_0Jgqd6EFrPT3o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeelvddguddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepffgvmhhiucfo
-    rghrihgvucfqsggvnhhouhhruceouggvmhhisehinhhvihhsihgslhgvthhhihhnghhslh
-    grsgdrtghomheqnecuggftrfgrthhtvghrnhepvdefgeekvdekgfffgeekhfeijedtffek
-    hefhleehfeejueetgfelgefgtdevieelnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhslhgr
-    sgdrtghomh
-X-ME-Proxy: <xmx:NBt5ZArP2z5ceXGfT-WnNAic88zSfXGiefzY0w7GCi8gY__mgqfqPg>
-    <xmx:NBt5ZJrnFQUM_pwfKg91jPfqXOgvhvtJ3e4MtUgG6qzzFfJBiMuZnw>
-    <xmx:NBt5ZOSURmcj3xPqFh8zXkD4AAFuGtgGFoRa5CV93AzUfZgyGNmmaA>
-    <xmx:NBt5ZKDxtd3dhzdgCmQxN2-98JyvDX0oo8PKnvrFn3_v8qjit326dA>
-Feedback-ID: iac594737:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 1 Jun 2023 18:26:59 -0400 (EDT)
-From:   Demi Marie Obenour <demi@invisiblethingslab.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Demi Marie Obenour <demi@invisiblethingslab.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] block, loop: Increment diskseq when releasing a loop device
-Date:   Thu,  1 Jun 2023 18:26:56 -0400
-Message-Id: <20230601222656.2062-1-demi@invisiblethingslab.com>
-X-Mailer: git-send-email 2.40.1
-MIME-Version: 1.0
+        with ESMTP id S229542AbjFAWhF (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jun 2023 18:37:05 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF85136;
+        Thu,  1 Jun 2023 15:37:04 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 351MRXqd022373;
+        Thu, 1 Jun 2023 22:36:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=OaENUk+OtTo7XYcgtLR8ZNNmcqnB6oV2wFbe20cGWJY=;
+ b=J7ZmdTM0M8QK3ig6zfsznu5yvsIhhGtBqQbpq5kqS4O8AWWxm+NZRyhMPXaYc0N6q4m9
+ M3pTrWVaN1rMtuGwfDTqD2s0RXn6lcKffAkX7rCEmKviU0FTSA26G7GB5v7TAmq+V4Qs
+ KB+MLj/Ua30UH0JKdn1LcBfur7dThxbfLHf4tV/6Vo5iCDkEjnvpIzuAXBY28LOuSDZc
+ gBWr32Ob5N78uH+FtRpU/Ok0RbkyIg/XqfgFLGqSrR/ljkejaImgmaI00e12iK5Ozc6g
+ 1FIIi8odU0Td1FeSD/diIU9m3e8lEyOA8xhumJA2OfhTQvk0JcmW29Q4UhTmDepe2QI9 xw== 
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qy44sg4m0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Jun 2023 22:36:34 +0000
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 351FDmB7017407;
+        Thu, 1 Jun 2023 22:36:33 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([9.208.130.99])
+        by ppma03dal.us.ibm.com (PPS) with ESMTPS id 3qu9g5af7q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Jun 2023 22:36:33 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+        by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 351MaWeu37880554
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Jun 2023 22:36:32 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 106F358054;
+        Thu,  1 Jun 2023 22:36:32 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C0D158063;
+        Thu,  1 Jun 2023 22:36:31 +0000 (GMT)
+Received: from rhel-laptop.ibm.com (unknown [9.61.58.163])
+        by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Thu,  1 Jun 2023 22:36:31 +0000 (GMT)
+From:   gjoyce@linux.vnet.ibm.com
+To:     linux-block@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
+        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
+        nayna@linux.ibm.com, axboe@kernel.dk, akpm@linux-foundation.org,
+        gjoyce@linux.vnet.ibm.com, keyrings@vger.kernel.org
+Subject: [PATCH v6 0/4] generic and PowerPC SED Opal keystore
+Date:   Thu,  1 Jun 2023 17:36:27 -0500
+Message-Id: <20230601223630.2136006-1-gjoyce@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.31.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Mpj7272lQAxVFgGC8awYVZQWP3bcinF8
+X-Proofpoint-GUID: Mpj7272lQAxVFgGC8awYVZQWP3bcinF8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-01_08,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=770
+ clxscore=1015 priorityscore=1501 malwarescore=0 adultscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2306010194
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The previous patch for checking diskseq in blkback is not enough to
-prevent the following race:
+From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
 
-1. Program X opens a loop device
-2. Program X gets the diskseq of the loop device.
-3. Program X associates a file with the loop device.
-4. Program X passes the loop device major, minor, and diskseq to
-   something.
-5. Program X exits.
-6. Program Y detaches the file from the loop device.
-7. Program Y attaches a different file to the loop device.
-8. The opener finally gets around to opening the loop device and checks
-   that the diskseq is what it expects it to be.  Even though the
-   diskseq is the expected value, the result is that the opener is
-   accessing the wrong file.
+This patchset has gone through numerous rounds of review and
+all comments/suggetions have been addressed. I believe that
+this patchset is ready for inclusion.
 
-To prevent this race condition, increment the diskseq of a loop device
-when it is detached from its file descriptor.  This causes blkback (or
-any other program, for that matter) to fail at step 8.  Export the
-inc_diskseq() function to make this possible.
+TCG SED Opal is a specification from The Trusted Computing Group
+that allows self encrypting storage devices (SED) to be locked at
+power on and require an authentication key to unlock the drive.
 
-Signed-off-by: Demi Marie Obenour <demi@invisiblethingslab.com>
----
-I considered destroying the loop device altogether instead of bumping
-its diskseq, but was not able to accomplish that.  Suggestions welcome.
----
- block/genhd.c        | 1 +
- drivers/block/loop.c | 6 ++++++
- 2 files changed, 7 insertions(+)
+Generic functions have been defined for accessing SED Opal keys.
+The generic functions are defined as weak so that they may be superseded
+by keystore specific versions.
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 1cb489b927d50ab06a84a4bfd6913ca8ba7318d4..c0ca2c387732171321555cd57565fbc606768505 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1502,3 +1502,4 @@ void inc_diskseq(struct gendisk *disk)
- {
- 	disk->diskseq = atomic64_inc_return(&diskseq);
- }
-+EXPORT_SYMBOL(inc_diskseq);
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bc31bb7072a2cb7294d32066f5d0aa14130349b4..05ea5fb41508b4106f184dd6b4c37942716bdcac 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1205,6 +1205,12 @@ static void __loop_clr_fd(struct loop_device *lo, bool release)
- 	if (!part_shift)
- 		set_bit(GD_SUPPRESS_PART_SCAN, &lo->lo_disk->state);
- 	mutex_lock(&lo->lo_mutex);
-+
-+	/*
-+	 * Increment the disk sequence number, so that userspace knows this
-+	 * device now points to something else.
-+	 */
-+	inc_diskseq(lo->lo_disk);
- 	lo->lo_state = Lo_unbound;
- 	mutex_unlock(&lo->lo_mutex);
- 
+PowerPC/pseries versions of these functions provide read/write access
+to SED Opal keys in the PLPKS keystore.
+
+The SED block driver has been modified to read the SED Opal
+keystore to populate a key in the SED Opal keyring. Changes to the
+SED Opal key will be written to the SED Opal keystore.
+
+Patch 3 "keystore access for SED Opal keys" is dependent on:
+        https://lore.kernel.org/keyrings/20220818143045.680972-4-gjoyce@linux.vnet.ibm.com/T/#u
+
+Changelog
+v6:	- squashed two commits (suggested by Andrew Donnellan)
+
+v5:	- updated to reflect changes in PLPKS API
+
+v4:
+        - scope reduced to cover just SED Opal keys
+        - base SED Opal keystore is now in SED block driver
+        - removed use of enum to indicate type
+        - refactored common code into common function that read and
+          write use
+        - removed cast to void
+        - added use of SED Opal keystore functions to SED block driver
+
+v3:
+        - No code changes, but per reviewer requests, adding additional
+          mailing lists(keyring, EFI) for wider review.
+
+v2:
+        - Include feedback from Gregory Joyce, Eric Richter and
+          Murilo Opsfelder Araujo.
+        - Include suggestions from Michael Ellerman.
+        - Moved a dependency from generic SED code to this patchset.
+          This patchset now builds of its own.
+
+
+
+Greg Joyce (3):
+  block:sed-opal: SED Opal keystore
+  block: sed-opal: keystore access for SED Opal keys
+  powerpc/pseries: PLPKS SED Opal keystore support
+
+ arch/powerpc/platforms/pseries/Kconfig        |   6 +
+ arch/powerpc/platforms/pseries/Makefile       |   1 +
+ .../powerpc/platforms/pseries/plpks_sed_ops.c | 114 ++++++++++++++++++
+ block/Kconfig                                 |   1 +
+ block/Makefile                                |   2 +-
+ block/sed-opal-key.c                          |  24 ++++
+ block/sed-opal.c                              |  18 ++-
+ include/linux/sed-opal-key.h                  |  15 +++
+ 8 files changed, 178 insertions(+), 3 deletions(-)
+ create mode 100644 arch/powerpc/platforms/pseries/plpks_sed_ops.c
+ create mode 100644 block/sed-opal-key.c
+ create mode 100644 include/linux/sed-opal-key.h
+
 -- 
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-Invisible Things Lab
+gjoyce@linux.vnet.ibm.com
 
