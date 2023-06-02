@@ -2,118 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA16D71F774
-	for <lists+linux-block@lfdr.de>; Fri,  2 Jun 2023 03:02:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA23720F6B
+	for <lists+linux-block@lfdr.de>; Sat,  3 Jun 2023 12:40:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjFBBCr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 1 Jun 2023 21:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37764 "EHLO
+        id S234340AbjFCKkS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 3 Jun 2023 06:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233062AbjFBBCq (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 1 Jun 2023 21:02:46 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AEA6E4
-        for <linux-block@vger.kernel.org>; Thu,  1 Jun 2023 18:02:45 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-5162d2373cdso2009926a12.3
-        for <linux-block@vger.kernel.org>; Thu, 01 Jun 2023 18:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1685667763; x=1688259763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nvpp6zCJzkAVruqEfeRw+jwirL2eHCSWtsESmTUPR/s=;
-        b=BBY56f7jmoox511iIEW/fUwIxf2zGwY2AoUXWaS6uG2zKcGVDZ+SuOYpCAtU6zZyVw
-         PC40gGUre+V8SVy8aSUqENVoLO2TWnmU6KvHWQfeIXYHbKBTootWbyGM3ITcIcB7B6B8
-         kPRB08aQxabbnXAy/5iwMNAWRIahUwv3BdlAg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685667763; x=1688259763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nvpp6zCJzkAVruqEfeRw+jwirL2eHCSWtsESmTUPR/s=;
-        b=UDKU6JFdVFJY1KR2c4VKiVDpLQ1UUnznRZJYjTvVLeXLp8y+LUGctViboSZZG+jkH/
-         tevzzr9pg7p/ALaYiG8U/TeNyJeU4PPUOlPKL/lSJSj+9NEG6OWCjIkyas/RsEFqAU2T
-         on/SP+8dtDZd8Ih0z7MeqFd8/Du6unxXd42y4IrC/Mh2AFdVaS6QeGUD2YdPyRAGLIc6
-         YPgJ90cnfnkCLhEjHbNmbUqGK10J+xChFY/eKZH3MEk4vswpihIcudUQAqjzO29HCQSD
-         /svrRZ+3ZVieePZp8wZTG4La1nLy5uHLy/VQlXtnxFLwT7Ijq22Ac3OpEoFIDjlerhmp
-         +iEQ==
-X-Gm-Message-State: AC+VfDxMsOGFNPghYPu+BRIOPVI/Sor5gcIp3ep617PhvtqRm1DoMDYI
-        wIWhZnmq2iVkMfQTyymx7f+h6xsSBTHMgWFFmamrkeey
-X-Google-Smtp-Source: ACHHUZ5jD7mIhvWMwxboyWIvzFkSNFtopYafMMIL8V8PaBwPyx0sMjyzVhqnZtRuB69G3C0l3lSWcQ==
-X-Received: by 2002:a17:907:360d:b0:94e:8559:b5c5 with SMTP id bk13-20020a170907360d00b0094e8559b5c5mr9356155ejc.64.1685667763579;
-        Thu, 01 Jun 2023 18:02:43 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id c4-20020a170906528400b009745d484519sm75137ejm.70.2023.06.01.18.02.42
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 18:02:42 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-96fbc74fbf1so226303266b.1
-        for <linux-block@vger.kernel.org>; Thu, 01 Jun 2023 18:02:42 -0700 (PDT)
-X-Received: by 2002:a17:907:940d:b0:974:6026:a312 with SMTP id
- dk13-20020a170907940d00b009746026a312mr300827ejc.51.1685667762103; Thu, 01
- Jun 2023 18:02:42 -0700 (PDT)
+        with ESMTP id S236089AbjFCKkO (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sat, 3 Jun 2023 06:40:14 -0400
+X-Greylist: delayed 4201 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 03 Jun 2023 03:39:52 PDT
+Received: from mail.webtopbits.pl (mail.webtopbits.pl [195.231.64.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8F81704
+        for <linux-block@vger.kernel.org>; Sat,  3 Jun 2023 03:39:52 -0700 (PDT)
+Received: by mail.webtopbits.pl (Postfix, from userid 1001)
+        id 3194BA38E1; Fri,  2 Jun 2023 09:51:05 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=webtopbits.pl;
+        s=mail; t=1685695874;
+        bh=Eh8ECMiYd4baGAwPAzhz8mhJACXX7NSRkYjh+plaY18=;
+        h=Date:From:To:Subject:From;
+        b=Jj6QKTsfMt6X8XWrlvBB9Y3mCBSjFMK61k0lw3ysOyLHib9BrHwDcsep9wDD7yJjb
+         FGcvTAH4EbLpsEnHZXIAKMQq2gh93ND1/FYW80I94+8cCvnKmU9Y5e9ITZRr4cRAlk
+         J2ebAAWENAOq55exM+yXeG6f0SLRh7VErtNUFcJQ4ZCQGuxroqI3y0jpgPl5PJqXyL
+         8CE/je/yWmkvVIc6gtn+vTzCxbhQu3/LFdB1Hx+w2T3rlbOg/PoXFKO09tZ0JmvMrp
+         EXNy6LCQsbdGN1Qk31lM90Nt4gViMwQEePFdSRgHxiWApSK2r5bsnyn5JX8g4GnEVN
+         PcGAq/i40wZ9g==
+Received: by mail.webtopbits.pl for <linux-block@vger.kernel.org>; Fri,  2 Jun 2023 08:50:56 GMT
+Message-ID: <20230602085530-0.1.8w.5kwa.0.kd6jxv968j@webtopbits.pl>
+Date:   Fri,  2 Jun 2023 08:50:56 GMT
+From:   "Kamil Durjasz" <kamil.durjasz@webtopbits.pl>
+To:     <linux-block@vger.kernel.org>
+Subject: =?UTF-8?Q?Wy=C5=BCsza_konwersja_w_e-sklepie_?=
+X-Mailer: mail.webtopbits.pl
 MIME-Version: 1.0
-References: <20230601072829.1258286-1-hch@lst.de> <20230601072829.1258286-4-hch@lst.de>
-In-Reply-To: <20230601072829.1258286-4-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 1 Jun 2023 21:02:25 -0400
-X-Gmail-Original-Message-ID: <CAHk-=wj3TrM-NWUcFUivefNwzbfGdfcgDGfGP12m6WBfH9JpWg@mail.gmail.com>
-Message-ID: <CAHk-=wj3TrM-NWUcFUivefNwzbfGdfcgDGfGP12m6WBfH9JpWg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] block: fail writes to read-only devices
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Mike Snitzer <snitzer@kernel.org>,
-        dm-devel@redhat.com, linux-block@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jun 1, 2023 at 3:28=E2=80=AFAM Christoph Hellwig <hch@lst.de> wrote=
-:
->
-> Note that the last attempt to do this got reverted by Linus in commit
-> a32e236eb93e ("Partially revert "block: fail op_is_write() requests to
-> read-only partitions") because device mapper relyied on not enforcing
-> the read-only state when used together with older lvm-tools.
+Dzie=C5=84 dobry,
 
-I'm certainly happy to try again, but I have my doubts whether this will wo=
-rk.
+w jaki spos=C3=B3b docieraj=C4=85 Pa=C5=84stwo do odbiorc=C3=B3w?
 
-Note that the problem case is for a device that *used* to be writable,
-but became read-only later, and there's an existing writer that needs
-that writability.
+Tworzymy pot=C4=99=C5=BCne narz=C4=99dzia sprzeda=C5=BCy, kt=C3=B3re pozw=
+alaj=C4=85 kompleksowo rozwi=C4=85za=C4=87 problemy potencjalnych klient=C3=
+=B3w i skutecznie wp=C5=82yn=C4=85=C4=87 na ich decyzje zakupowe.=20
 
-The lvm fix was not to stop writing, but to simply not mark it
-read-only too early.
+Skupiamy si=C4=99 na Pa=C5=84stwa potrzebach zwi=C4=85zanych z obs=C5=82u=
+g=C4=85 sklepu, oczekiwaniach i planach sprzeda=C5=BCowych. Szczeg=C3=B3=C5=
+=82owo dopasowujemy grafik=C4=99, funkcjonalno=C5=9Bci, struktur=C4=99 i =
+mikrointerakcje do Pa=C5=84stwa grupy docelowej, co przek=C5=82ada si=C4=99=
+ na oczekiwane rezultaty.
 
-So I do think that the problem here is purely in the block layer.
+Ch=C4=99tnie przedstawi=C4=99 dotychczasowe realizacje, aby mogli Pa=C5=84=
+stwo przekona=C4=87 si=C4=99 o naszych mo=C5=BCliwo=C5=9Bciach. Mog=C4=99=
+ si=C4=99 skontaktowa=C4=87?
 
-The logic wrt "bdev_read_only()" is not necessarily a "right now it's
-read-only", but more of a thing that should be checked purely when the
-device is opened. Which is pretty much exactly what we do.
 
-So honestly, that whole test for
-
-+       if (op_is_write(bio_op(bio)) && bio_sectors(bio) &&
-+           bdev_read_only(bdev)) {
-
-may look "obviously correct", but it's also equally valid to view it
-as "obviously garbage", simply because the test is being done at the
-wrong point.
-
-The same way you can write to a file that was opened for writing, but
-has then become read-only afterwards, writing to a device with a bdev
-that was writable when you *started* writing is not at all necessarily
-wrong.
-
-So please at least consider the possibility that that test - while it
-looks obvious - is simply buggy.
-
-                Linus
+Pozdrawiam
+Kamil Durjasz
