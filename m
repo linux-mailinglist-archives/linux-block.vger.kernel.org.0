@@ -2,69 +2,128 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA23720F6B
-	for <lists+linux-block@lfdr.de>; Sat,  3 Jun 2023 12:40:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BBE8720329
+	for <lists+linux-block@lfdr.de>; Fri,  2 Jun 2023 15:24:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234340AbjFCKkS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 3 Jun 2023 06:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50992 "EHLO
+        id S229575AbjFBNYO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 2 Jun 2023 09:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236089AbjFCKkO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sat, 3 Jun 2023 06:40:14 -0400
-X-Greylist: delayed 4201 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 03 Jun 2023 03:39:52 PDT
-Received: from mail.webtopbits.pl (mail.webtopbits.pl [195.231.64.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8F81704
-        for <linux-block@vger.kernel.org>; Sat,  3 Jun 2023 03:39:52 -0700 (PDT)
-Received: by mail.webtopbits.pl (Postfix, from userid 1001)
-        id 3194BA38E1; Fri,  2 Jun 2023 09:51:05 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=webtopbits.pl;
-        s=mail; t=1685695874;
-        bh=Eh8ECMiYd4baGAwPAzhz8mhJACXX7NSRkYjh+plaY18=;
-        h=Date:From:To:Subject:From;
-        b=Jj6QKTsfMt6X8XWrlvBB9Y3mCBSjFMK61k0lw3ysOyLHib9BrHwDcsep9wDD7yJjb
-         FGcvTAH4EbLpsEnHZXIAKMQq2gh93ND1/FYW80I94+8cCvnKmU9Y5e9ITZRr4cRAlk
-         J2ebAAWENAOq55exM+yXeG6f0SLRh7VErtNUFcJQ4ZCQGuxroqI3y0jpgPl5PJqXyL
-         8CE/je/yWmkvVIc6gtn+vTzCxbhQu3/LFdB1Hx+w2T3rlbOg/PoXFKO09tZ0JmvMrp
-         EXNy6LCQsbdGN1Qk31lM90Nt4gViMwQEePFdSRgHxiWApSK2r5bsnyn5JX8g4GnEVN
-         PcGAq/i40wZ9g==
-Received: by mail.webtopbits.pl for <linux-block@vger.kernel.org>; Fri,  2 Jun 2023 08:50:56 GMT
-Message-ID: <20230602085530-0.1.8w.5kwa.0.kd6jxv968j@webtopbits.pl>
-Date:   Fri,  2 Jun 2023 08:50:56 GMT
-From:   "Kamil Durjasz" <kamil.durjasz@webtopbits.pl>
-To:     <linux-block@vger.kernel.org>
-Subject: =?UTF-8?Q?Wy=C5=BCsza_konwersja_w_e-sklepie_?=
-X-Mailer: mail.webtopbits.pl
+        with ESMTP id S229447AbjFBNYN (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 2 Jun 2023 09:24:13 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF83132
+        for <linux-block@vger.kernel.org>; Fri,  2 Jun 2023 06:24:10 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id ca18e2360f4ac-760dff4b701so10185539f.0
+        for <linux-block@vger.kernel.org>; Fri, 02 Jun 2023 06:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1685712249; x=1688304249;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YCNMsz4Hf4KvL+9Ehh6e7vaBK4L/g/yzA7xvAPqA5vI=;
+        b=awCwmQFEqBB1M8NGPQc2WfXNS3HnsOF7AC8pgI8NJefGKIHPIsbPsoyP2qWN1QEjzj
+         9IaruUUvvZYCnOTxxIFNpuhPJL9e5YHqYXjYY8YzOVH4nyLafky7o3C7ZItreOMzwV3T
+         AirM70f9i35ZsZYgmX+ZAFk0JQv6/3racILRjLKtfCzopgdEA7YjO7NNdOcMsRrDiU3u
+         vul/ODIB4tJZes/a4g32wny0wc00Zb1BzJhup/9yuqk+r9UfzGkjQihG5KNVyaGelj3q
+         x0rZyzk8uxqICmgV6MhceMCubYahhCINGwjDd1ch3pl6o87RoSO6oota4u/Hbni4LiSL
+         ydkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685712249; x=1688304249;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YCNMsz4Hf4KvL+9Ehh6e7vaBK4L/g/yzA7xvAPqA5vI=;
+        b=XdGDJimuPLhGLrjNk0uqLAaePxu4xBfr546GDQaC500r+0Ygog04aNSah+sgjwDRk0
+         MzxDKb6UEtsFGAH2RHFBLOPpn6PbZqI0KTxXxRY6TZLes0nR1OUTBNc9scKxUjyEZjNH
+         zdoNmPTapwpBOV0CC1S/mpMTZFbF2Le7cO//pDQAdomcWNdYnJ91UV3tGAFSsqmbbenK
+         5bUVSjB1JeePUxzSJoYQfaGjHuY6uaVki2j6mLyPAuMUQ9HmyeTYrdiyXTs+ypkhwgNq
+         sOCbK6fmX12G0+jPcdZo6JPm5XepYfw1XokqbTfOp06mT3Dun1ZwmoApYwPzbbmQh0XO
+         sBew==
+X-Gm-Message-State: AC+VfDzOjlI0R+IrSYyZd7qvrpZEFAgdanmuW3hrngkMi3JK5sa83ksr
+        ccIrV9lVSUXAIUaVcTS6JAApIWlj8SoYGtnaRKM=
+X-Google-Smtp-Source: ACHHUZ717ZTNK/KVEc9v5rrQIt/bADDNRO/DiV+64pyH17sXQVowXcF2KoNDiTBh/KiBRO6OW0wQPw==
+X-Received: by 2002:a05:6602:2d8b:b0:774:9337:2d4c with SMTP id k11-20020a0566022d8b00b0077493372d4cmr10093471iow.1.1685712249363;
+        Fri, 02 Jun 2023 06:24:09 -0700 (PDT)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id z24-20020a6be018000000b00774804141f1sm393516iog.36.2023.06.02.06.24.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Jun 2023 06:24:08 -0700 (PDT)
+Message-ID: <7b49cd00-55fa-5806-39c0-ac0c26051e13@kernel.dk>
+Date:   Fri, 2 Jun 2023 07:24:08 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Content-Language: en-US
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] Block fixes for 6.4-rc5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hi Linus,
 
-w jaki spos=C3=B3b docieraj=C4=85 Pa=C5=84stwo do odbiorc=C3=B3w?
-
-Tworzymy pot=C4=99=C5=BCne narz=C4=99dzia sprzeda=C5=BCy, kt=C3=B3re pozw=
-alaj=C4=85 kompleksowo rozwi=C4=85za=C4=87 problemy potencjalnych klient=C3=
-=B3w i skutecznie wp=C5=82yn=C4=85=C4=87 na ich decyzje zakupowe.=20
-
-Skupiamy si=C4=99 na Pa=C5=84stwa potrzebach zwi=C4=85zanych z obs=C5=82u=
-g=C4=85 sklepu, oczekiwaniach i planach sprzeda=C5=BCowych. Szczeg=C3=B3=C5=
-=82owo dopasowujemy grafik=C4=99, funkcjonalno=C5=9Bci, struktur=C4=99 i =
-mikrointerakcje do Pa=C5=84stwa grupy docelowej, co przek=C5=82ada si=C4=99=
- na oczekiwane rezultaty.
-
-Ch=C4=99tnie przedstawi=C4=99 dotychczasowe realizacje, aby mogli Pa=C5=84=
-stwo przekona=C4=87 si=C4=99 o naszych mo=C5=BCliwo=C5=9Bciach. Mog=C4=99=
- si=C4=99 skontaktowa=C4=87?
+Just an NVMe pull request with (mostly) KATO fixes, a regression fix for
+zoned device revalidation, and a fix for an md raid5 regression. Please
+pull!
 
 
-Pozdrawiam
-Kamil Durjasz
+The following changes since commit 9491d01fbc550d123d72bf1cd7a0985508a9c469:
+
+  Merge tag 'nvme-6.4-2023-05-26' of git://git.infradead.org/nvme into block-6.4 (2023-05-26 09:46:01 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux.git tags/block-6.4-2023-06-02
+
+for you to fetch changes up to 2e45a49531fef55f4abbd6738c052545f53f43d4:
+
+  Merge tag 'nvme-6.4-2023-06-01' of git://git.infradead.org/nvme into block-6.4 (2023-06-01 11:12:46 -0600)
+
+----------------------------------------------------------------
+block-6.4-2023-06-02
+
+----------------------------------------------------------------
+Christoph Hellwig (1):
+      nvme: fix the name of Zone Append for verbose logging
+
+Damien Le Moal (1):
+      block: fix revalidate performance regression
+
+Jens Axboe (2):
+      Merge tag 'md-fixes-2023-05-24' of https://git.kernel.org/pub/scm/linux/kernel/git/song/md into block-6.4
+      Merge tag 'nvme-6.4-2023-06-01' of git://git.infradead.org/nvme into block-6.4
+
+Uday Shankar (3):
+      nvme: double KA polling frequency to avoid KATO with TBKAS on
+      nvme: check IO start time when deciding to defer KA
+      nvme: improve handling of long keep alives
+
+Yu Kuai (1):
+      md/raid5: fix miscalculation of 'end_sector' in raid5_read_one_chunk()
+
+min15.li (1):
+      nvme: fix miss command type check
+
+ block/blk-settings.c           |  3 ++-
+ drivers/md/raid5.c             |  2 +-
+ drivers/nvme/host/constants.c  |  2 +-
+ drivers/nvme/host/core.c       | 52 ++++++++++++++++++++++++++++++++++++++----
+ drivers/nvme/host/ioctl.c      |  2 +-
+ drivers/nvme/host/nvme.h       |  3 ++-
+ drivers/nvme/target/passthru.c |  2 +-
+ 7 files changed, 56 insertions(+), 10 deletions(-)
+
+-- 
+Jens Axboe
+
