@@ -2,52 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7B69724D36
-	for <lists+linux-block@lfdr.de>; Tue,  6 Jun 2023 21:39:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3EF9724D32
+	for <lists+linux-block@lfdr.de>; Tue,  6 Jun 2023 21:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232094AbjFFTjN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 6 Jun 2023 15:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60186 "EHLO
+        id S231970AbjFFTjM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 6 Jun 2023 15:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232050AbjFFTix (ORCPT
+        with ESMTP id S232037AbjFFTix (ORCPT
         <rfc822;linux-block@vger.kernel.org>); Tue, 6 Jun 2023 15:38:53 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96ED710CE;
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02C010EA;
         Tue,  6 Jun 2023 12:38:52 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 445D41FD8C;
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 94F6A1FD92;
         Tue,  6 Jun 2023 19:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
         t=1686080331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=x9PNMHUYGFdwWzSVwJ8w2w+S5Qi9wxp3fYQY1vW3YkI=;
-        b=LiSVi2GzsGvZ0D/KfAkAKje50SvWBi/e1Yr7g89HETxgqbfmS1Pv3GaIQHh/uocxvfORF+
-        14gB/2gg3UCNMDCJUvGxSIQfekUWgDshO2yRK329+W3aDXwiH1QePOyNb350LG1vjMPvwo
-        Pg6OX6oNG2qMj2+0osUmVltmLyu0Yp4=
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=leWSNybkvgM5TIQBj/WwVrrY7dWbgHg5e1qUYq/uf14=;
+        b=EAAvmzrNAsQWRMdlS/08G/MyNj7yO3Ovbr/0Z5+b5kWnP47Rk8Zh3DH4R575crn+vzSmtD
+        q4HeWneAYjI62F62ycL7fayQjzZ0iW1y8Gzrjwy7dJtrNBwm4Pq83Tcih6aigh7Qha4Owb
+        Xg3SK8KxCXnKbPKouHidmv8WecGKs6c=
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CAA8213776;
-        Tue,  6 Jun 2023 19:38:50 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4016A13A47;
+        Tue,  6 Jun 2023 19:38:51 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id yYuFL0qLf2RaFwAAMHmgww
-        (envelope-from <mwilck@suse.com>); Tue, 06 Jun 2023 19:38:50 +0000
+        id qM/tDUuLf2RaFwAAMHmgww
+        (envelope-from <mwilck@suse.com>); Tue, 06 Jun 2023 19:38:51 +0000
 From:   mwilck@suse.com
 To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
         Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
         Bart Van Assche <Bart.VanAssche@sandisk.com>
 Cc:     James Bottomley <jejb@linux.vnet.ibm.com>,
         linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>, Martin Wilck <mwilck@suse.com>
-Subject: [PATCH v2 0/3] scsi: fixes for targets with many LUNs
-Date:   Tue,  6 Jun 2023 21:38:42 +0200
-Message-Id: <20230606193845.9627-1-mwilck@suse.com>
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v2 1/3] bsg: increase number of devices
+Date:   Tue,  6 Jun 2023 21:38:43 +0200
+Message-Id: <20230606193845.9627-2-mwilck@suse.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230606193845.9627-1-mwilck@suse.com>
+References: <20230606193845.9627-1-mwilck@suse.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -60,28 +64,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Hannes Reinecke <hare@suse.de>
 
-This patch series addresses some issues we saw in a test setup
-with a large number of SCSI LUNs. The first two patches simply
-increase the number of available sg and bsg devices. The last one
-fixes an large delay we encountered between blocking a Fibre Channel
-remote port and the dev_loss_tmo.
+Larger setups may need to allocate more than 32k bsg devices, so
+increase the number of devices to the full range of minor device
+numbers.
 
-Changes v1 -> v2:
- - call blk_mq_wait_quiesce_done() from scsi_target_block() to
-   cover the case where BLK_MQ_F_BLOCKING is set (Bart van Assche)
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+---
+ block/bsg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hannes Reinecke (3):
-  bsg: increase number of devices
-  scsi: sg: increase number of devices
-  scsi: simplify scsi_stop_queue()
-
- block/bsg.c             |  2 +-
- drivers/scsi/scsi_lib.c | 28 ++++++++++++++--------------
- drivers/scsi/sg.c       |  2 +-
- 3 files changed, 16 insertions(+), 16 deletions(-)
-
+diff --git a/block/bsg.c b/block/bsg.c
+index 7eca43f33d7f..c53f24243bf2 100644
+--- a/block/bsg.c
++++ b/block/bsg.c
+@@ -36,7 +36,7 @@ static inline struct bsg_device *to_bsg_device(struct inode *inode)
+ }
+ 
+ #define BSG_DEFAULT_CMDS	64
+-#define BSG_MAX_DEVS		32768
++#define BSG_MAX_DEVS		(1 << MINORBITS)
+ 
+ static DEFINE_IDA(bsg_minor_ida);
+ static struct class *bsg_class;
 -- 
 2.40.1
 
