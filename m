@@ -2,41 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05DC6726158
-	for <lists+linux-block@lfdr.de>; Wed,  7 Jun 2023 15:34:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E60787261AB
+	for <lists+linux-block@lfdr.de>; Wed,  7 Jun 2023 15:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240850AbjFGNe4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 7 Jun 2023 09:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54130 "EHLO
+        id S234667AbjFGNwf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 7 Jun 2023 09:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240827AbjFGNey (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Jun 2023 09:34:54 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2511D1993;
-        Wed,  7 Jun 2023 06:34:54 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6B8376732D; Wed,  7 Jun 2023 15:34:49 +0200 (CEST)
-Date:   Wed, 7 Jun 2023 15:34:49 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Martin Wilck <mwilck@suse.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <Bart.VanAssche@sandisk.com>,
-        James Bottomley <jejb@linux.vnet.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v2 3/3] scsi: simplify scsi_stop_queue()
-Message-ID: <20230607133449.GB20840@lst.de>
-References: <20230606193845.9627-1-mwilck@suse.com> <20230606193845.9627-4-mwilck@suse.com> <20230607052710.GC20052@lst.de> <c0563161eb613f9500e6a1cccdcff6fc64efffad.camel@suse.com> <e982c95ad7ee29f80e8c0ba88f0cece837e344b9.camel@suse.com> <20230606193845.9627-1-mwilck@suse.com> <20230606193845.9627-4-mwilck@suse.com> <20230607052710.GC20052@lst.de> <c0563161eb613f9500e6a1cccdcff6fc64efffad.camel@suse.com>
+        with ESMTP id S231890AbjFGNwe (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Jun 2023 09:52:34 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F4D1BE5
+        for <linux-block@vger.kernel.org>; Wed,  7 Jun 2023 06:52:32 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3f9ac889629so2988391cf.0
+        for <linux-block@vger.kernel.org>; Wed, 07 Jun 2023 06:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1686145952; x=1688737952;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yBCy6Zr3tLUZoNRTWAl9DUYT1FQNLXNhhe11Jl7EVJw=;
+        b=0C0UEcws8800wGAcfU9YjUSxWnq5/82Hz8dLip01clh8YgJqhfQAhSdQM/bRFYglqw
+         BkFRmwNIC2wT1U5h0HObDAp5lkrdBVH6bKt2dwT4ugzdDyLKpZaYxWHCwiLplJdjXZRx
+         aAqyVqX1sC1t6edvZlsbs52JcQ+JKet2zKf+e80GIEbtKibc0OaHtP07v7ZcMI+FxPMy
+         nv0L+vWB5lVz/+HFIvc4xU1uZ0vaRRzxQqyY3fRmeuv0LYR0o1RRBOpXwfaoDKuER1vP
+         QQF9wl/mb5fvfpO2cjkf69nmiPjrwww3q0SqVu/HWYAOeznBdMG/StrXRXlLPoLuRswQ
+         wd1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686145952; x=1688737952;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yBCy6Zr3tLUZoNRTWAl9DUYT1FQNLXNhhe11Jl7EVJw=;
+        b=QcPrgiCdhEF1RHbSU9AMHfywuhuCyMTa2RwasH1Id4ZgUSSs23YE539cUohe3sQc6u
+         LbtUWAmjw+omMxTTi3lAhRSuos1OFOVy/2xYGzzxOhVisoXTP312DLbHvhobNUM/VEP8
+         evSzuIuF1Ew8T5bVZ+RY2Crq5PEtWWKojoVacFglXRkS397AJNNOeYhfawhL8zOeUN4n
+         jhzCHOkc9RXBVzC4jIIhdKN7Eua/yBU5mtUIH126MDg9P9sVRe95WL3xiHvZBz/BmVUM
+         CLiSkhVfseulv10zrUfUSAeK+Xhn4nSwbNzKi9I5HMV+vxt5JdCDP44XBewtfqdhNdRn
+         D6tQ==
+X-Gm-Message-State: AC+VfDxljls8dZLgfVFsj9FiNIuQQKhoI1FKdrCrvgMY7Sqc//fVYOd9
+        J+VGxAHRL18PiNhDWaoWo4wT3Zi1c0nK8HAxZNg=
+X-Google-Smtp-Source: ACHHUZ4fQ6pIyhB3M/I8i99y9dSNcWczKJKV8fRBAt/6EkdwqWBTOtLxNvG2mG7MjkYS368wiazRpw==
+X-Received: by 2002:a05:6214:d8e:b0:625:88f5:7c62 with SMTP id e14-20020a0562140d8e00b0062588f57c62mr2038353qve.2.1686145951989;
+        Wed, 07 Jun 2023 06:52:31 -0700 (PDT)
+Received: from [127.0.0.1] ([50.234.116.5])
+        by smtp.gmail.com with ESMTPSA id s5-20020a05621412c500b0062119a7a7a3sm6141611qvv.4.2023.06.07.06.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jun 2023 06:52:31 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     josef@toxicpanda.com, Zhong Jinghua <zhongjinghua@huaweicloud.com>
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org, zhongjinghua@huawei.com,
+        yi.zhang@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+In-Reply-To: <20230605122159.2134384-1-zhongjinghua@huaweicloud.com>
+References: <20230605122159.2134384-1-zhongjinghua@huaweicloud.com>
+Subject: Re: [PATCH -next] nbd: Add the maximum limit of allocated index in
+ nbd_dev_add
+Message-Id: <168614594988.134969.5912378237473757521.b4-ty@kernel.dk>
+Date:   Wed, 07 Jun 2023 07:52:29 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e982c95ad7ee29f80e8c0ba88f0cece837e344b9.camel@suse.com> <c0563161eb613f9500e6a1cccdcff6fc64efffad.camel@suse.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-c6835
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -44,49 +74,25 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 07, 2023 at 11:26:04AM +0200, Martin Wilck wrote:
-> > cleanups:
-> > 
-> >   1) remove scsi_internal_device_block and fold it into device_block
+
+On Mon, 05 Jun 2023 20:21:59 +0800, Zhong Jinghua wrote:
+> If the index allocated by idr_alloc greater than MINORMASK >> part_shift,
+> the device number will overflow, resulting in failure to create a block
+> device.
 > 
-> ok
+> Fix it by imiting the size of the max allocation.
 > 
-> >   2) move the scsi_internal_device_block in what was
 > 
-> You mean scsi_stop_queue() here, right?
+> [...]
 
-Yes.
+Applied, thanks!
 
-> The reason is simple: I wasn't certain if dev_to_shost() could return
-> NULL, and preferred skipping the wait over an Oops. I hear you say that
-> dev_to_shost() can't go wrong, so I'll remove the NULL test.
+[1/1] nbd: Add the maximum limit of allocated index in nbd_dev_add
+      commit: f12bc113ce904777fd6ca003b473b427782b3dde
 
-Well, the parent device can't really go away while we have a reference
-to a child.  So the only case where it can return NULL is if the
-passed in device isn't the child of a SCSI host, which would be a grave
-programming error.
+Best regards,
+-- 
+Jens Axboe
 
-> 
-> > Btw, as far as I can tell scsi_target_block is never called for
-> > a device that is a target device.  It might be worth throwing in
-> > another patch to remove support for that case and simplify things
-> > further.
-> 
-> Can we do this separately, maybe? 
 
-Sure.  Would be nice to just tack into onto the end of this series
-if you touch the area, though.
 
-> On Wed, 2023-06-07 at 11:26 +0200, Martin Wilck wrote:
-> > On Wed, 2023-06-07 at 07:27 +0200, Christoph Hellwig wrote:
-> > > 
-> > >   3) remove scsi_stop_queue and open code it in the two callers,
-> > > one
-> > >      of which currently wants nowait semantics, and one that
-> > > doesn't.
-> > ok
-> 
-> Hm, scsi_stop_queue() pairs with scsi_start_queue(), do we really want
-> to open-code it?
-
-Oh well, feel free to keep it if you prefer it that way.
