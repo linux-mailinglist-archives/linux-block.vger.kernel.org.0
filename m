@@ -2,304 +2,193 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E31BD7262A4
-	for <lists+linux-block@lfdr.de>; Wed,  7 Jun 2023 16:21:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E526B726352
+	for <lists+linux-block@lfdr.de>; Wed,  7 Jun 2023 16:52:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234809AbjFGOU7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 7 Jun 2023 10:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
+        id S240760AbjFGOwN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 7 Jun 2023 10:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240324AbjFGOU6 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Jun 2023 10:20:58 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08D41BCA
-        for <linux-block@vger.kernel.org>; Wed,  7 Jun 2023 07:20:56 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-9788554a8c9so108582666b.2
-        for <linux-block@vger.kernel.org>; Wed, 07 Jun 2023 07:20:56 -0700 (PDT)
+        with ESMTP id S240162AbjFGOwM (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 7 Jun 2023 10:52:12 -0400
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87E41702;
+        Wed,  7 Jun 2023 07:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1686149530; x=1717685530;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=Jg8xsOGleeY1pG+a70K0BbDViEQswcnCv32N8tNkTxw=;
+  b=lz33IyKNE3AYud9XvUwxbQII7ZlmbXc3kgaJX8DZvjh7uSdJS40ang4d
+   ctyiPdosMXDlC8d07fHrYAkYokogvZ388R139ovkhzc7FHAaUAOmuM0xJ
+   AuZxrAP2G8884/ak/kx0N25WAmDBYOEs18M8r10EmrT6r4ewvj31qLivU
+   XBche1iR+jyzDMOythfdwIGn9UBFcnl/9msYWCH3PYiy2wXwbcQJN7F5c
+   8G0AgWXcXxBtnqLB7ddD4CGNgaFjSqjJAOP9GHWBFMimn4WwzRo1ykC6z
+   OZoX2G4/XpeJjGoflazlSLt4WLV66EI7jNQ2M5N5F8jElZ2auccnl6ilM
+   A==;
+X-IronPort-AV: E=Sophos;i="6.00,224,1681142400"; 
+   d="scan'208";a="337553524"
+Received: from mail-mw2nam10lp2102.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.102])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Jun 2023 22:52:08 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=St8nksoOpudRlDORfbQ1fxiPSkoTGKvIvrpFv69RkjFhpNHfKziOzxFHGCrsCn3qQNFg9yQDQRq3aKP8HCe8b2uyVHq+JzO/qR+tX/UqTmVQ7wu15qO1pXe+pb3DiNn0TiGbjqJEa9LmekmmbSDK/irMgSVIdBI1yCldcM6zHR9N+ciJSsrgsfE+K8BOFqxzl7D8iQaghlH1SPqBgC+OYghvdufKAGy1g40TWtJfWPn0TIOMM0vTkHgc6cHkHrGmg1GvFCHx4NB24MNPjN5RJ04B3WEAGtCMNCynmaq04nBx1hFCw1bOdP0Z+Rm1kTTpA4cC46vGS8xwC9US4wLRKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UDdOdTVSbVSE5EzFlwvlSRawN03FfHoAr+1KxyCEBzQ=;
+ b=AW/W5xPL7pYlTVbB3jX6//xVyatSTfYho9uNzI+NaT9lQPsba9StlvEMUaakfREnYkYyG9+k9OBKUFYsxVrKCxpE6JjMWNQ+Qe2tFaY7JycEco35XuUTI20w5RmBcBrvsM1QY0PcBtvDW2iA8HnajJK4W38yeM1JuDQ4/M3FpMtmXvmhu5YiZMESH8iTGyG+0b3Op+41jcckJdFxGmW7cIZfulGZCbj2CMMSHJzMuqi7gNuEjmnrIJm2WG12yab395323pAc38qAguhDaNHbghiAYKrZhb8WohdESovUa9YZs7W0o6SkxR0edAnIs1JCZ7tYDPJ/5Rf4I/xf9iHdhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686147655; x=1688739655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HjnuyJE5MPCESC15VfWBkFspvFs6sDC35cz2+03PVNk=;
-        b=rrHj2rz6T2jIgziFoHaiCJuN451HlDOO89oOgtV0hOmxMsy+bzBPgZVKSDzU1p7/6S
-         ILrJnt56RG7uqmSYWIvsWfkCXGMQY0MVAdYqohsZkecFcTVOEkE68nAtE5nAQJ3Mqd9G
-         sbdMNy49pjuzJD7rNE/IaK+LTHsXXgCEZNEhc5U3eESs/mGdWSpREZRrnSyRN3dzb28N
-         xu7s9ybE1tDNXSIqDEAKnkf1sE+a6suX8f9Q2XTCCIUxRQFW+1q54/66WuIj3BPD6NKA
-         QWNggpf9kvFYg9Ds/UufP/aWPzt5ktH1BZOailS7sr4buSLCwOUh3OEWsi3CNv2lV2S4
-         0B/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686147655; x=1688739655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HjnuyJE5MPCESC15VfWBkFspvFs6sDC35cz2+03PVNk=;
-        b=gGT7K56ZW/SGly1qEY1xRrYndYNGePYi7XxCky2uBIrtH4rLPSr6Aej9EFI7P9DwS2
-         ot2bSbP4lyFBy5XOm3e205nROPrV0fNzEanZep8JF/WwIYFkDXV1O2G7cbepnZ0v/sLv
-         ms4j/azG5mZhGP+v+6fsV0enipTvAvRPCAubCNU0nLzZZJqJttIdtdWpVsDtGPQUttnT
-         ccylvyxagWH7FCm1mEadd1tOVF9VfDug6rBkU0ahWntxLu6AXYf/LN2bM6gzLgFbiDZC
-         4Klt1nZIsABVdQfR5mT5wV+06qrmZssjQMKd9uZM17Ds/0mnoAoDiZzD3HcwGacEIdpz
-         7+wQ==
-X-Gm-Message-State: AC+VfDwgA4/IjVNPb+dw2sRVKd0E6+JRfs2tBV8x+MCZQNCqW8umkVJK
-        yNXgOi/mMJpRYMcMR2MeqBCaFW7cSC0L2pSAnlQ=
-X-Google-Smtp-Source: ACHHUZ7EnBNjNqKKKXQB75Z3EtNvO1CN90RT/W9gem8aG5Qfqvf4PPaNN11JzfzaQ8AEyd4sK+E/zJAAFyRx8zs2pWU=
-X-Received: by 2002:a17:907:6ea3:b0:966:2123:e0ca with SMTP id
- sh35-20020a1709076ea300b009662123e0camr7219002ejc.34.1686147654888; Wed, 07
- Jun 2023 07:20:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <BN9PR11MB53545DD1516BFA0FB23F95458353A@BN9PR11MB5354.namprd11.prod.outlook.com>
-In-Reply-To: <BN9PR11MB53545DD1516BFA0FB23F95458353A@BN9PR11MB5354.namprd11.prod.outlook.com>
-From:   Suwan Kim <suwan.kim027@gmail.com>
-Date:   Wed, 7 Jun 2023 23:20:43 +0900
-Message-ID: <CAFNWusa7goyDs1HaMVYDvvXT7ePfB7cAQt3EewT+t=-kKNf5eg@mail.gmail.com>
-Subject: Re: virtio-blk: support completion batching for the IRQ path - failure
-To:     "Roberts, Martin" <martin.roberts@intel.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        virtualization <virtualization@lists.linux-foundation.org>,
-        linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UDdOdTVSbVSE5EzFlwvlSRawN03FfHoAr+1KxyCEBzQ=;
+ b=ao6gKK1rvTBxSGRbWrHLKCBhkkq8GUkyA3QCfrm2edOLGUXlGxeOcGw8PVKpiA0zEoSeT/kU5I5In58oeO4HBF/PZ6QSAlvE+jFUERFKNZZn/U7IIE5nxwirO0SGEaRrEpHbvMCdVk2aISrHks+gTC7vbvf55yqUHAnuEsriO/Y=
+Received: from MN2PR04MB6272.namprd04.prod.outlook.com (2603:10b6:208:e0::27)
+ by MN2PR04MB6927.namprd04.prod.outlook.com (2603:10b6:208:1e0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Wed, 7 Jun
+ 2023 14:52:06 +0000
+Received: from MN2PR04MB6272.namprd04.prod.outlook.com
+ ([fe80::d8ec:2aa9:9ddf:5af9]) by MN2PR04MB6272.namprd04.prod.outlook.com
+ ([fe80::d8ec:2aa9:9ddf:5af9%4]) with mapi id 15.20.6455.030; Wed, 7 Jun 2023
+ 14:52:06 +0000
+From:   Niklas Cassel <Niklas.Cassel@wdc.com>
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+CC:     Damien Le Moal <dlemoal@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v7 1/19] ioprio: cleanup interface definition
+Thread-Topic: [PATCH v7 1/19] ioprio: cleanup interface definition
+Thread-Index: AQHZmUGSbVOn3Rtvd0SuFTSJlhu19a9/bLCA
+Date:   Wed, 7 Jun 2023 14:52:06 +0000
+Message-ID: <ZICZNd6kKG40Lc6W@x1-carbon>
+References: <20230511011356.227789-2-nks@flawful.org>
+ <ZICB45/Mghr/rr6/@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+In-Reply-To: <ZICB45/Mghr/rr6/@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR04MB6272:EE_|MN2PR04MB6927:EE_
+x-ms-office365-filtering-correlation-id: 80686a73-ddce-40cd-3f43-08db6766c368
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: V9BOm/TAdsgdsTyIabqz0+SNYuPHArKTd+aZhFdnju2bti+Jniym9HgsUG4V2YNpCRm4oN4zyIHn4NwBlOnbXNKK8e/ET9DViSzK47FySN/QGIp0y12PaHQgWxklfEjGFjdz3ybtn9DRUz1Z+PctypcWVsPFxQ/mW2eBx+9O7+Veuh1yNx/YbAW9jP/U2LZaIDtovRH3ElDsPOx2hQaa/pc69+tXSZs7HLLv1UXJY22+FQKwjTt7vHgUK6Eu7XlzVEHSn7LC/7okpE3bE6tbbTl+RNaGKRKBwDfC4fb9IbVguxfTQmwwOekid0KVDZx8QTPbSgxS7DFBtSTzJm+Jf4HBensH7VynJEQR03G/58bh939qpMixPdeTaHLayuGSs+vn2SUch8nEN6QCx23C7haY+w8BXXE96Qm5Da/HnwS1gc7pvgeoEt3m4CaZllRlVTdxbTzd1n8HRWoWlG08zhQoIV5dmh0HzlhcXWH2jtKD+HxWBIfSuOJBxclKg/ZmZNfIUWwsZNlM5TNRnwdsHDaOLxAUS6D3DPZpNtX8NOXXxlur3eFZ11b1JbZP/3fdV0ALPRYixN0BHm3+EqUNZZRfDdDQ/Fc/48HP1HrCUog=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6272.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(346002)(376002)(366004)(136003)(396003)(39860400002)(451199021)(9686003)(6512007)(6506007)(38100700002)(41300700001)(6486002)(26005)(83380400001)(966005)(186003)(71200400001)(478600001)(82960400001)(54906003)(66946007)(64756008)(91956017)(66476007)(6916009)(66446008)(66556008)(316002)(8936002)(76116006)(4326008)(8676002)(122000001)(5660300002)(2906002)(86362001)(38070700005)(33716001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?NU9SgDfCLjuk69UvzR5VUhY/RUm1aZr9HHmoEv2JlAIr5/VmzlTmQpKxZHCK?=
+ =?us-ascii?Q?cw4IYYzYC/4EoJXl+D7+7dWb8LY5M2cn9RsjIgXZQNoYYc/7i3CkoGEVT0kX?=
+ =?us-ascii?Q?1jU2+MwgglzJMfPNqnngxPidlvXzfpRE01ZhAPstl3V/CKQaiHccLiuTuM4Z?=
+ =?us-ascii?Q?obbtkytvZv8ycHuEuTJvG+CDzOi901xCQwxazYl5Ylx9jZkuXAHtYXx5zecz?=
+ =?us-ascii?Q?1nMFzt4M3hexZJrOo1hxY/4DiKhF99Ap42wgI1JkBdQExqvJFf9zS/qQ6T5n?=
+ =?us-ascii?Q?hNV0x2ablraBlXLIywqYt0KLO+sblcMglyw9X8G5pzXmxz7Tis9CRi3CQPEv?=
+ =?us-ascii?Q?ByPgFyIO6GhppIdEoUvaC6TjGXPkRwK4BssYGyPRWY6xicsGIwNxcul0qK2e?=
+ =?us-ascii?Q?ARafuaNxgRekk9vLhUAmT7ooEc18IATK83gypJuAZVamJqTLR9nXKsibmb3R?=
+ =?us-ascii?Q?u5KI0gZrfTBGy/srRGkxJnTN7fGJZuaRQVHl7wrYnurqt4J3wWSuS0gHolVZ?=
+ =?us-ascii?Q?AJoGO78IHS8jMeES/yncGMcftMV/sL5Ij2Ni2OiURUxt1mMTTTHBD2C/Mlq6?=
+ =?us-ascii?Q?HB9prHDsQK43ZqSue7TMemJGr4m1cU7P7tPs/AxVSZe6p+4sW2Onq2H0XmxM?=
+ =?us-ascii?Q?MkSKBPTq+FEtfX4qkRxgNIU5xL9GPPwFou1bSEZJTaEbuiYRDNOQVMB0XDPZ?=
+ =?us-ascii?Q?Aa9qOuNYHIEecX06B0NNqQ4KtZDsDy1FJMdsyDpCycNBEOJYoH/r+YXXg34N?=
+ =?us-ascii?Q?a61NGu/0iB2nNi6HJWqRuzIkE7tDs9nehkL2SYUybQ1GJN0fTAUyXtdHC/s9?=
+ =?us-ascii?Q?6CKaidfupL4dJaaM1qLW++0q1FbhVWzYzkDkFry38we0SUBFCU3ZYsTRqkRD?=
+ =?us-ascii?Q?FxLzI/1zTEZF7oq3cwsRIu4a2Tp3/LBW5TKJucvNSR4ZmxfVn7xzoFTuuUD6?=
+ =?us-ascii?Q?23Qe1aP8rr98UxWqsln4EgKtB9vGXMpRAbqAKm6MSLrXQG1hY39vB8SPxJvP?=
+ =?us-ascii?Q?GdGioMnxf1KmDjfO0dZUKyq9W8kb7KLhLdUiWQDomACeRb3ETd/dY7m4/AVZ?=
+ =?us-ascii?Q?GUT/AMyuOQzN9HCVQ7jlK2lRlpARaL8YZOiN6gw/jWPNqvzRgvyQ5B0Y/GX1?=
+ =?us-ascii?Q?NDkkhgCeCiXaW36wz99i5RpNvo/YS4TOL5m6U0rYAqApugwDTpW+QqVhg7yE?=
+ =?us-ascii?Q?i98dgUJ2m+O51FfWTjqKagV/vfSbO0248yjdUgnGIAOcP3vJy8V/ye5UGZZ7?=
+ =?us-ascii?Q?h7NT3oNcMWefIdD0vDmQU6HtDm6q5SCkbiBVofp6Vd8wO4Wm3p2VDham8Jwe?=
+ =?us-ascii?Q?ECKlot/Kr3Sb7SkC+CPI5dfSMV4a5S8q29chokP+uIgdHn3GMlnuACW7zpFP?=
+ =?us-ascii?Q?STcoF/15hGa+4rBDXDGjyHLrIqV01pGokp/TUNl4mff9roeBnIAPmIsyOLr9?=
+ =?us-ascii?Q?YfjGRmQ/LTaTdT3+sCg6B3HWyH5Jh5uCiNk9cWNqzCUnpt/AR5RbuMEmsfPA?=
+ =?us-ascii?Q?MkaDkhuThWjDfP7owScDm/jSSa3xgkgX228uL0GnHpO4kqAHLVBuxIcF4lQw?=
+ =?us-ascii?Q?mJlRd6+H2ZuacliHyswOAHaP6gFvpxyFZmJGdmtfooEoaKOp+A7LohmgEmJX?=
+ =?us-ascii?Q?ow=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7AE5731D4CF60741A786238A73CCA13F@namprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: +MNmVel06YehD14ZBZiDOdJejyyWIrWieZfgVvXweLlkT8jWHjA/CuPET+6l8umYf2F/ldfIWzCgG2pBMzGAPWnOuhcjkH9pzaTEd8k3XD8IUJuW+0cPCIVyOgMV1Olds8eZwJoA+3CD3NbJAvyt58awJyjE45fVapzhUYH511ysQltqe+dC9c2kT1Nnl0zE0+rE4eaa1i0hiHJ+LNVpy6b3IeSjEHl383/xZgZ6hfzGc1M291krH/s+SWdub1sQX+W9glYWYmGGyuHp+yyBll+kIPhQ0HqW9tTWPDbFMBwGmOTZQhjmRuKC0oV8HVGEZtz31n3jw0F7SFd/YCWU0iCLrJ+WUWqFSS1qs0zvuXS9G5wQZx3syNvnDkIBW5VCk/jNm2LuFP08vEynfzAF8inH7SBpey//kZUDAJ+T89ZLLo5JmK8+/A+Y+CzHufPSSw7GbtqsxYn2a5uOo4QuJ5jQG3eZ2JyR/GJL3lW6izg6D4BqMwdJl6Ki/gNIkqpCmUmpBzqEWlprs9F9eKwxJdzfb0KrmKAMxLnHUXeLQ5CdKrw3Iif0ocP/sSzdFD1gl86bsfBzAKVBSwlWDsU+ZggR9AXXtSKXgoCsktbYSOws/bTUbYJ0ROruuYg8Ia3VdmXy+F9IqTFKP9vv4XGM390q1vmOryZ67YdVpxyuX7UbglLq0Lnh+wHsNx9ZOcgQGzOdxrDgJ0azCooETWU99cbyDS8zy+QXSnukIlOMb93iH/uAwtQVkOoijIdM9d36cdCqEciBTClViSF5LcSgy8lzDUqhmfuSK8zoOD/y5ei1fnr/8pipxOsFMCZmp7qahP7jdjl5QT10RPvFehKPEKCZn6ejAhLQ24vk33uS6F8qh1bj2GP28B0gVb4jaJgHEkwnlDB/lietDUlST2+KgYareXgQKmXyfza8Qzvu2oI=
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6272.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80686a73-ddce-40cd-3f43-08db6766c368
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2023 14:52:06.5727
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eDHd39MEmbY/r2aJRRJu90mLvKnkmNFFs1K703iLLIu76SIqMvG8f0k6vCYIFeKWaZHtfzvEYaq4n7e73h9TRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6927
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 7, 2023 at 6:14=E2=80=AFPM Roberts, Martin <martin.roberts@inte=
-l.com> wrote:
->
-> Re: virtio-blk: support completion batching for the IRQ path =C2=B7 torva=
-lds/linux@07b679f =C2=B7 GitHub
->
-> Signed-off-by: Suwan Kim suwan.kim027@gmail.com
->
-> Signed-off-by: Michael S. Tsirkin mst@redhat.com
->
->
->
->
->
-> This change appears to have broken things=E2=80=A6
->
-> We now see applications hanging during disk accesses.
->
-> e.g.
->
-> multi-port virtio-blk device running in h/w (FPGA)
->
-> Host running a simple =E2=80=98fio=E2=80=98 test.
->
-> [global]
->
-> thread=3D1
->
-> direct=3D1
->
-> ioengine=3Dlibaio
->
-> norandommap=3D1
->
-> group_reporting=3D1
->
-> bs=3D4K
->
-> rw=3Dread
->
-> iodepth=3D128
->
-> runtime=3D1
->
-> numjobs=3D4
->
-> time_based
->
-> [job0]
->
-> filename=3D/dev/vda
->
-> [job1]
->
-> filename=3D/dev/vdb
->
-> [job2]
->
-> filename=3D/dev/vdc
->
+On Wed, Jun 07, 2023 at 03:10:59PM +0200, Alexander Gordeev wrote:
+> On Thu, May 11, 2023 at 03:13:34AM +0200, Damien Le Moal wrote:
 > ...
->
-> [job15]
->
-> filename=3D/dev/vdp
->
->
->
-> i.e. 16 disks; 4 queues per disk; simple burst of 4KB reads
->
-> This is repeatedly run in a loop.
->
->
->
-> After a few, normally <10 seconds, fio hangs.
->
-> With 64 queues (16 disks), failure occurs within a few seconds; with 8 qu=
-eues (2 disks) it may take ~hour before hanging.
->
-> Last message:
->
-> fio-3.19
->
-> Starting 8 threads
->
-> Jobs: 1 (f=3D1): [_(7),R(1)][68.3%][eta 03h:11m:06s]
->
-> I think this means at the end of the run 1 queue was left incomplete.
->
->
->
-> =E2=80=98diskstats=E2=80=99 (run while fio is hung) shows no outstanding =
-transactions.
->
-> e.g.
->
-> $ cat /proc/diskstats
->
-> ...
->
-> 252       0 vda 1843140071 0 14745120568 712568645 0 0 0 0 0 3117947 7125=
-68645 0 0 0 0 0 0
->
-> 252      16 vdb 1816291511 0 14530332088 704905623 0 0 0 0 0 3117711 7049=
-05623 0 0 0 0 0 0
->
-> ...
->
->
->
-> Other stats (in the h/w, and added to the virtio-blk driver ([a]virtio_qu=
-eue_rq(), [b]virtblk_handle_req(), [c]virtblk_request_done()) all agree, an=
-d show every request had a completion, and that virtblk_request_done() neve=
-r gets called.
->
-> e.g.
->
-> PF=3D 0                         vq=3D0           1           2           =
-3
->
-> [a]request_count     -   839416590   813148916   105586179    84988123
->
-> [b]completion1_count -   839416590   813148916   105586179    84988123
->
-> [c]completion2_count -           0           0           0           0
->
->
->
-> PF=3D 1                         vq=3D0           1           2           =
-3
->
-> [a]request_count     -   823335887   812516140   104582672    75856549
->
-> [b]completion1_count -   823335887   812516140   104582672    75856549
->
-> [c]completion2_count -           0           0           0           0
->
->
->
-> i.e. the issue is after the virtio-blk driver.
->
->
->
->
->
-> This change was introduced in kernel 6.3.0.
->
-> I am seeing this using 6.3.3.
->
-> If I run with an earlier kernel (5.15), it does not occur.
->
-> If I make a simple patch to the 6.3.3 virtio-blk driver, to skip the blk_=
-mq_add_to_batch()call, it does not fail.
->
-> e.g.
->
-> kernel 5.15 =E2=80=93 this is OK
->
-> virtio_blk.c,virtblk_done() [irq handler]
->
->                  if (likely(!blk_should_fake_timeout(req->q))) {
->
->                           blk_mq_complete_request(req);
->
->                  }
->
->
->
-> kernel 6.3.3 =E2=80=93 this fails
->
-> virtio_blk.c,virtblk_handle_req() [irq handler]
->
->                  if (likely(!blk_should_fake_timeout(req->q))) {
->
->                           if (!blk_mq_complete_request_remote(req)) {
->
->                                   if (!blk_mq_add_to_batch(req, iob, virt=
-blk_vbr_status(vbr), virtblk_complete_batch)) {
->
->                                            virtblk_request_done(req);    =
-//this never gets called... so blk_mq_add_to_batch() must always succeed
->
->                                    }
->
->                           }
->
->                  }
->
->
->
-> If I do, kernel 6.3.3 =E2=80=93 this is OK
->
-> virtio_blk.c,virtblk_handle_req() [irq handler]
->
->                  if (likely(!blk_should_fake_timeout(req->q))) {
->
->                           if (!blk_mq_complete_request_remote(req)) {
->
->                                    virtblk_request_done(req); //force thi=
-s here...
->
->                                   if (!blk_mq_add_to_batch(req, iob, virt=
-blk_vbr_status(vbr), virtblk_complete_batch)) {
->
->                                            virtblk_request_done(req);    =
-//this never gets called... so blk_mq_add_to_batch() must always succeed
->
->                                    }
->
->                           }
->
->                  }
->
->
->
->
->
-> Perhaps you might like to fix/test/revert this change=E2=80=A6
->
-> Martin
->
->
+> Hi Damien et al,
+>=20
+> This patch aka commit eca2040972b4 ("scsi: block: ioprio:
+> Clean up interface definition") in -next breaks LTP test
+> (at least on s390):
+>=20
+> # ./ioprio_set03
+> tst_test.c:1558: TINFO: Timeout per run is 0h 00m 30s
+> ioprio_set03.c:39: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not wo=
+rk
+> ioprio_set03.c:47: TINFO: tested illegal priority with class NONE
+> ioprio_set03.c:50: TPASS: returned correct error for wrong prio: EINVAL (=
+22)
+>=20
+> Summary:
+> passed   1
+> failed   1
+> broken   0
+> skipped  0
+> warnings 0
+>=20
+> Thanks!
 
-Hi Martin,
+Hello Alex,
 
-There are many changes between 6.3.0 and 6.3.3.
-Could you try to find a commit which triggers the io hang?
-Is it ok with 6.3.0 kernel or with reverting
-"virtio-blk: support completion batching for the IRQ path" commit?
+The LTP failure requires the following patches to LTP:
+https://lore.kernel.org/ltp/CACRpkdYdtgcLSqovV-HwZ9PvSXFBZv5wdU3KzasMR1wHga=
+h4kg@mail.gmail.com/T/#t
 
-We need to confirm which commit is causing the error.
+Unfortunately, the LTP patches seem to not be available on the archive.
 
-Regards,
-Suwan Kim
+
+However, considering that the LTP patches decided to keep the test case tha=
+t
+sets a priority level out of range, they also require this block layer patc=
+h:
+https://lore.kernel.org/linux-block/20230530061307.525644-1-dlemoal@kernel.=
+org/T/
+
+The patch would have to go via Martin's tree, since that is where commit
+eca2040972b4 ("scsi: block: ioprio: Clean up interface definition") is queu=
+ed.
+
+
+Kind regards,
+Niklas=
