@@ -2,82 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F37E72887F
-	for <lists+linux-block@lfdr.de>; Thu,  8 Jun 2023 21:29:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2280D728A39
+	for <lists+linux-block@lfdr.de>; Thu,  8 Jun 2023 23:25:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235430AbjFHT3m (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 8 Jun 2023 15:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44804 "EHLO
+        id S237033AbjFHVZe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 8 Jun 2023 17:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235396AbjFHT3i (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Jun 2023 15:29:38 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCFE30C1;
-        Thu,  8 Jun 2023 12:29:34 -0700 (PDT)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 358IrQsm025863;
-        Thu, 8 Jun 2023 19:29:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=QTWOjJMYYhRkIl9QWyb/lLeqq5HbMt8BmdpYeCN/EgI=;
- b=jQRwih0hGJfaaIeo9oZ8PB6v6tXZOm28+Y4SnQwDbtJVOqZ9LjZ95Loh9AxYUCAR5dMb
- 56kCwfNBHE+tHSgVPUZEEtzK9OJncK/c2VMwygjhsoWqT3uFSS+AlzvCcRx/yZzUbmoM
- aQq29VNzAtmbU91e6AOOjME2zWip+HnhRzf12mQJgedgwZdqkwaKij3lVLZ9rM1KyRHs
- JQcinYkoiPc+nCVD5/MamnV6wCAmKwyDDeW7UcF1jV4YTegURGc164m9RtbftqKNpZfa
- bk+MLJcL56Lej87uFKrWveMBlV8d9ocac8wjJZzouoU4xXPogHExfZtv7rQtgpVdSHd+ DQ== 
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r3mnp8wed-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Jun 2023 19:29:23 +0000
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 358GlLsi032737;
-        Thu, 8 Jun 2023 19:29:21 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([9.208.129.117])
-        by ppma04wdc.us.ibm.com (PPS) with ESMTPS id 3r2a76t7f3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Jun 2023 19:29:21 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-        by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 358JTJGB62980584
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 8 Jun 2023 19:29:20 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1B2B58062;
-        Thu,  8 Jun 2023 19:29:19 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7327F58063;
-        Thu,  8 Jun 2023 19:29:19 +0000 (GMT)
-Received: from rhel-laptop.ibm.com (unknown [9.61.61.30])
-        by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  8 Jun 2023 19:29:19 +0000 (GMT)
-From:   gjoyce@linux.vnet.ibm.com
-To:     linux-block@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
-        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
-        nayna@linux.ibm.com, axboe@kernel.dk, akpm@linux-foundation.org,
-        gjoyce@linux.vnet.ibm.com, keyrings@vger.kernel.org
-Subject: [PATCH v7 3/3] powerpc/pseries: PLPKS SED Opal keystore support
-Date:   Thu,  8 Jun 2023 14:29:18 -0500
-Message-Id: <20230608192918.516911-4-gjoyce@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230608192918.516911-1-gjoyce@linux.vnet.ibm.com>
-References: <20230608192918.516911-1-gjoyce@linux.vnet.ibm.com>
+        with ESMTP id S232870AbjFHVZd (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 8 Jun 2023 17:25:33 -0400
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF012D52
+        for <linux-block@vger.kernel.org>; Thu,  8 Jun 2023 14:24:50 -0700 (PDT)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-75e4497597cso97723285a.2
+        for <linux-block@vger.kernel.org>; Thu, 08 Jun 2023 14:24:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686259489; x=1688851489;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=liAgCM+QUjk8WKzG6uC2H2ST/koBGGcMOvClrIQqatc=;
+        b=U4MWSqVe5bygu2U9UIzf5SRPzG30vXO4dN75/bLr0ob+WAxtb+tT1hPIfb+ovhz+p3
+         nUEzWYsQ5Ci6O14KEHRjEYdDkksrj6+gLzRtmDUTrlg/209ZQIutdelXNxJAYPDo6gVS
+         I5QxcGDGajfrkx5jBdVPRdUu8jO/vJuSmdTL1dAb2TQ2hNyQZG6Gwze3TBcRFIMJ695S
+         AVtMDYz3XpagpaUq+ZdYSBrthGfW9hm9uSaydnT9KpbpHtfBThZe7+OUjYAOOTWhHvt2
+         5ouSUc0FJ7I5ez815IKAsaLiwzWTWkfHFUvTA/IRoGOr5jKDQ8/aSc2x8qZkzwMnJmxS
+         3M8Q==
+X-Gm-Message-State: AC+VfDz0FzN1fPT3n+fv6ayt/9td5dYq7P1BzPxCMdoxV3MuZ+e+5PpP
+        10dgdqAhr5gldbpfbFH/p0Fz
+X-Google-Smtp-Source: ACHHUZ5cTCLmtiiH2aSe8aPBdiBk6FrasapLcCm72SE2cqNOiC9OqxtNKW6L219nYmdc4g2nkFpg4Q==
+X-Received: by 2002:a05:6214:c88:b0:628:c4c8:4afb with SMTP id r8-20020a0562140c8800b00628c4c84afbmr3203617qvr.60.1686259489142;
+        Thu, 08 Jun 2023 14:24:49 -0700 (PDT)
+Received: from localhost (pool-68-160-166-30.bstnma.fios.verizon.net. [68.160.166.30])
+        by smtp.gmail.com with ESMTPSA id g16-20020ac84690000000b003f8e6071e43sm669752qto.3.2023.06.08.14.24.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jun 2023 14:24:48 -0700 (PDT)
+Date:   Thu, 8 Jun 2023 17:24:47 -0400
+From:   Mike Snitzer <snitzer@kernel.org>
+To:     Sarthak Kukreti <sarthakkukreti@chromium.org>,
+        Joe Thornber <ejt@redhat.com>,
+        Brian Foster <bfoster@redhat.com>
+Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Bart Van Assche <bvanassche@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>
+Subject: Re: [PATCH v7 4/5] dm-thin: Add REQ_OP_PROVISION support
+Message-ID: <ZIJHH+ekx59+6Uu0@redhat.com>
+References: <20230518223326.18744-1-sarthakkukreti@chromium.org>
+ <20230518223326.18744-5-sarthakkukreti@chromium.org>
+ <ZGeUYESOQsZkOQ1Q@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oRnsrIeZAiPSfK-7cFvb1fwndKicQQdz
-X-Proofpoint-ORIG-GUID: oRnsrIeZAiPSfK-7cFvb1fwndKicQQdz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-08_14,2023-06-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 suspectscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 spamscore=0 phishscore=0 bulkscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306080165
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZGeUYESOQsZkOQ1Q@redhat.com>
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,183 +73,92 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
+On Fri, May 19 2023 at 11:23P -0400,
+Mike Snitzer <snitzer@kernel.org> wrote:
 
-Define operations for SED Opal to read/write keys
-from POWER LPAR Platform KeyStore(PLPKS). This allows
-non-volatile storage of SED Opal keys.
+> On Thu, May 18 2023 at  6:33P -0400,
+> Sarthak Kukreti <sarthakkukreti@chromium.org> wrote:
+> 
+> > dm-thinpool uses the provision request to provision
+> > blocks for a dm-thin device. dm-thinpool currently does not
+> > pass through REQ_OP_PROVISION to underlying devices.
+> > 
+> > For shared blocks, provision requests will break sharing and copy the
+> > contents of the entire block. Additionally, if 'skip_block_zeroing'
+> > is not set, dm-thin will opt to zero out the entire range as a part
+> > of provisioning.
+> > 
+> > Signed-off-by: Sarthak Kukreti <sarthakkukreti@chromium.org>
+> > ---
+> >  drivers/md/dm-thin.c | 74 +++++++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 70 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
+> > index 2b13c949bd72..f1b68b558cf0 100644
+> > --- a/drivers/md/dm-thin.c
+> > +++ b/drivers/md/dm-thin.c
+> > @@ -1245,8 +1247,8 @@ static int io_overlaps_block(struct pool *pool, struct bio *bio)
+> >  
+> >  static int io_overwrites_block(struct pool *pool, struct bio *bio)
+> >  {
+> > -	return (bio_data_dir(bio) == WRITE) &&
+> > -		io_overlaps_block(pool, bio);
+> > +	return (bio_data_dir(bio) == WRITE) && io_overlaps_block(pool, bio) &&
+> > +	       bio_op(bio) != REQ_OP_PROVISION;
+> >  }
+> >  
+> >  static void save_and_set_endio(struct bio *bio, bio_end_io_t **save,
+> > @@ -1394,6 +1396,9 @@ static void schedule_zero(struct thin_c *tc, dm_block_t virt_block,
+> >  	m->data_block = data_block;
+> >  	m->cell = cell;
+> >  
+> > +	if (bio && bio_op(bio) == REQ_OP_PROVISION)
+> > +		m->bio = bio;
+> > +
+> >  	/*
+> >  	 * If the whole block of data is being overwritten or we are not
+> >  	 * zeroing pre-existing data, we can issue the bio immediately.
+> 
+> This doesn't seem like the best way to address avoiding passdown of
+> provision bios (relying on process_prepared_mapping's implementation
+> that happens to do the right thing if m->bio set).  Doing so cascades
+> into relying on complete_overwrite_bio() happening to _not_ actually
+> being specific to "overwrite" bios.
+> 
+> I don't have a better suggestion yet but will look closer.  Just think
+> this needs to be formalized a bit more rather than it happening to
+> "just work".
+> 
+> Cc'ing Joe to see what he thinks too.  This is something we can clean
+> up with a follow-on patch though, so not a show-stopper for this
+> series.
 
-Signed-off-by: Greg Joyce <gjoyce@linux.vnet.ibm.com>
-Reviewed-by: Jonathan Derrick <jonathan.derrick@linux.dev>
----
- arch/powerpc/platforms/pseries/Kconfig        |   6 +
- arch/powerpc/platforms/pseries/Makefile       |   1 +
- .../powerpc/platforms/pseries/plpks_sed_ops.c | 114 ++++++++++++++++++
- block/Kconfig                                 |   1 +
- 4 files changed, 122 insertions(+)
- create mode 100644 arch/powerpc/platforms/pseries/plpks_sed_ops.c
+I haven't circled back to look close enough at this but
+REQ_OP_PROVISION bios _are_ being passed down to the thin-pool's
+underlying data device.
 
-diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
-index 4ebf2ef2845d..afc0f6a61337 100644
---- a/arch/powerpc/platforms/pseries/Kconfig
-+++ b/arch/powerpc/platforms/pseries/Kconfig
-@@ -164,6 +164,12 @@ config PSERIES_PLPKS
- 	# This option is selected by in-kernel consumers that require
- 	# access to the PKS.
- 
-+config PSERIES_PLPKS_SED
-+	depends on PPC_PSERIES
-+	bool
-+	# This option is selected by in-kernel consumers that require
-+	# access to the SED PKS keystore.
-+
- config PAPR_SCM
- 	depends on PPC_PSERIES && MEMORY_HOTPLUG && LIBNVDIMM
- 	tristate "Support for the PAPR Storage Class Memory interface"
-diff --git a/arch/powerpc/platforms/pseries/Makefile b/arch/powerpc/platforms/pseries/Makefile
-index 53c3b91af2f7..1476c5e4433c 100644
---- a/arch/powerpc/platforms/pseries/Makefile
-+++ b/arch/powerpc/platforms/pseries/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_PPC_SVM)		+= svm.o
- obj-$(CONFIG_FA_DUMP)		+= rtas-fadump.o
- obj-$(CONFIG_PSERIES_PLPKS)	+= plpks.o
- obj-$(CONFIG_PPC_SECURE_BOOT)	+= plpks-secvar.o
-+obj-$(CONFIG_PSERIES_PLPKS_SED)	+= plpks_sed_ops.o
- obj-$(CONFIG_SUSPEND)		+= suspend.o
- obj-$(CONFIG_PPC_VAS)		+= vas.o vas-sysfs.o
- 
-diff --git a/arch/powerpc/platforms/pseries/plpks_sed_ops.c b/arch/powerpc/platforms/pseries/plpks_sed_ops.c
-new file mode 100644
-index 000000000000..c1d08075e850
---- /dev/null
-+++ b/arch/powerpc/platforms/pseries/plpks_sed_ops.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * POWER Platform specific code for non-volatile SED key access
-+ * Copyright (C) 2022 IBM Corporation
-+ *
-+ * Define operations for SED Opal to read/write keys
-+ * from POWER LPAR Platform KeyStore(PLPKS).
-+ *
-+ * Self Encrypting Drives(SED) key storage using PLPKS
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/ioctl.h>
-+#include <linux/sed-opal-key.h>
-+#include <asm/plpks.h>
-+
-+/*
-+ * structure that contains all SED data
-+ */
-+struct plpks_sed_object_data {
-+	u_char version;
-+	u_char pad1[7];
-+	u_long authority;
-+	u_long range;
-+	u_int  key_len;
-+	u_char key[32];
-+};
-+
-+#define PLPKS_SED_OBJECT_DATA_V0        0
-+#define PLPKS_SED_MANGLED_LABEL         "/default/pri"
-+#define PLPKS_SED_COMPONENT             "sed-opal"
-+#define PLPKS_SED_KEY                   "opal-boot-pin"
-+
-+/*
-+ * authority is admin1 and range is global
-+ */
-+#define PLPKS_SED_AUTHORITY  0x0000000900010001
-+#define PLPKS_SED_RANGE      0x0000080200000001
-+
-+void plpks_init_var(struct plpks_var *var, char *keyname)
-+{
-+	var->name = keyname;
-+	var->namelen = strlen(keyname);
-+	if (strcmp(PLPKS_SED_KEY, keyname) == 0) {
-+		var->name = PLPKS_SED_MANGLED_LABEL;
-+		var->namelen = strlen(keyname);
-+	}
-+	var->policy = PLPKS_WORLDREADABLE;
-+	var->os = PLPKS_VAR_COMMON;
-+	var->data = NULL;
-+	var->datalen = 0;
-+	var->component = PLPKS_SED_COMPONENT;
-+}
-+
-+/*
-+ * Read the SED Opal key from PLPKS given the label
-+ */
-+int sed_read_key(char *keyname, char *key, u_int *keylen)
-+{
-+	struct plpks_var var;
-+	struct plpks_sed_object_data data;
-+	int ret;
-+	u_int len;
-+
-+	plpks_init_var(&var, keyname);
-+	var.data = (u8 *)&data;
-+	var.datalen = sizeof(data);
-+
-+	ret = plpks_read_os_var(&var);
-+	if (ret != 0)
-+		return ret;
-+
-+	len = min_t(u16, be32_to_cpu(data.key_len), var.datalen);
-+	memcpy(key, data.key, len);
-+	key[len] = '\0';
-+	*keylen = len;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Write the SED Opal key to PLPKS given the label
-+ */
-+int sed_write_key(char *keyname, char *key, u_int keylen)
-+{
-+	struct plpks_var var;
-+	struct plpks_sed_object_data data;
-+	struct plpks_var_name vname;
-+
-+	plpks_init_var(&var, keyname);
-+
-+	var.datalen = sizeof(struct plpks_sed_object_data);
-+	var.data = (u8 *)&data;
-+
-+	/* initialize SED object */
-+	data.version = PLPKS_SED_OBJECT_DATA_V0;
-+	data.authority = cpu_to_be64(PLPKS_SED_AUTHORITY);
-+	data.range = cpu_to_be64(PLPKS_SED_RANGE);
-+	memset(&data.pad1, '\0', sizeof(data.pad1));
-+	data.key_len = cpu_to_be32(keylen);
-+	memcpy(data.key, (char *)key, keylen);
-+
-+	/*
-+	 * Key update requires remove first. The return value
-+	 * is ignored since it's okay if the key doesn't exist.
-+	 */
-+	vname.namelen = var.namelen;
-+	vname.name = var.name;
-+	plpks_remove_var(var.component, var.os, vname);
-+
-+	return plpks_write_var(var);
-+}
-diff --git a/block/Kconfig b/block/Kconfig
-index 77f72175eb72..0375d2abf7a6 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -185,6 +185,7 @@ config BLK_SED_OPAL
- 	bool "Logic for interfacing with Opal enabled SEDs"
- 	depends on KEYS
- 	select PSERIES_PLPKS if PPC_PSERIES
-+	select PSERIES_PLPKS_SED if PPC_PSERIES
- 	help
- 	Builds Logic for interfacing with Opal enabled controllers.
- 	Enabling this option enables users to setup/unlock/lock
--- 
-gjoyce@linux.vnet.ibm.com
+Brian Foster reported that if he issues a REQ_OP_PROVISION to a thin
+device after a snapshot (to break sharing), it'll fail with
+-EOPNOTSUPP (response is from bio being passed down to device that
+doesn't support it).  I was able to reproduce with:
 
+# fallocate --offset 0 --length 1048576 /dev/test/thin
+# lvcreate -n snap --snapshot test/thin
+
+# fallocate --offset 0 --length 1048576 /dev/test/thin
+fallocate: fallocate failed: Operation not supported
+
+But reports success when retried:
+# fallocate --offset 0 --length 1048576 /dev/test/thin
+# echo $?
+0
+
+It's somewhat moot in that Joe will be reimplementing handling for
+REQ_OP_PROVISION _but_ in the meantime it'd be nice to have a version
+of this patch that doesn't error (due to passdown of REQ_OP_PROVISION)
+when breaking sharing.  Primarily so the XFS guys (Dave and Brian) can
+make progress.
+
+I'll take a closer look tomorrow but figured I'd let you know.
+
+Mike
