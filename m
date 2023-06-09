@@ -2,117 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACBDA7296F6
-	for <lists+linux-block@lfdr.de>; Fri,  9 Jun 2023 12:35:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 552B97294F3
+	for <lists+linux-block@lfdr.de>; Fri,  9 Jun 2023 11:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbjFIKfC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Jun 2023 06:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39042 "EHLO
+        id S230301AbjFIJZk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Jun 2023 05:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239786AbjFIKe0 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Jun 2023 06:34:26 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDCF13C0A;
-        Fri,  9 Jun 2023 03:30:45 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Qcw0H2kxZz4f3mnt;
-        Fri,  9 Jun 2023 16:55:43 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgAHoZQQ6YJkD4IqLQ--.38860S4;
-        Fri, 09 Jun 2023 16:55:45 +0800 (CST)
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     jack@suse.cz, axboe@kernel.dk, andriy.shevchenko@linux.intel.com,
-        qiulaibin@huawei.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: [PATCH -next] blk-mq: fix potential io hang by wrong 'wake_batch'
-Date:   Fri,  9 Jun 2023 16:51:30 +0800
-Message-Id: <20230609085130.2320859-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S230474AbjFIJY0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Jun 2023 05:24:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A50746EA2;
+        Fri,  9 Jun 2023 02:18:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 852ED618EA;
+        Fri,  9 Jun 2023 09:17:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4493C4339C;
+        Fri,  9 Jun 2023 09:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686302272;
+        bh=RQisGjj9KL7kg1igwwGHNm1IZaL2rbAG8kSrlm0JzKg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=b8qzhMu/qygDwv+U5QLA/usX5K3ECwj+MWUgaKKeHU1A6jDPzwgU3fjQTHoJIcRQ2
+         vpNZP+VrZ90ThxS166jMfUrT+QZKtm1KBvowVFfbmzSS0ZpEBL4QomvUjcGt0b52Tl
+         Vt/rs9HHyHQ8dLhU3gGj0OEBMcgAa+y35a7SmaLQgtKrg33rNDWaZIuKcmpotThwN1
+         fu5DkvO1vw/WNMbn33yxhtRaPCasPjOvUKIM3fRdHCT2l22iUWVnMcE5Y8vhK9LjcW
+         H16WBbKojs/cJ4E/ye6mdTIzDmYUTtUdX5j7GNSY8Zb/7OM7u+VmMpIdu95ff+AI7s
+         ZYsiksFxpfitw==
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f738f579ceso11218805e9.3;
+        Fri, 09 Jun 2023 02:17:52 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwq/ZcmRaLstf5k5+DGAm73+mrYqlxspWg7ufDrlMRKjd2j+4ub
+        MDFeMhDN/92vaVJV4STVSg2VkUrdk3Oyt4z0aQM=
+X-Google-Smtp-Source: ACHHUZ70M63/s5OAb5SuDf8GVqAjthMUYLs718VlOe6y2HvimEHtOeklfwr9dXNjNX4PdOTUT/IHiblpHj8LQ8LvlE4=
+X-Received: by 2002:a7b:c8d7:0:b0:3f4:2cb2:a6cf with SMTP id
+ f23-20020a7bc8d7000000b003f42cb2a6cfmr423308wml.10.1686302271124; Fri, 09 Jun
+ 2023 02:17:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgAHoZQQ6YJkD4IqLQ--.38860S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF1UKFy5CFWUJF1xArW7twb_yoW8Xry8pa
-        yaka17Kw1Fvr1jqayDJanrX3WI9a1DKr45Grsaq3WFyF1j9r1I9r10kr4vqrW8trs3Cr43
-        Zr47JrWrAF4UG37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
-        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-        fUouWlDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        MAY_BE_FORGED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230608032404.1887046-1-mcgrof@kernel.org> <20230608032404.1887046-5-mcgrof@kernel.org>
+ <ZIHZngefNAtYtg7L@casper.infradead.org> <ZIHcl8epO0h3z1TO@infradead.org>
+ <ZIITpjDXyupKom+N@bombadil.infradead.org> <ZIKofhpTXREOR3ec@infradead.org>
+In-Reply-To: <ZIKofhpTXREOR3ec@infradead.org>
+From:   Luis Chamberlain <mcgrof@kernel.org>
+Date:   Fri, 9 Jun 2023 02:17:39 -0700
+X-Gmail-Original-Message-ID: <CAB=NE6V-w+NWTZ0tZaUNhOH2uW7T3EEYKt-+YhkDX6tZZ8BccA@mail.gmail.com>
+Message-ID: <CAB=NE6V-w+NWTZ0tZaUNhOH2uW7T3EEYKt-+YhkDX6tZZ8BccA@mail.gmail.com>
+Subject: Re: [RFC 4/4] bdev: extend bdev inode with it's own super_block
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, djwong@kernel.org,
+        dchinner@redhat.com, kbusch@kernel.org, hare@suse.de,
+        ritesh.list@gmail.com, rgoldwyn@suse.com, jack@suse.cz,
+        patches@lists.linux.dev, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        p.raghav@samsung.com, da.gomez@samsung.com, rohan.puri@samsung.com,
+        rpuri.linux@gmail.com, corbet@lwn.net, jake@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Thu, Jun 8, 2023 at 9:20=E2=80=AFPM Christoph Hellwig <hch@infradead.org=
+> wrote:
+> Again, every non-trivial file system right now has more than one set
+> of aops per superblock.  I'm not sure what problem you are trying to
+> solve here.
 
-In __blk_mq_tag_busy/idle(), updating 'active_queues' and calculating
-'wake_batch' is not atomic:
+Alright, a 2 liner does indeed let it co-exist and replace this mess, thank=
+s.
 
-t1:			t2:
-_blk_mq_tag_busy	blk_mq_tag_busy
-inc active_queues
-// assume 1->2
-			inc active_queues
-			// 2 -> 3
-			blk_mq_update_wake_batch
-			// calculate based on 3
-blk_mq_update_wake_batch
-/* calculate based on 2, while active_queues is actually 3. */
-
-Fix this problem by protecting them wih 'tags->lock', this is not a hot
-path, so performance should not be concerned.
-
-Fixes: 180dccb0dba4 ("blk-mq: fix tag_get wait task can't be awakened")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-mq-tag.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index dfd81cab5788..43fe523f39c7 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -55,9 +55,10 @@ void __blk_mq_tag_busy(struct blk_mq_hw_ctx *hctx)
- 			return;
- 	}
- 
-+	spin_lock_irq(&hctx->tags->lock);
- 	users = atomic_inc_return(&hctx->tags->active_queues);
--
- 	blk_mq_update_wake_batch(hctx->tags, users);
-+	spin_unlock_irq(&hctx->tags->lock);
- }
- 
- /*
-@@ -90,9 +91,10 @@ void __blk_mq_tag_idle(struct blk_mq_hw_ctx *hctx)
- 			return;
- 	}
- 
-+	spin_lock_irq(&tags->lock);
- 	users = atomic_dec_return(&tags->active_queues);
--
- 	blk_mq_update_wake_batch(tags, users);
-+	spin_unlock_irq(&tags->lock);
- 
- 	blk_mq_tag_wakeup_all(tags, false);
- }
--- 
-2.39.2
-
+  Luis
