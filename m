@@ -2,37 +2,37 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0C3D729A16
-	for <lists+linux-block@lfdr.de>; Fri,  9 Jun 2023 14:32:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30BA972995F
+	for <lists+linux-block@lfdr.de>; Fri,  9 Jun 2023 14:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238834AbjFIMcz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Jun 2023 08:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
+        id S240252AbjFIMQ4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Jun 2023 08:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240648AbjFIMcw (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Jun 2023 08:32:52 -0400
-Received: from mx2.veeam.com (mx2.veeam.com [64.129.123.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3713A85;
-        Fri,  9 Jun 2023 05:32:17 -0700 (PDT)
+        with ESMTP id S230076AbjFIMQy (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Jun 2023 08:16:54 -0400
+Received: from mx1.veeam.com (mx1.veeam.com [216.253.77.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010FF185;
+        Fri,  9 Jun 2023 05:16:51 -0700 (PDT)
 Received: from mail.veeam.com (prgmbx01.amust.local [172.24.128.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx2.veeam.com (Postfix) with ESMTPS id 1906141AA3;
-        Fri,  9 Jun 2023 07:52:41 -0400 (EDT)
+        by mx1.veeam.com (Postfix) with ESMTPS id CA86D42522;
+        Fri,  9 Jun 2023 07:59:17 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com;
-        s=mx2-2022; t=1686311561;
-        bh=krk8hUPrMmB198Ms1g5PyIDtLt0DcV19Jou6f4yAGwg=;
+        s=mx1-2022; t=1686311958;
+        bh=xI5U7I017OidC54JE6H4lbxHIRF0RMUuN/RqLqBQZp8=;
         h=From:To:CC:Subject:Date:From;
-        b=IYJsg9N8eytz39WLMlcbPEK7OW3PSm2AGMBBVCJJGD1mONe+Zb3UBRqSPU+uPhwNt
-         OBhPHWZGyx3G7CLm4z2WCWIFCcXfw79pW+GA/N8GcHMNF4aTPdpQ9NS0JWOu7USYBl
-         OmQKvJBz+QstQ1cuEDSetc8+A5p2lKjIbwUAKV4xFut9efGMkpRb+jZvPozPwelxV+
-         T3op1xFuVgVdlMVUjt0TCxce/4s64+MjNoA2yG23nlWnr3MBlHvrrIQK6llB4sPrZf
-         GAAXmMbsEIgc3ui7YpZwA9swn2bT+ybsft1d0dNGb3P6Uumhr1YCFAUYOPI7yhU4/W
-         50ki8aOclQMQA==
+        b=Abehoq5oDSasqmcnt/zZf3kO3zp7A+lTkaJymLCxpNoHkBNeeshcfI7Gtg11AVlWv
+         +YoNNyiEMjKcgQZ3Lsc5BLwllTFQXlmSWF/DhEd+d6GZ8Y9lKfzBEQxRxuTxmejqkP
+         xiy/v1jL7YvyH3ppkZ2nSyhwCcXxZKZ4QCzy9rKJjW7E76wwvwL/vlXsyssApFe9Bg
+         ehJAq9BcvN5SY9Mf0VB8DZ+s9R53VhrFXRkqflUFYNn1uK6jH8QrmpcDwsjyAKt42X
+         9Xjw/xXhELl/eLWJtzTRzAhWKILDRMQZGKmcrrLPwOv534N6/ob8MTXAS2fOpInub6
+         1i8YTLCZ7H0VQ==
 Received: from ssh-deb10-ssd-vb.amust.local (172.24.10.107) by
  prgmbx01.amust.local (172.24.128.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 9 Jun 2023 13:52:39 +0200
+ 15.2.1118.26; Fri, 9 Jun 2023 13:59:15 +0200
 From:   Sergei Shtepa <sergei.shtepa@veeam.com>
 To:     <axboe@kernel.dk>, <hch@infradead.org>, <corbet@lwn.net>,
         <snitzer@kernel.org>
@@ -41,10 +41,11 @@ CC:     <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
         <heikki.krogerus@linux.intel.com>, <ming.lei@redhat.com>,
         <gregkh@linuxfoundation.org>, <linux-block@vger.kernel.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <sergei.shtepa@veeam.com>
-Subject: [PATCH v4 00/11] blksnap - block devices snapshots module
-Date:   Fri, 9 Jun 2023 13:51:55 +0200
-Message-ID: <20230609115206.4649-1-sergei.shtepa@veeam.com>
+        <linux-fsdevel@vger.kernel.org>, <sergei.shtepa@veeam.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH v4 01/11] documentation: Block Device Filtering Mechanism
+Date:   Fri, 9 Jun 2023 13:58:48 +0200
+Message-ID: <20230609115858.4737-1-sergei.shtepa@veeam.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -65,181 +66,121 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi all.
+The document contains:
+* Describes the purpose of the mechanism
+* A little historical background on the capabilities of handling I/O
+  units of the Linux kernel
+* Brief description of the design
+* Reference to interface description
 
-I am happy to offer a improved version of the Block Devices Snapshots
-Module. It allows to create non-persistent snapshots of any block devices.
-The main purpose of such snapshots is to provide backups of block devices.
-See more in Documentation/block/blksnap.rst.
-
-The Block Device Filtering Mechanism is added to the block layer. This
-allows to attach and detach block device filters to the block layer.
-Filters allow to extend the functionality of the block layer.
-See more in Documentation/block/blkfilter.rst.
-
-The tool, library and tests for working with blksnap can be found on github.
-Link: https://github.com/veeam/blksnap/tree/stable-v2.0
-
-There are few changes in this patch version. The experience of using the
-out-of-tree version of the blksnap module on real servers was taken into
-account.
-
-v4 changes:
-- Structures for describing the state of chunks are allocated dynamically.
-  This reduces memory consumption, since the struct chunk is allocated only
-  for those blocks for which the snapshot image state differs from the
-  original block device.
-- The algorithm for calculating the chunk size depending on the size of the
-  block device has been changed. For large block devices, it is now
-  possible to allocate a larger number of chunks, and their size is smaller.
-- For block devices, a 'filter' file has been added to /sys/block/<device>.
-  It displays the name of the filter that is attached to the block device.
-- Fixed a problem with the lack of protection against re-adding a block
-  device to a snapshot.
-- Fixed a bug in the algorithm of allocating the next bio for a chunk.
-  This problem was accurred on large disks, for which a chunk consists of
-  at least two bio.
-- The ownership mechanism of the diff_area structure has been changed.
-  This fixed the error of prematurely releasing the diff_area structure
-  when destroying the snapshot.
-- Documentation corrected.
-- The Sparse analyzer is passed.
-- Use __u64 type instead pointers in UAPI.
-
-v3 changes:
-- New block device I/O contols BLKFILTER_ATTACH and BLKFILTER_DETACH allow
-  to attach and detach filters.
-- New block device I/O contol BLKFILTER_CTL allow send command to attached
-  block device filter.
-- The copy-on-write algorithm for processing I/O units has been optimized
-  and has become asynchronous.
-- The snapshot image reading algorithm has been optimized and has become
-  asynchronous.
-- Optimized the finite state machine for processing chunks.
-- Fixed a tracking block size calculation bug.
-
-v2 changes:
-- Added documentation for Block Device Filtering Mechanism.
-- Added documentation for Block Devices Snapshots Module (blksnap).
-- The MAINTAINERS file has been updated.
-- Optimized queue code for snapshot images.
-- Fixed comments, log messages and code for better readability.
-
-v1 changes:
-- Forgotten "static" declarations have been added.
-- The text of the comments has been corrected.
-- It is possible to connect only one filter, since there are no others in
-  upstream.
-- Do not have additional locks for attach/detach filter.
-- blksnap.h moved to include/uapi/.
-- #pragma once and commented code removed.
-- uuid_t removed from user API.
-- Removed default values for module parameters from the configuration file.
-- The debugging code for tracking memory leaks has been removed.
-- Simplified Makefile.
-- Optimized work with large memory buffers, CBT tables are now in virtual
-  memory.
-- The allocation code of minor numbers has been optimized.
-- The implementation of the snapshot image block device has been
-  simplified, now it is a bio-based block device.
-- Removed initialization of global variables with null values.
-- only one bio is used to copy one chunk.
-- Checked on ppc64le.
-
-Thanks for preparing v4 patch:
-- Christoph Hellwig <hch@infradead.org> for his significant contribution
-  to the project.
-- Fabio Fantoni <fantonifabio@tiscali.it> for his participation in the
-  project, useful advice and faith in the success of the project.
-- Donald Buczek <buczek@molgen.mpg.de> for researching the module and
-  user-space tool. His fresh look revealed a number of flaw.
-- Bagas Sanjaya <bagasdotme@gmail.com> for comments on the documentation.
-
-Sergei Shtepa (11):
-  documentation: Block Device Filtering Mechanism
-  block: Block Device Filtering Mechanism
-  documentation: Block Devices Snapshots Module
-  blksnap: header file of the module interface
-  blksnap: module management interface functions
-  blksnap: handling and tracking I/O units
-  blksnap: minimum data storage unit of the original block device
-  blksnap: difference storage
-  blksnap: event queue from the difference storage
-  blksnap: snapshot and snapshot image block device
-  blksnap: Kconfig and Makefile
-
- Documentation/block/blkfilter.rst    |  64 ++++
- Documentation/block/blksnap.rst      | 345 +++++++++++++++++
- Documentation/block/index.rst        |   2 +
- MAINTAINERS                          |  17 +
- block/Makefile                       |   2 +-
- block/bdev.c                         |   1 +
- block/blk-core.c                     |  27 ++
- block/blk-filter.c                   | 213 ++++++++++
- block/blk.h                          |  11 +
- block/genhd.c                        |  10 +
- block/ioctl.c                        |   7 +
- block/partitions/core.c              |  10 +
- drivers/block/Kconfig                |   2 +
- drivers/block/Makefile               |   2 +
- drivers/block/blksnap/Kconfig        |  12 +
- drivers/block/blksnap/Makefile       |  15 +
- drivers/block/blksnap/cbt_map.c      | 227 +++++++++++
- drivers/block/blksnap/cbt_map.h      |  90 +++++
- drivers/block/blksnap/chunk.c        | 454 ++++++++++++++++++++++
- drivers/block/blksnap/chunk.h        | 114 ++++++
- drivers/block/blksnap/diff_area.c    | 554 +++++++++++++++++++++++++++
- drivers/block/blksnap/diff_area.h    | 144 +++++++
- drivers/block/blksnap/diff_buffer.c  | 127 ++++++
- drivers/block/blksnap/diff_buffer.h  |  37 ++
- drivers/block/blksnap/diff_storage.c | 315 +++++++++++++++
- drivers/block/blksnap/diff_storage.h | 111 ++++++
- drivers/block/blksnap/event_queue.c  |  87 +++++
- drivers/block/blksnap/event_queue.h  |  65 ++++
- drivers/block/blksnap/main.c         | 483 +++++++++++++++++++++++
- drivers/block/blksnap/params.h       |  16 +
- drivers/block/blksnap/snapimage.c    | 124 ++++++
- drivers/block/blksnap/snapimage.h    |  10 +
- drivers/block/blksnap/snapshot.c     | 443 +++++++++++++++++++++
- drivers/block/blksnap/snapshot.h     |  68 ++++
- drivers/block/blksnap/tracker.c      | 339 ++++++++++++++++
- drivers/block/blksnap/tracker.h      |  75 ++++
- include/linux/blk-filter.h           |  51 +++
- include/linux/blk_types.h            |   2 +
- include/linux/blkdev.h               |   1 +
- include/uapi/linux/blk-filter.h      |  35 ++
- include/uapi/linux/blksnap.h         | 421 ++++++++++++++++++++
- include/uapi/linux/fs.h              |   3 +
- 42 files changed, 5135 insertions(+), 1 deletion(-)
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Signed-off-by: Sergei Shtepa <sergei.shtepa@veeam.com>
+---
+ Documentation/block/blkfilter.rst | 64 +++++++++++++++++++++++++++++++
+ Documentation/block/index.rst     |  1 +
+ MAINTAINERS                       |  6 +++
+ 3 files changed, 71 insertions(+)
  create mode 100644 Documentation/block/blkfilter.rst
- create mode 100644 Documentation/block/blksnap.rst
- create mode 100644 block/blk-filter.c
- create mode 100644 drivers/block/blksnap/Kconfig
- create mode 100644 drivers/block/blksnap/Makefile
- create mode 100644 drivers/block/blksnap/cbt_map.c
- create mode 100644 drivers/block/blksnap/cbt_map.h
- create mode 100644 drivers/block/blksnap/chunk.c
- create mode 100644 drivers/block/blksnap/chunk.h
- create mode 100644 drivers/block/blksnap/diff_area.c
- create mode 100644 drivers/block/blksnap/diff_area.h
- create mode 100644 drivers/block/blksnap/diff_buffer.c
- create mode 100644 drivers/block/blksnap/diff_buffer.h
- create mode 100644 drivers/block/blksnap/diff_storage.c
- create mode 100644 drivers/block/blksnap/diff_storage.h
- create mode 100644 drivers/block/blksnap/event_queue.c
- create mode 100644 drivers/block/blksnap/event_queue.h
- create mode 100644 drivers/block/blksnap/main.c
- create mode 100644 drivers/block/blksnap/params.h
- create mode 100644 drivers/block/blksnap/snapimage.c
- create mode 100644 drivers/block/blksnap/snapimage.h
- create mode 100644 drivers/block/blksnap/snapshot.c
- create mode 100644 drivers/block/blksnap/snapshot.h
- create mode 100644 drivers/block/blksnap/tracker.c
- create mode 100644 drivers/block/blksnap/tracker.h
- create mode 100644 include/linux/blk-filter.h
- create mode 100644 include/uapi/linux/blk-filter.h
- create mode 100644 include/uapi/linux/blksnap.h
 
+diff --git a/Documentation/block/blkfilter.rst b/Documentation/block/blkfilter.rst
+new file mode 100644
+index 000000000000..555625789244
+--- /dev/null
++++ b/Documentation/block/blkfilter.rst
+@@ -0,0 +1,64 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++================================
++Block Device Filtering Mechanism
++================================
++
++The block device filtering mechanism is an API that allows to attach block
++device filters. Block device filters allow perform additional processing
++for I/O units.
++
++Introduction
++============
++
++The idea of handling I/O units on block devices is not new. Back in the
++2.6 kernel, there was an undocumented possibility of handling I/O units
++by substituting the make_request_fn() function, which belonged to the
++request_queue structure. But none of the in-tree kernel modules used this
++feature, and it was eliminated in the 5.10 kernel.
++
++The block device filtering mechanism returns the ability to handle I/O units.
++It is possible to safely attach filter to a block device "on the fly" without
++changing the structure of block devices stack.
++
++It supports attaching one filter to one block device, because there is only
++one filter implementation in the kernel yet.
++See Documentation/block/blksnap.rst.
++
++Design
++======
++
++The block device filtering mechanism provides registration and unregistration
++for filter operations. The struct blkfilter_operations contains a pointer to
++the callback functions for the filter. After registering the filter operations,
++filter can be managed using block device ioctl BLKFILTER_ATTACH,
++BLKFILTER_DETACH and BLKFILTER_CTL.
++
++When the filter is attached, the callback function is called for each I/O unit
++for a block device, providing I/O unit filtering. Depending on the result of
++filtering the I/O unit, it can either be passed for subsequent processing by
++the block layer, or skipped.
++
++The filter can be implemented as a loadable module. In this case, the filter
++module cannot be unloaded while the filter is attached to at least one of the
++block devices.
++
++Interface description
++=====================
++
++The ioctl BLKFILTER_ATTACH and BLKFILTER_DETACH use structure blkfilter_name.
++It allows to attach a filter to a block device or detach it.
++
++The ioctl BLKFILTER_CTL use structure blkfilter_ctl. It allows to send a
++filter-specific command.
++
++.. kernel-doc:: include/uapi/linux/blk-filter.h
++
++To register in the system, the filter creates its own account, which contains
++callback functions, unique filter name and module owner. This filter account is
++used by the registration functions.
++
++.. kernel-doc:: include/linux/blk-filter.h
++
++.. kernel-doc:: block/blk-filter.c
++   :export:
+diff --git a/Documentation/block/index.rst b/Documentation/block/index.rst
+index 9fea696f9daa..e9712f72cd6d 100644
+--- a/Documentation/block/index.rst
++++ b/Documentation/block/index.rst
+@@ -10,6 +10,7 @@ Block
+    bfq-iosched
+    biovecs
+    blk-mq
++   blkfilter
+    cmdline-partition
+    data-integrity
+    deadline-iosched
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 250518fc70ff..f85f21487364 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3583,6 +3583,12 @@ M:	Jan-Simon Moeller <jansimon.moeller@gmx.de>
+ S:	Maintained
+ F:	drivers/leds/leds-blinkm.c
+
++BLOCK DEVICE FILTERING MECHANISM
++M:	Sergei Shtepa <sergei.shtepa@veeam.com>
++L:	linux-block@vger.kernel.org
++S:	Supported
++F:	Documentation/block/blkfilter.rst
++
+ BLOCK LAYER
+ M:	Jens Axboe <axboe@kernel.dk>
+ L:	linux-block@vger.kernel.org
 --
 2.20.1
 
