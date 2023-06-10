@@ -2,110 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0864F72A701
-	for <lists+linux-block@lfdr.de>; Sat, 10 Jun 2023 02:23:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3898072A85E
+	for <lists+linux-block@lfdr.de>; Sat, 10 Jun 2023 04:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbjFJAXz (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 9 Jun 2023 20:23:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47706 "EHLO
+        id S233399AbjFJCY2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 9 Jun 2023 22:24:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjFJAXz (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Jun 2023 20:23:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C471A3A81
-        for <linux-block@vger.kernel.org>; Fri,  9 Jun 2023 17:23:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686356593;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bsQWyXs3Wi1lrZUD+4VBakidjsUgNo6KG4s1PH+Z7sA=;
-        b=C1OMuM9R/RiIFb3WgRj2abK4gWSqdTtVHj0Dn42EHrHo0lmoV077PA03WkndemyXxKCHQ7
-        FRJrkMRlBbsAuGcIqDl7ymn3iwqktvSh0UubD3loaZIZlQiJwUTMrNJuifqN7QAaNIMv6G
-        IfMrweF5wcjg5c5VW1Ye/G7zb9nD3H4=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-672-64PHJ2Y8NmKmkYBr5xvh8A-1; Fri, 09 Jun 2023 20:23:09 -0400
-X-MC-Unique: 64PHJ2Y8NmKmkYBr5xvh8A-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b1a7e31de7so17666241fa.1
-        for <linux-block@vger.kernel.org>; Fri, 09 Jun 2023 17:23:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686356588; x=1688948588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bsQWyXs3Wi1lrZUD+4VBakidjsUgNo6KG4s1PH+Z7sA=;
-        b=BUW/2dt1nz+8vYpXQFUZR3bAs2GQmmxREfTayAaCiBxIEGfP/wETQSosNiwRN81Yy7
-         dCMo2Jt0fZNISXeXqCETMuYA6+dqiaaMXTzsc8tXt5YY0U/a6/OQXBgNl0RZYb0HQxpf
-         nFyFn68zoOBtbbieqXR8K4nphFbZNJ7xmqXZZTC8ZilRNeIC8UohNnATdhrWtdTEwSU0
-         Gf8h0Un1Io1e2T63e6rSGSwCire4T66Mt5IBj0pjss6pLcbzC1oZUFnabttvIbRMdzo4
-         ePxWV5t0mkdLrkzeR+1iXdAhmcg9skAgl4Kv0dU7JkSnRNNLfbHe23wPT0U7Rb5RVeW4
-         wiWQ==
-X-Gm-Message-State: AC+VfDxXh8QcznAFpF1DiZdeDZDmtr46QZ470Jqze/UmSpDQKBzh0g2g
-        RRp8x308Asux4t7RobDDFx4kDVsTwMeR3q8acVtH8lzuhFQs2kOGR5UmbaBrnDeDspf2eirO2Du
-        oVCuTXHaRyg1SW72Rn+pBAlbmXnPeqTi4fBkUuxw=
-X-Received: by 2002:a2e:9c97:0:b0:2b2:a174:c9f9 with SMTP id x23-20020a2e9c97000000b002b2a174c9f9mr99051lji.37.1686356588088;
-        Fri, 09 Jun 2023 17:23:08 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6CgfNRbFyZRr2JEpFuiWGY2Gqn+v0iwO7DBONp5N+dihzUr4eidMfArrQ36mDZnO+btif76a4JgjxTZ8NE0zU=
-X-Received: by 2002:a2e:9c97:0:b0:2b2:a174:c9f9 with SMTP id
- x23-20020a2e9c97000000b002b2a174c9f9mr99046lji.37.1686356587784; Fri, 09 Jun
- 2023 17:23:07 -0700 (PDT)
+        with ESMTP id S229547AbjFJCY0 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 9 Jun 2023 22:24:26 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C9C73AB7;
+        Fri,  9 Jun 2023 19:24:25 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QdMGD44m7z4f3k6H;
+        Sat, 10 Jun 2023 10:24:20 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgBH_rHT3oNkRsFjLQ--.44376S4;
+        Sat, 10 Jun 2023 10:24:21 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     hch@lst.de, axboe@kernel.dk, dgilbert@interlog.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, yukuai3@huawei.com,
+        yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: [PATCH v5 0/3] fix blktrace debugfs entries leakage
+Date:   Sat, 10 Jun 2023 10:20:00 +0800
+Message-Id: <20230610022003.2557284-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230609180805.736872-1-jpittman@redhat.com> <yq1legs1nns.fsf@ca-mkp.ca.oracle.com>
-In-Reply-To: <yq1legs1nns.fsf@ca-mkp.ca.oracle.com>
-From:   John Pittman <jpittman@redhat.com>
-Date:   Fri, 9 Jun 2023 20:22:31 -0400
-Message-ID: <CA+RJvhzPfmjD0FZxWS5gFeZJWKki5OcdmywZdngqhgSjm6wiFA@mail.gmail.com>
-Subject: Re: [PATCH] block: set reasonable default for discard max
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     axboe@kernel.dk, djeffery@redhat.com, loberman@redhat.com,
-        emilne@redhat.com, minlei@redhat.com, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgBH_rHT3oNkRsFjLQ--.44376S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw4kKr48Kw15KrWfXry8Grg_yoWfXrc_uw
+        4DC3s7Gr17WF9YkF4SyF4rJFW09ay09r1UX3Wktry3Zw17Xry3Gayqgw4qq3WakFn8ua48
+        Ary7A348Xw1aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+        AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWU
+        JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoO
+        J5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Thanks alot for responding Martin.  Forgive my ignorance; just trying
-to gain understanding.  For example, if we find a device with a 2TiB
-max discard (way too high for any device to handle reasonably from
-what I've seen), and we make a quirk for it that brings the max
-discard down, how do we decide what value to bring that down to?
-Would we ask the hardware vendor for an optimal value?  Is there some
-way we could decide the value?  Thanks again for any help.
+From: Yu Kuai <yukuai3@huawei.com>
 
-On Fri, Jun 9, 2023 at 2:48=E2=80=AFPM Martin K. Petersen
-<martin.petersen@oracle.com> wrote:
->
->
-> John,
->
-> > Some drive manufacturers export a very large supported max discard
-> > size. However, when the operating system sends I/O of the max size to
-> > the device, extreme I/O latency can often be encountered. Since
-> > hardware does not provide an optimal discard value in addition to the
-> > max, and there is no way to foreshadow how well a drive handles the
-> > large size, take the method from max_sectors setting, and use
-> > BLK_DEF_MAX_SECTORS to set a more reasonable default discard max. This
-> > should avoid the extreme latency while still allowing the user to
-> > increase the value for specific needs.
->
-> What's reasonable for one device may be completely unreasonable for
-> another. 4 * BLK_DEF_MAX_SECTORS is *tiny* and will penalize performance
-> on many devices.
->
-> If there's a problem with a device returning something that doesn't make
-> sense, let's quirk it.
->
-> --
-> Martin K. Petersen      Oracle Linux Engineering
->
+Changes in v5:
+ - blk_trace_shutdown() can't be used for module, add a new patch to use
+ inline function for blk_trace_remove() to fix build warning from v3.
+ - add review tag for patch 2,3 that is the same from v3.
+
+Changes in v4:
+ - blk_trace_remove() will trigger build warning if blktrace config is
+ not enabled, use blk_trace_shutdown() instead.
+
+Changes in v3:
+ - add a new patch to handle /dev/sg
+
+Changes in v2:
+ - cleanup bltkrace in disk_release() instead of blk_free_queue()
+
+Yu Kuai (3):
+  blktrace: use inline function for blk_trace_remove() while blktrace is
+    disabled
+  scsi: sg: fix blktrace debugfs entries leakage
+  block: fix blktrace debugfs entries leakage
+
+ block/genhd.c                | 5 ++++-
+ drivers/scsi/sg.c            | 9 +++++++++
+ include/linux/blktrace_api.h | 6 +++++-
+ 3 files changed, 18 insertions(+), 2 deletions(-)
+
+-- 
+2.39.2
 
