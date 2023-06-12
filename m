@@ -2,80 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB36C72CD27
-	for <lists+linux-block@lfdr.de>; Mon, 12 Jun 2023 19:45:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C33C72CD2E
+	for <lists+linux-block@lfdr.de>; Mon, 12 Jun 2023 19:47:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233643AbjFLRpK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 12 Jun 2023 13:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51506 "EHLO
+        id S235126AbjFLRr3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 12 Jun 2023 13:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237113AbjFLRpJ (ORCPT
+        with ESMTP id S234982AbjFLRr3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 12 Jun 2023 13:45:09 -0400
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96C198
-        for <linux-block@vger.kernel.org>; Mon, 12 Jun 2023 10:45:07 -0700 (PDT)
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-558b6cffe03so2641467eaf.3
-        for <linux-block@vger.kernel.org>; Mon, 12 Jun 2023 10:45:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686591907; x=1689183907;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RAlb9volQIGj45ZSIOc8zo0X80J8Ja06Rm5bQqeTV0A=;
-        b=ZreZADzkConFaJr1Ik5254aRxGZjljr0YrvBRNTocHxig+JbsNoJCbw22448tKqX3B
-         1zHg+U8sHbBiDGgKBe8xqvZ1P2PKARO/ysEmVivR0rNtP+E8wtIlxTmKau0D9GvTsbaw
-         kxnGCk5adwDRZ/Yp5dEA4PKjH+ZfGmGt0WFg7G79FDC5z+kRH+sQ3PL3monox0n579uV
-         c3uG5+vdOZLbFsiadxgnLWe8gusraVdMb03T+CwE5xlb+ufnl9z3C+v2tagG5ekjrI6X
-         HVLffqKqLOvZ3h6FckMsq6sn/QDkCFLNSAy4nXhag8RGWPjsivBDVF6NDGbluCc3TQGH
-         qQng==
-X-Gm-Message-State: AC+VfDxDcGGI97G3LaPG9R+8g+NHmj4gDLFxLT2FXZ/OPX72yqcMXm4N
-        /LEv//E/zZki32Y6fkrJUNYNAzp0ctOiyQ==
-X-Google-Smtp-Source: ACHHUZ4ZxRGPjrlBLv4O9Uv924tulj6XNcgslKjQVlxjFSao0rsSaIgHq9oGc4KzfAb/8oKZPxwYHQ==
-X-Received: by 2002:a54:4805:0:b0:39a:ba1d:89a9 with SMTP id j5-20020a544805000000b0039aba1d89a9mr4341090oij.46.1686591906497;
-        Mon, 12 Jun 2023 10:45:06 -0700 (PDT)
-Received: from [192.168.3.219] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id g3-20020a17090a3c8300b0024e33c69ee5sm7664051pjc.5.2023.06.12.10.45.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jun 2023 10:45:05 -0700 (PDT)
-Message-ID: <a663fc71-3a06-f4bf-8451-1fbee328c2b6@acm.org>
-Date:   Mon, 12 Jun 2023 10:45:05 -0700
+        Mon, 12 Jun 2023 13:47:29 -0400
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEE2FB
+        for <linux-block@vger.kernel.org>; Mon, 12 Jun 2023 10:47:27 -0700 (PDT)
+Received: from cwcc.thunk.org (pool-173-48-82-39.bstnma.fios.verizon.net [173.48.82.39])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 35CHl1lV018047
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Jun 2023 13:47:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+        t=1686592023; bh=k5/mHoM4TKtwuRzijsuJUvOl+RgFkywa2qtXQ3b9Dqs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=lF0Da9dBYHdFjBZwXhrM/yTEBIMSSnD44OE2GDG/1eZqwdpKGecGfQyKQwJ5ZKr+I
+         mLe9HOMFzcQKASATbj0M/4P81ls5rg/slbVop7JCoLOqGz+AFlVdyPLyIAmNMvDtIz
+         x9VRsOfDyBZJRiLoKXFwR9XLoTF4LFp2AenkjvPWA3wf3lXzRSzLkqOoNpfVk8CrFU
+         zWW7VXtAzgvrPQ/wu3IqU/bix1gMsvTvf1OfZP4KGQMwHGMfc1OfXl8wcYnveI7S44
+         gf4D02ajuDr6QFALUHSt01hD2vXZSlz7IP9dTIAduCWawOYWA3nXVlv/oCm7yIcb2C
+         6ek0sBxatUi/Q==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+        id 3D31815C00B0; Mon, 12 Jun 2023 13:47:01 -0400 (EDT)
+Date:   Mon, 12 Jun 2023 13:47:01 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        yebin <yebin@huaweicloud.com>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] block: Add config option to not allow writing to mounted
+ devices
+Message-ID: <20230612174701.GC1500045@mit.edu>
+References: <20230612161614.10302-1-jack@suse.cz>
+ <20230612162545.frpr3oqlqydsksle@quack3>
+ <2f629dc3-fe39-624f-a2fe-d29eee1d2b82@acm.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] blk-crypto: use dynamic lock class for
- blk_crypto_profile::lock
-Content-Language: en-US
-To:     Eric Biggers <ebiggers@kernel.org>, linux-block@vger.kernel.org
-Cc:     dm-devel@redhat.com
-References: <20230610061139.212085-1-ebiggers@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20230610061139.212085-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f629dc3-fe39-624f-a2fe-d29eee1d2b82@acm.org>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/9/23 23:11, Eric Biggers wrote:
-> When a device-mapper device is passing through the inline encryption
-> support of an underlying device, calls to blk_crypto_evict_key() take
-> the blk_crypto_profile::lock of the device-mapper device, then take the
-> blk_crypto_profile::lock of the underlying device (nested).  This isn't
-> a real deadlock, but it causes a lockdep report because there is only
-> one lock class for all instances of this lock.
+On Mon, Jun 12, 2023 at 10:39:51AM -0700, Bart Van Assche wrote:
+> > > Writing to mounted devices is dangerous and can lead to filesystem
+> > > corruption as well as crashes. Furthermore syzbot comes with more and
+> > > more involved examples how to corrupt block device under a mounted
+> > > filesystem leading to kernel crashes and reports we can do nothing
+> > > about. Add config option to disallow writing to mounted (exclusively
+> > > open) block devices. Syzbot can use this option to avoid uninteresting
+> > > crashes. Also users whose userspace setup does not need writing to
+> > > mounted block devices can set this config option for hardening.
 > 
-> Lockdep subclasses don't really work here because the hierarchy of block
-> devices is dynamic and could have more than 2 levels.
-> 
-> Instead, register a dynamic lock class for each blk_crypto_profile, and
-> associate that with the lock.
+> Have alternatives been configured to making this functionality
+> configurable at build time only? How about a kernel command line
+> parameter instead of a config option?
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+I could imagine wanting a config option which changes the default, as
+well as a way of setting the parameter on the command line so that
+users of distro kernel can change the parameter value.  That's
+especially since it might be useful for more than just reining in
+syzbot reports.
+
+						- Ted
