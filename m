@@ -2,65 +2,89 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D3D272C6A8
-	for <lists+linux-block@lfdr.de>; Mon, 12 Jun 2023 15:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3043772C712
+	for <lists+linux-block@lfdr.de>; Mon, 12 Jun 2023 16:11:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236935AbjFLN4n (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 12 Jun 2023 09:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42616 "EHLO
+        id S237093AbjFLOLw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 12 Jun 2023 10:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236142AbjFLNz6 (ORCPT
+        with ESMTP id S237047AbjFLOLv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 12 Jun 2023 09:55:58 -0400
-Received: from mx1.veeam.com (mx1.veeam.com [216.253.77.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1221739;
-        Mon, 12 Jun 2023 06:55:35 -0700 (PDT)
-Received: from mail.veeam.com (prgmbx01.amust.local [172.24.128.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.veeam.com (Postfix) with ESMTPS id AEC33424F8;
-        Mon, 12 Jun 2023 09:55:32 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com;
-        s=mx1-2022; t=1686578132;
-        bh=eEtat5a3MMNeh43h2xdMlC3WmW17Blxcz/l7KSWKamY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=LB7L2q5RFq72yVKa3GNgJ94oqke7NX9Se3ItUgHBujEC4gpbjtkQGa1byv2AAAtYW
-         P7QDTVUyINYbm/tIOu3cbPO5msogpi3hgdjTiF5b2P2TL962dfDlsk5moOolVjlCNy
-         KQTI7Yg52ADl13QGlKYiQOY7A+ij1HOPWYBBCZ32JQNRWjL01NbiyAA57ShI0aRVEf
-         jBFPNmo90OjkenOU4+2njDf7EVLX64cxlM2AjIuxcFAgT8n9GaR9FsTj96m83hv4Sr
-         Q7f3Ah2h5ld3ifVD5rC1kjmV5Yy1VeHLHtr0ByIHsD0oSvGSedC5x4vcDvz+UX5CxD
-         BEQSi5bdvH6nQ==
-Received: from ssh-deb10-ssd-vb.amust.local (172.24.10.107) by
- prgmbx01.amust.local (172.24.128.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 12 Jun 2023 15:55:31 +0200
-From:   Sergei Shtepa <sergei.shtepa@veeam.com>
-To:     <axboe@kernel.dk>, <hch@infradead.org>, <corbet@lwn.net>,
-        <snitzer@kernel.org>
-CC:     <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
-        <dchinner@redhat.com>, <willy@infradead.org>, <dlemoal@kernel.org>,
-        <linux@weissschuh.net>, <jack@suse.cz>, <ming.lei@redhat.com>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <sergei.shtepa@veeam.com>
-Subject: [PATCH v5 11/11] blksnap: Kconfig and Makefile
-Date:   Mon, 12 Jun 2023 15:52:28 +0200
-Message-ID: <20230612135228.10702-12-sergei.shtepa@veeam.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230612135228.10702-1-sergei.shtepa@veeam.com>
-References: <20230612135228.10702-1-sergei.shtepa@veeam.com>
+        Mon, 12 Jun 2023 10:11:51 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 927CE10C4
+        for <linux-block@vger.kernel.org>; Mon, 12 Jun 2023 07:11:48 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id ca18e2360f4ac-7748ca56133so36785339f.0
+        for <linux-block@vger.kernel.org>; Mon, 12 Jun 2023 07:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1686579108; x=1689171108;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4muTChvfXbyFleywXuJztp663UoDJyd/b1njxzLhqy8=;
+        b=sLZGHozVNiyKe7ZdVW/Izn1P7sgaQShCFq8nFxDEUw2HPGtUJB2+ZAyPMlipviAeTp
+         k3uQ8FI/e0eQenGUZnHNrzUL6Ik3G0IXm+GRBayvvLbMzgaY+UXyhfCpD4GOrVPEdTJv
+         IcIkIA09lG9xzyFYUO5JzJkmOBfAprST6Rp9IHrO/jxkuWSRx8pvHMOooqILGwgI/Lo6
+         1VEW0UpTP7V9T32ew0hLYFEC4JqpDUjaCB9j68pNjawpUBhqZ7JS8ocpEabGbvX3LMxh
+         84vjMA0Z3WUKqubPW8wvoXypai5o3n5GNzihnbK3f7nqUGYlTvpK/lKsx4hWnhA+HiQE
+         ZgZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686579108; x=1689171108;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4muTChvfXbyFleywXuJztp663UoDJyd/b1njxzLhqy8=;
+        b=Eik2LghIMEzM8nJcetSMxz4lhgDxWoE0RFxQkCv9SO2WaSLjycRlDVIIOsRRs53MgD
+         X10pmpvriuK21juX3dRVRXhJASlgZcfpAoEc4jDu8PNHKZWUZkAK2cREO/CGNeGo4zgs
+         uH/VAl8GqCQAWnaCG+XF1YjFGEKQAiyn1poVWv1zONQ+GaITkKxjuasdta6b970i877q
+         ytiviX+qD+uzgWRoaqaN009X56hLzBGA0N9eLgaF9rLBBCVz8W4QcZsVVeeGzgSaV6nf
+         oxSbP/hybPc/7uqe+TnF/ZWwr5v9HXXpB6PrQDa1BH+wC72yW4P9Pf//cNYVk8RRYHXY
+         XAwQ==
+X-Gm-Message-State: AC+VfDyugPXjFGfRWeeNrz00lqbtGYg2VfdT7w7qukTsTkH7iZVxVBNb
+        LRH8w4ZB3iZN0yZ+k/Q+HQ8nFQ==
+X-Google-Smtp-Source: ACHHUZ7oss5Q4qEAESR1LIaLJkD7ZwONVfsRpFehVo9Ss1V9OTMOTrOh14yI7Krm7Ivy+/EbDcrm4g==
+X-Received: by 2002:a6b:690a:0:b0:77a:ee79:652 with SMTP id e10-20020a6b690a000000b0077aee790652mr4231482ioc.1.1686579107952;
+        Mon, 12 Jun 2023 07:11:47 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id i19-20020a02cc53000000b0041408b79f1esm2793007jaq.111.2023.06.12.07.11.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 07:11:47 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Coly Li <colyli@suse.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-bcache@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-nvme@lists.infradead.org,
+        linux-btrfs@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-nilfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+In-Reply-To: <20230608110258.189493-1-hch@lst.de>
+References: <20230608110258.189493-1-hch@lst.de>
+Subject: Re: decouple block open flags from fmode_t v2
+Message-Id: <168657910650.933808.4041515037046679285.b4-ty@kernel.dk>
+Date:   Mon, 12 Jun 2023 08:11:46 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.24.10.107]
-X-ClientProxiedBy: prgmbx02.amust.local (172.24.128.103) To
- prgmbx01.amust.local (172.24.128.102)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29240315546D776B
-X-Veeam-MMEX: True
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-c6835
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,80 +92,86 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allows to build a module and add the blksnap to the kernel tree.
 
-Co-developed-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Sergei Shtepa <sergei.shtepa@veeam.com>
----
- drivers/block/Kconfig          |  2 ++
- drivers/block/Makefile         |  2 ++
- drivers/block/blksnap/Kconfig  | 12 ++++++++++++
- drivers/block/blksnap/Makefile | 15 +++++++++++++++
- 4 files changed, 31 insertions(+)
- create mode 100644 drivers/block/blksnap/Kconfig
- create mode 100644 drivers/block/blksnap/Makefile
+On Thu, 08 Jun 2023 13:02:28 +0200, Christoph Hellwig wrote:
+> this series adds a new blk_mode_t for block open flags instead of abusing
+> fmode_t.  The block open flags work very different from the normal use of
+> fmode_t and only share the basic READ/WRITE flags with it.  None of the
+> other normal FMODE_* flags is used, but instead there are three
+> block-specific ones not used by anyone else, which can now be removed.
+> 
+> Note that I've only CCed maintainers and lists for drivers and file systems
+> that have non-trivial changes, as otherwise the series would spam literally
+> everyone in the block and file system world.
+> 
+> [...]
 
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index 5b9d4aaebb81..74d2d55526a3 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -404,4 +404,6 @@ config BLKDEV_UBLK_LEGACY_OPCODES
- 
- source "drivers/block/rnbd/Kconfig"
- 
-+source "drivers/block/blksnap/Kconfig"
-+
- endif # BLK_DEV
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index 101612cba303..9a2a9a56a247 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -40,3 +40,5 @@ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
- obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
- 
- swim_mod-y	:= swim.o swim_asm.o
-+
-+obj-$(CONFIG_BLKSNAP) += blksnap/
-diff --git a/drivers/block/blksnap/Kconfig b/drivers/block/blksnap/Kconfig
-new file mode 100644
-index 000000000000..14081359847b
---- /dev/null
-+++ b/drivers/block/blksnap/Kconfig
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Block device snapshot module configuration
-+#
-+
-+config BLKSNAP
-+	tristate "Block Devices Snapshots Module (blksnap)"
-+	help
-+	  Allow to create snapshots and track block changes for block devices.
-+	  Designed for creating backups for simple block devices. Snapshots are
-+	  temporary and are released then backup is completed. Change block
-+	  tracking allows to create incremental or differential backups.
-diff --git a/drivers/block/blksnap/Makefile b/drivers/block/blksnap/Makefile
-new file mode 100644
-index 000000000000..8d528b95579a
---- /dev/null
-+++ b/drivers/block/blksnap/Makefile
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+blksnap-y := 		\
-+	cbt_map.o	\
-+	chunk.o		\
-+	diff_area.o	\
-+	diff_buffer.o	\
-+	diff_storage.o	\
-+	event_queue.o	\
-+	main.o		\
-+	snapimage.o	\
-+	snapshot.o	\
-+	tracker.o
-+
-+obj-$(CONFIG_BLKSNAP)	 += blksnap.o
+Applied, thanks!
+
+[01/30] block: also call ->open for incremental partition opens
+        commit: 9d1c92872e7082f100f629a58b32fa0214aa1aec
+[02/30] cdrom: remove the unused bdev argument to cdrom_open
+        commit: 764b83100b9aff52f950e408539c22a37cdedae8
+[03/30] cdrom: remove the unused mode argument to cdrom_ioctl
+        commit: 473399b50de1fdc12606254351273c71d1786251
+[04/30] cdrom: remove the unused cdrom_close_write release code
+        commit: a4cec8bc14c02e15006a71f02b0e1bbc72b9f796
+[05/30] cdrom: track if a cdrom_device_info was opened for data
+        commit: 8cdf433e2b8e4fc6c7b4393deb93fb258175d537
+[06/30] cdrom: remove the unused mode argument to cdrom_release
+        commit: 7ae24fcee9929f9002b84d8121144b2b3590b58c
+[07/30] block: pass a gendisk on bdev_check_media_change
+        commit: 444aa2c58cb3b6cfe3b7cc7db6c294d73393a894
+[08/30] block: pass a gendisk to ->open
+        commit: d32e2bf83791727a84ad5d3e3d713e82f9adbe30
+[09/30] block: remove the unused mode argument to ->release
+        commit: ae220766d87cd6799dbf918fea10613ae14c0654
+[10/30] block: rename blkdev_close to blkdev_release
+        commit: 7ee34cbc291a28134b60683b246ba58b4b676ec3
+[11/30] swsusp: don't pass a stack address to blkdev_get_by_path
+        commit: c889d0793d9dc07e94a5fddcc05356157fab00b7
+[12/30] bcache: don't pass a stack address to blkdev_get_by_path
+        commit: 29499ab060fec044161be73fb0e448eab97b4813
+[13/30] rnbd-srv: don't pass a holder for non-exclusive blkdev_get_by_path
+        commit: 5ee607675debef509946f8a251d4c30a21493ec2
+[14/30] btrfs: don't pass a holder for non-exclusive blkdev_get_by_path
+        commit: 2ef789288afd365f4245ba97e56189062de5148e
+[15/30] block: use the holder as indication for exclusive opens
+        commit: 2736e8eeb0ccdc71d1f4256c9c9a28f58cc43307
+[16/30] block: add a sb_open_mode helper
+        commit: 3f0b3e785e8b54a40c530fa77b7ab37bec925c57
+[17/30] fs: remove sb->s_mode
+        commit: 81b1fb7d17c0110df839e13468ada9e99bb6e5f4
+[18/30] scsi: replace the fmode_t argument to scsi_cmd_allowed with a simple bool
+        commit: 5f4eb9d5413fdfc779c099fdaf0ff417eb163145
+[19/30] scsi: replace the fmode_t argument to scsi_ioctl with a simple bool
+        commit: 2e80089c18241699c41d0af0669cb93844ff0dc1
+[20/30] scsi: replace the fmode_t argument to ->sg_io_fn with a simple bool
+        commit: 1991299e49fa58c3ba7e91599932f84bf537d592
+[21/30] nvme: replace the fmode_t argument to the nvme ioctl handlers with a simple bool
+        commit: 7d9d7d59d44b7e9236d168472aa222b6543fae25
+[22/30] mtd: block: use a simple bool to track open for write
+        commit: 658afed19ceed54a52b9e9e69c0791c8868ff55d
+[23/30] rnbd-srv: replace sess->open_flags with a "bool readonly"
+        commit: 99b07780814e89f16bec2773c237eb25121f8502
+[24/30] ubd: remove commented out code in ubd_open
+        commit: bd6abfc8e7898ce2163a1ffdbb9ec71a0a081267
+[25/30] block: move a few internal definitions out of blkdev.h
+        commit: cfb425761c79b6056ae5bb73f8d400f03b513959
+[26/30] block: remove unused fmode_t arguments from ioctl handlers
+        commit: 5e4ea834676e3b8965344ca61d36e1ae236249eb
+[27/30] block: replace fmode_t with a block-specific type for block open flags
+        commit: 05bdb9965305bbfdae79b31d22df03d1e2cfcb22
+[28/30] block: always use I_BDEV on file->f_mapping->host to find the bdev
+        commit: 4e762d8623448bb9d32711832ce977a65ff7636a
+[29/30] block: store the holder in file->private_data
+        commit: ee3249a8ce78ef014a71b05157a43fba8dc764e3
+[30/30] fs: remove the now unused FMODE_* flags
+        commit: 0733ad8002916b9dbbbcfe6e92ad44d2657de1c1
+
+Best regards,
 -- 
-2.20.1
+Jens Axboe
+
+
 
