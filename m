@@ -2,46 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59F2F72B521
-	for <lists+linux-block@lfdr.de>; Mon, 12 Jun 2023 03:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3011F72B532
+	for <lists+linux-block@lfdr.de>; Mon, 12 Jun 2023 03:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbjFLBh2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 11 Jun 2023 21:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51998 "EHLO
+        id S229897AbjFLBtL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 11 Jun 2023 21:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjFLBh1 (ORCPT
+        with ESMTP id S229531AbjFLBtK (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 11 Jun 2023 21:37:27 -0400
-Received: from out-20.mta0.migadu.com (out-20.mta0.migadu.com [IPv6:2001:41d0:1004:224b::14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4111B3
-        for <linux-block@vger.kernel.org>; Sun, 11 Jun 2023 18:37:26 -0700 (PDT)
-Message-ID: <8059fd70-f4ac-a1db-47e9-4a44715ec1be@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1686533844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xfN5YFsFlBI8yxKCqg3ffjSu6YhY++hBq7YbqlxkGg4=;
-        b=WeorYBZ1pHEMqezRZdeualYsBbGM4XWx/Lg9NM+jf4TQqOlM9HZhXo+LwTb16drbSYI0Xv
-        IF40yCumWERimJIoSLS63xNxq+C0jLaD+ZfC4ZvWVLPdJaIHeZjN6rQ0sKcg9ISUHIxuWF
-        ZRc6GHE1hbzAltnW7nnyd+65oiEFGZQ=
-Date:   Mon, 12 Jun 2023 09:37:17 +0800
-MIME-Version: 1.0
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Guoqing Jiang <guoqing.jiang@linux.dev>
-Subject: Re: [PATCH V2 0/8] misc patches for rnbd
-To:     axboe@kernel.dk
-Cc:     jinpu.wang@ionos.com, haris.iqbal@ionos.com,
-        linux-block@vger.kernel.org
-References: <20230524070026.2932-1-guoqing.jiang@linux.dev>
-Content-Language: en-US
+        Sun, 11 Jun 2023 21:49:10 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E41CC12F
+        for <linux-block@vger.kernel.org>; Sun, 11 Jun 2023 18:49:08 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-25bdae05eb3so171337a91.0
+        for <linux-block@vger.kernel.org>; Sun, 11 Jun 2023 18:49:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1686534548; x=1689126548;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5U8oyK5GvJhj4Ee7fdxDkvyVUsHqjfnF8NeWf8XxItU=;
+        b=wZzIkBfWdhXKPiGod3HcmD0cDSxEPRas9KTszL4STTlTfZlTsRmv6pdEnvO+csFkl/
+         zf6SElO3xUazy81wnZgHrwI3fEOhB8a/uD/t+65cR6Kt54uOesm/J56p75pflFVq6fmM
+         HDUcU3c11xYY9a4ehzxsdpN25kCE+WxLpXtKj+Ia8lHh/OUTKhTWWWxADyDoL73ut6ow
+         8icw/ui1OqIOLzRqDC4MfnUgLX9mAoIiCv9h431hWY+WdJTdJgDPqYZEPydvdAzWL/bm
+         cYPxsnrlRL9U5a56CyoQF2ICct8XFQPDRVLyBk5RjsFXa7DiCg+cM2+3aw3gpK//uGy/
+         +kig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686534548; x=1689126548;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5U8oyK5GvJhj4Ee7fdxDkvyVUsHqjfnF8NeWf8XxItU=;
+        b=LOeAarlkDtFQYKW+fKsUte1WeeZtaQYu765ISmGoKkGxWs2l2bCS/2n0i4eC0iOqPd
+         A+gNKuj4eK8KFswOJNPQqick1lb1us5y89UoS3xpO0LDHW/lI1Jn0Gw0WvFlmmsilfIL
+         qAYt8kVTGtaG5HIwY9YSqJkRJv3iab4Q2CIwc4YW2NigtwRis8E4ABl2ug22Ad7HK7ih
+         joL+UI8TCoq8sJZYVhKlfo1fjAtsoSnliLDmVmpqbGYlBkNkddAU6FQ2FPFx9ZQpRumA
+         hNbsPH7eJ70Xe+bQUY2JwDOHe7dzCaBmf+fJFkLq1fZ56M2FoiasQqAn+8jep5/o5X/m
+         CQ/Q==
+X-Gm-Message-State: AC+VfDyAAuUSN3cZLzywPjBwKM+wf5WJMyV2i97jrsYd/RbaHHHgs7Q3
+        xF09Q5fIBg/IZgQnQ1PM0JhYoaEz+2QRKALBZkg=
+X-Google-Smtp-Source: ACHHUZ7AXnDu72RnN78JE+qXYbIQxrIu3H5dvr0kG8IW3Nm78Nt3l4OSkMF61BfnNEstl7PoPwWtXw==
+X-Received: by 2002:a17:90b:3852:b0:25b:de63:f193 with SMTP id nl18-20020a17090b385200b0025bde63f193mr2420894pjb.4.1686534547697;
+        Sun, 11 Jun 2023 18:49:07 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 23-20020a17090a195700b0024e37e0a67dsm6802959pjh.20.2023.06.11.18.49.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Jun 2023 18:49:06 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     haris.iqbal@ionos.com, jinpu.wang@ionos.com,
+        Guoqing Jiang <guoqing.jiang@linux.dev>
+Cc:     linux-block@vger.kernel.org
 In-Reply-To: <20230524070026.2932-1-guoqing.jiang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20230524070026.2932-1-guoqing.jiang@linux.dev>
+Subject: Re: [PATCH V2 0/8] misc patches for rnbd
+Message-Id: <168653454636.828148.3086329887965824145.b4-ty@kernel.dk>
+Date:   Sun, 11 Jun 2023 19:49:06 -0600
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+X-Mailer: b4 0.13-dev-c6835
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,44 +72,39 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
 
-Jack had acked all the patches, could you merge this series?
-
-Thanks,
-Guoqing
-
-On 5/24/23 15:00, Guoqing Jiang wrote:
+On Wed, 24 May 2023 15:00:18 +0800, Guoqing Jiang wrote:
 > V2 changes:
 > 1. two patches are dropped
 > 2. collect tags from Jack
 > 3. replace "int mode" with "enum rnbd_access_mode" in the 3rd one
->
+> 
 > Hi,
->
-> This series mostly do cleanup and other trival things, pls review.
->
-> Thanks,
-> Guoqing
->
-> Guoqing Jiang (8):
->    block/rnbd: kill rnbd_flags_supported
->    block/rnbd-srv: remove unused header
->    block/rnbd: introduce rnbd_access_modes
->    block/rnbd-srv: no need to check sess_dev
->    block/rnbd-srv: rename one member in rnbd_srv_dev
->    block/rnbd-srv: init ret with 0 instead of -EPERM
->    block/rnbd-srv: init err earlier in rnbd_srv_init_module
->    block/rnbd-srv: make process_msg_sess_info returns void
->
->   drivers/block/rnbd/Makefile         |  6 ++--
->   drivers/block/rnbd/rnbd-clt-sysfs.c |  4 +--
->   drivers/block/rnbd/rnbd-common.c    | 23 ---------------
->   drivers/block/rnbd/rnbd-proto.h     | 31 ++++++--------------
->   drivers/block/rnbd/rnbd-srv-sysfs.c |  3 +-
->   drivers/block/rnbd/rnbd-srv.c       | 44 +++++++++++++----------------
->   drivers/block/rnbd/rnbd-srv.h       |  2 +-
->   7 files changed, 34 insertions(+), 79 deletions(-)
->   delete mode 100644 drivers/block/rnbd/rnbd-common.c
->
+> 
+> [...]
+
+Applied, thanks!
+
+[1/8] block/rnbd: kill rnbd_flags_supported
+      commit: b0488411e919368014907850f74191d03e25f031
+[2/8] block/rnbd-srv: remove unused header
+      commit: 5783153ac67e20f65a402ef42237cd1a6d7fa320
+[3/8] block/rnbd: introduce rnbd_access_modes
+      commit: d6e94913cb1cb4b4d1d737f72b5cef10b13395ff
+[4/8] block/rnbd-srv: no need to check sess_dev
+      commit: ba2eed1cf8f08f1e5b1ba009ac22554f14d05342
+[5/8] block/rnbd-srv: rename one member in rnbd_srv_dev
+      commit: 3ecdbf91513511fae49eb0cfa9f39f690eb4fe11
+[6/8] block/rnbd-srv: init ret with 0 instead of -EPERM
+      commit: 6a12d5379508d530a73140fc7d5502551558ced5
+[7/8] block/rnbd-srv: init err earlier in rnbd_srv_init_module
+      commit: d3fc0b46642524bc8e38aed3c7f5e99742436495
+[8/8] block/rnbd-srv: make process_msg_sess_info returns void
+      commit: fece685cc7bbb5e1af89f891223c31c3bcc969f7
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
