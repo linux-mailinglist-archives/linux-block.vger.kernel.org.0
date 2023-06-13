@@ -2,91 +2,125 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E89672E8AB
-	for <lists+linux-block@lfdr.de>; Tue, 13 Jun 2023 18:40:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10E2372EA1C
+	for <lists+linux-block@lfdr.de>; Tue, 13 Jun 2023 19:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231517AbjFMQka (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Jun 2023 12:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
+        id S234436AbjFMRml (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Jun 2023 13:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232686AbjFMQkK (ORCPT
+        with ESMTP id S239238AbjFMRmg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Jun 2023 12:40:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C12810F7
-        for <linux-block@vger.kernel.org>; Tue, 13 Jun 2023 09:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686674359;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AcIaHBGFQIXuSfMrtRY4iVaejyldODuRWOKh30XsKHo=;
-        b=DV/FVAYem5IrLHiO26Pa6VGt9+sWs9fwVExHdDRdufxG4eK032DljR6+/5Iyh/B6JtZ/Lu
-        qjlw4rPgkoiUPDiKi2Dn3oBVfTsw5nGhc6crxEDCjjvwS1i6sAuwnX5iTl9/v1zzNn9Jfr
-        K5D79IZ39UlHjPy2Ib9mK4BkFdhuZGI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-14-n5bk6yWKO62xrbbYqo5uGQ-1; Tue, 13 Jun 2023 12:39:15 -0400
-X-MC-Unique: n5bk6yWKO62xrbbYqo5uGQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 13 Jun 2023 13:42:36 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9E0E1;
+        Tue, 13 Jun 2023 10:42:34 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3F0838039C9;
-        Tue, 13 Jun 2023 16:39:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE4081C558;
-        Tue, 13 Jun 2023 16:38:59 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <639735.1686672037@warthog.procyon.org.uk>
-References: <639735.1686672037@warthog.procyon.org.uk> <491da795-e9e0-1d84-558b-df09063228cb@kernel.dk> <545463.1686601473@warthog.procyon.org.uk>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dhowells@redhat.com, David Hildenbrand <david@redhat.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-mm@kvack.org, oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] block: Fix dio_bio_alloc() to set BIO_PAGE_PINNED
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 333B021D18;
+        Tue, 13 Jun 2023 17:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1686678153; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=AuwRmjJOYk1TsLTcz/TbJRJ+h6xQPxlYzNk2yeUo3Gw=;
+        b=KYCdrGPYqVmIJZ2QPFCpweOUO8nsNOMheLy29SBO+wTPJJ7m1CnV7Io1yW4JEU/8Pcn5Y3
+        oMMEGkVCw7otKQNE9VVRGNE+MN0+jGNAp3Ho1jc5gJg0v+xsBI4yKMePTrZCOrwblX4unn
+        qEfJqwMFr0n2XepXhSQ9YbyAz799FfY=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C027A13483;
+        Tue, 13 Jun 2023 17:42:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id mcaTLIiqiGSWXwAAMHmgww
+        (envelope-from <mwilck@suse.com>); Tue, 13 Jun 2023 17:42:32 +0000
+From:   mwilck@suse.com
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>
+Cc:     James Bottomley <jejb@linux.vnet.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Hannes Reinecke <hare@suse.de>, Martin Wilck <mwilck@suse.com>
+Subject: [PATCH v6 0/7] scsi: fixes for targets with many LUNs, and scsi_target_block rework
+Date:   Tue, 13 Jun 2023 19:42:20 +0200
+Message-Id: <20230613174227.11235-1-mwilck@suse.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <726323.1686674339.1@warthog.procyon.org.uk>
-Date:   Tue, 13 Jun 2023 17:38:59 +0100
-Message-ID: <726324.1686674339@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-David Howells <dhowells@redhat.com> wrote:
+From: Martin Wilck <mwilck@suse.com>
 
-> > What is this against?
-> 
-> It's against the branch I posted.
+This patch series addresses some issues we saw in a test setup
+with a large number of SCSI LUNs. The first two patches simply
+increase the number of available sg and bsg devices. 3-5 fix
+a large delay we encountered between blocking a Fibre Channel
+remote port and the dev_loss_tmo. 6 renames scsi_target_block()
+to scsi_block_targets(), and makes additional changes to this API,
+as suggested in the review of the v2 series. 7 improves a warning message.
 
-Actually, it's not.  It's against an old version of the patch on a different
-branch.  The patches you have applied already have that change - so the issue
-must be something else:-/
+Changes v5 -> v6
+ - 6/7: inverted order of arguments for scsi_block_targets (Christoph Hellwig), dropped "extern"
+   (I took the liberty not to remove previous "Reviewed-by"'s because of this change)
+ - 5/7: wrapped one over-long comment line
+ - added tags
 
-David
+Changes v4 -> v5:
+ - added 7/7 to improve the WARN_ON_ONCE in scsi_device_block() (Bart van Assche)
+ - 6/7: added WARN_ON_ONCE in scsi_block_targets() (Bart van Assche)
+ - 4/7: improved comment (Bart van Assche)
+ - Added tags
+
+Changes v3 -> v4:
+ - skipped 4/8: keep state_mutex held while quiescing queue (Bart van Assche),
+   added a comment in 4/6 to explain the rationale
+ - renamed scsi_target_block() to scsi_block_targets() (Christoph Hellwig), and
+   merged the previous patches 7/8 and 8/8 modifying this API into 6/6.
+ - rebased to latest mkp/queue branch
+
+Changes v2 -> v3:
+ - Split previous 3/3 into 4 separate patches as suggested by
+   Christoph Hellwig.
+ - Added 7/8 and 8/8, as suggested by Christoph and Bart van Assche.
+ - Added s-o-b and reviewed-by tags.
+
+Changes v1 -> v2:
+ - call blk_mq_wait_quiesce_done() from scsi_target_block() to
+   cover the case where BLK_MQ_F_BLOCKING is set (Bart van Assche)
+
+Hannes Reinecke (2):
+  bsg: increase number of devices
+  scsi: sg: increase number of devices
+
+Martin Wilck (5):
+  scsi: merge scsi_internal_device_block() and device_block()
+  scsi: don't wait for quiesce in scsi_stop_queue()
+  scsi: don't wait for quiesce in scsi_device_block()
+  scsi: replace scsi_target_block() by scsi_block_targets()
+  scsi: improve warning message in scsi_device_block()
+
+ block/bsg.c                         |  2 +-
+ drivers/scsi/scsi_lib.c             | 80 ++++++++++++++---------------
+ drivers/scsi/scsi_transport_fc.c    |  2 +-
+ drivers/scsi/scsi_transport_iscsi.c |  3 +-
+ drivers/scsi/scsi_transport_srp.c   |  6 +--
+ drivers/scsi/sg.c                   |  2 +-
+ drivers/scsi/snic/snic_disc.c       |  2 +-
+ include/scsi/scsi_device.h          |  2 +-
+ 8 files changed, 50 insertions(+), 49 deletions(-)
+
+-- 
+2.40.1
 
