@@ -2,84 +2,82 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B858D72D985
-	for <lists+linux-block@lfdr.de>; Tue, 13 Jun 2023 07:50:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8960F72D99C
+	for <lists+linux-block@lfdr.de>; Tue, 13 Jun 2023 08:02:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240075AbjFMFub (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 13 Jun 2023 01:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53092 "EHLO
+        id S234684AbjFMGC3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 13 Jun 2023 02:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240095AbjFMFu1 (ORCPT
+        with ESMTP id S234240AbjFMGC3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 13 Jun 2023 01:50:27 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C5693;
-        Mon, 12 Jun 2023 22:50:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pv13t75OeaLi0Wnedj8EISboR7Hj3/TyA2pQxdDC4e8=; b=hXcSNk2KPdcQyfjrbkKlXoE5A8
-        zHE+DOIDMV94Qeo3me/ZgOieikMcg1ilrc+v5wbdLQ9JogD4Tp+qS4GVyG7b8qYngNk7BsRW5aLFb
-        tF6rnwSpJ51d2rtfmaVN4nxRoZavhXjKNyyEMaMSFDaeFxlomjvwlAmZFXmPUtZaaAAorhnJBIm+H
-        vblo1Smiv8csEcFKVVkhbdxBms8UhjBa35xnir36Rqty6Zt38WM/zYPriU2n5rYkNd6gXeWDW+X9R
-        tGgf9hgo8YIeMREAWS7aGdCIMOh/tnWsg+y63di0f0e7kAWjMdnQ7L24EHgCMLczmFIF9jQXwmDb2
-        fN0lqz+Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8wuy-0070IZ-2V;
-        Tue, 13 Jun 2023 05:50:12 +0000
-Date:   Mon, 12 Jun 2023 22:50:12 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Sergei Shtepa <sergei.shtepa@veeam.com>, axboe@kernel.dk,
-        hch@infradead.org, corbet@lwn.net, snitzer@kernel.org,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-        willy@infradead.org, dlemoal@kernel.org, linux@weissschuh.net,
-        jack@suse.cz, ming.lei@redhat.com, linux-block@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v5 00/11] blksnap - block devices snapshots module
-Message-ID: <ZIgDlA/nMQIMqeLU@infradead.org>
-References: <20230612135228.10702-1-sergei.shtepa@veeam.com>
- <20230612161911.GA1200@sol.localdomain>
+        Tue, 13 Jun 2023 02:02:29 -0400
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE779188;
+        Mon, 12 Jun 2023 23:02:26 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Vl0oXcB_1686636140;
+Received: from 30.221.148.254(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vl0oXcB_1686636140)
+          by smtp.aliyun-inc.com;
+          Tue, 13 Jun 2023 14:02:21 +0800
+Message-ID: <b89351eb-e450-61b9-53b6-02fe68319174@linux.alibaba.com>
+Date:   Tue, 13 Jun 2023 14:02:18 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230612161911.GA1200@sol.localdomain>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.0
+Subject: Re: [PATCH v2] block: fine-granular CAP_SYS_ADMIN for Persistent
+ Reservation ioctl
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tianjia.zhang@linux.alibaba.com,
+        xiang@kernel.org, casey@schaufler-ca.com
+References: <20230612074103.4866-1-jefflexu@linux.alibaba.com>
+ <20230613050259.GA13751@lst.de>
+From:   Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20230613050259.GA13751@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 09:19:11AM -0700, Eric Biggers wrote:
-> On Mon, Jun 12, 2023 at 03:52:17PM +0200, Sergei Shtepa wrote:
-> > Hi all.
-> > 
-> > I am happy to offer a improved version of the Block Devices Snapshots
-> > Module. It allows to create non-persistent snapshots of any block devices.
-> > The main purpose of such snapshots is to provide backups of block devices.
-> > See more in Documentation/block/blksnap.rst.
-> 
-> How does blksnap interact with blk-crypto?
-> 
-> I.e., what happens if a bio with a ->bi_crypt_context set is submitted to a
-> block device that has blksnap active?
-> 
-> If you are unfamiliar with blk-crypto, please read
-> Documentation/block/inline-encryption.rst
-> 
-> It looks like blksnap hooks into the block layer directly, via the new
-> "blkfilter" mechanism.  I'm concerned that it might ignore ->bi_crypt_context
-> and write data to the disk in plaintext, when it is supposed to be encrypted.
 
-Yeah.  Same for integrity.  I guess for now the best would be to
-not allow attaching a filter to block devices that have encryption or
-integrity enabled and then look into that as a separate project fully
-reviewed by the respective experts.
 
+On 6/13/23 1:02 PM, Christoph Hellwig wrote:
+>> +static bool blkdev_pr_allowed(struct block_device *bdev, fmode_t mode)
+> 
+> With my resent series the use of fmode_t in the block layer has been
+> replaced with a new blk_mode_t, so you'll need to rebase.
+
+Okay I will rebase on that in the next version.
+
+> 
+>> +{
+>> +	if (capable(CAP_SYS_ADMIN))
+>> +		return true;
+>> +
+>> +	/* no sense to make reservations for partitions */
+>> +	if (bdev_is_partition(bdev))
+>> +		return false;
+> 
+> I think we should disallow the PR ioctls for partitions entirely.
+> Yes, that's a change of behavior (and should be a separate patch),
+> but this is the right time to fix it.
+
+Okay I will make it into a separate patch later.
+
+
+> Otherwise this change log good, thanks a lot!
+
+Thanks for the comment and suggestions!
+
+
+-- 
+Thanks,
+Jingbo
