@@ -2,52 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67A0572F607
-	for <lists+linux-block@lfdr.de>; Wed, 14 Jun 2023 09:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BFED72F630
+	for <lists+linux-block@lfdr.de>; Wed, 14 Jun 2023 09:24:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243090AbjFNHVd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 14 Jun 2023 03:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39732 "EHLO
+        id S243483AbjFNHYd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 14 Jun 2023 03:24:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243194AbjFNHVS (ORCPT
+        with ESMTP id S243202AbjFNHYJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 14 Jun 2023 03:21:18 -0400
+        Wed, 14 Jun 2023 03:24:09 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D42FD1FE3;
-        Wed, 14 Jun 2023 00:20:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869A426A0;
+        Wed, 14 Jun 2023 00:22:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=t5bVnubaysqgmFfqxZyypHKwktxU/caiSeNdZmNnYCg=; b=TKdDsBmQIr7BxQTCdY4CK7f1x1
-        Wm+GV80GLt7cXrSZjDBfLn3W/jIMufPnEuU8vV2kIOZV6Z+NOMtYiBCBewZL6Yz6P2A71Gp08aaEl
-        34teZijT2GRtJ1U5N6loEalm8qmlHTH3KGGEpUf+RAbb352oY8dJBgHfIU/DasZG6FMqBLoJVhyLM
-        ackTFjJ5+sSdOqgzkRsoMh7mnblAd12jPaMY6GUvt8cmbcl6NfUflSGTra+OuIipqkQqhqjr/tl+v
-        OnPldA3VMvjPMsr+QtBPrDbdKZwQtmbENvqumvGWZ+7/43k9ErN5S6UaMs7iERB4WaYbAd79yyceY
-        gVzlVF4Q==;
+        bh=oa4DOgSZwpr5FlHNC7X1lgn1eoGAQfcjs1SrNJbVpTg=; b=hHT9ZAx1PTiGPKAhnhqP1Wfk0i
+        gl/+ELIbVzYi5aXI1kQPrGZT96YPRBF6A6Q7Js1mZev89Tt+WQpCZIcUJDbkCkNKYX/ty67ZCP5/P
+        xoJqBWhbwkQav79q7n1SdUb6wTcMTdmC9e+2NSFUl99xYNPRAsRaQAGirQTj9uQY3mOibluV2sY1L
+        AIlwwJo/zRDSagW0sI9yDcUMOwZBIJ5Y2aOBzK7ZTio+Klw1348reyBx3oaf2Bw1gr8gOVe9sTVbe
+        byFTWDgVz7bOlLr3OX/XR+jBRRciFXAxJf2eEzKxWJCHrWF6gj4LWBgLTh4iMAQc416FZGai/enI5
+        xyH6aaMg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q9Knc-00Adlr-0T;
-        Wed, 14 Jun 2023 07:20:12 +0000
-Date:   Wed, 14 Jun 2023 00:20:12 -0700
+        id 1q9Kpy-00AeEL-0l;
+        Wed, 14 Jun 2023 07:22:38 +0000
+Date:   Wed, 14 Jun 2023 00:22:38 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>, Ted Tso <tytso@mit.edu>,
-        yebin <yebin@huaweicloud.com>, linux-fsdevel@vger.kernel.org,
-        Kees Cook <keescook@google.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Eric Biggers <ebiggers@google.com>
-Subject: Re: [PATCH] block: Add config option to not allow writing to mounted
- devices
-Message-ID: <ZIlqLJ6dFs1P4aj7@infradead.org>
-References: <20230612161614.10302-1-jack@suse.cz>
- <ZIf6RrbeyZVXBRhm@infradead.org>
- <20230613205614.atlrwst55bpqjzxf@quack3>
+To:     Ayush Jain <ayush.jain3@amd.com>
+Cc:     sfr@canb.auug.org.au,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Wyes Karny <wyes.karny@amd.com>, hch@infradead.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: Re: Kernel null pointer dereference on stopping raid device
+Message-ID: <ZIlqvsZ6nMv2OT2u@infradead.org>
+References: <e78344ad-8d57-91d8-0bfb-724c740c7c72@amd.com>
+ <3c4911c4-d3d7-a93e-5f14-e97384ae4f21@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230613205614.atlrwst55bpqjzxf@quack3>
+In-Reply-To: <3c4911c4-d3d7-a93e-5f14-e97384ae4f21@amd.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -59,26 +55,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 10:56:14PM +0200, Jan Kara wrote:
-> Well, as I've mentioned in the changelog there are old setups (without
-> initrd) that run fsck on root filesystem mounted read-only and fsck
-> programs tend to open the device with O_RDWR. These would be broken by this
-> change (for the filesystems that would use BLK_OPEN_ flag).
+Hi Ayush,
 
-But that's also a really broken setup that will corrupt data in many
-cases.  So yes, maybe we need a way to allow it, but it probably would
-have to be per-file system.
+can you try this patch?
 
-> Similarly some
-> boot loaders can write to first sectors of the root partition while the
-> filesystem is mounted. So I don't think controlling the behavior by the
-> in-kernel user that is having the bdev exclusively open really works. It
-> seems to be more a property of the system setup than a property of the
-> in-kernel bdev user. Am I mistaken?
-
-For many file systems this would already be completely broken (e.g.
-XFS).  So allowing this is needed for legacy use cases, but again should
-be limited to just file systems where this even makes sense.  And
-strictly limited to legacy setups, we do need proper kernel APIs for
-all of that in the future so that modern distros don't have to allow
-sideband writes at all.
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index ca0de7ddd9434d..828c4e6b9c5013 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -2460,7 +2460,7 @@ static void export_rdev(struct md_rdev *rdev, struct mddev *mddev)
+ 	if (test_bit(AutoDetected, &rdev->flags))
+ 		md_autodetect_dev(rdev->bdev->bd_dev);
+ #endif
+-	blkdev_put(rdev->bdev, mddev->major_version == -2 ? &claim_rdev : rdev);
++	blkdev_put(rdev->bdev, &claim_rdev);
+ 	rdev->bdev = NULL;
+ 	kobject_put(&rdev->kobj);
+ }
+@@ -3644,7 +3644,7 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
+ 		goto out_clear_rdev;
+ 
+ 	rdev->bdev = blkdev_get_by_dev(newdev, BLK_OPEN_READ | BLK_OPEN_WRITE,
+-			super_format == -2 ? &claim_rdev : rdev, NULL);
++			&claim_rdev, NULL);
+ 	if (IS_ERR(rdev->bdev)) {
+ 		pr_warn("md: could not open device unknown-block(%u,%u).\n",
+ 			MAJOR(newdev), MINOR(newdev));
+@@ -3681,7 +3681,7 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
+ 	return rdev;
+ 
+ out_blkdev_put:
+-	blkdev_put(rdev->bdev, super_format == -2 ? &claim_rdev : rdev);
++	blkdev_put(rdev->bdev, &claim_rdev);
+ out_clear_rdev:
+ 	md_rdev_clear(rdev);
+ out_free_rdev:
