@@ -2,48 +2,48 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A885730767
-	for <lists+linux-block@lfdr.de>; Wed, 14 Jun 2023 20:39:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD92730846
+	for <lists+linux-block@lfdr.de>; Wed, 14 Jun 2023 21:31:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbjFNSih (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 14 Jun 2023 14:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56446 "EHLO
+        id S236569AbjFNTbt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 14 Jun 2023 15:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236918AbjFNSi3 (ORCPT
+        with ESMTP id S236414AbjFNTbp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 14 Jun 2023 14:38:29 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46491BF9;
-        Wed, 14 Jun 2023 11:38:27 -0700 (PDT)
+        Wed, 14 Jun 2023 15:31:45 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D2CE4D;
+        Wed, 14 Jun 2023 12:31:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686767907; x=1718303907;
+  t=1686771103; x=1718307103;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=3juP/zZ0es/YUkn6xSx1QP7m7ZntPvgv8l4V1a11fWs=;
-  b=lK0BoPbr3Flwi1CR15+P5aeZB8NUmowitiyrOm4rQdD6rGse4cxy8Cwr
-   VNlzkbmDl17YAOeJz6aHJNedSoSaYOYAbl4daHujegeKipQzhK1Yxf1zh
-   jXOwEw0FdR/HeDLEA8ycKG7FnNwgccdTKsmrUEI3GTGNiqCg+r/ki8aEA
-   0rzOdjTVB/17FMgJ07BRXYXWJoBbSzmmokIhchYxPepBdzLK5KyHYOiBR
-   fiqpoIMp6eJpGZyqZSvrFJee/IoxTGWHNbYctFKX3gpOEDgwXMY6G9Y1s
-   aPDg49odGenlfRNJrmj7MPoiVyLXVUIIb37Pvy/llhsVOLt9w/CGi2r/i
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="356195114"
+  bh=2QObDKFcOOxd2UovtxJW4/xf3BM9T1joBKcedstMlnk=;
+  b=eZav0GAAuYkoYO59xcJ3NjP1Kw/mToUFuoGOR6NTGyfXMyW6b6QtWdaU
+   Sf11tRsYoCQWVGVXgx2OM+NTwSjdUIMgHx7YjLGHDEQ7y6nf+i38oMWQt
+   wbtzGgsT+zGdvTCCXLF9ihqU5aegpxzUTZ2ODA+KuWbNeQwKpVaeHWuWM
+   CNxeFtq6cCOg4wF3/6XWz0EMDz5o36M2OJuY2m8fbcXY+zVETXF96aYQ/
+   Ll72B1dD7YTPLnWmFLQyTE21hj8YkB48+6DMosxtxlMhxNXb0pVmpEUpH
+   n5bI3a+MuyYCCsTh1XIGHirsLsn1lCfMby/+C3BvetfoXwWqGMz1sKQC8
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="362093469"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="356195114"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 11:38:27 -0700
+   d="scan'208";a="362093469"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 12:31:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="745184233"
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="715327326"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="745184233"
+   d="scan'208";a="715327326"
 Received: from lkp-server02.sh.intel.com (HELO d59cacf64e9e) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 14 Jun 2023 11:38:24 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 14 Jun 2023 12:31:39 -0700
 Received: from kbuild by d59cacf64e9e with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1q9VNv-0000xH-1O;
-        Wed, 14 Jun 2023 18:38:23 +0000
-Date:   Thu, 15 Jun 2023 02:38:08 +0800
+        id 1q9WDR-00010G-0n;
+        Wed, 14 Jun 2023 19:31:37 +0000
+Date:   Thu, 15 Jun 2023 03:30:03 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Hannes Reinecke <hare@suse.de>
@@ -55,7 +55,7 @@ Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
         Christoph Hellwig <hch@lst.de>,
         Luis Chamberlain <mcgrof@kernel.org>
 Subject: Re: [PATCH 1/2] highmem: Add memcpy_to_folio()
-Message-ID: <202306150241.f2mNsWXE-lkp@intel.com>
+Message-ID: <202306150314.BSvTy8oJ-lkp@intel.com>
 References: <20230614134853.1521439-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -86,94 +86,40 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Matthew-Wilcox-Oracle/hig
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
 patch link:    https://lore.kernel.org/r/20230614134853.1521439-1-willy%40infradead.org
 patch subject: [PATCH 1/2] highmem: Add memcpy_to_folio()
-config: hexagon-randconfig-r015-20230614 (https://download.01.org/0day-ci/archive/20230615/202306150241.f2mNsWXE-lkp@intel.com/config)
+config: arm-randconfig-r046-20230614 (https://download.01.org/0day-ci/archive/20230615/202306150314.BSvTy8oJ-lkp@intel.com/config)
 compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
 reproduce (this is a W=1 build):
         mkdir -p ~/bin
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
         git remote add akpm-mm https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git
         git fetch akpm-mm mm-everything
         git checkout akpm-mm/mm-everything
         b4 shazam https://lore.kernel.org/r/20230614134853.1521439-1-willy@infradead.org
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=hexagon olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/nvme/target/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/iio/light/
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306150241.f2mNsWXE-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306150314.BSvTy8oJ-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
+   In file included from drivers/iio/light/rohm-bu27034.c:12:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
    In file included from include/linux/blk_types.h:10:
    In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
->> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof ((1UL << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+>> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
      525 |                 n = min(len, PAGE_SIZE - offset_in_page(offset));
          |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    include/linux/minmax.h:67:19: note: expanded from macro 'min'
@@ -188,12 +134,16 @@ All warnings (new ones prefixed by >>):
    include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
       20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
          |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
-   In file included from drivers/nvme/target/fc.c:8:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
+   In file included from drivers/iio/light/rohm-bu27034.c:12:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
    In file included from include/linux/blk_types.h:10:
    In file included from include/linux/bvec.h:10:
->> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof ((1UL << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+>> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
      534 |                 n = min(len, PAGE_SIZE);
          |                     ^~~~~~~~~~~~~~~~~~~
    include/linux/minmax.h:67:19: note: expanded from macro 'min'
@@ -208,53 +158,18 @@ All warnings (new ones prefixed by >>):
    include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
       20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
          |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
-   drivers/nvme/target/fc.c:176:1: warning: unused function 'nvmet_fc_iodnum' [-Wunused-function]
-     176 | nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
-         | ^
-   drivers/nvme/target/fc.c:182:1: warning: unused function 'nvmet_fc_fodnum' [-Wunused-function]
-     182 | nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
-         | ^
-   10 warnings generated.
+   2 warnings generated.
 --
-   In file included from drivers/nvme/target/loop.c:7:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/nvme/target/loop.c:7:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/nvme/target/loop.c:7:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   In file included from drivers/nvme/target/loop.c:8:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
+   In file included from drivers/iio/light/pa12203001.c:14:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
    In file included from include/linux/blk_types.h:10:
    In file included from include/linux/bvec.h:10:
->> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof ((1UL << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+>> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
      525 |                 n = min(len, PAGE_SIZE - offset_in_page(offset));
          |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    include/linux/minmax.h:67:19: note: expanded from macro 'min'
@@ -269,12 +184,16 @@ All warnings (new ones prefixed by >>):
    include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
       20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
          |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
-   In file included from drivers/nvme/target/loop.c:8:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
+   In file included from drivers/iio/light/pa12203001.c:14:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
    In file included from include/linux/blk_types.h:10:
    In file included from include/linux/bvec.h:10:
->> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof ((1UL << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+>> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
      534 |                 n = min(len, PAGE_SIZE);
          |                     ^~~~~~~~~~~~~~~~~~~
    include/linux/minmax.h:67:19: note: expanded from macro 'min'
@@ -289,7 +208,223 @@ All warnings (new ones prefixed by >>):
    include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
       20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
          |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
-   8 warnings generated.
+   drivers/iio/light/pa12203001.c:457:36: warning: unused variable 'pa12203001_acpi_match' [-Wunused-const-variable]
+     457 | static const struct acpi_device_id pa12203001_acpi_match[] = {
+         |                                    ^
+   3 warnings generated.
+--
+   In file included from drivers/iio/light/rpr0521.c:14:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     525 |                 n = min(len, PAGE_SIZE - offset_in_page(offset));
+         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   In file included from drivers/iio/light/rpr0521.c:14:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     534 |                 n = min(len, PAGE_SIZE);
+         |                     ^~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   drivers/iio/light/rpr0521.c:1105:36: warning: unused variable 'rpr0521_acpi_match' [-Wunused-const-variable]
+    1105 | static const struct acpi_device_id rpr0521_acpi_match[] = {
+         |                                    ^
+   3 warnings generated.
+--
+   In file included from drivers/iio/light/stk3310.c:11:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     525 |                 n = min(len, PAGE_SIZE - offset_in_page(offset));
+         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   In file included from drivers/iio/light/stk3310.c:11:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     534 |                 n = min(len, PAGE_SIZE);
+         |                     ^~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   drivers/iio/light/stk3310.c:693:36: warning: unused variable 'stk3310_acpi_id' [-Wunused-const-variable]
+     693 | static const struct acpi_device_id stk3310_acpi_id[] = {
+         |                                    ^
+   3 warnings generated.
+--
+   In file included from drivers/iio/light/us5182d.c:14:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     525 |                 n = min(len, PAGE_SIZE - offset_in_page(offset));
+         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   In file included from drivers/iio/light/us5182d.c:14:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     534 |                 n = min(len, PAGE_SIZE);
+         |                     ^~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   drivers/iio/light/us5182d.c:950:36: warning: unused variable 'us5182d_acpi_match' [-Wunused-const-variable]
+     950 | static const struct acpi_device_id us5182d_acpi_match[] = {
+         |                                    ^
+   3 warnings generated.
+--
+   In file included from drivers/iio/light/ltr501.c:13:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:525:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12) - ((unsigned long)(offset) & ~(~((1 << 12) - 1)))) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     525 |                 n = min(len, PAGE_SIZE - offset_in_page(offset));
+         |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   In file included from drivers/iio/light/ltr501.c:13:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:22:
+   In file included from include/linux/writeback.h:13:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+>> include/linux/highmem.h:534:7: warning: comparison of distinct pointer types ('typeof (len) *' (aka 'unsigned int *') and 'typeof (((1UL) << 12)) *' (aka 'unsigned long *')) [-Wcompare-distinct-pointer-types]
+     534 |                 n = min(len, PAGE_SIZE);
+         |                     ^~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:67:19: note: expanded from macro 'min'
+      67 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:24: note: expanded from macro '__careful_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~~~~~~~
+   include/linux/minmax.h:26:4: note: expanded from macro '__safe_cmp'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                  ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:20:28: note: expanded from macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                    ~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~
+   drivers/iio/light/ltr501.c:1611:36: warning: unused variable 'ltr_acpi_match' [-Wunused-const-variable]
+    1611 | static const struct acpi_device_id ltr_acpi_match[] = {
+         |                                    ^
+   3 warnings generated.
+..
 
 
 vim +525 include/linux/highmem.h
