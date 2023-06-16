@@ -2,35 +2,35 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1896B73284E
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 09:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE6FD73285B
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 09:06:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244151AbjFPHDc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 16 Jun 2023 03:03:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
+        id S243431AbjFPHEk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 16 Jun 2023 03:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244162AbjFPHCw (ORCPT
+        with ESMTP id S244163AbjFPHEI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 16 Jun 2023 03:02:52 -0400
+        Fri, 16 Jun 2023 03:04:08 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750034223;
-        Fri, 16 Jun 2023 00:01:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964943A8F
+        for <linux-block@vger.kernel.org>; Fri, 16 Jun 2023 00:02:40 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id EF5A967373; Fri, 16 Jun 2023 09:01:14 +0200 (CEST)
-Date:   Fri, 16 Jun 2023 09:01:14 +0200
+        id 0D7276732D; Fri, 16 Jun 2023 09:02:38 +0200 (CEST)
+Date:   Fri, 16 Jun 2023 09:02:37 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Song Liu <song@kernel.org>
-Cc:     kernel test robot <lkp@intel.com>, Christoph Hellwig <hch@lst.de>,
-        llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-raid@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 06/11] md-bitmap: refactor md_bitmap_init_from_disk
-Message-ID: <20230616070114.GB29500@lst.de>
-References: <20230615064840.629492-7-hch@lst.de> <202306160552.smw0qbmb-lkp@intel.com> <CAPhsuW5T4ULiYmCDoLwiaQRKP1OsMDhAez_hrzge_WkXxiWsNQ@mail.gmail.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Juan Yescas <jyescas@google.com>
+Subject: Re: [PATCH v6 0/8] Support limits below the page size
+Message-ID: <20230616070237.GC29500@lst.de>
+References: <20230612203314.17820-1-bvanassche@acm.org> <5041fc15-2c6c-b91e-6fb6-5eac740f75eb@kernel.dk> <20230615041537.GB4281@lst.de> <1d55e942-5150-de4c-3a02-c3d066f87028@acm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPhsuW5T4ULiYmCDoLwiaQRKP1OsMDhAez_hrzge_WkXxiWsNQ@mail.gmail.com>
+In-Reply-To: <1d55e942-5150-de4c-3a02-c3d066f87028@acm.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -41,7 +41,19 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 11:53:49PM -0700, Song Liu wrote:
-> I fixed this one, and applied the set to md-next.
+On Thu, Jun 15, 2023 at 06:55:36AM -0700, Bart Van Assche wrote:
+> On 6/14/23 21:15, Christoph Hellwig wrote:
+>> I really hate having this core complexity, but I suspect trying to driver
+>> hacks would be even worse than that, especially as this goes through
+>> the SCSI midlayer.  I think the answer is simply that if Google keeps
+>> buying broken hardware for their products from Samsung they just need
+>> to stick to a 4k page size instead of moving to a larger one.
+>
+> Although I do not like it that the Exynos UFS controller does not follow 
+> the UFS standard, this UFS controller is used much more widely than only in 
+> devices produced by my employer. See e.g. the output of the following grep 
+> command:
 
-Thanks!
+But it seems like no one is insisting on using it with larger than 4k
+page sizes.  I think we should just prohibit using the driver for those
+kernel configs and be done with it.
