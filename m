@@ -2,218 +2,93 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1248733599
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 18:15:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6A7273357E
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 18:13:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244026AbjFPQPT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 16 Jun 2023 12:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
+        id S229589AbjFPQNC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 16 Jun 2023 12:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344365AbjFPQOn (ORCPT
+        with ESMTP id S229658AbjFPQNB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 16 Jun 2023 12:14:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223CF2D5D
-        for <linux-block@vger.kernel.org>; Fri, 16 Jun 2023 09:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686932035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=icD5kbVEsLPzkQFWUHTmSK0TWNtewf4a1nLsJ/B7qIk=;
-        b=jOElHfE26s5pNiIH77XasdFx5vznUAjxOpl24bNcYWbbZKr39diLvJ4KQI/zFtTy/2zLiV
-        UCHjdFsFZ/LDkXMn0RMV/bxsjhEsVqRft7AQE/Q6opN3WTOFmLufsUY+sAZJPPY4KuD8E+
-        nAjWajFfEjK1DKYCLQdApexes24uhN8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-543-k2tOiSBtOmiq9_ek1Ymj9w-1; Fri, 16 Jun 2023 12:13:54 -0400
-X-MC-Unique: k2tOiSBtOmiq9_ek1Ymj9w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C23729AB3EE;
-        Fri, 16 Jun 2023 16:13:53 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 67C21140E952;
-        Fri, 16 Jun 2023 16:13:50 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org
-Subject: [PATCH net-next 14/17] drdb: Send an entire bio in a single sendmsg
-Date:   Fri, 16 Jun 2023 17:12:57 +0100
-Message-ID: <20230616161301.622169-15-dhowells@redhat.com>
-In-Reply-To: <20230616161301.622169-1-dhowells@redhat.com>
-References: <20230616161301.622169-1-dhowells@redhat.com>
+        Fri, 16 Jun 2023 12:13:01 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCA82D6A
+        for <linux-block@vger.kernel.org>; Fri, 16 Jun 2023 09:13:00 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-760dff4b701so10303339f.0
+        for <linux-block@vger.kernel.org>; Fri, 16 Jun 2023 09:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1686931979; x=1689523979;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mJPRL/5amBMOrAk4tz1IUWWqLcGNFvy3N6xi6eBZgB8=;
+        b=TbuYYlHnePGu+Uskg0qvoJzqwZF+Mns8o/z/Aq8MdtYoz2eRW9bvXEVMfqtMMCaJia
+         jDcOznAQkzWoQm2tgZK5Wa/fuPpp9jvA8rOLSWNGgv9NGSF99VoRKMH+Sc/miYrQAhZ1
+         6hZ1rHrT01V5bHMQLti/WsJf1U+DarVV9c30sJkBRQQjSuadgCk1ev/2RwFTktXA4Vwn
+         +A0ExLZf+vSTyluAEFtfijEvi1OWgz4JEhI7gnpLyJ3LGVEhiMS5DoAchDzjybYd6f4h
+         yDeJx9+w1OFOfTGlzxGlaziKgL9JAwUD4mDTl2+7SLk0lnEbUw37BzVKNRi8zUYNxJdi
+         5MXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686931979; x=1689523979;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mJPRL/5amBMOrAk4tz1IUWWqLcGNFvy3N6xi6eBZgB8=;
+        b=hKSwE28NtfubeL17YILld1oadEOzBWfgNy1hjKWUFB3fxeeeZmYZ2K6Xscq7xtHL9C
+         l75vE7oXkfpgsjb0ao86DBfAo/WP+dpOHwgrW1CvAXuUxEnicS4MU117zKjfVM1QUpCk
+         NZsym2wA3piwAfcBJPq6ByFk5Z4cPec3lyaOGEDrG8dGLtuqfrhv3staZDOplWiCJOrK
+         GXxq/URieFSr4GXBz0tzoVZKVEMvgFlQnU6sdSpbsiwV65zz7L7SGrWqNAfdJOzGg01c
+         R2up3KL9az2Us3m75rIHC+KLihHxK2S9bdkkji7hTNWkWyj+70XbZ0iqDVFNDDEZl0KC
+         hudg==
+X-Gm-Message-State: AC+VfDwx83p+PVXZAJFGyn04Ybm4HhifDQAKds8ZViwhbcVFepyctXXF
+        UGGUPrXzZl6FvRty3s9Nou5wvbxqP7S3KvUjuMM=
+X-Google-Smtp-Source: ACHHUZ6x5HHBjKxoGj6OgFIVfiiTaEtWdyo98wcaxMDhcdBs42G3S1I5+727AKhU5erijMiHnhRuUg==
+X-Received: by 2002:a05:6e02:216f:b0:33b:6751:fc71 with SMTP id s15-20020a056e02216f00b0033b6751fc71mr3497905ilv.2.1686931979621;
+        Fri, 16 Jun 2023 09:12:59 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id o8-20020a02cc28000000b004186bea7f51sm6333403jap.54.2023.06.16.09.12.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Jun 2023 09:12:58 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Guangwu Zhang <guazhang@redhat.com>
+In-Reply-To: <20230616132354.415109-1-ming.lei@redhat.com>
+References: <20230616132354.415109-1-ming.lei@redhat.com>
+Subject: Re: [PATCH] blk-mq: fix NULL dereference on q->elevator in
+ blk_mq_elv_switch_none
+Message-Id: <168693197863.2454997.502384811256816015.b4-ty@kernel.dk>
+Date:   Fri, 16 Jun 2023 10:12:58 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-c6835
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Since _drdb_sendpage() is now using sendmsg to send the pages rather
-sendpage, pass the entire bio in one go using a bvec iterator instead of
-doing it piecemeal.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Philipp Reisner <philipp.reisner@linbit.com>
-cc: Lars Ellenberg <lars.ellenberg@linbit.com>
-cc: "Christoph Böhmwalder" <christoph.boehmwalder@linbit.com>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: drbd-dev@lists.linbit.com
-cc: linux-block@vger.kernel.org
-cc: netdev@vger.kernel.org
----
- drivers/block/drbd/drbd_main.c | 77 +++++++++++-----------------------
- 1 file changed, 25 insertions(+), 52 deletions(-)
+On Fri, 16 Jun 2023 21:23:54 +0800, Ming Lei wrote:
+> After grabbing q->sysfs_lock, q->elevator may become NULL because of
+> elevator switch.
+> 
+> Fix the NULL dereference on q->elevator by checking it with lock.
+> 
+> 
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index c9d84183844c..f7ebdb5ab45e 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -1520,28 +1520,15 @@ static void drbd_update_congested(struct drbd_connection *connection)
-  * As a workaround, we disable sendpage on pages
-  * with page_count == 0 or PageSlab.
-  */
--static int _drbd_no_send_page(struct drbd_peer_device *peer_device, struct page *page,
--			      int offset, size_t size, unsigned msg_flags)
--{
--	struct socket *socket;
--	void *addr;
--	int err;
--
--	socket = peer_device->connection->data.socket;
--	addr = kmap(page) + offset;
--	err = drbd_send_all(peer_device->connection, socket, addr, size, msg_flags);
--	kunmap(page);
--	if (!err)
--		peer_device->device->send_cnt += size >> 9;
--	return err;
--}
--
--static int _drbd_send_page(struct drbd_peer_device *peer_device, struct page *page,
--		    int offset, size_t size, unsigned msg_flags)
-+static int _drbd_send_pages(struct drbd_peer_device *peer_device,
-+			    struct iov_iter *iter, unsigned msg_flags)
- {
- 	struct socket *socket = peer_device->connection->data.socket;
--	struct bio_vec bvec;
--	struct msghdr msg = { .msg_flags = msg_flags, };
-+	struct msghdr msg = {
-+		.msg_flags	= msg_flags | MSG_NOSIGNAL,
-+		.msg_iter	= *iter,
-+	};
-+	size_t size = iov_iter_count(iter);
- 	int err = -EIO;
- 
- 	/* e.g. XFS meta- & log-data is in slab pages, which have a
-@@ -1550,11 +1537,8 @@ static int _drbd_send_page(struct drbd_peer_device *peer_device, struct page *pa
- 	 * put_page(); and would cause either a VM_BUG directly, or
- 	 * __page_cache_release a page that would actually still be referenced
- 	 * by someone, leading to some obscure delayed Oops somewhere else. */
--	if (!drbd_disable_sendpage && sendpage_ok(page))
--		msg.msg_flags |= MSG_NOSIGNAL | MSG_SPLICE_PAGES;
--
--	bvec_set_page(&bvec, page, offset, size);
--	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1, size);
-+	if (drbd_disable_sendpage)
-+		msg.msg_flags &= ~(MSG_NOSIGNAL | MSG_SPLICE_PAGES);
- 
- 	drbd_update_congested(peer_device->connection);
- 	do {
-@@ -1585,39 +1569,22 @@ static int _drbd_send_page(struct drbd_peer_device *peer_device, struct page *pa
- 
- static int _drbd_send_bio(struct drbd_peer_device *peer_device, struct bio *bio)
- {
--	struct bio_vec bvec;
--	struct bvec_iter iter;
-+	struct iov_iter iter;
- 
--	/* hint all but last page with MSG_MORE */
--	bio_for_each_segment(bvec, bio, iter) {
--		int err;
-+	iov_iter_bvec(&iter, ITER_SOURCE, bio->bi_io_vec, bio->bi_vcnt,
-+		      bio->bi_iter.bi_size);
- 
--		err = _drbd_no_send_page(peer_device, bvec.bv_page,
--					 bvec.bv_offset, bvec.bv_len,
--					 bio_iter_last(bvec, iter)
--					 ? 0 : MSG_MORE);
--		if (err)
--			return err;
--	}
--	return 0;
-+	return _drbd_send_pages(peer_device, &iter, 0);
- }
- 
- static int _drbd_send_zc_bio(struct drbd_peer_device *peer_device, struct bio *bio)
- {
--	struct bio_vec bvec;
--	struct bvec_iter iter;
-+	struct iov_iter iter;
- 
--	/* hint all but last page with MSG_MORE */
--	bio_for_each_segment(bvec, bio, iter) {
--		int err;
-+	iov_iter_bvec(&iter, ITER_SOURCE, bio->bi_io_vec, bio->bi_vcnt,
-+		      bio->bi_iter.bi_size);
- 
--		err = _drbd_send_page(peer_device, bvec.bv_page,
--				      bvec.bv_offset, bvec.bv_len,
--				      bio_iter_last(bvec, iter) ? 0 : MSG_MORE);
--		if (err)
--			return err;
--	}
--	return 0;
-+	return _drbd_send_pages(peer_device, &iter, MSG_SPLICE_PAGES);
- }
- 
- static int _drbd_send_zc_ee(struct drbd_peer_device *peer_device,
-@@ -1629,10 +1596,16 @@ static int _drbd_send_zc_ee(struct drbd_peer_device *peer_device,
- 
- 	/* hint all but last page with MSG_MORE */
- 	page_chain_for_each(page) {
-+		struct iov_iter iter;
-+		struct bio_vec bvec;
- 		unsigned l = min_t(unsigned, len, PAGE_SIZE);
- 
--		err = _drbd_send_page(peer_device, page, 0, l,
--				      page_chain_next(page) ? MSG_MORE : 0);
-+		bvec_set_page(&bvec, page, 0, l);
-+		iov_iter_bvec(&iter, ITER_SOURCE, &bvec, 1, l);
-+
-+		err = _drbd_send_pages(peer_device, &iter,
-+				       MSG_SPLICE_PAGES |
-+				       (page_chain_next(page) ? MSG_MORE : 0));
- 		if (err)
- 			return err;
- 		len -= l;
+Applied, thanks!
+
+[1/1] blk-mq: fix NULL dereference on q->elevator in blk_mq_elv_switch_none
+      commit: 245165658e1c9f95c0fecfe02b9b1ebd30a1198a
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
