@@ -2,39 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E32973289D
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 09:17:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4F4F7328C0
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 09:22:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243614AbjFPHRe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 16 Jun 2023 03:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56684 "EHLO
+        id S244736AbjFPHWb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 16 Jun 2023 03:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231920AbjFPHRc (ORCPT
+        with ESMTP id S245012AbjFPHWJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 16 Jun 2023 03:17:32 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20AF170E;
-        Fri, 16 Jun 2023 00:17:31 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 471DF6732D; Fri, 16 Jun 2023 09:17:29 +0200 (CEST)
-Date:   Fri, 16 Jun 2023 09:17:29 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     "min15.li" <min15.li@samsung.com>
-Cc:     axboe@kernel.dk, willy@infradead.org, hch@lst.de,
-        dlemoal@kernel.org, gregkh@linuxfoundation.org, wsa@kernel.org,
-        vkoul@kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] block: add capacity validation in
- bdev_add_partition()
-Message-ID: <20230616071729.GA29853@lst.de>
-References: <CGME20230616030739epcas5p31e705be33bf080f988702d42534ad32f@epcas5p3.samsung.com> <20230616110557.12106-1-min15.li@samsung.com>
+        Fri, 16 Jun 2023 03:22:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B74D30C1
+        for <linux-block@vger.kernel.org>; Fri, 16 Jun 2023 00:20:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686900054;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tqp0jBy0MAwlbUsOY9gyPmPTKTK42ZPVNu6TVt7Ucvw=;
+        b=ZIIngV5zUGJPpZnvWG9v6ulF63VbR+VZk9aaSlywDbBOzG1KAI2piRIHOVxOgCEo5sF2Wp
+        YGyqFpTSVnCtPHqjeZd62Ga+vvlIEeLZsAn1WRqP5c1kMY2rUoa9LeKt2E50uYmELOKsFU
+        IxY6xeEBscdjVWqUQGh7URAaSJUIZ8A=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-15--JlAnzDoOqqlAjkngnYWaA-1; Fri, 16 Jun 2023 03:20:49 -0400
+X-MC-Unique: -JlAnzDoOqqlAjkngnYWaA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 10D55281424C;
+        Fri, 16 Jun 2023 07:20:48 +0000 (UTC)
+Received: from ovpn-8-18.pek2.redhat.com (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 366D540C20F4;
+        Fri, 16 Jun 2023 07:20:42 +0000 (UTC)
+Date:   Fri, 16 Jun 2023 15:20:38 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, Yi Zhang <yi.zhang@redhat.com>,
+        linux-block@vger.kernel.org, Chunguang Xu <brookxu.cn@gmail.com>
+Subject: Re: [PATCH 1/4] blk-mq: add API of blk_mq_unfreeze_queue_force
+Message-ID: <ZIwNRu1zodp61PEO@ovpn-8-18.pek2.redhat.com>
+References: <20230615143236.297456-1-ming.lei@redhat.com>
+ <20230615143236.297456-2-ming.lei@redhat.com>
+ <ZIsrSyEqWMw8/ikq@kbusch-mbp.dhcp.thefacebook.com>
+ <ZIsxt7Q2nmiLNTX2@ovpn-8-16.pek2.redhat.com>
+ <20230616054800.GA28499@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230616110557.12106-1-min15.li@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+In-Reply-To: <20230616054800.GA28499@lst.de>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -42,37 +66,29 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 11:05:57AM +0000, min15.li wrote:
-> In the function bdev_add_partition(),there is no check that the start
-> and end sectors exceed the size of the disk before calling add_partition.
-> When we call the block's ioctl interface directly to add a partition,
-> and the capacity of the disk is set to 0 by driver,the command will
-> continue to execute.
-> v1->v2: check for overflows of the start + length value and put
-> the capacity check at the beginning of the function.
+On Fri, Jun 16, 2023 at 07:48:00AM +0200, Christoph Hellwig wrote:
+> On Thu, Jun 15, 2023 at 11:43:51PM +0800, Ming Lei wrote:
+> > On Thu, Jun 15, 2023 at 09:16:27AM -0600, Keith Busch wrote:
+> > > On Thu, Jun 15, 2023 at 10:32:33PM +0800, Ming Lei wrote:
+> > > > NVMe calls freeze/unfreeze in different contexts, and controller removal
+> > > > may break in-progress error recovery, then leave queues in frozen state.
+> > > > So cause IO hang in del_gendisk() because pending writeback IOs are
+> > > > still waited in bio_queue_enter().
+> > > 
+> > > Shouldn't those writebacks be unblocked by the existing check in
+> > > bio_queue_enter, test_bit(GD_DEAD, &disk->state))? Or are we missing a
+> > > disk state update or wakeup on this condition?
+> > 
+> > GD_DEAD is only set if the device is really dead, then all pending IO
+> > will be failed.
 > 
-> Signed-off-by: min15.li <min15.li@samsung.com>
-> ---
->  block/partitions/core.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/block/partitions/core.c b/block/partitions/core.c
-> index 49e0496ff23c..3546b43d5124 100644
-> --- a/block/partitions/core.c
-> +++ b/block/partitions/core.c
-> @@ -438,8 +438,20 @@ int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
->  {
->  	struct block_device *part;
->  	int ret;
-> +	sector_t end;
-> +	sector_t capacity = get_capacity(disk);
+> del_gendisk also sets GD_DEAD early on.
 
-Very minor nitpick, but I think this would read nicer as:
+No.
 
-+	sector_t capacity = get_capacity(disk), end;
-  	struct block_device *part;
-  	int ret;
+The hang happens in fsync_bdev() of del_gendisk(), and there are IOs pending on
+bio_queue_enter().
 
-Otherwise this looks good:
+Thanks,
+Ming
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
