@@ -2,58 +2,77 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE6FD73285B
-	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 09:06:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E32973289D
+	for <lists+linux-block@lfdr.de>; Fri, 16 Jun 2023 09:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243431AbjFPHEk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 16 Jun 2023 03:04:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
+        id S243614AbjFPHRe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 16 Jun 2023 03:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244163AbjFPHEI (ORCPT
+        with ESMTP id S231920AbjFPHRc (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 16 Jun 2023 03:04:08 -0400
+        Fri, 16 Jun 2023 03:17:32 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964943A8F
-        for <linux-block@vger.kernel.org>; Fri, 16 Jun 2023 00:02:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20AF170E;
+        Fri, 16 Jun 2023 00:17:31 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0D7276732D; Fri, 16 Jun 2023 09:02:38 +0200 (CEST)
-Date:   Fri, 16 Jun 2023 09:02:37 +0200
+        id 471DF6732D; Fri, 16 Jun 2023 09:17:29 +0200 (CEST)
+Date:   Fri, 16 Jun 2023 09:17:29 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Juan Yescas <jyescas@google.com>
-Subject: Re: [PATCH v6 0/8] Support limits below the page size
-Message-ID: <20230616070237.GC29500@lst.de>
-References: <20230612203314.17820-1-bvanassche@acm.org> <5041fc15-2c6c-b91e-6fb6-5eac740f75eb@kernel.dk> <20230615041537.GB4281@lst.de> <1d55e942-5150-de4c-3a02-c3d066f87028@acm.org>
+To:     "min15.li" <min15.li@samsung.com>
+Cc:     axboe@kernel.dk, willy@infradead.org, hch@lst.de,
+        dlemoal@kernel.org, gregkh@linuxfoundation.org, wsa@kernel.org,
+        vkoul@kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] block: add capacity validation in
+ bdev_add_partition()
+Message-ID: <20230616071729.GA29853@lst.de>
+References: <CGME20230616030739epcas5p31e705be33bf080f988702d42534ad32f@epcas5p3.samsung.com> <20230616110557.12106-1-min15.li@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1d55e942-5150-de4c-3a02-c3d066f87028@acm.org>
+In-Reply-To: <20230616110557.12106-1-min15.li@samsung.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 06:55:36AM -0700, Bart Van Assche wrote:
-> On 6/14/23 21:15, Christoph Hellwig wrote:
->> I really hate having this core complexity, but I suspect trying to driver
->> hacks would be even worse than that, especially as this goes through
->> the SCSI midlayer.  I think the answer is simply that if Google keeps
->> buying broken hardware for their products from Samsung they just need
->> to stick to a 4k page size instead of moving to a larger one.
->
-> Although I do not like it that the Exynos UFS controller does not follow 
-> the UFS standard, this UFS controller is used much more widely than only in 
-> devices produced by my employer. See e.g. the output of the following grep 
-> command:
+On Fri, Jun 16, 2023 at 11:05:57AM +0000, min15.li wrote:
+> In the function bdev_add_partition(),there is no check that the start
+> and end sectors exceed the size of the disk before calling add_partition.
+> When we call the block's ioctl interface directly to add a partition,
+> and the capacity of the disk is set to 0 by driver,the command will
+> continue to execute.
+> v1->v2: check for overflows of the start + length value and put
+> the capacity check at the beginning of the function.
+> 
+> Signed-off-by: min15.li <min15.li@samsung.com>
+> ---
+>  block/partitions/core.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/block/partitions/core.c b/block/partitions/core.c
+> index 49e0496ff23c..3546b43d5124 100644
+> --- a/block/partitions/core.c
+> +++ b/block/partitions/core.c
+> @@ -438,8 +438,20 @@ int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
+>  {
+>  	struct block_device *part;
+>  	int ret;
+> +	sector_t end;
+> +	sector_t capacity = get_capacity(disk);
 
-But it seems like no one is insisting on using it with larger than 4k
-page sizes.  I think we should just prohibit using the driver for those
-kernel configs and be done with it.
+Very minor nitpick, but I think this would read nicer as:
+
++	sector_t capacity = get_capacity(disk), end;
+  	struct block_device *part;
+  	int ret;
+
+Otherwise this looks good:
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
