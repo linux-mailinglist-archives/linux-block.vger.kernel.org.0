@@ -2,54 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F8A4734508
-	for <lists+linux-block@lfdr.de>; Sun, 18 Jun 2023 08:05:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3438B73455E
+	for <lists+linux-block@lfdr.de>; Sun, 18 Jun 2023 10:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjFRGF3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 18 Jun 2023 02:05:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44846 "EHLO
+        id S229611AbjFRIJF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 18 Jun 2023 04:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjFRGF2 (ORCPT
+        with ESMTP id S229480AbjFRIJD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 18 Jun 2023 02:05:28 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5175F10E3;
-        Sat, 17 Jun 2023 23:05:27 -0700 (PDT)
+        Sun, 18 Jun 2023 04:09:03 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E595510D7;
+        Sun, 18 Jun 2023 01:09:01 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QkMnb1BKvz4f4PNl;
-        Sun, 18 Jun 2023 14:05:23 +0800 (CST)
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QkQX83vb2z4f3nyX;
+        Sun, 18 Jun 2023 16:08:56 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-        by APP4 (Coremail) with SMTP id gCh0CgCH77Kgno5k_0DdLw--.62007S4;
-        Sun, 18 Jun 2023 14:05:21 +0800 (CST)
+        by APP4 (Coremail) with SMTP id gCh0CgAHoZSXu45kz8rjLw--.30784S4;
+        Sun, 18 Jun 2023 16:08:58 +0800 (CST)
 From:   Yu Kuai <yukuai1@huaweicloud.com>
-To:     hch@lst.de, axboe@kernel.dk, brauner@kernel.org, dsterba@suse.com,
-        hare@suse.de, jinpu.wang@ionos.com
+To:     bvanassche@acm.org, axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         yukuai3@huawei.com, yukuai1@huaweicloud.com, yi.zhang@huawei.com,
         yangerkun@huawei.com
-Subject: [PATCH -next v2] block: fix wrong mode for blkdev_get_by_dev() from disk_scan_partitions()
-Date:   Sun, 18 Jun 2023 22:04:02 +0800
-Message-Id: <20230618140402.7556-1-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC 0/7] blk-mq: improve tag fair sharing
+Date:   Mon, 19 Jun 2023 00:07:31 +0800
+Message-Id: <20230618160738.54385-1-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCH77Kgno5k_0DdLw--.62007S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF4rWFWfKF17Jr4rGr45Wrg_yoW8Xr4UpF
-        W5WF45tryqgryxZF4vv3ZrGay5Ga98GryxKrWIgw1Fv39xXrsYkF92krs8Wr10vFZagrW5
-        WFnrZFyFqFyF9wUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9q14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+X-CM-TRANSID: gCh0CgAHoZSXu45kz8rjLw--.30784S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF48Xw13GryUuFW7uw48Zwb_yoW8Xry8pF
+        43ta45Gr4xtrW2vFsxK3y7JFyYvrs3Gr1UGrn7t34Fyrn8Crs3Xr48Ja15AFyxt393AFW7
+        Kr1UKr98GF1UJ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUv014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
         rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
-        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xv
-        wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-        x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-        64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
-        1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
-        YI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4I
-        kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-        WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-        0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWr
-        Jr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJbIYCTnIWIevJa73UjIFyTuYvjTRNgAwUUUUU
+        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+        wVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
+        xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
+        x2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRi
+        Pl1DUUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
@@ -63,44 +62,39 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-After commit 2736e8eeb0cc ("block: use the holder as indication for
-exclusive opens"), blkdev_get_by_dev() will warn if holder is NULL and
-mode contains 'FMODE_EXCL'.
+This is not a formal version and not fully tested, I send this RFC
+because I want to make sure if people think doing this is meaningful,
+before I spend too much time on this.
 
-holder from blkdev_get_by_dev() from disk_scan_partitions() is always NULL,
-hence it should not use 'FMODE_EXCL', which is broben by the commit. For
-consequence, WARN_ON_ONCE() will be triggered from blkdev_get_by_dev()
-if user scan partitions with device opened exclusively.
+This patchset tries to refactor how tag is shared:
+ - patch 2 delay tag sharing from issue io to when get driver tag faild;
+ - patch 3 support to access which queues/hctxs is sharing tags through
+ blk_mq_tags;
+ - patch 4 move the caculation that how many tags is available from
+ hctx_may_queue() to when queue/hctx start or stop to sharing tags.
+ - patch 5 record new information that how many times fail to get driver
+ tag recently; And patch 7 use this to adjust available tags for each
+ shared queue.
 
-Fix this problem by removing 'FMODE_EXCL' from disk_scan_partitions(),
-as it used to be.
+Yu Kuai (7):
+  blk-mq: factor out a structure from blk_mq_tags to control tag sharing
+  blk-mq: delay tag fair sharing until fail to get driver tag
+  blk-mq: support to track active queues from blk_mq_tags
+  blk-mq: precalculate available tags for hctx_may_queue()
+  blk-mq: record the number of times fail to get driver tag while
+    sharing tags
+  blk-mq: move active request counter to struct tag_sharing
+  blk-mq: allow shared queue to get more driver tags
 
-Reported-by: syzbot+00cd27751f78817f167b@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=00cd27751f78817f167b
-Fixes: 2736e8eeb0cc ("block: use the holder as indication for exclusive opens")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
+ block/blk-core.c       |   2 -
+ block/blk-mq-debugfs.c |   6 +-
+ block/blk-mq-tag.c     | 154 ++++++++++++++++++++++++++++++++++++++---
+ block/blk-mq.c         |  10 ++-
+ block/blk-mq.h         |  39 ++++++-----
+ include/linux/blk-mq.h |  24 ++++---
+ include/linux/blkdev.h |  13 +++-
+ 7 files changed, 201 insertions(+), 47 deletions(-)
 
-Changes in v2:
- - fix a typo
-
- block/genhd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/block/genhd.c b/block/genhd.c
-index 2c2f9a716822..d1e845ae1b32 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -365,7 +365,8 @@ int disk_scan_partitions(struct gendisk *disk, blk_mode_t mode)
- 	}
- 
- 	set_bit(GD_NEED_PART_SCAN, &disk->state);
--	bdev = blkdev_get_by_dev(disk_devt(disk), mode, NULL, NULL);
-+	bdev = blkdev_get_by_dev(disk_devt(disk), mode & ~FMODE_EXEC, NULL,
-+				 NULL);
- 	if (IS_ERR(bdev))
- 		ret =  PTR_ERR(bdev);
- 	else
 -- 
 2.39.2
 
