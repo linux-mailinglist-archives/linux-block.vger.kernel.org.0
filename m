@@ -2,83 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5BB9734504
-	for <lists+linux-block@lfdr.de>; Sun, 18 Jun 2023 07:59:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1F1F73453E
+	for <lists+linux-block@lfdr.de>; Sun, 18 Jun 2023 09:51:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjFRF7J (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 18 Jun 2023 01:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44092 "EHLO
+        id S229480AbjFRHvn convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Sun, 18 Jun 2023 03:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjFRF7I (ORCPT
+        with ESMTP id S229470AbjFRHvm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 18 Jun 2023 01:59:08 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C0B10E9;
-        Sat, 17 Jun 2023 22:59:06 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QkMfG2Fkgz4f4Dhk;
-        Sun, 18 Jun 2023 13:59:02 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgCXaK8lnY5kd+bcLw--.30297S3;
-        Sun, 18 Jun 2023 13:59:02 +0800 (CST)
-Subject: Re: [PATCH -next] block: fix wrong mode for blkdev_get_by_dev() from
- disk_scan_partitions()
-To:     kernel test robot <lkp@intel.com>,
-        Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, axboe@kernel.dk,
-        brauner@kernel.org, hare@suse.de, dsterba@suse.com,
-        jinpu.wang@ionos.com
-Cc:     oe-kbuild-all@lists.linux.dev, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20230617103813.3708374-1-yukuai1@huaweicloud.com>
- <202306172040.1dllc8rx-lkp@intel.com>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <1df1d531-cd16-5db5-6f36-744896aa945e@huaweicloud.com>
-Date:   Sun, 18 Jun 2023 13:59:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 18 Jun 2023 03:51:42 -0400
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B845FE51;
+        Sun, 18 Jun 2023 00:51:40 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5700401acbeso27900317b3.0;
+        Sun, 18 Jun 2023 00:51:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687074699; x=1689666699;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iXMXyUUSJXR/nTNTa+k3QFOvjzI9dKq9J11YzB0zBbc=;
+        b=DCxCDit2X9jblnIQiL8Q1yuZvkbo7/UbqjncYC6Q5XX2PxYGIb9ON4g8rfnaCb59Af
+         lxDofc5ROwmlPcpV9tzFr+dbnPAQori3pFn/0N+6STQFUkQkU/nG3ze6KIkC43W04xlv
+         WFzMytmCYL272rK5l4E9vNa8AMXBi3qwsKgQRMxLAg8bkd5iyw3SVSGARnhKEwaxiAHd
+         ADJU4bLCLLgxLmiMDKym3PchVLVkIban5rL36616gb/aqACdGOcqvxaOeGRqHd75d8tM
+         exqlQJ5BiC7xNFSPFBXa9I0g2RoID75j7gn2fGaWvCQi1w/RhnAnXoHdHXANEUc66U51
+         KI/Q==
+X-Gm-Message-State: AC+VfDz6wYj7aCEb8zGLsUj0gwCw+KXPBEQh6uDA0cRX1Ea1afuU7kcZ
+        U03+WiZ5eYKD/fNDiYsik0fOm1PzO/cPuw==
+X-Google-Smtp-Source: ACHHUZ7gfC9SiAKuiZVkdGPEIOUbBiWWQzVVNssBR/KT1jM0N6dnRFxrMrm59gO2v3gfW4ajop+EwA==
+X-Received: by 2002:a0d:ca0d:0:b0:56d:770:c315 with SMTP id m13-20020a0dca0d000000b0056d0770c315mr6766217ywd.49.1687074699573;
+        Sun, 18 Jun 2023 00:51:39 -0700 (PDT)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id b16-20020a0dd910000000b005707f542f62sm953037ywe.25.2023.06.18.00.51.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Jun 2023 00:51:38 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-bd6d9d7da35so2611586276.0;
+        Sun, 18 Jun 2023 00:51:38 -0700 (PDT)
+X-Received: by 2002:a5b:cb:0:b0:bc7:47a:9861 with SMTP id d11-20020a5b00cb000000b00bc7047a9861mr3316637ybp.51.1687074698581;
+ Sun, 18 Jun 2023 00:51:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202306172040.1dllc8rx-lkp@intel.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgCXaK8lnY5kd+bcLw--.30297S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYg7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
-        IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-        5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
-        CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxG
-        xcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrw
-        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
-        x2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-        AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230616223616.6002-1-schmitzmic@gmail.com> <20230616223616.6002-3-schmitzmic@gmail.com>
+ <CAMuHMdXo+Za3_Bz-PaLhq_oZzEzkN=g5YyDp=vaX7485WuE=Cg@mail.gmail.com> <e29dcf24-367f-4304-9b01-7913e0dcf650@gmail.com>
+In-Reply-To: <e29dcf24-367f-4304-9b01-7913e0dcf650@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sun, 18 Jun 2023 09:51:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUHNGKP4jFM7CDhFxHWd+SR4GG6Co0PosLCk1qpBV176w@mail.gmail.com>
+Message-ID: <CAMuHMdUHNGKP4jFM7CDhFxHWd+SR4GG6Co0PosLCk1qpBV176w@mail.gmail.com>
+Subject: Re: [PATCH v12 2/3] block: change annotation of rdb_CylBlocks in affs_hardblocks.h
+To:     Michael Schmitz <schmitzmic@gmail.com>
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-m68k@vger.kernel.org, hch@lst.de, martin@lichtvoll.de,
+        fthain@linux-m68k.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi,
+Hi Michael,
 
-ÔÚ 2023/06/17 20:25, kernel test robot Ð´µÀ:
-> 
->     block/genhd.c: In function 'disk_scan_partitions':
->>> block/genhd.c:369:59: error: 'FMODE_EXCL' undeclared (first use in this function); did you mean 'FMODE_EXEC'?
->       369 |         bdev = blkdev_get_by_dev(disk_devt(disk), mode & ~FMODE_EXCL, NULL,
->           |                                                           ^~~~~~~~~~
->           |                                                           FMODE_EXEC
+On Sun, Jun 18, 2023 at 5:10â€¯AM Michael Schmitz <schmitzmic@gmail.com> wrote:
+> Am 17.06.2023 um 23:08 schrieb Geert Uytterhoeven:
+> > On Sat, Jun 17, 2023 at 12:36â€¯AM Michael Schmitz <schmitzmic@gmail.com> wrote:
+> >> The Amiga partition parser module uses signed int for partition sector
+> >> address and count, which will overflow for disks larger than 1 TB.
+> >>
+> >> Use u64 as type for sector address and size to allow using disks up to
+> >> 2 TB without LBD support, and disks larger than 2 TB with LBD. The RBD
+> >> format allows to specify disk sizes up to 2^128 bytes (though native
+> >> OS limitations reduce this somewhat, to max 2^68 bytes), so check for
+> >> u64 overflow carefully to protect against overflowing sector_t.
+> >>
+> >> This bug was reported originally in 2012, and the fix was created by
+> >> the RDB author, Joanne Dow <jdow@earthlink.net>. A patch had been
+> >> discussed and reviewed on linux-m68k at that time but never officially
+> >> submitted (now resubmitted as patch 1 of this series).
+> >>
+> >> Patch 3 (this series) adds additional error checking and warning
+> >> messages. One of the error checks now makes use of the previously
+> >> unused rdb_CylBlocks field, which causes a 'sparse' warning
+> >> (cast to restricted __be32).
+> >>
+> >> Annotate all 32 bit fields in affs_hardblocks.h as __be32, as the
+> >> on-disk format of RDB and partition blocks is always big endian.
+> >>
+> >> Reported-by: Martin Steigerwald <Martin@lichtvoll.de>
+> >> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=43511
+> >> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> >> Message-ID: <201206192146.09327.Martin@lichtvoll.de>
+> >> Cc: <stable@vger.kernel.org> # 5.2
+> >> Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+> >> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>
+> Thanks - now I notice the patch title for this one doesn't fit too well
+> anymore.
+>
+> Would a change of title mess up the common patch tracking tools?
 
-Sorry about this typo, I'll send a new version.
+You mean changing one patch subject in v13?
+Nah, happens all the time, so the tooling should handle that fine.
 
-Thanks,
-Kuai
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
