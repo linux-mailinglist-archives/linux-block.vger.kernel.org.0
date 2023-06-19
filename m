@@ -2,172 +2,142 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B51377349AB
-	for <lists+linux-block@lfdr.de>; Mon, 19 Jun 2023 03:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 239FD734A65
+	for <lists+linux-block@lfdr.de>; Mon, 19 Jun 2023 04:54:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjFSBSG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 18 Jun 2023 21:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34798 "EHLO
+        id S229682AbjFSCx6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 18 Jun 2023 22:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjFSBSE (ORCPT
+        with ESMTP id S229654AbjFSCx4 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sun, 18 Jun 2023 21:18:04 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6FB01B6
-        for <linux-block@vger.kernel.org>; Sun, 18 Jun 2023 18:18:00 -0700 (PDT)
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230619011756epoutp024146b4e93887901e3822d3b64c95b028~p6piqdKsh0957109571epoutp02a
-        for <linux-block@vger.kernel.org>; Mon, 19 Jun 2023 01:17:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230619011756epoutp024146b4e93887901e3822d3b64c95b028~p6piqdKsh0957109571epoutp02a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1687137476;
-        bh=OleBLvtikVcBHuH8IDNEgE039JVPKNisZ9aLSJ3hOFY=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=uUWjEbNOYrZBVsKR6SvsyRHr+Tzm+SKq6OcbDSQsPwOGN9VbOALLdOVioWInjHwuQ
-         G9tjqiDh0CGLklFvYQs1rB+TKHWbLMTxd9lPbERwvoklQnOVqHx41kBXCIpu4atd8H
-         vgCE+QJ8n3HslVaIpRV5UW/9vHGRWo/69f6HnDgM=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20230619011756epcas5p49e7808cd190e4707f5c73efab94995bb~p6ph6JEVs1902519025epcas5p4a;
-        Mon, 19 Jun 2023 01:17:56 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.174]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4QksMQ2zqcz4x9Q0; Mon, 19 Jun
-        2023 01:17:54 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D5.9D.58203.2CCAF846; Mon, 19 Jun 2023 10:17:54 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230619011354epcas5p32c094e0c9bcd1ec2184c66a5f8be3268~p6mAmrEJA0421404214epcas5p3L;
-        Mon, 19 Jun 2023 01:13:54 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230619011354epsmtrp22f0aa82bf7f77d011a0707e0336d55d1~p6mAl07Yn1345013450epsmtrp2d;
-        Mon, 19 Jun 2023 01:13:54 +0000 (GMT)
-X-AuditID: b6c32a4b-c55fd7000001e35b-8e-648facc291aa
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C8.81.64355.1DBAF846; Mon, 19 Jun 2023 10:13:54 +0900 (KST)
-Received: from ubuntu.. (unknown [109.105.118.54]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20230619011352epsmtip1ec693ec61f4bed0d0c8c3f920ba79937~p6l-P13IR2286522865epsmtip1P;
-        Mon, 19 Jun 2023 01:13:52 +0000 (GMT)
-From:   Min Li <min15.li@samsung.com>
-To:     axboe@kernel.dk, willy@infradead.org, hch@lst.de,
-        dlemoal@kernel.org, gregkh@linuxfoundation.org, wsa@kernel.org,
-        vkoul@kernel.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Min Li <min15.li@samsung.com>
-Subject: [PATCH v4] block: add capacity validation in bdev_add_partition()
-Date:   Mon, 19 Jun 2023 09:12:14 +0000
-Message-Id: <20230619091214.31615-1-min15.li@samsung.com>
-X-Mailer: git-send-email 2.34.1
+        Sun, 18 Jun 2023 22:53:56 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0588E4E;
+        Sun, 18 Jun 2023 19:53:54 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b549e81cecso1643515ad.0;
+        Sun, 18 Jun 2023 19:53:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687143234; x=1689735234;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:cc:references:to:subject:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HcW1VUXTqcSc+mMUauKY0UCtX0Nd8ZbF6k2ii5GYHdA=;
+        b=qZDLkP7m9HtsnGf2OuczgZWOWhpB4CCADkesjrgcg5ZTM1XTBgY8KEjkV4hSmZfoIJ
+         Kid2JeOmMTbAEyfaJxwyD/TBJbo5cg3My76H20uHvPsOvIPmwPPFV96tMe+uinswJ4IZ
+         ZTg+N8eKRzwa3Q/8LLBFBgvqakCwJdh+oRwWaO7JXTpxkY58iw2cHqOqeFhShQDnuQLt
+         9u17/giJOm4BsQ151qK+upIrBOreQUxuMfFe04IbDgU+u51kbCYhcHJVMqCrwhVPbDSh
+         /XHq29LI7WAoTXZ+mNZIwCZSM/1KC2wqmtld1cqU/DIPOnB3geDxwMjJi5ruZKeCkPrW
+         MuxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687143234; x=1689735234;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:cc:references:to:subject:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HcW1VUXTqcSc+mMUauKY0UCtX0Nd8ZbF6k2ii5GYHdA=;
+        b=UPyTESzqDdtCvR6TkKDDoiUu4ZmaLWOBOM/gXo2UbDArcZnz6maYGNe8AHTEwx9Rzf
+         HZCV4FR8TTjJ3hFyb0Sq3ZNx2NNtWwS5YrzeUQGaedxcNzEfPg4rY9IKOvZBIPntHpPG
+         ilEdXr+IU3vKcI16c47C2rwaDgZK9t2kGdnfYA3iUVeTAOj4B+V75YFXGdeDg5nW9mSi
+         UHC19EVtAY2t4CMBhY67bkNcS/NnvuJzVnKtHPbFLwipaK/biM+8VBGjSyBWoJ9KD2+6
+         lVIPUimEABbK2y27Pum3pKbP1V2or5O7wdAaeGgXvaihs8uSbF82WE7tcaFMv4Fnou1n
+         8IIQ==
+X-Gm-Message-State: AC+VfDzWkybYig5NO+LzjtXo96lMK5MQqqETZNFqj9mPThGZsTQEvJj+
+        /3o518+4B45+NttTRAjDvLkZq5QVufQ=
+X-Google-Smtp-Source: ACHHUZ4sug0G5UmyVJCVoN+6pnic1syO1JLx7pj9HnnqDKeHP35kdVDp18umy8bDO80CO482avnPHQ==
+X-Received: by 2002:a17:902:e848:b0:1b5:49fc:e336 with SMTP id t8-20020a170902e84800b001b549fce336mr1885019plg.42.1687143233794;
+        Sun, 18 Jun 2023 19:53:53 -0700 (PDT)
+Received: from [10.1.1.24] (222-152-217-2-adsl.sparkbb.co.nz. [222.152.217.2])
+        by smtp.gmail.com with ESMTPSA id i9-20020a17090332c900b0019e60c645b1sm10805337plr.305.2023.06.18.19.53.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 18 Jun 2023 19:53:53 -0700 (PDT)
+Subject: Re: [PATCH v12 2/3] block: change annotation of rdb_CylBlocks in
+ affs_hardblocks.h
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20230616223616.6002-1-schmitzmic@gmail.com>
+ <20230616223616.6002-3-schmitzmic@gmail.com>
+ <CAMuHMdXo+Za3_Bz-PaLhq_oZzEzkN=g5YyDp=vaX7485WuE=Cg@mail.gmail.com>
+ <e29dcf24-367f-4304-9b01-7913e0dcf650@gmail.com>
+ <CAMuHMdUHNGKP4jFM7CDhFxHWd+SR4GG6Co0PosLCk1qpBV176w@mail.gmail.com>
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-m68k@vger.kernel.org, hch@lst.de, martin@lichtvoll.de,
+        fthain@linux-m68k.org, stable@vger.kernel.org
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <d4c2a542-f8ce-2aef-805b-d5fc3091e30a@gmail.com>
+Date:   Mon, 19 Jun 2023 14:53:45 +1200
+User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
+ Icedove/45.4.0
 MIME-Version: 1.0
+In-Reply-To: <CAMuHMdUHNGKP4jFM7CDhFxHWd+SR4GG6Co0PosLCk1qpBV176w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFJsWRmVeSWpSXmKPExsWy7bCmhu6hNf0pBi8miVmsvtvPZvFgv71F
-        8+L1bBY3jr9jtpj7+hKLxcrVR5ks9t7Stri8aw6bxfJVHUwWZyd8YLXYeecEs8XvH0Cxu/vn
-        MlrcWHeVxYHPY/MKLY/LZ0s9Nq3qZPPYP3cNu8fumw1sHn1bVjF6fN4kF8AelW2TkZqYklqk
-        kJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SvkkJZYk4pUCggsbhY
-        Sd/Opii/tCRVISO/uMRWKbUgJafApECvODG3uDQvXS8vtcTK0MDAyBSoMCE748Wbj4wFT7kr
-        bl/2b2DcxtnFyMkhIWAi8fd9L0sXIxeHkMBuRonGl0cYIZxPjBL/VmxkgXNWv5nFAtPy6dJM
-        NojETkaJvtnt7BDOc0aJ13fPMncxcnCwCShLbFvqA9IgItDBKLHlKNg+ZoE4iUtdnewgtrCA
-        l0Tnvi9sIDaLgKrEzmWHmUFsXgFLiV8n5kAtk5fYf/AsVFxQ4uTMJywQc+QlmrfOZgbZKyHQ
-        yiEx6+NeNogGF4nr+79DNQtLvDq+hR3ClpL4/A6khgPILpZ4+SMMIlwjsfvbbSYI21pi2/p1
-        TCAlzAKaEut36UOEZSWmnlrHBLGWT6L39xOocl6JHfNgbCWJvxfOMULYEhKL9z9khbA9JE6/
-        PABWIyQQKzH1cA/LBEb5WUi+mYXkm1kImxcwMq9ilEwtKM5NTy02LTDOSy2HR2tyfu4mRnCi
-        1fLewfjowQe9Q4xMHIyHGCU4mJVEeIP29qUI8aYkVlalFuXHF5XmpBYfYjQFBvFEZinR5Hxg
-        qs8riTc0sTQwMTMzM7E0NjNUEue9eL03RUggPbEkNTs1tSC1CKaPiYNTqoFp/r6Me58Mn2za
-        fme/lu/+d4Kfox/k8XNoty03tN+nfW+T5kdVj20ykccuB1/myrMV9xJOOn101ZU99mw9WjsX
-        zPT1Or7UcPHPb3WzuBmO1/kxX7GrXXfqSd6BftFDRe9tVuzKjF1mcmYOTz6/7sHFH+RORLlv
-        SNm1LLCivuf841Itj5tNcq/uvjKVqFrwc9JVBe7X675JHf48+YV7JLNUcduedn+9P7PNGvy2
-        /D/05qNEmdr735cD5bfOd3Evnd4V925ZQnyVPG9CAs8D+aj1Ju/FNIqN16x9G9zxaSnn603H
-        566cevTOsr/ffrza9rR8umP1RM+Pf5ZwbXR1PxkrsMu/rqYtSCk2Ucw8gCntmRJLcUaioRZz
-        UXEiACYdgX49BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsWy7bCSnO6l1f0pBtdfM1qsvtvPZvFgv71F
-        8+L1bBY3jr9jtpj7+hKLxcrVR5ks9t7Stri8aw6bxfJVHUwWZyd8YLXYeecEs8XvH0Cxu/vn
-        MlrcWHeVxYHPY/MKLY/LZ0s9Nq3qZPPYP3cNu8fumw1sHn1bVjF6fN4kF8AexWWTkpqTWZZa
-        pG+XwJXx4s1HxoKn3BW3L/s3MG7j7GLk5JAQMJH4dGkmG4gtJLCdUeLw5xqIuITE+Xm/2CBs
-        YYmV/56zdzFyAdU8ZZTY1bCVsYuRg4NNQFli21IfkLiIwCRGifsXXrOCNDALJEh0/DjEDmIL
-        C3hJdO77AjaIRUBVYueyw8wgNq+ApcSvE3NYIBbIS+w/eBYqLihxcuYTFog58hLNW2czT2Dk
-        m4UkNQtJagEj0ypG0dSC4tz03OQCQ73ixNzi0rx0veT83E2M4GDXCtrBuGz9X71DjEwcjIcY
-        JTiYlUR4g/b2pQjxpiRWVqUW5ccXleakFh9ilOZgURLnVc7pTBESSE8sSc1OTS1ILYLJMnFw
-        SjUwWamL8195qLNFyv/c4zu6ZnFhppPeWXbPDuGzYd2yetWB55mRJYWz/4iItGouEeVd23hO
-        Y99/A584YeOkg6e0am89uf3qiojo3mUL1X3s3vOGH0phyWi1+H1+DWPP/wnH1rj2zivTm3qK
-        26TNPXfSys0BfusP+EYmvjnxSHvKXEtex8/B3clvp2fclZgmvrVY4re5sEO18sxfxddXr9J8
-        +P9TmMnEgn5rsb0HsreX2cckPDtup7jtaW2Suv0h174ct30WPu9n7i1v1P16yGBa/p1Cx2+3
-        7s9TiZBw8GEJuMX3K2va6l65zxaL1kelTwmetp49wVRP87Gs8wRBpRVFLOse1WXvszWQ9XM5
-        cmuGEktxRqKhFnNRcSIAMiTDTeUCAAA=
-X-CMS-MailID: 20230619011354epcas5p32c094e0c9bcd1ec2184c66a5f8be3268
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230619011354epcas5p32c094e0c9bcd1ec2184c66a5f8be3268
-References: <CGME20230619011354epcas5p32c094e0c9bcd1ec2184c66a5f8be3268@epcas5p3.samsung.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In the function bdev_add_partition(),there is no check that the start
-and end sectors exceed the size of the disk before calling add_partition.
-When we call the block's ioctl interface directly to add a partition,
-and the capacity of the disk is set to 0 by driver,the command will
-continue to execute.
+Hi Geert,
 
-Signed-off-by: Min Li <min15.li@samsung.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Am 18.06.2023 um 19:51 schrieb Geert Uytterhoeven:
+> Hi Michael,
+>
+> On Sun, Jun 18, 2023 at 5:10 AM Michael Schmitz <schmitzmic@gmail.com> wrote:
+>> Am 17.06.2023 um 23:08 schrieb Geert Uytterhoeven:
+>>> On Sat, Jun 17, 2023 at 12:36 AM Michael Schmitz <schmitzmic@gmail.com> wrote:
+>>>> The Amiga partition parser module uses signed int for partition sector
+>>>> address and count, which will overflow for disks larger than 1 TB.
+>>>>
+>>>> Use u64 as type for sector address and size to allow using disks up to
+>>>> 2 TB without LBD support, and disks larger than 2 TB with LBD. The RBD
+>>>> format allows to specify disk sizes up to 2^128 bytes (though native
+>>>> OS limitations reduce this somewhat, to max 2^68 bytes), so check for
+>>>> u64 overflow carefully to protect against overflowing sector_t.
+>>>>
+>>>> This bug was reported originally in 2012, and the fix was created by
+>>>> the RDB author, Joanne Dow <jdow@earthlink.net>. A patch had been
+>>>> discussed and reviewed on linux-m68k at that time but never officially
+>>>> submitted (now resubmitted as patch 1 of this series).
+>>>>
+>>>> Patch 3 (this series) adds additional error checking and warning
+>>>> messages. One of the error checks now makes use of the previously
+>>>> unused rdb_CylBlocks field, which causes a 'sparse' warning
+>>>> (cast to restricted __be32).
+>>>>
+>>>> Annotate all 32 bit fields in affs_hardblocks.h as __be32, as the
+>>>> on-disk format of RDB and partition blocks is always big endian.
+>>>>
+>>>> Reported-by: Martin Steigerwald <Martin@lichtvoll.de>
+>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=43511
+>>>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>>>> Message-ID: <201206192146.09327.Martin@lichtvoll.de>
+>>>> Cc: <stable@vger.kernel.org> # 5.2
+>>>> Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>
+>>> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>
+>> Thanks - now I notice the patch title for this one doesn't fit too well
+>> anymore.
+>>
+>> Would a change of title mess up the common patch tracking tools?
+>
+> You mean changing one patch subject in v13?
 
----
-Changes from v1:
+Correct.
 
-- Check for overflows of the start + length value
-- Place the capacity check at the beginning of the function.
+> Nah, happens all the time, so the tooling should handle that fine.
 
-Changes from v2:
+OK - I need to add your review tag anyway.
 
-- Place the assignment on the first line and merge the two lines into one
+Cheers,
 
-Changes from v3:
-
-- Modify the singed name
----
- block/partitions/core.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index 49e0496ff23c..b511f88bf558 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -436,10 +436,21 @@ static bool partition_overlaps(struct gendisk *disk, sector_t start,
- int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
- 		sector_t length)
- {
-+	sector_t capacity = get_capacity(disk), end;
- 	struct block_device *part;
- 	int ret;
- 
- 	mutex_lock(&disk->open_mutex);
-+	if (check_add_overflow(start, length, &end)) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (start >= capacity || end > capacity) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	if (!disk_live(disk)) {
- 		ret = -ENXIO;
- 		goto out;
--- 
-2.34.1
-
+	Michael
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
