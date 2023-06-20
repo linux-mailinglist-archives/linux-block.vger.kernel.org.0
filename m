@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7095373612E
-	for <lists+linux-block@lfdr.de>; Tue, 20 Jun 2023 03:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 245DD736130
+	for <lists+linux-block@lfdr.de>; Tue, 20 Jun 2023 03:35:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjFTBfK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 19 Jun 2023 21:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57738 "EHLO
+        id S229595AbjFTBfX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 19 Jun 2023 21:35:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbjFTBfJ (ORCPT
+        with ESMTP id S229690AbjFTBfW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 19 Jun 2023 21:35:09 -0400
+        Mon, 19 Jun 2023 21:35:22 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03DB8E55
-        for <linux-block@vger.kernel.org>; Mon, 19 Jun 2023 18:34:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C40F1B0
+        for <linux-block@vger.kernel.org>; Mon, 19 Jun 2023 18:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687224869;
+        s=mimecast20190719; t=1687224873;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uDCU23Tg71ixu26B1Q5DI34+DtwzuYkE4QTPUCZ8gbM=;
-        b=ZXKxHyRs7haeAx9tv1kKW1X9WtJK1FyAiA3vnN/c8EXLcf4dSntSXxdxc7CFqqVpzuNi38
-        vYRxlJb3MAW/anr6zUobWeADe7aPAcvGQI2B19ny7GY9911452RfQcDzY3pVHSdpm7M4hc
-        Kx5crqDMWoyNA1iipwq1grC9tML3C5M=
+        bh=ikczhd6nnU0AFQRVGRfBcA4iWBBki9GNxTX/jhJO73E=;
+        b=AWWTC9B7JfRYxNSAYVaAkK9ist8YBrqSXMu8UUAALaAFL+17zlXsWY05G9xsj4Ay//o3Tl
+        w8tS6YgpNbIjTr6w0oTMao/SU81ZpUwlkuYmr66f0RYggu6m9bZjgjzO+H+Bm/awr66Ofv
+        HS5f7E9dE7kOnuRAy2ONeE1APMzxYU0=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-297-sPBOnxV0Mv6z7FTqZz490Q-1; Mon, 19 Jun 2023 21:34:26 -0400
-X-MC-Unique: sPBOnxV0Mv6z7FTqZz490Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-241-B72X3qVrOi-g8Skv5OvAiQ-1; Mon, 19 Jun 2023 21:34:30 -0400
+X-MC-Unique: B72X3qVrOi-g8Skv5OvAiQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 156CC1C08DB8;
-        Tue, 20 Jun 2023 01:34:26 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E56CE1C08DA3;
+        Tue, 20 Jun 2023 01:34:29 +0000 (UTC)
 Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A402112132C;
-        Tue, 20 Jun 2023 01:34:06 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 219DB492C1B;
+        Tue, 20 Jun 2023 01:34:28 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         Sagi Grimberg <sagi@grimberg.me>,
@@ -45,14 +45,14 @@ To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
 Cc:     Yi Zhang <yi.zhang@redhat.com>, linux-block@vger.kernel.org,
         Chunguang Xu <brookxu.cn@gmail.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V2 2/4] nvme: add nvme_unfreeze_force()
-Date:   Tue, 20 Jun 2023 09:33:47 +0800
-Message-Id: <20230620013349.906601-3-ming.lei@redhat.com>
+Subject: [PATCH V2 3/4] nvme: unfreeze queues before removing namespaces
+Date:   Tue, 20 Jun 2023 09:33:48 +0800
+Message-Id: <20230620013349.906601-4-ming.lei@redhat.com>
 In-Reply-To: <20230620013349.906601-1-ming.lei@redhat.com>
 References: <20230620013349.906601-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -63,67 +63,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Add nvme_unfreeze_force() for fixing IO hang during removing namespaces
-from error recovery.
+If removal is from breaking error recovery, queues may be frozen, and
+there may be pending IOs in bio_queue_enter(), and the following
+del_gendisk() may wait for these IOs, especially from writeback.
 
+Similar IO hang exists in flushing scan work too if there are pending
+IO in scan work context.
+
+Fix the kind of issue by unfreezing queues before removing namespace,
+so that all pending IOs can be handled.
+
+Reported-by: Chunguang Xu <brookxu.cn@gmail.com>
+https://lore.kernel.org/linux-nvme/cover.1685350577.git.chunguang.xu@shopee.com/
+Reported-by: Yi Zhang <yi.zhang@redhat.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/nvme/host/core.c | 21 ++++++++++++++++++---
- drivers/nvme/host/nvme.h |  1 +
- 2 files changed, 19 insertions(+), 3 deletions(-)
+ drivers/nvme/host/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 76e8f8b4098e..6b3f12368196 100644
+index 6b3f12368196..7d8ff58660ee 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -4579,17 +4579,32 @@ void nvme_mark_namespaces_dead(struct nvme_ctrl *ctrl)
- }
- EXPORT_SYMBOL_GPL(nvme_mark_namespaces_dead);
+@@ -4002,6 +4002,9 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
+ 	 */
+ 	nvme_mpath_clear_ctrl_paths(ctrl);
  
--void nvme_unfreeze(struct nvme_ctrl *ctrl)
-+static void __nvme_unfreeze(struct nvme_ctrl *ctrl, bool force)
- {
- 	struct nvme_ns *ns;
- 
- 	down_read(&ctrl->namespaces_rwsem);
--	list_for_each_entry(ns, &ctrl->namespaces, list)
--		blk_mq_unfreeze_queue(ns->queue);
-+	list_for_each_entry(ns, &ctrl->namespaces, list) {
-+		if (force)
-+			blk_mq_unfreeze_queue_force(ns->queue);
-+		else
-+			blk_mq_unfreeze_queue(ns->queue);
-+	}
- 	up_read(&ctrl->namespaces_rwsem);
- }
++	/* unfreeze queues which may be frozen from error recovery */
++	nvme_unfreeze_force(ctrl);
 +
-+void nvme_unfreeze(struct nvme_ctrl *ctrl)
-+{
-+	__nvme_unfreeze(ctrl, false);
-+}
- EXPORT_SYMBOL_GPL(nvme_unfreeze);
+ 	/* prevent racing with ns scanning */
+ 	flush_work(&ctrl->scan_work);
  
-+void nvme_unfreeze_force(struct nvme_ctrl *ctrl)
-+{
-+	__nvme_unfreeze(ctrl, true);
-+}
-+EXPORT_SYMBOL_GPL(nvme_unfreeze_force);
-+
- int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout)
- {
- 	struct nvme_ns *ns;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 78308f15e090..b583bab985c3 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -765,6 +765,7 @@ void nvme_mark_namespaces_dead(struct nvme_ctrl *ctrl);
- void nvme_sync_queues(struct nvme_ctrl *ctrl);
- void nvme_sync_io_queues(struct nvme_ctrl *ctrl);
- void nvme_unfreeze(struct nvme_ctrl *ctrl);
-+void nvme_unfreeze_force(struct nvme_ctrl *ctrl);
- void nvme_wait_freeze(struct nvme_ctrl *ctrl);
- int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout);
- void nvme_start_freeze(struct nvme_ctrl *ctrl);
 -- 
 2.40.1
 
