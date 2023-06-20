@@ -2,95 +2,108 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6648F736D42
-	for <lists+linux-block@lfdr.de>; Tue, 20 Jun 2023 15:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B5BF736D49
+	for <lists+linux-block@lfdr.de>; Tue, 20 Jun 2023 15:27:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232972AbjFTNZl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 20 Jun 2023 09:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54400 "EHLO
+        id S231560AbjFTN1T (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 20 Jun 2023 09:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233392AbjFTNZa (ORCPT
+        with ESMTP id S230466AbjFTN1T (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 20 Jun 2023 09:25:30 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D509F1734
-        for <linux-block@vger.kernel.org>; Tue, 20 Jun 2023 06:24:58 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-25eabe8b5fcso753332a91.1
-        for <linux-block@vger.kernel.org>; Tue, 20 Jun 2023 06:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1687267498; x=1689859498;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BdzIdsumWt8w6tgcLa7JYNOj4SBOWfYBxidEV06J4CI=;
-        b=lXHAJxXQo1IxWBtyAzKVYQNkyeyShY73a0a1dyt2x8+hwrBcr+Di4YXgEAFePohBXJ
-         c4YhOC8xc/lacMFDqn2bkueiKmew5cZCvXNL4ao5hawEaUHveNZ100NXE07TC9oYmy+G
-         zdmD6SwgneakVwIzYCYVBcH8GSxZTz+ZPvqnoXh7PQeEkCQm+tyTUnmb0QGFGANsXNu8
-         HVB87wzk5a8VUwhteiGbcAXUNr9MZ9nCsSqHa+y8XSLoQqfJO4itluRjSMlZCJjRvP21
-         ws4muT8ppkfoXNR9p5LcUT89EHMHzgZ7UH41In3uxXgbi0romrbROEd0wPBBKexQVu3e
-         HA0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687267498; x=1689859498;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BdzIdsumWt8w6tgcLa7JYNOj4SBOWfYBxidEV06J4CI=;
-        b=dOhagwmgcaFNiNTahsT1rF5dbxvf4Cg1I+9lQZMJ0T9eytsX6PxUeaLWddjyTizzRp
-         tJZwrCL8GCZrB66kZ3ugBHBn+wcgVuKSw29j4dlbWfxoQhwDDlNvS8PNERgl5tgfR+xC
-         ye88ADJ+wurHGXQ23FwkJZwfYuYJJ2WTy7VWF14hyDAaUM06eVKeP8aPrHcAifHpjcES
-         GoZcW6ZVs7gEWjUis+LyODGtu6xndLXE/HauDAdezn+iGsynt1G549rh2GqmRq/G5In1
-         Jowzpu+y1k6NSiLbWmEAPST2787AaZC6nlqLdMSDukl4vFtkMcWAcEt6FS/DrUT8qhFh
-         G1AA==
-X-Gm-Message-State: AC+VfDwLwBlMkypLyagDfC9ZJZCM1Oz6W8c5ztGPJgmrwjnNjYpt3yRl
-        Ru3K+rGd6YcHsjYSDcnmUnYyJY68ZNxCgSY5ISk=
-X-Google-Smtp-Source: ACHHUZ4iXL0ojL9vp6/E8ffxzHW/r8TZGDt8cfJCpsRBDgUZ9HFpqRpY9i8GA4iW/B/A0x8pyi88jw==
-X-Received: by 2002:a17:90a:e7d1:b0:260:d8fe:4de3 with SMTP id kb17-20020a17090ae7d100b00260d8fe4de3mr903505pjb.4.1687267498321;
-        Tue, 20 Jun 2023 06:24:58 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id gm14-20020a17090b100e00b00253311d508esm7342008pjb.27.2023.06.20.06.24.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jun 2023 06:24:57 -0700 (PDT)
-Message-ID: <a7a1dcc3-5aaf-53bc-7527-ba62292c44cd@kernel.dk>
-Date:   Tue, 20 Jun 2023 07:24:56 -0600
+        Tue, 20 Jun 2023 09:27:19 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A391185;
+        Tue, 20 Jun 2023 06:27:18 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id DC88E21228;
+        Tue, 20 Jun 2023 13:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1687267636; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=wKacNcJVLmesRp8TReg+QyYHTEChm9F06o8ZZWC2XNU=;
+        b=etp644gKfqe6QazNfpm5X5Ns1cefjHGkwJoHwV3juMcvziqq3FoPUXrBunj2J9rbFDsQjj
+        2bG3Pwvu1YURas3RYqwKj5YvUrJ4TSEWxSzB/HgAZeERpUSFJo2QjOaJ7S3mSZpuH5COqU
+        S8mh0cRjFzv2Y0u4FNLQul22WA85S3A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1687267636;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=wKacNcJVLmesRp8TReg+QyYHTEChm9F06o8ZZWC2XNU=;
+        b=BMBGRqQFIOvcvE3Oey9DaN31ZhziAS9EXA9VOjgFljUINLT5vyTbNAhOYPA/6ZBxCWvLO0
+        GXMDyHHavClkOwCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CE1751346D;
+        Tue, 20 Jun 2023 13:27:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id FnxKMjSpkWSaOAAAMHmgww
+        (envelope-from <dwagner@suse.de>); Tue, 20 Jun 2023 13:27:16 +0000
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Hannes Reinecke <hare@suse.de>,
+        James Smart <jsmart2021@gmail.com>,
+        Martin Belanger <Martin.Belanger@dell.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH blktests v1 0/3] More fixes for FC enabling
+Date:   Tue, 20 Jun 2023 15:27:00 +0200
+Message-ID: <20230620132703.20648-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 2/3] block: mark bdev files as FMODE_NOWAIT if underlying
- device supports it
-Content-Language: en-US
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     io-uring@vger.kernel.org, linux-block@vger.kernel.org
-References: <20230509151910.183637-1-axboe@kernel.dk>
- <20230509151910.183637-3-axboe@kernel.dk> <ZFucWYxUtBvvRJpR@infradead.org>
- <8d5daf0d-c623-5918-d40e-ab3ad1c508ad@kernel.dk>
- <ZJFEz2FKuvIf8aCL@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <ZJFEz2FKuvIf8aCL@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/20/23 12:18?AM, Christoph Hellwig wrote:
-> So it turns out this gets into the way of my planned cleanup to move
-> all the tatic FMODE_ flags out of this basically full field into a new
-> static one in file_operations.  Do you think it is ok to go back to
-> always claiming FMODE_NOWAIT for block devices and then just punt for
-> the drivers that don't support it like the patch below?
+The first patch is addressing the problem, that the FC transport is way faster
+in reconnecting and the test didn't observe all the states from live ->
+resetting -> connecting -> live. Instead trying to see these transitions just
+test for the final state which is live and the correct number of queues. This
+makes this test also a little bit more robust. So this patch is necessary.
 
-I think we need stronger justification than that, it's much nicer to
-have it in the open path than doing the same check over and over for
-each IO.
+The next two patches are more in RFC state but I think it makes sense to post
+them along side the rest.
 
-With your new proposed scheme, why can't the check and FMODE_NOWAIT set
-still be in open?
+The second and the third patch rely on the not yet released nvme-cli features
+'volatile configuration' and 'execution context awareness'. These two feature
+allow nvme-cli to figure out if a 'nvme connect' should actually be done or just
+ignored. If the FC autoconnect udev/systemd rules are enabled on a host, this is
+interfering with blktests. Note, this is also a way to get nvme-stas and
+nvme-cli play nicely with each other.
+
+In case anyone wants to run blktest with FC as transport needs either to disable
+the autoconnect feature or use the unreleased features of nvme-cli.
+
+Daniel Wagner (3):
+  nvme/048: Check for queue count check directly
+  nvme/rc: Avoid triggering host nvme-cli autoconnect
+  nvme/{041,042,043,044,045}: Use default hostnqn and hostid
+
+ tests/nvme/041 |  8 ++----
+ tests/nvme/042 |  8 ++----
+ tests/nvme/043 |  8 ++----
+ tests/nvme/044 |  8 ++----
+ tests/nvme/045 |  8 ++----
+ tests/nvme/048 | 35 ++++++++++++++++--------
+ tests/nvme/rc  | 73 +++++++++++++++++++++++++++++++++++++++++++-------
+ 7 files changed, 97 insertions(+), 51 deletions(-)
 
 -- 
-Jens Axboe
+2.41.0
 
