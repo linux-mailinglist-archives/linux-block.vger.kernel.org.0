@@ -2,175 +2,134 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0493D738578
-	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 15:40:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3949D738489
+	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 15:11:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbjFUNkx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Jun 2023 09:40:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
+        id S232140AbjFUNLd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Jun 2023 09:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232403AbjFUNkx (ORCPT
+        with ESMTP id S232138AbjFUNLd (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Jun 2023 09:40:53 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04304E59
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 06:40:52 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-66872dbc2efso979012b3a.0
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 06:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1687354851; x=1689946851;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GDKIhFWuEZ1n7Vcx+7wRMdAo6FU3gV4rV1Nj/5JuAlE=;
-        b=du53aedkjus+302qNWs3qEVB5aRN4QEkwkOHrg61I/TWiM8WPrC6eA4adL51H2Ljmy
-         7ZOrgCA++jBLPugmxeSN3GHhRzxqODdGTsSDXd/iUoacsFtJSebtFw7LlzkEnBQSkdRA
-         m2bUlzQHnQ1ohVh7rpN899B4bmd/fxYK+er3Uc5GCKXW9DQImfqbi8eImIpgvAy+JgWp
-         nKxSK0Ru+LHNo6tr0/nc/qp4Pomw0I5uYEzM1RZLm6OMvtNFYXndeTRqFQElq4fN4hnw
-         piOh7Car2wW8onSCnpOFfZ0a7iYx12DCMqzDXrKYtn3gvTlXreh9C++6V938Adxssmg5
-         L0yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687354851; x=1689946851;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GDKIhFWuEZ1n7Vcx+7wRMdAo6FU3gV4rV1Nj/5JuAlE=;
-        b=Aupn6AH03Ol0aDfF5PQoKnsWlnF4eQeEbIS62WysfL3JE2OdyW80B/LOS0tKobi8zI
-         +ZWbrnfo7tkHm7e7WdR8D4Qr71DyK/IhGiMczSi+JVDY2cd2sQe5PYDXKYqeE8XRkOmw
-         kjbF5EGzCGQoemoHzUSMrzBlUbsiAYvNInK8Z4uz6c2AI7Q6jEE+6tO9ZiYjdbpKhcJv
-         xa4A9xLoWIkZ/ZGpQF0Mm62B0k7a6P5hGEC6MGuKn5BkDSvSAT3Vb7dovUIoZTMYqPe1
-         F8b56yqqKzrkJKU0GXkD0daO4aa/j5WwhBEbt+POyVKZ+19EMo2EzqfyA89OUAkdM71w
-         RL5Q==
-X-Gm-Message-State: AC+VfDy61JfJFM+9oCZQoEVvi2uXpLHCwX5zB4gFCGTSADAdf3EGc0Kg
-        ZW1qU9MRlisi6HPHXCAQ54Shfg==
-X-Google-Smtp-Source: ACHHUZ6USHq1ptGQzjgdWY1T0ZVzNYU5zNduo0mJwiltjRqTiAHps1EEzHo49GMrjEydGzeOmCzaQA==
-X-Received: by 2002:a05:6a00:4192:b0:668:70af:b5c1 with SMTP id ca18-20020a056a00419200b0066870afb5c1mr11739859pfb.1.1687354851467;
-        Wed, 21 Jun 2023 06:40:51 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id j26-20020aa7801a000000b0065980654baasm2932470pfi.130.2023.06.21.06.40.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Jun 2023 06:40:50 -0700 (PDT)
-Message-ID: <e92a19fa-74cc-2b9f-3173-6a04557a6534@kernel.dk>
-Date:   Wed, 21 Jun 2023 07:40:49 -0600
+        Wed, 21 Jun 2023 09:11:33 -0400
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F65BE57
+        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 06:11:31 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QmP5n3Qw8z4f3p15
+        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 21:11:25 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+        by APP4 (Coremail) with SMTP id gCh0CgD3rLD79pJknOjSMA--.61999S4;
+        Wed, 21 Jun 2023 21:11:25 +0800 (CST)
+From:   Hou Tao <houtao@huaweicloud.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-block@vger.kernel.org, nvdimm@lists.linux.dev,
+        virtualization@lists.linux-foundation.org,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>, houtao1@huawei.com
+Subject: [PATCH v2] virtio_pmem: add the missing REQ_OP_WRITE for flush bio
+Date:   Wed, 21 Jun 2023 21:43:40 +0800
+Message-Id: <20230621134340.878461-1-houtao@huaweicloud.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <ZJLpYMC8FgtZ0k2k@infradead.org>
+References: <ZJLpYMC8FgtZ0k2k@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [bug report] BUG: KASAN: out-of-bounds in
- io_req_local_work_add+0x3b1/0x4a0
-Content-Language: en-US
-To:     Guangwu Zhang <guazhang@redhat.com>, linux-block@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>, Jeff Moyer <jmoyer@redhat.com>,
-        io-uring@vger.kernel.org
-References: <CAGS2=YrvrD0hf7WGjQd4Me772=m9=E6J92aGtG0PAoF4yD6dTw@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CAGS2=YrvrD0hf7WGjQd4Me772=m9=E6J92aGtG0PAoF4yD6dTw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgD3rLD79pJknOjSMA--.61999S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxJF48Ar1DXrWUKw18AF15CFg_yoW5Jw17pr
+        90kay3tr4UGF4fuanrta12gFyfX3WDGrZrKFWfuw1xAFZrAF1DKw1DWa4Fga4UCry8Gay7
+        JFykJw1jqryDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+        Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+        c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+        CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
+        MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6r
+        W3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+        cSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/21/23 1:38?AM, Guangwu Zhang wrote:
-> HI,
-> Found the io_req_local_work_add error when run  liburing testing.
-> 
-> kernel repo :
->     Merge branch 'for-6.5/block' into for-next
->     * for-6.5/block:
->       reiserfs: fix blkdev_put() warning from release_journal_dev()
-> 
-> [ 1733.389012] BUG: KASAN: out-of-bounds in io_req_local_work_add+0x3b1/0x4a0
-> [ 1733.395900] Read of size 4 at addr ffff888133320458 by task
-> iou-wrk-97057/97138
-> [ 1733.403205]
-> [ 1733.404706] CPU: 4 PID: 97138 Comm: iou-wrk-97057 Kdump: loaded Not
-> tainted 6.4.0-rc3.kasan+ #1
-> [ 1733.413404] Hardware name: Dell Inc. PowerEdge R740/06WXJT, BIOS
-> 2.13.3 12/13/2021
-> [ 1733.420972] Call Trace:
-> [ 1733.423425]  <TASK>
-> [ 1733.425533]  dump_stack_lvl+0x33/0x50
-> [ 1733.429207]  print_address_description.constprop.0+0x2c/0x3e0
-> [ 1733.434959]  print_report+0xb5/0x270
-> [ 1733.438539]  ? kasan_addr_to_slab+0x9/0xa0
-> [ 1733.442639]  ? io_req_local_work_add+0x3b1/0x4a0
-> [ 1733.447258]  kasan_report+0xcf/0x100
-> [ 1733.450839]  ? io_req_local_work_add+0x3b1/0x4a0
-> [ 1733.455456]  io_req_local_work_add+0x3b1/0x4a0
-> [ 1733.459903]  ? __pfx_io_req_local_work_add+0x10/0x10
-> [ 1733.464871]  ? __schedule+0x616/0x1530
-> [ 1733.468622]  __io_req_task_work_add+0x1bc/0x270
-> [ 1733.473156]  io_issue_sqe+0x55a/0xe80
-> [ 1733.476831]  io_wq_submit_work+0x23e/0xa00
-> [ 1733.480930]  io_worker_handle_work+0x2f5/0xa80
-> [ 1733.485384]  io_wq_worker+0x6c5/0x9d0
-> [ 1733.489051]  ? __pfx_io_wq_worker+0x10/0x10
-> [ 1733.493246]  ? _raw_spin_lock_irq+0x82/0xe0
-> [ 1733.497430]  ? __pfx_io_wq_worker+0x10/0x10
-> [ 1733.501616]  ret_from_fork+0x29/0x50
-> [ 1733.505204]  </TASK>
-> [ 1733.507396]
-> [ 1733.508894] Allocated by task 97057:
-> [ 1733.512475]  kasan_save_stack+0x1e/0x40
-> [ 1733.516313]  kasan_set_track+0x21/0x30
-> [ 1733.520068]  __kasan_slab_alloc+0x83/0x90
-> [ 1733.524080]  kmem_cache_alloc_bulk+0x13a/0x1e0
-> [ 1733.528526]  __io_alloc_req_refill+0x238/0x510
-> [ 1733.532971]  io_submit_sqes+0x65a/0xcd0
-> [ 1733.536810]  __do_sys_io_uring_enter+0x4e9/0x830
-> [ 1733.541430]  do_syscall_64+0x59/0x90
-> [ 1733.545010]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> [ 1733.550071]
-> [ 1733.551571] The buggy address belongs to the object at ffff8881333203c0
-> [ 1733.551571]  which belongs to the cache io_kiocb of size 224
-> [ 1733.563816] The buggy address is located 152 bytes inside of
-> [ 1733.563816]  224-byte region [ffff8881333203c0, ffff8881333204a0)
-> [ 1733.575544]
-> [ 1733.577042] The buggy address belongs to the physical page:
-> [ 1733.582617] page:00000000edbe178c refcount:1 mapcount:0
-> mapping:0000000000000000 index:0x0 pfn:0x133320
-> [ 1733.592011] head:00000000edbe178c order:1 entire_mapcount:0
-> nr_pages_mapped:0 pincount:0
-> [ 1733.600096] memcg:ffff88810cd49001
-> [ 1733.603501] flags:
-> 0x17ffffc0010200(slab|head|node=0|zone=2|lastcpupid=0x1fffff)
-> [ 1733.610896] page_type: 0xffffffff()
-> [ 1733.614390] raw: 0017ffffc0010200 ffff888101222280 ffffea0004473900
-> 0000000000000002
-> [ 1733.622128] raw: 0000000000000000 0000000000190019 00000001ffffffff
-> ffff88810cd49001
-> [ 1733.629866] page dumped because: kasan: bad access detected
-> [ 1733.635439]
-> [ 1733.636938] Memory state around the buggy address:
-> [ 1733.641731]  ffff888133320300: 00 00 00 00 00 00 00 00 00 00 00 00
-> fc fc fc fc
-> [ 1733.648952]  ffff888133320380: fc fc fc fc fc fc fc fc 00 00 00 00
-> 00 00 00 00
-> [ 1733.656169] >ffff888133320400: 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00
-> [ 1733.663389]                                                        ^
-> [ 1733.669743]  ffff888133320480: 00 00 00 00 fc fc fc fc fc fc fc fc
-> fc fc fc fc
-> [ 1733.676961]  ffff888133320500: 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00
+From: Hou Tao <houtao1@huawei.com>
 
-I appreciate you running tests and sending in failures, but can you
-please be more specific about what exactly was run? We seem to need to
-do this dance every time, which is just wasting time. So:
+The following warning was reported when doing fsync on a pmem device:
 
-1) What test triggered this?
-2) Was it invoked with any arguments?
+ ------------[ cut here ]------------
+ WARNING: CPU: 2 PID: 384 at block/blk-core.c:751 submit_bio_noacct+0x340/0x520
+ Modules linked in:
+ CPU: 2 PID: 384 Comm: mkfs.xfs Not tainted 6.4.0-rc7+ #154
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
+ RIP: 0010:submit_bio_noacct+0x340/0x520
+ ......
+ Call Trace:
+  <TASK>
+  ? asm_exc_invalid_op+0x1b/0x20
+  ? submit_bio_noacct+0x340/0x520
+  ? submit_bio_noacct+0xd5/0x520
+  submit_bio+0x37/0x60
+  async_pmem_flush+0x79/0xa0
+  nvdimm_flush+0x17/0x40
+  pmem_submit_bio+0x370/0x390
+  __submit_bio+0xbc/0x190
+  submit_bio_noacct_nocheck+0x14d/0x370
+  submit_bio_noacct+0x1ef/0x520
+  submit_bio+0x55/0x60
+  submit_bio_wait+0x5a/0xc0
+  blkdev_issue_flush+0x44/0x60
 
-In general, a good bug report should include exactly HOW you ended
-up there.
+The root cause is that submit_bio_noacct() needs bio_op() is either
+WRITE or ZONE_APPEND for flush bio and async_pmem_flush() doesn't assign
+REQ_OP_WRITE when allocating flush bio, so submit_bio_noacct just fail
+the flush bio.
 
+Simply fix it by adding the missing REQ_OP_WRITE for flush bio. And we
+could fix the flush order issue and do flush optimization later.
+
+Fixes: b4a6bb3a67aa ("block: add a sanity check for non-write flush/fua bios")
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+---
+v2:
+  * do a minimal fix first (Suggested by Christoph)
+v1: https://lore.kernel.org/linux-block/ZJLpYMC8FgtZ0k2k@infradead.org/T/#t
+
+Hi Jens & Dan,
+
+I found Pankaj was working on the fix and optimization of virtio-pmem
+flush bio [0], but considering the last status update was 1/12/2022, so
+could you please pick the patch up for v6.4 and we can do the flush fix
+and optimization later ?
+
+[0]: https://lore.kernel.org/lkml/20220111161937.56272-1-pankaj.gupta.linux@gmail.com/T/
+
+ drivers/nvdimm/nd_virtio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
+index c6a648fd8744..97098099f8a3 100644
+--- a/drivers/nvdimm/nd_virtio.c
++++ b/drivers/nvdimm/nd_virtio.c
+@@ -105,7 +105,7 @@ int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
+ 	 * parent bio. Otherwise directly call nd_region flush.
+ 	 */
+ 	if (bio && bio->bi_iter.bi_sector != -1) {
+-		struct bio *child = bio_alloc(bio->bi_bdev, 0, REQ_PREFLUSH,
++		struct bio *child = bio_alloc(bio->bi_bdev, 0, REQ_OP_WRITE | REQ_PREFLUSH,
+ 					      GFP_ATOMIC);
+ 
+ 		if (!child)
 -- 
-Jens Axboe
+2.29.2
 
