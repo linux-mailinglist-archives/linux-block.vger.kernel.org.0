@@ -2,134 +2,103 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3949D738489
-	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 15:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8F8E738599
+	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 15:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232140AbjFUNLd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Jun 2023 09:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45516 "EHLO
+        id S231156AbjFUNqq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Jun 2023 09:46:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232138AbjFUNLd (ORCPT
+        with ESMTP id S229699AbjFUNqp (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Jun 2023 09:11:33 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F65BE57
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 06:11:31 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QmP5n3Qw8z4f3p15
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 21:11:25 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-        by APP4 (Coremail) with SMTP id gCh0CgD3rLD79pJknOjSMA--.61999S4;
-        Wed, 21 Jun 2023 21:11:25 +0800 (CST)
-From:   Hou Tao <houtao@huaweicloud.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-block@vger.kernel.org, nvdimm@lists.linux.dev,
-        virtualization@lists.linux-foundation.org,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>, houtao1@huawei.com
-Subject: [PATCH v2] virtio_pmem: add the missing REQ_OP_WRITE for flush bio
-Date:   Wed, 21 Jun 2023 21:43:40 +0800
-Message-Id: <20230621134340.878461-1-houtao@huaweicloud.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <ZJLpYMC8FgtZ0k2k@infradead.org>
-References: <ZJLpYMC8FgtZ0k2k@infradead.org>
+        Wed, 21 Jun 2023 09:46:45 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D287819B
+        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 06:46:44 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1b515ec39feso10993635ad.0
+        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 06:46:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1687355204; x=1689947204;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kLtSXPBahUMgKQVBn5Rd4J0wNhqqaJSy+CKw/Y/m6tM=;
+        b=p/6bV4ypTW1kiEtExMP1Y77vqeg7zVH2t1J0zdEv4dtxUnvbN0McjCJ9aZ2vSliOJ5
+         2kFNww98CbYdPpGtc71RixBZAQYE6odAVxQtGtyiW99SmFR/OGfsTEcQJCMX5Ap06/Hr
+         zhcSgq/TJFysLI+bYBqFXzTqKIh+ozfgfqxaYgSnU1cuJtTXLdDbI5SSdnT2wd3QcSiG
+         trj8DCd6JLkCiPH2vbLoqUAKbbYDfNSjoeNvNnjwpqZErGldwRfiapwMdwFI0QbMx9vz
+         +EHP4e6v1Dh2GMcXJOAi2hc+QYSpM3kRsjjZ9I/A0C2sbuVrAA0eDAiAV231EUAY4Ofe
+         boyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687355204; x=1689947204;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kLtSXPBahUMgKQVBn5Rd4J0wNhqqaJSy+CKw/Y/m6tM=;
+        b=TdIyqNLelCUoiosTsskGa5nvaNFxc2K2zxnOLLSVzzElwovMp7ZSWTG0fpP5LfLATV
+         LSGnvLZ+53ZhXZN282+hWVvlb2TnZA/vrkmwvstKQw8SbQHHUAn8ub+YS2NOjbufa28F
+         OuquD8VXWd4xHJjEZUL8e2t6EGQymw8jn37liQ/YOrzCeZsECsv/5JwD/U3/Hqet6J1L
+         FY8OaCwXc+nItKTF1zjTt0fGhac71Kzjlmh2Gf0EsDCxwt/2xXO4DwlZ3rFjnQBRjoVa
+         iC0LNEnA3Kmrd1vMng3gHpSaZccshwFKmkuhGPUzshHxKJ41XqegcVCfx+zfOY74v+RQ
+         EKfw==
+X-Gm-Message-State: AC+VfDwj+LthHQWnfxgPlAMkDZ4Vo4fB1n28/ukJMH71a9yNghs3+6bU
+        1Es3NgcuYRFNkVDjmcO9gp6WBtbC3CBDHfJ2ZOY=
+X-Google-Smtp-Source: ACHHUZ7OkD4wv0DkpDZydNb4IYO41VvvOdEvmserXM7+mx4U8O/fwa4iq5YczMz/UU+uyqg2Ak8uJQ==
+X-Received: by 2002:a17:903:1ca:b0:1b5:32ec:df97 with SMTP id e10-20020a17090301ca00b001b532ecdf97mr18146080plh.5.1687355203847;
+        Wed, 21 Jun 2023 06:46:43 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id u2-20020a17090282c200b001ac95be5081sm3503549plz.307.2023.06.21.06.46.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jun 2023 06:46:43 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     linux-block@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Ivan Orlov <ivan.orlov0322@gmail.com>,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Jack Wang <jinpu.wang@ionos.com>
+In-Reply-To: <20230620180129.645646-5-gregkh@linuxfoundation.org>
+References: <20230620180129.645646-5-gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/4] block/rnbd: make all 'class' structures const
+Message-Id: <168735520264.3922571.3510429095521254500.b4-ty@kernel.dk>
+Date:   Wed, 21 Jun 2023 07:46:42 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3rLD79pJknOjSMA--.61999S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF48Ar1DXrWUKw18AF15CFg_yoW5Jw17pr
-        90kay3tr4UGF4fuanrta12gFyfX3WDGrZrKFWfuw1xAFZrAF1DKw1DWa4Fga4UCry8Gay7
-        JFykJw1jqryDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-        c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-        CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-        MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6r
-        W3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-        cSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-c6835
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
 
-The following warning was reported when doing fsync on a pmem device:
+On Tue, 20 Jun 2023 20:01:30 +0200, Greg Kroah-Hartman wrote:
+> Now that the driver core allows for struct class to be in read-only
+> memory, making all 'class' structures to be declared at build time
+> placing them into read-only memory, instead of having to be dynamically
+> allocated at load time.
+> 
+> 
 
- ------------[ cut here ]------------
- WARNING: CPU: 2 PID: 384 at block/blk-core.c:751 submit_bio_noacct+0x340/0x520
- Modules linked in:
- CPU: 2 PID: 384 Comm: mkfs.xfs Not tainted 6.4.0-rc7+ #154
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
- RIP: 0010:submit_bio_noacct+0x340/0x520
- ......
- Call Trace:
-  <TASK>
-  ? asm_exc_invalid_op+0x1b/0x20
-  ? submit_bio_noacct+0x340/0x520
-  ? submit_bio_noacct+0xd5/0x520
-  submit_bio+0x37/0x60
-  async_pmem_flush+0x79/0xa0
-  nvdimm_flush+0x17/0x40
-  pmem_submit_bio+0x370/0x390
-  __submit_bio+0xbc/0x190
-  submit_bio_noacct_nocheck+0x14d/0x370
-  submit_bio_noacct+0x1ef/0x520
-  submit_bio+0x55/0x60
-  submit_bio_wait+0x5a/0xc0
-  blkdev_issue_flush+0x44/0x60
+Applied, thanks!
 
-The root cause is that submit_bio_noacct() needs bio_op() is either
-WRITE or ZONE_APPEND for flush bio and async_pmem_flush() doesn't assign
-REQ_OP_WRITE when allocating flush bio, so submit_bio_noacct just fail
-the flush bio.
+[1/4] block/rnbd: make all 'class' structures const
+      commit: 137380c0ec40710cbaf57c7878726c41a6da81cd
+[2/4] aoe: make aoe_class a static const structure
+      commit: 65d7a37d4e3e226bb4a4ddf73a827d0dbc77f530
+[3/4] ublk: make ublk_chr_class a static const structure
+      commit: 2eefd399d28a52739fdbeebe84775275f016171c
+[4/4] bsg: make bsg_class a static const structure
+      commit: 72ef02b8dfa009029fa713e8a731a92d27d14e35
 
-Simply fix it by adding the missing REQ_OP_WRITE for flush bio. And we
-could fix the flush order issue and do flush optimization later.
-
-Fixes: b4a6bb3a67aa ("block: add a sanity check for non-write flush/fua bios")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
----
-v2:
-  * do a minimal fix first (Suggested by Christoph)
-v1: https://lore.kernel.org/linux-block/ZJLpYMC8FgtZ0k2k@infradead.org/T/#t
-
-Hi Jens & Dan,
-
-I found Pankaj was working on the fix and optimization of virtio-pmem
-flush bio [0], but considering the last status update was 1/12/2022, so
-could you please pick the patch up for v6.4 and we can do the flush fix
-and optimization later ?
-
-[0]: https://lore.kernel.org/lkml/20220111161937.56272-1-pankaj.gupta.linux@gmail.com/T/
-
- drivers/nvdimm/nd_virtio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
-index c6a648fd8744..97098099f8a3 100644
---- a/drivers/nvdimm/nd_virtio.c
-+++ b/drivers/nvdimm/nd_virtio.c
-@@ -105,7 +105,7 @@ int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
- 	 * parent bio. Otherwise directly call nd_region flush.
- 	 */
- 	if (bio && bio->bi_iter.bi_sector != -1) {
--		struct bio *child = bio_alloc(bio->bi_bdev, 0, REQ_PREFLUSH,
-+		struct bio *child = bio_alloc(bio->bi_bdev, 0, REQ_OP_WRITE | REQ_PREFLUSH,
- 					      GFP_ATOMIC);
- 
- 		if (!child)
+Best regards,
 -- 
-2.29.2
+Jens Axboe
+
+
 
