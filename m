@@ -2,184 +2,163 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F423A738622
-	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 16:05:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3056B738654
+	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 16:10:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231528AbjFUOFE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Jun 2023 10:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
+        id S232224AbjFUOJl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Jun 2023 10:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232039AbjFUOEe (ORCPT
+        with ESMTP id S232355AbjFUOJa (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Jun 2023 10:04:34 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A887618C
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 07:04:32 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6664ac3be47so1123066b3a.0
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 07:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1687356272; x=1689948272;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=It4/jWCGCWpVyhoys8hgpiNAqM0yj2xvFZeiNVDpslo=;
-        b=hMy/Xo6m0HSm6r+trE3rwtSeaFqxYi3x8e7XKVd7WBW6aRFCbwoiVGDBMwp6eqlCe7
-         Mb8I1CQfafBYlWCc056YOqYpaTU5CL1fkw+xdqPtfPzsMw3lwEtMvu50wS8Z3E5m6pA6
-         n1XjYXfa5Pa5a02bk/cO9mGgUyxlMqh6d03DocGlv0mzeOZftBg7c2pUITE9NsfH4xnE
-         CGA18vMBwHK0J+zGapXZ91vfyP8ECZZKvaG1cs8AJwDlY8BJPbZpSe+N5mGBMO0tZX7P
-         eH4qV9ihaDPYTQkh+IEYcXFgE240wUgL4n/exkkD9UDQ9phif5hnEJxqXkHnCqHHWdyG
-         RKUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687356272; x=1689948272;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=It4/jWCGCWpVyhoys8hgpiNAqM0yj2xvFZeiNVDpslo=;
-        b=f+e/SrOMm9t3n4kKo0pxWDA44AA5QEXe0hYcNQ7uY1SpEdDL+KrHb1jZTXajmHXLBJ
-         koLdOnEluQw9TgAAITXH41EHBFOhczWc/NLR/wVx9sl+IADr3RmP0718z0LclU2ygY2i
-         RlcfKKzItVttnfvoEj7Irpr/VyolWIzwhIwKO6j/2EalH1nsyUpd3Ch0zbHdLYdiJkNH
-         Xuu9O7EYSZiUg4DCiE9Yb1KFeffMcopq28RVCBRM6xXVSYgyspdJBSGUxRq4hKfX6sv7
-         QLq4+L0tVZydgSxuka5h6kHemLmXbj/yiqD+s4JU+dElRzzDXzCvd1W553CVnRI5jaqE
-         LGag==
-X-Gm-Message-State: AC+VfDxcEQkt8APSPG8Gb4rJSdKci57W0dKew0YlId80DgooB0wIqNZ8
-        1+b7VUojMryWPBAtSegtGpgM+A==
-X-Google-Smtp-Source: ACHHUZ5wmJ4i+/hrUfF2WuXVsXt7WpEm5F4be3Kq8sx/coB6eGOYYgcnMNA9fuJXFWoxKZ1olVV0aQ==
-X-Received: by 2002:a05:6a20:244c:b0:11b:3e33:d2f3 with SMTP id t12-20020a056a20244c00b0011b3e33d2f3mr18941039pzc.0.1687356272052;
-        Wed, 21 Jun 2023 07:04:32 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id h4-20020aa786c4000000b0065fd8075bb1sm3085800pfo.14.2023.06.21.07.04.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Jun 2023 07:04:31 -0700 (PDT)
-Message-ID: <e69ee589-aa93-8380-25de-83d173c90677@kernel.dk>
-Date:   Wed, 21 Jun 2023 08:04:30 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [bug report] BUG: KASAN: out-of-bounds in
- io_req_local_work_add+0x3b1/0x4a0
-Content-Language: en-US
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Guangwu Zhang <guazhang@redhat.com>, linux-block@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>, Jeff Moyer <jmoyer@redhat.com>,
-        io-uring@vger.kernel.org
-References: <CAGS2=YrvrD0hf7WGjQd4Me772=m9=E6J92aGtG0PAoF4yD6dTw@mail.gmail.com>
- <e92a19fa-74cc-2b9f-3173-6a04557a6534@kernel.dk>
-In-Reply-To: <e92a19fa-74cc-2b9f-3173-6a04557a6534@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+        Wed, 21 Jun 2023 10:09:30 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10271FFA;
+        Wed, 21 Jun 2023 07:09:13 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 0B4C55C0215;
+        Wed, 21 Jun 2023 10:09:13 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 21 Jun 2023 10:09:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1687356553; x=1687442953; bh=dY
+        2wjH1dPAUyXPlv+3pWnq0L8c8fn4MgP9qZzKyqERE=; b=EuqG2xunpquoWrkWcv
+        EeKIsjZ2G1bP3mTutqDHkKl+TK9U9RL6lmE2Ky1sq3knzkkTp9RKgHV5XVHgj7rd
+        k22pYnZgNSzTe5g4bno7u1xUniGLC9NCUgQVPmPLmnAOtnn3YLFxm11CaA1o2Aa2
+        5+T4l3Jc3a1a8029+2nj+h/PCTJjHRY0IUXYY6jVd6f3ldsgbL6Jl9Fae8U1feNe
+        YxZgOejfLiuBn85Fvbu8eUVzIbgf43IpEdwjlTq0Qxulr5BYcKsbVt5lBklioToa
+        RsRX7YrTMxU5SroNNLZyy2uF1aKSe5WTp/V6xpvqOt5VAtsB3rs7kLOUO4MxrAlE
+        o13Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1687356553; x=1687442953; bh=dY2wjH1dPAUyX
+        Plv+3pWnq0L8c8fn4MgP9qZzKyqERE=; b=RODJF+5zQFElZUj9yTx3I0bpynVwr
+        azzDz1bCJ7O/B+nFtBpB8WTPjdP/4lxvovk4xajAm/xqBJmRBRrVbYOZisqRw2r8
+        IumAalEBCOjpjDBE0id0y+V+jvIUCm0A0OitQ8OvVeu8+jHLGVu1r5PuIuYvus+y
+        4R70uPNVHZ1V5yl58kMytZeHWpzlajRdRTI8CAOSBBHVPOCiPF6DkyhlckzOEZNz
+        1UTu+3IaAw0ts5w7IX3ZmMBiwytG3NHlWJ+Ge7gT5teuaDQcbrxtjYj3K8cet4Zm
+        7FO4qNiQ2bcXdyK6JvY9VmLvdz/O8pSnIen3taQrSymse1l5xfQv2Rylw==
+X-ME-Sender: <xms:iASTZCrtnqmTkymsUhAWWEOz6bZgYRT8TzSX_R0SBHEqIPVwsuW-Kw>
+    <xme:iASTZArTbFifVyUzIDbQ6_js3PM1EQoOGqdXwK3uwGH_tlfFQzCtLt1cNnbeeSUee
+    aHPPcgMn1nFYMYPut8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeefkedggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:iASTZHMviZzP9hoCrCy3nIZEIujHdXlpIxNI2mAVMur1Ips6WidB_A>
+    <xmx:iASTZB7y8aPbopri1bV1ftcVbSuMWWWPLsBTOtKPAbvUvWWhyyvYmw>
+    <xmx:iASTZB7PdqGOmEk4PYfhWqb6pG7oaquSQnIxwH6_NfL-C0nII5qsuQ>
+    <xmx:iQSTZATrc-jQP-PCSGGUyWqlRjo20psZPGQlbtBqtbhtUrhBGU_X4A>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 3A1BEB60086; Wed, 21 Jun 2023 10:09:12 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+Mime-Version: 1.0
+Message-Id: <89dfc918-9757-4487-aa72-615f7029f6c1@app.fastmail.com>
+In-Reply-To: <CA+G9fYtKCZeAUTtwe69iK8Xcz1mOKQzwcy49wd+imZrfj6ifXA@mail.gmail.com>
+References: <CA+G9fYtKCZeAUTtwe69iK8Xcz1mOKQzwcy49wd+imZrfj6ifXA@mail.gmail.com>
+Date:   Wed, 21 Jun 2023 16:08:50 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+        "open list" <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org,
+        linux-block <linux-block@vger.kernel.org>,
+        "LTP List" <ltp@lists.linux.it>, linux-mm <linux-mm@kvack.org>,
+        "Rahul Rameshbabu" <rrameshbabu@nvidia.com>,
+        "Richard Cochran" <richardcochran@gmail.com>
+Cc:     "Alexander Viro" <viro@zeniv.linux.org.uk>,
+        "Christian Brauner" <brauner@kernel.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Dan Carpenter" <dan.carpenter@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Maciek Machnikowski" <maciek@machnikowski.net>,
+        "Richard Cochran" <richardcochran@gmail.com>,
+        "Shuah Khan" <shuah@kernel.org>, "Jakub Kicinski" <kuba@kernel.org>
+Subject: Re: next: ltp: fs: read_all: block sda: the capability attribute has been
+ deprecated. - supervisor instruction fetch in kernel mode
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 6/21/23 7:40?AM, Jens Axboe wrote:
-> On 6/21/23 1:38?AM, Guangwu Zhang wrote:
->> HI,
->> Found the io_req_local_work_add error when run  liburing testing.
->>
->> kernel repo :
->>     Merge branch 'for-6.5/block' into for-next
->>     * for-6.5/block:
->>       reiserfs: fix blkdev_put() warning from release_journal_dev()
->>
->> [ 1733.389012] BUG: KASAN: out-of-bounds in io_req_local_work_add+0x3b1/0x4a0
->> [ 1733.395900] Read of size 4 at addr ffff888133320458 by task
->> iou-wrk-97057/97138
->> [ 1733.403205]
->> [ 1733.404706] CPU: 4 PID: 97138 Comm: iou-wrk-97057 Kdump: loaded Not
->> tainted 6.4.0-rc3.kasan+ #1
->> [ 1733.413404] Hardware name: Dell Inc. PowerEdge R740/06WXJT, BIOS
->> 2.13.3 12/13/2021
->> [ 1733.420972] Call Trace:
->> [ 1733.423425]  <TASK>
->> [ 1733.425533]  dump_stack_lvl+0x33/0x50
->> [ 1733.429207]  print_address_description.constprop.0+0x2c/0x3e0
->> [ 1733.434959]  print_report+0xb5/0x270
->> [ 1733.438539]  ? kasan_addr_to_slab+0x9/0xa0
->> [ 1733.442639]  ? io_req_local_work_add+0x3b1/0x4a0
->> [ 1733.447258]  kasan_report+0xcf/0x100
->> [ 1733.450839]  ? io_req_local_work_add+0x3b1/0x4a0
->> [ 1733.455456]  io_req_local_work_add+0x3b1/0x4a0
->> [ 1733.459903]  ? __pfx_io_req_local_work_add+0x10/0x10
->> [ 1733.464871]  ? __schedule+0x616/0x1530
->> [ 1733.468622]  __io_req_task_work_add+0x1bc/0x270
->> [ 1733.473156]  io_issue_sqe+0x55a/0xe80
->> [ 1733.476831]  io_wq_submit_work+0x23e/0xa00
->> [ 1733.480930]  io_worker_handle_work+0x2f5/0xa80
->> [ 1733.485384]  io_wq_worker+0x6c5/0x9d0
->> [ 1733.489051]  ? __pfx_io_wq_worker+0x10/0x10
->> [ 1733.493246]  ? _raw_spin_lock_irq+0x82/0xe0
->> [ 1733.497430]  ? __pfx_io_wq_worker+0x10/0x10
->> [ 1733.501616]  ret_from_fork+0x29/0x50
->> [ 1733.505204]  </TASK>
->> [ 1733.507396]
->> [ 1733.508894] Allocated by task 97057:
->> [ 1733.512475]  kasan_save_stack+0x1e/0x40
->> [ 1733.516313]  kasan_set_track+0x21/0x30
->> [ 1733.520068]  __kasan_slab_alloc+0x83/0x90
->> [ 1733.524080]  kmem_cache_alloc_bulk+0x13a/0x1e0
->> [ 1733.528526]  __io_alloc_req_refill+0x238/0x510
->> [ 1733.532971]  io_submit_sqes+0x65a/0xcd0
->> [ 1733.536810]  __do_sys_io_uring_enter+0x4e9/0x830
->> [ 1733.541430]  do_syscall_64+0x59/0x90
->> [ 1733.545010]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
->> [ 1733.550071]
->> [ 1733.551571] The buggy address belongs to the object at ffff8881333203c0
->> [ 1733.551571]  which belongs to the cache io_kiocb of size 224
->> [ 1733.563816] The buggy address is located 152 bytes inside of
->> [ 1733.563816]  224-byte region [ffff8881333203c0, ffff8881333204a0)
->> [ 1733.575544]
->> [ 1733.577042] The buggy address belongs to the physical page:
->> [ 1733.582617] page:00000000edbe178c refcount:1 mapcount:0
->> mapping:0000000000000000 index:0x0 pfn:0x133320
->> [ 1733.592011] head:00000000edbe178c order:1 entire_mapcount:0
->> nr_pages_mapped:0 pincount:0
->> [ 1733.600096] memcg:ffff88810cd49001
->> [ 1733.603501] flags:
->> 0x17ffffc0010200(slab|head|node=0|zone=2|lastcpupid=0x1fffff)
->> [ 1733.610896] page_type: 0xffffffff()
->> [ 1733.614390] raw: 0017ffffc0010200 ffff888101222280 ffffea0004473900
->> 0000000000000002
->> [ 1733.622128] raw: 0000000000000000 0000000000190019 00000001ffffffff
->> ffff88810cd49001
->> [ 1733.629866] page dumped because: kasan: bad access detected
->> [ 1733.635439]
->> [ 1733.636938] Memory state around the buggy address:
->> [ 1733.641731]  ffff888133320300: 00 00 00 00 00 00 00 00 00 00 00 00
->> fc fc fc fc
->> [ 1733.648952]  ffff888133320380: fc fc fc fc fc fc fc fc 00 00 00 00
->> 00 00 00 00
->> [ 1733.656169] >ffff888133320400: 00 00 00 00 00 00 00 00 00 00 00 00
->> 00 00 00 00
->> [ 1733.663389]                                                        ^
->> [ 1733.669743]  ffff888133320480: 00 00 00 00 fc fc fc fc fc fc fc fc
->> fc fc fc fc
->> [ 1733.676961]  ffff888133320500: 00 00 00 00 00 00 00 00 00 00 00 00
->> 00 00 00 00
-> 
-> I appreciate you running tests and sending in failures, but can you
-> please be more specific about what exactly was run? We seem to need to
-> do this dance every time, which is just wasting time. So:
-> 
-> 1) What test triggered this?
-> 2) Was it invoked with any arguments?
-> 
-> In general, a good bug report should include exactly HOW you ended
-> up there.
+On Wed, Jun 21, 2023, at 16:01, Naresh Kamboju wrote:
+> While running LTP fs testing on x86_64 device the following kernel BUG:
+> notice with Linux next-20230621.
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Steps to reproduce:
+>
+> # cd /opt/ltp
+> # ./runltp -f fs
+>
+> Test log:
+> ======
+> read_all.c:687: TPASS: Finished reading files
+> Summary:
+> passed   1
+> failed   0
+> broken   0
+> skipped  0
+> warnings 0
+> tst_test.c:1558: TINFO: Timeout per run is 0h 06m 40s
+> read_all.c:568: TINFO: Worker timeout set to 10% of max_runtime: 1000ms
+> [ 1344.664349] block sda: the capability attribute has been deprecated.
 
-Another thing that's really handy in bug reports like this is a
-disassemble of where the bad memory access occured.  We have this:
+I think the oops is unrelated to the line above
 
-BUG: KASAN: out-of-bounds in io_req_local_work_add+0x3b1/0x4a0
+> [ 1344.679885] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> [ 1344.686839] #PF: supervisor instruction fetch in kernel mode
+> [ 1344.692490] #PF: error_code(0x0010) - not-present page
+> [ 1344.697620] PGD 8000000105569067 P4D 8000000105569067 PUD 1056ed067 PMD 0
+> [ 1344.704494] Oops: 0010 [#1] PREEMPT SMP PTI
+> [ 1344.708680] CPU: 0 PID: 5649 Comm: read_all Not tainted
+> 6.4.0-rc7-next-20230621 #1
+> [ 1344.716245] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> 2.5 11/26/2020
+> [ 1344.723629] RIP: 0010:0x0
+> [ 1344.726257] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> [ 1344.732780] RSP: 0018:ffff98d38123bd38 EFLAGS: 00010286
+> [ 1344.737998] RAX: 0000000000000000 RBX: ffffffffbea38720 RCX: 0000000000000000
+> [ 1344.745123] RDX: ffff979e42e31000 RSI: ffffffffbea38720 RDI: ffff979e40371900
+> [ 1344.752246] RBP: ffff98d38123bd48 R08: ffff979e4080a0f0 R09: 0000000000000001
+> [ 1344.759371] R10: ffff979e42e31000 R11: 0000000000000000 R12: ffff979e42e31000
+> [ 1344.766495] R13: 0000000000000001 R14: ffff979e432dd2f8 R15: ffff979e432dd2d0
+> [ 1344.773621] FS:  00007ff745d4b740(0000) GS:ffff97a1a7a00000(0000)
+> knlGS:0000000000000000
+> [ 1344.781704] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1344.787442] CR2: ffffffffffffffd6 CR3: 000000010563c004 CR4: 00000000003706f0
+> [ 1344.794587] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [ 1344.801733] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [ 1344.808857] Call Trace:
+> [ 1344.811301]  <TASK>
+> [ 1344.813399]  ? show_regs+0x6e/0x80
+> [ 1344.816804]  ? __die+0x29/0x70
+> [ 1344.819857]  ? page_fault_oops+0x154/0x470
+> [ 1344.823957]  ? do_user_addr_fault+0x355/0x6c0
+> [ 1344.828314]  ? exc_page_fault+0x6e/0x170
+> [ 1344.832239]  ? asm_exc_page_fault+0x2b/0x30
+> [ 1344.836420]  max_phase_adjustment_show+0x23/0x50
 
-and you can look that up in gdb, for example.
+The function is newly added by commit c3b60ab7a4dff ("ptp: Add 
+getmaxphase callback to ptp_clock_info"), adding everyone from
+that patch to Cc.
 
--- 
-Jens Axboe
-
+     Arnd
