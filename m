@@ -2,106 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C5AC737FE8
-	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 13:09:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF9B73812F
+	for <lists+linux-block@lfdr.de>; Wed, 21 Jun 2023 13:11:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232424AbjFUKOF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 21 Jun 2023 06:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33112 "EHLO
+        id S231214AbjFUJW3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 21 Jun 2023 05:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232448AbjFUKNs (ORCPT
+        with ESMTP id S229783AbjFUJW1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 21 Jun 2023 06:13:48 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3971BD2
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 03:13:14 -0700 (PDT)
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-3f80b192aecso13206245e9.1
-        for <linux-block@vger.kernel.org>; Wed, 21 Jun 2023 03:13:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687342388; x=1689934388;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z2ziSSDnHmXzqyopdHEpI90tpZriUVyJ27mmVdNAibQ=;
-        b=OkZinQZ7MY+fkQbPisy8O6EF1GGecL86Qsw1m7ikIgObcLJjRjNHBUU1GXW2kg7AlY
-         cKs8OgnyXB56KleO4C8vC509+T8LLEj7vD1Yn27D2NuGcVVrqETQ/k315+B9OQDGG3YY
-         4CHfWR39Ecu5HcPLXOVHKxrgYLdbC9FBZ3o8kcmkLgHqrcc7wmz/LM9Eir3dyhKlo6Dj
-         sLwsHApeF+kgIJpRQPEJBtBIuVx98y7Nhee8s9kWpW2zE3uMbpXO025YN9rCf2qdzhxO
-         vhD0xqi/bRAEE1pTaXB/RHpttVNYJqAz8S5omqlpBqcc+gkMJTu1e5sdmdLxNmWEPN3s
-         e47A==
-X-Gm-Message-State: AC+VfDyc7+W4OzqP2y1UNJEkGqHbtNpXGR3RpePhMxRujVzYOb7/01f8
-        h+u5CGpo8XB3eoARYclw4zE=
-X-Google-Smtp-Source: ACHHUZ51waEdZ8FsyNEQCBlkHeu3MxzAXF5zJdLTOiH5Tcp/JKKq5/qraqY5qK1ij/xekpfSZqA4bg==
-X-Received: by 2002:a1c:ed08:0:b0:3f7:369c:c640 with SMTP id l8-20020a1ced08000000b003f7369cc640mr14201347wmh.1.1687342387986;
-        Wed, 21 Jun 2023 03:13:07 -0700 (PDT)
-Received: from [192.168.64.192] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id t20-20020a1c7714000000b003f900678815sm4517708wmi.39.2023.06.21.03.13.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Jun 2023 03:13:07 -0700 (PDT)
-Message-ID: <caa80682-3c3e-f709-804a-6ee913e4524f@grimberg.me>
-Date:   Wed, 21 Jun 2023 13:13:05 +0300
+        Wed, 21 Jun 2023 05:22:27 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D95410F0;
+        Wed, 21 Jun 2023 02:22:26 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QmJ1T4pN4z4f3n5p;
+        Wed, 21 Jun 2023 17:22:21 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgCHLaFMwZJk+OrGMA--.39130S4;
+        Wed, 21 Jun 2023 17:22:22 +0800 (CST)
+From:   linan666@huaweicloud.com
+To:     axboe@kernel.dk, linan122@huawei.com, dan.j.williams@intel.com,
+        vishal.l.verma@intel.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yukuai3@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
+        yangerkun@huawei.com
+Subject: [PATCH v3 0/4] block/badblocks: fix badblocks setting error
+Date:   Thu, 22 Jun 2023 01:20:48 +0800
+Message-Id: <20230621172052.1499919-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH V2 0/4] nvme: fix two kinds of IO hang from removing NSs
-Content-Language: en-US
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        linux-nvme@lists.infradead.org, Yi Zhang <yi.zhang@redhat.com>,
-        linux-block@vger.kernel.org, Chunguang Xu <brookxu.cn@gmail.com>
-References: <20230620013349.906601-1-ming.lei@redhat.com>
- <86c10889-4d4a-1892-9779-a5f7b4e93392@grimberg.me>
- <ZJGoWGJ5/fKfIhx+@ovpn-8-23.pek2.redhat.com>
- <27ce75fc-f6c5-7bf3-8448-242ee3e65067@grimberg.me>
- <ZJI/1w8/9pLIyXZ2@ovpn-8-23.pek2.redhat.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <ZJI/1w8/9pLIyXZ2@ovpn-8-23.pek2.redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgCHLaFMwZJk+OrGMA--.39130S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw1UAr15JFy3urW7WFykXwb_yoWfCrX_ua
+        y0yFy5Grn5XFW5Aay3tF1UJrWIyF4UCr1jkFyUtrsYqry7tF4Utws5JrWjqrnxWF47Gwsx
+        Zr95XrWfXw1IgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbh8YFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+        AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq
+        3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AI
+        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28Icx
+        kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+        xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+        IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
+        6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsnYwUUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        KHOP_HELO_FCRDNS,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+From: Li Nan <linan122@huawei.com>
 
->>>>> Hello,
->>>>>
->>>>> The 1st three patch fixes io hang when controller removal interrupts error
->>>>> recovery, then queue is left as frozen.
->>>>>
->>>>> The 4th patch fixes io hang when controller is left as unquiesce.
->>>>
->>>> Ming, what happened to nvme-tcp/rdma move of freeze/unfreeze to the
->>>> connect patches?
->>>
->>> I'd suggest to handle all drivers(include nvme-pci) in same logic for avoiding
->>> extra maintain burden wrt. error handling, but looks Keith worries about the
->>> delay freezing may cause too many requests queued during error handling, and
->>> that might cause user report.
->>
->> For nvme-tcp/rdma your patch also addresses IO not failing over because
->> they block on queue enter. So I definitely want this for fabrics.
-> 
-> The patch in the following link should fix these issues too:
-> 
-> https://lore.kernel.org/linux-block/ZJGmW7lEaipT6saa@ovpn-8-23.pek2.redhat.com/T/#u
-> 
-> I guess you still want the paired freeze patch because it makes freeze &
-> unfreeze more reliable in error handling. If yes, I can make one fabric
-> only change for you.
+This patch series fixes some simple bugs of setting badblocks and
+optimizing struct badblocks. Coly Li has been trying to refactor badblocks
+in patch series "badblocks improvement for multiple bad block ranges", but
+the workload is significant. Before that, I will fix some easily triggered
+issues and optimize some code that does not conflict with Coly's changes.
 
-Not sure exactly what reliability is referred here. I agree that there
-is an issue with controller delete during error recovery. The patch
-was a way to side-step it, great. But it addressed I/O blocked on enter
-and not failing over.
+Changes in v3:
+ - delete patchs with significant changes.
 
-So yes, for fabrics we should have it. I would argue that it would be
-the right thing to do for pci as well. But I won't argue if Keith feels
-otherwise.
+Li Nan (4):
+  block/badblocks: change some members of badblocks to bool
+  block/badblocks: only set bb->changed/unacked_exist when badblocks
+    changes
+  block/badblocks: fix badblocks loss when badblocks combine
+  block/badblocks: fix the bug of reverse order
+
+ block/badblocks.c         | 38 ++++++++++++++++++++++----------------
+ include/linux/badblocks.h | 10 +++++-----
+ 2 files changed, 27 insertions(+), 21 deletions(-)
+
+-- 
+2.39.2
+
