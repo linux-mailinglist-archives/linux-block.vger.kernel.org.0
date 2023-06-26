@@ -2,148 +2,182 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA7C373DB3B
-	for <lists+linux-block@lfdr.de>; Mon, 26 Jun 2023 11:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F89073DCA4
+	for <lists+linux-block@lfdr.de>; Mon, 26 Jun 2023 13:00:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbjFZJVf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 26 Jun 2023 05:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60006 "EHLO
+        id S229666AbjFZLAI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 26 Jun 2023 07:00:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230063AbjFZJU4 (ORCPT
+        with ESMTP id S229639AbjFZLAG (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 26 Jun 2023 05:20:56 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66319E7D
-        for <linux-block@vger.kernel.org>; Mon, 26 Jun 2023 02:19:07 -0700 (PDT)
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230626091903epoutp03684484476951de29da3d7a51ff6b12d6~sKummQ4og2273422734epoutp03Q
-        for <linux-block@vger.kernel.org>; Mon, 26 Jun 2023 09:19:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230626091903epoutp03684484476951de29da3d7a51ff6b12d6~sKummQ4og2273422734epoutp03Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1687771143;
-        bh=gq5nfwHqHVfoRrgySJa7rfffjXc4wl5G348+fsTE7ww=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=dBlK4GhYAw/2JrmilOCzU+0GCRYVLQ4N74UDdT9rxM/R8jlaZHwaAMj9IJ83D+Mmp
-         /f9fk/ehC/F/f7C+bG3FJCvdcstMVsHQJEmrQDfE1UBf1w2bmPPCh8ScI2Yahuql3V
-         LVrK74HDN4pBXngITgEaMhrfXXJV0X+Y9zB6Kvws=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20230626091902epcas5p3ca62c27bd08175dfa32226e202b10b1a~sKuluxEpZ0386803868epcas5p3M;
-        Mon, 26 Jun 2023 09:19:02 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.182]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4QqMjJ4TnDz4x9Q7; Mon, 26 Jun
-        2023 09:19:00 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6A.D8.44250.40859946; Mon, 26 Jun 2023 18:19:00 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20230626091207epcas5p2a2957dfe97c4d82e39defa557d7ffd0e~sKojSL2p72645526455epcas5p2z;
-        Mon, 26 Jun 2023 09:12:07 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230626091207epsmtrp1d6a2e428c956d80e379ec357b2aacb82~sKojQqVHQ1964119641epsmtrp1A;
-        Mon, 26 Jun 2023 09:12:07 +0000 (GMT)
-X-AuditID: b6c32a4a-ec1fd7000000acda-16-649958041bbb
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        43.1D.64355.76659946; Mon, 26 Jun 2023 18:12:07 +0900 (KST)
-Received: from ubuntu.. (unknown [109.105.118.54]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20230626091206epsmtip178709a4d491b84066820b57c472a7f6f~sKoiFI-Us0137101371epsmtip1B;
-        Mon, 26 Jun 2023 09:12:06 +0000 (GMT)
-From:   Min Li <min15.li@samsung.com>
-To:     axboe@kernel.dk, willy@infradead.org, hch@lst.de,
-        dlemoal@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Min Li <min15.li@samsung.com>
-Subject: [PATCH] block: add check that partition length needs to be aligned
- with block size
-Date:   Mon, 26 Jun 2023 17:10:21 +0000
-Message-Id: <20230626171021.5895-1-min15.li@samsung.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 26 Jun 2023 07:00:06 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2C4D3
+        for <linux-block@vger.kernel.org>; Mon, 26 Jun 2023 04:00:04 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2b477e9d396so44514321fa.3
+        for <linux-block@vger.kernel.org>; Mon, 26 Jun 2023 04:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1687777202; x=1690369202;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G7sIG9mMWqnBSjmRGaB+tfEB5pMmkNJkQTNkwiFZC9I=;
+        b=kOuezhJK6qeL7RdVK0EOMNMSwUCf02bEbVt9y7n+j9VvQxFcy4KlmXddXqoSEo9xXw
+         Twj3oux1PDEvBM9/2TCSWUNNfx+Jh3sOhVwLSOMelasvm7JK/49oqOzkPnxvgR6rShTs
+         fhqd/Xktl6up0HT/IZGAldUumnle4bP0IQQuCNi8ALDLsig7t5ycgbte5L4+CtorhH7T
+         p5bEZMCRp91/Z9tD64QgcB61hKm42eeH0XdgZqedFbQpPzpzhZlkhSVtrnm8tHQzHOml
+         eHqGP7Pt/3v8HP739ro4zjbQcottNhuEZWYU5Mi47yOjxN/p8n0bxh1Ks//kGturNmfr
+         Ib2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687777202; x=1690369202;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G7sIG9mMWqnBSjmRGaB+tfEB5pMmkNJkQTNkwiFZC9I=;
+        b=PFWZqvoOGCQv51TABxpEgtYtNaQo50sOKgo5gUd4zpZRES9e9GwIulPE4wwRtoKFLE
+         Yj8yEfYR3sqeUlDg32gGAoOm470fRhllg5SPAjB5Nd3U6eTRRHbeGCgTqRJq19b7ZD/C
+         c+Ij6CdngSGtTdYkj4MD0fo2zjh10qUj+u1P4+tK+HJwEqN2gl5y9x6lF5K7GnPVYbK7
+         MCqcHmUstVb/nYGXQsy/Vp3LwjXrWXvu4n2E43UhRyk8DXTzykmdSt5sN55br+TzVe2z
+         v+WOlSKiGmn86zgfFPvzV8JLkeZj3+S/1HFozujsbipp0Jk8/sLm92tII+Br+VJSG0Y0
+         5+5g==
+X-Gm-Message-State: AC+VfDwBz0Ek1Oim5i9Nptnmugx82KwHB+CDIf53JTar3XBkoUAVxTij
+        9GPNDNsxHqLK2amEvp/BQvEpyQ==
+X-Google-Smtp-Source: ACHHUZ4zYjhSY+qg0esWzswppt9V4YWWBAzQx43K/Cea8Dvc33slbb6+aW2ukojrhy6ftK1bsVxRaA==
+X-Received: by 2002:a19:8c18:0:b0:4f4:fdb4:c76d with SMTP id o24-20020a198c18000000b004f4fdb4c76dmr18353746lfd.47.1687777202458;
+        Mon, 26 Jun 2023 04:00:02 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id t12-20020a7bc3cc000000b003f604793989sm10065546wmj.18.2023.06.26.04.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 04:00:01 -0700 (PDT)
+Date:   Mon, 26 Jun 2023 13:59:58 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     oe-kbuild@lists.linux.dev, Daniel Wagner <dwagner@suse.de>,
+        linux-nvme@lists.infradead.org
+Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Hannes Reinecke <hare@suse.de>,
+        James Smart <jsmart2021@gmail.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: Re: [PATCH v2 4/5] nvme-fc: Make initial connect attempt synchronous
+Message-ID: <7ba59f01-57fe-4ad2-917a-0a199528b1f6@kadam.mountain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmpi5LxMwUg0kvlCxW3+1ns3iw396i
-        efF6Nosbx98xW8x9fYnFYuXqo0wWe29pW1zeNYfNYvmqDiaLsxM+sFr8/gHk3lh3lcWBx2Pz
-        Ci2Py2dLPTat6mTz2D93DbvH7psNbB59W1YxenzeJBfAHpVtk5GamJJapJCal5yfkpmXbqvk
-        HRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0pZJCWWJOKVAoILG4WEnfzqYov7QkVSEj
-        v7jEVim1ICWnwKRArzgxt7g0L10vL7XEytDAwMgUqDAhO+PXFLOCzxwVZ3evZG1gnMPexcjB
-        ISFgIrFoJ5DJxSEksJtR4trZXhYI5xOjxNm9d1i7GDkhnO+Ly2AaFp/KhKjZySjxY81uZgjn
-        OaPEr0NHwaayCShLbFvqA9IrIpAmsbTjJxuIzSwQJ3Gpq5MdxBYWiJVYM+ML2HwWAVWJyb/W
-        g9XwClhIbF7yjAXElhCQl9h/8CwzRFxQ4uTMJywQc+QlmrfOBtsrIfCVXeLt5MmMEA0uEmde
-        /oSyhSVeHd/CDmFLSbzsb4P6uFji5Y8wiHCNxO5vt5kgbGuJbevXMYGUMAtoSqzfpQ8RlpWY
-        emodE8RaPone30+gynkldsyDsZUk/l44B7VVQmLx/oesELaHxI7Oz2wgI4WA3r0zy3wCo/ws
-        JM/MQvLMLITFCxiZVzFKphYU56anFpsWGOWllsOjNDk/dxMjOJlqee1gfPjgg94hRiYOxkOM
-        EhzMSiK8Yj+mpwjxpiRWVqUW5ccXleakFh9iNAWG8ERmKdHkfGA6zyuJNzSxNDAxMzMzsTQ2
-        M1QS5112pTdFSCA9sSQ1OzW1ILUIpo+Jg1OqgSn1oNniBwfPKjO57RQ5GnGybt+ZePZJJrP8
-        Tp0V5Zkc8PhA8boC9bip7Ip1zLPPHpr14QPzjftlXU9n/5sZMj/q2JSzM2J0ilzm7EvklHth
-        vPym2ua6a/frLj9I3DL37ud649TavSacTy+HcVyyPG993vX+Z69d30+tcpvZ8Spuj0U2l2NW
-        xx2/9v8h3ae++DxNvNKZfnt7+pxTz2cqS0c/vvxktkOc9Jrw+BfbWqdll23gO51h+f2qQptL
-        qIBc4tx7zZZGQm+/Ce84lflrvmbQIgGR6Pqmlfb7HrDE27GKHf14ZaZi4R3mf+LrLnR5rq+c
-        Vui3MnFFrqPxxjkBlyLnn/VYIntnHWcU3/+gxa1CSizFGYmGWsxFxYkAuzP7/S8EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsWy7bCSnG562MwUg9szxS1W3+1ns3iw396i
-        efF6Nosbx98xW8x9fYnFYuXqo0wWe29pW1zeNYfNYvmqDiaLsxM+sFr8/gHk3lh3lcWBx2Pz
-        Ci2Py2dLPTat6mTz2D93DbvH7psNbB59W1YxenzeJBfAHsVlk5Kak1mWWqRvl8CV8WuKWcFn
-        joqzu1eyNjDOYe9i5OCQEDCRWHwqs4uRi0NIYDujxPNZV1m6GDmB4hIS5+f9YoOwhSVW/nvO
-        DlH0lFFi8+n3LCDNbALKEtuW+oCYIgI5Eiu++4OUMwskSHT8OMQOYgsLREs82HgGzGYRUJWY
-        /Gs92EheAQuJzUueQa2Sl9h/8CwzRFxQ4uTMJywQc+QlmrfOZp7AyDcLSWoWktQCRqZVjKKp
-        BcW56bnJBYZ6xYm5xaV56XrJ+bmbGMFBrRW0g3HZ+r96hxiZOBgPMUpwMCuJ8Ir9mJ4ixJuS
-        WFmVWpQfX1Sak1p8iFGag0VJnFc5pzNFSCA9sSQ1OzW1ILUIJsvEwSnVwDRVulBz74w5hkI3
-        Py9s/zJv7cmUTSsrL4YuFmUunf1yJffUtjiL77uPxht+99zN6WTIf/hRVltv348elrAnPNxq
-        fgKbKxqfRE7l6LsxIUJSTqT0X8Pryl3SMWvy7il+9ntuJqgb9ntXuPzTdRfzrJ9oXKr5qngz
-        Lm3u23Jj1bw5rTes2xsNVL9fzwtec6XE7vCVp2HPG/+YnL2kteHz1436qzOSi9I8WCrk+FmL
-        jmZvs1tlf1Lg4dEd5sw/zDMWyIoVrOpR9BCK/V9m/KWy8cuLZ/uDF4quXNrNMdNv3pLU3Zxd
-        KRIX9r5lUA/u23xv0uz8abuzojgnTy9t+uR1UG673qMVYrcbalfMcJ9vU6DEUpyRaKjFXFSc
-        CADZ7Fh52QIAAA==
-X-CMS-MailID: 20230626091207epcas5p2a2957dfe97c4d82e39defa557d7ffd0e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230626091207epcas5p2a2957dfe97c4d82e39defa557d7ffd0e
-References: <CGME20230626091207epcas5p2a2957dfe97c4d82e39defa557d7ffd0e@epcas5p2.samsung.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230620133711.22840-5-dwagner@suse.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Before calling add partition or resize partition, there is no check
-on whether the length is aligned with the logical block size.
-If the logical block size of the disk is larger than 512 bytes,
-then the partition size maybe not the multiple of the logical block size,
-and when the last sector is read, bio_truncate() will adjust the bio size,
-resulting in an IO error if the size of the read command is smaller than
-the logical block size.If integrity data is supported, this will also
-result in a null pointer dereference when calling bio_integrity_free.
+Hi Daniel,
 
-Signed-off-by: Min Li <min15.li@samsung.com>
----
- block/ioctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+kernel test robot noticed the following build warnings:
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 9c5f637ff153..aa95b5561169 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -35,6 +35,9 @@ static int blkpg_do_ioctl(struct block_device *bdev,
- 
- 	start = p.start >> SECTOR_SHIFT;
- 	length = p.length >> SECTOR_SHIFT;
-+	/*check if length is aligned to blocksize*/
-+	if (p.length & (bdev_logical_block_size(bdev) - 1))
-+		return -EINVAL;
- 
- 	switch (op) {
- 	case BLKPG_ADD_PARTITION:
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Wagner/nvme-fc-Do-not-wait-in-vain-when-unloading-module/20230620-213849
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230620133711.22840-5-dwagner%40suse.de
+patch subject: [PATCH v2 4/5] nvme-fc: Make initial connect attempt synchronous
+config: openrisc-randconfig-m041-20230622 (https://download.01.org/0day-ci/archive/20230624/202306240125.U2jdrjAY-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230624/202306240125.U2jdrjAY-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202306240125.U2jdrjAY-lkp@intel.com/
+
+smatch warnings:
+drivers/nvme/host/fc.c:3590 nvme_fc_init_ctrl() warn: passing zero to 'ERR_PTR'
+
+vim +/ERR_PTR +3590 drivers/nvme/host/fc.c
+
+61bff8ef008845 James Smart       2017-04-23  3533  	ret = nvme_init_ctrl(&ctrl->ctrl, dev, &nvme_fc_ctrl_ops, 0);
+61bff8ef008845 James Smart       2017-04-23  3534  	if (ret)
+98e3528012cd57 Ross Lagerwall    2023-01-20  3535  		goto out_free_queues;
+e399441de9115c James Smart       2016-12-02  3536  
+61bff8ef008845 James Smart       2017-04-23  3537  	/* at this point, teardown path changes to ref counting on nvme ctrl */
+e399441de9115c James Smart       2016-12-02  3538  
+98e3528012cd57 Ross Lagerwall    2023-01-20  3539  	ret = nvme_alloc_admin_tag_set(&ctrl->ctrl, &ctrl->admin_tag_set,
+98e3528012cd57 Ross Lagerwall    2023-01-20  3540  			&nvme_fc_admin_mq_ops,
+98e3528012cd57 Ross Lagerwall    2023-01-20  3541  			struct_size((struct nvme_fcp_op_w_sgl *)NULL, priv,
+98e3528012cd57 Ross Lagerwall    2023-01-20  3542  				    ctrl->lport->ops->fcprqst_priv_sz));
+98e3528012cd57 Ross Lagerwall    2023-01-20  3543  	if (ret)
+98e3528012cd57 Ross Lagerwall    2023-01-20  3544  		goto fail_ctrl;
+98e3528012cd57 Ross Lagerwall    2023-01-20  3545  
+e399441de9115c James Smart       2016-12-02  3546  	spin_lock_irqsave(&rport->lock, flags);
+e399441de9115c James Smart       2016-12-02  3547  	list_add_tail(&ctrl->ctrl_list, &rport->ctrl_list);
+e399441de9115c James Smart       2016-12-02  3548  	spin_unlock_irqrestore(&rport->lock, flags);
+e399441de9115c James Smart       2016-12-02  3549  
+ac881fd1288ca6 Daniel Wagner     2023-06-20  3550  	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_CONNECTING)) {
+4c984154efa131 James Smart       2018-06-13  3551  		dev_err(ctrl->ctrl.device,
+4c984154efa131 James Smart       2018-06-13  3552  			"NVME-FC{%d}: failed to init ctrl state\n", ctrl->cnum);
+4c984154efa131 James Smart       2018-06-13  3553  		goto fail_ctrl;
+
+No error code on this path.  Originally it didn't matter because it was
+hardcoded to return ERR_PTR(-EIO);
+
+17c4dc6eb7e1b2 James Smart       2017-10-09  3554  	}
+17c4dc6eb7e1b2 James Smart       2017-10-09  3555  
+ac881fd1288ca6 Daniel Wagner     2023-06-20  3556  	ret = nvme_fc_create_association(ctrl);
+ac881fd1288ca6 Daniel Wagner     2023-06-20  3557  	if (ret)
+4c984154efa131 James Smart       2018-06-13  3558  		goto fail_ctrl;
+4c984154efa131 James Smart       2018-06-13  3559  
+4c984154efa131 James Smart       2018-06-13  3560  	dev_info(ctrl->ctrl.device,
+4c984154efa131 James Smart       2018-06-13  3561  		"NVME-FC{%d}: new ctrl: NQN \"%s\"\n",
+e5ea42faa773c6 Hannes Reinecke   2021-09-22  3562  		ctrl->cnum, nvmf_ctrl_subsysnqn(&ctrl->ctrl));
+4c984154efa131 James Smart       2018-06-13  3563  
+4c984154efa131 James Smart       2018-06-13  3564  	return &ctrl->ctrl;
+4c984154efa131 James Smart       2018-06-13  3565  
+4c984154efa131 James Smart       2018-06-13  3566  fail_ctrl:
+19fce0470f0503 James Smart       2020-12-01  3567  	cancel_work_sync(&ctrl->ioerr_work);
+cf25809bec2c7d James Smart       2018-03-13  3568  	cancel_work_sync(&ctrl->ctrl.reset_work);
+cf25809bec2c7d James Smart       2018-03-13  3569  	cancel_delayed_work_sync(&ctrl->connect_work);
+cf25809bec2c7d James Smart       2018-03-13  3570  
+de41447aac034c Ewan D. Milne     2017-04-24  3571  	ctrl->ctrl.opts = NULL;
+17c4dc6eb7e1b2 James Smart       2017-10-09  3572  
+61bff8ef008845 James Smart       2017-04-23  3573  	/* initiate nvme ctrl ref counting teardown */
+e399441de9115c James Smart       2016-12-02  3574  	nvme_uninit_ctrl(&ctrl->ctrl);
+61bff8ef008845 James Smart       2017-04-23  3575  
+0b5a7669a457dd James Smart       2017-06-15  3576  	/* Remove core ctrl ref. */
+0b5a7669a457dd James Smart       2017-06-15  3577  	nvme_put_ctrl(&ctrl->ctrl);
+0b5a7669a457dd James Smart       2017-06-15  3578  
+61bff8ef008845 James Smart       2017-04-23  3579  	/* as we're past the point where we transition to the ref
+61bff8ef008845 James Smart       2017-04-23  3580  	 * counting teardown path, if we return a bad pointer here,
+61bff8ef008845 James Smart       2017-04-23  3581  	 * the calling routine, thinking it's prior to the
+61bff8ef008845 James Smart       2017-04-23  3582  	 * transition, will do an rport put. Since the teardown
+61bff8ef008845 James Smart       2017-04-23  3583  	 * path also does a rport put, we do an extra get here to
+61bff8ef008845 James Smart       2017-04-23  3584  	 * so proper order/teardown happens.
+61bff8ef008845 James Smart       2017-04-23  3585  	 */
+61bff8ef008845 James Smart       2017-04-23  3586  	nvme_fc_rport_get(rport);
+61bff8ef008845 James Smart       2017-04-23  3587  
+ac881fd1288ca6 Daniel Wagner     2023-06-20  3588  	if (ret > 0)
+ac881fd1288ca6 Daniel Wagner     2023-06-20  3589  		ret = -EIO;
+ac881fd1288ca6 Daniel Wagner     2023-06-20 @3590  	return ERR_PTR(ret);
+e399441de9115c James Smart       2016-12-02  3591  
+61bff8ef008845 James Smart       2017-04-23  3592  out_free_queues:
+61bff8ef008845 James Smart       2017-04-23  3593  	kfree(ctrl->queues);
+e399441de9115c James Smart       2016-12-02  3594  out_free_ida:
+61bff8ef008845 James Smart       2017-04-23  3595  	put_device(ctrl->dev);
+3dd83f4013f0e8 Sagi Grimberg     2022-02-14  3596  	ida_free(&nvme_fc_ctrl_cnt, ctrl->cnum);
+e399441de9115c James Smart       2016-12-02  3597  out_free_ctrl:
+e399441de9115c James Smart       2016-12-02  3598  	kfree(ctrl);
+e399441de9115c James Smart       2016-12-02  3599  out_fail:
+e399441de9115c James Smart       2016-12-02  3600  	/* exit via here doesn't follow ctlr ref points */
+e399441de9115c James Smart       2016-12-02  3601  	return ERR_PTR(ret);
+e399441de9115c James Smart       2016-12-02  3602  }
+
 -- 
-2.34.1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
