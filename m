@@ -2,50 +2,75 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D1A6740B07
-	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 10:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCA86740B8B
+	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 10:32:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232099AbjF1IWA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jun 2023 04:22:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39250 "EHLO
+        id S232430AbjF1IcX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jun 2023 04:32:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232601AbjF1INn (ORCPT
+        with ESMTP id S234816AbjF1I1r (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jun 2023 04:13:43 -0400
-Received: from out-13.mta0.migadu.com (out-13.mta0.migadu.com [IPv6:2001:41d0:1004:224b::d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E24A4233
-        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 01:09:36 -0700 (PDT)
-Message-ID: <490fd0d8-c0b3-cc26-c658-da35d52b6b56@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1687928159;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        Wed, 28 Jun 2023 04:27:47 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA043AB8;
+        Wed, 28 Jun 2023 01:20:37 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 8D4BE1F889;
+        Wed, 28 Jun 2023 05:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1687931540; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=qQ68CUVkPH/DtMtvHx22HPkppfpY40d9tzkAnim8HEA=;
-        b=gd14pwcZQ7pAUgNaZvwc6+yhnLoa08VYUHT51t9MTHmJbHRbWHAjqm/MY7AF7bZv896gpi
-        s9Dd4FSxg9q8v1WeWWXfSI/buhDB081atkCewxWYSGCr6AhvGhhFI4nfeKWVbFu5DIavIz
-        xemrMbdSGayHfgkrFfaY+E+fDA+hZUQ=
-Date:   Wed, 28 Jun 2023 12:55:49 +0800
+        bh=sI2fzc8FIgVRp6/0G7OEBOQsc7dDWyTTvRQA68GkrJE=;
+        b=k+161G7z8ioudxMwi+XLxMLHq1hwIXR9LVsqtLWJEi98nGOtwRbBAjOGkMOJGCAApQvrHq
+        /oePJqE83iHoP0n6hyLQg+owuRj3WfmOA3bj/qDNokZfewoQqWygF3pPxU2dPpzGdbXRiW
+        B4KsS1TD10fnSjFpe4NBFEbJSwENhy8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1687931540;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sI2fzc8FIgVRp6/0G7OEBOQsc7dDWyTTvRQA68GkrJE=;
+        b=F5z1fUKdECyVhDAIDynzs/DRaJMTBnYpB0wU0CfQbWaEW7ncFZ7+skXJ1EtH6nVcG43fis
+        byvA1LRkfTx7cZCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7B86113483;
+        Wed, 28 Jun 2023 05:52:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id /eLfHZTKm2S/CgAAMHmgww
+        (envelope-from <dwagner@suse.de>); Wed, 28 Jun 2023 05:52:20 +0000
+Date:   Wed, 28 Jun 2023 07:52:19 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Hannes Reinecke <hare@suse.de>,
+        James Smart <jsmart2021@gmail.com>,
+        Martin Belanger <Martin.Belanger@dell.com>
+Subject: Re: [PATCH blktests v1 1/3] nvme/048: Check for queue count check
+ directly
+Message-ID: <bfkbjiznom3lddrec4skyi7245dff5sohpvitzv6fkaaln6w7t@bery27x4o7qd>
+References: <20230620132703.20648-1-dwagner@suse.de>
+ <20230620132703.20648-2-dwagner@suse.de>
+ <6he5owg5e6h4vq5uwhw7jo3cncwrrlgjdxnq6csr5wlopbwk5c@l434fr2edukp>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/4] blk-flush: count inflight flush_data requests
-Content-Language: en-US
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     axboe@kernel.dk, tj@kernel.org, hch@lst.de,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhouchengming@bytedance.com
-References: <20230627120854.971475-1-chengming.zhou@linux.dev>
- <20230627120854.971475-3-chengming.zhou@linux.dev>
- <ZJuzYMeVhP5cthbC@ovpn-8-21.pek2.redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <ZJuzYMeVhP5cthbC@ovpn-8-21.pek2.redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6he5owg5e6h4vq5uwhw7jo3cncwrrlgjdxnq6csr5wlopbwk5c@l434fr2edukp>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,115 +78,23 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2023/6/28 12:13, Ming Lei wrote:
-> On Tue, Jun 27, 2023 at 08:08:52PM +0800, chengming.zhou@linux.dev wrote:
->> From: Chengming Zhou <zhouchengming@bytedance.com>
->>
->> The flush state machine use a double list to link all inflight
->> flush_data requests, to avoid issuing separate post-flushes for
->> these flush_data requests which shared PREFLUSH.
->>
->> So we can't reuse rq->queuelist, this is why we need rq->flush.list
->>
->> In preparation of the next patch that reuse rq->queuelist for flush
->> state machine, we change the double linked list to a u64 counter,
->> which count all inflight flush_data requests.
->>
->> This is ok since we only need to know if there is any inflight
->> flush_data request, so a u64 counter is good. The only problem I can
->> think of is that u64 counter may overflow, which should be unlikely happen.
+On Tue, Jun 27, 2023 at 10:13:48AM +0000, Shinichiro Kawasaki wrote:
+> > +	nvmf_wait_for_state "${subsys_name}" "live" || return 1
+> > +
+> > +	queue_count=$((queue_count + 1))
+> > +	if grep -q "${queue_count}" "${queue_count_file}"; then
 > 
-> It won't overflow, q->nr_requests is 'unsigned long', which should have
-> been limited to one more reasonable value, such as 2 * BLK_MQ_MAX_DEPTH, so
-> u16 should be big enough in theory.
+> Does this check work when the number in queue_count_file has more digits than
+> queue_count? e.g.) queue_count_file=20, queue_count=2
 
-Ah, right. q->nr_requests is 'unsigned long' and q->queue_depth is 'unsigned int',
-so 'unsigned long' counter here won't overflow.
+The idea is that it should be an exact match. Let me figure out if this does
+what it is supposed to do.
 
-Should I change it to smaller 'unsigned short' or just leave it as 'unsigned long' ?
-(Now the size of struct blk_flush_queue is exactly 64 bytes)
+ > -	hostnqn="nqn.2014-08.org.nvmexpress:uuid:${hostid}"
+> > +	hostid="${def_hostid}"
+> > +	hostnqn="${def_hostnqn}"
+> 
+> I guess it's the better to move this hunk to the 3rd patch. Or we can mention it
+> in the commit message of this patch.
 
-Thanks.
-
-> 
->>
->> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
->> ---
->>  block/blk-flush.c | 9 +++++----
->>  block/blk.h       | 5 ++---
->>  2 files changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/block/blk-flush.c b/block/blk-flush.c
->> index dba392cf22be..bb7adfc2a5da 100644
->> --- a/block/blk-flush.c
->> +++ b/block/blk-flush.c
->> @@ -187,7 +187,8 @@ static void blk_flush_complete_seq(struct request *rq,
->>  		break;
->>  
->>  	case REQ_FSEQ_DATA:
->> -		list_move_tail(&rq->flush.list, &fq->flush_data_in_flight);
->> +		list_del_init(&rq->flush.list);
->> +		fq->flush_data_in_flight++;
->>  		spin_lock(&q->requeue_lock);
->>  		list_add_tail(&rq->queuelist, &q->flush_list);
->>  		spin_unlock(&q->requeue_lock);
->> @@ -299,7 +300,7 @@ static void blk_kick_flush(struct request_queue *q, struct blk_flush_queue *fq,
->>  		return;
->>  
->>  	/* C2 and C3 */
->> -	if (!list_empty(&fq->flush_data_in_flight) &&
->> +	if (fq->flush_data_in_flight &&
->>  	    time_before(jiffies,
->>  			fq->flush_pending_since + FLUSH_PENDING_TIMEOUT))
->>  		return;
->> @@ -374,6 +375,7 @@ static enum rq_end_io_ret mq_flush_data_end_io(struct request *rq,
->>  	 * the comment in flush_end_io().
->>  	 */
->>  	spin_lock_irqsave(&fq->mq_flush_lock, flags);
->> +	fq->flush_data_in_flight--;
->>  	blk_flush_complete_seq(rq, fq, REQ_FSEQ_DATA, error);
->>  	spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
->>  
->> @@ -445,7 +447,7 @@ bool blk_insert_flush(struct request *rq)
->>  		blk_rq_init_flush(rq);
->>  		rq->flush.seq |= REQ_FSEQ_POSTFLUSH;
->>  		spin_lock_irq(&fq->mq_flush_lock);
->> -		list_move_tail(&rq->flush.list, &fq->flush_data_in_flight);
->> +		fq->flush_data_in_flight++;
->>  		spin_unlock_irq(&fq->mq_flush_lock);
->>  		return false;
->>  	default:
->> @@ -496,7 +498,6 @@ struct blk_flush_queue *blk_alloc_flush_queue(int node, int cmd_size,
->>  
->>  	INIT_LIST_HEAD(&fq->flush_queue[0]);
->>  	INIT_LIST_HEAD(&fq->flush_queue[1]);
->> -	INIT_LIST_HEAD(&fq->flush_data_in_flight);
->>  
->>  	return fq;
->>  
->> diff --git a/block/blk.h b/block/blk.h
->> index 608c5dcc516b..686712e13835 100644
->> --- a/block/blk.h
->> +++ b/block/blk.h
->> @@ -15,15 +15,14 @@ struct elevator_type;
->>  extern struct dentry *blk_debugfs_root;
->>  
->>  struct blk_flush_queue {
->> +	spinlock_t		mq_flush_lock;
->>  	unsigned int		flush_pending_idx:1;
->>  	unsigned int		flush_running_idx:1;
->>  	blk_status_t 		rq_status;
->>  	unsigned long		flush_pending_since;
->>  	struct list_head	flush_queue[2];
->> -	struct list_head	flush_data_in_flight;
->> +	unsigned long		flush_data_in_flight;
->>  	struct request		*flush_rq;
->> -
->> -	spinlock_t		mq_flush_lock;
->>  };
-> 
-> The part of replacing inflight data rq list with counter looks fine.
-> 
-> Thanks,
-> Ming
-> 
+Good point, I'll move this to the 3rd patch so this change is in one patch.
