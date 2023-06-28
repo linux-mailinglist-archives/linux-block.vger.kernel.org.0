@@ -2,132 +2,81 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D20E6740C2F
-	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 11:02:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4058740C98
+	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 11:24:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235937AbjF1I7V (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jun 2023 04:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234405AbjF1InQ (ORCPT
+        id S230403AbjF1JYM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jun 2023 05:24:12 -0400
+Received: from dfw.source.kernel.org ([139.178.84.217]:34600 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234200AbjF1JEt (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jun 2023 04:43:16 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E162B30C2;
-        Wed, 28 Jun 2023 01:35:30 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        Wed, 28 Jun 2023 05:04:49 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id D4FBA21864;
-        Wed, 28 Jun 2023 06:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1687932593; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pb1MWnUMmUFEexxqK5EEY1JTSgmlRyHzP6MrqQFpEXU=;
-        b=YaYej1+R30o+dQs1G1sudkf9gCXZ0aUOD8y7MDYkVUrM2fmAol6PYiPYlr8/urWhqNoxuv
-        pOz5DwJ0yjft0n+5PVkUBxNfVdphIqR89aw6bvhctKCYmYBx1HWz5ZSFE4h9FWIt2/1yzn
-        6TnSC/0XOK77BpGtD0iCczdutNkgAcI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1687932593;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pb1MWnUMmUFEexxqK5EEY1JTSgmlRyHzP6MrqQFpEXU=;
-        b=PUzBZ2/mZv5KJOFaiPsbNDAfkGGcOcY5hMmJO3e1mdDxJDKhWegvRSFRNcN6r6/SYK6dvQ
-        3EUUToqhETgvzJAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BF98B138E8;
-        Wed, 28 Jun 2023 06:09:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id c9RlLrHOm2QcEgAAMHmgww
-        (envelope-from <dwagner@suse.de>); Wed, 28 Jun 2023 06:09:53 +0000
-Date:   Wed, 28 Jun 2023 08:09:53 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Shin'ichiro Kawasaki <shinichiro@fastmail.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Hannes Reinecke <hare@suse.de>,
-        James Smart <jsmart2021@gmail.com>,
-        Martin Belanger <Martin.Belanger@dell.com>
-Subject: Re: [PATCH blktests v1 2/3] nvme/rc: Avoid triggering host nvme-cli
- autoconnect
-Message-ID: <ygfgqglmntpqiopzq44aqegehnlroarteqjtmih7mulan4oukv@jmtupz2jnafv>
-References: <20230620132703.20648-1-dwagner@suse.de>
- <20230620132703.20648-3-dwagner@suse.de>
- <oyhlgbqq6pjwln5ly47rt5iyjtai4jeepkascfaskn2z7nu3ks@te7yrwbcpsmi>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BEA926130E;
+        Wed, 28 Jun 2023 06:38:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFBDEC433C8;
+        Wed, 28 Jun 2023 06:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687934312;
+        bh=hIaK5MMZGhPP0WIwXVhK5SME6ZluWkRCOQFxos9q7yo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I8ua108wM9nVnxl66nOGDyuQnEeDyCv1Lt9xUx3PvvrSFEyRKVVsoCEhtZe5OkjJj
+         K8PV1w6/2hv7iFGo9RIXX4tJ65+EOyV/k1I5pDcWGlCR1xSfvx++iL7DcAu4Lww9wl
+         4UMPqtN8Mfr+9RAAJ72Oen2S6f9NBtKagv3+F/GbYc9NyuyXDkH8j8pSKsxtmZ53ug
+         cYMwpr9SeoYocFqOd3gccdDDwqFMy4UbNYX88v1uFnfJehK0wgikDju1OEy//LzXLo
+         IpAyRn0Fnyz3YMYboSJJ92ReN/WU6M2Vw8rpeN/oYMZxWucdGEe1xctpK6zN+2bG+5
+         aXhcdu7sDEPbg==
+Date:   Tue, 27 Jun 2023 23:38:30 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Dongsoo Lee <letrhee@nsr.re.kr>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] fscrypt: Add LEA-256-XTS, LEA-256-CTS support
+Message-ID: <20230628063830.GA7920@sol.localdomain>
+References: <20230626084703.907331-1-letrhee@nsr.re.kr>
+ <20230626084703.907331-5-letrhee@nsr.re.kr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <oyhlgbqq6pjwln5ly47rt5iyjtai4jeepkascfaskn2z7nu3ks@te7yrwbcpsmi>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+In-Reply-To: <20230626084703.907331-5-letrhee@nsr.re.kr>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 10:22:53AM +0000, Shinichiro Kawasaki wrote:
-> On Jun 20, 2023 / 15:27, Daniel Wagner wrote:
-> > When the host has enabled the udev/systemd autoconnect services for the
-> > fc transport it interacts with blktests and make tests break.
-> > 
-> > nvme-cli learned to ignore connects attemps when using the
-> > --context command line option paired with a volatile configuration. Thus
-> > we can mark all the resources created by blktests and avoid any
-> > interaction with the systemd autoconnect scripts.
-> 
-> This sounds a good idea. Question, is "--context" option of the nvme command
-> mandatory to run nvme test with nvme_trtype=fc?
+On Mon, Jun 26, 2023 at 05:47:03PM +0900, Dongsoo Lee wrote:
+> when SIMD instructions are available, it performs even faster.
 
-If nvme-cli is called without the '--context' option, the command will be
-executed. Though if '--context' is provided as option and there is a
-configuration which matches the connect parameters but doesn't match the context
-it will ignore the operation.
+This will only be true once there is actually an applicable implementation of
+LEA-XTS and LEA-CTS using SIMD instructions included in the kernel.
 
-The blktests tests expects that nothing behind it's back is fiddling on the
-setup while it is running. So far udev didn't trigger for rdma/tcp but with fc
-it will.
+Perhaps it is your plan to go through and accelerate LEA-XTS and LEA-CTS for the
+common CPU architectures.  However, it is not included in this patchset yet, so
+it should not be claimed in the documentation yet.
 
-Thus, it's mandatory to use either the '--context' parameter or alternatively
-disable the rule with
+> Particularly, it outperforms AES when the dedicated crypto
+> +instructions for AES are unavailable, regardless of the presence of SIMD
+> +instructions. However, it is not recommended to use LEA unless there is
+> +a clear reason (such as the absence of dedicated crypto instructions for
+> +AES or a mandatory requirement) to do so. Also, to enable LEA support,
+> +it needs to be enabled in the kernel crypto API.
 
-  ln -s /etc/udev/rules.d/70-nvmf-autoconnect.rules /dev/null
+I think I'd prefer that you omit the mention of the "absence of dedicated crypto
+instructions" use case for now.  fscrypt already supports another algorithm that
+fulfills exactly that use case (Adiantum), and that algorithm already has
+optimized implementations for arm32, arm64, and x86_64.  LEA does not have that
+yet.  So it does not really bring anything new to the table.  I'm also unsure it
+would be appropriate to recommend a "lightweight" cipher at this point...
 
-BTW, when the udev rule is active I observed crashes when running blktests. So
-there is more to fix, though one thing at the time.
+That would leave "mandatory requirement" as the rationale, at least for now,
+similar to SM4.
 
-> Or is it nice-to-have feature
-> depending on the test system OS? If it is mandatory, it's the better to check
-> in _nvme_requires.
-
-Well, I didn't want to make this a hard requirement for all tests. I guess we
-could make it for fc only if this is what you had in mind. The question should
-it only test for nvme-cli supporting --context or should it be really clever and
-test if the udev rule is also active (no idea how but I assume it is possible)?
-
-> >  _cleanup_nvmet() {
-> > @@ -337,6 +383,8 @@ _setup_nvmet() {
-> >  		def_host_traddr=$(printf "nn-%s:pn-%s" \
-> >  					 "${def_local_wwnn}" \
-> >  					 "${def_local_wwpn}")
-> > +
-> > +		_setup_nvme_cli
-> 
-> Can we move this _setup_nvme_cli call from _setup_nvmet to _setup_fcloop?
-> _cleanup_nvme_cli is called in _cleanup_fcloop. I think it is a bit cleaner
-> since those setup/cleanup functions are called at at same level.
-
-Sure, no problem.
+- Eric
