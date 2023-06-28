@@ -2,115 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC68B740C97
-	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 11:24:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 798AA740C2A
+	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 11:02:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbjF1JYL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jun 2023 05:24:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:30280 "EHLO
+        id S235946AbjF1I7V (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jun 2023 04:59:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23325 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232964AbjF1IH4 (ORCPT
+        by vger.kernel.org with ESMTP id S234639AbjF1IRJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jun 2023 04:07:56 -0400
+        Wed, 28 Jun 2023 04:17:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687939626;
+        s=mimecast20190719; t=1687940178;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=kGytBMT/4D8N3PdlUpmb4evMLlTEamUTcj7Gwbg+z3A=;
-        b=DV4qkl9CDHfP0WcjAxB1PodsH5lg/BpoX66pw5UYJbJB3qRRKplubXb7yT1lhbg44KlMma
-        X6JYXvp62w/Bt5rInG+ULPAVnqFgwoEYhF7WR0/wufnYLh4ba6ngAWlni8dYR7Ap/C1Tb5
-        LWFa+N8nOZlE00dXlP3xMdKPSf12Fpk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-640-hCjEIBPSMzWGqhs1ltmbFw-1; Wed, 28 Jun 2023 03:06:38 -0400
-X-MC-Unique: hCjEIBPSMzWGqhs1ltmbFw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4D60D185A793;
-        Wed, 28 Jun 2023 07:06:38 +0000 (UTC)
-Received: from ovpn-8-21.pek2.redhat.com (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D858E40BB4D;
-        Wed, 28 Jun 2023 07:06:32 +0000 (UTC)
-Date:   Wed, 28 Jun 2023 15:06:27 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        Yi Zhang <yi.zhang@redhat.com>, linux-block@vger.kernel.org,
-        Chunguang Xu <brookxu.cn@gmail.com>, ming.lei@redhat.com
-Subject: Re: [PATCH V2 0/4] nvme: fix two kinds of IO hang from removing NSs
-Message-ID: <ZJvb85ovMrZEbilc@ovpn-8-21.pek2.redhat.com>
-References: <ZJI/1w8/9pLIyXZ2@ovpn-8-23.pek2.redhat.com>
- <caa80682-3c3e-f709-804a-6ee913e4524f@grimberg.me>
- <ZJL6w+K6e95WWJzV@ovpn-8-23.pek2.redhat.com>
- <ZJMb4f0i9wm8y4pi@kbusch-mbp.dhcp.thefacebook.com>
- <ZJRR0C9sqLp7zhAv@ovpn-8-19.pek2.redhat.com>
- <ZJRcRWyn7o7lLEDM@kbusch-mbp.dhcp.thefacebook.com>
- <ZJRgUXfRuuOoIN1o@ovpn-8-19.pek2.redhat.com>
- <ZJRmd7bnclaNW3PL@kbusch-mbp.dhcp.thefacebook.com>
- <ZJeJyEnSpVBDd4vb@ovpn-8-16.pek2.redhat.com>
- <ZJsaoFtqWIwshYD6@kbusch-mbp.dhcp.thefacebook.com>
+        bh=jOlL3RSz6r/FHa/kJAy/uiAgUQG7pSYnjQgfd6RA4Bg=;
+        b=d2WA5dkkLiEl13IgOJqZ8doRfSRuUMIXx/qxmlPvvHIl+sg7gWUd0lWxRemmTT3X2OGnKz
+        lTR84IUFD/BDiyRJAg0HK0ed+eoIxQV9/2Sa3N0yAM7j2QfNYsc7YB2XSAnWG4ZIwhGp7x
+        SUkUzWwDGi/bC+ngxeLZtwZsLwmYcGI=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-452-38d-dcYzO1uUemG6mEuVCA-1; Wed, 28 Jun 2023 03:15:54 -0400
+X-MC-Unique: 38d-dcYzO1uUemG6mEuVCA-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-39ca3e1728fso4954988b6e.2
+        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 00:15:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687936554; x=1690528554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jOlL3RSz6r/FHa/kJAy/uiAgUQG7pSYnjQgfd6RA4Bg=;
+        b=BDAYdJJC1y2nGr54T42Hou+7nJL/yKVmO38hoZ/KFQade+04MfkMnZkAhEyi2u6Ai4
+         aAiyjsbhVuyxIrz16o/G4KaDcrPL9A0391/UyzNoitWVS8p/6I+z8nctGD/TaKKn4fnS
+         iP7OZXlUYoYPSvPZualcnHGFB2k6E5kOD5gDUpnLm/OCpHER9VN3HhtFJ4JZB9tYzsy1
+         jZ/pGP6tUFfkzc+tttJFrlSPpq6/5h87nIA/lPYeYSoJMUx7oydRG4Hg0ScCkVxJM0Am
+         HrNOwcN8GQGRLO3cpUU8C5s5rtS8nW2KPwvJJKbQJLpzPit06mLoMjzUZARjzsMTPuLB
+         t+2Q==
+X-Gm-Message-State: AC+VfDxkP3HiYo0e+v83gkbZHhdPytX83vsFlg2RCA3alkpr5gmDXG8Z
+        B5oTihHgM8hWdE3/G/VTNRtBr0vP9jCeL7m5QhwQMUlGRsqzUGHSQeGiqJkZuaJ/Bqu82jvOUI3
+        p2F5QvfATeIsfYUQkAc8bGj5+LcyOsshwJ/ao7io=
+X-Received: by 2002:a05:6808:178b:b0:3a1:efe6:13c5 with SMTP id bg11-20020a056808178b00b003a1efe613c5mr6372687oib.44.1687936554185;
+        Wed, 28 Jun 2023 00:15:54 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5b1JKXXZr/fxyH6D05v9L+c5/fBm1hVIv8gr4cANfz7s7CdBBTWYKitE4TTX3WfkZ9rc5AiDdkfY6U8UjM1e0=
+X-Received: by 2002:a05:6808:178b:b0:3a1:efe6:13c5 with SMTP id
+ bg11-20020a056808178b00b003a1efe613c5mr6372679oib.44.1687936553951; Wed, 28
+ Jun 2023 00:15:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZJsaoFtqWIwshYD6@kbusch-mbp.dhcp.thefacebook.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+References: <CAHj4cs_qUWzetD0203EKbBLNv3KF=qgTLsWLeHN3PY7UE6mzmw@mail.gmail.com>
+ <4b8c1d77-b434-5970-fb1f-8a4059966095@grimberg.me> <8a15d10e-f94b-54b7-b080-1887d9c0bdac@nvidia.com>
+ <0c4b16a5-17da-02d9-754a-3c7a158daa56@nvidia.com> <CAHj4cs9ayQ8J+wDCWVKjmBTWTi7Bc3uqqTCDzL2ZY6JhpdDhsQ@mail.gmail.com>
+ <1fda4154-50f4-c09d-dbb1-3b53ed63d341@nvidia.com> <CAHj4cs_+yBbs+MgrC8Z8J7X8cKYwwr6wcR5tLfUCcYkftL7N1Q@mail.gmail.com>
+ <52df24f1-ebb7-cd24-3aaf-7b946acab3ee@grimberg.me>
+In-Reply-To: <52df24f1-ebb7-cd24-3aaf-7b946acab3ee@grimberg.me>
+From:   Yi Zhang <yi.zhang@redhat.com>
+Date:   Wed, 28 Jun 2023 15:15:41 +0800
+Message-ID: <CAHj4cs9=8fPRtXj4uyjN9MV1OMNNXwcVGte7CDnFxXYYbnnX0A@mail.gmail.com>
+Subject: Re: [bug report] most of blktests nvme/ failed on the latest linux tree
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 11:21:36AM -0600, Keith Busch wrote:
-> On Sun, Jun 25, 2023 at 08:26:48AM +0800, Ming Lei wrote:
-> > Yeah, but you can't remove the gap at all with start_freeze, that said
-> > the current code has to live with the situation of new mapping change
-> > and old request with old mapping.
-> > 
-> > Actually I considered to handle this kind of situation before, one approach
-> > is to reuse the bio steal logic taken in nvme mpath:
-> > 
-> > 1) for FS IO, re-submit bios, meantime free request
-> > 
-> > 2) for PT request, simply fail it
-> > 
-> > It could be a bit violent for 2) even though REQ_FAILFAST_DRIVER is
-> > always set for PT request, but not see any better approach for handling
-> > PT request.
-> 
-> I think that's acceptable for PT requests, or any request that doesn't
-> have a bio. I tried something similiar a while back that was almost
-> working, but I neither never posted it, or it's in that window when
-> infradead lost all the emails. :(
+On Wed, Jun 28, 2023 at 2:47=E2=80=AFPM Sagi Grimberg <sagi@grimberg.me> wr=
+ote:
+>
+> Yi,
+>
+> Do you have hostnqn and hostid files in your /etc/nvme directory?
+>
 
-If you are fine to fail PT request, I'd suggest to handle the
-problem in the following way:
+No, only one discovery.conf there.
 
-1) moving freeze into reset
+# ls /etc/nvme/
+discovery.conf
 
-2) during resetting
-
-- freeze NS queues
-- unquiesce NS queues
-- nvme_wait_freeze()
-- update_nr_hw_queues
-- unfreeze NS queues
-
-3) meantime changes driver's ->queue_rq() in case that ctrl state is NVME_CTRL_CONNECTING,
-
-- if the request is FS IO with data, re-submit all bios of this request,
-  and free the request
-
-- otherwise, fail the request  
-
-With this way, not only freeze is paired with unfreeze. More
-importantly, it becomes not possible to trigger new timeout during
-handling NVME_CTRL_CONNECTING, then fallback to ctrl removal can
-be avoided.
-
-Any comment on this approach?
-
-Thanks,
-Ming
+--=20
+Best Regards,
+  Yi Zhang
 
