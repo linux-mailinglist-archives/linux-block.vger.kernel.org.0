@@ -2,137 +2,166 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AEF1740C32
-	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 11:02:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D1A6740B07
+	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 10:22:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235961AbjF1I7Y (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jun 2023 04:59:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:30989 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233070AbjF1IxK (ORCPT
+        id S232099AbjF1IWA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jun 2023 04:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232601AbjF1INn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jun 2023 04:53:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687942321;
+        Wed, 28 Jun 2023 04:13:43 -0400
+Received: from out-13.mta0.migadu.com (out-13.mta0.migadu.com [IPv6:2001:41d0:1004:224b::d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E24A4233
+        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 01:09:36 -0700 (PDT)
+Message-ID: <490fd0d8-c0b3-cc26-c658-da35d52b6b56@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1687928159;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mr4UHt+/RbSvUJAMDZepZ17hHPabLIHQ8DU05mT//V0=;
-        b=PwRci8ElvbWmo2P7jGTXtqyvibbEaiohNFQ5BKL1ht6VOBN6ZXF5I1lyh1ooyl4AcDC3xc
-        iDSXUFMJ5JtfEBFkt7/6Galtmgmgtt7vXFbAnog9HAtCXVxgucAqB5CxbCcu7Xz/c3lW+u
-        wyIkAcbsXwr1DyMAeUahw5p/Rblx6Dc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-412-sYkB_o7oPfOkH5IYyEF-iA-1; Wed, 28 Jun 2023 00:50:31 -0400
-X-MC-Unique: sYkB_o7oPfOkH5IYyEF-iA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B35C41C07557;
-        Wed, 28 Jun 2023 04:50:30 +0000 (UTC)
-Received: from ovpn-8-21.pek2.redhat.com (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F9E340C2063;
-        Wed, 28 Jun 2023 04:50:25 +0000 (UTC)
-Date:   Wed, 28 Jun 2023 12:50:21 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Chengming Zhou <chengming.zhou@linux.dev>
+        bh=qQ68CUVkPH/DtMtvHx22HPkppfpY40d9tzkAnim8HEA=;
+        b=gd14pwcZQ7pAUgNaZvwc6+yhnLoa08VYUHT51t9MTHmJbHRbWHAjqm/MY7AF7bZv896gpi
+        s9Dd4FSxg9q8v1WeWWXfSI/buhDB081atkCewxWYSGCr6AhvGhhFI4nfeKWVbFu5DIavIz
+        xemrMbdSGayHfgkrFfaY+E+fDA+hZUQ=
+Date:   Wed, 28 Jun 2023 12:55:49 +0800
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/4] blk-flush: count inflight flush_data requests
+Content-Language: en-US
+To:     Ming Lei <ming.lei@redhat.com>
 Cc:     axboe@kernel.dk, tj@kernel.org, hch@lst.de,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         zhouchengming@bytedance.com
-Subject: Re: [PATCH 1/4] blk-mq: use percpu csd to remote complete instead of
- per-rq csd
-Message-ID: <ZJu8DQgug3/UjpUJ@ovpn-8-21.pek2.redhat.com>
 References: <20230627120854.971475-1-chengming.zhou@linux.dev>
- <20230627120854.971475-2-chengming.zhou@linux.dev>
- <ZJuY0OZu42H0oBa7@ovpn-8-21.pek2.redhat.com>
- <9c038fe8-0361-c6fb-9b4e-7b74e0591ae9@linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c038fe8-0361-c6fb-9b4e-7b74e0591ae9@linux.dev>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+ <20230627120854.971475-3-chengming.zhou@linux.dev>
+ <ZJuzYMeVhP5cthbC@ovpn-8-21.pek2.redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <ZJuzYMeVhP5cthbC@ovpn-8-21.pek2.redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 11:28:20AM +0800, Chengming Zhou wrote:
-> On 2023/6/28 10:20, Ming Lei wrote:
-> > On Tue, Jun 27, 2023 at 08:08:51PM +0800, chengming.zhou@linux.dev wrote:
-> >> From: Chengming Zhou <zhouchengming@bytedance.com>
-> >>
-> >> If request need to be completed remotely, we insert it into percpu llist,
-> >> and smp_call_function_single_async() if llist is empty previously.
-> >>
-> >> We don't need to use per-rq csd, percpu csd is enough. And the size of
-> >> struct request is decreased by 24 bytes.
-> >>
-> >> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> >> ---
-> >>  block/blk-mq.c         | 12 ++++++++----
-> >>  include/linux/blk-mq.h |  5 +----
-> >>  2 files changed, 9 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> >> index decb6ab2d508..a36822479b94 100644
-> >> --- a/block/blk-mq.c
-> >> +++ b/block/blk-mq.c
-> >> @@ -43,6 +43,7 @@
-> >>  #include "blk-ioprio.h"
-> >>  
-> >>  static DEFINE_PER_CPU(struct llist_head, blk_cpu_done);
-> >> +static DEFINE_PER_CPU(struct __call_single_data, blk_cpu_csd);
-> > 
-> > It might be better to use call_single_data, given:
-> > 
-> > /* Use __aligned() to avoid to use 2 cache lines for 1 csd */
-> >   typedef struct __call_single_data call_single_data_t
-> >   	__aligned(sizeof(struct __call_single_data));
-> > 
+On 2023/6/28 12:13, Ming Lei wrote:
+> On Tue, Jun 27, 2023 at 08:08:52PM +0800, chengming.zhou@linux.dev wrote:
+>> From: Chengming Zhou <zhouchengming@bytedance.com>
+>>
+>> The flush state machine use a double list to link all inflight
+>> flush_data requests, to avoid issuing separate post-flushes for
+>> these flush_data requests which shared PREFLUSH.
+>>
+>> So we can't reuse rq->queuelist, this is why we need rq->flush.list
+>>
+>> In preparation of the next patch that reuse rq->queuelist for flush
+>> state machine, we change the double linked list to a u64 counter,
+>> which count all inflight flush_data requests.
+>>
+>> This is ok since we only need to know if there is any inflight
+>> flush_data request, so a u64 counter is good. The only problem I can
+>> think of is that u64 counter may overflow, which should be unlikely happen.
 > 
-> Good, I will change to use this.
+> It won't overflow, q->nr_requests is 'unsigned long', which should have
+> been limited to one more reasonable value, such as 2 * BLK_MQ_MAX_DEPTH, so
+> u16 should be big enough in theory.
+
+Ah, right. q->nr_requests is 'unsigned long' and q->queue_depth is 'unsigned int',
+so 'unsigned long' counter here won't overflow.
+
+Should I change it to smaller 'unsigned short' or just leave it as 'unsigned long' ?
+(Now the size of struct blk_flush_queue is exactly 64 bytes)
+
+Thanks.
+
 > 
-> >>  
-> >>  static void blk_mq_insert_request(struct request *rq, blk_insert_t flags);
-> >>  static void blk_mq_request_bypass_insert(struct request *rq,
-> >> @@ -1156,13 +1157,13 @@ static void blk_mq_complete_send_ipi(struct request *rq)
-> >>  {
-> >>  	struct llist_head *list;
-> >>  	unsigned int cpu;
-> >> +	struct __call_single_data *csd;
-> >>  
-> >>  	cpu = rq->mq_ctx->cpu;
-> >>  	list = &per_cpu(blk_cpu_done, cpu);
-> >> -	if (llist_add(&rq->ipi_list, list)) {
-> >> -		INIT_CSD(&rq->csd, __blk_mq_complete_request_remote, rq);
-> >> -		smp_call_function_single_async(cpu, &rq->csd);
-> >> -	}
-> >> +	csd = &per_cpu(blk_cpu_csd, cpu);
-> >> +	if (llist_add(&rq->ipi_list, list))
-> >> +		smp_call_function_single_async(cpu, csd);
-> >>  }
-> > 
-> > This way is cleaner, and looks correct, given block softirq is guaranteed to be
-> > scheduled to consume the list if one new request is added to this percpu list,
-> > either smp_call_function_single_async() returns -EBUSY or 0.
-> > 
+>>
+>> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+>> ---
+>>  block/blk-flush.c | 9 +++++----
+>>  block/blk.h       | 5 ++---
+>>  2 files changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/block/blk-flush.c b/block/blk-flush.c
+>> index dba392cf22be..bb7adfc2a5da 100644
+>> --- a/block/blk-flush.c
+>> +++ b/block/blk-flush.c
+>> @@ -187,7 +187,8 @@ static void blk_flush_complete_seq(struct request *rq,
+>>  		break;
+>>  
+>>  	case REQ_FSEQ_DATA:
+>> -		list_move_tail(&rq->flush.list, &fq->flush_data_in_flight);
+>> +		list_del_init(&rq->flush.list);
+>> +		fq->flush_data_in_flight++;
+>>  		spin_lock(&q->requeue_lock);
+>>  		list_add_tail(&rq->queuelist, &q->flush_list);
+>>  		spin_unlock(&q->requeue_lock);
+>> @@ -299,7 +300,7 @@ static void blk_kick_flush(struct request_queue *q, struct blk_flush_queue *fq,
+>>  		return;
+>>  
+>>  	/* C2 and C3 */
+>> -	if (!list_empty(&fq->flush_data_in_flight) &&
+>> +	if (fq->flush_data_in_flight &&
+>>  	    time_before(jiffies,
+>>  			fq->flush_pending_since + FLUSH_PENDING_TIMEOUT))
+>>  		return;
+>> @@ -374,6 +375,7 @@ static enum rq_end_io_ret mq_flush_data_end_io(struct request *rq,
+>>  	 * the comment in flush_end_io().
+>>  	 */
+>>  	spin_lock_irqsave(&fq->mq_flush_lock, flags);
+>> +	fq->flush_data_in_flight--;
+>>  	blk_flush_complete_seq(rq, fq, REQ_FSEQ_DATA, error);
+>>  	spin_unlock_irqrestore(&fq->mq_flush_lock, flags);
+>>  
+>> @@ -445,7 +447,7 @@ bool blk_insert_flush(struct request *rq)
+>>  		blk_rq_init_flush(rq);
+>>  		rq->flush.seq |= REQ_FSEQ_POSTFLUSH;
+>>  		spin_lock_irq(&fq->mq_flush_lock);
+>> -		list_move_tail(&rq->flush.list, &fq->flush_data_in_flight);
+>> +		fq->flush_data_in_flight++;
+>>  		spin_unlock_irq(&fq->mq_flush_lock);
+>>  		return false;
+>>  	default:
+>> @@ -496,7 +498,6 @@ struct blk_flush_queue *blk_alloc_flush_queue(int node, int cmd_size,
+>>  
+>>  	INIT_LIST_HEAD(&fq->flush_queue[0]);
+>>  	INIT_LIST_HEAD(&fq->flush_queue[1]);
+>> -	INIT_LIST_HEAD(&fq->flush_data_in_flight);
+>>  
+>>  	return fq;
+>>  
+>> diff --git a/block/blk.h b/block/blk.h
+>> index 608c5dcc516b..686712e13835 100644
+>> --- a/block/blk.h
+>> +++ b/block/blk.h
+>> @@ -15,15 +15,14 @@ struct elevator_type;
+>>  extern struct dentry *blk_debugfs_root;
+>>  
+>>  struct blk_flush_queue {
+>> +	spinlock_t		mq_flush_lock;
+>>  	unsigned int		flush_pending_idx:1;
+>>  	unsigned int		flush_running_idx:1;
+>>  	blk_status_t 		rq_status;
+>>  	unsigned long		flush_pending_since;
+>>  	struct list_head	flush_queue[2];
+>> -	struct list_head	flush_data_in_flight;
+>> +	unsigned long		flush_data_in_flight;
+>>  	struct request		*flush_rq;
+>> -
+>> -	spinlock_t		mq_flush_lock;
+>>  };
 > 
-> If this llist_add() see the llist is empty, the consumer function in the softirq
-> on the remote CPU must have consumed the llist, so smp_call_function_single_async()
-> won't return -EBUSY ?
-
-block softirq can be scheduled from other code path, such as blk_mq_raise_softirq()
-for single queue's remote completion, where no percpu csd schedule is needed, so
-two smp_call_function_single_async() could be called, and the 2nd one
-may return -EBUSY.
-
-Not mention csd_unlock() could be called after the callback returns, see
-__flush_smp_call_function_queue().
-
-But that is fine, if there is pending block softirq, the llist is
-guaranteed to be consumed because the csd callback just raises block
-softirq, and request/llist is consumed in softirq handler.
-
-Thanks,
-Ming
-
+> The part of replacing inflight data rq list with counter looks fine.
+> 
+> Thanks,
+> Ming
+> 
