@@ -2,274 +2,221 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05F027418AB
-	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 21:08:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66AE57418B4
+	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 21:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231626AbjF1THI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jun 2023 15:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232146AbjF1THB (ORCPT
+        id S229865AbjF1TK4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jun 2023 15:10:56 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:59678 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229501AbjF1TKy (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jun 2023 15:07:01 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF992680
-        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 12:06:58 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-51d9128494cso4556237a12.0
-        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 12:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20221208.gappssmtp.com; s=20221208; t=1687979217; x=1690571217;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k09MsLBHwTc+y9WYz50c8Y73VYgCsBkw4p9DqkCCN/M=;
-        b=AMrm8MGS8YsjLjsAEPiKS0/uHUYlIE1gZyHmH/mHOzZRfp3DgrhhgqGOc7Y1du/0Ns
-         +vrRD7Ix5cumjIVFj0Az8G3vMK7rGO6lgJLmLNw7UkFpQ8uQpzM5L78cp3UPSeLkBKkp
-         2ndQ+7cCB1PoaCz4ekU6RKY0+lnwP8SvXJrBSeBahEYWsy0CP5TTUnGJzzVD7Bab8cwd
-         0e4RqEYNzHRJOHjdxXtf+RLOPCaaP/KK9bx3sP94URvC41wNbwKDSJKppPK39KiJ5Net
-         b3I+hpw0s1i2H0FeZkEqrxV7Pkx6sj+4+D2XKanPcpHe+rV2Jg/yvA9ONYOTThU+nfx6
-         YCQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687979217; x=1690571217;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k09MsLBHwTc+y9WYz50c8Y73VYgCsBkw4p9DqkCCN/M=;
-        b=mAe/XU48QYemTzQ5vkGNLT+gAsxiJtxh0MRm7r4bUFUL5sF7M4ah29gKf/0zTCH3Cp
-         lvqgALKcXacbnyPB9rCyUYp7ehdTrHS4g4CzbZVpAR3LL15rNqmeCh/1JdZoEdkNDFsM
-         vs/BmJLG8efVtUH/z/bv82XJLNc/mKXhfEUOZcFI3Yi0yDLcO65XVObdXv6sfAcSkXnE
-         dbxHH4E6vJshj8xym7J0dMvohPaO/Hmttm8xWSsx/YoBzs3cOwlMOHtrIqK1gQuj4epX
-         m9cucnrl2PS5KUJNz5yXhjbCd0Zxb8RCFH+UuF99XcMHQuXhsg4nFNTdJ8MP1Gvw/PQ6
-         TW2g==
-X-Gm-Message-State: AC+VfDwz7+GVo/7vSf4Fffz12osOuBc+9CJMbo7gUSBdKBtE0dPwBbld
-        Lz4LkISkTG+khmVMnPNLB4JvZpIN4MXJ8DNL6iw=
-X-Google-Smtp-Source: ACHHUZ47B59+EwXNTtLbz5NYO9F7exmS/Irop+y0C3KyOndwvuKjPWPzYTPUFXHxPVU2OC0mnsgrZA==
-X-Received: by 2002:a05:6402:892:b0:51d:d41b:26a5 with SMTP id e18-20020a056402089200b0051dd41b26a5mr1285108edy.14.1687979217241;
-        Wed, 28 Jun 2023 12:06:57 -0700 (PDT)
-Received: from localhost ([79.142.230.34])
-        by smtp.gmail.com with ESMTPSA id e2-20020a170906080200b0098503ba0db4sm6150511ejd.149.2023.06.28.12.06.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 12:06:56 -0700 (PDT)
-From:   Andreas Hindborg <nmi@metaspace.dk>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org (open list:BLOCK LAYER),
-        Christoph Hellwig <hch@infradead.org>,
-        Matias Bjorling <Matias.Bjorling@wdc.com>,
-        Andreas Hindborg <a.hindborg@samsung.com>,
-        linux-kernel@vger.kernel.org (open list),
-        Damien Le Moal <dlemoal@kernel.org>, gost.dev@samsung.com,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: [PATCH v4 4/4] ublk: add zone append
-Date:   Wed, 28 Jun 2023 21:06:49 +0200
-Message-ID: <20230628190649.11233-5-nmi@metaspace.dk>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230628190649.11233-1-nmi@metaspace.dk>
-References: <20230628190649.11233-1-nmi@metaspace.dk>
+        Wed, 28 Jun 2023 15:10:54 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E56BD21861;
+        Wed, 28 Jun 2023 19:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1687979452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y163GLXlIY7qQsdU/MbbES2r1FokRyWxT2xQc4IuSco=;
+        b=17CHUniKf0kpKinjDite2jRJXssHfqK40e1/swrE7qF5cXCkgD2qvey1hwhZU8oG00/s0/
+        uyLuQgxHC/ZJ7AD0LS7wn6ws8zEfb4d2MXD89ZLYY0sOLqvdpaySzF2DjU2Zww9LQ+8KtF
+        GmviuAoMpLFTGt0XuYt/dGdbNIU2p+k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1687979452;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y163GLXlIY7qQsdU/MbbES2r1FokRyWxT2xQc4IuSco=;
+        b=IGpxo9K3rNcAG0ewnJPK+dXjMJIukTj3HK8YG5HtQCL5GCwttnChcPm7gjQoiYCDkZfZpV
+        ixTbk3vzz2h4oNDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D6DF0138EF;
+        Wed, 28 Jun 2023 19:10:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id /hEmNLyFnGRzIQAAMHmgww
+        (envelope-from <dwagner@suse.de>); Wed, 28 Jun 2023 19:10:52 +0000
+Date:   Wed, 28 Jun 2023 21:10:52 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Shin'ichiro Kawasaki <shinichiro@wdc.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Hannes Reinecke <hare@suse.de>,
+        James Smart <jsmart2021@gmail.com>
+Subject: Re: [PATCH blktests v2 2/3] nvme/rc: Avoid triggering host nvme-cli
+ autoconnect
+Message-ID: <edoiq74rpu6qejs6m3dsvtp73ypjixafp6dsncg7kga7n4uwdr@xc7mgaerwqbk>
+References: <20230628151623.11340-1-dwagner@suse.de>
+ <20230628151623.11340-3-dwagner@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230628151623.11340-3-dwagner@suse.de>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Andreas Hindborg <a.hindborg@samsung.com>
+On Wed, Jun 28, 2023 at 05:16:22PM +0200, Daniel Wagner wrote:
+> When the host has enabled the udev/systemd autoconnect services for the
+> fc transport it interacts with blktests and make tests break.
+> 
+> nvme-cli learned to ignore connects attemps when using the --context
+> command line option paired with a volatile configuration. Thus we can
+> mark all the resources created by blktests and avoid any interaction
+> with the systemd autoconnect scripts.
+> 
+> Only enabled this for the fc transport.
+> 
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>  tests/nvme/rc | 81 ++++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 71 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tests/nvme/rc b/tests/nvme/rc
+> index 191f3e2e0c43..06d98f46b471 100644
+> --- a/tests/nvme/rc
+> +++ b/tests/nvme/rc
+> @@ -14,8 +14,8 @@ def_remote_wwnn="0x10001100aa000001"
+>  def_remote_wwpn="0x20001100aa000001"
+>  def_local_wwnn="0x10001100aa000002"
+>  def_local_wwpn="0x20001100aa000002"
+> -def_hostnqn="$(cat /etc/nvme/hostnqn 2> /dev/null)"
+> -def_hostid="$(cat /etc/nvme/hostid 2> /dev/null)"
+> +def_hostnqn="nqn.2014-08.org.nvmexpress:uuid:242d4a24-2484-4a80-8234-d0169409c5e8"
+> +def_hostid="242d4a24-2484-4a80-8234-d0169409c5e8"
+>  nvme_trtype=${nvme_trtype:-"loop"}
+>  nvme_img_size=${nvme_img_size:-"1G"}
+>  nvme_num_iter=${nvme_num_iter:-"1000"}
+> @@ -161,6 +161,57 @@ _nvme_calc_rand_io_size() {
+>  	echo "${io_size_kb}k"
+>  }
+>  
+> +_have_nvme_cli_context() {
+> +	# ignore all non-fc transports
+> +	if [[ "${nvme_trtype}" == "fc" ]] ||
 
-Add zone append feature to ublk. This feature uses the `addr` field of `struct
-ublksrv_io_cmd`. Therefore ublk must be used with the user copy
-feature (UBLK_F_USER_COPY) for zone append to be available. Without this
-feature, ublk will fail zone append requests.
+This should be !=, forgot to merge a fixup to this patch.
 
-Suggested-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
----
- drivers/block/ublk_drv-zoned.c | 11 +++++++++
- drivers/block/ublk_drv.c       | 43 ++++++++++++++++++++++++++++++----
- drivers/block/ublk_drv.h       |  1 +
- include/uapi/linux/ublk_cmd.h  |  3 ++-
- 4 files changed, 52 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/block/ublk_drv-zoned.c b/drivers/block/ublk_drv-zoned.c
-index ea86bf4b3681..007e8fc7ff25 100644
---- a/drivers/block/ublk_drv-zoned.c
-+++ b/drivers/block/ublk_drv-zoned.c
-@@ -16,6 +16,16 @@ void ublk_set_nr_zones(struct ublk_device *ub)
- 		ub->ub_disk->nr_zones = p->dev_sectors / p->chunk_sectors;
- }
- 
-+int ublk_dev_param_zoned_validate(const struct ublk_device *ub)
-+{
-+	const struct ublk_param_zoned *p = &ub->params.zoned;
-+
-+	if (! p->max_zone_append_sectors)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- void ublk_dev_param_zoned_apply(struct ublk_device *ub)
- {
- 	const struct ublk_param_zoned *p = &ub->params.zoned;
-@@ -23,6 +33,7 @@ void ublk_dev_param_zoned_apply(struct ublk_device *ub)
- 	if (ub->dev_info.flags & UBLK_F_ZONED) {
- 		disk_set_max_active_zones(ub->ub_disk, p->max_active_zones);
- 		disk_set_max_open_zones(ub->ub_disk, p->max_open_zones);
-+		blk_queue_max_zone_append_sectors(ub->ub_disk->queue, p->max_zone_append_sectors);
- 	}
- }
- 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 88fa39853c61..6a949669b47e 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -107,6 +107,11 @@ struct ublk_uring_cmd_pdu {
-  */
- #define UBLK_IO_FLAG_NEED_GET_DATA 0x08
- 
-+/*
-+ * Set when IO is Zone Append
-+ */
-+#define UBLK_IO_FLAG_ZONE_APPEND 0x10
-+
- struct ublk_io {
- 	/* userspace buffer address from io cmd */
- 	__u64	addr;
-@@ -230,6 +235,8 @@ static void ublk_dev_param_discard_apply(struct ublk_device *ub)
- 
- static int ublk_validate_params(const struct ublk_device *ub)
- {
-+	int ret = 0;
-+
- 	/* basic param is the only one which must be set */
- 	if (ub->params.types & UBLK_PARAM_TYPE_BASIC) {
- 		const struct ublk_param_basic *p = &ub->params.basic;
-@@ -260,6 +267,13 @@ static int ublk_validate_params(const struct ublk_device *ub)
- 	if (ub->params.types & UBLK_PARAM_TYPE_DEVT)
- 		return -EINVAL;
- 
-+	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
-+	    (ub->params.types & UBLK_PARAM_TYPE_ZONED)) {
-+		ret = ublk_dev_param_zoned_validate(ub);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -690,6 +704,11 @@ static blk_status_t ublk_setup_iod(struct ublk_queue *ubq, struct request *req)
- 			return BLK_STS_IOERR;
- 		}
- 	case REQ_OP_ZONE_APPEND:
-+		if (!(ubq->dev->dev_info.flags & UBLK_F_USER_COPY))
-+			return BLK_STS_IOERR;
-+		ublk_op = UBLK_IO_OP_ZONE_APPEND;
-+		io->flags |= UBLK_IO_FLAG_ZONE_APPEND;
-+		break;
- 	case REQ_OP_ZONE_RESET_ALL:
- 	case REQ_OP_DRV_OUT:
- 		/* We do not support zone append or reset_all yet */
-@@ -1112,6 +1131,12 @@ static void ublk_commit_completion(struct ublk_device *ub,
- 	/* find the io request and complete */
- 	req = blk_mq_tag_to_rq(ub->tag_set.tags[qid], tag);
- 
-+	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED)) {
-+		if (io->flags & UBLK_IO_FLAG_ZONE_APPEND)
-+			req->__sector = ub_cmd->addr;
-+		io->flags &= ~UBLK_IO_FLAG_ZONE_APPEND;
-+	}
-+
- 	if (req && likely(!blk_should_fake_timeout(req->q)))
- 		ublk_put_req_ref(ubq, req);
- }
-@@ -1411,7 +1436,8 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 			^ (_IOC_NR(cmd_op) == UBLK_IO_NEED_GET_DATA))
- 		goto out;
- 
--	if (ublk_support_user_copy(ubq) && ub_cmd->addr) {
-+	if (ublk_support_user_copy(ubq) &&
-+	    !(io->flags & UBLK_IO_FLAG_ZONE_APPEND) && ub_cmd->addr) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1534,11 +1560,14 @@ static inline bool ublk_check_ubuf_dir(const struct request *req,
- 		int ubuf_dir)
- {
- 	/* copy ubuf to request pages */
--	if (req_op(req) == REQ_OP_READ && ubuf_dir == ITER_SOURCE)
-+	if ((req_op(req) == REQ_OP_READ || req_op(req) == REQ_OP_DRV_IN) &&
-+	    ubuf_dir == ITER_SOURCE)
- 		return true;
- 
- 	/* copy request pages to ubuf */
--	if (req_op(req) == REQ_OP_WRITE && ubuf_dir == ITER_DEST)
-+	if ((req_op(req) == REQ_OP_WRITE ||
-+	     req_op(req) == REQ_OP_ZONE_APPEND) &&
-+	    ubuf_dir == ITER_DEST)
- 		return true;
- 
- 	return false;
-@@ -1867,6 +1896,12 @@ static int ublk_ctrl_start_dev(struct ublk_device *ub, struct io_uring_cmd *cmd)
- 	ub->dev_info.ublksrv_pid = ublksrv_pid;
- 	ub->ub_disk = disk;
- 
-+	ub->dev_info.state = UBLK_S_DEV_LIVE;
-+	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
-+	    ub->dev_info.flags & UBLK_F_ZONED) {
-+		disk_set_zoned(disk, BLK_ZONED_HM);
-+	}
-+
- 	ret = ublk_apply_params(ub);
- 	if (ret)
- 		goto out_put_disk;
-@@ -1877,7 +1912,6 @@ static int ublk_ctrl_start_dev(struct ublk_device *ub, struct io_uring_cmd *cmd)
- 
- 	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
- 	    ub->dev_info.flags & UBLK_F_ZONED) {
--		disk_set_zoned(disk, BLK_ZONED_HM);
- 		blk_queue_required_elevator_features(disk->queue, ELEVATOR_F_ZBD_SEQ_WRITE);
- 		ret = ublk_revalidate_disk_zones(disk);
- 		if (ret)
-@@ -1885,7 +1919,6 @@ static int ublk_ctrl_start_dev(struct ublk_device *ub, struct io_uring_cmd *cmd)
- 	}
- 
- 	get_device(&ub->cdev_dev);
--	ub->dev_info.state = UBLK_S_DEV_LIVE;
- 	ret = add_disk(disk);
- 	if (ret) {
- 		/*
-diff --git a/drivers/block/ublk_drv.h b/drivers/block/ublk_drv.h
-index 7242430fd6b9..f55e1c25531d 100644
---- a/drivers/block/ublk_drv.h
-+++ b/drivers/block/ublk_drv.h
-@@ -56,6 +56,7 @@ struct ublk_rq_data {
- };
- 
- void ublk_set_nr_zones(struct ublk_device *ub);
-+int ublk_dev_param_zoned_validate(const struct ublk_device *ub);
- void ublk_dev_param_zoned_apply(struct ublk_device *ub);
- int ublk_revalidate_disk_zones(struct gendisk *disk);
- 
-diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
-index 436525afffe8..4b6ad0b28598 100644
---- a/include/uapi/linux/ublk_cmd.h
-+++ b/include/uapi/linux/ublk_cmd.h
-@@ -351,7 +351,8 @@ struct ublk_param_devt {
- struct ublk_param_zoned {
- 	__u32	max_open_zones;
- 	__u32	max_active_zones;
--	__u8	reserved[24];
-+	__u32   max_zone_append_sectors;
-+	__u8	reserved[20];
- };
- 
- struct ublk_params {
--- 
-2.41.0
-
+> +	   ! nvme connect --help 2>&1 | grep -q -- '--context=<STR>' > /dev/null; then
+> +		    return 1
+> +	fi
+> +	return 0
+> +}
+> +
+> +_setup_nvme_cli() {
+> +	local local_wwnn="${1}"
+> +	local local_wwpn="${2}"
+> +	local remote_wwnn="${3}"
+> +	local remote_wwpn="${4}"
+> +
+> +	if ! _have_nvme_cli_context; then
+> +		return
+> +	fi
+> +
+> +	mkdir -p /run/nvme
+> +	cat >> /run/nvme/blktests.json <<-EOF
+> +	[
+> +	  {
+> +	    "hostnqn": "${def_hostnqn}",
+> +	    "hostid": "${def_hostid}",
+> +	    "subsystems": [
+> +	      {
+> +	        "application": "blktests",
+> +	        "nqn": "blktests-subsystem-1",
+> +	        "ports": [
+> +	          {
+> +	            "transport": "fc",
+> +	            "traddr": "nn-${remote_wwnn}:pn-${remote_wwpn}",
+> +	            "host_traddr": "nn-${local_wwnn}:pn-${local_wwpn}"
+> +	          }
+> +	        ]
+> +	      }
+> +	    ]
+> +	  }
+> +	]
+> +	EOF
+> +}
+> +
+> +_cleanup_nvme_cli() {
+> +	if ! _have_nvme_cli_context; then
+> +		return
+> +	fi
+> +
+> +	rm -f /run/nvme/blktests.json
+> +}
+> +
+>  _nvme_fcloop_add_rport() {
+>  	local local_wwnn="$1"
+>  	local local_wwpn="$2"
+> @@ -193,6 +244,9 @@ _setup_fcloop() {
+>  	local remote_wwnn="${3:-$def_remote_wwnn}"
+>  	local remote_wwpn="${4:-$def_remote_wwpn}"
+>  
+> +	_setup_nvme_cli "${local_wwnn}" "${local_wwpn}" \
+> +			"${remote_wwnn}" "${remote_wwpn}"
+> +
+>  	_nvme_fcloop_add_tport "${remote_wwnn}" "${remote_wwpn}"
+>  	_nvme_fcloop_add_lport "${local_wwnn}" "${local_wwpn}"
+>  	_nvme_fcloop_add_rport "${local_wwnn}" "${local_wwpn}" \
+> @@ -235,6 +289,8 @@ _cleanup_fcloop() {
+>  	_nvme_fcloop_del_lport "${local_wwnn}" "${local_wwpn}"
+>  	_nvme_fcloop_del_rport "${local_wwnn}" "${local_wwpn}" \
+>  			       "${remote_wwnn}" "${remote_wwpn}"
+> +
+> +	_cleanup_nvme_cli
+>  }
+>  
+>  _cleanup_nvmet() {
+> @@ -436,18 +492,18 @@ _nvme_connect_subsys() {
+>  	trtype="$1"
+>  	subsysnqn="$2"
+>  
+> -	ARGS=(-t "${trtype}" -n "${subsysnqn}")
+> +	ARGS=(-t "${trtype}"
+> +	      -n "${subsysnqn}"
+> +	      --hostnqn="${hostnqn}"
+> +	      --hostid="${hostid}")
+> +	if _have_nvme_cli_context; then
+> +		ARGS+=(--context="blktests")
+> +	fi
+>  	if [[ "${trtype}" == "fc" ]] ; then
+>  		ARGS+=(-a "${traddr}" -w "${host_traddr}")
+>  	elif [[ "${trtype}" != "loop" ]]; then
+>  		ARGS+=(-a "${traddr}" -s "${trsvcid}")
+>  	fi
+> -	if [[ "${hostnqn}" != "$def_hostnqn" ]]; then
+> -		ARGS+=(--hostnqn="${hostnqn}")
+> -	fi
+> -	if [[ "${hostid}" != "$def_hostid" ]]; then
+> -		ARGS+=(--hostid="${hostid}")
+> -	fi
+>  	if [[ -n "${hostkey}" ]]; then
+>  		ARGS+=(--dhchap-secret="${hostkey}")
+>  	fi
+> @@ -482,7 +538,12 @@ _nvme_discover() {
+>  	local host_traddr="${3:-$def_host_traddr}"
+>  	local trsvcid="${3:-$def_trsvcid}"
+>  
+> -	ARGS=(-t "${trtype}")
+> +	ARGS=(-t "${trtype}"
+> +	      --hostnqn="${def_hostnqn}"
+> +	      --hostid="${def_hostid}")
+> +	if _have_nvme_cli_context; then
+> +		ARGS+=(--context="blktests")
+> +	fi
+>  	if [[ "${trtype}" = "fc" ]]; then
+>  		ARGS+=(-a "${traddr}" -w "${host_traddr}")
+>  	elif [[ "${trtype}" != "loop" ]]; then
+> -- 
+> 2.41.0
+> 
