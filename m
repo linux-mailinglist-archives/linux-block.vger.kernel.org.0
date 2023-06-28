@@ -2,67 +2,100 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE24F7409F3
-	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 09:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91789740A11
+	for <lists+linux-block@lfdr.de>; Wed, 28 Jun 2023 09:57:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231447AbjF1Hz1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 28 Jun 2023 03:55:27 -0400
-Received: from mail-ed1-f52.google.com ([209.85.208.52]:39122 "EHLO
-        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229622AbjF1Hx4 (ORCPT
+        id S231950AbjF1H5A (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 28 Jun 2023 03:57:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32934 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230452AbjF1Hyv (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 28 Jun 2023 03:53:56 -0400
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-51669dd574aso1306813a12.0
-        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 00:53:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687938835; x=1690530835;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=llewhcCw1fZpqsM1XkiLEtifsi3NiIC5iPdwF149TWY=;
-        b=Vi1DZJ7Sz5R2M4Bapjxs1vXWK0Qpsqbhp+QQJBsiBTgqfMT0vsPoj7XS/vf/YNy1iy
-         /j07cEfTyTRN9kzk0xpQ+f6LPqFStllteR2K5PuXS4PzRMmRibd2tSRw8h2KM5GsiN+t
-         iG7WmeSo6J/r79HSlp2PukdIHkfkJ3oXi7ckMUcyodLPhppzcy9+xFh1t7Rc0w+41PqT
-         pMnvNFtrRCWbkSxREDO6owOgHmvN4O+kKKRkd9BiqBef70gghix8LGCMDzmbqXSzzv35
-         j2J+eNbIY4pC4OMXDLJRp3X+QuzdW+yEdrkuZrjtAuICJcJMg9BQB+4Mh9ogk6J5o0wU
-         sRqw==
-X-Gm-Message-State: AC+VfDxbAc4y7hEe9FkQSOOm4HlAF7FnZ8duI9DHPFYBx06YRkovvVH5
-        VWOtEihOgowlGH1RjqUATqildhV4kCo=
-X-Google-Smtp-Source: ACHHUZ6vt52UNX0JVWreukdXEYWnjtFEifQC7U+lp1BtAOwBCfHoLlkuQq++v+xSyHeI/U82bqHOVg==
-X-Received: by 2002:ac2:4543:0:b0:4f9:5ffe:87f5 with SMTP id j3-20020ac24543000000b004f95ffe87f5mr9684309lfm.0.1687934813673;
-        Tue, 27 Jun 2023 23:46:53 -0700 (PDT)
-Received: from [192.168.64.192] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id f7-20020a1c6a07000000b003fb5e3710d3sm4874498wmc.43.2023.06.27.23.46.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Jun 2023 23:46:53 -0700 (PDT)
-Message-ID: <52df24f1-ebb7-cd24-3aaf-7b946acab3ee@grimberg.me>
-Date:   Wed, 28 Jun 2023 09:46:51 +0300
+        Wed, 28 Jun 2023 03:54:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687938840;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yLt6oFfC/fSVNXdyS15w+dVWx2GE92WoVxiwpYLXLIU=;
+        b=Fa1QDRinZSAsqOQDhji5/56Da4ksWYmMl7NDhYfu4CuksCSBR6GCqnIgLj3PHSdHyrFsPA
+        JXXJgCPrNMOMqHhEp6Kq7NIHbQnHkJ7+4R3LGVjxQH6dSwffbOoTcAPZn+eR/eY1NvB9R8
+        XtxhCkSFJscEGjIk6Eeq4VnHkNZFnQ0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-134-K7_N336BO_m7VZwNQxyb_g-1; Wed, 28 Jun 2023 03:22:33 -0400
+X-MC-Unique: K7_N336BO_m7VZwNQxyb_g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A3724856F67;
+        Wed, 28 Jun 2023 07:22:32 +0000 (UTC)
+Received: from ovpn-8-21.pek2.redhat.com (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 831B9111F3B0;
+        Wed, 28 Jun 2023 07:22:28 +0000 (UTC)
+Date:   Wed, 28 Jun 2023 15:22:23 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Chengming Zhou <chengming.zhou@linux.dev>
+Cc:     axboe@kernel.dk, tj@kernel.org, hch@lst.de,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhouchengming@bytedance.com
+Subject: Re: [PATCH 2/4] blk-flush: count inflight flush_data requests
+Message-ID: <ZJvfr345L9krt371@ovpn-8-21.pek2.redhat.com>
+References: <20230627120854.971475-1-chengming.zhou@linux.dev>
+ <20230627120854.971475-3-chengming.zhou@linux.dev>
+ <ZJuzYMeVhP5cthbC@ovpn-8-21.pek2.redhat.com>
+ <490fd0d8-c0b3-cc26-c658-da35d52b6b56@linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [bug report] most of blktests nvme/ failed on the latest linux
- tree
-Content-Language: en-US
-To:     Yi Zhang <yi.zhang@redhat.com>,
-        Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>
-Cc:     "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
-        linux-block <linux-block@vger.kernel.org>
-References: <CAHj4cs_qUWzetD0203EKbBLNv3KF=qgTLsWLeHN3PY7UE6mzmw@mail.gmail.com>
- <4b8c1d77-b434-5970-fb1f-8a4059966095@grimberg.me>
- <8a15d10e-f94b-54b7-b080-1887d9c0bdac@nvidia.com>
- <0c4b16a5-17da-02d9-754a-3c7a158daa56@nvidia.com>
- <CAHj4cs9ayQ8J+wDCWVKjmBTWTi7Bc3uqqTCDzL2ZY6JhpdDhsQ@mail.gmail.com>
- <1fda4154-50f4-c09d-dbb1-3b53ed63d341@nvidia.com>
- <CAHj4cs_+yBbs+MgrC8Z8J7X8cKYwwr6wcR5tLfUCcYkftL7N1Q@mail.gmail.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <CAHj4cs_+yBbs+MgrC8Z8J7X8cKYwwr6wcR5tLfUCcYkftL7N1Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <490fd0d8-c0b3-cc26-c658-da35d52b6b56@linux.dev>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Yi,
+On Wed, Jun 28, 2023 at 12:55:49PM +0800, Chengming Zhou wrote:
+> On 2023/6/28 12:13, Ming Lei wrote:
+> > On Tue, Jun 27, 2023 at 08:08:52PM +0800, chengming.zhou@linux.dev wrote:
+> >> From: Chengming Zhou <zhouchengming@bytedance.com>
+> >>
+> >> The flush state machine use a double list to link all inflight
+> >> flush_data requests, to avoid issuing separate post-flushes for
+> >> these flush_data requests which shared PREFLUSH.
+> >>
+> >> So we can't reuse rq->queuelist, this is why we need rq->flush.list
+> >>
+> >> In preparation of the next patch that reuse rq->queuelist for flush
+> >> state machine, we change the double linked list to a u64 counter,
+> >> which count all inflight flush_data requests.
+> >>
+> >> This is ok since we only need to know if there is any inflight
+> >> flush_data request, so a u64 counter is good. The only problem I can
+> >> think of is that u64 counter may overflow, which should be unlikely happen.
+> > 
+> > It won't overflow, q->nr_requests is 'unsigned long', which should have
+> > been limited to one more reasonable value, such as 2 * BLK_MQ_MAX_DEPTH, so
+> > u16 should be big enough in theory.
+> 
+> Ah, right. q->nr_requests is 'unsigned long' and q->queue_depth is 'unsigned int',
+> so 'unsigned long' counter here won't overflow.
 
-Do you have hostnqn and hostid files in your /etc/nvme directory?
+Not like q->nr_requests, q->queue_depth usually means the whole queue's depth,
+which may cover all hw queue's depth. And it is only used by scsi, but it
+should be held in "unsigned short" too.
+
+> 
+> Should I change it to smaller 'unsigned short' or just leave it as 'unsigned long' ?
+> (Now the size of struct blk_flush_queue is exactly 64 bytes)
+
+You have to limit q->nr_requests first, which may need a bit more work for avoiding
+compiling warning or sort of thing. And 64k is big enough for holding per-queue
+scheduler request.
+
+Once it is done, it is fine to define this counter as 'unsigned short'.
+
+
+Thanks,
+Ming
+
