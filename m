@@ -2,40 +2,40 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC6B6742099
-	for <lists+linux-block@lfdr.de>; Thu, 29 Jun 2023 08:46:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E131D742096
+	for <lists+linux-block@lfdr.de>; Thu, 29 Jun 2023 08:46:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231718AbjF2GqG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        id S231493AbjF2GqG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
         Thu, 29 Jun 2023 02:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44046 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232263AbjF2GpM (ORCPT
+        with ESMTP id S232277AbjF2GpO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Jun 2023 02:45:12 -0400
-Received: from out-47.mta1.migadu.com (out-47.mta1.migadu.com [IPv6:2001:41d0:203:375::2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1BC30F6
-        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 23:42:33 -0700 (PDT)
-Message-ID: <9ad5f93f-b566-03ec-dba4-1f7777489e29@linux.dev>
-Date:   Thu, 29 Jun 2023 14:42:24 +0800
+        Thu, 29 Jun 2023 02:45:14 -0400
+Received: from out-23.mta0.migadu.com (out-23.mta0.migadu.com [91.218.175.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B2A2D62
+        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 23:44:49 -0700 (PDT)
+Message-ID: <585417dc-674d-5efc-c1dd-417ba9092228@linux.dev>
+Date:   Thu, 29 Jun 2023 14:44:33 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 3/3] blk-mq: fix start_time_ns and alloc_time_ns for
- pre-allocated rq
+Subject: Re: [PATCH v3 2/3] blk-mq: ktime_get_ns() only once for batched
+ requests init
 Content-Language: en-US
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     axboe@kernel.dk, tj@kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, zhouchengming@bytedance.com,
         ming.lei@redhat.com
 References: <20230628124546.1056698-1-chengming.zhou@linux.dev>
- <20230628124546.1056698-4-chengming.zhou@linux.dev>
- <20230629053201.GF16819@lst.de>
+ <20230628124546.1056698-3-chengming.zhou@linux.dev>
+ <20230629053001.GE16819@lst.de>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From:   Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20230629053201.GF16819@lst.de>
+In-Reply-To: <20230629053001.GE16819@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -43,31 +43,12 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2023/6/29 13:32, Christoph Hellwig wrote:
->> +/* Set rq alloc and start time when pre-allocated rq is actually used */
->> +static inline void blk_mq_rq_time_init(struct request_queue *q, struct request *rq)
->> +{
->> +	if (blk_mq_need_time_stamp(rq->rq_flags)) {
->> +		u64 now = ktime_get_ns();
->> +
->> +#ifdef CONFIG_BLK_RQ_ALLOC_TIME
->> +		/*
->> +		 * alloc time is only used by iocost for now,
->> +		 * only possible when blk_mq_need_time_stamp().
->> +		 */
->> +		if (blk_queue_rq_alloc_time(q))
->> +			rq->alloc_time_ns = now;
->> +#endif
->> +		rq->start_time_ns = now;
->> +	}
->> +}
-> 
-> No need to pass q separately here, you can just use rq->q.
-> 
-> While you're at it please capitalize the first letter of block comments.
+On 2023/6/29 13:30, Christoph Hellwig wrote:
+> Can we just stash the start time into blk_mq_alloc_data instead of
+> passing down yet another parameter?
 > 
 
-Ok, I will use rq->q and fix the comments in the next version.
+Yes, it's much better.
 
 Thanks.
 
