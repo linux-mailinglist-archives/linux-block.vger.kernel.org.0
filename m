@@ -2,53 +2,153 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E131D742096
-	for <lists+linux-block@lfdr.de>; Thu, 29 Jun 2023 08:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C837420C6
+	for <lists+linux-block@lfdr.de>; Thu, 29 Jun 2023 09:10:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231493AbjF2GqG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 29 Jun 2023 02:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
+        id S232036AbjF2HKv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 29 Jun 2023 03:10:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232277AbjF2GpO (ORCPT
+        with ESMTP id S232022AbjF2HKu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 29 Jun 2023 02:45:14 -0400
-Received: from out-23.mta0.migadu.com (out-23.mta0.migadu.com [91.218.175.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B2A2D62
-        for <linux-block@vger.kernel.org>; Wed, 28 Jun 2023 23:44:49 -0700 (PDT)
-Message-ID: <585417dc-674d-5efc-c1dd-417ba9092228@linux.dev>
-Date:   Thu, 29 Jun 2023 14:44:33 +0800
+        Thu, 29 Jun 2023 03:10:50 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A8BD2114
+        for <linux-block@vger.kernel.org>; Thu, 29 Jun 2023 00:10:48 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-98e109525d6so65841266b.0
+        for <linux-block@vger.kernel.org>; Thu, 29 Jun 2023 00:10:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20221208.gappssmtp.com; s=20221208; t=1688022647; x=1690614647;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=mvBygg2aa08XaO2HSEAFwLjrgCcNfa8tx+XRbswbIi8=;
+        b=CYn4BQ2bQitOEKyuoeRbF1vm3CVE9nOfCrYKNtEyEVpPgmHQXJf7agf1kt6HQq4314
+         wFyBirkA/EeBjG1fN/wNniolJ2ARJBsNe/j+WN+4tyBim4A4ufZaefAkH1ruN0lmyu3s
+         zNums1Yf7LlKq+z6cwK6tyhiIFa/Pzbio3j5qkALChyQG0aWRrfC6/yBqMHbKYaV44oO
+         zPkPPFr3FI/5aMEDWjIH752Wa9ZvZPihbTthq8b4olUPOZYe+4Cd5RdZQed484M6B1Q7
+         u7LCRCtmCLMetYEYx/5+ILHUCT/nikBxWTGFVLJFPOgfl5OJxZiMDnilhik63qFK2kHy
+         13JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688022647; x=1690614647;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mvBygg2aa08XaO2HSEAFwLjrgCcNfa8tx+XRbswbIi8=;
+        b=DWaqDJp2O4g8gb318EJtKCJZzipFApZ6nY34J7Pc6uNlFyK2rMpwDPiUsY2JHlVSwb
+         zO/e9gk8soisb3a6CkISz9fKqI2ngC7pR32OX459uZi7hfH/lQejo4mPsWknIyRLDiYn
+         W8GiTWHaRKk5yxG/ZIntVVymmzsZeTLuAdc1rcIMcmJtoDysRAw14J387SNKJUYTBR4N
+         cRDY5jp/+vkkzlJR6oNUkOixc6v8F0YZp8O9z6U3bUk4UplAs9puxtCqRpfjITGttKpX
+         mNyj4mYcPatCCVqwnsdgEGVf5OiECAWRiKXoC25Tg2b5DHaFC6XPAhEVEKseAeGEORDe
+         GzPw==
+X-Gm-Message-State: AC+VfDxGAtsBfL6Q4VxXwf21qkinqE6pSI/etJMBX3mpWi4fZkILmtl1
+        tXtYhrwYmRMYLt49ccCz0SkqMA==
+X-Google-Smtp-Source: ACHHUZ7UzIjkr8VlmNsWt5MWQnuZXpaVhxM/jqjB5hPC5bq5F0fqbmRT/6N2SczuiwXW59394C/Bug==
+X-Received: by 2002:a17:907:96aa:b0:987:fe18:1c58 with SMTP id hd42-20020a17090796aa00b00987fe181c58mr3087877ejc.35.1688022646904;
+        Thu, 29 Jun 2023 00:10:46 -0700 (PDT)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id bu5-20020a170906a14500b0096f6a131b9fsm6532672ejb.23.2023.06.29.00.10.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jun 2023 00:10:46 -0700 (PDT)
+References: <20230628190649.11233-1-nmi@metaspace.dk>
+ <20230628190649.11233-2-nmi@metaspace.dk>
+ <d23bf48c-5bc9-aab6-4ca2-ebbb24a0878e@kernel.org>
+ <ZJzSjFbzzNxppH7p@ovpn-8-18.pek2.redhat.com>
+User-agent: mu4e 1.10.4; emacs 28.2.50
+From:   "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Damien Le Moal <dlemoal@kernel.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>,
+        open list <linux-kernel@vger.kernel.org>, gost.dev@samsung.com,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH v4 1/4] ublk: change ublk IO command defines to enum
+Date:   Thu, 29 Jun 2023 09:09:07 +0200
+In-reply-to: <ZJzSjFbzzNxppH7p@ovpn-8-18.pek2.redhat.com>
+Message-ID: <87a5wizqto.fsf@metaspace.dk>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/3] blk-mq: ktime_get_ns() only once for batched
- requests init
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, tj@kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhouchengming@bytedance.com,
-        ming.lei@redhat.com
-References: <20230628124546.1056698-1-chengming.zhou@linux.dev>
- <20230628124546.1056698-3-chengming.zhou@linux.dev>
- <20230629053001.GE16819@lst.de>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20230629053001.GE16819@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2023/6/29 13:30, Christoph Hellwig wrote:
-> Can we just stash the start time into blk_mq_alloc_data instead of
-> passing down yet another parameter?
-> 
 
-Yes, it's much better.
+Ming Lei <ming.lei@redhat.com> writes:
 
-Thanks.
+> On Thu, Jun 29, 2023 at 07:47:47AM +0900, Damien Le Moal wrote:
+>> On 6/29/23 04:06, Andreas Hindborg wrote:
+>> > From: Andreas Hindborg <a.hindborg@samsung.com>
+>> > 
+>> > This change is in preparation for zoned storage support.
+>> > 
+>> > Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+>> > ---
+>> >  include/uapi/linux/ublk_cmd.h | 23 +++++++++++++++++------
+>> >  1 file changed, 17 insertions(+), 6 deletions(-)
+>> > 
+>> > diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
+>> > index 4b8558db90e1..471b3b983045 100644
+>> > --- a/include/uapi/linux/ublk_cmd.h
+>> > +++ b/include/uapi/linux/ublk_cmd.h
+>> > @@ -229,12 +229,23 @@ struct ublksrv_ctrl_dev_info {
+>> >  	__u64   reserved2;
+>> >  };
+>> >  
+>> > -#define		UBLK_IO_OP_READ		0
+>> > -#define		UBLK_IO_OP_WRITE		1
+>> > -#define		UBLK_IO_OP_FLUSH		2
+>> > -#define		UBLK_IO_OP_DISCARD	3
+>> > -#define		UBLK_IO_OP_WRITE_SAME	4
+>> > -#define		UBLK_IO_OP_WRITE_ZEROES	5
+>> > +enum ublk_op {
+>> > +	UBLK_IO_OP_READ = 0,
+>> > +	UBLK_IO_OP_WRITE = 1,
+>> > +	UBLK_IO_OP_FLUSH = 2,
+>> > +	UBLK_IO_OP_DISCARD = 3,
+>> > +	UBLK_IO_OP_WRITE_SAME = 4,
+>> > +	UBLK_IO_OP_WRITE_ZEROES = 5,
+>> > +	UBLK_IO_OP_ZONE_OPEN = 10,
+>> > +	UBLK_IO_OP_ZONE_CLOSE = 11,
+>> > +	UBLK_IO_OP_ZONE_FINISH = 12,
+>> > +	UBLK_IO_OP_ZONE_APPEND = 13,
+>> > +	UBLK_IO_OP_ZONE_RESET = 15,
+>> > +	__UBLK_IO_OP_DRV_IN_START = 32,
+>> > +	__UBLK_IO_OP_DRV_IN_END = 96,
+>> > +	__UBLK_IO_OP_DRV_OUT_START = __UBLK_IO_OP_DRV_IN_END,
+>> > +	__UBLK_IO_OP_DRV_OUT_END = 160,
+>> > +};
+>> 
+>> This patch does not do what the title says. You are also introducing the zone
+>> operations, and the very obscure __UBLK_IO_OP_DRV_XXX operations without an
+>> explanation. Also, why the "__" prefix for these ? I do not see the point...
+>
+> It should be to reserve space for ublk passthrough OP.
+>
+>> Given that this is a uapi, a comment to explain the less obvious commands would
+>> be nice.
+>> 
+>> So I think the change to an enum for the existing ops can be done either in
+>> patch 2 or as a separate patch and the introduction of the zone operations done
+>> in patch 3 or as a separate patch.
+>
+> Also it might break userspace by changing to enum from macro for existed
+> definition, cause userspace may check something by '#ifdef UBLK_IO_OP_*',
+> so probably it is better to keep these OPs as enum, or at least keep
+> existed definition as macro.
+
+I can change it back to `#define` again, no problem. I only changed it
+to `enum` on request from Ming [1]
+
+Best regards,
+Andreas
+
+[1] https://lore.kernel.org/all/ZAHeWieKXtgYUbvz@ovpn-8-18.pek2.redhat.com/
 
