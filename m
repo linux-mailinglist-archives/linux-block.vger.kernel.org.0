@@ -2,52 +2,52 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CE40745158
-	for <lists+linux-block@lfdr.de>; Sun,  2 Jul 2023 21:46:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4784674516E
+	for <lists+linux-block@lfdr.de>; Sun,  2 Jul 2023 21:46:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232815AbjGBTqU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 2 Jul 2023 15:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53180 "EHLO
+        id S232853AbjGBTqZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 2 Jul 2023 15:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232253AbjGBTow (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 2 Jul 2023 15:44:52 -0400
+        with ESMTP id S232656AbjGBTpP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 2 Jul 2023 15:45:15 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9622E10FA;
-        Sun,  2 Jul 2023 12:42:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D0035AB;
+        Sun,  2 Jul 2023 12:42:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD76E60C8E;
-        Sun,  2 Jul 2023 19:42:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E21C433CC;
-        Sun,  2 Jul 2023 19:42:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 26D8B60CA3;
+        Sun,  2 Jul 2023 19:42:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AED4C433C9;
+        Sun,  2 Jul 2023 19:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688326933;
-        bh=Jd9SviMyTJhfuFyAzDT+aOfbtj4KgUV9XUqZfotGHn8=;
+        s=k20201202; t=1688326943;
+        bh=zRGwIKu77q4Dz87R/hdFXM3IwpJP8FNt+IzYvxhjIMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2xjRccnABSDwqwOxvZq4OQNQGvRAx56MRIAiVhEFirLrPAQCpP1HkIaFr6pW0Hzc
-         Faj2lfH1vHC5VkNuuWylk4lQ3zeGK38anQu85reptkQos7Su5gycpwdVc4TdpF+9o8
-         KGiv4CIStzhA6GjhhHukskBlApmSN+3CSF+BQZimbZapYcn7/Z5Dk2kN6knfpLrsTh
-         gJrDkWgRJvxSaw8hl7vJ3uS7u0dnFVI+RYVjYUSnpJbC5GkX/+3sEH4hBE71SO/vmq
-         17Vn39IgstCMF+E9uDn//X7oledoKphZsX4Gzubkah4T4mn09ZgTW2vfkLHhB1CD9Q
-         klMnpfhRn141Q==
+        b=fMVRJhTpcQqz4i/yAEOm3ISU04u3UyX6zvpJZz6i/ndGObUvWFZNjgw6NJj6rjTdd
+         Dh6F/PhDDTd1GIQFrqjw0E2GDdhpPlJgg1SZ8/tPuglor/92rAq5iN/TorXnjguSMG
+         9Cz0bgI6OLZ6f38l6SpIbYEQ2xj2TXPv020kzjVzSIGPXNFoXZJLJqaaNikSUDnvNS
+         G47zZJYOmiDZ3RU7YdyLuYFMYOl7+GIwXlQvkHxFu9cmD+/xnzSKRzMPdfmUaQBpDd
+         JmVRO2NkidP5BX7drmAgmhS1K07k0Igk9oF7eFHt3jEF8lY8QT2u2rieEV4SW+PvjD
+         kixZ8pGG7/jDg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhong Jinghua <zhongjinghua@huawei.com>,
         Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, josef@toxicpanda.com,
         linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.4 2/5] nbd: Add the maximum limit of allocated index in nbd_dev_add
-Date:   Sun,  2 Jul 2023 15:42:06 -0400
-Message-Id: <20230702194209.1779267-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 2/5] nbd: Add the maximum limit of allocated index in nbd_dev_add
+Date:   Sun,  2 Jul 2023 15:42:16 -0400
+Message-Id: <20230702194219.1779408-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230702194209.1779267-1-sashal@kernel.org>
-References: <20230702194209.1779267-1-sashal@kernel.org>
+In-Reply-To: <20230702194219.1779408-1-sashal@kernel.org>
+References: <20230702194219.1779408-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.249
+X-stable-base: Linux 4.19.288
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index 218aa7e419700..37994a7a1b6f4 100644
+index 28024248a7b53..5a07964a1e676 100644
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -1708,7 +1708,8 @@ static int nbd_dev_add(int index)
+@@ -1646,7 +1646,8 @@ static int nbd_dev_add(int index)
  		if (err == -ENOSPC)
  			err = -EEXIST;
  	} else {
