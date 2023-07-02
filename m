@@ -2,45 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B6B37450FA
-	for <lists+linux-block@lfdr.de>; Sun,  2 Jul 2023 21:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECD49745134
+	for <lists+linux-block@lfdr.de>; Sun,  2 Jul 2023 21:45:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231978AbjGBTnr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sun, 2 Jul 2023 15:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
+        id S232600AbjGBTpI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sun, 2 Jul 2023 15:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231970AbjGBTnB (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Sun, 2 Jul 2023 15:43:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4F81FDB;
-        Sun,  2 Jul 2023 12:42:00 -0700 (PDT)
+        with ESMTP id S232284AbjGBTnw (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Sun, 2 Jul 2023 15:43:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3CE830C1;
+        Sun,  2 Jul 2023 12:42:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 299FB60D33;
-        Sun,  2 Jul 2023 19:41:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADCDFC433CA;
-        Sun,  2 Jul 2023 19:41:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CFA1D60C7A;
+        Sun,  2 Jul 2023 19:41:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93045C433C9;
+        Sun,  2 Jul 2023 19:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688326863;
-        bh=cEeFawSGtFwo6zua+qk5x1zyKvWqEF/YF/YPshZrmb8=;
+        s=k20201202; t=1688326868;
+        bh=FjJ6FW31syxeWUyhKx4k1aiKMPw5gGnc4GzHlWTbudM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fg5STtJoec53f48nzs1eVfRdIYOtM5KBdhWPIXAR8J6yeo1UPi/Da4DT02083eAmk
-         DO+xXAdafBQ1TF3BVfbxjff4fdb0HTK2caDwCw2IfRlLBjH2A61RHFNnxGbk1ibhf0
-         l9pnRC/6i5xX578awQ0khGeXCbLndXWiV/wXQAHTC+jqqrIzqP/tfearwpKd8qx1y9
-         WHrQj2CB452uhqAYpCJTMeXsqUz2zKkCd4D913Pq9fwpSPocR7vieWXIWi7xTlY6Rx
-         pK+U/kWDLbXgcnxH11kGsr5b/73alJ/EabHacJNB7RABmqUB0sJKERa7ZDdgbkDq1Z
-         nwJ+EK3XoJ0rg==
+        b=Cz7eK3G98lQ10lUgl3bGCavAZYP8/xosmbm6sKJCp5ZmMmYdDm6rLc6GHvHnPjbUQ
+         /1IyWtV1sIMqHx4qt1k2g8DAIub/sT420WLC5ZFbTIimmjqVivdI5h3vcQC1Gr/XyS
+         WsiU8djVxvzDyB7T3h3M5bBmTvoyk6Toj2t+RIG92lW0h+JxyqsBGR7t7VayuYK6vs
+         Sy3q1p4OSVzv3vGctZQB9LPmohJz0/VLIz9lWFyjsSWc8LO9SZrekMMDjRtEciAO86
+         9wb0t3ook7O0XzVETqru+DXQXrymI5x0xlL6G0x5Ktan5fQtRwm2N7Vso0yP+nY9nD
+         tv+dVYG6fv3nw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhong Jinghua <zhongjinghua@huawei.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, josef@toxicpanda.com,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 6.3 05/14] nbd: Add the maximum limit of allocated index in nbd_dev_add
-Date:   Sun,  2 Jul 2023 15:40:44 -0400
-Message-Id: <20230702194053.1777356-5-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Guangwu Zhang <guazhang@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.3 09/14] blk-mq: fix NULL dereference on q->elevator in blk_mq_elv_switch_none
+Date:   Sun,  2 Jul 2023 15:40:48 -0400
+Message-Id: <20230702194053.1777356-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230702194053.1777356-1-sashal@kernel.org>
 References: <20230702194053.1777356-1-sashal@kernel.org>
@@ -49,8 +49,8 @@ X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.3.11
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -59,39 +59,59 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Zhong Jinghua <zhongjinghua@huawei.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit f12bc113ce904777fd6ca003b473b427782b3dde ]
+[ Upstream commit 245165658e1c9f95c0fecfe02b9b1ebd30a1198a ]
 
-If the index allocated by idr_alloc greater than MINORMASK >> part_shift,
-the device number will overflow, resulting in failure to create a block
-device.
+After grabbing q->sysfs_lock, q->elevator may become NULL because of
+elevator switch.
 
-Fix it by imiting the size of the max allocation.
+Fix the NULL dereference on q->elevator by checking it with lock.
 
-Signed-off-by: Zhong Jinghua <zhongjinghua@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20230605122159.2134384-1-zhongjinghua@huaweicloud.com
+Reported-by: Guangwu Zhang <guazhang@redhat.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Link: https://lore.kernel.org/r/20230616132354.415109-1-ming.lei@redhat.com
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ block/blk-mq.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index dd0adcf745ff5..f0cdc5c576d9d 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1776,7 +1776,8 @@ static struct nbd_device *nbd_dev_add(int index, unsigned int refs)
- 		if (err == -ENOSPC)
- 			err = -EEXIST;
- 	} else {
--		err = idr_alloc(&nbd_index_idr, nbd, 0, 0, GFP_KERNEL);
-+		err = idr_alloc(&nbd_index_idr, nbd, 0,
-+				(MINORMASK >> part_shift) + 1, GFP_KERNEL);
- 		if (err >= 0)
- 			index = err;
- 	}
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index f2e2ffd135baf..e5f885ff018b0 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -4633,9 +4633,6 @@ static bool blk_mq_elv_switch_none(struct list_head *head,
+ {
+ 	struct blk_mq_qe_pair *qe;
+ 
+-	if (!q->elevator)
+-		return true;
+-
+ 	qe = kmalloc(sizeof(*qe), GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY);
+ 	if (!qe)
+ 		return false;
+@@ -4643,6 +4640,12 @@ static bool blk_mq_elv_switch_none(struct list_head *head,
+ 	/* q->elevator needs protection from ->sysfs_lock */
+ 	mutex_lock(&q->sysfs_lock);
+ 
++	/* the check has to be done with holding sysfs_lock */
++	if (!q->elevator) {
++		kfree(qe);
++		goto unlock;
++	}
++
+ 	INIT_LIST_HEAD(&qe->node);
+ 	qe->q = q;
+ 	qe->type = q->elevator->type;
+@@ -4650,6 +4653,7 @@ static bool blk_mq_elv_switch_none(struct list_head *head,
+ 	__elevator_get(qe->type);
+ 	list_add(&qe->node, head);
+ 	elevator_disable(q);
++unlock:
+ 	mutex_unlock(&q->sysfs_lock);
+ 
+ 	return true;
 -- 
 2.39.2
 
