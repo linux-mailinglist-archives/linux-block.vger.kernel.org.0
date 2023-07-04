@@ -2,144 +2,148 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37C397476A6
-	for <lists+linux-block@lfdr.de>; Tue,  4 Jul 2023 18:28:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C8EC747732
+	for <lists+linux-block@lfdr.de>; Tue,  4 Jul 2023 18:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231272AbjGDQ2p (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 4 Jul 2023 12:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39582 "EHLO
+        id S229647AbjGDQwQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 4 Jul 2023 12:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230489AbjGDQ2o (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Jul 2023 12:28:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C05E7B;
-        Tue,  4 Jul 2023 09:28:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 20F4061302;
-        Tue,  4 Jul 2023 16:28:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8C9C433C7;
-        Tue,  4 Jul 2023 16:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688488122;
-        bh=ZbfFFniWhSahnp7jSJ3oIaV9POCcbiLvynkhKSgpXe4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rYhrvsNpwqCJwn41eekT5X8PaPVwBQ6ub8Netmz5zCPt/qzVPnkLxH2Kjiq9nv1Cm
-         yUeZjhUrBrMq2ThgKqf6VqdUdYp1P2/zpT5yvYD7siJiybpmyKwoPpaa5gXpr6CMMv
-         akxinQnPPwXHrxodKNqiTb/6JTMYG4lY9mmxI0dhS9y7wawVJYcWdRHa64BuE/8weJ
-         eX7co1v82fmGWp5kKAm9BaeWX8/tRjFqKX1EDWvGtKd5aZ5LCCXaAY86lmuE5eezEu
-         Ix6OVXIAm9Wp1Cia2H4ClFO9rKC6nhjukt+dwjQnGXu6F26u0+VUNsprhPIs/s+nRo
-         qHwq5/jxHTM8Q==
-Date:   Tue, 4 Jul 2023 10:28:36 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        with ESMTP id S230156AbjGDQwP (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 4 Jul 2023 12:52:15 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD371AC
+        for <linux-block@vger.kernel.org>; Tue,  4 Jul 2023 09:52:13 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-51e00695e21so3204097a12.1
+        for <linux-block@vger.kernel.org>; Tue, 04 Jul 2023 09:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20221208.gappssmtp.com; s=20221208; t=1688489532; x=1691081532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NCEuud2npCtaP+WAwUQoRnlKY8hdkU19aLP9Y84PvRg=;
+        b=VI57yG1MiCludDVUSlMzYw8RlbygdCdy7DU1GtAtpp4ZqiXttzsdWHfm0fk/OIyF1K
+         6GRq0T/Hw23jT/wf2JejLA58GHEmUyowJjP92JgIxOM7fdJq+iCsUZprvS3HV0u9PBWH
+         oemiTCPAm6+QgcYQUIHxHTkCpSkDEwM24DTIzucfIAhLQ6pRorQZZd873SMoFgtR9YZL
+         tGx0ZMzuhLwXRX1/m0e/zNLGAyZDVpJ+jcQGbjh27qT+fhjYnD4cpXXJbmIWtNxZRlhu
+         wVI7vuHqkQE+eTtqi8bromcpMh+TzHh/pDx8HEUe1I862SRmUfSqX2bYDhEa4w+OQKnG
+         +tdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688489532; x=1691081532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NCEuud2npCtaP+WAwUQoRnlKY8hdkU19aLP9Y84PvRg=;
+        b=mIEH9zJf3n67axo1Jf0V5S7RiRudWVZwBxgG7z1ErFY9lymL0sp54ZsrXoMCxi+UyD
+         7P2y3g3xTpI6sAjyIj///ZVjTA8lIuUWijMe/3YU8hEDZX8WnwgL2RiTd9N3AiiGy3j6
+         cpmVpSe1CwUY5GFpjMw2EfBo17byoKKJb/v0ox3bDg7Ifve6SXo+IQMpN+QWUZUJwJBl
+         3alTPiihA3YgypXrGMcvbL/vVIZdiIO5N0xEmAPGWmE0NUYQRT2SnHKOKTklZjhpq8mb
+         K6efpqoCbd5j0Ka4jyNlMyTEHnZNKHUX0ogQCVhaMdPKEFkHOShvXuYpiot0MHHAjaMr
+         v6Vg==
+X-Gm-Message-State: ABy/qLZyvu+B+3F7AH/tCNgM5igNWEUt70yNyJwVhlBA7slTFTfmQIEc
+        ZzTpF8pU3zRwcU1d8O0MDwLwtw==
+X-Google-Smtp-Source: APBJJlFmC1hy+2lDGDv/PJFcapa3pXqHpnvzlzeQUFrvLzx32a7XVI0J6/Qfxr3huJyRQP03KgwJMA==
+X-Received: by 2002:aa7:df93:0:b0:51d:a124:62cb with SMTP id b19-20020aa7df93000000b0051da12462cbmr10146841edy.28.1688489531957;
+        Tue, 04 Jul 2023 09:52:11 -0700 (PDT)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id d17-20020a056402001100b0051a53d7b160sm11969824edu.80.2023.07.04.09.52.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jul 2023 09:52:11 -0700 (PDT)
+From:   Andreas Hindborg <nmi@metaspace.dk>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-kernel@vger.kernel.org (open list),
+        Matias Bjorling <Matias.Bjorling@wdc.com>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
         Jens Axboe <axboe@kernel.dk>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>, gost.dev@samsung.com,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
         Christoph Hellwig <hch@infradead.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        Joern Engel <joern@lazybastard.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Song Liu <song@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH 01/32] block: Provide blkdev_get_handle_* functions
-Message-ID: <ZKRItBRhm8f5Vba/@kbusch-mbp>
-References: <20230629165206.383-1-jack@suse.cz>
- <20230704122224.16257-1-jack@suse.cz>
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andreas Hindborg <a.hindborg@samsung.com>
+Subject: [PATCH v5 0/5] ublk: enable zoned storage support
+Date:   Tue,  4 Jul 2023 18:52:04 +0200
+Message-ID: <20230704165209.514591-1-nmi@metaspace.dk>
+X-Mailer: git-send-email 2.41.0
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230704122224.16257-1-jack@suse.cz>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, Jul 04, 2023 at 02:21:28PM +0200, Jan Kara wrote:
-> +struct bdev_handle *blkdev_get_handle_by_dev(dev_t dev, blk_mode_t mode,
-> +		void *holder, const struct blk_holder_ops *hops)
-> +{
-> +	struct bdev_handle *handle = kmalloc(sizeof(struct bdev_handle),
-> +					     GFP_KERNEL);
+From: Andreas Hindborg <a.hindborg@samsung.com>
 
-I believe 'sizeof(*handle)' is the preferred style.
+Hi All,
 
-> +	struct block_device *bdev;
-> +
-> +	if (!handle)
-> +		return ERR_PTR(-ENOMEM);
-> +	bdev = blkdev_get_by_dev(dev, mode, holder, hops);
-> +	if (IS_ERR(bdev))
-> +		return ERR_CAST(bdev);
+This patch set adds zoned storage support to `ublk`. The first 3 patches do some
+house cleaning in preparation for the last patch. The last patch adds support
+for report_zones and the following operations:
 
-Need a 'kfree(handle)' before the error return. Or would it be simpler
-to get the bdev first so you can check the mode settings against a
-read-only bdev prior to the kmalloc?
+ - REQ_OP_ZONE_OPEN
+ - REQ_OP_ZONE_CLOSE
+ - REQ_OP_ZONE_FINISH
+ - REQ_OP_ZONE_RESET
+ - REQ_OP_ZONE_APPEND
 
-> +	handle->bdev = bdev;
-> +	handle->holder = holder;
-> +	return handle;
-> +}
-> +EXPORT_SYMBOL(blkdev_get_handle_by_dev);
-> +
->  /**
->   * blkdev_get_by_path - open a block device by name
->   * @path: path to the block device to open
-> @@ -884,6 +902,28 @@ struct block_device *blkdev_get_by_path(const char *path, blk_mode_t mode,
->  }
->  EXPORT_SYMBOL(blkdev_get_by_path);
->  
-> +struct bdev_handle *blkdev_get_handle_by_path(const char *path, blk_mode_t mode,
-> +		void *holder, const struct blk_holder_ops *hops)
-> +{
-> +	struct bdev_handle *handle;
-> +	dev_t dev;
-> +	int error;
-> +
-> +	error = lookup_bdev(path, &dev);
-> +	if (error)
-> +		return ERR_PTR(error);
-> +
-> +	handle = blkdev_get_handle_by_dev(dev, mode, holder, hops);
-> +	if (!IS_ERR(handle) && (mode & BLK_OPEN_WRITE) &&
-> +	    bdev_read_only(handle->bdev)) {
-> +		blkdev_handle_put(handle);
-> +		return ERR_PTR(-EACCES);
-> +	}
-> +
-> +	return handle;
-> +}
-> +EXPORT_SYMBOL(blkdev_get_handle_by_path);
+Changes for v5:
+ - Merge zone append patch and zone ops patch
+ - Use defines instead of enum for opcodes
+ - Add a helper `ublk_dev_is_zoned()`
+ - Add a helper `ublk_dev_is_user_copy()`
+ - Fix a leak in `ublk_report_zones()`
+ - Use goto to handle cleanup in `ublk_report_zones()`
+ - Change name of module from `ublk` back to `ublk_drv` and rename source files
+ - Fail to add device if user copy is not supported (implicitly fail to start device under same condition)
+ - Fail to add device if kernel is not compiled with CONFIG_BLK_DEV_ZONED
+ - Fail to apply device parameters if chunk_sectors is not set while zoned support is requested
+ - Change kconfig entry
+ - Check max open/active zones are valid
+ - Document UBLK_IO_OP_REPORT_ZONES buffer format
+ - Use function stubs rather than if(IS_ENABLED(...))
+ - Improve validation of zoned parameters
+
+A user space component based on ubdsrv is available for testing [1] with the
+"loop" target. No changes are required for user space for v4 -> v5.
+
+Read/write and zone operations are tested with zenfs [3].
+
+The zone append path is tested with fio -> zonefs -> ublk -> null_blk.
+
+The implementation of zone append requires ublk user copy feature, and therefore
+the series is based on branch for-next (6afa337a3789) of [4].
+
+[1] https://github.com/metaspace/ubdsrv/commit/7de0d901c329fde7dc5a2e998952dd88bf5e668b
+[2] https://lore.kernel.org/linux-block/20230316145539.300523-1-nmi@metaspace.dk/
+[3] https://github.com/westerndigitalcorporation/zenfs
+[4] https://git.kernel.dk/linux.git
+
+Andreas Hindborg (5):
+  ublk: add opcode offsets for DRV_IN/DRV_OUT
+  ublk: move types to shared header file
+  ublk: rename driver files to prepare for multiple translation units
+  ublk: add helper to check if device supports user copy
+  ublk: enable zoned storage support
+
+ MAINTAINERS                          |   4 +-
+ drivers/block/Kconfig                |   5 +
+ drivers/block/Makefile               |   2 +
+ drivers/block/ublk-zoned.c           | 225 +++++++++++++++++++++++++++
+ drivers/block/{ublk_drv.c => ublk.c} | 186 ++++++++++------------
+ drivers/block/ublk.h                 | 180 +++++++++++++++++++++
+ include/uapi/linux/ublk_cmd.h        |  44 +++++-
+ 7 files changed, 533 insertions(+), 113 deletions(-)
+ create mode 100644 drivers/block/ublk-zoned.c
+ rename drivers/block/{ublk_drv.c => ublk.c} (95%)
+ create mode 100644 drivers/block/ublk.h
+
+
+base-commit: 3261ea42710e9665c9151006049411bd23b5411f
+-- 
+2.41.0
+
