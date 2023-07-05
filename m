@@ -2,98 +2,366 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E0B474823B
-	for <lists+linux-block@lfdr.de>; Wed,  5 Jul 2023 12:35:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DA7C748294
+	for <lists+linux-block@lfdr.de>; Wed,  5 Jul 2023 12:54:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231288AbjGEKf0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 5 Jul 2023 06:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50960 "EHLO
+        id S232226AbjGEKyp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 5 Jul 2023 06:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjGEKfZ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Jul 2023 06:35:25 -0400
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F170DD
-        for <linux-block@vger.kernel.org>; Wed,  5 Jul 2023 03:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1688553324; x=1720089324;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hRz7EOsh46CdPhiBYms1J/wAfbB6kT7JWaKY8eBnyos=;
-  b=JoKHPz4gnafpwq4k0a4bNLjF8Z+kTsaUKNyGXSDnOYQbKGKdEYMeNtpz
-   h+7Hls/j24ZjM5wdqgULME77s+qsZwErvvFP0thBli4uIWNlR2hFpWLSI
-   5kGefY08A04fnQSw8qmh1RYdGnWvHWtZm61rVhYZCpwVu2UBAoNEiCWsE
-   7bHD/2xH3tGlxI1yrUXVNO8Iq3ugr7hDOImULV5vwUxUDxg6r6msPe+z9
-   Jq8XsdsR/lwXPGKmXZkUtOzuArv9FONKc4ExZ6AvwShoMB9fvYoqzL4Jy
-   oz1jIOTqcHaODIEI82wyYZQ2TJvPWAksXCBNzZiTe4lnTmUC1IhCeCdAv
-   g==;
-X-IronPort-AV: E=Sophos;i="6.01,182,1684771200"; 
-   d="scan'208";a="237577993"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Jul 2023 18:35:23 +0800
-IronPort-SDR: 8YEc2GFCd/jxkSJ0rcJrsOlKrDQHtQkDeLVROeujS5cQdg2qn6bhv2+OoRUCwtcxEaEu35hM+3
- C0PahQwnsfChLKRZhv2PLBBFyExCb7GpzuFLN5DIQaZOWykhoqKPi6Jtsftrrcjk/2gEUx8vrj
- VPQlx427Dc0T/MhidcAVz2BbpLurtixao/99IdC361kGfpez024GOX5zHooFE6pXi0Qfu7ihPd
- ZpOilDM+JqAuZ2qTkpdumQ3kSawJuMEW+A4RaAvjojX6qOaLBsCGsMqs+DlnWrwsrPY9x7F4Zb
- Pe0=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jul 2023 02:49:33 -0700
-IronPort-SDR: 8UDBdQOThTa8TCC24AttF18Z3sRJPmwPjUsCgIyAAs3p1KZ+REkmL4QQIpTxdGczq79a6hcQAY
- 4lZ2TxH9xCGF7FmQiM0VdRXE9IapNMspXXoJro8eU1n37p8iLLh6mxKKyxOgCFjyCo9qVWI0Ng
- UbcH6Ka8IXrRi77bb4zlAFUDDY2DqaoKlKMglP6Imnao2HjiorenypsRDVKvylL6X9OkFLMCU0
- dQcZeywZFbIe2ggLfEYokrmQiUOP51SrZr2QStIiwxnmwAk6WMcj+S/UhmFOe4Wvzdu/Ht3gvT
- DDQ=
-WDCIronportException: Internal
-Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
-  by uls-op-cesaip02.wdc.com with ESMTP; 05 Jul 2023 03:35:23 -0700
-From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To:     linux-block@vger.kernel.org
+        with ESMTP id S231565AbjGEKyo (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 5 Jul 2023 06:54:44 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586081709
+        for <linux-block@vger.kernel.org>; Wed,  5 Jul 2023 03:54:42 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-51dff848168so5410335a12.2
+        for <linux-block@vger.kernel.org>; Wed, 05 Jul 2023 03:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20221208.gappssmtp.com; s=20221208; t=1688554481; x=1691146481;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=836U1ncNWnnbbFv6Lbmn9bhPGFpngTvn+a4DofbrEMA=;
+        b=yzCkyk8Dv6B5YuQMPqNVIszW1sTgXbusV4HIiIyHUuwzJv3O0z6/0wsq093wZotjBg
+         E7jaAij+YLBrc5uRZutdiObSVtEDkE3T+/49cYGma6s72SzUORCsXZxNwJRLT4gvI06I
+         fJAqQ8kbdNSZw91klUiFogZAfBxZuoomD1nU75RaE7DpxO49iIEVWDwzVSarmiqw7rKJ
+         Ji+xhhR26vQXow5NfWoz347beHQKXq5SOoEffpW0gzrG5QHdCSlQVJQ2FZsjcTzZGWnn
+         qJIYM1STfz+2ue3s0IbiUfn7NQxZcJ3s/r0x7HCjqmeibqKBvYws75rSBrfZsm8+DIEF
+         +e1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688554481; x=1691146481;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=836U1ncNWnnbbFv6Lbmn9bhPGFpngTvn+a4DofbrEMA=;
+        b=L6X0q8zkdnfoZJwGHwYqdZiD50miaLcvL9Pih8HWyujzZciOGFFYkzoMlZRm9v+Hx/
+         qaAsDjoDBkBMUYpgiUBdoCoqbnRPlYPjuzb1DgS37S7/QMjOZ8yI6RPymDXdUYsKh2vJ
+         lqpVZ4b0knabSa/MCvcBmu0PKQ3gXqJZ2RGVJ96mQtbgNMl76iJ3Z0blJTo4FNTw1ggn
+         vp9GN+UdU8SbVT/cpqUOiIX3NQC6MXaKRx+/MFHIJX+2F+tgpf1XlUxyyQTk47xLtZ0y
+         8lYcDHMFkEyZwrLtkbn6AXiy6mtF0z/Uvt0wb/dh+3/SK8mcxapNXB38EkAdck+mK1nh
+         FURg==
+X-Gm-Message-State: ABy/qLYSgugjNdigpjYGc/BzCIYXAm8HGcM9BATL4mO8UD1/uj4N7WvT
+        9y33d97X74TfdRo27uPBYFrYXQ==
+X-Google-Smtp-Source: APBJJlHIKmDtZd4qNT6fHFE4sE2GNLPsihbinAxZ7hQfL5VA7OC5Cg9Uow4Bn8sz6N8BRmmRhMW4EA==
+X-Received: by 2002:aa7:d958:0:b0:51d:f3a6:5eef with SMTP id l24-20020aa7d958000000b0051df3a65eefmr12292082eds.36.1688554480673;
+        Wed, 05 Jul 2023 03:54:40 -0700 (PDT)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id v1-20020a056402184100b0050488d1d376sm12982957edy.0.2023.07.05.03.54.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jul 2023 03:54:40 -0700 (PDT)
+References: <20230704165209.514591-1-nmi@metaspace.dk>
+ <20230704165209.514591-3-nmi@metaspace.dk>
+ <b5dbd5e0-417d-e33b-baf0-b6109882bc3a@kernel.org>
+User-agent: mu4e 1.10.4; emacs 28.2.50
+From:   "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To:     Damien Le Moal <dlemoal@kernel.org>
 Cc:     Ming Lei <ming.lei@redhat.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests] common/ublk: avoid modprobe failure for built-in ublk_drv
-Date:   Wed,  5 Jul 2023 19:35:22 +0900
-Message-Id: <20230705103522.3383196-1-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.40.1
+        open list <linux-kernel@vger.kernel.org>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>, gost.dev@samsung.com,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v5 2/5] ublk: move types to shared header file
+Date:   Wed, 05 Jul 2023 12:50:28 +0200
+In-reply-to: <b5dbd5e0-417d-e33b-baf0-b6109882bc3a@kernel.org>
+Message-ID: <875y6yd3wz.fsf@metaspace.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-When ublk_drv driver is not a loadable module but a built-in module,
-modprobe for the driver fails in _init_ublk. This results in unexpected
-test case skips with the message "requires ublk_drv".
 
-To not skip the test cases with built-in ublk_drv, call modprobe only
-when the driver is loadable and its module file exists. Also, do not set
-SKIP_REASONS to handle modprobe failure as test case failure.
+Damien Le Moal <dlemoal@kernel.org> writes:
 
-Fixes: 840ccf1fc33e ("block/033: add test to cover gendisk leak")
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- common/ublk | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> On 7/5/23 01:52, Andreas Hindborg wrote:
+>> From: Andreas Hindborg <a.hindborg@samsung.com>
+>> 
+>> This change is in preparation for ublk zoned storage support.
+>> 
+>> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+>
+> A couple of nits below. Otherwise looks OK to me.
+>
+> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+>
+> That said, your patch 5 still adds ublk-zoned.c, which Christoph commented that
+> this may not be needed given that zone support does not add that much code.
+> Without introducing this new file, this patch, as well as patch 3 would not be
+> needed and patch 5 would be simplified a little.
+>
+> If you really prefer (or Ming does) having the zone code separated, I would
+> suggest moving the ublk driver under its own "ublk" directory under
+> drivers/block/ (similarly to nullblk). That would simplify the Kconfig too.
 
-diff --git a/common/ublk b/common/ublk
-index 198c4db..8278d56 100644
---- a/common/ublk
-+++ b/common/ublk
-@@ -27,8 +27,7 @@ _init_ublk() {
- 	_remove_ublk_devices > /dev/null 2>&1
- 
- 	modprobe -rq ublk_drv
--	if ! modprobe ublk_drv; then
--		SKIP_REASONS+=("requires ublk_drv")
-+	if _module_file_exists ublk_drv && ! modprobe ublk_drv; then
- 		return 1
- 	fi
- 
--- 
-2.40.1
+I am fine either way. I don't think Ming commented on this. It seems
+both you and Christoph prefer just the 1 translation unit, so I might as
+well change it back to that.
+
+BR Andreas
+
+>
+>> ---
+>>  MAINTAINERS              |   1 +
+>>  drivers/block/ublk_drv.c |  92 +---------------------------------
+>>  drivers/block/ublk_drv.h | 103 +++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 105 insertions(+), 91 deletions(-)
+>>  create mode 100644 drivers/block/ublk_drv.h
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 27ef11624748..ace71c90751c 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -21554,6 +21554,7 @@ L:	linux-block@vger.kernel.org
+>>  S:	Maintained
+>>  F:	Documentation/block/ublk.rst
+>>  F:	drivers/block/ublk_drv.c
+>> +F:	drivers/block/ublk_drv.h
+>>  F:	include/uapi/linux/ublk_cmd.h
+>>  
+>>  UCLINUX (M68KNOMMU AND COLDFIRE)
+>> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+>> index 1c823750c95a..bca0c4e1cfd8 100644
+>> --- a/drivers/block/ublk_drv.c
+>> +++ b/drivers/block/ublk_drv.c
+>> @@ -45,6 +45,7 @@
+>>  #include <linux/namei.h>
+>>  #include <linux/kref.h>
+>>  #include <uapi/linux/ublk_cmd.h>
+>> +#include "ublk_drv.h"
+>>  
+>>  #define UBLK_MINORS		(1U << MINORBITS)
+>>  
+>> @@ -62,63 +63,11 @@
+>>  #define UBLK_PARAM_TYPE_ALL (UBLK_PARAM_TYPE_BASIC | \
+>>  		UBLK_PARAM_TYPE_DISCARD | UBLK_PARAM_TYPE_DEVT)
+>>  
+>> -struct ublk_rq_data {
+>> -	struct llist_node node;
+>> -
+>> -	struct kref ref;
+>> -};
+>>  
+>>  struct ublk_uring_cmd_pdu {
+>>  	struct ublk_queue *ubq;
+>>  };
+>>  
+>> -/*
+>> - * io command is active: sqe cmd is received, and its cqe isn't done
+>> - *
+>> - * If the flag is set, the io command is owned by ublk driver, and waited
+>> - * for incoming blk-mq request from the ublk block device.
+>> - *
+>> - * If the flag is cleared, the io command will be completed, and owned by
+>> - * ublk server.
+>> - */
+>> -#define UBLK_IO_FLAG_ACTIVE	0x01
+>> -
+>> -/*
+>> - * IO command is completed via cqe, and it is being handled by ublksrv, and
+>> - * not committed yet
+>> - *
+>> - * Basically exclusively with UBLK_IO_FLAG_ACTIVE, so can be served for
+>> - * cross verification
+>> - */
+>> -#define UBLK_IO_FLAG_OWNED_BY_SRV 0x02
+>> -
+>> -/*
+>> - * IO command is aborted, so this flag is set in case of
+>> - * !UBLK_IO_FLAG_ACTIVE.
+>> - *
+>> - * After this flag is observed, any pending or new incoming request
+>> - * associated with this io command will be failed immediately
+>> - */
+>> -#define UBLK_IO_FLAG_ABORTED 0x04
+>> -
+>> -/*
+>> - * UBLK_IO_FLAG_NEED_GET_DATA is set because IO command requires
+>> - * get data buffer address from ublksrv.
+>> - *
+>> - * Then, bio data could be copied into this data buffer for a WRITE request
+>> - * after the IO command is issued again and UBLK_IO_FLAG_NEED_GET_DATA is unset.
+>> - */
+>> -#define UBLK_IO_FLAG_NEED_GET_DATA 0x08
+>> -
+>> -struct ublk_io {
+>> -	/* userspace buffer address from io cmd */
+>> -	__u64	addr;
+>> -	unsigned int flags;
+>> -	int res;
+>> -
+>> -	struct io_uring_cmd *cmd;
+>> -};
+>> -
+>>  struct ublk_queue {
+>>  	int q_id;
+>>  	int q_depth;
+>> @@ -140,45 +89,6 @@ struct ublk_queue {
+>>  
+>>  #define UBLK_DAEMON_MONITOR_PERIOD	(5 * HZ)
+>>  
+>> -struct ublk_device {
+>> -	struct gendisk		*ub_disk;
+>> -
+>> -	char	*__queues;
+>> -
+>> -	unsigned int	queue_size;
+>> -	struct ublksrv_ctrl_dev_info	dev_info;
+>> -
+>> -	struct blk_mq_tag_set	tag_set;
+>> -
+>> -	struct cdev		cdev;
+>> -	struct device		cdev_dev;
+>> -
+>> -#define UB_STATE_OPEN		0
+>> -#define UB_STATE_USED		1
+>> -#define UB_STATE_DELETED	2
+>> -	unsigned long		state;
+>> -	int			ub_number;
+>> -
+>> -	struct mutex		mutex;
+>> -
+>> -	spinlock_t		mm_lock;
+>> -	struct mm_struct	*mm;
+>> -
+>> -	struct ublk_params	params;
+>> -
+>> -	struct completion	completion;
+>> -	unsigned int		nr_queues_ready;
+>> -	unsigned int		nr_privileged_daemon;
+>> -
+>> -	/*
+>> -	 * Our ubq->daemon may be killed without any notification, so
+>> -	 * monitor each queue's daemon periodically
+>> -	 */
+>> -	struct delayed_work	monitor_work;
+>> -	struct work_struct	quiesce_work;
+>> -	struct work_struct	stop_work;
+>> -};
+>> -
+>>  /* header of ublk_params */
+>>  struct ublk_params_header {
+>>  	__u32	len;
+>> diff --git a/drivers/block/ublk_drv.h b/drivers/block/ublk_drv.h
+>> new file mode 100644
+>> index 000000000000..2a4ab721d513
+>> --- /dev/null
+>> +++ b/drivers/block/ublk_drv.h
+>> @@ -0,0 +1,103 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +
+>> +#ifndef _UBLK_DRV_H
+>> +#define _UBLK_DRV_H
+>
+> Nit: I think you can drop the leading "_".
+>
+>> +
+>> +#include <uapi/linux/ublk_cmd.h>
+>> +#include <linux/blk-mq.h>
+>> +#include <linux/cdev.h>
+>> +
+>> +/*
+>> + * io command is active: sqe cmd is received, and its cqe isn't done
+>> + *
+>> + * If the flag is set, the io command is owned by ublk driver, and waited
+>> + * for incoming blk-mq request from the ublk block device.
+>> + *
+>> + * If the flag is cleared, the io command will be completed, and owned by
+>> + * ublk server.
+>> + */
+>> +#define UBLK_IO_FLAG_ACTIVE	0x01
+>> +
+>> +/*
+>> + * IO command is completed via cqe, and it is being handled by ublksrv, and
+>> + * not committed yet
+>> + *
+>> + * Basically exclusively with UBLK_IO_FLAG_ACTIVE, so can be served for
+>> + * cross verification
+>> + */
+>> +#define UBLK_IO_FLAG_OWNED_BY_SRV 0x02
+>> +
+>> +/*
+>> + * IO command is aborted, so this flag is set in case of
+>> + * !UBLK_IO_FLAG_ACTIVE.
+>> + *
+>> + * After this flag is observed, any pending or new incoming request
+>> + * associated with this io command will be failed immediately
+>> + */
+>> +#define UBLK_IO_FLAG_ABORTED 0x04
+>> +
+>> +/*
+>> + * UBLK_IO_FLAG_NEED_GET_DATA is set because IO command requires
+>> + * get data buffer address from ublksrv.
+>> + *
+>> + * Then, bio data could be copied into this data buffer for a WRITE request
+>> + * after the IO command is issued again and UBLK_IO_FLAG_NEED_GET_DATA is unset.
+>> + */
+>> +#define UBLK_IO_FLAG_NEED_GET_DATA 0x08
+>> +
+>> +
+>
+> Nit: extra blank line not needed.
+>
+>> +struct ublk_device {
+>> +	struct gendisk		*ub_disk;
+>> +
+>> +	char	*__queues;
+>> +
+>> +	unsigned int	queue_size;
+>> +	struct ublksrv_ctrl_dev_info	dev_info;
+>> +
+>> +	struct blk_mq_tag_set	tag_set;
+>> +
+>> +	struct cdev		cdev;
+>> +	struct device		cdev_dev;
+>> +
+>> +#define UB_STATE_OPEN		0
+>> +#define UB_STATE_USED		1
+>> +#define UB_STATE_DELETED	2
+>> +	unsigned long		state;
+>> +	int			ub_number;
+>> +
+>> +	struct mutex		mutex;
+>> +
+>> +	spinlock_t		mm_lock;
+>> +	struct mm_struct	*mm;
+>> +
+>> +	struct ublk_params	params;
+>> +
+>> +	struct completion	completion;
+>> +	unsigned int		nr_queues_ready;
+>> +	unsigned int		nr_privileged_daemon;
+>> +
+>> +	/*
+>> +	 * Our ubq->daemon may be killed without any notification, so
+>> +	 * monitor each queue's daemon periodically
+>> +	 */
+>> +	struct delayed_work	monitor_work;
+>> +	struct work_struct	quiesce_work;
+>> +	struct work_struct	stop_work;
+>> +};
+>> +
+>> +struct ublk_rq_data {
+>> +	struct llist_node node;
+>> +
+>> +	struct kref ref;
+>> +};
+>> +
+>> +struct ublk_io {
+>> +	/* userspace buffer address from io cmd */
+>> +	__u64 addr;
+>> +	unsigned int flags;
+>> +	int res;
+>> +
+>> +	struct io_uring_cmd *cmd;
+>> +};
+>> +
+>> +#endif
 
