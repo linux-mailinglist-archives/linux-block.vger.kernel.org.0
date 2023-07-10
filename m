@@ -2,103 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F50574DE60
-	for <lists+linux-block@lfdr.de>; Mon, 10 Jul 2023 21:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F45774DE79
+	for <lists+linux-block@lfdr.de>; Mon, 10 Jul 2023 21:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229664AbjGJTmj (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 10 Jul 2023 15:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
+        id S231238AbjGJTrp (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 10 Jul 2023 15:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjGJTmi (ORCPT
+        with ESMTP id S229921AbjGJTro (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 10 Jul 2023 15:42:38 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCAB5136;
-        Mon, 10 Jul 2023 12:42:37 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-66767d628e2so3149900b3a.2;
-        Mon, 10 Jul 2023 12:42:37 -0700 (PDT)
+        Mon, 10 Jul 2023 15:47:44 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3036C13E
+        for <linux-block@vger.kernel.org>; Mon, 10 Jul 2023 12:47:43 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-5576ad1b7e7so797649a12.1
+        for <linux-block@vger.kernel.org>; Mon, 10 Jul 2023 12:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689018157; x=1691610157;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=04iwNdcQJeXG0mTcbAUJlB0Fp+3icsLoRreQ0OBOOd0=;
-        b=AGJpRLLNY7gr0IHt75298Nt4r3trlw/X1GxvHxpZDpWIBel3ffomXdOFl/zKWLJMbT
-         +3+hj2WsVbhtAYidOO3xWJfj0OTUE8z+lt3Sd8amPfkDdqXb2JIoVJkc65M21b/cR2OU
-         lYzb7D8DRoaLl8DIvJrxAj3GGhA2ByTs08appnDyJdSMtjPidfvS2ve1/bP6zHl7rPvy
-         pKhIW/mIuik4FyvRwit7g6MHsB3CYu1gFTKqAa6HN8m2H9UMbfujbFGJemUUD2SA/ygn
-         Mv5+l0G0dVGPIkP81ySNtyl4njy+ClQc3b6WL4zBm2vFOvrB5QDSntI98bqAFOYHPrkI
-         0OLQ==
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1689018462; x=1691610462;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wx6jz07CguKA7YsY2NRJvMLsnINssTVQYdDo1GqP/S0=;
+        b=0WbQHgoaMO2YKQRgiCfjEHrrT2yuQHX/f5+FVtNOd/TF+XhAcM1rFA3VH7tFY0mCOB
+         Ok/u+UCt99IWrtDyeipbwp/Rl6F2lOxRKm45S5oZKg+y0QUCcsiUe9x5REQoJWdeHwax
+         k+NqygxlmdkXYtrHGg15uk550SRgl0j3jCMPpq2Ow3c6gX017KTkbmBSfvKKSlGFmeY5
+         mn/lwxJ7pCHqBt4Qfc8lULN6OMs8I0oaVjAzAOGgVTJz3nKSkb/mZ2EuAHF+zP7RbtVk
+         Iy8FNQUYVzbGoPKfvmKvR3eDc0rM/5aL7Unx8ejt+MkTUv/32WHlwbg7qg9emODucEye
+         dUNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689018157; x=1691610157;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=04iwNdcQJeXG0mTcbAUJlB0Fp+3icsLoRreQ0OBOOd0=;
-        b=Mhtnk3vgcijrCpAzheHBGM9qqxxLqSvhvxXJ67WUPEJ54kwr0HCMyo3eXsZp6uXz23
-         jokBYDYZLbgYt9dojwwf4XFtlUL1OqlIcp3H7yyPeIJ97fUnBoNKg0ZZoFVGJkX0YgA4
-         mDhQimcYmGb1MdM/1IsuQYx8nqRH7zcsGlzuipI5m7jOijtzkNOq3B6pAi9bIaGhMQde
-         HWIM5oaTaQKEQdXvuyffbZkv1syUTjrHPA6qQPI+aBalI3THzFfCtOQVpFK67icgsoBW
-         xjrkaazISqNsrBgA71NwldHqyBC8ByK94Qm2p+dydr1wvjvXqw8OqGqQbIiNig9RSeoB
-         Lbvw==
-X-Gm-Message-State: ABy/qLa3qyq2/KGBw/D1Gs1PdE5B4F2lrawuXlNmdJjcVSjTdnS0gZCO
-        +mgHaXiPEHDoAyDUbjv1lZU=
-X-Google-Smtp-Source: APBJJlGmlqcVyGDxNAqJ3GDBVll6Xd+YVNZXf0l5iLDCGbJCkXlBQ3AwPoKYCNT3QomWU3oAJfjpBA==
-X-Received: by 2002:a05:6a00:148b:b0:681:6169:e403 with SMTP id v11-20020a056a00148b00b006816169e403mr13384559pfu.8.1689018156995;
-        Mon, 10 Jul 2023 12:42:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:e2fe])
-        by smtp.gmail.com with ESMTPSA id fk25-20020a056a003a9900b00682a0184742sm160002pfb.148.2023.07.10.12.42.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jul 2023 12:42:36 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date:   Mon, 10 Jul 2023 09:42:35 -1000
-From:   Tejun Heo <tj@kernel.org>
-To:     chengming.zhou@linux.dev
-Cc:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhouchengming@bytedance.com
+        d=1e100.net; s=20221208; t=1689018462; x=1691610462;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wx6jz07CguKA7YsY2NRJvMLsnINssTVQYdDo1GqP/S0=;
+        b=R2BojdyF8e0zdqP04iOPGhnZ1NwQh0zAq7kekteBDS+n2b9ACp6y7BAYLgiE6Pw09m
+         UA6Wc0jwIPeOrCZzQKYS4xEiJUODtRBE7vN2iDogpjSPEqX41MTqVZ7+PfmK1NAK6MrE
+         Ud8kTJy7gHwKhQP2+3KJVtBcvPd8xs+NOgqYXVlzk6r8zH4At/SaSIdgwTSmL2LAtkiY
+         BHdoHRp1au/wHXXi9Zb3kAf32BQamdtGlIbyjLlJk7npY49woAHhIv8JU6RRQbEzB64Y
+         TYR9D986huO797LaqbrFihgwHgn8L+7OHZILyKv+AQ68/3ZmQ6mPffRmo+7gKRA3y2ig
+         G7Eg==
+X-Gm-Message-State: ABy/qLZHE4nNRpfQCnieBP6nfinkHXp9WdWJd7IT9CBCx71hwt11dUwj
+        mBRHhbWl6O7Tw8GBCsbf4wNl4Q==
+X-Google-Smtp-Source: APBJJlEjX5EE9AMOjnRkIhttTAuRuoQbE8zIt1M3jXvoaVqZ63sguWSrScz/k8tGFCDwa4d3c6QKJA==
+X-Received: by 2002:a17:902:d4cd:b0:1b8:17e8:5472 with SMTP id o13-20020a170902d4cd00b001b817e85472mr17625205plg.1.1689018462501;
+        Mon, 10 Jul 2023 12:47:42 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id g7-20020a17090a714700b0025bdc3454c6sm6749421pjs.8.2023.07.10.12.47.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jul 2023 12:47:41 -0700 (PDT)
+Message-ID: <aa813164-9a6a-53bd-405b-ba4cc1f1b656@kernel.dk>
+Date:   Mon, 10 Jul 2023 13:47:40 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
 Subject: Re: [PATCH v5] blk-mq: fix start_time_ns and alloc_time_ns for
  pre-allocated rq
-Message-ID: <ZKxfK-cWyvkujSR0@slm.duckdns.org>
+Content-Language: en-US
+To:     chengming.zhou@linux.dev, hch@lst.de, tj@kernel.org,
+        ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhouchengming@bytedance.com
 References: <20230710105516.2053478-1-chengming.zhou@linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From:   Jens Axboe <axboe@kernel.dk>
 In-Reply-To: <20230710105516.2053478-1-chengming.zhou@linux.dev>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jul 10, 2023 at 06:55:16PM +0800, chengming.zhou@linux.dev wrote:
+On 7/10/23 4:55?AM, chengming.zhou@linux.dev wrote:
 > From: Chengming Zhou <zhouchengming@bytedance.com>
 > 
-> The iocost rely on rq start_time_ns and alloc_time_ns to tell saturation
-> state of the block device. Most of the time request is allocated after
-> rq_qos_throttle() and its alloc_time_ns or start_time_ns won't be affected.
+> The iocost rely on rq start_time_ns and alloc_time_ns to tell
+> saturation state of the block device. Most of the time request is
+> allocated after rq_qos_throttle() and its alloc_time_ns or
+> start_time_ns won't be affected.
 > 
 > But for plug batched allocation introduced by the commit 47c122e35d7e
-> ("block: pre-allocate requests if plug is started and is a batch"), we can
-> rq_qos_throttle() after the allocation of the request. This is what the
-> blk_mq_get_cached_request() does.
+> ("block: pre-allocate requests if plug is started and is a batch"), we
+> can rq_qos_throttle() after the allocation of the request. This is
+> what the blk_mq_get_cached_request() does.
 > 
-> In this case, the cached request alloc_time_ns or start_time_ns is much
-> ahead if blocked in any qos ->throttle().
+> In this case, the cached request alloc_time_ns or start_time_ns is
+> much ahead if blocked in any qos ->throttle().
 > 
-> Fix it by setting alloc_time_ns and start_time_ns to now when the allocated
-> request is actually used.
-> 
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Fix it by setting alloc_time_ns and start_time_ns to now when the
+> allocated request is actually used.
 
-Acked-by: Tejun Heo <tj@kernel.org>
+One of the single most costly things we do in the io path is the crazy
+amount of time stamping that's done or added without attention to what
+else is doing it or where. And this is why we have a ton of them, and
+why the batched time stamping made sense.
 
-Thanks.
+I'd much rather see this just get the saved timestamp updated when
+necessary. If we block, that's certainly one such case.
 
 -- 
-tejun
+Jens Axboe
+
