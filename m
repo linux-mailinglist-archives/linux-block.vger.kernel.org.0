@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A04D7508E1
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jul 2023 14:56:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 561AF7508E4
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jul 2023 14:56:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232608AbjGLM4X (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Jul 2023 08:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34662 "EHLO
+        id S231522AbjGLM4a (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Jul 2023 08:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232333AbjGLM4U (ORCPT
+        with ESMTP id S232515AbjGLM42 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Jul 2023 08:56:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE821BC6
-        for <linux-block@vger.kernel.org>; Wed, 12 Jul 2023 05:55:31 -0700 (PDT)
+        Wed, 12 Jul 2023 08:56:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766311BC2
+        for <linux-block@vger.kernel.org>; Wed, 12 Jul 2023 05:55:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689166531;
+        s=mimecast20190719; t=1689166537;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gV9SQll/aiZU7jZHjbK/6CqsGn0qDXytoHDv6FeUPyo=;
-        b=Jv1x8vGC84/rIMffpUkklQGYcLtg/3onybr80fyRj6wNiX6vsXJJkUiSZRpXzuznVX1TUM
-        +trJY0BQ8efYaqqDYVCow5V7hQ76rhh1O0fx2vX0pfTxCQL4eRr567O0ahIF9CN4t3PeUv
-        o+7u2o33af8SJ3p3c2A4/BSJPlCt/Fs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-361-hvkH-1cePRinCSykJgDspQ-1; Wed, 12 Jul 2023 08:55:27 -0400
-X-MC-Unique: hvkH-1cePRinCSykJgDspQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        bh=Nk/Wqaa+Kq1K/rJO90p9bF5IpxDn2p06PBFgsL5mmuI=;
+        b=JjTMe04OpwbKbtG09Lwx9P272mWIoJL3qnPDR+AdGu9zOefQOFd1FJwzuASoruhaww1bXw
+        5P+mTrmxN73cbTuNNMTBxG49JcruCAFyLGkw741GG6uH3rgOPTNOVaZkEDypQG7/jry1D4
+        GrfjmqQhjvOoGotpiLi51owCQFYCFeI=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-58-FEyENvIFP9Gm5X0qWJ9PYQ-1; Wed, 12 Jul 2023 08:55:31 -0400
+X-MC-Unique: FEyENvIFP9Gm5X0qWJ9PYQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC4BE10504AE;
-        Wed, 12 Jul 2023 12:55:26 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8A4943C0FC94;
+        Wed, 12 Jul 2023 12:55:30 +0000 (UTC)
 Received: from localhost (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BB08C1ED96;
-        Wed, 12 Jul 2023 12:55:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BC6362017EB9;
+        Wed, 12 Jul 2023 12:55:29 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         linux-nvme@lists.infradead.org,
@@ -46,18 +46,18 @@ To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
 Cc:     linux-block@vger.kernel.org, Wen Xiong <wenxiong@linux.ibm.com>,
         Keith Busch <kbusch@kernel.org>,
         Ming Lei <ming.lei@redhat.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
         Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>
-Subject: [PATCH 6/8] scsi: megaraid: take blk_mq_max_nr_hw_queues() into account for calculating io vectors
-Date:   Wed, 12 Jul 2023 20:54:53 +0800
-Message-Id: <20230712125455.1986455-7-ming.lei@redhat.com>
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>
+Subject: [PATCH 7/8] scsi: mpt3sas: take blk_mq_max_nr_hw_queues() into account for calculating io vectors
+Date:   Wed, 12 Jul 2023 20:54:54 +0800
+Message-Id: <20230712125455.1986455-8-ming.lei@redhat.com>
 In-Reply-To: <20230712125455.1986455-1-ming.lei@redhat.com>
 References: <20230712125455.1986455-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -84,39 +84,29 @@ wrong queue mapping for handling IO, and IO timeout is triggered.
 Meantime, single queue makes much less resource utilization, and reduce
 risk of kernel failure.
 
+Cc: Sathya Prakash <sathya.prakash@broadcom.com>
 Cc: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>
-Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-Cc: Sumit Saxena <sumit.saxena@broadcom.com>
+Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 050eed8e2684..214713803c2e 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5921,6 +5921,10 @@ __megasas_alloc_irq_vectors(struct megasas_instance *instance)
- 	int i, irq_flags;
- 	struct irq_affinity desc = { .pre_vectors = instance->low_latency_index_start };
- 	struct irq_affinity *descp = &desc;
-+	unsigned max_vecs = instance->msix_vectors - instance->iopoll_q_count;
-+
-+	if (max_vecs > blk_mq_max_nr_hw_queues())
-+		max_vecs = blk_mq_max_nr_hw_queues();
- 
- 	irq_flags = PCI_IRQ_MSIX;
- 
-@@ -5934,7 +5938,7 @@ __megasas_alloc_irq_vectors(struct megasas_instance *instance)
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 53f5492579cb..18a73d3ff00b 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -3332,8 +3332,8 @@ _base_alloc_irq_vectors(struct MPT3SAS_ADAPTER *ioc)
+ 	 * Don't allocate msix vectors for poll_queues.
+ 	 * msix_vectors is always within a range of FW supported reply queue.
  	 */
- 	i = pci_alloc_irq_vectors_affinity(instance->pdev,
- 		instance->low_latency_index_start,
--		instance->msix_vectors - instance->iopoll_q_count, irq_flags, descp);
-+		max_vecs, irq_flags, descp);
+-	int nr_msix_vectors = ioc->iopoll_q_start_index;
+-
++	int nr_msix_vectors = min_t(unsigned int, ioc->iopoll_q_start_index,
++			blk_mq_max_nr_hw_queues());
  
- 	return i;
- }
+ 	if (ioc->smp_affinity_enable)
+ 		irq_flags |= PCI_IRQ_AFFINITY | PCI_IRQ_ALL_TYPES;
 -- 
 2.40.1
 
