@@ -2,94 +2,128 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8264C750FB0
-	for <lists+linux-block@lfdr.de>; Wed, 12 Jul 2023 19:33:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68A7A75124B
+	for <lists+linux-block@lfdr.de>; Wed, 12 Jul 2023 23:12:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjGLRd4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 12 Jul 2023 13:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40118 "EHLO
+        id S231614AbjGLVME (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 12 Jul 2023 17:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232644AbjGLRdz (ORCPT
+        with ESMTP id S232627AbjGLVLn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 12 Jul 2023 13:33:55 -0400
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813261991
-        for <linux-block@vger.kernel.org>; Wed, 12 Jul 2023 10:33:53 -0700 (PDT)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-666ecb21f86so6582666b3a.3
-        for <linux-block@vger.kernel.org>; Wed, 12 Jul 2023 10:33:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689183233; x=1691775233;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TUeLU1gIrAqM/pIx75Jx2TVyG1ihfpTnVUq6zHmwpbM=;
-        b=GGFTfWPrrNVQDd9zh9eBNCysLQO06cez9tj+oznrXJ4/2/aXd9WMcwSzZcmRWkEy9A
-         nU6+7xA1GEDt+Le3s/MelvCVs3ighM1hnFeZhbEp7+4zxFmhSfuqnR4VbF3Wqn/LehD5
-         afU441VwQkY8DhxCu+xm8KtI3J8iLgvEVo66Zd0mD4cr9TdVjM69mtVZYNoeudH2vG5w
-         g8M6pPy3Ikh9KpGF5UxrO8XaHmzHcU/xQ7LXC1b23vVYmWRYt7m6qG4MsDMqcsih9bDt
-         ZKejTPZcN8nqnG+1ehisd8SYTtVXWXhcOQ+j8hycZ3iqCJk3b9maupQjcG7s2j73SI1o
-         fYmA==
-X-Gm-Message-State: ABy/qLY8VD66O5Ifn8D4OD7vlhuyr+0MAeOr2q7Unyhg+Si4ziedU039
-        Szg5PIiHfbrwB39XvBsObDo=
-X-Google-Smtp-Source: APBJJlFFDGeH+ytdw7i0R52QFow4A6VFC0DHTb1curvmyTrNWimhAu8Gs/XhKDMsGrM+6u3ug04o0w==
-X-Received: by 2002:a05:6a20:8e1a:b0:12f:bc36:4c67 with SMTP id y26-20020a056a208e1a00b0012fbc364c67mr24574659pzj.61.1689183232705;
-        Wed, 12 Jul 2023 10:33:52 -0700 (PDT)
-Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:fc9:1485:272d:134e])
-        by smtp.gmail.com with ESMTPSA id fk25-20020a056a003a9900b00682a0184742sm4007051pfb.148.2023.07.12.10.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 10:33:52 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH] block/mq-deadline: Fix a bug in deadline_from_pos()
-Date:   Wed, 12 Jul 2023 10:33:43 -0700
-Message-ID: <20230712173344.2994513-1-bvanassche@acm.org>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+        Wed, 12 Jul 2023 17:11:43 -0400
+Received: from out-12.mta1.migadu.com (out-12.mta1.migadu.com [IPv6:2001:41d0:203:375::c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F23212D
+        for <linux-block@vger.kernel.org>; Wed, 12 Jul 2023 14:11:35 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1689196293;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1JvFlUnJNg/19MdiHLNUIX73kgMJww+dfgCblmEcu1U=;
+        b=ioo7Hlb05gzTDWYnW+QeyN9R+3fGtpTq8//vnD2VrzbgJKDTQEkVCE4P4f2TYbuiCQhSbu
+        sec4FOu9SqqU17hb0GbaFF3qcgRtj0mZbf7jTv8vr/R9kAlIggYzlRhurx6BhRUWxiUewA
+        qPzUxqlRuNs66nkA93vgzfPg3zuiRmw=
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Kent Overstreet <kent.overstreet@linux.dev>
+Subject: [PATCH 04/20] block: Add some exports for bcachefs
+Date:   Wed, 12 Jul 2023 17:10:59 -0400
+Message-Id: <20230712211115.2174650-5-kent.overstreet@linux.dev>
+In-Reply-To: <20230712211115.2174650-1-kent.overstreet@linux.dev>
+References: <20230712211115.2174650-1-kent.overstreet@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-A bug was introduced in deadline_from_pos() while implementing the
-suggestion to use round_down() in the following code:
+From: Kent Overstreet <kent.overstreet@gmail.com>
 
-	pos -= bdev_offset_from_zone_start(rq->q->disk->part0, pos);
+ - bio_set_pages_dirty(), bio_check_pages_dirty() - dio path
+ - blk_status_to_str() - error messages
+ - bio_add_folio() - this should definitely be exported for everyone,
+   it's the modern version of bio_add_page()
 
-This patch makes deadline_from_pos() use round_down() such that 'pos' is
-rounded down.
-
-Reported-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Closes: https://lore.kernel.org/all/5zthzi3lppvcdp4nemum6qck4gpqbdhvgy4k3qwguhgzxc4quj@amulvgycq67h/
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>
-Fixes: 0effb390c4ba ("block: mq-deadline: Handle requeued requests correctly")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: linux-block@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- block/mq-deadline.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bio.c            | 2 ++
+ block/blk-core.c       | 1 +
+ block/blk.h            | 1 -
+ include/linux/blkdev.h | 1 +
+ 4 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 0bed2bdeed89..f783ed71ae19 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -176,7 +176,7 @@ static inline struct request *deadline_from_pos(struct dd_per_prio *per_prio,
- 	 * zoned writes, start searching from the start of a zone.
- 	 */
- 	if (blk_rq_is_seq_zoned_write(rq))
--		pos -= round_down(pos, rq->q->limits.chunk_sectors);
-+		pos = round_down(pos, rq->q->limits.chunk_sectors);
+diff --git a/block/bio.c b/block/bio.c
+index 043944fd46..1e75840d17 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1481,6 +1481,7 @@ void bio_set_pages_dirty(struct bio *bio)
+ 			set_page_dirty_lock(bvec->bv_page);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(bio_set_pages_dirty);
  
- 	while (node) {
- 		rq = rb_entry_rq(node);
+ /*
+  * bio_check_pages_dirty() will check that all the BIO's pages are still dirty.
+@@ -1540,6 +1541,7 @@ void bio_check_pages_dirty(struct bio *bio)
+ 	spin_unlock_irqrestore(&bio_dirty_lock, flags);
+ 	schedule_work(&bio_dirty_work);
+ }
++EXPORT_SYMBOL_GPL(bio_check_pages_dirty);
+ 
+ static inline bool bio_remaining_done(struct bio *bio)
+ {
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 1da77e7d62..b7b0237c36 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -205,6 +205,7 @@ const char *blk_status_to_str(blk_status_t status)
+ 		return "<null>";
+ 	return blk_errors[idx].name;
+ }
++EXPORT_SYMBOL_GPL(blk_status_to_str);
+ 
+ /**
+  * blk_sync_queue - cancel any pending callbacks on a queue
+diff --git a/block/blk.h b/block/blk.h
+index 45547bcf11..f20f9ca03e 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -251,7 +251,6 @@ static inline void bio_integrity_free(struct bio *bio)
+ 
+ unsigned long blk_rq_timeout(unsigned long timeout);
+ void blk_add_timer(struct request *req);
+-const char *blk_status_to_str(blk_status_t status);
+ 
+ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
+ 		unsigned int nr_segs);
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index c0ffe203a6..7a32dc98e1 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -854,6 +854,7 @@ extern const char *blk_op_str(enum req_op op);
+ 
+ int blk_status_to_errno(blk_status_t status);
+ blk_status_t errno_to_blk_status(int errno);
++const char *blk_status_to_str(blk_status_t status);
+ 
+ /* only poll the hardware once, don't continue until a completion was found */
+ #define BLK_POLL_ONESHOT		(1 << 0)
+-- 
+2.40.1
+
