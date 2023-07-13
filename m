@@ -2,140 +2,114 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00AFD7523A2
-	for <lists+linux-block@lfdr.de>; Thu, 13 Jul 2023 15:24:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2082E752A15
+	for <lists+linux-block@lfdr.de>; Thu, 13 Jul 2023 19:58:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235323AbjGMNYH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 13 Jul 2023 09:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        id S229953AbjGMR62 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 13 Jul 2023 13:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235534AbjGMNXd (ORCPT
+        with ESMTP id S229738AbjGMR61 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 13 Jul 2023 09:23:33 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B103A99
-        for <linux-block@vger.kernel.org>; Thu, 13 Jul 2023 06:22:38 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4R1wHx2z9mz4f3mKs
-        for <linux-block@vger.kernel.org>; Thu, 13 Jul 2023 21:22:05 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-        by APP4 (Coremail) with SMTP id gCh0CgBH_rF6+q9kCg2GNw--.20068S4;
-        Thu, 13 Jul 2023 21:22:03 +0800 (CST)
-From:   Hou Tao <houtao@huaweicloud.com>
-To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        linux-block@vger.kernel.org, nvdimm@lists.linux.dev,
-        virtualization@lists.linux-foundation.org, houtao1@huawei.com
-Subject: [PATCH v4] virtio_pmem: add the missing REQ_OP_WRITE for flush bio
-Date:   Thu, 13 Jul 2023 21:54:13 +0800
-Message-Id: <20230713135413.2946622-1-houtao@huaweicloud.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <CAM9Jb+g5rrvmw8xCcwe3REK4x=RymrcqQ8cZavwWoWu7BH+8wA@mail.gmail.com>
-References: <CAM9Jb+g5rrvmw8xCcwe3REK4x=RymrcqQ8cZavwWoWu7BH+8wA@mail.gmail.com>
+        Thu, 13 Jul 2023 13:58:27 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB26271F;
+        Thu, 13 Jul 2023 10:58:26 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6689430d803so707869b3a.0;
+        Thu, 13 Jul 2023 10:58:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689271106; x=1691863106;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sKfG851w+7v64HCUqhsyddmrtv9B3jgmy4U+3AJOSi0=;
+        b=Tpi8jBVMfJ94R9QoHKdF/j1p1oqMARooFZQhwIPITtI+JJBKapRuurMzkPV1F89njH
+         SnroEDQ141QFLB8+jg9ppQBN0FzGuoBxdERA+De5s1gTNYoES5azCIIWe8Urls7cgMFg
+         HvY6H5vZJ4LHh9qO3OfPs6vXvLNFJVwD0axmY6gS4snCVEihzxTxIJaTJXrEw9FNgFXR
+         qK1nv17xFfUCbJqZNg99cnvS+Z5lcpBywWHavJr75HIf0dGi30w9p6cdBnv+fc6notKw
+         eS0APJYWdFUGp3Hs8uqppkt/sdNvv2XZjh4O16mrqbvZOcoNDwRuUoAuqYBeVgJlcJFl
+         b+cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689271106; x=1691863106;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sKfG851w+7v64HCUqhsyddmrtv9B3jgmy4U+3AJOSi0=;
+        b=YrmDuLAYnDn8+0YDOYjOxy6R76fij8+Dn1O+chQU5DFgG7BEM+ysoJL47yS7C4xAlJ
+         y7wAExRvh0WjMXRPRqtxG5EV1GToU4Ulqgl0R5ASaWTVufkwOgCs51HSHZoYDZSHzIPo
+         1lvegWIxs3CRu923s8GVFmQRZkz4oqERhBtBTQKUBcobHGqnfBEUKLtwNWneDGUrpqg3
+         oZ+6SDW7ncsejjW1eqt2ifNphTgemZQCzPC5VIm4Rnattuy8FKDv86840bUAE0BmbT/Z
+         +3Hy8AajhkS+i9MAdobmQJ/ZBQDSBcKsETOv27zIvFPAtMOtJnd518ysamIV7bf7s69n
+         Hc/w==
+X-Gm-Message-State: ABy/qLbmassgBxnQXTxHLGHvbqMlAz1TxgnzEqS0UQhGTv0W+AYTWkhF
+        nsHe+JFruE2p7eyRRl3Dhjk=
+X-Google-Smtp-Source: APBJJlF4pxyOX6QrRMj57ayz2rAQCz9RkM+99yAE3hanUQ8ewsYaxFr/emoUJqZPa2vARAzo+9IiMA==
+X-Received: by 2002:a05:6a21:6d8a:b0:10c:c9ac:14c6 with SMTP id wl10-20020a056a216d8a00b0010cc9ac14c6mr1842851pzb.39.1689271105614;
+        Thu, 13 Jul 2023 10:58:25 -0700 (PDT)
+Received: from localhost (dhcp-72-235-13-41.hawaiiantel.net. [72.235.13.41])
+        by smtp.gmail.com with ESMTPSA id t19-20020a62ea13000000b006732786b5f1sm5704610pfh.213.2023.07.13.10.58.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jul 2023 10:58:25 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Thu, 13 Jul 2023 07:58:24 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Chengming Zhou <chengming.zhou@linux.dev>
+Cc:     Jens Axboe <axboe@kernel.dk>, hch@lst.de,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ming.lei@redhat.com, zhouchengming@bytedance.com
+Subject: Re: [PATCH v5] blk-mq: fix start_time_ns and alloc_time_ns for
+ pre-allocated rq
+Message-ID: <ZLA7QAfSojxu_FMW@slm.duckdns.org>
+References: <20230710105516.2053478-1-chengming.zhou@linux.dev>
+ <aa813164-9a6a-53bd-405b-ba4cc1f1b656@kernel.dk>
+ <63f93f1c-98da-4c09-b3d8-711f6953d8b7@linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgBH_rF6+q9kCg2GNw--.20068S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr1xZw1UKF4xWw17JFW8Zwb_yoW5Gw48pr
-        13Ca4agr47GF4IkanrXa129F92qa1DGr9rWFWfuw1fZFW7AF1UKw1vgFyFqa4DtrW8Gaya
-        yF97Jr1jq34DZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-        0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-        vE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUrR6zUUUUU
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63f93f1c-98da-4c09-b3d8-711f6953d8b7@linux.dev>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+Hello,
 
-When doing mkfs.xfs on a pmem device, the following warning was
-reported:
+On Thu, Jul 13, 2023 at 08:25:50PM +0800, Chengming Zhou wrote:
+> Ok, this version will only get time stamp once for one request, it's actually
+> not worse than the current code, which will get start time stamp once for each
+> request even in the batch allocation.
+> 
+> But yes, maybe we can also set the start time stamp in the batch mode, and only
+> update the time stamp in the block case, like you said, has better performance.
+> 
+> The first version [1] I posted actually just did this, in which use a nr_flush counter
+> in plug to indicate that we blocked & flushed plug. Tejun and I think it seems fragile.
+> So go to this way that only set time stamp once when the request actually used.
+> 
+> [1] https://lore.kernel.org/all/20230601053919.3639954-1-chengming.zhou@linux.dev/
+> 
+> Another way I can think of is to make rq_qos_throttle() return a bool to indicate
+> if it blocked. Tejun and Jens, how do you think about this way?
+> 
+> Although it's better performance, in case of preemption, the time stamp maybe not accurate.
 
- ------------[ cut here ]------------
- WARNING: CPU: 2 PID: 384 at block/blk-core.c:751 submit_bio_noacct
- Modules linked in:
- CPU: 2 PID: 384 Comm: mkfs.xfs Not tainted 6.4.0-rc7+ #154
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
- RIP: 0010:submit_bio_noacct+0x340/0x520
- ......
- Call Trace:
-  <TASK>
-  ? submit_bio_noacct+0xd5/0x520
-  submit_bio+0x37/0x60
-  async_pmem_flush+0x79/0xa0
-  nvdimm_flush+0x17/0x40
-  pmem_submit_bio+0x370/0x390
-  __submit_bio+0xbc/0x190
-  submit_bio_noacct_nocheck+0x14d/0x370
-  submit_bio_noacct+0x1ef/0x520
-  submit_bio+0x55/0x60
-  submit_bio_wait+0x5a/0xc0
-  blkdev_issue_flush+0x44/0x60
+Trying to manually optimized timestamp reads seems like a bit of fool's
+errand to me. I don't think anyone cares about nanosec accuracy, so there
+are ample opportunities for generically caching timestamp so that we don't
+have to contort code to optimzie timestamp calls.
 
-The root cause is that submit_bio_noacct() needs bio_op() is either
-WRITE or ZONE_APPEND for flush bio and async_pmem_flush() doesn't assign
-REQ_OP_WRITE when allocating flush bio, so submit_bio_noacct just fail
-the flush bio.
+It's a bit out of scope for this patchset but I think it might make sense to
+build a timestamp caching infrastructure. The cached timestamp can be
+invalidated on context switches (block layer already hooks into them) and
+issue and other path boundaries (e.g. at the end of plug flush).
 
-Simply fix it by adding the missing REQ_OP_WRITE for flush bio. And we
-could fix the flush order issue and do flush optimization later.
+Thanks.
 
-Cc: stable@vger.kernel.org # 6.3+
-Fixes: b4a6bb3a67aa ("block: add a sanity check for non-write flush/fua bios")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-Tested-by: Pankaj Gupta <pankaj.gupta@amd.com>
-Signed-off-by: Hou Tao <houtao1@huawei.com>
----
-v4:
- * add stable Cc
- * collect Rvb and Tested-by tags
-
-v3: https://lore.kernel.org/linux-block/20230625022633.2753877-1-houtao@huaweicloud.com
- * adjust the overly long lines in both commit message and code
-
-v2: https://lore.kernel.org/linux-block/20230621134340.878461-1-houtao@huaweicloud.com
- * do a minimal fix first (Suggested by Christoph)
-
-v1: https://lore.kernel.org/linux-block/ZJLpYMC8FgtZ0k2k@infradead.org/T/#t
-
- drivers/nvdimm/nd_virtio.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
-index c6a648fd8744..1f8c667c6f1e 100644
---- a/drivers/nvdimm/nd_virtio.c
-+++ b/drivers/nvdimm/nd_virtio.c
-@@ -105,7 +105,8 @@ int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
- 	 * parent bio. Otherwise directly call nd_region flush.
- 	 */
- 	if (bio && bio->bi_iter.bi_sector != -1) {
--		struct bio *child = bio_alloc(bio->bi_bdev, 0, REQ_PREFLUSH,
-+		struct bio *child = bio_alloc(bio->bi_bdev, 0,
-+					      REQ_OP_WRITE | REQ_PREFLUSH,
- 					      GFP_ATOMIC);
- 
- 		if (!child)
 -- 
-2.29.2
-
+tejun
