@@ -2,82 +2,107 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A004756E91
-	for <lists+linux-block@lfdr.de>; Mon, 17 Jul 2023 22:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D9C7756E93
+	for <lists+linux-block@lfdr.de>; Mon, 17 Jul 2023 22:53:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbjGQUxP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 17 Jul 2023 16:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
+        id S229886AbjGQUxR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 17 Jul 2023 16:53:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230103AbjGQUxO (ORCPT
+        with ESMTP id S229658AbjGQUxP (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 17 Jul 2023 16:53:14 -0400
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE4110C4
-        for <linux-block@vger.kernel.org>; Mon, 17 Jul 2023 13:52:30 -0700 (PDT)
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-345e55a62d8so21988405ab.3
-        for <linux-block@vger.kernel.org>; Mon, 17 Jul 2023 13:52:30 -0700 (PDT)
+        Mon, 17 Jul 2023 16:53:15 -0400
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4BF21725
+        for <linux-block@vger.kernel.org>; Mon, 17 Jul 2023 13:52:31 -0700 (PDT)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5577900c06bso3772733a12.2
+        for <linux-block@vger.kernel.org>; Mon, 17 Jul 2023 13:52:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689627149; x=1692219149;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o0Rh+hgK5RJM2LTqnV8n589VzEO88GagfvtQuoz9vkQ=;
-        b=bod9FDO/bX968d17JiiRC3Rkj1Ov86dwMdlXuKHHdGWluLmP95fwzkRFcO9FxEpcHP
-         Yya6ZUNDzysYOdSVnGKzr6czaGCi92Tj33X4wgF1dWwguyRM6sITMMibGsfqgxDWdm/7
-         Hr2DL8fxjp7/2OT3KoWy15Jic9k2Eda9PnLBGfEelJeFg+kQe9/kDVCtJJc9kVffvGA0
-         aO10iPPDadlwZuvIMVzGWkcL76vKtFZvHNcwJgkjSt4rVt0VwaMLlzwH4OtTjchigGMA
-         hDfvsayS8peaeOBbZHWUfCAZ3sHFJIQ97EqyYsP/okOHJyvoh/Z/W7E6LcokStTR0wEt
-         29kw==
-X-Gm-Message-State: ABy/qLZy3w1hpo/8rtE+YmHFCjNqsmUC+5kg1m1siaQJNthlxHx5KyNw
-        Ydr6xWfVBotdYY9RtqedCug=
-X-Google-Smtp-Source: APBJJlGwXDIBhgTRd5cxE6vLq5rFpSBD0VpkKqfWOKPl89NtLqQCiDSrUkxqPsUQtq9VGdMzX0lOiA==
-X-Received: by 2002:a92:c24e:0:b0:348:7ac8:ce6b with SMTP id k14-20020a92c24e000000b003487ac8ce6bmr835468ilo.17.1689627149392;
-        Mon, 17 Jul 2023 13:52:29 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689627151; x=1692219151;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nVSZbVbHnYr4oPJtre+peVtx9ULfxBAErKcKzg0bkGo=;
+        b=bwmgYrGxumBZZqaT2xGEE6poTEv8MbZTvdwqAMz6o241uftyy+VL+8KjtOM5rMD8hf
+         UwA/+bfq1WDaLcRFnoi0xJ6nZaSG/siZXfVe7xNOk9OcGn8kKmhiBxNKughgJOFUevQi
+         sYlrD6R87qQMMMTHdwmapZy17JK/mFJidAH+YexdcTnoxlqIHxwt7FCrAw8TD7JG9Upz
+         Aze58rWkQoAHHph45wmPgdWXjrl6CR/ANTe8TPEtq725916MSbYwM47zySEA0FzvF2Xp
+         MAErYTZcPwfpJjyqiYMBLS4xSkjVQiD+poKrCdZVFcAsoHXApkXPAGdzCYM+NJlt3iEx
+         0I0g==
+X-Gm-Message-State: ABy/qLbgKwLiMvBdcgm23LJZdDEGdEoHEbHYcRteX/M8h2+nkV1p0SQy
+        ztenSng/R7VIxIRcGM56tlg=
+X-Google-Smtp-Source: APBJJlHhebQiAEEp/s+2qZtNhZeSgejD+aqeb4F5EKr0V25ZS3YmkT1iD08aHoFUtJR0cpcDBKNDKQ==
+X-Received: by 2002:a17:90a:b00d:b0:259:b065:da4f with SMTP id x13-20020a17090ab00d00b00259b065da4fmr12266934pjq.36.1689627150877;
+        Mon, 17 Jul 2023 13:52:30 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:ac3:b183:3725:4b8f])
-        by smtp.gmail.com with ESMTPSA id v17-20020a17090abb9100b0025645ce761dsm5222403pjr.35.2023.07.17.13.52.27
+        by smtp.gmail.com with ESMTPSA id v17-20020a17090abb9100b0025645ce761dsm5222403pjr.35.2023.07.17.13.52.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 13:52:28 -0700 (PDT)
+        Mon, 17 Jul 2023 13:52:30 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH 0/3] Improve performance for BLK_MQ_F_BLOCKING drivers
-Date:   Mon, 17 Jul 2023 13:52:12 -0700
-Message-ID: <20230717205216.2024545-1-bvanassche@acm.org>
+        Bart Van Assche <bvanassche@acm.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Subject: [PATCH 1/3] scsi: Inline scsi_kick_queue()
+Date:   Mon, 17 Jul 2023 13:52:13 -0700
+Message-ID: <20230717205216.2024545-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+In-Reply-To: <20230717205216.2024545-1-bvanassche@acm.org>
+References: <20230717205216.2024545-1-bvanassche@acm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+scsi_kick_queue() is too short to keep it as a separate function. Hence
+inline it.
 
-Request queues are run asynchronously if BLK_MQ_F_BLOCKING has been set. This
-results in suboptimal performance. This patch series improves performance if
-BLK_MQ_F_BLOCKING has been set by running request queues synchronously
-whenever possible.
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ drivers/scsi/scsi_lib.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Please consider this patch series for the next merge window.
-
-Thanks,
-
-Bart.
-
-Bart Van Assche (3):
-  scsi: Inline scsi_kick_queue()
-  scsi: Remove a blk_mq_run_hw_queues() call
-  block: Improve performance for BLK_MQ_F_BLOCKING drivers
-
- block/blk-mq.c          | 17 +++++++++++------
- drivers/scsi/scsi_lib.c | 13 +++++--------
- 2 files changed, 16 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index ad9afae49544..414d29eef968 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -300,11 +300,6 @@ void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd)
+ 	cmd->budget_token = -1;
+ }
+ 
+-static void scsi_kick_queue(struct request_queue *q)
+-{
+-	blk_mq_run_hw_queues(q, false);
+-}
+-
+ /*
+  * Kick the queue of SCSI device @sdev if @sdev != current_sdev. Called with
+  * interrupts disabled.
+@@ -340,7 +335,7 @@ static void scsi_single_lun_run(struct scsi_device *current_sdev)
+ 	 * but in most cases, we will be first. Ideally, each LU on the
+ 	 * target would get some limited time or requests on the target.
+ 	 */
+-	scsi_kick_queue(current_sdev->request_queue);
++	blk_mq_run_hw_queues(current_sdev->request_queue, false);
+ 
+ 	spin_lock_irqsave(shost->host_lock, flags);
+ 	if (!starget->starget_sdev_user)
+@@ -427,7 +422,7 @@ static void scsi_starved_list_run(struct Scsi_Host *shost)
+ 			continue;
+ 		spin_unlock_irqrestore(shost->host_lock, flags);
+ 
+-		scsi_kick_queue(slq);
++		blk_mq_run_hw_queues(slq, false);
+ 		blk_put_queue(slq);
+ 
+ 		spin_lock_irqsave(shost->host_lock, flags);
