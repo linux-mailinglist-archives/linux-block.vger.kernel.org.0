@@ -2,78 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CF8F7588E0
-	for <lists+linux-block@lfdr.de>; Wed, 19 Jul 2023 01:07:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAB94758E83
+	for <lists+linux-block@lfdr.de>; Wed, 19 Jul 2023 09:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231230AbjGRXHM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 18 Jul 2023 19:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
+        id S229632AbjGSHPU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Jul 2023 03:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231208AbjGRXHJ (ORCPT
+        with ESMTP id S229512AbjGSHPQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 18 Jul 2023 19:07:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C633A1;
-        Tue, 18 Jul 2023 16:07:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B53E661372;
-        Tue, 18 Jul 2023 23:07:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22736C433AB;
-        Tue, 18 Jul 2023 23:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689721627;
-        bh=+Pd8n6b3Bgde2sfLuTMJEdG3inSaboDgyN2R66pO+Cc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rbODd0eCkMojMdEsT2JG+DPQ5FfVcqjO+7TpaLSAITlHBKbP8U5e58LV5FWFBRUVd
-         WfqtFLFPPQLBI+WPyuMGATfmm8+J0uFQJTLKlLbH9TiCN9639o12nq+YJVNSQMYjF3
-         FGmaUehU1XG17oDii9iC9SAEy4rTkasUr+Y04Pcv/VZ+0YArgAhZB99N8buGKADRBJ
-         LYRHsl2hQRSIsn8KC+LLc8NDcS7nrGUW9UGRFo1Q8ScX1Afl7wGan1l3BVCFlU6WkM
-         vGsLFim7pfqlnxvDigXrfzxNxmdbDg2Bt/X2KpPLyeaCtSy8DvI3aGq9xkLL6VVsa3
-         nN1xZb5T64iiQ==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b70bfc8db5so96446021fa.2;
-        Tue, 18 Jul 2023 16:07:07 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYTqMOKKDuXbXPae+TkVvIBHii04NLL6oWZ3NaBL/5Qi+7Br2Fg
-        c5nvwOCmp+hymOSvFXr6KDal+Fhmc/vR2DtYc2E=
-X-Google-Smtp-Source: APBJJlE2SEtdQ0viGgTX1RHV1Jf09uAG1PnJ2kbrstQtKT8l+bPM54I0W1KpO3/vBtrnR6qoOuKC/wwAZ5RCUS+NTqM=
-X-Received: by 2002:a2e:968c:0:b0:2b5:8f85:bf67 with SMTP id
- q12-20020a2e968c000000b002b58f85bf67mr476772lji.53.1689721624966; Tue, 18 Jul
- 2023 16:07:04 -0700 (PDT)
+        Wed, 19 Jul 2023 03:15:16 -0400
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4640DE60
+        for <linux-block@vger.kernel.org>; Wed, 19 Jul 2023 00:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1689750912; x=1721286912;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sLArJoAtmPe/VjopnAfkMevLryeC7xck7O0k1mWLxSE=;
+  b=YY1Z1yEgLl5zI+jG0jlbae1rWwgzkDQtbGb/GTfr7I1fQQ6OzeLJah8w
+   0ww52gn52IXYlwUOX4BN1ZFIzJJK/36ymm5/t4YgCp/GJuAqOuDyreOMn
+   a/KA9Z/11s+ItL5sqzzuPeVBtPbVI/mGXmlrZOzl06bfw0DukU7kwgfHQ
+   VHEJh/7s57YOEvLcc4SmcajMxUdM+2hoT9m/bgpxEUnSdAEg4lbKfzaOJ
+   24MUN3sOs683vTjeZhnhZ6syTfSw7bbn1d6E6xIjuA4689ftcs9ba1VXr
+   k5TQxjHSHh7nEWTCKAZ+92tnr0zx6t2AEpK8RMFfyWHV89XJWvdaqwnWm
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,216,1684771200"; 
+   d="scan'208";a="238846513"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Jul 2023 15:15:11 +0800
+IronPort-SDR: lXDHbgmJJGtM5Y8ug8I9YJlyUUJrWomPqPo6F1opuTu5gm9UB+4MIWn/ILmG/+asHtVBvIyWXA
+ vhNFbQ77/vNyDkov8cuNhbjipomuma7KE6Vhp/DOyNyxBN0J74Y5c1rmvcoaEc7aPkEB5y/n5p
+ qtDs/swpm63MwPO32woc67/1R9Rm3GbEBaprNvns9Vh/A/2kjygRbVkw46GWQmeCTjAoddhV3g
+ wCKbkSV+n4lACWkWmveMYMGLG+pNZV5iTKJirAK2Jp7Q7hEBFru/KieFshkS9psCNvW6aT/UXI
+ N1k=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Jul 2023 23:23:23 -0700
+IronPort-SDR: WcMQe8i/xsElO3zkpOHj+Kap7DW61J4PzR3fm4fFt14fg+5ha6KXoV7SS2sGCWBh2jxkW4GBMP
+ zwx19p7y/kWBCN5itkR6XgS580tBXEiKF5O8LtECTH7cxf2CjkND3tRS7LLMjtlg9/+lBHLmAV
+ soOtLIKFBOl+Z4MFyz2XYj6QHWzj6+msv3Kvk9/DJkkCtBd4egDPY6G2ujtA5IBqdPGRj0o3Mf
+ GrDNRapgujLD9pP5ppwpYxmqJ165skseHzWEA4BGEBa90vocuyjOx4e1iEejEyFHSLeRFH2KWc
+ l/g=
+WDCIronportException: Internal
+Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
+  by uls-op-cesaip01.wdc.com with ESMTP; 19 Jul 2023 00:15:11 -0700
+From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To:     linux-block@vger.kernel.org
+Cc:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests 0/6] fix failures with bio based device-mapper
+Date:   Wed, 19 Jul 2023 16:15:04 +0900
+Message-Id: <20230719071510.530623-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <20230718125847.3869700-1-ardb@kernel.org> <20230718125847.3869700-2-ardb@kernel.org>
- <20230718223239.GB1005@sol.localdomain> <20230718225450.GD1005@sol.localdomain>
-In-Reply-To: <20230718225450.GD1005@sol.localdomain>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 19 Jul 2023 01:06:53 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGR=1vA5T+iiRBSiabMqZxdCar_mXLOfcWPW0G1eHiXPA@mail.gmail.com>
-Message-ID: <CAMj1kXGR=1vA5T+iiRBSiabMqZxdCar_mXLOfcWPW0G1eHiXPA@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/21] crypto: scomp - Revert "add support for deflate
- rfc1950 (zlib)"
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Kees Cook <keescook@chromium.org>,
-        Haren Myneni <haren@us.ibm.com>,
-        Nick Terrell <terrelln@fb.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Ahern <dsahern@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        qat-linux@intel.com, linuxppc-dev@lists.ozlabs.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,57 +66,38 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, 19 Jul 2023 at 00:54, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Jul 18, 2023 at 03:32:39PM -0700, Eric Biggers wrote:
-> > On Tue, Jul 18, 2023 at 02:58:27PM +0200, Ard Biesheuvel wrote:
-> > > This reverts commit a368f43d6e3a001e684e9191a27df384fbff12f5.
-> > >
-> > > "zlib-deflate" was introduced 6 years ago, but it does not have any
-> > > users. So let's remove the generic implementation and the test vectors,
-> > > but retain the "zlib-deflate" entry in the testmgr code to avoid
-> > > introducing warning messages on systems that implement zlib-deflate in
-> > > hardware.
-> > >
-> > > Note that RFC 1950 which forms the basis of this algorithm dates back to
-> > > 1996, and predates RFC 1951, on which the existing IPcomp is based and
-> > > which we have supported in the kernel since 2003. So it seems rather
-> > > unlikely that we will ever grow the need to support zlib-deflate.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >  crypto/deflate.c | 61 +++++-----------
-> > >  crypto/testmgr.c |  8 +--
-> > >  crypto/testmgr.h | 75 --------------------
-> > >  3 files changed, 18 insertions(+), 126 deletions(-)
-> >
-> > So if this is really unused, it's probably fair to remove it on that basis.
-> > However, it's not correct to claim that DEFLATE is obsoleted by zlib (the data
-> > format).  zlib is just DEFLATE plus a checksum, as is gzip.
-> >
-> > Many users of zlib or gzip use an external checksum and therefore would be
-> > better served by DEFLATE, avoiding a redundant builtin checksum.  Typically,
-> > people have chosen zlib or gzip simply because their compression library
-> > defaulted to it, they didn't understand the difference, and they overlooked that
-> > they're paying the price for a redundant builtin checksum.
-> >
-> > An example of someone doing it right is EROFS, which is working on adding
-> > DEFLATE support (not zlib or gzip!):
-> > https://lore.kernel.org/r/20230713001441.30462-1-hsiangkao@linux.alibaba.com
-> >
-> > Of course, they are using the library API instead of the clumsy crypto API.
-> >
->
-> Ah, I misread this patch, sorry.  It's actually removing support for zlib (the
-> data format) from the scomp API, leaving just DEFLATE.  That's fine too; again,
-> it ultimately just depends on what is actually being used via the scomp API.
-> But similarly you can't really claim that zlib is obsoleted by DEFLATE just
-> because of the RFC dates.  As I mentioned, many people do use zlib (the data
-> format), often just because it's the default of zlib (the library) and they
-> didn't know any better.  For example, btrfs compression supports zlib.
->
+When bio based device-mappers are set to TEST_DEVS, the test cases block/004,
+block/005, zbd/005 and zbd/006 fail (or silently skipped) on kernel version
+v6.5-rcX. This happens because the kernel no longer provides the sysfs
+attribute queue/scheduler for bio based block devices, and the test cases sets
+scheduler through the sysfs attribute and fail.
 
-I am not suggesting either is obsolete. I am merely pointing out that
-zlib-deflate is as old as plain deflate, and so we could have
-implemented both at the same time when IPcomp support was added, but
-we never bothered.
+This series address the failures. The first two patches are preparations. Next
+two patches introduce new helper functions: one to set scheduler to destination
+devices of bio based device-mapper. The other to check queue/scheduler attribute
+existence. The last two patches fix the test cases by calling the new helper
+functions.
+
+Shin'ichiro Kawasaki (6):
+  check, common/rc: save sysfs attribute path
+  common/dm: add script file for device-mapper functions
+  common/{rc,dm}: introduce functions to set scheduler of dm
+    destinations
+  common/rc: introduce _require_test_dev_sysfs
+  block/004, zbd/{005,006}: call _test_dev_set_scheduler
+  block/005: require queue/scheduler sysfs attribute
+
+ check           | 10 +++++-----
+ common/dm       | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ common/rc       | 29 ++++++++++++++++++++++++-----
+ tests/block/004 |  2 +-
+ tests/block/005 |  4 ++++
+ tests/zbd/005   |  2 +-
+ tests/zbd/006   |  2 +-
+ tests/zbd/rc    | 19 +------------------
+ 8 files changed, 81 insertions(+), 31 deletions(-)
+ create mode 100644 common/dm
+
+-- 
+2.40.1
+
