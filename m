@@ -2,57 +2,57 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71998758E82
-	for <lists+linux-block@lfdr.de>; Wed, 19 Jul 2023 09:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58837758E85
+	for <lists+linux-block@lfdr.de>; Wed, 19 Jul 2023 09:15:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjGSHPS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 19 Jul 2023 03:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48994 "EHLO
+        id S229660AbjGSHPW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 19 Jul 2023 03:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjGSHPQ (ORCPT
+        with ESMTP id S229689AbjGSHPQ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Wed, 19 Jul 2023 03:15:16 -0400
 Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66026E43
-        for <linux-block@vger.kernel.org>; Wed, 19 Jul 2023 00:15:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1CA1E47
+        for <linux-block@vger.kernel.org>; Wed, 19 Jul 2023 00:15:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1689750913; x=1721286913;
+  t=1689750914; x=1721286914;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=G09vDse7zEvj0+oVciZKEnyas4RKYuUwRXOFND9n7Po=;
-  b=KPGG5UlU301/N/pL4Ff64IWxFdfVHZ5q8qnVTyItTmk1vNVvAdSX/YYU
-   205e+KaloCV/ugC1xqL+5IozIc6/+zUfNjjWkfGcW1AOgQj6c4jsnUHbp
-   k7XIs/vcT6CBTUKk/PYTq4ubeFa9F7swfZeu/IDLPN5/c76jaBVVKonGT
-   AoaVhFE8Ykwum0gwl3OWi94Af3UpKCnWqnAV1j5VMWWt7ZwgEGswswoVS
-   5ZyyDRMH5PwI2MwHIx7oox6Su7PZqsQZtBgnxy7KNw0fD1dmincepfo1p
-   IUOcP2Zr3IkW5894NiYw/9xAnYJ6GxT//HV3sON6bJyceYgJuuugvvBm7
-   g==;
+  bh=3fF1NGMIcRWVjBOewH3fuROA4CJqtnPUQFzIkVwHVm8=;
+  b=cQMqrSHdrMGIoxbVQbHRzDEryM+0FkvabRAn4jDsUd8CBvm9ERb+S3ZJ
+   w1cY8PYNeaeKRNnlsmYO78ZTDby8GQHnZhjDylq1Tf1+9cSonQ61hCnta
+   uaWNkKSRQQVDabNax7Ow7Sk1jZUw8uxz5fK09PIadFtdj32jyKYi54zdY
+   kDaxbGIFvr87xH8l0zsnEFx6CW/fSgYMBWHQHUyh1VEv9Q7sP+SI4gfuY
+   y/2CkdK4B0DGHjSDfGWj32kWWlUbxtjRQnqHPyJbHZB44NNHoTOZTcNBa
+   Sd5kOljEeTxBMFv2N1U1mdMYuvxwyGqpncaLS0GRTaEs0a15KGmRrzfdh
+   Q==;
 X-IronPort-AV: E=Sophos;i="6.01,216,1684771200"; 
-   d="scan'208";a="238846515"
+   d="scan'208";a="238846517"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
   by ob1.hgst.iphmx.com with ESMTP; 19 Jul 2023 15:15:12 +0800
-IronPort-SDR: myQcDpxsY2pMrRbfLmGsFc/WQ0xgUEAwTM0r2QkmtllVIVRbpRLgiS1qU3RdvUePa/d2E19Iop
- cpOy0PcH2L3zYeFzTzYO7/txsISLp//iS0b7pLjTyT/0NFrbWuD7v7VxcF7+w8ZxNsDzuNuU1b
- JVVfPDrp8AasjsscPF2z9G0LUelOjraKr/wBVd8sYEgMLpuPxlJa/d/AvijxjwQjF4+dLBbZTX
- Lrgs4X7EU7lE8LsSd3mStaLNgiQzzpLQyqcK+ic+FxO6s6Ao4p4KG0OeIVT3txPkfyKmXLrwWK
- xSM=
+IronPort-SDR: T5ashRWuF20qy9+30nKI+IMmv8UiOmdy+iS/2GsnJMbXljtKANAXlFcNuvU84bADz7ssA9Us3H
+ 3RtPTAk6IGqR/fCQpPEXJaJ8+ANKRjIU+uEjtaCoyEHwCTOTmymvz5oS77HjWyBhcedxn4kOaY
+ ahzdI9SsCLugn4raZzy4SAH37EAh1rKhLjfbowNepeqQQlIQehj6oB5JN+L0/XMjqVdO0Ajzpi
+ OK8OkHb1eRR3HE9UPIRJYQgWG+N2GKvWZHjkrW/hKYQC151bTOZs+ojkJS+ZelqT3V7qXt9zxZ
+ INc=
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
   by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Jul 2023 23:23:24 -0700
-IronPort-SDR: SnTCgq74RsPYr51cHOs6U1bvbNVS2agXymhORRqAOG7AOgHboUBekQGLj60bDWm6c2YdDTZ63z
- /pGUKU4oNFYjVmDhBMnXXKoe/rXvnLymS5yKPTtEnk9SSiucUPUqGLGJeyfxwaS27S97goHdjD
- servZtGY1VEIv3ziqBsQTkr472iUsEOGUVEDOMirp+iMU6779vPLW5c9se3o23yWJVjQCgx7Pn
- gCRprYEr6dxYO7sU0qfxpLGzB6Q2lRL5N0Af7dGdcfEbMJErwGI6ESvf0wco1eEYiTOMc8QWqB
- 44c=
+IronPort-SDR: jIcVTulS4JZ487tzqYQdpZ/JGLIYXAGGYvKxyB9Tj7/R6DfUZ16Pqbz6rBKSHZgbVxVglpE0u2
+ 1N4BnTLOm/XZqBgVWYbZ+82YRsw/IVWFUI1B3NVc4sdK7t2QC/JXd4Qt6mXkqgcqovq9VoPXU3
+ ZImBRVv/ede1wCcXw39s/FD/A5K3kwLuOfx0JyoBKmO4EnN/Qaa95gv6/Qmpy1PJTaf5N1m4jL
+ 9z77eCVpS7Rlv6M9+kJgiRpdMKe1hILTI2SbmdEqPhHZV5LQSC6oqG7cpS9syajikidbUdbsvJ
+ 2h8=
 WDCIronportException: Internal
 Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
-  by uls-op-cesaip01.wdc.com with ESMTP; 19 Jul 2023 00:15:11 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 19 Jul 2023 00:15:12 -0700
 From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 1/6] check, common/rc: save sysfs attribute path
-Date:   Wed, 19 Jul 2023 16:15:05 +0900
-Message-Id: <20230719071510.530623-2-shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests 2/6] common/dm: add script file for device-mapper functions
+Date:   Wed, 19 Jul 2023 16:15:06 +0900
+Message-Id: <20230719071510.530623-3-shinichiro.kawasaki@wdc.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230719071510.530623-1-shinichiro.kawasaki@wdc.com>
 References: <20230719071510.530623-1-shinichiro.kawasaki@wdc.com>
@@ -68,73 +68,89 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Current implementation saves sysfs attributes under queue/ directory
-in the associative array TEST_DEV_QUEUE_SAVED using attribute file names
-as keys. The saved attributes are restored after each test case run.
-When TEST_DEV is a device-mapper, this attribute restore does not cover
-attributes of device-mapper destination devices. As a preparation to
-cover the destination devices, use path of the attributes as keys
-instead of file names. Also rename the associative array
-TEST_DEV_QUEUE_SAVED to SYSFS_QUEUE_SAVED.
+Create a new script file common/dm and move two helper functions for
+device-mapper from tests/zbd/rc.
 
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- check     | 10 +++++-----
- common/rc | 12 +++++++-----
- 2 files changed, 12 insertions(+), 10 deletions(-)
+ common/dm    | 23 +++++++++++++++++++++++
+ tests/zbd/rc | 19 +------------------
+ 2 files changed, 24 insertions(+), 18 deletions(-)
+ create mode 100644 common/dm
 
-diff --git a/check b/check
-index 8eaf5c6..e5697c6 100755
---- a/check
-+++ b/check
-@@ -314,10 +314,10 @@ _cleanup() {
- 	fi
- 
- 	local key value
--	for key in "${!TEST_DEV_QUEUE_SAVED[@]}"; do
--		value="${TEST_DEV_QUEUE_SAVED["$key"]}"
--		echo "$value" >"${TEST_DEV_SYSFS}/queue/${key}"
--		unset "TEST_DEV_QUEUE_SAVED[$key]"
-+	for key in "${!SYSFS_QUEUE_SAVED[@]}"; do
-+		value="${SYSFS_QUEUE_SAVED["$key"]}"
-+		echo "$value" >"${key}"
-+		unset "SYSFS_QUEUE_SAVED[$key]"
- 	done
- 
- 	if [[ "${RESTORE_CPUS_ONLINE:-}" ]]; then
-@@ -336,7 +336,7 @@ _call_test() {
- 	local seqres="${RESULTS_DIR}/${TEST_NAME}"
- 	# shellcheck disable=SC2034
- 	FULL="${seqres}.full"
--	declare -A TEST_DEV_QUEUE_SAVED
-+	declare -A SYSFS_QUEUE_SAVED
- 
- 	declare -A LAST_TEST_RUN
- 	_read_last_test_run
-diff --git a/common/rc b/common/rc
-index 90122c0..4984100 100644
---- a/common/rc
-+++ b/common/rc
-@@ -284,12 +284,14 @@ _test_dev_queue_get() {
- }
- 
- _test_dev_queue_set() {
--	# For bash >=4.3 we'd write if [[ ! -v TEST_DEV_QUEUE_SAVED["$1"] ]].
--	if [[ -z ${TEST_DEV_QUEUE_SAVED["$1"]} &&
--	      ${TEST_DEV_QUEUE_SAVED["$1"]-unset} == unset ]]; then
--		TEST_DEV_QUEUE_SAVED["$1"]="$(_test_dev_queue_get "$1")"
-+	local path="${TEST_DEV_SYSFS}/queue/$1"
+diff --git a/common/dm b/common/dm
+new file mode 100644
+index 0000000..85e1ed9
+--- /dev/null
++++ b/common/dm
+@@ -0,0 +1,23 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-3.0+
++# Copyright (C) 2023 Western Digital Corporation or its affiliates.
++#
++# scsi_debug helper functions.
 +
-+	# For bash >=4.3 we'd write if [[ ! -v SYSFS_QUEUE_SAVED["$path"] ]].
-+	if [[ -z ${SYSFS_QUEUE_SAVED["$path"]} &&
-+	      ${SYSFS_QUEUE_SAVED["$path"]-unset} == unset ]]; then
-+		SYSFS_QUEUE_SAVED["$path"]="$(_test_dev_queue_get "$1")"
- 	fi
--	echo "$2" >"${TEST_DEV_SYSFS}/queue/$1"
-+	echo "$2" >"$path"
++_test_dev_is_dm() {
++	[[ -r "${TEST_DEV_SYSFS}/dm/name" ]]
++}
++
++# Get device file path from the device ID "major:minor".
++_get_dev_path_by_id() {
++	for d in /sys/block/* /sys/block/*/*; do
++		if [[ ! -r "${d}/dev" ]]; then
++			continue
++		fi
++		if [[ "${1}" == "$(<"${d}/dev")" ]]; then
++			echo "/dev/${d##*/}"
++			return 0
++		fi
++	done
++	return 1
++}
+diff --git a/tests/zbd/rc b/tests/zbd/rc
+index 2e370f0..ffe3f6c 100644
+--- a/tests/zbd/rc
++++ b/tests/zbd/rc
+@@ -6,6 +6,7 @@
+ 
+ . common/rc
+ . common/null_blk
++. common/dm
+ 
+ #
+ # Test requirement check functions
+@@ -281,10 +282,6 @@ _find_two_contiguous_seq_zones() {
+ 	return 1
  }
  
- _require_test_dev_is_pci() {
+-_test_dev_is_dm() {
+-	[[ -r "${TEST_DEV_SYSFS}/dm/name" ]]
+-}
+-
+ _require_test_dev_is_logical() {
+ 	if ! _test_dev_is_partition && ! _test_dev_is_dm; then
+ 		SKIP_REASONS+=("$TEST_DEV is not a logical device")
+@@ -307,20 +304,6 @@ _test_dev_has_dm_map() {
+ 	return 0
+ }
+ 
+-# Get device file path from the device ID "major:minor".
+-_get_dev_path_by_id() {
+-	for d in /sys/block/* /sys/block/*/*; do
+-		if [[ ! -r "${d}/dev" ]]; then
+-			continue
+-		fi
+-		if [[ "${1}" == "$(<"${d}/dev")" ]]; then
+-			echo "/dev/${d##*/}"
+-			return 0
+-		fi
+-	done
+-	return 1
+-}
+-
+ # Given sector of TEST_DEV, return the device which contain the sector and
+ # corresponding sector of the container device.
+ _get_dev_container_and_sector() {
 -- 
 2.40.1
 
