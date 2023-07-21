@@ -2,71 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5134975CFA6
-	for <lists+linux-block@lfdr.de>; Fri, 21 Jul 2023 18:37:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D8AB75D0A9
+	for <lists+linux-block@lfdr.de>; Fri, 21 Jul 2023 19:28:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbjGUQhL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 21 Jul 2023 12:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33024 "EHLO
+        id S230153AbjGUR17 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 21 Jul 2023 13:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232434AbjGUQgV (ORCPT
+        with ESMTP id S231433AbjGUR1q (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 21 Jul 2023 12:36:21 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B23453A8C
-        for <linux-block@vger.kernel.org>; Fri, 21 Jul 2023 09:35:47 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D51A91F7AB;
-        Fri, 21 Jul 2023 16:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1689957344; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=I8N8UPzdHsXt8zyD+0Iu4lzNtBkmFQ10QLkyHs69xaA=;
-        b=07PFlsoE2qTfQ/8nL4pluvELLRPAuRcTiTjCUG5Br7M2xClmV5QndZz1QAg/Ul0a4Ts3EP
-        Ph26liK1v3mzX3fdIVAhtb9gOe9DjXitTFt0TO00h8Xu1GMF+CKNGO0/Qht3+ryPFVvz+P
-        EvqHxvYpax2NNSXsBDSHrsXhtmdcs70=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1689957344;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=I8N8UPzdHsXt8zyD+0Iu4lzNtBkmFQ10QLkyHs69xaA=;
-        b=onBiKn7tifUIK+Y8PXoV5Pf9M3c9bW0c4UCcEi6260TBqdkE8mVa0VOZAf8F/2tKDbIXH8
-        Tz1CY8UO8swx44CA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9DEAC134BA;
-        Fri, 21 Jul 2023 16:35:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id WXHnIOCzumSiSQAAMHmgww
-        (envelope-from <krisman@suse.de>); Fri, 21 Jul 2023 16:35:44 +0000
-From:   Gabriel Krisman Bertazi <krisman@suse.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        David Jeffery <djeffery@redhat.com>,
-        Kemeng Shi <shikemeng@huaweicloud.com>,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [RFC PATCH] sbitmap: fix batching wakeup
-Organization: SUSE
-References: <20230721095715.232728-1-ming.lei@redhat.com>
-Date:   Fri, 21 Jul 2023 12:35:43 -0400
-In-Reply-To: <20230721095715.232728-1-ming.lei@redhat.com> (Ming Lei's message
-        of "Fri, 21 Jul 2023 17:57:15 +0800")
-Message-ID: <87jzut43z4.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+        Fri, 21 Jul 2023 13:27:46 -0400
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DD75198D
+        for <linux-block@vger.kernel.org>; Fri, 21 Jul 2023 10:27:45 -0700 (PDT)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6686708c986so1911610b3a.0
+        for <linux-block@vger.kernel.org>; Fri, 21 Jul 2023 10:27:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689960465; x=1690565265;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e+ZWqL47uenxrTRJtNc3OjfBC2vjrgWoi9bKb9Q4Jxw=;
+        b=Ae6HgVKDdg8Ae6uBZLgUMMHpnkSDPKLJJ164v4foO+t19KwUqdqIfURsz3MhwYc0D4
+         GKjemDEudJxUKSwXG1enlIt8MuQ2Jd+S+gTthG+ozmI+uJT3fqKjlYHXYmJXpd7AkfBw
+         F0DQYGBs3FxcFl8j5l8FLnLdBQuZvvKnwlm4fDwMMRR1rLEs7fl1C2amMQdKNF7ImO6a
+         1UL1NlNtnTyFbpSrh5J0R8h1wF0BWcph2JGlXptCmmCT/sTV/hJMG99sHlsFN9O5qMDJ
+         lZBjgbu4YLE4z3xz1nJu7EeXZniKRQwwerg3Ku4D1xAIa+t/P/em8oIey2q38CL9RmVT
+         YiGQ==
+X-Gm-Message-State: ABy/qLZrPWOXANQH3QUTNWVGWA+Zuo/KWfHk4Qq+8g3RQO6g10wff6ij
+        PxWLnvKrGi4lj+h2ePJp6dg=
+X-Google-Smtp-Source: APBJJlEfySHOC85c7Rd5C7tcXVMuv2NViHLWthWs2zA4t6q6Fe37ahzg9IjCtrDtmqYsrSd/wU/CfA==
+X-Received: by 2002:a05:6a21:3385:b0:137:a9d7:d8cc with SMTP id yy5-20020a056a21338500b00137a9d7d8ccmr3003079pzb.24.1689960464803;
+        Fri, 21 Jul 2023 10:27:44 -0700 (PDT)
+Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5043:9124:70cb:43f9])
+        by smtp.gmail.com with ESMTPSA id jj13-20020a170903048d00b001b83db0bcf2sm3790961plb.141.2023.07.21.10.27.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jul 2023 10:27:44 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH v3 0/3] Improve performance for BLK_MQ_F_BLOCKING drivers
+Date:   Fri, 21 Jul 2023 10:27:27 -0700
+Message-ID: <20230721172731.955724-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,43 +59,35 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Ming Lei <ming.lei@redhat.com> writes:
+Hi Jens,
 
-> From: David Jeffery <djeffery@redhat.com>
->
-> Current code supposes that it is enough to provide forward progress by just
-> waking up one wait queue after one completion batch is done.
->
-> Unfortunately this way isn't enough, cause waiter can be added to
-> wait queue just after it is woken up.
->
-> Follows one example(64 depth, wake_batch is 8)
->
-> 1) all 64 tags are active
->
-> 2) in each wait queue, there is only one single waiter
->
-> 3) each time one completion batch(8 completions) wakes up just one waiter in each wait
-> queue, then immediately one new sleeper is added to this wait queue
->
-> 4) after 64 completions, 8 waiters are wakeup, and there are still 8 waiters in each
-> wait queue
->
-> 5) after another 8 active tags are completed, only one waiter can be wakeup, and the other 7
-> can't be waken up anymore.
->
-> Turns out it isn't easy to fix this problem, so simply wakeup enough waiters for
-> single batch.
+Request queues are run asynchronously if BLK_MQ_F_BLOCKING has been set. This
+results in suboptimal performance. This patch series improves performance if
+BLK_MQ_F_BLOCKING has been set by running request queues synchronously
+whenever possible.
 
-yes, I think this makes sense. When working on this algorithm I remember
-I considered it (thus wake_up_nr being ready), but ended up believing it
-wasn't needed.  please take:
-
-Reviewed-by: Gabriel Krisman Bertazi <krisman@suse.de>
-
-I wonder how likely it is to reach it.  Did you get a bug report?
+Please consider this patch series for the next merge window.
 
 Thanks,
 
--- 
-Gabriel Krisman Bertazi
+Bart.
+
+Changes compared to v2:
+- Improved the descriptions of patches 1/3 and 2/3.
+- Added a comment in patch 2/3.
+- In patch 3/3, included a change for blk_execute_rq_nowait() since I noticed
+  that this function may be called from a context where it is not allowed to
+  sleep (nvme_uring_cmd_io() for NVMe over TCP).
+
+Changes compared to v1:
+- Fixed support for the combination BLK_MQ_F_BLOCKING + BLIST_SINGLELUN.
+
+Bart Van Assche (3):
+  scsi: Inline scsi_kick_queue()
+  scsi: Remove a blk_mq_run_hw_queues() call
+  block: Improve performance for BLK_MQ_F_BLOCKING drivers
+
+ block/blk-mq.c          | 17 +++++++++++------
+ drivers/scsi/scsi_lib.c | 12 ++++--------
+ 2 files changed, 15 insertions(+), 14 deletions(-)
+
