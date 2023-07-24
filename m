@@ -2,73 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E666D75FC02
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jul 2023 18:26:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22A2F75FCA1
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jul 2023 18:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230448AbjGXQ0h (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jul 2023 12:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52918 "EHLO
+        id S230094AbjGXQyg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jul 2023 12:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbjGXQ0g (ORCPT
+        with ESMTP id S231228AbjGXQyf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jul 2023 12:26:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA09170E
-        for <linux-block@vger.kernel.org>; Mon, 24 Jul 2023 09:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690215936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=drAtcPHCS22fP7yNxW1l2FqAXXz6i9T2pfEijoZr8LE=;
-        b=Jg91pGSGYDlmtxEy/KNYCvbf6jZ7TM83/B8JqKwX1TqBspnTwP6rG9bWKegR5FebiX1iu7
-        ne/KK2Gwq5za6Rx2ovDsngOhjbjZ1QFB/oRRzl83dlPtA63KmGW5BnT7w9Na9YCAoDukab
-        zz4EK8GE8otpPaDwZZkpzOxpeoly+nE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-416-v3dJyOVKPCiMh3BNUtI08A-1; Mon, 24 Jul 2023 12:25:33 -0400
-X-MC-Unique: v3dJyOVKPCiMh3BNUtI08A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7D3F0800159;
-        Mon, 24 Jul 2023 16:25:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D754E40C2063;
-        Mon, 24 Jul 2023 16:25:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <000000000000836b2805fffd6d7e@google.com>
-References: <000000000000836b2805fffd6d7e@google.com>
-To:     syzbot <syzbot+6f66f3e78821b0fff882@syzkaller.appspotmail.com>
-Cc:     dhowells@redhat.com, akpm@linux-foundation.org, axboe@kernel.dk,
-        herbert@gondor.apana.org.au, kuba@kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [block?] KASAN: slab-out-of-bounds Read in bio_split_rw
+        Mon, 24 Jul 2023 12:54:35 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A6D10F4
+        for <linux-block@vger.kernel.org>; Mon, 24 Jul 2023 09:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=dVBw9C6L6a7S2QtTlPSWGEHC8f6tBNKd8qWOU7uEKCo=; b=14txw/k7d2Rh8C1Y6wRO7MRwsw
+        Is7Qpdq5QBrAwiNiNCJAq4cQ3y/jLbO1FgLaUOpFF1G2xH2pDMpuQMxD7sgPH/yDCRsWr72aPHMkZ
+        T18KkWYaEwNvpIkLSruNSCJymWIoUp8sDO+u6yEMWljvlxjjJxSjWWPCc5nZa3a1i5CApJqJQrEF6
+        t7JlyZe54WwYK1uQo+p8ZMq7zZlkYSam0TnMNlg9Y/YgthM9FPasdRhRqCDiEPs2C78dp+xlThjqr
+        VfoduYv1axY9hfS57GKSWm2CtCWCZdut3SapNxcxm31T+73A8JUZUkk2x6vF3usoao7qChCO/EsL0
+        W0eUtZ9A==;
+Received: from 67-207-104-238.static.wiline.com ([67.207.104.238] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qNypN-004vto-16;
+        Mon, 24 Jul 2023 16:54:33 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Jinyoung Choi <j-young.choi@samsung.com>,
+        linux-block@vger.kernel.org
+Subject: rationalize the flow in bio_add_page and friends v2
+Date:   Mon, 24 Jul 2023 09:54:25 -0700
+Message-Id: <20230724165433.117645-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <13124.1690215929.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 24 Jul 2023 17:25:29 +0100
-Message-ID: <13125.1690215929@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t 0b7ec177b589842c0abf9e91459c83ba28d32452
+Hi Jens,
 
+when reviewing v2 of Jinyoung's "Change the integrity configuration
+method in block" series I noticed that someone made a complete mess of
+the bio_add_page flow, so this untangles this to make the code better
+reusable for adding integrity payloads.  (I'll also have a word with
+younger me when I get the chance about this..)
+
+Changes since v1:
+ - rebased against the current for-6.6/block tree
+
+Diffstat:
+ bio.c |  124 ++++++++++++++++++++++++++++--------------------------------------
+ 1 file changed, 53 insertions(+), 71 deletions(-)
