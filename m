@@ -2,40 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C4CA75FCA4
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jul 2023 18:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 479EB75FCA2
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jul 2023 18:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231251AbjGXQyh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jul 2023 12:54:37 -0400
+        id S229558AbjGXQyg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jul 2023 12:54:36 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231221AbjGXQyg (ORCPT
+        with ESMTP id S231202AbjGXQyf (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jul 2023 12:54:36 -0400
+        Mon, 24 Jul 2023 12:54:35 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C8410F8
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16F410F6
         for <linux-block@vger.kernel.org>; Mon, 24 Jul 2023 09:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=/L4Vf6XgX1i8Sa3+yr/s3kpmCh1ZQ3gtttexj4gOiSA=; b=if925Q/XjllAAUlGwWCFx9Bepm
-        H8yI+sClIxfqCTajsyyicRcuZb5IVPSLmT+Lt19eNw1Pd79ftNTAHxctpymfEvrho2YNMIfRadJZ2
-        gvtqyHsRh+Vs0LkPzApeC3YxZWD/gHH8bbX1eimpw4Xt0rKUxmvO63dPHj0AgtImp05J+7AuJwPgW
-        BwDyZWbB+kRQ+LywIi761lpnfjboLKhWFgz4/g3Ro3ia+naKkwolBybGn8XRmPK6sC3kn81QvwXhs
-        rple+7tvKM07c3JBC8ioIf0J6/PLGe+OedRaYrz+PPy5zx6sK4i9STJdZ7HHfRM7fZ/pIckI33gzC
-        bMgoh2bg==;
+        bh=fo891t+MRuPQ6hqtNNoXRls0WMaXaEefJnnr0O2/hDE=; b=t77oPWR7xbM1JPbK11oQp8uXr+
+        tNUCxletgrisw9YU+H+/VU974ujGueouskQW5SDrdn4NuB7ptzILcuVkFKI94SatkS2z1yw4MiB7N
+        2AYKtKCfE4pN6dLuW4NUNZd0fzy/VVR9+bC/cOYUtYg8PJTfEa3XONRiNZZ/3ec/g70dxzfHtatIE
+        eT6gPxoXnrMSzXRgqNOhPKLSBhVP7Bqd8aGkQPj+Kbauv123pD2PhUwW25bYdkxjB5LFUs3esNPQa
+        PXAZsOOCu/URwckGMf4n3W03j5GwzcZ4IfXKgUhpxOL5Tavf+W2mGsBOn4aiuFvg8T/YkkuhVvJMy
+        Xwo2jebw==;
 Received: from 67-207-104-238.static.wiline.com ([67.207.104.238] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qNypN-004vtx-1q;
+        id 1qNypN-004vu4-2X;
         Mon, 24 Jul 2023 16:54:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Jinyoung Choi <j-young.choi@samsung.com>,
-        linux-block@vger.kernel.org
-Subject: [PATCH 1/8] block: tidy up the bio full checks in bio_add_hw_page
-Date:   Mon, 24 Jul 2023 09:54:26 -0700
-Message-Id: <20230724165433.117645-2-hch@lst.de>
+        linux-block@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 2/8] block: use SECTOR_SHIFT bio_add_hw_page
+Date:   Mon, 24 Jul 2023 09:54:27 -0700
+Message-Id: <20230724165433.117645-3-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230724165433.117645-1-hch@lst.de>
 References: <20230724165433.117645-1-hch@lst.de>
@@ -52,45 +53,28 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bio_add_hw_page already checks if the number of bytes trying to be added
-even fit into max_hw_sectors limit of the queue.   Remove the call to
-bio_full and just do a check for the smaller of the number of segments
-in the bio and the queue max segments limit, and do this cheap check
-before the more expensive gap to previous check.
+Use the SECTOR_SHIFT magic constant instead of the magic number.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jinyoung Choi <j-young.choi@samsung.com>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- block/bio.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ block/bio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/block/bio.c b/block/bio.c
-index 8672179213b939..72488ecea47acf 100644
+index 72488ecea47acf..445be4bdd99bdb 100644
 --- a/block/bio.c
 +++ b/block/bio.c
-@@ -1014,6 +1014,10 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
- 		if (bio_try_merge_hw_seg(q, bio, page, len, offset, same_page))
- 			return len;
+@@ -1007,7 +1007,7 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
+ 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
+ 		return 0;
  
-+		if (bio->bi_vcnt >=
-+		    min(bio->bi_max_vecs, queue_max_segments(q)))
-+			return 0;
-+
- 		/*
- 		 * If the queue doesn't support SG gaps and adding this segment
- 		 * would create a gap, disallow it.
-@@ -1023,12 +1027,6 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
- 			return 0;
- 	}
+-	if (((bio->bi_iter.bi_size + len) >> 9) > max_sectors)
++	if (((bio->bi_iter.bi_size + len) >> SECTOR_SHIFT) > max_sectors)
+ 		return 0;
  
--	if (bio_full(bio, len))
--		return 0;
--
--	if (bio->bi_vcnt >= queue_max_segments(q))
--		return 0;
--
- 	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, offset);
- 	bio->bi_vcnt++;
- 	bio->bi_iter.bi_size += len;
+ 	if (bio->bi_vcnt > 0) {
 -- 
 2.39.2
 
