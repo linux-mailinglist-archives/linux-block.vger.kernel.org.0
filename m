@@ -2,41 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22A2F75FCA1
-	for <lists+linux-block@lfdr.de>; Mon, 24 Jul 2023 18:54:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C4CA75FCA4
+	for <lists+linux-block@lfdr.de>; Mon, 24 Jul 2023 18:54:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbjGXQyg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 24 Jul 2023 12:54:36 -0400
+        id S231251AbjGXQyh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 24 Jul 2023 12:54:37 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231228AbjGXQyf (ORCPT
+        with ESMTP id S231221AbjGXQyg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 24 Jul 2023 12:54:35 -0400
+        Mon, 24 Jul 2023 12:54:36 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A6D10F4
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C8410F8
         for <linux-block@vger.kernel.org>; Mon, 24 Jul 2023 09:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=dVBw9C6L6a7S2QtTlPSWGEHC8f6tBNKd8qWOU7uEKCo=; b=14txw/k7d2Rh8C1Y6wRO7MRwsw
-        Is7Qpdq5QBrAwiNiNCJAq4cQ3y/jLbO1FgLaUOpFF1G2xH2pDMpuQMxD7sgPH/yDCRsWr72aPHMkZ
-        T18KkWYaEwNvpIkLSruNSCJymWIoUp8sDO+u6yEMWljvlxjjJxSjWWPCc5nZa3a1i5CApJqJQrEF6
-        t7JlyZe54WwYK1uQo+p8ZMq7zZlkYSam0TnMNlg9Y/YgthM9FPasdRhRqCDiEPs2C78dp+xlThjqr
-        VfoduYv1axY9hfS57GKSWm2CtCWCZdut3SapNxcxm31T+73A8JUZUkk2x6vF3usoao7qChCO/EsL0
-        W0eUtZ9A==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=/L4Vf6XgX1i8Sa3+yr/s3kpmCh1ZQ3gtttexj4gOiSA=; b=if925Q/XjllAAUlGwWCFx9Bepm
+        H8yI+sClIxfqCTajsyyicRcuZb5IVPSLmT+Lt19eNw1Pd79ftNTAHxctpymfEvrho2YNMIfRadJZ2
+        gvtqyHsRh+Vs0LkPzApeC3YxZWD/gHH8bbX1eimpw4Xt0rKUxmvO63dPHj0AgtImp05J+7AuJwPgW
+        BwDyZWbB+kRQ+LywIi761lpnfjboLKhWFgz4/g3Ro3ia+naKkwolBybGn8XRmPK6sC3kn81QvwXhs
+        rple+7tvKM07c3JBC8ioIf0J6/PLGe+OedRaYrz+PPy5zx6sK4i9STJdZ7HHfRM7fZ/pIckI33gzC
+        bMgoh2bg==;
 Received: from 67-207-104-238.static.wiline.com ([67.207.104.238] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qNypN-004vto-16;
+        id 1qNypN-004vtx-1q;
         Mon, 24 Jul 2023 16:54:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Jinyoung Choi <j-young.choi@samsung.com>,
         linux-block@vger.kernel.org
-Subject: rationalize the flow in bio_add_page and friends v2
-Date:   Mon, 24 Jul 2023 09:54:25 -0700
-Message-Id: <20230724165433.117645-1-hch@lst.de>
+Subject: [PATCH 1/8] block: tidy up the bio full checks in bio_add_hw_page
+Date:   Mon, 24 Jul 2023 09:54:26 -0700
+Message-Id: <20230724165433.117645-2-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230724165433.117645-1-hch@lst.de>
+References: <20230724165433.117645-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -50,17 +52,45 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+bio_add_hw_page already checks if the number of bytes trying to be added
+even fit into max_hw_sectors limit of the queue.   Remove the call to
+bio_full and just do a check for the smaller of the number of segments
+in the bio and the queue max segments limit, and do this cheap check
+before the more expensive gap to previous check.
 
-when reviewing v2 of Jinyoung's "Change the integrity configuration
-method in block" series I noticed that someone made a complete mess of
-the bio_add_page flow, so this untangles this to make the code better
-reusable for adding integrity payloads.  (I'll also have a word with
-younger me when I get the chance about this..)
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/bio.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Changes since v1:
- - rebased against the current for-6.6/block tree
+diff --git a/block/bio.c b/block/bio.c
+index 8672179213b939..72488ecea47acf 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1014,6 +1014,10 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
+ 		if (bio_try_merge_hw_seg(q, bio, page, len, offset, same_page))
+ 			return len;
+ 
++		if (bio->bi_vcnt >=
++		    min(bio->bi_max_vecs, queue_max_segments(q)))
++			return 0;
++
+ 		/*
+ 		 * If the queue doesn't support SG gaps and adding this segment
+ 		 * would create a gap, disallow it.
+@@ -1023,12 +1027,6 @@ int bio_add_hw_page(struct request_queue *q, struct bio *bio,
+ 			return 0;
+ 	}
+ 
+-	if (bio_full(bio, len))
+-		return 0;
+-
+-	if (bio->bi_vcnt >= queue_max_segments(q))
+-		return 0;
+-
+ 	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, offset);
+ 	bio->bi_vcnt++;
+ 	bio->bi_iter.bi_size += len;
+-- 
+2.39.2
 
-Diffstat:
- bio.c |  124 ++++++++++++++++++++++++++++--------------------------------------
- 1 file changed, 53 insertions(+), 71 deletions(-)
