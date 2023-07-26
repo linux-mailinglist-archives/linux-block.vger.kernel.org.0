@@ -2,89 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D22D7627EC
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jul 2023 02:58:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29E67628BE
+	for <lists+linux-block@lfdr.de>; Wed, 26 Jul 2023 04:31:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbjGZA6P (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 25 Jul 2023 20:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33236 "EHLO
+        id S230049AbjGZCbK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 25 Jul 2023 22:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbjGZA6O (ORCPT
+        with ESMTP id S229459AbjGZCbJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 25 Jul 2023 20:58:14 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C586DBC
-        for <linux-block@vger.kernel.org>; Tue, 25 Jul 2023 17:58:10 -0700 (PDT)
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6b9d562f776so4808250a34.2
-        for <linux-block@vger.kernel.org>; Tue, 25 Jul 2023 17:58:10 -0700 (PDT)
+        Tue, 25 Jul 2023 22:31:09 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF122688
+        for <linux-block@vger.kernel.org>; Tue, 25 Jul 2023 19:31:08 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-682b1768a0bso1482478b3a.0
+        for <linux-block@vger.kernel.org>; Tue, 25 Jul 2023 19:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1690338667; x=1690943467;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/pE4L/Xm3kLoI9HrD29L7K7aTmuDXrHPhtqkNw6IBbE=;
+        b=PP7ylOiR4Y79Htdcg5A3hJw/5wDtFQF+3iOv654e2CF9cX30H4cPrnu5NXn4p4x8NT
+         ASYJaTJK1ptUe1p0dPvHCvxaj3nwUg5kjrB5jn2E5Ry5VSz3XuVTwTWt+Dsk6oKjvoRH
+         4EiIcHjw3hVjkubi8Naj0v73pdG9eVD5nfxgAVtGT7RnSZXDg0Gee0JGI09b3ZYdCbBP
+         Ow3M1LaULfiBu5R9viG8XFf45DlF5SgTPztpbWJ1ng6yN41k15sDs9CXc6dAmPrar+or
+         CxXbUFObKJt3HSoANB4Jpy6K/OS55dv55K6OchX7zsbNEXKjr2te6KVk7i/3MzDIstcn
+         WtQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690333090; x=1690937890;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1690338667; x=1690943467;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KfP3G2FLUFJYJUQB/WuAG4l/dYwNhxCDQudwlLXJrQI=;
-        b=VsrVGVgf39kgg7g9fyFnsf9v+dgtIWaqYGn8/IiVChWUO6dsNykL/KwruTtgQVxTbT
-         qKyPntpzBcD9+s+2jhz0Xk0+Ghz/p8r6ewx16y9nQ9FAvBYVP6Bi5ppvHhxgMXw1kK85
-         JYdSvM6K0go3Pj2XpE19ZjxK83D8Vzgqhucs7eqD/vgHPO8of4vyKfTBfK1y2XOz8lg/
-         EbjBwMq02EvDajB5AwMwTXOPOjL1eDbHAzHT501251/VLXK0+MZecurzO3i9Kee3C9fE
-         r22QjXbtM4A7OQGvML5AoYu9GBpfjvZih9+bWYa+W3JOg+qx4/1fXSN7WTtuHxSLy+fA
-         LFWQ==
-X-Gm-Message-State: ABy/qLb0C71OWZkCe1XTbO+wT7nTTtTxkXUDZCMpWaGYqStWuEGvJeCf
-        tk4IOwp5TZTLZvzJZo5kDhY=
-X-Google-Smtp-Source: APBJJlE21D+lqUdbF1XyQw61O1QCMKCqlVfeo2Pa6AKQFnu4xBYGIfV6EZXRskomeAYGqg/ppamR2w==
-X-Received: by 2002:a05:6358:2817:b0:135:89d6:22e9 with SMTP id k23-20020a056358281700b0013589d622e9mr357992rwb.13.1690333089854;
-        Tue, 25 Jul 2023 17:58:09 -0700 (PDT)
-Received: from bvanassche-glaptop2.roam.corp.google.com ([2601:642:4c05:4a8d:dbda:6b13:2798:9795])
-        by smtp.gmail.com with ESMTPSA id t10-20020a63954a000000b005634bd81331sm11090138pgn.72.2023.07.25.17.58.08
+        bh=/pE4L/Xm3kLoI9HrD29L7K7aTmuDXrHPhtqkNw6IBbE=;
+        b=IhIDrL1oQCM3xjOEXIDKupFWeiBbxeoyHtky/F2b6F4mz4by4iEcBzYCwjZbC4FyKA
+         RYqOrN8v/lP0f3XwXPHqWhbyHq7e90A3jJ+9VQW/v+9+mm4R0PUG7mxs+cgJuwISOGmZ
+         32/m0JwFfSKrygyEvMru5/u8MRhWWDqpWGn3S58dn7PD/XTBIXSd1D1uzEjxqnBVFPRM
+         8ERupkKBm0JsBhefmu1lIe68WQI+c42OACoeLqw8IjMoQurk3cyBeHfimVtfjbLOgGfX
+         5/70GsHHmjCYP5We/IiOUe4OEUfOKbWCfefT+uBbNA9ranvsKYr0Bhhh42RRscquZk24
+         8YxA==
+X-Gm-Message-State: ABy/qLa02ILDfRY6g5dbVC9PcAAaoY49jFbzrqpgMAaJnOutzUT4USSu
+        1GpRyQAi3NH6nsStPhIcBux4Zg==
+X-Google-Smtp-Source: APBJJlESzRrQMirYjq1n8EmHX8b287gHfS/qwbjZK569Ys7+IMy/+sEP8iskIkH09yqzZ4ELfIPkeA==
+X-Received: by 2002:a05:6a21:6da6:b0:137:3eba:b808 with SMTP id wl38-20020a056a216da600b001373ebab808mr964035pzb.5.1690338667623;
+        Tue, 25 Jul 2023 19:31:07 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id p20-20020a637414000000b00563de16d60esm679198pgc.82.2023.07.25.19.31.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 17:58:09 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Ming Lei <ming.lei@redhat.com>, Chao Yu <chao@kernel.org>
-Subject: [PATCH v3 6/6] fs/f2fs: Disable zone write locking
-Date:   Tue, 25 Jul 2023 17:57:30 -0700
-Message-ID: <20230726005742.303865-7-bvanassche@acm.org>
-X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-In-Reply-To: <20230726005742.303865-1-bvanassche@acm.org>
-References: <20230726005742.303865-1-bvanassche@acm.org>
+        Tue, 25 Jul 2023 19:31:07 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jinyoung Choi <j-young.choi@samsung.com>
+Cc:     hch@lst.de, martin.petersen@oracle.com
+In-Reply-To: <20230725051839epcms2p8e4d20ad6c51326ad032e8406f59d0aaa@epcms2p8>
+References: <CGME20230725051839epcms2p8e4d20ad6c51326ad032e8406f59d0aaa@epcms2p8>
+ <20230725051839epcms2p8e4d20ad6c51326ad032e8406f59d0aaa@epcms2p8>
+Subject: Re: [PATCH] block: cleanup bio_integrity_prep
+Message-Id: <169033866680.863387.15476130342413439533.b4-ty@kernel.dk>
+Date:   Tue, 25 Jul 2023 20:31:06 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-099c9
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Set the REQ_NO_ZONE_WRITE_LOCK flag to inform the block layer that F2FS
-allocates and submits zoned writes in LBA order per zone.
 
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- fs/f2fs/data.c | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, 25 Jul 2023 14:18:39 +0900, Jinyoung Choi wrote:
+> If a problem occurs in the process of creating an integrity payload, the
+> status of bio is always BLK_STS_RESOURCE.
+> 
+> 
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 5882afe71d82..6361553f4ab1 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -569,6 +569,7 @@ static void f2fs_submit_write_bio(struct f2fs_sb_info *sbi, struct bio *bio,
- 		}
- 	}
- 
-+	bio->bi_opf |= REQ_NO_ZONE_WRITE_LOCK;
- 	trace_f2fs_submit_write_bio(sbi->sb, type, bio);
- 	iostat_update_submit_ctx(bio, type);
- 	submit_bio(bio);
+Applied, thanks!
+
+[1/1] block: cleanup bio_integrity_prep
+      commit: 51d74ec9b62f5813767a60226acaf943e26e7d7a
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
