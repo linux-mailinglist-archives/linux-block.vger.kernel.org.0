@@ -2,93 +2,143 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00BB5763FCE
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jul 2023 21:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE2F37641EC
+	for <lists+linux-block@lfdr.de>; Thu, 27 Jul 2023 00:12:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbjGZTfk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Jul 2023 15:35:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38010 "EHLO
+        id S229820AbjGZWMb (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Jul 2023 18:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbjGZTfj (ORCPT
+        with ESMTP id S229862AbjGZWM3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Jul 2023 15:35:39 -0400
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFB4E73
-        for <linux-block@vger.kernel.org>; Wed, 26 Jul 2023 12:35:36 -0700 (PDT)
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-68336d06620so224585b3a.1
-        for <linux-block@vger.kernel.org>; Wed, 26 Jul 2023 12:35:36 -0700 (PDT)
+        Wed, 26 Jul 2023 18:12:29 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F20271B;
+        Wed, 26 Jul 2023 15:12:27 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-57a4c0324b5so570847b3.0;
+        Wed, 26 Jul 2023 15:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690409547; x=1691014347;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u8mBYQ48hqxLsJ20eS/0jkkgIvd41omZCyTUT7Irfl8=;
+        b=FGMXJIm+YcdnO2qdl9FARUysPWEgy4ZPjJMWoyY5JQFrLYy/xhbsOd/fGYe1HgkGql
+         pwgC+CQD+7sPsRUocSzXMxgtDZMqOlRK8JOk8aFBW/RwtRTD8Ox/vfB53GHO6EOOygld
+         YgpptCv1YGYr+QjGiznuxc0N10q8/czjpTLTJUUILRBrN0sKXYI6Wiy5lZQ/tyUenAXA
+         THq4EpnBOvuM7e1m+P/ccaGwlZQEZCiO1eQQxB18EzMY4+iYdcLfIrmMFoxINsS1EkP8
+         CQq9H0/aL9FBMZQK3S9ktE0nJv0/z26zCITlVUKYKkqHI0q+846gLlY+ehtBe9nreUrK
+         tY4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690400135; x=1691004935;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1690409547; x=1691014347;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5g5dDMJrDnmVBYbURJxSyl07IG82zCyXPOwukTCAfBk=;
-        b=kS0zfG5wc3qrKU+m4nxmvpPQazxysvfGX1GLM2Vr44NswB2vj/kBDVr4J1A3MwdLVr
-         K8vw1CHN+2IiRFL/HTiL+PZ3v4cQpY7wDadlAadiKew3HLIfCYCWFk92jzuCxtZTmGKe
-         +xzH9kuxHSm6OfWvW2tV3fUu7x8lBfL6sRw9aK9DXoGqRvJJjS3cW/qMV3boZkFqcEyr
-         dgvfmD1U3+kafvF3maYLPqwSofc6p5nQC8MBjeoG3KGEfIsykUJ5MACRmB9EfHaAh6Qg
-         vTz2w+eLr1k5SmZ2h/DGbCd4GERFVI4eIcY4A1wMFEZCT3cJq5O5gY3kFmc+keyU+Y4P
-         n45A==
-X-Gm-Message-State: ABy/qLYUrQwDnyQSq4zJZSMfAOFK3hH+6KpZhWbvVMXhwb1JSShOxjOx
-        G2Q8QJ+iwuUtDMbUpS+9iSSTbW00QC8=
-X-Google-Smtp-Source: APBJJlEl1g3vhRzz8R5sWC2162DA2g4F9kH2BjVdNcMky9ozXLdMMwIc8F+aKXhZ1uOZw8DyI8A9Pw==
-X-Received: by 2002:a05:6a00:1503:b0:64d:46b2:9a58 with SMTP id q3-20020a056a00150300b0064d46b29a58mr3889745pfu.26.1690400135435;
-        Wed, 26 Jul 2023 12:35:35 -0700 (PDT)
-Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:32d2:d535:b137:7ba3])
-        by smtp.gmail.com with ESMTPSA id x52-20020a056a000bf400b00682ba300cd1sm11846685pfu.29.2023.07.26.12.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 12:35:35 -0700 (PDT)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>, Chao Yu <chao@kernel.org>
-Subject: [PATCH v4 7/7] fs/f2fs: Disable zone write locking
-Date:   Wed, 26 Jul 2023 12:34:11 -0700
-Message-ID: <20230726193440.1655149-8-bvanassche@acm.org>
-X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-In-Reply-To: <20230726193440.1655149-1-bvanassche@acm.org>
-References: <20230726193440.1655149-1-bvanassche@acm.org>
+        bh=u8mBYQ48hqxLsJ20eS/0jkkgIvd41omZCyTUT7Irfl8=;
+        b=j+9x7CCM+wmfOu7U3UnNQ74IqfyZckYgh+QuuU1FUsLZeKjmpaLuU9nRcUM1LXBtt4
+         2v8ssyGEMFPDsm6hbVOaRKAf3bf/yoRCus0Jq4zsUALuhsw72HpkgsIXAeJt5GsUoYQG
+         KhYNNaET5oihuyu0Es84WRqyFNRXfzeUWND3cPhBxD5pclU6Iq1ba6y+2s0mtFjwD0b9
+         0OZdUb91yZgMqOf8Ha2/n0p+604Wl0mSvwNwdj53cGIf90vPUADrGGqZE23UXS8pOaaQ
+         3eNebu6wvgZYtQGVlk0WkaYQNQgLG9zfDP0l/Tnrj9xWqHlujJcbvEIzanjX4R40LRWC
+         uJXQ==
+X-Gm-Message-State: ABy/qLauOpN8o93wQO6EM5cXDfoRN3sca1r+kDCsVMi2cdXe1aftFV3X
+        NSja3BN+e500rSocMv/Mau5FKc9WMXl/kSZ3pwg=
+X-Google-Smtp-Source: APBJJlFve1PkP06DY6fpBvu+Zd5E0ezqHhw29sIUPOsCCsvNLLVEHnoLaKmgHoIiHbPqze9ucSiCbjkXkmHOEVV5l+c=
+X-Received: by 2002:a81:6d51:0:b0:580:e3bf:698f with SMTP id
+ i78-20020a816d51000000b00580e3bf698fmr1781329ywc.3.1690409546737; Wed, 26 Jul
+ 2023 15:12:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+References: <20230726094027.535126-1-ming.lei@redhat.com> <20230726094027.535126-5-ming.lei@redhat.com>
+In-Reply-To: <20230726094027.535126-5-ming.lei@redhat.com>
+From:   Justin Tee <justintee8345@gmail.com>
+Date:   Wed, 26 Jul 2023 15:12:16 -0700
+Message-ID: <CABPRKS-0GQqMRiGh6akOgk3BKpx5kqTd0QVhH4nPe=fUdi7DbQ@mail.gmail.com>
+Subject: Re: [PATCH V2 4/9] scsi: lpfc: use blk_mq_max_nr_hw_queues() to
+ calculate io vectors
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        linux-nvme@lists.infradead.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Wen Xiong <wenxiong@linux.ibm.com>,
+        Keith Busch <kbusch@kernel.org>,
+        James Smart <james.smart@broadcom.com>,
+        Justin Tee <justin.tee@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Set the REQ_NO_ZONE_WRITE_LOCK flag to inform the block layer that F2FS
-allocates and submits zoned writes in LBA order per zone.
+Hi Ming,
 
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
----
- fs/f2fs/data.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+From version 1 of the patchset, I thought we had planned to put the
+min comparison right above pci_alloc_irq_vectors instead?
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 5882afe71d82..87ef089f1e88 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -468,8 +468,8 @@ static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
- 	struct bio *bio;
- 
- 	bdev = f2fs_target_device(sbi, fio->new_blkaddr, &sector);
--	bio = bio_alloc_bioset(bdev, npages,
--				fio->op | fio->op_flags | f2fs_io_flags(fio),
-+	bio = bio_alloc_bioset(bdev, npages, fio->op | fio->op_flags |
-+				f2fs_io_flags(fio) | REQ_NO_ZONE_WRITE_LOCK,
- 				GFP_NOIO, &f2fs_bioset);
- 	bio->bi_iter.bi_sector = sector;
- 	if (is_read_io(fio->op)) {
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 3221a934066b..20410789e8b8 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -13025,6 +13025,8 @@ lpfc_sli4_enable_msix(struct lpfc_hba *phba)
+                flags |=3D PCI_IRQ_AFFINITY;
+        }
+
++       vectors =3D min_t(unsigned int, vectors, scsi_max_nr_hw_queues());
++
+        rc =3D pci_alloc_irq_vectors(phba->pcidev, 1, vectors, flags);
+        if (rc < 0) {
+                lpfc_printf_log(phba, KERN_INFO, LOG_INIT,
+
+Thanks,
+Justin
+
+On Wed, Jul 26, 2023 at 2:40=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrot=
+e:
+>
+> Take blk-mq's knowledge into account for calculating io queues.
+>
+> Fix wrong queue mapping in case of kdump kernel.
+>
+> On arm and ppc64, 'maxcpus=3D1' is passed to kdump kernel command line,
+> see `Documentation/admin-guide/kdump/kdump.rst`, so num_possible_cpus()
+> still returns all CPUs because 'maxcpus=3D1' just bring up one single
+> cpu core during booting.
+>
+> blk-mq sees single queue in kdump kernel, and in driver's viewpoint
+> there are still multiple queues, this inconsistency causes driver to appl=
+y
+> wrong queue mapping for handling IO, and IO timeout is triggered.
+>
+> Meantime, single queue makes much less resource utilization, and reduce
+> risk of kernel failure.
+>
+> Cc: Justin Tee <justintee8345@gmail.com>
+> Cc: James Smart <james.smart@broadcom.com>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>  drivers/scsi/lpfc/lpfc_init.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.=
+c
+> index 3221a934066b..c546e5275108 100644
+> --- a/drivers/scsi/lpfc/lpfc_init.c
+> +++ b/drivers/scsi/lpfc/lpfc_init.c
+> @@ -13022,6 +13022,8 @@ lpfc_sli4_enable_msix(struct lpfc_hba *phba)
+>                 cpu =3D cpumask_first(aff_mask);
+>                 cpu_select =3D lpfc_next_online_cpu(aff_mask, cpu);
+>         } else {
+> +               vectors =3D min_t(unsigned int, vectors,
+> +                               scsi_max_nr_hw_queues());
+>                 flags |=3D PCI_IRQ_AFFINITY;
+>         }
+>
+> --
+> 2.40.1
+>
