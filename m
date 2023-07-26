@@ -2,56 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8B3F76397F
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jul 2023 16:46:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 992A076397D
+	for <lists+linux-block@lfdr.de>; Wed, 26 Jul 2023 16:46:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232389AbjGZOqL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Jul 2023 10:46:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
+        id S233013AbjGZOqK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Jul 2023 10:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231690AbjGZOqL (ORCPT
+        with ESMTP id S232284AbjGZOqJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Jul 2023 10:46:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BF51FC4
-        for <linux-block@vger.kernel.org>; Wed, 26 Jul 2023 07:45:23 -0700 (PDT)
+        Wed, 26 Jul 2023 10:46:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E60CE
+        for <linux-block@vger.kernel.org>; Wed, 26 Jul 2023 07:45:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690382722;
+        s=mimecast20190719; t=1690382728;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=B2CSks647K74F8OgrfUZLcugtKavDMhi7yN3N8fBdzE=;
-        b=YdwSNWpqw6UQRH+OhXMd0tDwJIXhgADxWKDYLcyOBRhtv0oC4wZxB7UP400xpp/RA99dm4
-        Yd9jer0VKXhTcC93GooqPtB1CSkfZzjHCXnsCIHDcun7uWzfq1MV2eEuPmLgqZD3g/HhQr
-        UQ7fKOBrJ6AUVzRMF5LVTkQSRdjwhgM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-84-jmnmFOEJOqCBRECw5Gh41Q-1; Wed, 26 Jul 2023 10:45:21 -0400
-X-MC-Unique: jmnmFOEJOqCBRECw5Gh41Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        bh=bzPn9kjJ2sLrhg6DwcaiHx5NwaC6b4GYbmK1EY48ANQ=;
+        b=bvlHV3eAAs8TgXq32nBblB57T7BEn0fT1aJqXiXqe/wev0BNmhQ1p7m8Lcn6aT3I79kDih
+        sr01kCJ0tJTokGf3/+vdXtCOFLqx+c4ic8QHN3/9PZosx80bNL1S1hzOlOOvdsqCROUqFQ
+        ACBF//AVYJO8hDPzcGaIqCVj24x/2a8=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-61-UcG2JuzlN9CsMZB9bjwJnw-1; Wed, 26 Jul 2023 10:45:24 -0400
+X-MC-Unique: UcG2JuzlN9CsMZB9bjwJnw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CCBD6185A791;
-        Wed, 26 Jul 2023 14:45:20 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1A8191C05AAC;
+        Wed, 26 Jul 2023 14:45:24 +0000 (UTC)
 Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E6F841121330;
-        Wed, 26 Jul 2023 14:45:19 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 46B00492C13;
+        Wed, 26 Jul 2023 14:45:22 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         Stefano Garzarella <sgarzare@redhat.com>,
         German Maglione <gmaglione@redhat.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V2 2/3] ublk: fail to recover device if queue setup is interrupted
-Date:   Wed, 26 Jul 2023 22:45:01 +0800
-Message-Id: <20230726144502.566785-3-ming.lei@redhat.com>
+Subject: [PATCH V2 3/3] ublk: return -EINTR if breaking from waiting for existed users in DEL_DEV
+Date:   Wed, 26 Jul 2023 22:45:02 +0800
+Message-Id: <20230726144502.566785-4-ming.lei@redhat.com>
 In-Reply-To: <20230726144502.566785-1-ming.lei@redhat.com>
 References: <20230726144502.566785-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -62,32 +62,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-In ublk_ctrl_end_recovery(), if wait_for_completion_interruptible() is
-interrupted by signal, queues aren't setup successfully yet, so we
-have to fail UBLK_CMD_END_USER_RECOVERY, otherwise kernel oops can be
-triggered.
+If user interrupts wait_event_interruptible() in ublk_ctrl_del_dev(),
+return -EINTR and let user know what happens.
 
-Fixes: c732a852b419 ("ublk_drv: add START_USER_RECOVERY and END_USER_RECOVERY support")
+Fixes: 0abe39dec065 ("block: ublk: improve handling device deletion")
 Reported-by: Stefano Garzarella <sgarzare@redhat.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/block/ublk_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 7938221f4f7e..9fcba3834e8d 100644
+index 9fcba3834e8d..21d2e71c5514 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -2324,7 +2324,9 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
- 	pr_devel("%s: Waiting for new ubq_daemons(nr: %d) are ready, dev id %d...\n",
- 			__func__, ub->dev_info.nr_hw_queues, header->dev_id);
- 	/* wait until new ubq_daemon sending all FETCH_REQ */
--	wait_for_completion_interruptible(&ub->completion);
-+	if (wait_for_completion_interruptible(&ub->completion))
+@@ -2126,8 +2126,8 @@ static int ublk_ctrl_del_dev(struct ublk_device **p_ub)
+ 	 * - the device number is freed already, we will not find this
+ 	 *   device via ublk_get_device_from_id()
+ 	 */
+-	wait_event_interruptible(ublk_idr_wq, ublk_idr_freed(idx));
+-
++	if (wait_event_interruptible(ublk_idr_wq, ublk_idr_freed(idx)))
 +		return -EINTR;
-+
- 	pr_devel("%s: All new ubq_daemons(nr: %d) are ready, dev id %d\n",
- 			__func__, ub->dev_info.nr_hw_queues, header->dev_id);
+ 	return 0;
+ }
  
 -- 
 2.40.1
