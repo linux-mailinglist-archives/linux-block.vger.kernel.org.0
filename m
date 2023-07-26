@@ -2,53 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5995276397B
-	for <lists+linux-block@lfdr.de>; Wed, 26 Jul 2023 16:46:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F4176397E
+	for <lists+linux-block@lfdr.de>; Wed, 26 Jul 2023 16:46:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232085AbjGZOqD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 26 Jul 2023 10:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34562 "EHLO
+        id S232284AbjGZOqK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 26 Jul 2023 10:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232141AbjGZOqC (ORCPT
+        with ESMTP id S231690AbjGZOqJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 26 Jul 2023 10:46:02 -0400
+        Wed, 26 Jul 2023 10:46:09 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7894410F9
-        for <linux-block@vger.kernel.org>; Wed, 26 Jul 2023 07:45:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82F21BE4
+        for <linux-block@vger.kernel.org>; Wed, 26 Jul 2023 07:45:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690382715;
+        s=mimecast20190719; t=1690382722;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=dkQqdaN7caXUtQeNTBWQKbs4Fa2X5gkvVGK60fqbnSY=;
-        b=MOC/UNZ+71b5MtS7b5sfSm8w8C+acF7r4vUfs0+DBIeOYVkRRH0ykuH4ObnbMv/mlJ6MRh
-        zYSb7vRozfNZXD/QI5KyAqdCCwGZXiQnEOL46Uu66s9C8sjaA8mOPJ1TY1vZi+fCHqZ75B
-        YB+zpjYfCqb+76j23qZXPfZCmu7ookc=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ubuIe3q9MGMOKPcY81/KVYpwDDc7fEDYdgixySVerbg=;
+        b=VM2l1b0g34KnVEjGJuuIf18xTWyZb3wsRlrylwFCBTb+ujcUsH3BzOjPY/RattnW3nORq/
+        fUe1Mo0gQabxn5FxgQ8MFxu2dOkEO1Wl27M/dEj2Ldu7dODUiewjO+18DRa/dQuQncsxF/
+        /52P2lIr8W9dt9uLbXt3UFDGcj0XxEo=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-57-EbiUDK0bPaCW2CL1Hav0SA-1; Wed, 26 Jul 2023 10:45:14 -0400
-X-MC-Unique: EbiUDK0bPaCW2CL1Hav0SA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-199-APcmxoKzOtem8TBgfO8pwg-1; Wed, 26 Jul 2023 10:45:17 -0400
+X-MC-Unique: APcmxoKzOtem8TBgfO8pwg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0AD3185A7A3;
-        Wed, 26 Jul 2023 14:45:13 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 18F47803FDC;
+        Wed, 26 Jul 2023 14:45:17 +0000 (UTC)
 Received: from localhost (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CF68DC2C7D3;
-        Wed, 26 Jul 2023 14:45:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FF88492CAC;
+        Wed, 26 Jul 2023 14:45:15 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org,
         Stefano Garzarella <sgarzare@redhat.com>,
         German Maglione <gmaglione@redhat.com>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V2 0/3] ublk: fail to start/recover/del device if interrupted by signal
-Date:   Wed, 26 Jul 2023 22:44:59 +0800
-Message-Id: <20230726144502.566785-1-ming.lei@redhat.com>
+Subject: [PATCH V2 1/3] ublk: fail to start device if queue setup is interrupted
+Date:   Wed, 26 Jul 2023 22:45:00 +0800
+Message-Id: <20230726144502.566785-2-ming.lei@redhat.com>
+In-Reply-To: <20230726144502.566785-1-ming.lei@redhat.com>
+References: <20230726144502.566785-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -59,25 +62,34 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi
+In ublk_ctrl_start_dev(), if wait_for_completion_interruptible() is
+interrupted by signal, queues aren't setup successfully yet, so we
+have to fail UBLK_CMD_START_DEV, otherwise kernel oops can be triggered.
 
-The 1st & 2nd patch fixes kernel oops if user interrupts the current
-ublk task.
+Reported by German when working on qemu-storage-deamon which requires
+single thread ublk daemon.
 
-The 3rd patch returns -EINTR if user interrupts the device deletion.
+Fixes: 71f28f3136af ("ublk_drv: add io_uring based userspace block driver")
+Reported-by: German Maglione <gmaglione@redhat.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/block/ublk_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-V2:
-	- add patch 2&3, as reported by Stefano
-
-Ming Lei (3):
-  ublk: fail to start device if queue setup is interrupted
-  ublk: fail to recover device if queue setup is interrupted
-  ublk: return -EINTR if breaking from waiting for existed users in
-    DEL_DEV
-
- drivers/block/ublk_drv.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 1c823750c95a..7938221f4f7e 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1847,7 +1847,8 @@ static int ublk_ctrl_start_dev(struct ublk_device *ub, struct io_uring_cmd *cmd)
+ 	if (ublksrv_pid <= 0)
+ 		return -EINVAL;
+ 
+-	wait_for_completion_interruptible(&ub->completion);
++	if (wait_for_completion_interruptible(&ub->completion) != 0)
++		return -EINTR;
+ 
+ 	schedule_delayed_work(&ub->monitor_work, UBLK_DAEMON_MONITOR_PERIOD);
+ 
 -- 
 2.40.1
 
