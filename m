@@ -2,83 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D07F77669D1
-	for <lists+linux-block@lfdr.de>; Fri, 28 Jul 2023 12:07:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B4C7766B5D
+	for <lists+linux-block@lfdr.de>; Fri, 28 Jul 2023 13:07:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231166AbjG1KHT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 28 Jul 2023 06:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41616 "EHLO
+        id S235025AbjG1LH1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 28 Jul 2023 07:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229809AbjG1KHS (ORCPT
+        with ESMTP id S236132AbjG1LH0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 28 Jul 2023 06:07:18 -0400
-Received: from 167-179-156-38.a7b39c.syd.nbn.aussiebb.net (167-179-156-38.a7b39c.syd.nbn.aussiebb.net [167.179.156.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3954E1FF5;
-        Fri, 28 Jul 2023 03:07:17 -0700 (PDT)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-        id 1qPKM4-0011VE-8y; Fri, 28 Jul 2023 18:05:53 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 28 Jul 2023 18:05:52 +0800
-Date:   Fri, 28 Jul 2023 18:05:52 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-crypto@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Haren Myneni <haren@us.ibm.com>,
-        Nick Terrell <terrelln@fb.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Ahern <dsahern@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        qat-linux@intel.com, linuxppc-dev@lists.ozlabs.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 00/21] crypto: consolidate and clean up compression
- APIs
-Message-ID: <ZMOTAB595JyptIN4@gondor.apana.org.au>
-References: <20230718125847.3869700-1-ardb@kernel.org>
- <ZMOQiPadP2jggZ2i@gondor.apana.org.au>
- <CAMj1kXFRAhoyRD8mGe4xKZ-xGord2vwPXHCM7O8DPOpYWcgnJw@mail.gmail.com>
- <ZMORcmIA/urS8OI4@gondor.apana.org.au>
- <CAMj1kXFnr64b7SA1zYvSOrXazdH_O5G=i4re=taQa9hAeRbh-w@mail.gmail.com>
+        Fri, 28 Jul 2023 07:07:26 -0400
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020C62701
+        for <linux-block@vger.kernel.org>; Fri, 28 Jul 2023 04:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1690542441; x=1722078441;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8AhSLLQl4ixAuVk+EJj1DMSH5r5hTz2QyAq2ZvUykHE=;
+  b=P7kGbIno7IxRDUTJ53PZdhPnb2+UZf9amRAjo7RRhB1PMp4bBvn27vnT
+   4E8xEaIRRHC+nMzyphgIQOPVE4X/qx4FxnUWLwwetfGtoHV6Spl0PBvWQ
+   vgq4sadT3FaBhqPivMNu1RwU9+nzoz4FxvI8F9ZrF4Se8if8KiZtyiVIL
+   x1FKKfnA+xO4+rYSNJ0L+FQUzVF+v+tXO13qviFJmTVeBFXI1DWiEAiR7
+   5ZgoXs+HsCtlAkSzivElaPs4KWGpDmtxMIc+/x5/74HHE3D2gl28DQRse
+   MkLkPHMz0T6f0YD9VieTLjmhA9srJKD6Lbr05/TDF9rL4YDEJVumWUUBX
+   A==;
+X-IronPort-AV: E=Sophos;i="6.01,237,1684771200"; 
+   d="scan'208";a="244001781"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2023 19:07:21 +0800
+IronPort-SDR: V/nKdWq8fjwn09N8pa4LS2qfQXvRQsSepRQlsTIDrMHk/glHkxoIKUyjPGRJTbh0jMXDHwIvv4
+ Zox1YAJHGey7InWtO2bghDqFq/AyXv3AF91ZcvUAg1WMCd0sDXlrZ8MTf/ky4GEz1IVHxEsfHp
+ Cq4RSF6dszQppDEiAcJImLOQzEIQcl95AF3179TK3i4Ru6eni/xxHpzbALfS0jbJjlX4nc2t+y
+ 3O8gi0CgSW30f7BT0whOtRxdOMfouznQoeOZDEKjU7b7KLc7Cy3AXS0otgHYoPLZNWXQT63poy
+ D28=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Jul 2023 03:15:21 -0700
+IronPort-SDR: yqTvIG1rhA72KYMaLLqVmoqTPCCCD+A+hrdj3DOVrKcjxHbPCd+s0i2ILbOqokx7211xMX+HUH
+ xdg+M67B/a0Ss/P0QSb7dFaU7WAYcm1AYjeN2Rn4mysCJkKqk4+cOAgs3bRRMlE2+HKnq3E5+5
+ 85Ej0ngeTirftuKLRBU6UUfuIOw3Ad1J0xdjgbs5Ip31D23Iu6RCTFexVorw4VdF7e9O5ij9Wd
+ N2NnKRfzs25+g5d3uzU/OHasAmjGzjQ4A+/yKQTJco/B88/Wzw6KpviXFVd8GxdMivmrsC6ySU
+ 3Hs=
+WDCIronportException: Internal
+Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
+  by uls-op-cesaip02.wdc.com with ESMTP; 28 Jul 2023 04:07:21 -0700
+From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To:     linux-block@vger.kernel.org
+Cc:     Omar Sandoval <osandov@osandov.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests 0/4] clarify confusions in blktests contributions
+Date:   Fri, 28 Jul 2023 20:07:16 +0900
+Message-Id: <20230728110720.1280124-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFnr64b7SA1zYvSOrXazdH_O5G=i4re=taQa9hAeRbh-w@mail.gmail.com>
-X-Spam-Status: No, score=2.7 required=5.0 tests=BAYES_00,HELO_DYNAMIC_IPADDR2,
-        RCVD_IN_DNSWL_BLOCKED,RDNS_DYNAMIC,SPF_HELO_NONE,SPF_PASS,TVD_RCVD_IP,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: **
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 12:03:23PM +0200, Ard Biesheuvel wrote:
->
-> Fair enough. But my point remains: this requires a lot of boilerplate
-> on the part of the driver, and it would be better if we could do this
-> in the acomp generic layer.
+I hear some confusions from blktests contributors. This series try to address
+them based on my thoughts. Comments will be welcomed.
 
-Absolutely.  If the hardware can't support allocate-as-you-go then
-this should very much go into the generic layer.
+Shin'ichiro Kawasaki (4):
+  new: don't mandate double square brackets
+  README: describe what './new' script documents
+  CONTRIBUTING, README: recommend patch post for contributions
+  README: clarify motivations to add new test cases
 
-> Does the IPcomp case always know the decompressed size upfront?
+ CONTRIBUTING.md | 14 ++++++++------
+ README.md       | 15 +++++++++++++--
+ new             |  4 ++--
+ 3 files changed, 23 insertions(+), 10 deletions(-)
 
-No it doesn't know.  Of course, we could optimise it because we know
-that in 99% cases, the packet is going to be less than 4K.  But we
-need a safety-net for those weird jumbo packets.
-
-Thanks,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.40.1
+
