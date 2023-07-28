@@ -2,60 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E34F766B5A
-	for <lists+linux-block@lfdr.de>; Fri, 28 Jul 2023 13:07:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A26D766B5C
+	for <lists+linux-block@lfdr.de>; Fri, 28 Jul 2023 13:07:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236126AbjG1LHZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 28 Jul 2023 07:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54712 "EHLO
+        id S234397AbjG1LH1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 28 Jul 2023 07:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234277AbjG1LHY (ORCPT
+        with ESMTP id S236131AbjG1LH0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 28 Jul 2023 07:07:24 -0400
+        Fri, 28 Jul 2023 07:07:26 -0400
 Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDCA2703
-        for <linux-block@vger.kernel.org>; Fri, 28 Jul 2023 04:07:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6FF62723
+        for <linux-block@vger.kernel.org>; Fri, 28 Jul 2023 04:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1690542443; x=1722078443;
+  t=1690542444; x=1722078444;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yCNF3JeuVZxf0ne5Pr482n//cL5sopctZx3QYJ+p9h4=;
-  b=B+DcJOwj3cg6rAbX+IbzS0di12vgwjyZF7nd6B2Vo1qPBQ7NH5mgMc/N
-   pml/1m4HBX9zRom4sd/Y1D/tur/xrrg0wTAsIZ1KluKUeEkt3u9bOXWJA
-   BK4VBlY57H0Fv6HOLNhgtWHAZB8PPfpFJ8bQrmeVTCJHNJ/JrKFj+f+m7
-   RTIWrc7NcBDdOepswcUyPDwvgPfA+uSne+LFGit3JKaXeq0Sx2yYvgxui
-   3b24rc/eaofjbMySz2VKQ3ABVDEb5xWWsKNPWMRW7Nj57WL34QbfISjEg
-   f8LTTIXnI0vvOgaMlCBbUoiWyh2eSwO0uCrOVI+8S0l0dwQjnShkv9Z3/
+  bh=5uoXmicthBfI1KVabTbY4/3y08MYGGWftLP6ljGdBh4=;
+  b=RcxKaCeWcm5ZJwJHBSkNdOBz9CpXoRw2a7iW+vrEiwaMEsV4vywqu7EG
+   nLs8ZFJclZEIMw5j3YEPEyqj07WL+45C8iwF1KDjh8s2tK0FQFAiw/hir
+   WUq3RXPXkjY9RyoHY8RDIUeD8BXYPDvJzNRMMrPuB0KEq02DGPEGhmpyK
+   yMc55FaxquxmQXdTnkXMrl2wijUyu27lBbuv/z/uZTctNNoJTTLbBuWwo
+   WvGKXT1TzTulmlBhaULss36wjpjyMO9tINMlVF7kaZYSvHrwWnUKcUHlC
+   ZmOht++9iBIfaOIYvKQxLf16f+KGczhvrJAm792pXs4J35naIvi7iCagV
    Q==;
 X-IronPort-AV: E=Sophos;i="6.01,237,1684771200"; 
-   d="scan'208";a="244001782"
+   d="scan'208";a="244001784"
 Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2023 19:07:22 +0800
-IronPort-SDR: RX2LtLkxEgtWRvhmCDsfl7xp5pjMqUQP6nDfHjbK9sAzmptSestKPvNEXqLz5xao0lv5+nldA1
- y6yya10DuW2gpyNo2XG5F/nG/ayoxAt45y8yIGBpSd7cfTSNLog7NK3FijNrnz/YIh9wcV7yER
- JhfuemLehIPLSPxMp98pyXG22IuaCgub6wBu7qPL/KLNn4bgezwBpSIFiZPzfTbZHVfRxx4iZ+
- GGucnl9/quLPzXNZQUHqKBwvrldfB/YCW2gbLl3zWQnfT6ajFturx1QlR82kfZveOCZuPi6OVl
- iyM=
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jul 2023 19:07:23 +0800
+IronPort-SDR: PPz1IPpO6ylleguuMeOurcY2GRaZwOxFzPuMDjI0kxg+bcaP9goi+KgJzxVI7QrJvefdNM5UTZ
+ tHEoaYUCUZzs7Y7xkVzq+OoHY+qttIdYybIYTpdHkqFmDTXAc2V+abBKbP1qh7S5oU02Qg37/I
+ wbglwhilQHNfBhBcEbtGqsYVmGbXXMzURrNjPhF/UIzJU4fn0EvF0IkahO2Qxlp9uQTuw0OQo0
+ BtjzaB9TLhFUFX35X8kQJJhQWfv9eptlgHYFV00IHS9SP8R1D9hesTy4hrQyqgXssQ7Pj0LuHZ
+ 9Nw=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Jul 2023 03:15:22 -0700
-IronPort-SDR: Q0nOgS7Eotq66p/yzdwdQ5wl6iqTYjdpxh9QYHA04crJazodW8T9KXuATSJsmS5I7jlqWWenQZ
- Fn37M6mvSLKl4r5GLRHOlnQ9CGqPKkpSe20CZhCK661R65yrcHCnQ5GUfigVU9rka+kibrFDAI
- +QBtrN9UrGOfXAqVufQQ3Gj3NijKWzJJMAoZJgkAT/kEvMkf5w+ZSEWkFwxRwDCdZ7YV1djoEm
- sFVVPuhjqAB1t4UdQlScmBpDc6D1UIc2+7eFuP8sGpdZRqA28OpXSQKwnniYbQgRPeH4N6M5BK
- h0M=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Jul 2023 03:15:23 -0700
+IronPort-SDR: 8rXByPWqjhDKaxoJV7Qj3uPXDYqbolEiqrqE1yZhHEeQ1q1UcPsMPX6e1g5JWVziLg5FGdEB/p
+ AesSVTYwOK1fJEE6cVE/7gaCDEpcqv5H6KlSQ938AwmYqFirXj5VWr9PSylJTSEluWMh2kwCYV
+ g5Wr9xSQFjk/x4BaRbFzwt7mXRO1fCWUq+i4gspzF8C+69QZ5h16KVHAn2xN6shSafpNIvINYj
+ 6ceTqknthhQJ54ILrRSCzJUomOqeYLy9vQaIdrrblOfEqIMJS+63YxcGVRWiUOLPjo/OAIYbEa
+ kGk=
 WDCIronportException: Internal
 Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
-  by uls-op-cesaip02.wdc.com with ESMTP; 28 Jul 2023 04:07:22 -0700
+  by uls-op-cesaip02.wdc.com with ESMTP; 28 Jul 2023 04:07:23 -0700
 From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     Omar Sandoval <osandov@osandov.com>,
         Omar Sandoval <osandov@fb.com>,
         Chaitanya Kulkarni <kch@nvidia.com>,
         Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 1/4] new: don't mandate double square brackets
-Date:   Fri, 28 Jul 2023 20:07:17 +0900
-Message-Id: <20230728110720.1280124-2-shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests 2/4] README: describe what './new' script documents
+Date:   Fri, 28 Jul 2023 20:07:18 +0900
+Message-Id: <20230728110720.1280124-3-shinichiro.kawasaki@wdc.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230728110720.1280124-1-shinichiro.kawasaki@wdc.com>
 References: <20230728110720.1280124-1-shinichiro.kawasaki@wdc.com>
@@ -71,40 +71,35 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It was guided for test statements in blktests scripts to use double
-square brackets [[ ]] form instead of single square brackets [ ] form.
-However, a number of patch contributors use [ ]. It is not productive to
-replace them with [[ ]] and discouraging contributions. To avoid those
-drawbacks, allow both forms and still keep [[ ]] as the preferred form.
-While at it, fix a typo.
+The knowledge required to implement blktests test cases are documented
+in './new' script which generates test case script template. This is
+handy when we implement new test cases. However, it is difficult to
+refer the documentation when we do not implement new test cases.
+
+To help to refer the documentation, add a pointer to it and describe
+what it documents.
 
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- new | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ README.md | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/new b/new
-index e8ee5a0..574d8b4 100755
---- a/new
-+++ b/new
-@@ -232,7 +232,7 @@ test() {
- 	echo "Test complete"
- }
+diff --git a/README.md b/README.md
+index 186fc3b..1324159 100644
+--- a/README.md
++++ b/README.md
+@@ -49,7 +49,10 @@ configuration and running tests.
+ ## Adding Tests
  
--# Finally, some coding style guidlines:
-+# Finally, some coding style guidelines:
- # - Indent with tabs.
- # - Don't add a space before the parentheses or a newline before the curly brace
- #   in function definitions.
-@@ -242,7 +242,7 @@ test() {
- # - Functions defined by the testing framework or group scripts, including
- #   helpers, have a leading underscore. E.g., _have_scsi_debug. Functions local
- #   to the test should not have a leading underscore.
--# - Use the bash [[ ]] form of tests instead of [ ].
-+# - Both [[ ]] form and [ ] form are fine for tests. [[ ]] is preferred.
- # - Always quote variable expansions unless the variable is a number or inside of
- #   a [[ ]] test.
- # - Use the \$() form of command substitution instead of backticks.
+ The `./new` script creates a new test from a template. The generated template
+-contains more detailed documentation.
++contains more detailed documentation. [The ./new script itself](new) can be
++referred as a document. It describes variables and functions that test cases
++should implement, global variables that test cases can refer and coding
++guidelines.
+ 
+ Pull requests on GitHub and patches to <linux-block@vger.kernel.org> are both
+ accepted. See [here](CONTRIBUTING.md) for more information on contributing.
 -- 
 2.40.1
 
