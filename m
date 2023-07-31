@@ -2,76 +2,67 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0775D76B03D
-	for <lists+linux-block@lfdr.de>; Tue,  1 Aug 2023 12:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4D4276B406
+	for <lists+linux-block@lfdr.de>; Tue,  1 Aug 2023 13:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233781AbjHAKDh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Aug 2023 06:03:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        id S232778AbjHAL47 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Aug 2023 07:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233980AbjHAKDT (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Aug 2023 06:03:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49951DF;
-        Tue,  1 Aug 2023 03:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=F9BXdlbwpUYCCGV+1bYwP+JXHESL2UKwaIWerHheSxQ=; b=G9ArVPnFgYc6sVVMFAzUvlJZdO
-        JAULzD2YiCX17SOQRLguWqfX8uV9Kq0ouUJy2WjPFEwfLFVmsvBkbxi/eQ4kUMnna0STEhui1QbUl
-        UbXT4FplP8OhkICf7bQU+z0SRo0hhQFGk/O0H/2PF7CbOE1Kd6+VwpkUPaRstWkjNglkqZkLpK7+F
-        o8wqNCCIvQ2Q5XHSoiJBsaTgCfYHrF6oy9thx9/tpg0HW9adNHIGXlivPDMbuh0HV3I5ZRoAzrBdK
-        ucrhbHY3vP7MMyjVEXW9DGGQk31OugHf4wXhY1NWAeG0uPTW+SiQPGN5L5uTKeO8D4kVzZaI4fljI
-        o/idd8Uw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qQmDi-001ibl-1I;
-        Tue, 01 Aug 2023 10:03:14 +0000
-Date:   Tue, 1 Aug 2023 03:03:14 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jinyoung Choi <j-young.choi@samsung.com>
-Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "chaitanya.kulkarni@wdc.com" <chaitanya.kulkarni@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2 3/4] bio-integrity: cleanup adding integrity pages to
- bip's bvec
-Message-ID: <ZMjYYtXgzn86UIF8@infradead.org>
-References: <20230731124710epcms2p55b4d1a163b5ee6f15d96bf07817e12a5@epcms2p5>
- <CGME20230731124710epcms2p55b4d1a163b5ee6f15d96bf07817e12a5@epcms2p1>
- <20230731125459epcms2p177a5cc5caa7ef0a9de35689e96558f43@epcms2p1>
+        with ESMTP id S232486AbjHAL46 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Aug 2023 07:56:58 -0400
+Received: from mail.cothiafon.pl (mail.cothiafon.pl [217.61.106.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 575971729
+        for <linux-block@vger.kernel.org>; Tue,  1 Aug 2023 04:56:57 -0700 (PDT)
+Received: by mail.cothiafon.pl (Postfix, from userid 1002)
+        id F1BA983117; Mon, 31 Jul 2023 10:35:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cothiafon.pl; s=mail;
+        t=1690792571; bh=dwoca0X6C9VXklO/zRgFQCPapTk5LFz4tKaENdvy6Po=;
+        h=Date:From:To:Subject:From;
+        b=g0ZI6GdqF/VX3KcT8/Vv6u+ZMg9HudJsNTmHUf3mAmKm/D1USwSQnss6eB0SI2Mvs
+         pY/dSB5Y1OwsS5+LIMIsoY2zTuWhbJJZE8n6Akih9P5XBgjZtdiEFue/steIj8zjBu
+         PtNwpDczh+PLVHkjqTWJAAiqbyTbmApvB86US3Q/eYpl+8s23Pw24ed3ztt7//aksv
+         FJ7nO0+rr4jFd7XHhNMY5QI0WO/6QcHnu92OdkNA6WbBwizT9rMxsA3FF6BE3gtMDT
+         hRDnjesm5ou89CH+uyNWCeTMyrM7+MQ8wlXSJD/fmf/ACdEpIZkMLFlv0Ngk26UjoW
+         7VpBl9cvGAMYw==
+Received: by mail.cothiafon.pl for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 08:35:48 GMT
+Message-ID: <20230731095940-0.1.28.omn0.0.2dg6y1gqe9@cothiafon.pl>
+Date:   Mon, 31 Jul 2023 08:35:48 GMT
+From:   =?UTF-8?Q? "Rados=C5=82aw_Grabowski" ?= 
+        <radoslaw.grabowski@cothiafon.pl>
+To:     <linux-block@vger.kernel.org>
+Subject: W sprawie samochodu
+X-Mailer: mail.cothiafon.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230731125459epcms2p177a5cc5caa7ef0a9de35689e96558f43@epcms2p1>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 09:54:59PM +0900, Jinyoung Choi wrote:
-> The bio_integrity_add_page() returns the set length if the execution
-> result is successful. Otherwise, return 0.
-> 
-> Unnecessary if statement was removed. And when the result value was less
-> than the set value, it was changed to failed.
+Dzie=C5=84 dobry,
 
-Maybe word this as
+chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
+, je=C5=9Bli chodzi o system monitoringu GPS.
 
-bio_integrity_add_page() returns the add length if successful, else 0,
-just as bio_add_page.  Simply check return value checking in
-bio_integrity_prep to not deal with a > 0 but < len case that can't
-happen.
+Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
+e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
+a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
 
-Otherwise looks good:
+Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
+dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
+szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
+mne znaczenie.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
+b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
+
+
+Pozdrawiam
+Rados=C5=82aw Grabowski
