@@ -2,52 +2,53 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F289176A404
-	for <lists+linux-block@lfdr.de>; Tue,  1 Aug 2023 00:15:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0245B76A406
+	for <lists+linux-block@lfdr.de>; Tue,  1 Aug 2023 00:15:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbjGaWP0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Jul 2023 18:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43726 "EHLO
+        id S229932AbjGaWPa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Jul 2023 18:15:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbjGaWPZ (ORCPT
+        with ESMTP id S229935AbjGaWP3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Jul 2023 18:15:25 -0400
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13004B2
-        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 15:15:25 -0700 (PDT)
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1bb81809ca8so39789075ad.3
-        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 15:15:25 -0700 (PDT)
+        Mon, 31 Jul 2023 18:15:29 -0400
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59326B2
+        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 15:15:26 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-686daaa5f1fso3508920b3a.3
+        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 15:15:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690841724; x=1691446524;
+        d=1e100.net; s=20221208; t=1690841726; x=1691446526;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=52d6Yv2j3msvKUoHhQfE+78n/6sSy14S5P1th7+0tyg=;
-        b=HUAQrLdqX0lIg7plFNmt+hyt67iEHOO9L6QqhNtRduPHV1Y/Np1AagKid9X1G3jKvw
-         27LG/SfQraOol8m5yqtd4xZA2s7k/6iWx6F06pMsHYnMMhl4WxeMIr76W2t9CD4riqxB
-         55PYanSbF2FzwsGNliwuvDPVh1b2b7iMCIkpsLItIEoDltkjlskbnLizNz3fNJKKZHmm
-         HXNhHe8DGb5TY1jEpBHqd28knNte7ZJBTL2TTej0bHJ5x4p09PxWmgaPFtIuK9qLEebw
-         JNyuLMiLxE0ilqfYaGwVIhGFTkbuz7pWvh+iQlmc5ZxgqnAuYbQkydGBhEuILli48R5d
-         mQDA==
-X-Gm-Message-State: ABy/qLb8UWJvzg/FgNixxwrdj2q7Ev5YW44958i1/n7s8Zq6l+yjA7Vm
-        LP3gZd2Nr+2CkPj/WZYXslA=
-X-Google-Smtp-Source: APBJJlHGPY6DTsfCodAnX1Trs1U2GLvB9BRXH4h2kiHW+gB7EV8bsy/whwMrkchE1L06K5UteK2qhg==
-X-Received: by 2002:a17:903:22c1:b0:1b8:b2c6:7e8d with SMTP id y1-20020a17090322c100b001b8b2c67e8dmr13054253plg.66.1690841724371;
-        Mon, 31 Jul 2023 15:15:24 -0700 (PDT)
+        bh=lxaQKdPofwgep3jGtj8wOmuCBCk05Widn0Lpq/npZrQ=;
+        b=Oibo/Gr5JAMaxXjVhSBdUtW7j9tuOCo7KdWu+sOGgsDIEygI4NGVcfJpEydct62VLf
+         rgG/N7hNSs1LSdJvf7qn7RZ6BNfKdcXnaHhEQBQsDJHha/XPJtXcUngN7N1C/hfB/O6x
+         QkUBqbuKCD7bKMZcxWsgWIj8oOeGSdTaqTESPdaVj9PtxQxD1lnUAaHERv9WSqRlTcUs
+         RSwjKLuOXjqIF8//nIB0tFJJxluhXtuuh9gW6hUe4WVhTdhKGr/SrxZHcnubDkZEK3Nk
+         NprFKHlRddkwQlZErLPZ9QSZzgahyIpP2CL2kRgTF/vp9NLVw9lNLx3cBXDHxsGMnGp2
+         4WaA==
+X-Gm-Message-State: ABy/qLapagT+kADnMCs/BeCsFRjiC5ozfQZWzxI12NEzRsGJTXLNUFiE
+        LebiJUNYpCy+xVsM0O3oRq0=
+X-Google-Smtp-Source: APBJJlH58SLPtzD6H7lhBW0c7wlc0yKff+UukzoNdZIaEvpQbc/rebK7YQo48H0SpvNUgpzZXx0X0w==
+X-Received: by 2002:a05:6a21:4887:b0:13b:7776:ceed with SMTP id av7-20020a056a21488700b0013b7776ceedmr10947631pzc.26.1690841725759;
+        Mon, 31 Jul 2023 15:15:25 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:9346:70e3:158a:281c])
-        by smtp.gmail.com with ESMTPSA id jn13-20020a170903050d00b001b895a18472sm9000888plb.117.2023.07.31.15.15.23
+        by smtp.gmail.com with ESMTPSA id jn13-20020a170903050d00b001b895a18472sm9000888plb.117.2023.07.31.15.15.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 15:15:24 -0700 (PDT)
+        Mon, 31 Jul 2023 15:15:25 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <dlemoal@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v5 2/7] block/mq-deadline: Only use zone locking if necessary
-Date:   Mon, 31 Jul 2023 15:14:38 -0700
-Message-ID: <20230731221458.437440-3-bvanassche@acm.org>
+        Ming Lei <ming.lei@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Subject: [PATCH v5 3/7] scsi: core: Retry unaligned zoned writes
+Date:   Mon, 31 Jul 2023 15:14:39 -0700
+Message-ID: <20230731221458.437440-4-bvanassche@acm.org>
 X-Mailer: git-send-email 2.41.0.585.gd2178a4bd4-goog
 In-Reply-To: <20230731221458.437440-1-bvanassche@acm.org>
 References: <20230731221458.437440-1-bvanassche@acm.org>
@@ -64,92 +65,136 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Measurements have shown that limiting the queue depth to one per zone for
-zoned writes has a significant negative performance impact on zoned UFS
-devices. Hence this patch that disables zone locking by the mq-deadline
-scheduler if the storage controller preserves the command order. This
-patch is based on the following assumptions:
-- It happens infrequently that zoned write requests are reordered by the
-  block layer.
-- The I/O priority of all write requests is the same per zone.
-- Either no I/O scheduler is used or an I/O scheduler is used that
-  submits write requests per zone in LBA order.
+If zoned writes (REQ_OP_WRITE) for a sequential write required zone have
+a starting LBA that differs from the write pointer, e.g. because zoned
+writes have been reordered, then the storage device will respond with an
+UNALIGNED WRITE COMMAND error. Send commands that failed with an
+unaligned write error to the SCSI error handler if zone write locking is
+disabled. Let the SCSI error handler sort SCSI commands per LBA before
+resubmitting these.
 
+If zone write locking is disabled, increase the number of retries for
+write commands sent to a sequential zone to the maximum number of
+outstanding commands because in the worst case the number of times
+reordered zoned writes have to be retried is (number of outstanding
+writes per sequential zone) - 1.
+
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Damien Le Moal <dlemoal@kernel.org>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/mq-deadline.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ drivers/scsi/scsi_error.c | 37 +++++++++++++++++++++++++++++++++++++
+ drivers/scsi/scsi_lib.c   |  1 +
+ drivers/scsi/sd.c         |  3 +++
+ include/scsi/scsi.h       |  1 +
+ 4 files changed, 42 insertions(+)
 
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 02a916ba62ee..1f4124dd4a0b 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -338,6 +338,16 @@ static struct request *deadline_skip_seq_writes(struct deadline_data *dd,
- 	return rq;
+diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+index c67cdcdc3ba8..24a4e49215af 100644
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -27,6 +27,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/delay.h>
+ #include <linux/jiffies.h>
++#include <linux/list_sort.h>
+ 
+ #include <scsi/scsi.h>
+ #include <scsi/scsi_cmnd.h>
+@@ -698,6 +699,16 @@ enum scsi_disposition scsi_check_sense(struct scsi_cmnd *scmd)
+ 		fallthrough;
+ 
+ 	case ILLEGAL_REQUEST:
++		/*
++		 * Unaligned write command. This indicates that zoned writes
++		 * have been received by the device in the wrong order. If zone
++		 * write locking is disabled, retry after all pending commands
++		 * have completed.
++		 */
++		if (sshdr.asc == 0x21 && sshdr.ascq == 0x04 &&
++		    blk_queue_no_zone_write_lock(scsi_cmd_to_rq(scmd)->q))
++			return NEEDS_DELAYED_RETRY;
++
+ 		if (sshdr.asc == 0x20 || /* Invalid command operation code */
+ 		    sshdr.asc == 0x21 || /* Logical block address out of range */
+ 		    sshdr.asc == 0x22 || /* Invalid function */
+@@ -2186,6 +2197,25 @@ void scsi_eh_ready_devs(struct Scsi_Host *shost,
  }
+ EXPORT_SYMBOL_GPL(scsi_eh_ready_devs);
  
 +/*
-+ * Use write locking if either QUEUE_FLAG_NO_ZONE_WRITE_LOCK has not been set.
-+ * Not using zone write locking is only safe if the block driver preserves the
-+ * request order.
++ * Returns a negative value if @_a has a lower LBA than @_b, zero if
++ * both have the same LBA and a positive value otherwise.
 + */
-+static bool dd_use_zone_write_locking(struct request_queue *q)
++static int scsi_cmp_lba(void *priv, const struct list_head *_a,
++			const struct list_head *_b)
 +{
-+	return blk_queue_is_zoned(q) && !blk_queue_no_zone_write_lock(q);
++	struct scsi_cmnd *a = list_entry(_a, typeof(*a), eh_entry);
++	struct scsi_cmnd *b = list_entry(_b, typeof(*b), eh_entry);
++	const sector_t pos_a = blk_rq_pos(scsi_cmd_to_rq(a));
++	const sector_t pos_b = blk_rq_pos(scsi_cmd_to_rq(b));
++
++	if (pos_a < pos_b)
++		return -1;
++	if (pos_a > pos_b)
++		return 1;
++	return 0;
 +}
 +
- /*
-  * For the specified data direction, return the next request to
-  * dispatch using arrival ordered lists.
-@@ -353,7 +363,7 @@ deadline_fifo_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
- 		return NULL;
+ /**
+  * scsi_eh_flush_done_q - finish processed commands or retry them.
+  * @done_q:	list_head of processed commands.
+@@ -2194,6 +2224,13 @@ void scsi_eh_flush_done_q(struct list_head *done_q)
+ {
+ 	struct scsi_cmnd *scmd, *next;
  
- 	rq = rq_entry_fifo(per_prio->fifo_list[data_dir].next);
--	if (data_dir == DD_READ || !blk_queue_is_zoned(rq->q))
-+	if (data_dir == DD_READ || !dd_use_zone_write_locking(rq->q))
- 		return rq;
++	/*
++	 * Sort pending SCSI commands in LBA order. This is important if one of
++	 * the SCSI devices associated with @shost is a zoned block device for
++	 * which zone write locking is disabled.
++	 */
++	list_sort(NULL, done_q, scsi_cmp_lba);
++
+ 	list_for_each_entry_safe(scmd, next, done_q, eh_entry) {
+ 		list_del_init(&scmd->eh_entry);
+ 		if (scsi_device_online(scmd->device) &&
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 59176946ab56..69da8aee13df 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1443,6 +1443,7 @@ static void scsi_complete(struct request *rq)
+ 	case ADD_TO_MLQUEUE:
+ 		scsi_queue_insert(cmd, SCSI_MLQUEUE_DEVICE_BUSY);
+ 		break;
++	case NEEDS_DELAYED_RETRY:
+ 	default:
+ 		scsi_eh_scmd_add(cmd);
+ 		break;
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 68b12afa0721..27b9ebe05b90 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1235,6 +1235,9 @@ static blk_status_t sd_setup_read_write_cmnd(struct scsi_cmnd *cmd)
+ 	cmd->transfersize = sdp->sector_size;
+ 	cmd->underflow = nr_blocks << 9;
+ 	cmd->allowed = sdkp->max_retries;
++	if (blk_queue_no_zone_write_lock(rq->q) &&
++	    blk_rq_is_seq_zoned_write(rq))
++		cmd->allowed += rq->q->nr_requests;
+ 	cmd->sdb.length = nr_blocks * sdp->sector_size;
  
- 	/*
-@@ -398,7 +408,7 @@ deadline_next_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
- 	if (!rq)
- 		return NULL;
- 
--	if (data_dir == DD_READ || !blk_queue_is_zoned(rq->q))
-+	if (data_dir == DD_READ || !dd_use_zone_write_locking(rq->q))
- 		return rq;
- 
- 	/*
-@@ -526,8 +536,9 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
- 	}
- 
- 	/*
--	 * For a zoned block device, if we only have writes queued and none of
--	 * them can be dispatched, rq will be NULL.
-+	 * For a zoned block device that requires write serialization, if we
-+	 * only have writes queued and none of them can be dispatched, rq will
-+	 * be NULL.
- 	 */
- 	if (!rq)
- 		return NULL;
-@@ -552,7 +563,8 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
- 	/*
- 	 * If the request needs its target zone locked, do it.
- 	 */
--	blk_req_zone_write_lock(rq);
-+	if (dd_use_zone_write_locking(rq->q))
-+		blk_req_zone_write_lock(rq);
- 	rq->rq_flags |= RQF_STARTED;
- 	return rq;
- }
-@@ -933,7 +945,7 @@ static void dd_finish_request(struct request *rq)
- 
- 	atomic_inc(&per_prio->stats.completed);
- 
--	if (blk_queue_is_zoned(q)) {
-+	if (dd_use_zone_write_locking(rq->q)) {
- 		unsigned long flags;
- 
- 		spin_lock_irqsave(&dd->zone_lock, flags);
+ 	SCSI_LOG_HLQUEUE(1,
+diff --git a/include/scsi/scsi.h b/include/scsi/scsi.h
+index ec093594ba53..6600db046227 100644
+--- a/include/scsi/scsi.h
++++ b/include/scsi/scsi.h
+@@ -93,6 +93,7 @@ static inline int scsi_status_is_check_condition(int status)
+  * Internal return values.
+  */
+ enum scsi_disposition {
++	NEEDS_DELAYED_RETRY	= 0x2000,
+ 	NEEDS_RETRY		= 0x2001,
+ 	SUCCESS			= 0x2002,
+ 	FAILED			= 0x2003,
