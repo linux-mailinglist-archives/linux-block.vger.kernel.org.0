@@ -2,44 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6E87696D0
-	for <lists+linux-block@lfdr.de>; Mon, 31 Jul 2023 14:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7457696DC
+	for <lists+linux-block@lfdr.de>; Mon, 31 Jul 2023 14:56:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231276AbjGaMzF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 31 Jul 2023 08:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40562 "EHLO
+        id S230055AbjGaM4V (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 31 Jul 2023 08:56:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbjGaMzE (ORCPT
+        with ESMTP id S230176AbjGaM4U (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 31 Jul 2023 08:55:04 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B811AD
-        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 05:55:03 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230731125501epoutp048134de1800bcee49df0197255b2d2fed~29QJ_ltUi0971409714epoutp04h
-        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 12:55:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230731125501epoutp048134de1800bcee49df0197255b2d2fed~29QJ_ltUi0971409714epoutp04h
+        Mon, 31 Jul 2023 08:56:20 -0400
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920B91AD
+        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 05:56:19 -0700 (PDT)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230731125618epoutp022c1e7508f83bd9c376db8d0de4fe6e7a~29RRlXiNU1129111291epoutp02d
+        for <linux-block@vger.kernel.org>; Mon, 31 Jul 2023 12:56:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230731125618epoutp022c1e7508f83bd9c376db8d0de4fe6e7a~29RRlXiNU1129111291epoutp02d
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1690808101;
-        bh=eu93vIczw2e7uVoLZPyx1ldXyXlxA+VenRHpGew8cYQ=;
+        s=mail20170921; t=1690808178;
+        bh=PoQdjC9lBed1xqyEfsVkXd2x90gYvZd/Stb7lCXTnc0=;
         h=Subject:Reply-To:From:To:In-Reply-To:Date:References:From;
-        b=WMSYarM8NRIIIYT0bwJlrKKmTR824Y7jkYcZ3mqIUiuCjTHSWxHTZ5s4TBCzDv2fz
-         I+034GqRx4tHrdKbrXSkKhLEsgNUFsxIEJB8ruEv2zgS+cGEl04C8Dm+eATAl+WlGa
-         nIT3z7FDlloV+W8AaBLf2srmR8Q0+cswYYmXe5O8=
+        b=LuUu7/5fRl/u/nmzXK28mdlMVJO716v2tHVJ/FeOjosWbXvgkrzD9pLB4q5RVg3ay
+         YqYSO0bZ8TDHs7JOl9bnqBBXgG3s5znchJgh3LEhRYo4Oh7SkM8FnWkd7BVD9557F6
+         lvfu8ioe7NFYAfH3vmus+Vx8e7vMJaL4EL5Mpfwk=
 Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20230731125500epcas2p1498de3fa02baa044d925f0fca88a4219~29QJsh3jz2209822098epcas2p1R;
-        Mon, 31 Jul 2023 12:55:00 +0000 (GMT)
-Received: from epsmgec2p1.samsung.com (unknown [182.195.36.88]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4RDyrN2SDCz4x9Q0; Mon, 31 Jul
-        2023 12:55:00 +0000 (GMT)
-X-AuditID: b6c32a43-557fb7000001d7ef-b9-64c7af24bcb8
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A0.A1.55279.42FA7C46; Mon, 31 Jul 2023 21:55:00 +0900 (KST)
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20230731125617epcas2p2bb52468597e84125e3aa7f80af87b0af~29RROibJM2783127831epcas2p2k;
+        Mon, 31 Jul 2023 12:56:17 +0000 (GMT)
+Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.70]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4RDyss17kgz4x9Pv; Mon, 31 Jul
+        2023 12:56:17 +0000 (GMT)
+X-AuditID: b6c32a4d-853ff70000047356-10-64c7af70f776
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7F.00.29526.07FA7C46; Mon, 31 Jul 2023 21:56:17 +0900 (KST)
 Mime-Version: 1.0
-Subject: [PATCH v2 3/4] bio-integrity: cleanup adding integrity pages to
- bip's bvec
+Subject: [PATCH v2 4/4] bio-integrity: create multi-page bvecs in
+ bio_integrity_add_page()
 Reply-To: j-young.choi@samsung.com
 Sender: Jinyoung Choi <j-young.choi@samsung.com>
 From:   Jinyoung Choi <j-young.choi@samsung.com>
@@ -58,33 +58,33 @@ X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <20230731125459epcms2p177a5cc5caa7ef0a9de35689e96558f43@epcms2p1>
-Date:   Mon, 31 Jul 2023 21:54:59 +0900
-X-CMS-MailID: 20230731125459epcms2p177a5cc5caa7ef0a9de35689e96558f43
+Message-ID: <20230731125616epcms2p15f142bc599785edac8be3ab9eb63fecc@epcms2p1>
+Date:   Mon, 31 Jul 2023 21:56:16 +0900
+X-CMS-MailID: 20230731125616epcms2p15f142bc599785edac8be3ab9eb63fecc
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 X-CPGSPASS: Y
 X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphk+LIzCtJLcpLzFFi42LZdljTXFdl/fEUg3/f+CxW3+1ns5h1+zWL
-        xctDmhaTDl1jtNh7S9vi8q45bBbLj/9jslj3+j2LA4fH+XsbWTwuny312LSqk83j49NbLB59
-        W1YxenzeJOfRfqCbKYA9KtsmIzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE3
-        1VbJxSdA1y0zB+gkJYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BeYFecWJucWle
-        ul5eaomVoYGBkSlQYUJ2xpaFigW7eSq2vPBrYLzB2cXIwSEhYCLx94F2FyMXh5DADkaJntP3
-        2EHivAKCEn93CHcxcnIIC4RKvLizig3EFhJQkji3ZhYjRNxAouV2GwuIzSagJ7Hj+W52kDki
-        Ap+ZJC7/+MAKkpAQ4JWY0f6UBcKWlti+fCtYM6eAn8TU62+ZIOIaEj+W9TJD2KISN1e/ZYex
-        3x+bzwhhi0i03jsLVSMo8eDnbqi4pMShQ1/ZIH7Jl9hwIBAiXCPR9us9VLm+xLWOjWAn8Ar4
-        Slye+w3sFxYBVYkLs44wQ7S6SBzpkAEJMwvIS2x/OwcszCygKbF+lz5EhbLEkVssEBV8Eh2H
-        /7LD/New8TdW9o55T5ggWtUkFjUZQYRlJL4ens8+gVFpFiKUZyFZOwth7QJG5lWMYqkFxbnp
-        qclGBYbwWE3Oz93ECE6WWs47GK/M/6d3iJGJg/EQowQHs5II76mAQylCvCmJlVWpRfnxRaU5
-        qcWHGE2B/p3ILCWanA9M13kl8YYmlgYmZmaG5kamBuZK4rz3WuemCAmkJ5akZqemFqQWwfQx
-        cXBKNTDJer00Yc2Nlk5jOrT5eMnqLye4DnVsS8ou/Kyspzn1YfKP7XWBt4IMV9m9UFiaPnWj
-        /ot95lM+3p7MfKzxc761VdkDwTthz3SzfCxeJ67Nfrh+xSHN0/YRy8wUvy/47vrwR962cPWn
-        Ttahsoc2vAy/dXax2NNH7wWSYncvtp4UYfjxQ5KY0GTVxoV/smM9vq1+zvhwS2znISvlNfXb
-        3kz8oCv3ri+EMXKZ5455U16FaT85MNs74ZuscalZeIHkXvXr/3Z/+XKZ/Zvip8ob7q9MErRV
-        //1eJj1h0Qdbi6sXnFsW3lN3jlBgVPcTb31heKdob2qV9qLnAZHZm+askFuaYycnvoxhoXCn
-        1udExy8xSizFGYmGWsxFxYkAXlAquR8EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMJsWRmVeSWpSXmKPExsWy7bCmhW7h+uMpBm0drBar7/azWcy6/ZrF
+        4uUhTYtJh64xWuy9pW1xedccNovlx/8xWax7/Z7FgcPj/L2NLB6Xz5Z6bFrVyebx8ektFo++
+        LasYPT5vkvNoP9DNFMAelW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ib
+        aqvk4hOg65aZA3SSkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAvECvODG3uDQv
+        XS8vtcTK0MDAyBSoMCE7Y07DcpaCHqGKNdtXMjYwPuTrYuTkkBAwkXiwpJu1i5GLQ0hgD6PE
+        hgXnmbsYOTh4BQQl/u4QBjGFBWIktszQASkXElCSOLdmFiOILSxgINFyu40FxGYT0JPY8Xw3
+        O8gYEYHPTBKXf3xghZjPKzGj/SkLhC0tsX35VrBmTgE/ianX3zJBxDUkfizrZYawRSVurn7L
+        DmO/PzafEcIWkWi9dxaqRlDiwc/dUHFJiUOHvrKB3CkhkC+x4UAgRLhGou3Xe6hyfYlrHRvB
+        TuAV8JX4ce0IWJxFQFXi8aR1UDUuErdPPQJbyywgL7H97RxwKDALaEqs36UPMV1Z4sgtFogK
+        PomOw3/ZYR5s2PgbK3vHvCdMEK1qEouajCDCMhJfD89nn8CoNAsRyrOQrJ2FsHYBI/MqRqnU
+        guLc9NRkowJD3bzUcnjkJufnbmIEp04t3x2Mr9f/1TvEyMTBeIhRgoNZSYT3VMChFCHelMTK
+        qtSi/Pii0pzU4kOMpkBPT2SWEk3OBybvvJJ4QxNLAxMzM0NzI1MDcyVx3nutc1OEBNITS1Kz
+        U1MLUotg+pg4OKUamGYUGbeXVCR8Yjnt/XaXbL+nU8TL8HVPcwV3ydguvuTioPppXd/G6pvX
+        f3xYv8trneHtoMp1a8ovfTFrtVzCO7m+5dpp60VcNY+28zsx1cZt6G1ROzJnrecJn6p19y5U
+        eNv88Szebhzrca75VubUAzHsOh+4v9+YOU10sdLXk/kn3hYUBqas/ujRPGWuaJjBE47u6vky
+        Ri6JhTYFeT0FsbHXHz/775W1fUvsatFZy35t8o3vvxqvt+7d1hX1Lw4G5/gd/th37AW7LbfQ
+        b1WRIxzzfxnM/dbfNi1W9/MW1Zv77ufdPHfI6OHG7UsK/y74uNP/tohp8jy5yOxC2VW/dmSq
+        VcdsjHH/73WrqFRIMk2JpTgj0VCLuag4EQBrJolpJgQAAA==
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
 X-CMS-RootMailID: 20230731124710epcms2p55b4d1a163b5ee6f15d96bf07817e12a5
@@ -92,8 +92,8 @@ References: <20230731124710epcms2p55b4d1a163b5ee6f15d96bf07817e12a5@epcms2p5>
         <CGME20230731124710epcms2p55b4d1a163b5ee6f15d96bf07817e12a5@epcms2p1>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -101,63 +101,70 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The bio_integrity_add_page() returns the set length if the execution
-result is successful. Otherwise, return 0.
+In general, the bvec data structure consists of one for physically
+continuous pages. But, in the bvec configuration for bip, physically
+continuous integrity pages are composed of each bvec.
 
-Unnecessary if statement was removed. And when the result value was less
-than the set value, it was changed to failed.
+Allow bio_integrity_add_page() to create multi-page bvecs, just like
+the bio payloads. This simplifies adding larger payloads, and fixes
+support for non-tiny workloads with nvme, which stopped using
+scatterlist for metadata a while ago.
 
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Martin K. Petersen <martin.petersen@oracle.com>
 
+Fixes: 783b94bd9250 ("nvme-pci: do not build a scatterlist to map metadata")
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Jinyoung Choi <j-young.choi@samsung.com>
 ---
- block/bio-integrity.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ block/bio-integrity.c | 31 ++++++++++++++++++++++++-------
+ 1 file changed, 24 insertions(+), 7 deletions(-)
 
 diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 6220a99977a4..c6b3bc86e1f9 100644
+index c6b3bc86e1f9..ec8ac8cf6e1b 100644
 --- a/block/bio-integrity.c
 +++ b/block/bio-integrity.c
-@@ -252,27 +252,18 @@ bool bio_integrity_prep(struct bio *bio)
+@@ -123,17 +123,34 @@ void bio_integrity_free(struct bio *bio)
+ int bio_integrity_add_page(struct bio *bio, struct page *page,
+ 			   unsigned int len, unsigned int offset)
+ {
++	struct request_queue *q = bdev_get_queue(bio->bi_bdev);
+ 	struct bio_integrity_payload *bip = bio_integrity(bio);
  
- 	/* Map it */
- 	offset = offset_in_page(buf);
--	for (i = 0 ; i < nr_pages ; i++) {
--		int ret;
-+	for (i = 0; i < nr_pages && len > 0; i++) {
- 		bytes = PAGE_SIZE - offset;
+-	if (bip->bip_vcnt >= bip->bip_max_vcnt) {
+-		printk(KERN_ERR "%s: bip_vec full\n", __func__);
++	if (((bip->bip_iter.bi_size + len) >> SECTOR_SHIFT) >
++	    queue_max_hw_sectors(q))
+ 		return 0;
+-	}
  
--		if (len <= 0)
--			break;
--
- 		if (bytes > len)
- 			bytes = len;
+-	if (bip->bip_vcnt &&
+-	    bvec_gap_to_prev(&bdev_get_queue(bio->bi_bdev)->limits,
+-			     &bip->bip_vec[bip->bip_vcnt - 1], offset))
+-		return 0;
++	if (bip->bip_vcnt > 0) {
++		struct bio_vec *bv = &bip->bip_vec[bip->bip_vcnt - 1];
++		bool same_page = false;
++
++		if (bvec_try_merge_hw_page(q, bv, page, len, offset,
++					   &same_page)) {
++			bip->bip_iter.bi_size += len;
++			return len;
++		}
++
++		if (bip->bip_vcnt >=
++		    min(bip->bip_max_vcnt, queue_max_integrity_segments(q)))
++			return 0;
++
++		/*
++		 * If the queue doesn't support SG gaps and adding this segment
++		 * would create a gap, disallow it.
++		 */
++		if (bvec_gap_to_prev(&q->limits, bv, offset))
++			return 0;
++	}
  
--		ret = bio_integrity_add_page(bio, virt_to_page(buf),
--					     bytes, offset);
--
--		if (ret == 0) {
-+		if (bio_integrity_add_page(bio, virt_to_page(buf),
-+					   bytes, offset) < bytes) {
- 			printk(KERN_ERR "could not attach integrity payload\n");
- 			goto err_end_io;
- 		}
- 
--		if (ret < bytes)
--			break;
--
- 		buf += bytes;
- 		len -= bytes;
- 		offset = 0;
-@@ -291,7 +282,6 @@ bool bio_integrity_prep(struct bio *bio)
- 	bio->bi_status = BLK_STS_RESOURCE;
- 	bio_endio(bio);
- 	return false;
--
- }
- EXPORT_SYMBOL(bio_integrity_prep);
- 
+ 	bvec_set_page(&bip->bip_vec[bip->bip_vcnt], page, len, offset);
+ 	bip->bip_vcnt++;
 -- 
 2.34.1
