@@ -2,123 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0F0F76B344
-	for <lists+linux-block@lfdr.de>; Tue,  1 Aug 2023 13:29:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3814276B473
+	for <lists+linux-block@lfdr.de>; Tue,  1 Aug 2023 14:13:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233128AbjHAL34 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 1 Aug 2023 07:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60984 "EHLO
+        id S232100AbjHAMN0 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 1 Aug 2023 08:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232949AbjHAL3s (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Aug 2023 07:29:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8D710EA
-        for <linux-block@vger.kernel.org>; Tue,  1 Aug 2023 04:28:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690889338;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=F7/Vx2vQrKZJtPQGs5BzH3RGbwK4yN0bYxF9djK4RRM=;
-        b=Lhh5LHt4QaQVus3Bk3qkMSwmQ6mJvQI5AtEdUW8ooR5ZSCCrSpXAabrMRERWQhs6NNNsYt
-        naDXJvD2blW/D64o1/kDpXHS+5TfnSFDUoiFvlTVXyTXaWyi3G2lpZmo5CQPY6Fgkr7jAJ
-        widy814kvb9NLQizg4T6qCRtrhSatvg=
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
- [209.85.167.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-Dtiwjrk1OYmCVntS7vkZog-1; Tue, 01 Aug 2023 07:28:57 -0400
-X-MC-Unique: Dtiwjrk1OYmCVntS7vkZog-1
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-39cdf9f9d10so7994667b6e.3
-        for <linux-block@vger.kernel.org>; Tue, 01 Aug 2023 04:28:57 -0700 (PDT)
+        with ESMTP id S231265AbjHAMNZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 1 Aug 2023 08:13:25 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CCB1999
+        for <linux-block@vger.kernel.org>; Tue,  1 Aug 2023 05:13:23 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3fbc5d5742eso60835415e9.3
+        for <linux-block@vger.kernel.org>; Tue, 01 Aug 2023 05:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20221208.gappssmtp.com; s=20221208; t=1690892002; x=1691496802;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Bg3vuHDK1chesb8Cvwh0EPT81VwLYoy6o1zjsPyDao=;
+        b=E6qw1wML4+ZXUwDdL1Ej+y95ntDPygJiIhKDTHKYrn41FGkIC7CN++dKrHWleWOVPB
+         afucCNg7x1yucKeOqzafkDMo/yB2zMetdAl28+Ze26wP2fCJPiEx6RtzH2GHCotEQp20
+         RQs1S5dP633qmtjFXFkeBtZWd0iBp9dLqG4Fi2HaeH5+3w/kGdCL8pTy29U02UM9n7aC
+         +Dy1jJP6vRZ7Qpv2xMXp61YVqQ41Qn7DCpMFyuepijOGA29yjAQHllouccd+A0MrGgF4
+         N/RmI+Ld4oCJZ2kG5oZoqn6sKDvviQcx30dHe8986ow7E4xwfvWBTEzHhugVDtELk2Ju
+         DAIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690889336; x=1691494136;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F7/Vx2vQrKZJtPQGs5BzH3RGbwK4yN0bYxF9djK4RRM=;
-        b=iKUDOp1PSynCUmhYWYKJ3YL2Q70Ww8v4qYenHWlj7FdF6+NkD0iCEEtBiBVQmaIayn
-         vkviTrIGotqiSTRM/TMyOMlgnLQLOOfrTcpXovZ/5pXqGbLixmuA3YThGY3zT2J6pa4k
-         FdHDV9/nVwti/X2ISlZmF3hSY2giTNdh3v3yeqxU6Sa/2Gc9IY/jEJz+kuUi1lW4QUPS
-         58uUNS3/jY0X6Ra+SKeudHZoLvNKQ5g5QnqVm/GvAMFW3bUsPfovSQCdEcJIjvi4ak61
-         Vwv4K+0sV9yKkU43olxOFC+DMFTO9PANMxmHvlGDtslwpWoIwnV2D1w2afOWykkAyE3Y
-         ZiUw==
-X-Gm-Message-State: ABy/qLaRiLyLN/t09r8xbCiwNl2NgVi425W4BcmQZ+UGkPIz1XfprQfQ
-        iX4SbG9N42kxejGcP4xSpO3SK9RJitKo21xTzRV/BRg7+lCqT1Q2vKx+PQW4wN3n7M8hhiD1s5L
-        Dfx+sQiTYaznZ+LhCz+mBFNmKhWNMfPRHBsHLHOCM8ii7kQSRGJbB
-X-Received: by 2002:a05:6808:1a81:b0:3a7:1bd8:4eb6 with SMTP id bm1-20020a0568081a8100b003a71bd84eb6mr6000663oib.44.1690889336213;
-        Tue, 01 Aug 2023 04:28:56 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGq5WBisi5MLVrJQkJb+u+kNQn8jJartIHndaKJkvl0JaqoT+K/XIH/4PHOkvNq2TGdInKUTu2Anm2CGwaIHiw=
-X-Received: by 2002:a05:6808:1a81:b0:3a7:1bd8:4eb6 with SMTP id
- bm1-20020a0568081a8100b003a71bd84eb6mr6000654oib.44.1690889335955; Tue, 01
- Aug 2023 04:28:55 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1690892002; x=1691496802;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Bg3vuHDK1chesb8Cvwh0EPT81VwLYoy6o1zjsPyDao=;
+        b=M7E/hKcW97wI1P4iraD+LNJOiRBYyAihzH2IU8ZmONpr1lYgxg/8iVIXUATqTADPHD
+         yFhLv2Q901diQYAkT5+PZKX30wmAjlCJeIyUOSrseVTXNXRJma9mzDMTf3oH4B1TXe+z
+         h7iTtbcOXY0hEO6V7wQtPna5rpzuen/XPl0VXO+Ox4cwtbXGMscVNxTt+OgRR5QS8vGQ
+         86vRl/XGGHSIh9jy08NlS9M2LMC8cZsXkw3f+j6PDz48WdNT5x+ZnVrtlTDwmIBUO91X
+         LmOXHimDqf5wmA4K4qWSLb996Z3XJQ2G7kJOtBTWMEaOxcqgKKycRAAtMagQECN8j1aZ
+         LPXg==
+X-Gm-Message-State: ABy/qLamHdKcD3ve9s7TkgJg8sc+yNODUvmsGT+e0BPDRsDCKTeNXn+u
+        YRzLfZ58lwf0OKPtKOtllIE04g==
+X-Google-Smtp-Source: APBJJlECZozkp1Tnu+B2GrFE1jQBQCJFjyh4uah59/l6lR7k4sjW/vX6KGmGr0KKf1ydPTPAryCLVQ==
+X-Received: by 2002:a1c:6a0e:0:b0:3fd:2e89:31bd with SMTP id f14-20020a1c6a0e000000b003fd2e8931bdmr2347615wmc.14.1690892001367;
+        Tue, 01 Aug 2023 05:13:21 -0700 (PDT)
+Received: from localhost ([147.161.155.108])
+        by smtp.gmail.com with ESMTPSA id w17-20020a05600c015100b003fbfef555d2sm16518134wmm.23.2023.08.01.05.13.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Aug 2023 05:13:20 -0700 (PDT)
+References: <20230714072510.47770-1-nmi@metaspace.dk>
+ <20230714072510.47770-3-nmi@metaspace.dk> <ZLfQjNK5j5lB68C/@x1-carbon>
+User-agent: mu4e 1.10.5; emacs 28.2.50
+From:   "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Matias =?utf-8?Q?Bj=C3=B8rling?= <Matias.Bjorling@wdc.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "gost.dev@samsung.com" <gost.dev@samsung.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH v9 2/2] ublk: enable zoned storage support
+Date:   Tue, 01 Aug 2023 14:11:56 +0200
+In-reply-to: <ZLfQjNK5j5lB68C/@x1-carbon>
+Message-ID: <87il9zot9c.fsf@metaspace.dk>
 MIME-Version: 1.0
-From:   Yi Zhang <yi.zhang@redhat.com>
-Date:   Tue, 1 Aug 2023 19:28:44 +0800
-Message-ID: <CAHj4cs9GNohGUjohNw93jrr8JGNcRYC-ienAZz+sa7az1RK77w@mail.gmail.com>
-Subject: [bug report] blktests nvme/047 failed due to /dev/nvme0n1 not created
- in time
-To:     linux-block <linux-block@vger.kernel.org>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello
 
-I found random nvme/047 failure on linux-block/for-next when I do
-stress blktests nvme/tcp nvme/047 test:
+Niklas Cassel <Niklas.Cassel@wdc.com> writes:
 
-Kernel config: https://pastebin.com/6i3sZWAx
-============================================0
-nvme/047 (test different queue types for fabric transports)  [failed]
-    runtime  71.129s  ...  7.096s
-    --- tests/nvme/047.out 2023-07-16 23:04:30.052101710 -0400
-    +++ /root/blktests/results/nodev/nvme/047.out.bad 2023-07-19
-09:17:35.949908134 -0400
-    @@ -1,2 +1,198 @@
-     Running nvme/047
-    +fio: looks like your file system does not support direct=1/buffered=0
-    +fio: looks like your file system does not support direct=1/buffered=0
-    +fio: looks like your file system does not support direct=1/buffered=0
-    +fio: looks like your file system does not support direct=1/buffered=0
-    +fio: destination does not support O_DIRECT
-    +fio: destination does not support O_DIRECT
-    ...
-    (Run 'diff -u tests/nvme/047.out
-/root/blktests/results/nodev/nvme/047.out.bad' to see the entire diff)
+> On Fri, Jul 14, 2023 at 09:25:10AM +0200, Andreas Hindborg wrote:
+>> From: Andreas Hindborg <a.hindborg@samsung.com>
+>
+> Hello Andreas!
+>
 
-After some investigating, I found it was due to the /dev/nvme0n1 node
-couldn't be created in time which lead to the following fio failing.
-+ nvme connect -t tcp -a 127.0.0.1 -s 4420 -n blktests-subsystem-1
---hostnqn=nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
---hostid=0f01fb42-9f7f-4856-b0b3-51e60b8de349 --nr-write-queues=1
-+ ls -l /dev/nvme0 /dev/nvme-fabrics
-crw-------. 1 root root 234,   0 Aug  1 05:50 /dev/nvme0
-crw-------. 1 root root  10, 122 Aug  1 05:50 /dev/nvme-fabrics
-+ '[' '!' -b /dev/nvme0n1 ']'
-+ echo '/dev/nvme0n1 node still not created'
-dmesg:
-[ 1840.413396] loop0: detected capacity change from 0 to 10485760
-[ 1840.934379] nvmet: adding nsid 1 to subsystem blktests-subsystem-1
-[ 1841.018766] nvmet_tcp: enabling port 0 (127.0.0.1:4420)
-[ 1846.782615] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349.
-[ 1846.808392] nvme nvme0: creating 33 I/O queues.
-[ 1846.874298] nvme nvme0: mapped 1/32/0 default/read/poll queues.
-[ 1846.945334] nvme nvme0: new ctrl: NQN "blktests-subsystem-1", addr
-127.0.0.1:4420
+<snip>
 
-BTW, I also found after disabling nvme_core.multipath, seems this
-issue cannot be reproduced.
+>>  	/* for READ request, writing data in iod->addr to rq buffers */
+>> @@ -1120,6 +1404,11 @@ static void ublk_commit_completion(struct ublk_device *ub,
+>>  	/* find the io request and complete */
+>>  	req = blk_mq_tag_to_rq(ub->tag_set.tags[qid], tag);
+>>  
+>> +	if (io->flags & UBLK_IO_FLAG_ZONE_APPEND) {
+>
+> Do we really need to introduce a completely new flag just for this?
+>
+> if (req_op(req) == REQ_OP_ZONE_APPEND)
+>
+> should work just as well, no?
 
---
-Best Regards,
-  Yi Zhang
+Makes sense, thanks.
+
+BR Andreas
 
