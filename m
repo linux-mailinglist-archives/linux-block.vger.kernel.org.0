@@ -2,146 +2,131 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AE1D76C940
-	for <lists+linux-block@lfdr.de>; Wed,  2 Aug 2023 11:17:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98C1E76C914
+	for <lists+linux-block@lfdr.de>; Wed,  2 Aug 2023 11:12:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234051AbjHBJRS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 2 Aug 2023 05:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        id S233889AbjHBJMV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 2 Aug 2023 05:12:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234140AbjHBJQ6 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Aug 2023 05:16:58 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C10953AB1
-        for <linux-block@vger.kernel.org>; Wed,  2 Aug 2023 02:16:28 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3fb4146e8ceso60812395e9.0
-        for <linux-block@vger.kernel.org>; Wed, 02 Aug 2023 02:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20221208.gappssmtp.com; s=20221208; t=1690967782; x=1691572582;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=00Deh1KqaGOo8Q3/vfjn8WmFooRbDdLKDL8pC9jYyCQ=;
-        b=E+QsCpCYQMLwK8CsU/EqmN3REjOC6vzcjlyRkilPUfeh4aJ8RFwdWz45RCbFas/Whp
-         qjADTLbA/3xZEdc8/Hgr6h29699Pq3Pj3oB2l6Aeet2Mc+B2T/AaGULF78sJ6Vdwyups
-         /EpywYPIBVjcCKCKOYlTcqgdlAqe2/d24yC0i3hCGHNfsFo5mDBjMJ2ccOJEoO2E8Ydw
-         ljwYh818x9h3w1QyL0A1uRj8jepEKcPwUEExO3G0tl7rVBxFof2QSVnj6EacLD1giYi3
-         HneHp97da3NxUERErsg+NHR2L1C/yg0dUxlbBPH8e4RgR0LdZzcoQAJkcuSeLdCB5lJe
-         KQew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690967782; x=1691572582;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=00Deh1KqaGOo8Q3/vfjn8WmFooRbDdLKDL8pC9jYyCQ=;
-        b=bYbn9vJfzalcFpzli/0eBmAa74AiIN0HP2vcI/rFg5r+8tmfrCzG6ygqs3FfldUnKl
-         XpFGES+clHJWPep2K5OAkJDCqIwURSKg/wFGbOIyxsad6Pu+3aFqkkRsJ52BePCU4gbN
-         bJX7prlHxi+N2XxpXl4D/Vo+9yOMkbgXD6StqGHIPmBG6WkjxYwA0tr68NsRWMEHObOj
-         twqCA7OMG8vTILqz1CJIlwf6SXlM4S1JmU7yrvbmfFOr+aDz5qYVEJ8wa7qMW3hZjgEq
-         RFyYbiuXVfJAjoDte9mOOUlz614lB3mgxF97bVG0MwxXueK10FhUh2qk9mJ0b9+/Xq2B
-         329Q==
-X-Gm-Message-State: ABy/qLYZIJC2qumbBt4A+LfsjSp9kaItCPrx7ZJsjpRHeyiKaRulW79E
-        PFfR9ELH7mDUiHKVAq9rrkD+JQ==
-X-Google-Smtp-Source: APBJJlExcQ/QaLqfDVVqQGS/9bfvXdFHbOfePluPR9zhy5Z3WpuSireQcXkq9bTVmXceflGlsONNSQ==
-X-Received: by 2002:a05:600c:2155:b0:3f7:f584:579b with SMTP id v21-20020a05600c215500b003f7f584579bmr4180925wml.9.1690967781569;
-        Wed, 02 Aug 2023 02:16:21 -0700 (PDT)
-Received: from localhost ([147.161.155.73])
-        by smtp.gmail.com with ESMTPSA id f2-20020a7bc8c2000000b003fe29f6b61bsm1119406wml.46.2023.08.02.02.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 02:16:21 -0700 (PDT)
-References: <20230714072510.47770-1-nmi@metaspace.dk>
- <20230714072510.47770-3-nmi@metaspace.dk> <ZLfQjNK5j5lB68C/@x1-carbon>
- <87il9zot9c.fsf@metaspace.dk> <ZMkBbvb7EFyT/zGX@ovpn-8-18.pek2.redhat.com>
-User-agent: mu4e 1.10.5; emacs 28.2.50
-From:   "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Niklas Cassel <Niklas.Cassel@wdc.com>,
-        Matias =?utf-8?Q?Bj=C3=B8rling?= <Matias.Bjorling@wdc.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "gost.dev@samsung.com" <gost.dev@samsung.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH v9 2/2] ublk: enable zoned storage support
-Date:   Wed, 02 Aug 2023 11:09:56 +0200
-In-reply-to: <ZMkBbvb7EFyT/zGX@ovpn-8-18.pek2.redhat.com>
-Message-ID: <87a5v9pzx7.fsf@metaspace.dk>
+        with ESMTP id S234002AbjHBJMT (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 2 Aug 2023 05:12:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F5C2D4E
+        for <linux-block@vger.kernel.org>; Wed,  2 Aug 2023 02:12:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C260D618B8
+        for <linux-block@vger.kernel.org>; Wed,  2 Aug 2023 09:12:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FDC0C433C8;
+        Wed,  2 Aug 2023 09:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690967537;
+        bh=UTxARlk7ZzXtrJK2zj2BkEzYy5IvjFv8aDaq/qtlTts=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=nz3abdTpKf6f9XcXYgVFjNGu3zhjGjox9AlATBpGULGqNltBm0jem/lQFUZ5cYHEX
+         6m8kGFuAxAv5H+wgmuBHIyjspu9Lu17KzUqH+qr4ZU5vs7w2lwOvDxbAvDNN13r0on
+         S+Gy8nCcrwugzBKnU1lzL9vmFHbDc/CvJD8WeMUsyjuXKDi9ozLdzzImzQa1o6Fwj7
+         oRd8GXe4s0HfmVXuAb0wPlsMd6PDzy3CJnpJjMZgIe1py6l17JwArHsB8ti/hdFvtX
+         JI5UGlrsGV/046EO6laW55CULfegWTocqun/TD09qhJvZhASNikYRIPsbLvbgDg2vY
+         5mxjEK+IeBbgA==
+Message-ID: <b07c0809-26ba-ab28-9c6c-8d0438fbbeb4@kernel.org>
+Date:   Wed, 2 Aug 2023 18:12:15 +0900
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v5 1/7] block: Introduce the flag
+ QUEUE_FLAG_NO_ZONE_WRITE_LOCK
+Content-Language: en-US
+To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Ming Lei <ming.lei@redhat.com>
+References: <20230731221458.437440-1-bvanassche@acm.org>
+ <20230731221458.437440-2-bvanassche@acm.org>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20230731221458.437440-2-bvanassche@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On 8/1/23 07:14, Bart Van Assche wrote:
+> Writes in sequential write required zones must happen at the write
+> pointer. Even if the submitter of the write commands (e.g. a filesystem)
+> submits writes for sequential write required zones in order, the block
+> layer or the storage controller may reorder these write commands.
+> 
+> The zone locking mechanism in the mq-deadline I/O scheduler serializes
+> write commands for sequential zones. Some but not all storage controllers
+> require this serialization. Introduce a new request queue flag to allow
+> block drivers to indicate that they preserve the order of write commands
+> and thus do not require serialization of writes per zone.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Damien Le Moal <dlemoal@kernel.org>
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 
-Ming Lei <ming.lei@redhat.com> writes:
+Looks OK.
+Very minor nit below.
 
-> On Tue, Aug 01, 2023 at 02:11:56PM +0200, Andreas Hindborg (Samsung) wrote:
->> 
->> Niklas Cassel <Niklas.Cassel@wdc.com> writes:
->> 
->> > On Fri, Jul 14, 2023 at 09:25:10AM +0200, Andreas Hindborg wrote:
->> >> From: Andreas Hindborg <a.hindborg@samsung.com>
->> >
->> > Hello Andreas!
->> >
->> 
->> <snip>
->> 
->> >>  	/* for READ request, writing data in iod->addr to rq buffers */
->> >> @@ -1120,6 +1404,11 @@ static void ublk_commit_completion(struct ublk_device *ub,
->> >>  	/* find the io request and complete */
->> >>  	req = blk_mq_tag_to_rq(ub->tag_set.tags[qid], tag);
->> >>  
->> >> +	if (io->flags & UBLK_IO_FLAG_ZONE_APPEND) {
->> >
->> > Do we really need to introduce a completely new flag just for this?
->> >
->> > if (req_op(req) == REQ_OP_ZONE_APPEND)
->> >
->> > should work just as well, no?
->> 
->> Makes sense, thanks.
->
-> The above one can be replaced with req_op().
->
-> But extra cost is added when retrieving request for the check in
-> __ublk_ch_uring_cmd().
->
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 
-How about this (diff to v9):
+> ---
+>  include/linux/blkdev.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 2f5371b8482c..de5e05cc34fa 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -534,6 +534,11 @@ struct request_queue {
+>  #define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
+>  #define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
+>  #define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
+> +/*
+> + * Do not serialize sequential writes (REQ_OP_WRITE, REQ_OP_WRITE_ZEROES) sent
+> + * to a sequential write required zone (BLK_ZONE_TYPE_SEQWRITE_REQ).
+> + */
 
-@@ -1709,7 +1702,7 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 		goto out;
- 
- 	if (ublk_support_user_copy(ubq) &&
--	    !(io->flags & UBLK_IO_FLAG_ZONE_APPEND) && ub_cmd->addr) {
-+	    _IOC_NR(cmd_op) != UBLK_IO_COMMIT_AND_FETCH_REQ && ub_cmd->addr) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1751,6 +1744,12 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
- 			goto out;
- 
-+		if (ublk_support_user_copy(ubq) &&
-+		    req_op(req) != REQ_OP_ZONE_APPEND && ub_cmd->addr) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
- 		if (!ublk_support_user_copy(ubq)) {
- 			/*
- 			 * COMMIT_AND_FETCH_REQ has to provide IO buffer if
+I would be very explicit here, for this to be clear to people who are not
+familiar with zone device write operation handling. Something like:
 
+/*
+ * The device supports not using the zone write locking mechanism to serialize
+ * write operations (REQ_OP_WRITE, REQ_OP_WRITE_ZEROES) issued to a sequential
+ * write required zone (BLK_ZONE_TYPE_SEQWRITE_REQ).
+ */
 
-BR Andreas
+> +#define QUEUE_FLAG_NO_ZONE_WRITE_LOCK 8
+>  #define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
+>  #define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
+>  #define QUEUE_FLAG_SYNCHRONOUS	11	/* always completes in submit context */
+> @@ -597,6 +602,11 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+>  #define blk_queue_skip_tagset_quiesce(q) \
+>  	test_bit(QUEUE_FLAG_SKIP_TAGSET_QUIESCE, &(q)->queue_flags)
+>  
+> +static inline bool blk_queue_no_zone_write_lock(struct request_queue *q)
+> +{
+> +	return test_bit(QUEUE_FLAG_NO_ZONE_WRITE_LOCK, &q->queue_flags);
+> +}
+> +
+>  extern void blk_set_pm_only(struct request_queue *q);
+>  extern void blk_clear_pm_only(struct request_queue *q);
+>  
+
+-- 
+Damien Le Moal
+Western Digital Research
+
