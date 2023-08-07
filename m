@@ -2,98 +2,126 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F441772D53
-	for <lists+linux-block@lfdr.de>; Mon,  7 Aug 2023 19:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3807E772D9B
+	for <lists+linux-block@lfdr.de>; Mon,  7 Aug 2023 20:19:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbjHGRzO (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Aug 2023 13:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46452 "EHLO
+        id S229875AbjHGSTH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Aug 2023 14:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229717AbjHGRzO (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Aug 2023 13:55:14 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BE51701
-        for <linux-block@vger.kernel.org>; Mon,  7 Aug 2023 10:55:13 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-583a8596e2aso44709957b3.1
-        for <linux-block@vger.kernel.org>; Mon, 07 Aug 2023 10:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691430912; x=1692035712;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RlCzFKNj2PLZtrDRconO+Ncogzp7Fz5t1sVouGvRFAY=;
-        b=hQ1WnTzUldedGB8lRCPKEoaeLuFvbD/k9u0mNXh3ly3gMJu7N8NVV21hA6n0junL6q
-         oxiSmBRroH02OdBGgner9gFn990pIHTanAtRdWN80/lHbo8T9EfdCzwx4J1eqJCQ+O7a
-         LH5yE5ftlwI7BywP/sXLvUeSBeQk/7PH3IoQ2q+ObmzBTd7JCl09N4qyvSfvIH/nBPVG
-         +N4fVsEcaJ0YXx9I0CC3nal7/6T01FWzAZRFPV9og04b5OcHuZaZXJ7c6BtdRFmpJaUB
-         PGfK0H/QKN9mD1KXLtfW9HNcodhKKra3lS75KalFMtOAXlMk7iB2HPRCdSvT6b9QZe1I
-         Sicg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691430912; x=1692035712;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RlCzFKNj2PLZtrDRconO+Ncogzp7Fz5t1sVouGvRFAY=;
-        b=gvyAol0ILisKcKEwrfMFFVrgaaW61Y0JKqv/zu+jbv/6fcEVDum9OrFvmiOyleaHJR
-         c5w84BHd+1wxjiKQVyDucNw5Zvcod9C8I3T9nLgqlHT/s3ONHP4hLWh6lbNnam7DUfs6
-         vEG9Dlg/cEm6rvhNZYioWEa1ENj9PsyMQtlKH+gI4/AlfVJMuEYh2sF/MOH3yWDUA2Z+
-         ijfqN6mY4TpoJpYfxt7QcN2zleGUb/RETqnmlqvIY+H8xzIw01mA49WROA2DVUAzfprc
-         tOkKD3iJqrds1Ypv8cWgl+eUyc9ZRhnkzTK57d9hy8WLrmWd72+sFMidn4twJ6A6vSot
-         eS8A==
-X-Gm-Message-State: AOJu0Yzutdji6nnCjCejfNw2da+ITITxqLlrKXGRWOrXnF99mD3VHkbq
-        h34D1UA+h0AHH2dXN02FTEgGiZjslrfn1XXMWD8=
-X-Google-Smtp-Source: AGHT+IF5Ce1yonD0nOwgvcdw9qjEnYMDbsCE0lJy3vYjGlNkX/3UOoq1uZ81RGlcEoSrEM0dk8SYv08ML3WTpFRyDrg=
-X-Received: by 2002:a81:a045:0:b0:56d:2c60:2f84 with SMTP id
- x66-20020a81a045000000b0056d2c602f84mr8419886ywg.46.1691430912283; Mon, 07
- Aug 2023 10:55:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAM9Jb+g5rrvmw8xCcwe3REK4x=RymrcqQ8cZavwWoWu7BH+8wA@mail.gmail.com>
- <20230713135413.2946622-1-houtao@huaweicloud.com> <CAM9Jb+jjg_By+A2F+HVBsHCMsVz1AEVWbBPtLTRTfOmtFao5hA@mail.gmail.com>
- <47f9753353d07e3beb60b6254632d740682376f9.camel@intel.com> <bcd1a935-b6ce-3941-5315-197f6876379e@intel.com>
-In-Reply-To: <bcd1a935-b6ce-3941-5315-197f6876379e@intel.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Mon, 7 Aug 2023 19:55:00 +0200
-Message-ID: <CAM9Jb+jmjDOsJz=D7GEtah4xFamVHUFsruh4eW7VtO6A8yCZTw@mail.gmail.com>
-Subject: Re: [PATCH v4] virtio_pmem: add the missing REQ_OP_WRITE for flush bio
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "houtao@huaweicloud.com" <houtao@huaweicloud.com>,
-        "houtao1@huawei.com" <houtao1@huawei.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "pankaj.gupta@amd.com" <pankaj.gupta@amd.com>,
-        "kch@nvidia.com" <kch@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        with ESMTP id S229589AbjHGSTG (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Aug 2023 14:19:06 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 07 Aug 2023 11:19:03 PDT
+Received: from mp-relay-02.fibernetics.ca (mp-relay-02.fibernetics.ca [208.85.217.137])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2ADD8F
+        for <linux-block@vger.kernel.org>; Mon,  7 Aug 2023 11:19:03 -0700 (PDT)
+Received: from mailpool-fe-01.fibernetics.ca (mailpool-fe-01.fibernetics.ca [208.85.217.144])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mp-relay-02.fibernetics.ca (Postfix) with ESMTPS id D915C75CEF;
+        Mon,  7 Aug 2023 18:13:56 +0000 (UTC)
+Received: from localhost (mailpool-mx-02.fibernetics.ca [208.85.217.141])
+        by mailpool-fe-01.fibernetics.ca (Postfix) with ESMTP id CCED33EBBA;
+        Mon,  7 Aug 2023 18:13:56 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at 
+X-Spam-Score: -0.2
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
+Received: from mailpool-fe-01.fibernetics.ca ([208.85.217.144])
+        by localhost (mail-mx-02.fibernetics.ca [208.85.217.141]) (amavisd-new, port 10024)
+        with ESMTP id IGvPir2wpeRp; Mon,  7 Aug 2023 18:13:51 +0000 (UTC)
+Received: from [192.168.48.17] (host-192.252-165-26.dyn.295.ca [192.252.165.26])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dgilbert@interlog.com)
+        by mail.ca.inter.net (Postfix) with ESMTPSA id 9DF303EBB6;
+        Mon,  7 Aug 2023 18:13:50 +0000 (UTC)
+Message-ID: <662fab49-2493-a86b-1683-a33b858e2e85@interlog.com>
+Date:   Mon, 7 Aug 2023 14:13:49 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH v5 4/7] scsi: scsi_debug: Support disabling zone write
+ locking
+To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+References: <20230731221458.437440-1-bvanassche@acm.org>
+ <20230731221458.437440-5-bvanassche@acm.org>
+Content-Language: en-CA
+From:   Douglas Gilbert <dgilbert@interlog.com>
+In-Reply-To: <20230731221458.437440-5-bvanassche@acm.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-> >> Gentle ping!
-> >>
-> >> Dan, Vishal for suggestion/review on this patch and request for merging.
-> >> +Cc Michael for awareness, as virtio-pmem device is currently broken.
-> >
-> > Looks good to me,
-> >
-> > Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-> >
-> > Dave, will you queue this for 6.6.
->
-> Looks like it's already queued:
-> https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/commit/?h=libnvdimm-for-next&id=c1dbd8a849183b9c12d257ad3043ecec50db50b3
+On 2023-07-31 18:14, Bart Van Assche wrote:
+> Make it easier to test handling of QUEUE_FLAG_NO_ZONE_WRITE_LOCK by
+> adding support for setting this flag for scsi_debug request queues.
+> 
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: Douglas Gilbert <dgilbert@interlog.com>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 
-Thank you, Dave!
+Acked-by: Douglas Gilbert <dgilbert@interlog.com>
 
-Best regards,
-Pankaj
+Thanks.
+
+> ---
+>   drivers/scsi/scsi_debug.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+> index 9c0af50501f9..57c6242bfb26 100644
+> --- a/drivers/scsi/scsi_debug.c
+> +++ b/drivers/scsi/scsi_debug.c
+> @@ -832,6 +832,7 @@ static int dix_reads;
+>   static int dif_errors;
+>   
+>   /* ZBC global data */
+> +static bool sdeb_no_zwrl;
+>   static bool sdeb_zbc_in_use;	/* true for host-aware and host-managed disks */
+>   static int sdeb_zbc_zone_cap_mb;
+>   static int sdeb_zbc_zone_size_mb;
+> @@ -5138,9 +5139,13 @@ static struct sdebug_dev_info *find_build_dev_info(struct scsi_device *sdev)
+>   
+>   static int scsi_debug_slave_alloc(struct scsi_device *sdp)
+>   {
+> +	struct request_queue *q = sdp->request_queue;
+> +
+>   	if (sdebug_verbose)
+>   		pr_info("slave_alloc <%u %u %u %llu>\n",
+>   		       sdp->host->host_no, sdp->channel, sdp->id, sdp->lun);
+> +	if (sdeb_no_zwrl)
+> +		blk_queue_flag_set(QUEUE_FLAG_NO_ZONE_WRITE_LOCK, q);
+>   	return 0;
+>   }
+>   
+> @@ -5738,6 +5743,7 @@ module_param_named(ndelay, sdebug_ndelay, int, S_IRUGO | S_IWUSR);
+>   module_param_named(no_lun_0, sdebug_no_lun_0, int, S_IRUGO | S_IWUSR);
+>   module_param_named(no_rwlock, sdebug_no_rwlock, bool, S_IRUGO | S_IWUSR);
+>   module_param_named(no_uld, sdebug_no_uld, int, S_IRUGO);
+> +module_param_named(no_zone_write_lock, sdeb_no_zwrl, bool, S_IRUGO);
+>   module_param_named(num_parts, sdebug_num_parts, int, S_IRUGO);
+>   module_param_named(num_tgts, sdebug_num_tgts, int, S_IRUGO | S_IWUSR);
+>   module_param_named(opt_blks, sdebug_opt_blks, int, S_IRUGO);
+> @@ -5812,6 +5818,8 @@ MODULE_PARM_DESC(ndelay, "response delay in nanoseconds (def=0 -> ignore)");
+>   MODULE_PARM_DESC(no_lun_0, "no LU number 0 (def=0 -> have lun 0)");
+>   MODULE_PARM_DESC(no_rwlock, "don't protect user data reads+writes (def=0)");
+>   MODULE_PARM_DESC(no_uld, "stop ULD (e.g. sd driver) attaching (def=0))");
+> +MODULE_PARM_DESC(no_zone_write_lock,
+> +		 "Disable serialization of zoned writes (def=0)");
+>   MODULE_PARM_DESC(num_parts, "number of partitions(def=0)");
+>   MODULE_PARM_DESC(num_tgts, "number of targets per host to simulate(def=1)");
+>   MODULE_PARM_DESC(opt_blks, "optimal transfer length in blocks (def=1024)");
+
