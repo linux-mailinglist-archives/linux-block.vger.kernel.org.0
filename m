@@ -2,55 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBE2577223D
-	for <lists+linux-block@lfdr.de>; Mon,  7 Aug 2023 13:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5BF77722FB
+	for <lists+linux-block@lfdr.de>; Mon,  7 Aug 2023 13:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232623AbjHGLan (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 7 Aug 2023 07:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36168 "EHLO
+        id S232969AbjHGLqC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 7 Aug 2023 07:46:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232362AbjHGLa3 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Aug 2023 07:30:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4846184;
-        Mon,  7 Aug 2023 04:27:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=C2Ha4CsVUfelPjS394inJjcDyMnuCGSgGsAEG2TLFOs=; b=1JpZRRVnoWMAthkvQEzrv4+W4k
-        xkFCTyVcxJDWwlC63fh8wIWbqCLTYf3/iHohEet5ZOt33F1KmnMKK82SrQibH0vaYyZv78MrqtBMu
-        Vte7FzIZzcLSJBjsNXgQUUSxS51eeH4/Kx1uPx3G7OPGSfrWgboGGEFxsxOMvaiReSZLcJ9AdW8bY
-        SIp/99YnQin5dcgBpW3gG7CKl4HnBBmc3RT2flRY8iFJm6Eh/Nb4yzrXNFQwkJqtU3fZUcgiOtoRm
-        lapJ19X4mbexsR0JXMq7L4ILuSROxgiE4n7qJzF5UGCm4jsnpr1TRMfGPyzl7LAl8rNRjf3za3UrZ
-        sPXh2Crg==;
-Received: from [82.33.212.90] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qSyNr-00H59X-2k;
-        Mon, 07 Aug 2023 11:26:48 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-        linux-block@vger.kernel.org
-Subject: [PATCH 4/4] fs, block: remove bdev->bd_super
-Date:   Mon,  7 Aug 2023 12:26:25 +0100
-Message-Id: <20230807112625.652089-5-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230807112625.652089-1-hch@lst.de>
-References: <20230807112625.652089-1-hch@lst.de>
+        with ESMTP id S232983AbjHGLpt (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 7 Aug 2023 07:45:49 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DDB10FE
+        for <linux-block@vger.kernel.org>; Mon,  7 Aug 2023 04:44:35 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-686b879f605so2936968b3a.1
+        for <linux-block@vger.kernel.org>; Mon, 07 Aug 2023 04:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691408668; x=1692013468;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QOkIol4hR/7Xp5+ZchryLNdE6H11vBt5X3cu3NIuMdw=;
+        b=FZAQ6U1Y1GJmYiveH7OoBA/d7SuG2Q4mQa2C8A1p3nqxsUUDi2IaX+mreRbkwecRrX
+         mpP9EjkIjcP2hq912NLJVLbR9VXO95Hi8xZACAHBwHdzzqKz2TP5YGL8FyHeflnoBits
+         AVcu07vz4ZL/ic0U+wtaGmULdMLRNZf6uu7zc7M3nnGoZafTulK0YVm3C2WytdT+VFN0
+         ZUUuS56gkObDy7l8rYRQWv50WoGQep0LUDw3Kk81Z1WR1qT8NbB3D+g9cMlkzSyvHpFF
+         6q19Xh/FpWgJXoEAwXFFMb09rsveZujIWSEtwhrWZJcVFvgh+Y252O04PsVGtQITuev5
+         8EtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691408668; x=1692013468;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QOkIol4hR/7Xp5+ZchryLNdE6H11vBt5X3cu3NIuMdw=;
+        b=Bb8ANhY41wZdvSZSV1eUKgoq1DWp1bMKNgJw98SnfaqU0BAFIgWZ6TkVgxdmbaDDxq
+         F3suaX/WLkvQBIRSTO+pyvfnorFzm6WGLw5m+sx14vYBzz+m3fgdME07C0qbsOjWzAyC
+         Vu/2ATYaS6ySH4+vgydnRRxrJVyQ0rLdpW0VOHg7WpYmeYEOecVx5gyWAxEcti8Z4Pvl
+         w5nDdVFV3UCt+09sPN+u+D1B+xDrysaWbF/5ICa1dBhMO0d4fhODqBzHyfyeIxP1gk3K
+         exBL9UoeeFAnJVq/+CU7jKhbro2A5iL5+UoFfiwqQtJa6z1psgwICtYQTnU26dFfgQO9
+         2EOA==
+X-Gm-Message-State: AOJu0YyHX5tAc/NqsY8omFj1gNflKsmhlg2+Y9Bvf6W2ZG7bfWlvR8Vl
+        jrfFim99BP/sTBiw35zBMrA/uGWVczc=
+X-Google-Smtp-Source: AGHT+IG4wOGScrDd781Ew8BOJkUd67naeJwhj+rXjQM3v/SE7uDYrg2SNYLgg04stiJNcFMGbZ/jMw==
+X-Received: by 2002:a05:6a00:24c4:b0:682:4b93:a4d3 with SMTP id d4-20020a056a0024c400b006824b93a4d3mr9204926pfv.1.1691408667970;
+        Mon, 07 Aug 2023 04:44:27 -0700 (PDT)
+Received: from atom0118 ([2405:201:c009:58e9:4d3a:892b:8e74:8cec])
+        by smtp.gmail.com with ESMTPSA id z22-20020aa791d6000000b006875493da1fsm6193034pfa.10.2023.08.07.04.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Aug 2023 04:44:27 -0700 (PDT)
+Date:   Mon, 7 Aug 2023 17:14:20 +0530
+From:   Atul Kumar Pant <atulpant.linux@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     josef@toxicpanda.com, axboe@kernel.dk, linux-block@vger.kernel.org,
+        shuah@kernel.org, linux-kernel-mentees@lists.linuxfoundation.org,
+        nbd@other.debian.org
+Subject: Re: [PATCH v1] drivers: block: Updates return value check
+Message-ID: <20230807114420.GA5826@atom0118>
+References: <20230806122351.157168-1-atulpant.linux@gmail.com>
+ <2023080600-pretext-corporal-61e3@gregkh>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023080600-pretext-corporal-61e3@gregkh>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,93 +72,84 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-bdev->bd_super is unused now, remove it.
+On Sun, Aug 06, 2023 at 03:36:18PM +0200, Greg KH wrote:
+> On Sun, Aug 06, 2023 at 05:53:51PM +0530, Atul Kumar Pant wrote:
+> > Updating the check of return value from debugfs_create_dir
+> > to use IS_ERR.
+> 
+> Why?
+> 
+> > 
+> > Signed-off-by: Atul Kumar Pant <atulpant.linux@gmail.com>
+> > ---
+> >  drivers/block/nbd.c     | 4 ++--
+> >  drivers/block/pktcdvd.c | 2 +-
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> > index 9c35c958f2c8..65ecde3e2a5b 100644
+> > --- a/drivers/block/nbd.c
+> > +++ b/drivers/block/nbd.c
+> > @@ -1666,7 +1666,7 @@ static int nbd_dev_dbg_init(struct nbd_device *nbd)
+> >  		return -EIO;
+> >  
+> >  	dir = debugfs_create_dir(nbd_name(nbd), nbd_dbg_dir);
+> > -	if (!dir) {
+> > +	if (IS_ERR(dir)) {
+> >  		dev_err(nbd_to_dev(nbd), "Failed to create debugfs dir for '%s'\n",
+> >  			nbd_name(nbd));
+> >  		return -EIO;
+> 
+> This isn't correct, sorry.  Please do not make this change.
+> 
+> > @@ -1692,7 +1692,7 @@ static int nbd_dbg_init(void)
+> >  	struct dentry *dbg_dir;
+> >  
+> >  	dbg_dir = debugfs_create_dir("nbd", NULL);
+> > -	if (!dbg_dir)
+> > +	if (IS_ERR(dbg_dir))
+> >  		return -EIO;
+> 
+> Again, not corrct.
+> 
+> >  	nbd_dbg_dir = dbg_dir;
+> > diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+> > index d5d7884cedd4..69e5a100b3cf 100644
+> > --- a/drivers/block/pktcdvd.c
+> > +++ b/drivers/block/pktcdvd.c
+> > @@ -451,7 +451,7 @@ static void pkt_debugfs_dev_new(struct pktcdvd_device *pd)
+> >  	if (!pkt_debugfs_root)
+> >  		return;
+> >  	pd->dfs_d_root = debugfs_create_dir(pd->name, pkt_debugfs_root);
+> > -	if (!pd->dfs_d_root)
+> > +	if (IS_ERR(pd->dfs_d_root))
+> >  		return;
+> 
+> Also not correct.
+> 
+> Why check the return value at all?  As this check has always been wrong,
+> why are you wanting to keep it?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/cramfs/inode.c         | 1 -
- fs/ext4/super.c           | 1 -
- fs/romfs/super.c          | 1 -
- fs/super.c                | 3 ---
- include/linux/blk_types.h | 1 -
- 5 files changed, 7 deletions(-)
+    I'll check the code again. I was not aware that this check is wrong,
+    so just tried to fix this based on return value of
+    debugfs_create_dir.
 
-diff --git a/fs/cramfs/inode.c b/fs/cramfs/inode.c
-index d2eea2e4807c4f..569f88dcb2f12c 100644
---- a/fs/cramfs/inode.c
-+++ b/fs/cramfs/inode.c
-@@ -493,7 +493,6 @@ static void cramfs_kill_sb(struct super_block *sb)
- 		put_mtd_device(sb->s_mtd);
- 		sb->s_mtd = NULL;
- 	} else if (IS_ENABLED(CONFIG_CRAMFS_BLOCKDEV) && sb->s_bdev) {
--		sb->s_bdev->bd_super = NULL;
- 		sync_blockdev(sb->s_bdev);
- 		blkdev_put(sb->s_bdev, sb);
- 	}
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 063832e2d12a8e..e6384782b4d036 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5563,7 +5563,6 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
- 	spin_lock_init(&sbi->s_bdev_wb_lock);
- 	errseq_check_and_advance(&sb->s_bdev->bd_inode->i_mapping->wb_err,
- 				 &sbi->s_bdev_wb_err);
--	sb->s_bdev->bd_super = sb;
- 	EXT4_SB(sb)->s_mount_state |= EXT4_ORPHAN_FS;
- 	ext4_orphan_cleanup(sb, es);
- 	EXT4_SB(sb)->s_mount_state &= ~EXT4_ORPHAN_FS;
-diff --git a/fs/romfs/super.c b/fs/romfs/super.c
-index b9eded546259bc..22cdb9a86a5748 100644
---- a/fs/romfs/super.c
-+++ b/fs/romfs/super.c
-@@ -593,7 +593,6 @@ static void romfs_kill_sb(struct super_block *sb)
- #endif
- #ifdef CONFIG_ROMFS_ON_BLOCK
- 	if (sb->s_bdev) {
--		sb->s_bdev->bd_super = NULL;
- 		sync_blockdev(sb->s_bdev);
- 		blkdev_put(sb->s_bdev, sb);
- 	}
-diff --git a/fs/super.c b/fs/super.c
-index efa28679e3e5b3..0023685815fda0 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1369,7 +1369,6 @@ int get_tree_bdev(struct fs_context *fc,
- 			return error;
- 		}
- 		s->s_flags |= SB_ACTIVE;
--		s->s_bdev->bd_super = s;
- 	}
- 
- 	BUG_ON(fc->root);
-@@ -1423,7 +1422,6 @@ struct dentry *mount_bdev(struct file_system_type *fs_type,
- 		}
- 
- 		s->s_flags |= SB_ACTIVE;
--		s->s_bdev->bd_super = s;
- 	}
- 
- 	return dget(s->s_root);
-@@ -1436,7 +1434,6 @@ void kill_block_super(struct super_block *sb)
- 
- 	generic_shutdown_super(sb);
- 	if (bdev) {
--		bdev->bd_super = NULL;
- 		sync_blockdev(bdev);
- 		blkdev_put(bdev, sb);
- 	}
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 0bad62cca3d025..d5c5e59ddbd25a 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -52,7 +52,6 @@ struct block_device {
- 	atomic_t		bd_openers;
- 	spinlock_t		bd_size_lock; /* for bd_inode->i_size updates */
- 	struct inode *		bd_inode;	/* will die */
--	struct super_block *	bd_super;
- 	void *			bd_claiming;
- 	void *			bd_holder;
- 	const struct blk_holder_ops *bd_holder_ops;
--- 
-2.39.2
+> 
+> Also, you never responded to our previous review comments, why not?  To
+> ignore people is not generally considered a good idea :(
 
+    I might have missed seeing your comments hence I did not reply back.
+    Please accept my sincere apologies for this.
+    I have one confusion though, regarding the comments that you are
+    referring to. Are you mentioning about this patch? Re: [PATCH v5] selftests: rtc: Improve rtctest error handling
+    Here I got the following response from your email bot -
+    Patch submitter, please ignore Markus's suggestion; you do not need to follow it at all.
+
+    Maybe I misunderstood this comment and hence did not reply/do
+    anything in response to Markus's comments.
+    If you were referring to some other patch then if possible, can you please tell me the
+    suject of the patch? I will reply to your comments and will make the
+    fixes accordingly.
+
+> 
+> greg k-h
