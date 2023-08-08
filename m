@@ -2,145 +2,132 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A69D7774314
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 19:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3187742EB
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 19:52:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbjHHR5X (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 13:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47894 "EHLO
+        id S229903AbjHHRwX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 13:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231861AbjHHR4o (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 13:56:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596CFBF579
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 09:25:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        with ESMTP id S230452AbjHHRvm (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 13:51:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857D5B4F2B
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 09:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1691511724;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RcNvV0Qjz5yRjBCjldonHF9keAbdWFFrzIeJa3Xxa4c=;
+        b=bcDPPWM2LEzHJ6vbrfyqjBjPFa9aVjr5jyM66Bj7R66C9NXvvIDsVHVRqMlYX+bRPOJcBM
+        wmGm9k4zDW+Q/UCjfCwroXKYsDibJ49ehqVl8uyODfZdNJm0SeXcd46SaMgHw3scf/ukCX
+        GtVVZ6+3zTShvdf/XcV3XakRBOhpCTQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-170-uimWGIJLPUuMD_DoV3yRvQ-1; Tue, 08 Aug 2023 04:19:01 -0400
+X-MC-Unique: uimWGIJLPUuMD_DoV3yRvQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A45146242D
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 08:08:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BF0FC433C7;
-        Tue,  8 Aug 2023 08:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1691482139;
-        bh=01W2hqms8ZqWd00aCRj2aWotAjT/HqjOmCQ8l6gmh14=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iRL9wCGrwqWzwHC2s/LKjqv3DIXoaU1m1eE2ZfUKy5RP6HxhtgKGbkeEm992lG7y6
-         Sa2vW/koBPgfvyTvEwx1rfxzzVrvU8cQwwcwt109Am4XzNo0qTpaxfXVtA6c6lCxqb
-         2Xb37oJySVLIYEvtEMLb07T2TVeN24n4/helYTDY=
-Date:   Tue, 8 Aug 2023 10:08:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Atul Kumar Pant <atulpant.linux@gmail.com>
-Cc:     josef@toxicpanda.com, axboe@kernel.dk, linux-block@vger.kernel.org,
-        shuah@kernel.org, linux-kernel-mentees@lists.linuxfoundation.org,
-        nbd@other.debian.org
-Subject: Re: [PATCH v1] drivers: block: Updates return value check
-Message-ID: <2023080841-preacher-lunchroom-7c8c@gregkh>
-References: <20230806122351.157168-1-atulpant.linux@gmail.com>
- <2023080600-pretext-corporal-61e3@gregkh>
- <20230807114420.GA5826@atom0118>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9051F1021E19;
+        Tue,  8 Aug 2023 08:19:00 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DBFCE40D283F;
+        Tue,  8 Aug 2023 08:18:55 +0000 (UTC)
+Date:   Tue, 8 Aug 2023 16:18:50 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        David Jeffery <djeffery@redhat.com>,
+        Kemeng Shi <shikemeng@huaweicloud.com>,
+        Gabriel Krisman Bertazi <krisman@suse.de>,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        ming.lei@redhat.com
+Subject: Re: [RFC PATCH] sbitmap: fix batching wakeup
+Message-ID: <ZNH6as/wUkbCMAcN@fedora>
+References: <20230721095715.232728-1-ming.lei@redhat.com>
+ <20230802160553.uv5wn6nfjseniyxx@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230807114420.GA5826@atom0118>
+In-Reply-To: <20230802160553.uv5wn6nfjseniyxx@quack3>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Aug 07, 2023 at 05:14:20PM +0530, Atul Kumar Pant wrote:
-> On Sun, Aug 06, 2023 at 03:36:18PM +0200, Greg KH wrote:
-> > On Sun, Aug 06, 2023 at 05:53:51PM +0530, Atul Kumar Pant wrote:
-> > > Updating the check of return value from debugfs_create_dir
-> > > to use IS_ERR.
+On Wed, Aug 02, 2023 at 06:05:53PM +0200, Jan Kara wrote:
+> On Fri 21-07-23 17:57:15, Ming Lei wrote:
+> > From: David Jeffery <djeffery@redhat.com>
 > > 
-> > Why?
+> > Current code supposes that it is enough to provide forward progress by just
+> > waking up one wait queue after one completion batch is done.
 > > 
-> > > 
-> > > Signed-off-by: Atul Kumar Pant <atulpant.linux@gmail.com>
-> > > ---
-> > >  drivers/block/nbd.c     | 4 ++--
-> > >  drivers/block/pktcdvd.c | 2 +-
-> > >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> > > index 9c35c958f2c8..65ecde3e2a5b 100644
-> > > --- a/drivers/block/nbd.c
-> > > +++ b/drivers/block/nbd.c
-> > > @@ -1666,7 +1666,7 @@ static int nbd_dev_dbg_init(struct nbd_device *nbd)
-> > >  		return -EIO;
-> > >  
-> > >  	dir = debugfs_create_dir(nbd_name(nbd), nbd_dbg_dir);
-> > > -	if (!dir) {
-> > > +	if (IS_ERR(dir)) {
-> > >  		dev_err(nbd_to_dev(nbd), "Failed to create debugfs dir for '%s'\n",
-> > >  			nbd_name(nbd));
-> > >  		return -EIO;
+> > Unfortunately this way isn't enough, cause waiter can be added to
+> > wait queue just after it is woken up.
 > > 
-> > This isn't correct, sorry.  Please do not make this change.
+> > Follows one example(64 depth, wake_batch is 8)
 > > 
-> > > @@ -1692,7 +1692,7 @@ static int nbd_dbg_init(void)
-> > >  	struct dentry *dbg_dir;
-> > >  
-> > >  	dbg_dir = debugfs_create_dir("nbd", NULL);
-> > > -	if (!dbg_dir)
-> > > +	if (IS_ERR(dbg_dir))
-> > >  		return -EIO;
+> > 1) all 64 tags are active
 > > 
-> > Again, not corrct.
+> > 2) in each wait queue, there is only one single waiter
 > > 
-> > >  	nbd_dbg_dir = dbg_dir;
-> > > diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-> > > index d5d7884cedd4..69e5a100b3cf 100644
-> > > --- a/drivers/block/pktcdvd.c
-> > > +++ b/drivers/block/pktcdvd.c
-> > > @@ -451,7 +451,7 @@ static void pkt_debugfs_dev_new(struct pktcdvd_device *pd)
-> > >  	if (!pkt_debugfs_root)
-> > >  		return;
-> > >  	pd->dfs_d_root = debugfs_create_dir(pd->name, pkt_debugfs_root);
-> > > -	if (!pd->dfs_d_root)
-> > > +	if (IS_ERR(pd->dfs_d_root))
-> > >  		return;
+> > 3) each time one completion batch(8 completions) wakes up just one waiter in each wait
+> > queue, then immediately one new sleeper is added to this wait queue
 > > 
-> > Also not correct.
+> > 4) after 64 completions, 8 waiters are wakeup, and there are still 8 waiters in each
+> > wait queue
 > > 
-> > Why check the return value at all?  As this check has always been wrong,
-> > why are you wanting to keep it?
+> > 5) after another 8 active tags are completed, only one waiter can be wakeup, and the other 7
+> > can't be waken up anymore.
+> > 
+> > Turns out it isn't easy to fix this problem, so simply wakeup enough waiters for
+> > single batch.
+> > 
+> > Cc: David Jeffery <djeffery@redhat.com>
+> > Cc: Kemeng Shi <shikemeng@huaweicloud.com>
+> > Cc: Gabriel Krisman Bertazi <krisman@suse.de>
+> > Cc: Chengming Zhou <zhouchengming@bytedance.com>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
 > 
->     I'll check the code again. I was not aware that this check is wrong,
->     so just tried to fix this based on return value of
->     debugfs_create_dir.
+> I'm sorry for the delay - I was on vacation. I can see the patch got
+> already merged and I'm not strictly against that (although I think Gabriel
+> was experimenting with this exact wakeup scheme and as far as I remember
+> the more eager waking up was causing performance decrease for some
+> configurations). But let me challenge the analysis above a bit. For the
+> sleeper to be added to a waitqueue in step 3), blk_mq_mark_tag_wait() must
+> fail the blk_mq_get_driver_tag() call. Which means that all tags were used
 
-The return value of debugfs_create_dir() should never need to be checked
-at all.  The value passed in can be later used in any debugfs call
-safely, be it an error or success.  The kernel logic should NOT change
-based on if debugfs is working properly or not.
+Here only allocating request by blk_mq_get_tag() is involved, and
+getting driver tag isn't involved.
 
-So for stuff like this, where the check is obviously wrong (i.e. it's
-never caught an error, it's even more of a good idea to remove the
-check.
+> at that moment. To summarize, anytime we add any new waiter to the
+> waitqueue, all tags are used and thus we should eventually receive enough
+> wakeups to wake all of them. What am I missing?
 
-> > 
-> > Also, you never responded to our previous review comments, why not?  To
-> > ignore people is not generally considered a good idea :(
-> 
->     I might have missed seeing your comments hence I did not reply back.
->     Please accept my sincere apologies for this.
+When running the final retry(__blk_mq_get_tag) before
+sleeping(io_schedule()) in blk_mq_get_tag(), the sleeper has been added to
+wait queue.
 
-Oops, nope, my apologies, this was my fault.  I got you confused with a
-different developer sending patches to the kernel-mentees mailing list
-with the same first name.  I should have checked better, again my fault,
-sorry.
+So when two completion batch comes, the two may wake up same wq because
+same ->wake_index can be observed from two completion path, and both two
+wake_up_nr() can return > 0 because adding sleeper into wq and wake_up_nr()
+can be interleaved, then 16 completions just wakeup 2 sleepers added to
+same wq.
 
-So all is good with your responses, but you should fix these up to NOT
-check the return value at all.
+If the story happens on one wq with >= 8 sleepers, io hang will be
+triggered, if there are another two pending wq.
 
-thanks,
 
-greg k-h
+Thanks, 
+Ming
+
