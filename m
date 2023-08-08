@@ -2,61 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7A63773CE8
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 18:11:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3259773DE3
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 18:24:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231959AbjHHQLk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 12:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
+        id S229791AbjHHQYL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 12:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231975AbjHHQJh (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 12:09:37 -0400
+        with ESMTP id S229903AbjHHQWu (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 12:22:50 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F717A80
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 08:46:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E79D09EE6
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 08:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691509566;
+        s=mimecast20190719; t=1691509756;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k/XiItvuETzuFaV0q2/0Ml9SkHL0l2Lbxykjfon98Ww=;
-        b=gzWBponId6Rk3ISzI2vUdqURoGvJDI7RBQf/FK+rvwyj9HojA96sH8kSFesaWxyPoz7sFs
-        zUj9NytMkBJhEHqbi3/nIUPGZJq9646WDcXtaPMumsN9WLzakryZG4IaSd+C0hbpFwK++r
-        nIG3PXEj1yznjMkudL9DVCrYkaI3JVY=
+        bh=9r/GcSpKKC2dt0ISzH0rvZ1VrInscXGexGqDsV7Zgfk=;
+        b=ZyTdwg/4IiOUYZxFYz/47uzuCMYqdoq3Or7stz2alILwts9mojUHe7z6BuasrPX++KI2Bp
+        y2BSLnoB5vGi0n7/9teV3h05+wmAoai0eKBuj4iu+gFk2X6csG7MyVvNEQ3F+/Htpk1qus
+        ml914Ckps2bNkZ6RlwyrCIY0mDMSqdY=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-484-dHf5P5j1NCCY04pi7Cukww-1; Tue, 08 Aug 2023 06:42:55 -0400
-X-MC-Unique: dHf5P5j1NCCY04pi7Cukww-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ us-mta-610-MBMMJmWsMYifeEoAwq7xkg-1; Tue, 08 Aug 2023 06:48:09 -0400
+X-MC-Unique: MBMMJmWsMYifeEoAwq7xkg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3A89B85CCE0;
-        Tue,  8 Aug 2023 10:42:55 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 354F4185A7A5;
+        Tue,  8 Aug 2023 10:43:02 +0000 (UTC)
 Received: from localhost (unknown [10.72.120.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 65E124E3D1;
-        Tue,  8 Aug 2023 10:42:53 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62944401061;
+        Tue,  8 Aug 2023 10:43:01 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         linux-nvme@lists.infradead.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org
 Cc:     linux-block@vger.kernel.org, Wen Xiong <wenxiong@linux.ibm.com>,
-        Keith Busch <kbusch@kernel.org>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V3 02/14] nvme-pci: use blk_mq_max_nr_hw_queues() to calculate io queues
-Date:   Tue,  8 Aug 2023 18:42:27 +0800
-Message-Id: <20230808104239.146085-3-ming.lei@redhat.com>
+        Keith Busch <kbusch@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH V3 04/14] virtio-blk: limit max allowed submit queues
+Date:   Tue,  8 Aug 2023 18:42:29 +0800
+Message-Id: <20230808104239.146085-5-ming.lei@redhat.com>
 In-Reply-To: <20230808104239.146085-1-ming.lei@redhat.com>
 References: <20230808104239.146085-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -79,25 +82,28 @@ wrong queue mapping for handling IO, and IO timeout is triggered.
 Meantime, single queue makes much less resource utilization, and reduce
 risk of kernel failure.
 
-Reported-by: Wen Xiong <wenxiong@linux.ibm.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: virtualization@lists.linux-foundation.org
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/nvme/host/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/virtio_blk.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index baf69af7ea78..a1227ae7eb39 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2251,7 +2251,7 @@ static unsigned int nvme_max_io_queues(struct nvme_dev *dev)
- 	 */
- 	if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS)
- 		return 1;
--	return num_possible_cpus() + dev->nr_write_queues + dev->nr_poll_queues;
-+	return blk_mq_max_nr_hw_queues() + dev->nr_write_queues + dev->nr_poll_queues;
- }
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 1fe011676d07..4ba79fe2a1b4 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -1047,7 +1047,8 @@ static int init_vq(struct virtio_blk *vblk)
  
- static int nvme_setup_io_queues(struct nvme_dev *dev)
+ 	num_poll_vqs = min_t(unsigned int, poll_queues, num_vqs - 1);
+ 
+-	vblk->io_queues[HCTX_TYPE_DEFAULT] = num_vqs - num_poll_vqs;
++	vblk->io_queues[HCTX_TYPE_DEFAULT] = min_t(unsigned,
++			num_vqs - num_poll_vqs, blk_mq_max_nr_hw_queues());
+ 	vblk->io_queues[HCTX_TYPE_READ] = 0;
+ 	vblk->io_queues[HCTX_TYPE_POLL] = num_poll_vqs;
+ 
 -- 
 2.40.1
 
