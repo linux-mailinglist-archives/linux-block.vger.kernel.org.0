@@ -2,132 +2,105 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D3187742EB
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 19:52:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CB50773EE9
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 18:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbjHHRwX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 13:52:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
+        id S231185AbjHHQjT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 12:39:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230452AbjHHRvm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 13:51:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857D5B4F2B
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 09:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691511724;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RcNvV0Qjz5yRjBCjldonHF9keAbdWFFrzIeJa3Xxa4c=;
-        b=bcDPPWM2LEzHJ6vbrfyqjBjPFa9aVjr5jyM66Bj7R66C9NXvvIDsVHVRqMlYX+bRPOJcBM
-        wmGm9k4zDW+Q/UCjfCwroXKYsDibJ49ehqVl8uyODfZdNJm0SeXcd46SaMgHw3scf/ukCX
-        GtVVZ6+3zTShvdf/XcV3XakRBOhpCTQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-170-uimWGIJLPUuMD_DoV3yRvQ-1; Tue, 08 Aug 2023 04:19:01 -0400
-X-MC-Unique: uimWGIJLPUuMD_DoV3yRvQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S231209AbjHHQie (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 12:38:34 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F4DC525A
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 08:54:01 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9051F1021E19;
-        Tue,  8 Aug 2023 08:19:00 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DBFCE40D283F;
-        Tue,  8 Aug 2023 08:18:55 +0000 (UTC)
-Date:   Tue, 8 Aug 2023 16:18:50 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        David Jeffery <djeffery@redhat.com>,
-        Kemeng Shi <shikemeng@huaweicloud.com>,
-        Gabriel Krisman Bertazi <krisman@suse.de>,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        ming.lei@redhat.com
-Subject: Re: [RFC PATCH] sbitmap: fix batching wakeup
-Message-ID: <ZNH6as/wUkbCMAcN@fedora>
-References: <20230721095715.232728-1-ming.lei@redhat.com>
- <20230802160553.uv5wn6nfjseniyxx@quack3>
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 8B5AD20310;
+        Tue,  8 Aug 2023 08:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1691484407; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1VmL4cnlNgAd9wIWh+n1F88tzINAPC+fI3K+o+7FiWI=;
+        b=kPmvuDyyKufNdk1d2aK3My5PVf/0qF0yLNCx+l0mgsLS5AkXAVPr6DcUFDdBqKiy2VQB6L
+        +CLlHOc0a28PZOaEGGb/4OEFRoO113NDS0BVDDAoY9dqUAMMr5qVx2mNXrWNbRaBYFTXkI
+        hq7BENiPoKY+rGn/vqLBMXSCBfSQyhE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1691484407;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1VmL4cnlNgAd9wIWh+n1F88tzINAPC+fI3K+o+7FiWI=;
+        b=ClDAnv4Er+7VUiVfj723l/hk/ylWWLCSHpwdDaXrQvWmmtVQlAefPBIZRcQp+dabW9EyR4
+        4AmUTlQLFoy260Aw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 718E4139D1;
+        Tue,  8 Aug 2023 08:46:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id qDuyG/cA0mQ8BQAAMHmgww
+        (envelope-from <dwagner@suse.de>); Tue, 08 Aug 2023 08:46:47 +0000
+Date:   Tue, 8 Aug 2023 10:46:46 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Yi Zhang <yi.zhang@redhat.com>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: Re: [bug report] blktests nvme/047 failed due to /dev/nvme0n1 not
+ created in time
+Message-ID: <vxeo2ucxhvdcm2z673keqerkpxay6dgfluuvxawukkbunddzm2@jdkdk7y3a5nu>
+References: <CAHj4cs9GNohGUjohNw93jrr8JGNcRYC-ienAZz+sa7az1RK77w@mail.gmail.com>
+ <CAHj4cs9J7w_QSWMrj0ncufKwT9viS-o7pxmS2Y4FeaWEyPD34Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230802160553.uv5wn6nfjseniyxx@quack3>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHj4cs9J7w_QSWMrj0ncufKwT9viS-o7pxmS2Y4FeaWEyPD34Q@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 06:05:53PM +0200, Jan Kara wrote:
-> On Fri 21-07-23 17:57:15, Ming Lei wrote:
-> > From: David Jeffery <djeffery@redhat.com>
-> > 
-> > Current code supposes that it is enough to provide forward progress by just
-> > waking up one wait queue after one completion batch is done.
-> > 
-> > Unfortunately this way isn't enough, cause waiter can be added to
-> > wait queue just after it is woken up.
-> > 
-> > Follows one example(64 depth, wake_batch is 8)
-> > 
-> > 1) all 64 tags are active
-> > 
-> > 2) in each wait queue, there is only one single waiter
-> > 
-> > 3) each time one completion batch(8 completions) wakes up just one waiter in each wait
-> > queue, then immediately one new sleeper is added to this wait queue
-> > 
-> > 4) after 64 completions, 8 waiters are wakeup, and there are still 8 waiters in each
-> > wait queue
-> > 
-> > 5) after another 8 active tags are completed, only one waiter can be wakeup, and the other 7
-> > can't be waken up anymore.
-> > 
-> > Turns out it isn't easy to fix this problem, so simply wakeup enough waiters for
-> > single batch.
-> > 
-> > Cc: David Jeffery <djeffery@redhat.com>
-> > Cc: Kemeng Shi <shikemeng@huaweicloud.com>
-> > Cc: Gabriel Krisman Bertazi <krisman@suse.de>
-> > Cc: Chengming Zhou <zhouchengming@bytedance.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> 
-> I'm sorry for the delay - I was on vacation. I can see the patch got
-> already merged and I'm not strictly against that (although I think Gabriel
-> was experimenting with this exact wakeup scheme and as far as I remember
-> the more eager waking up was causing performance decrease for some
-> configurations). But let me challenge the analysis above a bit. For the
-> sleeper to be added to a waitqueue in step 3), blk_mq_mark_tag_wait() must
-> fail the blk_mq_get_driver_tag() call. Which means that all tags were used
+On Fri, Aug 04, 2023 at 06:33:04PM +0800, Yi Zhang wrote:
+> On Tue, Aug 1, 2023 at 7:28 PM Yi Zhang <yi.zhang@redhat.com> wrote:
+> > After some investigating, I found it was due to the /dev/nvme0n1 node
+> > couldn't be created in time which lead to the following fio failing.
+> > + nvme connect -t tcp -a 127.0.0.1 -s 4420 -n blktests-subsystem-1
+> > --hostnqn=nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
+> > --hostid=0f01fb42-9f7f-4856-b0b3-51e60b8de349 --nr-write-queues=1
+> > + ls -l /dev/nvme0 /dev/nvme-fabrics
+> > crw-------. 1 root root 234,   0 Aug  1 05:50 /dev/nvme0
+> > crw-------. 1 root root  10, 122 Aug  1 05:50 /dev/nvme-fabrics
+> > + '[' '!' -b /dev/nvme0n1 ']'
+> > + echo '/dev/nvme0n1 node still not created'
+> > dmesg:
+> > [ 1840.413396] loop0: detected capacity change from 0 to 10485760
+> > [ 1840.934379] nvmet: adding nsid 1 to subsystem blktests-subsystem-1
+> > [ 1841.018766] nvmet_tcp: enabling port 0 (127.0.0.1:4420)
+> > [ 1846.782615] nvmet: creating nvm controller 1 for subsystem
+> > blktests-subsystem-1 for NQN
+> > nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349.
+> > [ 1846.808392] nvme nvme0: creating 33 I/O queues.
+> > [ 1846.874298] nvme nvme0: mapped 1/32/0 default/read/poll queues.
+> > [ 1846.945334] nvme nvme0: new ctrl: NQN "blktests-subsystem-1", addr
+> > 127.0.0.1:4420
 
-Here only allocating request by blk_mq_get_tag() is involved, and
-getting driver tag isn't involved.
-
-> at that moment. To summarize, anytime we add any new waiter to the
-> waitqueue, all tags are used and thus we should eventually receive enough
-> wakeups to wake all of them. What am I missing?
-
-When running the final retry(__blk_mq_get_tag) before
-sleeping(io_schedule()) in blk_mq_get_tag(), the sleeper has been added to
-wait queue.
-
-So when two completion batch comes, the two may wake up same wq because
-same ->wake_index can be observed from two completion path, and both two
-wake_up_nr() can return > 0 because adding sleeper into wq and wake_up_nr()
-can be interleaved, then 16 completions just wakeup 2 sleepers added to
-same wq.
-
-If the story happens on one wq with >= 8 sleepers, io hang will be
-triggered, if there are another two pending wq.
-
-
-Thanks, 
-Ming
-
+Not really sure how the blk device registration code works, but this
+looks like there something executed not in the same context as the
+nvme-cli command and thus we might return to userspace before the device
+is fully created. And there is also udev events which are handled by
+systemd. If this is the case, we might want to add some generic helper
+which waits for the device to pop up before we continue with the test.
