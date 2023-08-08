@@ -2,41 +2,41 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40A96773CEE
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 18:11:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE44F773EA9
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 18:33:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232082AbjHHQLq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 12:11:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32870 "EHLO
+        id S232953AbjHHQdh (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 12:33:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbjHHQJp (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 12:09:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D9CA7A83
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 08:46:22 -0700 (PDT)
+        with ESMTP id S232988AbjHHQcp (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 12:32:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E1C31007
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 08:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691509567;
+        s=mimecast20190719; t=1691509863;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cH8+J+v5eCSEAo5zzPYOsTrKPWy+zXGNhCQOIixYmz0=;
-        b=hEWW1uGTe+46JA2K7EtdqN8NNzv49+gZ8PjIEjr3Ukg8FDmNUNn+NLWUK/ucVmvwWNVVPD
-        pzSedgcNk/jOHF+lP2UqsezxvEz2s1gOXDE+J1uf+7XlxHAf4YzbAZwvXCJfmyCGzK8JDY
-        l2IRjU6HBtldgGIvlVlfBwuDX2Ps8UI=
+        bh=2TEtH5yVIZkcHhXlx7zXOq0kKCJ4wWHrHIE0jkzlzuw=;
+        b=SG38S9sH9NxrPtGfu1M2GpEk9LKC2SwJZR6LY5Wqw9y1aigjNCgmfs/F2S+Ya+9Z7S8KyO
+        E/aWP3Gi6+DdDTELP0bOW24CXJblox5I/RnV13rJS8ze5aXdmehBCeG3/faqbtOqker2/I
+        41O+2obluAlhGX2q8dNSwRXakfpFoCk=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-694-ORIgDiMuM2yLXyVmCPXrgg-1; Tue, 08 Aug 2023 06:43:30 -0400
-X-MC-Unique: ORIgDiMuM2yLXyVmCPXrgg-1
+ us-mta-90-leUcPBTANJW2QpPc0r0CxA-1; Tue, 08 Aug 2023 06:43:33 -0400
+X-MC-Unique: leUcPBTANJW2QpPc0r0CxA-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 363D685CCE1;
-        Tue,  8 Aug 2023 10:43:30 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 604A785CCE1;
+        Tue,  8 Aug 2023 10:43:33 +0000 (UTC)
 Received: from localhost (unknown [10.72.120.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5FD0C140E962;
-        Tue,  8 Aug 2023 10:43:29 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C31B140E962;
+        Tue,  8 Aug 2023 10:43:32 +0000 (UTC)
 From:   Ming Lei <ming.lei@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         linux-nvme@lists.infradead.org,
@@ -44,9 +44,9 @@ To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
         linux-scsi@vger.kernel.org
 Cc:     linux-block@vger.kernel.org, Wen Xiong <wenxiong@linux.ibm.com>,
         Keith Busch <kbusch@kernel.org>, Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH V3 12/14] scsi: ufs: limit max allowed nr_hw_queues
-Date:   Tue,  8 Aug 2023 18:42:37 +0800
-Message-Id: <20230808104239.146085-13-ming.lei@redhat.com>
+Subject: [PATCH V3 13/14] scsi: storvsc: limit max allowed nr_hw_queues
+Date:   Tue,  8 Aug 2023 18:42:38 +0800
+Message-Id: <20230808104239.146085-14-ming.lei@redhat.com>
 In-Reply-To: <20230808104239.146085-1-ming.lei@redhat.com>
 References: <20230808104239.146085-1-ming.lei@redhat.com>
 MIME-Version: 1.0
@@ -81,22 +81,23 @@ risk of kernel failure.
 
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/ufs/core/ufs-mcq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/storvsc_drv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-index 6fb0e007af63..7d808836b018 100644
---- a/drivers/ufs/core/ufs-mcq.c
-+++ b/drivers/ufs/core/ufs-mcq.c
-@@ -186,7 +186,7 @@ static int ufshcd_mcq_config_nr_queues(struct ufs_hba *hba)
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index f2823218670a..50df040b100d 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -2040,6 +2040,9 @@ static int storvsc_probe(struct hv_device *device,
+ 			host->nr_hw_queues = storvsc_max_hw_queues;
+ 		else
+ 			host->nr_hw_queues = num_present_cpus;
++		if (host->nr_hw_queues > scsi_max_nr_hw_queues())
++			host->nr_hw_queues = scsi_max_nr_hw_queues();
++
+ 	}
  
- 	if (!hba->nr_queues[HCTX_TYPE_DEFAULT])
- 		hba->nr_queues[HCTX_TYPE_DEFAULT] = min3(rem, rw_queues,
--							 num_possible_cpus());
-+							 scsi_max_nr_hw_queues());
- 
- 	for (i = 0; i < HCTX_MAX_TYPES; i++)
- 		host->nr_hw_queues += hba->nr_queues[i];
+ 	/*
 -- 
 2.40.1
 
