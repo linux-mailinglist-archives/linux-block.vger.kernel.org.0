@@ -2,42 +2,44 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B5BA774317
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 19:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E75A77431D
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 19:57:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbjHHR5X (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 13:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
+        id S231948AbjHHR5Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 13:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232129AbjHHR4j (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 13:56:39 -0400
+        with ESMTP id S229823AbjHHR4q (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 13:56:46 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C8BBF572
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 09:25:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F17BF57C
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 09:25:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E5AB362552
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 13:57:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55CEC433C8;
-        Tue,  8 Aug 2023 13:57:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F3E86237E
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 13:57:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90529C433C7;
+        Tue,  8 Aug 2023 13:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1691503024;
-        bh=hCiafJIuo132SXYA3rNC1rHWchmn0aURcRNHrvQTYCs=;
-        h=From:To:Subject:Date:From;
-        b=lUqgRRA5AoKobOp2VbZ3iM2dueovDtClQ58TGMX1XsNHUUDqxGkjw8vH4aSLX+TU7
-         1roS/3bZZ3W04J4WWH6zoBfjSBQ7bZwQQ2+ozk4YZZslDci1RrXZqz/5UBkoqUBv0P
-         mskfsqePlUXgaaUKuPp62JQ+2ZJ9gJqbBeUBs/rI19PGO8czfjqawE5UZKVl4ld5tA
-         9SDgl+PzVseGfP65Vb9Wfn4lf5EVF8bJvRn5QGX58pjkJQIZOCaKm5gSl9I5vq+jpY
-         HAa0NU40ui010XUQ3w4SGn1Wipj6BTigZnSKK+X5IRVOyReYE7PaycFKQVFMYNNfT/
-         WzQxYDZTsfnwg==
+        bh=Lzsg1DbcdMpSBtuF1sBjXJJgfjAquf8gIoL8FIwzV/Q=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=UltWsrzB7Okj6k13VzOJPyMPLe37HnxcQZ90d/BaWqotNrvemCdA3Te9LuH0I++4j
+         UxiyC/saI1jEwvLG0VSHotBAEGKglJszyD2g5p9UttXOYWzdeQMdEn3HkUfTjmN/U9
+         eNWuohYW0uvgopS2tjFtxi4yJMKrCKo4h+2JqW7O7gWgXM+4I3PMHFe7QAsEJnYNfP
+         1VlL+baW8zsGC5jgDr4RarRd7KexnL/kQaZ33PaJ4aiYKwAaDlw1IMUus+8IfXflSh
+         1DEvhEUYWsNtHMYiA8hkLR/u+TzVcdMq2i/6gYToxSe+hmGTZzz6V1ygkBL1VY/b9C
+         iGKzC84M9ucCQ==
 From:   Damien Le Moal <dlemoal@kernel.org>
 To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH 0/5] Some minor cleanups
-Date:   Tue,  8 Aug 2023 22:56:57 +0900
-Message-ID: <20230808135702.628588-1-dlemoal@kernel.org>
+Subject: [PATCH 1/5] block: use PAGE_SECTORS_SHIFT to set limits
+Date:   Tue,  8 Aug 2023 22:56:58 +0900
+Message-ID: <20230808135702.628588-2-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230808135702.628588-1-dlemoal@kernel.org>
+References: <20230808135702.628588-1-dlemoal@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -50,38 +52,45 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Patch 1 changes the blk-settings code to use PAGE_SECTORS_SHIFT instead
-of "PAGE_SHIFT - 9". The following patches swith calls to printk() to
-the equivalent pr_XXX() calls.
+Replace occurences of "PAGE_SHIFT - 9" in blk-settings.c with the
+cleaner PAGE_SECTORS_SHIFT macro.
 
-No functional changes overall.
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+---
+ block/blk-settings.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Damien Le Moal (5):
-  block: use PAGE_SECTORS_SHIFT to set limits
-  block: use pr_xxx() instead of printk()
-  block: use pr_xxx() instead of printk() in partition code
-  block: Improve efi partition debug messages
-  block: switch ldm partition code to use pr_xxx() functions
-
- Documentation/admin-guide/ldm.rst |  7 +++----
- arch/m68k/configs/virt_defconfig  |  1 -
- block/bio-integrity.c             | 11 ++++++----
- block/blk-ioc.c                   |  5 ++++-
- block/blk-mq.c                    | 25 ++++++++++++----------
- block/blk-settings.c              | 25 ++++++++++++----------
- block/bsg.c                       |  7 +++++--
- block/elevator.c                  |  5 ++++-
- block/genhd.c                     |  7 +++++--
- block/partitions/Kconfig          | 10 ---------
- block/partitions/atari.c          | 11 ++++++----
- block/partitions/check.h          |  1 +
- block/partitions/core.c           | 33 ++++++++++++++---------------
- block/partitions/efi.c            |  3 +++
- block/partitions/ldm.c            | 35 +++++++------------------------
- block/partitions/sgi.c            |  7 +++++--
- block/partitions/sun.c            |  5 ++++-
- 17 files changed, 99 insertions(+), 99 deletions(-)
-
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 0046b447268f..5e2dbd34436b 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -126,7 +126,7 @@ void blk_queue_max_hw_sectors(struct request_queue *q, unsigned int max_hw_secto
+ 	unsigned int max_sectors;
+ 
+ 	if ((max_hw_sectors << 9) < PAGE_SIZE) {
+-		max_hw_sectors = 1 << (PAGE_SHIFT - 9);
++		max_hw_sectors = 1 << PAGE_SECTORS_SHIFT;
+ 		printk(KERN_INFO "%s: set to minimum %d\n",
+ 		       __func__, max_hw_sectors);
+ 	}
+@@ -148,7 +148,7 @@ void blk_queue_max_hw_sectors(struct request_queue *q, unsigned int max_hw_secto
+ 
+ 	if (!q->disk)
+ 		return;
+-	q->disk->bdi->io_pages = max_sectors >> (PAGE_SHIFT - 9);
++	q->disk->bdi->io_pages = max_sectors >> PAGE_SECTORS_SHIFT;
+ }
+ EXPORT_SYMBOL(blk_queue_max_hw_sectors);
+ 
+@@ -398,7 +398,7 @@ void disk_update_readahead(struct gendisk *disk)
+ 	 */
+ 	disk->bdi->ra_pages =
+ 		max(queue_io_opt(q) * 2 / PAGE_SIZE, VM_READAHEAD_PAGES);
+-	disk->bdi->io_pages = queue_max_sectors(q) >> (PAGE_SHIFT - 9);
++	disk->bdi->io_pages = queue_max_sectors(q) >> PAGE_SECTORS_SHIFT;
+ }
+ EXPORT_SYMBOL_GPL(disk_update_readahead);
+ 
 -- 
 2.41.0
 
