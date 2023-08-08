@@ -2,135 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B619774A64
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 22:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6B6774CF6
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 23:22:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbjHHU0f (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 16:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
+        id S236735AbjHHVWw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 17:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbjHHU0S (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 16:26:18 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2086.outbound.protection.outlook.com [40.107.92.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D8B132E0
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 12:39:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GtRGdNvIBr9KS+LMfrWEVt4YW5BUOxoUq/pWQ5GfNdWizz56LoE9Xwdeh2R0l4dyyN8tvV3l8LrXgcub0FUSxS00QHFThvnfzy085IkdjJA3Wr86F/XmfgPOKdv29mVeSb6PSabGpoK5/REHuZfGqvqsuK4ji6Y/rTiNzqk9kY7ndUWW73jeyr/UnxZK99WvY5dAok9GIrnZng3vvSor11anZC01W6AtUqhZOVbPpGVswsGKhfNxIfjM3w/6WWZCdKcIkG8nfDd8K11/PWvZtxruWIv22Zc/lhs1ZwwS5ipB/uoOJXnr4ucdW7SbcxoPaSz4mo6bZs9fyLiVbcMO5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vMJsNKQUZtymdHH2GIIDBH9pJZkNnJpqIPPKhUU2X6k=;
- b=U7in6K/xvj1VhHwcOUXHzSwpff8X3panp0ebeikbLaOwKJ9cm9TCRplRkaRXydgGQGVwVQTwOVS7ItYvXdciEeQNI+ZxThswQ4yLHsIdRiyhCsJB3t1rBFVx95mwlbheZDx33RY52mPJS6o44S89cx7XIZNwbjjkzm6+wKqZ4WN8UPBgjb4pAwtWVmBJH2okIWpUdn7OVYzsnxwFPcayampj2VmTyw7Ib3C/nRQ1BrP1N1ABjQBFgp3QwcnGOtCOM4rNuEfDievQ9G/069AZ1SSzdi10fe7INlXwWUjmUIDBMt1aUrMFV5S1HUTPnH2MuG2GBW6xWbxwO6QuAmK6Kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vMJsNKQUZtymdHH2GIIDBH9pJZkNnJpqIPPKhUU2X6k=;
- b=ZYrRcoC6Vje9b7A7rVAejbIZY9Fjd3CijMpwvLV2iwe9PhoAq0vcEQZ8x6nujj2cmNClBKEwLz+bHgiPoS3CYfUeydB+i5saOKgM4amTFl8l9xYN/za+zpJx5t/RG//MnfcKlZBRUYy4NdLddltePrddhKKcJ4QPcrHp3LQQMK44+i/xwrj/qV9aGE74F5dbqpDvx/FCQptGOkeR8GrVcLfFjf0y94RAZTcpeGnYUKbnGroKVNRxjoTONRF1TsM6pzawFtcomo5uy4a8rXLeABPKYJCTxtlKZEO/cLvL4uubo9d34bnznMhWp0dte6dZYwHyp04wPqgG+DOQxs7gwA==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by BL1PR12MB5111.namprd12.prod.outlook.com (2603:10b6:208:31b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27; Tue, 8 Aug
- 2023 19:39:30 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::f55b:c44f:74a7:7056]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::f55b:c44f:74a7:7056%4]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
- 19:39:29 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 1/2] block: get rid of unused plug->nowait flag
-Thread-Topic: [PATCH 1/2] block: get rid of unused plug->nowait flag
-Thread-Index: AQHZyiOmE7S65bfMD0CSWlcLRuMTIq/gy9EA
-Date:   Tue, 8 Aug 2023 19:39:29 +0000
-Message-ID: <5309a2c6-8165-4c50-4e2f-95e66e800ff5@nvidia.com>
-References: <20230808171310.112878-1-axboe@kernel.dk>
- <20230808171310.112878-2-axboe@kernel.dk>
-In-Reply-To: <20230808171310.112878-2-axboe@kernel.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|BL1PR12MB5111:EE_
-x-ms-office365-filtering-correlation-id: 94768d9e-14d4-487f-8255-08db98472ec5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9qyGSiFNPUI+nSDu+d0zzqx4dJiy16unAuMdEdXGmSg2ZwLXuD1K7hbelLeu0G132hae0lg4v3y+NLdfKtBbrw7uHglTh9bqo+S2CrQAiWOND7q9nolAdW0OrrZnlDAyNdOOA+8NcX3sNBFhWp5SpCw8kT20K0Lx8B01K2V88zRBIyvUoaMo1aZfVhjd3APt6LMgJXTIx3G7hUjS9HCgIBjhdryu6gDciVcV+iPz26yGCl+oSn60qB7DvuLk66QoNx9IhJqngnoCVzQ7ys/Fkn+MhotfmQr2gYiH9i2y6iNMOzJKZfFM2O0l2+Aw5gbm97b3gtd188XSG3KrojGfKjardjSiwWecP5cOOdy5XttbpsPEQnH/2aoLi1SX4PwtDsJho11PD8LJ3TjnWPtM5+xPdjrKznk+6yxjUs54lKdVpuxvRs4UVlxnRbDQF+4YIrzYM40ybb/p/u/4aD9+6Uor3YIskiLHC14lVYjR5l92du7oBI1m5GRDjJaA5LITuk/+pgQncqBuZinFfXvnvZ8aUkerMwlWFHKisaiL+bYOETGB3s1KZEbN43pkXCemhIlrAo0xHqBEpiCeZ6sxGQYhqPrMb+2Gxl081diuvEHGjEiWwOEhDbK00WE01zGHObaSi5c0HXy1coXGNxNIcWcS2VA5rh+OTA6u2xWwO/o06dn4/1bZhM+xXcok64HwW1s5bTFSb0UO34Ovo704ww==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(39860400002)(376002)(136003)(346002)(186006)(1800799003)(451199021)(2616005)(122000001)(478600001)(83380400001)(31686004)(6486002)(53546011)(6512007)(26005)(6506007)(66946007)(76116006)(91956017)(66476007)(66446008)(8936002)(316002)(2906002)(8676002)(31696002)(66556008)(41300700001)(71200400001)(64756008)(110136005)(38100700002)(36756003)(38070700005)(558084003)(86362001)(5660300002)(26583001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VWU2VitDZ00wY2FqK2djTUZvU2pmalREN0ZoMUt2MGpqMElOY0ZYNGZhdW1Q?=
- =?utf-8?B?OWZxZU5GZHRlZktVS0prR1dVbmdvZXJ4ZnJaVmhiUGtuRHVJd1VoYW1DM1R5?=
- =?utf-8?B?RS9DR0RWQWpZanlMcnpGN0tJeEVkdEtpTVRybmVRUmZqcmhpejFGVUVTWFVY?=
- =?utf-8?B?UFBLWHloWlU1WkQ2ZE8xR3dFQzB6Yld3NS9IWUdaN2IvNDVFdTU1V0VvdVVF?=
- =?utf-8?B?WWN5SXZ4Z003b2dackpFK3pJczB6U0EwcUVJTHVQQnVFdHZuNmRVRGNmaExZ?=
- =?utf-8?B?VXhYcGJYQ2lMRDc0bC9qbXZwRW5DaWYzaGJUTk1Dc25hdTZNZy9RTmJVTmhQ?=
- =?utf-8?B?STlCSFQyeENzV1hTQTQwVUU1c1N4bE5ISkJ2dWZGN3FmTzlkaXFlbnZtR0M5?=
- =?utf-8?B?Q0hXS1JMN21lL0FCK255YWVlZUVKK3M5cSthSU94MEM2TmNXRzAzTEE4cFE4?=
- =?utf-8?B?dzZ0andhbzNFSHZKaWkrOGxrQTM4Tm1KVmFOOGl1QUJUUkdRWFhCbjZ1ZDRa?=
- =?utf-8?B?aVJ4MTBmWHhsT3Q5UnJzYllCRXVFUGxGYjVIM05lcjBMQVpBek01UkMvZ2VS?=
- =?utf-8?B?RTYyZlZoQ0o5WlBTcWlYTGx2N3JVV1FQaDFmZStrMnA0QjFGZnErdE1paG1E?=
- =?utf-8?B?dTM4TzhiWjBXYkNpRUFxczZlQkk0WEk3Mi9VMHA1cExha3E0UzZqR1NsWmF1?=
- =?utf-8?B?RDBqSktsY3N0Wjd1bUxTUFhpSXVZa2Y3RzVVYXlkVSt4VHZmbDZ0bXFyVFJK?=
- =?utf-8?B?YlV5cjFnSTk3THJmVHR4eUhEZTcrbXREWWUxRmVrajllOTMvUTRMZVpJMlEz?=
- =?utf-8?B?SllUeU0yc2RneE9Ya2UwTG94R29WVmpsMWJ0OHFGa2lYVFExb3dKaDNIRVps?=
- =?utf-8?B?M3l3bURTK29JOEI3TmYyVWdTbWM4djk2MHU1bm5FNzBsTUdUdmt4L1YxTEZJ?=
- =?utf-8?B?bnowenVYMHJSY3FhTllYNFJPaGNVamxqVXEvdmx3NDBydlBHUFYzNEUvS0Fu?=
- =?utf-8?B?YW1uT2lwZlFOd0pOVWp1d21kUGZPeEFESVZaTXJmcGY5cW5VVmQzajVFSm1T?=
- =?utf-8?B?cnpvRld2cEFwTTBrcDBQZlBMSFV2MEZMbHhyY0J1QkFGRmovSHh3NUNSak1p?=
- =?utf-8?B?c2NUa3RMRUhqSHYxQ2hFL1VPNlR2cjBnUHdqYXlYSkxrOC9iMFpPNGU1ZE4x?=
- =?utf-8?B?RHNZMkgyc1gyaFRoWmtFVWRQZisxZ0drMGJ4TXo1WkdiTUczTGtaMysrcHZP?=
- =?utf-8?B?OVcraFRCTm5mSXZtQm4wVjVQczBZOXhnY2dQYUhBVXFiZXhxcGpZM3lWeGhZ?=
- =?utf-8?B?ODExREFHck9VS0hLdzlwcHpwbWF6aW5YR3QzaXk0RTdzL3lUaUtTU1Raazh3?=
- =?utf-8?B?QlZueGZzWlRFMzA4NlJLOUZ2blBvOWZrYjNzZW5oNW8yWlhQM09aMWdHLysw?=
- =?utf-8?B?aWhFTUkxbmxuTVUraXR0Kys3eTJ6djRwbmoyd2JkeThqMS9ZYUdPWStyQTRY?=
- =?utf-8?B?MjJmbzUwOFBiMmovbFl4N0x2WlFReEJ2cHBMZkJ4TGVnL0hJbmRKVUJrY1hI?=
- =?utf-8?B?b1hubFJxbldwekl0MTVBUlJzTGdJWFAzUHJOMmhXcnpOaHhCMzdqQXA2VTJh?=
- =?utf-8?B?M2c5N3JMOElnY1V1Q3RMVzVwZmN0NXJ4TWp5WmROZGQ2akpGeFZqMUVvWmwz?=
- =?utf-8?B?bGZ1Z2pGN2JTcGFMeVVwTXpsdGl6R29JbkFQZFRwRlVNdmdBeU9qTTNjTDdY?=
- =?utf-8?B?V1c5UEdzKzJDUklINWRxYnNydHhLSG1QTGpUZ0pFMk5idWpJWS9RMzIyVnBU?=
- =?utf-8?B?WjlmUkhIR3RlaWFheFlxU3VXZCtZYkhPK3JMOWQxa2dMWHhaQi9ySk9weUJS?=
- =?utf-8?B?SHo5VHhkcWZsby9nYjZKZWF2MC9VSzNrV09CaitWSXlnSGtoZWEzMmJRRVhp?=
- =?utf-8?B?QUZtOS93THB3SUV4T0lraWtVaXQxbHJRdHRqQzJEa3VLMHh5Y1IrQTY4M3lH?=
- =?utf-8?B?YXNPK0ZXQzhndHZwb3M2aWp1R05GMGZOQ042Uk5Jak5Kd1o0TGRzODFLVXpH?=
- =?utf-8?B?MU5WWU5nV1J4cThVMGkzUHE0V3ZoNlIyTENSdnpIdXlrRkViR3p1RHdvQmda?=
- =?utf-8?Q?anDo=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <436429DC8CA1EF4386A0EDD7BACEC680@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S236663AbjHHVWl (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 17:22:41 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26AD94688
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 14:20:01 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bc76cdf0cbso3035865ad.1
+        for <linux-block@vger.kernel.org>; Tue, 08 Aug 2023 14:20:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1691529600; x=1692134400;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RDdZwF9KguBzQP6YmKiwPQ6frVPgr7pc2pSejY7e/Uo=;
+        b=uqcKD5Tha5HBmA3ZFYTgrsuYMh7XeSxyy0fq/7EMm7Gp5udXTZPdzZmP1SMthmVFE1
+         F0iL/7RH6inx52TyO+kkbdJjFhD4MF3RypaFh+cJRfv3wyKWWV8UQFr4c/nmfpZqF+3E
+         6o6UMImlWhHrWlDVIZoNqdVse4OSbMzCOWzSY2d3mejXLR7Miwc6HgXMBLg9Ryk80rqt
+         41ZyOZ0/h8WJlSh7f22OG2Y9kzfZDhyct7ZxZESgLJfhl1YbuXUilLQUdWHNqE746lO8
+         BRb6+UQlcQ2SAcPVZquACYqbFbos3cKUujXdFM953Jo8tk0+gNAEHkSc3x14z17wrehl
+         TdUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691529600; x=1692134400;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RDdZwF9KguBzQP6YmKiwPQ6frVPgr7pc2pSejY7e/Uo=;
+        b=AKNzSG0Q377QdFg7nrHg/yH4kkmph31qEpgWZA+NKrG9Wj1nCe2VyDrRjpMqg4IKbr
+         xDRmbxdNbJNB+du7QavlErRJJu+tHU6B5tmNWPiQo7uclRF7Tm+Q3A5GzJPgll/PAAar
+         IOQfHHb2UvXbmObwU65GHskQYP1yq6QkoblQ16E1pIUBKkT2u2DRC0PG4Lm3kZP0xkeQ
+         UkWcAjOfv2YLylfagg+QvmykXP1PFNr5f0LwM0tMyBLpQGbwh8f3EM85VIxArX5kitdJ
+         FHX+grYKEM/9TfgwsTHG06lR1dLPN0zRnFe34oAyJUecdry91G2f5+kied4umPBUsZGL
+         y4AA==
+X-Gm-Message-State: AOJu0YxgP+qlLLWBOYl+ysxm6gFoSSwRFRekCa3nlKnEkMtlLGqTkbqX
+        E92Ua2oJQEhS0EQS25Mi9+eGFw==
+X-Google-Smtp-Source: AGHT+IF6Ya/5Z2xIEjHri4UBBp25Q+eun6ODOIaHNh23yLls0vl3ZjAhoczBMVM2lXWY38O5+wso1Q==
+X-Received: by 2002:a17:902:e88f:b0:1bb:d7d4:e2b with SMTP id w15-20020a170902e88f00b001bbd7d40e2bmr1025181plg.0.1691529600567;
+        Tue, 08 Aug 2023 14:20:00 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id j24-20020a170902759800b001bc4737cc9fsm9431034pll.254.2023.08.08.14.19.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Aug 2023 14:19:59 -0700 (PDT)
+Message-ID: <dd230762-804c-bb8a-24e0-123afd81e26c@kernel.dk>
+Date:   Tue, 8 Aug 2023 15:19:58 -0600
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94768d9e-14d4-487f-8255-08db98472ec5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2023 19:39:29.7420
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 15RkaWSpxKCoD9ewua98EzWu2sQii3WYbtQ2b1ZaW8ckKHMMVE6qySlkgzV97ZgyRMhV7CXtJnA2S38W5IY7VQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5111
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: [PATCH v6 1/7] block: Introduce the flag
+ QUEUE_FLAG_NO_ZONE_WRITE_LOCK
+Content-Language: en-US
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>
+References: <20230804154821.3232094-1-bvanassche@acm.org>
+ <20230804154821.3232094-2-bvanassche@acm.org>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20230804154821.3232094-2-bvanassche@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-T24gOC84LzIwMjMgMTA6MTMgQU0sIEplbnMgQXhib2Ugd3JvdGU6DQo+IFRoaXMgd2FzIGludHJv
-ZHVjZWQgdG8gYWRkIGEgcGx1ZyBiYXNlZCB3YXkgb2Ygc2lnbmFsaW5nIG5vd2FpdCBpc3N1ZXMs
-DQo+IGJ1dCB3ZSBoYXZlIHNpbmNlIG1vdmVkIG9uIGZyb20gdGhhdC4gS2lsbCB0aGUgb2xkIGRl
-YWQgY29kZSwgbm9ib2R5IGlzDQo+IHNldHRpbmcgaXQgYW55bW9yZS4NCj4gDQo+IFNpZ25lZC1v
-ZmYtYnk6IEplbnMgQXhib2UgPGF4Ym9lQGtlcm5lbC5kaz4NCj4gLS0tDQoNCkxvb2tzIGdvb2Qg
-dG8gbWUuDQoNClJldmlld2VkLWJ5OiBDaGFpdGFueWEgS3Vsa2FybmkgPGtjaEBudmlkaWEuY29t
-Pg0KDQotY2sNCg0KDQo=
+On 8/4/23 9:47?AM, Bart Van Assche wrote:
+> Writes in sequential write required zones must happen at the write
+> pointer. Even if the submitter of the write commands (e.g. a filesystem)
+> submits writes for sequential write required zones in order, the block
+> layer or the storage controller may reorder these write commands.
+> 
+> The zone locking mechanism in the mq-deadline I/O scheduler serializes
+> write commands for sequential zones. Some but not all storage controllers
+> require this serialization. Introduce a new request queue flag to allow
+> block drivers to indicate that they preserve the order of write commands
+> and thus do not require serialization of writes per zone.
+
+Looking at how this is used, why not call it QUEUE_FLAG_ZONE_WRITE_LOCK
+instead? That'd make the code easier to immediately grok, rather than
+deal with double negations.
+
+-- 
+Jens Axboe
+
