@@ -2,140 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 658CB7748F1
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 21:45:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76FBC7743E0
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 20:11:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236286AbjHHTpe (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 15:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44980 "EHLO
+        id S235410AbjHHSLP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 14:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233224AbjHHTpQ (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 15:45:16 -0400
-Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6764E46FFB
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 09:48:38 -0700 (PDT)
-Received: by mail-oo1-xc2e.google.com with SMTP id 006d021491bc7-56c7f47ec42so4184328eaf.2
-        for <linux-block@vger.kernel.org>; Tue, 08 Aug 2023 09:48:38 -0700 (PDT)
+        with ESMTP id S231838AbjHHSKp (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 14:10:45 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09AF51BAFB
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 10:13:14 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id ca18e2360f4ac-790dcf48546so37823939f.0
+        for <linux-block@vger.kernel.org>; Tue, 08 Aug 2023 10:13:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691513317; x=1692118117;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Klg6b7rTmA3/2CEHhPBL9kFFomypTM/SqIrAORONAmA=;
-        b=HrUbAcZIcVGRlX4zScFuELATxKdyvbp8EoYD8gur7LDE7cd5xkSvkeb+qNOJVt0CgL
-         LpTgzCdKpBZ7s2chVEtBBqVGogsqFTl9bq6RmfljA1CUD35mRS6sBgjIzjTc6KlFC79F
-         umcgeR/4HIAAj+b0Lo1DU1sFg1qCBjU/SiZgIMmR1BntscuFlo1j6GejwT7eEtpLimsN
-         lnObmx/g9G7HFVlqt6LunRJL7bpGVgXibXcMV3yfTWBMs3vEBbwDfRHWh3hl06cisFnx
-         ZoXASz3ETrAAJ6POgDAueIlxE0o+jAu1YzU7388HyDJPcK9lBbMWtdY9x8g7nQ7s0I3X
-         PQ6A==
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1691514793; x=1692119593;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QFSFCcy2YzyX7yU8OcfMkexJd8fRtqvgyyADBsq68No=;
+        b=OI8unf6Stoi7II4i36n65HgUa/mkQ78GMZ6ONqj2imI57TeN4tQ5sCIbCsS4wWUU3M
+         lR404n2Yfguw49iKF6LuF5+RjBG5ucbLQ4XSYQThHbFcz3rjBezzWt33wCXXKivafN9g
+         AAfNmZQVvGVxjiNwVmI+BhYTlalYcgHvmQOFa8hFttjSuK32SXd+127Un+nMcxukRlrg
+         z/kzn+5R8ch5ltPO6jE+gzvYcFS7UN3c48bgIj1+BLjwQqcgKZBQCnD0x/eoZ9FsFThh
+         UUxhzYmHssb3KwmJXh2bgqWVFok61aH30xScnfK3a2kYYlGqimfaxNhg+e/R2L5Snxus
+         7+sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691513317; x=1692118117;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Klg6b7rTmA3/2CEHhPBL9kFFomypTM/SqIrAORONAmA=;
-        b=b/saTCVGHesABv/ObF6fMq/SlovhCBjoSlH7C96C1CH1EbVqUiMoiV6MQt14zhQ7Ep
-         eqp/40CBLDjQwFcJkeoxq5SfAJiQH48TBB7HOh3zTsj5xXthJiHrIW2ZT658nl55LM3H
-         KvGhrra8llEDI/IV9RUfYfcn09B+rPk+pcVhNLk6ZfRgbNZEELD3ECzP6GPCfgtlQntB
-         8mQpG0pv8r1p4Dy/lhc7e28aHe+ap+lkaGL3v4IHofNYCm4RDlQYKU7dkjm3lMDtL0VL
-         ePGZCv97IbVk9RGzFk9SVsGORfqds7KXfuqBA2gCS1ZT8M97x56iGJJtI8lcvUcTaRiy
-         RvHg==
-X-Gm-Message-State: AOJu0YzxCelwXM0XFdwdkf89ww/6XqxZMZPrhNtv5ZEDxxNmS1feq9xY
-        VIlXDoxz0FexjEqHu7E3qsuFFO/cgNmwGbXG8sxc4VMIHV3pVY54R5s=
-X-Google-Smtp-Source: AGHT+IFyFm7A28IM+G0on9OcPQxQMVC4tFTmtVJz+gYpID8XubCbPflmb8sfgiBS79hEh9WW2BWOpIws/LS1JffnNds=
-X-Received: by 2002:a05:6358:419b:b0:134:ca8a:7486 with SMTP id
- w27-20020a056358419b00b00134ca8a7486mr11887238rwc.28.1691492428398; Tue, 08
- Aug 2023 04:00:28 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691514793; x=1692119593;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QFSFCcy2YzyX7yU8OcfMkexJd8fRtqvgyyADBsq68No=;
+        b=eTtME9HSpUdB8SrJ5OzH7uBzqaT4HZawUCF5HTpkekdNIJwCf/89pgjIzEkRbrL55d
+         ao/X/uE7EsIjuiqkX2r3PMLjcn2T0RvWpMybXs52y7eCrpFFPODqfYyMmojyKqF2aXQR
+         ky5kUSikTtiKppImCxcM5+cBuOrR2PpthZQ67Q6EZJqlmKDTL7bGGhKafzwNqQOq797J
+         ne/ICwhqzkdvmotPDhEW3mgvNd/jX1YwnwA+NRYL2OENZF694yQDfPuwq9+Ms9cIVD3j
+         K7oVZ+uXjs83n43t2En6S8yYICjuObrtwPVXjtF5FqhgE1/9y6RS16yo42GtXDEquMp/
+         dhQw==
+X-Gm-Message-State: AOJu0Yx1hVrtpVQ370ZljD5G4BjcJEPneVtuk2b29d1hqI2Gwhp3vMkS
+        dRQCTgF+9MgKUiNivO+E0qbne/dmXl9IUDR3O3w=
+X-Google-Smtp-Source: AGHT+IFNfCoKahM+duqo9C6f1BuiAgc0i+iu1he2RHATM24InsvTZIyEpwZyt0WbU6oa6ZnCbVNgyw==
+X-Received: by 2002:a05:6602:29c7:b0:780:d6ef:160 with SMTP id z7-20020a05660229c700b00780d6ef0160mr380220ioq.1.1691514793193;
+        Tue, 08 Aug 2023 10:13:13 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id r25-20020a02c859000000b0042afec5be53sm3222955jao.153.2023.08.08.10.13.12
+        for <linux-block@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Aug 2023 10:13:12 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     linux-block@vger.kernel.org
+Subject: [PATCH 0/2] Block nowait fix
+Date:   Tue,  8 Aug 2023 11:13:08 -0600
+Message-Id: <20230808171310.112878-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <cover.1689802933.git.daniel@makrotopia.org> <1ce5f56df546cec25ef741f381286f1d7c33d000.1689802933.git.daniel@makrotopia.org>
- <CAPDyKFqhZtCHVmCNnm_Qm7X+=GtJY8uNJOWOgZXuTTVEw0msNA@mail.gmail.com> <ZNGULFxXpLT7zn35@makrotopia.org>
-In-Reply-To: <ZNGULFxXpLT7zn35@makrotopia.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 8 Aug 2023 12:59:52 +0200
-Message-ID: <CAPDyKFrpWgA=e-FSoKfYhWSOq5m5_pHjxgzaGeOFHFhU_mcmNw@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/6] mmc: block: set fwnode of disk devices
-To:     Daniel Golle <daniel@makrotopia.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Jan Kara <jack@suse.cz>, Damien Le Moal <dlemoal@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, Min Li <min15.li@samsung.com>,
-        Christian Loehle <CLoehle@hyperstone.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Yeqi Fu <asuk4.q@gmail.com>, Avri Altman <avri.altman@wdc.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ye Bin <yebin10@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Tue, 8 Aug 2023 at 03:02, Daniel Golle <daniel@makrotopia.org> wrote:
->
-> Hi Ulf,
->
-> thank you for reviewing and suggesting ways to improve this series!
->
-> On Mon, Aug 07, 2023 at 03:48:31PM +0200, Ulf Hansson wrote:
-> > On Thu, 20 Jul 2023 at 00:02, Daniel Golle <daniel@makrotopia.org> wrote:
-> > >
-> > > Set fwnode of disk devices to 'block', 'boot0' and 'boot1' subnodes of
-> > > the mmc-card. This is done in preparation for having the eMMC act as
-> > > NVMEM provider.
-> >
-> > Sorry, but I don't quite understand what you are trying to do here.
-> > Maybe you should re-order the patches in the series so it becomes
-> > clear why this is needed?
-> >
-> > Moreover, I don't see any DT docs being updated as a part of the
-> > series, which looks like it is needed too. That would also help to
-> > understand what you are proposing, I think.
->
-> I've prepared a tree on Github which now also includes commits adding
-> dt-bindings for block devices and partitions, so they can be referenced
-> as nvmem-cells provider.
->
-> The dt-schema addition supposedly explaining this specific patch:
->
-> https://github.com/dangowrt/linux/commit/b399a758f0e1c444ae9443dc80902a30de54af09
->
-> The whole tree:
->
-> https://github.com/dangowrt/linux/commits/for-nvmem-next
+Hi,
 
-Thanks for sharing. However, allow people to review, I suggest you
-post a new version with the updated DT bindings included.
+Patch 1 is just something I came across while debugging an issue,
+killing old and unused code.
 
-The point is, we really need confirmation from the DT maintainers -
-otherwise this is simply a no go.
+Patch 2 fixes an issue with IOCB_HIPRI -> REQ_POLLED, where we always
+set REQ_NOWAIT as well. We should not be combining these two flags, they
+are separate properties and it's up to the caller to do the right thing
+and set one or both as they see fit.
 
->
-> Most comments have been addressed, however, I still depend on using
-> either a class_interface *or* adding calls to add/remove the NVMEM
-> representation of a block device to block/genhd.c as well as
-> block/partitions/core.c, simply because afaik there isn't any better
-> way for in-kernel users of block devices to be notified about the
-> creation or removal of a block device.
+-- 
+Jens Axboe
 
-Okay, so that needs further discussions then. I will try to chim in.
 
-[...]
-
-Kind regards
-Uffe
