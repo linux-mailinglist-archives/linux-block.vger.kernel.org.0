@@ -2,34 +2,34 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51840774320
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 19:57:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57E0E77430A
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 19:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjHHR5Z (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 13:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
+        id S235079AbjHHR4K (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 13:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbjHHR4s (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 13:56:48 -0400
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA6332AF07;
-        Tue,  8 Aug 2023 09:25:41 -0700 (PDT)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-686ed1d2594so5638451b3a.2;
-        Tue, 08 Aug 2023 09:25:41 -0700 (PDT)
+        with ESMTP id S231955AbjHHRzq (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 13:55:46 -0400
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3F42A815;
+        Tue,  8 Aug 2023 09:25:12 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-686ed1d2594so5637909b3a.2;
+        Tue, 08 Aug 2023 09:25:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691511909; x=1692116709;
+        d=1e100.net; s=20221208; t=1691511869; x=1692116669;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=2qgNS4DkRUi6QR/B4v/+tHHbyA7hT2tYZURhMtsh+Es=;
-        b=TrMVP/QQE1rI58CHjpCyVan94bbZgB8RuLpGdPeMpg6OO8bQI/I+PzETBvDPHP54D4
-         sC9PBNfvQjQnxvPf+WyXSZUPb7FNqpxxt/xUYO5hJehXuWfGwemB84zLe1SztmulnkQq
-         t1zzN/IoC2K5HakfgcbDdfBJwpaoiFCwOLQJKsuSBnO6KRvPOltAWZK11wqZqjSGURFd
-         RuULnY7aLTgpNqg2a+SjXd4csHs+OvCVNK/VYLY3pKGA9P/u7jIN2/e8876zDUJv3mgR
-         EhFkPFJDLKXuUvdgUVbUCl8K7VnmlMwmHSa/af6Fc5MCw+N6CQ60wDioJEOz+Isa59Yz
-         XnoQ==
-X-Gm-Message-State: AOJu0YwvUL/7rDFBBNuoobjr4AEBc4e95/CdSjZzwtd/mRlavH7uwC26
-        V5j8Frr6PkUahSz/S35+XoGzOrCe3Tc=
+        b=Cm/ddo8Iy7ejIYfIRaYmnf/iae17j9ESzbEr/mZDkonpHXV6C3lEEVQbb2lYS76RcW
+         r5gqxD5Gbp3lmHgDZ6hvh9i/nJyOTDXvSDINB/BMd8R/uHXSgXS4nDYHmOhBcy99cu+9
+         pN88qASzWJtjLk/VPhWJkpettB+fkEndEUuD/GQLp0RuwDNkuZ0OPHLiZmYC7FRGaEWF
+         LQK47c8KiOgIJMxBYXx/8zkKWdqOIVOs5ZMFlKDtCH5PL4l+QpJi1ejJ1TANRV7qijF6
+         ejETk0NxX/Zn0uaNaDn1Aqlf5Ne3XKdCC46DndfwdNRNkzuP7mEO3z3W0N+ha3n+aPsi
+         c/6Q==
+X-Gm-Message-State: AOJu0YxIq9zzn5aZCn0G566O1xPyMr1eWBIHM3Cqnz/Ml1xolI9Gbt38
+        iBUauk3v8aL3mCfl9jL5Sr+xm1+MLjs=
 X-Google-Smtp-Source: AGHT+IGi8chTo6biWKPL5WddtVnyrqZ6Q73m3OdAvun3EgO2v2Q5zkHcBpv/7uGiTQHy76JyUyu61g==
 X-Received: by 2002:a05:6a00:851:b0:67f:3dcd:bc00 with SMTP id q17-20020a056a00085100b0067f3dcdbc00mr17452354pfk.2.1691504457041;
         Tue, 08 Aug 2023 07:20:57 -0700 (PDT)
@@ -60,8 +60,7 @@ Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
