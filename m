@@ -2,353 +2,147 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 010D8774B13
-	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 22:40:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4080774D66
+	for <lists+linux-block@lfdr.de>; Tue,  8 Aug 2023 23:53:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232389AbjHHUkB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 8 Aug 2023 16:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48464 "EHLO
+        id S231601AbjHHVxg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 8 Aug 2023 17:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232298AbjHHUjm (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 16:39:42 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CA8772B3
-        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 10:20:52 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RKnDH2VS5z1hwGD;
-        Tue,  8 Aug 2023 16:58:55 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 8 Aug
- 2023 17:01:43 +0800
-From:   Ruan Jinjie <ruanjinjie@huawei.com>
-To:     <linux-block@vger.kernel.org>, <drbd-dev@lists.linbit.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>
-CC:     <ruanjinjie@huawei.com>
-Subject: [PATCH -next] drbd: Use helper put_drbd_dev() and get_drbd_dev()
-Date:   Tue, 8 Aug 2023 17:01:11 +0800
-Message-ID: <20230808090111.2420717-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S232346AbjHHVxZ (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 8 Aug 2023 17:53:25 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D2810CF
+        for <linux-block@vger.kernel.org>; Tue,  8 Aug 2023 09:29:21 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id AAD2D20316;
+        Tue,  8 Aug 2023 10:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1691490620; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UyJL43iibtcNz0S6gJSk65zJptY7QZJTZMhY+M2Didc=;
+        b=EKLLDoAl5fv3Cogt+JPVHIkQmaGFJcoqPCRQd7BFB516ywdwTyzYAcXN9TS3Nx3aZ8NKGH
+        J/T5s5Opfr5yccLKanbMeWEw+fZDbXe75+ZA3x30Jy1q7m13bIMKVOprRdboRb6yoFDLvt
+        4Z+UkLDTuiLO/s8ecqCrLBjin1CJNzE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1691490620;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UyJL43iibtcNz0S6gJSk65zJptY7QZJTZMhY+M2Didc=;
+        b=HD/ozy0SHrhkkqFDpbVK1IUmw9u98yicfxiWncazK1FZSsJGeZTcpdZ2lmzBzC5Knz4asM
+        iuc/Y6eoEFxh4uBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8FB6C139D1;
+        Tue,  8 Aug 2023 10:30:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 8MYQIzwZ0mRwNwAAMHmgww
+        (envelope-from <jack@suse.cz>); Tue, 08 Aug 2023 10:30:20 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id EBF80A0769; Tue,  8 Aug 2023 12:30:19 +0200 (CEST)
+Date:   Tue, 8 Aug 2023 12:30:19 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, David Jeffery <djeffery@redhat.com>,
+        Kemeng Shi <shikemeng@huaweicloud.com>,
+        Gabriel Krisman Bertazi <krisman@suse.de>,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: Re: [RFC PATCH] sbitmap: fix batching wakeup
+Message-ID: <20230808103019.zvduupwrbalk3ee4@quack3>
+References: <20230721095715.232728-1-ming.lei@redhat.com>
+ <20230802160553.uv5wn6nfjseniyxx@quack3>
+ <ZNH6as/wUkbCMAcN@fedora>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500008.china.huawei.com (7.221.188.139)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZNH6as/wUkbCMAcN@fedora>
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The drbd_destroy_device() arg of this code is already duplicated
-18 times, use helper function put_drbd_dev() to release drbd_device
-and related resources instead of open coding it to help improve
-code readability a bit.
+On Tue 08-08-23 16:18:50, Ming Lei wrote:
+> On Wed, Aug 02, 2023 at 06:05:53PM +0200, Jan Kara wrote:
+> > On Fri 21-07-23 17:57:15, Ming Lei wrote:
+> > > From: David Jeffery <djeffery@redhat.com>
+> > > 
+> > > Current code supposes that it is enough to provide forward progress by just
+> > > waking up one wait queue after one completion batch is done.
+> > > 
+> > > Unfortunately this way isn't enough, cause waiter can be added to
+> > > wait queue just after it is woken up.
+> > > 
+> > > Follows one example(64 depth, wake_batch is 8)
+> > > 
+> > > 1) all 64 tags are active
+> > > 
+> > > 2) in each wait queue, there is only one single waiter
+> > > 
+> > > 3) each time one completion batch(8 completions) wakes up just one waiter in each wait
+> > > queue, then immediately one new sleeper is added to this wait queue
+> > > 
+> > > 4) after 64 completions, 8 waiters are wakeup, and there are still 8 waiters in each
+> > > wait queue
+> > > 
+> > > 5) after another 8 active tags are completed, only one waiter can be wakeup, and the other 7
+> > > can't be waken up anymore.
+> > > 
+> > > Turns out it isn't easy to fix this problem, so simply wakeup enough waiters for
+> > > single batch.
+> > > 
+> > > Cc: David Jeffery <djeffery@redhat.com>
+> > > Cc: Kemeng Shi <shikemeng@huaweicloud.com>
+> > > Cc: Gabriel Krisman Bertazi <krisman@suse.de>
+> > > Cc: Chengming Zhou <zhouchengming@bytedance.com>
+> > > Cc: Jan Kara <jack@suse.cz>
+> > > Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> > 
+> > I'm sorry for the delay - I was on vacation. I can see the patch got
+> > already merged and I'm not strictly against that (although I think Gabriel
+> > was experimenting with this exact wakeup scheme and as far as I remember
+> > the more eager waking up was causing performance decrease for some
+> > configurations). But let me challenge the analysis above a bit. For the
+> > sleeper to be added to a waitqueue in step 3), blk_mq_mark_tag_wait() must
+> > fail the blk_mq_get_driver_tag() call. Which means that all tags were used
+> 
+> Here only allocating request by blk_mq_get_tag() is involved, and
+> getting driver tag isn't involved.
+> 
+> > at that moment. To summarize, anytime we add any new waiter to the
+> > waitqueue, all tags are used and thus we should eventually receive enough
+> > wakeups to wake all of them. What am I missing?
+> 
+> When running the final retry(__blk_mq_get_tag) before
+> sleeping(io_schedule()) in blk_mq_get_tag(), the sleeper has been added to
+> wait queue.
+> 
+> So when two completion batch comes, the two may wake up same wq because
+> same ->wake_index can be observed from two completion path, and both two
+> wake_up_nr() can return > 0 because adding sleeper into wq and wake_up_nr()
+> can be interleaved, then 16 completions just wakeup 2 sleepers added to
+> same wq.
+> 
+> If the story happens on one wq with >= 8 sleepers, io hang will be
+> triggered, if there are another two pending wq.
 
-And add get_drbd_dev() helper function to be symmetrical with it.
+OK, thanks for explanation! I think I see the problem now.
 
-No functional change involved.
+								Honza
 
-Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
----
- drivers/block/drbd/drbd_debugfs.c  |  2 +-
- drivers/block/drbd/drbd_int.h      | 10 ++++++++++
- drivers/block/drbd/drbd_main.c     | 18 +++++++++---------
- drivers/block/drbd/drbd_nl.c       |  4 ++--
- drivers/block/drbd/drbd_receiver.c | 24 ++++++++++++------------
- drivers/block/drbd/drbd_state.c    |  4 ++--
- drivers/block/drbd/drbd_worker.c   | 12 ++++++------
- 7 files changed, 42 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/block/drbd/drbd_debugfs.c b/drivers/block/drbd/drbd_debugfs.c
-index 12460b584bcb..8f681be85460 100644
---- a/drivers/block/drbd/drbd_debugfs.c
-+++ b/drivers/block/drbd/drbd_debugfs.c
-@@ -751,7 +751,7 @@ static int device_ ## name ## _open(struct inode *inode, struct file *file)	\
- static int device_ ## name ## _release(struct inode *inode, struct file *file)	\
- {										\
- 	struct drbd_device *device = inode->i_private;				\
--	kref_put(&device->kref, drbd_destroy_device);				\
-+	put_drbd_dev(device);							\
- 	return single_release(inode, file);					\
- }										\
- static const struct file_operations device_ ## name ## _fops = {		\
-diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
-index a30a5ed811be..052a86240711 100644
---- a/drivers/block/drbd/drbd_int.h
-+++ b/drivers/block/drbd/drbd_int.h
-@@ -1372,6 +1372,16 @@ extern enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx
- extern void drbd_destroy_device(struct kref *kref);
- extern void drbd_delete_device(struct drbd_device *device);
- 
-+static inline void get_drbd_dev(struct drbd_device *dev)
-+{
-+	kref_get(&dev->kref);
-+}
-+
-+static inline void put_drbd_dev(struct drbd_device *dev)
-+{
-+	kref_put(&dev->kref, drbd_destroy_device);
-+}
-+
- extern struct drbd_resource *drbd_create_resource(const char *name);
- extern void drbd_free_resource(struct drbd_resource *resource);
- 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 79ab532aabaf..a7c619afecec 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -2746,7 +2746,7 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 			err = ERR_MINOR_OR_VOLUME_EXISTS;
- 		goto out_no_minor_idr;
- 	}
--	kref_get(&device->kref);
-+	get_drbd_dev(device);
- 
- 	id = idr_alloc(&resource->devices, device, vnr, vnr + 1, GFP_KERNEL);
- 	if (id < 0) {
-@@ -2754,7 +2754,7 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 			err = ERR_MINOR_OR_VOLUME_EXISTS;
- 		goto out_idr_remove_minor;
- 	}
--	kref_get(&device->kref);
-+	get_drbd_dev(device);
- 
- 	INIT_LIST_HEAD(&device->peer_devices);
- 	INIT_LIST_HEAD(&device->pending_bitmap_io);
-@@ -2766,7 +2766,7 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 		peer_device->device = device;
- 
- 		list_add(&peer_device->peer_devices, &device->peer_devices);
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 
- 		id = idr_alloc(&connection->peer_devices, peer_device, vnr, vnr + 1, GFP_KERNEL);
- 		if (id < 0) {
-@@ -2839,15 +2839,15 @@ void drbd_delete_device(struct drbd_device *device)
- 	drbd_debugfs_device_cleanup(device);
- 	for_each_connection(connection, resource) {
- 		idr_remove(&connection->peer_devices, device->vnr);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 	}
- 	idr_remove(&resource->devices, device->vnr);
--	kref_put(&device->kref, drbd_destroy_device);
-+	put_drbd_dev(device);
- 	idr_remove(&drbd_devices, device_to_minor(device));
--	kref_put(&device->kref, drbd_destroy_device);
-+	put_drbd_dev(device);
- 	del_gendisk(device->vdisk);
- 	synchronize_rcu();
--	kref_put(&device->kref, drbd_destroy_device);
-+	put_drbd_dev(device);
- }
- 
- static int __init drbd_init(void)
-@@ -2959,10 +2959,10 @@ void conn_md_sync(struct drbd_connection *connection)
- 	idr_for_each_entry(&connection->peer_devices, peer_device, vnr) {
- 		struct drbd_device *device = peer_device->device;
- 
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		rcu_read_unlock();
- 		drbd_md_sync(device);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index cddae6f4b00f..294b0b138e7d 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -228,7 +228,7 @@ static int drbd_adm_prepare(struct drbd_config_context *adm_ctx,
- 	 * But we may explicitly drop it/retake it in drbd_adm_set_role(),
- 	 * so make sure this object stays around. */
- 	if (adm_ctx->device)
--		kref_get(&adm_ctx->device->kref);
-+		get_drbd_dev(adm_ctx->device);
- 
- 	if (adm_ctx->resource_name) {
- 		adm_ctx->resource = drbd_find_resource(adm_ctx->resource_name);
-@@ -304,7 +304,7 @@ static int drbd_adm_finish(struct drbd_config_context *adm_ctx,
- 	struct genl_info *info, int retcode)
- {
- 	if (adm_ctx->device) {
--		kref_put(&adm_ctx->device->kref, drbd_destroy_device);
-+		put_drbd_dev(adm_ctx->device);
- 		adm_ctx->device = NULL;
- 	}
- 	if (adm_ctx->connection) {
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 0c9f54197768..101d81cd4db1 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -230,10 +230,10 @@ static void conn_reclaim_net_peer_reqs(struct drbd_connection *connection)
- 		if (!atomic_read(&device->pp_in_use_by_net))
- 			continue;
- 
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		rcu_read_unlock();
- 		drbd_reclaim_net_peer_reqs(device);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
-@@ -1105,7 +1105,7 @@ static int conn_connect(struct drbd_connection *connection)
- 	rcu_read_lock();
- 	idr_for_each_entry(&connection->peer_devices, peer_device, vnr) {
- 		struct drbd_device *device = peer_device->device;
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		rcu_read_unlock();
- 
- 		if (discard_my_data)
-@@ -1114,7 +1114,7 @@ static int conn_connect(struct drbd_connection *connection)
- 			clear_bit(DISCARD_MY_DATA, &device->flags);
- 
- 		drbd_connected(peer_device);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
-@@ -1273,7 +1273,7 @@ static void one_flush_endio(struct bio *bio)
- 
- 	clear_bit(FLUSH_PENDING, &device->flags);
- 	put_ldev(device);
--	kref_put(&device->kref, drbd_destroy_device);
-+	put_drbd_dev(device);
- 
- 	if (atomic_dec_and_test(&ctx->pending))
- 		complete(&ctx->done);
-@@ -1294,7 +1294,7 @@ static void submit_one_flush(struct drbd_device *device, struct issue_flush_cont
- 
- 		ctx->error = -ENOMEM;
- 		put_ldev(device);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		return;
- 	}
- 
-@@ -1326,7 +1326,7 @@ static void drbd_flush(struct drbd_connection *connection)
- 
- 			if (!get_ldev(device))
- 				continue;
--			kref_get(&device->kref);
-+			get_drbd_dev(device);
- 			rcu_read_unlock();
- 
- 			submit_one_flush(device, &ctx);
-@@ -1746,10 +1746,10 @@ static void conn_wait_active_ee_empty(struct drbd_connection *connection)
- 	idr_for_each_entry(&connection->peer_devices, peer_device, vnr) {
- 		struct drbd_device *device = peer_device->device;
- 
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		rcu_read_unlock();
- 		drbd_wait_ee_list_empty(device, &device->active_ee);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
-@@ -5129,10 +5129,10 @@ static void conn_disconnect(struct drbd_connection *connection)
- 	rcu_read_lock();
- 	idr_for_each_entry(&connection->peer_devices, peer_device, vnr) {
- 		struct drbd_device *device = peer_device->device;
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		rcu_read_unlock();
- 		drbd_disconnected(peer_device);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
-@@ -6112,7 +6112,7 @@ void drbd_send_acks_wf(struct work_struct *ws)
- 		tcp_sock_set_cork(connection->meta.socket->sk, true);
- 
- 	err = drbd_finish_peer_reqs(device);
--	kref_put(&device->kref, drbd_destroy_device);
-+	put_drbd_dev(device);
- 	/* get is in drbd_endio_write_sec_final(). That is necessary to keep the
- 	   struct work_struct send_acks_work alive, which is in the peer_device object */
- 
-diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
-index 287a8d1d3f70..c2fe43d80a29 100644
---- a/drivers/block/drbd/drbd_state.c
-+++ b/drivers/block/drbd/drbd_state.c
-@@ -122,7 +122,7 @@ struct drbd_state_change *remember_old_state(struct drbd_resource *resource, gfp
- 	device_state_change = state_change->devices;
- 	peer_device_state_change = state_change->peer_devices;
- 	idr_for_each_entry(&resource->devices, device, vnr) {
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		device_state_change->device = device;
- 		device_state_change->disk_state[OLD] = device->state.disk;
- 
-@@ -264,7 +264,7 @@ void forget_state_change(struct drbd_state_change *state_change)
- 		struct drbd_device *device = state_change->devices[n].device;
- 
- 		if (device)
--			kref_put(&device->kref, drbd_destroy_device);
-+			put_drbd_dev(device);
- 	}
- 	for (n = 0; n < state_change->n_connections; n++) {
- 		struct drbd_connection *connection =
-diff --git a/drivers/block/drbd/drbd_worker.c b/drivers/block/drbd/drbd_worker.c
-index 4352a50fbb3f..10d074885ea4 100644
---- a/drivers/block/drbd/drbd_worker.c
-+++ b/drivers/block/drbd/drbd_worker.c
-@@ -147,9 +147,9 @@ void drbd_endio_write_sec_final(struct drbd_peer_request *peer_req) __releases(l
- 		__drbd_chk_io_error(device, DRBD_WRITE_ERROR);
- 
- 	if (connection->cstate >= C_WF_REPORT_PARAMS) {
--		kref_get(&device->kref); /* put is in drbd_send_acks_wf() */
-+		get_drbd_dev(device); /* put is in drbd_send_acks_wf() */
- 		if (!queue_work(connection->ack_sender, &peer_device->send_acks_work))
--			kref_put(&device->kref, drbd_destroy_device);
-+			put_drbd_dev(device);
- 	}
- 	spin_unlock_irqrestore(&device->resource->req_lock, flags);
- 
-@@ -2065,10 +2065,10 @@ static void do_unqueued_work(struct drbd_connection *connection)
- 		if (!todo)
- 			continue;
- 
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		rcu_read_unlock();
- 		do_device_work(device, todo);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
-@@ -2229,10 +2229,10 @@ int drbd_worker(struct drbd_thread *thi)
- 	idr_for_each_entry(&connection->peer_devices, peer_device, vnr) {
- 		struct drbd_device *device = peer_device->device;
- 		D_ASSERT(device, device->state.disk == D_DISKLESS && device->state.conn == C_STANDALONE);
--		kref_get(&device->kref);
-+		get_drbd_dev(device);
- 		rcu_read_unlock();
- 		drbd_device_cleanup(device);
--		kref_put(&device->kref, drbd_destroy_device);
-+		put_drbd_dev(device);
- 		rcu_read_lock();
- 	}
- 	rcu_read_unlock();
 -- 
-2.34.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
