@@ -2,174 +2,170 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A8C777A12
-	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 16:03:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F2D2777A0E
+	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 16:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233719AbjHJODP (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Aug 2023 10:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56770 "EHLO
+        id S235551AbjHJOBg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Aug 2023 10:01:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbjHJODP (ORCPT
+        with ESMTP id S235525AbjHJOB3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Aug 2023 10:03:15 -0400
-Received: from box.fidei.email (box.fidei.email [71.19.144.250])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A981120;
-        Thu, 10 Aug 2023 07:03:14 -0700 (PDT)
-Received: from authenticated-user (box.fidei.email [71.19.144.250])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Thu, 10 Aug 2023 10:01:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC0A526AF
+        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 07:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1691676040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+g8mE7QgyEjqn7+5inRH3OtNbDjmawTuNNPPwXzqCuY=;
+        b=CuPW25TMK+Ia4C316cy27niD9SssBxnuK+SEaXeCJ6ahKNgU+WC6veYFc4nfUCRkEk3Xp3
+        B3g2KVRAQSkz3S262RuAgeRpzhVu2/LfmzmI0fACSRRp/V+Gr/IUf6H1OZp5QeerqE0luN
+        YUA8K4itIiEgXMCuLiW5XL4Mki40F0s=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-650-WyGF6OghP6e0iHJ2JUk9og-1; Thu, 10 Aug 2023 10:00:36 -0400
+X-MC-Unique: WyGF6OghP6e0iHJ2JUk9og-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by box.fidei.email (Postfix) with ESMTPSA id C8B6F835BE;
-        Thu, 10 Aug 2023 10:03:13 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dorminy.me; s=mail;
-        t=1691676194; bh=FKi9lWX389yWPHAdsOOq80Hxlwk+4mUEYc3mvuzJLzs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hzVLh3BHE2zW3OwLiVjC3Byo9LDXt2HCv/EqVLk3MwDIcjoggPkUg3S2it9GO63cO
-         DKVY5MIOBmsO3rSsCiuwylA8BKZJs6kd9q8/ng/0q0Zqxt1uvvkFDo4fq2n0C7nXqh
-         j7IJpGeTXxtJUBSEm9ZG0FjVb5M4gnL+57cv2m5w3TB3agltkHDlavosrMqJdFeQcb
-         h0Nvccr9wJSIKTn4BjuIUxLI90iYtfQHVNwVhTWC1TlJBuOexoERcGo9a1HbeqwPNb
-         yHXkpMGaU+3nUZavMGaygC/EHAYnFgaHUTlXGVZ8kDSIP3KzGFYZ4GwTXiLPC/8iXr
-         BR3XX4yg63d/A==
-From:   Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-To:     Jens Axboe <axboe@kernel.dk>, Satya Tangirala <satyat@google.com>,
-        linux-block@vger.kernel.org, kernel-team@meta.com,
-        ebiggers@kernel.org
-Cc:     Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-        stable@vger.kernel.org
-Subject: [PATCH v3] blk-crypto: dynamically allocate fallback profile
-Date:   Thu, 10 Aug 2023 09:49:59 -0400
-Message-ID: <20230810140307.92790-1-sweettea-kernel@dorminy.me>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E4EAB1C06EFB;
+        Thu, 10 Aug 2023 14:00:24 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D164492B0F;
+        Thu, 10 Aug 2023 14:00:20 +0000 (UTC)
+Date:   Thu, 10 Aug 2023 22:00:14 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andreas Hindborg <a.hindborg@samsung.com>, ming.lei@redhat.com
+Subject: Re: [PATCH V2] ublk: zoned: support REQ_OP_ZONE_RESET_ALL
+Message-ID: <ZNTtbpNCiXPvRlvI@fedora>
+References: <20230810124326.321472-1-ming.lei@redhat.com>
+ <ZNThwMBAqqVUGtek@x1-carbon>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZNThwMBAqqVUGtek@x1-carbon>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-blk_crypto_profile_init() calls lockdep_register_key(), which warns and
-does not register if the provided memory is a static object.
-blk-crypto-fallback currently has a static blk_crypto_profile and calls
-blk_crypto_profile_init() thereupon, resulting in the warning and
-failure to register.
+On Thu, Aug 10, 2023 at 01:10:30PM +0000, Niklas Cassel wrote:
+> On Thu, Aug 10, 2023 at 08:43:26PM +0800, Ming Lei wrote:
+> > There isn't any reason to not support REQ_OP_ZONE_RESET_ALL given everything
+> > is actually handled in userspace, not mention it is pretty easy to support
+> > RESET_ALL.
+> > 
+> > So enable REQ_OP_ZONE_RESET_ALL and let userspace handle it.
+> > 
+> > Verified by 'tools/zbc_reset_zone -all /dev/ublkb0' in libzbc[1] with
+> > libublk-rs based ublk-zoned target prototype[2], follows command line
+> > for creating ublk-zoned:
+> > 
+> > 	cargo run --example zoned -- add -1 1024	# add $dev_id $DEV_SIZE
+> > 
+> > [1] https://github.com/westerndigitalcorporation/libzbc
+> > [2] https://github.com/ming1/libublk-rs/tree/zoned.v2
+> > 
+> > Cc: Niklas Cassel <Niklas.Cassel@wdc.com>
+> > Cc: Damien Le Moal <dlemoal@kernel.org>
+> > Cc: Andreas Hindborg <a.hindborg@samsung.com>
+> > Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> > ---
+> > V2:
+> > 	- update comment as reported by Niklas
+> > 
+> >  drivers/block/ublk_drv.c      | 7 +++++--
+> >  include/uapi/linux/ublk_cmd.h | 1 +
+> >  2 files changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> > index b60394fe7be6..3650ef209344 100644
+> > --- a/drivers/block/ublk_drv.c
+> > +++ b/drivers/block/ublk_drv.c
+> > @@ -251,6 +251,7 @@ static int ublk_dev_param_zoned_apply(struct ublk_device *ub)
+> >  	const struct ublk_param_zoned *p = &ub->params.zoned;
+> >  
+> >  	disk_set_zoned(ub->ub_disk, BLK_ZONED_HM);
+> > +	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, ub->ub_disk->queue);
+> >  	blk_queue_required_elevator_features(ub->ub_disk->queue,
+> >  					     ELEVATOR_F_ZBD_SEQ_WRITE);
+> >  	disk_set_max_active_zones(ub->ub_disk, p->max_active_zones);
+> > @@ -393,6 +394,9 @@ static blk_status_t ublk_setup_iod_zoned(struct ublk_queue *ubq,
+> >  	case REQ_OP_ZONE_APPEND:
+> >  		ublk_op = UBLK_IO_OP_ZONE_APPEND;
+> >  		break;
+> > +	case REQ_OP_ZONE_RESET_ALL:
+> > +		ublk_op = UBLK_IO_OP_ZONE_RESET_ALL;
+> > +		break;
+> >  	case REQ_OP_DRV_IN:
+> >  		ublk_op = pdu->operation;
+> >  		switch (ublk_op) {
+> > @@ -404,9 +408,8 @@ static blk_status_t ublk_setup_iod_zoned(struct ublk_queue *ubq,
+> >  		default:
+> >  			return BLK_STS_IOERR;
+> >  		}
+> > -	case REQ_OP_ZONE_RESET_ALL:
+> >  	case REQ_OP_DRV_OUT:
+> > -		/* We do not support reset_all and drv_out */
+> > +		/* We do not support drv_out */
+> >  		return BLK_STS_NOTSUPP;
+> >  	default:
+> >  		return BLK_STS_IOERR;
+> > diff --git a/include/uapi/linux/ublk_cmd.h b/include/uapi/linux/ublk_cmd.h
+> > index 2685e53e4752..b9cfc5c96268 100644
+> > --- a/include/uapi/linux/ublk_cmd.h
+> > +++ b/include/uapi/linux/ublk_cmd.h
+> > @@ -245,6 +245,7 @@ struct ublksrv_ctrl_dev_info {
+> >  #define		UBLK_IO_OP_ZONE_CLOSE		11
+> >  #define		UBLK_IO_OP_ZONE_FINISH		12
+> >  #define		UBLK_IO_OP_ZONE_APPEND		13
+> > +#define		UBLK_IO_OP_ZONE_RESET_ALL	14
+> 
+> For some reason, it seems like the UBLK_IO_OP_ZONE_* values
+> are identical to the REQ_OP_ZONE_* values in enum req_op:
 
-Fortunately it is simple enough to use a dynamically allocated profile
-and make lockdep function correctly.
+Yeah.
 
-Fixes: 2fb48d88e77f ("blk-crypto: use dynamic lock class for blk_crypto_profile::lock")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
----
-v3: added allocation error checking as noted by Eric Biggers.
-v2: reworded commit message, fixed Fixes tag, as pointed out by Eric
-Biggers.
+I think that is zoned interface abstraction, which should be
+generic enough to use linux's definition for ublk's UAPI in 1:1.
 
- block/blk-crypto-fallback.c | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+The same mapping can be found in virtio-blk zoned spec.
 
-diff --git a/block/blk-crypto-fallback.c b/block/blk-crypto-fallback.c
-index ad9844c5b40c..4b0c661df191 100644
---- a/block/blk-crypto-fallback.c
-+++ b/block/blk-crypto-fallback.c
-@@ -78,7 +78,7 @@ static struct blk_crypto_fallback_keyslot {
- 	struct crypto_skcipher *tfms[BLK_ENCRYPTION_MODE_MAX];
- } *blk_crypto_keyslots;
- 
--static struct blk_crypto_profile blk_crypto_fallback_profile;
-+static struct blk_crypto_profile *blk_crypto_fallback_profile;
- static struct workqueue_struct *blk_crypto_wq;
- static mempool_t *blk_crypto_bounce_page_pool;
- static struct bio_set crypto_bio_split;
-@@ -292,7 +292,7 @@ static bool blk_crypto_fallback_encrypt_bio(struct bio **bio_ptr)
- 	 * Get a blk-crypto-fallback keyslot that contains a crypto_skcipher for
- 	 * this bio's algorithm and key.
- 	 */
--	blk_st = blk_crypto_get_keyslot(&blk_crypto_fallback_profile,
-+	blk_st = blk_crypto_get_keyslot(blk_crypto_fallback_profile,
- 					bc->bc_key, &slot);
- 	if (blk_st != BLK_STS_OK) {
- 		src_bio->bi_status = blk_st;
-@@ -395,7 +395,7 @@ static void blk_crypto_fallback_decrypt_bio(struct work_struct *work)
- 	 * Get a blk-crypto-fallback keyslot that contains a crypto_skcipher for
- 	 * this bio's algorithm and key.
- 	 */
--	blk_st = blk_crypto_get_keyslot(&blk_crypto_fallback_profile,
-+	blk_st = blk_crypto_get_keyslot(blk_crypto_fallback_profile,
- 					bc->bc_key, &slot);
- 	if (blk_st != BLK_STS_OK) {
- 		bio->bi_status = blk_st;
-@@ -499,7 +499,7 @@ bool blk_crypto_fallback_bio_prep(struct bio **bio_ptr)
- 		return false;
- 	}
- 
--	if (!__blk_crypto_cfg_supported(&blk_crypto_fallback_profile,
-+	if (!__blk_crypto_cfg_supported(blk_crypto_fallback_profile,
- 					&bc->bc_key->crypto_cfg)) {
- 		bio->bi_status = BLK_STS_NOTSUPP;
- 		return false;
-@@ -526,15 +526,14 @@ bool blk_crypto_fallback_bio_prep(struct bio **bio_ptr)
- 
- int blk_crypto_fallback_evict_key(const struct blk_crypto_key *key)
- {
--	return __blk_crypto_evict_key(&blk_crypto_fallback_profile, key);
-+	return __blk_crypto_evict_key(blk_crypto_fallback_profile, key);
- }
- 
- static bool blk_crypto_fallback_inited;
- static int blk_crypto_fallback_init(void)
- {
- 	int i;
--	int err;
--	struct blk_crypto_profile *profile = &blk_crypto_fallback_profile;
-+	int err = 0;
- 
- 	if (blk_crypto_fallback_inited)
- 		return 0;
-@@ -545,18 +544,25 @@ static int blk_crypto_fallback_init(void)
- 	if (err)
- 		goto out;
- 
--	err = blk_crypto_profile_init(profile, blk_crypto_num_keyslots);
--	if (err)
-+	/* Dynamic allocation is needed because of lockdep_register_key(). */
-+	blk_crypto_fallback_profile =
-+		kzalloc(sizeof(*blk_crypto_fallback_profile), GFP_KERNEL);
-+	if (!blk_crypto_fallback_profile)
- 		goto fail_free_bioset;
-+
-+	err = blk_crypto_profile_init(blk_crypto_fallback_profile,
-+				      blk_crypto_num_keyslots);
-+	if (err)
-+		goto fail_free_profile;
- 	err = -ENOMEM;
- 
--	profile->ll_ops = blk_crypto_fallback_ll_ops;
--	profile->max_dun_bytes_supported = BLK_CRYPTO_MAX_IV_SIZE;
-+	blk_crypto_fallback_profile->ll_ops = blk_crypto_fallback_ll_ops;
-+	blk_crypto_fallback_profile->max_dun_bytes_supported = BLK_CRYPTO_MAX_IV_SIZE;
- 
- 	/* All blk-crypto modes have a crypto API fallback. */
- 	for (i = 0; i < BLK_ENCRYPTION_MODE_MAX; i++)
--		profile->modes_supported[i] = 0xFFFFFFFF;
--	profile->modes_supported[BLK_ENCRYPTION_MODE_INVALID] = 0;
-+		blk_crypto_fallback_profile->modes_supported[i] = 0xFFFFFFFF;
-+	blk_crypto_fallback_profile->modes_supported[BLK_ENCRYPTION_MODE_INVALID] = 0;
- 
- 	blk_crypto_wq = alloc_workqueue("blk_crypto_wq",
- 					WQ_UNBOUND | WQ_HIGHPRI |
-@@ -597,7 +603,9 @@ static int blk_crypto_fallback_init(void)
- fail_free_wq:
- 	destroy_workqueue(blk_crypto_wq);
- fail_destroy_profile:
--	blk_crypto_profile_destroy(profile);
-+	blk_crypto_profile_destroy(blk_crypto_fallback_profile);
-+fail_free_profile:
-+	kfree(blk_crypto_fallback_profile);
- fail_free_bioset:
- 	bioset_exit(&crypto_bio_split);
- out:
--- 
-2.41.0
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/blk_types.h?h=v6.5-rc5#n371
+> 
+> I don't see any obvious advantage of keeping them the same,
+
+Not sure I follow your idea, and can you share your exact suggestion?
+
+UBLK_IO_OP_ZONE_* is part of ublk UAPI, but REQ_OP_ZONE_* is just kernel
+internal definition which may be changed time by time, so we can't use
+REQ_OP_ZONE_* directly.
+
+Here you can think of UBLK_IO_OP_ZONE_* as interface between driver and
+hardware, so UBLK_IO_OP_ZONE_* has to be defined independently.
+
+> but if you want to keep this pattern, then perhaps you want
+> to define UBLK_IO_OP_ZONE_RESET_ALL to 17.
+
+Why do you think that 17 is better than 14?
+
+I'd rather use 14 to fill the hole, meantime the two ZONE_RESET OPs
+can be kept together.
+
+Thanks,
+Ming
 
