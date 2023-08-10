@@ -2,106 +2,123 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6377F777AB0
-	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 16:27:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 250C3777AC7
+	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 16:31:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232018AbjHJO1L (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Aug 2023 10:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52338 "EHLO
+        id S231774AbjHJOb1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Aug 2023 10:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233628AbjHJO1L (ORCPT
+        with ESMTP id S235570AbjHJObZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Aug 2023 10:27:11 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3741125
-        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 07:27:10 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-523643207dbso1216415a12.3
-        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 07:27:10 -0700 (PDT)
+        Thu, 10 Aug 2023 10:31:25 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D97626A9
+        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 07:31:24 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bc76cdf0cbso1365245ad.1
+        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 07:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1691677629; x=1692282429;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u5xcFRJZ9iTBgAb+ZGptIB8k23d8fMFMHg19sXQmehs=;
-        b=bWtUmVyMYDN253szWDkw3W5J4L2OkSDfNJPp3KptVh4yjZPB9bybVxJ3p4IMqaqbMu
-         pQDqOEzedv6/ShhOkc8g8BLfgiEki/7735QQALVuajZdbLIkj/GarPi52YIDzt28E4WG
-         ppP9X7+oupNlaYNoLqCr5uu9//9ZoHz/mTjysJz/nCSZl02iTrf7Oph+gN5E8QY5Xe1h
-         Oq2JQzsbnaQhfD13VEd41uw1iPkT/Lv5naUFowHWhWhFePFWaPd42QbZ8/4kW1Xk4fkG
-         J9KEpLEdZPAQTg01DnDdQV1WySF5sCivNsvl5+BlTWrdEdsidRR84c3Nglxs72BWd/5z
-         DcNw==
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1691677883; x=1692282683;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dfLCCDH2lJon3gk1O7dp3FF9gazCYdPkfMfgDUEDf8E=;
+        b=EURAVQYADIX4U/Ql2uJtC/SU+5E2wBUfGEFDWz/1HAwDr/V4yhjOCF8yS5rsc+OfOE
+         KshHTsDt0VhhqpXNJRnWJf/e9xJD1BoLo+31KPek7eTtx/8OX4aIr+hwmK+i5UrAB9wr
+         KSNDXe20E6RXxyRayLXgbEWFHw7lRPC4q6F6bhwpFa8Jn/YHZI3R2jHTtPBNOELFEknI
+         /JY55dBisMhXA8wMeM16EQ7wuI92SGwgltoQ+wM8CCU1DIjCuj4sB0057q6STpVXbqHF
+         GoGtPHUR9F/CY1263HsJoX/9tvLa+OAd5jMfGtwpsAtgo+/Lthyp4vt5kd+e9GxqmAqB
+         p7KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691677629; x=1692282429;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u5xcFRJZ9iTBgAb+ZGptIB8k23d8fMFMHg19sXQmehs=;
-        b=cLN1+DFOiybbeDybuSMwXoJ3huOpYLMEujcyE/Ft/8TrJ1YTwOx9HRzdpAQj9NysfO
-         KjZx3olRHKKh9e/TGA9TdxlkkPgoxV1KZw7Eq+vzCSH1jKAl7wYB1lu54e3Jus72j3rW
-         u8L39flDLHwfCk56r/GV2nx7PXTb4IED7BDVUbz3h3uGCpO6ZaU7zfk0awlVIJ+4lumr
-         j54F5gBYPPHLIePCUaCGSCbJU/u56KZ35MRQTc2WfL5YJwFKr5ztdKpaEiFxdNM8hwsx
-         tbDhi9Dqh1oyxtr6udreW1YYYHMSFvYkyT8w+9/wBfEPcFTTHhUi1KlOgluFfMZIecrA
-         JnPw==
-X-Gm-Message-State: AOJu0Yzkx/H4PzPkzYczMJjM3Om5aGqQ4RuVKJ3QKJf2SghIe0Yfo2B9
-        OZoMZNlCnEHgIzkW6iBloINaClDPKnzuUQiJjrtmtA==
-X-Google-Smtp-Source: AGHT+IEMxNnZsCvYmRpACWEFVlmp6HtkpiGZh9pKQzzwbAMbJkxtMXj6BSqsrqTWtFTyR+5sVpwD4NdQtaNUqCHeCnM=
-X-Received: by 2002:a05:6402:88e:b0:522:36f0:f1a3 with SMTP id
- e14-20020a056402088e00b0052236f0f1a3mr2289742edy.10.1691677629247; Thu, 10
- Aug 2023 07:27:09 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691677883; x=1692282683;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dfLCCDH2lJon3gk1O7dp3FF9gazCYdPkfMfgDUEDf8E=;
+        b=aV/29EQkS0Huujlfm6O07A9tQhiA3cYIONFwlAX2xUtmE5jcrWhefs567hSeEGHVoO
+         UCMdIFHY0rOLYZCOo/stzjGJx5SW47Ib/TpfMwdSFY3TY8UlG3zkEdL50WEpR5fFU8rt
+         PLIlivipwRaulRDeIlQtZb5jrR75+f+Dkrk3jnLPb3biLBgUCiwmqlsM36a+OXp1GGxr
+         IXgA7UjYWYIkhvEWfB2x97e/YE+iohDNuvoKMIXo1ERziMx8fuGh/YJQ30QS5mW5L2JE
+         SDzptRc6rivWZGPp3GzloAXuxE9En/eF7ozkTx6qtuVD13DR3JyFqNNU8BHUBSkV29cF
+         o/qg==
+X-Gm-Message-State: AOJu0Yw247cHnT5pMt0LXGTgFO+bvv6GX95M7R9hcB8uRGzePyEmVK74
+        T/Sg9Iak0pZ/NJN74aIne6km1Q==
+X-Google-Smtp-Source: AGHT+IEJKGKRmPFBh/HK/d/ybnf411GaUAWNPEHIf+c1xUoCsq390IUfmMTKN5FrekqzYNVsivOudA==
+X-Received: by 2002:a17:902:e847:b0:1bb:d7d4:e2b with SMTP id t7-20020a170902e84700b001bbd7d40e2bmr3169371plg.0.1691677883527;
+        Thu, 10 Aug 2023 07:31:23 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id c18-20020a170903235200b001b8b07bc600sm1824836plh.186.2023.08.10.07.31.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Aug 2023 07:31:22 -0700 (PDT)
+Message-ID: <59c108b9-ac20-400a-804d-92e0c6a982ad@kernel.dk>
+Date:   Thu, 10 Aug 2023 08:31:21 -0600
 MIME-Version: 1.0
-References: <20230810141947.1236730-1-arnd@kernel.org> <20230810141947.1236730-6-arnd@kernel.org>
-In-Reply-To: <20230810141947.1236730-6-arnd@kernel.org>
-From:   Jinpu Wang <jinpu.wang@ionos.com>
-Date:   Thu, 10 Aug 2023 16:26:58 +0200
-Message-ID: <CAMGffEkM4XKn4MRNR332wENzWzjX=ujWu1HH_zdeGqGB+D79tQ@mail.gmail.com>
-Subject: Re: [PATCH 05/17] swim3: mark swim3_init() static
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <brauner@kernel.org>,
-        Hannes Reinecke <hare@suse.de>, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] blk-crypto: dynamically allocate fallback profile
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+        Satya Tangirala <satyat@google.com>,
+        linux-block@vger.kernel.org, kernel-team@meta.com,
+        ebiggers@kernel.org, stable@vger.kernel.org
+References: <20230809125628.529884-1-sweettea-kernel@dorminy.me>
+ <94c661a6-442b-4ca2-b9e8-198069d8b635@kernel.dk>
+ <2023081023-parsnip-limb-dcd4@gregkh>
+ <29a213de-d7c7-4e53-8b5c-eb742dcf23ea@kernel.dk>
+ <2023081007-poise-zeppelin-df6a@gregkh>
+Content-Language: en-US
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <2023081007-poise-zeppelin-df6a@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 4:21=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> This is the module init function, which by definition is used only
-> locally, so mark it static to avoid a warning:
->
-> drivers/block/swim3.c:1280:5: error: no previous prototype for 'swim3_ini=
-t' [-Werror=3Dmissing-prototypes]
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-lgtm
-Reviewed-by: Jack Wang <jinpu.wang@ionos.com>
-> ---
->  drivers/block/swim3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/block/swim3.c b/drivers/block/swim3.c
-> index dc43a63b34694..c2bc85826358e 100644
-> --- a/drivers/block/swim3.c
-> +++ b/drivers/block/swim3.c
-> @@ -1277,7 +1277,7 @@ static struct macio_driver swim3_driver =3D
->  };
->
->
-> -int swim3_init(void)
-> +static int swim3_init(void)
->  {
->         macio_register_driver(&swim3_driver);
->         return 0;
-> --
-> 2.39.2
->
+On 8/10/23 7:41 AM, Greg KH wrote:
+> On Thu, Aug 10, 2023 at 07:18:27AM -0600, Jens Axboe wrote:
+>> On 8/9/23 10:53 PM, Greg KH wrote:
+>>> On Wed, Aug 09, 2023 at 04:08:52PM -0600, Jens Axboe wrote:
+>>>> On 8/9/23 6:56 AM, Sweet Tea Dorminy wrote:
+>>>>> blk_crypto_profile_init() calls lockdep_register_key(), which warns and
+>>>>> does not register if the provided memory is a static object.
+>>>>> blk-crypto-fallback currently has a static blk_crypto_profile and calls
+>>>>> blk_crypto_profile_init() thereupon, resulting in the warning and
+>>>>> failure to register.
+>>>>>
+>>>>> Fortunately it is simple enough to use a dynamically allocated profile
+>>>>> and make lockdep function correctly.
+>>>>>
+>>>>> Fixes: 2fb48d88e77f ("blk-crypto: use dynamic lock class for blk_crypto_profile::lock")
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+>>>>
+>>>> The offending commit went into 6.5, so there should be no need for a
+>>>> stable tag on this one. But I can edit that while applying, waiting on
+>>>> Eric to ack it.
+>>>
+>>> That commit has been backported to stable releases, so it would be nice
+>>> to keep it there so our tools automatically pick it up properly.  Once
+>>> the authorship name is fixed up of course.
+>>
+>> But that stable tag should not be necessary? If stable has backported a
+>> commit, surely it'll pick a commit that has that in Fixes? Otherwise
+>> that seems broken and implies that people need to potentially check
+>> every commit for a stable presence.
+>>
+>> I can keep the tag, just a bit puzzled as to why that would be
+>> necessary.
+> 
+> It's not necessary, no, our scripts will pick it out and get it merged
+> eventually.  But if you know it's needed to start with, it's always nice
+> to add it if possible, saves me the extra work :)
+
+OK, makes sense.
+
+-- 
+Jens Axboe
+
