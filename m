@@ -2,47 +2,47 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 984DB777571
-	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 12:09:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE2A777576
+	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 12:10:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232180AbjHJKJ3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Aug 2023 06:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
+        id S231283AbjHJKKC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Aug 2023 06:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231994AbjHJKJ2 (ORCPT
+        with ESMTP id S233946AbjHJKKB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Aug 2023 06:09:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D0F83
-        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 03:08:43 -0700 (PDT)
+        Thu, 10 Aug 2023 06:10:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89CF3E0
+        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 03:09:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691662122;
+        s=mimecast20190719; t=1691662155;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=s9AiNKrVX8hfRXAiH8rdKAY0xfsUsj0VMC9UfNMLLnw=;
-        b=N/MlXP1ChCSbCRkJbnjLNh5BRU56uCqBNFXAXabWZLYWzqQQn66Ex63PBx9CjSbdl3LQv9
-        sI0kURSwSmb7TW7itdIU9sjq4W3HJc4NKNRxf8OBxwYXwru2co2xFKg3TH/hGa9s/oKEUq
-        cdp1AoyrgRHnb5EsfoekvU6zBOcxrv8=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-578-0QMvhMtAPzartjXIrlA_MQ-1; Thu, 10 Aug 2023 06:08:41 -0400
-X-MC-Unique: 0QMvhMtAPzartjXIrlA_MQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        bh=Zmj5nzJTSHzE8zf1I1zUcK3keiQbhtTkmdKSaDQ9f0U=;
+        b=U01m/qope0QhaAepEpfyMRMm+1FJOhs9hYMbTqDO48W7AMHz3gMRXrhX8UeTmb4kMeD/9g
+        bM52r1KZVKN6o+hdoxoY+yeaLaS/fDpz0o2CgbqKtGf5r76UEVlUMJDHXZggbXYrYinvzd
+        XprJ0f0hbefxc/A3ezxSqaCr06AxwcM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-665-btY38AADN2yPlZumBh7MJw-1; Thu, 10 Aug 2023 06:09:12 -0400
+X-MC-Unique: btY38AADN2yPlZumBh7MJw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BB7723C0D848;
-        Thu, 10 Aug 2023 10:08:40 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3469A8DC661;
+        Thu, 10 Aug 2023 10:09:12 +0000 (UTC)
 Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B020940C6F4E;
-        Thu, 10 Aug 2023 10:08:40 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2488DC15BAE;
+        Thu, 10 Aug 2023 10:09:12 +0000 (UTC)
 Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-        id C53AC30B9C07; Thu, 10 Aug 2023 10:08:39 +0000 (UTC)
+        id 17FD730B9C07; Thu, 10 Aug 2023 10:09:12 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-        by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id BABF33F7CF;
-        Thu, 10 Aug 2023 12:08:39 +0200 (CEST)
-Date:   Thu, 10 Aug 2023 12:08:39 +0200 (CEST)
+        by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 14B933F7CF;
+        Thu, 10 Aug 2023 12:09:12 +0200 (CEST)
+Date:   Thu, 10 Aug 2023 12:09:11 +0200 (CEST)
 From:   Mikulas Patocka <mpatocka@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 cc:     Li Nan <linan666@huaweicloud.com>,
@@ -50,90 +50,93 @@ cc:     Li Nan <linan666@huaweicloud.com>,
         Christoph Hellwig <hch@infradead.org>,
         Chaitanya Kulkarni <chaitanyak@nvidia.com>,
         linux-block@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH v3 1/4] brd: use a switch statement in brd_submit_bio
+Subject: [PATCH v3 2/4] brd: extend the rcu regions to cover read and write
 In-Reply-To: <2dacc73-854-e71c-1746-99b017401c9a@redhat.com>
-Message-ID: <ee59ce87-9e5-c725-8040-80c5e0fd48f@redhat.com>
+Message-ID: <2ae7f7aa-add7-a7f5-e73e-443fc97a0d9@redhat.com>
 References: <2dacc73-854-e71c-1746-99b017401c9a@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Use a switch statement in brd_submit_bio, so that the code will look
-better when we add support for more bio operations.
+This patch extends the rcu regions, so that lookup followed by a read or
+write of a page is done inside rcu read lock. This is needed for the
+following patch that enables discard.
 
 Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 
 ---
- drivers/block/brd.c |   43 ++++++++++++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 17 deletions(-)
+ drivers/block/brd.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 Index: linux-2.6/drivers/block/brd.c
 ===================================================================
 --- linux-2.6.orig/drivers/block/brd.c
 +++ linux-2.6/drivers/block/brd.c
-@@ -243,29 +243,38 @@ out:
- static void brd_submit_bio(struct bio *bio)
- {
- 	struct brd_device *brd = bio->bi_bdev->bd_disk->private_data;
--	sector_t sector = bio->bi_iter.bi_sector;
-+	sector_t sector;
- 	struct bio_vec bvec;
- 	struct bvec_iter iter;
+@@ -150,23 +150,27 @@ static void copy_to_brd(struct brd_devic
+ 	size_t copy;
  
--	bio_for_each_segment(bvec, bio, iter) {
--		unsigned int len = bvec.bv_len;
--		int err;
-+	switch (bio_op(bio)) {
-+		case REQ_OP_READ:
-+		case REQ_OP_WRITE:
-+			sector = bio->bi_iter.bi_sector;
-+			bio_for_each_segment(bvec, bio, iter) {
-+				unsigned int len = bvec.bv_len;
-+				int err;
+ 	copy = min_t(size_t, n, PAGE_SIZE - offset);
++	rcu_read_lock();
+ 	page = brd_lookup_page(brd, sector);
+ 	BUG_ON(!page);
  
--		/* Don't support un-aligned buffer */
--		WARN_ON_ONCE((bvec.bv_offset & (SECTOR_SIZE - 1)) ||
--				(len & (SECTOR_SIZE - 1)));
-+				/* Don't support un-aligned buffer */
-+				WARN_ON_ONCE((bvec.bv_offset & (SECTOR_SIZE - 1)) ||
-+						(len & (SECTOR_SIZE - 1)));
+ 	dst = kmap_atomic(page);
+ 	memcpy(dst + offset, src, copy);
+ 	kunmap_atomic(dst);
++	rcu_read_unlock();
  
--		err = brd_do_bvec(brd, bvec.bv_page, len, bvec.bv_offset,
--				  bio->bi_opf, sector);
--		if (err) {
--			if (err == -ENOMEM && bio->bi_opf & REQ_NOWAIT) {
--				bio_wouldblock_error(bio);
--				return;
-+				err = brd_do_bvec(brd, bvec.bv_page, len, bvec.bv_offset,
-+						  bio->bi_opf, sector);
-+				if (err) {
-+					if (err == -ENOMEM && bio->bi_opf & REQ_NOWAIT) {
-+						bio_wouldblock_error(bio);
-+						return;
-+					}
-+					bio_io_error(bio);
-+					return;
-+				}
-+				sector += len >> SECTOR_SHIFT;
- 			}
--			bio_io_error(bio);
--			return;
--		}
--		sector += len >> SECTOR_SHIFT;
-+			break;
-+		default:
-+			bio->bi_status = BLK_STS_NOTSUPP;
-+			break;
+ 	if (copy < n) {
+ 		src += copy;
+ 		sector += copy >> SECTOR_SHIFT;
+ 		copy = n - copy;
++		rcu_read_lock();
+ 		page = brd_lookup_page(brd, sector);
+ 		BUG_ON(!page);
+ 
+ 		dst = kmap_atomic(page);
+ 		memcpy(dst, src, copy);
+ 		kunmap_atomic(dst);
++		rcu_read_unlock();
  	}
+ }
  
- 	bio_endio(bio);
+@@ -182,6 +186,7 @@ static void copy_from_brd(void *dst, str
+ 	size_t copy;
+ 
+ 	copy = min_t(size_t, n, PAGE_SIZE - offset);
++	rcu_read_lock();
+ 	page = brd_lookup_page(brd, sector);
+ 	if (page) {
+ 		src = kmap_atomic(page);
+@@ -189,11 +194,13 @@ static void copy_from_brd(void *dst, str
+ 		kunmap_atomic(src);
+ 	} else
+ 		memset(dst, 0, copy);
++	rcu_read_unlock();
+ 
+ 	if (copy < n) {
+ 		dst += copy;
+ 		sector += copy >> SECTOR_SHIFT;
+ 		copy = n - copy;
++		rcu_read_lock();
+ 		page = brd_lookup_page(brd, sector);
+ 		if (page) {
+ 			src = kmap_atomic(page);
+@@ -201,6 +208,7 @@ static void copy_from_brd(void *dst, str
+ 			kunmap_atomic(src);
+ 		} else
+ 			memset(dst, 0, copy);
++		rcu_read_unlock();
+ 	}
+ }
+ 
 
