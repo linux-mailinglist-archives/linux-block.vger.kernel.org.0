@@ -2,95 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CDD777738B
-	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 10:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A437F777453
+	for <lists+linux-block@lfdr.de>; Thu, 10 Aug 2023 11:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231187AbjHJI7v (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 10 Aug 2023 04:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
+        id S234839AbjHJJVi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 10 Aug 2023 05:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230494AbjHJI7u (ORCPT
+        with ESMTP id S229904AbjHJJVW (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 10 Aug 2023 04:59:50 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038692115;
-        Thu, 10 Aug 2023 01:59:50 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id B4B041F749;
-        Thu, 10 Aug 2023 08:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1691657988; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Thu, 10 Aug 2023 05:21:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7D146A9
+        for <linux-block@vger.kernel.org>; Thu, 10 Aug 2023 02:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1691659086;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=jy/YCn0JOglkNZoKf+HHCofDjT30/Uw6kt1m0VyWxSM=;
-        b=aAu4rrdfNPSY9/SthNOTGY4CcP4k23StpfFeloLpGY6m0J63bPGetURM2yapPQ5RR377Sw
-        un1UUxcQIlFfbIE8OayE0qBIBWs4wra2XowlN5r+AHzYeAmm+zdW5doEF8qSmj4iq/0XmX
-        2l4+ypNoD3XdbgUreuByjoX5UuAXuuY=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=zCpvjGRV9TAD3foyhqRHy9bTJoBNpeC1r6qbYuF0Dlg=;
+        b=GNe5kFjoptCmKs+rMU047BLhU4/ALjYYq1Odb1FBcUI+MLjqGdWcVSBobyuPdLeMDVH3Hu
+        MmBkqUgShpgltXeoyyfo4IeDG4fYpw7+BZNkNWB4zGCn7yNBj0PabHmoC11JgjaNRA6rse
+        8U+KeYJq9NUxbJ/Hg3w5Cx6nsJEVp4I=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-518-14KIsuPWO-an0hPQX6Rzsw-1; Thu, 10 Aug 2023 05:18:02 -0400
+X-MC-Unique: 14KIsuPWO-an0hPQX6Rzsw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7811A138E2;
-        Thu, 10 Aug 2023 08:59:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id fUtwHASn1GRDcwAAMHmgww
-        (envelope-from <mkoutny@suse.com>); Thu, 10 Aug 2023 08:59:48 +0000
-Date:   Thu, 10 Aug 2023 10:59:47 +0200
-From:   Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To:     Li Lingfeng <lilingfeng@huaweicloud.com>
-Cc:     tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        yukuai3@huawei.com, linan122@huawei.com, yi.zhang@huawei.com,
-        yangerkun@huawei.com, lilingfeng3@huawei.com
-Subject: Re: [PATCH -next v3] block: remove init_mutex and open-code
- blk_iolatency_try_init
-Message-ID: <5n6ti5ym5ean7nk3meul4nzpd6poimyfx5hn3mfj436k64qkz3@uzhut3yeszcu>
-References: <20230810035111.2236335-1-lilingfeng@huaweicloud.com>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8AC4B29DD998;
+        Thu, 10 Aug 2023 09:18:02 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32B5740C6F4E;
+        Thu, 10 Aug 2023 09:17:58 +0000 (UTC)
+Date:   Thu, 10 Aug 2023 17:17:54 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Li Zetao <lizetao1@huawei.com>
+Cc:     axboe@kernel.dk, a.hindborg@samsung.com,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH -next] ublk: Fix signedness bug returning warning
+Message-ID: <ZNSrQp+KT02M+GTZ@fedora>
+References: <20230810084836.3535322-1-lizetao1@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hj4duincgs2uethd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230810035111.2236335-1-lilingfeng@huaweicloud.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230810084836.3535322-1-lizetao1@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+On Thu, Aug 10, 2023 at 04:48:36PM +0800, Li Zetao wrote:
+> There are two warnings reported by smatch:
+> 
+> drivers/block/ublk_drv.c:445 ublk_setup_iod_zoned() warn:
+> 	signedness bug returning '(-95)'
+> drivers/block/ublk_drv.c:963 ublk_setup_iod() warn:
+> 	signedness bug returning '(-5)'
+> 
+> The type of "blk_status_t" is either be a u32 or u8, but this two
+> functions return a negative value when not supported or failed. Use
+> the error code of the blk module to fix these warnings.
+> 
+> Fixes: 29802d7ca33b ("ublk: enable zoned storage support")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/r/202308100201.TCRhgdvN-lkp@intel.com/
+> Signed-off-by: Li Zetao <lizetao1@huawei.com>
 
---hj4duincgs2uethd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-On Thu, Aug 10, 2023 at 11:51:11AM +0800, Li Lingfeng <lilingfeng@huaweiclo=
-ud.com> wrote:
-> ---
->   v1->v2: open-code blk_iolatency_try_init()
->   v2->v3: add lockdep check
->  block/blk-iolatency.c | 35 +++++++++++------------------------
->  1 file changed, 11 insertions(+), 24 deletions(-)
+thanks,
+Ming
 
-Reviewed-by: Michal Koutn=FD <mkoutny@suse.com>
-
-Thanks.
-
---hj4duincgs2uethd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZNSnAQAKCRAGvrMr/1gc
-jssIAP0S+pqij21mDTM9cHk5Ner222D9hnl4pzbvxyJZSBlg2gD/V7I3A4pTZgvm
-sK+hU4OXge5gDrsskiOKZkE19TZpHgM=
-=CNhy
------END PGP SIGNATURE-----
-
---hj4duincgs2uethd--
