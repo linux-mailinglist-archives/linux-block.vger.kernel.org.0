@@ -2,165 +2,167 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 281CA77B950
-	for <lists+linux-block@lfdr.de>; Mon, 14 Aug 2023 15:02:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FDB677B8AC
+	for <lists+linux-block@lfdr.de>; Mon, 14 Aug 2023 14:32:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbjHNNCS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Aug 2023 09:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49586 "EHLO
+        id S230099AbjHNMcN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Aug 2023 08:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231229AbjHNNBt (ORCPT
+        with ESMTP id S231294AbjHNMcI (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Aug 2023 09:01:49 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14AEF1726
-        for <linux-block@vger.kernel.org>; Mon, 14 Aug 2023 06:01:28 -0700 (PDT)
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230814130116epoutp0408dc4eebf09a87161546e54870e3393b~7QXnismGz1917019170epoutp04h
-        for <linux-block@vger.kernel.org>; Mon, 14 Aug 2023 13:01:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230814130116epoutp0408dc4eebf09a87161546e54870e3393b~7QXnismGz1917019170epoutp04h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1692018076;
-        bh=TtSCb9KBJ2XHwOfKwyT3tCYK0FFVQAC/FyEVAI9BMkA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dhkdcAXLXQFgzYOEVb2yzKfCYyD3S3NWEjnr7pFpSbknHIaJih2dcolLX6+6rKE/Y
-         EpOe33Qa0gOPkDzOUnKfvLXnXUFqjRE3CYKtOCAAJVHhLUw+P7ot9IurrXQsP+ALGJ
-         7Tc1i8LqnIoxwU8pChb/x4hxaYfhtDPCW1aebtg8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20230814130116epcas5p174c4ae8fa6883c326483da4c005b41ca~7QXm56LGG0176601766epcas5p1A;
-        Mon, 14 Aug 2023 13:01:16 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.178]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4RPZK61vZgz4x9Pq; Mon, 14 Aug
-        2023 13:01:14 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BE.21.57354.A952AD46; Mon, 14 Aug 2023 22:01:14 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230814122212epcas5p37453fdef19909077528971ee54ed26e7~7P1gNwF260611606116epcas5p3C;
-        Mon, 14 Aug 2023 12:22:12 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230814122212epsmtrp14a1aafb5de1203698ae6790f4309bb83~7P1gMve2K1933719337epsmtrp1B;
-        Mon, 14 Aug 2023 12:22:12 +0000 (GMT)
-X-AuditID: b6c32a44-007ff7000001e00a-3f-64da259aa015
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D1.07.64355.47C1AD46; Mon, 14 Aug 2023 21:22:12 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20230814122209epsmtip2edb1c9a304e2560d48518e12f30945ff~7P1dR_UgZ0493104931epsmtip24;
-        Mon, 14 Aug 2023 12:22:09 +0000 (GMT)
-Date:   Mon, 14 Aug 2023 17:48:53 +0530
-From:   Nitesh Shetty <nj.shetty@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        martin.petersen@oracle.com, linux-doc@vger.kernel.org,
-        gost.dev@samsung.com, Anuj Gupta <anuj20.g@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, mcgrof@kernel.org, dlemoal@kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [dm-devel] [PATCH v14 02/11] Add infrastructure for copy
- offload in block and request layer.
-Message-ID: <20230814121853.ms4acxwr56etf3ph@green245>
+        Mon, 14 Aug 2023 08:32:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB17CCC;
+        Mon, 14 Aug 2023 05:32:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 79CE962D5E;
+        Mon, 14 Aug 2023 12:32:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEFB7C433C8;
+        Mon, 14 Aug 2023 12:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692016326;
+        bh=0DJHJ3rAXmJtkRIBadVM+FdIyJCgIhDp0E+687UQdnk=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=VqE2HWtj76+zmKkRWjjiH2qbvY27jDLfKUgAVDzgyvDsmudGHpVdO9Qv/1jTL3a4C
+         p/h8sm59CsWPRsqElEvTfNyspdylh4gJ7msg4l7Eum4unsEDc25Vy2nLAdoyWyjQeZ
+         6mozxkIajwgy2lP6mQIbk/GL1nzHFaXTeLmUS8/vmw7X4+tWhb6NVnwYZacnYJnLOL
+         zxSL5JPL2AjgnUJHTYX/LjGi38YbCbJdG5Z6pkmhYB0og8oYzNa3XliLRfjVvMR2R4
+         sEUo4KLmGNBeu+84aIjCTKsONuRndTrd+fiBHfzQ7/CJ1FfGLNA4+E0UfDTaRgVAWr
+         tVWBqbDERiC5A==
+Message-ID: <3188f400-b387-7be8-0f21-cf5089fe1411@kernel.org>
+Date:   Mon, 14 Aug 2023 21:32:04 +0900
 MIME-Version: 1.0
-In-Reply-To: <3b1da341-1c7f-e28f-d6aa-cecb83188f34@acm.org>
-User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TfVDTdRi/7357A5v9HCDfzQpugaIGbDrmF4Ighe53acnlnV3xxxjsd4wY
-        29qYUCcniBggCPkWG8ooMV6PwSREXmpCtgaRL8TEeRZXUAmCCAcCHaOxQfnf53mez+d5vYeJ
-        sQsZXGaqIoNUKyRyHt2T2ta7PShYH2iX8s/e2ICMfT9g6HjZMoYaHpbS0UTvDEAXphcxNGr+
-        DKCR76JR91QFDd03X6eguoabFHSmxwbQ2JCegrrtO9GXJ6upqKvbSkWDHRfpyPD1GAPVWBwU
-        NFw2BlDTxBMq+tG+Bd1attBiNhODv+wnbv3aQiUGB7SEqb6QTlytPkZ03s+hE5dPn6URJXlT
-        dOLpmJ1KPPl2iE6cbq0HxKzpFcI0OkmJZ32YFikjJVJS7U8qkpXSVEVKFG//IfE+cZiILwgW
-        hKM9PH+FJJ2M4sUeiA9+K1XunJnnf0Qi1zpd8RKNhhf6RqRaqc0g/WVKTUYUj1RJ5SqhKkQj
-        SddoFSkhCjIjQsDn7wpzEhPTZO1WHUNlZ2Q5/u7EcsBtehHwYEJcCJuXnoEi4Mlk450Amno6
-        qG5jBsDpWdv/xrDFRluX5Fb/TF3FbPw6gFar2E36E8DylvMuEhUPhJWnzIwiwGTS8Z2wf4W5
-        6vbGg+D8SI0rKYbraLCtsRJbDXjhaVD3wObqiYWL4InZhzQ33gStulFXMQ/8dXjj4oKL44O/
-        BMuvzGGriSD+hQe8/Uc/WC0G8VjY9X2Qu1EvOG5pZbgxFz4qPbmGM2HduVq6W3sCQP09PXAH
-        omF+X6mrIQyXwaJ7BWuCl+H5viaK278RlvwzSnH7WbC9ch2/ChuNVWtL5UDbs9w1TMDyqWsU
-        94amAextKMbKgJ/+ueH0z9Vz4whYOH2cpnfOg+FbYI2D6YbbobEjtArQ6gGHVGnSU8jkMJVA
-        QWb+d/FkZboJuH5iR2w7GDY4QnoAhQl6AGRiPG9WMcsuZbOkkk8+JdVKsVorJzU9IMx5rM8x
-        rk+y0vlUigyxQBjOF4pEImH4bpGA58uayL8kZeMpkgwyjSRVpHpdR2F6cHMo/MW8OP7e2mWv
-        vXX5nm8L75yytSWRFexS3e9dw2SxQSR4MaBumJNfNjc0GXro8KaqloitWZGc7NwQ7wDla7a8
-        Rt9mSYzFGCeDhYMb5NkrWRRObWLFZXHCzK7Jgy8MFORVd8f3Jrb6VH7VdHNk1I9m4XKWzk08
-        np+O6jL9thx46bBuYGXbNcf7ez6eR1s/esfcKN/t6Zta49/SXGJO7yzQMrOFuKFdcZV6cOOB
-        C7PY5sdHOt40JWdb/e4u9S5GrzC01Plxx5Lxp6TOOG5uQsL4B2ZDwz7de0cXLLyWp0MBfyVN
-        ZX6TYyw4OiHZ9kB55m6/d8yxO48QsVhoqEqYezfvygKPqpFJBDswtUbyL9O+GpucBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRmVeSWpSXmKPExsWy7bCSvG6JzK0UgyUT+SzWnzrGbNE04S+z
-        xeq7/WwWrw9/YrSY9uEns8WTA+2MFg/221vsfTeb1eLmgZ1MFitXH2WymHToGqPF06uzmCz2
-        3tK2WNi2hMViz96TLBaXd81hs5i/7Cm7xfLj/5gsbkx4ymix7vV7FosTt6Qtzv89zuog5nH5
-        irfH+XsbWTwuny312LSqk81j85J6j903G9g8FvdNZvXobX7H5vHx6S0Wj/f7rrJ59G1Zxejx
-        eZOcx6Ynb5kCeKO4bFJSczLLUov07RK4Mo6tbmQp6GGt2DbhLlMD4xyWLkZODgkBE4nGJeeA
-        bC4OIYHtjBKXe5+yQSQkJZb9PcIMYQtLrPz3nB2i6AmjxP7bB5lAEiwCqhLzug8AJTg42AS0
-        JU7/5wAJiwhoSHx7sBxsKLPAXFaJZb/Ps4MkhAWyJe4eWw+2gFfATKLl811WiKEfGCW+zbnE
-        CpEQlDg58wnYecxARfM2P2QGWcAsIC2x/B/YAk4Ba4mDc36AzREVkJGYsfQr8wRGwVlIumch
-        6Z6F0L2AkXkVo2hqQXFuem5ygaFecWJucWleul5yfu4mRnBcawXtYFy2/q/eIUYmDsZDjBIc
-        zEoivD28t1KEeFMSK6tSi/Lji0pzUosPMUpzsCiJ8yrndKYICaQnlqRmp6YWpBbBZJk4OKUa
-        mDzCpxpc3h/7Y5X+wzeb9jlvt+M4Fh7brem0xSfksmxoImecvveU2fN5b32Ukm86HtVxrHRS
-        x47vF4V7nvBcWLxIt1OsKbzqnmn8liknMjLNreu8uP7GR3GulX4iKa2q8+KWD18+t9bvFK1D
-        Etvua1mr9l/k+7WiMG8qz9aQD2xqn6bEyf3/FG72Tt+SOU3WmmNL6DWPr3t6VbnypRoMjq01
-        uyOmKXhkg7uVoFitUsbiXewddnfv33bZeWJ35ZnkIzHTN7q8WmPCoMK4YOqDHOFP4mz3hDqb
-        unYtDJvX/9w1lumlXGsqn/SplOnnrNxD9uzwPXN6efaRyxscPC43PPc+vFHFP6zzzQoeYdZk
-        JZbijERDLeai4kQAwZ9RKVoDAAA=
-X-CMS-MailID: 20230814122212epcas5p37453fdef19909077528971ee54ed26e7
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----nvFln8z3L_krFSQI_duuyTsYVGNcxCMU6qftyQwhOSKtHzaF=_54933_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230811105648epcas5p3ae8b8f6ed341e2aa253e8b4de8920a4d
-References: <20230811105300.15889-1-nj.shetty@samsung.com>
-        <CGME20230811105648epcas5p3ae8b8f6ed341e2aa253e8b4de8920a4d@epcas5p3.samsung.com>
-        <20230811105300.15889-3-nj.shetty@samsung.com>
-        <3b1da341-1c7f-e28f-d6aa-cecb83188f34@acm.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v8 1/9] block: Introduce more member variables related to
+ zone write locking
+Content-Language: en-US
+To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+References: <20230811213604.548235-1-bvanassche@acm.org>
+ <20230811213604.548235-2-bvanassche@acm.org>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20230811213604.548235-2-bvanassche@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-9.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------nvFln8z3L_krFSQI_duuyTsYVGNcxCMU6qftyQwhOSKtHzaF=_54933_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+On 8/12/23 06:35, Bart Van Assche wrote:
+> Many but not all storage controllers require serialization of zoned writes.
+> Introduce a new request queue limit member variable
+> (driver_preserves_write_order) that allows block drivers to indicate that
+> the order of write commands is preserved and hence that serialization of
+> writes per zone is not required.
+> 
+> Make disk_set_zoned() set 'use_zone_write_lock' only if the block device
+> has zones and if the block driver does not preserve the order of write
+> requests.
+> 
+> Cc: Damien Le Moal <dlemoal@kernel.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>  block/blk-settings.c   |  7 +++++++
+>  include/linux/blkdev.h | 10 ++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/block/blk-settings.c b/block/blk-settings.c
+> index 0046b447268f..3a7748af1bef 100644
+> --- a/block/blk-settings.c
+> +++ b/block/blk-settings.c
+> @@ -56,6 +56,8 @@ void blk_set_default_limits(struct queue_limits *lim)
+>  	lim->alignment_offset = 0;
+>  	lim->io_opt = 0;
+>  	lim->misaligned = 0;
+> +	lim->driver_preserves_write_order = false;
+> +	lim->use_zone_write_lock = false;
+>  	lim->zoned = BLK_ZONED_NONE;
+>  	lim->zone_write_granularity = 0;
+>  	lim->dma_alignment = 511;
+> @@ -685,6 +687,9 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+>  						   b->max_secure_erase_sectors);
+>  	t->zone_write_granularity = max(t->zone_write_granularity,
+>  					b->zone_write_granularity);
+> +	/* Request-based stacking drivers do not reorder requests. */
+> +	t->driver_preserves_write_order = b->driver_preserves_write_order;
+> +	t->use_zone_write_lock = b->use_zone_write_lock;
 
-On 23/08/11 02:25PM, Bart Van Assche wrote:
->On 8/11/23 03:52, Nitesh Shetty wrote:
->>diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
->>index 0bad62cca3d0..de0ad7a0d571 100644
->>+static inline bool op_is_copy(blk_opf_t op)
->>+{
->>+	return ((op & REQ_OP_MASK) == REQ_OP_COPY_SRC ||
->>+		(op & REQ_OP_MASK) == REQ_OP_COPY_DST);
->>+}
->>+
->
->The above function should be moved into include/linux/blk-mq.h below the
->definition of req_op() such that it can use req_op() instead of 
->open-coding it.
->
-We use this later for dm patches(patch 9) as well, and we don't have request at
-that time.
+I do not think this is correct as the last target of a multi target device will
+dictate the result, regardless of the other targets. So this should be something
+like:
 
-Thank you,
-Nitesh Shetty
+	t->driver_preserves_write_order = t->driver_preserves_write_order &&
+		b->driver_preserves_write_order;
+	t->use_zone_write_lock =
+		t->use_zone_write_lock || b->use_zone_write_lock;
 
-------nvFln8z3L_krFSQI_duuyTsYVGNcxCMU6qftyQwhOSKtHzaF=_54933_
-Content-Type: text/plain; charset="utf-8"
+However, given that driver_preserves_write_order is initialized as false, this
+would always be false. Not sure how to handle that...
 
+>  	t->zoned = max(t->zoned, b->zoned);
+>  	return ret;
+>  }
+> @@ -949,6 +954,8 @@ void disk_set_zoned(struct gendisk *disk, enum blk_zoned_model model)
+>  	}
+>  
+>  	q->limits.zoned = model;
+> +	q->limits.use_zone_write_lock = model != BLK_ZONED_NONE &&
+> +		!q->limits.driver_preserves_write_order;
 
-------nvFln8z3L_krFSQI_duuyTsYVGNcxCMU6qftyQwhOSKtHzaF=_54933_--
+I think this needs a comment to explain the condition as it takes a while to
+understand it.
+
+>  	if (model != BLK_ZONED_NONE) {
+>  		/*
+>  		 * Set the zone write granularity to the device logical block
+
+You also should set use_zone_write_lock to false in disk_clear_zone_settings().
+
+In patch 9, ufshcd_auto_hibern8_update() changes the value of
+driver_preserves_write_order, which will change the value of use_zone_write_lock
+only if disk_set_zoned() is called again after ufshcd_auto_hibern8_update(). Is
+that the case ? Is the drive revalidated always after
+ufshcd_auto_hibern8_update() is executed ?
+
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 2f5371b8482c..2c090a28ec78 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -316,6 +316,16 @@ struct queue_limits {
+>  	unsigned char		misaligned;
+>  	unsigned char		discard_misaligned;
+>  	unsigned char		raid_partial_stripes_expensive;
+> +	/*
+> +	 * Whether or not the block driver preserves the order of write
+> +	 * requests. Set by the block driver.
+> +	 */
+> +	bool			driver_preserves_write_order;
+> +	/*
+> +	 * Whether or not zone write locking should be used. Set by
+> +	 * disk_set_zoned().
+> +	 */
+> +	bool			use_zone_write_lock;
+>  	enum blk_zoned_model	zoned;
+>  
+>  	/*
+
+-- 
+Damien Le Moal
+Western Digital Research
+
