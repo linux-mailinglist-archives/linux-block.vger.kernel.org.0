@@ -2,86 +2,70 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC6D477CCF9
-	for <lists+linux-block@lfdr.de>; Tue, 15 Aug 2023 14:53:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8224A77CE1B
+	for <lists+linux-block@lfdr.de>; Tue, 15 Aug 2023 16:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235852AbjHOMwr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Aug 2023 08:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
+        id S237606AbjHOOav (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Aug 2023 10:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237315AbjHOMwW (ORCPT
+        with ESMTP id S237637AbjHOOa2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Aug 2023 08:52:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F6310C0
-        for <linux-block@vger.kernel.org>; Tue, 15 Aug 2023 05:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692103897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6h9aonqmeDneHn2sCJ+4YLuPQmV9DjwIRMJXM+2v704=;
-        b=dfm5vaKdjXYxElC1j5RObNJJvXUd4+p/bVFLBcVdMhGcy9KBBGUTknAM750Y/V1QNXlZ/q
-        v2QONwAdTsg59KwPLvUU03J8tS5NfVT2hO22JwgxWWHgxaIYTDzJu013Y2AQuRc6llZ+Vc
-        UWQnJfs/MhxQ27Sse3HCFs43COh3FpA=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-595-qBAZoA6cNmWTtYvAFtxRoA-1; Tue, 15 Aug 2023 08:51:32 -0400
-X-MC-Unique: qBAZoA6cNmWTtYvAFtxRoA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 576E33C108C9;
-        Tue, 15 Aug 2023 12:51:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3E4B140E917;
-        Tue, 15 Aug 2023 12:51:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <aceea2408bf049aebb1f1f893281795c@AcuMS.aculab.com>
-References: <aceea2408bf049aebb1f1f893281795c@AcuMS.aculab.com> <3710261.1691764329@warthog.procyon.org.uk>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <christian@brauner.io>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] iov_iter: Convert iterate*() to inline funcs
+        Tue, 15 Aug 2023 10:30:28 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B2D1989
+        for <linux-block@vger.kernel.org>; Tue, 15 Aug 2023 07:30:26 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4fe48d0ab0fso8497108e87.1
+        for <linux-block@vger.kernel.org>; Tue, 15 Aug 2023 07:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692109825; x=1692714625;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8zWX6sWFpbIqxvJkpqPafp4zk2BFLanx/lSJWZDELAA=;
+        b=c2Xk/xKruo+2UtyP8O3IiQOmCqEUrZHadqJQZKdJ+IlEmB7glIEbbGxR1dAD1cqv0D
+         SNyhmaAG7PPJOo3IGz/7Boq/5M3lRWyEYLjrElmxegpPFr92P9G15TCQKM1MeEExXYbr
+         7Hxtt9+yKVMHXoslsQsH4U8tUWPGQbO5C+dUvZDilPGoKWKh/FkcHnH5ebh5Sc94CnGW
+         c6nDLp9yHl2co/jWjgBkZughcl1lTDe0gEtQFcJF2EOCdjs803036+w6nHb2ugsVG/D0
+         X7aTaPyFpYhhoQgqB9vQ7SmmeQ+L0pu5dEGcBVymUJZLmJi9Kg7G/QTKkq92k8Sqz5T9
+         dpyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692109825; x=1692714625;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8zWX6sWFpbIqxvJkpqPafp4zk2BFLanx/lSJWZDELAA=;
+        b=UDNr5fL4MuwB5WYy/eGt6l62gWT20nqQIw6Eveiew1U7kYx5SqJXojLWOhv5L3izgs
+         okwSAl5pX/xUhQGEbEF6yhI1uJqx/N0jKCseFT/i+Uah5gB6rl5rii7HFbSs9v5FBUyS
+         WfxWczKxypsrhD2AZPbwj6AHTG5sm9dYGooCshghFVmtzIHpcB2GtKhm54oFe1zTK6CV
+         MyxEwIj6vOCHRJTSo3MUuJaf7CHEFMAkqSdEeCXqI9YhwNDTIgwu0ELDzUWkge1Y1t9v
+         ++VmJZIfVxcGWRSqceu/9YQ0NHxlFwv+Kdic5dQXCzeCZWEG85xHY6YbJl5QvkHXfLsI
+         iELA==
+X-Gm-Message-State: AOJu0Yzdtt3LlGWpbltNy19taZ9DfEm3TEniPDrH0Ij/QX9qXZC88VJk
+        pijNGqJm+iyBD5+E2M6YGXsa/Uhvqi69JooiOZQ=
+X-Google-Smtp-Source: AGHT+IHzFN180rJL/0i/AHjBkvTjf5cRvfdvxb8XJ20SZl872kemu8fQqFq0AAe27OnmxioLb8yxvLTuc6ukh8vIWUk=
+X-Received: by 2002:a05:6512:239f:b0:4f6:47a2:7bb4 with SMTP id
+ c31-20020a056512239f00b004f647a27bb4mr10384193lfv.60.1692109824458; Tue, 15
+ Aug 2023 07:30:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <286906.1692103889.1@warthog.procyon.org.uk>
-Date:   Tue, 15 Aug 2023 13:51:29 +0100
-Message-ID: <286907.1692103889@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Sender: folsonterfah@gmail.com
+Received: by 2002:ab2:813:0:b0:1d0:a44e:7acf with HTTP; Tue, 15 Aug 2023
+ 07:30:23 -0700 (PDT)
+From:   Pavillion Tchi <tchi.pavillion@gmail.com>
+Date:   Tue, 15 Aug 2023 14:30:23 +0000
+X-Google-Sender-Auth: WngU8F2lbxG8K1LicbIhe-tfMUI
+Message-ID: <CANgBfaQ8WpVRXoRedfCLwiji1nOt3k5g24fXeoyVTi+y97kiVg@mail.gmail.com>
+Subject: Hallo
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-David Laight <David.Laight@ACULAB.COM> wrote:
-
-> Actually quite typical because inlining happens much later on.
-> I suspect that the #define benefits from the compile front-end
-> optimising constants.
-
-I managed to mostly pull it back, and even make some functions slightly
-smaller, in the v2 I posted.  Mostly that came about by arranging things to
-look a bit more like the upstream macro version.
-
-David
-
+-- 
+Hallo
+Heb je mijn vorige e-mail ontvangen?
