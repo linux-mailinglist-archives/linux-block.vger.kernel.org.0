@@ -2,139 +2,87 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBF1677C4F2
-	for <lists+linux-block@lfdr.de>; Tue, 15 Aug 2023 03:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F13577C556
+	for <lists+linux-block@lfdr.de>; Tue, 15 Aug 2023 03:46:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233409AbjHOBSw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 14 Aug 2023 21:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
+        id S233943AbjHOBp1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 14 Aug 2023 21:45:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231839AbjHOBSg (ORCPT
+        with ESMTP id S233956AbjHOBpE (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 14 Aug 2023 21:18:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B631723
-        for <linux-block@vger.kernel.org>; Mon, 14 Aug 2023 18:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692062274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GJZSb/K28s3fnxQUtqipmDAy6W549OVPD0eFsko4JeE=;
-        b=TvEiRXDEnIcxaJGIsiSgYTECz4EC4N+jl7R812wA+rFf+dAFlTegUIL6SFhzoKVCmTTFPo
-        ZeiX1x/hMtBiHJhJfa54oIECRhwPmCftUXs/r+zJUTc8A737LOuRguOHLwQ6l2jqCEI6gj
-        UOcIar13lQjOeLSyWrXwnGWXSyXlL5w=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-408-NIF718NrMy24XEUo4SqI5g-1; Mon, 14 Aug 2023 21:17:53 -0400
-X-MC-Unique: NIF718NrMy24XEUo4SqI5g-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 79D1D8011AD;
-        Tue, 15 Aug 2023 01:17:52 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C2B05401E6A;
-        Tue, 15 Aug 2023 01:17:46 +0000 (UTC)
-Date:   Tue, 15 Aug 2023 09:17:41 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Gabriel Krisman Bertazi <krisman@suse.de>
-Cc:     linux-block@vger.kernel.org, io-uring <io-uring@vger.kernel.org>,
-        Andreas Hindborg <nmi@metaspace.dk>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        German Maglione <gmaglione@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Joe Thornber <ethornbe@redhat.com>, ming.lei@redhat.com
-Subject: Re: Libublk-rs v0.1.0
-Message-ID: <ZNrSNeCSg5qsOu61@fedora>
-References: <ZNmX5UQev4qvFMaq@fedora>
- <87o7j95vql.fsf@suse.de>
+        Mon, 14 Aug 2023 21:45:04 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC455170B;
+        Mon, 14 Aug 2023 18:45:03 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RPvGN4lC6z4f3mWL;
+        Tue, 15 Aug 2023 09:45:00 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgA3x6mb2NpkdnTyAg--.15945S4;
+        Tue, 15 Aug 2023 09:45:00 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
+        yukuai3@huawei.com, mkoutny@suse.com
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai1@huaweicloud.com,
+        yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: [PATCH -next 0/4] cleanup and fixes for 'carryover_ios/bytes'
+Date:   Tue, 15 Aug 2023 09:41:19 +0800
+Message-Id: <20230815014123.368929-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o7j95vql.fsf@suse.de>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgA3x6mb2NpkdnTyAg--.15945S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFWrKry5ZFWfWw4kGF4xXrb_yoWfJwb_uF
+        ykta48CF1UJa4IyFWxAry3A34rWw4jqw1qg3WqkFW7Zr9rZrn8Jr1fJF4qqFsxua1DCrs7
+        trs8Xr4xAr1aqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+        UdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Gabriel,
+From: Yu Kuai <yukuai3@huawei.com>
 
-On Mon, Aug 14, 2023 at 02:23:14PM -0400, Gabriel Krisman Bertazi wrote:
-> Ming Lei <ming.lei@redhat.com> writes:
-> 
-> > Hello,
-> >
-> > Libublk-rs(Rust)[1][2] 0.1.0 is released.
-> 
-> Hi Ming,
-> 
-> Do you intend to effectively deprecate the code in ubdsrv in favor of
-> libublk-rs or do you intend to keep the C library?  I'm asking because
-> I'm looking into how to enable ublk in distributions.
+Patch 1 print signed value for 'carryover_ios/bytes' to user.
 
-So far, there are users of C ubdsrv library, and both are maintained
-and co-exist, so C library is still kept.
+Patch 2 fix that comparation ”unsigned value < negative value“ will
+pass, causing that io won't be throttled in the silce.
 
+Patch 3,4 fix that 'carryover_ios/bytes' is not cleared while
+'io/bytes_disp' is cleared, causing that throttle is not accurate.
 
-Thanks
-Ming
+Yu Kuai (4):
+  blk-throttle: print signed value 'carryover_bytes/ios' for user
+  blk-throttle: fix wrong comparation while 'carryover_ios/bytes' is
+    negative
+  blk-throttle: use calculate_io/bytes_allowed() for throtl_trim_slice()
+  blk-throttle: consider 'carryover_ios/bytes' in throtl_trim_slice()
 
-> 
-> Thanks,
-> 
-> >
-> > The original idea is to use Rust to write ublk target for covering all
-> > kinds of block queue limits/parameters combination easily when talking
-> > with Andreas and Shinichiro about blktests in LSFMM/BPF 2023.
-> >
-> > Finally it is evolved into one generic library. Attributed to Rust's
-> > some modern language features, libublk interfaces are pretty simple:
-> >
-> > - one closure(tgt_init) for user to customize device by providing all
-> >   kind of parameter
-> >
-> > - the other closure(io handling) for user to handling IO which is
-> >   completely io_uring CQE driven: a) IO command CQE from ublk driver,
-> >   b) target IO CQE originated from target io handling code, c) eventfd
-> >   CQE if IO is offloaded to other context
-> >
-> > With low level APIs, <50 LoC can build one ublk-null, and if high level
-> > APIs are used, 30 LoC is enough.
-> >
-> > Performance is basically aligned with pure C ublk implementation[3].
-> >
-> > The library has been verified on null, ramdisk, loop and zoned target.
-> > The plan is to support async/await in 0.2 or 0.3 so that libublk can
-> > be used to build complicated target easily and efficiently.
-> >
-> > Thanks Andreas for reviewing and providing lots of good ideas for
-> > improvement & cleanup. Thanks German Maglione for some suggestions, such
-> > as eventfd support. Thanks Joe for providing excellent Rust programming
-> > guide.
-> >
-> > Any feedback is welcome!
-> >
-> > [1] https://crates.io/crates/libublk 
-> > [2] https://github.com/ming1/libublk-rs
-> > [3] https://github.com/osandov/blktests/blob/master/src/miniublk.c
-> >
-> > Thanks,
-> > Ming
-> >
-> 
-> -- 
-> Gabriel Krisman Bertazi
-> 
+ block/blk-throttle.c | 105 +++++++++++++++++++++----------------------
+ block/blk-throttle.h |   4 +-
+ 2 files changed, 54 insertions(+), 55 deletions(-)
 
 -- 
-Ming
+2.39.2
 
