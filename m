@@ -2,61 +2,59 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F4B977D77D
-	for <lists+linux-block@lfdr.de>; Wed, 16 Aug 2023 03:13:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6133B77D7B3
+	for <lists+linux-block@lfdr.de>; Wed, 16 Aug 2023 03:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240950AbjHPBNT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 15 Aug 2023 21:13:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
+        id S241044AbjHPBa4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 15 Aug 2023 21:30:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241065AbjHPBNP (ORCPT
+        with ESMTP id S241113AbjHPBaw (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 15 Aug 2023 21:13:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48931FCE;
-        Tue, 15 Aug 2023 18:13:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FE20644DD;
-        Wed, 16 Aug 2023 01:13:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5CC4C433C7;
-        Wed, 16 Aug 2023 01:13:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692148383;
-        bh=QjRJQDTbptRiTmupwSjSqxA9iaxB6Z7Rjtp+mkWFNJY=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=bwo2WNc9oMK10BMu4/1EFNUQIxxTQqY6uBnlWYOx2krA40wQtOYlgObeJDkrymNVG
-         DLxzoFBlpiaisOMLn6MT5fcWjRP4c4LpWwAKOaZRQkW8kVUCcjT8x2DSnXvcnAcVL/
-         fqrxK4AlmRzsXWS8q0K0LY8+5LF/+ZGiZ7tR3drfazPDvTNBYLbZMYGXUnvGgrm6Qz
-         KWjVWpwdBDB7NypeI+Nc8fbsR6nHd/w71EedzouX/b/LyTHktbjv6UVqmMaZRZPKU4
-         RvSrviZNR682fEe+uFdJ2nuUsVJa6uBitRvP+PVBRg3+lBap2wYan9pqLuySZQt4vL
-         h1BZop7A3gO1w==
-Message-ID: <2b73497c-0c0c-6eeb-91ca-000884a9898c@kernel.org>
-Date:   Wed, 16 Aug 2023 10:13:01 +0900
+        Tue, 15 Aug 2023 21:30:52 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4AC1BF8;
+        Tue, 15 Aug 2023 18:30:51 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RQVvX1wtfz4f3mHp;
+        Wed, 16 Aug 2023 09:30:48 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+        by APP4 (Coremail) with SMTP id gCh0CgAH5KbHJtxkQuVAAw--.55976S4;
+        Wed, 16 Aug 2023 09:30:49 +0800 (CST)
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+To:     tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
+        yukuai3@huawei.com, mkoutny@suse.com
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai1@huaweicloud.com,
+        yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: [PATCH -next v2 0/4] cleanup and fixes for 'carryover_ios/bytes'
+Date:   Wed, 16 Aug 2023 09:27:04 +0800
+Message-Id: <20230816012708.1193747-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v8 5/9] scsi: core: Retry unaligned zoned writes
-To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-References: <20230811213604.548235-1-bvanassche@acm.org>
- <20230811213604.548235-6-bvanassche@acm.org>
- <7dd67537-1ad8-79ca-281c-540bade2cb83@kernel.org>
- <3161926c-b1cb-9617-bf71-73b8711e86de@acm.org>
-Content-Language: en-US
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <3161926c-b1cb-9617-bf71-73b8711e86de@acm.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgAH5KbHJtxkQuVAAw--.55976S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7XrWrCF18AFWrKw1DWr48JFb_yoWfCFg_uF
+        ykta4rCF1UJayIyFWxAr9xZryrWw4UXw1jg3WDGFW7Ary7Xrn8Gr1fJF4vvFsxuan0krs7
+        trs8Za1xAr1agjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+        n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+        AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_
+        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+        XdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,38 +62,30 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/16/23 02:29, Bart Van Assche wrote:
-> On 8/14/23 05:36, Damien Le Moal wrote:
->> On 8/12/23 06:35, Bart Van Assche wrote:
->>> --- a/drivers/scsi/sd.c
->>> +++ b/drivers/scsi/sd.c
->>> @@ -1238,6 +1238,8 @@ static blk_status_t sd_setup_read_write_cmnd(struct scsi_cmnd *cmd)
->>>   	cmd->transfersize = sdp->sector_size;
->>>   	cmd->underflow = nr_blocks << 9;
->>>   	cmd->allowed = sdkp->max_retries;
->>> +	if (!rq->q->limits.use_zone_write_lock && blk_rq_is_seq_zoned_write(rq))
->>
->> This condition could be written as a little inline helper
->> blk_req_need_zone_write_lock(), which could be used in mq-dealine patch 2.
-> 
-> The above test differs from the tests in the mq-deadline I/O scheduler.
-> The mq-deadline I/O scheduler uses write locking if
-> rq->q->limits.use_zone_write_lock && q->disk->seq_zones_wlock &&
-> blk_rq_is_seq_zoned_write(rq). The above test is different and occurs
-> two times in scsi_error.c and one time in sd.c. Do you still want me to
-> introduce a helper function for that expression?
+From: Yu Kuai <yukuai3@huawei.com>
 
-May be not needed. But a comment explaining it may be good to add.
-I still think that added the test for use_zone_write_lock in
-blk_req_needs_zone_write_lock() is needed though, for consistency of all
-functions related to zone locking.
+changes in v2:
+ - fix missing adjustment in throtl_log().
 
-> 
-> Thanks,
-> 
-> Bart.
+Patch 1 print signed value for 'carryover_ios/bytes' to user.
+
+Patch 2 fix that comparation ”unsigned value < negative value“ will
+pass, causing that io won't be throttled in the silce.
+
+Patch 3,4 fix that 'carryover_ios/bytes' is not cleared while
+'io/bytes_disp' is cleared, causing that throttle is not accurate.
+
+Yu Kuai (4):
+  blk-throttle: print signed value 'carryover_bytes/ios' for user
+  blk-throttle: fix wrong comparation while 'carryover_ios/bytes' is
+    negative
+  blk-throttle: use calculate_io/bytes_allowed() for throtl_trim_slice()
+  blk-throttle: consider 'carryover_ios/bytes' in throtl_trim_slice()
+
+ block/blk-throttle.c | 112 +++++++++++++++++++++----------------------
+ block/blk-throttle.h |   4 +-
+ 2 files changed, 58 insertions(+), 58 deletions(-)
 
 -- 
-Damien Le Moal
-Western Digital Research
+2.39.2
 
