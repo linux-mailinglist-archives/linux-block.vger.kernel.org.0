@@ -2,171 +2,197 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D0A77E9E4
-	for <lists+linux-block@lfdr.de>; Wed, 16 Aug 2023 21:47:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76CC577E9FF
+	for <lists+linux-block@lfdr.de>; Wed, 16 Aug 2023 21:55:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345861AbjHPTqk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 16 Aug 2023 15:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
+        id S240274AbjHPTzU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 16 Aug 2023 15:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345873AbjHPTqN (ORCPT
+        with ESMTP id S1345905AbjHPTzC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 16 Aug 2023 15:46:13 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB9A12B;
-        Wed, 16 Aug 2023 12:46:11 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37GJcJMA002225;
-        Wed, 16 Aug 2023 19:45:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : reply-to : to : cc : date : in-reply-to : references : content-type
- : mime-version : content-transfer-encoding; s=pp1;
- bh=hBBNENKxEqj7kT9AWimxqHg0F8y2eG57NgzFKLZvEq8=;
- b=BEnU/VM/IxoQrcs8N/gkFdfQSivK/gQtYePhH+ukeJUnhr155tCy8KHTroDVPm28SjjX
- 98N8shN3yEsZvRCwBWSOA5ZDfEHIfYzVCbnKSeMV5PvHyCJw5mUKNXB2dpYZgpHutyZO
- Z+cmo7yWk+qsif/ayp0CCljDtUzQJtryMmwHITxytCw3VGkH0GM51b1CcbJe/QbZBZCK
- dakKpUVH1B7A9kn6tdTLbdBm0HNkkatbRVxJj2ddbifCSGdCVU3jV/cJC/7ZfUtsGMaD
- CmxNRAgam/TmSDOtbWHeYj15TnB6pxbU/u4b70fLUO8+jzf2KCpAEveW9LblNz7eMxtj nw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sh4pbrbpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 19:45:50 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37GJcPLT002972;
-        Wed, 16 Aug 2023 19:45:49 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sh4pbrbpb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 19:45:49 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37GJKOJM007856;
-        Wed, 16 Aug 2023 19:45:48 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3senwkfpma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 19:45:48 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-        by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37GJjlde7602808
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Aug 2023 19:45:47 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 698D25805C;
-        Wed, 16 Aug 2023 19:45:47 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86DC65805E;
-        Wed, 16 Aug 2023 19:45:46 +0000 (GMT)
-Received: from rhel-laptop.ibm.com (unknown [9.61.60.97])
-        by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 16 Aug 2023 19:45:46 +0000 (GMT)
-Message-ID: <46cda90a12da4639d1e65ce82ae342df05b7afc2.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 0/3 RESEND] sed-opal: keyrings, discovery, revert,
- key store
-From:   Greg Joyce <gjoyce@linux.vnet.ibm.com>
-Reply-To: gjoyce@linux.vnet.ibm.com
-To:     linux-block@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
-        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
-        nayna@linux.ibm.com, axboe@kernel.dk, akpm@linux-foundation.org,
-        keyrings@vger.kernel.org, okozina@redhat.com, dkeefe@redhat.com
-Date:   Wed, 16 Aug 2023 14:45:46 -0500
-In-Reply-To: <20230721211534.3437070-1-gjoyce@linux.vnet.ibm.com>
-References: <20230721211534.3437070-1-gjoyce@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Gv8S02VnGEarXaN7umjt4jkoFW7jziU1
-X-Proofpoint-ORIG-GUID: QeHwhJfdE2e3SCjhvbRRswF3o-uLsE18
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-16_18,2023-08-15_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- malwarescore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
- priorityscore=1501 clxscore=1011 mlxlogscore=844 suspectscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308160173
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        Wed, 16 Aug 2023 15:55:02 -0400
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20FDE6B;
+        Wed, 16 Aug 2023 12:55:00 -0700 (PDT)
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-565f24a5c20so146712a12.1;
+        Wed, 16 Aug 2023 12:55:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692215700; x=1692820500;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j+E87ZxpjzgRZ6hqmzAUuSWQPj2isw7kq8DrCbnK33I=;
+        b=ep2FDkSZIJKaeMNlg+fp8DKRY3LLf+7mPce/WIJUHedOIp1uN09x3biddomkSNmNav
+         3lsl7dkulfdUSWsJFoFxij2j+UkkMB6v/+zruNePewBN8SB36GMdarifuOoJNFAHhzeh
+         rq91Yf8OlKwX9trm82B0WBiid2dYdCqEOpan3VtmDbW5aiXgKU1tN9F5+6nNucRxA+ZA
+         F/tp2BDH9a3GFzhiaF0Xlx1CdDNYW6INI7ukST5E8fGpG40n5SxluXHHNzBvJMfKtPfV
+         AUk0t6WOZrzIOp9R791U6ziiEG6/oRYtV7JmrE0ioOMYnCekND1kJvO1N7nI5IrSu5zb
+         Npnw==
+X-Gm-Message-State: AOJu0YwYGduqUE4iXSH6ikZJo2AE+LP6yyqtDqNM9/5/dudcEEzHIQ+H
+        x8Us8YBGSSsL6vPW/9z+s6g=
+X-Google-Smtp-Source: AGHT+IFB4hoQKHgr06GkX/IdHUx/XP2yl7PPszedLI1/oWs35NfLy27AaEdVdVaqlgyjnbLQYs2o9g==
+X-Received: by 2002:a05:6a20:258f:b0:13e:2080:ab91 with SMTP id k15-20020a056a20258f00b0013e2080ab91mr729787pzd.28.1692215699969;
+        Wed, 16 Aug 2023 12:54:59 -0700 (PDT)
+Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:7141:e456:f574:7de0])
+        by smtp.gmail.com with ESMTPSA id r26-20020a62e41a000000b0068890c19c49sm1588508pfh.180.2023.08.16.12.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Aug 2023 12:54:59 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH v9 00/17] Improve performance for zoned UFS devices
+Date:   Wed, 16 Aug 2023 12:53:12 -0700
+Message-ID: <20230816195447.3703954-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.41.0.694.ge786442a9b-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-It's been almost 4 weeks since the last resend and there haven't been
-any comments. Is there anything that needs to be changed for
-acceptance?
+Hi Jens,
 
-Thanks for your input.
+This patch series improves small write IOPS by a factor of four (+300%) for
+zoned UFS devices on my test setup with an UFSHCI 3.0 controller. Please
+consider this patch series for the next merge window.
 
-Greg
+Thank you,
 
-On Fri, 2023-07-21 at 16:15 -0500, gjoyce@linux.vnet.ibm.com wrote:
-> From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
-> 
-> This patchset has gone through numerous rounds of review and
-> all comments/suggetions have been addressed. The reviews have
-> covered all relevant areas including reviews by block and keyring
-> developers as well as the SED Opal maintainer. The last
-> patchset submission has not solicited any responses in the
-> six weeks since it was last distributed. The changes are
-> generally useful and ready for inclusion.
-> 
-> TCG SED Opal is a specification from The Trusted Computing Group
-> that allows self encrypting storage devices (SED) to be locked at
-> power on and require an authentication key to unlock the drive.
-> 
-> The current SED Opal implementation in the block driver
-> requires that authentication keys be provided in an ioctl
-> so that they can be presented to the underlying SED
-> capable drive. Currently, the key is typically entered by
-> a user with an application like sedutil or sedcli. While
-> this process works, it does not lend itself to automation
-> like unlock by a udev rule.
-> 
-> The SED block driver has been extended so it can alternatively
-> obtain a key from a sed-opal kernel keyring. The SED ioctls
-> will indicate the source of the key, either directly in the
-> ioctl data or from the keyring.
-> 
-> Two new SED ioctls have also been added. These are:
->   1) IOC_OPAL_REVERT_LSP to revert LSP state
->   2) IOC_OPAL_DISCOVERY to discover drive capabilities/state
-> 
-> change log v5:
->         - rebase to for-6.5/block
-> 
-> change log v4:
->         - rebase to 6.3-rc7
->         - replaced "255" magic number with U8_MAX
-> 
-> change log:
->         - rebase to 6.x
->         - added latest reviews
->         - removed platform functions for persistent key storage
->         - replaced key update logic with key_create_or_update()
->         - minor bracing and padding changes
->         - add error returns
->         - opal_key structure is application provided but kernel
->           verified
->         - added brief description of TCG SED Opal
-> 
-> 
-> Greg Joyce (3):
->   block: sed-opal: Implement IOC_OPAL_DISCOVERY
->   block: sed-opal: Implement IOC_OPAL_REVERT_LSP
->   block: sed-opal: keyring support for SED keys
-> 
->  block/Kconfig                 |   2 +
->  block/opal_proto.h            |   4 +
->  block/sed-opal.c              | 252
-> +++++++++++++++++++++++++++++++++-
->  include/linux/sed-opal.h      |   5 +
->  include/uapi/linux/sed-opal.h |  25 +++-
->  5 files changed, 282 insertions(+), 6 deletions(-)
-> 
-> 
-> base-commit: 1341c7d2ccf42ed91aea80b8579d35bc1ea381e2
+Bart.
+
+Changes compared to v8:
+ - Fixed handling of 'driver_preserves_write_order' and 'use_zone_write_lock'
+   in blk_stack_limits().
+ - Added a comment in disk_set_zoned().
+ - Modified blk_req_needs_zone_write_lock() such that it returns false if
+   q->limits.use_zone_write_lock is false.
+ - Modified disk_clear_zone_settings() such that it clears
+   q->limits.use_zone_write_lock.
+ - Left out one change from the mq-deadline patch that became superfluous due to
+   the blk_req_needs_zone_write_lock() change.
+ - Modified scsi_call_prepare_resubmit() such that it only calls list_sort() if
+   zoned writes have to be resubmitted for which zone write locking is disabled.
+ - Added an additional unit test for scsi_call_prepare_resubmit().
+ - Modified the sorting code in the sd driver such that only those SCSI commands
+   are sorted for which write locking is disabled.
+ - Modified sd_zbc.c such that ELEVATOR_F_ZBD_SEQ_WRITE is only set if the
+   write order is not preserved.
+ - Included three patches for UFS host drivers that rework code that wrote
+   directly to the auto-hibernation controller register.
+ - Modified the UFS driver such that enabling auto-hibernation is not allowed
+   if a zoned logical unit is present and if the controller operates in legacy
+   mode.
+ - Also in the UFS driver, simplified ufshcd_auto_hibern8_update().
+
+Changes compared to v7:
+ - Split the queue_limits member variable `use_zone_write_lock' into two member
+   variables: `use_zone_write_lock' (set by disk_set_zoned()) and
+   `driver_preserves_write_order' (set by the block driver or SCSI LLD). This
+   should clear up the confusion about the purpose of this variable.
+ - Moved the code for sorting SCSI commands by LBA from the SCSI error handler
+   into the SCSI disk (sd) driver as requested by Christoph.
+   
+Changes compared to v6:
+ - Removed QUEUE_FLAG_NO_ZONE_WRITE_LOCK and instead introduced a flag in
+   the request queue limits data structure.
+
+Changes compared to v5:
+ - Renamed scsi_cmp_lba() into scsi_cmp_sector().
+ - Improved several source code comments.
+
+Changes compared to v4:
+ - Dropped the patch that introduces the REQ_NO_ZONE_WRITE_LOCK flag.
+ - Dropped the null_blk patch and added two scsi_debug patches instead.
+ - Dropped the f2fs patch.
+ - Split the patch for the UFS driver into two patches.
+ - Modified several patch descriptions and source code comments.
+ - Renamed dd_use_write_locking() into dd_use_zone_write_locking().
+ - Moved the list_sort() call from scsi_unjam_host() into scsi_eh_flush_done_q()
+   such that sorting happens just before reinserting.
+ - Removed the scsi_cmd_retry_allowed() call from scsi_check_sense() to make
+   sure that the retry counter is adjusted once per retry instead of twice.
+
+Changes compared to v3:
+ - Restored the patch that introduces QUEUE_FLAG_NO_ZONE_WRITE_LOCK. That patch
+   had accidentally been left out from v2.
+ - In patch "block: Introduce the flag REQ_NO_ZONE_WRITE_LOCK", improved the
+   patch description and added the function blk_no_zone_write_lock().
+ - In patch "block/mq-deadline: Only use zone locking if necessary", moved the
+   blk_queue_is_zoned() call into dd_use_write_locking().
+ - In patch "fs/f2fs: Disable zone write locking", set REQ_NO_ZONE_WRITE_LOCK
+   from inside __bio_alloc() instead of in f2fs_submit_write_bio().
+
+Changes compared to v2:
+ - Renamed the request queue flag for disabling zone write locking.
+ - Introduced a new request flag for disabling zone write locking.
+ - Modified the mq-deadline scheduler such that zone write locking is only
+   disabled if both flags are set.
+ - Added an F2FS patch that sets the request flag for disabling zone write
+   locking.
+ - Only disable zone write locking in the UFS driver if auto-hibernation is
+   disabled.
+
+Changes compared to v1:
+ - Left out the patches that are already upstream.
+ - Switched the approach in patch "scsi: Retry unaligned zoned writes" from
+   retrying immediately to sending unaligned write commands to the SCSI error
+   handler.
+
+Bart Van Assche (17):
+  block: Introduce more member variables related to zone write locking
+  block: Only use write locking if necessary
+  block/mq-deadline: Only use zone locking if necessary
+  scsi: core: Call .eh_prepare_resubmit() before resubmitting
+  scsi: core: Add unit tests for scsi_call_prepare_resubmit()
+  scsi: sd: Sort commands by LBA before resubmitting
+  scsi: core: Retry unaligned zoned writes
+  scsi: sd_zbc: Only require an I/O scheduler if needed
+  scsi: scsi_debug: Support disabling zone write locking
+  scsi: scsi_debug: Support injecting unaligned write errors
+  scsi: ufs: hisi: Rework the code that disables auto-hibernation
+  scsi: ufs: mediatek: Rework the code for disabling auto-hibernation
+  scsi: ufs: sprd: Rework the code for disabling auto-hibernation
+  scsi: ufs: Rename ufshcd_auto_hibern8_enable() and make it static
+  scsi: ufs: Simplify ufshcd_auto_hibern8_update()
+  scsi: ufs: Forbid auto-hibernation without I/O scheduler
+  scsi: ufs: Inform the block layer about write ordering
+
+ block/blk-settings.c            |  15 +++
+ block/blk-zoned.c               |  10 +-
+ block/mq-deadline.c             |  11 +-
+ drivers/scsi/Kconfig            |   2 +
+ drivers/scsi/Kconfig.kunit      |   4 +
+ drivers/scsi/Makefile           |   2 +
+ drivers/scsi/Makefile.kunit     |   1 +
+ drivers/scsi/scsi_debug.c       |  20 +++-
+ drivers/scsi/scsi_error.c       |  81 +++++++++++++
+ drivers/scsi/scsi_error_test.c  | 196 ++++++++++++++++++++++++++++++++
+ drivers/scsi/scsi_lib.c         |   1 +
+ drivers/scsi/scsi_priv.h        |   1 +
+ drivers/scsi/sd.c               |  41 +++++++
+ drivers/scsi/sd_zbc.c           |   4 +-
+ drivers/ufs/core/ufs-sysfs.c    |   2 +-
+ drivers/ufs/core/ufshcd-priv.h  |   1 -
+ drivers/ufs/core/ufshcd.c       | 110 ++++++++++++++----
+ drivers/ufs/host/ufs-hisi.c     |   5 +-
+ drivers/ufs/host/ufs-mediatek.c |   2 +-
+ drivers/ufs/host/ufs-sprd.c     |  11 +-
+ include/linux/blkdev.h          |  10 ++
+ include/scsi/scsi.h             |   1 +
+ include/scsi/scsi_driver.h      |   1 +
+ include/ufs/ufshcd.h            |   3 +-
+ 24 files changed, 485 insertions(+), 50 deletions(-)
+ create mode 100644 drivers/scsi/Kconfig.kunit
+ create mode 100644 drivers/scsi/Makefile.kunit
+ create mode 100644 drivers/scsi/scsi_error_test.c
 
