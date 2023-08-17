@@ -2,70 +2,84 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5867977F898
-	for <lists+linux-block@lfdr.de>; Thu, 17 Aug 2023 16:19:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3134577F8AB
+	for <lists+linux-block@lfdr.de>; Thu, 17 Aug 2023 16:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351787AbjHQOSn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Aug 2023 10:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44774 "EHLO
+        id S1351803AbjHQOVY (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 17 Aug 2023 10:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351819AbjHQOS1 (ORCPT
+        with ESMTP id S1351811AbjHQOVV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Aug 2023 10:18:27 -0400
-Received: from box.fidei.email (box.fidei.email [71.19.144.250])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39BB30D1;
-        Thu, 17 Aug 2023 07:18:24 -0700 (PDT)
-Received: from authenticated-user (box.fidei.email [71.19.144.250])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        by box.fidei.email (Postfix) with ESMTPSA id 660AD835BD;
-        Thu, 17 Aug 2023 10:18:21 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dorminy.me; s=mail;
-        t=1692281904; bh=odByIvjRi92I6foojdwddE69jn8cbNIsBbc/Ta7FEDA=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=WtyepLvm4L4V/LRIR2m6x1MkMRKW/q8myjxkbfV5i7cjymEWv2Q+R1qyr/Bu8D3yD
-         z9Vweq8AZcTsXv9tj2dAP4XimsPkVcAUAFJMABKsfHemL90gWLrjj+hAWSLzJHDlNs
-         c1LI6J1T8e5hXsEwpQPrr2tspU5lX/lTu6wrynqjRYT9gIIvvKT0o0FfIsv8QjMPPo
-         CBXys5a83aRMTnC9RPdIhtoHQl8iyF7nKrvRz84q/Scw6zFTg3q28Ezepqw6xvhEpw
-         ZARnjOxRCTtubJSUR4Rt/9Z0VtMnVGuTM9Jh+FcpRC29tZa5zjERrVRs9IAQb3R51Z
-         qm41vHJox/9Hg==
-Message-ID: <3de0063c-4683-715e-1ba0-f20a82d3bf59@dorminy.me>
-Date:   Thu, 17 Aug 2023 10:18:18 -0400
+        Thu, 17 Aug 2023 10:21:21 -0400
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEFA230C6;
+        Thu, 17 Aug 2023 07:21:19 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bdc8081147so7019095ad.1;
+        Thu, 17 Aug 2023 07:21:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692282079; x=1692886879;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=doPszRaxb9/4aAuNDgX3hC/2hLgfoHZ5dbhDCD5Yc84=;
+        b=GE46xeWYJM8E+28luULAeiTHBf1zb3k5yYa8GzC5oQrTfnv2Uum1D9vQ2nkr4RnulG
+         76rOQ0Hal8TaZdwihhaLQlBS9+sTuR1SEzL2RVk4HTEzhLgaXHRb5uzXFvEizB5LoHO0
+         P0gNseEKZyyGD1b96AFwuSZ545GgpTzt1hiWuANd6KzUeUIGHPV1xp62RHbkWRnm0QtP
+         uiNTEPN74AIIg75LsTNFKRN/ZBiGI2Pu44NEeptjERGIPh8FIlXjrxpC2tBsn2WFN5pd
+         +bf1lMcIetmkjvux8lY2dv6nqnIh5YhSYO2i6DqlSbVmYu2+C7c2uSaecb5U1ELOUVQ2
+         mODA==
+X-Gm-Message-State: AOJu0Yycwz0IJ6K0t2yi/s8ST1w0J3jK2u0azuWJZMRy8PplTA7OrR+D
+        DyXJjOzLgnmGxMhADf0MIh0=
+X-Google-Smtp-Source: AGHT+IGK2O968MxULonLkiIvt0R8Fnr37jU6Li4FQru1mc7wC2vtfEJavqSEFjuNCY3YSvHzpj1YWA==
+X-Received: by 2002:a17:902:d4c2:b0:1bd:9498:f15d with SMTP id o2-20020a170902d4c200b001bd9498f15dmr3298255plg.24.1692282079283;
+        Thu, 17 Aug 2023 07:21:19 -0700 (PDT)
+Received: from ?IPV6:2620:15c:211:201:dfd:6f25:f7be:a9ca? ([2620:15c:211:201:dfd:6f25:f7be:a9ca])
+        by smtp.gmail.com with ESMTPSA id jh15-20020a170903328f00b001bde77f3d0esm7673475plb.117.2023.08.17.07.21.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Aug 2023 07:21:18 -0700 (PDT)
+Message-ID: <5f45675d-20ac-02b5-8f88-edcc0d4ffc8a@acm.org>
+Date:   Thu, 17 Aug 2023 07:21:16 -0700
 MIME-Version: 1.0
-Subject: Re: [PATCH v4] blk-crypto: dynamically allocate fallback profile
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: [PATCH v9 02/17] block: Only use write locking if necessary
 Content-Language: en-US
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Satya Tangirala <satyat@google.com>,
-        linux-block@vger.kernel.org, kernel-team@meta.com,
-        stable@vger.kernel.org
-References: <20230810142346.96772-1-sweettea-kernel@dorminy.me>
- <20230810172457.GC701926@google.com>
-From:   Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-In-Reply-To: <20230810172457.GC701926@google.com>
+To:     Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+References: <20230816195447.3703954-1-bvanassche@acm.org>
+ <20230816195447.3703954-3-bvanassche@acm.org>
+ <0b3b4453-52a1-75e3-4dfd-6aae74c8c257@kernel.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <0b3b4453-52a1-75e3-4dfd-6aae74c8c257@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-
-On 8/10/23 13:24, Eric Biggers wrote:
-> On Thu, Aug 10, 2023 at 10:21:16AM -0400, Sweet Tea Dorminy wrote:
->> +	/* Dynamic allocation is needed because of lockdep_register_key(). */
->> +	blk_crypto_fallback_profile =
->> +		kzalloc(sizeof(*blk_crypto_fallback_profile), GFP_KERNEL);
->> +	if (!blk_crypto_fallback_profile)
->>   		goto fail_free_bioset;
+On 8/17/23 04:01, Damien Le Moal wrote:
+> On 8/17/23 04:53, Bart Van Assche wrote:
+>> Make blk_req_needs_zone_write_lock() return false if
+>> q->limits.use_zone_write_lock is false. Inline this function because it
+>> is short and because it is called from the hot path of the mq-deadline
+>> I/O scheduler.
 > 
-> err needs to be set to -ENOMEM on failure here.  See the suggestion I gave in v1
-> 
-> - Eric
+> Your are not actually inlining the function. Did you forget to move it to
+> blkdev.h ?
 
-Apologies; that's what I get for trying to rush out one more patch 
-before going on a trip. Hopefully v5 is correct. Apologies again.
+I considered inlining but eventually decided not to inline 
+blk_req_needs_zone_write_lock(). I will update the patch description.
+
+Thanks,
+
+Bart.
+
