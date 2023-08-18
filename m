@@ -2,55 +2,68 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DEBB7813C4
-	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 084C47813D2
+	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379728AbjHRTqJ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Aug 2023 15:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55024 "EHLO
+        id S1379827AbjHRTqm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Aug 2023 15:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379890AbjHRTp6 (ORCPT
+        with ESMTP id S1379864AbjHRTqY (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Aug 2023 15:45:58 -0400
+        Fri, 18 Aug 2023 15:46:24 -0400
 Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E4F4689;
-        Fri, 18 Aug 2023 12:45:35 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bdbbede5d4so10556985ad.2;
-        Fri, 18 Aug 2023 12:45:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50524685;
+        Fri, 18 Aug 2023 12:45:58 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bc63ef9959so10706805ad.2;
+        Fri, 18 Aug 2023 12:45:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692387809; x=1692992609;
+        d=1e100.net; s=20221208; t=1692387838; x=1692992638;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mKw3Aw2p8++zyZ3GJZp8ItEvankLwq1zpCMHoyF24eQ=;
-        b=QriJlvok2CV4PtJkI8TZuCXbQ51IV0INk90nYcVrn9cYjiTSQ2mMFMMEO4XUE9Llg9
-         X5WIuWWoLZHZX6qG9yMAGIa/YMF29qm18CTj8k4NDttbCUK5B3X3acRlvxZ3c359XyG7
-         5wAvXpZqpWWAlVUuq9kaYo4+fC68RSsNOZs4BDYKytrOOR1fpi2/z/kA7c2cii5Aht45
-         4bjoTMvSN6lR0XliNhQQDm0qWX8X74ezqkv7nkztD+vZuDPg/J4n6RFFcvpVZtRiX3Ij
-         K5yZQYCAa0D2xsMCVAM3bBZfsj2H9uybq1YBRquGqvztNTuvZeQtAswGX5he5Apd+3r0
-         tQoQ==
-X-Gm-Message-State: AOJu0YwjritIK3h58NsyRLteCx3tyjXtg+OxUNHnzeNvKMOrB5rsHTNj
-        pu1QXK3zaH/RX3NZvicJTS8=
-X-Google-Smtp-Source: AGHT+IFrsVRlNTiCXtpQUwsT7QsAF5X3cdZpAdzHe0eMl5VW2o0+6UdijY5XH/JPuYingf6VqvaYRA==
-X-Received: by 2002:a17:902:d48e:b0:1bc:5b36:a2e8 with SMTP id c14-20020a170902d48e00b001bc5b36a2e8mr221860plg.34.1692387808961;
-        Fri, 18 Aug 2023 12:43:28 -0700 (PDT)
+        bh=V9kjXpHnX8SSylVORGDS67iBhAPRKcB9tfPcWy3ggq4=;
+        b=JhRvcjLBKBejfceMQd7M8oYEIk5X6RWZBe4La5+Bqr2B7yeyOMHGf3vO48W0MWsikU
+         z2WYcoFRYV0MLwgWZW6fnV5SbbKYmRGVEFBlvlGPB3fUzZhogolOTo/aGPk0RZ3P0Zby
+         gBf0Qn0w3h4fA5d/jeBmxiIcbnNiraDtl5LQI7juKuF2nTWyz20iPV2RtjQ6/9tGPmfl
+         EsLEVWTD8nb6p4W5i4OD73IOxyresuUjwTQSTJAbUlx39xMPFUItFi0Y/j1iQa5BrLfY
+         IocpGtM+khA/TxDbntyAs0em5meWC9kxfa72BPb4pPaLzeFphsrhw+lxbv1pGUuq3KPI
+         1MLA==
+X-Gm-Message-State: AOJu0YyyAH97MbkqTlMYeRCzq/9swFZ6wOc5odZFzrQKVGrgptr9thjm
+        /t0jcDR5nD1oRWIe6SurWCk=
+X-Google-Smtp-Source: AGHT+IFBQiZR4RDdP+7V78pWQFaYjj/RYAEN9c3+1CFNCsEGV/eOAVCCZN8B0Z+iYcVLvuNxCnveHg==
+X-Received: by 2002:a17:903:1111:b0:1b9:de75:d5bb with SMTP id n17-20020a170903111100b001b9de75d5bbmr300486plh.7.1692387838261;
+        Fri, 18 Aug 2023 12:43:58 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5012:5192:47aa:c304])
-        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.27
+        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 12:43:28 -0700 (PDT)
+        Fri, 18 Aug 2023 12:43:57 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Christoph Hellwig <hch@lst.de>,
         Bart Van Assche <bvanassche@acm.org>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: [PATCH v10 10/18] scsi: scsi_debug: Support injecting unaligned write errors
-Date:   Fri, 18 Aug 2023 12:34:13 -0700
-Message-ID: <20230818193546.2014874-11-bvanassche@acm.org>
+        Can Guo <quic_cang@quicinc.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Bao D . Nguyen" <quic_nguyenb@quicinc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Jinyoung Choi <j-young.choi@samsung.com>,
+        Peter Wang <peter.wang@mediatek.com>,
+        Lu Hongfei <luhongfei@vivo.com>,
+        Daniil Lunev <dlunev@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Asutosh Das <quic_asutoshd@quicinc.com>,
+        Arthur Simchaev <arthur.simchaev@wdc.com>,
+        zhanghui <zhanghui31@xiaomi.com>,
+        Po-Wen Kao <powen.kao@mediatek.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Keoseong Park <keosung.park@samsung.com>
+Subject: [PATCH v10 11/18] scsi: ufs: Change the return type of ufshcd_auto_hibern8_update()
+Date:   Fri, 18 Aug 2023 12:34:14 -0700
+Message-ID: <20230818193546.2014874-12-bvanassche@acm.org>
 X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
 In-Reply-To: <20230818193546.2014874-1-bvanassche@acm.org>
 References: <20230818193546.2014874-1-bvanassche@acm.org>
@@ -66,53 +79,87 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Allow user space software, e.g. a blktests test, to inject unaligned
-write errors.
+A later patch will introduce an error path in ufshcd_auto_hibern8_update().
+Change the return type of that function before introducing calls to that
+function in the host drivers such that the host drivers only have to be
+modified once.
 
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Can Guo <quic_cang@quicinc.com>
+Cc: Avri Altman <avri.altman@wdc.com>
+Cc: Bao D. Nguyen <quic_nguyenb@quicinc.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/scsi/scsi_debug.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/ufs/core/ufs-sysfs.c   | 2 +-
+ drivers/ufs/core/ufshcd-priv.h | 1 -
+ drivers/ufs/core/ufshcd.c      | 6 ++++--
+ include/ufs/ufshcd.h           | 2 +-
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index 1ea4925d2c2f..164e82c218ff 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -181,6 +181,7 @@ static const char *sdebug_version_date = "20210520";
- #define SDEBUG_OPT_NO_CDB_NOISE		0x4000
- #define SDEBUG_OPT_HOST_BUSY		0x8000
- #define SDEBUG_OPT_CMD_ABORT		0x10000
-+#define SDEBUG_OPT_UNALIGNED_WRITE	0x20000
- #define SDEBUG_OPT_ALL_NOISE (SDEBUG_OPT_NOISE | SDEBUG_OPT_Q_NOISE | \
- 			      SDEBUG_OPT_RESET_NOISE)
- #define SDEBUG_OPT_ALL_INJECTING (SDEBUG_OPT_RECOVERED_ERR | \
-@@ -188,7 +189,8 @@ static const char *sdebug_version_date = "20210520";
- 				  SDEBUG_OPT_DIF_ERR | SDEBUG_OPT_DIX_ERR | \
- 				  SDEBUG_OPT_SHORT_TRANSFER | \
- 				  SDEBUG_OPT_HOST_BUSY | \
--				  SDEBUG_OPT_CMD_ABORT)
-+				  SDEBUG_OPT_CMD_ABORT | \
-+				  SDEBUG_OPT_UNALIGNED_WRITE)
- #define SDEBUG_OPT_RECOV_DIF_DIX (SDEBUG_OPT_RECOVERED_ERR | \
- 				  SDEBUG_OPT_DIF_ERR | SDEBUG_OPT_DIX_ERR)
+diff --git a/drivers/ufs/core/ufs-sysfs.c b/drivers/ufs/core/ufs-sysfs.c
+index 6c72075750dd..a693dea1bd18 100644
+--- a/drivers/ufs/core/ufs-sysfs.c
++++ b/drivers/ufs/core/ufs-sysfs.c
+@@ -203,7 +203,7 @@ static ssize_t auto_hibern8_store(struct device *dev,
+ 		goto out;
+ 	}
  
-@@ -3587,6 +3589,14 @@ static int resp_write_dt0(struct scsi_cmnd *scp, struct sdebug_dev_info *devip)
- 	struct sdeb_store_info *sip = devip2sip(devip, true);
- 	u8 *cmd = scp->cmnd;
+-	ufshcd_auto_hibern8_update(hba, ufshcd_us_to_ahit(timer));
++	ret = ufshcd_auto_hibern8_update(hba, ufshcd_us_to_ahit(timer));
  
-+	if (unlikely(sdebug_opts & SDEBUG_OPT_UNALIGNED_WRITE &&
-+		     atomic_read(&sdeb_inject_pending))) {
-+		atomic_set(&sdeb_inject_pending, 0);
-+		mk_sense_buffer(scp, ILLEGAL_REQUEST, LBA_OUT_OF_RANGE,
-+				UNALIGNED_WRITE_ASCQ);
-+		return check_condition_result;
-+	}
+ out:
+ 	up(&hba->host_sem);
+diff --git a/drivers/ufs/core/ufshcd-priv.h b/drivers/ufs/core/ufshcd-priv.h
+index 0f3bd943b58b..a2b74fbc2056 100644
+--- a/drivers/ufs/core/ufshcd-priv.h
++++ b/drivers/ufs/core/ufshcd-priv.h
+@@ -60,7 +60,6 @@ int ufshcd_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
+ 		      enum attr_idn idn, u8 index, u8 selector, u32 *attr_val);
+ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+ 	enum flag_idn idn, u8 index, bool *flag_res);
+-void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit);
+ void ufshcd_compl_one_cqe(struct ufs_hba *hba, int task_tag,
+ 			  struct cq_entry *cqe);
+ int ufshcd_mcq_init(struct ufs_hba *hba);
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 129446775796..053b82eac80f 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -4337,13 +4337,13 @@ int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+ }
+ EXPORT_SYMBOL_GPL(ufshcd_uic_hibern8_exit);
+ 
+-void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
++int ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
+ {
+ 	unsigned long flags;
+ 	bool update = false;
+ 
+ 	if (!ufshcd_is_auto_hibern8_supported(hba))
+-		return;
++		return 0;
+ 
+ 	spin_lock_irqsave(hba->host->host_lock, flags);
+ 	if (hba->ahit != ahit) {
+@@ -4360,6 +4360,8 @@ void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
+ 		ufshcd_release(hba);
+ 		ufshcd_rpm_put_sync(hba);
+ 	}
 +
- 	switch (cmd[0]) {
- 	case WRITE_16:
- 		ei_lba = 0;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(ufshcd_auto_hibern8_update);
+ 
+diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+index 6dc11fa0ebb1..ffc6ffe45fe1 100644
+--- a/include/ufs/ufshcd.h
++++ b/include/ufs/ufshcd.h
+@@ -1364,7 +1364,7 @@ static inline int ufshcd_disable_host_tx_lcc(struct ufs_hba *hba)
+ }
+ 
+ void ufshcd_auto_hibern8_enable(struct ufs_hba *hba);
+-void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit);
++int ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit);
+ void ufshcd_fixup_dev_quirks(struct ufs_hba *hba,
+ 			     const struct ufs_dev_quirk *fixups);
+ #define SD_ASCII_STD true
