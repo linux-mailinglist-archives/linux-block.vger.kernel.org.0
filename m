@@ -2,210 +2,163 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA3467813BB
-	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:46:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D0997813B7
+	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359138AbjHRTph (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Aug 2023 15:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37484 "EHLO
+        id S1344014AbjHRTpg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Aug 2023 15:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379839AbjHRTpU (ORCPT
+        with ESMTP id S1379919AbjHRTpe (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Aug 2023 15:45:20 -0400
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 134E3421C;
-        Fri, 18 Aug 2023 12:44:41 -0700 (PDT)
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1bdf4752c3cso9649325ad.2;
-        Fri, 18 Aug 2023 12:44:41 -0700 (PDT)
+        Fri, 18 Aug 2023 15:45:34 -0400
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB8E4684;
+        Fri, 18 Aug 2023 12:45:12 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bc3d94d40fso10692775ad.3;
+        Fri, 18 Aug 2023 12:45:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692387789; x=1692992589;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ABGLTyxmLkf9up1u0WqCkRzHbuROvy/6IIu3dbbXymY=;
-        b=l7nWqMS2uZV5XWO1xq6LiPDfo4znVwD4sSPAL3YjqRMSDtEZrZEQ0jQMzM9prWyhw2
-         Xpy/VzZVaEuZ9pZSNDwTzKbE0bj+yVCajRpQZKQ/Z/ueQcwwJe5UDF3Rz5JamGpRmHVI
-         7TMsGiivkDVchbw2tk8/XfslmvOOiIzO3QcsJY5y/Ls7R/FbBjDqTU7hGJDYU+d80meD
-         qsOay25TXA1lNwUhEMet6CzTMdoy4/Rd5OEVgUNNIyPhcsCNkxSRDjyPTV+12L3bouqq
-         uB8yCrRuN96WjUCeE8FftmGGU+MFXbE0wG+j+IarXtlmhS1qd1epwCj/hNhdC3cDGlk8
-         6qWA==
-X-Gm-Message-State: AOJu0Yw+/Stw7LgvJuaXwvW67oNj3C72A+jl6I6Znan4zQ17Gc6RjpdE
-        iva/Vsd/vL4iXgtbQumkZsg=
-X-Google-Smtp-Source: AGHT+IE07SkQNHwYuhdGhZMSapCqGMICluXaSz6lGB22+TSlQ/k49DQLVWto7ZV4aZt6XkyI1ypXMA==
-X-Received: by 2002:a17:902:e810:b0:1b8:8b2e:ae36 with SMTP id u16-20020a170902e81000b001b88b2eae36mr212501plg.3.1692387788568;
-        Fri, 18 Aug 2023 12:43:08 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692387790; x=1692992590;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A0wk1xa90VnYAyPUoUN4zedZwQDxNHF4MtXWEOIMiWM=;
+        b=bgzdamJIIrI7Tz0mnbPud/KLhqu3iw19owxqH6wugbCKVumeZL96ZygzorwKbFZQ+V
+         TKTxs/syf4EUSrog5lg5qJ+UAYH/1Wqm2Hqp/fN2wiiRMQMORHtKCgCC/0kyh20HkmO4
+         t6Oq0ELKTElWreD8bkvapE5dulal13T/TLZaQ6NqmSG955DeiFly35nVS6gq+pK02zVN
+         wcHHGkF106siEY4VlQyhOaCxiq2bCdbF17D/FjGaJhuzw5R7e/S9VQup4wOtOWnLlL6g
+         nKj96QOFhzm1idGvys9VMcE76rU1j0efuAaF+kbIe+qejBMGSpZvrYPzvvWEuavYnG53
+         w3FA==
+X-Gm-Message-State: AOJu0Yw98k2X9f4hLyMWXw7hhO4ZOIDExHhB/jrxXD4HNcGx7smKWAQH
+        ei0wK69af2zEQfXtxDwGNUo=
+X-Google-Smtp-Source: AGHT+IGnCDxz1tQlpiy7M2N5WUTK9mPo33ZafgMMWUjR1b6pbtgoL87mgKTCtQMPozbcH92qYmIdZw==
+X-Received: by 2002:a17:902:d4c9:b0:1b8:a88c:4dc6 with SMTP id o9-20020a170902d4c900b001b8a88c4dc6mr194814plg.45.1692387789982;
+        Fri, 18 Aug 2023 12:43:09 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5012:5192:47aa:c304])
-        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.07
+        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 12:43:08 -0700 (PDT)
+        Fri, 18 Aug 2023 12:43:09 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: [PATCH v10 00/18] Improve performance for zoned UFS devices
-Date:   Fri, 18 Aug 2023 12:34:03 -0700
-Message-ID: <20230818193546.2014874-1-bvanassche@acm.org>
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH v10 01/18] block: Introduce more member variables related to zone write locking
+Date:   Fri, 18 Aug 2023 12:34:04 -0700
+Message-ID: <20230818193546.2014874-2-bvanassche@acm.org>
 X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
+In-Reply-To: <20230818193546.2014874-1-bvanassche@acm.org>
+References: <20230818193546.2014874-1-bvanassche@acm.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Jens,
+Many but not all storage controllers require serialization of zoned writes.
+Introduce two new request queue limit member variables related to write
+serialization. 'driver_preserves_write_order' allows block drivers to
+indicate that the order of write commands is preserved and hence that
+serialization of writes per zone is not required. 'use_zone_write_lock' is
+set by disk_set_zoned() if and only if the block device has zones and if
+the block driver does not preserve the order of write requests.
 
-This patch series improves small write IOPS by a factor of four (+300%) for
-zoned UFS devices on my test setup with an UFSHCI 3.0 controller. Please
-consider this patch series for the next merge window.
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ block/blk-settings.c   | 15 +++++++++++++++
+ block/blk-zoned.c      |  1 +
+ include/linux/blkdev.h | 10 ++++++++++
+ 3 files changed, 26 insertions(+)
 
-Thank you,
-
-Bart.
-
-Changes compared to v9:
- - Introduced an additional scsi_driver callback: .eh_needs_prepare_resubmit().
- - Renamed the scsi_debug kernel module parameter 'no_zone_write_lock' into
-   'preserves_write_order'.
- - Fixed an out-of-bounds access in the unit scsi_call_prepare_resubmit() unit
-   test.
- - Wrapped ufshcd_auto_hibern8_update() calls in UFS host drivers with
-   WARN_ON_ONCE() such that a kernel stack appears in case an error code is
-   returned.
- - Elaborated a comment in the UFSHCI driver.
-
-Changes compared to v8:
- - Fixed handling of 'driver_preserves_write_order' and 'use_zone_write_lock'
-   in blk_stack_limits().
- - Added a comment in disk_set_zoned().
- - Modified blk_req_needs_zone_write_lock() such that it returns false if
-   q->limits.use_zone_write_lock is false.
- - Modified disk_clear_zone_settings() such that it clears
-   q->limits.use_zone_write_lock.
- - Left out one change from the mq-deadline patch that became superfluous due to
-   the blk_req_needs_zone_write_lock() change.
- - Modified scsi_call_prepare_resubmit() such that it only calls list_sort() if
-   zoned writes have to be resubmitted for which zone write locking is disabled.
- - Added an additional unit test for scsi_call_prepare_resubmit().
- - Modified the sorting code in the sd driver such that only those SCSI commands
-   are sorted for which write locking is disabled.
- - Modified sd_zbc.c such that ELEVATOR_F_ZBD_SEQ_WRITE is only set if the
-   write order is not preserved.
- - Included three patches for UFS host drivers that rework code that wrote
-   directly to the auto-hibernation controller register.
- - Modified the UFS driver such that enabling auto-hibernation is not allowed
-   if a zoned logical unit is present and if the controller operates in legacy
-   mode.
- - Also in the UFS driver, simplified ufshcd_auto_hibern8_update().
-
-Changes compared to v7:
- - Split the queue_limits member variable `use_zone_write_lock' into two member
-   variables: `use_zone_write_lock' (set by disk_set_zoned()) and
-   `driver_preserves_write_order' (set by the block driver or SCSI LLD). This
-   should clear up the confusion about the purpose of this variable.
- - Moved the code for sorting SCSI commands by LBA from the SCSI error handler
-   into the SCSI disk (sd) driver as requested by Christoph.
-   
-Changes compared to v6:
- - Removed QUEUE_FLAG_NO_ZONE_WRITE_LOCK and instead introduced a flag in
-   the request queue limits data structure.
-
-Changes compared to v5:
- - Renamed scsi_cmp_lba() into scsi_cmp_sector().
- - Improved several source code comments.
-
-Changes compared to v4:
- - Dropped the patch that introduces the REQ_NO_ZONE_WRITE_LOCK flag.
- - Dropped the null_blk patch and added two scsi_debug patches instead.
- - Dropped the f2fs patch.
- - Split the patch for the UFS driver into two patches.
- - Modified several patch descriptions and source code comments.
- - Renamed dd_use_write_locking() into dd_use_zone_write_locking().
- - Moved the list_sort() call from scsi_unjam_host() into scsi_eh_flush_done_q()
-   such that sorting happens just before reinserting.
- - Removed the scsi_cmd_retry_allowed() call from scsi_check_sense() to make
-   sure that the retry counter is adjusted once per retry instead of twice.
-
-Changes compared to v3:
- - Restored the patch that introduces QUEUE_FLAG_NO_ZONE_WRITE_LOCK. That patch
-   had accidentally been left out from v2.
- - In patch "block: Introduce the flag REQ_NO_ZONE_WRITE_LOCK", improved the
-   patch description and added the function blk_no_zone_write_lock().
- - In patch "block/mq-deadline: Only use zone locking if necessary", moved the
-   blk_queue_is_zoned() call into dd_use_write_locking().
- - In patch "fs/f2fs: Disable zone write locking", set REQ_NO_ZONE_WRITE_LOCK
-   from inside __bio_alloc() instead of in f2fs_submit_write_bio().
-
-Changes compared to v2:
- - Renamed the request queue flag for disabling zone write locking.
- - Introduced a new request flag for disabling zone write locking.
- - Modified the mq-deadline scheduler such that zone write locking is only
-   disabled if both flags are set.
- - Added an F2FS patch that sets the request flag for disabling zone write
-   locking.
- - Only disable zone write locking in the UFS driver if auto-hibernation is
-   disabled.
-
-Changes compared to v1:
- - Left out the patches that are already upstream.
- - Switched the approach in patch "scsi: Retry unaligned zoned writes" from
-   retrying immediately to sending unaligned write commands to the SCSI error
-   handler.
-
-Bart Van Assche (18):
-  block: Introduce more member variables related to zone write locking
-  block: Only use write locking if necessary
-  block/mq-deadline: Only use zone locking if necessary
-  scsi: core: Introduce a mechanism for reordering requests in the error
-    handler
-  scsi: core: Add unit tests for scsi_call_prepare_resubmit()
-  scsi: sd: Sort commands by LBA before resubmitting
-  scsi: core: Retry unaligned zoned writes
-  scsi: sd_zbc: Only require an I/O scheduler if needed
-  scsi: scsi_debug: Add the preserves_write_order module parameter
-  scsi: scsi_debug: Support injecting unaligned write errors
-  scsi: ufs: Change the return type of ufshcd_auto_hibern8_update()
-  scsi: ufs: hisi: Rework the code that disables auto-hibernation
-  scsi: ufs: mediatek: Rework the code for disabling auto-hibernation
-  scsi: ufs: sprd: Rework the code for disabling auto-hibernation
-  scsi: ufs: Rename ufshcd_auto_hibern8_enable() and make it static
-  scsi: ufs: Simplify ufshcd_auto_hibern8_update()
-  scsi: ufs: Forbid auto-hibernation without I/O scheduler
-  scsi: ufs: Inform the block layer about write ordering
-
- block/blk-settings.c            |  15 +++
- block/blk-zoned.c               |  10 +-
- block/mq-deadline.c             |  11 +-
- drivers/scsi/Kconfig            |   2 +
- drivers/scsi/Kconfig.kunit      |   4 +
- drivers/scsi/Makefile           |   2 +
- drivers/scsi/Makefile.kunit     |   1 +
- drivers/scsi/scsi_debug.c       |  21 +++-
- drivers/scsi/scsi_error.c       |  81 +++++++++++++
- drivers/scsi/scsi_error_test.c  | 207 ++++++++++++++++++++++++++++++++
- drivers/scsi/scsi_lib.c         |   1 +
- drivers/scsi/scsi_priv.h        |   1 +
- drivers/scsi/sd.c               |  51 ++++++++
- drivers/scsi/sd_zbc.c           |   4 +-
- drivers/ufs/core/ufs-sysfs.c    |   2 +-
- drivers/ufs/core/ufshcd-priv.h  |   1 -
- drivers/ufs/core/ufshcd.c       | 114 ++++++++++++++----
- drivers/ufs/host/ufs-hisi.c     |   5 +-
- drivers/ufs/host/ufs-mediatek.c |   2 +-
- drivers/ufs/host/ufs-sprd.c     |  11 +-
- include/linux/blkdev.h          |  10 ++
- include/scsi/scsi.h             |   1 +
- include/scsi/scsi_driver.h      |   2 +
- include/ufs/ufshcd.h            |   3 +-
- 24 files changed, 512 insertions(+), 50 deletions(-)
- create mode 100644 drivers/scsi/Kconfig.kunit
- create mode 100644 drivers/scsi/Makefile.kunit
- create mode 100644 drivers/scsi/scsi_error_test.c
-
+diff --git a/block/blk-settings.c b/block/blk-settings.c
+index 0046b447268f..4c776c08f190 100644
+--- a/block/blk-settings.c
++++ b/block/blk-settings.c
+@@ -56,6 +56,8 @@ void blk_set_default_limits(struct queue_limits *lim)
+ 	lim->alignment_offset = 0;
+ 	lim->io_opt = 0;
+ 	lim->misaligned = 0;
++	lim->driver_preserves_write_order = false;
++	lim->use_zone_write_lock = false;
+ 	lim->zoned = BLK_ZONED_NONE;
+ 	lim->zone_write_granularity = 0;
+ 	lim->dma_alignment = 511;
+@@ -82,6 +84,8 @@ void blk_set_stacking_limits(struct queue_limits *lim)
+ 	lim->max_dev_sectors = UINT_MAX;
+ 	lim->max_write_zeroes_sectors = UINT_MAX;
+ 	lim->max_zone_append_sectors = UINT_MAX;
++	/* Request-based stacking drivers do not reorder requests. */
++	lim->driver_preserves_write_order = true;
+ }
+ EXPORT_SYMBOL(blk_set_stacking_limits);
+ 
+@@ -685,6 +689,10 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
+ 						   b->max_secure_erase_sectors);
+ 	t->zone_write_granularity = max(t->zone_write_granularity,
+ 					b->zone_write_granularity);
++	t->driver_preserves_write_order = t->driver_preserves_write_order &&
++		b->driver_preserves_write_order;
++	t->use_zone_write_lock = t->use_zone_write_lock ||
++		b->use_zone_write_lock;
+ 	t->zoned = max(t->zoned, b->zoned);
+ 	return ret;
+ }
+@@ -949,6 +957,13 @@ void disk_set_zoned(struct gendisk *disk, enum blk_zoned_model model)
+ 	}
+ 
+ 	q->limits.zoned = model;
++	/*
++	 * Use the zone write lock only for zoned block devices and only if
++	 * the block driver does not preserve the order of write commands.
++	 */
++	q->limits.use_zone_write_lock = model != BLK_ZONED_NONE &&
++		!q->limits.driver_preserves_write_order;
++
+ 	if (model != BLK_ZONED_NONE) {
+ 		/*
+ 		 * Set the zone write granularity to the device logical block
+diff --git a/block/blk-zoned.c b/block/blk-zoned.c
+index 619ee41a51cc..112620985bff 100644
+--- a/block/blk-zoned.c
++++ b/block/blk-zoned.c
+@@ -631,6 +631,7 @@ void disk_clear_zone_settings(struct gendisk *disk)
+ 	q->limits.chunk_sectors = 0;
+ 	q->limits.zone_write_granularity = 0;
+ 	q->limits.max_zone_append_sectors = 0;
++	q->limits.use_zone_write_lock = false;
+ 
+ 	blk_mq_unfreeze_queue(q);
+ }
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index c1421da8d45e..38a1a71b2bcc 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -316,6 +316,16 @@ struct queue_limits {
+ 	unsigned char		misaligned;
+ 	unsigned char		discard_misaligned;
+ 	unsigned char		raid_partial_stripes_expensive;
++	/*
++	 * Whether or not the block driver preserves the order of write
++	 * requests. Set by the block driver.
++	 */
++	bool			driver_preserves_write_order;
++	/*
++	 * Whether or not zone write locking should be used. Set by
++	 * disk_set_zoned().
++	 */
++	bool			use_zone_write_lock;
+ 	enum blk_zoned_model	zoned;
+ 
+ 	/*
