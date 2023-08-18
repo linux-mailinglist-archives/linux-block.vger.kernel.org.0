@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05D4C7813B9
-	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:46:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72C717813BD
+	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:46:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379668AbjHRTph (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Aug 2023 15:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39220 "EHLO
+        id S1379757AbjHRTpi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Aug 2023 15:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379842AbjHRTpV (ORCPT
+        with ESMTP id S1379851AbjHRTpX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Aug 2023 15:45:21 -0400
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 560944239;
-        Fri, 18 Aug 2023 12:44:44 -0700 (PDT)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bf092a16c9so10943335ad.0;
-        Fri, 18 Aug 2023 12:44:44 -0700 (PDT)
+        Fri, 18 Aug 2023 15:45:23 -0400
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37C3C421F;
+        Fri, 18 Aug 2023 12:44:47 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1bbff6b2679so10022125ad.1;
+        Fri, 18 Aug 2023 12:44:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692387791; x=1692992591;
+        d=1e100.net; s=20221208; t=1692387793; x=1692992593;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FvsjixjHprGJoE6zHlkCW2HQWi6Q2BrxOyZzjpL+qb0=;
-        b=aLr4VXwyeaAt8n+PBTH5xW4Y65weOGZ3Sh3OPa0xiE0OyKmGsfk5BGyLlWCPy0NSXQ
-         PeAJ0MdEY7ue3JxdhLG+RhyacoJETMn60jINIgz9Gp5ANAguYFY5ePIwUgWbeSvfHqwF
-         zWY+/CxjmxCtatJhnmmvF/FaC4LdDowcSAqNUnGM+ggx8Zp/Z5SCdiQ1+XGH/YcVtWrR
-         tLFrtAwerWrIiQimY0Qn2Cg0RrjNj+fMpHcuSeHw8vtMCuDeRBXKmghMHFI4SZSrySqE
-         /mKO5G3dpdG8v3/OEgBzmAsJdi2DvfZmJETKsNPeNqlwUQzjbK7QegBw0NcZ1uyHglhI
-         mZoA==
-X-Gm-Message-State: AOJu0YzHkK8ejvaqxEW+/P2tRm3FoKvSIq1t9Wt5kO6WBDjp0WuY3pOF
-        Wv86p9+QazetLP4tQYtIlQDTc8OIdlQ=
-X-Google-Smtp-Source: AGHT+IF4n0M75II18TdmYY9xJaoBhoB8sECgbX5jp9wZYLq3+MQPy1u2o1bjEOBxLNlzeHIoSichVg==
-X-Received: by 2002:a17:902:8695:b0:1b8:2c6f:3248 with SMTP id g21-20020a170902869500b001b82c6f3248mr206100plo.39.1692387791269;
-        Fri, 18 Aug 2023 12:43:11 -0700 (PDT)
+        bh=GjGIaWCkHD/AcFvunDs8CWF2fnVsmWJz6tsJCh5ZAlo=;
+        b=VkNnq8fTEM5yoJPJGi17esCP6Wx6H4e6dCp/PqyleCZQKzYOcl3myrlq/S0ZDNV4L9
+         FMf+/Vc6TFfM7oNRoyiYhSEPibhM4hTluyUEA5xlfYbJ6EPbpsz+qMdAWHcjI2qgoiTt
+         L1wjFrR25zxB3JE33gyOj9LSpj6nKE8vkkSX0hoeP3+LWLW/fNPhsI2BzXqLoZCkmHs+
+         zNCTfOQMLz76SnVtzNSDnMyYKg+wSjcInsSOrVOmNeTk9Pf56b0YUYPhNwv8VQo9tLeL
+         ilHClz9otA+BWz6FBrl6T9PMwJmH0PX+YJWDDnClqxCu8ObSMTxHa1Vh0q96zgjCGHS5
+         7A7A==
+X-Gm-Message-State: AOJu0Yzr9fUd5rIPmMOhyRCu7ptNqkF5VFSBdMJW1pE70B/GtPSN7L41
+        OMXzYLysbMX8aIDcfmOPDN8=
+X-Google-Smtp-Source: AGHT+IEw87tUMoU5iuJ22C/MT/AysykN2kqpsa9IYh9braGioKT5selEp4HQs8whvbLP/HhdfwSecw==
+X-Received: by 2002:a17:902:f54a:b0:1b8:a2af:fe23 with SMTP id h10-20020a170902f54a00b001b8a2affe23mr228076plf.2.1692387792604;
+        Fri, 18 Aug 2023 12:43:12 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5012:5192:47aa:c304])
-        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.10
+        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 12:43:10 -0700 (PDT)
+        Fri, 18 Aug 2023 12:43:12 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
@@ -46,9 +46,9 @@ Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         Bart Van Assche <bvanassche@acm.org>,
         Damien Le Moal <dlemoal@kernel.org>,
         Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH v10 02/18] block: Only use write locking if necessary
-Date:   Fri, 18 Aug 2023 12:34:05 -0700
-Message-ID: <20230818193546.2014874-3-bvanassche@acm.org>
+Subject: [PATCH v10 03/18] block/mq-deadline: Only use zone locking if necessary
+Date:   Fri, 18 Aug 2023 12:34:06 -0700
+Message-ID: <20230818193546.2014874-4-bvanassche@acm.org>
 X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
 In-Reply-To: <20230818193546.2014874-1-bvanassche@acm.org>
 References: <20230818193546.2014874-1-bvanassche@acm.org>
@@ -56,45 +56,73 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Make blk_req_needs_zone_write_lock() return false if
-q->limits.use_zone_write_lock is false.
+Measurements have shown that limiting the queue depth to one per zone for
+zoned writes has a significant negative performance impact on zoned UFS
+devices. Hence this patch that disables zone locking by the mq-deadline
+scheduler if the storage controller preserves the command order. This
+patch is based on the following assumptions:
+- It happens infrequently that zoned write requests are reordered by the
+  block layer.
+- The I/O priority of all write requests is the same per zone.
+- Either no I/O scheduler is used or an I/O scheduler is used that
+  serializes write requests per zone.
 
-Cc: Damien Le Moal <dlemoal@kernel.org>
+Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- block/blk-zoned.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ block/mq-deadline.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/block/blk-zoned.c b/block/blk-zoned.c
-index 112620985bff..d8a80cce832f 100644
---- a/block/blk-zoned.c
-+++ b/block/blk-zoned.c
-@@ -53,11 +53,16 @@ const char *blk_zone_cond_str(enum blk_zone_cond zone_cond)
- EXPORT_SYMBOL_GPL(blk_zone_cond_str);
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index f958e79277b8..082ccf3186f4 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -353,7 +353,7 @@ deadline_fifo_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
+ 		return NULL;
  
- /*
-- * Return true if a request is a write requests that needs zone write locking.
-+ * Return true if a request is a write request that needs zone write locking.
-  */
- bool blk_req_needs_zone_write_lock(struct request *rq)
- {
--	if (!rq->q->disk->seq_zones_wlock)
-+	struct request_queue *q = rq->q;
-+
-+	if (!q->limits.use_zone_write_lock)
-+		return false;
-+
-+	if (!q->disk->seq_zones_wlock)
- 		return false;
+ 	rq = rq_entry_fifo(per_prio->fifo_list[data_dir].next);
+-	if (data_dir == DD_READ || !blk_queue_is_zoned(rq->q))
++	if (data_dir == DD_READ || !rq->q->limits.use_zone_write_lock)
+ 		return rq;
  
- 	return blk_rq_is_seq_zoned_write(rq);
+ 	/*
+@@ -398,7 +398,7 @@ deadline_next_request(struct deadline_data *dd, struct dd_per_prio *per_prio,
+ 	if (!rq)
+ 		return NULL;
+ 
+-	if (data_dir == DD_READ || !blk_queue_is_zoned(rq->q))
++	if (data_dir == DD_READ || !rq->q->limits.use_zone_write_lock)
+ 		return rq;
+ 
+ 	/*
+@@ -526,8 +526,9 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
+ 	}
+ 
+ 	/*
+-	 * For a zoned block device, if we only have writes queued and none of
+-	 * them can be dispatched, rq will be NULL.
++	 * For a zoned block device that requires write serialization, if we
++	 * only have writes queued and none of them can be dispatched, rq will
++	 * be NULL.
+ 	 */
+ 	if (!rq)
+ 		return NULL;
+@@ -934,7 +935,7 @@ static void dd_finish_request(struct request *rq)
+ 
+ 	atomic_inc(&per_prio->stats.completed);
+ 
+-	if (blk_queue_is_zoned(q)) {
++	if (rq->q->limits.use_zone_write_lock) {
+ 		unsigned long flags;
+ 
+ 		spin_lock_irqsave(&dd->zone_lock, flags);
