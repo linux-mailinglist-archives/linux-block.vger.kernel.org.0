@@ -2,66 +2,63 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C706A780784
-	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 10:54:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F072678092F
+	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 11:59:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351547AbjHRIxr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Aug 2023 04:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52740 "EHLO
+        id S1348065AbjHRJ6a (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Aug 2023 05:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358781AbjHRIxV (ORCPT
+        with ESMTP id S243622AbjHRJ6Y (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Aug 2023 04:53:21 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA1C30E6
-        for <linux-block@vger.kernel.org>; Fri, 18 Aug 2023 01:53:14 -0700 (PDT)
+        Fri, 18 Aug 2023 05:58:24 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720E730D6;
+        Fri, 18 Aug 2023 02:58:07 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6F2AA21875;
-        Fri, 18 Aug 2023 08:53:13 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 416CB1F893;
+        Fri, 18 Aug 2023 09:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1692348793; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KzcdXcvVdIdhkTV0Shlwle4xaHsekb83/IOSjUzWN0s=;
-        b=rSVQKs89JKN2+4Aqlr300idCqAjq8f0LRUAIkPIlQX26kh6SAPualI2223kORO34xnJXga
-        /qC2Zh0uxAZOmNB3Hs26Inal2KrhT5ea1OYCSYi5reGUfaXp0wMj5XCO81RWTRBAMlp04w
-        mmjwc7rRHKgSiVZXcQuGEYYAE3nyXyA=
+        t=1692352657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=F+4pE3eEurIa+crq3qA6W7/bubTCplnACoCcJD+xN5k=;
+        b=wKfiyMH8jk6H5Z5GyN+6VVe2FgI13BNyUBKp0WOPxRpPWgucE56XNo6ujn3uIMCWAbP0Fh
+        14Hl6p+NpL5f6nTxjg2xJpBnbzLk3uEJ571+CZYc6Dt9/rHxotZ0naBzlX8yKZer1MiwfT
+        E89p7ZHSJdXcssDi2pFNbMxaLeKO6z8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1692348793;
+        s=susede2_ed25519; t=1692352657;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KzcdXcvVdIdhkTV0Shlwle4xaHsekb83/IOSjUzWN0s=;
-        b=YUr04K2o+UhlLhDTs+iSZ6r3N/wxfaqTtBnJ2tyaSf9iR2p88PXmb5IZwWieiz4k3j43N5
-        c2GvAgq6AQJZetCw==
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=F+4pE3eEurIa+crq3qA6W7/bubTCplnACoCcJD+xN5k=;
+        b=8/vmGOZLHG3qT9Pt4zNDFnf4wIeAsryWZ9/qw7W8uGvVfR+rdlrCTCwpy0js48t63KsCQs
+        Bwa/Xb7TiAv2hfDw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5626813441;
-        Fri, 18 Aug 2023 08:53:13 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 34036138F0;
+        Fri, 18 Aug 2023 09:57:37 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id /sj+FHkx32StFgAAMHmgww
-        (envelope-from <dwagner@suse.de>); Fri, 18 Aug 2023 08:53:13 +0000
-Date:   Fri, 18 Aug 2023 10:53:24 +0200
+        id rRyiDJFA32SfNgAAMHmgww
+        (envelope-from <dwagner@suse.de>); Fri, 18 Aug 2023 09:57:37 +0000
 From:   Daniel Wagner <dwagner@suse.de>
-To:     Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Yi Zhang <yi.zhang@redhat.com>,
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Hannes Reinecke <hare@suse.de>,
         Sagi Grimberg <sagi@grimberg.me>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH blktests v3 1/2] nvme/rc: fix nvme device readiness check
- after _nvme_connect_subsys
-Message-ID: <mgfm3zji6qpuohc2hxfhttu3dmrj74ytmx5wfkloj23le6zcg7@gorhk6oekqln>
-References: <20230818044057.3794564-1-shinichiro.kawasaki@wdc.com>
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH blktests v1 0/1] Introduce nvmet target setup/cleanup helpers
+Date:   Fri, 18 Aug 2023 11:57:43 +0200
+Message-ID: <20230818095744.24619-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230818044057.3794564-1-shinichiro.kawasaki@wdc.com>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
@@ -71,83 +68,61 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 01:40:56PM +0900, Shin'ichiro Kawasaki wrote:
-> The helper function _nvme_connect_subsys() creates a nvme device. It may
-> take some time after the function call until the device gets ready for
-> I/O. So it is expected that the test cases call _find_nvme_dev() after
-> _nvme_connect_subsys() before I/O. _find_nvme_dev() returns the path of
-> the created device, and it also waits for uuid and wwid sysfs attributes
-> of the created device get ready. This wait works as the wait for the
-> device I/O readiness.
-> 
-> However, this wait by _find_nvme_dev() has two problems. The first
-> problem is missing call of _find_nvme_dev(). The test case nvme/047
-> calls _nvme_connect_subsys() twice, but _find_nvme_dev() is called only
-> for the first _nvme_connect_subsys() call. This causes too early I/O to
-> the device with tcp transport [1]. Fix this by moving the wait for the
-> device readiness from _find_nvme_dev() to _nvme_connect_subsys(). Also
-> add --no-wait option to _nvme_connect_subsys(). It allows to skip the
-> wait in _nvmet_passthru_target_connect() which has its own wait for
-> device readiness.
-> 
-> The second problem is wrong paths for the sysfs attributes. The paths
-> do not include namespace index, so the check for the attributes always
-> fail. Still _find_nvme_dev() does 1 second wait and allows the device
-> get ready for I/O in most cases, but this is not intended behavior.
-> Fix this by checking sysfs paths with the namespace index. Get list of
-> namespace indices for the sub-system and do the check for all indices.
-> 
-> On top of the checks for sysfs attributes, add 'udevadm settle' and a
-> check for the created device file. These ensures that the create device
-> is ready for I/O.
-> 
-> [1] https://lore.kernel.org/linux-block/CAHj4cs9GNohGUjohNw93jrr8JGNcRYC-ienAZz+sa7az1RK77w@mail.gmail.com/
-> 
-> Fixes: c766fccf3aff ("Make the NVMe tests more reliable")
-> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Introduce helpers to setup nvmet targets. This is spin off from the refactoring
+patches and the allowed_host patches [1].
 
-just a minor nitpick but feel free to add:
+Sagi suggested to record all resources allocated by nvmet_target_setup and then
+later clean them up in nvmet_target_cleanup. I opted to figure out in
+nvmet_target_cleanup what was allocated via the newly introdcuded _get_nvmet_ports
+helper. The reason being, Hannes told me offline that he would like to add ANA
+tests which will add some more ports to the subsystem. I hope with this
+the code is more future proof.
 
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
+BTW, while looking at this I saw that the passthru code is using the awkward
+return value port when calling nvmet_passthru_target_setup. It seems some
+more refactoring is in order...
 
-> diff --git a/tests/nvme/rc b/tests/nvme/rc
-> index 0b964e9..92eac06 100644
-> --- a/tests/nvme/rc
-> +++ b/tests/nvme/rc
-> @@ -428,6 +428,8 @@ _nvme_connect_subsys() {
->  	local keep_alive_tmo=""
->  	local reconnect_delay=""
->  	local ctrl_loss_tmo=""
-> +	local no_wait=""
+[1] https://lore.kernel.org/linux-nvme/5h333eqhtw252sjw6axjewlb5bbb5ze7awekczxe3kie2lnhw6@manyer42khct/
 
-I suggest to use the default 'no_wait=false' here
+Daniel Wagner (1):
+  nvme: Introduce nvmet_target_{setup/cleanup} common code
 
-> +	local i
->  
->  	while [[ $# -gt 0 ]]; do
->  		case $1 in
-> @@ -483,6 +485,10 @@ _nvme_connect_subsys() {
->  				ctrl_loss_tmo="$2"
->  				shift 2
->  				;;
-> +			--no-wait)
-> +				no_wait=true
-> +				shift 1
-> +				;;
->  			*)
->  				positional_args+=("$1")
->  				shift
-> @@ -532,6 +538,33 @@ _nvme_connect_subsys() {
->  	fi
->  
->  	nvme connect "${ARGS[@]}" 2> /dev/null
-> +
-> +	# Wait until device file and uuid/wwid sysfs attributes get ready for
-> +	# all namespaces.
-> +	if [[ -z ${no_wait} ]]; then
+ tests/nvme/003 | 14 ++-------
+ tests/nvme/004 | 21 ++-----------
+ tests/nvme/005 | 20 ++----------
+ tests/nvme/006 | 19 ++----------
+ tests/nvme/007 | 14 ++-------
+ tests/nvme/008 | 21 ++-----------
+ tests/nvme/009 | 16 ++--------
+ tests/nvme/010 | 21 ++-----------
+ tests/nvme/011 | 16 ++--------
+ tests/nvme/012 | 21 ++-----------
+ tests/nvme/013 | 16 ++--------
+ tests/nvme/014 | 21 ++-----------
+ tests/nvme/015 | 16 ++--------
+ tests/nvme/018 | 16 ++--------
+ tests/nvme/019 | 21 ++-----------
+ tests/nvme/020 | 16 ++--------
+ tests/nvme/021 | 16 ++--------
+ tests/nvme/022 | 16 ++--------
+ tests/nvme/023 | 21 ++-----------
+ tests/nvme/024 | 16 ++--------
+ tests/nvme/025 | 16 ++--------
+ tests/nvme/026 | 16 ++--------
+ tests/nvme/027 | 17 ++---------
+ tests/nvme/028 | 17 ++---------
+ tests/nvme/029 | 21 ++-----------
+ tests/nvme/040 | 19 ++----------
+ tests/nvme/041 | 18 ++---------
+ tests/nvme/042 | 17 ++---------
+ tests/nvme/043 | 17 ++---------
+ tests/nvme/044 | 19 ++----------
+ tests/nvme/045 | 18 ++---------
+ tests/nvme/047 | 21 ++-----------
+ tests/nvme/048 | 17 ++---------
+ tests/nvme/rc  | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 34 files changed, 154 insertions(+), 519 deletions(-)
 
-and do a
+-- 
+2.41.0
 
-	if [[ "${no_wait}" = true ]] ; then
-
-instead using a testing for an empty string.
