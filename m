@@ -2,42 +2,42 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B08217813B8
-	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:46:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 691B57813D0
+	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 21:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379733AbjHRTpi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 18 Aug 2023 15:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39328 "EHLO
+        id S1379824AbjHRTqm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Aug 2023 15:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379857AbjHRTpY (ORCPT
+        with ESMTP id S1379849AbjHRTqU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 18 Aug 2023 15:45:24 -0400
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7882421E;
-        Fri, 18 Aug 2023 12:44:49 -0700 (PDT)
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1bf3a2f4528so8112215ad.2;
-        Fri, 18 Aug 2023 12:44:49 -0700 (PDT)
+        Fri, 18 Aug 2023 15:46:20 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE1444B6;
+        Fri, 18 Aug 2023 12:45:55 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bb84194bf3so10003685ad.3;
+        Fri, 18 Aug 2023 12:45:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692387794; x=1692992594;
+        d=1e100.net; s=20221208; t=1692387801; x=1692992601;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CZv/GCTChROxyk79tHpawLiGp2hTN5F6+jFSRDwuk9c=;
-        b=kkQrfTPGGTsruYZiNBhux9X32SF13eraCeSoefQr1h28fLsx6USFkeMy7WyqZ18MQ5
-         ZWrLXRt65h/VghZ7F61JWGZV6QIgz5gzgAECRYKFIGzD17uAR6/KplX182dMrjAxEw0z
-         DToF7MsBESe3DjkTsZqXAY4KipOMoAfZtK8vsPaCA1PrGEI/b5te/3eZ5uLPl8psGxcr
-         oOxCXkPDim4k/cpDj3vzKh0OPpA8475u5DH+f3QhuRlhECFGKtNZ8FiGMNNaVp7AC3EA
-         AP/XXS8XE6ckGddeoByOx1B6eWYsyTAMIIE3G+ZU5OdOZrr37m3wp+ih5ParXL5OJFX+
-         PQ5w==
-X-Gm-Message-State: AOJu0YxOrqoUry2On0fVUDjq2HAPzGaOsX4lGIDtpJQehsTgyW9hAEYD
-        9fV2SSAxyxQW5u/43MrmvI8=
-X-Google-Smtp-Source: AGHT+IEAR5Sk6Zy4lpk0jvURmNoj1FCAoxycnR2AmEian94uY9DRfAQ/rq6joO08n3jH8fL2z+FfMg==
-X-Received: by 2002:a17:902:e78a:b0:1bb:dbec:40ba with SMTP id cp10-20020a170902e78a00b001bbdbec40bamr162933plb.16.1692387794095;
-        Fri, 18 Aug 2023 12:43:14 -0700 (PDT)
+        bh=adWNOW49kVXe1MZ2NF8xJiy0tj9xGw91as9Acxixn3o=;
+        b=C6MISHqQ7mrpLibE54K4KmLQdwNZR6CIlB3G80PUaQXT9zfTWvfNQV39EFzJkzxYtW
+         tr3rme/E5RF88n8PWLJBQzpY3UUF7Wx6+bGM5lMDThZNSWVbTxWtxc7WTRxjIXfmeIxG
+         zq6WQVmmuAzUblm4Nym/yF7mzDmfFuVSeM1eXS0FgWmGs/mOBXV1pCpwjaTSxVN3BN47
+         3ZJ4lsP/v7jRN0E78l5QEezmReGL8VHn96EiuXEpA7uXI8hUOSKbDpS7Hm42abmoxQQS
+         ZZXDKgdMGajHMBk2m+v4M/ZdyKQoQFx/Rudd9ADmGb2oEIaolGI4E7lKECHAydgh/H0l
+         9Z0w==
+X-Gm-Message-State: AOJu0YzCW9mWbgTGvLS3WX5/iQ+RUb1XcvJY+5m9o1frjz5nflx4Efr1
+        rBJDA/XHEf1NdUw2xv9zd1o=
+X-Google-Smtp-Source: AGHT+IHP/lcnbxfpAekISY88hv+xg7Sb8VLy4Ad+f3zCr1Ns5RmqxH7mgUlpwWGVWkBbXFvl3+b+GA==
+X-Received: by 2002:a17:902:d2c7:b0:1bb:a125:f831 with SMTP id n7-20020a170902d2c700b001bba125f831mr215203plc.58.1692387801553;
+        Fri, 18 Aug 2023 12:43:21 -0700 (PDT)
 Received: from bvanassche-linux.mtv.corp.google.com ([2620:15c:211:201:5012:5192:47aa:c304])
-        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.13
+        by smtp.gmail.com with ESMTPSA id u16-20020a170903125000b001bb8be10a84sm2115801plh.304.2023.08.18.12.43.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 12:43:13 -0700 (PDT)
+        Fri, 18 Aug 2023 12:43:21 -0700 (PDT)
 From:   Bart Van Assche <bvanassche@acm.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         Damien Le Moal <dlemoal@kernel.org>,
         Ming Lei <ming.lei@redhat.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: [PATCH v10 04/18] scsi: core: Introduce a mechanism for reordering requests in the error handler
-Date:   Fri, 18 Aug 2023 12:34:07 -0700
-Message-ID: <20230818193546.2014874-5-bvanassche@acm.org>
+Subject: [PATCH v10 05/18] scsi: core: Add unit tests for scsi_call_prepare_resubmit()
+Date:   Fri, 18 Aug 2023 12:34:08 -0700
+Message-ID: <20230818193546.2014874-6-bvanassche@acm.org>
 X-Mailer: git-send-email 2.42.0.rc1.204.g551eb34607-goog
 In-Reply-To: <20230818193546.2014874-1-bvanassche@acm.org>
 References: <20230818193546.2014874-1-bvanassche@acm.org>
@@ -57,20 +57,16 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Introduce the .eh_needs_prepare_resubmit and the .eh_prepare_resubmit
-function pointers in struct scsi_driver. Make the error handler call
-.eh_prepare_resubmit() before resubmitting commands if any of the
-.eh_needs_prepare_resubmit() invocations return true. A later patch
-will use this functionality to sort SCSI commands by LBA from inside
-the SCSI disk driver before these are resubmitted by the error handler.
+Triggering all code paths in scsi_call_prepare_resubmit() via manual
+testing is difficult. Hence add unit tests for this function.
 
 Cc: Martin K. Petersen <martin.petersen@oracle.com>
 Cc: Damien Le Moal <dlemoal@kernel.org>
@@ -78,123 +74,269 @@ Cc: Christoph Hellwig <hch@lst.de>
 Cc: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/scsi/scsi_error.c  | 65 ++++++++++++++++++++++++++++++++++++++
- drivers/scsi/scsi_priv.h   |  1 +
- include/scsi/scsi_driver.h |  2 ++
- 3 files changed, 68 insertions(+)
+ drivers/scsi/Kconfig           |   2 +
+ drivers/scsi/Kconfig.kunit     |   4 +
+ drivers/scsi/Makefile          |   2 +
+ drivers/scsi/Makefile.kunit    |   1 +
+ drivers/scsi/scsi_error_test.c | 207 +++++++++++++++++++++++++++++++++
+ 5 files changed, 216 insertions(+)
+ create mode 100644 drivers/scsi/Kconfig.kunit
+ create mode 100644 drivers/scsi/Makefile.kunit
+ create mode 100644 drivers/scsi/scsi_error_test.c
 
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index c67cdcdc3ba8..c4d817f044a0 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -27,6 +27,7 @@
- #include <linux/blkdev.h>
- #include <linux/delay.h>
- #include <linux/jiffies.h>
-+#include <linux/list_sort.h>
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 4962ce989113..fc288f8fb800 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -232,6 +232,8 @@ config SCSI_SCAN_ASYNC
+ 	  Note that this setting also affects whether resuming from
+ 	  system suspend will be performed asynchronously.
  
- #include <scsi/scsi.h>
- #include <scsi/scsi_cmnd.h>
-@@ -2186,6 +2187,68 @@ void scsi_eh_ready_devs(struct Scsi_Host *shost,
- }
- EXPORT_SYMBOL_GPL(scsi_eh_ready_devs);
++source "drivers/scsi/Kconfig.kunit"
++
+ menu "SCSI Transports"
+ 	depends on SCSI
  
+diff --git a/drivers/scsi/Kconfig.kunit b/drivers/scsi/Kconfig.kunit
+new file mode 100644
+index 000000000000..90984a6ec7cc
+--- /dev/null
++++ b/drivers/scsi/Kconfig.kunit
+@@ -0,0 +1,4 @@
++config SCSI_ERROR_TEST
++	tristate "scsi_error.c unit tests" if !KUNIT_ALL_TESTS
++	depends on SCSI && KUNIT
++	default KUNIT_ALL_TESTS
+diff --git a/drivers/scsi/Makefile b/drivers/scsi/Makefile
+index f055bfd54a68..1c5c3afb6c6e 100644
+--- a/drivers/scsi/Makefile
++++ b/drivers/scsi/Makefile
+@@ -168,6 +168,8 @@ scsi_mod-$(CONFIG_PM)		+= scsi_pm.o
+ scsi_mod-$(CONFIG_SCSI_DH)	+= scsi_dh.o
+ scsi_mod-$(CONFIG_BLK_DEV_BSG)	+= scsi_bsg.o
+ 
++include $(srctree)/drivers/scsi/Makefile.kunit
++
+ hv_storvsc-y			:= storvsc_drv.o
+ 
+ sd_mod-objs	:= sd.o
+diff --git a/drivers/scsi/Makefile.kunit b/drivers/scsi/Makefile.kunit
+new file mode 100644
+index 000000000000..3e98053b2709
+--- /dev/null
++++ b/drivers/scsi/Makefile.kunit
+@@ -0,0 +1 @@
++obj-$(CONFIG_SCSI_ERROR_TEST) += scsi_error_test.o
+diff --git a/drivers/scsi/scsi_error_test.c b/drivers/scsi/scsi_error_test.c
+new file mode 100644
+index 000000000000..be0d25e1fb57
+--- /dev/null
++++ b/drivers/scsi/scsi_error_test.c
+@@ -0,0 +1,207 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Returns true if .eh_prepare_resubmit should be called for the commands in
-+ * @done_q.
++ * Copyright 2023 Google LLC
 + */
-+static bool scsi_needs_preparation(struct list_head *done_q)
++#include <kunit/test.h>
++#include <scsi/scsi_cmnd.h>
++#include <scsi/scsi_driver.h>
++#include "scsi_priv.h"
++
++static struct kunit *kunit_test;
++
++static bool uld_needs_prepare_resubmit(struct scsi_cmnd *cmd)
 +{
-+	struct scsi_cmnd *scmd;
++	struct request *rq = scsi_cmd_to_rq(cmd);
 +
-+	list_for_each_entry(scmd, done_q, eh_entry) {
-+		struct scsi_driver *uld = scsi_cmd_to_driver(scmd);
-+		bool (*npr)(struct scsi_cmnd *) = uld->eh_needs_prepare_resubmit;
++	return !rq->q->limits.use_zone_write_lock &&
++		blk_rq_is_seq_zoned_write(rq);
++}
 +
-+		if (npr && npr(scmd))
-+			return true;
-+	}
-+
-+	return false;
++static void uld_prepare_resubmit(struct list_head *cmd_list)
++{
++	/* This function must not be called. */
++	KUNIT_EXPECT_TRUE(kunit_test, false);
 +}
 +
 +/*
-+ * Comparison function that allows to sort SCSI commands by ULD driver.
++ * Verify that .eh_prepare_resubmit() is not called if use_zone_write_lock is
++ * true.
 + */
-+static int scsi_cmp_uld(void *priv, const struct list_head *_a,
-+			const struct list_head *_b)
++static void test_prepare_resubmit1(struct kunit *test)
 +{
-+	struct scsi_cmnd *a = list_entry(_a, typeof(*a), eh_entry);
-+	struct scsi_cmnd *b = list_entry(_b, typeof(*b), eh_entry);
++	static struct gendisk disk;
++	static struct request_queue q = {
++		.disk = &disk,
++		.limits = {
++			.driver_preserves_write_order = false,
++			.use_zone_write_lock = true,
++			.zoned = BLK_ZONED_HM,
++		}
++	};
++	static struct scsi_driver uld = {
++		.eh_needs_prepare_resubmit = uld_needs_prepare_resubmit,
++		.eh_prepare_resubmit = uld_prepare_resubmit,
++	};
++	static struct scsi_device dev = {
++		.request_queue = &q,
++		.sdev_gendev.driver = &uld.gendrv,
++	};
++	static struct rq_and_cmd {
++		struct request rq;
++		struct scsi_cmnd cmd;
++	} cmd1, cmd2;
++	LIST_HEAD(cmd_list);
 +
-+	/* See also the comment above the list_sort() definition. */
-+	return scsi_cmd_to_driver(a) > scsi_cmd_to_driver(b);
++	BUILD_BUG_ON(scsi_cmd_to_rq(&cmd1.cmd) != &cmd1.rq);
++
++	disk.queue = &q;
++	cmd1 = (struct rq_and_cmd){
++		.rq = {
++			.q = &q,
++			.cmd_flags = REQ_OP_WRITE,
++			.__sector = 2,
++		},
++		.cmd.device = &dev,
++	};
++	cmd2 = cmd1;
++	cmd2.rq.__sector = 1;
++	list_add_tail(&cmd1.cmd.eh_entry, &cmd_list);
++	list_add_tail(&cmd2.cmd.eh_entry, &cmd_list);
++
++	KUNIT_EXPECT_EQ(test, list_count_nodes(&cmd_list), 2);
++	kunit_test = test;
++	scsi_call_prepare_resubmit(&cmd_list);
++	kunit_test = NULL;
++	KUNIT_EXPECT_EQ(test, list_count_nodes(&cmd_list), 2);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next, &cmd1.cmd.eh_entry);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next->next, &cmd2.cmd.eh_entry);
 +}
 +
-+void scsi_call_prepare_resubmit(struct list_head *done_q)
++static struct scsi_driver *uld1, *uld2, *uld3;
++
++static void uld1_prepare_resubmit(struct list_head *cmd_list)
 +{
-+	struct scsi_cmnd *scmd, *next;
++	struct scsi_cmnd *cmd;
 +
-+	if (!scsi_needs_preparation(done_q))
-+		return;
-+
-+	/* Sort pending SCSI commands by ULD. */
-+	list_sort(NULL, done_q, scsi_cmp_uld);
-+
-+	/*
-+	 * Call .eh_prepare_resubmit for each range of commands with identical
-+	 * ULD driver pointer.
-+	 */
-+	list_for_each_entry_safe(scmd, next, done_q, eh_entry) {
-+		struct scsi_driver *uld = scsi_cmd_to_driver(scmd);
-+		struct list_head *prev, uld_cmd_list;
-+
-+		while (&next->eh_entry != done_q &&
-+		       scsi_cmd_to_driver(next) == uld)
-+			next = list_next_entry(next, eh_entry);
-+		if (!uld->eh_prepare_resubmit)
-+			continue;
-+		prev = scmd->eh_entry.prev;
-+		list_cut_position(&uld_cmd_list, prev, next->eh_entry.prev);
-+		uld->eh_prepare_resubmit(&uld_cmd_list);
-+		list_splice(&uld_cmd_list, prev);
-+	}
++	KUNIT_EXPECT_EQ(kunit_test, list_count_nodes(cmd_list), 2);
++	list_for_each_entry(cmd, cmd_list, eh_entry)
++		KUNIT_EXPECT_PTR_EQ(kunit_test, scsi_cmd_to_driver(cmd), uld1);
 +}
 +
- /**
-  * scsi_eh_flush_done_q - finish processed commands or retry them.
-  * @done_q:	list_head of processed commands.
-@@ -2194,6 +2257,8 @@ void scsi_eh_flush_done_q(struct list_head *done_q)
- {
- 	struct scsi_cmnd *scmd, *next;
- 
-+	scsi_call_prepare_resubmit(done_q);
++static void uld2_prepare_resubmit(struct list_head *cmd_list)
++{
++	struct scsi_cmnd *cmd;
 +
- 	list_for_each_entry_safe(scmd, next, done_q, eh_entry) {
- 		list_del_init(&scmd->eh_entry);
- 		if (scsi_device_online(scmd->device) &&
-diff --git a/drivers/scsi/scsi_priv.h b/drivers/scsi/scsi_priv.h
-index f42388ecb024..df4af4645430 100644
---- a/drivers/scsi/scsi_priv.h
-+++ b/drivers/scsi/scsi_priv.h
-@@ -101,6 +101,7 @@ int scsi_eh_get_sense(struct list_head *work_q,
- 		      struct list_head *done_q);
- bool scsi_noretry_cmd(struct scsi_cmnd *scmd);
- void scsi_eh_done(struct scsi_cmnd *scmd);
-+void scsi_call_prepare_resubmit(struct list_head *done_q);
- 
- /* scsi_lib.c */
- extern int scsi_maybe_unblock_host(struct scsi_device *sdev);
-diff --git a/include/scsi/scsi_driver.h b/include/scsi/scsi_driver.h
-index 4ce1988b2ba0..00ffa470724a 100644
---- a/include/scsi/scsi_driver.h
-+++ b/include/scsi/scsi_driver.h
-@@ -18,6 +18,8 @@ struct scsi_driver {
- 	int (*done)(struct scsi_cmnd *);
- 	int (*eh_action)(struct scsi_cmnd *, int);
- 	void (*eh_reset)(struct scsi_cmnd *);
-+	bool (*eh_needs_prepare_resubmit)(struct scsi_cmnd *cmd);
-+	void (*eh_prepare_resubmit)(struct list_head *cmd_list);
- };
- #define to_scsi_driver(drv) \
- 	container_of((drv), struct scsi_driver, gendrv)
++	KUNIT_EXPECT_EQ(kunit_test, list_count_nodes(cmd_list), 2);
++	list_for_each_entry(cmd, cmd_list, eh_entry)
++		KUNIT_EXPECT_PTR_EQ(kunit_test, scsi_cmd_to_driver(cmd), uld2);
++}
++
++static void test_prepare_resubmit2(struct kunit *test)
++{
++	static struct gendisk disk;
++	static struct request_queue q = {
++		.disk = &disk,
++		.limits = {
++			.driver_preserves_write_order = true,
++			.use_zone_write_lock = false,
++			.zoned = BLK_ZONED_HM,
++		}
++	};
++	static struct rq_and_cmd {
++		struct request rq;
++		struct scsi_cmnd cmd;
++	} cmd1, cmd2, cmd3, cmd4, cmd5, cmd6;
++	static struct scsi_device dev1, dev2, dev3;
++	struct scsi_driver *uld;
++	LIST_HEAD(cmd_list);
++
++	BUILD_BUG_ON(scsi_cmd_to_rq(&cmd1.cmd) != &cmd1.rq);
++
++	uld = kzalloc(3 * sizeof(*uld), GFP_KERNEL);
++	uld1 = &uld[0];
++	uld1->eh_needs_prepare_resubmit = uld_needs_prepare_resubmit;
++	uld1->eh_prepare_resubmit = uld1_prepare_resubmit;
++	uld2 = &uld[1];
++	uld2->eh_needs_prepare_resubmit = uld_needs_prepare_resubmit;
++	uld2->eh_prepare_resubmit = uld2_prepare_resubmit;
++	uld3 = &uld[2];
++	disk.queue = &q;
++	dev1.sdev_gendev.driver = &uld1->gendrv;
++	dev1.request_queue = &q;
++	dev2.sdev_gendev.driver = &uld2->gendrv;
++	dev2.request_queue = &q;
++	dev3.sdev_gendev.driver = &uld3->gendrv;
++	dev3.request_queue = &q;
++	cmd1 = (struct rq_and_cmd){
++		.rq = {
++			.q = &q,
++			.cmd_flags = REQ_OP_WRITE,
++			.__sector = 3,
++		},
++		.cmd.device = &dev1,
++	};
++	cmd2 = cmd1;
++	cmd2.rq.__sector = 4;
++	cmd3 = (struct rq_and_cmd){
++		.rq = {
++			.q = &q,
++			.cmd_flags = REQ_OP_WRITE,
++			.__sector = 1,
++		},
++		.cmd.device = &dev2,
++	};
++	cmd4 = cmd3;
++	cmd4.rq.__sector = 2,
++	cmd5 = (struct rq_and_cmd){
++		.rq = {
++			.q = &q,
++			.cmd_flags = REQ_OP_WRITE,
++			.__sector = 5,
++		},
++		.cmd.device = &dev3,
++	};
++	cmd6 = cmd5;
++	cmd6.rq.__sector = 6;
++	list_add_tail(&cmd3.cmd.eh_entry, &cmd_list);
++	list_add_tail(&cmd1.cmd.eh_entry, &cmd_list);
++	list_add_tail(&cmd2.cmd.eh_entry, &cmd_list);
++	list_add_tail(&cmd5.cmd.eh_entry, &cmd_list);
++	list_add_tail(&cmd6.cmd.eh_entry, &cmd_list);
++	list_add_tail(&cmd4.cmd.eh_entry, &cmd_list);
++
++	KUNIT_EXPECT_EQ(test, list_count_nodes(&cmd_list), 6);
++	kunit_test = test;
++	scsi_call_prepare_resubmit(&cmd_list);
++	kunit_test = NULL;
++	KUNIT_EXPECT_EQ(test, list_count_nodes(&cmd_list), 6);
++	KUNIT_EXPECT_TRUE(test, uld1 < uld2);
++	KUNIT_EXPECT_TRUE(test, uld2 < uld3);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next, &cmd1.cmd.eh_entry);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next->next, &cmd2.cmd.eh_entry);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next->next->next,
++			    &cmd3.cmd.eh_entry);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next->next->next->next,
++			    &cmd4.cmd.eh_entry);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next->next->next->next->next,
++			    &cmd5.cmd.eh_entry);
++	KUNIT_EXPECT_PTR_EQ(test, cmd_list.next->next->next->next->next->next,
++			    &cmd6.cmd.eh_entry);
++	kfree(uld);
++}
++
++static struct kunit_case prepare_resubmit_test_cases[] = {
++	KUNIT_CASE(test_prepare_resubmit1),
++	KUNIT_CASE(test_prepare_resubmit2),
++	{}
++};
++
++static struct kunit_suite prepare_resubmit_test_suite = {
++	.name = "prepare_resubmit",
++	.test_cases = prepare_resubmit_test_cases,
++};
++kunit_test_suite(prepare_resubmit_test_suite);
++
++MODULE_DESCRIPTION("scsi_call_prepare_resubmit() unit tests");
++MODULE_AUTHOR("Bart Van Assche");
++MODULE_LICENSE("GPL");
