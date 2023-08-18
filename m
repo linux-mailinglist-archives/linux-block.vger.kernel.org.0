@@ -2,121 +2,199 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D85E7803E4
-	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 04:42:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A6D3780528
+	for <lists+linux-block@lfdr.de>; Fri, 18 Aug 2023 06:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357287AbjHRCl5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 17 Aug 2023 22:41:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46750 "EHLO
+        id S244231AbjHRElU (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 18 Aug 2023 00:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355001AbjHRClg (ORCPT
+        with ESMTP id S1357902AbjHRElC (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 17 Aug 2023 22:41:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B23B273C;
-        Thu, 17 Aug 2023 19:41:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EDD4C6225B;
-        Fri, 18 Aug 2023 02:41:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C10C433C7;
-        Fri, 18 Aug 2023 02:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692326494;
-        bh=69NFg+xLy6Grj5bAEumG3/r1gy5SzMRhgyeG1V+3eW8=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=FPGRiuWzSGm629KltXMBlq30IeGzgPD+9bbMgWyLJmL0fB3muPtgwiEVyFRlVgbRp
-         JsQ3PKXW/eedW6HF1vkEAPnRnuewDRcJ96nu9scBCoLEFaG/LkDBoNFiQUxcjTPcRB
-         +MVnnBztkAPxBr0gEuODRDdbThPtar3qxvDu7vAPVCvpgL6DTs32zRs8NDBZ655axz
-         QvUUxZQyhlPd+yZKXofyFoKfqduWX6XLZfjWv1G4Vo5lfhkFLXKb+bDAuhjI/Qd13v
-         juEbPTVRUk+VbWpFate5x8beXKurH5gET0LZp1bsO26+NN5hVTuYsvTb5BybhA4ONP
-         nvraF0R/c9cCA==
-Message-ID: <2e06646f-d72d-6321-08a3-a41e70c7e36e@kernel.org>
-Date:   Fri, 18 Aug 2023 11:41:31 +0900
+        Fri, 18 Aug 2023 00:41:02 -0400
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7439B3C06
+        for <linux-block@vger.kernel.org>; Thu, 17 Aug 2023 21:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1692333659; x=1723869659;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=S5ymVNujHDKKAiN5sqGAayD/JOzweF2ZXKdxqx2iBU8=;
+  b=XvZIrSdiGcUxHFRjuQyxCuDf3BRRcOkz7i62OzSydjQuqocVVwJN3fJS
+   6afWCX0+ioO6UXJV0yHVBJDJd0xMCDaB1Qdip5U+8uYIBIdWML6i4XXqU
+   d9hd06OC7zZJOUThQl62gdxyYrsDKyjU1z/eZ3B1tQ465hyiSI7LHl4cQ
+   wjeVsPneOUHoTxfCFHpRHzT4PMZJSBojXwkXD5C46JH8NtMF+Is9XgC6E
+   +4kaqR/YTIPwAi433ttEVDu4mqkSbH9NaLi6FsmaSUNXQKQvgEfXhsdYd
+   CbMchaQeByfXC2wQURgx1eIm7tiJ23r9Zta14kp/bV3bdMdUCF3WEBWkA
+   w==;
+X-IronPort-AV: E=Sophos;i="6.01,182,1684771200"; 
+   d="scan'208";a="353431500"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Aug 2023 12:40:58 +0800
+IronPort-SDR: GNgOAQK2/y2fsE4KZ/ecC+vjuddIwnvKeBOI4cSHed1t5mc9DA2p/5u0xHwkN7MCm+q6yPP7zG
+ tldyl8dSzCBU5NMNerA+etr0RtQMCk8hdF8T7vtAz3+gShmANVAUKAJFfEvi2z/nV/9xK3Ir/K
+ kkk0zTMn/vaZu9UUvNvXaA2Zx/Lqsc/Z/lSLLehBdPkn32jFWkfu84RFgej0vHco/6kfxQ8kQF
+ 2G3EPkncq35Yjl+esIqyAiKxl0RJ+5JlH8T/Xo0Tm5kiOKgfn9rWg2I7KOaTg/00zWF8wGwbEo
+ PDc=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 17 Aug 2023 20:54:14 -0700
+IronPort-SDR: cAF+r+dTuJWOWihuAcnPCYclBGzKNFfNPmLrxAq6SSUESV24cFIWNgLCvTv2/wcSn2NvUOL3lb
+ iL5oDxWbbteCjaCDtTrEygD4gLaYQxo+OCGap8oEpa+KtaIGE7qF0zIeOg0a/OPWc84yY373MX
+ UkvwliQAThJkGXM7mSCyWhO401F3a2GfhyHFLNxze5sdp6yrM6wWxCLlYnZpcchVMdbLpzl/wO
+ FnrnpzgHhwRYcfpUfLRTII7DCpXdfAMHc0J69MSBVwZ6Vd3juhdfRq4KJZG6GKfjdmDUyUzmAQ
+ 5vo=
+WDCIronportException: Internal
+Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
+  by uls-op-cesaip02.wdc.com with ESMTP; 17 Aug 2023 21:40:57 -0700
+From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To:     linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Yi Zhang <yi.zhang@redhat.com>, Daniel Wagner <dwagner@suse.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests v3 1/2] nvme/rc: fix nvme device readiness check after _nvme_connect_subsys
+Date:   Fri, 18 Aug 2023 13:40:56 +0900
+Message-Id: <20230818044057.3794564-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v9 06/17] scsi: sd: Sort commands by LBA before
- resubmitting
-Content-Language: en-US
-To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-References: <20230816195447.3703954-1-bvanassche@acm.org>
- <20230816195447.3703954-7-bvanassche@acm.org>
- <84e5531b-f6ae-8454-9079-39aeec09c6ed@kernel.org>
- <9a05f686-6755-b544-619f-1ed8fdabb542@acm.org>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <9a05f686-6755-b544-619f-1ed8fdabb542@acm.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-11.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2023/08/17 23:34, Bart Van Assche wrote:
-> On 8/17/23 04:13, Damien Le Moal wrote:
->> On 8/17/23 04:53, Bart Van Assche wrote:
->>> +static int sd_cmp_sector(void *priv, const struct list_head *_a,
->>> +			 const struct list_head *_b)
->>> +{
->>> +	struct scsi_cmnd *a = list_entry(_a, typeof(*a), eh_entry);
->>> +	struct scsi_cmnd *b = list_entry(_b, typeof(*b), eh_entry);
->>> +	struct request *rq_a = scsi_cmd_to_rq(a);
->>> +	struct request *rq_b = scsi_cmd_to_rq(b);
->>> +	bool use_zwl_a = rq_a->q->limits.use_zone_write_lock;
->>> +	bool use_zwl_b = rq_b->q->limits.use_zone_write_lock;
->>> +
->>> +	/*
->>> +	 * Order the commands that need zone write locking after the commands
->>> +	 * that do not need zone write locking. Order the commands that do not
->>> +	 * need zone write locking by LBA. Do not reorder the commands that
->>> +	 * need zone write locking. See also the comment above the list_sort()
->>> +	 * definition.
->>> +	 */
->>> +	if (use_zwl_a || use_zwl_b)
->>> +		return use_zwl_a > use_zwl_b;
->>> +	return blk_rq_pos(rq_a) > blk_rq_pos(rq_b);
->>> +}
->>> +
->>> +static void sd_prepare_resubmit(struct list_head *cmd_list)
->>> +{
->>> +	/*
->>> +	 * Sort pending SCSI commands in starting sector order. This is
->>> +	 * important if one of the SCSI devices associated with @shost is a
->>> +	 * zoned block device for which zone write locking is disabled.
->>> +	 */
->>> +	list_sort(NULL, cmd_list, sd_cmp_sector);
->>
->> We should not need to do this for regular devices or zoned devices using zone
->> write locking. So returning doing nothing would be better but the callback
->> lacks a pointer to the scsi_device to test that.
-> 
-> @cmd_list may include SCSI commands for multiple SCSI devices so I'm not 
-> sure which SCSI device pointer you are referring to in the above comment?
+The helper function _nvme_connect_subsys() creates a nvme device. It may
+take some time after the function call until the device gets ready for
+I/O. So it is expected that the test cases call _find_nvme_dev() after
+_nvme_connect_subsys() before I/O. _find_nvme_dev() returns the path of
+the created device, and it also waits for uuid and wwid sysfs attributes
+of the created device get ready. This wait works as the wait for the
+device I/O readiness.
 
-This is called from scsi_eh_flush_done_q() which also does not have the scsi
-device pointer. And places where this is called have the scsi host pointer, not
-the device. OK. So let's no do that.
+However, this wait by _find_nvme_dev() has two problems. The first
+problem is missing call of _find_nvme_dev(). The test case nvme/047
+calls _nvme_connect_subsys() twice, but _find_nvme_dev() is called only
+for the first _nvme_connect_subsys() call. This causes too early I/O to
+the device with tcp transport [1]. Fix this by moving the wait for the
+device readiness from _find_nvme_dev() to _nvme_connect_subsys(). Also
+add --no-wait option to _nvme_connect_subsys(). It allows to skip the
+wait in _nvmet_passthru_target_connect() which has its own wait for
+device readiness.
 
-> 
-> Thanks,
-> 
-> Bart.
-> 
+The second problem is wrong paths for the sysfs attributes. The paths
+do not include namespace index, so the check for the attributes always
+fail. Still _find_nvme_dev() does 1 second wait and allows the device
+get ready for I/O in most cases, but this is not intended behavior.
+Fix this by checking sysfs paths with the namespace index. Get list of
+namespace indices for the sub-system and do the check for all indices.
 
+On top of the checks for sysfs attributes, add 'udevadm settle' and a
+check for the created device file. These ensures that the create device
+is ready for I/O.
+
+[1] https://lore.kernel.org/linux-block/CAHj4cs9GNohGUjohNw93jrr8JGNcRYC-ienAZz+sa7az1RK77w@mail.gmail.com/
+
+Fixes: c766fccf3aff ("Make the NVMe tests more reliable")
+Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+---
+Changes from v2:
+* Renamed --wait-for option to --no-wait
+* Modified to check all namespaces
+
+Changes from v1:
+* Added --wait-for option to _nvme_connect_subsys()
+* Added 'udevadm settle' before readiness check
+
+ tests/nvme/rc | 42 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 34 insertions(+), 8 deletions(-)
+
+diff --git a/tests/nvme/rc b/tests/nvme/rc
+index 0b964e9..92eac06 100644
+--- a/tests/nvme/rc
++++ b/tests/nvme/rc
+@@ -428,6 +428,8 @@ _nvme_connect_subsys() {
+ 	local keep_alive_tmo=""
+ 	local reconnect_delay=""
+ 	local ctrl_loss_tmo=""
++	local no_wait=""
++	local i
+ 
+ 	while [[ $# -gt 0 ]]; do
+ 		case $1 in
+@@ -483,6 +485,10 @@ _nvme_connect_subsys() {
+ 				ctrl_loss_tmo="$2"
+ 				shift 2
+ 				;;
++			--no-wait)
++				no_wait=true
++				shift 1
++				;;
+ 			*)
+ 				positional_args+=("$1")
+ 				shift
+@@ -532,6 +538,33 @@ _nvme_connect_subsys() {
+ 	fi
+ 
+ 	nvme connect "${ARGS[@]}" 2> /dev/null
++
++	# Wait until device file and uuid/wwid sysfs attributes get ready for
++	# all namespaces.
++	if [[ -z ${no_wait} ]]; then
++		udevadm settle
++		for ((i = 0; i < 10; i++)); do
++			_nvme_ns_ready "${subsysnqn}" && return
++			sleep .1
++		done
++	fi
++}
++
++_nvme_ns_ready() {
++	local subsysnqn="${1}"
++	local ns_path ns_id dev
++	local cfs_path="${NVMET_CFS}/subsystems/$subsysnqn"
++
++	dev=$(_find_nvme_dev "$subsysnqn")
++	for ns_path in "${cfs_path}/namespaces/"*; do
++		ns_id=${ns_path##*/}
++		if [[ ! -b /dev/${dev}n${ns_id} ||
++			   ! -e /sys/block/${dev}n${ns_id}/uuid ||
++			   ! -e /sys/block/${dev}n${ns_id}/wwid ]]; then
++			return 1
++		fi
++	done
++	return 0
+ }
+ 
+ _nvme_discover() {
+@@ -758,13 +791,6 @@ _find_nvme_dev() {
+ 		subsysnqn="$(cat "/sys/class/nvme/${dev}/subsysnqn")"
+ 		if [[ "$subsysnqn" == "$subsys" ]]; then
+ 			echo "$dev"
+-			for ((i = 0; i < 10; i++)); do
+-				if [[ -e /sys/block/$dev/uuid &&
+-					-e /sys/block/$dev/wwid ]]; then
+-					return
+-				fi
+-				sleep .1
+-			done
+ 		fi
+ 	done
+ }
+@@ -794,7 +820,7 @@ _nvmet_passthru_target_connect() {
+ 	local trtype=$1
+ 	local subsys_name=$2
+ 
+-	_nvme_connect_subsys "${trtype}" "${subsys_name}" || return
++	_nvme_connect_subsys "${trtype}" "${subsys_name}" --no-wait || return
+ 	nsdev=$(_find_nvme_passthru_loop_dev "${subsys_name}")
+ 
+ 	# The following tests can race with the creation
 -- 
-Damien Le Moal
-Western Digital Research
+2.40.1
 
