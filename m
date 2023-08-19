@@ -2,139 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A5087817C1
-	for <lists+linux-block@lfdr.de>; Sat, 19 Aug 2023 09:03:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A7B7819D0
+	for <lists+linux-block@lfdr.de>; Sat, 19 Aug 2023 15:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343828AbjHSHDR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Sat, 19 Aug 2023 03:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55038 "EHLO
+        id S233022AbjHSNu7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Sat, 19 Aug 2023 09:50:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343704AbjHSHC6 (ORCPT
+        with ESMTP id S232958AbjHSNu7 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Sat, 19 Aug 2023 03:02:58 -0400
-Received: from mail-yw1-x1144.google.com (mail-yw1-x1144.google.com [IPv6:2607:f8b0:4864:20::1144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB336121
-        for <linux-block@vger.kernel.org>; Sat, 19 Aug 2023 00:02:56 -0700 (PDT)
-Received: by mail-yw1-x1144.google.com with SMTP id 00721157ae682-58cf42a32b9so18017427b3.2
-        for <linux-block@vger.kernel.org>; Sat, 19 Aug 2023 00:02:56 -0700 (PDT)
+        Sat, 19 Aug 2023 09:50:59 -0400
+Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1F7A5C1
+        for <linux-block@vger.kernel.org>; Sat, 19 Aug 2023 06:49:40 -0700 (PDT)
+Received: by mail-ot1-x336.google.com with SMTP id 46e09a7af769-6bc9353be9bso187769a34.1
+        for <linux-block@vger.kernel.org>; Sat, 19 Aug 2023 06:49:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692428576; x=1693033376;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :reply-to:mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
-        b=MUn6TsJ49QsJA4igR3yMrdu/XsOuj8hKh7h6eVdj/4Q6ak4DnVptLCIKMxoaE1lx82
-         BxwzjkQUKGArD5gK4285su7I1sDB3qAK0HSAdokXHiNeRenFsT5dKLZZVD83rG1rnoeS
-         VdXWoxIFxTFlZ65TKthmVXAt9fOId6PSQJki87wVoyeAFbKQrlj5j4smx8DIxP/w0ZWJ
-         TRln+T7V97cC+Lha+e87zGu5qdfzMw4YK01R7iyxmdvnMREZiOau3xyPwKBLzOkfFV8d
-         16kMFJpKMWwV0JdyrqeYRq0aUvKFPGskV1RZVJY1R5FX4jJ5AOT83v5lCI7JlEhO9IN8
-         hMmA==
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1692452980; x=1693057780;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e/B6UoozTgOvnZDnxvKImlq9ysTnzY+A8aabIbXLECc=;
+        b=ysEPnZ2wprO0ADtzkzFOQbi7bEuESJ1oyXnNd6Eu23By6wTNHjH4fDZx3zPpgJQczq
+         0I3TXeDp5C6tVxw3uM7aTSPAYA03ihPLYtcR0VDidIoSySeemZrSGLverCzXaTzYx79F
+         KQ7RENQd9GfXw1N7024GodNHyJ3NJVzX6dDjH1pRTMgLdamvF1zGo9q0MJAlpxLAGMci
+         G/kQPyFD++2gJETmXPg+BSN0rD2lnYJNX3bB57w+aV3/O/iuZeYuMyOEdEM5JJLOhWKv
+         81FarjqGZ4mX79INTv2PeipQR8BjfVELg0LWyEf26VN3Z1A0rC4PLwwaRVVstv7wMRQE
+         EAiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692428576; x=1693033376;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
-        b=Lta2Q6kI74eTYuvqFEygEK6FMRq398+rdOAV/rd4rprmEv712dvv0MqVHl0y2s250n
-         WEkx8MQmg2ZMFGJYsD3sJps/cud/FjwMci2CkHNkdCwYcrYxrYpSNcOJjEGHx8SIZxfw
-         1TVW4ZemzjxQkoQxJYt9a0yF0prjnTxNHHrfBu6lyqIMTj/KFe6gUMINNWFfJLwZ0Wa2
-         PbG+phC+YWwVG5V6eKBmUFGtCs2DGzthEhzUzEQCdrZ7v42vkPidHZ9ahev2t9jRP+aC
-         GzNHuLz5NzXBg6Y5uBtA5JWpTKZ8QMJrQLZD7Wi+iGk4kSA5XTGTwzfBbFlcXjbWtlKO
-         GFVw==
-X-Gm-Message-State: AOJu0YyJOdgi8Lwii03i28tMdIRpqN8oSIi15Z+Wh3tRHVlkX+BO9/pl
-        3kNqiQeaKX44a9DOxEHJotaSVGxriF8Pa3ZdBgs=
-X-Google-Smtp-Source: AGHT+IHBFHux9W7amy752XAKQ4G+pXj9K8KLABgekYkKVjTaNiUovhqWPJjy5q7mdLIzANUAVG24gzrYlmHT6Kjn7Kk=
-X-Received: by 2002:a81:8782:0:b0:589:a9fc:ffcd with SMTP id
- x124-20020a818782000000b00589a9fcffcdmr1407212ywf.20.1692428576106; Sat, 19
- Aug 2023 00:02:56 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692452980; x=1693057780;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e/B6UoozTgOvnZDnxvKImlq9ysTnzY+A8aabIbXLECc=;
+        b=U7gtknYoOIKrq6xZG6n+FLm0z8fhozS9wQyyROel8aX7nLo8p2DItWZ94UJjcyZlQY
+         fMfSx6jMcj2evAfiSOhPffTJ8tk238xW9m4WLI57lk1tfgkUKn7I4XQNZ+mIn0KQYMcH
+         g6lqEw/jhAGyW3LJPunJYhe5TJFsO/Rj1lc5SBdJsNrj+QmZhJ1qoqhUr3SWE6CwxAop
+         yjbwxTUd+yQ/iZYCQWm4neOz3HJ73wkubjBgBX6CzXEWr1K13LPEMoT5AdVd7VrD6HyS
+         snT3dxsYY4CXfnjrICQubTYOoF9V2Qrqzryl+OryKyNrVBy3hEoYo1TPqnqflIjMMR3F
+         sTWg==
+X-Gm-Message-State: AOJu0YysVPbnl7yYSzJQIGsyh3f8ZRgRIAh4NqzcM3n5vCTq9P7O4IUM
+        TzNhpl/yOBxLp8Smtfyl2q0qpQ==
+X-Google-Smtp-Source: AGHT+IEvvRLkc8kEmD2lgUo1aiyAPBpFrWPhmPLSWQOJ/warFZK5d4mY9EP3phvx8nF6CuIPv7vQew==
+X-Received: by 2002:a05:6870:330a:b0:1bf:9fa2:bfa3 with SMTP id x10-20020a056870330a00b001bf9fa2bfa3mr2603134oae.1.1692452978347;
+        Sat, 19 Aug 2023 06:49:38 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id y13-20020a17090aca8d00b002693505391csm4895881pjt.37.2023.08.19.06.49.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 19 Aug 2023 06:49:36 -0700 (PDT)
+Message-ID: <05ce0ba0-9c34-4da4-b8d0-e1b5a1c6c125@kernel.dk>
+Date:   Sat, 19 Aug 2023 07:49:35 -0600
 MIME-Version: 1.0
-Reply-To: razumkoykhailo@gmail.com
-Sender: mrtombaba@gmail.com
-Received: by 2002:a05:7000:5395:b0:4f4:2174:eed4 with HTTP; Sat, 19 Aug 2023
- 00:02:55 -0700 (PDT)
-From:   "Mr.Razum Khailo" <razumkoykhailo@gmail.com>
-Date:   Sat, 19 Aug 2023 00:02:55 -0700
-X-Google-Sender-Auth: TD1SbUwALQWUaG93zNo0ky4SaO8
-Message-ID: <CADXgghn2t3mU_VvtZDjHwnbadg2QnVcJ30yFd0kN8SL6NDhY1g@mail.gmail.com>
-Subject: Greetings from Ukraine,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
-        MILLION_USD,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:1144 listed in]
-        [list.dnswl.org]
-        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [razumkoykhailo[at]gmail.com]
-        *  2.0 MILLION_USD BODY: Talks about millions of dollars
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  2.4 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *****
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] blk-mq: fix mismatch between IO scheduler insert and
+ finish
+Content-Language: en-US
+To:     chengming.zhou@linux.dev, hch@lst.de, bvanassche@acm.org,
+        ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhouchengming@bytedance.com, chuck.lever@oracle.com, lkp@intel.com,
+        kernel test robot <oliver.sang@intel.com>
+References: <20230819031206.2744005-1-chengming.zhou@linux.dev>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20230819031206.2744005-1-chengming.zhou@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-R3JlZXRpbmdzwqBmcm9twqBVa3JhaW5lLA0KDQpNci7CoFJhenVta292wqBNeWtoYWlsbyzCoGFu
-wqBlbnRyZXByZW5ldXLCoGJ1c2luZXNzbWFuwqBmcm9twqBPZGVzc2ENClVrcmFpbmUuwqBXaXRo
-aW7CoGHCoHllYXLCoHBsdXPCoHNvbWXCoG1vbnRoc8Kgbm93LMKgbW9yZcKgdGhhbsKgOC4ywqBt
-aWxsaW9uDQpwZW9wbGXCoGFyb3VuZMKgdGhlwqBjaXRpZXPCoG9mwqBtecKgY291bnRyecKgVWty
-YWluZcKgaGF2ZcKgYmVlbsKgZXZhY3VhdGVkwqB0bw0KYcKgc2FmZcKgbG9jYXRpb27CoGFuZMKg
-b3V0wqBvZsKgdGhlwqBjb3VudHJ5LMKgbW9zdMKgZXNwZWNpYWxsecKgY2hpbGRyZW7CoHdpdGgN
-CnRoZWlywqBwYXJlbnRzLMKgbnVyc2luZ8KgbW90aGVyc8KgYW5kwqBwcmVnbmFudMKgd29tZW4s
-wqBhbmTCoHRob3NlwqB3aG/CoGhhdmUNCmJlZW7CoHNlcmlvdXNsecKgd291bmRlZMKgYW5kwqBu
-ZWVkwqB1cmdlbnTCoG1lZGljYWzCoGF0dGVudGlvbi7CoEnCoHdhc8KgYW1vbmcNCnRob3NlwqB0
-aGF0wqB3ZXJlwqBhYmxlwqB0b8KgZXZhY3VhdGXCoHRvwqBvdXLCoG5laWdoYm91cmluZ8KgY291
-bnRyaWVzwqBhbmTCoEnigJltDQpub3fCoGluwqB0aGXCoHJlZnVnZWXCoGNhbXDCoG9mwqBUZXLC
-oEFwZWzCoEdyb25pbmdlbsKgaW7CoHRoZcKgTmV0aGVybGFuZHMuDQoNCknCoG5lZWTCoGHCoGZv
-cmVpZ27CoHBhcnRuZXLCoHRvwqBlbmFibGXCoG1lwqB0b8KgdHJhbnNwb3J0wqBtecKgaW52ZXN0
-bWVudA0KY2FwaXRhbMKgYW5kwqB0aGVuwqByZWxvY2F0ZcKgd2l0aMKgbXnCoGZhbWlseSzCoGhv
-bmVzdGx5wqBpwqB3aXNowqBJwqB3aWxsDQpkaXNjdXNzwqBtb3JlwqBhbmTCoGdldMKgYWxvbmcu
-wqBJwqBuZWVkwqBhwqBwYXJ0bmVywqBiZWNhdXNlwqBtecKgaW52ZXN0bWVudA0KY2FwaXRhbMKg
-aXPCoGluwqBtecKgaW50ZXJuYXRpb25hbMKgYWNjb3VudC7CoEnigJltwqBpbnRlcmVzdGVkwqBp
-bsKgYnV5aW5nDQpwcm9wZXJ0aWVzLMKgaG91c2VzLMKgYnVpbGRpbmfCoHJlYWzCoGVzdGF0ZXMs
-wqBtecKgY2FwaXRhbMKgZm9ywqBpbnZlc3RtZW50DQppc8KgKCQzMMKgTWlsbGlvbsKgVVNEKcKg
-LsKgVGhlwqBmaW5hbmNpYWzCoGluc3RpdHV0aW9uc8KgaW7CoG15wqBjb3VudHJ5DQpVa3JhaW5l
-wqBhcmXCoGFsbMKgc2hvdMKgZG93bsKgZHVlwqB0b8KgdGhlwqBjcmlzaXPCoG9mwqB0aGlzwqB3
-YXLCoG9uwqBVa3JhaW5lDQpzb2lswqBiecKgdGhlwqBSdXNzaWFuwqBmb3JjZXMuwqBNZWFud2hp
-bGUswqBpZsKgdGhlcmXCoGlzwqBhbnnCoHByb2ZpdGFibGUNCmludmVzdG1lbnTCoHRoYXTCoHlv
-dcKgaGF2ZcKgc2/CoG11Y2jCoGV4cGVyaWVuY2XCoGluwqB5b3VywqBjb3VudHJ5LMKgdGhlbsKg
-d2UNCmNhbsKgam9pbsKgdG9nZXRoZXLCoGFzwqBwYXJ0bmVyc8Kgc2luY2XCoEnigJltwqBhwqBm
-b3JlaWduZXIuDQoNCknCoGNhbWXCoGFjcm9zc8KgeW91csKgZS1tYWlswqBjb250YWN0wqB0aHJv
-dWdowqBwcml2YXRlwqBzZWFyY2jCoHdoaWxlwqBpbsKgbmVlZA0Kb2bCoHlvdXLCoGFzc2lzdGFu
-Y2XCoGFuZMKgScKgZGVjaWRlZMKgdG/CoGNvbnRhY3TCoHlvdcKgZGlyZWN0bHnCoHRvwqBhc2vC
-oHlvdcKgaWYNCnlvdcKga25vd8KgYW55wqBsdWNyYXRpdmXCoGJ1c2luZXNzwqBpbnZlc3RtZW50
-wqBpbsKgeW91csKgY291bnRyecKgacKgY2FuDQppbnZlc3TCoG15wqBtb25lecKgc2luY2XCoG15
-wqBjb3VudHJ5wqBVa3JhaW5lwqBzZWN1cml0ecKgYW5kwqBlY29ub21pYw0KaW5kZXBlbmRlbnTC
-oGhhc8KgbG9zdMKgdG/CoHRoZcKgZ3JlYXRlc3TCoGxvd2VywqBsZXZlbCzCoGFuZMKgb3VywqBj
-dWx0dXJlwqBoYXMNCmxvc3TCoGluY2x1ZGluZ8Kgb3VywqBoYXBwaW5lc3PCoGhhc8KgYmVlbsKg
-dGFrZW7CoGF3YXnCoGZyb23CoHVzLsKgT3VywqBjb3VudHJ5DQpoYXPCoGJlZW7CoG9uwqBmaXJl
-wqBmb3LCoG1vcmXCoHRoYW7CoGHCoHllYXLCoG5vdy4NCg0KSWbCoHlvdcKgYXJlwqBjYXBhYmxl
-wqBvZsKgaGFuZGxpbmfCoHRoaXPCoGJ1c2luZXNzwqBwYXJ0bmVyc2hpcCzCoGNvbnRhY3TCoG1l
-DQpmb3LCoG1vcmXCoGRldGFpbHMswqBJwqB3aWxswqBhcHByZWNpYXRlwqBpdMKgaWbCoHlvdcKg
-Y2FuwqBjb250YWN0wqBtZQ0KaW1tZWRpYXRlbHkuwqBZb3XCoG1hecKgYXPCoHdlbGzCoHRlbGzC
-oG1lwqBhwqBsaXR0bGXCoG1vcmXCoGFib3V0wqB5b3Vyc2VsZi4NCkNvbnRhY3TCoG1lwqB1cmdl
-bnRsecKgdG/CoGVuYWJsZcKgdXPCoHRvwqBwcm9jZWVkwqB3aXRowqB0aGXCoGJ1c2luZXNzLsKg
-ScKgd2lsbA0KYmXCoHdhaXRpbmfCoGZvcsKgeW91csKgcmVzcG9uc2UuwqBNecKgc2luY2VyZcKg
-YXBvbG9naWVzwqBmb3LCoHRoZQ0KaW5jb252ZW5pZW5jZS4NCg0KDQpUaGFua8KgeW91IQ0KDQpN
-ci4gUmF6dW1rb3bCoE15a2hhaWxvLg0K
+On 8/18/23 9:12 PM, chengming.zhou@linux.dev wrote:
+> From: Chengming Zhou <zhouchengming@bytedance.com>
+> 
+> IO scheduler has requirement that one request which has been inserted
+> must call finish_request() only once.
+> 
+> Now we have three special cases to consider:
+> 1. rq has not insert, has complete: e.g. empty preflush
+> 2. rq has insert, has not complete: e.g. merged requests will be freed
+> 3. rq has insert, has twice complete: e.g. postflushes
+> 
+> Note case 1 which existed before, has been no problem since all the
+> schedulers will check in their finish_request() if the rq has been
+> inserted or not, like checking "rq->elv.priv[0]".
+> 
+> Then case 2 and case 3 are the introduced regression, we moved the
+> scheduler finish_request() from free phase to complete phase to solve
+> a deadlock problem. But it caused no finish_request() for request in
+> case 2, and double finish_request() for request in case 3.
+> 
+> So we still need finish_request() in blk_mq_free_request() to cover
+> case 2. And clear RQF_USE_SCHED flag to avoid double finish_request().
+> It should be fine since we're freeing the request now anyway.
+> 
+> Of course, we can also make all schedulers' finish_request() to clear
+> "rq->elv.priv[0]" to avoid double finish. Or clear it in blk-mq, make
+> the rq like not inserted as case 1.
+> 
+> FYI it's easy to reproduce warning in mq-deadline using this:
+> ```
+> DEV=sdb
+> echo mq-deadline > /sys/block/$DEV/queue/scheduler
+> mkfs.ext4 /dev/$DEV
+> mount /dev/$DEV /mnt
+> cd /mnt
+> stress-ng --symlink 4 --timeout 60
+> echo none > /sys/block/$DEV/queue/scheduler
+> ```
+> 
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202308172100.8ce4b853-oliver.sang@intel.com
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+
+I folded in this one and added a link to it as well, final result is here:
+
+https://git.kernel.dk/cgit/linux/commit/?h=block-6.5&id=e5c0ca13659e9d18f53368d651ed7e6e433ec1cf
+
+I'll get this sent off today.
+
+-- 
+Jens Axboe
+
