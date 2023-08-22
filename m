@@ -2,121 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DDA5784D8F
-	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 01:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1048F784E4D
+	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 03:39:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231835AbjHVX73 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Aug 2023 19:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
+        id S232062AbjHWBje (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 22 Aug 2023 21:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231831AbjHVX73 (ORCPT
+        with ESMTP id S230025AbjHWBje (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Aug 2023 19:59:29 -0400
-Received: from mail-oo1-xc4a.google.com (mail-oo1-xc4a.google.com [IPv6:2607:f8b0:4864:20::c4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45719E46
-        for <linux-block@vger.kernel.org>; Tue, 22 Aug 2023 16:59:27 -0700 (PDT)
-Received: by mail-oo1-xc4a.google.com with SMTP id 006d021491bc7-570bc7d71fbso3225795eaf.3
-        for <linux-block@vger.kernel.org>; Tue, 22 Aug 2023 16:59:27 -0700 (PDT)
+        Tue, 22 Aug 2023 21:39:34 -0400
+X-Greylist: delayed 918 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 22 Aug 2023 18:39:32 PDT
+Received: from symantec4.comsats.net.pk (symantec4.comsats.net.pk [203.124.41.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883C1E4A
+        for <linux-block@vger.kernel.org>; Tue, 22 Aug 2023 18:39:32 -0700 (PDT)
+X-AuditID: cb7c291e-06dff70000002aeb-3b-64e54ad37ded
+Received: from iesco.comsatshosting.com (iesco.comsatshosting.com [210.56.28.11])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        by symantec4.comsats.net.pk (Symantec Messaging Gateway) with SMTP id 40.DA.10987.4DA45E46; Wed, 23 Aug 2023 04:55:00 +0500 (PKT)
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns;
+        d=iesco.com.pk; s=default;
+        h=received:content-type:mime-version:content-transfer-encoding
+          :content-description:subject:to:from:date:reply-to;
+        b=Ks5OEUHMW1q3KP4KalDiCsz+su19w7+eq0tCXG3NBFRqmHZioVHQ8gOQLlCt3mJqY
+          P+2HlkRxutiyDk0HI+kIUbn6hmTLJiqcnBP/hDdguLd1TVwSgwWO6b8qXRSENJdgT
+          IouilZ5O80l6cyQRCTflfPuGOjxkYIgrZq0vdjWh4=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692748766; x=1693353566;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cGRueg2eqYbMCY2ShRbCc3/RucSV6L/B/eSOD25AmaY=;
-        b=oE7rm9AjFtO/wJhPR4I/B3C9PzPl0U9GIJtJ8lqhBf1+Myf/+D2iSRfZgrmLr7mR/x
-         nMayejh5oe5AWTapQPCLq5jq9CY0Pyc9ctwVerkEBlIECHUhVK4vkKvWYwR27pziznqm
-         9W/6Luzdj+ygswvRfmFxADqiAuYOViFaMm49y1CXqPV3sBb/+KuycOsoULepp7onHymj
-         YJMqT/JW19FcVl0zqu0VHtUAcLgBtMlKbMHcBgSSsL0o1dCaBKqqRdrNmCLdDIilXVF7
-         j8JurhCuRPmIhc+12Fomrtw8IDBZ0+NlB1WaYQiZQ5AwOcourf0LmrvpQCxGkEeWzW/q
-         LmPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692748766; x=1693353566;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cGRueg2eqYbMCY2ShRbCc3/RucSV6L/B/eSOD25AmaY=;
-        b=VF+9ukHCf/RvTbg9bYd/u7l+fGdbUM4oiXSZH+htiLgs6I6dmt7Edl7ESnUofRRwNc
-         MncpH0puDTAxI0aGwWssOnJCqVSE2fQ6c3HXafp+GZVN4EFUeUsK5X0lPvZbsPCTqJEU
-         HXR9N+QaAtTGOFIbZwhLJtAPaSo2Mn8Po4iEQJjZrAA5JRj+5vW4v965nSpHr+0MbdkC
-         7UIlRsBD7184woD9CmdyqXbWjqCXkiUpT9oxvsNUi4iQcKkpkOPZdLsNZRuznTOApE6L
-         z2kM1I8FgtMCLnkXHMJWWBPwiIu5SiZYJ6rgVzPS20TsIQqUhKzwTMJm60HjuKc5WaKK
-         b17Q==
-X-Gm-Message-State: AOJu0YxH2fbSW0qQvNeAMtJybFJqr4z4WCMLQvmtVZaywCHdHqOhGs5v
-        0hqvrIUpNZ6PRx9phgiPUNCr/I+YKzlnSsV4Jg==
-X-Google-Smtp-Source: AGHT+IEg7NbVScd59jOYBOeVb3GuBkFoZlJ1jMAeIVZP8P7/g2W+bAHAovNBatxzdjVp9Qhlv5I+h6M7X52P9QgtDQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:c796:b0:1bb:91fa:7aab with
- SMTP id dy22-20020a056870c79600b001bb91fa7aabmr174453oab.1.1692748766615;
- Tue, 22 Aug 2023 16:59:26 -0700 (PDT)
-Date:   Tue, 22 Aug 2023 23:59:26 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAN1L5WQC/x2N0QrCMAxFf2Xk2UCtjIm/Ij60WabBrStJGcrYv
- xt8PHDPPTsYq7DBrdtBeROTtTicTx3QK5Uno4zOEEO8hGuMaE0L1S/meaU31qRNmjuGtIyzFN/ nBYepz0SpDwMn8KuqPMnnn7k/juMHT0R0HHYAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692748765; l=1601;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=DvMuu8/lxku646YrnJJTNn2dZrYri5zBU+GthJXHRdo=; b=y9qu1DfwgWfym6uoXSaFbpI+RHlMMNIUgnNRgLwXSTUj4rO+8MpulMdSPc9QurH/sB/n7zscE
- V8PMAm229yiAOd/7pdZGUlXbYKP5Dt7IqsFe36jFT6eAtvHiQDn1fkp
-X-Mailer: b4 0.12.3
-Message-ID: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
-Subject: [PATCH] partitions/ibm: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        d=iesco.com.pk; s=default;
+        h=reply-to:date:from:to:subject:content-description
+          :content-transfer-encoding:mime-version:content-type;
+        bh=GMzYzcyTxDsE6wX/XHG6MHqAdAiHrhqbmmLQ/TZ1QnQ=;
+        b=bnZDRxIBCtP0dUhJQTD8UQwDhDoIyMswYlDpaE44614EfsHc6bQmDDmBfhOHDVrF2
+          OIRz6CgYaMbqmDSubHGhB3JuiMCgKwHLDRnAyYB1kA2SYLJjeJfBJNHhUwAX2JJna
+          VMsh9LbfQtOAfhZmecpA0GPiaauMGhTxMOFW00z6Y=
+Received: from [94.156.6.90] (UnknownHost [94.156.6.90]) by iesco.comsatshosting.com with SMTP;
+   Wed, 23 Aug 2023 04:30:58 +0500
+Message-ID: <40.DA.10987.4DA45E46@symantec4.comsats.net.pk>
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Re; Interest,
+To:     linux-block@vger.kernel.org
+From:   "Chen Yun" <pso.chairmanbod@iesco.com.pk>
+Date:   Tue, 22 Aug 2023 16:31:13 -0700
+Reply-To: chnyne@gmail.com
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNLMWRmVeSWpSXmKPExsVyyUKGW/eK19MUgw97BC323tJ2YPT4vEku
+        gDGKyyYlNSezLLVI3y6BK2PJugssBbuZK9r6F7E0MD5m6mLk5JAQMJHYtOYsG4gtJLCHSeLA
+        3uAuRi4OFoHVzBJPDm5ig3AeMkvcu3GaEcQREmhmlPjd9wushVfAWuLAxFksIDazgJ7EjalT
+        oOKCEidnPoGKa0ssW/iauYuRA8hWk/jaVQISFhYQk/g0bRk7iC0iIC+xbEsXI4jNJqAvseJr
+        M5jNIqAqceX6WhaI66QkNl5ZzzaBkX8Wkm2zkGybhWTbLIRtCxhZVjFKFFfmJgIDLdlELzk/
+        tzixpFgvL7VEryB7EyMwCE/XaMrtYFx6KfEQowAHoxIP7891T1KEWBPLgLoOMUpwMCuJ8Ep/
+        f5gixJuSWFmVWpQfX1Sak1p8iFGag0VJnNdW6FmykEB6YklqdmpqQWoRTJaJg1OqgfHatzmd
+        a+rXlDZmWQbruKzJfb4g8QhHSGfryzy/U69yWN/reRo4u4QlSW2pOyh4qOk746ZVGiuXHv8f
+        rbWFU8STMd00o38v3xMnzXNWfcKTHfstLTxFTlRO//3zk4B386+MUys9m7jf7o+9WxJjf6bK
+        +oy6yCI+wfWb+rLZ3ij0ent8VhGRVWIpzkg01GIuKk4EAADbK6w+AgAA
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_SBL,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: iesco.com.pk]
+        *  0.1 RCVD_IN_SBL RBL: Received via a relay in Spamhaus SBL
+        *      [94.156.6.90 listed in zen.spamhaus.org]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        * -0.7 RCVD_IN_DNSWL_LOW RBL: Sender listed at https://www.dnswl.org/,
+        *       low trust
+        *      [203.124.41.30 listed in list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+Re; Interest,
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on its destination buffer argument which is
-_not_ the case for `strncpy`!
+I am interested in discussing the Investment proposal as I explained
+in my previous mail. May you let me know your interest and the
+possibility of a cooperation aimed for mutual interest.
 
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- block/partitions/ibm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Looking forward to your mail for further discussion.
 
-diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
-index 403756dbd50d..e5893cf71b57 100644
---- a/block/partitions/ibm.c
-+++ b/block/partitions/ibm.c
-@@ -111,11 +111,11 @@ static int find_label(struct parsed_partitions *state,
- 		    !strcmp(temp, "LNX1") ||
- 		    !strcmp(temp, "CMS1")) {
- 			if (!strcmp(temp, "VOL1")) {
--				strncpy(type, label->vol.vollbl, 4);
--				strncpy(name, label->vol.volid, 6);
-+				strscpy(type, label->vol.vollbl, 4);
-+				strscpy(name, label->vol.volid, 6);
- 			} else {
--				strncpy(type, label->lnx.vollbl, 4);
--				strncpy(name, label->lnx.volid, 6);
-+				strscpy(type, label->lnx.vollbl, 4);
-+				strscpy(name, label->lnx.volid, 6);
- 			}
- 			EBCASC(type, 4);
- 			EBCASC(name, 6);
+Regards
 
----
-base-commit: 706a741595047797872e669b3101429ab8d378ef
-change-id: 20230822-strncpy-block-partitions-cmdline-ibm-7f5bcca507ea
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+------
+Chen Yun - Chairman of CREC
+China Railway Engineering Corporation - CRECG
+China Railway Plaza, No.69 Fuxing Road, Haidian District, Beijing, P.R.
+China
 
