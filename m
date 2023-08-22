@@ -2,97 +2,150 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA838784DA8
-	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 02:09:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D84DB785091
+	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 08:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230484AbjHWAJX (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 22 Aug 2023 20:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41086 "EHLO
+        id S232798AbjHWGXk (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Aug 2023 02:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbjHWAJX (ORCPT
+        with ESMTP id S231645AbjHWGXk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 22 Aug 2023 20:09:23 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C364E60
-        for <linux-block@vger.kernel.org>; Tue, 22 Aug 2023 17:09:11 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bf1876ef69so6331945ad.1
-        for <linux-block@vger.kernel.org>; Tue, 22 Aug 2023 17:09:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1692749350; x=1693354150;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NdAmFpsgAimnC/MBfbBr1LVAlYOvun6vfII/jkXCFI8=;
-        b=w7VKM9wOfDqjg3owcHgb2C1pnHTB9457TIJF1v5sJBPucicGSUVcJwZhbBMXy0CApW
-         gmc6pzY4ypInuel01Z/6LdlQpZBASjvNe/TpVzvbylk42+d+JWm8fDM1rWD5wmk6DqPm
-         602Fh89hxbzIbZq6T/WoFLAk2obOopGYQ/Kr9awheMUn7sMyWDlAJkuFETmprLdVkHMA
-         2/raoT+DuUgn/r7Qt2FJwbY7g1aoySD/PICaXxcBM5NCOSBbpwpKjGHzNgqc5VbTJmFr
-         st02qp7I32ujhd0pqOjYxqQBerVFJblqrbKn9gE47dsllzXW2nqbgAhuZadpsZl6HF8j
-         DprQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692749350; x=1693354150;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NdAmFpsgAimnC/MBfbBr1LVAlYOvun6vfII/jkXCFI8=;
-        b=fVdTK4s0DSomi8xWdLt3oVF34agohw8W7CPylo0WY3jgKEGQgYOzhtkPejHOKPI8b6
-         amNjlcOlPMaI51dxReDaq1iC4vClKYRM1XRaAaX1gAaJtdX8ulGZAstb8vhTaRLESyaC
-         0jthCTRp/2gcZAoOAFTcWTBj3T485yY9A8AKp41qr/NvM2zOR9ApVOSc+wE0bkOM023V
-         3129bJkWWuOcgCayYB0wJ0PlNxfdmboHgkYi6yax/FgFQzgwT77QvLcDFMtNHpPMOaKA
-         3USFiJVasuNc0SY6AJqHZJuMyuLwlDR7I70tDNkAP+Rm1yHKkYZyhqIHtn3RJ7QzOnTy
-         fxMQ==
-X-Gm-Message-State: AOJu0YwWBjaeGmzNpOOVM2eSyHaFzHLIdsQHfmtEdAM1Gll9r4jslnDg
-        t/bkIrHuFqzNBZZqmrpurVPTcw==
-X-Google-Smtp-Source: AGHT+IEWieYgoZObLvRGZKRu3zCi2GHgsl+XF2ezTYqTa5Gs1LxrTcwz8X3gX21BbOaA5WSk2J65hw==
-X-Received: by 2002:a17:902:dacd:b0:1bc:496c:8eda with SMTP id q13-20020a170902dacd00b001bc496c8edamr12479327plx.4.1692749350550;
-        Tue, 22 Aug 2023 17:09:10 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id j8-20020a170902690800b001bc56c1a384sm9528238plk.277.2023.08.22.17.09.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Aug 2023 17:09:09 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Justin Stitt <justinstitt@google.com>
-Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
-References: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
-Subject: Re: [PATCH] partitions/ibm: refactor deprecated strncpy
-Message-Id: <169274934932.113461.1025457818715758046.b4-ty@kernel.dk>
-Date:   Tue, 22 Aug 2023 18:09:09 -0600
+        Wed, 23 Aug 2023 02:23:40 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3EC6184
+        for <linux-block@vger.kernel.org>; Tue, 22 Aug 2023 23:23:37 -0700 (PDT)
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230823062334epoutp03fb7072741539b2f2885bf9ce9027abea~97v8KpU961197911979epoutp03W
+        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 06:23:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230823062334epoutp03fb7072741539b2f2885bf9ce9027abea~97v8KpU961197911979epoutp03W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1692771814;
+        bh=oae8C16j6kRiezbBVYHuN1AsaLhdigYyXsBcbOjJJlQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UmuDNLJNYDRDQWXGZlsrNWF6n39rHmc6U4H9jpMQY8SP7YIkwCevxLtCLJMxiEmAl
+         oJdJRntzFNOpfJ5nqhbXuFTxD1Yg3N7CI3VY7Az7lbOIItE13UF4sne90rw3QbeZ5D
+         y/v3swGxmwZP+96YbrsTL/LMl3mwGcPBI+oH3aoQ=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20230823062333epcas5p1370f686e36324ca51773f47df3ab62b4~97v78mf1N2579525795epcas5p15;
+        Wed, 23 Aug 2023 06:23:33 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.177]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4RVx441dljz4x9Pv; Wed, 23 Aug
+        2023 06:23:32 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C8.B0.55173.4E5A5E46; Wed, 23 Aug 2023 15:23:32 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230822063335epcas5p330d79a9f3f88bf1bcdb849ee47b831ec~9oPZvdKLo2787427874epcas5p37;
+        Tue, 22 Aug 2023 06:33:35 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230822063335epsmtrp13429d45f12ce49da961a9c1396ca638d~9oPZuq11L1793717937epsmtrp1K;
+        Tue, 22 Aug 2023 06:33:35 +0000 (GMT)
+X-AuditID: b6c32a50-df1ff7000001d785-d8-64e5a5e4cef0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        19.03.34491.FB654E46; Tue, 22 Aug 2023 15:33:35 +0900 (KST)
+Received: from unvme-desktop (unknown [107.99.41.39]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20230822063334epsmtip1afd02e2b288eedd6242afcfffc8c6f7e~9oPYu7rEl0074600746epsmtip1w;
+        Tue, 22 Aug 2023 06:33:34 +0000 (GMT)
+Date:   Tue, 22 Aug 2023 17:22:36 +0530
+From:   Ankit Kumar <ankit.kumar@samsung.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     kbusch@kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gost.dev@samsung.com
+Subject: Re: [PATCH 0/2] Small fixes for block t10-pi
+Message-ID: <20230822115236.GA183261@unvme-desktop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-034f2
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230811153313.93786-1-ankit.kumar@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdlhTS/fJ0qcpBmfOs1usvtvPZnHzwE4m
+        i0mHrjFa7L2lbXF51xw2i+XH/zE5sHlcPlvqsWlVJ5vHx6e3WDz6tqxi9Pi8SS6ANSrbJiM1
+        MSW1SCE1Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwdov5JCWWJOKVAo
+        ILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwKRArzgxt7g0L10vL7XEytDAwMgUqDAhO6PpxDX2
+        gtXsFa1vfrM3MLaydTFyckgImEhsOXyKpYuRi0NIYA+jxNzVa6GcT4wSKy73sEI43xgllp5c
+        zgTTMqfxNxtEYi+jxNlVh9ghnFeMEtNftrGAVLEIqErM/vYAzGYT0JZ49fYGM4gtIhAq0bjs
+        LNgkZoEMidNrHrGD2MICphJnHp5lBbF5BYwldjybxQJhC0qcnPkEzOYUsJWY+uMNI8gyCYFH
+        7BJ7ph5ihjjJReLjomlQ5wlLvDq+hR3ClpJ42d8GZWdLbHr4E6qmQOLIi16oXnuJ1lP9zDAH
+        tb7fB1UvKzH11DqoQ/kken8/gerlldgxD8ZWlfh77zYLhC0tcfPdVSjbQ+LLuhPMkFCZwCgx
+        e/8e1gmMcrOQPDQLyT4IW0diwe5PbLMYOYBsaYnl/zggTE2J9bv0FzCyrmKUSi0ozk1PTTYt
+        MNTNSy2Hx3Nyfu4mRnCq1ArYwbh6w1+9Q4xMHIyHGCU4mJVEeKW/P0wR4k1JrKxKLcqPLyrN
+        SS0+xGgKjKGJzFKiyfnAZJ1XEm9oYmlgYmZmZmJpbGaoJM77unVuipBAemJJanZqakFqEUwf
+        EwenVAOTmcoy2YOem65eUw3UP7Qw5craWXOPXz9knXPbxiFyXn00193njTNE9fQDNGo/Se46
+        fp1BtVZo+97wrJK6U+meS/mWsCz6Jmft5+LCVukvOXfXhtRs+3r3l39N1d8byk0ODrmZ3h76
+        4XRd2ce+vMMcbxtF6vYc+Xj59kelYpXGpnNbNuxVFmVc+4GHvSMi8cNj898T11qmXw7yaTCW
+        4xQ3Fr5+KMTSdMrD/wfTxEMnqDZX6E9IPMu+xUSt5XqotHKY+E5G05pPF+PP8mQK1LMZebG+
+        arm/pyrrw8qFLzQEwyrey/54JPj0aST/HpHtacHX9tTuCRDWPecVsPeLqLBQ8iLbymnX237c
+        jr4be0GJpTgj0VCLuag4EQDjH/R2HgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJLMWRmVeSWpSXmKPExsWy7bCSnO7+sCcpBv/+sFmsvtvPZnHzwE4m
+        i0mHrjFa7L2lbXF51xw2i+XH/zE5sHlcPlvqsWlVJ5vHx6e3WDz6tqxi9Pi8SS6ANYrLJiU1
+        J7MstUjfLoErY+mWPpaC1ywV+1buZG1gvMfcxcjJISFgIjGn8TdbFyMXh5DAbkaJxT0PGbsY
+        OYAS0hIL1ydC1AhLrPz3nB2i5gWjxPXfS1hAEiwCqhKzvz0As9kEtCVevb3BDNIrIhAq0fFc
+        DCTMLJAhcXrNI3YQW1jAVOLMw7OsIDavgLHEjmezWCBmTmCUmHZpAVRCUOLkzCcsEM1aEjf+
+        vWQCmckMdM/yfxwgYU4BW4mpP94wTmAUmIWkYxaSjlkIHQsYmVcxSqYWFOem5xYbFhjmpZbr
+        FSfmFpfmpesl5+duYgSHtpbmDsbtqz7oHWJk4mA8xCjBwawkwiv9/WGKEG9KYmVValF+fFFp
+        TmrxIUZpDhYlcV7xF70pQgLpiSWp2ampBalFMFkmDk6pBqarNSwrez8cdTrOf/NCcqHjimu/
+        N8c+Ef//f94rtrn3xQzPqITOOWNb8PLa/7ZVkXqfnGvWTVi4pfzYSwuLFvE39nJRv/cUMLBP
+        tOmeLRk972HjjJb+T+x9W/25rT2419m5J4jkrO2PEZlYk9Sp7pvlNse0LzKmTKXqlsvCgvpn
+        Nv5JXrwuR46+mHi2KzVx3ySORJElSmxKLJnzbquGP0m7P7vDrsQ6J856QkZEwXdhs5pmyx/n
+        nk/TYLlueLkjWGJJTIavzJRvV9ODFXm1FzbONetzPP1VvMflzuEPNYE32WaWrF6Qen/u/n0O
+        e30FY0S599vtj9AsVBLgDZ5x0YnZcClPYpq3/Pbt5vP5lViKMxINtZiLihMBrKHy1NwCAAA=
+X-CMS-MailID: 20230822063335epcas5p330d79a9f3f88bf1bcdb849ee47b831ec
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_7a094_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230811101910epcas5p30f4711f8d7da7bcb716d3a4d71978859
+References: <CGME20230811101910epcas5p30f4711f8d7da7bcb716d3a4d71978859@epcas5p3.samsung.com>
+        <20230811153313.93786-1-ankit.kumar@samsung.com>
+X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+------gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_7a094_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-On Tue, 22 Aug 2023 23:59:26 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Fri, Aug 11, 2023 at 09:03:11PM +0530, Ankit Kumar wrote:
+> This series has two patches that:
+>  - Removes redundant T10_PI_TYPE2_PROTECTION condition check during
+>    t10_pi_verify.
+>  - Removes duplicate module license introduced in an earlier commit.
 > 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on its destination buffer argument which is
-> _not_ the case for `strncpy`!
+> Ankit Kumar (2):
+>   block:t10-pi: remove redundant Type2 check during t10 PI verify
+>   block:t10-pi: remove duplicate module license
 > 
+>  block/t10-pi.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> [...]
+> -- 
+> 2.25.1
+> 
+>
 
-Applied, thanks!
+Hi Jens,
 
-[1/1] partitions/ibm: refactor deprecated strncpy
-      commit: 674576f8af1b34d7babade11082c392bcb6081b7
+These two patches have been reviewed by Martin.
+Can you please take a look.
 
-Best regards,
--- 
-Jens Axboe
+Ankit
+
+------gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_7a094_
+Content-Type: text/plain; charset="utf-8"
 
 
-
+------gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_7a094_--
