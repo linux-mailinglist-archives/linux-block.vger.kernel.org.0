@@ -2,156 +2,76 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70FCC7852DF
-	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 10:40:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45BE27853CC
+	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 11:25:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234284AbjHWIkT (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Aug 2023 04:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51682 "EHLO
+        id S235046AbjHWJZB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Aug 2023 05:25:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234328AbjHWIiI (ORCPT
+        with ESMTP id S235040AbjHWJMJ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Aug 2023 04:38:08 -0400
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA2E1BFF
-        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 01:36:37 -0700 (PDT)
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230823083636epoutp01f858cf3d3f7502bedb778ad731e31d69~99kGLZqzq3229032290epoutp01J
-        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 08:36:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230823083636epoutp01f858cf3d3f7502bedb778ad731e31d69~99kGLZqzq3229032290epoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1692779796;
-        bh=ESu4nDtgY24wjzpsjVdzrkqnUaBAw3M2WxLUuVFiqIM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hTJj5HGK6FUsRxA6XlcS7ZWTIBlrBXB+hLtOf3mIh0Nwq3CpIKRP6h9EF72xfiyEc
-         JgY9Qp/6+ggO89lJz61vvwCpmCWnYEhQeUbM8vbO4s9VSUw2AuvhKxxC29F/IAp7cu
-         PaKKy2hARV0b0Yam1jlInn1WJkbXL3jzwz+RK7vY=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20230823083635epcas5p17634551504b8af061c0be5bc982ab9a3~99kFw0ATs1884318843epcas5p1F;
-        Wed, 23 Aug 2023 08:36:35 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.175]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4RW01Z1kh2z4x9Q0; Wed, 23 Aug
-        2023 08:36:34 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        BC.1E.57354.215C5E46; Wed, 23 Aug 2023 17:36:34 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20230823082642epcas5p4ed07cdc043b208f2efff460cf023b264~99bddHknF3262332623epcas5p4B;
-        Wed, 23 Aug 2023 08:26:42 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230823082642epsmtrp10097a49e0ccedfc814376a4e81ccc637~99bdcaLPm3071430714epsmtrp1K;
-        Wed, 23 Aug 2023 08:26:42 +0000 (GMT)
-X-AuditID: b6c32a44-007ff7000001e00a-ac-64e5c5126885
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B1.5B.14748.2C2C5E46; Wed, 23 Aug 2023 17:26:42 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20230823082641epsmtip1695cb3b9d6583bf32c6aa11a6e647912~99bcIWKsD2682726827epsmtip1j;
-        Wed, 23 Aug 2023 08:26:41 +0000 (GMT)
-Date:   Wed, 23 Aug 2023 13:53:23 +0530
-From:   Nitesh Shetty <nj.shetty@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH v11 03/16] block/mq-deadline: Only use zone locking if
- necessary
-Message-ID: <20230823082323.grcj3iqoi2r5c5nx@green245>
+        Wed, 23 Aug 2023 05:12:09 -0400
+Received: from out-38.mta0.migadu.com (out-38.mta0.migadu.com [91.218.175.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A410BE54
+        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 02:05:02 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1692781500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=wjRgHpRn/Mi1kte2oU8yzlTkPSWTeowZKAuYRZmUUt4=;
+        b=NGZSwtJIqW9YiG7QkogGParOqmBK3DQXG/4Jm3I1UUNPJKMlj81KwMCNkjLnJzKVM3z7Xs
+        7y4bpA4eD0bfh6g7E0lot80JxKq+YInku6Ht/+rNBgPo7rQKSlxQeinP8WWXn3pwrk+/q3
+        Arn8Oxobq/IFo9BvYDevQEER5ZxRCpA=
+From:   chengming.zhou@linux.dev
+To:     axboe@kernel.dk, ming.lei@redhat.com, bvanassche@acm.org,
+        hch@lst.de
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhouchengming@bytedance.com
+Subject: [PATCH v2 0/6] blk-mq-tag: remove bt_for_each()
+Date:   Wed, 23 Aug 2023 17:04:35 +0800
+Message-ID: <20230823090441.3986631-1-chengming.zhou@linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230822191822.337080-4-bvanassche@acm.org>
-User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOJsWRmVeSWpSXmKPExsWy7bCmpq7Q0acpBl1NPBar7/azWUz78JPZ
-        4sF+e4uVq48yWey9pW3RfX0Hm8Xy4/+YLA5NbmZy4PC4fMXb4/LZUo9NqzrZPHbfbGDz+Pj0
-        FovH+31X2Tw+b5ILYI/KtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21
-        VXLxCdB1y8wBukhJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BSoFecmFtcmpeu
-        l5daYmVoYGBkClSYkJ0xa0s3e8EaropNZ3exNjC+4Ohi5OSQEDCRmH3xPDuILSSwm1Fi/v+y
-        LkYuIPsTo8TyaUeYIZxvjBI3X0xi7GLkAOtYNY0XIr6XUWLF1bNMEM4zRonJHX1sIKNYBFQl
-        TnbdZwdpYBPQljj9H2ybiICGxLcHy1lA6pkFfjBKLNzwjwUkISwQJvHtw1RWEJtXwExi1e3F
-        7BC2oMTJmU/AajgFLCVmv3rICGKLCshIzFj6Few6CYGJHBKnl05igvjHRaJh0VlWCFtY4tXx
-        LewQtpTEy/42KLtcYuWUFWwQzS2MErOuz2KESNhLtJ7qZwaxmQUyJJ48vcgCEZeVmHpqHRNE
-        nE+i9/cTqGW8EjvmwdjKEmvWL2CDsCUlrn1vhLI9JDYduA4NR2AAv1h5j3kCo/wsJN/NQrIP
-        wraS6PzQxDoLGHrMAtISy/9xQJiaEut36S9gZF3FKJlaUJybnppsWmCYl1oOj/Hk/NxNjOAU
-        q+Wyg/HG/H96hxiZOBgPMUpwMCuJ8Ep/f5gixJuSWFmVWpQfX1Sak1p8iNEUGFsTmaVEk/OB
-        ST6vJN7QxNLAxMzMzMTS2MxQSZz3devcFCGB9MSS1OzU1ILUIpg+Jg5OqQYmfTPXJe78Qfcj
-        FzGVKL3JTdV79atZ78b+7jnPd/hXyhw3UZc5G+Arf3eylFVf6TL2VYa3F9UGfQ9QfOkWdS00
-        TZR5y/TaVXuXnkuOmHrKLjZPlWeD3uTIw69MT62pvezDefKMh9qP4h9H0j9tSPQOaflgEd+3
-        POb5Nd2YEBOZYn3ee8/DLZZfvrGjh+Gi5iQdG5WI9W8Dtq8U+n6dyW2p5Co+HndN0cnXlm2f
-        Inj6/fWN5rsr7zM4q564GPt3RsaJeec/vXCXtZ2lm7Yqcs915eiZmn7zhAUeN/AXbxVYvdTw
-        Z/Ge+y6XFzMtDrT19+3K4Fu4/qeQqoz0DXP58vTIm39WaDbynrqbv/DoIvnvSizFGYmGWsxF
-        xYkA8DbkrjoEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSnO6hQ09TDOb+1bVYfbefzWLah5/M
-        Fg/221usXH2UyWLvLW2L7us72CyWH//HZHFocjOTA4fH5SveHpfPlnpsWtXJ5rH7ZgObx8en
-        t1g83u+7yubxeZNcAHsUl01Kak5mWWqRvl0CV8b2l1YF99grTv9rYWxg3MLWxcjBISFgIrFq
-        Gm8XIxeHkMBuRok/xxeydzFyAsUlJZb9PcIMYQtLrPz3HCwuJPCEUeL0HAsQm0VAVeJk1312
-        kDlsAtoSp/9zgIRFBDQkvj1YzgIyk1ngF6PEnL/zGEESwgJhEt8+TGUFsXkFzCRW3V4M1isk
-        kC7R/LkOIiwocXLmExYQmxmoZN7mh8wgJcwC0hLL/4GN5xSwlJj96iHYRFEBGYkZS78yT2AU
-        nIWkexaS7lkI3QsYmVcxSqYWFOem5yYbFhjmpZbrFSfmFpfmpesl5+duYgRHhJbGDsZ78//p
-        HWJk4mA8xCjBwawkwiv9/WGKEG9KYmVValF+fFFpTmrxIUZpDhYlcV7DGbNTgD5ILEnNTk0t
-        SC2CyTJxcEo1MDU/rbf/KJKusCZL3eByzWHpifMKq/sqDxstt72v3P5u2ax/a+7l3T9hsfFB
-        /JUPqR/iddytI4PW1nz4zTZzv+HWxesMnkT2bv5o2+rR/M3sXDXbjIMO3zz2KWb9yPilvbbs
-        W4zq3uLJJ/Z4JHy02ab0LSm0b/abdEODJR0bJLk4MxfMrJpVNzvk3cSuNTEnv5Yd4Hb+dW3B
-        JfX1jUJVCqHJPkbf93g8/T7jbkdWWLv87yKrjNyQJyV86Xvs5zUFHwjm0Nmr7DM/sXDWqXkX
-        hFds8N5+w1NRU9Po9b2WpdzHA+4n1pg/384qE2v2ZHNxhFH1rhUvF07nrJ2zx6rrmJWfxeHf
-        R5JFOndf37boxzolluKMREMt5qLiRAD9U1n+9wIAAA==
-X-CMS-MailID: 20230823082642epcas5p4ed07cdc043b208f2efff460cf023b264
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_80af9_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230823082642epcas5p4ed07cdc043b208f2efff460cf023b264
-References: <20230822191822.337080-1-bvanassche@acm.org>
-        <20230822191822.337080-4-bvanassche@acm.org>
-        <CGME20230823082642epcas5p4ed07cdc043b208f2efff460cf023b264@epcas5p4.samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_80af9_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-On 23/08/22 12:16PM, Bart Van Assche wrote:
->Measurements have shown that limiting the queue depth to one per zone for
->zoned writes has a significant negative performance impact on zoned UFS
->devices. Hence this patch that disables zone locking by the mq-deadline
->scheduler if the storage controller preserves the command order. This
->patch is based on the following assumptions:
->- It happens infrequently that zoned write requests are reordered by the
->  block layer.
->- The I/O priority of all write requests is the same per zone.
->- Either no I/O scheduler is used or an I/O scheduler is used that
->  serializes write requests per zone.
->
->Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
->Cc: Christoph Hellwig <hch@lst.de>
->Cc: Ming Lei <ming.lei@redhat.com>
->Signed-off-by: Bart Van Assche <bvanassche@acm.org>
->---
-> block/mq-deadline.c | 11 ++++++-----
-> 1 file changed, 6 insertions(+), 5 deletions(-)
->
+Changes in v2:
+  - Split by one change per patch and add Fixes tag.
+  - Improve commit messages, suggested by Bart Van Assche.
 
-Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
+There are two almost identical mechanisms in blk-mq-tag to iterate over
+requests of one tags: bt_for_each() and the newer bt_tags_for_each().
 
-------gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_80af9_
-Content-Type: text/plain; charset="utf-8"
+This series aim to add support of queue filter in bt_tags_for_each()
+then remove bt_for_each(). Fix and update documentation as we're here.
 
+Thanks for review!
 
-------gE6680ZNUinvX0c6ClraybDZwn8mhhmyVsG0uFNlX7QT91ZL=_80af9_--
+Chengming Zhou (6):
+  blk-mq-tag: support queue filter in bt_tags_iter()
+  blk-mq-tag: introduce __blk_mq_tagset_busy_iter()
+  blk-mq-tag: remove bt_for_each()
+  blk-mq: delete superfluous check in iterate callback
+  blk-mq-tag: fix functions documentation
+  blk-mq-tag: fix blk_mq_queue_tag_busy_iter() documentation
+
+ block/blk-mq-tag.c | 176 ++++++++++++---------------------------------
+ block/blk-mq.c     |  12 ++--
+ 2 files changed, 49 insertions(+), 139 deletions(-)
+
+-- 
+2.41.0
+
