@@ -2,102 +2,139 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2A7078586C
-	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 14:59:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A4A57859BA
+	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 15:49:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232927AbjHWM7I (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Aug 2023 08:59:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53868 "EHLO
+        id S236292AbjHWNts (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Aug 2023 09:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235213AbjHWM7H (ORCPT
+        with ESMTP id S236289AbjHWNts (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Aug 2023 08:59:07 -0400
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88349170C
-        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 05:58:20 -0700 (PDT)
-Received: by mail-qv1-xf31.google.com with SMTP id 6a1803df08f44-64ad88fb05fso11898396d6.1
-        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 05:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692795499; x=1693400299;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9bFaxFdv8YWeiOQM2v7zrzz9w73rvxJbfGPhZgqjlBU=;
-        b=fUEYZNq6lA9TuOwujL8kTdBfkKj6I1qff206rbzjLTMpOrWkwiNs61zFZUsCt0WFla
-         RuNovGQqTvYJq3mV7efmtcCZaLa2vr9BzrTfjbA9s07r2f/0ALnhmFLOX/3Jt7a9Bm88
-         +CLkImzro6uN7/xUFeIDpsSoPmBnfA69FRRdSFvy3G/WG3tkdbaPnhNWOxG+TKe6xzOP
-         sA2zrhwY0IUoMcaXEB9JKRilf4/ORtgVwY6T04MPC55gxSEsOi/OBdz2ZxMW5zZhQSJA
-         UF9B3SOo5w8RnMiUWoYJymPISHX7zT0zkIQVeSDTe+xmmHDae3crVIL6cvraaO78AQUR
-         eGLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692795499; x=1693400299;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9bFaxFdv8YWeiOQM2v7zrzz9w73rvxJbfGPhZgqjlBU=;
-        b=FDEP7yDlzZyP849gDNdaQRX4a0Fj7VO/Vw1lH7YAkyJViQqo37VJ3Y306HdWed+PyD
-         Oq7tSflEuGFdZzLElCyS39scRH6L3gSu1Yl0MpDABFzrmPpbp5L0m0/v623qWzXk1p0t
-         Gf5X5dzl9Bj1cDtCyI28K22ChNYXEY7wHD7ZaBLchawtNsOFyHeMoA+FgFxBDsF7QiCN
-         /f0qEwGB+MwofDDf3+lb/gs+FKR8pgK4Kof1866G5h5wRIHMx4BJLmdu5vQWTsrp72ac
-         W0RulTofcGMgy06SvGahkAEO7BjJFfu9FXr/Ys4pIETcjNFmHRrjaT9J8eWAlOsWUXBT
-         B28g==
-X-Gm-Message-State: AOJu0YzKAjx27RdcIYpBWi7CytN33iTCVsX9hTainofqXtYUUPQnI+++
-        DxC+jteXCXfh6uoBr8Hg30oxkgvPJBgHrKtA8/E=
-X-Google-Smtp-Source: AGHT+IHTScIjXem1wGOEiqJw6lqWuyphTQedxMfvGM+lBR5yUv2ZqzQfpRRu0oP8OAQk7pzSwTv2w6aV5RQNWL4MPBs=
-X-Received: by 2002:a05:6214:2466:b0:63f:7d29:1697 with SMTP id
- im6-20020a056214246600b0063f7d291697mr14766634qvb.2.1692795499152; Wed, 23
- Aug 2023 05:58:19 -0700 (PDT)
+        Wed, 23 Aug 2023 09:49:48 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F729CEC;
+        Wed, 23 Aug 2023 06:49:46 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37NDkPNM000992;
+        Wed, 23 Aug 2023 13:49:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=BvsJqRxjROcrJONT4v827/N/n+GC3nRM2LNlaPqw7po=;
+ b=oXrAJkBwIchgMIJfd8CLD3kVBZCb8OpJniicgdBplqNmxc4NxWLyqB8JmGN1oRh7V1JH
+ ajokCe7f3KVNIEalrltiv2FZR81aPbdE91BMFuKqZbnHcZsaKsouKeVxtHVspN6T3kNF
+ lFa5fUJH3BBZ7TKGp80WD1pIbcCmI6FU2SzbMFuMmLUWO+r3bsZAPJqcH9Q9BfeQsnu5
+ 9T9NlwU0qCD8cOrOE5zrbYau7nDoZosNqM94kGb9w10444nDwLXOcGJLT94Gkk3qrQ+O
+ kbDNpVRx5eg15vBfqE/LCPDJTiDDTIoiHuyV/ARwQD6ItcNOYJpOWJrH5WlZxJgDNXeW wg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3snk0xrg79-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Aug 2023 13:49:42 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37NDaO9i029238;
+        Wed, 23 Aug 2023 13:49:42 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3snk0xrg6y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Aug 2023 13:49:42 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37NCCJwn020117;
+        Wed, 23 Aug 2023 13:49:41 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sn22aeq91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Aug 2023 13:49:41 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37NDncRD44630524
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Aug 2023 13:49:38 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3BFDF2004D;
+        Wed, 23 Aug 2023 13:49:38 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CC0E20043;
+        Wed, 23 Aug 2023 13:49:37 +0000 (GMT)
+Received: from osiris (unknown [9.171.11.14])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Wed, 23 Aug 2023 13:49:37 +0000 (GMT)
+Date:   Wed, 23 Aug 2023 15:49:36 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Justin Stitt <justinstitt@google.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-s390@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] partitions/ibm: refactor deprecated strncpy
+Message-ID: <20230823134936.14378-E-hca@linux.ibm.com>
+References: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: UB7biBxPmFfUReZBIw8MNumAiqIFpVrZ
+X-Proofpoint-GUID: 252SuzsGcBtdvErTIcgeQdrJWOCSnR5Y
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Received: by 2002:a0c:aa9c:0:b0:647:290f:b96 with HTTP; Wed, 23 Aug 2023
- 05:58:18 -0700 (PDT)
-Reply-To: cristiinacampbell@hotmail.com
-From:   Diageo Company London <jw2433630@gmail.com>
-Date:   Wed, 23 Aug 2023 13:58:18 +0100
-Message-ID: <CANdTewEekMVk9PPQ23j4eL=FPCe549G1WMJoBJrGdbrKvf4K1g@mail.gmail.com>
-Subject: Necesitamos un distribuidor de ventas.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-23_08,2023-08-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 mlxscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2308230124
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-23/08/2023
+On Tue, Aug 22, 2023 at 11:59:26PM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on its destination buffer argument which is
+> _not_ the case for `strncpy`!
+> 
+> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+>  block/partitions/ibm.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
+> index 403756dbd50d..e5893cf71b57 100644
+> --- a/block/partitions/ibm.c
+> +++ b/block/partitions/ibm.c
+> @@ -111,11 +111,11 @@ static int find_label(struct parsed_partitions *state,
+>  		    !strcmp(temp, "LNX1") ||
+>  		    !strcmp(temp, "CMS1")) {
+>  			if (!strcmp(temp, "VOL1")) {
+> -				strncpy(type, label->vol.vollbl, 4);
+> -				strncpy(name, label->vol.volid, 6);
+> +				strscpy(type, label->vol.vollbl, 4);
+> +				strscpy(name, label->vol.volid, 6);
+>  			} else {
+> -				strncpy(type, label->lnx.vollbl, 4);
+> -				strncpy(name, label->lnx.volid, 6);
+> +				strscpy(type, label->lnx.vollbl, 4);
+> +				strscpy(name, label->lnx.volid, 6);
+>  			}
+>  			EBCASC(type, 4);
+>  			EBCASC(name, 6);
 
-Dr. John Smith
-16 Gran Marlborough St,
-Londres W1F 7HS, Reino Unido.
-Compa=C3=B1=C3=ADa Diageo Londres
-johnoffic@hotmail.com
+I'm quite sure this is not correct, since both type and name are not
+necessarily NUL-terminated, and this code operates on purpose on such
+strings.
 
-
-Estimado amigo,
-
-Mi nombre es Dr. John Smith; Gerente de Ventas Internacionales en
-Diageo Company Londres, Reino Unido, Diageo Company est=C3=A1 buscando una
-persona confiable en su pa=C3=ADs para ser su representante como
-distribuidor de sus productos y marcas.
-
-La Compa=C3=B1=C3=ADa le proporcionar=C3=A1 un 50% de anticipo del producto=
-, si est=C3=A1n
-convencidos de que usted es confiable y tiene la capacidad de
-representar los intereses de la Compa=C3=B1=C3=ADa y distribuir los product=
-os de
-la marca de manera efectiva en su pa=C3=ADs y sus alrededores para obtener
-ganancias.
-
-Le dar=C3=A9 m=C3=A1s detalles despu=C3=A9s de escuchar su declaraci=C3=B3n=
- de inter=C3=A9s en
-trabajar con nosotros y si est=C3=A1 interesado en ser distribuidor y
-representante de Diageo Company en su pa=C3=ADs/regi=C3=B3n, por favor resp=
-onda
-a este correo electr=C3=B3nico indicado aqu=C3=AD [johnoffic@hotmail.com ]
-
-Atentamente,
-Dr. John Smith
+Since currently Stefan and Jan are both not available, I added Peter
+Oberparleiter to Cc who hopefully knows better than me.
