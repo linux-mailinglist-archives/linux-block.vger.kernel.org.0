@@ -2,166 +2,150 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C7E78509E
-	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 08:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80563785306
+	for <lists+linux-block@lfdr.de>; Wed, 23 Aug 2023 10:49:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232922AbjHWG0e (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 23 Aug 2023 02:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38146 "EHLO
+        id S234713AbjHWIsr (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 23 Aug 2023 04:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232443AbjHWG0d (ORCPT
+        with ESMTP id S235138AbjHWIsU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 23 Aug 2023 02:26:33 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED31E70;
-        Tue, 22 Aug 2023 23:26:05 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E49571F38A;
-        Wed, 23 Aug 2023 06:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1692771963; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XN7LqX2H6SbWhNZUOepPsDIemoCNTeP1hUkjrQMnJg8=;
-        b=PnlH3/MXDHI1G5VSHUSwJpitXWLZwqhVXHd5X6Z8fzkcK/tRvNJ4wBT6nAN/sn8xYOaGtJ
-        JgA8naWgSwjR9wfqqiCARSLuuyiGipCGUtY2kQ+JqK/VWye+Qu6Uc0IABXyEsTDuvyfedc
-        HEpc+NHnoxhjPKl+6CZEilaAgEBtOOA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1692771963;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XN7LqX2H6SbWhNZUOepPsDIemoCNTeP1hUkjrQMnJg8=;
-        b=RR1WmuBmp+ULiqf+0l2Rf8346o1IVs89YHBjgEnWr1qccmrFyWhO28tBMtbsATGPJ45PU0
-        0TLw/wk7o7jA/NAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 44BCE13458;
-        Wed, 23 Aug 2023 06:26:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id AqV8D3qm5WTLJAAAMHmgww
-        (envelope-from <hare@suse.de>); Wed, 23 Aug 2023 06:26:02 +0000
-Message-ID: <3562fc36-4bc2-b4fb-a2ad-1e310baf1b47@suse.de>
-Date:   Wed, 23 Aug 2023 08:26:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v11 04/16] scsi: core: Introduce a mechanism for
- reordering requests in the error handler
-Content-Language: en-US
-To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Wed, 23 Aug 2023 04:48:20 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9DC1FC7
+        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 01:36:34 -0700 (PDT)
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230823083630epoutp01f209ec76c4025e09e951e2cfd3d20474~99kBAZSnz3229032290epoutp01_
+        for <linux-block@vger.kernel.org>; Wed, 23 Aug 2023 08:36:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230823083630epoutp01f209ec76c4025e09e951e2cfd3d20474~99kBAZSnz3229032290epoutp01_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1692779790;
+        bh=Ii8WoNaCJtIXgM9alRAZ493rkok15OWS8yABytABtw4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tZk+p5viTTr0UFoefZH2SthLeIegIE+Um+bpCc9XmSr9Or13VOc79o9KSeeX7+9h7
+         6y2r05d9Gxlt4GvyWUIb4lex9Vs3GzT7FLvmGUXqnaBBVJ1r0VVrvMjNOVEGaT6lG6
+         bfwkrv604qiCRG2I60dDv9FyBKdjfEOso3GKHb3U=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20230823083630epcas5p3c12027568fa9c178f92dd0a35fba72ee~99kAr_OwI3073130731epcas5p3t;
+        Wed, 23 Aug 2023 08:36:30 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.181]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4RW01S3lwgz4x9Q2; Wed, 23 Aug
+        2023 08:36:28 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CB.ED.44250.C05C5E46; Wed, 23 Aug 2023 17:36:28 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230823081141epcas5p334bc13e48a06ee3b518be9a33bc105d9~99OVs24XB2582625826epcas5p3Y;
+        Wed, 23 Aug 2023 08:11:41 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230823081141epsmtrp2c794a1110177027b69a56b07425e22f7~99OVrPeGM0327903279epsmtrp2b;
+        Wed, 23 Aug 2023 08:11:41 +0000 (GMT)
+X-AuditID: b6c32a4a-c4fff7000000acda-ba-64e5c50cb73f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E9.4D.64355.C3FB5E46; Wed, 23 Aug 2023 17:11:41 +0900 (KST)
+Received: from green245 (unknown [107.99.41.245]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20230823081139epsmtip1a5ef02a6acc827de23eee7c88be2d01e~99OUEEUX32123121231epsmtip1j;
+        Wed, 23 Aug 2023 08:11:39 +0000 (GMT)
+Date:   Wed, 23 Aug 2023 13:38:20 +0530
+From:   Nitesh Shetty <nj.shetty@samsung.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Christoph Hellwig <hch@lst.de>,
         Damien Le Moal <dlemoal@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH v11 01/16] block: Introduce more member variables
+ related to zone write locking
+Message-ID: <20230823080820.oxgehloydemqg466@green245>
+MIME-Version: 1.0
+In-Reply-To: <20230822191822.337080-2-bvanassche@acm.org>
+User-Agent: NeoMutt/20171215
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBJsWRmVeSWpSXmKPExsWy7bCmli7P0acpBpM2ylisvtvPZjHtw09m
+        iwf77S1Wrj7KZLH3lrZF9/UdbBbLj/9jsjg0uZnJgcPj8hVvj8tnSz02repk89h9s4HN4+PT
+        Wywe7/ddZfP4vEkugD0q2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfV
+        VsnFJ0DXLTMH6CIlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFJgV5xYm5xaV66
+        Xl5qiZWhgYGRKVBhQnbGogvzWQvec1T8+XeNqYHxFnsXIweHhICJxL8J3l2MXBxCArsZJX5/
+        /c0O4XxilOhY/JEZzlky8R1rFyMnWMeBJycYIRI7GSXW9j5ghXCeMUos/PCQHaSKRUBV4tC6
+        Y2wgO9gEtCVO/+cACYsIaEh8e7CcBaSeWeAHUP2GfywgCWGBVIk/fT3MIDavgJnEh+9TmSBs
+        QYmTM5+A1XAKWEpsbVvACGKLCshIzFj6Few8CYFeDonfm1pYIM5zkehe/R7qVGGJV8e3sEPY
+        UhKf3+1lg7DLJVZOWcEG0dzCKDHr+ixGiIS9ROupfrArmAUyJC4ceAE1VFZi6ql1TBBxPone
+        30+YIOK8EjvmwdjKEmvWL4BaIClx7XsjlO0h0XS2lxUexAc3NzJPYJSfheS7WUj2QdhWEp0f
+        mlhnAUOPWUBaYvk/DghTU2L9Lv0FjKyrGCVTC4pz01OLTQuM8lLL4VGenJ+7iRGcZLW8djA+
+        fPBB7xAjEwfjIUYJDmYlEV7p7w9ThHhTEiurUovy44tKc1KLDzGaAmNrIrOUaHI+MM3nlcQb
+        mlgamJiZmZlYGpsZKonzvm6dmyIkkJ5YkpqdmlqQWgTTx8TBKdXAtO5vgFH7ydsxE9pT0x5E
+        OFxQvGdvGWszz6btF0tse+yhKco/At7mXZ/YPvvIlXPVc7pZVae9a2zO6D2lvO36wier26rm
+        aX1w3m/Mk/DPdcHZfwZy0xjWr5efq9T6xv5FmN/VDDV1Ps2y2oXCP/5OjU0P8TBdbLCqvOwY
+        l3Git8Klua9W8G4/fG5tE+defR2j5CssDNKeH8/fOXje4J/647C6xT+XKah8t0j/LWtvPmXR
+        98mSqQk1l9qNWXOT9//uzSgOEbimOYd10v3cXK9JDJfDeqpM4kU8Eh6F5PDVeX8stDfNTJ3b
+        eEE6u6QhNfVCzbwkU8bi46yHHGqFBDyrdPoVdSIu/hOX/PGYQ1+JpTgj0VCLuag4EQA3hScQ
+        OwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSnK7t/qcpBncnMFqsvtvPZjHtw09m
+        iwf77S1Wrj7KZLH3lrZF9/UdbBbLj/9jsjg0uZnJgcPj8hVvj8tnSz02repk89h9s4HN4+PT
+        Wywe7/ddZfP4vEkugD2KyyYlNSezLLVI3y6BK2PmhQPMBQvZKk6c383WwLiMtYuRk0NCwETi
+        wJMTjF2MXBxCAtsZJaa/OMEEkZCUWPb3CDOELSyx8t9zdhBbSOAJo8Ttu6EgNouAqsShdcfY
+        uhg5ONgEtCVO/+cACYsIaEh8e7CcBWQms8AvRok5f+cxgiSEBVIlDm+YDDafV8BM4sP3qUwQ
+        M9Ml5m1dygwRF5Q4OfMJC4jNDFQzb/NDZpD5zALSEsv/gc3nFLCU2Nq2AGykqICMxIylX5kn
+        MArOQtI9C0n3LITuBYzMqxhFUwuKc9NzkwsM9YoTc4tL89L1kvNzNzGC40EraAfjsvV/9Q4x
+        MnEwHmKU4GBWEuGV/v4wRYg3JbGyKrUoP76oNCe1+BCjNAeLkjivck5nCtD5iSWp2ampBalF
+        MFkmDk6pBqapieHLz0WkFjs4bM2+wsjTaqm4fYHSDveHWtNLnDosZ1/jXnEtomAd756NRmd/
+        WWv9/mycs/5UYMMbrdmbfhhxREx0WFH+4fLXRcGtqhx/GHO/Pha0emEa+tJy59E9MW8O2q6t
+        +di7pmnG8a5NIVOmdi1+8H71Qvcnk0KePE90q9/iM/9BMnMT+/FHOe9y1klpyM0Wl2k5JTvv
+        weeYzdkfwniKBZX4lqvtKwq/2bH289SvYQf0X8pGVa3dXzMt7OC2I/lPXmfEt3x18hJX+rf1
+        XRCzWpK5bo9HqU/hp7QMy+8voth1nFiTbz1+I9Aq0/u9NmjZVCPOONuoQOa+WRP15peJlG6P
+        2P5TRlGcb6ESS3FGoqEWc1FxIgCFL4Le9gIAAA==
+X-CMS-MailID: 20230823081141epcas5p334bc13e48a06ee3b518be9a33bc105d9
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----2jlpTr02XJ1Dz0Ro0nWDo60KkQ.efMTj2bJXEJ.ys0a_1.o3=_8083f_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230823081141epcas5p334bc13e48a06ee3b518be9a33bc105d9
 References: <20230822191822.337080-1-bvanassche@acm.org>
- <20230822191822.337080-5-bvanassche@acm.org>
-From:   Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20230822191822.337080-5-bvanassche@acm.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        <20230822191822.337080-2-bvanassche@acm.org>
+        <CGME20230823081141epcas5p334bc13e48a06ee3b518be9a33bc105d9@epcas5p3.samsung.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 8/22/23 21:16, Bart Van Assche wrote:
-> Introduce the .eh_needs_prepare_resubmit and the .eh_prepare_resubmit
-> function pointers in struct scsi_driver. Make the error handler call
-> .eh_prepare_resubmit() before resubmitting commands if any of the
-> .eh_needs_prepare_resubmit() invocations return true. A later patch
-> will use this functionality to sort SCSI commands by LBA from inside
-> the SCSI disk driver before these are resubmitted by the error handler.
-> 
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: Damien Le Moal <dlemoal@kernel.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> ---
->   drivers/scsi/scsi_error.c  | 65 ++++++++++++++++++++++++++++++++++++++
->   drivers/scsi/scsi_priv.h   |  1 +
->   include/scsi/scsi_driver.h |  2 ++
->   3 files changed, 68 insertions(+)
-> 
-> diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-> index c67cdcdc3ba8..c4d817f044a0 100644
-> --- a/drivers/scsi/scsi_error.c
-> +++ b/drivers/scsi/scsi_error.c
-> @@ -27,6 +27,7 @@
->   #include <linux/blkdev.h>
->   #include <linux/delay.h>
->   #include <linux/jiffies.h>
-> +#include <linux/list_sort.h>
->   
->   #include <scsi/scsi.h>
->   #include <scsi/scsi_cmnd.h>
-> @@ -2186,6 +2187,68 @@ void scsi_eh_ready_devs(struct Scsi_Host *shost,
->   }
->   EXPORT_SYMBOL_GPL(scsi_eh_ready_devs);
->   
-> +/*
-> + * Returns true if .eh_prepare_resubmit should be called for the commands in
-> + * @done_q.
-> + */
-> +static bool scsi_needs_preparation(struct list_head *done_q)
-> +{
-> +	struct scsi_cmnd *scmd;
-> +
-> +	list_for_each_entry(scmd, done_q, eh_entry) {
-> +		struct scsi_driver *uld = scsi_cmd_to_driver(scmd);
-> +		bool (*npr)(struct scsi_cmnd *) = uld->eh_needs_prepare_resubmit;
-> +
-> +		if (npr && npr(scmd))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> + > +/*
-> + * Comparison function that allows to sort SCSI commands by ULD driver.
-> + */
-> +static int scsi_cmp_uld(void *priv, const struct list_head *_a,
-> +			const struct list_head *_b)
-> +{
-> +	struct scsi_cmnd *a = list_entry(_a, typeof(*a), eh_entry);
-> +	struct scsi_cmnd *b = list_entry(_b, typeof(*b), eh_entry);
-> +
-> +	/* See also the comment above the list_sort() definition. */
-> +	return scsi_cmd_to_driver(a) > scsi_cmd_to_driver(b);
+------2jlpTr02XJ1Dz0Ro0nWDo60KkQ.efMTj2bJXEJ.ys0a_1.o3=_8083f_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-I have to agree with Christoph here.
-Comparing LBA numbers at the SCSI level is really the wrong place.
-SCSI commands might be anything, and quite some of these commands don't
-even have LBA numbers. So trying to order them will be pointless.
+On 23/08/22 12:16PM, Bart Van Assche wrote:
+>Many but not all storage controllers require serialization of zoned writes.
+>Introduce two new request queue limit member variables related to write
+>serialization. 'driver_preserves_write_order' allows block drivers to
+>indicate that the order of write commands is preserved and hence that
+>serialization of writes per zone is not required. 'use_zone_write_lock' is
+>set by disk_set_zoned() if and only if the block device has zones and if
+>the block driver does not preserve the order of write requests.
+>
+>Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+>Cc: Christoph Hellwig <hch@lst.de>
+>Cc: Ming Lei <ming.lei@redhat.com>
+>Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+>---
 
-The reordering mechanism really has to go into the block layer, with
-the driver failing the request and the block layer resubmitting in-order.
+Reviewed-by: Nitesh Shetty <nj.shetty@samsung.com>
 
-Sorry.
+------2jlpTr02XJ1Dz0Ro0nWDo60KkQ.efMTj2bJXEJ.ys0a_1.o3=_8083f_
+Content-Type: text/plain; charset="utf-8"
 
-Cheers,
 
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
-Myers, Andrew McDonald, Martje Boudien Moerman
-
+------2jlpTr02XJ1Dz0Ro0nWDo60KkQ.efMTj2bJXEJ.ys0a_1.o3=_8083f_--
