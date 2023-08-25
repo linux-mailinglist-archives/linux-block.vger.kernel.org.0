@@ -2,105 +2,79 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 668667881FB
-	for <lists+linux-block@lfdr.de>; Fri, 25 Aug 2023 10:26:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7A28788323
+	for <lists+linux-block@lfdr.de>; Fri, 25 Aug 2023 11:12:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235769AbjHYIZa (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 25 Aug 2023 04:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36066 "EHLO
+        id S229706AbjHYJLx (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 25 Aug 2023 05:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231164AbjHYIZA (ORCPT
+        with ESMTP id S244116AbjHYJL3 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 25 Aug 2023 04:25:00 -0400
-Received: from out-67.mta1.migadu.com (out-67.mta1.migadu.com [IPv6:2001:41d0:203:375::43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD26F19A1
-        for <linux-block@vger.kernel.org>; Fri, 25 Aug 2023 01:24:57 -0700 (PDT)
-Message-ID: <84c857f7-9966-6125-92c4-1b2fa96fb98d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1692951895;
+        Fri, 25 Aug 2023 05:11:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77AB1BDB
+        for <linux-block@vger.kernel.org>; Fri, 25 Aug 2023 02:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692954638;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wqbXWkPKTS9wFhIrNSacoOf7UHR08PGSBOsQjqtY1Y4=;
-        b=kc4rEmgYNsSGtLStBuapfpyVWmgL1JJ4b2qZV9KujzXqAEEDM0Q9jKo5DBmKXm7rnSoBD7
-        bjq3JYuK7DyNtEIC7n8jqbS0F5IUg0y70dKOyaXfC9W6FnOEld/lGSmasId+1JCem3fmAQ
-        Vz9Gu+NRDV2e4fNSvRfoO3vCqMlaJZY=
-Date:   Fri, 25 Aug 2023 16:24:48 +0800
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=a+pGH+z7QUdI0m+ykxwJUuvoAK3X6BtRIZS4sAYva04=;
+        b=Tyx6rYkpTyKhmh8c6/0twqJo/Vx8XGVxjLA82v12sKFKgCrZNT9J/QpjHYc7LJwSkhwyVF
+        vIbX6OR/B4034K56BngtsmuqOlNSlynFySuz3ivWQrwqtezizcJ4vGOAzfsrh+ra1fbmzJ
+        2+BUw+uB4iGl8QzEHB/OFzwPDhPpsgY=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-441-eVymPfdkMtKD4-Kl57CkSQ-1; Fri, 25 Aug 2023 05:10:33 -0400
+X-MC-Unique: eVymPfdkMtKD4-Kl57CkSQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BB54228040D4;
+        Fri, 25 Aug 2023 09:10:30 +0000 (UTC)
+Received: from localhost (unknown [10.72.120.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6B202026D76;
+        Fri, 25 Aug 2023 09:10:29 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org
+Cc:     David Howells <dhowells@redhat.com>,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: [PATCH 0/2] io_uring: fix IO hang in io wq exit
+Date:   Fri, 25 Aug 2023 17:09:57 +0800
+Message-Id: <20230825090959.1866771-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/6] blk-mq: optimize the queue_rqs() support
-Content-Language: en-US
-To:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk, hch@lst.de,
-        ming.lei@redhat.com, kbusch@kernel.org
-Cc:     mst@redhat.com, sagi@grimberg.me, damien.lemoal@opensource.wdc.com,
-        kch@nvidia.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhouchengming@bytedance.com
-References: <20230824144403.2135739-1-chengming.zhou@linux.dev>
- <e4701e0e-57a3-6ee3-8686-6b1d3750c124@acm.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <e4701e0e-57a3-6ee3-8686-6b1d3750c124@acm.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 2023/8/25 01:02, Bart Van Assche wrote:
-> On 8/24/23 07:43, chengming.zhou@linux.dev wrote:
->> From: Chengming Zhou <zhouchengming@bytedance.com>
->>
->> The current queue_rqs() support has limitation that it can't work on
->> shared tags queue, which is resolved by patch 1-3. We move the account
->> of active requests to where we really allocate the driver tag.
->>
->> This is clearer and matched with the unaccount side which now happen
->> when we put the driver tag. And we can remove RQF_MQ_INFLIGHT, which
->> was used to avoid double account problem of flush request.
->>
->> Another problem is that the driver that support queue_rqs() has to
->> set inflight request table by itself, which is resolved in patch 4.
->>
->> The patch 5 fixes a potential race problem which may cause false
->> timeout because of the reorder of rq->state and rq->deadline.
->>
->> The patch 6 add support queue_rqs() for null_blk, which showed a
->> 3.6% IOPS improvement in fio/t/io_uring benchmark on my test VM.
->> And we also use it for testing queue_rqs() on shared tags queue.
-> 
-> Hi Jens and Christoph,
-> 
-> This patch series would be simplified significantly if the code for
-> fair tag allocation would be removed first
-> (https://lore.kernel.org/linux-block/20230103195337.158625-1-bvanassche@acm.org/, January 2023).
-> It has been proposed to improve fair tag sharing but the complexity of
-> the proposed alternative is scary
-> (https://lore.kernel.org/linux-block/20230618160738.54385-1-yukuai1@huaweicloud.com/, June 2023).
->  Does everyone agree with removing the code for fair tag sharing - code
-> that significantly hurts performance of UFS devices and code that did
-> not exist in the legacy block layer?
-> 
+Hello,
 
-Hi Bart, thanks for the references!
+The 1st patch add one helper, and the 2nd one fixes IO hang issue[1]
+reported by David Howells.
 
-I don't know the details of the UFS devices bad performance problem.
-But I feel it maybe caused by the too lazy queue idle handling, which
-is now only handled in queue timeout work.
+[1] https://lore.kernel.org/linux-block/3893581.1691785261@warthog.procyon.org.uk/
 
-Another problem maybe the wakeup batch algorithm, which is too subtle.
-And there were some IO hang problems caused by it in the past.
+Ming Lei (2):
+  io_uring: add one helper for reaping iopoll events
+  io_uring: reap iopoll events before exiting io wq
 
-So yes, we should improve it, although I don't have good idea for now,
-need to do some tests and analysis.
+ io_uring/io_uring.c | 27 +++++++++++++-------
+ io_uring/io_uring.h |  1 +
+ io_uring/tctx.c     | 60 +++++++++++++++++++++++++++++++++++++++------
+ 3 files changed, 71 insertions(+), 17 deletions(-)
 
-As for removing all this code, I don't know from my limited knowledge.
-It was introduced to improve relative fair tags sharing between queues,
-to avoid starvation. And the proposed alternative looks too complex to me.
+-- 
+2.40.1
 
-Thanks.
