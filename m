@@ -2,127 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5482F78DC92
-	for <lists+linux-block@lfdr.de>; Wed, 30 Aug 2023 20:49:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A3F378DCAA
+	for <lists+linux-block@lfdr.de>; Wed, 30 Aug 2023 20:50:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243114AbjH3SqC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Aug 2023 14:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45672 "EHLO
+        id S242519AbjH3SqS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Aug 2023 14:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242978AbjH3KAP (ORCPT
+        with ESMTP id S243205AbjH3KU2 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Aug 2023 06:00:15 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A798C1B7
-        for <linux-block@vger.kernel.org>; Wed, 30 Aug 2023 03:00:11 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-500c63c9625so2245082e87.2
-        for <linux-block@vger.kernel.org>; Wed, 30 Aug 2023 03:00:11 -0700 (PDT)
+        Wed, 30 Aug 2023 06:20:28 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEED61B3;
+        Wed, 30 Aug 2023 03:20:24 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6bd045336c6so3982962a34.2;
+        Wed, 30 Aug 2023 03:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693389610; x=1693994410; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3xTYLzShSJrMNa33kOQFBwQyF7CcLinjfIsI73sj6mA=;
-        b=NhZVFfnZrY4lUb7uBX51m41Wvv2oL8ZuKoDEcP347ewa3qI6U3GfIJLNtwr1jVDnFF
-         E8lUHrzatV/ve4JM0dKcLqAecCAs5+WAqyHS2B7NvhP9SiFZ7NcAlhvLKCwR3dPK4peX
-         TqkxTDhY4a4C8qfmbfhvHnmBjmEqsTbwHicf/TKHh4gVQcBvV8us5V4Japo+tMnEembw
-         VA2Pqny78q90kCaoC5xTx1Ia3W3ZfN2VAUcINRg1t3c60ailf1WO6eH0c2MyAYRThFIG
-         U6juh+WNxwBT+Cdt4v521GRG9jB3fiVvoiT6YQchcO1Hd+1hD/KtZ0b1oEY6xPboByFA
-         7HPw==
+        d=gmail.com; s=20221208; t=1693390824; x=1693995624; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F51SfreO0jWbIY43S7+9QFdz1WAt6ScuHJAkz6g7Suo=;
+        b=LZNqhMUqlNSiYwAmmSGWblaM6/8uCK+rE6rSytHXwztbpfD9kTPSrDlTw4xsSR6hVk
+         WI57DeQkbWJ4bR6SOdD2a7GhLkLYt9SNnSHfKc3Yip+YIWU053F/a9UmJZOWVqNm59Ia
+         B15zRsMA7Avi2xLLIurYBltGwYXxgLWF0up6hRxDU9fqwtd45uNGpFyKrwmgYO2NsQIM
+         HP0H2CeBF21KKiM+djuXCNxoYkOim2zGYTGxpHnaD0hDyNodmVrr2KVA05XQUdXGyshC
+         rT8ezOv/nUItvoraDlS+cEK97CokPumVhscEp+dtadU+ppVIfswlJsGp1/IRZIUtJvC8
+         p8VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693389610; x=1693994410;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3xTYLzShSJrMNa33kOQFBwQyF7CcLinjfIsI73sj6mA=;
-        b=BC9Q71sTbATCbsTby0qnMYB0RF6J0bxO7yWGU3GdO8NjgHoqnC5uXhXyyal7fKKHOk
-         gPwBwqN/5vvEkrT7O3C+JHLwRi84KbXIRXscTBVcIpZk6aexWU8RArvgvwh9v4YK+I6C
-         gTnDIRh8072VDwHz2TG8aWpf3ZK5BmMAUciDHeTKxCL2i8ojfFhuOiGGBaQO1xQaKdz3
-         1w4jwt7OxjdE20lrw4MawA6GiGUed0BlfNBD6itMPlcBjdq6vb/7ulDdl1wjTOuhiP/A
-         kuBysli9URn4etRUre4hXFoD9Toe/L+YtB27w5q9C+GY9BAriZh6H5OJua5y7/+l8Kao
-         ry8A==
-X-Gm-Message-State: AOJu0Yx7Jl/jYL4pHwB8/aNmb2aQio6F1/iin9k31aF+bjjjOeug3Hx8
-        0onSveUdo0uSZIT9kEaceffmbw==
-X-Google-Smtp-Source: AGHT+IHCaFP31zkAGHF02AmzezLz996huf1FhuxFlQEm+QFgPfp9jCQOyRrIpXdq64Q6sPBPvdP6GQ==
-X-Received: by 2002:a05:6512:2088:b0:500:7881:7b2f with SMTP id t8-20020a056512208800b0050078817b2fmr1125481lfr.54.1693389609676;
-        Wed, 30 Aug 2023 03:00:09 -0700 (PDT)
-Received: from [192.168.86.24] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id dk24-20020a170906f0d800b0099ddc81903asm7030466ejb.221.2023.08.30.03.00.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Aug 2023 03:00:08 -0700 (PDT)
-Message-ID: <2230571a-114c-0d03-d02a-fa08c2a8d483@linaro.org>
-Date:   Wed, 30 Aug 2023 11:00:07 +0100
+        d=1e100.net; s=20221208; t=1693390824; x=1693995624;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F51SfreO0jWbIY43S7+9QFdz1WAt6ScuHJAkz6g7Suo=;
+        b=h1FH6ASFwFF4Rz3gpwc9+GnMK1JT+BFwKKyOMvcgQKDlrotzSlOfmJimBPHFJhbBi1
+         E3LCP96wylV8UnVpR/86JxnnDFZJ8aj0sy57gjCwc2t/po6ZmBDTPz5h1Oz9sCBwxBUz
+         WGEMVg2/+dhBG42AyiN9osLVkrytx5OhLPJQOA68nCtwpq+frMXwSVEZiGgY480PAZou
+         X0JGHzgM+rq3NV+rnesk+Mw0RADEUOWbyC5q3XmgSBIVTxbea1nlJr01JVoRcdlSch5d
+         X1mHphevqT+oV+vFNce70smtTBUErozYTXZSLIwvECzNUaN/jIA042I5Vgv5uIRQNVYa
+         gkaA==
+X-Gm-Message-State: AOJu0YwBuVvFznRmeCn4hUjNDDW6g1al3ktXvp7aS9WpF0eqkhuL+euE
+        TuXeskfgqZyRr/ROTriii6DbywAEET07K9FXKquvjmlytBc=
+X-Google-Smtp-Source: AGHT+IEZmTz1Epp/lp6jTqZhUbFio8EtJ3Ayua/+HEmyHeBgl9z5Z89TB/tCMkqXbVT3i8j0GGo440Y7DG733z+BmqA=
+X-Received: by 2002:a05:6870:c18d:b0:1ad:5317:1f7d with SMTP id
+ h13-20020a056870c18d00b001ad53171f7dmr1955877oad.39.1693390824174; Wed, 30
+ Aug 2023 03:20:24 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 00/10] Hardware wrapped key support for qcom ice and
- ufs
-Content-Language: en-US
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Gaurav Kashyap <quic_gaurkash@quicinc.com>,
-        linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, omprsing@qti.qualcomm.com,
-        quic_psodagud@quicinc.com, avmenon@quicinc.com,
-        abel.vesa@linaro.org, quic_spuppala@quicinc.com
-References: <20230719170423.220033-1-quic_gaurkash@quicinc.com>
- <f4b5512b-9922-1511-fc22-f14d25e2426a@linaro.org>
- <20230825210727.GA1366@sol.localdomain>
- <f63ce281-1434-f86f-3f4e-e1958a684bbd@linaro.org>
- <20230829181223.GA2066264@google.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20230829181223.GA2066264@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20230830085929.527853-1-ruanjinjie@huawei.com>
+In-Reply-To: <20230830085929.527853-1-ruanjinjie@huawei.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Wed, 30 Aug 2023 12:20:11 +0200
+Message-ID: <CAOi1vP-N2ech4FOALrPfW5t3sOCLAqfGKaCvygJzDZWx26_rtQ@mail.gmail.com>
+Subject: Re: [PATCH -next] rbd: Use list_for_each_entry() helper
+To:     Jinjie Ruan <ruanjinjie@huawei.com>
+Cc:     linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Eric,
+On Wed, Aug 30, 2023 at 10:59=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com=
+> wrote:
+>
+> Convert list_for_each() to list_for_each_entry() so that the tmp
+> list_head pointer and list_entry() call are no longer needed, which
+> can reduce a few lines of code. No functional changed.
+>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  drivers/block/rbd.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index 2328cc05be36..3de11f077144 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -7199,7 +7199,6 @@ static void rbd_dev_remove_parent(struct rbd_device=
+ *rbd_dev)
+>  static ssize_t do_rbd_remove(const char *buf, size_t count)
+>  {
+>         struct rbd_device *rbd_dev =3D NULL;
+> -       struct list_head *tmp;
+>         int dev_id;
+>         char opt_buf[6];
+>         bool force =3D false;
+> @@ -7226,8 +7225,7 @@ static ssize_t do_rbd_remove(const char *buf, size_=
+t count)
+>
+>         ret =3D -ENOENT;
+>         spin_lock(&rbd_dev_list_lock);
+> -       list_for_each(tmp, &rbd_dev_list) {
+> -               rbd_dev =3D list_entry(tmp, struct rbd_device, node);
+> +       list_for_each_entry(rbd_dev, &rbd_dev_list, node) {
+>                 if (rbd_dev->dev_id =3D=3D dev_id) {
+>                         ret =3D 0;
+>                         break;
+> --
+> 2.34.1
+>
 
-On 29/08/2023 19:12, Eric Biggers wrote:
-> 
->>> They're also being documented by Qualcomm.  So, as this patchset does, they can
->>> be used by Linux in the implementation of new ioctls which provide a vendor
->>> independent interface to HW-wrapped key generation, import, and conversion.
->>>
->>> I think the new approach is the only one that is viable outside the Android
->>> context.  As such, I don't think anyone has any plan to upstream support for
->>> HW-wrapped keys for older Qualcomm SoCs that lack the new interface.
->> AFAIU, There are other downstream Qualcomm LE platforms that use wrapped key
->> support with the older interface.
->> What happens to them whey then upgrade the kernel?
->>
->> Does TA interface still continue to work with the changes that went into
->> common drivers (ufs/sd)?
-> This is a strange line of questioning for upstream review, as this feature does
-> not exist upstream.  This is the first time it will be supported by upstream
-> Linux, ever.  Adding support for this feature does not break anything.
-These are not unusual questions, what am trying to understand here is 
-below questions for better context, big picture and review/test. At the 
-end of the day we all want to get these features available in upstream.
+Applied.
 
-1. How backward compatibility of this wrapped key support. I guess the 
-answer is NO.
+Thanks,
 
-2. secondly reasons behind this change. Am still not really convinced 
-with the current technical reasoning to shift from TA based approach to 
-this. But I guess this is all done to dump the closed source userspace 
-thingy. Am hoping that this can be made available to other older SoCs at 
-some point in time.
-
-3. We are adding these apis/callbacks in common code without doing any 
-compatible or SoC checks. Is this going to be a issue if someone tries 
-fscrypt?
-
---srini
-
-> 
-> Downstream users who implemented a less well designed version of this feature
-> can continue to use their existing code.
+                Ilya
