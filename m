@@ -2,389 +2,219 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A743C78DCA8
-	for <lists+linux-block@lfdr.de>; Wed, 30 Aug 2023 20:50:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8A3978DCB2
+	for <lists+linux-block@lfdr.de>; Wed, 30 Aug 2023 20:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243142AbjH3SqQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Aug 2023 14:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41092 "EHLO
+        id S243160AbjH3SqW (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Aug 2023 14:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243657AbjH3LXU (ORCPT
+        with ESMTP id S244646AbjH3NiM (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Aug 2023 07:23:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B121BB
-        for <linux-block@vger.kernel.org>; Wed, 30 Aug 2023 04:22:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693394548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=1LCjn/XP3AAmX5frb3HOcwMtnAp7tbHVsdhvjrq6K84=;
-        b=OshMVcbfgg6dLEYVP4EaS99a+PbtK5G3/OKmSxea8Ht8i3IDEx38gKocqho0ysnxdlakz/
-        vyqdVnXmb4iy9skHogAc25F9/WMoxA8QMscZGI/g/CZEazgJRoTzmyDduOtrFEzBcmeDR/
-        xZX94PtxlrgC2cdfJjecRoQJrOa3NMI=
-Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com
- [209.85.160.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-D6v2LdO8NwaL1ZUqUglf6g-1; Wed, 30 Aug 2023 07:22:27 -0400
-X-MC-Unique: D6v2LdO8NwaL1ZUqUglf6g-1
-Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-1c8c362c080so6434515fac.0
-        for <linux-block@vger.kernel.org>; Wed, 30 Aug 2023 04:22:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693394546; x=1693999346;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1LCjn/XP3AAmX5frb3HOcwMtnAp7tbHVsdhvjrq6K84=;
-        b=OAhdX78KwrrgHToQtk2h+r8tmRK4MLAUgGRYd37A5rmOK8VNW4N2ZS3r6mHHlFBa67
-         /2fm9M1mfxGvnn7ffL3UcXNhBg2KMQdgZTzuMng2Q/r4m/w8XyxeZoQQh25/hiB+Jw/K
-         c8V6PlFeksOvodBzPz8IA08YedTQnX+nTquumbJIdprNyM1WqKARAEuIbF7cf8V0N+e8
-         qOS5pF4RtRVvot8xWruj97HuVzVnJg+MEIhUhOOV6d9hSZebqZocN3Z648rMq9Pi/WXu
-         K+XahiKrmPrb9vXYhycxWX552YkZ4v+1aNS+6w10Jt30j+0kNgQEB+yzoQCthgX5vIa6
-         QqUg==
-X-Gm-Message-State: AOJu0YysS8iMgLEbRdP0HCR2K8zZ0qN2SUXiunbCwqdqL0yQady8WsvD
-        pwXEB9DnEZkzltRu2OPVKKBh1TxQ5rPSy+jZYIbWIRmg545dlSK5G8o9+ek4CDYDQ3VRR9GkVmt
-        YahxtZkYaRUnsvJyJbkVt1PT+BTCysTjXcPKG7ndWS0OcG3VT+Q==
-X-Received: by 2002:a05:6870:a181:b0:1b0:57f8:dabf with SMTP id a1-20020a056870a18100b001b057f8dabfmr1895479oaf.33.1693394546198;
-        Wed, 30 Aug 2023 04:22:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGh1KM+U5AmdyTjuA8ZB31LmsdNO0NPZBmaZ5rHUZt929KYEkB5LHpoP8LTNE2uLCYjZYkyfsS2NIZnWvj3ylw=
-X-Received: by 2002:a05:6870:a181:b0:1b0:57f8:dabf with SMTP id
- a1-20020a056870a18100b001b057f8dabfmr1895459oaf.33.1693394545729; Wed, 30 Aug
- 2023 04:22:25 -0700 (PDT)
+        Wed, 30 Aug 2023 09:38:12 -0400
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857AD1B0;
+        Wed, 30 Aug 2023 06:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1693402688; x=1724938688;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=XxD+oyz5sNvFB4npsD15z1OsVvfTty3wBEXpT07aPRQ=;
+  b=czk8Zx7aoggYXQf09fgWTUfjIXNfazB52XiQCgLCCkAJS1Qnu7Fshank
+   +MH/Oaot8V/K7qrS0OB63J2OkaFumpcq2SH3rsJlvjjU/ZXr4Z54PSHMF
+   zTSa4bNqsfuqp3UZH83lQOa6hKScHNEy7gI7jAv0thvl3SP96S1Lp7gxw
+   F4Tb94YmzCNSSlb8KtUWsEzk9hdO3uawWU5YaXWBBXanR1HDgwi3uAEW3
+   o7442bgPG7Aup1vEtbnfFS3wJjFNfO+xkviWHBuGQhlF9lGS9+uBAq9Ie
+   796Cp90yD58Krx0gQRucOv42b5xjnFbSOIuFmh2i9lj9hq5ABeK8KUOgV
+   A==;
+X-IronPort-AV: E=Sophos;i="6.02,213,1688400000"; 
+   d="scan'208";a="347771448"
+Received: from mail-dm6nam12lp2168.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.168])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Aug 2023 21:38:06 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g5t3bokukoGqrW4iHECNvpXnXFRevDzw1q3MxnbSCy7k+p0wiom1Ez52ModB1Idr91vXaLDfhS89xxVJi8QTYvH12dJJnbyuVh/siaWtz+pxwdXZRx/QVV5orUWK9fF8vavCULsfIjaqZ422SD1SMfo4vlb3nonm0NPO/dXTFIPnqPFx/r4QNnmVc5+6HmOds6FBGsF/rQOyyUGVtukzaP+/hu8StYrw4u3zeUupPlDqJ05qka/mdWoV2rGYyLBEx52xQ68XczvHcXeuAhfWLXXN0Qr/EdQueYq6zYKkexsdzSZDcd4+mEPf9IkEmo671equbiQd00PzgV+pALbCAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ms3xnnyByKdosR/SJeiQchiLbMQCLRMOWa2E5ATnkkg=;
+ b=THpIQmrPwTZhD6XE79TNIp0npXvek3Haf8i3LCUcJ3saEhLwl6Wjna6K9XfRFQjbU8TLIARhU8wDbtNu4rVYcAwTnc1zwirB0mSbZpqefEVwN7WSHXMT47Yi4n1YVPxWHyiO0n5AqiZy+Oq34l+LSAv46D31zE0+f0IbUJrrQaXvj3+KEO5gDQ2lTXkYDFVBz7P1hS6GqqB8BMtb5955RmBe0RVWFNvJK/RxzIkNDVXqv/xDPT+m0CSSbNwPTRYETM407dEChlJf3CmKiBAGMK9WefPjCcwrEGEY2kojYaYt/sq8eUvQYerCCQ79TieAjHKPPMrXb/ARq7tdAhOuDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ms3xnnyByKdosR/SJeiQchiLbMQCLRMOWa2E5ATnkkg=;
+ b=J3EaclX7tF5xBLvdzmfiCYakikFzF2xKC4Pz5YFlcJCnCmcq+1Mpt1EjtR8GmaSr3MAkKT8WbaRb4EsOFO9TkPiL0LkI1kS2EokwHja9+nCUtGN5nwgSkiVyzOrVD/nuEbGiJzwryaGCQgjdrB3fV/amXdfy445yWZ9muWyQueU=
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
+ SA0PR04MB7452.namprd04.prod.outlook.com (2603:10b6:806:e2::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6745.18; Wed, 30 Aug 2023 13:38:04 +0000
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::f92a:6d40:fe94:34e9]) by DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::f92a:6d40:fe94:34e9%7]) with mapi id 15.20.6768.009; Wed, 30 Aug 2023
+ 13:38:03 +0000
+From:   Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To:     Daniel Wagner <dwagner@suse.de>
+CC:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH blktests v4 3/3] nvme: introduce
+ nvmet_target_{setup/cleanup} common code
+Thread-Topic: [PATCH blktests v4 3/3] nvme: introduce
+ nvmet_target_{setup/cleanup} common code
+Thread-Index: AQHZ2yM7D30ZgvpqvUqaelpgiH585LAC2B4A
+Date:   Wed, 30 Aug 2023 13:38:03 +0000
+Message-ID: <fhwbcvhmm57c55ozfgtczcix42zri63cswjavre46l42tmzgo7@3krpokexbslw>
+References: <20230830092019.9846-1-dwagner@suse.de>
+ <20230830092019.9846-4-dwagner@suse.de>
+In-Reply-To: <20230830092019.9846-4-dwagner@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|SA0PR04MB7452:EE_
+x-ms-office365-filtering-correlation-id: 651351db-8d09-4bd6-8c16-08dba95e55fe
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kyzsyzkSAUKpZKQGhkAWQZDsuTvYsZnvrdUzwdLTh344drHcTPugR12pzlkkv8RIhtGh40+TD9ch9VuaZ/n9kNuyCnqJWGACM0jtgHbIgxfXU3ib/BKMLtLNJncJ7auDDxvG5eSaMHmHUD45f5dVQm67OBvCOl1J9vaptXJq/Nq2n0C6f3++NzyGbmfM6SM2rDli4CCHj3C4UrB73alw8QPghdfqR13YuutRkSatvMmp7DhZXV5uZY8CHxpPlyumanRB8HZJM3VP+YkZgJZBp6vV/emFBJRDIiVaws+JQmz8h42SSEq2FLejAj8CVZh7A7sb3na70eeczOve5YQXHuGhb4Qbbx6YZ2ktsWho6Be6vRlGsLeVoEmgaeYxn9ESnSbBGoMEYvoJBqGy/3zptjAyuTbf+Be+iuMvc7zMe/S1589KTd6j9cP6G53atdpXyRFBvL99bzumojDccmJW0nFIHu7wS59dxOyqCFQvUjrSvja5ecAoZMEIyBflx8+L8vPKhzYsUTg/4jJSO/lssLPesGE30U4zBiOYixk9r5bBbdUNGoVCupwnQ21DdFFd1EYTrfHd4/PJBzvI6BFtRmuiTuwTzuEcwg2AX/dW9E6MFQMio2HkDPl7RlJ0KW9U
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(396003)(346002)(136003)(39860400002)(366004)(1800799009)(186009)(451199024)(8936002)(122000001)(91956017)(66946007)(76116006)(478600001)(6506007)(71200400001)(66556008)(64756008)(66476007)(54906003)(6486002)(66446008)(316002)(38100700002)(38070700005)(41300700001)(82960400001)(6512007)(9686003)(5660300002)(8676002)(44832011)(26005)(2906002)(6916009)(33716001)(86362001)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?a8cyhGk7YHgjA/6UGZtF/r8whK5VujILrJjATDY7wYCcDfumaETY8Cpi0t+u?=
+ =?us-ascii?Q?aPwa9xoaKqXNauRVAW3IonNdKpgX4rtRic425V+emFctKBM+WLWfJsHF67BW?=
+ =?us-ascii?Q?RHGW+5CieDwpF1QEpgdRzCtGwalaV7R8OtTcj31YWwRy9fpeiIW41dNFe08K?=
+ =?us-ascii?Q?VHbJO+H0KW4v0R/2Tf5HNwMCOir7wXwFPYpwEreiS2FgeO5SLQ9xjkINr3BB?=
+ =?us-ascii?Q?8K0r+fY8fUWp2ZESzebVpHzcCg5EQO7KdklqUDz3lmk2u5Oh6QlmziRUklst?=
+ =?us-ascii?Q?JC7JjuJvKzU/1wXEidIPKGw5xuxtCNsNNaBcQ3jaDFIo94Or0u6Enwdx6gbK?=
+ =?us-ascii?Q?JM+xg/18qelD3LBFQg8aII0nd3u7VrBL6NExfUc5rJ53JrKhf8C/MTbPvkNV?=
+ =?us-ascii?Q?L9E/5mgJohZ2umMwC5bcYiTNVye2Nd4o7eUiKqabcEkQkPoFmEb0CnlDcL9/?=
+ =?us-ascii?Q?Jwj69iuD8tdbgwIAkWE53UwG+I/yapeLKcywYOj3ZlVw84fKEDXHhrY7f4Ks?=
+ =?us-ascii?Q?sp17ovIXCkKJr9sjStnOm3v968US+EW0uDrmY3ou/t1xOVPgcDLB4QcKFGKk?=
+ =?us-ascii?Q?aTFBt1RwHWfVjvF629heYP6sFHTbLQDD5zhnquQaFGOdztYu9Fbmk04Bnp9O?=
+ =?us-ascii?Q?2hRuo/iNclH+GTQ9SbXukTR12AikVyppg2cBNccxjNX3kZBFkzafXbkbZqUv?=
+ =?us-ascii?Q?odgk0VQFWNnNPjzjtuPx8fh/cfGZJxJKqGcpgPsjm10IP1JDfqw/vNA1KN0Z?=
+ =?us-ascii?Q?Prg7qqgWgVx4qiEl9xeEq13hF72mP69aS18XEe6AKSvLGbvaggNpra8WGEc8?=
+ =?us-ascii?Q?qktJcF1xr5JiVI++WH9wrVk8eKrTH1nHzZFxAeXbBbWnkQB5FCEUN3QvrfqH?=
+ =?us-ascii?Q?DXUnLUyDV9zdoeSAAGV23Evz/eCxSwaodQ30AquEy2d9HJbTymWVj0NQdl6F?=
+ =?us-ascii?Q?LN+3Xj5UHkc+EiQ11Q8U06CgiBJOs7XDhryQ6uoSZ7tc5eUz49KNAh858a/h?=
+ =?us-ascii?Q?y0KKIfEy5Aio0f6JpFDQpAGna5xsr5Z5l0U9hfkn8FOaR7h8fH6NUx6pfHRg?=
+ =?us-ascii?Q?zB8CCR4W0eGQrrAX2x/wsisHbUBOWt/Z66ONLr44ew8XaU57zngayZuEimUK?=
+ =?us-ascii?Q?MQ0fqpNfAsE9IThPI100MVMaeqnWkXewccXZFB5X6DazJo9Ghd0CYWS1WBNw?=
+ =?us-ascii?Q?nmp07Aw5KgOirqRQcmD+LHMGMBuDBMoq154W5b2AdsnxlFCGBuH8BKBw3TiT?=
+ =?us-ascii?Q?dUZ/myc0wAD/sCSsYqjrTkO+CQkuwMgM9Ww20aCFN+1d27Pa9LMnc6OBuJV2?=
+ =?us-ascii?Q?5AJFtWZOdD4H2dSpLamlRiJmRp/NC5QwNiXJYi5w66iVM5LyiC688gj9rx79?=
+ =?us-ascii?Q?VSnO1iqhoNpJtZK6CKUFRUkIp8dCOeHjgi5i14vkyMZ6CJeYgoSsXUdwoFPE?=
+ =?us-ascii?Q?bhgKsjwq3LmcMnP8zp/1q6Iuaw0fT6i7njazybmGatsvrNZZhAQY/OeqmIoB?=
+ =?us-ascii?Q?mVAM3V2AikYB8IfhhvlmWfTxnGMczB0b4ZbdO/TqEZFxJ40PBe0TyVJkJmy/?=
+ =?us-ascii?Q?AfZzV3SQdKLqR5iRN4vf9lJQIC38MvOTUFzIH32LvWDdovooBXqMz8tQyKWO?=
+ =?us-ascii?Q?AIs/hfZStF7BDA6pTyy5Cvg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0B15C4976A4D30419F80A85CD31E814F@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-From:   Yi Zhang <yi.zhang@redhat.com>
-Date:   Wed, 30 Aug 2023 19:22:14 +0800
-Message-ID: <CAHj4cs_eZWuYDmxi3T0WbkihLHJS6=36XGyx+xjE6JvgwRR-fA@mail.gmail.com>
-Subject: [bug report] blktests nvme/043 nvme/045 failed
-To:     linux-block <linux-block@vger.kernel.org>,
-        "open list:NVM EXPRESS DRIVER" <linux-nvme@lists.infradead.org>
-Cc:     Hannes Reinecke <hare@suse.de>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?GJxjsPUGQXzjuFa3TbjrQwDxOSLTNEbVeKdCdMxCudX6IwwcRSIUas4xrLSB?=
+ =?us-ascii?Q?JZ+Ug+PFzuyYvfO1/0usq0GnXInIKfaArFUreq5cRC6PvBWD1dHwBIPkumZH?=
+ =?us-ascii?Q?zu59MmglCEcPvHCCEWDYGYDKvPWxirb9Y+g2f1HXq7xBlyK2YkWKPRgozRO8?=
+ =?us-ascii?Q?J6LLBbwtEDdUTf1RY0HD3eF0dRO4zYpZefqTTOXsMDiQIQhL6s4zs2lueJ8R?=
+ =?us-ascii?Q?LpI0IKBEQpELJ1W7cYvYuSR6aFRki5Z7EUd4SZdqS6spSgbMxDi2t8/IZ9+0?=
+ =?us-ascii?Q?wyGIHKntU7lJdy/Ad3w3v1P+d1MkFDHbarWbcyY9qKVAtPyl3xkxx3jfqa8Z?=
+ =?us-ascii?Q?zgoA9aMxXUl+6H8iuCQJ/YOLViylZlaz3frAG5OrHivmuNP7sSCrdn0grrIK?=
+ =?us-ascii?Q?Hchk9Eyt4arZfMhn6STUDuhzVfrV3Gu1bj+AKh+Bx+gCWJTCVvGPtDj7DBZD?=
+ =?us-ascii?Q?TUzxP0Sr9T5hShYcK0r3yhUwdrXHZtly0XUudRhrIEzoPqmCLmKl3YXf4GHj?=
+ =?us-ascii?Q?qXy9OmjCaw3XzqkFu1OM3GejAC3CrtKXBZHUTihARLEQEMIdmDMEddAWabwr?=
+ =?us-ascii?Q?TVjk7884xtvSuf2682d3vUm6Bb8r4CR1fxNty5uykoEZDh3K0AIRofhlRa3R?=
+ =?us-ascii?Q?1uWClzYEHOZN747z09b5/xx5ZA8jOt0TwrTJfX4cHc/qNLscNOEMBS+0iMqe?=
+ =?us-ascii?Q?gt5bFM3ZFjUYg9rV6+uZvKr+BeM8EI6MakU4aqT/KQG7KtxPHafFI4u9rGoo?=
+ =?us-ascii?Q?9tNqPtzejcJ4C3b0MOb2yhLLUWBjb8G2Af61Ycq34xG4RPaQVNKKmpxdJ/C3?=
+ =?us-ascii?Q?eYkpnTyAPBONwe/GItq5kTqXPdUuFFeYVdKKJjj3xKiHKDkjn62oHr2jGja9?=
+ =?us-ascii?Q?asUQrpg992EfikqoqZVWO9Z4SlpSyCXxMSQob6ifWo5dWog0f9a2UTy6cuDa?=
+ =?us-ascii?Q?EMF8LQtd9OzAjNJ2oF2ujQ=3D=3D?=
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 651351db-8d09-4bd6-8c16-08dba95e55fe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Aug 2023 13:38:03.7539
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z5/tBbV07GNGWnPVs7MxXY53TMOp8tP6R0WTVAG7/SQe1j9KU8/Bhsrxxmkn1am4U+sDqoHPlQ4O8A5YukoZm4gSPDRiNlwRAEl5ZYyA/sA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR04MB7452
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hello
+On Aug 30, 2023 / 11:20, Daniel Wagner wrote:
+> Almost all fabric tests have the identically code for
+> setting up and cleaning up the target side. Introduce
+> two new helpers.
+>=20
+> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
 
-I found blkests nvme/043 nvme/045 failed on one of our x86_64 servers,
-and it works on the other servers, from the log, it failed when
-Testing DH group ffdhe6144 and ffdhe8192, is it hw limitation?
+Thanks Daniel for this v4 series. All patches looks good, except one thing
+in this patch.
 
-# ./check nvme/043 nvme/045
-nvme/043 (Test hash and DH group variations for authenticated
-connections) [failed]
-    runtime  7.057s  ...  7.298s
-    --- tests/nvme/043.out 2023-08-30 00:19:38.518253725 -0400
-    +++ /root/blktests/results/nodev/nvme/043.out.bad 2023-08-30
-07:09:47.805056014 -0400
-    @@ -12,7 +12,9 @@
-     Testing DH group ffdhe4096
-     NQN:blktests-subsystem-1 disconnected 1 controller(s)
-     Testing DH group ffdhe6144
-    +tests/nvme/rc: line 780: echo: write error: Invalid argument
-     NQN:blktests-subsystem-1 disconnected 1 controller(s)
-     Testing DH group ffdhe8192
-    +tests/nvme/rc: line 780: echo: write error: Invalid argument
-    ...
-    (Run 'diff -u tests/nvme/043.out
-/root/blktests/results/nodev/nvme/043.out.bad' to see the entire diff)
-nvme/045 (Test re-authentication)                            [failed]
-    runtime  1.129s  ...  1.031s
-    --- tests/nvme/045.out 2023-08-30 00:19:38.518253725 -0400
-    +++ /root/blktests/results/nodev/nvme/045.out.bad 2023-08-30
-07:09:49.162053096 -0400
-    @@ -5,6 +5,7 @@
-     Renew ctrl key on the controller
-     Re-authenticate with new ctrl key
-     Change DH group to ffdhe8192
-    +tests/nvme/rc: line 780: echo: write error: Invalid argument
-     Re-authenticate with changed DH group
-     Change hash to hmac(sha512)
-     Re-authenticate with changed hash
-# cat results/nodev/nvme/043.out.bad
-Running nvme/043
-Testing hash hmac(sha256)
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Testing hash hmac(sha384)
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Testing hash hmac(sha512)
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Testing DH group ffdhe2048
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Testing DH group ffdhe3072
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Testing DH group ffdhe4096
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Testing DH group ffdhe6144
-tests/nvme/rc: line 780: echo: write error: Invalid argument
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Testing DH group ffdhe8192
-tests/nvme/rc: line 780: echo: write error: Invalid argument
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Test complete
+[...]
 
-# cat results/nodev/nvme/045.out.bad
-Running nvme/045
-Re-authenticate with original host key
-Renew host key on the controller
-Re-authenticate with new host key
-Renew ctrl key on the controller
-Re-authenticate with new ctrl key
-Change DH group to ffdhe8192
-tests/nvme/rc: line 780: echo: write error: Invalid argument
-Re-authenticate with changed DH group
-Change hash to hmac(sha512)
-Re-authenticate with changed hash
-NQN:blktests-subsystem-1 disconnected 1 controller(s)
-Test complete
+> diff --git a/tests/nvme/018 b/tests/nvme/018
+> index 68729c3cb070..19e439f3f3e0 100755
+> --- a/tests/nvme/018
+> +++ b/tests/nvme/018
+> @@ -21,16 +21,9 @@ test() {
+> =20
+>  	_setup_nvmet
+> =20
+> -	local port
+>  	local nvmedev
+> =20
+> -	truncate -s "${nvme_img_size}" "${def_file_path}"
+> -
+> -	_create_nvmet_subsystem "${def_subsysnqn}" "${def_file_path}" \
+> -		 "${def_subsys_uuid}"
+> -	port=3D"$(_create_nvmet_port "${nvme_trtype}")"
+> -	_add_nvmet_subsys_to_port "${port}" "${def_subsysnqn}"
+> -	_create_nvmet_host "${def_subsysnqn}" "${def_hostnqn}"
+> +	_nvmet_target_setup
 
-# dmesg
-[   69.957138] run blktests nvme/043 at 2023-08-30 07:09:40
-[   69.978405] nvmet: adding nsid 1 to subsystem blktests-subsystem-1
-[   70.014107] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   70.035854] nvme nvme0: qid 0: authenticated with hash hmac(sha256)
-dhgroup null
-[   70.044156] nvme nvme0: qid 0: authenticated
-[   70.049073] nvme nvme0: creating 56 I/O queues.
-[   70.267615] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   70.295125] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   70.725627] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   70.747942] nvme nvme0: qid 0: authenticated with hash hmac(sha384)
-dhgroup null
-[   70.756237] nvme nvme0: qid 0: authenticated
-[   70.761208] nvme nvme0: creating 56 I/O queues.
-[   70.991654] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   71.017200] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   71.435492] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   71.457799] nvme nvme0: qid 0: authenticated with hash hmac(sha512)
-dhgroup null
-[   71.466085] nvme nvme0: qid 0: authenticated
-[   71.471047] nvme nvme0: creating 56 I/O queues.
-[   71.699797] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   71.725256] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   72.153759] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   72.172640] nvme nvme0: qid 0: authenticated with hash hmac(sha512)
-dhgroup ffdhe2048
-[   72.181470] nvme nvme0: qid 0: authenticated
-[   72.186384] nvme nvme0: creating 56 I/O queues.
-[   72.282281] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   72.310214] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   72.766366] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   72.787046] nvme nvme0: qid 0: authenticated with hash hmac(sha512)
-dhgroup ffdhe3072
-[   72.795893] nvme nvme0: qid 0: authenticated
-[   72.800826] nvme nvme0: creating 56 I/O queues.
-[   72.990987] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   73.020641] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   73.523419] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   73.550242] nvme nvme0: qid 0: authenticated with hash hmac(sha512)
-dhgroup ffdhe4096
-[   73.559040] nvme nvme0: qid 0: authenticated
-[   73.563938] nvme nvme0: creating 56 I/O queues.
-[   74.113282] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   74.142589] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   74.548668] alg: ffdhe6144(dh): test failed on vector 1, err=-22
-[   74.555389] alg: self-tests for ffdhe6144(dh) using
-ffdhe6144(qat-dh) failed (rc=-22)
-[   74.555391] ------------[ cut here ]------------
-[   74.569289] alg: self-tests for ffdhe6144(dh) using
-ffdhe6144(qat-dh) failed (rc=-22)
-[   74.569310] WARNING: CPU: 54 PID: 2303 at crypto/testmgr.c:5936
-alg_test+0x516/0x630
-[   74.586705] Modules linked in: nvme_loop nvmet nvme_fabrics
-nvme_core nvme_common rfkill ixgbe sunrpc intel_rapl_msr
-intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp
-coretemp ipmi_ssif kvm_intel pcspkr i2c_i801 kvm iTCO_wdt
-iTCO_vendor_support pktcdvd mei_me irqbypass mdio rapl i2c_smbus
-intel_cstate acpi_ipmi mei dca intel_uncore ipmi_si joydev
-ipmi_devintf ipmi_msghandler lpc_ich acpi_pad acpi_power_meter fuse
-loop zram xfs sd_mod sr_mod cdrom t10_pi ahci libahci qat_dh895xcc
-crct10dif_pclmul crc32_pclmul crc32c_intel libata intel_qat
-ghash_clmulni_intel mgag200 crc8 i2c_algo_bit wmi dm_mod
-[   74.646779] CPU: 54 PID: 2303 Comm: cryptomgr_test Not tainted
-6.6.0-0.rc0.20230829git1c59d383390f.59.eln130.x86_64 #1
-[   74.658722] Hardware name: Intel Corporation S2600WTT/S2600WTT,
-BIOS GRNDSDP1.86B.0046.R00.1502111331 02/11/2015
-[   74.670081] RIP: 0010:alg_test+0x516/0x630
-[   74.674655] Code: ff ff 4c 89 e6 4c 89 e7 41 89 c7 e8 d4 da fe ff
-e9 37 ff ff ff 44 89 f9 48 89 ea 4c 89 ee 48 c7 c7 b8 54 62 ba e8 6a
-66 b5 ff <0f> 0b e9 7d fe ff ff 48 89 c2 48 89 ee 48 c7 c7 f0 53 62 ba
-45 89
-[   74.695613] RSP: 0018:ffffbbb7c885fe10 EFLAGS: 00010286
-[   74.701438] RAX: 0000000000000000 RBX: 0000000000000089 RCX: 0000000000000027
-[   74.709413] RDX: ffff9058afca0848 RSI: 0000000000000001 RDI: ffff9058afca0840
-[   74.717369] RBP: ffff9054ccf5cc00 R08: 0000000000000000 R09: ffffbbb7c885fca0
-[   74.725335] R10: 0000000000000003 R11: ffffffffbb1e5f68 R12: 000000000000008a
-[   74.733302] R13: ffff9054ccf5cc80 R14: 00000000ffffffff R15: 00000000ffffffea
-[   74.741258] FS:  0000000000000000(0000) GS:ffff9058afc80000(0000)
-knlGS:0000000000000000
-[   74.750289] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   74.756701] CR2: 00007f6bbb4a0f08 CR3: 0000000340e20001 CR4: 00000000001706e0
-[   74.764665] Call Trace:
-[   74.767405]  <TASK>
-[   74.769745]  ? alg_test+0x516/0x630
-[   74.773640]  ? __warn+0x81/0x130
-[   74.777245]  ? alg_test+0x516/0x630
-[   74.781139]  ? report_bug+0x171/0x1a0
-[   74.785232]  ? console_unlock+0x64/0x110
-[   74.789612]  ? handle_bug+0x3a/0x70
-[   74.793507]  ? exc_invalid_op+0x17/0x70
-[   74.797788]  ? asm_exc_invalid_op+0x1a/0x20
-[   74.802462]  ? alg_test+0x516/0x630
-[   74.806356]  ? __update_idle_core+0x27/0xd0
-[   74.811033]  ? __switch_to_asm+0x3e/0x70
-[   74.815416]  ? finish_task_switch.isra.0+0x94/0x2c0
-[   74.820862]  ? __schedule+0x28b/0x790
-[   74.824954]  ? __pfx_cryptomgr_test+0x10/0x10
-[   74.829818]  cryptomgr_test+0x24/0x40
-[   74.833898]  kthread+0xe8/0x120
-[   74.837412]  ? __pfx_kthread+0x10/0x10
-[   74.841597]  ret_from_fork+0x34/0x50
-[   74.845588]  ? __pfx_kthread+0x10/0x10
-[   74.849773]  ret_from_fork_asm+0x1b/0x30
-[   74.854155]  </TASK>
-[   74.856594] ---[ end trace 0000000000000000 ]---
-[   74.868165] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   74.895088] nvme nvme0: qid 0: authenticated with hash hmac(sha512)
-dhgroup ffdhe4096
-[   74.903903] nvme nvme0: qid 0: authenticated
-[   74.908814] nvme nvme0: creating 56 I/O queues.
-[   75.456877] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   75.490947] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   75.894980] alg: ffdhe8192(dh): test failed on vector 1, err=-22
-[   75.901702] alg: self-tests for ffdhe8192(dh) using
-ffdhe8192(qat-dh) failed (rc=-22)
-[   75.901703] ------------[ cut here ]------------
-[   75.915598] alg: self-tests for ffdhe8192(dh) using
-ffdhe8192(qat-dh) failed (rc=-22)
-[   75.915607] WARNING: CPU: 54 PID: 2315 at crypto/testmgr.c:5936
-alg_test+0x516/0x630
-[   75.932994] Modules linked in: nvme_loop nvmet nvme_fabrics
-nvme_core nvme_common rfkill ixgbe sunrpc intel_rapl_msr
-intel_rapl_common sb_edac x86_pkg_temp_thermal intel_powerclamp
-coretemp ipmi_ssif kvm_intel pcspkr i2c_i801 kvm iTCO_wdt
-iTCO_vendor_support pktcdvd mei_me irqbypass mdio rapl i2c_smbus
-intel_cstate acpi_ipmi mei dca intel_uncore ipmi_si joydev
-ipmi_devintf ipmi_msghandler lpc_ich acpi_pad acpi_power_meter fuse
-loop zram xfs sd_mod sr_mod cdrom t10_pi ahci libahci qat_dh895xcc
-crct10dif_pclmul crc32_pclmul crc32c_intel libata intel_qat
-ghash_clmulni_intel mgag200 crc8 i2c_algo_bit wmi dm_mod
-[   75.993054] CPU: 54 PID: 2315 Comm: cryptomgr_test Tainted: G
- W         -------  ---
-6.6.0-0.rc0.20230829git1c59d383390f.59.eln130.x86_64 #1
-[   76.007905] Hardware name: Intel Corporation S2600WTT/S2600WTT,
-BIOS GRNDSDP1.86B.0046.R00.1502111331 02/11/2015
-[   76.019254] RIP: 0010:alg_test+0x516/0x630
-[   76.023828] Code: ff ff 4c 89 e6 4c 89 e7 41 89 c7 e8 d4 da fe ff
-e9 37 ff ff ff 44 89 f9 48 89 ea 4c 89 ee 48 c7 c7 b8 54 62 ba e8 6a
-66 b5 ff <0f> 0b e9 7d fe ff ff 48 89 c2 48 89 ee 48 c7 c7 f0 53 62 ba
-45 89
-[   76.044777] RSP: 0018:ffffbbb7c88afe10 EFLAGS: 00010286
-[   76.050602] RAX: 0000000000000000 RBX: 000000000000008a RCX: 0000000000000027
-[   76.058568] RDX: ffff9058afca0848 RSI: 0000000000000001 RDI: ffff9058afca0840
-[   76.066533] RBP: ffff9054ccf5e400 R08: 0000000000000000 R09: ffffbbb7c88afca0
-[   76.074496] R10: 0000000000000003 R11: ffffffffbb1e5f68 R12: 000000000000008b
-[   76.082460] R13: ffff9054ccf5e480 R14: 00000000ffffffff R15: 00000000ffffffea
-[   76.090426] FS:  0000000000000000(0000) GS:ffff9058afc80000(0000)
-knlGS:0000000000000000
-[   76.099450] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   76.105862] CR2: 00007f6bbb4a0f08 CR3: 0000000340e20001 CR4: 00000000001706e0
-[   76.113825] Call Trace:
-[   76.116553]  <TASK>
-[   76.118894]  ? alg_test+0x516/0x630
-[   76.122780]  ? __warn+0x81/0x130
-[   76.126388]  ? alg_test+0x516/0x630
-[   76.130292]  ? report_bug+0x171/0x1a0
-[   76.134381]  ? console_unlock+0x64/0x110
-[   76.138759]  ? handle_bug+0x3a/0x70
-[   76.142652]  ? exc_invalid_op+0x17/0x70
-[   76.146933]  ? asm_exc_invalid_op+0x1a/0x20
-[   76.151595]  ? alg_test+0x516/0x630
-[   76.155480]  ? __update_idle_core+0x27/0xd0
-[   76.160150]  ? __switch_to_asm+0x3e/0x70
-[   76.164529]  ? finish_task_switch.isra.0+0x94/0x2c0
-[   76.169973]  ? __schedule+0x28b/0x790
-[   76.174060]  ? __pfx_cryptomgr_test+0x10/0x10
-[   76.178922]  cryptomgr_test+0x24/0x40
-[   76.183008]  kthread+0xe8/0x120
-[   76.186515]  ? __pfx_kthread+0x10/0x10
-[   76.190699]  ret_from_fork+0x34/0x50
-[   76.194689]  ? __pfx_kthread+0x10/0x10
-[   76.198872]  ret_from_fork_asm+0x1b/0x30
-[   76.203251]  </TASK>
-[   76.205688] ---[ end trace 0000000000000000 ]---
-[   76.217339] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   76.244233] nvme nvme0: qid 0: authenticated with hash hmac(sha512)
-dhgroup ffdhe4096
-[   76.253049] nvme nvme0: qid 0: authenticated
-[   76.257961] nvme nvme0: creating 56 I/O queues.
-[   76.803497] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   76.838043] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
-[   77.580673] run blktests nvme/045 at 2023-08-30 07:09:48
-[   77.604563] nvmet: adding nsid 1 to subsystem blktests-subsystem-1
-[   77.621293] nvmet: creating nvm controller 1 for subsystem
-blktests-subsystem-1 for NQN
-nqn.2014-08.org.nvmexpress:uuid:0f01fb42-9f7f-4856-b0b3-51e60b8de349
-with DH-HMAC-CHAP.
-[   77.640212] nvme nvme0: qid 0: authenticated with hash hmac(sha256)
-dhgroup ffdhe2048
-[   77.648962] nvme nvme0: qid 0: controller authenticated
-[   77.654884] nvme nvme0: qid 0: authenticated
-[   77.659805] nvme nvme0: creating 56 I/O queues.
-[   77.750259] nvme nvme0: new ctrl: "blktests-subsystem-1"
-[   77.779762] nvme nvme0: re-authenticating controller
-[   77.786634] nvme nvme0: qid 0: authenticated with hash hmac(sha256)
-dhgroup ffdhe2048
-[   77.795379] nvme nvme0: qid 0: controller authenticated
-[   77.803966] nvme nvme0: re-authenticating controller
-[   77.810766] nvme nvme0: qid 0: authenticated with hash hmac(sha256)
-dhgroup ffdhe2048
-[   77.819510] nvme nvme0: qid 0: controller authenticated
-[   77.827801] nvme nvme0: re-authenticating controller
-[   77.834727] nvme nvme0: qid 0: authenticated with hash hmac(sha256)
-dhgroup ffdhe2048
-[   77.843472] nvme nvme0: qid 0: controller authenticated
-[   77.852087] nvme nvme0: re-authenticating controller
-[   77.859042] nvme nvme0: qid 0: authenticated with hash hmac(sha256)
-dhgroup ffdhe2048
-[   77.867788] nvme nvme0: qid 0: controller authenticated
-[   77.876093] nvme nvme0: re-authenticating controller
-[   77.882985] nvme nvme0: qid 0: authenticated with hash hmac(sha512)
-dhgroup ffdhe2048
-[   77.891731] nvme nvme0: qid 0: controller authenticated
-[   78.209366] nvme nvme0: Removing ctrl: NQN "blktests-subsystem-1"
+As I noted for v3, I think the line above should be,
 
--- 
-Best Regards,
-  Yi Zhang
+	_nvmet_target_setup --blkdev file
 
+If the change is ok for you, I'll add this fix up and apply the series.
+
+> =20
+>  	_nvme_connect_subsys "${nvme_trtype}" "${def_subsysnqn}"
+> =20
+> @@ -48,12 +41,7 @@ test() {
+> =20
+>  	_nvme_disconnect_subsys "${def_subsysnqn}"
+> =20
+> -	_remove_nvmet_subsystem_from_port "${port}" "${def_subsysnqn}"
+> -	_remove_nvmet_subsystem "${def_subsysnqn}"
+> -	_remove_nvmet_port "${port}"
+> -	_remove_nvmet_host "${def_hostnqn}"
+> -
+> -	rm "${def_file_path}"
+> +	_nvmet_target_cleanup
+> =20
+>  	echo "Test complete"
+>  }=
