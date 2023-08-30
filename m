@@ -2,96 +2,191 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8F5C78DCB6
-	for <lists+linux-block@lfdr.de>; Wed, 30 Aug 2023 20:50:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B447C78E254
+	for <lists+linux-block@lfdr.de>; Thu, 31 Aug 2023 00:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242533AbjH3Sq1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 30 Aug 2023 14:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48356 "EHLO
+        id S239640AbjH3Wat (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 30 Aug 2023 18:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343977AbjH3RoJ (ORCPT
+        with ESMTP id S242802AbjH3War (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 30 Aug 2023 13:44:09 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E238F193;
-        Wed, 30 Aug 2023 10:44:06 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1693417444;
+        Wed, 30 Aug 2023 18:30:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63EBFD7
+        for <linux-block@vger.kernel.org>; Wed, 30 Aug 2023 15:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693434587;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dgT0AIDPZgl26tMkDdsBHDsxRu9I3n2FZzYpBP7cGCg=;
-        b=29k7LTWIm9DMq2cvAp585AIxhEGIlsLyKObcUcw/Ftj6Gnb0JxrNeCsKWYPEhC5jBGlluy
-        TTN4P7SXPLIYqknzbXC17wdPx7yEzlnl1c+zCuQ4Biy8yx0CyKnXuMqsopo1iELeI3kC/5
-        FNZc8mernGKPDlvxSrlRYJ4kAqujsv/INchiysSGWixlqOR91dwiR3ffbzVfVoohifacSV
-        srJWRs6jtiHQlM1wlBELCX9We22povOiX2MdiqFM2C/vPavcw9aBiE+kUaPedff10RbcHC
-        oaMhY6rgB/tEn65wmX0zlxaM5ZtapDQH5B6CzKO5F9Eb7Az2RBVZI0zQ5En/bA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1693417444;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dgT0AIDPZgl26tMkDdsBHDsxRu9I3n2FZzYpBP7cGCg=;
-        b=hTwrnzBqCSxtiJiAB7fbzhJcvQSwOfFyEkhCsz43GY12ZToHHutDY9UB0Sgv+FhnmCgS+P
-        0KC25+Gvlqnpa0Bw==
-To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Keith Busch <kbusch@kernel.org>,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        Yi Zhang <yi.zhang@redhat.com>,
-        Guangwu Zhang <guazhang@redhat.com>,
-        Chengming Zhou <zhouchengming@bytedance.com>
-Subject: Re: [PATCH V3] lib/group_cpus.c: avoid to acquire cpu hotplug lock
- in group_cpus_evenly
-In-Reply-To: <20230818140145.1229805-1-ming.lei@redhat.com>
-References: <20230818140145.1229805-1-ming.lei@redhat.com>
-Date:   Wed, 30 Aug 2023 19:44:03 +0200
-Message-ID: <87edjk5st8.ffs@tglx>
+        bh=FYqfRtnQxOV7PByWJqK8y3BA13qWsYODXL0RRw5z4G0=;
+        b=d4HpOitWxItuK9VDVALoCSuX2uJqGmgDpH3n6go7cxL5+bVo3TKQJ6sNMUiw+Rs0qRVBmQ
+        WsQ9Lrj7v3Lh/FvNKcfmegbUa5Ky9k+P5EhGMM9RhsKAruzTjpxVL2F+6H2ZEYmwWILRxC
+        nJBDobGlnX6ba0+rEvTOK09QfUgPtO8=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-664--QmGb92IMa-5RMcHjmKMHA-1; Wed, 30 Aug 2023 18:29:46 -0400
+X-MC-Unique: -QmGb92IMa-5RMcHjmKMHA-1
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3a842e7ba1cso157134b6e.3
+        for <linux-block@vger.kernel.org>; Wed, 30 Aug 2023 15:29:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693434585; x=1694039385;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FYqfRtnQxOV7PByWJqK8y3BA13qWsYODXL0RRw5z4G0=;
+        b=APA5/QwKsInmKcZ0w7q2jZs03BKbnLCLqPQ46apqcsWtP9IiaLhF/hxmLxGYmffflE
+         xrxx7QYBKQwFqSAFIPFE4JpLCJhCms1YBdCEbTLu2fFLNU/hWyIH7NlVTe6c1DtwFoT9
+         hr1Yb73MufKKRIPecxxmjlvEI+r9LzIghA91wl8f9eiBrPdqposy3DStqlPqX/eyRvod
+         FaGuS8Lv8ukeKJKhRPnije1v94ML42sprYq8vmTrc7CSk0EiVhOayLjFSDU0lYiN1yw6
+         ZL9yz3pZXtmD0LAEFxje35BtqHUkpaaPXOKzcFsOu9v1gWtpqlooVSqxooeUWm0gQGka
+         7C1w==
+X-Gm-Message-State: AOJu0YxcueIYuGDRLIK7m+jvYVU0nL1/e1L2HTB4GIrYq+hE/oIKKTlJ
+        2lfHK2C4MnhNfMgV5g4wrKNFAOShs0jJvdfb5CSb8+1ankh4oG39g0a+aY4NtbBVSjBytNDHJv2
+        n8w4dfuQAef9MvU4Zt8nR5bc=
+X-Received: by 2002:a05:6808:1a04:b0:3a8:4903:5688 with SMTP id bk4-20020a0568081a0400b003a849035688mr3505573oib.34.1693434585742;
+        Wed, 30 Aug 2023 15:29:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFqqemKSM9xURwBZYJlx1jyubOYrTVHwKDb0ZiV7TlN0z/vk4Ihpk00JCwFASj9ui/sEfBJew==
+X-Received: by 2002:a05:6808:1a04:b0:3a8:4903:5688 with SMTP id bk4-20020a0568081a0400b003a849035688mr3505558oib.34.1693434585554;
+        Wed, 30 Aug 2023 15:29:45 -0700 (PDT)
+Received: from ?IPv6:2804:1b3:a802:98e3:3c98:3d83:9703:4411? ([2804:1b3:a802:98e3:3c98:3d83:9703:4411])
+        by smtp.gmail.com with ESMTPSA id a10-20020a544e0a000000b003a8560a9d34sm67503oiy.25.2023.08.30.15.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 15:29:45 -0700 (PDT)
+Message-ID: <16efceed0b215ee34cc46ca7bba4a86bcf2d8ad7.camel@redhat.com>
+Subject: Re: [RFC PATCH v2 0/3] Move usages of struct __call_single_data to
+ call_single_data_t
+From:   Leonardo =?ISO-8859-1?Q?Br=E1s?= <leobras@redhat.com>
+To:     Chengming Zhou <chengming.zhou@linux.dev>,
+        Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Guo Ren <guoren@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 30 Aug 2023 19:29:40 -0300
+In-Reply-To: <51cf9db1-4487-4229-4d43-e91268e52125@linux.dev>
+References: <20230520052957.798486-1-leobras@redhat.com>
+         <CAJ6HWG6dK_-5jjoGJadOXqE=9c0Np-85r9-ymtAt241XrdwW=w@mail.gmail.com>
+         <b84ad9aa200457b1cbd5c55a7d860e685f068d7a.camel@redhat.com>
+         <1cd98cb37dcf621520e52ac7a15513aab5749534.camel@redhat.com>
+         <51cf9db1-4487-4229-4d43-e91268e52125@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Ming!
+On Tue, 2023-08-29 at 10:29 +0800, Chengming Zhou wrote:
+> On 2023/8/29 08:55, Leonardo Br=C3=A1s wrote:
+> > On Tue, 2023-07-04 at 04:22 -0300, Leonardo Br=C3=A1s wrote:
+> > > On Tue, 2023-06-13 at 00:51 -0300, Leonardo Bras Soares Passos wrote:
+> > > > Friendly ping
+> > > >=20
+> > > > On Sat, May 20, 2023 at 2:30=E2=80=AFAM Leonardo Bras <leobras@redh=
+at.com> wrote:
+> > > > >=20
+> > > > > Changes since RFCv1:
+> > > > > - request->csd moved to the middle of the struct, without size im=
+pact
+> > > > > - type change happens in a different patch (thanks Jens Axboe!)
+> > > > > - Improved the third patch to also update the .h file.
+> > > > >=20
+> > > > > Leonardo Bras (3):
+> > > > >   blk-mq: Move csd inside struct request so it's 32-byte aligned
+> > > > >   blk-mq: Change request->csd type to call_single_data_t
+> > > > >   smp: Change signatures to use call_single_data_t
+> > > > >=20
+> > > > >  include/linux/blk-mq.h | 10 +++++-----
+> > > > >  include/linux/smp.h    |  2 +-
+> > > > >  kernel/smp.c           |  4 ++--
+> > > > >  kernel/up.c            |  2 +-
+> > > > >  4 files changed, 9 insertions(+), 9 deletions(-)
+> > > > >=20
+> > > > > --
+> > > > > 2.40.1
+> > > > >=20
+> > >=20
+> > > Hello Jens,
+> > >=20
+> > > I still want your feedback on this series :)
+> > >=20
+> > > I think I addressed every issue of RFCv1, but if you have any other f=
+eedback,
+> > > please let me know.
+> > >=20
+> > > Thanks!
+> > > Leo
+> >=20
+> > Hello Jens Axboe,
+> >=20
+> > Please provide feedback on this series!
+> >=20
+> > Are you ok with those changes?
+> > What's your opinion on them?=20
+> >=20
+> > Thanks!
+> > Leo
+> >=20
+>=20
+> Hello,
+>=20
+> FYI, there is no csd in struct request anymore in block/for-next branch,
+> which is deleted by this commit:
+>=20
+> commit 660e802c76c89e871c29cd3174c07c8d23e39c35
+> Author: Chengming Zhou <zhouchengming@bytedance.com>
+> Date:   Mon Jul 17 12:00:55 2023 +0800
+>=20
+>     blk-mq: use percpu csd to remote complete instead of per-rq csd
+>=20
+>     If request need to be completed remotely, we insert it into percpu ll=
+ist,
+>     and smp_call_function_single_async() if llist is empty previously.
+>=20
+>     We don't need to use per-rq csd, percpu csd is enough. And the size o=
+f
+>     struct request is decreased by 24 bytes.
+>=20
+>     This way is cleaner, and looks correct, given block softirq is guaran=
+teed
+>     to be scheduled to consume the list if one new request is added to th=
+is
+>     percpu list, either smp_call_function_single_async() returns -EBUSY o=
+r 0.
+>=20
+>     Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+>     Reviewed-by: Ming Lei <ming.lei@redhat.com>
+>     Reviewed-by: Christoph Hellwig <hch@lst.de>
+>     Link: https://lore.kernel.org/r/20230717040058.3993930-2-chengming.zh=
+ou@linux.dev
+>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>=20
 
-On Fri, Aug 18 2023 at 22:01, Ming Lei wrote:
 
-> group_cpus_evenly() could be part of storage driver's error handler,
-> such as nvme driver, when may happen during CPU hotplug, in which
-> storage queue has to drain its pending IOs because all CPUs associated
-> with the queue are offline and the queue is becoming inactive. And
-> handling IO needs error handler to provide forward progress.
->
-> Then dead lock is caused:
->
-> 1) inside CPU hotplug handler, CPU hotplug lock is held, and blk-mq's
-> handler is waiting for inflight IO
->
-> 2) error handler is waiting for CPU hotplug lock
->
-> 3) inflight IO can't be completed in blk-mq's CPU hotplug handler because
-> error handling can't provide forward progress.
->
-> Solve the deadlock by not holding CPU hotplug lock in group_cpus_evenly(),
-> in which two stage spreads are taken: 1) the 1st stage is over all present
-> CPUs; 2) the end stage is over all other CPUs.
+Oh, thanks for the heads-up!
+I will send reviewed version of patch 3.
 
-That solves the deadlock, but makes the code racy against a concurrent
-hot-add operation which modifies cpu_present_mask. IOW, it introduces a
-data race.
+I suppose it can go on top of block/for-next, since the above patch is ther=
+e.
+Does that work for you Jens Axboe?
 
-The changelog does not explain why this does not matter nor does the
-comment.
-
-Thanks,
-
-        tglx
-
+Thanks!
+Leo
 
