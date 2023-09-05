@@ -2,40 +2,38 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48A067928FD
-	for <lists+linux-block@lfdr.de>; Tue,  5 Sep 2023 18:47:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3714979291B
+	for <lists+linux-block@lfdr.de>; Tue,  5 Sep 2023 18:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350299AbjIEQYy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 5 Sep 2023 12:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49456 "EHLO
+        id S1348572AbjIEQZN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 5 Sep 2023 12:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354564AbjIEMle (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Sep 2023 08:41:34 -0400
+        with ESMTP id S1354586AbjIEMrj (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Tue, 5 Sep 2023 08:47:39 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 007071A8;
-        Tue,  5 Sep 2023 05:41:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C438A1A6
+        for <linux-block@vger.kernel.org>; Tue,  5 Sep 2023 05:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
         Content-ID:Content-Description:In-Reply-To:References;
-        bh=I66u7n0qR7e4t2l/vHkn1+P4nfDofW3E+lXSWKAdYBU=; b=co4MG+2W+W6XTXPz7WYRQmR0j3
-        8PQGEq6qlCieyDdFq9+M9pPX4W+lm+6znAs21w9o70fhf8OAT5SUkzrJX65xgRBneV3lT2xCIXD4i
-        FIq7l+ln9X3FyQEMJZcp4TnnSXmZWEyJqMy3HO484PNKmlSYZrXiFR+T0OFMjoaIjyD0FO8pnuCIu
-        EvMqoGUbQMILy+A88Cnlq6gPlLvBtV0qScgqPxZD9oo2JPnY42oKZdu/A6t8wXTsrWt5JmZOE+1fx
-        p102lXJwc/3BYIHykX9h9GIJI1Su7xaY0FMYbccjaMQjn9c8CZ2TXq80xXrJPqWXBXHXeXlalvirN
-        XanECvGg==;
+        bh=nmkgySJXef3i3b/Buj6bY+9d63/8+xCAx84ENpTUqcg=; b=w0vgxZjUF+pyK9XVBz4TedniJZ
+        bvTPl3JW7vX5SvWn6tGAaUio+CCTXbMSEkF8MiXweX32ZcqrQf2YDJIIUJXu6Qgy5qoFxWV1PxQhN
+        tK9/TePGLticwJtlGOc1D72x2D0l9YRS//V319OC13mWyASmrUITBy7ZuMvHFKypa4oVYhDLil5yC
+        InahXdXknAJBkTVqrU1LJCw38tJYcaBKOmzdysuRVPuCx10baGKbofFIQwMlAhKI+MCSCXWJ7fVWV
+        U1c3HxLZjqoqtYy77gf1BlT5Xr/iM7J6AfZJ6ibOZ13IhqlkELmgbQUoUOWqRBxffmI+nwjN86Cxh
+        xQpGIcmg==;
 Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qdVMz-0062IL-16;
-        Tue, 05 Sep 2023 12:41:25 +0000
+        id 1qdVSx-0062y4-02;
+        Tue, 05 Sep 2023 12:47:35 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     djwong@kernel.org
-Cc:     viro@zeniv.linux.org.uk, brauner@kernel.org, axboe@kernel.dk,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        syzbot+4a08ffdf3667b36650a1@syzkaller.appspotmail.com
-Subject: [PATCH] iomap: handle error conditions more gracefully in iomap_to_bh
-Date:   Tue,  5 Sep 2023 14:41:20 +0200
-Message-Id: <20230905124120.325518-1-hch@lst.de>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH] block: fix pin count management when merging same-page segments
+Date:   Tue,  5 Sep 2023 14:47:31 +0200
+Message-Id: <20230905124731.328255-1-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -50,93 +48,37 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-iomap_to_bh currently BUG()s when the passed in block number is not
-in the iomap.  For file systems that have proper synchronization this
-should never happen and so far hasn't in mainline, but for block devices
-size changes aren't fully synchronized against ongoing I/O.  Instead
-of BUG()ing in this case, return -EIO to the caller, which already has
-proper error handling.  While we're at it, also return -EIO for an
-unknown iomap state instead of returning garbage.
+There is no need to unpin the added page when adding it to the bio fails
+as that is done by the loop below.  Instead we want to unpin it when adding
+a single page to the bio more than once as bio_release_pages will only
+unpin it once.
 
-Fixes: 487c607df790 ("block: use iomap for writes to block devices")
-Reported-by: syzbot+4a08ffdf3667b36650a1@syzkaller.appspotmail.com
+Fixes: d1916c86ccdc ("block: move same page handling from __bio_add_pc_page to the callers")
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/buffer.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ block/blk-map.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 2379564e5aeadf..a6785cd07081cb 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -2011,7 +2011,7 @@ void folio_zero_new_buffers(struct folio *folio, size_t from, size_t to)
- }
- EXPORT_SYMBOL(folio_zero_new_buffers);
+diff --git a/block/blk-map.c b/block/blk-map.c
+index 44d74a30ddac04..8584babf3ea0ca 100644
+--- a/block/blk-map.c
++++ b/block/blk-map.c
+@@ -315,12 +315,11 @@ static int bio_map_user_iov(struct request *rq, struct iov_iter *iter,
+ 					n = bytes;
  
--static void
-+static int
- iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
- 		const struct iomap *iomap)
- {
-@@ -2025,7 +2025,8 @@ iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
- 	 * current block, then do not map the buffer and let the caller
- 	 * handle it.
- 	 */
--	BUG_ON(offset >= iomap->offset + iomap->length);
-+	if (offset >= iomap->offset + iomap->length)
-+		return -EIO;
+ 				if (!bio_add_hw_page(rq->q, bio, page, n, offs,
+-						     max_sectors, &same_page)) {
+-					if (same_page)
+-						bio_release_page(bio, page);
++						     max_sectors, &same_page))
+ 					break;
+-				}
  
- 	switch (iomap->type) {
- 	case IOMAP_HOLE:
-@@ -2037,7 +2038,7 @@ iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
- 		if (!buffer_uptodate(bh) ||
- 		    (offset >= i_size_read(inode)))
- 			set_buffer_new(bh);
--		break;
-+		return 0;
- 	case IOMAP_DELALLOC:
- 		if (!buffer_uptodate(bh) ||
- 		    (offset >= i_size_read(inode)))
-@@ -2045,7 +2046,7 @@ iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
- 		set_buffer_uptodate(bh);
- 		set_buffer_mapped(bh);
- 		set_buffer_delay(bh);
--		break;
-+		return 0;
- 	case IOMAP_UNWRITTEN:
- 		/*
- 		 * For unwritten regions, we always need to ensure that regions
-@@ -2062,7 +2063,10 @@ iomap_to_bh(struct inode *inode, sector_t block, struct buffer_head *bh,
- 		bh->b_blocknr = (iomap->addr + offset - iomap->offset) >>
- 				inode->i_blkbits;
- 		set_buffer_mapped(bh);
--		break;
-+		return 0;
-+	default:
-+		WARN_ON_ONCE(1);
-+		return -EIO;
- 	}
- }
- 
-@@ -2103,13 +2107,12 @@ int __block_write_begin_int(struct folio *folio, loff_t pos, unsigned len,
- 			clear_buffer_new(bh);
- 		if (!buffer_mapped(bh)) {
- 			WARN_ON(bh->b_size != blocksize);
--			if (get_block) {
-+			if (get_block)
- 				err = get_block(inode, block, bh, 1);
--				if (err)
--					break;
--			} else {
--				iomap_to_bh(inode, block, bh, iomap);
--			}
-+			else
-+				err = iomap_to_bh(inode, block, bh, iomap);
-+			if (err)
-+				break;
- 
- 			if (buffer_new(bh)) {
- 				clean_bdev_bh_alias(bh);
++				if (same_page)
++					bio_release_page(bio, page);
+ 				bytes -= n;
+ 				offs = 0;
+ 			}
 -- 
 2.39.2
 
