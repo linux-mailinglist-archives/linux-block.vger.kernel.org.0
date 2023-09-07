@@ -2,161 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A7C0797A55
-	for <lists+linux-block@lfdr.de>; Thu,  7 Sep 2023 19:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFAE7976EE
+	for <lists+linux-block@lfdr.de>; Thu,  7 Sep 2023 18:18:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244661AbjIGRhv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 7 Sep 2023 13:37:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34166 "EHLO
+        id S238457AbjIGQSt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 7 Sep 2023 12:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245139AbjIGRhs (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Sep 2023 13:37:48 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44B210F9
-        for <linux-block@vger.kernel.org>; Thu,  7 Sep 2023 10:37:25 -0700 (PDT)
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230907080933epoutp04bf44a4dc28237dbf464298e3ba6da610~Cj3wguM4H0211902119epoutp04F
-        for <linux-block@vger.kernel.org>; Thu,  7 Sep 2023 08:09:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230907080933epoutp04bf44a4dc28237dbf464298e3ba6da610~Cj3wguM4H0211902119epoutp04F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1694074173;
-        bh=V6wr2bHKFf1JJGBntBJklQKl0KYjTY7rWeAV22neHUc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FuIsvGFBvEa3mSAuwbudLT13WTEF4irSeTJwTLS02ZR1lw4VXAkTtF7Mp51f/FSdv
-         4FsOsII2UFfacQCYclmXd/ERK+PuP7Dwzw1kKP7v8NGj2jOzCZdkT5/Z4KdjQ7Eeb+
-         em53o6sbb4Vimt9FBI1xdjZ+xsanhssjNly3gvzU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20230907080932epcas5p29191997c30b6c069da4ec6098457f9ed~Cj3v7N0E82859528595epcas5p27;
-        Thu,  7 Sep 2023 08:09:32 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.181]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4RhBjQ5pMQz4x9Q6; Thu,  7 Sep
-        2023 08:09:30 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        61.40.09638.A3589F46; Thu,  7 Sep 2023 17:09:30 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230907071936epcas5p1ae555e75c8ee278f08e4537d0839cc72~CjMJf8lev2653926539epcas5p1y;
-        Thu,  7 Sep 2023 07:19:36 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230907071936epsmtrp17265aa18f417f5e035967b86ea7c0b17~CjMJe6os_1235812358epsmtrp1B;
-        Thu,  7 Sep 2023 07:19:36 +0000 (GMT)
-X-AuditID: b6c32a4a-92df9700000025a6-ff-64f9853a35a9
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D0.0D.18916.88979F46; Thu,  7 Sep 2023 16:19:36 +0900 (KST)
-Received: from green245 (unknown [107.99.41.245]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20230907071933epsmtip2c2f2ef6298194cfcf6c7db10e2733a19~CjMGmu15-2489124891epsmtip2B;
-        Thu,  7 Sep 2023 07:19:32 +0000 (GMT)
-Date:   Thu, 7 Sep 2023 12:46:11 +0530
-From:   Nitesh Shetty <nj.shetty@samsung.com>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        martin.petersen@oracle.com, mcgrof@kernel.org,
-        gost.dev@samsung.com, Anuj Gupta <anuj20.g@samsung.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v15 03/12] block: add copy offload support
-Message-ID: <20230907071611.rgukw7fory2xh5sy@green245>
+        with ESMTP id S237747AbjIGQRk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 7 Sep 2023 12:17:40 -0400
+Received: from mail-yw1-x1145.google.com (mail-yw1-x1145.google.com [IPv6:2607:f8b0:4864:20::1145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4508A7A
+        for <linux-block@vger.kernel.org>; Thu,  7 Sep 2023 08:55:52 -0700 (PDT)
+Received: by mail-yw1-x1145.google.com with SMTP id 00721157ae682-58c8cbf0a0dso39973057b3.1
+        for <linux-block@vger.kernel.org>; Thu, 07 Sep 2023 08:55:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694102012; x=1694706812;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3uorYgBy/vSzGATNXjGaFcQjl0zqUtF7P8rETQPdQ6s=;
+        b=RLnEsUgrEto7+C0mePm0qrfRhjpzFRh/KmMVBp6WIl8gcKzBbXq3r3lwjAR/5jBG/a
+         vk3sgnoGG8TSHlN0be9TehKZQOnUrGlB9Y+pzJ+2qJqRS9IbNBxQDnRxjyz5VUGmqaSr
+         abdXNeyQLkoL4k3yrAy/RjIHwLGKwdGxyB0EtWMmOsxG17oB1Lmqe/Rklc+NzeTJsZna
+         FLhQCca7/yi6RTKRhnR4PSwjSRRmpBdvNqFF5EPYYvvxmWShsjpqqu1iVNw8N4KwQYHI
+         gBtT17MbIS+Iw22c9kkSKXTZ9Mja98KHXB6NyPKxCP7TI4dDbF0EQrazztLzv49bTHBi
+         BMKw==
+X-Gm-Message-State: AOJu0YxeYGkUZ+P5UFrinrW3GB9C5HXmrQA060iVqJMZ7ox5eFGISi6Q
+        MWcl5vVE7pDl8G3n2d0U1HZu/2rml2CcXcZPvaCrC3Gttm29nz0=
+X-Google-Smtp-Source: AGHT+IFv5RoDlYTTHNTZRVCYgdQ3cCvXQcVZJdqAENmmBoZNBWPCxhGShggp718Md5FgEKnzPNCIe8409SLooz2fwa7VgMNc/OBG
 MIME-Version: 1.0
-In-Reply-To: <b0f3d320-047b-4bd8-a6fc-25b468caf5b3@suse.de>
-User-Agent: NeoMutt/20171215
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TfVCTdRzA+z3Psxc8V09D7AdU0rC7kAM32uYzYuAp1z2XdQennlndwWKP
-        jGNsuz0bYHY1UUC4YIoUMKlAKN6E5SCP9yMMgVHxh4GAQsIxDZD3GyIEtLHh+d/n+/52XzbK
-        TWf5sBNUOkqrkil5zF3YrdsBAUGh6c/k/KKcAMJsvYMSaZc3UKJm1MgkZm4vAWKyIxMQbXPX
-        GMRwRxNCtF7PQ4iqmi6EyOscBIRtwIQQbSOBRGlGOUa0tvVixN3mYibx4882FlHRvYkQQ5dt
-        gKibmceInhFfon+jm3HYi+wfu4mRd//Uk5bqLCZZX/412TJsYJJluVcZZM6FOSa5aBvByPn2
-        ASaZ21ANyPq+c+Sy5U3SMjmLRHE+SQxTUDI5pfWjVHFqeYIqXso7djzmaIxIzBcECSTEIZ6f
-        SpZESXmRH0YFvZ+gdMzL80uWKfUOVZSMpnkHw8O0ar2O8lOoaZ2UR2nkSo1QE0zLkmi9Kj5Y
-        RelCBXx+iMjhGJuoWMtewDRbrNTKrCamATxgZgMPNsSFMGtzGMsGu9hcvAXAjMe/sFzCEoDz
-        tR3M54J9ogzZCbHPNCIuQxOABXPDLKeBiz8CsH5ht5MxfD+8uLHlcGKzmXgg7NtiO9V7cB5c
-        zOzcroDi6Qy4VrO0ndQTD4cTK5sMJ3NwMZw5X4q6+FXYWzSJOdkDfw8aV8e3+/bCX4eFP9lR
-        ZyKIF3jA8sJld3eRsLBpg+FiTzjd3cBysQ+cMma4OQVW5VcyXcEXATTdMwGXIQKmW43blVFc
-        AZ9MjWIu/RvwW2sd4tK/DHPWJ93FOLDxhx32hzfMJe6tesPBp+fdTMLJp7XuDS0AaJg9chns
-        M70wnOmFci4OhVkLaQyTY3ko7gsrNtkuDIDm5oMlgFENvCkNnRRP0SJNiIpKeX7xOHWSBWz/
-        w4EPGsH4w4XgToCwQSeAbJS3hzO3b0XO5chlZ7+gtOoYrV5J0Z1A5DjWFdTHK07teCiVLkYg
-        lPCFYrFYKHlXLOC9xplJ/17OxeNlOiqRojSUdicOYXv4GJCKa/nWM/cubJmjuoo2PFdQ6+/B
-        x0kpdyTTctJ66I93vO/M7R8fM0R+XDAsT/4r9p/kmOK6hvw6USkbiCZ+WzxWzIe3lKsaq2BN
-        n9N+OjmCHp2iLPd9bxR+FVGWUlVVuTeyR3Ip/mZT34DhvwKPElq43nzWOK1t7Xmr2Jb25Du7
-        f8RLVv+EL0uiU/8+9XaYRa7g9knW1yOH8kJ7uNgle605rpKCD6dbVsnBX7m+it2nsgIrTCfO
-        zfZa64zBA4+vPLDY+s+kfrRy+v7ecE7XSqv5aOx63pD18HUzEv5o6pV/2zLJT9ujk77xlEQf
-        ORlSNPbs6mcnYtOW2+yoVPN5wqI0l4fRCpngAKqlZf8D0vdD9ZgEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSvG5H5c8Ug52beS3WnzrGbNE04S+z
-        xeq7/WwWrw9/YrR4cqCd0WLvu9msFjcP7GSy2LNoEpPFytVHmSwmHbrGaPH06iwmi723tC0W
-        ti1hsdiz9ySLxeVdc9gs5i97ym6x/Pg/JosbE54yWqx7/Z7F4sQtaYvzf4+zOoh6nL+3kcXj
-        8tlSj02rOtk8Ni+p99h9s4HNY3HfZFaP3uZ3bB4fn95i8Xi/7yqbR9+WVYwem09Xe3zeJOex
-        6clbpgDeKC6blNSczLLUIn27BK6M8613WAs2slYc3dnE1sC4gqWLkZNDQsBE4uvrHUxdjFwc
-        QgLbGSWezX3KDJGQlFj29wiULSyx8t9zdhBbSOAJo8TyPVEgNouAikTL3/9AzRwcbALaEqf/
-        c4CERQSUJD62H2IHmcks0M4q0b/gFSNIQljATuLRt3+sIDavgJnE68aFzBCLPzBKXNp+kxki
-        IShxcuYTsOuYgYrmbX7IDLKAWUBaYvk/sAWcAtYS/T8esoHYogIyEjOWfmWewCg4C0n3LCTd
-        sxC6FzAyr2IUTS0ozk3PTS4w1CtOzC0uzUvXS87P3cQIjmatoB2My9b/1TvEyMTBeIhRgoNZ
-        SYT3nfy3FCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8yjmdKUIC6YklqdmpqQWpRTBZJg5OqQYm
-        psVGUjocv0PKF1veYZ6r5CabX2m7J+v1ubSIoFPLQiZPSBackunI5m6f/aTmt5Csv8qiRuby
-        fYdsMlgPZThaXf/x13umoG4Qw4d/i/+GRTnsZJJL6LmXxsCXyHo9dVXFIc2+2MaQsLOK2TJu
-        PpdSXB5kHMvvPzlvW2GI8sPbpqpJX97oRK1JeV1W0H6U+bHzwvnch6cp5Vrcj/kRnBH4+O67
-        NYI1D7eLP/68patKUlN/xY9p7d7HjtawHlBOenbhwTaeN+yZ91M29xubxqS6MoYobvfu3s0V
-        zyAaJmBn9jk+MuJ4e8GM/+ZS3g8M1hmeuvL5/auvU9Yd5JrsviNBdkb5+4Rjfw7d4mRqalRi
-        Kc5INNRiLipOBABGGkG3VQMAAA==
-X-CMS-MailID: 20230907071936epcas5p1ae555e75c8ee278f08e4537d0839cc72
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----1B4_PwnuBgjs5al8.ARo7bB9J1Y4sbiuOmsCUR3u7pWcBekA=_3ae06_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230906164312epcas5p397662c68dde1dbc4dc14c3e80ca260b3
-References: <20230906163844.18754-1-nj.shetty@samsung.com>
-        <CGME20230906164312epcas5p397662c68dde1dbc4dc14c3e80ca260b3@epcas5p3.samsung.com>
-        <20230906163844.18754-4-nj.shetty@samsung.com>
-        <b0f3d320-047b-4bd8-a6fc-25b468caf5b3@suse.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Received: by 2002:a17:903:32c2:b0:1c2:2485:ad7 with SMTP id
+ i2-20020a17090332c200b001c224850ad7mr587578plr.4.1694078749617; Thu, 07 Sep
+ 2023 02:25:49 -0700 (PDT)
+Date:   Thu, 07 Sep 2023 02:25:49 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000017b6b90604c17266@google.com>
+Subject: [syzbot] Monthly block report (Sep 2023)
+From:   syzbot <syzbot+list4766b5991d014e82a610@syzkaller.appspotmail.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-------1B4_PwnuBgjs5al8.ARo7bB9J1Y4sbiuOmsCUR3u7pWcBekA=_3ae06_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+Hello block maintainers/developers,
 
-On 07/09/23 07:49AM, Hannes Reinecke wrote:
->On 9/6/23 18:38, Nitesh Shetty wrote:
->
->Hmm. That looks a bit odd. Why do you have to use wait_for_completion?
+This is a 31-day syzbot report for the block subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/block
 
-wait_for_completion is waiting for all the copy IOs to complete,
-when caller does not pass endio handler.
-Copy IO submissions are still async, as in previous revisions.
+During the period, 5 new issues were detected and 0 were fixed.
+In total, 31 issues are still open and 85 have been fixed so far.
 
->Can't you submit the 'src' bio, and then submit the 'dst' bio from the 
->endio handler of the 'src' bio?
-We can't do this with the current bio merging approach.
-'src' bio waits for the 'dst' bio to arrive in request layer.
-Note that both bio's should be present in request reaching the driver,
-to form the copy-cmd.
+Some of the still happening issues:
 
-Thank You,
-Nitesh Shetty
+Ref  Crashes Repro Title
+<1>  1987    Yes   WARNING in copy_page_from_iter
+                   https://syzkaller.appspot.com/bug?extid=63dec323ac56c28e644f
+<2>  407     Yes   INFO: task hung in blkdev_put (4)
+                   https://syzkaller.appspot.com/bug?extid=9a29d5e745bd7523c851
+<3>  252     No    KMSAN: kernel-infoleak in copy_page_to_iter (4)
+                   https://syzkaller.appspot.com/bug?extid=17a061f6132066e9fb95
+<4>  95      Yes   INFO: task hung in blkdev_fallocate
+                   https://syzkaller.appspot.com/bug?extid=39b75c02b8be0a061bfc
+<5>  36      Yes   KASAN: use-after-free Read in __dev_queue_xmit (5)
+                   https://syzkaller.appspot.com/bug?extid=b7be9429f37d15205470
+<6>  25      Yes   INFO: task hung in blkdev_get_by_dev (5)
+                   https://syzkaller.appspot.com/bug?extid=6229476844294775319e
+<7>  24      Yes   WARNING in blk_register_tracepoints
+                   https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<8>  16      Yes   WARNING in wait_til_done (2)
+                   https://syzkaller.appspot.com/bug?extid=9bc4da690ee5334f5d15
+<9>  8       Yes   WARNING in floppy_interrupt (2)
+                   https://syzkaller.appspot.com/bug?extid=aa45f3927a085bc1b242
+<10> 5       Yes   WARNING in get_probe_ref
+                   https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
 
-------1B4_PwnuBgjs5al8.ARo7bB9J1Y4sbiuOmsCUR3u7pWcBekA=_3ae06_
-Content-Type: text/plain; charset="utf-8"
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
-------1B4_PwnuBgjs5al8.ARo7bB9J1Y4sbiuOmsCUR3u7pWcBekA=_3ae06_--
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
