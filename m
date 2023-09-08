@@ -2,170 +2,164 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE2C7989F7
-	for <lists+linux-block@lfdr.de>; Fri,  8 Sep 2023 17:26:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62EAE798A11
+	for <lists+linux-block@lfdr.de>; Fri,  8 Sep 2023 17:35:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244511AbjIHP0s (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 8 Sep 2023 11:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45006 "EHLO
+        id S244656AbjIHPfS (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 8 Sep 2023 11:35:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244520AbjIHP0s (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Sep 2023 11:26:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690C72101
-        for <linux-block@vger.kernel.org>; Fri,  8 Sep 2023 08:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694186724;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NABqDGLYLNPmUxO0QILxeEybmyL7dFx39ewlk67l+44=;
-        b=CHfxUVQd894nIcKA5JHkMkZ+SCcBpKygrj8Htu5n+lo+n/miXTpmjtnms0eABcC1VX4Fl5
-        Jm7bpF6lGfyoWARanRhcyj2T/p6hgbOvONX8IJKZ4gTD5tYqK5M0IzPMQou4kDMZ2EcQsr
-        mCNbeDDv6fVNTLkvdpgqwh7laMsMl/U=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-3-GubM347jPU2THVRKaKEW6Q-1; Fri, 08 Sep 2023 11:25:19 -0400
-X-MC-Unique: GubM347jPU2THVRKaKEW6Q-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3AB4880268A;
-        Fri,  8 Sep 2023 15:25:19 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 59AAE403171;
-        Fri,  8 Sep 2023 15:25:12 +0000 (UTC)
-Date:   Fri, 8 Sep 2023 23:25:08 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        virtualization@lists.linux-foundation.org, mst@redhat.com,
-        jasowang@redhat.com, ming.lei@redhat.com
-Subject: Re: [PATCH V3] io_uring: fix IO hang in io_wq_put_and_exit from
- do_exit()
-Message-ID: <ZPs81IAYfB8J78Pv@fedora>
-References: <20230908093009.540763-1-ming.lei@redhat.com>
- <58227846-6b73-46ef-957f-d9b1e0451899@kernel.dk>
- <ZPsxCYFgZjIIeaBk@fedora>
- <0f85a6b5-3ba6-4b77-bb7d-79f365dbb44c@kernel.dk>
+        with ESMTP id S244666AbjIHPfR (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 8 Sep 2023 11:35:17 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D661FC6;
+        Fri,  8 Sep 2023 08:35:13 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 388FM9qo016467;
+        Fri, 8 Sep 2023 15:34:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=/qBSFSgTr6TmenTwiZmSNb3/mHfNsOO1jh1mDXHSQhU=;
+ b=W2k9XkOezKxBKza3fZl7Hzfk0snxi1bB/iJKVoyXhW2xqjmNZvcqd7VMjfnQDIxNrRhP
+ i11rFG0MTEy6mFY1Zw7AJEu2C53DW/t59is6+gWkCWL8z5PjCO5ib4DuQvPdOcAqDcJp
+ EKKKjyGlGxzjEp5mRCOUhJrAYbowsvg1d1bi+bdaTZa9FYXkI3oe70PtPcYNvXE4Un+j
+ TRIOtWh+EB1PQww6V7kns8XmyrNmuGkfLIRvNJHtyAltyG8GWShGpPaUAk5Nu0rAXEGg
+ Jlx3kZApkiSBvjfVvybUa3Fist+n8VrKdHUVcd/vZhNzHS/nr8oIirdy+KcrKmvpunvc 0Q== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t066qr8nn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 15:34:47 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 388EQeIV006668;
+        Fri, 8 Sep 2023 15:31:01 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3svgvm4dj6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Sep 2023 15:31:01 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+        by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 388FV0YW6226446
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Sep 2023 15:31:00 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 485D85805C;
+        Fri,  8 Sep 2023 15:30:57 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A94DD5805F;
+        Fri,  8 Sep 2023 15:30:56 +0000 (GMT)
+Received: from rhel-laptop.ibm.com (unknown [9.61.45.202])
+        by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Sep 2023 15:30:56 +0000 (GMT)
+From:   gjoyce@linux.vnet.ibm.com
+To:     linux-block@vger.kernel.org, axboe@kernel.dk, jarkko@kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
+        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
+        nayna@linux.ibm.com, akpm@linux-foundation.org,
+        gjoyce@linux.vnet.ibm.com, keyrings@vger.kernel.org
+Subject: [PATCH v7 0/3 RESEND] generic and PowerPC SED Opal keystore
+Date:   Fri,  8 Sep 2023 10:30:53 -0500
+Message-Id: <20230908153056.3503975-1-gjoyce@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.39.3
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -D5pmrqQBMKL2xXDLTxef_G2K9Evm43l
+X-Proofpoint-ORIG-GUID: -D5pmrqQBMKL2xXDLTxef_G2K9Evm43l
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f85a6b5-3ba6-4b77-bb7d-79f365dbb44c@kernel.dk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-08_12,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 malwarescore=0 phishscore=0 clxscore=1015
+ mlxscore=0 bulkscore=0 impostorscore=0 priorityscore=1501 adultscore=0
+ mlxlogscore=730 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309080143
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 08:44:45AM -0600, Jens Axboe wrote:
-> On 9/8/23 8:34 AM, Ming Lei wrote:
-> > On Fri, Sep 08, 2023 at 07:49:53AM -0600, Jens Axboe wrote:
-> >> On 9/8/23 3:30 AM, Ming Lei wrote:
-> >>> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-> >>> index ad636954abae..95a3d31a1ef1 100644
-> >>> --- a/io_uring/io_uring.c
-> >>> +++ b/io_uring/io_uring.c
-> >>> @@ -1930,6 +1930,10 @@ void io_wq_submit_work(struct io_wq_work *work)
-> >>>  		}
-> >>>  	}
-> >>>  
-> >>> +	/* It is fragile to block POLLED IO, so switch to NON_BLOCK */
-> >>> +	if ((req->ctx->flags & IORING_SETUP_IOPOLL) && def->iopoll_queue)
-> >>> +		issue_flags |= IO_URING_F_NONBLOCK;
-> >>> +
-> >>
-> >> I think this comment deserves to be more descriptive. Normally we
-> >> absolutely cannot block for polled IO, it's only OK here because io-wq
-> > 
-> > Yeah, we don't do that until commit 2bc057692599 ("block: don't make REQ_POLLED
-> > imply REQ_NOWAIT") which actually push the responsibility/risk up to
-> > io_uring.
-> > 
-> >> is the issuer and not necessarily the poller of it. That generally falls
-> >> upon the original issuer to poll these requests.
-> >>
-> >> I think this should be a separate commit, coming before the main fix
-> >> which is below.
-> > 
-> > Looks fine, actually IO_URING_F_NONBLOCK change isn't a must, and the
-> > approach in V2 doesn't need this change.
-> > 
-> >>
-> >>> @@ -3363,6 +3367,12 @@ __cold void io_uring_cancel_generic(bool cancel_all, struct io_sq_data *sqd)
-> >>>  		finish_wait(&tctx->wait, &wait);
-> >>>  	} while (1);
-> >>>  
-> >>> +	/*
-> >>> +	 * Reap events from each ctx, otherwise these requests may take
-> >>> +	 * resources and prevent other contexts from being moved on.
-> >>> +	 */
-> >>> +	xa_for_each(&tctx->xa, index, node)
-> >>> +		io_iopoll_try_reap_events(node->ctx);
-> >>
-> >> The main issue here is that if someone isn't polling for them, then we
-> > 
-> > That is actually what this patch is addressing, :-)
-> 
-> Right, that part is obvious :)
-> 
-> >> get to wait for a timeout before they complete. This can delay exit, for
-> >> example, as we're now just waiting 30 seconds (or whatever the timeout
-> >> is on the underlying device) for them to get timed out before exit can
-> >> finish.
-> > 
-> > For the issue on null_blk, device timeout handler provides
-> > forward-progress, such as requests are released, so new IO can be
-> > handled.
-> > 
-> > However, not all devices support timeout, such as virtio device.
-> 
-> That's a bug in the driver, you cannot sanely support polled IO and not
-> be able to deal with timeouts. Someone HAS to reap the requests and
-> there are only two things that can do that - the application doing the
-> polled IO, or if that doesn't happen, a timeout.
+From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
 
-OK, then device driver timeout handler has new responsibility of covering
-userspace accident, :-)
+This patchset extends the capabilites incorporated into for-6.6/block
+(https://git.kernel.dk/cgit/linux/commit/?h=for-6.6/block&id=3bfeb61256643281ac4be5b8a57e9d9da3db4335) by allowing the SED Opal key to be seeded into
+the keyring from a secure permanent keystore.
 
-We may document this requirement for driver.
+It has gone through numerous rounds of review and all comments/suggetions
+have been addressed. The reviews have covered all relevant areas including
+reviews by block and keyring developers as well as the SED Opal
+maintainer. The last patchset submission has not solicited any responses
+in the six weeks since it was last distributed. The changes are
+generally useful and ready for inclusion.
 
-So far the only one should be virtio-blk, and the two virtio storage
-drivers never implement timeout handler.
+TCG SED Opal is a specification from The Trusted Computing Group
+that allows self encrypting storage devices (SED) to be locked at
+power on and require an authentication key to unlock the drive.
 
-> 
-> > Here we just call io_iopoll_try_reap_events() to poll submitted IOs
-> > for releasing resources, so no need to rely on device timeout handler
-> > any more, and the extra exit delay can be avoided.
-> > 
-> > But io_iopoll_try_reap_events() may not be enough because io_wq
-> > associated with current context can get released resource immediately,
-> > then new IOs are submitted successfully, but who can poll these new
-> > submitted IOs, then all device resources can be held by this (freed)io_wq
-> > for nothing.
-> > 
-> > I guess we may have to take the approach in patch V2 by only canceling
-> > polled IO for avoiding the thread_exit regression, or other ideas?
-> 
-> Ideally the behavior seems like it should be that if a task goes away,
-> any pending polled IO it has should be reaped. With the above notion
-> that a driver supporting poll absolutely must be able to deal with
-> timeouts, it's not a strict requirement as we know that requests will be
-> reaped.
+Generic functions have been defined for accessing SED Opal keys.
+The generic functions are defined as weak so that they may be superseded
+by keystore specific versions.
 
-Then looks the io_uring fix is less important, and I will see if one
-easy fix can be figured out, one way is to reap event when exiting both
-current task and the associated io_wq.
+PowerPC/pseries versions of these functions provide read/write access
+to SED Opal keys in the PLPKS keystore.
 
-Thanks,
-Ming
+The SED block driver has been modified to read the SED Opal
+keystore to populate a key in the SED Opal keyring. Changes to the
+SED Opal key will be written to the SED Opal keystore.
+
+Changelog
+v7:	- rebased to for-6.5/block
+
+v6:     - squashed two commits (suggested by Andrew Donnellan)
+
+v5:     - updated to reflect changes in PLPKS API
+
+v4:
+        - scope reduced to cover just SED Opal keys
+        - base SED Opal keystore is now in SED block driver
+        - removed use of enum to indicate type
+        - refactored common code into common function that read and
+          write use
+        - removed cast to void
+        - added use of SED Opal keystore functions to SED block driver
+
+v3:
+        - No code changes, but per reviewer requests, adding additional
+          mailing lists(keyring, EFI) for wider review.
+
+v2:
+        - Include feedback from Gregory Joyce, Eric Richter and
+          Murilo Opsfelder Araujo.
+        - Include suggestions from Michael Ellerman.
+        - Moved a dependency from generic SED code to this patchset.
+          This patchset now builds of its own.
+
+
+
+Greg Joyce (3):
+  block:sed-opal: SED Opal keystore
+  block: sed-opal: keystore access for SED Opal keys
+  powerpc/pseries: PLPKS SED Opal keystore support
+
+ arch/powerpc/platforms/pseries/Kconfig        |   6 +
+ arch/powerpc/platforms/pseries/Makefile       |   1 +
+ .../powerpc/platforms/pseries/plpks_sed_ops.c | 114 ++++++++++++++++++
+ block/Kconfig                                 |   1 +
+ block/Makefile                                |   2 +-
+ block/sed-opal-key.c                          |  24 ++++
+ block/sed-opal.c                              |  18 ++-
+ include/linux/sed-opal-key.h                  |  15 +++
+ 8 files changed, 178 insertions(+), 3 deletions(-)
+ create mode 100644 arch/powerpc/platforms/pseries/plpks_sed_ops.c
+ create mode 100644 block/sed-opal-key.c
+ create mode 100644 include/linux/sed-opal-key.h
+
+
+base-commit: 1341c7d2ccf42ed91aea80b8579d35bc1ea381e2
+-- 
+gjoyce@linux.vnet.ibm.com
 
