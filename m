@@ -2,78 +2,223 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B6DB79BEB1
-	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 02:17:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C23179BD92
+	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 02:16:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350823AbjIKVlg (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Sep 2023 17:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45914 "EHLO
+        id S1350761AbjIKVlH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Sep 2023 17:41:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237861AbjIKNQD (ORCPT
+        with ESMTP id S238030AbjIKNeo (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Sep 2023 09:16:03 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04722EB
-        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 06:15:59 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1c3c4eafe95so772455ad.1
-        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 06:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1694438158; x=1695042958; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=23rqbeU88G+H/X4YiesJiBFthRxmZeNP6+NeVuIKyqQ=;
-        b=doHL6hyQ/V7Y9snH2y1MrcixHhXL2WMgXtKDtw1BXpJzhdW4N9nOs9GjGm7zTh1Xv1
-         c46XkQj3a+arU5K0NcyUBQlvcSf/keUYQlXe+1/4T6xEOEqHjoScGOALZ24WlTNUvtR1
-         S0c5/lt/8mCYa+4W2YPeje2frPXsy0B/t7pSW8Uy15Wh0eMbQ1cAjmnLwlRXgFd5WOGN
-         DpZUOFzXL4QBUs0OWLKizcXM/LSSshqhAUztzqdmbS628vBRgBP2iIjNA5MWX7lYesSE
-         NEjsI9JT3RJXi16WW8grOvq3Xs1epIf2w9rPB1gPSyQswbpbdrnuepKf3IHa20g6xwRr
-         OF9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694438158; x=1695042958;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=23rqbeU88G+H/X4YiesJiBFthRxmZeNP6+NeVuIKyqQ=;
-        b=pjuCvyPSly9L19bXrXB0hu/2IeSAmEkur6vdjCjh4oxgjEmA831cl7d9MLvpyHPym+
-         U5D7ihh3shnbIAMQ6zNmHuKRLhNgBtwb+fGo7Hz7BHVil54aCT6p+3dlL6/5E/KzelX+
-         wbcxWZk/fTFlE7U15x1PEzZM4suKsY0fKifNf04xIHgnC3dgYmzsiPFxwzTHYTYudMSB
-         8nN3Dm6p8uVVR4DmBaXLxNjqKyvxBLLEAWpwQy09shjz/v4sbReZepYRjMjbS8pkBUVS
-         j7auU0Q/YdBxMb02ktPuDXMFlwXpwCwXBiG9bpPoN1gMGRqpyu8cdRSsX8p29vhasz+5
-         2EUg==
-X-Gm-Message-State: AOJu0Yzy0eEW90QP7/cXwdVopMU+LdyIkEH0Kl7wpxq9FTcCHruwwen0
-        R03ROYuAtY6P9paNas70/oh1uw==
-X-Google-Smtp-Source: AGHT+IEW/qPX2aarnJBsg+oN5jjbtYswhOeCTZgT6Y//Ff+leWEMuq7sKChCh7hLURN4RxMDM7Af4A==
-X-Received: by 2002:a17:902:d4c3:b0:1c3:411c:9b98 with SMTP id o3-20020a170902d4c300b001c3411c9b98mr11537309plg.3.1694438158433;
-        Mon, 11 Sep 2023 06:15:58 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id f12-20020a17090274cc00b001bbb22652a4sm6365069plt.226.2023.09.11.06.15.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 06:15:57 -0700 (PDT)
-Message-ID: <f646a624-224c-4dde-97e9-78333a1f79a8@kernel.dk>
-Date:   Mon, 11 Sep 2023 07:15:57 -0600
+        Mon, 11 Sep 2023 09:34:44 -0400
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A80B5125;
+        Mon, 11 Sep 2023 06:34:39 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Rknkk1MxMz9slY;
+        Mon, 11 Sep 2023 15:34:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+        s=MBO0001; t=1694439278;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BXAvZHy82SoCVQaKv/cbU0xLnaVu+pzPidj59xLN5A8=;
+        b=cu7s4m08t6I65Ck7rZOpE28zXVayV5lInSJ72/6vzTSz8wjACsQpffctcc75NXzi7655Yq
+        zQpVCUGLw9hB8sY1icjF1R0cGQqaHwQj+2/dRw2528KW+prXimhzVmfA7udgodWOLxfJ2m
+        mSzEAcDZK1V4+LS7wCFt+CDLoCjqQDiarfEZksvFz0fxmyz4d7CcbrflquuE2LOmjeIRzI
+        Fg3Al6gxwuBWYgoIWyp9KdFq7NY2uAmQBKMLCrMPRhaf1A2R+QJQDBFU8DOU6lmuNQefta
+        NR5kiGRq5pW3kD8VM6CDFY2WyAs9EYA9Nxwv9EjeowvpUAwYGc4dMbd2NXPo6A==
+From:   Pankaj Raghav <kernel@pankajraghav.com>
+To:     minchan@kernel.org, senozhatsky@chromium.org
+Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk,
+        p.raghav@samsung.com, linux-block@vger.kernel.org,
+        kernel@pankajraghav.com, gost.dev@samsung.com
+Subject: [PATCH 2/5] zram: encapsulate writeback to the backing bdev in a function
+Date:   Mon, 11 Sep 2023 15:34:27 +0200
+Message-Id: <20230911133430.1824564-3-kernel@pankajraghav.com>
+In-Reply-To: <20230911133430.1824564-1-kernel@pankajraghav.com>
+References: <20230911133430.1824564-1-kernel@pankajraghav.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [block?] WARNING in floppy_check_events (2)
-Content-Language: en-US
-To:     syzbot <syzbot+2302c7d7bfcdb6baae34@syzkaller.appspotmail.com>,
-        efremov@linux.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <0000000000004b06a9060510505d@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <0000000000004b06a9060510505d@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4Rknkk1MxMz9slY
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-https://lore.kernel.org/all/7df3e30a-aa31-495c-9d59-cb6080364f61@kernel.dk/
+From: Pankaj Raghav <p.raghav@samsung.com>
 
+Encapsulate the flushing data to the backing bdev in writeback in a
+separate function writeback_flush_to_bdev(). This is in preparation for
+adding batching IO support to writeback_store().
+
+No functional changes.
+
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+---
+ drivers/block/zram/zram_drv.c | 125 ++++++++++++++++++----------------
+ 1 file changed, 68 insertions(+), 57 deletions(-)
+
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index eaf9e227778e..bd93ed653b99 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -635,14 +635,78 @@ static bool writeback_prep_or_skip_index(struct zram *zram, int mode,
+ 	return ret;
+ }
+ 
++static int writeback_flush_to_bdev(struct zram *zram, unsigned long index,
++				   struct page *page, unsigned long *blk_idx)
++{
++	struct bio bio;
++	struct bio_vec bio_vec;
++	int ret;
++
++	bio_init(&bio, zram->bdev, &bio_vec, 1, REQ_OP_WRITE | REQ_SYNC);
++	bio.bi_iter.bi_sector = *blk_idx * (PAGE_SIZE >> 9);
++	__bio_add_page(&bio, page, PAGE_SIZE, 0);
++
++	/*
++	 * XXX: A single page IO would be inefficient for write
++	 * but it would be not bad as starter.
++	 */
++	ret = submit_bio_wait(&bio);
++	if (ret) {
++		zram_slot_lock(zram, index);
++		zram_clear_flag(zram, index, ZRAM_UNDER_WB);
++		zram_clear_flag(zram, index, ZRAM_IDLE);
++		zram_slot_unlock(zram, index);
++		/*
++		 * BIO errors are not fatal, we continue and simply
++		 * attempt to writeback the remaining objects (pages).
++		 * At the same time we need to signal user-space that
++		 * some writes (at least one, but also could be all of
++		 * them) were not successful and we do so by returning
++		 * the most recent BIO error.
++		 */
++		return ret;
++	}
++
++	atomic64_inc(&zram->stats.bd_writes);
++	/*
++	 * We released zram_slot_lock so need to check if the slot was
++	 * changed. If there is freeing for the slot, we can catch it
++	 * easily by zram_allocated.
++	 * A subtle case is the slot is freed/reallocated/marked as
++	 * ZRAM_IDLE again. To close the race, idle_store doesn't
++	 * mark ZRAM_IDLE once it found the slot was ZRAM_UNDER_WB.
++	 * Thus, we could close the race by checking ZRAM_IDLE bit.
++	 */
++	zram_slot_lock(zram, index);
++	if (!zram_allocated(zram, index) ||
++	    !zram_test_flag(zram, index, ZRAM_IDLE)) {
++		zram_clear_flag(zram, index, ZRAM_UNDER_WB);
++		zram_clear_flag(zram, index, ZRAM_IDLE);
++		goto skip;
++	}
++
++	zram_free_page(zram, index);
++	zram_clear_flag(zram, index, ZRAM_UNDER_WB);
++	zram_set_flag(zram, index, ZRAM_WB);
++	zram_set_element(zram, index, *blk_idx);
++	atomic64_inc(&zram->stats.pages_stored);
++	*blk_idx = 0;
++
++	spin_lock(&zram->wb_limit_lock);
++	if (zram->wb_limit_enable && zram->bd_wb_limit > 0)
++		zram->bd_wb_limit -= 1UL << (PAGE_SHIFT - 12);
++	spin_unlock(&zram->wb_limit_lock);
++skip:
++	zram_slot_unlock(zram, index);
++	return 0;
++}
++
+ static ssize_t writeback_store(struct device *dev,
+ 		struct device_attribute *attr, const char *buf, size_t len)
+ {
+ 	struct zram *zram = dev_to_zram(dev);
+ 	unsigned long nr_pages = zram->disksize >> PAGE_SHIFT;
+ 	unsigned long index = 0;
+-	struct bio bio;
+-	struct bio_vec bio_vec;
+ 	struct page *page;
+ 	ssize_t ret = len;
+ 	int mode, err;
+@@ -713,63 +777,10 @@ static ssize_t writeback_store(struct device *dev,
+ 			continue;
+ 		}
+ 
+-		bio_init(&bio, zram->bdev, &bio_vec, 1,
+-			 REQ_OP_WRITE | REQ_SYNC);
+-		bio.bi_iter.bi_sector = blk_idx * (PAGE_SIZE >> 9);
+-		__bio_add_page(&bio, page, PAGE_SIZE, 0);
++		err = writeback_flush_to_bdev(zram, index, page, &blk_idx);
+ 
+-		/*
+-		 * XXX: A single page IO would be inefficient for write
+-		 * but it would be not bad as starter.
+-		 */
+-		err = submit_bio_wait(&bio);
+-		if (err) {
+-			zram_slot_lock(zram, index);
+-			zram_clear_flag(zram, index, ZRAM_UNDER_WB);
+-			zram_clear_flag(zram, index, ZRAM_IDLE);
+-			zram_slot_unlock(zram, index);
+-			/*
+-			 * BIO errors are not fatal, we continue and simply
+-			 * attempt to writeback the remaining objects (pages).
+-			 * At the same time we need to signal user-space that
+-			 * some writes (at least one, but also could be all of
+-			 * them) were not successful and we do so by returning
+-			 * the most recent BIO error.
+-			 */
++		if (err)
+ 			ret = err;
+-			continue;
+-		}
+-
+-		atomic64_inc(&zram->stats.bd_writes);
+-		/*
+-		 * We released zram_slot_lock so need to check if the slot was
+-		 * changed. If there is freeing for the slot, we can catch it
+-		 * easily by zram_allocated.
+-		 * A subtle case is the slot is freed/reallocated/marked as
+-		 * ZRAM_IDLE again. To close the race, idle_store doesn't
+-		 * mark ZRAM_IDLE once it found the slot was ZRAM_UNDER_WB.
+-		 * Thus, we could close the race by checking ZRAM_IDLE bit.
+-		 */
+-		zram_slot_lock(zram, index);
+-		if (!zram_allocated(zram, index) ||
+-			  !zram_test_flag(zram, index, ZRAM_IDLE)) {
+-			zram_clear_flag(zram, index, ZRAM_UNDER_WB);
+-			zram_clear_flag(zram, index, ZRAM_IDLE);
+-			goto next;
+-		}
+-
+-		zram_free_page(zram, index);
+-		zram_clear_flag(zram, index, ZRAM_UNDER_WB);
+-		zram_set_flag(zram, index, ZRAM_WB);
+-		zram_set_element(zram, index, blk_idx);
+-		blk_idx = 0;
+-		atomic64_inc(&zram->stats.pages_stored);
+-		spin_lock(&zram->wb_limit_lock);
+-		if (zram->wb_limit_enable && zram->bd_wb_limit > 0)
+-			zram->bd_wb_limit -=  1UL << (PAGE_SHIFT - 12);
+-		spin_unlock(&zram->wb_limit_lock);
+-next:
+-		zram_slot_unlock(zram, index);
+ 	}
+ 
+ 	if (blk_idx)
 -- 
-Jens Axboe
+2.40.1
+
