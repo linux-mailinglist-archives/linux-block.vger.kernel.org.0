@@ -2,114 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE1D679B7CB
-	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 02:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EAC279B76F
+	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 02:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350812AbjIKVlf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Sep 2023 17:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48864 "EHLO
+        id S231452AbjIKXRG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Sep 2023 19:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238035AbjIKNey (ORCPT
+        with ESMTP id S1352492AbjIKVpN (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Sep 2023 09:34:54 -0400
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECD8125;
-        Mon, 11 Sep 2023 06:34:48 -0700 (PDT)
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Rknks1V17z9sp2;
-        Mon, 11 Sep 2023 15:34:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-        s=MBO0001; t=1694439285;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sM0TCUwtp+I4p1Y7f2I/GJmIKW0adFKaWbv7dHHJV3w=;
-        b=wjU43JN0vndUzN5R2PGvxnW0lcgnOeQ1yjXd7a06tIbLqiXTx3K2by5tBsNzBdYBTy0cKe
-        F8N/5ya9dkiG58yv1tgWKX3S41c18l6/1kzc3c86cdomo4+cb8q8jrSiNsgCedrbmbYohZ
-        X9lg0DBCvT7EYBqe9cvBiOZ5d7461YqAHvmu/3FtyTDveluBuFf1buxSuYVwCklEKqDM1f
-        l0CzTxfxDKC6RHMaegLTnqZhDIz7Z05c/4BSVSzqmznCZXNBso7RaAcGrDg2eYwtlOJ7ew
-        IAWE54eVw1QWTVOzO1oJF+EysxhE1RVpgrSZ/HqS5Giz4W6GT8IoRAowzwv5nw==
-From:   Pankaj Raghav <kernel@pankajraghav.com>
-To:     minchan@kernel.org, senozhatsky@chromium.org
-Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk,
-        p.raghav@samsung.com, linux-block@vger.kernel.org,
-        kernel@pankajraghav.com, gost.dev@samsung.com
-Subject: [PATCH 5/5] zram: don't overload blk_idx variable in writeback_store()
-Date:   Mon, 11 Sep 2023 15:34:30 +0200
-Message-Id: <20230911133430.1824564-6-kernel@pankajraghav.com>
-In-Reply-To: <20230911133430.1824564-1-kernel@pankajraghav.com>
-References: <20230911133430.1824564-1-kernel@pankajraghav.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Mon, 11 Sep 2023 17:45:13 -0400
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78E255AE
+        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 14:36:34 -0700 (PDT)
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-d8109d3a3bbso215177276.2
+        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 14:36:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694468056; x=1695072856; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QwxqNL1zXUB9OAJf/Ygs9mELpjYs6oPReuh29ZTVE2Q=;
+        b=ZlTD71ls15A1aQf8jyPlL4l8U8QDzUZuUTzP9g4KZtj7YPVopxF3aAgP6HzIOZxCfz
+         J41HcJq3xMvpBunJ1bojWHHWK2MIQ2+j1FbiMVu3c9T6x7WNs5WAdJ+QuT46Z0fz0LMw
+         G3p49Vw1Mq3lqMR+r4p+9c0B/L3pIDCFz0z0jKKXaBpjlQAs+gXzvKN+JwvRxqn9AuO4
+         5wHCxK0dTNBpjKEXNRyYN9MGh1CDHyfOnh6cK/i8rYLsIUMYhs86UkWY+2Hk/9f72Frc
+         BgM29321dvsSBTJ0uMCSv3wnilxU+WAVOzZKHBZh9p8pGMx27v8WI9XSazA8q82gW/3S
+         Rr8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694468056; x=1695072856;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QwxqNL1zXUB9OAJf/Ygs9mELpjYs6oPReuh29ZTVE2Q=;
+        b=GBYtYlm6a/OvBla3pJqHGVfOGIfJ90kNUx8QOA9hGh3UBDT8c5M0CAUqquQIj/07aJ
+         o/zpIV24NAfJ/7KHqUb0lCUmNlDhwtWByP8wBbO5tp2Znup8caAObqrgPr69D8owm+k8
+         h43q8ZDEFc4XRxpyqL+t9g/H/+wPG6wlYrPGL6Y3fRlT3qYg3DByZp2Gdq7Dt09m9Szk
+         7d8sa/G1Ozp1Ko0oedwoMcW0POr8WeUFgpkRiEAc9RBbG1YYpYtEvlQnvAfxFfq02rdu
+         5uWD1FKC2rm1MOtq/jJ0/BZu4DXk/DjiSn7i9d4FBln0d1HkOb3j6dKLNMEShfViUy+P
+         dKKg==
+X-Gm-Message-State: AOJu0Yx1PEvAez5tTN6WGDbSN/8rtpn72y+6wZHJuZtqYk0BYDCf53PN
+        CBtDp99Ablr24OkFPVFIg/PkC0rlYB/oc5qIqw==
+X-Google-Smtp-Source: AGHT+IHcMR+ryqln3fSBxGzKEDejFhIMPnxZUI8UrQblXcfot9EpwsLm83Fof7MdvFLqO8WCd16dz/9x4QOU6vN4eA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:b708:0:b0:581:3939:59a2 with SMTP
+ id v8-20020a81b708000000b00581393959a2mr281042ywh.3.1694466550612; Mon, 11
+ Sep 2023 14:09:10 -0700 (PDT)
+Date:   Mon, 11 Sep 2023 21:09:07 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAPOB/2QC/x2NzQrCMBAGX6Xs2YUk/oC+inhIk6+6KEnZLaVS+
+ u7GHuYwl5mVDCowunUrKWYxqaWJP3SUXrE8wZKbU3Dh6K7es01a0vjlrDJDjftPTW+OFX8KJk7 swimjj/ni3ZlaaFQMsuyT+2Pbfr6XNDh0AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694466549; l=1855;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=isAQzdD4TDo3zPe9CmPoe7IjN/uC1JjTZgMq1hRyNwE=; b=PhU1KfeKpdN/BDvmqV7i6qAIViRdCxXDRe+/LXWdXeF0pas87bxDJPMKvwHjUa7w8g1DIDeue
+ gKAjrn2y7siAoBO+CzhL32W04xXDWNV/yjjqwSJhVE0GfveW0V6sWnm
+X-Mailer: b4 0.12.3
+Message-ID: <20230911-strncpy-drivers-block-aoe-aoenet-c-v1-1-9643d6137ff9@google.com>
+Subject: [PATCH] aoe: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Xu Panda <xu.panda@zte.com.cn>,
+        Yang Yang <yang.yang29@zte.com>,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-Instead of overloading blk_idx variable to find if it was allocated and
-used, add a new boolean variable blk_allocated.
+`aoe_iflist` is expected to be NUL-terminated which is evident by its
+use with string apis later on like `strspn`:
+| 	p = aoe_iflist + strspn(aoe_iflist, WHITESPACE);
 
-No functional changes.
+It also seems `aoe_iflist` does not need to be NUL-padded which means
+`strscpy` [2] is a suitable replacement due to the fact that it
+guarantees NUL-termination on the destination buffer while not
+unnecessarily NUL-padding.
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Xu Panda <xu.panda@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- drivers/block/zram/zram_drv.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Note: This exact same patch exists [3] but seemed to die so I'm
+resending. If it was actually picked-up somewhere then we can ignore
+this patch.
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 27313c2d781d..7c1420e92c6a 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -747,6 +747,7 @@ static ssize_t writeback_store(struct device *dev,
- 	ssize_t ret = len;
- 	int mode, err;
- 	unsigned long blk_idx = 0;
-+	bool blk_allocated = false;
- 	unsigned int io_pages;
- 	u64 bd_wb_limit_pages = ULONG_MAX;
- 	struct index_mapping map = {};
-@@ -803,7 +804,7 @@ static ssize_t writeback_store(struct device *dev,
- 		}
- 		spin_unlock(&zram->wb_limit_lock);
+[3]: https://lore.kernel.org/all/202212051930256039214@zte.com.cn/
+---
+ drivers/block/aoe/aoenet.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
+index 63773a90581d..c51ea95bc2ce 100644
+--- a/drivers/block/aoe/aoenet.c
++++ b/drivers/block/aoe/aoenet.c
+@@ -39,8 +39,7 @@ static struct ktstate kts;
+ #ifndef MODULE
+ static int __init aoe_iflist_setup(char *str)
+ {
+-	strncpy(aoe_iflist, str, IFLISTSZ);
+-	aoe_iflist[IFLISTSZ - 1] = '\0';
++	strscpy(aoe_iflist, str, IFLISTSZ);
+ 	return 1;
+ }
  
--		if (!blk_idx) {
-+		if (!blk_allocated) {
- 			io_pages = min(1UL << order, nr_pages);
- 			io_pages = min_t(u64, bd_wb_limit_pages, io_pages);
- 
-@@ -812,6 +813,7 @@ static ssize_t writeback_store(struct device *dev,
- 				ret = -ENOSPC;
- 				break;
- 			}
-+			blk_allocated = true;
- 		}
- 
- 		if (!writeback_prep_or_skip_index(zram, mode, index)) {
-@@ -850,12 +852,12 @@ static ssize_t writeback_store(struct device *dev,
- 		 * the unused blocks after looping through all indices.
- 		 */
- 		if (map.nr_of_entries == io_pages) {
--			blk_idx = 0;
-+			blk_allocated = false;
- 			map.nr_of_entries = 0;
- 		}
- 	}
- 
--	if (blk_idx)
-+	if (blk_allocated)
- 		free_block_bdev_range(zram, blk_idx + map.nr_of_entries,
- 				      io_pages - map.nr_of_entries);
- 	folio_put(folio);
--- 
-2.40.1
+
+---
+base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+change-id: 20230911-strncpy-drivers-block-aoe-aoenet-c-024debad6105
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
