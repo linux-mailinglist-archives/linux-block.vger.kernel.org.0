@@ -2,98 +2,106 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF43679B2D3
-	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 01:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D57879AD9E
+	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 01:40:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350845AbjIKVls (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Sep 2023 17:41:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
+        id S238030AbjIKVlL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Sep 2023 17:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237233AbjIKMQN (ORCPT
+        with ESMTP id S237857AbjIKNP0 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Sep 2023 08:16:13 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF5AE125
-        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 05:16:04 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id A45941F8A6;
-        Mon, 11 Sep 2023 12:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1694434563; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=s5rMGM6Sk7+ypNL4iTYsBOZWgsFDohdDhMTFVQxzcWo=;
-        b=0u04b+E7qACQFXxagzsblEUC5xk9SywAyco4Ksj2NE/5Q0ldsd0PbsYIDc1sNb0VrcGVoU
-        NIOj3ZP8hBWkuKMoP6kgby+x1cfZ/yBde1EOu4WAqROKlAFqqySG7l/rmpxEqQf8iDh7t2
-        iYq2ZiRp7BtcAG628qSsHC2BnDVRcYk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1694434563;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=s5rMGM6Sk7+ypNL4iTYsBOZWgsFDohdDhMTFVQxzcWo=;
-        b=BADAqw6WcfCczVQWIpygYROfPRjvG2dh0eMuRWGX8zFJDpalsIzlPy1bSwA8XGV5Jpp83N
-        /a8jjsZopubXxmAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 97606139CC;
-        Mon, 11 Sep 2023 12:16:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Rp/hJAMF/2SABAAAMHmgww
-        (envelope-from <dwagner@suse.de>); Mon, 11 Sep 2023 12:16:03 +0000
-Date:   Mon, 11 Sep 2023 14:16:39 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     Yi Zhang <yi.zhang@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Subject: Re: [PATCH blktests] tests/nvme/031: fix connecting faiure
-Message-ID: <ndeue7dj4w4w26tndeya2imsct3s4c2ay2a7zpylfvahizn44t@taagv26xb3ha>
-References: <20230907034423.3928010-1-yi.zhang@redhat.com>
- <nrfuja62qetxqxzwxuxhjve2u4r4reofcpo43zmg6qbbhjjqkp@ratsu2kubymb>
- <kflpcc7u4wksuuo27gcrjxwsqr277b3phpnbbbjkdaniycmttn@f6t4dadmvqih>
- <swd5rjag3soiz5b6fkktk5vncfjtb4wemrbtl4fwkpcx6uodg7@5wnw5gf6luz6>
+        Mon, 11 Sep 2023 09:15:26 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD40EB
+        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 06:15:21 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-68e2ff0b5c4so415957b3a.0
+        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 06:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1694438120; x=1695042920; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IEzbOAJ4Fb01DDQnzPGrL2255sHl8eJXRyf8OznVFus=;
+        b=n+/dPdaFGlslxalFG5dQshZzQ1NB+zrUnqTKRXOBt0CWrJ1DGux/GVpOSWH26sx/og
+         InuJVd7502PA3wQLeS5ceHT3aGubpxRykJB0l3wyCG5TLImP15QNSA2eHyNdTUkHrdLo
+         GTBnHegJ/5dm5xOCXZMXWtlI/9FS1zRHdlOF5WYVYKdy8DbwILg/ybUGnUsfIzyaMN+X
+         NC9gQM5dJVhCG6cjlra4X44FI/M4aB2yDj5X9TsxNVPQOQ3FhEhygrSVo53bBF0eQVyQ
+         MdsW0Gh32ePJIznsvwt7DcEmAy2nAgd8lBzcUT8IFhlKb1jtSiURoFsxjK/lYWlZtS5r
+         XnQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694438120; x=1695042920;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IEzbOAJ4Fb01DDQnzPGrL2255sHl8eJXRyf8OznVFus=;
+        b=oVRuKS4avvwQ22/nmL3CYBKqU555t4o2YGAgkScWq3j34IBbW8e0aahkI8u9oLq1NC
+         OVmuhsLHkV3AvdTTar75iqpN6Wz0g8m/P9PRAuAZSTclpMHMaLSbMqdmwJsUXRHLDRY6
+         W7lYAdGsWIs+r3A3mygjCSOGv++3ZB57AhIbmTnHpz53ekDYKZAi4VLdFRVcNuWbTnS+
+         WUxDCGPlyl5h/O7T0x3VAbduxPNO7crB5ynxNan7ukkv4LA2lJDz5FrGbXxG1KxzDfU2
+         tGH+K14zM2oxCEUroWmox8hjPrenKpGxWskc+xp3vRt0yDBsdO6B49g/V6qpVRXYRUQv
+         qRXg==
+X-Gm-Message-State: AOJu0Yys5rki6s7W6Bd1Y3NubYQfmKLHujkhzcRQYiwZfSIK7ib3tDbW
+        5pZVsN0W8e4tGrcEdD2vXBlPEQ==
+X-Google-Smtp-Source: AGHT+IHudscUtHs0qFn619Ul6rWCuvw3olGAaxVp3mtAfQmBX9Hjci04z7QmU6EfAYODz1sIkdz2/w==
+X-Received: by 2002:a05:6a20:a10c:b0:145:3bd9:1389 with SMTP id q12-20020a056a20a10c00b001453bd91389mr11943803pzk.6.1694438120533;
+        Mon, 11 Sep 2023 06:15:20 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id f12-20020a17090274cc00b001bbb22652a4sm6365069plt.226.2023.09.11.06.15.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 06:15:19 -0700 (PDT)
+Message-ID: <d6da7de6-e603-4fb3-b68e-8d919f26fefe@kernel.dk>
+Date:   Mon, 11 Sep 2023 07:15:18 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <swd5rjag3soiz5b6fkktk5vncfjtb4wemrbtl4fwkpcx6uodg7@5wnw5gf6luz6>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH AUTOSEL 6.1 20/22] block: Allow bio_iov_iter_get_pages()
+ with bio->bi_bdev unset
+Content-Language: en-US
+To:     Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        linux-block@vger.kernel.org
+References: <20230908193407.3463368-1-sashal@kernel.org>
+ <20230908193407.3463368-20-sashal@kernel.org> <ZP7j2MA5Qk6RBtAd@duo.ucw.cz>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ZP7j2MA5Qk6RBtAd@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 11:00:17AM +0000, Shinichiro Kawasaki wrote:
-> > nvmf_wait_for_state "${def_subsysnqn}" "live"
-> > nvmedev=$(_find_nvme_dev "${def_subsysnqn}")
-> > 
-> > We could make this a bit more generic and move it into the connect
-> > helper. What do you think?
+On 9/11/23 3:54 AM, Pavel Machek wrote:
+> Hi!
 > 
-> This nvme state file check looks a bit complicated, but looks more robust than
-> "nvme connect" command exit status check. Do you think that "nvme connect" can
-> fail even when "nvme connect" command returns good status? If so, your approach
-> will be the way to choose.
+>> From: Kent Overstreet <kent.overstreet@linux.dev>
+>>
+>> [ Upstream commit 168145f617d57bf4e474901b7ffa869337a802e6 ]
+>>
+>> bio_iov_iter_get_pages() trims the IO based on the block size of the
+>> block device the IO will be issued to.
+>>
+>> However, bcachefs is a multi device filesystem; when we're creating the
+>> bio we don't yet know which block device the bio will be submitted to -
+>> we have to handle the alignment checks elsewhere.
+>>
+>> Thus this is needed to avoid a null ptr deref.
+> 
+> We are certainly not going to backport bcachefs to -stable. Please
+> drop.
 
-Currently, 'nvme connect' is a synchronous call for tcp/rdma but not for
-fc. 'nvme connect' for tcp/rdma will report an error if something is
-wrong but not for fc, because it always return successfully.
+I already said as much 3 days ago:
 
-The nvme/005 is exposing the behavior differences between the
-transports. My long time goal is to address and make all transport
-behave the same way (unification of the state machines). But as it
-currently stands fc would need someting like this to make sure we are
-not blindly reporting success just because the 'nvme connect' call is
-successful.
+https://lore.kernel.org/all/cd341326-cfaf-4796-8894-2241e7b630d9@kernel.dk/
 
-This type of check would make the test suite more robust and better in
-detecting errors.
+but didn't hear back yet.
+
+-- 
+Jens Axboe
+
+
