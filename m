@@ -2,45 +2,45 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4600979AF83
-	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 01:47:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D2279AFBD
+	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 01:48:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350777AbjIKVlR (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Sep 2023 17:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38332 "EHLO
+        id S1350713AbjIKVk5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Sep 2023 17:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238031AbjIKNep (ORCPT
+        with ESMTP id S238032AbjIKNeu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Sep 2023 09:34:45 -0400
+        Mon, 11 Sep 2023 09:34:50 -0400
 Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE71DCD7;
-        Mon, 11 Sep 2023 06:34:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E798106;
+        Mon, 11 Sep 2023 06:34:45 -0700 (PDT)
 Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Rknkh1Cz9z9sqY;
-        Mon, 11 Sep 2023 15:34:36 +0200 (CEST)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Rknkm0ZMnz9ssn;
+        Mon, 11 Sep 2023 15:34:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-        s=MBO0001; t=1694439276;
+        s=MBO0001; t=1694439280;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sKXrEFssCVb4iL+iRLOPhm9fa5JUtWNhHDnCVqBgNPc=;
-        b=a+rOwbLDJ0Sf+xzYoZzSRlHvx9UHJnqj+mQVZDnY4zqvNEODoN/XYhwdhjLk4ZgWiYjj1N
-        HpekzhvAisQ0yOeJC/Y9d4Oa6OZyrKxeFauCcz3dewg6KxTCn8otgbWvPnJsDS6ReTC1fA
-        WY8b7BNPjuCa6UaQJPrVHHpWItY6WDxdLT7flVA6EAwA6yZKVsVSUILep8Mw1vxGyTghVz
-        e0jdDb4xdCYtn7n2FlomMQNjAmiziLVVkwicfOTf5AS59l8W8F8nyrLO3l7rFGubeh3Nf1
-        NsB1marZdTVTnRSOsQSA9cOZ1kaHRKUrt8tESFD9rpGFfxYPwmDyxRmebVnq0A==
+        bh=tX5Q/p2imNV6Vfwxh+ihQ2ZUaBdn0HxqAB6O7wq75t4=;
+        b=A4rvocrwut8w3kDn9hrNosZg/hjRDt10YVYAjjnDvElcx/bLavMp1sppemaUFwSJ0n+p8U
+        k0nB1Jk8AVaZSBBl3Lr22PZ7z5XhG4ZZ61JDBptPyPcTCpKQxrM0UFmiDipFo7kMXKdWGy
+        +OAfZ3NQyUEm9NPzd9GAhi08xM3HnQJ0K56MVNvPvmJZqOwfUkP6Yyhnan0nx6osZabei9
+        CicvRQ9Ai5edtrYhe6x9HU8lNfX9DPYYqJI79ozUcrmI6vGNywf3qe07gXCOJShsyLoeFa
+        rJ7TPfBejw7Fu0b9dRrpNVj/nRARjzzYylP5TP+dXHMYCvQUUkGih51d74Rn9A==
 From:   Pankaj Raghav <kernel@pankajraghav.com>
 To:     minchan@kernel.org, senozhatsky@chromium.org
 Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk,
         p.raghav@samsung.com, linux-block@vger.kernel.org,
         kernel@pankajraghav.com, gost.dev@samsung.com
-Subject: [PATCH 1/5] zram: move index preparation to a separate function in writeback_store
-Date:   Mon, 11 Sep 2023 15:34:26 +0200
-Message-Id: <20230911133430.1824564-2-kernel@pankajraghav.com>
+Subject: [PATCH 3/5] zram: add alloc_block_bdev_range() and free_block_bdev_range()
+Date:   Mon, 11 Sep 2023 15:34:28 +0200
+Message-Id: <20230911133430.1824564-4-kernel@pankajraghav.com>
 In-Reply-To: <20230911133430.1824564-1-kernel@pankajraghav.com>
 References: <20230911133430.1824564-1-kernel@pankajraghav.com>
 MIME-Version: 1.0
@@ -56,102 +56,74 @@ X-Mailing-List: linux-block@vger.kernel.org
 
 From: Pankaj Raghav <p.raghav@samsung.com>
 
-Add a new function writeback_prep_or_skip_index() that does the check
-and set the approapriate flags before writeback starts. The function
-returns false if the index can be skipped.
+Add [alloc|free]_block_bdev_range() which accepts number of blocks to
+allocate or free from the block bitmap.
+
+alloc_block_bdev_range() tries to allocate a range of bitmap based in
+the input nr_of_blocks whenever possible, or else it will retry with a
+smaller value. This is done so that we don't unnecessarily return EIO
+when the underlying device is fragmented.
+
+alloc_block_bdev_range() is not an atomic operation as this function can
+be called only from writeback_store() and init_lock is anyway taken
+making sure there cannot be two processes allocating from bdev bitmap.
+
+free_block_bdev_range() is just a simple loop that calls the atomic
+free_block_bdev() function. As bdev bitmap free can be called from
+two different process simulataneously without a lock, atomicity needs
+to be maintained.
+
+This is useful when we want to send larger IOs to the backing dev.
 
 Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 ---
- drivers/block/zram/zram_drv.c | 68 +++++++++++++++++++++--------------
- 1 file changed, 42 insertions(+), 26 deletions(-)
+ drivers/block/zram/zram_drv.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 06673c6ca255..eaf9e227778e 100644
+index bd93ed653b99..0b8f814e11dd 100644
 --- a/drivers/block/zram/zram_drv.c
 +++ b/drivers/block/zram/zram_drv.c
-@@ -595,6 +595,46 @@ static void read_from_bdev_async(struct zram *zram, struct page *page,
- #define IDLE_WRITEBACK			(1<<1)
- #define INCOMPRESSIBLE_WRITEBACK	(1<<2)
+@@ -576,6 +576,39 @@ static void free_block_bdev(struct zram *zram, unsigned long blk_idx)
+ 	atomic64_dec(&zram->stats.bd_count);
+ }
  
-+/*
-+ * Returns: true if the index was prepared for further processing
-+ *          false if the index can be skipped
-+ */
-+static bool writeback_prep_or_skip_index(struct zram *zram, int mode,
-+					 unsigned long index)
++static unsigned long alloc_block_bdev_range(struct zram *zram,
++					    unsigned int *nr_of_blocksp)
 +{
-+	bool ret = false;
++	unsigned long blk_idx;
++	unsigned int nr_of_blocks = *nr_of_blocksp;
++retry:
++	/* skip 0 bit to confuse zram.handle = 0 */
++	blk_idx = 1;
++	blk_idx = bitmap_find_next_zero_area(zram->bitmap, zram->nr_pages,
++					     blk_idx, nr_of_blocks, 0);
 +
-+	zram_slot_lock(zram, index);
-+	if (!zram_allocated(zram, index))
-+		goto skip;
++	if ((blk_idx + nr_of_blocks) > zram->nr_pages) {
++		if (nr_of_blocks == 1)
++			return 0;
 +
-+	if (zram_test_flag(zram, index, ZRAM_WB) ||
-+	    zram_test_flag(zram, index, ZRAM_SAME) ||
-+	    zram_test_flag(zram, index, ZRAM_UNDER_WB))
-+		goto skip;
++		nr_of_blocks = nr_of_blocks / 2;
++		goto retry;
++	}
 +
-+	if (mode & IDLE_WRITEBACK && !zram_test_flag(zram, index, ZRAM_IDLE))
-+		goto skip;
-+	if (mode & HUGE_WRITEBACK && !zram_test_flag(zram, index, ZRAM_HUGE))
-+		goto skip;
-+	if (mode & INCOMPRESSIBLE_WRITEBACK &&
-+	    !zram_test_flag(zram, index, ZRAM_INCOMPRESSIBLE))
-+		goto skip;
++	bitmap_set(zram->bitmap, blk_idx, nr_of_blocks);
++	atomic64_add(nr_of_blocks, &zram->stats.bd_count);
++	*nr_of_blocksp = nr_of_blocks;
 +
-+	/*
-+	 * Clearing ZRAM_UNDER_WB is duty of caller.
-+	 * IOW, zram_free_page never clear it.
-+	 */
-+	zram_set_flag(zram, index, ZRAM_UNDER_WB);
-+	/* Need for hugepage writeback racing */
-+	zram_set_flag(zram, index, ZRAM_IDLE);
-+
-+	ret = true;
-+skip:
-+	zram_slot_unlock(zram, index);
-+	return ret;
++	return blk_idx;
 +}
 +
- static ssize_t writeback_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t len)
++static void free_block_bdev_range(struct zram *zram, unsigned long blk_idx,
++				  unsigned int nr_of_blocks)
++{
++	for (unsigned int i = 0; i < nr_of_blocks; i++)
++		free_block_bdev(zram, blk_idx + i);
++}
++
+ static void read_from_bdev_async(struct zram *zram, struct page *page,
+ 			unsigned long entry, struct bio *parent)
  {
-@@ -662,33 +702,9 @@ static ssize_t writeback_store(struct device *dev,
- 			}
- 		}
- 
--		zram_slot_lock(zram, index);
--		if (!zram_allocated(zram, index))
--			goto next;
-+		if (!writeback_prep_or_skip_index(zram, mode, index))
-+			continue;
- 
--		if (zram_test_flag(zram, index, ZRAM_WB) ||
--				zram_test_flag(zram, index, ZRAM_SAME) ||
--				zram_test_flag(zram, index, ZRAM_UNDER_WB))
--			goto next;
--
--		if (mode & IDLE_WRITEBACK &&
--		    !zram_test_flag(zram, index, ZRAM_IDLE))
--			goto next;
--		if (mode & HUGE_WRITEBACK &&
--		    !zram_test_flag(zram, index, ZRAM_HUGE))
--			goto next;
--		if (mode & INCOMPRESSIBLE_WRITEBACK &&
--		    !zram_test_flag(zram, index, ZRAM_INCOMPRESSIBLE))
--			goto next;
--
--		/*
--		 * Clearing ZRAM_UNDER_WB is duty of caller.
--		 * IOW, zram_free_page never clear it.
--		 */
--		zram_set_flag(zram, index, ZRAM_UNDER_WB);
--		/* Need for hugepage writeback racing */
--		zram_set_flag(zram, index, ZRAM_IDLE);
--		zram_slot_unlock(zram, index);
- 		if (zram_read_page(zram, page, index, NULL)) {
- 			zram_slot_lock(zram, index);
- 			zram_clear_flag(zram, index, ZRAM_UNDER_WB);
 -- 
 2.40.1
 
