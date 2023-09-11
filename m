@@ -2,151 +2,112 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2501D79C106
-	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 02:21:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C70F379BB68
+	for <lists+linux-block@lfdr.de>; Tue, 12 Sep 2023 02:13:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjIKX4o (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 11 Sep 2023 19:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
+        id S231203AbjIKXRC (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 11 Sep 2023 19:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236561AbjIKXxE (ORCPT
+        with ESMTP id S1378468AbjIKWcr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 11 Sep 2023 19:53:04 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E8714AE3A
-        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 16:47:26 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1c3257c8971so71643025ad.0
-        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 16:47:26 -0700 (PDT)
+        Mon, 11 Sep 2023 18:32:47 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE66D40F7E
+        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 15:20:36 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-273b1ea30beso1142854a91.1
+        for <linux-block@vger.kernel.org>; Mon, 11 Sep 2023 15:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694475988; x=1695080788; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VtlA+KB8kDzwUN9dvFmpQoLjgzbj73lXqnrIpi3kP44=;
-        b=g90ZU3pLsHI+eR2giAbU6hCuT5IAuZ7EIZ7XHjAVBmdmS+NHKcJASDjZG0FofubUYY
-         ykxZeHXpZzXb0FY0RSp0nKFe6HtL63R6TJIufJLzWkj+1Dvtu4P8vpaFtK0Z/YnkCxcE
-         +T4kgIpo+d4Wr/5H3v4PMsoLicOUSFr3wIn3nGTnOhiCVRZTvlvlXk2eIFbiunIC678Y
-         Ob9pGsJa23/h9EgQFq465RzbXr3RrTuGC6FEgfOGVLKu253qft8O35BiAJ1RNeezixM4
-         IJMaSiLkRYfPMZipq9ht82zg1+VQcyMuhkuwHmbvQkxJqcznEeieV3Hu1bYlh5RM73XM
-         Pzaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694475988; x=1695080788;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1694470756; x=1695075556; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VtlA+KB8kDzwUN9dvFmpQoLjgzbj73lXqnrIpi3kP44=;
-        b=hmhzmaLej6PJmhqZrdPAG/lU9BvAlGkO8hjqw61P+KD/8+IdoPEbBzPPNC+2PNmG33
-         VvkThX4nm/cr89VrrUYewk5+TQY2DESUZsJVDiIFWqVOgZky0OJOUvMC1XAESgA7DU0p
-         CmllgmdQt1sTTxM6LsPDMM0upKU89PXanCnw9KnIcTesCN44xtp6qKSU6VPVZEmU0Bqj
-         pnzt3yQdPjADYkPfGNLQJcq2SJ7EQ4wLncIiI5YK4INHlVlSJHvFg76zXeTdsMNqXbvY
-         dvI4B2h0UOMTM+hCe+rByma/KcA91oQBksXeHxDw1U8nT01SXWDqYISlTN9YFayS21sf
-         5+Xw==
-X-Gm-Message-State: AOJu0YwD/q6lMRldJpbWnesSo06YBZgnWbDwnOE8tZ+JQAtupPR2ocCJ
-        2kVB9FTFr+xSeq+ANksSPX/GiFmV/FSotEf84Q==
-X-Google-Smtp-Source: AGHT+IGz+NEEOx+kTbptMq4j+qCzNxFKiPoF3JBZuUXHlbhZqlK9zFaMBms4PxAmrlhTc5ZEYgefWanCKL3AQYpMWA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:108f:b0:d78:3c2e:b186 with
- SMTP id v15-20020a056902108f00b00d783c2eb186mr249352ybu.5.1694468808319; Mon,
- 11 Sep 2023 14:46:48 -0700 (PDT)
-Date:   Mon, 11 Sep 2023 21:46:47 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAMaK/2QC/x3NTQ6CQAxA4auQrm1CGX+CVzHEDEPVhrGQVomGc
- HcnLr/Neys4m7DDuVrBeBGXSQtoV0F6RL0zylAMTd2EuiVCf5mm+YuDycLm2OcpjajvnK99HvE ZRTHhKexbOgSmdIxQWrPxTT7/z6Xbth9z69SrdwAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694468807; l=2611;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=OWFJFfLu6R2MwsjnUT9XcLBqmI6CZTKqrnm0bDPTtIs=; b=LosAEspLXhaxEqoWCE/7ubiC5QsQX1wQYH8Q5dr8Rfy5EG7JDg1ORMnj9pREXDAE8Nr93Ab+Y
- J92caMRvcnwDaSGYgXwZQ8Lx07/ZJwt/KYaxiWbdy76qkHtaDS+f8AL
-X-Mailer: b4 0.12.3
-Message-ID: <20230911-strncpy-drivers-block-null_blk-main-c-v1-1-3b3887e7fde4@google.com>
-Subject: [PATCH] null_blk: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        bh=iiUitO1C45IpsjxwGwdvQemaaRHBGSkxcQvlW7NOoGw=;
+        b=GjXo/kQGb8J4cEDaGVKo1jENgkTFL/SZ2HSgWOfXnR66nKJWBE/ZSeoeOX12eYqeFC
+         sIOptF6wMtujaZvA4Uxce09AUQTt9RQ98+zXtN9mO6OBjfJu7NSOBN4/msdN0G5K50Gj
+         9orICPPg/jGJNw3Wyt0It9EQJa8YAzVEJtdbJAcA50JZeOYEH1sOIXnEI/BGfky0qV3O
+         Sb7wzfpbwdqELK4juikIOZvaZPL7ordubUQBeWZkKes+v+nxHDDngWY0H1TILCYzmtmN
+         dnlle1CqTP4nJ6pOw+hkrxdHKiNZLOFLr6LwbLAC8lE8edqrLdBWG2W8j1l3DhFgu8Pa
+         ZOaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694470756; x=1695075556;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iiUitO1C45IpsjxwGwdvQemaaRHBGSkxcQvlW7NOoGw=;
+        b=XtqOz+vqGFOFkBcwhVSeX/1S6fZRxaKoXnbzy5+3HJKPtV6dZLZt0t9RySL1ee1WVs
+         uUJpuPhHsTJBIg6TE4N09qkTbB7/RFpPGgPvmt6M4BwRIWiz7QSVVbKeQu727S9Jz+oi
+         NSFec53mYBMjJ4DSoFiN4M8zzFKwzlktUfIjmdE1yRM8p9cK6bvf2aiXmJB0CKs7Casy
+         x+agMHx2AZGjX5QLhnguH/nYk8w691/Amk4/+UlVpL7A8A6fUrr1wXkFyzeKI5iTCtA1
+         dn1Vzt5j0GUeV0jtW9E8RXSbl07cOeHJTzIJGR9+SgQgqLnC4xzLlyghH03iw87UncUr
+         W6Lg==
+X-Gm-Message-State: AOJu0YxzgLNI4CjWtHwTHe2V4WOF+ZNSpIsfWHKE8YdydpDruIpV/L6v
+        4OOZl+Trx0i1EUYbowSh7hBWpg==
+X-Google-Smtp-Source: AGHT+IEIG7J/4uQXyapv3ec696MJuuJpu5Z5SUZiYUFG6GJOQa+L0fXAy+FH7WO2a2Nx/sq9gGkHJA==
+X-Received: by 2002:a17:90a:3ea5:b0:268:ca63:e412 with SMTP id k34-20020a17090a3ea500b00268ca63e412mr10497992pjc.4.1694470755891;
+        Mon, 11 Sep 2023 15:19:15 -0700 (PDT)
+Received: from [192.168.1.136] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id rj14-20020a17090b3e8e00b00268032f6a64sm7850906pjb.25.2023.09.11.15.19.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 15:19:15 -0700 (PDT)
+Message-ID: <1a8f8c46-a048-4bd7-90f1-e5378b81968b@kernel.dk>
+Date:   Mon, 11 Sep 2023 16:19:13 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/3 RESEND] generic and PowerPC SED Opal keystore
+Content-Language: en-US
+To:     gjoyce@linux.vnet.ibm.com, linux-block@vger.kernel.org,
+        jarkko@kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, jonathan.derrick@linux.dev,
+        brking@linux.vnet.ibm.com, msuchanek@suse.de, mpe@ellerman.id.au,
+        nayna@linux.ibm.com, akpm@linux-foundation.org,
+        keyrings@vger.kernel.org
+References: <20230908153056.3503975-1-gjoyce@linux.vnet.ibm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20230908153056.3503975-1-gjoyce@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On 9/8/23 9:30 AM, gjoyce@linux.vnet.ibm.com wrote:
+> From: Greg Joyce <gjoyce@linux.vnet.ibm.com>
+> 
+> This patchset extends the capabilites incorporated into for-6.6/block
+> (https://git.kernel.dk/cgit/linux/commit/?h=for-6.6/block&id=3bfeb61256643281ac4be5b8a57e9d9da3db4335) by allowing the SED Opal key to be seeded into
+> the keyring from a secure permanent keystore.
+> 
+> It has gone through numerous rounds of review and all comments/suggetions
+> have been addressed. The reviews have covered all relevant areas including
+> reviews by block and keyring developers as well as the SED Opal
+> maintainer. The last patchset submission has not solicited any responses
+> in the six weeks since it was last distributed. The changes are
+> generally useful and ready for inclusion.
+> 
+> TCG SED Opal is a specification from The Trusted Computing Group
+> that allows self encrypting storage devices (SED) to be locked at
+> power on and require an authentication key to unlock the drive.
+> 
+> Generic functions have been defined for accessing SED Opal keys.
+> The generic functions are defined as weak so that they may be superseded
+> by keystore specific versions.
+> 
+> PowerPC/pseries versions of these functions provide read/write access
+> to SED Opal keys in the PLPKS keystore.
+> 
+> The SED block driver has been modified to read the SED Opal
+> keystore to populate a key in the SED Opal keyring. Changes to the
+> SED Opal key will be written to the SED Opal keystore.
 
-We should favor a more robust and less ambiguous interface.
+Applied for 6.7, thanks.
 
-We know `nullb->disk_name` is NUL-terminated and we expect that
-`disk->disk_name` also be NUL-terminated:
-|     snprintf(nullb->disk_name, sizeof(nullb->disk_name),
-|              "%s", config_item_name(&dev->group.cg_item));
+-- 
+Jens Axboe
 
-It seems like NUL-padding may be required due to __assign_disk_name()
-utilizing a memcpy as opposed to a `str*cpy` api.
-| static inline void __assign_disk_name(char *name, struct gendisk *disk)
-| {
-| 	if (disk)
-| 		memcpy(name, disk->disk_name, DISK_NAME_LEN);
-| 	else
-| 		memset(name, 0, DISK_NAME_LEN);
-| }
-
-This puzzles me as immediately after assigning the disk name we
-go and print it with `__print_disk_name` which wraps `nullb_trace_disk_name()`.
-| #define __print_disk_name(name) nullb_trace_disk_name(p, name)
-
-This function obviously expects a NUL-terminated string.
-| const char *nullb_trace_disk_name(struct trace_seq *p, char *name)
-| {
-| 	const char *ret = trace_seq_buffer_ptr(p);
-|
-| 	if (name && *name)
-| 		trace_seq_printf(p, "disk=%s, ", name);
-| 	trace_seq_putc(p, 0);
-|
-| 	return ret;
-| }
-
-I suspect that NUL-padding is _not_ needed but to be overly cautious
-let's use `strscpy_pad` (although I strongly suspect that whole memcpy
-thing should be changed).
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested
----
- drivers/block/null_blk/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index 864013019d6b..994919c63f05 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -1938,7 +1938,7 @@ static int null_gendisk_register(struct nullb *nullb)
- 	else
- 		disk->fops		= &null_bio_ops;
- 	disk->private_data	= nullb;
--	strncpy(disk->disk_name, nullb->disk_name, DISK_NAME_LEN);
-+	strscpy(disk->disk_name, nullb->disk_name, DISK_NAME_LEN);
- 
- 	if (nullb->dev->zoned) {
- 		int ret = null_register_zoned_dev(nullb);
-
----
-base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-change-id: 20230911-strncpy-drivers-block-null_blk-main-c-7349153e1c6a
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
 
