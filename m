@@ -2,74 +2,56 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C546279DEC5
-	for <lists+linux-block@lfdr.de>; Wed, 13 Sep 2023 05:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AC1F79E084
+	for <lists+linux-block@lfdr.de>; Wed, 13 Sep 2023 09:12:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238252AbjIMDv1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 12 Sep 2023 23:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53836 "EHLO
+        id S238417AbjIMHMH convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-block@lfdr.de>); Wed, 13 Sep 2023 03:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238278AbjIMDvW (ORCPT
+        with ESMTP id S238367AbjIMHMH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 12 Sep 2023 23:51:22 -0400
-Received: from out-229.mta0.migadu.com (out-229.mta0.migadu.com [91.218.175.229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B78199E
-        for <linux-block@vger.kernel.org>; Tue, 12 Sep 2023 20:51:15 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1694577073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hJ+K59AtY5YkcpgFDD7Z6/goeR9+RX3ce7piF7Aa0ls=;
-        b=ec8W6HwLVuud2KIvlVS4SYZAbsWXI7UUGxXY9Ut/TyTKG3LM275Rxk+Wj9LxEWy+VkzHdk
-        daotb2zixe1uiRnmvd7iqjXHY91/2BPW0OVtoMC2ik2Tci1U6oqAHBCHggCR/Fm3022Wz2
-        iaFoMP5HWb+YA8QwELrFDILYH2ONp5s=
-From:   chengming.zhou@linux.dev
-To:     axboe@kernel.dk, ming.lei@redhat.com, bvanassche@acm.org,
-        hch@lst.de
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chengming.zhou@linux.dev,
-        Chengming Zhou <zhouchengming@bytedance.com>
-Subject: [PATCH v4 6/6] blk-mq-tag: fix blk_mq_queue_tag_busy_iter() documentation
-Date:   Wed, 13 Sep 2023 03:50:33 +0000
-Message-Id: <20230913035033.1549277-7-chengming.zhou@linux.dev>
-In-Reply-To: <20230913035033.1549277-1-chengming.zhou@linux.dev>
-References: <20230913035033.1549277-1-chengming.zhou@linux.dev>
+        Wed, 13 Sep 2023 03:12:07 -0400
+Received: from jamoutsourcing.in (unknown [202.149.222.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623C31728;
+        Wed, 13 Sep 2023 00:12:03 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by jamoutsourcing.in (Postfix) with ESMTP id 3DCBA306901DC;
+        Wed, 13 Sep 2023 04:21:12 +0000 (UTC)
+Received: from jamoutsourcing.in ([127.0.0.1])
+        by localhost (jamoutsourcing.in [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Fcfq2XlRsvKp; Wed, 13 Sep 2023 04:21:12 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by jamoutsourcing.in (Postfix) with ESMTP id 44EBC306756AD;
+        Wed, 13 Sep 2023 04:17:06 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at jamoutsourcing.in
+Received: from jamoutsourcing.in ([127.0.0.1])
+        by localhost (jamoutsourcing.in [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id CaZJGuL44oBu; Wed, 13 Sep 2023 04:17:06 +0000 (UTC)
+Received: from [185.225.73.120] (_gateway [192.168.1.1])
+        by jamoutsourcing.in (Postfix) with ESMTP id 6C5A0306A5AC7;
+        Wed, 13 Sep 2023 04:15:02 +0000 (UTC)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: my offer
+To:     Recipients <test@test.com>
+From:   "Mr. mohd" <test@test.com>
+Date:   Tue, 12 Sep 2023 21:14:59 -0700
+Reply-To: abdulmkkh1971@gmail.com
+Message-Id: <20230913041502.6C5A0306A5AC7@jamoutsourcing.in>
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Chengming Zhou <zhouchengming@bytedance.com>
 
-The blk_mq_queue_tag_busy_iter() is only used to iterate over requests
-of the specified queue, fix the documentation.
+Dear
+My name is Mohamed Abdul I have the capacity to inject a considerable
+amount of capital in any viable project 
+1,cell phone number what-sap
+2,full name
 
-Fixes: c7b1bf5cca76 ("blk-mq: Document the functions that iterate over requests")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
----
- block/blk-mq-tag.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 0d42f3c4d76e..69b156750559 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -433,8 +433,7 @@ EXPORT_SYMBOL(blk_mq_tagset_wait_completed_request);
-  * @priv:	Will be passed as second argument to @fn.
-  *
-  * Note: if @q->tag_set is shared with other request queues then @fn will be
-- * called for all requests on all queues that share that tag set and not only
-- * for requests associated with @q.
-+ * called only for requests associated with @q.
-  */
- void blk_mq_queue_tag_busy_iter(struct request_queue *q, busy_tag_iter_fn *fn,
- 		void *priv)
--- 
-2.40.1
-
+yours truly
+Mohamed Abdul Ahmed
