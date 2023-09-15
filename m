@@ -2,109 +2,197 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17CF27A285B
-	for <lists+linux-block@lfdr.de>; Fri, 15 Sep 2023 22:45:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 977677A2971
+	for <lists+linux-block@lfdr.de>; Fri, 15 Sep 2023 23:33:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237126AbjIOUpH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Sep 2023 16:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50002 "EHLO
+        id S237770AbjIOVd2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Sep 2023 17:33:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237486AbjIOUox (ORCPT
+        with ESMTP id S237743AbjIOVdO (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:44:53 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9A5E58
-        for <linux-block@vger.kernel.org>; Fri, 15 Sep 2023 13:44:03 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-79a10807b4fso1082301241.2
-        for <linux-block@vger.kernel.org>; Fri, 15 Sep 2023 13:44:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694810642; x=1695415442;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RaheZZ3aWH4dfOldn9ZCeIYAt4mkA7cmMxZmrmD0nnI=;
-        b=pWVi0+xXnAmT6WzDGVbaOXR5SRVOgYRxikoQiexVOL26hAScxu9T4dYj5b89yco2Fb
-         unVk9+YF0eHPbPYvBCoMZtye2/bUdpDTvkMTaKilb3jt6Vu5x7J5ywX/S0YGACIgD9vL
-         ZoUMBy46rKg9AyUbD6MVzqVy5w9Czr/XoLs7vEjOIoP07sVzsBomb8bs2ANwSyULAfko
-         s0AOf2ROZMw/LQg7ZHqkpgZdWQhcxForD4Bbw9kv5Njal1PzqKCdL6TNSyPVXQiXIClF
-         tAExdCm7Zm05ktZd+FrMuQFIfyQcOINAYhjDOHareZXnbn3p7UKRPvY7mOcxhg/8AG0E
-         SHfw==
-X-Gm-Message-State: AOJu0YzXYBZV0MjCJkqn76juojZGY+pqXmMpDcjb7nhWuXrHcm2GjDPt
-        CqEgoSyrEoscXLPrYFPLjZrq
-X-Google-Smtp-Source: AGHT+IHh+CGQ1LQ9+nYV2h3rP3/WaZ66pFpMDO8YYt+Q4kieKGfGbDhPXKVAhMW8KfLvX71gD/W7IQ==
-X-Received: by 2002:a67:f7da:0:b0:44d:5c61:e473 with SMTP id a26-20020a67f7da000000b0044d5c61e473mr2854709vsp.22.1694810642718;
-        Fri, 15 Sep 2023 13:44:02 -0700 (PDT)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id h15-20020a0cf44f000000b0064f5d70d072sm1525969qvm.37.2023.09.15.13.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:44:02 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 16:44:00 -0400
-From:   Mike Snitzer <snitzer@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
-        Alasdair G Kergon <agk@redhat.com>,
-        Benjamin Marzinski <bmarzins@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [git pull] device mapper fixes for 6.6-rc2
-Message-ID: <ZQTCEOrIV+JmvfIE@redhat.com>
+        Fri, 15 Sep 2023 17:33:14 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E54DF7;
+        Fri, 15 Sep 2023 14:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=yV0EfbURKJh4PDYaNYUDtuXfuSlOqQYcsl+NeN4c8pU=; b=LXYofCU61UT766npBrb7d4bqPz
+        I8maRneOkt/otlO6AmfY3gCmoxvXu+qP88lIcpICnNwKOVhF0uPVrLBxoRdTfghz+apCgLs3Em1Bi
+        EBDweNYcg6qZW98TkDkbtz4pz0Yee6Gec+a9mzOB480fC/vME2k7TqfvWSuLtmpm+IvrW9Ru1LcXM
+        DRlcbHbLchQM7mhA0g2ZWfn+46YQ3tK8mAfsYYLq6Q/Min/o1D6XsLBbY2YfsTB29+S4tR0Ojkor5
+        zJyWDdA367BmuJ1kAH3JTyp7nBwpF8Mnbax0PT+6B22hutkF7ShUPUfVOs3AaPpMIJSKXVk/G7rfk
+        dhYE93fw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qhGQq-00BQn6-0A;
+        Fri, 15 Sep 2023 21:32:56 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     hch@infradead.org, djwong@kernel.org, dchinner@redhat.com,
+        kbusch@kernel.org, sagi@grimberg.me, axboe@fb.com
+Cc:     willy@infradead.org, brauner@kernel.org, hare@suse.de,
+        ritesh.list@gmail.com, rgoldwyn@suse.com, jack@suse.cz,
+        ziy@nvidia.com, ryan.roberts@arm.com, patches@lists.linux.dev,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, p.raghav@samsung.com,
+        da.gomez@samsung.com, dan.helmick@samsung.com, mcgrof@kernel.org
+Subject: [RFC v2 00/10] bdev: LBS devices support to coexist with buffer-heads
+Date:   Fri, 15 Sep 2023 14:32:44 -0700
+Message-Id: <20230915213254.2724586-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Hi Linus,
+Christoph added CONFIG_BUFFER_HEAD on v6.1 enabling a world where we can
+live without buffer-heads. When we opt into that world we end up also
+using the address space operations of the block device cache using
+iomap. Since iomap supports higher order folios it means then that block
+devices which do use the iomap aops can end up having a logical block
+size or physical block size greater than PAGE_SIZE. We refer to these as
+LBS devices. This in turn allows filesystems which support bs > 4k to be
+enabled on a 4k PAGE_SIZE world on LBS block devices. This alows LBS
+device then to take advantage of the recenlty posted work today to enable
+LBS support for filesystems [0].
 
-The following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d1d:
+However, an issue is that disabling CONFIG_BUFFER_HEAD in practice is not viable
+for many Linux distributions since it also means disabling support for most
+filesystems other than btrfs and XFS. So we either support larger order folios
+on buffer-heads, or we draw up a solution to enable co-existence. Since at LSFMM
+2023 it was decided we would not support larger order folios on buffer-heads,
+this takes the approach to help support co-existence between using buffer-head
+based filesystems and using the iomap aops dynamically when needed on block
+devices. Folks who want to enhance buffer-heads to support larger order folios
+can do so in parallel to this effort. This just allows iomap based filesystems
+to support LBS block devices today while also allowing buffer-head based
+filesystems to be used on them as well the LBS device also supports a
+logical block of PAGE_SIZE.
 
-  Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
+LBS devices can come in a few flavors. Adopting larger LBA format enables a
+logical block sizes to be > 4k. Different block device mechanisms which can also
+increase a block device's physical block size to be larger than 4k while still
+retaining backward compatibility with a logical block size of 4k. An example is
+NVMe drives with an LBA format of 4k and an npwg and awupf | nawupf of 16k. With
+this you a logical block size of 4k and a physical block size of 16k. Drives
+which do this may be a reality as larger Indirection Units (IUs) on QLC adopt
+IUs larger than 4k so to better support larger capacity. At least OCP 2.0 does
+require you to expose the IU through npwg. Whether or not a device supports the
+same value for awupf | nawupf (large atomic) is device specific. Devices which
+*do* sport an LBA format of 4k and npwg & awupf | nawupf >= 16k essentially can
+benefit from LBS support such as with XFS [1].
 
-are available in the Git repository at:
+While LBS devices come to market folks can also experiment with NVMe today
+what some of this might be like by ignoring power failure and faking the larger
+atomic up to the NVMe awun. When the NVMe awun is 0xffff it means awun is
+MDTS, so for those drives, in practice you can experiment today with LBS
+up to MDTS with real drives. This is documented on the kdevops documentation
+for LBS by using something like nvme_core.debug_large_atomics=16384 [2].
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.6/dm-fixes
+To experiment with larger LBA formtas you can also use kdevops and enable
+CONFIG_QEMU_ENABLE_EXTRA_DRIVE_LARGEIO. That enables a ton of drives with
+logical and physical block sizes >= 4k up to a desriable max target for
+experimentation. Since filesystems today only support up to 32k sector sizes,
+in practice you may only want to experiment up to 32k physical / logical.
 
-for you to fetch changes up to a9ce385344f916cd1c36a33905e564f5581beae9:
+Support for 64k sector sizes requires an XFS format change, which is something
+Daniel Gomez has experimental patches for, in case folks are interested in
+messing with.
 
-  dm: don't attempt to queue IO under RCU protection (2023-09-15 15:39:59 -0400)
+Patch 6 could probably be squashed with patch 5, but I wanted to be
+explicit about this, as this should be decided with the community.
 
-Please pull, thanks.
-Mike
+There might be a better way to do this than do deal with the switching
+of the aops dynamically, ideas welcomed!
 
-----------------------------------------------------------------
-- Fix DM core retrieve_deps() UAF race due to missing locking of a DM
-  table's list of devices that is managed using dm_{get,put}_device.
+The NVMe debug patches are posted for pure experimentation purposes, but
+the AWUN patch might be welcomed upsteram. Unless folks really want it,
+the goal here is *not* to upstream the support for the debug module
+parameter nvme_core.debug_large_atomics=16384. On a v3 RFC I can drop those
+patches and just aim to simplify the logic to support LBA formats > ps.
 
-- Revert DM core's half-baked RCU optimization if IO submitter has set
-  REQ_NOWAIT. Can be revisited, and properly justified, after
-  comprehensively auditing all of DM to also pass GFP_NOWAIT for any
-  allocations if REQ_NOWAIT used.
------BEGIN PGP SIGNATURE-----
+Changes since v1 RFC:
 
-iQEzBAABCAAdFiEEJfWUX4UqZ4x1O2wixSPxCi2dA1oFAmUEt7wACgkQxSPxCi2d
-A1prNwf/RB4EyKiSx7XS3ysM6mh/BPGO5FNjWwHebkrSFzAkEowo4i0cY9lRD0N4
-x9Wbd5bcV8HarH/fiyffQxgdfXspAIrMt8z5hRnfElkBLzg6hHixxg/3sFCwg+U3
-LG6AZFNLil7VmDeca9Pd8MCyXoy1u4ErWjkz3fU8pzzT+NDwRZPZhUMd/MFCWag6
-q22S8KMXkYKiAHqKauF52CeDH77XsO66G70t/AElemZ66PpyKpasg2p99RCuHgTg
-7jNuMTM6qXYWSWw8OswVXCPZEVfCp4zTFv1ebu9bagfDKR4ppNxwzyz7/CMkir14
-4uKKzQ/cy8QND6OR/05zKh4U3ctqyA==
-=rVpu
------END PGP SIGNATURE-----
+  o Modified the approach to accept we can have different aops per super block
+    on the block device cache as suggested by Christoph
+  o Try to allow dynamically switching between iomap aops and buffer-head aops
+  o Use the iomap aops if the target block size order or min order > ps
+  o Loosten restrictions on set_blocksize() so to just check for the iomap
+    aops for now, making it easy to allow buffer-heads to later add support
+    for bs > ps as well
+  o Use buffer-head aops first always unless the min order is > ps so to always
+    support buffer-head based filesystems
+  o Adopt a flag for buffer-heads so to check for support, buffer-heads based
+    filesystems cannot be used while an LBS filesystem is being used, for
+    instance
+  o Allow iomap aops to be used when the physical block size is > ps as well
+  o NVMe changes to experiment with LBS devices without power failure
+  o NVMe changes to support LBS devices
 
-----------------------------------------------------------------
-Jens Axboe (1):
-      dm: don't attempt to queue IO under RCU protection
+[0] https://lkml.kernel.org/r/20230608032404.1887046-1-mcgrof@kernel.org
+[1] https://lkml.kernel.org/r/20230915183848.1018717-1-kernel@pankajraghav.com
+[2] https://github.com/linux-kdevops/kdevops/blob/master/docs/lbs.md
 
-Mikulas Patocka (1):
-      dm: fix a race condition in retrieve_deps
+Luis Chamberlain (10):
+  bdev: rename iomap aops
+  bdev: dynamically set aops to enable LBS support
+  bdev: increase bdev max blocksize depending on the aops used
+  filesystems: add filesytem buffer-head flag
+  bdev: allow to switch between bdev aops
+  bdev: simplify coexistance
+  nvme: enhance max supported LBA format check
+  nvme: add awun / nawun sanity check
+  nvme: add nvme_core.debug_large_atomics to force high awun as phys_bs
+  nvme: enable LBS support
 
- drivers/md/dm-core.h  |  1 +
- drivers/md/dm-ioctl.c |  7 ++++++-
- drivers/md/dm-table.c | 32 ++++++++++++++++++++++++--------
- drivers/md/dm.c       | 23 ++---------------------
- 4 files changed, 33 insertions(+), 30 deletions(-)
+ block/bdev.c             | 73 ++++++++++++++++++++++++++++++++++++++--
+ block/blk.h              |  1 +
+ block/fops.c             | 14 ++++----
+ drivers/nvme/host/core.c | 70 +++++++++++++++++++++++++++++++++++---
+ drivers/nvme/host/nvme.h |  1 +
+ fs/adfs/super.c          |  2 +-
+ fs/affs/super.c          |  2 +-
+ fs/befs/linuxvfs.c       |  2 +-
+ fs/bfs/inode.c           |  2 +-
+ fs/efs/super.c           |  2 +-
+ fs/exfat/super.c         |  2 +-
+ fs/ext2/super.c          |  2 +-
+ fs/ext4/super.c          |  7 ++--
+ fs/f2fs/super.c          |  2 +-
+ fs/fat/namei_msdos.c     |  2 +-
+ fs/fat/namei_vfat.c      |  2 +-
+ fs/freevxfs/vxfs_super.c |  2 +-
+ fs/gfs2/ops_fstype.c     |  4 +--
+ fs/hfs/super.c           |  2 +-
+ fs/hfsplus/super.c       |  2 +-
+ fs/isofs/inode.c         |  2 +-
+ fs/jfs/super.c           |  2 +-
+ fs/minix/inode.c         |  2 +-
+ fs/nilfs2/super.c        |  2 +-
+ fs/ntfs/super.c          |  2 +-
+ fs/ntfs3/super.c         |  2 +-
+ fs/ocfs2/super.c         |  2 +-
+ fs/omfs/inode.c          |  2 +-
+ fs/qnx4/inode.c          |  2 +-
+ fs/qnx6/inode.c          |  2 +-
+ fs/reiserfs/super.c      |  2 +-
+ fs/super.c               |  3 +-
+ fs/sysv/super.c          |  4 +--
+ fs/udf/super.c           |  2 +-
+ fs/ufs/super.c           |  2 +-
+ include/linux/blkdev.h   |  7 ++++
+ include/linux/fs.h       |  1 +
+ 37 files changed, 189 insertions(+), 48 deletions(-)
+
+-- 
+2.39.2
+
