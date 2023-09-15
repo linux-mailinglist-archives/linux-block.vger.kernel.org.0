@@ -2,94 +2,155 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7EA97A1E3E
-	for <lists+linux-block@lfdr.de>; Fri, 15 Sep 2023 14:15:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B1237A1E7E
+	for <lists+linux-block@lfdr.de>; Fri, 15 Sep 2023 14:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234649AbjIOMPQ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Sep 2023 08:15:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
+        id S234747AbjIOMVE (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Sep 2023 08:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234647AbjIOMPP (ORCPT
+        with ESMTP id S234762AbjIOMVD (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Sep 2023 08:15:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93192113;
-        Fri, 15 Sep 2023 05:15:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9cnxnW7ESMZ0JG3goy/SixkPNAd8GwuVMtcmWWhCh8M=; b=hh6qr8cfEsfSY8d709qeQzGUkh
-        UqWbKETiUA6IhftO6ApR9FkEpzteHmM+8ekxGG4ssTV4swSkqsb1TXp7TEXFZmosyzLUBBOxCxCrV
-        lUG8Crmn4dfj7jxugqd8oCM8Q/6igBT/i9H9+7IY7mFu9sfs0InzwaJ8D82+W1GJtsjHT1LAMul5E
-        lGrj/xb0Tk2yDdB26P2rvy6GpP88l0V3thIIOSknLo2fVBpglW/ONxUboUlhJ4vZEzqDRpK53DDT/
-        f4aWb4/Nm9XHkK57VOp7Rr4oRjRAmnJWS0/bZp2jyLt65GoP4gBWCbe9R83/9KVSRXryzj9mZRKd3
-        wJ9rqGzA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qh7iq-009cFS-1s; Fri, 15 Sep 2023 12:14:56 +0000
-Date:   Fri, 15 Sep 2023 13:14:55 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Daniel Gomez <da.gomez@samsung.com>
-Cc:     "minchan@kernel.org" <minchan@kernel.org>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "hughd@google.com" <hughd@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        Fri, 15 Sep 2023 08:21:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A254A2729
+        for <linux-block@vger.kernel.org>; Fri, 15 Sep 2023 05:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694780392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=S6YdaabWMt5kMqbNYNBaQroIwASFlYwE8xKBnDy2tD0=;
+        b=fBkFJSU5ys6bpOwGN3QWLepnmKGp5DnhO1pSM6RMHC6LRdzJiLbIgljhvcyplKDKJRSGZW
+        coO7QmI3S7pnST/Y1EflUef+M6Hjn1xXaDFyXj253P/eCFM28P6KcNwduBcWjxiSCXDx84
+        MWwIPZKcbb1PqTobqB3lIsvh8bHb7Ls=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-426-7G8sFEHCP9WrzceNBoHclg-1; Fri, 15 Sep 2023 08:19:49 -0400
+X-MC-Unique: 7G8sFEHCP9WrzceNBoHclg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CEA2E857F8A;
+        Fri, 15 Sep 2023 12:19:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.216])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B0591004145;
+        Fri, 15 Sep 2023 12:19:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <dcc6543d71524ac488ca2a56dd430118@AcuMS.aculab.com>
+References: <dcc6543d71524ac488ca2a56dd430118@AcuMS.aculab.com> <20230914221526.3153402-1-dhowells@redhat.com> <20230914221526.3153402-10-dhowells@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        "Christian Brauner" <christian@brauner.io>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Brendan Higgins" <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
         "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "gost.dev@samsung.com" <gost.dev@samsung.com>,
-        Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH 3/6] shmem: account for large order folios
-Message-ID: <ZQRKv6NcfYCr0aWo@casper.infradead.org>
-References: <20230915095042.1320180-1-da.gomez@samsung.com>
- <CGME20230915095128eucas1p2885c3add58d82413d9c1d17832d3d281@eucas1p2.samsung.com>
- <20230915095042.1320180-4-da.gomez@samsung.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "kunit-dev@googlegroups.com" <kunit-dev@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <brauner@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [RFC PATCH 9/9] iov_iter: Add benchmarking kunit tests for UBUF/IOVEC
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230915095042.1320180-4-da.gomez@samsung.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3545839.1694780385.1@warthog.procyon.org.uk>
+Date:   Fri, 15 Sep 2023 13:19:45 +0100
+Message-ID: <3545840.1694780385@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 09:51:26AM +0000, Daniel Gomez wrote:
-> @@ -1810,13 +1815,14 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
->  		return;
->  
->  	folio_wait_writeback(folio);
-> +	num_swap_pages = folio_nr_pages(folio);
->  	delete_from_swap_cache(folio);
->  	/*
->  	 * Don't treat swapin error folio as alloced. Otherwise inode->i_blocks
->  	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
->  	 * in shmem_evict_inode().
->  	 */
-> -	shmem_recalc_inode(inode, -1, -1);
-> +	shmem_recalc_inode(inode, num_swap_pages, num_swap_pages);
+David Laight <David.Laight@ACULAB.COM> wrote:
 
-Shouldn't that be -num_swap_pages?
+> Isn't that going to be completely dominated by the cache fills
+> from memory?
+> 
+> I'd have thought you'd need to use something with a lot of
+> small fragments so that the iteration code dominates the copy.
 
->  	swap_free(swap);
->  }
->  
-> @@ -1903,7 +1909,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->  	if (error)
->  		goto failed;
->  
-> -	shmem_recalc_inode(inode, 0, -1);
-> +	shmem_recalc_inode(inode, 0, folio_nr_pages(folio));
->  
->  	if (sgp == SGP_WRITE)
->  		folio_mark_accessed(folio);
+Okay, if I switch it to using MAP_ANON for the big 256MiB buffer, switch all
+the benchmarking tests to use copy_from_iter() rather than copy_to_iter() and
+make the iovec benchmark use a separate iovec for each page, there's then a
+single page replicated across the mapping.
 
-Also here.
+Given that, without my macro-to-inline-func patches applied, I see:
+
+	iov_kunit_benchmark_bvec: avg 3184 uS, stddev 16 uS
+	iov_kunit_benchmark_bvec: avg 3189 uS, stddev 17 uS
+	iov_kunit_benchmark_bvec: avg 3190 uS, stddev 16 uS
+	iov_kunit_benchmark_bvec_outofline: avg 3731 uS, stddev 10 uS
+	iov_kunit_benchmark_bvec_outofline: avg 3735 uS, stddev 10 uS
+	iov_kunit_benchmark_bvec_outofline: avg 3738 uS, stddev 11 uS
+	iov_kunit_benchmark_bvec_split: avg 3403 uS, stddev 10 uS
+	iov_kunit_benchmark_bvec_split: avg 3405 uS, stddev 18 uS
+	iov_kunit_benchmark_bvec_split: avg 3407 uS, stddev 29 uS
+	iov_kunit_benchmark_iovec: avg 6616 uS, stddev 20 uS
+	iov_kunit_benchmark_iovec: avg 6619 uS, stddev 22 uS
+	iov_kunit_benchmark_iovec: avg 6621 uS, stddev 46 uS
+	iov_kunit_benchmark_kvec: avg 2671 uS, stddev 12 uS
+	iov_kunit_benchmark_kvec: avg 2671 uS, stddev 13 uS
+	iov_kunit_benchmark_kvec: avg 2675 uS, stddev 12 uS
+	iov_kunit_benchmark_ubuf: avg 6191 uS, stddev 1946 uS
+	iov_kunit_benchmark_ubuf: avg 6418 uS, stddev 3263 uS
+	iov_kunit_benchmark_ubuf: avg 6443 uS, stddev 3275 uS
+	iov_kunit_benchmark_xarray: avg 3689 uS, stddev 5 uS
+	iov_kunit_benchmark_xarray: avg 3689 uS, stddev 6 uS
+	iov_kunit_benchmark_xarray: avg 3698 uS, stddev 22 uS
+	iov_kunit_benchmark_xarray_outofline: avg 4202 uS, stddev 3 uS
+	iov_kunit_benchmark_xarray_outofline: avg 4204 uS, stddev 9 uS
+	iov_kunit_benchmark_xarray_outofline: avg 4210 uS, stddev 9 uS
+
+and with, I get:
+
+	iov_kunit_benchmark_bvec: avg 3241 uS, stddev 13 uS
+	iov_kunit_benchmark_bvec: avg 3245 uS, stddev 16 uS
+	iov_kunit_benchmark_bvec: avg 3248 uS, stddev 15 uS
+	iov_kunit_benchmark_bvec_outofline: avg 3705 uS, stddev 12 uS
+	iov_kunit_benchmark_bvec_outofline: avg 3706 uS, stddev 10 uS
+	iov_kunit_benchmark_bvec_outofline: avg 3709 uS, stddev 9 uS
+	iov_kunit_benchmark_bvec_split: avg 3446 uS, stddev 10 uS
+	iov_kunit_benchmark_bvec_split: avg 3447 uS, stddev 12 uS
+	iov_kunit_benchmark_bvec_split: avg 3448 uS, stddev 12 uS
+	iov_kunit_benchmark_iovec: avg 6587 uS, stddev 22 uS
+	iov_kunit_benchmark_iovec: avg 6587 uS, stddev 22 uS
+	iov_kunit_benchmark_iovec: avg 6590 uS, stddev 27 uS
+	iov_kunit_benchmark_kvec: avg 2671 uS, stddev 12 uS
+	iov_kunit_benchmark_kvec: avg 2672 uS, stddev 12 uS
+	iov_kunit_benchmark_kvec: avg 2676 uS, stddev 19 uS
+	iov_kunit_benchmark_ubuf: avg 6241 uS, stddev 2199 uS
+	iov_kunit_benchmark_ubuf: avg 6266 uS, stddev 2245 uS
+	iov_kunit_benchmark_ubuf: avg 6513 uS, stddev 3899 uS
+	iov_kunit_benchmark_xarray: avg 3695 uS, stddev 6 uS
+	iov_kunit_benchmark_xarray: avg 3695 uS, stddev 7 uS
+	iov_kunit_benchmark_xarray: avg 3703 uS, stddev 11 uS
+	iov_kunit_benchmark_xarray_outofline: avg 4215 uS, stddev 16 uS
+	iov_kunit_benchmark_xarray_outofline: avg 4217 uS, stddev 20 uS
+	iov_kunit_benchmark_xarray_outofline: avg 4224 uS, stddev 10 uS
+
+Interestingly, most of them are quite tight, but UBUF is all over the place.
+That's with the test covering the entire 256M span with a single UBUF
+iterator, so it would seem unlikely that the difference is due to the
+iteration framework.
+
+David
+
