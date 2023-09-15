@@ -2,69 +2,65 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC17A7A2A4E
-	for <lists+linux-block@lfdr.de>; Sat, 16 Sep 2023 00:17:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D198F7A2A65
+	for <lists+linux-block@lfdr.de>; Sat, 16 Sep 2023 00:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237412AbjIOWQv (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Sep 2023 18:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
+        id S236475AbjIOWWm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Sep 2023 18:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237846AbjIOWQZ (ORCPT
+        with ESMTP id S238039AbjIOWWg (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Sep 2023 18:16:25 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3180C91
-        for <linux-block@vger.kernel.org>; Fri, 15 Sep 2023 15:16:21 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CE08CC433C8;
-        Fri, 15 Sep 2023 22:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694816180;
-        bh=qwCXZyynHzaOdCwFkP6lrJH3+rUEuXW8D7zqJSgQvpI=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=PXy40EFzwkSMArPOVzoiDP4GK4GZri4hpOEkJzwt4Rels7sVngv5zqGNdrO5Rxr7J
-         C2LF81V0/t0g0iowFBiXALQkWT4/wbx2dt22vvmaDOwKoPmfPEcRizJbe1SSitXEh6
-         POqZX19l8L5JvBdBUkLzl7NGeIknEsF1+zFLv3TMMYUalDMHrMzPJi4DjgF3dLbSYY
-         vx5VKViz0kkScOBbjL3CIfhYA/XK1WNEcAWwDEl8k3edjVl/vOYU7t86UYuygnfTOv
-         9mWhlxBzjMZN8ipeuNPbJM/G/xX8sgVCNDUvHo6MI2+DcSEdfzTy2iSOHtN8XMHTZD
-         9pyUrpW2Q7bjg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BBF70E26881;
-        Fri, 15 Sep 2023 22:16:20 +0000 (UTC)
-Subject: Re: [GIT PULL] Block fixes for 6.6-rc2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <6bda4994-5bda-4b18-9143-c862baa9de35@kernel.dk>
-References: <6bda4994-5bda-4b18-9143-c862baa9de35@kernel.dk>
-X-PR-Tracked-List-Id: <linux-block.vger.kernel.org>
-X-PR-Tracked-Message-Id: <6bda4994-5bda-4b18-9143-c862baa9de35@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux.git tags/block-6.6-2023-09-15
-X-PR-Tracked-Commit-Id: c266ae774effb858266e64b0dfd7018e58278523
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5bc357b215bdff924c38589e6e043ecda8fb9756
-Message-Id: <169481618076.11838.9311433953429315710.pr-tracker-bot@kernel.org>
-Date:   Fri, 15 Sep 2023 22:16:20 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Fri, 15 Sep 2023 18:22:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC823A91;
+        Fri, 15 Sep 2023 15:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=stKfa1bVkKPha42Sjnuc16U1G8MgPCtAaZubw65nLYs=; b=lacb2tD7cU3dvbjmLaOqTtWQic
+        x5sTyne0eSTLoCZvgKBVrTb5s4uvU1T/m7LyE6vYFPvAGppYB/NEW3PpZVTea1Hg8ibC6ad9WTKzE
+        +eMP9wyXvHnzN4R8+z0GgkAJp5dziHCJqm3kP794Jl6Eeu49qdS8F17dkrw/HprSCj+qacE2eDWZg
+        9uFDTKOvgXsukYwJAvb/mRVGDTDyQ2JXT+9KQjH34GVtEtfl8r6eeiAI/KOti/LvKA1k9/lmuV5T6
+        cfbr//vixZiDr0HRyb6O+u+NPCUmF524ztzWqYvAl6+hCAs8eDFKk+g260XRzVlX3lhYRwy8F4RaQ
+        yiDAnroA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qhHB1-00CQBX-ST; Fri, 15 Sep 2023 22:20:39 +0000
+Date:   Fri, 15 Sep 2023 23:20:39 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     hch@infradead.org, djwong@kernel.org, dchinner@redhat.com,
+        kbusch@kernel.org, sagi@grimberg.me, axboe@fb.com,
+        brauner@kernel.org, hare@suse.de, ritesh.list@gmail.com,
+        rgoldwyn@suse.com, jack@suse.cz, ziy@nvidia.com,
+        ryan.roberts@arm.com, patches@lists.linux.dev,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, p.raghav@samsung.com,
+        da.gomez@samsung.com, dan.helmick@samsung.com
+Subject: Re: [RFC v2 07/10] nvme: enhance max supported LBA format check
+Message-ID: <ZQTYt9qG0AxhgR4I@casper.infradead.org>
+References: <20230915213254.2724586-1-mcgrof@kernel.org>
+ <20230915213254.2724586-8-mcgrof@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230915213254.2724586-8-mcgrof@kernel.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The pull request you sent on Fri, 15 Sep 2023 09:46:17 -0600:
+On Fri, Sep 15, 2023 at 02:32:51PM -0700, Luis Chamberlain wrote:
+> +/* XXX: shift 20 (1 MiB LBA) crashes on pure-iomap */
+> +#define NVME_MAX_SHIFT_SUPPORTED 19
 
-> git://git.kernel.dk/linux.git tags/block-6.6-2023-09-15
+I imagine somewhere we do a PAGE_SIZE << 20 and it overflows an int to 0.
+I've been trying to use size_t everywhere, but we probably missed
+something.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5bc357b215bdff924c38589e6e043ecda8fb9756
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Does 19 work on a machine with 64kB pages?  My guess is no.
