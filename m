@@ -2,68 +2,71 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE727A29D0
-	for <lists+linux-block@lfdr.de>; Fri, 15 Sep 2023 23:52:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F41217A2A4F
+	for <lists+linux-block@lfdr.de>; Sat, 16 Sep 2023 00:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237742AbjIOVvm (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 15 Sep 2023 17:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34576 "EHLO
+        id S237728AbjIOWQu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 15 Sep 2023 18:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237859AbjIOVvg (ORCPT
+        with ESMTP id S237822AbjIOWQX (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:51:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A437AB8;
-        Fri, 15 Sep 2023 14:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OjslU8SUhgdXrUcRZYaungvHohmhC3Ah4nEZHFd9adc=; b=bZ9XHGdy3Y7tSqtQxGArjIHu99
-        8kyAqRjluuRgG3KHxex8I4xiq3tAQyfHXU6OUOYO4aOnVd9K7ypyRYVTJcyS7lC5Q8sFGMcDdQfcP
-        krALeBAXuf+bzNrpPgO3aVJSLmR3k6Z5eobP3l2hv7fUvDznXWgfaknRvsZo/0M2/LNu0J4f1ATOn
-        IfT2RYKBE23DIUd3dXYHTNHJyh1z78S/SAZypfU4TRtFENyEl9ydqQRvWUxLAsrF0brhLBxqy6ygl
-        oHRcvq4RgkBebxdsz6lv7FjpijkXALeo0ut2wL+jdzHUsIo/bRxm8/kM97kpZwHQG0f6FVhVJKOZu
-        q/jXYcKA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qhGiW-00CHbh-9D; Fri, 15 Sep 2023 21:51:12 +0000
-Date:   Fri, 15 Sep 2023 22:51:12 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     hch@infradead.org, djwong@kernel.org, dchinner@redhat.com,
-        kbusch@kernel.org, sagi@grimberg.me, axboe@fb.com,
-        brauner@kernel.org, hare@suse.de, ritesh.list@gmail.com,
-        rgoldwyn@suse.com, jack@suse.cz, ziy@nvidia.com,
-        ryan.roberts@arm.com, patches@lists.linux.dev,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, p.raghav@samsung.com,
-        da.gomez@samsung.com, dan.helmick@samsung.com
-Subject: Re: [RFC v2 00/10] bdev: LBS devices support to coexist with
- buffer-heads
-Message-ID: <ZQTR0NorkxJlcNBW@casper.infradead.org>
-References: <20230915213254.2724586-1-mcgrof@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230915213254.2724586-1-mcgrof@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        Fri, 15 Sep 2023 18:16:23 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68478268F
+        for <linux-block@vger.kernel.org>; Fri, 15 Sep 2023 15:16:18 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 02DBAC433BA;
+        Fri, 15 Sep 2023 22:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694816178;
+        bh=qlEhSYHo8svPRlX462l5zLC6y2hf8eqi9KMrzh+xPrY=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=fRlFxnCtTCc9EjITZN16mRQBApViYbaApq9ATbjHSKyvvn1bdPWQPgTWoBidFEzOb
+         bnoAI4/Jh6O1BlJwEAwepfaEMXHdjj/GNNnCT4viCS6rC1i4VGQVU+y7r2NGTIMZRo
+         HYg6oiYeL7fo37UoZzw6y8WLWw1hEmWlVrORBrRT1tUwW55lGSZTUk20pR5Rv310IN
+         UUVfg4gDQePw259N/y5sUxZGAp+NMTVykqG3NRliTBPc2i0PP6CedpJFBI916HN0Kl
+         0xZIGUmVSJJC36PjB99/Uq37hngsxqaKQpPJtszUS7t8GXmBEBqiEhm+1+0HRygqvR
+         qnl+IpaHREj5A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E65E3E26882;
+        Fri, 15 Sep 2023 22:16:17 +0000 (UTC)
+Subject: Re: [dm-devel] [git pull] device mapper fixes for 6.6-rc2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <ZQTCEOrIV+JmvfIE@redhat.com>
+References: <ZQTCEOrIV+JmvfIE@redhat.com>
+X-PR-Tracked-List-Id: device-mapper development <dm-devel.redhat.com>
+X-PR-Tracked-Message-Id: <ZQTCEOrIV+JmvfIE@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.6/dm-fixes
+X-PR-Tracked-Commit-Id: a9ce385344f916cd1c36a33905e564f5581beae9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e39bfb5925ffac1688cd053d49792a764590bae2
+Message-Id: <169481617793.11838.15746982873328147675.pr-tracker-bot@kernel.org>
+Date:   Fri, 15 Sep 2023 22:16:17 +0000
+To:     Mike Snitzer <snitzer@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, Mikulas Patocka <mpatocka@redhat.com>,
+        Alasdair G Kergon <agk@redhat.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 02:32:44PM -0700, Luis Chamberlain wrote:
-> However, an issue is that disabling CONFIG_BUFFER_HEAD in practice is not viable
-> for many Linux distributions since it also means disabling support for most
-> filesystems other than btrfs and XFS. So we either support larger order folios
-> on buffer-heads, or we draw up a solution to enable co-existence. Since at LSFMM
-> 2023 it was decided we would not support larger order folios on buffer-heads,
+The pull request you sent on Fri, 15 Sep 2023 16:44:00 -0400:
 
-Um, I didn't agree to that.  If block size is equal to folio size, there
-are no problems supporting one buffer head per folio.  In fact, we could
-probably go up to 8 buffer heads per folio without any trouble (but I'm
-not signing up to do that work).
+> git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git tags/for-6.6/dm-fixes
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e39bfb5925ffac1688cd053d49792a764590bae2
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
