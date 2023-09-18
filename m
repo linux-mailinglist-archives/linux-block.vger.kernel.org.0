@@ -2,84 +2,62 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A137A4D85
-	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 17:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51A587A4CD7
+	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 17:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbjIRPwD (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Sep 2023 11:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
+        id S229635AbjIRPmH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Sep 2023 11:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjIRPwC (ORCPT
+        with ESMTP id S229472AbjIRPmH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Sep 2023 11:52:02 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBAC197
-        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 08:50:24 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1c45c45efeeso923045ad.0
-        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 08:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1695051966; x=1695656766; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0Vk4FgIcW1TSMW2JsWYrGwWF6KGqyDjo8gszSBQuYas=;
-        b=J8SI1ZNIWJoyYw7zeYz+M4t2izbwYCaP5Qph5przJvpPWHkRu7KDZQsJwQe+whnafs
-         AnkH2xxdixu/9mIp5VfzFMujIOlhl6l1LW9W7zoJ8KNwEV3TrsDZoUMfdEI4XRW0OUHQ
-         t1qeH0gS+VseXehcNfsoSmeKkWQYLS4Pss0CPjCxj1R36LgSmqnkqWo3hH+e1MExrXOF
-         Nsgo19IMwqoihjgMkcCd1VLJWtOaVtmsiTo7Oq+AgxHcQ6yrpYjJKVIZ72oVEMV7r1V7
-         c4wtqtwmQRRLQGPn0Le3mMU4pI3u36Nvpr4+jVVnjJCBWG3ijbRd79Rwhl6piH2ZN1cG
-         dl5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695051966; x=1695656766;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Vk4FgIcW1TSMW2JsWYrGwWF6KGqyDjo8gszSBQuYas=;
-        b=okFhS5RTqeEbHDoKw4wLTbWLOE1uj2gXpUylBjMVOQF16FI9b1n9BKrElMHxSUcwIQ
-         CeljTjjihq1D69mcBNfZ2onJcWO5in8R3Yu18Aoc0egwindScE+zJMYfPkQV1RJGdB4D
-         +ndaCJZze07nUzu3BnMky7Y80U7/ajN4pwQpuw5xQ8HylURqq52tE5ar8YndUHcjPamO
-         LYITP7jVohq5Q42SLSAo7aSvNZaD9BmJOoWXtQNhatya7eGXNqGCUxkOaePQDzsxa5mQ
-         ovUBT2JxZqYyHpNqG01r6KWPUk6K7jM0+yJOXqqo88p6CbRRDxSww6nbAF5yQc9cYXu3
-         7hWA==
-X-Gm-Message-State: AOJu0YxFvWNr6lzO6IXbkzsQ+WGXGl6nh8GpcA3beKB31lrcTIZV/3EK
-        NsONIr0XZSkPXoP8jwDBktWnJ6YvxUrZQpppbCU+fg==
-X-Google-Smtp-Source: AGHT+IF0ETGJxFGCPdWLjhdcq5kYB6tsNKFHCvPsF+dF0bkZx+4sJ6IG49WpbNpJND4QZJhorYYf7Q==
-X-Received: by 2002:a05:6602:88c:b0:792:8011:22f with SMTP id f12-20020a056602088c00b007928011022fmr8546560ioz.0.1695045568156;
-        Mon, 18 Sep 2023 06:59:28 -0700 (PDT)
-Received: from [192.168.1.94] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id em8-20020a0566384da800b0042b068d921esm2836235jab.16.2023.09.18.06.59.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Sep 2023 06:59:27 -0700 (PDT)
-Message-ID: <a6dc1618-249c-48db-a7d5-fe0415ae2afb@kernel.dk>
-Date:   Mon, 18 Sep 2023 07:59:26 -0600
+        Mon, 18 Sep 2023 11:42:07 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A20A188;
+        Mon, 18 Sep 2023 08:40:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fouKrDKKt6aBJ1Dc7SZubYvnayge8ritkFh73nhsd4Q=; b=UZIQNYhRDQTdkBDYOcz0+SM+gy
+        PhbgdFp3PR3FZmJkJRm8QhxP+lhCo7mj5i3ONdaDEiJvZdlSZ65qos6zjkF3whhbuQDtydXheCbMj
+        vac5GX7N7rNPLLBPb1uQAe4xEnEo73pCNJaeW998jYdNxWgG1aQMvsDzYSSosgmRD16wa6CQA8mIo
+        djZq2mb+j1ArpIUxl59UjXY5pf09nJnH+uuGm5Ijk85WToAZetMfFNKb98Ego2nh+HdWmYX9AxEaH
+        fxqoKqY+l5j/I5kKigBh+pUrixJ9g1WH+/KSDxoNXnViVqzjxirqs8Ex7APTmlfwhvOHv5UE6WeL1
+        QxweI1+A==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qiEnK-00BN1a-1b; Mon, 18 Sep 2023 14:00:10 +0000
+Date:   Mon, 18 Sep 2023 15:00:09 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Pankaj Raghav <p.raghav@samsung.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 09/18] fs/buffer: use mapping order in grow_dev_page()
+Message-ID: <ZQhX6Zt5iqZp4GJ0@casper.infradead.org>
+References: <20230918110510.66470-1-hare@suse.de>
+ <20230918110510.66470-10-hare@suse.de>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] null_blk: refactor deprecated strncpy
-Content-Language: en-US
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>
-References: <20230918-strncpy-drivers-block-null_blk-main-c-v2-1-cd9b109edfdf@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20230918-strncpy-drivers-block-null_blk-main-c-v2-1-cd9b109edfdf@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230918110510.66470-10-hare@suse.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/18/23 1:25 AM, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Mon, Sep 18, 2023 at 01:05:01PM +0200, Hannes Reinecke wrote:
+> Use the correct mapping order in grow_dev_page() to ensure folios
+> are created with the correct order.
 
-Commit title again...
+I see why you did this, but I think it's fragile.  __filemap_get_folio()
+will happily decrease 'order' if memory allocation fails.  I think
+__filemap_get_folio() needs to become aware of the minimum folio
+order for this mapping, and then we don't need this patch.
 
--- 
-Jens Axboe
-
+Overall, I like bits of this patchset and I like bits of Pankaj's ;-)
