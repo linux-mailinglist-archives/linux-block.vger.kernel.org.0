@@ -2,62 +2,98 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51A587A4CD7
-	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 17:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2F667A4DE2
+	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 18:02:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbjIRPmH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Sep 2023 11:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
+        id S229771AbjIRQC4 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Sep 2023 12:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjIRPmH (ORCPT
+        with ESMTP id S229501AbjIRQCz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Sep 2023 11:42:07 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A20A188;
-        Mon, 18 Sep 2023 08:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fouKrDKKt6aBJ1Dc7SZubYvnayge8ritkFh73nhsd4Q=; b=UZIQNYhRDQTdkBDYOcz0+SM+gy
-        PhbgdFp3PR3FZmJkJRm8QhxP+lhCo7mj5i3ONdaDEiJvZdlSZ65qos6zjkF3whhbuQDtydXheCbMj
-        vac5GX7N7rNPLLBPb1uQAe4xEnEo73pCNJaeW998jYdNxWgG1aQMvsDzYSSosgmRD16wa6CQA8mIo
-        djZq2mb+j1ArpIUxl59UjXY5pf09nJnH+uuGm5Ijk85WToAZetMfFNKb98Ego2nh+HdWmYX9AxEaH
-        fxqoKqY+l5j/I5kKigBh+pUrixJ9g1WH+/KSDxoNXnViVqzjxirqs8Ex7APTmlfwhvOHv5UE6WeL1
-        QxweI1+A==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qiEnK-00BN1a-1b; Mon, 18 Sep 2023 14:00:10 +0000
-Date:   Mon, 18 Sep 2023 15:00:09 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 09/18] fs/buffer: use mapping order in grow_dev_page()
-Message-ID: <ZQhX6Zt5iqZp4GJ0@casper.infradead.org>
-References: <20230918110510.66470-1-hare@suse.de>
- <20230918110510.66470-10-hare@suse.de>
+        Mon, 18 Sep 2023 12:02:55 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC42A3C35
+        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 09:00:10 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-76eecd12abbso77251885a.0
+        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 09:00:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1695052552; x=1695657352; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bC2phskuIFvD/AaiWBQwD/RidKu+taALyCRQa/nknSE=;
+        b=l2aJOcTwnr4VKLPCJMI3xvPby4xgyOk6TmntmpGu5lawEj5WGJXBFS/WAjBvd+qraT
+         n8JOC14SqRQpwcsMs8EZrqDVJOvyYtSptSA2Zfa/hafAB698WHETYweV02KlUGRhTt/4
+         6pJTJPlzz7EmEdOqyG8ziDE8An3l6lVfNUbUbqvv3s7wycM8Zjnzz0nFOhkxV49wRAJe
+         hmCCRc09aNzLj8Vd9wFQPN5Ssk6EtXwD2bZ5KYvv25O0KchSSLSaf6QjaDP/PnRV977r
+         kdqxY+Q4C7Xq4bXquxn6IeNkilhE6O3DQv0Ou5QmFIdXHi69NDbY37unF7YuDyj88PcA
+         F7bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695052552; x=1695657352;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bC2phskuIFvD/AaiWBQwD/RidKu+taALyCRQa/nknSE=;
+        b=Y1qWmPMpC+FwfUxVu4ewiJvxkk7sUt4amJCtnd7SIjwyED67UbGVaMRmJLuZXTVCrM
+         pSaSUwl9mcYADnwFIJynih04ETxOZmocOLz0LTIHcC8Zvj5vhcQzkGebdmXzmmrlXGNX
+         ebIqOEBmtcD/SEtoFmzZULkzX+wV7vQUQp6r32u0r1Os+ilfIfKkLddznGFnB6PUWQWe
+         crePnGwNkuWutcedcpYthpMMIXGX00xwW5XjlsLUs9PvOy0ZfN9VV0UiKU6t1kTt0tTb
+         GlNZxFC9FrYqDKBy2uzE5NMflGj4WrVCITyafT6+9lFNKwY4Y+HvXDkyDwyhiQ7t78y9
+         L5hQ==
+X-Gm-Message-State: AOJu0YyOG2sG+FWdpcFInKjxDHGbUBMuSbX41UmBeZNJAgzpQTsAJPIQ
+        ob9oH+D0hjgk2eEggagdasfTAkAnzxAc7QhXZtK0fA==
+X-Google-Smtp-Source: AGHT+IE4huNJ9ieYLbRr1wXk9YJVyZSV0RaDTxWDJMPdpQYjKG794yWqTTw/d7v2WKKlkf7zMRwoMQ==
+X-Received: by 2002:a6b:c94d:0:b0:795:172f:977a with SMTP id z74-20020a6bc94d000000b00795172f977amr9665856iof.1.1695045646340;
+        Mon, 18 Sep 2023 07:00:46 -0700 (PDT)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id em8-20020a0566384da800b0042b068d921esm2836235jab.16.2023.09.18.07.00.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 07:00:45 -0700 (PDT)
+Message-ID: <e6433ada-16db-4d16-801b-9a3fd5460467@kernel.dk>
+Date:   Mon, 18 Sep 2023 08:00:45 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230918110510.66470-10-hare@suse.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] aoe: refactor deprecated strncpy
+Content-Language: en-US
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Justin Sanders <justin@coraid.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Xu Panda <xu.panda@zte.com.cn>,
+        Yang Yang <yang.yang29@zte.com>
+References: <20230911-strncpy-drivers-block-aoe-aoenet-c-v1-1-9643d6137ff9@google.com>
+ <202309142019.23A7D80A@keescook>
+ <6338fbac-0177-43eb-be4f-7c586956953f@kernel.dk>
+ <CAFhGd8pwtUSJBzepe=GBeyKuhD6ND6aWjeeT477Sdb4YTYDL_Q@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CAFhGd8pwtUSJBzepe=GBeyKuhD6ND6aWjeeT477Sdb4YTYDL_Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 01:05:01PM +0200, Hannes Reinecke wrote:
-> Use the correct mapping order in grow_dev_page() to ensure folios
-> are created with the correct order.
+On 9/18/23 1:03 AM, Justin Stitt wrote:
+>> Change looks fine to me too, but for the love of $deity, please use
+>> a proper subject line for these kinds of patches. It's not refactoring
+>> anything.
+>>
+> 
+> Fair.
+> 
+> Perhaps "xyz: replace strncpy with strscpy"?
 
-I see why you did this, but I think it's fragile.  __filemap_get_folio()
-will happily decrease 'order' if memory allocation fails.  I think
-__filemap_get_folio() needs to become aware of the minimum folio
-order for this mapping, and then we don't need this patch.
+That's a lot more descriptive, as a) it's actually accurate, and b) this
+is what the patch does. You just sent another one with this refactor
+wording which makes zero sense, please resend this and others targeted
+at block with a proper description.
 
-Overall, I like bits of this patchset and I like bits of Pankaj's ;-)
+-- 
+Jens Axboe
+
