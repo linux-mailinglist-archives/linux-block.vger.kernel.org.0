@@ -2,219 +2,109 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 985EA7A4F00
-	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 18:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C65947A4F7B
+	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 18:43:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjIRQct (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Sep 2023 12:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38930 "EHLO
+        id S230365AbjIRQn2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Sep 2023 12:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230120AbjIRQc3 (ORCPT
+        with ESMTP id S229938AbjIRQnB (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Sep 2023 12:32:29 -0400
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239EB7A82
-        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 09:19:57 -0700 (PDT)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20230918135330euoutp02c3a5d06ddb3156cd75b9ca912148f1e6~GAqNRWjTU0521105211euoutp02T
-        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 13:53:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20230918135330euoutp02c3a5d06ddb3156cd75b9ca912148f1e6~GAqNRWjTU0521105211euoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1695045210;
-        bh=QyNZbmlzUImJ8eQcsA69RltUbDRiaT2o3+FeSg3Y62Y=;
-        h=Date:Subject:To:CC:From:In-Reply-To:References:From;
-        b=ux4PBtW+vPLpSvtvyZ+k6G6ltkshoBkob5GFLcWZXVoOwKUL/Ixq3lwaIx093ze2l
-         oFn7XwbGo2tJUKHyOBJfc2hlWVyMUiuqOp7R2g/b8OrSqEav3E2xaaVpdD9VX0zEsp
-         f9oXygCCIgGTbGYSrlSMlsXc5xsXfZGVHlKt3/FU=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230918135330eucas1p1e79551a21c02b30e9bd116ee91d0ef91~GAqNGY9KZ2626026260eucas1p1l;
-        Mon, 18 Sep 2023 13:53:30 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 43.AE.42423.95658056; Mon, 18
-        Sep 2023 14:53:29 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230918135329eucas1p1ed1ae2c216d203cfba0eac428a5f2369~GAqMwkZEW2416024160eucas1p1n;
-        Mon, 18 Sep 2023 13:53:29 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230918135329eusmtrp10b02e680b0c7f9addad7c1afca0ad76c~GAqMv33DM0074500745eusmtrp15;
-        Mon, 18 Sep 2023 13:53:29 +0000 (GMT)
-X-AuditID: cbfec7f2-a3bff7000002a5b7-97-650856597651
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A4.36.14344.95658056; Mon, 18
-        Sep 2023 14:53:29 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230918135329eusmtip1a11e796d64da38e379c132d7a42f41e1~GAqMixrzn2844828448eusmtip1_;
-        Mon, 18 Sep 2023 13:53:29 +0000 (GMT)
-Received: from [192.168.8.209] (106.210.248.18) by CAMSVWEXC02.scsc.local
-        (2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-        Mon, 18 Sep 2023 14:53:28 +0100
-Message-ID: <ef88e8e4-c94d-9ad3-a130-8cd6b3f722c9@samsung.com>
-Date:   Mon, 18 Sep 2023 15:53:27 +0200
+        Mon, 18 Sep 2023 12:43:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70276E6E
+        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 09:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695052988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Hy0ReXQZiegSjwpmyZH2qjKRhSINulN3U3E7DKyqaHs=;
+        b=VXE/Ue4GjVgLBjH51xi4k/R3cA++D1nFAL4ErxXuEoATKQnYCxC1KoIeKVyyKV+r80WSCw
+        YvaQnLW2lkKKzL8NZZ+0LDRqQ79eRvdOzVELdKCn9IZJX6uIy1IBwAS8BH7w28Eo9Rfysc
+        AQvevjZVRNWVVmwsS67d4ID7EAgeZ+A=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-54-HD6phgFBND-pWVVk7hfZWw-1; Mon, 18 Sep 2023 12:02:56 -0400
+X-MC-Unique: HD6phgFBND-pWVVk7hfZWw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 86AFE803470;
+        Mon, 18 Sep 2023 16:02:55 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5B9A2904;
+        Mon, 18 Sep 2023 16:02:52 +0000 (UTC)
+Date:   Tue, 19 Sep 2023 00:02:47 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, io-uring@vger.kernel.org,
+        ming.lei@redhat.com
+Subject: Re: [PATCH 00/10] io_uring/ublk: exit notifier support
+Message-ID: <ZQh0p+ovm1sd3Vau@fedora>
+References: <20230918041106.2134250-1-ming.lei@redhat.com>
+ <fae0bbc9-efdd-4b56-a5c8-53428facbe5b@kernel.dk>
+ <ZQhPhFwgSLvR/zDM@fedora>
+ <5706fa76-a071-4081-8bb0-b1089e86a77f@kernel.dk>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-        Thunderbird/102.15.1
-Subject: Re: [PATCH 0/5] Improve zram writeback performance
-Content-Language: en-US
-To:     <minchan@kernel.org>, <senozhatsky@chromium.org>
-CC:     <linux-kernel@vger.kernel.org>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <gost.dev@samsung.com>,
-        Pankaj Raghav <kernel@pankajraghav.com>
-From:   Pankaj Raghav <p.raghav@samsung.com>
-In-Reply-To: <20230911133430.1824564-1-kernel@pankajraghav.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [106.210.248.18]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-        CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGKsWRmVeSWpSXmKPExsWy7djPc7qRYRypBuvvWFmsvtvPZnHm5WcW
-        i723tC0u75rDZrHs63t2i90bF7E5sHnMbrjI4nH5bKnHplWdbB5nVzp6fN4kF8AaxWWTkpqT
-        WZZapG+XwJWx4fJkpoKFshVH2k+yNDDOEO9i5OSQEDCR2PjhLWMXIxeHkMAKRomXpw8xQThf
-        GCUe/vzGCuF8ZpToX/iYEaZl4pavLCC2kMByRonX35zgipZNe8AIkdjFKLF/m2UXIwcHr4Cd
-        xK3bISBhFgFVicam20wgNq+AoMTJmU/A5ogKREvMnLYQrFVYwFpi1YlmZhCbWUBc4taT+WD1
-        IkB7V/+9AnYqs8BMRomTv2YxgsxnE9CSaOxkB6nhFLCXeDHlHQtEr6ZE6/bf7BC2vMT2t3OY
-        Ie5XkljYdocNwq6VOLXlFtjHEgL/OSSmXjzKApFwkWjb3w5lC0u8Or6FHcKWkTg9uQcqXi3x
-        9MZvZojmFmAI7VzPBnKQBNAHfWdyIGocJf42zmeGCPNJ3HgrCHEPn8SkbdOZJzCqzkIKillI
-        Xp6F5IVZSF5YwMiyilE8tbQ4Nz212DAvtVyvODG3uDQvXS85P3cTIzDpnP53/NMOxrmvPuod
-        YmTiYDzEKMHBrCTCO9OQLVWINyWxsiq1KD++qDQntfgQozQHi5I4r7btyWQhgfTEktTs1NSC
-        1CKYLBMHp1QDU6JfjoBuyecmt6bK6srzF+WMGERbDjUtCHF1eq84a1HaEWMbzWclgiVTxXhv
-        bjn5lvvOeenU/oLrD+tvc2VJ9vj2LrTumrZ5Wd/j6FWce7N3GH69sP/WafFl1dzz2KWcZnxp
-        uHOovzj1V//zFqbchobp/nOFwjWEWRbWcRcd/83ceVj+qPXOFfsE71mfW/x0+ZlAfdkd+QwR
-        JtbBpz58FXitYcC03XntGzbR2e7MS7Y8bKvwWLzqa3tj0W67ZoHDnzetZu7snaYWzsjOefbJ
-        ZuVXoT6v8j1l9z9f8LjDT2GJVmL94c3ae2/9teJ8umPyZ78j3FMPa8X83XbzpfPE7Q5/dV+z
-        qv7ye7XM3I4rQImlOCPRUIu5qDgRAEcrJj+pAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsVy+t/xu7qRYRypBuumKlqsvtvPZnHm5WcW
-        i723tC0u75rDZrHs63t2i90bF7E5sHnMbrjI4nH5bKnHplWdbB5nVzp6fN4kF8AapWdTlF9a
-        kqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJex4fJkpoKFshVH
-        2k+yNDDOEO9i5OSQEDCRmLjlK0sXIxeHkMBSRokDv36yQSRkJDZ+ucoKYQtL/LnWxQZR9JFR
-        YtuF06wQzi5GiZUb/zN2MXJw8ArYSdy6HQLSwCKgKtHYdJsJxOYVEJQ4OfMJC0iJqEC0RNdL
-        Y5CwsIC1xKoTzcwgNrOAuMStJ/PBykWADlr99wojyHhmgZmMEid/zWKE2DWJUeLIs8nsIIPY
-        BLQkGjvZQRo4BewlXkx5xwIxSFOidftvdghbXmL72znMEA8oSSxsuwP1WK3E57/PGCcwis5C
-        ct4sJHfMQjJqFpJRCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG67ZjP7fsYFz56qPe
-        IUYmDsZDjBIczEoivDMN2VKFeFMSK6tSi/Lji0pzUosPMZoCw2gis5Rocj4wXeSVxBuaGZga
-        mphZGphamhkrifN6FnQkCgmkJ5akZqemFqQWwfQxcXBKNTBNU3tWplDx/us8zzsvdOcaljOK
-        9p5bn1fcz9O9Q+yia7OZYO7PqlzOxalvtzBJl82d/ujyl/kPRVIbU954CW6ecKJf5OU9yY2/
-        7pYFyEaYWap8jdzhpt0tkeymPS8lZPK09rurdSLTLBlup1i1s0Q939IRF10wcyUL14Eq7t2L
-        5L1vTvvnNGfb71c3PrzqZFRrvxm43ytTWb6k0dNV3Pt3B+tJTkE9ee9nLTJrwls83+V92cA9
-        hZUj7Bjf7qWS+xct2ZV29iPfrrANUfOENnhWf3e9VMbEFLzUzl33mlfrB/vrJt6iHrNXHTsm
-        NuNPdKz1m6xKgw3nQ/bt/rN/5om22Qw1V/iEZcX/7FrbIaHEUpyRaKjFXFScCABMZjJnXwMA
-        AA==
-X-CMS-MailID: 20230918135329eucas1p1ed1ae2c216d203cfba0eac428a5f2369
-X-Msg-Generator: CA
-X-RootMTR: 20230911133442eucas1p2f773a475e0a6dc1a448c63884d58c8d3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230911133442eucas1p2f773a475e0a6dc1a448c63884d58c8d3
-References: <CGME20230911133442eucas1p2f773a475e0a6dc1a448c63884d58c8d3@eucas1p2.samsung.com>
-        <20230911133430.1824564-1-kernel@pankajraghav.com>
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5706fa76-a071-4081-8bb0-b1089e86a77f@kernel.dk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Gentle ping Minchan and Sergey.
+On Mon, Sep 18, 2023 at 08:15:07AM -0600, Jens Axboe wrote:
+> On 9/18/23 7:24 AM, Ming Lei wrote:
+> > On Mon, Sep 18, 2023 at 06:54:33AM -0600, Jens Axboe wrote:
+> >> On 9/17/23 10:10 PM, Ming Lei wrote:
+> >>> Hello,
+> >>>
+> >>> In do_exit(), io_uring needs to wait pending requests.
+> >>>
+> >>> ublk is one uring_cmd driver, and its usage is a bit special by submitting
+> >>> command for waiting incoming block IO request in advance, so if there
+> >>> isn't any IO request coming, the command can't be completed. So far ublk
+> >>> driver has to bind its queue with one ublk daemon server, meantime
+> >>> starts one monitor work to check if this daemon is live periodically.
+> >>> This way requires ublk queue to be bound one single daemon pthread, and
+> >>> not flexible, meantime the monitor work is run in 3rd context, and the
+> >>> implementation is a bit tricky.
+> >>>
+> >>> The 1st 3 patches adds io_uring task exit notifier, and the other
+> >>> patches converts ublk into this exit notifier, and the implementation
+> >>> becomes more robust & readable, meantime it becomes easier to relax
+> >>> the ublk queue/daemon limit in future, such as not require to bind
+> >>> ublk queue with single daemon.
+> >>
+> >> The normal approach for this is to ensure that each request is
+> >> cancelable, which we need for other things too (like actual cancel
+> >> support) Why can't we just do the same for ublk?
+> > 
+> > I guess you meant IORING_OP_ASYNC_CANCEL, which needs userspace to
+> > submit this command, but here the userspace(ublk server) may be just panic
+> > or killed, and there isn't chance to send IORING_OP_ASYNC_CANCEL.
+> 
+> Either that, or cancel done because of task exit.
+> 
+> > And driver doesn't have any knowledge if the io_uring ctx or io task
+> > is exiting, so can't complete issued commands, then hang in
+> > io_uring_cancel_generic() when the io task/ctx is exiting.
+> 
+> If you hooked into the normal cancel paths, you very much would get
+> notified when the task is exiting. That's how the other cancelations
+> work, eg if a task has pending poll requests and exits, they get
+> canceled and reaped.
 
-Regards,
-Pankaj
+Ok, got the idea, thanks for the point!
 
-On 2023-09-11 15:34, Pankaj Raghav wrote:
-> ZRAM can have a backing device that could be used as a writeback device
-> for the pages in RAM. The current writeback code (writeback_store()) does
-> a synchronous single page size IO to the backing device.
-> 
-> This series implements IO batching while doing a writeback to a backing
-> device. The code still does synchronous IOs but with larger IO sizes
-> whenever possible. This crosses off one of the TODO that was there as a part
-> of writeback_store() function:
-> A single page IO would be inefficient for write...
-> 
-> The idea is to batch the IOs to a certain limit before the data is flushed
-> to the backing device. The batch limit is initially chosen based on the
-> bdi->io_pages value with an upper limit of 32 pages (128k on x86).
-> 
-> Batching reduces the time of writeback of 4G data to a nvme backing device
-> from 68 secs to 15 secs (more than **4x improvement**).
-> 
-> The first 3 patches are prep. 4th patch implements the main logic for IO
-> batching and the last patch is another cleanup.
-> 
-> Perf:
-> 
-> $ modprobe zram num_devices=1
-> $ echo "/dev/nvme0n1" > /sys/block/zram0/backing_dev
-> $ echo 6G > /sys/block/zram0/disksize
-> $ fio -iodepth=16 -rw=randwrite -ioengine=io_uring -bs=4k -numjobs=1 -size=4G -filename=/dev/zram0 -name=io_uring_1 > /dev/null
-> $ echo all > /sys/block/zram0/idle
-> 
-> Without changes:
-> $ time echo idle > /sys/block/zram0/writeback
-> real    1m8.648s         (68 secs)
-> user    0m0.000s
-> sys     0m24.899s
-> $ cat /sys/block/zram0/bd_stat
-> 1048576        0  1048576
-> 
-> With changes:
-> $ time echo idle > /sys/block/zram0/writeback
-> real    0m15.496s       (15 secs)
-> user    0m0.000s
-> sys     0m7.789s
-> $ cat /sys/block/zram0/bd_stat
-> 1048576        0  1048576
-> 
-> Testing:
-> 
-> A basic End-End testing (based on Sergey's test flow [1]):
-> 1) configure zram0 and add a nvme device as a writeback device
-> 2) Get the sha256sum of a tarball
-> 3) mkfs.ext4 on zram0, cp tarball
-> 4) idle writeback
-> 5) cp tarball from zram0 to another device (reread writeback pages) and
->    compare the sha256sum again
-> The sha before and after are verified to be the same.
-> 
-> Writeback limit testing:
-> 
-> 1) configure zram0 and add a nvme device as a writeback device
-> 2) Set writeback limit and enable
-> 3) Do a fio that crosses the writeback limit
-> 4) idle writeback
-> 5) Verify the writeback is limited to the set writeback limit value
-> 
-> $ modprobe zram num_devices=1
-> $ echo "/dev/nvme0n1" > /sys/block/zram0/backing_dev
-> $ echo 4G > /sys/block/zram0/disksize
-> $ echo 1 > /sys/block/zram0/writeback_limit_enable
-> $ echo 1002 > /sys/block/zram0/writeback_limit
-> 
-> $ fio -iodepth=16 -rw=write -ioengine=io_uring -bs=4k -numjobs=1 -size=10M -filename=/dev/zram0 -name=io_uring_1
-> 
-> $ echo all > /sys/block/zram0/idle
-> $ echo idle > /sys/block/zram0/writeback
-> $ cat /sys/block/zram0/bd_stat
-> 1002        0     1002
-> 
-> writeback is limited to the set value.
-> 
-> [1] https://lore.kernel.org/lkml/20230806071601.GB907732@google.com/
-> 
-> Pankaj Raghav (5):
->   zram: move index preparation to a separate function in writeback_store
->   zram: encapsulate writeback to the backing bdev in a function
->   zram: add alloc_block_bdev_range() and free_block_bdev_range()
->   zram: batch IOs during writeback to improve performance
->   zram: don't overload blk_idx variable in writeback_store()
-> 
->  drivers/block/zram/zram_drv.c | 318 ++++++++++++++++++++++------------
->  1 file changed, 210 insertions(+), 108 deletions(-)
-> 
-> 
-> base-commit: 7bc675554773f09d88101bf1ccfc8537dc7c0be9
+Turns out it is cancelable uring_cmd, and I will try to work towards
+this direction, and has got something in mind about the implementation.
+
+
+Thanks, 
+Ming
+
