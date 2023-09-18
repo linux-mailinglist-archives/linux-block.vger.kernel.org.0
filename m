@@ -2,92 +2,140 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 346667A47E2
-	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 13:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 140857A488A
+	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 13:36:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241246AbjIRLGA (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Sep 2023 07:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58418 "EHLO
+        id S241866AbjIRLg1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Sep 2023 07:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237389AbjIRLF2 (ORCPT
+        with ESMTP id S241827AbjIRLfz (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Sep 2023 07:05:28 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F632100;
-        Mon, 18 Sep 2023 04:05:22 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 8345921AB7;
-        Mon, 18 Sep 2023 11:05:17 +0000 (UTC)
+        Mon, 18 Sep 2023 07:35:55 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91809CC7;
+        Mon, 18 Sep 2023 04:34:47 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 4409021B04;
+        Mon, 18 Sep 2023 11:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1695035117; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+        t=1695036886; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=D5QLmYcyiXCClm9oSal5AbLNc763FLILvTTexvLDtfw=;
-        b=ZCSXK1SLt/Lfx4XzX4fIMcBfywjX7G9r/cC/rhMFkS2ddSGBKQiUpRcMl8Tv7sPrABU6Op
-        UuOKQXhBGtUQbJXz73R+SoeQZ67521Ul/PbZUrTMZqByZQzG0HvQ3R+Z1Q/flgYr+rd7ov
-        hCZwuvcyKVojvz0yjjEvdQWmxa1fdes=
+        bh=lsDDklBjIFoM7Jl8EU+BYlHZ0g3Sye7Xs6k5RDaXpUQ=;
+        b=1Ma+WufOY6MNQBSldMuieR9ZpirsJTdWcZsxqGoF3hzkrSmWYdUzna299yvRM5B3QCSSra
+        /JRoQvQMcnCpDBDCZwK+FqMy4pbuDhN+IQjN3aUGfjBWq10TYlBDowLFK/iFg0p58MO8WZ
+        PNgDtYb8GfwbFTLuknhCQayMBKCbPMk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1695035117;
+        s=susede2_ed25519; t=1695036886;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=D5QLmYcyiXCClm9oSal5AbLNc763FLILvTTexvLDtfw=;
-        b=oiwuijSI3YH9IQAqPcKjx+5SZRpDIArylIaQqai6E/s3AiIYrBFa7aXAqocgcMGO7J6qtf
-        g8lQh1Dlf3sDVPAw==
-Received: from adalid.arch.suse.de (adalid.arch.suse.de [10.161.8.13])
-        by relay2.suse.de (Postfix) with ESMTP id 6D48D2C161;
-        Mon, 18 Sep 2023 11:05:17 +0000 (UTC)
-Received: by adalid.arch.suse.de (Postfix, from userid 16045)
-        id 79D7751CD161; Mon, 18 Sep 2023 13:05:17 +0200 (CEST)
-From:   Hannes Reinecke <hare@suse.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 18/18] nvme: enable logical block size > PAGE_SIZE
-Date:   Mon, 18 Sep 2023 13:05:10 +0200
-Message-Id: <20230918110510.66470-19-hare@suse.de>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230918110510.66470-1-hare@suse.de>
-References: <20230918110510.66470-1-hare@suse.de>
+        bh=lsDDklBjIFoM7Jl8EU+BYlHZ0g3Sye7Xs6k5RDaXpUQ=;
+        b=lWxYWMG8V1e8y9ZvkPybRmpUpLTWqw/jpn9kAQofvAoPUVWxscsPv0GWi4rsXS3NH9Nk2b
+        06wsECm6iRw7PZCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DDBA913480;
+        Mon, 18 Sep 2023 11:34:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 33muM9M1CGXIWgAAMHmgww
+        (envelope-from <hare@suse.de>); Mon, 18 Sep 2023 11:34:43 +0000
+Message-ID: <7dbf0a76-d811-4cb0-a38e-8375334710b2@suse.de>
+Date:   Mon, 18 Sep 2023 13:34:37 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 00/10] bdev: LBS devices support to coexist with
+ buffer-heads
+Content-Language: en-US
+To:     Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, hch@infradead.org,
+        djwong@kernel.org, dchinner@redhat.com, kbusch@kernel.org,
+        sagi@grimberg.me, axboe@fb.com, brauner@kernel.org,
+        ritesh.list@gmail.com, rgoldwyn@suse.com, jack@suse.cz,
+        ziy@nvidia.com, ryan.roberts@arm.com, patches@lists.linux.dev,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, p.raghav@samsung.com,
+        da.gomez@samsung.com, dan.helmick@samsung.com
+References: <20230915213254.2724586-1-mcgrof@kernel.org>
+ <ZQd/7RYfDZgvR0n2@dread.disaster.area>
+ <ZQeIaN2WC+whc/OP@casper.infradead.org>
+From:   Hannes Reinecke <hare@suse.de>
+In-Reply-To: <ZQeIaN2WC+whc/OP@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+On 9/18/23 01:14, Matthew Wilcox wrote:
+> On Mon, Sep 18, 2023 at 08:38:37AM +1000, Dave Chinner wrote:
+>> On Fri, Sep 15, 2023 at 02:32:44PM -0700, Luis Chamberlain wrote:
+>>> LBS devices. This in turn allows filesystems which support bs > 4k to be
+>>> enabled on a 4k PAGE_SIZE world on LBS block devices. This alows LBS
+>>> device then to take advantage of the recenlty posted work today to enable
+>>> LBS support for filesystems [0].
+>>
+>> Why do we need LBS devices to support bs > ps in XFS?
+> 
+> It's the other way round -- we need the support in the page cache to
+> reject sub-block-size folios (which is in the other patches) before we
+> can sensibly talk about enabling any filesystems on top of LBS devices.
+> Even XFS, or for that matter ext2 which support 16k block sizes on
+> CONFIG_PAGE_SIZE_16K (or 64K) kernels need that support first.
+> 
+> [snipping the parts I agree with; this should not be the first you're
+> hearing about a format change to XFS]
+> 
+>>> There might be a better way to do this than do deal with the switching
+>>> of the aops dynamically, ideas welcomed!
+>>
+>> Is it even safe to switch aops dynamically? We know there are
+>> inherent race conditions in doing this w.r.t. mmap and page faults,
+>> as the write fault part of the processing is directly dependent
+>> on the page being correctly initialised during the initial
+>> population of the page data (the "read fault" side of the write
+>> fault).
+>>
+>> Hence it's not generally considered safe to change aops from one
+>> mechanism to another dynamically. Block devices can be mmap()d, but
+>> I don't see anything in this patch set that ensures there are no
+>> other users of the block device when the swaps are done. What am I
+>> missing?
+> 
+> We need to evict all pages from the page cache before switching aops to
+> prevent misinterpretation of folio->private.  If switching aops is even
+> the right thing to do.  I don't see the problem with allowing buffer heads
+> on block devices, but I haven't been involved with the discussion here.
 
-Don't set the capacity to zero for when logical block size > PAGE_SIZE
-as the block device with iomap aops support allocating block cache with
-a minimum folio order.
+Did we even have that conversation?
+That's one of the first things I've stumbled across when doing my 
+patchset, and found the implications too horrible to consider.
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Not a big fan, plus I don't think we need that.
+Cf my patchset :-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f3a01b79148c..e72f1b1ee27a 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1889,7 +1889,7 @@ static void nvme_update_disk_info(struct gendisk *disk,
- 	 * The block layer can't support LBA sizes larger than the page size
- 	 * yet, so catch this early and don't allow block I/O.
- 	 */
--	if (ns->lba_shift > PAGE_SHIFT) {
-+	if ((ns->lba_shift > PAGE_SHIFT) && IS_ENABLED(CONFIG_BUFFER_HEAD)) {
- 		capacity = 0;
- 		bs = (1 << 9);
- 	}
+Cheers,
+
+Hannes
 -- 
-2.35.3
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
+Myers, Andrew McDonald, Martje Boudien Moerman
 
