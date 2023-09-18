@@ -2,101 +2,104 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 771CC7A4A36
-	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 14:55:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A91D97A4D0E
+	for <lists+linux-block@lfdr.de>; Mon, 18 Sep 2023 17:46:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241554AbjIRMyq (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 18 Sep 2023 08:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37708 "EHLO
+        id S229721AbjIRPqI (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 18 Sep 2023 11:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241609AbjIRMyl (ORCPT
+        with ESMTP id S229720AbjIRPqH (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 18 Sep 2023 08:54:41 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12156A0
-        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 05:54:36 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-69028d0fab1so1099584b3a.1
-        for <linux-block@vger.kernel.org>; Mon, 18 Sep 2023 05:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1695041675; x=1695646475; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FWGPTo1ZvfuUjNg1XUW38hl8yK4OGYjL6QNtvfdy6vg=;
-        b=YLxMPmWWk1Gtnm/5DsxfQBnyzPFzHFukCGG+t2lvWjvrXsXAWYAptxnJbfCT6yzQ3x
-         rnWg/5rMS2ZFBaVVxoMm48YmjmDEgCf7aEM+JQEPrMo3hmde95RPJDWKrQVpOf0xgQQn
-         gjJ858d+UaM+oiZQF3SECJh/bjtX0sS32iowltcVXgCBMN+4my83IxEKZc+KFba/pwRR
-         UdKIOS3arAv3wPrwzmhoLGxJkZXEuanNl2Ya5jUZaNW0KV+eleT7RZgS5Y9Pd1Cfc69A
-         ze6A9isc6rA2Y7lwEI0MHNiXBJwj9/Bxp+/oIlj/h4Y6XCwzUBR0L/hWfZflvI1nnHil
-         m9Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695041675; x=1695646475;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FWGPTo1ZvfuUjNg1XUW38hl8yK4OGYjL6QNtvfdy6vg=;
-        b=A8Opco5UHaRMgbVt8ZZrJFfiJCLGKE0PbBgkK7c8PFFmhlBhMyARea4CHV+GYXVi2W
-         LKpTe6aO6AEMk2y6GiVFCPAeIlARf/xPPbYeY0Ki4z6lmopCVkitdcmuhcP2IbBxlvwZ
-         qDKUbUyq2X7uQaGbyxCTB/sbI8bceg+BDUSFPYPlfHms0xz/71dz5OOtafCikhqzuzbX
-         RaXuZX8L7T5HY9fKb3qgZhAdjD5v+moGODrE2vJxBV046m/2Br5PvDa47TG/gY9idmm6
-         lIgLXtXjyR4hOnesQqrgaAdmr7AZsXgRXYjE1A5bZIvToM7l57EzW6Pxv1i1CCQwueBK
-         XpXg==
-X-Gm-Message-State: AOJu0Yz8Yk9fNuRqL5/Jeq0xRbuS5OgDD/fBwFdPjLHdnIAmThSfwmgf
-        yPrh/3lST9JeYp4/vkSe8TIgjjBwmDoddRzX97+cQg==
-X-Google-Smtp-Source: AGHT+IGX7VvdwZmie4r1BP3W4CjS0WgfXtv2/ZI/UiSSocpoMYtDD+uTqQYoGeAnqTd9g1h7xJzbzA==
-X-Received: by 2002:a05:6a20:394c:b0:15a:2c0b:6c81 with SMTP id r12-20020a056a20394c00b0015a2c0b6c81mr9915610pzg.3.1695041675493;
-        Mon, 18 Sep 2023 05:54:35 -0700 (PDT)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e23-20020a62ee17000000b006889081281bsm7005760pfi.138.2023.09.18.05.54.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Sep 2023 05:54:34 -0700 (PDT)
-Message-ID: <fae0bbc9-efdd-4b56-a5c8-53428facbe5b@kernel.dk>
-Date:   Mon, 18 Sep 2023 06:54:33 -0600
+        Mon, 18 Sep 2023 11:46:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E732737;
+        Mon, 18 Sep 2023 08:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695051892; x=1726587892;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ykgUdcAyff68JbKMpOfYfrK6kmGZcZxRKCMtU2anr+I=;
+  b=HVTHZ00AThtAOg8Ljc230m/dF8XBoDobEM4sNiBsPcWxLzxoXkjCZD4k
+   2X/KFNI8fQSaLLp6Sq2UFMho9h2dbvIc5mqnI0Yp3iLHnkFUpcoPVamCG
+   J7LtyiETXVC8jtaPHZhQIerFoozGVE7IwWAB2cbUxdFywnwIO/MnN6QpE
+   1OkfsRg5cGWVu38Xi3K6PW15RiGLBiooLb4zGjKX9IEcVB9wG5QK3vsto
+   nRz7cL7rWi4kHQEnFJV7Q+7Gsfl3IdP9O+xyoztlLtY+GGzQOKRfTbeb5
+   t3jT7k92oy1HR78nXPkk8pBuKD2x/VHUeJ7RUO/3AlmTwISShWMFKoyrt
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="446113310"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="446113310"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:12:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="811342022"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="811342022"
+Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Sep 2023 06:12:19 -0700
+Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qiE2z-00067M-0D;
+        Mon, 18 Sep 2023 13:12:17 +0000
+Date:   Mon, 18 Sep 2023 21:11:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Hannes Reinecke <hare@suse.de>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Pankaj Raghav <p.raghav@samsung.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 08/18] mm/readahead: allocate folios with mapping order
+ preference
+Message-ID: <202309182020.nSchrF93-lkp@intel.com>
+References: <20230918110510.66470-9-hare@suse.de>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] io_uring/ublk: exit notifier support
-Content-Language: en-US
-To:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        io-uring@vger.kernel.org
-Cc:     ZiyangZhang <ZiyangZhang@linux.alibaba.com>
-References: <20230918041106.2134250-1-ming.lei@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20230918041106.2134250-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230918110510.66470-9-hare@suse.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/17/23 10:10 PM, Ming Lei wrote:
-> Hello,
-> 
-> In do_exit(), io_uring needs to wait pending requests.
-> 
-> ublk is one uring_cmd driver, and its usage is a bit special by submitting
-> command for waiting incoming block IO request in advance, so if there
-> isn't any IO request coming, the command can't be completed. So far ublk
-> driver has to bind its queue with one ublk daemon server, meantime
-> starts one monitor work to check if this daemon is live periodically.
-> This way requires ublk queue to be bound one single daemon pthread, and
-> not flexible, meantime the monitor work is run in 3rd context, and the
-> implementation is a bit tricky.
-> 
-> The 1st 3 patches adds io_uring task exit notifier, and the other
-> patches converts ublk into this exit notifier, and the implementation
-> becomes more robust & readable, meantime it becomes easier to relax
-> the ublk queue/daemon limit in future, such as not require to bind
-> ublk queue with single daemon.
+Hi Hannes,
 
-The normal approach for this is to ensure that each request is
-cancelable, which we need for other things too (like actual cancel
-support). Why can't we just do the same for ublk?
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on axboe-block/for-next]
+[also build test ERROR on akpm-mm/mm-everything linus/master v6.6-rc2 next-20230918]
+[cannot apply to xfs-linux/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hannes-Reinecke/mm-readahead-rework-loop-in-page_cache_ra_unbounded/20230918-190732
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
+patch link:    https://lore.kernel.org/r/20230918110510.66470-9-hare%40suse.de
+patch subject: [PATCH 08/18] mm/readahead: allocate folios with mapping order preference
+config: i386-tinyconfig (https://download.01.org/0day-ci/archive/20230918/202309182020.nSchrF93-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230918/202309182020.nSchrF93-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309182020.nSchrF93-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: mm/readahead.o: in function `readahead_expand':
+>> readahead.c:(.text+0x17b): undefined reference to `__divdi3'
 
 -- 
-Jens Axboe
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
