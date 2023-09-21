@@ -2,81 +2,95 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 087D67A97A8
-	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 19:26:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C383B7A9A36
+	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 20:37:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230033AbjIUR0t (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Sep 2023 13:26:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
+        id S230167AbjIUSh2 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Sep 2023 14:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbjIUR0j (ORCPT
+        with ESMTP id S230120AbjIUSgu (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Sep 2023 13:26:39 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AADCA2D69;
-        Thu, 21 Sep 2023 10:02:42 -0700 (PDT)
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3a9b41ffe12so721443b6e.3;
-        Thu, 21 Sep 2023 10:02:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695315643; x=1695920443;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+myxey5KkFamPLG+BXl8bpHSYiVN4ySSOSWXnhTIWBM=;
-        b=lPAsCm5pDGAjc0MKLMT5rXPtBCpaj3iWxUsuja3hf7WnyaqDXsIBdIZtS6p4lJcP34
-         v17x/G+qwSgzK/9jlpvhoPpc9hXtuFlbMEBmK6RQ6Y1vlVNWo9B5MtEu09fGUJjV2nMt
-         lB5ngN7QkK1EbNfFs+Nm6Hw4AiMQPIMur4GGxB7FOKQCiQ7H6JO0evgKH3nWbWwMgeUm
-         dKuiCuYlLjImTAxqOrNy+g3zQXfNH0eXO5kxD9odGC+dssWQVm9QDu6kvklZzHphtt08
-         Cy2gJpUzlMKmdbP2mVx0x8A0hUjOiNKgg7CA0AF2Et0hWFRXgiCAQZS5fH1rEf71U4Iq
-         Uhzg==
-X-Gm-Message-State: AOJu0YyAgtlPdUvPFOA94XrwGeneefDyYDWZn+Xw1ucBy2VPM8RJ9LTW
-        MMMFkWOd1P0WWitzGXMersU=
-X-Google-Smtp-Source: AGHT+IHkCW88em4+s4HanHcm2/nYfuEsdBtW/TqjDkgg3Ju0IBXefT2+akGRuQadD4OJtCmXfBOe8w==
-X-Received: by 2002:a05:6808:191c:b0:3a4:f9b:b42e with SMTP id bf28-20020a056808191c00b003a40f9bb42emr7058259oib.26.1695315642918;
-        Thu, 21 Sep 2023 10:00:42 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:6903:9a1f:51f3:593e? ([2620:15c:211:201:6903:9a1f:51f3:593e])
-        by smtp.gmail.com with ESMTPSA id i10-20020a63bf4a000000b005646e6634dcsm1389910pgo.83.2023.09.21.10.00.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Sep 2023 10:00:41 -0700 (PDT)
-Message-ID: <9975f36c-cacd-4922-9d27-a7ff726793a3@acm.org>
-Date:   Thu, 21 Sep 2023 10:00:40 -0700
+        Thu, 21 Sep 2023 14:36:50 -0400
+X-Greylist: delayed 4199 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 Sep 2023 11:32:45 PDT
+Received: from mail1.perex.cz (mail1.perex.cz [77.48.224.245])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 356A6DB65F;
+        Thu, 21 Sep 2023 11:32:45 -0700 (PDT)
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 5DBAE1624;
+        Thu, 21 Sep 2023 08:08:22 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 5DBAE1624
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1695276502; bh=TX3HwdkmE4MzYgRaFjViDafPL824M36FBOqMSpRbUdQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=rJtLwjnfXAu8GhKX2zGs01s96mHJexrISFBXuVSjH20E+PnXUGXfZAA/NMSjwhw7z
+         n4Dxe5RNReB8pVi2bRH84Ayb1wQ9v8UJcUEyYH8mCKrBF4QGSIr9ZM+t/oDFdo7IGw
+         gOHTzmLD5HIP3ChrbllaWNUM6Boer7KBdVaSvVZk=
+Received: from [192.168.100.98] (unknown [192.168.100.98])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Thu, 21 Sep 2023 08:08:03 +0200 (CEST)
+Message-ID: <2a3b1a19-1eef-0574-cb24-43432713db3b@perex.cz>
+Date:   Thu, 21 Sep 2023 08:08:02 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/13] Pass data temperature information to zoned UFS
- devices
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v5 01/11] sound: Fix snd_pcm_readv()/writev() to use iov
+ access functions
 Content-Language: en-US
-To:     Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20230920191442.3701673-1-bvanassche@acm.org>
- <ZQtHwsNvS1wYDKfG@casper.infradead.org>
- <1522d8ec-6b15-45d5-b6d9-517337e2c8cf@acm.org> <ZQv07Mg7qIXayHlf@x1-carbon>
- <8781636a-57ac-4dbd-8ec6-b49c10c81345@acm.org> <ZQxiklow/4m4kvYu@x1-carbon>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <ZQxiklow/4m4kvYu@x1-carbon>
+To:     David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Brauner <christian@brauner.io>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org
+References: <20230920222231.686275-1-dhowells@redhat.com>
+ <20230920222231.686275-2-dhowells@redhat.com>
+From:   Jaroslav Kysela <perex@perex.cz>
+In-Reply-To: <20230920222231.686275-2-dhowells@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 9/21/23 08:34, Niklas Cassel wrote:
-> Right now your cover letter is 4 lines :)
-> I don't recall when I last saw such a small cover letter for a feature
-> impacting so many different parts of the kernel.
+On 21. 09. 23 0:22, David Howells wrote:
+> Fix snd_pcm_readv()/writev() to use iov access functions rather than poking
+> at the iov_iter internals directly.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Jaroslav Kysela <perex@perex.cz>
+> cc: Takashi Iwai <tiwai@suse.com>
+> cc: Oswald Buddenhagen <oswald.buddenhagen@gmx.de>
+> cc: Jens Axboe <axboe@kernel.dk>
+> cc: Suren Baghdasaryan <surenb@google.com>
+> cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> cc: alsa-devel@alsa-project.org
+> ---
+>   sound/core/pcm_native.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 
-I will expand the cover letter if I have to repost this patch series.
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 
-Thanks,
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
 
-Bart.
