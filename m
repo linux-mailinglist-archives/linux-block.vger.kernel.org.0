@@ -2,123 +2,92 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 043687AA2D5
-	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 23:35:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 519D87A9F83
+	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 22:23:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232221AbjIUVfA convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-block@lfdr.de>); Thu, 21 Sep 2023 17:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54662 "EHLO
+        id S231791AbjIUUXG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Sep 2023 16:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231128AbjIUVeG (ORCPT
+        with ESMTP id S231654AbjIUUWn (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Sep 2023 17:34:06 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573975A036
-        for <linux-block@vger.kernel.org>; Thu, 21 Sep 2023 10:21:02 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-78-tT6XIwH6NoO3sNNrU8Sykg-1; Thu, 21 Sep 2023 15:05:00 +0100
-X-MC-Unique: tT6XIwH6NoO3sNNrU8Sykg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Sep
- 2023 15:05:00 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 21 Sep 2023 15:05:00 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'David Howells' <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Christian Brauner" <christian@brauner.io>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Jeff Layton" <jlayton@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v5 00/11] iov_iter: Convert the iterator macros into
- inline funcs
-Thread-Topic: [PATCH v5 00/11] iov_iter: Convert the iterator macros into
- inline funcs
-Thread-Index: AQHZ7BD/kh4zTlIOdEezFNQQd09cYrAlRT1Q
-Date:   Thu, 21 Sep 2023 14:04:59 +0000
-Message-ID: <591a70bf016b4317add2d936696abc0f@AcuMS.aculab.com>
-References: <20230920222231.686275-1-dhowells@redhat.com>
-In-Reply-To: <20230920222231.686275-1-dhowells@redhat.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 21 Sep 2023 16:22:43 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29674B70A;
+        Thu, 21 Sep 2023 10:24:52 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3aa14ed0e7eso652882b6e.1;
+        Thu, 21 Sep 2023 10:24:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695317091; x=1695921891;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rshe0jW7UhxhoxHzQRdwHHly+hnX6L1+KyeP6WuSdms=;
+        b=Z+IW+nx4wDQcTjHdy9q4ktNMuEQQ7Qr2EFvRMUsGU7VGjjsjwTACQB+QNOLqITHa5w
+         hqspMx5KpRPSDGcgsJ13heS/ch/kJItAJVOfy5HrDzNwyQMmIgSpP/MJpUd+FHEsa1Ut
+         9BFsxjsgk45bIWWeQhP27RNsZbQt7yRVK8nUxi5AMEA+KkrH+65umSKgWpimdRuj+UB+
+         VHA0SsFtQxsOzkaszJVEir8rSGUgqLweuHsc/6rCn28F3gapaOrhxvQLfOK0RzmuS44H
+         8yDb0nkYUToJaLoI2ofxe8Zn0OE2gyduehAlnIoMHKvV9qCUCTGTHp4OlmCXrvJbkxiz
+         4wSg==
+X-Gm-Message-State: AOJu0YzOFewXulSn5NUOBRJGvHPPbhKVEHoSMbSIsrBjExl5cVZzWcZ5
+        bQzDQ4V63QhThDTI120N35YOWDY9Mc8=
+X-Google-Smtp-Source: AGHT+IEckYqWZk5F9LFw20ucVdeJ8Lr3aC+IsVyPzXDqHASE0LSTBOEzKe0qNxhV6kLLw7xkoMLFug==
+X-Received: by 2002:a05:6a20:3c8a:b0:158:143d:e215 with SMTP id b10-20020a056a203c8a00b00158143de215mr12630984pzj.1.1695306430192;
+        Thu, 21 Sep 2023 07:27:10 -0700 (PDT)
+Received: from ?IPV6:2620:15c:211:201:6903:9a1f:51f3:593e? ([2620:15c:211:201:6903:9a1f:51f3:593e])
+        by smtp.gmail.com with ESMTPSA id y7-20020a637d07000000b0054fa8539681sm1362140pgc.34.2023.09.21.07.27.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Sep 2023 07:27:09 -0700 (PDT)
+Message-ID: <8781636a-57ac-4dbd-8ec6-b49c10c81345@acm.org>
+Date:   Thu, 21 Sep 2023 07:27:08 -0700
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/13] Pass data temperature information to zoned UFS
+ devices
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20230920191442.3701673-1-bvanassche@acm.org>
+ <ZQtHwsNvS1wYDKfG@casper.infradead.org>
+ <1522d8ec-6b15-45d5-b6d9-517337e2c8cf@acm.org> <ZQv07Mg7qIXayHlf@x1-carbon>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <ZQv07Mg7qIXayHlf@x1-carbon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: David Howells
-> Sent: 20 September 2023 23:22
-...
->  (8) Move the copy-and-csum code to net/ where it can be in proximity with
->      the code that uses it.  This eliminates the code if CONFIG_NET=n and
->      allows for the slim possibility of it being inlined.
-> 
->  (9) Fold memcpy_and_csum() in to its two users.
-> 
-> (10) Move csum_and_copy_from_iter_full() out of line and merge in
->      csum_and_copy_from_iter() since the former is the only caller of the
->      latter.
+On 9/21/23 00:46, Niklas Cassel wrote:
+> Considering that this API (F_GET_FILE_RW_HINT / F_SET_FILE_RW_HINT) 
+> was previously only used by NVMe (NVMe streams).
 
-I thought that the real idea behind these was to do the checksum
-at the same time as the copy to avoid loading the data into the L1
-data-cache twice - especially for long buffers.
-I wonder how often there are multiple iov[] that actually make
-it better than just check summing the linear buffer?
+That doesn't sound correct to me. I think support for this API was added
+in F2FS in November 2017 (commit 4f0a03d34dd4 ("f2fs: apply write hints
+to select the type of segments for buffered write")). That was a few
+months after NVMe stream support was added (June 2017) by commit
+f5d118406247 ("nvme: add support for streams and directives").
 
-I had a feeling that check summing of udp data was done during
-copy_to/from_user, but the code can't be the copy-and-csum here
-for that because it is missing support form odd-length buffers.
+> Should NVMe streams be brought back? Yes? No?
 
-Intel x86 desktop chips can easily checksum at 8 bytes/clock
-(But probably not with the current code!).
-(I've got ~12 bytes/clock using adox and adcx but that loop
-is entirely horrid and it would need run-time patching.
-Especially since I think some AMD cpu execute them very slowly.)
+ From commit 561593a048d7 ("Merge tag 'for-5.18/write-streams-2022-03-18'
+of git://git.kernel.dk/linux-block"): "This removes the write streams
+support in NVMe. No vendor ever really shipped working support for this,
+and they are not interested in supporting it."
 
-OTOH 'rep movs[bq]' copy will copy 16 bytes/clock (32 if the
-destination is 32 byte aligned - it pretty much won't be).
+I do not want to reopen the discussion about NVMe streams.
 
-So you'd need a csum-and-copy loop that did 16 bytes every
-three clocks to get the same throughput for long buffers.
-In principle splitting the 'adc memory' into two instructions
-is the same number of u-ops - but I'm sure I've tried to do
-that and failed and the extra memory write can happen in
-parallel with everything else.
-So I don't think you'll get 16 bytes in two clocks - but you
-might get it is three.
+Thanks,
 
-OTOH for a cpu where memcpy is code loop summing the data in
-the copy loop is likely to be a gain.
-
-But I suspect doing the checksum and copy at the same time
-got 'all to complicated' to actually implement fully.
-With most modern ethernet chips checksumming receive pacakets
-does it really get used enough for the additional complexity?
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Bart.
