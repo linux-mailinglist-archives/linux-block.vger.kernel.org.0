@@ -2,187 +2,128 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8F077A8F60
-	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 00:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 488D27A9033
+	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 02:38:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbjITWYy (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 20 Sep 2023 18:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49306 "EHLO
+        id S229678AbjIUAi1 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 20 Sep 2023 20:38:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbjITWYe (ORCPT
+        with ESMTP id S229647AbjIUAi1 (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 20 Sep 2023 18:24:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8910183
-        for <linux-block@vger.kernel.org>; Wed, 20 Sep 2023 15:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695248592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qT59ImjpXymvQ6tFUMHWEUo8+jWIxsSglDsUCxtrSao=;
-        b=hFJ51vrB7LczMN67RujkZDif8+VTLVqGVGwDOkwr/ipuy/iQuRRjOIGa61uEHligZAzmYV
-        Yww2Zx5GqepZaoSiKdW2OeBEG/ivC0xQYc6LWXM5wRbSbaup5IajpDM/9EsqRQxjxz4zAQ
-        AE7GQfv2ehvXR2QGL6G3IFeVG67EfqI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-647-5dIXQ-LFOyWTHqsMcxPB4w-1; Wed, 20 Sep 2023 18:23:07 -0400
-X-MC-Unique: 5dIXQ-LFOyWTHqsMcxPB4w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4AC303C0D183;
-        Wed, 20 Sep 2023 22:23:06 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.216])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4231E40C6EBF;
-        Wed, 20 Sep 2023 22:23:04 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <christian@brauner.io>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH v5 11/11] iov_iter, net: Move hash_and_copy_to_iter() to net/
-Date:   Wed, 20 Sep 2023 23:22:31 +0100
-Message-ID: <20230920222231.686275-12-dhowells@redhat.com>
-In-Reply-To: <20230920222231.686275-1-dhowells@redhat.com>
-References: <20230920222231.686275-1-dhowells@redhat.com>
+        Wed, 20 Sep 2023 20:38:27 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E73B7
+        for <linux-block@vger.kernel.org>; Wed, 20 Sep 2023 17:38:21 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c59c40b840so3317325ad.3
+        for <linux-block@vger.kernel.org>; Wed, 20 Sep 2023 17:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1695256700; x=1695861500; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jMd1KRyDEvQHJgfGmaNgihRzYBqmhVKvC+CzE4oWItk=;
+        b=cDd6GDoaZ6J84c/CzUz/r9V9a07bKe5F2PPSzuoJVZIvXyoJdSCOY6ybGiC2TNAMb+
+         yXVQQZrra9nCbK6FOrkeXMJCAXk1Ols5CToRV9NYH3vT/gUTz4HYBhkMRTz83cGs2Io6
+         iQI31+dCkVowjSdfZys6m2GKvGBf0lmbJ/VZq8NNnYirat0frKl9c9RdNbmNB83cbwcx
+         FxZFDBUQqfWrfVg7VcZkCSYpo9MrxuwotVngXcd4sV1h2UBF12BwuluchYxxunWOSp9B
+         o3L0rDtseYrvoK5c9Fiff+OScHplum/l9CZP7/1R5QRFDrAdIPPQ4IhnCuG8KOEawQRC
+         IOpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695256700; x=1695861500;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jMd1KRyDEvQHJgfGmaNgihRzYBqmhVKvC+CzE4oWItk=;
+        b=DviOkDuYgVW0YZshBj9+E0NkSTEHLjOZWET10igiGEv8gThEy0lZJmPs/BOEoIO19y
+         ZkqI6qFhkIgmnDRF1Wv45G2ZxrFSrwwEHt7MBgQn8pZ0Ejh0gUJZK9a8yke5MPET2BZ4
+         t9FLeKZnZBO5yAgaQw0Kvh9dhL2tAwr/taz/JMeFVAkUjfcDtNe/RXAXmBX6gC9Ec20D
+         3bYczcXuvDw8s2BhA9IfQFleLyllcT+9DP9QeO+ERhL98YwWQtfgUNL8KJmWFK4jB+iH
+         /JGd4ONC3DlY5x+VacHzNJuYWne8guQ/x6UiHNuJs52vy8bRYHM6PVAV62QhXyH8DOyw
+         OFlQ==
+X-Gm-Message-State: AOJu0YzFnRFuG9ozBM0leGN2gYd+YQnv1vJ2PQq5AQ1dnm4VrhRampca
+        bDFVlPxbAlqd0Ud7uj/xHmuVd0QhhNRjzuoFn5U=
+X-Google-Smtp-Source: AGHT+IEzLBFMk3kEDzcaTGMq6sgJhldRQhr+5QWyOipuNTfWB8uF3/9WdBQ08yQlD0BAeEqi8ebKKg==
+X-Received: by 2002:a17:903:228b:b0:1bb:e71f:793c with SMTP id b11-20020a170903228b00b001bbe71f793cmr4666954plh.44.1695256700664;
+        Wed, 20 Sep 2023 17:38:20 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
+        by smtp.gmail.com with ESMTPSA id ij27-20020a170902ab5b00b001bd41b70b65sm111056plb.49.2023.09.20.17.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Sep 2023 17:38:19 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qj7hx-003RjF-0J;
+        Thu, 21 Sep 2023 10:38:17 +1000
+Date:   Thu, 21 Sep 2023 10:38:17 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Aleksandr Nogikh <nogikh@google.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        syzbot <syzbot+1fa947e7f09e136925b8@syzkaller.appspotmail.com>,
+        djwong@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, linux-block@vger.kernel.org
+Subject: Re: [syzbot] [xfs?] INFO: task hung in clean_bdev_aliases
+Message-ID: <ZQuQeWm3UIn31ciq@dread.disaster.area>
+References: <000000000000e534bb0604959011@google.com>
+ <ZPeaH+K75a0nIyBk@dread.disaster.area>
+ <CANp29Y4AK9dzmpMj4E9iz3gqTwhG=-_7DfA8knrWYaHy4QxrEg@mail.gmail.com>
+ <20230908082846.GB9560@lst.de>
+ <CANp29Y5yx=F1w2s-jHbz1GVWCbOR_Z-gS488L6ERbWQTAX5dRQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+In-Reply-To: <CANp29Y5yx=F1w2s-jHbz1GVWCbOR_Z-gS488L6ERbWQTAX5dRQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Move hash_and_copy_to_iter() to be with its only caller in networking code.
+On Wed, Sep 20, 2023 at 10:56:56AM +0200, Aleksandr Nogikh wrote:
+> # set subsystems: iomap
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Christoph Hellwig <hch@lst.de>
-cc: Christian Brauner <christian@brauner.io>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Linus Torvalds <torvalds@linux-foundation.org>
-cc: David Laight <David.Laight@ACULAB.COM>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: linux-block@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
-cc: netdev@vger.kernel.org
----
- include/linux/uio.h |  3 ---
- lib/iov_iter.c      | 20 --------------------
- net/core/datagram.c | 19 +++++++++++++++++++
- 3 files changed, 19 insertions(+), 23 deletions(-)
+No. As I said when I originally reassigned this from XFS to the
+block subsystem, this is a regression caused by changes to the block
+device code. Just because that overall change was to use iomap for
+block devices, that doesn't make it an iomap regression or the
+responsibility of XFS or iomap maintainers to triage and fix this
+block device regression.
 
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index 0cf9937f98d3..442d0d238207 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -341,9 +341,6 @@ iov_iter_npages_cap(struct iov_iter *i, int maxpages, size_t max_bytes)
- 	return npages;
- }
- 
--size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
--		struct iov_iter *i);
--
- struct iovec *iovec_from_user(const struct iovec __user *uvector,
- 		unsigned long nr_segs, unsigned long fast_segs,
- 		struct iovec *fast_iov, bool compat);
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index fef934a8745d..2547c96d56c7 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0-only
--#include <crypto/hash.h>
- #include <linux/export.h>
- #include <linux/bvec.h>
- #include <linux/fault-inject-usercopy.h>
-@@ -1093,25 +1092,6 @@ ssize_t iov_iter_get_pages_alloc2(struct iov_iter *i,
- }
- EXPORT_SYMBOL(iov_iter_get_pages_alloc2);
- 
--size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
--		struct iov_iter *i)
--{
--#ifdef CONFIG_CRYPTO_HASH
--	struct ahash_request *hash = hashp;
--	struct scatterlist sg;
--	size_t copied;
--
--	copied = copy_to_iter(addr, bytes, i);
--	sg_init_one(&sg, addr, copied);
--	ahash_request_set_crypt(hash, &sg, NULL, copied);
--	crypto_ahash_update(hash);
--	return copied;
--#else
--	return 0;
--#endif
--}
--EXPORT_SYMBOL(hash_and_copy_to_iter);
--
- static int iov_npages(const struct iov_iter *i, int maxpages)
- {
- 	size_t skip = i->iov_offset, size = i->count;
-diff --git a/net/core/datagram.c b/net/core/datagram.c
-index 722311eeee18..103d46fa0eeb 100644
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -61,6 +61,7 @@
- #include <net/tcp_states.h>
- #include <trace/events/skb.h>
- #include <net/busy_poll.h>
-+#include <crypto/hash.h>
- 
- /*
-  *	Is a socket 'connection oriented' ?
-@@ -489,6 +490,24 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
- 	return 0;
- }
- 
-+static size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
-+				    struct iov_iter *i)
-+{
-+#ifdef CONFIG_CRYPTO_HASH
-+	struct ahash_request *hash = hashp;
-+	struct scatterlist sg;
-+	size_t copied;
-+
-+	copied = copy_to_iter(addr, bytes, i);
-+	sg_init_one(&sg, addr, copied);
-+	ahash_request_set_crypt(hash, &sg, NULL, copied);
-+	crypto_ahash_update(hash);
-+	return copied;
-+#else
-+	return 0;
-+#endif
-+}
-+
- /**
-  *	skb_copy_and_hash_datagram_iter - Copy datagram to an iovec iterator
-  *          and update a hash.
+> On Fri, Sep 8, 2023 at 10:28 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Wed, Sep 06, 2023 at 07:20:15PM +0200, Aleksandr Nogikh wrote:
+> > >
+> > > The reason why syzbot marked this report as xfs is that, per
+> > > MAINTAINERS, fs/iomap/ points to linux-xfs@vger.kernel.org. I can
+> > > adjust the rules syzbot uses so that these are routed to "block".
+> > >
+> > > But should MAINTAINERS actually also not relate IOMAP FILESYSTEM
+> > > LIBRARY with xfs in this case?
+> >
+> > I'd tag it with iomap, as it's a different subsystem just sharing
+> > the mailing list.  We also have iommu@lists.linux.dev for both the
+> > iommu and dma-mapping subsystems as a similar example.
+> >
+> > But what's also important for issues like this is that often the
+> > called library code (in this case iomap) if often not, or only
+> > partially at fault.  So capturing the calling context (in this
+> > case block) might also be useful.
 
+Which is exactly what Christoph also said.
+
+Please don't conflate a discussion about the incorrect assignment
+by syzbot (i.e. associating iomap with XFS because of a shared
+mailing list) with the actual problem that was initially reported.
+
+So, set this back to the block subsystem where it actually belongs.
+
+#syz set subsystems: block
+
+-Dave
+-- 
+Dave Chinner
+david@fromorbit.com
