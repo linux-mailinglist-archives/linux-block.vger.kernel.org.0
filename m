@@ -2,134 +2,101 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 545C37AA00B
-	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 22:31:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1129C7AA52C
+	for <lists+linux-block@lfdr.de>; Fri, 22 Sep 2023 00:40:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231856AbjIUUbH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Sep 2023 16:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
+        id S229628AbjIUWkc (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Sep 2023 18:40:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232777AbjIUUag (ORCPT
+        with ESMTP id S232238AbjIUWkZ (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Sep 2023 16:30:36 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8772BCFF33
-        for <linux-block@vger.kernel.org>; Thu, 21 Sep 2023 11:20:35 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59b5a586da6so23803577b3.1
-        for <linux-block@vger.kernel.org>; Thu, 21 Sep 2023 11:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695320434; x=1695925234; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Hw98Zupb8UHh+CqlMSyJaPhi0/ITpRz5yyNHO/GwHao=;
-        b=OXQoiftLHS+vkpFjzdG4wZSNGwcqJ3uPKs1hCgcLuhDOUa4fAa3bxLzV4wOcS0nGfv
-         jlj4CgYH2GaRKu5Cq3oAYiPW+xjn96HA+p76PI9twOmKaJ+L7bgv53lV0Mn2nOol+kqR
-         X3RmpKfHu0vlGMA+l+CDDPoXyLx8VAZrNL6FR48BTXykeqvmQNui27vq02b6x+TGSX/C
-         gIo6cVMxXeBCl3dKBFCkLgZWryF0nHyzwDvlR9XZArQ6MZ6vzCkHtqPVSlUJSnPsp0xC
-         l3q7GCXxUPoxoaXo2qfeu/Stf6uHSEPELPvNgIAkcPvtaQuIXlN1nrI3L7UUrhVssir0
-         ZV2A==
+        Thu, 21 Sep 2023 18:40:25 -0400
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D7B3C22;
+        Thu, 21 Sep 2023 13:11:05 -0700 (PDT)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1c1ff5b741cso12529355ad.2;
+        Thu, 21 Sep 2023 13:11:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695320434; x=1695925234;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Hw98Zupb8UHh+CqlMSyJaPhi0/ITpRz5yyNHO/GwHao=;
-        b=OF+rxvq0/Dxb9Sg5eNPJmldp7oLIL+d+XCNuDuFicOslDi6C3HMon5s3k/Qh5Ll4kk
-         RfaGjv6I1gCzbdHUv/Qjz+6BRj6AZh9XVlqmM0fNYx4lYRkxzvMhkfxkmcvc1gzdpkWy
-         TO3mQJpTk7yFGf1P/8lsMbH6ee2KWhwstrrEveK3pKNhP8stbS1MfKCCUao38KYIDhI8
-         ZPTCuYpWfjop7su2PLPVkdN/vqIZfg9CDDdo3V31Q5rf1xV472OndWqK83EHLeryEKEy
-         i+81azvIYfJLJyCd/0QXnSOFMpSUpw5e4RWD7SYNdixoigyk0XwVjUltfgfbCCqEI9hC
-         QhTg==
-X-Gm-Message-State: AOJu0YysRQgUx8d2uUtd/uQym5FXaur4ktr5grdlH/GQI/zimPo/cPCY
-        RbN6pUZIBc9YSCWOgljimK0Oxj7MJ0DAmmRj8sM=
-X-Google-Smtp-Source: AGHT+IGJgoOxhF4DLozb4xqhSavBmQjQaAZ2tyi0n+ac2tz4zDa9tN5xGVxVwr2RHxAucdD+d6PFSGiWcoQHHGhxMjY=
-X-Received: from saranyamohan.svl.corp.google.com ([2620:15c:2a3:200:5dbd:3ff1:e146:3806])
- (user=saranyamohan job=sendgmr) by 2002:a05:690c:831:b0:589:a533:405b with
- SMTP id by17-20020a05690c083100b00589a533405bmr6592ywb.3.1695320434564; Thu,
- 21 Sep 2023 11:20:34 -0700 (PDT)
-Date:   Thu, 21 Sep 2023 11:20:12 -0700
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
-Message-ID: <20230921182012.3965572-1-saranyamohan@google.com>
-Subject: [PATCH] block: fix use-after-free of q->q_usage_counter
-From:   Saranya Muruganandam <saranyamohan@google.com>
-To:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, stable@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhang Wensheng <zhangwensheng@huaweicloud.com>,
-        Zhong Jinghua <zhongjinghua@huawei.com>,
-        Hillf Danton <hdanton@sina.com>, Yu Kuai <yukuai3@huawei.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Saranya Muruganandam <saranyamohan@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        d=1e100.net; s=20230601; t=1695327065; x=1695931865;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AqLUJredNWFn6UV9EpZQHzPOud7X+d09rY2QfVP8FfM=;
+        b=hB++SQVsehyjfHesltdoKUlix0BRL+fSqltcUJUpDSz0hE4z2v3h17Yn7tT5cr6eA4
+         fuxNjGLSy15TF9h0wRHOCgBrbR3VARg4ovhRmzamN9unix/8twLGHTd9GHnI7N/6WovJ
+         UnqaY+TPIyI6Xcnq5IMeiNQVQP6CDlH9CcGNvMy8sNMClDxphv4nOrJ6Jt2YFavfOJ8Z
+         UJskvTvezFck9oe5WxqPB35kkemR6pAYN/PeiJrRAbZ+O8UbkN8Fl1/RjLvWki88AIXw
+         jhfjlr6uaP3kfYE1KkZamw8j1iHv9cgta24m/z7pOq3HB6cNv2fKt3Tvg5AugJ9Q2ZED
+         Nzow==
+X-Gm-Message-State: AOJu0YxBLOJG1vJoR1s1nW2IErM/uppeLm8s2GLWT0YTmGH7jkAS4yZy
+        kXre58vLoAksw15UZAOLYZc=
+X-Google-Smtp-Source: AGHT+IE4uBXaKeNClIyeQxDM3JodKlX79G3w3w9XgQ/pS0vx9mNOOgruGpeL+ibjNdK7nkmnSAy4Ag==
+X-Received: by 2002:a17:902:82c3:b0:1c3:f745:1cd5 with SMTP id u3-20020a17090282c300b001c3f7451cd5mr6113963plz.34.1695327065034;
+        Thu, 21 Sep 2023 13:11:05 -0700 (PDT)
+Received: from ?IPV6:2620:15c:211:201:6903:9a1f:51f3:593e? ([2620:15c:211:201:6903:9a1f:51f3:593e])
+        by smtp.gmail.com with ESMTPSA id a7-20020a170902ecc700b001b87bedcc6fsm1922245plh.93.2023.09.21.13.11.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Sep 2023 13:11:03 -0700 (PDT)
+Message-ID: <e547d35e-856b-4d0e-a77d-7f37fad3dde5@acm.org>
+Date:   Thu, 21 Sep 2023 13:11:02 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/13] Pass data temperature information to zoned UFS
+ devices
+Content-Language: en-US
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Bean Huo <huobean@gmail.com>,
+        Bean Huo <beanhuo@iokpp.de>, Avri Altman <avri.altman@wdc.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        Luca Porzio <lporzio@micron.com>
+References: <20230920191442.3701673-1-bvanassche@acm.org>
+ <ZQtHwsNvS1wYDKfG@casper.infradead.org>
+ <1522d8ec-6b15-45d5-b6d9-517337e2c8cf@acm.org> <ZQv07Mg7qIXayHlf@x1-carbon>
+ <8781636a-57ac-4dbd-8ec6-b49c10c81345@acm.org>
+ <ZQyZEqXJymyFWlKV@casper.infradead.org>
+ <4cacae64-6a11-41ab-9bec-f8915da00106@acm.org>
+ <ZQydeSIoHHJDQjHW@casper.infradead.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <ZQydeSIoHHJDQjHW@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+On 9/21/23 12:46, Matthew Wilcox wrote:
+> If vendor support already exists, then why did you dodge the question
+> asking for quantified data that I asked earlier?  And can we have that
+> data now?
 
-commit d36a9ea5e7766961e753ee38d4c331bbe6ef659b upstream.
+ From Rho, Eunhee, Kanchan Joshi, Seung-Uk Shin, Nitesh Jagadeesh 
+Shetty, Jooyoung Hwang, Sangyeun Cho, Daniel DG Lee, and Jaeheon Jeong. 
+"{FStream}: Managing Flash Streams in the File System." In 16th USENIX 
+Conference on File and Storage Technologies (FAST 18), pp. 257-264. 
+2018: "Experimental results show that FStream enhances the filebench 
+performance by 5%∼35% and reduces WAF (Write Amplification Factor) by 
+7%∼46%. For a NoSQL database benchmark, performance is improved by up to 
+38% and WAF is reduced by up to 81%." Please note that these results are 
+for ext4 instead of F2FS. The benefit for F2FS is probably smaller since 
+F2FS is optimized for NAND flash media.
 
-For blk-mq, queue release handler is usually called after
-blk_mq_freeze_queue_wait() returns. However, the
-q_usage_counter->release() handler may not be run yet at that time, so
-this can cause a use-after-free.
+I have Cc-ed open source contributors from multiple UFS vendors on this 
+email and I hope that they can share performance numbers for F2FS.
 
-Fix the issue by moving percpu_ref_exit() into blk_free_queue_rcu().
-Since ->release() is called with rcu read lock held, it is agreed that
-the race should be covered in caller per discussion from the two links.
+Thanks,
 
-Backport-notes: Not a clean cherry-pick since a lot has changed,
-however essentially the same fix.
-
-Reported-by: Zhang Wensheng <zhangwensheng@huaweicloud.com>
-Reported-by: Zhong Jinghua <zhongjinghua@huawei.com>
-Link: https://lore.kernel.org/linux-block/Y5prfOjyyjQKUrtH@T590/T/#u
-Link: https://lore.kernel.org/lkml/Y4%2FmzMd4evRg9yDi@fedora/
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Yu Kuai <yukuai3@huawei.com>
-Cc: Dennis Zhou <dennis@kernel.org>
-Fixes: 2b0d3d3e4fcf ("percpu_ref: reduce memory footprint of percpu_ref in fast path")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Link: https://lore.kernel.org/r/20221215021629.74870-1-ming.lei@redhat.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Saranya Muruganandam <saranyamohan@google.com>
----
- block/blk-core.c  | 2 --
- block/blk-sysfs.c | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d0d0dd8151f7..e5eeec801f56 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -414,8 +414,6 @@ void blk_cleanup_queue(struct request_queue *q)
- 		blk_mq_sched_free_requests(q);
- 	mutex_unlock(&q->sysfs_lock);
- 
--	percpu_ref_exit(&q->q_usage_counter);
--
- 	/* @q is and will stay empty, shutdown and put */
- 	blk_put_queue(q);
- }
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 8c5816364dd1..9174137a913c 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -726,6 +726,8 @@ static void blk_free_queue_rcu(struct rcu_head *rcu_head)
- {
- 	struct request_queue *q = container_of(rcu_head, struct request_queue,
- 					       rcu_head);
-+
-+	percpu_ref_exit(&q->q_usage_counter);
- 	kmem_cache_free(blk_requestq_cachep, q);
- }
- 
--- 
-2.42.0.515.g380fc7ccd1-goog
+Bart.
 
