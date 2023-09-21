@@ -2,81 +2,149 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC9477A99B3
-	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 20:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC73A7A9AA1
+	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 20:46:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjIUSRt (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Sep 2023 14:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57642 "EHLO
+        id S229513AbjIUSqn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Sep 2023 14:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbjIUSRd (ORCPT
+        with ESMTP id S229475AbjIUSqm (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Sep 2023 14:17:33 -0400
-Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B50385D18
-        for <linux-block@vger.kernel.org>; Thu, 21 Sep 2023 11:16:25 -0700 (PDT)
-Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-1dc160e3aadso1684767fac.3
-        for <linux-block@vger.kernel.org>; Thu, 21 Sep 2023 11:16:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695320123; x=1695924923;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Q3qFJHo3XVshohtuwZiN/FL0niZyPiXxa7GA+BqUwY=;
-        b=fVPaV2hiFvxUIiEmwzokoUOXEGG0iYlToAcV20vB9iArs9oaLPmeITuTDS2u/Eock4
-         un7ig9xzDlLeLiT9w63VLeHuU5N4Re/wROPkwcwU9QTrrV1aB1qGcs3T6KhJp4mY+sHQ
-         7UmC5MqjrWkW2huU0vs+AqzRhRfUHgpxTB28w7AFR3rC5vmoSqKs2JsRf+G3hntQrawt
-         wScG1jxEBWSi4x3orlqwqJQkMlOz8GoFJbtENo0Nj5q744AHwFhj8kbbYa2cm0FDZOzK
-         TZIJWCcHdsNEhrjh9OqCerBawww1BSj+TIRZldFJsIO0y60+twVctnt6ZgIifXQv72I9
-         AG7g==
-X-Gm-Message-State: AOJu0Yy+QgZiN4qd2fWNTRj1guvfQzT934lP2JjgALDbRI4TjkzO0Fey
-        d28Xir/JOYct1nCiUjvPZJcuQNPClcYHj9Pi30rr4sFIwUk1
-X-Google-Smtp-Source: AGHT+IHHPQ+f83WOGBx5Q3jkh5OIGbhQpryoZz5a7eZICtLdsOv/3A7TNMHxgGgwmTb+a5OxHenITAsJd3MG+L4ZYu+uSSaU8Nmx
+        Thu, 21 Sep 2023 14:46:42 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22912EE808;
+        Thu, 21 Sep 2023 11:46:34 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id CCDB8218FC;
+        Thu, 21 Sep 2023 18:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1695321992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UOeRcNA6z4fQ4wZ/y9y2/tuq46PWNNqvjziVWS+zisg=;
+        b=lEU121qIwPtgg66osXBkWjt2yg6FMzT36F9Mfvs3PYqSqhA73YAkBLD34q9mzmfn4GAV3j
+        Zxrz+WsfZ/nDx3DngL+2m+hS4INh64Mn4mRCTHMhAZ+lGiKbVfOqH6pn/x8RmmfSegXq15
+        k+MXQRLAoq/HfPF4+Z1Oc6TllDiATtY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1695321992;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UOeRcNA6z4fQ4wZ/y9y2/tuq46PWNNqvjziVWS+zisg=;
+        b=oWeTtrg04IMG8eMriDRFA0OJbQKmvGgNl7nPxJAkn8bAgsztvSLT2m4DKOZ8hNVobFfm3Z
+        wSbz0kXQacoephAQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9734E13513;
+        Thu, 21 Sep 2023 18:46:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id l88gH4iPDGW0XQAAMHmgww
+        (envelope-from <krisman@suse.de>); Thu, 21 Sep 2023 18:46:32 +0000
+From:   Gabriel Krisman Bertazi <krisman@suse.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH] io_uring: cancelable uring_cmd
+In-Reply-To: <20230921042434.2500190-1-ming.lei@redhat.com> (Ming Lei's
+        message of "Thu, 21 Sep 2023 12:24:34 +0800")
+References: <20230921042434.2500190-1-ming.lei@redhat.com>
+Date:   Thu, 21 Sep 2023 14:46:31 -0400
+Message-ID: <878r8znz3s.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6870:a8b2:b0:1c5:e4a5:6990 with SMTP id
- eb50-20020a056870a8b200b001c5e4a56990mr2450683oab.5.1695320123192; Thu, 21
- Sep 2023 11:15:23 -0700 (PDT)
-Date:   Thu, 21 Sep 2023 11:15:23 -0700
-In-Reply-To: <000000000000172fc905f8a19ab5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b93c240605e27901@google.com>
-Subject: Re: [syzbot] [btrfs?] WARNING in btrfs_commit_transaction (2)
-From:   syzbot <syzbot+dafbca0e20fbc5946925@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, clm@fb.com, dsterba@suse.com,
-        josef@toxicpanda.com, kristian@klausen.dk,
-        linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-syzbot has bisected this issue to:
+Ming Lei <ming.lei@redhat.com> writes:
 
-commit 2b9ac22b12a266eb4fec246a07b504dd4983b16b
-Author: Kristian Klausen <kristian@klausen.dk>
-Date:   Fri Jun 18 11:51:57 2021 +0000
+> uring_cmd may never complete, such as ublk, in which uring cmd isn't
+> completed until one new block request is coming from ublk block device.
+>
+> Add cancelable uring_cmd to provide mechanism to driver to cancel
+> pending commands in its own way.
+>
+> Add API of io_uring_cmd_mark_cancelable() for driver to mark one
+> command as cancelable, then io_uring will cancel this command in
+> io_uring_cancel_generic(). Driver callback is provided for canceling
+> command in driver's way, meantime driver gets notified with exiting of
+> io_uring task or context.
+>
+> Suggested-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>
+> ublk patches:
+>
+> 	https://github.com/ming1/linux/commits/uring_exit_and_ublk
+>
+>  include/linux/io_uring.h       | 22 +++++++++++++++++-
+>  include/linux/io_uring_types.h |  6 +++++
+>  include/uapi/linux/io_uring.h  |  7 ++++--
+>  io_uring/io_uring.c            | 30 ++++++++++++++++++++++++
+>  io_uring/uring_cmd.c           | 42 ++++++++++++++++++++++++++++++++++
+>  5 files changed, 104 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
+> index 106cdc55ff3b..5b98308a154f 100644
+> --- a/include/linux/io_uring.h
+> +++ b/include/linux/io_uring.h
+> @@ -22,6 +22,9 @@ enum io_uring_cmd_flags {
+>  	IO_URING_F_IOPOLL		= (1 << 10),
+>  };
+>  
+> +typedef void (uring_cmd_cancel_fn)(struct io_uring_cmd *,
+> +		unsigned int issue_flags, struct task_struct *task);
+> +
 
-    loop: Fix missing discard support when using LOOP_CONFIGURE
+Hi Ming,
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15dfb0f4680000
-start commit:   57012c57536f Merge tag 'net-6.5-rc4' of git://git.kernel.o..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=17dfb0f4680000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13dfb0f4680000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5f28dfd7d77a7042
-dashboard link: https://syzkaller.appspot.com/bug?extid=dafbca0e20fbc5946925
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=173a6716a80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111c7c7ea80000
+I wonder if uring_cmd_cancel shouldn't just be a new file operation, pairing
+with f_op->uring_cmd.  it would, of course, also mean don't need to pass
+it here occupying the pdu or explicitly registering it. iiuc, would also
+allow you to drop the flag and just assume it is cancelable if the operation
+exists, further simplifying the code.
 
-Reported-by: syzbot+dafbca0e20fbc5946925@syzkaller.appspotmail.com
-Fixes: 2b9ac22b12a2 ("loop: Fix missing discard support when using LOOP_CONFIGURE")
+> +static bool io_uring_try_cancel_uring_cmd(struct io_ring_ctx *ctx,
+> +					  struct task_struct *task,
+> +					  bool cancel_all)
+> +{
+> +	struct hlist_node *tmp;
+> +	struct io_kiocb *req;
+> +	bool ret = false;
+> +
+> +	mutex_lock(&ctx->uring_lock);
+> +	hlist_for_each_entry_safe(req, tmp, &ctx->cancelable_uring_cmd,
+> +			hash_node) {
+> +		struct io_uring_cmd *cmd = io_kiocb_to_cmd(req,
+> +				struct io_uring_cmd);
+> +
+> +		if (!cancel_all && req->task != task)
+> +			continue;
+> +
+> +		/* safe to call ->cancel_fn() since cmd isn't done yet */
+> +		if (cmd->flags & IORING_URING_CMD_CANCELABLE) {
+> +			cmd->cancel_fn(cmd, 0, task);
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+I find it weird to pass task here.  Also, it seems you use it only to
+sanity check it is the same as ubq->ubq_daemon.  Can you just recover it
+from cmd_to_io_kiocb(cmd)->task? it should be guaranteed to be the same
+as task by the check immediately before.
+
+Thanks,
+
+-- 
+Gabriel Krisman Bertazi
