@@ -2,149 +2,80 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC73A7A9AA1
-	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 20:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 129717A9D5F
+	for <lists+linux-block@lfdr.de>; Thu, 21 Sep 2023 21:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbjIUSqn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 21 Sep 2023 14:46:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58696 "EHLO
+        id S230424AbjIUTb3 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 21 Sep 2023 15:31:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjIUSqm (ORCPT
+        with ESMTP id S230434AbjIUTak (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 21 Sep 2023 14:46:42 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22912EE808;
-        Thu, 21 Sep 2023 11:46:34 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id CCDB8218FC;
-        Thu, 21 Sep 2023 18:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1695321992; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UOeRcNA6z4fQ4wZ/y9y2/tuq46PWNNqvjziVWS+zisg=;
-        b=lEU121qIwPtgg66osXBkWjt2yg6FMzT36F9Mfvs3PYqSqhA73YAkBLD34q9mzmfn4GAV3j
-        Zxrz+WsfZ/nDx3DngL+2m+hS4INh64Mn4mRCTHMhAZ+lGiKbVfOqH6pn/x8RmmfSegXq15
-        k+MXQRLAoq/HfPF4+Z1Oc6TllDiATtY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1695321992;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UOeRcNA6z4fQ4wZ/y9y2/tuq46PWNNqvjziVWS+zisg=;
-        b=oWeTtrg04IMG8eMriDRFA0OJbQKmvGgNl7nPxJAkn8bAgsztvSLT2m4DKOZ8hNVobFfm3Z
-        wSbz0kXQacoephAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9734E13513;
-        Thu, 21 Sep 2023 18:46:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id l88gH4iPDGW0XQAAMHmgww
-        (envelope-from <krisman@suse.de>); Thu, 21 Sep 2023 18:46:32 +0000
-From:   Gabriel Krisman Bertazi <krisman@suse.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH] io_uring: cancelable uring_cmd
-In-Reply-To: <20230921042434.2500190-1-ming.lei@redhat.com> (Ming Lei's
-        message of "Thu, 21 Sep 2023 12:24:34 +0800")
-References: <20230921042434.2500190-1-ming.lei@redhat.com>
-Date:   Thu, 21 Sep 2023 14:46:31 -0400
-Message-ID: <878r8znz3s.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        Thu, 21 Sep 2023 15:30:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9350A241;
+        Thu, 21 Sep 2023 12:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pzyLj/te+pJ0atcMca8/O/Us6PqNEkR5Xz0Y5l8NnVg=; b=piInYrEt+X8wmDUC3mgNPb793R
+        jZ0VFH+yzLf8eaEMHzbrcWvpyVoX40KpY4tRZiidjcjvcObuvInNIAexDPnyjVDhFFlzpA8A8YIbt
+        mUYiA9jkEzEDfLkXLsR22hzdIPxnLWbSY+4D5AYRPtIXaSD9xn3iVahsnbaMfI6k+gGyDQthT1Du2
+        zwnsTQqjoba0c1BrWlqRknzw9MuTjFciAvP57R25pWEdRcEPZzIFWR5II8DHJK87Xpq904uL/wf8D
+        dSg3g5D+gjNuCP78rFmUe7Exa2TL2oAKTJ0S29NGj/RH5PZ+gGp1Al7zlG6XBRIGrSPlYA5Jkvw2W
+        /EhWfKfw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qjPKU-00DghM-7I; Thu, 21 Sep 2023 19:27:14 +0000
+Date:   Thu, 21 Sep 2023 20:27:14 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 00/13] Pass data temperature information to zoned UFS
+ devices
+Message-ID: <ZQyZEqXJymyFWlKV@casper.infradead.org>
+References: <20230920191442.3701673-1-bvanassche@acm.org>
+ <ZQtHwsNvS1wYDKfG@casper.infradead.org>
+ <1522d8ec-6b15-45d5-b6d9-517337e2c8cf@acm.org>
+ <ZQv07Mg7qIXayHlf@x1-carbon>
+ <8781636a-57ac-4dbd-8ec6-b49c10c81345@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8781636a-57ac-4dbd-8ec6-b49c10c81345@acm.org>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Ming Lei <ming.lei@redhat.com> writes:
+On Thu, Sep 21, 2023 at 07:27:08AM -0700, Bart Van Assche wrote:
+> On 9/21/23 00:46, Niklas Cassel wrote:
+> > Considering that this API (F_GET_FILE_RW_HINT / F_SET_FILE_RW_HINT) was
+> > previously only used by NVMe (NVMe streams).
+> 
+> That doesn't sound correct to me. I think support for this API was added
+> in F2FS in November 2017 (commit 4f0a03d34dd4 ("f2fs: apply write hints
+> to select the type of segments for buffered write")). That was a few
+> months after NVMe stream support was added (June 2017) by commit
+> f5d118406247 ("nvme: add support for streams and directives").
+> 
+> > Should NVMe streams be brought back? Yes? No?
+> 
+> From commit 561593a048d7 ("Merge tag 'for-5.18/write-streams-2022-03-18'
+> of git://git.kernel.dk/linux-block"): "This removes the write streams
+> support in NVMe. No vendor ever really shipped working support for this,
+> and they are not interested in supporting it."
 
-> uring_cmd may never complete, such as ublk, in which uring cmd isn't
-> completed until one new block request is coming from ublk block device.
->
-> Add cancelable uring_cmd to provide mechanism to driver to cancel
-> pending commands in its own way.
->
-> Add API of io_uring_cmd_mark_cancelable() for driver to mark one
-> command as cancelable, then io_uring will cancel this command in
-> io_uring_cancel_generic(). Driver callback is provided for canceling
-> command in driver's way, meantime driver gets notified with exiting of
-> io_uring task or context.
->
-> Suggested-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->
-> ublk patches:
->
-> 	https://github.com/ming1/linux/commits/uring_exit_and_ublk
->
->  include/linux/io_uring.h       | 22 +++++++++++++++++-
->  include/linux/io_uring_types.h |  6 +++++
->  include/uapi/linux/io_uring.h  |  7 ++++--
->  io_uring/io_uring.c            | 30 ++++++++++++++++++++++++
->  io_uring/uring_cmd.c           | 42 ++++++++++++++++++++++++++++++++++
->  5 files changed, 104 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-> index 106cdc55ff3b..5b98308a154f 100644
-> --- a/include/linux/io_uring.h
-> +++ b/include/linux/io_uring.h
-> @@ -22,6 +22,9 @@ enum io_uring_cmd_flags {
->  	IO_URING_F_IOPOLL		= (1 << 10),
->  };
->  
-> +typedef void (uring_cmd_cancel_fn)(struct io_uring_cmd *,
-> +		unsigned int issue_flags, struct task_struct *task);
-> +
-
-Hi Ming,
-
-I wonder if uring_cmd_cancel shouldn't just be a new file operation, pairing
-with f_op->uring_cmd.  it would, of course, also mean don't need to pass
-it here occupying the pdu or explicitly registering it. iiuc, would also
-allow you to drop the flag and just assume it is cancelable if the operation
-exists, further simplifying the code.
-
-> +static bool io_uring_try_cancel_uring_cmd(struct io_ring_ctx *ctx,
-> +					  struct task_struct *task,
-> +					  bool cancel_all)
-> +{
-> +	struct hlist_node *tmp;
-> +	struct io_kiocb *req;
-> +	bool ret = false;
-> +
-> +	mutex_lock(&ctx->uring_lock);
-> +	hlist_for_each_entry_safe(req, tmp, &ctx->cancelable_uring_cmd,
-> +			hash_node) {
-> +		struct io_uring_cmd *cmd = io_kiocb_to_cmd(req,
-> +				struct io_uring_cmd);
-> +
-> +		if (!cancel_all && req->task != task)
-> +			continue;
-> +
-> +		/* safe to call ->cancel_fn() since cmd isn't done yet */
-> +		if (cmd->flags & IORING_URING_CMD_CANCELABLE) {
-> +			cmd->cancel_fn(cmd, 0, task);
-
-I find it weird to pass task here.  Also, it seems you use it only to
-sanity check it is the same as ubq->ubq_daemon.  Can you just recover it
-from cmd_to_io_kiocb(cmd)->task? it should be guaranteed to be the same
-as task by the check immediately before.
-
-Thanks,
-
--- 
-Gabriel Krisman Bertazi
+It sounds like UFS is at the same stage that NVMe got to -- standard
+exists, no vendor has committed to actually shipping it.  Isn't bringing
+it back a little premature?
