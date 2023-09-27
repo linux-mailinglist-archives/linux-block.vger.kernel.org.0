@@ -2,292 +2,140 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A6227B0069
-	for <lists+linux-block@lfdr.de>; Wed, 27 Sep 2023 11:35:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E5F07B06A3
+	for <lists+linux-block@lfdr.de>; Wed, 27 Sep 2023 16:20:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231207AbjI0JfL (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 27 Sep 2023 05:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44626 "EHLO
+        id S232165AbjI0OUZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Sep 2023 10:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231157AbjI0JfA (ORCPT
+        with ESMTP id S232227AbjI0OTq (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 27 Sep 2023 05:35:00 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3915013A;
-        Wed, 27 Sep 2023 02:34:49 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 16E7C21978;
-        Wed, 27 Sep 2023 09:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1695807285; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eshjhmlBZZ+GzNwp19gJ7ErY7Ih5GTuxpMRTs+m+0bs=;
-        b=EWUVkms5/pm2Ml5jbpZ8PZyg98OaUFitQ5RxXq1ZzVlbbqyw5iGue5zipZL3x5PApU/j0e
-        tymimozpkYIQuMmfdcJpSGaAuf6Gf9UuON4kL7vWrvc7BBDm5g/I6jma3HFNGt6D+RmQd0
-        ZUoHLT4s9UMO9sL9Qq2azAktAfRGbNM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1695807285;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eshjhmlBZZ+GzNwp19gJ7ErY7Ih5GTuxpMRTs+m+0bs=;
-        b=ss5MNlOjNXLJ919ETlSHkJp1Yp2PPEp1qO36o7DGcIzrpPjnGfs13irxuEi6+C86YwJI4q
-        U06WAnopbiSPRQDQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0798F1338F;
-        Wed, 27 Sep 2023 09:34:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id xuXGATX3E2U8EwAAMHmgww
-        (envelope-from <jack@suse.cz>); Wed, 27 Sep 2023 09:34:45 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id C1C83A0803; Wed, 27 Sep 2023 11:34:43 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 29/29] block: Remove blkdev_get_by_*() functions
-Date:   Wed, 27 Sep 2023 11:34:35 +0200
-Message-Id: <20230927093442.25915-29-jack@suse.cz>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230818123232.2269-1-jack@suse.cz>
-References: <20230818123232.2269-1-jack@suse.cz>
+        Wed, 27 Sep 2023 10:19:46 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FC6CD8
+        for <linux-block@vger.kernel.org>; Wed, 27 Sep 2023 07:19:40 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2bfe9447645so40486451fa.0
+        for <linux-block@vger.kernel.org>; Wed, 27 Sep 2023 07:19:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1695824379; x=1696429179; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Wwk46okUDVQfnnelgDDAXJI2PyNHcNwKe3ka13udWbU=;
+        b=DeI+ndmzygXiV26g14+sM5/i8LsgL9CgDy9VB19Br8mLYRZAuIXT5fRRQQG6dlR8uL
+         ZHHEpTz9ZokFgwqp34n75yS1PY5jIPS2kExh12XhknOQ2eKCYOv28dsCXeJAXJsi1HEl
+         F2Zx2jmfkSiekVnLkJ+WFP/RjHCF0P4hSSv/TEmiFoZUevCIhKJiTrNv3PuTvlSLSujz
+         Wf0VyalzJuC9m/i5NNQ2Jq1nDpP2QrA8a1dJThFB6+d4PeMeHZ2KUcdfKMEpuuI5ak06
+         ZG9/SXQPZ7P5UXbdQF7zqfmdxHWvYx4R5uZ/etWrlX8CR5WPQ2foeStaY5DOJOnP6vcl
+         LLCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695824379; x=1696429179;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wwk46okUDVQfnnelgDDAXJI2PyNHcNwKe3ka13udWbU=;
+        b=mSrw3bqhVcJzLKe04SpiOSKcM5xU0ml8BugExI16OCKsvaHvl7B+Y+kzslStCnVBfL
+         nrnSlFy84dtQo7kljOQZh3C14uZOcsCdKoZ5CESt7aW2oNXS6viJX3S1pmUC72OLot/t
+         Owo+RYgnWpfKlpcgawrT9gvVXp4ENUsHHG/1twrSeze1XDgLwCEIq8K44MuJwNZO9Ktl
+         9Lw+4YZbjuG0i9eL5wgkH+BrHCKrcoKgkDznNUW0VE7cpS5hU2lGbRXBPgGBZs+ncDz/
+         /1Qmq7+BlKtzp69aISw6AdVq/knInUcax6zpmjNjghq3p0jVNYQAGdNoRfMbOiyMmOmx
+         O1nQ==
+X-Gm-Message-State: AOJu0YxugvM6tFDPDCgpFBYghhL+fQr0YbYwpzat5A6hYAfEuyOVIoXb
+        yNR3MhLgE2TUgC79cL5hGxcZXg==
+X-Google-Smtp-Source: AGHT+IExVCqrFIxKzo43T8FMa/9T5rz6/xdccYRyI4cqxFk27k3RqgKqbk6x0v1Y5TMyg8NtKFdEkg==
+X-Received: by 2002:a05:651c:3cf:b0:2b6:cd7f:5ea8 with SMTP id f15-20020a05651c03cf00b002b6cd7f5ea8mr1801740ljp.1.1695824378667;
+        Wed, 27 Sep 2023 07:19:38 -0700 (PDT)
+Received: from [172.20.13.88] ([45.147.210.162])
+        by smtp.gmail.com with ESMTPSA id mh2-20020a170906eb8200b00992b2c55c67sm9370253ejb.156.2023.09.27.07.19.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Sep 2023 07:19:37 -0700 (PDT)
+Message-ID: <9cc59d88-4b77-4e56-ae54-737baca1d435@kernel.dk>
+Date:   Wed, 27 Sep 2023 08:19:36 -0600
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6889; i=jack@suse.cz; h=from:subject; bh=Ikp0JFfjK5lGV1c4NJSrLP6HE8Yq3ISmm+jwTrr9Eoo=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBlE/cqYojfqY37VS0S+9Qe7bf2w8dSlubsDBORTzMw MxR5zRiJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZRP3KgAKCRCcnaoHP2RA2W2tB/ 4z1O2luo6CRlZwZnpcQ0ddFqPaZCe5klRUn2PXAkyymVb8HUEM+xi8yJoCYMwWARqiDTnM1llQDKHU CdOG+EIfrNHX04Y49v8aZ5jBACh5tybF04FSgUiZQ2UiQ8nVWJIHdAGiEQxBbCBsyZlvRTLGJiSTFi MFgwewQC3Vj/yweM/O+VqauZx5qUtsuhkByD9GAWeA/MfHYHhEvtVFWvqk9TvTAMo3M3X8q6pYJW80 llF5MbSIV/H8Lu/NQ08gZbEJMpb5gIHOkFdWdE6q6u81T1ukE6Pp1Yx0tns2uh8BDT457TT+8gikXg uKPANWF0+KQKASVwUmL+6WrDrx2JoL
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v4 0/29] block: Make blkdev_get_by_*() return handle
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Alasdair Kergon <agk@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        Joern Engel <joern@lazybastard.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Song Liu <song@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        xen-devel@lists.xenproject.org
+References: <20230818123232.2269-1-jack@suse.cz>
+Content-Language: en-US
+In-Reply-To: <20230818123232.2269-1-jack@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-blkdev_get_by_*() and blkdev_put() functions are now unused. Remove
-them.
+On Wed, Sep 27, 2023 at 3:34?AM Jan Kara <jack@suse.cz> wrote:
+>
+> Hello,
+>
+> this is a v3 of the patch series which implements the idea of blkdev_get_by_*()
 
-Acked-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- block/bdev.c           | 94 ++++++++++++++----------------------------
- include/linux/blkdev.h |  5 ---
- 2 files changed, 30 insertions(+), 69 deletions(-)
+v4?
 
-diff --git a/block/bdev.c b/block/bdev.c
-index 4628dcb1da8a..ea80958027a8 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -729,7 +729,7 @@ void blkdev_put_no_open(struct block_device *bdev)
- }
- 	
- /**
-- * blkdev_get_by_dev - open a block device by device number
-+ * bdev_open_by_dev - open a block device by device number
-  * @dev: device number of block device to open
-  * @mode: open mode (BLK_OPEN_*)
-  * @holder: exclusive holder identifier
-@@ -741,32 +741,40 @@ void blkdev_put_no_open(struct block_device *bdev)
-  *
-  * Use this interface ONLY if you really do not have anything better - i.e. when
-  * you are behind a truly sucky interface and all you are given is a device
-- * number.  Everything else should use blkdev_get_by_path().
-+ * number.  Everything else should use bdev_open_by_path().
-  *
-  * CONTEXT:
-  * Might sleep.
-  *
-  * RETURNS:
-- * Reference to the block_device on success, ERR_PTR(-errno) on failure.
-+ * Handle with a reference to the block_device on success, ERR_PTR(-errno) on
-+ * failure.
-  */
--struct block_device *blkdev_get_by_dev(dev_t dev, blk_mode_t mode, void *holder,
--		const struct blk_holder_ops *hops)
-+struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
-+				     const struct blk_holder_ops *hops)
- {
--	bool unblock_events = true;
-+	struct bdev_handle *handle = kmalloc(sizeof(struct bdev_handle),
-+					     GFP_KERNEL);
- 	struct block_device *bdev;
-+	bool unblock_events = true;
- 	struct gendisk *disk;
- 	int ret;
- 
-+	if (!handle)
-+		return ERR_PTR(-ENOMEM);
-+
- 	ret = devcgroup_check_permission(DEVCG_DEV_BLOCK,
- 			MAJOR(dev), MINOR(dev),
- 			((mode & BLK_OPEN_READ) ? DEVCG_ACC_READ : 0) |
- 			((mode & BLK_OPEN_WRITE) ? DEVCG_ACC_WRITE : 0));
- 	if (ret)
--		return ERR_PTR(ret);
-+		goto free_handle;
- 
- 	bdev = blkdev_get_no_open(dev);
--	if (!bdev)
--		return ERR_PTR(-ENXIO);
-+	if (!bdev) {
-+		ret = -ENXIO;
-+		goto free_handle;
-+	}
- 	disk = bdev->bd_disk;
- 
- 	if (holder) {
-@@ -815,7 +823,10 @@ struct block_device *blkdev_get_by_dev(dev_t dev, blk_mode_t mode, void *holder,
- 
- 	if (unblock_events)
- 		disk_unblock_events(disk);
--	return bdev;
-+	handle->bdev = bdev;
-+	handle->holder = holder;
-+	handle->mode = mode;
-+	return handle;
- put_module:
- 	module_put(disk->fops->owner);
- abort_claiming:
-@@ -825,34 +836,14 @@ struct block_device *blkdev_get_by_dev(dev_t dev, blk_mode_t mode, void *holder,
- 	disk_unblock_events(disk);
- put_blkdev:
- 	blkdev_put_no_open(bdev);
-+free_handle:
-+	kfree(handle);
- 	return ERR_PTR(ret);
- }
--EXPORT_SYMBOL(blkdev_get_by_dev);
--
--struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
--				     const struct blk_holder_ops *hops)
--{
--	struct bdev_handle *handle = kmalloc(sizeof(*handle), GFP_KERNEL);
--	struct block_device *bdev;
--
--	if (!handle)
--		return ERR_PTR(-ENOMEM);
--	bdev = blkdev_get_by_dev(dev, mode, holder, hops);
--	if (IS_ERR(bdev)) {
--		kfree(handle);
--		return ERR_CAST(bdev);
--	}
--	handle->bdev = bdev;
--	handle->holder = holder;
--	if (holder)
--		mode |= BLK_OPEN_EXCL;
--	handle->mode = mode;
--	return handle;
--}
- EXPORT_SYMBOL(bdev_open_by_dev);
- 
- /**
-- * blkdev_get_by_path - open a block device by name
-+ * bdev_open_by_path - open a block device by name
-  * @path: path to the block device to open
-  * @mode: open mode (BLK_OPEN_*)
-  * @holder: exclusive holder identifier
-@@ -866,29 +857,9 @@ EXPORT_SYMBOL(bdev_open_by_dev);
-  * Might sleep.
-  *
-  * RETURNS:
-- * Reference to the block_device on success, ERR_PTR(-errno) on failure.
-+ * Handle with a reference to the block_device on success, ERR_PTR(-errno) on
-+ * failure.
-  */
--struct block_device *blkdev_get_by_path(const char *path, blk_mode_t mode,
--		void *holder, const struct blk_holder_ops *hops)
--{
--	struct block_device *bdev;
--	dev_t dev;
--	int error;
--
--	error = lookup_bdev(path, &dev);
--	if (error)
--		return ERR_PTR(error);
--
--	bdev = blkdev_get_by_dev(dev, mode, holder, hops);
--	if (!IS_ERR(bdev) && (mode & BLK_OPEN_WRITE) && bdev_read_only(bdev)) {
--		blkdev_put(bdev, holder);
--		return ERR_PTR(-EACCES);
--	}
--
--	return bdev;
--}
--EXPORT_SYMBOL(blkdev_get_by_path);
--
- struct bdev_handle *bdev_open_by_path(const char *path, blk_mode_t mode,
- 		void *holder, const struct blk_holder_ops *hops)
- {
-@@ -911,8 +882,9 @@ struct bdev_handle *bdev_open_by_path(const char *path, blk_mode_t mode,
- }
- EXPORT_SYMBOL(bdev_open_by_path);
- 
--void blkdev_put(struct block_device *bdev, void *holder)
-+void bdev_release(struct bdev_handle *handle)
- {
-+	struct block_device *bdev = handle->bdev;
- 	struct gendisk *disk = bdev->bd_disk;
- 
- 	/*
-@@ -926,8 +898,8 @@ void blkdev_put(struct block_device *bdev, void *holder)
- 		sync_blockdev(bdev);
- 
- 	mutex_lock(&disk->open_mutex);
--	if (holder)
--		bd_end_claim(bdev, holder);
-+	if (handle->holder)
-+		bd_end_claim(bdev, handle->holder);
- 
- 	/*
- 	 * Trigger event checking and tell drivers to flush MEDIA_CHANGE
-@@ -944,12 +916,6 @@ void blkdev_put(struct block_device *bdev, void *holder)
- 
- 	module_put(disk->fops->owner);
- 	blkdev_put_no_open(bdev);
--}
--EXPORT_SYMBOL(blkdev_put);
--
--void bdev_release(struct bdev_handle *handle)
--{
--	blkdev_put(handle->bdev, handle->holder);
- 	kfree(handle);
- }
- EXPORT_SYMBOL(bdev_release);
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 51fa7ffdee83..98406eea5d1b 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1485,10 +1485,6 @@ struct bdev_handle {
- 	blk_mode_t mode;
- };
- 
--struct block_device *blkdev_get_by_dev(dev_t dev, blk_mode_t mode, void *holder,
--		const struct blk_holder_ops *hops);
--struct block_device *blkdev_get_by_path(const char *path, blk_mode_t mode,
--		void *holder, const struct blk_holder_ops *hops);
- struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
- 		const struct blk_holder_ops *hops);
- struct bdev_handle *bdev_open_by_path(const char *path, blk_mode_t mode,
-@@ -1496,7 +1492,6 @@ struct bdev_handle *bdev_open_by_path(const char *path, blk_mode_t mode,
- int bd_prepare_to_claim(struct block_device *bdev, void *holder,
- 		const struct blk_holder_ops *hops);
- void bd_abort_claiming(struct block_device *bdev, void *holder);
--void blkdev_put(struct block_device *bdev, void *holder);
- void bdev_release(struct bdev_handle *handle);
- 
- /* just for blk-cgroup, don't use elsewhere */
+> calls returning bdev_handle which is then passed to blkdev_put() [1]. This
+> makes the get and put calls for bdevs more obviously matching and allows us to
+> propagate context from get to put without having to modify all the users
+> (again!). In particular I need to propagate used open flags to blkdev_put() to
+> be able count writeable opens and add support for blocking writes to mounted
+> block devices. I'll send that series separately.
+>
+> The series is based on Btrfs tree's for-next branch [2] as of today as the
+> series depends on Christoph's changes to btrfs device handling.  Patches have
+> passed some reasonable testing - I've tested block changes, md, dm, bcache,
+> xfs, btrfs, ext4, swap. More testing or review is always welcome. Thanks! I've
+> pushed out the full branch to:
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git bdev_handle
+>
+> to ease review / testing. Christian, can you pull the patches to your tree
+> to get some exposure in linux-next as well? Thanks!
+
+For the block bits:
+
+Acked-by: Jens Axboe <axboe@kernel.dk>
+
 -- 
-2.35.3
+Jens Axboe
 
