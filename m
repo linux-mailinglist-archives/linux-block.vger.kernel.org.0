@@ -2,288 +2,194 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1927AF06A
-	for <lists+linux-block@lfdr.de>; Tue, 26 Sep 2023 18:15:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FFA27B0051
+	for <lists+linux-block@lfdr.de>; Wed, 27 Sep 2023 11:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235183AbjIZQPH (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 26 Sep 2023 12:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45584 "EHLO
+        id S231150AbjI0Je7 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 27 Sep 2023 05:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235194AbjIZQPG (ORCPT
+        with ESMTP id S230448AbjI0Jes (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 26 Sep 2023 12:15:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9476AF
-        for <linux-block@vger.kernel.org>; Tue, 26 Sep 2023 09:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695744851;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Expj9KdGU5UQzWCnX5PAuSPH6Fbb8WCnKutwu5N8eHI=;
-        b=WE1TIbicEDL6G32ipDAikLsrPwBj1PqbhaOCb701vwwTwPTphi2uMwh7JGUKWRtFtDfLxK
-        sgzjU7mwe/O2XoZA1vo0zgongFYEfpUV4xvaMeF6RzScL3m1U97U2oHu3vZzQFu1onYh4o
-        ApyILd3WWZypEKMYP7jw21D7q6yVxL8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-641-cUN4MP7ZMueIJqqFxc4B6A-1; Tue, 26 Sep 2023 12:14:08 -0400
-X-MC-Unique: cUN4MP7ZMueIJqqFxc4B6A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 27 Sep 2023 05:34:48 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9157A193;
+        Wed, 27 Sep 2023 02:34:45 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7363F801779;
-        Tue, 26 Sep 2023 16:14:07 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F5C540C2064;
-        Tue, 26 Sep 2023 16:14:06 +0000 (UTC)
-Date:   Tue, 26 Sep 2023 10:55:26 -0400
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Ming Lei <ming.lei@redhat.com>, Suwan Kim <suwan.kim027@gmail.com>
-Cc:     Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        virtualization@lists.linux-foundation.org, mst@redhat.com
-Subject: Re: [PATCH V3] io_uring: fix IO hang in io_wq_put_and_exit from
- do_exit()
-Message-ID: <20230926145526.GA387951@fedora>
-References: <20230908093009.540763-1-ming.lei@redhat.com>
- <58227846-6b73-46ef-957f-d9b1e0451899@kernel.dk>
- <ZPsxCYFgZjIIeaBk@fedora>
- <0f85a6b5-3ba6-4b77-bb7d-79f365dbb44c@kernel.dk>
- <ZPs81IAYfB8J78Pv@fedora>
- <CACGkMEvP=f1mB=01CDOhHaDLNL9espKPrUffgHEdBVkW4fo=pw@mail.gmail.com>
- <20230925211710.GH323580@fedora>
- <ZRIzr6C8tHM2N4Ng@fedora>
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 967601FD5E;
+        Wed, 27 Sep 2023 09:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1695807283; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=8yq/EWr5xgyIq2expGTOm/a8E50tdoL6jyUvlCURtkA=;
+        b=AFBlD5DhZEt1NESHiYyz8SkegLzofp7eJ1WULrYqvNawr6FwYRs8YvfnxMMuueLH4oaPAr
+        4/E8CfUtgD9JCSYdgqDNPTGf3WDqWggCkDqswdM4bg88sfMPDeWHH5NIlB2Bfj+JpMt9FG
+        ZcOWlzLEUXG/bpJ8Kbaqy4vRi+qRmpA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1695807283;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=8yq/EWr5xgyIq2expGTOm/a8E50tdoL6jyUvlCURtkA=;
+        b=mg4W9cwL1b35dhDAXFy+IpXoqDtwwHWZKy46oqV5YDeY2A866tqG4ZHrqCDezVtTxVLjRN
+        B2SqzI+xFxiJavDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 779CF13A74;
+        Wed, 27 Sep 2023 09:34:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id YqW3HDP3E2X+EgAAMHmgww
+        (envelope-from <jack@suse.cz>); Wed, 27 Sep 2023 09:34:43 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id DAA33A07C9; Wed, 27 Sep 2023 11:34:42 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Alasdair Kergon <agk@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        Joern Engel <joern@lazybastard.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Song Liu <song@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v4 0/29] block: Make blkdev_get_by_*() return handle
+Date:   Wed, 27 Sep 2023 11:34:06 +0200
+Message-Id: <20230818123232.2269-1-jack@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rd/ih7ZpJJDBDoHt"
-Content-Disposition: inline
-In-Reply-To: <ZRIzr6C8tHM2N4Ng@fedora>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3761; i=jack@suse.cz; h=from:subject:message-id; bh=szriGynEGZ/XhMNms+k06ASpRGig2ulDzrbrydRWx/Q=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBlE/cIrHCVKGuvNFZzgT9xiRfuRKr6Es2Qs4om7G7p jp8k2rmJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZRP3CAAKCRCcnaoHP2RA2XGWB/ 4+O+K19fPnUyIouL+A+izJvDBxQbTCWLdn5TEMu5YdIMbi0dvnwAfknt+NWIhJaTQX2oqlgt3Z+UIT peMYb+jQZabj8X4xHMMy3Sfq64tRwodJHlZby5Ux9AfTZe49zDp4M4B3yxQqarEhmz6e4FJUGDaSej vcJmLz6AuSnYuAh4QK/3jCXQrEElZRTjarZjfbunWocM/2dQ7CB+rOSwKJcRMoDpqntU8QyArxca4l q6I2pBMNjnYMgjtG+ABGSBtTrj87TuJSTB3V8qtI38sfCYjMVVEoQiJKuUm1GMh2sPOFelwVMXMCJH mKs8UbSjcFd3wsbJXc8EOKLxzYparl
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
+Hello,
 
---rd/ih7ZpJJDBDoHt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+this is a v3 of the patch series which implements the idea of blkdev_get_by_*()
+calls returning bdev_handle which is then passed to blkdev_put() [1]. This
+makes the get and put calls for bdevs more obviously matching and allows us to
+propagate context from get to put without having to modify all the users
+(again!). In particular I need to propagate used open flags to blkdev_put() to
+be able count writeable opens and add support for blocking writes to mounted
+block devices. I'll send that series separately.
 
-On Tue, Sep 26, 2023 at 09:28:15AM +0800, Ming Lei wrote:
-> On Mon, Sep 25, 2023 at 05:17:10PM -0400, Stefan Hajnoczi wrote:
-> > On Fri, Sep 15, 2023 at 03:04:05PM +0800, Jason Wang wrote:
-> > > On Fri, Sep 8, 2023 at 11:25=E2=80=AFPM Ming Lei <ming.lei@redhat.com=
-> wrote:
-> > > >
-> > > > On Fri, Sep 08, 2023 at 08:44:45AM -0600, Jens Axboe wrote:
-> > > > > On 9/8/23 8:34 AM, Ming Lei wrote:
-> > > > > > On Fri, Sep 08, 2023 at 07:49:53AM -0600, Jens Axboe wrote:
-> > > > > >> On 9/8/23 3:30 AM, Ming Lei wrote:
-> > > > > >>> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-> > > > > >>> index ad636954abae..95a3d31a1ef1 100644
-> > > > > >>> --- a/io_uring/io_uring.c
-> > > > > >>> +++ b/io_uring/io_uring.c
-> > > > > >>> @@ -1930,6 +1930,10 @@ void io_wq_submit_work(struct io_wq_wo=
-rk *work)
-> > > > > >>>           }
-> > > > > >>>   }
-> > > > > >>>
-> > > > > >>> + /* It is fragile to block POLLED IO, so switch to NON_BLOCK=
- */
-> > > > > >>> + if ((req->ctx->flags & IORING_SETUP_IOPOLL) && def->iopoll_=
-queue)
-> > > > > >>> +         issue_flags |=3D IO_URING_F_NONBLOCK;
-> > > > > >>> +
-> > > > > >>
-> > > > > >> I think this comment deserves to be more descriptive. Normally=
- we
-> > > > > >> absolutely cannot block for polled IO, it's only OK here becau=
-se io-wq
-> > > > > >
-> > > > > > Yeah, we don't do that until commit 2bc057692599 ("block: don't=
- make REQ_POLLED
-> > > > > > imply REQ_NOWAIT") which actually push the responsibility/risk =
-up to
-> > > > > > io_uring.
-> > > > > >
-> > > > > >> is the issuer and not necessarily the poller of it. That gener=
-ally falls
-> > > > > >> upon the original issuer to poll these requests.
-> > > > > >>
-> > > > > >> I think this should be a separate commit, coming before the ma=
-in fix
-> > > > > >> which is below.
-> > > > > >
-> > > > > > Looks fine, actually IO_URING_F_NONBLOCK change isn't a must, a=
-nd the
-> > > > > > approach in V2 doesn't need this change.
-> > > > > >
-> > > > > >>
-> > > > > >>> @@ -3363,6 +3367,12 @@ __cold void io_uring_cancel_generic(bo=
-ol cancel_all, struct io_sq_data *sqd)
-> > > > > >>>           finish_wait(&tctx->wait, &wait);
-> > > > > >>>   } while (1);
-> > > > > >>>
-> > > > > >>> + /*
-> > > > > >>> +  * Reap events from each ctx, otherwise these requests may =
-take
-> > > > > >>> +  * resources and prevent other contexts from being moved on.
-> > > > > >>> +  */
-> > > > > >>> + xa_for_each(&tctx->xa, index, node)
-> > > > > >>> +         io_iopoll_try_reap_events(node->ctx);
-> > > > > >>
-> > > > > >> The main issue here is that if someone isn't polling for them,=
- then we
-> > > > > >
-> > > > > > That is actually what this patch is addressing, :-)
-> > > > >
-> > > > > Right, that part is obvious :)
-> > > > >
-> > > > > >> get to wait for a timeout before they complete. This can delay=
- exit, for
-> > > > > >> example, as we're now just waiting 30 seconds (or whatever the=
- timeout
-> > > > > >> is on the underlying device) for them to get timed out before =
-exit can
-> > > > > >> finish.
-> > > > > >
-> > > > > > For the issue on null_blk, device timeout handler provides
-> > > > > > forward-progress, such as requests are released, so new IO can =
-be
-> > > > > > handled.
-> > > > > >
-> > > > > > However, not all devices support timeout, such as virtio device.
-> > > > >
-> > > > > That's a bug in the driver, you cannot sanely support polled IO a=
-nd not
-> > > > > be able to deal with timeouts. Someone HAS to reap the requests a=
-nd
-> > > > > there are only two things that can do that - the application doin=
-g the
-> > > > > polled IO, or if that doesn't happen, a timeout.
-> > > >
-> > > > OK, then device driver timeout handler has new responsibility of co=
-vering
-> > > > userspace accident, :-)
-> >=20
-> > Sorry, I don't have enough context so this is probably a silly question:
-> >=20
-> > When an application doesn't reap a polled request, why doesn't the block
-> > layer take care of this in a generic way? I don't see anything
-> > driver-specific about this.
->=20
-> block layer doesn't have knowledge to handle that, io_uring knows the
-> application is exiting, and can help to reap the events.
+The series is based on Btrfs tree's for-next branch [2] as of today as the
+series depends on Christoph's changes to btrfs device handling.  Patches have
+passed some reasonable testing - I've tested block changes, md, dm, bcache,
+xfs, btrfs, ext4, swap. More testing or review is always welcome. Thanks! I've
+pushed out the full branch to:
 
-I thought the discussion was about I/O timeouts in general but here
-you're only mentioning application exit. Are we talking about I/O
-timeouts or purely about cleaning up I/O requests when an application
-exits?
+git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git bdev_handle
 
->=20
-> But the big question is that if there is really IO timeout for virtio-blk.
-> If there is, the reap done in io_uring may never return and cause other
-> issue, so if it is done in io_uring, that can be just thought as sort of
-> improvement.
+to ease review / testing. Christian, can you pull the patches to your tree
+to get some exposure in linux-next as well? Thanks!
 
-virtio-blk drivers have no way of specifying timeouts on the device or
-aborting/canceling requests.
+Changes since v3:
+* Rebased on top on btrfs tree
 
-virtio-blk devices may fail requests if they implement an internal
-timeout mechanism (e.g. the host kernel fails requests after a host
-timeout), but this is not controlled by the driver and there is no
-guarantee that the device has an internal timeout. The driver will not
-treat these timed out requests in a special way - the application will
-see EIO errors.
+Changes since v2:
+* Rebased on top of current vfs tree
+* Added some acks
+* Reflected minor nits from Christoph
+* Added missing conversion of blkdev_put() calls in cramfs and erofs
+* Fixed possible leak of bdev handle in xfs if logdev is the same as fs dev
 
->=20
-> The real bug fix is still in device driver, usually only the driver timeo=
-ut
-> handler can provide forward progress guarantee.
+Changes since v1:
+* Rebased on top of current vfs tree
+* Renamed final functions to bdev_open_by_*() and bdev_release()
+* Fixed detection of exclusive open in blkdev_ioctl() and blkdev_fallocate()
+* Fixed swap conversion to properly reinitialize swap_info->bdev_handle
+* Fixed xfs conversion to not oops with rtdev without logdev
+* Couple other minor fixups
 
-The only recourse for hung I/O on a virtio-blk device is device reset,
-but that is often implemented as a synchronous operation and is likely
-to block until in-flight I/O finishes.
+								Honza
 
-An admin virtqueue could be added to virtio-blk along with an abort
-command, but existing devices will not support the new hardware
-interface.
+[1] https://lore.kernel.org/all/ZJGNsVDhZx0Xgs2H@infradead.org
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-next
 
-However, I'm not sure a new abort command would solve the problem.
-virtio-blk devices are often implemented as userspace processes and are
-limited by the availability of I/O cancellation APIs. Maybe my
-understanding is outdated, but I believe userspace processes cannot
-force I/O to abort. For example, the man page says the following for
-IORING_OP_ASYNC_CANCEL:
+CC: Alasdair Kergon <agk@redhat.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Anna Schumaker <anna@kernel.org>
+CC: Chao Yu <chao@kernel.org>
+CC: Christian Borntraeger <borntraeger@linux.ibm.com>
+CC: Coly Li <colyli@suse.de
+CC: "Darrick J. Wong" <djwong@kernel.org>
+CC: Dave Kleikamp <shaggy@kernel.org>
+CC: David Sterba <dsterba@suse.com>
+CC: dm-devel@redhat.com
+CC: drbd-dev@lists.linbit.com
+CC: Gao Xiang <xiang@kernel.org>
+CC: Jack Wang <jinpu.wang@ionos.com>
+CC: Jaegeuk Kim <jaegeuk@kernel.org>
+CC: jfs-discussion@lists.sourceforge.net
+CC: Joern Engel <joern@lazybastard.org>
+CC: Joseph Qi <joseph.qi@linux.alibaba.com>
+CC: Kent Overstreet <kent.overstreet@gmail.com>
+CC: linux-bcache@vger.kernel.org
+CC: linux-btrfs@vger.kernel.org
+CC: linux-erofs@lists.ozlabs.org
+CC: <linux-ext4@vger.kernel.org>
+CC: linux-f2fs-devel@lists.sourceforge.net
+CC: linux-mm@kvack.org
+CC: linux-mtd@lists.infradead.org
+CC: linux-nfs@vger.kernel.org
+CC: linux-nilfs@vger.kernel.org
+CC: linux-nvme@lists.infradead.org
+CC: linux-pm@vger.kernel.org
+CC: linux-raid@vger.kernel.org
+CC: linux-s390@vger.kernel.org
+CC: linux-scsi@vger.kernel.org
+CC: linux-xfs@vger.kernel.org
+CC: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
+CC: Mike Snitzer <snitzer@kernel.org>
+CC: Minchan Kim <minchan@kernel.org>
+CC: ocfs2-devel@oss.oracle.com
+CC: reiserfs-devel@vger.kernel.org
+CC: Sergey Senozhatsky <senozhatsky@chromium.org>
+CC: Song Liu <song@kernel.org>
+CC: Sven Schnelle <svens@linux.ibm.com>
+CC: target-devel@vger.kernel.org
+CC: Ted Tso <tytso@mit.edu>
+CC: Trond Myklebust <trond.myklebust@hammerspace.com>
+CC: xen-devel@lists.xenproject.org
 
-  In general, requests that are interruptible (like socket IO) will get
-  canceled, while disk IO requests cannot be canceled if already
-  started.
-
-Even if an abort command is added to virtio-blk, won't we just end up in
-this situation:
-1. The guest kernel invokes ->timeout() on virtio_blk.ko.
-2. virtio_blk.ko sends an abort command to the device and resets the
-   timeout.
-3. The device submits IORING_OP_ASYNC_CANCEL but it cannot cancel an
-   in-flight disk I/O request.
-4. ...time passes...
-5. The guest kernel invokes ->timeout() again and virtio_blk.ko decides
-   abort was ineffective. The entire device must be reset.
-?
-
-(I based this on the ->timeout() logic in the nvme driver.)
-
-If we're effectively just going to wait for twice the timeout duration
-and then reset the device, then why go through the trouble of sending
-the abort command? I'm hoping you'll tell me that IORING_OP_ASYNC_CANCEL
-is in fact able to cancel disk I/O nowadays :).
-
->=20
-> >=20
-> > Driver-specific behavior would be sending an abort/cancel upon timeout.
-> > virtio-blk cannot do that because there is no such command in the device
-> > specification at the moment. So simply waiting for the polled request to
-> > complete is the only thing that can be done (aside from resetting the
-> > device), and it's generic behavior.
->=20
-> Then looks not safe to support IO polling for virtio-blk, maybe disable it
-> at default now until the virtio-blk spec starts to support IO abort?
-
-The virtio_blk.ko poll_queues module parameter is already set to 0 by
-default. Poll queues are only available when the user has explicitly set
-the module parameter.
-
-I have added Suwan Kim to the email thread. Suwan Kim added poll queue
-support to the virtio-blk driver and may have a preference for how to
-proceed.
-
-Stefan
-
---rd/ih7ZpJJDBDoHt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmUS8N4ACgkQnKSrs4Gr
-c8hWmgf/fD3DZcd+L6dOVkhoxLktiDsXa1YuXrbUUX/SxuNNEBqs13rtQqt7ZsK2
-Q6JuURAdhVOwnq/yNZ7m8OAFEW9chwJU6XexG9ZCuRdrH+weEOFsHZYT0sp07vCb
-C2GmsIkoEIaTPplPKJ//2TCh+Ag1N3FFHgZQ34IDJS/+9In+uDHt23JPS7Pp34OL
-z7AZVp8lOmSapW4HpoextIwBF+l0BzsEmW5VNsWWqr6kM2dnzvC3pbqTffGcWs09
-2AsgcTL/zKJNw77UzddLHVxssPd3KHYaY5YYdJKvwujkzr/m4iqj4z5VWJGWCSqi
-8WOa0LVA2GGcDVmkQ8OnbpItjoWh2w==
-=WLJs
------END PGP SIGNATURE-----
-
---rd/ih7ZpJJDBDoHt--
-
+Previous versions:
+Link: http://lore.kernel.org/r/20230629165206.383-1-jack@suse.cz # v1
+Link: http://lore.kernel.org/r/20230810171429.31759-1-jack@suse.cz # v2
