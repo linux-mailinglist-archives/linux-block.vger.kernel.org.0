@@ -2,54 +2,54 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B2B17B17A4
-	for <lists+linux-block@lfdr.de>; Thu, 28 Sep 2023 11:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 284537B179B
+	for <lists+linux-block@lfdr.de>; Thu, 28 Sep 2023 11:39:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231817AbjI1Jjn (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Sep 2023 05:39:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57070 "EHLO
+        id S231895AbjI1Jjd (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Sep 2023 05:39:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231909AbjI1JjV (ORCPT
+        with ESMTP id S231915AbjI1JjV (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Thu, 28 Sep 2023 05:39:21 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB1871B6
-        for <linux-block@vger.kernel.org>; Thu, 28 Sep 2023 02:39:02 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-32336a30d18so4738219f8f.2
-        for <linux-block@vger.kernel.org>; Thu, 28 Sep 2023 02:39:02 -0700 (PDT)
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C926ECE2
+        for <linux-block@vger.kernel.org>; Thu, 28 Sep 2023 02:39:03 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-3248e90f032so172363f8f.1
+        for <linux-block@vger.kernel.org>; Thu, 28 Sep 2023 02:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20230601.gappssmtp.com; s=20230601; t=1695893941; x=1696498741; darn=vger.kernel.org;
+        d=linbit-com.20230601.gappssmtp.com; s=20230601; t=1695893942; x=1696498742; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DjqSRzwtcmbZCSdKBG680ING+E16TFEDXl3yu9hsx/4=;
-        b=C8M0DdeXPslPvE2nDGk1T6oVddJq0OD10kcrqDGNu7AEzn3VKwgw/N2JL8t2Oazj60
-         DYz0MAh1+2PoNkVNK3IuowcCZ3+nAUi9jvLlVQM0r7zsOb5CqxRcaJTjKYEADq37DNeS
-         lf0ly9rWlXyHxvqRiUuVAW0mPvwoRLSqc6nuYDYk8qBPBqWDTVft0e2Xsz0+1K1MllFq
-         8wtJlqyoC6+mcjhHiKx7Dc4DDEsTMPdMgxR/nEmVEzO+LCpOtCWFkx84vtgnHBlSHV+x
-         w9lGMMf57GBh5lVof3OxqQqyQJQqERyhZxelnkSB/HZWZcnGSzCizQABp/wjTVrVdh6G
-         nsKg==
+        bh=FxdqCPbXhmzZcYHHWzAs1Pz189GcHmpMYCt/LIrBVmA=;
+        b=defPPbsL31qtr6Fegpk+sAyp/swDW33q+GGjJfm2HTUJBv1BXu4Yz/obKNEjhlODV3
+         FhWVgZyPQfTjtl/IfBLB0ay4Vr4hvmNUeyp3zgWJloAIymdu8BsIayJlOPkhtuD1cium
+         e0LOnSuwZCLSaz7I0euNIkAmht+SDP3LBF2w0d4q9jYUbujT40YXccUKDdnr3Mwka+x6
+         +4Stdr0uux2cHqTe/trKh6Yu0nUcYjr8Jtes6b3D/0f4Z3cewVQTrBFEc7oGmrVs7CJf
+         bT5LZFeJ08cYFkqP5GVSRszrsq32sjQ8O2xJ2gb6mbA0ZaGIQMpDtls3SnsQHmFF8WFl
+         xKrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695893941; x=1696498741;
+        d=1e100.net; s=20230601; t=1695893942; x=1696498742;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DjqSRzwtcmbZCSdKBG680ING+E16TFEDXl3yu9hsx/4=;
-        b=RV2OOapJeKoYGA7OXeznn4HThpR849iSdIK0zhOyyE28pA/GaPHzBUxLdvoLIoCxrh
-         8I0/prrCVi7CEjnDzMOD3k8Dbi92KB85GnhP2vx+aH/gFqs0yGyvWDlgw0xJWwJTUZ26
-         Exd3vb/9pNDiWis5pYiWxRmspDgEdQboNojlkI4J43jIhWZov2z3vrvpBoqG+cx7ucpY
-         KzRqoD88BavmDquu2+kSBimLnHO3FmxsQASpuoMGrgVyxt1uH3mE5/rmh1eScYvMF7U9
-         bvYyH2/vZGNVALsmaU4ScHdEe1mlNjFCTd/qjcN/SPmWlQMVw7LPm1WKcjzUQQHGrIN1
-         x76Q==
-X-Gm-Message-State: AOJu0YwfKOARbZtOKnoZYsiDNZinSKg3wG+8Ki0XNuSjiXA7R2pxzzaI
-        5idFpmkfCpo6IpK0OoLYvfL+2Q==
-X-Google-Smtp-Source: AGHT+IGdEtds9yfynzz07vsuk4Ka5Y1yzotz4oFQqFgtVM7Pp6z4PO00hby8WHdz4jdco6WcaLK5Aw==
-X-Received: by 2002:adf:dc90:0:b0:319:7134:a3cf with SMTP id r16-20020adfdc90000000b003197134a3cfmr617107wrj.31.1695893941024;
-        Thu, 28 Sep 2023 02:39:01 -0700 (PDT)
+        bh=FxdqCPbXhmzZcYHHWzAs1Pz189GcHmpMYCt/LIrBVmA=;
+        b=D6RQsAt4N9y5/qZUmNfr9qolOHJrvCe6UEL6xQZNnunyJS6WXjCAywOdZYXZ2sYZcU
+         ZvXfYuRGK/RhXvcF1xz5Qb+2WKBFFHWsBdNQAqtmthdaDtKPu7XmyvCsIarJk1QY8hUM
+         zuwr+22Y7C5OSAF7W5gyLLE+2B2MzyyDdIg4pxvpZZgRDnT3wHX4ei58MTQXnbffnrxV
+         wMH9l3XwMUJZ6dOlVrczadakGxZ7oiIp6NRm4Q7Zcc3CgoEFizO/xoIzbbBp5di9LZKn
+         /d+Vw3NHAl13Wk/jAAnXUfb1JVj3EPyvJiMK0fC2SdyQCdtyF/mF9mvVy5xfviRts2xh
+         XxuA==
+X-Gm-Message-State: AOJu0YwDB9dkenl4kh9Y2wYxAFs0Qfs0Un3MfpWjcn0HqCYO+F1aTqrz
+        qt+S//ayUJh8+oVwQZQ1AdEyUQ==
+X-Google-Smtp-Source: AGHT+IFXErMwVQh26NX4Lo+CN3tqVv9eERZaRoI/iWHEjF+72aA0bMsuVLkXufdDKwDB+VZd3qOeDQ==
+X-Received: by 2002:a05:6000:10c4:b0:319:77dd:61f9 with SMTP id b4-20020a05600010c400b0031977dd61f9mr668384wrx.35.1695893942239;
+        Thu, 28 Sep 2023 02:39:02 -0700 (PDT)
 Received: from localhost.localdomain (213-225-13-130.nat.highway.a1.net. [213.225.13.130])
-        by smtp.gmail.com with ESMTPSA id f4-20020a5d50c4000000b0031fa870d4b3sm18931449wrt.60.2023.09.28.02.38.59
+        by smtp.gmail.com with ESMTPSA id f4-20020a5d50c4000000b0031fa870d4b3sm18931449wrt.60.2023.09.28.02.39.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 02:39:00 -0700 (PDT)
+        Thu, 28 Sep 2023 02:39:01 -0700 (PDT)
 From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
         <christoph.boehmwalder@linbit.com>
 To:     Jens Axboe <axboe@kernel.dk>
@@ -60,9 +60,9 @@ Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
         Joel Colledge <joel.colledge@linbit.com>,
         =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
         <christoph.boehmwalder@linbit.com>
-Subject: [PATCH 2/5] drbd: Add new per-resource "worker" thread
-Date:   Thu, 28 Sep 2023 11:38:49 +0200
-Message-ID: <20230928093852.676786-3-christoph.boehmwalder@linbit.com>
+Subject: [PATCH 3/5] drbd: Move connection independent work from "sender" to "worker"
+Date:   Thu, 28 Sep 2023 11:38:50 +0200
+Message-ID: <20230928093852.676786-4-christoph.boehmwalder@linbit.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230928093852.676786-1-christoph.boehmwalder@linbit.com>
 References: <20230928093852.676786-1-christoph.boehmwalder@linbit.com>
@@ -70,141 +70,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Out-of-tree fixes folded in:
-- drbd: allow to dequeue batches of work at a time (partial backport)
-- drbd: Keep "worker" alive while resource exists
-- Flush the work queue before stopping the worker thread
-
 Originally-from: Andreas Gruenbacher <agruen@linbit.com>
 Reviewed-by: Joel Colledge <joel.colledge@linbit.com>
 Signed-off-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
 ---
- drivers/block/drbd/drbd_int.h    |  4 +++
- drivers/block/drbd/drbd_main.c   |  5 ++++
- drivers/block/drbd/drbd_nl.c     |  2 +-
- drivers/block/drbd/drbd_sender.c | 46 ++++++++++++++++++++++++++++++++
- 4 files changed, 56 insertions(+), 1 deletion(-)
+ drivers/block/drbd/drbd_receiver.c | 2 +-
+ drivers/block/drbd/drbd_req.c      | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
-index a53e63af23f1..fe7e93a4dfa6 100644
---- a/drivers/block/drbd/drbd_int.h
-+++ b/drivers/block/drbd/drbd_int.h
-@@ -603,6 +603,9 @@ struct drbd_resource {
- 	enum write_ordering_e write_ordering;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 0c9f54197768..6e21df44b5aa 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5890,7 +5890,7 @@ static int got_OVResult(struct drbd_connection *connection, struct packet_info *
+ 		if (dw) {
+ 			dw->w.cb = w_ov_finished;
+ 			dw->device = device;
+-			drbd_queue_work(&peer_device->connection->sender_work, &dw->w);
++			drbd_queue_work(&device->resource->work, &dw->w);
+ 		} else {
+ 			drbd_err(device, "kmalloc(dw) failed.");
+ 			ov_out_of_sync_print(peer_device);
+diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
+index cd56fd0f3b06..fbb47138a52b 100644
+--- a/drivers/block/drbd/drbd_req.c
++++ b/drivers/block/drbd/drbd_req.c
+@@ -823,8 +823,7 @@ int __req_mod(struct drbd_request *req, enum drbd_req_event what,
  
- 	cpumask_var_t cpu_mask;
-+
-+	struct drbd_work_queue work;
-+	struct drbd_thread worker;
- };
+ 		get_ldev(device); /* always succeeds in this call path */
+ 		req->w.cb = w_restart_disk_io;
+-		drbd_queue_work(&connection->sender_work,
+-				&req->w);
++		drbd_queue_work(&device->resource->work, &req->w);
+ 		break;
  
- struct drbd_thread_timing_details
-@@ -1428,6 +1431,7 @@ extern void drbd_md_endio(struct bio *bio);
- extern void drbd_peer_request_endio(struct bio *bio);
- extern void drbd_request_endio(struct bio *bio);
- extern int drbd_sender(struct drbd_thread *thi);
-+extern int drbd_worker(struct drbd_thread *thi);
- enum drbd_ret_code drbd_resync_after_valid(struct drbd_device *device, int o_minor);
- void drbd_resync_after_changed(struct drbd_device *device);
- extern void drbd_start_resync(struct drbd_device *device, enum drbd_conns side);
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index a14c1e9ee327..bb5de1e1ca9f 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -2329,6 +2329,8 @@ void drbd_free_resource(struct drbd_resource *resource)
- {
- 	struct drbd_connection *connection, *tmp;
- 
-+	drbd_flush_workqueue(&resource->work);
-+	drbd_thread_stop(&resource->worker);
- 	for_each_connection_safe(connection, tmp, resource) {
- 		list_del(&connection->connections);
- 		drbd_debugfs_connection_cleanup(connection);
-@@ -2564,6 +2566,9 @@ struct drbd_resource *drbd_create_resource(const char *name)
- 	mutex_init(&resource->conf_update);
- 	mutex_init(&resource->adm_mutex);
- 	spin_lock_init(&resource->req_lock);
-+	drbd_init_workqueue(&resource->work);
-+	drbd_thread_init(resource, &resource->worker, drbd_worker, "worker");
-+	drbd_thread_start(&resource->worker);
- 	drbd_debugfs_resource_add(resource);
- 	return resource;
- 
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index a5844819d1c3..9d9ced46f968 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1900,7 +1900,7 @@ int drbd_adm_attach(struct sk_buff *skb, struct genl_info *info)
- 	 */
- 	wait_event(device->misc_wait, !atomic_read(&device->ap_pending_cnt) || drbd_suspended(device));
- 	/* and for any other previously queued work */
--	drbd_flush_workqueue(&connection->sender_work);
-+	drbd_flush_workqueue(&device->resource->work);
- 
- 	rv = _drbd_request_state(device, NS(disk, D_ATTACHING), CS_VERBOSE);
- 	retcode = (enum drbd_ret_code)rv;
-diff --git a/drivers/block/drbd/drbd_sender.c b/drivers/block/drbd/drbd_sender.c
-index fcc8a43efdca..0c482d45a52a 100644
---- a/drivers/block/drbd/drbd_sender.c
-+++ b/drivers/block/drbd/drbd_sender.c
-@@ -2239,3 +2239,49 @@ int drbd_sender(struct drbd_thread *thi)
- 
- 	return 0;
- }
-+
-+int drbd_worker(struct drbd_thread *thi)
-+{
-+	LIST_HEAD(work_list);
-+	struct drbd_resource *resource = thi->resource;
-+	struct drbd_work *w;
-+
-+	while (get_t_state(thi) == RUNNING) {
-+		drbd_thread_current_set_cpu(thi);
-+
-+		if (list_empty(&work_list)) {
-+			wait_event_interruptible(resource->work.q_wait,
-+				dequeue_work_batch(&resource->work, &work_list));
-+		}
-+
-+		if (signal_pending(current)) {
-+			flush_signals(current);
-+			if (get_t_state(thi) == RUNNING) {
-+				drbd_warn(resource, "Worker got an unexpected signal\n");
-+				continue;
-+			}
-+			break;
-+		}
-+
-+		if (get_t_state(thi) != RUNNING)
-+			break;
-+
-+
-+		while (!list_empty(&work_list)) {
-+			w = list_first_entry(&work_list, struct drbd_work, list);
-+			list_del_init(&w->list);
-+			w->cb(w, 0);
-+		}
-+	}
-+
-+	do {
-+		while (!list_empty(&work_list)) {
-+			w = list_first_entry(&work_list, struct drbd_work, list);
-+			list_del_init(&w->list);
-+			w->cb(w, 1);
-+		}
-+		dequeue_work_batch(&resource->work, &work_list);
-+	} while (!list_empty(&work_list));
-+
-+	return 0;
-+}
+ 	case RESEND:
 -- 
 2.41.0
 
