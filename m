@@ -2,182 +2,189 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BD067B179E
-	for <lists+linux-block@lfdr.de>; Thu, 28 Sep 2023 11:39:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 608217B17B5
+	for <lists+linux-block@lfdr.de>; Thu, 28 Sep 2023 11:41:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231929AbjI1Jjf (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 28 Sep 2023 05:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51862 "EHLO
+        id S231752AbjI1JlM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 28 Sep 2023 05:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231938AbjI1JjX (ORCPT
+        with ESMTP id S231853AbjI1JlA (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Thu, 28 Sep 2023 05:39:23 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7817DCE8
-        for <linux-block@vger.kernel.org>; Thu, 28 Sep 2023 02:39:06 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-31f7400cb74so11513089f8f.2
-        for <linux-block@vger.kernel.org>; Thu, 28 Sep 2023 02:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20230601.gappssmtp.com; s=20230601; t=1695893945; x=1696498745; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RUAvpHbZIlJDAymrC3wO69unj3kyTMzvS96nKCkH42g=;
-        b=QCw8itSkMqpC5Prk0VPaoql/XSrWr14r5OHinGiKdig7dubkSVYoFamSqilNgisdx5
-         0kwunV7CjHNNCPp56sMJiFlODTk0YUjN4yLCCMGo4D2RRGj8i/AzGjyPzUOqt/BwuUJ/
-         VxplwlXtJGxeBvOzNhI45xMl3X8NQVWZirvU6d3UfK5PKV3JrbQZU19luk2vuaykZQcc
-         TQIkgJgOEgByhapcL+g6gH2pENMFUmOSkETV2uIDUTrZJ3HWIqTt+WyHMGB39mRarVdq
-         z3lSMzh5Igj3YBPngkprUem45GgW/L8CFwfeZdGfSaialid5MLfNktX8kNGezalImPwc
-         qHQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695893945; x=1696498745;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RUAvpHbZIlJDAymrC3wO69unj3kyTMzvS96nKCkH42g=;
-        b=UEVune10t4cakCxZkFmBSl06GWlS+HNHwx+Q8XUXBa8FmeVqKms547V7nFrLWzVLX1
-         lCQkQOz4Y3JEGfG+2j4L3x292uXucFCJvZ7CVEPB6hT4Lgh2TbV1ti2uHnzgxQTRQWVi
-         R2DzsmiGMj5CTvX4266xradD42kl18pHruhUIRcQueHN1/rTcW6tuM1gMmzGueqHkU/B
-         qqJVArmTEjCteslkANpSbjTkjdWVnABmcmZtGyIH4l3yKOVXVCq3pFGURIzI0Ry5jqux
-         dUiQ4mczUMiClq7Uhpf9WsKjUP8aE71wICl9hX4u8z1zjAgeo0VUg6T3c/UfcDlSDPLQ
-         m7gA==
-X-Gm-Message-State: AOJu0YxGFfGCRWXPLhMC7LBr4TVAmZAQBo8hAiRBU0BOL/vDyth9yJ0x
-        wjRwWcrWtkindbTfUaqulZzelA==
-X-Google-Smtp-Source: AGHT+IFOh1UVdUIHYK2shBxIs9apOwc+4FRG5zqxR/3bZCY1dSSV3c0K6NkS/zzqRscr/ae10XfuIw==
-X-Received: by 2002:a5d:4985:0:b0:320:10c:37a4 with SMTP id r5-20020a5d4985000000b00320010c37a4mr712514wrq.21.1695893944947;
-        Thu, 28 Sep 2023 02:39:04 -0700 (PDT)
-Received: from localhost.localdomain (213-225-13-130.nat.highway.a1.net. [213.225.13.130])
-        by smtp.gmail.com with ESMTPSA id f4-20020a5d50c4000000b0031fa870d4b3sm18931449wrt.60.2023.09.28.02.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 02:39:04 -0700 (PDT)
-From:   =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars@linbit.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Joel Colledge <joel.colledge@linbit.com>,
-        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>
-Subject: [PATCH 5/5] drbd: Get rid of conn_reconfig_start() and conn_reconfig_done()
-Date:   Thu, 28 Sep 2023 11:38:52 +0200
-Message-ID: <20230928093852.676786-6-christoph.boehmwalder@linbit.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230928093852.676786-1-christoph.boehmwalder@linbit.com>
-References: <20230928093852.676786-1-christoph.boehmwalder@linbit.com>
+        Thu, 28 Sep 2023 05:41:00 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE61C1722;
+        Thu, 28 Sep 2023 02:40:47 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Rx7ky5G7Wz4f3nTP;
+        Thu, 28 Sep 2023 17:40:42 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+        by APP4 (Coremail) with SMTP id gCh0CgB3BdUbShVlGaViBg--.11343S3;
+        Thu, 28 Sep 2023 17:40:44 +0800 (CST)
+Subject: Re: [PATCH] nbd: pass nbd_sock to nbd_read_reply() instead of index
+To:     Ming Lei <ming.lei@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     linan666@huaweicloud.com, josef@toxicpanda.com, axboe@kernel.dk,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org, linan122@huawei.com,
+        yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com,
+        "yukuai (C)" <yukuai3@huawei.com>
+References: <20230911023308.3467802-1-linan666@huaweicloud.com>
+ <ZRT7cVFcE6QMHfie@fedora>
+ <47669fb6-3700-e327-11af-93a92b0984a0@huaweicloud.com>
+ <ZRUt/vAQNGNp6Ugx@fedora>
+ <41161d21-299c-3657-6020-0a3a9cf109ec@huaweicloud.com>
+ <ZRU/7Bx1ZJSX3Qg3@fedora>
+ <60f9a88b-b750-3579-bdfd-5421f2040406@huaweicloud.com>
+ <ZRVGWkCzKAVVL9bV@fedora>
+From:   Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <bbadaad4-172e-af7b-2a47-52f7e7c83423@huaweicloud.com>
+Date:   Thu, 28 Sep 2023 17:40:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <ZRVGWkCzKAVVL9bV@fedora>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-CM-TRANSID: gCh0CgB3BdUbShVlGaViBg--.11343S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr1UXr1UZF4DuFyrKrW7urg_yoWrJF43pF
+        4UJF1UCr4UJr1aywsYqw4xWr1Yqw17Kw13Ww1UG347Aryqvr13Ar47GFyF9F9rtr1UXr1j
+        qr4UWFy3A348Jr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9I14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
+        Zr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJb
+        IYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Originally-from: Andreas Gruenbacher <agruen@kernel.org>
-Reviewed-by: Joel Colledge <joel.colledge@linbit.com>
-Signed-off-by: Christoph Böhmwalder <christoph.boehmwalder@linbit.com>
----
- drivers/block/drbd/drbd_nl.c | 34 +++-------------------------------
- 1 file changed, 3 insertions(+), 31 deletions(-)
+Hi,
 
-diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
-index 85ab6f0f9d87..5de8a6641253 100644
---- a/drivers/block/drbd/drbd_nl.c
-+++ b/drivers/block/drbd/drbd_nl.c
-@@ -1349,28 +1349,6 @@ void drbd_reconsider_queue_parameters(struct drbd_device *device, struct drbd_ba
- 	drbd_setup_queue_param(device, bdev, new, o);
- }
- 
--/* Starts the sender thread */
--static void conn_reconfig_start(struct drbd_connection *connection)
--{
--	drbd_thread_start(&connection->sender);
--	drbd_flush_workqueue(&connection->sender_work);
--}
--
--/* if still unconfigured, stops sender again. */
--static void conn_reconfig_done(struct drbd_connection *connection)
--{
--	bool stop_threads;
--	spin_lock_irq(&connection->resource->req_lock);
--	stop_threads = connection->cstate == C_STANDALONE;
--	spin_unlock_irq(&connection->resource->req_lock);
--	if (stop_threads) {
--		/* ack_receiver thread and ack_sender workqueue are implicitly
--		 * stopped by receiver in conn_disconnect() */
--		drbd_thread_stop(&connection->receiver);
--		drbd_thread_stop(&connection->sender);
--	}
--}
--
- /* Make sure IO is suspended before calling this function(). */
- static void drbd_suspend_al(struct drbd_device *device)
- {
-@@ -2382,7 +2360,7 @@ int drbd_adm_net_opts(struct sk_buff *skb, struct genl_info *info)
- 		goto out;
- 	}
- 
--	conn_reconfig_start(connection);
-+	drbd_flush_workqueue(&connection->sender_work);
- 
- 	mutex_lock(&connection->data.mutex);
- 	mutex_lock(&connection->resource->conf_update);
-@@ -2461,15 +2439,13 @@ int drbd_adm_net_opts(struct sk_buff *skb, struct genl_info *info)
- 			drbd_send_sync_param(peer_device);
- 	}
- 
--	goto done;
-+	goto out;
- 
-  fail:
- 	mutex_unlock(&connection->resource->conf_update);
- 	mutex_unlock(&connection->data.mutex);
- 	free_crypto(&crypto);
- 	kfree(new_net_conf);
-- done:
--	conn_reconfig_done(connection);
-  out:
- 	mutex_unlock(&adm_ctx.resource->adm_mutex);
-  finish:
-@@ -2548,7 +2524,6 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
- 
- 	mutex_lock(&adm_ctx.resource->adm_mutex);
- 	connection = first_connection(adm_ctx.resource);
--	conn_reconfig_start(connection);
- 
- 	if (connection->cstate > C_STANDALONE) {
- 		retcode = ERR_NET_CONFIGURED;
-@@ -2581,8 +2556,6 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
- 
- 	((char *)new_net_conf->shared_secret)[SHARED_SECRET_MAX-1] = 0;
- 
--	drbd_flush_workqueue(&connection->sender_work);
--
- 	mutex_lock(&adm_ctx.resource->conf_update);
- 	old_net_conf = connection->net_conf;
- 	if (old_net_conf) {
-@@ -2631,7 +2604,7 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
- 
- 	rv = conn_request_state(connection, NS(conn, C_UNCONNECTED), CS_VERBOSE);
- 
--	conn_reconfig_done(connection);
-+	drbd_thread_start(&connection->sender);
- 	mutex_unlock(&adm_ctx.resource->adm_mutex);
- 	drbd_adm_finish(&adm_ctx, info, rv);
- 	return 0;
-@@ -2640,7 +2613,6 @@ int drbd_adm_connect(struct sk_buff *skb, struct genl_info *info)
- 	free_crypto(&crypto);
- 	kfree(new_net_conf);
- 
--	conn_reconfig_done(connection);
- 	mutex_unlock(&adm_ctx.resource->adm_mutex);
- out:
- 	drbd_adm_finish(&adm_ctx, info, retcode);
--- 
-2.41.0
+在 2023/09/28 17:24, Ming Lei 写道:
+> On Thu, Sep 28, 2023 at 05:06:40PM +0800, Yu Kuai wrote:
+>> Hi,
+>>
+>> 在 2023/09/28 16:57, Ming Lei 写道:
+>>> On Thu, Sep 28, 2023 at 04:55:03PM +0800, Yu Kuai wrote:
+>>>> Hi,
+>>>>
+>>>> 在 2023/09/28 15:40, Ming Lei 写道:
+>>>>> On Thu, Sep 28, 2023 at 02:03:28PM +0800, Yu Kuai wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> 在 2023/09/28 12:05, Ming Lei 写道:
+>>>>>>> On Mon, Sep 11, 2023 at 10:33:08AM +0800, linan666@huaweicloud.com wrote:
+>>>>>>>> From: Li Nan <linan122@huawei.com>
+>>>>>>>>
+>>>>>>>> If a socket is processing ioctl 'NBD_SET_SOCK', config->socks might be
+>>>>>>>> krealloc in nbd_add_socket(), and a garbage request is received now, a UAF
+>>>>>>>> may occurs.
+>>>>>>>>
+>>>>>>>>       T1
+>>>>>>>>       nbd_ioctl
+>>>>>>>>        __nbd_ioctl
+>>>>>>>>         nbd_add_socket
+>>>>>>>>          blk_mq_freeze_queue
+>>>>>>>> 				T2
+>>>>>>>>       				recv_work
+>>>>>>>>       				 nbd_read_reply
+>>>>>>>>       				  sock_xmit
+>>>>>>>>          krealloc config->socks
+>>>>>>>> 				   def config->socks
+>>>>>>>>
+>>>>>>>> Pass nbd_sock to nbd_read_reply(). And introduce a new function
+>>>>>>>> sock_xmit_recv(), which differs from sock_xmit only in the way it get
+>>>>>>>> socket.
+>>>>>>>>
+>>>>>>>
+>>>>>>> I am wondering why not grab queue usage counter before calling nbd_read_reply()
+>>>>>>> for avoiding such issue, something like the following change:
+>>>>>>>
+>>>>>>> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+>>>>>>> index df1cd0f718b8..09215b605b12 100644
+>>>>>>> --- a/drivers/block/nbd.c
+>>>>>>> +++ b/drivers/block/nbd.c
+>>>>>>> @@ -837,9 +837,6 @@ static void recv_work(struct work_struct *work)
+>>>>>>>      	while (1) {
+>>>>>>>      		struct nbd_reply reply;
+>>>>>>> -		if (nbd_read_reply(nbd, args->index, &reply))
+>>>>>>> -			break;
+>>>>>>> -
+>>>>>>>      		/*
+>>>>>>>      		 * Grab .q_usage_counter so request pool won't go away, then no
+>>>>>>>      		 * request use-after-free is possible during nbd_handle_reply().
+>>>>>>> @@ -852,6 +849,9 @@ static void recv_work(struct work_struct *work)
+>>>>>>>      			break;
+>>>>>>>      		}
+>>>>>>
+>>>>>> This break how nbd works, if there is no reply yet, recv_work() will
+>>>>>> wait for reply in:
+>>>>>>
+>>>>>> nbd_read_reply
+>>>>>>     sock_xmit
+>>>>>>      sock_recvmsg
+>>>>>>
+>>>>>> After this change, recv_work() will just return if there is no io.
+>>>>>
+>>>>> OK, got it, thanks for the input.
+>>>>>
+>>>>> But I feel it isn't necessary & fragile to store one extra reference of nsock in
+>>>>> `recv_thread_args`.
+>>>>>
+>>>>> Just run a quick look, the only potential UAF on config->socks should be recv_work(),
+>>>>> so you can retrieve the `nsock` reference at the entry of recv_work(),
+>>>>
+>>>> I don't understand what you mean retrieve the 'nsock', is following what
+>>>> you expected?
+>>>>
+>>>> blk_queue_enter() -> prevent concurrent with nbd_add_socket
+>>>> nsock = config->socks[args->index]
+>>>> blk_queue_exit()
+>>>
+>>> Yeah, turns out you do understand, :-)
+>>
+>> Ok, I was not sure about this blk_queue_enter(). By the way, this
+> 
+> blk_queue_enter() isn't exported, but you can grab ->config_lock
+> for getting the `nsock`.
+> 
+>> remind me of what you did to fix uaf of access queue->mq_hctx[] by
+>> convert the array to xarray.
+>>
+>>
+>> Maybe it's better to covert config->socks[] to xarray to fix this uaf as
+>> well?
+> 
+> ->socks[idx] is needed in nbd fast path, so xarray may not be one good idea
+> since xarray_load() introduces extra load, especially ->socks[] uaf
+> should exist in recv_work() very likely. For other cases, the active
+> block request holds queue usage counter.
+
+Thanks for the explanation, grab 'config_lock' to get 'nsock' in the
+begining sounds good to me.
+
+Kuai
+
+> 
+> 
+> Thanks,
+> Ming
+> 
+> .
+> 
 
