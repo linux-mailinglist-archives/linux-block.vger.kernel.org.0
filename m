@@ -2,42 +2,43 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CAC27BA341
-	for <lists+linux-block@lfdr.de>; Thu,  5 Oct 2023 17:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B91C7BA13B
+	for <lists+linux-block@lfdr.de>; Thu,  5 Oct 2023 16:53:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236380AbjJEPw5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 5 Oct 2023 11:52:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
+        id S236081AbjJEOsi (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 5 Oct 2023 10:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235616AbjJEPvL (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Oct 2023 11:51:11 -0400
+        with ESMTP id S237375AbjJEOqD (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 5 Oct 2023 10:46:03 -0400
 Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E235B78914
-        for <linux-block@vger.kernel.org>; Thu,  5 Oct 2023 07:13:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73580B3D13
+        for <linux-block@vger.kernel.org>; Thu,  5 Oct 2023 07:28:40 -0700 (PDT)
 Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231005114715epoutp04363d098eb8d5d2c26e65a4c95b46f8d7~LM51TR4Iu0939509395epoutp04F
-        for <linux-block@vger.kernel.org>; Thu,  5 Oct 2023 11:47:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231005114715epoutp04363d098eb8d5d2c26e65a4c95b46f8d7~LM51TR4Iu0939509395epoutp04F
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231005115954epoutp045190e2ed309e9ec725cfbf1ce7f0fe77~LNE4k99iG1915819158epoutp04V
+        for <linux-block@vger.kernel.org>; Thu,  5 Oct 2023 11:59:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231005115954epoutp045190e2ed309e9ec725cfbf1ce7f0fe77~LNE4k99iG1915819158epoutp04V
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1696506435;
-        bh=Ur+4Je3z8bThcQehVDWdTpaEHCUcUOWQbzV4q7wIiCc=;
+        s=mail20170921; t=1696507194;
+        bh=+6P7kYwTsI/syAFJr/vDIbvAx6N2NJbpxlsh+84U80k=;
         h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=iKuYPA76nLE3s1kYHBv12H9KsYEg3qc/Y6U+dBMqeqOjaBj+f8YsB6MZ/kiMAjOCD
-         Lj3sNgJpF4PuwUajl6HbnmXIIIPkdbOkdvZ08WBg2dnr4mu4t1jqGJFpJTApLo5na5
-         IhFJzHAc+85S9UBK+DOsLthEDwjKvpsFQPj6U9cc=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20231005114714epcas2p4275fa98619da66da774a9e4da888acab~LM50qdik-2498724987epcas2p4E;
-        Thu,  5 Oct 2023 11:47:14 +0000 (GMT)
-Received: from epsmgec2p1.samsung.com (unknown [182.195.36.70]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4S1VCk2wKgz4x9Pv; Thu,  5 Oct
-        2023 11:47:14 +0000 (GMT)
-X-AuditID: b6c32a43-96bfd70000002187-f1-651ea242eab2
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C2.58.08583.242AE156; Thu,  5 Oct 2023 20:47:14 +0900 (KST)
+        b=vKIW8RQPfUqKoXpVuSDHBOrPUrvbMG9r/dYmVKw7EyFFkkJpZ2bIym20TWhr+33A7
+         8G3D8CYxpAiEyO6OXWNUwHwfnGeumO6IXnWTSZVhrjkzxsBiTZIV6Eqovdax+NfLbK
+         DyZxyhSaBosfJnuIlcIdu31/75OGV7GMqMk7NoXk=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20231005115954epcas2p1966c150d583b0cb3aac3078561fc2d4b~LNE3-nC_62742227422epcas2p13;
+        Thu,  5 Oct 2023 11:59:54 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.101]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4S1VVK50JBz4x9Pv; Thu,  5 Oct
+        2023 11:59:53 +0000 (GMT)
+X-AuditID: b6c32a47-d5dfa700000025bc-12-651ea539b059
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        13.90.09660.935AE156; Thu,  5 Oct 2023 20:59:53 +0900 (KST)
 Mime-Version: 1.0
-Subject: RE: [PATCH 04/13] block: Restore write hint support
+Subject: RE: [PATCH 05/13] scsi: core: Query the Block Limits Extension VPD
+ page
 Reply-To: daejun7.park@samsung.com
 Sender: Daejun Park <daejun7.park@samsung.com>
 From:   Daejun Park <daejun7.park@samsung.com>
@@ -47,83 +48,70 @@ CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Christoph Hellwig <hch@lst.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
         Daejun Park <daejun7.park@samsung.com>,
+        Jorn Lee <lunar.lee@samsung.com>,
         Seokhwan Kim <sukka.kim@samsung.com>,
-        Yonggil Song <yonggil.song@samsung.com>,
-        Jorn Lee <lunar.lee@samsung.com>
+        Yonggil Song <yonggil.song@samsung.com>
 X-Priority: 3
 X-Content-Kind-Code: NORMAL
-In-Reply-To: <20230920191442.3701673-5-bvanassche@acm.org>
+In-Reply-To: <20230920191442.3701673-6-bvanassche@acm.org>
 X-CPGS-Detection: blocking_info_exchange
 X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <20231005114612epcms2p14efed0ed36c055344eec4b1f961ddf60@epcms2p1>
-Date:   Thu, 05 Oct 2023 20:46:12 +0900
-X-CMS-MailID: 20231005114612epcms2p14efed0ed36c055344eec4b1f961ddf60
-Content-Transfer-Encoding: 7bit
+Message-ID: <20231005115852epcms2p3a3338e2696b91342acee7bc332428965@epcms2p3>
+Date:   Thu, 05 Oct 2023 20:58:52 +0900
+X-CMS-MailID: 20231005115852epcms2p3a3338e2696b91342acee7bc332428965
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 X-CPGSPASS: Y
 X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAJsWRmVeSWpSXmKPExsWy7bCmha7TIrlUg30nRCxW3+1ns3h9+BOj
-        xbQPP5ktTk89y2Tx8pCmxaoH4RaXn/BZrFx9lMniyfpZzBZ7b2lb7Nl7ksWi+/oONouTK16w
-        WCw//o/JYlXHXEaL83+Ps1pMPX+EyUHQ4/IVb4/LZ0s9Nq3qZPPYfbOBzePj01ssHn1bVjF6
-        fN4k57HpyVumAI6obJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUX
-        nwBdt8wcoA+UFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQXmBXrFibnFpXnpenmp
-        JVaGBgZGpkCFCdkZ/esfsxa8ZKt4tXoZawPjWdYuRk4OCQETiV17lgDZXBxCAjsYJTqXdrB0
-        MXJw8AoISvzdIQxSIyxgI7Hl2VY2EFtIQEli/cVZ7BBxPYlbD9cwgthsAjoS00/cB4uLCLhJ
-        NFzdxQYyk1ngHYvEq7+7oZbxSsxof8oCYUtLbF++FayZU8BKYunFnewQcQ2JH8t6mSFsUYmb
-        q9+yw9jvj81nhLBFJFrvnYWqEZR48HM3VFxS4vbcTVD1+RL/ryyHsmskth2YB2XrS1zr2Ah2
-        A6+Ar8S/N29ZQf5lEVCVeDiVG6LERaJ35XKw8cwC8hLb385hBilhFtCUWL9LH8SUEFCWOHKL
-        BaKCT6Lj8F92mAcbNv7Gyt4x7wkThK0mse7neqYJjMqzEOE8C8muWQi7FjAyr2IUSy0ozk1P
-        TTYqMIRHbXJ+7iZGcFLWct7BeGX+P71DjEwcjIcYJTiYlUR40xtkUoV4UxIrq1KL8uOLSnNS
-        iw8xmgI9OZFZSjQ5H5gX8kriDU0sDUzMzAzNjUwNzJXEee+1zk0REkhPLEnNTk0tSC2C6WPi
-        4JRqYKr0Zr8rJ7pKNbPXyHhvbq2KS/Fzj/cv64SFevRFC6uWRybfXLvMwSejn5PvW21WCc8E
-        tzwj99pAFrM9h+N7db5Nbr1x4N0O9sJV3fFLniY9sq1js9pSr5gksilFconGq6ctr9bEaxbb
-        bsuqZdvy8N1Btj+XZQ/13cj3WtpTeSz8bXBTqfWKG6seHD970O33/jc3FnruWCpZtPj059q5
-        DPv2T78iu+XOzYBT5hItp97L+WX7hEz/airg3Pl8trC4tYvv8s0pwTuetG1617bwnor98UXO
-        QVOL/ye7RX3V1hdp3yee/y0iqeKXtaRyyj/Gg5P1XI1On6u98kqwLVLbhX3W1pn7uZe+LWBq
-        MT/xWomlOCPRUIu5qDgRAPbgHYxTBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJJsWRmVeSWpSXmKPExsWy7bCmua7lUrlUg23fVCxW3+1ns5j24Sez
+        xctDmharHoRbrFx9lMli0Y1tTBZ7b2lb7Nl7ksWi+/oONouTK16wWCw//o/JYlXHXEaLqeeP
+        MDnwely+4u1x+Wypx4RFBxg9dt9sYPP4+PQWi0ffllWMHp83yQWwR2XbZKQmpqQWKaTmJeen
+        ZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gBdqqRQlphTChQKSCwuVtK3synK
+        Ly1JVcjILy6xVUotSMkpMC/QK07MLS7NS9fLSy2xMjQwMDIFKkzIztj9eTdzwXfWivZja1ka
+        GB+zdjFyckgImEgc7e0Csrk4hAR2MErM7nnC1sXIwcErICjxd4cwSI2wQJDEp3m32UBsIQEl
+        ifUXZ7FDxPUkbj1cwwhiswnoSEw/cR8sLiLgJtFwdRcbyExmgYfMEuvPd7BDLOOVmNH+lAXC
+        lpbYvnwrWDOngJXEs/WL2CDiGhI/lvUyQ9iiEjdXv2WHsd8fm88IYYtItN47C1UjKPHg526o
+        uKTE7bmboOrzJf5fWQ5l10hsOzAPytaXuNaxEewGXgFfib0tG8DiLAKqEj/6+6BqXCR2L3kD
+        NpNZQFti2cLXzKAwYRbQlFi/Sx/ElBBQljhyiwWigk+i4/BfuA8bNv7Gyt4x7wkThK0mse7n
+        eqYJjMqzEAE9C8muWQi7FjAyr2IUSy0ozk1PLTYqMIbHbXJ+7iZGcJrVct/BOOPtB71DjEwc
+        jIcYJTiYlUR40xtkUoV4UxIrq1KL8uOLSnNSiw8xmgJ9OZFZSjQ5H5jo80riDU0sDUzMzAzN
+        jUwNzJXEee+1zk0REkhPLEnNTk0tSC2C6WPi4JRqYJrx5dbFnkMrg+/M2zV/5tL7Ssvd4vVK
+        NvJqZNRd43A/9Oda+y7r0K1npp9r+rZZc9lkbvnPk6Zcu+t4p2r6wutTBFLePf7yTcc6OzxJ
+        7PNvGe7nEs9YDilvtzJZcsjZZmJL6dyzZ9t+KpxX+bog9JN6V/abUxki1ZPqS7RKpPdu2l66
+        JFfFX2BCRT537xlG97c6Vy8WcGxb+ij0FEPw5bX3n55KzM5zXB+tFPPEXzdtvZrHgnjxa13u
+        MrfuH1lyTTRHuNVZ+mvtmyCthWktnv9enXzc8rLmTWN9W+Jf7c3XWVpuXC56t0A6gi265e/D
+        Gy/uvi475JWkdlj8p2Wz/j2Xdwnt2x2FlS3dM8/EpnkosRRnJBpqMRcVJwIAXcz+KDwEAAA=
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230920191556epcas2p39b150e6715248b625588a50b333e82e2
-References: <20230920191442.3701673-5-bvanassche@acm.org>
+X-CMS-RootMailID: 20230920191816epcas2p1b30d19aa41e51ffaf7c95f9100ee6311
+References: <20230920191442.3701673-6-bvanassche@acm.org>
         <20230920191442.3701673-1-bvanassche@acm.org>
-        <CGME20230920191556epcas2p39b150e6715248b625588a50b333e82e2@epcms2p1>
+        <CGME20230920191816epcas2p1b30d19aa41e51ffaf7c95f9100ee6311@epcms2p3>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-
-> This patch partially reverts commit c75e707fe1aa ("block: remove the
-> per-bio/request write hint"). The following aspects of that commit have
-> been reverted:
-> - Pass the struct kiocb write hint information to struct bio.
-> - Pass the struct bio write hint information to struct request.
-> - Do not merge requests with different write hints.
-> - Passing write hint information from the VFS layer to the block layer.
-> - In F2FS, initialization of bio.bi_write_hint.
-> 
-> The following aspects of that commit have been dropped:
-> - Debugfs support for retrieving and modifying write hints.
-> - md-raid, BTRFS, ext4, gfs2 and zonefs write hint support.
-> - The write_hints[] array in struct request_queue.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-
-Reviewed-by: Daejun Park <daejun7.park@samsung.com>
+=C2=A0=0D=0A>=20Parse=20the=20Reduced=20Stream=20Control=20Supported=20(RSC=
+S)=20bit=20from=20the=20block=0D=0A>=20limits=20extension=20VPD=20page.=20T=
+he=20RSCS=20bit=20is=20defined=20in=20T10=20document=0D=0A>=20=22SBC-5=20Co=
+nstrained=20Streams=20with=20Data=20Lifetimes=22=0D=0A>=20(https://protect2=
+.fireeye.com/v1/url?k=3D046aff72-65e1ea35-046b743d-000babff99aa-a76aa64ec2a=
+10777&q=3D1&e=3D39d8e8ca-6f96-4283-86e4-54310bfa56e1&u=3Dhttps%3A%2F%2Fwww.=
+t10.org%2Fcgi-bin%2Fac.pl%3Ft%3Dd%26f%3D23-024r3.pdf).=0D=0A>=C2=A0=0D=0A>=
+=20Cc:=20Martin=20K.=20Petersen=20<martin.petersen=40oracle.com>=0D=0A>=20S=
+igned-off-by:=20Bart=20Van=20Assche=20<bvanassche=40acm.org>=0D=0A=0D=0ARev=
+iewed-by:=20Daejun=20Park=20<daejun7.park=40samsung.com>
