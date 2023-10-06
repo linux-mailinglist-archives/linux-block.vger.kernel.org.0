@@ -2,136 +2,184 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F8187BB680
-	for <lists+linux-block@lfdr.de>; Fri,  6 Oct 2023 13:36:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A6727BB833
+	for <lists+linux-block@lfdr.de>; Fri,  6 Oct 2023 14:55:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232048AbjJFLgu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 6 Oct 2023 07:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52678 "EHLO
+        id S231705AbjJFMy6 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 6 Oct 2023 08:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbjJFLgt (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Oct 2023 07:36:49 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2041.outbound.protection.outlook.com [40.107.237.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5F883;
-        Fri,  6 Oct 2023 04:36:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mD5btIUv7muxLEyIY4YNasMU0VHU5BDW4aZmBMsZYJU3oQNnboiCUN5Gxf4MZpMYAcy3jZyx1k0/Lp+gbfADeoL3ahVzG87jW5sN3bbsOij3+Tr4lcHeuC290LwNnyV3PHrA0infLWKC0c2mFV4Tfjj35IysAd1GHL9o3ztsUlwsbQngUV//76ymfTzVK5yqxNfzozI/Q5j0wi5H2QU5m4WCshDLbTSpRhhCH3nD9WTqRLClrvMMf0IuOFYfSGOTweFMKaZWQ2SgN8/OfY1sGtiKReBd9+XP0oQfhMjIXMNUNWxV+XSY9fjARsUpwSXzi5NLpxnzhRUZX4grnWU/YA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8YS4GKvPWR+qtNIH0/VPfhhrwct9zM/hGetdmYRwC6Y=;
- b=i9drSmA6hwaV0MMbuHFtBNu7fc6h36QA+3Sfj3du1XWdz3i65ELJBPdAeLp1Ihq7RPfkm00HF+Fj1EbxazLbCeNtBn/NLhJHqfS5I/J4xSBGnzXS52XZ/YTnQgMApmiOq7zgApG9ol74/krzWTgJE5QlJSJCiQ+Q31vUjcgY2P9Qo95NVMkumtU23pLKQpeSNbeIyhPPCqkcKWDOiKr/udgbuiGsn8PbOEmzdivs+a7wLwRFE3TfEkL2dsVU5HWPxl8/t7UNimjsCu6GbTMnj4MmCafQi+vWkKcMh/63DvgwyhAH36wRDF22yeWwSaGCD+dsKqpnc7lU1WJPZ6IdZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8YS4GKvPWR+qtNIH0/VPfhhrwct9zM/hGetdmYRwC6Y=;
- b=O8RYZgc5QVi59yDYMK9wJj3eE1maamFl3+zEXmCjdN2iffaJYSJ1wa4W9MeB4V42mQabzyvXt81iY+ckVNfJPBbHZ/r8FufiCxf6eLgrzrnuoRl9/i8huO2UOOYnqFlwNRZry3QZxAYl1UYaA7A6LweX/HzInUOFryVdyRqBw/TeguVlH/wqtF3yA+FE8zsugLHQgWYILcSyrSqQgyQ2FAUlXlylNGgRxQPyEzgoLSlip4lASSvHA/KaSe2ssJKvNnP4UWi+48ncftRyGET9941fbpF+d8toVVsrOTp264PwNKbPJJMok3MCPGiwFiB8aRMRtRn6jADJ1Z7TApo0pQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by MN0PR12MB5833.namprd12.prod.outlook.com (2603:10b6:208:378::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.25; Fri, 6 Oct
- 2023 11:36:45 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::3f66:c2b6:59eb:78c2]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::3f66:c2b6:59eb:78c2%6]) with mapi id 15.20.6838.030; Fri, 6 Oct 2023
- 11:36:45 +0000
-Date:   Fri, 6 Oct 2023 08:36:44 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-block@vger.kernel.org, baolu.lu@linux.intel.com,
-        jsnitsel@redhat.com, jroedel@suse.de, joro@8bytes.org,
-        will@kernel.org, iommu@lists.linux.dev,
-        abdhalee@linux.vnet.ibm.com, mputtash@linux.vnet.com,
-        sachinp@linux.vnet.com
-Subject: Re: [Bisected] [commit 2ad56efa80db] [Hotplug] WARNING while
- performing hotplug operation on 6.6-rc3-next
-Message-ID: <20231006113644.GN682044@nvidia.com>
-References: <92db426f-4a31-9c2c-e23a-85a8d353fbae@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92db426f-4a31-9c2c-e23a-85a8d353fbae@linux.vnet.ibm.com>
-X-ClientProxiedBy: MN2PR20CA0040.namprd20.prod.outlook.com
- (2603:10b6:208:235::9) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        with ESMTP id S232262AbjJFMy6 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Oct 2023 08:54:58 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509DCD6;
+        Fri,  6 Oct 2023 05:54:56 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9ad8a822508so402605666b.0;
+        Fri, 06 Oct 2023 05:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696596895; x=1697201695; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gecE+vOGFjARaQC/nlEr7rWoc3kbi1x64ECe3si5O9A=;
+        b=YUTNZV0ZDZFg5hj6nfvgxV9ta43IFBVQvNHZM2Pb3zk5KXWSgHv4gfylS6Qf6DbcWy
+         vk7Wl9sXQh/7mwxrGixlwA5g+ODP9MEQ0g31lj4nNOpo+k1sCNssJWBpLPVAgjyf048i
+         nL1RXBWRYYrQnWAGIoKbT1bWH08BTw4a/D4s0JV7NeRRhwaHddIsq5leX4fNjsUJgrXc
+         usDzGZ2i5aexRLf8XlVPhc3IaQ1GEC2ZxZmEGxVGVPTRCayjhzIPJE/mcofH/YzGX2Hv
+         1+SxmpgvH5xqNyn0WN0z+5npgW2snvJ86+nGzaaYsdIu7ivUbiuO+RTaC4wMExgnRfH1
+         Afwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696596895; x=1697201695;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gecE+vOGFjARaQC/nlEr7rWoc3kbi1x64ECe3si5O9A=;
+        b=ofXlhAqmVm0UySHyJPZJsJGUFMIiGFi0CO0bP1Th7xTkuc873LKqxDhKpIiryrD59B
+         GeuFiOrkQ3WRT7Q6KcdeqEHizTjECOTyYK9JL3FUahgiFdtO6ld5EiXOSIcb7716/v82
+         ClezAnacr3hdV8pt6+Dn2n7TnFuIkf3RcFFpuGnfVkG91yb5eHJ11hWopVlmAj5PRsk5
+         9dVlwf+vYweU47Xd5V/RgJEps5loKtw/4mYXUfzSsqcUdp5WbcT4+nlPBg4rdn/m7U2L
+         uE+uz9cmZNA3N+n/GeHUfTweWstOtihGaxgTqCBH31nYkKpOlhFDI03cyDWyk9GRpt9G
+         2g0Q==
+X-Gm-Message-State: AOJu0Yxjm46+L9bahak5SD4czhyuN/qqZzXp1dfsdhsvO31qXaTSAMGQ
+        ep45hhUu7jSrzGcuJhDCVZp5gMTL3gv+qg==
+X-Google-Smtp-Source: AGHT+IESjdKyA6s5OhJ7UTOKsi/fr9Zwv0a4+sM65k6PMfimI9UTYwlNKm7rSorMRoWRPGG+v7fOvA==
+X-Received: by 2002:a17:906:1da1:b0:9ba:65e:752b with SMTP id u1-20020a1709061da100b009ba065e752bmr368474ejh.39.1696596894512;
+        Fri, 06 Oct 2023 05:54:54 -0700 (PDT)
+Received: from sauvignon.fi.muni.cz (laomedon.fi.muni.cz. [147.251.42.107])
+        by smtp.gmail.com with ESMTPSA id p26-20020a1709060dda00b0099bc08862b6sm2894660eji.171.2023.10.06.05.54.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 05:54:53 -0700 (PDT)
+From:   Milan Broz <gmazyland@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     usb-storage@lists.one-eyed-alien.net, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org, stern@rowland.harvard.edu,
+        oneukum@suse.com, jonathan.derrick@linux.dev,
+        Milan Broz <gmazyland@gmail.com>
+Subject: [RFC PATCH 0/6] usb-storage,uas,scsi: Support OPAL commands on USB attached devices.
+Date:   Fri,  6 Oct 2023 14:54:39 +0200
+Message-ID: <20231006125445.122380-1-gmazyland@gmail.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|MN0PR12MB5833:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7fcbc66-99bc-4b2f-6ca3-08dbc66084bd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nf4KgmNb+mRs9Bl/BCJYCEEhIR8KAVdvUM7YIklGK5MDHUJxmUaUL7AbLfnz1xxbpYN+N0Vq3vH6VmZPHXkzwX3knlKWZNJS2Blvl3kDVdgQFYnhEMftKOpcDuneYUDCRQiZvtUR3wiR+KXwJlMEmL8w+p6qhSBEGcN4Q9ov8pSre0Yb/Q+y/sO7c0z+E45gD7hcFGj+EcnqVn3HBff4zbmmSce0eLttI6elcQve3qlRChGH8XZFnPmqEyAwmWtpU7fWTChuPUyYmBPsfIFtnQdg6AXN2sRh4ItxvrAP+g3iHEPF7/m/qlZjpVCr4WMAGfh1FNe0GmtitzqbPYVhSx3HvPuA636Zk9Ej0SAZnU2oDO+NWlGWy+0134xp1uOB6ufKfV7y4jYs4rqdkV2zXXqBMMBAZ/zQRdGfApiq3NxNdXvlLqL52Qjkm0WSM0pI6A3haHV/910M0s5dGdLebhdWBc6Pgx7SBwGHdNLet1MjwZRer9sbVyYusTkM0fKpC3cyEnpSZ5GpxtI+JCBmD9NZRpUKv49M5t+XWC0ZaERJT++P3IYEWgIJlXFc1Fay2nyo+mMKp3hZYfFlKUahDYjLyyLitKL8/VUcgDuduM1l7bH6OPJ4kfMmuCnowGcUwW9UHhZun7IPb4nRmHM/XQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(396003)(39860400002)(376002)(230922051799003)(451199024)(64100799003)(1800799009)(186009)(83380400001)(6506007)(6512007)(6486002)(966005)(478600001)(86362001)(38100700002)(33656002)(4744005)(7416002)(41300700001)(316002)(2616005)(1076003)(26005)(2906002)(36756003)(66946007)(66556008)(66476007)(5660300002)(6916009)(4326008)(8936002)(8676002)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YdLpxw1kx+SBdY3HvKQulg6ARz0d4JBX5Akpvra7hYMkVzZeNkE71dAVEQqL?=
- =?us-ascii?Q?eSO+rUpJIe3MMhez+ngEJViaIbq/LsccY/l2RjfVFoZCqw8uZ5Qair5V+lAY?=
- =?us-ascii?Q?nn5shW1vw2Ahep501euCLm8NPm6PVeWJ8PCqPveTqvmgf6dfIprUo9bW/LFs?=
- =?us-ascii?Q?PgDLD5RITvTOazxS5g9n3IFYvsoKhw/dzRndNzOMotVZisGcBkLxDEZoHZEy?=
- =?us-ascii?Q?aoNkEdDO8f4JcqUEv+7PzGGadx4w/7eRBjjARwDBFtoZvAA5ROjtliIQqbbG?=
- =?us-ascii?Q?Q1yro/pGGZWMnzWWXahvfYYjtgrMcW/d8dA+guy+1gl5M+I8rfXoFH+Rj2hs?=
- =?us-ascii?Q?oD6b63nlz+XLTxtgLPBIEcoEHRm09YEppqNztvfavMrgq6rI5xXimsApLRr0?=
- =?us-ascii?Q?G7x9qNWp9VTvpTCY/dkUPMwDklhBB6RvU6jSo17iEPWsZVqmwYZB/Vnl/dSa?=
- =?us-ascii?Q?9SLQ2WP20mVhuX+3IN+HJj2tc4Uwv6thmqEau/TCQD9FhjDquyElSz6loNTN?=
- =?us-ascii?Q?pLKs7gRN11m44BP71pQqZki4loE1xkpnhIz89fus8P3P030W6q6+e9hLNKGP?=
- =?us-ascii?Q?xfiKqJdl/VCX8jIg/JxlpixnxroyBbiCKnUTw2iojsrurb6xOIxGDIA05eZU?=
- =?us-ascii?Q?gWGSg2tJFq9TJO5p4//YMeV/F1TS5zbLLaqkcIan6yNCujRJ+72+QO0wBUld?=
- =?us-ascii?Q?2z4FwuEc3zobyRudXlC6aWEA/bbGBkZ4t7usrlMsj/Ooaw7uk9cgS4YlsPcP?=
- =?us-ascii?Q?vB8h3MQb2D4m5LkesiuGMtpkK+Lu2jwj5x0LIJ/EipyWd6eDH7BqMWaxiupV?=
- =?us-ascii?Q?4SJb6MwkcUoIvkwxInvuaWgooQY3cIYZUdDI++hHfLpXjDjxCFPebVj/fHyS?=
- =?us-ascii?Q?QjuEGcrhXVC1KcaxxHqb6gRTgi/aY9LTHr/1Z8aXMU/UnZXAHLH5xufsfuXf?=
- =?us-ascii?Q?ly2GDKHaDBVUUm45yWjAU3+6tkLud23ZLUnnqmdqha+6jYSJhn+hze5So/br?=
- =?us-ascii?Q?/eLBlYNgnMI2ncyyPwKJAt2aS2Xv26fzpgb3afl2aiHI78StZ1F8ieTqcFt8?=
- =?us-ascii?Q?uJQ2dEFDLIVtrEobW9iUaWUHev1PaTdO9HwGC15frdvp1dc1kGOVRyKXGnLI?=
- =?us-ascii?Q?DW3/+DbJINgMmyUKGs/z+T8tP3G/OIp6PvXjteKyTCICJGxrq7b8lFt6lwQG?=
- =?us-ascii?Q?AIMSIYRdReZPkxhkDKHmH99j9EJFvbn0VXiX1eLoeHQvU3VbeVuXLsuH47It?=
- =?us-ascii?Q?/WX36kJC03o6HuI/UN5JzOglaLrjP7aKWCHmivN2IbouYwrDOJURvr4A+DEu?=
- =?us-ascii?Q?WgzYSAt6UEcwET4bCLN88KgHkK1KhZuLtTyS07ZZesSF0EAEh8o90Arj7etm?=
- =?us-ascii?Q?Y/wstnclToCaos+BZ1zfa8c6chKWoaXsEkaSOS0VO9ehwcI8VGSzby3k/SvD?=
- =?us-ascii?Q?MWPa6vLb7wfxL4PhM+w/CDFbb3y0MtPBS+QKJgSqoHc3jul/rqwqzyC//zJ0?=
- =?us-ascii?Q?ekl0uO86brma9hXE+YU8cN5T4xjhIXnyC45KR+cVzP8YMKZT0xaiY4jkN61w?=
- =?us-ascii?Q?SnxB4sZ0v2nHaqYYRVxdOtqhQV+t/ljDWbD+9b2g?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7fcbc66-99bc-4b2f-6ca3-08dbc66084bd
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2023 11:36:45.0619
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ks6EBsKGpMO5mdtOSOgPATMjKKLjoz5WNqcvSJQ8OCjntHX1s6toE9kIdPot7kEb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5833
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Fri, Oct 06, 2023 at 01:20:17PM +0530, Tasmiya Nalatwad wrote:
-> Greetings,
-> 
-> [linux-next] [6.6.0-rc3-next-20230929] WARNING: CPU: 5 PID: 185612 at
-> drivers/iommu/iommu.c:3049 iommu_setup_default_domain+0x410/0x680
-> 
-> --- Traces ---
-> 
-> [ 6296.425934] WARNING: CPU: 5 PID: 185612 at drivers/iommu/iommu.c:3049
-> iommu_setup_default_domain+0x410/0x680
+This patchset adds support for OPAL commands (self-encrypted drives)
+through USB-attached storage (usb-storage and UAS drivers).
 
-Does this fix it too? I think it should?
+1) Patches 1-4 only add support for 64-bit quirks for USB storage
+(unfortunately, USB device info can be 32-bit on 32-bit platforms,
+and we are out of space for flags now).
 
-https://lore.kernel.org/r/0-v1-2b52423411b9+164fc-iommu_ppc_defdomain_jgg@nvidia.com
+2) Patches 5-6 enable OPAL commands on USB device and also adds
+an ATA-12 pass-thru wrapper to support OPAL even on devices that
+do not support SCSI SECURITY IN/OUT commands.
+ATA-12 is already used by sedutils directly; this patch makes
+internal kernel OPAL ioctl work with ATA-12 too.
 
-Jason
+As patch 6 introduced a new USB quirk that overflows 32-bit,
+I posted all patches together - but logically, these solve two
+separate issues.
+
+More info
+
+1) 64bit USB storage quirk flags
+
+The quirks are transferred through the device info value, which
+is unsigned long (and as a part of USB infrastructure, it cannot
+be changed).
+After discussion on USB list, I used high bit as an indicator
+that the values need to be translated/unpacked to 64bit
+(while lower values are used directly).
+
+This is implemented through a host-compiled program that
+generates device tables and translation function.
+As both usb-storage and UAS drivers share a lot of headers and
+definitions, we need to generate separate files for usb-storage,
+UAS and flags translation function.
+
+(I also tried to use a statically generated array for flags,
+but this increased the size of drivers significantly, and
+the code was quite ugly...)
+
+2) Support for OPAL on USB attached storage.
+
+The main support for OPAL on USB-attached storage is
+straightforward. The patch 6
+ - enables SCSI security flag for USB mass storage and UAS device
+   by default.
+ - adds an optional wrapper to the SCSI layer for the ATA-12
+   pass-thru command as an alternative if SECURITY IN/OUT
+   is unavailable.
+
+During device detection, these steps are then done:
+  1) USB driver (mass-storage, UAS) enables security driver flag
+     by default if not disabled by quirk
+  2) SCSI device enumerates SECURITY IN/OUT support. If detected,
+     SECURITY ON/OUT wrapper is used (as in the current code).
+     If not, the new ATA12 pass-thru wrapper is used instead.
+  3) SED OPAL code tries OPAL discovery command for the device.
+     If it receives correct reply, OPAL is enabled for the device.
+
+Enabling support may uncover many issues, as OPAL-locked devices often
+tend to generate errors on the locked range.
+
+Anyway, cryptsetup will soon support OPAL devices, and I think support
+for USB devices is a nice feature that enables users to unlock drives
+even if they are attached through USB adapters.
+
+But also, there are bugs in firmware, so I added a quirk flag that can
+disable security commands for particular devices.
+
+The last patch uses this quirk for Realtek 9210, which seems to support
+OPAL commands, but after configuring OPAL locking range, it also sets
+the write-protected flag for the whole device.
+This is perhaps a bug in firmware (all versions I tried), and I will
+report that later to Realtek.
+
+Milan Broz (6):
+  usb-storage: remove UNUSUAL_VENDOR_INTF macro
+  usb-storage: make internal quirks flags 64bit
+  usb-storage: use fflags index only in usb-storage driver
+  usb-storage,uas: use host helper to generate driver info
+  usb-storage,uas,scsi: allow to pass through security commands (OPAL)
+  usb-storage,uas: Disable security commands (OPAL) for RT9210 chip
+    family
+
+ drivers/scsi/sd.c                   |  33 ++++-
+ drivers/usb/storage/Makefile        |  25 ++++
+ drivers/usb/storage/alauda.c        |   2 +-
+ drivers/usb/storage/cypress_atacb.c |   2 +-
+ drivers/usb/storage/datafab.c       |   2 +-
+ drivers/usb/storage/ene_ub6250.c    |   2 +-
+ drivers/usb/storage/freecom.c       |   2 +-
+ drivers/usb/storage/isd200.c        |   2 +-
+ drivers/usb/storage/jumpshot.c      |   2 +-
+ drivers/usb/storage/karma.c         |   2 +-
+ drivers/usb/storage/mkflags.c       | 212 ++++++++++++++++++++++++++++
+ drivers/usb/storage/onetouch.c      |   2 +-
+ drivers/usb/storage/realtek_cr.c    |   2 +-
+ drivers/usb/storage/scsiglue.c      |   4 +
+ drivers/usb/storage/sddr09.c        |   2 +-
+ drivers/usb/storage/sddr55.c        |   2 +-
+ drivers/usb/storage/shuttle_usbat.c |   2 +-
+ drivers/usb/storage/uas-detect.h    |   4 +-
+ drivers/usb/storage/uas.c           |  26 ++--
+ drivers/usb/storage/unusual_devs.h  |  11 ++
+ drivers/usb/storage/unusual_uas.h   |  11 ++
+ drivers/usb/storage/usb.c           |  42 +++---
+ drivers/usb/storage/usb.h           |   7 +-
+ drivers/usb/storage/usual-tables.c  |  38 +----
+ include/linux/usb_usual.h           |   2 +
+ 25 files changed, 346 insertions(+), 95 deletions(-)
+ create mode 100644 drivers/usb/storage/mkflags.c
+
+-- 
+2.42.0
+
