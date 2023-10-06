@@ -2,134 +2,134 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD6F47BB841
-	for <lists+linux-block@lfdr.de>; Fri,  6 Oct 2023 14:55:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2BB27BB955
+	for <lists+linux-block@lfdr.de>; Fri,  6 Oct 2023 15:39:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232292AbjJFMzK (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Fri, 6 Oct 2023 08:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44008 "EHLO
+        id S232323AbjJFNjl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Fri, 6 Oct 2023 09:39:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232273AbjJFMzD (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Oct 2023 08:55:03 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74223E9;
-        Fri,  6 Oct 2023 05:55:01 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-99bdeae1d0aso399746866b.1;
-        Fri, 06 Oct 2023 05:55:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696596900; x=1697201700; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1hGVnjdGEOumYZe081/NvT5dGB2xwJn4Ju//yjOVJPI=;
-        b=Y9UaCvO4K/mYbFVG5kkGA0sJq+68VnCZ6MF+7oBn0jqraCFUJ30itNjSPHoGIPkrl8
-         Hd/9qEw7iyQ2tDs0+UyRA0AwKjXy/DTqVCiugtxhj+NWcHx1xtJxsC4/+Q5VIf1vNWlj
-         NvXz+wvyQhThApvIjMTSFCwdP1DzGS22N63iFNV+j4zUxxKD5sbQVfogpXhLfVMb2Mqi
-         J1EPgRSqjSOo31NVNDeRVe4w00+kSBL2aNHr1y9VMos/0+zTramYEhx2SyR8bLimAZ18
-         T9I/+2iFT9FZi6e9VvFW7lR2lU7Xz1zWutTP0SG2hJTm8O74A/m3EMdDoI3gDTJWc5X6
-         cTeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696596900; x=1697201700;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1hGVnjdGEOumYZe081/NvT5dGB2xwJn4Ju//yjOVJPI=;
-        b=L7uVi4eOAzhvkzAMooQuW4i5PnYBfWiz3P7fULGDxs5ZO4m951QWCLFhqGnlvGGfyD
-         rf+wU5tirhSQciNcWdCl7BcoMUMIl7FUZGCLGGLA/E+OPAxgxt6MyOR9HZj6EAtu22fk
-         tw2XKa0IqdBkoc9QwvPEDveMcgV9P6kl3d3FNIM3VLXFVwowQ6bW9ANsJwG+Dln98/LX
-         fBWNh5TaP5WIArqA28dDw7AWYhWvpfWQgtPTgOwdSDQKPJPL0GArGdlKldLhSlauLrEy
-         XpNdWPaTN9hJ93Ir0W/xNDqcxxZdhmTqtahAx3PBUfQx9EDZms8gZiZWQV1a0A+aS8c3
-         nEbA==
-X-Gm-Message-State: AOJu0YzYtQrR06udWeh2NdWzMhgRutDAy2xfTTJqxPAVvkMjIZgqVfDB
-        qW5GpRQu/gDP//Iq3Vyn3oL7PMUw8NGunw==
-X-Google-Smtp-Source: AGHT+IGA2SkMIhhjl5o3xK0Cgzq/nu9xewMEnyg1G2kSMo60FMhO8VSwk2kxX++tiRWPSK2sFhQgzA==
-X-Received: by 2002:a17:907:1dd8:b0:9ad:f143:e554 with SMTP id og24-20020a1709071dd800b009adf143e554mr6590860ejc.30.1696596899617;
-        Fri, 06 Oct 2023 05:54:59 -0700 (PDT)
-Received: from sauvignon.fi.muni.cz (laomedon.fi.muni.cz. [147.251.42.107])
-        by smtp.gmail.com with ESMTPSA id p26-20020a1709060dda00b0099bc08862b6sm2894660eji.171.2023.10.06.05.54.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 05:54:59 -0700 (PDT)
-From:   Milan Broz <gmazyland@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     usb-storage@lists.one-eyed-alien.net, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org, stern@rowland.harvard.edu,
-        oneukum@suse.com, jonathan.derrick@linux.dev,
-        Milan Broz <gmazyland@gmail.com>
-Subject: [RFC PATCH 6/6] usb-storage,uas: Disable security commands (OPAL) for RT9210 chip family
-Date:   Fri,  6 Oct 2023 14:54:45 +0200
-Message-ID: <20231006125445.122380-7-gmazyland@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231006125445.122380-1-gmazyland@gmail.com>
-References: <20231006125445.122380-1-gmazyland@gmail.com>
+        with ESMTP id S232302AbjJFNjk (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Fri, 6 Oct 2023 09:39:40 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B9195;
+        Fri,  6 Oct 2023 06:39:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bqgo8wvixtg0o5TpC80nh37CELGgI0eEmpYD4zONDQkDMdS9lEGpR+DEW9z/eyJmZjjQmWv2eEjl3OtJI9S+NbY3dUqx6+i8MQltABgv1I9fTUa4u4jfx1GbdpGr+ruyU8mPLtMLEpZXUvZfNUvJSDcP4mGOm4ZBq3acUpBW1SHyp7Bk0Bbg1RmGEcwh7NGQOpSwTjj1nl/5tp02Sh3MpGbwwQ+PWQMOxtdfoegY+SWNmpMW88Zj1ZCxrB7r/6+R17qoWTc0ZMMaQ0ASgOyVTX50GD9i6VW2MjPhlD+zMAnuP9hsL1hffXvx3DialNdnft/DWlfoiiQryHAwWj2XWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vxfqm4qFf2jdSJfR72Og+72flvv3pO/CXHxJhaVG+0U=;
+ b=AXe+9Pj/Id71/+4SBkVDVFlPQWHc0svR1d/2GIFfqHO5e/Gtgo6/gr+VfEZlJ5C3F01O4NC4vVAsWmpgn1PLOHuko6meLv3/0Fw9O/E0lEx3Jqyye0rPZtkSqKwx74At04J61uCStKBctMQ/uS9Y5mizPW8fBFRyfgPEWQuDggFq1RDoflhMeFXAVU+cKfyb/ReFThwOCCZJB8ZaPftNhyr0b/od9t4ePV7Pf0MAvoFaeVRBcnCT39bslEFUIPigo9V2+1p+5VJ9Q7dP+JLaOj3sQdRC/8uRae63u9lc93p7kt6kqUf2b18ls+m0NQUpN+LDgbamOOzhFcyG0++37w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vxfqm4qFf2jdSJfR72Og+72flvv3pO/CXHxJhaVG+0U=;
+ b=gQ3XvieQnt0fVrRcuTMjXwxFxyhivAGaRlRAcvFN4QTYFkhd/5OqCry2ylKZqcc/JKEWslAkAOurgAz1nk7235v6iqA0mi64wMQOj0Ixu/tFJ6ZohxacqdZvuNiTeIpZSGtqPi8WBotmXQvC5ysLbu9xQDpb1WpenVA+jVFJINqWbYkj8NJP01ScQoqqKOQZD+LamgPFZBHQCxpU2+8QICjtyPuiA4+iDhFZQg0I9WcAafW+rEDfVuUewcZvjAzwkWG4EfxUEtajwX7J3vtgJ3bTC/R+VQrEvjWVz+j8K8jGD0ZVM9V+JNgTp278ds3CkL2qXICm5fcPD1ji/2ubsQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by BL1PR12MB5045.namprd12.prod.outlook.com (2603:10b6:208:310::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.38; Fri, 6 Oct
+ 2023 13:39:37 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::3f66:c2b6:59eb:78c2]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::3f66:c2b6:59eb:78c2%6]) with mapi id 15.20.6838.030; Fri, 6 Oct 2023
+ 13:39:37 +0000
+Date:   Fri, 6 Oct 2023 10:39:36 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-block@vger.kernel.org, baolu.lu@linux.intel.com,
+        jsnitsel@redhat.com, jroedel@suse.de, joro@8bytes.org,
+        will@kernel.org, iommu@lists.linux.dev,
+        abdhalee@linux.vnet.ibm.com, mputtash@linux.vnet.com,
+        sachinp@linux.vnet.com
+Subject: Re: [Bisected] [commit 2ad56efa80db] [Hotplug] WARNING while
+ performing hotplug operation on 6.6-rc3-next
+Message-ID: <20231006133936.GQ682044@nvidia.com>
+References: <92db426f-4a31-9c2c-e23a-85a8d353fbae@linux.vnet.ibm.com>
+ <20231006113644.GN682044@nvidia.com>
+ <7ce42090-a768-ba3d-bd27-e86bc076ee57@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ce42090-a768-ba3d-bd27-e86bc076ee57@linux.vnet.ibm.com>
+X-ClientProxiedBy: BL0PR1501CA0016.namprd15.prod.outlook.com
+ (2603:10b6:207:17::29) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|BL1PR12MB5045:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e3b5b18-9010-4c16-6e7a-08dbc671aef4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PayoTtzGXDzJ7J53au0xgHMf1Eu9ZktuVELl0yhMuex0me+e7WUnOKkGBboA4+2NK0HmPPPZYuiI1zwMY8INpNkZopGjhQeFDA1ktuZQgzlo/pRvvuHDd8srdX2rJPqcTDo0qoo39u+ye4/Q0RhVdFH50Vzh+mFbATsngTf1aZP/PempVIvUDbsj6+L+0Elv4T57uDWcj9HZ8SiWKwIUQa9y+p0HtC8jwQDqoUZpSMv9Ls74PB2P4wUpzhUW3X6w2daQJWyPufccMkfXfEjCWuDwfF9IuDYb+N5+wr59rga5F27B02EJOQleltaqLaPJlE3tpbNJrn17YJ4eVa5rrskaibM82wp98r0Bf2b3Z7a8fLBWtT85jy2kBq8gcOanbmDsbi5cVV6ju6skFOyiYvYCGPHNhah/GCAKKsr660P/YfEMc4XLAoRYSMGR3zzAZR54tt/0McbnMDioNIokLj1S/tQ0K3vet3X1TLaPkAjtO0NgN0dP3RjNrOZ9kOvijBI5N+4nFy3ENNGcvg0ZIji2QQEJThWcV4jJ5KRv0qCSjG5Ph2HeMD3eRLZnyLlybn0RsLUhJPw5vpzXeupfPP8cBTf+8nUOJWuEAwnJeMI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(396003)(136003)(376002)(346002)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(83380400001)(7416002)(316002)(2906002)(4744005)(36756003)(8936002)(41300700001)(5660300002)(4326008)(8676002)(66556008)(66476007)(6916009)(86362001)(26005)(66946007)(33656002)(6486002)(6506007)(6512007)(1076003)(2616005)(38100700002)(478600001)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?t6L2nsCUeWrE7ZEX5LWZTF1PV/svLPvvgt6m+FZyyCJ+azR0zW5piW3F9ZXQ?=
+ =?us-ascii?Q?y6Do7jBSxkQSg8SIQm7p+gMT5slS+zlUSJw+ZdtWgkGfeXHNY6wja8B0OAKh?=
+ =?us-ascii?Q?JF/x92yBFXJd/7m0J/Y53VXaVRUjOt85Op+SxXef/TCKgxX7enHAk+4hrsPp?=
+ =?us-ascii?Q?qa7CL9W9CRL7EsYVJvzCrkqkeNNExzGwokoB+RjwrYkYqbTMKEQ5AwEiEIYk?=
+ =?us-ascii?Q?dDwxorMudCfyZPZ0DPgVxj3RZRmSzLqOSro1n+fby0QXRZwajRcdqin6sAkd?=
+ =?us-ascii?Q?Rz1kx0kHm+WTX3PlcXOaKUm2huqtzoNYeBXnFrICL/wcNzKBUTb4DcjHVZUl?=
+ =?us-ascii?Q?30Gv27p96jh6wXvDHURGZYgRZQGirnqTZVHRarrWy12hqlyBf0cQCQttGGoB?=
+ =?us-ascii?Q?xfAzAAkj9eJH3At31GHNpUi4pLJQSo+17JSuD/HaNFwZuHOvo65iq/r9fFuI?=
+ =?us-ascii?Q?WzCcpsqZZk3VEhE+U7g6TxK9cW2TkVscPO1h/5YfqH/QcqtKDW9dW5Y2I0C6?=
+ =?us-ascii?Q?ss0vXmBlcjVqAx/LYx0XJf5iaqY3Bfh4CYW2jEUq19zt0jRaaWQG2zJ6A5QZ?=
+ =?us-ascii?Q?514EhXKyWQ+SPydwSNYdWbKWPPXFYTVRbnBjKhWRuIegiGBDYQCJZO0WYdqR?=
+ =?us-ascii?Q?0xoypipKHUOk245NrJdKRQzQwkq8hG7McOZ+Arctv102mtbHVAhItQVvLus+?=
+ =?us-ascii?Q?O9Rrks6qZdNI8orHZLhQcD2Wd3Sm1vDcs0/7d+J3B4GR44hrVjFpYOnAMQUz?=
+ =?us-ascii?Q?NL9xqZF/jt7QC8rehzOoXWrFJ4wf//VpHC59Xkq6FfWo5OGMGN9+UOIxd6dE?=
+ =?us-ascii?Q?RALxWsJ3ugvP08wovowW8jD3hJksjNPo+74NsyVuSpEeenpa4A77/0hrcljV?=
+ =?us-ascii?Q?Iwzxi+XpB9sob8QEuMELOnFlyLl2NymJ4UjKc+1uSckQx1m83DewLvnGqMdb?=
+ =?us-ascii?Q?a6FtwMbdrLWX2QuP3MOzZ2bAeJQ5rklFPfOYtJj/lhYKFoGBG3Y6BjTvWiNT?=
+ =?us-ascii?Q?OKDY/RRaNQt7KckcHIH+PVzgt9TEtlul+5Xj38tB87FAc2CmVBjsX2p68c6d?=
+ =?us-ascii?Q?5TLH3EFuvCL7+QXLewtS5fFOhUS7Qbhiz7P3szgx35HHrq9m/rljv8Y0MJmF?=
+ =?us-ascii?Q?nj+K4xb2m/P98otv52E9ZQLf18NoB+u/kX9ZNW7Vv+8/DCSPuMHJ4CwNswYI?=
+ =?us-ascii?Q?z+e2R9kVdgyIHbsvs9f2IVhZMV85R5ZOHI9eXNjkdbOHKMvdqmOylBJGg86a?=
+ =?us-ascii?Q?B53s1QDI7HFrBw7z/1yFX1M71vyp5AgZisnG6/MWJvuWRFdmv/aj6E5Q3puO?=
+ =?us-ascii?Q?LbdX0fG5qQ80qTQK4Y2DrCGKnEugRhfgT9QFAImlB8jvmwECgUWUdH33x5zl?=
+ =?us-ascii?Q?m0QJJ6LOOWVatLU1U3TkBDG20syNuozya4Lpi+n6aeASn4XgdCA/hNl6Y3RJ?=
+ =?us-ascii?Q?G8+YaEDk1fTiBYbIVKblhtv0hWYwXPRMw4m1hKMFvHR5FYCr1HE5rsAwpPt+?=
+ =?us-ascii?Q?kkLPhADfpFulw0dEyzRxM81oNxjUsyXYSyPo72p3/vgvpGTs8vSobKD2NclG?=
+ =?us-ascii?Q?P1mT5u/kxFPCin70ReTPwKG1DviAMB9KJ7PrdQzH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e3b5b18-9010-4c16-6e7a-08dbc671aef4
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2023 13:39:37.3556
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZwLrbuPl2OAX0j1GXkM1+uKi3q+2IcuAdNE96uleda6QAfGSjftUo23lngplzLjX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5045
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Realtek 9210 family (NVME to USB bridge) adapters always set
-the write-protected bit for the whole drive if an OPAL locking range
-is defined (even if the OPAL locking range just covers part of the disk).
+On Fri, Oct 06, 2023 at 06:50:00PM +0530, Tasmiya Nalatwad wrote:
+>    Greetings,
+> 
+>    Thanks Jason.
+> 
+>    The fix provided by you works. It is not giving WARNING's but i am
+>    seeing below logs. Would you please confirm on the logs.
 
-The only way to recover is PSID reset and physical reconnection of the device.
+I don't know anything about your environment but those logs don't
+appear to be related to this series?
 
-This looks like a wrong implementation of OPAL standard (and I will try
-to report it to Realtek as it happens for all firmware versions I have),
-but for now, these adapters are unusable for OPAL.
-
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
----
- drivers/usb/storage/unusual_devs.h | 11 +++++++++++
- drivers/usb/storage/unusual_uas.h  | 11 +++++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/drivers/usb/storage/unusual_devs.h b/drivers/usb/storage/unusual_devs.h
-index 20dcbccb290b..b7c0df180e5d 100644
---- a/drivers/usb/storage/unusual_devs.h
-+++ b/drivers/usb/storage/unusual_devs.h
-@@ -1476,6 +1476,17 @@ UNUSUAL_DEV( 0x0bc2, 0x3332, 0x0000, 0x9999,
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_NO_WP_DETECT ),
- 
-+/*
-+ * Realtek 9210 family set global write-protection flag
-+ * for any OPAL locking range making device unusable
-+ * Reported-by: Milan Broz <gmazyland@gmail.com>
-+ */
-+UNUSUAL_DEV( 0x0bda, 0x9210, 0x0000, 0xffff,
-+		"Realtek",
-+		"",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_IGNORE_OPAL),
-+
- UNUSUAL_DEV(  0x0d49, 0x7310, 0x0000, 0x9999,
- 		"Maxtor",
- 		"USB to SATA",
-diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
-index 1f8c9b16a0fb..71ab824bfb32 100644
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -185,3 +185,14 @@ UNUSUAL_DEV(0x4971, 0x8024, 0x0000, 0x9999,
- 		"External HDD",
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_ALWAYS_SYNC),
-+
-+/*
-+ * Realtek 9210 family set global write-protection flag
-+ * for any OPAL locking range making device unusable
-+ * Reported-by: Milan Broz <gmazyland@gmail.com>
-+ */
-+UNUSUAL_DEV(0x0bda, 0x9210, 0x0000, 0xffff,
-+		"Realtek",
-+		"",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_IGNORE_OPAL),
--- 
-2.42.0
-
+Jason
