@@ -2,164 +2,129 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 411CD7BD733
-	for <lists+linux-block@lfdr.de>; Mon,  9 Oct 2023 11:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AE9F7BD7E1
+	for <lists+linux-block@lfdr.de>; Mon,  9 Oct 2023 12:04:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345804AbjJIJgM (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 9 Oct 2023 05:36:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
+        id S1346012AbjJIKEB (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 9 Oct 2023 06:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345875AbjJIJgL (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Oct 2023 05:36:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2105BD6
-        for <linux-block@vger.kernel.org>; Mon,  9 Oct 2023 02:34:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696844094;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3kULn7XJW6r9/K5SsnJw6mRPX4XQ+SkNMJL3kPzdeUY=;
-        b=FeJwaEGZe6v0dbdqE+Z1GPgK+w+NBssafeD0ADWraoKWNWGjNG8cZ3vTgV5oES+AsskyLl
-        1HYaM4xTcWGxtk2FPPltbHZ7kbMmpeNUCxq3l3r9CKr9I2hOvsNNM+Amr0FHHyNqU69iDL
-        k70TzkLWiyA5n9dHusfYFpNIux+lHDY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-665-xRrnsAbvMmatImXt8H0UXg-1; Mon, 09 Oct 2023 05:34:51 -0400
-X-MC-Unique: xRrnsAbvMmatImXt8H0UXg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A802A80CDA1;
-        Mon,  9 Oct 2023 09:34:50 +0000 (UTC)
-Received: from localhost (unknown [10.72.120.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C484E63F50;
-        Mon,  9 Oct 2023 09:34:49 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH for-6.7/io_uring 7/7] ublk: simplify aborting request
-Date:   Mon,  9 Oct 2023 17:33:22 +0800
-Message-ID: <20231009093324.957829-8-ming.lei@redhat.com>
-In-Reply-To: <20231009093324.957829-1-ming.lei@redhat.com>
-References: <20231009093324.957829-1-ming.lei@redhat.com>
+        with ESMTP id S1346003AbjJIKD7 (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Mon, 9 Oct 2023 06:03:59 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779D999
+        for <linux-block@vger.kernel.org>; Mon,  9 Oct 2023 03:03:57 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1bf55a81eeaso28230165ad.0
+        for <linux-block@vger.kernel.org>; Mon, 09 Oct 2023 03:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1696845837; x=1697450637; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hMq2jaKv0w7qan5Rleu8o2mGnamgbpb4/RZFYckJiqE=;
+        b=eIN6wv78V6TIKbWZslEO89bntQLmIuBcYQSWGCKiV8hx3qW1IGCESB+Oa1htaV6KpS
+         isOAXUhyeAdED4TzYY++98CVRGuqHD4AToSEcjSRKdiJT1Vx8BwuODWuw50OFghIpAy2
+         cZ6kNNVgBq0tFbObLYRdD4dar+zLGyosiRu09MRlB5rTCLAbEALZZxKeCDcPXLCz10Lt
+         1bZXqUolgxjnIvMGDzjRNSebzBZR7z8w0bZEKlGhfNbKZ7GjtOzImAK03b+S4cO1+87L
+         9AdAN80jZ8+Aik7LTv5Ki7QcU3jfdon1BFoIJlXvUxJ1Ht9KBwTWP+ADnDc3a99FkEeV
+         7ujA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696845837; x=1697450637;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hMq2jaKv0w7qan5Rleu8o2mGnamgbpb4/RZFYckJiqE=;
+        b=M/frgggjBq3wPNLhRG09H3SUhUHms8EgxVW5uzDJhL9Emr8U0ISo58E04NcoSc+tlb
+         c7N6qucOQHPRgJswfPeqFWQTSNg7E7eG4FeyEFwS/Mm1cFXqhZ9o2bMlPdBq4W5wzNu7
+         tbbe8PtsfRHViucAa4z2k4KUhZJwp7IYt+aHKgCXn+tNo94qHx9JyTQwpcYGbrgJrqAP
+         28D1BOXkE8gnXYHtc9x0V7eLebbLN324cPi2V4hej0E+RWq+eN1x1h8AaaejSuua8pPz
+         ILB9oQ56mBPBbZ16iNRAcqbVYm2pKKWVR0DNe7UmaG9y3cqp+opOnEH4l54HnkR1ls93
+         odsQ==
+X-Gm-Message-State: AOJu0YwV9fZFtMLThGUTrTUTUV5ZrYRwMqZZhNQsiA6f1EbmrnappSMi
+        ldaTJLoK8AA83wCYSSof1c28ow==
+X-Google-Smtp-Source: AGHT+IHqyeR/SlcADUh0qh+R4VMms4WKkZS0JH3GoHyZjxjZO/4rMaaXkeB8vh9DU/H7/MsJVadC6A==
+X-Received: by 2002:a17:903:1245:b0:1c7:49dd:2df with SMTP id u5-20020a170903124500b001c749dd02dfmr14037224plh.32.1696845836897;
+        Mon, 09 Oct 2023 03:03:56 -0700 (PDT)
+Received: from ubuntu-yizhou.default.svc.cluster.local ([101.127.248.173])
+        by smtp.gmail.com with ESMTPSA id d15-20020a170902cecf00b001c5eb37e92csm9119991plg.305.2023.10.09.03.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 03:03:56 -0700 (PDT)
+From:   yizhou.tang@shopee.com
+To:     houtao1@huawei.com, jack@suse.cz, bvanassche@acm.org,
+        kch@nvidia.com
+Cc:     axboe@kernel.dk, tj@kernel.org, corbet@lwn.net,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yingfu.zhou@shopee.com,
+        yizhou.tang@shopee.com, chunguang.xu@shopee.com
+Subject: [PATCH] doc: blk-ioprio: Standardize a few names
+Date:   Mon,  9 Oct 2023 18:03:49 +0800
+Message-Id: <20231009100349.52884-1-yizhou.tang@shopee.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-Now ublk_abort_queue() is run exclusively with ublk_queue_rq() and the
-ubq_daemon task, so simplify aborting request:
+From: Tang Yizhou <yizhou.tang@shopee.com>
 
-- set UBLK_IO_FLAG_ABORTED in ublk_abort_queue() just for aborting
-this request
+Our system administrator have noted that the names 'rt-to-be' and
+'all-to-idle' in the I/O priority policies table appeared without
+explanations, leading to confusion. Let's standardize these names in
+line with the naming in the 'attribute' section.
 
-- abort request in ublk_queue_rq() if ubq->canceling is set
+Additionally,
+1. Correct the interface name to 'io.prio.class'.
+2. Add a table entry of 'promote-to-rt' for consistency.
+3. Fix a typo of 'priority'.
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Suggested-by: Yingfu Zhou <yingfu.zhou@shopee.com>
+Signed-off-by: Tang Yizhou <yizhou.tang@shopee.com>
 ---
- drivers/block/ublk_drv.c | 41 +++++++++++-----------------------------
- 1 file changed, 11 insertions(+), 30 deletions(-)
+ Documentation/admin-guide/cgroup-v2.rst | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 75ed7b87a844..20237b8f318a 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -1083,13 +1083,10 @@ static void __ublk_fail_req(struct ublk_queue *ubq, struct ublk_io *io,
- {
- 	WARN_ON_ONCE(io->flags & UBLK_IO_FLAG_ACTIVE);
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 4ef890191196..10461c73c9a3 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -2023,7 +2023,7 @@ IO Priority
+ ~~~~~~~~~~~
  
--	if (!(io->flags & UBLK_IO_FLAG_ABORTED)) {
--		io->flags |= UBLK_IO_FLAG_ABORTED;
--		if (ublk_queue_can_use_recovery_reissue(ubq))
--			blk_mq_requeue_request(req, false);
--		else
--			ublk_put_req_ref(ubq, req);
--	}
-+	if (ublk_queue_can_use_recovery_reissue(ubq))
-+		blk_mq_requeue_request(req, false);
-+	else
-+		ublk_put_req_ref(ubq, req);
- }
+ A single attribute controls the behavior of the I/O priority cgroup policy,
+-namely the blkio.prio.class attribute. The following values are accepted for
++namely the io.prio.class attribute. The following values are accepted for
+ that attribute:
  
- static void ubq_complete_io_cmd(struct ublk_io *io, int res,
-@@ -1230,27 +1227,10 @@ static void ublk_rq_task_work_cb(struct io_uring_cmd *cmd, unsigned issue_flags)
- static void ublk_queue_cmd(struct ublk_queue *ubq, struct request *rq)
- {
- 	struct ublk_rq_data *data = blk_mq_rq_to_pdu(rq);
--	struct ublk_io *io;
+   no-change
+@@ -2052,9 +2052,11 @@ The following numerical values are associated with the I/O priority policies:
+ +----------------+---+
+ | no-change      | 0 |
+ +----------------+---+
+-| rt-to-be       | 2 |
++| promote-to-rt  | 1 |
+ +----------------+---+
+-| all-to-idle    | 3 |
++| restrict-to-be | 2 |
+++----------------+---+
++| idle           | 3 |
+ +----------------+---+
  
--	if (!llist_add(&data->node, &ubq->io_cmds))
--		return;
-+	if (llist_add(&data->node, &ubq->io_cmds)) {
-+		struct ublk_io *io = &ubq->ios[rq->tag];
- 
--	io = &ubq->ios[rq->tag];
--	/*
--	 * If the check pass, we know that this is a re-issued request aborted
--	 * previously in cancel fn because the ubq_daemon(cmd's task) is
--	 * PF_EXITING. We cannot call io_uring_cmd_complete_in_task() anymore
--	 * because this ioucmd's io_uring context may be freed now if no inflight
--	 * ioucmd exists. Otherwise we may cause null-deref in ctx->fallback_work.
--	 *
--	 * Note: cancel fn sets UBLK_IO_FLAG_ABORTED and ends this request(releasing
--	 * the tag). Then the request is re-started(allocating the tag) and we are here.
--	 * Since releasing/allocating a tag implies smp_mb(), finding UBLK_IO_FLAG_ABORTED
--	 * guarantees that here is a re-issued request aborted previously.
--	 */
--	if (unlikely(io->flags & UBLK_IO_FLAG_ABORTED)) {
--		ublk_abort_io_cmds(ubq);
--	} else {
- 		io_uring_cmd_complete_in_task(io->cmd, ublk_rq_task_work_cb);
- 	}
- }
-@@ -1320,13 +1300,12 @@ static blk_status_t ublk_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	if (ublk_queue_can_use_recovery(ubq) && unlikely(ubq->force_abort))
- 		return BLK_STS_IOERR;
- 
--	blk_mq_start_request(bd->rq);
--
- 	if (unlikely(ubq->canceling)) {
- 		__ublk_abort_rq(ubq, rq);
- 		return BLK_STS_OK;
- 	}
- 
-+	blk_mq_start_request(bd->rq);
- 	ublk_queue_cmd(ubq, rq);
- 
- 	return BLK_STS_OK;
-@@ -1449,8 +1428,10 @@ static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq)
- 			 * will do it
- 			 */
- 			rq = blk_mq_tag_to_rq(ub->tag_set.tags[ubq->q_id], i);
--			if (rq)
-+			if (rq && blk_mq_request_started(rq)) {
-+				io->flags |= UBLK_IO_FLAG_ABORTED;
- 				__ublk_fail_req(ubq, io, rq);
-+			}
- 		}
- 	}
- }
-@@ -1534,7 +1515,7 @@ static void ublk_uring_cmd_cancel_fn(struct io_uring_cmd *cmd,
- 
- 	io = &ubq->ios[pdu->tag];
- 	WARN_ON_ONCE(io->cmd != cmd);
--	ublk_cancel_cmd(ubq, &ubq->ios[pdu->tag], issue_flags);
-+	ublk_cancel_cmd(ubq, io, issue_flags);
- 
- 	if (need_schedule) {
- 		if (ublk_can_use_recovery(ub))
+ The numerical value that corresponds to each I/O priority class is as follows:
+@@ -2074,7 +2076,7 @@ The algorithm to set the I/O priority class for a request is as follows:
+ - If I/O priority class policy is promote-to-rt, change the request I/O
+   priority class to IOPRIO_CLASS_RT and change the request I/O priority
+   level to 4.
+-- If I/O priorityt class is not promote-to-rt, translate the I/O priority
++- If I/O priority class policy is not promote-to-rt, translate the I/O priority
+   class policy into a number, then change the request I/O priority class
+   into the maximum of the I/O priority class policy number and the numerical
+   I/O priority class.
 -- 
-2.41.0
+2.25.1
 
