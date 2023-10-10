@@ -2,135 +2,78 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 170C77BF37B
-	for <lists+linux-block@lfdr.de>; Tue, 10 Oct 2023 08:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7B9D7BF398
+	for <lists+linux-block@lfdr.de>; Tue, 10 Oct 2023 09:01:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442378AbjJJG6C (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Tue, 10 Oct 2023 02:58:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
+        id S1442350AbjJJHBl (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Tue, 10 Oct 2023 03:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442363AbjJJG6B (ORCPT
+        with ESMTP id S1442267AbjJJHBk (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Tue, 10 Oct 2023 02:58:01 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697D59F;
-        Mon,  9 Oct 2023 23:57:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42CCC433C8;
-        Tue, 10 Oct 2023 06:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1696921079;
-        bh=EYuUNIt6jJRwYBy0E3p0Vk5Y1cHFfh6ehg6kHTfAyUU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zzQU1pwcQ/CneY+FW5FxMonJkZiI86OeSlFhEhdRj/hvvySkkTG2K8Sk51p8M1RuX
-         NA8xXufVqn3K4h0T1GP7rVOn7ryC3K4n6YeVOhjVhWQYEIJa6ayQXO2ZChu8j2BCF+
-         i7dawBqEH7KL0R9NbBls/UV6Yg3YejnrOELbQ5Mk=
-Date:   Tue, 10 Oct 2023 08:57:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Max Kellermann <max.kellermann@ionos.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-        nvdimm@lists.linux.dev, linux-nvme@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Tue, 10 Oct 2023 03:01:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4CF99;
+        Tue, 10 Oct 2023 00:01:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bI/vJl5ULJZr3ilKxFJWstI+fkyfacC5qyu4Nha56e8=; b=hZyC1bZ33GltcX7CCa2ZSkJWi+
+        Rv0Rtm4poGcty1nCCUjPMItWznXW9OAM/CRkuZ+AezB2KzLFqn5/eOTe2z3u+Vkq1eLfXq8AeG8JW
+        SjLCTQV0wQJMR/vVKeX7y1xzzIhS44Uu7XRey217WHgrnWpwiQhU/zCwTleY43Zvt1WVTYRbGZRzJ
+        49WpyDQFt9xFfEr1yzZ93JEk6i4j16SpnlX8tH6mZ6AkCRv8ROX9xKYDMBIrRg2CnY/Z4obgw/LWV
+        nJWZCHVUplR9m8EeA3JW/yT513gvgv05gUZGzDT1xUaUhrf9XLgcCMzGJCW7MCK8scc2OEI3bAe1B
+        spzshVVw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qq6kH-00Cf4m-1r;
+        Tue, 10 Oct 2023 07:01:33 +0000
+Date:   Tue, 10 Oct 2023 00:01:33 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     zlang@redhat.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, guan@eryu.me, linux-block@vger.kernel.org,
         linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 6/7] fs/sysfs/group: make attribute_group pointers const
-Message-ID: <2023101041-giggle-refried-5b8c@gregkh>
-References: <20231009165741.746184-1-max.kellermann@ionos.com>
- <20231009165741.746184-6-max.kellermann@ionos.com>
- <264fa39d-aed6-4a54-a085-107997078f8d@roeck-us.net>
- <CAKPOu+8k2x1CucWSzoouts0AfMJk+srJXWWf3iWVOeY+fWkOpQ@mail.gmail.com>
- <f511170fe61d7e7214a3a062661cf4103980dad6.camel@perches.com>
+Subject: Re: [PATCH 1/3] xfs/178: don't fail when SCRATCH_DEV contains random
+ xfs superblocks
+Message-ID: <ZST2zRvtMrU0KlkN@infradead.org>
+References: <169687550821.3948976.6892161616008393594.stgit@frogsfrogsfrogs>
+ <169687551395.3948976.8425812597156927952.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f511170fe61d7e7214a3a062661cf4103980dad6.camel@perches.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <169687551395.3948976.8425812597156927952.stgit@frogsfrogsfrogs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Mon, Oct 09, 2023 at 11:48:10PM -0700, Joe Perches wrote:
-> On Mon, 2023-10-09 at 22:05 +0200, Max Kellermann wrote:
-> > On Mon, Oct 9, 2023 at 7:24 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > Also, I don't know why checkpatch is happy with all the
-> > > 
-> > >         const struct attribute_group *const*groups;
-> > > 
-> > > instead of
-> > > 
-> > >         const struct attribute_group *const *groups;
-> > 
-> > I found out that checkpatch has no check for this at all; it does
-> > complain about such lines, but only for local variables. But that
-> > warning is actually a bug, because this is a check for unary
-> > operators: it thinks the asterisk is a dereference operator, not a
-> > pointer declaration, and complains that the unary operator must be
-> > preceded by a space. Thus warnings on local variable are only correct
-> > by coincidence, not by design.
-> > 
-> > Inside structs or parameters (where my coding style violations can be
-> > found), it's a different context and thus checkpatch doesn't apply the
-> > rules for unary operators.
+On Mon, Oct 09, 2023 at 11:18:33AM -0700, Darrick J. Wong wrote:
+> The storage advertises SCSI UNMAP support, but it is of the variety
+> where the UNMAP command returns immediately but takes its time to unmap
+> in the background.  Subsequent rereads are allowed to return stale
+> contents, per DISCARD semantics.
 > 
-> My opinion is that const use in the kernel should almost
-> always have whitespace before and after it except when
-> preceded by a open parenthesis or a newline.
+> When the fstests cloud is not busy, the old contents disappear in a few
+> seconds.  However, at peak utilization, there are ~75 VMs running, and
+> the storage backend can take several minutes to commit these background
+> requests.
 
-I totally agree.
+Umm, that is not valid behavior fo SCSI UNMAP or any other command
+that Linux discard maps to.  All of them can do one of the two options
+on a per-block basis:
+
+ - return the unmap pattern (usually but not always 0) for any read
+   following the unmap/trim/discard
+ - always return the previous pattern until it is overwritten or
+   discarded again
+
+Changing the pattern some time after unmap is a grave bug, and we need
+to blacklist the device.
+
