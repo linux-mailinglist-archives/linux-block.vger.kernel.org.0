@@ -2,138 +2,116 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76EBE7C5EB3
-	for <lists+linux-block@lfdr.de>; Wed, 11 Oct 2023 22:51:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E167C5EBB
+	for <lists+linux-block@lfdr.de>; Wed, 11 Oct 2023 22:53:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233452AbjJKUvG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Oct 2023 16:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56964 "EHLO
+        id S233560AbjJKUxV (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Oct 2023 16:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231226AbjJKUvF (ORCPT
+        with ESMTP id S233465AbjJKUxU (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Oct 2023 16:51:05 -0400
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACF9A9;
-        Wed, 11 Oct 2023 13:51:03 -0700 (PDT)
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-27d1f57bda7so36941a91.0;
-        Wed, 11 Oct 2023 13:51:03 -0700 (PDT)
+        Wed, 11 Oct 2023 16:53:20 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA049E
+        for <linux-block@vger.kernel.org>; Wed, 11 Oct 2023 13:53:18 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-7a2874d2820so4654639f.1
+        for <linux-block@vger.kernel.org>; Wed, 11 Oct 2023 13:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1697057597; x=1697662397; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B0r2pRN9W+gPfTIBA/X521fXInr9pJ0L2hQFd34BVM0=;
+        b=uQi6cEgVyfSQ8FLM5/ryAty1H3LcAqtZIcluHCYa4OcOU9motrMZRQQ8UKETzgfABn
+         YPPXtJd60f/KPQ/9AlfVAuIQ0uyw8D2JMyawDEQBL3enuImc5ymEvgyOocmHlICOFlTR
+         30QZ8u/7kBTSe4TUAS8F1LA0kpblbkZBfBWkJNE1r2t8WsJ0/rKLjtFA3PpK17hk1wrN
+         ClAru1ZRYFls+4PQq3xTx4QMAzDHAJXGSln9ycAAq3LUGg5Iw4n8IRGk83xI5gl7w5Wv
+         LzdZc7XlzDGQSvU2cQdfhHN5j82DH2LlW7pvhmB6dq7a6fLM5O7FvARea2NRRns4Y+1Z
+         2YIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697057463; x=1697662263;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+        d=1e100.net; s=20230601; t=1697057597; x=1697662397;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nE+u+F1XkNDY5suKWhgfSDeZXY6238ysQJ12xui8faI=;
-        b=PodpIlA6kc9rcD3lUSetKU+2XcImBSaTEYr+ZZsVQ4mVBMNYLx3gVusdMM4u7JZqGK
-         6LTu48/SFjAu2kf44EapchCYl/Vz5QgMTzoyxrwZewNu2hC4js/vCs0dYwvv6yAgK8X0
-         aDr7wf/DE+XFS+NQT6B9qTJngiq04pi4bJoeAFzarLPnRuQ6jTS67qrGny6JgihUWjbh
-         6zm7S2V9YZkNOVTsNcNrgOmQLf1BSpw/leu6C3ak/IQaiG90HEzXYBDqzhoJjhvjFg3L
-         1V2v/OABqr9hwfWk5/x4tMnWxIV1OugUx+x6kdV7Qb0ZoAYT2SXHjtV3SPxGdzDoNBe5
-         90Hg==
-X-Gm-Message-State: AOJu0Yy7MfkbVfsd5n+2MYEjHvQw+XrXq7opvYV4ebX9/I87baametpX
-        2xvHf6wk72iK5AsNLnZMApc=
-X-Google-Smtp-Source: AGHT+IEQsrUikkl+B3X3A6GHGMJk0zCkNQCIcFx/RiY+mEqPpKHqXHGQJ3jBlTWnhgrGIBsfb7aJqA==
-X-Received: by 2002:a17:90a:b008:b0:273:cb91:c74f with SMTP id x8-20020a17090ab00800b00273cb91c74fmr22557041pjq.8.1697057462903;
-        Wed, 11 Oct 2023 13:51:02 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:19de:6b54:16fe:c022? ([2620:15c:211:201:19de:6b54:16fe:c022])
-        by smtp.gmail.com with ESMTPSA id sm6-20020a17090b2e4600b00273fc850342sm352450pjb.20.2023.10.11.13.51.01
+        bh=B0r2pRN9W+gPfTIBA/X521fXInr9pJ0L2hQFd34BVM0=;
+        b=gyXQCsI3A9QkwCiXH2yspvPrt7YtiKK0XO66ymlFfYKhllTUb59HNN9xWwoAi/RTSU
+         J8Nw0nZoeKSK3Q3/0qmIZ4Y5VYATjFztWwtXozIFlpT98awsWlfylNbYsHkaeJrZb7OZ
+         qOvjBqKBJTy9QWsmgvJri8JP7s2HqKF0hcUF40U9lBftRkzoB6gOjXgBC19ihhio4H8I
+         G9a1IrteWpIw8hlb//IveRi9Ux0TEtS+cDdymzExYbPLNvzFwidsBnlIm2aX+RMd2uvr
+         H6XX1Xl9V7UNJf6/5WiUTLA/9gWBNH5Cz2k5/cHu0e217hA+D/EkS8+o2uj6QgIkDGYj
+         x3qg==
+X-Gm-Message-State: AOJu0YyIeoXKiSiHhutdqJn+pYrlsi5f/BhVHhR05lhNZwOnTuVh24PQ
+        ClgufAd14qANwqs3dEUj2vu+0w==
+X-Google-Smtp-Source: AGHT+IGoTKFpU2Egc4uvEK/uN+eOQeP5IWTqsfI4byvncIVMVKfEdFp7mzGoAuzS4v8G1B3/mbB/mg==
+X-Received: by 2002:a05:6602:3a11:b0:79f:922b:3809 with SMTP id by17-20020a0566023a1100b0079f922b3809mr23714875iob.1.1697057597568;
+        Wed, 11 Oct 2023 13:53:17 -0700 (PDT)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 28-20020a0566380a5c00b0043a11ec6517sm3458846jap.171.2023.10.11.13.53.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Oct 2023 13:51:02 -0700 (PDT)
-Message-ID: <b0b015bf-0a27-4e89-950a-597b9fed20fb@acm.org>
-Date:   Wed, 11 Oct 2023 13:51:00 -0700
+        Wed, 11 Oct 2023 13:53:16 -0700 (PDT)
+Message-ID: <d5e95ca1-aa20-43da-92f8-3860e744337e@kernel.dk>
+Date:   Wed, 11 Oct 2023 14:53:15 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/15] block: Support data lifetime in the I/O priority
- bitfield
+Subject: Re: block: Don't invalidate pagecache for invalid falloc modes
 Content-Language: en-US
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        Bean Huo <huobean@gmail.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        Hannes Reinecke <hare@suse.de>
-References: <20231005194129.1882245-1-bvanassche@acm.org>
- <20231005194129.1882245-4-bvanassche@acm.org>
- <8aec03bb-4cef-9423-0ce4-c10d060afce4@kernel.org>
- <46c17c1b-29be-41a3-b799-79163851f972@acm.org>
-In-Reply-To: <46c17c1b-29be-41a3-b799-79163851f972@acm.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+To:     Mike Snitzer <snitzer@kernel.org>
+Cc:     Sarthak Kukreti <sarthakkukreti@chromium.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20231011201230.750105-1-sarthakkukreti@chromium.org>
+ <b068c2ef-5de3-44fb-a55d-2cbe5a7f1158@kernel.dk>
+ <ZScKlejOlxIXYmWI@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ZScKlejOlxIXYmWI@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/6/23 11:07, Bart Van Assche wrote:
-> On 10/6/23 01:19, Damien Le Moal wrote:
->> Your change seem to assume that it makes sense to be able to combine 
->> CDL with
->> lifetime hints. But does it really ? CDL is of dubious value for solid 
->> state
->> media and as far as I know, UFS world has not expressed interest. 
->> Conversely,
->> data lifetime hints do not make much sense for spin rust media where 
->> CDL is
->> important. So I would say that the combination of CDL and lifetime 
->> hints is of
->> dubious value.
+On 10/11/23 2:50 PM, Mike Snitzer wrote:
+> On Wed, Oct 11 2023 at  4:20P -0400,
+> Jens Axboe <axboe@kernel.dk> wrote:
+> 
+>> On 10/11/23 2:12 PM, Sarthak Kukreti wrote:
+>>> Only call truncate_bdev_range() if the fallocate mode is
+>>> supported. This fixes a bug where data in the pagecache
+>>> could be invalidated if the fallocate() was called on the
+>>> block device with an invalid mode.
 >>
->> Given this, why not simply define the 64 possible lifetime values as 
->> plain hint
->> values (8 to 71, following 1 to 7 for CDL) ?
->>
->> The other question here if you really want to keep the bit separation 
->> approach
->> is: do we really need up to 64 different lifetime hints ? While the scsi
->> standard allows that much, does this many different lifetime make 
->> sense in
->> practice ? Can we ever think of a usecase that needs more than say 8 
->> different
->> liftimes (3 bits) ? If you limit the number of possible lifetime hints 
->> to 8,
->> then we can keep 4 bits unused in the hint field for future features.
+>> Fix looks fine, but would be nicer if we didn't have to duplicate the
+>> truncate_bdev_range() in each switch clause. Can we check this upfront
+>> instead?
 > 
-> Hi Damien,
+> No, if you look at the function (rather than just the patch in
+> isolation) we need to make the call for each case rather than collapse
+> to a single call at the front (that's the reason for this fix, because
+> otherwise the default: error case will invalidate the page cache too).
+
+Yes that part is clear, but it might look cleaner to check a valid mask
+first rather than have 3 duplicate calls.
+
+> Just so you're aware, I also had this feedback that shaped the patch a
+> bit back in April:
+> https://listman.redhat.com/archives/dm-devel/2023-April/053986.html
 > 
-> Not supporting CDL for solid state media and supporting eight different
-> lifetime values sounds good to me. Is this perhaps what you had in mind?
+>> Also, please wrap commit messages at 72-74 chars.
 > 
-> Thanks,
-> 
-> Bart.
-> 
-> --- a/include/uapi/linux/ioprio.h
-> +++ b/include/uapi/linux/ioprio.h
-> @@ -100,6 +100,14 @@ enum {
->          IOPRIO_HINT_DEV_DURATION_LIMIT_5 = 5,
->          IOPRIO_HINT_DEV_DURATION_LIMIT_6 = 6,
->          IOPRIO_HINT_DEV_DURATION_LIMIT_7 = 7,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_0 = 8,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_1 = 9,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_2 = 10,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_3 = 11,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_4 = 12,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_5 = 13,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_6 = 14,
-> +       IOPRIO_HINT_DATA_LIFE_TIME_7 = 15,
->   };
+> Not seeing where the header should be wrapped.  You referring to the
+> Fixes: line?  I've never seen those wrapped.
 
-(replying to my own e-mail)
+I'm referring to the commit message itself.
 
-Hi Damien,
-
-Does the above look good to you?
-
-Thanks,
-
-Bart.
+-- 
+Jens Axboe
 
