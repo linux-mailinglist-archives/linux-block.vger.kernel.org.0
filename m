@@ -2,60 +2,60 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 534A47C628D
-	for <lists+linux-block@lfdr.de>; Thu, 12 Oct 2023 04:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 237267C628F
+	for <lists+linux-block@lfdr.de>; Thu, 12 Oct 2023 04:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233989AbjJLCME (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Oct 2023 22:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44316 "EHLO
+        id S231898AbjJLCMG (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Oct 2023 22:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233929AbjJLCME (ORCPT
+        with ESMTP id S233983AbjJLCME (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
         Wed, 11 Oct 2023 22:12:04 -0400
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB46A9
-        for <linux-block@vger.kernel.org>; Wed, 11 Oct 2023 19:11:59 -0700 (PDT)
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B47B6
+        for <linux-block@vger.kernel.org>; Wed, 11 Oct 2023 19:12:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1697076720; x=1728612720;
+  t=1697076722; x=1728612722;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vHBSuirUxnrDeXtKpL4MAu0PGBcG61Buk+PcsYsGzkI=;
-  b=J3rOyOSsZleF4/Wi1JkKZ9dyX7xnO0K8Pql91MfMHbAmZvHDjNPBcuUj
-   a9jYVjlz6xSSTkoLILCHvDYj80XAtSpwwexKMJKdYoYBb9MQj/NvJ1vK7
-   l9reHU5967q2UxBmq0HTRv6Mudc4p/QzhuUuCifPR3E76AtvBQfVL0nw5
-   9eZMZiygZPbi94ZxOU3afCjChi5Kl4xxH+QQnma46CbySbY+Z235+KBH2
-   hLp5yH2866idozmZEbu5GczPp5l5PMfNG+xK0O3E7uLw44h/hJk2PJGmz
-   D1yxWTDn8mij9Sn7lydU3cbbTXEcQqqEnb31ugqyVePXdcItT+l8382ZU
-   g==;
-X-CSE-ConnectionGUID: 292CY/P9QuO914+ixk3+Gw==
-X-CSE-MsgGUID: xkF0ieesT7OA188WF+QH9g==
+  bh=W2EAhHNi2XIUk7YopdZRhwdUiav0UH6yaUvRGqcZzWg=;
+  b=OjHkY2/hyzF/FhSjWapf10l6z/MphwsvL2QS+AXvdUbWqYEeQ444xI6h
+   5ARUQmVSlT2NvL9KUCJefhdiL9nO5lqBbGEsWVSuBhZDyQpFmCx1jlYR1
+   gXI3mxBAJBQTZLAUKVw7HhTQxj1Op0YmAM4eJPB5bFI2bishmN9rSBdNz
+   ZBHmTJukBKzvZExXOvZBNMFzXYq7NG44boLnV8jAwseifvqFXZqTplFCh
+   YHZ4Ui9OtgnXfYGdFoqB5B3Kp5OxNHkUMqhSdOPz/GDh1cmZx2Ezx3JTD
+   5kT2vx3hdNIo5wH37rRSUiEtyxYeliKmCgXelTDZVdi2GImZxkXAQxEnW
+   w==;
+X-CSE-ConnectionGUID: mUleecLbTaGUNI3rOm7n6Q==
+X-CSE-MsgGUID: LxL/lkqkSx+5+/YeQ1sxGg==
 X-IronPort-AV: E=Sophos;i="6.03,217,1694707200"; 
-   d="scan'208";a="358430903"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Oct 2023 10:11:55 +0800
-IronPort-SDR: Tt4xaDHEjLBRZ/Q7qLi2aCkU42ocZP4vdU2t3vYHqIJt9/kfzwmLa9EzLxlsrDHftftdt+XYJF
- 9RP9GNQ8nJJM7/mN5t/JtVjatJcfGt2NJsUYF+1BgEYDSZzJZM1aZ9DIlFYv/hX+i6pJzsrX1g
- SccY6PZzdr7EfCOJhYZc3Y5ewUxqQErZc+NQUUtX6qpEm1jkqCfZSlYmK9XUSkZufUtWXuP0A7
- UoJYT5ytPOof8h9bBkklNzHXx/QdiibRI/KMk3NiXjxOw13hgttjIVN3Ro65koyZEXGsOTkiQx
- 1C0=
+   d="scan'208";a="250798293"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Oct 2023 10:11:57 +0800
+IronPort-SDR: 4clBepSOZWXHJcZM9RxGhrPmiBTS+XzikxucmRXBI9rBSFerwLmtUEk+lCs3YFO24hLupirt5s
+ xiLko1l1ydvRl7iyQPPoIKjqDGvJ5kKdNl9vbIQRnZoDRKk9pxY6t6xHcW5K00kknlRHOSvIS0
+ T51ouJGtSIrmroc9BFpAqO+Usc5ZLPJiqdgkVOBI6KRf8+blonJlvTEE4nniLHxq5iGXCsssyz
+ 4ihuHZ/DzUj5qkPYNqd87w9Xf/Jp7Ixtqy8xGDq3/QuIg+AdxiwNgsKLlHxGOYacNpJkxaGtu1
+ 8xA=
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Oct 2023 18:24:03 -0700
-IronPort-SDR: 2IrWY0yZovMuNrS4/ZY2rwjMPtYuBw+cL7xk09X/JelqD0QBy/GcqT3u9B86QdoklN8LkVItL3
- XwIHmAwD6l4igpHVxjVvP5LqJNHn7lzHgAiQ9xnqrynGOmDE7GP+U8+13ZmzXEinxboagtnodj
- gDjaXVFSaMqFBiUYePdvbTlhjCzDmJu9E/kPaLYxdBU++wMXttZOJYCiVGVrOy+R70Zupvuf68
- 55sIt+bH6C5YY/gjf+9XWHLU9O4G7Q0rYJlmhJW4zIgaeXS9Dyelg13itACvU6n1dNjdDpSbFI
- BE4=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Oct 2023 18:24:04 -0700
+IronPort-SDR: LIkYx0AwSZY4Wom+Sc5DqIZ85XTJb/TUaclNdO8bUyD7+qq2VLe7JMV2uvs8zoFl9pD2K6rulF
+ 8JlmdwZjnEfi62zrTi50AQSHPDM7E0feRHh06ry+hjXL7H/P2m+UrWkU3r2iOKsvtB3auZBqN9
+ mZK4thA2B3kbRAG7G3nHqnruGUvKh1Na3sDwG/nD982KIMngjzFAXLwvTUBxpPKEC7mmnzzDOY
+ vRYXDsUhMCWBdanpTPy8i0/74T0U7y8crAmEmnOrP/Q/ZzXGKJVtyXEiByv3RuHqMySuAlEAgI
+ 8lE=
 WDCIronportException: Internal
 Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
-  by uls-op-cesaip01.wdc.com with ESMTP; 11 Oct 2023 19:11:55 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 11 Oct 2023 19:11:56 -0700
 From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 To:     linux-block@vger.kernel.org
 Cc:     Yi Zhang <yi.zhang@redhat.com>, Daniel Wagner <dwagner@suse.de>,
         Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 1/2] nvme/{rc,017,031}: replace def_file_path with _nvme_def_file_path()
-Date:   Thu, 12 Oct 2023 11:11:51 +0900
-Message-ID: <20231012021152.832553-2-shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests 2/2] block/002: fix TMPDIR path
+Date:   Thu, 12 Oct 2023 11:11:52 +0900
+Message-ID: <20231012021152.832553-3-shinichiro.kawasaki@wdc.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231012021152.832553-1-shinichiro.kawasaki@wdc.com>
 References: <20231012021152.832553-1-shinichiro.kawasaki@wdc.com>
@@ -70,136 +70,27 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-The commit b6356f6 ("nvme/rc: Add common file_path name define") defined
-a global variable 'def_file_path' in nvme/rc, which refers TMPDIR.
-However, when nvme/rc is sourced and def_file_path is defined for the
-nvme test group, TMPDIR is not yet defined since TMPDIR is defined for
-each test case. Then an unexpected path is set to def_file_path and
-temporary files are created at the unexpected path.
+There has been a typo of TMPDIR variable. This resulted in blktrace
+files created at unexpected place. Fix the typo.
 
-Fix this by replacing the global variable def_file_path with a helper
-function _nvme_def_file_path(). This helper function allows to refer
-TMPDIR not at nvme/rc source timing but in test() or test_device()
-context of each test case.
-
-Reported-by: Yi Zhang <yi.zhang@redhat.com>
-Fixes: b6356f6 ("nvme/rc: Add common file_path name define")
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- tests/nvme/017 |  9 +++++----
- tests/nvme/031 |  6 +++---
- tests/nvme/rc  | 17 +++++++++++------
- 3 files changed, 19 insertions(+), 13 deletions(-)
+ tests/block/002 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tests/nvme/017 b/tests/nvme/017
-index aa0a3fe..c8d9b32 100755
---- a/tests/nvme/017
-+++ b/tests/nvme/017
-@@ -21,15 +21,16 @@ test() {
- 	local port
- 	local iterations="${nvme_num_iter}"
- 
--	truncate -s "${nvme_img_size}" "${def_file_path}"
-+	truncate -s "${nvme_img_size}" "$(_nvme_def_file_path)"
- 
- 	local genctr=1
- 
--	_create_nvmet_subsystem "${def_subsysnqn}" "${def_file_path}" \
-+	_create_nvmet_subsystem "${def_subsysnqn}" "$(_nvme_def_file_path)" \
- 		"${def_subsys_uuid}"
- 
- 	for ((i = 2; i <= iterations; i++)); do
--		_create_nvmet_ns "${def_subsysnqn}" "${i}" "${def_file_path}"
-+		_create_nvmet_ns "${def_subsysnqn}" "${i}" \
-+				 "$(_nvme_def_file_path)"
- 	done
- 
- 	port="$(_create_nvmet_port "${nvme_trtype}")"
-@@ -46,7 +47,7 @@ test() {
- 
- 	_remove_nvmet_subsystem "${def_subsysnqn}"
- 
--	rm "${def_file_path}"
-+	rm "$(_nvme_def_file_path)"
- 
- 	echo "Test complete"
- }
-diff --git a/tests/nvme/031 b/tests/nvme/031
-index 696db2d..ed5f196 100755
---- a/tests/nvme/031
-+++ b/tests/nvme/031
-@@ -33,9 +33,9 @@ test() {
- 	local loop_dev
- 	local port
- 
--	truncate -s "${nvme_img_size}" "${def_file_path}"
-+	truncate -s "${nvme_img_size}" "$(_nvme_def_file_path)"
- 
--	loop_dev="$(losetup -f --show "${def_file_path}")"
-+	loop_dev="$(losetup -f --show "$(_nvme_def_file_path)")"
- 
- 	port="$(_create_nvmet_port "${nvme_trtype}")"
- 
-@@ -52,7 +52,7 @@ test() {
- 
- 	_remove_nvmet_port "${port}"
- 	losetup -d "$loop_dev"
--	rm "${def_file_path}"
-+	rm "$(_nvme_def_file_path)"
- 
- 	echo "Test complete"
- }
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 1ec9eb6..012ca95 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -18,11 +18,16 @@ def_hostid="0f01fb42-9f7f-4856-b0b3-51e60b8de349"
- def_hostnqn="nqn.2014-08.org.nvmexpress:uuid:${def_hostid}"
- export def_subsysnqn="blktests-subsystem-1"
- export def_subsys_uuid="91fdba0d-f87b-4c25-b80f-db7be1418b9e"
--export def_file_path="${TMPDIR}/img"
- nvme_trtype=${nvme_trtype:-"loop"}
- nvme_img_size=${nvme_img_size:-"1G"}
- nvme_num_iter=${nvme_num_iter:-"1000"}
- 
-+# TMPDIR can not be referred out of test() or test_device() context. Instead of
-+# global variable def_flie_path, use this getter function.
-+_nvme_def_file_path() {
-+	echo "${TMPDIR}/img"
-+}
-+
- _nvme_requires() {
- 	_have_program nvme
- 	_require_nvme_test_img_size 4m
-@@ -300,11 +305,11 @@ _cleanup_blkdev() {
- 	local blkdev
- 	local dev
- 
--	blkdev="$(losetup -l | awk '$6 == "'"${def_file_path}"'" { print $1 }')"
-+	blkdev="$(losetup -l | awk '$6 == "'"$(_nvme_def_file_path)"'" { print $1 }')"
- 	for dev in ${blkdev}; do
- 		losetup -d "${dev}"
- 	done
--	rm -f "${def_file_path}"
-+	rm -f "$(_nvme_def_file_path)"
- }
- 
- _cleanup_nvmet() {
-@@ -859,11 +864,11 @@ _nvmet_target_setup() {
- 		esac
- 	done
- 
--	truncate -s "${nvme_img_size}" "${def_file_path}"
-+	truncate -s "${nvme_img_size}" "$(_nvme_def_file_path)"
- 	if [[ "${blkdev_type}" == "device" ]]; then
--		blkdev="$(losetup -f --show "${def_file_path}")"
-+		blkdev="$(losetup -f --show "$(_nvme_def_file_path)")"
- 	else
--		blkdev="${def_file_path}"
-+		blkdev="$(_nvme_def_file_path)"
+diff --git a/tests/block/002 b/tests/block/002
+index ee8b0bc..65b0fbd 100755
+--- a/tests/block/002
++++ b/tests/block/002
+@@ -23,7 +23,7 @@ test() {
+ 		return 1
  	fi
  
- 	_create_nvmet_subsystem "${def_subsysnqn}" "${blkdev}" \
+-	blktrace -D "$TMP_DIR" "/dev/${SCSI_DEBUG_DEVICES[0]}" >"$FULL" 2>&1 &
++	blktrace -D "$TMPDIR" "/dev/${SCSI_DEBUG_DEVICES[0]}" >"$FULL" 2>&1 &
+ 	sleep 0.5
+ 	echo 1 > "/sys/block/${SCSI_DEBUG_DEVICES[0]}/device/delete"
+ 	{ kill $!; wait; } >/dev/null 2>/dev/null
 -- 
 2.41.0
 
