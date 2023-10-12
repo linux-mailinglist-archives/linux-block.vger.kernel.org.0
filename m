@@ -2,132 +2,90 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6350A7C6203
-	for <lists+linux-block@lfdr.de>; Thu, 12 Oct 2023 03:02:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB9627C628E
+	for <lists+linux-block@lfdr.de>; Thu, 12 Oct 2023 04:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233729AbjJLBCN (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 11 Oct 2023 21:02:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
+        id S233929AbjJLCMF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 11 Oct 2023 22:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233969AbjJLBCM (ORCPT
+        with ESMTP id S231898AbjJLCME (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Wed, 11 Oct 2023 21:02:12 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E23A9;
-        Wed, 11 Oct 2023 18:02:11 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1D2C433C9;
-        Thu, 12 Oct 2023 01:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697072531;
-        bh=yiANFDzQ62tB7ZkTAR1ls+F1QryoZ0mK2oO/chRVDKc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=LzaS5dJ7h/XH5ZlVAyfzW8tJV0oac+mUEfgPA4MglhzYbSXfl6RTXqW+3/J00LLWT
-         23KhwKXyC1Y3PB6aed2SZlawoNnVe+mS5pUdD42qbP4Tl93F4uZeA9LipGne+MIawl
-         U3FLobkG5w62P+lEB/hJcrfgOuM4d2Qjm518lGkVV7SR3lUYm6m1i2RynsP38EdkXt
-         tqi1GYh4/ijxvaS+t+0/zKR9TMqnFt48zhco/vkFCJWfNdXU86dAcuqXmHokeT3xyX
-         ZEs3RaMSYFXByh7aW2oDA1xSDe7ANv9q3C3T33jsgjjatuB5miyDF8r6uzKD2eYkgC
-         V1ixt/Dc3xZZw==
-Message-ID: <447f3095-66cb-417b-b48c-90005d37b5d3@kernel.org>
-Date:   Thu, 12 Oct 2023 10:02:07 +0900
+        Wed, 11 Oct 2023 22:12:04 -0400
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0139398
+        for <linux-block@vger.kernel.org>; Wed, 11 Oct 2023 19:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1697076719; x=1728612719;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=td9WBejDDKjR4Ddy0J5rCXN1ounSZS54zWqmKYVAHHA=;
+  b=gPhf75DTrArfrolPySb+pTjmpBi97ob2oyRdI8S9m9GsRhSEw/TRkOAN
+   cO8UZiPK6GQlJDeq/m/C2EfJxhWq/Dq9pi6zW/gkark6FPzZLLMwOODog
+   HjiSccRTcedWGso+IrQxqBVlSiXbDcpvUSHECWtNuaKdn+VBgZHbWSd8t
+   fduU+TA5qFuecSLRWJ7IfVdxV4qIibIfAGnfSnN/HryMigAy064iuq+hO
+   pd3ibhu8zFod8gyCp1VzuVAxqykJVEV+m7M7hlTdBNvttH5rAxDCbhV8y
+   6gjP0OtyXOb3WKNSCPQQi5n2CGvwPF2f6tKMtAuP9HHYdRQEQNSF+k/wX
+   g==;
+X-CSE-ConnectionGUID: lXTI4VUPQVK01oNCr1tOqg==
+X-CSE-MsgGUID: B4doRqDDR9aBYnnkz8naeA==
+X-IronPort-AV: E=Sophos;i="6.03,217,1694707200"; 
+   d="scan'208";a="250798257"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Oct 2023 10:11:55 +0800
+IronPort-SDR: NhbgxNh6d7d50rX2KQcfRiYInOUqJYJYZ7Hx/RjeaaZGsrgOoHPvaMwaecy1p6JQpE62xNZFdq
+ w85kM6yrJ74ln9iS5YBWPBCjFPzuzkJJCKYeLkpj2ZkNQoDEC4wzprugvE+C9Xz16eXis4IDos
+ a07r6hd69krwKQtan1MYvffTE1ZZPHWCyFRxBI27IpFUaxKqS1WuGuETav/BTdLSHvatj4wz+0
+ IXp99fClf09SEXbcsPQRlGQ80hX0BliisAGd4pM4pGJJUbdN6xU1ONXpKhxk2uTlZEOgWvlPdc
+ c+M=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Oct 2023 18:24:02 -0700
+IronPort-SDR: D+Wiz3jkuL7Uxc4NQmshYdBT8t97UCyQ5YHO0h7HWCREFkkE3LBOZ52SwFSprmimarabc36u+B
+ w8LvcmZflDgELOo6OWs2gBqB8eiOdptlsnZGGK8yxDF0u0t0Fc6xyjLbTVgF+M0yl5q3ClYv8n
+ 4zxJVvKG+/YsJieKWp6dggbD6ql04ShBjOq0twinUQgEaYxi+YOtEc9wgEiiOhhJCAuk8t7S5t
+ WQ6Rtou+cez4ZizN6AZsYvN0bTiuC01HXARZFd3PwN7XeVZw0flwL+J3IRKPtCuh+csAEKKPth
+ KlQ=
+WDCIronportException: Internal
+Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
+  by uls-op-cesaip01.wdc.com with ESMTP; 11 Oct 2023 19:11:54 -0700
+From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To:     linux-block@vger.kernel.org
+Cc:     Yi Zhang <yi.zhang@redhat.com>, Daniel Wagner <dwagner@suse.de>,
+        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests 0/2] TMPDIR fixes
+Date:   Thu, 12 Oct 2023 11:11:50 +0900
+Message-ID: <20231012021152.832553-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/15] block: Support data lifetime in the I/O priority
- bitfield
-To:     Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        Bean Huo <huobean@gmail.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        Hannes Reinecke <hare@suse.de>
-References: <20231005194129.1882245-1-bvanassche@acm.org>
- <20231005194129.1882245-4-bvanassche@acm.org>
- <8aec03bb-4cef-9423-0ce4-c10d060afce4@kernel.org>
- <46c17c1b-29be-41a3-b799-79163851f972@acm.org>
- <b0b015bf-0a27-4e89-950a-597b9fed20fb@acm.org>
-Content-Language: en-US
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <b0b015bf-0a27-4e89-950a-597b9fed20fb@acm.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On 10/12/23 05:51, Bart Van Assche wrote:
-> On 10/6/23 11:07, Bart Van Assche wrote:
->> On 10/6/23 01:19, Damien Le Moal wrote:
->>> Your change seem to assume that it makes sense to be able to combine CDL with
->>> lifetime hints. But does it really ? CDL is of dubious value for solid state
->>> media and as far as I know, UFS world has not expressed interest. Conversely,
->>> data lifetime hints do not make much sense for spin rust media where CDL is
->>> important. So I would say that the combination of CDL and lifetime hints is of
->>> dubious value.
->>>
->>> Given this, why not simply define the 64 possible lifetime values as plain hint
->>> values (8 to 71, following 1 to 7 for CDL) ?
->>>
->>> The other question here if you really want to keep the bit separation approach
->>> is: do we really need up to 64 different lifetime hints ? While the scsi
->>> standard allows that much, does this many different lifetime make sense in
->>> practice ? Can we ever think of a usecase that needs more than say 8 different
->>> liftimes (3 bits) ? If you limit the number of possible lifetime hints to 8,
->>> then we can keep 4 bits unused in the hint field for future features.
->>
->> Hi Damien,
->>
->> Not supporting CDL for solid state media and supporting eight different
->> lifetime values sounds good to me. Is this perhaps what you had in mind?
->>
->> Thanks,
->>
->> Bart.
->>
->> --- a/include/uapi/linux/ioprio.h
->> +++ b/include/uapi/linux/ioprio.h
->> @@ -100,6 +100,14 @@ enum {
->>          IOPRIO_HINT_DEV_DURATION_LIMIT_5 = 5,
->>          IOPRIO_HINT_DEV_DURATION_LIMIT_6 = 6,
->>          IOPRIO_HINT_DEV_DURATION_LIMIT_7 = 7,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_0 = 8,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_1 = 9,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_2 = 10,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_3 = 11,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_4 = 12,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_5 = 13,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_6 = 14,
->> +       IOPRIO_HINT_DATA_LIFE_TIME_7 = 15,
->>   };
-> 
-> (replying to my own e-mail)
-> 
-> Hi Damien,
-> 
-> Does the above look good to you?
+Yi Zhang reported that the reference to TMPDIR in nvme/rc causes an issue
+because the reference happens out of test() or test_device() context [1][2].
+The first patch addresses this issue. The second patch fixes another TMPDIR
+bug found during this work.
 
-Yes, it is what I was thinking of and I think it looks much better (and
-simpler) than coding with different bits. However, I think this is acceptable
-only if everyone agrees that combining CDL and lifetime (and potentially other
-hints) is not a sensible thing to do. I stated that my thinking is that CDL is
-more geared toward rotating media while lifetime is more suitable for solid
-state media. But does everyone agree ?
+[1] https://lore.kernel.org/linux-block/20231011034832.1650797-1-yi.zhang@redhat.com/
+[2] https://lore.kernel.org/linux-block/20231011072530.1659810-1-yi.zhang@redhat.com/
 
-Some have stated interest in CDL in NVMe-oF context, which could imply that
-combining CDL and lifetime may be something useful to do in that space...
+Shin'ichiro Kawasaki (2):
+  nvme/{rc,017,031}: replace def_file_path with _nvme_def_file_path()
+  block/002: fix TMPDIR path
 
-Getting more opinions about this would be nice. If we do not get any, I would
-say that we should go with this.
+ tests/block/002 |  2 +-
+ tests/nvme/017  |  9 +++++----
+ tests/nvme/031  |  6 +++---
+ tests/nvme/rc   | 17 +++++++++++------
+ 4 files changed, 20 insertions(+), 14 deletions(-)
 
 -- 
-Damien Le Moal
-Western Digital Research
+2.41.0
 
