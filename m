@@ -2,83 +2,64 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECCF37CB3AB
-	for <lists+linux-block@lfdr.de>; Mon, 16 Oct 2023 22:06:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 222A47CB4E2
+	for <lists+linux-block@lfdr.de>; Mon, 16 Oct 2023 22:47:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231955AbjJPUGu (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Mon, 16 Oct 2023 16:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54516 "EHLO
+        id S231221AbjJPUrs (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Mon, 16 Oct 2023 16:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231221AbjJPUGt (ORCPT
+        with ESMTP id S231955AbjJPUrr (ORCPT
         <rfc822;linux-block@vger.kernel.org>);
-        Mon, 16 Oct 2023 16:06:49 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B38B0
-        for <linux-block@vger.kernel.org>; Mon, 16 Oct 2023 13:06:47 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-419b232fc99so23093831cf.1
-        for <linux-block@vger.kernel.org>; Mon, 16 Oct 2023 13:06:47 -0700 (PDT)
+        Mon, 16 Oct 2023 16:47:47 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53245A7
+        for <linux-block@vger.kernel.org>; Mon, 16 Oct 2023 13:47:44 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-325e9cd483eso4826320f8f.2
+        for <linux-block@vger.kernel.org>; Mon, 16 Oct 2023 13:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697486807; x=1698091607; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HaHWZ++raSb5lyMsNQf39E3EcgWl93LaF644FrH4GdU=;
-        b=hBIUf8VAGVmxV4BERjwzHyWP1LZP/hNjaKFR6sNPCtdtH4vuoyCxGksddkmE/dcVFj
-         Ygtbyji8J132bRiUG7ku5RUgYUM+vMUxeBumpfMAqYjsrWOX5evBR8VBq+P/HwGn14S3
-         Tjh8L1YhuUlxXHDL5QtAVQoGu7NG+30D2Um+w=
+        d=philpotter-co-uk.20230601.gappssmtp.com; s=20230601; t=1697489262; x=1698094062; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XO8iW+Aewu5dyhHhxqYtvkVfM0D0owqLsE+KQIP1q7k=;
+        b=yCbnmADcIviPaFt/1DSKt6mgS78EhpYj8U9r+gF2fQBhcsNJCCmg0kemuDNR8+h/Dl
+         HxnCGQB0Xh2N787uUldsM1qCzkm/2JKrTBw071Yl0OfuZqhSAQkI9QqK+TDOOJwjRgC1
+         V8rBgBiVAfBZI0F9jKQ2AoRCJmSeqp8LZYoUz2n8NKcQHp1MlZOXdAwYvfYeBmd2vJ2b
+         pQefJVy3s7BcUBemr8g8T22JuyeIBC9ink5h5OPF+HD2I3dUACLmMype9faXkTZ8Vh88
+         77ahAYWomi0H5oYZetXOH2xiXhRr3SmVIcFsCpUmqrzs4NP+VR1Evz8JxPC/LCkSZ68b
+         VqNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697486807; x=1698091607;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HaHWZ++raSb5lyMsNQf39E3EcgWl93LaF644FrH4GdU=;
-        b=ZO5K85ZYROg19VkG3hCPkxwfW+gFgbQtarqb6rWYIOv5aoeUybN1ab/d5VqtU4oP1q
-         xh7VbUYklXeXpnfQnW1dfG9k51xJZsihTgc1IgU46YpL443zvC7/dcg3bAbYyuULrXV+
-         cx+Bw98tW/ZASOYwqd+uzQa8MTchw0irk83fDvdwqiEoMFSFXXmVKXUn2h25ZQL30dRz
-         qwxmG3VnIT+652XnTNwrAVU1ihPGAayyOnUgfa9SPer22JDzsXZXVMg2/jSTo5JIvpxr
-         n9/l+Plnf7jzNuHstMdaK77R0cU7LqkGRVNrDnJWanvYJ6mK9WwEGFvVvPJYGYFGWeBY
-         TcqQ==
-X-Gm-Message-State: AOJu0YzIZvRbNbeeacPAn5KPjaAJ27Jqq7J+/api1ErqajJeUqOkhBAX
-        If/1zVY+RayAK/fblONj42+Gmt99SRo/JY0wRe8=
-X-Google-Smtp-Source: AGHT+IG/a4K4BPf9EecLMujdW2Y/FTmTFvBHHpfhPvyzVnR0woh4IruL2zFR+75BvhwcohqbTZ3AAg==
-X-Received: by 2002:ac8:7c4e:0:b0:415:138e:d858 with SMTP id o14-20020ac87c4e000000b00415138ed858mr306226qtv.60.1697486806714;
-        Mon, 16 Oct 2023 13:06:46 -0700 (PDT)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
-        by smtp.gmail.com with ESMTPSA id h5-20020ac87145000000b0041969bc2e4csm22330qtp.32.2023.10.16.13.06.45
-        for <linux-block@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Oct 2023 13:06:45 -0700 (PDT)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4195fe5cf73so9341cf.1
-        for <linux-block@vger.kernel.org>; Mon, 16 Oct 2023 13:06:45 -0700 (PDT)
-X-Received: by 2002:a05:622a:2c43:b0:418:1464:37bf with SMTP id
- kl3-20020a05622a2c4300b00418146437bfmr55093qtb.16.1697486805442; Mon, 16 Oct
- 2023 13:06:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697489262; x=1698094062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XO8iW+Aewu5dyhHhxqYtvkVfM0D0owqLsE+KQIP1q7k=;
+        b=fGwa9iYsaUliXWK0W3X2YELk+p5dRH2b6UFLcNeTCPvBb6TMocs4ycUKp3ZrPLM/3H
+         djVf0uFEmH4Hwhu/32pfUIHJ9QOsPkeFO7Q/94cH00wf1E5YokuGkK4Eerf1Uu+TrLaA
+         75hACf4XVM+hXEtzHhVvQXxaGOO1Ya9VlIufPNdMxgiCOB3Tf2GzrBip74eTIdAJBx+b
+         tkezCXTHa57Rq8nMUeP5pK267q7bdoYq/ZMUQAICxPmH0aSLqlUDZqqyeD61iUzK9KOh
+         EhPSxXeqOTDYhrACBg5xuOv/uD/AxhA/9llG/7SS0z3raZlGTZRoGG7zw3fQbH1liprU
+         YqIw==
+X-Gm-Message-State: AOJu0YzTuk00ZaH788h11fKlSIMSaPltlmW0Twm9dNJZe1HvFn5NlzBc
+        S1DCVX2OuL9oKHsb+UCliCL3tEwypsbvzfvz34s=
+X-Google-Smtp-Source: AGHT+IFGAp4thw4ojnPO4RJifl4w8aPC0pdev10N6Hc2N9uBar6BYqoneUbKjBD9Z/WeBYY6SqwTow==
+X-Received: by 2002:adf:f608:0:b0:32d:b2dd:ee1c with SMTP id t8-20020adff608000000b0032db2ddee1cmr438603wrp.5.1697489262403;
+        Mon, 16 Oct 2023 13:47:42 -0700 (PDT)
+Received: from localhost.localdomain (3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.1.f.d.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:df16::3])
+        by smtp.gmail.com with ESMTPSA id g15-20020adfe40f000000b003217cbab88bsm124441wrm.16.2023.10.16.13.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Oct 2023 13:47:42 -0700 (PDT)
+From:   Phillip Potter <phil@philpotter.co.uk>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org
+Subject: [PATCH 0/1] cdrom: cleanup patch for inclusion
+Date:   Mon, 16 Oct 2023 21:47:40 +0100
+Message-ID: <20231016204741.1014-1-phil@philpotter.co.uk>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-References: <20230928015858.1809934-1-linan666@huaweicloud.com>
- <CACGdZY+JV+PdiC_cspQiScm=SJ0kijdufeTrc8wkrQC3ZJx3qQ@mail.gmail.com>
- <4ace01e8-6815-29d0-70ce-4632818ca701@huaweicloud.com> <20231005162417.GA32420@redhat.com>
- <0a8f34aa-ced9-e613-3e5f-b5e53a3ef3d9@huaweicloud.com> <20231007151607.GA24726@redhat.com>
- <21843836-7265-f903-a7d5-e77b07dd5a71@huaweicloud.com> <20231008113602.GB24726@redhat.com>
- <CACGdZY+OOr4Q5ajM0za2babr34YztE7zjRyPXHgh_A64zvoBOw@mail.gmail.com> <e9165cd0-9c9d-1d1a-1c5b-402556a1a31f@huaweicloud.com>
-In-Reply-To: <e9165cd0-9c9d-1d1a-1c5b-402556a1a31f@huaweicloud.com>
-From:   Khazhy Kumykov <khazhy@chromium.org>
-Date:   Mon, 16 Oct 2023 13:06:31 -0700
-X-Gmail-Original-Message-ID: <CACGdZYLxnL91S4RxfvLmN8j3rcvbsqdkouj4Lgc05mnCo2fZSw@mail.gmail.com>
-Message-ID: <CACGdZYLxnL91S4RxfvLmN8j3rcvbsqdkouj4Lgc05mnCo2fZSw@mail.gmail.com>
-Subject: Re: [PATCH] blk-throttle: Calculate allowed value only when the
- throttle is enabled
-To:     Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Li Nan <linan666@huaweicloud.com>,
-        tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        houtao1@huawei.com, yangerkun@huawei.com,
-        "yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,83 +67,20 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Sun, Oct 15, 2023 at 6:47=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> Hi,
->
-> =E5=9C=A8 2023/10/14 5:51, Khazhy Kumykov =E5=86=99=E9=81=93:
-> > Looking at the generic mul_u64_u64_div_u64 impl, it doesn't handle
-> > overflow of the final result either, as far as I can tell. So while on
-> > x86 we get a DE, on non-x86 we just get the wrong result.
-> >
-> > (Aside: after 8d6bbaada2e0 ("blk-throttle: prevent overflow while
-> > calculating wait time"), setting a very-high bps_limit would probably
-> > also cause this crash, no?)
-> >
-> > Would it be possible to have a "check_mul_u64_u64_div_u64_overflow()",
-> > where if the result doesn't fit in u64, we indicate (and let the
-> > caller choose what to do? Here we should just return U64_MAX)?
-> >
-> > Absent that, maybe we can take inspiration from the generic
-> > mul_u64_u64_div_u64? (Forgive the paste)
-> >
-> >   static u64 calculate_bytes_allowed(u64 bps_limit, unsigned long jiffy=
-_elapsed)
-> >   {
-> > +       /* Final result probably won't fit in u64 */
-> > +       if (ilog2(bps_limit) + ilog2(jiffy_elapsed) - ilog2(HZ) > 62)
->
-> I'm not sure, but this condition looks necessary, but doesn't look
-> sufficient, for example, jiffy_elapsed cound be greater than HZ, while
-> ilog2(jiffy_elapsed) is equal to ilog2(HZ).
-I believe 62 is correct, although admittedly it's less "intuitive"
-than the check in mul_u64_u64_div_u64()....
+Hi Jens,
 
-The result overflows if log2(A * B / C) >=3D 64, so we want to ensure that:
-log2(A) + log2(B) - log2(C) < 64
+Please include Edson's cleanup patch below, reviewed and signed off by
+myself. Many thanks.
 
-Given that:
-ilog2(A) <=3D log2(A) < ilog2(A) + 1  // truncation defn
-It follows that:
--log2(A) <=3D -ilog2(A)  // Inverse rule
-log2(A) - 1 < ilog2(A)
+Regards,
+Phil
 
-Starting from:
-ilog2(A) + ilog2(B) - ilog2(C) <=3D X
+Edson Juliano Drosdeck (1):
+  cdrom: Add missing blank lines after declarations
 
-We can show:
-(log2(A) - 1) + (log2(B) - 1) + (-log2(C)) < ilog2(A) + ilog2(B) +
-(-ilog2(C)) // strict inequality here since the substitutions for A
-and B terms are strictly less
-(log2(A) - 1) + (log2(B) - 1) + (-log2(C)) < X
-log2(A) + log2(B) - log2(C) < X + 2
+ drivers/cdrom/cdrom.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-So for X =3D 62, log2(A) + log2(B) - log2(C) < 64 must be true, and we
-must be safe from overflow.
+-- 
+2.41.0
 
-So... by converse, if ilog2(A) + ilog2(B) - ilog2(C) > 62, we cannot
-guarantee that the result will not overflow - thus we bail out.
-
-// end math
-
-It /is/ less exact than your proposal (sufficient, but not necessary),
-but saves an extra 128bit mul.
-
-I mostly just want us to pick /something/, since 6.6-rc and the LTSs
-with the patch in question are busted currently. :)
-
-
-
->
-> Thanks,
-> Kuai
->
-> > +               return U64_MAX;
-> >          return mul_u64_u64_div_u64(bps_limit, (u64)jiffy_elapsed, (u64=
-)HZ);
-> >   }
-> >
-> > .
-> >
->
