@@ -2,110 +2,73 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8EB37DF562
-	for <lists+linux-block@lfdr.de>; Thu,  2 Nov 2023 15:54:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34E687DF596
+	for <lists+linux-block@lfdr.de>; Thu,  2 Nov 2023 16:03:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232873AbjKBOy5 (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Thu, 2 Nov 2023 10:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54102 "EHLO
+        id S229480AbjKBPDw (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Thu, 2 Nov 2023 11:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjKBOy4 (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Nov 2023 10:54:56 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D7A13A;
-        Thu,  2 Nov 2023 07:54:54 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C746C433C7;
-        Thu,  2 Nov 2023 14:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698936893;
-        bh=BJTFD/V8NhF9xL2Vb2JI1wzz0obRMSgyun4+k7Ugw9Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mS0qn/iBxKZEKvGGrtnVqbeXoKkNJRh2yX+sjN9sp80EPCvEYbFaQJfaCMKEdHZ+1
-         /eVzZ6+rIhVkuedaouV9kmdWnlIc6RtzmvHhbMo81QuRbZfYjYOB1Q4tp2BATbjZSr
-         9ll8LVHjc+8hUhcpJZjOqCRtf7t60o891zB3PpcWsZzGxeQbts68ySyE3ghCoU9V1o
-         qpjNuDyDuvTarMA8beLpXWEZCNYFxm5FUo2lLGzus8Pt6X27M3MM0z0Rk1bAmjVSs0
-         h6NQNekzzERttZHnIIzjRc4H+bK2fhUPbE0RGxNI83ST1NiqFwfVWunvI34pSdS/Gh
-         QTiOf36cX8mWQ==
-Date:   Thu, 2 Nov 2023 15:54:48 +0100
-From:   Christian Brauner <brauner@kernel.org>
-To:     Chandan Babu R <chandanbabu@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <djwong@kernel.org>
-Cc:     viro@zeniv.linux.org.uk, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        djwong@kernel.org, linux-xfs@vger.kernel.org,
-        dchinner@fromorbit.com, Christoph Hellwig <hch@lst.de>
-Subject: Re: [BUG REPORT] next-20231102: generic/311 fails on XFS with
- external log
-Message-ID: <20231102-teich-absender-47a27e86e78f@brauner>
-References: <87bkccnwxc.fsf@debian-BULLSEYE-live-builder-AMD64>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87bkccnwxc.fsf@debian-BULLSEYE-live-builder-AMD64>
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229492AbjKBPDv (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Thu, 2 Nov 2023 11:03:51 -0400
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [IPv6:2a02:238:f030:102::1064])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7865D193;
+        Thu,  2 Nov 2023 08:03:44 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+        s=mail; t=1698937422;
+        bh=P+tj398I5i3YozrQjUqZOpwRemov8iwZB6DBDr3ZVZc=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To;
+        b=ISK9fpZOL77xhBwQuEdY4YI+c1+zygp9UO9AW3QtqOekMebcdtBRxt5UkFbOvsYdo
+         SRG1aTXy6PfqHA3hpCms1ojE34S5qZ6z5+ObYW0omK8oGtWU82ogUCEGuHnA5dL3Xj
+         y6RR+bBqNv8npNwrx5r5/dgh+RKVX7pJ0c1UpVD0=
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.4\))
+Subject: Re: [REGRESSION] Backport? RIP: 0010:throtl_trim_slice+0xc6/0x320
+ caused kernel panic
+From:   Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <F5E0BC95-9883-4E8E-83A6-CD9962B7E90C@flyingcircus.io>
+Date:   Thu, 2 Nov 2023 16:03:21 +0100
+Cc:     linux-block@vger.kernel.org, yukuai3@huawei.com,
+        ming.lei@redhat.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8624167B-9565-40C7-B151-1FD56EA65310@flyingcircus.io>
+References: <F5E0BC95-9883-4E8E-83A6-CD9962B7E90C@flyingcircus.io>
+To:     Linux regressions mailing list <regressions@lists.linux.dev>,
+        stable@vger.kernel.org
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-On Thu, Nov 02, 2023 at 06:06:10PM +0530, Chandan Babu R wrote:
+Hi,
+
+> On 2. Nov 2023, at 15:53, Christian Theune <ct@flyingcircus.io> wrote:
+>=20
 > Hi,
-> 
-> generic/311 consistently fails when executing on a kernel built from
-> next-20231102.
-> 
-> The following is the fstests config file that was used during testing.
-> 
-> export FSTYP=xfs
-> 
-> export TEST_DEV=/dev/loop0
-> export TEST_DIR=/mnt/test
-> export TEST_LOGDEV=/dev/loop2
-> 
-> export SCRATCH_DEV=/dev/loop1
-> export SCRATCH_MNT=/mnt/scratch
-> export SCRATCH_LOGDEV=/dev/loop3
+>=20
+> I hope i=E2=80=99m not jumping the gun, but I guess I=E2=80=99d be =
+interested in a backport to said issue =E2=80=A6 ;)
 
-Thanks for the report. So dm flakey sets up:
+It appears I jumped the gun. :(
 
-/dev/dm-0 over /dev/loop0
-/dev/dm-1 over /dev/loop2
+I guess 6a5b845b57b122534d051129bc4fc85eac7f4a68 mentioned in =
+https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.61 is the fix =
+for this.=20
 
-and then we mount an xfs filesystem with:
+Sorry for the noise and mea culpa.
 
-/dev/loop2 as logdev and /dev/loop0 as the main device.
+Christian Theune
 
-So on current kernels what happens is that if you freeze the main
-device you end up:
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
 
-bdev_freeze(dm-0)
--> get_super(dm-0) # finds xfs sb
-   -> freeze_super(sb)
-
-if you also freeze the log device afterwards via:
-
-bdev_freeze(dm-1)
--> get_super(dm-1) # doesn't find xfs sb because freezing only works for
-                   # main device
-
-What's currently in -next allows you to roughly do the following:
-
-bdev_freeze(dm-0)
--> fs_bdev_freeze(dm-0->sb)
-   -> freeze_super(dm-0->sb) # returns 0
-
-bdev_freeze(dm-1)
--> fs_bdev_freeze(dm-1->sb)
-   -> freeze_super(dm-1->sb) # returns -EBUSY
-
-So you'll see EBUSY because the superblock was already frozen when the
-main block device was frozen. I was somewhat expecting that we may run
-into such issues.
-
-I think we just need to figure out what we want to do in cases the
-superblock is frozen via multiple devices. It would probably be correct
-to keep it frozen as long as any of the devices is frozen?
