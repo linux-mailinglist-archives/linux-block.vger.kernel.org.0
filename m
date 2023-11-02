@@ -2,120 +2,69 @@ Return-Path: <linux-block-owner@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBFAA7DE9AC
-	for <lists+linux-block@lfdr.de>; Thu,  2 Nov 2023 01:48:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE407DE984
+	for <lists+linux-block@lfdr.de>; Thu,  2 Nov 2023 01:40:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234640AbjKBAsF (ORCPT <rfc822;lists+linux-block@lfdr.de>);
-        Wed, 1 Nov 2023 20:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60714 "EHLO
+        id S231347AbjKBAkZ (ORCPT <rfc822;lists+linux-block@lfdr.de>);
+        Wed, 1 Nov 2023 20:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234568AbjKBAsE (ORCPT
-        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Nov 2023 20:48:04 -0400
-X-Greylist: delayed 1994 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Nov 2023 17:47:58 PDT
-Received: from outbound-ip191a.ess.barracuda.com (outbound-ip191a.ess.barracuda.com [209.222.82.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99FD4DB
-        for <linux-block@vger.kernel.org>; Wed,  1 Nov 2023 17:47:58 -0700 (PDT)
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168]) by mx-outbound12-254.us-east-2a.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Thu, 02 Nov 2023 00:47:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gmpvgcfa8nwZPEjtz2oX+c3UnRIqG51y+AaHQUfKpqgKShprD6WKbenyLTxvX1pqj+c7mY/GvC8SBTd5PNMrhpWYZbRSOSNgs5b4722+3I57eXKcayDWXojlB2XPdea/+s2+VkVkvlPEQWKLIlMJe97GdH/lRlOUvWETc9KHOP/l3AqhnsiNjNMvBLbGN3fmAG52ONAcBhGZApGcMC7L2TlVCJk2mT7cIdATvAJxT7f+FmMY3ffhR/ZIRXhk/v6K/Lv/4B/LEM8RLP+SISX1Op4AAYxBSt1CWggc0jLUpPBOxir4CaPT955ndAMzF+LrCMKAGG6Kk5nqqldTNCaYZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=imL0tRoe4o69+kHLt9ssdP5f4ZTh0nWl5RVozdU/p8M=;
- b=FtI7yLQyI7yzl5L9uAptZau3hXXlixfhc2SstFHCvSgkL2vegmcKr7TJt8CM0X8fDQ4FMhsuSpfg32mNNPK8t0rCPfOwi71qoPMDFlz9tf3lJCcvHHf50me5M4HuAFDO3HqgdNorSHCfKsTZCNOeJiFEBA+m/FP6dx4xXgpEV0YIj2YRfSkT/dwU9OIM88O4Wt+lxeyhPE5qTKN8ed6gi9hXLU3jKSoDqI3yrc2PsVlF46I4doIu3W2EPdKg7uhhL6BbxvDO7Mz/cUkcnPtPpaneybNVcH5F2Qp8a9EgqzgcvPpMoUCOLZVbH+3GlCUlmAP8BJTvvw/xPhfi7WrpIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
- header.d=ddn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=imL0tRoe4o69+kHLt9ssdP5f4ZTh0nWl5RVozdU/p8M=;
- b=ORLdktWiChRi67Ghv5XbJIhB0j6yXtJrwIC62xzR9zA7xoAM5hQuxERQGkBvxA3/yLYLVSaKAPFGDHQ6WVQrFdsOefaFi4smeOjiO+YqtQn94YPLKi6XjbgSjs0SvsLWU3ZqK8KlAvow3git7TX3BuR1R8qHoTYIpaKJlGNfOz0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ddn.com;
-Received: from DS7PR19MB5711.namprd19.prod.outlook.com (2603:10b6:8:72::19) by
- SA0PR19MB4603.namprd19.prod.outlook.com (2603:10b6:806:b3::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6954.19; Thu, 2 Nov 2023 00:14:37 +0000
-Received: from DS7PR19MB5711.namprd19.prod.outlook.com
- ([fe80::d7a0:ac28:9211:7962]) by DS7PR19MB5711.namprd19.prod.outlook.com
- ([fe80::d7a0:ac28:9211:7962%7]) with mapi id 15.20.6954.019; Thu, 2 Nov 2023
- 00:14:37 +0000
-From:   Li Dongyang <dongyangli@ddn.com>
-To:     linux-block@vger.kernel.org
-Cc:     hch@lst.de, adilger.kernel@dilger.ca
-Subject: [PATCH] block: add SB_I_STABLE_WRITES to bdev sb flag
-Date:   Thu,  2 Nov 2023 11:14:30 +1100
-Message-ID: <20231102001430.385337-1-dongyangli@ddn.com>
-X-Mailer: git-send-email 2.42.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SY6PR01CA0145.ausprd01.prod.outlook.com
- (2603:10c6:10:1ba::19) To DS7PR19MB5711.namprd19.prod.outlook.com
- (2603:10b6:8:72::19)
+        with ESMTP id S229861AbjKBAkY (ORCPT
+        <rfc822;linux-block@vger.kernel.org>); Wed, 1 Nov 2023 20:40:24 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225FC115
+        for <linux-block@vger.kernel.org>; Wed,  1 Nov 2023 17:40:18 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id 3f1490d57ef6-da041ffef81so417300276.0
+        for <linux-block@vger.kernel.org>; Wed, 01 Nov 2023 17:40:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1698885617; x=1699490417; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XqFTar32ASbvPrjveH78MV7Rh5xk6Ufja7S8f/Bljs0=;
+        b=F7mWy0sDxS2NsZq4r0QIIkweMjFgefI5B9XATldwoY88ve/PPhdiO6WPTlCRZzZKYH
+         bDAL7W3bJxXiOJ0tdx4Oars+508WwIqhuqekUkgZD6Kb6UhFk0q2Tl0baDFvH+0eotKR
+         242gTFN2/4qwp3Mt8DWC447jdlMMPTvPfMjumv1oPnP7lMq7CKDlxhTYm5KTON3NCoNV
+         oU2XaTDUkxocJG0bR7yLUf9xyWKv6b02FIRYAtZ3biraiF7Qq2R9xLINkiSCYFzTmqxc
+         OTBpwVzjfD+HLWavnU5OuO7RaMH9DhPxo6jRfyHL/h18I27yuPQRGDWSsHDo4FKV0SlS
+         fmhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698885617; x=1699490417;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XqFTar32ASbvPrjveH78MV7Rh5xk6Ufja7S8f/Bljs0=;
+        b=HPsg1PcFRhLXaCPGgBYGPrHsbbMupX/XytLb1nYQ20KZ+11ovTElGj6E4kKfZtDAkY
+         znxgblVgMeG797+/DzcuxqC4MRNIqw9UWcdL0+wifLpfqdWLq8lr9sM/2/fGRNgrDxVT
+         wAmBYx4HKQv0yth1kN4vpAfgIb7ueXQVzbDTP6kqB18gebEfhm1CtGLWq022ECx/7rAy
+         Dl3jMzCdeoIRi8xrOCyn3/NDa3NaM79l4xJwg7MruFiEQadIHgOxDv16WKI/hZ8xiD5o
+         bR9uyRufaukBzuwViY3y6mpFgipx7SxRxXRnMB2rr2twHGiQ2K1padiYviB3/Sshp9b9
+         sZ7Q==
+X-Gm-Message-State: AOJu0Yy0n8ozOmUVI0+RAVbU1BD3zqcr0vWt4l2SmngMB+f+GGKL/rFf
+        l2QZeGzqkaZvbxCEh5aATl5CVq8I2hEmBX6sqxLJ
+X-Google-Smtp-Source: AGHT+IGK/PhuZ+UhDDHZYM1Pa72OuOxp0eZOylk1ZmSUvvPb8Alc5ldvSn4N3nj0JccWeXvYLwtkGk3oqNifU7yZ4Jo=
+X-Received: by 2002:a25:da82:0:b0:da0:5ff5:5df7 with SMTP id
+ n124-20020a25da82000000b00da05ff55df7mr17332747ybf.12.1698885617167; Wed, 01
+ Nov 2023 17:40:17 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR19MB5711:EE_|SA0PR19MB4603:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3131166-6c44-47e4-6064-08dbdb38b29e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ez7qxhf73dp9/+DOhQBdBIG744JJsm/4FFQi08xNuJhWi1N9kp4H8fKfETNhF54frea4HfLnYe4cO79+kA7IvfNad2IycAGIPnW0qKJETnZKB/jO6A2rJoYInVR4r6TuG5y88Kl5UrdZXZaROhEQVC18KOaTvKeopStwbWrEZL54T58kXa/JU9n4WhH/X4ds8Ny50eaFpXfIys6cQOXs176hZ9fHo61SffwYWukJ1w+r7IBDMqN3C9az9BwrI8YsL7UM/+qY/D0VUOSTIb8sxWE440DumRpUFOb2NaUFAi6Y7njjORuaj7elgM+QKoWHVDvCtUj+T6+uDhXY871NhUHejJFRg7GN6o/I//dpwn0qzmK+lxQeX0E3bRXr/sGGjrB+ccp/8Vb4mwRqjwrza0kGefCGQHfImvAZ19IjhEMqVtRiHeSbCHAKyuQ7GFwzX+lZKv0nz91JKGK/Dvcgf/ZRW2gKducitRqntRtfGBvlIlDLXhPmsC2rDt8KPjLqYcXGYf7Z6QZKxYOEsFjU+yadcWHizzmZrTjvQ2eg8z6nXXkkAuMB2jud6ceSS6pA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR19MB5711.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39850400004)(396003)(366004)(136003)(376002)(230922051799003)(64100799003)(1800799009)(451199024)(186009)(2616005)(5660300002)(1076003)(26005)(6506007)(6486002)(6666004)(478600001)(2906002)(66556008)(55236004)(36756003)(66476007)(66946007)(6916009)(316002)(38100700002)(41300700001)(6512007)(83380400001)(8936002)(8676002)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jJUOAn7MGbjt8O28oRwYZIXFjJsgXvO/PlAT4onJYnItoMVf8+qKyq4R+z7M?=
- =?us-ascii?Q?Wx7oqKbCfDXoU14EPDvEZwoZtOMUnMdrj/td0QDK+IUmjCs9sWmOEEaiYzT2?=
- =?us-ascii?Q?H1MXk7BR93cSd2QMw/2nX3A3ni/g7koNTUGEIUMFro3FoMsBoi89uVUoxJHJ?=
- =?us-ascii?Q?OSFQz3QET8lPnKxdx+9BklAbtW3YKVByL9IapTjAIIEcDY9D/BUMQqhU+FO3?=
- =?us-ascii?Q?p4YhiPq5hX+MCVFc0PsjPJGrNqcIkSKHqzqmdO+1G7MxkukjQQCCRGO5HGCZ?=
- =?us-ascii?Q?FDEwTo/5hoKjaLRiJeQ/GSNMvEn/l4INej3R2BkFUAufyTdld2uL+9Gd90nP?=
- =?us-ascii?Q?OjTvCQLt7c5jBPNOubAKdn2vCWlkop623qnst30li+1B5qpfdVrUoPApHPzv?=
- =?us-ascii?Q?IH0BsPmwDfQbyoR6hC+xn5iv5nDKNwVkAt+TyPRrwNRB/FJX248kOPDft6qM?=
- =?us-ascii?Q?pxmb5Qy4o/isk8BOLdXHicO0XkceLAKpufk8vGIS7Hvej5ajj7HO3QC75BMN?=
- =?us-ascii?Q?kKrUXbFG/mKuiscPtDhgVwR5OmUCpbuf+/e/I7CTugHDlkOsI8n5A5ud2kIy?=
- =?us-ascii?Q?kQsHZ8mg1reCpJCBZLrG4pDtkQl0FVOeHhkggY1u5OeFKGuM9DiJn4beCl+3?=
- =?us-ascii?Q?qW5oIMiGFO2c/DLVmYHY/+j+tIDsgrIGUKSJMrMPBXcuwGJXt/WEhai8plMm?=
- =?us-ascii?Q?z7CT3X4JyU50f+N5f2L9+dIg11F+hkFLjfEZ8xNrvUtP+OMn4Q7cLJg+m5sE?=
- =?us-ascii?Q?fASeM+x7G7uqi3fmgPD/0PvxKhNHBDAvQEliwSV1jzTZkMc6D7sWpxD7ufrp?=
- =?us-ascii?Q?hdQj0pHyutbngk7Wh8VmJ4iILWeLIn+uiGfVA/kATxJ5TtnEddCvSSxdBR5O?=
- =?us-ascii?Q?6ypzJ/z7B1YUtd6w+04lcgd/zaqtkyPpmnXsYThsZ0jMy8akmqSf1l2vCZlo?=
- =?us-ascii?Q?lHlMMpdCHztGbjDDCDVOFFKvZn92HNKqwNPPrGgnbgaf23vX/5681YfXImzp?=
- =?us-ascii?Q?NEMsHxc7gDHJfhq7MFrUsMxEr7NJq+hCAqKiMx4vg9UGeRVeh1XY4Om0Tyxk?=
- =?us-ascii?Q?KIUZfN/5p9XA61B0LZ5BhoGm8zaNVOFCCwEwh7J6u6hF85LR2fvWCDRxz0V6?=
- =?us-ascii?Q?nxc7pYoJbRgi+DsXeuEKbhOgplK072sVF4wMEOdltDXDdKqNTy3LEma/w/wT?=
- =?us-ascii?Q?BbOzoM6De1u+bwWxp/TTQQjwPgErwr1Ds5qXoWAPDFmrgKjnudcUxUyPUQwz?=
- =?us-ascii?Q?dxoXjv6UVlw8X9Jm6z29SxWzV6Qy7oUwOsCKavNONKnxYvok62JTQD4zUZck?=
- =?us-ascii?Q?CU+huTHLNpLRxdv/xFSywVm1UCN1HvUMS5ie7VNkwmZo9WHYbCP8UTsq3fur?=
- =?us-ascii?Q?TdgrkCuilAWRHjnOe8ayQYGS/LLES/4NqioBVjpmzT9BJU0vXO3Vxyisu1AC?=
- =?us-ascii?Q?otVHDXW2xjE6aZZb9+wIyqmko0LusHb71PZSz1Gaf72Wzq/JHsWq/zXBiebU?=
- =?us-ascii?Q?7DQAt/S4GCsFx/jri9NJnwDkwNNOlt4VO3aWIb9EpS3SfVj6O2Nxz7Mxg941?=
- =?us-ascii?Q?6J+EZbc46tLQPG6jND8=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: ULI4i4JBovPrX7gXOHXY3mVScQIoK2W/FuSD5fNf4itCt6eL31d1GvsNMJn7z4Kwn8tOm9Dujq7eWL6vouDZM2L5U4qB5K4tMDf87rqne/UJmcu2gu1PLTXsjsvKinBdTrA4HYmCTpE9vdUyTuCsLU6vXNNE0MHM3Tkq91bG6Z41C3geWp0JyaKUdWCMzfLgxI35VhelRgNwEihOn+mP4gHUP84HtYQY6x7zYdKkPZ4rG76sQjFLGht6RFtufLKXHmZppZwUZtf05Ql0KlbzsVqPx9Yyd2U0t2B6o0qUrrHTjEj+JyIx6Z40OcEqb+LyhJ/9u3X8KL0U01o9awCL2wR4uzBsCmdrpSixTxfZgMEiJ3rIpkkqDenE5g1XDRgIFJza59CEUXlw9ZFGZuIoMwEcbFXYgtqvBBfH/ncNP+6o/98CGfVG1V6kJeV2DJ7ytGzkW/hYngAdn4y8gqJOeFvLkf8tiXzmvbievNDp6M+rSCp4SbIlPkygHAP13bZyeCejkX3rDa06RdCeMAZUAeW6wDV1cwdDnGt1bMV8oQenveCCy31+uApEGZkxTZaHsmL/3Jy6+H61uhtAX7r6rqOlCYqdU0Xs1m97CSONGB+C5kxUZUSdMXPw7PCR+cFac6YGI7L3Xu+VEppELHlA+lC7CT/GpEI8SGVhzymc0OkTL7r5H9ESKlmPAEDpRxYBeoJKTbqsbdoUMk/8Kc2FVovTZVThtC/cBB10lHf/ahIZOfz/k6YR60hLnkzdb6Ry5kRGC9wVBbFrQBzrxCk5ZstFpXsDMNkreyRkhQsAea9jba7BFq20yPweEKpP6LpMSOu8LMUr+wuzQ5ziBOR3aXvMDZWtQtDkzVU8wUaOwWQ=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3131166-6c44-47e4-6064-08dbdb38b29e
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB5711.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2023 00:14:36.6397
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R3pJmf5zhDppnFr4VztrEM7nx0hQf+Nh8vzD72ms6btt2nxya27wEqyfE/V4JDAK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR19MB4603
-X-OriginatorOrg: ddn.com
-X-BESS-ID: 1698886076-103326-12361-17186-1
-X-BESS-VER: 2019.1_20231024.1900
-X-BESS-Apparent-Source-IP: 104.47.56.168
-X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUioBkjpK+cVKVoaG5gZAVgZQMNHY1DQlzdDE2C
-        AlLS3JyMg8yTLFzCjV0Cw5LdnEOM1UqTYWAN4nmuBBAAAA
-X-BESS-Outbound-Spam-Score: 0.00
-X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.251846 [from 
-        cloudscan19-60.us-east-2b.ess.aws.cudaops.com]
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------
-        0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
-X-BESS-Outbound-Spam-Status: SCORE=0.00 using account:ESS124931 scores of KILL_LEVEL=7.0 tests=BSF_BESS_OUTBOUND
-X-BESS-BRTS-Status: 1
+References: <1696457386-3010-16-git-send-email-wufan@linux.microsoft.com> <6efb7a80ba0eb3e02b3ae7a5c0a210f3.paul@paul-moore.com>
+In-Reply-To: <6efb7a80ba0eb3e02b3ae7a5c0a210f3.paul@paul-moore.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 1 Nov 2023 20:40:06 -0400
+Message-ID: <CAHC9VhQJkcb-k+o+NvVn7crrMMZqpBcZpnEbKBT+eZg4Ocjqhw@mail.gmail.com>
+Subject: Re: [PATCH RFC v11 15/19] fsverity: consume builtin signature via LSM hook
+To:     Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net,
+        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
+        tytso@mit.edu, ebiggers@kernel.org, axboe@kernel.dk,
+        agk@redhat.com, snitzer@kernel.org, eparis@redhat.com
+Cc:     linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-block@vger.kernel.org,
+        dm-devel@redhat.com, audit@vger.kernel.org,
+        roberto.sassu@huawei.com, linux-kernel@vger.kernel.org,
+        Deven Bowers <deven.desai@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
@@ -126,38 +75,172 @@ Precedence: bulk
 List-ID: <linux-block.vger.kernel.org>
 X-Mailing-List: linux-block@vger.kernel.org
 
-wait_for_stable_page() now checks SB_I_STABLE_WRITES
-flag on the superblock instead of backing_dev_info,
-this could trigger a false block integrity error when
-doing buffered write directly to the block device,
-as wait_for_stable_page() is a noop for bdev and the
-content of the page could be modified during writeback.
+On Mon, Oct 23, 2023 at 11:52=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
+rote:
+> On Oct  4, 2023 Fan Wu <wufan@linux.microsoft.com> wrote:
+> >
+> > fsverity represents a mechanism to support both integrity and
+> > authenticity protection of a file, supporting both signed and unsigned
+> > digests.
+> >
+> > An LSM which controls access to a resource based on authenticity and
+> > integrity of said resource, can then use this data to make an informed
+> > decision on the authorization (provided by the LSM's policy) of said
+> > claim.
+> >
+> > This effectively allows the extension of a policy enforcement layer in
+> > LSM for fsverity, allowing for more granular control of how a
+> > particular authenticity claim can be used. For example, "all (built-in)
+> > signed fsverity files should be allowed to execute, but only these
+> > hashes are allowed to be loaded as kernel modules".
+> >
+> > This enforcement must be done in kernel space, as a userspace only
+> > solution would fail a simple litmus test: Download a self-contained
+> > malicious binary that never touches the userspace stack. This
+> > binary would still be able to execute.
+> >
+> > Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
+> > Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
+> > ---
+> > v1-v6:
+> >   + Not present
+> >
+> > v7:
+> >   Introduced
+> >
+> > v8:
+> >   + Split fs/verity/ changes and security/ changes into separate patche=
+s
+> >   + Change signature of fsverity_create_info to accept non-const inode
+> >   + Change signature of fsverity_verify_signature to accept non-const i=
+node
+> >   + Don't cast-away const from inode.
+> >   + Digest functionality dropped in favor of:
+> >     ("fs-verity: define a function to return the integrity protected
+> >       file digest")
+> >   + Reworded commit description and title to match changes.
+> >   + Fix a bug wherein no LSM implements the particular fsverity @name
+> >     (or LSM is disabled), and returns -EOPNOTSUPP, causing errors.
+> >
+> > v9:
+> >   + No changes
+> >
+> > v10:
+> >   + Rename the signature blob key
+> >   + Cleanup redundant code
+> >   + Make the hook call depends on CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+> >
+> > v11:
+> >   + No changes
+> > ---
+> >  fs/verity/fsverity_private.h |  2 +-
+> >  fs/verity/open.c             | 26 +++++++++++++++++++++++++-
+> >  include/linux/fsverity.h     |  2 ++
+> >  3 files changed, 28 insertions(+), 2 deletions(-)
+>
+> We need an ACK from some VFS folks on this.
 
-Add SB_I_STABLE_WRITES to bdev superblock flag to
-prevent this, one downside is we now wait for the
-page writeback for all devices doing write via bdev,
-regardless if stable_writes is required or not by
-the device.
+Eric and/or Ted, can we get either an ACK or some feedback on this patch?
 
-Fixes: 1cb039f3dc16 ("bdi: replace BDI_CAP_STABLE_WRITES with a queue and a sb flag")
-Signed-off-by: Li Dongyang <dongyangli@ddn.com>
----
- block/bdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For reference, the full patchset can be found on lore at the link below:
 
-diff --git a/block/bdev.c b/block/bdev.c
-index 2018d250e131..b1536f069aba 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -350,7 +350,7 @@ static int bd_init_fs_context(struct fs_context *fc)
- 	struct pseudo_fs_context *ctx = init_pseudo(fc, BDEVFS_MAGIC);
- 	if (!ctx)
- 		return -ENOMEM;
--	fc->s_iflags |= SB_I_CGROUPWB;
-+	fc->s_iflags |= SB_I_CGROUPWB | SB_I_STABLE_WRITES;
- 	ctx->ops = &bdev_sops;
- 	return 0;
- }
--- 
-2.42.0
+https://lore.kernel.org/linux-security-module/1696457386-3010-1-git-send-em=
+ail-wufan@linux.microsoft.com/
 
+> > diff --git a/fs/verity/fsverity_private.h b/fs/verity/fsverity_private.=
+h
+> > index d071a6e32581..4a82716e852f 100644
+> > --- a/fs/verity/fsverity_private.h
+> > +++ b/fs/verity/fsverity_private.h
+> > @@ -108,7 +108,7 @@ int fsverity_init_merkle_tree_params(struct merkle_=
+tree_params *params,
+> >                                    unsigned int log_blocksize,
+> >                                    const u8 *salt, size_t salt_size);
+> >
+> > -struct fsverity_info *fsverity_create_info(const struct inode *inode,
+> > +struct fsverity_info *fsverity_create_info(struct inode *inode,
+> >                                          struct fsverity_descriptor *de=
+sc);
+> >
+> >  void fsverity_set_info(struct inode *inode, struct fsverity_info *vi);
+> > diff --git a/fs/verity/open.c b/fs/verity/open.c
+> > index 6c31a871b84b..5b48e2c39086 100644
+> > --- a/fs/verity/open.c
+> > +++ b/fs/verity/open.c
+> > @@ -8,6 +8,7 @@
+> >  #include "fsverity_private.h"
+> >
+> >  #include <linux/mm.h>
+> > +#include <linux/security.h>
+> >  #include <linux/slab.h>
+> >
+> >  static struct kmem_cache *fsverity_info_cachep;
+> > @@ -172,12 +173,28 @@ static int compute_file_digest(const struct fsver=
+ity_hash_alg *hash_alg,
+> >       return err;
+> >  }
+> >
+> > +#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+> > +static int fsverity_inode_setsecurity(struct inode *inode,
+> > +                                   struct fsverity_descriptor *desc)
+> > +{
+> > +     return security_inode_setsecurity(inode, FS_VERITY_INODE_SEC_NAME=
+,
+> > +                                       desc->signature,
+> > +                                       le32_to_cpu(desc->sig_size), 0)=
+;
+> > +}
+> > +#else
+> > +static inline int fsverity_inode_setsecurity(struct inode *inode,
+> > +                                          struct fsverity_descriptor *=
+desc)
+> > +{
+> > +     return 0;
+> > +}
+> > +#endif /* CONFIG_IPE_PROP_FS_VERITY*/
+> > +
+> >  /*
+> >   * Create a new fsverity_info from the given fsverity_descriptor (with=
+ optional
+> >   * appended builtin signature), and check the signature if present.  T=
+he
+> >   * fsverity_descriptor must have already undergone basic validation.
+> >   */
+> > -struct fsverity_info *fsverity_create_info(const struct inode *inode,
+> > +struct fsverity_info *fsverity_create_info(struct inode *inode,
+> >                                          struct fsverity_descriptor *de=
+sc)
+> >  {
+> >       struct fsverity_info *vi;
+> > @@ -242,6 +259,13 @@ struct fsverity_info *fsverity_create_info(const s=
+truct inode *inode,
+> >               spin_lock_init(&vi->hash_page_init_lock);
+> >       }
+> >
+> > +     err =3D fsverity_inode_setsecurity(inode, desc);
+> > +     if (err =3D=3D -EOPNOTSUPP)
+> > +             err =3D 0;
+> > +
+> > +     if (err)
+> > +             goto fail;
+> > +
+> >       return vi;
+> >
+> >  fail:
+> > diff --git a/include/linux/fsverity.h b/include/linux/fsverity.h
+> > index 1eb7eae580be..9666721baf15 100644
+> > --- a/include/linux/fsverity.h
+> > +++ b/include/linux/fsverity.h
+> > @@ -319,4 +319,6 @@ static inline int fsverity_prepare_setattr(struct d=
+entry *dentry,
+> >       return 0;
+> >  }
+> >
+> > +#define FS_VERITY_INODE_SEC_NAME "fsverity.builtin-sig"
+> > +
+> >  #endif       /* _LINUX_FSVERITY_H */
+> > --
+> > 2.25.1
+
+--=20
+paul-moore.com
