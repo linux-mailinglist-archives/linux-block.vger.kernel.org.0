@@ -1,153 +1,143 @@
-Return-Path: <linux-block+bounces-16-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C9927E390E
-	for <lists+linux-block@lfdr.de>; Tue,  7 Nov 2023 11:25:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1348C7E3325
+	for <lists+linux-block@lfdr.de>; Tue,  7 Nov 2023 03:40:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4C05280FC9
-	for <lists+linux-block@lfdr.de>; Tue,  7 Nov 2023 10:25:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79916280C8C
+	for <lists+linux-block@lfdr.de>; Tue,  7 Nov 2023 02:39:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29DE71401A;
-	Tue,  7 Nov 2023 10:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C/lZpXEj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6D4ECE;
+	Tue,  7 Nov 2023 02:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-block@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFBE12E67
-	for <linux-block@vger.kernel.org>; Tue,  7 Nov 2023 10:25:26 +0000 (UTC)
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D740F116
-	for <linux-block@vger.kernel.org>; Tue,  7 Nov 2023 02:25:22 -0800 (PST)
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231107102520epoutp02a6fe8df44914fd3c5f68600cee55c9d2~VUEu8UpJT2212222122epoutp02O
-	for <linux-block@vger.kernel.org>; Tue,  7 Nov 2023 10:25:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231107102520epoutp02a6fe8df44914fd3c5f68600cee55c9d2~VUEu8UpJT2212222122epoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1699352720;
-	bh=l9+nqALNvgS2e3VhhHqIFbejhxk5Xtdy+ePOfXRPj9E=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=C/lZpXEju96c8HUOnmqqyDUwdqP/Jfh6taz2Xp37LfB34YqNRu329Y8jtDvjEKL7W
-	 rJXQNegxhdskJD3PU62iqRpeIcjg2NyJu4w21zef1CkNphSYLwm/zPRwQlajgfU3xx
-	 vTSeGPI0J2drz4MRNA537YAlMnYX1WozrkKzwvZ0=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20231107102520epcas5p4e2b6305bdf694794affcc9d3f005a516~VUEunhQcC1558915589epcas5p4B;
-	Tue,  7 Nov 2023 10:25:20 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4SPkqx1g9Rz4x9Q1; Tue,  7 Nov
-	2023 10:25:17 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	CB.4B.19369.D801A456; Tue,  7 Nov 2023 19:25:17 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231107102516epcas5p4eba405b7fe0ab3deb5286c36ef4e44d3~VUErbRGiD0520905209epcas5p47;
-	Tue,  7 Nov 2023 10:25:16 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231107102516epsmtrp1e04180ed0999c0306e3ed9c2fc9fe77c~VUEraZ9Fx2891428914epsmtrp19;
-	Tue,  7 Nov 2023 10:25:16 +0000 (GMT)
-X-AuditID: b6c32a50-9e1ff70000004ba9-a6-654a108db3ff
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6C.67.08817.C801A456; Tue,  7 Nov 2023 19:25:16 +0900 (KST)
-Received: from [107.122.11.51] (unknown [107.122.11.51]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20231107102515epsmtip1341bef91daf5aa842339591f871cd878~VUEqN5hZ_3269332693epsmtip16;
-	Tue,  7 Nov 2023 10:25:15 +0000 (GMT)
-Message-ID: <1067f03f-e89b-4fc8-58bb-0b83b6c5c91d@samsung.com>
-Date: Tue, 7 Nov 2023 15:55:14 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C7EA49
+	for <linux-block@vger.kernel.org>; Tue,  7 Nov 2023 02:39:53 +0000 (UTC)
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52716115;
+	Mon,  6 Nov 2023 18:39:52 -0800 (PST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4SPXVq0jb5z4f3l7D;
+	Tue,  7 Nov 2023 10:39:47 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 220661A0177;
+	Tue,  7 Nov 2023 10:39:48 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBXWhBxo0ll3yj7AA--.25469S4;
+	Tue, 07 Nov 2023 10:39:47 +0800 (CST)
+From: Li Lingfeng <lilingfeng@huaweicloud.com>
+To: josef@toxicpanda.com
+Cc: linux-kernel@vger.kernel.org,
+	hch@lst.de,
+	linux-block@vger.kernel.org,
+	nbd@other.debian.org,
+	axboe@kernel.dk,
+	chaitanya.kulkarni@wdc.com,
+	yukuai1@huaweicloud.com,
+	houtao1@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	lilingfeng@huaweicloud.com,
+	lilingfeng3@huawei.com
+Subject: [PATCH v2] nbd: fix uaf in nbd_open
+Date: Tue,  7 Nov 2023 18:34:35 +0800
+Message-Id: <20231107103435.2074904-1-lilingfeng@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
-	Gecko/20100101 Thunderbird/91.8.1
-Subject: Re: [PATCHv2 1/4] block: bio-integrity: directly map user buffers
-Content-Language: en-US
-To: Keith Busch <kbusch@kernel.org>
-Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org, io-uring@vger.kernel.org, axboe@kernel.dk,
-	hch@lst.de, martin.petersen@oracle.com
-From: Kanchan Joshi <joshi.k@samsung.com>
-In-Reply-To: <ZUkAH258Ts0caQ5W@kbusch-mbp.dhcp.thefacebook.com>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKJsWRmVeSWpSXmKPExsWy7bCmhm6vgFeqwZRZbBar7/azWaxcfZTJ
-	4l3rORaLSYeuMVqcubqQxWLvLW2L+cueslssP/6PyYHD4/LZUo9NqzrZPDYvqffYfbOBzePc
-	xQqPj09vsXh83iQXwB6VbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtq
-	q+TiE6DrlpkDdJGSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CkQK84Mbe4NC9d
-	Ly+1xMrQwMDIFKgwITvj6eWqgh6Oiukv+hgbGOexdTFyckgImEhsW3KdsYuRi0NIYA+jxJ6/
-	75khnE+MEp8fXWeHcL4xSlxfuoYJpuX57O9sEIm9jBLHNtxlB0kICbxllFjwzAnE5hWwk2h4
-	1ga2g0VARWL+rNnsEHFBiZMzn7CA2KICSRK/rs5hBLGFBbwkbjd+ZwWxmQXEJW49mQ+2TERA
-	WeLu/JmsIMuYBbYySmx4NReomYODTUBT4sLkUpAaTgF7icebHzJB9MpLbH87hxni0JkcEscX
-	OULYLhJn162G+llY4tXxLewQtpTEy/42KDtZ4tLMc1BPlkg83nMQyraXaD3Vzwyylhlo7fpd
-	+hCr+CR6fz9hAglLCPBKdLQJQVQrStyb9JQVwhaXeDhjCZTtIfH44VVosC1kkrj7YT3zBEaF
-	WUihMgvJ97OQfDMLYfMCRpZVjFKpBcW56anJpgWGunmp5fD4Ts7P3cQITq9aATsYV2/4q3eI
-	kYmD8RCjBAezkgjvX3uPVCHelMTKqtSi/Pii0pzU4kOMpsD4mcgsJZqcD0zweSXxhiaWBiZm
-	ZmYmlsZmhkrivK9b56YICaQnlqRmp6YWpBbB9DFxcEo1MAV27v0p8mVXwW6BWynfjFacEzfb
-	q6/Qpm/UoKUqquzJneEh2ax11mB+7EZR+bD8hWynrvO0+fCc/bij2Fn9xgFBo+QZ+9a4bv81
-	T62ha93/4pDlGYH+pqVs+qeeeDEuzOpzKdBOaJsqcOn84+v3fV0kds7w9p2Qet79Zl7vYlEd
-	D441PsvW8vFe2jf9wA1xNuENDo6aIoxnTmwQOB5+2OtNmNCUfQYrGeSb83bbrBTKDLrkvFbf
-	RkkyOktD9Enlolla6hys+9ODtFYeyxKUDTvxNv2vo/yks9XfuHv/Fxf+/XDnKIemwRPeIrEn
-	OYfkjSJ0pPZcf+PJ/aBcfsLL17+mLW6VZY51it86/98UJZbijERDLeai4kQAwgBfczgEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpikeLIzCtJLcpLzFFi42LZdlhJTrdHwCvV4F2fnsXqu/1sFitXH2Wy
-	eNd6jsVi0qFrjBZnri5ksdh7S9ti/rKn7BbLj/9jcuDwuHy21GPTqk42j81L6j1232xg8zh3
-	scLj49NbLB6fN8kFsEdx2aSk5mSWpRbp2yVwZTy9XFXQw1Ex/UUfYwPjPLYuRk4OCQETieez
-	vwPZXBxCArsZJa583c4OkRCXaL72A8oWllj57zk7RNFrRolTP1YwgyR4BewkGp61gU1iEVCR
-	mD9rNjtEXFDi5MwnLCC2qECSxJ77jUwgtrCAl8Ttxu+sIDYz0IJbT+aDxUUElCXuzp/JCrKA
-	WWAro8TyU3tZILYtZJJ4+vsG0FQODjYBTYkLk0tBGjgF7CUeb37IBDHITKJraxcjhC0vsf3t
-	HOYJjEKzkNwxC8m+WUhaZiFpWcDIsopRMrWgODc9t9iwwCgvtVyvODG3uDQvXS85P3cTIzia
-	tLR2MO5Z9UHvECMTB+MhRgkOZiUR3r/2HqlCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeb+97k0R
-	EkhPLEnNTk0tSC2CyTJxcEo1MF1WervL/n/F56Oij8LEijR0n8/VuH+W/993rYLT68VPcWhP
-	KriXwK+6+tbihw42XA6aiZW6WjO9TnBbxM66r8GY5/ZV0++Kvwbv7Zq2tJMzXv5P1P75I/2U
-	zD49r8dO+d0emVFHFpvLF7cZbDNSrft5+U9RK3f0/aMeRVoZS04qCDT7r8++F+NcvSxpd/Hd
-	/AQW9TYztrTfXytzGc2MPT8tqRPZUzHX3yF45rndK04Hzkor3BiQ/D2iZtnFQk+/ue/C5oUX
-	tq+JP8dVfOTD4ptvE34alui9fqjmIK/yP1OQVZnV7aODZLOTwOXtq3h2vNk7V5GXc2LV5LOF
-	1fvOuDv5CJqHz5nY4WS47vpDJZbijERDLeai4kQAPrjlkhUDAAA=
-X-CMS-MailID: 20231107102516epcas5p4eba405b7fe0ab3deb5286c36ef4e44d3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231027182010epcas5p36bcf271f93f821055206b2e04b3019a6
-References: <20231027181929.2589937-1-kbusch@meta.com>
-	<CGME20231027182010epcas5p36bcf271f93f821055206b2e04b3019a6@epcas5p3.samsung.com>
-	<20231027181929.2589937-2-kbusch@meta.com>
-	<40ac82f5-ce1b-6f49-3609-1aff496ae241@samsung.com>
-	<ZUkAH258Ts0caQ5W@kbusch-mbp.dhcp.thefacebook.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBXWhBxo0ll3yj7AA--.25469S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar4rur1ktr1xKryUWw1kGrg_yoW8ZryxpF
+	s8XF4DKay8Gw4Iga18Jw43Xr1rKw18G3yIgFW7u34avF93ArZIqFyvyFy8XFn0qrWxJFsr
+	AF4jqryxZ3WxCrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9S14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
+	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
+	YI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWr
+	Zr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+	1UYxBIdaVFxhVjvjDU0xZFpf9x0pRQo7tUUUUU=
+X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-On 11/6/2023 8:32 PM, Keith Busch wrote:
-> On Mon, Nov 06, 2023 at 11:18:03AM +0530, Kanchan Joshi wrote:
->> On 10/27/2023 11:49 PM, Keith Busch wrote:
->>> +	for (i = 0; i < nr_vecs; i = j) {
->>> +		size_t size = min_t(size_t, bytes, PAGE_SIZE - offs);
->>> +		struct folio *folio = page_folio(pages[i]);
->>> +
->>> +		bytes -= size;
->>> +		for (j = i + 1; j < nr_vecs; j++) {
->>> +			size_t next = min_t(size_t, PAGE_SIZE, bytes);
->>> +
->>> +			if (page_folio(pages[j]) != folio ||
->>> +			    pages[j] != pages[j - 1] + 1)
->>> +				break;
->>> +			unpin_user_page(pages[j]);
->>
->> Is this unpin correct here?
-> 
-> Should be. The pages are bound to the folio, so this doesn't really
-> unpin the user page. It just drops a reference, and the folio holds the
-> final reference to the contiguous pages, which is released on
-> completion. 
+From: Li Lingfeng <lilingfeng3@huawei.com>
 
-But the completion is still going to see multiple pages and not one 
-(folio). The bip_for_each_vec loop is going to drop the reference again.
-I suspect it is not folio-aware.
+Commit 4af5f2e03013 ("nbd: use blk_mq_alloc_disk and
+blk_cleanup_disk") cleans up disk by blk_cleanup_disk() and it won't set
+disk->private_data as NULL as before. UAF may be triggered in nbd_open()
+if someone tries to open nbd device right after nbd_put() since nbd has
+been free in nbd_dev_remove().
+
+Fix this by implementing ->free_disk and free private data in it.
+
+Fixes: 4af5f2e03013 ("nbd: use blk_mq_alloc_disk and blk_cleanup_disk")
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+  v1->v2: Implemente ->free_disk and free nbd in it instead of setting
+          disk->private_data as NULL before free nbd.
+
+ drivers/block/nbd.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 800f131222fc..855fdf5c3b4e 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -250,7 +250,6 @@ static void nbd_dev_remove(struct nbd_device *nbd)
+ 	struct gendisk *disk = nbd->disk;
+ 
+ 	del_gendisk(disk);
+-	put_disk(disk);
+ 	blk_mq_free_tag_set(&nbd->tag_set);
+ 
+ 	/*
+@@ -261,7 +260,7 @@ static void nbd_dev_remove(struct nbd_device *nbd)
+ 	idr_remove(&nbd_index_idr, nbd->index);
+ 	mutex_unlock(&nbd_index_mutex);
+ 	destroy_workqueue(nbd->recv_workq);
+-	kfree(nbd);
++	put_disk(disk);
+ }
+ 
+ static void nbd_dev_remove_work(struct work_struct *work)
+@@ -1608,6 +1607,13 @@ static void nbd_release(struct gendisk *disk)
+ 	nbd_put(nbd);
+ }
+ 
++static void nbd_free_disk(struct gendisk *disk)
++{
++	struct nbd_device *nbd = disk->private_data;
++
++	kfree(nbd);
++}
++
+ static const struct block_device_operations nbd_fops =
+ {
+ 	.owner =	THIS_MODULE,
+@@ -1615,6 +1621,7 @@ static const struct block_device_operations nbd_fops =
+ 	.release =	nbd_release,
+ 	.ioctl =	nbd_ioctl,
+ 	.compat_ioctl =	nbd_ioctl,
++	.free_disk =	nbd_free_disk,
+ };
+ 
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+-- 
+2.31.1
+
 
