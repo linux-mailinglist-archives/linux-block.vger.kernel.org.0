@@ -1,100 +1,92 @@
-Return-Path: <linux-block+bounces-27-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-29-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6655F7E4F19
-	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 03:49:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76D307E4F6C
+	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 04:26:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 973CA1C20A82
-	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 02:49:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7E8AB20D37
+	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 03:26:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ADFAEC7;
-	Wed,  8 Nov 2023 02:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F26F91368;
+	Wed,  8 Nov 2023 03:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mkeZv2Dn"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k7si3DRA"
 X-Original-To: linux-block@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235BEEA3
-	for <linux-block@vger.kernel.org>; Wed,  8 Nov 2023 02:49:30 +0000 (UTC)
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78D7910F6
-	for <linux-block@vger.kernel.org>; Tue,  7 Nov 2023 18:49:29 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-5bd33a450fdso4431832a12.0
-        for <linux-block@vger.kernel.org>; Tue, 07 Nov 2023 18:49:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1699411769; x=1700016569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O0pCvuuqiIXdmKShmtr7TpA+fcjvN0E7H6T0yqECQ54=;
-        b=mkeZv2DnhoIyRbBuK7CY5yaWxHN1s5p+QmDM3BNCpspgzZcv2dMrH/HWZXX29VTovK
-         x/1n39eFc6y/eBLXhRQv1xyABCO7N1Q/CAiLNGbuCC/frkv0SBLvJrIXp/03eRn0AKdR
-         qY1+TBte6iZDKbP8tA+PfsIADvzU1OH1BOkyo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699411769; x=1700016569;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O0pCvuuqiIXdmKShmtr7TpA+fcjvN0E7H6T0yqECQ54=;
-        b=lt2z3bvojlvmE9ADiwi86wACvWJ2Rcs1PRyITMOx9ERkJc+EmhaRbQ/cEfvm7JYDCg
-         adxNWCrJmNJn3nw040vnZcFX3BsXuxeLx4Xa4hNluCKPXcY3OpIITvuDn8j/qig3+aGU
-         o6YBIWXUT0GA5prvbg5Coo2fLr/kXsY7zwqa0W2L/dCesMRFSApL9cGmM6N/UqGUTh1s
-         YAxTy4eyI3C/NLE5QmmeBW9mhGtNRo5Bf9bH8stfbpPJxJYT7kheFCjSnSxaaqNofelu
-         SoCWdYWcWYvOadH5UQfr1kAsq/ANhZyHYcGKsVnOab3LoQG4qxZWPB+Xdgm0fD9eQe68
-         0aAw==
-X-Gm-Message-State: AOJu0Yw/WTskZNJgcDPmR7a112TtVEwYfVqrIlLWqXl/dxIWSoFeEgEt
-	1w09RytCa3z7ClViZWzRn7jYNQ==
-X-Google-Smtp-Source: AGHT+IGGCUffSEeIf39+LJitPMsQTTvAdYxDCHBABfr7nE8eOSrRfqBUm7WkSiHgQUm8BjI0viaqaw==
-X-Received: by 2002:a17:902:b613:b0:1c9:cc88:502c with SMTP id b19-20020a170902b61300b001c9cc88502cmr756838pls.69.1699411768942;
-        Tue, 07 Nov 2023 18:49:28 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:2fe:d436:c346:6fcf])
-        by smtp.gmail.com with ESMTPSA id j1-20020a170902690100b001c74df14e6esm523291plk.51.2023.11.07.18.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Nov 2023 18:49:28 -0800 (PST)
-Date: Wed, 8 Nov 2023 11:49:24 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Vasily Averin <vasily.averin@linux.dev>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, zhouxianrong <zhouxianrong@huawei.com>
-Subject: Re: [PATCH] zram: extra zram_get_element call in
- zram_read_from_zspool()
-Message-ID: <20231108024924.GG11577@google.com>
-References: <ec494d90-3f04-4ab4-870b-bb4f015eb0ed@linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB181366
+	for <linux-block@vger.kernel.org>; Wed,  8 Nov 2023 03:26:32 +0000 (UTC)
+X-Greylist: delayed 572 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Nov 2023 19:26:31 PST
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [IPv6:2001:41d0:1004:224b::b5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C7F10C9
+	for <linux-block@vger.kernel.org>; Tue,  7 Nov 2023 19:26:31 -0800 (PST)
+Message-ID: <b87ff5e2-156f-4bf8-9001-9cfbb79871ae@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1699413415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VJayWB9Gx8SRyr0qvwZO08eAjm1AFxboWshwi5jryBE=;
+	b=k7si3DRAlTYR76IlM8Foxg/xOS7CSJNt6iPTDW8Hr1YB/CpE28GHALleNHLXLSaTnjjTMe
+	6e+SDy3sB9MSrfbcaVaewXnQ2YMDx4acuMcVDX0EyjOybQNBrjD1h4yMfHMUUuRuL+QLsk
+	W8JirEu/utOEjmdzW0Pg2gYK3SWNZuI=
+Date: Wed, 8 Nov 2023 06:16:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec494d90-3f04-4ab4-870b-bb4f015eb0ed@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vasily Averin <vasily.averin@linux.dev>
+Subject: Re: [PATCH] zram: extra zram_get_element call in
+ zram_read_from_zspool()
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, zhouxianrong <zhouxianrong@huawei.com>
+References: <ec494d90-3f04-4ab4-870b-bb4f015eb0ed@linux.dev>
+ <20231108024924.GG11577@google.com>
+Content-Language: en-US
+In-Reply-To: <20231108024924.GG11577@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On (23/11/06 22:55), Vasily Averin wrote:
+On 11/8/23 05:49, Sergey Senozhatsky wrote:
+> On (23/11/06 22:55), Vasily Averin wrote:
+>>
+>> 'element' and 'handle' are union in struct zram_table_entry.
+>>
+>> Fixes: 8e19d540d107 ("zram: extend zero pages to same element pages")
 > 
-> 'element' and 'handle' are union in struct zram_table_entry.
-> 
-> Fixes: 8e19d540d107 ("zram: extend zero pages to same element pages")
+> Sorry, what exactly does it fix?
 
-Sorry, what exactly does it fix?
+It removes unneeded call of zram_get_element() and unneeded variable 'value'.
+zram_get_element() == zram_get_handle(), they both access the same field of the same struct zram_table_entry,
+no need to read it 2nd time. 
+'value' variable is not required, 'handle' can be used instead.
 
-[..]
-> @@ -1318,12 +1318,10 @@ static int zram_read_from_zspool(struct zram *zram, struct page *page,
->  
->  	handle = zram_get_handle(zram, index);
->  	if (!handle || zram_test_flag(zram, index, ZRAM_SAME)) {
-> -		unsigned long value;
->  		void *mem;
->  
-> -		value = handle ? zram_get_element(zram, index) : 0;
->  		mem = kmap_atomic(page);
-> -		zram_fill_page(mem, PAGE_SIZE, value);
-> +		zram_fill_page(mem, PAGE_SIZE, handle);
->  		kunmap_atomic(mem);
->  		return 0;
->  	}
+I hope this explain why element/handle union should be removed: it confuses reviewers.
+
+> [..]
+>> @@ -1318,12 +1318,10 @@ static int zram_read_from_zspool(struct zram *zram, struct page *page,
+>>  
+>>  	handle = zram_get_handle(zram, index);
+>>  	if (!handle || zram_test_flag(zram, index, ZRAM_SAME)) {
+>> -		unsigned long value;
+>>  		void *mem;
+>>  
+>> -		value = handle ? zram_get_element(zram, index) : 0;
+>>  		mem = kmap_atomic(page);
+>> -		zram_fill_page(mem, PAGE_SIZE, value);
+>> +		zram_fill_page(mem, PAGE_SIZE, handle);
+>>  		kunmap_atomic(mem);
+>>  		return 0;
+>>  	}
+
 
