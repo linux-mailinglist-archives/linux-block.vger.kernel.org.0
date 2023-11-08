@@ -1,34 +1,34 @@
-Return-Path: <linux-block+bounces-40-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-38-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A76A27E50D0
-	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 08:10:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62D5F7E50B9
+	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 07:59:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36FF8B20D7E
-	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 07:10:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8773C1C208C6
+	for <lists+linux-block@lfdr.de>; Wed,  8 Nov 2023 06:59:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD3E6D26C;
-	Wed,  8 Nov 2023 07:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61A19D266;
+	Wed,  8 Nov 2023 06:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="KqM1BXo8"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ceBZNOaY"
 X-Original-To: linux-block@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72484D266
-	for <linux-block@vger.kernel.org>; Wed,  8 Nov 2023 07:10:41 +0000 (UTC)
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6278910D3
-	for <linux-block@vger.kernel.org>; Tue,  7 Nov 2023 23:10:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB76CA6C
+	for <linux-block@vger.kernel.org>; Wed,  8 Nov 2023 06:59:46 +0000 (UTC)
+Received: from out203-205-221-192.mail.qq.com (out203-205-221-192.mail.qq.com [203.205.221.192])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9701989;
+	Tue,  7 Nov 2023 22:59:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1699427438; bh=jwb1s6BdmK/eBLbgQTraLTMZRylWtwUjWZChOl9ziE0=;
+	t=1699426782; bh=jwb1s6BdmK/eBLbgQTraLTMZRylWtwUjWZChOl9ziE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KqM1BXo84eqz6yhrukTtR3XVKh91BSPQ4yu9DNYy/TIP6wvoiMPem0wSUJQe29aHE
-	 x+F06XknIUT48R+nKxXqQW6rfjbN6aAp+wlaVBSA9Fm63mAf2ml0grDU7ru9hw/DyT
-	 mT5YJSmQiLPo29PS2LUfmNGpkBg82Usn3zHg3kqk=
+	b=ceBZNOaYKFcdW85aMz675MAweR+sKZFtsLbgdnStA7QPIqwrltu+/Rh0gx6Avm2Ua
+	 +2T2bGAq8FKlJ8knk7vgTnwDdIp6klPwSVloDM9+1A17MmDivplifm/Og8tS+8Yw9j
+	 j+mXS6g6pi4eo9hJ3LR8qoN578S/u2+F0v6k8gHI=
 Received: from pek-lxu-l1.wrs.com ([111.198.228.56])
 	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
 	id EE7AE8A2; Wed, 08 Nov 2023 14:59:39 +0800
