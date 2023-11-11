@@ -1,60 +1,63 @@
-Return-Path: <linux-block+bounces-110-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-109-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65B637E8930
-	for <lists+linux-block@lfdr.de>; Sat, 11 Nov 2023 05:31:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 455987E892B
+	for <lists+linux-block@lfdr.de>; Sat, 11 Nov 2023 05:31:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF489B20E05
-	for <lists+linux-block@lfdr.de>; Sat, 11 Nov 2023 04:31:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 767C11C20BC0
+	for <lists+linux-block@lfdr.de>; Sat, 11 Nov 2023 04:31:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 817F9125C3;
-	Sat, 11 Nov 2023 04:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8306C107B9;
+	Sat, 11 Nov 2023 04:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P9Gz3J/o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M3Ea9ttL"
 X-Original-To: linux-block@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4171A6FD1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183556FB2
 	for <linux-block@vger.kernel.org>; Sat, 11 Nov 2023 04:30:51 +0000 (UTC)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E291FD7
-	for <linux-block@vger.kernel.org>; Fri, 10 Nov 2023 20:30:48 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7754212
+	for <linux-block@vger.kernel.org>; Fri, 10 Nov 2023 20:30:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699677048;
+	s=mimecast20190719; t=1699677047;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
 	bh=WHKUzCujTCQXQ8MfrEp01hdmYf4+Dp1Vpzzb9nmBKSA=;
-	b=P9Gz3J/oHit5OWg8ci1CgPFoydbhzfNxZmpQlOiQiau7DetrPqop7VmHtJhT9z+Izs5Wee
-	IlTiGc6j12MbAkZHagdKMe74U6pEHb5CFSwTBeoTLaSlPICqnftrkJ0ei+C/XS44U+BRF7
-	qpAXkRcJJtpWy2S0xM5VCzzngtDGBVc=
+	b=M3Ea9ttLgEF3bbjwZGj1zb8slNUd76oUtKQlQ2Kym3adb6a09ZzQiZ+jSCkr1UU+8Rr5VC
+	HMizf6buvmjMc4LG/odqBrE3G04fz/nZfxYmCcmlb+mL37nepmlayl6mGeH4sAbpAs+raM
+	+NLKU52B+GFFNuW4x6s6z+peUTZlp6g=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-671-He3BrgZfM--TFnGN621JRA-1; Fri, 10 Nov 2023 23:30:45 -0500
-X-MC-Unique: He3BrgZfM--TFnGN621JRA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-199-Sa9cgfg4NS2NickEhmd1wA-1; Fri, 10 Nov 2023 23:30:45 -0500
+X-MC-Unique: Sa9cgfg4NS2NickEhmd1wA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3B511811E7D;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 622C2101A53B;
 	Sat, 11 Nov 2023 04:30:45 +0000 (UTC)
 Received: from pbitcolo-build-10.permabit.com (pbitcolo-build-10.permabit.lab.eng.bos.redhat.com [10.19.117.76])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2BFA72026D4C;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 520AB1C060AE;
 	Sat, 11 Nov 2023 04:30:45 +0000 (UTC)
 Received: by pbitcolo-build-10.permabit.com (Postfix, from userid 1138)
-	id D22553003D; Fri, 10 Nov 2023 23:30:44 -0500 (EST)
+	id 061563003B; Fri, 10 Nov 2023 23:30:44 -0500 (EST)
 From: Matthew Sakai <msakai@redhat.com>
 To: dm-devel@lists.linux.dev,
 	linux-block@vger.kernel.org
 Cc: Matthew Sakai <msakai@redhat.com>
-Subject: [PATCH 0/8] dm vdo memory-alloc: improve interface
-Date: Fri, 10 Nov 2023 23:30:35 -0500
+Subject: [PATCH 0/8] dm vdo memory-alloc: various fixes
+Date: Fri, 10 Nov 2023 23:30:36 -0500
 Message-Id: <cover.1699676411.git.msakai@redhat.com>
+In-Reply-To: <cover.1699676411.git.msakai@redhat.com>
+References: <cover.1699676411.git.msakai@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -62,7 +65,7 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
 This patchset includes various fixes to make the interface to the
 dm-vdo memory allocator cleaner.
