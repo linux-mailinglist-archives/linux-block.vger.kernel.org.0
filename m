@@ -1,75 +1,81 @@
-Return-Path: <linux-block+bounces-222-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-227-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7047EDC04
-	for <lists+linux-block@lfdr.de>; Thu, 16 Nov 2023 08:32:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FF417EDCFB
+	for <lists+linux-block@lfdr.de>; Thu, 16 Nov 2023 09:37:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FE911C2084B
-	for <lists+linux-block@lfdr.de>; Thu, 16 Nov 2023 07:32:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C6B31C2092F
+	for <lists+linux-block@lfdr.de>; Thu, 16 Nov 2023 08:37:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7672CFBE4;
-	Thu, 16 Nov 2023 07:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C8F1CA69;
+	Thu, 16 Nov 2023 08:37:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AEC/jdcX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="z3xOZh3D"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CWUhrgyM";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Gc8GA5HM"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0315120
-	for <linux-block@vger.kernel.org>; Wed, 15 Nov 2023 23:32:39 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5032222924;
-	Thu, 16 Nov 2023 07:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1700119958; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XTezg+sc0Tnb91YVBGMGJIvF6L7L5vCGPC8EpjzZBIw=;
-	b=AEC/jdcXE+AK0x/uUiEq2T+IIltgj9fLWZEYAbhxwCd59cRxFfoNjAUmlLBKixt+1P+Fvy
-	OCvvylPxKck8jGLEMskd04x1NQwXyxZsAUn7QMGqzWHuGMnHixI3y6G6YYjja2EKhAt4go
-	11PoXGjPzfLrJauctJjRnBESK3LN+Qc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1700119958;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XTezg+sc0Tnb91YVBGMGJIvF6L7L5vCGPC8EpjzZBIw=;
-	b=z3xOZh3DHrfkWVVIozpit/zli0yJaSS3+WWIoITAYuubwDlmoTAQ/wAj3HHah1hj3F7/2V
-	flip5E/KA2JL7rCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1A8C51377E;
-	Thu, 16 Nov 2023 07:32:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id DHA3BJbFVWUfRgAAMHmgww
-	(envelope-from <hare@suse.de>); Thu, 16 Nov 2023 07:32:38 +0000
-Message-ID: <ab72deff-d0e8-42bd-ba93-37f04350ce50@suse.de>
-Date: Thu, 16 Nov 2023 08:32:37 +0100
-Precedence: bulk
-X-Mailing-List: linux-block@vger.kernel.org
-List-Id: <linux-block.vger.kernel.org>
-List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C49DA
+	for <linux-block@vger.kernel.org>; Thu, 16 Nov 2023 00:36:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1700123819; x=1731659819;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=w+bvOaytCd0DDw/tOxQxclYBklHv6ZGDiJ771wRRaoo=;
+  b=CWUhrgyMccvVBhsbo7Bcuc8wHHjhseP2mjBpPFLoYi9+AaS7IKwl3AZJ
+   koE6BZj7e9NSqsMi1vzjNPkEvcK2HYBvI+PcHSKl4GLn//skAj780tg/g
+   9uDv/yQgvCMk1eqY4b9WQIu9ph6cvmAA2CZP9ho7XZggbMnHWY3j6Aach
+   RoPHHepPHToE1mAVjQJvjPkcHyc2LImJ4p+Cjq1x8Jx5hmMFovLJmolSf
+   V06M0WEBYLXmB1hMwjQ+rouq+RfaUwb+uPWgb+U8L1z36JMjElBahgW40
+   tjD++5uUyQXzZGRuXh8AKsTRtzSUE/1sGfPjUm4i/KSQRAWFROEargR/i
+   w==;
+X-CSE-ConnectionGUID: xrfqJZhcT++ypv8ZWy2oAw==
+X-CSE-MsgGUID: xAcb5+pMTpy8gru94KTg0g==
+X-IronPort-AV: E=Sophos;i="6.03,307,1694707200"; 
+   d="scan'208";a="2400083"
+Received: from mail-dm6nam10lp2101.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.101])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Nov 2023 16:36:59 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n1KfB74M6bkim5SGcj8/L7R4Hr1k4Sg1maSV75rz3XuxuPBJa/Lis+y9f9lUuTwZ8w8qu3t1zqmWNsAfdfkuatvXPYGkPAGTyvxkGxY/cUmCdOInKt4j1WuvFEc6l6GMrK1ZPMbF/oDvKrM5uTDKL2PRtp6j3N6JolwWSjL2EwvCx80UiOypQFua5HkaRgoI5RRaTRqOXZhhyf3bh9nEhZd6dL4yR3vN8H5O/QghvezhSjBt5dx8iQxOSQldplQ0HFJTkKCOyeGdNiT87ujHmyWEcNz4Mf/lSQDoZhQxWko1YljENEOFcCh0i/7AEwzuJX6hIkpIEQ3SFTyDUkV4Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w+bvOaytCd0DDw/tOxQxclYBklHv6ZGDiJ771wRRaoo=;
+ b=gJR6ek95vv00fLI7v1fLMd0UNPvsAuCBLwDrSaiB88OOl9tQ9fuzZhaOg0iv1fw6RaGEIUHQUYRR/jayu2UPbE8vzFI4tPVYmGRvLZht9r7HFTkYf458AGLnlTXhHslxFWKKxK47Y+zGQQtWy2cGhYy1aS0o9ikwfb8ja4EN7RpgL5eR12drVc0qnvMZeO0Pfn7Q9/ms4twW69ySxEiwpRICh1YqHxXDy8sstEENWGExhU4pd9nt+fvVC0JN3ii89wmFLQ+wshNKBC8D8rTkFUwE9e7t/qihvXIkyaqkkdaPbKUVzeggTlDdwETrlIzRQt+QVrpRg9D8EnnIAim9zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w+bvOaytCd0DDw/tOxQxclYBklHv6ZGDiJ771wRRaoo=;
+ b=Gc8GA5HMmjHxLToX5800bu4UwbUOR8S/mTqLFy++MB/zmjpOObirERUejUKPnwHwgIg3EQEt6OZXWK0z10WdjqxUokjWkVzVgBpUImlCHPaSE4720vbhYACYlcRmcA8WSGrHChtZ21WRZ4VR+MvycmAkSfvrteN1HPUXt/IN1Gs=
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
+ SN7PR04MB8768.namprd04.prod.outlook.com (2603:10b6:806:2e4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.31; Thu, 16 Nov
+ 2023 08:36:57 +0000
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::81a9:5f87:e955:16b4]) by DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::81a9:5f87:e955:16b4%3]) with mapi id 15.20.7002.021; Thu, 16 Nov 2023
+ 08:36:57 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Hannes Reinecke <hare@suse.de>
+CC: Daniel Wagner <dwagner@suse.de>, "linux-block@vger.kernel.org"
+	<linux-block@vger.kernel.org>, "linux-nvme@lists.infradead.org"
+	<linux-nvme@lists.infradead.org>, Yi Zhang <yi.zhang@redhat.com>
 Subject: Re: [PATCH blktests 2/2] nvme/{041,042,043,044,045}: require kernel
  config NVME_HOST_AUTH
-Content-Language: en-US
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: Daniel Wagner <dwagner@suse.de>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- Yi Zhang <yi.zhang@redhat.com>
+Thread-Topic: [PATCH blktests 2/2] nvme/{041,042,043,044,045}: require kernel
+ config NVME_HOST_AUTH
+Thread-Index:
+ AQHaF4fs31V751Pswky+3T/QxhjUILB64sUAgAAdzQCAAAmMAIAAZAsAgAAD/wCAAMKJAIAADycAgABLPICAABH3gA==
+Date: Thu, 16 Nov 2023 08:36:57 +0000
+Message-ID: <rhemqs37f4qog5xi5blwwdgaeam6yxbzlpshe4xk3fpfl3tgwc@qikpw4qoxb4b>
 References: <20231115055220.2656965-1-shinichiro.kawasaki@wdc.com>
  <20231115055220.2656965-3-shinichiro.kawasaki@wdc.com>
  <447d68cc-91d1-4d17-aec6-0105d3b188c5@suse.de>
@@ -79,125 +85,91 @@ References: <20231115055220.2656965-1-shinichiro.kawasaki@wdc.com>
  <fd9a0f77-116d-4eb6-ab3b-8af08dda878e@suse.de>
  <6fwo7puujh4dgoppilxwtg6t2d3sf7l7jp7ifyjprgj5litjtt@b6qoyootcnnr>
  <3c5daxlrkpyf6l3asotx7gqczqo32ffzjjvfoobchvwq56c4hv@r4llw3v2msvl>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <3c5daxlrkpyf6l3asotx7gqczqo32ffzjjvfoobchvwq56c4hv@r4llw3v2msvl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.29
-X-Spamd-Result: default: False [-3.29 / 50.00];
-	 ARC_NA(0.00)[];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.993];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_COUNT_TWO(0.00)[2];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
+ <ab72deff-d0e8-42bd-ba93-37f04350ce50@suse.de>
+In-Reply-To: <ab72deff-d0e8-42bd-ba93-37f04350ce50@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|SN7PR04MB8768:EE_
+x-ms-office365-filtering-correlation-id: e6a10866-a026-4980-7b9b-08dbe67f31ac
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 6f+9a98OvXvUgVz74nZzPj2CigiROLNKNLqln1j8V9KbOllosdvSgd3R0toovkl3eZ8sbB9M2UzMzlpRWVaAKsf8kdR08uETVrvZtSN9kbECKOXHdoGw2GJhTx7djeVvRUQo028p38iFexanAsl1T2RPtCBnuudbiEuhbdOm1W/3VO4lparQwrrzfMzMyrlbWa0CgMiC3Qkji8TSbkQdimacX9P2pEPzYwc01LDHZvd2X77O4eTA5z34zwJQ9dMDdWThtM2DgyFTXDOPW4fJSAy+hyf5suHGCZq8jdwMEBWw5O9Em/PPI5JB0qjwaT8mCSXm5jYRy5XNhDuM7qdQDc2P5VSDQfj2EW+DoZ96WMtEKyWsYkaEPhiMOQz7SSnm2t+ki55Pqdeh/M1cpLryPmYuPhoJ/LmP/f0KFJXeYqvPiJbdHRWpoMbVfTxpLQ2LugbSAOPJDyaf/14/EOGXe0v4U6gD4bQkMfCzAfymQwKs2cTbVeyEt2l9q7Z/XfUYOY+QYlzdKoWNdUs5ZDNyRXlbqY5amGRJJXQLcH+DQys6png0htH04AyKr2MfKM9EKXqCHeOTEBtjfiYCRD9dksvvYyRxz7/332YSyIlcjUwCvLcDip9IJTwxc5SBmnL3
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(376002)(396003)(346002)(39860400002)(366004)(230922051799003)(1800799009)(186009)(451199024)(64100799003)(4326008)(8676002)(44832011)(5660300002)(86362001)(38100700002)(8936002)(6486002)(9686003)(6512007)(2906002)(66446008)(54906003)(66946007)(64756008)(66556008)(76116006)(316002)(6916009)(4744005)(41300700001)(82960400001)(26005)(83380400001)(38070700009)(66476007)(122000001)(91956017)(33716001)(71200400001)(478600001)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?9gZhtIG9mM3Qo2HITuNpyuhK5ZpvbbNl9K3G7+bgjD/zcvQaXpTyEX4e0eSd?=
+ =?us-ascii?Q?qL7O7v1nEeVP4Osry6fAww3VqYwzg/RF+xYc68NJgqs3hXJ10rTTUN1cFRU2?=
+ =?us-ascii?Q?KkIQaxWfnq+GyaaI6q9xOpiduIPbtKAr2QLehmlqmr5GRWBbAoaUSDkyvvDR?=
+ =?us-ascii?Q?rEv41OGsD6aY3EzCVJhZZNklP/yi67txu8e8SqcFgtdsxr5aGVaeRYSwF7JL?=
+ =?us-ascii?Q?aoN/qRFzU4Z4R0ZTPlLDd+ilkVwyQ4e99aEdkUkoYxEbQP2iHzCHnJr4/b5P?=
+ =?us-ascii?Q?UzzittP+mU/vt8/GdDysADg8n8TZibkllz+cQY8HL0u5wtlTmdjSCWHqIC8Y?=
+ =?us-ascii?Q?7jFc1I3TQSc1s5u4vPes31WICkbkLvlIDjDtRha/OZehZt15YY7W4ySK3ciI?=
+ =?us-ascii?Q?H22LMYSBJFglPxNHPHg2L14r3+Uchp4tnBWKlBCHPjfeDidgF7RHZVu67RRV?=
+ =?us-ascii?Q?Bds2hTN2ehu5rhErYYH0V0bONeQS/0inbgIVeT6bK+H+BuIiHlOhOx/ywuT6?=
+ =?us-ascii?Q?VB52Y0wbtvz4W2QEUxwQF8TQsY56qGGwqIPoaAIOh2tzEqOqGvTijU1Kxjs+?=
+ =?us-ascii?Q?hJmkdNMIlM6N9IjlFGrj6ZVOYEnKvSRlcHfLq8zeZ/xnIYD/ND6fJ3YiAT9h?=
+ =?us-ascii?Q?XIEM3znmz1I+y3jiv/bHL2AWYpq4Gq1Cp8U8xP++YKB/35sV8sjAYzobEMAh?=
+ =?us-ascii?Q?fwG0oroemb9UQ/GHG41AEdKR2kQosNV1DkXRNTGMyouYabskZWxy+3YIcsJM?=
+ =?us-ascii?Q?EgQU6kDjk3odHCuqSuc8CzFPqOm4agd2M0/Ea0WDm6q+Bm5aqXgvTdi6ZTt2?=
+ =?us-ascii?Q?1dNnutF7CnpYi+Roi7NnOH5xkK2v5rXmnmQsNkCPDL0IdUfwA/FwVasrbrsI?=
+ =?us-ascii?Q?F+s7/Eh38/C2OlfwWckZcF6WAnGOVHIKl6bd2HUlMh4bYDsHulG5AyvZhF12?=
+ =?us-ascii?Q?nexQ8FGVLEf3v7Hl4J6dOLV042BWg9eowlN+odR1MN20Lx3Qb6b8zNlM1rSE?=
+ =?us-ascii?Q?vM7SdTwHmDfkGRWfhIw1D6wBmz/4lQe4uMSTKNYyLz/C3RWySLT4hzKMMMV5?=
+ =?us-ascii?Q?i7hJph8vCkUPkAz0+/jJqMRjjYAktSPYiMfmOHP0hVv/R874VCHFHXBUjd7k?=
+ =?us-ascii?Q?javWvhxK5lMzCJdr257kJGjgAtJsq8ySsUhrbb570LDIUdEZnkGHsNM66GVQ?=
+ =?us-ascii?Q?mg75VI0ggKxiIG6QzfXLfzPP87zUAY6s8c7LS8CHb4TFEvONEs0A+/YueVDf?=
+ =?us-ascii?Q?zhIPVmll7upg+JjyCM+q1q9SnwIgEsV8ZJfEpO53fP6lDw4L5F9+4OyLI9eb?=
+ =?us-ascii?Q?3YYjA1/C1Y40GGsAtpTSxJaNcQ3LmQm46bYeisYBBNDT5xAHyuaD06y0Oy7u?=
+ =?us-ascii?Q?U4buatu1+VYAzuItkuy9/JdySNFxa1Mel6pm2Bsu2LlH7zpqN51SeoSQIH+p?=
+ =?us-ascii?Q?tJr+PViW6MlFMPKqljvVLKWfo+BeQi63F4rx0sn3ukHqlP5FUXFYWwUo7Zsy?=
+ =?us-ascii?Q?EST49ury8MB1f17RHf6RooXOh6IIukC3U5iqJ62W0xRsylyftKsDf4LBtVwa?=
+ =?us-ascii?Q?TWm32gIwZC/w8VjPSkJhJHMYZf4pZ11XsYHVJR7jdYM5f0jm2xJk+9F63vlz?=
+ =?us-ascii?Q?AZFZfyN9qTNqRgEnhG3MhvA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8428C7E5FB64B7438F6039232B8949F8@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+Precedence: bulk
+X-Mailing-List: linux-block@vger.kernel.org
+List-Id: <linux-block.vger.kernel.org>
+List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	ro5hQGboHT6wNHafbDBtUpVwHizbE9kHnKO+bnLfCwmNKJLj8pEgp9usl2OYRnYFBAhostO5RffXo060hZ7bq2snSrhi1konUXB5r7RnRuhVA1m1165sd5+1rVJ3A+E60nhsDCAVde85tf3ndhfGCDChkHDfdJF11hUlPuMEwcDEEZ8zR/SxLQA0AIbToRfvQeoXGFVpGMptatjAwqTjfGbub7XrbF5I+v32bkascjkd2Qn//mwdZQIKltJ9/pTkrHxGCS2+YBWda0nZLTuhrsuZYcBLie4OgP0kQQE20zHooKGQwuUuO9eIhNRjuff8kgF44Mvw/Vh0ieRFDZKMhno8WQr0AFup5p0V6FjeI7vjpUE4dicCcfh1EILO8NDulJRcocnJEoZ9hoZ7AkTNWZXI8evCHRltpisIpwytzA/iiPmbMtcWkel6VrjDONlZbfl6jclCjKTrBTSUHX4vUxsUaF0Es8RGaYwdWz8KPLLbqy/WmyjsFxdAf9/vhRW6YjxVJWPDhRLY073WWa4Z1XZa49/Y82tIUcDLnv7/GuUNxu3gWnVNUIA2lWl6iVD9TmJp21fXExOOAlE58H5p/kk9q9ibHv/sThjBUFB/BhUMyVow75gOubq/LJchEiuzdcUOTdN9EZsSZC9DI9ivRaYW9Wlc+XHWn2D4Rx9Fx+s5PLo6A0QrVdkewq1prMiV3EzBDxssGnxx1uQh9ViX/bIyQcNBvcT5P8BY1PLmOBI3DiAW3DKnmG+aXNzG3zq+2GsyWWUsaOT2/IVSjYQBm3bN8XPa+LxzJkMh7/IymhAo2UK4hl2cMq0/EO81c08zExq9Wq6oQ1n3Yw2mY/UhnM+Ot8ckFaIcr2KxVqmf5ccH24r41jnu62q7eN5HCMZ9
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6a10866-a026-4980-7b9b-08dbe67f31ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Nov 2023 08:36:57.1634
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4IHqizdJkhsiQveF60/wWRLgZOqVkPcPP2Rf9aEIINjLz47F8Chu4sqwTXEFc1kQBYXFIRWc8JZxM4q/F6m8sVWfI1NTzhQ5ndTPh9IR1nw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR04MB8768
 
-On 11/16/23 04:03, Shinichiro Kawasaki wrote:
-> On Nov 16, 2023 / 02:09, Shinichiro Kawasaki wrote:
->> On Nov 15, 2023 / 15:32, Hannes Reinecke wrote:
->>> On 11/15/23 15:18, Daniel Wagner wrote:
-> [...]
->>>> diff --git a/tests/nvme/045 b/tests/nvme/045
->>>> index 1eb1032a3b93..954f96bedd5a 100755
->>>> --- a/tests/nvme/045
->>>> +++ b/tests/nvme/045
->>>> @@ -17,6 +17,7 @@ requires() {
->>>>           _have_kernel_option NVME_TARGET_AUTH
->>>>           _require_nvme_trtype_is_fabrics
->>>>           _require_nvme_cli_auth
->>>> +       _require_kernel_nvme_feature dhchap_ctrl_secret
->>
->> The idea looked good and I checked /dev/nvme-fabrics content on kernel v6.7-
->> rc1. But unfortunately, I found that /dev/nvme-fabrics content is same
->> regardless of the kernel config NVME_HOST_AUTH. I checked opt_tokens in
->> drivers/nvme/host/fabrics.c, and saw that "dhchap_ctrl_secret=%s" is not
->> surrounded with #ifdef CONFIG_NVME_HOST_AUTH. Should we add the #ifdef?
->>
->> I tried to find out other differences that NVME_HOST_AUTH makes and visible
->> from userland. I found ctrl_dhchap_secret sysfs attribute of nvme devices is
->> in #ifdef CONFIG_HOST_AUTH. But to find the attribute, it looks "nvme connect"
->> needs to happen before-hand. So the attribute does not look usable. Hmm.
-> 
-> I rethought about the ctrl_dhchap_secret sysfs attribute, and came up with an
-> idea to set up nvme target without host key and do "nvme connect". (With host
-> key, nvme connect fails). Then check if the sysfs attributes exists or not.
-> 
-> I quickly created a patch below, and it looks working. The check creates a nvme
-> target and affects the test system, then I think it should be done in test()
-> rather than requires(). If there is no better idea, we can take this solution.
-> 
-> diff --git a/tests/nvme/041 b/tests/nvme/041
-> index d23f10a..28322e4 100755
-> --- a/tests/nvme/041
-> +++ b/tests/nvme/041
-> @@ -27,6 +27,10 @@ test() {
->   	local hostkey
->   	local ctrldev
->   
-> +	if ! _nvme_host_supports_dhchap_ctrl_secret; then
-> +		return 1
-> +	fi
-> +
->   	hostkey="$(nvme gen-dhchap-key -n ${def_subsysnqn} 2> /dev/null)"
->   	if [ -z "$hostkey" ] ; then
->   		echo "nvme gen-dhchap-key failed"
-> diff --git a/tests/nvme/rc b/tests/nvme/rc
-> index 1cff522..9e77d7a 100644
-> --- a/tests/nvme/rc
-> +++ b/tests/nvme/rc
-> @@ -1010,3 +1010,21 @@ _nvme_reset_ctrl() {
->   _nvme_delete_ctrl() {
->   	echo 1 > /sys/class/nvme/"$1"/delete_controller
->   }
-> +
-> +# Set up nvme target without hostkey and see if dhchap_ctrl_secret exists.
-> +_nvme_host_supports_dhchap_ctrl_secret() {
-> +	local ctrldev
-> +	local ret=0
-> +
-> +	_nvmet_target_setup --hostkey ""
-> +	_nvme_connect_subsys "${nvme_trtype}" "${def_subsysnqn}"
-> +	cdev=$(_find_nvme_dev "${def_subsysnqn}")
-> +	if [[ -z $cdev || ! -e "/sys/class/nvme/${cdev}/dhchap_ctrl_secret" ]]; then
-> +		ret=1
-> +		SKIP_REASONS+=("dhchap_ctrl_secret is not enabled (check CONFIG_NVME_HOST_AUTH)")
-> +	fi
-> +	_nvme_disconnect_subsys "${def_subsysnqn}" > /dev/null 2>&1
-> +	_nvmet_target_cleanup
-> +
-> +	return $ret
-> +}
+On Nov 16, 2023 / 08:32, Hannes Reinecke wrote:
+[...]
+> To step back a bit: why again do you want to run these tests on older
+> kernels? If authentication is not present it's _quite_ pointless running
+> them...
+> So what's the rationale?
 
-Errm. Not quite what I had in mind.
-
-To step back a bit: why again do you want to run these tests on older 
-kernels? If authentication is not present it's _quite_ pointless running 
-them...
-So what's the rationale?
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Ivo Totev, Andrew
-Myers, Andrew McDonald, Martje Boudien Moerman
-
+In this context, LTS kernel 6.1.y is in my mind as the older kernels. Accor=
+ding
+to the git log, nvme authentication was introduced with kernel v6.0. I have=
+ just
+built the kernel v6.1.62 and confirmed the it supports nvme authentication
+(CONFIG_NVME_AUTH) and the test cases from nvme/041 to nvme/045 passes on i=
+t.
 
