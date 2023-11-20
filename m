@@ -1,84 +1,101 @@
-Return-Path: <linux-block+bounces-262-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-266-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C6847F0A2D
-	for <lists+linux-block@lfdr.de>; Mon, 20 Nov 2023 01:52:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 422BE7F0AA2
+	for <lists+linux-block@lfdr.de>; Mon, 20 Nov 2023 03:49:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 22389B207C1
-	for <lists+linux-block@lfdr.de>; Mon, 20 Nov 2023 00:52:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5A0D1F2168A
+	for <lists+linux-block@lfdr.de>; Mon, 20 Nov 2023 02:49:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7A3F17FF;
-	Mon, 20 Nov 2023 00:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 382A4110A;
+	Mon, 20 Nov 2023 02:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGpR3ZM1"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="o0ZAtkhx"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F99107
-	for <linux-block@vger.kernel.org>; Sun, 19 Nov 2023 16:52:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700441519;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pg23Djh+yfVbJar8GNNdsoCwV8dqaP5vWE9OQixE4gw=;
-	b=UGpR3ZM1jypWsUYlznOO/Pw536mWNf4k41L+F3n3I9zgPFIQvbgYGESN/KWNkcWzYsYHeq
-	redWIhopKStbSjzPsxEcE25E5Mqs5fsFdKtW4TwaDOYUKBdJQNBbt/yiScbQsPWrEGUQG5
-	tz4jXiuGn5PCeNmjo/8nRwnrAUtxTAE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-453-oCQtljgZNkOU6qZrb7SqaA-1; Sun, 19 Nov 2023 19:51:56 -0500
-X-MC-Unique: oCQtljgZNkOU6qZrb7SqaA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 93B2B101A529;
-	Mon, 20 Nov 2023 00:51:56 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 054E3492BE0;
-	Mon, 20 Nov 2023 00:51:53 +0000 (UTC)
-Date: Mon, 20 Nov 2023 08:51:48 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH 3/3] blk-cgroup: bypass blkcg_deactivate_policy after
- destroying
-Message-ID: <ZVqtpGLIvsnlWEpF@fedora>
-References: <20231117023527.3188627-1-ming.lei@redhat.com>
- <20231117023527.3188627-4-ming.lei@redhat.com>
- <ZVoiaucRAsPkN6FQ@slm.duckdns.org>
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6E513A
+	for <linux-block@vger.kernel.org>; Sun, 19 Nov 2023 18:49:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1700448574; x=1731984574;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EJjx07eaa3eOPS2MmLCRFA0098DB9H/f5+N2JcKQMLo=;
+  b=o0ZAtkhxAksmCbbP3I/svrhexkSPBd9hDLdnjOKZHV6cbYMfY58tUMHN
+   VsEoX9Yih07de2ffkS5g4t7QGuYF2qXbC1MczRjju/sphdnlpnKJRYIpt
+   DJBU5qBcE98trU6SHZTBgAjqKf3lqsfX00kuM7moObd1bZYtO59YwRWGQ
+   SV/8cfE+1dP9h7tu8+ZCeFlaAt3b+lgbos/myF+TT6QdtnbZXugxs6KnD
+   j8mYaJriSMtuVAE3ZPtsa/ZbvI/QEI7KU/Hz90FaiB+Uo7Lm+BErAbmnt
+   9aDUgxQlbWmwbF0I1pIkXmcPpDV5DoEF+9uBB0sJXfqL/Bgy1SykKcIkh
+   w==;
+X-CSE-ConnectionGUID: X9m5X8LXQ9aAbzI9kCDvVg==
+X-CSE-MsgGUID: QWEx3uLCTOiVPo6HC5X9CA==
+X-IronPort-AV: E=Sophos;i="6.04,212,1695657600"; 
+   d="scan'208";a="2825571"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Nov 2023 10:49:33 +0800
+IronPort-SDR: 07S6t6SkyyiM/aeebjh/gVJJOIJHScAXigAuwxcqyPjaLq4Pu3iCYWTDsLpE65Bv0v9QJToTbB
+ 9T0zCilOqfu5ksKCoA+UtV93bWHDCADvT+V11zQUlmdlTwsN7+XCRNAkUncFZrcPyZtpJ1M0bh
+ 8QuSqwn7jbp8JQ2R+lsFCuxtvDB3b96DFtGGzyf4IUJuaTmow60ZiDHS45pCUGNeaXo3BN1pZq
+ yBQtbKgR1nJc3v66zYlNMOPRDACJUuYFBzYkzYz+Odm12tdcsPwaOTCeT6QNUlyWJ0OdXtLeTT
+ AOw=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Nov 2023 17:55:14 -0800
+IronPort-SDR: wnUDoEhcIpZYbVJ9SHvH8Lg0lW3RA+bgddTHpZO5ooRQ1nVtFbemp0FXh5NkNksHOWIq4egR7/
+ NCUOXD2DTray/rFGM2rQ4DL9r5e3o9f93e0M1HjGJ56aHqBRHkcL0lPegBHpOJf0VBbtN1ccoa
+ fUhOpAOhZVo3yBwBL/vKPvKp4kdUA7o1V+cF6RRXXmdcp2vi45mp9x2OghPtdDmPV+KZFEjB5R
+ FkXrPjI3cqpMJM4JkFaFvpo8IKkzbPUicF4Mm8uD79I/I/GpSu5YGuOyvsKTcQ18BZnwrX7gzF
+ 3AM=
+WDCIronportException: Internal
+Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
+  by uls-op-cesaip02.wdc.com with ESMTP; 19 Nov 2023 18:49:32 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org
+Cc: Yi Zhang <yi.zhang@redhat.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Daniel Wagner <dwagern@suse.de>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests v2 0/1] nvme: require kernel config NVME_HOST_AUTH
+Date: Mon, 20 Nov 2023 11:49:30 +0900
+Message-ID: <20231120024931.3076984-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZVoiaucRAsPkN6FQ@slm.duckdns.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Content-Transfer-Encoding: 8bit
 
-On Sun, Nov 19, 2023 at 04:57:46AM -1000, Tejun Heo wrote:
-> Hello, Ming.
-> 
-> On Fri, Nov 17, 2023 at 10:35:24AM +0800, Ming Lei wrote:
-> > blkcg_deactivate_policy() can be called after blkg_destroy_all()
-> > returns, and it isn't necessary since blkg_destroy_all has covered
-> > policy deactivation.
-> 
-> Does this actually affect anything? This would matter iff a policy is
-> deactivated for the queue between blkg_destroy_all() and the rest of the
-> queue destruction, right?
+Yi Zhang reported test cases for nvme authentication feature fail with
+linux-block/for-next kernel [1]. I observed the failures with kernel v6.7-rc1.
+Chris Leech pointed out that the test cases require kernel config option
+NVME_HOST_AUTH. This fix patch modifies the test cases to ensure the
+requirement. I added a Reviewed-by tag by Daneil per record on GitHub [2].
 
-Yeah, it is true actually for throttle code.
+[1] https://lore.kernel.org/linux-block/CAHj4cs8yZ4-BXqTK4W0UsPpmc2ctCD=_mYiwuAuvcmgS3+KJ8g@mail.gmail.com/
+[2] https://github.com/kawasaki/blktests/commit/81110ce8056f16716d09774e6f237ea0393579e1
 
+Changes from v1:
+* Refer nvme-fabrics sysfs attribute to not rely on kernel version
 
+Shin'ichiro Kawasaki (1):
+  nvme/{041,042,043,044,045}: check dhchap_ctrl_secret support by
+    nvme-fabrics
 
-thanks,
-Ming
+ tests/nvme/041 |  1 +
+ tests/nvme/042 |  1 +
+ tests/nvme/043 |  1 +
+ tests/nvme/044 |  1 +
+ tests/nvme/045 |  1 +
+ tests/nvme/rc  | 16 ++++++++++++++++
+ 6 files changed, 21 insertions(+)
+
+-- 
+2.41.0
 
 
