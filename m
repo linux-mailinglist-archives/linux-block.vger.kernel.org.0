@@ -1,166 +1,144 @@
-Return-Path: <linux-block+bounces-390-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-392-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05F0D7F548C
-	for <lists+linux-block@lfdr.de>; Thu, 23 Nov 2023 00:28:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62A8A7F565C
+	for <lists+linux-block@lfdr.de>; Thu, 23 Nov 2023 03:19:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADD211F20CD4
-	for <lists+linux-block@lfdr.de>; Wed, 22 Nov 2023 23:28:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEA67280E20
+	for <lists+linux-block@lfdr.de>; Thu, 23 Nov 2023 02:19:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489A721A07;
-	Wed, 22 Nov 2023 23:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C0A6440F;
+	Thu, 23 Nov 2023 02:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q8FMhX4D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TE8jrV7z"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F854110
-	for <linux-block@vger.kernel.org>; Wed, 22 Nov 2023 15:28:28 -0800 (PST)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1700695706;
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 912D619D
+	for <linux-block@vger.kernel.org>; Wed, 22 Nov 2023 18:19:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700705983;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wdxKnJ2FmIDaRAshfSUcmrGs+dMUGZeUTYVCPDJSnpk=;
-	b=q8FMhX4D68JVMtBwOlZC8K7WTFcuV7dFt6Tdp+yJPOCFEpENVPE1X/9EsC7aj4rSAKviNs
-	YXezFsQOaw4edYpaUeU3NRGO/ewnZZTbyesH4EgJzwvsM/xIaMGMlYZkbPYW7OSL+/FYyJ
-	ghl5q/SL7SVDzkrhNFrysTuy3zB75cs=
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: axboe@kernel.dk,
-	linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	Ming Lei <ming.lei@redhat.com>
-Subject: [PATCH 3/3] block: Add documentation for bio iterator macros
-Date: Wed, 22 Nov 2023 18:28:15 -0500
-Message-ID: <20231122232818.178256-3-kent.overstreet@linux.dev>
-In-Reply-To: <20231122232818.178256-1-kent.overstreet@linux.dev>
-References: <20231122232818.178256-1-kent.overstreet@linux.dev>
+	bh=k2aZzryTXfwVm4bHgxcYkBHTBkYi7Y8xjXsoz4m2WKU=;
+	b=TE8jrV7z8BBzHMyf7v5sLEbf3PneAzCvrLT8rTaouGbzkTKOuTv2rtQMvhbYb/g9JSa/i1
+	D09+S9W9WDn0xbsPNRjB0KS6vys++0wY/13rZXnqRgZxAw3s7sFd8QKV5VsnNo5mt6Gw44
+	qw8LBCeKKcGtRCScDOuZDt3YdIb3uxY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-678-_OvJFeQrOSu_YCCI76BTjg-1; Wed, 22 Nov 2023 21:19:40 -0500
+X-MC-Unique: _OvJFeQrOSu_YCCI76BTjg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 47A3E80D722;
+	Thu, 23 Nov 2023 02:19:40 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.3])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D79A492BFA;
+	Thu, 23 Nov 2023 02:19:34 +0000 (UTC)
+Date: Thu, 23 Nov 2023 10:19:30 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v3 2/3] block: introduce new field bd_flags in
+ block_device
+Message-ID: <ZV62svvu5MSUGoPD@fedora>
+References: <20231122103103.1104589-1-yukuai1@huaweicloud.com>
+ <20231122103103.1104589-3-yukuai1@huaweicloud.com>
+ <ZV2tuLCH2cPXxQ30@infradead.org>
+ <ZV2xlDgkLpPeUhHN@fedora>
+ <ZV2zbTPTZ0qC2F1U@infradead.org>
+ <ZV25nGGMYQuyclK6@fedora>
+ <ZV34d/hI12pKFUzj@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZV34d/hI12pKFUzj@infradead.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-We've now got 3x2 interfaces for iterating over bios: by page, by bvec,
-or by folio, and variants that iterate over what bi_iter points to, or
-the entire bio as created by the filesystem/originator.
+On Wed, Nov 22, 2023 at 04:47:51AM -0800, Christoph Hellwig wrote:
+> On Wed, Nov 22, 2023 at 04:19:40PM +0800, Ming Lei wrote:
+> > On Tue, Nov 21, 2023 at 11:53:17PM -0800, Christoph Hellwig wrote:
+> > > On Wed, Nov 22, 2023 at 03:45:24PM +0800, Ming Lei wrote:
+> > > > All the existed 'bool' flags are not atomic RW, so I think it isn't
+> > > > necessary to define 'bd_flags' as 'unsigned long' for replacing them.
+> > > 
+> > > So because the old code wasn't correct we'll never bother?  The new
+> > > flag and the new placement certainly make this more critical as well.
+> > 
+> > Can you explain why the old code was wrong?
+> > 
+> > 1) ->bd_read_only and ->bd_make_it_fail
+> > 
+> > - set from userspace interface(ioctl or sysfs)
+> > - check in IO code path
+> > 
+> > so changing it into atomic bit doesn't make difference from user
+> > viewpoint.
+> 
+> > 
+> > 2) ->bd_write_holder
+> > 
+> > disk->open_mutex is held for read & write this flag
+> > 
+> > 3) ->bd_has_submit_bio
+> > 
+> > This flag is setup as oneshot before adding disk, and check in FS io code
+> > path.
+> 
+> On architectures that can't do byte-level atomics all three can corrupt
+> each other
 
-This adds more detailed kerneldoc comments for each variant.
+Yeah, C/C++ doesn't provide such guarantee, but many modern ARCHs [1]
+guarantees that RW on naturally aligned type is atomic.
 
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: linux-block@vger.kernel.org
----
- include/linux/bio.h | 54 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
+I verified the point on x86/arm64/ppc64le by the following code, and
+all three STOREs are done in single instruction.
 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index eaaf7e5f0d54..21524a953f6e 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -103,9 +103,14 @@ static inline void bio_iter_all_advance(const struct bio *bio,
- 		((bvl = bio_iter_all_peek(bio, &iter)), true);		\
- 	     bio_iter_all_advance((bio), &iter, bvl.bv_len))
- 
--/*
-- * drivers should _never_ use the all version - the bio may have been split
-- * before it got to the driver and the driver won't own all of it
-+/**
-+ * bio_for_each_segment_all - iterate over single pages in a bio
-+ *
-+ * Like other _all versions, this is for the filesystem, or the owner/creator of
-+ * a bio; it iterates over the original contents of a bio.
-+ *
-+ * Drivers that are working with bios that were submitted to them should not use
-+ * the _all version.
-  */
- #define bio_for_each_segment_all(bvl, bio, iter)			\
- 	for (bvec_iter_all_init(&iter);					\
-@@ -166,6 +171,13 @@ static inline void bio_advance(struct bio *bio, unsigned int nbytes)
- 		((bvl = bio_iter_iovec((bio), (iter))), 1);		\
- 	     bio_advance_iter_single((bio), &(iter), (bvl).bv_len))
- 
-+/**
-+ * bio_for_each_segment - iterate over single pages in a bio
-+ *
-+ * Like other non-_all versions, this iterates over what bio->bi_iter currently
-+ * points to. This version is for drivers, where the bio may have previously
-+ * been split or cloned.
-+ */
- #define bio_for_each_segment(bvl, bio, iter)				\
- 	__bio_for_each_segment(bvl, bio, iter, (bio)->bi_iter)
- 
-@@ -202,6 +214,13 @@ static inline struct folio_vec bio_iter_iovec_folio(struct bio *bio,
- 		((bvl = bio_iter_iovec_folio((bio), (iter))), 1);	\
- 	     bio_advance_iter_single((bio), &(iter), (bvl).fv_len))
- 
-+/**
-+ * bio_for_each_folio - iterate over folios within a bio
-+ *
-+ * Like other non-_all versions, this iterates over what bio->bi_iter currently
-+ * points to. This version is for drivers, where the bio may have previously
-+ * been split or cloned.
-+ */
- #define bio_for_each_folio(bvl, bio, iter)				\
- 	__bio_for_each_folio(bvl, bio, iter, (bio)->bi_iter)
- 
-@@ -211,13 +230,30 @@ static inline struct folio_vec bio_iter_iovec_folio(struct bio *bio,
- 		((bvl = mp_bvec_iter_bvec((bio)->bi_io_vec, (iter))), 1); \
- 	     bio_advance_iter_single((bio), &(iter), (bvl).bv_len))
- 
--/* iterate over multi-page bvec */
-+/**
-+ * bio_for_each_bvec - iterate over bvecs within a bio
-+ *
-+ * This version iterates over entire bio_vecs, which will be a range of
-+ * contiguous pages.
-+ *
-+ * Like other non-_all versions, this iterates over what bio->bi_iter currently
-+ * points to. This version is for drivers, where the bio may have previously
-+ * been split or cloned.
-+ */
- #define bio_for_each_bvec(bvl, bio, iter)			\
- 	__bio_for_each_bvec(bvl, bio, iter, (bio)->bi_iter)
- 
- /*
-- * Iterate over all multi-page bvecs. Drivers shouldn't use this version for the
-- * same reasons as bio_for_each_segment_all().
-+ * bio_for_each_bvec_all - iterate over bvecs within a bio
-+ *
-+ * This version iterates over entire bio_vecs, which will be a range of
-+ * contiguous pages.
-+ *
-+ * Like other _all versions, this is for the filesystem, or the owner/creator of
-+ * a bio; it iterates over the original contents of a bio.
-+ *
-+ * Drivers that are working with bios that were submitted to them should not use
-+ * the _all version.
-  */
- #define bio_for_each_bvec_all(bvl, bio, i)		\
- 	for (i = 0, bvl = bio_first_bvec_all(bio);	\
-@@ -328,6 +364,12 @@ static inline struct folio_vec bio_folio_iter_all_peek(const struct bio *bio,
-  * bio_for_each_folio_all - Iterate over each folio in a bio.
-  * @fi: struct bio_folio_iter_all which is updated for each folio.
-  * @bio: struct bio to iterate over.
-+ *
-+ * Like other _all versions, this is for the filesystem, or the owner/creator of
-+ * a bio; it iterates over the original contents of a bio.
-+ *
-+ * Drivers that are working with bios that were submitted to them should not use
-+ * the _all version.
-  */
- #define bio_for_each_folio_all(fv, bio, iter)				\
- 	for (bvec_iter_all_init(&iter);					\
--- 
-2.42.0
+	struct data {
+		int b;
+		char a;
+		char a2;
+		char a3;
+		char a4;
+	} __attribute__((aligned(8)));
+	
+	void atomic_test()
+	{
+		struct data d;
+	
+		d.b = 1;
+		d.a = 2;
+		d.a3 = 3;
+	
+		printf("%d %d %d\n", d.b, d.a, d.a3);
+	}
+
+[1] https://preshing.com/20130618/atomic-vs-non-atomic-operations/
+
+> and even worse bd_partno.  Granted that is only alpha these
+> days IIRC, but it's still buggy.
+
+bd_has_submit_bio and bd_partno can be thought as read only, and the
+two can be corrupted?
+
+bd_dev may have similar trouble with bd_partno for ARCHs which don't
+provide atomic RW on naturally aligned int.
+
+
+Thanks,
+Ming
 
 
