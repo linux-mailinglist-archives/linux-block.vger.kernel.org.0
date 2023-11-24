@@ -1,373 +1,168 @@
-Return-Path: <linux-block+bounces-407-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-409-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E3E17F6A88
-	for <lists+linux-block@lfdr.de>; Fri, 24 Nov 2023 03:06:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A7157F6ACD
+	for <lists+linux-block@lfdr.de>; Fri, 24 Nov 2023 04:05:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD581B20EC0
-	for <lists+linux-block@lfdr.de>; Fri, 24 Nov 2023 02:06:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F8011C2098D
+	for <lists+linux-block@lfdr.de>; Fri, 24 Nov 2023 03:05:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05110A55;
-	Fri, 24 Nov 2023 02:06:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0658A3D67;
+	Fri, 24 Nov 2023 03:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dkw9w/l/"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="tq5uyujU"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4B4D6C
-	for <linux-block@vger.kernel.org>; Thu, 23 Nov 2023 18:06:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700791568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rQnzBTj/z5aPPqyxUu82KqapSq/NYxk1EmzIkkjx9o8=;
-	b=Dkw9w/l/ETPaM9ldHUXXJUADp3OANuuLXAIMi6mhjXPgWA4+QjSI9/vHOvbrRdjT1pPT4+
-	XGMrlbQUpRXDVliFG6y6EzzEol/bk5XipS2MIyVn9zH9xnC6L/JPUHAcM5JlNSAGSntClQ
-	7ZcJ2IAiipy4slBQuBu6RI3a3Rt9N3Y=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-JXD-KZH4P42NL2KHtynaEw-1; Thu,
- 23 Nov 2023 21:06:02 -0500
-X-MC-Unique: JXD-KZH4P42NL2KHtynaEw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E71731C060C6;
-	Fri, 24 Nov 2023 02:06:01 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.3])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D229B1C060B0;
-	Fri, 24 Nov 2023 02:05:57 +0000 (UTC)
-Date: Fri, 24 Nov 2023 10:05:53 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, joshi.k@samsung.com
-Subject: Re: [PATCH 1/3] io_uring: split out cmd api into a separate header
-Message-ID: <ZWAFAex/QRx8ODZe@fedora>
-References: <cover.1700668641.git.asml.silence@gmail.com>
- <547e56560b97cd66f00bfc5b53db24f2fa1a8852.1700668641.git.asml.silence@gmail.com>
- <ZV67ozp4yizgWYYg@fedora>
- <c204c03a-785d-4872-a8c8-58d0cdc708d6@gmail.com>
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2048.outbound.protection.outlook.com [40.107.6.48])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC88D43;
+	Thu, 23 Nov 2023 19:05:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HEbWaRxp5ms+DrgR/u21V4YNSnKR2GorfXHnNsQVt/kdFC0ZAJpUbIx6Fcf/QX3PwOc7AFZ4UcC17iYUFRnvhPDpdduYAbEDetY0fTLHMLDqn3mIk8x8Kp3JgNys1Id//HkDE8wrDfxpRdlC7X02xwr2V1R72k1tjfl1r9KmbpJn9JUHKnNAes9PbbyxmBnRDNQH2lhHgx4kArsophUd03KXEWpHq4a96VzBm9cKHw0grwwVd6So9rVfGSiIezeL/jOlyJ6imeflZU8NO++pXGd6BNZg6LVU8i/x6hynA/5dxsBnRi1V64O4u57zjY91zCxLh4dHCaVx1WGTDFpW/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pEV7pXTpShHiKKEd0Z55xc3LMiRvWs8kvXcWdqoecVM=;
+ b=K42llC8Vt3CKCaYZsaKvFK5r2ReO5ovAG5CF23uT5AkbhXJgiO/UejkrZo9qS5geFW/gN7t7hncLumaZx4UgJ98QItY7habOgw2LeLrM4SPCfKHqq8qhyfoOP1OPB4vuQuN7FmwASU3MDrBpgemXZocbPd/KGSMH2iz2SAV9OsV74IPJhezI8eVGWdHLwBGe9wnsXFZaKrSVxppeOKQYsUZA6OKQMJVZ9oxbkr2/JD6ybfx9eo37pAaYoKDbjIi4HNn+qM0IoYfK4uc3RsxdNnuzX4H2kQf2vxzlAEnmV7BQXNk7UVwulkV2tSzn8bhMeurowJZpP2xXqu3rCr+UOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pEV7pXTpShHiKKEd0Z55xc3LMiRvWs8kvXcWdqoecVM=;
+ b=tq5uyujUE56pcVuogNPrKaEI+ThRbOpfOgy02/Y/u6B+WbjVarkfIDMvhCwcpdGi5KoIWfXtvsuUQDvDfgOtoK/D6Ck49GoC9Rp8BaV6FkUwGmgr7vV5Y878Lb65b6QVOyh95GXXNbtp1qt7PSzKmqU7jAcso562gzCwZ6+e/XsKqcJwQSQQ1TBkfbh9Nbdw4SzbgDO99GdbpztA8oI6s1r5w2ij23K9LW6h+IIneWF3cz6QewOJlcstIrs86ebJWm2MGuXFXirlpi3NzYlkpw5QCAfHddeGiWVAyN68Oeye2pgn5TIPjkzs7dEmUb0hq6DMlit17kY/Dpkg/qcdVA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from AS8PR04MB8199.eurprd04.prod.outlook.com (2603:10a6:20b:3f6::21)
+ by PA4PR04MB9687.eurprd04.prod.outlook.com (2603:10a6:102:270::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.13; Fri, 24 Nov
+ 2023 03:05:47 +0000
+Received: from AS8PR04MB8199.eurprd04.prod.outlook.com
+ ([fe80::9d39:5718:5401:764d]) by AS8PR04MB8199.eurprd04.prod.outlook.com
+ ([fe80::9d39:5718:5401:764d%5]) with mapi id 15.20.7046.012; Fri, 24 Nov 2023
+ 03:05:46 +0000
+From: Wei Gao <wegao@suse.com>
+To: axboe@kernel.dk,
+	dlemoal@kernel.org,
+	hare@suse.de,
+	hch@lst.de,
+	niklas.cassel@wdc.com,
+	martin.petersen@oracle.com,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Wei Gao <wegao@suse.com>
+Subject: [PATCH v1] block: ioprio: Fix ioprio_check_cap() validation logic
+Date: Thu, 23 Nov 2023 22:05:25 -0500
+Message-Id: <20231124030525.31426-1-wegao@suse.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: FR2P281CA0076.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9a::18) To AS8PR04MB8199.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3f6::21)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c204c03a-785d-4872-a8c8-58d0cdc708d6@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8199:EE_|PA4PR04MB9687:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c01b3e4-6573-4a56-5abb-08dbec9a40ce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	1Wx2AlTvfVFi/quU1i+UPPt0KvdQii2Qa4O/R8LHB1gdRN2RoECkvkf6uNzL0v4UHTGNKwvaMl6lzcxZqW95gbZl5SqxZwEguG3LMrCGQivcmlhHuovX2nNDPZHt7kDnv9GvNRL61t5+YguxLuXlaCmniYBSgmyt7ACc1ldoTGWywspPtKyyFk70TTK78H73vmLrY1ohh9xshrVsRVt4jEQI4iVJtBkf0FOApdNZCNtiJabh/tqz65RXkfmGEULJ3UvfLMvesahSkOtNNa/gpxunLeiQuPgqIT4y5cvsgT+U6k5YqGJU6pp1uuMPi4mOb6er1ufZ2tW5UPhC3HdHBnm7k1EwvqqVmp9ne39F9zjpH+5KvdXnkJOgWfBl51qk09k0UPkE+GfV674AKokODurlSlPVGiAM9Atq1VmtQfESE+rd/UEBKL1SNdBP6KN8xuRkPDaWLx9uahrdHDFT6Hj8flfjTbCf6W6h3HQMPtXWCea82xBJ2lLFpEFnl5rCWLgKnB5N0FW/F5nGt27fRAEAB3vlELjf5w3qxn4OdLlurXMsxsJjdACs9UpXsPS0
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8199.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(396003)(376002)(346002)(136003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(38100700002)(478600001)(6666004)(6486002)(2616005)(5660300002)(86362001)(2906002)(107886003)(1076003)(4326008)(26005)(66476007)(41300700001)(66556008)(8676002)(8936002)(83380400001)(316002)(66946007)(6506007)(6512007)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gWZyhRUAF/R3SmyP3v6SaeuC1cvBuEYNNvAY2q4wXsALyLWkNP5lxXR0OHRZ?=
+ =?us-ascii?Q?QVbNSUQd3gM91KKlbybSQdHmtHmByyD4qmLWSA+kELeeKc2snuBpRe8Jgl8l?=
+ =?us-ascii?Q?4u4INRmRi0IZ+7ZQhGoNRNHSCKR2vkoTeDsmGJEAv+ghw2Qrk5g55rv1BR7z?=
+ =?us-ascii?Q?ByVE7SSsW6VorYw4TNzgDIQSsjNRHeoOzmFZUoDwX4guXHCBnNupJezG/Ky2?=
+ =?us-ascii?Q?gRhcW9rnLpVRyGn1vWFDyrVM0b8YlGIwglpbsqS+rBVmONRkOS5l3jX29cT0?=
+ =?us-ascii?Q?JiBL5t9py2m30Ms8w6Bg06A8ZQFVc2TRbma1hwuKHwxhKLK+66b/P7Ox6Hp0?=
+ =?us-ascii?Q?BSaqPYErZ5ibYHlk5DiRnmXTC66fv452RyGEObKl+G3KoiSHpa/oI2tOr++4?=
+ =?us-ascii?Q?E3XV/LXgBG3PY9y5MlXx5/NleOUBGHCf4Fptu0cPER48ZMn2unubwf5E6vo2?=
+ =?us-ascii?Q?L29J4CXuhkV4cHfgFUPGJx0RgXHJiB3CH9E2PQPUMEVb2JCRX6ZSTa1MLgtB?=
+ =?us-ascii?Q?cNTwYH++q725FCE9AYAWef0c0B6UmERAMny3aTaWbly6QPDpCSGr1yX46H1R?=
+ =?us-ascii?Q?CqKrM9jDFCc3JuzjCL7o+T/N9Y5RjkxePbLZQsy6umy6Vt/JGBAS26hEXwXb?=
+ =?us-ascii?Q?M0vMVYgtCq5senJj3XJeekhcJRNSyvrpPzWP02Gl7XHej57vqLIJKV/kfi6K?=
+ =?us-ascii?Q?Z0fecYQVT6QRCnnVgBCzbRsamFfA4hdmtmh6uOdYO+e52dl7ogn5QzYD/wSN?=
+ =?us-ascii?Q?lRgkLjROv/d1TmeCORG/9DbULl7pvrMvsF4eSQNHizTRqRtbQhFmmG5AYkUn?=
+ =?us-ascii?Q?vcxWvqH4YTfD0/7k9g2nkV9HCg+kvA0gb9K6qun/TuB33PVrm0wQKmYdQ0kH?=
+ =?us-ascii?Q?Os0Nq6EuQmDYW1B4ZSj7woXQDUVTUEUlXiOt6P+O/ED+dKihSnGR310VidgU?=
+ =?us-ascii?Q?vP7YWT1GihFr7hS9wtmslzyKI93m4p3NUWE628UU0qrfqFQsKw1jW89DGVQj?=
+ =?us-ascii?Q?sr5BR2/xkULTy5lranW/UVDMBzlmWE20n6+P/UmP0VXIH1yDMGGS9tpvYiIn?=
+ =?us-ascii?Q?lbx4MIrrZHSeaWJImEKVAEqCrCpjrXPWOJZ6tBX2v/lBhbaGsYG857fVylAe?=
+ =?us-ascii?Q?X87xYTlhubVtBymZcDuOVGjE0wifxbVUsgrhURt0hLARd4lUmFmVpUNhKwcm?=
+ =?us-ascii?Q?KRKGMupZjWezdU5gtdX8NqIscBy94i5MrxAn3F4zDj5lMwFc+jq1UL3zacNB?=
+ =?us-ascii?Q?2+9K1Xjxi1ZRxwvfg1XH9q6WAQFSFxAp57LmUwwboIt12kNIhGdUMYvQXeob?=
+ =?us-ascii?Q?647kBYe+kw5gV0vloWa3mu8T+D9WWef2Dl2BKABdSFavw9VzgQCrbYk5xdKy?=
+ =?us-ascii?Q?g89Uctvr+wzW8/1O6yhuLDbJbc9+p0fUNyAPXryYLe/TgrjCynEBzrw32dEk?=
+ =?us-ascii?Q?76KmKVUcX2aMaiDNT07yHSlIWOZ8g8l1me1iYYu2RE6tTynvljk5U06kojj8?=
+ =?us-ascii?Q?C5311HcUSFg7r9l0ndj6uxtEifOJRwCq+DVS1HZQtNYzeeLJoHwrqlZn2+zs?=
+ =?us-ascii?Q?GSj/O5EhQ06esmrKP6k=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c01b3e4-6573-4a56-5abb-08dbec9a40ce
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8199.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2023 03:05:46.8152
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oBhBOnGiq+Mn3YGwrb2zgzsuobq13ZcIG3/3hC4AGvVc8nNHl8xhoIt40HmVLGpa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9687
 
-On Thu, Nov 23, 2023 at 11:16:33AM +0000, Pavel Begunkov wrote:
-> On 11/23/23 02:40, Ming Lei wrote:
-> > On Wed, Nov 22, 2023 at 04:01:09PM +0000, Pavel Begunkov wrote:
-> > > linux/io_uring.h is slowly becoming a rubbish bin where we put
-> > > anything exposed to other subsystems. For instance, the task exit
-> > > hooks and io_uring cmd infra are completely orthogonal and don't need
-> > > each other's definitions. Start cleaning it up by splitting out all
-> > > command bits into a new header file.
-> > > 
-> > > Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> > > ---
-> > >   drivers/block/ublk_drv.c       |  2 +-
-> > >   drivers/nvme/host/ioctl.c      |  2 +-
-> > >   include/linux/io_uring.h       | 89 +---------------------------------
-> > >   include/linux/io_uring/cmd.h   | 81 +++++++++++++++++++++++++++++++
-> > >   include/linux/io_uring_types.h | 20 ++++++++
-> > >   io_uring/io_uring.c            |  1 +
-> > >   io_uring/rw.c                  |  2 +-
-> > >   io_uring/uring_cmd.c           |  2 +-
-> > >   8 files changed, 107 insertions(+), 92 deletions(-)
-> > >   create mode 100644 include/linux/io_uring/cmd.h
-> > > 
-> > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > > index 83600b45e12a..909377068a87 100644
-> > > --- a/drivers/block/ublk_drv.c
-> > > +++ b/drivers/block/ublk_drv.c
-> > > @@ -36,7 +36,7 @@
-> > >   #include <linux/sched/mm.h>
-> > >   #include <linux/uaccess.h>
-> > >   #include <linux/cdev.h>
-> > > -#include <linux/io_uring.h>
-> > > +#include <linux/io_uring/cmd.h>
-> > >   #include <linux/blk-mq.h>
-> > >   #include <linux/delay.h>
-> > >   #include <linux/mm.h>
-> > > diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-> > > index 529b9954d2b8..6864a6eeee93 100644
-> > > --- a/drivers/nvme/host/ioctl.c
-> > > +++ b/drivers/nvme/host/ioctl.c
-> > > @@ -5,7 +5,7 @@
-> > >    */
-> > >   #include <linux/ptrace.h>	/* for force_successful_syscall_return */
-> > >   #include <linux/nvme_ioctl.h>
-> > > -#include <linux/io_uring.h>
-> > > +#include <linux/io_uring/cmd.h>
-> > >   #include "nvme.h"
-> > >   enum {
-> > > diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-> > > index aefb73eeeebf..d8fc93492dc5 100644
-> > > --- a/include/linux/io_uring.h
-> > > +++ b/include/linux/io_uring.h
-> > > @@ -6,71 +6,13 @@
-> > >   #include <linux/xarray.h>
-> > >   #include <uapi/linux/io_uring.h>
-> > > -enum io_uring_cmd_flags {
-> > > -	IO_URING_F_COMPLETE_DEFER	= 1,
-> > > -	IO_URING_F_UNLOCKED		= 2,
-> > > -	/* the request is executed from poll, it should not be freed */
-> > > -	IO_URING_F_MULTISHOT		= 4,
-> > > -	/* executed by io-wq */
-> > > -	IO_URING_F_IOWQ			= 8,
-> > > -	/* int's last bit, sign checks are usually faster than a bit test */
-> > > -	IO_URING_F_NONBLOCK		= INT_MIN,
-> > > -
-> > > -	/* ctx state flags, for URING_CMD */
-> > > -	IO_URING_F_SQE128		= (1 << 8),
-> > > -	IO_URING_F_CQE32		= (1 << 9),
-> > > -	IO_URING_F_IOPOLL		= (1 << 10),
-> > > -
-> > > -	/* set when uring wants to cancel a previously issued command */
-> > > -	IO_URING_F_CANCEL		= (1 << 11),
-> > > -	IO_URING_F_COMPAT		= (1 << 12),
-> > > -};
-> > > -
-> > > -/* only top 8 bits of sqe->uring_cmd_flags for kernel internal use */
-> > > -#define IORING_URING_CMD_CANCELABLE	(1U << 30)
-> > > -#define IORING_URING_CMD_POLLED		(1U << 31)
-> > > -
-> > > -struct io_uring_cmd {
-> > > -	struct file	*file;
-> > > -	const struct io_uring_sqe *sqe;
-> > > -	union {
-> > > -		/* callback to defer completions to task context */
-> > > -		void (*task_work_cb)(struct io_uring_cmd *cmd, unsigned);
-> > > -		/* used for polled completion */
-> > > -		void *cookie;
-> > > -	};
-> > > -	u32		cmd_op;
-> > > -	u32		flags;
-> > > -	u8		pdu[32]; /* available inline for free use */
-> > > -};
-> > > -
-> > > -static inline const void *io_uring_sqe_cmd(const struct io_uring_sqe *sqe)
-> > > -{
-> > > -	return sqe->cmd;
-> > > -}
-> > > -
-> > >   #if defined(CONFIG_IO_URING)
-> > > -int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
-> > > -			      struct iov_iter *iter, void *ioucmd);
-> > > -void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret, ssize_t res2,
-> > > -			unsigned issue_flags);
-> > >   struct sock *io_uring_get_socket(struct file *file);
-> > >   void __io_uring_cancel(bool cancel_all);
-> > >   void __io_uring_free(struct task_struct *tsk);
-> > >   void io_uring_unreg_ringfd(void);
-> > >   const char *io_uring_get_opcode(u8 opcode);
-> > > -void __io_uring_cmd_do_in_task(struct io_uring_cmd *ioucmd,
-> > > -			    void (*task_work_cb)(struct io_uring_cmd *, unsigned),
-> > > -			    unsigned flags);
-> > > -/* users should follow semantics of IOU_F_TWQ_LAZY_WAKE */
-> > > -void io_uring_cmd_do_in_task_lazy(struct io_uring_cmd *ioucmd,
-> > > -			void (*task_work_cb)(struct io_uring_cmd *, unsigned));
-> > > -
-> > > -static inline void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
-> > > -			void (*task_work_cb)(struct io_uring_cmd *, unsigned))
-> > > -{
-> > > -	__io_uring_cmd_do_in_task(ioucmd, task_work_cb, 0);
-> > > -}
-> > > +int io_uring_cmd_sock(struct io_uring_cmd *cmd, unsigned int issue_flags);
-> > >   static inline void io_uring_files_cancel(void)
-> > >   {
-> > > @@ -89,28 +31,7 @@ static inline void io_uring_free(struct task_struct *tsk)
-> > >   	if (tsk->io_uring)
-> > >   		__io_uring_free(tsk);
-> > >   }
-> > > -int io_uring_cmd_sock(struct io_uring_cmd *cmd, unsigned int issue_flags);
-> > > -void io_uring_cmd_mark_cancelable(struct io_uring_cmd *cmd,
-> > > -		unsigned int issue_flags);
-> > > -struct task_struct *io_uring_cmd_get_task(struct io_uring_cmd *cmd);
-> > >   #else
-> > > -static inline int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
-> > > -			      struct iov_iter *iter, void *ioucmd)
-> > > -{
-> > > -	return -EOPNOTSUPP;
-> > > -}
-> > > -static inline void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret,
-> > > -		ssize_t ret2, unsigned issue_flags)
-> > > -{
-> > > -}
-> > > -static inline void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
-> > > -			void (*task_work_cb)(struct io_uring_cmd *, unsigned))
-> > > -{
-> > > -}
-> > > -static inline void io_uring_cmd_do_in_task_lazy(struct io_uring_cmd *ioucmd,
-> > > -			void (*task_work_cb)(struct io_uring_cmd *, unsigned))
-> > > -{
-> > > -}
-> > >   static inline struct sock *io_uring_get_socket(struct file *file)
-> > >   {
-> > >   	return NULL;
-> > > @@ -133,14 +54,6 @@ static inline int io_uring_cmd_sock(struct io_uring_cmd *cmd,
-> > >   {
-> > >   	return -EOPNOTSUPP;
-> > >   }
-> > > -static inline void io_uring_cmd_mark_cancelable(struct io_uring_cmd *cmd,
-> > > -		unsigned int issue_flags)
-> > > -{
-> > > -}
-> > > -static inline struct task_struct *io_uring_cmd_get_task(struct io_uring_cmd *cmd)
-> > > -{
-> > > -	return NULL;
-> > > -}
-> > >   #endif
-> > >   #endif
-> > > diff --git a/include/linux/io_uring/cmd.h b/include/linux/io_uring/cmd.h
-> > > new file mode 100644
-> > > index 000000000000..62fcfaf6fcc9
-> > > --- /dev/null
-> > > +++ b/include/linux/io_uring/cmd.h
-> > > @@ -0,0 +1,81 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > > +#ifndef _LINUX_IO_URING_CMD_H
-> > > +#define _LINUX_IO_URING_CMD_H
-> > > +
-> > > +#include <uapi/linux/io_uring.h>
-> > > +#include <linux/io_uring_types.h>
-> > > +
-> > > +/* only top 8 bits of sqe->uring_cmd_flags for kernel internal use */
-> > > +#define IORING_URING_CMD_CANCELABLE	(1U << 30)
-> > > +#define IORING_URING_CMD_POLLED		(1U << 31)
-> > > +
-> > > +struct io_uring_cmd {
-> > > +	struct file	*file;
-> > > +	const struct io_uring_sqe *sqe;
-> > > +	union {
-> > > +		/* callback to defer completions to task context */
-> > > +		void (*task_work_cb)(struct io_uring_cmd *cmd, unsigned);
-> > > +		/* used for polled completion */
-> > > +		void *cookie;
-> > > +	};
-> > > +	u32		cmd_op;
-> > > +	u32		flags;
-> > > +	u8		pdu[32]; /* available inline for free use */
-> > > +};
-> > > +
-> > > +static inline const void *io_uring_sqe_cmd(const struct io_uring_sqe *sqe)
-> > > +{
-> > > +	return sqe->cmd;
-> > > +}
-> > > +
-> > > +#if defined(CONFIG_IO_URING)
-> > > +int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
-> > > +			      struct iov_iter *iter, void *ioucmd);
-> > > +void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret, ssize_t res2,
-> > > +			unsigned issue_flags);
-> > > +void __io_uring_cmd_do_in_task(struct io_uring_cmd *ioucmd,
-> > > +			    void (*task_work_cb)(struct io_uring_cmd *, unsigned),
-> > > +			    unsigned flags);
-> > > +/* users should follow semantics of IOU_F_TWQ_LAZY_WAKE */
-> > > +void io_uring_cmd_do_in_task_lazy(struct io_uring_cmd *ioucmd,
-> > > +			void (*task_work_cb)(struct io_uring_cmd *, unsigned));
-> > > +
-> > > +static inline void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
-> > > +			void (*task_work_cb)(struct io_uring_cmd *, unsigned))
-> > > +{
-> > > +	__io_uring_cmd_do_in_task(ioucmd, task_work_cb, 0);
-> > > +}
-> > > +
-> > > +void io_uring_cmd_mark_cancelable(struct io_uring_cmd *cmd,
-> > > +		unsigned int issue_flags);
-> > > +struct task_struct *io_uring_cmd_get_task(struct io_uring_cmd *cmd);
-> > > +
-> > > +#else
-> > > +static inline int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
-> > > +			      struct iov_iter *iter, void *ioucmd)
-> > > +{
-> > > +	return -EOPNOTSUPP;
-> > > +}
-> > > +static inline void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret,
-> > > +		ssize_t ret2, unsigned issue_flags)
-> > > +{
-> > > +}
-> > > +static inline void io_uring_cmd_complete_in_task(struct io_uring_cmd *ioucmd,
-> > > +			void (*task_work_cb)(struct io_uring_cmd *, unsigned))
-> > > +{
-> > > +}
-> > > +static inline void io_uring_cmd_do_in_task_lazy(struct io_uring_cmd *ioucmd,
-> > > +			void (*task_work_cb)(struct io_uring_cmd *, unsigned))
-> > > +{
-> > > +}
-> > > +static inline void io_uring_cmd_mark_cancelable(struct io_uring_cmd *cmd,
-> > > +		unsigned int issue_flags)
-> > > +{
-> > > +}
-> > > +static inline struct task_struct *io_uring_cmd_get_task(struct io_uring_cmd *cmd)
-> > > +{
-> > > +	return NULL;
-> > > +}
-> > > +#endif
-> > > +
-> > > +#endif /* _LINUX_IO_URING_CMD_H */
-> > > diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
-> > > index d3009d56af0b..0bcecb734af3 100644
-> > > --- a/include/linux/io_uring_types.h
-> > > +++ b/include/linux/io_uring_types.h
-> > > @@ -7,6 +7,26 @@
-> > >   #include <linux/llist.h>
-> > >   #include <uapi/linux/io_uring.h>
-> > > +enum io_uring_cmd_flags {
-> > > +	IO_URING_F_COMPLETE_DEFER	= 1,
-> > > +	IO_URING_F_UNLOCKED		= 2,
-> > > +	/* the request is executed from poll, it should not be freed */
-> > > +	IO_URING_F_MULTISHOT		= 4,
-> > > +	/* executed by io-wq */
-> > > +	IO_URING_F_IOWQ			= 8,
-> > > +	/* int's last bit, sign checks are usually faster than a bit test */
-> > > +	IO_URING_F_NONBLOCK		= INT_MIN,
-> > > +
-> > > +	/* ctx state flags, for URING_CMD */
-> > > +	IO_URING_F_SQE128		= (1 << 8),
-> > > +	IO_URING_F_CQE32		= (1 << 9),
-> > > +	IO_URING_F_IOPOLL		= (1 << 10),
-> > > +
-> > > +	/* set when uring wants to cancel a previously issued command */
-> > > +	IO_URING_F_CANCEL		= (1 << 11),
-> > > +	IO_URING_F_COMPAT		= (1 << 12),
-> > > +};
-> > 
-> > I am wondering why you don't move io_uring_cmd_flags into
-> > io_uring/cmd.h? And many above flags are used by driver now.
-> > 
-> > But most definitions in io_uring_types.h are actually io_uring
-> > internal stuff.
-> 
-> That's because these are io_uring internal execution state flags,
-> on top of which someone started to pile up cmd flags, not the
-> other way around. No clue why it was named io_uring_cmd_flags.
-> iow, the first 5 flags are widely used internally, moving them
-> would force us to add cmd.h includes into all io_uring internals.
-> 
-> We could split the enum in half, but that would be more ugly
-> as there are still packed into a single unsigned. And we can
-> also get rid of IO_URING_F_SQE128 and others by checking
-> ctx flags directly (with a helper), it'd be way better than
-> having a cmd copy of specific flags.
+The current logic "if (level >= IOPRIO_NR_LEVELS)" can not be reached since
+level value get from IOPRIO_PRIO_LEVEL ONLY extract lower 3-bits of ioprio.
+(IOPRIO_NR_LEVELS=8)
 
-OK, thanks for the explanation.
+So this trigger LTP test case ioprio_set03 failed, the test case expect
+error when set IOPRIO_CLASS_BE prio 8, in current implementation level
+value will be 0 and obviously can not return error.
 
-My only concern is about io_uring_types.h, which is used by io_uring
-internal except for trace. If you think it is OK to expose it to driver
-via io_uring/cmd.h now, this patch looks fine for me.
+Fixes: eca2040972b4 ("scsi: block: ioprio: Clean up interface definition")
+Signed-off-by: Wei Gao <wegao@suse.com>
+---
+ block/ioprio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
-thanks,
-Ming
+diff --git a/block/ioprio.c b/block/ioprio.c
+index b5a942519a79..f83029208f2a 100644
+--- a/block/ioprio.c
++++ b/block/ioprio.c
+@@ -33,7 +33,7 @@
+ int ioprio_check_cap(int ioprio)
+ {
+ 	int class = IOPRIO_PRIO_CLASS(ioprio);
+-	int level = IOPRIO_PRIO_LEVEL(ioprio);
++	int data = IOPRIO_PRIO_DATA(ioprio);
+ 
+ 	switch (class) {
+ 		case IOPRIO_CLASS_RT:
+@@ -49,13 +49,13 @@ int ioprio_check_cap(int ioprio)
+ 			fallthrough;
+ 			/* rt has prio field too */
+ 		case IOPRIO_CLASS_BE:
+-			if (level >= IOPRIO_NR_LEVELS)
++			if (data >= IOPRIO_NR_LEVELS || data < 0)
+ 				return -EINVAL;
+ 			break;
+ 		case IOPRIO_CLASS_IDLE:
+ 			break;
+ 		case IOPRIO_CLASS_NONE:
+-			if (level)
++			if (data)
+ 				return -EINVAL;
+ 			break;
+ 		case IOPRIO_CLASS_INVALID:
+-- 
+2.34.1
 
 
