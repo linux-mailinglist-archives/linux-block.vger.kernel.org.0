@@ -1,110 +1,117 @@
-Return-Path: <linux-block+bounces-475-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-477-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE6867F9A85
-	for <lists+linux-block@lfdr.de>; Mon, 27 Nov 2023 08:10:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A85F17F9AC3
+	for <lists+linux-block@lfdr.de>; Mon, 27 Nov 2023 08:20:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D691B209BA
-	for <lists+linux-block@lfdr.de>; Mon, 27 Nov 2023 07:10:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62FD1280CC6
+	for <lists+linux-block@lfdr.de>; Mon, 27 Nov 2023 07:20:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 927D7F9E6;
-	Mon, 27 Nov 2023 07:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B79FBFF;
+	Mon, 27 Nov 2023 07:20:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRPuFgHz"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KWspGncb"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A38FBEE;
-	Mon, 27 Nov 2023 07:09:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996CFC433C7;
-	Mon, 27 Nov 2023 07:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701068997;
-	bh=rnicohsvfFaSTeb42azhK+SpajDI1T+vJboqkZ88aAw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VRPuFgHzyDdTKsrT6v2s4trEAs1zQA4cvx634pNpuoQtKkSCdvaCJbelneF1Ip3l4
-	 3R2XpX9ULxFTLpvYZKC+OlVq1tQIg76lPle5uK1IXkDVPKpxfksILf6SRdY2YXiVx8
-	 +7dKkjw2ixB7N6vQIrVxt9xKL7YlIHvL3xsDc8NMjznTj873bGKZp7GuQibnlnSWQy
-	 ysSVDOissl1B8bF0lV/M0VJ7ULdDRCNYUqiH8Y50kpQs3OK75m1qeIPmc8MbFbLlTF
-	 UDMB8ntMGz+OWj0fdv08z2PCWBrrlD9/8Y+uzFUqcbmYmX6+lodrokeIPhbDBGbkVC
-	 Bn0mDn1QrfPEw==
-Message-ID: <d3b87b87-2ca7-43ca-9fb4-ee3696561eb5@kernel.org>
-Date: Mon, 27 Nov 2023 16:09:47 +0900
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D39C1A5
+	for <linux-block@vger.kernel.org>; Sun, 26 Nov 2023 23:20:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=9GPxLlAAbAn5ecuFIoNe2gon1TvpEZ33fBcyS7Qycvg=; b=KWspGncbwp6oomqHelwwUWdCqW
+	/MfYb4sKnAs/r/sNhGXnsRUHEglBdnIN05pqbkNOnN8LEGd4rhx3//RCW3wSY5g+p+l5abQznmQsm
+	aZDO9T95K7FDTUVje3l6B0QFTzTc+YNaxiVLj6SONYTzVC6LZQjYcJ7QnNOIn6PNB+l/DniYIm6mR
+	UJYlIDwR5pCdvl2A6NSRMJ3m5NnsXwuGpdPBW45tE++1q8+IR4x59TMwDBfoPeFwFed1Q8YLEFiLt
+	rWtjyVqYVBHVa1+Ukwwz7yVOnTdk2iemmIjeLk9HZ/QS6Ahiyg5UcrNlcxYS6vnjGfrkFJUE20BwH
+	argA0O2g==;
+Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1r7VuY-001hyK-05;
+	Mon, 27 Nov 2023 07:20:06 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
+	dlemoal@kernel.org
+Subject: [PATCH] block: move a few definitions out of CONFIG_BLK_DEV_ZONED
+Date: Mon, 27 Nov 2023 08:20:02 +0100
+Message-Id: <20231127072002.1332685-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH block/for-next v2 07/16] bcachefs: use new helper to get
- inode from block_device
-To: Yu Kuai <yukuai1@huaweicloud.com>, hch@infradead.org,
- ming.lei@redhat.com, axboe@kernel.dk, roger.pau@citrix.com, colyli@suse.de,
- kent.overstreet@gmail.com, joern@lazybastard.org, miquel.raynal@bootlin.com,
- richard@nod.at, vigneshr@ti.com, sth@linux.ibm.com, hoeppner@linux.ibm.com,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- jejb@linux.ibm.com, martin.petersen@oracle.com, clm@fb.com,
- josef@toxicpanda.com, dsterba@suse.com, viro@zeniv.linux.org.uk,
- brauner@kernel.org, nico@fluxnic.net, xiang@kernel.org, chao@kernel.org,
- tytso@mit.edu, adilger.kernel@dilger.ca, agruenba@redhat.com, jack@suse.com,
- konishi.ryusuke@gmail.com, dchinner@redhat.com, linux@weissschuh.net,
- min15.li@samsung.com, yukuai3@huawei.com, willy@infradead.org,
- akpm@linux-foundation.org, hare@suse.de, p.raghav@samsung.com
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-bcache@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-bcachefs@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
- gfs2@lists.linux.dev, linux-nilfs@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com
-References: <20231127062116.2355129-1-yukuai1@huaweicloud.com>
- <20231127062116.2355129-8-yukuai1@huaweicloud.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20231127062116.2355129-8-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 11/27/23 15:21, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Which is more efficiency, and also prepare to remove the field
-> 'bd_inode' from block_device.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  fs/bcachefs/util.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/bcachefs/util.h b/fs/bcachefs/util.h
-> index 2984b57b2958..fe7ccb3a3517 100644
-> --- a/fs/bcachefs/util.h
-> +++ b/fs/bcachefs/util.h
-> @@ -518,7 +518,7 @@ int bch2_bio_alloc_pages(struct bio *, size_t, gfp_t);
->  
->  static inline sector_t bdev_sectors(struct block_device *bdev)
->  {
-> -	return bdev->bd_inode->i_size >> 9;
-> +	return bdev_inode(bdev)->i_size >> 9;
+Allow using a few symbols with IS_ENABLED instead of #idef by moving
+the declarations out of #idef CONFIG_BLK_DEV_ZONED, and move
+bdev_nr_zones into the remaining  #idef CONFIG_BLK_DEV_ZONED, #else
+block below.
 
-shouldn't this use i_size_read() ?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/blkdev.h | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-I missed the history with this but why not use bdev_nr_sectors() and delete this
-helper ?
-
->  }
->  
->  #define closure_bio_submit(bio, cl)					\
-
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 51fa7ffdee83b4..17c0a7d0d319eb 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -331,22 +331,13 @@ typedef int (*report_zones_cb)(struct blk_zone *zone, unsigned int idx,
+ 
+ void disk_set_zoned(struct gendisk *disk, enum blk_zoned_model model);
+ 
+-#ifdef CONFIG_BLK_DEV_ZONED
+ #define BLK_ALL_ZONES  ((unsigned int)-1)
+ int blkdev_report_zones(struct block_device *bdev, sector_t sector,
+-			unsigned int nr_zones, report_zones_cb cb, void *data);
+-unsigned int bdev_nr_zones(struct block_device *bdev);
+-extern int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
+-			    sector_t sectors, sector_t nr_sectors,
+-			    gfp_t gfp_mask);
++		unsigned int nr_zones, report_zones_cb cb, void *data);
++int blkdev_zone_mgmt(struct block_device *bdev, enum req_op op,
++		sector_t sectors, sector_t nr_sectors, gfp_t gfp_mask);
+ int blk_revalidate_disk_zones(struct gendisk *disk,
+-			      void (*update_driver_data)(struct gendisk *disk));
+-#else /* CONFIG_BLK_DEV_ZONED */
+-static inline unsigned int bdev_nr_zones(struct block_device *bdev)
+-{
+-	return 0;
+-}
+-#endif /* CONFIG_BLK_DEV_ZONED */
++		void (*update_driver_data)(struct gendisk *disk));
+ 
+ /*
+  * Independent access ranges: struct blk_independent_access_range describes
+@@ -643,6 +634,8 @@ static inline bool blk_queue_is_zoned(struct request_queue *q)
+ }
+ 
+ #ifdef CONFIG_BLK_DEV_ZONED
++unsigned int bdev_nr_zones(struct block_device *bdev);
++
+ static inline unsigned int disk_nr_zones(struct gendisk *disk)
+ {
+ 	return blk_queue_is_zoned(disk->queue) ? disk->nr_zones : 0;
+@@ -687,6 +680,11 @@ static inline unsigned int bdev_max_active_zones(struct block_device *bdev)
+ }
+ 
+ #else /* CONFIG_BLK_DEV_ZONED */
++static inline unsigned int bdev_nr_zones(struct block_device *bdev)
++{
++	return 0;
++}
++
+ static inline unsigned int disk_nr_zones(struct gendisk *disk)
+ {
+ 	return 0;
 -- 
-Damien Le Moal
-Western Digital Research
+2.39.2
 
 
