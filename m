@@ -1,34 +1,38 @@
-Return-Path: <linux-block+bounces-508-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-509-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD6567FBAA4
-	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 14:00:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC7597FBBFD
+	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 14:56:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF1BF1C20CA5
-	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 13:00:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7538B282913
+	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 13:56:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC8451C23;
-	Tue, 28 Nov 2023 13:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E24E85914F;
+	Tue, 28 Nov 2023 13:56:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D9518F;
-	Tue, 28 Nov 2023 05:00:03 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F58D1;
+	Tue, 28 Nov 2023 05:56:25 -0800 (PST)
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 52971227A87; Tue, 28 Nov 2023 14:00:01 +0100 (CET)
-Date: Tue, 28 Nov 2023 14:00:00 +0100
+	id E6897227A87; Tue, 28 Nov 2023 14:56:19 +0100 (CET)
+Date: Tue, 28 Nov 2023 14:56:19 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, ming.lei@redhat.com, axboe@kernel.dk,
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk, kbusch@kernel.org,
+	sagi@grimberg.me, jejb@linux.ibm.com, martin.petersen@oracle.com,
+	djwong@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	chandan.babu@oracle.com, dchinner@redhat.com,
 	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v4 2/2] block: warn once for each partition in
- bio_check_ro()
-Message-ID: <20231128130000.GB7984@lst.de>
-References: <20231128123027.971610-1-yukuai1@huaweicloud.com> <20231128123027.971610-3-yukuai1@huaweicloud.com>
+	linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH 17/21] fs: xfs: iomap atomic write support
+Message-ID: <20231128135619.GA12202@lst.de>
+References: <20230929102726.2985188-1-john.g.garry@oracle.com> <20230929102726.2985188-18-john.g.garry@oracle.com> <20231109152615.GB1521@lst.de> <a50a16ca-d4b9-a4d8-4230-833d82752bd2@oracle.com> <c78bcca7-8f09-41c7-adf0-03b42cde70d6@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -37,22 +41,38 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231128123027.971610-3-yukuai1@huaweicloud.com>
+In-Reply-To: <c78bcca7-8f09-41c7-adf0-03b42cde70d6@oracle.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Nov 28, 2023 at 08:30:27PM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Commit 1b0a151c10a6 ("blk-core: use pr_warn_ratelimited() in
-> bio_check_ro()") fix message storm by limit the rate, however, there
-> will still be lots of message in the long term. Fix it better by warn
-> once for each partition.
+On Tue, Nov 28, 2023 at 08:56:37AM +0000, John Garry wrote:
+> Are you suggesting some sort of hybrid between the atomic write series you 
+> had a few years ago and this solution?
 
-The new field is in the same dword alignment as bd_make_it_fail and
-could in theory corrupt it, at least on alpha.  I guess we're fine,
-because if you enable CONFIG_FAIL_MAKE_REQUEST on alpha you're asking
-for this.  I still hope we can clean up these non-atomic bools and
-replace them with bitops soon.
+Very roughly, yes.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+> To me that would be continuing with the following:
+> - per-IO RWF_ATOMIC (and not O_ATOMIC semantics of nothing is written until 
+> some data sync)
+
+Yes.
+
+> - writes must be a power-of-two and at a naturally-aligned offset
+
+Where offset is offset in the file?  It would not require it.  You
+probably want to do it for optimal performance, but requiring it
+feeels rather limited.
+
+> - relying on atomic write HW support always
+
+And I think that's where we have different opinions.  I think the hw
+offload is a nice optimization and we should use it wherever we can.
+But building the entire userspace API around it feels like a mistake.
+
+> BTW, we also have rtvol support which does not use forcealign as it already 
+> can guarantee alignment, but still does rely on the same principle of 
+> requiring alignment - would you want CoW support there also?
+
+Upstream doesn't have out of place write support for the RT subvolume
+yet.  But Darrick has a series for it and we're actively working on
+upstreaming it.
 
