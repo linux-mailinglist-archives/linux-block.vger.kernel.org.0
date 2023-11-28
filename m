@@ -1,123 +1,103 @@
-Return-Path: <linux-block+bounces-534-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-536-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72F9F7FC8EB
-	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 22:59:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30EB87FC97D
+	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 23:28:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EDFA282605
-	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 21:59:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A0843B21690
+	for <lists+linux-block@lfdr.de>; Tue, 28 Nov 2023 22:28:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58653481A9;
-	Tue, 28 Nov 2023 21:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C92695024C;
+	Tue, 28 Nov 2023 22:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WSLa365g"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="dG3HqqGR"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CA01A3
-	for <linux-block@vger.kernel.org>; Tue, 28 Nov 2023 13:59:48 -0800 (PST)
-Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-35cd93add9fso3182505ab.0
-        for <linux-block@vger.kernel.org>; Tue, 28 Nov 2023 13:59:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1701208788; x=1701813588; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IqXh8h2TE9EqBfbi7m4c/BFMHO+IwfCong5cfxOFR/E=;
-        b=WSLa365g2mqIEi0is0kQkWMUvC6BvhaaanbR5cVI6iHQI2DxvYhylWKRi691idP4ZK
-         eYwMn84ysqp2ewUzffB4B3ZA+fQ7dQnbeDUMV3yeZiBzIH//KahTeV7vbzTLNDLiOLcJ
-         0A0rS3cgR0O2dpSQimDzdnvBBJEKfuyIyoQ1prfGsuU3Rt2pN2ZowsoIT53uqZzi5qRF
-         w7rUx8rbIijbqY+rTDdK+OQ8f4+0BI0W9c7RYucrQWYpVajb08IdQaK0hxhSVk7FbiUW
-         11DQJ4l0JY2itQhHM0wxVnSv+HIqRlrcQ60DZmgs1VGmXMEY4lNour3XGjlwsQQq8vQD
-         qeIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701208788; x=1701813588;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IqXh8h2TE9EqBfbi7m4c/BFMHO+IwfCong5cfxOFR/E=;
-        b=QQ9NP0MpvYjDAmSdYif0fdR9HoEz0IDuYZ7sCxztNm1sBeoX7PpT5N3QuV00h7oeHo
-         Z8ahMPRiH3xrhxE/hQQgM8DXmcrN9z10RDMiQ4OwzPzkylmWd3deX3d85c1PSnHppuW2
-         ydNPijVNFzQRY7G2y+nZ9zdjHo24i63D5bgBDgxqJQfKBMUpI1MB0jURFSZLhWuYo4h+
-         CYZ8fC+2ZWMlmpA5wkbM9z7oYeh+i7ZOUIQwqn1g3YRp/5HNCdOxuSy7yXHoXww/R2bM
-         ac0VfBriiUJtpNo0jSj13iM4zZPwkU6hemACVcd3vDylfibTJt8LIaZZk7kQI+L8uGe5
-         Mdbw==
-X-Gm-Message-State: AOJu0Yynb+P+ZLscuOa31QdyYsGLss6/zOEjLzKkQdnO6n9rECEVgoa/
-	yhNr7XESa57fhvq27bz6jRdgVA==
-X-Google-Smtp-Source: AGHT+IEVso2zBXyIILDyd1NKHjfwFmHQZ9RyRGvd8AQMvztNKwPP6rHt1yS8h8/sfYKGkxCFjt9tKg==
-X-Received: by 2002:a92:c84b:0:b0:35c:baec:750c with SMTP id b11-20020a92c84b000000b0035cbaec750cmr8318971ilq.1.1701208787912;
-        Tue, 28 Nov 2023 13:59:47 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id p15-20020a62ab0f000000b00694ebe2b0d4sm9483791pff.191.2023.11.28.13.59.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Nov 2023 13:59:47 -0800 (PST)
-Message-ID: <66be0c42-2514-436b-bbef-3bd9ab123594@kernel.dk>
-Date: Tue, 28 Nov 2023 14:59:45 -0700
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6AAD137
+	for <linux-block@vger.kernel.org>; Tue, 28 Nov 2023 14:28:08 -0800 (PST)
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 3ASMGMfn014696
+	for <linux-block@vger.kernel.org>; Tue, 28 Nov 2023 14:28:07 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=s2048-2021-q4;
+ bh=x1zlHo3Q0pSUeyHRtLLKebQeFEuwDiMtVQDgTgJdZPI=;
+ b=dG3HqqGRFHXTBBk8APEbObBCyu6vU73Q5nDlkLQx6qbOii2BB8NLtdrkPx6jHU/HUkQM
+ EUnowuO0q6U0Ts75TU2c+HbFYwlmgBOPaw+e1k2d/3OXDJCTD4nM6L1vQDEgBkmsbyHC
+ oDeRHnfPFriji3t4PyJzlM25VDjaetmAzQ6Xgy8DVscC7UpNEmyEYhCEMvxqERyrgskj
+ PQkMNdZFJ/z7xW6GjzhB8fPsTdi5TFDdScoqYV9T2IzLROyJabEjC52eBw1AOagk35FV
+ Y/1HzQWe6v552XUrq1fzRFAh8Prclt+KM/lUycE3DHOLADv5vUroJQnmL+y5IRPvIV3E eA== 
+Received: from mail.thefacebook.com ([163.114.132.120])
+	by m0089730.ppops.net (PPS) with ESMTPS id 3unf81cty6-6
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Tue, 28 Nov 2023 14:28:07 -0800
+Received: from twshared34392.14.frc2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:11d::8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Tue, 28 Nov 2023 14:28:05 -0800
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+	id 3AE362252F0C0; Tue, 28 Nov 2023 14:27:53 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
+        <io-uring@vger.kernel.org>
+CC: <axboe@kernel.dk>, <hch@lst.de>, <joshi.k@samsung.com>,
+        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
+        Keith Busch
+	<kbusch@kernel.org>
+Subject: [PATCHv4 0/4] block integrity: directly map user space addresses
+Date: Tue, 28 Nov 2023 14:27:48 -0800
+Message-ID: <20231128222752.1767344-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Merging raw block device writes
-Content-Language: en-US
-To: Michael Kelley <mhklinux@outlook.com>, "hch@lst.de" <hch@lst.de>
-Cc: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <SN6PR02MB41575884C4898B59615B496AD4BFA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20231127065928.GA27811@lst.de>
- <f2735bdc-1234-4477-a579-90bafa7ae4ea@kernel.dk>
- <SN6PR02MB41578DD2B7A1F25336B0224BD4BCA@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <SN6PR02MB41578DD2B7A1F25336B0224BD4BCA@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: 82kxuA0WyJDSHTUr6UpFtmf536acE8EY
+X-Proofpoint-ORIG-GUID: 82kxuA0WyJDSHTUr6UpFtmf536acE8EY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-28_24,2023-11-27_01,2023-05-22_02
 
-On 11/28/23 12:29 PM, Michael Kelley wrote:
-> From: Jens Axboe <axboe@kernel.dk> Sent: Monday, November 27, 2023 8:10 AM
->>
->> On 11/26/23 11:59 PM, hch@lst.de wrote:
->>> On Sat, Nov 25, 2023 at 05:38:28PM +0000, Michael Kelley wrote:
->>>> Hyper-V guests and the Azure cloud have a particular interest here
->>>> because Hyper-V guests uses SCSI as the standard interface to virtual
->>>> disks.  Azure cloud disks can be throttled to a limited number of IOPS,
->>>> so the number of in-flights I/Os can be relatively high, and
->>>> merging can be beneficial to staying within the throttle
->>>> limits.  Of the flip side, this problem hasn't generated complaints
->>>> over the last 18 months that I'm aware of, though that may be more
->>>> because commercial distros haven't been running 5.16 or later kernels
->>>> until relatively recently.
->>>
->>> I think the more important thing is that if you care about reducing
->>> the number of I/Os you probably should use an I/O scheduler.  Reducing
->>> the number of I/Os without an I/O scheduler isn't (and I'll argue
->>> shouldn't) be a concern for the non I/O scheduler.
->>
->> Yep fully agree.
->>
-> 
-> OK.  But there *is* intentional functionality in blk-mq to do merging
-> even when there's no I/O scheduler.  If that functionality breaks, is
-> that considered a bug and regression?  The functionality only affects
-> performance and not correctness, so maybe it's a bit of a gray area.
-> 
-> It's all working again as of 6.5, so the only potential code action is to
-> backport Christoph's commit to stable releases. But it still seems like
-> there should be an explicit statement about what to expect going forward.
-> Should the code for doing merging with no I/O scheduler be removed, or
-> at least put on the deprecation path?
+From: Keith Busch <kbusch@kernel.org>
 
-It's mostly a "you get what you get" thing. If we can do merging cheap
-or for free, then we do that above the IO scheduler. It'd be great to
-have some tests for this to ensure we don't regress, unknowingly.
+Handling passthrough metadata ("integrity") today introduces overhead
+and complications that we can avoid if we just map user space addresses
+directly. This patch series implements that, falling back to a kernel
+bounce buffer if necessary.
 
-But in general, if you want guaranteed good merging, then an IO
-scheduler is the right choice.
+v3->v4:
 
--- 
-Jens Axboe
+  Code organization suggestions (Jens, Christoph)
+
+  Spelling and unnecessary punctionation (Anuj)
+
+  Open code the final user page unpin (Ming)
+
+  Eliminate another allocation for the bounce copy by moving the bvec
+  into the bip rather than just a pointer to it (me)
+
+Keith Busch (4):
+  block: bio-integrity: directly map user buffers
+  nvme: use bio_integrity_map_user
+  iouring: remove IORING_URING_CMD_POLLED
+  io_uring: remove uring_cmd cookie
+
+ block/bio-integrity.c     | 203 ++++++++++++++++++++++++++++++++++++++
+ drivers/nvme/host/ioctl.c | 197 ++++++------------------------------
+ include/linux/bio.h       |   9 ++
+ include/linux/io_uring.h  |   9 +-
+ io_uring/uring_cmd.c      |   1 -
+ 5 files changed, 243 insertions(+), 176 deletions(-)
+
+--=20
+2.34.1
 
 
