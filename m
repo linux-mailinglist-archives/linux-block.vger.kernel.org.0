@@ -1,61 +1,59 @@
-Return-Path: <linux-block+bounces-548-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-550-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC48A7FD427
-	for <lists+linux-block@lfdr.de>; Wed, 29 Nov 2023 11:31:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A0F7FD5D8
+	for <lists+linux-block@lfdr.de>; Wed, 29 Nov 2023 12:36:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 184C4B21A64
-	for <lists+linux-block@lfdr.de>; Wed, 29 Nov 2023 10:31:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E44D1F20F72
+	for <lists+linux-block@lfdr.de>; Wed, 29 Nov 2023 11:36:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2442A1B291;
-	Wed, 29 Nov 2023 10:31:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3F961C6B9;
+	Wed, 29 Nov 2023 11:36:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CCoj+IMc"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Do3FuNMk"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 532721AE
-	for <linux-block@vger.kernel.org>; Wed, 29 Nov 2023 02:31:48 -0800 (PST)
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5934B5
+	for <linux-block@vger.kernel.org>; Wed, 29 Nov 2023 03:36:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1701253908; x=1732789908;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KnviQ2ymAzfNc4y3yC6typtzhWKDAm9b+z3JTEDzMuc=;
-  b=CCoj+IMcw2PnWXU24bPECuFTuu4dLjnkd+qd78Y74bEmWMHqk3u3qb+i
-   Ke05tp3XLd2t+0c6dDGDwqX95JOop5t0SNfuGuoGg4dAsTRAOQqFMUp1G
-   YveGm/2b0YCsw59ifVN9cIBpRyrFiEFPdam26a6OpTgkrYR2d4fz/4qL3
-   m2MS+TJiIp5xHki6E+pxIc9223fPuHOL4XOBhCYbpoLsmcuLcicpUd+do
-   jc3V32J0aTQqMwTk7fCuH8X8B6efhEgxjyhjxBLyxTZ41MaiUTrngXlrF
-   QDrX7ZjYpfmTxqRe3kWHrIs/olNB8XvXdYdAbk3IVH6RuhRVowuCum+L0
-   w==;
-X-CSE-ConnectionGUID: hDlwciWMTx2xs09l20OCHg==
-X-CSE-MsgGUID: 5iZkzzkoTLiTgvTgrUATig==
+  t=1701257777; x=1732793777;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YN4Z/bGjY0kaPL9PTU6XxB6l4IGlqdpWZPKerV1xchA=;
+  b=Do3FuNMkH1r40Wk+npEAGEI89zqYgM02fsVZ5qoSG6ng7pfn6LZOzazs
+   ySVqi+huVkKpZUMA/j9k+K5s1HV3Et4HQdGnBjUJ1WzzOxYkOKzqvZN3P
+   +2qDfMreYedG25wF4DHmF5d6fyliwNejel8ynmuXr0NIzwKWIf1mjEH9k
+   iF5U6yUGXi9j2J6bmmAZ/xzHDCMctRTgkxSe0vbExGQqWEkbgbneXJFjp
+   snOTTL2DDJrr83Z7MDenhDXDoWA+ITHjP2N743Fo7do+40WhLYS1/1P9a
+   s1ujRPpSXiJrkgasde9oyFnFlFXerMdFAw6zkIBrxzKBFugF7PZ+jcVQX
+   A==;
+X-CSE-ConnectionGUID: 2uD6KaFoSUCtIfUS5ESGFA==
+X-CSE-MsgGUID: Z45NdgGjTbSZ7EtGbYp0GQ==
 X-IronPort-AV: E=Sophos;i="6.04,235,1695657600"; 
-   d="scan'208";a="3614312"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 29 Nov 2023 18:31:47 +0800
-IronPort-SDR: 3XQE4eOa3c0lIlZVyDkAw984Tj0pBtBiRIymwTzsB9M3zhOmZQDEKtNMJWVUDA9OkWxNc1OLNj
- ccF2tWmqayGg==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Nov 2023 01:37:16 -0800
-IronPort-SDR: RDGle/Qs6CbYgeJPiWpE8p39qd7pZJGQaGSghSxYTPkBlDvRC5a8/bMwvOmmRHHvZ3F3uBUEiW
- pEHin2Td3tHQ==
+   d="scan'208";a="3755240"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Nov 2023 19:36:17 +0800
+IronPort-SDR: B018wNdRS86kvBw9Y8ooA35urjjUFUrlLqOUr1tit3vBNZIoyPHzbwFbjTq4djAZ0isgwnLyEx
+ tLOJfI0gbRWw==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Nov 2023 02:47:26 -0800
+IronPort-SDR: FsNKRWRjzE3GHdZiMVpZGRv/6bz+1WGsgDO43e10gKddHdQNV7o740EuZgf8OkEj0vkK1dgY8F
+ Sxo7X+2krGBw==
 WDCIronportException: Internal
 Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
-  by uls-op-cesaip01.wdc.com with ESMTP; 29 Nov 2023 02:31:47 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP; 29 Nov 2023 03:36:16 -0800
 From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 To: linux-block@vger.kernel.org
-Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+Cc: Alyssa Ross <hi@alyssa.is>,
 	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH blktests 2/2] block/011: set default timeout to 20 minutes
-Date: Wed, 29 Nov 2023 19:31:45 +0900
-Message-ID: <20231129103145.655612-3-shinichiro.kawasaki@wdc.com>
+Subject: [PATCH blktests] loop/009: require --option of udevadm control command
+Date: Wed, 29 Nov 2023 20:36:15 +0900
+Message-ID: <20231129113616.663934-1-shinichiro.kawasaki@wdc.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231129103145.655612-1-shinichiro.kawasaki@wdc.com>
-References: <20231129103145.655612-1-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -64,33 +62,33 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The test case runs fio while disabling and enabling PCI device of the
-test target block device. Depending on the device type, it takes very
-long time to re-enable the device. At worst case, it takes 4 hours to
-complete the test case.
+The test case loop/009 calls udevadm control command with --ping option.
+When systemd version is prior to 241, udevadm control command does not
+support the option, and the test case fails. Check availability of the
+option to avoid the failure.
 
-To avoid the meaningless long test runtime, set default timeout limit. I
-ran the test case on various devices: real NVME SSD, QEMU NVME
-emulation, HDDs with AHCI, HDDs with SAS-HBA. Many of them takes less
-than 20 minutes to complete and pass the test case. Hence, choose 20
-minutes as the timeout duration.
-
+Link: https://github.com/osandov/blktests/issues/129
 Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- tests/block/011 | 1 +
- 1 file changed, 1 insertion(+)
+ tests/loop/009 | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tests/block/011 b/tests/block/011
-index 2a967d1..78d8d3d 100755
---- a/tests/block/011
-+++ b/tests/block/011
-@@ -49,6 +49,7 @@ test_device() {
- 	fi
+diff --git a/tests/loop/009 b/tests/loop/009
+index 2b7a042..5c14758 100755
+--- a/tests/loop/009
++++ b/tests/loop/009
+@@ -10,6 +10,12 @@ DESCRIPTION="check that LOOP_CONFIGURE sends uevents for partitions"
  
- 	# start fio job
-+	: "${TIMEOUT:=1200}"
- 	_run_fio_rand_io --filename="$TEST_DEV" --size="$size" \
- 			--ignore_error=EIO,ENXIO,ENODEV &
+ QUICK=1
+ 
++requires() {
++	if ! udevadm control --ping > /dev/null 2>&1; then
++		SKIP_REASONS+=("udevadm control does not support --ping option")
++	fi
++}
++
+ test() {
+ 	echo "Running ${TEST_NAME}"
  
 -- 
 2.43.0
