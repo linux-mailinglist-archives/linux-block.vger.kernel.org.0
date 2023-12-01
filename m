@@ -1,105 +1,107 @@
-Return-Path: <linux-block+bounces-608-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-610-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DA207FFF33
-	for <lists+linux-block@lfdr.de>; Fri,  1 Dec 2023 00:09:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 452A58000C5
+	for <lists+linux-block@lfdr.de>; Fri,  1 Dec 2023 02:00:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CEFEBB21001
-	for <lists+linux-block@lfdr.de>; Thu, 30 Nov 2023 23:09:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D044B20843
+	for <lists+linux-block@lfdr.de>; Fri,  1 Dec 2023 01:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC18D5FEE3;
-	Thu, 30 Nov 2023 23:09:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F713187F;
+	Fri,  1 Dec 2023 01:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="azGIg95T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMVywn+T"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1CA10DE
-	for <linux-block@vger.kernel.org>; Thu, 30 Nov 2023 15:09:27 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6cdd2aeaa24so267851b3a.1
-        for <linux-block@vger.kernel.org>; Thu, 30 Nov 2023 15:09:27 -0800 (PST)
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C7C173B;
+	Thu, 30 Nov 2023 16:59:29 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40838915cecso14904545e9.2;
+        Thu, 30 Nov 2023 16:59:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1701385766; x=1701990566; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WmpnCqUtuoxHHvkEl3B5MTEZYjPTnTR+G4KhZG9sw9Q=;
-        b=azGIg95T8DT5YlRh40XmtRd4RMEQHF1NlqeK5L6qqqKxZ/V49sS/8wZFnuJuBGygRw
-         xSe9RvnI787ksQ8455sJPxTqb2zACV55jAYcDgo8OsgYAu852AA9pCqpzX9Xg44+GK6a
-         /++Bi4zyGWyf0sjnUqq3/g6luTya2FP0Hnczm1Kci4YVZXED3YRhjyqH6nk4QMkrxM6M
-         qjg6kgfHJcab3iYu0cQUCbst7bF6b/mDC31VAAj8HLXHyxBz4NrVH23AHFPnOYWVFsmE
-         llJRFPVPaF6muX/vU+hhiMNnzbBnV+Wkg8D1dlF3ZHaxClMIhsF5FtAr7KMTHAFz2NtH
-         J4nA==
+        d=gmail.com; s=20230601; t=1701392367; x=1701997167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DCovVFDKvkXq+97AfUx6ubrKnI0Lz7CYohHuF1C06i0=;
+        b=NMVywn+TX0d5mffVpfEv/h4dpex3Z8hVkjrOU55wCowPcxk9AMuAHjhXY6sC47sE1z
+         8kyzSfqGw5j9b5xgiGthMnyqa2kPRwkMbxnPOXsicslCTdQJIA0eIsKJW3nTsLIzly6z
+         n/WW4O1d+KPTKj4+x5G2kogs2H/x+h7ZoLEFMuUZK55f4KRyIY+MUCC7pl5sPrZ+9T/s
+         mxe4aZt92fSTIPTkodjnxA2kyYwH3oiDeuFk6fI0U1+FOx+QEr7U4sfFAqUfid7bg4CX
+         7WFwwNX2q4DxwzWJShpZr3aBUeHHwWQ9vj7MmbN5pGUQETvyzXmHBv1F6nJnhvufo8/J
+         uBCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701385766; x=1701990566;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WmpnCqUtuoxHHvkEl3B5MTEZYjPTnTR+G4KhZG9sw9Q=;
-        b=uE3lY4lpR+zkIxURZpuV4S5oce9JB9f6f1Mk6aZRwbTonHz9kJE5SXq/yax2ERXmYd
-         vZuakmhqZsd4ERQDemZQpbWsn01S5L6mdv6Mq3ZvH6RMEXL7Wa+Qk0G5kzJ3XlWY+RVX
-         g1OwnFzj0bSzJV4N3Qi//OeIk+EkoqLKmEFTss1wTLvkXLg6Blc1JmHy5kMAiPub39pc
-         XRBWpNj+jxnCjSld0iHa2DEx+H0qBCu/j4nb8lSzYMIbzNNIPn0d0QfhNnwGsM45aZvD
-         uI5o5eqIEViDtDa8rtINzs9AXTR7FTjYQ1H0pZo4PE5T944/BNcqbJAWeNRz4rLBN/bV
-         F04A==
-X-Gm-Message-State: AOJu0YzmjVI4xKUZXrYuR//qlLe3h/gxA2PiTIiYmpuBwQoE7GXgK1V8
-	P0/LOBbfTmOu7bzaY37Ea5NB70uNbmmTrz4sb5Z7Cg==
-X-Google-Smtp-Source: AGHT+IFKPPF8r3m5BMDX5DFNv0M2Ii6euwt49/3tWDuQf1TJfXsX7mSig2AEFjsW0Ceh/6TAPaPTMA==
-X-Received: by 2002:a05:6a20:8f05:b0:18c:6148:6a7b with SMTP id b5-20020a056a208f0500b0018c61486a7bmr20428611pzk.0.1701385766268;
-        Thu, 30 Nov 2023 15:09:26 -0800 (PST)
-Received: from [127.0.0.1] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id 3-20020a17090a000300b002850eb8b6dcsm2010297pja.44.2023.11.30.15.09.25
+        d=1e100.net; s=20230601; t=1701392367; x=1701997167;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DCovVFDKvkXq+97AfUx6ubrKnI0Lz7CYohHuF1C06i0=;
+        b=VsWXNxez/zjdS+3jbo9F51tyR3P8DTy5pJmiaYSzWbu1M45+LWGY4HyUxZ1ynU0K7o
+         m4tD8XmkY8yHg4F2YVA97CqHtQ6H9exN35/eElT+KTp33qU1Aeec/WO6RbgmcMKZuiqN
+         0RMdfWopxDmK1gdd0O/nesyEjQkYbk7mRvoZWHRCrVdDHANcTQayQDAoGvJTKknhYr3d
+         MpIF6i8zUqs7feV5JtleWBjItHvJVbfbS9vW8CYmknRMR3nHGrOn2/+cLqSJFls1mWeG
+         anyszAp+Qos2JinpZk17Va/VOwxfI2TcN+dVVwAblK2ht4B1/2ltoEr0BCVh6webVsgd
+         6VBA==
+X-Gm-Message-State: AOJu0YwAJ19xRjAuq7vatoweuo1RN/lE03VmAtDcSByAD8Kd9srLGATE
+	kSPgIszvcfHyCHxOEQ4GnFwQayKPqRc=
+X-Google-Smtp-Source: AGHT+IHvsA3FlPe2VVg3VzV19jVZA+1llGaXu6/xVZ1oh7SLF/MhKK/s+Zpw3AwC5Y/gkhWKhNtulg==
+X-Received: by 2002:adf:e68b:0:b0:333:2fd2:68f5 with SMTP id r11-20020adfe68b000000b003332fd268f5mr216762wrm.136.1701392367049;
+        Thu, 30 Nov 2023 16:59:27 -0800 (PST)
+Received: from 127.0.0.1localhost ([185.69.145.191])
+        by smtp.gmail.com with ESMTPSA id ks19-20020a170906f85300b00a11b2677acbsm1250511ejb.163.2023.11.30.16.59.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 15:09:25 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, 
- io-uring@vger.kernel.org, Keith Busch <kbusch@meta.com>
-Cc: hch@lst.de, joshi.k@samsung.com, martin.petersen@oracle.com, 
- ming.lei@redhat.com, Keith Busch <kbusch@kernel.org>
-In-Reply-To: <20231130215309.2923568-1-kbusch@meta.com>
-References: <20231130215309.2923568-1-kbusch@meta.com>
-Subject: Re: [PATCHv5 0/4] block integrity: directly map user space
- addresses
-Message-Id: <170138576512.699292.6762410631511683338.b4-ty@kernel.dk>
-Date: Thu, 30 Nov 2023 16:09:25 -0700
+        Thu, 30 Nov 2023 16:59:26 -0800 (PST)
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: io-uring@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>,
+	asml.silence@gmail.com,
+	linux-block@vger.kernel.org,
+	ming.lei@redhat.com,
+	joshi.k@samsung.com,
+	linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org,
+	Paul Moore <paul@paul-moore.com>
+Subject: [PATCH v2 0/3] clean up io_uring cmd header structure
+Date: Fri,  1 Dec 2023 00:57:34 +0000
+Message-ID: <cover.1701391955.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-7edf1
+Content-Transfer-Encoding: 8bit
 
+Looking at the zc rfc, and how we tend to stuff everything into
+linux/io_uring, start splitting the file before it becomes even more
+monstrous.
 
-On Thu, 30 Nov 2023 13:53:05 -0800, Keith Busch wrote:
-> Handling passthrough metadata ("integrity") today introduces overhead
-> and complications that we can avoid if we just map user space addresses
-> directly. This patch series implements that, falling back to a kernel
-> bounce buffer if necessary.
-> 
-> v4->v5:
-> 
-> [...]
+V2: fix up includes for security/
+    Add new files to MAINTAINERS
 
-Applied, thanks!
+Pavel Begunkov (3):
+  io_uring: split out cmd api into a separate header
+  io_uring/cmd: inline io_uring_cmd_do_in_task_lazy
+  io_uring/cmd: inline io_uring_cmd_get_task
 
-[1/4] block: bio-integrity: directly map user buffers
-      commit: 5a0584b2c714a219296d97d9f4307ffe53c18937
-[2/4] nvme: use bio_integrity_map_user
-      commit: aec0ff70f016fdf7b4ba52e34d682a185dd8dd74
-[3/4] iouring: remove IORING_URING_CMD_POLLED
-      commit: f8243a30dc179ac197bd8315bdf9d55d3d7792c3
-[4/4] io_uring: remove uring_cmd cookie
-      commit: fb62c0c9b04265539851734ae35cf3f10651a8dd
+ MAINTAINERS                    |  1 +
+ drivers/block/ublk_drv.c       |  2 +-
+ drivers/nvme/host/ioctl.c      |  2 +-
+ include/linux/io_uring.h       | 89 +---------------------------------
+ include/linux/io_uring/cmd.h   | 82 +++++++++++++++++++++++++++++++
+ include/linux/io_uring_types.h | 31 ++++++++++++
+ io_uring/io_uring.c            |  1 +
+ io_uring/io_uring.h            | 10 ----
+ io_uring/rw.c                  |  2 +-
+ io_uring/uring_cmd.c           | 15 +-----
+ security/selinux/hooks.c       |  2 +-
+ security/smack/smack_lsm.c     |  2 +-
+ 12 files changed, 122 insertions(+), 117 deletions(-)
+ create mode 100644 include/linux/io_uring/cmd.h
 
-Best regards,
 -- 
-Jens Axboe
-
-
+2.43.0
 
 
