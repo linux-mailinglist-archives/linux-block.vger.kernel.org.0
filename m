@@ -1,142 +1,247 @@
-Return-Path: <linux-block+bounces-692-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-694-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85618803D54
-	for <lists+linux-block@lfdr.de>; Mon,  4 Dec 2023 19:41:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D2D2803D76
+	for <lists+linux-block@lfdr.de>; Mon,  4 Dec 2023 19:51:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 397F31F211FE
-	for <lists+linux-block@lfdr.de>; Mon,  4 Dec 2023 18:41:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 577E0B20A6D
+	for <lists+linux-block@lfdr.de>; Mon,  4 Dec 2023 18:51:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662C52C1BF;
-	Mon,  4 Dec 2023 18:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="RW4NtGgg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0B42FC26;
+	Mon,  4 Dec 2023 18:51:09 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA86CA
-	for <linux-block@vger.kernel.org>; Mon,  4 Dec 2023 10:41:02 -0800 (PST)
-Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-35d559a71d8so2986825ab.1
-        for <linux-block@vger.kernel.org>; Mon, 04 Dec 2023 10:41:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1701715261; x=1702320061; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8nF/2go7Oh+X36EEMP+OJQ3WMJQXuy7RxDAu7l6pxwI=;
-        b=RW4NtGggQhTrYZK1Qmc1d7zjjg5dEmVgaCD4soCV4Mvw7euO4WY6i6Qk+4dKfK2Rxy
-         z/hn93scfymepBPSqhCTdv38L9X1m46DxWENw51nUTf7eJdL85kZZUoK+34aT34MIkRl
-         vok1BDPx/c1Mx4VeDoNMSG/EMgfMikG7RFLNW7NWOMB6Q+Egcys6R9/4em9kUTbplSkv
-         LsDZYabo8pR6Q4RatjhBsuOiyi8zJ5R64tnmMXhVpUxGCkBIE0RzpTGXEf77FXSiB2sf
-         HxNkl3hIPRKUvIIETKcxebNYhsxmzve9jTMpL69LCiA+O26NxRMmw/kZIFgZ5uRelEen
-         oY3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701715261; x=1702320061;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8nF/2go7Oh+X36EEMP+OJQ3WMJQXuy7RxDAu7l6pxwI=;
-        b=f73pqreJobEMqLBR5ZHe+MUZ6OQZTt94IHKlo4zgKn9jyEB8BSxI2C8Q1K6rGSdAwV
-         UixDN8NuA32sLsVxZ1RBMOf7pvhMioxqCvVazBP+QVbmfgJWhC7g0KFrhEKz35Yr+Aeb
-         vWE3ebFrjpT5u60KmM3rwQWxIHFf5m+yjVYj4ottu0pNW4bF98YU0HwMXNXU3jL17lAz
-         nuKyBanKA5EK8moAsxrGBqqUH7VDrpm+m3gBCzc8ihbRvI7Z8u/WkuvHQfOM6CsbTWQL
-         Emd3PvtCQZTggx6x3IJaZ7cCknw59ZXgbZkhV/mtcFT5NSiukiduz2MpGwCeaN524jFI
-         TbTg==
-X-Gm-Message-State: AOJu0YzyBQHZR0p5IGAHsXKTFLVJU6XxLIgKwfRRtwM0dlPcYH+fSq1g
-	W+ED0txMDojKUDyDG+Cf8T+FLQ==
-X-Google-Smtp-Source: AGHT+IFwnXzSZ6zMUt3RFVhl4mWAcRHCUZgHbMqGp/IAkapXbe/q1AgrqU1/KeEhU/TQrREsFzf9Jg==
-X-Received: by 2002:a6b:660f:0:b0:7b3:58c4:b894 with SMTP id a15-20020a6b660f000000b007b358c4b894mr30267653ioc.1.1701715261426;
-        Mon, 04 Dec 2023 10:41:01 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id fn20-20020a056638641400b0045812e7b8bbsm2621977jab.25.2023.12.04.10.41.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Dec 2023 10:41:00 -0800 (PST)
-Message-ID: <f5ba61c7-aae8-407c-90e9-4d6d9316d33d@kernel.dk>
-Date: Mon, 4 Dec 2023 11:40:59 -0700
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2a07:de40:b251:101:10:150:64:2])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D096AF;
+	Mon,  4 Dec 2023 10:51:04 -0800 (PST)
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 14A361FE6A;
+	Mon,  4 Dec 2023 18:51:02 +0000 (UTC)
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id F113513B65;
+	Mon,  4 Dec 2023 18:51:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id dGqaOpUfbmXlYQAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 04 Dec 2023 18:51:01 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 6870FA07DB; Mon,  4 Dec 2023 19:51:01 +0100 (CET)
+Date: Mon, 4 Dec 2023 19:51:01 +0100
+From: Jan Kara <jack@suse.cz>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	"Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+	Akinobu Mita <akinobu.mita@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Disseldorp <ddiss@suse.de>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+	Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>, Karsten Graul <kgraul@linux.ibm.com>,
+	Karsten Keil <isdn@linux-pingi.de>,
+	Kees Cook <keescook@chromium.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Martin Habets <habetsm.xilinx@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Oliver Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ping-Ke Shih <pkshih@realtek.com>, Rich Felker <dalias@libc.org>,
+	Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Stanislaw Gruszka <stf_xl@wp.pl>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org,
+	ath10k@lists.infradead.org, dmaengine@vger.kernel.org,
+	iommu@lists.linux.dev, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-net-drivers@amd.com, linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, mpi3mr-linuxdrv.pdl@broadcom.com,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
+	Jan Kara <jack@suse.cz>,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+	Alexey Klimov <klimov.linux@gmail.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: Re: [PATCH v2 00/35] bitops: add atomic find_bit() operations
+Message-ID: <20231204185101.ddmkvsr2xxsmoh2u@quack3>
+References: <20231203192422.539300-1-yury.norov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/35] lib/sbitmap; make __sbitmap_get_word() using
- find_and_set_bit()
-Content-Language: en-US
-To: Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org,
- linux-block@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>, Mirsad Todorovac
- <mirsad.todorovac@alu.unizg.hr>, Matthew Wilcox <willy@infradead.org>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
- Alexey Klimov <klimov.linux@gmail.com>, Bart Van Assche
- <bvanassche@acm.org>, Sergey Shtylyov <s.shtylyov@omp.ru>
-References: <20231203192422.539300-1-yury.norov@gmail.com>
- <20231203193307.542794-1-yury.norov@gmail.com>
- <20231203193307.542794-2-yury.norov@gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20231203193307.542794-2-yury.norov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231203192422.539300-1-yury.norov@gmail.com>
+X-Spamd-Bar: ++++++++++++++
+X-Spam-Score: 14.88
+X-Rspamd-Server: rspamd1
+Authentication-Results: smtp-out2.suse.de;
+	dkim=none;
+	spf=softfail (smtp-out2.suse.de: 2a07:de40:b281:104:10:150:64:98 is neither permitted nor denied by domain of jack@suse.cz) smtp.mailfrom=jack@suse.cz;
+	dmarc=none
+X-Rspamd-Queue-Id: 14A361FE6A
+X-Spamd-Result: default: False [14.88 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	 TO_DN_SOME(0.00)[];
+	 R_SPF_SOFTFAIL(4.60)[~all];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_GT_50(0.00)[100];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(2.20)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FORGED_RECIPIENTS(2.00)[m:yury.norov@gmail.com,m:davem@davemloft.net,m:jejb@linux.ibm.com,m:haris.iqbal@ionos.com,m:akinobu.mita@gmail.com,m:akpm@linux-foundation.org,m:andersson@kernel.org,m:bp@alien8.de,m:brauner@kernel.org,m:dave.hansen@linux.intel.com,m:ecree.xilinx@gmail.com,m:edumazet@google.com,m:fenghua.yu@intel.com,m:geert@linux-m68k.org,m:gregory.greenman@intel.com,m:hughd@google.com,m:kuba@kernel.org,m:axboe@kernel.dk,m:jirislaby@kernel.org,m:kvalo@kernel.org,m:kgraul@linux.ibm.com,m:isdn@linux-pingi.de,m:keescook@chromium.org,m:leon@kernel.org,m:mark.rutland@arm.com,m:habetsm.xilinx@gmail.com,m:mchehab@kernel.org,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:peterz@infradead.org,m:dalias@libc.org,m:robh@kernel.org,m:robin.murphy@arm.com,m:seanjc@google.com,m:xueshuai@linux.alibaba.com,m:rostedt@goodmis.org,m:tsbogend@alpha.franken.de,m:tglx@linutronix.de,m:wenjia@linux.ibm.com,m:will@kernel.org,m:alsa-devel@alsa-project.org,m:linux-net-drivers@amd.com,m:mpi3mr-linuxdrv.pdl
+ @broadcom.com,m:x86@kernel.org,m:mirsad.todorovac@alu.unizg.hr,m:willy@infradead.org,m:andriy.shevchenko@linux.intel.com,m:maxim.kuvyrkov@linaro.org,m:klimov.linux@gmail.com,m:bvanassche@acm.org,s:s.shtylyov@omp.ru];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[wp.pl,xs4all.nl];
+	 NEURAL_SPAM_SHORT(2.49)[0.832];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DMARC_NA(1.20)[suse.cz];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 NEURAL_SPAM_LONG(3.50)[1.000];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,davemloft.net,zytor.com,linux.ibm.com,microsoft.com,ionos.com,gmail.com,linux-foundation.org,kernel.org,alien8.de,nvidia.com,opensource.wdc.com,linux.intel.com,suse.de,google.com,intel.com,linux-m68k.org,linuxfoundation.org,xs4all.nl,redhat.com,perex.cz,ziepe.ca,kernel.dk,resnulli.us,linux-pingi.de,chromium.org,arm.com,ellerman.id.au,monstr.eu,suse.com,infradead.org,realtek.com,libc.org,linux.alibaba.com,wp.pl,goodmis.org,alpha.franken.de,linutronix.de,users.sourceforge.jp,marvell.com,alsa-project.org,lists.infradead.org,lists.linux.dev,lists.linux-m68k.org,amd.com,lists.ozlabs.org,broadcom.com,suse.cz,alu.unizg.hr,rasmusvillemoes.dk,linaro.org,acm.org,omp.ru];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
 
-On 12/3/23 12:32 PM, Yury Norov wrote:
-> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-> index d0a5081dfd12..b21aebd07fd6 100644
-> --- a/lib/sbitmap.c
-> +++ b/lib/sbitmap.c
-> @@ -133,38 +133,11 @@ void sbitmap_resize(struct sbitmap *sb, unsigned int depth)
->  }
->  EXPORT_SYMBOL_GPL(sbitmap_resize);
->  
-> -static int __sbitmap_get_word(unsigned long *word, unsigned long depth,
-> +static inline int __sbitmap_get_word(unsigned long *word, unsigned long depth,
->  			      unsigned int hint, bool wrap)
->  {
-> -	int nr;
-> -
-> -	/* don't wrap if starting from 0 */
-> -	wrap = wrap && hint;
-> -
-> -	while (1) {
-> -		nr = find_next_zero_bit(word, depth, hint);
-> -		if (unlikely(nr >= depth)) {
-> -			/*
-> -			 * We started with an offset, and we didn't reset the
-> -			 * offset to 0 in a failure case, so start from 0 to
-> -			 * exhaust the map.
-> -			 */
-> -			if (hint && wrap) {
-> -				hint = 0;
-> -				continue;
-> -			}
-> -			return -1;
-> -		}
-> -
-> -		if (!test_and_set_bit_lock(nr, word))
-> -			break;
-> -
-> -		hint = nr + 1;
-> -		if (hint >= depth - 1)
-> -			hint = 0;
-> -	}
-> -
-> -	return nr;
-> +	return wrap ? find_and_set_bit_wrap_lock(word, depth, hint) :
-> +			find_and_set_next_bit_lock(word, depth, hint);
->  }
+Hello Yury!
 
-Please make this:
+On Sun 03-12-23 11:23:47, Yury Norov wrote:
+> Add helpers around test_and_{set,clear}_bit() that allow to search for
+> clear or set bits and flip them atomically.
+> 
+> The target patterns may look like this:
+> 
+> 	for (idx = 0; idx < nbits; idx++)
+> 		if (test_and_clear_bit(idx, bitmap))
+> 			do_something(idx);
+> 
+> Or like this:
+> 
+> 	do {
+> 		bit = find_first_bit(bitmap, nbits);
+> 		if (bit >= nbits)
+> 			return nbits;
+> 	} while (!test_and_clear_bit(bit, bitmap));
+> 	return bit;
+> 
+> In both cases, the opencoded loop may be converted to a single function
+> or iterator call. Correspondingly:
+> 
+> 	for_each_test_and_clear_bit(idx, bitmap, nbits)
+> 		do_something(idx);
+> 
+> Or:
+> 	return find_and_clear_bit(bitmap, nbits);
 
-	if (wrap)
-		return find_and_set_bit_wrap_lock(word, depth, hint) :
-	return find_and_set_next_bit_lock(word, depth, hint);
+These are fine cleanups but they actually don't address the case that has
+triggered all these changes - namely the xarray use of find_next_bit() in
+xas_find_chunk().
 
-so this is a lot more readable.
+...
+> This series is a result of discussion [1]. All find_bit() functions imply
+> exclusive access to the bitmaps. However, KCSAN reports quite a number
+> of warnings related to find_bit() API. Some of them are not pointing
+> to real bugs because in many situations people intentionally allow
+> concurrent bitmap operations.
+> 
+> If so, find_bit() can be annotated such that KCSAN will ignore it:
+> 
+>         bit = data_race(find_first_bit(bitmap, nbits));
 
+No, this is not a correct thing to do. If concurrent bitmap changes can
+happen, find_first_bit() as it is currently implemented isn't ever a safe
+choice because it can call __ffs(0) which is dangerous as you properly note
+above. I proposed adding READ_ONCE() into find_first_bit() / find_next_bit()
+implementation to fix this issue but you disliked that. So other option we
+have is adding find_first_bit() and find_next_bit() variants that take
+volatile 'addr' and we have to use these in code like xas_find_chunk()
+which cannot be converted to your new helpers.
+
+> This series addresses the other important case where people really need
+> atomic find ops. As the following patches show, the resulting code
+> looks safer and more verbose comparing to opencoded loops followed by
+> atomic bit flips.
+> 
+> In [1] Mirsad reported 2% slowdown in a single-thread search test when
+> switching find_bit() function to treat bitmaps as volatile arrays. On
+> the other hand, kernel robot in the same thread reported +3.7% to the
+> performance of will-it-scale.per_thread_ops test.
+
+It was actually me who reported the regression here [2] but whatever :)
+
+[2] https://lore.kernel.org/all/20231011150252.32737-1-jack@suse.cz
+
+> Assuming that our compilers are sane and generate better code against
+> properly annotated data, the above discrepancy doesn't look weird. When
+> running on non-volatile bitmaps, plain find_bit() outperforms atomic
+> find_and_bit(), and vice-versa.
+> 
+> So, all users of find_bit() API, where heavy concurrency is expected,
+> are encouraged to switch to atomic find_and_bit() as appropriate.
+
+Well, all users where any concurrency can happen should switch. Otherwise
+they are prone to the (admittedly mostly theoretical) data race issue.
+
+								Honza
 -- 
-Jens Axboe
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
