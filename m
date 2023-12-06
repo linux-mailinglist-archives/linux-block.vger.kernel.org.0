@@ -1,66 +1,107 @@
-Return-Path: <linux-block+bounces-793-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-794-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE3EA807A8A
-	for <lists+linux-block@lfdr.de>; Wed,  6 Dec 2023 22:34:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63D7F807AD0
+	for <lists+linux-block@lfdr.de>; Wed,  6 Dec 2023 22:53:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66B0828257B
-	for <lists+linux-block@lfdr.de>; Wed,  6 Dec 2023 21:34:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AE4E1F21941
+	for <lists+linux-block@lfdr.de>; Wed,  6 Dec 2023 21:53:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8F857097A;
-	Wed,  6 Dec 2023 21:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81EAA3FE55;
+	Wed,  6 Dec 2023 21:52:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LTp9w+Pj"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="A0FaZ5VP"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C349E18D
-	for <linux-block@vger.kernel.org>; Wed,  6 Dec 2023 13:34:30 -0800 (PST)
-Date: Wed, 6 Dec 2023 16:34:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1701898467;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JfTfgeKvI5T6VMc/0k0zRS053aDBKMmp57C0Z7pwgG0=;
-	b=LTp9w+Pj3M8wkdwFgP7qAhkJL9B6PDheGDmTOpK4mSfcyT6RrrZBCjfJ/UoIcn5yN/OePQ
-	06yeokFgJzKrvhjJ8nEWD++Nv8fzU8rYPFRzs/jhlKUdwbGs/wk/ObaJmnGWa3PxkH+iWI
-	ihdfyXlXxO1cfSaXWtbpSscPyiHC8JQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Phillip Lougher <phillip@squashfs.org.uk>
-Subject: Re: [PATCH 1/3] block: Rework bio_for_each_segment_all()
-Message-ID: <20231206213424.rn7i42zoyo6zxufk@moria.home.lan>
-References: <20231122232818.178256-1-kent.overstreet@linux.dev>
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A54710C8
+	for <linux-block@vger.kernel.org>; Wed,  6 Dec 2023 13:52:54 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-db539f21712so301965276.1
+        for <linux-block@vger.kernel.org>; Wed, 06 Dec 2023 13:52:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1701899573; x=1702504373; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ad4QKqllEurVWf/Pv2WnyL7sj04ktRUEA1KwimHLGBw=;
+        b=A0FaZ5VPghmIMOFtE7VI5ktxGozz3Olwlubi9g38u8YjHjJ4FQqmsMbHx5O5owP402
+         MCvGx1UDIadD/hB9HuYVtFRO/iIwo0dNq0lSiw4mz8KYluLoEdNgvKuQQgFIuh8Nv1eB
+         kYposvN9K5OwVDmbRa3Gv9n912+wMYAeAfqA632ImawSese1WvEBzRAEmcBfENMmAHDE
+         LJudlvpdo32+Q65nFFXz1GnhCjH075c+xgvoc/efJW9ZJesqy2nIpO9HcSJ8dBAPDRyQ
+         yZGac/GZ9q3ZVNEXO8rmyC7iA0zgf+Vwi80FNnTTU73Q8ksqhIGRg/Y6vOxjZt64WSWi
+         yKYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701899573; x=1702504373;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ad4QKqllEurVWf/Pv2WnyL7sj04ktRUEA1KwimHLGBw=;
+        b=nMeUeh0/CAJjHWbJhRxNczcXL8yvZk89X5qn4JPWPwB+7UIxNa9qAG8barlAg64ujW
+         VD8kj9d5b2y3/mdKkIonSEVdx5ZRb9CaEIXc+PepawuBc3mHsxKuBYwJQpaMd5ZvWY7l
+         ATSoSmP9Icid/ZjqAWc3c1vH9SMRbRHHJzlDjnXVikMMMBUf8u+sy95w72InoHRV9MFL
+         2Dd8ksZEMqhn388S46HWwYWE3MZAbNIwvZ6371Kxm1jCjJncwGt2GMcx1YKKTC2knBJ/
+         TC7Uhu1x+X+0POZA6Prk8Z5zG/mptEtVKZehFjiJ5R84/R3ObiXmE6oTXqADOv2SPtx2
+         jmmw==
+X-Gm-Message-State: AOJu0Yw7HdJTlFkWW11Ikj2LvEKKlQWtoUTbyPH5kuJiCkiw8Rijjnl9
+	y9cb/AqJYzI+IqMdRSKZFrW2Nse5fOHRkDKvgVj/
+X-Google-Smtp-Source: AGHT+IEj7nPBQx69pTJuIU/DScLOgVaCvMx3IAuTkYQQJ5vMAh2Hehp1yFZ/6ct0anbgpUrLprVHp8nDNRkJVZqoN6c=
+X-Received: by 2002:a25:ab66:0:b0:db7:98ba:2468 with SMTP id
+ u93-20020a25ab66000000b00db798ba2468mr1505130ybi.28.1701899573074; Wed, 06
+ Dec 2023 13:52:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231122232818.178256-1-kent.overstreet@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+References: <20231206060629.2827226-1-david@fromorbit.com> <20231206060629.2827226-6-david@fromorbit.com>
+In-Reply-To: <20231206060629.2827226-6-david@fromorbit.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 6 Dec 2023 16:52:42 -0500
+Message-ID: <CAHC9VhTP3hRAkmp7wOKGrEzY5OXXJpnuofTG_+KdXDku18vkeA@mail.gmail.com>
+Subject: Re: [PATCH 05/11] selinux: use dlist for isec inode list
+To: Dave Chinner <david@fromorbit.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-cachefs@redhat.com, dhowells@redhat.com, gfs2@lists.linux.dev, 
+	dm-devel@lists.linux.dev, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 22, 2023 at 06:28:13PM -0500, Kent Overstreet wrote:
-> This patch reworks bio_for_each_segment_all() to be more inline with how
-> the other bio iterators work:
-> 
->  - bio_iter_all_peek() now returns a synthesized bio_vec; we don't stash
->    one in the iterator and pass a pointer to it - bad. This way makes it
->    clearer what's a constructed value vs. a reference to something
->    pre-existing, and it also will help with cleaning up and
->    consolidating code with bio_for_each_folio_all().
-> 
->  - We now provide bio_for_each_segment_all_continue(), for squashfs:
->    this makes their code clearer.
+On Wed, Dec 6, 2023 at 1:07=E2=80=AFAM Dave Chinner <david@fromorbit.com> w=
+rote:
+>
+> From: Dave Chinner <dchinner@redhat.com>
+>
+> Because it's a horrible point of lock contention under heavily
+> concurrent directory traversals...
+>
+>   - 12.14% d_instantiate
+>      - 12.06% security_d_instantiate
+>         - 12.13% selinux_d_instantiate
+>            - 12.16% inode_doinit_with_dentry
+>               - 15.45% _raw_spin_lock
+>                  - do_raw_spin_lock
+>                       14.68% __pv_queued_spin_lock_slowpath
+>
+>
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  include/linux/dlock-list.h        |  9 ++++
+>  security/selinux/hooks.c          | 72 +++++++++++++++----------------
+>  security/selinux/include/objsec.h |  6 +--
+>  3 files changed, 47 insertions(+), 40 deletions(-)
 
-Jens, can we _please_ get this series merged so bcachefs isn't reaching
-into bio/bvec internals?
+In the cover letter you talk about testing, but I didn't see any
+mention of testing with SELinux enabled.  Given the lock contention
+stats in the description above I'm going to assume you did test this
+and pass along my ACK, but if you haven't tested the changes below
+please do before sending this anywhere important.
+
+Acked-by: Paul Moore <paul@paul-moore.com>
+
+--=20
+paul-moore.com
 
