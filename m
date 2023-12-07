@@ -1,68 +1,105 @@
-Return-Path: <linux-block+bounces-813-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-815-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 558A8807F82
-	for <lists+linux-block@lfdr.de>; Thu,  7 Dec 2023 05:18:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D5C1807F9E
+	for <lists+linux-block@lfdr.de>; Thu,  7 Dec 2023 05:33:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6C0F28241F
-	for <lists+linux-block@lfdr.de>; Thu,  7 Dec 2023 04:18:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF8E71C20A4F
+	for <lists+linux-block@lfdr.de>; Thu,  7 Dec 2023 04:33:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ED32569E;
-	Thu,  7 Dec 2023 04:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20A78107AA;
+	Thu,  7 Dec 2023 04:33:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NFO11Xyc"
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="wT5VYrmQ"
 X-Original-To: linux-block@vger.kernel.org
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9B0D4B
-	for <linux-block@vger.kernel.org>; Wed,  6 Dec 2023 20:18:33 -0800 (PST)
-Date: Wed, 6 Dec 2023 23:18:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1701922711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2mvMz4Xtdgv0/4300WneKlj3cKdx36cdNrIcEspzdyw=;
-	b=NFO11XycgEixh3ft6g48SeLb7yeXS3J4BErSklwsmCkY/vNLDM+uI54ppt0a97GslK3N9e
-	vh/Hdk0XILHlX93REmLqe4QAbbVtBqUPa6B3yxXoX9OOcTZoRfm5eTauUVSFjjARyChQf0
-	c0CpqzY4BCG20/1m7mZGJapZt1QRhfw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-cachefs@redhat.com, dhowells@redhat.com, gfs2@lists.linux.dev,
-	dm-devel@lists.linux.dev, linux-security-module@vger.kernel.org,
-	selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/11] vfs: Remove unnecessary list_for_each_entry_safe()
- variants
-Message-ID: <20231207041827.yn5d46g7lvz3d3um@moria.home.lan>
-References: <20231206060629.2827226-1-david@fromorbit.com>
- <20231206060629.2827226-3-david@fromorbit.com>
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01ACAD4B
+	for <linux-block@vger.kernel.org>; Wed,  6 Dec 2023 20:33:03 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id 5614622812f47-3b84e328327so434685b6e.2
+        for <linux-block@vger.kernel.org>; Wed, 06 Dec 2023 20:33:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1701923582; x=1702528382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f/Lf0+IIfQE0io2nHdmDYhVLqD8zUaOijlO0hMGWTXo=;
+        b=wT5VYrmQHNPb1qQ3+Ylr9AB94gfVkmZCFtEREN9DtQks6bAY4XrND3mEdttHR1wUFc
+         iTMAjQlS3o3LvUrt8m1x0G1eUlxaF3TpDvc1sl6Iqnv8z3Q+K/pRmBXMRfRo4+yDjRGl
+         ghcAxp3IzknCeqJbtDbB2MlB1RyGOM2LDvqOqWYvjd5uHkHxjkfAHdLuYfLhb8hWdMS5
+         MTaSlG6GHaZbIC04MgNmA1u1mJJSYnxM0tRpJ+3m8orCYnGracbeMtYooR1sH/1hbjEg
+         at7BC0WM+rm9qm5t8GXilCu/mYYtKbpy7L6s3BCL1IFgBtZvYBRa7wovb16RpUfuvPUR
+         ELPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701923582; x=1702528382;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f/Lf0+IIfQE0io2nHdmDYhVLqD8zUaOijlO0hMGWTXo=;
+        b=KyJx4fyqf96JHF43ShU5dhCwUtNo97T9c6yQzQdchh/b7aHvpxy4QysfYrAvfU8cH0
+         hT/c9rh+AmhlMPQkiezgjMOfS8UtRLG8c0FI5iSwENMSbOO1yfoUBBsmUoarXJrjYHgo
+         Hyj7RaVmOfIpZkr/ouJHMQrNZPdLWHrzSAsr1ndn1md7nJwFWQY/66xB83botvqPWLhH
+         XXhpLui7RLyH96LzkIMUIefzodo662/vehIO9X38a8pRpVDnA1kjnxtBKMvhcnFUBUAC
+         ZELvSSHKD+fUSxWIwQi7U3w7RyYanO7YTJrx2SqcVMsM57Xj/jYDw3mo6xRiXWjqYNsf
+         RrRQ==
+X-Gm-Message-State: AOJu0Yy1MEzYKH8kmWnYuzhdTzPhOR/cwNUR9q/GXJbvxoASYmbmmZBC
+	XuNjBixtdwErmslOKUVdhDFy7w==
+X-Google-Smtp-Source: AGHT+IHJYbFIUTZB44VBOizgu6C4ZjGpZ8ov/2VlLfUy+pzKCRy95+hHpycf+1VuZxTdnNIi7xPU9A==
+X-Received: by 2002:aca:1b02:0:b0:3b9:dcf0:63b9 with SMTP id b2-20020aca1b02000000b003b9dcf063b9mr615047oib.23.1701923581661;
+        Wed, 06 Dec 2023 20:33:01 -0800 (PST)
+Received: from localhost.localdomain.localdomain ([8.210.91.195])
+        by smtp.gmail.com with ESMTPSA id v19-20020aa78513000000b006cea1e12564sm332971pfn.81.2023.12.06.20.32.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Dec 2023 20:33:01 -0800 (PST)
+From: Li Feng <fengli@smartx.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	linux-block@vger.kernel.org (open list:BLOCK LAYER),
+	linux-kernel@vger.kernel.org (open list),
+	virtualization@lists.linux.dev (open list:VIRTIO BLOCK AND SCSI DRIVERS)
+Cc: Li Feng <fengli@smartx.com>
+Subject: [PATCH] virtio_blk: set the default scheduler to none
+Date: Thu,  7 Dec 2023 12:31:05 +0800
+Message-ID: <20231207043118.118158-1-fengli@smartx.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231206060629.2827226-3-david@fromorbit.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 06, 2023 at 05:05:31PM +1100, Dave Chinner wrote:
-> From: Jan Kara <jack@suse.cz>
-> 
-> evict_inodes() and invalidate_inodes() use list_for_each_entry_safe()
-> to iterate sb->s_inodes list. However, since we use i_lru list entry for
-> our local temporary list of inodes to destroy, the inode is guaranteed
-> to stay in sb->s_inodes list while we hold sb->s_inode_list_lock. So
-> there is no real need for safe iteration variant and we can use
-> list_for_each_entry() just fine.
-> 
-> Signed-off-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Waiman Long <longman@redhat.com>
+virtio-blk is generally used in cloud computing scenarios, where the
+performance of virtual disks is very important. The mq-deadline scheduler
+has a big performance drop compared to none with single queue. In my tests,
+mq-deadline 4k readread iops were 270k compared to 450k for none. So here
+the default scheduler of virtio-blk is set to "none".
 
-Reviewed-by: Kent Overstreet <kent.overstreet@linux.dev>
+Signed-off-by: Li Feng <fengli@smartx.com>
+---
+ drivers/block/virtio_blk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index d53d6aa8ee69..5183ec8e00be 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -1367,7 +1367,7 @@ static int virtblk_probe(struct virtio_device *vdev)
+ 	vblk->tag_set.ops = &virtio_mq_ops;
+ 	vblk->tag_set.queue_depth = queue_depth;
+ 	vblk->tag_set.numa_node = NUMA_NO_NODE;
+-	vblk->tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
++	vblk->tag_set.flags = BLK_MQ_F_SHOULD_MERGE | BLK_MQ_F_NO_SCHED_BY_DEFAULT;
+ 	vblk->tag_set.cmd_size =
+ 		sizeof(struct virtblk_req) +
+ 		sizeof(struct scatterlist) * VIRTIO_BLK_INLINE_SG_CNT;
+-- 
+2.42.0
+
 
