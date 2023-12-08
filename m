@@ -1,60 +1,39 @@
-Return-Path: <linux-block+bounces-888-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-890-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3287809A1E
-	for <lists+linux-block@lfdr.de>; Fri,  8 Dec 2023 04:15:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13F12809A8F
+	for <lists+linux-block@lfdr.de>; Fri,  8 Dec 2023 04:38:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D4A1281DA8
-	for <lists+linux-block@lfdr.de>; Fri,  8 Dec 2023 03:15:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBD901F21120
+	for <lists+linux-block@lfdr.de>; Fri,  8 Dec 2023 03:37:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA0663D7A;
-	Fri,  8 Dec 2023 03:15:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4E94C65;
+	Fri,  8 Dec 2023 03:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="R1dbJvL4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0PjQTVc"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DE810DE
-	for <linux-block@vger.kernel.org>; Thu,  7 Dec 2023 19:15:20 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-2886d445d8dso402726a91.1
-        for <linux-block@vger.kernel.org>; Thu, 07 Dec 2023 19:15:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1702005320; x=1702610120; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jGfLZ/anCgoizin3EJrsBtWsOUnIV8oEkhHw3KAoiyE=;
-        b=R1dbJvL4+eLjEhhg0VgKY1AyJG3WfUpl2uxQt+FrXUBP2zJo3ZTU1KPTLIGLtnpSvl
-         WVtby8UN9DTj5oBxNmDlOmfjSz+86PVJOXQ5XTk+0QOpU32ClIiM52GlRRfnjv+o2wTL
-         FJ7mn4tve4W+KE7AhVjKoQ3JwmfPod4VQDdS0O8aO+OdAlidD2cS5xY04gE/Ncwb52Wv
-         s6PoYDk+M7xrGj8YUaBpbUjLRNaqZsqHilmMLjBcI2UZhYP9cXdprcq/USkp3IGdSp3p
-         aJoJSuaraEW1cwQgBvbsqF0FH/fjvDJWvCwZzNPe5TpdyvDb/0JOGMriSqLcnHEEKCuR
-         Jz8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702005320; x=1702610120;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jGfLZ/anCgoizin3EJrsBtWsOUnIV8oEkhHw3KAoiyE=;
-        b=IxbXLczcpNzCQwdqWgAYfLDIaUcP52/Un8Fa5L9BfrBx2QwNMW/Hzv9sC5+zEdWhT8
-         ImeAXnb5NYiwolza5NupMsqAMmKTc/CzpvoO+S037MmTp0SIfBoGo5xZ7YGu9VYEvNpq
-         FSl/lJUZAxgn19fjKs0Be+lwfHHY1S1sbMQxQDcNNZOmCIACeuUjMgm18LGuVcJe8I3o
-         AwMQLg4+rRw4Fqb+cWjaJxkZOvvcVGU1RoRuxPgRpzcXYX5z91mBNjI+DY/sUce72BC5
-         NbC0dGXxLNTUSo8Ucm1tlNSmJPdO0ivnm16MYmCJ8ROPPoQCx+yqH4pk6lTEiSzuNtfn
-         LnMg==
-X-Gm-Message-State: AOJu0YzzE0GEEVPuwN0dze5OnH4A4G/x6AECt8+M8lG2LzF/NlYBLa9a
-	MbrAgrnsjij23kWuGBBr6oPTeg==
-X-Google-Smtp-Source: AGHT+IEb0VGLsYlBNxLkCRq834nrTlhul/JW2q5GdSZUzgMVZYylVw6G7cr3f6N2ts4MFxlhZfZU8A==
-X-Received: by 2002:a05:6a20:1583:b0:18b:4b84:3a1 with SMTP id h3-20020a056a20158300b0018b4b8403a1mr7015450pzj.5.1702005320251;
-        Thu, 07 Dec 2023 19:15:20 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id w4-20020aa78584000000b006ce5c583c89sm532425pfn.15.2023.12.07.19.15.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Dec 2023 19:15:19 -0800 (PST)
-Message-ID: <d9afeea8-2e67-4a90-8f7e-98b4c904a314@kernel.dk>
-Date: Thu, 7 Dec 2023 20:15:18 -0700
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2894C60
+	for <linux-block@vger.kernel.org>; Fri,  8 Dec 2023 03:37:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D190BC433C7;
+	Fri,  8 Dec 2023 03:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702006675;
+	bh=9SCEYl+KewgxDkj1I8Bn5lIVPoRX1EKQC9T7qsVgEEM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p0PjQTVcLc8gSQ0fXVUUMvu1bYa0HR2Y/WeS5O5hEmZGb6pKTp6/3LdBRcCZVqmq+
+	 m+otqBb+PTnwIuUv3WL0+NHwK8eAe0qoC0fxIXJzCqwwL5i3fnDfjoMF0voO8We1RO
+	 +GO3D5iUJ7zf7unvggTCrXTqbhHrfyeMLra0p28DxpGx8Z7NYBJDyDqDlKhwAS3cat
+	 ePsKDKIHx0EmeqCm6aGy+3n/11F/rpKWJ3/J7ME9RnU6EpfEsqZyBw8OOrts5jWZL3
+	 OOSNMf7JAdbHNYf3WEeKnpVCd6qGB+RaT3gaE/FGM6GoE52+TPh4I20+7k1Bfdl9RN
+	 rgYNh3z2O3cxg==
+Message-ID: <37f3179a-9add-4ee6-9ae9-cf84c1584366@kernel.org>
+Date: Fri, 8 Dec 2023 12:37:51 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -62,48 +41,181 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] virtio_blk: set the default scheduler to none
+Subject: Re: [PATCH 3/3] block/mq-deadline: Disable I/O prioritization in
+ certain cases
+To: Bart Van Assche <bvanassche@acm.org>, Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+ Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20231205053213.522772-1-bvanassche@acm.org>
+ <20231205053213.522772-4-bvanassche@acm.org>
+ <100ddd75-eef5-44e9-93ff-34e093b19ab7@kernel.org>
+ <4d506909-e063-4918-a9d3-e91bfa5a41a3@acm.org>
 Content-Language: en-US
-To: Keith Busch <kbusch@kernel.org>, Ming Lei <ming.lei@redhat.com>
-Cc: Li Feng <fengli@smartx.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Stefan Hajnoczi <stefanha@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>,
- "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:VIRTIO BLOCK AND SCSI DRIVERS" <virtualization@lists.linux.dev>
-References: <20231207043118.118158-1-fengli@smartx.com>
- <ZXJ4xNawrSRem2qe@fedora> <ZXKDFdzXN4xQAuBm@kbusch-mbp>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <ZXKDFdzXN4xQAuBm@kbusch-mbp>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <4d506909-e063-4918-a9d3-e91bfa5a41a3@acm.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/7/23 7:44 PM, Keith Busch wrote:
-> On Fri, Dec 08, 2023 at 10:00:36AM +0800, Ming Lei wrote:
->> On Thu, Dec 07, 2023 at 12:31:05PM +0800, Li Feng wrote:
->>> virtio-blk is generally used in cloud computing scenarios, where the
->>> performance of virtual disks is very important. The mq-deadline scheduler
->>> has a big performance drop compared to none with single queue. In my tests,
->>> mq-deadline 4k readread iops were 270k compared to 450k for none. So here
->>> the default scheduler of virtio-blk is set to "none".
->>
->> The test result shows you may not test HDD. backing of virtio-blk.
->>
->> none can lose IO merge capability more or less, so probably sequential IO perf
->> drops in case of HDD backing.
+On 12/8/23 09:03, Bart Van Assche wrote:
+> On 12/5/23 16:42, Damien Le Moal wrote:
+>> ... when prio_aging_expire is set to 0. Right ? Otherwise, the sentence above
+>> reads as if you are disabling IO priority for zoned devices...
 > 
-> More of a curiosity, as I don't immediately even have an HDD to test
-> with! Isn't it more useful for the host providing the backing HDD use an
-> appropriate IO scheduler? virtio-blk has similiarities with a stacking
-> block driver, and we usually don't need to stack IO schedulers.
+> Hi Damien,
+> 
+> I just noticed that I posted an old version of this patch (3/3). In the patch
+> below I/O priorities are ignored for zoned writes.
+> 
+> Thanks,
+> 
+> Bart.
+> 
+> 
+> Subject: [PATCH] block/mq-deadline: Disable I/O prioritization in certain cases
+> 
+> Fix the following two issues:
+> - Even with prio_aging_expire set to zero, I/O priorities still affect the
+>    request order.
+> - Assigning I/O priorities with the ioprio cgroup policy breaks zoned
+>    storage support in the mq-deadline scheduler.
+> 
+> This patch fixes both issues by disabling I/O prioritization for these
+> two cases.
+> 
+> Cc: Damien Le Moal <dlemoal@kernel.org>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>   block/mq-deadline.c | 37 ++++++++++++++++++++++++-------------
+>   1 file changed, 24 insertions(+), 13 deletions(-)
+> 
+> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+> index fe5da2ade953..310ff133ce20 100644
+> --- a/block/mq-deadline.c
+> +++ b/block/mq-deadline.c
+> @@ -119,18 +119,27 @@ deadline_rb_root(struct dd_per_prio *per_prio, struct request *rq)
+>   	return &per_prio->sort_list[rq_data_dir(rq)];
+>   }
+> 
+> +static bool dd_use_io_priority(struct deadline_data *dd, enum req_op op)
+> +{
+> +	return dd->prio_aging_expire != 0 && !op_needs_zoned_write_locking(op);
+> +}
 
-Indeed, any kind of scheduling or merging should not need to happen
-here, but rather at the lower end. But there could be an argument to be
-made for having fewer commands coming out of virtio-blk, however. Would
-be interesting to test.
+Hard NACK on this. The reason is that this will disable IO priority also for
+sensible use cases that use libaio/io_uring with direct IOs, with an application
+that does the right thing for writes, namely assigning the same priority for all
+writes to a zone. There are some use cases like this in production.
+
+I do understand that there is a problem when IO priorities come from cgroups and
+the user go through a file system. But that should be handled by the file
+system. That is, for f2fs, all writes going to the same zone should have the
+same priority. Otherwise, priority inversion issues will lead to non sequential
+write patterns.
+
+Ideally, we should indeed have a generic solution for the cgroup case. But it
+seems that for now, the simplest thing to do is to not allow priorities through
+cgroups for writes to zoned devices, unless cgroups is made more intellignet
+about it and manage bio priorities per zone to avoid priority inversion within a
+zone.
+
+> +
+>   /*
+>    * Returns the I/O priority class (IOPRIO_CLASS_*) that has been assigned to a
+>    * request.
+>    */
+> -static u8 dd_rq_ioclass(struct request *rq)
+> +static u8 dd_rq_ioclass(struct deadline_data *dd, struct request *rq)
+>   {
+> -	return IOPRIO_PRIO_CLASS(req_get_ioprio(rq));
+> +	if (dd_use_io_priority(dd, req_op(rq)))
+> +		return IOPRIO_PRIO_CLASS(req_get_ioprio(rq));
+> +	return IOPRIO_CLASS_NONE;
+>   }
+> 
+> -static u8 dd_bio_ioclass(struct bio *bio)
+> +static u8 dd_bio_ioclass(struct deadline_data *dd, struct bio *bio)
+>   {
+> -	return IOPRIO_PRIO_CLASS(bio->bi_ioprio);
+> +	if (dd_use_io_priority(dd, bio_op(bio)))
+> +		return IOPRIO_PRIO_CLASS(bio->bi_ioprio);
+> +	return IOPRIO_CLASS_NONE;
+>   }
+> 
+>   /*
+> @@ -233,7 +242,7 @@ static void dd_request_merged(struct request_queue *q, struct request *req,
+>   			      enum elv_merge type)
+>   {
+>   	struct deadline_data *dd = q->elevator->elevator_data;
+> -	const u8 ioprio_class = dd_rq_ioclass(req);
+> +	const u8 ioprio_class = dd_rq_ioclass(dd, req);
+>   	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
+>   	struct dd_per_prio *per_prio = &dd->per_prio[prio];
+> 
+> @@ -253,7 +262,7 @@ static void dd_merged_requests(struct request_queue *q, struct request *req,
+>   			       struct request *next)
+>   {
+>   	struct deadline_data *dd = q->elevator->elevator_data;
+> -	const u8 ioprio_class = dd_rq_ioclass(next);
+> +	const u8 ioprio_class = dd_rq_ioclass(dd, next);
+>   	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
+> 
+>   	lockdep_assert_held(&dd->lock);
+> @@ -550,7 +559,7 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
+>   	dd->batching++;
+>   	deadline_move_request(dd, per_prio, rq);
+>   done:
+> -	ioprio_class = dd_rq_ioclass(rq);
+> +	ioprio_class = dd_rq_ioclass(dd, rq);
+>   	prio = ioprio_class_to_prio[ioprio_class];
+>   	dd->per_prio[prio].latest_pos[data_dir] = blk_rq_pos(rq);
+>   	dd->per_prio[prio].stats.dispatched++;
+> @@ -606,9 +615,11 @@ static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
+>   	enum dd_prio prio;
+> 
+>   	spin_lock(&dd->lock);
+> -	rq = dd_dispatch_prio_aged_requests(dd, now);
+> -	if (rq)
+> -		goto unlock;
+> +	if (dd->prio_aging_expire != 0) {
+> +		rq = dd_dispatch_prio_aged_requests(dd, now);
+> +		if (rq)
+> +			goto unlock;
+> +	}
+> 
+>   	/*
+>   	 * Next, dispatch requests in priority order. Ignore lower priority
+> @@ -749,7 +760,7 @@ static int dd_request_merge(struct request_queue *q, struct request **rq,
+>   			    struct bio *bio)
+>   {
+>   	struct deadline_data *dd = q->elevator->elevator_data;
+> -	const u8 ioprio_class = dd_bio_ioclass(bio);
+> +	const u8 ioprio_class = dd_bio_ioclass(dd, bio);
+>   	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
+>   	struct dd_per_prio *per_prio = &dd->per_prio[prio];
+>   	sector_t sector = bio_end_sector(bio);
+> @@ -814,7 +825,7 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+>   	 */
+>   	blk_req_zone_write_unlock(rq);
+> 
+> -	prio = ioprio_class_to_prio[dd_rq_ioclass(rq)];
+> +	prio = ioprio_class_to_prio[dd_rq_ioclass(dd, rq)];
+>   	per_prio = &dd->per_prio[prio];
+>   	if (!rq->elv.priv[0]) {
+>   		per_prio->stats.inserted++;
+> @@ -923,7 +934,7 @@ static void dd_finish_request(struct request *rq)
+>   {
+>   	struct request_queue *q = rq->q;
+>   	struct deadline_data *dd = q->elevator->elevator_data;
+> -	const u8 ioprio_class = dd_rq_ioclass(rq);
+> +	const u8 ioprio_class = dd_rq_ioclass(dd, rq);
+>   	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
+>   	struct dd_per_prio *per_prio = &dd->per_prio[prio];
+> 
+> 
 
 -- 
-Jens Axboe
+Damien Le Moal
+Western Digital Research
 
 
