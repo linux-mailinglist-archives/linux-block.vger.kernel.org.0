@@ -1,112 +1,70 @@
-Return-Path: <linux-block+bounces-1016-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1020-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AEE380EA16
-	for <lists+linux-block@lfdr.de>; Tue, 12 Dec 2023 12:13:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0824780ECE6
+	for <lists+linux-block@lfdr.de>; Tue, 12 Dec 2023 14:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7A0FB20E46
-	for <lists+linux-block@lfdr.de>; Tue, 12 Dec 2023 11:13:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8ECD5B20A86
+	for <lists+linux-block@lfdr.de>; Tue, 12 Dec 2023 13:10:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37FCA5CD1C;
-	Tue, 12 Dec 2023 11:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72F1B6166C;
+	Tue, 12 Dec 2023 13:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2RHzZKk"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FtF77hqK"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15E71710;
-	Tue, 12 Dec 2023 03:12:34 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1d0aaa979f0so31514645ad.0;
-        Tue, 12 Dec 2023 03:12:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702379554; x=1702984354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fRWJvmM8+hpVsGJoyvu2YuvVcQVJUfQcuTmMveSE8/s=;
-        b=c2RHzZKkum9NRONbaeT4jXwKCCVFHUqe5Q41RMCOVKCoyQRbyeen+mfbfqXb90MhHQ
-         OE2pUZnsH3fHowyc8v6LxD3T84t9Uo40t9aqIf2iy++6OtEcwRrmDXNaYtHHqnk08HD6
-         DerSRz91i6ZpDKMXHFKGHpvfww4ypTHPZoQiV9AOgWnBsedwaV/JcXk2vEQ3IGfzmrlJ
-         NwV0NnylvJM4WIkBLw17bhsouuBuccKW1zFej5wBrs0zxXqqVzdbiKjJSnZ6SjUKi2vW
-         +yCJ2mESMchde54tZgnHydGt6bwjCBqkbc8ROScJnOYPji1SK7WDGzwWm4Ex42thBZms
-         4PXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702379554; x=1702984354;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fRWJvmM8+hpVsGJoyvu2YuvVcQVJUfQcuTmMveSE8/s=;
-        b=hx3/PmBitkBd2/sLg4JodXUIGi3v62m8BMUGJb11XAO11kuVnm2c268A7A2Lc/oZSP
-         IeW5day9W7YFVO0jjD+rmSnfNHE4w7UzqfD6xev8pmvFfQjGnf9QomdGd79JcAkNysFE
-         XA+ZHujVnF+bxm0wXWeN+5K/L4W59OeiS6EXDAWetr7AXl6OLb+eSNXxbYOOPg2vkIQX
-         bsKX7wABiHdYpQEJwmmOYeg0EuFS5QZJKRfQ739qITAl2m4Oz3UrBgl09Gmv81nQ21On
-         0voLz6Hooi05IBGgLjgGjaTBnHYHkcTrYNNpXFVLWo9Vbd2msCwGxSrV8XPgbsUazWxF
-         A88g==
-X-Gm-Message-State: AOJu0Yx/dw4eCAWONhgafgx83OqEv2zKlzqjFdnMte4aA3qgCtN5INVM
-	3fFhMLV4L/dJobMEGBON01o=
-X-Google-Smtp-Source: AGHT+IFlcy+h/DMb4yTLMEPWYaQdXpLguXXRtdGTaHrTLhSYejeIi4auC/X/p0G23rVz46hOssocww==
-X-Received: by 2002:a17:902:780a:b0:1d3:3876:bfe with SMTP id p10-20020a170902780a00b001d338760bfemr169241pll.90.1702379553803;
-        Tue, 12 Dec 2023 03:12:33 -0800 (PST)
-Received: from ubuntu.. ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id 21-20020a170902ee5500b001d0511c990csm8345453plo.237.2023.12.12.03.12.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 03:12:33 -0800 (PST)
-From: Hongyu Jin <hongyu.jin.cn@gmail.com>
-To: agk@redhat.com,
-	snitzer@kernel.org,
-	mpatocka@redhat.com,
-	axboe@kernel.dk,
-	ebiggers@kernel.org
-Cc: zhiguo.niu@unisoc.com,
-	ke.wang@unisoc.com,
-	yibin.ding@unisoc.com,
-	hongyu.jin@unisoc.com,
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4BD116;
+	Tue, 12 Dec 2023 05:10:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ahu4/U/soh/dA2Q7HSesGB7diJShIHO31XJcJ7WvGa8=; b=FtF77hqKG+5XA3T32JPw3/a4U5
+	5OvUv+ihcFuSlPlYbDcAJN4l/kk8He7gPEnLATDEXa94mGS7Hg6HsAKEH2bJHeKsi19Q43/BIpQgc
+	FwLRjTaHAkQXDmrZsJzmJkoB/lLM0rK7ouD6cdn1xn85GlqoFCYew1QokfjDkr7AwU6QCj2Pyfcqz
+	uDujeYaNmJCfAiKS2TZsN6TqB3Po2wtDOzznyMBwTiwNuATrv5LKcS8wdUDfXZKNf2UcwDsw0D7gb
+	5kdg8EavFa+GSus987vBL5vuklPWFxFp6ChjB2MfY+rQvbvrl5AJdsIlokYV4sFSh1VZ/Spcb4+Zb
+	sRrIYS6Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rD2X4-00BlAA-2C;
+	Tue, 12 Dec 2023 13:10:42 +0000
+Date: Tue, 12 Dec 2023 05:10:42 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Ojaswin Mujoo <ojaswin@linux.ibm.com>, linux-ext4@vger.kernel.org,
+	Theodore Ts'o <tytso@mit.edu>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-block@vger.kernel.org
-Subject: [PATCH v4 5/5] dm-crypt: Fix lost ioprio when queuing write bios
-Date: Tue, 12 Dec 2023 19:11:50 +0800
-Message-Id: <20231212111150.18155-6-hongyu.jin.cn@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231212111150.18155-1-hongyu.jin.cn@gmail.com>
-References: <ZXeJ9jAKEQ31OXLP@redhat.com>
- <20231212111150.18155-1-hongyu.jin.cn@gmail.com>
+	"Darrick J . Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	dchinner@redhat.com
+Subject: Re: [RFC 0/7] ext4: Allocator changes for atomic write support with
+ DIO
+Message-ID: <ZXhb0tKFvAge/GWf@infradead.org>
+References: <cover.1701339358.git.ojaswin@linux.ibm.com>
+ <8c06c139-f994-442b-925e-e177ef2c5adb@oracle.com>
+ <ZW3WZ6prrdsPc55Z@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+ <de90e79b-83f2-428f-bac6-0754708aa4a8@oracle.com>
+ <ZXbqVs0TdoDcJ352@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+ <c4cf3924-f67d-4f04-8460-054dbad70b93@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4cf3924-f67d-4f04-8460-054dbad70b93@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Hongyu Jin <hongyu.jin@unisoc.com>
+On Tue, Dec 12, 2023 at 07:46:51AM +0000, John Garry wrote:
+> It is assumed that the user will fallocate/dd the complete file before
+> issuing atomic writes, and we will have extent alignment and length as
+> required.
 
-The original submitting bio->bi_ioprio setting can be retained by
-struct dm_crypt_io::base_bio, we set the original bio's ioprio to
-the cloned bio for write.
-
-Link: https://lore.kernel.org/dm-devel/alpine.LRH.2.11.1612141049250.13402@mail.ewheeler.net
-
-Signed-off-by: Hongyu Jin <hongyu.jin@unisoc.com>
----
- drivers/md/dm-crypt.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 6de107aff331..7149da6555b8 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -1683,6 +1683,7 @@ static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned int size)
- 				 GFP_NOIO, &cc->bs);
- 	clone->bi_private = io;
- 	clone->bi_end_io = crypt_endio;
-+	clone->bi_ioprio = io->base_bio->bi_ioprio;
- 
- 	remaining_size = size;
- 
--- 
-2.34.1
-
+I don't think that's a long time maintainable usage model.
 
