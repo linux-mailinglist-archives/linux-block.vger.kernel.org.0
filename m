@@ -1,88 +1,148 @@
-Return-Path: <linux-block+bounces-1104-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1106-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BAAE812ADE
-	for <lists+linux-block@lfdr.de>; Thu, 14 Dec 2023 09:57:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A53C7812D00
+	for <lists+linux-block@lfdr.de>; Thu, 14 Dec 2023 11:34:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05AC0281C77
-	for <lists+linux-block@lfdr.de>; Thu, 14 Dec 2023 08:57:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 098F7281EEF
+	for <lists+linux-block@lfdr.de>; Thu, 14 Dec 2023 10:34:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709DB2575D;
-	Thu, 14 Dec 2023 08:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FFE635EF1;
+	Thu, 14 Dec 2023 10:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="brU8mEhL"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B60D114
-	for <linux-block@vger.kernel.org>; Thu, 14 Dec 2023 00:57:32 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 3D02468B05; Thu, 14 Dec 2023 09:57:29 +0100 (CET)
-Date: Thu, 14 Dec 2023 09:57:29 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Bart Van Assche <bvanassche@acm.org>,
-	Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH 3/3] block/mq-deadline: Disable I/O prioritization in
- certain cases
-Message-ID: <20231214085729.GA9099@lst.de>
-References: <20231212171846.GA28682@lst.de> <686cc853-96e2-4aa4-8f68-fdcc5cdabbba@acm.org> <20231212174802.GA30659@lst.de> <5b7be2e9-3691-409d-abff-f1fbf04cef7d@acm.org> <20231212181304.GA32666@lst.de> <19cd459e-d79e-4ecd-8ec8-778be0066e84@acm.org> <20231212182613.GA1216@lst.de> <ZXiual-UkUY4OWY2@google.com> <20231213155606.GA8748@lst.de> <ZXnevBo4eIZEXbhK@google.com>
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69FCB114;
+	Thu, 14 Dec 2023 02:34:14 -0800 (PST)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B26C3240008;
+	Thu, 14 Dec 2023 10:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1702550052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jugSzKA5RANlnPt+1c8lwCcp54ROkWZ7TeiH8CT7p/A=;
+	b=brU8mEhL7FkhQ9ky50byWcLBDM0D5qpw0kEMSokgUJptsEhuGASnYkJylJIguGZ6nO/q5J
+	FVbxguP1/E1tO9XDiuTLGfldOsfc1FU4ii0sRUurXO/55O7AXbGT89jWBc+J7WVxs2w79q
+	2QtfsWgH7gzMiZPFWmwUC1JzHH/bLPKnS+4d0kNRG1yZgoJqPzgqgQwkO4FXsqlo4xa/yl
+	jTYFvc/Sf9BuQTy8+ZkRNEvv0ynT3nNW18Y796+iQIBUbNCr+ZVPDtWI8HLD3zWC22fhb7
+	Z6myHK497Hh5VFtbSEr1R1E7GtDYKK4nPwYj7nf4pyOjEAD3W0B+Pa8LBbu5WA==
+Date: Thu, 14 Dec 2023 11:34:07 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Romain Gantois <romain.gantois@bootlin.com>, Richard Weinberger
+ <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Ard Biesheuvel <ardb@kernel.org>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, Herve Codina
+ <herve.codina@bootlin.com>, linux-mtd@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-efi@vger.kernel.org
+Subject: Re: [RFC PATCH 0/6] Add GPT parser to MTD layer
+Message-ID: <20231214113407.484e24a5@xps-13>
+In-Reply-To: <cykfpuff32nuq3t27vd5tv463cx32phri473fjnrruvom5dk5u@uao5e3ml73ai>
+References: <20231211151244.289349-1-romain.gantois@bootlin.com>
+ <cykfpuff32nuq3t27vd5tv463cx32phri473fjnrruvom5dk5u@uao5e3ml73ai>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXnevBo4eIZEXbhK@google.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, Dec 13, 2023 at 08:41:32AM -0800, Jaegeuk Kim wrote:
-> I don't have any
-> concern to keep the same ioprio on writes, since handheld devices are mostly
-> sensitive to reads. So, if you have other use-cases using zoned writes which
-> require different ioprio on writes, I think you can suggest a knob to control
-> it by users.
+Hi Davidlohr,
 
-Get out of your little handheld world.  In Linux we need a generally usable
-I/O stack, and any feature exposed by the kernel and will be used quite
-differently than you imagine.
+dave@stgolabs.net wrote on Mon, 11 Dec 2023 16:43:58 -0800:
 
-Just like people will add reordering to the I/O stack that's not there
-right now (in addition to the ones your testing doesn't hit).  That
-doensn't mean we should avoid them - you genereally get better performance
-by not reordering without a good reason (like thotting), but especially
-in error handling paths or resource constrained environment they will
-hapen all over.  We've had this whole discussion with the I/O barriers
-that did not work for exactly the same reasons.
+> On Mon, 11 Dec 2023, Romain Gantois wrote:
+>=20
+> >Hello everyone,
+> >
+> >MTD devices were historically partitioned using fixed partitions schemes
+> >defined in the kernel device tree or on the cmdline. More recently, a bu=
+nch
+> >of dynamic parsers have been introduced, allowing partitioning informati=
+on
+> >to be stored in-band. However, unlike disks, parsers for MTD devices do =
+not
+> >support runtime discovery of the partition format. This format is instead
+> >named in the device-tree using a compatible string.
+> >
+> >The GUID Partition Table is one of the most common ways of partitioning a
+> >block device. As of now, there is no support in the MTD layer for parsing
+> >GPT tables. Indeed, use cases for layouts like GPT on raw Flash devices =
+are
+> >rare, and for good reason since these partitioning schemes are sensitive=
+ to
+> >bad blocks in strategic locations such as LBA 2.  Moreover, they do not
+> >allow proper wear-leveling to be performed on the full span of the devic=
+e.
+> >
+> >However, allowing GPT to be used on MTD devices can be practical in some
+> >cases. In the context of an A/B OTA upgrade that can act on either NOR of
+> >eMMC devices, having the same partition table format for both kinds of
+> >devices can simplify the task of the update software.
+> >
+> >This series adds a fully working MTD GPT parser to the kernel. Use of the
+> >parser is restricted to NOR flash devices, since NAND flashes are too
+> >susceptible to bad blocks. To ensure coherence and code-reuse between
+> >subsystems, I've factored device-agnostic code from the block layer GPT
+> >parser and moved it to a new generic library in lib/gpt.c. No functional
+> >change is intended in the block layer parser.
+> >
+> >I understand that this can seem like a strange feature for MTD devices, =
+but
+> >with the restriction to NOR devices, the partition table can be fairly
+> >reliable. Moreover, this addition fits nicely into the MTD parser model.
+> >Please tell me what you think. =20
+>=20
+> I am not a fan of this. The usecase seems very hacky and ad-hoc to justify
+> decoupling from the block layer,
 
-> 
-> > 
-> > > it is essential to place the data per file to get better bandwidth. And for
-> > > NAND-based storage, filesystem is the right place to deal with the more efficient
-> > > garbage collecion based on the known data locations.
-> > 
-> > And that works perfectly fine match for zone append.
-> 
-> How that works, if the device gives random LBAs back to the adjacent data in
-> a file? And, how to make the LBAs into the sequential ones back?
+The use case indeed is a bit ad-hoc, as it is an OTA tool which makes
+it painful to handle two separate types of partitioning between blocks
+and mtd devices, so being able to parse a GPT on an mtd device would
+help a lot.
 
-Why would your device pick random LBAs?  If you send a zone append to
-zone it will be written at the write pointer, which is absolutely not
-random.  All I/O written in a single write is going to be sequential,
-so just like for all other devices doing large sequential writes is
-important.  Multiple writes can get reordered, but if you havily hit
-the same zone you'd get the same effect in the file system allocator
-too.
+> not to mention move complexity out of
+> userspace and into the kernel (new parser) for something that is already
+> being done/worked around.
 
-> Sorry, I needed to stop reading here, as you're totally biased. This is not
-> the case in JEDEC, as Bart spent multiple years to synchronize the technical
-> benefitcs that we've seen across UFS vendors as well as OEMs.
+This is the part I don't fully agree with. There is no added
+complexity, the parser exists and is kept untouched (apart from the
+cosmetic changes). For a long time mtd partitioning information was
+kept out of the storage (through fixed-partitions) but it's been quite
+some time since the need for more flexible approaches arised, so we do
+have "dynamic" partition parsers already and the one proposed by Romain
+looks very straightforward and is thus not a problem to me. It
+basically just extends the list of partition tables mtd devices know
+about with a very common and popular format.
 
-*lol*  There is no more fucked up corporate pressure standard committee
-than the storage standards in JEDEC.  That's why not one actually takes
-them seriously.
+To be honest I do not have a strong opinion on whether this should be
+merged or not but my reluctance is more about the mix of styles between
+'block' and 'mtd'. People shall not treat them similarly for a number
+of reasons, and this parser is an obvious step towards a more common
+handling, knowing that it's been exclusively used on blocks for
+decades.
 
+> Also, what other user would consume this new gpt
+> lib abstraction in the future? I don't think it is worth it.
+
+Well, again I don't feel like this is a problem, sharing code between
+two parties is already a win and the choice for a lib sounds rational
+to me. The question being, shall we do it/do we want to do it.
+
+Thanks,
+Miqu=C3=A8l
 
