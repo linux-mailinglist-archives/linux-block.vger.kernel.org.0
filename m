@@ -1,102 +1,128 @@
-Return-Path: <linux-block+bounces-1166-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1172-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 747E1814A99
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:35:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A750814BCB
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:28:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 13E4CB23463
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 14:35:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EF2E5B212B6
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:28:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 399F03589C;
-	Fri, 15 Dec 2023 14:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99ECB381B2;
+	Fri, 15 Dec 2023 15:28:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="xBetXADN"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dLlIestx"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BFC358B0
-	for <linux-block@vger.kernel.org>; Fri, 15 Dec 2023 14:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7b7117ca63eso9406939f.1
-        for <linux-block@vger.kernel.org>; Fri, 15 Dec 2023 06:35:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1702650923; x=1703255723; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WBKTN7M6SrEHPbD/br4onX9utwhUTCegr9U3qroprRo=;
-        b=xBetXADNtRtL65HxN9aEGkpGMuW5R3vXwQYlVMZht2rneDUTcWNiqJJQaoN9wuWqvh
-         bLxi1XK0fDHWJ87+ukOiE59XyplHTvNhPGed1N5VaxmcJVtcJnBLTnkBXC76EH/xRZhZ
-         P/rSJiVftnH7FwJci+1Dm9gLX6GBfSMoKQ+6P3pScqUmAPNxJn+ngygNjWvX2dtC8e0U
-         T2dP8nFtCm+JG4HyJUjyNHuE5aNZhW8roX6amwuTsse/iELuOMiVLhqdiSeIRbxeCBm6
-         1BIuDXl2AmnkbK8Ic+xosqJTMnkr+UvboXqgmgEPa9qqof+C4j7CxNcwWOoh8e5aq1ok
-         grZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702650923; x=1703255723;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WBKTN7M6SrEHPbD/br4onX9utwhUTCegr9U3qroprRo=;
-        b=BLUbHL/61MmCGhGV90hSAazeRPI+mlBv4F6/eHVNh7IfTf33fEH78pbKYqM0N2n2hM
-         okshAd6BX2Ftj0R4q/TIdabI4vq0nNwhCOAIAEtCqvGd/P0Y4H8NTUhs0tgmqQMQn1d4
-         7LHqS6CL54bEAyu+7gNND4Ca4vaC2H2KTuuIhPhVxwNfKApuve129KXMY9PH/RYST0VN
-         H5Ydw8dbNMSSSHko4BTIVhKMz+4ysbQ+1TIdGvwo4jbEyQYO9Cib/c5c6dvHwLsObwZ4
-         DcrOICIQweSQ3LeKZr6/NBNgYCmSl6v/MbT1SbHiFLoCz7rdwxl28n2cFkq2WXJh68u/
-         ou3A==
-X-Gm-Message-State: AOJu0Yy+l9jeHLiJCmU9gqQzond5hwRbKliXBpoFer1uT/O5HIiWWQV2
-	OLPMZt3J47eMPSM/DJrasw+Lhe5YdRW6aJ6yBvLMwA==
-X-Google-Smtp-Source: AGHT+IF0gQxmTgUnu3o9lfoMz4n948npVqymIdbVkx7PJRZBAjWatfek6oDeXUilFum2mayy6//B9w==
-X-Received: by 2002:a6b:e70c:0:b0:7b7:fe4:3dfa with SMTP id b12-20020a6be70c000000b007b70fe43dfamr19698810ioh.2.1702650923006;
-        Fri, 15 Dec 2023 06:35:23 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id i12-20020a05663815cc00b00468ecf31973sm4140873jat.67.2023.12.15.06.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 06:35:21 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <d2b7b61c-4868-45c0-9060-4f9c73de9d7e@kernel.dk>
-References: <d2b7b61c-4868-45c0-9060-4f9c73de9d7e@kernel.dk>
-Subject: Re: [PATCH] block: improve struct request_queue layout
-Message-Id: <170265092151.460397.11678955109139047906.b4-ty@kernel.dk>
-Date: Fri, 15 Dec 2023 07:35:21 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52788374D2;
+	Fri, 15 Dec 2023 15:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFFMVvg023383;
+	Fri, 15 Dec 2023 15:28:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=PxYIW+Ogv+PRcGpjhTc5X4FzqAIej9t4x6k7OOZnM8k=;
+ b=dLlIestxLK85Ko/z0sn6PKONGGyFeTXspOhtGhVFNFmz4PHoikYWXp1PaRCaZzgkgb6d
+ mEmE8I9uaIto6kRvWd8HYvb5foaEsCBKzxFjcLjlLBqlHXrGLId65nbeDs1f9ZHq1ASu
+ xoRfClebTQTuIaNkXS65+yNunMXRydCEDqRS0HvJ4UKtXbuHiePKJBtNXnSNFSHaQw5d
+ KsEhXTLaWVOnKe45LxS50XH9kFUKHRkMg3f1gm+WA8wnCCvEDzzvxpDyCgUPQYrcQjWh
+ E9idAKCxwYpOiO3VbRL1zkayn+njNlFD99e3XwKc/S5yxr+aMYHiFdbNSmNAKEUuibUE zQ== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0scm07cp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Dec 2023 15:28:15 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFDILiQ008491;
+	Fri, 15 Dec 2023 15:28:15 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw2ju14x8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Dec 2023 15:28:14 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFSAhJ12452598
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Dec 2023 15:28:10 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EAC562004D;
+	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D8A7920040;
+	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+	id 8F987E01C6; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
+From: Stefan Haberland <sth@linux.ibm.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 00/10] s390/dasd: string handling cleanups
+Date: Fri, 15 Dec 2023 16:28:00 +0100
+Message-Id: <20231215152809.882602-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-7edf1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: K9Aaod1dwIGqO9A6f6wCAeZdr6NUAUNX
+X-Proofpoint-ORIG-GUID: K9Aaod1dwIGqO9A6f6wCAeZdr6NUAUNX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-15_10,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1015 mlxlogscore=741 mlxscore=0 spamscore=0
+ malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2312150106
 
+Hi Jens,
 
-On Thu, 14 Dec 2023 11:08:15 -0700, Jens Axboe wrote:
-> It's clearly been a while since someone looked at this, so I gave it a
-> quick shot. There are few issues in here:
-> 
-> - Random bundling of members that are mostly read-only and often written
-> - Random holes that need not be there
-> 
-> This moves the most frequently used bits into cacheline 1 and 2, with
-> the 2nd one being more write intensive than the first one, which is
-> basically read-only.
-> 
-> [...]
+please apply the following patches for the next merge window.
+They clean up the string handling in the DASD driver.
 
-Applied, thanks!
+Jan Höppner (10):
+  s390/dasd: Simplify uid string generation
+  s390/dasd: Use sysfs_emit() over sprintf()
+  s390/dasd: Remove unnecessary errorstring generation
+  s390/dasd: Move allocation error message to DBF
+  s390/dasd: Remove unused message logging macros
+  s390/dasd: Use dev_err() over printk()
+  s390/dasd: Remove %p format specifier from error messages
+  s390/dasd: Remove PRINTK_HEADER and KMSG_COMPONENT definitions
+  s390/dasd: Use dev_*() for device log messages
+  s390/dasd: Improve ERP error messages
 
-[1/1] block: improve struct request_queue layout
-      commit: 0c734c5ea76e333fbb8dd83b5bab46291b38096b
+ drivers/s390/block/dasd.c          | 101 +++++++------------
+ drivers/s390/block/dasd_3990_erp.c |  80 ++++-----------
+ drivers/s390/block/dasd_alias.c    |   8 --
+ drivers/s390/block/dasd_devmap.c   |  34 +++----
+ drivers/s390/block/dasd_diag.c     |   4 -
+ drivers/s390/block/dasd_eckd.c     | 157 +++++++++++------------------
+ drivers/s390/block/dasd_eer.c      |   7 --
+ drivers/s390/block/dasd_erp.c      |   9 +-
+ drivers/s390/block/dasd_fba.c      |  55 ++++------
+ drivers/s390/block/dasd_genhd.c    |   5 -
+ drivers/s390/block/dasd_int.h      |  29 ------
+ drivers/s390/block/dasd_ioctl.c    |   6 --
+ drivers/s390/block/dasd_proc.c     |   5 -
+ 13 files changed, 153 insertions(+), 347 deletions(-)
 
-Best regards,
 -- 
-Jens Axboe
-
-
+2.40.1
 
 
