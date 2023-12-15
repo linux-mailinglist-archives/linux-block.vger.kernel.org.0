@@ -1,74 +1,74 @@
-Return-Path: <linux-block+bounces-1167-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1169-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A9BD814BC0
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:28:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99D1C814BC4
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:28:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19496281ACB
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:28:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCECC1C2292B
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B3937141;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767AC37163;
 	Fri, 15 Dec 2023 15:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sHtWfF9T"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XSmOQqxR"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC8136AEA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03ABA36AF3;
 	Fri, 15 Dec 2023 15:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFEkrn6022216;
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFFOHR7002221;
 	Fri, 15 Dec 2023 15:28:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=ZaRCtM3TEtQv27k3zYafCj7W025DJess/ym1q85zgXw=;
- b=sHtWfF9TBpFc5ADHd2sz0K+tASB3kXAtOp70pvW6PZaBeGVEfWMpT+8wyTxuiHBOC3ve
- UGBx6h4RA0SUx6ep3pGq5i0xJEPqFhtfC+ATxEGyWH0CVNHIfLIbRxD7H9FmarIK4/tn
- cJjb8Zu0QPAvBlq+4fi9NuyToQfj4CR3CtvAmbLAxb4jOrRTRj26klzQqB/Vo2dUK3OD
- LKwXjI44+5hnJeZJG+u4swhcRfWr5ZNXMbSDkE9vOFWoOLOCjZ3hShFfkL1jI7gzjHyi
- ckTXQapvoagooVZTa3ggDSmm07eTD/nbXoIcJpEnwRF77Swbz/ZdGfjZ/SNUYNkkerud hQ== 
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0p155q7u-1
+ bh=LXrR67UlmTcaNgIY9xfIVR0QdYtShEzidKKjgzYEkCM=;
+ b=XSmOQqxRyXi5SvGwHqQEJsvuZJxGTY8D6lizqRqIsuhl6ruBdyd4ROXZ5bevX7F01TLg
+ fLj7i4hQNSVdYjJtURErtSn2Wz5GmnvkK+JiRcDlOVstTJaG6lyonx3zKc78rqdXNVmg
+ ehclUfxN69HsDZL0bH7L9QP+cI1d6oTZRtQ27UQbTqi/c2VIfTldgMsH8R0/W5gvzTIQ
+ auYROdPSj+fZdVJPWaFD5y/tcrzNpLduoLbEzjopSunYWmWAKulGA0IQV41WHJ+9CDsU
+ aQgFFGFlV77rn/ujv7KLGrhTUKH7sF25NkGtLKNN3jJ8paT1YXSsBDEwz5NoegPYalfa OQ== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0pymm63e-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Dec 2023 15:28:15 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFDNkHo028248;
+	Fri, 15 Dec 2023 15:28:16 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFDqP75012585;
 	Fri, 15 Dec 2023 15:28:15 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw2y090q6-1
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw3jpgwjn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 15 Dec 2023 15:28:15 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFSAEd45089160
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFSAna11272760
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 15 Dec 2023 15:28:10 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E6E872004B;
-	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D625420040;
-	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29F842004D;
+	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1A6F32004B;
+	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-	id 98394E12F1; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
+	id 9A770E1506; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
 From: Stefan Haberland <sth@linux.ibm.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 04/10] s390/dasd: Move allocation error message to DBF
-Date: Fri, 15 Dec 2023 16:28:04 +0100
-Message-Id: <20231215152809.882602-5-sth@linux.ibm.com>
+Subject: [PATCH 05/10] s390/dasd: Remove unused message logging macros
+Date: Fri, 15 Dec 2023 16:28:05 +0100
+Message-Id: <20231215152809.882602-6-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231215152809.882602-1-sth@linux.ibm.com>
 References: <20231215152809.882602-1-sth@linux.ibm.com>
@@ -81,47 +81,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: a8j17C_kO6Gn0dWyH-whSLqpfXqf5Lb4
-X-Proofpoint-GUID: a8j17C_kO6Gn0dWyH-whSLqpfXqf5Lb4
+X-Proofpoint-ORIG-GUID: sEjXLklR3gLfn97QGS9nRshgWHnkZM0Z
+X-Proofpoint-GUID: sEjXLklR3gLfn97QGS9nRshgWHnkZM0Z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-15_09,2023-12-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- bulkscore=0 phishscore=0 impostorscore=0 suspectscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=876 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311290000 definitions=main-2312150105
 
 From: Jan Höppner <hoeppner@linux.ibm.com>
 
-All error messages for a failling dasd_smalloc_request() call are logged
-via DBF, except one. There is no value in logging this particular
-allocation failure via dev_err(). Move the message to DBF, too, to be
-in line with the rest.
+The macros DEV_MESSAGE, MESSAGE, DEV_MESSAGE_LOG, and MESSAGE_LOG, are
+not used and there is no history anymore of any usage. Remove them.
 
 Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
 Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 ---
- drivers/s390/block/dasd.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/s390/block/dasd_int.h | 26 --------------------------
+ 1 file changed, 26 deletions(-)
 
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index 2e084fd8e520..60e666b7ca05 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -3969,10 +3969,8 @@ static struct dasd_ccw_req *dasd_generic_build_rdc(struct dasd_device *device,
- 				   NULL);
+diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
+index 71d88e931090..a6c5f1fa2d87 100644
+--- a/drivers/s390/block/dasd_int.h
++++ b/drivers/s390/block/dasd_int.h
+@@ -123,32 +123,6 @@ do { \
+ #define	DBF_INFO	6	/* informational			*/
+ #define	DBF_DEBUG	6	/* debug-level messages			*/
  
- 	if (IS_ERR(cqr)) {
--		/* internal error 13 - Allocating the RDC request failed*/
--		dev_err(&device->cdev->dev,
--			 "An error occurred in the DASD device driver, "
--			 "reason=%s\n", "13");
-+		DBF_EVENT_DEVID(DBF_WARNING, device->cdev, "%s",
-+				"Could not allocate RDC request");
- 		return cqr;
- 	}
+-/* messages to be written via klogd and dbf */
+-#define DEV_MESSAGE(d_loglevel,d_device,d_string,d_args...)\
+-do { \
+-	printk(d_loglevel PRINTK_HEADER " %s: " d_string "\n", \
+-	       dev_name(&d_device->cdev->dev), d_args); \
+-	DBF_DEV_EVENT(DBF_ALERT, d_device, d_string, d_args); \
+-} while(0)
+-
+-#define MESSAGE(d_loglevel,d_string,d_args...)\
+-do { \
+-	printk(d_loglevel PRINTK_HEADER " " d_string "\n", d_args); \
+-	DBF_EVENT(DBF_ALERT, d_string, d_args); \
+-} while(0)
+-
+-/* messages to be written via klogd only */
+-#define DEV_MESSAGE_LOG(d_loglevel,d_device,d_string,d_args...)\
+-do { \
+-	printk(d_loglevel PRINTK_HEADER " %s: " d_string "\n", \
+-	       dev_name(&d_device->cdev->dev), d_args); \
+-} while(0)
+-
+-#define MESSAGE_LOG(d_loglevel,d_string,d_args...)\
+-do { \
+-	printk(d_loglevel PRINTK_HEADER " " d_string "\n", d_args); \
+-} while(0)
+-
+ /* Macro to calculate number of blocks per page */
+ #define BLOCKS_PER_PAGE(blksize) (PAGE_SIZE / blksize)
  
 -- 
 2.40.1
