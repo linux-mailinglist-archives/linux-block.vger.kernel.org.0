@@ -1,74 +1,74 @@
-Return-Path: <linux-block+bounces-1175-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1168-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A4CB814BD1
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:28:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B738814BC2
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:28:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B59AB2102F
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:28:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D777E281A6D
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:28:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7503339FE2;
-	Fri, 15 Dec 2023 15:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC6337152;
+	Fri, 15 Dec 2023 15:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BrDM7Z5Y"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jU0h0J0c"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD83F381B9;
-	Fri, 15 Dec 2023 15:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBBA364D3;
+	Fri, 15 Dec 2023 15:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFFSHwP007891;
-	Fri, 15 Dec 2023 15:28:17 GMT
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFEVfTm028210;
+	Fri, 15 Dec 2023 15:28:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=JvQizxwxLmPqgh9+r1B4KcnfYVhTh3MJFyhN9f6hnbc=;
- b=BrDM7Z5YudmWQIoUocpWpEQjdQ93AnFmgdWo7GgOkit+mIz55bO2EK3LADXAlH4V4yBX
- 01UVTn8HVDNFZgAH0BfwOYC5mjDm2zBrnw6HYDFxY/NjVwoTNE2lsUNe4RLVyiLaVAQM
- Zh10y6iL5U8e0uFKuDtIsw82+KbopvY05P4olrPcV8jGu6nUx0VAkDj6JTZZFlxAWDgf
- EeP7Ri0Pcpp2ct9ZEwxcfQORAEDVGgOmRT6FoFhYehWP2hhLbUCwaPxDo3VNf6MduIbw
- T0ADNHukAdYoxKLZyiUPKmGrTJa/wtqw58b3nJJomvLOvvDcf+lEuADF6MEUJJ7cUHVD zQ== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0sf9g03h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Dec 2023 15:28:17 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BF5tV9w014813;
-	Fri, 15 Dec 2023 15:28:16 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw42kkget-1
+ bh=FsDBn/f0pqi2JIhLRWKxsJ29yr3T+I8RIFAi6yJXrsI=;
+ b=jU0h0J0cYnunBZXR10zQsL9oPgXb0spHGSBzrKuJx9EHVd70dkndNX8v1qJceRdFdozs
+ tNEUo4ODCllS4GZpfu+OGtmU1SVMw1bO2bNcxnYoIHeN8l4bMgGA3JbsaQuDQPVeYQFf
+ L9pHrtxuEJCj/BSRlr9I1CcCXrbKxBzMmraCHSDw2VV8BOC61kt1/+TYRaSL6BA0QcHW
+ ty2r/RImRma3xlqXxnGgZkRL+3LnuPn9wSS79RHx7wkJE65G1eih/E+/JQgwnHmH5ptl
+ TxqlTvwTQEhnpU538VEmaptdaGoj+jp9yK6OHVfVNte581I8+BztQQdVY6EiCX9lKqRe 0g== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0pymm63b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 15 Dec 2023 15:28:15 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFSALD41222898
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFEw0PI004390;
+	Fri, 15 Dec 2023 15:28:15 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw4sm0huv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Dec 2023 15:28:15 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFSAdl3146418
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 15 Dec 2023 15:28:10 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4D9592004D;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2CCE42004D;
 	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3066C20040;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1B0AA20043;
 	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
 	Fri, 15 Dec 2023 15:28:10 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-	id A1BAAE153A; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
+	id A4276E156A; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
 From: Stefan Haberland <sth@linux.ibm.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 08/10] s390/dasd: Remove PRINTK_HEADER and KMSG_COMPONENT definitions
-Date: Fri, 15 Dec 2023 16:28:08 +0100
-Message-Id: <20231215152809.882602-9-sth@linux.ibm.com>
+Subject: [PATCH 09/10] s390/dasd: Use dev_*() for device log messages
+Date: Fri, 15 Dec 2023 16:28:09 +0100
+Message-Id: <20231215152809.882602-10-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231215152809.882602-1-sth@linux.ibm.com>
 References: <20231215152809.882602-1-sth@linux.ibm.com>
@@ -81,296 +81,172 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 30GBTkW_whYdK8-J-IwRv3GDaKIXUZIN
-X-Proofpoint-ORIG-GUID: 30GBTkW_whYdK8-J-IwRv3GDaKIXUZIN
+X-Proofpoint-ORIG-GUID: 4w5KaVxDBl8b_1BXDOGZgY5O8wPoHddK
+X-Proofpoint-GUID: 4w5KaVxDBl8b_1BXDOGZgY5O8wPoHddK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-15_10,2023-12-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- clxscore=1015 bulkscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
- adultscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ definitions=2023-12-15_09,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312150106
+ engine=8.12.0-2311290000 definitions=main-2312150105
 
 From: Jan Höppner <hoeppner@linux.ibm.com>
 
-PRINTK_HEADER was mainly used to prefix log messages with the module
-name. Most components don't use this definition anymore. Either because
-there are no log messages being generated anymore, or pr_*() were
-replaced by dev_*(), which contains device and component information
-already.
+All log messages in dasd.c use the printk variants of pr_*(). They all
+add the name of the affected device manually to the log message.
+This can be simplified by using the dev_*() variants of printk, which
+include the device information and make a separate call to dev_name()
+unnecessary.
 
-PRINTK_HEADER is also dropped in the function
-dasd_3990_erp_handle_match_erp() in dasd_3990_erp.c from a panic() call
-as panic() already provides all relevant information.
-
-KMSG_COMPONENT was mainly used to identify a component in a long gone
-kernel message catalog feature.
-
-Remove both definition since they're either not used or alternatives
-make the code slightly shorter and more readable.
+The KMSG_COMPONENT and the pr_fmt() definition can be dropped. Note that
+this removes the "dasd: " prefix from the one pr_info() call in
+dasd_init(). However, the log message already provides all relevant
+information.
 
 Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
 Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 ---
- drivers/s390/block/dasd.c          | 3 ---
- drivers/s390/block/dasd_3990_erp.c | 7 +------
- drivers/s390/block/dasd_alias.c    | 8 --------
- drivers/s390/block/dasd_devmap.c   | 4 ----
- drivers/s390/block/dasd_diag.c     | 4 ----
- drivers/s390/block/dasd_eckd.c     | 2 --
- drivers/s390/block/dasd_eer.c      | 7 -------
- drivers/s390/block/dasd_erp.c      | 5 -----
- drivers/s390/block/dasd_genhd.c    | 5 -----
- drivers/s390/block/dasd_ioctl.c    | 6 ------
- drivers/s390/block/dasd_proc.c     | 5 -----
- 11 files changed, 1 insertion(+), 55 deletions(-)
+ drivers/s390/block/dasd.c | 50 +++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index be5f019d878b..c6a5fddd4389 100644
+index c6a5fddd4389..1af8edd6c509 100644
 --- a/drivers/s390/block/dasd.c
 +++ b/drivers/s390/block/dasd.c
-@@ -30,9 +30,6 @@
- #include <asm/itcw.h>
- #include <asm/diag.h>
- 
--/* This is ugly... */
--#define PRINTK_HEADER "dasd:"
--
- #include "dasd_int.h"
- /*
-  * SECTION: Constant definitions to be used within this file
-diff --git a/drivers/s390/block/dasd_3990_erp.c b/drivers/s390/block/dasd_3990_erp.c
-index b39c0798a110..c59a961cfdd2 100644
---- a/drivers/s390/block/dasd_3990_erp.c
-+++ b/drivers/s390/block/dasd_3990_erp.c
-@@ -7,13 +7,9 @@
-  *
-  */
- 
--#define KMSG_COMPONENT "dasd-eckd"
--
- #include <linux/timer.h>
- #include <asm/idals.h>
- 
--#define PRINTK_HEADER "dasd_erp(3990): "
--
- #include "dasd_int.h"
- #include "dasd_eckd.h"
- 
-@@ -2700,8 +2696,7 @@ dasd_3990_erp_handle_match_erp(struct dasd_ccw_req *erp_head,
- 	while (erp_done != erp) {
- 
- 		if (erp_done == NULL)	/* end of chain reached */
--			panic(PRINTK_HEADER "Programming error in ERP! The "
--			      "original request was lost\n");
-+			panic("Programming error in ERP! The original request was lost\n");
- 
- 		/* remove the request from the device queue */
- 		list_del(&erp_done->blocklist);
-diff --git a/drivers/s390/block/dasd_alias.c b/drivers/s390/block/dasd_alias.c
-index c9740ae88d1a..e84cd5436556 100644
---- a/drivers/s390/block/dasd_alias.c
-+++ b/drivers/s390/block/dasd_alias.c
-@@ -6,20 +6,12 @@
-  * Author(s): Stefan Weinhuber <wein@de.ibm.com>
-  */
- 
--#define KMSG_COMPONENT "dasd-eckd"
--
- #include <linux/list.h>
- #include <linux/slab.h>
- #include <asm/ebcdic.h>
- #include "dasd_int.h"
- #include "dasd_eckd.h"
- 
--#ifdef PRINTK_HEADER
--#undef PRINTK_HEADER
--#endif				/* PRINTK_HEADER */
--#define PRINTK_HEADER "dasd(eckd):"
--
--
- /*
-  * General concept of alias management:
-  * - PAV and DASD alias management is specific to the eckd discipline.
-diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd_devmap.c
-index 8a01afb5e3ce..0316c20823ee 100644
---- a/drivers/s390/block/dasd_devmap.c
-+++ b/drivers/s390/block/dasd_devmap.c
-@@ -13,8 +13,6 @@
-  *
+@@ -8,9 +8,6 @@
+  * Copyright IBM Corp. 1999, 2009
   */
  
 -#define KMSG_COMPONENT "dasd"
+-#define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
 -
- #include <linux/ctype.h>
+ #include <linux/kmod.h>
  #include <linux/init.h>
- #include <linux/module.h>
-@@ -24,8 +22,6 @@
- #include <linux/uaccess.h>
- #include <asm/ipl.h>
- 
--/* This is ugly... */
--#define PRINTK_HEADER "dasd_devmap:"
- #define DASD_MAX_PARAMS 256
- 
- #include "dasd_int.h"
-diff --git a/drivers/s390/block/dasd_diag.c b/drivers/s390/block/dasd_diag.c
-index 2e4e555b37c3..041088c7e909 100644
---- a/drivers/s390/block/dasd_diag.c
-+++ b/drivers/s390/block/dasd_diag.c
-@@ -8,8 +8,6 @@
-  *
-  */
- 
--#define KMSG_COMPONENT "dasd"
--
- #include <linux/kernel_stat.h>
- #include <linux/stddef.h>
- #include <linux/kernel.h>
-@@ -31,8 +29,6 @@
- #include "dasd_int.h"
- #include "dasd_diag.h"
- 
--#define PRINTK_HEADER "dasd(diag):"
--
- MODULE_LICENSE("GPL");
- 
- /* The maximum number of blocks per request (max_blocks) is dependent on the
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index d9f776789429..8aade17d885c 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -10,8 +10,6 @@
-  * Author.........: Nigel Hislop <hislop_nigel@emc.com>
-  */
- 
--#define KMSG_COMPONENT "dasd-eckd"
--
- #include <linux/stddef.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-diff --git a/drivers/s390/block/dasd_eer.c b/drivers/s390/block/dasd_eer.c
-index c956de711cf7..5064a616e041 100644
---- a/drivers/s390/block/dasd_eer.c
-+++ b/drivers/s390/block/dasd_eer.c
-@@ -7,8 +7,6 @@
-  *  Author(s): Stefan Weinhuber <wein@de.ibm.com>
-  */
- 
--#define KMSG_COMPONENT "dasd-eckd"
--
- #include <linux/init.h>
- #include <linux/fs.h>
- #include <linux/kernel.h>
-@@ -28,11 +26,6 @@
- #include "dasd_int.h"
- #include "dasd_eckd.h"
- 
--#ifdef PRINTK_HEADER
--#undef PRINTK_HEADER
--#endif				/* PRINTK_HEADER */
--#define PRINTK_HEADER "dasd(eer):"
--
- /*
-  * SECTION: the internal buffer
-  */
-diff --git a/drivers/s390/block/dasd_erp.c b/drivers/s390/block/dasd_erp.c
-index c462f01d22e3..4c0d3a704513 100644
---- a/drivers/s390/block/dasd_erp.c
-+++ b/drivers/s390/block/dasd_erp.c
-@@ -9,8 +9,6 @@
-  *
-  */
- 
--#define KMSG_COMPONENT "dasd"
--
- #include <linux/ctype.h>
- #include <linux/init.h>
- 
-@@ -18,9 +16,6 @@
- #include <asm/ebcdic.h>
- #include <linux/uaccess.h>
- 
--/* This is ugly... */
--#define PRINTK_HEADER "dasd_erp:"
--
- #include "dasd_int.h"
- 
- struct dasd_ccw_req *
-diff --git a/drivers/s390/block/dasd_genhd.c b/drivers/s390/block/dasd_genhd.c
-index 55e3abe94cde..30e8ee583e98 100644
---- a/drivers/s390/block/dasd_genhd.c
-+++ b/drivers/s390/block/dasd_genhd.c
-@@ -11,8 +11,6 @@
-  *
-  */
- 
--#define KMSG_COMPONENT "dasd"
--
  #include <linux/interrupt.h>
- #include <linux/major.h>
- #include <linux/fs.h>
-@@ -20,9 +18,6 @@
+@@ -3387,8 +3384,7 @@ static void dasd_generic_auto_online(void *data, async_cookie_t cookie)
  
- #include <linux/uaccess.h>
+ 	ret = ccw_device_set_online(cdev);
+ 	if (ret)
+-		pr_warn("%s: Setting the DASD online failed with rc=%d\n",
+-			dev_name(&cdev->dev), ret);
++		dev_warn(&cdev->dev, "Setting the DASD online failed with rc=%d\n", ret);
+ }
  
--/* This is ugly... */
--#define PRINTK_HEADER "dasd_gendisk:"
--
- #include "dasd_int.h"
- 
- static unsigned int queue_depth = 32;
-diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
-index 61b9675e2a67..6814354a23ef 100644
---- a/drivers/s390/block/dasd_ioctl.c
-+++ b/drivers/s390/block/dasd_ioctl.c
-@@ -10,8 +10,6 @@
-  * i/o controls for the dasd driver.
-  */
- 
--#define KMSG_COMPONENT "dasd"
--
- #include <linux/interrupt.h>
- #include <linux/compat.h>
- #include <linux/major.h>
-@@ -24,12 +22,8 @@
- #include <linux/uaccess.h>
- #include <linux/dasd_mod.h>
- 
--/* This is ugly... */
--#define PRINTK_HEADER "dasd_ioctl:"
--
- #include "dasd_int.h"
- 
--
- static int
- dasd_ioctl_api_version(void __user *argp)
+ /*
+@@ -3475,8 +3471,11 @@ int dasd_generic_set_online(struct ccw_device *cdev,
  {
-diff --git a/drivers/s390/block/dasd_proc.c b/drivers/s390/block/dasd_proc.c
-index 62a859ea67f8..0faaa437d9be 100644
---- a/drivers/s390/block/dasd_proc.c
-+++ b/drivers/s390/block/dasd_proc.c
-@@ -11,8 +11,6 @@
-  *
-  */
+ 	struct dasd_discipline *discipline;
+ 	struct dasd_device *device;
++	struct device *dev;
+ 	int rc;
  
--#define KMSG_COMPONENT "dasd"
--
- #include <linux/ctype.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-@@ -23,9 +21,6 @@
- #include <asm/debug.h>
- #include <linux/uaccess.h>
++	dev = &cdev->dev;
++
+ 	/* first online clears initial online feature flag */
+ 	dasd_set_feature(cdev, DASD_FEATURE_INITIAL_ONLINE, 0);
+ 	device = dasd_create_device(cdev);
+@@ -3489,11 +3488,10 @@ int dasd_generic_set_online(struct ccw_device *cdev,
+ 			/* Try to load the required module. */
+ 			rc = request_module(DASD_DIAG_MOD);
+ 			if (rc) {
+-				pr_warn("%s Setting the DASD online failed "
+-					"because the required module %s "
+-					"could not be loaded (rc=%d)\n",
+-					dev_name(&cdev->dev), DASD_DIAG_MOD,
+-					rc);
++				dev_warn(dev, "Setting the DASD online failed "
++					 "because the required module %s "
++					 "could not be loaded (rc=%d)\n",
++					 DASD_DIAG_MOD, rc);
+ 				dasd_delete_device(device);
+ 				return -ENODEV;
+ 			}
+@@ -3501,8 +3499,7 @@ int dasd_generic_set_online(struct ccw_device *cdev,
+ 		/* Module init could have failed, so check again here after
+ 		 * request_module(). */
+ 		if (!dasd_diag_discipline_pointer) {
+-			pr_warn("%s Setting the DASD online failed because of missing DIAG discipline\n",
+-				dev_name(&cdev->dev));
++			dev_warn(dev, "Setting the DASD online failed because of missing DIAG discipline\n");
+ 			dasd_delete_device(device);
+ 			return -ENODEV;
+ 		}
+@@ -3523,8 +3520,8 @@ int dasd_generic_set_online(struct ccw_device *cdev,
+ 	/* check_device will allocate block device if necessary */
+ 	rc = discipline->check_device(device);
+ 	if (rc) {
+-		pr_warn("%s Setting the DASD online with discipline %s failed with rc=%i\n",
+-			dev_name(&cdev->dev), discipline->name, rc);
++		dev_warn(dev, "Setting the DASD online with discipline %s failed with rc=%i\n",
++			 discipline->name, rc);
+ 		module_put(discipline->owner);
+ 		module_put(base_discipline->owner);
+ 		dasd_delete_device(device);
+@@ -3533,16 +3530,15 @@ int dasd_generic_set_online(struct ccw_device *cdev,
  
--/* This is ugly... */
--#define PRINTK_HEADER "dasd_proc:"
--
- #include "dasd_int.h"
+ 	dasd_set_target_state(device, DASD_STATE_ONLINE);
+ 	if (device->state <= DASD_STATE_KNOWN) {
+-		pr_warn("%s Setting the DASD online failed because of a missing discipline\n",
+-			dev_name(&cdev->dev));
++		dev_warn(dev, "Setting the DASD online failed because of a missing discipline\n");
+ 		rc = -ENODEV;
+ 		dasd_set_target_state(device, DASD_STATE_NEW);
+ 		if (device->block)
+ 			dasd_free_block(device->block);
+ 		dasd_delete_device(device);
+-	} else
+-		pr_debug("dasd_generic device %s found\n",
+-				dev_name(&cdev->dev));
++	} else {
++		dev_dbg(dev, "dasd_generic device found\n");
++	}
  
- static struct proc_dir_entry *dasd_proc_root_entry = NULL;
+ 	wait_event(dasd_init_waitq, _wait_for_device(device));
+ 
+@@ -3553,10 +3549,13 @@ EXPORT_SYMBOL_GPL(dasd_generic_set_online);
+ 
+ int dasd_generic_set_offline(struct ccw_device *cdev)
+ {
++	int max_count, open_count, rc;
+ 	struct dasd_device *device;
+ 	struct dasd_block *block;
+-	int max_count, open_count, rc;
+ 	unsigned long flags;
++	struct device *dev;
++
++	dev = &cdev->dev;
+ 
+ 	rc = 0;
+ 	spin_lock_irqsave(get_ccwdev_lock(cdev), flags);
+@@ -3577,11 +3576,10 @@ int dasd_generic_set_offline(struct ccw_device *cdev)
+ 		open_count = atomic_read(&device->block->open_count);
+ 		if (open_count > max_count) {
+ 			if (open_count > 0)
+-				pr_warn("%s: The DASD cannot be set offline with open count %i\n",
+-					dev_name(&cdev->dev), open_count);
++				dev_warn(dev, "The DASD cannot be set offline with open count %i\n",
++					 open_count);
+ 			else
+-				pr_warn("%s: The DASD cannot be set offline while it is in use\n",
+-					dev_name(&cdev->dev));
++				dev_warn(dev, "The DASD cannot be set offline while it is in use\n");
+ 			rc = -EBUSY;
+ 			goto out_err;
+ 		}
+@@ -3941,8 +3939,8 @@ static int dasd_handle_autoquiesce(struct dasd_device *device,
+ 	if (dasd_eer_enabled(device))
+ 		dasd_eer_write(device, NULL, DASD_EER_AUTOQUIESCE);
+ 
+-	pr_info("%s: The DASD has been put in the quiesce state\n",
+-		dev_name(&device->cdev->dev));
++	dev_info(&device->cdev->dev,
++		 "The DASD has been put in the quiesce state\n");
+ 	dasd_device_set_stop_bits(device, DASD_STOPPED_QUIESCE);
+ 
+ 	if (device->features & DASD_FEATURE_REQUEUEQUIESCE)
 -- 
 2.40.1
 
