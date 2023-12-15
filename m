@@ -1,107 +1,113 @@
-Return-Path: <linux-block+bounces-1177-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1191-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC765814BED
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:38:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E3888150CC
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 21:07:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69EEB2843F9
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:38:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09C71287400
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 20:07:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A36F3716F;
-	Fri, 15 Dec 2023 15:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 565365B5D0;
+	Fri, 15 Dec 2023 20:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyLP0V55"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aB+irrCa"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445DA374E6;
-	Fri, 15 Dec 2023 15:38:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B31BAC433C8;
-	Fri, 15 Dec 2023 15:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702654687;
-	bh=x62x6NYP9yRE2oI6l70jSejMRfQlxBsF7W56q+aZzXM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YyLP0V550r0J42MzYaM+fh9x16QkiLirDBV+ev3nM/dMxEM/tIWeNgdP7VGaHY4re
-	 vmZCe/MyyH0dKzHE0E7OZY2g4o4Ji1S5AicP+zGMUyX+5wI+3yF18jCzic9tCLWqg8
-	 iMVfC3C6zh8ezJCk4aqyYWMIXax6ZQdGyciyHmPUBQXQUV/REjmzZto0pMHp7RCMOB
-	 y4Y3w07lmwo3Dn26huf0KFTtaTgddlbFxXJ2seImYkE49cpAmzMSp7SImkFGfWc9T+
-	 ewGuAdursxUAtZxw5NmaEKo/sXifX7I8+XQYXcjieCTn2yEtp+5fWhRxrsQWwDc804
-	 XfD9S6wmSDA5Q==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50bf8843a6fso736859e87.0;
-        Fri, 15 Dec 2023 07:38:07 -0800 (PST)
-X-Gm-Message-State: AOJu0Yx7MU5SKSvGjpy43nmB1sHRBukz+7Gb9NeaYlZHxv63snGBMEbK
-	B04aT2bxgRlJ55x8WhNKLynz2xBJKIF2S0XNS9k=
-X-Google-Smtp-Source: AGHT+IF2o19iSjuma7z1rViUr4sWABiy6wlRLdIwp5Tpkbtge9DERt9+zTTFZPwV1qlJD1XBSN92MPB6o6otz7AUm6Y=
-X-Received: by 2002:a19:8c47:0:b0:50b:ca4c:fedd with SMTP id
- i7-20020a198c47000000b0050bca4cfeddmr5404455lfj.31.1702654685913; Fri, 15 Dec
- 2023 07:38:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7492759E40;
+	Fri, 15 Dec 2023 20:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=97FcQZQjQrmA6OamzvNbQTkU/hd/MlI4iESmvm3umZo=; b=aB+irrCaGgsM25+DU3EtTIj+kO
+	pwIhQlsNdbFA+gEMEbwHVdKFXq8o4wFiTU0TEdslVJO6byMLNQkCBex7I/XGM5RsZ2h2Jh+uxnULx
+	7GaUSIPspkjfceg8JA0MEQ6GYpQZ3cYcgj/YcQ0EU/nDUPZnHp0kXIxTRvyad1vALL/AJbqhQ2I5O
+	G1fovOIvhZtiwjvyM9+sgQwqkV0xrmnX+v3QwzGvnAUxt94hk7j8STcauKQH3n7wA1yQ/qooTp/0N
+	LWhsThfb/6FbtX1gl9AsWjpUK9zfbW3VLxyJp+ZtuZDs5Ycn0ct4q0TlEXLgGrLcZL7BD6dI0YpyG
+	t7pAngzQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rEEOU-0038i4-QW; Fri, 15 Dec 2023 20:02:46 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Christoph Hellwig <hch@lst.de>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: [PATCH 00/14] Clean up the writeback paths
+Date: Fri, 15 Dec 2023 20:02:31 +0000
+Message-Id: <20231215200245.748418-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214222107.2016042-1-song@kernel.org> <20231215125059.00006270@linux.intel.com>
-In-Reply-To: <20231215125059.00006270@linux.intel.com>
-From: Song Liu <song@kernel.org>
-Date: Fri, 15 Dec 2023 07:37:54 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW6GZnufqFseLvgpMrrX6qRXodX1n89vEbbC-FqTjsWPDg@mail.gmail.com>
-Message-ID: <CAPhsuW6GZnufqFseLvgpMrrX6qRXodX1n89vEbbC-FqTjsWPDg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] md: Remove deprecated flavors
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Mariusz,
+I don't think any of this conflicts with the writeback refactoring that
+Christoph has kindly taken over from me, although we might want to redo
+patch 13 on that infrastructure rather than using write_cache_pages().
+That can be a later addition.
 
-On Fri, Dec 15, 2023 at 3:51=E2=80=AFAM Mariusz Tkaczyk
-<mariusz.tkaczyk@linux.intel.com> wrote:
->
-> On Thu, 14 Dec 2023 14:21:04 -0800
-> Song Liu <song@kernel.org> wrote:
->
-> > Linear, multipath, and faulty have been marked as deprecated for 2.5 ye=
-ars.
-> > Let's remove them.
-> >
-> > Thanks,
-> > Song
->
-> Hi Song,
-> Great idea!
->
-> Please note that there are mdadm tests for those levels. I can approve it=
- only
-> when mdadm clean-up is merged. Our tests must pass continuously.
+Most of these patches verge on the trivial, converting filesystems that
+just use block_write_full_page() to use mpage_writepages().  But as we
+saw with Christoph's earlier patchset, there can be some "interesting"
+gotchas, and I clearly haven't tested the majority of filesystems I've
+touched here.
 
-Is the continuous test result available publicly?
+Patches 3 & 4 get rid of a lot of stack usage on architectures with
+larger page sizes; 1024 bytes on 64-bit systems with 64KiB pages.
+It starts to open the door to larger folio sizes on all architectures,
+but it's certainly not enough yet.
 
->
-> It is a nice code complexity improvement so let me know if you would
-> like to get my help with mdadm patches.
+Patch 14 is kind of trivial, but it's nice to get that simplification in.
 
-On my local tests with mdadm, I need to make changes to the following
-tests:
+Matthew Wilcox (Oracle) (14):
+  fs: Remove clean_page_buffers()
+  fs: Convert clean_buffers() to take a folio
+  fs: Reduce stack usage in __mpage_writepage
+  fs: Reduce stack usage in do_mpage_readpage
+  adfs: Remove writepage implementation
+  bfs: Remove writepage implementation
+  hfs: Really remove hfs_writepage
+  hfsplus: Really remove hfsplus_writepage
+  minix: Remove writepage implementation
+  ocfs2: Remove writepage implementation
+  sysv: Remove writepage implementation
+  ufs: Remove writepage implementation
+  fs: Convert block_write_full_page to block_write_full_folio
+  fs: Remove the bh_end_io argument from __block_write_full_folio
 
-00linear...
-00names...
-00raid0...
-00readonly...
-02lineargrow...
-03r0assem...
-04r0update...
-04update-metadata...
+ block/fops.c                | 21 +++++++++++--
+ fs/adfs/inode.c             | 11 ++++---
+ fs/bfs/file.c               |  9 ++++--
+ fs/buffer.c                 | 36 ++++++++++-----------
+ fs/ext4/page-io.c           |  2 +-
+ fs/gfs2/aops.c              |  6 ++--
+ fs/hfs/inode.c              |  8 ++---
+ fs/hfsplus/inode.c          |  8 ++---
+ fs/minix/inode.c            |  9 ++++--
+ fs/mpage.c                  | 62 +++++++++++++++++--------------------
+ fs/ntfs/aops.c              |  4 +--
+ fs/ocfs2/alloc.c            |  2 +-
+ fs/ocfs2/aops.c             | 15 ++++-----
+ fs/ocfs2/file.c             |  2 +-
+ fs/ocfs2/ocfs2_trace.h      |  2 --
+ fs/sysv/itree.c             |  9 ++++--
+ fs/ufs/inode.c              | 11 ++++---
+ include/linux/buffer_head.h |  9 ++----
+ 18 files changed, 115 insertions(+), 111 deletions(-)
 
-The changes are all straightforward (just remove things related to
-linear/multipath/faulty).
+-- 
+2.42.0
 
-Thanks,
-Song
 
