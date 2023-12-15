@@ -1,74 +1,74 @@
-Return-Path: <linux-block+bounces-1171-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1174-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B68E1814BC8
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:28:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD087814BCF
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 16:28:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57C191F23EDC
-	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:28:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23CDDB213DB
+	for <lists+linux-block@lfdr.de>; Fri, 15 Dec 2023 15:28:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8333C381AB;
-	Fri, 15 Dec 2023 15:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C620D39FC9;
+	Fri, 15 Dec 2023 15:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="atKKrzHf"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VDkfD6X6"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC4436AE3;
-	Fri, 15 Dec 2023 15:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E18374F2;
+	Fri, 15 Dec 2023 15:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFEVhd9028305;
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFFRoUV005927;
 	Fri, 15 Dec 2023 15:28:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=HG9gg23yhBilE2sXuIaL4SgGDriy2ZpP2zl4tLDC+hs=;
- b=atKKrzHfghf0STSSvdtQmWbtnW8lLJnp58diaKeI0s75NLCocgXU5/Xjsuu6Y7kfyM59
- 3rlGHbceDlhhf+67SvyjgZUz0b0xRus1S/EYiVaU2lZcGqn2nGkg/1rQXpFqwmtAozf+
- YItDVUaUDjaJdtaQDsghic4yfnvGQ6PX0IV2od3gogDg3Rn61cvezFU1AM4oKeG5SfL3
- bzO6SHvFm2yUz85xeHiK7pLGyLlPrJILfOgumCWDD5VoEogHCfaJ6sl7kjSzLAscc454
- i7iyrRyr+XLBf9zlHORtD9KbpcOEryNxr27gmEBqeRMCskdE9HXZtBU002/6Q03idaNi 4g== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0pymm63c-1
+ bh=50OurVZKQT4BJQ08ZqHWkD4gVuXBNeHXsbelfHPz7hQ=;
+ b=VDkfD6X6rjjay+NJpZsvId0pgeEvjYT+LdBpMKLz/lczMU/mFNJyc1ZGv79g40JZW9mS
+ fR6UF7LiFpeTLqG4ZUg0+8Ooab1FDyyZhIEbFeNGW/GMLPcknqP0Bg1ZNebaxoZ4Kwqs
+ KVN37z2vCJUIq2gytUVpkZFtx3wBS40tu4B527t3XECf4FJMF43UEhqnhlRSMmX143Y6
+ rYX2X+H8n6/NsGzlFd6rJJFJAdmAtajCcI86Mu9av133sikyd0qP0wod2k21p6O6YPce
+ 35Mn+BasO3QTg03MWJ3U2iJyw5pvCJqDa56wuMNxzUmpdJwYV55es1HMfBOFGxi99l0g sw== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0sf9g03d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Dec 2023 15:28:15 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BF6jJO4014824;
+	Fri, 15 Dec 2023 15:28:16 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFDwoDX012593;
 	Fri, 15 Dec 2023 15:28:15 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw42kkges-1
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw3jpgwjm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 15 Dec 2023 15:28:15 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFS9J627656778
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BFFSAR03146416
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 15 Dec 2023 15:28:10 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E272620049;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ECE5D2004D;
 	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D125620040;
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D6B762004B;
 	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
 	Fri, 15 Dec 2023 15:28:09 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-	id 939FDE11F7; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
+	id 95F79E12CE; Fri, 15 Dec 2023 16:28:09 +0100 (CET)
 From: Stefan Haberland <sth@linux.ibm.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 02/10] s390/dasd: Use sysfs_emit() over sprintf()
-Date: Fri, 15 Dec 2023 16:28:02 +0100
-Message-Id: <20231215152809.882602-3-sth@linux.ibm.com>
+Subject: [PATCH 03/10] s390/dasd: Remove unnecessary errorstring generation
+Date: Fri, 15 Dec 2023 16:28:03 +0100
+Message-Id: <20231215152809.882602-4-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231215152809.882602-1-sth@linux.ibm.com>
 References: <20231215152809.882602-1-sth@linux.ibm.com>
@@ -81,105 +81,159 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: aCysuI4A0PL2V2A4nxHm0fTfnH0YHeI0
-X-Proofpoint-GUID: aCysuI4A0PL2V2A4nxHm0fTfnH0YHeI0
+X-Proofpoint-GUID: sY0KzMh2aLlIzUQ3z6TOHgTZHt8HoqHK
+X-Proofpoint-ORIG-GUID: sY0KzMh2aLlIzUQ3z6TOHgTZHt8HoqHK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-15_09,2023-12-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ definitions=2023-12-15_10,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ clxscore=1015 bulkscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ adultscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312150105
+ engine=8.12.0-2311290000 definitions=main-2312150106
 
 From: Jan Höppner <hoeppner@linux.ibm.com>
 
-sysfs_emit() should be used in show() functions. There are still a
-couple of functions that use sprintf().
-Replace outstanding occurrences of sprintf() in all show() functions
-with sysfs_emit().
+In quite a few cases an errorstring is generated using snprintf() before
+it's passed to dev_err(). This indirection is unnecessary and all
+information can simply be passed directly to dev_err() instead.
+The errrorstring and ERRORLENGTH definitions are removed entirely.
+
+While at it, rephrase the error messages to provide more context where
+possible. Also, fix a few incorrectly used format specifier (e.g. %x02
+-> %02x) in those messages.
 
 Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
 Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 ---
- drivers/s390/block/dasd_devmap.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/s390/block/dasd.c          | 26 ++++++--------------------
+ drivers/s390/block/dasd_3990_erp.c |  8 ++------
+ drivers/s390/block/dasd_int.h      |  3 ---
+ 3 files changed, 8 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd_devmap.c
-index 6297dfe6bc67..8a01afb5e3ce 100644
---- a/drivers/s390/block/dasd_devmap.c
-+++ b/drivers/s390/block/dasd_devmap.c
-@@ -1114,7 +1114,7 @@ dasd_use_diag_show(struct device *dev, struct device_attribute *attr, char *buf)
- 		use_diag = (devmap->features & DASD_FEATURE_USEDIAG) != 0;
- 	else
- 		use_diag = (DASD_FEATURE_DEFAULT & DASD_FEATURE_USEDIAG) != 0;
--	return sprintf(buf, use_diag ? "1\n" : "0\n");
-+	return sysfs_emit(buf, use_diag ? "1\n" : "0\n");
- }
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index 833cfab7d877..2e084fd8e520 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -1307,7 +1307,6 @@ int dasd_term_IO(struct dasd_ccw_req *cqr)
+ {
+ 	struct dasd_device *device;
+ 	int retries, rc;
+-	char errorstring[ERRORLENGTH];
  
- static ssize_t
-@@ -1163,7 +1163,7 @@ dasd_use_raw_show(struct device *dev, struct device_attribute *attr, char *buf)
- 		use_raw = (devmap->features & DASD_FEATURE_USERAW) != 0;
- 	else
- 		use_raw = (DASD_FEATURE_DEFAULT & DASD_FEATURE_USERAW) != 0;
--	return sprintf(buf, use_raw ? "1\n" : "0\n");
-+	return sysfs_emit(buf, use_raw ? "1\n" : "0\n");
- }
- 
- static ssize_t
-@@ -1259,7 +1259,7 @@ dasd_access_show(struct device *dev, struct device_attribute *attr,
- 	if (count < 0)
- 		return count;
- 
--	return sprintf(buf, "%d\n", count);
-+	return sysfs_emit(buf, "%d\n", count);
- }
- 
- static DEVICE_ATTR(host_access_count, 0444, dasd_access_show, NULL);
-@@ -1338,19 +1338,19 @@ static ssize_t dasd_alias_show(struct device *dev,
- 
- 	device = dasd_device_from_cdev(to_ccwdev(dev));
- 	if (IS_ERR(device))
--		return sprintf(buf, "0\n");
-+		return sysfs_emit(buf, "0\n");
- 
- 	if (device->discipline && device->discipline->get_uid &&
- 	    !device->discipline->get_uid(device, &uid)) {
- 		if (uid.type == UA_BASE_PAV_ALIAS ||
- 		    uid.type == UA_HYPER_PAV_ALIAS) {
- 			dasd_put_device(device);
--			return sprintf(buf, "1\n");
-+			return sysfs_emit(buf, "1\n");
+ 	/* Check the cqr */
+ 	rc = dasd_check_cqr(cqr);
+@@ -1346,10 +1345,8 @@ int dasd_term_IO(struct dasd_ccw_req *cqr)
+ 			rc = 0;
+ 			break;
+ 		default:
+-			/* internal error 10 - unknown rc*/
+-			snprintf(errorstring, ERRORLENGTH, "10 %d", rc);
+-			dev_err(&device->cdev->dev, "An error occurred in the "
+-				"DASD device driver, reason=%s\n", errorstring);
++			dev_err(&device->cdev->dev,
++				"Unexpected error during request termination %d\n", rc);
+ 			BUG();
+ 			break;
  		}
+@@ -1368,7 +1365,6 @@ int dasd_start_IO(struct dasd_ccw_req *cqr)
+ {
+ 	struct dasd_device *device;
+ 	int rc;
+-	char errorstring[ERRORLENGTH];
+ 
+ 	/* Check the cqr */
+ 	rc = dasd_check_cqr(cqr);
+@@ -1388,10 +1384,8 @@ int dasd_start_IO(struct dasd_ccw_req *cqr)
+ 		return -EPERM;
  	}
- 	dasd_put_device(device);
+ 	if (cqr->retries < 0) {
+-		/* internal error 14 - start_IO run out of retries */
+-		sprintf(errorstring, "14 %p", cqr);
+-		dev_err(&device->cdev->dev, "An error occurred in the DASD "
+-			"device driver, reason=%s\n", errorstring);
++		dev_err(&device->cdev->dev,
++			"Start I/O ran out of retries %p\n", cqr);
+ 		cqr->status = DASD_CQR_ERROR;
+ 		return -EIO;
+ 	}
+@@ -1469,11 +1463,8 @@ int dasd_start_IO(struct dasd_ccw_req *cqr)
+ 			      "not accessible");
+ 		break;
+ 	default:
+-		/* internal error 11 - unknown rc */
+-		snprintf(errorstring, ERRORLENGTH, "11 %d", rc);
+ 		dev_err(&device->cdev->dev,
+-			"An error occurred in the DASD device driver, "
+-			"reason=%s\n", errorstring);
++			"Unexpected error during request start %d", rc);
+ 		BUG();
+ 		break;
+ 	}
+@@ -1910,8 +1901,6 @@ static void __dasd_device_process_ccw_queue(struct dasd_device *device,
+ static void __dasd_process_cqr(struct dasd_device *device,
+ 			       struct dasd_ccw_req *cqr)
+ {
+-	char errorstring[ERRORLENGTH];
+-
+ 	switch (cqr->status) {
+ 	case DASD_CQR_SUCCESS:
+ 		cqr->status = DASD_CQR_DONE;
+@@ -1923,11 +1912,8 @@ static void __dasd_process_cqr(struct dasd_device *device,
+ 		cqr->status = DASD_CQR_TERMINATED;
+ 		break;
+ 	default:
+-		/* internal error 12 - wrong cqr status*/
+-		snprintf(errorstring, ERRORLENGTH, "12 %p %x02", cqr, cqr->status);
+ 		dev_err(&device->cdev->dev,
+-			"An error occurred in the DASD device driver, "
+-			"reason=%s\n", errorstring);
++			"Unexpected CQR status %p %02x", cqr, cqr->status);
+ 		BUG();
+ 	}
+ 	if (cqr->callback)
+diff --git a/drivers/s390/block/dasd_3990_erp.c b/drivers/s390/block/dasd_3990_erp.c
+index 89957bb7244d..0705736acf09 100644
+--- a/drivers/s390/block/dasd_3990_erp.c
++++ b/drivers/s390/block/dasd_3990_erp.c
+@@ -398,7 +398,6 @@ dasd_3990_handle_env_data(struct dasd_ccw_req * erp, char *sense)
+ 	struct dasd_device *device = erp->startdev;
+ 	char msg_format = (sense[7] & 0xF0);
+ 	char msg_no = (sense[7] & 0x0F);
+-	char errorstring[ERRORLENGTH];
  
--	return sprintf(buf, "0\n");
-+	return sysfs_emit(buf, "0\n");
- }
+ 	switch (msg_format) {
+ 	case 0x00:		/* Format 0 - Program or System Checks */
+@@ -1004,12 +1003,9 @@ dasd_3990_handle_env_data(struct dasd_ccw_req * erp, char *sense)
+ 		}
+ 		break;
  
- static DEVICE_ATTR(alias, 0444, dasd_alias_show, NULL);
-@@ -1856,7 +1856,7 @@ static ssize_t dasd_pm_show(struct device *dev,
+-	default:	/* unknown message format - should not happen
+-			   internal error 03 - unknown message format */
+-		snprintf(errorstring, ERRORLENGTH, "03 %x02", msg_format);
++	default:
+ 		dev_err(&device->cdev->dev,
+-			 "An error occurred in the DASD device driver, "
+-			 "reason=%s\n", errorstring);
++			"Unknown message format %02x", msg_format);
+ 		break;
+ 	}			/* end switch message format */
  
- 	device = dasd_device_from_cdev(to_ccwdev(dev));
- 	if (IS_ERR(device))
--		return sprintf(buf, "0\n");
-+		return sysfs_emit(buf, "0\n");
+diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
+index 1b1b8a41c4d4..71d88e931090 100644
+--- a/drivers/s390/block/dasd_int.h
++++ b/drivers/s390/block/dasd_int.h
+@@ -113,9 +113,6 @@ do { \
+ 			    __dev_id.ssid, __dev_id.devno, d_data);	\
+ } while (0)
  
- 	opm = dasd_path_get_opm(device);
- 	nppm = dasd_path_get_nppm(device);
-@@ -1866,8 +1866,8 @@ static ssize_t dasd_pm_show(struct device *dev,
- 	ifccpm = dasd_path_get_ifccpm(device);
- 	dasd_put_device(device);
- 
--	return sprintf(buf, "%02x %02x %02x %02x %02x %02x\n", opm, nppm,
--		       cablepm, cuirpm, hpfpm, ifccpm);
-+	return sysfs_emit(buf, "%02x %02x %02x %02x %02x %02x\n", opm, nppm,
-+			  cablepm, cuirpm, hpfpm, ifccpm);
- }
- 
- static DEVICE_ATTR(path_masks, 0444, dasd_pm_show, NULL);
+-/* limit size for an errorstring */
+-#define ERRORLENGTH 30
+-
+ /* definition of dbf debug levels */
+ #define	DBF_EMERG	0	/* system is unusable			*/
+ #define	DBF_ALERT	1	/* action must be taken immediately	*/
 -- 
 2.40.1
 
