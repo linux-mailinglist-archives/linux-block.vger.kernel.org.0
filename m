@@ -1,144 +1,186 @@
-Return-Path: <linux-block+bounces-1380-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1376-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB08281B6DF
-	for <lists+linux-block@lfdr.de>; Thu, 21 Dec 2023 14:03:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0562081B582
+	for <lists+linux-block@lfdr.de>; Thu, 21 Dec 2023 13:11:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2918D1C25ADB
-	for <lists+linux-block@lfdr.de>; Thu, 21 Dec 2023 13:03:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D3F228366E
+	for <lists+linux-block@lfdr.de>; Thu, 21 Dec 2023 12:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 366FB73170;
-	Thu, 21 Dec 2023 13:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14AE6A327;
+	Thu, 21 Dec 2023 12:11:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RknqFI9n"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pUDhVOiE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hzTwR5PX";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pUDhVOiE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hzTwR5PX"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D51A697A5
-	for <linux-block@vger.kernel.org>; Thu, 21 Dec 2023 13:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231221130139epoutp03d821cc9ae8176de3a65ab2710c5bc369~i2lxwOA6p1365513655epoutp03D
-	for <linux-block@vger.kernel.org>; Thu, 21 Dec 2023 13:01:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231221130139epoutp03d821cc9ae8176de3a65ab2710c5bc369~i2lxwOA6p1365513655epoutp03D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1703163699;
-	bh=PpnlORNR0D4uCtNQd1bbOOWyPJnGQzA/ditmPACE5wE=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=RknqFI9nLJtGJYI/LAIF4eChc3UaM5gUtooyXspWdZEhurw17T7m0lSrb5wjmVDlQ
-	 mA/1kmtYxGJICkQjW9j+BXx6tmeAj7P06jwzCIpS6SjxtEQ0DfDHpRU27UpVKVCFlV
-	 CuXBxILm408KeyvImUYBHVMW4ePWHQZwCqMJTCEg=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20231221130139epcas5p2aa94ddd4d53646cb0efabbe23508ba3b~i2lxavJqs0750607506epcas5p2R;
-	Thu, 21 Dec 2023 13:01:39 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4SwrD12q8Xz4x9Pt; Thu, 21 Dec
-	2023 13:01:37 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BA.66.09634.03734856; Thu, 21 Dec 2023 22:01:36 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231221111858epcas5p46c3bf66f33df8652d2da966b3ecbfa60~i1MHWoPL60261302613epcas5p4O;
-	Thu, 21 Dec 2023 11:18:58 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231221111858epsmtrp1a518a6716d63997965b748925070783a~i1MHWC9sq1883118831epsmtrp1b;
-	Thu, 21 Dec 2023 11:18:58 +0000 (GMT)
-X-AuditID: b6c32a49-159fd700000025a2-b6-65843730eaf6
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	51.2C.08755.12F14856; Thu, 21 Dec 2023 20:18:57 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.99.41.245]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20231221111857epsmtip18f664a9fc348222ede1be4a3af7576a9~i1MGW1xzm3105531055epsmtip1_;
-	Thu, 21 Dec 2023 11:18:56 +0000 (GMT)
-From: Kundan Kumar <kundan.kumar@samsung.com>
-To: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de
-Cc: linux-block@vger.kernel.org, Kundan Kumar <kundan.kumar@samsung.com>,
-	Kanchan Joshi <joshi.k@samsung.com>
-Subject: [PATCH] block: skip start/end time stamping for passthrough IO
-Date: Thu, 21 Dec 2023 16:42:21 +0530
-Message-Id: <20231221111221.4237-1-kundan.kumar@samsung.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28C16A02A;
+	Thu, 21 Dec 2023 12:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B09D91FDAA;
+	Thu, 21 Dec 2023 12:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1703160670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J+TyKykGlPVi1TiMaCKYzUe9Yh1Gu/kCcG/smM9DkYo=;
+	b=pUDhVOiEd5zLszVe8ECaSa3ymfOk9bQCI97dUgxxgcf6D8Wmj4PoHuqXUwiEiq00br12S0
+	D2Gf1Zo7C2/e7r1g7zglKHX1oyaVlmy/DLtPbKqTr0+zHreqGgJVRpjcHH+SSuS9HhUiRM
+	mXQbxcRYE3LnxwLRKG6ztmQDVgS1G18=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1703160670;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J+TyKykGlPVi1TiMaCKYzUe9Yh1Gu/kCcG/smM9DkYo=;
+	b=hzTwR5PXHZWTh5Wt3yjvB6dz8ugCKv2WGNijPFdBwhy0VBlFaBJLLSRWohuBcX1g8OLlqL
+	q/PPCzwG1hqhQ2BA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1703160670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J+TyKykGlPVi1TiMaCKYzUe9Yh1Gu/kCcG/smM9DkYo=;
+	b=pUDhVOiEd5zLszVe8ECaSa3ymfOk9bQCI97dUgxxgcf6D8Wmj4PoHuqXUwiEiq00br12S0
+	D2Gf1Zo7C2/e7r1g7zglKHX1oyaVlmy/DLtPbKqTr0+zHreqGgJVRpjcHH+SSuS9HhUiRM
+	mXQbxcRYE3LnxwLRKG6ztmQDVgS1G18=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1703160670;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J+TyKykGlPVi1TiMaCKYzUe9Yh1Gu/kCcG/smM9DkYo=;
+	b=hzTwR5PXHZWTh5Wt3yjvB6dz8ugCKv2WGNijPFdBwhy0VBlFaBJLLSRWohuBcX1g8OLlqL
+	q/PPCzwG1hqhQ2BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9AB7B13AB5;
+	Thu, 21 Dec 2023 12:11:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NWrBJV4rhGW9aQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 21 Dec 2023 12:11:10 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 36197A07E3; Thu, 21 Dec 2023 13:11:02 +0100 (CET)
+Date: Thu, 21 Dec 2023 13:11:02 +0100
+From: Jan Kara <jack@suse.cz>
+To: Li Lingfeng <lilingfeng@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>,
+	Kees Cook <keescook@google.com>,
+	syzkaller <syzkaller@googlegroups.com>,
+	Alexander Popov <alex.popov@linux.com>, linux-xfs@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>,
+	yangerkun <yangerkun@huawei.com>, "yukuai (C)" <yukuai3@huawei.com>,
+	"zhangyi (F)" <yi.zhang@huawei.com>
+Subject: Re: [PATCH 3/7] block: Add config option to not allow writing to
+ mounted devices
+Message-ID: <20231221121102.2pfp3cyzmsf2xmls@quack3>
+References: <20231101173542.23597-1-jack@suse.cz>
+ <20231101174325.10596-3-jack@suse.cz>
+ <64fdffaa-9a8f-df34-42e7-ccca81e95c3c@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNKsWRmVeSWpSXmKPExsWy7bCmlq6BeUuqwb1Tehar7/azWaxcfZTJ
-	4uj/t2wWkw5dY7TY+uUrq8XeW9oObB6Xz5Z6bFrVyeax+2YDm0ffllWMHp83yQWwRmXbZKQm
-	pqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gDtV1IoS8wpBQoF
-	JBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoYGJkCFSZkZ6xf8Z+p
-	4CtbxYm5X9kbGN+ydjFyckgImEgsmfSdHcQWEtjNKHF8Yn4XIxeQ/YlR4uvSH8wQzjdGiTe/
-	VrPBdKxu62CCSOxllOh+8h2q6jOjxMQjb4EyHBxsAroSP5pCQRpEBIwkdv59DdbMLJAv8ejp
-	dDBbWMBd4vHdJWCrWQRUJTY/3MsIYvMK2Eh8WfcM6jx5iZmXIM7jFRCUODnzCQvEHHmJ5q2z
-	wfZKCBxil9i8cDUzRIOLxKpd16FsYYlXx7ewQ9hSEi/726DsbIlDjRuYIOwSiZ1HGqDi9hKt
-	p/qZQe5nFtCUWL9LHyIsKzH11DomiL18Er2/n0C18krsmAdjq0nMeTeVBcKWkVh4aQZU3ENi
-	999lLJDgjZW42/KeZQKj/Cwk78xC8s4shM0LGJlXMUqmFhTnpqcWmxYY5qWWw+M1OT93EyM4
-	FWp57mC8++CD3iFGJg7GQ4wSHMxKIrz5Oi2pQrwpiZVVqUX58UWlOanFhxhNgWE8kVlKNDkf
-	mIzzSuINTSwNTMzMzEwsjc0MlcR5X7fOTRESSE8sSc1OTS1ILYLpY+LglGpgYnmfK30qyMzQ
-	1uhv/wtLy4c6JfdeT550LV+s+dFx5VXGn075zey1iDtp7hQw97b/MZOf6TfefJwhJRDDY77/
-	2Ep12/WZt/Lsb+sEVM1K/PAuy1FM47BhmkXgxd0X2CQ+WSSwtUe2yNV1n2OaOTMqk+PfJ74r
-	DLEyM2/2zLPTZzh4YvZXtZo5N2vlYnr1+B9c+MpyeWGbz1lu/2Pywc/f7j/IdGUyu+3vh1OS
-	BfTXV3uyNB7dz7Qj86OIluWsp9fuK9rOZ7ifXvdkXl/9feU4C6Xm+wuOKQpM3HXtdGjOyicr
-	zjy8Vh3w+KXFaos/tmIar157Se4Q/dMs/f279ETZuGlrGZ67beE/zftVt7skSomlOCPRUIu5
-	qDgRAG8iwg0OBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGLMWRmVeSWpSXmKPExsWy7bCSnK6ifEuqwdetNhar7/azWaxcfZTJ
-	4uj/t2wWkw5dY7TY+uUrq8XeW9oObB6Xz5Z6bFrVyeax+2YDm0ffllWMHp83yQWwRnHZpKTm
-	ZJalFunbJXBlrF/xn6ngK1vFiblf2RsY37J2MXJySAiYSKxu62DqYuTiEBLYzSjx7NQpRoiE
-	jMTuuzuhioQlVv57zg5R9JFR4u/5GUBFHBxsAroSP5pCQWpEBMwk9p/byAwSZhYolPizSRQk
-	LCzgLvH47hJ2EJtFQFVi88O9YON5BWwkvqx7BjVeXmLmpe/sEHFBiZMzn7CA2MxA8eats5kn
-	MPLNQpKahSS1gJFpFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcFBqae5g3L7qg94h
-	RiYOxkOMEhzMSiK8ezubUoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzir/oTRESSE8sSc1OTS1I
-	LYLJMnFwSjUwbZ43f9l1Rx7e3UY7RA6r5v92ZNA7WW7TmtCr92vWZb02pQcv+BbFz365b3bu
-	unndvMeeK8svuTyRq+vGnVsLvQ6a9Gzuni9fMuFR8Cnp+5I/l64K5PsWPKdGuEFSQzWtQtmf
-	LbL4d268zbRZFy5z7+1Jb/V99WXeFMnybPdHn7LLb6xue2wyOeP22+VH7t85/PaByMrmwO+/
-	PC0j1AIifnlNPFWn6pzj++XF67nennM1Y1Zcv9LO4LkgVm1NxJ4O7lM6883l1qQzWCwqkKpl
-	LXoumLrs+/FPrlu8Uxd8aO+ZF65a98jo26TSCs16u8nWVaK3nVJf5gq9uxKUt8qZ31f7jd42
-	yQC7sLyfTGxOSizFGYmGWsxFxYkAJC87c7kCAAA=
-X-CMS-MailID: 20231221111858epcas5p46c3bf66f33df8652d2da966b3ecbfa60
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231221111858epcas5p46c3bf66f33df8652d2da966b3ecbfa60
-References: <CGME20231221111858epcas5p46c3bf66f33df8652d2da966b3ecbfa60@epcas5p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64fdffaa-9a8f-df34-42e7-ccca81e95c3c@huaweicloud.com>
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[15];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
-This patch will avoid start/end time stamping for passthrough IO.
-This helps to improve IO performance by ~7%
+On Wed 20-12-23 11:26:38, Li Lingfeng wrote:
+> > @@ -773,6 +803,10 @@ struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
+> >   	if (ret)
+> >   		goto free_handle;
+> > +	/* Blocking writes requires exclusive opener */
+> > +	if (mode & BLK_OPEN_RESTRICT_WRITES && !holder)
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> >   	bdev = blkdev_get_no_open(dev);
+> >   	if (!bdev) {
+> >   		ret = -ENXIO;
+> > @@ -800,12 +834,21 @@ struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *holder,
+> >   		goto abort_claiming;
+> >   	if (!try_module_get(disk->fops->owner))
+> >   		goto abort_claiming;
+> > +	ret = -EBUSY;
+> > +	if (!blkdev_open_compatible(bdev, mode))
+> > +		goto abort_claiming;
+> >   	if (bdev_is_partition(bdev))
+> >   		ret = blkdev_get_part(bdev, mode);
+> >   	else
+> >   		ret = blkdev_get_whole(bdev, mode);
+> >   	if (ret)
+> >   		goto put_module;
+> > +	if (!bdev_allow_write_mounted) {
+> > +		if (mode & BLK_OPEN_RESTRICT_WRITES)
+> > +			bdev_block_writes(bdev);
+> 
+> When a partition device is mounted, I think maybe it's better to block
+> writes on the whole device at same time.
+> 
+> Allowing the whole device to be opened for writing when mounting a partition
+> device, did you have any special considerations before?
 
-Signed-off-by: Kundan Kumar <kundan.kumar@samsung.com>
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
----
- include/linux/blk-mq.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yes, we were considering this. But the truth is that:
 
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 1ab3081c82ed..04617494db7e 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -830,7 +830,8 @@ void blk_mq_end_request_batch(struct io_comp_batch *ib);
-  */
- static inline bool blk_mq_need_time_stamp(struct request *rq)
- {
--	return (rq->rq_flags & (RQF_IO_STAT | RQF_STATS | RQF_USE_SCHED));
-+	return (rq->rq_flags & (RQF_IO_STAT | RQF_STATS | RQF_USE_SCHED) &&
-+		!blk_rq_is_passthrough(rq));
- }
- 
- static inline bool blk_mq_is_reserved_rq(struct request *rq)
+a) It is *very* hard to stop all the possibilities of corrupting data on
+the device - e.g. with device mapper / loop device / malicious partition
+table you can construct many block devices pointing to the same storage,
+you can use e.g. SG_IO to corrupt on disk data etc. So special-casing
+partitions is providing little additional benefit.
+
+b) It is difficult to then correctly handle valid cases of multiple
+writeably mounted partitions on the same device - you'd need to track used
+block numbers for each device which gets difficult in presence of device
+mapper etc.
+
+c) To stop filesystem crashes, it is enough to stop modifications of buffer
+cache of that one block device. Because filesystems have to validate data
+they are loading into buffer cache anyway to handle faulty device, fs
+corruption etc.
+
+								Honza
 -- 
-2.25.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
