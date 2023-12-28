@@ -1,82 +1,109 @@
-Return-Path: <linux-block+bounces-1500-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1502-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E968281F709
-	for <lists+linux-block@lfdr.de>; Thu, 28 Dec 2023 11:49:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A27C81F79C
+	for <lists+linux-block@lfdr.de>; Thu, 28 Dec 2023 12:15:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A57D5281DFF
-	for <lists+linux-block@lfdr.de>; Thu, 28 Dec 2023 10:49:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BF2A1C23249
+	for <lists+linux-block@lfdr.de>; Thu, 28 Dec 2023 11:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6D6563BA;
-	Thu, 28 Dec 2023 10:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tlm1zSZA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C4506FB2;
+	Thu, 28 Dec 2023 11:15:25 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9553D6AA4;
-	Thu, 28 Dec 2023 10:49:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DB01C433C7;
-	Thu, 28 Dec 2023 10:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703760542;
-	bh=kXdM8l6YBnsY84eHi4eZAnWpfsxkw1Psni5CMD4xugU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tlm1zSZAF9rDDu6xZHygpQ0OabYcZcvyfgPyltQddupRJkvBFHn68a0hm/WTVa4xe
-	 EeSWlnBIwp38QleElX+ZcxO/E1+y8IJboF7iO72KeGY7HNJ3LZzq+VYn10u89BPXt0
-	 YluU2jfAVGMlJ43d3121Y/Fg4Vkzh7jwzmSPEtC9iYc75kbfZvCtDI/A4IXHbW8Vwa
-	 oBfqnd20y8uh6t2DwINznlxneOxlLrJXfNmXZdacJA3joCH6R33suHv8E9m7gSmM2c
-	 oCIJPl7Cs3Jl7i5o5BOgBrk+P1qUhVZ1IJr4MBZJXBhhLwWsym8a5caEKG5hWZBn1Y
-	 IKQ2xyPX7ekAA==
-From: Christian Brauner <brauner@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	Jan Kara <jack@suse.cz>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH] block: Fix a memory leak in bdev_open_by_dev()
-Date: Thu, 28 Dec 2023 11:48:37 +0100
-Message-ID: <20231228-marmorieren-frisch-f6677dbebc8c@brauner>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To:  <8eaec334781e695810aaa383b55de00ca4ab1352.1703439383.git.christophe.jaillet@wanadoo.fr>
-References:  <8eaec334781e695810aaa383b55de00ca4ab1352.1703439383.git.christophe.jaillet@wanadoo.fr>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79F56AAC;
+	Thu, 28 Dec 2023 11:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 64FC36343B34;
+	Thu, 28 Dec 2023 12:09:39 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id QLKAjcGqlAWB; Thu, 28 Dec 2023 12:09:38 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 83EF66343B4D;
+	Thu, 28 Dec 2023 12:09:38 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ho9bqT-b41NN; Thu, 28 Dec 2023 12:09:38 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 498246343B34;
+	Thu, 28 Dec 2023 12:09:38 +0100 (CET)
+Date: Thu, 28 Dec 2023 12:09:38 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: hch <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, anton ivanov <anton.ivanov@cambridgegreys.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Minchan Kim <minchan@kernel.org>, 
+	senozhatsky <senozhatsky@chromium.org>, Coly Li <colyli@suse.de>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, 
+	linux-um <linux-um@lists.infradead.org>, 
+	linux-block <linux-block@vger.kernel.org>, nbd@other.debian.org, 
+	linux-bcache <linux-bcache@vger.kernel.org>, 
+	linux-mtd <linux-mtd@lists.infradead.org>
+Message-ID: <651248504.172152.1703761778190.JavaMail.zimbra@nod.at>
+In-Reply-To: <20231228075545.362768-10-hch@lst.de>
+References: <20231228075545.362768-1-hch@lst.de> <20231228075545.362768-10-hch@lst.de>
+Subject: Re: [PATCH 9/9] mtd_blkdevs: use the default discard granularity
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=941; i=brauner@kernel.org; h=from:subject:message-id; bh=Ax77AMZlSmHKwfAhMNiE2q9swju9T0TiGdasEacnqp0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT2BrUwaytwyK/ZMLcn7JzuL8fJH1Oiex7vD5h0wj7l0 Ip26TMPO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYSPo3hf+r5Jj9nrzcSre2M h6z/duwqVC+TvZ1dmDZvw9/rCu4quxgZDvjcNXiWyhj5af2vqyrN8fW3Fqlt2Rte1vtFhcGCR/E nEwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: mtd_blkdevs: use the default discard granularity
+Thread-Index: qBzbN7jF6yK+/MNDxaXtjyFFzypHWw==
 
-On Sun, 24 Dec 2023 18:36:42 +0100, Christophe JAILLET wrote:
-> If we early exit here, 'handle' needs to be freed, or some memory leaks.
-> 
-> 
+----- Urspr=C3=BCngliche Mail -----
+> Von: "hch" <hch@lst.de>
+> An: "Jens Axboe" <axboe@kernel.dk>
+> CC: "richard" <richard@nod.at>, "anton ivanov" <anton.ivanov@cambridgegre=
+ys.com>, "Josef Bacik" <josef@toxicpanda.com>,
+> "Minchan Kim" <minchan@kernel.org>, "senozhatsky" <senozhatsky@chromium.o=
+rg>, "Coly Li" <colyli@suse.de>, "Miquel
+> Raynal" <miquel.raynal@bootlin.com>, "Vignesh Raghavendra" <vigneshr@ti.c=
+om>, "linux-um"
+> <linux-um@lists.infradead.org>, "linux-block" <linux-block@vger.kernel.or=
+g>, nbd@other.debian.org, "linux-bcache"
+> <linux-bcache@vger.kernel.org>, "linux-mtd" <linux-mtd@lists.infradead.or=
+g>
+> Gesendet: Donnerstag, 28. Dezember 2023 08:55:45
+> Betreff: [PATCH 9/9] mtd_blkdevs: use the default discard granularity
 
-Applied to the vfs.super branch of the vfs/vfs.git tree.
-Patches in the vfs.super branch should appear in linux-next soon.
+> The discard granularity now defaults to a single sector, so don't set
+> that value explicitly.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+> drivers/mtd/mtd_blkdevs.c | 4 +---
+> 1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/mtd/mtd_blkdevs.c b/drivers/mtd/mtd_blkdevs.c
+> index ff18636e088973..0da7b33849471a 100644
+> --- a/drivers/mtd/mtd_blkdevs.c
+> +++ b/drivers/mtd/mtd_blkdevs.c
+> @@ -376,10 +376,8 @@ int add_mtd_blktrans_dev(struct mtd_blktrans_dev *ne=
+w)
+> =09blk_queue_flag_set(QUEUE_FLAG_NONROT, new->rq);
+> =09blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, new->rq);
+>=20
+> -=09if (tr->discard) {
+> +=09if (tr->discard)
+> =09=09blk_queue_max_discard_sectors(new->rq, UINT_MAX);
+> -=09=09new->rq->limits.discard_granularity =3D tr->blksize;
+> -=09}
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Acked-by: Richard Weinberger <richard@nod.at>
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.super
-
-[1/1] block: Fix a memory leak in bdev_open_by_dev()
-      https://git.kernel.org/vfs/vfs/c/8ff363ade395
+Thanks,
+//richard
 
