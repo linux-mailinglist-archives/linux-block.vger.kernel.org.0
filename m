@@ -1,37 +1,37 @@
-Return-Path: <linux-block+bounces-1635-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1636-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 288FA826DC8
-	for <lists+linux-block@lfdr.de>; Mon,  8 Jan 2024 13:27:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 228A6826DF1
+	for <lists+linux-block@lfdr.de>; Mon,  8 Jan 2024 13:30:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FC1A1C2243D
-	for <lists+linux-block@lfdr.de>; Mon,  8 Jan 2024 12:27:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 358891C224B1
+	for <lists+linux-block@lfdr.de>; Mon,  8 Jan 2024 12:30:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BD3C3FE5A;
-	Mon,  8 Jan 2024 12:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78579405F8;
+	Mon,  8 Jan 2024 12:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPsGJcl1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9AfNFur"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F0D405C2;
-	Mon,  8 Jan 2024 12:27:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F53C433C7;
-	Mon,  8 Jan 2024 12:27:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DBB405EA;
+	Mon,  8 Jan 2024 12:28:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A78DC433C7;
+	Mon,  8 Jan 2024 12:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704716869;
-	bh=XT1YEEoBYL9YDiIX/x8rgxCuvHmV/PTauF415QqPIFQ=;
+	s=k20201202; t=1704716906;
+	bh=DIRZMWKXKKAnLBsFnFzwOy/7jeFqFxs2HaaS1MGyc68=;
 	h=From:To:Cc:Subject:Date:From;
-	b=UPsGJcl1g9EiAthi4CpNsl0yNSWFFCHkd2ZUbk6CPMt34BMDzCtyhQ+yca1YMlyBY
-	 Cql7306y2Q7Nn85Nuz1FCd0JTfdsdsmOvi+V4YV+fFxy119KClUTIlxh1NT+KFeoKY
-	 MZpaB7OGQETIMSHaflY6/9l4S07nJqm9h+39n1NQ6aOsqa3uDyWEoUod0N46iLPlhi
-	 RPnolo36oi829R/GkUy7NdzRIIwkMV/ZnE9kQ0pNJXQDc5nEv1QUcsgDlUmVgSpFNq
-	 TXD9HiTkn3unCs6nevPT3VmvnbCyYnaQNWJ7Sm+o2QutC34hu+g0hb9g3xiyQpWTkN
-	 /ZukCNaH92M/w==
+	b=p9AfNFur0i0oRt+xSkPpYUSYN3HVcK5zIbO52U2404MlddnK59eKp5pzSwMgoZQjV
+	 iiWAkdP9hRzKDwZ+oX03pjQ2WEW4JDTQ58to4nUistaO/JC41KVEkKT3fCbZ2mE3z4
+	 EEwIX015ijGZCdzhyfJhXhbN4Rcj+HX6y/EG0uQnCouVpFrw9WbOOLP/UAMxF+IhQ3
+	 I4jmVw6NsG2nXP2TKgxJK2N3TIkY3yzGnqRNuE6k8Wie7P3xp6h46V99s1V/7Hg3gW
+	 UIghNzUIegAgYwDI7K5oCae9Q+MdacE2KkprM2PYUY92DJizNi1yr+L6GeXfe5bT47
+	 JK/G19yDNG4AQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -44,9 +44,9 @@ Cc: Stefan Hajnoczi <stefanha@redhat.com>,
 	axboe@kernel.dk,
 	virtualization@lists.linux.dev,
 	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 1/8] virtio_blk: fix snprintf truncation compiler warning
-Date: Mon,  8 Jan 2024 07:27:17 -0500
-Message-ID: <20240108122745.2090122-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 1/5] virtio_blk: fix snprintf truncation compiler warning
+Date: Mon,  8 Jan 2024 07:28:12 -0500
+Message-ID: <20240108122823.2090312-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
@@ -57,7 +57,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.10
+X-stable-base: Linux 6.1.71
 Content-Transfer-Encoding: 8bit
 
 From: Stefan Hajnoczi <stefanha@redhat.com>
@@ -98,10 +98,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 4a4b9bad551e8..225c86c74d4e9 100644
+index efa5535a8e1d8..3124837aa406f 100644
 --- a/drivers/block/virtio_blk.c
 +++ b/drivers/block/virtio_blk.c
-@@ -1021,12 +1021,12 @@ static void virtblk_config_changed(struct virtio_device *vdev)
+@@ -609,12 +609,12 @@ static void virtblk_config_changed(struct virtio_device *vdev)
  static int init_vq(struct virtio_blk *vblk)
  {
  	int err;
@@ -116,7 +116,7 @@ index 4a4b9bad551e8..225c86c74d4e9 100644
  	struct virtio_device *vdev = vblk->vdev;
  	struct irq_affinity desc = { 0, };
  
-@@ -1070,13 +1070,13 @@ static int init_vq(struct virtio_blk *vblk)
+@@ -658,13 +658,13 @@ static int init_vq(struct virtio_blk *vblk)
  
  	for (i = 0; i < num_vqs - num_poll_vqs; i++) {
  		callbacks[i] = virtblk_done;
