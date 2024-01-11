@@ -1,36 +1,43 @@
-Return-Path: <linux-block+bounces-1740-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1741-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2B9482B28D
-	for <lists+linux-block@lfdr.de>; Thu, 11 Jan 2024 17:14:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3022982B28E
+	for <lists+linux-block@lfdr.de>; Thu, 11 Jan 2024 17:15:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A679E1F2342E
-	for <lists+linux-block@lfdr.de>; Thu, 11 Jan 2024 16:14:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADDFE2872A2
+	for <lists+linux-block@lfdr.de>; Thu, 11 Jan 2024 16:15:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 850F14CB3C;
-	Thu, 11 Jan 2024 16:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11DCB4EB5C;
+	Thu, 11 Jan 2024 16:15:30 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59FC4F5F8
-	for <linux-block@vger.kernel.org>; Thu, 11 Jan 2024 16:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99FE28E33;
+	Thu, 11 Jan 2024 16:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 11CC268CFE; Thu, 11 Jan 2024 17:14:41 +0100 (CET)
-Date: Thu, 11 Jan 2024 17:14:40 +0100
+	id 8034F68CFE; Thu, 11 Jan 2024 17:15:22 +0100 (CET)
+Date: Thu, 11 Jan 2024 17:15:22 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH 2/2] blk-mq: ensure a q_usage_counter reference is held
- when splitting bios
-Message-ID: <20240111161440.GA16626@lst.de>
-References: <20240111135705.2155518-1-hch@lst.de> <20240111135705.2155518-3-hch@lst.de> <d713fe1b-3eaa-4de4-99a6-5910247ffad5@kernel.dk>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, axboe@kernel.dk,
+	kbusch@kernel.org, sagi@grimberg.me, jejb@linux.ibm.com,
+	martin.petersen@oracle.com, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, dchinner@redhat.com, jack@suse.cz,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+	linux-scsi@vger.kernel.org, ming.lei@redhat.com, bvanassche@acm.org,
+	ojaswin@linux.ibm.com
+Subject: Re: [PATCH v2 00/16] block atomic writes
+Message-ID: <20240111161522.GB16626@lst.de>
+References: <fff50006-ccd2-4944-ba32-84cbb2dbd1f4@oracle.com> <20231221065031.GA25778@lst.de> <73d03703-6c57-424a-80ea-965e636c34d6@oracle.com> <ZZ3Q4GPrKYo91NQ0@dread.disaster.area> <20240110091929.GA31003@lst.de> <20240111014056.GL722975@frogsfrogsfrogs> <20240111050257.GA4457@lst.de> <d5db2291-36b4-4b22-89f2-1d9e7d30f0f1@oracle.com> <20240111144537.GA9295@lst.de> <71063aee-8ba9-4a02-8c09-9b3a9982f6e0@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -39,22 +46,13 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d713fe1b-3eaa-4de4-99a6-5910247ffad5@kernel.dk>
+In-Reply-To: <71063aee-8ba9-4a02-8c09-9b3a9982f6e0@oracle.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jan 11, 2024 at 09:12:23AM -0700, Jens Axboe wrote:
-> On 1/11/24 6:57 AM, Christoph Hellwig wrote:
-> > q_usage_counter is the only thing preventing us from the limits changing
-> > under us in __bio_split_to_limits, but blk_mq_submit_bio doesn't hold it.
-> > 
-> > Change __submit_bio to always acquire the q_usage_counter counter before
-> > branching out into bio vs request based helper, and let blk_mq_submit_bio
-> > tell it if it consumed the reference by handing it off to the request.
-> 
-> This causes hangs for me on shutdown/reset:
+On Thu, Jan 11, 2024 at 04:11:38PM +0000, John Garry wrote:
+> Could we just error the SETXATTR ioctl when FS_XFLAG_FORCEALIGN is not set 
+> (and it is required)? The problem is that ioctl reports -EINVAL for any 
+> such errors, so hard for the user to know the issue...
 
-> which seems to indicate that a reference is being leaked. Haven't poked
-> any further at it, I'll drop these two for now.
-
-Can you send me your .config?
+Sure.  Pick a good unique error code, though.
 
