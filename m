@@ -1,101 +1,144 @@
-Return-Path: <linux-block+bounces-1896-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1894-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0944482FB12
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 22:47:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7846282FAA8
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 22:38:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A97D128C258
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 21:47:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2779B28C189
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 21:38:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3119E15EAA8;
-	Tue, 16 Jan 2024 20:02:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E41159579;
+	Tue, 16 Jan 2024 20:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjLv0eoY"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="IimP4Pc1"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687915EAA4;
-	Tue, 16 Jan 2024 20:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E8C15957C
+	for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 20:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705435332; cv=none; b=uE+nvvKrmvIIO6FlfmB2fL23e+bkx6yES1dCThPjKxirSEoxP9jfvSfzqgf7KTaDShbiFgm9qLy2U4ZFl1ZHyRB/4pibi2Vxz2CbqTtDPaYUbm/pn3qE0wbUyOirR1Ry/RjkKMfVdUzwN9Un4hW7RlXuubdvcaYyRisuHxn9uPg=
+	t=1705435235; cv=none; b=JHd/VMeabPMNUnC5pWJFuwkxQ8Ot3m4CK/0pzOfWYNxp4GLeEm1Q8IPlrpe39b1pYUBy/UWrzx4V2kjj2V980ujLYSpkQP6Eu6gXejG4yzHbI1T5XtlDWgDifkCw/YgDAdzNZzg6rVSc90D1Oy363BbGkpRez+6kPONdLBuIbZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705435332; c=relaxed/simple;
-	bh=vjZYyZeDl59BTyWU7LFYGlJ62/taRWr+zV/pUjW8rkY=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
-	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=bmv58R5EFA8WvItM0ocFDg4cQd5yoQhrELu6MpCpjrFbvqh7/T1BBip00C2NNOTlyUk33Qxg/b1IxUDanUv8/wM93u91fk4u3IaQcBmDftM5fzelm/s5Ex3tpY9AwISgPwT4w32VI5y/2jHz0GQeLNRoQhfBWw9M6N/Wew7l9nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjLv0eoY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B039CC43399;
-	Tue, 16 Jan 2024 20:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705435331;
-	bh=vjZYyZeDl59BTyWU7LFYGlJ62/taRWr+zV/pUjW8rkY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fjLv0eoYjqWxVbmqhga/b1/Of/OrUpkkFH/Xk48YJ/JRu80srKawXRrRG29mUMvWt
-	 BT4h2yQ3XcdONwY7C+sPRp7cUVdE/G4P1/zB0Tttwf1UzctpwZxDetw+JPcxLjIbBp
-	 u40QjgoWwafKhCMycgIH20WZhlSyIn11tSkHFcB2yWS8Y9Z/B91O7aNnKpQfZiUcY2
-	 QRpnX1HmL5FlWW6AQZKz/lC/7pYBZoKffu9PKwGX6xoO+LXCpc/azY5cxsPDQ7T+Kh
-	 sMA0hlSnX+fvkIkBiKoeaEkd1wEkxr4qdMKB3EJIlRpYP+D1yrJN6FGmM3Kj8Ufjs2
-	 NmINoUGxeEaEQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 33/44] block: prevent an integer overflow in bvec_try_merge_hw_page
-Date: Tue, 16 Jan 2024 15:00:02 -0500
-Message-ID: <20240116200044.258335-33-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116200044.258335-1-sashal@kernel.org>
-References: <20240116200044.258335-1-sashal@kernel.org>
+	s=arc-20240116; t=1705435235; c=relaxed/simple;
+	bh=0LpxdPDwIhXx9whWgjBylXCRhboUwUu+jIA/F2NRoWc=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=L/xfzYy+0rrNrhRqtMMjERWzOMr2RMVLRDPIUR+El7Dk6ggKlzui+koC6y8kmYz0ICQ3DAMxbTZl3SOE2Q0ynY/yzM+Z4UdQgD2RMhz9UsJK1ONtLQWfTcI6sGtYRUJbS2bE609Juo3Rv9fy5znAPnWGSAGaSjtQlLJhtFjTUdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=IimP4Pc1; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3618c6a1d30so724375ab.0
+        for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 12:00:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705435230; x=1706040030; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8Bzi0VNEZLd3xkt69kN62PfQd5yOGDUdslJTECLXFRg=;
+        b=IimP4Pc1UlT1Dxvn4rthZMYDf19IAeO/EBFr2fLbWHMWHQjjlbujtucKNyTHweQTI8
+         n7sWGwfxGb3TB7t1++rN5fAN5rRwxq07taKD/AwzUSiJPkbjrTVwg60yhn0ZhuRuaa8B
+         b3KbQHJxndhscKKaJmye9Kve//SiKKfNlfFJxpWCbifNWgQfVnmO00ZBmFFL19bDXmkz
+         7VMeRnrPGgsNj3AhzWQzWSdQcq0ww4/76/fZcrUGwupAmfQQ1ykoCjwfcGgZSnhlJB9y
+         +ItHxEb74pD+c9EBNnpijdHENmIYJdCqY/D3sZIe/qWH+r56qXn5KAKiW65hFQovuL39
+         KARA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705435230; x=1706040030;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Bzi0VNEZLd3xkt69kN62PfQd5yOGDUdslJTECLXFRg=;
+        b=Ymx9WD2OkvbYV8GWvemuvS0DlX9UK/7KGHnf2EYEQ6pzHFap22QEmmf0Ufho3g26JW
+         Xlyj1a7YIxkIaeNhGQrqcWukXRS1/RseHfPbu2eedFtmxwXvraEVwY8zSeCmXbG5Mqb3
+         RvZ6bc6TQpyH9anF257NKRacVJBPUdDbw8zcs6H6QjEFU9pf81swobF7WY8nZ37XQ4Hc
+         GRBR6PhhzpD8uoEpJ5NjYm+IE38avkiTqppmqO+arExRwBt2OpkzEmLvQvXoP/13elNJ
+         6EkenKMarGrafEs1wuhZk37ScEZjnMdEoXSxCaIyjTNWOAX76xS6kHaDPkJbH1wcWAqT
+         nPgg==
+X-Gm-Message-State: AOJu0YxTgL8PhOmF/uGLMHOHUcMmCNFEshpWDCp+OQQ/dIeH9+YXA9YC
+	PTuLYSyV81EFKGiBDDdy3DsHG3+Sf/d/KA==
+X-Google-Smtp-Source: AGHT+IGD/c0B/2oUpgwDPKxeGeaTpllkQKnSoDSKBOTPLNpwFPFn9e3DteSXI03hU/LqVgKuvSnt4Q==
+X-Received: by 2002:a6b:c845:0:b0:7bc:2603:575f with SMTP id y66-20020a6bc845000000b007bc2603575fmr14558885iof.0.1705435230304;
+        Tue, 16 Jan 2024 12:00:30 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id b8-20020a029a08000000b0046e1efd2e1dsm3079962jal.74.2024.01.16.12.00.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jan 2024 12:00:29 -0800 (PST)
+Message-ID: <e2e2bfad-c1be-42fc-be83-b0cb894887ca@kernel.dk>
+Date: Tue, 16 Jan 2024 13:00:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.208
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [block?] BUG: unable to handle kernel NULL pointer
+ dereference in __bio_release_pages
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>
+Cc: syzbot <syzbot+004c1e0fced2b4bc3dcc@syzkaller.appspotmail.com>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <000000000000dbe2f2060f0d2781@google.com>
+ <4bd438c0-75b8-4e28-939c-954716df7563@kernel.dk>
+ <ZabOF3/P/jQmjudb@casper.infradead.org>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ZabOF3/P/jQmjudb@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Christoph Hellwig <hch@lst.de>
+On 1/16/24 11:42 AM, Matthew Wilcox wrote:
+> On Tue, Jan 16, 2024 at 11:00:52AM -0700, Jens Axboe wrote:
+>> On 1/16/24 2:57 AM, syzbot wrote:
+>>> pstate: 10000005 (nzcV daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>> pc : _compound_head include/linux/page-flags.h:247 [inline]
+>>> pc : bio_first_folio include/linux/bio.h:289 [inline]
+>>> pc : __bio_release_pages+0x100/0x73c block/bio.c:1153
+>>> lr : bio_release_pages include/linux/bio.h:508 [inline]
+>>> lr : blkdev_bio_end_io+0x2a0/0x3f0 block/fops.c:157
+>>> sp : ffff800089a375e0
+>>> x29: ffff800089a375e0 x28: 1fffe0000162e879 x27: ffff00000b1743c0
+>>> x26: ffff00000b1743c8 x25: 000000000000000a x24: 1fffe000015a9e12
+>>> x23: ffff00000ad4f094 x22: ffff00000f496600 x21: 1fffe0000162e87a
+>>> x20: 0000000000000004 x19: 0000000000000000 x18: ffff00000b174432
+>>> x17: ffff00000b174438 x16: ffff00000f948008 x15: 1fffe0000162e886
+>>> x14: ffff00000b1743d4 x13: 00000000f1f1f1f1 x12: ffff6000015a9e13
+>>> x11: 1fffe000015a9e12 x10: ffff6000015a9e12 x9 : dfff800000000000
+>>> x8 : ffff00000b1743d4 x7 : 0000000041b58ab3 x6 : 1ffff00011346ed0
+>>> x5 : ffff700011346ed0 x4 : 00000000f1f1f1f1 x3 : 000000000000f1f1
+>>> x2 : 0000000000000001 x1 : dfff800000000000 x0 : 0000000000000008
+>>> Call trace:
+>>>  _compound_head include/linux/page-flags.h:247 [inline]
+>>>  bio_first_folio include/linux/bio.h:289 [inline]
+>>>  __bio_release_pages+0x100/0x73c block/bio.c:1153
+>>>  bio_release_pages include/linux/bio.h:508 [inline]
+>>>  blkdev_bio_end_io+0x2a0/0x3f0 block/fops.c:157
+>>>  bio_endio+0x4a4/0x618 block/bio.c:1608
+>>
+>> This looks to be caused by:
+>>
+>> commit 1b151e2435fc3a9b10c8946c6aebe9f3e1938c55
+>> Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+>> Date:   Mon Aug 14 15:41:00 2023 +0100
+>>
+>>     block: Remove special-casing of compound pages
+> 
+> This looks familiar ... looks like it came up right before Xmas and
+> I probably dropped the patch on the floor?
+> 
+> https://lore.kernel.org/all/ZX07SsSqIQ2TYwEi@casper.infradead.org/
 
-[ Upstream commit 3f034c374ad55773c12dd8f3c1607328e17c0072 ]
+Can you send out a proper patch please?
 
-Reordered a check to avoid a possible overflow when adding len to bv_len.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Link: https://lore.kernel.org/r/20231204173419.782378-2-hch@lst.de
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/bio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index 6d6e7b96b002..5c442ebc5500 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -770,7 +770,7 @@ static bool bio_try_merge_hw_seg(struct request_queue *q, struct bio *bio,
- 
- 	if ((addr1 | mask) != (addr2 | mask))
- 		return false;
--	if (bv->bv_len + len > queue_max_segment_size(q))
-+	if (len > queue_max_segment_size(q) - bv->bv_len)
- 		return false;
- 	return __bio_try_merge_page(bio, page, len, offset, same_page);
- }
 -- 
-2.43.0
+Jens Axboe
+
 
 
