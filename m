@@ -1,180 +1,95 @@
-Return-Path: <linux-block+bounces-1860-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1862-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0806582EFF1
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 14:46:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E844982F0BB
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 15:42:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B14F1F24217
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 13:46:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 196C31C23456
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 14:42:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA6DF1BDC4;
-	Tue, 16 Jan 2024 13:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCA4E1BF2A;
+	Tue, 16 Jan 2024 14:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="IpX3Paob"
 X-Original-To: linux-block@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from forward203b.mail.yandex.net (forward203b.mail.yandex.net [178.154.239.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAE51BF23;
-	Tue, 16 Jan 2024 13:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TDqzb3cbZz4f3jJ2;
-	Tue, 16 Jan 2024 21:46:19 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 39D281A0A00;
-	Tue, 16 Jan 2024 21:46:23 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgBnOBGtiKZlSqsRBA--.20499S3;
-	Tue, 16 Jan 2024 21:46:23 +0800 (CST)
-Subject: Re: PROBLEM: BLKPG_DEL_PARTITION with GENHD_FL_NO_PART used to return
- ENXIO, now returns EINVAL
-To: Yu Kuai <yukuai1@huaweicloud.com>, Christoph Hellwig <hch@infradead.org>,
- Allison Karlitskaya <allison.karlitskaya@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, "yukuai (C)" <yukuai3@huawei.com>
-References: <CAOYeF9VsmqKMcQjo1k6YkGNujwN-nzfxY17N3F-CMikE1tYp+w@mail.gmail.com>
- <ZaZesiKpbMEiiTrf@infradead.org>
- <210deda9-5439-244a-0ce2-af9dc8e5d7fe@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <592625f7-36d7-02e0-2ee6-8211334aa0f9@huaweicloud.com>
-Date: Tue, 16 Jan 2024 21:46:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA371BF22
+	for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 14:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
+	by forward203b.mail.yandex.net (Yandex) with ESMTPS id D6AE965C09
+	for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 17:35:49 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:30a4:0:640:6426:0])
+	by forward102b.mail.yandex.net (Yandex) with ESMTP id 262F7608F3;
+	Tue, 16 Jan 2024 17:35:42 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id eZpm1CDOk0U0-iNNfpDju;
+	Tue, 16 Jan 2024 17:35:41 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1705415741; bh=hUqXt3iq3wr6WKTOdpFPRwCLgcCq56h8Q0+juNfIfao=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=IpX3PaobfaqOdmANcCrmCjzXYPdCzAZfQEBaVUlJO1HGtJgOSRWHvohes9Wa3RHpT
+	 jTAQ0U8/fkwNpzTBp2OtCbfJ0+xpxGw9/YvWQc9egSaUCJ9EgUweMOsNF0jIpwIAMO
+	 5rQgtDH/WyFEwLEBnx5y8rsDvYNpP0O98XL1YgA0=
+Authentication-Results: mail-nwsmtp-smtp-production-main-84.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH] block: bio-integrity: fix kcalloc() arguments order
+Date: Tue, 16 Jan 2024 17:34:31 +0300
+Message-ID: <20240116143437.89060-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <210deda9-5439-244a-0ce2-af9dc8e5d7fe@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBnOBGtiKZlSqsRBA--.20499S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw13XFyDCrWkKr48CrWkXrb_yoW5trWDpr
-	4vqrWUA3y5Grn3uFyUta17X34rGrnrtw18Jw18XF10vrW7ArnFqFy09ry09r4UXrZ7JFWf
-	XF10vryxZ3W7ArUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
-	DUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+When compiling with gcc version 14.0.1 20240116 (experimental)
+and W=1, I've noticed the following warning:
 
-在 2024/01/16 21:23, Yu Kuai 写道:
-> Hi, Christoph
-> 
-> 在 2024/01/16 18:47, Christoph Hellwig 写道:
->> Hi Allison,
->>
->> please try this minimal fix.  I need to double check if we historically
->> returned ENXIO or EINVAL for adding / resizing partitions, which would
->> make things more complicated.  Or maybe you already have data for that
->> at hand?
->>
->> diff --git a/block/ioctl.c b/block/ioctl.c
->> index 9c73a763ef8838..f2028e39767821 100644
->> --- a/block/ioctl.c
->> +++ b/block/ioctl.c
->> @@ -21,7 +21,7 @@ static int blkpg_do_ioctl(struct block_device *bdev,
->>       sector_t start, length;
->>       if (disk->flags & GENHD_FL_NO_PART)
->> -        return -EINVAL;
->> +        return -ENXIO;
-> 
-> I think this might not be a proper fix, the reason if that before this
-> condition is added, -ENXIO is returned from bdev_del_partition(). And
-> there are also some other error number like -EACCES,-EFAULT following,
-> so this change will still make changes for user in other cases.
+block/bio-integrity.c: In function 'bio_integrity_map_user':
+block/bio-integrity.c:339:38: warning: 'kcalloc' sizes specified with 'sizeof'
+in the earlier argument and not in the later argument [-Wcalloc-transposed-args]
+  339 |                 bvec = kcalloc(sizeof(*bvec), nr_vecs, GFP_KERNEL);
+      |                                      ^
+block/bio-integrity.c:339:38: note: earlier argument should specify number of
+elements, later size of each element
 
-Please ignore the patch from last email. Sorry for the noise...
-bdev_resize_partition() will also return -ENXIO if partition does't
-exist. So the right patch should be following:
+Since 'n' and 'size' arguments of 'kcalloc()' are multiplied to
+calculate the final size, their actual order doesn't affect the
+result and so this is not a bug. But it's still worth to fix it.
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 4160f4e6bd5b..ba8d44fa7e02 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -20,8 +20,6 @@ static int blkpg_do_ioctl(struct block_device *bdev,
-         struct blkpg_partition p;
-         long long start, length;
+Fixes: 492c5d455969 ("block: bio-integrity: directly map user buffers")
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+ block/bio-integrity.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--       if (disk->flags & GENHD_FL_NO_PART)
--               return -EINVAL;
-         if (!capable(CAP_SYS_ADMIN))
-                 return -EACCES;
-         if (copy_from_user(&p, upart, sizeof(struct blkpg_partition)))
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index f47ffcfdfcec..f14602022c5e 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -447,6 +447,11 @@ int bdev_add_partition(struct gendisk *disk, int 
-partno, sector_t start,
-                 goto out;
-         }
-
-+       if (disk->flags & GENHD_FL_NO_PART) {
-+               ret = -EINVAL;
-+               goto out;
-+       }
-+
-         if (partition_overlaps(disk, start, length, -1)) {
-                 ret = -EBUSY;
-                 goto out;
-
-Thanks,
-Kuai
-> 
-> How about following patch?
-> 
-> diff --git a/block/ioctl.c b/block/ioctl.c
-> index 4160f4e6bd5b..ec012cf910dc 100644
-> --- a/block/ioctl.c
-> +++ b/block/ioctl.c
-> @@ -20,8 +20,6 @@ static int blkpg_do_ioctl(struct block_device *bdev,
->          struct blkpg_partition p;
->          long long start, length;
-> 
-> -       if (disk->flags & GENHD_FL_NO_PART)
-> -               return -EINVAL;
->          if (!capable(CAP_SYS_ADMIN))
->                  return -EACCES;
->          if (copy_from_user(&p, upart, sizeof(struct blkpg_partition)))
-> @@ -38,6 +36,9 @@ static int blkpg_do_ioctl(struct block_device *bdev,
->          start = p.start >> SECTOR_SHIFT;
->          length = p.length >> SECTOR_SHIFT;
-> 
-> +       if (disk->flags & GENHD_FL_NO_PART)
-> +               return -EINVAL;
-> +
->          switch (op) {
->          case BLKPG_ADD_PARTITION:
->                  /* check if partition is aligned to blocksize */
-> 
-> Thanks,
-> Kuai
-> 
-> 
->>       if (!capable(CAP_SYS_ADMIN))
->>           return -EACCES;
->>       if (copy_from_user(&p, upart, sizeof(struct blkpg_partition)))
->>
->> .
->>
-> 
-> .
-> 
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index feef615e2c9c..c9a16fba58b9 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -336,7 +336,7 @@ int bio_integrity_map_user(struct bio *bio, void __user *ubuf, ssize_t bytes,
+ 	if (nr_vecs > BIO_MAX_VECS)
+ 		return -E2BIG;
+ 	if (nr_vecs > UIO_FASTIOV) {
+-		bvec = kcalloc(sizeof(*bvec), nr_vecs, GFP_KERNEL);
++		bvec = kcalloc(nr_vecs, sizeof(*bvec), GFP_KERNEL);
+ 		if (!bvec)
+ 			return -ENOMEM;
+ 		pages = NULL;
+-- 
+2.43.0
 
 
