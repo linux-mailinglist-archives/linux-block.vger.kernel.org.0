@@ -1,64 +1,64 @@
-Return-Path: <linux-block+bounces-1861-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-1863-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25A6982F0B4
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 15:41:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D622982F0BC
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 15:43:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B2A01C2352D
-	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 14:41:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E600A1C2340B
+	for <lists+linux-block@lfdr.de>; Tue, 16 Jan 2024 14:43:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF851BC31;
-	Tue, 16 Jan 2024 14:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4211BF2A;
+	Tue, 16 Jan 2024 14:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="uhZX1/Ah"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="D7yN45go"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE2F17BCF
-	for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 14:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA271BF22
+	for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 14:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7bee9f626caso48374539f.0
-        for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 06:41:30 -0800 (PST)
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-360630beb7bso7778265ab.0
+        for <linux-block@vger.kernel.org>; Tue, 16 Jan 2024 06:43:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705416089; x=1706020889; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705416193; x=1706020993; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AO1cGJ6yR5rhuGGsnNJ25N8iwi3HgScYUyOHxA7RNBc=;
-        b=uhZX1/AhV88opPWcP8TYkVidtBr+gZjcpcks0JdhqNaNYX9qUzBw+IEA7II0xPgGvg
-         fyaPH4Rr4OEeNOB4O1QK9MF2YEfblKj+zCWhyeN9Six+2yqRfmNndiwGPZIkSZRpB+L3
-         gUJYls7MMUZ0Q5FaAEJT3vxy5WKF8EUac1VyRmSZIkhRHEUiCLkEiSFsQO5cadA1vlo8
-         n29Jmy1ZqBHOeVRkVoO/DGg4GtIawW+tnFu9avdeZjBIz7v8Zb/O1oEO+aG8NvHb8BSp
-         iUyTDqDIKYqK39daXEcsDaKMBwjtVzsKOQ0D4vj15d9NBD68YBLSxsGmli+hy+ChVM+Q
-         Q4lw==
+        bh=rrKHxnpFL43gNtqjixFGO85ojRP7W+RwELBqauGPTUk=;
+        b=D7yN45goia7yRk+rDVYjL7DuvE8be256fJqL4B0paptHYWBroEQUVOkpFsn+npkm/T
+         CJoyIKR65Y2rCU/QH0SrcwgMVJueE1bidTW9A0xgyp6BItLwgY4PQLRxYt0CUIjJuTPE
+         a754KTwMTgBk3+64O6JyDYwJGMweHyuqPY2dhCdTXrlg8oHva/vtOrQeidpcHEUqmiS7
+         HsS+Zuw68NhW7RBRQ13Va+YjnI86v4rfZ+oX1MdVmPlB3Ho6vSx7OHnhMybcpn/6S2sS
+         mLhR5NM8fDIyhjBzlDxfGrO6GLyW06ShAOL1kUUW45RoWvHXp1RL45Bs7HuLdvj4Wt9A
+         uA8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705416089; x=1706020889;
+        d=1e100.net; s=20230601; t=1705416193; x=1706020993;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AO1cGJ6yR5rhuGGsnNJ25N8iwi3HgScYUyOHxA7RNBc=;
-        b=Y3NiJC+Py295CRw+CJyCBFCUEsWLgThyqM6M9aJM3bcwfnaBVN1zsw8S4nUZdR4aUz
-         QR2oa/Mcd9W20diTbPAlC/P07EQ12wPe1eBMeD6PZjTAgOcne+E96zqn/OmOfF+4XY/U
-         AcOAmZlgQXs/+SMUSwBCF3nKyOB2s8eN7uo9PB+clycaxc4+OuVYTCRSDgwIg9Am4HaX
-         YA5Zlha5DecDozYriNqfwgcDuTfggvFDMa8XFdQlppbwOe5LD1JNEleL/hZv6MuWOpVZ
-         xf40+SZe8ZFZODJt43OxV73o97A3LGUz41fWGwr5Y6N8drMLWiZZ2MGSaqUR1gc6ejJk
-         5PjA==
-X-Gm-Message-State: AOJu0YyHjo03IS9E5KsYsxTHU5OoBHvlqozaRySHxQ+k3hhCM0EHUEEL
-	4a9OTDFQGw5t0+iBn+gVN3LledcmqawWIA==
-X-Google-Smtp-Source: AGHT+IGEh6yRc5Pqp/2ull0BRDSZMtMmuQTOwd/w9S53EyIIKsQvqIoeVK2Ht/D6ruqzllzCYMQS1w==
-X-Received: by 2002:a6b:c845:0:b0:7bc:2603:575f with SMTP id y66-20020a6bc845000000b007bc2603575fmr13648184iof.0.1705416089580;
-        Tue, 16 Jan 2024 06:41:29 -0800 (PST)
+        bh=rrKHxnpFL43gNtqjixFGO85ojRP7W+RwELBqauGPTUk=;
+        b=SH96jSSlqE2MGwP384mMkMY1a7EH9itNfsrKmJjuvXarHI5Ckhu5b14qMUOUYDVPiz
+         phat2RDmy+B+7BuOTGxEs4XQgdk17QslLBjuh5dKQMVUwwayjtifLnt+GhRVRY8umqci
+         3wzY6ONeDgLEvgqDckfp8kQ49hdK+q2QsUoeQwP2rFyf3+B/Hq/x4rO8k8o2Is+WnTeS
+         rTZr+hdKT06QlMfFz/V+mcx7Ao1nPTugKpVjtnxDU7HXX0cbwQQuq9osxUwlc5FAxd/z
+         TCRU+/XKvqG8nmTOCRszoL8Q14kn8pAG/D4XDzZxSv6LKcyIp2u8JjmNuDqbM6fKUX5n
+         k/jw==
+X-Gm-Message-State: AOJu0YzptwH3k/NKG7Kp8RFt83+B0e8yX3albu696udq0t9aTS/uUSgw
+	+O5Kn3D+nud2FTE/2z3QfuPWkdlZbgpwrg==
+X-Google-Smtp-Source: AGHT+IGEDZDWtxDpwZAWR9ay3DfGokiow/x1zwcvh/FkAoj7YSLMXApURRI7WLCOHevnHmseN/6nFA==
+X-Received: by 2002:a92:ca07:0:b0:35f:b559:c2c7 with SMTP id j7-20020a92ca07000000b0035fb559c2c7mr12627242ils.3.1705416192396;
+        Tue, 16 Jan 2024 06:43:12 -0800 (PST)
 Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id gm25-20020a0566382b9900b0046df77733acsm2953403jab.102.2024.01.16.06.41.28
+        by smtp.gmail.com with ESMTPSA id bq7-20020a056e02238700b0036088147a06sm3603463ilb.1.2024.01.16.06.43.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 06:41:28 -0800 (PST)
-Message-ID: <4493b71b-4596-4117-950d-5fe8aa11975a@kernel.dk>
-Date: Tue, 16 Jan 2024 07:41:28 -0700
+        Tue, 16 Jan 2024 06:43:11 -0800 (PST)
+Message-ID: <17a5683c-8883-4adf-8c98-812f7176eff1@kernel.dk>
+Date: Tue, 16 Jan 2024 07:43:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -66,49 +66,77 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] block: add blk_time_get_ns() helper
+Subject: Re: [PATCH 2/2] block: cache current nsec time in struct blk_plug
 Content-Language: en-US
-To: Yu Kuai <yukuai1@huaweicloud.com>, linux-block@vger.kernel.org,
- "yukuai (C)" <yukuai3@huawei.com>
+To: Kanchan Joshi <joshi.k@samsung.com>, linux-block@vger.kernel.org
 References: <20240115215840.54432-1-axboe@kernel.dk>
- <20240115215840.54432-2-axboe@kernel.dk>
- <a67e7a44-5ac4-b18d-b0c8-b0a4b42e1224@huaweicloud.com>
+ <CGME20240115215903epcas5p1518ca37cf0c83499dadba07bd3e51c77@epcas5p1.samsung.com>
+ <20240115215840.54432-3-axboe@kernel.dk>
+ <ff4a6649-9f09-23fc-ad33-06deb4845590@samsung.com>
 From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <a67e7a44-5ac4-b18d-b0c8-b0a4b42e1224@huaweicloud.com>
+In-Reply-To: <ff4a6649-9f09-23fc-ad33-06deb4845590@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 1/15/24 11:42 PM, Yu Kuai wrote:
-> Hi,
+On 1/16/24 2:51 AM, Kanchan Joshi wrote:
+> On 1/16/2024 3:23 AM, Jens Axboe wrote:
 > 
-> ? 2024/01/16 5:53, Jens Axboe ??:
->>   @@ -2810,7 +2810,7 @@ static void ioc_rqos_done(struct rq_qos *rqos, struct request *rq)
->>           return;
->>       }
->>   -    on_q_ns = ktime_get_ns() - rq->alloc_time_ns;
->> +    on_q_ns = blk_time_get_ns() - rq->alloc_time_ns;
+>> diff --git a/block/blk-core.c b/block/blk-core.c
+>> index 11342af420d0..cc4db4d92c75 100644
+>> --- a/block/blk-core.c
+>> +++ b/block/blk-core.c
+>> @@ -1073,6 +1073,7 @@ void blk_start_plug_nr_ios(struct blk_plug *plug, unsigned short nr_ios)
+>>   	if (tsk->plug)
+>>   		return;
+>>   
+>> +	plug->cur_ktime = 0;
+>>   	plug->mq_list = NULL;
+>>   	plug->cached_rq = NULL;
+>>   	plug->nr_ios = min_t(unsigned short, nr_ios, BLK_MAX_REQUEST_COUNT);
+>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+>> index 2f9ceea0e23b..23c237b22071 100644
+>> --- a/include/linux/blkdev.h
+>> +++ b/include/linux/blkdev.h
+>> @@ -942,6 +942,7 @@ struct blk_plug {
+>>   
+>>   	/* if ios_left is > 1, we can batch tag/rq allocations */
+>>   	struct request *cached_rq;
+>> +	u64 cur_ktime;
+>>   	unsigned short nr_ios;
+>>   
+>>   	unsigned short rq_count;
+>> @@ -977,7 +978,15 @@ long nr_blockdev_pages(void);
+>>   
+>>   static inline u64 blk_time_get_ns(void)
+>>   {
+>> -	return ktime_get_ns();
+>> +	struct blk_plug *plug = current->plug;
+>> +
+>> +	if (!plug)
+>> +		return ktime_get_ns();
+>> +	if (!(plug->cur_ktime & 1ULL)) {
+>> +		plug->cur_ktime = ktime_get_ns();
+>> +		plug->cur_ktime |= 1ULL;
+>> +	}
+>> +	return plug->cur_ktime;
 > 
-> Just notice that this is from io completion path, and the same as
-> blk_account_io_done(), where plug does not exist. Hence ktime_get_ns()
-> will still be called multiple times after patch 2.
-> 
-> Do you think will this worth to be optimized? For example, add a new
-> field in request so that each rq completion will only call
-> ktime_get_ns() once. Furthermore, we can optimize io_tices precision
-> from jiffies to ns.
+> I did not understand the relevance of 1ULL here. If ktime_get_ns()
+> returns even value, it will turn that into an odd value before
+> caching.
 
-Right, as mentioned this is just an issue side optimization, my intent
-is/was to convert all callers of ktime_get_ns() to use the internal one.
-The completion side will just not get any amortization of the frequency
-of time calls for now, but then it's prepared for that later on. That,
-to me, was nicer than doing selective conversions as then it's not clear
-if the two time sources could be compared.
+Right, it's potentially round it up by 1 nsec.
 
-It isn't complete yet, I just did the main components.
+> And that value will be returned for the subsequent calls. But
+> how is that better compared to just caching whatever ktime_get_ns()
+> returned.
 
-Putting it in the request is one way, ideally we'd have completion
-batching via struct io_comp_batch for the completion side. At least that
-was my plan.
+0 could be a valid time. You could argue that this doesn't matter, we'd
+just do an extra ktime_get_ns() in that case. And that's probably fine.
+The LSB was meant to indicate "time stamp is valid".
+
+But not that important imho, I'll either add a comment or just use 0 as
+both the initializer (as it is now) and non-zero to indicate if the
+timestamp is valid or not.
 
 -- 
 Jens Axboe
