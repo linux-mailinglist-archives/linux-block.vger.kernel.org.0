@@ -1,181 +1,138 @@
-Return-Path: <linux-block+bounces-2080-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2082-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F232836D61
-	for <lists+linux-block@lfdr.de>; Mon, 22 Jan 2024 18:30:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3004C836F2E
+	for <lists+linux-block@lfdr.de>; Mon, 22 Jan 2024 19:11:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 482741C26800
-	for <lists+linux-block@lfdr.de>; Mon, 22 Jan 2024 17:30:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6BC091C210D6
+	for <lists+linux-block@lfdr.de>; Mon, 22 Jan 2024 18:11:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE701EF1A;
-	Mon, 22 Jan 2024 16:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 507B158232;
+	Mon, 22 Jan 2024 17:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M91NIq+v"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QjGpB3vP"
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62113AC08
-	for <linux-block@vger.kernel.org>; Mon, 22 Jan 2024 16:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC21F40BE6;
+	Mon, 22 Jan 2024 17:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705941018; cv=none; b=WH7m9fTBWRI5S/9Ppb8wAZvY+u514tE5yGvgy64tbLzFlc0cymGqBZorAfoHZnLKN5CK9idxx+9B4gBEU0vUVRn1csFb4U1BPNtPjIBd89U4We2K8lFHuVnsVhEezkdXraSKR8DwJqZ7Z3m4wa1iCLVaThrs1PJjA+bfwXTG8Do=
+	t=1705945025; cv=none; b=fUtGpb+9SW7hqkJ3IZ2/rE2IrpFYZO8ZCjt+GQJXN9wznkXl7f+RWcarTcU8U62YMAKSoq4s247mKr3EsPPBmLQjiDND164dkO+HvjwCZxva7sqdpDuFr+TPewqB2fducf7j9su27Vyn0ai7LtTxQ3X1wa7eehf4+KTnccEzgTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705941018; c=relaxed/simple;
-	bh=FkeU1P4Kg6q0fZ6PmJzlGNg2n2Hty/oMxcKzx2UOhlQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=G3AuNCYt6m+c8sRUBDxCfDTTZbfFtQgR37H+Yv/oeDPYzYvdtutTzTygWQ+Qt3kHukBz2brlgV7lJcnAxqbKexEvW4pjQi4VE91cOdnAxbT6dsBGW6VTyxUFUsjlJC1NTcaUGuXxlB4lVXBdL4rnIcvQRBGUa91jPY6vsoQ6M44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M91NIq+v; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705941015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gh5n5hMcdVsHj3TbGR4iAicOuNL7iE5wuH4NHtg9SMQ=;
-	b=M91NIq+vtGofetGeaUUIpb7MelGbz3AYSGfo6HXUOiJTAXsN8sCeNw0SWcCw7CeEnkqb8d
-	S40eYor5PwoxwH7yogfdo6mRPrt6xB88++so4fgw4fxte8n18jubcoU/l03nu5NQqdr/74
-	UKKamJN4s758owYGgpAQ8B5Hp/Bqe8k=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-pFhktqY5NmG4MXBEsctt1w-1; Mon, 22 Jan 2024 11:30:09 -0500
-X-MC-Unique: pFhktqY5NmG4MXBEsctt1w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5E55686EB4B;
-	Mon, 22 Jan 2024 16:30:08 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 41CFF111DCF0;
-	Mon, 22 Jan 2024 16:30:08 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id E373D30B9D67; Mon, 22 Jan 2024 16:30:07 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id DF3763FB50;
-	Mon, 22 Jan 2024 17:30:07 +0100 (CET)
-Date: Mon, 22 Jan 2024 17:30:07 +0100 (CET)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Ming Lei <ming.lei@redhat.com>, Zdenek Kabelac <zkabelac@redhat.com>
-cc: Jens Axboe <axboe@kernel.dk>, Li Nan <linan666@huaweicloud.com>, 
-    Christoph Hellwig <hch@infradead.org>, 
-    Chaitanya Kulkarni <chaitanyak@nvidia.com>, linux-block@vger.kernel.org, 
-    dm-devel@lists.linux.dev
-Subject: Re: [PATCH v3 0/4] brd discard patches
-In-Reply-To: <Zao1PNip1SRVB4Rp@fedora>
-Message-ID: <dc9e648b-6c5f-9642-8892-b48dbc893c6@redhat.com>
-References: <2dacc73-854-e71c-1746-99b017401c9a@redhat.com> <Zao1PNip1SRVB4Rp@fedora>
+	s=arc-20240116; t=1705945025; c=relaxed/simple;
+	bh=Eya6PEjNjunP1OTqi5RkPciJWlhoayB8OZEByeuS8hU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e6wyDv98plhWKyd6kwGAidBnGjSjS0qj+vt0apyJn1+egXa9X3j47HQpAVQWnuJZAiu2eGruyGZpf0Od2TZd8ymvU496Yu2K+Gzigo+0JwiX2kx5qYg4M4hL4kjD88tPT2S0URRU30XBWRKs5/t1/XPLJ7wMsMg08deJY920iYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QjGpB3vP; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=t9HRa5vgjKuUC52SaApgPp71CS5FhNEd43Ov+g8RmyM=; b=QjGpB3vPTtWQcCV8peKW5YpWfa
+	+ro4pRL7QJ5gWv+PYk/XXoVGVxkEw3cTyx08OEj6jeCGFtNqJCzyfSGdLPaMso5I0YRprwpSdcHck
+	YsbbFuNLBugnHy9uSsy2no7RERzx6M51VFTlFDjQmzMX8/NK1Z5qLOBFQ3aHqAdv6M7rEOyytrSay
+	EYjI253QxquXcfUii8X2Q0WCgBs/4l+oYuCbT/JL4ZLq9Aime2ycMpxj78+ktCuTOgXsnfimgcgiT
+	oGfB5EJUjY6Qjg7/A2H6yv0zUdixxA40UQUbGGiOHCbsJx9I842UPEtzDOIJOpjAcP5mNbzesg53M
+	DPCoE9XA==;
+Received: from [2001:4bb8:198:a22c:146a:86ef:5806:b115] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rRyE4-00DGZx-25;
+	Mon, 22 Jan 2024 17:36:49 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	linux-block@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	virtualization@lists.linux.dev
+Subject: atomic queue limits updates
+Date: Mon, 22 Jan 2024 18:36:30 +0100
+Message-Id: <20240122173645.1686078-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="185210117-1207581628-1705941007=:2579516"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Jens,
 
---185210117-1207581628-1705941007=:2579516
-Content-Type: text/plain; charset=ISO-8859-2
-Content-Transfer-Encoding: 8BIT
+currently queue limits updates are a mess in that they are updated one
+limit at a time, which makes both cross-checking them against other
+limits hard, and also makes it hard to provide atomicy.
 
-Hi
+This series tries to change this by updating the whole set of queue
+limits atomically.   This in done in two ways:
 
+ - for the initial setup the queue_limits structure is simply passed to
+   the queue/disk allocation helpers and applies there after validation.
+ - for the (relatively few) cases that update limits at runtime a pair
+   of helpers to take a snapshot of the current limits and to commit it
+   after picking up the callers changes are provided.
 
-On Fri, 19 Jan 2024, Ming Lei wrote:
+As the series is big enough it only converts two drivers - virtio_blk as
+a heavily used driver in virtualized setups, and loop as one that actually
+does runtime updates while being fairly simple.  I plan to update most
+drivers for this merge window, although SCSI will probably have to wait
+for the next one given that it will need extensive API changes in the
+LLDD and ULD interfaces.
 
-> Hi Mikulas,
-> 
-> On Thu, Aug 10, 2023 at 12:07:07PM +0200, Mikulas Patocka wrote:
-> > Hi
-> > 
-> > Here I'm submitting the ramdisk discard patches for the next merge window. 
-> > If you want to make some more changes, please let me now.
-> 
-> brd discard is removed in f09a06a193d9 ("brd: remove discard support")
-> in 2017 because it is just driver private write_zero, and user can get same
-> result with fallocate(FALLOC_FL_ZERO_RANGE).
-> 
-> Also you only mentioned the motivation in V1 cover-letter:
-> 
-> https://lore.kernel.org/linux-block/alpine.LRH.2.02.2209151604410.13231@file01.intranet.prod.int.rdu2.redhat.com/
-> 
-> ```
-> Zdenek asked me to write it, because we use brd in the lvm2 testsuite and
-> it would be benefical to run the testsuite with discard enabled in order
-> to test discard handling.
-> ```
-> 
-> But we have lots of test disks with discard support: loop, scsi_debug,
-> null_blk, ublk, ..., so one requestion is that why brd discard is
-> a must for lvm2 testsuite to cover (lvm)discard handling?
-
-We should ask Zdenìk Kabeláè about it - he is expert about the lvm2 
-testsuite.
-
-> The reason why brd didn't support discard by freeing pages is writeback
-> deadlock risk, see:
-> 
-> commit f09a06a193d9 ("brd: remove discard support")
-> 
-> -static void discard_from_brd(struct brd_device *brd,
-> -                       sector_t sector, size_t n)
-> -{
-> -       while (n >= PAGE_SIZE) {
-> -               /*
-> -                * Don't want to actually discard pages here because
-> -                * re-allocating the pages can result in writeback
-> -                * deadlocks under heavy load.
-> -                */
-> -               if (0)
-> -                       brd_free_page(brd, sector);
-> -               else
-> -                       brd_zero_page(brd, sector);
-> -               sector += PAGE_SIZE >> SECTOR_SHIFT;
-> -               n -= PAGE_SIZE;
-> -       }
-> -}
-> 
-> However, you didn't mention how your patches address this potential
-> risk, care to document it? I can't find any related words about
-> this problem.
-
-The writeback deadlock can happen even without discard - if the machine 
-runs out of memory while writing data to a ramdisk. But the probability is 
-increased when discard is used, because pages are freed and re-allocated 
-more often.
-
-Generally, the admin should make sure that the machine has enough 
-available memory when creating a ramdisk - then, the deadlock can't 
-happen.
-
-Ramdisk has no limit on the number of allocated pages, so when it runs out 
-of memory, the oom killer will try to kill unrelated processes and the 
-machine will hang. If there is risk of overflowing the available memory, 
-the admin should use tmpfs instead of a ramdisk - tmpfs can be configured 
-with a limit and it can also swap out pages.
-
-> BTW, your patches looks more complicated than the original removed
-> discard implementation. And if the above questions get addressed,
-> I am happy to provide review on the following patches.
-
-My patches actually free the discarded pages. The original discard 
-implementation just overwrote the pages with zeroes without freeing them.
-
-Mikulas
-
-> 
-> 
-> Thanks,
-> Ming
-> 
---185210117-1207581628-1705941007=:2579516--
-
+Diffstat:
+ arch/um/drivers/ubd_kern.c          |    2 
+ block/blk-core.c                    |   29 ++-
+ block/blk-mq.c                      |   26 +--
+ block/blk-settings.c                |  172 +++++++++++++++++++-
+ block/blk-sysfs.c                   |   59 +++----
+ block/blk.h                         |    3 
+ block/bsg-lib.c                     |    2 
+ block/genhd.c                       |    4 
+ drivers/block/amiflop.c             |    2 
+ drivers/block/aoe/aoeblk.c          |    2 
+ drivers/block/ataflop.c             |    2 
+ drivers/block/floppy.c              |    2 
+ drivers/block/loop.c                |   75 ++++-----
+ drivers/block/mtip32xx/mtip32xx.c   |    2 
+ drivers/block/nbd.c                 |    2 
+ drivers/block/null_blk/main.c       |    2 
+ drivers/block/ps3disk.c             |    2 
+ drivers/block/rbd.c                 |    2 
+ drivers/block/rnbd/rnbd-clt.c       |    2 
+ drivers/block/sunvdc.c              |    2 
+ drivers/block/swim.c                |    2 
+ drivers/block/swim3.c               |    2 
+ drivers/block/ublk_drv.c            |    2 
+ drivers/block/virtio_blk.c          |  299 ++++++++++++++++++------------------
+ drivers/block/xen-blkfront.c        |    2 
+ drivers/block/z2ram.c               |    2 
+ drivers/cdrom/gdrom.c               |    2 
+ drivers/memstick/core/ms_block.c    |    2 
+ drivers/memstick/core/mspro_block.c |    2 
+ drivers/mmc/core/queue.c            |    2 
+ drivers/mtd/mtd_blkdevs.c           |    2 
+ drivers/mtd/ubi/block.c             |    2 
+ drivers/nvme/host/apple.c           |    2 
+ drivers/nvme/host/core.c            |   18 --
+ drivers/s390/block/dasd_genhd.c     |    2 
+ drivers/s390/block/scm_blk.c        |    2 
+ drivers/scsi/scsi_scan.c            |    2 
+ drivers/ufs/core/ufshcd.c           |    2 
+ include/linux/blk-mq.h              |   10 -
+ include/linux/blkdev.h              |   36 +++-
+ 40 files changed, 484 insertions(+), 305 deletions(-)
 
