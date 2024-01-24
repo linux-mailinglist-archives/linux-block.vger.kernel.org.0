@@ -1,189 +1,137 @@
-Return-Path: <linux-block+bounces-2328-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2311-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5DFB83A8F0
-	for <lists+linux-block@lfdr.de>; Wed, 24 Jan 2024 13:05:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D55C83A89F
+	for <lists+linux-block@lfdr.de>; Wed, 24 Jan 2024 13:00:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C3F1B23E74
-	for <lists+linux-block@lfdr.de>; Wed, 24 Jan 2024 12:05:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E96921F24D45
+	for <lists+linux-block@lfdr.de>; Wed, 24 Jan 2024 12:00:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C999865BB6;
-	Wed, 24 Jan 2024 12:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C252560DE2;
+	Wed, 24 Jan 2024 11:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="lUF7A/gL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LgjGdE5i"
 X-Original-To: linux-block@vger.kernel.org
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32B97634E7;
-	Wed, 24 Jan 2024 12:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C0C60DE6;
+	Wed, 24 Jan 2024 11:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706097610; cv=none; b=OyISF8rXrVF8Amgwmp8QnyWHp5XVeHJkr3xdFpjYs7ms3sahCClTIr3EaSiRvcVEi14mbm7SvatpJxF8HxR80lg1xYrCiedC9T2csVkFOoJcPm4mj+VjJ5ouZ5FAR1ZqGfGBclfo9csN5+81E/jpXp23drO2HaHXxiOKLRvbM5s=
+	t=1706097593; cv=none; b=G3yrBX4vJ6BbXkhpAjm4tz/e0HBjnyRJ01e9QcdOVODwD1sMlUEUiBvdDDFGiyu7SWNSNuqcvnclVT6TaBHJyff/U8iL/PJPdM6Xe0fZ3UgG0ztYDGKXci31SdQmGkKzHb7YLuP6l3qB5TRwL5gizzKPmsJYNH+JbB+9oumvNl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706097610; c=relaxed/simple;
-	bh=t4Qh0s/9NGiebNos8RWbTI6PuT087Z/eTqnpXervcDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=jhxmndNZ6Qr5he0SiJ8rDB7uj376EeUGfTawsjczY0cwYWRDHRWCJ/yPaRZTi+jLf9AFl3CqpD4h9t/Oi38NRYDwNmRGgYMbG1xMfED42Kbx9Uu4HuAx3Im6QG6esoeMigyP3jdSCiHLhCK6MWqaLUsMoCLqN2FMAq4oqUt4Evo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-35-65b0fbb6fc5a
-From: Byungchul Park <byungchul@sk.com>
-To: linux-kernel@vger.kernel.org
-Cc: kernel_team@skhynix.com,
-	torvalds@linux-foundation.org,
-	damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	will@kernel.org,
-	tglx@linutronix.de,
-	rostedt@goodmis.org,
-	joel@joelfernandes.org,
-	sashal@kernel.org,
-	daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com,
-	johannes.berg@intel.com,
-	tj@kernel.org,
-	tytso@mit.edu,
-	willy@infradead.org,
-	david@fromorbit.com,
-	amir73il@gmail.com,
-	gregkh@linuxfoundation.org,
-	kernel-team@lge.com,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	mhocko@kernel.org,
-	minchan@kernel.org,
-	hannes@cmpxchg.org,
-	vdavydov.dev@gmail.com,
-	sj@kernel.org,
-	jglisse@redhat.com,
-	dennis@kernel.org,
-	cl@linux.com,
-	penberg@kernel.org,
-	rientjes@google.com,
-	vbabka@suse.cz,
-	ngupta@vflare.org,
-	linux-block@vger.kernel.org,
-	josef@toxicpanda.com,
-	linux-fsdevel@vger.kernel.org,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	jlayton@kernel.org,
-	dan.j.williams@intel.com,
-	hch@infradead.org,
-	djwong@kernel.org,
-	dri-devel@lists.freedesktop.org,
-	rodrigosiqueiramelo@gmail.com,
-	melissa.srw@gmail.com,
-	hamohammed.sa@gmail.com,
-	42.hyeyoo@gmail.com,
-	chris.p.wilson@intel.com,
-	gwan-gyeong.mun@intel.com,
-	max.byungchul.park@gmail.com,
-	boqun.feng@gmail.com,
-	longman@redhat.com,
-	hdanton@sina.com,
-	her0gyugyu@gmail.com
-Subject: [PATCH v11 15/26] dept: Apply sdt_might_sleep_{start,end}() to dma fence wait
-Date: Wed, 24 Jan 2024 20:59:26 +0900
-Message-Id: <20240124115938.80132-16-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240124115938.80132-1-byungchul@sk.com>
-References: <20240124115938.80132-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXSW1BMcRwHcP9zb7XmzLqdynXNjpmMyxrMT2PIA04PGoZB9cCODrujFhvV
-	MlHaqFW5TUU3tbLWlsouKaxJphKVpYZsabRTdI/YRheXlvHym8/8Lt+nH4NLKkhvRqU+JmjU
-	ijApJSJEA575S8vGS4UVjTo/uJS8AlzfEwnILimiwF5ciKDoXhwGPdVb4N1IP4Lxhlc4ZKTZ
-	EeR3fMDhXk07ApvpDAVNndOg2TVEQV3aeQrib5RQ8LpvAoO29MsYFFq2wsuLBgwqRz8TkNFD
-	QVZGPDZZujEYNZppMMbKwGnKpGGiQw517W9JsDmWwLXcNgoe2+oIqCl3YtD0MJuC9qLfJLys
-	eU6A/VIKCXcGDRT0jRhxMLqGaHhTmYdBqW4y6Oy3XyTUplRicLbgLgbN7x8heJL4EQNL0VsK
-	nrn6MbBa0nAYu1WNwJk6QENC8igNWXGpCM4npBPw6mctCbq21TD+I5vy9+Of9Q/hvM4axdtG
-	8gj+hYHjKzI/0LzuiYPm8yzHeavJl7/xuAfj84ddJG8xJ1G8ZfgyzesHmjF+sLGR5p9fHSf4
-	zuYMbJtPsGhdqBCmihQ0y9fvEylTWxvRkThxtOU6HYu6RHrkwXDsKi69tx79t6E6AXebYhdz
-	LS2jfz2DXcBZUz6ReiRicPbcVM70pYHSI4aZzu7iTH073DsEK+MKvr6g3Raza7ghVy/+L3M+
-	V1ha+dcek/071xyE2xJ2NffRfIF2Z3JsvAfXcdNJ/zvw4p6aWoiLSJyHppiRRKWODFeowlYt
-	U2rVquhl+w+HW9DkQxljJkLK0bB9RxViGST1FPubSwQJqYiM0IZXIY7BpTPELV7FgkQcqtCe
-	EDSH92qOhwkRVciHIaSzxStHokIl7EHFMeGQIBwRNP+nGOPhHYtSCwOaSkLG5FcOaNf6+Hnl
-	dA5oF0Jgr+yBv+3rvpPBZdJ665hj02nrnk3MbbHBWRxU9z5Qbr/fqgv2PCWbrSuIDIq5Kquo
-	LY6ex27flax2ytUBcaG5c4Wj7UmEsq90w/WbuYtyujbvnNetfOc/p2tmcGDAXt9p+vRZG2+d
-	++GA3VIiQqmQ++KaCMUfAxQQ8EwDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXSf0yMcRwHcN/nd6ezx7nNI4admVUkm/hs0rLZPLMxw5gfm57pUaer7K6O
-	DCt1J0eptiRFp3LO3alcNFKtdfo9iRpJWhqSfhzqmnMdivnns9c+78/ef30YXFZA+jHKuARR
-	HSeoFJSEkOzclLqmylMhBrdML4fsy8HgmkwnoLDcRkFnmRWB7UEKBsON2+D11CgCz7PnOOTl
-	diK49f4dDg+a+hHUms9T0PVhHnS7nBS05l6iILWknIIXI9MY9F3NwcBq3wHtWcUY1LuHCMgb
-	pqAgLxWbGZ8xcJssNJiSV8Kg+ToN0+/XQWv/KxIcN1pJqO0NhPybfRTU1LYS0PRoEIOu6kIK
-	+m2/SWhvaiGgMzuDhHvjxRSMTJlwMLmcNLysN2JQkTbTpp/4RUJzRj0G+tL7GHS/eYKgLn0A
-	A7vtFQUO1ygGlfZcHH7eaUQwmDlGg+6ym4aClEwEl3RXCXjubSYhrS8EPD8KqfBNvGPUifNp
-	lSf52ikjwbcVc/zj6+9oPq2ul+aN9kS+0hzAl9QMY/yt7y6St1suUrz9ew7NG8a6MX68o4Pm
-	W655CP5Ddx62a8lBSWikqFJqRfXasAhJdObbDnQiRXrKXkQno48SA/JhOHY9V9yow2dNsau4
-	nh73X8vZ5VxlxifSgCQMzl6Yy5m/PqMMiGEWsPs488ie2RuCXcmVfmujZy1lN3BO1xf8X+cy
-	zlpR/9c+M/t7+b3ErGVsCDdguUJnIYkRzbEguTJOGysoVSFBmpjopDjlqaCj8bF2NPMyprPT
-	2Y/QZNe2BsQySOErDbeUizJS0GqSYhsQx+AKubRnUZkok0YKSadFdfwRdaJK1DSgxQyhWCjd
-	vl+MkLFRQoIYI4onRPX/FGN8/JLR/MNLI6u8+bvu6ir2/YzCgw9vVYX2h7qE8pGevf7Hgs+c
-	G9dD1UWnPP7axv0Td7mh12FX3Hpv5u1Jw0S7XKJvPzdQV/3DI+R4OzYbDVmDhzYEhhWRCdXp
-	q7V94Vbf7BV+x72yjT5hrjm7n24pPeKwObRj/gfGEsmhqtK3D/18JxWEJlpYF4CrNcIfhViG
-	ai4DAAA=
-X-CFilter-Loop: Reflected
+	s=arc-20240116; t=1706097593; c=relaxed/simple;
+	bh=UX+V6m3P/BH5d0y63xcfewjjX/2BPQOrDlQlcjtdifw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=tTBW61Bv+iJDYMg2379D2MiQOrn6iYULTsc509Vzbul04CrumUYJt4cCn8OX5nj+Z7+r3CCKCwAB6Zz7DEWCreKUjzh3eVgH4wCSaTC28mk+we//mXxLL6oeN9nTfTWjz2+lt50bPNEcvcLLLNL1bUHFu5z2+Vyc4lqy6TtT7GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=lUF7A/gL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LgjGdE5i; arc=none smtp.client-ip=64.147.123.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 8B9873200ABB;
+	Wed, 24 Jan 2024 06:59:49 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 24 Jan 2024 06:59:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1706097589; x=1706183989; bh=i7tME4Obkq
+	6tIWMZkSqVPdKH8Vwld2eBrrHRmGPBcEg=; b=lUF7A/gLVNogk++qHxhU7CMiCa
+	4Iz9/+dWPnRLN9kwPxwoZLPJSmq/F4sHvp6pOLCIuOc+A33dhk1smvZujex8Xb11
+	JeODSdLwWXljXJGVPVbEwEQ3geG8Wcj3WbsJEwrxu+dDvVUW00o/vq/mgH8Wgl91
+	iJNTm6PZ6B4Vex+HaX9lVLig3m9rVB7ykwR514+Ox0bNx2JpaRAqoZyVVzJZrlHn
+	PJxnFTwuHCx8k/3R7SU6xSejHFwlbpbwtjYY+sXAjIHckhn/K7Fkt2b1kMl/uJU3
+	9CKwqoj4Ybvf0oFJIENyuw+J2E1XQ38w5IQZRGc2yIScKuA8Tk8kKDAuYCVg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706097589; x=1706183989; bh=i7tME4Obkq6tIWMZkSqVPdKH8Vwl
+	d2eBrrHRmGPBcEg=; b=LgjGdE5iSU6UttzIRJ32e8TgCXim3gKmCUWDUIHeoc6W
+	3mee0wEJ/yR3sKhU833OAtZIaLZEaS6188sZfii8olktlsDFUIEI27nPISxPnsDB
+	i8P9GwwXT8G3+mnTqQ+xd5BvVFaqveaiXzZTUcCHa5xEm2bQS8xOAl4rSXnvp1AH
+	d5VFU8bozBOqYwQR1+JInBuQzbzHNfXxfcnqXKPkqt9FA92td4Taxb2RlyuImRO3
+	f8HX6vVF/y9oSloqEsjc+UkBPv5AiTsPSzeBmsDYQZlMEMHdE2HPM2E98Da3Kcvq
+	AYpiV/rd0Uj6Fp6aOzt+D0qDTdDBMMohg2ol+ZNQ+g==
+X-ME-Sender: <xms:tPuwZXPlZobUrrOiGdNo7H2eQO12x_8QAvDOFX2-FoXeAdif5P9VCA>
+    <xme:tPuwZR8g7zMuYTMBcMj7wcWWm5-PQMVVRIYhzoQBdedNatsJ3xs9_2aS6vQB7_-t-
+    0mweLaSJju-jmCMyig>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeluddgfedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:tPuwZWTfoGk77YbXTUKgtNT8fAPmFPSZ6i1cXG1D-rZB-OKCmnSPhg>
+    <xmx:tPuwZbthRm9LKdSjRP0ajyLV-v2NjPXf755cN7vC4HNMj2hyFFo4yA>
+    <xmx:tPuwZfdibRsnzTWH6uN_wD-H0nEow74c2Mslnxuo3OHY4wGBorai9A>
+    <xmx:tfuwZRvwbC4JYsFBFV8JzlPggEPJNysNtvVT5uDEQ08wAnJ1uStK4w>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 594DAB6008D; Wed, 24 Jan 2024 06:59:48 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Message-Id: <6f38c2db-3aae-42fe-ab97-dd027b90b690@app.fastmail.com>
+In-Reply-To: <20240123091132.GA32056@lst.de>
+References: <20240112054449.GA6829@lst.de>
+ <9eb0f18e-f3ce-497c-931d-339efee2190d@kernel.dk>
+ <CAPDyKFpmEB9FGAmGAQNdEH+DtRtcCNnFszfv_ewihzUU9du+Xg@mail.gmail.com>
+ <20240122073423.GA25859@lst.de>
+ <14ea6933-763f-4ba7-9109-1eea580e1c29@app.fastmail.com>
+ <20240122133932.GB20434@lst.de>
+ <d2289b38-f463-43e6-a60c-486fd479d275@app.fastmail.com>
+ <20240123091132.GA32056@lst.de>
+Date: Wed, 24 Jan 2024 12:59:27 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Christoph Hellwig" <hch@lst.de>
+Cc: "Ulf Hansson" <ulf.hansson@linaro.org>, "Jens Axboe" <axboe@kernel.dk>,
+ "Ming Lei" <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+ "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
+ "Linus Walleij" <linus.walleij@linaro.org>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Gregory Clement" <gregory.clement@bootlin.com>,
+ "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>
+Subject: Re: mmc vs highmem, was: Re: [PATCH 2/2] blk-mq: ensure a q_usage_counter
+ reference is held when splitting bios
+Content-Type: text/plain
 
-Makes Dept able to track dma fence waits.
+On Tue, Jan 23, 2024, at 10:11, Christoph Hellwig wrote:
+> On Mon, Jan 22, 2024 at 03:57:16PM +0100, Arnd Bergmann wrote:
+>> > It would be good to fix the one or two that could use highmem and add a
+>> > depends on !HIGHMEM for the others
+>> 
+>> I would prefer a runtime check here, as one might still have a
+>> multiplatform kernel where one machine can use highmem and
+>> another machine can use one of these drivers, e.g. in
+>> imx_v6_v7_defconfig.
+>
+> Well, if someone can come up with a good runtime check that's fine with me.
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
----
- drivers/dma-buf/dma-fence.c | 5 +++++
- 1 file changed, 5 insertions(+)
+I assumed there was a generic way already, but it looks like
+there is not, and adding one across nine architectures would be
+nontrivial.
 
-diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-index 8aa8f8cb7071..76dba11f0dab 100644
---- a/drivers/dma-buf/dma-fence.c
-+++ b/drivers/dma-buf/dma-fence.c
-@@ -16,6 +16,7 @@
- #include <linux/dma-fence.h>
- #include <linux/sched/signal.h>
- #include <linux/seq_file.h>
-+#include <linux/dept_sdt.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/dma_fence.h>
-@@ -783,6 +784,7 @@ dma_fence_default_wait(struct dma_fence *fence, bool intr, signed long timeout)
- 	cb.task = current;
- 	list_add(&cb.base.node, &fence->cb_list);
- 
-+	sdt_might_sleep_start(NULL);
- 	while (!test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->flags) && ret > 0) {
- 		if (intr)
- 			__set_current_state(TASK_INTERRUPTIBLE);
-@@ -796,6 +798,7 @@ dma_fence_default_wait(struct dma_fence *fence, bool intr, signed long timeout)
- 		if (ret > 0 && intr && signal_pending(current))
- 			ret = -ERESTARTSYS;
- 	}
-+	sdt_might_sleep_end();
- 
- 	if (!list_empty(&cb.base.node))
- 		list_del(&cb.base.node);
-@@ -885,6 +888,7 @@ dma_fence_wait_any_timeout(struct dma_fence **fences, uint32_t count,
- 		}
- 	}
- 
-+	sdt_might_sleep_start(NULL);
- 	while (ret > 0) {
- 		if (intr)
- 			set_current_state(TASK_INTERRUPTIBLE);
-@@ -899,6 +903,7 @@ dma_fence_wait_any_timeout(struct dma_fence **fences, uint32_t count,
- 		if (ret > 0 && intr && signal_pending(current))
- 			ret = -ERESTARTSYS;
- 	}
-+	sdt_might_sleep_end();
- 
- 	__set_current_state(TASK_RUNNING);
- 
--- 
-2.17.1
+Let's use your initial suggestion then and use a Kconfig
+dependency. I still don't like how this may impact users that
+currently enable highmem and use one of these drivers, but
+on a more positive note this might help us kill off HIGHMEM
+in the future if users instead choose to go with
+CONFIG_VMSPLIT_3G_OPT or similar.
 
+The Marvell driver still needs some other solution of course.
+
+    Arnd
 
