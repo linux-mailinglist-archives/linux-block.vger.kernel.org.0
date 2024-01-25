@@ -1,74 +1,74 @@
-Return-Path: <linux-block+bounces-2393-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2395-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D45183C4D8
-	for <lists+linux-block@lfdr.de>; Thu, 25 Jan 2024 15:37:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70D5B83C4DB
+	for <lists+linux-block@lfdr.de>; Thu, 25 Jan 2024 15:37:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3EA73B24C68
-	for <lists+linux-block@lfdr.de>; Thu, 25 Jan 2024 14:37:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 279961F259AE
+	for <lists+linux-block@lfdr.de>; Thu, 25 Jan 2024 14:37:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 899966E2D3;
-	Thu, 25 Jan 2024 14:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FCD6E2DE;
+	Thu, 25 Jan 2024 14:37:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pu6svjJs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XleSXefY"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B312C6E2BD
-	for <linux-block@vger.kernel.org>; Thu, 25 Jan 2024 14:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6426E2B9
+	for <linux-block@vger.kernel.org>; Thu, 25 Jan 2024 14:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706193432; cv=none; b=PTAEJecyh/C3WzMczazKum1OwXzGZUYc1RJV73aM8HwKERz78G8ShmS2IlomikQ9qH1nNfSNdxV6KCMZwEkK+ACgjlck7Ka5ORJ7UqIiqZOQ3LDBVYkqH1KZHLatjku0cUHOg5nrES+1BbOYSUU9cPR+PpJoesRnV3YwYD8EbP8=
+	t=1706193433; cv=none; b=b/q8xo7ppUYlhuW88l9K0BG6+7atsh+3CQ2rjm0jvp7LVcCxN2LHBhDAig8EDnewRNtbDyVWts8uCP/ITyen7zBg51pCnqfHLG9Cl7ZykevAJHtA+KvHkM3bWQRz8WWnf7fm5DjOWrORiCMVsFhePzQvTluxAkrYm9zwydLLdkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706193432; c=relaxed/simple;
-	bh=GuAK1SrygrJ1Pbwv2s94cKHIzXqnBSS/RN81vD3QUOE=;
+	s=arc-20240116; t=1706193433; c=relaxed/simple;
+	bh=G4/hgPajp0i7ZbgcSS3IunhzrTBYec3u+HmofLpC6eA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kG+OLO9luF/BzRYlLXF/vlZ4x8qopgA/ydGlyGQXwJmYWPpIkCPngV2G3snSsRodT+DgxrJLuTi6Ck+U97kwBqsBMbSiMYsuIS3HNzj8ihbjP2rUpr4yt7GG3kQTW+X1dHxwdWJDYT9GBvrT6+2q7GkYKUXcw3/g1QSRMysSwzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pu6svjJs; arc=none smtp.client-ip=209.85.208.169
+	 In-Reply-To:To:Cc; b=QV1FV91mgdp4Y05XV3Si2BsQoD6518HtQxwIHMRYUUm13bxPMz0kGRvWaP1DYEIr3GQeYecQJcrl5uwPYSWOYQe6cCb9k/1y0al15B0tMNbsh9ztXko8F/ncXRJGRbXYNgv8+MlUFUDsMDDn6nA5jAeeXDzgqK7jevdSegtsxE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XleSXefY; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cf2b218c62so22019091fa.2
-        for <linux-block@vger.kernel.org>; Thu, 25 Jan 2024 06:37:10 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cf354613easo9705701fa.1
+        for <linux-block@vger.kernel.org>; Thu, 25 Jan 2024 06:37:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706193429; x=1706798229; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706193430; x=1706798230; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+QFZ+mkC4kkjj+4EYDZYr6F/eopGpIChJZt5vmWI1II=;
-        b=pu6svjJs3riuHSfGOJ+/eMw9uosRbEXcpJJZnsw51WpGvnVoAdrMMycQIoJvsGCkJH
-         Ek0m4cnHYYT7zMtj8hM9t9TFS0CNHYufbF+8BiaVO+L8FxYhm3T18edmU6AgpgxG+Qeu
-         nU7qt6CVeb/2O5CJ8T6T7jX/8trC27ycxPpPHtHhWYFZdkv81DieYDPPC2e3BhegzPW3
-         oMQK76/e99N6sWgZ1+XBObam9HgPvPLNPBOdsRtCl3NbVlHOYccTfl1VS209lX9pZfjF
-         Q9+rpOA0N9gOkqfS1BxQPL/9gshnEz2/USzEIhSMP6qE1wkwXOKbL8NP3nSUv9a1zRxL
-         YuXg==
+        bh=f43KvRvUGeX/b0EUJRmkX0ZbThJsQoZyHADR9QN2mtQ=;
+        b=XleSXefYnmRAn8b/0DPQu2sYAPmtMxWbaxtOg/scqryF/TV5gVCDeATbuiS+T7YfnL
+         t1CYP5aXcROtx5v5Os2kkAy588Q8YO63STjZiZMr3JEUNBvc+3hJ3Llpj6OC1j5qcX7q
+         fkcSCaTFOPUFePF6Z6RFbq2F34P7akWaYIczphNoLPU98A+SHz5mzy66KoqRYB1mE5D0
+         PxjOJbHvk8w+8ZkDdwveET0tQCU6nmVDwLBvxtDYHyC5ZCuWCUjdYFKUc19xOVJtSEBM
+         ugnI7BeVz/7pkiUgrEL1MD9AyPtij9iYsvYQR6HjluJ5DMmyggcRlkQk50PZFkwvIH+s
+         6pJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706193429; x=1706798229;
+        d=1e100.net; s=20230601; t=1706193430; x=1706798230;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+QFZ+mkC4kkjj+4EYDZYr6F/eopGpIChJZt5vmWI1II=;
-        b=d1su/euPdGZ8LjK9gfRrIKs60eKEdCwYj/HJs8fnlX7uLLHFoPOdKKETLGpcxV9F+U
-         rN0LJ4kv7moGBfF4OkxyhVOqtzCXa+LSw+laJxu1JGHJCAnkPkEpsgpimuw47dJUVJaM
-         xqMPTSEVz7gLIoDioaXIIkiB1ABvRMV4I7hbJEQktLxWzmQZJNfyowp6vZ7fbUcriN0O
-         z/qF/N6oMnUZxGW1x5Gsl3B4jCmHa6MJUw5T2FHNnyqBGzQFZVVZrHwOjvDo9P3xNkdw
-         0vYBbgkJo6u1XTmNj/sANRVMbzSVaYQzLplBw9CBJ5i5Kc2mQ6hgJ7nbrmUFm7zZU7N9
-         s9CQ==
-X-Gm-Message-State: AOJu0YxZ92mfvPkBQvwIz7O+CtUe9p+h3dC8GPpDP+7C+vtr8Zwgjp7o
-	C9H98Byy5eTnqUfJA23mwglbMYr5DX7Uvu/oibY5K5xspdgQyrus0jgNTGSSrp4=
-X-Google-Smtp-Source: AGHT+IEjyNeOAVs0KsI2HYaw+x5O0V6Jfis1CPom+dYxNRm4InBqXYsV6heWEbkW9MhsFYXQf3dovQ==
-X-Received: by 2002:a2e:a7ca:0:b0:2cf:2efa:e14a with SMTP id x10-20020a2ea7ca000000b002cf2efae14amr464246ljp.6.1706193428725;
-        Thu, 25 Jan 2024 06:37:08 -0800 (PST)
+        bh=f43KvRvUGeX/b0EUJRmkX0ZbThJsQoZyHADR9QN2mtQ=;
+        b=XTjObpf4we8w7HNkAE34S6DiQjI5zA2RTpnzLL/BUB9bAvX7a/8MvzA7EtJMUMtbXT
+         QYzibgt19XFhVBndqVuw2CvvdYfWkqaGbYxrCxm/cGDcWxLkEr9kQZjlas6E1+r7V/Q8
+         DiNvXwMnbrhc34siNgNOhsvkVQX6ONqUIcBRKcFaq1LjKzuIk0XcuIto0YiQ+AUGjEGv
+         u4r6iLh4nQSfbHt8DESgRotNGsmB8sLEqcBu+66h05KKeQxJld0M6hOw1Cb2q1C+yNXM
+         5t+jue/QtjknhbDkWd4Qas8woC3itRReDpkDs9/7Usfls12+JlqqQEeGDcNF7UbaDK0y
+         ScjA==
+X-Gm-Message-State: AOJu0YzEXeLIye7kst6mSr0be0Vidpf01XukdZmeFGhAlA6GTaKygrX6
+	AqDZbZHwMAgXddEOmYl4BVh1UHcGv+8EeJ1T/QA5ovPbz0p0p89icRyTYg2NoCo=
+X-Google-Smtp-Source: AGHT+IHlljf93ZvwCDfA3yWKFoRN5Nc0r9yERDrrItXR8g5zHO9eHlJ2iaQUkWwkQKVa4fEPwIhv+A==
+X-Received: by 2002:a2e:9997:0:b0:2cf:3ee1:3ec8 with SMTP id w23-20020a2e9997000000b002cf3ee13ec8mr352461lji.97.1706193430084;
+        Thu, 25 Jan 2024 06:37:10 -0800 (PST)
 Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id y24-20020a2e3218000000b002ce098d3f0asm292644ljy.115.2024.01.25.06.37.07
+        by smtp.gmail.com with ESMTPSA id y24-20020a2e3218000000b002ce098d3f0asm292644ljy.115.2024.01.25.06.37.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 06:37:08 -0800 (PST)
+        Thu, 25 Jan 2024 06:37:09 -0800 (PST)
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 25 Jan 2024 15:37:06 +0100
-Subject: [PATCH 2/7] mmc: moxart-mmc: Map the virtual page for PIO
+Date: Thu, 25 Jan 2024 15:37:07 +0100
+Subject: [PATCH 3/7] mmc: mvsdio: Map the virtual page for PIO
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-mmc-proper-kmap-v1-2-ba953c1ac3f9@linaro.org>
+Message-Id: <20240125-mmc-proper-kmap-v1-3-ba953c1ac3f9@linaro.org>
 References: <20240125-mmc-proper-kmap-v1-0-ba953c1ac3f9@linaro.org>
 In-Reply-To: <20240125-mmc-proper-kmap-v1-0-ba953c1ac3f9@linaro.org>
 To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>, 
@@ -99,30 +99,30 @@ Suggested-by: Christoph Hellwig <hch@lst.de>
 Link: https://lore.kernel.org/linux-mmc/20240122073423.GA25859@lst.de/
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/mmc/host/moxart-mmc.c | 3 ++-
+ drivers/mmc/host/mvsdio.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/moxart-mmc.c b/drivers/mmc/host/moxart-mmc.c
-index 5cfdd3a86e54..7ccfe872415a 100644
---- a/drivers/mmc/host/moxart-mmc.c
-+++ b/drivers/mmc/host/moxart-mmc.c
-@@ -310,7 +310,7 @@ static void moxart_transfer_pio(struct moxart_host *host)
- 	if (host->data_len == data->bytes_xfered)
- 		return;
+diff --git a/drivers/mmc/host/mvsdio.c b/drivers/mmc/host/mvsdio.c
+index ca01b7d204ba..a004a523bd2a 100644
+--- a/drivers/mmc/host/mvsdio.c
++++ b/drivers/mmc/host/mvsdio.c
+@@ -115,7 +115,7 @@ static int mvsd_setup_data(struct mvsd_host *host, struct mmc_data *data)
+ 		 * boundary.
+ 		 */
+ 		host->pio_size = data->blocks * data->blksz;
+-		host->pio_ptr = sg_virt(data->sg);
++		host->pio_ptr = kmap_local_page(sg_page(data->sg));
+ 		if (!nodma)
+ 			dev_dbg(host->dev, "fallback to PIO for data at 0x%p size %d\n",
+ 				host->pio_ptr, host->pio_size);
+@@ -289,6 +289,7 @@ static u32 mvsd_finish_data(struct mvsd_host *host, struct mmc_data *data,
+ 	void __iomem *iobase = host->base;
  
--	sgp = sg_virt(host->cur_sg);
-+	sgp = kmap_local_page(sg_page(host->cur_sg));
- 	remain = host->data_remain;
- 
- 	if (data->flags & MMC_DATA_WRITE) {
-@@ -346,6 +346,7 @@ static void moxart_transfer_pio(struct moxart_host *host)
- 		}
- 	}
- 
-+	kunmap_local(sgp);
- 	data->bytes_xfered += host->data_remain - remain;
- 	host->data_remain = remain;
- 
+ 	if (host->pio_ptr) {
++		kunmap_local(host->pio_ptr);
+ 		host->pio_ptr = NULL;
+ 		host->pio_size = 0;
+ 	} else {
 
 -- 
 2.34.1
