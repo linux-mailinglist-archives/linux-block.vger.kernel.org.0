@@ -1,226 +1,133 @@
-Return-Path: <linux-block+bounces-2519-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2521-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92B9E84047B
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 12:59:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4093A84074C
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 14:45:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7A1E1C22CF1
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 11:59:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 413011C23348
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 13:45:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E845FDA9;
-	Mon, 29 Jan 2024 11:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA42657CE;
+	Mon, 29 Jan 2024 13:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mlDBaFhi";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="BGEvoJoR"
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="GosVN6dy"
 X-Original-To: linux-block@vger.kernel.org
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29C95FDB2
-	for <linux-block@vger.kernel.org>; Mon, 29 Jan 2024 11:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706529468; cv=fail; b=Ruhhf2s+9TEzYJzZecgU5LnMY2v/3Z83tbhOxDqUc7eY3QYzg8ZH2yCDw/h94y7VtP9aDktDxfzx2sX0cGh+sgha9B2GwYvbayZ1erb0astD0/DxaTcdSFHcOZILttmDYlLrTNexKWkI3ocZf7LYsUytN3Cbh+xGdZUsIfmB8EQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706529468; c=relaxed/simple;
-	bh=Z4SWqO/QO2/ZGdWeiW8l/GeNxKM8G/80Zj1PH611kb4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HWC8Cy/jY1zsqTmU2PQ3d+ZQ8WXmRkgs3jT5GtrnmD6+CniO4MMziC/f5b7oQmfnROKgOHD9dfYi2ATRO2j96HziJCoAUUFoq2h6WqZK1K5hf8CAyvL0Q/lhp1wWpneGAwAiGccNbAv7u6yqCvVIr+5+Wj41P0cY1CWe/KjJgoE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=mlDBaFhi; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=BGEvoJoR; arc=fail smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1706529465; x=1738065465;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Z4SWqO/QO2/ZGdWeiW8l/GeNxKM8G/80Zj1PH611kb4=;
-  b=mlDBaFhiTgX5/L3hp9UYdzWYNpStEVgxDstuFypDHQSn1fSKaTGaqFTo
-   b/NI0QBpjVWekO9OhDxdVaDkSP7uBtSRApwWZ+gEfFiVpkKJJa5yTkFLB
-   f4ett5YrzF9fWuzvYPkK10B37zQxWNUEX+CwDDBrz+pRXO52E7cL8t5ak
-   RPFzyJCXrsfE5dbldyGajgT4KZp0E1+Wg0o+t9CBynGowz3w7moBOdnY/
-   Dpi/5PIXq4JjiOkrzwWYgYPQlbe4MM9acgpKMpaULAOrmKdSFcIx6lRWT
-   1tf9xGQvSMo848pjV8OAH55ajWn60Ce+vHVia9tBdXdmDneYML0iJW3Aa
-   A==;
-X-CSE-ConnectionGUID: 8NAj5q+ETeqhAjWXpYdQEQ==
-X-CSE-MsgGUID: PfoH1cUcSTy50JlOc0MeLw==
-X-IronPort-AV: E=Sophos;i="6.05,227,1701100800"; 
-   d="scan'208";a="7972774"
-Received: from mail-dm6nam11lp2169.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.169])
-  by ob1.hgst.iphmx.com with ESMTP; 29 Jan 2024 19:57:37 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O2YQisi8opnTj8Ll+zZUIp2mYxZ5pYuqrp0pTOM4nUbKt6Iq6cqjWVw8cli1EqrluKbFvl/q0kMuT8UjETJaBBE1DPdgydC/wFP685Uwk5ONK8QlZEKLvnyrTw10VzhbBucdlrCCGOR7sonnLwHGEiM3r9pXK8elbrbg8VW8rgWqvoLeHYVqllwzrYkBiVEyY51GTQbeIY/r9E45en34BFME/Cg82sDnD2LeUTlexcplbG7rKFr9E7cKfF4l/+BqbCb5P1eKxJOucfoMAzJLfrrSq5T6bXD6YljsrZe3Rk+hfamxH7wnZD7pWJpalnqGczxP8XAt9TpQTc8mrZGwgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1d1mI+2rwCdIw9+nETzXCGOL/PdD7U3LeIkfJ3SPZgc=;
- b=TGyOdJmKJQJI4c1eF5cQnQTxITlTmHfrGN3gXmMATVRWtnAQNMozAOctAyHBAnGPQlh9qkJCgi4yYVuf9ST5XZ38JwyBrxwoA6TDtIA5f/h2JSKWkiz6KFF3Hlvcai5aQ8UOLgUT5GzdnHbEv5AkXIJQ1Y1/DIeit1T8uDyAYqpq+jlaKLtILZ/1iuVnNgDNdhqIfySvFRhC4hd+onm3gwgfnQ6qxZyeErhP8x0RW2NPc9rNTASGZmZadBYmXX+pthOG3R4dZ2aU2YcqM/r/mbVqITvVxJ1tULo/GkUejedfRjiZLUWhw72LkoVxLm2vgvpsY7X3rAjN6YYP4GaOpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17E1657AE
+	for <linux-block@vger.kernel.org>; Mon, 29 Jan 2024 13:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706535883; cv=none; b=EW/PW1YDO3x/5gPr0W+vXqTe2oT61kwXGCAVB7TwslIyTjWMktJ6q391tx2N92lbyQs7LXyOVFjkOsgsCxSuE3mGQj2wef3NhBMfZEhpLgJnlAlyMwoC6glmm5R7jgiwjhmISsXu+UbiIlA1WuJj92YoX4vDpAu664c0vc8rXQI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706535883; c=relaxed/simple;
+	bh=fxpr0jfLJ1BZoumvzLNGtLFQyDCHp+0ZqHuTDBKxtD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ttDwS6qtUOdujJIuHngqgzM2PJMSYFb/GbU7vR/QBIkcqj2bhECS8otwtLKvmxu4dRea1f/l6bi2MDqIBrXdc5UTvF7C55pIz+e8s7J+uctjPm/pftCKez4aFVR8vGwxhRua/nDl71j3xZzSUBqEZcLJ3VzrE/KOHAXBn5bYWV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=GosVN6dy; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5102b00c2cdso1858789e87.3
+        for <linux-block@vger.kernel.org>; Mon, 29 Jan 2024 05:44:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1d1mI+2rwCdIw9+nETzXCGOL/PdD7U3LeIkfJ3SPZgc=;
- b=BGEvoJoR/APZ4rNVhAe0oCQ7gOYLPV9McW/6q59ux5pewoW/que2s6RJStFFy4mJbRmeYgUGSJ3KHzgC0Mgpxe0P4hiSTpzCQvBqGtf5d1ERpshyRmS2SHeMo5o72h6mZx4KEwxS2aSGSnzx7+nfpbPBd7WaOLAOXlkrVg//3vI=
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
- CH2PR04MB6521.namprd04.prod.outlook.com (2603:10b6:610:68::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.33; Mon, 29 Jan 2024 11:57:35 +0000
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::25d0:1445:7392:e814]) by DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::25d0:1445:7392:e814%7]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 11:57:35 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-CC: "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-Subject: Re: [PATCH blktests V3] nvme: add nvme pci timeout testcase
-Thread-Topic: [PATCH blktests V3] nvme: add nvme pci timeout testcase
-Thread-Index: AQHaTk9gWHtQE5TZs0KJeUiw48f8BLDwq+MAgAAMLYA=
-Date: Mon, 29 Jan 2024 11:57:35 +0000
-Message-ID: <cw6jph7xbssf2ngke7hv7uek2muonmddbbrbzd3v3a4aw66wyg@rkb4gpzgtmui>
-References: <20240123225547.10221-1-kch@nvidia.com>
- <863833c7-3414-4012-a138-3d44ea44dde7@nvidia.com>
-In-Reply-To: <863833c7-3414-4012-a138-3d44ea44dde7@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|CH2PR04MB6521:EE_
-x-ms-office365-filtering-correlation-id: cd7abf1f-0426-4087-7d46-08dc20c17b73
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- IFHRZbt2OgguJzvWdgHJSqtYcn7bjYeptyhymIA3sMX2bWypBqkeVZnojFbpLnTE7D2qERXHIdBmgK6lXwfy2ZSs3UvQBa2uTqw+x29DI+Y14hf1q5CM/NSMIxGcLPZ3jnfiBGsOsOjrygibmFGTMVEYd34J5pPNIcYqKWmyJnVRrLoywEO36BdnLA/jGjVEyd+jq3yupVps+IvvM9BbAlGx5816khKgSdmhH/+zWzxPhdPl3GbCTL6Hr8K0NK8siOyT3rJKE4IxymmnG6UFincTOIYoh7gzLBGI8XTZvTtL77TM++okfn27uWpl7FL4u7Pi85vTM9lQOP2X5snNKgTvUN5Hm8VuC/Z5MQ4s+NJXhohBewVwaQXe7oGliFBSlk/UOqs7M8UDd6L572VT6ZCSUMk3C5AB30AKjuYD3z6jKQ452oM/VF7CDf5Tccwz5SjS7/XTEi64Tgk9tBdym6bL8NkXXr0o+6adZIHNn8QBIO+Y5K7fYaSDGBjRiki4+KpUfRH7hj52O6m6Q++0Jlv6etNYlyXcYAEwnfFHY6q8bvn9vB3+Ygy3JlXUqWYF3EJSNxKIlDqplmeddiB+s1kw2F9H6HLQRPoW/Wxd6Hb0ZPMuC6rv5FeWPXkDrzGf
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(346002)(396003)(366004)(136003)(376002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(83380400001)(33716001)(6512007)(9686003)(38100700002)(26005)(122000001)(44832011)(8676002)(8936002)(5660300002)(4326008)(2906002)(478600001)(6486002)(6506007)(53546011)(66946007)(66556008)(54906003)(64756008)(66446008)(66476007)(71200400001)(91956017)(76116006)(41300700001)(316002)(6916009)(38070700009)(86362001)(82960400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?HjEixvO0txoiHspHC1U6GaXPomxc4SNK9KFv5/JonXh351JBa8Vh+XBvsH8r?=
- =?us-ascii?Q?KoPab3dT74a+QmMljl3cM87QVVVgY4Zzns59GxK5JgIb9yqV66cubU1HDyND?=
- =?us-ascii?Q?6yiSyO6CkiJDKs9HaahBh+D0DkiQvGgvHqxFwnm39iLz5e+HlHWIe8WB8/9h?=
- =?us-ascii?Q?cGOtKf5GVRrN0oWSgXJDnltaUyGSqxNv04fjLKur4GFnIJ3I+eMUIvzXS8pc?=
- =?us-ascii?Q?pnwMPXfH4u+U3q4a1aMBfi/yrjGB1SQIXApbGWHAy5Rkqjy2NCJZxOje8Qd8?=
- =?us-ascii?Q?+sdVgnEFbpxa4iudGvvVLdlL7uYjhiuQLkFCIg9nbDhTRWydFLC2sIFQHXeL?=
- =?us-ascii?Q?ME4gcYT7XabTS2Av7HiVVLMWknrjujLJTFBd7dn6bifj7J/p+rTsoVKQuQMY?=
- =?us-ascii?Q?PJxh1KKhj4XV698GGfE5PupTUODWgJHhKW79QbZW1uErFoNbkvVPr4/0m6vt?=
- =?us-ascii?Q?RVpUzqnms9RYdk6J5vJKQ8PwDNxVaH+gB9r/dDerGVON5el8ZrdzVNqvdyVC?=
- =?us-ascii?Q?dcNTpDhcnL7sT/AGJvmik03fzszAPsu2IX7HAMsMXWhvksVQkNRb/71ufTbu?=
- =?us-ascii?Q?URi8Y2QHQiYlXT5ZSc51dQnm1tJEUNz7ugUhOD8q4XZIp05LY5BTfCntPDHm?=
- =?us-ascii?Q?dE+amzzP3/SZ99ljne+MGupdPirzQvR43tXoh5NakVh1D0PNp1WZEpoyFi2I?=
- =?us-ascii?Q?UrMBvUFt8MoX01Led1GHeNdVJwSU1Q28KKj+z/GTqEKhfRkvWNMwi6iLflyH?=
- =?us-ascii?Q?zobp+8+7WzqE4thFcazouBJlAiHL56fKYJ3C6nZ9TceON8VE9rTGZGi5swyi?=
- =?us-ascii?Q?VAxC1hf+BtJN/edr1vlboc5JuDva1+7iLb21hNoKK5qJxR3fJ04akSPOaNQn?=
- =?us-ascii?Q?KgjhE6Rcg0g8A98RaaO8QoWP5AjOT72i5vFrOZAGqL0CtaZI0uATz+lb/gGB?=
- =?us-ascii?Q?zbbC3l8f4wRri3UkuP/Agt22I/2kT9QiC2VY1xppe5L5JirYOeBBnZs7WKZo?=
- =?us-ascii?Q?inAvvgvvS89lRzFQDp0IimxeNeHq7yQosX9t6uoXPwev862O/TVU7sER5YGo?=
- =?us-ascii?Q?V3akg053FnFYDlP82rguNEY7pSbFMoWPqdp2S5xfiOr17Php+Qs/VJUsg74t?=
- =?us-ascii?Q?2fMbjzs3ln2K/pneK1db7EfBrlvXa/VmGFeFHn3YXRnrxR6YGuDsJMr1g+6L?=
- =?us-ascii?Q?6XbVh5pO+dRckurUIiEPdSRf9NlQF04tdek0oFwLPFSsB3Qc8fWiFToTbvKp?=
- =?us-ascii?Q?UzXHe2WWSjlwQhK7i1sfZHVLJRQnRaeSIAtGURDh9ZbbQoRSkrq35iDArqvg?=
- =?us-ascii?Q?jN4o2nU5fKxjsiJuF1rLaEMzrxYU6n7dmKY9venBNTiWWx2IvEJzned5rfN8?=
- =?us-ascii?Q?1lMUaDhR+lKfZKjD5DUR2YqKhjwZxosfDHxf4pYxzZMryYRkGxRMO9WYsDnk?=
- =?us-ascii?Q?FOOVGEwtxWRB+BI5g7XDOoOpCHOdU5QZEtEhnbNZi7Bex/QVgkyXAgKEgqJs?=
- =?us-ascii?Q?LUA0QvgdTjsom/9dLPrk3pCRy/c7d0st2hlmKobJxY9OuMKYxO+A4qK424EM?=
- =?us-ascii?Q?0z6PXsMUG2yQwXqQl307p8BZbUQDa8jxe80jQwTmjd2mY/lFuil+v/zaaiQV?=
- =?us-ascii?Q?MFzZFxuTc3BKpSIDADC+kNA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2E2B74D0282C214BB6350269B1E25CA5@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1706535878; x=1707140678; darn=vger.kernel.org;
+        h=mime-version:message-id:date:subject:cc:to:from:user-agent:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fxpr0jfLJ1BZoumvzLNGtLFQyDCHp+0ZqHuTDBKxtD0=;
+        b=GosVN6dy+OX1VciJaSAN0x2LRZjKHIAetG8CGcQCoDn21RniL6Z+SwVxFx81HHn33f
+         TQ03v1meR3B4v0gVG6lMJd1321WhvHAA8x2GxDgr0PytveeVMaexXyzangHCB+KXALbo
+         ozt8bwl3izzazhIUjF8HX9PmAj39HCmU2X9ZogQ+eHHJM2Bqnxz7LjAH7HPlFd+Fz3Vw
+         8CkamVp/h5Jy8XnklKiX3MgAmXioq508aiiCxThRRiQW0ZQmT+eDlbleG1b3vudBHf1+
+         XGLoGsxfoZ/Jboqxu986ksZ+6mzMJ4UfxdVAo93yzAXig5PECfpQo1L8pUmFokF0cEfW
+         EW9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706535878; x=1707140678;
+        h=mime-version:message-id:date:subject:cc:to:from:user-agent
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fxpr0jfLJ1BZoumvzLNGtLFQyDCHp+0ZqHuTDBKxtD0=;
+        b=clFwbUiztxd033H3fp2HCf9w4VKIPj4rG0E/glnxkYV1VYPhvOZ8FK4dVa0NKYexg9
+         FmEAa9m4S7oOsJlXAbB+9um1eXBNBh8mjDw+KRT8hNKPU6EPtMNgSKtFYZa+4Bbhp90o
+         HCRP9PQkBnOYHPRgClbiKz+Phk+ElEDKc1a/eRxNc16ydlNHUiInsVMPZL+7lX0u25AB
+         hC8uFulHBzZEWYqZ/I2tkOxPG+qNvAYfQ/ow5OadBojEdWHuMJVQI+21QYJ54VRCI4Qy
+         4N6EAyHWJ7PcRfmxBZx5BTeu+ot7REYlOO+M8qx7NzLRgSABQH4bm44eAeoXKY6cxGgI
+         rdnQ==
+X-Gm-Message-State: AOJu0YxsbnWGTwedZKCEplBib7TzA005ET4I4MUqevy10NLdwvsUOYF8
+	GAsB4jjKHyvQWdKErqr6ODRUT9mP3bBmjq0+9WSBFT5MrxGF6etjr2xiIte1mZ8=
+X-Google-Smtp-Source: AGHT+IFVqsBbwdgj7EewY8BkGYY23wg0krUJF4qWKa5Y+t5wC7jhahZ9dzmN9BzQNYTV+0Xi1GcBKw==
+X-Received: by 2002:a05:6512:b83:b0:511:1790:e3dd with SMTP id b3-20020a0565120b8300b005111790e3ddmr27625lfv.54.1706535878523;
+        Mon, 29 Jan 2024 05:44:38 -0800 (PST)
+Received: from localhost ([147.161.155.108])
+        by smtp.gmail.com with ESMTPSA id fb4-20020a05600c520400b0040ebf340759sm10232554wmb.21.2024.01.29.05.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 05:44:38 -0800 (PST)
+User-agent: mu4e 1.10.8; emacs 29.2
+From: "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-block@vger.kernel.org,
+    rust-for-linux@vger.kernel.org,
+    Jens Axboe <axboe@kernel.dk>,
+    Keith Busch <kbusch@kernel.org>,
+    Matthew Wilcox <willy@infradead.org>,
+    Damien Le Moal <dlemoal@kernel.org>,
+    Daniel Wagner <dwagner@suse.de>,
+    Hannes Reinecke <hare@suse.de>,
+    Christoph Hellwig <hch@lst.de>,
+    Wedson Almeida Filho <wedsonaf@gmail.com>,
+    Boqun Feng <boqun.feng@gmail.com>,
+    Andreas Hindborg <a.hindborg@samsung.com>,
+    gost.dev@samsung.com
+Subject: [LSF/MM/BPF TOPIC] Rust block device driver APIs
+Date: Mon, 29 Jan 2024 14:17:22 +0100
+Message-ID: <87v87cgsp8.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	c+ir/mhTKZMQ7X/+XZbOB5PO5NUpO/w8u6cccnkdqR7iAE3rDMhVLAFfwX3GRlm2Z4HyU/bemRgaOL8yoTk8eFqv771EuFxiZJA8Ry4UCFyeyxuw+m/w33tF9unCeRimyJT4JUQCWCu9s3HdBFXkJArCRMOq528HaRI4Xhy3bUfz7DLbB6umGpfapPFm4JhanFXSJ9g2J19teegtQPZ0q2QzZjaI2fHLRhjHfOJwpaolL5mEi1T5OXdIJpqb9sjNE9k14aiolt3dp0wzrkp07ilSfZn2mnT7O0RUbb7idiheKUjIwY91dLBr/BRjzx3SZHs70ddlpTZYthHuiK9Gk7X30Xp524GGKWusD0E41onUa5jWigauMkDNYddl1BsFf+LlDtpXhvyUnOf4IXCLPAmfZ6SEz4Uoh0K17ZAQV8pfNL7rKc682P3xBnL1tunXGp83wq3Y+6FoNGczE5znZj0jTI8MgzulipOGAfirCn2oqC0GtJXnxPNPNvGCSjfvD3xxKLnM5tgmFe9VIaVz+VBym3wDX7s2krF3D5YK3DbFZWHgekDJnKgBxifKMI2NmGyCiR1JEwhDVoT/QUcH9EV4sTfZ5f/NnUVXUoBVg4BT9u6sI3zwjMJyp2JoVTwu
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd7abf1f-0426-4087-7d46-08dc20c17b73
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2024 11:57:35.1215
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: irsHYWmPAZ9mXCWdFD+Ze/dGoPOZRxa9Hn4dOVShAVLqw+BE3tx9mYcUb5AXxcCcBMVGaBigU/+y4ft5Iaz55eux/vx6/NwMFAVZyr67gww=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6521
+Content-Type: text/plain
 
-On Jan 29, 2024 / 11:13, Chaitanya Kulkarni wrote:
-> On 1/23/24 14:55, Chaitanya Kulkarni wrote:
-> > Trigger and test nvme-pci timeout with concurrent fio jobs.
-> >
-> > Signed-off-by: Chaitanya Kulkarni <kch@nvidia.com>
-> > ---
-> > V3:-
-> >
-> > 1. Add CAN_BE_ZONED.
-> > 2. Add FAULT_INJECTION_DEBUG_FS check in requires.
-> > 3. Remove _require_nvme_trtype pci in requires().
-> > 4. Remove device_requires().
-> > 5. Store fio output in FULL.
-> > 6. Revmoe shellcheck and use grep I/O error value to pass/fail testcase=
-.
-> >
-> > ---
-> >
->=20
-> is there any objections on this patch ?
+Hi All,
 
-Thanks for the V3 patch. It looks almost good, except one thing: as I comme=
-nted
-on V1 and V2, this test case often leaves the target NVME device with zero =
-size.
-It will make the following test cases fail (I mean the future test cases to=
- be
-added).
+I would like to propose a session on the Rust block device driver APIs.
 
-I suggest to remove and rescan the device to regain the good status of the
-device. The following change will do it. What do you think?
+I submitted the APIs along with a simple null block driver as an RFC last year
+[1]. Since then I have kept the code in sync with latest mainline release [2],
+cleaned up the code, and added a few features.
 
-(If we take this change as it is, it will recover the io_timeout_fail sysfs
-attribute also, so the code to save and restore io_timeout_fail can be remo=
-ved.)
+After talking to some of you at various meetups over the past year, I think we
+have reached a point where we can potentially agree on merging initial Rust
+block layer support, along with the null block driver. To that end, I plan to
+send a few iterations of the patch set before LSF in May, so that we can use the
+session to discuss any remaining details.
 
-diff --git a/tests/nvme/050 b/tests/nvme/050
-index cacaba6..cb1c6f5 100755
---- a/tests/nvme/050
-+++ b/tests/nvme/050
-@@ -41,9 +41,12 @@ restore_fi_settings() {
- test_device() {
- 	local nvme_ns
- 	local io_fimeout_fail
-+	local pdev
-=20
- 	echo "Running ${TEST_NAME}"
-=20
-+	pdev=3D$(_get_pci_dev_from_blkdev)
-+
- 	nvme_ns=3D"$(basename "${TEST_DEV}")"
- 	io_fimeout_fail=3D"$(cat /sys/block/"${nvme_ns}"/io-timeout-fail)"
- 	save_fi_settings
-@@ -66,4 +69,11 @@ test_device() {
- 	fi
- 	restore_fi_settings
- 	echo "${io_fimeout_fail}" > /sys/block/"${nvme_ns}"/io-timeout-fail
-+
-+	# Remove and rescan the NVME device to ensure that it has come back
-+	echo 1 > "/sys/bus/pci/devices/$pdev/remove"
-+	echo 1 > /sys/bus/pci/rescan
-+	if [[ ! -b $TEST_DEV ]]; then
-+		echo "Failed to regain $TEST_DEV"
-+	fi
- }
+Since Kent has also proposed a dedicated Rust session, we might find some
+synergy with this topic [3].
+
+I also maintain an NVMe driver based on the Rust block APIs [4]. Due to
+community feedback, I have no plans for upstreaming this driver at the moment.
+However, it is a valuable tool for designing a sensible Rust block device API
+that is suitable real hardware.
+
+Part of the NVMe patches are abstractions for PCI. Other users (drm) have
+expressed interest in these, so I plan to separate these in their own tree to
+make them easier to pick up for those users.
+
+As a last note, I have recently become aware of ongoing work on
+implementing nbd in Rust. The work looks promising, and I hope the
+author will decide to send the patches, when they are ready to be
+shared.
+
+Best regards
+Andreas Hindborg
+
+
+[1] https://lore.kernel.org/all/20230503090708.2524310-1-nmi@metaspace.dk/
+[2] https://rust-for-linux.com/null-block-driver
+[3] https://lore.kernel.org/all/wjtuw2m3ojn7m6gx2ozyqtvlsetzwxv5hdhg2hocal3gyou3ue@34e37oox4d5m/
+[4] https://rust-for-linux.com/nvme-driver
+
 
