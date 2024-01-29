@@ -1,78 +1,146 @@
-Return-Path: <linux-block+bounces-2501-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2503-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7316383FE24
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 07:20:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FD8E83FF56
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 08:53:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F3802813B1
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 06:20:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5ADEB2388B
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 07:53:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 267FB4C3C3;
-	Mon, 29 Jan 2024 06:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1FD1537F1;
+	Mon, 29 Jan 2024 07:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="XKoAWwFC"
 X-Original-To: linux-block@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C43A4BABE;
-	Mon, 29 Jan 2024 06:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1290552F70;
+	Mon, 29 Jan 2024 07:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.141.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706509243; cv=none; b=jBNiESgIhefzXuVHaz/dmCZdXx471c2h8nt0EE/IMxpDYoN7MB/CJFHGzbpIMtYbjrZhMH1xQn52uelbGNcyG/kBwYfviJvszYebJwEfHJ/SKxOQFVrou5MwGqk/D73S8Ic0tmnw2q+YYQxdzT7AY5YX2HiSeQ4oC87pP9CDJ9U=
+	t=1706514757; cv=none; b=PSkZknQuItr8lBc4Ghil2dAhatW+l42L8HJ7HPDAKX869PSHXwFQYnyr5j/KuLJTzPvehFfpZN8sr/wYnT8q6jIVr5KSdK1NBCB/fiZWvf96B1ppmQcFftMWr+jRoNFdIhMOLL6RInjFui+/lm8fQ/gLT/4N2GrUJ75Go2jqq5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706509243; c=relaxed/simple;
-	bh=a3ABtJCzIyYgu9Y0K7TLjoHutY0PL9Nh7ra7xgZiwb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OiFXPqE1frxXp7p6hj25V3Go63XbrKIkR0L69FTxxskll67ow6MDlZNakiiC0JqYEqt6twCUs+DSqQFPJ1HGMZxJESlkzBiXI4JSgDH8Kw4BWlClrlvZBHKhR/nYoDKZdowXf/mxO4/17stK+4XSgtOtWNnukjjKxLdAAgUiqAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 95A9768B05; Mon, 29 Jan 2024 07:20:35 +0100 (CET)
-Date: Mon, 29 Jan 2024 07:20:35 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Keith Busch <kbusch@kernel.org>, axboe@kernel.dk, hch@lst.de,
-	sagi@grimberg.me, jejb@linux.ibm.com, martin.petersen@oracle.com,
-	djwong@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	dchinner@redhat.com, jack@suse.cz, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	tytso@mit.edu, jbongio@google.com, linux-scsi@vger.kernel.org,
-	ming.lei@redhat.com, ojaswin@linux.ibm.com, bvanassche@acm.org,
-	Alan Adamson <alan.adamson@oracle.com>
-Subject: Re: [PATCH v3 15/15] nvme: Ensure atomic writes will be executed
- atomically
-Message-ID: <20240129062035.GB19796@lst.de>
-References: <20240124113841.31824-1-john.g.garry@oracle.com> <20240124113841.31824-16-john.g.garry@oracle.com> <ZbGwv4uFdJyfKtk5@kbusch-mbp.dhcp.thefacebook.com> <dbb3ad13-7524-4861-8006-b2ea426fbacd@oracle.com>
+	s=arc-20240116; t=1706514757; c=relaxed/simple;
+	bh=rp5FcjO4/GYjbF5Qyk/GxKqz5Dm+QfeA7jbL0YYHdsM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KyAeq2CBVke3JrOpCOEdaY39czmfPCdNJvbaAUzppdxKlr8FH6DvmT2tCLkLXgyzedba/R+YHJew69+eUzJnRA8oola8JAvKseYrHZotQtrGpTWyENX1y0EIMxMOltkA1/2EZWNoeqMIecLvr+c2PZE0GfQND6o+vbmMBGPhk9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=XKoAWwFC; arc=none smtp.client-ip=68.232.141.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1706514755; x=1738050755;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=rp5FcjO4/GYjbF5Qyk/GxKqz5Dm+QfeA7jbL0YYHdsM=;
+  b=XKoAWwFCJyE4SSdjzG7ykRQ3IY1GYH5kkhc8fRJryBnE6P6O9UC/wVjp
+   uiyBRtffxT0+drwocE1mwkssIgBaC9gDtC2flggHtdhh4C7u1f+LLRmMf
+   26lu5IJfa1vmwUKB5nYmdm5rMKrZJFZ6NUw3nlrgVYi87bYobXVk8fh90
+   c+kF/TlZ8YsNY4L+u+A65wSvQYKr1EWWvjH06Fvv1qulTB9MJqqJlQg6n
+   iQ89vSU7TFotOuMRJBQHx0guvy+riLefuAfh5l05Yc9RXNbYJeFnlpTsw
+   vlYVrgsyBz0HSU88zXTBkuWKu5zKMEQ/mpQl/9wwwbNxQodpKYmqgj29f
+   g==;
+X-CSE-ConnectionGUID: i3AIqhLoRfGg2acZAua5fg==
+X-CSE-MsgGUID: NWGJryoKR22IAwaPuB+Bug==
+X-IronPort-AV: E=Sophos;i="6.05,226,1701100800"; 
+   d="scan'208";a="8194605"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jan 2024 15:52:27 +0800
+IronPort-SDR: XKmQyU5LRfXJN4EP3MstUx/6dt1sLU+J4iQLeTtq1RGxD0IXKohpvK2SHlN06cdtdM92F1dINn
+ Cjtz5OUu/oNQ==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Jan 2024 22:56:42 -0800
+IronPort-SDR: a+xFj1elJxUfjnGbMLQtq4lQiX7ERjA+Y4ZquDyvRef/cnam2FbEjwxso8q5jVbsGBbnmT7XDU
+ gx4d10id9lHQ==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun91.ssa.fujisawa.hgst.com) ([10.149.66.6])
+  by uls-op-cesaip02.wdc.com with ESMTP; 28 Jan 2024 23:52:24 -0800
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH v3 0/5] block: remove gfp_mask for blkdev_zone_mgmt()
+Date: Sun, 28 Jan 2024 23:52:15 -0800
+Message-Id: <20240128-zonefs_nofs-v3-0-ae3b7c8def61@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbb3ad13-7524-4861-8006-b2ea426fbacd@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADBZt2UC/1XMywrCMBCF4VeRWRuZTC+2rnwPEbHJxGZhIonES
+ +m7mxZBuzwH/m+AyMFyhN1qgMDJRutdHsV6Bao/uwsLq/MGQipRShRv79jEk/MmCq0lE3XEWNa
+ Qi1tgY5+zdjjm3dt49+E140lO79ehYuEkKVAohR0W2LChav/QaqP8FSYl0X9ZLUvKJel2W6lGy
+ brFXzmO4wfFfYJg3gAAAA==
+To: Damien Le Moal <dlemoal@kernel.org>, 
+ Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+ Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev, 
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+ David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, 
+ Chao Yu <chao@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, 
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706514743; l=1894;
+ i=johannes.thumshirn@wdc.com; s=20230613; h=from:subject:message-id;
+ bh=rp5FcjO4/GYjbF5Qyk/GxKqz5Dm+QfeA7jbL0YYHdsM=;
+ b=2ejVcWAH227cyBcLTAnmQV/viZ0C5PHZhudgyn72fAlTiBCd6IOpK+wyllf64WvtEBVU5sViJ
+ 8eBBKuHqePeBlFpK16YJ9MZy0ZO2EaU/AF6A2deSt4WZJ/fyuLoWemF
+X-Developer-Key: i=johannes.thumshirn@wdc.com; a=ed25519;
+ pk=TGmHKs78FdPi+QhrViEvjKIGwReUGCfa+3LEnGoR2KM=
 
-On Thu, Jan 25, 2024 at 11:28:22AM +0000, John Garry wrote:
-> We have limits checks in XFS iomap and fops.c, but we would also want to 
-> ensure that the the block layer is not doing anything it shouldn't be doing 
-> after submit_bio_noacct(), like merging atomic write BIOs which straddle a 
-> boundary or exceed atomic_max (if there were any merging).
->
-> The SCSI standard already has provision for error'ing an atomic write 
-> command which exceeds the target atomic write capabilities, while NVMe 
-> doesn't.
+Fueled by the LSFMM discussion on removing GFP_NOFS initiated by Willy,
+I've looked into the sole GFP_NOFS allocation in zonefs. As it turned out,
+it is only done for zone management commands and can be removed.
 
-Can you get Oracle to propose this for NVMe?  It always helps if these
-suggestions come from a large buyer of NVMe equipment.
+After digging into more callers of blkdev_zone_mgmt() I came to the
+conclusion that the gfp_mask parameter can be removed alltogether.
 
-> BTW, Christoph did mention that he would like to see this:
-> https://lore.kernel.org/linux-nvme/20231109153603.GA2188@lst.de/
+So this series switches all callers of blkdev_zone_mgmt() to either use
+GFP_KERNEL where possible or grab a memalloc_no{fs,io} context.
 
-I can probably live with a sufficiently low-level block layer check.
+The final patch in this series is getting rid of the gfp_mask parameter.
+
+Link: https://lore.kernel.org/all/ZZcgXI46AinlcBDP@casper.infradead.org/
+
+---
+Changes in v3:
+- Fix build error after rebase in dm-zoned-metadata.c
+- Link to v2: https://lore.kernel.org/r/20240125-zonefs_nofs-v2-0-2d975c8c1690@wdc.com
+
+Changes in v2:
+- guard blkdev_zone_mgmt in dm-zoned-metadata.c with memalloc_noio context
+- Link to v1: https://lore.kernel.org/r/20240123-zonefs_nofs-v1-0-cc0b0308ef25@wdc.com
+
+---
+Johannes Thumshirn (5):
+      zonefs: pass GFP_KERNEL to blkdev_zone_mgmt() call
+      dm: dm-zoned: guard blkdev_zone_mgmt with noio scope
+      btrfs: zoned: call blkdev_zone_mgmt in nofs scope
+      f2fs: guard blkdev_zone_mgmt with nofs scope
+      block: remove gfp_flags from blkdev_zone_mgmt
+
+ block/blk-zoned.c              | 19 ++++++++-----------
+ drivers/md/dm-zoned-metadata.c |  5 ++++-
+ drivers/nvme/target/zns.c      |  5 ++---
+ fs/btrfs/zoned.c               | 35 +++++++++++++++++++++++++----------
+ fs/f2fs/segment.c              | 15 ++++++++++++---
+ fs/zonefs/super.c              |  2 +-
+ include/linux/blkdev.h         |  2 +-
+ 7 files changed, 53 insertions(+), 30 deletions(-)
+---
+base-commit: 615d300648869c774bd1fe54b4627bb0c20faed4
+change-id: 20240110-zonefs_nofs-dd1e22b2e046
+
+Best regards,
+-- 
+Johannes Thumshirn <johannes.thumshirn@wdc.com>
+
 
