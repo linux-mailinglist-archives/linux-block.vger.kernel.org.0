@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-2550-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2549-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01311840F83
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 18:24:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2FC8840F06
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 18:20:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95DED1F214BD
-	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 17:24:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21ABA1C23E05
+	for <lists+linux-block@lfdr.de>; Mon, 29 Jan 2024 17:20:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ED601649C9;
-	Mon, 29 Jan 2024 17:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EA7015CD7F;
+	Mon, 29 Jan 2024 17:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fkllayoF"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZiyJuN2y"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4670A15B0F0;
-	Mon, 29 Jan 2024 17:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8672157E8F;
+	Mon, 29 Jan 2024 17:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706548454; cv=none; b=G3xdQENB3Dke/mLfBW2Oc7dke3Z59Vk5SAxIFX0LoGnqdua/Ctr0hD7MlXXRzbMEnzuDReyyS3mCAv71EHLxEe7FMsYUGFAE3Rtau2jQ1jr7PFFmnb9OpKMmHMdulOB+0EwiUw0U0jdLCDNdTqypAx1RAe1ApjUzWbcjDVv4c94=
+	t=1706548374; cv=none; b=ukDcoOzpB6pT9Bjle09vQ+eoKMRDLg9Uyj3w0R1qV7eiyP3iMd8fq6Go6zlZiNpJ/XJWnfFHD8HcSxurGMZ4cf5EB0HGr1WiasXxD6qnnuF/uEAQ5z5vC68w2QC/k5Ay7P5JHuMSJHJc2Gas/skcOGVyLyWh1rLoK+KEjhLgJ0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706548454; c=relaxed/simple;
-	bh=RXj9HKVda3MnFL631bmhL2vw8wi4MJIzWrg6rq26JQg=;
+	s=arc-20240116; t=1706548374; c=relaxed/simple;
+	bh=bu6ITFeX4H3xnn8T4N9IfQ1WlQczDz+JxDyvEH+Rslk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EENpNlOr0OYJN9am4bi2tVFX/1ndDYiCiOF1JyqABGi/0xJ7cn2UDLHcM60OCRlG7plHitEJghbOL4ViKdSX15Didz/OlzZiFlKLPO97AuVmFHjPtJ58S9rkWBIcFEKXBrIVIxlpuWe4/R+TQ1xQoL++iPduiLI8u4pdNKUIG9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fkllayoF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4CAC433F1;
-	Mon, 29 Jan 2024 17:14:14 +0000 (UTC)
+	 MIME-Version; b=csKIlvIDBZcs9Q5s4PDbBFYg0z4pHpEiRnkO8/5pX+YyMhnW3UYH2yNMSIuhdsmi32yxppyZPISz7hEYMSkVNvRtvc61Doto8pVQnl3b+oyeIYn69K6YdqRqQ1V7Dy6HHSBpZCK8Ss8KM5a397YTmalC2yhl9MAvWcRU7/Fu5xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZiyJuN2y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B35E3C43390;
+	Mon, 29 Jan 2024 17:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706548454;
-	bh=RXj9HKVda3MnFL631bmhL2vw8wi4MJIzWrg6rq26JQg=;
+	s=korg; t=1706548373;
+	bh=bu6ITFeX4H3xnn8T4N9IfQ1WlQczDz+JxDyvEH+Rslk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fkllayoFUPHPKqaXSaYUARn6h0TbK0I1kChjdgfBEUMtKU9fP4pIa7yh/gLuxc01C
-	 adw2m0h+6Js78UQ6rqmdnFOKv1nvx7ImSGsazO7cab8N90sml8W2Vei8piBFrnVua+
-	 lVRP1+tzOpTaH6+u9pdq0D3UoJewAOfKUWNbRl4s=
+	b=ZiyJuN2ytXgWaCOGSRYCD8OSZDpmySgFkMlluDEMR4qKmhtiDV+GMwe2fHtDGYc8c
+	 irzT6MRX7BdhnZsGVv9uy0hy98eFX03wb05P68rBlHBa+kvVHfMkhcoBg1qXg8dDNj
+	 mJZhYked3ksCZi3ddRjpNuT5ef3JRgbeZ9MVWFyI=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,12 +49,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-block@vger.kernel.org,
 	nbd@other.debian.org,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH 6.6 065/331] nbd: always initialize struct msghdr completely
-Date: Mon, 29 Jan 2024 09:02:09 -0800
-Message-ID: <20240129170016.834406710@linuxfoundation.org>
+Subject: [PATCH 6.1 114/185] nbd: always initialize struct msghdr completely
+Date: Mon, 29 Jan 2024 09:05:14 -0800
+Message-ID: <20240129170002.256421367@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240129170014.969142961@linuxfoundation.org>
-References: <20240129170014.969142961@linuxfoundation.org>
+In-Reply-To: <20240129165958.589924174@linuxfoundation.org>
+References: <20240129165958.589924174@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -66,7 +66,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+6.1-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -122,19 +122,19 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/block/nbd.c
 +++ b/drivers/block/nbd.c
-@@ -510,7 +510,7 @@ static int __sock_xmit(struct nbd_device
+@@ -494,7 +494,7 @@ static int __sock_xmit(struct nbd_device
  		       struct iov_iter *iter, int msg_flags, int *sent)
  {
  	int result;
 -	struct msghdr msg;
-+	struct msghdr msg = {} ;
++	struct msghdr msg = { };
  	unsigned int noreclaim_flag;
  
  	if (unlikely(!sock)) {
-@@ -526,10 +526,6 @@ static int __sock_xmit(struct nbd_device
+@@ -509,10 +509,6 @@ static int __sock_xmit(struct nbd_device
+ 	noreclaim_flag = memalloc_noreclaim_save();
  	do {
  		sock->sk->sk_allocation = GFP_NOIO | __GFP_MEMALLOC;
- 		sock->sk->sk_use_task_frag = false;
 -		msg.msg_name = NULL;
 -		msg.msg_namelen = 0;
 -		msg.msg_control = NULL;
