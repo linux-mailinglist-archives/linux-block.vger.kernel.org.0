@@ -1,43 +1,43 @@
-Return-Path: <linux-block+bounces-2844-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2845-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9DC5848178
-	for <lists+linux-block@lfdr.de>; Sat,  3 Feb 2024 05:19:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5247A8482D8
+	for <lists+linux-block@lfdr.de>; Sat,  3 Feb 2024 05:28:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95F6F2821BE
-	for <lists+linux-block@lfdr.de>; Sat,  3 Feb 2024 04:19:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84B4D1C2412C
+	for <lists+linux-block@lfdr.de>; Sat,  3 Feb 2024 04:28:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F51211725;
-	Sat,  3 Feb 2024 04:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06EDA1C68C;
+	Sat,  3 Feb 2024 04:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LqB/FEZ5"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XBT+du0D"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553AF11738;
-	Sat,  3 Feb 2024 04:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F061C69E;
+	Sat,  3 Feb 2024 04:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706933564; cv=none; b=sYmma/C6v1fLYAG5OL11EpTdoaSj1Rc9Vf38n9z85E5y1GJue1ju2VFt2YuAImqPtkC7pxD3Wv96BuBgpoq5CT1HhaS8QToI8AQGFsoSk/STkRi/n17WgYs/p/FGbPgTbgK+2Iu2X+azkF8fAkjASCogURauS9bwkx3YNOnlXfQ=
+	t=1706933821; cv=none; b=iYyxc8yV6xj3w51pjhi8YPtf9FXgrxwV1sLu4ScWjxMX6Evsg5B4hqvzIwEDIU4uSbUJKQ0FLU2JbHo0nKWFOzJOFh7BY2isSdEog5tX46r4HJkCP4+eODVXP9m2l9u3MFfwpgw660vYmI3BieYniAUER1Uhv55XiPB/OT6uuWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706933564; c=relaxed/simple;
-	bh=mZUwljEJkfnLFnf+VU+JHp0fV3eoEhPLnE7DDYAIuXw=;
+	s=arc-20240116; t=1706933821; c=relaxed/simple;
+	bh=7PuSNmADNg96fw5G3/WV5PYwy2T/FPeDQubWQMtD5f8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C2VkpK57RQfxlbESZ8W5GGJ+v7Q/GxO4ekxMcVsENTXaY36lL32D+JEBhsyeLAgaecPHppGHqkYQfYcYbR33Lv1XnDi5ttW9jdPzkxwRj+LDUCpCVifNpnSZRgcVRR9oAVcxvnWkEZLNU4lkD6/8eGtvcpPqzANu0YOjG+b1Dmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LqB/FEZ5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F343C43394;
-	Sat,  3 Feb 2024 04:12:44 +0000 (UTC)
+	 MIME-Version; b=LYu8amroalAw/W/Na69PRoBjemGAa6PA5oi7QmwtwAHW+WrC7v/X6Igf4teLWNOwXapdQnT1XZxnlp10drpxrL0dzZiiLDm5BkYrLp1l17lf6ElEaVKheRgJP/GpRvSCQyDQeopUV7vAFm6QT/WnLCzlD4qiApTtxC4sq+55aR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XBT+du0D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99C5FC43390;
+	Sat,  3 Feb 2024 04:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706933564;
-	bh=mZUwljEJkfnLFnf+VU+JHp0fV3eoEhPLnE7DDYAIuXw=;
+	s=korg; t=1706933821;
+	bh=7PuSNmADNg96fw5G3/WV5PYwy2T/FPeDQubWQMtD5f8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LqB/FEZ5TfZ28XJ82+5UUgKBQzYp/a9RhjWGmU5lYCz7zRM/hvzovNYkwsuQP68NH
-	 uRA/25e49Ok4HM9rRIQcyTQTQajU2C+4rLVbX4WNgu6le5M3oqiJNzSZReueB6vj2V
-	 /qB7yp7cCRSALQi9eN7c7e4BQ2pgncUHY8gp1Uks=
+	b=XBT+du0Ds2NqyaFDDzpTn66+75k85F7Dme5M5OxTlXfW5CZRWYVWvtz2NbaOBEcvf
+	 M2euSdAR173Tm7Gb4toLtPfHAZbxgg1G551gli6bGpiAsdLhdimlDO7f9RvULb0YQT
+	 6bfJCnRBF9iBeXW6VtDgsTkl5nC8gIXrYkpepU68=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,12 +50,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Kees Cook <keescook@chromium.org>,
 	Guoqing Jiang <guoqing.jiang@linux.dev>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 118/322] block/rnbd-srv: Check for unlikely string overflow
-Date: Fri,  2 Feb 2024 20:03:35 -0800
-Message-ID: <20240203035402.960991083@linuxfoundation.org>
+Subject: [PATCH 6.7 117/353] block/rnbd-srv: Check for unlikely string overflow
+Date: Fri,  2 Feb 2024 20:03:55 -0800
+Message-ID: <20240203035407.451512377@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240203035359.041730947@linuxfoundation.org>
-References: <20240203035359.041730947@linuxfoundation.org>
+In-Reply-To: <20240203035403.657508530@linuxfoundation.org>
+References: <20240203035403.657508530@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+6.7-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -111,7 +111,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index c186df0ec641..b67e39a34010 100644
+index 65de51f3dfd9..ab78eab97d98 100644
 --- a/drivers/block/rnbd/rnbd-srv.c
 +++ b/drivers/block/rnbd/rnbd-srv.c
 @@ -585,6 +585,7 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
