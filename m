@@ -1,100 +1,71 @@
-Return-Path: <linux-block+bounces-2920-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-2936-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10F0B84A1F7
-	for <lists+linux-block@lfdr.de>; Mon,  5 Feb 2024 19:18:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CC0D84A51B
+	for <lists+linux-block@lfdr.de>; Mon,  5 Feb 2024 21:10:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 439F01C22585
-	for <lists+linux-block@lfdr.de>; Mon,  5 Feb 2024 18:18:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57734287066
+	for <lists+linux-block@lfdr.de>; Mon,  5 Feb 2024 20:10:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E855947F70;
-	Mon,  5 Feb 2024 18:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F6EC173637;
+	Mon,  5 Feb 2024 19:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="snqSwbkF"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9104176E;
-	Mon,  5 Feb 2024 18:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD521726D5;
+	Mon,  5 Feb 2024 19:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707157129; cv=none; b=XCXEffSk1elZ0J3BY/GBhjv979YqnHJd2BOLafLUgDULcG2+PsdWIhVFiql1e6nLDd1SnRMKyNf3gUAdJEV14xmCq69QwDEDmxeFTjz8fDTSwCo5cT2wQKt9wZ1t1Zq/aEvqWDaJIrJwcndYd8jWKfRNcd466yeF9Rg4RQwNLh8=
+	t=1707159848; cv=none; b=NLTO/GjJOmhIlwY5BrBMZGe/hjBvmKTm1r/3s6z1DVK6xegy8kHV3QLS+JyOtxLOiElVrrJCCpW8am+oK7KXQuVjOdAAc4lSqH7oX4jdFzF6Y8D4rWdtI6xZtiudmfZRz0EvV21/S8MosLeKFp23WUJO39A8Sk2yw0Plz4FPl8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707157129; c=relaxed/simple;
-	bh=UbW9pb+p4NKUxQEZa6hHc+7CxIITbDL/dB4xo5xLR8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i9Sxmtws5xXMIlI+VPR4m6dFRO4ZkKQRs3s9YfgepwN1kj+QmCdFZm0Y642v7Cvml+9Xm6SqXOPUF6zDQ9a/oMT23C57+vZPLqoRScUUENwcuioV31IpHLPuIN2BkGOsY89xSx6LcCTyOYxRXp6zXLCEwh87uN6J6xQnPGXSZIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d95d67ff45so30666865ad.2;
-        Mon, 05 Feb 2024 10:18:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707157128; x=1707761928;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qp3N1ga5ugtPxim9zjENr195h2Ajx0b+DBXqYAvDBaM=;
-        b=vMGqzT41fWFCw2EL0dj+bTodTPO+3+VCZGFJqCrEBtx65RqoCzott3CPswl9q9ZRhw
-         tGYGj+YkJ5GjIK3O8RfpKqRHOECav0zv2MxQ+492XR9VzNRjnZZ/N3r1t7mII22xsVZ6
-         67V2LJxgTQYgrHVQDnDBpWk+mwmbkwgMue5XjkZ+f/MA8537GqEm4ypSjWGynbidezSk
-         0+Oh+LU/XEzgZQsTNdVg5oN+ouBS2JDm5yspNrfwaBzIBEw8twYeMa2IeYqfRA9hnTrY
-         AxV0CLf3Irt57y6/SBwvoV9hcPXT9oRloytfOlwqm9Zq/Yl0nPYj2117GHhE8bVjMmXN
-         GjpQ==
-X-Gm-Message-State: AOJu0YwdOQPeXOBCrh/xdZcwwHFYC1Tr4UyisVD8MTK5mzNnOcWaFKun
-	4ENm+1GzTiMlVXsa7Llamy2q1jgBnctkToVixekzqhbWjPYRU5CC
-X-Google-Smtp-Source: AGHT+IGl8GEKozCjvP6yuZlfvwDbt6MOzVemHnmNUbn15UHQP46qxmaWzfaPHuRpBzw2l9VWvltRMg==
-X-Received: by 2002:a17:903:487:b0:1d9:af60:a7e3 with SMTP id jj7-20020a170903048700b001d9af60a7e3mr300964plb.27.1707157127732;
-        Mon, 05 Feb 2024 10:18:47 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUxGIoMm5rhsniEwj3nD9//9C0izEWLs48WYS2Si2Ojdodx9VfSnebECLeltzmQ34fEIt/0e3Zecu1096/AJpbfn+WiWUbNhI8/SY8zsMDp6Obkke2+aB1a6wFsd2VPAkyucvOlfRZ3xVUNa1JbeWTrIpKNTMH9adq4RLphaOgh+3dqej3EtT0W8j4cL6l/ziTZp88WOKLm/uwwAuUA4202GrSji0yRalrdyE3wL3GCa+nfEcJVH/+3tbkeF/rHqtYq0g==
-Received: from ?IPV6:2620:0:1000:8411:be2a:6ac0:4203:7316? ([2620:0:1000:8411:be2a:6ac0:4203:7316])
-        by smtp.gmail.com with ESMTPSA id ja12-20020a170902efcc00b001d901c2087esm158975plb.302.2024.02.05.10.18.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 10:18:47 -0800 (PST)
-Message-ID: <fc7ab626-58ed-49bd-b692-4875d17c6556@acm.org>
-Date: Mon, 5 Feb 2024 10:18:46 -0800
+	s=arc-20240116; t=1707159848; c=relaxed/simple;
+	bh=lE5hwhPwL9fmh995uPn3W/2zYsVXs5rlxJNIrnK0Bsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kMxaETT4e30Zs7Qvo3j5lIg6ryZQIyC5NWDjauzjw1uSNIOZ6oeAM7XkQLclL68ydUz4oPq7dvN4zfD2vPy9+eP+cVx5mP3nCU9LHSld21gqVA1Z7fLyYpSXxnF+DKN8p8SFYvYajdhhBYkGuKJ719ttksTG5uaz0bluLvlzMCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=snqSwbkF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34DFDC43143;
+	Mon,  5 Feb 2024 19:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707159848;
+	bh=lE5hwhPwL9fmh995uPn3W/2zYsVXs5rlxJNIrnK0Bsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=snqSwbkFoG3IE3u5R6ZuZGjsCrya9ixTszmxievLUy+kdBOINouw5OvP7Wz+Q/rnM
+	 YdCbTuyg+xEoJmoJWdRyeO3vdBwcLKtktVgwvhOlTdlJmc7jdDn1/zeqJR5FwPti3o
+	 8ZazDKHCChx7m9ag6jiAQnSkA2LLx3B6UATvbJ8k=
+Date: Mon, 5 Feb 2024 04:51:13 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Ilya Dryomov <idryomov@gmail.com>,
+	Dongsheng Yang <dongsheng.yang@easystack.cn>,
+	Jens Axboe <axboe@kernel.dk>, ceph-devel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] block: rbd: make rbd_bus_type const
+Message-ID: <2024020509-splatter-unframed-4960@gregkh>
+References: <20240204-bus_cleanup-block-v1-1-fc77afd8d7cc@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/26] Zone write plugging
-Content-Language: en-US
-To: Damien Le Moal <dlemoal@kernel.org>, linux-block@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
- "Martin K . Petersen" <martin.petersen@oracle.com>,
- dm-devel@lists.linux.dev, Mike Snitzer <snitzer@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>
-References: <20240202073104.2418230-1-dlemoal@kernel.org>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240202073104.2418230-1-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240204-bus_cleanup-block-v1-1-fc77afd8d7cc@marliere.net>
 
-On 2/1/24 23:30, Damien Le Moal wrote:
->   - Zone write plugging operates on BIOs instead of requests. Plugged
->     BIOs waiting for execution thus do not hold scheduling tags and thus
->     do not prevent other BIOs from being submitted to the device (reads
->     or writes to other zones). Depending on the workload, this can
->     significantly improve the device use and the performance.
+On Sun, Feb 04, 2024 at 12:31:42PM -0300, Ricardo B. Marliere wrote:
+> Now that the driver core can properly handle constant struct bus_type,
+> move the rbd_bus_type variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-Deep queues may introduce performance problems. In Android we had to
-restrict the number of pending writes to the device queue depth because
-otherwise read latency is too high (e.g. to start the camera app).
-
-I'm not convinced that queuing zoned write bios is a better approach than
-queuing zoned write requests.
-
-Are there numbers available about the performance differences (bandwidth
-and latency) between plugging zoned write bios and zoned write plugging
-requests?
-
-Thanks,
-
-Bart.
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
