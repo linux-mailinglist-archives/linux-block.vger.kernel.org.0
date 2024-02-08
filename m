@@ -1,74 +1,74 @@
-Return-Path: <linux-block+bounces-3050-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3043-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 752F684E546
-	for <lists+linux-block@lfdr.de>; Thu,  8 Feb 2024 17:44:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E002A84E537
+	for <lists+linux-block@lfdr.de>; Thu,  8 Feb 2024 17:43:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 312CE285B78
-	for <lists+linux-block@lfdr.de>; Thu,  8 Feb 2024 16:44:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9500228C8ED
+	for <lists+linux-block@lfdr.de>; Thu,  8 Feb 2024 16:43:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5399F84A3A;
-	Thu,  8 Feb 2024 16:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 301C582D65;
+	Thu,  8 Feb 2024 16:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NvpsmBnh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tBaG5wiM"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA76A823A1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC8C823AC;
 	Thu,  8 Feb 2024 16:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707410582; cv=none; b=Ctpv9sSlZP5R+bMhxdVcZ89AzZZisufgptt7n6Wrd9UWSh22bz2LEzv3FR91N48NAA8HjHo2FVUTfpkMBPJeXOQbkti3r7OpUdRR31/z2jjan9IAitkktOrAVFUSk8EyBOLuQQo4PZGrt5dss+BavQvON3u2V+nKGB72fId64tk=
+	t=1707410581; cv=none; b=taXt9z9QrofJjAOQ2NTZW8qgSrEVywrdekrq31bdwrF8j3xBu2dneS5U8xQmZKqwlUH2+va0TTQY3poZS+tlM98WfuSzv0DDnlMPy3tdZ9UOMPMS2XBkrIbV/S2eiqveXg6usqqDcwykREHD55c8PbC5CfFvQYU6oiTdI2dLkDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707410582; c=relaxed/simple;
-	bh=JhQ1CAKuGeIZAseISCEICwNq8ci19AcF5apenvrbm2o=;
+	s=arc-20240116; t=1707410581; c=relaxed/simple;
+	bh=DFdR+/VQPFAHdnXSYbZpZDS2mahMbZI+V3bqR+tt4R0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GW/yN3l7QbWNKNRM43NEQMntxqF+u+xRet+e+SiK/grwJ3Ahu02rW59J7FA+qwGtbEywu0tLGUef92uFXeEhk26nRzO7kGlacyoensm6GHR/lYGj3z5zuRIsyMngYAZ2NnFof5M+9yz4AzioXsT8p58uHiKgD+G99niane9YThs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NvpsmBnh; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version:Content-Type; b=cbjvUUaCcNez/qRL/tkSbwYV5Jdczhq7NTSuOckV3K7oCnffjP+9Uyp96Brc3rQTLLhhxfc7VGeSZYb5xf5h3DxdxwY7Czg8IJdqt6oLv7QaBn8n8YSgQVPXZ/d/ZxHZ18Pa40erpAmxB5wjpVcScLN2tEApLckTABB1jvjQ5tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tBaG5wiM; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 418GZ27d020568;
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 418GSBTe019461;
 	Thu, 8 Feb 2024 16:42:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=HG9gg23yhBilE2sXuIaL4SgGDriy2ZpP2zl4tLDC+hs=;
- b=NvpsmBnhpm2IYZfUe38JqirzZtPB7hEgO1Kn8ZbtfNq6Z5kv4RpZ01aiVKmKMybo0BwW
- gnhoAInp+pmTCUXOLEiESLmgY/c4udd8qkpbqmnJz+yUPSHmGxIqdiXeA1Fc+i764oBq
- vo//1ZOILn0u4GA9vBZBKeVvLVXKbtWiRKzMjgh4EC+J77UJcSMmpU9uHJ0o+FnzHWMX
- XAtA28dKD5Q3SRh/4FSFO5pUo+lC3KkxXDm3aCaGW4kvI1R3MlXHndf/WPGqff6fk9DF
- 1cQ+f3bWuviRPTQfryq1CovS/3hDqKfeIySgPuaJowp4mUGKt4TOURfNmDSj1UdDL3eJ QQ== 
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w509qcf4c-1
+ bh=VL8mdpWDBLLmfFcJ+yEvTiNiMOGsAPvtCFnyASAyHb8=;
+ b=tBaG5wiMe/N5vtx5o0vqqG+IU6yjB7kjc6QU+EhnMJT0MDsibLLZBVKVxBW1S+eXHlCr
+ kg1buYxOTgrR+wIp+wITioqobYAc6scFUGu3bB1YM7iPW5DaTlLb04XZXYMBPAJ3SbKy
+ nj1Xk3w6/0TvwNdW8rjVnxWqRaekEo3Tp3xhfmjAlq6m/RgzUhBEl0pADwUy+1SUPVuq
+ htKP5yZ9jYSy52gKzjG1Bt6xE6RFyUINujjSRPDxHohYCcWfCtpXqlUwOinBnQ8Euhaq
+ 7oIOfenFdvxkS8/kd/hcYSssq3LiegiY8NsOQ6gxHqoIjz5EqUnAVpi5ofW+cVz05/mV 1A== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w4yqg5vh1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 16:42:55 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 418EvxnT008752;
+	Thu, 08 Feb 2024 16:42:54 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 418G97ci008623;
 	Thu, 8 Feb 2024 16:42:54 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w206ywsyx-1
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w221kd9ja-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 16:42:53 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 418GgmW841484770
+	Thu, 08 Feb 2024 16:42:54 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 418Ggmvi20382286
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Thu, 8 Feb 2024 16:42:48 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8D4F72004B;
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A15E920049;
 	Thu,  8 Feb 2024 16:42:48 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C4BF20043;
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8BCEB2004D;
 	Thu,  8 Feb 2024 16:42:48 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
 	Thu,  8 Feb 2024 16:42:48 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-	id 41ED4E04F6; Thu,  8 Feb 2024 17:42:48 +0100 (CET)
+	id 446C3E1506; Thu,  8 Feb 2024 17:42:48 +0100 (CET)
 From: Stefan Haberland <sth@linux.ibm.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
@@ -76,9 +76,9 @@ Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Miroslav Franc <mfranc@suse.cz>
-Subject: [PATCH RESEND 02/11] s390/dasd: Use sysfs_emit() over sprintf()
-Date: Thu,  8 Feb 2024 17:42:41 +0100
-Message-Id: <20240208164248.540985-3-sth@linux.ibm.com>
+Subject: [PATCH RESEND 03/11] s390/dasd: Remove unnecessary errorstring generation
+Date: Thu,  8 Feb 2024 17:42:42 +0100
+Message-Id: <20240208164248.540985-4-sth@linux.ibm.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240208164248.540985-1-sth@linux.ibm.com>
 References: <20240208164248.540985-1-sth@linux.ibm.com>
@@ -91,105 +91,159 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ZKWD1RW0hn3hZ4hYv8JlFDfH6JiO9a-M
-X-Proofpoint-GUID: ZKWD1RW0hn3hZ4hYv8JlFDfH6JiO9a-M
+X-Proofpoint-GUID: 6Bk3KoaascicRJDQ7_28hB0PablbXgNq
+X-Proofpoint-ORIG-GUID: 6Bk3KoaascicRJDQ7_28hB0PablbXgNq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-08_07,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 suspectscore=0 spamscore=0
- impostorscore=0 mlxlogscore=986 malwarescore=0 bulkscore=0 mlxscore=0
- phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 phishscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311290000 definitions=main-2402080088
 
 From: Jan Höppner <hoeppner@linux.ibm.com>
 
-sysfs_emit() should be used in show() functions. There are still a
-couple of functions that use sprintf().
-Replace outstanding occurrences of sprintf() in all show() functions
-with sysfs_emit().
+In quite a few cases an errorstring is generated using snprintf() before
+it's passed to dev_err(). This indirection is unnecessary and all
+information can simply be passed directly to dev_err() instead.
+The errrorstring and ERRORLENGTH definitions are removed entirely.
+
+While at it, rephrase the error messages to provide more context where
+possible. Also, fix a few incorrectly used format specifier (e.g. %x02
+-> %02x) in those messages.
 
 Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
 Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 ---
- drivers/s390/block/dasd_devmap.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/s390/block/dasd.c          | 26 ++++++--------------------
+ drivers/s390/block/dasd_3990_erp.c |  8 ++------
+ drivers/s390/block/dasd_int.h      |  3 ---
+ 3 files changed, 8 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd_devmap.c
-index 6297dfe6bc67..8a01afb5e3ce 100644
---- a/drivers/s390/block/dasd_devmap.c
-+++ b/drivers/s390/block/dasd_devmap.c
-@@ -1114,7 +1114,7 @@ dasd_use_diag_show(struct device *dev, struct device_attribute *attr, char *buf)
- 		use_diag = (devmap->features & DASD_FEATURE_USEDIAG) != 0;
- 	else
- 		use_diag = (DASD_FEATURE_DEFAULT & DASD_FEATURE_USEDIAG) != 0;
--	return sprintf(buf, use_diag ? "1\n" : "0\n");
-+	return sysfs_emit(buf, use_diag ? "1\n" : "0\n");
- }
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index 7327e81352e9..a9aa2db3f4ab 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -1301,7 +1301,6 @@ int dasd_term_IO(struct dasd_ccw_req *cqr)
+ {
+ 	struct dasd_device *device;
+ 	int retries, rc;
+-	char errorstring[ERRORLENGTH];
  
- static ssize_t
-@@ -1163,7 +1163,7 @@ dasd_use_raw_show(struct device *dev, struct device_attribute *attr, char *buf)
- 		use_raw = (devmap->features & DASD_FEATURE_USERAW) != 0;
- 	else
- 		use_raw = (DASD_FEATURE_DEFAULT & DASD_FEATURE_USERAW) != 0;
--	return sprintf(buf, use_raw ? "1\n" : "0\n");
-+	return sysfs_emit(buf, use_raw ? "1\n" : "0\n");
- }
- 
- static ssize_t
-@@ -1259,7 +1259,7 @@ dasd_access_show(struct device *dev, struct device_attribute *attr,
- 	if (count < 0)
- 		return count;
- 
--	return sprintf(buf, "%d\n", count);
-+	return sysfs_emit(buf, "%d\n", count);
- }
- 
- static DEVICE_ATTR(host_access_count, 0444, dasd_access_show, NULL);
-@@ -1338,19 +1338,19 @@ static ssize_t dasd_alias_show(struct device *dev,
- 
- 	device = dasd_device_from_cdev(to_ccwdev(dev));
- 	if (IS_ERR(device))
--		return sprintf(buf, "0\n");
-+		return sysfs_emit(buf, "0\n");
- 
- 	if (device->discipline && device->discipline->get_uid &&
- 	    !device->discipline->get_uid(device, &uid)) {
- 		if (uid.type == UA_BASE_PAV_ALIAS ||
- 		    uid.type == UA_HYPER_PAV_ALIAS) {
- 			dasd_put_device(device);
--			return sprintf(buf, "1\n");
-+			return sysfs_emit(buf, "1\n");
+ 	/* Check the cqr */
+ 	rc = dasd_check_cqr(cqr);
+@@ -1340,10 +1339,8 @@ int dasd_term_IO(struct dasd_ccw_req *cqr)
+ 			rc = 0;
+ 			break;
+ 		default:
+-			/* internal error 10 - unknown rc*/
+-			snprintf(errorstring, ERRORLENGTH, "10 %d", rc);
+-			dev_err(&device->cdev->dev, "An error occurred in the "
+-				"DASD device driver, reason=%s\n", errorstring);
++			dev_err(&device->cdev->dev,
++				"Unexpected error during request termination %d\n", rc);
+ 			BUG();
+ 			break;
  		}
+@@ -1362,7 +1359,6 @@ int dasd_start_IO(struct dasd_ccw_req *cqr)
+ {
+ 	struct dasd_device *device;
+ 	int rc;
+-	char errorstring[ERRORLENGTH];
+ 
+ 	/* Check the cqr */
+ 	rc = dasd_check_cqr(cqr);
+@@ -1382,10 +1378,8 @@ int dasd_start_IO(struct dasd_ccw_req *cqr)
+ 		return -EPERM;
  	}
- 	dasd_put_device(device);
+ 	if (cqr->retries < 0) {
+-		/* internal error 14 - start_IO run out of retries */
+-		sprintf(errorstring, "14 %p", cqr);
+-		dev_err(&device->cdev->dev, "An error occurred in the DASD "
+-			"device driver, reason=%s\n", errorstring);
++		dev_err(&device->cdev->dev,
++			"Start I/O ran out of retries %p\n", cqr);
+ 		cqr->status = DASD_CQR_ERROR;
+ 		return -EIO;
+ 	}
+@@ -1463,11 +1457,8 @@ int dasd_start_IO(struct dasd_ccw_req *cqr)
+ 			      "not accessible");
+ 		break;
+ 	default:
+-		/* internal error 11 - unknown rc */
+-		snprintf(errorstring, ERRORLENGTH, "11 %d", rc);
+ 		dev_err(&device->cdev->dev,
+-			"An error occurred in the DASD device driver, "
+-			"reason=%s\n", errorstring);
++			"Unexpected error during request start %d", rc);
+ 		BUG();
+ 		break;
+ 	}
+@@ -1904,8 +1895,6 @@ static void __dasd_device_process_ccw_queue(struct dasd_device *device,
+ static void __dasd_process_cqr(struct dasd_device *device,
+ 			       struct dasd_ccw_req *cqr)
+ {
+-	char errorstring[ERRORLENGTH];
+-
+ 	switch (cqr->status) {
+ 	case DASD_CQR_SUCCESS:
+ 		cqr->status = DASD_CQR_DONE;
+@@ -1917,11 +1906,8 @@ static void __dasd_process_cqr(struct dasd_device *device,
+ 		cqr->status = DASD_CQR_TERMINATED;
+ 		break;
+ 	default:
+-		/* internal error 12 - wrong cqr status*/
+-		snprintf(errorstring, ERRORLENGTH, "12 %p %x02", cqr, cqr->status);
+ 		dev_err(&device->cdev->dev,
+-			"An error occurred in the DASD device driver, "
+-			"reason=%s\n", errorstring);
++			"Unexpected CQR status %p %02x", cqr, cqr->status);
+ 		BUG();
+ 	}
+ 	if (cqr->callback)
+diff --git a/drivers/s390/block/dasd_3990_erp.c b/drivers/s390/block/dasd_3990_erp.c
+index 89957bb7244d..0705736acf09 100644
+--- a/drivers/s390/block/dasd_3990_erp.c
++++ b/drivers/s390/block/dasd_3990_erp.c
+@@ -398,7 +398,6 @@ dasd_3990_handle_env_data(struct dasd_ccw_req * erp, char *sense)
+ 	struct dasd_device *device = erp->startdev;
+ 	char msg_format = (sense[7] & 0xF0);
+ 	char msg_no = (sense[7] & 0x0F);
+-	char errorstring[ERRORLENGTH];
  
--	return sprintf(buf, "0\n");
-+	return sysfs_emit(buf, "0\n");
- }
+ 	switch (msg_format) {
+ 	case 0x00:		/* Format 0 - Program or System Checks */
+@@ -1004,12 +1003,9 @@ dasd_3990_handle_env_data(struct dasd_ccw_req * erp, char *sense)
+ 		}
+ 		break;
  
- static DEVICE_ATTR(alias, 0444, dasd_alias_show, NULL);
-@@ -1856,7 +1856,7 @@ static ssize_t dasd_pm_show(struct device *dev,
+-	default:	/* unknown message format - should not happen
+-			   internal error 03 - unknown message format */
+-		snprintf(errorstring, ERRORLENGTH, "03 %x02", msg_format);
++	default:
+ 		dev_err(&device->cdev->dev,
+-			 "An error occurred in the DASD device driver, "
+-			 "reason=%s\n", errorstring);
++			"Unknown message format %02x", msg_format);
+ 		break;
+ 	}			/* end switch message format */
  
- 	device = dasd_device_from_cdev(to_ccwdev(dev));
- 	if (IS_ERR(device))
--		return sprintf(buf, "0\n");
-+		return sysfs_emit(buf, "0\n");
+diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
+index 1b1b8a41c4d4..71d88e931090 100644
+--- a/drivers/s390/block/dasd_int.h
++++ b/drivers/s390/block/dasd_int.h
+@@ -113,9 +113,6 @@ do { \
+ 			    __dev_id.ssid, __dev_id.devno, d_data);	\
+ } while (0)
  
- 	opm = dasd_path_get_opm(device);
- 	nppm = dasd_path_get_nppm(device);
-@@ -1866,8 +1866,8 @@ static ssize_t dasd_pm_show(struct device *dev,
- 	ifccpm = dasd_path_get_ifccpm(device);
- 	dasd_put_device(device);
- 
--	return sprintf(buf, "%02x %02x %02x %02x %02x %02x\n", opm, nppm,
--		       cablepm, cuirpm, hpfpm, ifccpm);
-+	return sysfs_emit(buf, "%02x %02x %02x %02x %02x %02x\n", opm, nppm,
-+			  cablepm, cuirpm, hpfpm, ifccpm);
- }
- 
- static DEVICE_ATTR(path_masks, 0444, dasd_pm_show, NULL);
+-/* limit size for an errorstring */
+-#define ERRORLENGTH 30
+-
+ /* definition of dbf debug levels */
+ #define	DBF_EMERG	0	/* system is unusable			*/
+ #define	DBF_ALERT	1	/* action must be taken immediately	*/
 -- 
 2.40.1
 
