@@ -1,150 +1,118 @@
-Return-Path: <linux-block+bounces-3078-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3080-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7243584F55B
-	for <lists+linux-block@lfdr.de>; Fri,  9 Feb 2024 13:45:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A8EE84F7AD
+	for <lists+linux-block@lfdr.de>; Fri,  9 Feb 2024 15:38:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 222D72856B2
-	for <lists+linux-block@lfdr.de>; Fri,  9 Feb 2024 12:45:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB1682816C7
+	for <lists+linux-block@lfdr.de>; Fri,  9 Feb 2024 14:38:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0049E374D3;
-	Fri,  9 Feb 2024 12:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2C038DF7;
+	Fri,  9 Feb 2024 14:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TZhn3Obu"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="lDGx6p9G"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF10374CC;
-	Fri,  9 Feb 2024 12:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6074666B4D
+	for <linux-block@vger.kernel.org>; Fri,  9 Feb 2024 14:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707482733; cv=none; b=U3OFIPXPojor6VQDMgj8PndsjWJJ27btkNoKJCWKKpBIVFGipOTwwXh5EEgB9VIfmlBzaxf6PTU+bIpNMmRw1AxJnYfx/5/eUZG1Vhbd/jlBgkqn3VzLLjhgXzK4WUDtQ2R86Hu/EC9tZKf1VLisocfxRzsXVQOTXUMUN9MXjaA=
+	t=1707489214; cv=none; b=XsSpnsWTg2ReR6V9IfQKhX4f7Zrcm+d5ikiKcT9WTyb9dtEOLsZNcHb7/YR4+r/XuXT2PqapJoAWIOrlSbzfca8p6cGC8S6yfD4OZTFgniM4n2fVhWx3p1PhjfpXi7Fazjecff4jB9Vw5D4n162KD+3X6b6qt717gxcUykLS4fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707482733; c=relaxed/simple;
-	bh=elXA0Ksm5mb4jnP65PdA3s52EPbUsLR2oOSQIEBBQtQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cr1cfr12aWpp+di/uEtGkD+zuEcGsJykuKRiqzOoZmjFTYI/33jOzYTFzq7POSzocJ8Yda6IVP4oy+kMjCnzNGE4lXNr2L9gPI5s2QJvILrVhw3COX9jZowvQbdRAv5iauUv3UVjD4k4nbRCkHNirXeP/i1rkFUnnd+RSVuMteA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TZhn3Obu; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 419Cc3B5023296;
-	Fri, 9 Feb 2024 12:45:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=5+EdPaMIjToTH4qCNU5WJSqW5nniVGk1xMnn4EPfGD8=;
- b=TZhn3Obuo0VC0dAlk0rIZHnbr9RCGbyb1pp+Fus2aYbV78giphOjmoe/Gnhge24iarSS
- 5WTM7qWDjRPr7gH1Tx+N7X+tzVgQnYHy7/eoVWJfcn7Dz2UKxdML/SEV/8KlKygZhfbT
- hijwsgvEBCOct2GTsNeomSo5goB5xBwima54mS64HOI9G0VsFb2M9inmovxknadLpe5r
- RPOjQFsSZS4gvfH4ITQ7RHl2ahAZnMa4jiO7wW3EhToFTtDzsOIsWcbGEjdCE7yJdrtF
- 8XjvyAENyix1tzwilAO1oAsgzqrx5P4aYrQ/MWVat21s95IbmayW7WTZ/E76WO8ouRSx cQ== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w5m7jr691-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Feb 2024 12:45:28 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 419C0K2b008527;
-	Fri, 9 Feb 2024 12:45:28 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w221kjrq6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Feb 2024 12:45:28 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 419CjNrC15532568
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 9 Feb 2024 12:45:23 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EB08A20043;
-	Fri,  9 Feb 2024 12:45:22 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DBC6720040;
-	Fri,  9 Feb 2024 12:45:22 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  9 Feb 2024 12:45:22 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-	id A02CFE15C0; Fri,  9 Feb 2024 13:45:22 +0100 (CET)
-From: Stefan Haberland <sth@linux.ibm.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Miroslav Franc <mfranc@suse.cz>
-Subject: [PATCH RESEND 2/2] s390/dasd: fix double module refcount decrement
-Date: Fri,  9 Feb 2024 13:45:22 +0100
-Message-Id: <20240209124522.3697827-3-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1707489214; c=relaxed/simple;
+	bh=SjpiHYMiN7o4SN7WUyGlvg2LmukCSiKd6iLytN3gO8c=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QfvimcWyairIFmLKUOB5Dvc74bz4EvZIqfDnSkHeShXMsZDXBgBVqfD8ta4eV/DctdaGzArxKqzbXTGKEAx66NOzRJX1Qt/OAH6Xc5XkVkDJKAsx1AHuz70jnuokDDO0ntMoQrpHkPHjfnHhDtjwhEuBJ5/Hfo1J7qBwWIi5XIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=lDGx6p9G; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7bf3283c18dso7343239f.0
+        for <linux-block@vger.kernel.org>; Fri, 09 Feb 2024 06:33:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1707489210; x=1708094010; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BVgFKAYhfQn+nElwnbqj47hUJTVhtfwCN1H+BTLsvpU=;
+        b=lDGx6p9GHOB2RCLurtRipI9oNG1QHOocXinNbW5GwfMO+dVvIY6XfD1XH+fvZkDtjS
+         N0cEzoJAzrmzsum2Ial1Bj+DbCfqlaHk6zFlrsOY8QF80Mv843D/8HmZtwHbN4bS3zQj
+         Tau5vgGDiIG35oLzpGL3+4NZ0SZzg6sIFNHoT6mqXjIwerkMexDDuP4rrepQoLt4i8KZ
+         YkBIk4jgWS/979gkqMZ+0MG1S6lrvvvurz08zrVuRyU2vx8/Z94atn5yZulljb50RIMz
+         KHvdCK0/lL3UNwmkkfhjqsw5zdS+gC0Q3R54CQqz3Locy4kEPdumTXDJN95SoqFHq//k
+         b4fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707489210; x=1708094010;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BVgFKAYhfQn+nElwnbqj47hUJTVhtfwCN1H+BTLsvpU=;
+        b=Kk4ZxM7K9w4nLn99BhdX4c6zc5jtUpxzcfCXJk4X9aEsUp87K5b+RYTBbWN01VsIZW
+         o/9ppx0R1RwB7EG/ZPmutwVmeYDT55c9SR7/8FYITYECpWjso1V9Q6pDj4av0OYZNcgN
+         tRZMov5yZcoSHKfC9xf3QT8eYW0LpVVZ1bPHK2hXVc1y/uKO3R6dZZ4EgOcbsfg/+T9B
+         G6i8/qYqxZ4U9zXgA0Ht02DpRg1RXTj+u2bteVC00GrJaSzenDhJ14ij98Z4QRk/aVfY
+         +JrKsOs5BkEoPAaywEkVbY7o/5KGuqEqiP/LlXcOejF1DPONXPVwMpShSsSlTfHiWSAn
+         cxDQ==
+X-Gm-Message-State: AOJu0YzQIxJJYY/LCYLPmZ1ImAC7kvgQbtj1EcuVcsJHdptT6MzbLVGc
+	ooxy8QU6QNFrXaopIzFg9tphZAlyig/RvhODliXQeUhjez9kU2D1l7CoowSXf0h+vOxXDNTOAHP
+	dF6A=
+X-Google-Smtp-Source: AGHT+IHz55nNkJNsbOp4/Q69jhvAB1qTFWFIBag13ent39Fzo8/uGE2VRanRwaUOQ8DPZNl3KHW4ug==
+X-Received: by 2002:a6b:e413:0:b0:7c4:3a7e:ccc with SMTP id u19-20020a6be413000000b007c43a7e0cccmr2103676iog.0.1707489209881;
+        Fri, 09 Feb 2024 06:33:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXMKe/hl5bEOrnSrYvP2WKEA4g66yDslPmViuOKEL6UA7pkDCwK7TDhnXHVutwzrTOU8sYgU1itj4Z66AsRo3J9rnuRAvTtkciEXgMM7Am6S2iyyJloY6V4XvjAwNhYzW04HPCsXPjSgs+5/HRrDP9f32vn8wSzswDK+fW3i8lGGk0k3SA9QNPMvEqQViwYcWboPZZaXtc6OJmqc0POMNQiFirgSuTuDLp4M0z9sODs8hmdAA==
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id x20-20020a02ac94000000b0047147018e96sm423579jan.11.2024.02.09.06.33.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 06:33:29 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Stefan Haberland <sth@linux.ibm.com>
+Cc: linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>, 
+ linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, Miroslav Franc <mfranc@suse.cz>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>
 In-Reply-To: <20240209124522.3697827-1-sth@linux.ibm.com>
 References: <20240209124522.3697827-1-sth@linux.ibm.com>
+Subject: Re: [PATCH RESEND 0/2] two missing patches
+Message-Id: <170748920879.1612996.819975947367482362.b4-ty@kernel.dk>
+Date: Fri, 09 Feb 2024 07:33:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: DlFCPwJjAgPAvk58ds_OeWT3VKzJ5Y0R
-X-Proofpoint-GUID: DlFCPwJjAgPAvk58ds_OeWT3VKzJ5Y0R
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-09_10,2024-02-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=654 clxscore=1015
- impostorscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402090093
+X-Mailer: b4 0.12.5-dev-2aabd
 
-From: Miroslav Franc <mfranc@suse.cz>
 
-Once the discipline is associated with the device, deleting the device
-takes care of decrementing the module's refcount.  Doing it manually on
-this error path causes refcount to artificially decrease on each error
-while it should just stay the same.
+On Fri, 09 Feb 2024 13:45:20 +0100, Stefan Haberland wrote:
+> somehow two of the patches have not been sent with the patchset yesterday.
+> Sorry for this.
+> 
+> Here are the two missing patches.
+> Please apply for the upcomming merge window.
+> 
+> Jan Höppner (1):
+>   s390/dasd: Improve ERP error messages
+> 
+> [...]
 
-Fixes: c020d722b110 ("s390/dasd: fix panic during offline processing")
-Signed-off-by: Miroslav Franc <mfranc@suse.cz>
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
----
- drivers/s390/block/dasd.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
-index fdb6cb8d8abf..2f3adf5d8fee 100644
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -3503,12 +3503,11 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 		dasd_delete_device(device);
- 		return -EINVAL;
- 	}
-+	device->base_discipline = base_discipline;
- 	if (!try_module_get(discipline->owner)) {
--		module_put(base_discipline->owner);
- 		dasd_delete_device(device);
- 		return -EINVAL;
- 	}
--	device->base_discipline = base_discipline;
- 	device->discipline = discipline;
- 
- 	/* check_device will allocate block device if necessary */
-@@ -3516,8 +3515,6 @@ int dasd_generic_set_online(struct ccw_device *cdev,
- 	if (rc) {
- 		dev_warn(dev, "Setting the DASD online with discipline %s failed with rc=%i\n",
- 			 discipline->name, rc);
--		module_put(discipline->owner);
--		module_put(base_discipline->owner);
- 		dasd_delete_device(device);
- 		return rc;
- 	}
+[1/2] s390/dasd: Improve ERP error messages
+      commit: 1df0f512faa71f1e106f36529ceff52f48209e30
+[2/2] s390/dasd: fix double module refcount decrement
+      commit: c3116e62ddeff79cae342147753ce596f01fcf06
+
+Best regards,
 -- 
-2.40.1
+Jens Axboe
+
+
 
 
