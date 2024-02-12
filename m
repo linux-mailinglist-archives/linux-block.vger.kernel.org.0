@@ -1,50 +1,50 @@
-Return-Path: <linux-block+bounces-3109-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3112-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54163850D91
-	for <lists+linux-block@lfdr.de>; Mon, 12 Feb 2024 07:46:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAED8850D96
+	for <lists+linux-block@lfdr.de>; Mon, 12 Feb 2024 07:46:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5EE74B220DB
-	for <lists+linux-block@lfdr.de>; Mon, 12 Feb 2024 06:46:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C7981C223CE
+	for <lists+linux-block@lfdr.de>; Mon, 12 Feb 2024 06:46:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE28C8830;
-	Mon, 12 Feb 2024 06:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FAEDE54C;
+	Mon, 12 Feb 2024 06:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Et26V4ar"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DoULLL3a"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568FF882E;
-	Mon, 12 Feb 2024 06:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18582C2CD;
+	Mon, 12 Feb 2024 06:46:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707720388; cv=none; b=XST1gEAxryUSP/AlK8JFFeyoeuTHXJJWyPHhUAwisz0/Kw0bFu/1khuG7yMYHdYE3dpONPY35eugZtTGDtlgvD6EgYvH0DrTyvEW6Z4IOACSpTPgR4AWglm/6fyOBQ+V+hjl/K5WWYg7eNJq0ohpmP6WklaOtAO6K6w4RYzXp10=
+	t=1707720393; cv=none; b=bto5xwwCBOHSuWSeiWA1HkQY+Bmw6FlIgdQnOtU2KlloftehmdFflTb70B9qVF8yq9PM2N5l4Zv+CdXBbS8fGXMSP7xWHztagjiJ/zVxb1afkUXDz5j55sBLbyyhhiO3qDIaWcsc/DunNTVci02YjUiEESnIZFyNDn2lrZUdW5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707720388; c=relaxed/simple;
-	bh=eO2PLTqZJFLMgRmRGZ2al0YjEjClo+ry2KNvmaSM1Mk=;
+	s=arc-20240116; t=1707720393; c=relaxed/simple;
+	bh=CKgpclj+vim48ZzXigNly6i3DBy7x2MQkLbp82JytWc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nlHTOfBY+H0arcZEpgWBlkDlRl8iFSdCojwXOpwf72dAzF4LzX2QcGoy0YZoXGKsPb7uBYvsI0xcsQRq5CRUSOKf5eSUvRIqQzulPGkVH2Wlv0c/1PXmX+Rp8VPNAgDDwcZrA6DWZBxRJQY5rrjXt3ZSOndRiFEZukwOPkaGio0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Et26V4ar; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=W0CLSKbfFfbn2zeGLyBpEH3P4pJzMiga/0vs6tovduM81qykXLOHNKebznFQk+HxdbHQMnI3iifAhJFPrc7r2CR4wg6R2Q5QBUVnc/q0fnhAjUT+q+wkHF3cM9M3nuUW4XO2N2xHg+Z9DlAmspaW9sKKriTqcOylrB9lagpao1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DoULLL3a; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=FdBZZfIe4Gg0+XVL+ZZDzEMtykzHbZrexnu46bVVgBY=; b=Et26V4ar0/4t3FTXGbyyW16wfH
-	NRjtUB8W+Gf3VNmigQTdiYoTWVEOM/+r2Rs7sRu9Rrl3eUuduHSgIbRtLAGQokitzRyeG2W1eJ6RE
-	EPJcelSptFRwH00Y/MIKcm7KsDsnpvs0jCt6vBy3URcACkMjmJw155/0IDERRCdyvSuIh6hIWTrxe
-	/0EwyP46AxWSpBySh3Hl3hvpJFnx8mq3kjAx5fFX6uBKIMES5zH9B4CMRE4iNBx4zRIglo/4mQFSF
-	CKNhLo/3fKNuWhwa1R13EtvVUb9R+AuCB8kYRt5SOh0xbROvb7csBq83vl5tOS0DdaenLj1ViZ/nE
-	P2aGcq7g==;
+	bh=p6HSM27GbKcz02IsFZ1aYD7BVqR49cLm+9QPOfHJCYE=; b=DoULLL3aoXgF1aARVqiks3lSig
+	Sw9qi06txzfy2f9e4+HGojqTX3463o8Ncg0PTOWWIsmw4hbry17wq338ChdOUBfVXi7RITtIDlUB1
+	IarEdPnnQxr3q5IIGowRAcFnZA4J+q0krFoPiCF3xcBohKiISsZu5HSM2/o3yVGNn1kqzu4Nq2F8T
+	CI+Lr0kW+UdP9o2lQ8puo9qcyLeIzbq3RT7HqoOyL3FNRwTIbxLUqRYs9L5Z5v2PWOHoKYvf4WN8S
+	8/+QdLbL3Rn976wkZpR1TiNl+NbBER8P3rLNBJFJfQrVgP0JTh8wDhOk8GcfAK1qX/wm+uJdURrmk
+	fU4m4n6Q==;
 Received: from [2001:4bb8:190:6eab:75e9:7295:a6e3:c35d] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rZQ59-00000004PZd-37UC;
-	Mon, 12 Feb 2024 06:46:24 +0000
+	id 1rZQ5C-00000004Pa7-1s0g;
+	Mon, 12 Feb 2024 06:46:27 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: "Michael S. Tsirkin" <mst@redhat.com>,
@@ -58,13 +58,10 @@ Cc: "Michael S. Tsirkin" <mst@redhat.com>,
 	Sagi Grimberg <sagi@grimberg.me>,
 	linux-block@vger.kernel.org,
 	linux-nvme@lists.infradead.org,
-	virtualization@lists.linux.dev,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Ming Lei <ming.lei@redhat.com>,
-	Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 02/15] block: refactor disk_update_readahead
-Date: Mon, 12 Feb 2024 07:45:56 +0100
-Message-Id: <20240212064609.1327143-3-hch@lst.de>
+	virtualization@lists.linux.dev
+Subject: [PATCH 03/15] block: decouple blk_set_stacking_limits from blk_set_default_limits
+Date: Mon, 12 Feb 2024 07:45:57 +0100
+Message-Id: <20240212064609.1327143-4-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240212064609.1327143-1-hch@lst.de>
 References: <20240212064609.1327143-1-hch@lst.de>
@@ -77,59 +74,40 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Factor out a blk_apply_bdi_limits limits helper that can be used with
-an explicit queue_limits argument, which will be useful later.
+blk_set_stacking_limits uses very little from blk_set_default_limits.
+Open code these initializations in preparation for rewriting
+blk_set_default_limits.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/blk-settings.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ block/blk-settings.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/block/blk-settings.c b/block/blk-settings.c
-index 06ea91e51b8b2e..f16d3fec6658e5 100644
+index f16d3fec6658e5..1cae2db41490d2 100644
 --- a/block/blk-settings.c
 +++ b/block/blk-settings.c
-@@ -85,6 +85,17 @@ void blk_set_stacking_limits(struct queue_limits *lim)
- }
- EXPORT_SYMBOL(blk_set_stacking_limits);
- 
-+static void blk_apply_bdi_limits(struct backing_dev_info *bdi,
-+		struct queue_limits *lim)
-+{
-+	/*
-+	 * For read-ahead of large files to be effective, we need to read ahead
-+	 * at least twice the optimal I/O size.
-+	 */
-+	bdi->ra_pages = max(lim->io_opt * 2 / PAGE_SIZE, VM_READAHEAD_PAGES);
-+	bdi->io_pages = lim->max_sectors >> PAGE_SECTORS_SHIFT;
-+}
-+
- /**
-  * blk_queue_bounce_limit - set bounce buffer limit for queue
-  * @q: the request queue for the device
-@@ -393,15 +404,7 @@ EXPORT_SYMBOL(blk_queue_alignment_offset);
- 
- void disk_update_readahead(struct gendisk *disk)
+@@ -65,13 +65,16 @@ void blk_set_default_limits(struct queue_limits *lim)
+  * blk_set_stacking_limits - set default limits for stacking devices
+  * @lim:  the queue_limits structure to reset
+  *
+- * Description:
+- *   Returns a queue_limit struct to its default state. Should be used
+- *   by stacking drivers like DM that have no internal limits.
++ * Prepare queue limits for applying limits from underlying devices using
++ * blk_stack_limits().
+  */
+ void blk_set_stacking_limits(struct queue_limits *lim)
  {
--	struct request_queue *q = disk->queue;
--
--	/*
--	 * For read-ahead of large files to be effective, we need to read ahead
--	 * at least twice the optimal I/O size.
--	 */
--	disk->bdi->ra_pages =
--		max(queue_io_opt(q) * 2 / PAGE_SIZE, VM_READAHEAD_PAGES);
--	disk->bdi->io_pages = queue_max_sectors(q) >> (PAGE_SHIFT - 9);
-+	blk_apply_bdi_limits(disk->bdi, &disk->queue->limits);
- }
- EXPORT_SYMBOL_GPL(disk_update_readahead);
+-	blk_set_default_limits(lim);
++	memset(lim, 0, sizeof(*lim));
++	lim->logical_block_size = lim->physical_block_size = lim->io_min = 512;
++	lim->discard_granularity = 512;
++	lim->dma_alignment = 511;
++	lim->seg_boundary_mask = BLK_SEG_BOUNDARY_MASK;
  
+ 	/* Inherit limits from component devices */
+ 	lim->max_segments = USHRT_MAX;
 -- 
 2.39.2
 
