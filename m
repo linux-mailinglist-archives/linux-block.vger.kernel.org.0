@@ -1,48 +1,48 @@
-Return-Path: <linux-block+bounces-3225-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3227-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CEFD854853
-	for <lists+linux-block@lfdr.de>; Wed, 14 Feb 2024 12:29:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60EA6854863
+	for <lists+linux-block@lfdr.de>; Wed, 14 Feb 2024 12:31:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C52711F27547
-	for <lists+linux-block@lfdr.de>; Wed, 14 Feb 2024 11:29:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9373B1C277B0
+	for <lists+linux-block@lfdr.de>; Wed, 14 Feb 2024 11:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6CB199A1;
-	Wed, 14 Feb 2024 11:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E7001B7F9;
+	Wed, 14 Feb 2024 11:30:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jB8K+yMa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGgM7oiW"
 X-Original-To: linux-block@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3581D1946C
-	for <linux-block@vger.kernel.org>; Wed, 14 Feb 2024 11:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB091B7F8
+	for <linux-block@vger.kernel.org>; Wed, 14 Feb 2024 11:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707910177; cv=none; b=eWbGKN20fW4iVDbU1J7P1znob0TEJWiv+pVfMCGi3EALFMgnQKg2QkxqdAB+u9u4ODwanzRrpm+3IHkRGz2mG0MMU8CeefISn4Ij2JV0uWlZ3S0RG1BsW6dNTHggO50FhNRLMHtvE3OLGib0QwRlRyA4vamH+LFX4oSDIZiJJ/8=
+	t=1707910239; cv=none; b=FycpLhL9Eczc9VtH6KoZpARXdzLj1MjRZbXp8gZ2V/dTANiGT0X+YwHFlYWUhQLMDVz5zUl6b4dX+zkSzRwBUBtonQZ4mvvMQVKT3MeESKtHR1alzI6zUT+GAbnlLss7ZBkZotCPUas6HD7tACxTfh32gf3zpFzSHTCTgFNU+kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707910177; c=relaxed/simple;
-	bh=qorJ2faBobJZxD7xFFq7reEJL0r1JNE7FwfezvL3u/Q=;
+	s=arc-20240116; t=1707910239; c=relaxed/simple;
+	bh=t3ID9M/oqfQ0gNRgQNobZ++m8H/v2qL3qQ398BbktkU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ezqcR45IfvV1VzhWxObWLYH8CzYntRiA96thUip4fze9FA+9a+O7VOVuhXvdz/n6U9rsBN+4rVumsMKkjfccA2IMBrn4n2zd0mvjR1WXGgbdJLuC1s+muGvRskUL9Vs8R0m5k/NWSM/5siTkyGnVHGZbz+6Qvwoc3sVw/8o4EnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jB8K+yMa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B882CC433F1;
-	Wed, 14 Feb 2024 11:29:35 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=o1/LATl3Vvabs9ItPOCLzTVirXO2xzL94xMXDbSaIGZ+g/NYepWKs4MT/ob1Q4layKnUdxDGaFtoB0c83BknjiOPa6ehLiKoSfHE2sSZElwMzuo0TUEtSnYS9wKtfZMETWlwGI1AOpzX450d9E9EUWSMne775t4oU/9pB4Nz094=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGgM7oiW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03CFEC433C7;
+	Wed, 14 Feb 2024 11:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707910176;
-	bh=qorJ2faBobJZxD7xFFq7reEJL0r1JNE7FwfezvL3u/Q=;
+	s=k20201202; t=1707910238;
+	bh=t3ID9M/oqfQ0gNRgQNobZ++m8H/v2qL3qQ398BbktkU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jB8K+yMa5h3v2DC/stZZdIsv5DtNjLFrZj/r7lF5X7yz3ILIeuoCTgXMvs+AyF4nk
-	 vxIIJ7OD2VvMyeQWmgrJbxTHeiV60+O+QI6DZnMi+aYWT/atRJbe7NSiVcIoWXxaux
-	 xP96ACQ4PYjw4hTB/2VE+elqAC4mROsI3XfbFhHfBpzI656fkSa/k3HlzaoRF4q1mT
-	 Ejyobt2QMXdg1Z78ENpIHiAQ7G1sqVdF5xW3k7iGrZddtX5VSoUD8iEuld5N9USXkI
-	 ksYSoC10k0v6VFdWdk7K8W0+tGIuInDGUSVuj6wYloDly7pE33dgU70Z5rc4qwkEMJ
-	 U94ZHieI8CTZA==
-Message-ID: <ded648ac-6747-4226-a0f3-8de4c1a67792@kernel.org>
-Date: Wed, 14 Feb 2024 20:29:34 +0900
+	b=EGgM7oiWdF2lErwqVlRZrawy9DiKVomkHtepIo1wKKM3Xm2foupkJceOKCvTDXUXE
+	 tUfeC0mQJyE7RWFifO26yveBic6z1XsnrbyWUf57Djrsy9B1vbdgbNIQb+e2PqWciQ
+	 V2khSjKWq1BubetAbYnuGp8hGthxLEDXP5KT+xxa3Gno8q2l1euf4enm0Nmx21Y7AP
+	 XXMQXMwVh7ZJKNxeeT9L9Ajm6KjqHQEmp1Vastznfm+REEPwIkrWx/Ej37orTt9KjE
+	 jw90z14HEIfidiwcjD8IDJt/pLkjsvicZ27Eql+mSENkQ2Pa6VXoy7JSp9N8uB+N/H
+	 F1eWB9yg9aPTw==
+Message-ID: <764c5522-6fe2-471f-aaa5-3dc43793b3d0@kernel.org>
+Date: Wed, 14 Feb 2024 20:30:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -50,22 +50,22 @@ List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] null_blk: refactor tag_set setup
+Subject: Re: [PATCH 4/5] null_blk: remove null_gendisk_register
 Content-Language: en-US
 To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org
 References: <20240214095501.1883819-1-hch@lst.de>
- <20240214095501.1883819-4-hch@lst.de>
+ <20240214095501.1883819-5-hch@lst.de>
 From: Damien Le Moal <dlemoal@kernel.org>
 Organization: Western Digital Research
-In-Reply-To: <20240214095501.1883819-4-hch@lst.de>
+In-Reply-To: <20240214095501.1883819-5-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/14/24 18:54, Christoph Hellwig wrote:
-> Move the tagset initialization out of null_add_dev into a new
-> null_setup_tagset helper, and move the shared vs local differences
-> out of null_init_tag_set into the callers.
+On 2/14/24 18:55, Christoph Hellwig wrote:
+> null_gendisk_register isn't a very useful abstraction given that it
+> doesn't even allocate the gendisk.  Merge it into the only caller
+> instead.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
