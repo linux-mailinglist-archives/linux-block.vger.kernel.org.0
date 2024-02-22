@@ -1,65 +1,65 @@
-Return-Path: <linux-block+bounces-3584-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3580-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7792E86028A
-	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 20:21:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AD7C860285
+	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 20:20:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 123A5286836
-	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 19:21:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04682286EC7
+	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 19:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CBD14B824;
-	Thu, 22 Feb 2024 19:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD79F14B828;
+	Thu, 22 Feb 2024 19:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="EI9UisMd"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="XFLD5ZAB"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E653E548EB
-	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 19:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2269C14B824
+	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 19:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708629657; cv=none; b=sdOmDccwHtFvbjnWUQSbM3nAdJ61JlwwKJv/cKgx9cfBbjcqCj8jsg3S76Cn1/HAsqB6Qu64/ll4kCumlmgC034guFV9xdUy4NxSZev7k36p30zrOmow4bRSumuwhBRVeeY3DfLKwwhUNw1JE0hsc1P+h/xNk/VtyQzGTfB/udE=
+	t=1708629647; cv=none; b=t0+hLxhlelRBDFoJcO1yVhA+UyWIUAEtAhJo/7CvN7BEFpbRK/vs5JzTTnfif2rb1GFhuHFe27QqfyTyiwvxj/OJdz2oGbjh1gbod1r+ArQfF/BIhNk6AJUGo3/rhNOHO0dh0CjM3AB/l0T5lrFLey++y2s4Cdy1xbeh2o5Yyec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708629657; c=relaxed/simple;
-	bh=Vj+L3/70ajCUy8KeYpw+fGjzkFe8WDybhJ+VaEq7fGo=;
+	s=arc-20240116; t=1708629647; c=relaxed/simple;
+	bh=zQD6oPiqsC7ES4uENVtVntjfOaQK0Mmoqg5f8SzwZSc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k4zqN8NkNVkDeYFNKEht+RstPT17yGauFn9Ez9aSphAd0yOUTiro9rzXahR8O1blbj7KeTjCEBvz8U+rZI9mUYXr4VwbiNZ68aifd/ezpK4P/51HvWEC9GUipQzCjvmcUVNrntkF07q9kYaAvxz7F6zzhX2y65OaYaXwcsBN6jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=EI9UisMd; arc=none smtp.client-ip=67.231.145.42
+	 MIME-Version:Content-Type; b=Ru4PTzGth6u15O9tQPX4YBnymkfm+WxcH6G2hzXwVbXi2SzcAC9xQ5SmHEWKG64dCuOQhBsBgmvGbnbxfC4n5pE2My5Eo7q3bKywnm3Vsv96n79aFjJsuoM1yNZEgj/Ih+tZZfpAugJjkxk1ESBvLOutKNHOCHQIWPw8Bt5YUgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=XFLD5ZAB; arc=none smtp.client-ip=67.231.145.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41MIcf4x017785
-	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 11:20:55 -0800
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41MIvDoO012046
+	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 11:20:45 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=s2048-2021-q4;
- bh=4uYN0swH0MhsHnhs0GxmEssjHKom0NEX7OpTrV6hhm0=;
- b=EI9UisMdU9t4Iy3/wffbMT1HZG60juMXa77sjiSgtntFQib/JqAfS2rZEKTjs9Hw/O+Q
- zN/fNiZ4QR8k3ud+KZ1xShNNjT7XXmiMzH9MJBpb7FVfam5pXaatSoPC7ZO3c8LeCYrb
- D3EYm18MUPk7iCeknB0v8LPbcqSxJprjXIXlJ1/4zZGwub2iwyvX6UQpmr4uhIIlenka
- mz2XYXd+umkffhw0lb3i/kV9kgY6EcYGnTk3Y4ar6kCTIvXE4E6gIyzZHP7QLajjbdWZ
- SqoUFwCcEpkRzYuquzsMv3DIQyPiPJ1ncXTjKlV+0Csa3QZLVkqfpEXfFqg8Lxsd1+8W jQ== 
+ bh=YtSiX6VZwe9+8caIFcZzz6t0+Mz/DJznXBZMA2Q+5tE=;
+ b=XFLD5ZABNMEAZodgjd7Wy/rie81dpFTqsFFxKM0hfdvCIpNF//ZhI7Xmy/fFywkYX0Ye
+ 1hdxcbIlV++ijj2Ug6ThULTd0nwkDKkqEdDRnIoG96gCCThXuAdKNsOjkcy3r+jwBfCC
+ KjWt+m5dlyVwGS0ESYLrMXq6HQ6JsIHN0f0fdw20m7pSyN10loj6HmoNZkH0wiHPseyD
+ xJv16hJ4qjsfubzCeeM00DaaCBLdX455+DxQxHiivTJYm92jF5B6g2iP8PgpYM3reuNV
+ kpfmCcsapV4pqIKVIj+eGB3OXICvKVGo867KWHi7eIyrtVNSBaJBVApKEa1WuU5GeoqG fw== 
 Received: from mail.thefacebook.com ([163.114.132.120])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3we86y27jw-1
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3wec0cr64e-7
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 11:20:54 -0800
-Received: from twshared6594.02.ash8.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:11d::8) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 11:20:45 -0800
+Received: from twshared53729.38.frc1.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 11:20:54 -0800
+ 15.1.2507.35; Thu, 22 Feb 2024 11:20:44 -0800
 Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-	id BAA5E256D9817; Thu, 22 Feb 2024 11:20:40 -0800 (PST)
+	id C6D7F256D9819; Thu, 22 Feb 2024 11:20:40 -0800 (PST)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>
 CC: <axboe@kernel.org>, <ming.lei@redhat.com>, <nilay@linux.ibm.com>,
         <chaitanyak@nvidia.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv3 1/4] block: blkdev_issue_secure_erase loop style
-Date: Thu, 22 Feb 2024 11:19:19 -0800
-Message-ID: <20240222191922.2130580-2-kbusch@meta.com>
+Subject: [PATCHv3 2/4] block: __blkdev_issue_write_zeroes cleanup 
+Date: Thu, 22 Feb 2024 11:19:20 -0800
+Message-ID: <20240222191922.2130580-3-kbusch@meta.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240222191922.2130580-1-kbusch@meta.com>
 References: <20240222191922.2130580-1-kbusch@meta.com>
@@ -72,55 +72,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: OQKgYzbpuRnncnYA4j2_d8vBlgeLoU8b
-X-Proofpoint-GUID: OQKgYzbpuRnncnYA4j2_d8vBlgeLoU8b
+X-Proofpoint-GUID: lntaIhGNhKEhZ3J2ljgTjPnIBA0chtWi
+X-Proofpoint-ORIG-GUID: lntaIhGNhKEhZ3J2ljgTjPnIBA0chtWi
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-22_15,2024-02-22_01,2023-05-22_02
 
 From: Keith Busch <kbusch@kernel.org>
 
-Use consistent coding style in this file. All the other loops for the
-same purpose use "while (nr_sects)", so they win.
+Use min to calculate the next number of sectors like everyone else.
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/blk-lib.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ block/blk-lib.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/block/blk-lib.c b/block/blk-lib.c
-index e59c3069e8351..91770da2239f2 100644
+index 91770da2239f2..d4c476cf3784a 100644
 --- a/block/blk-lib.c
 +++ b/block/blk-lib.c
-@@ -322,7 +322,7 @@ int blkdev_issue_secure_erase(struct block_device *bd=
-ev, sector_t sector,
- 		return -EPERM;
+@@ -132,19 +132,16 @@ static int __blkdev_issue_write_zeroes(struct block=
+_device *bdev,
+ 		return -EOPNOTSUPP;
 =20
- 	blk_start_plug(&plug);
--	for (;;) {
-+	while (nr_sects) {
- 		unsigned int len =3D min_t(sector_t, nr_sects, max_sectors);
+ 	while (nr_sects) {
++		unsigned int len =3D min_t(sector_t, nr_sects, max_write_zeroes_sector=
+s);
++
+ 		bio =3D blk_next_bio(bio, bdev, 0, REQ_OP_WRITE_ZEROES, gfp_mask);
+ 		bio->bi_iter.bi_sector =3D sector;
+ 		if (flags & BLKDEV_ZERO_NOUNMAP)
+ 			bio->bi_opf |=3D REQ_NOUNMAP;
 =20
- 		bio =3D blk_next_bio(bio, bdev, 0, REQ_OP_SECURE_ERASE, gfp);
-@@ -331,13 +331,12 @@ int blkdev_issue_secure_erase(struct block_device *=
-bdev, sector_t sector,
-=20
- 		sector +=3D len;
- 		nr_sects -=3D len;
--		if (!nr_sects) {
--			ret =3D submit_bio_wait(bio);
--			bio_put(bio);
--			break;
+-		if (nr_sects > max_write_zeroes_sectors) {
+-			bio->bi_iter.bi_size =3D max_write_zeroes_sectors << 9;
+-			nr_sects -=3D max_write_zeroes_sectors;
+-			sector +=3D max_write_zeroes_sectors;
+-		} else {
+-			bio->bi_iter.bi_size =3D nr_sects << 9;
+-			nr_sects =3D 0;
 -		}
++		bio->bi_iter.bi_size =3D len << 9;
++		nr_sects -=3D len;
++		sector +=3D len;
  		cond_resched();
  	}
-+	if (bio) {
-+		ret =3D submit_bio_wait(bio);
-+		bio_put(bio);
-+	}
- 	blk_finish_plug(&plug);
 =20
- 	return ret;
 --=20
 2.34.1
 
