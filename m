@@ -1,109 +1,82 @@
-Return-Path: <linux-block+bounces-3572-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3574-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95AFB85FEC0
-	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 18:09:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8694285FF74
+	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 18:33:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C644B1C22B34
-	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 17:09:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7AC31C20DC5
+	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 17:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA82F154437;
-	Thu, 22 Feb 2024 17:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="NdnYy3M8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5D50153BCE;
+	Thu, 22 Feb 2024 17:33:51 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDE4153BD5
-	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 17:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5E7155306
+	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 17:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708621770; cv=none; b=Fw0h9w1xuFtdmz9N6kaUuqk1sFKyk5dc60oX849PVUUL5lDmzsjj2tsHxpVuWu3U2hehQi5z4nsJPtalYNOVkOc+H+CRNIBd3F1gqJ43YMgddmLkiuxNoVv0xjZCbtsVlh7juQ5YX6hqFNvZk1sCxOWFfSX4xjs7hVRR9+S+F8Q=
+	t=1708623231; cv=none; b=AwScVtlHErj8HcuQjwC54DbgYu7M4KOry1cpo/QNZfVsxOusmJaMdoTKeq0a6F1dae1b/yA7r7A2UJv73lwgsnYhG+uYPeSb0OEZoH/Mj+IcHUZjeB52Pt27ykMp6fhM5RuR91mN9UG/ZrFXGteYEW9A1IYk2XWGmxWJWRAINy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708621770; c=relaxed/simple;
-	bh=celCtcEPOo2fHHqBOz3nSdK/i7RCfiSVSuhe9wgbjnU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=igMojQV/wdPdh2EN0FskfrDY4pgoEF9COpMxwweWBmQCxc+UuKJVg1dYRJDIFrR8clGFc/OObwfcVkpC8wX2Oh3+H4XWWQ59dfkUjLc725taaW/ymvkst3PQu5/Mil9ty/tuSkDrEDEzYlCYB99BMozzW1lxaDWg8S6iVlj31JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=NdnYy3M8; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1db9cb6dcb5so8209675ad.1
-        for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 09:09:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1708621767; x=1709226567; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VsB2Fa2MB2AKFmE4QgPHpTanl2i0CQHMOV8hh32bbjQ=;
-        b=NdnYy3M8jr4uc0Y5b9SraXjzlZj0RVtt8tIzyyC0Yy4ENKCjXe+dK3jkJQ+mTJQXRr
-         /l28m5GD0/TVVRI8UWHMrA36CNmiJP3LdEIonrDSBbA1QSU2wCJzXiAbr/H7UIVpFRcs
-         vVigSN3zNghgElceMbm8KIUrwMd4+HLE83qQIgqBSqDkyigIiRNkX8okNeBnbNl74EfX
-         e9ONxLKho9qfnxRTI0c9Urndr+pRm543RHsp4zMhB/bGlsPvpEl+feIJgObEaHW1FJFh
-         ZyXXeTJoA335TMPkqKE5ZdMlFWVnUBWTkj0CywKB1aMPapZn99nWdncy0uvKpfKWbhRt
-         xcSg==
+	s=arc-20240116; t=1708623231; c=relaxed/simple;
+	bh=V/N4+LIqAU9vvZFMbX/xk+AJCYdk10vFs25xLxgwt8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oYVY/9zJcRnC+EOyYCMZ7zQks9O0c6EBe8m7YsTBvvGWxnlUV1E+5yKe8SuJ7Z07BtRSBnr5u9NyYisYbPnfaaFAziUWZ1eBGFBauIvThwaRltImbxmirqwpQXrRAzdCUm37rHX4Li802jRSMmbPQTCGVqYzdznBCeuEOOBzwTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e4c359e48aso1146949b3a.1
+        for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 09:33:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708621767; x=1709226567;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VsB2Fa2MB2AKFmE4QgPHpTanl2i0CQHMOV8hh32bbjQ=;
-        b=EOGJMuhIetn9HHXQZtrpM5hw/jLsW8B0+1vznA0QFpxXmM2b1jHNcDjwS5o53F7ZUR
-         nBhTNNu8mHLZP70SICSuCT08W8j8PgBLQYlWXsQxkG9cmWzhQ9CvwMgqP2dTbE8lKK6p
-         lZvqcIccoxhUi5gsYecBi49vpgsNXkYre3F3ZWLjDxXxNzSgjlMETGYcpbHmCL4JhH9z
-         ZMo4FIdQA7nyI/Gty7qcwqo/wCxj7TYQKS83hvXnhSaAjX9cU3GpVCUNML0uCL10+LzZ
-         AXj+2TZr8RIyZPTLPdFSiOOLocEe6E5fGbdNYA2EKgDHvCXN1/i4CU/OH7sWkU7pVMC/
-         c9Ng==
-X-Gm-Message-State: AOJu0Yy4+S4nwXg9q0vMj//jNma5ac/bmeOmzwR2Ecdbje8XS1nAGNoe
-	94x14B+qkOfk2Jzx7OuMasKGtT2mH71R2eqcDeTJD/g2otEXwX7QYeP7ew6XKFM=
-X-Google-Smtp-Source: AGHT+IEQORPQqdSdKH5gSaxLmE90VNhie4CuVf5II+5mIvejOfv3ilBZL0Bs6AFZ+F2bWnN20Uf/qg==
-X-Received: by 2002:a17:902:f689:b0:1db:c3b8:4620 with SMTP id l9-20020a170902f68900b001dbc3b84620mr3184232plg.5.1708621766846;
-        Thu, 22 Feb 2024 09:09:26 -0800 (PST)
-Received: from [127.0.0.1] (071-095-160-189.biz.spectrum.com. [71.95.160.189])
-        by smtp.gmail.com with ESMTPSA id w19-20020a170902c79300b001db839b9e80sm10253745pla.286.2024.02.22.09.09.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Feb 2024 09:09:26 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-block@vger.kernel.org
-In-Reply-To: <20240222073647.3776769-1-hch@lst.de>
-References: <20240222073647.3776769-1-hch@lst.de>
-Subject: Re: pass queue limits to alloc_disk for pktcdvd
-Message-Id: <170862176605.8813.6292201088013363148.b4-ty@kernel.dk>
-Date: Thu, 22 Feb 2024 10:09:26 -0700
+        d=1e100.net; s=20230601; t=1708623229; x=1709228029;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V/N4+LIqAU9vvZFMbX/xk+AJCYdk10vFs25xLxgwt8o=;
+        b=Z+dV5FOJ+lSBNrDoW7vXXOsZTPB5l18W4FRU+lcBvAm4m6gQ6FWYkTwqef8YQDj09C
+         nOknM1FotCBNaTbEnVTZmGAOJIWDWt0viNOrF7JQ+zQOaejtfHB7HhvfPoY/WCQpMfUl
+         mEBwsHL/lZbi86we9Mz4YK5DWlMG/57Uv4I/Nejuv6mNmyufdgsXKaTJc7qDuh6NpsZa
+         MogCwRby0qc4xJkRmc7YZ4BkBkNcZX+DoR4/NG8UPrSbTtVPbECZwyHVvYCwq5uJyweD
+         Mji+moQBOl9zXVRYZz8n2CPT8j7hG4uekDdSjkhjs67NE5H92yEtxHVAEAas1vchZ7cM
+         PddA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWZILaKXOTVvZ+UG606OQBHlHFBPmnOUZJ4slcttC36TL72MLYEJtHKV1MW47hsZbvCQBZ6j+aa5G31YMu7PW5wTjJhcT0QUOMF6g=
+X-Gm-Message-State: AOJu0YwqTUbHd28zNlcCWqHqGMdekdCq4DYVIuEMFO0zr9vZL/4c8cWo
+	/BcxQmLSTOOua4q4WK9Uh48A7h/1HaGem5FwH/fThL/yTgfoboTx
+X-Google-Smtp-Source: AGHT+IFjpzp9LFKK+XX4u4mu5/PxhW8yhYdfo9eJhqCY2E9cZNG0PXg6gWDde5uFNyMYtDmGkQpttA==
+X-Received: by 2002:a05:6a21:3181:b0:19e:3cbf:60a8 with SMTP id za1-20020a056a21318100b0019e3cbf60a8mr23692925pzb.39.1708623229302;
+        Thu, 22 Feb 2024 09:33:49 -0800 (PST)
+Received: from ?IPV6:2620:0:1000:8411:cb6b:6b1d:5f36:8b80? ([2620:0:1000:8411:cb6b:6b1d:5f36:8b80])
+        by smtp.gmail.com with ESMTPSA id y4-20020a056a00190400b006e1463c18f8sm11198091pfi.37.2024.02.22.09.33.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 09:33:48 -0800 (PST)
+Message-ID: <ba5f02dd-943a-403b-98c4-3e3729fe3ffc@acm.org>
+Date: Thu, 22 Feb 2024 09:33:46 -0800
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] block: Do not include rbtree.h in blk-zoned.c
+Content-Language: en-US
+To: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>
+References: <20240222131724.1803520-1-dlemoal@kernel.org>
+ <20240222131724.1803520-2-dlemoal@kernel.org>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240222131724.1803520-2-dlemoal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
 
+On 2/22/24 05:17, Damien Le Moal wrote:
+> The block zone code does not use RB-tree. So remove the include of
+> linux/rbtree.h as it is not needed.
 
-On Thu, 22 Feb 2024 08:36:45 +0100, Christoph Hellwig wrote:
-> this series has the queue limits conversion for pktcdvd.
-> 
-> Diffstat:
->  pktcdvd.c |   25 +++++++++----------------
->  1 file changed, 9 insertions(+), 16 deletions(-)
-> 
-
-Applied, thanks!
-
-[1/2] pktcdvd: stop setting q->queuedata
-      commit: 6f420d6a2dd8d4a795eab2839b0e08663269f9f8
-[2/2] pktcdvd: set queue limits at disk allocation time
-      commit: 4068550870360410261638479ffaf8364c366dd8
-
-Best regards,
--- 
-Jens Axboe
-
-
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
