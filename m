@@ -1,179 +1,109 @@
-Return-Path: <linux-block+bounces-3571-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3573-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A51885FDDF
-	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 17:19:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B377085FEC2
+	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 18:09:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8588B2C02F
-	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 16:16:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AD4F1F290DA
+	for <lists+linux-block@lfdr.de>; Thu, 22 Feb 2024 17:09:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7A0150988;
-	Thu, 22 Feb 2024 16:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C845A14F9FE;
+	Thu, 22 Feb 2024 17:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1IPtTC1B";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="s5rnFZTL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1IPtTC1B";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="s5rnFZTL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WNzxAmoh"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487591509A7;
-	Thu, 22 Feb 2024 16:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B68A1E488
+	for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 17:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708618596; cv=none; b=EvY6OdLabufg8VGVoSDpHq7FeCGX9vAYbYXeW3rzCqD5Wozt7xTOJwyQVUTt7GcLBI6Hp51dXTyeKsxI4oAz0lx5QEWukPCTfyCGK0FBgd7B4JTMx0IukD9EJNXjuvBM234kMq9ZANOb/YFzNGSkT7ReS1fqfdfbXIgXJJrUx+M=
+	t=1708621771; cv=none; b=GJZjL32C2u/U3qGdOUSzYFzAHfAEJ2jUzijxejTRJ3Jm68r+YccylOA6RYf+/MT7AFFh1pYeyV/X9VAmiP0j6u0ehRB64aOyalh7TtvLk5kH6eES+rqWK/rOUdAH/1IjGbZpGxaxSk8crmaqzNa0r6jf172meSnrcgRna6m2Tdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708618596; c=relaxed/simple;
-	bh=lUjzPL2Rn/vckbm9GFQABCjyaKVvEJJPfyMuWnZrp4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+diUzOTo+kvMGTDfguz88UZQBvB6ZnmQzK4qcfFowo6W33TgiC8/NokWj4bUAGwexD5j1gZZgqxGc15tAHonohzHl5VK6gWHvMWjl6sJwVE7CnfaW2BKJuGAf+mSlk27OX9fFAg2hq0r9xb+wxZl8/jK1Fh88QEt+OckkFu5FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1IPtTC1B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=s5rnFZTL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1IPtTC1B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=s5rnFZTL; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4ABE41FB9A;
-	Thu, 22 Feb 2024 16:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708618591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WxAylS37KlSMxqz30UlWrIOlrte9S7xx+OkJa4dyaF4=;
-	b=1IPtTC1BlUpNz+Rkqo4Yxv3I+yStxpqoMioqayy1m4KZWUa/XPFfAtd7oBX0vSUu8MlhIn
-	fBjyF96Y1tc4QXQNkBOSksngMIJX7o+eSxopjZAqMCOp3DYezazk5qWC31vpDVKN45c7fV
-	tMnLvrxcoaK/jfLAWKY1Jp+mk+Yhvyg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708618591;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WxAylS37KlSMxqz30UlWrIOlrte9S7xx+OkJa4dyaF4=;
-	b=s5rnFZTLttmF3tC9S5WDuuKboJl7/2Sq8PlCDfBYFRpVr1Ts17KrRiwYn3MiCz0ePNSfju
-	xhppSBXF+Ym+LmAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708618591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WxAylS37KlSMxqz30UlWrIOlrte9S7xx+OkJa4dyaF4=;
-	b=1IPtTC1BlUpNz+Rkqo4Yxv3I+yStxpqoMioqayy1m4KZWUa/XPFfAtd7oBX0vSUu8MlhIn
-	fBjyF96Y1tc4QXQNkBOSksngMIJX7o+eSxopjZAqMCOp3DYezazk5qWC31vpDVKN45c7fV
-	tMnLvrxcoaK/jfLAWKY1Jp+mk+Yhvyg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708618591;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WxAylS37KlSMxqz30UlWrIOlrte9S7xx+OkJa4dyaF4=;
-	b=s5rnFZTLttmF3tC9S5WDuuKboJl7/2Sq8PlCDfBYFRpVr1Ts17KrRiwYn3MiCz0ePNSfju
-	xhppSBXF+Ym+LmAg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 2CAE613A6B;
-	Thu, 22 Feb 2024 16:16:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id FXYpCl9z12XIfAAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Thu, 22 Feb 2024 16:16:31 +0000
-Date: Thu, 22 Feb 2024 17:16:30 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Chaitanya Kulkarni <chaitanyak@nvidia.com>, 
-	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>, 
-	"linux-fsdevel@vger.kernel.org >> linux-fsdevel" <linux-fsdevel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, 
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Bart Van Assche <bvanassche@acm.org>, 
-	"josef@toxicpanda.com" <josef@toxicpanda.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>, 
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>, "shinichiro.kawasaki@wdc.com" <shinichiro.kawasaki@wdc.com>, 
-	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>, "jack@suse.com" <jack@suse.com>, Ming Lei <ming.lei@redhat.com>, 
-	Sagi Grimberg <sagi@grimberg.me>, Theodore Ts'o <tytso@mit.edu>, 
-	"daniel@iogearbox.net" <daniel@iogearbox.net>
-Subject: Re: [LSF/MM/BPF ATTEND][LSF/MM/BPF TOPIC] : blktests: status,
- expansion plan for the storage stack test framework
-Message-ID: <6spltrohwisctoeowctyyneyrqolzyvcd3riozbczj2c2o5pcw@lmtrghutbgwx>
-References: <e5d8cd68-b3f2-4d7b-b323-b13d18199256@nvidia.com>
- <bh5s6a4fhhlje42bzj2t22k3jpmruzkx234ks4ytuhd62tonzj@zn6h5foaqrof>
- <jfydrbb277d7ad2ypu5dottiqh4rtzm5ipf72wcjo34mmpvnl7@mjlqomulsq3q>
- <ZdZBpb4vMMVoLfhs@bombadil.infradead.org>
- <g5c3kwbalxru7gykmzdymrzf43fkriofiqtgdgcswbf4hrg65r@wdduaccaswhe>
- <ZdduKnjJx3tJsQGY@bombadil.infradead.org>
+	s=arc-20240116; t=1708621771; c=relaxed/simple;
+	bh=Z1GskjClhquD1XZu5l3BrsicrOLmznGF3BV92ZWk+sM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dgrF1cHkHRbs1xDeLHGYIWSKVz9PLcPqlkrm6r04eB/ny+f/ShfZAWTcsY/t1smdN/LAMdtTPhTQheFXrLx6gYDFk4Pm8rq0BfeQLi7ZmqBT+RfaKKwvnLv46WCmMdDH3Gvuu10qySFNmGl+azVD1qXYWeubcRlDP+6PZoUKaRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WNzxAmoh; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1db9cb6dcb5so8209775ad.1
+        for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 09:09:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1708621768; x=1709226568; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wOZrMjyUcQo5lrNPbgsjeePit/IKSLB+Nm61h+OnLec=;
+        b=WNzxAmohVlEWCqX36HPP0NWQS5t7fpP8drb5QZXNQOvK0E//af/8FzORIttiVc05Un
+         sLNkFKv2vS7PH/pYOdMm5ibijQpLXiXJ9QGIYnI4avczMJflpZGSuC/i8zu6xcqmrtV5
+         8d+EkflZBuhG72vwIJARXIfCMsiyN3T9q25MnDPBazmh1bmLrPOLEu8Qh+QN1uRMwZAC
+         JGm5FpDZ1lMiex4VizREFQpx/zYlf/QO9xIzFNepbul9LmveL3FdeoumIBing4xbXp2J
+         dfqo0wY8OxXMQkyskx9c82p6XRe7c8X0Xi58rAno4xxPf/fT52e9rSlGMtvFhN0kyith
+         52Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708621768; x=1709226568;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wOZrMjyUcQo5lrNPbgsjeePit/IKSLB+Nm61h+OnLec=;
+        b=HSfIzSXI4aUxWqIPNRMsx+iymFIzTw4hPFzuLJ4fXRRuAB3RgLxQfQIuTSLHhmUmXJ
+         dP9THIUQMctwHcCbCwrL1PhZW1ON2AM7KxkuTN/zyAQ+kZ5XtnYYQRKRCihyQZGliZNi
+         qYWviVy6tbrX+sjx3VWmxp/NLs9bf5/arzUWM0u1pAgOVRPkf734UtfUF17ToeX+rJwZ
+         1KK0/ximPuhqBhwQCDaaDffqCV/2R4ZnNrR++fn5NUyzXD0XQBgfTT/+3spFX2xYEEch
+         Zu1LDSnEEZiUcfjs0/W6abIMG93KhC9EQVVTfRUblASCAqR7Qz4O5+OML1crhmcZQnSd
+         5sKQ==
+X-Gm-Message-State: AOJu0YxPXxPrNtEYfzYX1/Ez0RHnJqvBZJ5DkvT1gAo5s1NPmG3ceHTL
+	2h+Sa66KhpkEJ9qsU1TxSX5bZRN50Lsp3kHujricX/t84q3zj3ldZ7cNfKzv/Us=
+X-Google-Smtp-Source: AGHT+IGRol6/6PHs9fyf4vSpFmqKkAbEqktu+wXWnxKsziokb9SKYPGvs2VZy49eIXTcCIXisyQKAQ==
+X-Received: by 2002:a17:902:d389:b0:1db:d32c:f4c0 with SMTP id e9-20020a170902d38900b001dbd32cf4c0mr3204585pld.3.1708621768321;
+        Thu, 22 Feb 2024 09:09:28 -0800 (PST)
+Received: from [127.0.0.1] (071-095-160-189.biz.spectrum.com. [71.95.160.189])
+        by smtp.gmail.com with ESMTPSA id w19-20020a170902c79300b001db839b9e80sm10253745pla.286.2024.02.22.09.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 09:09:27 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: John Garry <john.g.garry@oracle.com>
+Cc: linux-block@vger.kernel.org, hch@lst.de
+In-Reply-To: <20240222083420.6026-1-john.g.garry@oracle.com>
+References: <20240222083420.6026-1-john.g.garry@oracle.com>
+Subject: Re: [PATCH] null_blk: Delete nullb.{queue_depth, nr_queues}
+Message-Id: <170862176698.8813.5426505320214942854.b4-ty@kernel.dk>
+Date: Thu, 22 Feb 2024 10:09:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdduKnjJx3tJsQGY@bombadil.infradead.org>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [0.40 / 50.00];
-	 ARC_NA(0.00)[];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[24];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[nvidia.com,lists.linux-foundation.org,vger.kernel.org,lists.infradead.org,kernel.dk,acm.org,toxicpanda.com,gmail.com,javigon.com,intel.com,lst.de,kernel.org,suse.de,opensource.wdc.com,wdc.com,suse.com,redhat.com,grimberg.me,mit.edu,iogearbox.net];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[27.99%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: 0.40
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-On Thu, Feb 22, 2024 at 07:54:18AM -0800, Luis Chamberlain wrote:
-> > I should have been more precise here, I was trying to say supporting
-> > real fabrics targets. blktests already has some logic for PCI targets
-> > with $TEST_DEV but I haven't really looked into this part yet.
+
+On Thu, 22 Feb 2024 08:34:20 +0000, John Garry wrote:
+> Since commit 8b631f9cf0b8 ("null_blk: remove the bio based I/O path"),
+> struct nullb members queue_depth and nr_queues are only ever written, so
+> delete them.
 > 
-> Do fabric targets have a symlink which remains static?
+> With that, null_exit_hctx() can also be deleted.
+> 
+> 
+> [...]
 
-A pretty typical nvme fabric test is:
+Applied, thanks!
 
-setup phase target side:
- - create backing device (file/block)
- - create loopback device
- - create nvme subsystem
+[1/1] null_blk: Delete nullb.{queue_depth, nr_queues}
+      commit: 0f225f87873ee95dd4cf94dfc6a3249d4289e4ea
 
-setup phase host side:
- - discover
- - connect to the target
+Best regards,
+-- 
+Jens Axboe
 
-test phase
- do something like reading/writing from '/dev/nvmeX'
- or 'nvme id-ctrl /dev/nvmeX', etc.
 
-cleanup phase host side:
- - disconnect from the target
 
-cleanup phase target side:
- - remove nvme subsystem
- - remove loopback device
- - remove backing device
-
-I'd like to make the setup and cleanup target side more flexible. The
-host side will not be affected at all by exchanging the current soft
-target side (aka nvmet) with something else. This means it's not about
-any device links in /dev.
-
-Hope this makes it a bit clearer.
 
