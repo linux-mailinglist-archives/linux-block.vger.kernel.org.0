@@ -1,80 +1,105 @@
-Return-Path: <linux-block+bounces-3624-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3626-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13CA58616A4
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 17:00:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C3908616A5
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 17:00:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3A1E0B229C4
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 16:00:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB309286012
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 16:00:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C34C382D84;
-	Fri, 23 Feb 2024 15:58:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A67982D7A;
+	Fri, 23 Feb 2024 15:59:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reWjiXNp"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="FJbqOkVY"
 X-Original-To: linux-block@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA2983CBD
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 15:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9A182D81
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 15:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708703928; cv=none; b=aDpK6TDbqU5VWJYsweTFpON2wBTjuwGc4wqE0Xpkg3bsNEggcNXE1zrffuK2zN3Xi8dMwROhgQAkkWEKKMp+pgDCFuW2LGDFM2f8zev7EqLUI6yea8+h+WVn7qq0TtgNxuGZOcnQ4bA9+EkG5oon9ixZ3wsLCXFRMbnRijH+H7g=
+	t=1708703968; cv=none; b=jXqzAmi/m5Xp682HTxmv+OqaW3WsZqU/+3uRuRuae02ymuHbrUg9W7qmQrAb/PzE1kCCXQGcC963UgGZZpbzkyU3on+xkuVWGwpQn5UpUcFpSCXylphRb0ItvzCU/5dbzMB0rVkjwRrY4ZZxIRsL60FTm+EPO/gYIVq2mh2Wics=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708703928; c=relaxed/simple;
-	bh=90ZD0EQUhD6fJgwU8WdGRjCLu+3FSFgOAkRfqTl+t1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWRQBDGMCM+MRVK2N/mk7tYh1PLO6Im5dDAG7tqZ1Dzp0YZNYrT/Qt+AcNwMdHUvP1aeYvFgrsxeFwNhSy1MsDQRhPE3/ymPAWP9JI44r2FLvf8zSYKKg10bkUG2vbCmnI4Up+arYbvaY+pR0wwMMHLJBL83Z4YshT5G0Z7lCXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reWjiXNp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90E0EC433F1;
-	Fri, 23 Feb 2024 15:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708703928;
-	bh=90ZD0EQUhD6fJgwU8WdGRjCLu+3FSFgOAkRfqTl+t1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=reWjiXNpX+8lOIv/vE5DR7NFgab1x7fKwo9VuFLGqBZOvOtSw2WRe4S+VAjvosJk+
-	 LKpD4BsX0t+s0PWyaSpjVcFZ7qRa+NAA2v4QdH1fYJoe+wIkBccPQw1Aqnv6rN43pI
-	 V43DgvxBEa0kJkhV5WacB2Ocs45Y2viyzMOnUqnmz4+CVftzQ0umM8fhK4LGcn9uIJ
-	 2S1JqfGWX6l8Rbfz2arQvr8uomy+94x+yUTSKNxOF5fjnhE4HSMHifd2K+YX9zQT6x
-	 MM5ig4cqPuCMyWwCpOftwQmFtAwKkgRc+PxZFSX7YM3oLEThKa363G2kABdKp6dZx5
-	 Yu2P66Dp7kg3Q==
-Date: Fri, 23 Feb 2024 08:58:45 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Nilay Shroff <nilay@linux.ibm.com>
-Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
-	axboe@kernel.org, ming.lei@redhat.com, chaitanyak@nvidia.com,
-	Conrad Meyer <conradmeyer@meta.com>
-Subject: Re: [PATCHv3 4/4] blk-lib: check for kill signal
-Message-ID: <ZdjAtdut9Pkgq_79@kbusch-mbp>
-References: <20240222191922.2130580-1-kbusch@meta.com>
- <20240222191922.2130580-5-kbusch@meta.com>
- <50f7c805-d562-4084-8f4f-4bf0e223ddde@linux.ibm.com>
+	s=arc-20240116; t=1708703968; c=relaxed/simple;
+	bh=Y4Qv0Ryn8M940ad2Ttnt2ZEB8nPtjitKR0zZjXkfdjA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YucnST6UyUSia0TfXXklFeCNITbLdGlKyEbNNmJfl+sGsY5cHRa1uCd57Rubbg+abmMN0vjyg2Ypl/iHepXk6o1Dp7tHu07wm4uZFGNDs1sPj2uDOOxq8w8oVLYm6Y4z4UXp3rcDaHCG9TAOOBaILWhgdXpw9KGKsFpZ9CTRyBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=FJbqOkVY; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41NF5P3s021692
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:25 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=s2048-2021-q4;
+ bh=EJn8gal7/WlJIZYk7CPkBp0tSDR5oN4QowIZWHzXe1o=;
+ b=FJbqOkVY6av+1ETEoX4TaGt83xohq02V2zJSV150wSh0yDvOnY8CU6rzRoPuvsY8ozY8
+ NcntQ/kKBG9w5bJp89eEhqClYp5mocd/TuG4g9sS38bU1N7g3UYhCZh+9k7iCKN8ttjU
+ EIOeII1eZc57NYV1j3TYoI8HF7WWzWtc6smn6W/dYxeEKeL1tfD5LZb589+vIjTYO4EK
+ jpuE4K2OpSvkzt8xRM+SnYVj2tkAtt1qmILwfpm16KsBpsgGdphCr0on6vnHRxev1P/P
+ D/s8Tbvq6FPKTBSR00dhSa3gVfy9CKVrtEC9w4OYTA851wV8f+AV+aCHEl+wz611895h Hw== 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3webyke4e6-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:25 -0800
+Received: from twshared9513.02.ash9.facebook.com (2620:10d:c0a8:1b::30) by
+ mail.thefacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 23 Feb 2024 07:59:23 -0800
+Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
+	id 998932574FA3F; Fri, 23 Feb 2024 07:59:12 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-block@vger.kernel.org>
+CC: <axboe@kernel.org>, <ming.lei@redhat.com>, <nilay@linux.ibm.com>,
+        <chaitanyak@nvidia.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCHv4 0/4] block: make long running operations killable
+Date: Fri, 23 Feb 2024 07:59:06 -0800
+Message-ID: <20240223155910.3622666-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50f7c805-d562-4084-8f4f-4bf0e223ddde@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: OPd4pStd-vN3DOZelXzmViaHaPqrgvGr
+X-Proofpoint-GUID: OPd4pStd-vN3DOZelXzmViaHaPqrgvGr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-23_02,2024-02-23_01,2023-05-22_02
 
-On Fri, Feb 23, 2024 at 04:30:14PM +0530, Nilay Shroff wrote:
-> I think if fatal signal is intercepted while running __blkdev_issue_write_zeroes() then we 
-> shouldn't need to re-enter the __blkdev_issue_zero_pages(). We may want to add following code:
-> 
-> @@ -280,7 +306,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
->                 bio_put(bio);
->         }
->         blk_finish_plug(&plug);
-> -       if (ret && try_write_zeroes) {
-> +       if (ret && ret != -EINTR && try_write_zeroes) {
->                 if (!(flags & BLKDEV_ZERO_NOFALLBACK)) {
->                         try_write_zeroes = false;
->                         goto retry;
+From: Keith Busch <kbusch@kernel.org>
 
-Good point, I'll fold this in.
+Changes from v3:
+
+ Added reviewed and tested by tags
+
+ More formatting cleanups in patch 2 (Christoph)
+
+ A more descriptive name for the bio chain wait helper (Christoph)
+
+ Don't fallback to the zero page on fatal signal error (Nilay)
+
+Keith Busch (4):
+  block: blkdev_issue_secure_erase loop style
+  block: cleanup __blkdev_issue_write_zeroes
+  block: io wait hang check helper
+  blk-lib: check for kill signal
+
+ block/bio.c     | 12 +--------
+ block/blk-lib.c | 70 ++++++++++++++++++++++++++++++++++++-------------
+ block/blk-mq.c  | 19 +++-----------
+ block/blk.h     | 13 +++++++++
+ 4 files changed, 69 insertions(+), 45 deletions(-)
+
+--=20
+2.34.1
+
 
