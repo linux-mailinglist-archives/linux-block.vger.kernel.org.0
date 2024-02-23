@@ -1,67 +1,67 @@
-Return-Path: <linux-block+bounces-3629-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3625-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFF8C8616AB
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 17:00:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 050C08616A3
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 17:00:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC649B22BE8
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 16:00:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 364DB1C25473
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 16:00:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 761678287B;
-	Fri, 23 Feb 2024 16:00:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A746982879;
+	Fri, 23 Feb 2024 15:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="FiL4UK+u"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="n0m5KK4C"
 X-Original-To: linux-block@vger.kernel.org
 Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C962782D7D
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 15:59:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5E881AD3
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 15:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708704000; cv=none; b=mhY42jdjgQXdT0i2XYF5jmrQULGNKzuQLi1iO4sMUL+m0I+gg7fsC8d4k1KCSbcei3V3Xz/w/zgN8GOBR8SaapWy32Sikg9yjXDNJH0UtKIf9ahPCWvrDEJNovXgzGLYiN8ATgqbDGr3r+yQlPGSxOOrFo/6J5dX1V0mcE8i4Vs=
+	t=1708703964; cv=none; b=PyYZVbqjEKdL3oiFZHbIMR4NvAE3TYF05OJqIC3cn8m9YpRGMTqwqq6+SPxpuWUJzYK0m58rCGSceCx+PqiGmxJIMrmDWWifElTBFBQjk1MxkYpihrpmLkALVKzAiBSEf4rlLQggRVe6upVe+Ozzhv0CbBQ6qve2lYrvyOlalp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708704000; c=relaxed/simple;
-	bh=RFU7AQr6deKdQR+3toeNP+aMAS4K4nKfTYZSYGjPEY8=;
+	s=arc-20240116; t=1708703964; c=relaxed/simple;
+	bh=xLidHQGevw3+hdgp5Aw1xJdduckx5iJ5szsvVyNZdCc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GU/hP0MB2k1qatOJPSANrbe3ElQzoJE2EgMPFo6xH6QBI0QeR1dXNjam51k8mckZ/ktrfX3ByML1f7kZsC2wgMICoo/FQ8xEPLGDZ4H9Q/Mvq5VElMVH4mRLb0Rxi9hv0Jt7YNgtTSXRulOt1Omr6rFxiTgYrvwcrr4RL8wSgNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=FiL4UK+u; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=BsZ4bB9JH/YE2wHcQNaRBNe56lcIHBm4iawTma+rXQPxiUC/FZzRQLZqny47nsICxLSe8sgallXBIXXjpt0Ex1Z4sqv4bikPr/wi/i0OBwnfxhOA0Givh+oSlk32fjeKxsGlAZkKZjhrbBqUAixF6VOf1hPYETyldhC6oeHgW78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=n0m5KK4C; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 41N36YHD008854
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:57 -0800
+	by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 41N36YH0008854
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:21 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=s2048-2021-q4;
- bh=KCV1GsxIVZ+O9ooNXDBBSvmGvB+u+6vYvN8LgYXZGIg=;
- b=FiL4UK+unYmTJ27tsErylDHTb3QJlL1h7AJLo9ZgqnmmqGMp1DZmJX/EqKLeE7GPdqUf
- /8OEfI2Wuij7IwGt41Z31k+TrajfeAYBIzVVeD7gKjD2rfbTfLtfOsinQL01rfUJu01i
- nAgAoXAM2FJcgHBRDCV3L4aoUnuxHxtGmxeOeHy5tp2QZEXGJeHSkU2W4eOAwWQnURHn
- 6fREpphrii1PgDAWOQsK8DxFHVon9QhiqpuAWxkEy6QafviqAstMPfb6O7TXuJFj6px7
- +Sjw28La/ALoq6tfcklP5e1pb1lO8lLsDYhBehNF2CMEox9qX0g5DYdtSO5yRYFe7/IS Eg== 
+ bh=X7lDYXI0dpywXrFiieUIh3nLJG0yEH5eUraiJMVUVo8=;
+ b=n0m5KK4Cr/5ntgTr9Es/r00sSstkODj2ewAGkvMdx70ctsLuAZ/xVKlz1E3m3Zor/Hl8
+ jR2E/F1g5t/AB/zzNJcrpPEPwdTQsQU6m87WZiUeI+idGKVUGOEek90QvqqElUUyfhU6
+ Le7CMpMUY2ZVvNrbuP9zGa2qDwpU9yV73fyptu6XM37h3pI4VnKipNV2a1birtTxpDli
+ K4RVRvD8ZZXE54odIgxFVwXNtrxSxz3696CCi/fK3pQCWc3xmgAwjwyn9LUazjwxiQ13
+ zhaReK5vzJcTOnX2Z4f5wkSYe6zZ2Xd1wUnniCrBuuJavdGxxe6vLvdI5t9DZHmxi2Ud 0Q== 
 Received: from mail.thefacebook.com ([163.114.132.120])
-	by m0089730.ppops.net (PPS) with ESMTPS id 3wek5m3a08-17
+	by m0089730.ppops.net (PPS) with ESMTPS id 3wek5m3a08-5
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:57 -0800
-Received: from twshared34526.07.ash9.facebook.com (2620:10d:c085:108::4) by
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:21 -0800
+Received: from twshared1676.08.ash9.facebook.com (2620:10d:c085:208::11) by
  mail.thefacebook.com (2620:10d:c085:11d::8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 23 Feb 2024 07:59:26 -0800
+ 15.1.2507.35; Fri, 23 Feb 2024 07:59:19 -0800
 Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-	id 593692574FA47; Fri, 23 Feb 2024 07:59:13 -0800 (PST)
+	id E54D72574FA4C; Fri, 23 Feb 2024 07:59:13 -0800 (PST)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>
 CC: <axboe@kernel.org>, <ming.lei@redhat.com>, <nilay@linux.ibm.com>,
         <chaitanyak@nvidia.com>, Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig
-	<hch@lst.de>
-Subject: [PATCHv4 3/4] block: io wait hang check helper
-Date: Fri, 23 Feb 2024 07:59:09 -0800
-Message-ID: <20240223155910.3622666-4-kbusch@meta.com>
+        Conrad Meyer
+	<conradmeyer@meta.com>
+Subject: [PATCHv4 4/4] blk-lib: check for kill signal
+Date: Fri, 23 Feb 2024 07:59:10 -0800
+Message-ID: <20240223155910.3622666-5-kbusch@meta.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240223155910.3622666-1-kbusch@meta.com>
 References: <20240223155910.3622666-1-kbusch@meta.com>
@@ -74,131 +74,123 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: tJfWC8qxaIhPKvt8tOv7b73JdbcG7fqT
-X-Proofpoint-GUID: tJfWC8qxaIhPKvt8tOv7b73JdbcG7fqT
+X-Proofpoint-ORIG-GUID: qKIKOUFUtHE8N2ixCi6SbLTEQKLKiecL
+X-Proofpoint-GUID: qKIKOUFUtHE8N2ixCi6SbLTEQKLKiecL
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-23_02,2024-02-23_01,2023-05-22_02
 
 From: Keith Busch <kbusch@kernel.org>
 
-This is the same in two places, and another will be added soon. Create a
-helper for it.
+Some of these block operations can access a significant capacity and
+take longer than the user expected. A user may change their mind about
+wanting to run that command and attempt to kill the process and do
+something else with their device. But since the task is uninterruptable,
+they have to wait for it to finish, which could be many hours.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Check for a fatal signal at each iteration so the user doesn't have to
+wait for their regretted operation to complete naturally.
+
+Reported-by: Conrad Meyer <conradmeyer@meta.com>
+Tested-by: Nilay Shroff<nilay@linux.ibm.com>
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- block/bio.c    | 12 +-----------
- block/blk-mq.c | 19 +++----------------
- block/blk.h    | 13 +++++++++++++
- 3 files changed, 17 insertions(+), 27 deletions(-)
+ block/blk-lib.c | 40 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 00847ff1415c3..496867b51609f 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -16,7 +16,6 @@
- #include <linux/workqueue.h>
- #include <linux/cgroup.h>
- #include <linux/highmem.h>
--#include <linux/sched/sysctl.h>
- #include <linux/blk-crypto.h>
- #include <linux/xarray.h>
-=20
-@@ -1371,21 +1370,12 @@ int submit_bio_wait(struct bio *bio)
- {
- 	DECLARE_COMPLETION_ONSTACK_MAP(done,
- 			bio->bi_bdev->bd_disk->lockdep_map);
--	unsigned long hang_check;
-=20
- 	bio->bi_private =3D &done;
- 	bio->bi_end_io =3D submit_bio_wait_endio;
- 	bio->bi_opf |=3D REQ_SYNC;
- 	submit_bio(bio);
--
--	/* Prevent hang_check timer from firing at us during very long I/O */
--	hang_check =3D sysctl_hung_task_timeout_secs;
--	if (hang_check)
--		while (!wait_for_completion_io_timeout(&done,
--					hang_check * (HZ/2)))
--			;
--	else
--		wait_for_completion_io(&done);
-+	blk_wait_io(&done);
-=20
- 	return blk_status_to_errno(bio->bi_status);
- }
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 6abb4ce46baa1..45f994c100446 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -21,7 +21,6 @@
- #include <linux/llist.h>
- #include <linux/cpu.h>
- #include <linux/cache.h>
--#include <linux/sched/sysctl.h>
- #include <linux/sched/topology.h>
- #include <linux/sched/signal.h>
- #include <linux/delay.h>
-@@ -1409,22 +1408,10 @@ blk_status_t blk_execute_rq(struct request *rq, b=
-ool at_head)
- 	blk_mq_insert_request(rq, at_head ? BLK_MQ_INSERT_AT_HEAD : 0);
- 	blk_mq_run_hw_queue(hctx, false);
-=20
--	if (blk_rq_is_poll(rq)) {
-+	if (blk_rq_is_poll(rq))
- 		blk_rq_poll_completion(rq, &wait.done);
--	} else {
--		/*
--		 * Prevent hang_check timer from firing at us during very long
--		 * I/O
--		 */
--		unsigned long hang_check =3D sysctl_hung_task_timeout_secs;
--
--		if (hang_check)
--			while (!wait_for_completion_io_timeout(&wait.done,
--					hang_check * (HZ/2)))
--				;
--		else
--			wait_for_completion_io(&wait.done);
--	}
-+	else
-+		blk_wait_io(&wait.done);
-=20
- 	return wait.ret;
- }
-diff --git a/block/blk.h b/block/blk.h
-index 7c30e2ac8ebcd..6c2749d122ab5 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -4,6 +4,7 @@
-=20
- #include <linux/blk-crypto.h>
- #include <linux/memblock.h>	/* for max_pfn/max_low_pfn */
-+#include <linux/sched/sysctl.h>
- #include <linux/timekeeping.h>
- #include <xen/xen.h>
- #include "blk-crypto-internal.h"
-@@ -71,6 +72,18 @@ static inline int bio_queue_enter(struct bio *bio)
- 	return __bio_queue_enter(q, bio);
+diff --git a/block/blk-lib.c b/block/blk-lib.c
+index a6954eafb8c8a..dc8e35d0a51d6 100644
+--- a/block/blk-lib.c
++++ b/block/blk-lib.c
+@@ -35,6 +35,26 @@ static sector_t bio_discard_limit(struct block_device =
+*bdev, sector_t sector)
+ 	return round_down(UINT_MAX, discard_granularity) >> SECTOR_SHIFT;
  }
 =20
-+static inline void blk_wait_io(struct completion *done)
++static void await_bio_endio(struct bio *bio)
 +{
-+	/* Prevent hang_check timer from firing at us during very long I/O */
-+	unsigned long timeout =3D sysctl_hung_task_timeout_secs * HZ / 2;
-+
-+	if (timeout)
-+		while (!wait_for_completion_io_timeout(done, timeout))
-+			;
-+	else
-+		wait_for_completion_io(done);
++	complete(bio->bi_private);
++	bio_put(bio);
 +}
 +
- #define BIO_INLINE_VECS 4
- struct bio_vec *bvec_alloc(mempool_t *pool, unsigned short *nr_vecs,
- 		gfp_t gfp_mask);
++/*
++ * await_bio_chain - ends @bio and waits for every chained bio to comple=
+te
++ */
++static void await_bio_chain(struct bio *bio)
++{
++	DECLARE_COMPLETION_ONSTACK_MAP(done,
++			bio->bi_bdev->bd_disk->lockdep_map);
++
++	bio->bi_private =3D &done;
++	bio->bi_end_io =3D await_bio_endio;
++	bio_endio(bio);
++	blk_wait_io(&done);
++}
++
+ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+ 		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop)
+ {
+@@ -77,6 +97,10 @@ int __blkdev_issue_discard(struct block_device *bdev, =
+sector_t sector,
+ 		 * is disabled.
+ 		 */
+ 		cond_resched();
++		if (fatal_signal_pending(current)) {
++			await_bio_chain(bio);
++			return -EINTR;
++		}
+ 	}
+=20
+ 	*biop =3D bio;
+@@ -143,6 +167,10 @@ static int __blkdev_issue_write_zeroes(struct block_=
+device *bdev,
+ 		nr_sects -=3D len;
+ 		sector +=3D len;
+ 		cond_resched();
++		if (fatal_signal_pending(current)) {
++			await_bio_chain(bio);
++			return -EINTR;
++		}
+ 	}
+=20
+ 	*biop =3D bio;
+@@ -187,6 +215,10 @@ static int __blkdev_issue_zero_pages(struct block_de=
+vice *bdev,
+ 				break;
+ 		}
+ 		cond_resched();
++		if (fatal_signal_pending(current)) {
++			await_bio_chain(bio);
++			return -EINTR;
++		}
+ 	}
+=20
+ 	*biop =3D bio;
+@@ -277,7 +309,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, s=
+ector_t sector,
+ 		bio_put(bio);
+ 	}
+ 	blk_finish_plug(&plug);
+-	if (ret && try_write_zeroes) {
++	if (ret && ret !=3D -EINTR && try_write_zeroes) {
+ 		if (!(flags & BLKDEV_ZERO_NOFALLBACK)) {
+ 			try_write_zeroes =3D false;
+ 			goto retry;
+@@ -329,6 +361,12 @@ int blkdev_issue_secure_erase(struct block_device *b=
+dev, sector_t sector,
+ 		sector +=3D len;
+ 		nr_sects -=3D len;
+ 		cond_resched();
++		if (fatal_signal_pending(current)) {
++			await_bio_chain(bio);
++			ret =3D -EINTR;
++			bio =3D NULL;
++			break;
++		}
+ 	}
+ 	if (bio) {
+ 		ret =3D submit_bio_wait(bio);
 --=20
 2.34.1
 
