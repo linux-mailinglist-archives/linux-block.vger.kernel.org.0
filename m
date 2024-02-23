@@ -1,113 +1,89 @@
-Return-Path: <linux-block+bounces-3593-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3598-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 201FD860974
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 04:39:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BD3D8609AE
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 04:56:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C66951F22E1C
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 03:39:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CBB801C24FE0
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 03:56:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A080D2F25;
-	Fri, 23 Feb 2024 03:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dlJ/6Xnd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26ECA10A13;
+	Fri, 23 Feb 2024 03:56:11 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B3853A1
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 03:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03F610A09
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 03:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708659540; cv=none; b=UGl9ei4sSbzHF8YcIKWKX8ZYiAJNtgm3qexr0e7MxPokun2CA7SgR4R7BYL+3zv3gCn7bTlh3uj2pqtj/DCL156Zh6FImWxYfSnnFPxKpBOmaT69sAwoAxSkoJNVMcxEwuayqmXYJqZ0BphiqrhLdj5DMwD5lkTS+eUUmM2VEdA=
+	t=1708660571; cv=none; b=LqDuIFETitnTH2uF9ut/AxZOBr9TP5b7NrB7oWaX7FUQGhhxfntb7796tO7atTbVx9Vg15fpNMSyUmXPY2O69zzol4d+kBC2SZXNtP0lpwD9m+E7lePK4Y5ouQZXpBJLR1Ck/WpWctcTZ8JdFmWmSs4qcDVsul928aagosiOg+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708659540; c=relaxed/simple;
-	bh=B0i0+nxfozszHhNkVrDf9L8PZfAFfrk7N7ZDM0M5HBg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p+J2dS+cAT+fA8oCKs/vqEfxm5IB3mIdT3YQvWUAMXl4eh+L7ulsDZvH1r3U+RklMAlOi+dlPpIsF1EQdRAd2z1Kf5JOV8nQg9wGrBEljSDAmdSdVu92ckRrIRhtUntUJdCNzpUtxTLboH5m2HWaEQiB5eq040r8Du25SbxE1pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dlJ/6Xnd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708659534;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B0i0+nxfozszHhNkVrDf9L8PZfAFfrk7N7ZDM0M5HBg=;
-	b=dlJ/6XndNUyXQhOboEYV6IYp7qL6BnH1e089NkTmdYRsg2d94aW579W6a9fJ8whpEoNy3I
-	VJC03Gb/LNWvHOqnulC3PuDJKuq88+juSOdXzgf56fPgwYDTTdW5jt2CYBoIEhSubrDu+5
-	tBTModpFVT3PXCR1P7feJV00sgYjePM=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-687-ILOQd3zBMUqLcaWds6YPNw-1; Thu, 22 Feb 2024 22:38:53 -0500
-X-MC-Unique: ILOQd3zBMUqLcaWds6YPNw-1
-Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-46d1e3394a0so100537137.0
-        for <linux-block@vger.kernel.org>; Thu, 22 Feb 2024 19:38:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708659533; x=1709264333;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B0i0+nxfozszHhNkVrDf9L8PZfAFfrk7N7ZDM0M5HBg=;
-        b=HrwTGjcn5BcH/Gzzzf6IYEcqZFOyPtYHBeN7ckG9Ym+1ikCXo2bBNYk1WT9w5lJdvt
-         sEOc7Fj7FbaPie4xcrW2UBRHk97BTvQwpU5bODO+zoFdgjYnYmRAEArMyrUoQkd7788q
-         j8BaauEBuXF6k3zE2MSjUq0PKZ9pUyh71pDpOMkWSo8blGH2TSQdREW2kOccMqh0uNAa
-         jn33HavdMObL/8azRGtvfrEo1zQOKcVckrqpVtTACexIeE3ve8DIT10K+UtJGhQXg2XU
-         AbChpiVwOO6t+u0e/rLiY4JCJQk69binDENs0meS7iWwj7l6ypOihyz81dS5ICqdwtDt
-         yOmw==
-X-Gm-Message-State: AOJu0YxwXXPQm+IJHNb+kZmd/DXQTndY18agWuUBJ5pc4MT9+ApCZc/L
-	Jz85ypB4jXcQyXvh/mu5r9wGP512Mo5pizkWxFpAaW4wCD5JMvmNREcY8U5/6yzlHSgu/m3njiT
-	n1BTzxD2TEjqEaJeolxMc7wyY2IFflP7OiIAW+04je4Y/N+ktrQH0xRc2wwfDrw4dm1NlyxCF/l
-	fw1Ch8SNTYoiV16Y4s2FEX8FfrMHT/kcXjMwM=
-X-Received: by 2002:a05:6102:3bd5:b0:470:5f0b:5d52 with SMTP id a21-20020a0561023bd500b004705f0b5d52mr733520vsv.1.1708659532838;
-        Thu, 22 Feb 2024 19:38:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFCi7Nly8NrzpaEv3afvqfYVJQF08wqstMO58fqKSzSDKgfROkvjK/2ZA4uqLhyGi/Nv8V2C/TTinOemxNC/5U=
-X-Received: by 2002:a05:6102:3bd5:b0:470:5f0b:5d52 with SMTP id
- a21-20020a0561023bd500b004705f0b5d52mr733513vsv.1.1708659532596; Thu, 22 Feb
- 2024 19:38:52 -0800 (PST)
+	s=arc-20240116; t=1708660571; c=relaxed/simple;
+	bh=t6I7agqo7A3TTgQjkP8Wd3mMKgNKfghTfx+u9omcUE0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pjuiLmSlUbO99H5fRkuDhthEMPdrE8PkahgbBvzDP+qrJyFLfr3ww5/BPJzh3leTgRFw/eyQl1YRakPi0+lysuopciOS9uZOAjI1YwQkoIwFk/UiDqXDE5NlNhrqd4/4Fa0cPerX668NMfB0WljDdhekUDjwYUcxA9vXIQ6JReI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Tgx2f6rlfzXhG2;
+	Fri, 23 Feb 2024 11:54:02 +0800 (CST)
+Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 006391400CA;
+	Fri, 23 Feb 2024 11:56:00 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 23 Feb 2024 11:55:59 +0800
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+To: Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>,
+	Nhat Pham <nphamcs@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+CC: Chengming Zhou <chengming.zhou@linux.dev>, Huacai Chen
+	<chenhuacai@kernel.org>, Minchan Kim <minchan@kernel.org>, Sergey Senozhatsky
+	<senozhatsky@chromium.org>, <linux-mm@kvack.org>,
+	<linux-block@vger.kernel.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH 0/5] mm: unify default compressor algorithm for zram/zswap
+Date: Fri, 23 Feb 2024 11:55:43 +0800
+Message-ID: <20240223035548.2591882-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
 List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222191922.2130580-1-kbusch@meta.com> <20240222191922.2130580-5-kbusch@meta.com>
-In-Reply-To: <20240222191922.2130580-5-kbusch@meta.com>
-From: Ming Lei <ming.lei@redhat.com>
-Date: Fri, 23 Feb 2024 11:38:41 +0800
-Message-ID: <CAFj5m9JAZ1UMnWkpvR31LUG-Ym76Hkc1dWhc8ta-8wZLWPOOMg@mail.gmail.com>
-Subject: Re: [PATCHv3 4/4] blk-lib: check for kill signal
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-block@vger.kernel.org, axboe@kernel.org, nilay@linux.ibm.com, 
-	chaitanyak@nvidia.com, Keith Busch <kbusch@kernel.org>, 
-	Conrad Meyer <conradmeyer@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm100001.china.huawei.com (7.185.36.93)
 
-On Fri, Feb 23, 2024 at 3:20=E2=80=AFAM Keith Busch <kbusch@meta.com> wrote=
-:
->
-> From: Keith Busch <kbusch@kernel.org>
->
-> Some of these block operations can access a significant capacity and
-> take longer than the user expected. A user may change their mind about
-> wanting to run that command and attempt to kill the process and do
-> something else with their device. But since the task is uninterruptable,
-> they have to wait for it to finish, which could be many hours.
->
-> Check for a fatal signal at each iteration so the user doesn't have to
-> wait for their regretted operation to complete naturally.
->
-> Reported-by: Conrad Meyer <conradmeyer@meta.com>
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
+Both zram and zswap are used to reduce memory usage by compressing cold
+page, a default compressor algorithm is selected from kinds of compressor
+algorithm as the default one from very similar Kconfig, also both of
+them could change the algorithm by sysfs interfaces, so unify the
+default compressor algorithm to cleanup the default algorithm chosen.
 
-Looks fine,
+Kefeng Wang (5):
+  zram: zcomp: remove zcomp_set_max_streams() declaration
+  zram: make zram depends on SWAP
+  zram: support deflate compressor
+  mm: zswap: default to lzo-rle instead of lzo
+  mm: unify default compressor algorithm for zswap and zram
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+ Documentation/admin-guide/mm/zswap.rst     |   2 +-
+ arch/loongarch/configs/loongson3_defconfig |   2 +-
+ drivers/block/zram/Kconfig                 |  44 +------
+ drivers/block/zram/zcomp.c                 |   3 +
+ drivers/block/zram/zcomp.h                 |   1 -
+ drivers/block/zram/zram_drv.c              |   2 +-
+ mm/Kconfig                                 | 134 +++++++++++----------
+ mm/zswap.c                                 |   8 +-
+ 8 files changed, 83 insertions(+), 113 deletions(-)
+
+-- 
+2.27.0
 
 
