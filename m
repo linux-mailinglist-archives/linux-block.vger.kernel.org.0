@@ -1,44 +1,44 @@
-Return-Path: <linux-block+bounces-3597-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3594-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FC648609AD
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 04:56:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 605448609AA
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 04:56:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0FD91C24D50
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 03:56:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16EC2287492
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 03:56:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A82A22F25;
-	Fri, 23 Feb 2024 03:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA3DBE5A;
+	Fri, 23 Feb 2024 03:56:06 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D2610971
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 03:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAD3B67F
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 03:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708660570; cv=none; b=sdxYGXLYt+fW9p0RwBADpAqAf3YZb95Xlp3frpUZoyQh6eQLE60QmGbtCvQkHmU3hj8q4PoQDkjZAnClMug7k8v1ULvNWfuICK4hIDOrIht7vc6CCc8jWy4a3niH/SO27TTa1hKet1Z4SpSvtJqRr5tm3ZiQQ5OuMf5frSJ2TMk=
+	t=1708660566; cv=none; b=lN/doA7+YJl+QWxe7T0BHYr4/JNs1k3DTz/2KgzoO1oATKZ5cupUCdwUbfQn0ylPyDXIPMqZImTo3Yqim7qep9vdmt7v1gc9aHwUzN/5ozFGgYCayrT78bkfuRX4PWuwaVOVHpbbN2U5JKFr7pAaJvdo7kaNH+KHlnr/vbR0JvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708660570; c=relaxed/simple;
-	bh=d/R/4aR4gC50xsS9lw/06sGRWh/mHdlq/aSZyPL2FnQ=;
+	s=arc-20240116; t=1708660566; c=relaxed/simple;
+	bh=brGBZ9P1VPb4XpFtJMfvT/hhEfEYKxqN4etRyOQiKfQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nDB6gxXmf+bRxXlEDLD+KoNFiTZKR4EjtfuE0vJoZjPcyqLhzTgs0aHBbcWbPqpdqc8UDz5NSu+riGi72oXC9+qnO52UhxeJSsrjwjV8qkU8ySASeh3vTXsLyEO9IlURp+kSY07Hdw/cXqXdmPYXVT6LPFoKIqmt7VvTYADP7TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=L9+9wF/TVB5hvcDv9qVPh9mPZDtFY0qnWTJfJosxAzVkBCGzlDhROJrQoVX0gARfXsOX+xQAZg1cvlbBfM11F/ZzhfRifm/WqHdHsPAFd1MI2vBgvEYOzp/6mNKpDBFmneySu9OfK8E2350dRiOALs+w9tu3wqbQrNhDPcGc5Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tgx3J0qT7z1xpBD;
-	Fri, 23 Feb 2024 11:54:36 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Tgx4G1kvhz1vtxj;
+	Fri, 23 Feb 2024 11:55:26 +0800 (CST)
 Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 92D6C140136;
-	Fri, 23 Feb 2024 11:56:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2A7911A016C;
+	Fri, 23 Feb 2024 11:56:01 +0800 (CST)
 Received: from localhost.localdomain (10.175.112.125) by
  dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 23 Feb 2024 11:55:59 +0800
+ 15.1.2507.35; Fri, 23 Feb 2024 11:56:00 +0800
 From: Kefeng Wang <wangkefeng.wang@huawei.com>
 To: Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>,
 	Nhat Pham <nphamcs@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
@@ -46,9 +46,9 @@ CC: Chengming Zhou <chengming.zhou@linux.dev>, Huacai Chen
 	<chenhuacai@kernel.org>, Minchan Kim <minchan@kernel.org>, Sergey Senozhatsky
 	<senozhatsky@chromium.org>, <linux-mm@kvack.org>,
 	<linux-block@vger.kernel.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH 1/5] zram: zcomp: remove zcomp_set_max_streams() declaration
-Date: Fri, 23 Feb 2024 11:55:44 +0800
-Message-ID: <20240223035548.2591882-2-wangkefeng.wang@huawei.com>
+Subject: [PATCH 2/5] zram: make zram depends on SWAP
+Date: Fri, 23 Feb 2024 11:55:45 +0800
+Message-ID: <20240223035548.2591882-3-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240223035548.2591882-1-wangkefeng.wang@huawei.com>
 References: <20240223035548.2591882-1-wangkefeng.wang@huawei.com>
@@ -63,24 +63,26 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  dggpemm100001.china.huawei.com (7.185.36.93)
 
-The zcomp_set_max_streams() is removed from commit 43209ea2d17a
-("zram: remove max_comp_streams internals"), remove the declaration.
+The zram is useless when SWAP is disabled, make zram depends on SWAP.
 
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- drivers/block/zram/zcomp.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/block/zram/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/zram/zcomp.h b/drivers/block/zram/zcomp.h
-index cdefdef93da8..e9fe63da0e9b 100644
---- a/drivers/block/zram/zcomp.h
-+++ b/drivers/block/zram/zcomp.h
-@@ -39,5 +39,4 @@ int zcomp_compress(struct zcomp_strm *zstrm,
- int zcomp_decompress(struct zcomp_strm *zstrm,
- 		const void *src, unsigned int src_len, void *dst);
- 
--bool zcomp_set_max_streams(struct zcomp *comp, int num_strm);
- #endif /* _ZCOMP_H_ */
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index 7b29cce60ab2..0cee425da0f5 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config ZRAM
+ 	tristate "Compressed RAM block device support"
+-	depends on BLOCK && SYSFS && MMU
++	depends on SWAP && SYSFS
+ 	depends on CRYPTO_LZO || CRYPTO_ZSTD || CRYPTO_LZ4 || CRYPTO_LZ4HC || CRYPTO_842
+ 	select ZSMALLOC
+ 	help
 -- 
 2.27.0
 
