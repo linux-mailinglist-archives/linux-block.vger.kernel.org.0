@@ -1,65 +1,70 @@
-Return-Path: <linux-block+bounces-3626-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3628-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C3908616A5
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 17:00:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 662E18616AA
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 17:00:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB309286012
-	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 16:00:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 972691C23EE5
+	for <lists+linux-block@lfdr.de>; Fri, 23 Feb 2024 16:00:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A67982D7A;
-	Fri, 23 Feb 2024 15:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F414884A28;
+	Fri, 23 Feb 2024 15:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="FJbqOkVY"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="RPQ/6m3a"
 X-Original-To: linux-block@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9A182D81
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 15:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5D782D7D
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 15:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708703968; cv=none; b=jXqzAmi/m5Xp682HTxmv+OqaW3WsZqU/+3uRuRuae02ymuHbrUg9W7qmQrAb/PzE1kCCXQGcC963UgGZZpbzkyU3on+xkuVWGwpQn5UpUcFpSCXylphRb0ItvzCU/5dbzMB0rVkjwRrY4ZZxIRsL60FTm+EPO/gYIVq2mh2Wics=
+	t=1708703997; cv=none; b=bRCMgDT7EuFuuEhUmaJR36uTHciLT1eADLAzWSBAmTGQ62bJs4xic1EfLZEis4aTSCG/+MA65mDfqKkJHrtc609SIOSuugvH5aSOcCgFfePDx/3EWSE3i8WjqVXtEhAZDeQvfIkkk3QFc/HNDGHukPhLqKUPj6mLjmYEZvYTH94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708703968; c=relaxed/simple;
-	bh=Y4Qv0Ryn8M940ad2Ttnt2ZEB8nPtjitKR0zZjXkfdjA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YucnST6UyUSia0TfXXklFeCNITbLdGlKyEbNNmJfl+sGsY5cHRa1uCd57Rubbg+abmMN0vjyg2Ypl/iHepXk6o1Dp7tHu07wm4uZFGNDs1sPj2uDOOxq8w8oVLYm6Y4z4UXp3rcDaHCG9TAOOBaILWhgdXpw9KGKsFpZ9CTRyBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=FJbqOkVY; arc=none smtp.client-ip=67.231.145.42
+	s=arc-20240116; t=1708703997; c=relaxed/simple;
+	bh=QhJk5WCim3ppStJXdISlPyPXyOJjRwsz4DNi8IZIEJs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LsTp7qJaXZwOa1njRW6LijvsjCe04+D3MVfLwstpgxXXQChbiKiIToPWrrsQ32wE2Om+LbAZ0xqhaQmC+eSasvP9GmvBlj9Y43esG0+XcSJ8vewi1O/ayDkel75t3tII9QwkXg3EeDtEUEhfQJQvDnFBeOhJfokdv+dLtyipe6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=RPQ/6m3a; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41NF5P3s021692
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:25 -0800
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 41N36YH9008854
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:55 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=s2048-2021-q4;
- bh=EJn8gal7/WlJIZYk7CPkBp0tSDR5oN4QowIZWHzXe1o=;
- b=FJbqOkVY6av+1ETEoX4TaGt83xohq02V2zJSV150wSh0yDvOnY8CU6rzRoPuvsY8ozY8
- NcntQ/kKBG9w5bJp89eEhqClYp5mocd/TuG4g9sS38bU1N7g3UYhCZh+9k7iCKN8ttjU
- EIOeII1eZc57NYV1j3TYoI8HF7WWzWtc6smn6W/dYxeEKeL1tfD5LZb589+vIjTYO4EK
- jpuE4K2OpSvkzt8xRM+SnYVj2tkAtt1qmILwfpm16KsBpsgGdphCr0on6vnHRxev1P/P
- D/s8Tbvq6FPKTBSR00dhSa3gVfy9CKVrtEC9w4OYTA851wV8f+AV+aCHEl+wz611895h Hw== 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3webyke4e6-2
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=s2048-2021-q4;
+ bh=1NfP6xsV93KEOWBV/kWyr+viXR/FDP+NGbmg2sv08/I=;
+ b=RPQ/6m3a+t3t5dviozTmEmY4mQDtjq/mn7hMzH+OuGMMS5qi1ndrRugB+ijSFaGPuVSj
+ 3DOeJ5SLtbfmvITmHCWtRY3ZrktDCEdJwz1oXHGD0C/hZ0rzYostapdfdJsZuxaoyo+d
+ tL1afHOcMiOozlJelD++eFRTOTGfj01aTp1sqpQEtvjUgi6MHTuAYf/GKY8w4OPGsI+h
+ gfAlSrDJ08sL9IJM1ohd+OfTp2lSXmIY2iWn/B8/BRURGdsJbvtW7fXVtoLpg41WZ1SQ
+ C9Yx1uYK+s7DAsjR2VJajUGUzPDZI5SJRX5vmaAiJleJnRcALK88GYMTcFBnlx2G4rAw WQ== 
+Received: from mail.thefacebook.com ([163.114.132.120])
+	by m0089730.ppops.net (PPS) with ESMTPS id 3wek5m3a08-13
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:25 -0800
-Received: from twshared9513.02.ash9.facebook.com (2620:10d:c0a8:1b::30) by
- mail.thefacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP Server
+	for <linux-block@vger.kernel.org>; Fri, 23 Feb 2024 07:59:55 -0800
+Received: from twshared53729.38.frc1.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:11d::8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 23 Feb 2024 07:59:23 -0800
+ 15.1.2507.35; Fri, 23 Feb 2024 07:59:25 -0800
 Received: by devbig007.nao1.facebook.com (Postfix, from userid 544533)
-	id 998932574FA3F; Fri, 23 Feb 2024 07:59:12 -0800 (PST)
+	id 9FFE42574FA41; Fri, 23 Feb 2024 07:59:12 -0800 (PST)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-block@vger.kernel.org>
 CC: <axboe@kernel.org>, <ming.lei@redhat.com>, <nilay@linux.ibm.com>,
-        <chaitanyak@nvidia.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv4 0/4] block: make long running operations killable
-Date: Fri, 23 Feb 2024 07:59:06 -0800
-Message-ID: <20240223155910.3622666-1-kbusch@meta.com>
+        <chaitanyak@nvidia.com>, Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig
+	<hch@lst.de>
+Subject: [PATCHv4 1/4] block: blkdev_issue_secure_erase loop style
+Date: Fri, 23 Feb 2024 07:59:07 -0800
+Message-ID: <20240223155910.3622666-2-kbusch@meta.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240223155910.3622666-1-kbusch@meta.com>
+References: <20240223155910.3622666-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -69,36 +74,57 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: OPd4pStd-vN3DOZelXzmViaHaPqrgvGr
-X-Proofpoint-GUID: OPd4pStd-vN3DOZelXzmViaHaPqrgvGr
+X-Proofpoint-ORIG-GUID: pkhawA1H3ttzLhS9_9rE4WZe98jMem4v
+X-Proofpoint-GUID: pkhawA1H3ttzLhS9_9rE4WZe98jMem4v
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-23_02,2024-02-23_01,2023-05-22_02
 
 From: Keith Busch <kbusch@kernel.org>
 
-Changes from v3:
+Use consistent coding style in this file. All the other loops for the
+same purpose use "while (nr_sects)", so they win.
 
- Added reviewed and tested by tags
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ block/blk-lib.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
- More formatting cleanups in patch 2 (Christoph)
-
- A more descriptive name for the bio chain wait helper (Christoph)
-
- Don't fallback to the zero page on fatal signal error (Nilay)
-
-Keith Busch (4):
-  block: blkdev_issue_secure_erase loop style
-  block: cleanup __blkdev_issue_write_zeroes
-  block: io wait hang check helper
-  blk-lib: check for kill signal
-
- block/bio.c     | 12 +--------
- block/blk-lib.c | 70 ++++++++++++++++++++++++++++++++++++-------------
- block/blk-mq.c  | 19 +++-----------
- block/blk.h     | 13 +++++++++
- 4 files changed, 69 insertions(+), 45 deletions(-)
-
+diff --git a/block/blk-lib.c b/block/blk-lib.c
+index e59c3069e8351..91770da2239f2 100644
+--- a/block/blk-lib.c
++++ b/block/blk-lib.c
+@@ -322,7 +322,7 @@ int blkdev_issue_secure_erase(struct block_device *bd=
+ev, sector_t sector,
+ 		return -EPERM;
+=20
+ 	blk_start_plug(&plug);
+-	for (;;) {
++	while (nr_sects) {
+ 		unsigned int len =3D min_t(sector_t, nr_sects, max_sectors);
+=20
+ 		bio =3D blk_next_bio(bio, bdev, 0, REQ_OP_SECURE_ERASE, gfp);
+@@ -331,13 +331,12 @@ int blkdev_issue_secure_erase(struct block_device *=
+bdev, sector_t sector,
+=20
+ 		sector +=3D len;
+ 		nr_sects -=3D len;
+-		if (!nr_sects) {
+-			ret =3D submit_bio_wait(bio);
+-			bio_put(bio);
+-			break;
+-		}
+ 		cond_resched();
+ 	}
++	if (bio) {
++		ret =3D submit_bio_wait(bio);
++		bio_put(bio);
++	}
+ 	blk_finish_plug(&plug);
+=20
+ 	return ret;
 --=20
 2.34.1
 
