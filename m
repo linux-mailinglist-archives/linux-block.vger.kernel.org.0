@@ -1,50 +1,50 @@
-Return-Path: <linux-block+bounces-3773-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3775-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE48986A146
-	for <lists+linux-block@lfdr.de>; Tue, 27 Feb 2024 22:00:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C04786A14B
+	for <lists+linux-block@lfdr.de>; Tue, 27 Feb 2024 22:01:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 640271F213BD
-	for <lists+linux-block@lfdr.de>; Tue, 27 Feb 2024 21:00:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E57D71F252FF
+	for <lists+linux-block@lfdr.de>; Tue, 27 Feb 2024 21:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CBC614DFE6;
-	Tue, 27 Feb 2024 21:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD85A14EFEF;
+	Tue, 27 Feb 2024 21:01:05 +0000 (UTC)
 X-Original-To: linux-block@vger.kernel.org
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5A013AA36
-	for <linux-block@vger.kernel.org>; Tue, 27 Feb 2024 21:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641614EFDD
+	for <linux-block@vger.kernel.org>; Tue, 27 Feb 2024 21:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709067610; cv=none; b=P/+6dIHe2o31TMPkvA3N3fjVT+laXvh2vtSXMnWYzBDwmtyPuq4hK2+KMKvAOd3Ya1cP+fzDKrKVLBi0ZL7S4w3abVkzqeL9w2yVDAtoWbM9CUKKwEhdsI+XZUXOH8Go163oV4c8DjcM94pYuL7GBNMLRA2NdrYvtKig/rUG3Cs=
+	t=1709067665; cv=none; b=cya9Uayo0JLM406hKmO5D6pnEh/Rcxi/EcwyJfKhS13/3jCra+/D1V007ro90ATvd+Bhh82Uo5McvBuOs7dpEAeblGGcM0LrQBlCXbD4Yq9SuT9IWdMYl0JsWe+dubEjVGnxJgs49B1qvu+8GR2fIXUkDZ50hct+HvkPj6e3VII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709067610; c=relaxed/simple;
-	bh=wMj73LSvJJMAZxL4shJObq4IZoFb494UHh4fQRIJeoA=;
+	s=arc-20240116; t=1709067665; c=relaxed/simple;
+	bh=eNHvNTPjAf2BcKVNlj1XiUAeeg+PuV9WuAs0hX5itZU=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=USWl53SzPgs8/8CVBHqnR2m+IhlI9cN+eRs87ynARk/A3Sde+clDdSOxp0isLgPR03ZOck045SkWjnRH+k3g+zV81wDhE6uJPuU+zul/izfmbCgDWIvs+kRMcfgT1eoY4IIZAX3TYHkFzwBzxOeZl2P/t8pf/dW7ZLNgZz2EFJg=
+	 MIME-Version:Content-Type; b=OQR652z3nbi4C+iHY1XAydoXsFcV0B7rErPR7q1RJUqcBXa/G2K2kjTUXQLD4VjbbhtRNdfnJLIIFTLjUQJYjvbCUJ8JE+v9LNLRuV8ifRq+BkhQBYdQArVbdm+HeMfLvciK4WDq2CgaSA2ajR9vBZx7NpePSHQ7a9ouAHv8Smg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 89A4A626FAEB;
-	Tue, 27 Feb 2024 22:00:05 +0100 (CET)
+	by lithops.sigma-star.at (Postfix) with ESMTP id 49F98626FAED;
+	Tue, 27 Feb 2024 22:01:02 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 0HrLx_8q8I2T; Tue, 27 Feb 2024 22:00:04 +0100 (CET)
+	with ESMTP id haZ2ZmOR4y2P; Tue, 27 Feb 2024 22:01:01 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 869B7626FAEC;
-	Tue, 27 Feb 2024 22:00:04 +0100 (CET)
+	by lithops.sigma-star.at (Postfix) with ESMTP id D30E2626FAEC;
+	Tue, 27 Feb 2024 22:01:01 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id qHr-r-fSkg-s; Tue, 27 Feb 2024 22:00:04 +0100 (CET)
+	with ESMTP id wFPCRLT6xrlv; Tue, 27 Feb 2024 22:01:01 +0100 (CET)
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 30846626FAEB;
-	Tue, 27 Feb 2024 22:00:04 +0100 (CET)
-Date: Tue, 27 Feb 2024 22:00:03 +0100 (CET)
+	by lithops.sigma-star.at (Postfix) with ESMTP id B700A626FAEB;
+	Tue, 27 Feb 2024 22:01:01 +0100 (CET)
+Date: Tue, 27 Feb 2024 22:01:01 +0100 (CET)
 From: Richard Weinberger <richard@nod.at>
 To: hch <hch@lst.de>
 Cc: anton ivanov <anton.ivanov@cambridgegreys.com>, 
@@ -52,11 +52,10 @@ Cc: anton ivanov <anton.ivanov@cambridgegreys.com>,
 	Jens Axboe <axboe@kernel.dk>, 
 	linux-um <linux-um@lists.infradead.org>, 
 	linux-block <linux-block@vger.kernel.org>
-Message-ID: <254176725.106438.1709067603867.JavaMail.zimbra@nod.at>
-In-Reply-To: <20240222072417.3773131-5-hch@lst.de>
-References: <20240222072417.3773131-1-hch@lst.de> <20240222072417.3773131-5-hch@lst.de>
-Subject: Re: [PATCH 4/7] ubd: move setting the variable queue limits to
- ubd_add
+Message-ID: <1568393451.106442.1709067661698.JavaMail.zimbra@nod.at>
+In-Reply-To: <20240222072417.3773131-7-hch@lst.de>
+References: <20240222072417.3773131-1-hch@lst.de> <20240222072417.3773131-7-hch@lst.de>
+Subject: Re: [PATCH 6/7] ubd: remove the queue pointer in struct ubd
 Precedence: bulk
 X-Mailing-List: linux-block@vger.kernel.org
 List-Id: <linux-block.vger.kernel.org>
@@ -66,8 +65,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: move setting the variable queue limits to ubd_add
-Thread-Index: gszs01OAM/HMQeDXBm0jy7JIC/bqkA==
+Thread-Topic: remove the queue pointer in struct ubd
+Thread-Index: PfkHaHr5LY6oKbXnCFFct3EjiOb5Ew==
 
 ----- Urspr=C3=BCngliche Mail -----
 > Von: "hch" <hch@lst.de>
@@ -76,56 +75,40 @@ ys.com>, "Johannes Berg"
 > <johannes@sipsolutions.net>, "Jens Axboe" <axboe@kernel.dk>
 > CC: "linux-um" <linux-um@lists.infradead.org>, "linux-block" <linux-block=
 @vger.kernel.org>
-> Gesendet: Donnerstag, 22. Februar 2024 08:24:14
-> Betreff: [PATCH 4/7] ubd: move setting the variable queue limits to ubd_a=
-dd
+> Gesendet: Donnerstag, 22. Februar 2024 08:24:16
+> Betreff: [PATCH 6/7] ubd: remove the queue pointer in struct ubd
 
-> No reason to delay this until open time.
+> No need for it now, everything goes through the gendisk.
 >=20
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
-> arch/um/drivers/ubd_kern.c | 13 +++++++------
-> 1 file changed, 7 insertions(+), 6 deletions(-)
+> arch/um/drivers/ubd_kern.c | 4 +---
+> 1 file changed, 1 insertion(+), 3 deletions(-)
 >=20
 > diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
-> index 9dcf41f7d49606..26bc8306356263 100644
+> index c5d32e75426366..9bf1d6a88bae59 100644
 > --- a/arch/um/drivers/ubd_kern.c
 > +++ b/arch/um/drivers/ubd_kern.c
-> @@ -772,8 +772,6 @@ static int ubd_open_dev(struct ubd *ubd_dev)
-> =09ubd_dev->fd =3D fd;
->=20
-> =09if(ubd_dev->cow.file !=3D NULL){
-> -=09=09blk_queue_max_hw_sectors(ubd_dev->queue, 8 * sizeof(long));
-> -
-> =09=09err =3D -ENOMEM;
-> =09=09ubd_dev->cow.bitmap =3D vmalloc(ubd_dev->cow.bitmap_len);
-> =09=09if(ubd_dev->cow.bitmap =3D=3D NULL){
-> @@ -795,10 +793,6 @@ static int ubd_open_dev(struct ubd *ubd_dev)
-> =09=09if(err < 0) goto error;
-> =09=09ubd_dev->cow.fd =3D err;
+> @@ -163,7 +163,6 @@ struct ubd {
+> =09struct cow cow;
+> =09struct platform_device pdev;
+> =09struct gendisk *disk;
+> -=09struct request_queue *queue;
+> =09struct blk_mq_tag_set tag_set;
+> =09spinlock_t lock;
+> };
+> @@ -892,10 +891,9 @@ static int ubd_add(int n, char **error_out)
+> =09=09err =3D PTR_ERR(disk);
+> =09=09goto out_cleanup_tags;
 > =09}
-> -=09if (ubd_dev->no_trim =3D=3D 0) {
-> -=09=09blk_queue_max_discard_sectors(ubd_dev->queue, UBD_MAX_REQUEST);
-> -=09=09blk_queue_max_write_zeroes_sectors(ubd_dev->queue, UBD_MAX_REQUEST=
-);
-> -=09}
-> =09return 0;
->  error:
-> =09os_close_file(ubd_dev->fd);
-> @@ -867,6 +861,13 @@ static int ubd_add(int n, char **error_out)
-> =09if(ubd_dev->file =3D=3D NULL)
-> =09=09goto out;
+> -=09ubd_dev->queue =3D disk->queue;
 >=20
-> +=09if (ubd_dev->cow.file)
-> +=09=09lim.max_hw_sectors =3D 8 * sizeof(long);
-> +=09if (!ubd_dev->no_trim) {
-> +=09=09lim.max_hw_discard_sectors =3D UBD_MAX_REQUEST;
-> +=09=09lim.max_write_zeroes_sectors =3D UBD_MAX_REQUEST;
-> +=09}
-> +
-> =09err =3D ubd_file_size(ubd_dev, &ubd_dev->size);
-> =09if(err < 0){
-> =09=09*error_out =3D "Couldn't determine size of device's file";
+> =09blk_queue_flag_set(QUEUE_FLAG_NONROT, disk->queue);
+> -=09blk_queue_write_cache(ubd_dev->queue, true, false);
+> +=09blk_queue_write_cache(disk->queue, true, false);
+> =09disk->major =3D UBD_MAJOR;
+> =09disk->first_minor =3D n << UBD_SHIFT;
+> =09disk->minors =3D 1 << UBD_SHIFT;
 > --
 > 2.39.2
 
