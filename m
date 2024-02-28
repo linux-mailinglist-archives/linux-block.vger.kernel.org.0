@@ -1,49 +1,49 @@
-Return-Path: <linux-block+bounces-3811-lists+linux-block=lfdr.de@vger.kernel.org>
+Return-Path: <linux-block+bounces-3816-lists+linux-block=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-block@lfdr.de
 Delivered-To: lists+linux-block@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17A2786BB36
-	for <lists+linux-block@lfdr.de>; Wed, 28 Feb 2024 23:57:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39A6686BB46
+	for <lists+linux-block@lfdr.de>; Wed, 28 Feb 2024 23:58:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 835461F275C4
-	for <lists+linux-block@lfdr.de>; Wed, 28 Feb 2024 22:57:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82741F28184
+	for <lists+linux-block@lfdr.de>; Wed, 28 Feb 2024 22:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCFC076EF6;
-	Wed, 28 Feb 2024 22:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494B27D08B;
+	Wed, 28 Feb 2024 22:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cq2xurVN"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rBUBUKgb"
 X-Original-To: linux-block@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9DB7290D;
-	Wed, 28 Feb 2024 22:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50997290E;
+	Wed, 28 Feb 2024 22:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709161017; cv=none; b=VAgMj7Gkv2D6vwb7gMewZmpyGKwLWj6zE4+HBYmJ3Now2qzTqcJPIl2alVHSW2SNd9SHNdbybRAVqqz/svNHJY6HtZwSuXoTh4/Ynej8Wq9xodGRsHaUc185agfXaF98U8Y5RmMcFnJw+mfgjEq9pzAyDuTW86ioSEzjXo2OWo4=
+	t=1709161020; cv=none; b=fcWm+KqNZ19efkXKeCESKYn9LeuTVB4FmeeL4Xa1vp6qHhwh7K83bfxY6FjEhg9VcxSrTmyj7fYi/sd/NgrHJv4ITa9Dt12sN6ToqM9X2ESg+XN+SwmKxGPcHeKbj7Bm+2piHC2gHaJO4DXpFObK3rydpdAaZscMxZETp8Ml4Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709161017; c=relaxed/simple;
-	bh=3/xOyO8bCQyh/vTDfk5iMCHyqJtwKvw42InP6I3FFxI=;
+	s=arc-20240116; t=1709161020; c=relaxed/simple;
+	bh=TjI7EHPbm0rtsFaJEe2vZG8NXZMT1AAx5wNDdJYY8JM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XL4eOpUWahlStMiC3ccBf0AjLJcrYOeZpffJrSlehqO0MLlwQauxAIRQ3sTQupoVkvJzGuzRqb5Js4wdDQMpAtzS1Dp5clFnN3luHfLVJwlPFb7TfoQYdlR9EiZEyhcfCHbakqxp0zE+CpRNYzbGZrSGgV6rBT/UitGeSpaJbOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cq2xurVN; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=eJQxluxKSVifu6r/NMgVoNoGCd7gw9QEZ7wVVURdmALSX/YHXWeCIAlsmaEo+KGGctBxBgHfHRP0wnXz7qjbBftgFbGWWeaBi3404PPJDNPTNptgqWOFtZlSpg723L4enGh5AfA9297mHxX/Xh7fAQStWP2KTPkuB0WcVaKIsNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rBUBUKgb; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=DdiDosqRE4HrozPUItBNS0DqsW91jIxkrinJnwBod8E=; b=cq2xurVNjQdethG09/wwYWnchD
-	aL1QM+rhDlIm8hbUaPoteBbI+QQQPkxO3ZpRRHzU1Ok9YNq/0mlcXkxJjzin5MuQ/ILKfDvGUIyq/
-	0tgLd7bXkZr5cDYUY0b2GIp3M/33xOqL567OuqLVI/TZrJADplAC/Pp0Uq1CUEFeoUTXHRUyNSX4K
-	fcvQaJ+RyMenI3s+ZTDZaA3o3/1MWsVJOS9VGEEMsoQ4QJ3rTc0upWRTezT5rZE6lvfqbiPsExxPe
-	C6kSS+KKx+Ln/BcFvXLyMf5tnWxZ3Q/ka4jlxSuuN8Sw74buzT2t01OnGLaZkRjgxTTh2rNLEnZ5s
-	DzNKg2gw==;
+	bh=Guj9TF+YSfgRpOC/M20J9OvG45zLGLW0zwrnlN78wZo=; b=rBUBUKgbQgeZFBQulNEQRPfwM0
+	rVW/kwKftFs5W3xFFFZAhWMcu5QsH9auSFKiHrl3sInttF97R8VGTORNz2rxLb51YfpwMOouqnjZu
+	o4Wsj4kC/aLt0TdGSQ5ObyHHMEswdWvF+vgSkY6opHzj8msQ6jSz81vMq7HyDHaEjon4dUbNYEOjD
+	Qb73ZHMtMH1V6ks+bOvViUOOCNu3H2rIr0L7SUsbjgEaDg4n6HXu/1p3nC5jX3r93WfJrZ9/ySNPb
+	u2N2UUpypY2BE5oiigG/h/iuZPCKqamDKuSEwr8LOvHokEKUsGCOG0YFxXuSwRXO3Lt35nPJJ6kTr
+	qs6ljWwA==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rfSr9-0000000BCO2-0e6i;
+	id 1rfSr9-0000000BCOF-2hSE;
 	Wed, 28 Feb 2024 22:56:55 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
@@ -54,9 +54,9 @@ To: Jens Axboe <axboe@kernel.dk>,
 Cc: dm-devel@lists.linux.dev,
 	linux-block@vger.kernel.org,
 	linux-raid@vger.kernel.org
-Subject: [PATCH 04/14] md: add a mddev_trace_remap helper
-Date: Wed, 28 Feb 2024 14:56:43 -0800
-Message-Id: <20240228225653.947152-5-hch@lst.de>
+Subject: [PATCH 05/14] md: add a mddev_add_trace_msg helper
+Date: Wed, 28 Feb 2024 14:56:44 -0800
+Message-Id: <20240228225653.947152-6-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240228225653.947152-1-hch@lst.de>
 References: <20240228225653.947152-1-hch@lst.de>
@@ -69,179 +69,203 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Add a helper to trace bio remapping that hides some argument
+Add a small wrapper around blk_add_trace_msg that hides some argument
 dereferences and the check for a DM-mapped MD device.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/md/md.c     |  6 +-----
- drivers/md/md.h     |  8 ++++++++
- drivers/md/raid0.c  |  5 +----
- drivers/md/raid1.c  | 11 ++---------
- drivers/md/raid10.c | 10 ++--------
- drivers/md/raid5.c  | 14 +++-----------
- 6 files changed, 17 insertions(+), 37 deletions(-)
+ drivers/md/md-bitmap.c |  9 +++------
+ drivers/md/md.c        |  3 +--
+ drivers/md/md.h        |  6 ++++++
+ drivers/md/raid1.c     | 10 ++++------
+ drivers/md/raid10.c    | 15 +++++++--------
+ drivers/md/raid5.c     | 14 +++++++-------
+ 6 files changed, 28 insertions(+), 29 deletions(-)
 
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index 9672f75c30503c..a0935a3d66c2d7 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -1043,9 +1043,8 @@ void md_bitmap_unplug(struct bitmap *bitmap)
+ 		if (dirty || need_write) {
+ 			if (!writing) {
+ 				md_bitmap_wait_writes(bitmap);
+-				if (bitmap->mddev->queue)
+-					blk_add_trace_msg(bitmap->mddev->queue,
+-							  "md bitmap_unplug");
++				mddev_add_trace_msg(bitmap->mddev,
++					"md bitmap_unplug");
+ 			}
+ 			clear_page_attr(bitmap, i, BITMAP_PAGE_PENDING);
+ 			filemap_write_page(bitmap, i, false);
+@@ -1316,9 +1315,7 @@ void md_bitmap_daemon_work(struct mddev *mddev)
+ 	}
+ 	bitmap->allclean = 1;
+ 
+-	if (bitmap->mddev->queue)
+-		blk_add_trace_msg(bitmap->mddev->queue,
+-				  "md bitmap_daemon_work");
++	mddev_add_trace_msg(bitmap->mddev, "md bitmap_daemon_work");
+ 
+ 	/* Any file-page which is PENDING now needs to be written.
+ 	 * So set NEEDWRITE now, then after we make any last-minute changes
 diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 75266c34b1f99b..ccbc66ce8c4d13 100644
+index ccbc66ce8c4d13..409e57242b27f6 100644
 --- a/drivers/md/md.c
 +++ b/drivers/md/md.c
-@@ -65,7 +65,6 @@
- #include <linux/percpu-refcount.h>
- #include <linux/part_stat.h>
+@@ -2847,8 +2847,7 @@ void md_update_sb(struct mddev *mddev, int force_change)
+ 	pr_debug("md: updating %s RAID superblock on device (in sync %d)\n",
+ 		 mdname(mddev), mddev->in_sync);
  
--#include <trace/events/block.h>
- #include "md.h"
- #include "md-bitmap.h"
- #include "md-cluster.h"
-@@ -8663,10 +8662,7 @@ void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
- 
- 	bio_chain(discard_bio, bio);
- 	bio_clone_blkg_association(discard_bio, bio);
--	if (mddev->gendisk)
--		trace_block_bio_remap(discard_bio,
--				disk_devt(mddev->gendisk),
--				bio->bi_iter.bi_sector);
-+	mddev_trace_remap(mddev, discard_bio, bio->bi_iter.bi_sector);
- 	submit_bio_noacct(discard_bio);
- }
- EXPORT_SYMBOL_GPL(md_submit_discard_bio);
+-	if (mddev->queue)
+-		blk_add_trace_msg(mddev->queue, "md md_update_sb");
++	mddev_add_trace_msg(mddev, "md md_update_sb");
+ rewrite:
+ 	md_bitmap_update_sb(mddev->bitmap);
+ 	rdev_for_each(rdev, mddev) {
 diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 8d881cc597992f..6465411d3afd5d 100644
+index 6465411d3afd5d..91ee8951fc8dcb 100644
 --- a/drivers/md/md.h
 +++ b/drivers/md/md.h
-@@ -18,6 +18,7 @@
- #include <linux/timer.h>
- #include <linux/wait.h>
- #include <linux/workqueue.h>
-+#include <trace/events/block.h>
- #include "md-cluster.h"
+@@ -871,4 +871,10 @@ static inline void mddev_trace_remap(struct mddev *mddev, struct bio *bio,
+ 		trace_block_bio_remap(bio, disk_devt(mddev->gendisk), sector);
+ }
  
- #define MaxSector (~(sector_t)0)
-@@ -863,4 +864,11 @@ int do_md_run(struct mddev *mddev);
- 
- extern const struct block_device_operations md_fops;
- 
-+static inline void mddev_trace_remap(struct mddev *mddev, struct bio *bio,
-+		sector_t sector)
-+{
-+	if (mddev->gendisk)
-+		trace_block_bio_remap(bio, disk_devt(mddev->gendisk), sector);
-+}
++#define mddev_add_trace_msg(mddev, fmt, args...)			\
++do {									\
++	if ((mddev)->gendisk)						\
++		blk_add_trace_msg((mddev)->queue, fmt, ##args);		\
++} while (0)
 +
  #endif /* _MD_MD_H */
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index c50a7abda744ad..aff094de974347 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -578,10 +578,7 @@ static void raid0_map_submit_bio(struct mddev *mddev, struct bio *bio)
- 	bio_set_dev(bio, tmp_dev->bdev);
- 	bio->bi_iter.bi_sector = sector + zone->dev_start +
- 		tmp_dev->data_offset;
--
--	if (mddev->gendisk)
--		trace_block_bio_remap(bio, disk_devt(mddev->gendisk),
--				      bio_sector);
-+	mddev_trace_remap(mddev, bio, bio_sector);
- 	mddev_check_write_zeroes(mddev, bio);
- 	submit_bio_noacct(bio);
- }
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 286f8b16c7bde7..cb64477fa89feb 100644
+index cb64477fa89feb..3f47fe828b21bb 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -1320,11 +1320,7 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
- 	    test_bit(R1BIO_FailFast, &r1_bio->state))
- 	        read_bio->bi_opf |= MD_FAILFAST;
- 	read_bio->bi_private = r1_bio;
--
--	if (mddev->gendisk)
--	        trace_block_bio_remap(read_bio, disk_devt(mddev->gendisk),
--				      r1_bio->sector);
--
-+	mddev_trace_remap(mddev, read_bio, r1_bio->sector);
- 	submit_bio_noacct(read_bio);
- }
+@@ -46,9 +46,6 @@
+ static void allow_barrier(struct r1conf *conf, sector_t sector_nr);
+ static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
  
-@@ -1557,10 +1553,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 		mbio->bi_private = r1_bio;
- 
- 		atomic_inc(&r1_bio->remaining);
+-#define raid1_log(md, fmt, args...)				\
+-	do { if ((md)->queue) blk_add_trace_msg((md)->queue, "raid1 " fmt, ##args); } while (0)
 -
--		if (mddev->gendisk)
--			trace_block_bio_remap(mbio, disk_devt(mddev->gendisk),
--					      r1_bio->sector);
-+		mddev_trace_remap(mddev, mbio, r1_bio->sector);
- 		/* flush_pending_writes() needs access to the rdev so...*/
- 		mbio->bi_bdev = (void *)rdev;
- 		if (!raid1_add_bio_to_plug(mddev, mbio, raid1_unplug, disks)) {
+ #define RAID_1_10_NAME "raid1"
+ #include "raid1-10.c"
+ 
+@@ -1098,7 +1095,7 @@ static void freeze_array(struct r1conf *conf, int extra)
+ 	 */
+ 	spin_lock_irq(&conf->resync_lock);
+ 	conf->array_frozen = 1;
+-	raid1_log(conf->mddev, "wait freeze");
++	mddev_add_trace_msg(conf->mddev, "raid1 wait freeze");
+ 	wait_event_lock_irq_cmd(
+ 		conf->wait_barrier,
+ 		get_unqueued_pending(conf) == extra,
+@@ -1287,7 +1284,7 @@ static void raid1_read_request(struct mddev *mddev, struct bio *bio,
+ 		 * Reading from a write-mostly device must take care not to
+ 		 * over-take any writes that are 'behind'
+ 		 */
+-		raid1_log(mddev, "wait behind writes");
++		mddev_add_trace_msg(mddev, "raid1 wait behind writes");
+ 		wait_event(bitmap->behind_wait,
+ 			   atomic_read(&bitmap->behind_writes) == 0);
+ 	}
+@@ -1470,7 +1467,8 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 			bio_wouldblock_error(bio);
+ 			return;
+ 		}
+-		raid1_log(mddev, "wait rdev %d blocked", blocked_rdev->raid_disk);
++		mddev_add_trace_msg(mddev, "raid1 wait rdev %d blocked",
++				blocked_rdev->raid_disk);
+ 		md_wait_for_blocked_rdev(blocked_rdev, mddev);
+ 		wait_barrier(conf, bio->bi_iter.bi_sector, false);
+ 		goto retry_write;
 diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 7412066ea22c7a..ae90cca8335b50 100644
+index ae90cca8335b50..b6c5194c22308d 100644
 --- a/drivers/md/raid10.c
 +++ b/drivers/md/raid10.c
-@@ -1249,10 +1249,7 @@ static void raid10_read_request(struct mddev *mddev, struct bio *bio,
- 	    test_bit(R10BIO_FailFast, &r10_bio->state))
- 	        read_bio->bi_opf |= MD_FAILFAST;
- 	read_bio->bi_private = r10_bio;
+@@ -76,9 +76,6 @@ static void reshape_request_write(struct mddev *mddev, struct r10bio *r10_bio);
+ static void end_reshape_write(struct bio *bio);
+ static void end_reshape(struct r10conf *conf);
+ 
+-#define raid10_log(md, fmt, args...)				\
+-	do { if ((md)->queue) blk_add_trace_msg((md)->queue, "raid10 " fmt, ##args); } while (0)
 -
--	if (mddev->gendisk)
--	        trace_block_bio_remap(read_bio, disk_devt(mddev->gendisk),
--	                              r10_bio->sector);
-+	mddev_trace_remap(mddev, read_bio, r10_bio->sector);
- 	submit_bio_noacct(read_bio);
- 	return;
- }
-@@ -1288,10 +1285,7 @@ static void raid10_write_one_disk(struct mddev *mddev, struct r10bio *r10_bio,
- 			 && enough(conf, devnum))
- 		mbio->bi_opf |= MD_FAILFAST;
- 	mbio->bi_private = r10_bio;
--
--	if (conf->mddev->gendisk)
--		trace_block_bio_remap(mbio, disk_devt(conf->mddev->gendisk),
--				      r10_bio->sector);
-+	mddev_trace_remap(mddev, mbio, r10_bio->sector);
- 	/* flush_pending_writes() needs access to the rdev so...*/
- 	mbio->bi_bdev = (void *)rdev;
+ #include "raid1-10.c"
+ 
+ #define NULL_CMD
+@@ -1033,7 +1030,7 @@ static bool wait_barrier(struct r10conf *conf, bool nowait)
+ 			ret = false;
+ 		} else {
+ 			conf->nr_waiting++;
+-			raid10_log(conf->mddev, "wait barrier");
++			mddev_add_trace_msg(conf->mddev, "raid10 wait barrier");
+ 			wait_event_barrier(conf, stop_waiting_barrier(conf));
+ 			conf->nr_waiting--;
+ 		}
+@@ -1152,7 +1149,7 @@ static bool regular_request_wait(struct mddev *mddev, struct r10conf *conf,
+ 			bio_wouldblock_error(bio);
+ 			return false;
+ 		}
+-		raid10_log(conf->mddev, "wait reshape");
++		mddev_add_trace_msg(conf->mddev, "raid10 wait reshape");
+ 		wait_event(conf->wait_barrier,
+ 			   conf->reshape_progress <= bio->bi_iter.bi_sector ||
+ 			   conf->reshape_progress >= bio->bi_iter.bi_sector +
+@@ -1354,8 +1351,9 @@ static void wait_blocked_dev(struct mddev *mddev, struct r10bio *r10_bio)
+ 	if (unlikely(blocked_rdev)) {
+ 		/* Have to wait for this device to get unblocked, then retry */
+ 		allow_barrier(conf);
+-		raid10_log(conf->mddev, "%s wait rdev %d blocked",
+-				__func__, blocked_rdev->raid_disk);
++		mddev_add_trace_msg(conf->mddev,
++			"raid10 %s wait rdev %d blocked",
++			__func__, blocked_rdev->raid_disk);
+ 		md_wait_for_blocked_rdev(blocked_rdev, mddev);
+ 		wait_barrier(conf, false);
+ 		goto retry_wait;
+@@ -1410,7 +1408,8 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
+ 			bio_wouldblock_error(bio);
+ 			return;
+ 		}
+-		raid10_log(conf->mddev, "wait reshape metadata");
++		mddev_add_trace_msg(conf->mddev,
++			"raid10 wait reshape metadata");
+ 		wait_event(mddev->sb_wait,
+ 			   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
  
 diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 14f2cf75abbd72..c7da69c6e7c50c 100644
+index c7da69c6e7c50c..969df5c584653e 100644
 --- a/drivers/md/raid5.c
 +++ b/drivers/md/raid5.c
-@@ -1295,10 +1295,7 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
- 			if (rrdev)
- 				set_bit(R5_DOUBLE_LOCKED, &sh->dev[i].flags);
- 
--			if (conf->mddev->gendisk)
--				trace_block_bio_remap(bi,
--						disk_devt(conf->mddev->gendisk),
--						sh->dev[i].sector);
-+			mddev_trace_remap(conf->mddev, bi, sh->dev[i].sector);
- 			if (should_defer && op_is_write(op))
- 				bio_list_add(&pending_bios, bi);
- 			else
-@@ -1342,10 +1339,7 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
- 			 */
- 			if (op == REQ_OP_DISCARD)
- 				rbi->bi_vcnt = 0;
--			if (conf->mddev->gendisk)
--				trace_block_bio_remap(rbi,
--						disk_devt(conf->mddev->gendisk),
--						sh->dev[i].sector);
-+			mddev_trace_remap(conf->mddev, rbi, sh->dev[i].sector);
- 			if (should_defer && op_is_write(op))
- 				bio_list_add(&pending_bios, rbi);
- 			else
-@@ -5530,9 +5524,7 @@ static int raid5_read_one_chunk(struct mddev *mddev, struct bio *raid_bio)
- 		spin_unlock_irq(&conf->device_lock);
+@@ -4199,10 +4199,9 @@ static int handle_stripe_dirtying(struct r5conf *conf,
+ 	set_bit(STRIPE_HANDLE, &sh->state);
+ 	if ((rmw < rcw || (rmw == rcw && conf->rmw_level == PARITY_PREFER_RMW)) && rmw > 0) {
+ 		/* prefer read-modify-write, but need to get some data */
+-		if (conf->mddev->queue)
+-			blk_add_trace_msg(conf->mddev->queue,
+-					  "raid5 rmw %llu %d",
+-					  (unsigned long long)sh->sector, rmw);
++		mddev_add_trace_msg(conf->mddev, "raid5 rmw %llu %d",
++				sh->sector, rmw);
++
+ 		for (i = disks; i--; ) {
+ 			struct r5dev *dev = &sh->dev[i];
+ 			if (test_bit(R5_InJournal, &dev->flags) &&
+@@ -4280,9 +4279,10 @@ static int handle_stripe_dirtying(struct r5conf *conf,
+ 			}
+ 		}
+ 		if (rcw && conf->mddev->queue)
+-			blk_add_trace_msg(conf->mddev->queue, "raid5 rcw %llu %d %d %d",
+-					  (unsigned long long)sh->sector,
+-					  rcw, qread, test_bit(STRIPE_DELAYED, &sh->state));
++			mddev_add_trace_msg(conf->mddev,
++				"raid5 rcw %llu %d %d %d",
++				sh->sector, rcw, qread,
++				test_bit(STRIPE_DELAYED, &sh->state));
  	}
  
--	if (mddev->gendisk)
--		trace_block_bio_remap(align_bio, disk_devt(mddev->gendisk),
--				      raid_bio->bi_iter.bi_sector);
-+	mddev_trace_remap(mddev, align_bio, raid_bio->bi_iter.bi_sector);
- 	submit_bio_noacct(align_bio);
- 	return 1;
- }
+ 	if (rcw > disks && rmw > disks &&
 -- 
 2.39.2
 
